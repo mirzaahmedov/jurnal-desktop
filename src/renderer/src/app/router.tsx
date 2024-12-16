@@ -55,7 +55,6 @@ import SmetaPage from './super-admin/smeta/page'
 import SostavPage from './region-spravochnik/sostav/page'
 import Subdivision7Page from './jur7/podrazdelenie/page'
 import SubdivisionPage from './region-spravochnik/podrazdelenie/page'
-import { TestPage } from './test/page'
 import UnitPage from './super-admin/unit/page'
 import UserPage from './super-admin/user/page'
 
@@ -63,10 +62,6 @@ export const routes: RouteObject[] = [
   {
     path: '/signin',
     element: <SigninPage />
-  },
-  {
-    path: '/test',
-    element: <TestPage />
   },
   {
     path: '*',
