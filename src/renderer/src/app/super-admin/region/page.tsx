@@ -1,0 +1,75 @@
+import type { Region } from '@/common/models'
+import { GenericTable, LoadingOverlay } from '@/common/components'
+import { useEffect, useState } from 'react'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { regionService } from './service'
+import { regionColumns } from './columns'
+import { useToggle } from '@/common/hooks/use-toggle'
+import { regionQueryKeys } from './constants'
+import { useLayout } from '@/common/features/layout'
+import { useConfirm } from '@/common/features/confirm'
+import RegionsDialog from './dialog'
+
+const RegionPage = () => {
+  const [selected, setSelected] = useState<Region | null>(null)
+
+  const toggle = useToggle()
+  const queryClient = useQueryClient()
+
+  const { confirm } = useConfirm()
+
+  const { data: region, isFetching } = useQuery({
+    queryKey: [regionQueryKeys.getAll],
+    queryFn: regionService.getAll
+  })
+  const { mutate: deleteMutation, isPending } = useMutation({
+    mutationKey: [regionQueryKeys.delete],
+    mutationFn: regionService.delete,
+    onSuccess() {
+      queryClient.invalidateQueries({
+        queryKey: [regionQueryKeys.getAll]
+      })
+    }
+  })
+
+  useEffect(() => {
+    if (!toggle.isOpen) {
+      setSelected(null)
+    }
+  }, [toggle.isOpen])
+  useLayout({
+    title: 'Регионы',
+    onCreate: toggle.open
+  })
+
+  const handleClickEdit = (row: Region) => {
+    setSelected(row)
+    toggle.open()
+  }
+
+  const handleClickDelete = (row: Region) => {
+    confirm({
+      onConfirm() {
+        deleteMutation(row.id)
+      }
+    })
+  }
+
+  return (
+    <>
+      <div className="flex-1 relative">
+        {isFetching || isPending ? <LoadingOverlay /> : null}
+        <GenericTable
+          data={region?.data ?? []}
+          columns={regionColumns}
+          onEdit={handleClickEdit}
+          onDelete={handleClickDelete}
+        />
+      </div>
+
+      <RegionsDialog data={selected} open={toggle.isOpen} onChangeOpen={toggle.setIsOpen} />
+    </>
+  )
+}
+
+export default RegionPage

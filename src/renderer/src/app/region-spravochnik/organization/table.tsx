@@ -1,0 +1,21 @@
+import { GenericTable } from '@/common/components'
+import { GenericTableProps } from '@/common/components/generic-table/table'
+import { Organization } from '@/common/models'
+import { organizationColumns } from './columns'
+
+const OrganizationTable = ({
+  data,
+  ...props
+}: Omit<GenericTableProps<Organization>, 'columns' | 'getRowId'>) => {
+  return (
+    <GenericTable
+      {...props}
+      data={data ?? []}
+      columns={organizationColumns}
+      getRowId={(row) => row.id}
+      className="min-w-0"
+    />
+  )
+}
+
+export { OrganizationTable }
