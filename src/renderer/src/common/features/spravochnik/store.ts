@@ -1,7 +1,7 @@
 import type { ApiEndpoints, CRUDService } from '@/common/features/crud'
+import type { ComponentType, ReactNode } from 'react'
 
 import type { ColumnDef } from '@/common/components'
-import type { ComponentType } from 'react'
 import { create } from 'zustand'
 
 export type FilterComponentProps<
@@ -20,7 +20,12 @@ export type SpravochnikDataType<T extends Record<string, unknown>> = {
   params?: Record<string, unknown>
   filters?: ComponentType<FilterComponentProps>[]
   search?: boolean
-  paginate?: boolean
+  renderTable?: (props: {
+    data: T[]
+    columns: ColumnDef<T>[]
+    selectedRowId?: string
+    onClickRow(row: T): void
+  }) => ReactNode
 }
 export type SpravochnikStoreType<T extends Record<string, unknown>> = {
   isOpen: boolean

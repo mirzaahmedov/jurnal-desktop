@@ -34,9 +34,8 @@ export const Spravochnik = () => {
       spravochnik?.endpoint ?? 'spravochnik',
       extendObject(
         {
-          ...queryParams,
-          page: spravochnik?.paginate ? page : 1,
-          limit: spravochnik?.paginate ? 10 : 10000
+          page,
+          ...queryParams
         },
         spravochnik?.params ?? {}
       )
@@ -147,19 +146,31 @@ export const Spravochnik = () => {
         ) : Array.isArray(spravochnik?.columns) ? (
           <>
             <ScrollArea className="flex-1">
-              <GenericTable
-                data={data?.data ?? []}
-                columns={spravochnik?.columns}
-                getRowId={(row) => String(row.id)}
-                selectedRowId={String(selected?.id)}
-                onClickRow={(row) => {
-                  selectId?.(row.id, row)
-                  close()
-                }}
-              />
+              {spravochnik?.renderTable ? (
+                spravochnik.renderTable({
+                  data: data?.data ?? [],
+                  columns: spravochnik.columns,
+                  selectedRowId: String(selected?.id),
+                  onClickRow: (row) => {
+                    selectId?.(row.id, row)
+                    close()
+                  }
+                })
+              ) : (
+                <GenericTable
+                  data={data?.data ?? []}
+                  columns={spravochnik?.columns}
+                  getRowId={(row) => String(row.id)}
+                  selectedRowId={String(selected?.id)}
+                  onClickRow={(row) => {
+                    selectId?.(row.id, row)
+                    close()
+                  }}
+                />
+              )}
             </ScrollArea>
             <div className="flex-0 p-5">
-              {spravochnik?.paginate !== false && data?.meta?.pageCount ? (
+              {data?.meta?.pageCount ? (
                 <Paginate
                   className="flex gap-4"
                   pageRangeDisplayed={2}
