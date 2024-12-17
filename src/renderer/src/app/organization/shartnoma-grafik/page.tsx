@@ -52,11 +52,13 @@ const ShartnomaGrafikPage = () => {
   return (
     <ListView>
       <ListView.Header>
-        <ChooseOrganization
-          selected={orgSpravochnik.selected}
-          open={orgSpravochnik.open}
-          clear={orgSpravochnik.clear}
-        />
+        <div className="flex items-center">
+          <ChooseOrganization
+            selected={orgSpravochnik.selected}
+            open={orgSpravochnik.open}
+            clear={orgSpravochnik.clear}
+          />
+        </div>
       </ListView.Header>
       <ListView.Content loading={isFetching}>
         <GenericTable

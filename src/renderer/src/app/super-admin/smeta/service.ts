@@ -18,7 +18,8 @@ export const createSmetaSpravochnik = (config: Partial<SpravochnikHookOptions<Sm
       endpoint: ApiEndpoints.smeta,
       columns: smetaColumns,
       service: smetaService,
-      filters: [SpravochnikSearchField]
+      filters: [SpravochnikSearchField],
+      paginate: false
     } satisfies typeof config,
     config
   )

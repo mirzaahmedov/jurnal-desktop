@@ -1,6 +1,7 @@
-import type { ComponentType } from 'react'
-import type { ColumnDef } from '@/common/components'
 import type { ApiEndpoints, CRUDService } from '@/common/features/crud'
+
+import type { ColumnDef } from '@/common/components'
+import type { ComponentType } from 'react'
 import { create } from 'zustand'
 
 export type FilterComponentProps<
@@ -19,6 +20,7 @@ export type SpravochnikDataType<T extends Record<string, unknown>> = {
   params?: Record<string, unknown>
   filters?: ComponentType<FilterComponentProps>[]
   search?: boolean
+  paginate?: boolean
 }
 export type SpravochnikStoreType<T extends Record<string, unknown>> = {
   isOpen: boolean

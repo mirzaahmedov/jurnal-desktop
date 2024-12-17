@@ -1,9 +1,9 @@
-import type { ComponentType, RefObject } from 'react'
 import type { ApiEndpoints, CRUDService } from '@/common/features/crud'
-import type { ColumnDef } from '@/common/components'
+import type { ComponentType, RefObject } from 'react'
 import type { FilterComponentProps, SpravochnikStoreType } from './store'
-
 import { useCallback, useEffect, useId, useLayoutEffect, useRef, useState } from 'react'
+
+import type { ColumnDef } from '@/common/components'
 import { useQuery } from '@tanstack/react-query'
 import { useSpravochnikStore } from './store'
 
@@ -22,6 +22,7 @@ export type SpravochnikHookOptions<T extends { id: number }> = SpravochnikHookCa
   params?: Record<string, unknown>
   filters?: ComponentType<FilterComponentProps>[]
   search?: boolean
+  paginate?: boolean
 }
 
 export type UseSpravochnikReturn<T> = {
@@ -92,7 +93,8 @@ export const useSpravochnik = <T extends { id: number }>(
       filters: options.filters,
       params: options.params,
       columns: options.columns,
-      service: options.service
+      service: options.service,
+      paginate: options.paginate ?? true
     })
     setSelectId((id, data) => {
       setSelectedId(id)

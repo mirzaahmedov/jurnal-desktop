@@ -62,8 +62,10 @@ const Sidebar = () => {
               <ul>{getNavElements().map((elem) => renderNavElement(elem, isCollapsed))}</ul>
             </nav>
           </div>
-          <div className="p-5 flex items-center gap-5">
-            <p className="text-xs text-slate-500 font-medium">Электрон молия тизими: {version}</p>
+          <div className="flex items-center gap-1 flex-wrap justify-center">
+            <p className="text-xs text-slate-500 font-medium p-5">
+              Электрон молия тизими {version}
+            </p>
             <ApplicationBadge />
           </div>
         </div>

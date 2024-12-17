@@ -1,16 +1,17 @@
-import type { KeyboardEvent } from 'react'
-import type { SpravochnikStoreType } from './store'
-
-import { useEffect, useRef, useState } from 'react'
+import { ArrowLeft, ArrowRight } from 'lucide-react'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/common/components/ui/dialog'
 import { GenericTable, LoadingOverlay } from '@/common/components'
-import { useSpravochnikStore } from './store'
+import { useEffect, useRef, useState } from 'react'
+
 import { Button } from '@/common/components/ui/button'
-import { ArrowLeft, ArrowRight } from 'lucide-react'
-import { useQuery } from '@tanstack/react-query'
-import { normalizeEmptyFields } from '@/common/lib/validation'
-import { extendObject } from '@/common/lib/utils'
+import type { KeyboardEvent } from 'react'
 import Paginate from 'react-paginate'
+import { ScrollArea } from '@renderer/common/components/ui/scroll-area'
+import type { SpravochnikStoreType } from './store'
+import { extendObject } from '@/common/lib/utils'
+import { normalizeEmptyFields } from '@/common/lib/validation'
+import { useQuery } from '@tanstack/react-query'
+import { useSpravochnikStore } from './store'
 
 export const Spravochnik = () => {
   const timer = useRef<NodeJS.Timeout | null>(null)
@@ -31,7 +32,14 @@ export const Spravochnik = () => {
   const { data, error, isFetching } = useQuery({
     queryKey: [
       spravochnik?.endpoint ?? 'spravochnik',
-      extendObject({ ...queryParams, page }, spravochnik?.params ?? {})
+      extendObject(
+        {
+          ...queryParams,
+          page: spravochnik?.paginate ? page : 1,
+          limit: spravochnik?.paginate ? 10 : 10000
+        },
+        spravochnik?.params ?? {}
+      )
     ],
     queryFn: spravochnik?.service.getAll,
     refetchOnMount: false,
@@ -138,7 +146,7 @@ export const Spravochnik = () => {
           </div>
         ) : Array.isArray(spravochnik?.columns) ? (
           <>
-            <div className="flex-1 h-full overflow-auto">
+            <ScrollArea className="flex-1">
               <GenericTable
                 data={data?.data ?? []}
                 columns={spravochnik?.columns}
@@ -149,32 +157,34 @@ export const Spravochnik = () => {
                   close()
                 }}
               />
-            </div>
+            </ScrollArea>
             <div className="flex-0 p-5">
-              <Paginate
-                className="flex gap-4"
-                pageRangeDisplayed={2}
-                breakLabel="..."
-                forcePage={page - 1}
-                onPageChange={({ selected }) => setPage(selected + 1)}
-                pageLabelBuilder={(item) => (
-                  <Button variant={page === item ? 'outline' : 'ghost'} size="icon">
-                    {item}
-                  </Button>
-                )}
-                nextLabel={
-                  <Button variant="ghost" size="icon">
-                    <ArrowRight className="btn-icon !ml-0" />
-                  </Button>
-                }
-                previousLabel={
-                  <Button variant="ghost" size="icon">
-                    <ArrowLeft className="btn-icon !ml-0" />
-                  </Button>
-                }
-                pageCount={data?.meta?.pageCount ?? 0}
-                renderOnZeroPageCount={null}
-              />
+              {spravochnik?.paginate !== false && data?.meta?.pageCount ? (
+                <Paginate
+                  className="flex gap-4"
+                  pageRangeDisplayed={2}
+                  breakLabel="..."
+                  forcePage={page - 1}
+                  onPageChange={({ selected }) => setPage(selected + 1)}
+                  pageLabelBuilder={(item) => (
+                    <Button variant={page === item ? 'outline' : 'ghost'} size="icon">
+                      {item}
+                    </Button>
+                  )}
+                  nextLabel={
+                    <Button variant="ghost" size="icon">
+                      <ArrowRight className="btn-icon !ml-0" />
+                    </Button>
+                  }
+                  previousLabel={
+                    <Button variant="ghost" size="icon">
+                      <ArrowLeft className="btn-icon !ml-0" />
+                    </Button>
+                  }
+                  pageCount={data?.meta?.pageCount ?? 0}
+                  renderOnZeroPageCount={null}
+                />
+              ) : null}
             </div>
           </>
         ) : null}

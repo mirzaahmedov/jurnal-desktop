@@ -1,5 +1,3 @@
-import type { Response } from '@/common/models'
-import type { QueryFunctionContext } from '@tanstack/react-query'
 import type { AxiosInstance, AxiosRequestConfig } from 'axios'
 import type {
   CRUDServiceOptions,
@@ -10,6 +8,8 @@ import type {
 } from './definition'
 
 import { ApiEndpoints } from '@/common/features/crud'
+import type { QueryFunctionContext } from '@tanstack/react-query'
+import type { Response } from '@/common/models'
 import { http } from '@/common/lib/http'
 
 export class CRUDService<T, C = T, U = C, M = undefined> {
@@ -41,6 +41,10 @@ export class CRUDService<T, C = T, U = C, M = undefined> {
 
     const config = this.requestBuilder?.('getAll', buildArgs)?.config ?? defaultConfig
     const url = this.requestBuilder?.('getAll', buildArgs)?.url ?? `/${this.endpoint}`
+
+    if (config.params?.onChange) {
+      delete config.params.onChange
+    }
 
     const res = await this.client.get<Response<T[], M>>(url, this.proccessMiddleware(config))
 
