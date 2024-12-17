@@ -20,7 +20,8 @@ export const DemoPage = () => {
       smetaQueryKeys.getAll,
       {
         page: 1,
-        limit: 10000
+        limit: 10000,
+        group_number: group
       }
     ],
     queryFn: smetaService.getAll,
@@ -46,11 +47,7 @@ export const DemoPage = () => {
         ) : (
           <>
             <ScrollArea className="flex-1">
-              <CollapsibleTable
-                data={(smetaList?.data ?? []).filter(
-                  (smeta) => smeta.group_number === String(group)
-                )}
-              />
+              <CollapsibleTable data={smetaList?.data ?? []} />
             </ScrollArea>
           </>
         )}

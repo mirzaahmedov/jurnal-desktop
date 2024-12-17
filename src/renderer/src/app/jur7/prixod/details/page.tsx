@@ -143,7 +143,17 @@ const MO7PrixodDetailsPage = () => {
   }, [values])
 
   useEffect(() => {
-    form.reset(prixod?.data ? prixod.data : defaultValues)
+    form.reset(
+      prixod?.data
+        ? {
+            ...prixod.data,
+            childs: prixod.data.childs.map((child) => ({
+              ...child,
+              iznos: !!Number(child.iznos_foiz)
+            }))
+          }
+        : defaultValues
+    )
   }, [form, prixod])
 
   const kimdan_id = form.watch('kimdan_id')

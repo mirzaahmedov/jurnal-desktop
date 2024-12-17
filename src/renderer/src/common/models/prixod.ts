@@ -47,6 +47,7 @@ type MO7PrixodChild = {
   kredit_schet: string
   kredit_sub_schet: string
   data_pereotsenka: string
+  iznos_foiz?: number
 }
 type MO7Prixod = {
   id: number

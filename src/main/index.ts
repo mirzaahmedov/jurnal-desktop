@@ -64,6 +64,10 @@ function createWindow(): void {
       autoUpdater.quitAndInstall()
     })
 
+    ipcMain.on('open-dev-tools', () => {
+      mainWindow.webContents.openDevTools()
+    })
+
     ipcMain.handle('get-version', () => app.getVersion())
   })
 

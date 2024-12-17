@@ -1,14 +1,20 @@
-import { DateRangeForm, GenericTable, LoadingOverlay } from '@/common/components'
-import { useLayout } from '@/common/features/layout'
-import { useNavigate } from 'react-router-dom'
-import { useQueryClient } from '@tanstack/react-query'
-import { usePrixodDelete, usePrixodList } from './service'
-import { useDateRange } from '@/common/hooks/use-date-range'
-
+import {
+  DateRangeForm,
+  DownloadDocumentButton,
+  GenericTable,
+  LoadingOverlay
+} from '@/common/components'
 import { columns, queryKeys } from './config'
+import { usePrixodDelete, usePrixodList } from './service'
+
+import { ButtonGroup } from '@renderer/common/components/ui/button-group'
 import { toast } from '@/common/hooks/use-toast'
 import { useConfirm } from '@/common/features/confirm'
+import { useDateRange } from '@/common/hooks/use-date-range'
+import { useLayout } from '@/common/features/layout'
 import { useMainSchet } from '@/common/features/main-schet'
+import { useNavigate } from 'react-router-dom'
+import { useQueryClient } from '@tanstack/react-query'
 
 const MO7PrixodPage = () => {
   const navigate = useNavigate()
@@ -53,8 +59,18 @@ const MO7PrixodPage = () => {
 
   return (
     <>
-      <div className="p-5">
+      <div className="p-5 flex items-center justify-between">
         <DateRangeForm form={form} onSubmit={applyFilters} />
+        {main_schet?.id ? (
+          <ButtonGroup>
+            <DownloadDocumentButton
+              url="jur_7/doc_prixod/report"
+              fileName={`jur7_prixod_report-${from}:${to}.xlsx`}
+              buttonText="Скачать отчет"
+              params={{ from, to, main_schet_id: main_schet?.id }}
+            />
+          </ButtonGroup>
+        ) : null}
       </div>
       <div className="flex-1 relative">
         {isFetching ? <LoadingOverlay /> : null}
