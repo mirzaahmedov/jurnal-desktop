@@ -48,7 +48,10 @@ const CollapsibleTable = ({ data }: CollapsibleTableProps) => {
       <TableBody>
         {Array.isArray(nested) && nested.length ? (
           nested.map((row) => (
-            <Collapsible key={row.id} asChild>
+            <Collapsible
+              key={row.id}
+              asChild
+            >
               <>
                 <CollapsibleTrigger asChild>
                   <GenericTableRow>
@@ -60,7 +63,9 @@ const CollapsibleTable = ({ data }: CollapsibleTableProps) => {
                           fit={fit}
                           stretch={stretch}
                           numeric={numeric}
-                          className="font-bold"
+                          className={cn(
+                            Array.isArray(row.children) && row.children.length > 0 && 'font-bold'
+                          )}
                         >
                           {typeof renderCell === 'function'
                             ? renderCell(row, col)
@@ -72,7 +77,10 @@ const CollapsibleTable = ({ data }: CollapsibleTableProps) => {
                 </CollapsibleTrigger>
                 <CollapsibleContent asChild>
                   <GenericTableRow>
-                    <GenericTableCell colSpan={100} className="p-0">
+                    <GenericTableCell
+                      colSpan={100}
+                      className="p-0"
+                    >
                       <div className="pl-[60px] bg-white">
                         <Table className="">
                           <TableBody>
@@ -109,7 +117,10 @@ const CollapsibleTable = ({ data }: CollapsibleTableProps) => {
           ))
         ) : (
           <GenericTableRow className="pointer-events-none">
-            <GenericTableCell colSpan={100} className="w-full text-center py-20 text-slate-400">
+            <GenericTableCell
+              colSpan={100}
+              className="w-full text-center py-20 text-slate-400"
+            >
               Нет данных для отображения
             </GenericTableCell>
           </GenericTableRow>

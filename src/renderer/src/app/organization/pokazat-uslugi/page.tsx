@@ -75,7 +75,10 @@ const PokazatUslugiPage = () => {
         />
       </ListView.Content>
       <ListView.Footer>
-        <ListView.Pagination {...pagination} pageCount={pokazatUslugiList?.meta.pageCount ?? 0} />
+        <ListView.Pagination
+          {...pagination}
+          pageCount={pokazatUslugiList?.meta.pageCount ?? 0}
+        />
       </ListView.Footer>
     </ListView>
   )

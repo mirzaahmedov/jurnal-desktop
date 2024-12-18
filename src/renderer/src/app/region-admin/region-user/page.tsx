@@ -66,7 +66,11 @@ const RegionUserPage = () => {
           onEdit={handleClickEdit}
         />
       </div>
-      <RegionUserDialog data={selected} open={toggle.isOpen} onChangeOpen={toggle.setIsOpen} />
+      <RegionUserDialog
+        data={selected}
+        open={toggle.isOpen}
+        onChangeOpen={toggle.setIsOpen}
+      />
     </>
   )
 }

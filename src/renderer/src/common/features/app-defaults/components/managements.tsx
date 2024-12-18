@@ -44,7 +44,10 @@ const ManagementFields: FormEditableFieldsComponent<RequiredManagementFields> = 
         name="rukovoditel"
         control={form.control as unknown as Control<RequiredManagementFields>}
         render={({ field }) => (
-          <FormElement label="Руководитель" grid="2:5">
+          <FormElement
+            label="Руководитель"
+            grid="2:5"
+          >
             <Combobox
               loading={isFetching}
               options={Array.isArray(fioList?.data?.rukovoditel) ? fioList.data.rukovoditel : []}
@@ -70,7 +73,10 @@ const ManagementFields: FormEditableFieldsComponent<RequiredManagementFields> = 
         name="glav_buxgalter"
         control={form.control as unknown as Control<RequiredManagementFields>}
         render={({ field }) => (
-          <FormElement label="Глав Бухгалтер" grid="2:5">
+          <FormElement
+            label="Глав Бухгалтер"
+            grid="2:5"
+          >
             <Combobox
               loading={isFetching}
               options={

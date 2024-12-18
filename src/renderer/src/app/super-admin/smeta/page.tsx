@@ -81,7 +81,11 @@ const SmetaPage = () => {
       <div className="px-10 py-5">
         <Pagination pageCount={mainSchets?.meta.pageCount ?? 0} />
       </div>
-      <SmetaDialog data={selected} open={toggle.isOpen} onChangeOpen={toggle.setIsOpen} />
+      <SmetaDialog
+        data={selected}
+        open={toggle.isOpen}
+        onChangeOpen={toggle.setIsOpen}
+      />
     </>
   )
 }

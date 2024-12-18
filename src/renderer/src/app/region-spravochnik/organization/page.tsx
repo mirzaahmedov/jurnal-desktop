@@ -72,10 +72,16 @@ const OrganizationPage = () => {
         />
       </ListView.Content>
       <ListView.Footer>
-        <ListView.Pagination {...pagination} pageCount={orgList?.meta.pageCount ?? 0} />
+        <ListView.Pagination
+          {...pagination}
+          pageCount={orgList?.meta.pageCount ?? 0}
+        />
       </ListView.Footer>
       <UpdateOrganizationDrawer />
-      <CreateOrganizationDialog open={createOpen} onChangeOpen={setCreateOpen} />
+      <CreateOrganizationDialog
+        open={createOpen}
+        onChangeOpen={setCreateOpen}
+      />
     </ListView>
   )
 }

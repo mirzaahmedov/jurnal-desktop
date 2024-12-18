@@ -14,20 +14,29 @@ const Signatures = () => {
         <Flex.Item>
           <Field>
             <Label>Подпись</Label>
-            <Blank fullWidth helpText="распоряделителя кредитов" />
+            <Blank
+              fullWidth
+              helpText="распоряделителя кредитов"
+            />
           </Field>
         </Flex.Item>
         <Flex.Item>
           <Field>
             <Label>Подпись</Label>
-            <Blank fullWidth helpText="гл. или ст. бухгалтер" />
+            <Blank
+              fullWidth
+              helpText="гл. или ст. бухгалтер"
+            />
           </Field>
         </Flex.Item>
       </Flex>
 
       <Field>
         <Label>Получил</Label>
-        <Blank fullWidth helpText="сумма прописью" />
+        <Blank
+          fullWidth
+          helpText="сумма прописью"
+        />
       </Field>
 
       <Flex>

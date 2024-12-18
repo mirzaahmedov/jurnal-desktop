@@ -85,7 +85,11 @@ const ResponsiblePage = () => {
       <div className="px-10 py-5">
         <Pagination pageCount={revaluationList?.meta.pageCount ?? 0} />
       </div>
-      <ResponsibleDialog open={active} onClose={close} data={selected} />
+      <ResponsibleDialog
+        open={active}
+        onClose={close}
+        data={selected}
+      />
     </>
   )
 }

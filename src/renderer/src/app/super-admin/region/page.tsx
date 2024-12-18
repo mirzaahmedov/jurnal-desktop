@@ -67,7 +67,11 @@ const RegionPage = () => {
         />
       </div>
 
-      <RegionsDialog data={selected} open={toggle.isOpen} onChangeOpen={toggle.setIsOpen} />
+      <RegionsDialog
+        data={selected}
+        open={toggle.isOpen}
+        onChangeOpen={toggle.setIsOpen}
+      />
     </>
   )
 }

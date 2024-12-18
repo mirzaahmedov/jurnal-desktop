@@ -50,14 +50,24 @@ const ConfigureDefaultValuesDialog = ({ open, onClose }: ConfigureDefaultValuesD
   })
 
   return (
-    <Dialog open={open} onOpenChange={onClose}>
+    <Dialog
+      open={open}
+      onOpenChange={onClose}
+    >
       <DialogContent className="flex flex-col w-full max-w-3xl h-full max-h-[400px]">
         <DialogHeader>
           <DialogTitle>Настроить значения по умолчанию</DialogTitle>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={onSubmit} className="flex-1 flex flex-col mt-4">
-            <Tabs value={currentTab} onValueChange={setCurrentTab} className="flex-1">
+          <form
+            onSubmit={onSubmit}
+            className="flex-1 flex flex-col mt-4"
+          >
+            <Tabs
+              value={currentTab}
+              onValueChange={setCurrentTab}
+              className="flex-1"
+            >
               <div className="h-full flex flex-row gap-5">
                 <div className="h-full w-48">
                   <TabsList className="h-full w-full flex-col justify-start p-1 bg-transparent">
@@ -76,13 +86,19 @@ const ConfigureDefaultValuesDialog = ({ open, onClose }: ConfigureDefaultValuesD
                   </TabsList>
                 </div>
                 <div className="h-full flex-1">
-                  <TabsContent tabIndex={-1} value="filters">
+                  <TabsContent
+                    tabIndex={-1}
+                    value="filters"
+                  >
                     <div className="space-y-4">
                       <FormField
                         control={form.control}
                         name="from"
                         render={({ field }) => (
-                          <FormElement label="Дата с" grid="1:4">
+                          <FormElement
+                            label="Дата с"
+                            grid="1:4"
+                          >
                             <DatePicker {...field} />
                           </FormElement>
                         )}
@@ -91,7 +107,10 @@ const ConfigureDefaultValuesDialog = ({ open, onClose }: ConfigureDefaultValuesD
                         control={form.control}
                         name="to"
                         render={({ field }) => (
-                          <FormElement label="Дата по" grid="1:4">
+                          <FormElement
+                            label="Дата по"
+                            grid="1:4"
+                          >
                             <DatePicker {...field} />
                           </FormElement>
                         )}

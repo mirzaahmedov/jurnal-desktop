@@ -51,10 +51,16 @@ const ChoosePodotchet = (props: ChoosePodotchetProps) => {
               </div>
             </div>
           </PopoverTrigger>
-          <PopoverContent align="start" className="w-full max-w-md">
+          <PopoverContent
+            align="start"
+            className="w-full max-w-md"
+          >
             <ul className="text-xs space-y-1.5">
               {elements.map(({ name, value }) => (
-                <li key={name} className="grid grid-cols-5 gap-2 text-slate-600">
+                <li
+                  key={name}
+                  className="grid grid-cols-5 gap-2 text-slate-600"
+                >
                   <span className="col-span-1 text-slate-500 font-medium">{name}</span>
                   <span className="col-span-4 font-bold text-foreground">{value}</span>
                 </li>

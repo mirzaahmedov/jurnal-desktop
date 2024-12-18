@@ -69,7 +69,10 @@ const CreateOrganizationDialog = (props: OrganizationCreateDialogProps) => {
   })
 
   return (
-    <Dialog open={open} onOpenChange={onChangeOpen}>
+    <Dialog
+      open={open}
+      onOpenChange={onChangeOpen}
+    >
       <DialogContent className="max-w-xl">
         <DialogHeader>
           <DialogTitle>Добавить организацию</DialogTitle>
@@ -79,7 +82,10 @@ const CreateOrganizationDialog = (props: OrganizationCreateDialogProps) => {
           onSubmit={onSubmit}
           formActions={
             <DialogFooter>
-              <Button disabled={isCreating} type="submit">
+              <Button
+                disabled={isCreating}
+                type="submit"
+              >
                 Добавить
               </Button>
             </DialogFooter>

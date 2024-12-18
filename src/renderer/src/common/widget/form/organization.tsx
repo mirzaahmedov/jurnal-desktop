@@ -14,7 +14,10 @@ const OrganizationFields: FormSpravochnikFieldsComponent<Organization, { gazna?:
 }) => {
   const { inputRef, ...spravochnikProps } = spravochnik
   return (
-    <SpravochnikFields {...props} name={name ?? 'Организация'}>
+    <SpravochnikFields
+      {...props}
+      name={name ?? 'Организация'}
+    >
       <SpravochnikField
         {...spravochnikProps}
         readOnly

@@ -66,7 +66,11 @@ const BudgetPage = () => {
           onEdit={handleClickEdit}
         />
       </div>
-      <BudgetDialog data={selected} open={toggle.isOpen} onChangeOpen={toggle.setIsOpen} />
+      <BudgetDialog
+        data={selected}
+        open={toggle.isOpen}
+        onChangeOpen={toggle.setIsOpen}
+      />
     </>
   )
 }

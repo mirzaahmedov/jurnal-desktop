@@ -80,7 +80,11 @@ const MainSchetPage = () => {
       <div className="px-10 py-5">
         <Pagination pageCount={mainSchets?.meta.pageCount ?? 0} />
       </div>
-      <MainSchetDialog data={selected} open={toggle.isOpen} onChangeOpen={toggle.setIsOpen} />
+      <MainSchetDialog
+        data={selected}
+        open={toggle.isOpen}
+        onChangeOpen={toggle.setIsOpen}
+      />
     </>
   )
 }

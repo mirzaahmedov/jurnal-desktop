@@ -100,7 +100,10 @@ const PodotchetDialog = (props: PodotchetDialogProps) => {
   }, [form, data])
 
   return (
-    <Dialog open={open} onOpenChange={onChangeOpen}>
+    <Dialog
+      open={open}
+      onOpenChange={onChangeOpen}
+    >
       <DialogContent className="max-w-xl">
         <DialogHeader>
           <DialogTitle>{data ? 'Изменить' : 'Добавить'} подотчетное лицо</DialogTitle>
@@ -116,7 +119,10 @@ const PodotchetDialog = (props: PodotchetDialogProps) => {
                     <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
                       <FormLabel className="text-right col-span-2">Название</FormLabel>
                       <FormControl>
-                        <Input className="col-span-4" {...field} />
+                        <Input
+                          className="col-span-4"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage className="text-end col-span-6" />
                     </div>
@@ -132,7 +138,10 @@ const PodotchetDialog = (props: PodotchetDialogProps) => {
                     <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
                       <FormLabel className="text-right col-span-2">Район</FormLabel>
                       <FormControl>
-                        <Input className="col-span-4" {...field} />
+                        <Input
+                          className="col-span-4"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage className="text-end col-span-6" />
                     </div>
@@ -141,7 +150,10 @@ const PodotchetDialog = (props: PodotchetDialogProps) => {
               />
             </div>
             <DialogFooter>
-              <Button type="submit" disabled={isCreating || isUpdating}>
+              <Button
+                type="submit"
+                disabled={isCreating || isUpdating}
+              >
                 {data ? 'Изменить' : 'Добавить'}
               </Button>
             </DialogFooter>

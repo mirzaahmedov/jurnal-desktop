@@ -19,8 +19,15 @@ const DoverennostFields: FormEditableFieldsComponent<RequiredDoverennostFields> 
       name="doverennost"
       control={form.control as unknown as Control<RequiredDoverennostFields>}
       render={({ field }) => (
-        <FormElement label="Доверенность" className="flex-1">
-          <Input tabIndex={tabIndex} disabled={disabled} {...field} />
+        <FormElement
+          label="Доверенность"
+          className="flex-1"
+        >
+          <Input
+            tabIndex={tabIndex}
+            disabled={disabled}
+            {...field}
+          />
         </FormElement>
       )}
     />

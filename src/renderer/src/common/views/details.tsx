@@ -9,7 +9,10 @@ import { ScrollArea } from '@/common/components/ui/scroll-area'
 type DetailsViewProps = HTMLAttributes<HTMLElement>
 const DetailsView = ({ children, className, ...props }: DetailsViewProps) => {
   return (
-    <div {...props} className={cn('flex-1 min-h-0 relative flex flex-col', className)}>
+    <div
+      {...props}
+      className={cn('flex-1 min-h-0 relative flex flex-col', className)}
+    >
       {children}
     </div>
   )
@@ -25,7 +28,10 @@ const DetailsViewContent = ({
   ...props
 }: DetailsViewContentProps) => {
   return loading ? (
-    <div {...props} className="h-full flex items-center justify-center">
+    <div
+      {...props}
+      className="h-full flex items-center justify-center"
+    >
       <LoadingSpinner />
     </div>
   ) : (

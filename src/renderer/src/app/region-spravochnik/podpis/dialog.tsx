@@ -93,18 +93,27 @@ const PodpisDialog = ({ data, open, onOpenChange }: PodpisDialogProps) => {
   }, [form, open, data])
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog
+      open={open}
+      onOpenChange={onOpenChange}
+    >
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Подпись</DialogTitle>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          <form
+            onSubmit={handleSubmit}
+            className="flex flex-col gap-4"
+          >
             <FormField
               control={form.control}
               name="doljnost_name"
               render={({ field }) => (
-                <FormElement grid="1:2" label="Должность">
+                <FormElement
+                  grid="1:2"
+                  label="Должность"
+                >
                   <Input {...field} />
                 </FormElement>
               )}
@@ -113,7 +122,10 @@ const PodpisDialog = ({ data, open, onOpenChange }: PodpisDialogProps) => {
               control={form.control}
               name="fio_name"
               render={({ field }) => (
-                <FormElement grid="1:2" label="ФИО">
+                <FormElement
+                  grid="1:2"
+                  label="ФИО"
+                >
                   <Input {...field} />
                 </FormElement>
               )}
@@ -122,7 +134,10 @@ const PodpisDialog = ({ data, open, onOpenChange }: PodpisDialogProps) => {
               control={form.control}
               name="type_document"
               render={({ field }) => (
-                <FormElement grid="1:2" label="Тип документа">
+                <FormElement
+                  grid="1:2"
+                  label="Тип документа"
+                >
                   <Input {...field} />
                 </FormElement>
               )}
@@ -131,7 +146,10 @@ const PodpisDialog = ({ data, open, onOpenChange }: PodpisDialogProps) => {
               control={form.control}
               name="numeric_poryadok"
               render={({ field }) => (
-                <FormElement grid="1:2" label="Номер порядка">
+                <FormElement
+                  grid="1:2"
+                  label="Номер порядка"
+                >
                   <NumericInput
                     {...field}
                     allowedDecimalSeparators={[]}
@@ -145,7 +163,10 @@ const PodpisDialog = ({ data, open, onOpenChange }: PodpisDialogProps) => {
               )}
             />
             <DialogFooter>
-              <Button type="submit" disabled={isCreating || isUpdating}>
+              <Button
+                type="submit"
+                disabled={isCreating || isUpdating}
+              >
                 Сохранить
               </Button>
             </DialogFooter>

@@ -6,7 +6,10 @@ import { mergeStyles } from '@/common/lib/utils'
 
 const Label = ({ children, style, ...props }: PropsWithChildren<TextProps>) => {
   return (
-    <Text {...props} style={mergeStyles(styles.label, style)}>
+    <Text
+      {...props}
+      style={mergeStyles(styles.label, style)}
+    >
       {children}
     </Text>
   )

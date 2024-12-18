@@ -61,17 +61,26 @@ export const Pagination = (props: PaginationProps) => {
         forcePage={page - 1}
         onPageChange={({ selected }) => setPage(selected + 1)}
         pageLabelBuilder={(page) => (
-          <Button variant={currentPage === page ? 'outline' : 'ghost'} size="icon">
+          <Button
+            variant={currentPage === page ? 'outline' : 'ghost'}
+            size="icon"
+          >
             {page}
           </Button>
         )}
         nextLabel={
-          <Button variant="ghost" size="icon">
+          <Button
+            variant="ghost"
+            size="icon"
+          >
             <ArrowRight className="btn-icon !ml-0" />
           </Button>
         }
         previousLabel={
-          <Button variant="ghost" size="icon">
+          <Button
+            variant="ghost"
+            size="icon"
+          >
             <ArrowLeft className="btn-icon !ml-0" />
           </Button>
         }

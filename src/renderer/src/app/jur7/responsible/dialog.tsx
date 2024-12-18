@@ -113,13 +113,19 @@ const ResponsibleDialog = (props: ResponsibleDialogProps) => {
     form.reset(defaultValues)
   }, [form, data])
   return (
-    <Dialog open={open} onOpenChange={onClose}>
+    <Dialog
+      open={open}
+      onOpenChange={onClose}
+    >
       <DialogContent>
         <DialogHeader>
           <DialogTitle>{data ? 'Изменить' : 'Добавить'} Материально-ответственное лицо</DialogTitle>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={onSubmit} className="mt-5">
+          <form
+            onSubmit={onSubmit}
+            className="mt-5"
+          >
             <div className="flex flex-col gap-6">
               <FormElement
                 label="Подразделение"
@@ -135,14 +141,20 @@ const ResponsibleDialog = (props: ResponsibleDialogProps) => {
                 name="fio"
                 control={form.control}
                 render={({ field }) => (
-                  <FormElement grid="1:2" label="ФИО">
+                  <FormElement
+                    grid="1:2"
+                    label="ФИО"
+                  >
                     <Input {...field} />
                   </FormElement>
                 )}
               />
             </div>
             <DialogFooter className="mt-5">
-              <Button type="submit" disabled={isCreating || isUpdating}>
+              <Button
+                type="submit"
+                disabled={isCreating || isUpdating}
+              >
                 {data ? 'Изменить' : 'Добавить'}
               </Button>
             </DialogFooter>

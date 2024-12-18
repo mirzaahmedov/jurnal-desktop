@@ -17,10 +17,12 @@ import styles from './styles.module.css'
 type CollapsibleTableProps<T> = {
   data: T[]
   columns: ColumnDef<Partial<T>>[]
+  onClickRow?: (row: T) => void
 }
 const CollapsibleTable = <T extends { id: number; children: T[] }>({
   data,
-  columns
+  columns,
+  onClickRow
 }: CollapsibleTableProps<T>) => {
   return (
     <Table>
@@ -45,9 +47,17 @@ const CollapsibleTable = <T extends { id: number; children: T[] }>({
       <TableBody>
         {Array.isArray(data) && data.length ? (
           data.map((row) => (
-            <Collapsible key={row.id} asChild>
+            <Collapsible
+              key={row.id}
+              asChild
+            >
               <>
-                <CollapsibleTrigger asChild>
+                <CollapsibleTrigger
+                  asChild
+                  onDoubleClick={() => {
+                    onClickRow?.(row)
+                  }}
+                >
                   <GenericTableRow>
                     {columns.map((col) => {
                       const { key, fit, stretch, numeric, renderCell } = col
@@ -69,7 +79,10 @@ const CollapsibleTable = <T extends { id: number; children: T[] }>({
                 </CollapsibleTrigger>
                 <CollapsibleContent asChild>
                   <GenericTableRow>
-                    <GenericTableCell colSpan={100} className="p-0">
+                    <GenericTableCell
+                      colSpan={100}
+                      className="p-0"
+                    >
                       <div className="pl-[60px] bg-white">
                         <Table className="">
                           <TableBody>
@@ -77,6 +90,7 @@ const CollapsibleTable = <T extends { id: number; children: T[] }>({
                               <GenericTableRow
                                 key={child.id}
                                 className={cn(styles.Nested_row, 'even:bg-transparent')}
+                                onClick={() => onClickRow?.(child)}
                               >
                                 {columns.map((col) => {
                                   const { key, fit, stretch, numeric, renderCell } = col
@@ -106,7 +120,10 @@ const CollapsibleTable = <T extends { id: number; children: T[] }>({
           ))
         ) : (
           <GenericTableRow className="pointer-events-none">
-            <GenericTableCell colSpan={100} className="w-full text-center py-20 text-slate-400">
+            <GenericTableCell
+              colSpan={100}
+              className="w-full text-center py-20 text-slate-400"
+            >
               Нет данных для отображения
             </GenericTableCell>
           </GenericTableRow>

@@ -18,8 +18,16 @@ const OpisanieFields: FormEditableFieldsComponent<RequiredOpisanieFields> = ({
       name="opisanie"
       control={form.control as unknown as Control<RequiredOpisanieFields>}
       render={({ field }) => (
-        <FormElement direction="column" label="Описания">
-          <Textarea tabIndex={tabIndex} rows={4} spellCheck={false} {...field} />
+        <FormElement
+          direction="column"
+          label="Описания"
+        >
+          <Textarea
+            tabIndex={tabIndex}
+            rows={4}
+            spellCheck={false}
+            {...field}
+          />
         </FormElement>
       )}
     />

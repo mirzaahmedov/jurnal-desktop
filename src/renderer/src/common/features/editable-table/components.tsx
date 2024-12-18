@@ -39,7 +39,10 @@ export const EditableTableRow = ({
   ...props
 }: HTMLAttributes<HTMLTableRowElement>) => {
   return (
-    <TableRow {...props} className={cn('hover:bg-white', className)}>
+    <TableRow
+      {...props}
+      className={cn('hover:bg-white', className)}
+    >
       {children}
     </TableRow>
   )

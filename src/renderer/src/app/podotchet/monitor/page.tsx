@@ -119,7 +119,10 @@ const PodotchetMonitoringPage = () => {
               ) : null}
             </ButtonGroup>
           </div>
-          <DateRangeForm form={form} onSubmit={applyFilters} />
+          <DateRangeForm
+            form={form}
+            onSubmit={applyFilters}
+          />
           <SummaFields
             summaDebet={
               monitorList?.meta && monitorList?.meta.summa_from > 0

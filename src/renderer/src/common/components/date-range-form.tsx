@@ -24,13 +24,19 @@ export const DateRangeForm = (props: DateRangeFormProps) => {
 
   return (
     <Form {...form}>
-      <form className="flex items-center gap-10" onSubmit={onSubmit}>
+      <form
+        className="flex items-center gap-10"
+        onSubmit={onSubmit}
+      >
         <FormField
           control={form.control}
           name="from"
           render={({ field }) => (
             <FormElement label="За период с">
-              <DatePicker autoFocus {...field} />
+              <DatePicker
+                autoFocus
+                {...field}
+              />
             </FormElement>
           )}
         />
@@ -44,7 +50,10 @@ export const DateRangeForm = (props: DateRangeFormProps) => {
           )}
         />
         <div className="space-x-1">
-          <Button type="submit" variant="outline">
+          <Button
+            type="submit"
+            variant="outline"
+          >
             <CircleArrowDown className="btn-icon icon-start" />
             Загрузить
           </Button>

@@ -133,13 +133,22 @@ const ShartnomaGrafikDetailsPage = () => {
         <Form {...form}>
           <form onSubmit={onSubmit}>
             <div>
-              <Fieldset name="Платежные документы" className="pr-0">
+              <Fieldset
+                name="Платежные документы"
+                className="pr-0"
+              >
                 <div className="flex items-center gap-5 flex-wrap">
                   <FormElement label="Документ №">
-                    <Input readOnly value={shartnomaGrafik?.data.doc_num} />
+                    <Input
+                      readOnly
+                      value={shartnomaGrafik?.data.doc_num}
+                    />
                   </FormElement>
                   <FormElement label="Дата проводки">
-                    <DatePicker readOnly value={shartnomaGrafik?.data.doc_date ?? ''} />
+                    <DatePicker
+                      readOnly
+                      value={shartnomaGrafik?.data.doc_date ?? ''}
+                    />
                   </FormElement>
                 </div>
               </Fieldset>
@@ -197,7 +206,11 @@ const ShartnomaGrafikDetailsPage = () => {
                     </span>
                   </p>
                 ) : null}
-                <Button type="button" variant="ghost" onClick={reportToggle.open}>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  onClick={reportToggle.open}
+                >
                   <DownloadIcon className="btn-icon icon-start" />
                   График оплаты
                 </Button>

@@ -53,7 +53,10 @@ const TooltipCellRenderer = <T extends { id: number }>({
             {Object.entries(elements).map((entry) => {
               const [key, value] = entry as [keyof T, ReactNode]
               return (
-                <li key={String(key)} className="flex items-center gap-2 text-slate-600">
+                <li
+                  key={String(key)}
+                  className="flex items-center gap-2 text-slate-600"
+                >
                   <span className="w-40 text-slate-500 font-medium">{value}:</span>
                   <span className="flex-1 font-bold text-foreground">
                     <Copyable value={data[key] ? String(data[key]) : '-'}>

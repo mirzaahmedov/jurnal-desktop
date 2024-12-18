@@ -107,7 +107,10 @@ const AdminUserDialog = (props: AdminUserDialogProps) => {
   }, [form, data])
 
   return (
-    <Dialog open={open} onOpenChange={onChangeOpen}>
+    <Dialog
+      open={open}
+      onOpenChange={onChangeOpen}
+    >
       <DialogContent className="max-w-xl">
         <DialogHeader>
           <DialogTitle>{data ? 'Изменить' : 'Добавить'} Пользователь</DialogTitle>
@@ -146,7 +149,10 @@ const AdminUserDialog = (props: AdminUserDialogProps) => {
                     <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
                       <FormLabel className="text-right col-span-2">Ф.И.О.</FormLabel>
                       <FormControl>
-                        <Input className="col-span-4" {...field} />
+                        <Input
+                          className="col-span-4"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage className="text-end col-span-6" />
                     </div>
@@ -161,7 +167,10 @@ const AdminUserDialog = (props: AdminUserDialogProps) => {
                     <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
                       <FormLabel className="text-right col-span-2">Логин</FormLabel>
                       <FormControl>
-                        <Input className="col-span-4" {...field} />
+                        <Input
+                          className="col-span-4"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage className="text-end col-span-6" />
                     </div>
@@ -176,7 +185,10 @@ const AdminUserDialog = (props: AdminUserDialogProps) => {
                     <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
                       <FormLabel className="text-right col-span-2">Пароль</FormLabel>
                       <FormControl>
-                        <Input className="col-span-4" {...field} />
+                        <Input
+                          className="col-span-4"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage className="text-end col-span-6" />
                     </div>
@@ -185,7 +197,10 @@ const AdminUserDialog = (props: AdminUserDialogProps) => {
               />
             </div>
             <DialogFooter>
-              <Button type="submit" disabled={isCreating || isUpdating}>
+              <Button
+                type="submit"
+                disabled={isCreating || isUpdating}
+              >
                 {data ? 'Изменить' : 'Добавить'}
               </Button>
             </DialogFooter>

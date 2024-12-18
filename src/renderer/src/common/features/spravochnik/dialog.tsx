@@ -35,6 +35,7 @@ export const Spravochnik = () => {
       extendObject(
         {
           page,
+          ...(spravochnik?.defaultFilters || {}),
           ...queryParams
         },
         spravochnik?.params ?? {}
@@ -123,8 +124,13 @@ export const Spravochnik = () => {
     }
   }
 
+  const CustomTable = spravochnik?.CustomTable
+
   return (
-    <Dialog open={isOpen} onOpenChange={setOpen}>
+    <Dialog
+      open={isOpen}
+      onOpenChange={setOpen}
+    >
       <DialogContent
         className="max-w-screen-2xl w-full p-0 gap-0 h-3/5 overflow-auto flex flex-col"
         onKeyDown={handleKeyDown}
@@ -134,7 +140,11 @@ export const Spravochnik = () => {
           <DialogTitle>{spravochnik?.title}</DialogTitle>
           <div className="flex-1 flex items-center gap-5 px-10">
             {spravochnik?.filters?.map((FilterComponent, id) => (
-              <FilterComponent key={id} getValue={getValue} setValue={setValue} />
+              <FilterComponent
+                key={id}
+                getValue={getValue}
+                setValue={setValue}
+              />
             ))}
           </div>
         </DialogHeader>
@@ -146,16 +156,16 @@ export const Spravochnik = () => {
         ) : Array.isArray(spravochnik?.columns) ? (
           <>
             <ScrollArea className="flex-1">
-              {spravochnik?.renderTable ? (
-                spravochnik.renderTable({
-                  data: data?.data ?? [],
-                  columns: spravochnik.columns,
-                  selectedRowId: String(selected?.id),
-                  onClickRow: (row) => {
+              {CustomTable ? (
+                <CustomTable
+                  data={data?.data ?? []}
+                  columns={spravochnik.columns}
+                  selectedRowId={String(selected?.id)}
+                  onClickRow={(row) => {
                     selectId?.(row.id, row)
                     close()
-                  }
-                })
+                  }}
+                />
               ) : (
                 <GenericTable
                   data={data?.data ?? []}
@@ -178,17 +188,26 @@ export const Spravochnik = () => {
                   forcePage={page - 1}
                   onPageChange={({ selected }) => setPage(selected + 1)}
                   pageLabelBuilder={(item) => (
-                    <Button variant={page === item ? 'outline' : 'ghost'} size="icon">
+                    <Button
+                      variant={page === item ? 'outline' : 'ghost'}
+                      size="icon"
+                    >
                       {item}
                     </Button>
                   )}
                   nextLabel={
-                    <Button variant="ghost" size="icon">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                    >
                       <ArrowRight className="btn-icon !ml-0" />
                     </Button>
                   }
                   previousLabel={
-                    <Button variant="ghost" size="icon">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                    >
                       <ArrowLeft className="btn-icon !ml-0" />
                     </Button>
                   }

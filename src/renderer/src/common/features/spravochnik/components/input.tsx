@@ -53,7 +53,10 @@ const SpravochnikInput = <T extends Record<string, unknown>>({
   ...props
 }: SpravochnikInputProps<T>) => {
   return (
-    <div {...divProps} className={cn('relative group', divProps?.className)}>
+    <div
+      {...divProps}
+      className={cn('relative group', divProps?.className)}
+    >
       <Input
         ref={inputRef}
         disabled={loading}

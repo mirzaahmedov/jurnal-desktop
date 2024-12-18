@@ -29,7 +29,10 @@ type SpravochnikInputProps = InputProps &
 const SpravochnikInput = forwardRef<HTMLInputElement, SpravochnikInputProps>(
   ({ className, containerProps = {}, editor, error, onClear, ...props }, ref) => {
     return (
-      <div {...containerProps} className={cn('relative group', containerProps?.className)}>
+      <div
+        {...containerProps}
+        className={cn('relative group', containerProps?.className)}
+      >
         <Input
           ref={ref}
           className={cn(inputVariants({ editor, error }), className)}

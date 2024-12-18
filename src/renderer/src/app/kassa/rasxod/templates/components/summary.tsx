@@ -10,7 +10,11 @@ const Summary = ({ fio, operation, summa, summaWords }: SummaryProps) => {
   return (
     <Flex>
       <Flex.Item>
-        <Flex direction="column" alignItems="flex-start" style={{ gap: 4 }}>
+        <Flex
+          direction="column"
+          alignItems="flex-start"
+          style={{ gap: 4 }}
+        >
           <Field>
             <Label>ФИО:</Label>
             <Value>{fio}</Value>

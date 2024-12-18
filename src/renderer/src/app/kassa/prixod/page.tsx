@@ -86,7 +86,10 @@ const KassaPrixodPage = () => {
         />
       </ListView.Content>
       <ListView.Footer>
-        <ListView.Pagination {...pagination} pageCount={prixodList?.meta.pageCount ?? 0} />
+        <ListView.Pagination
+          {...pagination}
+          pageCount={prixodList?.meta.pageCount ?? 0}
+        />
       </ListView.Footer>
     </ListView>
   )

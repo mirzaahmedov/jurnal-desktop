@@ -31,7 +31,10 @@ const KassaPrixodOrder = ({
         gap: 20
       }}
     >
-      <Header doc_num={doc_num} doc_date={doc_date} />
+      <Header
+        doc_num={doc_num}
+        doc_date={doc_date}
+      />
       <PodvodkaTable podvodkaList={podvodkaList} />
       <Details
         fio={fio}

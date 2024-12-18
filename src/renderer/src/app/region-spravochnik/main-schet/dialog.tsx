@@ -110,13 +110,19 @@ const OrganizationDialog = (props: OrganizationDialogProps) => {
   }, [form, data])
 
   return (
-    <Dialog open={open} onOpenChange={onChangeOpen}>
+    <Dialog
+      open={open}
+      onOpenChange={onChangeOpen}
+    >
       <DialogContent className="h-full max-h-[700px] max-w-xl flex flex-col">
         <DialogHeader>
           <DialogTitle>{data ? 'Изменить' : 'Добавить'} основной счет</DialogTitle>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={onSubmit} className="overflow-y-auto noscroll-bar p-1">
+          <form
+            onSubmit={onSubmit}
+            className="overflow-y-auto noscroll-bar p-1"
+          >
             <div className="grid gap-4 py-4">
               <FormField
                 name="spravochnik_budjet_name_id"
@@ -150,7 +156,10 @@ const OrganizationDialog = (props: OrganizationDialogProps) => {
                     <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
                       <FormLabel className="text-right col-span-2">Название</FormLabel>
                       <FormControl>
-                        <Input className="col-span-4" {...field} />
+                        <Input
+                          className="col-span-4"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage className="text-end col-span-6" />
                     </div>
@@ -166,7 +175,10 @@ const OrganizationDialog = (props: OrganizationDialogProps) => {
                     <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
                       <FormLabel className="text-right col-span-2">Номер</FormLabel>
                       <FormControl>
-                        <Input className="col-span-4" {...field} />
+                        <Input
+                          className="col-span-4"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage className="text-end col-span-6" />
                     </div>
@@ -182,7 +194,10 @@ const OrganizationDialog = (props: OrganizationDialogProps) => {
                     <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
                       <FormLabel className="text-right col-span-2">Название организации</FormLabel>
                       <FormControl>
-                        <Input className="col-span-4" {...field} />
+                        <Input
+                          className="col-span-4"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage className="text-end col-span-6" />
                     </div>
@@ -198,7 +213,10 @@ const OrganizationDialog = (props: OrganizationDialogProps) => {
                     <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
                       <FormLabel className="text-right col-span-2">ИНН организации</FormLabel>
                       <FormControl>
-                        <Input {...field} className="col-span-4" />
+                        <Input
+                          {...field}
+                          className="col-span-4"
+                        />
                       </FormControl>
                       <FormMessage className="text-end col-span-6" />
                     </div>
@@ -214,7 +232,10 @@ const OrganizationDialog = (props: OrganizationDialogProps) => {
                     <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
                       <FormLabel className="text-right col-span-2">МФО организации</FormLabel>
                       <FormControl>
-                        <Input className="col-span-4" {...field} />
+                        <Input
+                          className="col-span-4"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage className="text-end col-span-6" />
                     </div>
@@ -230,7 +251,10 @@ const OrganizationDialog = (props: OrganizationDialogProps) => {
                     <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
                       <FormLabel className="text-right col-span-2">Банк организации</FormLabel>
                       <FormControl>
-                        <Input className="col-span-4" {...field} />
+                        <Input
+                          className="col-span-4"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage className="text-end col-span-6" />
                     </div>
@@ -246,7 +270,10 @@ const OrganizationDialog = (props: OrganizationDialogProps) => {
                     <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
                       <FormLabel className="text-right col-span-2">Журнал 1 счет</FormLabel>
                       <FormControl>
-                        <Input className="col-span-4" {...field} />
+                        <Input
+                          className="col-span-4"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage className="text-end col-span-6" />
                     </div>
@@ -261,7 +288,10 @@ const OrganizationDialog = (props: OrganizationDialogProps) => {
                     <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
                       <FormLabel className="text-right col-span-2">Журнал 1 субсчет</FormLabel>
                       <FormControl>
-                        <Input className="col-span-4" {...field} />
+                        <Input
+                          className="col-span-4"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage className="text-end col-span-6" />
                     </div>
@@ -277,7 +307,10 @@ const OrganizationDialog = (props: OrganizationDialogProps) => {
                     <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
                       <FormLabel className="text-right col-span-2">Журнал 2 счет</FormLabel>
                       <FormControl>
-                        <Input className="col-span-4" {...field} />
+                        <Input
+                          className="col-span-4"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage className="text-end col-span-6" />
                     </div>
@@ -292,7 +325,10 @@ const OrganizationDialog = (props: OrganizationDialogProps) => {
                     <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
                       <FormLabel className="text-right col-span-2">Журнал 2 субсчет</FormLabel>
                       <FormControl>
-                        <Input className="col-span-4" {...field} />
+                        <Input
+                          className="col-span-4"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage className="text-end col-span-6" />
                     </div>
@@ -308,7 +344,10 @@ const OrganizationDialog = (props: OrganizationDialogProps) => {
                     <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
                       <FormLabel className="text-right col-span-2">Журнал 3 счет</FormLabel>
                       <FormControl>
-                        <Input className="col-span-4" {...field} />
+                        <Input
+                          className="col-span-4"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage className="text-end col-span-6" />
                     </div>
@@ -323,7 +362,10 @@ const OrganizationDialog = (props: OrganizationDialogProps) => {
                     <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
                       <FormLabel className="text-right col-span-2">Журнал 3 субсчет</FormLabel>
                       <FormControl>
-                        <Input className="col-span-4" {...field} />
+                        <Input
+                          className="col-span-4"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage className="text-end col-span-6" />
                     </div>
@@ -339,7 +381,10 @@ const OrganizationDialog = (props: OrganizationDialogProps) => {
                     <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
                       <FormLabel className="text-right col-span-2">Журнал 4 счет</FormLabel>
                       <FormControl>
-                        <Input className="col-span-4" {...field} />
+                        <Input
+                          className="col-span-4"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage className="text-end col-span-6" />
                     </div>
@@ -354,7 +399,10 @@ const OrganizationDialog = (props: OrganizationDialogProps) => {
                     <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
                       <FormLabel className="text-right col-span-2">Журнал 4 субсчет</FormLabel>
                       <FormControl>
-                        <Input className="col-span-4" {...field} />
+                        <Input
+                          className="col-span-4"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage className="text-end col-span-6" />
                     </div>
@@ -363,7 +411,10 @@ const OrganizationDialog = (props: OrganizationDialogProps) => {
               />
             </div>
             <DialogFooter className="w-full mt-5 sticky bottom-0 bg-white shadow-[0px_5px_0px_5px_white]">
-              <Button type="submit" disabled={isCreating || isUpdating}>
+              <Button
+                type="submit"
+                disabled={isCreating || isUpdating}
+              >
                 {data ? 'Изменить' : 'Добавить'}
               </Button>
             </DialogFooter>

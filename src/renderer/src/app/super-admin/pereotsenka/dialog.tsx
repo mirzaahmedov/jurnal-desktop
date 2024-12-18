@@ -117,7 +117,10 @@ const PereotsenkaDialog = (props: PereotsenkaDialogProps) => {
   console.log(form.formState.errors)
 
   return (
-    <Dialog open={open} onOpenChange={onClose}>
+    <Dialog
+      open={open}
+      onOpenChange={onClose}
+    >
       <DialogContent>
         <DialogHeader>
           <DialogTitle>{data ? 'Изменить переоценку' : 'Добавить переоценку'}</DialogTitle>
@@ -141,7 +144,10 @@ const PereotsenkaDialog = (props: PereotsenkaDialogProps) => {
                 name="name"
                 control={form.control}
                 render={({ field }) => (
-                  <FormElement label="Название" grid="1:2">
+                  <FormElement
+                    label="Название"
+                    grid="1:2"
+                  >
                     <Input {...field} />
                   </FormElement>
                 )}
@@ -151,7 +157,10 @@ const PereotsenkaDialog = (props: PereotsenkaDialogProps) => {
                 name="pereotsenka_foiz"
                 control={form.control}
                 render={({ field }) => (
-                  <FormElement label="Износ (%)" grid="1:2">
+                  <FormElement
+                    label="Износ (%)"
+                    grid="1:2"
+                  >
                     <NumericInput
                       {...field}
                       value={Number(field.value) === 0 ? '' : (field.value ?? '')}
@@ -163,7 +172,10 @@ const PereotsenkaDialog = (props: PereotsenkaDialogProps) => {
               />
             </div>
             <DialogFooter className="mt-5">
-              <Button type="submit" disabled={isCreating || isUpdating}>
+              <Button
+                type="submit"
+                disabled={isCreating || isUpdating}
+              >
                 {data ? 'Изменить' : 'Добавить'}
               </Button>
             </DialogFooter>

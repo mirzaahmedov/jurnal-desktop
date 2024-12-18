@@ -103,7 +103,10 @@ const PodvodkaTable = ({ podvodkaList }: PodvodkaTableProps) => {
       </Table.Row>
 
       <Table.Row>
-        <Table.Column wrap style={{ width: columnWidths[0], padding: 4 }}>
+        <Table.Column
+          wrap
+          style={{ width: columnWidths[0], padding: 4 }}
+        >
           <Table.CellView
             style={{
               display: 'flex',

@@ -90,8 +90,14 @@ const DatePicker = forwardRef<HTMLButtonElement, DatePickerProps>(
     }
 
     return (
-      <Popover open={calendarToggle.isOpen} onOpenChange={handleChangeActive}>
-        <PopoverTrigger asChild ref={ref}>
+      <Popover
+        open={calendarToggle.isOpen}
+        onOpenChange={handleChangeActive}
+      >
+        <PopoverTrigger
+          asChild
+          ref={ref}
+        >
           <button
             tabIndex={-1}
             onFocus={() => {
@@ -116,7 +122,10 @@ const DatePicker = forwardRef<HTMLButtonElement, DatePickerProps>(
             <CalendarIcon className="absolute top-1/2 right-2 -translate-y-1/2 mr-2 h-4 w-4 text-slate-500" />
           </button>
         </PopoverTrigger>
-        <PopoverContent className="w-auto p-0" onOpenAutoFocus={(e) => e.preventDefault()}>
+        <PopoverContent
+          className="w-auto p-0"
+          onOpenAutoFocus={(e) => e.preventDefault()}
+        >
           <Calendar
             mode="single"
             selected={value ? parseDate(value) : undefined}

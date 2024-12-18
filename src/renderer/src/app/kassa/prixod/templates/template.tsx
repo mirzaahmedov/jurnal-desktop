@@ -31,7 +31,11 @@ const KassaPrixodOrderTemplate = ({
   return (
     <Document>
       <Page style={styles.page}>
-        <Flex direction="row" alignItems="flex-start" style={{ width: '100%', height: '50%' }}>
+        <Flex
+          direction="row"
+          alignItems="flex-start"
+          style={{ width: '100%', height: '50%' }}
+        >
           <Flex.Item>
             <KassaPrixodOrder
               doc_num={doc_num}

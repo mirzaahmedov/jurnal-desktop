@@ -67,7 +67,10 @@ const AutoComplete = <T extends Record<string, unknown>>({
           <CommandList>
             <CommandEmpty autoFocus={false}>Ничего не найдено</CommandEmpty>
             {isFetching ? (
-              <CommandItem disabled className="flex justify-center">
+              <CommandItem
+                disabled
+                className="flex justify-center"
+              >
                 <LoadingSpinner />
               </CommandItem>
             ) : Array.isArray(options) ? (

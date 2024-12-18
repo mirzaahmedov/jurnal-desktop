@@ -60,7 +60,10 @@ const MO7PrixodPage = () => {
   return (
     <>
       <div className="p-5 flex items-center justify-between">
-        <DateRangeForm form={form} onSubmit={applyFilters} />
+        <DateRangeForm
+          form={form}
+          onSubmit={applyFilters}
+        />
         {main_schet?.id ? (
           <ButtonGroup>
             <DownloadDocumentButton

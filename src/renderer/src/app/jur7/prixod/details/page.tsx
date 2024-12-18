@@ -187,7 +187,10 @@ const MO7PrixodDetailsPage = () => {
   return (
     <DetailsPage loading={isFetching}>
       <Form {...form}>
-        <form onSubmit={onSubmit} className="divide-y">
+        <form
+          onSubmit={onSubmit}
+          className="divide-y"
+        >
           <div className="grid grid-cols-2 items-end">
             <DocumentFields form={form} />
             <div className="flex items-center gap-5 flex-wrap pb-7 px-5">

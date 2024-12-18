@@ -52,8 +52,16 @@ const BankRasxodPorucheniyaTemplate = ({
 
   return (
     <Document>
-      <Page size="A4" style={styles.page} wrap={false}>
-        <Flex direction="column" alignItems="stretch" style={{ width: '100%', height: '100%' }}>
+      <Page
+        size="A4"
+        style={styles.page}
+        wrap={false}
+      >
+        <Flex
+          direction="column"
+          alignItems="stretch"
+          style={{ width: '100%', height: '100%' }}
+        >
           <Flex.Item>
             <Porucheniya />
           </Flex.Item>

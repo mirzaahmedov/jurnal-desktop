@@ -65,7 +65,11 @@ const UserPage = () => {
           onEdit={handleClickEdit}
         />
       </div>
-      <AdminUserDialog data={selected} open={toggle.isOpen} onChangeOpen={toggle.setIsOpen} />
+      <AdminUserDialog
+        data={selected}
+        open={toggle.isOpen}
+        onChangeOpen={toggle.setIsOpen}
+      />
     </>
   )
 }

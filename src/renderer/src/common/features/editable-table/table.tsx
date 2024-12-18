@@ -88,7 +88,10 @@ export const EditableTable = <T extends Record<string, unknown>>(props: Editable
             })
           ) : (
             <EditableTableRow>
-              <EditableTableCell colSpan={100} className="text-center">
+              <EditableTableCell
+                colSpan={100}
+                className="text-center"
+              >
                 {placeholder ?? 'No data available.'}
               </EditableTableCell>
             </EditableTableRow>

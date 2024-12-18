@@ -196,7 +196,10 @@ const AdvanceReportDetailsPage = () => {
         <form onSubmit={onSubmit}>
           <div>
             <div className="grid grid-cols-2">
-              <DocumentFields tabIndex={1} form={form} />
+              <DocumentFields
+                tabIndex={1}
+                form={form}
+              />
               <OperatsiiFields
                 tabIndex={2}
                 spravochnik={operatsiiSpravochnik}
@@ -216,16 +219,25 @@ const AdvanceReportDetailsPage = () => {
             </div>
 
             <div className="p-5">
-              <OpisanieFields tabIndex={4} form={form} />
+              <OpisanieFields
+                tabIndex={4}
+                form={form}
+              />
             </div>
           </div>
 
           <DetailsPageFooter>
-            <DetailsPageCreateBtn tabIndex={6} disabled={isCreating || isUpdating} />
+            <DetailsPageCreateBtn
+              tabIndex={6}
+              disabled={isCreating || isUpdating}
+            />
           </DetailsPageFooter>
         </form>
       </Form>
-      <Fieldset name="Подводка" className="flex-1 mt-10 pb-24 bg-slate-50">
+      <Fieldset
+        name="Подводка"
+        className="flex-1 mt-10 pb-24 bg-slate-50"
+      >
         <EditableTable
           tabIndex={5}
           columns={podvodkaColumns}

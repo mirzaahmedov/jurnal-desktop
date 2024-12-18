@@ -87,9 +87,16 @@ const GroupPage = () => {
         />
       </ListView.Content>
       <ListView.Footer>
-        <ListView.Pagination {...pagination} pageCount={groupList?.meta?.pageCount ?? 0} />
+        <ListView.Pagination
+          {...pagination}
+          pageCount={groupList?.meta?.pageCount ?? 0}
+        />
       </ListView.Footer>
-      <GroupDialog data={selected} open={dialogToggle.isOpen} onClose={dialogToggle.close} />
+      <GroupDialog
+        data={selected}
+        open={dialogToggle.isOpen}
+        onClose={dialogToggle.close}
+      />
     </ListView>
   )
 }

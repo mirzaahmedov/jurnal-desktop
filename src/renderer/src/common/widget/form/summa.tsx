@@ -11,7 +11,10 @@ const SummaFields: FormFieldsComponent<{
   summa?: number
 }> = ({ data, name, ...props }) => {
   return (
-    <Fieldset {...props} name={name ?? 'Сумма'}>
+    <Fieldset
+      {...props}
+      name={name ?? 'Сумма'}
+    >
       <div className="flex items-start gap-5">
         <FormElement label="Сумма">
           <Input

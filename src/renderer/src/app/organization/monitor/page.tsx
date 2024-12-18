@@ -195,7 +195,10 @@ const OrganizationMonitoringPage = () => {
               : 0
           }
         />
-        <ListView.Pagination {...pagination} pageCount={orgMonitorList?.meta.pageCount ?? 0} />
+        <ListView.Pagination
+          {...pagination}
+          pageCount={orgMonitorList?.meta.pageCount ?? 0}
+        />
       </ListView.Footer>
     </ListView>
   )

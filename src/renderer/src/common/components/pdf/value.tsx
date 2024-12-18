@@ -10,7 +10,10 @@ type ValueProps = TextProps & {
 const Value = ({ children, viewProps, ...props }: ValueProps) => {
   return (
     <View {...viewProps}>
-      <Text {...props} style={mergeStyles(styles.value, props?.style)}>
+      <Text
+        {...props}
+        style={mergeStyles(styles.value, props?.style)}
+      >
         {children}
       </Text>
     </View>

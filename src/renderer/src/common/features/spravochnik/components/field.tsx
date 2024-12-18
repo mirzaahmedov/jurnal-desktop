@@ -21,11 +21,19 @@ const SpravochnikField = <T extends Record<string, unknown>>({
   ...props
 }: SpravochnikFieldProps<T>) => {
   return (
-    <FormElement {...formElementProps} error={error} label={label}>
+    <FormElement
+      {...formElementProps}
+      error={error}
+      label={label}
+    >
       {customInput ? (
         customInput
       ) : (
-        <SpravochnikInput inputRef={inputRef} error={error} {...props} />
+        <SpravochnikInput
+          inputRef={inputRef}
+          error={error}
+          {...props}
+        />
       )}
     </FormElement>
   )

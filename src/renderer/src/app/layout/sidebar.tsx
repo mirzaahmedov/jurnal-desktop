@@ -39,7 +39,11 @@ const Sidebar = () => {
               isCollapsed && 'flex-col-reverse'
             )}
           >
-            <img src={logo} alt="МЧС Республики Узбекистан" className="max-h-16" />
+            <img
+              src={logo}
+              alt="МЧС Республики Узбекистан"
+              className="max-h-16"
+            />
             {!isCollapsed ? (
               <h1 className="flex-1 text-md leading-tight font-bold">МЧС Республики Узбекистан</h1>
             ) : null}
@@ -81,7 +85,10 @@ const renderNavElement = (elem: null | NavElement, isCollapsed: boolean, rootPat
 
   const path = rootPath ? `${rootPath}/${elem.path}` : elem.path
   return elem.children?.length ? (
-    <li key={path} className="px-5 hover:bg-slate-50 transition-colors">
+    <li
+      key={path}
+      className="px-5 hover:bg-slate-50 transition-colors"
+    >
       <Accordion type="multiple">
         <AccordionItem value={path}>
           <AccordionTrigger className="py-0 hover:no-underline">
@@ -105,7 +112,10 @@ const renderNavElement = (elem: null | NavElement, isCollapsed: boolean, rootPat
       </Accordion>
     </li>
   ) : (
-    <li key={path} className="group px-5 hover:bg-slate-50 transition-colors">
+    <li
+      key={path}
+      className="group px-5 hover:bg-slate-50 transition-colors"
+    >
       <NavLink
         to={path}
         className={({ isActive }) =>

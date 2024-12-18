@@ -98,7 +98,10 @@ const SmetaDialog = (props: SmetaDialogProps) => {
   }, [form, data])
 
   return (
-    <Dialog open={open} onOpenChange={onChangeOpen}>
+    <Dialog
+      open={open}
+      onOpenChange={onChangeOpen}
+    >
       <DialogContent className="max-w-xl">
         <DialogHeader>
           <DialogTitle>{data ? 'Изменить' : 'Добавить'} Смета</DialogTitle>
@@ -114,7 +117,10 @@ const SmetaDialog = (props: SmetaDialogProps) => {
                     <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
                       <FormLabel className="text-right col-span-2">Имя Сметы</FormLabel>
                       <FormControl>
-                        <Input className="col-span-4" {...field} />
+                        <Input
+                          className="col-span-4"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage className="text-end col-span-6" />
                     </div>
@@ -129,7 +135,11 @@ const SmetaDialog = (props: SmetaDialogProps) => {
                     <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
                       <FormLabel className="text-right col-span-2">Номер Сметы</FormLabel>
                       <FormControl>
-                        <Input type="number" className="col-span-4" {...field} />
+                        <Input
+                          type="number"
+                          className="col-span-4"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage className="text-end col-span-6" />
                     </div>
@@ -144,7 +154,11 @@ const SmetaDialog = (props: SmetaDialogProps) => {
                     <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
                       <FormLabel className="text-right col-span-2">Номер Группы</FormLabel>
                       <FormControl>
-                        <Input type="number" className="col-span-4" {...field} />
+                        <Input
+                          type="number"
+                          className="col-span-4"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage className="text-end col-span-6" />
                     </div>
@@ -159,7 +173,10 @@ const SmetaDialog = (props: SmetaDialogProps) => {
                     <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
                       <FormLabel className="text-right col-span-2">Тип Сметы</FormLabel>
                       <FormControl>
-                        <Input className="col-span-4" {...field} />
+                        <Input
+                          className="col-span-4"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage className="text-end col-span-6" />
                     </div>
@@ -168,7 +185,10 @@ const SmetaDialog = (props: SmetaDialogProps) => {
               />
             </div>
             <DialogFooter>
-              <Button type="submit" disabled={isCreating || isUpdating}>
+              <Button
+                type="submit"
+                disabled={isCreating || isUpdating}
+              >
                 {data ? 'Изменить' : 'Добавить'}
               </Button>
             </DialogFooter>

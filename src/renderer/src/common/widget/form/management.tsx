@@ -44,7 +44,10 @@ const ManagementFields: FormEditableFieldsComponent<RequiredManagementFields> = 
   })
 
   return (
-    <Fieldset {...props} name={name ?? 'Подписи'}>
+    <Fieldset
+      {...props}
+      name={name ?? 'Подписи'}
+    >
       <div
         {...containerProps}
         className={cn('flex items-center gap-5 flex-wrap', containerProps?.className)}
@@ -53,7 +56,10 @@ const ManagementFields: FormEditableFieldsComponent<RequiredManagementFields> = 
           name="rukovoditel"
           control={form.control as unknown as Control<RequiredManagementFields>}
           render={({ field }) => (
-            <FormElement label="Руководитель" className="w-full flex-1">
+            <FormElement
+              label="Руководитель"
+              className="w-full flex-1"
+            >
               <Combobox
                 loading={isFetching}
                 options={Array.isArray(fioList?.data?.rukovoditel) ? fioList.data.rukovoditel : []}
@@ -79,7 +85,10 @@ const ManagementFields: FormEditableFieldsComponent<RequiredManagementFields> = 
           name="glav_buxgalter"
           control={form.control as unknown as Control<RequiredManagementFields>}
           render={({ field }) => (
-            <FormElement label="Глав Бухгалтер" className="flex-1 w-full">
+            <FormElement
+              label="Глав Бухгалтер"
+              className="flex-1 w-full"
+            >
               <Combobox
                 loading={isFetching}
                 options={

@@ -69,14 +69,22 @@ const SigninPage = () => {
     <main className="h-full flex items-center justify-center">
       <div className="w-full max-w-md space-y-5">
         <div className="flex items-center flex-col gap-5">
-          <img src={logo} alt="МЧС Республики Узбекистан" className="h-24" />
+          <img
+            src={logo}
+            alt="МЧС Республики Узбекистан"
+            className="h-24"
+          />
           <h1 className="max-w-xs text-center text-xl leading-tight font-bold">
             МЧС Республики Узбекистан
           </h1>
         </div>
         <div>
           <Form {...form}>
-            <form autoComplete="off" onSubmit={onSubmit} className="flex flex-col gap-4">
+            <form
+              autoComplete="off"
+              onSubmit={onSubmit}
+              className="flex flex-col gap-4"
+            >
               <FormField
                 control={form.control}
                 name="login"
@@ -84,7 +92,10 @@ const SigninPage = () => {
                   <FormItem>
                     <FormLabel>Логин</FormLabel>
                     <FormControl>
-                      <Input autoComplete="off" {...field} />
+                      <Input
+                        autoComplete="off"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -118,7 +129,11 @@ const SigninPage = () => {
                 <FormLabel className="!mt-0">Показать пароль</FormLabel>
                 <FormMessage />
               </FormItem>
-              <Button disabled={isPending} type="submit" className="mt-5">
+              <Button
+                disabled={isPending}
+                type="submit"
+                className="mt-5"
+              >
                 Войти
               </Button>
             </form>

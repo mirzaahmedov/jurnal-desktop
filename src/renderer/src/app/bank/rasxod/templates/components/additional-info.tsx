@@ -15,7 +15,11 @@ const AdditionalInfo = ({
   opisanie
 }: AdditionalInfoProps) => {
   return (
-    <Flex direction="column" alignItems="stretch" style={{ gap: 2 }}>
+    <Flex
+      direction="column"
+      alignItems="stretch"
+      style={{ gap: 2 }}
+    >
       <Flex>
         <Label style={{ width: 100 }}>Summa (so`z bilan)</Label>
         <TextBox

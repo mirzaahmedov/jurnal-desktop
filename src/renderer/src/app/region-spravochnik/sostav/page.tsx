@@ -79,7 +79,11 @@ const SostavPage = () => {
       <div className="px-10 py-5">
         <Pagination pageCount={sostavList?.meta.pageCount ?? 0} />
       </div>
-      <SostavDialog data={selected} open={toggle.isOpen} onChangeOpen={toggle.setIsOpen} />
+      <SostavDialog
+        data={selected}
+        open={toggle.isOpen}
+        onChangeOpen={toggle.setIsOpen}
+      />
     </>
   )
 }

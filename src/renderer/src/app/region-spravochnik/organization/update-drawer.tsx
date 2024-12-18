@@ -121,7 +121,10 @@ const UpdateOrganizationDrawer = () => {
   }
 
   return (
-    <Drawer open={!!parentId} onOpenChange={() => setParentId(null)}>
+    <Drawer
+      open={!!parentId}
+      onOpenChange={() => setParentId(null)}
+    >
       <DrawerContent>
         <DrawerHeader>
           <DrawerTitle>Организация</DrawerTitle>
@@ -135,11 +138,17 @@ const UpdateOrganizationDrawer = () => {
               formActions={
                 <DrawerFooter>
                   <div className="flex flex-row gap-5">
-                    <Button disabled={isFetching || isUpdating} type="submit">
+                    <Button
+                      disabled={isFetching || isUpdating}
+                      type="submit"
+                    >
                       Сохранить
                     </Button>
                     <DrawerClose>
-                      <Button type="button" variant="outline">
+                      <Button
+                        type="button"
+                        variant="outline"
+                      >
                         Отменить
                       </Button>
                     </DrawerClose>

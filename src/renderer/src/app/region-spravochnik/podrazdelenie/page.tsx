@@ -80,7 +80,11 @@ const SubdivisionPage = () => {
       <div className="px-10 py-5">
         <Pagination pageCount={subdivisions?.meta.pageCount ?? 0} />
       </div>
-      <SubdivisionDialog data={selected} open={toggle.isOpen} onChangeOpen={toggle.setIsOpen} />
+      <SubdivisionDialog
+        data={selected}
+        open={toggle.isOpen}
+        onChangeOpen={toggle.setIsOpen}
+      />
     </>
   )
 }

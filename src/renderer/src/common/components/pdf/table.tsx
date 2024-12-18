@@ -6,7 +6,10 @@ import { mergeStyles } from '@/common/lib/utils'
 
 const Table = (props: PropsWithChildren<ViewProps>) => {
   return (
-    <View {...props} style={mergeStyles([styles.table, props.style])}>
+    <View
+      {...props}
+      style={mergeStyles([styles.table, props.style])}
+    >
       {props.children}
     </View>
   )
@@ -14,7 +17,10 @@ const Table = (props: PropsWithChildren<ViewProps>) => {
 
 const TableRow = (props: PropsWithChildren<ViewProps>) => {
   return (
-    <View {...props} style={mergeStyles([styles.row, props.style])}>
+    <View
+      {...props}
+      style={mergeStyles([styles.row, props.style])}
+    >
       {props.children}
     </View>
   )
@@ -22,7 +28,10 @@ const TableRow = (props: PropsWithChildren<ViewProps>) => {
 
 const TableColumn = (props: PropsWithChildren<ViewProps>) => {
   return (
-    <View {...props} style={mergeStyles([styles.column, props.style])}>
+    <View
+      {...props}
+      style={mergeStyles([styles.column, props.style])}
+    >
       {props.children}
     </View>
   )
@@ -30,7 +39,10 @@ const TableColumn = (props: PropsWithChildren<ViewProps>) => {
 
 const TableCell = (props: PropsWithChildren<TextProps>) => {
   return (
-    <Text {...props} style={mergeStyles([styles.cell, props.style])}>
+    <Text
+      {...props}
+      style={mergeStyles([styles.cell, props.style])}
+    >
       {props.children}
     </Text>
   )
@@ -38,7 +50,10 @@ const TableCell = (props: PropsWithChildren<TextProps>) => {
 
 const TableCellView = (props: PropsWithChildren<ViewProps>) => {
   return (
-    <View {...props} style={mergeStyles([styles.cell, props.style])}>
+    <View
+      {...props}
+      style={mergeStyles([styles.cell, props.style])}
+    >
       {props.children}
     </View>
   )

@@ -86,7 +86,11 @@ const PereotsenkaPage = () => {
       <div className="px-10 py-5">
         <Pagination pageCount={pereotsenkaList?.meta.pageCount ?? 0} />
       </div>
-      <PereotsenkaDialog data={selected} open={dialogToggle.isOpen} onClose={dialogToggle.close} />
+      <PereotsenkaDialog
+        data={selected}
+        open={dialogToggle.isOpen}
+        onClose={dialogToggle.close}
+      />
       <PereotsenkaBatchCreateDialog
         open={batchDialogToggle.isOpen}
         onClose={batchDialogToggle.close}

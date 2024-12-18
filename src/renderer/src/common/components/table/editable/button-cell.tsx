@@ -6,7 +6,12 @@ export const EditableButtonCell = (props: EditableButtonCellProps) => {
   const { children, ...restProps } = props
   return (
     <TableCell className="p-1 flex items-center justify-center">
-      <Button type="button" variant="ghost" size="icon" {...restProps}>
+      <Button
+        type="button"
+        variant="ghost"
+        size="icon"
+        {...restProps}
+      >
         {children}
       </Button>
     </TableCell>

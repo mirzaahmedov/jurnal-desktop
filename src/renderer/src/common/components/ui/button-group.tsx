@@ -29,7 +29,10 @@ const ButtonGroup = ({
   ...props
 }: HTMLAttributes<HTMLDivElement> & VariantProps<typeof buttonGroupVariants>) => {
   return (
-    <div className={cn(buttonGroupVariants({ direction, borderStyle }), className)} {...props}>
+    <div
+      className={cn(buttonGroupVariants({ direction, borderStyle }), className)}
+      {...props}
+    >
       {children}
     </div>
   )

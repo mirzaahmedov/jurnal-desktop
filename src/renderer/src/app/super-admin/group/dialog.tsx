@@ -118,7 +118,10 @@ const GroupDialog = (props: GroupDialogProps) => {
   })
 
   return (
-    <Dialog open={open} onOpenChange={onClose}>
+    <Dialog
+      open={open}
+      onOpenChange={onClose}
+    >
       <DialogContent>
         <DialogHeader>
           <DialogTitle>{data ? 'Изменить' : 'Добавить'} группу</DialogTitle>
@@ -130,7 +133,10 @@ const GroupDialog = (props: GroupDialogProps) => {
                 name="group_number"
                 control={form.control}
                 render={({ field }) => (
-                  <FormElement label="Номер группы" grid="1:2">
+                  <FormElement
+                    label="Номер группы"
+                    grid="1:2"
+                  >
                     <Input {...field} />
                   </FormElement>
                 )}
@@ -140,7 +146,10 @@ const GroupDialog = (props: GroupDialogProps) => {
                 name="name"
                 control={form.control}
                 render={({ field }) => (
-                  <FormElement label="Наименования" grid="1:2">
+                  <FormElement
+                    label="Наименования"
+                    grid="1:2"
+                  >
                     <Input {...field} />
                   </FormElement>
                 )}
@@ -150,7 +159,10 @@ const GroupDialog = (props: GroupDialogProps) => {
                 name="schet"
                 control={form.control}
                 render={({ field }) => (
-                  <FormElement label="Счет" grid="1:2">
+                  <FormElement
+                    label="Счет"
+                    grid="1:2"
+                  >
                     <Input {...field} />
                   </FormElement>
                 )}
@@ -160,8 +172,14 @@ const GroupDialog = (props: GroupDialogProps) => {
                 name="iznos_foiz"
                 control={form.control}
                 render={({ field }) => (
-                  <FormElement label="Износ (%)" grid="1:2">
-                    <Input type="number" {...field} />
+                  <FormElement
+                    label="Износ (%)"
+                    grid="1:2"
+                  >
+                    <Input
+                      type="number"
+                      {...field}
+                    />
                   </FormElement>
                 )}
               />
@@ -187,7 +205,10 @@ const GroupDialog = (props: GroupDialogProps) => {
                 name="provodka_debet"
                 control={form.control}
                 render={({ field }) => (
-                  <FormElement label="Дебет" grid="1:2">
+                  <FormElement
+                    label="Дебет"
+                    grid="1:2"
+                  >
                     <Input {...field} />
                   </FormElement>
                 )}
@@ -197,14 +218,20 @@ const GroupDialog = (props: GroupDialogProps) => {
                 name="provodka_kredit"
                 control={form.control}
                 render={({ field }) => (
-                  <FormElement label="Кредит" grid="1:2">
+                  <FormElement
+                    label="Кредит"
+                    grid="1:2"
+                  >
                     <Input {...field} />
                   </FormElement>
                 )}
               />
             </div>
             <DialogFooter className="mt-5">
-              <Button type="submit" disabled={isCreating || isUpdating}>
+              <Button
+                type="submit"
+                disabled={isCreating || isUpdating}
+              >
                 {data ? 'Изменить' : 'Добавить'}
               </Button>
             </DialogFooter>

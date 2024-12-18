@@ -34,7 +34,10 @@ export const SearchField = (props: SearchFieldProps) => {
   }, [setSearch, interim])
 
   return (
-    <div {...rest} className={cn('flex justify-end items-center gap-2.5 px-10', className)}>
+    <div
+      {...rest}
+      className={cn('flex justify-end items-center gap-2.5 px-10', className)}
+    >
       <div className="relative w-full max-w-xs">
         <Input
           name="search"

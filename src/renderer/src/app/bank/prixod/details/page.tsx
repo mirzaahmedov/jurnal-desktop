@@ -196,11 +196,17 @@ const BankPrixodDetailsPage = () => {
           <form onSubmit={onSubmit}>
             <div>
               <div className="flex">
-                <DocumentFields tabIndex={1} form={form} />
+                <DocumentFields
+                  tabIndex={1}
+                  form={form}
+                />
               </div>
 
               <div className="grid grid-cols-2 items-start border-y divide-x divide-border/50 border-border/50">
-                <MainSchetFields main_schet={main_schet?.data} name="Данные получателя" />
+                <MainSchetFields
+                  main_schet={main_schet?.data}
+                  name="Данные получателя"
+                />
                 <OrganizationFields
                   tabIndex={2}
                   error={form.formState.errors.id_spravochnik_organization}
@@ -221,7 +227,10 @@ const BankPrixodDetailsPage = () => {
               </div>
 
               <div className="-mt-5 p-5">
-                <OpisanieFields tabIndex={4} form={form} />
+                <OpisanieFields
+                  tabIndex={4}
+                  form={form}
+                />
               </div>
             </div>
             <DetailsView.Footer>
@@ -229,7 +238,10 @@ const BankPrixodDetailsPage = () => {
             </DetailsView.Footer>
           </form>
         </Form>
-        <Fieldset name="Подводка" className="flex-1 mt-5 pb-24 bg-slate-50">
+        <Fieldset
+          name="Подводка"
+          className="flex-1 mt-5 pb-24 bg-slate-50"
+        >
           <EditableTable
             tabIndex={5}
             columns={podvodkaColumns}

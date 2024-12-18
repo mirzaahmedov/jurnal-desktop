@@ -81,7 +81,11 @@ const OperationTypePage = () => {
       <div className="px-10 py-5">
         <Pagination pageCount={operationTypes?.meta.pageCount ?? 0} />
       </div>
-      <OperationTypeDialog data={selected} open={toggle.isOpen} onChangeOpen={toggle.setIsOpen} />
+      <OperationTypeDialog
+        data={selected}
+        open={toggle.isOpen}
+        onChangeOpen={toggle.setIsOpen}
+      />
     </>
   )
 }

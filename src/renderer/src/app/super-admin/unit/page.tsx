@@ -68,7 +68,11 @@ const UnitPage = () => {
           onDelete={handleClickDelete}
         />
       </ListView.Content>
-      <UnitDialog data={selected} open={toggle.isOpen} onChangeOpen={toggle.setIsOpen} />
+      <UnitDialog
+        data={selected}
+        open={toggle.isOpen}
+        onChangeOpen={toggle.setIsOpen}
+      />
     </ListView>
   )
 }

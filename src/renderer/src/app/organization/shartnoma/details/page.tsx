@@ -186,11 +186,17 @@ const OrganizationDetailsPage = () => {
           <form onSubmit={onSubmit}>
             <div>
               <div className="flex">
-                <DocumentFields tabIndex={1} form={form} />
+                <DocumentFields
+                  tabIndex={1}
+                  form={form}
+                />
               </div>
 
               <div className="grid grid-cols-2 gap-10">
-                <SummaEditableFields tabIndex={2} form={form} />
+                <SummaEditableFields
+                  tabIndex={2}
+                  form={form}
+                />
                 <SmetaFields
                   tabIndex={3}
                   error={form.formState.errors.smeta_id}
@@ -199,12 +205,21 @@ const OrganizationDetailsPage = () => {
               </div>
 
               <div className="p-5">
-                <OpisanieFields form={form} className="pt-0" />
+                <OpisanieFields
+                  form={form}
+                  className="pt-0"
+                />
               </div>
 
               <div className="grid grid-cols-2 gap-10">
-                <PudratchiFields form={form} className="pt-0" />
-                <ShartnomaKindFields form={form} className="pt-0" />
+                <PudratchiFields
+                  form={form}
+                  className="pt-0"
+                />
+                <ShartnomaKindFields
+                  form={form}
+                  className="pt-0"
+                />
               </div>
             </div>
 

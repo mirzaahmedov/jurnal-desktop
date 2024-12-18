@@ -13,7 +13,10 @@ const PodotchetFields: FormSpravochnikFieldsComponent<Podotchet> = ({
 }) => {
   const { inputRef, ...spravochnikProps } = spravochnik
   return (
-    <SpravochnikFields {...props} name={name ?? 'Подотчетное лицо'}>
+    <SpravochnikFields
+      {...props}
+      name={name ?? 'Подотчетное лицо'}
+    >
       <div className="grid grid-cols-2 gap-5">
         <SpravochnikField
           {...spravochnikProps}

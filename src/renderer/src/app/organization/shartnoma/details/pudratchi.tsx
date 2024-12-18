@@ -9,7 +9,10 @@ import { cn } from '@/common/lib/utils'
 
 const PudratchiFields: FormEditableFieldsComponent<ShartnomaForm> = ({ form, name, ...props }) => {
   return (
-    <Fieldset {...props} name={name ?? ''}>
+    <Fieldset
+      {...props}
+      name={name ?? ''}
+    >
       <div className="flex items-start gap-5">
         <FormField
           name="pudratchi_bool"

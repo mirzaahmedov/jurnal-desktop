@@ -36,7 +36,10 @@ export const DemoPage = () => {
         <DialogHeader className="flex-0 p-5 flex items-center flex-row gap-5">
           <DialogTitle>Смета справочник</DialogTitle>
           <div>
-            <SmetaFilter value={group} onChange={setGroup} />
+            <SmetaFilter
+              value={group}
+              onChange={setGroup}
+            />
           </div>
         </DialogHeader>
         {error ? (

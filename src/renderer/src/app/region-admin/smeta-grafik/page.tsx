@@ -77,7 +77,11 @@ const SmetaGrafikPage = () => {
       <div className="px-10 py-5">
         <Pagination pageCount={smetaGrafikList?.meta?.pageCount ?? 0} />
       </div>
-      <SmetaGrafikDialog data={selected} open={active} onClose={close} />
+      <SmetaGrafikDialog
+        data={selected}
+        open={active}
+        onClose={close}
+      />
     </>
   )
 }

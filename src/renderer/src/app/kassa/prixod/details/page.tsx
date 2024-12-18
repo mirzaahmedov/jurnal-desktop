@@ -176,7 +176,10 @@ const KassaPrixodDetailsPage = () => {
           <form onSubmit={onSubmit}>
             <div>
               <div className="flex">
-                <DocumentFields tabIndex={1} form={form} />
+                <DocumentFields
+                  tabIndex={1}
+                  form={form}
+                />
               </div>
 
               <div className="grid grid-cols-2 items-start border-y divide-x divide-border/50 border-border/50">
@@ -189,7 +192,10 @@ const KassaPrixodDetailsPage = () => {
               </div>
 
               <div className="mt-5 px-5">
-                <OpisanieFields tabIndex={3} form={form} />
+                <OpisanieFields
+                  tabIndex={3}
+                  form={form}
+                />
               </div>
             </div>
 
@@ -234,7 +240,10 @@ const KassaPrixodDetailsPage = () => {
             </DetailsView.Footer>
           </form>
         </Form>
-        <Fieldset name="Подводка" className="flex-1 mt-5 pb-24 bg-slate-50">
+        <Fieldset
+          name="Подводка"
+          className="flex-1 mt-5 pb-24 bg-slate-50"
+        >
           <EditableTable
             tabIndex={4}
             columns={podvodkaColumns}

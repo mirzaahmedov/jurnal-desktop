@@ -28,7 +28,10 @@ export type EditableTableHeaderProps = TableHTMLAttributes<HTMLTableSectionEleme
 export const EditableTableHeader = (props: EditableTableHeaderProps) => {
   const { children, className, ...rest } = props
   return (
-    <TableHeader className={cn('bg-slate-50 divide-x divide-gray-200', className)} {...rest}>
+    <TableHeader
+      className={cn('bg-slate-50 divide-x divide-gray-200', className)}
+      {...rest}
+    >
       {children}
     </TableHeader>
   )
@@ -44,7 +47,10 @@ export type EditableTableHeadProps = TableHTMLAttributes<HTMLTableCellElement> &
 export const EditableTableHead = (props: EditableTableHeadProps) => {
   const { children, className, ...rest } = props
   return (
-    <TableHead className={cn('px-2.5 py-3', className)} {...rest}>
+    <TableHead
+      className={cn('px-2.5 py-3', className)}
+      {...rest}
+    >
       {children}
     </TableHead>
   )
@@ -67,7 +73,12 @@ export const EditableTableCreateRow = (props: EditableTableCreateRowProps) => {
   return (
     <EditableTableRow>
       <EditableTableCell colSpan={100}>
-        <Button variant="ghost" type="submit" className="w-full" {...props}>
+        <Button
+          variant="ghost"
+          type="submit"
+          className="w-full"
+          {...props}
+        >
           <Plus className="btn-icon" /> Добавить
         </Button>
       </EditableTableCell>

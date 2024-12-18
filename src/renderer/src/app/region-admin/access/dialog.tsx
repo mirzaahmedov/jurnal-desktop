@@ -105,7 +105,10 @@ const AccessDialog = (props: AccessDialogProps) => {
   })
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog
+      open={open}
+      onOpenChange={onOpenChange}
+    >
       <DialogContent className="max-w-screen-md">
         <DialogTitle>Доступ для "{access?.data.role_name}"</DialogTitle>
         <div className="relative">
@@ -138,7 +141,10 @@ const AccessDialog = (props: AccessDialogProps) => {
                 ))}
               </div>
               <DialogFooter>
-                <Button type="submit" disabled={isFetching || isPending}>
+                <Button
+                  type="submit"
+                  disabled={isFetching || isPending}
+                >
                   Изменить
                 </Button>
               </DialogFooter>

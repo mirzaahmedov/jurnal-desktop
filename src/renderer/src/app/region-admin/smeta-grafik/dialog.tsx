@@ -140,18 +140,27 @@ const SmetaGrafikDialog = (props: SmetaGrafikDialogProps) => {
   }, [values])
 
   return (
-    <Dialog open={open} onOpenChange={onClose}>
+    <Dialog
+      open={open}
+      onOpenChange={onClose}
+    >
       <DialogContent className="h-full max-h-[700px] flex flex-col">
         <DialogHeader>
           <DialogTitle>{data ? 'Изменить' : 'Добавить'} график сметы</DialogTitle>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={onSubmit} className="mt-5 space-y-6 overflow-y-auto noscroll-bar p-1">
+          <form
+            onSubmit={onSubmit}
+            className="mt-5 space-y-6 overflow-y-auto noscroll-bar p-1"
+          >
             <FormField
               name="year"
               control={form.control}
               render={({ field }) => (
-                <FormElement direction="column" label="Год">
+                <FormElement
+                  direction="column"
+                  label="Год"
+                >
                   <NumericFormat
                     {...field}
                     autoFocus
@@ -171,7 +180,10 @@ const SmetaGrafikDialog = (props: SmetaGrafikDialogProps) => {
               name="smeta_id"
               control={form.control}
               render={({ field }) => (
-                <FormElement direction="column" label="Смета">
+                <FormElement
+                  direction="column"
+                  label="Смета"
+                >
                   <SpravochnikInput
                     className="col-span-4"
                     {...field}
@@ -198,7 +210,10 @@ const SmetaGrafikDialog = (props: SmetaGrafikDialogProps) => {
                   name={name}
                   control={form.control}
                   render={({ field }) => (
-                    <FormElement direction="column" label={label}>
+                    <FormElement
+                      direction="column"
+                      label={label}
+                    >
                       <NumericInput
                         {...field}
                         value={field.value || ''}
@@ -214,7 +229,10 @@ const SmetaGrafikDialog = (props: SmetaGrafikDialogProps) => {
               <h4 className="font-bold text-start">
                 Сумма: {formatNumber(roundNumberToTwoDecimalPlaces(summa))}
               </h4>
-              <Button type="submit" disabled={isCreating || isUpdating}>
+              <Button
+                type="submit"
+                disabled={isCreating || isUpdating}
+              >
                 {data ? 'Изменить' : 'Добавить'}
               </Button>
             </DialogFooter>

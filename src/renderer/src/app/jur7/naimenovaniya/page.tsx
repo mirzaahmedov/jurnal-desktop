@@ -86,7 +86,11 @@ const NaimenovaniePage = () => {
       <div className="p-5">
         <Pagination pageCount={denominationList?.meta?.pageCount ?? 0} />
       </div>
-      <DenominationDialog data={selected} open={active} onClose={close} />
+      <DenominationDialog
+        data={selected}
+        open={active}
+        onClose={close}
+      />
     </>
   )
 }

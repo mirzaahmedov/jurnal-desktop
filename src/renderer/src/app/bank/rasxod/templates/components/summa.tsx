@@ -7,7 +7,10 @@ const Summa = ({ summa }: SummaProps) => {
   return (
     <Flex>
       <Label style={{ width: 100 }}>Summa</Label>
-      <TextBox fullWidth style={{ fontWeight: 'bold' }}>
+      <TextBox
+        fullWidth
+        style={{ fontWeight: 'bold' }}
+      >
         {summa}
       </TextBox>
     </Flex>

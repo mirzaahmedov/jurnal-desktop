@@ -10,7 +10,10 @@ type DetailsPageProps = HTMLAttributes<HTMLElement> & {
 }
 const DetailsPage = ({ children, className, loading, ...props }: DetailsPageProps) => {
   return (
-    <div {...props} className={cn('h-full relative flex flex-col', className)}>
+    <div
+      {...props}
+      className={cn('h-full relative flex flex-col', className)}
+    >
       {loading ? (
         <div className="h-full flex items-center justify-center">
           <LoadingSpinner />

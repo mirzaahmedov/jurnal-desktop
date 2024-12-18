@@ -1,4 +1,6 @@
 singleQuote: true
+bracketSameLine: false
+singleAttributePerLine: true
 semi: false
 printWidth: 100
 trailingComma: none

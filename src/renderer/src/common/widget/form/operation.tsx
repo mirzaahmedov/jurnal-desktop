@@ -18,9 +18,16 @@ const OperationFields: FormSpravochnikFieldsComponent<Operatsii> = ({
   ...props
 }) => {
   return (
-    <Fieldset {...props} name={name ?? 'Операция'}>
+    <Fieldset
+      {...props}
+      name={name ?? 'Операция'}
+    >
       <div className="flex items-center gap-5 flex-wrap">
-        <FormElement label="Названия" className="w-full flex-1" message={errorMessage}>
+        <FormElement
+          label="Названия"
+          className="w-full flex-1"
+          message={errorMessage}
+        >
           <SpravochnikInput
             readOnly
             tabIndex={tabIndex}
@@ -33,7 +40,11 @@ const OperationFields: FormSpravochnikFieldsComponent<Operatsii> = ({
           />
         </FormElement>
 
-        <FormElement label="Счет/Субсчет" className="flex-1 w-full" message={errorMessage}>
+        <FormElement
+          label="Счет/Субсчет"
+          className="flex-1 w-full"
+          message={errorMessage}
+        >
           <SpravochnikInput
             readOnly
             tabIndex={-1}

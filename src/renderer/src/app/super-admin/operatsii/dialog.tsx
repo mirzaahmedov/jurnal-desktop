@@ -123,7 +123,10 @@ const OperatsiiDialog = (props: OperatsiiDialogProps) => {
   }, [form, open, filters.type_schet])
 
   return (
-    <Dialog open={open} onOpenChange={onChangeOpen}>
+    <Dialog
+      open={open}
+      onOpenChange={onChangeOpen}
+    >
       <DialogContent className="max-w-xl">
         <DialogHeader>
           <DialogTitle>{data ? 'Изменить' : 'Добавить'} операцию</DialogTitle>
@@ -139,7 +142,10 @@ const OperatsiiDialog = (props: OperatsiiDialogProps) => {
                     <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
                       <FormLabel className="text-right col-span-2">Название</FormLabel>
                       <FormControl>
-                        <Input className="col-span-4" {...field} />
+                        <Input
+                          className="col-span-4"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage className="text-end col-span-6" />
                     </div>
@@ -155,7 +161,10 @@ const OperatsiiDialog = (props: OperatsiiDialogProps) => {
                     <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
                       <FormLabel className="text-right col-span-2">Счет</FormLabel>
                       <FormControl>
-                        <Input className="col-span-4" {...field} />
+                        <Input
+                          className="col-span-4"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage className="text-end col-span-6" />
                     </div>
@@ -171,7 +180,10 @@ const OperatsiiDialog = (props: OperatsiiDialogProps) => {
                     <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
                       <FormLabel className="text-right col-span-2">Субсчет</FormLabel>
                       <FormControl>
-                        <Input className="col-span-4" {...field} />
+                        <Input
+                          className="col-span-4"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage className="text-end col-span-6" />
                     </div>
@@ -224,7 +236,10 @@ const OperatsiiDialog = (props: OperatsiiDialogProps) => {
               />
             </div>
             <DialogFooter>
-              <Button type="submit" disabled={isCreating || isUpdating}>
+              <Button
+                type="submit"
+                disabled={isCreating || isUpdating}
+              >
                 {data ? 'Изменить' : 'Добавить'}
               </Button>
             </DialogFooter>

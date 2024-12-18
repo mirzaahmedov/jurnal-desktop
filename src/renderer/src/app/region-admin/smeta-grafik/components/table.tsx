@@ -163,7 +163,10 @@ const SmetaTable = ({ isLoading, data, onEdit, onDelete }: SmetaTableProps) => {
       className="relative w-full overflow-x-auto noscroll-bar"
     >
       {isLoading ? <LoadingOverlay /> : null}
-      <Table ref={tableRef} className="border-separate border-spacing-0 overflow-clip h-px">
+      <Table
+        ref={tableRef}
+        className="border-separate border-spacing-0 overflow-clip h-px"
+      >
         <TableHeader>
           <SmetaTableRow>
             {columns.map((column) => {
@@ -216,7 +219,11 @@ const SmetaTable = ({ isLoading, data, onEdit, onDelete }: SmetaTableProps) => {
                         className={column.className}
                       >
                         {column.cellElement ? (
-                          <column.cellElement row={row} onEdit={onEdit} onDelete={onDelete} />
+                          <column.cellElement
+                            row={row}
+                            onEdit={onEdit}
+                            onDelete={onDelete}
+                          />
                         ) : !column.alphanumeric ? (
                           formatNumber(Number(row[column.key as keyof SmetaGrafik] || '0'))
                         ) : (
@@ -247,7 +254,11 @@ const SmetaTable = ({ isLoading, data, onEdit, onDelete }: SmetaTableProps) => {
                       className={column.className}
                     >
                       {column.cellElement ? (
-                        <column.cellElement row={row} onEdit={onEdit} onDelete={onDelete} />
+                        <column.cellElement
+                          row={row}
+                          onEdit={onEdit}
+                          onDelete={onDelete}
+                        />
                       ) : !column.alphanumeric ? (
                         formatNumber(Number(row[column.key as keyof SmetaGrafik] || '0'))
                       ) : (
@@ -260,7 +271,10 @@ const SmetaTable = ({ isLoading, data, onEdit, onDelete }: SmetaTableProps) => {
             ))
           ) : (
             <SmetaTableRow className="pointer-events-none">
-              <SmetaTableCell className="w-full text-center py-20 text-slate-400" colSpan={1000}>
+              <SmetaTableCell
+                className="w-full text-center py-20 text-slate-400"
+                colSpan={1000}
+              >
                 Нет данных для отображения
               </SmetaTableCell>
             </SmetaTableRow>

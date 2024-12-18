@@ -33,7 +33,10 @@ const OrganizationForm = ({ form, formActions, onSubmit }: OrganizationFormProps
             name="name"
             control={form.control}
             render={({ field }) => (
-              <FormElement grid="2:4" label="Название">
+              <FormElement
+                grid="2:4"
+                label="Название"
+              >
                 <Input {...field} />
               </FormElement>
             )}
@@ -43,7 +46,10 @@ const OrganizationForm = ({ form, formActions, onSubmit }: OrganizationFormProps
             name="inn"
             control={form.control}
             render={({ field }) => (
-              <FormElement grid="2:4" label="ИНН">
+              <FormElement
+                grid="2:4"
+                label="ИНН"
+              >
                 <Input {...field} />
               </FormElement>
             )}
@@ -53,7 +59,10 @@ const OrganizationForm = ({ form, formActions, onSubmit }: OrganizationFormProps
             name="mfo"
             control={form.control}
             render={({ field }) => (
-              <FormElement grid="2:4" label="МФО">
+              <FormElement
+                grid="2:4"
+                label="МФО"
+              >
                 <AutoComplete
                   isFetching={isFetching}
                   disabled={search === ''}
@@ -93,7 +102,10 @@ const OrganizationForm = ({ form, formActions, onSubmit }: OrganizationFormProps
             name="bank_klient"
             control={form.control}
             render={({ field }) => (
-              <FormElement grid="2:4" label="Название банка">
+              <FormElement
+                grid="2:4"
+                label="Название банка"
+              >
                 <FormControl>
                   <AutoComplete
                     isFetching={isFetching}
@@ -134,7 +146,10 @@ const OrganizationForm = ({ form, formActions, onSubmit }: OrganizationFormProps
             name="raschet_schet"
             control={form.control}
             render={({ field }) => (
-              <FormElement grid="2:4" label="Расчетный счет">
+              <FormElement
+                grid="2:4"
+                label="Расчетный счет"
+              >
                 <Input {...field} />
               </FormElement>
             )}
@@ -144,7 +159,10 @@ const OrganizationForm = ({ form, formActions, onSubmit }: OrganizationFormProps
             name="raschet_schet_gazna"
             control={form.control}
             render={({ field }) => (
-              <FormElement grid="2:4" label="Расчетный счет газна">
+              <FormElement
+                grid="2:4"
+                label="Расчетный счет газна"
+              >
                 <Input {...field} />
               </FormElement>
             )}
@@ -154,7 +172,10 @@ const OrganizationForm = ({ form, formActions, onSubmit }: OrganizationFormProps
             name="okonx"
             control={form.control}
             render={({ field }) => (
-              <FormElement grid="2:4" label="Оконкс">
+              <FormElement
+                grid="2:4"
+                label="Оконкс"
+              >
                 <Input {...field} />
               </FormElement>
             )}

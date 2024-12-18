@@ -1,5 +1,5 @@
 import type { ApiEndpoints, CRUDService } from '@/common/features/crud'
-import type { ComponentType, ReactNode, RefObject } from 'react'
+import type { ComponentType, RefObject } from 'react'
 import type { FilterComponentProps, SpravochnikStoreType } from './store'
 import { useCallback, useEffect, useId, useLayoutEffect, useRef, useState } from 'react'
 
@@ -21,13 +21,14 @@ export type SpravochnikHookOptions<T extends { id: number }> = SpravochnikHookCa
   enabled?: boolean
   params?: Record<string, unknown>
   filters?: ComponentType<FilterComponentProps>[]
+  defaultFilters?: Record<string, unknown>
   search?: boolean
-  renderTable?: (props: {
+  CustomTable?: (props: {
     data: T[]
     columns: ColumnDef<T>[]
     selectedRowId?: string
     onClickRow(row: T): void
-  }) => ReactNode
+  }) => JSX.Element
 }
 
 export type UseSpravochnikReturn<T> = {
@@ -96,10 +97,11 @@ export const useSpravochnik = <T extends { id: number }>(
       title: options.title ?? 'Выберите',
       endpoint: options.endpoint,
       filters: options.filters,
+      defaultFilters: options.defaultFilters,
       params: options.params,
       columns: options.columns,
       service: options.service,
-      renderTable: options.renderTable
+      CustomTable: options.CustomTable
     })
     setSelectId((id, data) => {
       setSelectedId(id)
@@ -118,7 +120,7 @@ export const useSpravochnik = <T extends { id: number }>(
     options.endpoint,
     options.filters,
     options.params,
-    options.renderTable,
+    options.CustomTable,
     open,
     close,
     setSpravochnik,

@@ -36,24 +36,36 @@ const SelectFieldComponent = <T extends Record<string, unknown>>(
     ...rest
   } = props
   return (
-    <Select {...rest} disabled={disabled || options.length === 0}>
+    <Select
+      {...rest}
+      disabled={disabled || options.length === 0}
+    >
       {withFormControl ? (
         <FormControl>
           <SelectTrigger
             className={cn('shadow-none focus:ring-2 focus:ring-brand', triggerClassName)}
           >
-            <SelectValue placeholder={placeholder} ref={ref} />
+            <SelectValue
+              placeholder={placeholder}
+              ref={ref}
+            />
           </SelectTrigger>
         </FormControl>
       ) : (
         <SelectTrigger className={cn('shadow-none', triggerClassName)}>
-          <SelectValue placeholder={placeholder} ref={ref} />
+          <SelectValue
+            placeholder={placeholder}
+            ref={ref}
+          />
         </SelectTrigger>
       )}
 
       <SelectContent>
         {options.map((option) => (
-          <SelectItem key={getOptionValue(option)} value={String(getOptionValue(option))}>
+          <SelectItem
+            key={getOptionValue(option)}
+            value={String(getOptionValue(option))}
+          >
             {getOptionLabel(option)}
           </SelectItem>
         ))}

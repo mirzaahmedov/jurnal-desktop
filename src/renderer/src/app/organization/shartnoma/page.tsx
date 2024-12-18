@@ -98,7 +98,10 @@ const ShartnomaPage = () => {
         />
       </ListView.Content>
       <ListView.Footer>
-        <ListView.Pagination {...pagination} pageCount={shartnomaList?.meta.pageCount ?? 0} />
+        <ListView.Pagination
+          {...pagination}
+          pageCount={shartnomaList?.meta.pageCount ?? 0}
+        />
       </ListView.Footer>
     </ListView>
   )

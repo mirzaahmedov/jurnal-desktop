@@ -9,7 +9,10 @@ type SpravochnikFieldsProps = PropsWithChildren<
 >
 const SpravochnikFields = ({ name, children, ...props }: SpravochnikFieldsProps) => {
   return (
-    <Fieldset {...props} name={name}>
+    <Fieldset
+      {...props}
+      name={name}
+    >
       {children}
     </Fieldset>
   )

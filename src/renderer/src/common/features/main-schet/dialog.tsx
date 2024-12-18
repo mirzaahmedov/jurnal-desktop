@@ -74,7 +74,10 @@ export const MainSchetDialog = (props: MainSchetDialogProps) => {
   }, [form, open, main_schet])
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog
+      open={open}
+      onOpenChange={onOpenChange}
+    >
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Выберите основной счет</DialogTitle>
@@ -130,7 +133,10 @@ export const MainSchetDialog = (props: MainSchetDialogProps) => {
           ) : null}
         </Form>
         <DialogFooter>
-          <Button disabled={!form.watch('main_schet_id')} onClick={handleSubmit}>
+          <Button
+            disabled={!form.watch('main_schet_id')}
+            onClick={handleSubmit}
+          >
             Сохранить
           </Button>
         </DialogFooter>

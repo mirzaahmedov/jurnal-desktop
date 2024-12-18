@@ -5,7 +5,10 @@ type SignaturesProps = {
 }
 const Signatures = ({ type = 'order' }: SignaturesProps) => {
   return (
-    <Flex direction="column" alignItems="stretch">
+    <Flex
+      direction="column"
+      alignItems="stretch"
+    >
       <Field>
         <Label>Главный бухгалтер</Label>
         <Blank

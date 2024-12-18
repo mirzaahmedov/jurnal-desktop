@@ -10,7 +10,10 @@ type BlankProps = TextProps & {
 }
 const Blank = ({ fullWidth = false, helpText, viewProps, style, ...props }: BlankProps) => {
   return (
-    <View {...viewProps} style={mergeStyles(viewProps?.style, fullWidth ? { flex: 1 } : undefined)}>
+    <View
+      {...viewProps}
+      style={mergeStyles(viewProps?.style, fullWidth ? { flex: 1 } : undefined)}
+    >
       <Text
         {...props}
         style={mergeStyles(styles.blank, fullWidth ? { width: '100%' } : undefined, style)}

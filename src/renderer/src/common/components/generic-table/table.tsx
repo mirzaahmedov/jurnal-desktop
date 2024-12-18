@@ -84,7 +84,11 @@ export const GenericTable = <T extends Record<string, unknown>>({
               })
             : null}
           {onDelete || onEdit ? (
-            <GenericTableHead fit className="text-center" key="actions">
+            <GenericTableHead
+              fit
+              className="text-center"
+              key="actions"
+            >
               Действие
             </GenericTableHead>
           ) : null}
@@ -163,7 +167,10 @@ export const GenericTable = <T extends Record<string, unknown>>({
           ))
         ) : (
           <GenericTableRow className="pointer-events-none">
-            <GenericTableCell colSpan={100} className="w-full text-center py-20 text-slate-400">
+            <GenericTableCell
+              colSpan={100}
+              className="w-full text-center py-20 text-slate-400"
+            >
               {placeholder ?? 'Нет данных для отображения'}
             </GenericTableCell>
           </GenericTableRow>

@@ -6,7 +6,11 @@ type HeaderReceiptProps = {
 }
 const HeaderReceipt = ({ doc_num }: HeaderReceiptProps) => {
   return (
-    <Flex direction="column" alignItems="center" style={{ gap: 4 }}>
+    <Flex
+      direction="column"
+      alignItems="center"
+      style={{ gap: 4 }}
+    >
       <Text style={styles.name}>Квитанция</Text>
       <Text style={styles.description}>к приходному расходному ордеру</Text>
       <Text style={styles.name}>

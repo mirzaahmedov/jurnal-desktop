@@ -66,7 +66,11 @@ const RolePage = () => {
           onDelete={handleClickDelete}
         />
       </div>
-      <RoleDialog data={selected} open={toggle.isOpen} onChangeOpen={toggle.setIsOpen} />
+      <RoleDialog
+        data={selected}
+        open={toggle.isOpen}
+        onChangeOpen={toggle.setIsOpen}
+      />
     </>
   )
 }

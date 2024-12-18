@@ -24,7 +24,10 @@ const Sheet = ({
 }: SheetProps) => {
   return (
     <Flex.Item>
-      <Flex direction="column" alignItems="stretch">
+      <Flex
+        direction="column"
+        alignItems="stretch"
+      >
         <Header />
         <DocumentInfo
           section={section}
@@ -33,7 +36,11 @@ const Sheet = ({
           createdDate={createdDate}
           contractDetails={contractDetails}
         />
-        <Schedule article={article} data={schedule} paymentDetails={paymentDetails} />
+        <Schedule
+          article={article}
+          data={schedule}
+          paymentDetails={paymentDetails}
+        />
         <Signatures />
       </Flex>
     </Flex.Item>

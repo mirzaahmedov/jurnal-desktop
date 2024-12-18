@@ -79,7 +79,10 @@ const BankMonitorPage = () => {
           footer={
             <>
               <FooterRow>
-                <FooterCell title="Итого" colSpan={3} />
+                <FooterCell
+                  title="Итого"
+                  colSpan={3}
+                />
                 <FooterCell
                   content={formatNumber(monitorList?.meta?.prixod_sum ?? 0)}
                   colSpan={1}
@@ -100,7 +103,10 @@ const BankMonitorPage = () => {
             {formatNumber(monitorList?.meta?.summa_to ?? 0)}
           </b>
         </div>
-        <ListView.Pagination {...pagination} pageCount={monitorList?.meta.pageCount ?? 0} />
+        <ListView.Pagination
+          {...pagination}
+          pageCount={monitorList?.meta.pageCount ?? 0}
+        />
       </ListView.Footer>
     </ListView>
   )

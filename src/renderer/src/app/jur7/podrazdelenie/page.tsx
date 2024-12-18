@@ -87,7 +87,11 @@ const Subdivision7Page = () => {
       <div className="px-10 py-5">
         <Pagination pageCount={subdivision7List?.meta.pageCount ?? 0} />
       </div>
-      <Subdivision7Dialog open={active} onClose={close} data={selected} />
+      <Subdivision7Dialog
+        open={active}
+        onClose={close}
+        data={selected}
+      />
     </>
   )
 }

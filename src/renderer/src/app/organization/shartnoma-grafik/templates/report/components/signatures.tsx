@@ -3,7 +3,10 @@ import { Text } from '@react-pdf/renderer'
 
 const Signatures = () => {
   return (
-    <Flex direction="column" alignItems="stretch">
+    <Flex
+      direction="column"
+      alignItems="stretch"
+    >
       <Flex>
         <Text>М.У.</Text>
         <Flex>

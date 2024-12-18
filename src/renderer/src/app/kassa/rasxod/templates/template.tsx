@@ -24,8 +24,14 @@ const KassaRasxodOrderTemplate = ({
 }: KassaRasxodOrderTemplateProps) => {
   return (
     <Document>
-      <Page size="A4" style={styles.page}>
-        <Header doc_num={doc_num} doc_date={doc_date} />
+      <Page
+        size="A4"
+        style={styles.page}
+      >
+        <Header
+          doc_num={doc_num}
+          doc_date={doc_date}
+        />
         <View style={{ marginTop: 15 }}>
           <Summary
             fio={fio}

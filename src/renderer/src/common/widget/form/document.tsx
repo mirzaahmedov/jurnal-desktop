@@ -19,14 +19,25 @@ const DocumentFields: FormEditableFieldsComponent<RequiredDocumentFields> = ({
   ...props
 }) => {
   return (
-    <Fieldset {...props} name={name ?? 'Документ'}>
+    <Fieldset
+      {...props}
+      name={name ?? 'Документ'}
+    >
       <div className="flex items-center gap-5 flex-wrap">
         <FormField
           name="doc_num"
           control={form.control as unknown as Control<RequiredDocumentFields>}
           render={({ field }) => (
-            <FormElement label="Документ №" className="flex-1 max-w-xs">
-              <Input autoFocus tabIndex={tabIndex} disabled={disabled} {...field} />
+            <FormElement
+              label="Документ №"
+              className="flex-1 max-w-xs"
+            >
+              <Input
+                autoFocus
+                tabIndex={tabIndex}
+                disabled={disabled}
+                {...field}
+              />
             </FormElement>
           )}
         />
@@ -36,7 +47,11 @@ const DocumentFields: FormEditableFieldsComponent<RequiredDocumentFields> = ({
           control={form.control as unknown as Control<RequiredDocumentFields>}
           render={({ field }) => (
             <FormElement label="Дата проводки">
-              <DatePicker tabIndex={tabIndex} disabled={disabled} {...field} />
+              <DatePicker
+                tabIndex={tabIndex}
+                disabled={disabled}
+                {...field}
+              />
             </FormElement>
           )}
         />

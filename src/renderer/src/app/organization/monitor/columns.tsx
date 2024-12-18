@@ -43,7 +43,10 @@ const orgMonitorColumns: ColumnDef<OrganizationMonitor>[] = [
     key: 'type',
     header: 'Тип операции',
     renderCell: (row) => (
-      <Badge variant="secondary" className="text-brand bg-brand/10 pointer-events-none">
+      <Badge
+        variant="secondary"
+        className="text-brand bg-brand/10 pointer-events-none"
+      >
         {getProvodkaName(row.type)}
       </Badge>
     )

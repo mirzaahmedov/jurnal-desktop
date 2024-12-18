@@ -26,7 +26,10 @@ const Logs = () => {
         <ListView.RangeDatePicker {...dates} />
       </ListView.Header>
       <ListView.Content loading={isFetching}>
-        <GenericTable data={logList?.data ?? []} columns={logColumns} />
+        <GenericTable
+          data={logList?.data ?? []}
+          columns={logColumns}
+        />
       </ListView.Content>
     </ListView>
   )

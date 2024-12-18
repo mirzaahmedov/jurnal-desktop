@@ -95,7 +95,11 @@ const rowVariants = cva(
 export const GenericTableRow = forwardRef<HTMLTableRowElement, HTMLAttributes<HTMLTableRowElement>>(
   ({ children, ...props }, ref) => {
     return (
-      <TableRow {...props} ref={ref} className={cn(rowVariants(), props.className)}>
+      <TableRow
+        {...props}
+        ref={ref}
+        className={cn(rowVariants(), props.className)}
+      >
         {children}
       </TableRow>
     )

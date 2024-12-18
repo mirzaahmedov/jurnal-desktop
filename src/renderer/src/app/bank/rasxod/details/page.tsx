@@ -245,7 +245,10 @@ const BankRasxodDetailtsPage = () => {
           <form onSubmit={onSubmit}>
             <div>
               <div className="flex">
-                <DocumentFields tabIndex={1} form={form} />
+                <DocumentFields
+                  tabIndex={1}
+                  form={form}
+                />
               </div>
 
               <div className="grid grid-cols-2 items-start border-y divide-x divide-border/50 border-border/50">
@@ -271,10 +274,17 @@ const BankRasxodDetailtsPage = () => {
               </div>
 
               <div className="-mt-5 p-5">
-                <OpisanieFields tabIndex={4} form={form} />
+                <OpisanieFields
+                  tabIndex={4}
+                  form={form}
+                />
               </div>
               <div className="grid grid-cols-3">
-                <ManagementFields tabIndex={5} form={form} className="pt-0 col-span-2" />
+                <ManagementFields
+                  tabIndex={5}
+                  form={form}
+                  className="pt-0 col-span-2"
+                />
               </div>
             </div>
 
@@ -325,7 +335,10 @@ const BankRasxodDetailtsPage = () => {
             </DetailsView.Footer>
           </form>
         </Form>
-        <Fieldset name="Подводка" className="flex-1 mt-5 pb-24 bg-slate-50">
+        <Fieldset
+          name="Подводка"
+          className="flex-1 mt-5 pb-24 bg-slate-50"
+        >
           <EditableTable
             tabIndex={6}
             columns={podvodkaColumns}

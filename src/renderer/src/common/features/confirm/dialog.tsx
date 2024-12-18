@@ -21,17 +21,26 @@ export const ConfirmationDialog = () => {
   } = useConfirm()
 
   return (
-    <AlertDialog open={isOpen} onOpenChange={close}>
+    <AlertDialog
+      open={isOpen}
+      onOpenChange={close}
+    >
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle className="text-base">{title}</AlertDialogTitle>
           <AlertDialogDescription>{description}</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel onClick={onCancel} className="text-xs">
+          <AlertDialogCancel
+            onClick={onCancel}
+            className="text-xs"
+          >
             Отмена
           </AlertDialogCancel>
-          <AlertDialogAction onClick={onConfirm} className="text-xs">
+          <AlertDialogAction
+            onClick={onConfirm}
+            className="text-xs"
+          >
             Подтверждать
           </AlertDialogAction>
         </AlertDialogFooter>

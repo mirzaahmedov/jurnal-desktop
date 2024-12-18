@@ -9,7 +9,10 @@ import { cn } from '@/common/lib/utils'
 type ListViewProps = HTMLAttributes<HTMLDivElement>
 const ListView = ({ children, className, ...props }: ListViewProps) => {
   return (
-    <div {...props} className={cn('flex-1 min-h-0 flex flex-col', className)}>
+    <div
+      {...props}
+      className={cn('flex-1 min-h-0 flex flex-col', className)}
+    >
       {children}
     </div>
   )
@@ -17,7 +20,10 @@ const ListView = ({ children, className, ...props }: ListViewProps) => {
 
 const ListViewHeader = ({ children, className, ...props }: HTMLAttributes<HTMLDivElement>) => {
   return (
-    <div className={cn('p-5', className)} {...props}>
+    <div
+      className={cn('p-5', className)}
+      {...props}
+    >
       {children}
     </div>
   )
@@ -37,7 +43,10 @@ const ListViewContent = ({ loading, children }: ListViewContentProps) => {
 
 const ListViewFooter = ({ children, className, ...props }: HTMLAttributes<HTMLDivElement>) => {
   return (
-    <div className={cn('p-5', className)} {...props}>
+    <div
+      className={cn('p-5', className)}
+      {...props}
+    >
       {children}
     </div>
   )

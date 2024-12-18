@@ -76,10 +76,16 @@ export const ProvodkaTable = ({ form }: ProvodkaTableProps) => {
             <EditableTableHead rowSpan={2}>Цена</EditableTableHead>
             <EditableTableHead rowSpan={2}>Сумма</EditableTableHead>
             <EditableTableHead rowSpan={2}>Износь</EditableTableHead>
-            <EditableTableHead colSpan={2} className="text-center">
+            <EditableTableHead
+              colSpan={2}
+              className="text-center"
+            >
               Дебет
             </EditableTableHead>
-            <EditableTableHead colSpan={2} className="text-center">
+            <EditableTableHead
+              colSpan={2}
+              className="text-center"
+            >
               Кредит
             </EditableTableHead>
             <EditableTableHead rowSpan={2}>Дата прихода</EditableTableHead>
@@ -275,7 +281,10 @@ export const ProvodkaTable = ({ form }: ProvodkaTableProps) => {
             })
           ) : (
             <EditableTableRow>
-              <EditableTableCell colSpan={100} className="text-center">
+              <EditableTableCell
+                colSpan={100}
+                className="text-center"
+              >
                 No data available.
               </EditableTableCell>
             </EditableTableRow>

@@ -101,24 +101,36 @@ const Subdivision7Dialog = (props: Subdivision7DialogProps) => {
     form.reset(defaultValues)
   }, [form, data])
   return (
-    <Dialog open={open} onOpenChange={onClose}>
+    <Dialog
+      open={open}
+      onOpenChange={onClose}
+    >
       <DialogContent>
         <DialogHeader>
           <DialogTitle>{data ? 'Изменить' : 'Добавить'} подразделение</DialogTitle>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={onSubmit} className="mt-5">
+          <form
+            onSubmit={onSubmit}
+            className="mt-5"
+          >
             <FormField
               name="name"
               control={form.control}
               render={({ field }) => (
-                <FormElement direction="column" label="Название">
+                <FormElement
+                  direction="column"
+                  label="Название"
+                >
                   <Input {...field} />
                 </FormElement>
               )}
             />
             <DialogFooter className="mt-5">
-              <Button type="submit" disabled={isCreating || isUpdating}>
+              <Button
+                type="submit"
+                disabled={isCreating || isUpdating}
+              >
                 {data ? 'Изменить' : 'Добавить'}
               </Button>
             </DialogFooter>

@@ -22,7 +22,10 @@ export type FormDialogProps<T extends Record<string, unknown>> = {
 export const FormDialog = <T extends Record<string, unknown>>(props: FormDialogProps<T>) => {
   const { name, open, onChangeOpen, form, onSubmit, children, footer } = props
   return (
-    <Dialog open={open} onOpenChange={onChangeOpen}>
+    <Dialog
+      open={open}
+      onOpenChange={onChangeOpen}
+    >
       <DialogContent className="max-w-xl">
         <DialogHeader>
           <DialogTitle>{name}</DialogTitle>

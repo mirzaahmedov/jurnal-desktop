@@ -78,7 +78,10 @@ const AvansPage = () => {
         />
       </ListView.Content>
       <ListView.Footer>
-        <ListView.Pagination {...pagination} pageCount={avansList?.meta.pageCount ?? 0} />
+        <ListView.Pagination
+          {...pagination}
+          pageCount={avansList?.meta.pageCount ?? 0}
+        />
       </ListView.Footer>
     </ListView>
   )

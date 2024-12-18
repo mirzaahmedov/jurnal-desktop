@@ -11,6 +11,7 @@ module.exports = {
     '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/ban-types': 'off',
     'react/prop-types': 'off',
-    'no-case-declarations': 'off'
+    'no-case-declarations': 'off',
+    'prettier/prettier': 'off'
   }
 }

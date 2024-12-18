@@ -30,7 +30,11 @@ const AccessPage = () => {
 
   return (
     <>
-      <AccessDialog roleId={roleId} open={toggle.isOpen} onOpenChange={toggle.setIsOpen} />
+      <AccessDialog
+        roleId={roleId}
+        open={toggle.isOpen}
+        onOpenChange={toggle.setIsOpen}
+      />
       <GenericTable
         columns={roleColumns}
         data={roleList?.data ?? []}

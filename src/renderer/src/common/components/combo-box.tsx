@@ -17,9 +17,15 @@ type ComboboxProps = {
 const Combobox = ({ children, loading = false, options, value, onChange }: ComboboxProps) => {
   const { isOpen: active, close, setIsOpen: setActive } = useToggle()
   return (
-    <Popover open={active} onOpenChange={setActive}>
+    <Popover
+      open={active}
+      onOpenChange={setActive}
+    >
       <PopoverTrigger>{children}</PopoverTrigger>
-      <PopoverContent className="p-0" side="top">
+      <PopoverContent
+        className="p-0"
+        side="top"
+      >
         {loading ? (
           <LoadingSpinner />
         ) : (

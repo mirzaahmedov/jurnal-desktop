@@ -11,10 +11,17 @@ type ContractScheduleTemplateProps = SheetProps
 const ContractScheduleTemplate = (props: ContractScheduleTemplateProps) => {
   return (
     <Document>
-      <Page size="A4" orientation="landscape" style={styles.page}>
+      <Page
+        size="A4"
+        orientation="landscape"
+        style={styles.page}
+      >
         <Flex alignItems="stretch">
           <Sheet {...props} />
-          <Seperator vertical fullWidth />
+          <Seperator
+            vertical
+            fullWidth
+          />
           <Sheet {...props} />
         </Flex>
       </Page>

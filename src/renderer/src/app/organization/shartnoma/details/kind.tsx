@@ -13,7 +13,10 @@ const ShartnomaKindFields: FormEditableFieldsComponent<ShartnomaForm> = ({
   ...props
 }) => {
   return (
-    <Fieldset {...props} name={name ?? ''}>
+    <Fieldset
+      {...props}
+      name={name ?? ''}
+    >
       <div className="flex items-start gap-5">
         <FormField
           name="yillik_oylik"

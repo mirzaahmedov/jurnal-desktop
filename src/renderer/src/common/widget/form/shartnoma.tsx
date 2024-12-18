@@ -14,7 +14,10 @@ const ShartnomaFields: FormSpravochnikFieldsComponent<Shartnoma> = ({
 }) => {
   const { inputRef, ...spravochnikProps } = spravochnik
   return (
-    <SpravochnikFields {...props} name={name ?? 'Договор'}>
+    <SpravochnikFields
+      {...props}
+      name={name ?? 'Договор'}
+    >
       <div className="grid grid-cols-2 gap-5">
         <SpravochnikField
           {...spravochnikProps}

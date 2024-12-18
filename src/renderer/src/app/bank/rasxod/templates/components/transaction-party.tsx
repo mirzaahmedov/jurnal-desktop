@@ -10,12 +10,19 @@ type TransactionPartyProps = {
 }
 const TransactionParty = ({ type, name, raschet, inn, bank, mfo }: TransactionPartyProps) => {
   return (
-    <Flex direction="column" alignItems="stretch" style={{ gap: 2, marginTop: 4 }}>
+    <Flex
+      direction="column"
+      alignItems="stretch"
+      style={{ gap: 2, marginTop: 4 }}
+    >
       <Flex>
         <Label style={{ width: 100 }}>
           {type === 'debtor' ? 'Mablag`larni to`lovchining' : 'Mablag`larni oluvchining'} nomi
         </Label>
-        <TextBox fullWidth style={{ fontSize: 10, textDecoration: 'none' }}>
+        <TextBox
+          fullWidth
+          style={{ fontSize: 10, textDecoration: 'none' }}
+        >
           {name}
         </TextBox>
       </Flex>
@@ -24,7 +31,10 @@ const TransactionParty = ({ type, name, raschet, inn, bank, mfo }: TransactionPa
         <Label style={{ fontWeight: 'bold' }}>{type === 'debtor' ? 'DEBET' : 'KREDIT'}</Label>
       </Flex>
 
-      <Flex justifyContent="space-between" alignItems="flex-start">
+      <Flex
+        justifyContent="space-between"
+        alignItems="flex-start"
+      >
         <Label style={{ width: 100 }}>
           {type === 'debtor' ? 'Mablag`larni to`lovchining' : 'Mablag`larni oluvchining'}{' '}
           hisobvarag`i

@@ -59,21 +59,33 @@ const GenerateReportDialog = ({ schedule, open, onChange }: GenerateReportDialog
   }, [form])
 
   return (
-    <Dialog open={open} onOpenChange={onChange}>
+    <Dialog
+      open={open}
+      onOpenChange={onChange}
+    >
       <DialogContent>
         <DialogHeader>
           <DialogTitle>График оплаты</DialogTitle>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(() => {})} className="mt-4">
+          <form
+            onSubmit={form.handleSubmit(() => {})}
+            className="mt-4"
+          >
             <div className="flex flex-col gap-5">
               <div className="grid grid-cols-2 gap-4">
                 <FormField
                   control={form.control}
                   name="section"
                   render={({ field }) => (
-                    <FormElement direction="column" label="Бўлим">
-                      <Input type="number" {...field} />
+                    <FormElement
+                      direction="column"
+                      label="Бўлим"
+                    >
+                      <Input
+                        type="number"
+                        {...field}
+                      />
                     </FormElement>
                   )}
                 />
@@ -81,8 +93,14 @@ const GenerateReportDialog = ({ schedule, open, onChange }: GenerateReportDialog
                   control={form.control}
                   name="subchapter"
                   render={({ field }) => (
-                    <FormElement direction="column" label="Кичик бўлим">
-                      <Input type="number" {...field} />
+                    <FormElement
+                      direction="column"
+                      label="Кичик бўлим"
+                    >
+                      <Input
+                        type="number"
+                        {...field}
+                      />
                     </FormElement>
                   )}
                 />
@@ -90,8 +108,14 @@ const GenerateReportDialog = ({ schedule, open, onChange }: GenerateReportDialog
                   control={form.control}
                   name="chapter"
                   render={({ field }) => (
-                    <FormElement direction="column" label="Боб">
-                      <Input type="number" {...field} />
+                    <FormElement
+                      direction="column"
+                      label="Боб"
+                    >
+                      <Input
+                        type="number"
+                        {...field}
+                      />
                     </FormElement>
                   )}
                 />
@@ -99,7 +123,10 @@ const GenerateReportDialog = ({ schedule, open, onChange }: GenerateReportDialog
                   control={form.control}
                   name="payment_date"
                   render={({ field }) => (
-                    <FormElement label="Дата оплаты" direction="column">
+                    <FormElement
+                      label="Дата оплаты"
+                      direction="column"
+                    >
                       <DatePicker {...field} />
                     </FormElement>
                   )}
@@ -129,16 +156,26 @@ const GenerateReportDialog = ({ schedule, open, onChange }: GenerateReportDialog
                   <FormItem className="space-y-4">
                     <FormLabel>Процент оплаты</FormLabel>
                     <FormControl>
-                      <RadioGroup {...field} value={field.value} onValueChange={field.onChange}>
+                      <RadioGroup
+                        {...field}
+                        value={field.value}
+                        onValueChange={field.onChange}
+                      >
                         {['30', '70', '100'].map((value) => (
-                          <FormItem key={value} className="flex flex-row items-center space-x-4">
+                          <FormItem
+                            key={value}
+                            className="flex flex-row items-center space-x-4"
+                          >
                             <FormControl>
                               <RadioGroupItem value={value} />
                             </FormControl>
                             <FormLabel className="!my-0 cursor-pointer">{value}%</FormLabel>
                           </FormItem>
                         ))}
-                        <FormItem key="custom" className="flex flex-row items-center space-x-4">
+                        <FormItem
+                          key="custom"
+                          className="flex flex-row items-center space-x-4"
+                        >
                           <FormControl>
                             <RadioGroupItem value="custom" />
                           </FormControl>
@@ -155,12 +192,24 @@ const GenerateReportDialog = ({ schedule, open, onChange }: GenerateReportDialog
               <FormField
                 control={form.control}
                 name="payment_details"
-                render={({ field }) => <Textarea spellCheck={false} rows={5} {...field} />}
+                render={({ field }) => (
+                  <Textarea
+                    spellCheck={false}
+                    rows={5}
+                    {...field}
+                  />
+                )}
               />
               <FormField
                 control={form.control}
                 name="contract_details"
-                render={({ field }) => <Textarea spellCheck={false} rows={5} {...field} />}
+                render={({ field }) => (
+                  <Textarea
+                    spellCheck={false}
+                    rows={5}
+                    {...field}
+                  />
+                )}
               />
             </div>
           </form>

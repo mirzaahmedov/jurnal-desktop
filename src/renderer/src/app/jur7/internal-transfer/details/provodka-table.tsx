@@ -51,10 +51,16 @@ export const ProvodkaTable = ({ form }: ProvodkaTableProps) => {
             <EditableTableHead rowSpan={2}>Количество</EditableTableHead>
             <EditableTableHead rowSpan={2}>Цена</EditableTableHead>
             <EditableTableHead rowSpan={2}>Сумма</EditableTableHead>
-            <EditableTableHead colSpan={2} className="text-center">
+            <EditableTableHead
+              colSpan={2}
+              className="text-center"
+            >
               Дебет
             </EditableTableHead>
-            <EditableTableHead colSpan={2} className="text-center">
+            <EditableTableHead
+              colSpan={2}
+              className="text-center"
+            >
               Кредит
             </EditableTableHead>
             <EditableTableHead rowSpan={2}>Дата прихода</EditableTableHead>
@@ -70,11 +76,21 @@ export const ProvodkaTable = ({ form }: ProvodkaTableProps) => {
         <TableBody>
           {Array.isArray(form.watch('childs')) ? (
             form.watch('childs').map((row, index) => {
-              return <Provodka key={index} index={index} row={row} form={form} />
+              return (
+                <Provodka
+                  key={index}
+                  index={index}
+                  row={row}
+                  form={form}
+                />
+              )
             })
           ) : (
             <EditableTableRow>
-              <EditableTableCell colSpan={100} className="text-center">
+              <EditableTableCell
+                colSpan={100}
+                className="text-center"
+              >
                 No data available.
               </EditableTableCell>
             </EditableTableRow>

@@ -13,7 +13,10 @@ const OperatsiiFields: FormSpravochnikFieldsComponent<Operatsii> = ({
 }) => {
   const { inputRef, ...spravochnikProps } = spravochnik
   return (
-    <SpravochnikFields {...props} name={name ?? 'Операция'}>
+    <SpravochnikFields
+      {...props}
+      name={name ?? 'Операция'}
+    >
       <div className="grid grid-cols-2 gap-5">
         <SpravochnikField
           {...spravochnikProps}

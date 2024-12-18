@@ -121,7 +121,10 @@ const DenominationDialog = (props: DenominationDialogProps) => {
   })
 
   return (
-    <Dialog open={open} onOpenChange={onClose}>
+    <Dialog
+      open={open}
+      onOpenChange={onClose}
+    >
       <DialogContent>
         <DialogHeader>
           <DialogTitle>{data ? 'Изменить' : 'Добавить'} наименование</DialogTitle>
@@ -144,7 +147,10 @@ const DenominationDialog = (props: DenominationDialogProps) => {
                 name="name"
                 control={form.control}
                 render={({ field }) => (
-                  <FormElement label="Название" grid="1:2">
+                  <FormElement
+                    label="Название"
+                    grid="1:2"
+                  >
                     <Input {...field} />
                   </FormElement>
                 )}
@@ -154,7 +160,10 @@ const DenominationDialog = (props: DenominationDialogProps) => {
                 name="inventar_num"
                 control={form.control}
                 render={({ field }) => (
-                  <FormElement label="Инвентарный номер" grid="1:2">
+                  <FormElement
+                    label="Инвентарный номер"
+                    grid="1:2"
+                  >
                     <Input {...field} />
                   </FormElement>
                 )}
@@ -164,7 +173,10 @@ const DenominationDialog = (props: DenominationDialogProps) => {
                 name="serial_num"
                 control={form.control}
                 render={({ field }) => (
-                  <FormElement label="Серийный номер" grid="1:2">
+                  <FormElement
+                    label="Серийный номер"
+                    grid="1:2"
+                  >
                     <Input {...field} />
                   </FormElement>
                 )}
@@ -174,7 +186,10 @@ const DenominationDialog = (props: DenominationDialogProps) => {
                 name="edin"
                 control={form.control}
                 render={({ field }) => (
-                  <FormElement label="Единица измерения" grid="1:2">
+                  <FormElement
+                    label="Единица измерения"
+                    grid="1:2"
+                  >
                     <Input {...field} />
                   </FormElement>
                 )}
@@ -192,7 +207,10 @@ const DenominationDialog = (props: DenominationDialogProps) => {
               </FormElement>
             </div>
             <DialogFooter className="mt-5">
-              <Button type="submit" disabled={isCreating || isUpdating}>
+              <Button
+                type="submit"
+                disabled={isCreating || isUpdating}
+              >
                 {data ? 'Изменить' : 'Добавить'}
               </Button>
             </DialogFooter>

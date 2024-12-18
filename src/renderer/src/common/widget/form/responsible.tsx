@@ -13,7 +13,10 @@ const ResponsibleFields: FormSpravochnikFieldsComponent<Responsible> = ({
 }) => {
   const { inputRef, ...spravochnikProps } = spravochnik
   return (
-    <SpravochnikFields {...props} name={name ?? 'Материально-ответственное лицо'}>
+    <SpravochnikFields
+      {...props}
+      name={name ?? 'Материально-ответственное лицо'}
+    >
       <div className="grid grid-cols-2 gap-5">
         <SpravochnikField
           {...spravochnikProps}

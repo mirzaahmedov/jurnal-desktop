@@ -44,7 +44,10 @@ const HomePage = () => {
               { label: 'ИНН', value: schet?.tashkilot_inn },
               { label: 'МФО', value: schet?.tashkilot_mfo }
             ].map(({ label, value }) => (
-              <li key={label} className="flex pb-2 last:border-b-0 last:pb-0 text-2xl text-black">
+              <li
+                key={label}
+                className="flex pb-2 last:border-b-0 last:pb-0 text-2xl text-black"
+              >
                 <span className="font-bold min-w-96">{label}:</span>
                 <span className="font-bold">{value}</span>
               </li>

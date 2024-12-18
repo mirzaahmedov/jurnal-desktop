@@ -47,7 +47,11 @@ export const PageLayout = (props: PageLayoutProps) => {
       <header className="px-5 py-4 flex justify-between border-b border-border/50 bg-white z-[51] sticky top-0">
         <div className="flex items-center gap-5">
           {typeof onBack === 'function' ? (
-            <Button variant="ghost" size="icon" onClick={onBack}>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={onBack}
+            >
               <ArrowLeft className="size-5" />
             </Button>
           ) : null}
@@ -66,13 +70,21 @@ export const PageLayout = (props: PageLayoutProps) => {
         </div>
         <div className="flex items-center divide-x">
           <div className="flex items-center gap-1 px-8">
-            <Button variant="ghost" size="icon" onClick={appDefaultsToggle.open}>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={appDefaultsToggle.open}
+            >
               <Settings />
             </Button>
 
             {user?.role_name !== 'super-admin' && (
               <>
-                <Button variant="ghost" size="icon" onClick={mainSchetToggle.open}>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={mainSchetToggle.open}
+                >
                   <RefreshCw />
                 </Button>
 
@@ -104,14 +116,21 @@ export const PageLayout = (props: PageLayoutProps) => {
             </div>
           ) : null}
           <div className="pl-8 flex items-center gap-2">
-            <Button variant="ghost" size="icon" onClick={handleLogout}>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={handleLogout}
+            >
               <LogOut />
             </Button>
           </div>
         </div>
       </header>
       {children}
-      <MainSchetDialog open={mainSchetToggle.isOpen} onOpenChange={mainSchetToggle.setIsOpen} />
+      <MainSchetDialog
+        open={mainSchetToggle.isOpen}
+        onOpenChange={mainSchetToggle.setIsOpen}
+      />
       <ConfigureDefaultValuesDialog
         open={appDefaultsToggle.isOpen}
         onClose={appDefaultsToggle.close}

@@ -8,19 +8,30 @@ import { smetaColumns } from './columns'
 import { SpravochnikSearchField } from '@/common/features/search'
 import { CollapsibleTable } from '@renderer/common/components/collapsible-table'
 import { useMemo } from 'react'
-import { groupNestedList } from '@renderer/common/lib/array'
+import { treeFromArray } from './utils'
+import { SmetaGroupFilter } from './group-filter'
 
 export const smetaService = new CRUDService<Smeta, SmetaForm>({
   endpoint: ApiEndpoints.smeta
 })
 
-const renderSmetaTable: SpravochnikHookOptions<Smeta>['renderTable'] = ({
+const SmetaTable: SpravochnikHookOptions<Smeta>['CustomTable'] = ({
   data,
   columns,
   onClickRow
 }) => {
-  const nested = useMemo(() => groupNestedList(data, 'father_smeta_name'), [data])
-  return <CollapsibleTable data={nested} columns={columns} />
+  const nested = useMemo(() => treeFromArray(data), [data])
+  return (
+    <CollapsibleTable
+      data={nested}
+      columns={columns}
+      onClickRow={onClickRow}
+    />
+  )
+}
+
+const defaultFilters = {
+  group_number: 1
 }
 
 export const createSmetaSpravochnik = (config: Partial<SpravochnikHookOptions<Smeta>>) => {
@@ -30,8 +41,16 @@ export const createSmetaSpravochnik = (config: Partial<SpravochnikHookOptions<Sm
       endpoint: ApiEndpoints.smeta,
       columns: smetaColumns,
       service: smetaService,
-      filters: [SpravochnikSearchField],
-      renderTable: renderSmetaTable
+      filters: [SpravochnikSearchField, SmetaGroupFilter],
+      defaultFilters,
+      params: extendObject(
+        {
+          page: 1,
+          limit: 100000
+        },
+        config.params ?? {}
+      ),
+      CustomTable: SmetaTable
     } satisfies typeof config,
     config
   )

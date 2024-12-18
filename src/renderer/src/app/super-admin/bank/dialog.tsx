@@ -92,18 +92,27 @@ const BankDialog = ({ data, open, onOpenChange }: BankDialogProps) => {
   }, [form, open, data])
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog
+      open={open}
+      onOpenChange={onOpenChange}
+    >
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Подпись</DialogTitle>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          <form
+            onSubmit={handleSubmit}
+            className="flex flex-col gap-4"
+          >
             <FormField
               control={form.control}
               name="mfo"
               render={({ field }) => (
-                <FormElement grid="1:2" label="МФО">
+                <FormElement
+                  grid="1:2"
+                  label="МФО"
+                >
                   <Input {...field} />
                 </FormElement>
               )}
@@ -112,13 +121,19 @@ const BankDialog = ({ data, open, onOpenChange }: BankDialogProps) => {
               control={form.control}
               name="bank_name"
               render={({ field }) => (
-                <FormElement grid="1:2" label="Название банка">
+                <FormElement
+                  grid="1:2"
+                  label="Название банка"
+                >
                   <Input {...field} />
                 </FormElement>
               )}
             />
             <DialogFooter>
-              <Button type="submit" disabled={isCreating || isUpdating}>
+              <Button
+                type="submit"
+                disabled={isCreating || isUpdating}
+              >
                 Сохранить
               </Button>
             </DialogFooter>

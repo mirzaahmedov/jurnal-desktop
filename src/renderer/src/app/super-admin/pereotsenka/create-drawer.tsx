@@ -86,7 +86,10 @@ const PereotsenkaBatchCreateDrawer = (props: PereotsenkaBatchCreateDrawerProps) 
   })
 
   return (
-    <Drawer open={open} onOpenChange={onClose}>
+    <Drawer
+      open={open}
+      onOpenChange={onClose}
+    >
       <DrawerContent className="h-full max-h-[600px]">
         <DrawerHeader>
           <DrawerTitle>Добавить переоценку</DrawerTitle>
@@ -103,7 +106,10 @@ const PereotsenkaBatchCreateDrawer = (props: PereotsenkaBatchCreateDrawerProps) 
                       name="name"
                       control={form.control}
                       render={({ field }) => (
-                        <FormElement label="Название" className="w-full max-w-md">
+                        <FormElement
+                          label="Название"
+                          className="w-full max-w-md"
+                        >
                           <Input {...field} />
                         </FormElement>
                       )}
@@ -121,7 +127,10 @@ const PereotsenkaBatchCreateDrawer = (props: PereotsenkaBatchCreateDrawerProps) 
                     />
                   </div>
                   <DrawerFooter className="mt-5 flex flex-row justify-start">
-                    <Button type="submit" disabled={isPending}>
+                    <Button
+                      type="submit"
+                      disabled={isPending}
+                    >
                       Добавить
                     </Button>
                   </DrawerFooter>

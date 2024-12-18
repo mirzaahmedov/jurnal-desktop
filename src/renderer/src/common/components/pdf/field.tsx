@@ -6,7 +6,10 @@ import { mergeStyles } from '@/common/lib/utils'
 
 const Field = ({ children, style, ...props }: PropsWithChildren<ViewProps>) => {
   return (
-    <View style={mergeStyles(styles.field, style)} {...props}>
+    <View
+      style={mergeStyles(styles.field, style)}
+      {...props}
+    >
       {children}
     </View>
   )

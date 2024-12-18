@@ -7,7 +7,10 @@ registerFonts()
 const InventarizatsiyaTemplate = () => {
   return (
     <Document>
-      <Page size="A4" style={styles.page}></Page>
+      <Page
+        size="A4"
+        style={styles.page}
+      ></Page>
     </Document>
   )
 }

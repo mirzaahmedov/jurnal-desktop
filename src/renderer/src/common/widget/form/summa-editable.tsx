@@ -18,7 +18,10 @@ const SummaEditableFields: FormEditableFieldsComponent<RequiredSummaEditableFiel
   ...props
 }) => {
   return (
-    <Fieldset {...props} name={name ?? 'Сумма'}>
+    <Fieldset
+      {...props}
+      name={name ?? 'Сумма'}
+    >
       <div className="flex items-start gap-5">
         <FormField
           control={form.control as unknown as Control<RequiredSummaEditableFields>}

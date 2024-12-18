@@ -7,7 +7,10 @@ type HeaderProps = {
 }
 const Header = ({ doc_num, doc_date }: HeaderProps) => {
   return (
-    <Flex direction="column" alignItems="stretch">
+    <Flex
+      direction="column"
+      alignItems="stretch"
+    >
       <Text style={styles.name}>
         Приходной кассовый ордер № <Text style={styles.doc_num}>{doc_num}</Text>
       </Text>

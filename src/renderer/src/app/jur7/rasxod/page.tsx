@@ -54,7 +54,10 @@ const MO7RasxodPage = () => {
   return (
     <>
       <div className="p-5">
-        <DateRangeForm form={form} onSubmit={applyFilters} />
+        <DateRangeForm
+          form={form}
+          onSubmit={applyFilters}
+        />
       </div>
       <div className="flex-1 relative">
         {isFetching ? <LoadingOverlay /> : null}

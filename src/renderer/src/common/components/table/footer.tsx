@@ -8,7 +8,10 @@ export type FooterRowProps = HTMLAttributes<HTMLTableRowElement> & {
 }
 export const FooterRow = ({ children, className, ...props }: FooterRowProps) => {
   return (
-    <GenericTableRow className={cn('pointer-events-none', className)} {...props}>
+    <GenericTableRow
+      className={cn('pointer-events-none', className)}
+      {...props}
+    >
       {children}
     </GenericTableRow>
   )
@@ -27,7 +30,10 @@ export const FooterCell = ({
   ...props
 }: FooterCellProps) => {
   return (
-    <GenericTableCell className={cn('last:border-solid', className)} {...props}>
+    <GenericTableCell
+      className={cn('last:border-solid', className)}
+      {...props}
+    >
       <div className="flex items-center justify-between">
         {title ? <b className="font-black">{title}</b> : null}
         <b className={cn('ml-auto text-right font-black', contentClassName)}>{content}</b>

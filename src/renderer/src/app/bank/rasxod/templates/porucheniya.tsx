@@ -53,10 +53,21 @@ const PorucheniyaForm = ({
   glav_buxgalter
 }: PorucheniyaFormProps) => {
   return (
-    <Flex direction="column" alignItems="stretch" style={{ gap: 10 }}>
-      <Header name="TO`LOV TOPSHIRIQNOMASI RAQAMI" doc_num={doc_num} />
+    <Flex
+      direction="column"
+      alignItems="stretch"
+      style={{ gap: 10 }}
+    >
+      <Header
+        name="TO`LOV TOPSHIRIQNOMASI RAQAMI"
+        doc_num={doc_num}
+      />
 
-      <Flex direction="column" alignItems="stretch" style={{ gap: 2 }}>
+      <Flex
+        direction="column"
+        alignItems="stretch"
+        style={{ gap: 2 }}
+      >
         <DocInfo doc_date={doc_date} />
 
         <TransactionParty
@@ -86,7 +97,10 @@ const PorucheniyaForm = ({
           opisanie={opisanie ?? ' '}
         />
 
-        <Signatures rukovoditel={rukovoditel} glav_buxgalter={glav_buxgalter} />
+        <Signatures
+          rukovoditel={rukovoditel}
+          glav_buxgalter={glav_buxgalter}
+        />
       </Flex>
     </Flex>
   )
