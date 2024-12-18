@@ -10,7 +10,7 @@ import { organizationColumns } from './columns'
 
 export const OrganizationFormSchema = withPreprocessor(
   z.object({
-    parent_id: z.number().optional(),
+    parent_id: z.preprocess((value) => (!value ? undefined : value), z.number().optional()),
     name: z.string(),
     mfo: z.string(),
     inn: z.string(),

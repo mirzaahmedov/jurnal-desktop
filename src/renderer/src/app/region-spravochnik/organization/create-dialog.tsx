@@ -64,7 +64,7 @@ const CreateOrganizationDialog = (props: OrganizationCreateDialogProps) => {
   const onSubmit = form.handleSubmit((values) => {
     createOrganization({
       ...values,
-      parent_id: parentId
+      parent_id: parentId ? parentId : undefined
     })
   })
 
