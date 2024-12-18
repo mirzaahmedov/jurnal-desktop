@@ -41,14 +41,14 @@ const numberToWords = (num: number, initial: boolean = true): string => {
         ' ' +
         'so`m' +
         ' ' +
-        (numberToWords(decimalPart, false) || '00') +
+        (decimalPart % 100 || '00') +
         ' ' +
         'tiyin'
     )
   }
 
   const helper = (n: number): string => {
-    const results = []
+    const results: string[] = []
 
     const hundersDigit = Math.floor(n / 100)
     const tensDigit = Math.floor((n % 100) / 10)

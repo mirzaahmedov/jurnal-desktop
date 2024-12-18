@@ -8,15 +8,30 @@ type TreeNode = Group & {
   children: TreeNode[]
 }
 
-const treeFromArray = (list: (Group & { _included?: boolean })[]) => {
-  const normalized = list.map((item) => {
-    item._included = false
-    return {
-      ...item,
-      children: [],
-      _levels: removeTrailingZeros(item.pod_group).split('.').map(Number)
+const sortElementsByLevels = (a: TreeNode, b: TreeNode) => {
+  const levelsA = a._levels
+  const levelsB = b._levels
+  const length = Math.min(levelsA.length, levelsB.length)
+  for (let i = 0; i < length; i++) {
+    if (levelsA[i] === levelsB[i]) {
+      continue
     }
-  })
+    return levelsA[i] - levelsB[i]
+  }
+  return levelsA.length - levelsB.length
+}
+
+const treeFromArray = (list: (Group & { _included?: boolean })[]) => {
+  const normalized = list
+    .map((item) => {
+      item._included = false
+      return {
+        ...item,
+        children: [],
+        _levels: removeTrailingZeros(item.pod_group).split('.').map(Number)
+      }
+    })
+    .sort(sortElementsByLevels)
 
   const findChildren = (target: TreeNode): TreeNode => {
     const children = normalized.filter((item) => {

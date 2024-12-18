@@ -31,6 +31,7 @@ const createNaimenovanieSpravochnik = (config: Partial<SpravochnikHookOptions<Na
     config
   )
 }
+
 const createNaimenovanieKolSpravochnik = (
   config: Partial<SpravochnikHookOptions<NaimenovanieKol>>
 ) => {
