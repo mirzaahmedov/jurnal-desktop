@@ -14,9 +14,9 @@ import BankRasxodPage from './bank/rasxod/page'
 import BankSpravochnikPage from './super-admin/bank/page'
 import BudgetPage from './super-admin/budjet/page'
 import ContractDetailsPage from './organization/shartnoma/details/page'
-import DemoPage from './demo/page'
+// import DemoPage from './demo/page'
 import GroupPage from './super-admin/group/page'
-// import HomePage from './home/page'
+import HomePage from './home/page'
 import { InternalTransferDetailsPage } from './jur7/internal-transfer/details/page'
 import { InternalTransferPage } from './jur7/internal-transfer/page'
 import KassaMonitorPage from './kassa/monitor/page'
@@ -323,7 +323,7 @@ export const routes: RouteObject[] = [
       },
       {
         index: true,
-        element: <DemoPage />
+        element: <HomePage />
       },
       {
         path: '*',

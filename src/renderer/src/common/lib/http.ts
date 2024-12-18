@@ -2,9 +2,9 @@ import type { InternalAxiosRequestConfig } from 'axios'
 import axios from 'axios'
 import { useAuthStore } from '@/common/features/auth'
 
-// ? 'http://10.50.0.140:3006'
+// ? 'http://147.45.107.174:3005'
 const baseURL = import.meta.env.DEV
-  ? 'http://147.45.107.174:3005'
+  ? 'http://10.50.0.140:3006'
   : import.meta.env.VITE_MODE === 'staging'
     ? 'http://10.50.0.140:3006'
     : 'http://10.50.0.140:3005'
