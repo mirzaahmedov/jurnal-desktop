@@ -6,7 +6,7 @@ import { useAuthStore } from '@/common/features/auth'
 // ? 'http://10.50.0.140:3006'
 // ? 'http://10.51.2.242:3005'
 const baseURL = import.meta.env.DEV
-  ? 'http://10.50.0.140:3006'
+  ? 'http://147.45.107.174:3005'
   : import.meta.env.VITE_MODE === 'staging'
     ? 'http://10.50.0.140:3006'
     : 'http://10.50.0.140:3005'
