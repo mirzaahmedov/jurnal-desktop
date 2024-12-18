@@ -4,6 +4,9 @@
   background-color: theme('colors.white');
   font-weight: bold;
 }
+.Nested_row:last-child {
+  border-bottom: none;
+}
 .Nested_row:nth-child(even),
 .Nested_row:nth-child(even):hover {
   background-color: theme('colors.white');
@@ -18,16 +21,16 @@
   width: 1px;
   background-color: theme('colors.slate.200');
   position: absolute;
-  left: -30px;
+  left: -25px;
   top: 0;
 }
 .Nested_row > td:first-child::after {
   content: '';
   display: block;
   height: 1px;
-  width: 15px;
+  width: 12px;
   top: 50%;
-  left: -30px;
+  left: -25px;
   transform: translateY(-50%);
   background-color: theme('colors.slate.200');
   position: absolute;

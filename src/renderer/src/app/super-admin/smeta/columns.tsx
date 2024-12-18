@@ -9,17 +9,20 @@ const smetaColumns: ColumnDef<Smeta>[] = [
   {
     key: 'smeta_number',
     header: 'Номер',
-    headerClassName: 'w-20'
+    headerClassName: 'w-24',
+    className: 'w-32'
   },
   {
     key: 'group_number',
     header: 'Номер группы',
-    headerClassName: 'w-20'
+    headerClassName: 'w-24',
+    className: 'w-32'
   },
   {
     key: 'father_smeta_name',
     header: 'Смета база',
-    headerClassName: 'w-20'
+    headerClassName: 'w-24',
+    className: 'w-32'
   }
 ]
 

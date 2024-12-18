@@ -7,10 +7,12 @@ import {
   GenericTableCell,
   GenericTableHead,
   GenericTableRow
-} from '@/common/components/generic-table'
+} from '@renderer/common/components/generic-table'
 import { Table, TableBody, TableHeader } from '@renderer/common/components/ui/table'
 
+import { Button } from '@renderer/common/components/ui/button'
 import type { ColumnDef } from './types'
+import { Plus } from 'lucide-react'
 import { cn } from '@renderer/common/lib/utils'
 import styles from './styles.module.css'
 
@@ -52,31 +54,40 @@ const CollapsibleTable = <T extends { id: number; children: T[] }>({
               asChild
             >
               <>
-                <CollapsibleTrigger
-                  asChild
-                  onDoubleClick={() => {
-                    onClickRow?.(row)
-                  }}
-                >
-                  <GenericTableRow>
-                    {columns.map((col) => {
-                      const { key, fit, stretch, numeric, renderCell } = col
-                      return (
-                        <GenericTableCell
-                          key={key.toString()}
-                          fit={fit}
-                          stretch={stretch}
-                          numeric={numeric}
-                          className="font-bold"
-                        >
-                          {typeof renderCell === 'function'
-                            ? renderCell(row, col)
-                            : String(row[col.key as keyof T])}
-                        </GenericTableCell>
-                      )
-                    })}
-                  </GenericTableRow>
-                </CollapsibleTrigger>
+                <GenericTableRow onClick={() => onClickRow?.(row)}>
+                  {columns.map((col, index) => {
+                    const { key, fit, stretch, numeric, renderCell } = col
+                    return (
+                      <GenericTableCell
+                        key={key.toString()}
+                        fit={fit}
+                        stretch={stretch}
+                        numeric={numeric}
+                        className={cn('font-bold', col.className)}
+                      >
+                        {index === 0 && (
+                          <CollapsibleTrigger
+                            asChild
+                            onClick={(e) => {
+                              e.stopPropagation()
+                            }}
+                          >
+                            <Button
+                              size="icon"
+                              variant="outline"
+                              className="size-6 align-middle mr-2"
+                            >
+                              <Plus className="btn-icon !size-3.5 !ml-0" />
+                            </Button>
+                          </CollapsibleTrigger>
+                        )}
+                        {typeof renderCell === 'function'
+                          ? renderCell(row, col)
+                          : String(row[col.key as keyof T])}
+                      </GenericTableCell>
+                    )
+                  })}
+                </GenericTableRow>
                 <CollapsibleContent asChild>
                   <GenericTableRow>
                     <GenericTableCell
@@ -84,12 +95,15 @@ const CollapsibleTable = <T extends { id: number; children: T[] }>({
                       className="p-0"
                     >
                       <div className="pl-[60px] bg-white">
-                        <Table className="">
+                        <Table>
                           <TableBody>
                             {row.children.map((child) => (
                               <GenericTableRow
                                 key={child.id}
-                                className={cn(styles.Nested_row, 'even:bg-transparent')}
+                                className={cn(
+                                  styles.Nested_row,
+                                  'even:bg-transparent even:hover:bg-transparent odd:bg-transparent hover:bg-transparent'
+                                )}
                                 onClick={() => onClickRow?.(child)}
                               >
                                 {columns.map((col) => {
@@ -100,6 +114,7 @@ const CollapsibleTable = <T extends { id: number; children: T[] }>({
                                       fit={fit}
                                       stretch={stretch}
                                       numeric={numeric}
+                                      className={col.className}
                                     >
                                       {typeof renderCell === 'function'
                                         ? renderCell(child, col)
