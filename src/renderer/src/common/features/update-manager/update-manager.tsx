@@ -88,14 +88,16 @@ const UpdateManager = () => {
           </AlertDialogTitle>
         </div>
         {status === 'downloading' && <Progress value={progress} />}
-        <AlertDialogFooter>
-          {status === 'downloaded' && (
-            <AlertDialogAction onClick={handleRestart}>Перезапустить</AlertDialogAction>
-          )}
-          {(status === 'downloaded' || status === 'error') && (
-            <AlertDialogCancel>Закрыть</AlertDialogCancel>
-          )}
-        </AlertDialogFooter>
+        {(status === 'downloaded' || status === 'error') && (
+          <AlertDialogFooter>
+            {status === 'downloaded' && (
+              <AlertDialogAction onClick={handleRestart}>Перезапустить</AlertDialogAction>
+            )}
+            {(status === 'downloaded' || status === 'error') && (
+              <AlertDialogCancel>Закрыть</AlertDialogCancel>
+            )}
+          </AlertDialogFooter>
+        )}
       </AlertDialogContent>
     </AlertDialog>
   )
@@ -121,10 +123,10 @@ const AlertIcon = ({ type }: AlertIconProps) => {
     <div
       className={cn(
         'bg-red-50 size-16 flex items-center justify-center rounded-full',
-        type === 'error' && 'bg-red-100',
-        type === 'available' && 'bg-yellow-100',
-        type === 'downloading' && 'bg-blue-100',
-        type === 'downloaded' && 'bg-green-100'
+        type === 'error' && 'bg-red-50',
+        type === 'available' && 'bg-yellow-50',
+        type === 'downloading' && 'bg-blue-50',
+        type === 'downloaded' && 'bg-emerald-50'
       )}
     >
       <Icon
@@ -133,7 +135,7 @@ const AlertIcon = ({ type }: AlertIconProps) => {
           type === 'error' && 'text-red-500',
           type === 'available' && 'text-yellow-500',
           type === 'downloading' && 'text-blue-500',
-          type === 'downloaded' && 'text-green-500'
+          type === 'downloaded' && 'text-emerald-500'
         )}
       />
     </div>
