@@ -1,8 +1,8 @@
+import { SpravochnikField, SpravochnikFields } from '@/common/features/spravochnik'
+
 import type { FormSpravochnikFieldsComponent } from './types'
 import type { Shartnoma } from '@/common/models'
-
 import { formatLocaleDate } from '@/common/lib/format'
-import { SpravochnikField, SpravochnikFields } from '@/common/features/spravochnik'
 
 const ShartnomaFields: FormSpravochnikFieldsComponent<Shartnoma> = ({
   tabIndex,
@@ -12,7 +12,9 @@ const ShartnomaFields: FormSpravochnikFieldsComponent<Shartnoma> = ({
   error,
   ...props
 }) => {
+  console.log({ spravochnik })
   const { inputRef, ...spravochnikProps } = spravochnik
+
   return (
     <SpravochnikFields
       {...props}

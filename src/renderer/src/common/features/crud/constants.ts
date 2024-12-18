@@ -42,5 +42,6 @@ export enum ApiEndpoints {
   jur7_internal = 'jur_7/internal',
   jur7_unit = 'jur_7/unit',
   spravochnik_bank = 'spravochnik/bank',
+  tables_count = 'auth/control/tables/count',
   logs = 'log/get'
 }

@@ -42,6 +42,7 @@ import PodotchetMonitoringPage from './podotchet/monitor/page'
 import PodpisPage from './region-spravochnik/podpis/page'
 import PokazatUslugiDetailsPage from './organization/pokazat-uslugi/details/page'
 import PokazatUslugiPage from './organization/pokazat-uslugi/page'
+import RegionDataPage from './super-admin/region-data/page'
 import RegionPage from './super-admin/region/page'
 import RegionUserPage from './region-admin/region-user'
 import ResponsiblePage from './jur7/responsible/page'
@@ -258,6 +259,10 @@ export const routes: RouteObject[] = [
           {
             path: 'unit',
             element: <UnitPage />
+          },
+          {
+            path: 'region-data',
+            element: <RegionDataPage />
           }
         ]
       },

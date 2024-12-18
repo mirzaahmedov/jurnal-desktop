@@ -8,6 +8,7 @@ import {
   CircleDollarSign,
   CircleFadingPlus,
   CircleHelp,
+  Database,
   FileCheck,
   FileCheck2,
   FileClock,
@@ -385,6 +386,11 @@ export const getNavElements = (): NavElement[] => {
               path: 'unit',
               title: 'Единица измерения',
               icon: Weight
+            },
+            {
+              path: 'region-data',
+              title: 'Проверка данных',
+              icon: Database
             }
           ])
         }

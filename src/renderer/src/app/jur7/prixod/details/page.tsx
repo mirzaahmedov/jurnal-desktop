@@ -158,7 +158,7 @@ const MO7PrixodDetailsPage = () => {
 
   const kimdan_id = form.watch('kimdan_id')
   useEffect(() => {
-    if (kimdan_id !== prevData.current.kimdan_id) {
+    if (kimdan_id !== prevData.current.kimdan_id && prevData.current.kimdan_id) {
       if (kimdan_id) {
         form.setValue('id_shartnomalar_organization', 0)
         prevData.current.kimdan_id = kimdan_id
@@ -183,6 +183,8 @@ const MO7PrixodDetailsPage = () => {
       navigate(-1)
     }
   })
+
+  console.log({ shartnomaSpravochnik })
 
   return (
     <DetailsPage loading={isFetching}>
