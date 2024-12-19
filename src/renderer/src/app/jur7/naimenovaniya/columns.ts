@@ -43,14 +43,14 @@ export const naimenovanieKolColumns: ColumnDef<NaimenovanieKol>[] = [
     key: 'sena',
     header: 'Цена',
     renderCell: (row) => {
-      return row.data.sena ?? '-'
+      return row.sena ?? '-'
     }
   },
   {
     key: 'summa',
     header: 'Сумма',
     renderCell: (row) => {
-      return row.data.sena ? (row.data?.sena ? Number(row.data?.sena) : 0) * (row.result ?? 0) : '-'
+      return row.sena ? (row.sena ? Number(row.sena) : 0) * (row.result ?? 0) : '-'
     }
   },
   {
@@ -61,7 +61,7 @@ export const naimenovanieKolColumns: ColumnDef<NaimenovanieKol>[] = [
     key: 'data_prixod',
     header: 'Дата прихода',
     renderCell: (row) => {
-      return row.data.doc_date ? formatLocaleDate(row.data.doc_date) : '-'
+      return row.doc_date ? formatLocaleDate(row.doc_date) : '-'
     }
   },
   {

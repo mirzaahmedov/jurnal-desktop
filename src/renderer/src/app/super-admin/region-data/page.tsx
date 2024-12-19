@@ -37,8 +37,8 @@ const RegionDataPage = () => {
         <MonthPicker
           value={date}
           onChange={setDate}
-          id="year_and_month"
-          name="year_and_month"
+          id="month"
+          name="month"
         />
       </ListView.Header>
       <ListView.Content loading={isFetching}>

@@ -204,7 +204,11 @@ const BankRasxodDetailtsPage = () => {
   useLayout({
     title: id === 'create' ? 'Создать расходный документ' : 'Редактировать расходный документ',
     onBack() {
-      navigate(-1)
+      try {
+        navigate(-1)
+      } catch (error) {
+        console.log(error)
+      }
     }
   })
 

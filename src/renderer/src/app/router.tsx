@@ -1,4 +1,4 @@
-import { Navigate, createBrowserRouter } from 'react-router-dom'
+import { Navigate, createHashRouter } from 'react-router-dom'
 
 import AccessPage from './region-admin/access/page'
 import AccountablePage from './region-spravochnik/podotchet'
@@ -338,4 +338,4 @@ export const routes: RouteObject[] = [
   }
 ]
 
-export const router = createBrowserRouter(routes)
+export const router = createHashRouter(routes)

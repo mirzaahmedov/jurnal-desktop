@@ -352,11 +352,11 @@ const NaimenovanieCells = ({
       onChange(id, data) {
         setMaxKol(data?.result ?? Infinity)
         onChangeChildFieldEvent(index, 'kol', data?.result ?? 0)
-        onChangeChildFieldEvent(index, 'sena', data?.data?.sena ?? 0)
+        onChangeChildFieldEvent(index, 'sena', data?.sena ?? 0)
         onChangeChildFieldEvent(
           index,
           'data_pereotsenka',
-          data?.data?.doc_date ? data.data.doc_date.substring(0, 10) : ''
+          data?.doc_date ? data.doc_date.substring(0, 10) : ''
         )
         onChange(id)
       },

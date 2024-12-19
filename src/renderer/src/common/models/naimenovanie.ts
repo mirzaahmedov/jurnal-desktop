@@ -23,10 +23,8 @@ type NaimenovanieKol = {
   rasxod1: number
   rasxod2: number
   result: number
-  data: {
-    doc_date: string
-    sena: string
-  }
+  doc_date: string
+  sena: string
 }
 
 export type { Naimenovanie, NaimenovanieKol }

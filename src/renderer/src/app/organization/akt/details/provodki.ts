@@ -1,13 +1,13 @@
-import type { EditableColumnType } from '@/common/features/editable-table'
-import type { AktProvodkaForm } from '../service'
-
-import { TypeSchetOperatsii } from '@/common/models'
 import {
   createOperatsiiEditor,
-  createTypeOperatsiiEditor,
+  createPodrazdelenieEditor,
   createStaffEditor,
-  createPodrazdelenieEditor
+  createTypeOperatsiiEditor
 } from '@/common/features/editable-table/editors'
+
+import type { AktProvodkaForm } from '../service'
+import type { EditableColumnType } from '@/common/features/editable-table'
+import { TypeSchetOperatsii } from '@/common/models'
 import { createNumberEditor } from '@/common/features/editable-table/editors/number'
 
 export const podvodkaColumns: EditableColumnType<AktProvodkaForm>[] = [
