@@ -1,17 +1,17 @@
-import type { ReactNode } from 'react'
-
-import { Button } from '@/common/components/ui/button'
 import { ArrowLeft, CirclePlus, LogOut, RefreshCw, Settings } from 'lucide-react'
 import { Avatar, AvatarFallback } from '@/common/components/ui/avatar'
 import { MainSchetDialog, useMainSchet } from '@/common/features/main-schet'
+import { mainSchetQueryKeys, mainSchetService } from '@/app/region-spravochnik/main-schet'
+
+import { Button } from '@/common/components/ui/button'
+import { ConfigureDefaultValuesDialog } from '@/common/features/app-defaults'
+import { MainSchet } from '@/common/models'
+import type { ReactNode } from 'react'
 import { useAuthStore } from '@/common/features/auth'
-import { useToggle } from '@/common/hooks/use-toggle'
 import { useLayoutStore } from './store'
 import { useLocation } from 'react-router-dom'
-import { MainSchet } from '@/common/models'
 import { useQuery } from '@tanstack/react-query'
-import { mainSchetQueryKeys, mainSchetService } from '@/app/region-spravochnik/main-schet'
-import { ConfigureDefaultValuesDialog } from '@/common/features/app-defaults'
+import { useToggle } from '@/common/hooks/use-toggle'
 
 type PageLayoutProps = {
   children: ReactNode
@@ -101,7 +101,11 @@ export const PageLayout = (props: PageLayoutProps) => {
             <div className="px-8 flex items-center gap-4">
               <Avatar>
                 <AvatarFallback className="bg-brand text-brand-foreground">
-                  {user.fio.split(' ').map((w) => w[0].toUpperCase())}
+                  {user.fio
+                    ?.split(' ')
+                    .filter((w) => Boolean(w?.trim()))
+                    .slice(0, 2)
+                    .map((w) => w?.[0]?.toUpperCase())}
                 </AvatarFallback>
               </Avatar>
               <div className="flex flex-col gap-0.5">
