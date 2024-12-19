@@ -19,7 +19,6 @@ import {
   House,
   Landmark,
   LayoutGrid,
-  ListTodo,
   MapPinHouse,
   MonitorCog,
   NotebookTabs,
@@ -226,11 +225,11 @@ export const getNavElements = (): NavElement[] => {
               path: 'internal-transfer',
               title: 'Внутрь. Пере. Документ'
             },
-            {
-              path: 'denomination',
-              title: 'Наименование',
-              icon: ListTodo
-            },
+            // {
+            //   path: 'denomination',
+            //   title: 'Наименование',
+            //   icon: ListTodo
+            // },
             {
               path: 'responsible',
               title: 'Ответственное лицо',

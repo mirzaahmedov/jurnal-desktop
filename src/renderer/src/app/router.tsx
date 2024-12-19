@@ -32,7 +32,7 @@ import { MO7RasxodPage } from './jur7/rasxod/page'
 import MainLayout from './layout/main'
 import { MainSchetGuard } from '@/common/features/main-schet'
 import MainSchetPage from './region-spravochnik/main-schet/page'
-import NaimenovaniePage from './jur7/naimenovaniya/page'
+// import NaimenovaniePage from './jur7/naimenovaniya/page'
 import OperationTypePage from './region-spravochnik/type-operatsii/page'
 import OperatsiiPage from './super-admin/operatsii/page'
 import OrganizationMonitorPage from './organization/monitor/page'
@@ -288,10 +288,10 @@ export const routes: RouteObject[] = [
         path: 'journal-7',
         element: <MainSchetGuard />,
         children: [
-          {
-            path: 'denomination',
-            element: <NaimenovaniePage />
-          },
+          // {
+          //   path: 'denomination',
+          //   element: <NaimenovaniePage />
+          // },
           {
             path: 'responsible',
             element: <ResponsiblePage />

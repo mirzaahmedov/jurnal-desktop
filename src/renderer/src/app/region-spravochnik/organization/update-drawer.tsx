@@ -71,15 +71,6 @@ const UpdateOrganizationDrawer = () => {
       })
     }
   })
-  const { mutate: deleteOrganization, isPending: isDeleting } = useMutation({
-    mutationKey: [organizationQueryKeys.delete],
-    mutationFn: organizationService.delete,
-    onSuccess() {
-      queryClient.invalidateQueries({
-        queryKey: [organizationQueryKeys.getAll]
-      })
-    }
-  })
 
   useEffect(() => {
     if (!parentId) {
@@ -130,7 +121,13 @@ const UpdateOrganizationDrawer = () => {
   const handleDelete = (row: Organization) => {
     confirm({
       onConfirm() {
-        deleteOrganization(row.id)
+        if (!row || !organization?.data) {
+          return
+        }
+        updateOrganization({
+          ...row,
+          parent_id: undefined
+        })
       }
     })
   }
@@ -140,11 +137,11 @@ const UpdateOrganizationDrawer = () => {
       open={!!parentId}
       onOpenChange={() => setParentId(null)}
     >
-      <DrawerContent>
+      <DrawerContent className="max-h-full flex flex-col">
         <DrawerHeader>
           <DrawerTitle>Организация</DrawerTitle>
         </DrawerHeader>
-        <div className="grid grid-cols-12 gap-10">
+        <div className="grid grid-cols-12 gap-10 flex-1 overflow-hidden">
           <div className="col-span-4 relative">
             {isFetching ? <LoadingOverlay /> : null}
             <OrganizationForm
@@ -172,16 +169,16 @@ const UpdateOrganizationDrawer = () => {
               }
             />
           </div>
-          <div className="col-span-8 border-l relative">
-            {isFetching || isDeleting ? <LoadingOverlay /> : null}
-            <ScrollArea type="auto">
-              <OrganizationTable
-                data={organization?.data.childs ?? []}
-                onEdit={handleEdit}
-                onDelete={handleDelete}
-              />
-              <ScrollBar orientation="horizontal" />
-            </ScrollArea>
+          <ScrollArea
+            type="auto"
+            className="col-span-8 border-l relative h-full"
+          >
+            {isFetching ? <LoadingOverlay /> : null}
+            <OrganizationTable
+              data={organization?.data.childs ?? []}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
+            />
             <div className="p-5 flex flex-row justify-end">
               <Button
                 onClick={() => {
@@ -192,7 +189,8 @@ const UpdateOrganizationDrawer = () => {
                 Добавить
               </Button>
             </div>
-          </div>
+            <ScrollBar orientation="horizontal" />
+          </ScrollArea>
         </div>
       </DrawerContent>
     </Drawer>

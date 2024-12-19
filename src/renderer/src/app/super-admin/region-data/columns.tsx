@@ -49,6 +49,11 @@ const regionDataColumns: ColumnDef<RegionData>[] = [
     renderCell: (row) => <CountCell count={row.counts.jur7_count} />
   },
   {
+    key: 'spravochnik',
+    header: 'Справочник',
+    renderCell: (row) => <CountCell count={row.counts.storage_count} />
+  },
+  {
     key: 'total',
     header: 'Итого',
     renderCell: (row) => <CountCell count={row.counts.total_count} />
