@@ -22,6 +22,7 @@ const OperatsiiFormSchema = withPreprocessor(
       TypeSchetOperatsii.AKT,
       TypeSchetOperatsii.AVANS_OTCHET,
       TypeSchetOperatsii.POKAZAT_USLUGI,
+      TypeSchetOperatsii.JUR7,
       TypeSchetOperatsii.GENERAL
     ]),
     smeta_id: z.number().optional()

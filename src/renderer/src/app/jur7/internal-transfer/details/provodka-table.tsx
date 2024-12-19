@@ -1,5 +1,5 @@
 import { CircleMinus, CirclePlus } from 'lucide-react'
-import { DatePicker, NumericInput, SpravochnikInput, inputVariants } from '@/common/components'
+import { DatePicker, NumericInput, inputVariants } from '@/common/components'
 import {
   EditableTableCell,
   EditableTableHead,
@@ -11,6 +11,7 @@ import {
   InternalTransferFormType,
   defaultValues
 } from '../config'
+import { SpravochnikInput, useSpravochnik } from '@/common/features/spravochnik'
 import { Table, TableBody, TableFooter, TableHeader } from '@/common/components/ui/table'
 import { calcSena, calcSumma } from '@/common/lib/pricing'
 import { useEffect, useRef, useState } from 'react'
@@ -23,7 +24,6 @@ import { cn } from '@/common/lib/utils'
 import { createGroupSpravochnik } from '@/app/super-admin/group/service'
 import { createNaimenovanieKolSpravochnik } from '@/app/jur7/naimenovaniya/service'
 import { useEventCallback } from '@/common/hooks/use-event-callback'
-import { useSpravochnik } from '@/common/features/spravochnik'
 
 type ProvodkaTableProps = {
   form: UseFormReturn<InternalTransferFormType>
@@ -204,7 +204,7 @@ const Provodka = ({ index, row, form }: ProvodkaProps) => {
             value={row.summa || ''}
             onValueChange={(values) => {
               const sena = calcSena(values.floatValue ?? 0, row.kol)
-              if (sena !== row.sena) {
+              if (sena !== row.sena && (values.floatValue ?? 0) !== 0) {
                 handleChangeChildField(index, 'sena', sena)
               }
               handleChangeChildField(index, 'summa', values.floatValue)
@@ -219,7 +219,6 @@ const Provodka = ({ index, row, form }: ProvodkaProps) => {
       <EditableTableCell>
         <div className="relative">
           <Input
-            readOnly
             value={row.debet_schet}
             onChange={(e) => {
               handleChangeChildField(index, 'debet_schet', e.target.value)
@@ -234,7 +233,6 @@ const Provodka = ({ index, row, form }: ProvodkaProps) => {
       <EditableTableCell>
         <div className="relative">
           <Input
-            readOnly
             value={row.debet_sub_schet}
             onChange={(e) => {
               handleChangeChildField(index, 'debet_sub_schet', e.target.value)
@@ -249,7 +247,6 @@ const Provodka = ({ index, row, form }: ProvodkaProps) => {
       <EditableTableCell>
         <div className="relative">
           <Input
-            readOnly
             value={row.kredit_schet}
             onChange={(e) => {
               handleChangeChildField(index, 'kredit_schet', e.target.value)
@@ -264,7 +261,6 @@ const Provodka = ({ index, row, form }: ProvodkaProps) => {
       <EditableTableCell>
         <div className="relative">
           <Input
-            readOnly
             value={row.kredit_sub_schet}
             onChange={(e) => {
               handleChangeChildField(index, 'kredit_sub_schet', e.target.value)
@@ -357,7 +353,11 @@ const NaimenovanieCells = ({
         setMaxKol(data?.result ?? Infinity)
         onChangeChildFieldEvent(index, 'kol', data?.result ?? 0)
         onChangeChildFieldEvent(index, 'sena', data?.data?.sena ?? 0)
-        onChangeChildFieldEvent(index, 'data_pereotsenka', data?.data?.doc_date ?? '')
+        onChangeChildFieldEvent(
+          index,
+          'data_pereotsenka',
+          data?.data?.doc_date ? data.data.doc_date.substring(0, 10) : ''
+        )
         onChange(id)
       },
       params: {
@@ -422,8 +422,8 @@ const NaimenovanieCells = ({
               editor: true,
               error: !!errorMessage
             })}
-            onDoubleClick={naimenovanieSpravochnik.open}
-            onClear={naimenovanieSpravochnik.clear}
+            getInputValue={(selected) => String(selected?.id) ?? ''}
+            {...naimenovanieSpravochnik}
           />
         </div>
       </EditableTableCell>
@@ -437,8 +437,8 @@ const NaimenovanieCells = ({
               inputVariants({ editor: true, error: !!errorMessage }),
               'disabled:opacity-100'
             )}
-            onDoubleClick={groupSpravochnik.open}
-            onClear={!value ? groupSpravochnik.clear : undefined}
+            getInputValue={(selected) => selected?.name ?? ''}
+            {...groupSpravochnik}
           />
         </div>
       </EditableTableCell>

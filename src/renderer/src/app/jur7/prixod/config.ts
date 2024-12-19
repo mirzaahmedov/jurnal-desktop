@@ -58,7 +58,7 @@ const PrixodFormSchema = withPreprocessor(
     doc_date: z.string(),
     j_o_num: z.string(),
     opisanie: z.string().optional(),
-    doverennost: z.string(),
+    doverennost: z.string().optional(),
     kimdan_id: z.number(),
     kimga_id: z.number(),
     id_shartnomalar_organization: z.number().optional(),

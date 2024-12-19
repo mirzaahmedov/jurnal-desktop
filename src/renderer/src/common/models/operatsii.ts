@@ -14,6 +14,7 @@ enum TypeSchetOperatsii {
   AKT = 'akt',
   AVANS_OTCHET = 'avans_otchet',
   POKAZAT_USLUGI = 'show_service',
+  JUR7 = 'jur7',
   GENERAL = 'general'
 }
 

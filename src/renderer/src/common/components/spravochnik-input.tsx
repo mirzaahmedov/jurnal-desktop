@@ -1,13 +1,12 @@
+import { Button } from './ui/button'
+import { CircleX } from 'lucide-react'
 import type { HTMLAttributes } from 'react'
+import { Input } from '@/common/components/ui/input'
 import type { InputProps } from '@/common/components/ui/input'
 import type { VariantProps } from 'class-variance-authority'
-
-import { forwardRef } from 'react'
 import { cn } from '@/common/lib/utils'
 import { cva } from 'class-variance-authority'
-import { Input } from '@/common/components/ui/input'
-import { CircleX } from 'lucide-react'
-import { Button } from './ui/button'
+import { forwardRef } from 'react'
 
 const inputVariants = cva('cursor-pointer', {
   variants: {
@@ -54,6 +53,8 @@ const SpravochnikInput = forwardRef<HTMLInputElement, SpravochnikInputProps>(
     )
   }
 )
+
+SpravochnikInput.displayName = 'SpravochnikInput'
 
 export { SpravochnikInput, inputVariants }
 export type { SpravochnikInputProps }

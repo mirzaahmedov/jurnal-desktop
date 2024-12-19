@@ -14,7 +14,6 @@ import { OrganizationForm } from './form'
 import { toast } from '@/common/hooks'
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
-import { useParentId } from './hooks'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 type OrganizationCreateDialogProps = {
@@ -23,8 +22,6 @@ type OrganizationCreateDialogProps = {
 }
 const CreateOrganizationDialog = (props: OrganizationCreateDialogProps) => {
   const { open, onChangeOpen } = props
-
-  const [parentId] = useParentId()
 
   const queryClient = useQueryClient()
   const form = useForm({
@@ -44,7 +41,7 @@ const CreateOrganizationDialog = (props: OrganizationCreateDialogProps) => {
         queryKey: [organizationQueryKeys.getAll]
       })
       queryClient.invalidateQueries({
-        queryKey: [organizationQueryKeys.getById, Number(parentId)]
+        queryKey: [organizationQueryKeys.getById]
       })
       onChangeOpen(false)
     },
@@ -62,10 +59,7 @@ const CreateOrganizationDialog = (props: OrganizationCreateDialogProps) => {
   }, [form])
 
   const onSubmit = form.handleSubmit((values) => {
-    createOrganization({
-      ...values,
-      parent_id: parentId ? parentId : undefined
-    })
+    createOrganization(values)
   })
 
   return (

@@ -1,6 +1,6 @@
 import { SearchField, useSearch } from '@/common/features/search'
-import { useCreateOpen, useParentId } from './hooks'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { usePagination, useToggle } from '@/common/hooks'
 
 import { CreateOrganizationDialog } from './create-dialog'
 import { ListView } from '@/common/views'
@@ -11,15 +11,15 @@ import { organizationQueryKeys } from './config'
 import { organizationService } from './service'
 import { useConfirm } from '@/common/features/confirm'
 import { useLayout } from '@/common/features/layout'
-import { usePagination } from '@/common/hooks'
+import { useParentId } from './hooks'
 
 const OrganizationPage = () => {
   const [, setParentId] = useParentId()
-  const [createOpen, setCreateOpen] = useCreateOpen()
 
   const { confirm } = useConfirm()
   const { search } = useSearch()
 
+  const dialogToggle = useToggle()
   const pagination = usePagination()
   const queryClient = useQueryClient()
 
@@ -47,7 +47,7 @@ const OrganizationPage = () => {
     title: 'Организации',
     content: SearchField,
     onCreate: () => {
-      setCreateOpen(true)
+      dialogToggle.open()
     }
   })
 
@@ -79,8 +79,8 @@ const OrganizationPage = () => {
       </ListView.Footer>
       <UpdateOrganizationDrawer />
       <CreateOrganizationDialog
-        open={createOpen}
-        onChangeOpen={setCreateOpen}
+        open={dialogToggle.isOpen}
+        onChangeOpen={dialogToggle.setIsOpen}
       />
     </ListView>
   )

@@ -1,8 +1,7 @@
 import type { ColumnDef } from '@/common/components'
 import type { InternalTransfer } from '@/common/models'
-
-import { z } from 'zod'
 import { withPreprocessor } from '@/common/lib/validation'
+import { z } from 'zod'
 
 const queryKeys = {
   getAll: 'jur7_internal/all',
@@ -16,9 +15,7 @@ const defaultValues: InternalTransferFormType = {
   type_document: 1,
   doc_num: '',
   doc_date: '',
-  j_o_num: '',
   opisanie: '',
-  doverennost: '',
   kimdan_id: 0,
   kimga_id: 0,
   childs: [
@@ -54,9 +51,7 @@ const InternalTransferFormSchema = withPreprocessor(
     type_document: z.number().optional(),
     doc_num: z.string(),
     doc_date: z.string(),
-    j_o_num: z.string(),
     opisanie: z.string().optional(),
-    doverennost: z.string(),
     kimdan_id: z.number(),
     kimga_id: z.number(),
     childs: z.array(InternalTransferChildFormSchema)

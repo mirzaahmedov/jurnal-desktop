@@ -3,16 +3,16 @@ import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger
-} from '@/common/components/ui/accordion'
+} from '@renderer/common/components/ui/accordion'
 import { ChevronsLeft, ChevronsRight } from 'lucide-react'
 import { useEffect, useState } from 'react'
 
 import { Badge } from '@renderer/common/components/ui/badge'
-import { Button } from '@/common/components/ui/button'
+import { Button } from '@renderer/common/components/ui/button'
 import type { NavElement } from './constants'
 import { NavLink } from 'react-router-dom'
 import { ScrollArea } from '@/common/components/ui/scroll-area'
-import { cn } from '@/common/lib/utils'
+import { cn } from '@renderer/common/lib/utils'
 import { getNavElements } from './constants'
 import logo from '@resources/logo.svg'
 
@@ -66,11 +66,17 @@ const Sidebar = () => {
               <ul>{getNavElements().map((elem) => renderNavElement(elem, isCollapsed))}</ul>
             </nav>
           </div>
-          <div className="flex items-center gap-1 flex-wrap justify-center">
-            <p className="text-xs text-slate-500 font-medium p-5">
-              Электрон молия тизими {version}
-            </p>
+          <div
+            className={cn(
+              'flex items-center p-5 gap-2 flex-wrap justify-center',
+              isCollapsed && 'px-1'
+            )}
+          >
             <ApplicationBadge />
+            <p className="text-xs text-slate-500 font-medium">
+              {!isCollapsed && 'Электрон молия тизими '}
+              v.{version}
+            </p>
           </div>
         </div>
       </ScrollArea>
@@ -137,9 +143,23 @@ const renderNavElement = (elem: null | NavElement, isCollapsed: boolean, rootPat
 const ApplicationBadge = () => {
   switch (true) {
     case import.meta.env.DEV:
-      return <Badge variant="outline">Разработка</Badge>
+      return (
+        <Badge
+          variant="secondary"
+          className="bg-brand/10 hover:bg-brand/10 text-brand"
+        >
+          Разработка
+        </Badge>
+      )
     case import.meta.env.VITE_MODE === 'staging':
-      return <Badge variant="outline">Тестирование</Badge>
+      return (
+        <Badge
+          variant="secondary"
+          className="bg-emerald-50 text-emerald-500"
+        >
+          Тестирование
+        </Badge>
+      )
     default:
       return null
   }

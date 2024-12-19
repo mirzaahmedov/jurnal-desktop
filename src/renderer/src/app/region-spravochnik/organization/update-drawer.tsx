@@ -6,9 +6,12 @@ import {
   DrawerHeader,
   DrawerTitle
 } from '@/common/components/ui/drawer'
-import { OrganizationFormSchema, organizationService } from './service'
+import {
+  OrganizationFormSchema,
+  createOrganizationSpravochnik,
+  organizationService
+} from './service'
 import { ScrollArea, ScrollBar } from '@/common/components/ui/scroll-area'
-import { useCreateOpen, useParentId } from './hooks'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 import { Button } from '@/common/components/ui/button'
@@ -22,13 +25,12 @@ import { toast } from '@/common/hooks'
 import { useConfirm } from '@/common/features/confirm'
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
+import { useParentId } from './hooks'
+import { useSpravochnik } from '@renderer/common/features/spravochnik'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 const UpdateOrganizationDrawer = () => {
   const [parentId, setParentId] = useParentId()
-  const [createOpen, setCreateOpen] = useCreateOpen()
-
-  console.log(createOpen)
 
   const queryClient = useQueryClient()
   const form = useForm({
@@ -54,14 +56,12 @@ const UpdateOrganizationDrawer = () => {
       toast({
         title: 'Организация успешно обновлена'
       })
-      form.reset(defaultValues)
       queryClient.invalidateQueries({
         queryKey: [organizationQueryKeys.getAll]
       })
       queryClient.invalidateQueries({
         queryKey: [organizationQueryKeys.getById, Number(parentId)]
       })
-      setParentId(null)
     },
     onError(error) {
       toast({
@@ -86,7 +86,7 @@ const UpdateOrganizationDrawer = () => {
       return
     }
     form.reset(organization?.data ?? defaultValues)
-  }, [form, organization, parentId])
+  }, [form, organization?.data, parentId])
 
   useEffect(() => {
     if (error) {
@@ -107,6 +107,21 @@ const UpdateOrganizationDrawer = () => {
       ...values
     })
   })
+
+  const orgSpravochnik = useSpravochnik(
+    createOrganizationSpravochnik({
+      onChange(_, org) {
+        if (!org || !organization?.data) {
+          return
+        }
+        updateOrganization({
+          ...org,
+          parent_id: organization.data.id
+        })
+      },
+      enabled: !!organization?.data
+    })
+  )
 
   const handleEdit = (row: Organization) => {
     setParentId(row.id)
@@ -170,9 +185,9 @@ const UpdateOrganizationDrawer = () => {
             <div className="p-5 flex flex-row justify-end">
               <Button
                 onClick={() => {
-                  setCreateOpen(true)
+                  orgSpravochnik.open()
                 }}
-                disabled={isFetching || isUpdating}
+                disabled={isFetching || orgSpravochnik.loading || isUpdating}
               >
                 Добавить
               </Button>

@@ -4,7 +4,6 @@ import {
   EdinSelect,
   LoadingSpinner,
   NumericInput,
-  SpravochnikInput,
   inputVariants
 } from '@/common/components'
 import {
@@ -19,6 +18,7 @@ import {
   PrixodFormType,
   defaultValues
 } from '../config'
+import { SpravochnikInput, useSpravochnik } from '@/common/features/spravochnik'
 import { Table, TableBody, TableFooter, TableHeader } from '@/common/components/ui/table'
 import { calcSena, calcSumma } from '@/common/lib/pricing'
 import {
@@ -38,7 +38,6 @@ import { denominationQueryKeys } from '@/app/jur7/naimenovaniya/constants'
 import { useEventCallback } from '@/common/hooks/use-event-callback'
 import { useMainSchet } from '@/common/features/main-schet'
 import { useMutation } from '@tanstack/react-query'
-import { useSpravochnik } from '@/common/features/spravochnik'
 
 type ProvodkaTableProps = {
   form: UseFormReturn<PrixodFormType>
@@ -156,7 +155,7 @@ export const ProvodkaTable = ({ form }: ProvodkaTableProps) => {
                         value={row.summa || ''}
                         onValueChange={(values) => {
                           const sena = calcSena(values.floatValue ?? 0, row.kol)
-                          if (sena !== row.sena) {
+                          if (sena !== row.sena && (values.floatValue ?? 0) !== 0) {
                             handleChangeChildField(index, 'sena', sena)
                           }
                           handleChangeChildField(index, 'summa', values.floatValue)
@@ -181,7 +180,6 @@ export const ProvodkaTable = ({ form }: ProvodkaTableProps) => {
                   <EditableTableCell>
                     <div className="relative">
                       <Input
-                        readOnly
                         value={row.debet_schet}
                         onChange={(e) => {
                           handleChangeChildField(index, 'debet_schet', e.target.value)
@@ -196,7 +194,6 @@ export const ProvodkaTable = ({ form }: ProvodkaTableProps) => {
                   <EditableTableCell>
                     <div className="relative">
                       <Input
-                        readOnly
                         value={row.debet_sub_schet}
                         onChange={(e) => {
                           handleChangeChildField(index, 'debet_sub_schet', e.target.value)
@@ -211,7 +208,6 @@ export const ProvodkaTable = ({ form }: ProvodkaTableProps) => {
                   <EditableTableCell>
                     <div className="relative">
                       <Input
-                        readOnly
                         value={row.kredit_schet}
                         onChange={(e) => {
                           handleChangeChildField(index, 'kredit_schet', e.target.value)
@@ -226,7 +222,6 @@ export const ProvodkaTable = ({ form }: ProvodkaTableProps) => {
                   <EditableTableCell>
                     <div className="relative">
                       <Input
-                        readOnly
                         value={row.kredit_sub_schet}
                         onChange={(e) => {
                           handleChangeChildField(index, 'kredit_sub_schet', e.target.value)
@@ -454,7 +449,10 @@ const NaimenovanieCells = ({
                   editor: true,
                   error: !!errorMessage
                 })}
-                onClear={naimenovanieSpravochnik.clear}
+                {...naimenovanieSpravochnik}
+                getInputValue={(selected) => String(selected?.id) ?? ''}
+                open={undefined}
+                clear={undefined}
               />
             </PopoverTrigger>
             <PopoverContent
@@ -495,8 +493,8 @@ const NaimenovanieCells = ({
               inputVariants({ editor: true, error: !!errorMessage }),
               'disabled:opacity-100'
             )}
-            onDoubleClick={groupSpravochnik.open}
-            onClear={!value ? groupSpravochnik.clear : undefined}
+            getInputValue={(selected) => selected?.name ?? ''}
+            {...groupSpravochnik}
           />
         </div>
       </EditableTableCell>

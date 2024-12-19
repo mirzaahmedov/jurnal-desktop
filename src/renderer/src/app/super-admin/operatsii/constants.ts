@@ -41,6 +41,10 @@ const operatsiiTypeSchetOptions: Array<{
     label: 'Аванс Отчёт'
   },
   {
+    value: TypeSchetOperatsii.JUR7,
+    label: 'Журнал 7'
+  },
+  {
     value: TypeSchetOperatsii.GENERAL,
     label: 'Общий'
   }

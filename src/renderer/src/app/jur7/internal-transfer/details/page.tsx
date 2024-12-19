@@ -110,13 +110,14 @@ const InternalTransferDetailsPage = () => {
     }
   })
 
+  console.log(form.formState.errors)
+
   return (
     <DetailsPage loading={isFetching}>
       <Form {...form}>
         <form onSubmit={onSubmit}>
           <div className="grid grid-cols-2 items-end">
             <DocumentFields form={form} />
-            {/* <POAFields form={form} /> */}
           </div>
           <div className="grid grid-cols-2">
             <ResponsibleFields

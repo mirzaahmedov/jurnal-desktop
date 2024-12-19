@@ -1,8 +1,7 @@
 import type { ColumnDef } from '@/common/components'
 import type { MO7Rasxod } from '@/common/models'
-
-import { z } from 'zod'
 import { withPreprocessor } from '@/common/lib/validation'
+import { z } from 'zod'
 
 const queryKeys = {
   getAll: 'jur7_rasxod/all',
@@ -53,7 +52,7 @@ const RasxodFormSchema = withPreprocessor(
     doc_num: z.string(),
     doc_date: z.string(),
     opisanie: z.string().optional(),
-    doverennost: z.string(),
+    doverennost: z.string().optional(),
     kimdan_id: z.number(),
     childs: z.array(RasxodChildFormSchema)
   })
