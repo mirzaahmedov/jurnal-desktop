@@ -1,7 +1,7 @@
-import type { ColumnDef } from '@/common/components'
 import type { OrganizationMonitor, OrganizationMonitorProvodka } from '@/common/models'
 
 import { Badge } from '@/common/components/ui/badge'
+import type { ColumnDef } from '@/common/components'
 import { formatLocaleDate } from '@/common/lib/format'
 
 const orgMonitorColumns: ColumnDef<OrganizationMonitor>[] = [
@@ -73,6 +73,12 @@ const getProvodkaName = (type: OrganizationMonitorProvodka) => {
       return 'Показать услуги'
     case 'akt':
       return 'Акт-приём пересдач'
+    case 'jur7_prixod':
+      return 'Журнал 7 приход'
+    case 'jur7_rasxod':
+      return 'Журнал 7 расход'
+    case 'jur7_internal':
+      return 'Журнал 7 внутренний'
     default:
       return ''
   }

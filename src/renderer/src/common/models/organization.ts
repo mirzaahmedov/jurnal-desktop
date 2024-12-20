@@ -18,6 +18,9 @@ type OrganizationMonitorProvodka =
   | 'kassa_rasxod'
   | 'show_service'
   | 'akt'
+  | 'jur7_prixod'
+  | 'jur7_rasxod'
+  | 'jur7_internal'
 
 type OrganizationMonitor = {
   id: number
