@@ -1,7 +1,7 @@
 import type { HTMLAttributes, TdHTMLAttributes, ThHTMLAttributes } from 'react'
+import { TableCell, TableHead, TableRow } from '@/common/components/ui/table'
 
 import { cn } from '@/common/lib/utils'
-import { TableCell, TableHead, TableRow } from '@/common/components/ui/table'
 
 export const EditableTableCell = ({
   children,

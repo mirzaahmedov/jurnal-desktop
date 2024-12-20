@@ -41,20 +41,59 @@ export const ProvodkaTable = ({ form }: ProvodkaTableProps) => {
         })
       }}
     >
-      <Table className="border border-slate-200">
+      <Table className="border border-slate-200 table-xs">
         <TableHeader>
           <EditableTableRow>
             <EditableTableHead rowSpan={2}>Код</EditableTableHead>
-            <EditableTableHead rowSpan={2}>Группа</EditableTableHead>
-            <EditableTableHead rowSpan={2}>Наименования</EditableTableHead>
+            <EditableTableHead
+              rowSpan={2}
+              className="w-48"
+            >
+              Группа
+            </EditableTableHead>
+            <EditableTableHead
+              rowSpan={2}
+              className="min-w-72"
+            >
+              Наименования
+            </EditableTableHead>
             <EditableTableHead rowSpan={2}>Е.И</EditableTableHead>
-            <EditableTableHead rowSpan={2}>Количество</EditableTableHead>
-            <EditableTableHead rowSpan={2}>Цена</EditableTableHead>
-            <EditableTableHead rowSpan={2}>Сумма</EditableTableHead>
-            <EditableTableHead rowSpan={2}>НДС(%)</EditableTableHead>
-            <EditableTableHead rowSpan={2}>НДС</EditableTableHead>
-            <EditableTableHead rowSpan={2}>Сумма + НДС</EditableTableHead>
-            <EditableTableHead rowSpan={2}>Износь</EditableTableHead>
+            <EditableTableHead
+              rowSpan={2}
+              className="text-right"
+            >
+              Количество
+            </EditableTableHead>
+            <EditableTableHead
+              rowSpan={2}
+              className="text-right"
+            >
+              Цена
+            </EditableTableHead>
+            <EditableTableHead
+              rowSpan={2}
+              className="text-right"
+            >
+              Сумма
+            </EditableTableHead>
+            <EditableTableHead
+              rowSpan={2}
+              className="text-right"
+            >
+              НДС(%)
+            </EditableTableHead>
+            <EditableTableHead
+              rowSpan={2}
+              className="text-right"
+            >
+              НДС
+            </EditableTableHead>
+            <EditableTableHead
+              rowSpan={2}
+              className="text-right"
+            >
+              Сумма с НДС
+            </EditableTableHead>
             <EditableTableHead
               colSpan={2}
               className="text-center"
@@ -72,9 +111,9 @@ export const ProvodkaTable = ({ form }: ProvodkaTableProps) => {
           </EditableTableRow>
           <EditableTableRow>
             <EditableTableHead>Счет</EditableTableHead>
-            <EditableTableHead>Субсчет</EditableTableHead>
+            <EditableTableHead className="w-20">Субсчет</EditableTableHead>
             <EditableTableHead>Счет</EditableTableHead>
-            <EditableTableHead className="last:border-solid">Субсчет</EditableTableHead>
+            <EditableTableHead className="last:border-solid w-20">Субсчет</EditableTableHead>
           </EditableTableRow>
         </TableHeader>
         <TableBody>

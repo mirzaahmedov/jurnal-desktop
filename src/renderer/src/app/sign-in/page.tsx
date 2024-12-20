@@ -1,3 +1,4 @@
+import { ArrowRightToLine, Usb } from 'lucide-react'
 import {
   Form,
   FormControl,
@@ -5,22 +6,35 @@ import {
   FormItem,
   FormLabel,
   FormMessage
-} from '@/common/components/ui/form'
+} from '@renderer/common/components/ui/form'
 import { SigninFormSchema, defaultValues } from './config'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
-import { Button } from '@/common/components/ui/button'
-import { Checkbox } from '@/common/components/ui/checkbox'
-import { Input } from '@/common/components/ui/input'
-import logo from '@resources/logo.svg'
+import { Button } from '@renderer/common/components/ui/button'
+import { Checkbox } from '@renderer/common/components/ui/checkbox'
+import { Input } from '@renderer/common/components/ui/input'
+import { SelectField } from '@renderer/common/components'
+import backgroundImage from '@resources/signin-bg.png'
+import logoImage from '@resources/logo.svg'
 import { signinQuery } from './service'
-import { useAuthStore } from '@/common/features/auth'
+import { useAuthStore } from '@renderer/common/features/auth'
 import { useForm } from 'react-hook-form'
-import { useMainSchet } from '@/common/features/main-schet'
+import { useMainSchet } from '@renderer/common/features/main-schet'
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
-import { useToast } from '@/common/hooks/use-toast'
+import { useToast } from '@renderer/common/hooks/use-toast'
 import { zodResolver } from '@hookform/resolvers/zod'
+
+const languageOptions = [
+  {
+    label: 'Русский',
+    value: 'ru'
+  },
+  {
+    label: 'O‘zbekcha',
+    value: 'uz'
+  }
+]
 
 const SigninPage = () => {
   const [isPasswordVisible, setPasswordVisible] = useState(false)
@@ -67,78 +81,107 @@ const SigninPage = () => {
 
   return (
     <main className="h-full flex items-center justify-center">
-      <div className="w-full max-w-md space-y-5">
-        <div className="flex items-center flex-col gap-5">
-          <img
-            src={logo}
-            alt="МЧС Республики Узбекистан"
-            className="h-24"
-          />
-          <h1 className="max-w-xs text-center text-xl leading-tight font-bold">
-            МЧС Республики Узбекистан
-          </h1>
-        </div>
-        <div>
-          <Form {...form}>
-            <form
-              autoComplete="off"
-              onSubmit={onSubmit}
-              className="flex flex-col gap-4"
-            >
-              <FormField
-                control={form.control}
-                name="login"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Логин</FormLabel>
-                    <FormControl>
-                      <Input
-                        autoComplete="off"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Пароль</FormLabel>
-                    <FormControl>
-                      <Input
-                        autoComplete="off"
-                        type={isPasswordVisible ? 'text' : 'password'}
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormItem className="flex items-center gap-2">
-                <FormControl>
-                  <Checkbox
-                    checked={isPasswordVisible}
-                    onCheckedChange={(state) => setPasswordVisible(!!state)}
-                  />
-                </FormControl>
-                <FormLabel className="!mt-0">Показать пароль</FormLabel>
-                <FormMessage />
-              </FormItem>
-              <Button
-                disabled={isPending}
-                type="submit"
-                className="mt-5"
+      <div className="w-full max-w-xl h-full space-y-5 bg-slate-100 py-20 px-16">
+        <div className="h-full flex flex-col justify-center gap-5">
+          <div className="flex items-center flex-col gap-5">
+            <img
+              src={logoImage}
+              alt="МЧС Республики Узбекистан"
+              className="h-48"
+            />
+            <h1 className="max-w-md text-center text-2xl leading-tight font-bold">
+              O‘zbekiston Respublikasi FVV <br />
+              axborot tizimi &quot;Е-Moliya&quot;
+            </h1>
+          </div>
+          <div>
+            <Form {...form}>
+              <form
+                autoComplete="off"
+                onSubmit={onSubmit}
+                className="flex flex-col gap-4"
               >
-                Войти
-              </Button>
-            </form>
-          </Form>
+                <FormField
+                  control={form.control}
+                  name="login"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Login</FormLabel>
+                      <FormControl>
+                        <Input
+                          autoComplete="off"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="password"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Parol</FormLabel>
+                      <FormControl>
+                        <Input
+                          autoComplete="off"
+                          type={isPasswordVisible ? 'text' : 'password'}
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormItem className="flex items-center gap-2">
+                  <FormControl>
+                    <Checkbox
+                      checked={isPasswordVisible}
+                      onCheckedChange={(state) => setPasswordVisible(!!state)}
+                    />
+                  </FormControl>
+                  <FormLabel className="!mt-0">Parolni ko‘rsatish</FormLabel>
+                  <FormMessage />
+                </FormItem>
+                <div className="flex flex-col gap-2">
+                  <Button
+                    disabled={isPending}
+                    type="submit"
+                    className="mt-5"
+                  >
+                    <ArrowRightToLine className="btn-icon icon-start" /> Kirish
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="outline"
+                  >
+                    <Usb className="btn-icon icon-start" /> USB kalit orqali kirish
+                  </Button>
+                </div>
+              </form>
+            </Form>
+          </div>
         </div>
+        <div className="flex justify-end">
+          <SelectField
+            defaultValue="uz"
+            placeholder="Tilni tanlang"
+            options={languageOptions}
+            getOptionLabel={(option) => option.label}
+            getOptionValue={(option) => option.value}
+            triggerClassName="w-32 bg-white"
+          />
+        </div>
+      </div>
+      <div className="flex-1 h-full p-20">
+        <img
+          aria-hidden
+          src={backgroundImage}
+          alt="Orqa fon rasmi"
+          className="w-full h-full object-contain"
+        />
       </div>
     </main>
   )

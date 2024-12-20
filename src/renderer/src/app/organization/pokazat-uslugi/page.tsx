@@ -1,17 +1,16 @@
-import type { PokazatUslugi } from '@/common/models'
-
-import { useNavigate } from 'react-router-dom'
-import { GenericTable } from '@/common/components'
-import { pokazatUslugiColumns } from './columns'
-import { queryKeys } from './constants'
+import { toast, usePagination, useRangeDate } from '@/common/hooks'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+
+import { GenericTable } from '@/common/components'
+import { ListView } from '@/common/views'
+import type { PokazatUslugi } from '@/common/models'
+import { pokazatUslugiColumns } from './columns'
 import { pokazatUslugiService } from './service'
+import { queryKeys } from './constants'
+import { useConfirm } from '@/common/features/confirm'
 import { useLayout } from '@/common/features/layout'
 import { useMainSchet } from '@/common/features/main-schet'
-import { useConfirm } from '@/common/features/confirm'
-
-import { ListView } from '@/common/views'
-import { useRangeDate, usePagination } from '@/common/hooks'
+import { useNavigate } from 'react-router-dom'
 
 const PokazatUslugiPage = () => {
   const { main_schet } = useMainSchet()
@@ -39,6 +38,12 @@ const PokazatUslugiPage = () => {
     onSuccess() {
       queryClient.invalidateQueries({
         queryKey: [queryKeys.getAll]
+      })
+    },
+    onError() {
+      toast({
+        title: 'Ошибка при удалении показа услуги',
+        variant: 'destructive'
       })
     }
   })

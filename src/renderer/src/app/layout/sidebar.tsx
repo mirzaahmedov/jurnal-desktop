@@ -45,7 +45,9 @@ const Sidebar = () => {
               className="max-h-16"
             />
             {!isCollapsed ? (
-              <h1 className="flex-1 text-md leading-tight font-bold">МЧС Республики Узбекистан</h1>
+              <h1 className="flex-1 text-xs font-bold">
+                O‘zbekiston Respublikasi FVV axborot tizimi &quot;Е-Moliya&quot;
+              </h1>
             ) : null}
 
             <Button
