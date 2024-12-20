@@ -1,17 +1,28 @@
-import type { NumericFormatProps } from 'react-number-format'
-import type { InputProps } from './ui/input'
+import { forwardRef, useRef } from 'react'
 
-import { forwardRef } from 'react'
-import { NumericFormat } from 'react-number-format'
 import { Input } from './ui/input'
+import type { InputProps } from './ui/input'
+import { NumericFormat } from 'react-number-format'
+import type { NumericFormatProps } from 'react-number-format'
 import { cn } from '@/common/lib/utils'
 
-export type NumericInputProps = NumericFormatProps<InputProps>
-export const NumericInput = forwardRef<HTMLInputElement, NumericInputProps>(
-  ({ className, ...props }, ref) => {
+type NumericInputProps = NumericFormatProps<InputProps> & {
+  adjustWidth?: boolean
+}
+const NumericInput = forwardRef<HTMLInputElement, NumericInputProps>(
+  ({ className, adjustWidth, ...props }, forwardedRef) => {
+    const inputRef = useRef<HTMLInputElement>()
+
     return (
       <NumericFormat
-        getInputRef={ref}
+        getInputRef={(ref: HTMLInputElement) => {
+          inputRef.current = ref
+          if (typeof forwardedRef === 'function') {
+            forwardedRef(ref)
+          } else if (forwardedRef) {
+            forwardedRef.current = ref
+          }
+        }}
         allowNegative
         allowLeadingZeros={false}
         thousandSeparator=" "
@@ -20,8 +31,22 @@ export const NumericInput = forwardRef<HTMLInputElement, NumericInputProps>(
         customInput={Input}
         className={cn('text-end', className)}
         {...props}
+        onValueChange={(values, src) => {
+          props.onValueChange?.(values, src)
+          if (adjustWidth) {
+            const input = inputRef.current
+            if (input) {
+              input.style.minWidth = `${input.value.length}ch`
+            }
+          }
+        }}
         onChange={undefined}
       />
     )
   }
 )
+
+NumericInput.displayName = 'NumericInput'
+
+export { NumericInput }
+export type { NumericInputProps }

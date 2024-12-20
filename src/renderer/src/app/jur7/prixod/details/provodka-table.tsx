@@ -64,16 +64,19 @@ export const ProvodkaTable = ({ form }: ProvodkaTableProps) => {
         })
       }}
     >
-      <Table className="border border-slate-200">
+      <Table className="border border-slate-200 overflow-x-auto">
         <TableHeader>
           <EditableTableRow>
-            <EditableTableHead rowSpan={2}>Код товара</EditableTableHead>
+            <EditableTableHead rowSpan={2}>Код</EditableTableHead>
             <EditableTableHead rowSpan={2}>Группа</EditableTableHead>
             <EditableTableHead rowSpan={2}>Наименования</EditableTableHead>
             <EditableTableHead rowSpan={2}>Е.И</EditableTableHead>
             <EditableTableHead rowSpan={2}>Количество</EditableTableHead>
             <EditableTableHead rowSpan={2}>Цена</EditableTableHead>
             <EditableTableHead rowSpan={2}>Сумма</EditableTableHead>
+            <EditableTableHead rowSpan={2}>НДС(%)</EditableTableHead>
+            <EditableTableHead rowSpan={2}>НДС</EditableTableHead>
+            <EditableTableHead rowSpan={2}>Сумма + НДС</EditableTableHead>
             <EditableTableHead rowSpan={2}>Износь</EditableTableHead>
             <EditableTableHead
               colSpan={2}
@@ -116,6 +119,7 @@ export const ProvodkaTable = ({ form }: ProvodkaTableProps) => {
                   <EditableTableCell>
                     <div className="relative">
                       <NumericInput
+                        adjustWidth
                         value={row.kol || ''}
                         onValueChange={(values) => {
                           const summa = calcSumma(values.floatValue ?? 0, row.sena)
@@ -134,6 +138,7 @@ export const ProvodkaTable = ({ form }: ProvodkaTableProps) => {
                   <EditableTableCell>
                     <div className="relative">
                       <NumericInput
+                        adjustWidth
                         value={row.sena || ''}
                         onValueChange={(values) => {
                           const summa = calcSumma(row.kol, values.floatValue ?? 0)
@@ -152,6 +157,7 @@ export const ProvodkaTable = ({ form }: ProvodkaTableProps) => {
                   <EditableTableCell>
                     <div className="relative">
                       <NumericInput
+                        adjustWidth
                         value={row.summa || ''}
                         onValueChange={(values) => {
                           const sena = calcSena(values.floatValue ?? 0, row.kol)
@@ -163,6 +169,54 @@ export const ProvodkaTable = ({ form }: ProvodkaTableProps) => {
                         className={inputVariants({
                           editor: true,
                           error: !!form.formState.errors.childs?.[index]?.summa
+                        })}
+                      />
+                    </div>
+                  </EditableTableCell>
+
+                  <EditableTableCell>
+                    <div className="relative">
+                      <NumericInput
+                        adjustWidth
+                        isAllowed={(values) => (values.floatValue ?? 0) <= 99}
+                        value={row.nds_foiz || ''}
+                        onValueChange={(values) => {
+                          handleChangeChildField(index, 'nds_foiz', values.floatValue)
+                        }}
+                        className={inputVariants({
+                          editor: true,
+                          error: !!form.formState.errors.childs?.[index]?.nds_foiz
+                        })}
+                      />
+                    </div>
+                  </EditableTableCell>
+
+                  <EditableTableCell>
+                    <div className="relative">
+                      <NumericInput
+                        readOnly
+                        adjustWidth
+                        value={((row.kol || 0) * (row.sena || 0) * (row.nds_foiz || 0)) / 100 || ''}
+                        className={inputVariants({
+                          editor: true,
+                          nonfocus: true
+                        })}
+                      />
+                    </div>
+                  </EditableTableCell>
+
+                  <EditableTableCell>
+                    <div className="relative">
+                      <NumericInput
+                        readOnly
+                        adjustWidth
+                        value={
+                          (row.kol || 0) * (row.sena || 0) +
+                            ((row.kol || 0) * (row.sena || 0) * (row.nds_foiz || 0)) / 100 || ''
+                        }
+                        className={inputVariants({
+                          editor: true,
+                          nonfocus: true
                         })}
                       />
                     </div>

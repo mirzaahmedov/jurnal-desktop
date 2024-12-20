@@ -12,7 +12,6 @@ const ShartnomaFields: FormSpravochnikFieldsComponent<Shartnoma> = ({
   error,
   ...props
 }) => {
-  console.log({ spravochnik })
   const { inputRef, ...spravochnikProps } = spravochnik
 
   return (

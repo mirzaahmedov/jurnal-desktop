@@ -110,8 +110,6 @@ const InternalTransferDetailsPage = () => {
     }
   })
 
-  console.log(form.formState.errors)
-
   return (
     <DetailsPage loading={isFetching}>
       <Form {...form}>

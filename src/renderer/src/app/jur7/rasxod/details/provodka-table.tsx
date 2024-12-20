@@ -44,13 +44,17 @@ export const ProvodkaTable = ({ form }: ProvodkaTableProps) => {
       <Table className="border border-slate-200">
         <TableHeader>
           <EditableTableRow>
-            <EditableTableHead rowSpan={2}>Код товара</EditableTableHead>
+            <EditableTableHead rowSpan={2}>Код</EditableTableHead>
             <EditableTableHead rowSpan={2}>Группа</EditableTableHead>
             <EditableTableHead rowSpan={2}>Наименования</EditableTableHead>
             <EditableTableHead rowSpan={2}>Е.И</EditableTableHead>
             <EditableTableHead rowSpan={2}>Количество</EditableTableHead>
             <EditableTableHead rowSpan={2}>Цена</EditableTableHead>
             <EditableTableHead rowSpan={2}>Сумма</EditableTableHead>
+            <EditableTableHead rowSpan={2}>НДС(%)</EditableTableHead>
+            <EditableTableHead rowSpan={2}>НДС</EditableTableHead>
+            <EditableTableHead rowSpan={2}>Сумма + НДС</EditableTableHead>
+            <EditableTableHead rowSpan={2}>Износь</EditableTableHead>
             <EditableTableHead
               colSpan={2}
               className="text-center"
@@ -152,7 +156,7 @@ const Provodka = ({ index, row, form }: ProvodkaProps) => {
     <EditableTableRow key={index}>
       <NaimenovanieCells
         index={index}
-        kimdan_id={form.getValues('kimdan_id')}
+        kimdan_id={form.watch('kimdan_id')}
         setMaxKol={setMaxKol}
         errorMessage={form.formState.errors.childs?.[index]?.naimenovanie_tovarov_jur7_id?.message}
         value={row.naimenovanie_tovarov_jur7_id}
@@ -164,6 +168,7 @@ const Provodka = ({ index, row, form }: ProvodkaProps) => {
       <EditableTableCell>
         <div className="relative">
           <NumericInput
+            adjustWidth
             isAllowed={(values) => (values.floatValue ?? 0) <= maxKol}
             value={row.kol || ''}
             onValueChange={(values) => {
@@ -183,6 +188,7 @@ const Provodka = ({ index, row, form }: ProvodkaProps) => {
       <EditableTableCell>
         <div className="relative">
           <NumericInput
+            adjustWidth
             value={row.sena || ''}
             onValueChange={(values) => {
               const summa = calcSumma(row.kol, values.floatValue ?? 0)
@@ -201,6 +207,7 @@ const Provodka = ({ index, row, form }: ProvodkaProps) => {
       <EditableTableCell>
         <div className="relative">
           <NumericInput
+            adjustWidth
             value={row.summa || ''}
             onValueChange={(values) => {
               const sena = calcSena(values.floatValue ?? 0, row.kol)
@@ -212,6 +219,53 @@ const Provodka = ({ index, row, form }: ProvodkaProps) => {
             className={inputVariants({
               editor: true,
               error: !!form.formState.errors.childs?.[index]?.summa
+            })}
+          />
+        </div>
+      </EditableTableCell>
+      <EditableTableCell>
+        <div className="relative">
+          <NumericInput
+            adjustWidth
+            isAllowed={(values) => (values.floatValue ?? 0) <= 99}
+            value={row.nds_foiz || ''}
+            onValueChange={(values) => {
+              handleChangeChildField(index, 'nds_foiz', values.floatValue)
+            }}
+            className={inputVariants({
+              editor: true,
+              error: !!form.formState.errors.childs?.[index]?.nds_foiz
+            })}
+          />
+        </div>
+      </EditableTableCell>
+
+      <EditableTableCell>
+        <div className="relative">
+          <NumericInput
+            readOnly
+            adjustWidth
+            value={((row.kol || 0) * (row.sena || 0) * (row.nds_foiz || 0)) / 100 || ''}
+            className={inputVariants({
+              editor: true,
+              nonfocus: true
+            })}
+          />
+        </div>
+      </EditableTableCell>
+
+      <EditableTableCell>
+        <div className="relative">
+          <NumericInput
+            readOnly
+            adjustWidth
+            value={
+              (row.kol || 0) * (row.sena || 0) +
+                ((row.kol || 0) * (row.sena || 0) * (row.nds_foiz || 0)) / 100 || ''
+            }
+            className={inputVariants({
+              editor: true,
+              nonfocus: true
             })}
           />
         </div>
@@ -346,6 +400,11 @@ const NaimenovanieCells = ({
     createNaimenovanieKolSpravochnik({
       value,
       onChange(id, data) {
+        onChange(id)
+
+        if (!data?.result) {
+          return
+        }
         setMaxKol(data?.result ?? Infinity)
         onChangeChildFieldEvent(index, 'kol', data?.result ?? 0)
         onChangeChildFieldEvent(index, 'sena', data?.sena ?? 0)
@@ -354,7 +413,6 @@ const NaimenovanieCells = ({
           'data_pereotsenka',
           data?.doc_date ? data.doc_date.substring(0, 10) : ''
         )
-        onChange(id)
       },
       params: {
         kimdan_id
@@ -405,6 +463,8 @@ const NaimenovanieCells = ({
       groupSpravochnik.selected?.provodka_subschet ?? ''
     )
   }, [index, onChangeChildFieldEvent, groupSpravochnik.selected])
+
+  console.log({ naimenovanieSpravochnik, groupSpravochnik })
 
   return (
     <>

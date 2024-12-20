@@ -1,13 +1,13 @@
 import type { EditableColumnType } from '@/common/features/editable-table'
 import type { PrixodPodvodkaPayloadType } from '../service'
-
 import { TypeSchetOperatsii } from '@/common/models'
+
 import {
   createOperatsiiEditor,
-  createTypeOperatsiiEditor,
-  createStaffEditor,
   createPodrazdelenieEditor,
-  createSummaEditor
+  createStaffEditor,
+  createSummaEditor,
+  createTypeOperatsiiEditor
 } from '@/common/features/editable-table/editors'
 
 export const podvodkaColumns: EditableColumnType<PrixodPodvodkaPayloadType>[] = [

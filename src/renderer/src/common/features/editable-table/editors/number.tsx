@@ -1,21 +1,29 @@
-import type { EditorComponentType } from './types'
+import { NumericInput, inputVariants } from '@/common/components'
 
-import { inputVariants, NumericInput } from '@/common/components'
+import type { EditorComponentType } from './types'
 
 const createNumberEditor = <T extends Record<string, unknown>>({
   readOnly = false,
-  key
+  key,
+  max
 }: {
   readOnly?: boolean
   key: keyof T
+  max?: number
 }): EditorComponentType<T> => {
-  return ({ tabIndex, id, row, errors, onChange }) => {
+  const EditorComponent: EditorComponentType<T> = ({ tabIndex, id, row, errors, onChange }) => {
     return (
       <div className="relative">
         <NumericInput
           readOnly={readOnly}
           name={key as string}
           tabIndex={tabIndex}
+          isAllowed={(values) => {
+            if (max) {
+              return (values.floatValue ?? 0) <= max
+            }
+            return true
+          }}
           value={
             typeof row[key] === 'string' || typeof row[key] === 'number'
               ? Number(row[key]) !== 0
@@ -43,6 +51,7 @@ const createNumberEditor = <T extends Record<string, unknown>>({
       </div>
     )
   }
+  return EditorComponent
 }
 
 export { createNumberEditor }

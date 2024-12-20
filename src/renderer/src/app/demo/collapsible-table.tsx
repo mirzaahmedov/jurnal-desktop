@@ -23,8 +23,6 @@ type CollapsibleTableProps = {
 const CollapsibleTable = ({ data }: CollapsibleTableProps) => {
   const nested = useMemo(() => groupNestedList(data, 'father_smeta_name'), [data])
 
-  console.log({ nested })
-
   return (
     <Table>
       <TableHeader>

@@ -1,5 +1,5 @@
-import type { FieldErrors } from 'react-hook-form'
 import type { EditableColumnType } from '../table'
+import type { FieldErrors } from 'react-hook-form'
 import type { ReactNode } from 'react'
 
 export type ChangeContext<T extends Record<string, unknown>, K extends keyof T = keyof T> = {
@@ -17,6 +17,7 @@ export type EditorComponentType<T extends Record<string, unknown>> = (props: {
   id: number
   row: T
   col: EditableColumnType<T>
+  max?: number
   errors?: FieldErrors<T>
   onChange?(ctx: ChangeContext<T>): void
 }) => ReactNode

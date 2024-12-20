@@ -1,15 +1,16 @@
-import type { ReactNode } from 'react'
+import { Autocomplete } from '@renderer/common/lib/types'
+import { Button } from '@renderer/common/components/ui/button'
 import type { EditorComponentType } from './editors'
-
-import { Table, TableBody, TableFooter, TableHeader } from '@/common/components/ui/table'
-import { EditableTableRow, EditableTableHead, EditableTableCell } from './components'
-import { Button } from '@/common/components/ui/button'
 import { FieldErrors } from 'react-hook-form'
+import type { ReactNode } from 'react'
+
 import { ChangeContext, DeleteContext } from './editors/types'
 import { CircleMinus, CirclePlus } from 'lucide-react'
+import { EditableTableCell, EditableTableHead, EditableTableRow } from './components'
+import { Table, TableBody, TableFooter, TableHeader } from '@renderer/common/components/ui/table'
 
 export type EditableColumnType<T extends Record<string, unknown>> = {
-  key: keyof T
+  key: Autocomplete<keyof T>
   header: ReactNode
   Editor: EditorComponentType<T>
 }

@@ -5,16 +5,10 @@ import { Unit } from '@/common/models'
 import { useQuery } from '@tanstack/react-query'
 
 const EdinSelect = (props: Partial<SelectFieldProps<Unit>>) => {
-  const {
-    data: unitList,
-    isFetching,
-    error
-  } = useQuery({
+  const { data: unitList, isFetching } = useQuery({
     queryKey: [unitQueryKeys.getAll],
     queryFn: unitService.getAll
   })
-
-  console.log({ isFetching, error })
 
   return (
     <SelectField

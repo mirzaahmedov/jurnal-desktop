@@ -96,7 +96,7 @@ const MO7RasxodDetailsPage = () => {
 
   const kimdan_id = form.watch('kimdan_id')
   useEffect(() => {
-    if (kimdan_id !== prevData.current.kimdan_id) {
+    if (kimdan_id !== prevData.current.kimdan_id && prevData.current.kimdan_id) {
       if (kimdan_id) {
         form.setValue(
           'childs',

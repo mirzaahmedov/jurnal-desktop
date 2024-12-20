@@ -2,22 +2,22 @@ import type { AktForm, AktProvodkaForm } from '../service'
 
 import { AktFormSchema, AktProvodkaFormSchema, aktService } from '../service'
 import { useCallback, useEffect } from 'react'
-import { useSpravochnik } from '@/common/features/spravochnik'
-import { Form } from '@/common/components/ui/form'
+import { useSpravochnik } from '@renderer/common/features/spravochnik'
+import { Form } from '@renderer/common/components/ui/form'
 import { createOrganizationSpravochnik } from '@renderer/app/region-spravochnik/organization'
-import { createOperatsiiSpravochnik } from '@/app/super-admin/operatsii'
+import { createOperatsiiSpravochnik } from '@renderer/app/super-admin/operatsii'
 import { createShartnomaSpravochnik } from '@renderer/app/organization/shartnoma'
-import { TypeSchetOperatsii } from '@/common/models'
-import { useToast } from '@/common/hooks/use-toast'
+import { TypeSchetOperatsii } from '@renderer/common/models'
+import { useToast } from '@renderer/common/hooks/use-toast'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { queryKeys, defaultValues } from '../constants'
-import { normalizeEmptyFields } from '@/common/lib/validation'
-import { useLayout } from '@/common/features/layout'
-import { useMainSchet } from '@/common/features/main-schet'
-import { EditableTable } from '@/common/features/editable-table'
+import { normalizeEmptyFields } from '@renderer/common/lib/validation'
+import { useLayout } from '@renderer/common/features/layout'
+import { useMainSchet } from '@renderer/common/features/main-schet'
+import { EditableTable } from '@renderer/common/features/editable-table'
 import { podvodkaColumns } from './provodki'
 import {
   OperatsiiFields,
@@ -26,14 +26,13 @@ import {
   OpisanieFields,
   OrganizationFields,
   SummaFields
-} from '@/common/widget/form'
-import { Fieldset } from '@/common/components'
+} from '@renderer/common/widget/form'
+import { Fieldset } from '@renderer/common/components'
 import {
   createEditorChangeHandler,
   createEditorCreateHandler,
   createEditorDeleteHandler
-} from '@/common/features/editable-table/helpers'
-
+} from '@renderer/common/features/editable-table/helpers'
 import { DetailsView } from '@/common/views'
 
 const AktDetailsPage = () => {
@@ -193,8 +192,8 @@ const AktDetailsPage = () => {
   useEffect(() => {
     const summa =
       podvodki
-        .filter((podvodka) => !isNaN(podvodka.kol) && !isNaN(podvodka.sena))
-        .reduce((acc, curr) => acc + curr.kol * curr.sena, 0) ?? 0
+        .filter((podvodka) => !isNaN(Number(podvodka?.kol)) && !isNaN(Number(podvodka?.sena)))
+        .reduce((acc, curr) => acc + (curr?.kol || 0) * (curr?.sena || 0), 0) ?? 0
     form.setValue('summa', summa)
   }, [form, podvodki])
 

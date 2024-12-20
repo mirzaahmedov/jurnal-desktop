@@ -184,8 +184,6 @@ const MO7PrixodDetailsPage = () => {
     }
   })
 
-  console.log({ shartnomaSpravochnik })
-
   return (
     <DetailsPage loading={isFetching}>
       <Form {...form}>

@@ -2,6 +2,7 @@ type Jur7Child = {
   naimenovanie_tovarov_jur7_id: number
   kol: number
   sena: number
+  nds_foiz: number
   summa: number
   debet_schet: string
   debet_sub_schet: string

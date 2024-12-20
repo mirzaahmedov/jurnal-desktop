@@ -1,9 +1,8 @@
-import type { ColumnDef } from '@/common/components'
 import type { Akt } from '@/common/models'
-
-import { formatLocaleDate } from '@/common/lib/format'
+import type { ColumnDef } from '@/common/components'
 import { Copyable } from '@/common/components'
 import { TooltipCellRenderer } from '@/common/components/table/renderers'
+import { formatLocaleDate } from '@/common/lib/format'
 
 export const columns: ColumnDef<Akt>[] = [
   {

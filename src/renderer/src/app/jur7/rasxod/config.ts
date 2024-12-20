@@ -39,6 +39,7 @@ const RasxodChildFormSchema = withPreprocessor(
     kol: z.number(),
     sena: z.number(),
     summa: z.number(),
+    nds_foiz: z.number().optional(),
     debet_schet: z.string(),
     debet_sub_schet: z.string(),
     kredit_schet: z.string(),

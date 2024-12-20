@@ -1,3 +1,8 @@
+import { Progress } from '@renderer/common/components/ui/progress'
+import { cn } from '@renderer/common/lib/utils'
+import { events } from '@main/auto-updater'
+import { toast } from '@renderer/common/hooks/use-toast'
+
 import {
   AlertDialog,
   AlertDialogAction,
@@ -8,11 +13,6 @@ import {
 } from '@renderer/common/components/ui/alert-dialog'
 import { Check, Download, MessageCircleWarning, TriangleAlert } from 'lucide-react'
 import { useEffect, useState } from 'react'
-
-import { Progress } from '@renderer/common/components/ui/progress'
-import { cn } from '@renderer/common/lib/utils'
-import { events } from '@main/auto-updater'
-import { toast } from '@renderer/common/hooks/use-toast'
 
 const ipcRenderer = window.electron.ipcRenderer
 
