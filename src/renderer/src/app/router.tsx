@@ -13,7 +13,11 @@ import BankRasxodDetailsPage from './bank/rasxod/details/page'
 import BankRasxodPage from './bank/rasxod/page'
 import BankSpravochnikPage from './super-admin/bank/page'
 import BudgetPage from './super-admin/budjet/page'
+import CloseMonthlyReportDetailsPage from './main-book/close-monthly-report/details/page'
+import CloseMonthlyReportPage from './main-book/close-monthly-report/page'
 import ContractDetailsPage from './organization/shartnoma/details/page'
+import CreateMonthlyReportDetailsPage from './main-book/create-monthly-report/details/page'
+import CreateMonthlyReportPage from './main-book/create-monthly-report/page'
 // import DemoPage from './demo/page'
 import GroupPage from './super-admin/group/page'
 import HomePage from './home/page'
@@ -259,10 +263,6 @@ export const routes: RouteObject[] = [
           {
             path: 'unit',
             element: <UnitPage />
-          },
-          {
-            path: 'region-data',
-            element: <RegionDataPage />
           }
         ]
       },
@@ -325,6 +325,31 @@ export const routes: RouteObject[] = [
             element: <InternalTransferDetailsPage />
           }
         ]
+      },
+      {
+        path: 'main-book',
+        children: [
+          {
+            path: 'create-monthly-report',
+            element: <CreateMonthlyReportPage />
+          },
+          {
+            path: 'create-monthly-report/:id',
+            element: <CreateMonthlyReportDetailsPage />
+          },
+          {
+            path: 'close-monthly-report',
+            element: <CloseMonthlyReportPage />
+          },
+          {
+            path: 'close-monthly-report/:id',
+            element: <CloseMonthlyReportDetailsPage />
+          }
+        ]
+      },
+      {
+        path: 'region-data',
+        element: <RegionDataPage />
       },
       {
         index: true,

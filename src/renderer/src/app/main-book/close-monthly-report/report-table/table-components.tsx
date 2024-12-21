@@ -20,7 +20,7 @@ const cellVariants = cva(
   }
 )
 
-const SmetaTableCell = ({
+const ReportTableCell = ({
   children,
   alphanumeric,
   sticky,
@@ -59,7 +59,7 @@ const headVariants = cva(
   }
 )
 
-const SmetaTableHead = forwardRef<
+const ReportTableHead = forwardRef<
   HTMLTableCellElement,
   ThHTMLAttributes<HTMLTableCellElement> & VariantProps<typeof headVariants>
 >(({ children, alphanumeric, sticky, ...props }, ref) => {
@@ -80,11 +80,11 @@ const SmetaTableHead = forwardRef<
     </TableHead>
   )
 })
-SmetaTableHead.displayName = 'SmetaTableHead'
+ReportTableHead.displayName = 'ReportTableHead'
 
 const rowVariants = cva('group cursor-pointer hover:bg-white')
 
-const SmetaTableRow = forwardRef<HTMLTableRowElement, HTMLAttributes<HTMLTableRowElement>>(
+const ReportTableRow = forwardRef<HTMLTableRowElement, HTMLAttributes<HTMLTableRowElement>>(
   ({ children, ...props }, ref) => {
     return (
       <TableRow
@@ -97,6 +97,6 @@ const SmetaTableRow = forwardRef<HTMLTableRowElement, HTMLAttributes<HTMLTableRo
     )
   }
 )
-SmetaTableRow.displayName = 'SmetaTableRow'
+ReportTableRow.displayName = 'ReportTableRow'
 
-export { SmetaTableCell, SmetaTableHead, SmetaTableRow }
+export { ReportTableCell, ReportTableHead, ReportTableRow }

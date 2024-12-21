@@ -1,10 +1,10 @@
 import type { ButtonHTMLAttributes, HTMLAttributes } from 'react'
 
-import { cn } from '@/common/lib/utils'
-import { CircleCheck } from 'lucide-react'
 import { Button } from '@/common/components/ui/button'
+import { CircleCheck } from 'lucide-react'
 import { LoadingSpinner } from '@/common/components'
 import { ScrollArea } from '@/common/components/ui/scroll-area'
+import { cn } from '@/common/lib/utils'
 
 type DetailsViewProps = HTMLAttributes<HTMLElement>
 const DetailsView = ({ children, className, ...props }: DetailsViewProps) => {

@@ -4,6 +4,8 @@ import {
   Building,
   Building2,
   CalendarCheck,
+  CalendarPlus2,
+  CalendarX,
   ChartCandlestick,
   CircleDollarSign,
   CircleFadingPlus,
@@ -22,6 +24,7 @@ import {
   MapPinHouse,
   MonitorCog,
   NotebookTabs,
+  NotebookText,
   NotepadText,
   Percent,
   ReceiptText,
@@ -385,14 +388,31 @@ export const getNavElements = (): NavElement[] => {
               path: 'unit',
               title: 'Единица измерения',
               icon: Weight
-            },
-            {
-              path: 'region-data',
-              title: 'Проверка данных',
-              icon: Database
             }
           ])
         }
-      : null
+      : null,
+    {
+      path: '/main-book',
+      title: 'Главный книга',
+      icon: NotebookText,
+      children: [
+        {
+          path: 'create-monthly-report',
+          title: 'Создать месячный отчёт',
+          icon: CalendarPlus2
+        },
+        {
+          path: 'close-monthly-report',
+          title: 'Закрыть месячный отчёт',
+          icon: CalendarX
+        }
+      ]
+    },
+    {
+      path: 'region-data',
+      title: 'Проверка данных',
+      icon: Database
+    }
   ])
 }
