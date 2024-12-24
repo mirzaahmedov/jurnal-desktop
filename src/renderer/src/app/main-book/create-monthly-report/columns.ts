@@ -11,10 +11,12 @@ const createMonthlyReportColumns: ColumnDef<CreateMonthlyReport>[] = [
     header: 'Год'
   },
   {
-    key: 'kredit',
+    numeric: true,
+    key: 'kredit_sum',
     header: 'Кредит'
   },
   {
+    numeric: true,
     key: 'debet_sum',
     header: 'Дебет'
   },

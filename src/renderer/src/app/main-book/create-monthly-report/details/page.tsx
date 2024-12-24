@@ -32,6 +32,7 @@ import { useMainSchet } from '@renderer/common/features/main-schet'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 const documentTypeOptions = [
+  { value: 'start', label: 'Начало' },
   { value: 'jur1', label: 'Ж.О.1' },
   { value: 'jur2', label: 'Ж.О.2' },
   { value: 'jur3', label: 'Ж.О.3' },
@@ -39,7 +40,8 @@ const documentTypeOptions = [
   { value: 'jur5', label: 'Ж.О.5' },
   { value: 'jur6', label: 'Ж.О.6' },
   { value: 'jur7', label: 'Ж.О.7' },
-  { value: 'jur8', label: 'Ж.О.8' }
+  { value: 'jur8', label: 'Ж.О.8' },
+  { value: 'end', label: 'Конец' }
 ]
 
 const CreateMonthlyReportDetailsPage = () => {

@@ -21,7 +21,11 @@ export interface CloseMonthlyReport {
   month: number
   year: number
   user_id: number
-  user_id_qabul_qilgan: any
+  login: string
+  cofirm_login: null | string
+  document_yaratilgan_vaqt: string
+  user_id_qabul_qilgan: null | number
+  document_qabul_qilingan_vaqt: null | string
   budjet_id: number
   budjet_name: string
   status: number
