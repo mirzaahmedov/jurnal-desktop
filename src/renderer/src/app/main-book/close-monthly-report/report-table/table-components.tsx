@@ -14,7 +14,7 @@ const cellVariants = cva(
         true: 'text-center'
       },
       sticky: {
-        true: 'sticky left-0 bg-white font-extrabold z-50 whitespace-nowrap overflow-y-clip'
+        true: 'sticky left-0 bg-white font-extrabold z-50 overflow-y-clip'
       }
     }
   }

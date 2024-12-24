@@ -1,3 +1,4 @@
+import { deleteCloseMonthlyReport, getCloseMonthlyReportList } from './service'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 import { CloseMonthlyReport } from '@renderer/common/models'
@@ -6,26 +7,27 @@ import { ListView } from '@renderer/common/views'
 import { MonthPicker } from '@renderer/common/components/month-picker'
 import { closeMonthlyReportColumns } from './columns'
 import { closeMonthlyReportQueryKeys } from './config'
-import { closeMonthlyReportService } from './service'
 import { toast } from '@renderer/common/hooks'
 import { useConfirm } from '@renderer/common/features/confirm'
 import { useLayout } from '@renderer/common/features/layout'
+import { useMainSchet } from '@renderer/common/features/main-schet'
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 
 const CloseMonthlyReportPage = () => {
   const [date, setDate] = useState('2024-01-01')
 
+  const main_schet_id = useMainSchet((store) => store.main_schet?.id)
   const queryClient = useQueryClient()
   const navigate = useNavigate()
   const { confirm } = useConfirm()
 
   const { data: closeMontlyReportList, isFetching } = useQuery({
-    queryKey: [closeMonthlyReportQueryKeys.getAll],
-    queryFn: () => closeMonthlyReportService.getAll()
+    queryKey: [closeMonthlyReportQueryKeys.getAll, { main_schet_id: main_schet_id! }],
+    queryFn: getCloseMonthlyReportList
   })
-  const { mutate: deleteCloseMonthlyReport, isPending } = useMutation({
-    mutationFn: (id: number) => closeMonthlyReportService.delete(id),
+  const { mutate, isPending } = useMutation({
+    mutationFn: deleteCloseMonthlyReport,
     onError: (error) => {
       console.error(error)
       toast({
@@ -46,19 +48,24 @@ const CloseMonthlyReportPage = () => {
   useLayout({
     title: 'Закончить месячный отчёт',
     onCreate: () => {
-      navigate('create')
+      navigate('all/create')
     }
   })
 
   const handleEdit = (row: CloseMonthlyReport) => {
-    navigate(`${row.id}`)
+    navigate(`${row.year}/${row.month}`)
   }
 
   const handleDelete = (row: CloseMonthlyReport) => {
     confirm({
       title: 'Удалить запись?',
       onConfirm: async () => {
-        deleteCloseMonthlyReport(row.id)
+        if (!main_schet_id) return
+        mutate({
+          main_schet_id: main_schet_id!,
+          year: row.year,
+          month: row.month
+        })
       }
     })
   }

@@ -1,31 +1,35 @@
+import { createMonthlyReportDeleteQuery, createMonthlyReportGetAllQuery } from './service'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 import { CreateMonthlyReport } from '@renderer/common/models'
 import { GenericTable } from '@renderer/common/components'
 import { ListView } from '@renderer/common/views'
-import { MonthPicker } from '@renderer/common/components/month-picker'
 import { createMonthlyReportColumns } from './columns'
 import { createMonthlyReportQueryKeys } from './config'
-import { createMonthlyReportService } from './service'
 import { toast } from '@renderer/common/hooks'
 import { useConfirm } from '@renderer/common/features/confirm'
 import { useLayout } from '@renderer/common/features/layout'
+import { useMainSchet } from '@renderer/common/features/main-schet'
 import { useNavigate } from 'react-router-dom'
-import { useState } from 'react'
 
 const CreateMonthlyReportPage = () => {
-  const [date, setDate] = useState('2024-01-01')
-
+  const main_schet_id = useMainSchet((store) => store.main_schet?.id)
   const queryClient = useQueryClient()
   const navigate = useNavigate()
   const { confirm } = useConfirm()
 
   const { data: createMontlyReportList, isFetching } = useQuery({
-    queryKey: [createMonthlyReportQueryKeys.getAll],
-    queryFn: () => createMonthlyReportService.getAll()
+    queryKey: [
+      createMonthlyReportQueryKeys.getAll,
+      {
+        main_schet_id: main_schet_id!
+      }
+    ],
+    queryFn: createMonthlyReportGetAllQuery
   })
   const { mutate: deleteCreateMonthlyReport, isPending } = useMutation({
-    mutationFn: (id: number) => createMonthlyReportService.delete(id),
+    mutationKey: [createMonthlyReportQueryKeys.delete],
+    mutationFn: createMonthlyReportDeleteQuery,
     onError: (error) => {
       console.error(error)
       toast({
@@ -46,40 +50,42 @@ const CreateMonthlyReportPage = () => {
   useLayout({
     title: 'Создать месячный отчет',
     onCreate: () => {
-      navigate('create')
+      const date = new Date().toISOString().slice(0, 7)
+      const [year, month] = date.split('-')
+      navigate(`${year}/${month}/create`)
     }
   })
 
   const handleEdit = (row: CreateMonthlyReport) => {
-    navigate(`${row.id}`)
+    navigate(`${row.year}/${row.month}/${row.type_document}`)
   }
 
   const handleDelete = (row: CreateMonthlyReport) => {
     confirm({
       title: 'Удалить запись?',
       onConfirm: async () => {
-        deleteCreateMonthlyReport(row.id)
+        // @ts-ignore - fix this
+        deleteCreateMonthlyReport({
+          type_document: row.type_document,
+          year: row.year,
+          month: row.month,
+          main_schet_id: main_schet_id!
+        })
       }
     })
   }
 
   return (
     <ListView>
-      <ListView.Header>
-        <MonthPicker
-          value={date}
-          onChange={setDate}
-        />
-      </ListView.Header>
       <ListView.Content loading={isFetching || isPending}>
         <GenericTable
           columns={createMonthlyReportColumns}
           data={createMontlyReportList?.data ?? []}
           onEdit={handleEdit}
           onDelete={handleDelete}
+          getRowId={(row) => row.month + row.year + row.type_document}
         />
       </ListView.Content>
-      <ListView.Footer></ListView.Footer>
     </ListView>
   )
 }

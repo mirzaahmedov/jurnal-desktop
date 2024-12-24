@@ -410,7 +410,7 @@ export const getNavElements = (): NavElement[] => {
       ]
     },
     {
-      path: 'region-data',
+      path: '/region-data',
       title: 'Проверка данных',
       icon: Database
     }

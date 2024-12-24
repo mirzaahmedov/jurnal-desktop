@@ -1,5 +1,5 @@
-type MonthlyReportStatus = 'draft' | 'approved' | 'rejected'
-type MonthlyReportDocumentType =
+export type MonthlyReportStatus = 'draft' | 'approved' | 'rejected'
+export type MonthlyReportDocumentType =
   | 'akt'
   | 'shartnoma'
   | 'avans'
@@ -9,8 +9,7 @@ type MonthlyReportDocumentType =
   | 'schet-operatsii'
   | 'podpis'
 
-type CreateMonthlyReport = {
-  id: number
+export interface CreateMonthlyReport {
   year: number
   month: number
   type_document: MonthlyReportDocumentType
@@ -18,28 +17,55 @@ type CreateMonthlyReport = {
   debet_sum: number
 }
 
-type CloseMonthlyReport = {
-  id: number
-  year: number
+export interface CloseMonthlyReport {
   month: number
+  year: number
   user_id: number
-  yaratilgan_vaqt: string
-  user_id_qabul_qilgan: number
-  document_qabul_qilingan_vaqt: string
-  status: MonthlyReportStatus
+  user_id_qabul_qilgan: any
+  budjet_id: number
+  budjet_name: string
+  status: number
 }
 
-type CloseMonthlyReportDetails = {
+export interface CloseMonthlyReportDetails {
+  key: string
+  schets: Schet[]
+  debet_sum: number
+  kredit_sum: number
+}
+
+export interface Schet {
   id: number
-  spravochnik_operatsii_id: number
-  spravochnik_operatsii_name: string
-  spravochnik_operatsii_schet: string
+  name: string
+  schet: string
+  sub_schet: string
+  type_schet: string
+  smeta_id: number
+  summa: Summa
+}
+
+export interface Summa {
+  debet_sum: number
+  kredit_sum: number
+}
+
+export interface CloseMonthlyReportTableItem {
+  id: number
+  name: string
+  schet: string
+  sub_schet: string
+  type_schet: string
+  smeta_id: number
   start_debet: number
   start_kredit: number
   jur1_debet: number
   jur1_kredit: number
   jur2_debet: number
   jur2_kredit: number
+  jur3_debet: number
+  jur3_kredit: number
+  jur4_debet: number
+  jur4_kredit: number
   jur5_debet: number
   jur5_kredit: number
   jur6_debet: number
@@ -50,12 +76,4 @@ type CloseMonthlyReportDetails = {
   jur8_kredit: number
   end_debet: number
   end_kredit: number
-}
-
-export type {
-  MonthlyReportStatus,
-  MonthlyReportDocumentType,
-  CreateMonthlyReport,
-  CloseMonthlyReport,
-  CloseMonthlyReportDetails
 }

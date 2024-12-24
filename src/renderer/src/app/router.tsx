@@ -334,7 +334,7 @@ export const routes: RouteObject[] = [
             element: <CreateMonthlyReportPage />
           },
           {
-            path: 'create-monthly-report/:id',
+            path: 'create-monthly-report/:year/:month/:type_document',
             element: <CreateMonthlyReportDetailsPage />
           },
           {
@@ -342,7 +342,7 @@ export const routes: RouteObject[] = [
             element: <CloseMonthlyReportPage />
           },
           {
-            path: 'close-monthly-report/:id',
+            path: 'close-monthly-report/:year/:month',
             element: <CloseMonthlyReportDetailsPage />
           }
         ]

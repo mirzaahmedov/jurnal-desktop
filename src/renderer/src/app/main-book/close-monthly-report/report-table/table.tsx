@@ -1,13 +1,16 @@
+import type {
+  CloseMonthlyReportDetails,
+  CloseMonthlyReportTableItem
+} from '@renderer/common/models'
 import type { MouseEvent, RefObject, UIEvent } from 'react'
 import { ReportTableCell, ReportTableHead, ReportTableRow } from './table-components'
 import { Table, TableBody, TableHeader } from '@renderer/common/components/ui/table'
+import { cn, parseCSSNumericValue } from '@renderer/common/lib/utils'
 import { createRef, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 
-import type { CloseMonthlyReportDetails } from '@renderer/common/models'
 import { LoadingOverlay } from '@renderer/common/components'
 import { columns } from './columns'
 import { formatNumber } from '@renderer/common/lib/format'
-import { parseCSSNumericValue } from '@renderer/common/lib/utils'
 
 const stickyColumns = columns.filter((column) => column.sticky)
 
@@ -17,9 +20,9 @@ const SCROLL_AREA_WIDTH = 400
 
 type ReportTableProps = {
   isLoading: boolean
-  data: CloseMonthlyReportDetails[]
-  onEdit: (row: CloseMonthlyReportDetails) => void
-  onDelete: (row: CloseMonthlyReportDetails) => void
+  data: CloseMonthlyReportTableItem[]
+  onEdit: (row: CloseMonthlyReportTableItem) => void
+  onDelete: (row: CloseMonthlyReportTableItem) => void
 }
 const ReportTable = ({ isLoading, data, onEdit, onDelete }: ReportTableProps) => {
   const ref = useRef<HTMLDivElement>(null)
@@ -170,12 +173,18 @@ const ReportTable = ({ isLoading, data, onEdit, onDelete }: ReportTableProps) =>
         <TableHeader>
           <ReportTableRow>
             {columns.map((column) => {
+              if (column.hidden) {
+                return null
+              }
+
               if (!column.sticky) {
                 return (
                   <ReportTableHead
                     key={String(column.key)}
                     alphanumeric={column.alphanumeric}
-                    className={column.className}
+                    rowSpan={column.rowSpan}
+                    colSpan={column.colSpan}
+                    className={cn('text-center', column.className)}
                   >
                     {column.header}
                   </ReportTableHead>
@@ -193,8 +202,10 @@ const ReportTable = ({ isLoading, data, onEdit, onDelete }: ReportTableProps) =>
                   key={String(column.key)}
                   alphanumeric={column.alphanumeric}
                   sticky={true}
+                  rowSpan={column.rowSpan}
+                  colSpan={column.colSpan}
                   ref={columnRefs[index]}
-                  className={column.className}
+                  className={cn('text-center', column.className)}
                   style={{
                     left: leftOffset,
                     right: rightOffset
@@ -204,6 +215,16 @@ const ReportTable = ({ isLoading, data, onEdit, onDelete }: ReportTableProps) =>
                 </ReportTableHead>
               )
             })}
+          </ReportTableRow>
+          <ReportTableRow>
+            {Array(10)
+              .fill(null)
+              .map(() => (
+                <>
+                  <ReportTableHead className="text-center">кредит</ReportTableHead>
+                  <ReportTableHead className="text-center">дебет</ReportTableHead>
+                </>
+              ))}
           </ReportTableRow>
         </TableHeader>
         <TableBody>
