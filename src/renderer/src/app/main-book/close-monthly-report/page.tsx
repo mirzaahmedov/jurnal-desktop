@@ -1,23 +1,18 @@
-import { completeMonthlyReportService, deleteCloseMonthlyReport } from './service'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 import { CompleteMonthlyReport } from '@renderer/common/models'
 import { GenericTable } from '@renderer/common/components'
 import { ListView } from '@renderer/common/views'
-import { MonthPicker } from '@renderer/common/components/month-picker'
 import { completeMonthlyReportColumns } from './columns'
 import { completeMonthlyReportQueryKeys } from './config'
-import { formatDate } from '@renderer/common/lib/date'
+import { completeMonthlyReportService } from './service'
 import { toast } from '@renderer/common/hooks'
 import { useConfirm } from '@renderer/common/features/confirm'
 import { useLayout } from '@renderer/common/features/layout'
 import { useMainSchet } from '@renderer/common/features/main-schet'
 import { useNavigate } from 'react-router-dom'
-import { useState } from 'react'
 
 const CompleteMonthlyReportPage = () => {
-  const [date, setDate] = useState(() => formatDate(new Date()))
-
   const main_schet = useMainSchet((store) => store.main_schet)
   const queryClient = useQueryClient()
   const navigate = useNavigate()
@@ -50,7 +45,7 @@ const CompleteMonthlyReportPage = () => {
   useLayout({
     title: 'Закончить месячный отчёт',
     onCreate: () => {
-      navigate('create')
+      navigate(`create?year=${encodeURIComponent}`)
     }
   })
 
@@ -69,12 +64,6 @@ const CompleteMonthlyReportPage = () => {
 
   return (
     <ListView>
-      <ListView.Header>
-        <MonthPicker
-          value={date}
-          onChange={setDate}
-        />
-      </ListView.Header>
       <ListView.Content loading={isFetching || isPending}>
         <GenericTable
           columns={completeMonthlyReportColumns}

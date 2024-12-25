@@ -1,7 +1,7 @@
 import { Badge } from '@renderer/common/components/ui/badge'
 import type { ColumnDef } from '@renderer/common/components'
 import type { CompleteMonthlyReport } from '@renderer/common/models'
-import { formatLocaleDate } from '@renderer/common/lib/format'
+// import { formatLocaleDate } from '@renderer/common/lib/format'
 import { getMonthName } from '@renderer/common/lib/date'
 
 const statusMap = {
@@ -49,8 +49,8 @@ export const completeMonthlyReportColumns: ColumnDef<CompleteMonthlyReport>[] = 
     renderCell(row) {
       return (
         <div>
-          <h6 className="font-bold text-base">@{row.login}</h6>
-          <p>{formatLocaleDate(row.document_yaratilgan_vaqt)}</p>
+          <h6 className="font-bold text-base">@{row.user_login}</h6>
+          {/* <p>{formatLocaleDate(row)}</p> */}
         </div>
       )
     }
@@ -59,16 +59,16 @@ export const completeMonthlyReportColumns: ColumnDef<CompleteMonthlyReport>[] = 
     key: 'document_qabul_qilingan_vaqt',
     header: 'Действия',
     renderCell(row) {
-      return row.cofirm_login || row.document_qabul_qilingan_vaqt ? (
+      return row.accepted_login ? (
         <div>
           <h6 className="font-bold text-base">
-            {row.cofirm_login ? `@${row.cofirm_login}` : null}
+            {row.accepted_login ? `@${row.accepted_login}` : null}
           </h6>
-          <p>
+          {/* <p>
             {row.document_qabul_qilingan_vaqt
               ? formatLocaleDate(row.document_yaratilgan_vaqt)
               : null}
-          </p>
+          </p> */}
         </div>
       ) : null
     }

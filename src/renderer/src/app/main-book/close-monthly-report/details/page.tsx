@@ -43,7 +43,7 @@ const CompleteMonthlyReportDetailsPage = () => {
     resolver: zodResolver(CompleteMonthlyReportFormSchema)
   })
 
-  const { data: reportInfo, isFetching } = useQuery({
+  const { data: reportInfo, isFetching: isFetchingInfo } = useQuery({
     queryKey: [
       completeMonthlyReportQueryKeys.getById,
       1,
