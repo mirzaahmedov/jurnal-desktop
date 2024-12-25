@@ -1,6 +1,12 @@
-import type { InternalAxiosRequestConfig } from 'axios'
+import type { AxiosError, InternalAxiosRequestConfig } from 'axios'
+
 import axios from 'axios'
 import { useAuthStore } from '@/common/features/auth'
+
+type ErrorResponse = {
+  success: false
+  message: string
+}
 
 // ? 'http://147.45.107.174:3005'
 // ? 'http://10.50.0.140:3006'
@@ -28,5 +34,30 @@ http.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   config.headers.Authorization = `Bearer ${token}`
   return config
 })
+
+http.interceptors.response.use(
+  (response) => {
+    return response
+  },
+  (error) => {
+    if (!error) {
+      throw new Error('Something went wrong :(')
+    }
+
+    if (!axios.isAxiosError(error)) {
+      throw error
+    }
+
+    const response = error.response
+    if (response) {
+      const data = response.data as ErrorResponse
+      const message = data?.message || (error as AxiosError)?.message
+      throw new Error(message)
+    }
+
+    const message = (error as AxiosError)?.message
+    throw new Error(message)
+  }
+)
 
 export { http }

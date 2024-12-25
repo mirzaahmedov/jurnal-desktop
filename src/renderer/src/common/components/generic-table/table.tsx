@@ -66,7 +66,7 @@ export const GenericTable = <T extends Record<string, unknown>>({
     <Table {...props}>
       {caption ? <TableCaption>A list of your recent invoices.</TableCaption> : null}
       <TableHeader>
-        <GenericTableRow className="hover:bg-transparent border-t border-slate-200">
+        <GenericTableRow className="hover:bg-slate-100 border-t border-slate-200 bg-slate-100">
           {Array.isArray(columns)
             ? columns.map((col) => {
                 const { key, header, fit, stretch, numeric, headerClassName } = col

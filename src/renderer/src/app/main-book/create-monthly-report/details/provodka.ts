@@ -1,10 +1,10 @@
 import { createNumberEditor, createOperatsiiEditor } from '@/common/features/editable-table/editors'
 
-import type { CreateMonthlyReportProvodka } from '../config'
 import type { EditableColumnType } from '@/common/features/editable-table'
+import type { OpenMonthlyReportProvodka } from '../config'
 import { TypeSchetOperatsii } from '@/common/models'
 
-const provodkaColumns: EditableColumnType<CreateMonthlyReportProvodka>[] = [
+const provodkaColumns: EditableColumnType<OpenMonthlyReportProvodka>[] = [
   {
     key: 'spravochnik_operatsii_id',
     header: 'Подводка',

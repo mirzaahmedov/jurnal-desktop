@@ -20,7 +20,6 @@ import { Button } from '@/common/components/ui/button'
 import { Input } from '@/common/components/ui/input'
 import { Naimenovanie } from '@/common/models'
 import { UseFormReturn } from 'react-hook-form'
-import { cn } from '@/common/lib/utils'
 import { createGroupSpravochnik } from '@/app/super-admin/group/service'
 import { createNaimenovanieKolSpravochnik } from '@/app/jur7/naimenovaniya/service'
 import { useEventCallback } from '@/common/hooks/use-event-callback'
@@ -75,24 +74,6 @@ export const ProvodkaTable = ({ form }: ProvodkaTableProps) => {
               className="text-right"
             >
               Сумма
-            </EditableTableHead>
-            <EditableTableHead
-              rowSpan={2}
-              className="text-right"
-            >
-              НДС(%)
-            </EditableTableHead>
-            <EditableTableHead
-              rowSpan={2}
-              className="text-right"
-            >
-              НДС
-            </EditableTableHead>
-            <EditableTableHead
-              rowSpan={2}
-              className="text-right"
-            >
-              Сумма с НДС
             </EditableTableHead>
             <EditableTableHead
               colSpan={2}
@@ -262,53 +243,7 @@ const Provodka = ({ index, row, form }: ProvodkaProps) => {
           />
         </div>
       </EditableTableCell>
-      <EditableTableCell>
-        <div className="relative">
-          <NumericInput
-            adjustWidth
-            isAllowed={(values) => (values.floatValue ?? 0) <= 99}
-            value={row.nds_foiz || ''}
-            onValueChange={(values) => {
-              handleChangeChildField(index, 'nds_foiz', values.floatValue)
-            }}
-            className={inputVariants({
-              editor: true,
-              error: !!form.formState.errors.childs?.[index]?.nds_foiz
-            })}
-          />
-        </div>
-      </EditableTableCell>
 
-      <EditableTableCell>
-        <div className="relative">
-          <NumericInput
-            readOnly
-            adjustWidth
-            value={((row.kol || 0) * (row.sena || 0) * (row.nds_foiz || 0)) / 100 || ''}
-            className={inputVariants({
-              editor: true,
-              nonfocus: true
-            })}
-          />
-        </div>
-      </EditableTableCell>
-
-      <EditableTableCell>
-        <div className="relative">
-          <NumericInput
-            readOnly
-            adjustWidth
-            value={
-              (row.kol || 0) * (row.sena || 0) +
-                ((row.kol || 0) * (row.sena || 0) * (row.nds_foiz || 0)) / 100 || ''
-            }
-            className={inputVariants({
-              editor: true,
-              nonfocus: true
-            })}
-          />
-        </div>
-      </EditableTableCell>
       <EditableTableCell>
         <div className="relative">
           <Input
@@ -524,34 +459,36 @@ const NaimenovanieCells = ({
         <div className="relative">
           <SpravochnikInput
             readOnly
-            disabled={!!value}
+            disabled={!kimdan_id}
             value={groupSpravochnik.selected?.name || ''}
-            className={cn(
-              inputVariants({ editor: true, error: !!errorMessage }),
-              'disabled:opacity-100'
-            )}
+            className={inputVariants({ editor: true, error: !!errorMessage })}
             getInputValue={(selected) => selected?.name ?? ''}
             {...groupSpravochnik}
+            open={naimenovanieSpravochnik.open}
           />
         </div>
       </EditableTableCell>
       <EditableTableCell>
         <div className="relative">
           <Input
+            disabled={!kimdan_id}
             readOnly={!!value}
             value={values.name}
             onChange={(e) => setValues({ ...values, name: e.target.value })}
             className={inputVariants({ editor: true, error: !!errorMessage })}
+            onDoubleClick={naimenovanieSpravochnik.open}
           />
         </div>
       </EditableTableCell>
       <EditableTableCell>
         <div className="relative">
           <Input
+            disabled={!kimdan_id}
             readOnly={!!value}
             value={values.edin}
             onChange={(e) => setValues({ ...values, edin: e.target.value })}
             className={inputVariants({ editor: true, error: !!errorMessage })}
+            onDoubleClick={naimenovanieSpravochnik.open}
           />
         </div>
       </EditableTableCell>

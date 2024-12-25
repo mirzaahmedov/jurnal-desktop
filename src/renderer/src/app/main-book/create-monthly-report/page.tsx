@@ -1,11 +1,11 @@
-import { createMonthlyReportDeleteQuery, createMonthlyReportGetAllQuery } from './service'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
-import { CreateMonthlyReport } from '@renderer/common/models'
 import { GenericTable } from '@renderer/common/components'
 import { ListView } from '@renderer/common/views'
-import { createMonthlyReportColumns } from './columns'
-import { createMonthlyReportQueryKeys } from './config'
+import { OpenMonthlyReport } from '@renderer/common/models'
+import { openMonthlyReportColumns } from './columns'
+import { openMonthlyReportQueryKeys } from './config'
+import { openMonthlyReportService } from './service'
 import { toast } from '@renderer/common/hooks'
 import { useConfirm } from '@renderer/common/features/confirm'
 import { useLayout } from '@renderer/common/features/layout'
@@ -13,28 +13,29 @@ import { useMainSchet } from '@renderer/common/features/main-schet'
 import { useNavigate } from 'react-router-dom'
 
 const CreateMonthlyReportPage = () => {
-  const main_schet_id = useMainSchet((store) => store.main_schet?.id)
+  const main_schet = useMainSchet((store) => store.main_schet)
   const queryClient = useQueryClient()
   const navigate = useNavigate()
   const { confirm } = useConfirm()
 
-  const { data: createMontlyReportList, isFetching } = useQuery({
+  const { data: reportList, isFetching } = useQuery({
     queryKey: [
-      createMonthlyReportQueryKeys.getAll,
+      openMonthlyReportQueryKeys.getAll,
       {
-        main_schet_id: main_schet_id!
+        budjet_id: main_schet?.budget_id
       }
     ],
-    queryFn: createMonthlyReportGetAllQuery
+    queryFn: openMonthlyReportService.getAll,
+    enabled: !!main_schet
   })
-  const { mutate: deleteCreateMonthlyReport, isPending } = useMutation({
-    mutationKey: [createMonthlyReportQueryKeys.delete],
-    mutationFn: createMonthlyReportDeleteQuery,
+  const { mutate: deleteReport, isPending } = useMutation({
+    mutationKey: [openMonthlyReportQueryKeys.delete],
+    mutationFn: openMonthlyReportService.delete,
     onError: (error) => {
       console.error(error)
       toast({
         variant: 'destructive',
-        title: 'Ошибка при удалении записи'
+        title: error.message
       })
     },
     onSuccess: () => {
@@ -42,7 +43,7 @@ const CreateMonthlyReportPage = () => {
         title: 'Запись успешно удалена'
       })
       queryClient.invalidateQueries({
-        queryKey: [createMonthlyReportQueryKeys.getAll]
+        queryKey: [openMonthlyReportQueryKeys.getAll]
       })
     }
   })
@@ -50,27 +51,19 @@ const CreateMonthlyReportPage = () => {
   useLayout({
     title: 'Создать месячный отчет',
     onCreate: () => {
-      const date = new Date().toISOString().slice(0, 7)
-      const [year, month] = date.split('-')
-      navigate(`${year}/${month}/create`)
+      navigate('create')
     }
   })
 
-  const handleEdit = (row: CreateMonthlyReport) => {
-    navigate(`${row.year}/${row.month}/${row.type_document}`)
+  const handleEdit = (row: OpenMonthlyReport) => {
+    navigate(`${row.id}`)
   }
 
-  const handleDelete = (row: CreateMonthlyReport) => {
+  const handleDelete = (row: OpenMonthlyReport) => {
     confirm({
       title: 'Удалить запись?',
-      onConfirm: async () => {
-        // @ts-ignore - fix this
-        deleteCreateMonthlyReport({
-          type_document: row.type_document,
-          year: row.year,
-          month: row.month,
-          main_schet_id: main_schet_id!
-        })
+      onConfirm: () => {
+        deleteReport(row.id)
       }
     })
   }
@@ -79,11 +72,10 @@ const CreateMonthlyReportPage = () => {
     <ListView>
       <ListView.Content loading={isFetching || isPending}>
         <GenericTable
-          columns={createMonthlyReportColumns}
-          data={createMontlyReportList?.data ?? []}
+          columns={openMonthlyReportColumns}
+          data={reportList?.data ?? []}
           onEdit={handleEdit}
           onDelete={handleDelete}
-          getRowId={(row) => row.month + row.year + row.type_document}
         />
       </ListView.Content>
     </ListView>

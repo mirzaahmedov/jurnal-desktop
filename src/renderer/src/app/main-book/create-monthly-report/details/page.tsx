@@ -1,28 +1,24 @@
-import {
-  CreateMonthlyReportFormSchema,
-  CreateMonthlyReportProvodkaSchema,
-  createMonthlyReportQueryKeys,
-  defaultValues
-} from '../config'
 import { Fieldset, SelectField } from '@renderer/common/components'
 import { Form, FormField } from '@renderer/common/components/ui/form'
+import {
+  OpenMonthlyReportFormSchema,
+  OpenMonthlyReportProvodkaSchema,
+  defaultValues,
+  openMonthlyReportQueryKeys
+} from '../config'
 import {
   createEditorChangeHandler,
   createEditorCreateHandler,
   createEditorDeleteHandler
 } from '@renderer/common/features/editable-table/helpers'
-import {
-  createMonthlyReportCreateQuery,
-  createMonthlyReportGetByIdQuery,
-  createMonthlyReportUpdateQuery
-} from '../service'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import { DetailsView } from '@renderer/common/views'
 import { EditableTable } from '@renderer/common/features/editable-table'
-import { FormElement } from '@renderer/common/components/form'
 import { MonthPicker } from '@renderer/common/components/month-picker'
+import { documentTypes } from '@renderer/app/main-book/common/data'
+import { openMonthlyReportService } from '../service'
 import { provodkaColumns } from './provodka'
 import { toast } from '@renderer/common/hooks'
 import { useEffect } from 'react'
@@ -31,48 +27,33 @@ import { useLayout } from '@renderer/common/features/layout'
 import { useMainSchet } from '@renderer/common/features/main-schet'
 import { zodResolver } from '@hookform/resolvers/zod'
 
-const documentTypeOptions = [
-  { value: 'start', label: 'Начало' },
-  { value: 'jur1', label: 'Ж.О.1' },
-  { value: 'jur2', label: 'Ж.О.2' },
-  { value: 'jur3', label: 'Ж.О.3' },
-  { value: 'jur4', label: 'Ж.О.4' },
-  { value: 'jur5', label: 'Ж.О.5' },
-  { value: 'jur6', label: 'Ж.О.6' },
-  { value: 'jur7', label: 'Ж.О.7' },
-  { value: 'jur8', label: 'Ж.О.8' },
-  { value: 'end', label: 'Конец' }
-]
-
 const CreateMonthlyReportDetailsPage = () => {
   const navigate = useNavigate()
   const params = useParams()
-  const main_schet_id = useMainSchet((store) => store.main_schet?.id)
+  const main_schet = useMainSchet((store) => store.main_schet)
 
   const form = useForm({
     defaultValues: {
       ...defaultValues,
-      year: params.year ? Number(params.year) : defaultValues.year,
-      month: params.month ? Number(params.month) : defaultValues.month
+      year: new Date().getFullYear(),
+      month: new Date().getMonth() + 1
     },
-    resolver: zodResolver(CreateMonthlyReportFormSchema)
+    resolver: zodResolver(OpenMonthlyReportFormSchema)
   })
 
-  const { data: createMontlyReport, isFetching } = useQuery({
+  const { data: report, isFetching } = useQuery({
     queryKey: [
-      createMonthlyReportQueryKeys.getById,
+      openMonthlyReportQueryKeys.getById,
+      Number(params.id),
       {
-        main_schet_id: main_schet_id!,
-        type_document: params.type_document!,
-        year: Number(params.year),
-        month: Number(params.month)
+        budjet_id: main_schet?.budget_id
       }
     ],
-    queryFn: createMonthlyReportGetByIdQuery,
-    enabled: params.type_document !== 'create'
+    queryFn: openMonthlyReportService.getById,
+    enabled: params.id !== 'create'
   })
-  const { mutate: createCreateMontlyReport, isPending: isCreating } = useMutation({
-    mutationFn: createMonthlyReportCreateQuery,
+  const { mutate: createReport, isPending: isCreating } = useMutation({
+    mutationFn: openMonthlyReportService.create,
     onSuccess() {
       toast({
         title: 'Запись успешно создана'
@@ -83,12 +64,12 @@ const CreateMonthlyReportDetailsPage = () => {
       console.error(error)
       toast({
         variant: 'destructive',
-        title: 'Ошибка при создании записи'
+        title: error.message
       })
     }
   })
-  const { mutate: updateCreateMontlyReport, isPending: isUpdating } = useMutation({
-    mutationFn: createMonthlyReportUpdateQuery,
+  const { mutate: updateReport, isPending: isUpdating } = useMutation({
+    mutationFn: openMonthlyReportService.update,
     onSuccess() {
       toast({
         title: 'Запись успешно обновлена'
@@ -99,7 +80,7 @@ const CreateMonthlyReportDetailsPage = () => {
       console.error(error)
       toast({
         variant: 'destructive',
-        title: 'Ошибка при обновлении записи'
+        title: error.message
       })
     }
   })
@@ -112,31 +93,14 @@ const CreateMonthlyReportDetailsPage = () => {
   })
 
   useEffect(() => {
-    form.reset(
-      createMontlyReport?.data
-        ? {
-            ...createMontlyReport?.data,
-            childs: createMontlyReport?.data.childs.map((child) => ({
-              ...child,
-              debet_sum: !isNaN(Number(child.debet_sum)) ? Number(child.debet_sum) : 0,
-              kredit_sum: !isNaN(Number(child.kredit_sum)) ? Number(child.kredit_sum) : 0
-            }))
-          }
-        : defaultValues
-    )
-  }, [createMontlyReport])
+    form.reset(report?.data ? report?.data : defaultValues)
+  }, [report])
 
   const onSubmit = form.handleSubmit((values) => {
-    if (params.type_document === 'create') {
-      createCreateMontlyReport({
-        ...values,
-        main_schet_id: main_schet_id!
-      })
+    if (params.id === 'create') {
+      createReport(values)
     } else {
-      updateCreateMontlyReport({
-        ...values,
-        main_schet_id: main_schet_id!
-      })
+      updateReport({ id: Number(params.id), ...values })
     }
   })
 
@@ -146,25 +110,23 @@ const CreateMonthlyReportDetailsPage = () => {
         <Form {...form}>
           <form onSubmit={onSubmit}>
             <div className="grid grid-cols-4 gap-10 p-5">
-              <FormElement label="Период">
-                <MonthPicker
-                  value={
-                    form.watch('year') && form.watch('month')
-                      ? `${form.watch('year')}-${form.watch('month')}-01`
-                      : ''
+              <MonthPicker
+                value={
+                  form.watch('year') && form.watch('month')
+                    ? `${form.watch('year')}-${form.watch('month')}-01`
+                    : ''
+                }
+                onChange={(date) => {
+                  if (!date) {
+                    form.setValue('year', 0)
+                    form.setValue('month', 0)
+                    return
                   }
-                  onChange={(date) => {
-                    if (!date) {
-                      form.setValue('year', 0)
-                      form.setValue('month', 0)
-                      return
-                    }
-                    const [year, month] = date.split('-').map(Number)
-                    form.setValue('year', year)
-                    form.setValue('month', month)
-                  }}
-                />
-              </FormElement>
+                  const [year, month] = date.split('-').map(Number)
+                  form.setValue('year', year)
+                  form.setValue('month', month)
+                }}
+              />
               <FormField
                 control={form.control}
                 name="type_document"
@@ -172,10 +134,10 @@ const CreateMonthlyReportDetailsPage = () => {
                   <SelectField
                     {...field}
                     onValueChange={(value) => field.onChange(value)}
-                    options={documentTypeOptions}
+                    options={documentTypes}
                     placeholder="Выберите тип документа"
-                    getOptionLabel={(option) => option.label}
-                    getOptionValue={(option) => option.value}
+                    getOptionLabel={(option) => option.name}
+                    getOptionValue={(option) => option.key}
                   />
                 )}
               />
@@ -196,7 +158,7 @@ const CreateMonthlyReportDetailsPage = () => {
             errors={form.formState.errors.childs}
             onCreate={createEditorCreateHandler({
               form,
-              schema: CreateMonthlyReportProvodkaSchema,
+              schema: OpenMonthlyReportProvodkaSchema,
               defaultValues: defaultValues.childs[0]
             })}
             onDelete={createEditorDeleteHandler({

@@ -1,14 +1,14 @@
 const date_regex = /^\d{1,2}.\d{1,2}.\d{4}$/
 
-const getFirstDayOfMonth = (date: Date = new Date()) => {
+export const getFirstDayOfMonth = (date: Date = new Date()) => {
   return new Date(date.getFullYear(), date.getMonth(), 1)
 }
 
-const getLastDayOfMonth = (date: Date = new Date()) => {
+export const getLastDayOfMonth = (date: Date = new Date()) => {
   return new Date(date.getFullYear(), date.getMonth() + 1, 0)
 }
 
-const formatDate = (date: Date | string) => {
+export const formatDate = (date: Date | string) => {
   if (!date) {
     return ''
   }
@@ -22,12 +22,12 @@ const formatDate = (date: Date | string) => {
   return [year, month, day].map((n) => n.toString().padStart(2, '0')).join('-')
 }
 
-const parseDate = (date: string) => {
+export const parseDate = (date: string) => {
   const [year, month, day] = date.split('-').map(Number)
   return new Date(year, month - 1, day)
 }
 
-const validateLocaleDate = (formatted: string): boolean => {
+export const validateLocaleDate = (formatted: string): boolean => {
   const date = new Date(formatted.split('.').reverse().join('-'))
 
   const parts = formatted.split('.').map(Number)
@@ -46,4 +46,22 @@ const validateLocaleDate = (formatted: string): boolean => {
   )
 }
 
-export { getFirstDayOfMonth, getLastDayOfMonth, formatDate, parseDate, validateLocaleDate }
+export const getMonthName = (monthNumber: number) => {
+  if (monthNumber < 1 || monthNumber > 12) {
+    return ''
+  }
+  return [
+    'Январь',
+    'Февраль',
+    'Март',
+    'Апрель',
+    'Май',
+    'Июнь',
+    'Июль',
+    'Август',
+    'Сентябрь',
+    'Октябрь',
+    'Ноябрь',
+    'Декабрь'
+  ][monthNumber - 1]
+}

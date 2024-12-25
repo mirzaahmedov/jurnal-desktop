@@ -1,19 +1,19 @@
 import type { Autocomplete } from '@renderer/common/lib/types'
-import type { CloseMonthlyReportTableItem } from '@renderer/common/models'
+import type { CompleteMonthlyReportTableItem } from '@renderer/common/models'
 import type { ComponentType } from 'react'
 import type { ReportTableProps } from './table'
 
 type ColumnDef = {
   alphanumeric?: boolean
   sticky?: true
-  key: Autocomplete<keyof CloseMonthlyReportTableItem>
+  key: Autocomplete<keyof CompleteMonthlyReportTableItem>
   header: string
   className?: string
   hidden?: boolean
   rowSpan?: number
   colSpan?: number
   cellElement?: ComponentType<
-    Pick<ReportTableProps, 'onEdit' | 'onDelete'> & { row: CloseMonthlyReportTableItem }
+    Pick<ReportTableProps, 'onEdit' | 'onDelete'> & { row: CompleteMonthlyReportTableItem }
   >
 }
 

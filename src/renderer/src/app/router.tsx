@@ -13,8 +13,8 @@ import BankRasxodDetailsPage from './bank/rasxod/details/page'
 import BankRasxodPage from './bank/rasxod/page'
 import BankSpravochnikPage from './super-admin/bank/page'
 import BudgetPage from './super-admin/budjet/page'
-import CloseMonthlyReportDetailsPage from './main-book/close-monthly-report/details/page'
-import CloseMonthlyReportPage from './main-book/close-monthly-report/page'
+import CompleteMonthlyReportDetailsPage from './main-book/close-monthly-report/details/page'
+import CompleteMonthlyReportPage from './main-book/close-monthly-report/page'
 import ContractDetailsPage from './organization/shartnoma/details/page'
 import CreateMonthlyReportDetailsPage from './main-book/create-monthly-report/details/page'
 import CreateMonthlyReportPage from './main-book/create-monthly-report/page'
@@ -334,16 +334,16 @@ export const routes: RouteObject[] = [
             element: <CreateMonthlyReportPage />
           },
           {
-            path: 'create-monthly-report/:year/:month/:type_document',
+            path: 'create-monthly-report/:id',
             element: <CreateMonthlyReportDetailsPage />
           },
           {
             path: 'close-monthly-report',
-            element: <CloseMonthlyReportPage />
+            element: <CompleteMonthlyReportPage />
           },
           {
-            path: 'close-monthly-report/:year/:month',
-            element: <CloseMonthlyReportDetailsPage />
+            path: 'close-monthly-report/:id',
+            element: <CompleteMonthlyReportDetailsPage />
           }
         ]
       },

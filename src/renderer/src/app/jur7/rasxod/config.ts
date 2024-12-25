@@ -1,5 +1,6 @@
 import type { ColumnDef } from '@/common/components'
 import type { MO7Rasxod } from '@/common/models'
+import { formatLocaleDate } from '@renderer/common/lib/format'
 import { withPreprocessor } from '@/common/lib/validation'
 import { z } from 'zod'
 
@@ -39,7 +40,6 @@ const RasxodChildFormSchema = withPreprocessor(
     kol: z.number(),
     sena: z.number(),
     summa: z.number(),
-    nds_foiz: z.number().optional(),
     debet_schet: z.string(),
     debet_sub_schet: z.string(),
     kredit_schet: z.string(),
@@ -68,7 +68,8 @@ const columns: ColumnDef<MO7Rasxod>[] = [
   },
   {
     key: 'doc_date',
-    header: 'Дата документа'
+    header: 'Дата документа',
+    renderCell: (row) => formatLocaleDate(row.doc_date)
   },
   {
     key: 'kimdan_name',
@@ -79,6 +80,7 @@ const columns: ColumnDef<MO7Rasxod>[] = [
     header: 'Кимга'
   },
   {
+    numeric: true,
     key: 'summa',
     header: 'Сумма'
   },

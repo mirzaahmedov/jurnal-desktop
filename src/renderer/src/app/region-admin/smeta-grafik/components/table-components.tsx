@@ -38,7 +38,7 @@ const SmetaTableCell = ({
         props.className
       )}
     >
-      <div className="h-full w-full py-2 px-3 overflow-y-clip grid items-center [.stuck-left>&]:shadow-right [.stuck-right>&]:shadow-left">
+      <div className="h-full w-full py-1 px-3 overflow-y-clip grid items-center [.stuck-left>&]:shadow-right [.stuck-right>&]:shadow-left">
         {children}
       </div>
     </TableCell>

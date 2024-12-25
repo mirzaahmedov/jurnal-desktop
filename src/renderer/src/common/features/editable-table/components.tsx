@@ -26,7 +26,10 @@ export const EditableTableHead = ({
   return (
     <TableHead
       {...props}
-      className={cn('px-3 border-r border-slate-200 last:border-none', className)}
+      className={cn(
+        'px-3 border-r border-slate-200 last:border-none !bg-slate-100 text-foreground text-xs font-extrabold',
+        className
+      )}
     >
       {children}
     </TableHead>

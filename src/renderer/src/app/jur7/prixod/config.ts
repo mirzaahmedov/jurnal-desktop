@@ -1,5 +1,6 @@
 import type { ColumnDef } from '@/common/components'
 import type { MO7Prixod } from '@/common/models'
+import { formatLocaleDate } from '@renderer/common/lib/format'
 import { withPreprocessor } from '@/common/lib/validation'
 import { z } from 'zod'
 
@@ -77,7 +78,8 @@ const columns: ColumnDef<MO7Prixod>[] = [
   },
   {
     key: 'doc_date',
-    header: 'Дата документа'
+    header: 'Дата документа',
+    renderCell: (row) => formatLocaleDate(row.doc_date)
   },
   {
     key: 'kimdan_name',
@@ -88,6 +90,7 @@ const columns: ColumnDef<MO7Prixod>[] = [
     header: 'Кимга'
   },
   {
+    numeric: true,
     key: 'summa',
     header: 'Сумма'
   },

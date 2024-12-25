@@ -1,6 +1,7 @@
 import type { Avans } from '@/common/models'
 import type { ColumnDef } from '@/common/components'
 import { TooltipCellRenderer } from '@/common/components/table/renderers/tooltip'
+import { formatLocaleDate } from '@renderer/common/lib/format'
 
 export const avansColumns: ColumnDef<Avans>[] = [
   {
@@ -9,7 +10,8 @@ export const avansColumns: ColumnDef<Avans>[] = [
   },
   {
     key: 'doc_date',
-    header: 'Документ дата'
+    header: 'Документ дата',
+    renderCell: (row) => formatLocaleDate(row.doc_date)
   },
   {
     key: 'spravochnik_podotchet_litso_id',
@@ -26,6 +28,7 @@ export const avansColumns: ColumnDef<Avans>[] = [
     )
   },
   {
+    numeric: true,
     key: 'summa',
     header: 'Сумма'
   },

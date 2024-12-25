@@ -1,27 +1,27 @@
-import z from 'zod'
+import { z } from 'zod'
 
-const createMonthlyReportQueryKeys = {
-  getAll: 'create-montly-report/all',
-  getById: 'create-montly-report',
-  create: 'create-montly-report/create',
-  update: 'create-montly-report/update',
-  delete: 'create-montly-report/delete'
+export const openMonthlyReportQueryKeys = {
+  getAll: 'open-montly-report/all',
+  getById: 'open-montly-report',
+  create: 'open-montly-report/create',
+  update: 'open-montly-report/update',
+  delete: 'open-montly-report/delete'
 }
-const CreateMonthlyReportProvodkaSchema = z.object({
+export const OpenMonthlyReportProvodkaSchema = z.object({
   spravochnik_operatsii_id: z.number(),
   debet_sum: z.number(),
   kredit_sum: z.number()
 })
-const CreateMonthlyReportFormSchema = z.object({
+export const OpenMonthlyReportFormSchema = z.object({
   year: z.number(),
   month: z.number(),
   type_document: z.string(),
-  childs: z.array(CreateMonthlyReportProvodkaSchema)
+  childs: z.array(OpenMonthlyReportProvodkaSchema)
 })
-type CreateMonthlyReportProvodka = z.infer<typeof CreateMonthlyReportProvodkaSchema>
-type CreateMonthlyReportForm = z.infer<typeof CreateMonthlyReportFormSchema>
+export type OpenMonthlyReportProvodka = z.infer<typeof OpenMonthlyReportProvodkaSchema>
+export type OpenMonthlyReportValues = z.infer<typeof OpenMonthlyReportFormSchema>
 
-const defaultValues: CreateMonthlyReportForm = {
+export const defaultValues: OpenMonthlyReportValues = {
   year: new Date().getFullYear(),
   month: new Date().getMonth() + 1,
   type_document: '',
@@ -33,11 +33,3 @@ const defaultValues: CreateMonthlyReportForm = {
     }
   ]
 }
-
-export {
-  createMonthlyReportQueryKeys,
-  CreateMonthlyReportProvodkaSchema,
-  CreateMonthlyReportFormSchema,
-  defaultValues
-}
-export type { CreateMonthlyReportProvodka, CreateMonthlyReportForm }

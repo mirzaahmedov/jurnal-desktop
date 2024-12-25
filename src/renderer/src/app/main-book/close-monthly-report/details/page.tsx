@@ -1,9 +1,8 @@
-import { CloseMonthlyReportFormSchema, closeMonthlyReportQueryKeys, defaultValues } from '../config'
 import {
-  createCloseMonthlyReport,
-  getCloseMonthlyReportInfo,
-  updateCloseMonthlyReport
-} from '../service'
+  CompleteMonthlyReportFormSchema,
+  completeMonthlyReportQueryKeys,
+  defaultValues
+} from '../config'
 import { useMemo, useState } from 'react'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -12,10 +11,9 @@ import { Button } from '@renderer/common/components/ui/button'
 import { CircleArrowDown } from 'lucide-react'
 import { DetailsView } from '@renderer/common/views'
 import { Form } from '@renderer/common/components/ui/form'
-import { FormElement } from '@renderer/common/components/form'
-import { LoadingOverlay } from '@renderer/common/components'
 import { MonthPicker } from '@renderer/common/components/month-picker'
 import { ReportTable } from '../report-table'
+import { completeMonthlyReportService } from '../service'
 import { toast } from '@renderer/common/hooks'
 import { transformData } from './utils'
 import { useForm } from 'react-hook-form'
@@ -23,17 +21,15 @@ import { useLayout } from '@renderer/common/features/layout'
 import { useMainSchet } from '@renderer/common/features/main-schet'
 import { zodResolver } from '@hookform/resolvers/zod'
 
-const CloseMonthlyReportDetailsPage = () => {
-  const main_schet_id = useMainSchet((store) => store.main_schet?.id)
+const CompleteMonthlyReportDetailsPage = () => {
+  const main_schet = useMainSchet((store) => store.main_schet)
   const navigate = useNavigate()
   const params = useParams()
 
   const defaultDate =
-    params.month === 'create'
+    params.id === 'create'
       ? new Date().toISOString().slice(0, 10)
       : new Date(`${params.year}-${params.month}-01`).toISOString().slice(0, 10)
-
-  console.log({ defaultDate })
 
   const [date, setDate] = useState(defaultDate)
   const [year, month] = date.split('-')
@@ -44,27 +40,39 @@ const CloseMonthlyReportDetailsPage = () => {
       month: Number(month),
       year: Number(year)
     },
-    resolver: zodResolver(CloseMonthlyReportFormSchema)
+    resolver: zodResolver(CompleteMonthlyReportFormSchema)
   })
 
-  const { data: closeMonthlyReport, isFetching } = useQuery({
+  const { data: reportInfo, isFetching } = useQuery({
     queryKey: [
-      closeMonthlyReportQueryKeys.getById,
+      completeMonthlyReportQueryKeys.getById,
+      1,
       {
         year: Number(year),
         month: Number(month),
-        main_schet_id: main_schet_id!
+        budjet_id: main_schet?.budget_id
       }
     ],
-    queryFn: getCloseMonthlyReportInfo
+    queryFn: completeMonthlyReportService.getById,
+    enabled: !!main_schet?.budget_id && params.id === 'create'
   })
-  const { mutate: create, isPending: isCreating } = useMutation({
-    mutationFn: createCloseMonthlyReport,
+
+  const { data: report, isFetching } = useQuery({
+    queryKey: [
+      completeMonthlyReportQueryKeys.getById,
+      Number(params.id),
+      { budjet_id: main_schet?.budget_id }
+    ],
+    queryFn: completeMonthlyReportService.getById
+  })
+
+  const { mutate: createReport, isPending: isCreating } = useMutation({
+    mutationFn: completeMonthlyReportService.create,
     onError: (error) => {
       console.error(error)
       toast({
         variant: 'destructive',
-        title: 'Ошибка при сохранении месячного отчета'
+        title: error.message
       })
     },
     onSuccess: () => {
@@ -74,13 +82,13 @@ const CloseMonthlyReportDetailsPage = () => {
       })
     }
   })
-  const { mutate: update, isPending: isUpdating } = useMutation({
-    mutationFn: updateCloseMonthlyReport,
+  const { mutate: updateReport, isPending: isUpdating } = useMutation({
+    mutationFn: completeMonthlyReportService.update,
     onError: (error) => {
       console.error(error)
       toast({
         variant: 'destructive',
-        title: 'Ошибка при сохранении месячного отчета'
+        title: error.message
       })
     },
     onSuccess: () => {
@@ -92,30 +100,30 @@ const CloseMonthlyReportDetailsPage = () => {
   })
 
   useLayout({
-    title: params.month === 'create' ? 'Создать месячный отчет' : 'Редактировать месячный отчет',
+    title: params.id === 'create' ? 'Создать месячный отчет' : 'Редактировать месячный отчет',
     onBack: () => {
       navigate(-1)
     }
   })
 
   const transformed = useMemo(() => {
-    if (!closeMonthlyReport?.data) {
+    if (!reportInfo?.data) {
       return []
     }
 
-    return transformData(closeMonthlyReport.data)
-  }, [closeMonthlyReport?.data])
+    return transformData(reportInfo.data as any)
+  }, [reportInfo?.data])
 
   return (
     <DetailsView>
       <Form {...form}>
         <div className="flex gap-10 p-5 border-b">
-          <FormElement label="Период">
-            <MonthPicker
-              value={date}
-              onChange={setDate}
-            />
-          </FormElement>
+          <MonthPicker
+            disabled={params.id !== 'create'}
+            value={date}
+            onChange={setDate}
+            className="disabled:opacity-100"
+          />
           <div>
             <Button type="button">
               <CircleArrowDown className="btn-icon icon-start" />
@@ -125,9 +133,8 @@ const CloseMonthlyReportDetailsPage = () => {
         </div>
       </Form>
       <div className="relative w-full overflow-x-hidden">
-        {isFetching && <LoadingOverlay />}
         <ReportTable
-          isLoading={false}
+          isLoading={isFetching}
           data={transformed}
           onDelete={() => {}}
           onEdit={() => {}}
@@ -136,26 +143,17 @@ const CloseMonthlyReportDetailsPage = () => {
       <div className="p-5 border-t">
         <Button
           type="button"
-          disabled={
-            isCreating ||
-            isUpdating ||
-            !main_schet_id ||
-            !closeMonthlyReport?.data ||
-            !month ||
-            !year
-          }
+          disabled={isCreating || isUpdating || !main_schet || !reportInfo?.data || !month || !year}
           onClick={() => {
-            if (params.month === 'create') {
-              create({
-                main_schet_id: main_schet_id!,
-                data: closeMonthlyReport!.data!,
+            if (params.id === 'create') {
+              createReport({
+                data: reportInfo!.data!,
                 month: Number(month),
                 year: Number(year)
               })
             } else {
-              update({
-                main_schet_id: main_schet_id!,
-                data: closeMonthlyReport!.data!,
+              updateReport({
+                data: reportInfo!.data!,
                 month: Number(month),
                 year: Number(year)
               })
@@ -169,4 +167,4 @@ const CloseMonthlyReportDetailsPage = () => {
   )
 }
 
-export default CloseMonthlyReportDetailsPage
+export default CompleteMonthlyReportDetailsPage

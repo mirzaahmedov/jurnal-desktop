@@ -1,8 +1,8 @@
+import { formatLocaleDate, formatNumber } from '@/common/lib/format'
+
 import type { ColumnDef } from '@/common/components'
 import type { PodotchetMonitor } from '@/common/models'
-
 import { TooltipCellRenderer } from '@/common/components/table/renderers'
-import { formatNumber } from '@/common/lib/format'
 
 const podotchetMonitoringColumns: ColumnDef<PodotchetMonitor>[] = [
   {
@@ -11,7 +11,8 @@ const podotchetMonitoringColumns: ColumnDef<PodotchetMonitor>[] = [
   },
   {
     header: 'Дата документа',
-    key: 'doc_date'
+    key: 'doc_date',
+    renderCell: (row) => formatLocaleDate(row.doc_date)
   },
   {
     header: 'Разъяснительный текст',

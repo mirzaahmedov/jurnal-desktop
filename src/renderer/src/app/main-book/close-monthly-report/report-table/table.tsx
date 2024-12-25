@@ -1,6 +1,6 @@
 import type {
-  CloseMonthlyReportDetails,
-  CloseMonthlyReportTableItem
+  CompleteMonthlyReportProvodka,
+  CompleteMonthlyReportTableItem
 } from '@renderer/common/models'
 import type { MouseEvent, RefObject, UIEvent } from 'react'
 import { ReportTableCell, ReportTableHead, ReportTableRow } from './table-components'
@@ -20,9 +20,9 @@ const SCROLL_AREA_WIDTH = 400
 
 type ReportTableProps = {
   isLoading: boolean
-  data: CloseMonthlyReportTableItem[]
-  onEdit: (row: CloseMonthlyReportTableItem) => void
-  onDelete: (row: CloseMonthlyReportTableItem) => void
+  data: CompleteMonthlyReportTableItem[]
+  onEdit: (row: CompleteMonthlyReportTableItem) => void
+  onDelete: (row: CompleteMonthlyReportTableItem) => void
 }
 const ReportTable = ({ isLoading, data, onEdit, onDelete }: ReportTableProps) => {
   const ref = useRef<HTMLDivElement>(null)
@@ -171,7 +171,7 @@ const ReportTable = ({ isLoading, data, onEdit, onDelete }: ReportTableProps) =>
         className="border-separate border-spacing-0 overflow-clip h-px"
       >
         <TableHeader>
-          <ReportTableRow>
+          <ReportTableRow className="bg-slate-100">
             {columns.map((column) => {
               if (column.hidden) {
                 return null
@@ -216,7 +216,7 @@ const ReportTable = ({ isLoading, data, onEdit, onDelete }: ReportTableProps) =>
               )
             })}
           </ReportTableRow>
-          <ReportTableRow>
+          <ReportTableRow className="bg-slate-100">
             {Array(10)
               .fill(null)
               .map(() => (
@@ -230,7 +230,10 @@ const ReportTable = ({ isLoading, data, onEdit, onDelete }: ReportTableProps) =>
         <TableBody>
           {Array.isArray(data) && data.length > 0 ? (
             data.map((row) => (
-              <ReportTableRow key={row.id}>
+              <ReportTableRow
+                key={row.id}
+                className="[&:nth-child(2n)>td]:!bg-slate-50"
+              >
                 {columns.map((column) => {
                   if (!column.sticky) {
                     return (
@@ -247,10 +250,10 @@ const ReportTable = ({ isLoading, data, onEdit, onDelete }: ReportTableProps) =>
                           />
                         ) : !column.alphanumeric ? (
                           formatNumber(
-                            Number(row[column.key as keyof CloseMonthlyReportDetails] || '0')
+                            Number(row[column.key as keyof CompleteMonthlyReportProvodka] || '0')
                           )
                         ) : (
-                          row[column.key as keyof CloseMonthlyReportDetails]
+                          row[column.key as keyof CompleteMonthlyReportProvodka]
                         )}
                       </ReportTableCell>
                     )
@@ -284,10 +287,10 @@ const ReportTable = ({ isLoading, data, onEdit, onDelete }: ReportTableProps) =>
                         />
                       ) : !column.alphanumeric ? (
                         formatNumber(
-                          Number(row[column.key as keyof CloseMonthlyReportDetails] || '0')
+                          Number(row[column.key as keyof CompleteMonthlyReportProvodka] || '0')
                         )
                       ) : (
-                        row[column.key as keyof CloseMonthlyReportDetails]
+                        row[column.key as keyof CompleteMonthlyReportProvodka]
                       )}
                     </ReportTableCell>
                   )

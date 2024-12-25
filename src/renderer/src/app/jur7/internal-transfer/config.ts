@@ -1,5 +1,6 @@
 import type { ColumnDef } from '@/common/components'
 import type { InternalTransfer } from '@/common/models'
+import { formatLocaleDate } from '@renderer/common/lib/format'
 import { withPreprocessor } from '@/common/lib/validation'
 import { z } from 'zod'
 
@@ -24,7 +25,6 @@ const defaultValues: InternalTransferFormType = {
       kol: 0,
       sena: 0,
       summa: 0,
-      nds_foiz: 0,
       debet_schet: '',
       debet_sub_schet: '',
       kredit_schet: '',
@@ -40,7 +40,6 @@ const InternalTransferChildFormSchema = withPreprocessor(
     kol: z.number(),
     sena: z.number(),
     summa: z.number(),
-    nds_foiz: z.number().optional(),
     debet_schet: z.string(),
     debet_sub_schet: z.string(),
     kredit_schet: z.string(),
@@ -69,7 +68,8 @@ const columns: ColumnDef<InternalTransfer>[] = [
   },
   {
     key: 'doc_date',
-    header: 'Дата документа'
+    header: 'Дата документа',
+    renderCell: (row) => formatLocaleDate(row.doc_date)
   },
   {
     key: 'kimdan_name',
@@ -80,6 +80,7 @@ const columns: ColumnDef<InternalTransfer>[] = [
     header: 'Кимга'
   },
   {
+    numeric: true,
     key: 'summa',
     header: 'Сумма'
   },

@@ -107,6 +107,6 @@ select:-webkit-autofill:focus {
     @apply !text-xs font-semibold !p-1.5;
   }
   .table-xs th {
-    @apply !text-xs !p-1.5 bg-slate-50 font-bold;
+    @apply !text-xs !p-1.5;
   }
 }

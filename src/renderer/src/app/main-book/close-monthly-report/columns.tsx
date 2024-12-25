@@ -1,17 +1,43 @@
-import type { CloseMonthlyReport } from '@renderer/common/models'
+import { Badge } from '@renderer/common/components/ui/badge'
 import type { ColumnDef } from '@renderer/common/components'
+import type { CompleteMonthlyReport } from '@renderer/common/models'
 import { formatLocaleDate } from '@renderer/common/lib/format'
+import { getMonthName } from '@renderer/common/lib/date'
 
 const statusMap = {
-  1: 'Отправлено',
-  2: 'Получено',
-  3: 'Отказано'
+  1: (
+    <Badge
+      variant="secondary"
+      className="bg-slate-100 text-slate-500"
+    >
+      Отправлено
+    </Badge>
+  ),
+  2: (
+    <Badge
+      variant="secondary"
+      className="bg-emerald-100 text-emerald-500"
+    >
+      Получено
+    </Badge>
+  ),
+  3: (
+    <Badge
+      variant="secondary"
+      className="bg-red-100 text-red-500"
+    >
+      Отказано
+    </Badge>
+  )
 }
 
-const closeMonthlyReportColumns: ColumnDef<CloseMonthlyReport>[] = [
+export const completeMonthlyReportColumns: ColumnDef<CompleteMonthlyReport>[] = [
   {
     key: 'month',
-    header: 'Месяц'
+    header: 'Месяц',
+    renderCell(row) {
+      return getMonthName(row.month)
+    }
   },
   {
     key: 'year',
@@ -53,5 +79,3 @@ const closeMonthlyReportColumns: ColumnDef<CloseMonthlyReport>[] = [
     renderCell: (row) => statusMap[row.status]
   }
 ]
-
-export { closeMonthlyReportColumns }

@@ -1,10 +1,11 @@
 import type { HTMLAttributes, ReactNode } from 'react'
 import {
-  TooltipProvider,
   Tooltip,
-  TooltipTrigger,
-  TooltipContent
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger
 } from '@/common/components/ui/tooltip'
+
 import { Copyable } from '@/common/components'
 import { TooltipContentProps } from '@radix-ui/react-tooltip'
 import { cn } from '@/common/lib/utils'
@@ -28,17 +29,17 @@ const TooltipCellRenderer = <T extends { id: number }>({
     <TooltipProvider>
       <Tooltip delayDuration={100}>
         <TooltipTrigger asChild>
-          <div>
+          <div className="-mt-1 -mb-2">
             <h6 className="text-sm font-bold leading-none">{title}</h6>
             <p className="mt-0.5 text-slate-400 text-xs font-medium leading-none">
-              <span>{elements[description]}:</span>{' '}
               {description && data[description] ? (
-                <Copyable value={String(data[description])}>
-                  <span>{String(data[description])}</span>
-                </Copyable>
-              ) : (
-                '-'
-              )}
+                <>
+                  <span>{elements[description]}:</span>{' '}
+                  <Copyable value={String(data[description])}>
+                    <span>{String(data[description])}</span>
+                  </Copyable>
+                </>
+              ) : null}
             </p>
           </div>
         </TooltipTrigger>

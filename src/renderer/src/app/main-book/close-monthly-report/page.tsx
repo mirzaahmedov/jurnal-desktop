@@ -1,12 +1,13 @@
-import { deleteCloseMonthlyReport, getCloseMonthlyReportList } from './service'
+import { completeMonthlyReportService, deleteCloseMonthlyReport } from './service'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
-import { CloseMonthlyReport } from '@renderer/common/models'
+import { CompleteMonthlyReport } from '@renderer/common/models'
 import { GenericTable } from '@renderer/common/components'
 import { ListView } from '@renderer/common/views'
 import { MonthPicker } from '@renderer/common/components/month-picker'
-import { closeMonthlyReportColumns } from './columns'
-import { closeMonthlyReportQueryKeys } from './config'
+import { completeMonthlyReportColumns } from './columns'
+import { completeMonthlyReportQueryKeys } from './config'
+import { formatDate } from '@renderer/common/lib/date'
 import { toast } from '@renderer/common/hooks'
 import { useConfirm } from '@renderer/common/features/confirm'
 import { useLayout } from '@renderer/common/features/layout'
@@ -14,25 +15,26 @@ import { useMainSchet } from '@renderer/common/features/main-schet'
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 
-const CloseMonthlyReportPage = () => {
-  const [date, setDate] = useState('2024-01-01')
+const CompleteMonthlyReportPage = () => {
+  const [date, setDate] = useState(() => formatDate(new Date()))
 
-  const main_schet_id = useMainSchet((store) => store.main_schet?.id)
+  const main_schet = useMainSchet((store) => store.main_schet)
   const queryClient = useQueryClient()
   const navigate = useNavigate()
   const { confirm } = useConfirm()
 
-  const { data: closeMontlyReportList, isFetching } = useQuery({
-    queryKey: [closeMonthlyReportQueryKeys.getAll, { main_schet_id: main_schet_id! }],
-    queryFn: getCloseMonthlyReportList
+  const { data: reportList, isFetching } = useQuery({
+    queryKey: [completeMonthlyReportQueryKeys.getAll, { budjet_id: main_schet?.budget_id }],
+    queryFn: completeMonthlyReportService.getAll
   })
-  const { mutate, isPending } = useMutation({
-    mutationFn: deleteCloseMonthlyReport,
+  const { mutate: deleteReport, isPending } = useMutation({
+    mutationKey: [completeMonthlyReportQueryKeys.delete],
+    mutationFn: completeMonthlyReportService.delete,
     onError: (error) => {
       console.error(error)
       toast({
         variant: 'destructive',
-        title: 'Ошибка при удалении записи'
+        title: error.message
       })
     },
     onSuccess: () => {
@@ -40,7 +42,7 @@ const CloseMonthlyReportPage = () => {
         title: 'Запись успешно удалена'
       })
       queryClient.invalidateQueries({
-        queryKey: [closeMonthlyReportQueryKeys.getAll]
+        queryKey: [completeMonthlyReportQueryKeys.getAll]
       })
     }
   })
@@ -48,24 +50,19 @@ const CloseMonthlyReportPage = () => {
   useLayout({
     title: 'Закончить месячный отчёт',
     onCreate: () => {
-      navigate('all/create')
+      navigate('create')
     }
   })
 
-  const handleEdit = (row: CloseMonthlyReport) => {
-    navigate(`${row.year}/${row.month}`)
+  const handleEdit = (row: CompleteMonthlyReport) => {
+    navigate(`${row.id}`)
   }
 
-  const handleDelete = (row: CloseMonthlyReport) => {
+  const handleDelete = (row: CompleteMonthlyReport) => {
     confirm({
       title: 'Удалить запись?',
       onConfirm: async () => {
-        if (!main_schet_id) return
-        mutate({
-          main_schet_id: main_schet_id!,
-          year: row.year,
-          month: row.month
-        })
+        deleteReport(row.id)
       }
     })
   }
@@ -80,8 +77,8 @@ const CloseMonthlyReportPage = () => {
       </ListView.Header>
       <ListView.Content loading={isFetching || isPending}>
         <GenericTable
-          columns={closeMonthlyReportColumns}
-          data={closeMontlyReportList?.data ?? []}
+          columns={completeMonthlyReportColumns}
+          data={reportList?.data ?? []}
           onEdit={handleEdit}
           onDelete={handleDelete}
         />
@@ -91,4 +88,4 @@ const CloseMonthlyReportPage = () => {
   )
 }
 
-export default CloseMonthlyReportPage
+export default CompleteMonthlyReportPage

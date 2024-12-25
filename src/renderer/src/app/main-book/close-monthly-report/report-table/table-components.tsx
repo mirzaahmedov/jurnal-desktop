@@ -50,7 +50,7 @@ const headVariants = cva(
   {
     variants: {
       sticky: {
-        true: 'sticky left-0 bg-white font-extrabold z-50'
+        true: 'sticky left-0 bg-slate-100 font-extrabold z-50'
       },
       alphanumeric: {
         true: 'text-center'

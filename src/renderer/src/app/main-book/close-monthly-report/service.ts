@@ -1,13 +1,24 @@
-import type { CloseMonthlyReportDetails, Response } from '@renderer/common/models'
+import { ApiEndpoints, CRUDService } from '@renderer/common/features/crud'
+import type {
+  CompleteMonthlyReport,
+  CompleteMonthlyReportProvodka,
+  Response
+} from '@renderer/common/models'
 
-import { ApiEndpoints } from '@renderer/common/features/crud'
+import { CompleteMonthlyReportValues } from './config'
 import type { QueryFunctionContext } from '@tanstack/react-query'
+import { budget } from '@renderer/common/features/crud/middleware'
 import { http } from '@renderer/common/lib/http'
 
-export const getCloseMonthlyReportInfo = async (
-  ctx: QueryFunctionContext<[string, { year: number; month: number; main_schet_id: number }]>
+type QueryParams = {
+  year: number
+  month: number
+  budjet_id: number
+}
+export const getCompleteMonthlyReportInfo = async (
+  ctx: QueryFunctionContext<[string, QueryParams]>
 ) => {
-  const response = await http.get<Response<CloseMonthlyReportDetails[]>>(
+  const response = await http.get<Response<CompleteMonthlyReportProvodka[]>>(
     ApiEndpoints.main_book__end + '/info',
     {
       params: ctx.queryKey[1]
@@ -33,7 +44,7 @@ export const createCloseMonthlyReport = async ({
   year
 }: {
   main_schet_id: number
-  data: CloseMonthlyReportDetails[]
+  data: CompleteMonthlyReportProvodka[]
   month: number
   year: number
 }) => {
@@ -60,7 +71,7 @@ export const updateCloseMonthlyReport = async ({
   year
 }: {
   main_schet_id: number
-  data: CloseMonthlyReportDetails[]
+  data: CompleteMonthlyReportProvodka[]
   month: number
   year: number
 }) => {
@@ -90,3 +101,16 @@ export const deleteCloseMonthlyReport = async (params: {
   })
   return response.data
 }
+
+export const completeMonthlyReportService = new CRUDService<CompleteMonthlyReport, any>({
+  endpoint: ApiEndpoints.main_book__end
+})
+  .use(budget())
+  .forRequest((type) => {
+    if (type === 'getById') {
+      return {
+        url: ApiEndpoints.main_book__end + '/info'
+      }
+    }
+    return {}
+  })
