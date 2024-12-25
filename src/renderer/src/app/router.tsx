@@ -2,6 +2,7 @@ import { Navigate, createHashRouter } from 'react-router-dom'
 
 import AccessPage from './region-admin/access/page'
 import AccountablePage from './region-spravochnik/podotchet'
+import AdminMoonBookPage from './super-admin/main-book/page'
 import AdvanceReportDetailsPage from './podotchet/avans/details/page'
 import AktDetailsPage from './organization/akt/details/page'
 import AktPage from './organization/akt/page'
@@ -13,12 +14,11 @@ import BankRasxodDetailsPage from './bank/rasxod/details/page'
 import BankRasxodPage from './bank/rasxod/page'
 import BankSpravochnikPage from './super-admin/bank/page'
 import BudgetPage from './super-admin/budjet/page'
-import CompleteMonthlyReportDetailsPage from './main-book/close-monthly-report/details/page'
-import CompleteMonthlyReportPage from './main-book/close-monthly-report/page'
+import CompleteMonthlyReportDetailsPage from './main-book/complete-monthly-report/details/page'
+import CompleteMonthlyReportPage from './main-book/complete-monthly-report/page'
 import ContractDetailsPage from './organization/shartnoma/details/page'
 import CreateMonthlyReportDetailsPage from './main-book/create-monthly-report/details/page'
 import CreateMonthlyReportPage from './main-book/create-monthly-report/page'
-// import DemoPage from './demo/page'
 import GroupPage from './super-admin/group/page'
 import HomePage from './home/page'
 import { InternalTransferDetailsPage } from './jur7/internal-transfer/details/page'
@@ -36,7 +36,6 @@ import { MO7RasxodPage } from './jur7/rasxod/page'
 import MainLayout from './layout/main'
 import { MainSchetGuard } from '@/common/features/main-schet'
 import MainSchetPage from './region-spravochnik/main-schet/page'
-// import NaimenovaniePage from './jur7/naimenovaniya/page'
 import OperationTypePage from './region-spravochnik/type-operatsii/page'
 import OperatsiiPage from './super-admin/operatsii/page'
 import OrganizationMonitorPage from './organization/monitor/page'
@@ -63,6 +62,10 @@ import Subdivision7Page from './jur7/podrazdelenie/page'
 import SubdivisionPage from './region-spravochnik/podrazdelenie/page'
 import UnitPage from './super-admin/unit/page'
 import UserPage from './super-admin/user/page'
+
+// import DemoPage from './demo/page'
+
+// import NaimenovaniePage from './jur7/naimenovaniya/page'
 
 export const routes: RouteObject[] = [
   {
@@ -263,6 +266,10 @@ export const routes: RouteObject[] = [
           {
             path: 'unit',
             element: <UnitPage />
+          },
+          {
+            path: 'main-book',
+            element: <AdminMoonBookPage />
           }
         ]
       },

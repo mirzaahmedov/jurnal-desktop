@@ -45,5 +45,6 @@ export enum ApiEndpoints {
   tables_count = 'auth/control/tables/count',
   logs = 'log/get',
   main_book__doc = 'main/book/doc',
-  main_book__end = 'main/book/end'
+  main_book__end = 'main/book/end',
+  admin__main_book = 'admin/main/book'
 }

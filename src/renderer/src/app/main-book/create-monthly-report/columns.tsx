@@ -41,7 +41,7 @@ export const openMonthlyReportColumns: ColumnDef<OpenMonthlyReport>[] = [
       return found ? (
         <Badge
           variant="secondary"
-          className="bg-slate-100 text-slate-500"
+          className="bg-brand/10 text-brand"
         >
           {found.name}
         </Badge>

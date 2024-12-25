@@ -1,10 +1,10 @@
 import { Badge } from '@renderer/common/components/ui/badge'
 import type { ColumnDef } from '@renderer/common/components'
 import type { CompleteMonthlyReport } from '@renderer/common/models'
-// import { formatLocaleDate } from '@renderer/common/lib/format'
+import { formatLocaleDate } from '@renderer/common/lib/format'
 import { getMonthName } from '@renderer/common/lib/date'
 
-const statusMap = {
+export const statusMap = {
   1: (
     <Badge
       variant="secondary"
@@ -50,7 +50,7 @@ export const completeMonthlyReportColumns: ColumnDef<CompleteMonthlyReport>[] = 
       return (
         <div>
           <h6 className="font-bold text-base">@{row.user_login}</h6>
-          {/* <p>{formatLocaleDate(row)}</p> */}
+          <p>{formatLocaleDate(row.created_at)}</p>
         </div>
       )
     }
@@ -64,11 +64,7 @@ export const completeMonthlyReportColumns: ColumnDef<CompleteMonthlyReport>[] = 
           <h6 className="font-bold text-base">
             {row.accepted_login ? `@${row.accepted_login}` : null}
           </h6>
-          {/* <p>
-            {row.document_qabul_qilingan_vaqt
-              ? formatLocaleDate(row.document_yaratilgan_vaqt)
-              : null}
-          </p> */}
+          <p>{row.accepted_time ? formatLocaleDate(row.accepted_time) : null}</p>
         </div>
       ) : null
     }

@@ -1,5 +1,5 @@
 import type { Autocomplete } from '@renderer/common/lib/types'
-import type { CompleteMonthlyReportTableItem } from '@renderer/common/models'
+import type { CompleteMonthlyReportTableItem } from '../details/utils'
 import type { ComponentType } from 'react'
 import type { ReportTableProps } from './table'
 
@@ -21,7 +21,7 @@ const columns: ColumnDef[] = [
   {
     alphanumeric: true,
     sticky: true,
-    className: 'px-5 max-w-80',
+    className: 'px-5 !min-w-80',
     rowSpan: 2,
     key: 'name',
     header: 'Операция'

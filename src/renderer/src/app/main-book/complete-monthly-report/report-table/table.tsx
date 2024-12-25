@@ -165,7 +165,7 @@ const ReportTable = ({ isLoading, data, onEdit, onDelete }: ReportTableProps) =>
       onMouseLeave={handleMouseLeave}
       className="relative w-full overflow-x-auto noscroll-bar"
     >
-      {isLoading ? <LoadingOverlay /> : null}
+      {isLoading ? <LoadingOverlay className="z-[51]" /> : null}
       <Table
         ref={tableRef}
         className="border-separate border-spacing-0 overflow-clip h-px"

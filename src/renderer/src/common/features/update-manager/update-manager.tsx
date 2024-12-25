@@ -11,7 +11,7 @@ import {
   AlertDialogFooter,
   AlertDialogTitle
 } from '@renderer/common/components/ui/alert-dialog'
-import { Check, Download, MessageCircleWarning, TriangleAlert } from 'lucide-react'
+import { Check, CircleFadingArrowUp, CircleX, Download } from 'lucide-react'
 import { useEffect, useState } from 'react'
 
 const ipcRenderer = window.electron.ipcRenderer
@@ -73,7 +73,7 @@ const UpdateManager = () => {
       <AlertDialogContent>
         <div className="flex items-center gap-5">
           {status ? <AlertIcon type={status} /> : null}
-          <AlertDialogTitle className="text-xl font-bold">
+          <AlertDialogTitle className="text-lg font-bold">
             {status === 'available'
               ? 'Доступно обновление'
               : status === 'downloading'
@@ -108,32 +108,32 @@ const AlertIcon = ({ type }: AlertIconProps) => {
   let Icon = Check
 
   if (type === 'error') {
-    Icon = TriangleAlert
+    Icon = CircleX
   }
   if (type === 'downloading') {
     Icon = Download
   }
   if (type === 'available') {
-    Icon = MessageCircleWarning
+    Icon = CircleFadingArrowUp
   }
 
   return (
     <div
       className={cn(
         'bg-red-50 size-16 flex items-center justify-center rounded-full',
-        type === 'error' && 'bg-red-50',
-        type === 'available' && 'bg-yellow-50',
-        type === 'downloading' && 'bg-blue-50',
-        type === 'downloaded' && 'bg-emerald-50'
+        type === 'error' && 'bg-red-100',
+        type === 'available' && 'bg-emerald-100',
+        type === 'downloading' && 'bg-blue-100',
+        type === 'downloaded' && 'bg-emerald-100'
       )}
     >
       <Icon
         className={cn(
-          'block size-6',
-          type === 'error' && 'text-red-500',
-          type === 'available' && 'text-yellow-500',
-          type === 'downloading' && 'text-blue-500',
-          type === 'downloaded' && 'text-emerald-500'
+          'block size-7',
+          type === 'error' && 'text-red-600',
+          type === 'available' && 'text-emerald-600',
+          type === 'downloading' && 'text-blue-600',
+          type === 'downloaded' && 'text-emerald-600'
         )}
       />
     </div>

@@ -1,59 +1,41 @@
 import {
-  CompleteMonthlyReportFormSchema,
-  completeMonthlyReportQueryKeys,
-  defaultValues
-} from '../config'
-import { useMemo, useState } from 'react'
+  completeMonthlyReportService,
+  getCompleteMonthlyReportById,
+  getCompleteMonthlyReportInfo
+} from '../service'
+import { useEffect, useMemo, useState } from 'react'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import { Button } from '@renderer/common/components/ui/button'
-import { CircleArrowDown } from 'lucide-react'
 import { DetailsView } from '@renderer/common/views'
-import { Form } from '@renderer/common/components/ui/form'
 import { MonthPicker } from '@renderer/common/components/month-picker'
 import { ReportTable } from '../report-table'
-import { completeMonthlyReportService } from '../service'
+import { completeMonthlyReportQueryKeys } from '../config'
+import { formatDate } from '@renderer/common/lib/date'
 import { toast } from '@renderer/common/hooks'
 import { transformData } from './utils'
-import { useForm } from 'react-hook-form'
 import { useLayout } from '@renderer/common/features/layout'
 import { useMainSchet } from '@renderer/common/features/main-schet'
-import { zodResolver } from '@hookform/resolvers/zod'
 
 const CompleteMonthlyReportDetailsPage = () => {
   const main_schet = useMainSchet((store) => store.main_schet)
   const navigate = useNavigate()
   const params = useParams()
 
-  const defaultDate =
-    params.id === 'create'
-      ? new Date().toISOString().slice(0, 10)
-      : new Date(`${params.year}-${params.month}-01`).toISOString().slice(0, 10)
-
-  const [date, setDate] = useState(defaultDate)
+  const [date, setDate] = useState(formatDate(new Date()))
   const [year, month] = date.split('-')
-
-  const form = useForm({
-    defaultValues: {
-      ...defaultValues,
-      month: Number(month),
-      year: Number(year)
-    },
-    resolver: zodResolver(CompleteMonthlyReportFormSchema)
-  })
 
   const { data: reportInfo, isFetching: isFetchingInfo } = useQuery({
     queryKey: [
-      completeMonthlyReportQueryKeys.getById,
-      1,
+      getCompleteMonthlyReportInfo,
       {
         year: Number(year),
         month: Number(month),
         budjet_id: main_schet?.budget_id
       }
     ],
-    queryFn: completeMonthlyReportService.getById,
+    queryFn: getCompleteMonthlyReportInfo,
     enabled: !!main_schet?.budget_id && params.id === 'create'
   })
 
@@ -63,7 +45,8 @@ const CompleteMonthlyReportDetailsPage = () => {
       Number(params.id),
       { budjet_id: main_schet?.budget_id }
     ],
-    queryFn: completeMonthlyReportService.getById
+    queryFn: getCompleteMonthlyReportById,
+    enabled: !!main_schet?.budget_id && params.id !== 'create'
   })
 
   const { mutate: createReport, isPending: isCreating } = useMutation({
@@ -107,34 +90,37 @@ const CompleteMonthlyReportDetailsPage = () => {
   })
 
   const transformed = useMemo(() => {
-    if (!reportInfo?.data) {
+    const data = reportInfo?.data ?? report?.data
+
+    if (!data) {
       return []
     }
 
-    return transformData(reportInfo.data as any)
-  }, [reportInfo?.data])
+    return transformData(data)
+  }, [reportInfo?.data, report?.data])
+
+  useEffect(() => {
+    const data = report?.data
+    if (!data) {
+      return
+    }
+
+    setDate(`${data.year}-${data.month}-01`)
+  }, [report?.data])
 
   return (
     <DetailsView>
-      <Form {...form}>
-        <div className="flex gap-10 p-5 border-b">
-          <MonthPicker
-            disabled={params.id !== 'create'}
-            value={date}
-            onChange={setDate}
-            className="disabled:opacity-100"
-          />
-          <div>
-            <Button type="button">
-              <CircleArrowDown className="btn-icon icon-start" />
-              Загрузить
-            </Button>
-          </div>
-        </div>
-      </Form>
+      <div className="flex gap-10 p-5 border-b">
+        <MonthPicker
+          disabled={params.id !== 'create'}
+          value={date}
+          onChange={setDate}
+          className="disabled:opacity-100"
+        />
+      </div>
       <div className="relative w-full overflow-x-hidden">
         <ReportTable
-          isLoading={isFetching}
+          isLoading={isFetching || isFetchingInfo}
           data={transformed}
           onDelete={() => {}}
           onEdit={() => {}}

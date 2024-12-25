@@ -1,15 +1,3 @@
-export type MonthlyReportDocumentType =
-  | 'start'
-  | 'jur1'
-  | 'jur2'
-  | 'jur3'
-  | 'jur4'
-  | 'jur5'
-  | 'jur6'
-  | 'jur7'
-  | 'jur8'
-  | 'end'
-
 export type Summa = {
   debet_sum: number
   kredit_sum: number
@@ -23,14 +11,6 @@ export type OpenMonthlyReport = {
   summa: Summa
 }
 
-export type CreateMonthlyReport = {
-  year: number
-  month: number
-  type_document: MonthlyReportDocumentType
-  kredit: number
-  debet_sum: number
-}
-
 export type CompleteMonthlyReport = {
   id: number
   month: number
@@ -41,46 +21,56 @@ export type CompleteMonthlyReport = {
   user_login: string
   accepted_id: null | string
   accepted_login: null | string
+  accepted_time: null | string
+  created_at: string
   status: number
 }
 
-export interface CompleteMonthlyReportProvodka {
+/*====================================================
+    report info response types
+====================================================*/
+
+export type CompleteMonthlyReportInfo = Array<{
   type: string
-  schets: CompleteMonthlyReportSchet[]
+  schets: SchetInfo[]
   debet_sum: number
   kredit_sum: number
+}>
+
+export interface SchetInfo {
+  id: number
+  name: string
+  schet: string
+  sub_schet: string
+  type_schet: string
+  smeta_id: number
+  summa: Summa
 }
 
-export type CompleteMonthlyReportSchet = {
+/*====================================================
+    report by id response types
+====================================================*/
+
+export type CompleteMonthlyReportById = {
+  id: number
+  user_id: number
+  user_id_accepted: number
+  budjet_id: number
+  accepted_time: string
+  month: number
+  year: number
+  status: number
+  data: Array<{
+    type: string
+    schets: SchetById[]
+    debet_sum: number
+    kredit_sum: number
+  }>
+}
+
+export interface SchetById {
   spravochnik_operatsii_id: number
   schet_name: string
   schet: string
-  debet_sum: number
-  kredit_sum: number
-}
-
-export interface CompleteMonthlyReportTableItem {
-  id: string
-  name: string
-  schet: string
-  start_debet: number
-  start_kredit: number
-  jur1_debet: number
-  jur1_kredit: number
-  jur2_debet: number
-  jur2_kredit: number
-  jur3_debet: number
-  jur3_kredit: number
-  jur4_debet: number
-  jur4_kredit: number
-  jur5_debet: number
-  jur5_kredit: number
-  jur6_debet: number
-  jur6_kredit: number
-  jur7_debet: number
-  jur7_kredit: number
-  jur8_debet: number
-  jur8_kredit: number
-  end_debet: number
-  end_kredit: number
+  summa: Summa
 }

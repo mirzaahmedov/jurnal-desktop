@@ -325,6 +325,11 @@ export const getNavElements = (): NavElement[] => {
           icon: UserCog,
           children: omitEmptyArrayElements([
             {
+              path: 'main-book',
+              title: 'Главная книга',
+              icon: NotebookText
+            },
+            {
               path: 'logs',
               title: 'Логи',
               icon: FileClock
@@ -392,23 +397,25 @@ export const getNavElements = (): NavElement[] => {
           ])
         }
       : null,
-    {
-      path: '/main-book',
-      title: 'Главный книга',
-      icon: NotebookText,
-      children: [
-        {
-          path: 'create-monthly-report',
-          title: 'Создать месячный отчёт',
-          icon: CalendarPlus2
-        },
-        {
-          path: 'close-monthly-report',
-          title: 'Закрыть месячный отчёт',
-          icon: CalendarX
+    !is_admin && !is_super_admin
+      ? {
+          path: '/main-book',
+          title: 'Главный книга',
+          icon: NotebookText,
+          children: [
+            {
+              path: 'create-monthly-report',
+              title: 'Создать месячный отчёт',
+              icon: CalendarPlus2
+            },
+            {
+              path: 'close-monthly-report',
+              title: 'Закрыть месячный отчёт',
+              icon: CalendarX
+            }
+          ]
         }
-      ]
-    },
+      : null,
     {
       path: '/region-data',
       title: 'Проверка данных',
