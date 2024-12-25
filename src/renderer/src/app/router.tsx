@@ -2,6 +2,7 @@ import { Navigate, createHashRouter } from 'react-router-dom'
 
 import AccessPage from './region-admin/access/page'
 import AccountablePage from './region-spravochnik/podotchet'
+import AdminMainBookDetailsPage from './super-admin/main-book/details/page'
 import AdminMoonBookPage from './super-admin/main-book/page'
 import AdvanceReportDetailsPage from './podotchet/avans/details/page'
 import AktDetailsPage from './organization/akt/details/page'
@@ -270,6 +271,10 @@ export const routes: RouteObject[] = [
           {
             path: 'main-book',
             element: <AdminMoonBookPage />
+          },
+          {
+            path: 'main-book/:id',
+            element: <AdminMainBookDetailsPage />
           }
         ]
       },

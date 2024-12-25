@@ -129,7 +129,7 @@ const CompleteMonthlyReportDetailsPage = () => {
       <div className="p-5 border-t">
         <Button
           type="button"
-          disabled={isCreating || isUpdating || !main_schet || !reportInfo?.data || !month || !year}
+          disabled={isCreating || isUpdating || !main_schet || !month || !year}
           onClick={() => {
             if (params.id === 'create') {
               createReport({
@@ -139,7 +139,7 @@ const CompleteMonthlyReportDetailsPage = () => {
               })
             } else {
               updateReport({
-                data: reportInfo!.data!,
+                data: report!.data!,
                 month: Number(month),
                 year: Number(year)
               })

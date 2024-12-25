@@ -12,3 +12,28 @@ export type AdminMainbook = {
   region_id: number
   region_name: string
 }
+
+export interface AdminMainbookDetails {
+  id: number
+  user_id: number
+  user_id_accepted: number
+  budjet_id: number
+  accepted_time: string
+  month: number
+  year: number
+  status: number
+  data: Array<{
+    type: string
+    schets: Schet[]
+    debet_sum: number
+    kredit_sum: number
+  }>
+}
+
+export interface Schet {
+  spravochnik_operatsii_id: number
+  schet_name: string
+  schet: string
+  debet_sum: number
+  kredit_sum: number
+}

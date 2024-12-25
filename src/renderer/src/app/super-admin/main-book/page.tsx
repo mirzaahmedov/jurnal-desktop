@@ -16,7 +16,7 @@ const AdminMoonBookPage = () => {
   })
 
   const handleEdit = (row: AdminMainbook) => {
-    navigate(`${row.id}`)
+    navigate(`${row.id}?region_id=${row.region_id}`)
   }
 
   return (

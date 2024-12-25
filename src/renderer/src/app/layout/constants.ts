@@ -397,7 +397,7 @@ export const getNavElements = (): NavElement[] => {
           ])
         }
       : null,
-    !is_admin && !is_super_admin
+    !is_super_admin
       ? {
           path: '/main-book',
           title: 'Главный книга',
