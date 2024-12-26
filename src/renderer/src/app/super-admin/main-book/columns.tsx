@@ -1,5 +1,6 @@
-import { AdminMainbook } from '@renderer/common/models'
-import { ColumnDef } from '@renderer/common/components'
+import type { AdminMainbook } from '@renderer/common/models'
+import type { ColumnDef } from '@renderer/common/components'
+import { formatLocaleDateTime } from '@renderer/common/lib/format'
 import { getMonthName } from '@renderer/common/lib/date'
 import { statusMap } from '@renderer/app/main-book/complete-monthly-report/columns'
 
@@ -33,7 +34,7 @@ export const columns: ColumnDef<AdminMainbook>[] = [
       return (
         <div>
           <h6 className="font-bold text-base">@{row.user_login}</h6>
-          {/* <p>{formatLocaleDate(row.)}</p> */}
+          <p>{formatLocaleDateTime(row.created_at)}</p>
         </div>
       )
     }
@@ -47,7 +48,7 @@ export const columns: ColumnDef<AdminMainbook>[] = [
           <h6 className="font-bold text-base">
             {row.accepted_login ? `@${row.accepted_login}` : null}
           </h6>
-          {/* <p>{row.accepted_time ? formatLocaleDate(row.accepted_time) : null}</p> */}
+          <p>{row.accepted_time ? formatLocaleDateTime(row.accepted_time) : null}</p>
         </div>
       ) : null
     }

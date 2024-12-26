@@ -8,9 +8,11 @@ export type AdminMainbook = {
   user_login: string
   accepted_id: null | number
   accepted_login: null | string
+  accepted_time: null | string
   status: number
   region_id: number
   region_name: string
+  created_at: string
 }
 
 export interface AdminMainbookDetails {

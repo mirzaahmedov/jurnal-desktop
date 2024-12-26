@@ -11,6 +11,17 @@ const formatLocaleDate = (date?: string) => {
   }
 }
 
+export const formatLocaleDateTime = (date?: string) => {
+  try {
+    if (!date) {
+      return ''
+    }
+    return format(new Date(date), 'dd.MM.yyyy HH:mm')
+  } catch {
+    return ''
+  }
+}
+
 const unformatLocaleDate = (date: string) => {
   const value = date.split('.').reverse().join('-')
   const dateObj = new Date(value)
