@@ -1,13 +1,11 @@
-import type {
-  CompleteMonthlyReportProvodka,
-  CompleteMonthlyReportTableItem
-} from '@renderer/common/models'
 import type { MouseEvent, RefObject, UIEvent } from 'react'
 import { ReportTableCell, ReportTableHead, ReportTableRow } from './table-components'
 import { Table, TableBody, TableHeader } from '@renderer/common/components/ui/table'
 import { cn, parseCSSNumericValue } from '@renderer/common/lib/utils'
 import { createRef, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 
+import type { CompleteMonthlyReportProvodka } from '@renderer/common/models'
+import { CompleteMonthlyReportTableItem } from '../details/utils'
 import { LoadingOverlay } from '@renderer/common/components'
 import { columns } from './columns'
 import { formatNumber } from '@renderer/common/lib/format'

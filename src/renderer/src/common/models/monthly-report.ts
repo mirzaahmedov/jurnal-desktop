@@ -26,51 +26,23 @@ export type CompleteMonthlyReport = {
   status: number
 }
 
-/*====================================================
-    report info response types
-====================================================*/
+export interface CompleteMonthlyReportProvodka {
+  year: number
+  month: number
+  data: CompleteMonthlyReportProvodkaData[]
+}
 
-export type CompleteMonthlyReportInfo = Array<{
+export interface CompleteMonthlyReportProvodkaData {
   type: string
-  schets: SchetInfo[]
+  schets: Array<{
+    id: number
+    name: string
+    schet: string
+    sub_schet: string
+    type_schet: string
+    smeta_id: number
+    summa: Summa
+  }>
   debet_sum: number
   kredit_sum: number
-}>
-
-export interface SchetInfo {
-  id: number
-  name: string
-  schet: string
-  sub_schet: string
-  type_schet: string
-  smeta_id: number
-  summa: Summa
-}
-
-/*====================================================
-    report by id response types
-====================================================*/
-
-export type CompleteMonthlyReportById = {
-  id: number
-  user_id: number
-  user_id_accepted: number
-  budjet_id: number
-  accepted_time: string
-  month: number
-  year: number
-  status: number
-  data: Array<{
-    type: string
-    schets: SchetById[]
-    debet_sum: number
-    kredit_sum: number
-  }>
-}
-
-export interface SchetById {
-  spravochnik_operatsii_id: number
-  schet_name: string
-  schet: string
-  summa: Summa
 }

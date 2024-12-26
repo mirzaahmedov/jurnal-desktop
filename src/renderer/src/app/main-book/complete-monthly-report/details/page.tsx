@@ -1,3 +1,4 @@
+import { FileDown, Save } from 'lucide-react'
 import {
   completeMonthlyReportService,
   getCompleteMonthlyReportById,
@@ -8,6 +9,7 @@ import { useMutation, useQuery } from '@tanstack/react-query'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import { Button } from '@renderer/common/components/ui/button'
+import { CompleteMonthlyReportProvodkaData } from '@renderer/common/models'
 import { DetailsView } from '@renderer/common/views'
 import { MonthPicker } from '@renderer/common/components/month-picker'
 import { ReportTable } from '../report-table'
@@ -23,6 +25,7 @@ const CompleteMonthlyReportDetailsPage = () => {
   const navigate = useNavigate()
   const params = useParams()
 
+  const [values, setValues] = useState<CompleteMonthlyReportProvodkaData[]>()
   const [date, setDate] = useState(formatDate(new Date()))
   const [year, month] = date.split('-')
 
@@ -81,6 +84,22 @@ const CompleteMonthlyReportDetailsPage = () => {
       })
     }
   })
+  const { mutate: loadInfo, isPending } = useMutation({
+    mutationFn: getCompleteMonthlyReportInfo,
+    onSuccess: (response) => {
+      toast({
+        title: 'Информация успешно загружена'
+      })
+      setValues(response?.data ?? [])
+    },
+    onError: (error) => {
+      console.error(error)
+      toast({
+        variant: 'destructive',
+        title: error.message
+      })
+    }
+  })
 
   useLayout({
     title: params.id === 'create' ? 'Создать месячный отчет' : 'Редактировать месячный отчет',
@@ -90,13 +109,15 @@ const CompleteMonthlyReportDetailsPage = () => {
   })
 
   const transformed = useMemo(() => {
-    const data = reportInfo?.data ?? report?.data
-
-    if (!data) {
+    if (!values) {
       return []
     }
 
-    return transformData(data)
+    return transformData(values).sort((a, b) => a.schet.localeCompare(b.schet))
+  }, [values])
+
+  useEffect(() => {
+    setValues(reportInfo?.data ?? report?.data?.data ?? [])
   }, [reportInfo?.data, report?.data])
 
   useEffect(() => {
@@ -120,34 +141,56 @@ const CompleteMonthlyReportDetailsPage = () => {
       </div>
       <div className="relative w-full overflow-x-hidden">
         <ReportTable
-          isLoading={isFetching || isFetchingInfo}
+          isLoading={isFetching || isFetchingInfo || isPending}
           data={transformed}
           onDelete={() => {}}
           onEdit={() => {}}
         />
       </div>
-      <div className="p-5 border-t">
+
+      <div className="p-5 border-t flex items-center gap-2">
         <Button
           type="button"
-          disabled={isCreating || isUpdating || !main_schet || !month || !year}
+          disabled={isCreating || isUpdating || isPending || !main_schet || !month || !year}
           onClick={() => {
             if (params.id === 'create') {
               createReport({
-                data: reportInfo!.data!,
+                data: values,
                 month: Number(month),
                 year: Number(year)
               })
             } else {
               updateReport({
-                data: report!.data!,
+                id: Number(params.id),
+                data: values,
                 month: Number(month),
                 year: Number(year)
               })
             }
           }}
         >
-          Сохранить
+          <Save className="btn-icon icon-start" /> Сохранить
         </Button>
+        {params.id !== 'create' ? (
+          <Button
+            disabled={isPending}
+            variant="outline"
+            onClick={() => {
+              loadInfo({
+                queryKey: [
+                  getCompleteMonthlyReportInfo,
+                  {
+                    year: Number(year),
+                    month: Number(month),
+                    budjet_id: main_schet?.budget_id
+                  }
+                ]
+              } as any)
+            }}
+          >
+            <FileDown className="btn-icon icon-start" /> Загрузить обновления
+          </Button>
+        ) : null}
       </div>
     </DetailsView>
   )

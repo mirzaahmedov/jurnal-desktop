@@ -1,31 +1,16 @@
-import type {
-  CompleteMonthlyReportById,
-  CompleteMonthlyReportInfo,
-  SchetById,
-  SchetInfo
-} from '@renderer/common/models'
+import type { CompleteMonthlyReportProvodkaData } from '@renderer/common/models'
 
-type NormalizedSchet = SchetById & { type: string }
+export const transformData = (data: CompleteMonthlyReportProvodkaData[]) => {
+  const schets = data
 
-export const transformData = (data: CompleteMonthlyReportInfo | CompleteMonthlyReportById) => {
-  const schets = Array.isArray(data)
-    ? data.map((item) => {
-        const normalized = item.schets.map(normalizeSchets)
-        return {
-          ...item,
-          schets: normalized
-        }
-      })
-    : data.data
-
-  const schetsMap = new Map<number, NormalizedSchet[]>()
+  const schetsMap = new Map<number, Schet[]>()
 
   schets.forEach((item) => {
     item.schets.forEach((schet) => {
-      if (!schetsMap.has(schet.spravochnik_operatsii_id)) {
-        schetsMap.set(schet.spravochnik_operatsii_id, [])
+      if (!schetsMap.has(schet.id)) {
+        schetsMap.set(schet.id, [])
       }
-      schetsMap.get(schet.spravochnik_operatsii_id)?.push({
+      schetsMap.get(schet.id)?.push({
         ...schet,
         type: item.type
       })
@@ -34,12 +19,12 @@ export const transformData = (data: CompleteMonthlyReportInfo | CompleteMonthlyR
 
   const rows: CompleteMonthlyReportTableItem[] = []
 
-  schetsMap.forEach((values, key) => {
+  schetsMap.forEach((values) => {
     const result = {} as CompleteMonthlyReportTableItem
 
     const schet = values[0]
-    result.id = key + schet.type
-    result.name = schet.schet_name
+    result.id = schet.id
+    result.name = schet.name
     result.schet = schet.schet
 
     values.forEach((item) => {
@@ -53,20 +38,8 @@ export const transformData = (data: CompleteMonthlyReportInfo | CompleteMonthlyR
   return rows
 }
 
-const normalizeSchets = (schet: SchetInfo): SchetById => {
-  return {
-    spravochnik_operatsii_id: schet.id,
-    schet_name: schet.name,
-    schet: schet.schet,
-    summa: {
-      debet_sum: schet.summa.debet_sum,
-      kredit_sum: schet.summa.kredit_sum
-    }
-  }
-}
-
 export interface CompleteMonthlyReportTableItem {
-  id: string
+  id: number
   name: string
   schet: string
   start_debet: number
@@ -90,3 +63,7 @@ export interface CompleteMonthlyReportTableItem {
   end_debet: number
   end_kredit: number
 }
+
+type Schet = {
+  type: string
+} & CompleteMonthlyReportProvodkaData['schets'][number]

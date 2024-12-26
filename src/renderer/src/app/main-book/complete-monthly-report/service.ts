@@ -1,8 +1,8 @@
 import { ApiEndpoints, CRUDService } from '@renderer/common/features/crud'
 import type {
   CompleteMonthlyReport,
-  CompleteMonthlyReportById,
-  CompleteMonthlyReportInfo,
+  CompleteMonthlyReportProvodka,
+  CompleteMonthlyReportProvodkaData,
   Response
 } from '@renderer/common/models'
 
@@ -11,7 +11,7 @@ import { budget } from '@renderer/common/features/crud/middleware'
 import { http } from '@renderer/common/lib/http'
 
 export const getCompleteMonthlyReportInfo = async (ctx: QueryFunctionContext) => {
-  const response = await http.get<Response<CompleteMonthlyReportInfo>>(
+  const response = await http.get<Response<CompleteMonthlyReportProvodkaData[]>>(
     ApiEndpoints.main_book__end + '/info',
     {
       params: ctx.queryKey[1]
@@ -21,7 +21,7 @@ export const getCompleteMonthlyReportInfo = async (ctx: QueryFunctionContext) =>
 }
 
 export const getCompleteMonthlyReportById = async (ctx: QueryFunctionContext) => {
-  const response = await http.get<Response<CompleteMonthlyReportById>>(
+  const response = await http.get<Response<CompleteMonthlyReportProvodka>>(
     `${ApiEndpoints.main_book__end}/${ctx.queryKey[1]}`,
     { params: ctx.queryKey[2] }
   )
