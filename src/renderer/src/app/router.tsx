@@ -15,11 +15,7 @@ import BankRasxodDetailsPage from './bank/rasxod/details/page'
 import BankRasxodPage from './bank/rasxod/page'
 import BankSpravochnikPage from './super-admin/bank/page'
 import BudgetPage from './super-admin/budjet/page'
-import CompleteMonthlyReportDetailsPage from './main-book/complete-monthly-report/details/page'
-import CompleteMonthlyReportPage from './main-book/complete-monthly-report/page'
 import ContractDetailsPage from './organization/shartnoma/details/page'
-import CreateMonthlyReportDetailsPage from './main-book/create-monthly-report/details/page'
-import CreateMonthlyReportPage from './main-book/create-monthly-report/page'
 import GroupPage from './super-admin/group/page'
 import HomePage from './home/page'
 import { InternalTransferDetailsPage } from './jur7/internal-transfer/details/page'
@@ -37,6 +33,10 @@ import { MO7RasxodPage } from './jur7/rasxod/page'
 import MainLayout from './layout/main'
 import { MainSchetGuard } from '@/common/features/main-schet'
 import MainSchetPage from './region-spravochnik/main-schet/page'
+import MainbookDetailsPage from './main-book/mainbook/details/page'
+import MainbookPage from './main-book/mainbook/page'
+import MainbookReportDetailsPage from './main-book/report/details/page'
+import MainbookReportPage from './main-book/report/page'
 import OperationTypePage from './region-spravochnik/type-operatsii/page'
 import OperatsiiPage from './super-admin/operatsii/page'
 import OrganizationMonitorPage from './organization/monitor/page'
@@ -269,11 +269,11 @@ export const routes: RouteObject[] = [
             element: <UnitPage />
           },
           {
-            path: 'main-book',
+            path: 'mainbook',
             element: <AdminMoonBookPage />
           },
           {
-            path: 'main-book/:id',
+            path: 'mainbook/:id',
             element: <AdminMainBookDetailsPage />
           }
         ]
@@ -339,23 +339,23 @@ export const routes: RouteObject[] = [
         ]
       },
       {
-        path: 'main-book',
+        path: 'mainbook',
         children: [
           {
-            path: 'create-monthly-report',
-            element: <CreateMonthlyReportPage />
+            path: 'report',
+            element: <MainbookReportPage />
           },
           {
-            path: 'create-monthly-report/:id',
-            element: <CreateMonthlyReportDetailsPage />
+            path: 'report/:id',
+            element: <MainbookReportDetailsPage />
           },
           {
-            path: 'close-monthly-report',
-            element: <CompleteMonthlyReportPage />
+            index: true,
+            element: <MainbookPage />
           },
           {
-            path: 'close-monthly-report/:id',
-            element: <CompleteMonthlyReportDetailsPage />
+            path: ':id',
+            element: <MainbookDetailsPage />
           }
         ]
       },

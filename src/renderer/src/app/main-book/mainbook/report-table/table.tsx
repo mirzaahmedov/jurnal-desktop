@@ -4,9 +4,9 @@ import { Table, TableBody, TableHeader } from '@renderer/common/components/ui/ta
 import { cn, parseCSSNumericValue } from '@renderer/common/lib/utils'
 import { createRef, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 
-import type { CompleteMonthlyReportProvodka } from '@renderer/common/models'
-import { CompleteMonthlyReportTableItem } from '../details/utils'
 import { LoadingOverlay } from '@renderer/common/components'
+import type { Mainbook } from '@renderer/common/models'
+import { MainbookTableRow } from '../details/utils'
 import { columns } from './columns'
 import { formatNumber } from '@renderer/common/lib/format'
 
@@ -18,9 +18,9 @@ const SCROLL_AREA_WIDTH = 400
 
 type ReportTableProps = {
   isLoading: boolean
-  data: CompleteMonthlyReportTableItem[]
-  onEdit: (row: CompleteMonthlyReportTableItem) => void
-  onDelete: (row: CompleteMonthlyReportTableItem) => void
+  data: MainbookTableRow[]
+  onEdit: (row: MainbookTableRow) => void
+  onDelete: (row: MainbookTableRow) => void
 }
 const ReportTable = ({ isLoading, data, onEdit, onDelete }: ReportTableProps) => {
   const ref = useRef<HTMLDivElement>(null)
@@ -248,10 +248,10 @@ const ReportTable = ({ isLoading, data, onEdit, onDelete }: ReportTableProps) =>
                           />
                         ) : !column.alphanumeric ? (
                           formatNumber(
-                            Number(row[column.key as keyof CompleteMonthlyReportProvodka] || '0')
+                            Number(row[column.key as keyof Mainbook.ReportPreviewProvodka] || '0')
                           )
                         ) : (
-                          row[column.key as keyof CompleteMonthlyReportProvodka]
+                          row[column.key as keyof Mainbook.ReportPreviewProvodka]
                         )}
                       </ReportTableCell>
                     )
@@ -285,10 +285,10 @@ const ReportTable = ({ isLoading, data, onEdit, onDelete }: ReportTableProps) =>
                         />
                       ) : !column.alphanumeric ? (
                         formatNumber(
-                          Number(row[column.key as keyof CompleteMonthlyReportProvodka] || '0')
+                          Number(row[column.key as keyof Mainbook.ReportPreviewProvodka] || '0')
                         )
                       ) : (
-                        row[column.key as keyof CompleteMonthlyReportProvodka]
+                        row[column.key as keyof Mainbook.ReportPreviewProvodka]
                       )}
                     </ReportTableCell>
                   )

@@ -2,7 +2,7 @@ import type { ColumnDef } from '@renderer/common/components'
 import type { Mainbook } from '@renderer/common/models'
 import { formatLocaleDateTime } from '@renderer/common/lib/format'
 import { getMonthName } from '@renderer/common/lib/date'
-import { statusMap } from '@renderer/app/main-book/complete-monthly-report/columns'
+import { statusMap } from '@renderer/app/main-book/mainbook/columns'
 
 export const columns: ColumnDef<Mainbook.AdminReport>[] = [
   {

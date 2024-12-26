@@ -325,7 +325,7 @@ export const getNavElements = (): NavElement[] => {
           icon: UserCog,
           children: omitEmptyArrayElements([
             {
-              path: 'main-book',
+              path: 'mainbook',
               title: 'Главная книга',
               icon: NotebookText
             },
@@ -399,17 +399,17 @@ export const getNavElements = (): NavElement[] => {
       : null,
     !is_super_admin
       ? {
-          path: '/main-book',
+          path: '/mainbook',
           title: 'Главный книга',
           icon: NotebookText,
           children: [
             {
-              path: 'create-monthly-report',
+              path: 'report',
               title: 'Создать месячный отчёт',
               icon: CalendarPlus2
             },
             {
-              path: 'close-monthly-report',
+              path: '/',
               title: 'Закрыть месячный отчёт',
               icon: CalendarX
             }

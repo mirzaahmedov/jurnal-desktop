@@ -1,8 +1,6 @@
-import type { CompleteMonthlyReportProvodkaData } from '@renderer/common/models'
+import type { Mainbook } from '@renderer/common/models'
 
-export const transformData = (data: CompleteMonthlyReportProvodkaData[]) => {
-  const schets = data
-
+export const transformData = (schets: Mainbook.ReportPreviewProvodka[]) => {
   const schetsMap = new Map<number, Schet[]>()
 
   schets.forEach((item) => {
@@ -17,10 +15,10 @@ export const transformData = (data: CompleteMonthlyReportProvodkaData[]) => {
     })
   })
 
-  const rows: CompleteMonthlyReportTableItem[] = []
+  const rows: MainbookTableRow[] = []
 
   schetsMap.forEach((values) => {
-    const result = {} as CompleteMonthlyReportTableItem
+    const result = {} as MainbookTableRow
 
     const schet = values[0]
     result.id = schet.id
@@ -38,7 +36,7 @@ export const transformData = (data: CompleteMonthlyReportProvodkaData[]) => {
   return rows
 }
 
-export interface CompleteMonthlyReportTableItem {
+export type MainbookTableRow = {
   id: number
   name: string
   schet: string
@@ -66,4 +64,4 @@ export interface CompleteMonthlyReportTableItem {
 
 type Schet = {
   type: string
-} & CompleteMonthlyReportProvodkaData['schets'][number]
+} & Mainbook.ReportPreviewProvodka['schets'][number]

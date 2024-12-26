@@ -1,10 +1,10 @@
 import { Fieldset, SelectField } from '@renderer/common/components'
 import { Form, FormField } from '@renderer/common/components/ui/form'
 import {
-  OpenMonthlyReportFormSchema,
-  OpenMonthlyReportProvodkaSchema,
+  MainbookReportFormSchema,
+  MainbookReportProvodkaSchema,
   defaultValues,
-  openMonthlyReportQueryKeys
+  mainbookReportQueryKeys
 } from '../config'
 import {
   createEditorChangeHandler,
@@ -27,7 +27,7 @@ import { useLayout } from '@renderer/common/features/layout'
 import { useMainSchet } from '@renderer/common/features/main-schet'
 import { zodResolver } from '@hookform/resolvers/zod'
 
-const CreateMonthlyReportDetailsPage = () => {
+const MainbookReportDetailsPage = () => {
   const navigate = useNavigate()
   const params = useParams()
   const main_schet = useMainSchet((store) => store.main_schet)
@@ -38,12 +38,12 @@ const CreateMonthlyReportDetailsPage = () => {
       year: new Date().getFullYear(),
       month: new Date().getMonth() + 1
     },
-    resolver: zodResolver(OpenMonthlyReportFormSchema)
+    resolver: zodResolver(MainbookReportFormSchema)
   })
 
   const { data: report, isFetching } = useQuery({
     queryKey: [
-      openMonthlyReportQueryKeys.getById,
+      mainbookReportQueryKeys.getById,
       Number(params.id),
       {
         budjet_id: main_schet?.budget_id
@@ -158,7 +158,7 @@ const CreateMonthlyReportDetailsPage = () => {
             errors={form.formState.errors.childs}
             onCreate={createEditorCreateHandler({
               form,
-              schema: OpenMonthlyReportProvodkaSchema,
+              schema: MainbookReportProvodkaSchema,
               defaultValues: defaultValues.childs[0]
             })}
             onDelete={createEditorDeleteHandler({
@@ -174,4 +174,4 @@ const CreateMonthlyReportDetailsPage = () => {
   )
 }
 
-export default CreateMonthlyReportDetailsPage
+export default MainbookReportDetailsPage
