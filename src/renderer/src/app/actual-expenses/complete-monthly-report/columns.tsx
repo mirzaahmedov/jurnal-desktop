@@ -1,14 +1,37 @@
+import { Badge } from '@renderer/common/components/ui/badge'
 import type { ColumnDef } from '@renderer/common/components'
-import type { Mainbook } from '@renderer/common/models'
+import type { CompleteMonthlyReport } from '@renderer/common/models'
 import { formatLocaleDateTime } from '@renderer/common/lib/format'
 import { getMonthName } from '@renderer/common/lib/date'
-import { statusMap } from '@renderer/app/main-book/complete-monthly-report/columns'
 
-export const columns: ColumnDef<Mainbook.AdminReport>[] = [
-  {
-    key: 'year',
-    header: 'Год'
-  },
+export const statusMap = {
+  1: (
+    <Badge
+      variant="secondary"
+      className="bg-slate-100 text-slate-500"
+    >
+      Отправлено
+    </Badge>
+  ),
+  2: (
+    <Badge
+      variant="secondary"
+      className="bg-emerald-100 text-emerald-500"
+    >
+      Получено
+    </Badge>
+  ),
+  3: (
+    <Badge
+      variant="secondary"
+      className="bg-red-100 text-red-500"
+    >
+      Отказано
+    </Badge>
+  )
+}
+
+export const completeMonthlyReportColumns: ColumnDef<CompleteMonthlyReport>[] = [
   {
     key: 'month',
     header: 'Месяц',
@@ -17,15 +40,8 @@ export const columns: ColumnDef<Mainbook.AdminReport>[] = [
     }
   },
   {
-    key: 'name',
-    header: 'Бюджет'
-  },
-  {
-    key: 'status',
-    header: 'Статус',
-    renderCell(row) {
-      return statusMap[row.status]
-    }
+    key: 'year',
+    header: 'Год'
   },
   {
     key: 'user_id',
@@ -54,7 +70,8 @@ export const columns: ColumnDef<Mainbook.AdminReport>[] = [
     }
   },
   {
-    key: 'region_name',
-    header: 'Регион'
+    key: 'status',
+    header: 'Статус',
+    renderCell: (row) => statusMap[row.status]
   }
 ]

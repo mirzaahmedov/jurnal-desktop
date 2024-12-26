@@ -1,10 +1,11 @@
 import { formatLocaleDate, formatNumber } from '@/common/lib/format'
 
+import { Badge } from '@renderer/common/components/ui/badge'
 import type { ColumnDef } from '@/common/components'
 import type { PodotchetMonitor } from '@/common/models'
 import { TooltipCellRenderer } from '@/common/components/table/renderers'
 
-const podotchetMonitoringColumns: ColumnDef<PodotchetMonitor>[] = [
+export const podotchetMonitoringColumns: ColumnDef<PodotchetMonitor>[] = [
   {
     header: 'Номер документа',
     key: 'doc_num'
@@ -63,12 +64,19 @@ const podotchetMonitoringColumns: ColumnDef<PodotchetMonitor>[] = [
     header: 'Подотчет'
   },
   {
-    key: 'schet_array',
-    header: 'Операция',
-    renderCell(row) {
-      return row.schet_array ? row.schet_array.join(', ') : row.operatsii
-    }
+    fit: true,
+    key: 'type',
+    header: 'Тип операции',
+    renderCell: (row) => (
+      <Badge
+        variant="secondary"
+        className="text-brand bg-brand/10 pointer-events-none"
+      >
+        {getProvodkaName(row.type)}
+      </Badge>
+    )
   },
+
   {
     key: 'user_id',
     header: 'Создано пользователем',
@@ -76,4 +84,27 @@ const podotchetMonitoringColumns: ColumnDef<PodotchetMonitor>[] = [
   }
 ]
 
-export { podotchetMonitoringColumns }
+const getProvodkaName = (type: string) => {
+  switch (type) {
+    case 'bank_rasxod':
+      return 'Банк расход'
+    case 'bank_prixod':
+      return 'Банк приход'
+    case 'kassa_rasxod':
+      return 'Касса расход'
+    case 'kassa_prixod':
+      return 'Касса приход'
+    case 'show_service':
+      return 'Показать услуги'
+    case 'akt':
+      return 'Акт-приём пересдач'
+    case 'jur7_prixod':
+      return 'Журнал 7 приход'
+    case 'jur7_rasxod':
+      return 'Журнал 7 расход'
+    case 'jur7_internal':
+      return 'Журнал 7 внутренний'
+    default:
+      return ''
+  }
+}

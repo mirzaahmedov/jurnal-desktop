@@ -16,7 +16,7 @@ type PodotchetMonitor = {
   user_id: number
   fio: string
   login: string
-  schet_array?: string[]
+  type: string
   operatsii?: string
   provodki_schet: string
   provodki_sub_schet: string

@@ -1,13 +1,13 @@
+import { ChangeContext, DeleteContext } from './editors/types'
+import { CircleMinus, CirclePlus } from 'lucide-react'
+import { EditableTableCell, EditableTableHead, EditableTableRow } from './components'
+import { Table, TableBody, TableFooter, TableHeader } from '@renderer/common/components/ui/table'
+
 import { Autocomplete } from '@renderer/common/lib/types'
 import { Button } from '@renderer/common/components/ui/button'
 import type { EditorComponentType } from './editors'
 import { FieldErrors } from 'react-hook-form'
 import type { ReactNode } from 'react'
-
-import { ChangeContext, DeleteContext } from './editors/types'
-import { CircleMinus, CirclePlus } from 'lucide-react'
-import { EditableTableCell, EditableTableHead, EditableTableRow } from './components'
-import { Table, TableBody, TableFooter, TableHeader } from '@renderer/common/components/ui/table'
 
 export type EditableColumnType<T extends Record<string, unknown>> = {
   key: Autocomplete<keyof T>
@@ -34,7 +34,7 @@ export const EditableTable = <T extends Record<string, unknown>>(props: Editable
         onCreate?.()
       }}
       onFocus={(e) => {
-        e.currentTarget.scrollIntoView({
+        e.target.scrollIntoView({
           behavior: 'smooth',
           block: 'start'
         })
