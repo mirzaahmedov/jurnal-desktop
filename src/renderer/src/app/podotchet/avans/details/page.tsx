@@ -20,7 +20,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { normalizeEmptyFields } from '@/common/lib/validation'
 import { useLayout } from '@/common/features/layout'
-import { useMainSchet } from '@/common/features/main-schet'
+import { useRequisitesStore } from '@/common/features/main-schet'
 import { createPodotchetSpravochnik } from '@/app/region-spravochnik/podotchet'
 import { EditableTable } from '@/common/features/editable-table'
 import { podvodkaColumns } from './podvodki'
@@ -41,7 +41,7 @@ import {
 const AdvanceReportDetailsPage = () => {
   const { toast } = useToast()
 
-  const main_schet_id = useMainSchet((state) => state.main_schet?.id)
+  const main_schet_id = useRequisitesStore((state) => state.main_schet_id)
   const id = useParams().id as string
   const navigate = useNavigate()
   const queryClient = useQueryClient()

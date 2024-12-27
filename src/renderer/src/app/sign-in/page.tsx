@@ -19,8 +19,8 @@ import logoImage from '@resources/logo.svg'
 import { signinQuery } from './service'
 import { useAuthStore } from '@renderer/common/features/auth'
 import { useForm } from 'react-hook-form'
-import { useMainSchet } from '@renderer/common/features/main-schet'
 import { useNavigate } from 'react-router-dom'
+import { useRequisitesStore } from '@renderer/common/features/main-schet'
 import { useState } from 'react'
 import { useToast } from '@renderer/common/hooks/use-toast'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -42,7 +42,7 @@ const SigninPage = () => {
   const queryClient = useQueryClient()
   const navigate = useNavigate()
 
-  const { main_schet, setMainSchet } = useMainSchet()
+  const { user_id, main_schet_id, budjet_id, setRequisites } = useRequisitesStore()
   const { toast } = useToast()
   const { setUser } = useAuthStore()
 
@@ -51,11 +51,16 @@ const SigninPage = () => {
     defaultValues
   })
 
+  console.log({ user_id, main_schet_id, budjet_id })
+
   const { mutate: signin, isPending } = useMutation({
     mutationFn: signinQuery,
     onSuccess(res) {
-      if (res.data?.result.id !== main_schet?.user_id) {
-        setMainSchet()
+      if (res.data?.result.id !== user_id) {
+        setRequisites({
+          main_schet_id: undefined,
+          budjet_id: undefined
+        })
       }
       setUser({
         token: res.data.token,

@@ -1,7 +1,7 @@
 import type { PrixodPodvodkaPayloadType } from '../service'
 
 import { PrixodPayloadSchema, PrixodPodvodkaPayloadSchema, bankPrixodService } from '../service'
-import { useMainSchet } from '@/common/features/main-schet'
+import { useRequisitesStore } from '@/common/features/main-schet'
 import { useCallback, useEffect } from 'react'
 import { useSpravochnik } from '@/common/features/spravochnik'
 import { Form } from '@/common/components/ui/form'
@@ -38,7 +38,7 @@ import { DetailsView } from '@/common/views'
 const BankPrixodDetailsPage = () => {
   const { toast } = useToast()
 
-  const main_schet_id = useMainSchet((state) => state.main_schet?.id)
+  const main_schet_id = useRequisitesStore((state) => state.main_schet_id)
   const queryClient = useQueryClient()
   const id = useParams().id as string
   const navigate = useNavigate()
@@ -77,7 +77,13 @@ const BankPrixodDetailsPage = () => {
     queryFn: mainSchetService.getById
   })
   const { data: prixod, isFetching } = useQuery({
-    queryKey: [queryKeys.getById, Number(id), { main_schet_id }],
+    queryKey: [
+      queryKeys.getById,
+      Number(id),
+      {
+        main_schet_id
+      }
+    ],
     queryFn: bankPrixodService.getById,
     enabled: id !== 'create'
   })
@@ -94,7 +100,7 @@ const BankPrixodDetailsPage = () => {
         queryKey: [queryKeys.getById, id]
       })
 
-      navigate('/bank/prixod')
+      navigate(-1)
     },
     onError(error) {
       toast({ title: error.message, variant: 'destructive' })
@@ -114,7 +120,7 @@ const BankPrixodDetailsPage = () => {
         queryKey: [queryKeys.getById, id]
       })
 
-      navigate('/bank/prixod')
+      navigate(-1)
     },
     onError(error) {
       toast({ title: error.message, variant: 'destructive' })

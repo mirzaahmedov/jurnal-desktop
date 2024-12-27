@@ -1,27 +1,27 @@
 import { z } from 'zod'
 
-export const mainbookReportQueryKeys = {
-  getAll: 'mainbook-report/all',
-  getById: 'mainbook-report',
-  create: 'mainbook-report/create',
-  update: 'mainbook-report/update',
-  delete: 'mainbook-report/delete'
+export const expensesReportQueryKeys = {
+  getAll: 'expenses-report/all',
+  getById: 'expenses-report',
+  create: 'expenses-report/create',
+  update: 'expenses-report/update',
+  delete: 'expenses-report/delete'
 }
-export const MainbookReportProvodkaSchema = z.object({
-  spravochnik_main_book_schet_id: z.number(),
+export const ExpensesReportProvodkaSchema = z.object({
+  smeta_id: z.number(),
   debet_sum: z.number(),
   kredit_sum: z.number()
 })
-export const MainbookReportFormSchema = z.object({
+export const ExpensesReportFormSchema = z.object({
   year: z.number(),
   month: z.number(),
   type_document: z.string(),
-  childs: z.array(MainbookReportProvodkaSchema)
+  childs: z.array(ExpensesReportProvodkaSchema)
 })
-export type MainbookReportProvodka = z.infer<typeof MainbookReportProvodkaSchema>
-export type MainbookReportValues = z.infer<typeof MainbookReportFormSchema>
+export type ExpensesReportProvodka = z.infer<typeof ExpensesReportProvodkaSchema>
+export type ExpensesReportValues = z.infer<typeof ExpensesReportFormSchema>
 
-export const defaultValues: MainbookReportValues = {
+export const defaultValues: ExpensesReportValues = {
   year: new Date().getFullYear(),
   month: new Date().getMonth() + 1,
   type_document: '',

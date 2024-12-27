@@ -1,22 +1,21 @@
-import type { Akt } from '@/common/models'
-
-import { useNavigate } from 'react-router-dom'
 import { DownloadDocumentButton, GenericTable } from '@/common/components'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { usePagination, useRangeDate } from '@/common/hooks'
+
+import type { Akt } from '@/common/models'
+import { ListView } from '@/common/views'
+import { aktService } from './service'
 import { columns } from './columns'
 import { queryKeys } from './constants'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { aktService } from './service'
-import { useLayout } from '@/common/features/layout'
-import { useMainSchet } from '@/common/features/main-schet'
 import { useConfirm } from '@/common/features/confirm'
-
-import { ListView } from '@/common/views'
-import { usePagination, useRangeDate } from '@/common/hooks'
+import { useLayout } from '@/common/features/layout'
+import { useNavigate } from 'react-router-dom'
+import { useRequisitesStore } from '@/common/features/main-schet'
 
 const AktPage = () => {
   const { confirm } = useConfirm()
 
-  const main_schet_id = useMainSchet((state) => state.main_schet?.id)
+  const main_schet_id = useRequisitesStore((state) => state.main_schet_id)
   const queryClient = useQueryClient()
   const navigate = useNavigate()
   const pagination = usePagination()

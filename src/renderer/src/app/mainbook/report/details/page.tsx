@@ -24,13 +24,13 @@ import { toast } from '@renderer/common/hooks'
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { useLayout } from '@renderer/common/features/layout'
-import { useMainSchet } from '@renderer/common/features/main-schet'
+import { useRequisitesStore } from '@renderer/common/features/main-schet'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 const MainbookReportDetailsPage = () => {
   const navigate = useNavigate()
   const params = useParams()
-  const main_schet = useMainSchet((store) => store.main_schet)
+  const budjet_id = useRequisitesStore((store) => store.budjet_id)
 
   const form = useForm({
     defaultValues: {
@@ -46,7 +46,7 @@ const MainbookReportDetailsPage = () => {
       mainbookReportQueryKeys.getById,
       Number(params.id),
       {
-        budjet_id: main_schet?.budget_id
+        budjet_id
       }
     ],
     queryFn: mainbookReportService.getById,

@@ -1,18 +1,18 @@
-import { useQuery } from '@tanstack/react-query'
-import { kassaMonitorService } from './service'
-import { GenericTable, FooterRow, FooterCell, DownloadDocumentButton } from '@/common/components'
+import { DownloadDocumentButton, FooterCell, FooterRow, GenericTable } from '@/common/components'
+import { usePagination, useRangeDate } from '@/common/hooks'
+
+import { ButtonGroup } from '@/common/components/ui/button-group'
+import { ListView } from '@/common/views'
 import { columns } from './columns'
 import { formatNumber } from '@/common/lib/format'
 import { kassaMonitorQueryKeys } from './constants'
+import { kassaMonitorService } from './service'
 import { useLayout } from '@/common/features/layout'
-import { useMainSchet } from '@/common/features/main-schet'
-import { ButtonGroup } from '@/common/components/ui/button-group'
-
-import { ListView } from '@/common/views'
-import { useRangeDate, usePagination } from '@/common/hooks'
+import { useQuery } from '@tanstack/react-query'
+import { useRequisitesStore } from '@/common/features/main-schet'
 
 const KassaMonitorPage = () => {
-  const { main_schet } = useMainSchet()
+  const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
   const pagination = usePagination()
   const dates = useRangeDate()
 
@@ -20,7 +20,7 @@ const KassaMonitorPage = () => {
     queryKey: [
       kassaMonitorQueryKeys.getAll,
       {
-        main_schet_id: main_schet?.id,
+        main_schet_id,
         ...dates,
         ...pagination
       }
@@ -37,14 +37,14 @@ const KassaMonitorPage = () => {
       <ListView.Header>
         <div className="flex items-center justify-between">
           <ListView.RangeDatePicker {...dates} />
-          {main_schet ? (
+          {main_schet_id ? (
             <ButtonGroup borderStyle="dashed">
               <DownloadDocumentButton
                 fileName={`касса-дневной-отчет_${dates.from}:${dates.to}.xlsx`}
                 url="kassa/monitoring/daily"
                 buttonText="Дневной отчет"
                 params={{
-                  main_schet_id: main_schet?.id,
+                  main_schet_id,
                   from: dates.from,
                   to: dates.to
                 }}
@@ -54,7 +54,7 @@ const KassaMonitorPage = () => {
                 url="kassa/monitoring/cap"
                 buttonText="Шапка отчет"
                 params={{
-                  main_schet_id: main_schet?.id,
+                  main_schet_id,
                   from: dates.from,
                   to: dates.to
                 }}

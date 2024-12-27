@@ -1,14 +1,13 @@
-import type { FormEditableFieldsComponent } from '@/common/widget/form'
-
-import { FormElement } from '@/common/components/form'
-import { Input } from '@/common/components/ui/input'
-import { FormField } from '@/common/components/ui/form'
-import { useQuery } from '@tanstack/react-query'
-import { http } from '@/common/lib/http'
-import { useMainSchet } from '@/common/features/main-schet'
-import { Response } from '@/common/models'
-import { Control } from 'react-hook-form'
 import { Combobox } from '@/common/components'
+import { Control } from 'react-hook-form'
+import type { FormEditableFieldsComponent } from '@/common/widget/form'
+import { FormElement } from '@/common/components/form'
+import { FormField } from '@/common/components/ui/form'
+import { Input } from '@/common/components/ui/input'
+import { Response } from '@/common/models'
+import { http } from '@/common/lib/http'
+import { useQuery } from '@tanstack/react-query'
+import { useRequisitesStore } from '@/common/features/main-schet'
 
 type RequiredManagementFields = {
   rukovoditel?: string | null
@@ -20,9 +19,10 @@ const ManagementFields: FormEditableFieldsComponent<RequiredManagementFields> = 
   form,
   disabled
 }) => {
-  const { main_schet } = useMainSchet()
+  const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
+
   const { data: fioList, isFetching } = useQuery({
-    queryKey: ['management/fio', main_schet?.id],
+    queryKey: ['management/fio', main_schet_id],
     queryFn: async () => {
       const response = await http.get<
         Response<{
@@ -31,7 +31,7 @@ const ManagementFields: FormEditableFieldsComponent<RequiredManagementFields> = 
         }>
       >('bank/expense/fio', {
         params: {
-          main_schet_id: main_schet?.id
+          main_schet_id
         }
       })
       return response.data

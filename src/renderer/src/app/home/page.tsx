@@ -2,15 +2,16 @@ import { mainSchetQueryKeys, mainSchetService } from '@/app/region-spravochnik/m
 
 import logo from '@resources/logo.svg'
 import { useLayout } from '@/common/features/layout'
-import { useMainSchet } from '@/common/features/main-schet'
 import { useQuery } from '@tanstack/react-query'
+import { useRequisitesStore } from '@/common/features/main-schet'
 
 const HomePage = () => {
-  const main_schet_id = useMainSchet((store) => store.main_schet?.id)
+  const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
 
   const { data: main_schet, isFetching } = useQuery({
     queryKey: [mainSchetQueryKeys.getById, main_schet_id],
-    queryFn: mainSchetService.getById
+    queryFn: mainSchetService.getById,
+    enabled: !!main_schet_id
   })
 
   useLayout({

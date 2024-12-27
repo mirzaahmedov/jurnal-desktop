@@ -1,37 +1,38 @@
-import { useQuery } from '@tanstack/react-query'
-import { podotchetMonitoringQueryKeys } from './constants'
-import { getPodotchetMonitoringByIdQuery, podotchetMonitoringService } from './service'
 import {
+  ChooseOperatsii,
+  ChoosePodotchet,
+  DateRangeForm,
+  DownloadDocumentButton,
+  FooterCell,
+  FooterRow,
   GenericTable,
   LoadingOverlay,
-  usePagination,
-  DateRangeForm,
-  ChoosePodotchet,
-  ChooseOperatsii,
   Pagination,
-  FooterRow,
-  FooterCell,
-  DownloadDocumentButton
+  usePagination
 } from '@/common/components'
-import { podotchetMonitoringColumns } from './columns'
-import { useSpravochnik } from '@/common/features/spravochnik'
-import { createPodotchetSpravochnik } from '@/app/region-spravochnik/podotchet'
+import { getPodotchetMonitoringByIdQuery, podotchetMonitoringService } from './service'
 import { parseAsInteger, useQueryState } from 'nuqs'
-import { useDateRange } from '@/common/hooks/use-date-range'
-import { useMainSchet } from '@/common/features/main-schet'
-import { useLayout } from '@/common/features/layout'
-import { formatNumber } from '@/common/lib/format'
-import { createOperatsiiSpravochnik } from '@/app/super-admin/operatsii'
-import { TypeSchetOperatsii } from '@/common/models'
+
 import { ButtonGroup } from '@/common/components/ui/button-group'
 import { ScrollArea } from '@/common/components/ui/scroll-area'
+import { TypeSchetOperatsii } from '@/common/models'
+import { createOperatsiiSpravochnik } from '@/app/super-admin/operatsii'
+import { createPodotchetSpravochnik } from '@/app/region-spravochnik/podotchet'
+import { formatNumber } from '@/common/lib/format'
+import { podotchetMonitoringColumns } from './columns'
+import { podotchetMonitoringQueryKeys } from './constants'
+import { useDateRange } from '@/common/hooks/use-date-range'
+import { useLayout } from '@/common/features/layout'
+import { useQuery } from '@tanstack/react-query'
+import { useRequisitesStore } from '@/common/features/main-schet'
+import { useSpravochnik } from '@/common/features/spravochnik'
 
 const PodotchetMonitoringPage = () => {
   const [podotchetId, setPodotchetId] = useQueryState('podotchet_id', parseAsInteger.withDefault(0))
   const [operatsii, setOperatsii] = useQueryState('operatsii', parseAsInteger.withDefault(0))
 
   const { currentPage, itemsPerPage } = usePagination()
-  const { main_schet } = useMainSchet()
+  const { main_schet_id, budjet_id } = useRequisitesStore()
   const { from, to, form, applyFilters } = useDateRange()
 
   const podotchetSpravochnik = useSpravochnik(
@@ -57,7 +58,7 @@ const PodotchetMonitoringPage = () => {
     queryKey: [
       podotchetMonitoringQueryKeys.getAll,
       {
-        main_schet_id: main_schet?.id,
+        main_schet_id,
         from,
         to,
         page: currentPage,
@@ -69,7 +70,7 @@ const PodotchetMonitoringPage = () => {
       },
       podotchetId
     ],
-    enabled: !!main_schet?.id && !!operatsiiSpravochnik.selected
+    enabled: !!main_schet_id && !!operatsiiSpravochnik.selected
   })
 
   useLayout({
@@ -99,7 +100,7 @@ const PodotchetMonitoringPage = () => {
                 fileName={`дебитор-кредитор_отчет-${to}.xlsx`}
                 url="podotchet/monitoring/prixod/rasxod/"
                 params={{
-                  budjet_id: main_schet?.budget_id,
+                  budjet_id,
                   to
                 }}
                 buttonText="Дебитор / Кредитор отчет"
@@ -110,7 +111,7 @@ const PodotchetMonitoringPage = () => {
                   url={`podotchet/monitoring/export/${podotchetId}`}
                   params={{
                     operatsii: operatsiiSpravochnik.selected?.schet,
-                    main_schet_id: main_schet?.id,
+                    main_schet_id,
                     from,
                     to
                   }}

@@ -1,8 +1,7 @@
-import type { ColumnDef } from '@renderer/common/components'
+import { ReportStatus, type ColumnDef } from '@renderer/common/components'
 import type { Mainbook } from '@renderer/common/models'
 import { formatLocaleDateTime } from '@renderer/common/lib/format'
 import { getMonthName } from '@renderer/common/lib/date'
-import { statusMap } from '@renderer/app/mainbook/mainbook/columns'
 
 export const columns: ColumnDef<Mainbook.AdminReport>[] = [
   {
@@ -24,7 +23,7 @@ export const columns: ColumnDef<Mainbook.AdminReport>[] = [
     key: 'status',
     header: 'Статус',
     renderCell(row) {
-      return statusMap[row.status]
+      return <ReportStatus status={row.status} />
     }
   },
   {

@@ -16,7 +16,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { queryKeys, defaultValues } from '../constants'
 import { normalizeEmptyFields } from '@renderer/common/lib/validation'
 import { useLayout } from '@renderer/common/features/layout'
-import { useMainSchet } from '@renderer/common/features/main-schet'
+import { useRequisitesStore } from '@renderer/common/features/main-schet'
 import { EditableTable } from '@renderer/common/features/editable-table'
 import { podvodkaColumns } from './provodki'
 import {
@@ -38,7 +38,7 @@ import { DetailsView } from '@/common/views'
 const AktDetailsPage = () => {
   const { toast } = useToast()
 
-  const main_schet_id = useMainSchet((state) => state.main_schet?.id)
+  const main_schet_id = useRequisitesStore((state) => state.main_schet_id)
   const id = useParams().id as string
   const navigate = useNavigate()
   const queryClient = useQueryClient()

@@ -1,36 +1,36 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
+import { Expenses } from '@renderer/common/models'
 import { GenericTable } from '@renderer/common/components'
 import { ListView } from '@renderer/common/views'
-import { OpenMonthlyReport } from '@renderer/common/models'
-import { mainbookReportColumns } from './columns'
-import { mainbookReportQueryKeys } from './config'
-import { openMonthlyReportService } from './service'
+import { expensesReportColumns } from './columns'
+import { expensesReportQueryKeys } from './config'
+import { expensesReportService } from './service'
 import { toast } from '@renderer/common/hooks'
 import { useConfirm } from '@renderer/common/features/confirm'
 import { useLayout } from '@renderer/common/features/layout'
-import { useMainSchet } from '@renderer/common/features/main-schet'
 import { useNavigate } from 'react-router-dom'
+import { useRequisitesStore } from '@renderer/common/features/main-schet'
 
-const MainbookReportPage = () => {
-  const main_schet = useMainSchet((store) => store.main_schet)
+const ExpensesReportPage = () => {
+  const budjet_id = useRequisitesStore((store) => store.budjet_id)
   const queryClient = useQueryClient()
   const navigate = useNavigate()
   const { confirm } = useConfirm()
 
   const { data: reportList, isFetching } = useQuery({
     queryKey: [
-      mainbookReportQueryKeys.getAll,
+      expensesReportQueryKeys.getAll,
       {
-        budjet_id: main_schet?.budget_id
+        budjet_id
       }
     ],
-    queryFn: openMonthlyReportService.getAll,
-    enabled: !!main_schet
+    queryFn: expensesReportService.getAll,
+    enabled: !!budjet_id
   })
   const { mutate: deleteReport, isPending } = useMutation({
-    mutationKey: [mainbookReportQueryKeys.delete],
-    mutationFn: openMonthlyReportService.delete,
+    mutationKey: [expensesReportQueryKeys.delete],
+    mutationFn: expensesReportService.delete,
     onError: (error) => {
       console.error(error)
       toast({
@@ -43,7 +43,7 @@ const MainbookReportPage = () => {
         title: 'Запись успешно удалена'
       })
       queryClient.invalidateQueries({
-        queryKey: [mainbookReportQueryKeys.getAll]
+        queryKey: [expensesReportQueryKeys.getAll]
       })
     }
   })
@@ -55,11 +55,11 @@ const MainbookReportPage = () => {
     }
   })
 
-  const handleEdit = (row: OpenMonthlyReport) => {
+  const handleEdit = (row: Expenses.Report) => {
     navigate(`${row.id}`)
   }
 
-  const handleDelete = (row: OpenMonthlyReport) => {
+  const handleDelete = (row: Expenses.Report) => {
     confirm({
       title: 'Удалить запись?',
       onConfirm: () => {
@@ -72,7 +72,7 @@ const MainbookReportPage = () => {
     <ListView>
       <ListView.Content loading={isFetching || isPending}>
         <GenericTable
-          columns={mainbookReportColumns}
+          columns={expensesReportColumns}
           data={reportList?.data ?? []}
           onEdit={handleEdit}
           onDelete={handleDelete}
@@ -82,4 +82,4 @@ const MainbookReportPage = () => {
   )
 }
 
-export default MainbookReportPage
+export default ExpensesReportPage

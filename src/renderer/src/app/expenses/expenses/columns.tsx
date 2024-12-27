@@ -31,7 +31,7 @@ export const statusMap = {
   )
 }
 
-export const mainbookColumns: ColumnDef<Mainbook.ReportPreview>[] = [
+export const expensesColumns: ColumnDef<Mainbook.ReportPreview>[] = [
   {
     key: 'month',
     header: 'Месяц',

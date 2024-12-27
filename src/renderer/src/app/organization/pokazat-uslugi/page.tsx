@@ -9,13 +9,13 @@ import { pokazatUslugiService } from './service'
 import { queryKeys } from './constants'
 import { useConfirm } from '@/common/features/confirm'
 import { useLayout } from '@/common/features/layout'
-import { useMainSchet } from '@/common/features/main-schet'
 import { useNavigate } from 'react-router-dom'
+import { useRequisitesStore } from '@/common/features/main-schet'
 
 const PokazatUslugiPage = () => {
-  const { main_schet } = useMainSchet()
   const { confirm } = useConfirm()
 
+  const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const pagination = usePagination()
@@ -25,7 +25,7 @@ const PokazatUslugiPage = () => {
     queryKey: [
       queryKeys.getAll,
       {
-        main_schet_id: main_schet?.id,
+        main_schet_id,
         ...dates,
         ...pagination
       }

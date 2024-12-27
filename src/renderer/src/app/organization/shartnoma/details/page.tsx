@@ -17,8 +17,8 @@ import { createSmetaSpravochnik } from '@renderer/app/super-admin/smeta'
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { useLayout } from '@/common/features/layout'
-import { useMainSchet } from '@/common/features/main-schet'
 import { useOrgId } from '../hooks'
+import { useRequisitesStore } from '@/common/features/main-schet'
 import { useSpravochnik } from '@/common/features/spravochnik'
 import { useToast } from '@/common/hooks/use-toast'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -27,11 +27,11 @@ const OrganizationDetailsPage = () => {
   const [orgId] = useOrgId()
 
   const { toast } = useToast()
-  const { main_schet } = useMainSchet()
 
   const id = useParams().id as string
   const navigate = useNavigate()
   const queryClient = useQueryClient()
+  const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
 
   const form = useForm({
     resolver: zodResolver(ShartnomaFormSchema),
@@ -53,7 +53,7 @@ const OrganizationDetailsPage = () => {
       shartnomaQueryKeys.getById,
       Number(id),
       {
-        main_schet_id: main_schet?.id
+        main_schet_id
       }
     ],
     queryFn: shartnomaService.getById,

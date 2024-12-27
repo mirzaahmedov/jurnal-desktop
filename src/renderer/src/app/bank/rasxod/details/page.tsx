@@ -15,7 +15,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { defaultValues, queryKeys } from '../constants'
 import { normalizeEmptyFields } from '@/common/lib/validation'
 import { useLayout } from '@/common/features/layout'
-import { useMainSchet } from '@/common/features/main-schet'
+import { useRequisitesStore } from '@/common/features/main-schet'
 import { mainSchetQueryKeys, mainSchetService } from '@/app/region-spravochnik/main-schet'
 import { EditableTable } from '@/common/features/editable-table'
 import { podvodkaColumns } from './podvodki'
@@ -49,7 +49,7 @@ const BankRasxodDetailtsPage = () => {
 
   const navigate = useNavigate()
   const queryClient = useQueryClient()
-  const main_schet_id = useMainSchet((state) => state.main_schet?.id)
+  const main_schet_id = useRequisitesStore((state) => state.main_schet_id)
 
   const { rukovoditel: default_rukovoditel, glav_buxgalter: default_glav_buxgalter } =
     useDefaultFormFields()

@@ -9,18 +9,24 @@ import { mainbookService } from './service'
 import { toast } from '@renderer/common/hooks'
 import { useConfirm } from '@renderer/common/features/confirm'
 import { useLayout } from '@renderer/common/features/layout'
-import { useMainSchet } from '@renderer/common/features/main-schet'
 import { useNavigate } from 'react-router-dom'
+import { useRequisitesStore } from '@renderer/common/features/main-schet'
 
 const MainbookPage = () => {
-  const main_schet = useMainSchet((store) => store.main_schet)
+  const budjet_id = useRequisitesStore((store) => store.budjet_id)
   const queryClient = useQueryClient()
   const navigate = useNavigate()
   const { confirm } = useConfirm()
 
   const { data: reportList, isFetching } = useQuery({
-    queryKey: [mainbookQueryKeys.getAll, { budjet_id: main_schet?.budget_id }],
-    queryFn: mainbookService.getAll
+    queryKey: [
+      mainbookQueryKeys.getAll,
+      {
+        budjet_id
+      }
+    ],
+    queryFn: mainbookService.getAll,
+    enabled: !!budjet_id
   })
   const { mutate: deleteReport, isPending } = useMutation({
     mutationKey: [mainbookQueryKeys.delete],
@@ -45,7 +51,7 @@ const MainbookPage = () => {
   useLayout({
     title: 'Закончить месячный отчёт',
     onCreate: () => {
-      navigate(`create?year=${encodeURIComponent}`)
+      navigate(`create`)
     }
   })
 

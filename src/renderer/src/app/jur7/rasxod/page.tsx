@@ -1,21 +1,21 @@
 import { DateRangeForm, GenericTable, LoadingOverlay } from '@/common/components'
+import { columns, queryKeys } from './config'
+import { useRasxodDelete, useRasxodList } from './service'
+
+import { toast } from '@/common/hooks/use-toast'
+import { useConfirm } from '@/common/features/confirm'
+import { useDateRange } from '@/common/hooks/use-date-range'
 import { useLayout } from '@/common/features/layout'
 import { useNavigate } from 'react-router-dom'
-import { useRasxodDelete, useRasxodList } from './service'
-import { useDateRange } from '@/common/hooks/use-date-range'
-
-import { columns, queryKeys } from './config'
 import { useQueryClient } from '@tanstack/react-query'
-import { useConfirm } from '@/common/features/confirm'
-import { toast } from '@/common/hooks/use-toast'
-import { useMainSchet } from '@/common/features/main-schet'
+import { useRequisitesStore } from '@/common/features/main-schet'
 
 const MO7RasxodPage = () => {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
+  const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
 
   const { confirm } = useConfirm()
-  const { main_schet } = useMainSchet()
   const { form, from, to, applyFilters } = useDateRange()
 
   const { mutate: deleteRasxod } = useRasxodDelete({
@@ -36,7 +36,7 @@ const MO7RasxodPage = () => {
   })
   const { data: rasxodList, isFetching } = useRasxodList({
     params: {
-      main_schet_id: main_schet?.id,
+      main_schet_id,
       limit: 10,
       page: 1,
       from,

@@ -1,11 +1,11 @@
+import {
+  ExpensesReportFormSchema,
+  ExpensesReportProvodkaSchema,
+  defaultValues,
+  expensesReportQueryKeys
+} from '../config'
 import { Fieldset, SelectField } from '@renderer/common/components'
 import { Form, FormField } from '@renderer/common/components/ui/form'
-import {
-  MainbookReportFormSchema,
-  MainbookReportProvodkaSchema,
-  defaultValues,
-  mainbookReportQueryKeys
-} from '../config'
 import {
   createEditorChangeHandler,
   createEditorCreateHandler,
@@ -18,19 +18,19 @@ import { DetailsView } from '@renderer/common/views'
 import { EditableTable } from '@renderer/common/features/editable-table'
 import { MonthPicker } from '@renderer/common/components/month-picker'
 import { documentTypes } from '@renderer/app/mainbook/common/data'
-import { openMonthlyReportService } from '../service'
+import { expensesReportService } from '../service'
 import { provodkaColumns } from './provodka'
 import { toast } from '@renderer/common/hooks'
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { useLayout } from '@renderer/common/features/layout'
-import { useMainSchet } from '@renderer/common/features/main-schet'
+import { useRequisitesStore } from '@renderer/common/features/main-schet'
 import { zodResolver } from '@hookform/resolvers/zod'
 
-const MainbookReportDetailsPage = () => {
+const ExpensesReportDetailsPage = () => {
   const navigate = useNavigate()
   const params = useParams()
-  const main_schet = useMainSchet((store) => store.main_schet)
+  const budjet_id = useRequisitesStore((store) => store.budjet_id)
 
   const form = useForm({
     defaultValues: {
@@ -38,22 +38,22 @@ const MainbookReportDetailsPage = () => {
       year: new Date().getFullYear(),
       month: new Date().getMonth() + 1
     },
-    resolver: zodResolver(MainbookReportFormSchema)
+    resolver: zodResolver(ExpensesReportFormSchema)
   })
 
   const { data: report, isFetching } = useQuery({
     queryKey: [
-      mainbookReportQueryKeys.getById,
+      expensesReportQueryKeys.getById,
       Number(params.id),
       {
-        budjet_id: main_schet?.budget_id
+        budjet_id
       }
     ],
-    queryFn: openMonthlyReportService.getById,
+    queryFn: expensesReportService.getById,
     enabled: params.id !== 'create'
   })
   const { mutate: createReport, isPending: isCreating } = useMutation({
-    mutationFn: openMonthlyReportService.create,
+    mutationFn: expensesReportService.create,
     onSuccess() {
       toast({
         title: 'Запись успешно создана'
@@ -69,7 +69,7 @@ const MainbookReportDetailsPage = () => {
     }
   })
   const { mutate: updateReport, isPending: isUpdating } = useMutation({
-    mutationFn: openMonthlyReportService.update,
+    mutationFn: expensesReportService.update,
     onSuccess() {
       toast({
         title: 'Запись успешно обновлена'
@@ -158,7 +158,7 @@ const MainbookReportDetailsPage = () => {
             errors={form.formState.errors.childs}
             onCreate={createEditorCreateHandler({
               form,
-              schema: MainbookReportProvodkaSchema,
+              schema: ExpensesReportProvodkaSchema,
               defaultValues: defaultValues.childs[0]
             })}
             onDelete={createEditorDeleteHandler({
@@ -174,4 +174,4 @@ const MainbookReportDetailsPage = () => {
   )
 }
 
-export default MainbookReportDetailsPage
+export default ExpensesReportDetailsPage

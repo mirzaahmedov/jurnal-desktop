@@ -1,35 +1,35 @@
-import { shartnomaGrafikDetailsService, ShartnomaGrafikFormSchema } from '../service'
-import { useEffect, useMemo } from 'react'
-import { Form, FormControl, FormField, FormItem, FormLabel } from '@/common/components/ui/form'
 import { DatePicker, Fieldset, NumericInput } from '@/common/components'
-import { useToast } from '@/common/hooks/use-toast'
+import { Form, FormControl, FormField, FormItem, FormLabel } from '@/common/components/ui/form'
 import { Navigate, useNavigate, useParams } from 'react-router-dom'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { shartnomaGrafikQueryKeys, defaultValues } from '../constants'
-import { useLayout } from '@/common/features/layout'
-import { useMainSchet } from '@/common/features/main-schet'
-import { FormElement } from '@/common/components/form'
-import { Input } from '@/common/components/ui/input'
+import { ShartnomaGrafikFormSchema, shartnomaGrafikDetailsService } from '../service'
+import { defaultValues, shartnomaGrafikQueryKeys } from '../constants'
 import { numberToWords, roundNumberToTwoDecimalPlaces } from '@/common/lib/utils'
-import { formatNumber } from '@/common/lib/format'
-import { Textarea } from '@/common/components/ui/textarea'
-import { monthNames } from '@/common/data/month'
-import { useOrgId } from '../hooks'
-import { GenerateReportDialog } from '../templates/report-dialog/dialog'
-import { useToggle } from '@/common/hooks/use-toggle'
-import { Button } from '@/common/components/ui/button'
-import { DownloadIcon } from 'lucide-react'
+import { useEffect, useMemo } from 'react'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
+import { Button } from '@/common/components/ui/button'
 import { DetailsView } from '@/common/views'
+import { DownloadIcon } from 'lucide-react'
+import { FormElement } from '@/common/components/form'
+import { GenerateReportDialog } from '../templates/report-dialog/dialog'
+import { Input } from '@/common/components/ui/input'
+import { Textarea } from '@/common/components/ui/textarea'
+import { formatNumber } from '@/common/lib/format'
+import { monthNames } from '@/common/data/month'
+import { useForm } from 'react-hook-form'
+import { useLayout } from '@/common/features/layout'
+import { useOrgId } from '../hooks'
+import { useRequisitesStore } from '@/common/features/main-schet'
+import { useToast } from '@/common/hooks/use-toast'
+import { useToggle } from '@/common/hooks/use-toggle'
+import { zodResolver } from '@hookform/resolvers/zod'
 
 const ShartnomaGrafikDetailsPage = () => {
   const [orgId] = useOrgId()
 
   const { toast } = useToast()
-  const { main_schet } = useMainSchet()
 
+  const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
   const id = useParams().id as string
   const navigate = useNavigate()
   const queryClient = useQueryClient()
@@ -45,11 +45,11 @@ const ShartnomaGrafikDetailsPage = () => {
       shartnomaGrafikQueryKeys.getById,
       Number(id),
       {
-        main_schet_id: main_schet?.id
+        main_schet_id
       }
     ],
     queryFn: shartnomaGrafikDetailsService.getById,
-    enabled: id !== 'create'
+    enabled: id !== 'create' && !!main_schet_id
   })
 
   const { mutate: update } = useMutation({
@@ -175,6 +175,7 @@ const ShartnomaGrafikDetailsPage = () => {
               <div className="grid grid-cols-4 p-5 gap-y-5 gap-x-10">
                 {monthNames.map(({ name, label }) => (
                   <FormField
+                    key={name}
                     control={form.control}
                     name={name}
                     render={({ field }) => (

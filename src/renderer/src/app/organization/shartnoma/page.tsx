@@ -10,22 +10,22 @@ import { shartnomaQueryKeys } from './constants'
 import { shartnomaService } from './service'
 import { useConfirm } from '@/common/features/confirm'
 import { useLayout } from '@/common/features/layout'
-import { useMainSchet } from '@/common/features/main-schet'
 import { useNavigate } from 'react-router-dom'
 import { useOrgId } from './hooks'
 import { usePagination } from '@/common/hooks'
+import { useRequisitesStore } from '@/common/features/main-schet'
 import { useSpravochnik } from '@/common/features/spravochnik'
 
 const ShartnomaPage = () => {
   const [orgId, setOrgId] = useOrgId()
 
-  const { main_schet } = useMainSchet()
   const { confirm } = useConfirm()
   const { search } = useSearch()
 
   const pagination = usePagination()
   const navigate = useNavigate()
   const queryClient = useQueryClient()
+  const budjet_id = useRequisitesStore((store) => store.budjet_id)
 
   const orgSpravochnik = useSpravochnik(
     createOrganizationSpravochnik({
@@ -39,7 +39,7 @@ const ShartnomaPage = () => {
       shartnomaQueryKeys.getAll,
       {
         search,
-        budjet_id: main_schet?.budget_id,
+        budjet_id,
         organization: orgSpravochnik.selected?.id,
         ...pagination
       }

@@ -14,10 +14,10 @@ import { formatDate } from '@renderer/common/lib/date'
 import { mainbookQueryKeys } from '../config'
 import { toast } from '@renderer/common/hooks'
 import { useLayout } from '@renderer/common/features/layout'
-import { useMainSchet } from '@renderer/common/features/main-schet'
+import { useRequisitesStore } from '@renderer/common/features/main-schet'
 
 const MainbookDetailsPage = () => {
-  const main_schet = useMainSchet((store) => store.main_schet)
+  const budjet_id = useRequisitesStore((store) => store.budjet_id)
   const navigate = useNavigate()
   const params = useParams()
 
@@ -31,17 +31,23 @@ const MainbookDetailsPage = () => {
       {
         year: Number(year),
         month: Number(month),
-        budjet_id: main_schet?.budget_id
+        budjet_id
       }
     ],
     queryFn: getMainbookInfo,
-    enabled: !!main_schet?.budget_id && params.id === 'create'
+    enabled: !!budjet_id && params.id === 'create'
   })
 
   const { data: mainbook, isFetching } = useQuery({
-    queryKey: [mainbookQueryKeys.getById, Number(params.id), { budjet_id: main_schet?.budget_id }],
+    queryKey: [
+      mainbookQueryKeys.getById,
+      Number(params.id),
+      {
+        budjet_id
+      }
+    ],
     queryFn: getMainbookById,
-    enabled: !!main_schet?.budget_id && params.id !== 'create'
+    enabled: !!budjet_id && params.id !== 'create'
   })
 
   const { mutate: createMainbook, isPending: isCreating } = useMutation({
@@ -148,7 +154,7 @@ const MainbookDetailsPage = () => {
       <div className="p-5 border-t flex items-center gap-2">
         <Button
           type="button"
-          disabled={isCreating || isUpdating || isPending || !main_schet || !month || !year}
+          disabled={isCreating || isUpdating || isPending || !budjet_id || !month || !year}
           onClick={() => {
             if (params.id === 'create') {
               createMainbook({
@@ -179,7 +185,7 @@ const MainbookDetailsPage = () => {
                   {
                     year: Number(year),
                     month: Number(month),
-                    budjet_id: main_schet?.budget_id
+                    budjet_id
                   }
                 ]
               } as any)

@@ -1,6 +1,6 @@
 import { FileDown, Save } from 'lucide-react'
 import { calculateColumnTotals, calculateRowTotals, transformData } from './utils'
-import { getMainbookById, getMainbookInfo, mainbookService } from '../service'
+import { expensesService, getExpensesById, getExpensesInfo } from '../service'
 import { useEffect, useMemo, useState } from 'react'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -10,14 +10,14 @@ import { DetailsView } from '@renderer/common/views'
 import { Mainbook } from '@renderer/common/models'
 import { MonthPicker } from '@renderer/common/components/month-picker'
 import { ReportTable } from '../report-table'
+import { expensesQueryKeys } from '../config'
 import { formatDate } from '@renderer/common/lib/date'
-import { mainbookQueryKeys } from '../config'
 import { toast } from '@renderer/common/hooks'
 import { useLayout } from '@renderer/common/features/layout'
-import { useMainSchet } from '@renderer/common/features/main-schet'
+import { useRequisitesStore } from '@renderer/common/features/main-schet'
 
-const MainbookDetailsPage = () => {
-  const main_schet = useMainSchet((store) => store.main_schet)
+const ExpensesDetailsPage = () => {
+  const budjet_id = useRequisitesStore((store) => store.budjet_id)
   const navigate = useNavigate()
   const params = useParams()
 
@@ -27,25 +27,31 @@ const MainbookDetailsPage = () => {
 
   const { data: reportInfo, isFetching: isFetchingInfo } = useQuery({
     queryKey: [
-      getMainbookInfo,
+      getExpensesInfo,
       {
         year: Number(year),
         month: Number(month),
-        budjet_id: main_schet?.budget_id
+        budjet_id
       }
     ],
-    queryFn: getMainbookInfo,
-    enabled: !!main_schet?.budget_id && params.id === 'create'
+    queryFn: getExpensesInfo,
+    enabled: !!budjet_id && params.id === 'create'
   })
 
   const { data: mainbook, isFetching } = useQuery({
-    queryKey: [mainbookQueryKeys.getById, Number(params.id), { budjet_id: main_schet?.budget_id }],
-    queryFn: getMainbookById,
-    enabled: !!main_schet?.budget_id && params.id !== 'create'
+    queryKey: [
+      expensesQueryKeys.getById,
+      Number(params.id),
+      {
+        budjet_id
+      }
+    ],
+    queryFn: getExpensesById,
+    enabled: !!budjet_id && params.id !== 'create'
   })
 
   const { mutate: createMainbook, isPending: isCreating } = useMutation({
-    mutationFn: mainbookService.create,
+    mutationFn: expensesService.create,
     onError: (error) => {
       console.error(error)
       toast({
@@ -61,7 +67,7 @@ const MainbookDetailsPage = () => {
     }
   })
   const { mutate: updateMainbook, isPending: isUpdating } = useMutation({
-    mutationFn: mainbookService.update,
+    mutationFn: expensesService.update,
     onError: (error) => {
       console.error(error)
       toast({
@@ -77,7 +83,7 @@ const MainbookDetailsPage = () => {
     }
   })
   const { mutate: loadInfo, isPending } = useMutation({
-    mutationFn: getMainbookInfo,
+    mutationFn: getExpensesInfo,
     onSuccess: (response) => {
       toast({
         title: 'Информация успешно загружена'
@@ -148,7 +154,7 @@ const MainbookDetailsPage = () => {
       <div className="p-5 border-t flex items-center gap-2">
         <Button
           type="button"
-          disabled={isCreating || isUpdating || isPending || !main_schet || !month || !year}
+          disabled={isCreating || isUpdating || isPending || !budjet_id || !month || !year}
           onClick={() => {
             if (params.id === 'create') {
               createMainbook({
@@ -175,11 +181,11 @@ const MainbookDetailsPage = () => {
             onClick={() => {
               loadInfo({
                 queryKey: [
-                  getMainbookInfo,
+                  getExpensesInfo,
                   {
                     year: Number(year),
                     month: Number(month),
-                    budjet_id: main_schet?.budget_id
+                    budjet_id
                   }
                 ]
               } as any)
@@ -193,4 +199,4 @@ const MainbookDetailsPage = () => {
   )
 }
 
-export default MainbookDetailsPage
+export default ExpensesDetailsPage

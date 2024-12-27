@@ -24,7 +24,7 @@ import { monthNames } from '@/common/data/month'
 import { smetaGrafikService } from './service'
 import { toast } from '@/common/hooks/use-toast'
 import { useForm } from 'react-hook-form'
-import { useMainSchet } from '@/common/features/main-schet'
+import { useRequisitesStore } from '@/common/features/main-schet'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 export type SmetaGrafikDialogProps = {
@@ -35,7 +35,7 @@ export type SmetaGrafikDialogProps = {
 const SmetaGrafikDialog = (props: SmetaGrafikDialogProps) => {
   const { open, onClose, data } = props
 
-  const { main_schet } = useMainSchet()
+  const { main_schet_id, budjet_id } = useRequisitesStore()
 
   const queryClient = useQueryClient()
   const form = useForm({
@@ -50,8 +50,8 @@ const SmetaGrafikDialog = (props: SmetaGrafikDialogProps) => {
         form.setValue('smeta_id', value)
       },
       params: {
-        main_schet_id: main_schet?.id,
-        budjet_id: main_schet?.budget_id
+        main_schet_id,
+        budjet_id
       }
     })
   )
@@ -101,7 +101,7 @@ const SmetaGrafikDialog = (props: SmetaGrafikDialogProps) => {
   })
 
   const onSubmit = form.handleSubmit((payload) => {
-    if (!main_schet) {
+    if (!main_schet_id) {
       toast({
         variant: 'destructive',
         title: 'Выберите счет'
@@ -112,14 +112,14 @@ const SmetaGrafikDialog = (props: SmetaGrafikDialogProps) => {
       updateSmetaGrafik(
         extendObject(payload, {
           id: data.id,
-          spravochnik_budjet_name_id: main_schet.budget_id
+          spravochnik_budjet_name_id: budjet_id
         })
       )
       return
     }
     createSmetaGrafik(
       extendObject(payload, {
-        spravochnik_budjet_name_id: main_schet.budget_id
+        spravochnik_budjet_name_id: budjet_id
       })
     )
   })

@@ -7,6 +7,7 @@ export const mainbookReportQueryKeys = {
   update: 'mainbook-report/update',
   delete: 'mainbook-report/delete'
 }
+
 export const MainbookReportProvodkaSchema = z.object({
   spravochnik_main_book_schet_id: z.number(),
   debet_sum: z.number(),

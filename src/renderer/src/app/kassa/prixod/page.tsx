@@ -1,33 +1,32 @@
-import type { KassaPrixodType } from '@/common/models'
-
+import { FooterCell, FooterRow, GenericTable } from '@/common/components'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { useNavigate } from 'react-router-dom'
-import { GenericTable, FooterRow, FooterCell } from '@/common/components'
+import { usePagination, useRangeDate } from '@/common/hooks'
+
+import type { KassaPrixodType } from '@/common/models'
+import { ListView } from '@/common/views'
 import { columns } from './columns'
 import { formatNumber } from '@/common/lib/format'
 import { kassaPrixodService } from './service'
 import { queryKeys } from './constants'
-import { useMainSchet } from '@/common/features/main-schet'
-import { useLayout } from '@/common/features/layout'
 import { useConfirm } from '@/common/features/confirm'
-
-import { ListView } from '@/common/views'
-import { useRangeDate, usePagination } from '@/common/hooks'
+import { useLayout } from '@/common/features/layout'
+import { useNavigate } from 'react-router-dom'
+import { useRequisitesStore } from '@/common/features/main-schet'
 
 const KassaPrixodPage = () => {
-  const { main_schet } = useMainSchet()
   const { confirm } = useConfirm()
 
   const dates = useRangeDate()
   const pagination = usePagination()
   const queryClient = useQueryClient()
   const navigate = useNavigate()
+  const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
 
   const { data: prixodList, isFetching } = useQuery({
     queryKey: [
       queryKeys.getAll,
       {
-        main_schet_id: main_schet?.id,
+        main_schet_id,
         ...dates,
         ...pagination
       }

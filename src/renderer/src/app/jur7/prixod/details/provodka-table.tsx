@@ -36,8 +36,8 @@ import { cn } from '@/common/lib/utils'
 import { createGroupSpravochnik } from '@/app/super-admin/group/service'
 import { denominationQueryKeys } from '@/app/jur7/naimenovaniya/constants'
 import { useEventCallback } from '@/common/hooks/use-event-callback'
-import { useMainSchet } from '@/common/features/main-schet'
 import { useMutation } from '@tanstack/react-query'
+import { useRequisitesStore } from '@/common/features/main-schet'
 
 type ProvodkaTableProps = {
   form: UseFormReturn<PrixodFormType>
@@ -430,6 +430,8 @@ const NaimenovanieCells = ({
 }: NaimenovanieCellsProps) => {
   const isMounted = useRef(false)
 
+  const budjet_id = useRequisitesStore((store) => store.budjet_id)
+
   const onChangeChildFieldEvent = useEventCallback(onChangeChildField)!
 
   const [values, setValues] = useState<Pick<Naimenovanie, 'group_jur7_id' | 'name' | 'edin'>>({
@@ -449,7 +451,7 @@ const NaimenovanieCells = ({
       value: values.group_jur7_id,
       onChange: (id) => {
         setValues((prev) => ({ ...prev, group_jur7_id: id }))
-        if (!main_schet) {
+        if (!budjet_id) {
           return
         }
         applyChanges({
@@ -457,13 +459,11 @@ const NaimenovanieCells = ({
           name: values.name,
           group_jur7_id: id,
           edin: values.edin,
-          spravochnik_budjet_name_id: main_schet?.budget_id
+          spravochnik_budjet_name_id: budjet_id
         })
       }
     })
   )
-
-  const { main_schet } = useMainSchet()
 
   const { mutate: createNaimenovanie, isPending: isCreating } = useMutation({
     mutationKey: [denominationQueryKeys.create],
@@ -522,7 +522,7 @@ const NaimenovanieCells = ({
       (selected.group_jur7_id === changes.group_jur7_id &&
         selected.edin === changes.edin &&
         selected.name === changes.name) ||
-      !main_schet
+      !budjet_id
     ) {
       return
     }
@@ -556,14 +556,14 @@ const NaimenovanieCells = ({
               <Button
                 disabled={isCreating || isUpdating}
                 onClick={() => {
-                  if (!main_schet) {
+                  if (!budjet_id) {
                     return
                   }
                   createNaimenovanie({
                     group_jur7_id: values.group_jur7_id,
                     name: values.name,
                     edin: values.edin,
-                    spravochnik_budjet_name_id: main_schet?.budget_id
+                    spravochnik_budjet_name_id: budjet_id
                   })
                 }}
               >
@@ -600,7 +600,7 @@ const NaimenovanieCells = ({
               setValues({ ...values, name: e.target.value })
             }}
             onBlur={(e) => {
-              if (!main_schet) {
+              if (!budjet_id) {
                 return
               }
               const name = e.target.value
@@ -609,7 +609,7 @@ const NaimenovanieCells = ({
                 name,
                 group_jur7_id: values.group_jur7_id,
                 edin: values.edin,
-                spravochnik_budjet_name_id: main_schet?.budget_id
+                spravochnik_budjet_name_id: budjet_id
               })
             }}
             className={inputVariants({ editor: true, error: !!errorMessage })}
@@ -622,7 +622,7 @@ const NaimenovanieCells = ({
             value={values.edin}
             onValueChange={(edin) => {
               setValues({ ...values, edin })
-              if (!main_schet) {
+              if (!budjet_id) {
                 return
               }
               applyChanges({
@@ -630,7 +630,7 @@ const NaimenovanieCells = ({
                 name: values.name,
                 group_jur7_id: values.group_jur7_id,
                 edin,
-                spravochnik_budjet_name_id: main_schet?.budget_id
+                spravochnik_budjet_name_id: budjet_id
               })
             }}
             triggerClassName={inputVariants({ editor: true, error: !!errorMessage })}

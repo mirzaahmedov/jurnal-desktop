@@ -1,11 +1,11 @@
-import { Outlet } from 'react-router-dom'
-import { useMainSchet } from './store'
 import { CircleAlert } from 'lucide-react'
+import { Outlet } from 'react-router-dom'
+import { useRequisitesStore } from './store'
 
 export const MainSchetGuard = () => {
-  const { main_schet } = useMainSchet()
+  const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
 
-  if (!main_schet || !main_schet.id) {
+  if (!main_schet_id) {
     return (
       <div className="w-full h-full flex items-center justify-center">
         <div className="flex flex-col items-center gap-5">

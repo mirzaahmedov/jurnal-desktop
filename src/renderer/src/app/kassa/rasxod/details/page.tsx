@@ -14,7 +14,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { defaultValues, queryKeys } from '../constants'
 import { normalizeEmptyFields } from '@/common/lib/validation'
 import { useLayout } from '@/common/features/layout'
-import { useMainSchet } from '@/common/features/main-schet'
+import { useRequisitesStore } from '@/common/features/main-schet'
 import { EditableTable } from '@/common/features/editable-table'
 import { podvodkaColumns } from './podvodki'
 import {
@@ -40,7 +40,7 @@ const KassaRasxodDetailtsPage = () => {
   const { toast } = useToast()
   const { id } = useParams()
 
-  const main_schet_id = useMainSchet((store) => store.main_schet?.id)
+  const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
   const navigate = useNavigate()
   const queryClient = useQueryClient()
 

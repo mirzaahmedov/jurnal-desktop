@@ -1,21 +1,21 @@
 import { DateRangeForm, GenericTable, LoadingOverlay } from '@/common/components'
+import { columns, queryKeys } from './config'
+import { useInternalTransferDelete, useInternalTransferList } from './service'
+
+import { toast } from '@/common/hooks/use-toast'
+import { useConfirm } from '@/common/features/confirm'
+import { useDateRange } from '@/common/hooks/use-date-range'
 import { useLayout } from '@/common/features/layout'
 import { useNavigate } from 'react-router-dom'
-import { useInternalTransferDelete, useInternalTransferList } from './service'
-import { useDateRange } from '@/common/hooks/use-date-range'
-
-import { columns, queryKeys } from './config'
 import { useQueryClient } from '@tanstack/react-query'
-import { useConfirm } from '@/common/features/confirm'
-import { toast } from '@/common/hooks/use-toast'
-import { useMainSchet } from '@/common/features/main-schet'
+import { useRequisitesStore } from '@/common/features/main-schet'
 
 const InternalTransferPage = () => {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
+  const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
 
   const { confirm } = useConfirm()
-  const { main_schet } = useMainSchet()
   const { form, from, to, applyFilters } = useDateRange()
 
   const { mutate: deleteInternalTransfer } = useInternalTransferDelete({
@@ -36,7 +36,7 @@ const InternalTransferPage = () => {
   })
   const { data: transferList, isFetching } = useInternalTransferList({
     params: {
-      main_schet_id: main_schet?.id,
+      main_schet_id,
       limit: 10,
       page: 1,
       from,

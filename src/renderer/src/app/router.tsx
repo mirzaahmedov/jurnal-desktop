@@ -16,6 +16,10 @@ import BankRasxodPage from './bank/rasxod/page'
 import BankSpravochnikPage from './super-admin/bank/page'
 import BudgetPage from './super-admin/budjet/page'
 import ContractDetailsPage from './organization/shartnoma/details/page'
+import ExpensesDetailsPage from './expenses/expenses/details/page'
+import ExpensesPage from './expenses/expenses/page'
+import ExpensesReportDetailsPage from './expenses/report/details/page'
+import ExpensesReportPage from './expenses/report/page'
 import GroupPage from './super-admin/group/page'
 import HomePage from './home/page'
 import { InternalTransferDetailsPage } from './jur7/internal-transfer/details/page'
@@ -356,6 +360,27 @@ export const routes: RouteObject[] = [
           {
             path: ':id',
             element: <MainbookDetailsPage />
+          }
+        ]
+      },
+      {
+        path: 'expenses',
+        children: [
+          {
+            path: 'report',
+            element: <ExpensesReportPage />
+          },
+          {
+            path: 'report/:id',
+            element: <ExpensesReportDetailsPage />
+          },
+          {
+            index: true,
+            element: <ExpensesPage />
+          },
+          {
+            path: ':id',
+            element: <ExpensesDetailsPage />
           }
         ]
       },

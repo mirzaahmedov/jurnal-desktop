@@ -10,8 +10,8 @@ import { avansService } from './service'
 import { toast } from '@/common/hooks/use-toast'
 import { useConfirm } from '@/common/features/confirm'
 import { useLayout } from '@/common/features/layout'
-import { useMainSchet } from '@/common/features/main-schet'
 import { useNavigate } from 'react-router-dom'
+import { useRequisitesStore } from '@/common/features/main-schet'
 
 const AvansPage = () => {
   const navigate = useNavigate()
@@ -19,14 +19,14 @@ const AvansPage = () => {
 
   const dates = useRangeDate()
   const pagination = usePagination()
-  const { main_schet } = useMainSchet()
+  const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
   const { confirm } = useConfirm()
 
   const { data: avansList, isFetching } = useQuery({
     queryKey: [
       avansQueryKeys.getAll,
       {
-        main_schet_id: main_schet?.id,
+        main_schet_id,
         ...dates,
         ...pagination
       }

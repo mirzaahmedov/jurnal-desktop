@@ -13,7 +13,7 @@ import {
   createEditorDeleteHandler
 } from '@/common/features/editable-table/helpers'
 import { useLayout } from '@/common/features/layout'
-import { useMainSchet } from '@/common/features/main-schet'
+import { useRequisitesStore } from '@/common/features/main-schet'
 import { useSpravochnik } from '@/common/features/spravochnik'
 import { useToast } from '@/common/hooks/use-toast'
 import { formatNumber } from '@/common/lib/format'
@@ -38,7 +38,7 @@ const KassaPrixodDetailsPage = () => {
   const { toast } = useToast()
   const { id } = useParams()
 
-  const main_schet_id = useMainSchet((store) => store.main_schet?.id)
+  const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
 
   const navigate = useNavigate()
   const queryClient = useQueryClient()

@@ -1,18 +1,18 @@
-import { useQuery } from '@tanstack/react-query'
-import { useLayout } from '@/common/features/layout'
-import { useMainSchet } from '@/common/features/main-schet'
-import { bankMonitorService } from './service'
-import { GenericTable, FooterRow, FooterCell, DownloadDocumentButton } from '@/common/components'
-import { columns } from './columns'
-import { formatNumber } from '@/common/lib/format'
-import { bankMonitorQueryKeys } from './constants'
-import { ButtonGroup } from '@/common/components/ui/button-group'
-
-import { ListView } from '@/common/views'
+import { DownloadDocumentButton, FooterCell, FooterRow, GenericTable } from '@/common/components'
 import { usePagination, useRangeDate } from '@/common/hooks'
 
+import { ButtonGroup } from '@/common/components/ui/button-group'
+import { ListView } from '@/common/views'
+import { bankMonitorQueryKeys } from './constants'
+import { bankMonitorService } from './service'
+import { columns } from './columns'
+import { formatNumber } from '@/common/lib/format'
+import { useLayout } from '@/common/features/layout'
+import { useQuery } from '@tanstack/react-query'
+import { useRequisitesStore } from '@/common/features/main-schet'
+
 const BankMonitorPage = () => {
-  const { main_schet } = useMainSchet()
+  const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
 
   const dates = useRangeDate()
   const pagination = usePagination()
@@ -21,12 +21,13 @@ const BankMonitorPage = () => {
     queryKey: [
       bankMonitorQueryKeys.getAll,
       {
-        main_schet_id: main_schet?.id,
+        main_schet_id,
         ...dates,
         ...pagination
       }
     ],
-    queryFn: bankMonitorService.getAll
+    queryFn: bankMonitorService.getAll,
+    enabled: !!main_schet_id
   })
 
   useLayout({
@@ -45,14 +46,14 @@ const BankMonitorPage = () => {
             </b>
           </div>
 
-          {main_schet ? (
+          {main_schet_id ? (
             <ButtonGroup borderStyle="dashed">
               <DownloadDocumentButton
                 fileName={`банк-дневной-отчет_${dates.from}:${dates.to}.xlsx`}
                 url="bank/monitoring/daily"
                 buttonText="Дневной отчет"
                 params={{
-                  main_schet_id: main_schet?.id,
+                  main_schet_id,
                   from: dates.from,
                   to: dates.to
                 }}
@@ -62,7 +63,7 @@ const BankMonitorPage = () => {
                 url="bank/monitoring/cap"
                 buttonText="Шапка отчет"
                 params={{
-                  main_schet_id: main_schet?.id,
+                  main_schet_id,
                   from: dates.from,
                   to: dates.to
                 }}

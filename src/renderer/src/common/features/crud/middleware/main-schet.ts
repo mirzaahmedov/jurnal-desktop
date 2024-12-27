@@ -1,12 +1,13 @@
+import { getBudgetId, getMainschetId } from '@/common/features/main-schet'
+
 import type { AxiosRequestConfig } from 'axios'
-import { extendObject } from '@/common/lib/utils'
-import { getMainSchetBudgetId, getMainSchetId } from '@/common/features/main-schet'
 import { MiddlewareFunction } from '../definition'
+import { extendObject } from '@/common/lib/utils'
 
 const main_schet: () => MiddlewareFunction = () => {
   return (config: AxiosRequestConfig) => {
     config.params = extendObject(config.params, {
-      main_schet_id: getMainSchetId()
+      main_schet_id: getMainschetId()
     })
     return config
   }
@@ -15,7 +16,7 @@ const main_schet: () => MiddlewareFunction = () => {
 const budget: () => MiddlewareFunction = () => {
   return (config: AxiosRequestConfig) => {
     config.params = extendObject(config.params, {
-      budjet_id: getMainSchetBudgetId()
+      budjet_id: getBudgetId()
     })
     return config
   }

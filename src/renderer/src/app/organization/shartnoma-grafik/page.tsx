@@ -7,18 +7,17 @@ import { shartnomaGrafikColumns } from './columns'
 import { shartnomaGrafikQueryKeys } from './constants'
 import { shartnomaGrafikService } from './service'
 import { useLayout } from '@/common/features/layout'
-import { useMainSchet } from '@/common/features/main-schet'
 import { useNavigate } from 'react-router-dom'
 import { useOrgId } from './hooks'
 import { usePagination } from '@/common/hooks'
 import { useQuery } from '@tanstack/react-query'
+import { useRequisitesStore } from '@/common/features/main-schet'
 import { useSpravochnik } from '@/common/features/spravochnik'
 
 const ShartnomaGrafikPage = () => {
   const [orgId, setOrgId] = useOrgId()
 
-  const { main_schet } = useMainSchet()
-
+  const budjet_id = useRequisitesStore((store) => store.budjet_id)
   const navigate = useNavigate()
   const pagination = usePagination()
 
@@ -33,12 +32,13 @@ const ShartnomaGrafikPage = () => {
     queryKey: [
       shartnomaGrafikQueryKeys.getAll,
       {
-        budjet_id: main_schet?.budget_id,
+        budjet_id,
         organization: orgSpravochnik.selected?.id,
         ...pagination
       }
     ],
-    queryFn: shartnomaGrafikService.getAll
+    queryFn: shartnomaGrafikService.getAll,
+    enabled: !!budjet_id
   })
 
   const handleClickEdit = (row: ShartnomaGrafik) => {

@@ -1,51 +1,53 @@
-import { z } from 'zod'
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { withPreprocessor } from '@/common/lib/validation'
+import { z } from 'zod'
 
-const MainSchetStateSchema = withPreprocessor(
+const RequisitesSchema = withPreprocessor(
   z.object({
-    id: z.number(),
-    account_number: z.string(),
-    user_id: z.number(),
-    budget_id: z.number()
+    main_schet_id: z.number().optional(),
+    budjet_id: z.number().optional(),
+    user_id: z.number().optional()
   })
 )
 
-type MainSchetStoreType = {
-  main_schet?: {
-    id: number
-    account_number: string
-    user_id: number
-    budget_id: number
-  }
-  setMainSchet: (payload?: MainSchetStoreType['main_schet']) => void
+type Requisites = {
+  main_schet_id?: number
+  budjet_id?: number
+  user_id?: number
 }
-export const useMainSchet = create<MainSchetStoreType>()(
-  persist(
+
+type RequisitesStore = Requisites & {
+  setRequisites: (params: Requisites) => void
+}
+export const useRequisitesStore = create(
+  persist<RequisitesStore>(
     (set) => ({
-      setMainSchet: (payload) => {
-        const result = MainSchetStateSchema.safeParse(payload)
+      setRequisites: ({ main_schet_id, budjet_id, user_id }) => {
+        const result = RequisitesSchema.safeParse({
+          main_schet_id,
+          budjet_id,
+          user_id
+        })
         if (result.success) {
           set({
-            main_schet: result.data
+            main_schet_id: result.data.main_schet_id,
+            budjet_id: result.data.budjet_id,
+            user_id: result.data.user_id
           })
           return
         }
-        set({
-          main_schet: undefined
-        })
       }
     }),
     {
-      name: 'main-schet'
+      name: 'requisites'
     }
   )
 )
 
-export const getMainSchetId = () => {
-  return useMainSchet.getState().main_schet?.id
+export const getMainschetId = () => {
+  return useRequisitesStore.getState().main_schet_id
 }
-export const getMainSchetBudgetId = () => {
-  return useMainSchet.getState().main_schet?.budget_id
+export const getBudgetId = () => {
+  return useRequisitesStore.getState().budjet_id
 }

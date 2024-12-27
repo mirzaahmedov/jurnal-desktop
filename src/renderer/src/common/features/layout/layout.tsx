@@ -1,6 +1,6 @@
 import { ArrowLeft, CirclePlus, LogOut, RefreshCw, Settings } from 'lucide-react'
 import { Avatar, AvatarFallback } from '@/common/components/ui/avatar'
-import { MainSchetDialog, useMainSchet } from '@/common/features/main-schet'
+import { MainSchetDialog, useRequisitesStore } from '@/common/features/main-schet'
 import { mainSchetQueryKeys, mainSchetService } from '@/app/region-spravochnik/main-schet'
 
 import { Button } from '@/common/components/ui/button'
@@ -23,7 +23,7 @@ export const PageLayout = (props: PageLayoutProps) => {
   const { user, setUser } = useAuthStore()
   const { pathname } = useLocation()
 
-  const main_schet_id = useMainSchet((store) => store.main_schet?.id)
+  const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
 
   const mainSchetToggle = useToggle()
   const appDefaultsToggle = useToggle()

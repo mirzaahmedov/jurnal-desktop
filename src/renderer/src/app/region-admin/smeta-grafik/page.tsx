@@ -1,22 +1,22 @@
-import type { SmetaGrafik } from '@/common/models'
-
-import { useState } from 'react'
 import { Pagination, usePagination } from '@/common/components'
-import { smetaGrafikQueryKeys } from './constants'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { smetaGrafikService } from './service'
-import { useLayout } from '@/common/features/layout'
-import { useMainSchet } from '@/common/features/main-schet'
-import { useConfirm } from '@/common/features/confirm'
-import { useToggle } from '@/common/hooks/use-toggle'
-import { SmetaTable } from './components'
+
+import type { SmetaGrafik } from '@/common/models'
 import SmetaGrafikDialog from './dialog'
+import { SmetaTable } from './components'
+import { smetaGrafikQueryKeys } from './constants'
+import { smetaGrafikService } from './service'
+import { useConfirm } from '@/common/features/confirm'
+import { useLayout } from '@/common/features/layout'
+import { useRequisitesStore } from '@/common/features/main-schet'
+import { useState } from 'react'
+import { useToggle } from '@/common/hooks/use-toggle'
 
 const SmetaGrafikPage = () => {
   const [selected, setSelected] = useState<null | SmetaGrafik>(null)
 
   const { currentPage, itemsPerPage } = usePagination()
-  const { main_schet } = useMainSchet()
+  const { main_schet_id, budjet_id } = useRequisitesStore()
   const { confirm } = useConfirm()
   const { open, close, isOpen: active } = useToggle()
 
@@ -28,11 +28,12 @@ const SmetaGrafikPage = () => {
       {
         page: currentPage,
         limit: itemsPerPage,
-        budjet_id: main_schet?.budget_id,
-        main_schet_id: main_schet?.id
+        budjet_id,
+        main_schet_id
       }
     ],
-    queryFn: smetaGrafikService.getAll
+    queryFn: smetaGrafikService.getAll,
+    enabled: !!budjet_id && !!main_schet_id
   })
   const { mutate: deleteSmetaGrafik, isPending } = useMutation({
     mutationKey: [smetaGrafikQueryKeys.delete],

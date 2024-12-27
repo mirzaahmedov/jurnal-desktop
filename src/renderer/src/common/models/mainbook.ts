@@ -4,6 +4,12 @@ export namespace Mainbook {
     kredit_sum: number
   }
 
+  export enum Status {
+    SENT = 1,
+    ACCEPTED = 2,
+    REJECTED = 3
+  }
+
   export type Schet = {
     id: number
     name: string

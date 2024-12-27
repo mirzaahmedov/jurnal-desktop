@@ -1,9 +1,9 @@
 import { ApiEndpoints, CRUDService } from '@renderer/common/features/crud'
 
-import { Mainbook } from '@renderer/common/models'
-import { MainbookReportValues } from './config'
+import { Expenses } from '@renderer/common/models'
+import { ExpensesReportValues } from './config'
 import { budget } from '@renderer/common/features/crud/middleware'
 
-export const openMonthlyReportService = new CRUDService<Mainbook.Report, MainbookReportValues>({
+export const expensesReportService = new CRUDService<Expenses.Report, ExpensesReportValues>({
   endpoint: ApiEndpoints.mainbook__doc
 }).use(budget())

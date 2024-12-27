@@ -17,7 +17,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { queryKeys, defaultValues } from '../constants'
 import { normalizeEmptyFields } from '@/common/lib/validation'
 import { useLayout } from '@/common/features/layout'
-import { useMainSchet } from '@/common/features/main-schet'
+import { useRequisitesStore } from '@/common/features/main-schet'
 import { createOrganizationSpravochnik } from '@renderer/app/region-spravochnik/organization'
 import { createOperatsiiSpravochnik } from '@/app/super-admin/operatsii'
 import { createShartnomaSpravochnik } from '@renderer/app/organization/shartnoma'
@@ -46,7 +46,7 @@ const PokazatUslugiDetailsPage = () => {
   const id = useParams().id as string
   const navigate = useNavigate()
   const queryClient = useQueryClient()
-  const main_schet_id = useMainSchet((state) => state.main_schet?.id)
+  const main_schet_id = useRequisitesStore((state) => state.main_schet_id)
 
   const form = useForm({
     resolver: zodResolver(PokazatUslugiFormSchema),
@@ -191,8 +191,8 @@ const PokazatUslugiDetailsPage = () => {
   useEffect(() => {
     const summa =
       podvodki
-        .filter((podvodka) => !isNaN(podvodka.kol) && !isNaN(podvodka.sena))
-        .reduce((acc, curr) => acc + curr.kol * curr.sena, 0) ?? 0
+        .filter((podvodka) => !isNaN(podvodka.kol!) && !isNaN(podvodka.sena!))
+        .reduce((acc, curr) => acc + curr.kol! * curr.sena!, 0) ?? 0
     form.setValue('summa', summa)
   }, [form, podvodki])
 

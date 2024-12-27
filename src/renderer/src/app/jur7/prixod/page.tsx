@@ -12,15 +12,15 @@ import { toast } from '@/common/hooks/use-toast'
 import { useConfirm } from '@/common/features/confirm'
 import { useDateRange } from '@/common/hooks/use-date-range'
 import { useLayout } from '@/common/features/layout'
-import { useMainSchet } from '@/common/features/main-schet'
 import { useNavigate } from 'react-router-dom'
 import { useQueryClient } from '@tanstack/react-query'
+import { useRequisitesStore } from '@/common/features/main-schet'
 
 const MO7PrixodPage = () => {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
+  const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
 
-  const { main_schet } = useMainSchet()
   const { confirm } = useConfirm()
   const { form, from, to, applyFilters } = useDateRange()
 
@@ -42,7 +42,7 @@ const MO7PrixodPage = () => {
   })
   const { data: prixodList, isFetching } = usePrixodList({
     params: {
-      main_schet_id: main_schet?.id,
+      main_schet_id,
       limit: 10,
       page: 1,
       from,
@@ -64,13 +64,13 @@ const MO7PrixodPage = () => {
           form={form}
           onSubmit={applyFilters}
         />
-        {main_schet?.id ? (
+        {main_schet_id ? (
           <ButtonGroup>
             <DownloadDocumentButton
               url="jur_7/doc_prixod/report"
               fileName={`jur7_prixod_report-${from}:${to}.xlsx`}
               buttonText="Скачать отчет"
-              params={{ from, to, main_schet_id: main_schet?.id }}
+              params={{ from, to, main_schet_id }}
             />
           </ButtonGroup>
         ) : null}

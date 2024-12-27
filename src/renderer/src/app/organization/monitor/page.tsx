@@ -10,7 +10,7 @@ import { useSpravochnik } from '@/common/features/spravochnik'
 import { useQuery } from '@tanstack/react-query'
 import { orgMonitoringService } from './service'
 import { orgMonitorQueryKeys } from './constants'
-import { useMainSchet } from '@/common/features/main-schet'
+import { useRequisitesStore } from '@/common/features/main-schet'
 import {
   ChooseOrganization,
   ChooseOperatsii,
@@ -39,7 +39,7 @@ const OrganizationMonitoringPage = () => {
   const pagination = usePagination()
   const navigate = useNavigate()
 
-  const { main_schet } = useMainSchet()
+  const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
 
   const orgSpravochnik = useSpravochnik(
     createOrganizationSpravochnik({
@@ -71,7 +71,7 @@ const OrganizationMonitoringPage = () => {
     queryKey: [
       orgMonitorQueryKeys.getByOrgId,
       {
-        main_schet_id: main_schet?.id,
+        main_schet_id,
         operatsii: operatsiiSpravochnik.selected ? operatsiiSpravochnik.selected.schet : undefined,
         ...dates,
         ...pagination
@@ -79,7 +79,7 @@ const OrganizationMonitoringPage = () => {
       orgId
     ],
     queryFn: orgMonitoringService.getAll,
-    enabled: !!main_schet && !!operatsiiSpravochnik.selected
+    enabled: !!main_schet_id && !!operatsiiSpravochnik.selected
   })
 
   useLayout({
@@ -111,13 +111,13 @@ const OrganizationMonitoringPage = () => {
                 clear={orgSpravochnik.clear}
               />
             </div>
-            {main_schet?.id && operatsiiSpravochnik.selected?.schet ? (
+            {main_schet_id && operatsiiSpravochnik.selected?.schet ? (
               <ButtonGroup borderStyle="dashed">
                 <DownloadDocumentButton
                   fileName={`дебитор-кредитор_отчет-${dates.to}.xlsx`}
                   url="organization/monitoring/prixod/rasxod"
                   params={{
-                    main_schet_id: main_schet?.id,
+                    main_schet_id,
                     to: dates.to,
                     operatsii: operatsiiSpravochnik.selected?.schet
                   }}
@@ -127,7 +127,7 @@ const OrganizationMonitoringPage = () => {
                   fileName={`сводный-отчет-${dates.from}:${dates.to}.xlsx`}
                   url="/organization/monitoring/order"
                   params={{
-                    main_schet_id: main_schet?.id,
+                    main_schet_id,
                     from: dates.from,
                     to: dates.to,
                     schet: operatsiiSpravochnik.selected?.schet
@@ -137,7 +137,7 @@ const OrganizationMonitoringPage = () => {
                 {orgId ? (
                   <AktSverkaDialog
                     orgId={orgId}
-                    schetId={main_schet?.id}
+                    schetId={main_schet_id}
                     from={dates.from}
                     to={dates.to}
                   />
