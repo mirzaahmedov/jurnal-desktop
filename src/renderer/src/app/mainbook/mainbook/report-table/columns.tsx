@@ -133,6 +133,11 @@ const columns: ColumnDef[] = [
     key: 'end_kredit',
     header: 'Ой оборотка',
     hidden: true
+  },
+  {
+    key: 'itogo',
+    header: 'Итого',
+    rowSpan: 2
   }
 ]
 

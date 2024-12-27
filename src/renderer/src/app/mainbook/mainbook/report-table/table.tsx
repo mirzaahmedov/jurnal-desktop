@@ -225,7 +225,7 @@ const ReportTable = ({ isLoading, data, onEdit, onDelete }: ReportTableProps) =>
               ))}
           </ReportTableRow>
         </TableHeader>
-        <TableBody>
+        <TableBody className="[&>tr:last-child>td]:!font-extrabold [&>tr>td:last-child]:!font-extrabold">
           {Array.isArray(data) && data.length > 0 ? (
             data.map((row) => (
               <ReportTableRow

@@ -1,4 +1,5 @@
 import { FileDown, Save } from 'lucide-react'
+import { calculateColumnTotals, calculateRowTotals, transformData } from './utils'
 import { getMainbookById, getMainbookInfo, mainbookService } from '../service'
 import { useEffect, useMemo, useState } from 'react'
 import { useMutation, useQuery } from '@tanstack/react-query'
@@ -12,7 +13,6 @@ import { ReportTable } from '../report-table'
 import { formatDate } from '@renderer/common/lib/date'
 import { mainbookQueryKeys } from '../config'
 import { toast } from '@renderer/common/hooks'
-import { transformData } from './utils'
 import { useLayout } from '@renderer/common/features/layout'
 import { useMainSchet } from '@renderer/common/features/main-schet'
 
@@ -100,11 +100,15 @@ const MainbookDetailsPage = () => {
     }
   })
 
-  const transformed = useMemo(() => {
+  const rows = useMemo(() => {
     if (!values) {
       return []
     }
-    return transformData(values).sort((a, b) => a.schet.localeCompare(b.schet))
+    const rows = transformData(values).sort((a, b) => a.schet.localeCompare(b.schet))
+
+    rows.push(calculateColumnTotals(rows))
+
+    return calculateRowTotals(rows)
   }, [values])
 
   useEffect(() => {
@@ -133,7 +137,7 @@ const MainbookDetailsPage = () => {
       <div className="relative w-full overflow-x-hidden">
         <ReportTable
           isLoading={isFetching || isFetchingInfo || isPending}
-          data={transformed}
+          data={rows}
           onDelete={() => {}}
           onEdit={() => {}}
         />
