@@ -215,7 +215,7 @@ const ReportTable = ({ isLoading, data, onEdit, onDelete }: ReportTableProps) =>
             })}
           </ReportTableRow>
           <ReportTableRow className="bg-slate-100">
-            {Array(10)
+            {Array(11)
               .fill(null)
               .map(() => (
                 <>
@@ -225,7 +225,7 @@ const ReportTable = ({ isLoading, data, onEdit, onDelete }: ReportTableProps) =>
               ))}
           </ReportTableRow>
         </TableHeader>
-        <TableBody className="[&>tr:last-child>td]:!font-extrabold [&>tr>td:last-child]:!font-extrabold">
+        <TableBody className="[&>tr:last-child>td]:!font-extrabold">
           {Array.isArray(data) && data.length > 0 ? (
             data.map((row) => (
               <ReportTableRow

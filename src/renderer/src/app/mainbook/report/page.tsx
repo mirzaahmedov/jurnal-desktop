@@ -5,7 +5,7 @@ import { ListView } from '@renderer/common/views'
 import { OpenMonthlyReport } from '@renderer/common/models'
 import { mainbookReportColumns } from './columns'
 import { mainbookReportQueryKeys } from './config'
-import { openMonthlyReportService } from './service'
+import { mainbookReportService } from './service'
 import { toast } from '@renderer/common/hooks'
 import { useConfirm } from '@renderer/common/features/confirm'
 import { useLayout } from '@renderer/common/features/layout'
@@ -25,12 +25,12 @@ const MainbookReportPage = () => {
         budjet_id: main_schet?.budget_id
       }
     ],
-    queryFn: openMonthlyReportService.getAll,
+    queryFn: mainbookReportService.getAll,
     enabled: !!main_schet
   })
   const { mutate: deleteReport, isPending } = useMutation({
     mutationKey: [mainbookReportQueryKeys.delete],
-    mutationFn: openMonthlyReportService.delete,
+    mutationFn: mainbookReportService.delete,
     onError: (error) => {
       console.error(error)
       toast({

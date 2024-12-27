@@ -1,10 +1,10 @@
 import { Fieldset, SelectField } from '@renderer/common/components'
 import { Form, FormField } from '@renderer/common/components/ui/form'
 import {
-  OpenMonthlyReportFormSchema,
-  OpenMonthlyReportProvodkaSchema,
+  MainbookReportFormSchema,
+  MainbookReportProvodkaSchema,
   defaultValues,
-  openMonthlyReportQueryKeys
+  mainbookReportQueryKeys
 } from '../config'
 import {
   createEditorChangeHandler,
@@ -17,7 +17,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { DetailsView } from '@renderer/common/views'
 import { EditableTable } from '@renderer/common/features/editable-table'
 import { MonthPicker } from '@renderer/common/components/month-picker'
-import { documentTypes } from '@renderer/app/main-book/common/data'
+import { documentTypes } from '@renderer/app/mainbook/common/data'
 import { openMonthlyReportService } from '../service'
 import { provodkaColumns } from './provodka'
 import { toast } from '@renderer/common/hooks'
@@ -27,7 +27,7 @@ import { useLayout } from '@renderer/common/features/layout'
 import { useMainSchet } from '@renderer/common/features/main-schet'
 import { zodResolver } from '@hookform/resolvers/zod'
 
-const CreateMonthlyReportDetailsPage = () => {
+const MainbookReportDetailsPage = () => {
   const navigate = useNavigate()
   const params = useParams()
   const main_schet = useMainSchet((store) => store.main_schet)
@@ -38,12 +38,12 @@ const CreateMonthlyReportDetailsPage = () => {
       year: new Date().getFullYear(),
       month: new Date().getMonth() + 1
     },
-    resolver: zodResolver(OpenMonthlyReportFormSchema)
+    resolver: zodResolver(MainbookReportFormSchema)
   })
 
   const { data: report, isFetching } = useQuery({
     queryKey: [
-      openMonthlyReportQueryKeys.getById,
+      mainbookReportQueryKeys.getById,
       Number(params.id),
       {
         budjet_id: main_schet?.budget_id
@@ -58,7 +58,7 @@ const CreateMonthlyReportDetailsPage = () => {
       toast({
         title: 'Запись успешно создана'
       })
-      navigate('/main-book/create-monthly-report')
+      navigate(-1)
     },
     onError(error) {
       console.error(error)
@@ -74,7 +74,7 @@ const CreateMonthlyReportDetailsPage = () => {
       toast({
         title: 'Запись успешно обновлена'
       })
-      navigate('/main-book/create-monthly-report')
+      navigate(-1)
     },
     onError(error) {
       console.error(error)
@@ -158,7 +158,7 @@ const CreateMonthlyReportDetailsPage = () => {
             errors={form.formState.errors.childs}
             onCreate={createEditorCreateHandler({
               form,
-              schema: OpenMonthlyReportProvodkaSchema,
+              schema: MainbookReportProvodkaSchema,
               defaultValues: defaultValues.childs[0]
             })}
             onDelete={createEditorDeleteHandler({
@@ -174,4 +174,4 @@ const CreateMonthlyReportDetailsPage = () => {
   )
 }
 
-export default CreateMonthlyReportDetailsPage
+export default MainbookReportDetailsPage

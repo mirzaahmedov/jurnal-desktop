@@ -125,19 +125,24 @@ const columns: ColumnDef[] = [
     hidden: true
   },
   {
-    key: 'end_debet',
+    key: 'itogo_debet',
     header: 'Ой оборотка',
     colSpan: 2
   },
   {
-    key: 'end_kredit',
+    key: 'itogo_kredit',
     header: 'Ой оборотка',
     hidden: true
   },
   {
-    key: 'itogo',
-    header: 'Итого',
-    rowSpan: 2
+    key: 'end_debet',
+    header: 'Кон. сал. ',
+    colSpan: 2
+  },
+  {
+    key: 'end_kredit',
+    header: 'Кон. сал. ',
+    hidden: true
   }
 ]
 

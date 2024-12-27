@@ -1,4 +1,4 @@
-export namespace Mainbook {
+export namespace Expenses {
   type Summa = {
     debet_sum: number
     kredit_sum: number
@@ -41,12 +41,11 @@ export namespace Mainbook {
     data: Array<{
       type: string
       schets: Array<{
-        id: number
-        name: string
+        spravochnik_operatsii_id: number
+        schet_name: string
         schet: string
-        created_at: string
-        updated_at: string
-        summa: Summa
+        debet_sum: number
+        kredit_sum: number
       }>
       debet_sum: number
       kredit_sum: number
@@ -88,6 +87,9 @@ export namespace Mainbook {
       id: number
       name: string
       schet: string
+      sub_schet: string
+      type_schet: string
+      smeta_id: number
       summa: Summa
     }>
     debet_sum: number

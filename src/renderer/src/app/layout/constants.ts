@@ -416,6 +416,25 @@ export const getNavElements = (): NavElement[] => {
           ]
         }
       : null,
+    !is_super_admin
+      ? {
+          icon: Wallet,
+          title: 'Хакикий харажатлар',
+          path: '/expenses',
+          children: [
+            {
+              path: 'report',
+              title: 'Создать месячный отчёт',
+              icon: CalendarPlus2
+            },
+            {
+              path: '/',
+              title: 'Закрыть месячный отчёт',
+              icon: CalendarX
+            }
+          ]
+        }
+      : null,
     {
       path: '/region-data',
       title: 'Проверка данных',

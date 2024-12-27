@@ -1,16 +1,16 @@
-import { createNumberEditor, createOperatsiiEditor } from '@/common/features/editable-table/editors'
+import {
+  createMainbookSchetEditor,
+  createNumberEditor
+} from '@/common/features/editable-table/editors'
 
 import type { EditableColumnType } from '@/common/features/editable-table'
-import type { OpenMonthlyReportProvodka } from '../config'
-import { TypeSchetOperatsii } from '@/common/models'
+import type { MainbookReportProvodka } from '../config'
 
-const provodkaColumns: EditableColumnType<OpenMonthlyReportProvodka>[] = [
+const provodkaColumns: EditableColumnType<MainbookReportProvodka>[] = [
   {
     key: 'spravochnik_operatsii_id',
     header: 'Подводка',
-    Editor: createOperatsiiEditor({
-      type_schet: TypeSchetOperatsii.BANK_PRIXOD
-    })
+    Editor: createMainbookSchetEditor()
   },
   {
     key: 'debet_sum',

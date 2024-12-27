@@ -1,11 +1,11 @@
 import { Badge } from '@renderer/common/components/ui/badge'
 import type { ColumnDef } from '@renderer/common/components'
-import type { OpenMonthlyReport } from '@renderer/common/models'
+import type { Mainbook } from '@renderer/common/models'
 import { documentTypes } from '../common/data'
 import { formatNumber } from '@renderer/common/lib/format'
 import { getMonthName } from '@renderer/common/lib/date'
 
-export const openMonthlyReportColumns: ColumnDef<OpenMonthlyReport>[] = [
+export const mainbookReportColumns: ColumnDef<Mainbook.Report>[] = [
   {
     key: 'month',
     header: 'Месяц',

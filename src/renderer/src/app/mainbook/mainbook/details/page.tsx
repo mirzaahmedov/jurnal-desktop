@@ -104,7 +104,9 @@ const MainbookDetailsPage = () => {
     if (!values) {
       return []
     }
-    const rows = transformData(values).sort((a, b) => a.schet.localeCompare(b.schet))
+    const rows = transformData(values).sort((a, b) =>
+      a.schet.padStart(3, '0').localeCompare(b.schet.padStart(3, '0'))
+    )
 
     rows.push(calculateColumnTotals(rows))
 

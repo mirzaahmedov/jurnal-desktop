@@ -1,6 +1,6 @@
 import { Badge } from '@renderer/common/components/ui/badge'
 import type { ColumnDef } from '@renderer/common/components'
-import type { CompleteMonthlyReport } from '@renderer/common/models'
+import type { Mainbook } from '@renderer/common/models'
 import { formatLocaleDateTime } from '@renderer/common/lib/format'
 import { getMonthName } from '@renderer/common/lib/date'
 
@@ -31,7 +31,7 @@ export const statusMap = {
   )
 }
 
-export const completeMonthlyReportColumns: ColumnDef<CompleteMonthlyReport>[] = [
+export const mainbookColumns: ColumnDef<Mainbook.ReportPreview>[] = [
   {
     key: 'month',
     header: 'Месяц',

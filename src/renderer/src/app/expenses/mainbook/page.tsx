@@ -2,35 +2,29 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 import { GenericTable } from '@renderer/common/components'
 import { ListView } from '@renderer/common/views'
-import { OpenMonthlyReport } from '@renderer/common/models'
-import { openMonthlyReportColumns } from './columns'
-import { openMonthlyReportQueryKeys } from './config'
-import { openMonthlyReportService } from './service'
+import { Mainbook } from '@renderer/common/models'
+import { mainbookColumns } from './columns'
+import { mainbookQueryKeys } from './config'
+import { mainbookService } from './service'
 import { toast } from '@renderer/common/hooks'
 import { useConfirm } from '@renderer/common/features/confirm'
 import { useLayout } from '@renderer/common/features/layout'
 import { useMainSchet } from '@renderer/common/features/main-schet'
 import { useNavigate } from 'react-router-dom'
 
-const CreateMonthlyReportPage = () => {
+const MainbookPage = () => {
   const main_schet = useMainSchet((store) => store.main_schet)
   const queryClient = useQueryClient()
   const navigate = useNavigate()
   const { confirm } = useConfirm()
 
   const { data: reportList, isFetching } = useQuery({
-    queryKey: [
-      openMonthlyReportQueryKeys.getAll,
-      {
-        budjet_id: main_schet?.budget_id
-      }
-    ],
-    queryFn: openMonthlyReportService.getAll,
-    enabled: !!main_schet
+    queryKey: [mainbookQueryKeys.getAll, { budjet_id: main_schet?.budget_id }],
+    queryFn: mainbookService.getAll
   })
   const { mutate: deleteReport, isPending } = useMutation({
-    mutationKey: [openMonthlyReportQueryKeys.delete],
-    mutationFn: openMonthlyReportService.delete,
+    mutationKey: [mainbookQueryKeys.delete],
+    mutationFn: mainbookService.delete,
     onError: (error) => {
       console.error(error)
       toast({
@@ -43,26 +37,26 @@ const CreateMonthlyReportPage = () => {
         title: 'Запись успешно удалена'
       })
       queryClient.invalidateQueries({
-        queryKey: [openMonthlyReportQueryKeys.getAll]
+        queryKey: [mainbookQueryKeys.getAll]
       })
     }
   })
 
   useLayout({
-    title: 'Создать месячный отчет',
+    title: 'Закончить месячный отчёт',
     onCreate: () => {
-      navigate('create')
+      navigate(`create?year=${encodeURIComponent}`)
     }
   })
 
-  const handleEdit = (row: OpenMonthlyReport) => {
+  const handleEdit = (row: Mainbook.ReportPreview) => {
     navigate(`${row.id}`)
   }
 
-  const handleDelete = (row: OpenMonthlyReport) => {
+  const handleDelete = (row: Mainbook.ReportPreview) => {
     confirm({
       title: 'Удалить запись?',
-      onConfirm: () => {
+      onConfirm: async () => {
         deleteReport(row.id)
       }
     })
@@ -72,14 +66,15 @@ const CreateMonthlyReportPage = () => {
     <ListView>
       <ListView.Content loading={isFetching || isPending}>
         <GenericTable
-          columns={openMonthlyReportColumns}
+          columns={mainbookColumns}
           data={reportList?.data ?? []}
           onEdit={handleEdit}
           onDelete={handleDelete}
         />
       </ListView.Content>
+      <ListView.Footer></ListView.Footer>
     </ListView>
   )
 }
 
-export default CreateMonthlyReportPage
+export default MainbookPage

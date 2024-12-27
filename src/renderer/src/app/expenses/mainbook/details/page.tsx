@@ -1,59 +1,51 @@
 import { FileDown, Save } from 'lucide-react'
-import {
-  completeMonthlyReportService,
-  getCompleteMonthlyReportById,
-  getCompleteMonthlyReportInfo
-} from '../service'
+import { calculateColumnTotals, calculateRowTotals, transformData } from './utils'
+import { getMainbookById, getMainbookInfo, mainbookService } from '../service'
 import { useEffect, useMemo, useState } from 'react'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import { Button } from '@renderer/common/components/ui/button'
-import { CompleteMonthlyReportProvodkaData } from '@renderer/common/models'
 import { DetailsView } from '@renderer/common/views'
+import { Mainbook } from '@renderer/common/models'
 import { MonthPicker } from '@renderer/common/components/month-picker'
 import { ReportTable } from '../report-table'
-import { completeMonthlyReportQueryKeys } from '../config'
 import { formatDate } from '@renderer/common/lib/date'
+import { mainbookQueryKeys } from '../config'
 import { toast } from '@renderer/common/hooks'
-import { transformData } from './utils'
 import { useLayout } from '@renderer/common/features/layout'
 import { useMainSchet } from '@renderer/common/features/main-schet'
 
-const CompleteMonthlyReportDetailsPage = () => {
+const MainbookDetailsPage = () => {
   const main_schet = useMainSchet((store) => store.main_schet)
   const navigate = useNavigate()
   const params = useParams()
 
-  const [values, setValues] = useState<CompleteMonthlyReportProvodkaData[]>()
+  const [values, setValues] = useState<Mainbook.ReportPreviewProvodka[]>()
   const [date, setDate] = useState(formatDate(new Date()))
   const [year, month] = date.split('-')
 
   const { data: reportInfo, isFetching: isFetchingInfo } = useQuery({
     queryKey: [
-      getCompleteMonthlyReportInfo,
+      getMainbookInfo,
       {
         year: Number(year),
         month: Number(month),
         budjet_id: main_schet?.budget_id
       }
     ],
-    queryFn: getCompleteMonthlyReportInfo,
+    queryFn: getMainbookInfo,
     enabled: !!main_schet?.budget_id && params.id === 'create'
   })
 
-  const { data: report, isFetching } = useQuery({
-    queryKey: [
-      completeMonthlyReportQueryKeys.getById,
-      Number(params.id),
-      { budjet_id: main_schet?.budget_id }
-    ],
-    queryFn: getCompleteMonthlyReportById,
+  const { data: mainbook, isFetching } = useQuery({
+    queryKey: [mainbookQueryKeys.getById, Number(params.id), { budjet_id: main_schet?.budget_id }],
+    queryFn: getMainbookById,
     enabled: !!main_schet?.budget_id && params.id !== 'create'
   })
 
-  const { mutate: createReport, isPending: isCreating } = useMutation({
-    mutationFn: completeMonthlyReportService.create,
+  const { mutate: createMainbook, isPending: isCreating } = useMutation({
+    mutationFn: mainbookService.create,
     onError: (error) => {
       console.error(error)
       toast({
@@ -68,8 +60,8 @@ const CompleteMonthlyReportDetailsPage = () => {
       })
     }
   })
-  const { mutate: updateReport, isPending: isUpdating } = useMutation({
-    mutationFn: completeMonthlyReportService.update,
+  const { mutate: updateMainbook, isPending: isUpdating } = useMutation({
+    mutationFn: mainbookService.update,
     onError: (error) => {
       console.error(error)
       toast({
@@ -85,7 +77,7 @@ const CompleteMonthlyReportDetailsPage = () => {
     }
   })
   const { mutate: loadInfo, isPending } = useMutation({
-    mutationFn: getCompleteMonthlyReportInfo,
+    mutationFn: getMainbookInfo,
     onSuccess: (response) => {
       toast({
         title: 'Информация успешно загружена'
@@ -108,26 +100,31 @@ const CompleteMonthlyReportDetailsPage = () => {
     }
   })
 
-  const transformed = useMemo(() => {
+  const rows = useMemo(() => {
     if (!values) {
       return []
     }
+    const rows = transformData(values).sort((a, b) =>
+      a.schet.padStart(3, '0').localeCompare(b.schet.padStart(3, '0'))
+    )
 
-    return transformData(values).sort((a, b) => a.schet.localeCompare(b.schet))
+    rows.push(calculateColumnTotals(rows))
+
+    return calculateRowTotals(rows)
   }, [values])
 
   useEffect(() => {
-    setValues(reportInfo?.data ?? report?.data?.data ?? [])
-  }, [reportInfo?.data, report?.data])
+    setValues(reportInfo?.data ?? mainbook?.data?.data ?? [])
+  }, [reportInfo?.data, mainbook?.data])
 
   useEffect(() => {
-    const data = report?.data
+    const data = mainbook?.data
     if (!data) {
       return
     }
 
     setDate(`${data.year}-${data.month}-01`)
-  }, [report?.data])
+  }, [mainbook?.data])
 
   return (
     <DetailsView>
@@ -142,7 +139,7 @@ const CompleteMonthlyReportDetailsPage = () => {
       <div className="relative w-full overflow-x-hidden">
         <ReportTable
           isLoading={isFetching || isFetchingInfo || isPending}
-          data={transformed}
+          data={rows}
           onDelete={() => {}}
           onEdit={() => {}}
         />
@@ -154,13 +151,13 @@ const CompleteMonthlyReportDetailsPage = () => {
           disabled={isCreating || isUpdating || isPending || !main_schet || !month || !year}
           onClick={() => {
             if (params.id === 'create') {
-              createReport({
+              createMainbook({
                 data: values,
                 month: Number(month),
                 year: Number(year)
               })
             } else {
-              updateReport({
+              updateMainbook({
                 id: Number(params.id),
                 data: values,
                 month: Number(month),
@@ -178,7 +175,7 @@ const CompleteMonthlyReportDetailsPage = () => {
             onClick={() => {
               loadInfo({
                 queryKey: [
-                  getCompleteMonthlyReportInfo,
+                  getMainbookInfo,
                   {
                     year: Number(year),
                     month: Number(month),
@@ -196,4 +193,4 @@ const CompleteMonthlyReportDetailsPage = () => {
   )
 }
 
-export default CompleteMonthlyReportDetailsPage
+export default MainbookDetailsPage

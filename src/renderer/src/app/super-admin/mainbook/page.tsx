@@ -7,7 +7,7 @@ import { queryKeys } from './config'
 import { useNavigate } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 
-const AdminMoonBookPage = () => {
+const AdminMainbookPage = () => {
   const navigate = useNavigate()
 
   const { data: reports, isFetching } = useQuery({
@@ -32,4 +32,4 @@ const AdminMoonBookPage = () => {
   )
 }
 
-export default AdminMoonBookPage
+export default AdminMainbookPage

@@ -1,13 +1,13 @@
 import { adminMainBookService, adminMainBookUpdateQuery } from '../service'
+import { calculateColumnTotals, calculateRowTotals, transformData } from './utils'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 
-import { AdminMainbookDetails } from '@renderer/common/models'
 import { Button } from '@renderer/common/components/ui/button'
 import { DetailsView } from '@renderer/common/views'
+import { Mainbook } from '@renderer/common/models'
 import { ReportTable } from '../report-table'
 import { queryKeys } from '../config'
-import { transformData } from './utils'
 import { useConfirm } from '@renderer/common/features/confirm'
 import { useLayout } from '@renderer/common/features/layout'
 import { useMemo } from 'react'
@@ -37,11 +37,17 @@ const AdminMainBookDetailsPage = () => {
   })
 
   const transformed = useMemo(() => {
-    if (!report?.data) {
+    const data = (report?.data as unknown as Mainbook.AdminReportDetails) || {}
+    if (!data?.data) {
       return []
     }
+    const rows = transformData(data?.data).sort((a, b) =>
+      a.schet.padStart(3, '0').localeCompare(b.schet.padStart(3, '0'))
+    )
 
-    return transformData(report?.data as unknown as AdminMainbookDetails)
+    rows.push(calculateColumnTotals(rows))
+
+    return calculateRowTotals(rows)
   }, [report?.data])
 
   const handleAccept = () => {
@@ -88,9 +94,15 @@ const AdminMainBookDetailsPage = () => {
         />
       </div>
       <div className="p-5 flex justify-between border-t">
-        <Button onClick={handleAccept}>Принять</Button>
+        <Button
+          disabled={isPending}
+          onClick={handleAccept}
+        >
+          Принять
+        </Button>
         <Button
           variant="destructive"
+          disabled={isPending}
           onClick={handleReject}
         >
           Отказ

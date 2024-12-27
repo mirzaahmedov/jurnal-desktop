@@ -18,7 +18,7 @@ import { DetailsView } from '@renderer/common/views'
 import { EditableTable } from '@renderer/common/features/editable-table'
 import { MonthPicker } from '@renderer/common/components/month-picker'
 import { documentTypes } from '@renderer/app/mainbook/common/data'
-import { openMonthlyReportService } from '../service'
+import { mainbookReportService } from '../service'
 import { provodkaColumns } from './provodka'
 import { toast } from '@renderer/common/hooks'
 import { useEffect } from 'react'
@@ -49,16 +49,16 @@ const MainbookReportDetailsPage = () => {
         budjet_id: main_schet?.budget_id
       }
     ],
-    queryFn: openMonthlyReportService.getById,
+    queryFn: mainbookReportService.getById,
     enabled: params.id !== 'create'
   })
   const { mutate: createReport, isPending: isCreating } = useMutation({
-    mutationFn: openMonthlyReportService.create,
+    mutationFn: mainbookReportService.create,
     onSuccess() {
       toast({
         title: 'Запись успешно создана'
       })
-      navigate('/main-book/create-monthly-report')
+      navigate(-1)
     },
     onError(error) {
       console.error(error)
@@ -69,12 +69,12 @@ const MainbookReportDetailsPage = () => {
     }
   })
   const { mutate: updateReport, isPending: isUpdating } = useMutation({
-    mutationFn: openMonthlyReportService.update,
+    mutationFn: mainbookReportService.update,
     onSuccess() {
       toast({
         title: 'Запись успешно обновлена'
       })
-      navigate('/main-book/create-monthly-report')
+      navigate(-1)
     },
     onError(error) {
       console.error(error)

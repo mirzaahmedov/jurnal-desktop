@@ -44,7 +44,8 @@ export enum ApiEndpoints {
   spravochnik_bank = 'spravochnik/bank',
   tables_count = 'auth/control/tables/count',
   logs = 'log/get',
-  main_book__doc = 'main/book/doc',
-  main_book__end = 'main/book/end',
-  admin__main_book = 'admin/main/book'
+  mainbook__doc = 'main/book/doc',
+  mainbook__end = 'main/book/end',
+  admin__mainbook_schet = 'spravochnik/main/book/schet',
+  admin__mainbook = 'admin/main/book'
 }
