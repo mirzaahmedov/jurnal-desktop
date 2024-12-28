@@ -10,7 +10,7 @@ import { queryKeys } from './constants'
 import { useConfirm } from '@/common/features/confirm'
 import { useLayout } from '@/common/features/layout'
 import { useNavigate } from 'react-router-dom'
-import { useRequisitesStore } from '@/common/features/main-schet'
+import { useRequisitesStore } from '@renderer/common/features/requisites'
 
 const AktPage = () => {
   const { confirm } = useConfirm()

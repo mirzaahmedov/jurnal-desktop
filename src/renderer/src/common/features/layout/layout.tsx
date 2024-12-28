@@ -1,6 +1,6 @@
 import { ArrowLeft, CirclePlus, LogOut, RefreshCw, Settings } from 'lucide-react'
 import { Avatar, AvatarFallback } from '@/common/components/ui/avatar'
-import { MainSchetDialog, useRequisitesStore } from '@/common/features/main-schet'
+import { RequisitesDialog, useRequisitesStore } from '@renderer/common/features/requisites'
 import { mainSchetQueryKeys, mainSchetService } from '@/app/region-spravochnik/main-schet'
 
 import { Button } from '@/common/components/ui/button'
@@ -131,7 +131,7 @@ export const PageLayout = (props: PageLayoutProps) => {
         </div>
       </header>
       {children}
-      <MainSchetDialog
+      <RequisitesDialog
         open={mainSchetToggle.isOpen}
         onOpenChange={mainSchetToggle.setIsOpen}
       />

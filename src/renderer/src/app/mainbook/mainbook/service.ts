@@ -2,7 +2,7 @@ import { ApiEndpoints, CRUDService } from '@renderer/common/features/crud'
 import type { Mainbook, Response } from '@renderer/common/models'
 
 import type { QueryFunctionContext } from '@tanstack/react-query'
-import { budget } from '@renderer/common/features/crud/middleware'
+import { budjet } from '@renderer/common/features/crud/middleware'
 import { http } from '@renderer/common/lib/http'
 
 export const getMainbookInfo = async (ctx: QueryFunctionContext) => {
@@ -24,4 +24,4 @@ export const getMainbookById = async (ctx: QueryFunctionContext) => {
 
 export const mainbookService = new CRUDService<Mainbook.ReportPreview, any>({
   endpoint: ApiEndpoints.mainbook__end
-}).use(budget())
+}).use(budjet())

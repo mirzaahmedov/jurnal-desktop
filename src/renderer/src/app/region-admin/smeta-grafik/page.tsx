@@ -8,7 +8,7 @@ import { smetaGrafikQueryKeys } from './constants'
 import { smetaGrafikService } from './service'
 import { useConfirm } from '@/common/features/confirm'
 import { useLayout } from '@/common/features/layout'
-import { useRequisitesStore } from '@/common/features/main-schet'
+import { useRequisitesStore } from '@renderer/common/features/requisites'
 import { useState } from 'react'
 import { useToggle } from '@/common/hooks/use-toggle'
 

@@ -13,7 +13,7 @@ import { useLayout } from '@/common/features/layout'
 import { useNavigate } from 'react-router-dom'
 import { useOrgId } from './hooks'
 import { usePagination } from '@/common/hooks'
-import { useRequisitesStore } from '@/common/features/main-schet'
+import { useRequisitesStore } from '@renderer/common/features/requisites'
 import { useSpravochnik } from '@/common/features/spravochnik'
 
 const ShartnomaPage = () => {

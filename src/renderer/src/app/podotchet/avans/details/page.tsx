@@ -20,7 +20,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { normalizeEmptyFields } from '@/common/lib/validation'
 import { useLayout } from '@/common/features/layout'
-import { useRequisitesStore } from '@/common/features/main-schet'
+import { useRequisitesStore } from '@renderer/common/features/requisites'
 import { createPodotchetSpravochnik } from '@/app/region-spravochnik/podotchet'
 import { EditableTable } from '@/common/features/editable-table'
 import { podvodkaColumns } from './podvodki'
@@ -31,7 +31,7 @@ import {
   PodotchetFields,
   OperatsiiFields
 } from '@/common/widget/form'
-import { DetailsPageContainer, DetailsPageCreateBtn, DetailsPageFooter } from '@/common/layout'
+import { DetailsView } from '@renderer/common/views'
 import {
   createEditorChangeHandler,
   createEditorCreateHandler,
@@ -191,72 +191,74 @@ const AdvanceReportDetailsPage = () => {
   }, [setPodvodki, form, prixod, id])
 
   return (
-    <DetailsPageContainer loading={isFetching}>
-      <Form {...form}>
-        <form onSubmit={onSubmit}>
-          <div>
-            <div className="grid grid-cols-2">
-              <DocumentFields
-                tabIndex={1}
-                form={form}
-              />
-              <OperatsiiFields
-                tabIndex={2}
-                spravochnik={operatsiiSpravochnik}
-                error={form.formState.errors.spravochnik_operatsii_own_id}
-              />
-            </div>
-
-            <div className="grid grid-cols-2 items-start border-y divide-x divide-border/50 border-border/50">
-              <div className="h-full bg-slate-50">
-                <PodotchetFields
-                  tabIndex={3}
-                  spravochnik={podotchetSpravochnik}
-                  error={form.formState.errors.spravochnik_podotchet_litso_id}
+    <DetailsView>
+      <DetailsView.Content loading={isFetching}>
+        <Form {...form}>
+          <form onSubmit={onSubmit}>
+            <div>
+              <div className="grid grid-cols-2">
+                <DocumentFields
+                  tabIndex={1}
+                  form={form}
+                />
+                <OperatsiiFields
+                  tabIndex={2}
+                  spravochnik={operatsiiSpravochnik}
+                  error={form.formState.errors.spravochnik_operatsii_own_id}
                 />
               </div>
-              <SummaFields data={{ summa: form.watch('summa') }} />
+
+              <div className="grid grid-cols-2 items-start border-y divide-x divide-border/50 border-border/50">
+                <div className="h-full bg-slate-50">
+                  <PodotchetFields
+                    tabIndex={3}
+                    spravochnik={podotchetSpravochnik}
+                    error={form.formState.errors.spravochnik_podotchet_litso_id}
+                  />
+                </div>
+                <SummaFields data={{ summa: form.watch('summa') }} />
+              </div>
+
+              <div className="p-5">
+                <OpisanieFields
+                  tabIndex={4}
+                  form={form}
+                />
+              </div>
             </div>
 
-            <div className="p-5">
-              <OpisanieFields
-                tabIndex={4}
-                form={form}
+            <DetailsView.Footer>
+              <DetailsView.Create
+                tabIndex={6}
+                disabled={isCreating || isUpdating}
               />
-            </div>
-          </div>
-
-          <DetailsPageFooter>
-            <DetailsPageCreateBtn
-              tabIndex={6}
-              disabled={isCreating || isUpdating}
-            />
-          </DetailsPageFooter>
-        </form>
-      </Form>
-      <Fieldset
-        name="Подводка"
-        className="flex-1 mt-10 pb-24 bg-slate-50"
-      >
-        <EditableTable
-          tabIndex={5}
-          columns={podvodkaColumns}
-          data={form.watch('childs')}
-          errors={form.formState.errors.childs}
-          onCreate={createEditorCreateHandler({
-            form,
-            schema: AdvanceReportPodvodkaPayloadSchema,
-            defaultValues: defaultValues.childs[0]
-          })}
-          onDelete={createEditorDeleteHandler({
-            form
-          })}
-          onChange={createEditorChangeHandler({
-            form
-          })}
-        />
-      </Fieldset>
-    </DetailsPageContainer>
+            </DetailsView.Footer>
+          </form>
+        </Form>
+        <Fieldset
+          name="Подводка"
+          className="flex-1 mt-10 pb-24 bg-slate-50"
+        >
+          <EditableTable
+            tabIndex={5}
+            columns={podvodkaColumns}
+            data={form.watch('childs')}
+            errors={form.formState.errors.childs}
+            onCreate={createEditorCreateHandler({
+              form,
+              schema: AdvanceReportPodvodkaPayloadSchema,
+              defaultValues: defaultValues.childs[0]
+            })}
+            onDelete={createEditorDeleteHandler({
+              form
+            })}
+            onChange={createEditorChangeHandler({
+              form
+            })}
+          />
+        </Fieldset>
+      </DetailsView.Content>
+    </DetailsView>
   )
 }
 

@@ -7,7 +7,7 @@ import { Input } from '@/common/components/ui/input'
 import { Response } from '@/common/models'
 import { http } from '@/common/lib/http'
 import { useQuery } from '@tanstack/react-query'
-import { useRequisitesStore } from '@/common/features/main-schet'
+import { useRequisitesStore } from '@renderer/common/features/requisites'
 
 type RequiredManagementFields = {
   rukovoditel?: string | null

@@ -10,19 +10,19 @@ export type MainSchetOptionType = {
 export type QueryKeyType = [
   string,
   {
-    budget_id: number
+    budjet_id: number
     region_id: number
   }
 ]
 export const getMainSchetsQuery = async (ctx: QueryFunctionContext<QueryKeyType>) => {
-  const { budget_id, region_id } = ctx.queryKey[1]
+  const { budjet_id, region_id } = ctx.queryKey[1]
 
   const res = await http.get<Response<MainSchetOptionType[]>>(
     `/spravochnik/main-schet/budjet/region`,
     {
       params: {
-        budjet_id: budget_id,
-        region_id: region_id
+        budjet_id,
+        region_id
       },
       withCredentials: false
     }

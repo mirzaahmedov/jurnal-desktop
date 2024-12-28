@@ -9,7 +9,7 @@ import { kassaMonitorQueryKeys } from './constants'
 import { kassaMonitorService } from './service'
 import { useLayout } from '@/common/features/layout'
 import { useQuery } from '@tanstack/react-query'
-import { useRequisitesStore } from '@/common/features/main-schet'
+import { useRequisitesStore } from '@renderer/common/features/requisites'
 
 const KassaMonitorPage = () => {
   const main_schet_id = useRequisitesStore((store) => store.main_schet_id)

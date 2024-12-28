@@ -24,7 +24,7 @@ import { toast } from '@renderer/common/hooks'
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { useLayout } from '@renderer/common/features/layout'
-import { useRequisitesStore } from '@renderer/common/features/main-schet'
+import { useRequisitesStore } from '@renderer/common/features/requisites'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 const ExpensesReportDetailsPage = () => {

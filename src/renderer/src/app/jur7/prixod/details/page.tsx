@@ -1,4 +1,3 @@
-import { DetailsPage, DetailsPageCreateBtn, DetailsPageFooter } from '@/common/layout/details'
 import {
   DocumentFields,
   DoverennostFields,
@@ -15,6 +14,7 @@ import { useEffect, useMemo, useRef } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { usePrixodCreate, usePrixodGet, usePrixodUpdate } from '../service'
 
+import { DetailsView } from '@renderer/common/views'
 import { Form } from '@/common/components/ui/form'
 import { ProvodkaTable } from './provodka-table'
 import { createOperatsiiSpravochnik } from '@/app/super-admin/operatsii'
@@ -42,7 +42,7 @@ const MO7PrixodDetailsPage = () => {
       toast({
         title: 'Приход успешно создан'
       })
-      navigate('/journal-7/prixod')
+      navigate(-1)
       queryClient.invalidateQueries({
         queryKey: [queryKeys.getAll]
       })
@@ -59,7 +59,7 @@ const MO7PrixodDetailsPage = () => {
       toast({
         title: 'Приход успешно обновлен'
       })
-      navigate('/journal-7/prixod')
+      navigate(-1)
       queryClient.invalidateQueries({
         queryKey: [queryKeys.getAll]
       })
@@ -185,63 +185,65 @@ const MO7PrixodDetailsPage = () => {
   })
 
   return (
-    <DetailsPage loading={isFetching}>
-      <Form {...form}>
-        <form
-          onSubmit={onSubmit}
-          className="divide-y"
-        >
-          <div className="grid grid-cols-2 items-end">
-            <DocumentFields form={form} />
-            <div className="flex items-center gap-5 flex-wrap pb-7 px-5">
-              <JONumFields
-                spravochnik={{
-                  ...operatsiiSpravochnik,
-                  selected: {
-                    schet: form.watch('j_o_num')
-                  } as Operatsii
+    <DetailsView>
+      <DetailsView.Content loading={isFetching}>
+        <Form {...form}>
+          <form
+            onSubmit={onSubmit}
+            className="divide-y"
+          >
+            <div className="grid grid-cols-2 items-end">
+              <DocumentFields form={form} />
+              <div className="flex items-center gap-5 flex-wrap pb-7 px-5">
+                <JONumFields
+                  spravochnik={{
+                    ...operatsiiSpravochnik,
+                    selected: {
+                      schet: form.watch('j_o_num')
+                    } as Operatsii
+                  }}
+                />
+                <DoverennostFields form={form} />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 divide-x">
+              <OrganizationFields
+                name="От кого"
+                spravochnik={orgSpravochnik}
+                error={form.formState.errors.kimdan_id}
+              />
+              <ResponsibleFields
+                name="Кому"
+                spravochnik={responsibleSpravochnik}
+                error={form.formState.errors.kimga_id}
+              />
+            </div>
+            <div className="grid grid-cols-2">
+              <ShartnomaFields
+                disabled={!form.watch('kimdan_id')}
+                spravochnik={shartnomaSpravochnik}
+                error={form.formState.errors.id_shartnomalar_organization}
+              />
+              <SummaFields
+                data={{
+                  summa
                 }}
               />
-              <DoverennostFields form={form} />
             </div>
-          </div>
-          <div className="grid grid-cols-2 divide-x">
-            <OrganizationFields
-              name="От кого"
-              spravochnik={orgSpravochnik}
-              error={form.formState.errors.kimdan_id}
-            />
-            <ResponsibleFields
-              name="Кому"
-              spravochnik={responsibleSpravochnik}
-              error={form.formState.errors.kimga_id}
-            />
-          </div>
-          <div className="grid grid-cols-2">
-            <ShartnomaFields
-              disabled={!form.watch('kimdan_id')}
-              spravochnik={shartnomaSpravochnik}
-              error={form.formState.errors.id_shartnomalar_organization}
-            />
-            <SummaFields
-              data={{
-                summa
-              }}
-            />
-          </div>
-          <div className="p-5">
-            <OpisanieFields form={form} />
-          </div>
-          <DetailsPageFooter>
-            <DetailsPageCreateBtn disabled={isCreating || isUpdating} />
-          </DetailsPageFooter>
-        </form>
-      </Form>
+            <div className="p-5">
+              <OpisanieFields form={form} />
+            </div>
+            <DetailsView.Footer>
+              <DetailsView.Create disabled={isCreating || isUpdating} />
+            </DetailsView.Footer>
+          </form>
+        </Form>
 
-      <div className="p-5 pb-28">
-        <ProvodkaTable form={form} />
-      </div>
-    </DetailsPage>
+        <div className="p-5 pb-28">
+          <ProvodkaTable form={form} />
+        </div>
+      </DetailsView.Content>
+    </DetailsView>
   )
 }
 

@@ -24,7 +24,7 @@ import { monthNames } from '@/common/data/month'
 import { smetaGrafikService } from './service'
 import { toast } from '@/common/hooks/use-toast'
 import { useForm } from 'react-hook-form'
-import { useRequisitesStore } from '@/common/features/main-schet'
+import { useRequisitesStore } from '@renderer/common/features/requisites'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 export type SmetaGrafikDialogProps = {

@@ -18,12 +18,13 @@ import { useForm } from 'react-hook-form'
 import { useQuery } from '@tanstack/react-query'
 import { useRequisitesStore } from './store'
 
-export type MainSchetDialogProps = {
+export type RequisitesDialogProps = {
   open: boolean
   onOpenChange: (value: boolean) => void
 }
-export const MainSchetDialog = (props: MainSchetDialogProps) => {
+export const RequisitesDialog = (props: RequisitesDialogProps) => {
   const { open, onOpenChange } = props
+
   const { user } = useAuthStore()
   const { main_schet_id, budjet_id, setRequisites } = useRequisitesStore()
 
@@ -37,7 +38,7 @@ export const MainSchetDialog = (props: MainSchetDialogProps) => {
     queryKey: [
       queryKeys.getAll,
       {
-        budget_id: form.watch('budjet_id'),
+        budjet_id: form.watch('budjet_id'),
         region_id: user?.region_id ?? 0
       }
     ],
@@ -70,7 +71,7 @@ export const MainSchetDialog = (props: MainSchetDialogProps) => {
     >
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Выберите основной счет</DialogTitle>
+          <DialogTitle>Выберите реквизиты</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={onSubmit}>

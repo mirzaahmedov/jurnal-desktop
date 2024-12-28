@@ -37,7 +37,7 @@ import { createGroupSpravochnik } from '@/app/super-admin/group/service'
 import { denominationQueryKeys } from '@/app/jur7/naimenovaniya/constants'
 import { useEventCallback } from '@/common/hooks/use-event-callback'
 import { useMutation } from '@tanstack/react-query'
-import { useRequisitesStore } from '@/common/features/main-schet'
+import { useRequisitesStore } from '@renderer/common/features/requisites'
 
 type ProvodkaTableProps = {
   form: UseFormReturn<PrixodFormType>

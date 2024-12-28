@@ -1,4 +1,3 @@
-import { DetailsPage, DetailsPageCreateBtn, DetailsPageFooter } from '@/common/layout/details'
 import {
   DocumentFields,
   OpisanieFields,
@@ -14,6 +13,7 @@ import {
 } from '../service'
 import { useNavigate, useParams } from 'react-router-dom'
 
+import { DetailsView } from '@renderer/common/views'
 import { Form } from '@/common/components/ui/form'
 import { ProvodkaTable } from './provodka-table'
 import { createResponsibleSpravochnik } from '../../responsible/service'
@@ -32,7 +32,7 @@ const InternalTransferDetailsPage = () => {
       toast({
         title: 'Внутренний перевод успешно создан'
       })
-      navigate('/journal-7/internal-transfer')
+      navigate(-1)
     },
     onError() {
       toast({
@@ -47,7 +47,7 @@ const InternalTransferDetailsPage = () => {
       toast({
         title: 'Внутренний перевод успешно обновлен'
       })
-      navigate('/journal-7/internal-transfer')
+      navigate(-1)
     },
     onError() {
       toast({
@@ -111,44 +111,46 @@ const InternalTransferDetailsPage = () => {
   })
 
   return (
-    <DetailsPage loading={isFetching}>
-      <Form {...form}>
-        <form onSubmit={onSubmit}>
-          <div className="grid grid-cols-2 items-end">
-            <DocumentFields form={form} />
-          </div>
-          <div className="grid grid-cols-2">
-            <ResponsibleFields
-              name="От кого"
-              spravochnik={kimdanResponsibleSpravochnik}
-              error={form.formState.errors.kimdan_id}
-            />
-            <ResponsibleFields
-              name="Кому"
-              spravochnik={kimgaResponsibleSpravochnik}
-              error={form.formState.errors.kimga_id}
-            />
-          </div>
-          <div className="grid grid-cols-2">
-            <SummaFields
-              data={{
-                summa
-              }}
-            />
-          </div>
-          <div className="p-5">
-            <OpisanieFields form={form} />
-          </div>
-          <DetailsPageFooter>
-            <DetailsPageCreateBtn disabled={isCreating || isUpdating} />
-          </DetailsPageFooter>
-        </form>
-      </Form>
+    <DetailsView>
+      <DetailsView.Content loading={isFetching}>
+        <Form {...form}>
+          <form onSubmit={onSubmit}>
+            <div className="grid grid-cols-2 items-end">
+              <DocumentFields form={form} />
+            </div>
+            <div className="grid grid-cols-2">
+              <ResponsibleFields
+                name="От кого"
+                spravochnik={kimdanResponsibleSpravochnik}
+                error={form.formState.errors.kimdan_id}
+              />
+              <ResponsibleFields
+                name="Кому"
+                spravochnik={kimgaResponsibleSpravochnik}
+                error={form.formState.errors.kimga_id}
+              />
+            </div>
+            <div className="grid grid-cols-2">
+              <SummaFields
+                data={{
+                  summa
+                }}
+              />
+            </div>
+            <div className="p-5">
+              <OpisanieFields form={form} />
+            </div>
+            <DetailsView.Footer>
+              <DetailsView.Create disabled={isCreating || isUpdating} />
+            </DetailsView.Footer>
+          </form>
+        </Form>
 
-      <div className="p-5 pb-28">
-        <ProvodkaTable form={form} />
-      </div>
-    </DetailsPage>
+        <div className="p-5 pb-28">
+          <ProvodkaTable form={form} />
+        </div>
+      </DetailsView.Content>
+    </DetailsView>
   )
 }
 

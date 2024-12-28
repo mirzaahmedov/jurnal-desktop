@@ -4,14 +4,14 @@ import type { SpravochnikHookOptions } from '@/common/features/spravochnik'
 import { z } from 'zod'
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 import { withPreprocessor } from '@/common/lib/validation'
-import { budget } from '@/common/features/crud/middleware'
+import { budjet } from '@/common/features/crud/middleware'
 import { extendObject } from '@/common/lib/utils'
 import { shartnomaColumns } from './columns'
 import { SpravochnikSearchField } from '@/common/features/search'
 
 export const shartnomaService = new CRUDService<Shartnoma, ShartnomaForm>({
   endpoint: ApiEndpoints.shartnoma
-}).use(budget())
+}).use(budjet())
 
 export const ShartnomaFormSchema = withPreprocessor(
   z.object({

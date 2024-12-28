@@ -13,12 +13,34 @@ import type { NavElement } from './constants'
 import { NavLink } from 'react-router-dom'
 import { ScrollArea } from '@/common/components/ui/scroll-area'
 import { cn } from '@renderer/common/lib/utils'
+import { create } from 'zustand'
 import { getNavElements } from './constants'
 import logo from '@resources/logo.svg'
+import { persist } from 'zustand/middleware'
+
+type SidebarStore = {
+  isCollapsed: boolean
+  toggleCollapsed: () => void
+  setCollapsed: (collapsed: boolean) => void
+}
+
+const useSidebarStore = create(
+  persist<SidebarStore>(
+    (set) => ({
+      isCollapsed: false,
+      toggleCollapsed: () => set((state) => ({ isCollapsed: !state.isCollapsed })),
+      setCollapsed: (collapsed: boolean) => set({ isCollapsed: collapsed })
+    }),
+    {
+      name: 'sidebar'
+    }
+  )
+)
 
 const Sidebar = () => {
   const [version, setVersion] = useState('')
-  const [isCollapsed, setCollapsed] = useState(false)
+
+  const { isCollapsed, toggleCollapsed } = useSidebarStore()
 
   useEffect(() => {
     window.electron.ipcRenderer.invoke('get-version').then(setVersion)
@@ -53,7 +75,7 @@ const Sidebar = () => {
             <Button
               variant="ghost"
               size="icon"
-              onClick={setCollapsed.bind(null, (prev) => !prev)}
+              onClick={toggleCollapsed}
               className="text-slate-500"
             >
               {isCollapsed ? (

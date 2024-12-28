@@ -1,18 +1,18 @@
-import type { ShartnomaGrafikDetails, ShartnomaGrafik } from '@/common/models'
-
-import { z } from 'zod'
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
-import { budget } from '@/common/features/crud/middleware'
+import type { ShartnomaGrafik, ShartnomaGrafikDetails } from '@/common/models'
+
+import { budjet } from '@/common/features/crud/middleware'
+import { z } from 'zod'
 
 export const shartnomaGrafikService = new CRUDService<ShartnomaGrafik, ShartnomaGrafikForm>({
   endpoint: ApiEndpoints.shartnoma_grafik
-}).use(budget())
+}).use(budjet())
 export const shartnomaGrafikDetailsService = new CRUDService<
   ShartnomaGrafikDetails,
   ShartnomaGrafikForm
 >({
   endpoint: ApiEndpoints.shartnoma_grafik
-}).use(budget())
+}).use(budjet())
 
 export const ShartnomaGrafikFormSchema = z.object({
   oy_1: z.number(),

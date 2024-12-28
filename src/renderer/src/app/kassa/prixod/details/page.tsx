@@ -13,7 +13,7 @@ import {
   createEditorDeleteHandler
 } from '@/common/features/editable-table/helpers'
 import { useLayout } from '@/common/features/layout'
-import { useRequisitesStore } from '@/common/features/main-schet'
+import { useRequisitesStore } from '@renderer/common/features/requisites'
 import { useSpravochnik } from '@/common/features/spravochnik'
 import { useToast } from '@/common/hooks/use-toast'
 import { formatNumber } from '@/common/lib/format'

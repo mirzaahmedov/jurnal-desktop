@@ -34,8 +34,7 @@ import { MO7PrixodDetailsPage } from './jur7/prixod/details/page'
 import { MO7PrixodPage } from './jur7/prixod/page'
 import { MO7RasxodDetailsPage } from './jur7/rasxod/details/page'
 import { MO7RasxodPage } from './jur7/rasxod/page'
-import MainLayout from './layout/main'
-import { MainSchetGuard } from '@/common/features/main-schet'
+import MainLayout from '../common/layout/main'
 import MainSchetPage from './region-spravochnik/main-schet/page'
 import MainbookDetailsPage from './mainbook/mainbook/details/page'
 import MainbookPage from './mainbook/mainbook/page'
@@ -53,6 +52,7 @@ import PokazatUslugiPage from './organization/pokazat-uslugi/page'
 import RegionDataPage from './super-admin/region-data/page'
 import RegionPage from './super-admin/region/page'
 import RegionUserPage from './region-admin/region-user'
+import { RequisitesGuard } from '@renderer/common/features/requisites'
 import ResponsiblePage from './jur7/responsible/page'
 import RolePage from './super-admin/role/page'
 import type { RouteObject } from 'react-router-dom'
@@ -83,7 +83,7 @@ export const routes: RouteObject[] = [
     children: [
       {
         path: 'organization',
-        element: <MainSchetGuard />,
+        element: <RequisitesGuard />,
         children: [
           {
             path: 'monitor',
@@ -125,7 +125,7 @@ export const routes: RouteObject[] = [
       },
       {
         path: 'kassa',
-        element: <MainSchetGuard />,
+        element: <RequisitesGuard />,
         children: [
           {
             path: 'prixod',
@@ -151,7 +151,7 @@ export const routes: RouteObject[] = [
       },
       {
         path: 'bank',
-        element: <MainSchetGuard />,
+        element: <RequisitesGuard />,
         children: [
           {
             path: 'prixod',
@@ -284,7 +284,7 @@ export const routes: RouteObject[] = [
       },
       {
         path: 'accountable',
-        element: <MainSchetGuard />,
+        element: <RequisitesGuard />,
         children: [
           {
             path: 'monitor',
@@ -302,7 +302,7 @@ export const routes: RouteObject[] = [
       },
       {
         path: 'journal-7',
-        element: <MainSchetGuard />,
+        element: <RequisitesGuard />,
         children: [
           // {
           //   path: 'denomination',

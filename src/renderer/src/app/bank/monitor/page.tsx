@@ -9,7 +9,7 @@ import { columns } from './columns'
 import { formatNumber } from '@/common/lib/format'
 import { useLayout } from '@/common/features/layout'
 import { useQuery } from '@tanstack/react-query'
-import { useRequisitesStore } from '@/common/features/main-schet'
+import { useRequisitesStore } from '@renderer/common/features/requisites'
 
 const BankMonitorPage = () => {
   const main_schet_id = useRequisitesStore((store) => store.main_schet_id)

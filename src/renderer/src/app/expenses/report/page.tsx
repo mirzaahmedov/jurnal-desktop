@@ -10,7 +10,7 @@ import { toast } from '@renderer/common/hooks'
 import { useConfirm } from '@renderer/common/features/confirm'
 import { useLayout } from '@renderer/common/features/layout'
 import { useNavigate } from 'react-router-dom'
-import { useRequisitesStore } from '@renderer/common/features/main-schet'
+import { useRequisitesStore } from '@renderer/common/features/requisites'
 
 const ExpensesReportPage = () => {
   const budjet_id = useRequisitesStore((store) => store.budjet_id)

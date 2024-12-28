@@ -14,7 +14,7 @@ import { expensesQueryKeys } from '../config'
 import { formatDate } from '@renderer/common/lib/date'
 import { toast } from '@renderer/common/hooks'
 import { useLayout } from '@renderer/common/features/layout'
-import { useRequisitesStore } from '@renderer/common/features/main-schet'
+import { useRequisitesStore } from '@renderer/common/features/requisites'
 
 const ExpensesDetailsPage = () => {
   const budjet_id = useRequisitesStore((store) => store.budjet_id)

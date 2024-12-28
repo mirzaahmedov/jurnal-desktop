@@ -48,6 +48,6 @@ export const useRequisitesStore = create(
 export const getMainschetId = () => {
   return useRequisitesStore.getState().main_schet_id
 }
-export const getBudgetId = () => {
+export const getBudjetId = () => {
   return useRequisitesStore.getState().budjet_id
 }

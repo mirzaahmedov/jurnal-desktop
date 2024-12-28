@@ -1,7 +1,7 @@
 import type { PrixodPodvodkaPayloadType } from '../service'
 
 import { PrixodPayloadSchema, PrixodPodvodkaPayloadSchema, bankPrixodService } from '../service'
-import { useRequisitesStore } from '@/common/features/main-schet'
+import { useRequisitesStore } from '@renderer/common/features/requisites'
 import { useCallback, useEffect } from 'react'
 import { useSpravochnik } from '@/common/features/spravochnik'
 import { Form } from '@/common/components/ui/form'

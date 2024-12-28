@@ -24,7 +24,7 @@ import { podotchetMonitoringQueryKeys } from './constants'
 import { useDateRange } from '@/common/hooks/use-date-range'
 import { useLayout } from '@/common/features/layout'
 import { useQuery } from '@tanstack/react-query'
-import { useRequisitesStore } from '@/common/features/main-schet'
+import { useRequisitesStore } from '@renderer/common/features/requisites'
 import { useSpravochnik } from '@/common/features/spravochnik'
 
 const PodotchetMonitoringPage = () => {

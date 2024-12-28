@@ -1,4 +1,3 @@
-import { DetailsPage, DetailsPageCreateBtn, DetailsPageFooter } from '@/common/layout/details'
 import {
   DocumentFields,
   DoverennostFields,
@@ -11,6 +10,7 @@ import { useEffect, useMemo, useRef } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useRasxodCreate, useRasxodGet, useRasxodUpdate } from '../service'
 
+import { DetailsView } from '@renderer/common/views'
 import { Form } from '@/common/components/ui/form'
 import { ProvodkaTable } from './provodka-table'
 import { createResponsibleSpravochnik } from '../../responsible/service'
@@ -34,7 +34,7 @@ const MO7RasxodDetailsPage = () => {
       toast({
         title: 'Расходный документ успешно создан'
       })
-      navigate('/journal-7/rasxod')
+      navigate(-1)
     },
     onError() {
       toast({
@@ -48,7 +48,7 @@ const MO7RasxodDetailsPage = () => {
       toast({
         title: 'Расходный документ успешно обновлен'
       })
-      navigate('/journal-7/rasxod')
+      navigate(-1)
     },
     onError() {
       toast({
@@ -129,40 +129,42 @@ const MO7RasxodDetailsPage = () => {
   })
 
   return (
-    <DetailsPage loading={isFetching}>
-      <Form {...form}>
-        <form onSubmit={onSubmit}>
-          <div className="grid grid-cols-2 items-end">
-            <DocumentFields form={form} />
-            <div className="grid grid-cols-2 pb-7">
-              <DoverennostFields form={form} />
+    <DetailsView>
+      <DetailsView.Content loading={isFetching}>
+        <Form {...form}>
+          <form onSubmit={onSubmit}>
+            <div className="grid grid-cols-2 items-end">
+              <DocumentFields form={form} />
+              <div className="grid grid-cols-2 pb-7">
+                <DoverennostFields form={form} />
+              </div>
             </div>
-          </div>
-          <div className="grid grid-cols-2">
-            <ResponsibleFields
-              name="От кого"
-              spravochnik={responsibleSpravochnik}
-              error={form.formState.errors.kimdan_id}
-            />
-            <SummaFields
-              data={{
-                summa
-              }}
-            />
-          </div>
-          <div className="p-5">
-            <OpisanieFields form={form} />
-          </div>
-          <DetailsPageFooter>
-            <DetailsPageCreateBtn disabled={isCreating || isUpdating} />
-          </DetailsPageFooter>
-        </form>
-      </Form>
+            <div className="grid grid-cols-2">
+              <ResponsibleFields
+                name="От кого"
+                spravochnik={responsibleSpravochnik}
+                error={form.formState.errors.kimdan_id}
+              />
+              <SummaFields
+                data={{
+                  summa
+                }}
+              />
+            </div>
+            <div className="p-5">
+              <OpisanieFields form={form} />
+            </div>
+            <DetailsView.Footer>
+              <DetailsView.Create disabled={isCreating || isUpdating} />
+            </DetailsView.Footer>
+          </form>
+        </Form>
 
-      <div className="p-5 pb-28">
-        <ProvodkaTable form={form} />
-      </div>
-    </DetailsPage>
+        <div className="p-5 pb-28">
+          <ProvodkaTable form={form} />
+        </div>
+      </DetailsView.Content>
+    </DetailsView>
   )
 }
 
