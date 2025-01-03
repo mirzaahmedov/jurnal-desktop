@@ -93,7 +93,6 @@ export const calculateRowTotals = (rows: MainbookTableRow[]) => {
     return {
       ...row,
       itogo_debet:
-        row.start_debet +
         row.jur1_debet +
         row.jur2_debet +
         row.jur3_debet +
@@ -101,10 +100,8 @@ export const calculateRowTotals = (rows: MainbookTableRow[]) => {
         row.jur5_debet +
         row.jur6_debet +
         row.jur7_debet +
-        row.jur8_debet +
-        row.end_debet,
+        row.jur8_debet,
       itogo_kredit:
-        row.start_kredit +
         row.jur1_kredit +
         row.jur2_kredit +
         row.jur3_kredit +
@@ -112,8 +109,7 @@ export const calculateRowTotals = (rows: MainbookTableRow[]) => {
         row.jur5_kredit +
         row.jur6_kredit +
         row.jur7_kredit +
-        row.jur8_kredit +
-        row.end_kredit
+        row.jur8_kredit
     }
   })
 }

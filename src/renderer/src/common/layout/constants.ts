@@ -228,11 +228,6 @@ export const getNavElements = (): NavElement[] => {
               path: 'internal-transfer',
               title: 'Внутрь. Пере. Документ'
             },
-            // {
-            //   path: 'denomination',
-            //   title: 'Наименование',
-            //   icon: ListTodo
-            // },
             {
               path: 'responsible',
               title: 'Ответственное лицо',
@@ -328,6 +323,11 @@ export const getNavElements = (): NavElement[] => {
               path: 'mainbook',
               title: 'Главная книга',
               icon: NotebookText
+            },
+            {
+              path: 'expenses',
+              title: 'Хакикий харажатлар',
+              icon: Wallet
             },
             {
               path: 'logs',

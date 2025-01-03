@@ -136,12 +136,12 @@ const columns: ColumnDef[] = [
   },
   {
     key: 'end_debet',
-    header: 'Кон. сал. ',
+    header: 'Конец сал.',
     colSpan: 2
   },
   {
     key: 'end_kredit',
-    header: 'Кон. сал. ',
+    header: 'Конец сал.',
     hidden: true
   }
 ]

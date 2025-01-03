@@ -7,7 +7,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 
 import { Button } from '@renderer/common/components/ui/button'
 import { DetailsView } from '@renderer/common/views'
-import { Mainbook } from '@renderer/common/models'
+import { Expenses } from '@renderer/common/models'
 import { MonthPicker } from '@renderer/common/components/month-picker'
 import { ReportTable } from '../report-table'
 import { expensesQueryKeys } from '../config'
@@ -21,7 +21,7 @@ const ExpensesDetailsPage = () => {
   const navigate = useNavigate()
   const params = useParams()
 
-  const [values, setValues] = useState<Mainbook.ReportPreviewProvodka[]>()
+  const [values, setValues] = useState<Expenses.ReportPreviewProvodka[]>()
   const [date, setDate] = useState(formatDate(new Date()))
   const [year, month] = date.split('-')
 
@@ -110,9 +110,7 @@ const ExpensesDetailsPage = () => {
     if (!values) {
       return []
     }
-    const rows = transformData(values).sort((a, b) =>
-      a.schet.padStart(3, '0').localeCompare(b.schet.padStart(3, '0'))
-    )
+    const rows = transformData(values).sort((a, b) => a.smeta_number.localeCompare(b.smeta_number))
 
     rows.push(calculateColumnTotals(rows))
 

@@ -5,5 +5,5 @@ import { ExpensesReportValues } from './config'
 import { budjet } from '@renderer/common/features/crud/middleware'
 
 export const expensesReportService = new CRUDService<Expenses.Report, ExpensesReportValues>({
-  endpoint: ApiEndpoints.mainbook__doc
+  endpoint: ApiEndpoints.realcost_doc
 }).use(budjet())

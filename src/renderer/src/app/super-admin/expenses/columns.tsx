@@ -1,37 +1,13 @@
-import { Badge } from '@renderer/common/components/ui/badge'
-import type { ColumnDef } from '@renderer/common/components'
+import { ReportStatus, type ColumnDef } from '@renderer/common/components'
 import type { Expenses } from '@renderer/common/models'
 import { formatLocaleDateTime } from '@renderer/common/lib/format'
 import { getMonthName } from '@renderer/common/lib/date'
 
-export const statusMap = {
-  1: (
-    <Badge
-      variant="secondary"
-      className="bg-slate-100 text-slate-500"
-    >
-      Отправлено
-    </Badge>
-  ),
-  2: (
-    <Badge
-      variant="secondary"
-      className="bg-emerald-100 text-emerald-500"
-    >
-      Получено
-    </Badge>
-  ),
-  3: (
-    <Badge
-      variant="secondary"
-      className="bg-red-100 text-red-500"
-    >
-      Отказано
-    </Badge>
-  )
-}
-
-export const expensesColumns: ColumnDef<Expenses.ReportPreview>[] = [
+export const columns: ColumnDef<Expenses.AdminReport>[] = [
+  {
+    key: 'year',
+    header: 'Год'
+  },
   {
     key: 'month',
     header: 'Месяц',
@@ -40,8 +16,15 @@ export const expensesColumns: ColumnDef<Expenses.ReportPreview>[] = [
     }
   },
   {
-    key: 'year',
-    header: 'Год'
+    key: 'name',
+    header: 'Бюджет'
+  },
+  {
+    key: 'status',
+    header: 'Статус',
+    renderCell(row) {
+      return <ReportStatus status={row.status} />
+    }
   },
   {
     key: 'user_id',
@@ -56,7 +39,7 @@ export const expensesColumns: ColumnDef<Expenses.ReportPreview>[] = [
     }
   },
   {
-    key: 'accepted_id',
+    key: 'document_qabul_qilingan_vaqt',
     header: 'Действия',
     renderCell(row) {
       return row.accepted_login ? (
@@ -70,8 +53,7 @@ export const expensesColumns: ColumnDef<Expenses.ReportPreview>[] = [
     }
   },
   {
-    key: 'status',
-    header: 'Статус',
-    renderCell: (row) => statusMap[row.status]
+    key: 'region_name',
+    header: 'Регион'
   }
 ]

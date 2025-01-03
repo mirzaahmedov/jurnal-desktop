@@ -27,7 +27,7 @@ export const expensesReportColumns: ColumnDef<Expenses.Report>[] = [
   },
   {
     numeric: true,
-    key: 'summa.kredit',
+    key: 'summa.kredit_sum',
     header: 'Кредит',
     renderCell(row) {
       return formatNumber(row.summa?.kredit_sum)

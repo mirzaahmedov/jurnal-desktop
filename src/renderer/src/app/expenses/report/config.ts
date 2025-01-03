@@ -8,7 +8,7 @@ export const expensesReportQueryKeys = {
   delete: 'expenses-report/delete'
 }
 export const ExpensesReportProvodkaSchema = z.object({
-  smeta_id: z.number(),
+  smeta_grafik_id: z.number(),
   debet_sum: z.number(),
   kredit_sum: z.number()
 })
@@ -27,7 +27,7 @@ export const defaultValues: ExpensesReportValues = {
   type_document: '',
   childs: [
     {
-      spravochnik_main_book_schet_id: 0,
+      smeta_grafik_id: 0,
       debet_sum: 0,
       kredit_sum: 0
     }

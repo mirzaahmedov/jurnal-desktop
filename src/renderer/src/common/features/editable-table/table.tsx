@@ -13,6 +13,7 @@ export type EditableColumnType<T extends Record<string, unknown>> = {
   key: Autocomplete<keyof T>
   header: ReactNode
   Editor: EditorComponentType<T>
+  width?: string
 }
 
 export type EditableTableProps<T extends Record<string, unknown>> = {
@@ -45,8 +46,15 @@ export const EditableTable = <T extends Record<string, unknown>>(props: Editable
           <EditableTableRow>
             {Array.isArray(columns)
               ? columns.map((col) => {
-                  const { key, header: content } = col
-                  return <EditableTableHead key={String(key)}>{content}</EditableTableHead>
+                  const { key, header, width } = col
+                  return (
+                    <EditableTableHead
+                      key={String(key)}
+                      style={{ width }}
+                    >
+                      {header}
+                    </EditableTableHead>
+                  )
                 })
               : null}
             {typeof onDelete === 'function' && <EditableTableHead key="delete"></EditableTableHead>}
@@ -58,10 +66,13 @@ export const EditableTable = <T extends Record<string, unknown>>(props: Editable
               return (
                 <EditableTableRow key={index}>
                   {columns.map((col) => {
-                    const { key, Editor: EditorComponent } = col
+                    const { key, Editor, width } = col
                     return (
-                      <EditableTableCell key={String(key)}>
-                        <EditorComponent
+                      <EditableTableCell
+                        key={String(key)}
+                        style={{ width }}
+                      >
+                        <Editor
                           tabIndex={tabIndex}
                           id={index}
                           row={row}

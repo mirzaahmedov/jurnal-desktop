@@ -1,7 +1,7 @@
 import type { Expenses } from '@renderer/common/models'
 
 export const transformData = (childs: Expenses.ReportPreviewProvodka[]) => {
-  const grafiksMap = new Map<number, Schet[]>()
+  const grafiksMap = new Map<number, Grafik[]>()
 
   childs.forEach((child) => {
     child.grafiks.forEach((grafik) => {
@@ -141,6 +141,6 @@ export type ExpensesTableRow = {
   itogo: number
 }
 
-type Schet = {
+type Grafik = {
   type: string
 } & Expenses.ReportPreviewProvodkaGrafik

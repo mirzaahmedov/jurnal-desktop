@@ -1,4 +1,4 @@
-import type { EditableColumnType } from '../table'
+import type { EditableColumnDef } from '../table'
 import type { FieldErrors } from 'react-hook-form'
 import type { FunctionComponent } from 'react'
 
@@ -16,7 +16,7 @@ export type EditorComponentType<T extends Record<string, unknown>> = FunctionCom
   tabIndex?: number
   id: number
   row: T
-  col: EditableColumnType<T>
+  col: EditableColumnDef<T>
   max?: number
   errors?: FieldErrors<T>
   onChange?(ctx: ChangeContext<T>): void

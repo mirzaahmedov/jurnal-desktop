@@ -2,6 +2,8 @@ import { Navigate, createHashRouter } from 'react-router-dom'
 
 import AccessPage from './region-admin/access/page'
 import AccountablePage from './region-spravochnik/podotchet'
+import AdminExpenseDetailsPage from './super-admin/expenses/details/page'
+import AdminExpensesPage from './super-admin/expenses/page'
 import AdminMainBookDetailsPage from './super-admin/mainbook/details/page'
 import AdminMainbookPage from './super-admin/mainbook/page'
 import AdvanceReportDetailsPage from './podotchet/avans/details/page'
@@ -279,6 +281,14 @@ export const routes: RouteObject[] = [
           {
             path: 'mainbook/:id',
             element: <AdminMainBookDetailsPage />
+          },
+          {
+            path: 'expenses',
+            element: <AdminExpensesPage />
+          },
+          {
+            path: 'expenses/:id',
+            element: <AdminExpenseDetailsPage />
           }
         ]
       },
@@ -304,10 +314,6 @@ export const routes: RouteObject[] = [
         path: 'journal-7',
         element: <RequisitesGuard />,
         children: [
-          // {
-          //   path: 'denomination',
-          //   element: <NaimenovaniePage />
-          // },
           {
             path: 'responsible',
             element: <ResponsiblePage />
