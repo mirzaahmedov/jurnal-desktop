@@ -42,6 +42,8 @@ import MainbookDetailsPage from './mainbook/mainbook/details/page'
 import MainbookPage from './mainbook/mainbook/page'
 import MainbookReportDetailsPage from './mainbook/report/details/page'
 import MainbookReportPage from './mainbook/report/page'
+import OXReportDetailsPage from './1ox-report/report/details/page'
+import OXReportPage from './1ox-report/report/page'
 import OperationTypePage from './region-spravochnik/type-operatsii/page'
 import OperatsiiPage from './super-admin/operatsii/page'
 import OrganizationMonitorPage from './organization/monitor/page'
@@ -387,6 +389,19 @@ export const routes: RouteObject[] = [
           {
             path: ':id',
             element: <ExpensesDetailsPage />
+          }
+        ]
+      },
+      {
+        path: 'ox-report',
+        children: [
+          {
+            path: 'report',
+            element: <OXReportPage />
+          },
+          {
+            path: 'report/:id',
+            element: <OXReportDetailsPage />
           }
         ]
       },

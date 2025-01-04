@@ -50,11 +50,13 @@ const TransactionParty = ({ type, name, raschet, inn, bank, mfo }: TransactionPa
         <Label style={{ width: 100 }}>
           {type === 'debtor' ? 'Mablag`larni to`lovchining' : 'Mablag`larni oluvchining'} banki nomi
         </Label>
-        <TextBox style={{ flex: 1, fontSize: 10, minHeight: 24 }}>{bank}</TextBox>
+        <Flex style={{ flex: 1, flexWrap: 'wrap' }}>
+          <TextBox style={{ fontSize: 10, flex: 1 }}>{bank}</TextBox>
+        </Flex>
         <Label style={{ width: 100 }}>
           {type === 'debtor' ? 'Mablag`larni to`lovchining' : 'Mablag`larni oluvchining'} banki kodi
         </Label>
-        <TextBox style={{ letterSpacing: 5 }}>{mfo}</TextBox>
+        <TextBox style={{ width: 60, textAlign: 'center', letterSpacing: 5 }}>{mfo}</TextBox>
       </Flex>
     </Flex>
   )

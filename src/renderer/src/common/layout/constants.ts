@@ -28,6 +28,7 @@ import {
   NotepadText,
   Percent,
   ReceiptText,
+  Sheet,
   ShieldCheck,
   Signature,
   SquareActivity,
@@ -421,6 +422,25 @@ export const getNavElements = (): NavElement[] => {
           icon: Wallet,
           title: 'Хакикий харажатлар',
           path: '/expenses',
+          children: [
+            {
+              path: 'report',
+              title: 'Создать месячный отчёт',
+              icon: CalendarPlus2
+            },
+            {
+              path: '/',
+              title: 'Закрыть месячный отчёт',
+              icon: CalendarX
+            }
+          ]
+        }
+      : null,
+    !is_super_admin
+      ? {
+          icon: Sheet,
+          title: '1-OX хисобот',
+          path: '/ox-report',
           children: [
             {
               path: 'report',

@@ -42,7 +42,7 @@ const SigninPage = () => {
   const queryClient = useQueryClient()
   const navigate = useNavigate()
 
-  const { user_id, main_schet_id, budjet_id, setRequisites } = useRequisitesStore()
+  const { user_id, setRequisites } = useRequisitesStore()
   const { toast } = useToast()
   const { setUser } = useAuthStore()
 
@@ -50,8 +50,6 @@ const SigninPage = () => {
     resolver: zodResolver(SigninFormSchema),
     defaultValues
   })
-
-  console.log({ user_id, main_schet_id, budjet_id })
 
   const { mutate: signin, isPending } = useMutation({
     mutationFn: signinQuery,

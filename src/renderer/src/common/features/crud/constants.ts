@@ -50,5 +50,6 @@ export enum ApiEndpoints {
   admin__mainbook = 'admin/main/book',
   admin__realcost = 'admin/real/cost',
   realcost_doc = 'real/cost/doc',
-  realcost_end = 'real/cost/end'
+  realcost_end = 'real/cost/end',
+  ox = 'ox'
 }

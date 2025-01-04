@@ -1,7 +1,7 @@
+import { StyleSheet, Text } from '@react-pdf/renderer'
+
 import type { PropsWithChildren } from 'react'
 import type { TextProps } from '@react-pdf/renderer'
-
-import { Text, StyleSheet } from '@react-pdf/renderer'
 import { mergeStyles } from '@/common/lib/utils'
 
 type BoxProps = PropsWithChildren<TextProps> & {
@@ -31,8 +31,7 @@ const styles = StyleSheet.create({
     fontSize: 11,
     lineHeight: 1,
     border: '1.5px solid black',
-    paddingLeft: 3,
-    paddingTop: 1
+    paddingHorizontal: 3
   }
 })
 

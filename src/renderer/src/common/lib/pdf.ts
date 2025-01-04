@@ -6,7 +6,7 @@ import tinos_regular from '@resources/fonts/tinos/tinos-regular.ttf'
 
 let fontsRegistered = false
 
-const registerFonts = () => {
+export const registerFonts = () => {
   if (fontsRegistered) {
     return
   }
@@ -31,7 +31,6 @@ const registerFonts = () => {
       }
     ]
   })
+  Font.registerHyphenationCallback((word) => [word])
   fontsRegistered = true
 }
-
-export { registerFonts }

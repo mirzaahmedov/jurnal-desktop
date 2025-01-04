@@ -1,6 +1,7 @@
-import type { EditableColumnDef } from '../table'
+import type { Dispatch, FunctionComponent, SetStateAction } from 'react'
+
+import type { EditableColumnType } from '../table'
 import type { FieldErrors } from 'react-hook-form'
-import type { FunctionComponent } from 'react'
 
 export type ChangeContext<T extends Record<string, unknown>, K extends keyof T = keyof T> = {
   id: number
@@ -16,10 +17,12 @@ export type EditorComponentType<T extends Record<string, unknown>> = FunctionCom
   tabIndex?: number
   id: number
   row: T
-  col: EditableColumnDef<T>
+  col: EditableColumnType<T>
   max?: number
   errors?: FieldErrors<T>
   onChange?(ctx: ChangeContext<T>): void
+  state: Record<string, unknown>
+  setState: Dispatch<SetStateAction<Record<string, unknown>>>
 }>
 
 export type EditorOptions<T extends Record<string, unknown>> = {

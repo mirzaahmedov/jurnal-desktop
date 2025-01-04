@@ -7,13 +7,13 @@ import { Autocomplete } from '@renderer/common/lib/types'
 import { Button } from '@renderer/common/components/ui/button'
 import type { EditorComponentType } from './editors'
 import { FieldErrors } from 'react-hook-form'
-import type { ReactNode } from 'react'
+import { useState, type ReactNode } from 'react'
 
 export type EditableColumnType<T extends Record<string, unknown>> = {
   key: Autocomplete<keyof T>
   header: ReactNode
   Editor: EditorComponentType<T>
-  width?: string
+  width?: string | number
 }
 
 export type EditableTableProps<T extends Record<string, unknown>> = {
@@ -64,38 +64,16 @@ export const EditableTable = <T extends Record<string, unknown>>(props: Editable
           {Array.isArray(data) && data.length ? (
             data.map((row, index) => {
               return (
-                <EditableTableRow key={index}>
-                  {columns.map((col) => {
-                    const { key, Editor, width } = col
-                    return (
-                      <EditableTableCell
-                        key={String(key)}
-                        style={{ width }}
-                      >
-                        <Editor
-                          tabIndex={tabIndex}
-                          id={index}
-                          row={row}
-                          col={col}
-                          onChange={onChange}
-                          errors={errors?.[index] as FieldErrors<T>}
-                        />
-                      </EditableTableCell>
-                    )
-                  })}
-                  {typeof onDelete === 'function' && (
-                    <EditableTableCell className="whitespace-nowrap w-0">
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        className="hover:bg-slate-50 hover:text-brand text-slate-400"
-                        onClick={() => onDelete?.({ id: index })}
-                      >
-                        <CircleMinus className="btn-icon !mx-0" />
-                      </Button>
-                    </EditableTableCell>
-                  )}
-                </EditableTableRow>
+                <EditableTableRowRenderer
+                  key={index}
+                  index={index}
+                  tabIndex={tabIndex}
+                  row={row}
+                  columns={columns}
+                  errors={errors}
+                  onChange={onChange}
+                  onDelete={onDelete}
+                />
               )
             })
           ) : (
@@ -126,5 +104,63 @@ export const EditableTable = <T extends Record<string, unknown>>(props: Editable
         )}
       </Table>
     </form>
+  )
+}
+
+type EditableTableRowRendererProps<T extends Record<string, unknown>> = {
+  tabIndex?: number
+  index: number
+  columns: EditableColumnType<T>[]
+  row: T
+  errors?: FieldErrors<{ example: T[] }>['example']
+  onDelete?(ctx: DeleteContext): void
+  onChange?(ctx: ChangeContext<T>): void
+}
+const EditableTableRowRenderer = <T extends Record<string, unknown>>({
+  tabIndex,
+  index,
+  columns,
+  row,
+  errors,
+  onDelete,
+  onChange
+}: EditableTableRowRendererProps<T>) => {
+  const [state, setState] = useState<Record<string, unknown>>({})
+
+  return (
+    <EditableTableRow>
+      {columns.map((col) => {
+        const { key, Editor, width } = col
+        return (
+          <EditableTableCell
+            key={String(key)}
+            style={{ width }}
+          >
+            <Editor
+              tabIndex={tabIndex}
+              id={index}
+              row={row}
+              col={col}
+              onChange={onChange}
+              errors={errors?.[index] as FieldErrors<T>}
+              state={state}
+              setState={setState}
+            />
+          </EditableTableCell>
+        )
+      })}
+      {typeof onDelete === 'function' && (
+        <EditableTableCell className="whitespace-nowrap w-0">
+          <Button
+            type="button"
+            variant="ghost"
+            className="hover:bg-slate-50 hover:text-brand text-slate-400"
+            onClick={() => onDelete?.({ id: index })}
+          >
+            <CircleMinus className="btn-icon !mx-0" />
+          </Button>
+        </EditableTableCell>
+      )}
+    </EditableTableRow>
   )
 }
