@@ -1,5 +1,6 @@
+import { AdditionalInfo, DocInfo, Header, Signatures, Summa, TransactionParty } from './components'
+
 import { Flex } from '@/common/components/pdf'
-import { Header, DocInfo, Signatures, TransactionParty, AdditionalInfo, Summa } from './components'
 import { formatNumber } from '@/common/lib/format'
 
 type PorucheniyaType = 'normal' | 'tax'

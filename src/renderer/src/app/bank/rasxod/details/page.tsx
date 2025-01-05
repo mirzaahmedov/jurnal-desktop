@@ -4,7 +4,7 @@ import { RasxodPayloadSchema, RasxodPodvodkaPayloadSchema, bankRasxodService } f
 import { useCallback, useEffect } from 'react'
 import { useSpravochnik } from '@/common/features/spravochnik'
 import { Form } from '@/common/components/ui/form'
-import { Fieldset, AccountBalance, GenerateDocumentButton } from '@/common/components'
+import { Fieldset, AccountBalance } from '@/common/components'
 import { createOrganizationSpravochnik } from '@renderer/app/region-spravochnik/organization'
 import { createShartnomaSpravochnik } from '@renderer/app/organization/shartnoma'
 import { useToast } from '@/common/hooks/use-toast'
@@ -35,13 +35,13 @@ import {
 } from '@/common/widget/form'
 import { formatDate } from '@/common/lib/date'
 import { bankMonitorService, bankMonitorQueryKeys } from '../../monitor'
-import { BankRasxodPorucheniyaTemplate } from '../templates'
 import { ButtonGroup } from '@/common/components/ui/button-group'
 import { useDefaultFormFields } from '@/common/features/app-defaults'
 import { extendObject } from '@/common/lib/utils'
 import { formatLocaleDate } from '@/common/lib/format'
 
 import { DetailsView } from '@/common/views'
+import { GeneratePorucheniya } from './generate-porucheniya'
 
 const BankRasxodDetailtsPage = () => {
   const { toast } = useToast()
@@ -306,30 +306,28 @@ const BankRasxodDetailtsPage = () => {
 
               {main_schet?.data && orgSpravochnik.selected && form.formState.isValid ? (
                 <ButtonGroup borderStyle="dashed">
-                  <GenerateDocumentButton
+                  <GeneratePorucheniya
+                    type="porucheniya"
                     tabIndex={8}
-                    fileName={`поручения-${form.watch('doc_num')}.pdf`}
+                    fileName={`поручения-${form.watch('doc_num')}.xlsx`}
                     buttonText="Создать Поручения"
-                  >
-                    <BankRasxodPorucheniyaTemplate
-                      type="normal"
-                      rasxod={form.getValues()}
-                      main_schet={main_schet.data}
-                      organization={orgSpravochnik.selected}
-                    />
-                  </GenerateDocumentButton>
-                  <GenerateDocumentButton
-                    tabIndex={9}
-                    buttonText="Создать Поручения (налог)"
-                    fileName={`поручения-налог-${form.watch('doc_num')}.pdf`}
-                  >
-                    <BankRasxodPorucheniyaTemplate
-                      type="tax"
-                      rasxod={form.getValues()}
-                      main_schet={main_schet.data}
-                      organization={orgSpravochnik.selected}
-                    />
-                  </GenerateDocumentButton>
+                    data={{
+                      rasxod: form.getValues(),
+                      main_schet: main_schet.data,
+                      organization: orgSpravochnik.selected
+                    }}
+                  />
+                  <GeneratePorucheniya
+                    type="porucheniya_nalog"
+                    tabIndex={8}
+                    fileName={`поручения-${form.watch('doc_num')}_налог.xlsx`}
+                    buttonText="Создать Поручения (Налог)"
+                    data={{
+                      rasxod: form.getValues(),
+                      main_schet: main_schet.data,
+                      organization: orgSpravochnik.selected
+                    }}
+                  />
                 </ButtonGroup>
               ) : null}
             </DetailsView.Footer>
