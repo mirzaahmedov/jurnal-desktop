@@ -113,24 +113,24 @@ export const generatePorucheniyaNalog = async (params: GeneratePorucheniyaParams
     paperSize: 9,
     orientation: 'portrait',
     margins: {
-      top: 0.7,
-      left: 0.7,
-      right: 0.7,
-      bottom: 0.7,
-      header: 0.3,
-      footer: 0.3
+      top: 0.3,
+      left: 0.3,
+      right: 0.3,
+      bottom: 0.3,
+      header: 0,
+      footer: 0
     }
   }
   sheet.columns = [
-    { width: 23 },
+    { width: 26 },
     { width: 5 },
-    { width: 12 },
-    { width: 5 },
-    { width: 12 },
-    { width: 5 },
-    { width: 11 },
-    { width: 11 },
-    { width: 5 }
+    { width: 14 },
+    { width: 4 },
+    { width: 14 },
+    { width: 4 },
+    { width: 13 },
+    { width: 13 },
+    { width: 4 }
   ]
 
   sheet.addRows([...rows, [''], [''], ...rows])
@@ -167,6 +167,17 @@ export const generatePorucheniyaNalog = async (params: GeneratePorucheniyaParams
   sheet.getRow(37).height = 4
 
   renderSingleCopy(sheet, 38)
+
+  sheet.eachRow((row, i) => {
+    if ([23, 27, 60, 64].includes(i)) {
+      row.height = 35
+    }
+  })
+  sheet.eachRow((row, i) => {
+    if ([7, 17, 44, 54].includes(i)) {
+      row.height = 10
+    }
+  })
 
   const buffer = await workbook.xlsx.writeBuffer()
   const blob = new Blob([buffer], {
@@ -244,11 +255,6 @@ const renderSingleCopy = (sheet: Worksheet, startIndex: number = 1) => {
 const renderCounterAgent = (sheet: Worksheet, rowIndex: number) => {
   sheet.mergeCells(rowIndex, 2, rowIndex, 9)
   sheet.getRow(rowIndex).eachCell((cell, i) => {
-    if (i === 1) {
-      cell.alignment = assign(cell.alignment, {
-        wrapText: false
-      })
-    }
     if (i === 2) {
       textbox(cell)
     }

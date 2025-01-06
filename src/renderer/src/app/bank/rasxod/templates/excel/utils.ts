@@ -61,12 +61,14 @@ export const textbox = (cell: Cell, centered = false) => {
   if (centered) {
     cell.alignment = assign(cell.alignment, {
       vertical: 'middle',
-      horizontal: 'center'
+      horizontal: 'center',
+      wrapText: true
     })
   } else {
     cell.alignment = assign(cell.alignment, {
       vertical: 'top',
-      horizontal: 'left'
+      horizontal: 'left',
+      wrapText: true
     })
   }
 }

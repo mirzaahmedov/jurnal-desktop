@@ -234,7 +234,7 @@ const BankRasxodDetailtsPage = () => {
     }
     form.setValue(
       'opisanie',
-      `№ ${doc_num}-сонли ${formatLocaleDate(doc_date)} йил кунги шартномага асосан _________________________________ Ст: (субсчет)`
+      `№ ${doc_num}-сонли ${formatLocaleDate(doc_date)} йил кунги шартномага асосан  Ст: (субсчет)`
     )
   }, [form, doc_date, doc_num])
 
