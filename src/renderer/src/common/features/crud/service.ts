@@ -120,7 +120,8 @@ export class CRUDService<T, C = T, U = C, M = undefined> {
     const defaultConfig = {}
     const buildArgs = {
       endpoint: this.endpoint,
-      config: defaultConfig
+      config: defaultConfig,
+      payload: id
     }
 
     const config = this.requestBuilder?.('delete', buildArgs)?.config ?? defaultConfig

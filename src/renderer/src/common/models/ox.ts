@@ -1,7 +1,10 @@
 export namespace OX {
   type Summa = {
-    debet_sum: number
-    kredit_sum: number
+    ajratilgan_mablag: number
+    tulangan_mablag_smeta_buyicha: number
+    kassa_rasxod: number
+    haqiqatda_harajatlar: number
+    qoldiq: number
   }
 
   export type Schet = {
@@ -30,51 +33,37 @@ export namespace OX {
   }
 
   export type Report = {
-    id: number
-    type_document: string
     month: number
     year: number
-    summa: {
-      debet_sum: number
-      kredit_sum: number
-    }
+    ajratilgan_mablag: number
+    tulangan_mablag_smeta_buyicha: number
+    kassa_rasxod: number
+    haqiqatda_harajatlar: number
+    qoldiq: number
   }
 
   export type ReportPreview = {
-    id: number
     month: number
     year: number
     budjet_id: number
-    name: string
+    budjet_name: string
     user_id: number
     user_login: string
-    accepted_id: null | number
-    accepted_login: null | string
+    user_id_qabul_qilgan: null | number
+    user_login_qabul_qilgan: null | string
     status: number
-    created_at: string
-    accepted_time: null | string
+    document_yaratilgan_vaqt: string
+    document_qabul_qilingan_vaqt: null | string
   }
 
   export type ReportPreviewDetails = {
-    id: number
-    user_id: number
-    user_id_accepted: number
-    budjet_id: number
-    accepted_time: string
-    month: number
     year: number
-    status: number
-    data: Array<ReportPreviewProvodka>
+    month: number
+    summa: Summa
+    smeta_grafiks: Array<ReportPreviewProvodka>
   }
 
   export type ReportPreviewProvodka = {
-    type: string
-    debet_sum: number
-    kredit_sum: number
-    grafiks: Array<ReportPreviewProvodkaGrafik>
-  }
-
-  export type ReportPreviewProvodkaGrafik = {
     id: number
     smeta_id: number
     smeta_name: string

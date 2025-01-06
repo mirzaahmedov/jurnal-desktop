@@ -1,3 +1,4 @@
+import type { Mainbook, OX } from '@renderer/common/models'
 import type { MouseEvent, RefObject, UIEvent } from 'react'
 import { ReportTableCell, ReportTableHead, ReportTableRow } from './table-components'
 import { Table, TableBody, TableHeader } from '@renderer/common/components/ui/table'
@@ -5,8 +6,6 @@ import { cn, parseCSSNumericValue } from '@renderer/common/lib/utils'
 import { createRef, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 
 import { LoadingOverlay } from '@renderer/common/components'
-import type { Mainbook } from '@renderer/common/models'
-import { MainbookTableRow } from '../details/utils'
 import { columns } from './columns'
 import { formatNumber } from '@renderer/common/lib/format'
 
@@ -18,9 +17,9 @@ const SCROLL_AREA_WIDTH = 400
 
 type ReportTableProps = {
   isLoading: boolean
-  data: MainbookTableRow[]
-  onEdit: (row: MainbookTableRow) => void
-  onDelete: (row: MainbookTableRow) => void
+  data: OX.ReportPreviewProvodka[]
+  onEdit: (row: OX.ReportPreviewProvodka) => void
+  onDelete: (row: OX.ReportPreviewProvodka) => void
 }
 const ReportTable = ({ isLoading, data, onEdit, onDelete }: ReportTableProps) => {
   const ref = useRef<HTMLDivElement>(null)
@@ -213,16 +212,6 @@ const ReportTable = ({ isLoading, data, onEdit, onDelete }: ReportTableProps) =>
                 </ReportTableHead>
               )
             })}
-          </ReportTableRow>
-          <ReportTableRow className="bg-slate-100">
-            {Array(11)
-              .fill(null)
-              .map(() => (
-                <>
-                  <ReportTableHead className="text-center">кредит</ReportTableHead>
-                  <ReportTableHead className="text-center">дебет</ReportTableHead>
-                </>
-              ))}
           </ReportTableRow>
         </TableHeader>
         <TableBody className="[&>tr:last-child>td]:!font-extrabold">

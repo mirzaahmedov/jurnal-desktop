@@ -1,5 +1,3 @@
-import { Fieldset, SelectField } from '@renderer/common/components'
-import { Form, FormField } from '@renderer/common/components/ui/form'
 import {
   OXReportFormSchema,
   OXReportProvodkaSchema,
@@ -12,12 +10,13 @@ import {
   createEditorDeleteHandler
 } from '@renderer/common/features/editable-table/helpers'
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 
 import { DetailsView } from '@renderer/common/views'
 import { EditableTable } from '@renderer/common/features/editable-table'
+import { Fieldset } from '@renderer/common/components'
+import { Form } from '@renderer/common/components/ui/form'
 import { MonthPicker } from '@renderer/common/components/month-picker'
-import { documentTypes } from '@renderer/app/mainbook/common/data'
 import { oxReportService } from '../service'
 import { provodkaColumns } from './provodka'
 import { toast } from '@renderer/common/hooks'
@@ -32,11 +31,15 @@ const OXReportDetailsPage = () => {
   const params = useParams()
   const budjet_id = useRequisitesStore((store) => store.budjet_id)
 
+  const [searchParams] = useSearchParams()
+  const date = searchParams.get('date')
+  const [year, month] = date ? date.split('-').map(Number) : [0, 0]
+
   const form = useForm({
     defaultValues: {
       ...defaultValues,
-      year: new Date().getFullYear(),
-      month: new Date().getMonth() + 1
+      year: year || new Date().getFullYear(),
+      month: month || new Date().getMonth() + 1
     },
     resolver: zodResolver(OXReportFormSchema)
   })
@@ -44,13 +47,15 @@ const OXReportDetailsPage = () => {
   const { data: report, isFetching } = useQuery({
     queryKey: [
       oxReportQueryKeys.getById,
-      Number(params.id),
+      100,
       {
-        budjet_id
+        budjet_id,
+        year,
+        month
       }
     ],
     queryFn: oxReportService.getById,
-    enabled: params.id !== 'create'
+    enabled: params.id === 'edit'
   })
   const { mutate: createReport, isPending: isCreating } = useMutation({
     mutationFn: oxReportService.create,
@@ -100,7 +105,7 @@ const OXReportDetailsPage = () => {
     if (params.id === 'create') {
       createReport(values)
     } else {
-      updateReport({ id: Number(params.id), ...values })
+      updateReport(values)
     }
   })
 
@@ -111,6 +116,7 @@ const OXReportDetailsPage = () => {
           <form onSubmit={onSubmit}>
             <div className="grid grid-cols-4 gap-10 p-5">
               <MonthPicker
+                disabled={isFetching || isCreating || isUpdating || params.id !== 'create'}
                 value={
                   form.watch('year') && form.watch('month')
                     ? `${form.watch('year')}-${form.watch('month')}-01`
@@ -126,20 +132,7 @@ const OXReportDetailsPage = () => {
                   form.setValue('year', year)
                   form.setValue('month', month)
                 }}
-              />
-              <FormField
-                control={form.control}
-                name="type_document"
-                render={({ field }) => (
-                  <SelectField
-                    {...field}
-                    onValueChange={(value) => field.onChange(value)}
-                    options={documentTypes}
-                    placeholder="Выберите тип документа"
-                    getOptionLabel={(option) => option.name}
-                    getOptionValue={(option) => option.key}
-                  />
-                )}
+                className="disabled:opacity-85"
               />
             </div>
             <DetailsView.Footer>
@@ -167,6 +160,9 @@ const OXReportDetailsPage = () => {
             onChange={createEditorChangeHandler({
               form
             })}
+            params={{
+              month: form.watch('month')
+            }}
           />
         </Fieldset>
       </DetailsView.Content>

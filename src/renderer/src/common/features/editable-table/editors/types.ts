@@ -23,6 +23,7 @@ export type EditorComponentType<T extends Record<string, unknown>> = FunctionCom
   onChange?(ctx: ChangeContext<T>): void
   state: Record<string, unknown>
   setState: Dispatch<SetStateAction<Record<string, unknown>>>
+  params: Record<string, unknown>
 }>
 
 export type EditorOptions<T extends Record<string, unknown>> = {

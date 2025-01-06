@@ -30,7 +30,7 @@ const MainbookReportPage = () => {
   })
   const { mutate: deleteReport, isPending } = useMutation({
     mutationKey: [mainbookReportQueryKeys.delete],
-    mutationFn: mainbookReportService.delete,
+    mutationFn: mainbookReportService.delete as (params: any) => Promise<any>,
     onError: (error) => {
       console.error(error)
       toast({
@@ -56,14 +56,19 @@ const MainbookReportPage = () => {
   })
 
   const handleEdit = (row: Mainbook.Report) => {
-    navigate(`${row.id}`)
+    console.log(row.year, row.month)
+    navigate(`edit?date=${row.year}-${row.month}&type_document=${row.type_document}`)
   }
 
   const handleDelete = (row: Mainbook.Report) => {
     confirm({
       title: 'Удалить запись?',
       onConfirm: () => {
-        deleteReport(row.id)
+        deleteReport({
+          year: row.year,
+          month: row.month,
+          type_document: row.type_document
+        })
       }
     })
   }

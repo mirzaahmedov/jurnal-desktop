@@ -1,57 +1,61 @@
 import { FileDown, Save } from 'lucide-react'
-import { calculateColumnTotals, calculateRowTotals, transformData } from './utils'
-import { expensesService, getExpensesById, getExpensesInfo } from '../service'
-import { useEffect, useMemo, useState } from 'react'
+import { getOXById, getOXInfo, oxService } from '../service'
+import { useEffect, useState } from 'react'
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 
 import { Button } from '@renderer/common/components/ui/button'
 import { DetailsView } from '@renderer/common/views'
-import { Expenses } from '@renderer/common/models'
 import { MonthPicker } from '@renderer/common/components/month-picker'
+import { OX } from '@renderer/common/models'
 import { ReportTable } from '../report-table'
-import { expensesQueryKeys } from '../config'
 import { formatDate } from '@renderer/common/lib/date'
+import { oxQueryKeys } from '../config'
 import { toast } from '@renderer/common/hooks'
 import { useLayout } from '@renderer/common/features/layout'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
 
-const ExpensesDetailsPage = () => {
+const OXDetailsPage = () => {
   const budjet_id = useRequisitesStore((store) => store.budjet_id)
   const navigate = useNavigate()
   const params = useParams()
 
-  const [values, setValues] = useState<Expenses.ReportPreviewProvodka[]>()
+  const [values, setValues] = useState<OX.ReportPreviewProvodka[]>()
   const [date, setDate] = useState(formatDate(new Date()))
   const [year, month] = date.split('-')
 
+  const [searchParams] = useSearchParams()
+  const [yearParam, monthParam] = searchParams.get('date')?.split('-') ?? [0, 0]
+
   const { data: reportInfo, isFetching: isFetchingInfo } = useQuery({
     queryKey: [
-      getExpensesInfo,
+      getOXInfo,
       {
         year: Number(year),
         month: Number(month),
         budjet_id
       }
     ],
-    queryFn: getExpensesInfo,
+    queryFn: getOXInfo,
     enabled: !!budjet_id && params.id === 'create'
   })
 
-  const { data: mainbook, isFetching } = useQuery({
+  const { data: ox, isFetching } = useQuery({
     queryKey: [
-      expensesQueryKeys.getById,
+      oxQueryKeys.getById,
       Number(params.id),
       {
+        year: Number(yearParam),
+        month: Number(monthParam),
         budjet_id
       }
     ],
-    queryFn: getExpensesById,
-    enabled: !!budjet_id && params.id !== 'create'
+    queryFn: getOXById,
+    enabled: !!budjet_id && params.id !== 'create' && !!monthParam && !!yearParam
   })
 
-  const { mutate: createMainbook, isPending: isCreating } = useMutation({
-    mutationFn: expensesService.create,
+  const { mutate: createOX, isPending: isCreating } = useMutation({
+    mutationFn: oxService.create,
     onError: (error) => {
       console.error(error)
       toast({
@@ -66,8 +70,8 @@ const ExpensesDetailsPage = () => {
       })
     }
   })
-  const { mutate: updateMainbook, isPending: isUpdating } = useMutation({
-    mutationFn: expensesService.update,
+  const { mutate: updateOX, isPending: isUpdating } = useMutation({
+    mutationFn: oxService.update,
     onError: (error) => {
       console.error(error)
       toast({
@@ -83,12 +87,12 @@ const ExpensesDetailsPage = () => {
     }
   })
   const { mutate: loadInfo, isPending } = useMutation({
-    mutationFn: getExpensesInfo,
+    mutationFn: getOXInfo,
     onSuccess: (response) => {
       toast({
         title: 'Информация успешно загружена'
       })
-      setValues(response?.data ?? [])
+      setValues(response?.data?.smeta_grafiks ?? [])
     },
     onError: (error) => {
       console.error(error)
@@ -106,29 +110,18 @@ const ExpensesDetailsPage = () => {
     }
   })
 
-  const rows = useMemo(() => {
-    if (!values) {
-      return []
-    }
-    const rows = transformData(values).sort((a, b) => a.smeta_number.localeCompare(b.smeta_number))
-
-    rows.push(calculateColumnTotals(rows))
-
-    return calculateRowTotals(rows)
-  }, [values])
+  useEffect(() => {
+    setValues(reportInfo?.data?.smeta_grafiks ?? ox?.data?.smeta_grafiks ?? [])
+  }, [reportInfo?.data, ox?.data])
 
   useEffect(() => {
-    setValues(reportInfo?.data ?? mainbook?.data?.data ?? [])
-  }, [reportInfo?.data, mainbook?.data])
-
-  useEffect(() => {
-    const data = mainbook?.data
+    const data = ox?.data
     if (!data) {
       return
     }
 
     setDate(`${data.year}-${data.month}-01`)
-  }, [mainbook?.data])
+  }, [ox?.data])
 
   return (
     <DetailsView>
@@ -143,7 +136,7 @@ const ExpensesDetailsPage = () => {
       <div className="relative w-full overflow-x-hidden">
         <ReportTable
           isLoading={isFetching || isFetchingInfo || isPending}
-          data={rows}
+          data={values ?? []}
           onDelete={() => {}}
           onEdit={() => {}}
         />
@@ -155,15 +148,13 @@ const ExpensesDetailsPage = () => {
           disabled={isCreating || isUpdating || isPending || !budjet_id || !month || !year}
           onClick={() => {
             if (params.id === 'create') {
-              createMainbook({
+              createOX({
                 data: values,
                 month: Number(month),
                 year: Number(year)
               })
             } else {
-              updateMainbook({
-                id: Number(params.id),
-                data: values,
+              updateOX({
                 month: Number(month),
                 year: Number(year)
               })
@@ -179,7 +170,7 @@ const ExpensesDetailsPage = () => {
             onClick={() => {
               loadInfo({
                 queryKey: [
-                  getExpensesInfo,
+                  getOXInfo,
                   {
                     year: Number(year),
                     month: Number(month),
@@ -197,4 +188,4 @@ const ExpensesDetailsPage = () => {
   )
 }
 
-export default ExpensesDetailsPage
+export default OXDetailsPage

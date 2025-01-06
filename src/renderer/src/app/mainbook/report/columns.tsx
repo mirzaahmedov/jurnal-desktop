@@ -22,7 +22,7 @@ export const mainbookReportColumns: ColumnDef<Mainbook.Report>[] = [
     key: 'summa.debet_sum',
     header: 'Дебет',
     renderCell(row) {
-      return formatNumber(row.summa?.debet_sum)
+      return formatNumber(row?.debet_sum)
     }
   },
   {
@@ -30,7 +30,7 @@ export const mainbookReportColumns: ColumnDef<Mainbook.Report>[] = [
     key: 'summa.kredit',
     header: 'Кредит',
     renderCell(row) {
-      return formatNumber(row.summa?.kredit_sum)
+      return formatNumber(row?.kredit_sum)
     }
   },
   {

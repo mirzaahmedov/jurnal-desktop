@@ -12,7 +12,7 @@ import {
   createEditorDeleteHandler
 } from '@renderer/common/features/editable-table/helpers'
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 
 import { DetailsView } from '@renderer/common/views'
 import { EditableTable } from '@renderer/common/features/editable-table'
@@ -32,6 +32,12 @@ const MainbookReportDetailsPage = () => {
   const params = useParams()
   const budjet_id = useRequisitesStore((store) => store.budjet_id)
 
+  const [searchParams] = useSearchParams()
+
+  const date = searchParams.get('date')
+  const type_document = searchParams.get('type_document')
+  const [year, month] = date ? date.split('-').map(Number) : [0, 0]
+
   const form = useForm({
     defaultValues: {
       ...defaultValues,
@@ -44,13 +50,16 @@ const MainbookReportDetailsPage = () => {
   const { data: report, isFetching } = useQuery({
     queryKey: [
       mainbookReportQueryKeys.getById,
-      Number(params.id),
+      100,
       {
-        budjet_id
+        budjet_id,
+        type_document,
+        year,
+        month
       }
     ],
     queryFn: mainbookReportService.getById,
-    enabled: params.id !== 'create'
+    enabled: params.id === 'edit' && !!year && !!month
   })
   const { mutate: createReport, isPending: isCreating } = useMutation({
     mutationFn: mainbookReportService.create,
@@ -111,6 +120,7 @@ const MainbookReportDetailsPage = () => {
           <form onSubmit={onSubmit}>
             <div className="grid grid-cols-4 gap-10 p-5">
               <MonthPicker
+                disabled={isFetching || isCreating || isUpdating || params.id !== 'create'}
                 value={
                   form.watch('year') && form.watch('month')
                     ? `${form.watch('year')}-${form.watch('month')}-01`
@@ -126,6 +136,7 @@ const MainbookReportDetailsPage = () => {
                   form.setValue('year', year)
                   form.setValue('month', month)
                 }}
+                className="disabled:opacity-85"
               />
               <FormField
                 control={form.control}

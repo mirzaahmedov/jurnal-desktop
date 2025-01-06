@@ -2,17 +2,17 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 import { GenericTable } from '@renderer/common/components'
 import { ListView } from '@renderer/common/views'
-import type { OX } from '@renderer/common/models'
-import { oxReportColumns } from './columns'
-import { oxReportQueryKeys } from './config'
-import { oxReportService } from './service'
+import { OX } from '@renderer/common/models'
+import { oxColumns } from './columns'
+import { oxQueryKeys } from './config'
+import { oxService } from './service'
 import { toast } from '@renderer/common/hooks'
 import { useConfirm } from '@renderer/common/features/confirm'
 import { useLayout } from '@renderer/common/features/layout'
 import { useNavigate } from 'react-router-dom'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
 
-const OXReportPage = () => {
+const OXPage = () => {
   const budjet_id = useRequisitesStore((store) => store.budjet_id)
   const queryClient = useQueryClient()
   const navigate = useNavigate()
@@ -20,17 +20,17 @@ const OXReportPage = () => {
 
   const { data: reportList, isFetching } = useQuery({
     queryKey: [
-      oxReportQueryKeys.getAll,
+      oxQueryKeys.getAll,
       {
         budjet_id
       }
     ],
-    queryFn: oxReportService.getAll,
+    queryFn: oxService.getAll,
     enabled: !!budjet_id
   })
   const { mutate: deleteReport, isPending } = useMutation({
-    mutationKey: [oxReportQueryKeys.delete],
-    mutationFn: oxReportService.delete,
+    mutationKey: [oxQueryKeys.delete],
+    mutationFn: oxService.delete as (params: any) => Promise<any>,
     onError: (error) => {
       console.error(error)
       toast({
@@ -43,27 +43,30 @@ const OXReportPage = () => {
         title: 'Запись успешно удалена'
       })
       queryClient.invalidateQueries({
-        queryKey: [oxReportQueryKeys.getAll]
+        queryKey: [oxQueryKeys.getAll]
       })
     }
   })
 
   useLayout({
-    title: 'Создать месячный отчет',
+    title: 'Закончить месячный отчёт',
     onCreate: () => {
-      navigate('create')
+      navigate(`create`)
     }
   })
 
-  const handleEdit = (row: OX.Report) => {
-    navigate(`${row.id}`)
+  const handleEdit = (row: OX.ReportPreview) => {
+    navigate(`edit?date=${row.year}-${row.month}`)
   }
 
-  const handleDelete = (row: OX.Report) => {
+  const handleDelete = (row: OX.ReportPreview) => {
     confirm({
       title: 'Удалить запись?',
-      onConfirm: () => {
-        deleteReport(row.id)
+      onConfirm: async () => {
+        deleteReport({
+          year: row.year,
+          month: row.month
+        })
       }
     })
   }
@@ -72,14 +75,15 @@ const OXReportPage = () => {
     <ListView>
       <ListView.Content loading={isFetching || isPending}>
         <GenericTable
-          columns={oxReportColumns}
+          columns={oxColumns}
           data={reportList?.data ?? []}
           onEdit={handleEdit}
           onDelete={handleDelete}
         />
       </ListView.Content>
+      <ListView.Footer></ListView.Footer>
     </ListView>
   )
 }
 
-export default OXReportPage
+export default OXPage

@@ -3,7 +3,7 @@ import { calculateColumnTotals, calculateRowTotals, transformData } from './util
 import { getMainbookById, getMainbookInfo, mainbookService } from '../service'
 import { useEffect, useMemo, useState } from 'react'
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 
 import { Button } from '@renderer/common/components/ui/button'
 import { DetailsView } from '@renderer/common/views'
@@ -21,6 +21,7 @@ const MainbookDetailsPage = () => {
   const navigate = useNavigate()
   const params = useParams()
 
+  const [searchParams] = useSearchParams()
   const [values, setValues] = useState<Mainbook.ReportPreviewProvodka[]>()
   const [date, setDate] = useState(formatDate(new Date()))
   const [year, month] = date.split('-')
@@ -38,16 +39,20 @@ const MainbookDetailsPage = () => {
     enabled: !!budjet_id && params.id === 'create'
   })
 
+  console.log({ date: searchParams.get('date') })
+  const [yearParam, monthParam] = searchParams.get('date')?.split('-').map(Number) ?? [0, 0]
   const { data: mainbook, isFetching } = useQuery({
     queryKey: [
       mainbookQueryKeys.getById,
       Number(params.id),
       {
-        budjet_id
+        budjet_id,
+        year: yearParam,
+        month: monthParam
       }
     ],
     queryFn: getMainbookById,
-    enabled: !!budjet_id && params.id !== 'create'
+    enabled: !!budjet_id && params.id === 'edit' && !!yearParam && !!monthParam
   })
 
   const { mutate: createMainbook, isPending: isCreating } = useMutation({
@@ -88,7 +93,7 @@ const MainbookDetailsPage = () => {
       toast({
         title: 'Информация успешно загружена'
       })
-      setValues(response?.data ?? [])
+      setValues(response?.data?.type_documents ?? [])
     },
     onError: (error) => {
       console.error(error)
@@ -120,7 +125,7 @@ const MainbookDetailsPage = () => {
   }, [values])
 
   useEffect(() => {
-    setValues(reportInfo?.data ?? mainbook?.data?.data ?? [])
+    setValues(reportInfo?.data?.type_documents ?? mainbook?.data?.types ?? [])
   }, [reportInfo?.data, mainbook?.data])
 
   useEffect(() => {
@@ -129,7 +134,7 @@ const MainbookDetailsPage = () => {
       return
     }
 
-    setDate(`${data.year}-${data.month}-01`)
+    setDate(`${data.year}-${data.month.toString().padStart(2, '0')}-01`)
   }, [mainbook?.data])
 
   return (
@@ -158,14 +163,11 @@ const MainbookDetailsPage = () => {
           onClick={() => {
             if (params.id === 'create') {
               createMainbook({
-                data: values,
                 month: Number(month),
                 year: Number(year)
               })
             } else {
               updateMainbook({
-                id: Number(params.id),
-                data: values,
                 month: Number(month),
                 year: Number(year)
               })

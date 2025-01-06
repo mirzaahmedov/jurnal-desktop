@@ -1,7 +1,7 @@
 import { adminMainBookService, adminMainBookUpdateQuery } from '../service'
 import { calculateColumnTotals, calculateRowTotals, transformData } from './utils'
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 
 import { Button } from '@renderer/common/components/ui/button'
 import { DetailsView } from '@renderer/common/views'
@@ -14,20 +14,24 @@ import { useMemo } from 'react'
 
 const AdminMainBookDetailsPage = () => {
   const navigate = useNavigate()
-  const params = useParams()
   const [searchParams] = useSearchParams()
 
   const { confirm } = useConfirm()
 
+  const [year, month] = searchParams.get('date')?.split('-')?.map(Number) ?? [0, 0]
   const { data: report, isFetching } = useQuery({
     queryKey: [
       queryKeys.getById,
-      Number(params.id),
+      1000,
       {
-        region_id: searchParams.get('region_id')
+        region_id: searchParams.get('region_id'),
+        budjet_id: searchParams.get('budjet_id'),
+        year: Number(year),
+        month: Number(month)
       }
     ],
-    queryFn: adminMainBookService.getById
+    queryFn: adminMainBookService.getById,
+    enabled: !!searchParams.get('region_id') && !!searchParams.get('budjet_id') && !!year && !!month
   })
   const { mutate: updateReport, isPending } = useMutation({
     mutationFn: adminMainBookUpdateQuery,
@@ -38,10 +42,10 @@ const AdminMainBookDetailsPage = () => {
 
   const transformed = useMemo(() => {
     const data = (report?.data as unknown as Mainbook.AdminReportDetails) || {}
-    if (!data?.data) {
+    if (!data?.types) {
       return []
     }
-    const rows = transformData(data?.data).sort((a, b) =>
+    const rows = transformData(data?.types).sort((a, b) =>
       a.schet.padStart(3, '0').localeCompare(b.schet.padStart(3, '0'))
     )
 
@@ -55,9 +59,11 @@ const AdminMainBookDetailsPage = () => {
       title: 'Принять отчёт?',
       onConfirm: () => {
         updateReport({
-          id: Number(params.id),
           status: 2,
-          region_id: Number(searchParams.get('region_id'))
+          month: Number(month),
+          year: Number(year),
+          region_id: Number(searchParams.get('region_id')),
+          budjet_id: Number(searchParams.get('budjet_id'))
         })
       }
     })
@@ -68,9 +74,11 @@ const AdminMainBookDetailsPage = () => {
       title: 'Отклонить отчёт?',
       onConfirm: () => {
         updateReport({
-          id: Number(params.id),
           status: 3,
-          region_id: Number(searchParams.get('region_id'))
+          month: Number(month),
+          year: Number(year),
+          region_id: Number(searchParams.get('region_id')),
+          budjet_id: Number(searchParams.get('budjet_id'))
         })
       }
     })

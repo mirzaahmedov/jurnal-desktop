@@ -45,11 +45,12 @@ export enum ApiEndpoints {
   tables_count = 'auth/control/tables/count',
   logs = 'log/get',
   mainbook__doc = 'main/book/doc',
-  mainbook__end = 'main/book/end',
+  mainbook__report = 'main/book/report',
   admin__mainbook_schet = 'spravochnik/main/book/schet',
   admin__mainbook = 'admin/main/book',
   admin__realcost = 'admin/real/cost',
   realcost_doc = 'real/cost/doc',
   realcost_end = 'real/cost/end',
-  ox = 'ox'
+  ox_doc = 'ox/doc',
+  ox_report = 'ox/report'
 }

@@ -25,9 +25,20 @@ export type EditableTableProps<T extends Record<string, unknown>> = {
   onDelete?(ctx: DeleteContext): void
   onChange?(ctx: ChangeContext<T>): void
   onCreate?(): void
+  params?: Record<string, unknown>
 }
 export const EditableTable = <T extends Record<string, unknown>>(props: EditableTableProps<T>) => {
-  const { tabIndex, data, columns, errors, placeholder, onCreate, onDelete, onChange } = props
+  const {
+    tabIndex,
+    data,
+    columns,
+    errors,
+    placeholder,
+    onCreate,
+    onDelete,
+    onChange,
+    params = {}
+  } = props
   return (
     <form
       onSubmit={(e) => {
@@ -73,6 +84,7 @@ export const EditableTable = <T extends Record<string, unknown>>(props: Editable
                   errors={errors}
                   onChange={onChange}
                   onDelete={onDelete}
+                  params={params}
                 />
               )
             })
@@ -115,6 +127,7 @@ type EditableTableRowRendererProps<T extends Record<string, unknown>> = {
   errors?: FieldErrors<{ example: T[] }>['example']
   onDelete?(ctx: DeleteContext): void
   onChange?(ctx: ChangeContext<T>): void
+  params: Record<string, unknown>
 }
 const EditableTableRowRenderer = <T extends Record<string, unknown>>({
   tabIndex,
@@ -123,7 +136,8 @@ const EditableTableRowRenderer = <T extends Record<string, unknown>>({
   row,
   errors,
   onDelete,
-  onChange
+  onChange,
+  params
 }: EditableTableRowRendererProps<T>) => {
   const [state, setState] = useState<Record<string, unknown>>({})
 
@@ -145,6 +159,7 @@ const EditableTableRowRenderer = <T extends Record<string, unknown>>({
               errors={errors?.[index] as FieldErrors<T>}
               state={state}
               setState={setState}
+              params={params}
             />
           </EditableTableCell>
         )

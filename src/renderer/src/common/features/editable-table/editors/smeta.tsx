@@ -3,11 +3,12 @@ import { SpravochnikInput, useSpravochnik } from '@/common/features/spravochnik'
 import type { EditorComponentType } from './types'
 import { createSmetaGrafikSpravochnik } from '@renderer/app/region-admin/smeta-grafik/service'
 import { formatNumber } from '@renderer/common/lib/format'
+import { useEffect } from 'react'
 
 export const createSmetaGrafikEditor = <
   T extends { smeta_grafik_id?: number }
 >(): EditorComponentType<T> => {
-  const Editor: EditorComponentType<T> = ({ tabIndex, id, row, errors, onChange }) => {
+  const Editor: EditorComponentType<T> = ({ tabIndex, id, row, errors, onChange, setState }) => {
     const smetaSpravochnik = useSpravochnik(
       createSmetaGrafikSpravochnik({
         value: row.smeta_grafik_id || undefined,
@@ -23,6 +24,13 @@ export const createSmetaGrafikEditor = <
         }
       })
     )
+
+    useEffect(() => {
+      setState({
+        smeta_grafik: smetaSpravochnik.selected
+      })
+    }, [smetaSpravochnik.selected])
+
     return (
       <SpravochnikInput
         {...smetaSpravochnik}

@@ -19,44 +19,34 @@ export namespace Mainbook {
   }
 
   export type AdminReport = {
-    id: number
     month: number
     year: number
     budjet_id: number
-    name: string
+    budjet_name: string
     user_id: number
     user_login: string
-    accepted_id: null | number
-    accepted_login: null | string
-    accepted_time: null | string
+    user_id_qabul_qilgan: any
+    user_login_qabul_qilgan: any
     status: number
     region_id: number
     region_name: string
-    created_at: string
+    document_yaratilgan_vaqt: string
+    document_qabul_qilingan_vaqt: any
   }
 
   export type AdminReportDetails = {
-    id: number
-    user_id: number
-    user_id_accepted: number
-    budjet_id: number
-    accepted_time: string
     month: number
     year: number
+    budjet_id: number
+    budjet_name: string
+    user_id: number
+    user_login: string
+    user_id_qabul_qilgan: null | number
+    user_login_qabul_qilgan: null | string
     status: number
-    data: Array<{
-      type: string
-      schets: Array<{
-        id: number
-        name: string
-        schet: string
-        created_at: string
-        updated_at: string
-        summa: Summa
-      }>
-      debet_sum: number
-      kredit_sum: number
-    }>
+    document_yaratilgan_vaqt: string
+    document_qabul_qilingan_vaqt: null | string
+    types: ReportPreviewProvodka[]
   }
 
   export type Report = {
@@ -64,28 +54,34 @@ export namespace Mainbook {
     type_document: string
     month: number
     year: number
-    summa: Summa
+    debet_sum: number
+    kredit_sum: number
   }
 
   export type ReportPreview = {
-    id: number
     month: number
     year: number
     budjet_id: number
-    name: string
+    budjet_name: string
     user_id: number
     user_login: string
-    accepted_id: null | string
-    accepted_login: null | string
-    accepted_time: null | string
-    created_at: string
+    user_id_qabul_qilgan: any
+    user_login_qabul_qilgan: any
     status: number
+    document_yaratilgan_vaqt: string
+    document_qabul_qilingan_vaqt: any
   }
 
   export type ReportPreviewDetails = {
     year: number
     month: number
-    data: ReportPreviewProvodka[]
+    types: ReportPreviewProvodka[]
+  }
+
+  export type ReportPreviewInfo = {
+    year: number
+    month: number
+    type_documents: ReportPreviewProvodka[]
   }
 
   export type ReportPreviewProvodka = {

@@ -33,7 +33,7 @@ export const columns: ColumnDef<Mainbook.AdminReport>[] = [
       return (
         <div>
           <h6 className="font-bold text-base">@{row.user_login}</h6>
-          <p>{formatLocaleDateTime(row.created_at)}</p>
+          <p>{formatLocaleDateTime(row.document_yaratilgan_vaqt)}</p>
         </div>
       )
     }
@@ -42,12 +42,16 @@ export const columns: ColumnDef<Mainbook.AdminReport>[] = [
     key: 'document_qabul_qilingan_vaqt',
     header: 'Действия',
     renderCell(row) {
-      return row.accepted_login ? (
+      return row.user_login_qabul_qilgan ? (
         <div>
           <h6 className="font-bold text-base">
-            {row.accepted_login ? `@${row.accepted_login}` : null}
+            {row.user_login_qabul_qilgan ? `@${row.user_login_qabul_qilgan}` : null}
           </h6>
-          <p>{row.accepted_time ? formatLocaleDateTime(row.accepted_time) : null}</p>
+          <p>
+            {row.document_qabul_qilingan_vaqt
+              ? formatLocaleDateTime(row.document_qabul_qilingan_vaqt)
+              : null}
+          </p>
         </div>
       ) : null
     }
