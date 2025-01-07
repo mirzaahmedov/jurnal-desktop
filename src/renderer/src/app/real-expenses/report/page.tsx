@@ -1,36 +1,38 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
-import { Expenses } from '@renderer/common/models'
 import { GenericTable } from '@renderer/common/components'
 import { ListView } from '@renderer/common/views'
-import { expensesColumns } from './columns'
-import { expensesQueryKeys } from './config'
-import { expensesService } from './service'
+import { RealExpenses } from '@renderer/common/models'
+import { expensesReportColumns } from './columns'
+import { realExpensesReportQueryKeys } from './config'
+import { realExpensesReportService } from './service'
+import { serializeDateParams } from '@renderer/common/lib/query-params'
 import { toast } from '@renderer/common/hooks'
 import { useConfirm } from '@renderer/common/features/confirm'
 import { useLayout } from '@renderer/common/features/layout'
 import { useNavigate } from 'react-router-dom'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
 
-const ExpensesPage = () => {
+const RealExpensesReportPage = () => {
   const budjet_id = useRequisitesStore((store) => store.budjet_id)
   const queryClient = useQueryClient()
   const navigate = useNavigate()
+
   const { confirm } = useConfirm()
 
   const { data: reportList, isFetching } = useQuery({
     queryKey: [
-      expensesQueryKeys.getAll,
+      realExpensesReportQueryKeys.getAll,
       {
         budjet_id
       }
     ],
-    queryFn: expensesService.getAll,
+    queryFn: realExpensesReportService.getAll,
     enabled: !!budjet_id
   })
   const { mutate: deleteReport, isPending } = useMutation({
-    mutationKey: [expensesQueryKeys.delete],
-    mutationFn: expensesService.delete,
+    mutationKey: [realExpensesReportQueryKeys.delete],
+    mutationFn: realExpensesReportService.delete as (params: any) => Promise<any>,
     onError: (error) => {
       console.error(error)
       toast({
@@ -43,27 +45,33 @@ const ExpensesPage = () => {
         title: 'Запись успешно удалена'
       })
       queryClient.invalidateQueries({
-        queryKey: [expensesQueryKeys.getAll]
+        queryKey: [realExpensesReportQueryKeys.getAll]
       })
     }
   })
 
   useLayout({
-    title: 'Закончить месячный отчёт',
+    title: 'Создать месячный отчет',
     onCreate: () => {
-      navigate(`create`)
+      navigate('create')
     }
   })
 
-  const handleEdit = (row: Expenses.ReportPreview) => {
-    navigate(`${row.id}`)
+  const handleEdit = (row: RealExpenses.Report) => {
+    const date = serializeDateParams({ month: row.month, year: row.year })
+    navigate(`edit?date=${date}&type_document=${row.type_document}`)
   }
 
-  const handleDelete = (row: Expenses.ReportPreview) => {
+  const handleDelete = (row: RealExpenses.Report) => {
     confirm({
       title: 'Удалить запись?',
-      onConfirm: async () => {
-        deleteReport(row.id)
+      onConfirm: () => {
+        deleteReport({
+          month: row.month,
+          year: row.year,
+          type_document: row.type_document,
+          budjet_id
+        })
       }
     })
   }
@@ -72,15 +80,14 @@ const ExpensesPage = () => {
     <ListView>
       <ListView.Content loading={isFetching || isPending}>
         <GenericTable
-          columns={expensesColumns}
+          columns={expensesReportColumns}
           data={reportList?.data ?? []}
           onEdit={handleEdit}
           onDelete={handleDelete}
         />
       </ListView.Content>
-      <ListView.Footer></ListView.Footer>
     </ListView>
   )
 }
 
-export default ExpensesPage
+export default RealExpensesReportPage

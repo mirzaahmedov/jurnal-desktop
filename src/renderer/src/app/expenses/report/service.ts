@@ -1,9 +1,0 @@
-import { ApiEndpoints, CRUDService } from '@renderer/common/features/crud'
-
-import { Expenses } from '@renderer/common/models'
-import { ExpensesReportValues } from './config'
-import { budjet } from '@renderer/common/features/crud/middleware'
-
-export const expensesReportService = new CRUDService<Expenses.Report, ExpensesReportValues>({
-  endpoint: ApiEndpoints.realcost_doc
-}).use(budjet())

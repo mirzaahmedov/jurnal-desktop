@@ -3,7 +3,7 @@ import { ApiEndpoints, CRUDService } from '@renderer/common/features/crud'
 import type { Mainbook } from '@renderer/common/models'
 import { http } from '@renderer/common/lib/http'
 
-export const adminMainBookService = new CRUDService<Mainbook.AdminReport>({
+export const adminMainbookService = new CRUDService<Mainbook.AdminReport>({
   endpoint: ApiEndpoints.admin__mainbook
 }).forRequest((type, args) => {
   if (type === 'getById') {
@@ -21,7 +21,7 @@ type UpdateParams = {
   year: number
   month: number
 }
-export const adminMainBookUpdateQuery = async ({
+export const adminMainbookUpdateQuery = async ({
   status,
   region_id,
   budjet_id,

@@ -1,10 +1,10 @@
-import type { Expenses } from '@renderer/common/models'
+import type { RealExpenses } from '@renderer/common/models'
 
-export const transformData = (childs: Expenses.ReportPreviewProvodka[]) => {
+export const transformData = (childs: RealExpenses.ReportPreviewProvodka[]) => {
   const grafiksMap = new Map<number, Grafik[]>()
 
   childs.forEach((child) => {
-    child.grafiks.forEach((grafik) => {
+    child.smeta_grafiks.forEach((grafik) => {
       if (!grafiksMap.has(grafik.id)) {
         grafiksMap.set(grafik.id, [])
       }
@@ -143,4 +143,4 @@ export type ExpensesTableRow = {
 
 type Grafik = {
   type: string
-} & Expenses.ReportPreviewProvodkaGrafik
+} & RealExpenses.ReportPreviewProvodkaGrafik

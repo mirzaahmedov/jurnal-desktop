@@ -1,13 +1,14 @@
 import { ApiEndpoints, CRUDService } from '@renderer/common/features/crud'
+import { budjet, main_schet } from '@renderer/common/features/crud/middleware'
 
 import { Mainbook } from '@renderer/common/models'
 import { MainbookReportValues } from './config'
-import { budjet } from '@renderer/common/features/crud/middleware'
 
 export const mainbookReportService = new CRUDService<Mainbook.Report, MainbookReportValues>({
   endpoint: ApiEndpoints.mainbook__doc
 })
   .use(budjet())
+  .use(main_schet())
   .forRequest((type, args) => {
     if (type === 'update') {
       const { year, month, type_document } = args.payload as any

@@ -1,11 +1,10 @@
 import { Badge } from '@renderer/common/components/ui/badge'
 import type { ColumnDef } from '@renderer/common/components'
-import type { Expenses } from '@renderer/common/models'
+import type { RealExpenses } from '@renderer/common/models'
 import { documentTypes } from '../common/data'
-import { formatNumber } from '@renderer/common/lib/format'
 import { getMonthName } from '@renderer/common/lib/date'
 
-export const expensesReportColumns: ColumnDef<Expenses.Report>[] = [
+export const expensesReportColumns: ColumnDef<RealExpenses.Report>[] = [
   {
     key: 'month',
     header: 'Месяц',
@@ -19,19 +18,13 @@ export const expensesReportColumns: ColumnDef<Expenses.Report>[] = [
   },
   {
     numeric: true,
-    key: 'summa.debet_sum',
-    header: 'Дебет',
-    renderCell(row) {
-      return formatNumber(row.summa?.debet_sum)
-    }
+    key: 'debet_sum',
+    header: 'Дебет'
   },
   {
     numeric: true,
-    key: 'summa.kredit_sum',
-    header: 'Кредит',
-    renderCell(row) {
-      return formatNumber(row.summa?.kredit_sum)
-    }
+    key: 'kredit_sum',
+    header: 'Кредит'
   },
   {
     key: 'type_document',

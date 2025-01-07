@@ -331,6 +331,11 @@ export const getNavElements = (): NavElement[] => {
               icon: Wallet
             },
             {
+              path: 'ox-report',
+              title: '1-OX хисобот',
+              icon: Sheet
+            },
+            {
               path: 'logs',
               title: 'Логи',
               icon: FileClock

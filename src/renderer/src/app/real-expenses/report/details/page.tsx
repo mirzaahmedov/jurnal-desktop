@@ -1,11 +1,11 @@
-import {
-  ExpensesReportFormSchema,
-  ExpensesReportProvodkaSchema,
-  defaultValues,
-  expensesReportQueryKeys
-} from '../config'
 import { Fieldset, SelectField } from '@renderer/common/components'
 import { Form, FormField } from '@renderer/common/components/ui/form'
+import {
+  RealExpensesReportFormSchema,
+  RealExpensesReportProvodkaSchema,
+  defaultValues,
+  realExpensesReportQueryKeys
+} from '../config'
 import {
   createEditorChangeHandler,
   createEditorCreateHandler,
@@ -13,13 +13,14 @@ import {
 } from '@renderer/common/features/editable-table/helpers'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { useNavigate, useParams } from 'react-router-dom'
+import { useQueryDateParams, useQueryTypeDocument } from '@renderer/common/lib/query-params'
 
 import { DetailsView } from '@renderer/common/views'
 import { EditableTable } from '@renderer/common/features/editable-table'
 import { MonthPicker } from '@renderer/common/components/month-picker'
 import { documentTypes } from '@renderer/app/mainbook/common/data'
-import { expensesReportService } from '../service'
 import { provodkaColumns } from './provodka'
+import { realExpensesReportService } from '../service'
 import { toast } from '@renderer/common/hooks'
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
@@ -32,28 +33,34 @@ const ExpensesReportDetailsPage = () => {
   const params = useParams()
   const budjet_id = useRequisitesStore((store) => store.budjet_id)
 
+  const { year, month } = useQueryDateParams('date')
+  const { type_document } = useQueryTypeDocument()
+
   const form = useForm({
     defaultValues: {
       ...defaultValues,
       year: new Date().getFullYear(),
       month: new Date().getMonth() + 1
     },
-    resolver: zodResolver(ExpensesReportFormSchema)
+    resolver: zodResolver(RealExpensesReportFormSchema)
   })
 
   const { data: report, isFetching } = useQuery({
     queryKey: [
-      expensesReportQueryKeys.getById,
-      Number(params.id),
+      realExpensesReportQueryKeys.getById,
+      1000,
       {
+        year,
+        month,
+        type_document,
         budjet_id
       }
     ],
-    queryFn: expensesReportService.getById,
-    enabled: params.id !== 'create'
+    queryFn: realExpensesReportService.getById,
+    enabled: params.id !== 'create' && !!budjet_id && !!year && !!month
   })
   const { mutate: createReport, isPending: isCreating } = useMutation({
-    mutationFn: expensesReportService.create,
+    mutationFn: realExpensesReportService.create,
     onSuccess() {
       toast({
         title: 'Запись успешно создана'
@@ -69,7 +76,7 @@ const ExpensesReportDetailsPage = () => {
     }
   })
   const { mutate: updateReport, isPending: isUpdating } = useMutation({
-    mutationFn: expensesReportService.update,
+    mutationFn: realExpensesReportService.update,
     onSuccess() {
       toast({
         title: 'Запись успешно обновлена'
@@ -100,7 +107,7 @@ const ExpensesReportDetailsPage = () => {
     if (params.id === 'create') {
       createReport(values)
     } else {
-      updateReport({ id: Number(params.id), ...values })
+      updateReport(values)
     }
   })
 
@@ -111,6 +118,7 @@ const ExpensesReportDetailsPage = () => {
           <form onSubmit={onSubmit}>
             <div className="grid grid-cols-4 gap-10 p-5">
               <MonthPicker
+                disabled={isFetching || isCreating || isUpdating || params.id !== 'create'}
                 value={
                   form.watch('year') && form.watch('month')
                     ? `${form.watch('year')}-${form.watch('month')}-01`
@@ -126,6 +134,7 @@ const ExpensesReportDetailsPage = () => {
                   form.setValue('year', year)
                   form.setValue('month', month)
                 }}
+                className="disabled:opacity-85"
               />
               <FormField
                 control={form.control}
@@ -133,11 +142,13 @@ const ExpensesReportDetailsPage = () => {
                 render={({ field }) => (
                   <SelectField
                     {...field}
+                    disabled={isFetching || isCreating || isUpdating || params.id !== 'create'}
                     onValueChange={(value) => field.onChange(value)}
                     options={documentTypes}
                     placeholder="Выберите тип документа"
                     getOptionLabel={(option) => option.name}
                     getOptionValue={(option) => option.key}
+                    triggerClassName="disabled:opacity-85"
                   />
                 )}
               />
@@ -158,7 +169,7 @@ const ExpensesReportDetailsPage = () => {
             errors={form.formState.errors.childs}
             onCreate={createEditorCreateHandler({
               form,
-              schema: ExpensesReportProvodkaSchema,
+              schema: RealExpensesReportProvodkaSchema,
               defaultValues: defaultValues.childs[0]
             })}
             onDelete={createEditorDeleteHandler({

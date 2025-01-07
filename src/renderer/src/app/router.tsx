@@ -2,10 +2,12 @@ import { Navigate, createHashRouter } from 'react-router-dom'
 
 import AccessPage from './region-admin/access/page'
 import AccountablePage from './region-spravochnik/podotchet'
-import AdminExpenseDetailsPage from './super-admin/expenses/details/page'
-import AdminExpensesPage from './super-admin/expenses/page'
-import AdminMainBookDetailsPage from './super-admin/mainbook/details/page'
+import AdminMainbookDetailsPage from './super-admin/mainbook/details/page'
 import AdminMainbookPage from './super-admin/mainbook/page'
+import AdminOXDetailsPage from './super-admin/ox-report/details/page'
+import AdminOXPage from './super-admin/ox-report/page'
+import AdminRealExpenseDetailsPage from './super-admin/real-expenses/details/page'
+import AdminRealExpensesPage from './super-admin/real-expenses/page'
 import AdvanceReportDetailsPage from './podotchet/avans/details/page'
 import AktDetailsPage from './organization/akt/details/page'
 import AktPage from './organization/akt/page'
@@ -18,10 +20,9 @@ import BankRasxodPage from './bank/rasxod/page'
 import BankSpravochnikPage from './super-admin/bank/page'
 import BudgetPage from './super-admin/budjet/page'
 import ContractDetailsPage from './organization/shartnoma/details/page'
-import ExpensesDetailsPage from './expenses/expenses/details/page'
-import ExpensesPage from './expenses/expenses/page'
-import ExpensesReportDetailsPage from './expenses/report/details/page'
-import ExpensesReportPage from './expenses/report/page'
+import ExpensesDetailsPage from './real-expenses/real-expenses/details/page'
+import ExpensesPage from './real-expenses/real-expenses/page'
+import ExpensesReportDetailsPage from './real-expenses/report/details/page'
 import GroupPage from './super-admin/group/page'
 import HomePage from './home/page'
 import { InternalTransferDetailsPage } from './jur7/internal-transfer/details/page'
@@ -55,6 +56,7 @@ import PodotchetMonitoringPage from './podotchet/monitor/page'
 import PodpisPage from './region-spravochnik/podpis/page'
 import PokazatUslugiDetailsPage from './organization/pokazat-uslugi/details/page'
 import PokazatUslugiPage from './organization/pokazat-uslugi/page'
+import RealExpensesReportPage from './real-expenses/report/page'
 import RegionDataPage from './super-admin/region-data/page'
 import RegionPage from './super-admin/region/page'
 import RegionUserPage from './region-admin/region-user'
@@ -73,10 +75,6 @@ import Subdivision7Page from './jur7/podrazdelenie/page'
 import SubdivisionPage from './region-spravochnik/podrazdelenie/page'
 import UnitPage from './super-admin/unit/page'
 import UserPage from './super-admin/user/page'
-
-// import DemoPage from './demo/page'
-
-// import NaimenovaniePage from './jur7/naimenovaniya/page'
 
 export const routes: RouteObject[] = [
   {
@@ -284,15 +282,23 @@ export const routes: RouteObject[] = [
           },
           {
             path: 'mainbook/:id',
-            element: <AdminMainBookDetailsPage />
+            element: <AdminMainbookDetailsPage />
           },
           {
             path: 'expenses',
-            element: <AdminExpensesPage />
+            element: <AdminRealExpensesPage />
           },
           {
             path: 'expenses/:id',
-            element: <AdminExpenseDetailsPage />
+            element: <AdminRealExpenseDetailsPage />
+          },
+          {
+            path: 'ox-report',
+            element: <AdminOXPage />
+          },
+          {
+            path: 'ox-report/:id',
+            element: <AdminOXDetailsPage />
           }
         ]
       },
@@ -378,7 +384,7 @@ export const routes: RouteObject[] = [
         children: [
           {
             path: 'report',
-            element: <ExpensesReportPage />
+            element: <RealExpensesReportPage />
           },
           {
             path: 'report/:id',

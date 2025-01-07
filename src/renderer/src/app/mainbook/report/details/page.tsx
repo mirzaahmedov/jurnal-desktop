@@ -109,7 +109,7 @@ const MainbookReportDetailsPage = () => {
     if (params.id === 'create') {
       createReport(values)
     } else {
-      updateReport({ id: Number(params.id), ...values })
+      updateReport(values)
     }
   })
 

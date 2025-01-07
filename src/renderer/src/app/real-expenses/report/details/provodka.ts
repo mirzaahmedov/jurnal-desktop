@@ -4,9 +4,9 @@ import {
 } from '@/common/features/editable-table/editors'
 
 import type { EditableColumnType } from '@/common/features/editable-table'
-import type { ExpensesReportProvodka } from '../config'
+import type { RealExpensesReportProvodka } from '../config'
 
-const provodkaColumns: EditableColumnType<ExpensesReportProvodka>[] = [
+const provodkaColumns: EditableColumnType<RealExpensesReportProvodka>[] = [
   {
     key: 'smeta_grafik_id',
     header: 'Смета',

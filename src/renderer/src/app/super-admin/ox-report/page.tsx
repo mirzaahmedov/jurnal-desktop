@@ -1,23 +1,30 @@
-import { Expenses } from '@renderer/common/models'
 import { GenericTable } from '@renderer/common/components'
 import { ListView } from '@renderer/common/views'
-import { adminMainBookService } from './service'
+import { OX } from '@renderer/common/models'
+import { adminOXService } from './service'
 import { columns } from './columns'
 import { queryKeys } from './config'
+import { serializeDateParams } from '@renderer/common/lib/query-params'
+import { useLayout } from '@renderer/common/features/layout'
 import { useNavigate } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 
-const AdminExpensesPage = () => {
+const AdminOXPage = () => {
   const navigate = useNavigate()
 
   const { data: reports, isFetching } = useQuery({
     queryKey: [queryKeys.getAll],
-    queryFn: adminMainBookService.getAll
+    queryFn: adminOXService.getAll
   })
 
-  const handleEdit = (row: Expenses.AdminReport) => {
-    navigate(`${row.id}?region_id=${row.region_id}`)
+  const handleEdit = (row: OX.AdminReport) => {
+    const date = serializeDateParams({ month: row.month, year: row.year })
+    navigate(`edit?date=${date}&region_id=${row.region_id}&budjet_id=${row.budjet_id}`)
   }
+
+  useLayout({
+    title: 'Отчеты по ОХ'
+  })
 
   return (
     <ListView>
@@ -32,4 +39,4 @@ const AdminExpensesPage = () => {
   )
 }
 
-export default AdminExpensesPage
+export default AdminOXPage

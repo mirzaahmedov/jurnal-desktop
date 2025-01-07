@@ -36,30 +36,26 @@ import {
 import { formatDate } from '@/common/lib/date'
 import { bankMonitorService, bankMonitorQueryKeys } from '../../monitor'
 import { ButtonGroup } from '@/common/components/ui/button-group'
-import { useDefaultFormFields } from '@/common/features/app-defaults'
-import { extendObject } from '@/common/lib/utils'
 import { formatLocaleDate } from '@/common/lib/format'
 
 import { DetailsView } from '@/common/views'
 import { GeneratePorucheniya } from './generate-porucheniya'
+import { usePodpis } from '@renderer/common/features/podpis'
+import { ApiEndpoints } from '@renderer/common/features/crud'
+import { Operatsii, Response } from '@renderer/common/models'
 
 const BankRasxodDetailtsPage = () => {
   const { toast } = useToast()
-  const { id } = useParams()
 
+  const params = useParams()
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const main_schet_id = useRequisitesStore((state) => state.main_schet_id)
-
-  const { rukovoditel: default_rukovoditel, glav_buxgalter: default_glav_buxgalter } =
-    useDefaultFormFields()
+  const podpis = usePodpis('bank_rasxod', params.id === 'create')
 
   const form = useForm<RasxodPayloadType>({
     resolver: zodResolver(RasxodPayloadSchema),
-    defaultValues: extendObject(defaultValues, {
-      rukovoditel: default_rukovoditel,
-      glav_buxgalter: default_glav_buxgalter
-    })
+    defaultValues
   })
 
   const orgSpravochnik = useSpravochnik(
@@ -108,13 +104,13 @@ const BankRasxodDetailtsPage = () => {
   const { data: rasxod, isFetching } = useQuery({
     queryKey: [
       queryKeys.getById,
-      Number(id),
+      Number(params.id),
       {
         main_schet_id
       }
     ],
     queryFn: bankRasxodService.getById,
-    enabled: id !== 'create'
+    enabled: params.id !== 'create'
   })
   const { mutate: create, isPending: isCreating } = useMutation({
     mutationFn: bankRasxodService.create,
@@ -126,7 +122,7 @@ const BankRasxodDetailtsPage = () => {
         queryKey: [queryKeys.getAll]
       })
       queryClient.invalidateQueries({
-        queryKey: [queryKeys.getById, id]
+        queryKey: [queryKeys.getById, params.id]
       })
     },
     onError(error) {
@@ -142,7 +138,7 @@ const BankRasxodDetailtsPage = () => {
         queryKey: [queryKeys.getAll]
       })
       queryClient.invalidateQueries({
-        queryKey: [queryKeys.getById, id]
+        queryKey: [queryKeys.getById, params.id]
       })
     },
     onError(error) {
@@ -162,9 +158,9 @@ const BankRasxodDetailtsPage = () => {
       summa
     } = payload
 
-    if (id !== 'create') {
+    if (params.id !== 'create') {
       update({
-        id: Number(id),
+        id: Number(params.id),
         doc_date,
         doc_num,
         id_spravochnik_organization,
@@ -202,7 +198,8 @@ const BankRasxodDetailtsPage = () => {
   const reminder = (monitor?.meta?.summa_to ?? 0) - (summa ?? 0) + (rasxod?.data?.summa ?? 0)
 
   useLayout({
-    title: id === 'create' ? 'Создать расходный документ' : 'Редактировать расходный документ',
+    title:
+      params.id === 'create' ? 'Создать расходный документ' : 'Редактировать расходный документ',
     onBack() {
       navigate(-1)
     }
@@ -217,7 +214,7 @@ const BankRasxodDetailtsPage = () => {
   }, [form, podvodki])
 
   useEffect(() => {
-    if (id === 'create') {
+    if (params.id === 'create') {
       form.reset(defaultValues)
       setPodvodki(defaultValues.childs)
       return
@@ -225,7 +222,7 @@ const BankRasxodDetailtsPage = () => {
 
     form.reset(rasxod?.data ?? defaultValues)
     setPodvodki(rasxod?.data?.childs ?? defaultValues.childs)
-  }, [setPodvodki, form, rasxod, id])
+  }, [setPodvodki, form, rasxod, params.id])
 
   const { doc_num, doc_date } = form.watch()
   useEffect(() => {
@@ -234,9 +231,43 @@ const BankRasxodDetailtsPage = () => {
     }
     form.setValue(
       'opisanie',
-      `№ ${doc_num}-сонли ${formatLocaleDate(doc_date)} йил кунги шартномага асосан  Ст: (субсчет)`
+      `№ ${doc_num}-сонли ${formatLocaleDate(doc_date)} йил кунги шартномага асосан {kerakli matn} Ст: 0`
     )
   }, [form, doc_date, doc_num])
+
+  useEffect(() => {
+    const [rukovoditel, glav_buxgalter] = podpis
+
+    if (rukovoditel && !form.getValues('rukovoditel')) {
+      form.setValue('rukovoditel', rukovoditel.fio_name)
+    }
+    if (glav_buxgalter && !form.getValues('glav_buxgalter')) {
+      form.setValue('glav_buxgalter', glav_buxgalter.fio_name)
+    }
+  }, [form, podpis])
+
+  const provodka = form.watch('childs.0')
+  const operatsii_id = provodka?.spravochnik_operatsii_id ?? 0
+  useEffect(() => {
+    if (!operatsii_id) {
+      return
+    }
+    const operatsii = queryClient.getQueryState<Response<Operatsii>>([
+      ApiEndpoints.operatsii,
+      operatsii_id
+    ])
+
+    if (!operatsii?.data) {
+      return
+    }
+
+    const { sub_schet } = operatsii?.data?.data ?? {}
+    if (/Ст: \d*$/.test(form.getValues('opisanie') || '')) {
+      form.setValue('opisanie', form.getValues('opisanie')!.replace(/Ст: \d*$/, `Ст: ${sub_schet}`))
+    } else {
+      form.setValue('opisanie', `${form.getValues('opisanie')} Ст: ${sub_schet}`)
+    }
+  }, [queryClient, form, operatsii_id])
 
   return (
     <DetailsView>

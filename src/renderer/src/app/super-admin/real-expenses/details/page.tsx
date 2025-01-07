@@ -1,4 +1,4 @@
-import { adminMainbookService, adminMainbookUpdateQuery } from '../service'
+import { adminRealExpenseUpdateQuery, adminRealExpensesService } from '../service'
 import { calculateColumnTotals, calculateRowTotals, transformData } from './utils'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import {
@@ -9,20 +9,21 @@ import {
 
 import { Button } from '@renderer/common/components/ui/button'
 import { DetailsView } from '@renderer/common/views'
-import { Mainbook } from '@renderer/common/models'
+import { RealExpenses } from '@renderer/common/models'
 import { ReportTable } from '../report-table'
 import { queryKeys } from '../config'
+import { toast } from '@renderer/common/hooks'
 import { useConfirm } from '@renderer/common/features/confirm'
 import { useLayout } from '@renderer/common/features/layout'
 import { useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-const AdminMainbookDetailsPage = () => {
+const AdminRealExpenseDetailsPage = () => {
   const navigate = useNavigate()
 
-  const { budjet_id } = useQueryBudjetId()
+  const { year, month } = useQueryDateParams('date')
   const { region_id } = useQueryRegionId()
-  const { month, year } = useQueryDateParams('date')
+  const { budjet_id } = useQueryBudjetId()
 
   const { confirm } = useConfirm()
 
@@ -33,27 +34,41 @@ const AdminMainbookDetailsPage = () => {
       {
         region_id,
         budjet_id,
-        year,
-        month
+        month,
+        year
       }
     ],
-    queryFn: adminMainbookService.getById,
-    enabled: !!region_id && !!budjet_id && !!year && !!month
+    queryFn: adminRealExpensesService.getById,
+    enabled: !!region_id && !!year && !!month && !!budjet_id
   })
   const { mutate: updateReport, isPending } = useMutation({
-    mutationFn: adminMainbookUpdateQuery,
+    mutationFn: adminRealExpenseUpdateQuery,
     onSuccess: () => {
+      toast({
+        title: 'Отчёт успешно обновлён'
+      })
       navigate(-1)
+    },
+    onError: (error) => {
+      console.error(error)
+      toast({
+        variant: 'destructive',
+        title: error.message
+      })
     }
   })
 
   const transformed = useMemo(() => {
-    const data = (report?.data as unknown as Mainbook.AdminReportDetails) || {}
+    if (!report?.data) {
+      return []
+    }
+
+    const data = report?.data as unknown as RealExpenses.AdminReportDetails
     if (!data?.types) {
       return []
     }
     const rows = transformData(data?.types).sort((a, b) =>
-      a.schet.padStart(3, '0').localeCompare(b.schet.padStart(3, '0'))
+      a.smeta_number?.localeCompare(b.smeta_number)
     )
 
     rows.push(calculateColumnTotals(rows))
@@ -65,13 +80,10 @@ const AdminMainbookDetailsPage = () => {
     confirm({
       title: 'Принять отчёт?',
       onConfirm: () => {
-        if (!region_id || !budjet_id) {
-          return
-        }
         updateReport({
           status: 2,
-          month,
           year,
+          month,
           region_id,
           budjet_id
         })
@@ -83,13 +95,10 @@ const AdminMainbookDetailsPage = () => {
     confirm({
       title: 'Отклонить отчёт?',
       onConfirm: () => {
-        if (!region_id || !budjet_id) {
-          return
-        }
         updateReport({
           status: 3,
-          month,
           year,
+          month,
           region_id,
           budjet_id
         })
@@ -133,4 +142,4 @@ const AdminMainbookDetailsPage = () => {
   )
 }
 
-export default AdminMainbookDetailsPage
+export default AdminRealExpenseDetailsPage

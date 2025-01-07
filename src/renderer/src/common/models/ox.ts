@@ -16,20 +16,19 @@ export namespace OX {
   }
 
   export type AdminReport = {
-    id: number
     month: number
     year: number
     budjet_id: number
-    name: string
+    budjet_name: string
     user_id: number
     user_login: string
-    accepted_id: null | number
-    accepted_login: null | string
+    user_id_qabul_qilgan: null | number
+    user_login_qabul_qilgan: null | string
     status: number
     region_id: number
     region_name: string
-    accepted_time: null | string
-    created_at: string
+    document_yaratilgan_vaqt: string
+    document_qabul_qilingan_vaqt: null | string
   }
 
   export type Report = {
@@ -85,18 +84,21 @@ export namespace OX {
     oy_12: number
     year: number
     summa: Summa
+    year_summa: Summa
   }
 
   export type AdminReportDetails = {
-    id: number
-    user_id: number
-    user_id_accepted: any
-    budjet_id: number
-    accepted_time: any
     month: number
     year: number
+    budjet_id: number
+    budjet_name: string
+    user_id: number
+    user_login: string
+    user_id_qabul_qilgan: any
+    user_login_qabul_qilgan: any
     status: number
-    created_at: string
-    childs: Array<ReportPreviewProvodka>
+    document_yaratilgan_vaqt: string
+    document_qabul_qilingan_vaqt: any
+    smeta_grafiks: ReportPreviewProvodka[]
   }
 }

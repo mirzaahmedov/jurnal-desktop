@@ -1,4 +1,4 @@
-export namespace Expenses {
+export namespace RealExpenses {
   type Summa = {
     debet_sum: number
     kredit_sum: number
@@ -13,65 +13,58 @@ export namespace Expenses {
   }
 
   export type AdminReport = {
-    id: number
     month: number
     year: number
     budjet_id: number
-    name: string
+    budjet_name: string
     user_id: number
     user_login: string
-    accepted_id: null | number
-    accepted_login: null | string
+    user_id_qabul_qilgan: null | number
+    user_login_qabul_qilgan: null | string
     status: number
     region_id: number
     region_name: string
-    accepted_time: null | string
-    created_at: string
+    document_yaratilgan_vaqt: string
+    document_qabul_qilingan_vaqt: string | null
   }
 
   export type Report = {
-    id: number
     type_document: string
     month: number
     year: number
-    summa: {
-      debet_sum: number
-      kredit_sum: number
-    }
+    debet_sum: number
+    kredit_sum: number
   }
 
   export type ReportPreview = {
-    id: number
     month: number
     year: number
     budjet_id: number
-    name: string
+    budjet_name: string
     user_id: number
     user_login: string
-    accepted_id: null | number
-    accepted_login: null | string
+    user_id_qabul_qilgan: null | number
+    user_login_qabul_qilgan: null | string
     status: number
-    created_at: string
-    accepted_time: null | string
+    region_id: number
+    document_yaratilgan_vaqt: string
+    document_qabul_qilingan_vaqt: null | string
   }
 
   export type ReportPreviewDetails = {
-    id: number
-    user_id: number
-    user_id_accepted: number
-    budjet_id: number
-    accepted_time: string
     month: number
     year: number
-    status: number
-    data: Array<ReportPreviewProvodka>
+    types: Array<ReportPreviewProvodka>
+  }
+  export type ReportPreviewInfo = {
+    month: number
+    year: number
+    type_documents: Array<ReportPreviewProvodka>
   }
 
   export type ReportPreviewProvodka = {
     type: string
-    debet_sum: number
-    kredit_sum: number
-    grafiks: Array<ReportPreviewProvodkaGrafik>
+    smeta_grafiks: Array<ReportPreviewProvodkaGrafik>
   }
 
   export type ReportPreviewProvodkaGrafik = {
@@ -99,15 +92,17 @@ export namespace Expenses {
   }
 
   export type AdminReportDetails = {
-    id: number
-    user_id: number
-    user_id_accepted: any
-    budjet_id: number
-    accepted_time: any
     month: number
     year: number
+    budjet_id: number
+    budjet_name: string
+    user_id: number
+    user_login: string
+    user_id_qabul_qilgan: null | number
+    user_login_qabul_qilgan: null | string
     status: number
-    created_at: string
-    childs: Array<ReportPreviewProvodka>
+    document_yaratilgan_vaqt: string
+    document_qabul_qilingan_vaqt: null | string
+    types: ReportPreviewProvodka[]
   }
 }

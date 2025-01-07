@@ -1,19 +1,20 @@
 import { FileDown, Save } from 'lucide-react'
 import { calculateColumnTotals, calculateRowTotals, transformData } from './utils'
-import { expensesService, getExpensesById, getExpensesInfo } from '../service'
+import { getRealExpenseById, getRealExpenseInfo, realExpensesService } from '../service'
 import { useEffect, useMemo, useState } from 'react'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import { Button } from '@renderer/common/components/ui/button'
 import { DetailsView } from '@renderer/common/views'
-import { Expenses } from '@renderer/common/models'
 import { MonthPicker } from '@renderer/common/components/month-picker'
+import { RealExpenses } from '@renderer/common/models'
 import { ReportTable } from '../report-table'
 import { expensesQueryKeys } from '../config'
 import { formatDate } from '@renderer/common/lib/date'
 import { toast } from '@renderer/common/hooks'
 import { useLayout } from '@renderer/common/features/layout'
+import { useQueryDateParams } from '@renderer/common/lib/query-params'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
 
 const ExpensesDetailsPage = () => {
@@ -21,37 +22,41 @@ const ExpensesDetailsPage = () => {
   const navigate = useNavigate()
   const params = useParams()
 
-  const [values, setValues] = useState<Expenses.ReportPreviewProvodka[]>()
+  const [values, setValues] = useState<RealExpenses.ReportPreviewProvodka[]>()
   const [date, setDate] = useState(formatDate(new Date()))
   const [year, month] = date.split('-')
 
+  const dateParams = useQueryDateParams('date')
+
   const { data: reportInfo, isFetching: isFetchingInfo } = useQuery({
     queryKey: [
-      getExpensesInfo,
+      getRealExpenseInfo,
       {
         year: Number(year),
         month: Number(month),
         budjet_id
       }
     ],
-    queryFn: getExpensesInfo,
+    queryFn: getRealExpenseInfo,
     enabled: !!budjet_id && params.id === 'create'
   })
 
   const { data: mainbook, isFetching } = useQuery({
     queryKey: [
       expensesQueryKeys.getById,
-      Number(params.id),
+      1000,
       {
-        budjet_id
+        budjet_id,
+        year: dateParams.year,
+        month: dateParams.month
       }
     ],
-    queryFn: getExpensesById,
-    enabled: !!budjet_id && params.id !== 'create'
+    queryFn: getRealExpenseById,
+    enabled: !!budjet_id && params.id !== 'create' && !!dateParams.year && !!dateParams.month
   })
 
   const { mutate: createMainbook, isPending: isCreating } = useMutation({
-    mutationFn: expensesService.create,
+    mutationFn: realExpensesService.create,
     onError: (error) => {
       console.error(error)
       toast({
@@ -67,7 +72,7 @@ const ExpensesDetailsPage = () => {
     }
   })
   const { mutate: updateMainbook, isPending: isUpdating } = useMutation({
-    mutationFn: expensesService.update,
+    mutationFn: realExpensesService.update,
     onError: (error) => {
       console.error(error)
       toast({
@@ -83,12 +88,12 @@ const ExpensesDetailsPage = () => {
     }
   })
   const { mutate: loadInfo, isPending } = useMutation({
-    mutationFn: getExpensesInfo,
+    mutationFn: getRealExpenseInfo,
     onSuccess: (response) => {
       toast({
         title: 'Информация успешно загружена'
       })
-      setValues(response?.data ?? [])
+      setValues(response?.data?.type_documents ?? [])
     },
     onError: (error) => {
       console.error(error)
@@ -118,7 +123,7 @@ const ExpensesDetailsPage = () => {
   }, [values])
 
   useEffect(() => {
-    setValues(reportInfo?.data ?? mainbook?.data?.data ?? [])
+    setValues(reportInfo?.data?.type_documents ?? mainbook?.data?.types ?? [])
   }, [reportInfo?.data, mainbook?.data])
 
   useEffect(() => {
@@ -137,7 +142,7 @@ const ExpensesDetailsPage = () => {
           disabled={params.id !== 'create'}
           value={date}
           onChange={setDate}
-          className="disabled:opacity-100"
+          className="disabled:opacity-85"
         />
       </div>
       <div className="relative w-full overflow-x-hidden">
@@ -156,16 +161,13 @@ const ExpensesDetailsPage = () => {
           onClick={() => {
             if (params.id === 'create') {
               createMainbook({
-                data: values,
                 month: Number(month),
                 year: Number(year)
               })
             } else {
               updateMainbook({
-                id: Number(params.id),
-                data: values,
-                month: Number(month),
-                year: Number(year)
+                month: dateParams.month,
+                year: dateParams.year
               })
             }
           }}
@@ -179,7 +181,7 @@ const ExpensesDetailsPage = () => {
             onClick={() => {
               loadInfo({
                 queryKey: [
-                  getExpensesInfo,
+                  getRealExpenseInfo,
                   {
                     year: Number(year),
                     month: Number(month),

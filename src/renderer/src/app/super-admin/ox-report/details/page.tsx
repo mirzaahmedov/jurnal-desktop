@@ -1,57 +1,69 @@
-import { adminExpenseUpdateQuery, adminMainBookService } from '../service'
-import { calculateColumnTotals, calculateRowTotals, transformData } from './utils'
+import { adminOXService, adminOXUpdateQuery } from '../service'
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import {
+  useQueryBudjetId,
+  useQueryDateParams,
+  useQueryRegionId
+} from '@renderer/common/lib/query-params'
 
 import { Button } from '@renderer/common/components/ui/button'
 import { DetailsView } from '@renderer/common/views'
-import { Expenses } from '@renderer/common/models'
+import { OX } from '@renderer/common/models'
 import { ReportTable } from '../report-table'
 import { queryKeys } from '../config'
+import { toast } from '@renderer/common/hooks'
 import { useConfirm } from '@renderer/common/features/confirm'
 import { useLayout } from '@renderer/common/features/layout'
 import { useMemo } from 'react'
+import { useNavigate } from 'react-router-dom'
 
-const AdminExpenseDetailsPage = () => {
+const AdminOXDetailsPage = () => {
   const navigate = useNavigate()
-  const params = useParams()
-  const [searchParams] = useSearchParams()
+
+  const { year, month } = useQueryDateParams('date')
+  const { region_id } = useQueryRegionId()
+  const { budjet_id } = useQueryBudjetId()
 
   const { confirm } = useConfirm()
 
   const { data: report, isFetching } = useQuery({
     queryKey: [
       queryKeys.getById,
-      Number(params.id),
+      1000,
       {
-        region_id: searchParams.get('region_id')
+        region_id,
+        budjet_id,
+        month,
+        year
       }
     ],
-    queryFn: adminMainBookService.getById
+    queryFn: adminOXService.getById,
+    enabled: !!region_id && !!year && !!month && !!budjet_id
   })
   const { mutate: updateReport, isPending } = useMutation({
-    mutationFn: adminExpenseUpdateQuery,
+    mutationFn: adminOXUpdateQuery,
     onSuccess: () => {
+      toast({
+        title: 'Отчёт успешно обновлён'
+      })
       navigate(-1)
+    },
+    onError: (error) => {
+      console.error(error)
+      toast({
+        variant: 'destructive',
+        title: error.message
+      })
     }
   })
 
-  const transformed = useMemo(() => {
+  const values = useMemo(() => {
     if (!report?.data) {
       return []
     }
 
-    const data = report?.data as unknown as Expenses.AdminReportDetails
-    if (!data?.childs) {
-      return []
-    }
-    const rows = transformData(data?.childs).sort((a, b) =>
-      a.smeta_number?.localeCompare(b.smeta_number)
-    )
-
-    rows.push(calculateColumnTotals(rows))
-
-    return calculateRowTotals(rows)
+    const data = report?.data as unknown as OX.AdminReportDetails
+    return data?.smeta_grafiks
   }, [report?.data])
 
   const handleAccept = () => {
@@ -59,9 +71,11 @@ const AdminExpenseDetailsPage = () => {
       title: 'Принять отчёт?',
       onConfirm: () => {
         updateReport({
-          id: Number(params.id),
           status: 2,
-          region_id: Number(searchParams.get('region_id'))
+          year,
+          month,
+          region_id,
+          budjet_id
         })
       }
     })
@@ -72,9 +86,11 @@ const AdminExpenseDetailsPage = () => {
       title: 'Отклонить отчёт?',
       onConfirm: () => {
         updateReport({
-          id: Number(params.id),
           status: 3,
-          region_id: Number(searchParams.get('region_id'))
+          year,
+          month,
+          region_id,
+          budjet_id
         })
       }
     })
@@ -92,7 +108,7 @@ const AdminExpenseDetailsPage = () => {
       <div className="w-full relative overflow-x-hidden">
         <ReportTable
           isLoading={isFetching}
-          data={transformed}
+          data={values}
           onDelete={() => {}}
           onEdit={() => {}}
         />
@@ -116,4 +132,4 @@ const AdminExpenseDetailsPage = () => {
   )
 }
 
-export default AdminExpenseDetailsPage
+export default AdminOXDetailsPage

@@ -1,15 +1,15 @@
-import type { Podpis } from '@/common/models'
+import { GenericTable, LoadingOverlay, Pagination, usePagination } from '@/common/components'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
+import type { Podpis } from '@/common/models'
+import { PodpisDialog } from './dialog'
+import { podpisColumns } from './columns'
+import { podpisQueryKeys } from './constants'
+import { podpisService } from './service'
+import { useConfirm } from '@/common/features/confirm'
+import { useLayout } from '@/common/features/layout'
 import { useState } from 'react'
 import { useToggle } from '@/common/hooks/use-toggle'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { GenericTable, LoadingOverlay, Pagination, usePagination } from '@/common/components'
-import { podpisService } from './service'
-import { PodpisDialog } from './dialog'
-import { podpisQueryKeys } from './constants'
-import { podpisColumns } from './columns'
-import { useLayout } from '@/common/features/layout'
-import { useConfirm } from '@/common/features/confirm'
 
 const PodpisPage = () => {
   const [selected, setSelected] = useState<Podpis>()
@@ -52,11 +52,11 @@ const PodpisPage = () => {
     })
   }
 
-  const openDialog = dialogToggle.open
   useLayout({
     title: 'Подписи',
     onCreate() {
-      openDialog()
+      dialogToggle.open()
+      setSelected(undefined)
     }
   })
 

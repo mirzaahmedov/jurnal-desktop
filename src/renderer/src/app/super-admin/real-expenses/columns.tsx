@@ -1,9 +1,9 @@
 import { ReportStatus, type ColumnDef } from '@renderer/common/components'
-import type { Mainbook } from '@renderer/common/models'
+import type { RealExpenses } from '@renderer/common/models'
 import { formatLocaleDateTime } from '@renderer/common/lib/format'
 import { getMonthName } from '@renderer/common/lib/date'
 
-export const columns: ColumnDef<Mainbook.AdminReport>[] = [
+export const columns: ColumnDef<RealExpenses.AdminReport>[] = [
   {
     key: 'year',
     header: 'Год'
@@ -42,7 +42,7 @@ export const columns: ColumnDef<Mainbook.AdminReport>[] = [
     key: 'document_qabul_qilingan_vaqt',
     header: 'Действия',
     renderCell(row) {
-      return row.user_login_qabul_qilgan ? (
+      return row.user_id_qabul_qilgan ? (
         <div>
           <h6 className="font-bold text-base">
             {row.user_login_qabul_qilgan ? `@${row.user_login_qabul_qilgan}` : null}

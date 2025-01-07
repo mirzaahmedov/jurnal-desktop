@@ -1,31 +1,25 @@
 import { GenericTable } from '@renderer/common/components'
 import { ListView } from '@renderer/common/views'
 import { Mainbook } from '@renderer/common/models'
-import { adminMainBookService } from './service'
+import { adminMainbookService } from './service'
 import { columns } from './columns'
 import { queryKeys } from './config'
+import { serializeDateParams } from '@renderer/common/lib/query-params'
 import { useLayout } from '@renderer/common/features/layout'
 import { useNavigate } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
-
-// import { parseAsInteger, useQueryState } from 'nuqs'
-
-// import { createBudgetSpravochnik } from '../budjet'
-
-// import { useSpravochnik } from '@renderer/common/features/spravochnik'
 
 const AdminMainbookPage = () => {
   const navigate = useNavigate()
 
   const { data: reports, isFetching } = useQuery({
     queryKey: [queryKeys.getAll],
-    queryFn: adminMainBookService.getAll
+    queryFn: adminMainbookService.getAll
   })
 
   const handleEdit = (row: Mainbook.AdminReport) => {
-    navigate(
-      `info?region_id=${row.region_id}&date=${row.year}-${row.month}&budjet_id=${row.budjet_id}`
-    )
+    const date = serializeDateParams({ month: row.month, year: row.year })
+    navigate(`info?date=${date}&region_id=${row.region_id}&budjet_id=${row.budjet_id}`)
   }
 
   useLayout({
