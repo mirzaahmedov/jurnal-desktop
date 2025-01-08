@@ -1,6 +1,5 @@
-import type { ResponseMeta, OrganizationMonitor } from '@/common/models'
-
-import { ApiEndpoints, CRUDService, GetAllQueryKey } from '@/common/features/crud'
+import { ApiEndpoints, CRUDService } from '@/common/features/crud'
+import type { OrganizationMonitor, ResponseMeta } from '@/common/models'
 
 type OrgMonitorMetaType = {
   summa_prixod: number
@@ -20,20 +19,6 @@ const orgMonitorService = new CRUDService<
   ResponseMeta & OrgMonitorMetaType
 >({
   endpoint: ApiEndpoints.organization_monitoring
-}).forRequest((type, args) => {
-  if (type === 'getAll') {
-    const orgId = args.ctx!.queryKey[2]
-    return {
-      url: orgId ? '/organization/monitoring/id' : '/organization/monitoring',
-      config: {
-        params: {
-          ...(args.ctx!.queryKey as GetAllQueryKey)[1],
-          organ_id: orgId
-        }
-      }
-    }
-  }
-  return {}
 })
 
 export { orgMonitorService as orgMonitoringService }

@@ -1,8 +1,3 @@
-import type { Podpis } from '@/common/models'
-
-import { useEffect } from 'react'
-import { Button } from '@/common/components/ui/button'
-import { Form, FormField } from '@/common/components/ui/form'
 import {
   Dialog,
   DialogContent,
@@ -10,15 +5,26 @@ import {
   DialogHeader,
   DialogTitle
 } from '@/common/components/ui/dialog'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { defaultValues, PodpisPayloadSchema, podpisQueryKeys } from './constants'
+import { Form, FormField } from '@/common/components/ui/form'
+import { NumericInput, SelectField } from '@/common/components'
+import {
+  PodpisPayloadSchema,
+  defaultValues,
+  podpisDoljnostOptions,
+  podpisQueryKeys,
+  podpisTypeDocumentOptions
+} from './constants'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+
+import { Button } from '@/common/components/ui/button'
 import { FormElement } from '@/common/components/form'
 import { Input } from '@/common/components/ui/input'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+import type { Podpis } from '@/common/models'
 import { podpisService } from './service'
 import { toast } from '@/common/hooks/use-toast'
-import { NumericInput } from '@/common/components'
+import { useEffect } from 'react'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
 
 type PodpisDialogProps = {
   data?: Podpis
@@ -114,7 +120,15 @@ const PodpisDialog = ({ data, open, onOpenChange }: PodpisDialogProps) => {
                   grid="1:2"
                   label="Должность"
                 >
-                  <Input {...field} />
+                  <SelectField
+                    {...field}
+                    options={podpisDoljnostOptions}
+                    getOptionLabel={(option) => option.name}
+                    getOptionValue={(option) => option.key}
+                    placeholder="Выберите должность"
+                    onValueChange={(value) => field.onChange(value)}
+                    value={field.value}
+                  />
                 </FormElement>
               )}
             />
@@ -138,7 +152,15 @@ const PodpisDialog = ({ data, open, onOpenChange }: PodpisDialogProps) => {
                   grid="1:2"
                   label="Тип документа"
                 >
-                  <Input {...field} />
+                  <SelectField
+                    {...field}
+                    options={podpisTypeDocumentOptions}
+                    getOptionLabel={(option) => option.name}
+                    getOptionValue={(option) => option.key}
+                    placeholder="Выберите тип документа"
+                    onValueChange={(value) => field.onChange(value)}
+                    value={field.value}
+                  />
                 </FormElement>
               )}
             />

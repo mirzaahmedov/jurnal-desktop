@@ -15,7 +15,7 @@ import { forwardRef } from 'react'
 type SelectFieldProps<T> = SelectProps & {
   withFormControl?: boolean
   placeholder: string
-  options: T[]
+  options: T[] | readonly T[]
   getOptionLabel(data: T): string
   getOptionValue(data: T): string | number
   triggerClassName?: string

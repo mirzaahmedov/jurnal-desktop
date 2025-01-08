@@ -42,7 +42,7 @@ import { DetailsView } from '@/common/views'
 import { GeneratePorucheniya } from './generate-porucheniya'
 import { usePodpis } from '@renderer/common/features/podpis'
 import { ApiEndpoints } from '@renderer/common/features/crud'
-import { Operatsii, Response } from '@renderer/common/models'
+import { Operatsii, PodpisDoljnost, PodpisTypeDocument, Response } from '@renderer/common/models'
 
 const BankRasxodDetailtsPage = () => {
   const { toast } = useToast()
@@ -51,7 +51,7 @@ const BankRasxodDetailtsPage = () => {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const main_schet_id = useRequisitesStore((state) => state.main_schet_id)
-  const podpis = usePodpis('bank_rasxod', params.id === 'create')
+  const podpis = usePodpis(PodpisTypeDocument.BANK, params.id === 'create')
 
   const form = useForm<RasxodPayloadType>({
     resolver: zodResolver(RasxodPayloadSchema),
@@ -229,14 +229,21 @@ const BankRasxodDetailtsPage = () => {
     if (form.getValues('opisanie') || !doc_num || !doc_date) {
       return
     }
+    if (form.getValues('opisanie')?.startsWith('№')) {
+      return
+    }
     form.setValue(
       'opisanie',
-      `№ ${doc_num}-сонли ${formatLocaleDate(doc_date)} йил кунги шартномага асосан {kerakli matn} Ст: 0`
+      `№ ${doc_num}-сонли ${formatLocaleDate(doc_date)} йил кунги шартномага асосан ` +
+        form.getValues('opisanie')
     )
   }, [form, doc_date, doc_num])
 
   useEffect(() => {
-    const [rukovoditel, glav_buxgalter] = podpis
+    const rukovoditel = podpis.find((item) => item.doljnost_name === PodpisDoljnost.BOLIM_BOSHLIGI)
+    const glav_buxgalter = podpis.find(
+      (item) => item.doljnost_name === PodpisDoljnost.BOSH_BUXGALTER
+    )
 
     if (rukovoditel && !form.getValues('rukovoditel')) {
       form.setValue('rukovoditel', rukovoditel.fio_name)
@@ -252,7 +259,7 @@ const BankRasxodDetailtsPage = () => {
     if (!operatsii_id) {
       return
     }
-    const operatsii = queryClient.getQueryState<Response<Operatsii>>([
+    const operatsii = queryClient.getQueryData<Response<Operatsii>>([
       ApiEndpoints.operatsii,
       operatsii_id
     ])
@@ -261,7 +268,11 @@ const BankRasxodDetailtsPage = () => {
       return
     }
 
-    const { sub_schet } = operatsii?.data?.data ?? {}
+    const { sub_schet } = operatsii?.data ?? {}
+    if (sub_schet === undefined) {
+      return
+    }
+
     if (/Ст: \d*$/.test(form.getValues('opisanie') || '')) {
       form.setValue('opisanie', form.getValues('opisanie')!.replace(/Ст: \d*$/, `Ст: ${sub_schet}`))
     } else {

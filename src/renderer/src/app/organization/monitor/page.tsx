@@ -73,10 +73,10 @@ const OrganizationMonitoringPage = () => {
       {
         main_schet_id,
         operatsii: operatsiiSpravochnik.selected ? operatsiiSpravochnik.selected.schet : undefined,
+        organ_id: orgId ? orgId : undefined,
         ...dates,
         ...pagination
-      },
-      orgId
+      }
     ],
     queryFn: orgMonitoringService.getAll,
     enabled: !!main_schet_id && !!operatsiiSpravochnik.selected
