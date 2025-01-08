@@ -40,6 +40,7 @@ const OrganizationMonitoringPage = () => {
   const navigate = useNavigate()
 
   const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
+  const budjet_id = useRequisitesStore((store) => store.budjet_id)
 
   const orgSpravochnik = useSpravochnik(
     createOrganizationSpravochnik({
@@ -118,6 +119,7 @@ const OrganizationMonitoringPage = () => {
                   url="organization/monitoring/prixod/rasxod"
                   params={{
                     main_schet_id,
+                    budjet_id,
                     to: dates.to,
                     operatsii: operatsiiSpravochnik.selected?.schet
                   }}

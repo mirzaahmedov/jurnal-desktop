@@ -24,16 +24,28 @@ const provodkaColumns: EditableColumnType<OXReportProvodka>[] = [
   {
     key: 'ajratilgan_mablag',
     header: 'Ажратилган маблаг',
-    Editor: ({ state, params }) => {
+    Editor: ({ id, row, state, params, onChange }) => {
       const month = params['month'] as number
       const smeta = state['smeta_grafik'] as SmetaGrafik | undefined
 
-      const value = getMonthAllocated(month, smeta)
+      const allocated = getMonthAllocated(month, smeta)
+
+      if (row.ajratilgan_mablag !== allocated) {
+        onChange?.({
+          id,
+          key: 'ajratilgan_mablag',
+          payload: {
+            ...row,
+            ajratilgan_mablag: allocated
+          }
+        })
+      }
+
       return (
         <div className="relative">
           <NumericInput
             readOnly
-            value={value}
+            value={allocated}
             className={inputVariants({ editor: true })}
           />
         </div>
@@ -62,11 +74,24 @@ const provodkaColumns: EditableColumnType<OXReportProvodka>[] = [
   {
     key: 'remainder',
     header: 'Колдик',
-    Editor: ({ state, params, row }) => {
+    Editor: ({ id, state, params, row, onChange }) => {
       const month = params['month'] as number
       const smeta = state['smeta_grafik'] as SmetaGrafik | undefined
 
-      const remainder = getMonthAllocated(month, smeta) - row.kassa_rasxod
+      const allocated = getMonthAllocated(month, smeta)
+      const remainder = allocated - row.kassa_rasxod
+
+      if (row.remainder !== remainder) {
+        onChange?.({
+          id,
+          key: 'remainder',
+          payload: {
+            ...row,
+            remainder
+          }
+        })
+      }
+
       return (
         <div className="relative">
           <NumericInput

@@ -134,6 +134,7 @@ const MainbookReportDetailsPage = () => {
       }
       return false
     })
+    console.log(ids)
   }, [childs])
 
   const onSubmit = form.handleSubmit((values) => {

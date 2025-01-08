@@ -9,10 +9,12 @@ export const oxReportQueryKeys = {
 }
 
 export const OXReportProvodkaSchema = z.object({
+  ajratilgan_mablag: z.number(),
   smeta_grafik_id: z.number(),
   tulangan_mablag_smeta_buyicha: z.number(),
   kassa_rasxod: z.number(),
-  haqiqatda_harajatlar: z.number()
+  haqiqatda_harajatlar: z.number(),
+  remainder: z.number()
 })
 export const OXReportFormSchema = z.object({
   year: z.number(),
@@ -27,10 +29,12 @@ export const defaultValues: OXReportValues = {
   month: new Date().getMonth() + 1,
   childs: [
     {
+      ajratilgan_mablag: 0,
       smeta_grafik_id: 0,
       tulangan_mablag_smeta_buyicha: 0,
       kassa_rasxod: 0,
-      haqiqatda_harajatlar: 0
+      haqiqatda_harajatlar: 0,
+      remainder: 0
     }
   ]
 }

@@ -1,4 +1,10 @@
 import {
+  EditableTable,
+  EditableTableCell,
+  EditableTableRow
+} from '@renderer/common/features/editable-table'
+import { Fieldset, inputVariants } from '@renderer/common/components'
+import {
   OXReportFormSchema,
   OXReportProvodkaSchema,
   defaultValues,
@@ -9,18 +15,19 @@ import {
   createEditorCreateHandler,
   createEditorDeleteHandler
 } from '@renderer/common/features/editable-table/helpers'
+import { useEffect, useMemo } from 'react'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 
 import { DetailsView } from '@renderer/common/views'
-import { EditableTable } from '@renderer/common/features/editable-table'
-import { Fieldset } from '@renderer/common/components'
 import { Form } from '@renderer/common/components/ui/form'
+import { Input } from '@renderer/common/components/ui/input'
 import { MonthPicker } from '@renderer/common/components/month-picker'
+import { cn } from '@renderer/common/lib/utils'
+import { formatNumber } from '@renderer/common/lib/format'
 import { oxReportService } from '../service'
 import { provodkaColumns } from './provodka'
 import { toast } from '@renderer/common/hooks'
-import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { useLayout } from '@renderer/common/features/layout'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
@@ -101,6 +108,27 @@ const OXReportDetailsPage = () => {
     form.reset(report?.data ? report?.data : defaultValues)
   }, [report])
 
+  const childs = form.watch('childs')
+  const itogo = useMemo(() => {
+    return childs?.reduce(
+      (result, item) => {
+        result.ajratilgan_mablag += item.ajratilgan_mablag
+        result.haqiqatda_harajatlar += item.haqiqatda_harajatlar
+        result.kassa_rasxod += item.kassa_rasxod
+        result.tulangan_mablag_smeta_buyicha += item.tulangan_mablag_smeta_buyicha
+        result.remainder += item.remainder
+        return result
+      },
+      {
+        ajratilgan_mablag: 0,
+        haqiqatda_harajatlar: 0,
+        kassa_rasxod: 0,
+        tulangan_mablag_smeta_buyicha: 0,
+        remainder: 0
+      }
+    )
+  }, [childs])
+
   const onSubmit = form.handleSubmit((values) => {
     if (params.id === 'create') {
       createReport(values)
@@ -163,6 +191,83 @@ const OXReportDetailsPage = () => {
             params={{
               month: form.watch('month')
             }}
+            footerRows={
+              <EditableTableRow className="!border">
+                <EditableTableCell>
+                  <Input
+                    aria-hidden
+                    readOnly
+                    tabIndex={-1}
+                    className={cn(
+                      inputVariants({ editor: true }),
+                      'pointer-events-none text-xs text-gray-700 font-extrabold'
+                    )}
+                    value="Итого"
+                  />
+                </EditableTableCell>
+                <EditableTableCell>
+                  <Input
+                    aria-hidden
+                    readOnly
+                    tabIndex={-1}
+                    className={cn(
+                      inputVariants({ editor: true }),
+                      'pointer-events-none font-bold text-right'
+                    )}
+                    value={formatNumber(itogo.ajratilgan_mablag)}
+                  />
+                </EditableTableCell>
+                <EditableTableCell>
+                  <Input
+                    aria-hidden
+                    readOnly
+                    tabIndex={-1}
+                    className={cn(
+                      inputVariants({ editor: true }),
+                      'pointer-events-none font-bold text-right'
+                    )}
+                    value={formatNumber(itogo.tulangan_mablag_smeta_buyicha)}
+                  />
+                </EditableTableCell>
+                <EditableTableCell>
+                  <Input
+                    aria-hidden
+                    readOnly
+                    tabIndex={-1}
+                    className={cn(
+                      inputVariants({ editor: true }),
+                      'pointer-events-none font-bold text-right'
+                    )}
+                    value={formatNumber(itogo.kassa_rasxod)}
+                  />
+                </EditableTableCell>
+                <EditableTableCell>
+                  <Input
+                    aria-hidden
+                    readOnly
+                    tabIndex={-1}
+                    className={cn(
+                      inputVariants({ editor: true }),
+                      'pointer-events-none font-bold text-right'
+                    )}
+                    value={formatNumber(itogo.haqiqatda_harajatlar)}
+                  />
+                </EditableTableCell>
+                <EditableTableCell>
+                  <Input
+                    aria-hidden
+                    readOnly
+                    tabIndex={-1}
+                    className={cn(
+                      inputVariants({ editor: true }),
+                      'pointer-events-none font-bold text-right'
+                    )}
+                    value={formatNumber(itogo.remainder)}
+                  />
+                </EditableTableCell>
+                <EditableTableCell></EditableTableCell>
+              </EditableTableRow>
+            }
           />
         </Fieldset>
       </DetailsView.Content>

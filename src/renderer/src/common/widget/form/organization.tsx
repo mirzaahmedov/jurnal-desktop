@@ -1,7 +1,7 @@
-import type { Organization } from '@/common/models'
-import type { FormSpravochnikFieldsComponent } from './types'
+import { SpravochnikField, SpravochnikFields } from '@/common/features/spravochnik'
 
-import { SpravochnikFields, SpravochnikField } from '@/common/features/spravochnik'
+import type { FormSpravochnikFieldsComponent } from './types'
+import type { Organization } from '@/common/models'
 
 const OrganizationFields: FormSpravochnikFieldsComponent<Organization, { gazna?: boolean }> = ({
   tabIndex,
@@ -26,7 +26,7 @@ const OrganizationFields: FormSpravochnikFieldsComponent<Organization, { gazna?:
         disabled={disabled}
         error={!!error?.message}
         getInputValue={(selected) => selected?.name ?? ''}
-        label="Плательщик"
+        label={name ?? 'Организация'}
         formElementProps={{
           grid: '2:6'
         }}

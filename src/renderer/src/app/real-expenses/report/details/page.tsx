@@ -1,4 +1,9 @@
-import { Fieldset, SelectField } from '@renderer/common/components'
+import {
+  EditableTable,
+  EditableTableCell,
+  EditableTableRow
+} from '@renderer/common/features/editable-table'
+import { Fieldset, SelectField, inputVariants } from '@renderer/common/components'
 import { Form, FormField } from '@renderer/common/components/ui/form'
 import {
   RealExpensesReportFormSchema,
@@ -11,18 +16,20 @@ import {
   createEditorCreateHandler,
   createEditorDeleteHandler
 } from '@renderer/common/features/editable-table/helpers'
+import { useEffect, useMemo } from 'react'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useQueryDateParams, useQueryTypeDocument } from '@renderer/common/lib/query-params'
 
 import { DetailsView } from '@renderer/common/views'
-import { EditableTable } from '@renderer/common/features/editable-table'
+import { Input } from '@renderer/common/components/ui/input'
 import { MonthPicker } from '@renderer/common/components/month-picker'
+import { cn } from '@renderer/common/lib/utils'
 import { documentTypes } from '@renderer/app/mainbook/common/data'
+import { formatNumber } from '@renderer/common/lib/format'
 import { provodkaColumns } from './provodka'
 import { realExpensesReportService } from '../service'
 import { toast } from '@renderer/common/hooks'
-import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { useLayout } from '@renderer/common/features/layout'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
@@ -103,6 +110,21 @@ const ExpensesReportDetailsPage = () => {
     form.reset(report?.data ? report?.data : defaultValues)
   }, [report])
 
+  const childs = form.watch('childs')
+  const itogo = useMemo(() => {
+    return childs?.reduce(
+      (result, item) => {
+        result.debet += item.debet_sum
+        result.credit += item.kredit_sum
+        return result
+      },
+      {
+        debet: 0,
+        credit: 0
+      }
+    )
+  }, [childs])
+
   const onSubmit = form.handleSubmit((values) => {
     if (params.id === 'create') {
       createReport(values)
@@ -178,6 +200,47 @@ const ExpensesReportDetailsPage = () => {
             onChange={createEditorChangeHandler({
               form
             })}
+            footerRows={
+              <EditableTableRow className="!border">
+                <EditableTableCell>
+                  <Input
+                    aria-hidden
+                    readOnly
+                    tabIndex={-1}
+                    className={cn(
+                      inputVariants({ editor: true }),
+                      'pointer-events-none text-xs text-gray-700 font-extrabold'
+                    )}
+                    value="Итого"
+                  />
+                </EditableTableCell>
+                <EditableTableCell>
+                  <Input
+                    aria-hidden
+                    readOnly
+                    tabIndex={-1}
+                    className={cn(
+                      inputVariants({ editor: true }),
+                      'pointer-events-none font-bold text-right'
+                    )}
+                    value={formatNumber(itogo.debet)}
+                  />
+                </EditableTableCell>
+                <EditableTableCell>
+                  <Input
+                    aria-hidden
+                    readOnly
+                    tabIndex={-1}
+                    className={cn(
+                      inputVariants({ editor: true }),
+                      'pointer-events-none font-bold text-right'
+                    )}
+                    value={formatNumber(itogo.credit)}
+                  />
+                </EditableTableCell>
+                <EditableTableCell></EditableTableCell>
+              </EditableTableRow>
+            }
           />
         </Fieldset>
       </DetailsView.Content>
