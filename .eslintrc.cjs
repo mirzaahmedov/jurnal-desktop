@@ -13,16 +13,7 @@ module.exports = {
     '@typescript-eslint/no-namespace': 'off',
     'react/prop-types': 'off',
     'no-case-declarations': 'off',
-    'prettier/prettier': 'off'
-    // 'sort-imports': [
-    //   'error',
-    //   {
-    //     ignoreCase: false,
-    //     ignoreDeclarationSort: false,
-    //     ignoreMemberSort: false,
-    //     memberSyntaxSortOrder: ['none', 'single', 'multiple', 'all'],
-    //     allowSeparatedGroups: true
-    //   }
-    // ]
+    'prettier/prettier': 'off',
+    'react/display-name': 'off'
   }
 }

@@ -8,7 +8,7 @@ import type { MainbookReportProvodka } from '../config'
 
 const provodkaColumns: EditableColumnType<MainbookReportProvodka>[] = [
   {
-    key: 'spravochnik_operatsii_id',
+    key: 'spravochnik_main_book_schet_id',
     header: 'Подводка',
     Editor: createMainbookSchetEditor()
   },

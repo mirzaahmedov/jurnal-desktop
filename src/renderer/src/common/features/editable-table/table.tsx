@@ -26,6 +26,7 @@ export type EditableTableProps<T extends Record<string, unknown>> = {
   onChange?(ctx: ChangeContext<T>): void
   onCreate?(): void
   params?: Record<string, unknown>
+  footerRows?: ReactNode
 }
 export const EditableTable = <T extends Record<string, unknown>>(props: EditableTableProps<T>) => {
   const {
@@ -101,6 +102,7 @@ export const EditableTable = <T extends Record<string, unknown>>(props: Editable
         </TableBody>
         {typeof onCreate === 'function' && (
           <TableFooter>
+            {props.footerRows}
             <EditableTableRow>
               <EditableTableCell colSpan={100}>
                 <Button

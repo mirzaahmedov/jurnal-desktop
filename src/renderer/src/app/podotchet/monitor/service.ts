@@ -1,8 +1,5 @@
-import type { PodotchetMonitor, ResponseMeta, Response } from '@/common/models'
-
-import { http } from '@/common/lib/http'
-import { CRUDService, ApiEndpoints, GetAllQueryKey } from '@/common/features/crud'
-import { QueryFunctionContext } from '@tanstack/react-query'
+import { ApiEndpoints, CRUDService } from '@/common/features/crud'
+import type { PodotchetMonitor, ResponseMeta } from '@/common/models'
 
 type PodotchetMonitorMeta = ResponseMeta & {
   summa_prixod: number
@@ -20,16 +17,4 @@ const podotchetMonitoringService = new CRUDService<
   endpoint: ApiEndpoints.podotchet_monitoring
 })
 
-const getPodotchetMonitoringByIdQuery = async (ctx: QueryFunctionContext<GetAllQueryKey>) => {
-  const params = ctx.queryKey[1]
-  const id = ctx.queryKey[2]
-  const res = await http.get<Response<PodotchetMonitor[], PodotchetMonitorMeta>>(
-    '/podotchet/monitoring/' + id,
-    {
-      params
-    }
-  )
-  return res.data
-}
-
-export { podotchetMonitoringService, getPodotchetMonitoringByIdQuery }
+export { podotchetMonitoringService }

@@ -10,7 +10,6 @@ import {
   Pagination,
   usePagination
 } from '@/common/components'
-import { getPodotchetMonitoringByIdQuery, podotchetMonitoringService } from './service'
 import { parseAsInteger, useQueryState } from 'nuqs'
 
 import { ButtonGroup } from '@/common/components/ui/button-group'
@@ -21,6 +20,7 @@ import { createPodotchetSpravochnik } from '@/app/region-spravochnik/podotchet'
 import { formatNumber } from '@/common/lib/format'
 import { podotchetMonitoringColumns } from './columns'
 import { podotchetMonitoringQueryKeys } from './constants'
+import { podotchetMonitoringService } from './service'
 import { useDateRange } from '@/common/hooks/use-date-range'
 import { useLayout } from '@/common/features/layout'
 import { useQuery } from '@tanstack/react-query'
@@ -54,7 +54,7 @@ const PodotchetMonitoringPage = () => {
   )
 
   const { data: monitorList, isFetching } = useQuery({
-    queryFn: podotchetId ? getPodotchetMonitoringByIdQuery : podotchetMonitoringService.getAll,
+    queryFn: podotchetMonitoringService.getAll,
     queryKey: [
       podotchetMonitoringQueryKeys.getAll,
       {
@@ -63,7 +63,7 @@ const PodotchetMonitoringPage = () => {
         to,
         page: currentPage,
         limit: itemsPerPage,
-        podotchet: podotchetId ? podotchetId : undefined,
+        podotchet_id: podotchetId ? podotchetId : undefined,
         operatsii: operatsiiSpravochnik.selected?.schet
           ? operatsiiSpravochnik.selected?.schet
           : undefined
