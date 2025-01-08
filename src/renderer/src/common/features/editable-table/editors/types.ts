@@ -24,6 +24,7 @@ export type EditorComponentType<T extends Record<string, unknown>> = FunctionCom
   state: Record<string, unknown>
   setState: Dispatch<SetStateAction<Record<string, unknown>>>
   params: Record<string, unknown>
+  validate?: (ctx: ChangeContext<T>) => boolean
 }>
 
 export type EditorOptions<T extends Record<string, unknown>> = {

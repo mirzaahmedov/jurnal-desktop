@@ -121,7 +121,8 @@ const OrganizationMonitoringPage = () => {
                     main_schet_id,
                     budjet_id,
                     to: dates.to,
-                    operatsii: operatsiiSpravochnik.selected?.schet
+                    operatsii: operatsiiSpravochnik.selected?.schet,
+                    excel: true
                   }}
                   buttonText="Дебитор / Кредитор отчет"
                 />
@@ -132,7 +133,8 @@ const OrganizationMonitoringPage = () => {
                     main_schet_id,
                     from: dates.from,
                     to: dates.to,
-                    schet: operatsiiSpravochnik.selected?.schet
+                    schet: operatsiiSpravochnik.selected?.schet,
+                    excel: true
                   }}
                   buttonText="Сводный отчет"
                 />

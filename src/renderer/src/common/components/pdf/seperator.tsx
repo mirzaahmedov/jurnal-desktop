@@ -1,4 +1,4 @@
-import { View, StyleSheet } from '@react-pdf/renderer'
+import { StyleSheet, View } from '@react-pdf/renderer'
 
 type SeperatorProps = {
   vertical?: boolean
@@ -30,8 +30,7 @@ const styles = StyleSheet.create({
   lineVertical: {
     height: '100%',
     width: 1,
-    borderRight: '1px dashed black',
-    marginHorizontal: 5
+    borderRight: '1px dashed black'
   }
 })
 

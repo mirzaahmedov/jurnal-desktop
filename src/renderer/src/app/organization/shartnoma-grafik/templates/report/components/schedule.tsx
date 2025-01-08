@@ -1,11 +1,10 @@
 import type { ShartnomaGrafikForm } from '../../../service'
-
-import { useState } from 'react'
-import { Text } from '@react-pdf/renderer'
 import { Table } from '@/common/components/pdf'
-import { mergeStyles } from '@/common/lib/utils'
+import { Text } from '@react-pdf/renderer'
 import { formatNumber } from '@/common/lib/format'
+import { mergeStyles } from '@/common/lib/utils'
 import { monthNames } from '@/common/data/month'
+import { useState } from 'react'
 
 const ScheduleCell: typeof Table.Cell = ({ children, style, ...props }) => {
   return (
@@ -55,7 +54,7 @@ const Schedule = ({ article, data, paymentDetails }: ScheduleProps) => {
                 Харажат турлари
               </ScheduleCell>
             </Table.Row>
-            <Table.Row style={{ borderBottom: 'none' }}>
+            <Table.Row style={{ borderBottom: 'none', height: 8 }}>
               <Table.Column
                 style={{
                   width: percentage(innerWidths[0])

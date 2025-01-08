@@ -4,9 +4,9 @@ import { Table, TableBody, TableHeader } from '@renderer/common/components/ui/ta
 import { cn, parseCSSNumericValue } from '@renderer/common/lib/utils'
 import { createRef, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 
+import { ExpensesTableRow } from '../details/utils'
 import { LoadingOverlay } from '@renderer/common/components'
 import type { Mainbook } from '@renderer/common/models'
-import { MainbookTableRow } from '../details/utils'
 import { columns } from './columns'
 import { formatNumber } from '@renderer/common/lib/format'
 
@@ -18,9 +18,9 @@ const SCROLL_AREA_WIDTH = 400
 
 type ReportTableProps = {
   isLoading: boolean
-  data: MainbookTableRow[]
-  onEdit: (row: MainbookTableRow) => void
-  onDelete: (row: MainbookTableRow) => void
+  data: ExpensesTableRow[]
+  onEdit: (row: ExpensesTableRow) => void
+  onDelete: (row: ExpensesTableRow) => void
 }
 const ReportTable = ({ isLoading, data, onEdit, onDelete }: ReportTableProps) => {
   const ref = useRef<HTMLDivElement>(null)
@@ -161,14 +161,14 @@ const ReportTable = ({ isLoading, data, onEdit, onDelete }: ReportTableProps) =>
       onScroll={handleScroll}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className="relative w-full overflow-x-auto noscroll-bar"
+      className="relative w-full h-full overflow-x-auto noscroll-bar"
     >
       {isLoading ? <LoadingOverlay className="z-[51]" /> : null}
       <Table
         ref={tableRef}
-        className="border-separate border-spacing-0 overflow-clip h-px"
+        className="border-separate border-spacing-0"
       >
-        <TableHeader>
+        <TableHeader className="sticky top-0 z-[100]">
           <ReportTableRow className="bg-slate-100">
             {columns.map((column) => {
               if (column.hidden) {

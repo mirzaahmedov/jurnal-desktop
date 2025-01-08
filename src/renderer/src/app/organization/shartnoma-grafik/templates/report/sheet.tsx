@@ -1,6 +1,7 @@
-import type { ShartnomaGrafikForm } from '../../service'
+import { DocumentInfo, Header, Schedule, Signatures } from './components'
+
 import { Flex } from '@/common/components/pdf'
-import { Header, Schedule, DocumentInfo, Signatures } from './components'
+import type { ShartnomaGrafikForm } from '../../service'
 
 type SheetProps = {
   article: string
@@ -27,6 +28,7 @@ const Sheet = ({
       <Flex
         direction="column"
         alignItems="stretch"
+        style={{ padding: 5 }}
       >
         <Header />
         <DocumentInfo

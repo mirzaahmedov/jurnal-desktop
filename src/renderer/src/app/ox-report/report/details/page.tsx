@@ -15,7 +15,7 @@ import {
   createEditorCreateHandler,
   createEditorDeleteHandler
 } from '@renderer/common/features/editable-table/helpers'
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 
@@ -34,6 +34,7 @@ import { useRequisitesStore } from '@renderer/common/features/requisites'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 const OXReportDetailsPage = () => {
+  const tableRef = useRef<HTMLTableElement>(null)
   const navigate = useNavigate()
   const params = useParams()
   const budjet_id = useRequisitesStore((store) => store.budjet_id)
@@ -173,6 +174,7 @@ const OXReportDetailsPage = () => {
           className="flex-1 mt-5 pb-24 bg-slate-50"
         >
           <EditableTable
+            tableRef={tableRef}
             tabIndex={5}
             columns={provodkaColumns}
             data={form.watch('childs')}
@@ -190,6 +192,32 @@ const OXReportDetailsPage = () => {
             })}
             params={{
               month: form.watch('month')
+            }}
+            validate={({ id, key, payload }) => {
+              if (key !== 'smeta_grafik_id') {
+                return true
+              }
+
+              return !form.getValues('childs').some((child, index) => {
+                if (id !== index && payload.smeta_grafik_id === child.smeta_grafik_id) {
+                  toast({
+                    variant: 'destructive',
+                    title: 'Подводка с таким счетом уже существует'
+                  })
+
+                  const input = tableRef?.current?.querySelector(
+                    `[data-editorid="${index}-smeta_grafik_id"]`
+                  ) as HTMLInputElement
+                  if (input) {
+                    setTimeout(() => {
+                      input.focus()
+                    }, 100)
+                  }
+
+                  return true
+                }
+                return false
+              })
             }}
             footerRows={
               <EditableTableRow className="!border">

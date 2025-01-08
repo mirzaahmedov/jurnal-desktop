@@ -145,7 +145,7 @@ const ExpensesDetailsPage = () => {
           className="disabled:opacity-85"
         />
       </div>
-      <div className="relative w-full overflow-x-hidden">
+      <div className="relative w-full flex-1 overflow-hidden">
         <ReportTable
           isLoading={isFetching || isFetchingInfo || isPending}
           data={rows}

@@ -161,14 +161,14 @@ const ReportTable = ({ isLoading, data, onEdit, onDelete }: ReportTableProps) =>
       onScroll={handleScroll}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className="relative w-full overflow-x-auto noscroll-bar"
+      className="relative h-full w-full overflow-x-auto noscroll-bar"
     >
       {isLoading ? <LoadingOverlay className="z-[51]" /> : null}
       <Table
         ref={tableRef}
-        className="border-separate border-spacing-0 overflow-clip h-px"
+        className="relative h-full border-separate border-spacing-0"
       >
-        <TableHeader>
+        <TableHeader className="sticky top-0 z-[100]">
           <ReportTableRow className="bg-slate-100">
             {columns.map((column) => {
               if (column.hidden) {

@@ -133,7 +133,7 @@ const OXDetailsPage = () => {
           className="disabled:opacity-100"
         />
       </div>
-      <div className="relative w-full overflow-x-hidden">
+      <div className="relative w-full flex-1 overflow-hidden">
         <ReportTable
           isLoading={isFetching || isFetchingInfo || isPending}
           data={values ?? []}

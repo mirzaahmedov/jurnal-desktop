@@ -17,6 +17,7 @@ export type EditableColumnType<T extends Record<string, unknown>> = {
 }
 
 export type EditableTableProps<T extends Record<string, unknown>> = {
+  tableRef?: React.RefObject<HTMLTableElement>
   tabIndex?: number
   data: T[]
   columns: EditableColumnType<T>[]
@@ -27,9 +28,11 @@ export type EditableTableProps<T extends Record<string, unknown>> = {
   onCreate?(): void
   params?: Record<string, unknown>
   footerRows?: ReactNode
+  validate?(ctx: ChangeContext<T>): boolean
 }
 export const EditableTable = <T extends Record<string, unknown>>(props: EditableTableProps<T>) => {
   const {
+    tableRef,
     tabIndex,
     data,
     columns,
@@ -40,6 +43,7 @@ export const EditableTable = <T extends Record<string, unknown>>(props: Editable
     onChange,
     params = {}
   } = props
+
   return (
     <form
       onSubmit={(e) => {
@@ -53,7 +57,10 @@ export const EditableTable = <T extends Record<string, unknown>>(props: Editable
         })
       }}
     >
-      <Table className="border border-slate-200">
+      <Table
+        ref={tableRef}
+        className="border border-slate-200"
+      >
         <TableHeader>
           <EditableTableRow>
             {Array.isArray(columns)
@@ -86,6 +93,7 @@ export const EditableTable = <T extends Record<string, unknown>>(props: Editable
                   onChange={onChange}
                   onDelete={onDelete}
                   params={params}
+                  validate={props.validate}
                 />
               )
             })
@@ -130,6 +138,7 @@ type EditableTableRowRendererProps<T extends Record<string, unknown>> = {
   onDelete?(ctx: DeleteContext): void
   onChange?(ctx: ChangeContext<T>): void
   params: Record<string, unknown>
+  validate?: (ctx: ChangeContext<T>) => boolean
 }
 const EditableTableRowRenderer = <T extends Record<string, unknown>>({
   tabIndex,
@@ -139,7 +148,8 @@ const EditableTableRowRenderer = <T extends Record<string, unknown>>({
   errors,
   onDelete,
   onChange,
-  params
+  params,
+  validate
 }: EditableTableRowRendererProps<T>) => {
   const [state, setState] = useState<Record<string, unknown>>({})
 
@@ -162,6 +172,8 @@ const EditableTableRowRenderer = <T extends Record<string, unknown>>({
               state={state}
               setState={setState}
               params={params}
+              validate={validate}
+              data-editorId={`${index}-${String(key)}`}
             />
           </EditableTableCell>
         )

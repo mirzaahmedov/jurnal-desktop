@@ -8,11 +8,27 @@ import { useEffect } from 'react'
 export const createSmetaGrafikEditor = <
   T extends { smeta_grafik_id?: number }
 >(): EditorComponentType<T> => {
-  const Editor: EditorComponentType<T> = ({ tabIndex, id, row, errors, onChange, setState }) => {
+  const Editor: EditorComponentType<T> = ({
+    tabIndex,
+    id,
+    row,
+    errors,
+    onChange,
+    setState,
+    validate,
+    ...props
+  }) => {
     const smetaSpravochnik = useSpravochnik(
       createSmetaGrafikSpravochnik({
         value: row.smeta_grafik_id || undefined,
         onChange: (value) => {
+          if (
+            validate &&
+            !validate({ id, key: 'smeta_grafik_id', payload: { ...row, smeta_grafik_id: value } })
+          ) {
+            smetaSpravochnik.clear()
+            return
+          }
           onChange?.({
             id,
             key: 'smeta_grafik_id',
@@ -44,6 +60,7 @@ export const createSmetaGrafikEditor = <
             ? `${selected.smeta_number} - ${formatNumber(selected.itogo)} so'm - ${selected.smeta_name}`
             : '-'
         }
+        {...props}
       />
     )
   }

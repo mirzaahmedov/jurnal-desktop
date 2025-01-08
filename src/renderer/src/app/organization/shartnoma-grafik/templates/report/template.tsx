@@ -1,9 +1,9 @@
-import type { SheetProps } from './sheet'
-
 import { Document, Page, StyleSheet } from '@react-pdf/renderer'
-import { Sheet } from './sheet'
-import { registerFonts } from '@/common/lib/pdf'
 import { Flex, Seperator } from '@/common/components/pdf'
+
+import { Sheet } from './sheet'
+import type { SheetProps } from './sheet'
+import { registerFonts } from '@/common/lib/pdf'
 
 registerFonts()
 
@@ -16,7 +16,12 @@ const ContractScheduleTemplate = (props: ContractScheduleTemplateProps) => {
         orientation="landscape"
         style={styles.page}
       >
-        <Flex alignItems="stretch">
+        <Flex
+          direction="row"
+          alignItems="stretch"
+          justifyContent="center"
+          style={{ width: '100%', maxWidth: '100%' }}
+        >
           <Sheet {...props} />
           <Seperator
             vertical
@@ -30,8 +35,8 @@ const ContractScheduleTemplate = (props: ContractScheduleTemplateProps) => {
 }
 const styles = StyleSheet.create({
   page: {
-    fontSize: 10,
-    margin: 20,
+    padding: 10,
+    fontSize: 8,
     fontFamily: 'Tinos'
   }
 })
