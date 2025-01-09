@@ -1,9 +1,10 @@
 import * as React from 'react'
-import { ChevronLeftIcon, ChevronRightIcon } from '@radix-ui/react-icons'
-import { DayPicker } from 'react-day-picker'
 
-import { cn } from '@/common/lib/utils'
+import { ChevronLeftIcon, ChevronRightIcon } from '@radix-ui/react-icons'
+
+import { DayPicker } from 'react-day-picker'
 import { buttonVariants } from '@/common/components/ui/button'
+import { cn } from '@/common/lib/utils'
 
 export type CalendarProps = React.ComponentProps<typeof DayPicker>
 
@@ -41,7 +42,7 @@ function Calendar({ className, classNames, showOutsideDays = true, ...props }: C
         day_range_start: 'day-range-start',
         day_range_end: 'day-range-end',
         day_selected:
-          'bg-brand text-brand-foreground hover:bg-brand hover:text-brand-foreground focus:bg-brand focus:text-brand-foreground',
+          'bg-brand text-white hover:bg-brand hover:text-brand-foreground focus:bg-brand focus:text-brand-foreground',
         day_today: 'bg-accent text-accent-foreground',
         day_outside:
           'day-outside text-muted-foreground opacity-50  aria-selected:bg-accent/50 aria-selected:text-muted-foreground aria-selected:opacity-30',

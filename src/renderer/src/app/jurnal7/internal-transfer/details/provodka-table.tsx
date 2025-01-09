@@ -6,9 +6,9 @@ import {
   EditableTableRow
 } from '@/common/features/editable-table'
 import {
-  RasxodChildFormSchema,
-  RasxodChildFormType,
-  RasxodFormType,
+  InternalTransferChildFormSchema,
+  InternalTransferChildFormType,
+  InternalTransferFormType,
   defaultValues
 } from '../config'
 import { SpravochnikInput, useSpravochnik } from '@/common/features/spravochnik'
@@ -21,11 +21,11 @@ import { Input } from '@/common/components/ui/input'
 import { Naimenovanie } from '@/common/models'
 import { UseFormReturn } from 'react-hook-form'
 import { createGroupSpravochnik } from '@/app/super-admin/group/service'
-import { createNaimenovanieKolSpravochnik } from '@/app/jur7/naimenovaniya/service'
+import { createNaimenovanieKolSpravochnik } from '@renderer/app/jurnal7/naimenovaniya/service'
 import { useEventCallback } from '@/common/hooks/use-event-callback'
 
 type ProvodkaTableProps = {
-  form: UseFormReturn<RasxodFormType>
+  form: UseFormReturn<InternalTransferFormType>
 }
 export const ProvodkaTable = ({ form }: ProvodkaTableProps) => {
   return (
@@ -92,9 +92,9 @@ export const ProvodkaTable = ({ form }: ProvodkaTableProps) => {
           </EditableTableRow>
           <EditableTableRow>
             <EditableTableHead>Счет</EditableTableHead>
-            <EditableTableHead>Субсчет</EditableTableHead>
+            <EditableTableHead className="w-20">Субсчет</EditableTableHead>
             <EditableTableHead>Счет</EditableTableHead>
-            <EditableTableHead className="last:border-solid">Субсчет</EditableTableHead>
+            <EditableTableHead className="last:border-solid w-20">Субсчет</EditableTableHead>
           </EditableTableRow>
         </TableHeader>
         <TableBody>
@@ -131,7 +131,7 @@ export const ProvodkaTable = ({ form }: ProvodkaTableProps) => {
                   const childs = form.getValues('childs')
                   if (
                     !Array.isArray(childs) ||
-                    !childs.every((c) => RasxodChildFormSchema.safeParse(c).success)
+                    !childs.every((c) => InternalTransferChildFormSchema.safeParse(c).success)
                   ) {
                     return
                   }
@@ -157,15 +157,15 @@ export const ProvodkaTable = ({ form }: ProvodkaTableProps) => {
 
 type ProvodkaProps = {
   index: number
-  row: RasxodChildFormType
-  form: UseFormReturn<RasxodFormType>
+  row: InternalTransferChildFormType
+  form: UseFormReturn<InternalTransferFormType>
 }
 const Provodka = ({ index, row, form }: ProvodkaProps) => {
   const [maxKol, setMaxKol] = useState<number>(Infinity)
 
   const handleChangeChildField = (
     index: number,
-    key: keyof RasxodChildFormType,
+    key: keyof InternalTransferChildFormType,
     value: unknown
   ) => {
     form.setValue(`childs.${index}.${key}`, value as string | number)
@@ -176,7 +176,7 @@ const Provodka = ({ index, row, form }: ProvodkaProps) => {
     <EditableTableRow key={index}>
       <NaimenovanieCells
         index={index}
-        kimdan_id={form.watch('kimdan_id')}
+        kimdan_id={form.getValues('kimdan_id')}
         setMaxKol={setMaxKol}
         errorMessage={form.formState.errors.childs?.[index]?.naimenovanie_tovarov_jur7_id?.message}
         value={row.naimenovanie_tovarov_jur7_id}
@@ -348,7 +348,11 @@ type NaimenovanieCellsProps = {
   kimdan_id: number
   setMaxKol: (value: number) => void
   onChange: (value: number) => void
-  onChangeChildField: (index: number, key: keyof RasxodChildFormType, value: unknown) => void
+  onChangeChildField: (
+    index: number,
+    key: keyof InternalTransferChildFormType,
+    value: unknown
+  ) => void
   errorMessage?: string
 }
 const NaimenovanieCells = ({
@@ -374,11 +378,6 @@ const NaimenovanieCells = ({
     createNaimenovanieKolSpravochnik({
       value,
       onChange(id, data) {
-        onChange(id)
-
-        if (!data?.result) {
-          return
-        }
         setMaxKol(data?.result ?? Infinity)
         onChangeChildFieldEvent(index, 'kol', data?.result ?? 0)
         onChangeChildFieldEvent(index, 'sena', data?.sena ?? 0)
@@ -387,6 +386,7 @@ const NaimenovanieCells = ({
           'data_pereotsenka',
           data?.doc_date ? data.doc_date.substring(0, 10) : ''
         )
+        onChange(id)
       },
       params: {
         kimdan_id
@@ -424,7 +424,7 @@ const NaimenovanieCells = ({
       isMounted.current = true
       return
     }
-    onChangeChildFieldEvent(index, 'debet_schet', groupSpravochnik.selected?.provodka_debet ?? '')
+    onChangeChildFieldEvent(index, 'debet_schet', groupSpravochnik.selected?.schet ?? '')
     onChangeChildFieldEvent(index, 'kredit_schet', groupSpravochnik.selected?.schet ?? '')
     onChangeChildFieldEvent(
       index,
@@ -471,9 +471,10 @@ const NaimenovanieCells = ({
       <EditableTableCell>
         <div className="relative">
           <Input
-            readOnly
             disabled={!kimdan_id}
+            readOnly={!!value}
             value={values.name}
+            onChange={(e) => setValues({ ...values, name: e.target.value })}
             className={inputVariants({ editor: true, error: !!errorMessage })}
             onDoubleClick={naimenovanieSpravochnik.open}
           />
@@ -482,9 +483,10 @@ const NaimenovanieCells = ({
       <EditableTableCell>
         <div className="relative">
           <Input
-            readOnly
             disabled={!kimdan_id}
+            readOnly={!!value}
             value={values.edin}
+            onChange={(e) => setValues({ ...values, edin: e.target.value })}
             className={inputVariants({ editor: true, error: !!errorMessage })}
             onDoubleClick={naimenovanieSpravochnik.open}
           />

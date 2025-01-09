@@ -10,6 +10,7 @@ import {
 } from '@/common/widget/form'
 import { Operatsii, TypeSchetOperatsii } from '@/common/models'
 import { PrixodFormSchema, defaultValues, queryKeys } from '../config'
+import { parseDate, withinMonth } from '@renderer/common/lib/date'
 import { useEffect, useMemo, useRef } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { usePrixodCreate, usePrixodGet, usePrixodUpdate } from '../service'
@@ -23,6 +24,7 @@ import { createResponsibleSpravochnik } from '../../responsible/service'
 import { createShartnomaSpravochnik } from '@renderer/app/organization/shartnoma'
 import { toast } from '@/common/hooks/use-toast'
 import { useForm } from 'react-hook-form'
+import { useJurnal7DefaultsStore } from '../../common/features/defaults'
 import { useLayout } from '@/common/features/layout'
 import { useQueryClient } from '@tanstack/react-query'
 import { useSpravochnik } from '@/common/features/spravochnik'
@@ -36,6 +38,7 @@ const MO7PrixodDetailsPage = () => {
 
   const { id } = useParams()
 
+  const { from } = useJurnal7DefaultsStore()
   const { data: prixod, isFetching } = usePrixodGet(Number(id))
   const { mutate: createPrixod, isPending: isCreating } = usePrixodCreate({
     onSuccess: () => {
@@ -176,6 +179,18 @@ const MO7PrixodDetailsPage = () => {
       }))
     )
   }, [form, doc_date])
+  useEffect(() => {
+    if (id !== 'create') {
+      return
+    }
+
+    const defaultDate = parseDate(from)
+    const docDate = parseDate(form.watch('doc_date'))
+
+    if (!docDate || !withinMonth(docDate, defaultDate)) {
+      form.setValue('doc_date', from)
+    }
+  }, [id, from, form])
 
   useLayout({
     title: id === 'create' ? 'Создать приход' : 'Редактировать приход',
@@ -193,7 +208,16 @@ const MO7PrixodDetailsPage = () => {
             className="divide-y"
           >
             <div className="grid grid-cols-2 items-end">
-              <DocumentFields form={form} />
+              <DocumentFields
+                form={form}
+                validateDocDate={(date) => {
+                  return withinMonth(new Date(date), parseDate(from))
+                }}
+                calendarProps={{
+                  fromMonth: parseDate(from),
+                  toMonth: parseDate(from)
+                }}
+              />
               <div className="flex items-center gap-5 flex-wrap pb-7 px-5">
                 <JONumFields
                   spravochnik={{

@@ -1,5 +1,6 @@
-import type { HTMLAttributes, RefObject } from 'react'
 import type { FieldError, FieldErrors, FieldValues, UseFormReturn } from 'react-hook-form'
+import type { HTMLAttributes, RefObject } from 'react'
+
 import type { FieldsetProps } from '@/common/components'
 import { UseSpravochnikReturn } from '@/common/features/spravochnik'
 
@@ -37,10 +38,11 @@ type FormEditableFieldsComponentProps<T extends FieldValues> = Omit<
   form: UseFormReturn<T>
   containerProps?: HTMLAttributes<HTMLDivElement>
 }
-type FormEditableFieldsComponent<TypeRequired extends FieldValues> = <
-  TypePayload extends TypeRequired
->(
-  props: FormEditableFieldsComponentProps<TypePayload>
+type FormEditableFieldsComponent<
+  TypeRequired extends FieldValues,
+  TProps extends Record<string, unknown>
+> = <TypePayload extends TypeRequired>(
+  props: FormEditableFieldsComponentProps<TypePayload> & TProps
 ) => JSX.Element
 
 // -----------------------------------------------------------------------------

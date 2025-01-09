@@ -10,7 +10,7 @@ export const subdivision7Service = new CRUDService<Jur7Podrazdelenie, Subdivisio
   endpoint: ApiEndpoints.jur7_podrazdelenie
 })
 
-export const createSubdivision7Spravochnik = (
+export const createPodrazdelenie7Spravochnik = (
   config: Partial<SpravochnikHookOptions<Jur7Podrazdelenie>>
 ) => {
   return extendObject(

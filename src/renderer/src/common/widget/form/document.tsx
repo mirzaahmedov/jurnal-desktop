@@ -1,23 +1,25 @@
+import { DatePicker, Fieldset } from '@/common/components'
+
+import { CalendarProps } from '@renderer/common/components/ui/calendar'
 import type { Control } from 'react-hook-form'
 import type { FormEditableFieldsComponent } from './types'
-
-import { DatePicker, Fieldset } from '@/common/components'
-import { FormField } from '@/common/components/ui/form'
 import { FormElement } from '@/common/components/form'
+import { FormField } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
+import { validateDate } from '@renderer/common/lib/date'
 
 type RequiredDocumentFields = {
   doc_num: string
   doc_date: string
 }
 
-const DocumentFields: FormEditableFieldsComponent<RequiredDocumentFields> = ({
-  tabIndex,
-  name,
-  form,
-  disabled,
-  ...props
-}) => {
+const DocumentFields: FormEditableFieldsComponent<
+  RequiredDocumentFields,
+  {
+    validateDocDate?: (value: string) => boolean
+    calendarProps?: CalendarProps
+  }
+> = ({ tabIndex, name, form, disabled, validateDocDate, calendarProps, ...props }) => {
   return (
     <Fieldset
       {...props}
@@ -50,6 +52,8 @@ const DocumentFields: FormEditableFieldsComponent<RequiredDocumentFields> = ({
               <DatePicker
                 tabIndex={tabIndex}
                 disabled={disabled}
+                validate={validateDocDate ?? validateDate}
+                calendarProps={calendarProps}
                 {...field}
               />
             </FormElement>

@@ -1,10 +1,11 @@
-import { DateRangeForm, GenericTable, LoadingOverlay } from '@/common/components'
+import { GenericTable, LoadingOverlay } from '@/common/components'
 import { columns, queryKeys } from './config'
 import { useInternalTransferDelete, useInternalTransferList } from './service'
 
+import { DateRangeForm } from '../common/components/date-range-form'
 import { toast } from '@/common/hooks/use-toast'
 import { useConfirm } from '@/common/features/confirm'
-import { useDateRange } from '@/common/hooks/use-date-range'
+import { useJurnal7DateRange } from '../common/components/use-date-range'
 import { useLayout } from '@/common/features/layout'
 import { useNavigate } from 'react-router-dom'
 import { useQueryClient } from '@tanstack/react-query'
@@ -16,7 +17,7 @@ const InternalTransferPage = () => {
   const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
 
   const { confirm } = useConfirm()
-  const { form, from, to, applyFilters } = useDateRange()
+  const { form, from, to, applyFilters } = useJurnal7DateRange()
 
   const { mutate: deleteInternalTransfer } = useInternalTransferDelete({
     onSuccess() {

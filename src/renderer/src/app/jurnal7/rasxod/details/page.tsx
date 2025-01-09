@@ -6,6 +6,7 @@ import {
   SummaFields
 } from '@/common/widget/form'
 import { RasxodFormSchema, defaultValues } from '../config'
+import { parseDate, withinMonth } from '@renderer/common/lib/date'
 import { useEffect, useMemo, useRef } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useRasxodCreate, useRasxodGet, useRasxodUpdate } from '../service'
@@ -16,6 +17,7 @@ import { ProvodkaTable } from './provodka-table'
 import { createResponsibleSpravochnik } from '../../responsible/service'
 import { toast } from '@/common/hooks/use-toast'
 import { useForm } from 'react-hook-form'
+import { useJurnal7DefaultsStore } from '../../common/features/defaults'
 import { useLayout } from '@/common/features/layout'
 import { useSpravochnik } from '@/common/features/spravochnik'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -28,6 +30,7 @@ const MO7RasxodDetailsPage = () => {
 
   const { id } = useParams()
 
+  const { from } = useJurnal7DefaultsStore()
   const { data: rasxod, isFetching } = useRasxodGet(Number(id))
   const { mutate: createRasxod, isPending: isCreating } = useRasxodCreate({
     onSuccess: () => {
@@ -120,6 +123,18 @@ const MO7RasxodDetailsPage = () => {
       }))
     )
   }, [form, doc_date])
+  useEffect(() => {
+    if (id !== 'create') {
+      return
+    }
+
+    const defaultDate = parseDate(from)
+    const docDate = parseDate(form.watch('doc_date'))
+
+    if (!docDate || !withinMonth(docDate, defaultDate)) {
+      form.setValue('doc_date', from)
+    }
+  }, [id, from, form])
 
   useLayout({
     title: id === 'create' ? 'Создать расходный документ' : 'Редактировать расходный документ',
@@ -134,7 +149,16 @@ const MO7RasxodDetailsPage = () => {
         <Form {...form}>
           <form onSubmit={onSubmit}>
             <div className="grid grid-cols-2 items-end">
-              <DocumentFields form={form} />
+              <DocumentFields
+                form={form}
+                validateDocDate={(date) => {
+                  return withinMonth(new Date(date), parseDate(from))
+                }}
+                calendarProps={{
+                  fromMonth: parseDate(from),
+                  toMonth: parseDate(from)
+                }}
+              />
               <div className="grid grid-cols-2 pb-7">
                 <DoverennostFields form={form} />
               </div>

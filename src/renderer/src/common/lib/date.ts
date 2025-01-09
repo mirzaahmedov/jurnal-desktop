@@ -1,4 +1,5 @@
 const date_regex = /^\d{1,2}.\d{1,2}.\d{4}$/
+const date_iso_regex = /^\d{4}-\d{1,2}-\d{1,2}$/
 
 export const getFirstDayOfMonth = (date: Date = new Date()) => {
   return new Date(date.getFullYear(), date.getMonth(), 1)
@@ -46,6 +47,25 @@ export const validateLocaleDate = (formatted: string): boolean => {
   )
 }
 
+export const validateDate = (dateString: string): boolean => {
+  const date = new Date(dateString)
+
+  const parts = dateString.split('-').map(Number)
+  if (parts.length !== 3) {
+    return false
+  }
+
+  const [year, month, day] = parts
+
+  return (
+    date_iso_regex.test(dateString) &&
+    !isNaN(date.getTime()) &&
+    date.getDate() === day &&
+    date.getMonth() + 1 === month &&
+    date.getFullYear() === year
+  )
+}
+
 export const getMonthName = (monthNumber: number) => {
   if (monthNumber < 1 || monthNumber > 12) {
     return ''
@@ -64,4 +84,12 @@ export const getMonthName = (monthNumber: number) => {
     'Ноябрь',
     'Декабрь'
   ][monthNumber - 1]
+}
+
+export const withinMonth = (date: Date, month: Date) => {
+  return date >= getFirstDayOfMonth(month) && date <= getLastDayOfMonth(month)
+}
+
+export const localeDateToISO = (localeDateString: string) => {
+  return localeDateString.split('.').reverse().join('-')
 }

@@ -7,11 +7,11 @@ import {
   useRef,
   useState
 } from 'react'
+import { Calendar, CalendarProps } from '@/common/components/ui/calendar'
 import { Popover, PopoverContent, PopoverTrigger } from '@/common/components/ui/popover'
-import { formatDate, parseDate, validateLocaleDate } from '@/common/lib/date'
+import { formatDate, localeDateToISO, parseDate, validateDate } from '@/common/lib/date'
 import { formatLocaleDate, unformatLocaleDate } from '@/common/lib/format'
 
-import { Calendar } from '@/common/components/ui/calendar'
 import { Calendar as CalendarIcon } from 'lucide-react'
 import { Input } from './ui/input'
 import type { InputProps } from './ui/input'
@@ -30,6 +30,7 @@ export type DatePickerProps = Omit<PatternFormatProps<InputProps>, 'format' | 'o
   formatValue?: (value: string) => string
   unformatValue?: (value: string) => string
   validate?: (value: string) => boolean
+  calendarProps?: CalendarProps
 }
 const DatePicker = forwardRef<HTMLButtonElement, DatePickerProps>(
   (
@@ -40,8 +41,9 @@ const DatePicker = forwardRef<HTMLButtonElement, DatePickerProps>(
       className,
       formatValue = formatLocaleDate,
       unformatValue = unformatLocaleDate,
-      validate = validateLocaleDate,
+      validate = validateDate,
       triggerProps = {},
+      calendarProps = {},
       ...props
     },
     ref
@@ -59,13 +61,17 @@ const DatePicker = forwardRef<HTMLButtonElement, DatePickerProps>(
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
       const value = e.target.value
       setInternalValue(value)
-      if (validate(value)) {
+      if (validate(localeDateToISO(value))) {
         onChange?.(unformatValue(value))
       }
     }
 
     const handleBlur = () => {
-      if (!validate(internalValue)) {
+      if (!internalValue) {
+        onChange?.('')
+        return
+      }
+      if (!validate(localeDateToISO(internalValue))) {
         toast({
           title: 'Неверный формат даты или дата не существует',
           variant: 'destructive'
@@ -127,10 +133,14 @@ const DatePicker = forwardRef<HTMLButtonElement, DatePickerProps>(
           onOpenAutoFocus={(e) => e.preventDefault()}
         >
           <Calendar
+            {...calendarProps}
             mode="single"
             selected={value ? parseDate(value) : undefined}
             onSelect={(date) => {
               if (!date) {
+                return
+              }
+              if (!validate(formatDate(date))) {
                 return
               }
               onChange?.(formatDate(date))

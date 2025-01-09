@@ -5,6 +5,7 @@ import {
   SummaFields
 } from '@/common/widget/form'
 import { InternalTransferFormSchema, defaultValues } from '../config'
+import { parseDate, withinMonth } from '@renderer/common/lib/date'
 import { useEffect, useMemo } from 'react'
 import {
   useInternalTransferCreate,
@@ -19,6 +20,7 @@ import { ProvodkaTable } from './provodka-table'
 import { createResponsibleSpravochnik } from '../../responsible/service'
 import { toast } from '@/common/hooks/use-toast'
 import { useForm } from 'react-hook-form'
+import { useJurnal7DefaultsStore } from '../../common/features/defaults'
 import { useLayout } from '@/common/features/layout'
 import { useSpravochnik } from '@/common/features/spravochnik'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -26,6 +28,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 const InternalTransferDetailsPage = () => {
   const { id } = useParams()
 
+  const { from } = useJurnal7DefaultsStore()
   const { data: internalTransfer, isFetching } = useInternalTransferGet(Number(id))
   const { mutate: createInternalTransfer, isPending: isCreating } = useInternalTransferCreate({
     onSuccess: () => {
@@ -101,6 +104,18 @@ const InternalTransferDetailsPage = () => {
   useEffect(() => {
     form.reset(internalTransfer?.data ? internalTransfer.data : defaultValues)
   }, [form, internalTransfer])
+  useEffect(() => {
+    if (id !== 'create') {
+      return
+    }
+
+    const defaultDate = parseDate(from)
+    const docDate = parseDate(form.watch('doc_date'))
+
+    if (!docDate || !withinMonth(docDate, defaultDate)) {
+      form.setValue('doc_date', from)
+    }
+  }, [id, from, form])
 
   useLayout({
     title:
@@ -116,7 +131,16 @@ const InternalTransferDetailsPage = () => {
         <Form {...form}>
           <form onSubmit={onSubmit}>
             <div className="grid grid-cols-2 items-end">
-              <DocumentFields form={form} />
+              <DocumentFields
+                form={form}
+                validateDocDate={(date) => {
+                  return withinMonth(new Date(date), parseDate(from))
+                }}
+                calendarProps={{
+                  fromMonth: parseDate(from),
+                  toMonth: parseDate(from)
+                }}
+              />
             </div>
             <div className="grid grid-cols-2">
               <ResponsibleFields

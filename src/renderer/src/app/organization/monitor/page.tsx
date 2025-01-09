@@ -159,6 +159,7 @@ const OrganizationMonitoringPage = () => {
                   url="/organization/monitoring/cap"
                   params={{
                     main_schet_id,
+                    from: dates.from,
                     to: dates.to,
                     operatsii: operatsiiSpravochnik.selected?.schet,
                     excel: true

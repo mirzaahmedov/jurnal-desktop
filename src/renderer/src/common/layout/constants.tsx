@@ -43,12 +43,10 @@ import {
 import type { ComponentType, ReactNode } from 'react'
 
 import type { Access } from '@/common/models'
-import { Button } from '@renderer/common/components/ui/button'
-import { MonthPicker } from '@renderer/common/components/month-picker'
+import { ChangeJurnal7Defaults } from '@renderer/app/jurnal7/common/features/defaults/change-defaults'
 import { adminRoles } from '@renderer/app/super-admin/role'
 import { omitEmptyArrayElements } from '@/common/lib/validation'
 import { useAuthStore } from '@/common/features/auth'
-import { useJur7DefaultsStore } from '@renderer/app/jur7/common/features/defaults'
 
 export type NavElement = {
   noLink?: boolean
@@ -245,18 +243,14 @@ export const getNavElements = (): NavElement[] => {
               icon: Building
             },
             {
+              path: 'ostatok',
+              title: 'Остаток',
+              icon: Percent
+            },
+            {
               noLink: true,
               path: '',
-              title: (
-                <div className="flex flex-col gap-2">
-                  <MonthPicker
-                    value={useJur7DefaultsStore.getState().date}
-                    onChange={useJur7DefaultsStore.getState().setDate}
-                    className="w-56"
-                  />
-                  <Button>Регистрация сальдо</Button>
-                </div>
-              ),
+              title: <ChangeJurnal7Defaults />,
               icon: null
             }
           ]

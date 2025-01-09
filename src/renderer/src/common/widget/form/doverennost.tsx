@@ -1,12 +1,11 @@
 import type { Control } from 'react-hook-form'
 import type { FormEditableFieldsComponent } from '@/common/widget/form'
-
-import { FormField } from '@/common/components/ui/form'
 import { FormElement } from '@/common/components/form'
+import { FormField } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
 
 type RequiredDoverennostFields = {
-  doverennost: string
+  doverennost?: string
 }
 
 const DoverennostFields: FormEditableFieldsComponent<RequiredDoverennostFields> = ({

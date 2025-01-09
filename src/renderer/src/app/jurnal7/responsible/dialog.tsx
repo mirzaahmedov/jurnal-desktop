@@ -13,7 +13,7 @@ import { Button } from '@/common/components/ui/button'
 import { FormElement } from '@/common/components/form'
 import { Input } from '@/common/components/ui/input'
 import type { Responsible } from '@/common/models'
-import { createSubdivision7Spravochnik } from '../podrazdelenie/service'
+import { createPodrazdelenie7Spravochnik } from '../podrazdelenie/service'
 import { extendObject } from '@/common/lib/utils'
 import { responsibleService } from './service'
 import { toast } from '@/common/hooks/use-toast'
@@ -37,7 +37,7 @@ const ResponsibleDialog = (props: ResponsibleDialogProps) => {
   })
 
   const subdivision7Spravochnik = useSpravochnik(
-    createSubdivision7Spravochnik({
+    createPodrazdelenie7Spravochnik({
       value: form.watch('spravochnik_podrazdelenie_jur7_id'),
       onChange(value) {
         form.setValue('spravochnik_podrazdelenie_jur7_id', value)
