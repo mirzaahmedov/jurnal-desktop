@@ -40,17 +40,22 @@ import {
   Wallet,
   Weight
 } from 'lucide-react'
+import type { ComponentType, ReactNode } from 'react'
 
 import type { Access } from '@/common/models'
-import type { ComponentType } from 'react'
+import { Button } from '@renderer/common/components/ui/button'
+import { MonthPicker } from '@renderer/common/components/month-picker'
 import { adminRoles } from '@renderer/app/super-admin/role'
 import { omitEmptyArrayElements } from '@/common/lib/validation'
 import { useAuthStore } from '@/common/features/auth'
+import { useJur7DefaultsStore } from '@renderer/app/jur7/common/features/defaults'
 
 export type NavElement = {
-  title: string
+  noLink?: boolean
+  title: ReactNode
+  className?: string
   path: string
-  icon: ComponentType<any>
+  icon: ComponentType<any> | null
   children?: NavElement[]
 }
 
@@ -238,6 +243,21 @@ export const getNavElements = (): NavElement[] => {
               path: 'subdivision-7',
               title: 'Подразделение',
               icon: Building
+            },
+            {
+              noLink: true,
+              path: '',
+              title: (
+                <div className="flex flex-col gap-2">
+                  <MonthPicker
+                    value={useJur7DefaultsStore.getState().date}
+                    onChange={useJur7DefaultsStore.getState().setDate}
+                    className="w-56"
+                  />
+                  <Button>Регистрация сальдо</Button>
+                </div>
+              ),
+              icon: null
             }
           ]
         }

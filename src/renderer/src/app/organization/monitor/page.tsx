@@ -131,12 +131,39 @@ const OrganizationMonitoringPage = () => {
                   url="/organization/monitoring/order"
                   params={{
                     main_schet_id,
+                    organ_id: orgId ? orgId : undefined,
                     from: dates.from,
                     to: dates.to,
                     schet: operatsiiSpravochnik.selected?.schet,
-                    excel: true
+                    excel: true,
+                    contract: false
                   }}
                   buttonText="Сводный отчет"
+                />
+                <DownloadDocumentButton
+                  fileName={`сводный-отчет-${dates.from}:${dates.to}.xlsx`}
+                  url="/organization/monitoring/order"
+                  params={{
+                    main_schet_id,
+                    organ_id: orgId ? orgId : undefined,
+                    from: dates.from,
+                    to: dates.to,
+                    schet: operatsiiSpravochnik.selected?.schet,
+                    excel: true,
+                    contract: true
+                  }}
+                  buttonText="Сводный отчет (по договору)"
+                />
+                <DownloadDocumentButton
+                  fileName={`сводный-отчет-${dates.to}-счет:${operatsiiSpravochnik.selected?.schet}.xlsx`}
+                  url="/organization/monitoring/cap"
+                  params={{
+                    main_schet_id,
+                    to: dates.to,
+                    operatsii: operatsiiSpravochnik.selected?.schet,
+                    excel: true
+                  }}
+                  buttonText="Шапка"
                 />
                 {orgId ? (
                   <AktSverkaDialog

@@ -127,9 +127,9 @@ const renderNavElement = (elem: null | NavElement, isCollapsed: boolean, rootPat
                 'w-full flex items-center py-3 gap-2.5',
                 isCollapsed && 'justify-center'
               )}
-              title={elem.title}
+              title={String(elem.title)}
             >
-              <elem.icon className="size-5" />
+              {elem.icon && <elem.icon className="size-5" />}
               {!isCollapsed ? (
                 <span className="font-bold text-sm text-start">{elem.title}</span>
               ) : null}
@@ -146,20 +146,35 @@ const renderNavElement = (elem: null | NavElement, isCollapsed: boolean, rootPat
       key={path}
       className="group px-5 hover:bg-slate-50 transition-colors"
     >
-      <NavLink
-        to={path}
-        className={({ isActive }) =>
-          cn(
+      {elem.noLink ? (
+        <div
+          className={cn(
             'flex items-center py-3 gap-2.5 border-b border-slate-200 group-last:border-none',
             isCollapsed && 'justify-center',
-            isActive && 'text-brand'
-          )
-        }
-        title={elem.title}
-      >
-        <elem.icon className="size-5" />
-        {!isCollapsed ? <span className="font-bold text-sm">{elem.title}</span> : null}
-      </NavLink>
+            elem.className
+          )}
+          title={String(elem.title)}
+        >
+          {elem.icon && <elem.icon className="size-5" />}
+          {!isCollapsed ? <span className="font-bold text-sm">{elem.title}</span> : null}
+        </div>
+      ) : (
+        <NavLink
+          to={path}
+          className={({ isActive }) =>
+            cn(
+              'flex items-center py-3 gap-2.5 border-b border-slate-200 group-last:border-none',
+              isCollapsed && 'justify-center',
+              isActive && 'text-brand',
+              elem.className
+            )
+          }
+          title={String(elem.title)}
+        >
+          {elem.icon && <elem.icon className="size-5" />}
+          {!isCollapsed ? <span className="font-bold text-sm">{elem.title}</span> : null}
+        </NavLink>
+      )}
     </li>
   )
 }
