@@ -1,9 +1,14 @@
 import { DatePicker, Fieldset, NumericInput } from '@/common/components'
 import { Form, FormControl, FormField, FormItem, FormLabel } from '@/common/components/ui/form'
-import { Navigate, useNavigate, useParams } from 'react-router-dom'
+import { Navigate, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { ShartnomaGrafikFormSchema, shartnomaGrafikDetailsService } from '../service'
 import { defaultValues, shartnomaGrafikQueryKeys } from '../constants'
+import { mainSchetQueryKeys, mainSchetService } from '@renderer/app/region-spravochnik/main-schet'
 import { numberToWords, roundNumberToTwoDecimalPlaces } from '@/common/lib/utils'
+import {
+  organizationQueryKeys,
+  organizationService
+} from '@renderer/app/region-spravochnik/organization'
 import { useEffect, useMemo } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
@@ -18,18 +23,18 @@ import { formatNumber } from '@/common/lib/format'
 import { monthNames } from '@/common/data/month'
 import { useForm } from 'react-hook-form'
 import { useLayout } from '@/common/features/layout'
-import { useOrgId } from '../hooks'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
 import { useToast } from '@/common/hooks/use-toast'
 import { useToggle } from '@/common/hooks/use-toggle'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 const ShartnomaGrafikDetailsPage = () => {
-  const [orgId] = useOrgId()
+  const [searchParams] = useSearchParams()
 
   const { toast } = useToast()
 
   const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
+  const orgId = searchParams.get('org_id')
   const id = useParams().id as string
   const navigate = useNavigate()
   const queryClient = useQueryClient()
@@ -40,6 +45,14 @@ const ShartnomaGrafikDetailsPage = () => {
     defaultValues
   })
 
+  const { data: main_schet } = useQuery({
+    queryKey: [mainSchetQueryKeys.getById, main_schet_id],
+    queryFn: mainSchetService.getById
+  })
+  const { data: organization } = useQuery({
+    queryKey: [organizationQueryKeys.getById, Number(orgId)],
+    queryFn: organizationService.getById
+  })
   const { data: shartnomaGrafik, isFetching } = useQuery({
     queryKey: [
       shartnomaGrafikQueryKeys.getById,
@@ -211,6 +224,7 @@ const ShartnomaGrafikDetailsPage = () => {
                   type="button"
                   variant="ghost"
                   onClick={reportToggle.open}
+                  disabled={!main_schet?.data || !organization?.data || !shartnomaGrafik?.data}
                 >
                   <DownloadIcon className="btn-icon icon-start" />
                   График оплаты
@@ -220,11 +234,17 @@ const ShartnomaGrafikDetailsPage = () => {
           </form>
         </Form>
       </DetailsView.Content>
-      <GenerateReportDialog
-        open={reportToggle.isOpen}
-        onChange={reportToggle.setIsOpen}
-        schedule={form.watch()}
-      />
+      {main_schet?.data && organization?.data && shartnomaGrafik?.data ? (
+        <GenerateReportDialog
+          open={reportToggle.isOpen}
+          onChange={reportToggle.setIsOpen}
+          schedule={form.watch()}
+          main_schet={main_schet.data}
+          organization={organization.data}
+          doc_date={shartnomaGrafik.data.doc_date}
+          doc_num={shartnomaGrafik.data.doc_num}
+        />
+      ) : null}
     </DetailsView>
   )
 }

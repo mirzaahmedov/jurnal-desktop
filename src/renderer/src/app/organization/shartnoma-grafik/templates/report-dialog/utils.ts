@@ -1,18 +1,21 @@
+import { MainSchet, Organization } from '@renderer/common/models'
 import { numberToWords, roundNumberToTwoDecimalPlaces } from '@/common/lib/utils'
 
-type BuildContractDetailsTextParams = {
+import { formatLocaleDate } from '@renderer/common/lib/format'
+
+type BuildContractPaymentDetailsTextParams = {
   percentageValue: string
   summaValue: number
   summaTotal: number
-  payment_date: string
+  paymentDate: string
 }
-const buildContractDetailsText = ({
+export const buildContractPaymentDetailsText = ({
   percentageValue,
   summaValue,
   summaTotal,
-  payment_date
-}: BuildContractDetailsTextParams) => {
-  const date = new Date(payment_date)
+  paymentDate
+}: BuildContractPaymentDetailsTextParams) => {
+  const date = new Date(paymentDate)
   const month = date.toLocaleString('ru', { month: 'long' })
   const year = date.getFullYear()
   const summa =
@@ -23,4 +26,19 @@ const buildContractDetailsText = ({
   return `Умумий сумма ${summaTotal} ${numberToWords(summaTotal)}. юкорида курсатилган суммадан ${summa} суми ёки шартноманинг умумий суммасининг ${roundNumberToTwoDecimalPlaces(Number(percentage))}%ни ${year} йил ${month} ойида олдиндан туланиши лозим`
 }
 
-export { buildContractDetailsText }
+type BuildContractDetailsTextParams = {
+  main_schet: MainSchet
+  organization: Organization
+  doc_date: string
+  doc_num: string
+  summa: number
+}
+export const buildContractDetailsText = ({
+  doc_date,
+  doc_num,
+  main_schet,
+  organization,
+  summa
+}: BuildContractDetailsTextParams) => {
+  return `${main_schet.tashkilot_nomi} ва ${organization.name} билан умумий суммадаги ${summa} ${numberToWords(summa)}. ${formatLocaleDate(doc_date)} йилдаги ${doc_num}-сонли шартномага`
+}

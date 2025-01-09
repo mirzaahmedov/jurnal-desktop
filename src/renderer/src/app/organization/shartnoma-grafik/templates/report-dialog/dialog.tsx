@@ -1,29 +1,42 @@
-import type { ShartnomaGrafikForm } from '../../service'
-
-import { useForm } from 'react-hook-form'
-import { Form, FormControl, FormField, FormItem, FormLabel } from '@/common/components/ui/form'
-import { FormElement } from '@/common/components/form'
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/common/components/ui/dialog'
-import { Input } from '@/common/components/ui/input'
-import { RadioGroup, RadioGroupItem } from '@/common/components/ui/radio-group'
-import { Textarea } from '@/common/components/ui/textarea'
-import { useEffect, useMemo } from 'react'
 import { DatePicker, NumericInput } from '@/common/components'
-import { GenerateDocumentButton } from '@/common/components'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/common/components/ui/dialog'
+import { Form, FormControl, FormField, FormItem, FormLabel } from '@/common/components/ui/form'
+import type { MainSchet, Organization } from '@renderer/common/models'
+import { RadioGroup, RadioGroupItem } from '@/common/components/ui/radio-group'
+import { ReportDialogPayloadSchema, defaultValues } from './constants'
+import { buildContractDetailsText, buildContractPaymentDetailsText } from './utils'
+import { useEffect, useMemo } from 'react'
+
 import { ContractScheduleTemplate } from '../report'
-import { defaultValues, ReportDialogPayloadSchema } from './constants'
+import { FormElement } from '@/common/components/form'
+import { GenerateDocumentButton } from '@/common/components'
+import { Input } from '@/common/components/ui/input'
+import type { ShartnomaGrafikForm } from '../../service'
+import { Textarea } from '@/common/components/ui/textarea'
 import { formatDate } from '@/common/lib/date'
 import { monthNames } from '@/common/data/month'
-import { buildContractDetailsText } from './utils'
-import { zodResolver } from '@hookform/resolvers/zod'
 import { roundNumberToTwoDecimalPlaces } from '@/common/lib/utils'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
 
 type GenerateReportDialogProps = {
   schedule: ShartnomaGrafikForm
+  doc_date: string
+  doc_num: string
   open: boolean
+  main_schet: MainSchet
+  organization: Organization
   onChange: (open: boolean) => void
 }
-const GenerateReportDialog = ({ schedule, open, onChange }: GenerateReportDialogProps) => {
+const GenerateReportDialog = ({
+  schedule,
+  doc_date,
+  doc_num,
+  main_schet,
+  organization,
+  open,
+  onChange
+}: GenerateReportDialogProps) => {
   const form = useForm({
     defaultValues,
     resolver: zodResolver(ReportDialogPayloadSchema),
@@ -37,26 +50,32 @@ const GenerateReportDialog = ({ schedule, open, onChange }: GenerateReportDialog
   }, [schedule])
 
   const percentageValue = form.watch('percentage')
-  const payment_date = form.watch('payment_date')
+  const paymentDate = form.watch('payment_date')
   const summaValue = form.watch('summa_value')
   useEffect(() => {
     form.setValue(
       'payment_details',
-      buildContractDetailsText({
+      buildContractPaymentDetailsText({
         percentageValue,
-        payment_date,
+        paymentDate,
         summaValue,
         summaTotal
       })
     )
-  }, [form, percentageValue, payment_date, summaValue, summaTotal])
+  }, [form, percentageValue, paymentDate, summaValue, summaTotal])
 
   useEffect(() => {
     form.setValue(
       'contract_details',
-      `ЕМУ УБДД ГУВД г. Ташкент ва "ТСҲТТ" АК "Ўзбектелеком" билан умумий суммадаги 12000000 12 Миллион сум 0 тийин. 05.02.2024 йилдаги ТРГ/Б2Г-296221 53-сонли шартномага`
+      buildContractDetailsText({
+        main_schet,
+        organization,
+        doc_date,
+        doc_num,
+        summa: summaTotal
+      })
     )
-  }, [form])
+  }, [form, main_schet, organization, doc_date, doc_num, summaTotal])
 
   return (
     <Dialog
