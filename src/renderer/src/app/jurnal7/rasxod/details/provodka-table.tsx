@@ -21,7 +21,8 @@ import { Input } from '@/common/components/ui/input'
 import { Naimenovanie } from '@/common/models'
 import { UseFormReturn } from 'react-hook-form'
 import { createGroupSpravochnik } from '@/app/super-admin/group/service'
-import { createNaimenovanieKolSpravochnik } from '@renderer/app/jurnal7/naimenovaniya/service'
+import { createOstatokProductSpravochnik } from '@renderer/app/jurnal7/ostatok'
+import { formatDate } from '@renderer/common/lib/date'
 import { useEventCallback } from '@/common/hooks/use-event-callback'
 
 type ProvodkaTableProps = {
@@ -370,26 +371,31 @@ const NaimenovanieCells = ({
     edin: ''
   })
 
-  const naimenovanieSpravochnik = useSpravochnik(
-    createNaimenovanieKolSpravochnik({
+  console.log(values)
+
+  const productOstatokSpravochnik = useSpravochnik(
+    createOstatokProductSpravochnik({
       value,
       onChange(id, data) {
         onChange(id)
 
-        if (!data?.result) {
+        console.log({ data })
+
+        if (!data?.to.kol) {
           return
         }
-        setMaxKol(data?.result ?? Infinity)
-        onChangeChildFieldEvent(index, 'kol', data?.result ?? 0)
+        setMaxKol(data?.to.kol ?? Infinity)
+        onChangeChildFieldEvent(index, 'kol', data?.to.kol ?? 0)
         onChangeChildFieldEvent(index, 'sena', data?.sena ?? 0)
         onChangeChildFieldEvent(
           index,
           'data_pereotsenka',
-          data?.doc_date ? data.doc_date.substring(0, 10) : ''
+          data?.date_saldo ? data.date_saldo.substring(0, 10) : ''
         )
       },
       params: {
-        kimdan_id
+        kimning_buynida: kimdan_id,
+        to: formatDate(new Date())
       },
       enabled: !!kimdan_id
     })
@@ -404,7 +410,7 @@ const NaimenovanieCells = ({
   )
 
   useEffect(() => {
-    if (!naimenovanieSpravochnik.selected) {
+    if (!productOstatokSpravochnik.selected) {
       setValues({
         group_jur7_id: 0,
         name: '',
@@ -413,11 +419,11 @@ const NaimenovanieCells = ({
       return
     }
     setValues({
-      group_jur7_id: naimenovanieSpravochnik.selected?.group_jur7_id ?? 0,
-      name: naimenovanieSpravochnik.selected?.name ?? '',
-      edin: naimenovanieSpravochnik.selected?.edin ?? ''
+      group_jur7_id: productOstatokSpravochnik.selected?.group_id ?? 0,
+      name: productOstatokSpravochnik.selected?.naimenovanie_tovarov ?? '',
+      edin: productOstatokSpravochnik.selected?.edin ?? ''
     })
-  }, [naimenovanieSpravochnik.selected, onChangeChildFieldEvent, index, setMaxKol])
+  }, [productOstatokSpravochnik.selected, onChangeChildFieldEvent, index, setMaxKol])
 
   useEffect(() => {
     if (!isMounted.current) {
@@ -451,7 +457,7 @@ const NaimenovanieCells = ({
               error: !!errorMessage
             })}
             getInputValue={(selected) => String(selected?.id) ?? ''}
-            {...naimenovanieSpravochnik}
+            {...productOstatokSpravochnik}
           />
         </div>
       </EditableTableCell>
@@ -464,7 +470,7 @@ const NaimenovanieCells = ({
             className={inputVariants({ editor: true, error: !!errorMessage })}
             getInputValue={(selected) => selected?.name ?? ''}
             {...groupSpravochnik}
-            open={naimenovanieSpravochnik.open}
+            open={productOstatokSpravochnik.open}
           />
         </div>
       </EditableTableCell>
@@ -475,7 +481,7 @@ const NaimenovanieCells = ({
             disabled={!kimdan_id}
             value={values.name}
             className={inputVariants({ editor: true, error: !!errorMessage })}
-            onDoubleClick={naimenovanieSpravochnik.open}
+            onDoubleClick={productOstatokSpravochnik.open}
           />
         </div>
       </EditableTableCell>
@@ -486,7 +492,7 @@ const NaimenovanieCells = ({
             disabled={!kimdan_id}
             value={values.edin}
             className={inputVariants({ editor: true, error: !!errorMessage })}
-            onDoubleClick={naimenovanieSpravochnik.open}
+            onDoubleClick={productOstatokSpravochnik.open}
           />
         </div>
       </EditableTableCell>
