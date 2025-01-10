@@ -1,10 +1,10 @@
-import { ApiEndpoints, CRUDService } from '@renderer/common/features/crud'
+import { APIEndpoints, CRUDService } from '@renderer/common/features/crud'
 
 import type { Mainbook } from '@renderer/common/models'
 import { http } from '@renderer/common/lib/http'
 
 export const adminMainbookService = new CRUDService<Mainbook.AdminReport>({
-  endpoint: ApiEndpoints.admin__mainbook
+  endpoint: APIEndpoints.admin__mainbook
 }).forRequest((type, args) => {
   if (type === 'getById') {
     return {
@@ -29,7 +29,7 @@ export const adminMainbookUpdateQuery = async ({
   month
 }: UpdateParams) => {
   const response = await http.put(
-    `${ApiEndpoints.admin__mainbook}`,
+    `${APIEndpoints.admin__mainbook}`,
     {
       status
     },

@@ -1,11 +1,11 @@
-import { ApiEndpoints, CRUDService } from '@renderer/common/features/crud'
+import { APIEndpoints, CRUDService } from '@renderer/common/features/crud'
 import { budjet, main_schet } from '@renderer/common/features/crud/middleware'
 
 import type { OX } from '@renderer/common/models'
 import type { OXReportValues } from './config'
 
 export const oxReportService = new CRUDService<OX.Report, OXReportValues>({
-  endpoint: ApiEndpoints.ox_doc
+  endpoint: APIEndpoints.ox_doc
 })
   .use(budjet())
   .use(main_schet())

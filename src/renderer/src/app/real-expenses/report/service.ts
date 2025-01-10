@@ -1,4 +1,4 @@
-import { ApiEndpoints, CRUDService } from '@renderer/common/features/crud'
+import { APIEndpoints, CRUDService } from '@renderer/common/features/crud'
 import { budjet, main_schet } from '@renderer/common/features/crud/middleware'
 
 import { RealExpenses } from '@renderer/common/models'
@@ -8,7 +8,7 @@ export const realExpensesReportService = new CRUDService<
   RealExpenses.Report,
   RealExpensesReportValues
 >({
-  endpoint: ApiEndpoints.realcost_doc
+  endpoint: APIEndpoints.realcost_doc
 })
   .use(budjet())
   .use(main_schet())

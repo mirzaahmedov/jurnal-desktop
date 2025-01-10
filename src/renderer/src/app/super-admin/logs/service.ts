@@ -1,9 +1,9 @@
-import { ApiEndpoints, CRUDService } from '@renderer/common/features/crud'
+import { APIEndpoints, CRUDService } from '@renderer/common/features/crud'
 
 import type { Log } from '@renderer/common/models'
 
 const logService = new CRUDService<Log>({
-  endpoint: ApiEndpoints.logs
+  endpoint: APIEndpoints.logs
 }).forRequest((type, args) => {
   if (type === 'getAll') {
     const { params } = args.config

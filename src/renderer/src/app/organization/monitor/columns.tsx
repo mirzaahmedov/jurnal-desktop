@@ -1,15 +1,17 @@
 import type { OrganizationMonitor, OrganizationMonitorProvodka } from '@/common/models'
 
-import { Badge } from '@/common/components/ui/badge'
-import type { ColumnDef } from '@/common/components'
-import { formatLocaleDate } from '@/common/lib/format'
+import { Badge } from '@renderer/common/components/ui/badge'
+import type { ColumnDef } from '@renderer/common/components'
+import { formatLocaleDate } from '@renderer/common/lib/format'
 
-const orgMonitorColumns: ColumnDef<OrganizationMonitor>[] = [
+export const organizationMonitorColumns: ColumnDef<OrganizationMonitor>[] = [
   {
+    fit: true,
     key: 'doc_num',
     header: 'Документ №'
   },
   {
+    fit: true,
     key: 'doc_date',
     header: 'Дата',
     renderCell: (row) => formatLocaleDate(row.doc_date)
@@ -35,6 +37,7 @@ const orgMonitorColumns: ColumnDef<OrganizationMonitor>[] = [
     header: 'Кредит'
   },
   {
+    fit: true,
     key: 'shartnoma_doc_num',
     header: '№ договора'
   },
@@ -83,5 +86,3 @@ const getProvodkaName = (type: OrganizationMonitorProvodka) => {
       return ''
   }
 }
-
-export { orgMonitorColumns }

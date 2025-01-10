@@ -1,4 +1,4 @@
-import { ApiEndpoints, CRUDService } from '@renderer/common/features/crud'
+import { APIEndpoints, CRUDService } from '@renderer/common/features/crud'
 import type { SpravochnikHookOptions } from '@renderer/common/features/spravochnik'
 import { extendObject } from '@renderer/common/lib/utils'
 import type { Mainbook } from '@renderer/common/models'
@@ -6,7 +6,7 @@ import { adminMainbookSchetColumns } from './columns'
 import { SpravochnikSearchField } from '@renderer/common/features/search'
 
 export const adminMainbookSchetService = new CRUDService<Mainbook.Schet>({
-  endpoint: ApiEndpoints.admin__mainbook_schet
+  endpoint: APIEndpoints.admin__mainbook_schet
 })
 
 export const createMainbookSchetSpravochnik = (
@@ -15,7 +15,7 @@ export const createMainbookSchetSpravochnik = (
   return extendObject(
     {
       title: 'Выберите операцию',
-      endpoint: ApiEndpoints.admin__mainbook_schet,
+      endpoint: APIEndpoints.admin__mainbook_schet,
       columns: adminMainbookSchetColumns,
       service: adminMainbookSchetService,
       filters: [SpravochnikSearchField]

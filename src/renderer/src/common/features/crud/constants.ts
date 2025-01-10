@@ -1,4 +1,4 @@
-export enum ApiEndpoints {
+export enum APIEndpoints {
   sostav = 'spravochnik/sostav',
   main_schet = 'spravochnik/main-schet',
   podotchet_litso = 'spravochnik/podotchet-litso',
@@ -12,6 +12,7 @@ export enum ApiEndpoints {
   shartnoma_grafik = 'shartnoma/grafik',
   bank_prixod = 'bank/income',
   bank_rasxod = 'bank/expense',
+  bank_rasxod_payment = 'bank/expense/payment',
   bank_monitoring = 'bank/monitoring',
   kassa_prixod = 'kassa/income',
   kassa_rasxod = 'kassa/expense',

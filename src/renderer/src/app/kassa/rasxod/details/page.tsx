@@ -29,7 +29,7 @@ import { KassaRasxodOrderTemplate } from '../templates'
 import { formatNumber } from '@/common/lib/format'
 import { numberToWords } from '@/common/lib/utils'
 import { mainSchetQueryKeys, mainSchetService } from '@/app/region-spravochnik/main-schet'
-import { ApiEndpoints } from '@/common/features/crud'
+import { APIEndpoints } from '@/common/features/crud'
 import { getDataFromCache } from '@/common/lib/query-client'
 import { Operatsii } from '@/common/models'
 import { ButtonGroup } from '@/common/components/ui/button-group'
@@ -249,7 +249,7 @@ const KassaRasxodDetailtsPage = () => {
                         .watch('childs')
                         .map(({ summa, spravochnik_operatsii_id }) => {
                           const result = getDataFromCache<Operatsii>(queryClient, [
-                            ApiEndpoints.operatsii,
+                            APIEndpoints.operatsii,
                             spravochnik_operatsii_id
                           ])
                           const operation = result?.data?.name ?? ''

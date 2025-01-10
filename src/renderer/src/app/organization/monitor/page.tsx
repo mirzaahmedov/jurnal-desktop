@@ -21,7 +21,7 @@ import {
 } from '@/common/components'
 import { formatNumber } from '@/common/lib/format'
 import { useOperatsiiId, useOrgId } from './hooks'
-import { orgMonitorColumns } from './columns'
+import { organizationMonitorColumns } from './columns'
 import { createOrganizationSpravochnik } from '@renderer/app/region-spravochnik/organization'
 import { createOperatsiiSpravochnik } from '@/app/super-admin/operatsii'
 
@@ -196,7 +196,7 @@ const OrganizationMonitoringPage = () => {
       </ListView.Header>
       <ListView.Content loading={isFetching}>
         <GenericTable
-          columns={orgMonitorColumns}
+          columns={organizationMonitorColumns}
           data={orgMonitorList?.data ?? []}
           onEdit={handleClickEdit}
           getRowId={(row) => {

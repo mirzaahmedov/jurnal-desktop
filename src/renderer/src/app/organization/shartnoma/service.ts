@@ -2,7 +2,7 @@ import type { Shartnoma } from '@/common/models'
 import type { SpravochnikHookOptions } from '@/common/features/spravochnik'
 
 import { z } from 'zod'
-import { ApiEndpoints, CRUDService } from '@/common/features/crud'
+import { APIEndpoints, CRUDService } from '@/common/features/crud'
 import { withPreprocessor } from '@/common/lib/validation'
 import { budjet } from '@/common/features/crud/middleware'
 import { extendObject } from '@/common/lib/utils'
@@ -10,7 +10,7 @@ import { shartnomaColumns } from './columns'
 import { SpravochnikSearchField } from '@/common/features/search'
 
 export const shartnomaService = new CRUDService<Shartnoma, ShartnomaForm>({
-  endpoint: ApiEndpoints.shartnoma
+  endpoint: APIEndpoints.shartnoma
 }).use(budjet())
 
 export const ShartnomaFormSchema = withPreprocessor(
@@ -33,7 +33,7 @@ export const createShartnomaSpravochnik = (config: Partial<SpravochnikHookOption
   return extendObject(
     {
       title: 'Выберите договор',
-      endpoint: ApiEndpoints.shartnoma,
+      endpoint: APIEndpoints.shartnoma,
       columns: shartnomaColumns,
       service: shartnomaService,
       filters: [SpravochnikSearchField]

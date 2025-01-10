@@ -1,7 +1,7 @@
-import type { ResponseMeta, BankMonitoringType } from '@/common/models'
+import type { BankMonitoringType, ResponseMeta } from '@/common/models'
 
+import { APIEndpoints } from '@/common/features/crud'
 import { CRUDService } from '@/common/features/crud'
-import { ApiEndpoints } from '@/common/features/crud'
 
 export type BankMonitorMetaType = {
   summa_from: number
@@ -16,5 +16,5 @@ export const bankMonitorService = new CRUDService<
   undefined,
   BankMonitorMetaType & ResponseMeta
 >({
-  endpoint: ApiEndpoints.bank_monitoring
+  endpoint: APIEndpoints.bank_monitoring
 })

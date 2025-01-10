@@ -1,10 +1,10 @@
 import type { HTMLAttributes, TdHTMLAttributes, ThHTMLAttributes } from 'react'
-import type { VariantProps } from 'class-variance-authority'
-
-import { forwardRef } from 'react'
-import { cva } from 'class-variance-authority'
-import { cn } from '@/common/lib/utils'
 import { TableCell, TableHead, TableRow } from '@/common/components/ui/table'
+
+import type { VariantProps } from 'class-variance-authority'
+import { cn } from '@/common/lib/utils'
+import { cva } from 'class-variance-authority'
+import { forwardRef } from 'react'
 
 const cellVariants = cva(
   'px-6 py-4 border-r last:border-none font-medium text-slate-600 border-slate-200',

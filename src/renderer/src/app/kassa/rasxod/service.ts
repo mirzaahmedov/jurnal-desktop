@@ -1,9 +1,10 @@
-import type { ResponseMeta, KassaRasxodType } from '@/common/models'
-import { z } from 'zod'
+import type { KassaRasxodType, ResponseMeta } from '@/common/models'
+
+import { APIEndpoints } from '@/common/features/crud'
 import { CRUDService } from '@/common/features/crud'
-import { ApiEndpoints } from '@/common/features/crud'
-import { withPreprocessor } from '@/common/lib/validation'
 import { main_schet } from '@/common/features/crud/middleware'
+import { withPreprocessor } from '@/common/lib/validation'
+import { z } from 'zod'
 
 export const kassaRasxodService = new CRUDService<
   KassaRasxodType,
@@ -11,7 +12,7 @@ export const kassaRasxodService = new CRUDService<
   RasxodPayloadType,
   { summa: number } & ResponseMeta
 >({
-  endpoint: ApiEndpoints.kassa_rasxod
+  endpoint: APIEndpoints.kassa_rasxod
 }).use(main_schet())
 
 export const RasxodPodvodkaPayloadSchema = withPreprocessor(

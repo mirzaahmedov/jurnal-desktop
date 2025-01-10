@@ -1,13 +1,13 @@
 import type { SmetaGrafik } from '@/common/models'
 import type { SmetaGrafikForm } from './constants'
 
-import { ApiEndpoints, CRUDService } from '@/common/features/crud'
+import { APIEndpoints, CRUDService } from '@/common/features/crud'
 import { extendObject } from '@renderer/common/lib/utils'
 import { ColumnDef } from '@renderer/common/components'
 import { SpravochnikHookOptions } from '@renderer/common/features/spravochnik'
 
 export const smetaGrafikService = new CRUDService<SmetaGrafik, SmetaGrafikForm>({
-  endpoint: ApiEndpoints.smeta_grafik
+  endpoint: APIEndpoints.smeta_grafik
 })
 
 export const createSmetaGrafikSpravochnik = (
@@ -16,7 +16,7 @@ export const createSmetaGrafikSpravochnik = (
   return extendObject(
     {
       title: 'Выберите смету',
-      endpoint: ApiEndpoints.smeta_grafik,
+      endpoint: APIEndpoints.smeta_grafik,
       columns: [
         {
           key: 'smeta_number',

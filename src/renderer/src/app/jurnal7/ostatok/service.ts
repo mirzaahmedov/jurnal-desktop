@@ -1,4 +1,4 @@
-import { ApiEndpoints, CRUDService } from '@renderer/common/features/crud'
+import { APIEndpoints, CRUDService } from '@renderer/common/features/crud'
 import { SpravochnikSearchField } from '@renderer/common/features/search'
 import { SpravochnikHookOptions } from '@renderer/common/features/spravochnik'
 import { extendObject } from '@renderer/common/lib/utils'
@@ -14,11 +14,11 @@ export const ostatokService = new CRUDService<
     month: number
   }
 >({
-  endpoint: ApiEndpoints.jur7_saldo
+  endpoint: APIEndpoints.jur7_saldo
 })
 
 export const ostatokProductService = new CRUDService<Ostatok>({
-  endpoint: ApiEndpoints.jur7_saldo_product
+  endpoint: APIEndpoints.jur7_saldo_product
 }).forRequest((type, args) => {
   if (type === 'getById') {
     return {
@@ -41,7 +41,7 @@ export const createOstatokProductSpravochnik = (
   return extendObject(
     {
       title: 'Выберите операцию',
-      endpoint: ApiEndpoints.jur7_saldo_product,
+      endpoint: APIEndpoints.jur7_saldo_product,
       columns: ostatokProductColumns,
       service: ostatokProductService,
       filters: [SpravochnikSearchField]

@@ -1,15 +1,15 @@
-import { FooterCell, FooterRow, GenericTable } from '@/common/components'
+import { FooterCell, FooterRow, GenericTable } from '@renderer/common/components'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { usePagination, useRangeDate } from '@/common/hooks'
+import { usePagination, useRangeDate } from '@renderer/common/hooks'
 
-import type { BankRasxodType } from '@/common/models'
-import { ListView } from '@/common/views'
+import type { BankRasxod } from '@renderer/common/models'
+import { ListView } from '@renderer/common/views'
 import { bankRasxodService } from './service'
 import { columns } from './columns'
-import { formatNumber } from '@/common/lib/format'
+import { formatNumber } from '@renderer/common/lib/format'
 import { queryKeys } from './constants'
-import { useConfirm } from '@/common/features/confirm'
-import { useLayout } from '@/common/features/layout'
+import { useConfirm } from '@renderer/common/features/confirm'
+import { useLayout } from '@renderer/common/features/layout'
 import { useNavigate } from 'react-router-dom'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
 
@@ -50,10 +50,10 @@ const BankRasxodPage = () => {
     }
   })
 
-  const handleClickEdit = (row: BankRasxodType) => {
+  const handleClickEdit = (row: BankRasxod) => {
     navigate(`${row.id}`)
   }
-  const handleClickDelete = (row: BankRasxodType) => {
+  const handleClickDelete = (row: BankRasxod) => {
     confirm({
       onConfirm() {
         deleteMutation(row.id)

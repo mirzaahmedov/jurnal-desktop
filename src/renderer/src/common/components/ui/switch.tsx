@@ -1,11 +1,12 @@
 import * as React from 'react'
 import * as SwitchPrimitives from '@radix-ui/react-switch'
 
+import { LoadingSpinner } from '../loading'
 import { cn } from '@/common/lib/utils'
 
 const Switch = React.forwardRef<
   React.ElementRef<typeof SwitchPrimitives.Root>,
-  React.ComponentPropsWithoutRef<typeof SwitchPrimitives.Root>
+  React.ComponentPropsWithoutRef<typeof SwitchPrimitives.Root> & { loading?: boolean }
 >(({ className, ...props }, ref) => (
   <SwitchPrimitives.Root
     className={cn(
@@ -17,9 +18,11 @@ const Switch = React.forwardRef<
   >
     <SwitchPrimitives.Thumb
       className={cn(
-        'pointer-events-none block h-4 w-4 rounded-full bg-background shadow-lg ring-0 transition-transform data-[state=checked]:translate-x-4 data-[state=unchecked]:translate-x-0'
+        'pointer-events-none flex items-center justify-center h-4 w-4 rounded-full bg-background shadow-lg ring-0 transition-transform data-[state=checked]:translate-x-4 data-[state=unchecked]:translate-x-0'
       )}
-    />
+    >
+      {props.loading ? <LoadingSpinner className="size-3 border-2" /> : null}
+    </SwitchPrimitives.Thumb>
   </SwitchPrimitives.Root>
 ))
 Switch.displayName = SwitchPrimitives.Root.displayName

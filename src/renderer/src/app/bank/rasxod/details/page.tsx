@@ -41,7 +41,7 @@ import { formatLocaleDate } from '@/common/lib/format'
 import { DetailsView } from '@/common/views'
 import { GeneratePorucheniya } from './generate-porucheniya'
 import { usePodpis } from '@renderer/common/features/podpis'
-import { ApiEndpoints } from '@renderer/common/features/crud'
+import { APIEndpoints } from '@renderer/common/features/crud'
 import { Operatsii, PodpisDoljnost, PodpisTypeDocument, Response } from '@renderer/common/models'
 
 const BankRasxodDetailtsPage = () => {
@@ -260,7 +260,7 @@ const BankRasxodDetailtsPage = () => {
       return
     }
     const operatsii = queryClient.getQueryData<Response<Operatsii>>([
-      ApiEndpoints.operatsii,
+      APIEndpoints.operatsii,
       operatsii_id
     ])
 

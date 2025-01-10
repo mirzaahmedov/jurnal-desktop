@@ -1,4 +1,4 @@
-import { ApiEndpoints, CRUDService } from '@/common/features/crud'
+import { APIEndpoints, CRUDService } from '@/common/features/crud'
 
 import type { Akt } from '@/common/models/akt'
 import { main_schet } from '@/common/features/crud/middleware'
@@ -6,7 +6,7 @@ import { withPreprocessor } from '@/common/lib/validation'
 import { z } from 'zod'
 
 const aktService = new CRUDService<Akt, AktForm>({
-  endpoint: ApiEndpoints.akt_priyom
+  endpoint: APIEndpoints.akt_priyom
 }).use(main_schet())
 
 const AktProvodkaFormSchema = withPreprocessor(

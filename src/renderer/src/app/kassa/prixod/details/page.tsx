@@ -5,7 +5,7 @@ import { createPodotchetSpravochnik } from '@/app/region-spravochnik/podotchet'
 import { Fieldset, GenerateDocumentButton } from '@/common/components'
 import { ButtonGroup } from '@/common/components/ui/button-group'
 import { Form } from '@/common/components/ui/form'
-import { ApiEndpoints } from '@/common/features/crud'
+import { APIEndpoints } from '@/common/features/crud'
 import { EditableTable } from '@/common/features/editable-table'
 import {
   createEditorChangeHandler,
@@ -221,7 +221,7 @@ const KassaPrixodDetailsPage = () => {
                         .watch('childs')
                         .map(({ summa, spravochnik_operatsii_id }) => {
                           const result = getDataFromCache<Operatsii>(queryClient, [
-                            ApiEndpoints.operatsii,
+                            APIEndpoints.operatsii,
                             spravochnik_operatsii_id
                           ])
                           const operation = result?.data?.name ?? ''

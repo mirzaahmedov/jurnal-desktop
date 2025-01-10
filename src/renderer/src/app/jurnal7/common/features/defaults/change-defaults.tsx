@@ -70,8 +70,12 @@ export const ChangeJurnal7Defaults = () => {
             month
           })
         }}
+        className="flex items-center gap-2"
       >
-        {isPending ? <LoadingSpinner /> : null} Регистрация сальдо
+        {isPending ? (
+          <LoadingSpinner className="border-2 border-white border-r-transparent size-4" />
+        ) : null}{' '}
+        Регистрация сальдо
       </Button>
     </div>
   )

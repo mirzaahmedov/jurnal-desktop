@@ -1,4 +1,4 @@
-import { ApiEndpoints, CRUDService } from '@renderer/common/features/crud'
+import { APIEndpoints, CRUDService } from '@renderer/common/features/crud'
 import type { RealExpenses, Response } from '@renderer/common/models'
 import { budjet, main_schet } from '@renderer/common/features/crud/middleware'
 
@@ -7,7 +7,7 @@ import { http } from '@renderer/common/lib/http'
 
 export const getRealExpenseInfo = async (ctx: QueryFunctionContext) => {
   const response = await http.get<Response<RealExpenses.ReportPreviewInfo>>(
-    ApiEndpoints.realcost_report + '/info',
+    APIEndpoints.realcost_report + '/info',
     {
       params: ctx.queryKey[1]
     }
@@ -16,14 +16,14 @@ export const getRealExpenseInfo = async (ctx: QueryFunctionContext) => {
 }
 export const getRealExpenseById = async (ctx: QueryFunctionContext) => {
   const response = await http.get<Response<RealExpenses.ReportPreviewDetails>>(
-    `${ApiEndpoints.realcost_report}/id`,
+    `${APIEndpoints.realcost_report}/id`,
     { params: ctx.queryKey[2] }
   )
   return response.data
 }
 
 export const realExpensesService = new CRUDService<RealExpenses.ReportPreview, any>({
-  endpoint: ApiEndpoints.realcost_report
+  endpoint: APIEndpoints.realcost_report
 })
   .use(budjet())
   .use(main_schet())

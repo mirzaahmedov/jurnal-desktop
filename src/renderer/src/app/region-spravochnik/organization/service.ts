@@ -2,7 +2,7 @@ import type { Organization } from '@/common/models'
 import type { SpravochnikHookOptions } from '@/common/features/spravochnik'
 
 import { z } from 'zod'
-import { ApiEndpoints, CRUDService } from '@/common/features/crud'
+import { APIEndpoints, CRUDService } from '@/common/features/crud'
 import { withPreprocessor } from '@/common/lib/validation'
 import { SpravochnikSearchField } from '@/common/features/search'
 import { extendObject } from '@/common/lib/utils'
@@ -23,7 +23,7 @@ export const OrganizationFormSchema = withPreprocessor(
 export type OrganizationFormPayload = z.infer<typeof OrganizationFormSchema>
 
 export const organizationService = new CRUDService<Organization, OrganizationFormPayload>({
-  endpoint: ApiEndpoints.organization
+  endpoint: APIEndpoints.organization
 })
 
 export const createOrganizationSpravochnik = (
@@ -32,7 +32,7 @@ export const createOrganizationSpravochnik = (
   return extendObject(
     {
       title: 'Выберите организацию',
-      endpoint: ApiEndpoints.organization,
+      endpoint: APIEndpoints.organization,
       columns: organizationColumns,
       service: organizationService,
       filters: [SpravochnikSearchField]

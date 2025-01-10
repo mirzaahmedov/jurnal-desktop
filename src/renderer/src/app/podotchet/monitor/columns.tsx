@@ -32,7 +32,7 @@ export const podotchetMonitoringColumns: ColumnDef<PodotchetMonitor>[] = [
           title={formatNumber(row.prixod_sum)}
           elements={{
             provodki_schet: 'Проводка счет',
-            provodki_sub_schet: 'Проводка подсчет'
+            provodki_sub_schet: 'Проводка субсчет'
           }}
           className="text-start"
         />

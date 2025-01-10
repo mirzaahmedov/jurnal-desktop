@@ -1,4 +1,4 @@
-export type BankRasxodType = {
+export type BankRasxod = {
   id: number
   doc_num: string
   doc_date: string
@@ -15,10 +15,12 @@ export type BankRasxodType = {
   spravochnik_organization_inn?: string
   glav_buxgalter: string | null
   rukovoditel: string | null
-  childs: BankRasxodProvodkaType[]
+  tulanmagan_summa: number
+  tulangan_tulanmagan: boolean
+  childs: BankRasxodProvodka[]
 }
 
-export type BankRasxodProvodkaType = {
+export type BankRasxodProvodka = {
   id: number
   spravochnik_operatsii_id: number
   spravochnik_operatsii_name: string

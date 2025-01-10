@@ -1,6 +1,6 @@
 import type { SpravochnikHookOptions } from '@/common/features/spravochnik'
 import { z } from 'zod'
-import { ApiEndpoints, CRUDService } from '@/common/features/crud'
+import { APIEndpoints, CRUDService } from '@/common/features/crud'
 import { TypeOperatsii } from '@/common/models'
 import { withPreprocessor } from '@/common/lib/validation'
 import { extendObject } from '@/common/lib/utils'
@@ -16,7 +16,7 @@ export const OperationTypePayloadSchema = withPreprocessor(
 export type OperationTypePayloadType = z.infer<typeof OperationTypePayloadSchema>
 
 export const operationTypeService = new CRUDService<TypeOperatsii, OperationTypePayloadType>({
-  endpoint: ApiEndpoints.type_operatsii
+  endpoint: APIEndpoints.type_operatsii
 })
 
 export const createOperationTypeSpravochnik = (
@@ -25,7 +25,7 @@ export const createOperationTypeSpravochnik = (
   return extendObject(
     {
       title: 'Выберите тип операции',
-      endpoint: ApiEndpoints.type_operatsii,
+      endpoint: APIEndpoints.type_operatsii,
       columns: operationTypeColumns,
       service: operationTypeService,
       filters: [SpravochnikSearchField]

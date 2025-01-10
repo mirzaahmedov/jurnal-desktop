@@ -50,12 +50,14 @@ const OstatokPage = () => {
         <div className="flex gap-10 justify-between p-5">
           <div className="flex gap-5">
             <SpravochnikInput
+              readOnly
               value={podrazdelenieSpravochnik.selected?.name ?? 'Выберите подразделение'}
               onDoubleClick={podrazdelenieSpravochnik.open}
               onClear={podrazdelenieSpravochnik.clear}
               className="min-w-[300px]"
             />
             <SpravochnikInput
+              readOnly
               value={responsibleSpravochnik.selected?.fio ?? 'Выберите ответственное лицо'}
               onDoubleClick={responsibleSpravochnik.open}
               onClear={responsibleSpravochnik.clear}

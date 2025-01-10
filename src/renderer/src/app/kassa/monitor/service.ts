@@ -1,7 +1,7 @@
-import type { ResponseMeta, KassaMonitoringType } from '@/common/models'
+import type { KassaMonitoringType, ResponseMeta } from '@/common/models'
 
+import { APIEndpoints } from '@/common/features/crud'
 import { CRUDService } from '@/common/features/crud'
-import { ApiEndpoints } from '@/common/features/crud'
 
 export type KassaMonitorMetaType = {
   summa_from: number
@@ -16,5 +16,5 @@ export const kassaMonitorService = new CRUDService<
   undefined,
   KassaMonitorMetaType & ResponseMeta
 >({
-  endpoint: ApiEndpoints.kassa_monitoring
+  endpoint: APIEndpoints.kassa_monitoring
 })

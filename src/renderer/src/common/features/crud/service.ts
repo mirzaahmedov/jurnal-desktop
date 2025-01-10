@@ -7,14 +7,14 @@ import type {
   RequestBuilderFunction
 } from './definition'
 
-import { ApiEndpoints } from '@/common/features/crud'
+import { APIEndpoints } from '@/common/features/crud'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 import type { Response } from '@/common/models'
 import { http } from '@/common/lib/http'
 
 export class CRUDService<T, C = T, U = C, M = undefined> {
   private middleware: MiddlewareFunction[]
-  private endpoint: ApiEndpoints
+  private endpoint: APIEndpoints
   private client: AxiosInstance
   private requestBuilder?: RequestBuilderFunction
 

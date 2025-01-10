@@ -1,7 +1,7 @@
 import type { Podrazdelenie } from '@/common/models'
 import type { SpravochnikHookOptions } from '@/common/features/spravochnik'
 import { z } from 'zod'
-import { ApiEndpoints, CRUDService } from '@/common/features/crud'
+import { APIEndpoints, CRUDService } from '@/common/features/crud'
 import { withPreprocessor } from '@/common/lib/validation'
 import { extendObject } from '@/common/lib/utils'
 import { subdivisionColumns } from './columns'
@@ -16,7 +16,7 @@ export const SubdivisionPayloadSchema = withPreprocessor(
 export type SubdivisionPayloadType = z.infer<typeof SubdivisionPayloadSchema>
 
 export const subdivisionService = new CRUDService<Podrazdelenie, SubdivisionPayloadType>({
-  endpoint: ApiEndpoints.podrazdelenie
+  endpoint: APIEndpoints.podrazdelenie
 })
 
 export const createSubdivisionSpravochnik = (
@@ -25,7 +25,7 @@ export const createSubdivisionSpravochnik = (
   return extendObject(
     {
       title: 'Выберите подразделение',
-      endpoint: ApiEndpoints.podrazdelenie,
+      endpoint: APIEndpoints.podrazdelenie,
       columns: subdivisionColumns,
       service: subdivisionService,
       filters: [SpravochnikSearchField]

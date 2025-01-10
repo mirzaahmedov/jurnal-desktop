@@ -3,7 +3,7 @@ import type { SpravochnikHookOptions } from '@/common/features/spravochnik'
 
 import { z } from 'zod'
 import { TypeSchetOperatsii } from '@/common/models'
-import { ApiEndpoints, CRUDService } from '@/common/features/crud'
+import { APIEndpoints, CRUDService } from '@/common/features/crud'
 import { withPreprocessor } from '@/common/lib/validation'
 import { extendObject } from '@/common/lib/utils'
 import { operatsiiColumns } from './columns'
@@ -31,14 +31,14 @@ const OperatsiiFormSchema = withPreprocessor(
 type OperatsiiForm = z.infer<typeof OperatsiiFormSchema>
 
 const operatsiiService = new CRUDService<Operatsii, OperatsiiForm>({
-  endpoint: ApiEndpoints.operatsii
+  endpoint: APIEndpoints.operatsii
 })
 
 const createOperatsiiSpravochnik = (config: Partial<SpravochnikHookOptions<Operatsii>>) => {
   return extendObject(
     {
       title: 'Выберите операцию',
-      endpoint: ApiEndpoints.operatsii,
+      endpoint: APIEndpoints.operatsii,
       columns: operatsiiColumns,
       service: operatsiiService,
       filters: [SpravochnikSearchField]

@@ -1,4 +1,4 @@
-import { ApiEndpoints, CRUDService } from '@/common/features/crud'
+import { APIEndpoints, CRUDService } from '@/common/features/crud'
 import type { OrganizationMonitor, ResponseMeta } from '@/common/models'
 
 type OrgMonitorMetaType = {
@@ -18,7 +18,7 @@ const orgMonitorService = new CRUDService<
   undefined,
   ResponseMeta & OrgMonitorMetaType
 >({
-  endpoint: ApiEndpoints.organization_monitoring
+  endpoint: APIEndpoints.organization_monitoring
 })
 
 export { orgMonitorService as orgMonitoringService }

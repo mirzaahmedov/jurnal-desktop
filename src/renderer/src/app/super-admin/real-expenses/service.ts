@@ -1,10 +1,10 @@
-import { ApiEndpoints, CRUDService } from '@renderer/common/features/crud'
+import { APIEndpoints, CRUDService } from '@renderer/common/features/crud'
 
 import type { RealExpenses } from '@renderer/common/models'
 import { http } from '@renderer/common/lib/http'
 
 export const adminRealExpensesService = new CRUDService<RealExpenses.AdminReport>({
-  endpoint: ApiEndpoints.admin__realcost
+  endpoint: APIEndpoints.admin__realcost
 }).forRequest((type, args) => {
   if (type === 'getById') {
     return {
@@ -29,7 +29,7 @@ export const adminRealExpenseUpdateQuery = async ({
   budjet_id
 }: UpdateQueryParams) => {
   const response = await http.put(
-    `${ApiEndpoints.admin__realcost}`,
+    `${APIEndpoints.admin__realcost}`,
     { status },
     {
       params: {

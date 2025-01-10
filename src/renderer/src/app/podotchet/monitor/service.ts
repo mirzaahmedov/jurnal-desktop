@@ -1,4 +1,4 @@
-import { ApiEndpoints, CRUDService } from '@/common/features/crud'
+import { APIEndpoints, CRUDService } from '@/common/features/crud'
 import type { PodotchetMonitor, ResponseMeta } from '@/common/models'
 
 type PodotchetMonitorMeta = ResponseMeta & {
@@ -14,7 +14,7 @@ const podotchetMonitoringService = new CRUDService<
   undefined,
   PodotchetMonitorMeta
 >({
-  endpoint: ApiEndpoints.podotchet_monitoring
+  endpoint: APIEndpoints.podotchet_monitoring
 })
 
 export { podotchetMonitoringService }

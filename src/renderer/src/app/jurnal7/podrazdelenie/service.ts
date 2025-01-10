@@ -2,12 +2,12 @@ import type { Jur7Podrazdelenie } from '@/common/models'
 import type { Subdivision7PayloadType } from './constants'
 import type { SpravochnikHookOptions } from '@/common/features/spravochnik'
 
-import { ApiEndpoints, CRUDService } from '@/common/features/crud'
+import { APIEndpoints, CRUDService } from '@/common/features/crud'
 import { extendObject } from '@/common/lib/utils'
 import { subdivision7Columns } from './columns'
 
 export const subdivision7Service = new CRUDService<Jur7Podrazdelenie, Subdivision7PayloadType>({
-  endpoint: ApiEndpoints.jur7_podrazdelenie
+  endpoint: APIEndpoints.jur7_podrazdelenie
 })
 
 export const createPodrazdelenie7Spravochnik = (
@@ -16,7 +16,7 @@ export const createPodrazdelenie7Spravochnik = (
   return extendObject(
     {
       title: 'Выберите подразделение',
-      endpoint: ApiEndpoints.jur7_podrazdelenie,
+      endpoint: APIEndpoints.jur7_podrazdelenie,
       columns: subdivision7Columns,
       service: subdivision7Service
     } satisfies typeof config,

@@ -2,15 +2,15 @@ import type { Naimenovanie, NaimenovanieKol } from '@/common/models'
 import type { DenominationPayloadType } from './constants'
 import type { SpravochnikHookOptions } from '@/common/features/spravochnik'
 
-import { ApiEndpoints, CRUDService } from '@/common/features/crud'
+import { APIEndpoints, CRUDService } from '@/common/features/crud'
 import { naimenovanieColumns, naimenovanieKolColumns } from './columns'
 import { extendObject } from '@/common/lib/utils'
 
 export const naimenovanieService = new CRUDService<Naimenovanie, DenominationPayloadType>({
-  endpoint: ApiEndpoints.jur7_naimenovanie
+  endpoint: APIEndpoints.jur7_naimenovanie
 })
 const naimenovanieKolService = new CRUDService<NaimenovanieKol>({
-  endpoint: ApiEndpoints.jur7_naimenovanie_kol
+  endpoint: APIEndpoints.jur7_naimenovanie_kol
 }).forRequest((type, req) => {
   if (type === 'getById') {
     return {
@@ -24,7 +24,7 @@ const createNaimenovanieSpravochnik = (config: Partial<SpravochnikHookOptions<Na
   return extendObject(
     {
       title: 'Выберите наименование',
-      endpoint: ApiEndpoints.jur7_naimenovanie,
+      endpoint: APIEndpoints.jur7_naimenovanie,
       columns: naimenovanieColumns,
       service: naimenovanieService
     } satisfies typeof config,
@@ -38,7 +38,7 @@ const createNaimenovanieKolSpravochnik = (
   return extendObject(
     {
       title: 'Выберите наименование',
-      endpoint: ApiEndpoints.jur7_naimenovanie_kol,
+      endpoint: APIEndpoints.jur7_naimenovanie_kol,
       columns: naimenovanieKolColumns,
       service: naimenovanieKolService
     } satisfies typeof config,

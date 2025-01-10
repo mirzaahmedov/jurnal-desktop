@@ -1,6 +1,6 @@
 import { QueryFunctionContext } from '@tanstack/react-query'
 import { AxiosInstance, AxiosRequestConfig } from 'axios'
-import { ApiEndpoints } from './constants'
+import { APIEndpoints } from './constants'
 
 export type QueryKeyParams = {
   main_schet_id?: number
@@ -44,6 +44,6 @@ export type RequestBuilderFunction = (
 ) => RequestBuilderReturnType
 
 export type CRUDServiceOptions = {
-  endpoint: ApiEndpoints
+  endpoint: APIEndpoints
   client?: AxiosInstance
 }

@@ -2,7 +2,7 @@ import type { MainSchet } from '@/common/models'
 import type { SpravochnikHookOptions } from '@/common/features/spravochnik'
 
 import { z } from 'zod'
-import { ApiEndpoints, CRUDService } from '@/common/features/crud'
+import { APIEndpoints, CRUDService } from '@/common/features/crud'
 import { withPreprocessor } from '@/common/lib/validation'
 import { mainSchetColumns } from './columns'
 import { extendObject } from '@/common/lib/utils'
@@ -30,14 +30,14 @@ export const MainSchetPayloadSchema = withPreprocessor(
 export type MainSchetPayloadType = z.infer<typeof MainSchetPayloadSchema>
 
 export const mainSchetService = new CRUDService<MainSchet, MainSchetPayloadType>({
-  endpoint: ApiEndpoints.main_schet
+  endpoint: APIEndpoints.main_schet
 })
 
 export const createMainSchetSpravochnik = (config: SpravochnikHookOptions<MainSchet>) => {
   return extendObject(
     {
       title: 'Выберите основной счет',
-      endpoint: ApiEndpoints.main_schet,
+      endpoint: APIEndpoints.main_schet,
       columns: mainSchetColumns,
       service: mainSchetService,
       filters: [SpravochnikSearchField]

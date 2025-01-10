@@ -1,4 +1,4 @@
-import type { ApiEndpoints, CRUDService } from '@/common/features/crud'
+import type { APIEndpoints, CRUDService } from '@/common/features/crud'
 import type { ComponentType, RefObject } from 'react'
 import type { FilterComponentProps, SpravochnikStoreType } from './store'
 import { useCallback, useEffect, useId, useLayoutEffect, useRef, useState } from 'react'
@@ -13,7 +13,7 @@ type SpravochnikHookCallbacksType<T> = {
 }
 
 export type SpravochnikHookOptions<T extends { id: number }> = SpravochnikHookCallbacksType<T> & {
-  endpoint: ApiEndpoints
+  endpoint: APIEndpoints
   value?: number
   title?: string
   columns: ColumnDef<T>[]

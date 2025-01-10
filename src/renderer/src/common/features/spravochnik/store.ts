@@ -1,4 +1,4 @@
-import type { ApiEndpoints, CRUDService } from '@/common/features/crud'
+import type { APIEndpoints, CRUDService } from '@/common/features/crud'
 
 import type { ColumnDef } from '@/common/components'
 import type { ComponentType } from 'react'
@@ -13,7 +13,7 @@ export type FilterComponentProps<
 }
 
 export type SpravochnikDataType<T extends Record<string, unknown>> = {
-  endpoint: ApiEndpoints
+  endpoint: APIEndpoints
   title?: string
   service: CRUDService<T>
   columns: ColumnDef<T>[]

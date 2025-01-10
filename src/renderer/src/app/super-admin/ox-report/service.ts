@@ -1,10 +1,10 @@
-import { ApiEndpoints, CRUDService } from '@renderer/common/features/crud'
+import { APIEndpoints, CRUDService } from '@renderer/common/features/crud'
 
 import type { OX } from '@renderer/common/models'
 import { http } from '@renderer/common/lib/http'
 
 export const adminOXService = new CRUDService<OX.AdminReport>({
-  endpoint: ApiEndpoints.admin__ox
+  endpoint: APIEndpoints.admin__ox
 }).forRequest((type, args) => {
   if (type === 'getById') {
     return {
@@ -29,7 +29,7 @@ export const adminOXUpdateQuery = async ({
   budjet_id
 }: UpdateQueryParams) => {
   const response = await http.put(
-    `${ApiEndpoints.admin__ox}`,
+    `${APIEndpoints.admin__ox}`,
     { status },
     {
       params: {
