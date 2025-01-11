@@ -174,7 +174,8 @@ const Provodka = ({ index, row, form }: ProvodkaProps) => {
     <EditableTableRow key={index}>
       <NaimenovanieCells
         index={index}
-        kimdan_id={form.getValues('kimdan_id')}
+        kimdan_id={form.watch('kimdan_id')}
+        doc_date={form.watch('doc_date')}
         setMaxKol={setMaxKol}
         errorMessage={form.formState.errors.childs?.[index]?.naimenovanie_tovarov_jur7_id?.message}
         value={row.naimenovanie_tovarov_jur7_id}
@@ -344,6 +345,7 @@ type NaimenovanieCellsProps = {
   index: number
   value: number
   kimdan_id: number
+  doc_date: string
   setMaxKol: (value: number) => void
   onChange: (value: number) => void
   onChangeChildField: (
@@ -358,6 +360,7 @@ const NaimenovanieCells = ({
   setMaxKol,
   value,
   kimdan_id,
+  doc_date,
   onChange,
   onChangeChildField,
   errorMessage
@@ -370,6 +373,7 @@ const NaimenovanieCells = ({
     index,
     value,
     kimdan_id,
+    doc_date,
     setMaxKol,
     onChange,
     onChangeChildFieldEvent

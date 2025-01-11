@@ -43,7 +43,8 @@ import { GeneratePorucheniya } from './generate-porucheniya'
 import { usePodpis } from '@renderer/common/features/podpis'
 import { Operatsii, PodpisDoljnost, PodpisTypeDocument } from '@renderer/common/models'
 
-const shartnomaRegExp = /№ .*?-сонли \d{2}.\d{2}.\d{4} йил кунги шартномага асосан /
+const shartnomaRegExp = /№ .*?-сонли \d{2}.\d{2}.\d{4} йил кунги шартномага асосан\s?/
+const smetaRegExp = / Ст: \d*$\s?/
 
 const BankRasxodDetailtsPage = () => {
   const { toast } = useToast()
@@ -384,13 +385,13 @@ const BankRasxodDetailtsPage = () => {
             params={{
               onChangeOperatsii: (selected: Operatsii | undefined) => {
                 if (!selected) {
-                  form.setValue('opisanie', form.getValues('opisanie')!.replace(/Ст: \d*$/, ''))
+                  form.setValue('opisanie', form.getValues('opisanie')!.replace(smetaRegExp, ''))
                   return
                 }
-                if (/Ст: \d*$/.test(form.getValues('opisanie') || '')) {
+                if (smetaRegExp.test(form.getValues('opisanie') || '')) {
                   form.setValue(
                     'opisanie',
-                    form.getValues('opisanie')!.replace(/Ст: \d*$/, `Ст: ${selected.sub_schet}`)
+                    form.getValues('opisanie')!.replace(smetaRegExp, `Ст: ${selected.sub_schet}`)
                   )
                   return
                 }

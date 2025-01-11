@@ -5,13 +5,13 @@ import { Naimenovanie } from '@renderer/common/models'
 import { RasxodChildFormType } from '@renderer/app/jurnal7/rasxod/config'
 import { createGroupSpravochnik } from '@renderer/app/super-admin/group/service'
 import { createOstatokProductSpravochnik } from '@renderer/app/jurnal7/ostatok'
-import { formatDate } from '@renderer/common/lib/date'
 import { useSpravochnik } from '@renderer/common/features/spravochnik'
 
 type UseOstatokProductParams = {
   index: number
   value: number
   kimdan_id: number
+  doc_date: string
   setMaxKol: (value: number) => void
   onChange: (value: number) => void
   onChangeChildFieldEvent: (
@@ -26,6 +26,7 @@ export const useOstatokProduct = ({
   onChange,
   setMaxKol,
   kimdan_id,
+  doc_date,
   onChangeChildFieldEvent
 }: UseOstatokProductParams) => {
   const [values, setValues] = useState<Pick<Naimenovanie, 'group_jur7_id' | 'name' | 'edin'>>({
@@ -54,7 +55,7 @@ export const useOstatokProduct = ({
       },
       params: {
         kimning_buynida: kimdan_id,
-        to: formatDate(new Date())
+        to: doc_date
       },
       includeParamsInGetById: true,
       enabled: !!kimdan_id

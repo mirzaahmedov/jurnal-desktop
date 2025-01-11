@@ -175,6 +175,7 @@ const Provodka = ({ index, row, form }: ProvodkaProps) => {
       <NaimenovanieCells
         index={index}
         kimdan_id={form.watch('kimdan_id')}
+        doc_date={form.watch('doc_date')}
         setMaxKol={setMaxKol}
         errorMessage={form.formState.errors.childs?.[index]?.naimenovanie_tovarov_jur7_id?.message}
         value={row.naimenovanie_tovarov_jur7_id}
@@ -344,6 +345,7 @@ type NaimenovanieCellsProps = {
   index: number
   value: number
   kimdan_id: number
+  doc_date: string
   setMaxKol: (value: number) => void
   onChange: (value: number) => void
   onChangeChildField: (index: number, key: keyof RasxodChildFormType, value: unknown) => void
@@ -354,6 +356,7 @@ const NaimenovanieCells = ({
   setMaxKol,
   value,
   kimdan_id,
+  doc_date,
   onChange,
   onChangeChildField,
   errorMessage
@@ -367,6 +370,7 @@ const NaimenovanieCells = ({
     setMaxKol,
     value,
     kimdan_id,
+    doc_date,
     onChange,
     onChangeChildFieldEvent
   })
