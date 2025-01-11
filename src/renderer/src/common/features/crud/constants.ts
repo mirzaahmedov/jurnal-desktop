@@ -44,6 +44,7 @@ export enum APIEndpoints {
   jur7_unit = 'jur_7/unit',
   jur7_saldo = 'jur_7/saldo',
   jur7_saldo_product = 'jur_7/saldo/rasxod',
+  jur7_iznos = 'jur_7/iznos',
   spravochnik_bank = 'spravochnik/bank',
   tables_count = 'auth/control/tables/count',
   logs = 'log/get',

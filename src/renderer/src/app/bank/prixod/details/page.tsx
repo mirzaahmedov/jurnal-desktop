@@ -8,7 +8,6 @@ import { Form } from '@/common/components/ui/form'
 import { Fieldset } from '@/common/components'
 import { createOrganizationSpravochnik } from '@renderer/app/region-spravochnik/organization'
 import { createShartnomaSpravochnik } from '@renderer/app/organization/shartnoma'
-import { useToast } from '@/common/hooks/use-toast'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -34,10 +33,9 @@ import {
 } from '@/common/widget/form'
 
 import { DetailsView } from '@/common/views'
+import { toast } from 'react-toastify'
 
 const BankPrixodDetailsPage = () => {
-  const { toast } = useToast()
-
   const main_schet_id = useRequisitesStore((state) => state.main_schet_id)
   const queryClient = useQueryClient()
   const id = useParams().id as string
@@ -91,7 +89,7 @@ const BankPrixodDetailsPage = () => {
     mutationKey: [queryKeys.create],
     mutationFn: bankPrixodService.create,
     onSuccess() {
-      toast({ title: 'Документ успешно создан' })
+      toast.success('Документ успешно создан')
       form.reset(defaultValues)
       queryClient.invalidateQueries({
         queryKey: [queryKeys.getAll]
@@ -103,7 +101,8 @@ const BankPrixodDetailsPage = () => {
       navigate(-1)
     },
     onError(error) {
-      toast({ title: error.message, variant: 'destructive' })
+      console.error(error)
+      toast.error(error.message)
     }
   })
 
@@ -111,7 +110,7 @@ const BankPrixodDetailsPage = () => {
     mutationKey: [queryKeys.update, id],
     mutationFn: bankPrixodService.update,
     onSuccess() {
-      toast({ title: 'Документ успешно обновлен' })
+      toast.success('Документ успешно обновлен')
 
       queryClient.invalidateQueries({
         queryKey: [queryKeys.getAll]
@@ -123,7 +122,8 @@ const BankPrixodDetailsPage = () => {
       navigate(-1)
     },
     onError(error) {
-      toast({ title: error.message, variant: 'destructive' })
+      console.error(error)
+      toast.error(error.message)
     }
   })
 

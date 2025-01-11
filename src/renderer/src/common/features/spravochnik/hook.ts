@@ -20,6 +20,7 @@ export type SpravochnikHookOptions<T extends { id: number }> = SpravochnikHookCa
   service: CRUDService<T, any>
   enabled?: boolean
   params?: Record<string, unknown>
+  includeParamsInGetById?: boolean
   filters?: ComponentType<FilterComponentProps>[]
   defaultFilters?: Record<string, unknown>
   search?: boolean
@@ -58,7 +59,11 @@ export const useSpravochnik = <T extends { id: number }>(
     useSpravochnikStore() as SpravochnikStoreType<T>
 
   const { data: selected, isLoading: loading } = useQuery({
-    queryKey: [options.endpoint, selectedId],
+    queryKey: [
+      options.endpoint,
+      selectedId,
+      options.includeParamsInGetById ? options.params : undefined
+    ],
     queryFn: options.service.getById,
     enabled: !!selectedId,
     placeholderData: undefined,

@@ -41,8 +41,9 @@ import { formatLocaleDate } from '@/common/lib/format'
 import { DetailsView } from '@/common/views'
 import { GeneratePorucheniya } from './generate-porucheniya'
 import { usePodpis } from '@renderer/common/features/podpis'
-import { APIEndpoints } from '@renderer/common/features/crud'
-import { Operatsii, PodpisDoljnost, PodpisTypeDocument, Response } from '@renderer/common/models'
+import { Operatsii, PodpisDoljnost, PodpisTypeDocument } from '@renderer/common/models'
+
+const shartnomaRegExp = /№ .*?-сонли \d{2}.\d{2}.\d{4} йил кунги шартномага асосан /
 
 const BankRasxodDetailtsPage = () => {
   const { toast } = useToast()
@@ -224,12 +225,24 @@ const BankRasxodDetailtsPage = () => {
     setPodvodki(rasxod?.data?.childs ?? defaultValues.childs)
   }, [setPodvodki, form, rasxod, params.id])
 
-  const { doc_num, doc_date } = form.watch()
   useEffect(() => {
-    if (form.getValues('opisanie') || !doc_num || !doc_date) {
+    if (!shartnomaSpravochnik.selected) {
+      form.setValue('opisanie', form.getValues('opisanie')?.replace(shartnomaRegExp, ''))
       return
     }
-    if (form.getValues('opisanie')?.startsWith('№')) {
+
+    const { doc_num, doc_date } = shartnomaSpravochnik.selected
+
+    if (shartnomaRegExp.test(form.getValues('opisanie') || '')) {
+      form.setValue(
+        'opisanie',
+        form
+          .getValues('opisanie')
+          ?.replace(
+            shartnomaRegExp,
+            `№ ${doc_num}-сонли ${formatLocaleDate(doc_date)} йил кунги шартномага асосан `
+          )
+      )
       return
     }
     form.setValue(
@@ -237,7 +250,7 @@ const BankRasxodDetailtsPage = () => {
       `№ ${doc_num}-сонли ${formatLocaleDate(doc_date)} йил кунги шартномага асосан ` +
         form.getValues('opisanie')
     )
-  }, [form, doc_date, doc_num])
+  }, [shartnomaSpravochnik.selected])
 
   useEffect(() => {
     const rukovoditel = podpis.find((item) => item.doljnost_name === PodpisDoljnost.BOLIM_BOSHLIGI)
@@ -252,33 +265,6 @@ const BankRasxodDetailtsPage = () => {
       form.setValue('glav_buxgalter', glav_buxgalter.fio_name)
     }
   }, [form, podpis])
-
-  const provodka = form.watch('childs.0')
-  const operatsii_id = provodka?.spravochnik_operatsii_id ?? 0
-  useEffect(() => {
-    if (!operatsii_id) {
-      return
-    }
-    const operatsii = queryClient.getQueryData<Response<Operatsii>>([
-      APIEndpoints.operatsii,
-      operatsii_id
-    ])
-
-    if (!operatsii?.data) {
-      return
-    }
-
-    const { sub_schet } = operatsii?.data ?? {}
-    if (sub_schet === undefined) {
-      return
-    }
-
-    if (/Ст: \d*$/.test(form.getValues('opisanie') || '')) {
-      form.setValue('opisanie', form.getValues('opisanie')!.replace(/Ст: \d*$/, `Ст: ${sub_schet}`))
-    } else {
-      form.setValue('opisanie', `${form.getValues('opisanie')} Ст: ${sub_schet}`)
-    }
-  }, [queryClient, form, operatsii_id])
 
   return (
     <DetailsView>
@@ -395,6 +381,23 @@ const BankRasxodDetailtsPage = () => {
             onChange={createEditorChangeHandler({
               form
             })}
+            params={{
+              onChangeOperatsii: (selected: Operatsii | undefined) => {
+                if (!selected) {
+                  form.setValue('opisanie', form.getValues('opisanie')!.replace(/Ст: \d*$/, ''))
+                  return
+                }
+                if (/Ст: \d*$/.test(form.getValues('opisanie') || '')) {
+                  form.setValue(
+                    'opisanie',
+                    form.getValues('opisanie')!.replace(/Ст: \d*$/, `Ст: ${selected.sub_schet}`)
+                  )
+                  return
+                }
+
+                form.setValue('opisanie', `${form.getValues('opisanie')} Ст: ${selected.sub_schet}`)
+              }
+            }}
           />
         </Fieldset>
       </DetailsView.Content>

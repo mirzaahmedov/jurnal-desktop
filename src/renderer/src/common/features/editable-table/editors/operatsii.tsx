@@ -1,8 +1,9 @@
-import type { TypeSchetOperatsii } from '@/common/models'
-import type { EditorComponentType } from './types'
+import type { Operatsii, TypeSchetOperatsii } from '@/common/models'
+import { SpravochnikInput, useSpravochnik } from '@/common/features/spravochnik'
+import { useEffect, useLayoutEffect, useRef } from 'react'
 
+import type { EditorComponentType } from './types'
 import { createOperatsiiSpravochnik } from '@/app/super-admin/operatsii'
-import { useSpravochnik, SpravochnikInput } from '@/common/features/spravochnik'
 
 type OperatsiiEditorOptions = {
   type_schet: TypeSchetOperatsii
@@ -10,7 +11,15 @@ type OperatsiiEditorOptions = {
 export const createOperatsiiEditor = <T extends { spravochnik_operatsii_id?: number }>({
   type_schet
 }: OperatsiiEditorOptions): EditorComponentType<T> => {
-  return ({ tabIndex, id, row, errors, onChange }) => {
+  return ({ tabIndex, id, row, errors, onChange, params }) => {
+    const paramsRef = useRef<{ onChangeOperatsii: (selected: Operatsii | undefined) => void }>(
+      params as any
+    )
+
+    useLayoutEffect(() => {
+      paramsRef.current = params as any
+    })
+
     const operatsiiSpravochnik = useSpravochnik(
       createOperatsiiSpravochnik({
         value: row.spravochnik_operatsii_id || undefined,
@@ -29,6 +38,11 @@ export const createOperatsiiEditor = <T extends { spravochnik_operatsii_id?: num
         }
       })
     )
+
+    useEffect(() => {
+      paramsRef.current?.onChangeOperatsii?.(operatsiiSpravochnik.selected)
+    }, [operatsiiSpravochnik.selected])
+
     return (
       <SpravochnikInput
         {...operatsiiSpravochnik}

@@ -118,6 +118,20 @@ const PodotchetMonitoringPage = () => {
                   buttonText="Лицевой счет"
                 />
               ) : null}
+              {podotchetSpravochnik.selected && operatsiiSpravochnik.selected ? (
+                <DownloadDocumentButton
+                  fileName={`шапка_${podotchetSpravochnik.selected.name}:${from}:${to}-${operatsiiSpravochnik.selected.schet}.xlsx`}
+                  url={`/podotchet/monitoring/cap`}
+                  params={{
+                    operatsii: operatsiiSpravochnik.selected.schet,
+                    main_schet_id,
+                    from,
+                    to,
+                    exel: true
+                  }}
+                  buttonText="Шапка"
+                />
+              ) : null}
             </ButtonGroup>
           </div>
           <DateRangeForm

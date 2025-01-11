@@ -27,6 +27,7 @@ import GroupPage from './super-admin/group/page'
 import HomePage from './home/page'
 import { InternalTransferDetailsPage } from './jurnal7/internal-transfer/details/page'
 import { InternalTransferPage } from './jurnal7/internal-transfer/page'
+import IznosPage from './jurnal7/iznos/page'
 import KassaMonitorPage from './kassa/monitor/page'
 import KassaPrixodDetailsPage from './kassa/prixod/details/page'
 import KassaPrixodPage from './kassa/prixod/page'
@@ -360,6 +361,10 @@ export const routes: RouteObject[] = [
           {
             path: 'ostatok',
             element: <OstatokPage />
+          },
+          {
+            path: 'iznos',
+            element: <IznosPage />
           }
         ]
       },

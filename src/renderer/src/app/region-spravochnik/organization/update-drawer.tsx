@@ -132,10 +132,17 @@ const UpdateOrganizationDrawer = () => {
     })
   }
 
+  const open = !!parentId
+  const handleClose = (open: boolean) => {
+    if (!open) {
+      setParentId(null)
+    }
+  }
+
   return (
     <Drawer
-      open={!!parentId}
-      onOpenChange={() => setParentId(null)}
+      open={open}
+      onOpenChange={handleClose}
     >
       <DrawerContent className="max-h-full flex flex-col">
         <DrawerHeader>

@@ -1,8 +1,3 @@
-import { Progress } from '@renderer/common/components/ui/progress'
-import { cn } from '@renderer/common/lib/utils'
-import { events } from '@main/auto-updater'
-import { toast } from '@renderer/common/hooks/use-toast'
-
 import {
   AlertDialog,
   AlertDialogAction,
@@ -13,6 +8,11 @@ import {
 } from '@renderer/common/components/ui/alert-dialog'
 import { Check, CircleFadingArrowUp, CircleX, Download } from 'lucide-react'
 import { useEffect, useState } from 'react'
+
+import { Progress } from '@renderer/common/components/ui/progress'
+import { cn } from '@renderer/common/lib/utils'
+import { events } from '@main/auto-updater'
+import { toast } from 'react-toastify'
 
 const ipcRenderer = window.electron.ipcRenderer
 
@@ -25,9 +25,7 @@ const UpdateManager = () => {
   useEffect(() => {
     ipcRenderer.send('check-for-updates')
     ipcRenderer.on(events.checking_for_update, () => {
-      toast({
-        title: 'Проверка обновлений'
-      })
+      toast.loading('Проверка обновлений')
     })
 
     ipcRenderer.on(events.update_available, () => {

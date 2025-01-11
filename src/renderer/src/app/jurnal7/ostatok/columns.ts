@@ -89,7 +89,7 @@ export const ostatokProductColumns: ColumnDef<OstatokProduct>[] = [
     header: 'Един.'
   },
   {
-    key: 'group_name',
+    key: 'group_jur7_name',
     header: 'Группа'
   },
   {

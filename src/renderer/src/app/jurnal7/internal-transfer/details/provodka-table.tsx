@@ -11,18 +11,16 @@ import {
   InternalTransferFormType,
   defaultValues
 } from '../config'
-import { SpravochnikInput, useSpravochnik } from '@/common/features/spravochnik'
 import { Table, TableBody, TableFooter, TableHeader } from '@/common/components/ui/table'
 import { calcSena, calcSumma } from '@/common/lib/pricing'
 import { useEffect, useRef, useState } from 'react'
 
 import { Button } from '@/common/components/ui/button'
 import { Input } from '@/common/components/ui/input'
-import { Naimenovanie } from '@/common/models'
+import { SpravochnikInput } from '@/common/features/spravochnik'
 import { UseFormReturn } from 'react-hook-form'
-import { createGroupSpravochnik } from '@/app/super-admin/group/service'
-import { createNaimenovanieKolSpravochnik } from '@renderer/app/jurnal7/naimenovaniya/service'
 import { useEventCallback } from '@/common/hooks/use-event-callback'
+import { useOstatokProduct } from '../../common/features/ostatok-product/use-ostatok-product'
 
 type ProvodkaTableProps = {
   form: UseFormReturn<InternalTransferFormType>
@@ -368,56 +366,14 @@ const NaimenovanieCells = ({
 
   const onChangeChildFieldEvent = useEventCallback(onChangeChildField)!
 
-  const [values, setValues] = useState<Pick<Naimenovanie, 'group_jur7_id' | 'name' | 'edin'>>({
-    group_jur7_id: 0,
-    name: '',
-    edin: ''
+  const { groupSpravochnik, productOstatokSpravochnik, values } = useOstatokProduct({
+    index,
+    value,
+    kimdan_id,
+    setMaxKol,
+    onChange,
+    onChangeChildFieldEvent
   })
-
-  const naimenovanieSpravochnik = useSpravochnik(
-    createNaimenovanieKolSpravochnik({
-      value,
-      onChange(id, data) {
-        setMaxKol(data?.result ?? Infinity)
-        onChangeChildFieldEvent(index, 'kol', data?.result ?? 0)
-        onChangeChildFieldEvent(index, 'sena', data?.sena ?? 0)
-        onChangeChildFieldEvent(
-          index,
-          'data_pereotsenka',
-          data?.doc_date ? data.doc_date.substring(0, 10) : ''
-        )
-        onChange(id)
-      },
-      params: {
-        kimdan_id
-      },
-      enabled: !!kimdan_id
-    })
-  )
-  const groupSpravochnik = useSpravochnik(
-    createGroupSpravochnik({
-      value: values.group_jur7_id,
-      onChange: (id) => {
-        setValues((prev) => ({ ...prev, group_jur7_id: id }))
-      }
-    })
-  )
-
-  useEffect(() => {
-    if (!naimenovanieSpravochnik.selected) {
-      setValues({
-        group_jur7_id: 0,
-        name: '',
-        edin: ''
-      })
-      return
-    }
-    setValues({
-      group_jur7_id: naimenovanieSpravochnik.selected?.group_jur7_id ?? 0,
-      name: naimenovanieSpravochnik.selected?.name ?? '',
-      edin: naimenovanieSpravochnik.selected?.edin ?? ''
-    })
-  }, [naimenovanieSpravochnik.selected, onChangeChildFieldEvent, index, setMaxKol])
 
   useEffect(() => {
     if (!isMounted.current) {
@@ -451,7 +407,7 @@ const NaimenovanieCells = ({
               error: !!errorMessage
             })}
             getInputValue={(selected) => String(selected?.id) ?? ''}
-            {...naimenovanieSpravochnik}
+            {...productOstatokSpravochnik}
           />
         </div>
       </EditableTableCell>
@@ -464,7 +420,7 @@ const NaimenovanieCells = ({
             className={inputVariants({ editor: true, error: !!errorMessage })}
             getInputValue={(selected) => selected?.name ?? ''}
             {...groupSpravochnik}
-            open={naimenovanieSpravochnik.open}
+            open={productOstatokSpravochnik.open}
           />
         </div>
       </EditableTableCell>
@@ -474,9 +430,8 @@ const NaimenovanieCells = ({
             disabled={!kimdan_id}
             readOnly={!!value}
             value={values.name}
-            onChange={(e) => setValues({ ...values, name: e.target.value })}
             className={inputVariants({ editor: true, error: !!errorMessage })}
-            onDoubleClick={naimenovanieSpravochnik.open}
+            onDoubleClick={productOstatokSpravochnik.open}
           />
         </div>
       </EditableTableCell>
@@ -486,9 +441,8 @@ const NaimenovanieCells = ({
             disabled={!kimdan_id}
             readOnly={!!value}
             value={values.edin}
-            onChange={(e) => setValues({ ...values, edin: e.target.value })}
             className={inputVariants({ editor: true, error: !!errorMessage })}
-            onDoubleClick={naimenovanieSpravochnik.open}
+            onDoubleClick={productOstatokSpravochnik.open}
           />
         </div>
       </EditableTableCell>

@@ -11,19 +11,16 @@ import {
   RasxodFormType,
   defaultValues
 } from '../config'
-import { SpravochnikInput, useSpravochnik } from '@/common/features/spravochnik'
 import { Table, TableBody, TableFooter, TableHeader } from '@/common/components/ui/table'
 import { calcSena, calcSumma } from '@/common/lib/pricing'
 import { useEffect, useRef, useState } from 'react'
 
 import { Button } from '@/common/components/ui/button'
 import { Input } from '@/common/components/ui/input'
-import { Naimenovanie } from '@/common/models'
+import { SpravochnikInput } from '@/common/features/spravochnik'
 import { UseFormReturn } from 'react-hook-form'
-import { createGroupSpravochnik } from '@/app/super-admin/group/service'
-import { createOstatokProductSpravochnik } from '@renderer/app/jurnal7/ostatok'
-import { formatDate } from '@renderer/common/lib/date'
 import { useEventCallback } from '@/common/hooks/use-event-callback'
+import { useOstatokProduct } from '../../common/features/ostatok-product/use-ostatok-product'
 
 type ProvodkaTableProps = {
   form: UseFormReturn<RasxodFormType>
@@ -365,65 +362,14 @@ const NaimenovanieCells = ({
 
   const onChangeChildFieldEvent = useEventCallback(onChangeChildField)!
 
-  const [values, setValues] = useState<Pick<Naimenovanie, 'group_jur7_id' | 'name' | 'edin'>>({
-    group_jur7_id: 0,
-    name: '',
-    edin: ''
+  const { values, groupSpravochnik, productOstatokSpravochnik } = useOstatokProduct({
+    index,
+    setMaxKol,
+    value,
+    kimdan_id,
+    onChange,
+    onChangeChildFieldEvent
   })
-
-  console.log(values)
-
-  const productOstatokSpravochnik = useSpravochnik(
-    createOstatokProductSpravochnik({
-      value,
-      onChange(id, data) {
-        onChange(id)
-
-        console.log({ data })
-
-        if (!data?.to.kol) {
-          return
-        }
-        setMaxKol(data?.to.kol ?? Infinity)
-        onChangeChildFieldEvent(index, 'kol', data?.to.kol ?? 0)
-        onChangeChildFieldEvent(index, 'sena', data?.sena ?? 0)
-        onChangeChildFieldEvent(
-          index,
-          'data_pereotsenka',
-          data?.date_saldo ? data.date_saldo.substring(0, 10) : ''
-        )
-      },
-      params: {
-        kimning_buynida: kimdan_id,
-        to: formatDate(new Date())
-      },
-      enabled: !!kimdan_id
-    })
-  )
-  const groupSpravochnik = useSpravochnik(
-    createGroupSpravochnik({
-      value: values.group_jur7_id,
-      onChange: (id) => {
-        setValues((prev) => ({ ...prev, group_jur7_id: id }))
-      }
-    })
-  )
-
-  useEffect(() => {
-    if (!productOstatokSpravochnik.selected) {
-      setValues({
-        group_jur7_id: 0,
-        name: '',
-        edin: ''
-      })
-      return
-    }
-    setValues({
-      group_jur7_id: productOstatokSpravochnik.selected?.group_id ?? 0,
-      name: productOstatokSpravochnik.selected?.naimenovanie_tovarov ?? '',
-      edin: productOstatokSpravochnik.selected?.edin ?? ''
-    })
-  }, [productOstatokSpravochnik.selected, onChangeChildFieldEvent, index, setMaxKol])
 
   useEffect(() => {
     if (!isMounted.current) {

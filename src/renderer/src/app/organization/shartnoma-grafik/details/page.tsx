@@ -1,6 +1,6 @@
 import { DatePicker, Fieldset, NumericInput } from '@/common/components'
 import { Form, FormControl, FormField, FormItem, FormLabel } from '@/common/components/ui/form'
-import { Navigate, useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import { Navigate, useNavigate, useParams } from 'react-router-dom'
 import { ShartnomaGrafikFormSchema, shartnomaGrafikDetailsService } from '../service'
 import { defaultValues, shartnomaGrafikQueryKeys } from '../constants'
 import { mainSchetQueryKeys, mainSchetService } from '@renderer/app/region-spravochnik/main-schet'
@@ -23,18 +23,18 @@ import { formatNumber } from '@/common/lib/format'
 import { monthNames } from '@/common/data/month'
 import { useForm } from 'react-hook-form'
 import { useLayout } from '@/common/features/layout'
+import { useOrgId } from '../hooks'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
 import { useToast } from '@/common/hooks/use-toast'
 import { useToggle } from '@/common/hooks/use-toggle'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 const ShartnomaGrafikDetailsPage = () => {
-  const [searchParams] = useSearchParams()
+  const [orgId] = useOrgId()
 
   const { toast } = useToast()
 
   const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
-  const orgId = searchParams.get('org_id')
   const id = useParams().id as string
   const navigate = useNavigate()
   const queryClient = useQueryClient()

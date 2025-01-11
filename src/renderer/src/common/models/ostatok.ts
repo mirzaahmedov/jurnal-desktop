@@ -13,7 +13,9 @@ export type Ostatok = {
   kimning_buynida: number
   naimenovanie_tovarov: string
   edin: string
-  group_name: string
+  group_jur7_id: number
+  group_jur7_name: string
+  prixod_doc_date: string
   internal: {
     prixod: {
       kol: number
@@ -45,7 +47,9 @@ export type OstatokProduct = {
   kimning_buynida: number
   naimenovanie_tovarov: string
   edin: string
-  group_name: string
+  group_jur7_id: number
+  group_jur7_name: string
+  prixod_doc_date: string
   to: {
     kol: number
     summa: number

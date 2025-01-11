@@ -1,5 +1,6 @@
+import { formatDate, getFirstDayOfMonth, getLastDayOfMonth } from '@renderer/common/lib/date'
+
 import { create } from 'zustand'
-import { formatDate } from '@renderer/common/lib/date'
 import { persist } from 'zustand/middleware'
 
 type Jurnal7DefaultsStore = {
@@ -11,8 +12,8 @@ type Jurnal7DefaultsStore = {
 export const useJurnal7DefaultsStore = create(
   persist<Jurnal7DefaultsStore>(
     (set) => ({
-      from: '',
-      to: '',
+      from: formatDate(getFirstDayOfMonth()),
+      to: formatDate(getLastDayOfMonth()),
       setDates: ({ from, to }) => {
         set({
           from: formatDate(from),

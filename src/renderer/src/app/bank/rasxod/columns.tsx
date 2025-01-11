@@ -1,7 +1,7 @@
 import { type ColumnDef } from '@renderer/common/components'
 import { TooltipCellRenderer } from '@renderer/common/components/table/renderers'
 import { Switch } from '@renderer/common/components/ui/switch'
-import { toast } from '@renderer/common/hooks'
+import { toast } from 'react-toastify'
 import { formatLocaleDate, formatNumber } from '@renderer/common/lib/format'
 import type { BankRasxod } from '@renderer/common/models'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
@@ -80,18 +80,13 @@ const BankRasxodStatus = ({ row }: { row: BankRasxod }) => {
   const { mutate: updateStatus, isPending } = useMutation({
     mutationFn: bankRasxodPaymentService.update,
     onSuccess() {
-      toast({
-        title: 'Статус успешно обновлен'
-      })
+      toast.success('Статус успешно обновлен')
       queryClient.invalidateQueries({
         queryKey: [queryKeys.getAll]
       })
     },
     onError() {
-      toast({
-        variant: 'destructive',
-        title: 'Ошибка при обновлении статуса'
-      })
+      toast.error('Ошибка при обновлении статуса')
     }
   })
 

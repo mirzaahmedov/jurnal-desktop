@@ -17,12 +17,12 @@ import { SelectField } from '@renderer/common/components'
 import backgroundImage from '@resources/signin-bg.png'
 import logoImage from '@resources/logo.svg'
 import { signinQuery } from './service'
+import { toast } from 'react-toastify'
 import { useAuthStore } from '@renderer/common/features/auth'
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
 import { useState } from 'react'
-import { useToast } from '@renderer/common/hooks/use-toast'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 const languageOptions = [
@@ -43,7 +43,6 @@ const SigninPage = () => {
   const navigate = useNavigate()
 
   const { user_id, setRequisites } = useRequisitesStore()
-  const { toast } = useToast()
   const { setUser } = useAuthStore()
 
   const form = useForm({
@@ -65,16 +64,11 @@ const SigninPage = () => {
         user: res.data.result
       })
       queryClient.clear()
-      toast({
-        title: 'Вы успешно вошли в систему'
-      })
+      toast.success('Вы успешно вошли в систему')
       navigate('/')
     },
     onError(error) {
-      toast({
-        variant: 'destructive',
-        title: error.message ?? 'Не удалось войти в систему'
-      })
+      toast.error(error.message ?? 'Не удалось войти в систему')
     }
   })
 

@@ -38,6 +38,7 @@ import {
   UserSquare,
   Users,
   Wallet,
+  Warehouse,
   Weight
 } from 'lucide-react'
 import type { ComponentType, ReactNode } from 'react'
@@ -245,6 +246,11 @@ export const getNavElements = (): NavElement[] => {
             {
               path: 'ostatok',
               title: 'Остаток',
+              icon: Warehouse
+            },
+            {
+              path: 'iznos',
+              title: 'Износ',
               icon: Percent
             },
             {
