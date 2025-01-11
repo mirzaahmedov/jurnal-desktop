@@ -118,16 +118,16 @@ const PodotchetMonitoringPage = () => {
                   buttonText="Лицевой счет"
                 />
               ) : null}
-              {podotchetSpravochnik.selected && operatsiiSpravochnik.selected ? (
+              {operatsiiSpravochnik.selected ? (
                 <DownloadDocumentButton
-                  fileName={`шапка_${podotchetSpravochnik.selected.name}:${from}:${to}-${operatsiiSpravochnik.selected.schet}.xlsx`}
+                  fileName={`шапка_${from}:${to}-${operatsiiSpravochnik.selected.schet}.xlsx`}
                   url={`/podotchet/monitoring/cap`}
                   params={{
                     operatsii: operatsiiSpravochnik.selected.schet,
                     main_schet_id,
                     from,
                     to,
-                    exel: true
+                    excel: true
                   }}
                   buttonText="Шапка"
                 />
