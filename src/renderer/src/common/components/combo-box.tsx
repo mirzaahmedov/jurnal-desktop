@@ -1,11 +1,11 @@
-import type { ReactNode } from 'react'
-
-import { useToggle } from '@/common/hooks/use-toggle'
-import { Popover, PopoverContent, PopoverTrigger } from './ui/popover'
-import { LoadingSpinner } from './loading'
 import { Command, CommandInput, CommandItem, CommandList } from './ui/command'
+import { Popover, PopoverContent, PopoverTrigger } from './ui/popover'
+
 import { Check } from 'lucide-react'
+import { LoadingSpinner } from './loading'
+import type { ReactNode } from 'react'
 import { cn } from '@/common/lib/utils'
+import { useToggle } from '@/common/hooks/use-toggle'
 
 type ComboboxProps = {
   children: ReactNode
@@ -15,7 +15,7 @@ type ComboboxProps = {
   onChange?: (value: string) => void
 }
 const Combobox = ({ children, loading = false, options, value, onChange }: ComboboxProps) => {
-  const { isOpen: active, close, setIsOpen: setActive } = useToggle()
+  const { isOpen: active, close, setOpen: setActive } = useToggle()
   return (
     <Popover
       open={active}

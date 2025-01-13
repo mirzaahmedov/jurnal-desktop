@@ -237,7 +237,7 @@ const ShartnomaGrafikDetailsPage = () => {
       {main_schet?.data && organization?.data && shartnomaGrafik?.data ? (
         <GenerateReportDialog
           open={reportToggle.isOpen}
-          onChange={reportToggle.setIsOpen}
+          onChange={reportToggle.setOpen}
           schedule={form.watch()}
           main_schet={main_schet.data}
           organization={organization.data}

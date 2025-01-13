@@ -1,4 +1,5 @@
 export type Iznos = {
+  id: number
   naimenovanie_tovarov_jur7_id: number
   kol: string
   sena: string

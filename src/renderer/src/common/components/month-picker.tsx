@@ -127,7 +127,7 @@ const MonthPicker = ({ value, onChange, className, ...props }: MonthPickerProps)
   return (
     <Popover
       open={popoverToggle.isOpen}
-      onOpenChange={popoverToggle.setIsOpen}
+      onOpenChange={popoverToggle.setOpen}
     >
       <PopoverTrigger asChild>
         <Button

@@ -33,7 +33,7 @@ const AccessPage = () => {
       <AccessDialog
         roleId={roleId}
         open={toggle.isOpen}
-        onOpenChange={toggle.setIsOpen}
+        onOpenChange={toggle.setOpen}
       />
       <GenericTable
         columns={roleColumns}

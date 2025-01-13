@@ -92,7 +92,7 @@ const DatePicker = forwardRef<HTMLButtonElement, DatePickerProps>(
       if (!active) {
         inputRef.current?.focus()
       }
-      calendarToggle.setIsOpen(active)
+      calendarToggle.setOpen(active)
     }
 
     return (

@@ -1,23 +1,23 @@
 import { useCallback, useState } from 'react'
 
 export const useToggle = (initialState: boolean = false) => {
-  const [isOpen, setIsOpen] = useState(initialState)
+  const [isOpen, setOpen] = useState(initialState)
 
   const open = useCallback(() => {
-    setIsOpen(true)
+    setOpen(true)
   }, [])
 
   const close = useCallback(() => {
-    setIsOpen(false)
+    setOpen(false)
   }, [])
 
   const toggle = useCallback(() => {
-    setIsOpen((prev) => prev)
+    setOpen((prev) => prev)
   }, [])
 
   return {
     isOpen,
-    setIsOpen,
+    setOpen,
     open,
     close,
     toggle

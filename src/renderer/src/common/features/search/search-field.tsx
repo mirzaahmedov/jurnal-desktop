@@ -1,11 +1,11 @@
-import type { HTMLAttributes } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
-import { cn } from '@/common/lib/utils'
+import type { HTMLAttributes } from 'react'
 import { Input } from '@/common/components/ui/input'
 import { Search } from 'lucide-react'
-import { useSearch } from './hook'
-import { useState, useEffect, useRef } from 'react'
+import { cn } from '@/common/lib/utils'
 import { usePagination } from '@/common/components'
+import { useSearch } from './hook'
 
 export type SearchFieldProps = HTMLAttributes<HTMLDivElement>
 export const SearchField = (props: SearchFieldProps) => {

@@ -1,16 +1,17 @@
-import type { MainSchet } from '@/common/models'
+import { LoadingOverlay, Pagination, usePagination } from '@/common/components'
+import { SearchField, useSearch } from '@/common/features/search'
 import { useEffect, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { mainSchetService } from './service'
-import { LoadingOverlay, Pagination, usePagination } from '@/common/components'
+
 import { GenericTable } from '@/common/components'
+import type { MainSchet } from '@/common/models'
+import MainSchetDialog from './dialog'
 import { mainSchetColumns } from './columns'
+import { mainSchetQueryKeys } from './constants'
+import { mainSchetService } from './service'
+import { useConfirm } from '@/common/features/confirm'
 import { useLayout } from '@/common/features/layout'
 import { useToggle } from '@/common/hooks/use-toggle'
-import { useConfirm } from '@/common/features/confirm'
-import { mainSchetQueryKeys } from './constants'
-import { SearchField, useSearch } from '@/common/features/search'
-import MainSchetDialog from './dialog'
 
 const MainSchetPage = () => {
   const [selected, setSelected] = useState<MainSchet | null>(null)
@@ -83,7 +84,7 @@ const MainSchetPage = () => {
       <MainSchetDialog
         data={selected}
         open={toggle.isOpen}
-        onChangeOpen={toggle.setIsOpen}
+        onChangeOpen={toggle.setOpen}
       />
     </>
   )

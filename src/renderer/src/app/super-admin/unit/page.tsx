@@ -1,17 +1,16 @@
-import type { Unit } from '@/common/models'
+import { useEffect, useState } from 'react'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 import { GenericTable } from '@/common/components'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { unitService } from './service'
-import { unitColumns } from './columns'
-import { useEffect, useState } from 'react'
-import { useToggle } from '@/common/hooks/use-toggle'
-import { unitQueryKeys } from './constants'
-import { useLayout } from '@/common/features/layout'
-import { useConfirm } from '@/common/features/confirm'
-
 import { ListView } from '@/common/views'
+import type { Unit } from '@/common/models'
 import { UnitDialog } from './dialog'
+import { unitColumns } from './columns'
+import { unitQueryKeys } from './constants'
+import { unitService } from './service'
+import { useConfirm } from '@/common/features/confirm'
+import { useLayout } from '@/common/features/layout'
+import { useToggle } from '@/common/hooks/use-toggle'
 
 const UnitPage = () => {
   const [selected, setSelected] = useState<Unit | null>(null)
@@ -71,7 +70,7 @@ const UnitPage = () => {
       <UnitDialog
         data={selected}
         open={toggle.isOpen}
-        onChangeOpen={toggle.setIsOpen}
+        onChangeOpen={toggle.setOpen}
       />
     </ListView>
   )

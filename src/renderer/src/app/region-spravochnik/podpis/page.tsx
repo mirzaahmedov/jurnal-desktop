@@ -41,7 +41,7 @@ const PodpisPage = () => {
 
   const handleClickEdit = (data: Podpis) => {
     setSelected(data)
-    dialogToggle.setIsOpen(true)
+    dialogToggle.setOpen(true)
   }
   const handleClickDelete = (data: Podpis) => {
     confirm({
@@ -77,7 +77,7 @@ const PodpisPage = () => {
       <PodpisDialog
         data={selected}
         open={dialogToggle.isOpen}
-        onOpenChange={dialogToggle.setIsOpen}
+        onOpenChange={dialogToggle.setOpen}
       />
     </>
   )

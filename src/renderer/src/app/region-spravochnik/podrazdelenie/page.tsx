@@ -1,15 +1,16 @@
-import type { Podrazdelenie } from '@/common/models'
+import { GenericTable, LoadingOverlay, Pagination, usePagination } from '@/common/components'
+import { SearchField, useSearch } from '@/common/features/search'
 import { useEffect, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { useLayout } from '@/common/features/layout'
-import { subdivisionService } from './service'
-import { GenericTable, LoadingOverlay, Pagination, usePagination } from '@/common/components'
-import { subdivisionColumns } from './columns'
-import { useToggle } from '@/common/hooks/use-toggle'
-import { subdivisionQueryKeys } from './constants'
-import { useConfirm } from '@/common/features/confirm'
-import { SearchField, useSearch } from '@/common/features/search'
+
+import type { Podrazdelenie } from '@/common/models'
 import SubdivisionDialog from './dialog'
+import { subdivisionColumns } from './columns'
+import { subdivisionQueryKeys } from './constants'
+import { subdivisionService } from './service'
+import { useConfirm } from '@/common/features/confirm'
+import { useLayout } from '@/common/features/layout'
+import { useToggle } from '@/common/hooks/use-toggle'
 
 const SubdivisionPage = () => {
   const [selected, setSelected] = useState<Podrazdelenie | null>(null)
@@ -83,7 +84,7 @@ const SubdivisionPage = () => {
       <SubdivisionDialog
         data={selected}
         open={toggle.isOpen}
-        onChangeOpen={toggle.setIsOpen}
+        onChangeOpen={toggle.setOpen}
       />
     </>
   )

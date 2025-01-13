@@ -1,15 +1,15 @@
-import type { Budjet } from '@/common/models'
-
+import { GenericTable, LoadingOverlay } from '@/common/components'
 import { useEffect, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { budgetService } from './service'
-import { GenericTable, LoadingOverlay } from '@/common/components'
-import { budgetColumns } from './columns'
-import { useToggle } from '@/common/hooks/use-toggle'
-import { budgetQueryKeys } from './constants'
-import { useLayout } from '@/common/features/layout'
-import { useConfirm } from '@/common/features/confirm'
+
 import BudgetDialog from './dialog'
+import type { Budjet } from '@/common/models'
+import { budgetColumns } from './columns'
+import { budgetQueryKeys } from './constants'
+import { budgetService } from './service'
+import { useConfirm } from '@/common/features/confirm'
+import { useLayout } from '@/common/features/layout'
+import { useToggle } from '@/common/hooks/use-toggle'
 
 const BudgetPage = () => {
   const [selected, setSelected] = useState<Budjet | null>(null)
@@ -69,7 +69,7 @@ const BudgetPage = () => {
       <BudgetDialog
         data={selected}
         open={toggle.isOpen}
-        onChangeOpen={toggle.setIsOpen}
+        onChangeOpen={toggle.setOpen}
       />
     </>
   )

@@ -1,16 +1,15 @@
-import type { Bank } from '@/common/models'
-
-import { useState } from 'react'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { useToggle } from '@/common/hooks/use-toggle'
-import { useLayout } from '@/common/features/layout'
-import { useConfirm } from '@/common/features/confirm'
 import { GenericTable, LoadingOverlay, Pagination, usePagination } from '@/common/components'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
-import { bankService } from './service'
+import type { Bank } from '@/common/models'
 import { BankDialog } from './dialog'
-import { bankQueryKeys } from './config'
 import { bankColumns } from './columns'
+import { bankQueryKeys } from './config'
+import { bankService } from './service'
+import { useConfirm } from '@/common/features/confirm'
+import { useLayout } from '@/common/features/layout'
+import { useState } from 'react'
+import { useToggle } from '@/common/hooks/use-toggle'
 
 const BankPage = () => {
   const [selected, setSelected] = useState<Bank>()
@@ -42,7 +41,7 @@ const BankPage = () => {
 
   const handleClickEdit = (data: Bank) => {
     setSelected(data)
-    dialogToggle.setIsOpen(true)
+    dialogToggle.setOpen(true)
   }
   const handleClickDelete = (data: Bank) => {
     confirm({
@@ -78,7 +77,7 @@ const BankPage = () => {
       <BankDialog
         data={selected}
         open={dialogToggle.isOpen}
-        onOpenChange={dialogToggle.setIsOpen}
+        onOpenChange={dialogToggle.setOpen}
       />
     </>
   )

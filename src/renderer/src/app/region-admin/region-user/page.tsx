@@ -1,14 +1,15 @@
-import type { User } from '@/common/models'
+import { GenericTable, LoadingOverlay } from '@/common/components'
 import { useEffect, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { regionUserService } from './service'
-import { GenericTable, LoadingOverlay } from '@/common/components'
+
+import RegionUserDialog from './dialog'
+import type { User } from '@/common/models'
 import { regionUserColumns } from './columns'
 import { regionUserKeys } from './constants'
-import { useToggle } from '@/common/hooks/use-toggle'
-import { useLayout } from '@/common/features/layout'
+import { regionUserService } from './service'
 import { useConfirm } from '@/common/features/confirm'
-import RegionUserDialog from './dialog'
+import { useLayout } from '@/common/features/layout'
+import { useToggle } from '@/common/hooks/use-toggle'
 
 const RegionUserPage = () => {
   const [selected, setSelected] = useState<User | null>(null)
@@ -69,7 +70,7 @@ const RegionUserPage = () => {
       <RegionUserDialog
         data={selected}
         open={toggle.isOpen}
-        onChangeOpen={toggle.setIsOpen}
+        onChangeOpen={toggle.setOpen}
       />
     </>
   )

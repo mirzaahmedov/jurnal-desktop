@@ -80,7 +80,7 @@ const OrganizationPage = () => {
       <UpdateOrganizationDrawer />
       <CreateOrganizationDialog
         open={dialogToggle.isOpen}
-        onChangeOpen={dialogToggle.setIsOpen}
+        onChangeOpen={dialogToggle.setOpen}
       />
     </ListView>
   )

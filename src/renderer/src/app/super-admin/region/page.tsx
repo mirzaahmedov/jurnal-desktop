@@ -1,14 +1,15 @@
-import type { Region } from '@/common/models'
 import { GenericTable, LoadingOverlay } from '@/common/components'
 import { useEffect, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { regionService } from './service'
-import { regionColumns } from './columns'
-import { useToggle } from '@/common/hooks/use-toggle'
-import { regionQueryKeys } from './constants'
-import { useLayout } from '@/common/features/layout'
-import { useConfirm } from '@/common/features/confirm'
+
+import type { Region } from '@/common/models'
 import RegionsDialog from './dialog'
+import { regionColumns } from './columns'
+import { regionQueryKeys } from './constants'
+import { regionService } from './service'
+import { useConfirm } from '@/common/features/confirm'
+import { useLayout } from '@/common/features/layout'
+import { useToggle } from '@/common/hooks/use-toggle'
 
 const RegionPage = () => {
   const [selected, setSelected] = useState<Region | null>(null)
@@ -70,7 +71,7 @@ const RegionPage = () => {
       <RegionsDialog
         data={selected}
         open={toggle.isOpen}
-        onChangeOpen={toggle.setIsOpen}
+        onChangeOpen={toggle.setOpen}
       />
     </>
   )

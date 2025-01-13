@@ -1,14 +1,15 @@
-import type { User } from '@/common/models'
+import { GenericTable, LoadingOverlay } from '@/common/components'
 import { useEffect, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { adminUserService } from './service'
-import { GenericTable, LoadingOverlay } from '@/common/components'
+
+import AdminUserDialog from './dialog'
+import type { User } from '@/common/models'
 import { adminUserColumns } from './columns'
 import { adminUserQueryKeys } from './constants'
-import { useToggle } from '@/common/hooks/use-toggle'
-import { useLayout } from '@/common/features/layout'
+import { adminUserService } from './service'
 import { useConfirm } from '@/common/features/confirm'
-import AdminUserDialog from './dialog'
+import { useLayout } from '@/common/features/layout'
+import { useToggle } from '@/common/hooks/use-toggle'
 
 const UserPage = () => {
   const [selected, setSelected] = useState<User | null>(null)
@@ -68,7 +69,7 @@ const UserPage = () => {
       <AdminUserDialog
         data={selected}
         open={toggle.isOpen}
-        onChangeOpen={toggle.setIsOpen}
+        onChangeOpen={toggle.setOpen}
       />
     </>
   )

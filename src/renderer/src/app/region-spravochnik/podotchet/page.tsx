@@ -1,17 +1,17 @@
-import type { Podotchet } from '@/common/models'
+import { LoadingOverlay, Pagination, usePagination } from '@/common/components'
+import { SearchField, useSearch } from '@/common/features/search'
 import { useEffect, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { podotchetService } from './service'
-import { LoadingOverlay, Pagination, usePagination } from '@/common/components'
-import { GenericTable } from '@/common/components'
-import { podotchetColumns } from './columns'
-import { useToggle } from '@/common/hooks/use-toggle'
-import { useLayout } from '@/common/features/layout'
-import { useConfirm } from '@/common/features/confirm'
-import { podotchetQueryKeys } from './constants'
-import { SearchField, useSearch } from '@/common/features/search'
 
+import { GenericTable } from '@/common/components'
+import type { Podotchet } from '@/common/models'
 import PodotchetDialog from './dialog'
+import { podotchetColumns } from './columns'
+import { podotchetQueryKeys } from './constants'
+import { podotchetService } from './service'
+import { useConfirm } from '@/common/features/confirm'
+import { useLayout } from '@/common/features/layout'
+import { useToggle } from '@/common/hooks/use-toggle'
 
 const PodotchetPage = () => {
   const [selected, setSelected] = useState<Podotchet | null>(null)
@@ -85,7 +85,7 @@ const PodotchetPage = () => {
       <PodotchetDialog
         data={selected}
         open={toggle.isOpen}
-        onChangeOpen={toggle.setIsOpen}
+        onChangeOpen={toggle.setOpen}
       />
     </>
   )

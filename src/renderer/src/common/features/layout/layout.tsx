@@ -133,7 +133,7 @@ export const PageLayout = (props: PageLayoutProps) => {
       {children}
       <RequisitesDialog
         open={mainSchetToggle.isOpen}
-        onOpenChange={mainSchetToggle.setIsOpen}
+        onOpenChange={mainSchetToggle.setOpen}
       />
       <ConfigureDefaultValuesDialog
         open={appDefaultsToggle.isOpen}

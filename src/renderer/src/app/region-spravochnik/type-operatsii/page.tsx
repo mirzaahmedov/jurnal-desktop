@@ -1,15 +1,16 @@
-import type { TypeOperatsii } from '@/common/models'
+import { GenericTable, LoadingOverlay, Pagination, usePagination } from '@/common/components'
+import { SearchField, useSearch } from '@/common/features/search'
 import { useEffect, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { operationTypeService } from './service'
-import { GenericTable, LoadingOverlay, Pagination, usePagination } from '@/common/components'
-import { operationTypeColumns } from './columns'
-import { useToggle } from '@/common/hooks/use-toggle'
-import { useLayout } from '@/common/features/layout'
-import { useConfirm } from '@/common/features/confirm'
-import { operationTypeQueryKeys } from './constants'
-import { SearchField, useSearch } from '@/common/features/search'
+
 import OperationTypeDialog from './dialog'
+import type { TypeOperatsii } from '@/common/models'
+import { operationTypeColumns } from './columns'
+import { operationTypeQueryKeys } from './constants'
+import { operationTypeService } from './service'
+import { useConfirm } from '@/common/features/confirm'
+import { useLayout } from '@/common/features/layout'
+import { useToggle } from '@/common/hooks/use-toggle'
 
 const OperationTypePage = () => {
   const [selected, setSelected] = useState<TypeOperatsii | null>(null)
@@ -84,7 +85,7 @@ const OperationTypePage = () => {
       <OperationTypeDialog
         data={selected}
         open={toggle.isOpen}
-        onChangeOpen={toggle.setIsOpen}
+        onChangeOpen={toggle.setOpen}
       />
     </>
   )

@@ -1,18 +1,17 @@
-import type { Smeta } from '@/common/models'
-
+import { LoadingOverlay, Pagination, usePagination } from '@/common/components'
+import { SearchField, useSearch } from '@/common/features/search'
 import { useEffect, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { LoadingOverlay, Pagination, usePagination } from '@/common/components'
+
 import { GenericTable } from '@/common/components'
+import type { Smeta } from '@/common/models'
+import { SmetaDialog } from './dialog'
 import { smetaColumns } from './columns'
+import { smetaQueryKeys } from './config'
+import { smetaService } from './service'
+import { useConfirm } from '@/common/features/confirm'
 import { useLayout } from '@/common/features/layout'
 import { useToggle } from '@/common/hooks/use-toggle'
-import { useConfirm } from '@/common/features/confirm'
-import { SearchField, useSearch } from '@/common/features/search'
-import { SmetaDialog } from './dialog'
-
-import { smetaService } from './service'
-import { smetaQueryKeys } from './config'
 
 const SmetaPage = () => {
   const [selected, setSelected] = useState<Smeta | null>(null)
@@ -84,7 +83,7 @@ const SmetaPage = () => {
       <SmetaDialog
         data={selected}
         open={toggle.isOpen}
-        onChangeOpen={toggle.setIsOpen}
+        onChangeOpen={toggle.setOpen}
       />
     </>
   )
