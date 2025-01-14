@@ -19,7 +19,8 @@ export const GroupPayloadSchema = withPreprocessor(
     iznos_foiz: z.coerce.number(),
     provodka_debet: z.string(),
     provodka_subschet: z.string(),
-    provodka_kredit: z.string()
+    provodka_kredit: z.string(),
+    pod_group: z.string().nonempty()
   })
 )
 
@@ -33,5 +34,6 @@ export const defaultValues: GroupPayloadType = {
   iznos_foiz: 0,
   provodka_debet: '',
   provodka_subschet: '',
-  provodka_kredit: ''
+  provodka_kredit: '',
+  pod_group: ''
 }

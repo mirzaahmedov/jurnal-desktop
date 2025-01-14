@@ -1,17 +1,15 @@
+import { GroupTable, groupService } from './service'
 import { SearchField, useSearch } from '@renderer/common/features/search'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
-import { GenericTable } from '@/common/components'
 import type { Group } from '@/common/models'
 import GroupDialog from './dialog'
 import { ListView } from '@renderer/common/views'
 import { groupColumns } from './columns'
 import { groupQueryKeys } from './constants'
-import { groupService } from './service'
 import { toast } from '@/common/hooks/use-toast'
 import { useConfirm } from '@/common/features/confirm'
 import { useLayout } from '@/common/features/layout'
-import { usePagination } from '@renderer/common/hooks'
 import { useState } from 'react'
 import { useToggle } from '@/common/hooks/use-toggle'
 
@@ -20,7 +18,6 @@ const GroupPage = () => {
 
   const dialogToggle = useToggle()
   const queryClient = useQueryClient()
-  const pagination = usePagination()
 
   const { search } = useSearch()
   const { confirm } = useConfirm()
@@ -30,7 +27,8 @@ const GroupPage = () => {
       groupQueryKeys.getAll,
       {
         search,
-        ...pagination
+        page: 1,
+        limit: 10000
       }
     ],
     queryFn: groupService.getAll
@@ -79,19 +77,13 @@ const GroupPage = () => {
   return (
     <ListView>
       <ListView.Content loading={isFetching || isPending}>
-        <GenericTable
+        <GroupTable
           columns={groupColumns}
           data={groupList?.data ?? []}
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}
         />
       </ListView.Content>
-      <ListView.Footer>
-        <ListView.Pagination
-          {...pagination}
-          pageCount={groupList?.meta?.pageCount ?? 0}
-        />
-      </ListView.Footer>
       <GroupDialog
         data={selected}
         open={dialogToggle.isOpen}

@@ -8,23 +8,21 @@ import { extendObject } from '@/common/lib/utils'
 import { SpravochnikSearchField } from '@renderer/common/features/search'
 import { treeFromArray } from './utils'
 import { useMemo } from 'react'
-import { CollapsibleTable } from '@renderer/common/components/collapsible-table'
+import {
+  CollapsibleTable,
+  CollapsibleTableProps
+} from '@renderer/common/components/collapsible-table'
 
 export const groupService = new CRUDService<Group, GroupPayloadType>({
   endpoint: APIEndpoints.jur7_group
 })
 
-const GroupTable: SpravochnikHookOptions<Group>['CustomTable'] = ({
-  data,
-  columns,
-  onClickRow
-}) => {
+export const GroupTable = ({ data, ...props }: CollapsibleTableProps<any>) => {
   const nested = useMemo(() => treeFromArray(data), [data])
   return (
     <CollapsibleTable
       data={nested}
-      columns={columns}
-      onClickRow={onClickRow}
+      {...props}
     />
   )
 }

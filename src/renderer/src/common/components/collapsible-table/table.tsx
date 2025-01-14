@@ -61,151 +61,11 @@ const CollapsibleTable = <T extends { id: number; children: T[] }>({
       <TableBody>
         {Array.isArray(data) && data.length ? (
           data.map((row) => (
-            <Collapsible
+            <CollapsibleItem
               key={row.id}
-              asChild
-            >
-              <>
-                <GenericTableRow onClick={() => onClickRow?.(row)}>
-                  {columns.map((col, index) => {
-                    const { key, fit, stretch, numeric, renderCell } = col
-                    return (
-                      <GenericTableCell
-                        key={key.toString()}
-                        fit={fit}
-                        stretch={stretch}
-                        numeric={numeric}
-                        className={cn('font-bold', col.className)}
-                      >
-                        {index === 0 && (
-                          <CollapsibleTrigger
-                            asChild
-                            onClick={(e) => {
-                              e.stopPropagation()
-                            }}
-                          >
-                            <Button
-                              size="icon"
-                              variant="outline"
-                              className="size-6 align-middle mr-2"
-                            >
-                              <Plus className="btn-icon !size-3.5 !ml-0" />
-                            </Button>
-                          </CollapsibleTrigger>
-                        )}
-                        {typeof renderCell === 'function'
-                          ? renderCell(row, col)
-                          : String(row[col.key as keyof T])}
-                      </GenericTableCell>
-                    )
-                  })}
-                  {onEdit || onDelete ? (
-                    <GenericTableCell className="py-1 w-32">
-                      <div className="flex items-center whitespace-nowrap w-full gap-1">
-                        {onEdit ? (
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={(e) => {
-                              e.stopPropagation()
-                              onEdit(row)
-                            }}
-                          >
-                            <Pencil className="size-4" />
-                          </Button>
-                        ) : null}
-                        {onDelete ? (
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={(e) => {
-                              e.stopPropagation()
-                              onDelete(row)
-                            }}
-                            className="text-destructive hover:text-destructive"
-                          >
-                            <Trash2 className="size-4" />
-                          </Button>
-                        ) : null}
-                      </div>
-                    </GenericTableCell>
-                  ) : null}
-                </GenericTableRow>
-                <CollapsibleContent asChild>
-                  <GenericTableRow>
-                    <GenericTableCell
-                      colSpan={100}
-                      className="p-0"
-                    >
-                      <div className="pl-[60px] bg-white">
-                        <Table>
-                          <TableBody>
-                            {row.children.map((child) => (
-                              <GenericTableRow
-                                key={child.id}
-                                className={cn(
-                                  styles.Nested_row,
-                                  'even:bg-transparent even:hover:bg-transparent odd:bg-transparent hover:bg-transparent'
-                                )}
-                                onClick={() => onClickRow?.(child)}
-                              >
-                                {columns.map((col) => {
-                                  const { key, fit, stretch, numeric, renderCell } = col
-                                  return (
-                                    <GenericTableCell
-                                      key={key.toString()}
-                                      fit={fit}
-                                      stretch={stretch}
-                                      numeric={numeric}
-                                      className={col.className}
-                                    >
-                                      {typeof renderCell === 'function'
-                                        ? renderCell(child, col)
-                                        : String(child[col.key as keyof T])}
-                                    </GenericTableCell>
-                                  )
-                                })}
-                                {onEdit || onDelete ? (
-                                  <GenericTableCell className="py-1 w-32">
-                                    <div className="flex items-center whitespace-nowrap w-full gap-1">
-                                      {onEdit ? (
-                                        <Button
-                                          variant="ghost"
-                                          size="icon"
-                                          onClick={(e) => {
-                                            e.stopPropagation()
-                                            onEdit(row)
-                                          }}
-                                        >
-                                          <Pencil className="size-4" />
-                                        </Button>
-                                      ) : null}
-                                      {onDelete ? (
-                                        <Button
-                                          variant="ghost"
-                                          size="icon"
-                                          onClick={(e) => {
-                                            e.stopPropagation()
-                                            onDelete(row)
-                                          }}
-                                          className="text-destructive hover:text-destructive"
-                                        >
-                                          <Trash2 className="size-4" />
-                                        </Button>
-                                      ) : null}
-                                    </div>
-                                  </GenericTableCell>
-                                ) : null}
-                              </GenericTableRow>
-                            ))}
-                          </TableBody>
-                        </Table>
-                      </div>
-                    </GenericTableCell>
-                  </GenericTableRow>
-                </CollapsibleContent>
-              </>
-            </Collapsible>
+              row={row}
+              tableProps={{ columns, onClickRow, onEdit, onDelete, data }}
+            />
           ))
         ) : (
           <GenericTableRow className="pointer-events-none">
@@ -219,6 +79,175 @@ const CollapsibleTable = <T extends { id: number; children: T[] }>({
         )}
       </TableBody>
     </Table>
+  )
+}
+
+type CollapsibleItemProps<T> = {
+  row: T
+  tableProps: CollapsibleTableProps<T>
+}
+const CollapsibleItem = <T extends { id: number; children: T[] }>({
+  row,
+  tableProps
+}: CollapsibleItemProps<T>) => {
+  const { columns, onClickRow, onEdit, onDelete } = tableProps
+
+  if (!row.children?.length) {
+    return (
+      <GenericTableRow
+        key={row.id}
+        className={cn(
+          styles.Nested_row,
+          'even:bg-transparent even:hover:bg-transparent odd:bg-transparent hover:bg-transparent'
+        )}
+        onClick={() => onClickRow?.(row)}
+      >
+        {columns.map((col) => {
+          const { key, fit, stretch, numeric, renderCell } = col
+          return (
+            <GenericTableCell
+              key={key.toString()}
+              fit={fit}
+              stretch={stretch}
+              numeric={numeric}
+              className={col.className}
+            >
+              {typeof renderCell === 'function'
+                ? renderCell(row, col)
+                : String(row[col.key as keyof T])}
+            </GenericTableCell>
+          )
+        })}
+        {onEdit || onDelete ? (
+          <GenericTableCell className="py-1 w-32">
+            <div className="flex items-center whitespace-nowrap w-full gap-1">
+              {onEdit ? (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    onEdit(row)
+                  }}
+                >
+                  <Pencil className="size-4" />
+                </Button>
+              ) : null}
+              {onDelete ? (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    onDelete(row)
+                  }}
+                  className="text-destructive hover:text-destructive"
+                >
+                  <Trash2 className="size-4" />
+                </Button>
+              ) : null}
+            </div>
+          </GenericTableCell>
+        ) : null}
+      </GenericTableRow>
+    )
+  }
+
+  return (
+    <Collapsible
+      key={row.id}
+      asChild
+    >
+      <>
+        <GenericTableRow onClick={() => onClickRow?.(row)}>
+          {columns.map((col, index) => {
+            const { key, fit, stretch, numeric, renderCell } = col
+            return (
+              <GenericTableCell
+                key={key.toString()}
+                fit={fit}
+                stretch={stretch}
+                numeric={numeric}
+                className={cn('font-bold', col.className)}
+              >
+                {index === 0 && (
+                  <CollapsibleTrigger
+                    asChild
+                    onClick={(e) => {
+                      e.stopPropagation()
+                    }}
+                  >
+                    <Button
+                      size="icon"
+                      variant="outline"
+                      className="size-6 align-middle mr-2"
+                    >
+                      <Plus className="btn-icon !size-3.5 !ml-0" />
+                    </Button>
+                  </CollapsibleTrigger>
+                )}
+                {typeof renderCell === 'function'
+                  ? renderCell(row, col)
+                  : String(row[col.key as keyof T])}
+              </GenericTableCell>
+            )
+          })}
+          {onEdit || onDelete ? (
+            <GenericTableCell className="py-1 w-32">
+              <div className="flex items-center whitespace-nowrap w-full gap-1">
+                {onEdit ? (
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      onEdit(row)
+                    }}
+                  >
+                    <Pencil className="size-4" />
+                  </Button>
+                ) : null}
+                {onDelete ? (
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      onDelete(row)
+                    }}
+                    className="text-destructive hover:text-destructive"
+                  >
+                    <Trash2 className="size-4" />
+                  </Button>
+                ) : null}
+              </div>
+            </GenericTableCell>
+          ) : null}
+        </GenericTableRow>
+        <CollapsibleContent asChild>
+          <GenericTableRow>
+            <GenericTableCell
+              colSpan={100}
+              className="p-0"
+            >
+              <div className="pl-[60px] bg-white">
+                <Table>
+                  <TableBody>
+                    {row.children.map((child) => (
+                      <CollapsibleItem
+                        key={child.id}
+                        row={child}
+                        tableProps={tableProps}
+                      />
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            </GenericTableCell>
+          </GenericTableRow>
+        </CollapsibleContent>
+      </>
+    </Collapsible>
   )
 }
 

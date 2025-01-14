@@ -6,14 +6,6 @@ export const groupColumns: ColumnDef<Group>[] = [
     key: 'name',
     header: 'Наименования'
   },
-  // {
-  //   key: 'pod_group',
-  //   header: 'Номер группы'
-  // },
-  // {
-  //   key: 'smeta_name',
-  //   header: 'Смета'
-  // },
   {
     key: 'schet',
     header: 'Счет',
@@ -42,6 +34,11 @@ export const groupColumns: ColumnDef<Group>[] = [
     key: 'provodka_kredit',
     header: 'Кредит',
     headerClassName: 'w-32',
+    className: 'w-32'
+  },
+  {
+    key: 'pod_group',
+    header: 'Подгруппа',
     className: 'w-32'
   }
 ]

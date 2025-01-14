@@ -47,6 +47,7 @@ const GroupDialog = (props: GroupDialogProps) => {
           return
         }
         form.setValue('provodka_subschet', smeta?.smeta_number)
+        form.setValue('smeta_id', smeta?.id)
         form.trigger('provodka_subschet')
       }
     })
@@ -187,7 +188,7 @@ const GroupDialog = (props: GroupDialogProps) => {
               <FormElement
                 label="Смета"
                 grid="1:2"
-                message={form.formState.errors.smeta_id?.message}
+                message={form.formState.errors.smeta_id?.message || ''}
               >
                 <SpravochnikInput
                   readOnly
@@ -220,6 +221,19 @@ const GroupDialog = (props: GroupDialogProps) => {
                 render={({ field }) => (
                   <FormElement
                     label="Кредит"
+                    grid="1:2"
+                  >
+                    <Input {...field} />
+                  </FormElement>
+                )}
+              />
+
+              <FormField
+                name="pod_group"
+                control={form.control}
+                render={({ field }) => (
+                  <FormElement
+                    label="Подгруппа"
                     grid="1:2"
                   >
                     <Input {...field} />
