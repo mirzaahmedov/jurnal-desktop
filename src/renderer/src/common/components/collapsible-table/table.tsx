@@ -8,23 +8,27 @@ import {
   GenericTableHead,
   GenericTableRow
 } from '@renderer/common/components/generic-table'
+import { Pencil, Plus, Trash2 } from 'lucide-react'
 import { Table, TableBody, TableHeader } from '@renderer/common/components/ui/table'
 
 import { Button } from '@renderer/common/components/ui/button'
 import type { ColumnDef } from './types'
-import { Plus } from 'lucide-react'
 import { cn } from '@renderer/common/lib/utils'
 import styles from './styles.module.css'
 
-type CollapsibleTableProps<T> = {
+export type CollapsibleTableProps<T> = {
   data: T[]
   columns: ColumnDef<Partial<T>>[]
   onClickRow?: (row: T) => void
+  onEdit?: (row: T) => void
+  onDelete?: (row: T) => void
 }
 const CollapsibleTable = <T extends { id: number; children: T[] }>({
   data,
   columns,
-  onClickRow
+  onClickRow,
+  onEdit,
+  onDelete
 }: CollapsibleTableProps<T>) => {
   return (
     <Table>
@@ -44,6 +48,14 @@ const CollapsibleTable = <T extends { id: number; children: T[] }>({
               </GenericTableHead>
             )
           })}
+          {onEdit || onDelete ? (
+            <GenericTableHead
+              key="actions"
+              className="w-32"
+            >
+              Действия
+            </GenericTableHead>
+          ) : null}
         </GenericTableRow>
       </TableHeader>
       <TableBody>
@@ -87,6 +99,37 @@ const CollapsibleTable = <T extends { id: number; children: T[] }>({
                       </GenericTableCell>
                     )
                   })}
+                  {onEdit || onDelete ? (
+                    <GenericTableCell className="py-1 w-32">
+                      <div className="flex items-center whitespace-nowrap w-full gap-1">
+                        {onEdit ? (
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              onEdit(row)
+                            }}
+                          >
+                            <Pencil className="size-4" />
+                          </Button>
+                        ) : null}
+                        {onDelete ? (
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              onDelete(row)
+                            }}
+                            className="text-destructive hover:text-destructive"
+                          >
+                            <Trash2 className="size-4" />
+                          </Button>
+                        ) : null}
+                      </div>
+                    </GenericTableCell>
+                  ) : null}
                 </GenericTableRow>
                 <CollapsibleContent asChild>
                   <GenericTableRow>
@@ -122,6 +165,37 @@ const CollapsibleTable = <T extends { id: number; children: T[] }>({
                                     </GenericTableCell>
                                   )
                                 })}
+                                {onEdit || onDelete ? (
+                                  <GenericTableCell className="py-1 w-32">
+                                    <div className="flex items-center whitespace-nowrap w-full gap-1">
+                                      {onEdit ? (
+                                        <Button
+                                          variant="ghost"
+                                          size="icon"
+                                          onClick={(e) => {
+                                            e.stopPropagation()
+                                            onEdit(row)
+                                          }}
+                                        >
+                                          <Pencil className="size-4" />
+                                        </Button>
+                                      ) : null}
+                                      {onDelete ? (
+                                        <Button
+                                          variant="ghost"
+                                          size="icon"
+                                          onClick={(e) => {
+                                            e.stopPropagation()
+                                            onDelete(row)
+                                          }}
+                                          className="text-destructive hover:text-destructive"
+                                        >
+                                          <Trash2 className="size-4" />
+                                        </Button>
+                                      ) : null}
+                                    </div>
+                                  </GenericTableCell>
+                                ) : null}
                               </GenericTableRow>
                             ))}
                           </TableBody>

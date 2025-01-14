@@ -1,4 +1,5 @@
 import type { Ostatok, OstatokProduct } from '@renderer/common/models/ostatok'
+import { formatLocaleDate, formatNumber } from '@renderer/common/lib/format'
 
 import type { ColumnDef } from '@renderer/common/components'
 
@@ -16,44 +17,57 @@ export const ostatokColumns: ColumnDef<Ostatok>[] = [
     header: 'Един.'
   },
   {
+    numeric: true,
     key: 'from.kol',
     header: 'Начало Кол.',
-    renderCell: (row) => row.from.kol
+    renderCell: (row) => formatNumber(row.from.kol)
   },
   {
+    numeric: true,
     key: 'from.summa',
     header: 'Начало Сумма',
-    renderCell: (row) => row.from.summa
+    renderCell: (row) => formatNumber(row.from.summa)
   },
   {
+    numeric: true,
     key: 'internal.prixod.kol',
     header: 'Приход Кол.',
-    renderCell: (row) => row.internal.prixod.kol
+    renderCell: (row) => formatNumber(row.internal.prixod.kol)
   },
   {
+    numeric: true,
     key: 'internal.prixod.summa',
     header: 'Приход Сумма',
-    renderCell: (row) => row.internal.prixod.summa
+    renderCell: (row) => formatNumber(row.internal.prixod.summa)
   },
   {
+    numeric: true,
     key: 'internal.rasxod.kol',
     header: 'Расход Кол.',
-    renderCell: (row) => row.internal.rasxod.kol
+    renderCell: (row) => formatNumber(row.internal.rasxod.kol)
   },
   {
+    numeric: true,
     key: 'internal.rasxod.summa',
     header: 'Расход Сумма',
-    renderCell: (row) => row.internal.rasxod.summa
+    renderCell: (row) => formatNumber(row.internal.rasxod.summa)
   },
   {
+    numeric: true,
     key: 'to.kol',
     header: 'Конец Кол.',
-    renderCell: (row) => row.to.kol
+    renderCell: (row) => formatNumber(row.to.kol)
   },
   {
+    numeric: true,
     key: 'to.summa',
     header: 'Конец Сумма',
-    renderCell: (row) => row.to.summa
+    renderCell: (row) => formatNumber(row.to.summa)
+  },
+  {
+    key: 'prixod_data.doc_date',
+    header: 'Дата прихода',
+    renderCell: (row) => formatLocaleDate(row.prixod_data?.doc_date)
   }
 ]
 
@@ -93,7 +107,7 @@ export const ostatokProductColumns: ColumnDef<OstatokProduct>[] = [
     header: 'Группа'
   },
   {
-    key: 'date_saldo',
-    header: 'Дата'
+    key: 'prixod_doc_date',
+    header: 'Дата сальдо'
   }
 ]

@@ -9,7 +9,7 @@ import { Button } from '@renderer/common/components/ui/button'
 import { LoadingSpinner } from '@renderer/common/components'
 import { MonthPicker } from '@renderer/common/components/month-picker'
 import { ostatokService } from '@renderer/app/jurnal7/ostatok'
-import { toast } from '@renderer/common/hooks'
+import { toast } from 'react-toastify'
 import { useJurnal7DateRange } from '../../components/use-date-range'
 import { useJurnal7DefaultsStore } from './store'
 import { useLocation } from 'react-router-dom'
@@ -23,17 +23,11 @@ export const ChangeJurnal7Defaults = () => {
   const { mutate: createOstatok, isPending } = useMutation({
     mutationFn: ostatokService.create,
     onSuccess() {
-      toast({
-        title: 'Сальдо успешно зарегистрировано'
-      })
+      toast.success('Сальдо успешно зарегистрировано')
     },
     onError(error) {
       console.error(error)
-      toast({
-        title: 'Ошибка при регистрации сальдо',
-        description: error.message,
-        variant: 'destructive'
-      })
+      toast.error('Ошибка при регистрации - ' + error.message)
     }
   })
 
@@ -74,7 +68,7 @@ export const ChangeJurnal7Defaults = () => {
       >
         {isPending ? (
           <LoadingSpinner className="border-2 border-white border-r-transparent size-4" />
-        ) : null}{' '}
+        ) : null}
         Регистрация сальдо
       </Button>
     </div>

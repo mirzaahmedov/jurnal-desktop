@@ -1,8 +1,8 @@
+import { GenericTable, LoadingOverlay } from '@renderer/common/components'
 import { SearchField, useSearch } from '@renderer/common/features/search'
 import { usePagination, useToggle } from '@renderer/common/hooks'
 
 import { EditIznosDialog } from './edit-dialog'
-import { GenericTable } from '@renderer/common/components'
 import { Iznos } from '@renderer/common/models'
 import { ListView } from '@renderer/common/views'
 import { MonthPicker } from '@renderer/common/components/month-picker'
@@ -62,18 +62,20 @@ const IznosPage = () => {
           />
         </div>
       </ListView.Header>
-      <ListView.Content loading={isFetching}>
+      <div className="whitespace-nowrap !overflow-scroll w-full">
+        {isFetching && <LoadingOverlay />}
         <GenericTable
           columns={columns}
           data={iznosList?.data ?? []}
           onEdit={handleEdit}
+          className="overflow-hidden w-full whitespace-nowrap"
         />
         <EditIznosDialog
           selected={selected}
           open={dialogToggle.isOpen}
           onOpenChange={dialogToggle.setOpen}
         />
-      </ListView.Content>
+      </div>
       <ListView.Footer>
         <ListView.Pagination
           {...pagination}

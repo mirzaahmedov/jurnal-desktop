@@ -16,6 +16,10 @@ export type Ostatok = {
   group_jur7_id: number
   group_jur7_name: string
   prixod_doc_date: string
+  prixod_data: {
+    doc_date: string
+    doc_num: string
+  }
   internal: {
     prixod: {
       kol: number

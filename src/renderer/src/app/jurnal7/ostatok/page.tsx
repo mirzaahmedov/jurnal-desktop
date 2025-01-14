@@ -1,5 +1,7 @@
-import { GenericTable, SpravochnikInput } from '@renderer/common/components'
+import { DownloadDocumentButton, GenericTable, SpravochnikInput } from '@renderer/common/components'
+import { formatDate, getFirstDayOfMonth, getLastDayOfMonth } from '@renderer/common/lib/date'
 
+import { ButtonGroup } from '@renderer/common/components/ui/button-group'
 import { ListView } from '@renderer/common/views'
 import { MonthPicker } from '@renderer/common/components/month-picker'
 import { createPodrazdelenie7Spravochnik } from '../podrazdelenie/service'
@@ -7,13 +9,17 @@ import { createResponsibleSpravochnik } from '../responsible/service'
 import { ostatokColumns } from './columns'
 import { ostatokQueryKeys } from './config'
 import { ostatokService } from './service'
+import { useLayout } from '@renderer/common/features/layout'
 import { useQuery } from '@tanstack/react-query'
+import { useRequisitesStore } from '@renderer/common/features/requisites'
 import { useSpravochnik } from '@renderer/common/features/spravochnik'
 import { useState } from 'react'
 
 const OstatokPage = () => {
   const [month, setMonth] = useState(new Date().getMonth() + 1)
   const [year, setYear] = useState(new Date().getFullYear())
+
+  const { main_schet_id, budjet_id } = useRequisitesStore()
 
   const podrazdelenieSpravochnik = useSpravochnik(
     createPodrazdelenie7Spravochnik({
@@ -44,6 +50,14 @@ const OstatokPage = () => {
     enabled: !!responsibleSpravochnik.selected?.id
   })
 
+  useLayout({
+    title: 'Остаток'
+  })
+
+  const date = new Date(`${year}-${month}-01`)
+  const from = formatDate(getFirstDayOfMonth(date))
+  const to = formatDate(getLastDayOfMonth(date))
+
   return (
     <ListView>
       <ListView.Content loading={isFetching}>
@@ -64,6 +78,52 @@ const OstatokPage = () => {
               disabled={!podrazdelenieSpravochnik.selected}
               className="min-w-[300px]"
             />
+          </div>
+          <div>
+            <ButtonGroup>
+              <DownloadDocumentButton
+                fileName={`оборотка_${year}-${month}.xlsx`}
+                url="/jur_7/monitoring/obrotka/report"
+                params={{
+                  year,
+                  month,
+                  main_schet_id
+                }}
+                buttonText="Оборотка"
+              />
+              <DownloadDocumentButton
+                fileName={`материальная_${year}-${month}.xlsx`}
+                url="/jur_7/monitoring/material/report"
+                params={{
+                  year,
+                  month,
+                  main_schet_id
+                }}
+                buttonText="Материальная"
+              />
+              <DownloadDocumentButton
+                fileName={`шапка_${year}-${month}.xlsx`}
+                url="/jur_7/monitoring/cap/report"
+                params={{
+                  from,
+                  to,
+                  budjet_id,
+                  excel: true
+                }}
+                buttonText="Шапка"
+              />
+              <DownloadDocumentButton
+                fileName={`шапка2_${year}-${month}.xlsx`}
+                url="/jur_7/monitoring/cap/back/report"
+                params={{
+                  from,
+                  to,
+                  budjet_id,
+                  excel: true
+                }}
+                buttonText="Шапка (2)"
+              />
+            </ButtonGroup>
           </div>
           <MonthPicker
             value={`${year}-${month}-01`}

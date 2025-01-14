@@ -1,8 +1,14 @@
 import type { ColumnDef } from '@renderer/common/components'
 import type { Iznos } from '@renderer/common/models'
 import { formatLocaleDate } from '@renderer/common/lib/format'
+import { getMonthName } from '@renderer/common/lib/date'
 
 export const columns: ColumnDef<Iznos>[] = [
+  {
+    key: 'name',
+    header: 'Наименование',
+    className: 'w-80'
+  },
   {
     key: 'inventar_num',
     header: 'Инвентар №'
@@ -16,6 +22,7 @@ export const columns: ColumnDef<Iznos>[] = [
     header: 'Количество'
   },
   {
+    numeric: true,
     key: 'sena',
     header: 'Цена'
   },
@@ -25,7 +32,10 @@ export const columns: ColumnDef<Iznos>[] = [
   },
   {
     key: 'month',
-    header: 'Месяц'
+    header: 'Месяц',
+    renderCell(row) {
+      return getMonthName(row.month)
+    }
   },
   {
     fit: true,
@@ -38,7 +48,12 @@ export const columns: ColumnDef<Iznos>[] = [
   {
     numeric: true,
     key: 'iznos_summa',
-    header: 'Сумма износа'
+    header: 'Сумма износа (Общий)'
+  },
+  {
+    numeric: true,
+    key: 'month_iznos_summa',
+    header: 'Сумма износа (Месяц)'
   },
   {
     numeric: true,

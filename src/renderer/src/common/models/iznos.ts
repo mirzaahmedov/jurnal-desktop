@@ -9,6 +9,7 @@ export type Iznos = {
   inventar_num: string
   serial_num: string
   eski_iznos_summa: number
+  month_iznos_summa: number
   iznos_summa: number
   kimning_buynida: string
   month: number

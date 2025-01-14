@@ -1,12 +1,3 @@
-import type { Smeta } from '@/common/models'
-
-import { useEffect } from 'react'
-import { useForm } from 'react-hook-form'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { useToast } from '@/common/hooks/use-toast'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { smetaService } from './service'
-import { Button } from '@/common/components/ui/button'
 import {
   Dialog,
   DialogContent,
@@ -16,14 +7,23 @@ import {
 } from '@/common/components/ui/dialog'
 import {
   Form,
+  FormControl,
   FormField,
   FormItem,
-  FormControl,
   FormLabel,
   FormMessage
 } from '@/common/components/ui/form'
+import { SmetaFormSchema, defaultValues, smetaQueryKeys } from './config'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+
+import { Button } from '@/common/components/ui/button'
 import { Input } from '@/common/components/ui/input'
-import { defaultValues, SmetaFormSchema, smetaQueryKeys } from './config'
+import type { Smeta } from '@/common/models'
+import { smetaService } from './service'
+import { useEffect } from 'react'
+import { useForm } from 'react-hook-form'
+import { useToast } from '@/common/hooks/use-toast'
+import { zodResolver } from '@hookform/resolvers/zod'
 
 type SmetaDialogProps = {
   open: boolean
@@ -171,7 +171,7 @@ const SmetaDialog = (props: SmetaDialogProps) => {
                 render={({ field }) => (
                   <FormItem>
                     <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
-                      <FormLabel className="text-right col-span-2">Тип Сметы</FormLabel>
+                      <FormLabel className="text-right col-span-2">Смета база</FormLabel>
                       <FormControl>
                         <Input
                           className="col-span-4"

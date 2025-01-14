@@ -6,6 +6,7 @@ import { extendObject } from '@renderer/common/lib/utils'
 import type { Ostatok, OstatokProduct } from '@renderer/common/models/ostatok'
 import { ostatokProductColumns } from './columns'
 import { formatDate } from '@renderer/common/lib/date'
+import { budjet } from '@renderer/common/features/crud/middleware'
 
 export const ostatokService = new CRUDService<
   Ostatok,
@@ -15,7 +16,7 @@ export const ostatokService = new CRUDService<
   }
 >({
   endpoint: APIEndpoints.jur7_saldo
-})
+}).use(budjet())
 
 export const ostatokProductService = new CRUDService<OstatokProduct>({
   endpoint: APIEndpoints.jur7_saldo_product

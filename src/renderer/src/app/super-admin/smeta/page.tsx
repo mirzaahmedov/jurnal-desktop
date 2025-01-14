@@ -1,22 +1,45 @@
-import { LoadingOverlay, Pagination, usePagination } from '@/common/components'
-import { SearchField, useSearch } from '@/common/features/search'
+import { LoadingOverlay, SelectField } from '@renderer/common/components'
+import { SearchField, useSearch } from '@renderer/common/features/search'
+import { parseAsString, useQueryState } from 'nuqs'
 import { useEffect, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
-import { GenericTable } from '@/common/components'
-import type { Smeta } from '@/common/models'
+import type { Smeta } from '@renderer/common/models'
 import { SmetaDialog } from './dialog'
+import { SmetaTable } from './service'
 import { smetaColumns } from './columns'
+import { smetaFilterOptions } from './group-filter'
 import { smetaQueryKeys } from './config'
 import { smetaService } from './service'
-import { useConfirm } from '@/common/features/confirm'
-import { useLayout } from '@/common/features/layout'
-import { useToggle } from '@/common/hooks/use-toggle'
+import { useConfirm } from '@renderer/common/features/confirm'
+import { useLayout } from '@renderer/common/features/layout'
+import { useToggle } from '@renderer/common/hooks/use-toggle'
 
+const SmetaFilters = () => {
+  const [groupNumber, setGroupNumber] = useQueryState(
+    'group_number',
+    parseAsString.withDefault('1')
+  )
+
+  return (
+    <div className="flex gap-2 px-10">
+      <SelectField
+        name="group_number"
+        value={groupNumber}
+        onValueChange={setGroupNumber}
+        options={smetaFilterOptions}
+        getOptionLabel={(option) => option.name}
+        getOptionValue={(option) => option.value}
+        placeholder="Guruhni tanlang"
+      />
+      <SearchField className="w-full" />
+    </div>
+  )
+}
 const SmetaPage = () => {
   const [selected, setSelected] = useState<Smeta | null>(null)
+  const [groupNumber] = useQueryState('group_number', parseAsString.withDefault('1'))
 
-  const { currentPage, itemsPerPage } = usePagination()
   const { confirm } = useConfirm()
   const { search } = useSearch()
 
@@ -27,8 +50,9 @@ const SmetaPage = () => {
     queryKey: [
       smetaQueryKeys.getAll,
       {
-        page: currentPage,
-        limit: itemsPerPage,
+        page: 1,
+        limit: 10000,
+        group_number: groupNumber,
         search
       }
     ],
@@ -51,7 +75,7 @@ const SmetaPage = () => {
   }, [toggle.isOpen])
   useLayout({
     title: 'Смета',
-    content: SearchField,
+    content: SmetaFilters,
     onCreate: toggle.open
   })
 
@@ -70,15 +94,14 @@ const SmetaPage = () => {
     <>
       <div className="flex-1 relative">
         {isFetching || isPending ? <LoadingOverlay /> : null}
-        <GenericTable
-          data={mainSchets?.data ?? []}
-          columns={smetaColumns}
-          onEdit={handleClickEdit}
-          onDelete={handleClickDelete}
-        />
-      </div>
-      <div className="px-10 py-5">
-        <Pagination pageCount={mainSchets?.meta.pageCount ?? 0} />
+        {SmetaTable ? (
+          <SmetaTable
+            data={mainSchets?.data ?? []}
+            columns={smetaColumns}
+            onEdit={handleClickEdit}
+            onDelete={handleClickDelete}
+          />
+        ) : null}
       </div>
       <SmetaDialog
         data={selected}

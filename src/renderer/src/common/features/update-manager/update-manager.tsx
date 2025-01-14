@@ -25,7 +25,7 @@ const UpdateManager = () => {
   useEffect(() => {
     ipcRenderer.send('check-for-updates')
     ipcRenderer.on(events.checking_for_update, () => {
-      toast.loading('Проверка обновлений', { autoClose: 1000, closeButton: true })
+      toast.info('Проверка обновлений', { autoClose: 1000, closeButton: true })
     })
 
     ipcRenderer.on(events.update_available, () => {

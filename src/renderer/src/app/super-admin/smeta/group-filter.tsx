@@ -1,7 +1,7 @@
 import type { InputHTMLAttributes } from 'react'
 import { SelectField } from '@renderer/common/components/select-field'
 
-const smetaFilterOptions = [
+export const smetaFilterOptions = [
   {
     name: 'I-guruh “Ish haqi va unga tenglashtirilgan to‘lovlar”',
     value: 1

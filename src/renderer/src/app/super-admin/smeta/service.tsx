@@ -6,7 +6,10 @@ import { APIEndpoints, CRUDService } from '@/common/features/crud'
 import { extendObject } from '@/common/lib/utils'
 import { smetaColumns } from './columns'
 import { SpravochnikSearchField } from '@/common/features/search'
-import { CollapsibleTable } from '@renderer/common/components/collapsible-table'
+import {
+  CollapsibleTable,
+  CollapsibleTableProps
+} from '@renderer/common/components/collapsible-table'
 import { useMemo } from 'react'
 import { treeFromArray } from './utils'
 import { SmetaGroupFilter } from './group-filter'
@@ -15,17 +18,13 @@ export const smetaService = new CRUDService<Smeta, SmetaForm>({
   endpoint: APIEndpoints.smeta
 })
 
-const SmetaTable: SpravochnikHookOptions<Smeta>['CustomTable'] = ({
-  data,
-  columns,
-  onClickRow
-}) => {
+export const SmetaTable = ({ data, columns, ...props }: CollapsibleTableProps<any>) => {
   const nested = useMemo(() => treeFromArray(data), [data])
   return (
     <CollapsibleTable
       data={nested}
       columns={columns}
-      onClickRow={onClickRow}
+      {...props}
     />
   )
 }
