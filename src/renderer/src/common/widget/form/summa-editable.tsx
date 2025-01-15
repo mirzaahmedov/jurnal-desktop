@@ -1,11 +1,11 @@
-import type { FormEditableFieldsComponent } from './types'
-
 import { Fieldset, NumericInput } from '@/common/components'
+import { cn, numberToWords } from '@/common/lib/utils'
+
+import { Control } from 'react-hook-form'
+import type { FormEditableFieldsComponent } from './types'
 import { FormElement } from '@/common/components/form'
 import { FormField } from '@/common/components/ui/form'
 import { Textarea } from '@/common/components/ui/textarea'
-import { numberToWords } from '@/common/lib/utils'
-import { Control } from 'react-hook-form'
 
 type RequiredSummaEditableFields = {
   summa?: number
@@ -15,14 +15,24 @@ const SummaEditableFields: FormEditableFieldsComponent<RequiredSummaEditableFiel
   name,
   form,
   disabled,
+  dialog = false,
+  containerProps,
   ...props
 }) => {
   return (
     <Fieldset
       {...props}
+      className={cn(dialog && 'p-0', props.className)}
       name={name ?? 'Сумма'}
     >
-      <div className="flex items-start gap-5">
+      <div
+        {...containerProps}
+        className={cn(
+          'flex items-start gap-5',
+          dialog && 'flex-col items-stretch',
+          containerProps?.className
+        )}
+      >
         <FormField
           control={form.control as unknown as Control<RequiredSummaEditableFields>}
           name="summa"

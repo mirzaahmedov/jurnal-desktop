@@ -5,24 +5,23 @@ import {
   DrawerFooter,
   DrawerHeader,
   DrawerTitle
-} from '@/common/components/ui/drawer'
+} from '@renderer/common/components/ui/drawer'
 import {
   OrganizationFormSchema,
   createOrganizationSpravochnik,
   organizationService
 } from './service'
-import { ScrollArea, ScrollBar } from '@/common/components/ui/scroll-area'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
-import { Button } from '@/common/components/ui/button'
-import { LoadingOverlay } from '@/common/components'
-import { Organization } from '@/common/models'
+import { Button } from '@renderer/common/components/ui/button'
+import { LoadingOverlay } from '@renderer/common/components'
+import { Organization } from '@renderer/common/models'
 import { OrganizationForm } from './form'
 import { OrganizationTable } from './table'
 import { defaultValues } from './config'
 import { organizationQueryKeys } from './config'
-import { toast } from '@/common/hooks'
-import { useConfirm } from '@/common/features/confirm'
+import { toast } from 'react-toastify'
+import { useConfirm } from '@renderer/common/features/confirm'
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { useParentId } from './hooks'
@@ -53,9 +52,7 @@ const UpdateOrganizationDrawer = () => {
     mutationKey: [organizationQueryKeys.update],
     mutationFn: organizationService.update,
     onSuccess() {
-      toast({
-        title: 'Организация успешно обновлена'
-      })
+      toast.success('Организация успешно обновлена')
       queryClient.invalidateQueries({
         queryKey: [organizationQueryKeys.getAll]
       })
@@ -64,11 +61,7 @@ const UpdateOrganizationDrawer = () => {
       })
     },
     onError(error) {
-      toast({
-        variant: 'destructive',
-        title: 'Не удалось обновить организацию',
-        description: error.message
-      })
+      toast.error('Не удалось обновить организацию: ' + error.message)
     }
   })
 
@@ -81,11 +74,7 @@ const UpdateOrganizationDrawer = () => {
 
   useEffect(() => {
     if (error) {
-      toast({
-        variant: 'destructive',
-        title: 'Не удалось загрузить организацию',
-        description: error.message
-      })
+      toast.error('Не удалось загрузить организацию: ' + error.message)
     }
   }, [error])
 
@@ -176,10 +165,7 @@ const UpdateOrganizationDrawer = () => {
               }
             />
           </div>
-          <ScrollArea
-            type="auto"
-            className="col-span-8 border-l relative h-full"
-          >
+          <div className="col-span-8 border-l relative h-full overflow-auto scrollbar">
             {isFetching ? <LoadingOverlay /> : null}
             <OrganizationTable
               data={organization?.data.childs ?? []}
@@ -196,8 +182,7 @@ const UpdateOrganizationDrawer = () => {
                 Добавить
               </Button>
             </div>
-            <ScrollBar orientation="horizontal" />
-          </ScrollArea>
+          </div>
         </div>
       </DrawerContent>
     </Drawer>

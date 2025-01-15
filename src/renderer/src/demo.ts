@@ -16,6 +16,13 @@ const response = {
       group_number: '1'
     },
     {
+      id: 1559,
+      smeta_name: 'Pul shaklidagi ish haqi',
+      smeta_number: '4111000',
+      father_smeta_name: '1.1.1.0',
+      group_number: '1'
+    },
+    {
       id: 1560,
       smeta_name: 'Pul shaklidagi ish haqi',
       smeta_number: '4111000',
@@ -227,8 +234,11 @@ const treeFromArray = (list: (Smeta & { _included?: boolean })[]) => {
     }
   })
 
-  const findChildren = (parent: TreeNode): TreeNode => {
-    const nodes = normalized.filter((item) => arrayStartsWith(item._levels, parent._levels))
+  const findChildren = (parent: TreeNode) => {
+    const nodes = normalized.filter(
+      (item) =>
+        arrayStartsWith(item._levels, parent._levels) && item._levels.length > parent._levels.length
+    )
 
     nodes.forEach(findChildren)
 
@@ -240,10 +250,7 @@ const treeFromArray = (list: (Smeta & { _included?: boolean })[]) => {
       return false
     })
 
-    return {
-      ...parent,
-      children
-    }
+    parent.children = children
   }
 
   const nodes = normalized.filter((item) => {
@@ -254,11 +261,10 @@ const treeFromArray = (list: (Smeta & { _included?: boolean })[]) => {
     return false
   })
 
-  const tree = nodes.map(findChildren)
+  nodes.forEach(findChildren)
+  nodes.push(...normalized.filter((item) => !item._included))
 
-  tree.push(...normalized.filter((item) => !item._included))
-
-  console.log(tree)
-
-  return tree
+  return nodes
 }
+
+treeFromArray(response.data)

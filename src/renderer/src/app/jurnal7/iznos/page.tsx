@@ -62,7 +62,7 @@ const IznosPage = () => {
           />
         </div>
       </ListView.Header>
-      <div className="whitespace-nowrap !overflow-scroll w-full">
+      <div className="relative">
         {isFetching && <LoadingOverlay />}
         <GenericTable
           columns={columns}

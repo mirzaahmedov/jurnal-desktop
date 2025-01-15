@@ -2,6 +2,7 @@ import type { APIEndpoints, CRUDService } from '@/common/features/crud'
 
 import type { ColumnDef } from '@/common/components'
 import type { ComponentType } from 'react'
+import type { DialogProps } from '@radix-ui/react-dialog'
 import { create } from 'zustand'
 
 export type FilterComponentProps<
@@ -12,46 +13,49 @@ export type FilterComponentProps<
   setValue(name: K, value: undefined | string): void
 }
 
-export type SpravochnikDataType<T extends Record<string, unknown>> = {
+export type SpravochnikDialogProps = DialogProps & { params: undefined | Record<string, unknown> }
+export type SpravochnikTableProps<T extends Record<string, unknown>> = {
+  data: T[]
+  columns: ColumnDef<T>[]
+  selectedRowId?: string
+  onClickRow(row: T): void
+}
+
+export type SpravochnikData<T extends Record<string, unknown>> = {
+  id: string
   endpoint: APIEndpoints
   title?: string
   service: CRUDService<T>
+  selectId?: (id: number, data: T) => void
+  onClose?: () => void
+  queryKeys?: {
+    getAll: string
+    getById: string
+  }
   columns: ColumnDef<T>[]
   params?: Record<string, unknown>
   filters?: ComponentType<FilterComponentProps>[]
   defaultFilters?: Record<string, unknown>
   search?: boolean
-  CustomTable?: (props: {
-    data: T[]
-    columns: ColumnDef<T>[]
-    selectedRowId?: string
-    onClickRow(row: T): void
-  }) => JSX.Element
+  Dialog?: ComponentType<SpravochnikDialogProps>
+  CustomTable?: ComponentType<SpravochnikTableProps<T>>
 }
-export type SpravochnikStoreType<T extends Record<string, unknown>> = {
-  isOpen: boolean
-  setOpen: (open: boolean) => void
-  open(): void
-  close(): void
-
-  selectId?: (id: number, data: T) => void
-  spravochnikId?: string
-  setSelectId: (onSelect: undefined | ((id: number, data: T) => void)) => void
-  setSpravochnikId: (spravochnikId?: string) => void
-
-  data: null | SpravochnikDataType<T>
-  setSpravochnik: (data: null | SpravochnikDataType<T>) => void
+export type SpravochnikStore<T extends Record<string, unknown>> = {
+  isOpen: (id: string) => boolean
+  open(spravochnik: SpravochnikData<T>): void
+  close(id: string): void
+  spravochniks: SpravochnikData<T>[]
 }
 
-export const useSpravochnikStore = create<SpravochnikStoreType<any>>((set) => ({
-  isOpen: false,
-  setOpen: (open) => set({ isOpen: open, data: null }),
-  open: () => set({ isOpen: true }),
-  close: () => set({ isOpen: false, data: null }),
+export const useSpravochnikStore = create<SpravochnikStore<any>>((set, get) => ({
+  isOpen: (id) => get().spravochniks.some((s) => s.id === id),
+  open: (data) => {
+    if (get().isOpen(data.id)) {
+      return
+    }
+    set({ spravochniks: [...get().spravochniks, data] })
+  },
+  close: (id) => set({ spravochniks: get().spravochniks.filter((s) => s.id !== id) }),
 
-  setSelectId: (onSelect) => set({ selectId: onSelect }),
-  setSpravochnikId: (spravochnikId) => set({ spravochnikId }),
-
-  data: null,
-  setSpravochnik: (data) => set({ data })
+  spravochniks: []
 }))

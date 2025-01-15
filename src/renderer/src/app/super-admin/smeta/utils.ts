@@ -26,7 +26,7 @@ const treeFromArray = (list: (Smeta & { _included?: boolean })[]) => {
     }
   })
 
-  const findChildren = (parent: TreeNode): TreeNode => {
+  const findChildren = (parent: TreeNode) => {
     const nodes = normalized.filter(
       (item) =>
         arrayStartsWith(item._levels, parent._levels) && item._levels.length > parent._levels.length
@@ -42,10 +42,7 @@ const treeFromArray = (list: (Smeta & { _included?: boolean })[]) => {
       return false
     })
 
-    return {
-      ...parent,
-      children
-    }
+    parent.children = children
   }
 
   const nodes = normalized.filter((item) => {
@@ -56,11 +53,10 @@ const treeFromArray = (list: (Smeta & { _included?: boolean })[]) => {
     return false
   })
 
-  const tree = nodes.map(findChildren)
+  nodes.forEach(findChildren)
+  nodes.push(...normalized.filter((item) => !item._included))
 
-  tree.push(...normalized.filter((item) => !item._included))
-
-  return tree
+  return nodes
 }
 
 export { treeFromArray }

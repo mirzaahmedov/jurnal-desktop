@@ -14,7 +14,6 @@ import { Table, TableBody, TableHeader } from '@renderer/common/components/ui/ta
 import { Button } from '@renderer/common/components/ui/button'
 import type { ColumnDef } from './types'
 import { cn } from '@renderer/common/lib/utils'
-import styles from './styles.module.css'
 
 export type CollapsibleTableProps<T> = {
   data: T[]
@@ -97,7 +96,6 @@ const CollapsibleItem = <T extends { id: number; children: T[] }>({
       <GenericTableRow
         key={row.id}
         className={cn(
-          styles.Nested_row,
           'even:bg-transparent even:hover:bg-transparent odd:bg-transparent hover:bg-transparent'
         )}
         onClick={() => onClickRow?.(row)}

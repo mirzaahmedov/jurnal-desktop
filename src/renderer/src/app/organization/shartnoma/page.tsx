@@ -30,7 +30,9 @@ const ShartnomaPage = () => {
   const orgSpravochnik = useSpravochnik(
     createOrganizationSpravochnik({
       value: orgId,
-      onChange: (id) => setOrgId(id)
+      onChange: (id) => {
+        setOrgId(id)
+      }
     })
   )
 
@@ -40,7 +42,7 @@ const ShartnomaPage = () => {
       {
         search,
         budjet_id,
-        organization: orgSpravochnik.selected?.id,
+        organization: orgId ? Number(orgId) : undefined,
         ...pagination
       }
     ],

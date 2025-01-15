@@ -5,7 +5,8 @@ import {
   TableBody,
   TableCaption,
   TableFooter,
-  TableHeader
+  TableHeader,
+  type TableProps
 } from '@/common/components/ui/table'
 import { Button } from '@/common/components/ui/button'
 import { Pencil, Trash2 } from 'lucide-react'
@@ -26,18 +27,19 @@ export type ColumnDef<T extends Record<string, unknown>> = {
 }
 
 export type GenericTableProps<T extends Record<string, unknown>> =
-  TableHTMLAttributes<HTMLTableElement> & {
-    caption?: string
-    data: T[]
-    columns: ColumnDef<T>[]
-    placeholder?: string
-    getRowId?(row: T): string | number
-    onClickRow?(row: T): void
-    onDelete?(row: T): void
-    onEdit?(row: T): void
-    selectedRowId?: string | number
-    footer?: ReactNode
-  }
+  TableHTMLAttributes<HTMLTableElement> &
+    TableProps & {
+      caption?: string
+      data: T[]
+      columns: ColumnDef<T>[]
+      placeholder?: string
+      getRowId?(row: T): string | number
+      onClickRow?(row: T): void
+      onDelete?(row: T): void
+      onEdit?(row: T): void
+      selectedRowId?: string | number
+      footer?: ReactNode
+    }
 export const GenericTable = <T extends Record<string, unknown>>({
   caption,
   data,

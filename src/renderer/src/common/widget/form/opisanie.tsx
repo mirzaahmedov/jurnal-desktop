@@ -1,6 +1,5 @@
-import type { FormEditableFieldsComponent } from './types'
 import type { Control } from 'react-hook-form'
-
+import type { FormEditableFieldsComponent } from './types'
 import { FormElement } from '@/common/components/form'
 import { FormField } from '@/common/components/ui/form'
 import { Textarea } from '@/common/components/ui/textarea'

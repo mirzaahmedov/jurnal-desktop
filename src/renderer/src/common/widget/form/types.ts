@@ -34,13 +34,14 @@ type FormEditableFieldsComponentProps<T extends FieldValues> = Omit<
 > & {
   tabIndex?: number
   disabled?: boolean
+  dialog?: boolean
   name?: string
   form: UseFormReturn<T>
   containerProps?: HTMLAttributes<HTMLDivElement>
 }
 type FormEditableFieldsComponent<
   TypeRequired extends FieldValues,
-  TProps extends Record<string, unknown>
+  TProps extends Record<string, unknown> = {}
 > = <TypePayload extends TypeRequired>(
   props: FormEditableFieldsComponentProps<TypePayload> & TProps
 ) => JSX.Element
@@ -54,7 +55,9 @@ type FormSpravochnikFieldsComponentProps<T> = Omit<FieldsetProps, 'name'> & {
   disabled?: boolean
   error?: FieldError
   name?: string
+  dialog?: boolean
   spravochnik: UseSpravochnikReturn<T>
+  containerProps?: HTMLAttributes<HTMLDivElement>
 }
 type FormSpravochnikFieldsComponent<
   T extends Record<string, unknown>,

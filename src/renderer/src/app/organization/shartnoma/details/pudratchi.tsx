@@ -3,11 +3,15 @@ import { FormControl, FormField, FormItem, FormLabel } from '@renderer/common/co
 import type { Control } from 'react-hook-form'
 import { Fieldset } from '@renderer/common/components'
 import type { FormEditableFieldsComponent } from '@renderer/common/widget/form'
-import type { ShartnomaForm } from '../service'
+import type { ShartnomaFormValues } from '../service'
 import { Switch } from '@renderer/common/components/ui/switch'
 import { cn } from '@renderer/common/lib/utils'
 
-const PudratchiFields: FormEditableFieldsComponent<ShartnomaForm> = ({ form, name, ...props }) => {
+const PudratchiFields: FormEditableFieldsComponent<ShartnomaFormValues> = ({
+  form,
+  name,
+  ...props
+}) => {
   return (
     <Fieldset
       {...props}
@@ -16,7 +20,7 @@ const PudratchiFields: FormEditableFieldsComponent<ShartnomaForm> = ({ form, nam
       <div className="flex items-start gap-5">
         <FormField
           name="pudratchi_bool"
-          control={form.control as unknown as Control<ShartnomaForm>}
+          control={form.control as unknown as Control<ShartnomaFormValues>}
           render={({ field }) => (
             <FormItem className="flex items-center gap-5">
               <FormLabel className={cn('transition-colors', field.value && 'text-slate-400')}>

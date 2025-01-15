@@ -1,4 +1,4 @@
-import type { ShartnomaForm } from './service'
+import type { ShartnomaFormValues } from './service'
 
 export const shartnomaQueryKeys = {
   getById: 'shartnoma',
@@ -8,7 +8,7 @@ export const shartnomaQueryKeys = {
   delete: 'shartnoma/delete'
 }
 
-export const defaultValues: ShartnomaForm = {
+export const defaultValues: ShartnomaFormValues = {
   spravochnik_organization_id: 0,
   doc_num: '',
   doc_date: '',

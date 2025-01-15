@@ -6,6 +6,7 @@ import type { FormEditableFieldsComponent } from './types'
 import { FormElement } from '@/common/components/form'
 import { FormField } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
+import { cn } from '@renderer/common/lib/utils'
 import { validateDate } from '@renderer/common/lib/date'
 
 type RequiredDocumentFields = {
@@ -19,10 +20,20 @@ const DocumentFields: FormEditableFieldsComponent<
     validateDocDate?: (value: string) => boolean
     calendarProps?: CalendarProps
   }
-> = ({ tabIndex, name, form, disabled, validateDocDate, calendarProps, ...props }) => {
+> = ({
+  tabIndex,
+  name,
+  form,
+  disabled,
+  dialog = false,
+  validateDocDate,
+  calendarProps,
+  ...props
+}) => {
   return (
     <Fieldset
       {...props}
+      className={cn(dialog && 'p-0 pb-5', props.className)}
       name={name ?? 'Документ'}
     >
       <div className="flex items-center gap-5 flex-wrap">
@@ -33,6 +44,7 @@ const DocumentFields: FormEditableFieldsComponent<
             <FormElement
               label="Документ №"
               className="flex-1 max-w-xs"
+              direction={dialog ? 'column' : 'row'}
             >
               <Input
                 autoFocus
@@ -48,7 +60,10 @@ const DocumentFields: FormEditableFieldsComponent<
           name="doc_date"
           control={form.control as unknown as Control<RequiredDocumentFields>}
           render={({ field }) => (
-            <FormElement label="Дата проводки">
+            <FormElement
+              label="Дата проводки"
+              direction={dialog ? 'column' : 'row'}
+            >
               <DatePicker
                 tabIndex={tabIndex}
                 disabled={disabled}

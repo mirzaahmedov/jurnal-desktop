@@ -7,13 +7,17 @@ import { Button } from '@/common/components/ui/button'
 import type { KeyboardEvent } from 'react'
 import Paginate from 'react-paginate'
 import { ScrollArea } from '@renderer/common/components/ui/scroll-area'
-import type { SpravochnikStoreType } from './store'
+import type { SpravochnikData } from './store'
 import { extendObject } from '@/common/lib/utils'
 import { normalizeEmptyFields } from '@/common/lib/validation'
 import { useQuery } from '@tanstack/react-query'
-import { useSpravochnikStore } from './store'
+import { useToggle } from '@renderer/common/hooks'
 
-export const Spravochnik = () => {
+type SpravochnikProps = {
+  close: (id: string) => void
+  spravochnik: SpravochnikData<{ id: number }>
+}
+export const Spravochnik = ({ close, spravochnik }: SpravochnikProps) => {
   const timer = useRef<NodeJS.Timeout | null>(null)
 
   const [page, setPage] = useState<number>(1)
@@ -21,17 +25,13 @@ export const Spravochnik = () => {
   const [queryParams, setQueryParams] = useState<Record<string, unknown>>({})
   const [selected, setSelected] = useState<{ id: number } | undefined>(undefined)
 
-  const {
-    isOpen,
-    setOpen,
-    close,
-    selectId,
-    data: spravochnik
-  } = useSpravochnikStore() as SpravochnikStoreType<{ id: number }>
+  const dialogToggle = useToggle()
+
+  const queryKey = spravochnik?.queryKeys?.getAll ?? spravochnik?.endpoint ?? 'spravochnik'
 
   const { data, error, isFetching } = useQuery({
     queryKey: [
-      spravochnik?.endpoint ?? 'spravochnik',
+      queryKey,
       extendObject(
         {
           page,
@@ -43,8 +43,7 @@ export const Spravochnik = () => {
     ],
     queryFn: spravochnik?.service.getAll,
     refetchOnMount: false,
-    refetchOnWindowFocus: false,
-    enabled: isOpen
+    refetchOnWindowFocus: false
   })
 
   useEffect(() => {
@@ -63,12 +62,6 @@ export const Spravochnik = () => {
     }
   }, [values])
   useEffect(() => {
-    if (!isOpen) {
-      setPage(1)
-      setValues({})
-    }
-  }, [isOpen])
-  useEffect(() => {
     if (data?.data && data.data.length > 0) {
       setSelected(data.data[0])
     }
@@ -85,20 +78,17 @@ export const Spravochnik = () => {
   }
 
   const handleKeyDown = (e: KeyboardEvent) => {
-    if (!isOpen) {
-      return
-    }
     switch (e.key) {
       case 'Escape':
-        close()
+        close(spravochnik.id)
         return
       case 'Enter':
         e.preventDefault()
         e.stopPropagation()
         if (selected) {
-          selectId?.(selected.id, selected)
+          spravochnik.selectId?.(selected.id, selected)
         }
-        close()
+        close(spravochnik.id)
         return
       case 'ArrowDown':
         const currentIndex = data?.data?.findIndex((item) => item.id === selected?.id)
@@ -125,100 +115,123 @@ export const Spravochnik = () => {
   }
 
   const CustomTable = spravochnik?.CustomTable
+  const CustomDialog = spravochnik?.Dialog
 
   return (
-    <Dialog
-      open={isOpen}
-      onOpenChange={setOpen}
-    >
-      <DialogContent
-        className="max-w-screen-2xl w-full p-0 gap-0 h-3/5 overflow-auto flex flex-col"
-        onKeyDown={handleKeyDown}
+    <>
+      {CustomDialog ? (
+        <CustomDialog
+          open={dialogToggle.isOpen}
+          onOpenChange={dialogToggle.setOpen}
+          params={spravochnik.params}
+        />
+      ) : null}
+      <Dialog
+        defaultOpen
+        onOpenChange={(open) => {
+          if (!open) {
+            close(spravochnik.id)
+            spravochnik.onClose?.()
+          }
+        }}
       >
-        {isFetching ? <LoadingOverlay /> : null}
-        <DialogHeader className="flex-0 p-5 flex items-center flex-row">
-          <DialogTitle>{spravochnik?.title}</DialogTitle>
-          <div className="flex-1 flex items-center gap-5 px-10">
-            {spravochnik?.filters?.map((FilterComponent, id) => (
-              <FilterComponent
-                key={id}
-                getValue={getValue}
-                setValue={setValue}
-              />
-            ))}
-          </div>
-        </DialogHeader>
-        {error ? (
-          <div className="w-full h-full flex flex-col items-center justify-center gap-1">
-            <h3 className="text-xl">Не удалось получить данные :(</h3>
-            <p className="text-sm text-slate-500">{error?.message}</p>
-          </div>
-        ) : Array.isArray(spravochnik?.columns) ? (
-          <>
-            <ScrollArea className="flex-1">
-              {CustomTable ? (
-                <CustomTable
-                  data={data?.data ?? []}
-                  columns={spravochnik.columns}
-                  selectedRowId={String(selected?.id)}
-                  onClickRow={(row) => {
-                    selectId?.(row.id, row)
-                    close()
-                  }}
+        <DialogContent
+          className="max-w-screen-2xl w-full p-0 gap-0 h-3/5 overflow-auto flex flex-col"
+          onKeyDown={handleKeyDown}
+        >
+          {isFetching ? <LoadingOverlay /> : null}
+          <DialogHeader className="flex-0 p-5 flex items-center flex-row">
+            <DialogTitle>{spravochnik?.title}</DialogTitle>
+
+            <div className="flex-1 flex items-center gap-5 px-10">
+              {spravochnik?.filters?.map((FilterComponent, id) => (
+                <FilterComponent
+                  key={id}
+                  getValue={getValue}
+                  setValue={setValue}
                 />
-              ) : (
-                <GenericTable
-                  data={data?.data ?? []}
-                  columns={spravochnik?.columns}
-                  getRowId={(row) => String(row.id)}
-                  selectedRowId={String(selected?.id)}
-                  onClickRow={(row) => {
-                    selectId?.(row.id, row)
-                    close()
-                  }}
-                />
-              )}
-            </ScrollArea>
-            <div className="flex-0 p-5">
-              {data?.meta?.pageCount ? (
-                <Paginate
-                  className="flex gap-4"
-                  pageRangeDisplayed={2}
-                  breakLabel="..."
-                  forcePage={page - 1}
-                  onPageChange={({ selected }) => setPage(selected + 1)}
-                  pageLabelBuilder={(item) => (
-                    <Button
-                      variant={page === item ? 'outline' : 'ghost'}
-                      size="icon"
-                    >
-                      {item}
-                    </Button>
-                  )}
-                  nextLabel={
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                    >
-                      <ArrowRight className="btn-icon !ml-0" />
-                    </Button>
-                  }
-                  previousLabel={
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                    >
-                      <ArrowLeft className="btn-icon !ml-0" />
-                    </Button>
-                  }
-                  pageCount={data?.meta?.pageCount ?? 0}
-                  renderOnZeroPageCount={null}
-                />
+              ))}
+              {CustomDialog ? (
+                <>
+                  <Button onClick={dialogToggle.open}>Добавить</Button>
+                </>
               ) : null}
             </div>
-          </>
-        ) : null}
-      </DialogContent>
-    </Dialog>
+          </DialogHeader>
+          {error ? (
+            <div className="w-full h-full flex flex-col items-center justify-center gap-1">
+              <h3 className="text-xl">Не удалось получить данные :(</h3>
+              <p className="text-sm text-slate-500">{error?.message}</p>
+            </div>
+          ) : Array.isArray(spravochnik?.columns) ? (
+            <>
+              <ScrollArea className="flex-1">
+                {CustomTable ? (
+                  <CustomTable
+                    data={data?.data ?? []}
+                    columns={spravochnik.columns}
+                    selectedRowId={String(selected?.id)}
+                    onClickRow={(row) => {
+                      spravochnik.selectId?.(row.id, row)
+                      close(spravochnik.id)
+                      spravochnik.onClose?.()
+                    }}
+                  />
+                ) : (
+                  <GenericTable
+                    data={data?.data ?? []}
+                    columns={spravochnik?.columns}
+                    getRowId={(row) => String(row.id)}
+                    selectedRowId={String(selected?.id)}
+                    onClickRow={(row) => {
+                      spravochnik.selectId?.(row.id, row)
+                      close(spravochnik.id)
+                      spravochnik.onClose?.()
+                    }}
+                  />
+                )}
+              </ScrollArea>
+              <div className="flex-0 p-5">
+                {data?.meta?.pageCount ? (
+                  <Paginate
+                    className="flex gap-4"
+                    pageRangeDisplayed={2}
+                    breakLabel="..."
+                    forcePage={page - 1}
+                    onPageChange={({ selected }) => setPage(selected + 1)}
+                    pageLabelBuilder={(item) => (
+                      <Button
+                        variant={page === item ? 'outline' : 'ghost'}
+                        size="icon"
+                      >
+                        {item}
+                      </Button>
+                    )}
+                    nextLabel={
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                      >
+                        <ArrowRight className="btn-icon !ml-0" />
+                      </Button>
+                    }
+                    previousLabel={
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                      >
+                        <ArrowLeft className="btn-icon !ml-0" />
+                      </Button>
+                    }
+                    pageCount={data?.meta?.pageCount ?? 0}
+                    renderOnZeroPageCount={null}
+                  />
+                ) : null}
+              </div>
+            </>
+          ) : null}
+        </DialogContent>
+      </Dialog>
+    </>
   )
 }

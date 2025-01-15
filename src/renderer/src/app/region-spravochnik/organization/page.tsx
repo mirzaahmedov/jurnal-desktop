@@ -4,6 +4,7 @@ import { usePagination, useToggle } from '@/common/hooks'
 
 import { CreateOrganizationDialog } from './create-dialog'
 import { ListView } from '@/common/views'
+import { LoadingOverlay } from '@renderer/common/components'
 import { Organization } from '@/common/models'
 import { OrganizationTable } from './table'
 import { UpdateOrganizationDrawer } from './update-drawer'
@@ -23,7 +24,7 @@ const OrganizationPage = () => {
   const pagination = usePagination()
   const queryClient = useQueryClient()
 
-  const { data: orgList, isFetching } = useQuery({
+  const { data: organizations, isFetching } = useQuery({
     queryKey: [
       organizationQueryKeys.getAll,
       {
@@ -63,24 +64,25 @@ const OrganizationPage = () => {
   }
 
   return (
-    <ListView>
-      <ListView.Content loading={isFetching || isPending}>
+    <ListView className="relative">
+      <div className="flex-1 overflow-auto scrollbar">
+        {isFetching || isPending ? <LoadingOverlay /> : null}
         <OrganizationTable
-          data={orgList?.data ?? []}
+          data={organizations?.data ?? []}
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}
         />
-      </ListView.Content>
+      </div>
       <ListView.Footer>
         <ListView.Pagination
           {...pagination}
-          pageCount={orgList?.meta.pageCount ?? 0}
+          pageCount={organizations?.meta.pageCount ?? 0}
         />
       </ListView.Footer>
       <UpdateOrganizationDrawer />
       <CreateOrganizationDialog
         open={dialogToggle.isOpen}
-        onChangeOpen={dialogToggle.setOpen}
+        onOpenChange={dialogToggle.setOpen}
       />
     </ListView>
   )

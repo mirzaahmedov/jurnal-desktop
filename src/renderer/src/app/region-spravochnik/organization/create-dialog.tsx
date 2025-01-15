@@ -10,18 +10,15 @@ import { defaultValues, organizationQueryKeys } from './config'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { Button } from '@/common/components/ui/button'
+import { DialogProps } from '@radix-ui/react-dialog'
 import { OrganizationForm } from './form'
-import { toast } from '@/common/hooks'
+import { toast } from 'react-toastify'
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 
-type OrganizationCreateDialogProps = {
-  open: boolean
-  onChangeOpen(value: boolean): void
-}
-const CreateOrganizationDialog = (props: OrganizationCreateDialogProps) => {
-  const { open, onChangeOpen } = props
+const CreateOrganizationDialog = (props: DialogProps) => {
+  const { open, onOpenChange } = props
 
   const queryClient = useQueryClient()
   const form = useForm({
@@ -33,9 +30,7 @@ const CreateOrganizationDialog = (props: OrganizationCreateDialogProps) => {
     mutationKey: [organizationQueryKeys.create],
     mutationFn: organizationService.create,
     onSuccess() {
-      toast({
-        title: 'Организация успешно создана'
-      })
+      toast.success('Организация успешно создана')
       form.reset(defaultValues)
       queryClient.invalidateQueries({
         queryKey: [organizationQueryKeys.getAll]
@@ -43,14 +38,10 @@ const CreateOrganizationDialog = (props: OrganizationCreateDialogProps) => {
       queryClient.invalidateQueries({
         queryKey: [organizationQueryKeys.getById]
       })
-      onChangeOpen(false)
+      onOpenChange?.(false)
     },
     onError(error) {
-      toast({
-        variant: 'destructive',
-        title: 'Не удалось создать организацию',
-        description: error.message
-      })
+      toast.error('Не удалось создать организацию: ' + error.message)
     }
   })
 
@@ -65,7 +56,7 @@ const CreateOrganizationDialog = (props: OrganizationCreateDialogProps) => {
   return (
     <Dialog
       open={open}
-      onOpenChange={onChangeOpen}
+      onOpenChange={onOpenChange}
     >
       <DialogContent className="max-w-xl">
         <DialogHeader>

@@ -1,13 +1,13 @@
-import type { ShartnomaForm } from '../service'
-import type { FormEditableFieldsComponent } from '@/common/widget/form'
-import type { Control } from 'react-hook-form'
-
-import { Fieldset } from '@/common/components'
 import { FormControl, FormField, FormItem, FormLabel } from '@/common/components/ui/form'
+
+import type { Control } from 'react-hook-form'
+import { Fieldset } from '@/common/components'
+import type { FormEditableFieldsComponent } from '@/common/widget/form'
+import type { ShartnomaFormValues } from '../service'
 import { Switch } from '@/common/components/ui/switch'
 import { cn } from '@/common/lib/utils'
 
-const ShartnomaKindFields: FormEditableFieldsComponent<ShartnomaForm> = ({
+const ShartnomaKindFields: FormEditableFieldsComponent<ShartnomaFormValues> = ({
   form,
   name,
   ...props
@@ -20,7 +20,7 @@ const ShartnomaKindFields: FormEditableFieldsComponent<ShartnomaForm> = ({
       <div className="flex items-start gap-5">
         <FormField
           name="yillik_oylik"
-          control={form.control as unknown as Control<ShartnomaForm>}
+          control={form.control as unknown as Control<ShartnomaFormValues>}
           render={({ field }) => (
             <FormItem className="flex items-center gap-5">
               <FormLabel className={cn('transition-colors', field.value && 'text-slate-400')}>

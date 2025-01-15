@@ -13,7 +13,6 @@ const OrganizationTable = ({
       data={data ?? []}
       columns={organizationColumns}
       getRowId={(row) => row.id}
-      className="min-w-0"
     />
   )
 }

@@ -1,36 +1,21 @@
-import type { APIEndpoints, CRUDService } from '@/common/features/crud'
-import type { ComponentType, RefObject } from 'react'
-import type { FilterComponentProps, SpravochnikStoreType } from './store'
+import type { SpravochnikData, SpravochnikStore } from './store'
 import { useCallback, useEffect, useId, useLayoutEffect, useRef, useState } from 'react'
 
-import type { ColumnDef } from '@/common/components'
+import type { RefObject } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { useSpravochnikStore } from './store'
 
-type SpravochnikHookCallbacksType<T> = {
+type SpravochnikHookCallbacks<T> = {
   onChange?: (id: number, data?: T) => void
   onClose?: () => void
 }
 
-export type SpravochnikHookOptions<T extends { id: number }> = SpravochnikHookCallbacksType<T> & {
-  endpoint: APIEndpoints
-  value?: number
-  title?: string
-  columns: ColumnDef<T>[]
-  service: CRUDService<T, any>
-  enabled?: boolean
-  params?: Record<string, unknown>
-  includeParamsInGetById?: boolean
-  filters?: ComponentType<FilterComponentProps>[]
-  defaultFilters?: Record<string, unknown>
-  search?: boolean
-  CustomTable?: (props: {
-    data: T[]
-    columns: ColumnDef<T>[]
-    selectedRowId?: string
-    onClickRow(row: T): void
-  }) => JSX.Element
-}
+export type SpravochnikHookOptions<T extends { id: number }> = SpravochnikHookCallbacks<T> &
+  Omit<SpravochnikData<T>, 'id'> & {
+    value?: number
+    enabled?: boolean
+    includeParamsInGetById?: boolean
+  }
 
 export type UseSpravochnikReturn<T> = {
   selected: T | undefined
@@ -47,23 +32,19 @@ export const useSpravochnik = <T extends { id: number }>(
   const id = useId()
 
   const inputRef = useRef<HTMLInputElement>(null)
-  const isInitialMount = useRef(true)
-  const callbacksRef = useRef<SpravochnikHookCallbacksType<T>>({
+  const callbacksRef = useRef<SpravochnikHookCallbacks<T>>({
     onChange: options.onChange,
     onClose: options.onClose
   })
 
   const [selectedId, setSelectedId] = useState<undefined | number>()
 
-  const { isOpen, open, close, setSpravochnik, setSelectId, spravochnikId, setSpravochnikId } =
-    useSpravochnikStore() as SpravochnikStoreType<T>
+  const { isOpen, open, close } = useSpravochnikStore() as SpravochnikStore<T>
+
+  const queryKey = options.queryKeys?.getAll ?? options.endpoint ?? 'spravochnik/id'
 
   const { data: selected, isLoading: loading } = useQuery({
-    queryKey: [
-      options.endpoint,
-      selectedId,
-      options.includeParamsInGetById ? options.params : undefined
-    ],
+    queryKey: [queryKey, selectedId, options.includeParamsInGetById ? options.params : undefined],
     queryFn: options.service.getById,
     enabled: !!selectedId,
     placeholderData: undefined,
@@ -85,20 +66,12 @@ export const useSpravochnik = <T extends { id: number }>(
     setSelectedId(options.value)
   }, [options.value])
 
-  useEffect(() => {
-    if (!isOpen && !isInitialMount.current && id === spravochnikId) {
-      callbacksRef.current.onClose?.()
-      inputRef.current?.focus()
-      setSpravochnikId()
-    }
-    isInitialMount.current = false
-  }, [id, spravochnikId, isOpen, setSpravochnikId])
-
   const handleOpenDialog = useCallback(() => {
     if (!options.service || !options.columns) {
       return
     }
-    setSpravochnik({
+    open({
+      id,
       title: options.title ?? 'Выберите',
       endpoint: options.endpoint,
       filters: options.filters,
@@ -106,19 +79,21 @@ export const useSpravochnik = <T extends { id: number }>(
       params: options.params,
       columns: options.columns,
       service: options.service,
-      CustomTable: options.CustomTable
+      queryKeys: options.queryKeys,
+      onClose: () => {
+        callbacksRef.current.onClose?.()
+        inputRef.current?.focus()
+      },
+      selectId: (selectedId, values) => {
+        setSelectedId(selectedId)
+        callbacksRef.current?.onChange?.(selectedId, values)
+        close(id)
+      },
+      CustomTable: options.CustomTable,
+      Dialog: options.Dialog
     })
-    setSelectId((id, data) => {
-      setSelectedId(id)
-      callbacksRef.current?.onChange?.(id, data)
-      close()
-    })
-    setSpravochnikId(id)
-
-    open()
   }, [
     id,
-    setSpravochnikId,
     options.columns,
     options.service,
     options.title,
@@ -126,10 +101,10 @@ export const useSpravochnik = <T extends { id: number }>(
     options.filters,
     options.params,
     options.CustomTable,
+    options.Dialog,
+    options.queryKeys,
     open,
-    close,
-    setSpravochnik,
-    setSelectId
+    close
   ])
 
   const handleClearState = useCallback(() => {
@@ -140,7 +115,7 @@ export const useSpravochnik = <T extends { id: number }>(
   return {
     selected: selected?.data,
     loading,
-    isOpen,
+    isOpen: isOpen(id),
     inputRef,
     open: handleOpenDialog,
     clear: handleClearState

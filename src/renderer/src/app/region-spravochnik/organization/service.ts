@@ -7,6 +7,8 @@ import { withPreprocessor } from '@/common/lib/validation'
 import { SpravochnikSearchField } from '@/common/features/search'
 import { extendObject } from '@/common/lib/utils'
 import { organizationColumns } from './columns'
+import { CreateOrganizationDialog } from './create-dialog'
+import { organizationQueryKeys } from './config'
 
 export const OrganizationFormSchema = withPreprocessor(
   z.object({
@@ -35,7 +37,9 @@ export const createOrganizationSpravochnik = (
       endpoint: APIEndpoints.organization,
       columns: organizationColumns,
       service: organizationService,
-      filters: [SpravochnikSearchField]
+      filters: [SpravochnikSearchField],
+      Dialog: CreateOrganizationDialog,
+      queryKeys: organizationQueryKeys
     } satisfies typeof config,
     config
   )
