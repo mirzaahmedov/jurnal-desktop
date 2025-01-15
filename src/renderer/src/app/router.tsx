@@ -19,7 +19,6 @@ import BankRasxodDetailsPage from './bank/rasxod/details/page'
 import BankRasxodPage from './bank/rasxod/page'
 import BankSpravochnikPage from './super-admin/bank/page'
 import BudgetPage from './super-admin/budjet/page'
-import ContractDetailsPage from './organization/shartnoma/details/page'
 import ExpensesDetailsPage from './real-expenses/real-expenses/details/page'
 import ExpensesPage from './real-expenses/real-expenses/page'
 import ExpensesReportDetailsPage from './real-expenses/report/details/page'
@@ -66,6 +65,7 @@ import { RequisitesGuard } from '@renderer/common/features/requisites'
 import ResponsiblePage from './jurnal7/responsible/page'
 import RolePage from './super-admin/role/page'
 import type { RouteObject } from 'react-router-dom'
+import ShartnomaDetailsPage from './organization/shartnoma/details/page'
 import ShartnomaGrafikDetailsPage from './organization/shartnoma-grafik/details/page'
 import ShartnomaGrafikPage from './organization/shartnoma-grafik/page'
 import ShartnomaPage from './organization/shartnoma/page'
@@ -101,7 +101,7 @@ export const routes: RouteObject[] = [
           },
           {
             path: 'shartnoma/:id',
-            element: <ContractDetailsPage />
+            element: <ShartnomaDetailsPage />
           },
           {
             path: 'shartnoma-grafik',

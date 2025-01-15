@@ -79,6 +79,8 @@ const ShartnomaPage = () => {
       : undefined
   })
 
+  console.log(window.location.search, { orgId })
+
   return (
     <ListView>
       <ListView.Header>

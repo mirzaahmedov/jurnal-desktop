@@ -8,7 +8,7 @@ import { ShartnomaFormSchema, shartnomaService } from '../service'
 import { defaultValues, shartnomaQueryKeys } from '../constants'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
-import { DetailsView } from '@renderer/common/views'
+import { Button } from '@renderer/common/components/ui/button'
 import { Form } from '@renderer/common/components/ui/form'
 import { PudratchiFields } from './pudratchi'
 import { Shartnoma } from '@renderer/common/models'
@@ -140,13 +140,6 @@ export const ShartnomaForm = ({
   })
 
   useEffect(() => {
-    if (!organization) {
-      toast.error('Выберите организацию')
-      return
-    }
-  }, [toast, organization])
-
-  useEffect(() => {
     if (!selected) {
       form.reset(defaultValues)
       return
@@ -192,15 +185,26 @@ export const ShartnomaForm = ({
             <OpisanieFields form={form} />
           </div>
 
-          <div className="grid grid-cols-2 gap-10">
-            <PudratchiFields form={form} />
-            <ShartnomaKindFields form={form} />
+          <div className={cn('grid grid-cols-2 gap-10', dialog && 'gap-20')}>
+            <PudratchiFields
+              form={form}
+              className={dialog ? 'p-0' : undefined}
+            />
+            <ShartnomaKindFields
+              form={form}
+              className={dialog ? 'p-0' : undefined}
+            />
           </div>
         </div>
 
-        <DetailsView.Footer className="left-0">
-          <DetailsView.Create disabled={isCreating || isUpdating} />
-        </DetailsView.Footer>
+        <div className={cn('p-5', dialog && 'p-0 pt-5')}>
+          <Button
+            type="submit"
+            disabled={isCreating || isUpdating}
+          >
+            {selected ? 'Обновить' : 'Создать'}
+          </Button>
+        </div>
       </form>
     </Form>
   )

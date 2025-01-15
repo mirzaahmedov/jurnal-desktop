@@ -1,6 +1,5 @@
 import { DatePicker, Fieldset, NumericInput } from '@/common/components'
 import { Form, FormControl, FormField, FormItem, FormLabel } from '@/common/components/ui/form'
-import { Navigate, useNavigate, useParams } from 'react-router-dom'
 import { ShartnomaGrafikFormSchema, shartnomaGrafikDetailsService } from '../service'
 import { defaultValues, shartnomaGrafikQueryKeys } from '../constants'
 import { mainSchetQueryKeys, mainSchetService } from '@renderer/app/region-spravochnik/main-schet'
@@ -11,6 +10,7 @@ import {
 } from '@renderer/app/region-spravochnik/organization'
 import { useEffect, useMemo } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useNavigate, useParams } from 'react-router-dom'
 
 import { Button } from '@/common/components/ui/button'
 import { DetailsView } from '@/common/views'
@@ -21,18 +21,16 @@ import { Input } from '@/common/components/ui/input'
 import { Textarea } from '@/common/components/ui/textarea'
 import { formatNumber } from '@/common/lib/format'
 import { monthNames } from '@/common/data/month'
+import { toast } from 'react-toastify'
 import { useForm } from 'react-hook-form'
 import { useLayout } from '@/common/features/layout'
 import { useOrgId } from '../hooks'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
-import { useToast } from '@/common/hooks/use-toast'
 import { useToggle } from '@/common/hooks/use-toggle'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 const ShartnomaGrafikDetailsPage = () => {
   const [orgId] = useOrgId()
-
-  const { toast } = useToast()
 
   const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
   const id = useParams().id as string
@@ -69,7 +67,7 @@ const ShartnomaGrafikDetailsPage = () => {
     mutationKey: [shartnomaGrafikQueryKeys.update],
     mutationFn: shartnomaGrafikDetailsService.update,
     onSuccess() {
-      toast({ title: 'Документ успешно обновлен' })
+      toast.success('Документ успешно обновлен')
 
       queryClient.invalidateQueries({
         queryKey: [shartnomaGrafikQueryKeys.getAll]
@@ -81,7 +79,7 @@ const ShartnomaGrafikDetailsPage = () => {
       navigate(`/organization/shartnoma-grafik?org_id=${orgId}`)
     },
     onError(error) {
-      toast({ title: error.message, variant: 'destructive' })
+      toast.error('Произошла ошибка при обновлении документа: ' + error.message)
     }
   })
 
@@ -91,16 +89,6 @@ const ShartnomaGrafikDetailsPage = () => {
       ...payload
     })
   })
-
-  useEffect(() => {
-    if (!orgId) {
-      toast({
-        title: 'Выберите организацию',
-        variant: 'destructive'
-      })
-      return
-    }
-  }, [toast, orgId])
 
   useEffect(() => {
     if (!shartnomaGrafik?.data) {
@@ -134,13 +122,20 @@ const ShartnomaGrafikDetailsPage = () => {
   useLayout({
     title: 'Обновить график договора',
     onBack() {
-      navigate(-1)
+      navigate(`/organization/shartnoma-grafik?org_id=${orgId}`)
     }
   })
 
-  return !orgId ? (
-    <Navigate to="/organization/shartnoma-grafik" />
-  ) : (
+  useEffect(() => {
+    if (!orgId) {
+      toast.error('Выберите организацию')
+      navigate(`/organization/shartnoma-grafik`)
+    }
+  }, [orgId])
+
+  console.log('shartnoma-grafik-details', { href: window.location.href, orgId })
+
+  return (
     <DetailsView>
       <DetailsView.Content loading={isFetching}>
         <Form {...form}>

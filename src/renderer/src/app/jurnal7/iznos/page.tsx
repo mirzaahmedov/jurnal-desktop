@@ -62,7 +62,7 @@ const IznosPage = () => {
           />
         </div>
       </ListView.Header>
-      <div className="relative">
+      <div className="relative overflow-auto scrollbar">
         {isFetching && <LoadingOverlay />}
         <GenericTable
           columns={columns}
