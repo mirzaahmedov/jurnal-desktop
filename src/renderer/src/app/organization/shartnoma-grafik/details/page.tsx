@@ -133,7 +133,7 @@ const ShartnomaGrafikDetailsPage = () => {
     }
   }, [orgId])
 
-  console.log('shartnoma-grafik-details', { href: window.location.href, orgId })
+  console.log('rendering shartnoma-grafik details')
 
   return (
     <DetailsView>

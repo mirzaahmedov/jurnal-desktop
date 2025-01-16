@@ -37,7 +37,7 @@ const ShartnomaDetailsPage = () => {
     }
   }, [orgId])
 
-  console.log('shartnoma-details', { href: window.location.href, orgId })
+  console.log('rendering details page')
 
   useLayout({
     title: 'Договор',

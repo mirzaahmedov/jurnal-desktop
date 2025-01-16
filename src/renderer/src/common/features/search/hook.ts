@@ -1,10 +1,9 @@
-import { parseAsString, useQueryState } from 'nuqs'
+import { useSearchParams } from 'react-router-dom'
 
 export const useSearch = () => {
-  const [search, setSearch] = useQueryState('search', parseAsString.withDefault(''))
+  const [searchParams] = useSearchParams()
 
   return {
-    search: search || undefined,
-    setSearch
+    search: searchParams.get('search') || undefined
   }
 }

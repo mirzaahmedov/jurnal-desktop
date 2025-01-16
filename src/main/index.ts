@@ -1,16 +1,10 @@
-import { BrowserWindow, app, ipcMain, session, shell } from 'electron'
+import { BrowserWindow, app, ipcMain, shell } from 'electron'
 import { electronApp, is, optimizer } from '@electron-toolkit/utils'
 
 import { NsisUpdater } from 'electron-updater'
 import { events } from './auto-updater'
 import icon from '@resources/icon.png?asset'
 import { join } from 'path'
-import os from 'os'
-
-const reactDevToolsPath = join(
-  os.homedir(),
-  'AppData/Local/Google/Chrome/User Data/Default/Extensions/fmkadmapgofadopljbjfkapdkoienihi/6.0.1_0'
-)
 
 const url =
   import.meta.env.VITE_MODE === 'staging' ? 'http://10.50.0.140:4006' : 'http://10.50.0.140:4005'
@@ -35,8 +29,6 @@ function createWindow(): void {
   })
 
   mainWindow.on('ready-to-show', async () => {
-    await session.defaultSession.loadExtension(reactDevToolsPath)
-
     mainWindow.show()
     mainWindow.maximize()
 

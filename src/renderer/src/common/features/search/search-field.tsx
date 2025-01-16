@@ -5,33 +5,38 @@ import { Input } from '@/common/components/ui/input'
 import { Search } from 'lucide-react'
 import { cn } from '@/common/lib/utils'
 import { usePagination } from '@/common/components'
-import { useSearch } from './hook'
+import { useSearchParams } from 'react-router-dom'
 
 export type SearchFieldProps = HTMLAttributes<HTMLDivElement>
 export const SearchField = (props: SearchFieldProps) => {
   const { className, ...rest } = props
 
-  const timeout = useRef<null | NodeJS.Timeout>(null)
   const [interim, setInterim] = useState('')
 
-  const { setSearch } = useSearch()
+  const [, setSearchParams] = useSearchParams()
   const { currentPage, setCurrentPage } = usePagination()
+
+  const timeout = useRef<null | NodeJS.Timeout>(null)
+  const callbackRef = useRef((value: string) => {
+    const params = new URLSearchParams(window.location.search)
+    params.set('search', value)
+    setSearchParams(params)
+  })
 
   useEffect(() => {
     if (timeout.current) {
       clearTimeout(timeout.current)
     }
-
     timeout.current = setTimeout(() => {
-      setSearch(interim)
-    }, 300)
-
+      callbackRef.current(interim)
+    }, 1000)
+    const timer = timeout.current
     return () => {
-      if (timeout.current) {
-        clearTimeout(timeout.current)
+      if (timer) {
+        clearTimeout(timer)
       }
     }
-  }, [setSearch, interim])
+  }, [interim])
 
   return (
     <div

@@ -7,8 +7,6 @@ export const SpravochnikProvider = () => {
     id: number
   }>
 
-  console.log(spravochniks)
-
   return spravochniks.map((spravochnik) => {
     return (
       <Spravochnik

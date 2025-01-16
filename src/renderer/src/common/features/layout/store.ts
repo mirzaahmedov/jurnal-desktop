@@ -13,7 +13,13 @@ type LayoutStore = Layout & {
 }
 const useLayoutStore = create<LayoutStore>((set) => ({
   title: '',
-  setLayout: (state) => set(state)
+  setLayout: ({ title, content, onCreate, onBack }) =>
+    set({
+      title,
+      content,
+      onCreate,
+      onBack
+    })
 }))
 
 type UseLayoutParams = {

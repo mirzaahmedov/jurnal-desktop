@@ -58,7 +58,7 @@ export const PageLayout = (props: PageLayoutProps) => {
           <h1 className="text-xl">{title}</h1>
         </div>
         <div className="flex-1 flex items-center">
-          <div className="flex-1">{Content && <Content />}</div>
+          <div className="flex-1">{Content && <Content key={pathname} />}</div>
           <div>
             {typeof onCreate === 'function' ? (
               <Button onClick={onCreate}>

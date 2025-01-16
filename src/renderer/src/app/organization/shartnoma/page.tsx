@@ -9,7 +9,8 @@ import { shartnomaColumns } from './columns'
 import { shartnomaQueryKeys } from './constants'
 import { shartnomaService } from './service'
 import { useConfirm } from '@/common/features/confirm'
-import { useLayout } from '@/common/features/layout'
+import { useEffect } from 'react'
+import { useLayoutStore } from '@/common/features/layout'
 import { useNavigate } from 'react-router-dom'
 import { useOrgId } from './hooks'
 import { usePagination } from '@/common/hooks'
@@ -21,6 +22,7 @@ const ShartnomaPage = () => {
 
   const { confirm } = useConfirm()
   const { search } = useSearch()
+  const { setLayout } = useLayoutStore()
 
   const pagination = usePagination()
   const navigate = useNavigate()
@@ -69,17 +71,17 @@ const ShartnomaPage = () => {
     })
   }
 
-  useLayout({
-    title: 'Договоры',
-    content: SearchField,
-    onCreate: orgSpravochnik.selected?.id
-      ? () => {
-          navigate(`create?org_id=${orgSpravochnik.selected?.id}`)
-        }
-      : undefined
-  })
-
-  console.log(window.location.search, { orgId })
+  useEffect(() => {
+    setLayout({
+      title: 'Договоры',
+      content: SearchField,
+      onCreate: orgSpravochnik.selected?.id
+        ? () => {
+            navigate(`create?org_id=${orgSpravochnik.selected?.id}`)
+          }
+        : undefined
+    })
+  }, [setLayout, navigate, orgSpravochnik.selected?.id])
 
   return (
     <ListView>
