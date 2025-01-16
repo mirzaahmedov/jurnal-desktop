@@ -1,8 +1,8 @@
-import { GenericTable, LoadingOverlay } from '@renderer/common/components'
 import { SearchField, useSearch } from '@renderer/common/features/search'
 import { usePagination, useToggle } from '@renderer/common/hooks'
 
 import { EditIznosDialog } from './edit-dialog'
+import { GenericTable } from '@renderer/common/components'
 import { Iznos } from '@renderer/common/models'
 import { ListView } from '@renderer/common/views'
 import { MonthPicker } from '@renderer/common/components/month-picker'
@@ -39,7 +39,8 @@ const IznosPage = () => {
   })
 
   useLayout({
-    title: 'Износ'
+    title: 'Износ',
+    content: SearchField
   })
 
   const handleEdit = (row: Iznos) => {
@@ -51,7 +52,6 @@ const IznosPage = () => {
     <ListView>
       <ListView.Header>
         <div className="flex items-center">
-          <SearchField className="px-0 w-full max-w-sm justify-start [&>input]:w-full" />
           <MonthPicker
             value={year && month ? `${year}-${month}-01` : ''}
             onChange={(date) => {
@@ -62,8 +62,10 @@ const IznosPage = () => {
           />
         </div>
       </ListView.Header>
-      <div className="relative overflow-auto scrollbar">
-        {isFetching && <LoadingOverlay />}
+      <ListView.Content
+        loading={isFetching}
+        className="relative overflow-auto scrollbar"
+      >
         <GenericTable
           columns={columns}
           data={iznosList?.data ?? []}
@@ -75,7 +77,7 @@ const IznosPage = () => {
           open={dialogToggle.isOpen}
           onOpenChange={dialogToggle.setOpen}
         />
-      </div>
+      </ListView.Content>
       <ListView.Footer>
         <ListView.Pagination
           {...pagination}

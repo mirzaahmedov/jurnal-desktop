@@ -1,28 +1,26 @@
-import { ChooseOrganization, GenericTable } from '@/common/components'
-import { SearchField, useSearch } from '@/common/features/search'
+import { ChooseOrganization, GenericTable } from '@renderer/common/components'
+import { SearchField, useSearch } from '@renderer/common/features/search'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
-import { ListView } from '@/common/views'
-import type { Shartnoma } from '@/common/models'
+import { ListView } from '@renderer/common/views'
+import type { Shartnoma } from '@renderer/common/models'
 import { createOrganizationSpravochnik } from '@renderer/app/region-spravochnik/organization'
 import { shartnomaColumns } from './columns'
 import { shartnomaQueryKeys } from './constants'
 import { shartnomaService } from './service'
-import { useConfirm } from '@/common/features/confirm'
-import { useEffect } from 'react'
-import { useLayoutStore } from '@/common/features/layout'
+import { useConfirm } from '@renderer/common/features/confirm'
+import { useLayout } from '@renderer/common/features/layout'
 import { useNavigate } from 'react-router-dom'
 import { useOrgId } from './hooks'
-import { usePagination } from '@/common/hooks'
+import { usePagination } from '@renderer/common/hooks'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
-import { useSpravochnik } from '@/common/features/spravochnik'
+import { useSpravochnik } from '@renderer/common/features/spravochnik'
 
 const ShartnomaPage = () => {
   const [orgId, setOrgId] = useOrgId()
 
   const { confirm } = useConfirm()
   const { search } = useSearch()
-  const { setLayout } = useLayoutStore()
 
   const pagination = usePagination()
   const navigate = useNavigate()
@@ -71,17 +69,15 @@ const ShartnomaPage = () => {
     })
   }
 
-  useEffect(() => {
-    setLayout({
-      title: 'Договоры',
-      content: SearchField,
-      onCreate: orgSpravochnik.selected?.id
-        ? () => {
-            navigate(`create?org_id=${orgSpravochnik.selected?.id}`)
-          }
-        : undefined
-    })
-  }, [setLayout, navigate, orgSpravochnik.selected?.id])
+  useLayout({
+    title: 'Договоры',
+    content: SearchField,
+    onCreate: orgSpravochnik.selected?.id
+      ? () => {
+          navigate(`create?org_id=${orgSpravochnik.selected?.id}`)
+        }
+      : undefined
+  })
 
   return (
     <ListView>

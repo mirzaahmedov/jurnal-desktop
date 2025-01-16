@@ -1,7 +1,7 @@
 import { APIEndpoints, CRUDService } from '@/common/features/crud'
 import { PrixodFormType, queryKeys } from './config'
+import { UseMutationOptions, useMutation, useQuery } from '@tanstack/react-query'
 import { budjet, main_schet } from '@/common/features/crud/middleware'
-import { useMutation, useQuery } from '@tanstack/react-query'
 
 import type { MO7Prixod } from '@/common/models'
 
@@ -30,10 +30,7 @@ const usePrixodGet = (id: number) => {
   })
 }
 
-type UsePrixodParams = {
-  onSuccess?: () => void
-  onError?: () => void
-}
+type UsePrixodParams = Pick<UseMutationOptions<any, Error, any>, 'onSuccess' | 'onError'>
 const usePrixodCreate = ({ onSuccess, onError }: UsePrixodParams) => {
   return useMutation({
     mutationKey: [queryKeys.create],

@@ -11,18 +11,33 @@ import {
   CollapsibleTableProps
 } from '@renderer/common/components/collapsible-table'
 import { useMemo } from 'react'
-import { treeFromArray } from './utils'
+import {
+  buildTreeFromArray,
+  sortElementsByLevels,
+  type TreeNode
+} from '@renderer/common/lib/data-structure'
 import { SmetaGroupFilter } from './group-filter'
 
 export const smetaService = new CRUDService<Smeta, SmetaForm>({
   endpoint: APIEndpoints.smeta
 })
 
-export const SmetaTable = ({ data, columns, ...props }: CollapsibleTableProps<any>) => {
-  const nested = useMemo(() => treeFromArray(data), [data])
+type SmetaTableProps = Omit<CollapsibleTableProps<TreeNode<Smeta>>, 'data'> & {
+  data: Smeta[]
+}
+export const SmetaTable = ({ data, columns, ...props }: SmetaTableProps) => {
+  const treeData = useMemo(
+    () =>
+      buildTreeFromArray(
+        data,
+        (smeta) => smeta.father_smeta_name,
+        (array) => array.sort(sortElementsByLevels)
+      ),
+    [data]
+  )
   return (
     <CollapsibleTable
-      data={nested}
+      data={treeData}
       columns={columns}
       {...props}
     />

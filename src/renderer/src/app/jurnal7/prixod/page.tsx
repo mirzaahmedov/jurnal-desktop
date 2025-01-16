@@ -4,7 +4,7 @@ import { usePrixodDelete, usePrixodList } from './service'
 
 import { ButtonGroup } from '@renderer/common/components/ui/button-group'
 import { DateRangeForm } from '../common/components/date-range-form'
-import { toast } from '@/common/hooks/use-toast'
+import { toast } from 'react-toastify'
 import { useConfirm } from '@/common/features/confirm'
 import { useJurnal7DateRange } from '../common/components/use-date-range'
 import { useLayout } from '@/common/features/layout'
@@ -25,15 +25,10 @@ const MO7PrixodPage = () => {
       queryClient.invalidateQueries({
         queryKey: [queryKeys.getAll]
       })
-      toast({
-        title: 'Приход успешно удален'
-      })
+      toast.success('Приход успешно удален')
     },
     onError() {
-      toast({
-        title: 'Ошибка при удалении прихода',
-        variant: 'destructive'
-      })
+      toast.error('Ошибка при удалении прихода')
     }
   })
   const { data: prixodList, isFetching } = usePrixodList({

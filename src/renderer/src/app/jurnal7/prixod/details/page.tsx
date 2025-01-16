@@ -7,8 +7,8 @@ import {
   ResponsibleFields,
   ShartnomaFields,
   SummaFields
-} from '@/common/widget/form'
-import { Operatsii, TypeSchetOperatsii } from '@/common/models'
+} from '@renderer/common/widget/form'
+import { Operatsii, TypeSchetOperatsii } from '@renderer/common/models'
 import { PrixodFormSchema, defaultValues, queryKeys } from '../config'
 import { parseDate, withinMonth } from '@renderer/common/lib/date'
 import { useEffect, useMemo, useRef } from 'react'
@@ -16,18 +16,18 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { usePrixodCreate, usePrixodGet, usePrixodUpdate } from '../service'
 
 import { DetailsView } from '@renderer/common/views'
-import { Form } from '@/common/components/ui/form'
+import { Form } from '@renderer/common/components/ui/form'
 import { ProvodkaTable } from './provodka-table'
 import { createOperatsiiSpravochnik } from '@/app/super-admin/operatsii'
 import { createOrganizationSpravochnik } from '@renderer/app/region-spravochnik/organization'
 import { createResponsibleSpravochnik } from '../../responsible/service'
 import { createShartnomaSpravochnik } from '@renderer/app/organization/shartnoma'
-import { toast } from '@/common/hooks/use-toast'
+import { toast } from 'react-toastify'
 import { useForm } from 'react-hook-form'
 import { useJurnal7DefaultsStore } from '../../common/features/defaults'
-import { useLayout } from '@/common/features/layout'
+import { useLayout } from '@renderer/common/features/layout'
 import { useQueryClient } from '@tanstack/react-query'
-import { useSpravochnik } from '@/common/features/spravochnik'
+import { useSpravochnik } from '@renderer/common/features/spravochnik'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 const MO7PrixodDetailsPage = () => {
@@ -42,36 +42,28 @@ const MO7PrixodDetailsPage = () => {
   const { data: prixod, isFetching } = usePrixodGet(Number(id))
   const { mutate: createPrixod, isPending: isCreating } = usePrixodCreate({
     onSuccess: () => {
-      toast({
-        title: 'Приход успешно создан'
-      })
+      toast.success('Приход успешно создан')
       navigate(-1)
       queryClient.invalidateQueries({
         queryKey: [queryKeys.getAll]
       })
     },
-    onError() {
-      toast({
-        title: 'Ошибка при создании прихода',
-        variant: 'destructive'
-      })
+    onError(error) {
+      console.log(error)
+      toast.error('Ошибка при создании прихода: ' + error.message)
     }
   })
   const { mutate: updatePrixod, isPending: isUpdating } = usePrixodUpdate({
     onSuccess() {
-      toast({
-        title: 'Приход успешно обновлен'
-      })
+      toast.success('Приход успешно обновлен')
       navigate(-1)
       queryClient.invalidateQueries({
         queryKey: [queryKeys.getAll]
       })
     },
-    onError() {
-      toast({
-        title: 'Ошибка при обновлении прихода',
-        variant: 'destructive'
-      })
+    onError(error) {
+      console.log(error)
+      toast.error('Ошибка при обновлении прихода: ' + error.message)
     }
   })
 

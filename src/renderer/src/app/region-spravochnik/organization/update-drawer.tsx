@@ -165,14 +165,16 @@ const UpdateOrganizationDrawer = () => {
               }
             />
           </div>
-          <div className="col-span-8 border-l relative h-full overflow-auto scrollbar">
-            {isFetching ? <LoadingOverlay /> : null}
-            <OrganizationTable
-              data={organization?.data.childs ?? []}
-              onEdit={handleEdit}
-              onDelete={handleDelete}
-            />
-            <div className="p-5 flex flex-row justify-end">
+          <div className="col-span-8 border-l h-full flex flex-col">
+            <div className="relative overflow-auto scrollbar flex-1">
+              {isFetching ? <LoadingOverlay /> : null}
+              <OrganizationTable
+                data={organization?.data.childs ?? []}
+                onEdit={handleEdit}
+                onDelete={handleDelete}
+              />
+            </div>
+            <div className="p-5 flex flex-row justify-start">
               <Button
                 onClick={() => {
                   orgSpravochnik.open()

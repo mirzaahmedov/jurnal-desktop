@@ -2,8 +2,6 @@ import type { HTMLAttributes } from 'react'
 import { LoadingOverlay } from '@/common/components'
 import { Pagination } from '@/common/components/pagination-alt'
 import { RangeDatePicker } from '@/common/components/range-date-picker'
-import { ScrollArea } from '@/common/components/ui/scroll-area'
-import type { ScrollAreaProps } from '@radix-ui/react-scroll-area'
 import { cn } from '@/common/lib/utils'
 
 type ListViewProps = HTMLAttributes<HTMLDivElement>
@@ -29,18 +27,18 @@ const ListViewHeader = ({ children, className, ...props }: HTMLAttributes<HTMLDi
   )
 }
 
-type ListViewContentProps = ScrollAreaProps & {
+type ListViewContentProps = HTMLAttributes<HTMLDivElement> & {
   loading: boolean
 }
 const ListViewContent = ({ loading, children, className, ...props }: ListViewContentProps) => {
   return (
-    <ScrollArea
-      className={cn('flex-1 relative', className)}
+    <div
+      className={cn('flex-1 relative overflow-auto scrollbar', className)}
       {...props}
     >
       {loading ? <LoadingOverlay /> : null}
       {children}
-    </ScrollArea>
+    </div>
   )
 }
 

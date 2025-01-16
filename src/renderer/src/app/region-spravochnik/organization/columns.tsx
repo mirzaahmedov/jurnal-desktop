@@ -25,7 +25,7 @@ export const organizationColumns: ColumnDef<Organization>[] = [
   {
     key: 'bank_klient',
     header: 'Название банка',
-    className: 'w-full max-w-80 break-all'
+    className: 'min-w-80 w-full break-all'
   },
   {
     key: 'raschet_schet',

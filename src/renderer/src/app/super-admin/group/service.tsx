@@ -6,7 +6,11 @@ import { APIEndpoints, CRUDService } from '@/common/features/crud'
 import { groupColumns } from './columns'
 import { extendObject } from '@/common/lib/utils'
 import { SpravochnikSearchField } from '@renderer/common/features/search'
-import { treeFromArray } from './utils'
+import {
+  buildTreeFromArray,
+  sortElementsByLevels,
+  type TreeNode
+} from '@renderer/common/lib/data-structure'
 import { useMemo } from 'react'
 import {
   CollapsibleTable,
@@ -17,11 +21,22 @@ export const groupService = new CRUDService<Group, GroupPayloadType>({
   endpoint: APIEndpoints.jur7_group
 })
 
-export const GroupTable = ({ data, ...props }: CollapsibleTableProps<any>) => {
-  const nested = useMemo(() => treeFromArray(data), [data])
+type GroupTableProps = Omit<CollapsibleTableProps<TreeNode<Group>>, 'data'> & {
+  data: Group[]
+}
+export const GroupTable = ({ data, ...props }: GroupTableProps) => {
+  const treeData = useMemo(
+    () =>
+      buildTreeFromArray(
+        data,
+        (group) => group.pod_group,
+        (array) => array.sort(sortElementsByLevels)
+      ),
+    [data]
+  )
   return (
     <CollapsibleTable
-      data={nested}
+      data={treeData}
       {...props}
     />
   )

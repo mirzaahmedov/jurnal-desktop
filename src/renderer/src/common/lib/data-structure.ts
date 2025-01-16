@@ -1,20 +1,21 @@
 import { arrayStartsWith, removeTrailingZeros } from '@renderer/common/lib/array'
 
-import type { Smeta } from '@renderer/common/models'
-
-type TreeNode = Smeta & {
+export type TreeNode<T> = T & {
   _levels: number[]
   _included?: boolean
-  children: TreeNode[]
+  children: TreeNode<T>[]
 }
+export type PreprocessFn = <T>(arrays: TreeNode<T>[]) => TreeNode<T>[]
 
-const treeFromArray = (list: (Smeta & { _included?: boolean })[]) => {
+export const buildTreeFromArray = <T extends Record<string, unknown>>(
+  array: T[],
+  acceccorFn: (item: T) => string,
+  ...preprocessors: PreprocessFn[]
+) => {
   let minLevel = Infinity
 
-  const normalized = list.map((item) => {
-    item._included = false
-
-    const levels = removeTrailingZeros(item.father_smeta_name).split('.').map(Number)
+  let normalized = array.map((item) => {
+    const levels = removeTrailingZeros(acceccorFn(item)).split('.').map(Number)
     if (levels.length < minLevel) {
       minLevel = levels.length
     }
@@ -22,11 +23,16 @@ const treeFromArray = (list: (Smeta & { _included?: boolean })[]) => {
     return {
       ...item,
       children: [],
-      _levels: levels
+      _levels: levels,
+      _included: false
     }
   })
 
-  const findChildren = (parent: TreeNode) => {
+  preprocessors.forEach((fn) => {
+    normalized = fn(normalized)
+  })
+
+  const findChildren = (parent: TreeNode<T>) => {
     const nodes = normalized.filter(
       (item) =>
         arrayStartsWith(item._levels, parent._levels) && item._levels.length > parent._levels.length
@@ -59,4 +65,15 @@ const treeFromArray = (list: (Smeta & { _included?: boolean })[]) => {
   return nodes
 }
 
-export { treeFromArray }
+export const sortElementsByLevels = (a: TreeNode<any>, b: TreeNode<any>) => {
+  const levelsA = a._levels
+  const levelsB = b._levels
+  const length = Math.min(levelsA.length, levelsB.length)
+  for (let i = 0; i < length; i++) {
+    if (levelsA[i] === levelsB[i]) {
+      continue
+    }
+    return levelsA[i] - levelsB[i]
+  }
+  return levelsA.length - levelsB.length
+}

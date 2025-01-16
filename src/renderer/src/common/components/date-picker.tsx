@@ -18,7 +18,7 @@ import type { InputProps } from './ui/input'
 import { PatternFormat } from 'react-number-format'
 import type { PatternFormatProps } from 'react-number-format'
 import { cn } from '@/common/lib/utils'
-import { toast } from '../hooks'
+import { toast } from 'react-toastify'
 import { useToggle } from '@/common/hooks/use-toggle'
 
 export type DatePickerProps = Omit<PatternFormatProps<InputProps>, 'format' | 'onChange'> & {
@@ -72,10 +72,7 @@ const DatePicker = forwardRef<HTMLButtonElement, DatePickerProps>(
         return
       }
       if (!validate(localeDateToISO(internalValue))) {
-        toast({
-          title: 'Неверный формат даты или дата не существует',
-          variant: 'destructive'
-        })
+        toast.error('Неверный формат даты или дата не существует')
         setInternalValue(formatValue(value ?? ''))
       }
     }
