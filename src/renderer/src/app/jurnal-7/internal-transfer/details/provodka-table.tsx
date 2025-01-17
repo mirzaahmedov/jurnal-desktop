@@ -4,7 +4,7 @@ import {
   EditableTableCell,
   EditableTableHead,
   EditableTableRow
-} from '@/common/features/editable-table'
+} from '@renderer/common/components/editable-table'
 import {
   InternalTransferChildFormSchema,
   InternalTransferChildFormType,

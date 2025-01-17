@@ -2,7 +2,7 @@ import { parseAsString, useQueryStates } from 'nuqs'
 
 import { useDefaultFilters } from '@renderer/common/features/app-defaults'
 import { useForm } from 'react-hook-form'
-import { useJurnal7DefaultsStore } from '@renderer/app/jurnal7/common/features/defaults'
+import { useJurnal7DefaultsStore } from '@renderer/app/jurnal-7/common/features/defaults'
 import { usePagination } from '@renderer/common/components'
 
 export const useJurnal7DateRange = () => {

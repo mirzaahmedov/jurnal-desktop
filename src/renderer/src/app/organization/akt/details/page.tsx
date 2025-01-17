@@ -17,7 +17,7 @@ import { queryKeys, defaultValues } from '../constants'
 import { normalizeEmptyFields } from '@renderer/common/lib/validation'
 import { useLayout } from '@renderer/common/features/layout'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
-import { EditableTable } from '@renderer/common/features/editable-table'
+import { EditableTable } from '@renderer/common/components/editable-table'
 import { podvodkaColumns } from './provodki'
 import {
   OperatsiiFields,
@@ -32,7 +32,7 @@ import {
   createEditorChangeHandler,
   createEditorCreateHandler,
   createEditorDeleteHandler
-} from '@renderer/common/features/editable-table/helpers'
+} from '@renderer/common/components/editable-table/helpers'
 import { DetailsView } from '@/common/views'
 
 const AktDetailsPage = () => {

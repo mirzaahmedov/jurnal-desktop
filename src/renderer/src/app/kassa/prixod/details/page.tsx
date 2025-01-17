@@ -6,12 +6,12 @@ import { Fieldset, GenerateDocumentButton } from '@/common/components'
 import { ButtonGroup } from '@/common/components/ui/button-group'
 import { Form } from '@/common/components/ui/form'
 import { APIEndpoints } from '@/common/features/crud'
-import { EditableTable } from '@/common/features/editable-table'
+import { EditableTable } from '@renderer/common/components/editable-table'
 import {
   createEditorChangeHandler,
   createEditorCreateHandler,
   createEditorDeleteHandler
-} from '@/common/features/editable-table/helpers'
+} from '@renderer/common/components/editable-table/helpers'
 import { useLayout } from '@/common/features/layout'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
 import { useSpravochnik } from '@/common/features/spravochnik'

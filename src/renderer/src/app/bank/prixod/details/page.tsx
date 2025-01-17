@@ -16,13 +16,13 @@ import { queryKeys, defaultValues } from '../constants'
 import { normalizeEmptyFields } from '@/common/lib/validation'
 import { useLayout } from '@/common/features/layout'
 import { mainSchetQueryKeys, mainSchetService } from '@/app/region-spravochnik/main-schet'
-import { EditableTable } from '@/common/features/editable-table'
+import { EditableTable } from '@renderer/common/components/editable-table'
 import { podvodkaColumns } from './podvodki'
 import {
   createEditorChangeHandler,
   createEditorCreateHandler,
   createEditorDeleteHandler
-} from '@/common/features/editable-table/helpers'
+} from '@renderer/common/components/editable-table/helpers'
 import {
   ShartnomaFields,
   DocumentFields,

@@ -16,7 +16,7 @@ import { getLatestPereotsenkaQuery, pereotsenkaCreateBatchQuery } from './servic
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 import { Button } from '@/common/components/ui/button'
-import { EditableTable } from '@/common/features/editable-table'
+import { EditableTable } from '@renderer/common/components/editable-table'
 import { FormElement } from '@/common/components/form'
 import { Input } from '@/common/components/ui/input'
 import { LoadingSpinner } from '@/common/components'

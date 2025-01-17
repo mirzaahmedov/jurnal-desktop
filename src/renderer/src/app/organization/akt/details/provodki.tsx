@@ -3,14 +3,14 @@ import {
   createPodrazdelenieEditor,
   createStaffEditor,
   createTypeOperatsiiEditor
-} from '@/common/features/editable-table/editors'
+} from '@renderer/common/components/editable-table/editors'
 
 import type { AktProvodkaForm } from '../service'
-import type { EditableColumnType } from '@/common/features/editable-table'
+import type { EditableColumnType } from '@renderer/common/components/editable-table'
 import { Input } from '@renderer/common/components/ui/input'
 import { TypeSchetOperatsii } from '@/common/models'
 import { cn } from '@renderer/common/lib/utils'
-import { createNumberEditor } from '@/common/features/editable-table/editors/number'
+import { createNumberEditor } from '@renderer/common/components/editable-table/editors/number'
 import { inputVariants } from '@renderer/common/components'
 
 export const podvodkaColumns: EditableColumnType<AktProvodkaForm>[] = [

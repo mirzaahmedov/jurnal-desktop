@@ -6,7 +6,7 @@ import {
   DialogTitle
 } from '@/common/components/ui/dialog'
 import { Form, FormField } from '@/common/components/ui/form'
-import { ResponsiblePayloadSchema, defaultValues, responsibleQueryKeys } from './constants'
+import { ResponsibleFormSchema, defaultValues, responsibleQueryKeys } from './constants'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { Button } from '@/common/components/ui/button'
@@ -33,7 +33,7 @@ const ResponsibleDialog = (props: ResponsibleDialogProps) => {
   const queryClient = useQueryClient()
   const form = useForm({
     defaultValues,
-    resolver: zodResolver(ResponsiblePayloadSchema)
+    resolver: zodResolver(ResponsibleFormSchema)
   })
 
   const subdivision7Spravochnik = useSpravochnik(

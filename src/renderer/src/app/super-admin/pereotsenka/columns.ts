@@ -1,9 +1,9 @@
-import type { ColumnDef } from '@/common/components'
-import type { EditableColumnType } from '@/common/features/editable-table'
 import type { Group, Pereotsenka } from '@/common/models'
 
-import { createTextEditor } from '@/common/features/editable-table/editors'
-import { createNumberEditor } from '@/common/features/editable-table/editors/number'
+import type { ColumnDef } from '@/common/components'
+import type { EditableColumnType } from '@renderer/common/components/editable-table'
+import { createNumberEditor } from '@renderer/common/components/editable-table/editors/number'
+import { createTextEditor } from '@renderer/common/components/editable-table/editors'
 
 const pereotsenkaColumns: ColumnDef<Pereotsenka>[] = [
   {

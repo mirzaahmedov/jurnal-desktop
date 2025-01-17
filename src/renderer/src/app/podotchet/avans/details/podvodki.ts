@@ -4,10 +4,10 @@ import {
   createStaffEditor,
   createSummaEditor,
   createTypeOperatsiiEditor
-} from '@/common/features/editable-table/editors'
+} from '@renderer/common/components/editable-table/editors'
 
 import type { AdvanceReportPodvodkaPayloadType } from '../constants'
-import type { EditableColumnType } from '@/common/features/editable-table'
+import type { EditableColumnType } from '@renderer/common/components/editable-table'
 import { TypeSchetOperatsii } from '@/common/models'
 
 export const podvodkaColumns: EditableColumnType<AdvanceReportPodvodkaPayloadType>[] = [

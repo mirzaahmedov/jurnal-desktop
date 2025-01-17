@@ -1,5 +1,5 @@
-import { z } from 'zod'
 import { withPreprocessor } from '@/common/lib/validation'
+import { z } from 'zod'
 
 export const responsibleQueryKeys = {
   getAll: 'responsible/all',
@@ -9,16 +9,16 @@ export const responsibleQueryKeys = {
   delete: 'responsible/delete'
 }
 
-export const ResponsiblePayloadSchema = withPreprocessor(
+export const ResponsibleFormSchema = withPreprocessor(
   z.object({
     fio: z.string(),
     spravochnik_podrazdelenie_jur7_id: z.number()
   })
 )
 
-export type ResponsiblePayloadType = z.infer<typeof ResponsiblePayloadSchema>
+export type ResponsibleFormValues = z.infer<typeof ResponsibleFormSchema>
 
-export const defaultValues: ResponsiblePayloadType = {
+export const defaultValues: ResponsibleFormValues = {
   fio: '',
   spravochnik_podrazdelenie_jur7_id: 0
 }

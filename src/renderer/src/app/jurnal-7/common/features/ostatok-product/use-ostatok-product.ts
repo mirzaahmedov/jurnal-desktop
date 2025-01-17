@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
 
-import { InternalTransferChildFormType } from '@renderer/app/jurnal7/internal-transfer/config'
+import { InternalTransferChildFormType } from '@renderer/app/jurnal-7/internal-transfer/config'
 import { Naimenovanie } from '@renderer/common/models'
-import { RasxodChildFormType } from '@renderer/app/jurnal7/rasxod/config'
+import { RasxodChildFormType } from '@renderer/app/jurnal-7/rasxod/config'
 import { createGroupSpravochnik } from '@renderer/app/super-admin/group/service'
-import { createOstatokProductSpravochnik } from '@renderer/app/jurnal7/ostatok'
+import { createOstatokProductSpravochnik } from '@renderer/app/jurnal-7/ostatok'
 import { useSpravochnik } from '@renderer/common/features/spravochnik'
 
 type UseOstatokProductParams = {

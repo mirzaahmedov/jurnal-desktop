@@ -30,13 +30,13 @@ import {
   SummaFields
 } from '@/common/widget/form'
 import { Fieldset } from '@/common/components'
-import { EditableTable } from '@/common/features/editable-table'
+import { EditableTable } from '@renderer/common/components/editable-table'
 import { podvodkaColumns } from './podvodki'
 import {
   createEditorChangeHandler,
   createEditorCreateHandler,
   createEditorDeleteHandler
-} from '@/common/features/editable-table/helpers'
+} from '@renderer/common/components/editable-table/helpers'
 
 import { DetailsView } from '@/common/views'
 

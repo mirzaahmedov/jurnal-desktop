@@ -22,7 +22,7 @@ import { normalizeEmptyFields } from '@/common/lib/validation'
 import { useLayout } from '@/common/features/layout'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
 import { createPodotchetSpravochnik } from '@/app/region-spravochnik/podotchet'
-import { EditableTable } from '@/common/features/editable-table'
+import { EditableTable } from '@renderer/common/components/editable-table'
 import { podvodkaColumns } from './podvodki'
 import {
   DocumentFields,
@@ -36,7 +36,7 @@ import {
   createEditorChangeHandler,
   createEditorCreateHandler,
   createEditorDeleteHandler
-} from '@/common/features/editable-table/helpers'
+} from '@renderer/common/components/editable-table/helpers'
 
 const AdvanceReportDetailsPage = () => {
   const { toast } = useToast()

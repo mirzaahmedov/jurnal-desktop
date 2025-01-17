@@ -2,7 +2,7 @@ import {
   EditableTable,
   EditableTableCell,
   EditableTableRow
-} from '@renderer/common/features/editable-table'
+} from '@renderer/common/components/editable-table'
 import { Fieldset, SelectField, inputVariants } from '@renderer/common/components'
 import { Form, FormField } from '@renderer/common/components/ui/form'
 import {
@@ -15,7 +15,7 @@ import {
   createEditorChangeHandler,
   createEditorCreateHandler,
   createEditorDeleteHandler
-} from '@renderer/common/features/editable-table/helpers'
+} from '@renderer/common/components/editable-table/helpers'
 import { useEffect, useMemo, useRef } from 'react'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'

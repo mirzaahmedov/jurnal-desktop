@@ -15,13 +15,13 @@ import { defaultValues, queryKeys } from '../constants'
 import { normalizeEmptyFields } from '@/common/lib/validation'
 import { useLayout } from '@/common/features/layout'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
-import { EditableTable } from '@/common/features/editable-table'
+import { EditableTable } from '@renderer/common/components/editable-table'
 import { podvodkaColumns } from './podvodki'
 import {
   createEditorChangeHandler,
   createEditorCreateHandler,
   createEditorDeleteHandler
-} from '@/common/features/editable-table/helpers'
+} from '@renderer/common/components/editable-table/helpers'
 import { DocumentFields, OpisanieFields, PodotchetFields, SummaFields } from '@/common/widget/form'
 import { kassaMonitorService, kassaMonitorQueryKeys } from '@renderer/app/kassa/monitor'
 import { formatDate } from '@/common/lib/date'

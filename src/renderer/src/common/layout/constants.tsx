@@ -44,7 +44,7 @@ import {
 import type { ComponentType, ReactNode } from 'react'
 
 import type { Access } from '@/common/models'
-import { ChangeJurnal7Defaults } from '@renderer/app/jurnal7/common/features/defaults/change-defaults'
+import { ChangeJurnal7Defaults } from '@renderer/app/jurnal-7/common/features/defaults/change-defaults'
 import { adminRoles } from '@renderer/app/super-admin/role'
 import { omitEmptyArrayElements } from '@/common/lib/validation'
 import { useAuthStore } from '@/common/features/auth'

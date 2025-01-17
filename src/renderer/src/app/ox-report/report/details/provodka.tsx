@@ -2,9 +2,9 @@ import { NumericInput, inputVariants } from '@renderer/common/components'
 import {
   createNumberEditor,
   createSmetaGrafikEditor
-} from '@/common/features/editable-table/editors'
+} from '@renderer/common/components/editable-table/editors'
 
-import type { EditableColumnType } from '@/common/features/editable-table'
+import type { EditableColumnType } from '@renderer/common/components/editable-table'
 import type { OXReportProvodka } from '../config'
 import { SmetaGrafik } from '@renderer/common/models'
 

@@ -10,7 +10,7 @@ import {
   EditableTableCell,
   EditableTableHead,
   EditableTableRow
-} from '@/common/features/editable-table'
+} from '@renderer/common/components/editable-table'
 import { Popover, PopoverContent, PopoverTrigger } from '@/common/components/ui/popover'
 import {
   PrixodChildFormSchema,
@@ -24,7 +24,7 @@ import { calcSena, calcSumma } from '@/common/lib/pricing'
 import {
   createNaimenovanieSpravochnik,
   naimenovanieService
-} from '@renderer/app/jurnal7/naimenovaniya/service'
+} from '@renderer/app/jurnal-7/naimenovaniya/service'
 import { useEffect, useRef, useState } from 'react'
 
 import { Button } from '@/common/components/ui/button'
@@ -34,7 +34,7 @@ import { Naimenovanie } from '@/common/models'
 import { UseFormReturn } from 'react-hook-form'
 import { cn } from '@/common/lib/utils'
 import { createGroupSpravochnik } from '@/app/super-admin/group/service'
-import { denominationQueryKeys } from '@renderer/app/jurnal7/naimenovaniya/constants'
+import { denominationQueryKeys } from '@renderer/app/jurnal-7/naimenovaniya/constants'
 import { useEventCallback } from '@/common/hooks/use-event-callback'
 import { useMutation } from '@tanstack/react-query'
 import { useRequisitesStore } from '@renderer/common/features/requisites'

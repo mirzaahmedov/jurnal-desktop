@@ -7,13 +7,13 @@ import {
   TableFooter,
   TableHeader,
   type TableProps
-} from '@/common/components/ui/table'
-import { Button } from '@/common/components/ui/button'
+} from '@renderer/common/components/ui/table'
+import { Button } from '@renderer/common/components/ui/button'
 import { Pencil, Trash2 } from 'lucide-react'
-import { formatNumber } from '@/common/lib/format'
+import { formatNumber } from '@renderer/common/lib/format'
 import { GenericTableCell, GenericTableHead, GenericTableRow } from './components'
-import type { Autocomplete } from '@/common/lib/types'
-import { cn } from '@/common/lib/utils'
+import type { Autocomplete } from '@renderer/common/lib/types'
+import { cn } from '@renderer/common/lib/utils'
 
 export type ColumnDef<T extends Record<string, unknown>> = {
   numeric?: boolean
@@ -150,7 +150,6 @@ export const GenericTable = <T extends Record<string, unknown>>({
               {Array.isArray(columnDefs)
                 ? columnDefs.map((col) => {
                     const { key, fit, stretch, numeric, renderCell, className } = col
-                    console.log(col, key, key.toString())
                     return (
                       <GenericTableCell
                         key={key.toString()}
