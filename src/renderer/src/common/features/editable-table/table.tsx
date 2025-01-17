@@ -53,7 +53,7 @@ export const EditableTable = <T extends Record<string, unknown>>(props: Editable
       onFocus={(e) => {
         e.target.scrollIntoView({
           behavior: 'smooth',
-          block: 'start'
+          block: 'nearest'
         })
       }}
     >

@@ -2,6 +2,7 @@ import type { Ostatok, OstatokProduct } from '@renderer/common/models/ostatok'
 import { formatLocaleDate, formatNumber } from '@renderer/common/lib/format'
 
 import type { ColumnDef } from '@renderer/common/components'
+import { HeaderGroup } from '@renderer/common/components/generic-table/table'
 
 export const ostatokColumns: ColumnDef<Ostatok>[] = [
   {
@@ -69,6 +70,98 @@ export const ostatokColumns: ColumnDef<Ostatok>[] = [
     header: 'Дата прихода',
     renderCell: (row) => formatLocaleDate(row.prixod_data?.doc_date)
   }
+]
+
+export const ostatokHeaderGroups: HeaderGroup<Ostatok>[][] = [
+  [
+    {
+      key: 'naimenovanie_tovarov_jur7_id',
+      header: 'Код товара',
+      rowSpan: 2
+    },
+    {
+      key: 'naimenovanie_tovarov',
+      header: 'Наименование товара',
+      rowSpan: 2
+    },
+    {
+      key: 'edin',
+      header: 'Един.',
+      rowSpan: 2
+    },
+    {
+      key: 'from',
+      header: 'Начало',
+      colSpan: 2,
+      headerClassName: 'text-center'
+    },
+    {
+      key: 'internal.prixod',
+      header: 'Приход',
+      colSpan: 2,
+      headerClassName: 'text-center'
+    },
+    {
+      key: 'internal.rasxod',
+      header: 'Расход',
+      colSpan: 2,
+      headerClassName: 'text-center'
+    },
+    {
+      key: 'to',
+      header: 'Конец',
+      colSpan: 2,
+      headerClassName: 'text-center'
+    },
+    {
+      key: 'prixod_data',
+      rowSpan: 2,
+      header: 'Дата прихода'
+    }
+  ],
+  [
+    {
+      numeric: true,
+      key: 'from.kol',
+      header: 'Кол.'
+    },
+    {
+      numeric: true,
+      key: 'from.summa',
+      header: 'Сумма'
+    },
+    {
+      numeric: true,
+      key: 'internal.prixod.kol',
+      header: 'Кол.'
+    },
+    {
+      numeric: true,
+      key: 'internal.prixod.summa',
+      header: 'Сумма'
+    },
+    {
+      numeric: true,
+      key: 'internal.rasxod.kol',
+      header: 'Кол.'
+    },
+    {
+      numeric: true,
+      key: 'internal.rasxod.summa',
+      header: 'Сумма'
+    },
+    {
+      numeric: true,
+      key: 'to.kol',
+      header: 'Кол.'
+    },
+    {
+      numeric: true,
+      key: 'to.summa',
+      header: 'Сумма',
+      headerClassName: 'last:border-solid'
+    }
+  ]
 ]
 
 export const ostatokProductColumns: ColumnDef<OstatokProduct>[] = [

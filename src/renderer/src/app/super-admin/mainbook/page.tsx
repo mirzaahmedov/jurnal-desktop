@@ -30,7 +30,7 @@ const AdminMainbookPage = () => {
     <ListView>
       <ListView.Content loading={isFetching}>
         <GenericTable
-          columns={columns}
+          columnDefs={columns}
           data={reports?.data ?? []}
           onEdit={handleEdit}
         />

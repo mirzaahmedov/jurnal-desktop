@@ -78,7 +78,7 @@ const AktPage = () => {
       <ListView.Content loading={isFetching || isPending}>
         <GenericTable
           data={aktList?.data ?? []}
-          columns={columns}
+          columnDefs={columns}
           getRowId={(row) => row.id}
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}

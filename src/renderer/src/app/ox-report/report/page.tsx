@@ -75,7 +75,7 @@ const OXReportPage = () => {
     <ListView>
       <ListView.Content loading={isFetching || isPending}>
         <GenericTable
-          columns={oxReportColumns}
+          columnDefs={oxReportColumns}
           data={reportList?.data ?? []}
           onEdit={handleEdit}
           onDelete={handleDelete}

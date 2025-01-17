@@ -36,7 +36,7 @@ const AccessPage = () => {
         onOpenChange={toggle.setOpen}
       />
       <GenericTable
-        columns={roleColumns}
+        columnDefs={roleColumns}
         data={roleList?.data ?? []}
         onEdit={(role) => {
           setRoleId(role.id)

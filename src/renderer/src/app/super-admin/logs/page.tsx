@@ -28,7 +28,7 @@ const Logs = () => {
       <ListView.Content loading={isFetching}>
         <GenericTable
           data={logList?.data ?? []}
-          columns={logColumns}
+          columnDefs={logColumns}
         />
       </ListView.Content>
     </ListView>

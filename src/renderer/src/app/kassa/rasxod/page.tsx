@@ -70,7 +70,7 @@ const KassaRasxodPage = () => {
       <ListView.Content loading={isFetching || isPending}>
         <GenericTable
           data={rasxodList?.data ?? []}
-          columns={columns}
+          columnDefs={columns}
           getRowId={(row) => row.id}
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}

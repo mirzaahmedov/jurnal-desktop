@@ -1,12 +1,16 @@
-import { DownloadDocumentButton, GenericTable, SpravochnikInput } from '@renderer/common/components'
+import {
+  ChooseSpravochnik,
+  DownloadDocumentButton,
+  GenericTable
+} from '@renderer/common/components'
 import { formatDate, getFirstDayOfMonth, getLastDayOfMonth } from '@renderer/common/lib/date'
+import { ostatokColumns, ostatokHeaderGroups } from './columns'
 
 import { ButtonGroup } from '@renderer/common/components/ui/button-group'
 import { ListView } from '@renderer/common/views'
 import { MonthPicker } from '@renderer/common/components/month-picker'
 import { createPodrazdelenie7Spravochnik } from '../podrazdelenie/service'
 import { createResponsibleSpravochnik } from '../responsible/service'
-import { ostatokColumns } from './columns'
 import { ostatokQueryKeys } from './config'
 import { ostatokService } from './service'
 import { useLayout } from '@renderer/common/features/layout'
@@ -63,24 +67,26 @@ const OstatokPage = () => {
       <ListView.Content loading={isFetching}>
         <div className="flex gap-10 justify-between p-5">
           <div className="flex gap-5">
-            <SpravochnikInput
-              readOnly
-              value={podrazdelenieSpravochnik.selected?.name ?? 'Выберите подразделение'}
-              onDoubleClick={podrazdelenieSpravochnik.open}
-              onClear={podrazdelenieSpravochnik.clear}
-              className="min-w-[300px]"
+            <ChooseSpravochnik
+              spravochnik={podrazdelenieSpravochnik}
+              placeholder="Выберите подразделение"
+              getName={(selected) => selected.name}
+              getElements={(selected) => [{ name: 'Наименование', value: selected.name }]}
             />
-            <SpravochnikInput
-              readOnly
-              value={responsibleSpravochnik.selected?.fio ?? 'Выберите ответственное лицо'}
-              onDoubleClick={responsibleSpravochnik.open}
-              onClear={responsibleSpravochnik.clear}
+
+            <ChooseSpravochnik
               disabled={!podrazdelenieSpravochnik.selected}
-              className="min-w-[300px]"
+              spravochnik={responsibleSpravochnik}
+              placeholder="Выберите ответственное лицо"
+              getName={(selected) => selected.fio}
+              getElements={(selected) => [
+                { name: 'ФИО', value: selected.fio },
+                { name: 'Подразделение', value: selected.spravochnik_podrazdelenie_jur7_name }
+              ]}
             />
           </div>
           <div>
-            <ButtonGroup>
+            <ButtonGroup borderStyle="dashed">
               <DownloadDocumentButton
                 fileName={`оборотка_${year}-${month}.xlsx`}
                 url="/jur_7/monitoring/obrotka/report"
@@ -135,7 +141,8 @@ const OstatokPage = () => {
           />
         </div>
         <GenericTable
-          columns={ostatokColumns}
+          columnDefs={ostatokColumns}
+          headerGroups={ostatokHeaderGroups}
           data={ostatokList?.data ?? []}
         />
       </ListView.Content>

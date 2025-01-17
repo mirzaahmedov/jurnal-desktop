@@ -71,7 +71,7 @@ const AvansPage = () => {
       </ListView.Header>
       <ListView.Content loading={isFetching || isPending}>
         <GenericTable
-          columns={avansColumns}
+          columnDefs={avansColumns}
           data={avansList?.data ?? []}
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}

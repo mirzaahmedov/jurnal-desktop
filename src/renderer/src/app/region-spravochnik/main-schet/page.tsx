@@ -73,7 +73,7 @@ const MainSchetPage = () => {
         {isFetching || isPending ? <LoadingOverlay /> : null}
         <GenericTable
           data={mainSchets?.data ?? []}
-          columns={mainSchetColumns}
+          columnDefs={mainSchetColumns}
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}
         />

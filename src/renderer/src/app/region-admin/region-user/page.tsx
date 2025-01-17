@@ -62,7 +62,7 @@ const RegionUserPage = () => {
         {isFetching || isPending ? <LoadingOverlay /> : null}
         <GenericTable
           data={regionUsers?.data ?? []}
-          columns={regionUserColumns}
+          columnDefs={regionUserColumns}
           onDelete={handleClickDelete}
           onEdit={handleClickEdit}
         />

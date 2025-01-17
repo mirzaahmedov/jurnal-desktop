@@ -12,7 +12,7 @@ import { Button } from '@/common/components/ui/button'
 import { Pencil, Trash2 } from 'lucide-react'
 import { formatNumber } from '@/common/lib/format'
 import { GenericTableCell, GenericTableHead, GenericTableRow } from './components'
-import { Autocomplete } from '@/common/lib/types'
+import type { Autocomplete } from '@/common/lib/types'
 import { cn } from '@/common/lib/utils'
 
 export type ColumnDef<T extends Record<string, unknown>> = {
@@ -23,7 +23,22 @@ export type ColumnDef<T extends Record<string, unknown>> = {
   header: ReactNode
   className?: string
   headerClassName?: string
+  rowSpan?: number
+  colSpan?: number
+  renderHeader?(row: T): ReactNode
   renderCell?(row: T, col: ColumnDef<T>): ReactNode
+}
+
+export type HeaderGroup<T extends Record<string, unknown>> = {
+  numeric?: boolean
+  fit?: boolean
+  stretch?: boolean
+  key: Autocomplete<keyof T>
+  header: ReactNode
+  headerClassName?: string
+  rowSpan?: number
+  colSpan?: number
+  renderHeader?(row: T): ReactNode
 }
 
 export type GenericTableProps<T extends Record<string, unknown>> =
@@ -31,7 +46,8 @@ export type GenericTableProps<T extends Record<string, unknown>> =
     TableProps & {
       caption?: string
       data: T[]
-      columns: ColumnDef<T>[]
+      columnDefs: ColumnDef<T>[]
+      headerGroups?: HeaderGroup<T>[][]
       placeholder?: string
       getRowId?(row: T): string | number
       onClickRow?(row: T): void
@@ -43,7 +59,8 @@ export type GenericTableProps<T extends Record<string, unknown>> =
 export const GenericTable = <T extends Record<string, unknown>>({
   caption,
   data,
-  columns,
+  columnDefs,
+  headerGroups = [columnDefs],
   placeholder,
   getRowId = defaultRowIdGetter,
   onClickRow,
@@ -68,33 +85,51 @@ export const GenericTable = <T extends Record<string, unknown>>({
     <Table {...props}>
       {caption ? <TableCaption>A list of your recent invoices.</TableCaption> : null}
       <TableHeader>
-        <GenericTableRow className="hover:bg-slate-100 border-t border-slate-200 bg-slate-100">
-          {Array.isArray(columns)
-            ? columns.map((col) => {
-                const { key, header, fit, stretch, numeric, headerClassName } = col
-                return (
+        {Array.isArray(headerGroups)
+          ? headerGroups.map((headerGroup, index) => (
+              <GenericTableRow
+                key={index}
+                className="hover:bg-slate-100 border-t border-slate-200 bg-slate-100 even:bg-slate-100 even:hover:bg-slate-100"
+              >
+                {Array.isArray(headerGroup)
+                  ? headerGroup.map((col) => {
+                      const {
+                        key,
+                        header,
+                        fit,
+                        stretch,
+                        numeric,
+                        headerClassName,
+                        colSpan,
+                        rowSpan
+                      } = col
+                      return (
+                        <GenericTableHead
+                          key={key.toString()}
+                          numeric={numeric}
+                          fit={fit}
+                          stretch={stretch}
+                          className={headerClassName}
+                          colSpan={colSpan}
+                          rowSpan={rowSpan}
+                        >
+                          {header}
+                        </GenericTableHead>
+                      )
+                    })
+                  : null}
+                {onDelete || onEdit ? (
                   <GenericTableHead
-                    key={key.toString()}
-                    numeric={numeric}
-                    fit={fit}
-                    stretch={stretch}
-                    className={headerClassName}
+                    fit
+                    className="text-center"
+                    key="actions"
                   >
-                    {header}
+                    Действие
                   </GenericTableHead>
-                )
-              })
-            : null}
-          {onDelete || onEdit ? (
-            <GenericTableHead
-              fit
-              className="text-center"
-              key="actions"
-            >
-              Действие
-            </GenericTableHead>
-          ) : null}
-        </GenericTableRow>
+                ) : null}
+              </GenericTableRow>
+            ))
+          : null}
       </TableHeader>
       <TableBody>
         {Array.isArray(data) && data.length ? (
@@ -112,9 +147,10 @@ export const GenericTable = <T extends Record<string, unknown>>({
                   'bg-brand/5 even:bg-brand/5 hover:bg-brand/5 transition-none'
               )}
             >
-              {Array.isArray(columns)
-                ? columns.map((col) => {
+              {Array.isArray(columnDefs)
+                ? columnDefs.map((col) => {
                     const { key, fit, stretch, numeric, renderCell, className } = col
+                    console.log(col, key, key.toString())
                     return (
                       <GenericTableCell
                         key={key.toString()}

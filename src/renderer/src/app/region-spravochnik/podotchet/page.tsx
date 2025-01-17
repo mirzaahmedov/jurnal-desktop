@@ -74,7 +74,7 @@ const PodotchetPage = () => {
         {isFetching || isPending ? <LoadingOverlay /> : null}
         <GenericTable
           data={podotchetList?.data ?? []}
-          columns={podotchetColumns}
+          columnDefs={podotchetColumns}
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}
         />

@@ -69,7 +69,7 @@ const MO7PrixodPage = () => {
       <div className="flex-1 relative">
         {isFetching ? <LoadingOverlay /> : null}
         <GenericTable
-          columns={columns}
+          columnDefs={columns}
           data={prixodList?.data ?? []}
           onEdit={(row) => navigate(`${row.id}`)}
           onDelete={(row) => {

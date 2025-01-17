@@ -1,17 +1,16 @@
-import type { Jur7Podrazdelenie } from '@/common/models'
-
-import { useState } from 'react'
-import { toast } from '@/common/hooks/use-toast'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { useToggle } from '@/common/hooks/use-toggle'
-import { useLayout } from '@/common/features/layout'
 import { GenericTable, LoadingOverlay, Pagination, usePagination } from '@/common/components'
-import { useConfirm } from '@/common/features/confirm'
-import { subdivision7Columns } from './columns'
-import { subdivision7Service } from './service'
-import { subdivision7QueryKeys } from './constants'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
+import type { Jur7Podrazdelenie } from '@/common/models'
 import Subdivision7Dialog from './dialog'
+import { subdivision7Columns } from './columns'
+import { subdivision7QueryKeys } from './constants'
+import { subdivision7Service } from './service'
+import { toast } from '@/common/hooks/use-toast'
+import { useConfirm } from '@/common/features/confirm'
+import { useLayout } from '@/common/features/layout'
+import { useState } from 'react'
+import { useToggle } from '@/common/hooks/use-toggle'
 
 const Subdivision7Page = () => {
   const [selected, setSelected] = useState<null | Jur7Podrazdelenie>(null)
@@ -78,7 +77,7 @@ const Subdivision7Page = () => {
       <div className="relative flex-1">
         {isFetching || isPending ? <LoadingOverlay /> : null}
         <GenericTable
-          columns={subdivision7Columns}
+          columnDefs={subdivision7Columns}
           data={subdivision7List?.data ?? []}
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}

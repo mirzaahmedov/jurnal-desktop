@@ -73,7 +73,7 @@ const OperationTypePage = () => {
         {isPending || isFetching ? <LoadingOverlay /> : null}
         <GenericTable
           data={operationTypes?.data ?? []}
-          columns={operationTypeColumns}
+          columnDefs={operationTypeColumns}
           getRowId={(row) => row.id}
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}

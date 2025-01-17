@@ -75,7 +75,7 @@ const MainbookPage = () => {
     <ListView>
       <ListView.Content loading={isFetching || isPending}>
         <GenericTable
-          columns={mainbookColumns}
+          columnDefs={mainbookColumns}
           data={reportList?.data ?? []}
           onEdit={handleEdit}
           onDelete={handleDelete}

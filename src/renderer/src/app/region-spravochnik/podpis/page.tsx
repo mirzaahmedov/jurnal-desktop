@@ -66,7 +66,7 @@ const PodpisPage = () => {
         {isFetching || isPending ? <LoadingOverlay /> : null}
         <GenericTable
           data={podpisList?.data ?? []}
-          columns={podpisColumns}
+          columnDefs={podpisColumns}
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}
         />

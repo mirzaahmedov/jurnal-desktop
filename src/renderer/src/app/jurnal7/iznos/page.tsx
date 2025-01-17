@@ -67,7 +67,7 @@ const IznosPage = () => {
         className="relative overflow-auto scrollbar"
       >
         <GenericTable
-          columns={columns}
+          columnDefs={columns}
           data={iznosList?.data ?? []}
           onEdit={handleEdit}
           className="overflow-hidden w-full whitespace-nowrap"

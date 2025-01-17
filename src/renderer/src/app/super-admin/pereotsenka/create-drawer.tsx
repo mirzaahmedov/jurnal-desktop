@@ -1,6 +1,3 @@
-import type { PereotsenkaTable } from './config'
-
-import { useEffect } from 'react'
 import {
   Drawer,
   DrawerContent,
@@ -9,25 +6,27 @@ import {
   DrawerTitle
 } from '@/common/components/ui/drawer'
 import { Form, FormField } from '@/common/components/ui/form'
-import { useForm } from 'react-hook-form'
-import { Input } from '@/common/components/ui/input'
-import { Button } from '@/common/components/ui/button'
 import {
-  defaultBatchValues,
   PereotsenkaBatchForm,
   PereotsenkaBatchFormSchema,
+  defaultBatchValues,
   pereotsenkaQueryKeys
 } from './config'
-import { zodResolver } from '@hookform/resolvers/zod'
+import { getLatestPereotsenkaQuery, pereotsenkaCreateBatchQuery } from './service'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { FormElement } from '@/common/components/form'
-import { EditableTable } from '@/common/features/editable-table'
 
-import { pereotsenkaCreateBatchQuery, getLatestPereotsenkaQuery } from './service'
-import { groupQueryKeys } from '@/app/super-admin/group/constants'
-import { groupColumns } from './columns'
+import { Button } from '@/common/components/ui/button'
+import { EditableTable } from '@/common/features/editable-table'
+import { FormElement } from '@/common/components/form'
+import { Input } from '@/common/components/ui/input'
 import { LoadingSpinner } from '@/common/components'
+import type { PereotsenkaTable } from './config'
+import { groupColumns } from './columns'
+import { groupQueryKeys } from '@/app/super-admin/group/constants'
 import { toast } from '@/common/hooks/use-toast'
+import { useEffect } from 'react'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
 
 type PereotsenkaBatchCreateDrawerProps = {
   open: boolean
@@ -90,53 +89,54 @@ const PereotsenkaBatchCreateDrawer = (props: PereotsenkaBatchCreateDrawerProps) 
       open={open}
       onOpenChange={onClose}
     >
-      <DrawerContent className="h-full max-h-[600px]">
+      <DrawerContent className="max-h-full">
         <DrawerHeader>
           <DrawerTitle>Добавить переоценку</DrawerTitle>
         </DrawerHeader>
         <Form {...form}>
-          <form onSubmit={onSubmit}>
-            <div className="relative">
-              {isFetching ? (
-                <LoadingSpinner />
-              ) : (
-                <>
-                  <div className="w-full flex flex-row p-5">
-                    <FormField
-                      name="name"
-                      control={form.control}
-                      render={({ field }) => (
-                        <FormElement
-                          label="Название"
-                          className="w-full max-w-md"
-                        >
-                          <Input {...field} />
-                        </FormElement>
-                      )}
-                    />
-                  </div>
-                  <div className="px-5 mt-5">
-                    <EditableTable
-                      columns={groupColumns as any}
-                      data={form.watch('array')}
-                      errors={form.formState.errors.array}
-                      onChange={(ctx) => {
-                        form.setValue(`array.${ctx.id}`, ctx.payload)
-                        form.trigger(`array.${ctx.id}`)
-                      }}
-                    />
-                  </div>
-                  <DrawerFooter className="mt-5 flex flex-row justify-start">
-                    <Button
-                      type="submit"
-                      disabled={isPending}
-                    >
-                      Добавить
-                    </Button>
-                  </DrawerFooter>
-                </>
-              )}
-            </div>
+          <form
+            onSubmit={onSubmit}
+            className="relative h-full flex flex-col overflow-hidden"
+          >
+            {isFetching ? (
+              <LoadingSpinner />
+            ) : (
+              <>
+                <div className="w-full flex flex-row p-5 border-b">
+                  <FormField
+                    name="name"
+                    control={form.control}
+                    render={({ field }) => (
+                      <FormElement
+                        label="Название"
+                        className="w-full max-w-md"
+                      >
+                        <Input {...field} />
+                      </FormElement>
+                    )}
+                  />
+                </div>
+                <div className="p-5 overflow-auto scrollbar flex-1">
+                  <EditableTable
+                    columns={groupColumns as any}
+                    data={form.watch('array')}
+                    errors={form.formState.errors.array}
+                    onChange={(ctx) => {
+                      form.setValue(`array.${ctx.id}`, ctx.payload)
+                      form.trigger(`array.${ctx.id}`)
+                    }}
+                  />
+                </div>
+                <DrawerFooter className="flex flex-row justify-start border-t">
+                  <Button
+                    type="submit"
+                    disabled={isPending}
+                  >
+                    Добавить
+                  </Button>
+                </DrawerFooter>
+              </>
+            )}
           </form>
         </Form>
       </DrawerContent>

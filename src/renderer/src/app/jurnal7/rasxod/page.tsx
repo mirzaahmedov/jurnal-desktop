@@ -65,7 +65,7 @@ const MO7RasxodPage = () => {
       <div className="flex-1 relative">
         {isFetching ? <LoadingOverlay /> : null}
         <GenericTable
-          columns={columns}
+          columnDefs={columns}
           data={rasxodList?.data ?? []}
           onEdit={(row) => navigate(`${row.id}`)}
           onDelete={(row) => {

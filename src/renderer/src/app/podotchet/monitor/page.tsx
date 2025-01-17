@@ -1,6 +1,5 @@
 import {
-  ChooseOperatsii,
-  ChoosePodotchet,
+  ChooseSpravochnik,
   DateRangeForm,
   DownloadDocumentButton,
   FooterCell,
@@ -83,15 +82,24 @@ const PodotchetMonitoringPage = () => {
         <div className="p-5 space-y-5 flex flex-col items-start">
           <div className="w-full flex flex-row gap-10 items-center justify-between">
             <div className="flex-1 flex flex-row gap-5 items-center">
-              <ChooseOperatsii
-                selected={operatsiiSpravochnik.selected}
-                open={operatsiiSpravochnik.open}
-                clear={operatsiiSpravochnik.clear}
+              <ChooseSpravochnik
+                spravochnik={operatsiiSpravochnik}
+                placeholder="Выберите операцию"
+                getName={(selected) => selected.name}
+                getElements={(selected) => [
+                  { name: 'Наименование', value: selected.name },
+                  { name: 'Счет', value: selected.schet },
+                  { name: 'Субсчет', value: selected.sub_schet }
+                ]}
               />
-              <ChoosePodotchet
-                selected={podotchetSpravochnik.selected}
-                open={podotchetSpravochnik.open}
-                clear={podotchetSpravochnik.clear}
+              <ChooseSpravochnik
+                spravochnik={podotchetSpravochnik}
+                placeholder="Выберите подотчетное лицо"
+                getName={(selected) => selected.name}
+                getElements={(selected) => [
+                  { name: 'Наименование', value: selected.name },
+                  { name: 'Регион', value: selected?.rayon }
+                ]}
               />
             </div>
 
@@ -155,7 +163,7 @@ const PodotchetMonitoringPage = () => {
       <ScrollArea className="flex-1 relative">
         {isFetching ? <LoadingOverlay /> : null}
         <GenericTable
-          columns={podotchetMonitoringColumns}
+          columnDefs={podotchetMonitoringColumns}
           data={monitorList?.data ?? []}
           footer={
             <>

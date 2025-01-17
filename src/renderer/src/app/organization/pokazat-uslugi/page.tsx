@@ -74,7 +74,7 @@ const PokazatUslugiPage = () => {
       <ListView.Content loading={isFetching || isPending}>
         <GenericTable
           data={pokazatUslugiList?.data ?? []}
-          columns={pokazatUslugiColumns}
+          columnDefs={pokazatUslugiColumns}
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}
         />

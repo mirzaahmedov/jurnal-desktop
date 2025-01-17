@@ -12,12 +12,11 @@ import { orgMonitoringService } from './service'
 import { orgMonitorQueryKeys } from './constants'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
 import {
-  ChooseOrganization,
-  ChooseOperatsii,
   FooterCell,
   FooterRow,
   GenericTable,
-  DownloadDocumentButton
+  DownloadDocumentButton,
+  ChooseSpravochnik
 } from '@/common/components'
 import { formatNumber } from '@/common/lib/format'
 import { useOperatsiiId, useOrgId } from './hooks'
@@ -101,15 +100,26 @@ const OrganizationMonitoringPage = () => {
         <div className="w-full space-y-5 flex flex-col items-start">
           <div className="w-full flex flex-row items-center justify-between">
             <div className="flex flex-row items-center gap-5">
-              <ChooseOperatsii
-                selected={operatsiiSpravochnik.selected}
-                open={operatsiiSpravochnik.open}
-                clear={operatsiiSpravochnik.clear}
+              <ChooseSpravochnik
+                spravochnik={operatsiiSpravochnik}
+                placeholder="Выберите операцию"
+                getName={(selected) => selected.name}
+                getElements={(selected) => [
+                  { name: 'Наименование', value: selected.name },
+                  { name: 'Счет', value: selected.schet },
+                  { name: 'Субсчет', value: selected.sub_schet }
+                ]}
               />
-              <ChooseOrganization
-                selected={orgSpravochnik.selected}
-                open={orgSpravochnik.open}
-                clear={orgSpravochnik.clear}
+              <ChooseSpravochnik
+                spravochnik={orgSpravochnik}
+                placeholder="Выберите организацию"
+                getName={(selected) => selected.name}
+                getElements={(selected) => [
+                  { name: 'ИНН:', value: selected?.inn },
+                  { name: 'МФО:', value: selected?.mfo },
+                  { name: 'Расчетный счет:', value: selected?.raschet_schet },
+                  { name: 'Банк:', value: selected?.bank_klient }
+                ]}
               />
             </div>
             {main_schet_id && operatsiiSpravochnik.selected?.schet ? (
@@ -196,7 +206,7 @@ const OrganizationMonitoringPage = () => {
       </ListView.Header>
       <ListView.Content loading={isFetching}>
         <GenericTable
-          columns={organizationMonitorColumns}
+          columnDefs={organizationMonitorColumns}
           data={orgMonitorList?.data ?? []}
           onEdit={handleClickEdit}
           getRowId={(row) => {

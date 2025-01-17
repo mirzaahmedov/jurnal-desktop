@@ -62,7 +62,7 @@ const RolePage = () => {
         {isFetching || isPending ? <LoadingOverlay /> : null}
         <GenericTable
           data={role?.data ?? []}
-          columns={roleColumns}
+          columnDefs={roleColumns}
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}
         />

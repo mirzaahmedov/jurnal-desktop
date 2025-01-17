@@ -11,7 +11,7 @@ const OrganizationTable = ({
     <GenericTable
       {...props}
       data={data ?? []}
-      columns={organizationColumns}
+      columnDefs={organizationColumns}
       getRowId={(row) => row.id}
     />
   )

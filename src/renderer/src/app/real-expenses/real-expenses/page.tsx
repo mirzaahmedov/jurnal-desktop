@@ -81,7 +81,7 @@ const ExpensesPage = () => {
     <ListView>
       <ListView.Content loading={isFetching || isPending}>
         <GenericTable
-          columns={expensesColumns}
+          columnDefs={expensesColumns}
           data={reportList?.data ?? []}
           onEdit={handleEdit}
           onDelete={handleDelete}

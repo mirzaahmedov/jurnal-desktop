@@ -1,4 +1,4 @@
-import { ChooseOrganization, GenericTable } from '@renderer/common/components'
+import { ChooseSpravochnik, GenericTable } from '@renderer/common/components'
 import { SearchField, useSearch } from '@renderer/common/features/search'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
@@ -83,17 +83,23 @@ const ShartnomaPage = () => {
     <ListView>
       <ListView.Header>
         <div className="flex items-center">
-          <ChooseOrganization
-            selected={orgSpravochnik.selected}
-            open={orgSpravochnik.open}
-            clear={orgSpravochnik.clear}
+          <ChooseSpravochnik
+            spravochnik={orgSpravochnik}
+            placeholder="Выберите организацию"
+            getName={(selected) => selected.name}
+            getElements={(selected) => [
+              { name: 'ИНН:', value: selected?.inn },
+              { name: 'МФО:', value: selected?.mfo },
+              { name: 'Расчетный счет:', value: selected?.raschet_schet },
+              { name: 'Банк:', value: selected?.bank_klient }
+            ]}
           />
         </div>
       </ListView.Header>
       <ListView.Content loading={isFetching || isPending}>
         <GenericTable
           data={shartnomaList?.data ?? []}
-          columns={shartnomaColumns}
+          columnDefs={shartnomaColumns}
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}
           placeholder={!orgSpravochnik.selected ? 'Выберите организацию' : undefined}

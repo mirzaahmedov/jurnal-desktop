@@ -1,8 +1,7 @@
 import type { EditorComponentType } from './types'
-
-import { inputVariants } from '@/common/components'
 import { Input } from '@/common/components/ui/input'
 import { cn } from '@/common/lib/utils'
+import { inputVariants } from '@/common/components'
 
 const createTextEditor = <T extends Record<string, unknown>>({
   readOnly = false,
@@ -38,7 +37,7 @@ const createTextEditor = <T extends Record<string, unknown>>({
               editor: true,
               error: !!errors?.[key as string]
             }),
-            'disabled:opacity-100 disabled:ring-0 disabled:bg-slate-50 disabled:focus-visible:ring-0 disabled:outline-none'
+            'disabled:opacity-100 disabled:ring-0 disabled:focus-visible:ring-0 disabled:outline-none'
           )}
           autoComplete="off"
         />

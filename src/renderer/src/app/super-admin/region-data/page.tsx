@@ -43,7 +43,7 @@ const RegionDataPage = () => {
       </ListView.Header>
       <ListView.Content loading={isFetching}>
         <GenericTable
-          columns={regionDataColumns}
+          columnDefs={regionDataColumns}
           data={(regionDataList?.data ?? [])?.sort(
             (a, b) => b?.counts?.total_count - a?.counts?.total_count
           )}

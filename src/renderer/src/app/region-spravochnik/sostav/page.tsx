@@ -71,7 +71,7 @@ const SostavPage = () => {
         {isFetching || isPending ? <LoadingOverlay /> : null}
         <GenericTable
           data={sostavList?.data ?? []}
-          columns={sostavColumns}
+          columnDefs={sostavColumns}
           getRowId={(row) => row.id}
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}

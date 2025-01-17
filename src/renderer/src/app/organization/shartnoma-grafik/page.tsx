@@ -1,4 +1,4 @@
-import { ChooseOrganization, GenericTable, Pagination } from '@/common/components'
+import { ChooseSpravochnik, GenericTable, Pagination } from '@/common/components'
 
 import { ListView } from '@/common/views'
 import type { ShartnomaGrafik } from '@/common/models'
@@ -53,17 +53,23 @@ const ShartnomaGrafikPage = () => {
     <ListView>
       <ListView.Header>
         <div className="flex items-center">
-          <ChooseOrganization
-            selected={orgSpravochnik.selected}
-            open={orgSpravochnik.open}
-            clear={orgSpravochnik.clear}
+          <ChooseSpravochnik
+            spravochnik={orgSpravochnik}
+            placeholder="Выберите организацию"
+            getName={(selected) => selected.name}
+            getElements={(selected) => [
+              { name: 'ИНН:', value: selected?.inn },
+              { name: 'МФО:', value: selected?.mfo },
+              { name: 'Расчетный счет:', value: selected?.raschet_schet },
+              { name: 'Банк:', value: selected?.bank_klient }
+            ]}
           />
         </div>
       </ListView.Header>
       <ListView.Content loading={isFetching}>
         <GenericTable
           data={shartnomaGrafikList?.data ?? []}
-          columns={shartnomaGrafikColumns}
+          columnDefs={shartnomaGrafikColumns}
           getRowId={(row) => row.id}
           onEdit={handleClickEdit}
           placeholder={!orgSpravochnik.selected ? 'Выберите организацию' : undefined}

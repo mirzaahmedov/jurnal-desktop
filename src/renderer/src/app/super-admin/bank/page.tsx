@@ -66,7 +66,7 @@ const BankPage = () => {
         {isFetching || isPending ? <LoadingOverlay /> : null}
         <GenericTable
           data={podpisList?.data ?? []}
-          columns={bankColumns}
+          columnDefs={bankColumns}
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}
         />

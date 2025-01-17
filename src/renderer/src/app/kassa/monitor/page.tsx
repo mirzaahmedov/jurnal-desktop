@@ -72,7 +72,7 @@ const KassaMonitorPage = () => {
       <ListView.Content loading={isFetching}>
         <GenericTable
           data={monitorList?.data ?? []}
-          columns={columns}
+          columnDefs={columns}
           getRowId={(row) => `${row.id}-${row.rasxod_sum ? 'rasxod' : 'prixod'}`}
           footer={
             <>

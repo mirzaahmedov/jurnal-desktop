@@ -62,7 +62,7 @@ const UnitPage = () => {
       <ListView.Content loading={isFetching || isPending}>
         <GenericTable
           data={unit?.data ?? []}
-          columns={unitColumns}
+          columnDefs={unitColumns}
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}
         />

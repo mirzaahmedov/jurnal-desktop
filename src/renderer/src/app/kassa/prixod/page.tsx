@@ -69,7 +69,7 @@ const KassaPrixodPage = () => {
       <ListView.Content loading={isFetching || isPending}>
         <GenericTable
           data={prixodList?.data ?? []}
-          columns={columns}
+          columnDefs={columns}
           getRowId={(row) => row.id}
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}

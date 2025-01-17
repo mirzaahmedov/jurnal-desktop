@@ -180,7 +180,7 @@ export const Spravochnik = ({ close, spravochnik }: SpravochnikProps) => {
                 ) : (
                   <GenericTable
                     data={data?.data ?? []}
-                    columns={spravochnik?.columns}
+                    columnDefs={spravochnik?.columns}
                     getRowId={(row) => String(row.id)}
                     selectedRowId={String(selected?.id)}
                     onClickRow={(row) => {

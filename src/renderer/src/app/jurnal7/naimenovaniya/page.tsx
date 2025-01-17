@@ -1,17 +1,16 @@
-import type { Naimenovanie } from '@/common/models'
-
-import { useState } from 'react'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { useLayout } from '@/common/features/layout'
-import { useToggle } from '@/common/hooks/use-toggle'
-import { denominationQueryKeys } from './constants'
 import { GenericTable, LoadingOverlay, Pagination, usePagination } from '@/common/components'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+
+import DenominationDialog from './dialog'
+import type { Naimenovanie } from '@/common/models'
+import { denominationQueryKeys } from './constants'
 import { naimenovanieColumns } from './columns'
 import { naimenovanieService } from './service'
 import { toast } from '@/common/hooks/use-toast'
 import { useConfirm } from '@/common/features/confirm'
-
-import DenominationDialog from './dialog'
+import { useLayout } from '@/common/features/layout'
+import { useState } from 'react'
+import { useToggle } from '@/common/hooks/use-toggle'
 
 const NaimenovaniePage = () => {
   const [selected, setSelected] = useState<null | Naimenovanie>(null)
@@ -77,7 +76,7 @@ const NaimenovaniePage = () => {
       <div className="relative flex-1">
         {isPending || isFetching ? <LoadingOverlay /> : null}
         <GenericTable
-          columns={naimenovanieColumns}
+          columnDefs={naimenovanieColumns}
           data={denominationList?.data ?? []}
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}

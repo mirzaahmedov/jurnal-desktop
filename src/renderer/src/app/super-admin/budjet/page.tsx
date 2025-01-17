@@ -61,7 +61,7 @@ const BudgetPage = () => {
         {isFetching || isPending ? <LoadingOverlay /> : null}
         <GenericTable
           data={budgets?.data ?? []}
-          columns={budgetColumns}
+          columnDefs={budgetColumns}
           onDelete={handleClickDelete}
           onEdit={handleClickEdit}
         />

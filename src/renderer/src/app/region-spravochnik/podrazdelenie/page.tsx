@@ -72,7 +72,7 @@ const SubdivisionPage = () => {
         {isFetching || isPending ? <LoadingOverlay /> : null}
         <GenericTable
           data={subdivisions?.data ?? []}
-          columns={subdivisionColumns}
+          columnDefs={subdivisionColumns}
           getRowId={(row) => row.id}
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}

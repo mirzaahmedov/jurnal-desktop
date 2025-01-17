@@ -1,17 +1,16 @@
-import type { Responsible } from '@/common/models'
-
-import { useState } from 'react'
-import { toast } from '@/common/hooks/use-toast'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { useToggle } from '@/common/hooks/use-toggle'
-import { useLayout } from '@/common/features/layout'
 import { GenericTable, LoadingOverlay, Pagination, usePagination } from '@/common/components'
-import { useConfirm } from '@/common/features/confirm'
-import { responsibleColumns } from './columns'
-import { responsibleService } from './service'
-import { responsibleQueryKeys } from './constants'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
+import type { Responsible } from '@/common/models'
 import ResponsibleDialog from './dialog'
+import { responsibleColumns } from './columns'
+import { responsibleQueryKeys } from './constants'
+import { responsibleService } from './service'
+import { toast } from '@/common/hooks/use-toast'
+import { useConfirm } from '@/common/features/confirm'
+import { useLayout } from '@/common/features/layout'
+import { useState } from 'react'
+import { useToggle } from '@/common/hooks/use-toggle'
 
 const ResponsiblePage = () => {
   const [selected, setSelected] = useState<null | Responsible>(null)
@@ -76,7 +75,7 @@ const ResponsiblePage = () => {
       <div className="relative flex-1">
         {isFetching || isPending ? <LoadingOverlay /> : null}
         <GenericTable
-          columns={responsibleColumns}
+          columnDefs={responsibleColumns}
           data={revaluationList?.data ?? []}
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}

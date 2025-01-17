@@ -61,7 +61,7 @@ const UserPage = () => {
         {isFetching || isPending ? <LoadingOverlay /> : null}
         <GenericTable
           data={users?.data ?? []}
-          columns={adminUserColumns}
+          columnDefs={adminUserColumns}
           onDelete={handleClickDelete}
           onEdit={handleClickEdit}
         />

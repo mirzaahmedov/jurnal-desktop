@@ -1,32 +1,27 @@
-import type { Podotchet } from '@/common/models'
-
 import { CircleCheck, CircleX } from 'lucide-react'
-import { Button } from '@/common/components/ui/button'
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover'
 
-type ChoosePodotchetProps = {
-  selected?: Podotchet
-  open: () => void
-  clear: () => void
-}
-const ChoosePodotchet = (props: ChoosePodotchetProps) => {
-  const { selected, open, clear } = props
+import { Button } from '@renderer/common/components/ui/button'
+import type { UseSpravochnikReturn } from '@renderer/common/features/spravochnik'
 
-  const elements = [
-    {
-      name: 'Регион',
-      value: selected?.rayon
-    }
-  ]
+export type ChooseSpravochnikProps<T> = {
+  disabled?: boolean
+  spravochnik: UseSpravochnikReturn<T>
+  placeholder: string
+  getName: (selected: T) => string
+  getElements: (selected: T) => { name: string; value: string }[]
+}
+export const ChooseSpravochnik = <T,>(props: ChooseSpravochnikProps<T>) => {
+  const { disabled, spravochnik, placeholder, getName, getElements } = props
 
   return (
     <div className="border-2 border-slate-100 rounded-xl flex flex-wrap justify-between items-center gap-20">
-      {selected ? (
+      {spravochnik?.selected ? (
         <Popover>
-          <PopoverTrigger>
+          <PopoverTrigger disabled={disabled}>
             <div className="px-5 py-2.5 flex items-center gap-10">
               <h3 className="text-xs text-foreground/90 text-md leading-none font-bold">
-                {selected.name}
+                {getName(spravochnik.selected)}
               </h3>
 
               <div className="flex items-center">
@@ -34,7 +29,7 @@ const ChoosePodotchet = (props: ChoosePodotchetProps) => {
                   variant="ghost"
                   size="icon"
                   title="Выбрать"
-                  onClick={clear}
+                  onClick={spravochnik.clear}
                   className="hover:text-destructive text-slate-400"
                 >
                   <CircleX className="btn-icon icon-start !mr-0" />
@@ -43,8 +38,9 @@ const ChoosePodotchet = (props: ChoosePodotchetProps) => {
                   variant="ghost"
                   size="icon"
                   title="Выбрать"
-                  onClick={open}
+                  onClick={spravochnik.open}
                   className="text-slate-400"
+                  disabled={disabled}
                 >
                   <CircleCheck className="btn-icon icon-start !mr-0" />
                 </Button>
@@ -56,7 +52,7 @@ const ChoosePodotchet = (props: ChoosePodotchetProps) => {
             className="w-full max-w-md"
           >
             <ul className="text-xs space-y-1.5">
-              {elements.map(({ name, value }) => (
+              {getElements(spravochnik.selected).map(({ name, value }) => (
                 <li
                   key={name}
                   className="grid grid-cols-5 gap-2 text-slate-600"
@@ -70,13 +66,14 @@ const ChoosePodotchet = (props: ChoosePodotchetProps) => {
         </Popover>
       ) : (
         <div className="px-5 py-2.5 self-stretch flex items-center gap-10">
-          <h6 className="text-sm text-slate-500">Выберите подотчетное лицо</h6>
+          <h6 className="text-sm text-slate-500">{placeholder}</h6>
           <Button
             variant="ghost"
             size="icon"
             title="Выбрать"
-            onClick={open}
+            onClick={spravochnik?.open}
             className="text-slate-400"
+            disabled={disabled}
           >
             <CircleCheck className="btn-icon icon-start !mr-0" />
           </Button>
@@ -85,6 +82,3 @@ const ChoosePodotchet = (props: ChoosePodotchetProps) => {
     </div>
   )
 }
-
-export { ChoosePodotchet }
-export type { ChoosePodotchetProps }

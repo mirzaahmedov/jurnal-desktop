@@ -48,7 +48,7 @@ export const GenericTableCell = ({
 }
 
 const headVariants = cva(
-  'px-6 py-4 text-xs font-extrabold border-r last:border-none bg-transparent text-foreground border-slate-200',
+  'px-6 py-4 text-xs font-extrabold border-r last:border-none !bg-transparent text-foreground border-slate-200',
   {
     variants: {
       fit: {
