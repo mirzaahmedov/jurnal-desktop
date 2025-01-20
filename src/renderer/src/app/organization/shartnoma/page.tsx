@@ -111,7 +111,7 @@ const ShartnomaPage = () => {
               size="icon"
               onClick={(e) => {
                 e.stopPropagation()
-                navigate(`create?org_id=${row.id}`, {
+                navigate(`create?org_id=${row.spravochnik_organization_id}`, {
                   state: {
                     original: row
                   }
