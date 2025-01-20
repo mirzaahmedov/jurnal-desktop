@@ -30,10 +30,10 @@ import { zodResolver } from '@hookform/resolvers/zod'
 
 type PereotsenkaBatchCreateDrawerProps = {
   open: boolean
-  onClose: () => void
+  onOpenChange: (open: boolean) => void
 }
 const PereotsenkaBatchCreateDrawer = (props: PereotsenkaBatchCreateDrawerProps) => {
-  const { open, onClose } = props
+  const { open, onOpenChange } = props
 
   const queryClient = useQueryClient()
   const form = useForm<PereotsenkaTable>({
@@ -62,7 +62,7 @@ const PereotsenkaBatchCreateDrawer = (props: PereotsenkaBatchCreateDrawerProps) 
         queryKey: [pereotsenkaQueryKeys.getAll]
       })
       form.reset(defaultBatchValues)
-      onClose()
+      onOpenChange(false)
     },
     onError(error) {
       toast({
@@ -87,9 +87,9 @@ const PereotsenkaBatchCreateDrawer = (props: PereotsenkaBatchCreateDrawerProps) 
   return (
     <Drawer
       open={open}
-      onOpenChange={onClose}
+      onOpenChange={onOpenChange}
     >
-      <DrawerContent className="max-h-full">
+      <DrawerContent className="h-[900px] max-h-[90%]">
         <DrawerHeader>
           <DrawerTitle>Добавить переоценку</DrawerTitle>
         </DrawerHeader>
@@ -134,6 +134,14 @@ const PereotsenkaBatchCreateDrawer = (props: PereotsenkaBatchCreateDrawerProps) 
                   >
                     Добавить
                   </Button>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    disabled={isPending}
+                    onClick={onOpenChange.bind(null, false)}
+                  >
+                    Отмена
+                  </Button>
                 </DrawerFooter>
               </>
             )}
@@ -144,4 +152,4 @@ const PereotsenkaBatchCreateDrawer = (props: PereotsenkaBatchCreateDrawerProps) 
   )
 }
 
-export { PereotsenkaBatchCreateDrawer as PereotsenkaBatchCreateDialog }
+export { PereotsenkaBatchCreateDrawer }

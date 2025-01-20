@@ -6,7 +6,7 @@ import { organizationColumns } from './columns'
 const OrganizationTable = ({
   data,
   ...props
-}: Omit<GenericTableProps<Organization>, 'columns' | 'getRowId'>) => {
+}: Omit<GenericTableProps<Organization>, 'columnDefs' | 'getRowId'>) => {
   return (
     <GenericTable
       {...props}

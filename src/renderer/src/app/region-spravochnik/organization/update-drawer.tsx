@@ -59,6 +59,7 @@ const UpdateOrganizationDrawer = () => {
       queryClient.invalidateQueries({
         queryKey: [organizationQueryKeys.getById, Number(parentId)]
       })
+      setParentId(null)
     },
     onError(error) {
       toast.error('Не удалось обновить организацию: ' + error.message)

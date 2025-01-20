@@ -193,7 +193,10 @@ const MO7PrixodDetailsPage = () => {
 
   return (
     <DetailsView>
-      <DetailsView.Content loading={isFetching}>
+      <DetailsView.Content
+        loading={isFetching}
+        className="w-full overflow-x-hidden"
+      >
         <Form {...form}>
           <form
             onSubmit={onSubmit}
@@ -255,8 +258,11 @@ const MO7PrixodDetailsPage = () => {
           </form>
         </Form>
 
-        <div className="p-5 pb-28">
-          <ProvodkaTable form={form} />
+        <div className="p-5 pb-28 w-full overflow-x-auto">
+          <ProvodkaTable
+            isCreate={id === 'create'}
+            form={form}
+          />
         </div>
       </DetailsView.Content>
     </DetailsView>

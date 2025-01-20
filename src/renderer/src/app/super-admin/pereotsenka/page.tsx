@@ -7,7 +7,7 @@ import {
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 import type { Pereotsenka } from '@renderer/common/models'
-import { PereotsenkaBatchCreateDialog } from './create-drawer'
+import { PereotsenkaBatchCreateDrawer } from './create-drawer'
 import { PereotsenkaDialog } from './dialog'
 import { pereotsenkaColumns } from './columns'
 import { pereotsenkaQueryKeys } from './config'
@@ -89,9 +89,9 @@ const PereotsenkaPage = () => {
         open={dialogToggle.isOpen}
         onClose={dialogToggle.close}
       />
-      <PereotsenkaBatchCreateDialog
+      <PereotsenkaBatchCreateDrawer
         open={batchDialogToggle.isOpen}
-        onClose={batchDialogToggle.close}
+        onOpenChange={batchDialogToggle.setOpen}
       />
     </>
   )

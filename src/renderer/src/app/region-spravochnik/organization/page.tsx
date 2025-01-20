@@ -1,17 +1,17 @@
-import { SearchField, useSearch } from '@/common/features/search'
+import { SearchField, useSearch } from '@renderer/common/features/search'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { usePagination, useToggle } from '@/common/hooks'
+import { usePagination, useToggle } from '@renderer/common/hooks'
 
 import { CreateOrganizationDialog } from './create-dialog'
-import { ListView } from '@/common/views'
+import { ListView } from '@renderer/common/views'
 import { LoadingOverlay } from '@renderer/common/components'
-import { Organization } from '@/common/models'
+import { Organization } from '@renderer/common/models'
 import { OrganizationTable } from './table'
 import { UpdateOrganizationDrawer } from './update-drawer'
 import { organizationQueryKeys } from './config'
 import { organizationService } from './service'
-import { useConfirm } from '@/common/features/confirm'
-import { useLayout } from '@/common/features/layout'
+import { useConfirm } from '@renderer/common/features/confirm'
+import { useLayout } from '@renderer/common/features/layout'
 import { useParentId } from './hooks'
 
 const OrganizationPage = () => {

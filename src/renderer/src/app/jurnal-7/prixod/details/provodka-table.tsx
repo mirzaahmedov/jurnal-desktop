@@ -1,17 +1,11 @@
 import { CircleMinus, CirclePlus } from 'lucide-react'
-import {
-  DatePicker,
-  EdinSelect,
-  LoadingSpinner,
-  NumericInput,
-  inputVariants
-} from '@/common/components'
+import { DatePicker, EdinSelect, NumericInput, inputVariants } from '@/common/components'
 import {
   EditableTableCell,
   EditableTableHead,
   EditableTableRow
 } from '@renderer/common/components/editable-table'
-import { Popover, PopoverContent, PopoverTrigger } from '@/common/components/ui/popover'
+import type { FieldError, FieldErrorsImpl, Merge, UseFormReturn } from 'react-hook-form'
 import {
   PrixodChildFormSchema,
   PrixodChildFormType,
@@ -21,36 +15,30 @@ import {
 import { SpravochnikInput, useSpravochnik } from '@/common/features/spravochnik'
 import { Table, TableBody, TableFooter, TableHeader } from '@/common/components/ui/table'
 import { calcSena, calcSumma } from '@/common/lib/pricing'
-import {
-  createNaimenovanieSpravochnik,
-  naimenovanieService
-} from '@renderer/app/jurnal-7/naimenovaniya/service'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 
 import { Button } from '@/common/components/ui/button'
 import { Checkbox } from '@renderer/common/components/ui/checkbox'
 import { Input } from '@/common/components/ui/input'
-import { Naimenovanie } from '@/common/models'
-import { UseFormReturn } from 'react-hook-form'
 import { cn } from '@/common/lib/utils'
 import { createGroupSpravochnik } from '@/app/super-admin/group/service'
-import { denominationQueryKeys } from '@renderer/app/jurnal-7/naimenovaniya/constants'
-import { useEventCallback } from '@/common/hooks/use-event-callback'
-import { useMutation } from '@tanstack/react-query'
+import { toast } from 'react-toastify'
+import { useEventCallback } from '@renderer/common/hooks'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
 
 type ProvodkaTableProps = {
+  isCreate: boolean
   form: UseFormReturn<PrixodFormType>
 }
-export const ProvodkaTable = ({ form }: ProvodkaTableProps) => {
-  const handleChangeChildField = (
-    index: number,
-    key: keyof PrixodChildFormType,
-    value: unknown
-  ) => {
-    form.setValue(`childs.${index}.${key}`, value as string | number)
-    form.trigger(`childs.${index}.${key}`)
-  }
+export const ProvodkaTable = ({ isCreate, form }: ProvodkaTableProps) => {
+  const handleChangeChildField = useEventCallback(
+    (index: number, key: keyof PrixodChildFormType, value: unknown) => {
+      form.setValue(`childs.${index}.${key}`, value as string | number)
+      form.trigger(`childs.${index}.${key}`)
+    }
+  )!
+
+  console.log({ errors: form.formState.errors })
 
   return (
     <form
@@ -63,11 +51,11 @@ export const ProvodkaTable = ({ form }: ProvodkaTableProps) => {
           block: 'start'
         })
       }}
+      className="w-[2500px]"
     >
       <Table className="border border-slate-200 table-xs">
         <TableHeader>
           <EditableTableRow>
-            <EditableTableHead rowSpan={2}>Код</EditableTableHead>
             <EditableTableHead
               rowSpan={2}
               className="w-48"
@@ -79,6 +67,18 @@ export const ProvodkaTable = ({ form }: ProvodkaTableProps) => {
               className="min-w-72"
             >
               Наименования
+            </EditableTableHead>
+            <EditableTableHead
+              rowSpan={2}
+              className="min-w-28"
+            >
+              Серийный номер
+            </EditableTableHead>
+            <EditableTableHead
+              rowSpan={2}
+              className="min-w-28"
+            >
+              Инвентарный номер
             </EditableTableHead>
             <EditableTableHead rowSpan={2}>Е.И</EditableTableHead>
             <EditableTableHead
@@ -117,7 +117,13 @@ export const ProvodkaTable = ({ form }: ProvodkaTableProps) => {
             >
               Сумма с НДС
             </EditableTableHead>
-            <EditableTableHead rowSpan={2}>Износь</EditableTableHead>
+            <EditableTableHead
+              rowSpan={2}
+              colSpan={isCreate ? 2 : 1}
+              className="text-center"
+            >
+              Износь / Старый износ
+            </EditableTableHead>
             <EditableTableHead
               colSpan={2}
               className="text-center"
@@ -143,18 +149,14 @@ export const ProvodkaTable = ({ form }: ProvodkaTableProps) => {
         <TableBody>
           {Array.isArray(form.watch('childs')) ? (
             form.watch('childs').map((row, index) => {
+              const errors = form.formState.errors.childs?.[index] || {}
               return (
                 <EditableTableRow key={index}>
                   <NaimenovanieCells
                     index={index}
-                    errorMessage={
-                      form.formState.errors.childs?.[index]?.naimenovanie_tovarov_jur7_id?.message
-                    }
-                    value={row.naimenovanie_tovarov_jur7_id}
-                    onChange={(id) => {
-                      handleChangeChildField(index, 'naimenovanie_tovarov_jur7_id', Number(id))
-                    }}
-                    onChangeChildField={handleChangeChildField}
+                    row={row}
+                    errors={errors}
+                    onChangeField={handleChangeChildField}
                   />
                   <EditableTableCell>
                     <div className="relative">
@@ -170,7 +172,7 @@ export const ProvodkaTable = ({ form }: ProvodkaTableProps) => {
                         }}
                         className={inputVariants({
                           editor: true,
-                          error: !!form.formState.errors.childs?.[index]?.kol
+                          error: !!errors?.kol
                         })}
                       />
                     </div>
@@ -189,7 +191,7 @@ export const ProvodkaTable = ({ form }: ProvodkaTableProps) => {
                         }}
                         className={inputVariants({
                           editor: true,
-                          error: !!form.formState.errors.childs?.[index]?.sena
+                          error: !!errors?.sena
                         })}
                       />
                     </div>
@@ -208,7 +210,7 @@ export const ProvodkaTable = ({ form }: ProvodkaTableProps) => {
                         }}
                         className={inputVariants({
                           editor: true,
-                          error: !!form.formState.errors.childs?.[index]?.summa
+                          error: !!errors?.summa
                         })}
                       />
                     </div>
@@ -225,7 +227,7 @@ export const ProvodkaTable = ({ form }: ProvodkaTableProps) => {
                         }}
                         className={inputVariants({
                           editor: true,
-                          error: !!form.formState.errors.childs?.[index]?.nds_foiz
+                          error: !!errors?.nds_foiz
                         })}
                       />
                     </div>
@@ -261,13 +263,30 @@ export const ProvodkaTable = ({ form }: ProvodkaTableProps) => {
                       />
                     </div>
                   </EditableTableCell>
+                  {isCreate ? (
+                    <EditableTableCell>
+                      <div className="relative flex items-center justify-center px-4">
+                        <Checkbox
+                          checked={row.iznos}
+                          onCheckedChange={(checked) => {
+                            handleChangeChildField(index, 'iznos', Boolean(checked))
+                          }}
+                        />
+                      </div>
+                    </EditableTableCell>
+                  ) : null}
                   <EditableTableCell>
                     <div className="relative flex items-center justify-center">
-                      <Checkbox
-                        checked={row.iznos}
-                        onCheckedChange={(checked) => {
-                          handleChangeChildField(index, 'iznos', Boolean(checked))
+                      <NumericInput
+                        adjustWidth
+                        value={row.eski_iznos_summa || ''}
+                        onValueChange={(values) => {
+                          handleChangeChildField(index, 'eski_iznos_summa', values.floatValue)
                         }}
+                        className={inputVariants({
+                          editor: true,
+                          error: !!errors?.eski_iznos_summa
+                        })}
                       />
                     </div>
                   </EditableTableCell>
@@ -280,7 +299,7 @@ export const ProvodkaTable = ({ form }: ProvodkaTableProps) => {
                         }}
                         className={inputVariants({
                           editor: true,
-                          error: !!form.formState.errors.childs?.[index]?.debet_schet
+                          error: !!errors?.debet_schet
                         })}
                       />
                     </div>
@@ -294,7 +313,7 @@ export const ProvodkaTable = ({ form }: ProvodkaTableProps) => {
                         }}
                         className={inputVariants({
                           editor: true,
-                          error: !!form.formState.errors.childs?.[index]?.debet_sub_schet
+                          error: !!errors?.debet_sub_schet
                         })}
                       />
                     </div>
@@ -308,7 +327,7 @@ export const ProvodkaTable = ({ form }: ProvodkaTableProps) => {
                         }}
                         className={inputVariants({
                           editor: true,
-                          error: !!form.formState.errors.childs?.[index]?.kredit_schet
+                          error: !!errors?.kredit_schet
                         })}
                       />
                     </div>
@@ -322,7 +341,7 @@ export const ProvodkaTable = ({ form }: ProvodkaTableProps) => {
                         }}
                         className={inputVariants({
                           editor: true,
-                          error: !!form.formState.errors.childs?.[index]?.kredit_sub_schet
+                          error: !!errors?.kredit_sub_schet
                         })}
                       />
                     </div>
@@ -337,7 +356,7 @@ export const ProvodkaTable = ({ form }: ProvodkaTableProps) => {
                         placeholder="дд.мм.гггг"
                         className={inputVariants({
                           editor: true,
-                          error: !!form.formState.errors.childs?.[index]?.data_pereotsenka
+                          error: !!errors?.data_pereotsenka
                         })}
                         triggerProps={{
                           className: 'min-w-32'
@@ -392,6 +411,8 @@ export const ProvodkaTable = ({ form }: ProvodkaTableProps) => {
                     !Array.isArray(childs) ||
                     !childs.every((c) => PrixodChildFormSchema.safeParse(c).success)
                   ) {
+                    form.trigger('childs')
+                    toast.error('Неверные данные')
                     return
                   }
 
@@ -399,6 +420,7 @@ export const ProvodkaTable = ({ form }: ProvodkaTableProps) => {
                     ...form.getValues('childs'),
                     {
                       ...defaultValues.childs[0],
+                      kredit_schet: form.getValues('j_o_num'),
                       data_pereotsenka: form.getValues('doc_date')
                     }
                   ])
@@ -416,175 +438,46 @@ export const ProvodkaTable = ({ form }: ProvodkaTableProps) => {
 
 type NaimenovanieCellsProps = {
   index: number
-  value: number
-  onChange: (value: number) => void
-  onChangeChildField: (index: number, key: keyof PrixodChildFormType, value: unknown) => void
-  errorMessage?: string
+  row: PrixodChildFormType
+  errors: Merge<FieldError, FieldErrorsImpl<PrixodChildFormType>>
+  onChangeField: (index: number, key: keyof PrixodChildFormType, value: unknown) => void
 }
-const NaimenovanieCells = ({
-  index,
-  value,
-  onChange,
-  onChangeChildField,
-  errorMessage
-}: NaimenovanieCellsProps) => {
+const NaimenovanieCells = ({ index, row, errors, onChangeField }: NaimenovanieCellsProps) => {
   const isMounted = useRef(false)
 
   const budjet_id = useRequisitesStore((store) => store.budjet_id)
 
-  const onChangeChildFieldEvent = useEventCallback(onChangeChildField)!
-
-  const [values, setValues] = useState<Pick<Naimenovanie, 'group_jur7_id' | 'name' | 'edin'>>({
-    group_jur7_id: 0,
-    name: '',
-    edin: ''
-  })
-
-  const naimenovanieSpravochnik = useSpravochnik(
-    createNaimenovanieSpravochnik({
-      value,
-      onChange
-    })
-  )
   const groupSpravochnik = useSpravochnik(
     createGroupSpravochnik({
-      value: values.group_jur7_id,
-      onChange: (id) => {
-        setValues((prev) => ({ ...prev, group_jur7_id: id }))
+      value: row.group_jur7_id,
+      onChange: (groupId) => {
         if (!budjet_id) {
           return
         }
-        applyChanges({
-          id: value,
-          name: values.name,
-          group_jur7_id: id,
-          edin: values.edin,
-          spravochnik_budjet_name_id: budjet_id
-        })
+        onChangeField(index, 'group_jur7_id', groupId)
       }
     })
   )
 
-  const { mutate: createNaimenovanie, isPending: isCreating } = useMutation({
-    mutationKey: [denominationQueryKeys.create],
-    mutationFn: naimenovanieService.create,
-    onSuccess(result: unknown) {
-      const id = (result as { data: [Naimenovanie] }).data[0].id
-      setValues((prev) => ({
-        ...prev,
-        group_jur7_id: id
-      }))
-      onChange(id)
-    }
-  })
-  const { mutate: updateNaimenovanie, isPending: isUpdating } = useMutation({
-    mutationKey: [denominationQueryKeys.update],
-    mutationFn: naimenovanieService.update
-  })
-
-  useEffect(() => {
-    if (!naimenovanieSpravochnik.selected) {
-      setValues({
-        group_jur7_id: 0,
-        name: '',
-        edin: ''
-      })
-      return
-    }
-    setValues({
-      group_jur7_id: naimenovanieSpravochnik.selected?.group_jur7_id ?? 0,
-      name: naimenovanieSpravochnik.selected?.name ?? '',
-      edin: naimenovanieSpravochnik.selected?.edin ?? ''
-    })
-  }, [naimenovanieSpravochnik.selected])
   useEffect(() => {
     if (!isMounted.current) {
       isMounted.current = true
       return
     }
-    onChangeChildFieldEvent(index, 'debet_schet', groupSpravochnik.selected?.schet ?? '')
-    onChangeChildFieldEvent(
-      index,
-      'debet_sub_schet',
-      groupSpravochnik.selected?.provodka_subschet ?? ''
-    )
-    onChangeChildFieldEvent(
-      index,
-      'kredit_sub_schet',
-      groupSpravochnik.selected?.provodka_subschet ?? ''
-    )
-  }, [index, onChangeChildFieldEvent, groupSpravochnik.selected])
-
-  const applyChanges = (changes: Parameters<typeof updateNaimenovanie>[0]) => {
-    const selected = naimenovanieSpravochnik.selected
-    if (
-      !selected ||
-      (selected.group_jur7_id === changes.group_jur7_id &&
-        selected.edin === changes.edin &&
-        selected.name === changes.name) ||
-      !budjet_id
-    ) {
-      return
-    }
-
-    updateNaimenovanie(changes)
-  }
+    onChangeField(index, 'debet_schet', groupSpravochnik.selected?.schet ?? '')
+    onChangeField(index, 'debet_sub_schet', groupSpravochnik.selected?.provodka_subschet ?? '')
+    onChangeField(index, 'kredit_sub_schet', groupSpravochnik.selected?.provodka_subschet ?? '')
+  }, [index, onChangeField, groupSpravochnik.selected])
 
   return (
     <>
-      <EditableTableCell>
-        <div className="relative">
-          <Popover open={!value && !!values.name && !!values.edin && !!values.group_jur7_id}>
-            <PopoverTrigger>
-              <SpravochnikInput
-                readOnly
-                value={value || ''}
-                className={inputVariants({
-                  editor: true,
-                  error: !!errorMessage
-                })}
-                {...naimenovanieSpravochnik}
-                getInputValue={(selected) => String(selected?.id) ?? ''}
-                open={undefined}
-                clear={undefined}
-              />
-            </PopoverTrigger>
-            <PopoverContent
-              onOpenAutoFocus={(e) => e.preventDefault()}
-              onCloseAutoFocus={(e) => e.preventDefault()}
-            >
-              <Button
-                disabled={isCreating || isUpdating}
-                onClick={() => {
-                  if (!budjet_id) {
-                    return
-                  }
-                  createNaimenovanie({
-                    group_jur7_id: values.group_jur7_id,
-                    name: values.name,
-                    edin: values.edin,
-                    spravochnik_budjet_name_id: budjet_id
-                  })
-                }}
-              >
-                {isCreating || isUpdating ? (
-                  <>
-                    <LoadingSpinner /> {}
-                  </>
-                ) : null}
-                Добавить новое наименование
-              </Button>
-            </PopoverContent>
-          </Popover>
-        </div>
-      </EditableTableCell>
       <EditableTableCell>
         <div className="relative">
           <SpravochnikInput
             readOnly
             value={groupSpravochnik.selected?.name || ''}
             className={cn(
-              inputVariants({ editor: true, error: !!errorMessage }),
+              inputVariants({ editor: true, error: !!errors.group_jur7_id }),
               'disabled:opacity-100'
             )}
             getInputValue={(selected) => selected?.name ?? ''}
@@ -595,45 +488,44 @@ const NaimenovanieCells = ({
       <EditableTableCell>
         <div className="relative">
           <Input
-            value={values.name}
+            value={row.name}
             onChange={(e) => {
-              setValues({ ...values, name: e.target.value })
+              onChangeField(index, 'name', e.target.value)
             }}
-            onBlur={(e) => {
-              if (!budjet_id) {
-                return
-              }
-              const name = e.target.value
-              applyChanges({
-                id: value,
-                name,
-                group_jur7_id: values.group_jur7_id,
-                edin: values.edin,
-                spravochnik_budjet_name_id: budjet_id
-              })
+            className={inputVariants({ editor: true, error: !!errors.name })}
+          />
+        </div>
+      </EditableTableCell>
+      <EditableTableCell>
+        <div className="relative">
+          <Input
+            value={row.serial_num}
+            onChange={(e) => {
+              onChangeField(index, 'serial_num', e.target.value)
             }}
-            className={inputVariants({ editor: true, error: !!errorMessage })}
+            className={inputVariants({ editor: true, error: !!errors.serial_num })}
+          />
+        </div>
+      </EditableTableCell>
+      <EditableTableCell>
+        <div className="relative">
+          <Input
+            value={row.inventar_num}
+            onChange={(e) => {
+              onChangeField(index, 'inventar_num', e.target.value)
+            }}
+            className={inputVariants({ editor: true, error: !!errors.inventar_num })}
           />
         </div>
       </EditableTableCell>
       <EditableTableCell>
         <div className="relative">
           <EdinSelect
-            value={values.edin}
+            value={row.edin}
             onValueChange={(edin) => {
-              setValues({ ...values, edin })
-              if (!budjet_id) {
-                return
-              }
-              applyChanges({
-                id: value,
-                name: values.name,
-                group_jur7_id: values.group_jur7_id,
-                edin,
-                spravochnik_budjet_name_id: budjet_id
-              })
+              onChangeField(index, 'edin', edin)
             }}
-            triggerClassName={inputVariants({ editor: true, error: !!errorMessage })}
+            triggerClassName={inputVariants({ editor: true, error: !!errors.edin })}
           />
         </div>
       </EditableTableCell>

@@ -1,10 +1,9 @@
 import type { ButtonHTMLAttributes, HTMLAttributes } from 'react'
 
-import { Button } from '@/common/components/ui/button'
+import { Button } from '@renderer/common/components/ui/button'
 import { CircleCheck } from 'lucide-react'
-import { LoadingSpinner } from '@/common/components'
-import { ScrollArea } from '@/common/components/ui/scroll-area'
-import { cn } from '@/common/lib/utils'
+import { LoadingSpinner } from '@renderer/common/components'
+import { cn } from '@renderer/common/lib/utils'
 
 type DetailsViewProps = HTMLAttributes<HTMLElement>
 const DetailsView = ({ children, className, ...props }: DetailsViewProps) => {
@@ -35,7 +34,7 @@ const DetailsViewContent = ({
       <LoadingSpinner />
     </div>
   ) : (
-    <ScrollArea className={cn('flex-1', className)}>{children}</ScrollArea>
+    <div className={cn('flex-1 overflow-y-auto scrollbar', className)}>{children}</div>
   )
 }
 

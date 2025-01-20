@@ -24,12 +24,17 @@ const defaultValues: PrixodFormType = {
   id_shartnomalar_organization: 0,
   childs: [
     {
-      naimenovanie_tovarov_jur7_id: 0,
+      name: '',
+      edin: '',
+      group_jur7_id: 0,
+      inventar_num: '',
+      serial_num: '',
       kol: 0,
       sena: 0,
       nds_foiz: 0,
       summa: 0,
       iznos: false,
+      eski_iznos_summa: 0,
       debet_schet: '',
       debet_sub_schet: '',
       kredit_schet: '',
@@ -41,12 +46,17 @@ const defaultValues: PrixodFormType = {
 
 const PrixodChildFormSchema = withPreprocessor(
   z.object({
-    naimenovanie_tovarov_jur7_id: z.number(),
+    name: z.string(),
+    edin: z.string(),
+    group_jur7_id: z.number(),
+    inventar_num: z.string(),
+    serial_num: z.string(),
     kol: z.number(),
     sena: z.number(),
     summa: z.number(),
     nds_foiz: z.number().optional(),
     iznos: z.boolean(),
+    eski_iznos_summa: z.number().optional(),
     debet_schet: z.string(),
     debet_sub_schet: z.string(),
     kredit_schet: z.string(),
