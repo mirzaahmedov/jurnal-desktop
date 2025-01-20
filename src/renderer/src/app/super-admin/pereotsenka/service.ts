@@ -24,7 +24,7 @@ const createPereotsenkaSpravochnik = (config: Partial<SpravochnikHookOptions<Per
     {
       title: 'Выберите переоценку',
       endpoint: APIEndpoints.jur7_pereotsenka,
-      columns: pereotsenkaColumns,
+      columnDefs: pereotsenkaColumns,
       service: pereotsenkaService
     } satisfies typeof config,
     config

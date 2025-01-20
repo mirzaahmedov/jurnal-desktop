@@ -35,7 +35,7 @@ export const createOrganizationSpravochnik = (
     {
       title: 'Выберите организацию',
       endpoint: APIEndpoints.organization,
-      columns: organizationColumns,
+      columnDefs: organizationColumns,
       service: organizationService,
       filters: [SpravochnikSearchField],
       Dialog: CreateOrganizationDialog,

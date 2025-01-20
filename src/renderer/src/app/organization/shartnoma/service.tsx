@@ -1,21 +1,28 @@
+import type {
+  SpravochnikDialogProps,
+  SpravochnikHookOptions,
+  SpravochnikTableProps
+} from '@/common/features/spravochnik'
 import type { Shartnoma } from '@/common/models'
-import type { SpravochnikDialogProps, SpravochnikHookOptions } from '@/common/features/spravochnik'
 
-import { z } from 'zod'
 import { APIEndpoints, CRUDService } from '@/common/features/crud'
-import { withPreprocessor } from '@/common/lib/validation'
 import { budjet } from '@/common/features/crud/middleware'
-import { extendObject } from '@/common/lib/utils'
-import { shartnomaColumns } from './columns'
 import { SpravochnikSearchField } from '@/common/features/search'
+import { extendObject } from '@/common/lib/utils'
+import { withPreprocessor } from '@/common/lib/validation'
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle
 } from '@renderer/common/components/ui/dialog'
-import { ShartnomaForm } from './details/shartnoma-form'
+import { z } from 'zod'
+import { shartnomaColumns } from './columns'
 import { shartnomaQueryKeys } from './constants'
+import { ShartnomaForm } from './details/shartnoma-form'
+import { GenericTable } from '@renderer/common/components'
+import { Button } from '@renderer/common/components/ui/button'
+import { CopyPlus } from 'lucide-react'
 
 export const shartnomaService = new CRUDService<Shartnoma, ShartnomaFormValues>({
   endpoint: APIEndpoints.shartnoma
@@ -37,8 +44,16 @@ export const ShartnomaFormSchema = withPreprocessor(
 )
 export type ShartnomaFormValues = z.infer<typeof ShartnomaFormSchema>
 
-const ShartnomaDialog = ({ open, onOpenChange, params }: SpravochnikDialogProps) => {
+const ShartnomaSpravochnikDialog = ({
+  open,
+  onOpenChange,
+  params,
+  state
+}: SpravochnikDialogProps) => {
   const organization = params?.organization ? Number(params.organization) : 0
+
+  const original = state?.original as Shartnoma
+
   return (
     <Dialog
       open={open}
@@ -50,10 +65,38 @@ const ShartnomaDialog = ({ open, onOpenChange, params }: SpravochnikDialogProps)
         </DialogHeader>
         <ShartnomaForm
           organization={organization}
+          original={original}
           onSuccess={() => onOpenChange?.(false)}
         />
       </DialogContent>
     </Dialog>
+  )
+}
+
+const ShartnomaSpravochnikTable = ({
+  setState,
+  dialogToggle,
+  ...props
+}: SpravochnikTableProps<Shartnoma>) => {
+  return (
+    <GenericTable
+      {...props}
+      customActions={(row) => (
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={(e) => {
+            e.stopPropagation()
+            setState?.({
+              original: row
+            })
+            dialogToggle?.open()
+          }}
+        >
+          <CopyPlus className="size-4" />
+        </Button>
+      )}
+    />
   )
 }
 
@@ -62,10 +105,11 @@ export const createShartnomaSpravochnik = (config: Partial<SpravochnikHookOption
     {
       title: 'Выберите договор',
       endpoint: APIEndpoints.shartnoma,
-      columns: shartnomaColumns,
+      columnDefs: shartnomaColumns,
       service: shartnomaService,
       queryKeys: shartnomaQueryKeys,
-      Dialog: ShartnomaDialog,
+      Dialog: ShartnomaSpravochnikDialog,
+      CustomTable: ShartnomaSpravochnikTable,
       filters: [SpravochnikSearchField]
     } satisfies typeof config,
     config

@@ -1,9 +1,11 @@
 import type { APIEndpoints, CRUDService } from '@/common/features/crud'
+import type { ComponentType, Dispatch, SetStateAction } from 'react'
 
 import type { ColumnDef } from '@/common/components'
-import type { ComponentType } from 'react'
 import type { DialogProps } from '@radix-ui/react-dialog'
+import type { GenericTableProps } from '@renderer/common/components/generic-table/table'
 import { create } from 'zustand'
+import { useToggle } from '@renderer/common/hooks'
 
 export type FilterComponentProps<
   T extends Record<string, unknown> = Record<string, unknown>,
@@ -13,12 +15,21 @@ export type FilterComponentProps<
   setValue(name: K, value: undefined | string): void
 }
 
-export type SpravochnikDialogProps = DialogProps & { params: undefined | Record<string, unknown> }
+export type SpravochnikLocalState = Record<string, unknown>
+
+export type SpravochnikDialogProps = DialogProps & {
+  params: undefined | Record<string, unknown>
+  state?: SpravochnikLocalState
+  setState?: Dispatch<SetStateAction<SpravochnikLocalState>>
+}
 export type SpravochnikTableProps<T extends Record<string, unknown>> = {
   data: T[]
-  columns: ColumnDef<T>[]
+  columnDefs: ColumnDef<T>[]
   selectedRowId?: string
   onClickRow(row: T): void
+  dialogToggle?: ReturnType<typeof useToggle>
+  state?: SpravochnikLocalState
+  setState?: Dispatch<SetStateAction<SpravochnikLocalState>>
 }
 
 export type SpravochnikData<T extends Record<string, unknown>> = {
@@ -32,13 +43,14 @@ export type SpravochnikData<T extends Record<string, unknown>> = {
     getAll: string
     getById: string
   }
-  columns: ColumnDef<T>[]
+  columnDefs: ColumnDef<T>[]
   params?: Record<string, unknown>
   filters?: ComponentType<FilterComponentProps>[]
   defaultFilters?: Record<string, unknown>
   search?: boolean
   Dialog?: ComponentType<SpravochnikDialogProps>
   CustomTable?: ComponentType<SpravochnikTableProps<T>>
+  tableProps?: Partial<GenericTableProps<T>>
 }
 export type SpravochnikStore<T extends Record<string, unknown>> = {
   isOpen: (id: string) => boolean

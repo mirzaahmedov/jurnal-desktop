@@ -7,6 +7,7 @@ import { withPreprocessor } from '@/common/lib/validation'
 import { extendObject } from '@/common/lib/utils'
 import { podotchetColumns } from './columns'
 import { SpravochnikSearchField } from '@/common/features/search'
+import PodotchetDialog from './dialog'
 
 export const PodotchetFormSchema = withPreprocessor(
   z.object({
@@ -25,8 +26,9 @@ export const createPodotchetSpravochnik = (config: Partial<SpravochnikHookOption
     {
       title: 'Выберите подотчетное лицо',
       endpoint: APIEndpoints.podotchet_litso,
-      columns: podotchetColumns,
+      columnDefs: podotchetColumns,
       service: podotchetService,
+      Dialog: PodotchetDialog,
       filters: [SpravochnikSearchField]
     } satisfies typeof config,
     config

@@ -78,7 +78,7 @@ const GroupPage = () => {
     <ListView>
       <ListView.Content loading={isFetching || isPending}>
         <GroupTable
-          columns={groupColumns}
+          columnDefs={groupColumns}
           data={groupList?.data ?? []}
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}

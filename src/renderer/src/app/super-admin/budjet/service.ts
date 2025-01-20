@@ -23,7 +23,7 @@ export const createBudgetSpravochnik = (config: Partial<SpravochnikHookOptions<B
     {
       title: 'Выберите бюджет',
       endpoint: APIEndpoints.budjet_name,
-      columns: budgetColumns,
+      columnDefs: budgetColumns,
       service: budgetService
     } satisfies typeof config,
     config

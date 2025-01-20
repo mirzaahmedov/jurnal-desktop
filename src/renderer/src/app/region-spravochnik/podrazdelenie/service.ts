@@ -26,7 +26,7 @@ export const createSubdivisionSpravochnik = (
     {
       title: 'Выберите подразделение',
       endpoint: APIEndpoints.podrazdelenie,
-      columns: subdivisionColumns,
+      columnDefs: subdivisionColumns,
       service: subdivisionService,
       filters: [SpravochnikSearchField]
     } satisfies typeof config,

@@ -25,7 +25,7 @@ export const createSostavSpravochnik = (config: Partial<SpravochnikHookOptions<S
     {
       title: 'Выберите состав',
       endpoint: APIEndpoints.sostav,
-      columns: sostavColumns,
+      columnDefs: sostavColumns,
       service: sostavService,
       filters: [SpravochnikSearchField]
     } satisfies typeof config,

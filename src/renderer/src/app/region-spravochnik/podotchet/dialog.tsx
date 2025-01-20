@@ -24,15 +24,12 @@ import {
 } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
 import { podotchetQueryKeys } from './constants'
+import { DialogProps } from '@radix-ui/react-dialog'
 
-type PodotchetDialogProps = {
-  open: boolean
-  onChangeOpen(value: boolean): void
-  data: Podotchet | null
+type PodotchetDialogProps = DialogProps & {
+  selected?: Podotchet | null
 }
-const PodotchetDialog = (props: PodotchetDialogProps) => {
-  const { open, onChangeOpen, data } = props
-
+const PodotchetDialog = ({ open, onOpenChange, selected, ...props }: PodotchetDialogProps) => {
   const { toast } = useToast()
   const queryClient = useQueryClient()
   const form = useForm<PodotchetForm>({
@@ -51,7 +48,7 @@ const PodotchetDialog = (props: PodotchetDialogProps) => {
       queryClient.invalidateQueries({
         queryKey: [podotchetQueryKeys.getAll]
       })
-      onChangeOpen(false)
+      onOpenChange?.(false)
     },
     onError(error) {
       toast({
@@ -71,7 +68,7 @@ const PodotchetDialog = (props: PodotchetDialogProps) => {
       queryClient.invalidateQueries({
         queryKey: [podotchetQueryKeys.getAll]
       })
-      onChangeOpen(false)
+      onOpenChange?.(false)
     },
     onError(error) {
       toast({
@@ -83,30 +80,31 @@ const PodotchetDialog = (props: PodotchetDialogProps) => {
   })
 
   const onSubmit = (payload: PodotchetForm) => {
-    if (data) {
-      update(Object.assign(payload, { id: data.id }))
+    if (selected) {
+      update(Object.assign(payload, { id: selected.id }))
     } else {
       create(payload)
     }
   }
 
   useEffect(() => {
-    if (!data) {
+    if (!selected) {
       form.reset(defaultValues)
       return
     }
 
-    form.reset(data)
-  }, [form, data])
+    form.reset(selected)
+  }, [form, selected])
 
   return (
     <Dialog
       open={open}
-      onOpenChange={onChangeOpen}
+      onOpenChange={onOpenChange}
+      {...props}
     >
       <DialogContent className="max-w-xl">
         <DialogHeader>
-          <DialogTitle>{data ? 'Изменить' : 'Добавить'} подотчетное лицо</DialogTitle>
+          <DialogTitle>{selected ? 'Изменить' : 'Добавить'} подотчетное лицо</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -154,7 +152,7 @@ const PodotchetDialog = (props: PodotchetDialogProps) => {
                 type="submit"
                 disabled={isCreating || isUpdating}
               >
-                {data ? 'Изменить' : 'Добавить'}
+                {selected ? 'Изменить' : 'Добавить'}
               </Button>
             </DialogFooter>
           </form>

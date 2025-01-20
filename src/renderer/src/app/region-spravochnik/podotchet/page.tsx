@@ -83,9 +83,9 @@ const PodotchetPage = () => {
         <Pagination pageCount={podotchetList?.meta.pageCount ?? 0} />
       </div>
       <PodotchetDialog
-        data={selected}
+        selected={selected}
         open={toggle.isOpen}
-        onChangeOpen={toggle.setOpen}
+        onOpenChange={toggle.setOpen}
       />
     </>
   )

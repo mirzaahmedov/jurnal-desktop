@@ -39,7 +39,7 @@ const createOperatsiiSpravochnik = (config: Partial<SpravochnikHookOptions<Opera
     {
       title: 'Выберите операцию',
       endpoint: APIEndpoints.operatsii,
-      columns: operatsiiColumns,
+      columnDefs: operatsiiColumns,
       service: operatsiiService,
       filters: [SpravochnikSearchField]
     } satisfies typeof config,

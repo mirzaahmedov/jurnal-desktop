@@ -17,7 +17,7 @@ export const createPodrazdelenie7Spravochnik = (
     {
       title: 'Выберите подразделение',
       endpoint: APIEndpoints.jur7_podrazdelenie,
-      columns: subdivision7Columns,
+      columnDefs: subdivision7Columns,
       service: subdivision7Service
     } satisfies typeof config,
     config

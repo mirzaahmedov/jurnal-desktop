@@ -25,7 +25,7 @@ const createNaimenovanieSpravochnik = (config: Partial<SpravochnikHookOptions<Na
     {
       title: 'Выберите наименование',
       endpoint: APIEndpoints.jur7_naimenovanie,
-      columns: naimenovanieColumns,
+      columnDefs: naimenovanieColumns,
       service: naimenovanieService
     } satisfies typeof config,
     config
@@ -39,7 +39,7 @@ const createNaimenovanieKolSpravochnik = (
     {
       title: 'Выберите наименование',
       endpoint: APIEndpoints.jur7_naimenovanie_kol,
-      columns: naimenovanieKolColumns,
+      columnDefs: naimenovanieKolColumns,
       service: naimenovanieKolService
     } satisfies typeof config,
     config

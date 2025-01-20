@@ -22,6 +22,7 @@ export const Spravochnik = ({ close, spravochnik }: SpravochnikProps) => {
 
   const [page, setPage] = useState<number>(1)
   const [values, setValues] = useState<Record<string, unknown>>({})
+  const [state, setState] = useState<Record<string, unknown>>({})
   const [queryParams, setQueryParams] = useState<Record<string, unknown>>({})
   const [selected, setSelected] = useState<{ id: number } | undefined>(undefined)
 
@@ -124,6 +125,8 @@ export const Spravochnik = ({ close, spravochnik }: SpravochnikProps) => {
           open={dialogToggle.isOpen}
           onOpenChange={dialogToggle.setOpen}
           params={spravochnik.params}
+          state={state}
+          setState={setState}
         />
       ) : null}
       <Dialog
@@ -163,24 +166,27 @@ export const Spravochnik = ({ close, spravochnik }: SpravochnikProps) => {
               <h3 className="text-xl">Не удалось получить данные :(</h3>
               <p className="text-sm text-slate-500">{error?.message}</p>
             </div>
-          ) : Array.isArray(spravochnik?.columns) ? (
+          ) : Array.isArray(spravochnik?.columnDefs) ? (
             <>
               <ScrollArea className="flex-1">
                 {CustomTable ? (
                   <CustomTable
                     data={data?.data ?? []}
-                    columns={spravochnik.columns}
+                    columnDefs={spravochnik.columnDefs}
                     selectedRowId={String(selected?.id)}
                     onClickRow={(row) => {
                       spravochnik.selectId?.(row.id, row)
                       close(spravochnik.id)
                       spravochnik.onClose?.()
                     }}
+                    state={state}
+                    setState={setState}
+                    dialogToggle={dialogToggle}
                   />
                 ) : (
                   <GenericTable
                     data={data?.data ?? []}
-                    columnDefs={spravochnik?.columns}
+                    columnDefs={spravochnik?.columnDefs}
                     getRowId={(row) => String(row.id)}
                     selectedRowId={String(selected?.id)}
                     onClickRow={(row) => {
@@ -188,6 +194,7 @@ export const Spravochnik = ({ close, spravochnik }: SpravochnikProps) => {
                       close(spravochnik.id)
                       spravochnik.onClose?.()
                     }}
+                    {...spravochnik.tableProps}
                   />
                 )}
               </ScrollArea>

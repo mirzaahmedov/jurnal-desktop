@@ -23,14 +23,18 @@ import { useSpravochnik } from '@renderer/common/features/spravochnik'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 type ShartnomaFormProps = {
+  loading?: boolean
   dialog?: boolean
   organization: number
+  original?: Shartnoma
   selected?: Shartnoma | undefined
   onSuccess?: () => void
 }
 export const ShartnomaForm = ({
+  loading = false,
   dialog = true,
   organization,
+  original,
   selected,
   onSuccess
 }: ShartnomaFormProps) => {
@@ -39,7 +43,7 @@ export const ShartnomaForm = ({
 
   const form = useForm({
     resolver: zodResolver(ShartnomaFormSchema),
-    defaultValues
+    defaultValues: original ?? defaultValues
   })
 
   const smetaSpravochnik = useSpravochnik(
@@ -141,11 +145,11 @@ export const ShartnomaForm = ({
 
   useEffect(() => {
     if (!selected) {
-      form.reset(defaultValues)
+      form.reset(original ?? defaultValues)
       return
     }
     form.reset(selected)
-  }, [form, selected, id])
+  }, [form, original, selected, id])
 
   useEffect(() => {
     if (organization) {
@@ -200,7 +204,7 @@ export const ShartnomaForm = ({
         <div className={cn('p-5', dialog && 'p-0 pt-5')}>
           <Button
             type="submit"
-            disabled={isCreating || isUpdating}
+            disabled={isCreating || isUpdating || loading}
           >
             {selected ? 'Обновить' : 'Создать'}
           </Button>

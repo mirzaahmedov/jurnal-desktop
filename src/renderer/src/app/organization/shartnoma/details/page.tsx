@@ -1,6 +1,7 @@
-import { useNavigate, useParams } from 'react-router-dom'
+import { type Location, useLocation, useNavigate, useParams } from 'react-router-dom'
 
 import { DetailsView } from '@/common/views'
+import type { Shartnoma } from '@renderer/common/models'
 import { ShartnomaForm } from './shartnoma-form'
 import { shartnomaQueryKeys } from '../constants'
 import { shartnomaService } from '../service'
@@ -16,7 +17,10 @@ const ShartnomaDetailsPage = () => {
 
   const id = useParams().id as string
   const navigate = useNavigate()
+  const location = useLocation() as Location<{ original?: Shartnoma }>
   const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
+
+  const original = location.state?.original
 
   const { data: shartnoma, isFetching } = useQuery({
     queryKey: [
@@ -37,8 +41,6 @@ const ShartnomaDetailsPage = () => {
     }
   }, [orgId])
 
-  console.log('rendering details page')
-
   useLayout({
     title: 'Договор',
     onBack() {
@@ -53,6 +55,7 @@ const ShartnomaDetailsPage = () => {
           dialog={false}
           organization={orgId}
           selected={shartnoma?.data}
+          original={original}
           onSuccess={() => {
             navigate(`/organization/shartnoma?org_id=${orgId}`)
           }}

@@ -16,7 +16,7 @@ export const createMainbookSchetSpravochnik = (
     {
       title: 'Выберите операцию',
       endpoint: APIEndpoints.admin__mainbook_schet,
-      columns: adminMainbookSchetColumns,
+      columnDefs: adminMainbookSchetColumns,
       service: adminMainbookSchetService,
       filters: [SpravochnikSearchField]
     } satisfies typeof config,

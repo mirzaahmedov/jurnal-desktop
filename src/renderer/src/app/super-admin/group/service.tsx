@@ -47,7 +47,7 @@ export const createGroupSpravochnik = (config: Partial<SpravochnikHookOptions<Gr
     {
       title: 'Выберите группу',
       endpoint: APIEndpoints.jur7_group,
-      columns: groupColumns,
+      columnDefs: groupColumns,
       service: groupService,
       filters: [SpravochnikSearchField],
       CustomTable: GroupTable,

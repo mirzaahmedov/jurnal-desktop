@@ -17,14 +17,14 @@ import { cn } from '@renderer/common/lib/utils'
 
 export type CollapsibleTableProps<T> = {
   data: T[]
-  columns: ColumnDef<Partial<T>>[]
+  columnDefs: ColumnDef<Partial<T>>[]
   onClickRow?: (row: T) => void
   onEdit?: (row: T) => void
   onDelete?: (row: T) => void
 }
 const CollapsibleTable = <T extends { id: number; children: T[] }>({
   data,
-  columns,
+  columnDefs,
   onClickRow,
   onEdit,
   onDelete
@@ -33,7 +33,7 @@ const CollapsibleTable = <T extends { id: number; children: T[] }>({
     <Table>
       <TableHeader>
         <GenericTableRow className="hover:bg-transparent border-t border-slate-200">
-          {columns.map((col) => {
+          {columnDefs.map((col) => {
             const { key, header, fit, stretch, numeric, headerClassName } = col
             return (
               <GenericTableHead
@@ -63,7 +63,7 @@ const CollapsibleTable = <T extends { id: number; children: T[] }>({
             <CollapsibleItem
               key={row.id}
               row={row}
-              tableProps={{ columns, onClickRow, onEdit, onDelete, data }}
+              tableProps={{ columnDefs: columnDefs, onClickRow, onEdit, onDelete, data }}
             />
           ))
         ) : (
@@ -89,7 +89,7 @@ const CollapsibleItem = <T extends { id: number; children: T[] }>({
   row,
   tableProps
 }: CollapsibleItemProps<T>) => {
-  const { columns, onClickRow, onEdit, onDelete } = tableProps
+  const { columnDefs: columns, onClickRow, onEdit, onDelete } = tableProps
 
   if (!row.children?.length) {
     return (

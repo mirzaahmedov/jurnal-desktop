@@ -53,6 +53,7 @@ export type GenericTableProps<T extends Record<string, unknown>> =
       onClickRow?(row: T): void
       onDelete?(row: T): void
       onEdit?(row: T): void
+      customActions?: (row: T) => ReactNode
       selectedRowId?: string | number
       footer?: ReactNode
     }
@@ -68,6 +69,7 @@ export const GenericTable = <T extends Record<string, unknown>>({
   onEdit,
   selectedRowId,
   footer,
+  customActions,
   ...props
 }: GenericTableProps<T>) => {
   const [selectedRowRef, setSelectedRowRef] = useState<HTMLElement | null>(null)
@@ -118,7 +120,7 @@ export const GenericTable = <T extends Record<string, unknown>>({
                       )
                     })
                   : null}
-                {onDelete || onEdit ? (
+                {onDelete || onEdit || customActions ? (
                   <GenericTableHead
                     fit
                     className="text-center"
@@ -169,7 +171,7 @@ export const GenericTable = <T extends Record<string, unknown>>({
                   })
                 : null}
 
-              {onDelete || onEdit ? (
+              {onDelete || onEdit || customActions ? (
                 <GenericTableCell className="py-1">
                   <div className="flex items-center whitespace-nowrap w-full gap-1">
                     {onEdit && (
@@ -197,6 +199,7 @@ export const GenericTable = <T extends Record<string, unknown>>({
                         <Trash2 className="size-4" />
                       </Button>
                     )}
+                    {customActions?.(row)}
                   </div>
                 </GenericTableCell>
               ) : null}

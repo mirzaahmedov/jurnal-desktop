@@ -25,7 +25,7 @@ export const smetaService = new CRUDService<Smeta, SmetaForm>({
 type SmetaTableProps = Omit<CollapsibleTableProps<TreeNode<Smeta>>, 'data'> & {
   data: Smeta[]
 }
-export const SmetaTable = ({ data, columns, ...props }: SmetaTableProps) => {
+export const SmetaTable = ({ data, columnDefs: columns, ...props }: SmetaTableProps) => {
   const treeData = useMemo(
     () =>
       buildTreeFromArray(
@@ -38,7 +38,7 @@ export const SmetaTable = ({ data, columns, ...props }: SmetaTableProps) => {
   return (
     <CollapsibleTable
       data={treeData}
-      columns={columns}
+      columnDefs={columns}
       {...props}
     />
   )
@@ -53,7 +53,7 @@ export const createSmetaSpravochnik = (config: Partial<SpravochnikHookOptions<Sm
     {
       title: 'Выберите смету',
       endpoint: APIEndpoints.smeta,
-      columns: smetaColumns,
+      columnDefs: smetaColumns,
       service: smetaService,
       filters: [SpravochnikSearchField, SmetaGroupFilter],
       defaultFilters,

@@ -67,7 +67,7 @@ export const useSpravochnik = <T extends { id: number }>(
   }, [options.value])
 
   const handleOpenDialog = useCallback(() => {
-    if (!options.service || !options.columns) {
+    if (!options.service || !options.columnDefs) {
       return
     }
     open({
@@ -77,7 +77,7 @@ export const useSpravochnik = <T extends { id: number }>(
       filters: options.filters,
       defaultFilters: options.defaultFilters,
       params: options.params,
-      columns: options.columns,
+      columnDefs: options.columnDefs,
       service: options.service,
       queryKeys: options.queryKeys,
       onClose: () => {
@@ -94,7 +94,7 @@ export const useSpravochnik = <T extends { id: number }>(
     })
   }, [
     id,
-    options.columns,
+    options.columnDefs,
     options.service,
     options.title,
     options.endpoint,

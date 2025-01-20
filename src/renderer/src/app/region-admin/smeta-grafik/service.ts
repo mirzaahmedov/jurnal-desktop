@@ -17,7 +17,7 @@ export const createSmetaGrafikSpravochnik = (
     {
       title: 'Выберите смету',
       endpoint: APIEndpoints.smeta_grafik,
-      columns: [
+      columnDefs: [
         {
           key: 'smeta_number',
           header: 'Номер сметы'

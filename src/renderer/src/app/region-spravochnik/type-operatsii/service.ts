@@ -26,7 +26,7 @@ export const createOperationTypeSpravochnik = (
     {
       title: 'Выберите тип операции',
       endpoint: APIEndpoints.type_operatsii,
-      columns: operationTypeColumns,
+      columnDefs: operationTypeColumns,
       service: operationTypeService,
       filters: [SpravochnikSearchField]
     } satisfies typeof config,

@@ -2,6 +2,8 @@ import { ChooseSpravochnik, GenericTable } from '@renderer/common/components'
 import { SearchField, useSearch } from '@renderer/common/features/search'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
+import { Button } from '@renderer/common/components/ui/button'
+import { CopyPlus } from 'lucide-react'
 import { ListView } from '@renderer/common/views'
 import type { Shartnoma } from '@renderer/common/models'
 import { createOrganizationSpravochnik } from '@renderer/app/region-spravochnik/organization'
@@ -103,6 +105,22 @@ const ShartnomaPage = () => {
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}
           placeholder={!orgSpravochnik.selected ? 'Выберите организацию' : undefined}
+          customActions={(row) => (
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={(e) => {
+                e.stopPropagation()
+                navigate(`create?org_id=${row.id}`, {
+                  state: {
+                    original: row
+                  }
+                })
+              }}
+            >
+              <CopyPlus className="size-4" />
+            </Button>
+          )}
         />
       </ListView.Content>
       <ListView.Footer>

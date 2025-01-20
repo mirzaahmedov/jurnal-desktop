@@ -97,7 +97,7 @@ const SmetaPage = () => {
         {SmetaTable ? (
           <SmetaTable
             data={mainSchets?.data ?? []}
-            columns={smetaColumns}
+            columnDefs={smetaColumns}
             onEdit={handleClickEdit}
             onDelete={handleClickDelete}
           />

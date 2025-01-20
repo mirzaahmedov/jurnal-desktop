@@ -43,7 +43,7 @@ export const createOstatokProductSpravochnik = (
     {
       title: 'Выберите операцию',
       endpoint: APIEndpoints.jur7_saldo_product,
-      columns: ostatokProductColumns,
+      columnDefs: ostatokProductColumns,
       service: ostatokProductService,
       filters: [SpravochnikSearchField]
     } satisfies typeof config,

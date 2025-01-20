@@ -38,7 +38,7 @@ export const createMainSchetSpravochnik = (config: SpravochnikHookOptions<MainSc
     {
       title: 'Выберите основной счет',
       endpoint: APIEndpoints.main_schet,
-      columns: mainSchetColumns,
+      columnDefs: mainSchetColumns,
       service: mainSchetService,
       filters: [SpravochnikSearchField]
     } satisfies typeof config,

@@ -14,7 +14,7 @@ const createResponsibleSpravochnik = (config: Partial<SpravochnikHookOptions<Res
   return extendObject(
     {
       endpoint: APIEndpoints.jur7_responsible,
-      columns: responsibleColumns,
+      columnDefs: responsibleColumns,
       service: responsibleService,
       title: 'Ответственные'
     } satisfies typeof config,
