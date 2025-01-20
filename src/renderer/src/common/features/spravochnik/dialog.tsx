@@ -42,7 +42,7 @@ export const Spravochnik = ({ close, spravochnik }: SpravochnikProps) => {
       )
     ],
     queryFn: spravochnik?.service.getAll,
-    refetchOnMount: false,
+    refetchOnMount: true,
     refetchOnWindowFocus: false
   })
 
