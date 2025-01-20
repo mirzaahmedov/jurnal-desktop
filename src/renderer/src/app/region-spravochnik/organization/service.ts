@@ -7,7 +7,7 @@ import { withPreprocessor } from '@/common/lib/validation'
 import { SpravochnikSearchField } from '@/common/features/search'
 import { extendObject } from '@/common/lib/utils'
 import { organizationColumns } from './columns'
-import { CreateOrganizationDialog } from './create-dialog'
+import { CreateOrganizationDialog } from './components/create-dialog'
 import { organizationQueryKeys } from './config'
 
 export const OrganizationFormSchema = withPreprocessor(

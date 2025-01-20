@@ -1,8 +1,11 @@
 import { SearchField, useSearch } from '@renderer/common/features/search'
+import { useEffect, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { usePagination, useToggle } from '@renderer/common/hooks'
 
-import { CreateOrganizationDialog } from './create-dialog'
+import { Button } from '@renderer/common/components/ui/button'
+import { CopyPlus } from 'lucide-react'
+import { CreateOrganizationDialog } from './components/create-dialog'
 import { ListView } from '@renderer/common/views'
 import { LoadingOverlay } from '@renderer/common/components'
 import { Organization } from '@renderer/common/models'
@@ -16,6 +19,7 @@ import { useParentId } from './hooks'
 
 const OrganizationPage = () => {
   const [, setParentId] = useParentId()
+  const [original, setOriginal] = useState<Organization>()
 
   const { confirm } = useConfirm()
   const { search } = useSearch()
@@ -63,6 +67,12 @@ const OrganizationPage = () => {
     })
   }
 
+  useEffect(() => {
+    if (!dialogToggle.isOpen) {
+      setOriginal(undefined)
+    }
+  }, [dialogToggle.isOpen])
+
   return (
     <ListView className="relative">
       <div className="flex-1 overflow-auto scrollbar">
@@ -71,6 +81,19 @@ const OrganizationPage = () => {
           data={organizations?.data ?? []}
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}
+          customActions={(row) => (
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={(e) => {
+                e.stopPropagation()
+                setOriginal(row)
+                dialogToggle?.open()
+              }}
+            >
+              <CopyPlus className="size-4" />
+            </Button>
+          )}
         />
       </div>
       <ListView.Footer>
@@ -83,6 +106,9 @@ const OrganizationPage = () => {
       <CreateOrganizationDialog
         open={dialogToggle.isOpen}
         onOpenChange={dialogToggle.setOpen}
+        state={{
+          original
+        }}
       />
     </ListView>
   )
