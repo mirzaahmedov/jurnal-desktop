@@ -4,7 +4,7 @@ import { RasxodPayloadSchema, RasxodPodvodkaPayloadSchema, kassaRasxodService } 
 import { useCallback, useEffect } from 'react'
 import { useSpravochnik } from '@/common/features/spravochnik'
 import { Form } from '@/common/components/ui/form'
-import { Fieldset, AccountBalance, GenerateDocumentButton } from '@/common/components'
+import { Fieldset, AccountBalance } from '@/common/components'
 import { createPodotchetSpravochnik } from '@/app/region-spravochnik/podotchet'
 import { useToast } from '@/common/hooks/use-toast'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -35,6 +35,7 @@ import { Operatsii } from '@/common/models'
 import { ButtonGroup } from '@/common/components/ui/button-group'
 
 import { DetailsView } from '@/common/views'
+import { GenerateFile } from '@renderer/common/features/file'
 
 const KassaRasxodDetailtsPage = () => {
   const { toast } = useToast()
@@ -234,7 +235,7 @@ const KassaRasxodDetailtsPage = () => {
 
               {main_schet?.data && form.formState.isValid ? (
                 <ButtonGroup borderStyle="dashed">
-                  <GenerateDocumentButton
+                  <GenerateFile
                     tabIndex={8}
                     fileName={`расходный-кассовый-ордер-${form.watch('doc_num')}.pdf`}
                     buttonText="Скачать расходный кассовый ордер"
@@ -262,7 +263,7 @@ const KassaRasxodDetailtsPage = () => {
                           }
                         })}
                     />
-                  </GenerateDocumentButton>
+                  </GenerateFile>
                 </ButtonGroup>
               ) : null}
             </DetailsView.Footer>

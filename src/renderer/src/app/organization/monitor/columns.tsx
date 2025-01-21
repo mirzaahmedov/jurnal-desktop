@@ -16,7 +16,6 @@ export const organizationMonitorColumns: ColumnDef<OrganizationMonitor>[] = [
     header: 'Дата',
     renderCell: (row) => formatLocaleDate(row.doc_date)
   },
-
   {
     key: 'opisanie',
     header: 'Разъяснительный текст',

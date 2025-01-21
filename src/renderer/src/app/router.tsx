@@ -19,7 +19,6 @@ import BankRasxodDetailsPage from './bank/rasxod/details/page'
 import BankRasxodPage from './bank/rasxod/page'
 import BankSpravochnikPage from './super-admin/bank/page'
 import BudgetPage from './super-admin/budjet/page'
-import DemoPage from './demo/page'
 import ExpensesDetailsPage from './real-expenses/real-expenses/details/page'
 import ExpensesPage from './real-expenses/real-expenses/page'
 import ExpensesReportDetailsPage from './real-expenses/report/details/page'
@@ -78,6 +77,8 @@ import Subdivision7Page from './jurnal-7/podrazdelenie/page'
 import SubdivisionPage from './region-spravochnik/podrazdelenie/page'
 import UnitPage from './super-admin/unit/page'
 import UserPage from './super-admin/user/page'
+
+// import DemoPage from './demo/page'
 
 export const routes: RouteObject[] = [
   {
@@ -442,7 +443,7 @@ export const routes: RouteObject[] = [
       },
       {
         path: 'demo',
-        element: <DemoPage />
+        element: null
       },
       {
         path: '*',

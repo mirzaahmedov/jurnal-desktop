@@ -9,7 +9,7 @@ import { useEffect, useMemo } from 'react'
 
 import { ContractScheduleTemplate } from '../report'
 import { FormElement } from '@/common/components/form'
-import { GenerateDocumentButton } from '@/common/components'
+import { GenerateFile } from '@renderer/common/features/file'
 import { Input } from '@/common/components/ui/input'
 import type { ShartnomaGrafikForm } from '../../service'
 import { Textarea } from '@/common/components/ui/textarea'
@@ -233,7 +233,7 @@ const GenerateReportDialog = ({
             </div>
           </form>
         </Form>
-        <GenerateDocumentButton
+        <GenerateFile
           disabled={
             form.watch('section') === 0 ||
             form.watch('subchapter') === 0 ||
@@ -252,7 +252,7 @@ const GenerateReportDialog = ({
             paymentDetails={form.watch('payment_details')}
             contractDetails={form.watch('contract_details')}
           />
-        </GenerateDocumentButton>
+        </GenerateFile>
       </DialogContent>
     </Dialog>
   )

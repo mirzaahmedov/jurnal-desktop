@@ -11,13 +11,7 @@ import { useQuery } from '@tanstack/react-query'
 import { orgMonitoringService } from './service'
 import { orgMonitorQueryKeys } from './constants'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
-import {
-  FooterCell,
-  FooterRow,
-  GenericTable,
-  DownloadDocumentButton,
-  ChooseSpravochnik
-} from '@/common/components'
+import { FooterCell, FooterRow, GenericTable, ChooseSpravochnik } from '@/common/components'
 import { formatNumber } from '@/common/lib/format'
 import { useOperatsiiId, useOrgId } from './hooks'
 import { organizationMonitorColumns } from './columns'
@@ -29,6 +23,7 @@ import { ButtonGroup } from '@/common/components/ui/button-group'
 
 import { ListView } from '@/common/views'
 import { useRangeDate, usePagination } from '@/common/hooks'
+import { DownloadFile } from '@renderer/common/features/file'
 
 const OrganizationMonitoringPage = () => {
   const [operatsiiId, setOperatsiiId] = useOperatsiiId()
@@ -124,7 +119,7 @@ const OrganizationMonitoringPage = () => {
             </div>
             {main_schet_id && operatsiiSpravochnik.selected?.schet ? (
               <ButtonGroup borderStyle="dashed">
-                <DownloadDocumentButton
+                <DownloadFile
                   fileName={`дебитор-кредитор_отчет-${dates.to}.xlsx`}
                   url="organization/monitoring/prixod/rasxod"
                   params={{
@@ -136,8 +131,8 @@ const OrganizationMonitoringPage = () => {
                   }}
                   buttonText="Дебитор / Кредитор отчет"
                 />
-                <DownloadDocumentButton
-                  fileName={`сводный-отчет-${dates.from}:${dates.to}.xlsx`}
+                <DownloadFile
+                  fileName={`сводный-отчет-${dates.from}&${dates.to}.xlsx`}
                   url="/organization/monitoring/order"
                   params={{
                     main_schet_id,
@@ -150,8 +145,8 @@ const OrganizationMonitoringPage = () => {
                   }}
                   buttonText="Сводный отчет"
                 />
-                <DownloadDocumentButton
-                  fileName={`сводный-отчет-${dates.from}:${dates.to}.xlsx`}
+                <DownloadFile
+                  fileName={`сводный-отчет-${dates.from}&${dates.to}.xlsx`}
                   url="/organization/monitoring/order"
                   params={{
                     main_schet_id,
@@ -164,8 +159,8 @@ const OrganizationMonitoringPage = () => {
                   }}
                   buttonText="Сводный отчет (по договору)"
                 />
-                <DownloadDocumentButton
-                  fileName={`сводный-отчет-${dates.to}-счет:${operatsiiSpravochnik.selected?.schet}.xlsx`}
+                <DownloadFile
+                  fileName={`сводный-отчет-${dates.to}-счет&${operatsiiSpravochnik.selected?.schet}.xlsx`}
                   url="/organization/monitoring/cap"
                   params={{
                     main_schet_id,

@@ -1,12 +1,9 @@
-import {
-  ChooseSpravochnik,
-  DownloadDocumentButton,
-  GenericTable
-} from '@renderer/common/components'
+import { ChooseSpravochnik, GenericTable } from '@renderer/common/components'
 import { formatDate, getFirstDayOfMonth, getLastDayOfMonth } from '@renderer/common/lib/date'
 import { ostatokColumns, ostatokHeaderGroups } from './columns'
 
 import { ButtonGroup } from '@renderer/common/components/ui/button-group'
+import { DownloadFile } from '@renderer/common/features/file'
 import { ListView } from '@renderer/common/views'
 import { MonthPicker } from '@renderer/common/components/month-picker'
 import { createPodrazdelenie7Spravochnik } from '../podrazdelenie/service'
@@ -87,7 +84,7 @@ const OstatokPage = () => {
           </div>
           <div>
             <ButtonGroup borderStyle="dashed">
-              <DownloadDocumentButton
+              <DownloadFile
                 fileName={`оборотка_${year}-${month}.xlsx`}
                 url="/jur_7/monitoring/obrotka/report"
                 params={{
@@ -97,7 +94,7 @@ const OstatokPage = () => {
                 }}
                 buttonText="Оборотка"
               />
-              <DownloadDocumentButton
+              <DownloadFile
                 fileName={`материальная_${year}-${month}.xlsx`}
                 url="/jur_7/monitoring/material/report"
                 params={{
@@ -107,7 +104,7 @@ const OstatokPage = () => {
                 }}
                 buttonText="Материальная"
               />
-              <DownloadDocumentButton
+              <DownloadFile
                 fileName={`шапка_${year}-${month}.xlsx`}
                 url="/jur_7/monitoring/cap/report"
                 params={{
@@ -118,7 +115,7 @@ const OstatokPage = () => {
                 }}
                 buttonText="Шапка"
               />
-              <DownloadDocumentButton
+              <DownloadFile
                 fileName={`шапка2_${year}-${month}.xlsx`}
                 url="/jur_7/monitoring/cap/back/report"
                 params={{

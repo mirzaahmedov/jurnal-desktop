@@ -1,9 +1,10 @@
-import { DownloadDocumentButton, GenericTable, LoadingOverlay } from '@/common/components'
+import { GenericTable, LoadingOverlay } from '@/common/components'
 import { columns, queryKeys } from './config'
 import { usePrixodDelete, usePrixodList } from './service'
 
 import { ButtonGroup } from '@renderer/common/components/ui/button-group'
 import { DateRangeForm } from '../common/components/date-range-form'
+import { DownloadFile } from '@renderer/common/features/file'
 import { toast } from 'react-toastify'
 import { useConfirm } from '@/common/features/confirm'
 import { useJurnal7DateRange } from '../common/components/use-date-range'
@@ -57,9 +58,9 @@ const MO7PrixodPage = () => {
         />
         {main_schet_id ? (
           <ButtonGroup>
-            <DownloadDocumentButton
+            <DownloadFile
               url="jur_7/doc_prixod/report"
-              fileName={`jur7_prixod_report-${from}:${to}.xlsx`}
+              fileName={`jur7_prixod_report-${from}&${to}.xlsx`}
               buttonText="Скачать отчет"
               params={{ from, to, main_schet_id }}
             />

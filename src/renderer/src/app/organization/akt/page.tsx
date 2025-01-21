@@ -1,8 +1,9 @@
-import { DownloadDocumentButton, GenericTable } from '@/common/components'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { usePagination, useRangeDate } from '@/common/hooks'
 
 import type { Akt } from '@/common/models'
+import { DownloadFile } from '@renderer/common/features/file'
+import { GenericTable } from '@/common/components'
 import { ListView } from '@/common/views'
 import { aktService } from './service'
 import { columns } from './columns'
@@ -64,8 +65,8 @@ const AktPage = () => {
     <ListView>
       <ListView.Header className="flex flex-row items-center justify-between">
         <ListView.RangeDatePicker {...dates} />
-        <DownloadDocumentButton
-          fileName={`aкт-приема-пересдач_шапка-${dates.from}:${dates.to}.xlsx`}
+        <DownloadFile
+          fileName={`aкт-приема-пересдач_шапка-${dates.from}&${dates.to}.xlsx`}
           url="/akt/export/cap"
           params={{
             main_schet_id,

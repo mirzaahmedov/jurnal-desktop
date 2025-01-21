@@ -1,7 +1,8 @@
-import { DownloadDocumentButton, FooterCell, FooterRow, GenericTable } from '@/common/components'
+import { FooterCell, FooterRow, GenericTable } from '@/common/components'
 import { usePagination, useRangeDate } from '@/common/hooks'
 
 import { ButtonGroup } from '@/common/components/ui/button-group'
+import { DownloadFile } from '@renderer/common/features/file'
 import { ListView } from '@/common/views'
 import { bankMonitorQueryKeys } from './constants'
 import { bankMonitorService } from './service'
@@ -48,8 +49,8 @@ const BankMonitorPage = () => {
 
           {main_schet_id ? (
             <ButtonGroup borderStyle="dashed">
-              <DownloadDocumentButton
-                fileName={`банк-дневной-отчет_${dates.from}:${dates.to}.xlsx`}
+              <DownloadFile
+                fileName={`банк-дневной-отчет_${dates.from}&${dates.to}.xlsx`}
                 url="bank/monitoring/daily"
                 buttonText="Дневной отчет"
                 params={{
@@ -58,8 +59,8 @@ const BankMonitorPage = () => {
                   to: dates.to
                 }}
               />
-              <DownloadDocumentButton
-                fileName={`банк-шапка-отчет_${dates.from}:${dates.to}.xlsx`}
+              <DownloadFile
+                fileName={`банк-шапка-отчет_${dates.from}&${dates.to}.xlsx`}
                 url="bank/monitoring/cap"
                 buttonText="Шапка отчет"
                 params={{

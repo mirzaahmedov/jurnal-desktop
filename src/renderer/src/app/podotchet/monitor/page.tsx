@@ -1,7 +1,6 @@
 import {
   ChooseSpravochnik,
   DateRangeForm,
-  DownloadDocumentButton,
   FooterCell,
   FooterRow,
   GenericTable,
@@ -12,6 +11,7 @@ import {
 import { parseAsInteger, useQueryState } from 'nuqs'
 
 import { ButtonGroup } from '@/common/components/ui/button-group'
+import { DownloadFile } from '@renderer/common/features/file'
 import { ScrollArea } from '@/common/components/ui/scroll-area'
 import { TypeSchetOperatsii } from '@/common/models'
 import { createOperatsiiSpravochnik } from '@/app/super-admin/operatsii'
@@ -104,31 +104,33 @@ const PodotchetMonitoringPage = () => {
             </div>
 
             <ButtonGroup borderStyle="dashed">
-              <DownloadDocumentButton
+              <DownloadFile
                 fileName={`дебитор-кредитор_отчет-${to}.xlsx`}
                 url="podotchet/monitoring/prixod/rasxod/"
                 params={{
                   budjet_id,
-                  to
+                  to,
+                  excel: true
                 }}
                 buttonText="Дебитор / Кредитор отчет"
               />
               {podotchetId ? (
-                <DownloadDocumentButton
-                  fileName={`лицевой-счет_${podotchetSpravochnik.selected?.name}:${from}:${to}.xlsx`}
+                <DownloadFile
+                  fileName={`лицевой-счет_${podotchetSpravochnik.selected?.name}-${from}&${to}.xlsx`}
                   url={`podotchet/monitoring/export/${podotchetId}`}
                   params={{
                     operatsii: operatsiiSpravochnik.selected?.schet,
                     main_schet_id,
                     from,
-                    to
+                    to,
+                    excel: true
                   }}
                   buttonText="Лицевой счет"
                 />
               ) : null}
               {operatsiiSpravochnik.selected ? (
-                <DownloadDocumentButton
-                  fileName={`шапка_${from}:${to}-${operatsiiSpravochnik.selected.schet}.xlsx`}
+                <DownloadFile
+                  fileName={`шапка_${from}&${to}-${operatsiiSpravochnik.selected.schet}.xlsx`}
                   url={`/podotchet/monitoring/cap`}
                   params={{
                     operatsii: operatsiiSpravochnik.selected.schet,

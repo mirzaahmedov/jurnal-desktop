@@ -1,31 +1,25 @@
-import type { ReactElement } from 'react'
-import type { ButtonProps } from './ui/button'
+import { Button } from '@renderer/common/components/ui/button'
+import type { ButtonProps } from '@renderer/common/components/ui/button'
 import type { DocumentProps } from '@react-pdf/renderer'
-
-import { LoadingSpinner } from './loading'
+import { LoadingSpinner } from '@renderer/common/components/loading'
 import { Printer } from 'lucide-react'
-import { Button } from './ui/button'
+import type { ReactElement } from 'react'
+import { pdf } from '@react-pdf/renderer'
 import { useMutation } from '@tanstack/react-query'
 import { useToast } from '@/common/hooks/use-toast'
-import { saveAs } from 'file-saver'
-import { pdf } from '@react-pdf/renderer'
 
-type GenerateDocumentButtonProps = ButtonProps & {
+export type GenerateFileProps = ButtonProps & {
   children: ReactElement<DocumentProps>
   fileName: string
   buttonText: string
 }
-const GenerateDocumentButton = ({
-  children,
-  fileName,
-  buttonText,
-  ...props
-}: GenerateDocumentButtonProps) => {
+export const GenerateFile = ({ children, fileName, buttonText, ...props }: GenerateFileProps) => {
   const { toast } = useToast()
   const { mutate: generateDocument, isPending: isGeneratingDocument } = useMutation({
     mutationFn: async () => {
       const blob = await pdf(children).toBlob()
-      saveAs(blob, fileName)
+      const buf = await blob.arrayBuffer()
+      window.downloader.saveFile(buf, fileName)
     },
     onError(error) {
       toast({
@@ -58,5 +52,3 @@ const GenerateDocumentButton = ({
     </Button>
   )
 }
-
-export { GenerateDocumentButton }

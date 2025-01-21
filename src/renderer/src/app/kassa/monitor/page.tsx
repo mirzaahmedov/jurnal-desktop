@@ -1,7 +1,8 @@
-import { DownloadDocumentButton, FooterCell, FooterRow, GenericTable } from '@/common/components'
+import { FooterCell, FooterRow, GenericTable } from '@/common/components'
 import { usePagination, useRangeDate } from '@/common/hooks'
 
 import { ButtonGroup } from '@/common/components/ui/button-group'
+import { DownloadFile } from '@renderer/common/features/file'
 import { ListView } from '@/common/views'
 import { columns } from './columns'
 import { formatNumber } from '@/common/lib/format'
@@ -39,8 +40,8 @@ const KassaMonitorPage = () => {
           <ListView.RangeDatePicker {...dates} />
           {main_schet_id ? (
             <ButtonGroup borderStyle="dashed">
-              <DownloadDocumentButton
-                fileName={`касса-дневной-отчет_${dates.from}:${dates.to}.xlsx`}
+              <DownloadFile
+                fileName={`касса-дневной-отчет_${dates.from}&${dates.to}.xlsx`}
                 url="kassa/monitoring/daily"
                 buttonText="Дневной отчет"
                 params={{
@@ -49,8 +50,8 @@ const KassaMonitorPage = () => {
                   to: dates.to
                 }}
               />
-              <DownloadDocumentButton
-                fileName={`касса-шапка-отчет_${dates.from}:${dates.to}.xlsx`}
+              <DownloadFile
+                fileName={`касса-шапка-отчет_${dates.from}&${dates.to}.xlsx`}
                 url="kassa/monitoring/cap"
                 buttonText="Шапка отчет"
                 params={{

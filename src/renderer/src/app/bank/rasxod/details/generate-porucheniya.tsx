@@ -9,7 +9,6 @@ import { formatLocaleDate } from '@renderer/common/lib/format'
 import { generatePorucheniya } from '../templates/excel/porucheniya'
 import { generatePorucheniyaNalog } from '../templates/excel/porucheniya_nalog'
 import { numberToWords } from '@renderer/common/lib/utils'
-import { saveAs } from 'file-saver'
 import { useMutation } from '@tanstack/react-query'
 import { useToast } from '@renderer/common/hooks'
 
@@ -58,7 +57,8 @@ export const GeneratePorucheniya = ({
       const blob = await (type === 'porucheniya' ? generatePorucheniya : generatePorucheniyaNalog)(
         params
       )
-      saveAs(blob, fileName)
+      const buf = await blob.arrayBuffer()
+      window.downloader.saveFile(buf, fileName)
     },
     onError(error) {
       toast({

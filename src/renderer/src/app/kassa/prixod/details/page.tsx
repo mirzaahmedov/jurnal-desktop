@@ -2,7 +2,7 @@ import type { PrixodPodvodkaPayloadType } from '../service'
 
 import { mainSchetQueryKeys, mainSchetService } from '@/app/region-spravochnik/main-schet'
 import { createPodotchetSpravochnik } from '@/app/region-spravochnik/podotchet'
-import { Fieldset, GenerateDocumentButton } from '@/common/components'
+import { Fieldset } from '@/common/components'
 import { ButtonGroup } from '@/common/components/ui/button-group'
 import { Form } from '@/common/components/ui/form'
 import { APIEndpoints } from '@/common/features/crud'
@@ -33,6 +33,7 @@ import { KassaPrixodOrderTemplate } from '../templates'
 import { podvodkaColumns } from './podvodki'
 
 import { DetailsView } from '@/common/views'
+import { GenerateFile } from '@renderer/common/features/file'
 
 const KassaPrixodDetailsPage = () => {
   const { toast } = useToast()
@@ -204,7 +205,7 @@ const KassaPrixodDetailsPage = () => {
 
               {main_schet?.data && form.formState.isValid ? (
                 <ButtonGroup borderStyle="dashed">
-                  <GenerateDocumentButton
+                  <GenerateFile
                     tabIndex={8}
                     fileName={`приходной-кассовый-ордер-${form.watch('doc_num')}.pdf`}
                     buttonText="Создать приходной кассовый ордер"
@@ -234,7 +235,7 @@ const KassaPrixodDetailsPage = () => {
                           }
                         })}
                     />
-                  </GenerateDocumentButton>
+                  </GenerateFile>
                 </ButtonGroup>
               ) : null}
             </DetailsView.Footer>
