@@ -19,6 +19,7 @@ import BankRasxodDetailsPage from './bank/rasxod/details/page'
 import BankRasxodPage from './bank/rasxod/page'
 import BankSpravochnikPage from './super-admin/bank/page'
 import BudgetPage from './super-admin/budjet/page'
+import DemoPage from './demo/page'
 import ExpensesDetailsPage from './real-expenses/real-expenses/details/page'
 import ExpensesPage from './real-expenses/real-expenses/page'
 import ExpensesReportDetailsPage from './real-expenses/report/details/page'
@@ -438,6 +439,10 @@ export const routes: RouteObject[] = [
       {
         index: true,
         element: <HomePage />
+      },
+      {
+        path: 'demo',
+        element: <DemoPage />
       },
       {
         path: '*',

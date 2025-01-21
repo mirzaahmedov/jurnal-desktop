@@ -3,8 +3,11 @@ import { electronApp, is, optimizer } from '@electron-toolkit/utils'
 
 import { NsisUpdater } from 'electron-updater'
 import { events } from './auto-updater'
+import fs from 'fs'
 import icon from '@resources/icon.png?asset'
 import { join } from 'path'
+import os from 'os'
+import path from 'path'
 
 const url =
   import.meta.env.VITE_MODE === 'staging' ? 'http://10.50.0.140:4006' : 'http://10.50.0.140:4005'
@@ -63,6 +66,22 @@ function createWindow(): void {
     ipcMain.on('open-dev-tools', () => {
       mainWindow.webContents.openDevTools()
     })
+
+    ipcMain.on(
+      'save-file',
+      (_, { fileName, fileData }: { fileName: string; fileData: ArrayBuffer }) => {
+        const folderPath = path.join(os.homedir(), 'Downloads/E-Moliya')
+        const filePath = path.join(folderPath, fileName)
+
+        if (!fs.existsSync(folderPath)) {
+          fs.mkdirSync(folderPath, { recursive: true })
+          console.log(`create folder ${folderPath}`)
+        }
+
+        fs.writeFileSync(filePath, Buffer.from(fileData))
+        console.log(`file save to ${filePath}`)
+      }
+    )
 
     ipcMain.handle('get-version', () => app.getVersion())
   })
