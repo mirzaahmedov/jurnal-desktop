@@ -67,7 +67,7 @@ function createWindow(): void {
       mainWindow.webContents.openDevTools()
     })
 
-    ipcMain.on(
+    ipcMain.handle(
       'save-file',
       (_, { fileName, fileData }: { fileName: string; fileData: ArrayBuffer }) => {
         const folderPath = path.join(os.homedir(), 'Downloads/E-Moliya')
@@ -75,11 +75,15 @@ function createWindow(): void {
 
         if (!fs.existsSync(folderPath)) {
           fs.mkdirSync(folderPath, { recursive: true })
-          console.log(`create folder ${folderPath}`)
+          console.log(`created folder ${folderPath}`)
         }
 
         fs.writeFileSync(filePath, Buffer.from(fileData))
-        console.log(`file save to ${filePath}`)
+        console.log(`file saved to ${filePath}`)
+
+        shell.openPath(filePath).catch((err) => {
+          console.error('Failed to open file:', err)
+        })
       }
     )
 

@@ -15,7 +15,7 @@ const DemoPage = () => {
           params={{
             main_schet_id,
             budjet_id,
-            to: '21-01-2025',
+            to: '2025-01-01',
             operatsii: '159',
             excel: true
           }}
