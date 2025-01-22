@@ -19,7 +19,9 @@ export const GenerateFile = ({ children, fileName, buttonText, ...props }: Gener
     mutationFn: async () => {
       const blob = await pdf(children).toBlob()
       const buf = await blob.arrayBuffer()
-      window.downloader.saveFile(buf, fileName)
+
+      const [name, ext] = fileName.split('.')
+      window.downloader.saveFile(buf, `${name}___${Date.now()}.${ext}`)
     },
     onError(error) {
       toast({

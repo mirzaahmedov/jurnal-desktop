@@ -24,7 +24,8 @@ export const DownloadFile = ({
         responseType: 'arraybuffer',
         params
       })
-      window.downloader.saveFile(res.data, fileName)
+      const [name, ext] = fileName.split('.')
+      window.downloader.saveFile(res.data, `${name}___${Date.now()}.${ext}`)
     }
   })
 
