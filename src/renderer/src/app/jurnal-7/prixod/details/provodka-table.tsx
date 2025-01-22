@@ -27,10 +27,9 @@ import { useEventCallback } from '@renderer/common/hooks'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
 
 type ProvodkaTableProps = {
-  isCreate: boolean
   form: UseFormReturn<PrixodFormType>
 }
-export const ProvodkaTable = ({ isCreate, form }: ProvodkaTableProps) => {
+export const ProvodkaTable = ({ form }: ProvodkaTableProps) => {
   const handleChangeChildField = useEventCallback(
     (index: number, key: keyof PrixodChildFormType, value: unknown) => {
       form.setValue(`childs.${index}.${key}`, value as string | number)
@@ -119,7 +118,7 @@ export const ProvodkaTable = ({ isCreate, form }: ProvodkaTableProps) => {
             </EditableTableHead>
             <EditableTableHead
               rowSpan={2}
-              colSpan={isCreate ? 2 : 1}
+              colSpan={2}
               className="text-center"
             >
               Износь / Старый износ
@@ -150,6 +149,7 @@ export const ProvodkaTable = ({ isCreate, form }: ProvodkaTableProps) => {
           {Array.isArray(form.watch('childs')) ? (
             form.watch('childs').map((row, index) => {
               const errors = form.formState.errors.childs?.[index] || {}
+              console.log({ iznos: row.iznos })
               return (
                 <EditableTableRow key={index}>
                   <NaimenovanieCells
@@ -267,18 +267,16 @@ export const ProvodkaTable = ({ isCreate, form }: ProvodkaTableProps) => {
                       />
                     </div>
                   </EditableTableCell>
-                  {isCreate ? (
-                    <EditableTableCell>
-                      <div className="relative flex items-center justify-center px-4">
-                        <Checkbox
-                          checked={row.iznos}
-                          onCheckedChange={(checked) => {
-                            handleChangeChildField(index, 'iznos', Boolean(checked))
-                          }}
-                        />
-                      </div>
-                    </EditableTableCell>
-                  ) : null}
+                  <EditableTableCell>
+                    <div className="relative flex items-center justify-center px-4">
+                      <Checkbox
+                        checked={row.iznos}
+                        onCheckedChange={(checked) => {
+                          handleChangeChildField(index, 'iznos', Boolean(checked))
+                        }}
+                      />
+                    </div>
+                  </EditableTableCell>
                   <EditableTableCell>
                     <div className="relative flex items-center justify-center">
                       <NumericInput

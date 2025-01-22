@@ -138,17 +138,7 @@ const MO7PrixodDetailsPage = () => {
   }, [values])
 
   useEffect(() => {
-    form.reset(
-      prixod?.data
-        ? {
-            ...prixod.data,
-            childs: prixod.data.childs.map((child) => ({
-              ...child,
-              iznos: !!Number(child.iznos_foiz)
-            }))
-          }
-        : defaultValues
-    )
+    form.reset(prixod?.data ? prixod?.data : defaultValues)
   }, [form, prixod])
 
   const kimdan_id = form.watch('kimdan_id')
@@ -259,10 +249,7 @@ const MO7PrixodDetailsPage = () => {
         </Form>
 
         <div className="p-5 mb-28 w-full overflow-x-auto scrollbar">
-          <ProvodkaTable
-            isCreate={id === 'create'}
-            form={form}
-          />
+          <ProvodkaTable form={form} />
         </div>
       </DetailsView.Content>
     </DetailsView>
