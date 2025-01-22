@@ -1,7 +1,6 @@
 import type { EditorComponentType } from './types'
-
-import { inputVariants } from '@/common/components'
 import { NumericInput } from '@/common/components'
+import { inputVariants } from '@/common/components'
 
 export const createSummaEditor = <T extends { summa?: number }>(): EditorComponentType<T> => {
   return ({ tabIndex, id, row, errors, onChange }) => {
@@ -10,6 +9,7 @@ export const createSummaEditor = <T extends { summa?: number }>(): EditorCompone
         <NumericInput
           name="summa"
           tabIndex={tabIndex}
+          allowNegative={false}
           value={row.summa || ''}
           onValueChange={(values) =>
             onChange?.({

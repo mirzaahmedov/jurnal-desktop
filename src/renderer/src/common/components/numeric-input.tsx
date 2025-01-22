@@ -6,10 +6,10 @@ import { NumericFormat } from 'react-number-format'
 import type { NumericFormatProps } from 'react-number-format'
 import { cn } from '@/common/lib/utils'
 
-type NumericInputProps = NumericFormatProps<InputProps> & {
+export type NumericInputProps = NumericFormatProps<InputProps> & {
   adjustWidth?: boolean
 }
-const NumericInput = forwardRef<HTMLInputElement, NumericInputProps>(
+export const NumericInput = forwardRef<HTMLInputElement, NumericInputProps>(
   ({ className, adjustWidth, ...props }, forwardedRef) => {
     const inputRef = useRef<HTMLInputElement>()
 
@@ -47,6 +47,3 @@ const NumericInput = forwardRef<HTMLInputElement, NumericInputProps>(
 )
 
 NumericInput.displayName = 'NumericInput'
-
-export { NumericInput }
-export type { NumericInputProps }

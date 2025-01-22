@@ -258,7 +258,7 @@ const MO7PrixodDetailsPage = () => {
           </form>
         </Form>
 
-        <div className="p-5 pb-28 w-full overflow-x-auto">
+        <div className="p-5 mb-28 w-full overflow-x-auto scrollbar">
           <ProvodkaTable
             isCreate={id === 'create'}
             form={form}

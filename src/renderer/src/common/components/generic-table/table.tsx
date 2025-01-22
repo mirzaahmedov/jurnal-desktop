@@ -14,6 +14,7 @@ import { formatNumber } from '@renderer/common/lib/format'
 import { GenericTableCell, GenericTableHead, GenericTableRow } from './components'
 import type { Autocomplete } from '@renderer/common/lib/types'
 import { cn } from '@renderer/common/lib/utils'
+import { twMerge } from 'tailwind-merge'
 
 export type ColumnDef<T extends Record<string, unknown>> = {
   numeric?: boolean
@@ -84,9 +85,12 @@ export const GenericTable = <T extends Record<string, unknown>>({
   }, [selectedRowRef])
 
   return (
-    <Table {...props}>
+    <Table
+      {...props}
+      className={twMerge('relative', props.className)}
+    >
       {caption ? <TableCaption>A list of your recent invoices.</TableCaption> : null}
-      <TableHeader>
+      <TableHeader className="sticky top-0">
         {Array.isArray(headerGroups)
           ? headerGroups.map((headerGroup, index) => (
               <GenericTableRow

@@ -40,6 +40,7 @@ const SummaEditableFields: FormEditableFieldsComponent<RequiredSummaEditableFiel
             <FormElement label="Сумма">
               <NumericInput
                 {...field}
+                allowNegative={false}
                 tabIndex={tabIndex}
                 disabled={disabled}
                 value={field.value || ''}

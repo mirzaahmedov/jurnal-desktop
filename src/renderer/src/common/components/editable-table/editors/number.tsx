@@ -1,14 +1,13 @@
-import { NumericInput, inputVariants } from '@/common/components'
-
-import type { EditorComponentType } from './types'
+import type { EditorComponentType, EditorOptions } from './types'
+import { NumericInput, NumericInputProps, inputVariants } from '@/common/components'
 
 const createNumberEditor = <T extends Record<string, unknown>>({
   readOnly = false,
   key,
-  max
-}: {
+  max,
+  inputProps
+}: EditorOptions<T, NumericInputProps> & {
   readOnly?: boolean
-  key: keyof T
   max?: number
 }): EditorComponentType<T> => {
   const EditorComponent: EditorComponentType<T> = ({ tabIndex, id, row, errors, onChange }) => {
@@ -47,6 +46,7 @@ const createNumberEditor = <T extends Record<string, unknown>>({
             error: !!errors?.[key as string]
           })}
           autoComplete="off"
+          {...inputProps}
         />
       </div>
     )

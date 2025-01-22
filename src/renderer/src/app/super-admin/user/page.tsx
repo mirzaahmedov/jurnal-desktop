@@ -1,4 +1,5 @@
 import { GenericTable, LoadingOverlay } from '@/common/components'
+import { SearchField, useSearch } from '@renderer/common/features/search'
 import { useEffect, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
@@ -18,9 +19,15 @@ const UserPage = () => {
   const queryClient = useQueryClient()
 
   const { confirm } = useConfirm()
+  const { search } = useSearch()
 
   const { data: users, isFetching } = useQuery({
-    queryKey: [adminUserQueryKeys.getAll],
+    queryKey: [
+      adminUserQueryKeys.getAll,
+      {
+        search
+      }
+    ],
     queryFn: adminUserService.getAll
   })
   const { mutate: deleteMutation, isPending } = useMutation({
@@ -40,6 +47,7 @@ const UserPage = () => {
   }, [toggle.isOpen])
   useLayout({
     title: 'Пользователи',
+    content: SearchField,
     onCreate: toggle.open
   })
 

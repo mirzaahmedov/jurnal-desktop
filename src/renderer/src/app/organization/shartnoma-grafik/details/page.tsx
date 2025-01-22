@@ -192,6 +192,7 @@ const ShartnomaGrafikDetailsPage = () => {
                         <FormControl>
                           <NumericInput
                             {...field}
+                            allowNegative={false}
                             value={field.value || ''}
                             onValueChange={(values) => {
                               field.onChange(values.floatValue ?? 0)

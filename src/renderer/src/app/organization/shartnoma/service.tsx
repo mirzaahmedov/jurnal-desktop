@@ -36,7 +36,7 @@ export const ShartnomaFormSchema = withPreprocessor(
     smeta_id: z.number(),
     smeta2_id: z.number().optional(),
     opisanie: z.string().optional(),
-    summa: z.coerce.number(),
+    summa: z.coerce.number().min(1),
     pudratchi_bool: z.boolean(),
     grafik_year: z.number().optional(),
     yillik_oylik: z.boolean()

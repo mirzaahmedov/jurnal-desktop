@@ -1,4 +1,5 @@
-import { withPreprocessor } from '@/common/lib/validation'
+import { validateProvodkaOperatsii, withPreprocessor } from '@/common/lib/validation'
+
 import { z } from 'zod'
 
 export const avansQueryKeys = {
@@ -12,7 +13,7 @@ export const avansQueryKeys = {
 export const AdvanceReportPodvodkaPayloadSchema = withPreprocessor(
   z.object({
     spravochnik_operatsii_id: z.number(),
-    summa: z.number(),
+    summa: z.number().min(1),
     id_spravochnik_podrazdelenie: z.number().optional(),
     id_spravochnik_sostav: z.number().optional(),
     id_spravochnik_type_operatsii: z.number().optional()
@@ -28,7 +29,7 @@ export const AdvanceReportPayloadSchema = withPreprocessor(
     spravochnik_podotchet_litso_id: z.number(),
     spravochnik_operatsii_own_id: z.number(),
     summa: z.number().optional(),
-    childs: z.array(AdvanceReportPodvodkaPayloadSchema)
+    childs: z.array(AdvanceReportPodvodkaPayloadSchema).superRefine(validateProvodkaOperatsii)
   })
 )
 export type AdvanceReportPayloadType = z.infer<typeof AdvanceReportPayloadSchema>

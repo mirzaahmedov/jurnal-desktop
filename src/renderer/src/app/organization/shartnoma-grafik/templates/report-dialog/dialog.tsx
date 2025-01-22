@@ -160,6 +160,7 @@ const GenerateReportDialog = ({
                     <FormElement label="Сумма">
                       <NumericInput
                         {...field}
+                        allowNegative={false}
                         value={field.value}
                         onValueChange={(value) => field.onChange(value.floatValue)}
                       />

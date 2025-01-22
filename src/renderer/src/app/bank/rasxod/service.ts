@@ -1,8 +1,8 @@
 import { APIEndpoints, CRUDService } from '@renderer/common/features/crud'
 import type { BankRasxod, ResponseMeta } from '@renderer/common/models'
+import { validateProvodkaOperatsii, withPreprocessor } from '@renderer/common/lib/validation'
 
 import { main_schet } from '@renderer/common/features/crud/middleware'
-import { withPreprocessor } from '@renderer/common/lib/validation'
 import { z } from 'zod'
 
 export const bankRasxodService = new CRUDService<
@@ -17,7 +17,7 @@ export const bankRasxodService = new CRUDService<
 export const RasxodPodvodkaPayloadSchema = withPreprocessor(
   z.object({
     spravochnik_operatsii_id: z.number(),
-    summa: z.number(),
+    summa: z.number().min(1),
     id_spravochnik_podrazdelenie: z.number().optional(),
     id_spravochnik_sostav: z.number().optional(),
     id_spravochnik_podotchet_litso: z.number().optional(),
@@ -35,7 +35,7 @@ export const RasxodPayloadSchema = withPreprocessor(
     rukovoditel: z.string().optional().nullable(),
     glav_buxgalter: z.string().optional().nullable(),
     id_shartnomalar_organization: z.number().optional(),
-    childs: z.array(RasxodPodvodkaPayloadSchema)
+    childs: z.array(RasxodPodvodkaPayloadSchema).superRefine(validateProvodkaOperatsii)
   })
 )
 

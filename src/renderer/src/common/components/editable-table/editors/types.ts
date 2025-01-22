@@ -1,4 +1,4 @@
-import type { Dispatch, FunctionComponent, SetStateAction } from 'react'
+import type { Dispatch, FunctionComponent, InputHTMLAttributes, SetStateAction } from 'react'
 
 import type { EditableColumnType } from '../table'
 import type { FieldErrors } from 'react-hook-form'
@@ -27,6 +27,10 @@ export type EditorComponentType<T extends Record<string, unknown>> = FunctionCom
   validate?: (ctx: ChangeContext<T>) => boolean
 }>
 
-export type EditorOptions<T extends Record<string, unknown>> = {
+export type EditorOptions<
+  T extends Record<string, unknown>,
+  P = InputHTMLAttributes<HTMLInputElement>
+> = {
   key: keyof T
+  inputProps?: P
 }

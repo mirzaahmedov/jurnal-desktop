@@ -484,13 +484,13 @@ export const getNavElements = (): NavElement[] => {
       path: '/region-data',
       title: 'Проверка данных',
       icon: Database
-    },
-    import.meta.env.DEV
-      ? {
-          path: '/demo',
-          title: 'Demo page',
-          icon: Database
-        }
-      : null
+    }
+    // import.meta.env.DEV
+    //   ? {
+    //       path: '/demo',
+    //       title: 'Demo page',
+    //       icon: Database
+    //     }
+    //   : null
   ])
 }

@@ -170,7 +170,7 @@ const InternalTransferDetailsPage = () => {
           </form>
         </Form>
 
-        <div className="p-5 pb-28">
+        <div className="p-5 mb-28 overflow-x-auto scrollbar">
           <ProvodkaTable form={form} />
         </div>
       </DetailsView.Content>

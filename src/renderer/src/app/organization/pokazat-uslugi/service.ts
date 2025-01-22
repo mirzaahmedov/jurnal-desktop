@@ -1,8 +1,8 @@
 import { APIEndpoints, CRUDService } from '@/common/features/crud'
+import { validateProvodkaOperatsii, withPreprocessor } from '@/common/lib/validation'
 
 import type { PokazatUslugi } from '@/common/models'
 import { main_schet } from '@/common/features/crud/middleware'
-import { withPreprocessor } from '@/common/lib/validation'
 import { z } from 'zod'
 
 export const pokazatUslugiService = new CRUDService<PokazatUslugi, PokazatUslugiForm>({
@@ -24,12 +24,12 @@ export const PokazatUslugiFormSchema = withPreprocessor(
   z.object({
     doc_num: z.string(),
     doc_date: z.string(),
-    summa: z.coerce.number(),
+    summa: z.coerce.number().min(1),
     opisanie: z.string().optional(),
     spravochnik_operatsii_own_id: z.number(),
     id_spravochnik_organization: z.number(),
     shartnomalar_organization_id: z.number().optional(),
-    childs: z.array(PokazatUslugiProvodkaFormSchema)
+    childs: z.array(PokazatUslugiProvodkaFormSchema).superRefine(validateProvodkaOperatsii)
   })
 )
 export type PokazatUslugiForm = z.infer<typeof PokazatUslugiFormSchema>

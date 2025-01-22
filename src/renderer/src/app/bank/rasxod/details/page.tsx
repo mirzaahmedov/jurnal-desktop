@@ -8,7 +8,7 @@ import { Fieldset, AccountBalance } from '@/common/components'
 import { createOrganizationSpravochnik } from '@renderer/app/region-spravochnik/organization'
 import { createShartnomaSpravochnik } from '@renderer/app/organization/shartnoma'
 import { useToast } from '@/common/hooks/use-toast'
-import { useNavigate, useParams } from 'react-router-dom'
+import { Location, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
@@ -41,7 +41,7 @@ import { formatLocaleDate } from '@/common/lib/format'
 import { DetailsView } from '@/common/views'
 import { GeneratePorucheniya } from './generate-porucheniya'
 import { usePodpis } from '@renderer/common/features/podpis'
-import { Operatsii, PodpisDoljnost, PodpisTypeDocument } from '@renderer/common/models'
+import { BankRasxod, Operatsii, PodpisDoljnost, PodpisTypeDocument } from '@renderer/common/models'
 
 const shartnomaRegExp = /№ .*?-сонли \d{2}.\d{2}.\d{4} йил кунги шартномага асосан\s?/
 const smetaRegExp = / Ст: \d*$\s?/
@@ -50,15 +50,30 @@ const BankRasxodDetailtsPage = () => {
   const { toast } = useToast()
 
   const params = useParams()
+  const location = useLocation() as Location<{ original?: BankRasxod }>
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const main_schet_id = useRequisitesStore((state) => state.main_schet_id)
   const podpis = usePodpis(PodpisTypeDocument.BANK, params.id === 'create')
 
+  const original = location.state?.original
+
   const form = useForm<RasxodPayloadType>({
     resolver: zodResolver(RasxodPayloadSchema),
-    defaultValues
+    defaultValues: {
+      ...defaultValues,
+      doc_date: original?.doc_date ?? defaultValues.doc_date,
+      id_shartnomalar_organization:
+        original?.id_shartnomalar_organization ?? defaultValues.id_shartnomalar_organization,
+      id_spravochnik_organization:
+        original?.id_spravochnik_organization ?? defaultValues.id_spravochnik_organization,
+      opisanie: original?.opisanie ?? defaultValues.opisanie,
+      rukovoditel: original?.rukovoditel ?? defaultValues.rukovoditel,
+      glav_buxgalter: original?.glav_buxgalter ?? defaultValues.glav_buxgalter
+    }
   })
+
+  console.log(form.watch())
 
   const orgSpravochnik = useSpravochnik(
     createOrganizationSpravochnik({
@@ -217,8 +232,6 @@ const BankRasxodDetailtsPage = () => {
 
   useEffect(() => {
     if (params.id === 'create') {
-      form.reset(defaultValues)
-      setPodvodki(defaultValues.childs)
       return
     }
 

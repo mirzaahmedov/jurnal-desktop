@@ -39,7 +39,7 @@ const RasxodChildFormSchema = withPreprocessor(
     naimenovanie_tovarov_jur7_id: z.number(),
     kol: z.number(),
     sena: z.number(),
-    summa: z.number(),
+    summa: z.number().min(1),
     debet_schet: z.string(),
     debet_sub_schet: z.string(),
     kredit_schet: z.string(),

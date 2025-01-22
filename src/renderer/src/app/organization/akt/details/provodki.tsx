@@ -24,12 +24,12 @@ export const podvodkaColumns: EditableColumnType<AktProvodkaForm>[] = [
   {
     key: 'kol',
     header: 'Количество',
-    Editor: createNumberEditor({ key: 'kol' })
+    Editor: createNumberEditor({ key: 'kol', inputProps: { allowNegative: false } })
   },
   {
     key: 'sena',
     header: 'Цена',
-    Editor: createNumberEditor({ key: 'sena' })
+    Editor: createNumberEditor({ key: 'sena', inputProps: { allowNegative: false } })
   },
   {
     key: 'summa',
@@ -45,7 +45,7 @@ export const podvodkaColumns: EditableColumnType<AktProvodkaForm>[] = [
   {
     key: 'nds_foiz',
     header: 'НДС %',
-    Editor: createNumberEditor({ key: 'nds_foiz', max: 99 })
+    Editor: createNumberEditor({ key: 'nds_foiz', max: 99, inputProps: { allowNegative: false } })
   },
   {
     key: 'nds_summa',

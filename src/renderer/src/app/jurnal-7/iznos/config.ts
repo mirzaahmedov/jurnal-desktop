@@ -8,7 +8,7 @@ export const iznosQueryKeys = {
 export const IznosFormSchema = withPreprocessor(
   z.object({
     iznos_start_date: z.string().nonempty(),
-    eski_iznos_summa: z.number()
+    eski_iznos_summa: z.number().min(1)
   })
 )
 export type IznosFormValues = z.infer<typeof IznosFormSchema>

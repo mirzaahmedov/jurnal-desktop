@@ -3,6 +3,8 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { usePagination, useRangeDate } from '@renderer/common/hooks'
 
 import type { BankRasxod } from '@renderer/common/models'
+import { Button } from '@renderer/common/components/ui/button'
+import { CopyPlus } from 'lucide-react'
 import { ListView } from '@renderer/common/views'
 import { bankRasxodService } from './service'
 import { columns } from './columns'
@@ -73,6 +75,23 @@ const BankRasxodPage = () => {
           getRowId={(row) => row.id}
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}
+          customActions={(row) => (
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={(e) => {
+                e.stopPropagation()
+                row.doc_num = ''
+                navigate(`create`, {
+                  state: {
+                    original: row
+                  }
+                })
+              }}
+            >
+              <CopyPlus className="size-4" />
+            </Button>
+          )}
           footer={
             <FooterRow>
               <FooterCell

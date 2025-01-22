@@ -37,6 +37,7 @@ export const ProvodkaTable = ({ form }: ProvodkaTableProps) => {
           block: 'start'
         })
       }}
+      className="whitespace-nowrap w-[2000px]"
     >
       <Table className="border border-slate-200 table-xs">
         <TableHeader>
@@ -188,11 +189,12 @@ const Provodka = ({ index, row, form }: ProvodkaProps) => {
         <div className="relative">
           <NumericInput
             adjustWidth
+            allowNegative={false}
             isAllowed={(values) => (values.floatValue ?? 0) <= maxKol}
             value={row.kol || ''}
-            onValueChange={(values) => {
+            onValueChange={(values, src) => {
               const summa = calcSumma(values.floatValue ?? 0, row.sena)
-              if (summa !== row.summa) {
+              if (src.source === 'event' && summa !== row.summa) {
                 handleChangeChildField(index, 'summa', summa)
               }
               handleChangeChildField(index, 'kol', values.floatValue ?? 0)
@@ -208,10 +210,11 @@ const Provodka = ({ index, row, form }: ProvodkaProps) => {
         <div className="relative">
           <NumericInput
             adjustWidth
+            allowNegative={false}
             value={row.sena || ''}
-            onValueChange={(values) => {
+            onValueChange={(values, src) => {
               const summa = calcSumma(row.kol, values.floatValue ?? 0)
-              if (summa !== row.summa) {
+              if (src.source === 'event' && summa !== row.summa) {
                 handleChangeChildField(index, 'summa', summa)
               }
               handleChangeChildField(index, 'sena', values.floatValue)
@@ -227,10 +230,11 @@ const Provodka = ({ index, row, form }: ProvodkaProps) => {
         <div className="relative">
           <NumericInput
             adjustWidth
+            allowNegative={false}
             value={row.summa || ''}
-            onValueChange={(values) => {
+            onValueChange={(values, src) => {
               const sena = calcSena(values.floatValue ?? 0, row.kol)
-              if (sena !== row.sena && (values.floatValue ?? 0) !== 0) {
+              if (src.source === 'event' && sena !== row.sena && (values.floatValue ?? 0) !== 0) {
                 handleChangeChildField(index, 'sena', sena)
               }
               handleChangeChildField(index, 'summa', values.floatValue)

@@ -8,6 +8,7 @@ import { extendObject } from '@/common/lib/utils'
 import { podotchetColumns } from './columns'
 import { SpravochnikSearchField } from '@/common/features/search'
 import PodotchetDialog from './dialog'
+import { podotchetQueryKeys } from './constants'
 
 export const PodotchetFormSchema = withPreprocessor(
   z.object({
@@ -28,6 +29,7 @@ export const createPodotchetSpravochnik = (config: Partial<SpravochnikHookOption
       endpoint: APIEndpoints.podotchet_litso,
       columnDefs: podotchetColumns,
       service: podotchetService,
+      queryKeys: podotchetQueryKeys,
       Dialog: PodotchetDialog,
       filters: [SpravochnikSearchField]
     } satisfies typeof config,
