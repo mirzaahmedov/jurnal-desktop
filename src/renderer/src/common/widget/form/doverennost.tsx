@@ -21,6 +21,7 @@ const DoverennostFields: FormEditableFieldsComponent<RequiredDoverennostFields> 
         <FormElement
           label="Доверенность"
           className="flex-1"
+          error={!!form.formState.errors.doverennost}
         >
           <Input
             tabIndex={tabIndex}

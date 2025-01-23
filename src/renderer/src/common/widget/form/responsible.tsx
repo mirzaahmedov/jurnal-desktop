@@ -1,9 +1,9 @@
-import type { Responsible } from '@/common/models'
-import type { FormSpravochnikFieldsComponent } from '@/common/widget/form'
-
 import { SpravochnikField, SpravochnikFields } from '@/common/features/spravochnik'
 
-const ResponsibleFields: FormSpravochnikFieldsComponent<Responsible> = ({
+import type { FormSpravochnikFieldsComponent } from '@/common/widget/form'
+import type { Responsible } from '@/common/models'
+
+export const ResponsibleFields: FormSpravochnikFieldsComponent<Responsible> = ({
   tabIndex,
   disabled,
   name,
@@ -48,5 +48,3 @@ const ResponsibleFields: FormSpravochnikFieldsComponent<Responsible> = ({
     </SpravochnikFields>
   )
 }
-
-export { ResponsibleFields }

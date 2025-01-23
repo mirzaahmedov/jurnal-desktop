@@ -122,6 +122,9 @@ dependencies:
   just-compare:
     specifier: ^2.3.0
     version: 2.3.0
+  just-is-empty:
+    specifier: ^3.4.1
+    version: 3.4.1
   lucide-react:
     specifier: ^0.468.0
     version: 0.468.0(react@18.3.1)
@@ -5280,6 +5283,10 @@ packages:
 
   /just-compare@2.3.0:
     resolution: {integrity: sha512-6shoR7HDT+fzfL3gBahx1jZG3hWLrhPAf+l7nCwahDdT9XDtosB9kIF0ZrzUp5QY8dJWfQVr5rnsPqsbvflDzg==}
+    dev: false
+
+  /just-is-empty@3.4.1:
+    resolution: {integrity: sha512-bweyqPPl3HReVyVzLJvCJn+cfXJKh6dy4kSLoW9YLqwFz+2vZbWLN38AOK7esEIVPQwY1W48HaNvOFZqYAjLpw==}
     dev: false
 
   /keyv@4.5.4:

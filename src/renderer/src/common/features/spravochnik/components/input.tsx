@@ -1,13 +1,13 @@
-import type { HTMLAttributes, Ref } from 'react'
-import type { InputProps } from '@/common/components/ui/input'
-import type { VariantProps } from 'class-variance-authority'
+import { type HTMLAttributes, type Ref } from 'react'
 
+import { LoadingSpinner } from '@/common/components'
+import { Button } from '@/common/components/ui/button'
+import type { InputProps } from '@/common/components/ui/input'
+import { Input } from '@/common/components/ui/input'
 import { cn } from '@/common/lib/utils'
+import type { VariantProps } from 'class-variance-authority'
 import { cva } from 'class-variance-authority'
 import { CircleX } from 'lucide-react'
-import { Input } from '@/common/components/ui/input'
-import { Button } from '@/common/components/ui/button'
-import { LoadingSpinner } from '@/common/components'
 import { registerKeyBindings } from './key-bindings'
 
 const inputVariants = cva('cursor-pointer', {
@@ -23,7 +23,7 @@ const inputVariants = cva('cursor-pointer', {
     {
       editor: true,
       error: true,
-      className: 'bg-destructive/5'
+      className: 'bg-destructive/10 !ring-2 !ring-solid !ring-destructive'
     }
   ]
 })
@@ -64,6 +64,7 @@ const SpravochnikInput = <T extends Record<string, unknown>>({
         error={error}
         value={getInputValue(selected) ?? ''}
         onDoubleClick={open}
+        data-error={error}
         {...registerKeyBindings({ open, clear })}
         {...props}
       />
@@ -88,5 +89,5 @@ const SpravochnikInput = <T extends Record<string, unknown>>({
   )
 }
 
-export { SpravochnikInput, inputVariants }
+export { inputVariants, SpravochnikInput }
 export type { SpravochnikInputProps }

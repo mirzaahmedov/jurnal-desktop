@@ -28,8 +28,11 @@ export const ChooseSpravochnik = <T,>(props: ChooseSpravochnikProps<T>) => {
                 <Button
                   variant="ghost"
                   size="icon"
-                  title="Выбрать"
-                  onClick={spravochnik.clear}
+                  title="Close"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    spravochnik.clear
+                  }}
                   className="hover:text-destructive text-slate-400"
                 >
                   <CircleX className="btn-icon icon-start !mr-0" />
@@ -38,7 +41,10 @@ export const ChooseSpravochnik = <T,>(props: ChooseSpravochnikProps<T>) => {
                   variant="ghost"
                   size="icon"
                   title="Выбрать"
-                  onClick={spravochnik.open}
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    spravochnik.open()
+                  }}
                   className="text-slate-400"
                   disabled={disabled}
                 >
@@ -55,9 +61,9 @@ export const ChooseSpravochnik = <T,>(props: ChooseSpravochnikProps<T>) => {
               {getElements(spravochnik.selected).map(({ name, value }) => (
                 <li
                   key={name}
-                  className="grid grid-cols-5 gap-2 text-slate-600"
+                  className="grid grid-cols-6 gap-2 text-slate-600"
                 >
-                  <span className="col-span-1 text-slate-500 font-medium">{name}</span>
+                  <span className="col-span-2 text-slate-500 font-medium">{name}:</span>
                   <span className="col-span-4 font-bold text-foreground">{value}</span>
                 </li>
               ))}

@@ -14,12 +14,19 @@ const inputVariants = cva('cursor-pointer', {
       true: 'border-none rounded-none hover:ring-0 bg-transparent py-5'
     },
     error: {
-      true: 'bg-destructive/5 focus-visible:ring-destructive'
+      true: 'bg-destructive/10 focus-visible:ring-destructive'
     },
     nonfocus: {
       true: 'focus-visible:ring-none transition-none'
     }
-  }
+  },
+  compoundVariants: [
+    {
+      editor: true,
+      error: true,
+      className: '!ring-2 !ring-solid !ring-destructive'
+    }
+  ]
 })
 
 type SpravochnikInputProps = InputProps &
@@ -39,6 +46,7 @@ const SpravochnikInput = forwardRef<HTMLInputElement, SpravochnikInputProps>(
           ref={ref}
           className={cn(inputVariants({ editor, error }), className)}
           error={error}
+          data-error={error}
           {...props}
         />
         <div className="flex items-center invisible absolute right-0 top-0 bottom-0 text-foreground/50 [input:focus+&]:text-brand group-focus-within:visible group-hover:visible px-1">

@@ -12,7 +12,7 @@ const queryKeys = {
   delete: 'jur7_rasxod/delete'
 }
 
-const defaultValues: RasxodFormType = {
+const defaultValues: RasxodFormValues = {
   type_document: 1,
   doc_num: '',
   doc_date: '',
@@ -38,6 +38,7 @@ const RasxodChildFormSchema = withPreprocessor(
   z.object({
     naimenovanie_tovarov_jur7_id: z.number(),
     kol: z.number(),
+    max_kol: z.number().optional(),
     sena: z.number(),
     summa: z.number().min(1),
     debet_schet: z.string(),
@@ -55,11 +56,22 @@ const RasxodFormSchema = withPreprocessor(
     opisanie: z.string().optional(),
     doverennost: z.string().optional(),
     kimdan_id: z.number(),
-    childs: z.array(RasxodChildFormSchema)
+    childs: z.array(RasxodChildFormSchema).superRefine((childs, ctx) => {
+      childs.forEach((child, index) => {
+        if (child.max_kol && child.kol > child.max_kol) {
+          ctx.addIssue({
+            code: 'custom',
+            message: 'Product quantity exceeds available quantity of products',
+            path: [index, 'kol']
+          })
+          delete child.max_kol
+        }
+      })
+    })
   })
 )
-type RasxodFormType = z.infer<typeof RasxodFormSchema>
-type RasxodChildFormType = z.infer<typeof RasxodChildFormSchema>
+export type RasxodFormValues = z.infer<typeof RasxodFormSchema>
+export type RasxodChildFormValues = z.infer<typeof RasxodChildFormSchema>
 
 const columns: ColumnDef<MO7Rasxod>[] = [
   {
@@ -91,4 +103,3 @@ const columns: ColumnDef<MO7Rasxod>[] = [
 ]
 
 export { queryKeys, defaultValues, columns, RasxodFormSchema, RasxodChildFormSchema }
-export type { RasxodFormType, RasxodChildFormType }

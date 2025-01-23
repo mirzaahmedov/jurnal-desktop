@@ -22,6 +22,8 @@ import { createOperatsiiSpravochnik } from '@/app/super-admin/operatsii'
 import { createOrganizationSpravochnik } from '@renderer/app/region-spravochnik/organization'
 import { createResponsibleSpravochnik } from '../../responsible/service'
 import { createShartnomaSpravochnik } from '@renderer/app/organization/shartnoma'
+import { focusInvalidInput } from '@renderer/common/lib/errors'
+import isEmpty from 'just-is-empty'
 import { toast } from 'react-toastify'
 import { useForm } from 'react-hook-form'
 import { useJurnal7DefaultsStore } from '../../common/features/defaults'
@@ -111,7 +113,7 @@ const MO7PrixodDetailsPage = () => {
           'childs',
           form.getValues('childs').map((child) => ({
             ...child,
-            kredit_schet: operatsii?.schet ?? ''
+            kredit_schet: child.kredit_schet || operatsii?.schet || ''
           }))
         )
       },
@@ -181,6 +183,11 @@ const MO7PrixodDetailsPage = () => {
     }
   })
 
+  const { errors } = form.formState
+  useEffect(() => {
+    if (!isEmpty(errors)) focusInvalidInput()
+  }, [errors])
+
   return (
     <DetailsView>
       <DetailsView.Content
@@ -194,6 +201,7 @@ const MO7PrixodDetailsPage = () => {
           >
             <div className="grid grid-cols-2 items-end">
               <DocumentFields
+                tabIndex={1}
                 form={form}
                 validateDocDate={(date) => {
                   return withinMonth(new Date(date), parseDate(from))
@@ -205,6 +213,8 @@ const MO7PrixodDetailsPage = () => {
               />
               <div className="flex items-center gap-5 flex-wrap pb-7 px-5">
                 <JONumFields
+                  tabIndex={2}
+                  error={form.formState.errors.j_o_num}
                   spravochnik={{
                     ...operatsiiSpravochnik,
                     selected: {
@@ -212,16 +222,21 @@ const MO7PrixodDetailsPage = () => {
                     } as Operatsii
                   }}
                 />
-                <DoverennostFields form={form} />
+                <DoverennostFields
+                  tabIndex={3}
+                  form={form}
+                />
               </div>
             </div>
             <div className="grid grid-cols-2 divide-x">
               <OrganizationFields
+                tabIndex={4}
                 name="От кого"
                 spravochnik={orgSpravochnik}
                 error={form.formState.errors.kimdan_id}
               />
               <ResponsibleFields
+                tabIndex={5}
                 name="Кому"
                 spravochnik={responsibleSpravochnik}
                 error={form.formState.errors.kimga_id}
@@ -229,6 +244,7 @@ const MO7PrixodDetailsPage = () => {
             </div>
             <div className="grid grid-cols-2">
               <ShartnomaFields
+                tabIndex={6}
                 disabled={!form.watch('kimdan_id')}
                 spravochnik={shartnomaSpravochnik}
                 error={form.formState.errors.id_shartnomalar_organization}
@@ -240,7 +256,10 @@ const MO7PrixodDetailsPage = () => {
               />
             </div>
             <div className="p-5">
-              <OpisanieFields form={form} />
+              <OpisanieFields
+                tabIndex={7}
+                form={form}
+              />
             </div>
             <DetailsView.Footer>
               <DetailsView.Create disabled={isCreating || isUpdating} />

@@ -196,11 +196,21 @@ export const ostatokProductColumns: ColumnDef<OstatokProduct>[] = [
     header: 'Един.'
   },
   {
-    key: 'group_jur7_name',
+    key: 'group_name',
     header: 'Группа'
   },
   {
-    key: 'prixod_doc_date',
-    header: 'Дата сальдо'
+    key: 'date_saldo',
+    header: 'Дата сальдо',
+    renderCell(row) {
+      return formatLocaleDate(row.date_saldo)
+    }
+  },
+  {
+    key: 'prixod_data.doc_date',
+    header: 'Дата сальдо',
+    renderCell(row) {
+      return formatLocaleDate(row.prixod_data?.doc_date)
+    }
   }
 ]

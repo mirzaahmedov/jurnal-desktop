@@ -1,5 +1,6 @@
 import type { UseFormReturn } from 'react-hook-form'
 import type { ZodSchema } from 'zod'
+import { focusInvalidInput } from '@renderer/common/lib/errors'
 
 const createEditorCreateHandler =
   ({
@@ -16,7 +17,9 @@ const createEditorCreateHandler =
       const validation = schema.safeParse(row)
       if (!validation.success) {
         console.log('validation failed for podvodka', index, validation.error)
-        form.trigger('childs')
+        form.trigger('childs').then(() => {
+          focusInvalidInput()
+        })
         return
       }
     }

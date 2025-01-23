@@ -18,6 +18,8 @@ import { DetailsView } from '@renderer/common/views'
 import { Form } from '@/common/components/ui/form'
 import { ProvodkaTable } from './provodka-table'
 import { createResponsibleSpravochnik } from '../../responsible/service'
+import { focusInvalidInput } from '@renderer/common/lib/errors'
+import isEmpty from 'just-is-empty'
 import { toast } from '@/common/hooks/use-toast'
 import { useForm } from 'react-hook-form'
 import { useJurnal7DefaultsStore } from '../../common/features/defaults'
@@ -124,6 +126,11 @@ const InternalTransferDetailsPage = () => {
       navigate(-1)
     }
   })
+
+  const { errors } = form.formState
+  useEffect(() => {
+    if (!isEmpty(errors)) focusInvalidInput()
+  }, [errors])
 
   return (
     <DetailsView>

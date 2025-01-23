@@ -5,7 +5,6 @@ import { extendObject } from '@renderer/common/lib/utils'
 
 import type { Ostatok, OstatokProduct } from '@renderer/common/models/ostatok'
 import { ostatokProductColumns } from './columns'
-import { formatDate } from '@renderer/common/lib/date'
 import { budjet } from '@renderer/common/features/crud/middleware'
 
 export const ostatokService = new CRUDService<
@@ -23,14 +22,7 @@ export const ostatokProductService = new CRUDService<OstatokProduct>({
 }).forRequest((type, args) => {
   if (type === 'getById') {
     return {
-      url: args.endpoint,
-      config: {
-        params: {
-          ...args.config.params,
-          to: formatDate(new Date()),
-          product_id: args.ctx?.queryKey[1]
-        }
-      }
+      url: args.endpoint
     }
   }
   return {}

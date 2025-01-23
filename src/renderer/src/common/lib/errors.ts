@@ -26,3 +26,11 @@ export function handleAxiosError(error: AxiosError): ErrorResponse {
     }
   }
 }
+
+export const focusInvalidInput = () => {
+  const inputElement = document.querySelector('input[data-error=true]') as HTMLInputElement
+  if (inputElement) {
+    inputElement.focus()
+    inputElement.scrollIntoView({ behavior: 'smooth' })
+  }
+}

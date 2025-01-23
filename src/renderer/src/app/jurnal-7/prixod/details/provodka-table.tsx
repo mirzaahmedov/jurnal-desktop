@@ -15,7 +15,6 @@ import {
 import { SpravochnikInput, useSpravochnik } from '@/common/features/spravochnik'
 import { Table, TableBody, TableFooter, TableHeader } from '@/common/components/ui/table'
 import { calcSena, calcSumma } from '@/common/lib/pricing'
-import { useEffect, useRef } from 'react'
 
 import { Button } from '@/common/components/ui/button'
 import { Checkbox } from '@renderer/common/components/ui/checkbox'
@@ -24,12 +23,11 @@ import { cn } from '@/common/lib/utils'
 import { createGroupSpravochnik } from '@/app/super-admin/group/service'
 import { toast } from 'react-toastify'
 import { useEventCallback } from '@renderer/common/hooks'
-import { useRequisitesStore } from '@renderer/common/features/requisites'
 
 type ProvodkaTableProps = {
   form: UseFormReturn<PrixodFormType>
 }
-export const ProvodkaTable = ({ form }: ProvodkaTableProps) => {
+export const ProvodkaTable = ({ form, ...props }: ProvodkaTableProps) => {
   const handleChangeChildField = useEventCallback(
     (index: number, key: keyof PrixodChildFormType, value: unknown) => {
       form.setValue(`childs.${index}.${key}`, value as string | number)
@@ -52,7 +50,10 @@ export const ProvodkaTable = ({ form }: ProvodkaTableProps) => {
       }}
       className="w-[2500px]"
     >
-      <Table className="border border-slate-200 table-xs">
+      <Table
+        className="border border-slate-200 table-xs"
+        {...props}
+      >
         <TableHeader>
           <EditableTableRow>
             <EditableTableHead
@@ -170,6 +171,7 @@ export const ProvodkaTable = ({ form }: ProvodkaTableProps) => {
                           }
                           handleChangeChildField(index, 'kol', values.floatValue)
                         }}
+                        error={!!errors.kol}
                         className={inputVariants({
                           editor: true,
                           error: !!errors?.kol
@@ -193,6 +195,7 @@ export const ProvodkaTable = ({ form }: ProvodkaTableProps) => {
                           editor: true,
                           error: !!errors?.sena
                         })}
+                        error={!!errors.sena}
                       />
                     </div>
                   </EditableTableCell>
@@ -216,6 +219,7 @@ export const ProvodkaTable = ({ form }: ProvodkaTableProps) => {
                           editor: true,
                           error: !!errors?.summa
                         })}
+                        error={!!errors.summa}
                       />
                     </div>
                   </EditableTableCell>
@@ -233,6 +237,7 @@ export const ProvodkaTable = ({ form }: ProvodkaTableProps) => {
                           editor: true,
                           error: !!errors?.nds_foiz
                         })}
+                        error={!!errors.nds_foiz}
                       />
                     </div>
                   </EditableTableCell>
@@ -272,6 +277,9 @@ export const ProvodkaTable = ({ form }: ProvodkaTableProps) => {
                       <Checkbox
                         checked={row.iznos}
                         onCheckedChange={(checked) => {
+                          if (!checked) {
+                            handleChangeChildField(index, 'eski_iznos_summa', 0)
+                          }
                           handleChangeChildField(index, 'iznos', Boolean(checked))
                         }}
                       />
@@ -280,6 +288,7 @@ export const ProvodkaTable = ({ form }: ProvodkaTableProps) => {
                   <EditableTableCell>
                     <div className="relative flex items-center justify-center">
                       <NumericInput
+                        disabled={!row.iznos}
                         adjustWidth
                         value={row.eski_iznos_summa || ''}
                         onValueChange={(values) => {
@@ -289,6 +298,7 @@ export const ProvodkaTable = ({ form }: ProvodkaTableProps) => {
                           editor: true,
                           error: !!errors?.eski_iznos_summa
                         })}
+                        error={!!errors.eski_iznos_summa}
                       />
                     </div>
                   </EditableTableCell>
@@ -303,6 +313,7 @@ export const ProvodkaTable = ({ form }: ProvodkaTableProps) => {
                           editor: true,
                           error: !!errors?.debet_schet
                         })}
+                        error={!!errors.debet_schet}
                       />
                     </div>
                   </EditableTableCell>
@@ -317,6 +328,7 @@ export const ProvodkaTable = ({ form }: ProvodkaTableProps) => {
                           editor: true,
                           error: !!errors?.debet_sub_schet
                         })}
+                        error={!!errors.debet_sub_schet}
                       />
                     </div>
                   </EditableTableCell>
@@ -327,6 +339,7 @@ export const ProvodkaTable = ({ form }: ProvodkaTableProps) => {
                         onChange={(e) => {
                           handleChangeChildField(index, 'kredit_schet', e.target.value)
                         }}
+                        error={!!errors?.kredit_schet}
                         className={inputVariants({
                           editor: true,
                           error: !!errors?.kredit_schet
@@ -345,6 +358,7 @@ export const ProvodkaTable = ({ form }: ProvodkaTableProps) => {
                           editor: true,
                           error: !!errors?.kredit_sub_schet
                         })}
+                        error={!!errors.kredit_sub_schet}
                       />
                     </div>
                   </EditableTableCell>
@@ -363,6 +377,7 @@ export const ProvodkaTable = ({ form }: ProvodkaTableProps) => {
                         triggerProps={{
                           className: 'min-w-32'
                         }}
+                        error={!!errors.data_pereotsenka}
                       />
                     </div>
                   </EditableTableCell>
@@ -445,31 +460,17 @@ type NaimenovanieCellsProps = {
   onChangeField: (index: number, key: keyof PrixodChildFormType, value: unknown) => void
 }
 const NaimenovanieCells = ({ index, row, errors, onChangeField }: NaimenovanieCellsProps) => {
-  const isMounted = useRef(false)
-
-  const budjet_id = useRequisitesStore((store) => store.budjet_id)
-
   const groupSpravochnik = useSpravochnik(
     createGroupSpravochnik({
       value: row.group_jur7_id,
-      onChange: (groupId) => {
-        if (!budjet_id) {
-          return
-        }
-        onChangeField(index, 'group_jur7_id', groupId)
+      onChange: (id, group) => {
+        onChangeField(index, 'debet_schet', group?.schet ?? '')
+        onChangeField(index, 'debet_sub_schet', group?.provodka_subschet ?? '')
+        onChangeField(index, 'kredit_sub_schet', group?.provodka_subschet ?? '')
+        onChangeField(index, 'group_jur7_id', id)
       }
     })
   )
-
-  useEffect(() => {
-    if (!isMounted.current) {
-      isMounted.current = true
-      return
-    }
-    onChangeField(index, 'debet_schet', groupSpravochnik.selected?.schet ?? '')
-    onChangeField(index, 'debet_sub_schet', groupSpravochnik.selected?.provodka_subschet ?? '')
-    onChangeField(index, 'kredit_sub_schet', groupSpravochnik.selected?.provodka_subschet ?? '')
-  }, [index, onChangeField, groupSpravochnik.selected])
 
   return (
     <>
@@ -477,12 +478,12 @@ const NaimenovanieCells = ({ index, row, errors, onChangeField }: NaimenovanieCe
         <div className="relative">
           <SpravochnikInput
             readOnly
-            value={groupSpravochnik.selected?.name || ''}
+            error={!!errors.group_jur7_id}
             className={cn(
               inputVariants({ editor: true, error: !!errors.group_jur7_id }),
               'disabled:opacity-100'
             )}
-            getInputValue={(selected) => selected?.name ?? ''}
+            getInputValue={(selected) => selected?.group_number ?? ''}
             {...groupSpravochnik}
           />
         </div>
@@ -490,6 +491,7 @@ const NaimenovanieCells = ({ index, row, errors, onChangeField }: NaimenovanieCe
       <EditableTableCell>
         <div className="relative">
           <Input
+            error={!!errors.name}
             value={row.name}
             onChange={(e) => {
               onChangeField(index, 'name', e.target.value)
@@ -501,6 +503,7 @@ const NaimenovanieCells = ({ index, row, errors, onChangeField }: NaimenovanieCe
       <EditableTableCell>
         <div className="relative">
           <Input
+            error={!!errors.serial_num}
             value={row.serial_num}
             onChange={(e) => {
               onChangeField(index, 'serial_num', e.target.value)
@@ -512,6 +515,7 @@ const NaimenovanieCells = ({ index, row, errors, onChangeField }: NaimenovanieCe
       <EditableTableCell>
         <div className="relative">
           <Input
+            error={!!errors.inventar_num}
             value={row.inventar_num}
             onChange={(e) => {
               onChangeField(index, 'inventar_num', e.target.value)
@@ -523,6 +527,7 @@ const NaimenovanieCells = ({ index, row, errors, onChangeField }: NaimenovanieCe
       <EditableTableCell>
         <div className="relative">
           <EdinSelect
+            error={!!errors.inventar_num}
             value={row.edin}
             onValueChange={(edin) => {
               onChangeField(index, 'edin', edin)

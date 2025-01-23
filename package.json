@@ -1,6 +1,6 @@
 {
   "name": "jurnal.desktop",
-  "version": "1.0.68",
+  "version": "1.0.69",
   "description": "An Electron application with React and TypeScript",
   "main": "./out/main/index.js",
   "author": "example.com",
@@ -62,6 +62,7 @@
     "exceljs": "^4.4.0",
     "file-saver": "^2.0.5",
     "just-compare": "^2.3.0",
+    "just-is-empty": "^3.4.1",
     "lucide-react": "^0.468.0",
     "nuqs": "^2.3.0",
     "react-day-picker": "^8.10.1",

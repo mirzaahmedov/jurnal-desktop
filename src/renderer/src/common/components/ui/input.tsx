@@ -1,7 +1,6 @@
-import type { VariantProps } from 'class-variance-authority'
-
 import * as React from 'react'
 
+import type { VariantProps } from 'class-variance-authority'
 import { cn } from '@/common/lib/utils'
 import { cva } from 'class-variance-authority'
 
@@ -15,7 +14,7 @@ export const inputVariants = cva(
     }
   }
 )
-export type InputProps = React.InputHTMLAttributes<HTMLInputElement> &
+export type InputProps = Omit<React.InputHTMLAttributes<HTMLInputElement>, 'error'> &
   VariantProps<typeof inputVariants>
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
@@ -29,6 +28,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           }),
           className
         )}
+        data-error={error}
         ref={ref}
         {...props}
       />

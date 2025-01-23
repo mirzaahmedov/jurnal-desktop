@@ -82,7 +82,12 @@ export const useSpravochnik = <T extends { id: number }>(
       queryKeys: options.queryKeys,
       onClose: () => {
         callbacksRef.current.onClose?.()
-        inputRef.current?.focus()
+        if (inputRef.current) {
+          const input = inputRef.current
+          setTimeout(() => {
+            input.focus()
+          }, 300)
+        }
       },
       selectId: (selectedId, values) => {
         setSelectedId(selectedId)
