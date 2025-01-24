@@ -33,7 +33,7 @@ export const createOstatokProductSpravochnik = (
 ) => {
   return extendObject(
     {
-      title: 'Выберите операцию',
+      title: 'Выбрать товар',
       endpoint: APIEndpoints.jur7_saldo_product,
       columnDefs: ostatokProductColumns,
       service: ostatokProductService,

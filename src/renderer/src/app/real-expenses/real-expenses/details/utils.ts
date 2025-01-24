@@ -26,8 +26,8 @@ export const transformData = (childs: RealExpenses.ReportPreviewProvodka[]) => {
     result.smeta_number = grafik.smeta_number.replace(/\s/g, '')
 
     values.forEach((item) => {
-      result[`${item.type}_debet`] = item.summa.debet_sum
-      result[`${item.type}_kredit`] = item.summa.kredit_sum
+      result[`${item.type}_debet`] = item.summa?.debet_sum
+      result[`${item.type}_kredit`] = item.summa?.kredit_sum
     })
 
     rows.push(result)

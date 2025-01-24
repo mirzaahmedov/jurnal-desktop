@@ -1,19 +1,19 @@
-import { LoadingOverlay, SelectField } from '@renderer/common/components'
+import { SelectField } from '@renderer/common/components'
 import { SearchField, useSearch } from '@renderer/common/features/search'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { parseAsString, useQueryState } from 'nuqs'
 import { useEffect, useState } from 'react'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
-import type { Smeta } from '@renderer/common/models'
-import { SmetaDialog } from './dialog'
-import { SmetaTable } from './service'
-import { smetaColumns } from './columns'
-import { smetaFilterOptions } from './group-filter'
-import { smetaQueryKeys } from './config'
-import { smetaService } from './service'
 import { useConfirm } from '@renderer/common/features/confirm'
 import { useLayout } from '@renderer/common/features/layout'
 import { useToggle } from '@renderer/common/hooks/use-toggle'
+import type { Smeta } from '@renderer/common/models'
+import { ListView } from '@renderer/common/views'
+import { smetaColumns } from './columns'
+import { smetaQueryKeys } from './config'
+import { SmetaDialog } from './dialog'
+import { smetaFilterOptions } from './group-filter'
+import { smetaService, SmetaTable } from './service'
 
 const SmetaFilters = () => {
   const [groupNumber, setGroupNumber] = useQueryState(
@@ -91,9 +91,8 @@ const SmetaPage = () => {
     })
   }
   return (
-    <>
-      <div className="flex-1 relative">
-        {isFetching || isPending ? <LoadingOverlay /> : null}
+    <ListView>
+      <ListView.Content loading={isFetching || isPending}>
         {SmetaTable ? (
           <SmetaTable
             data={mainSchets?.data ?? []}
@@ -102,13 +101,13 @@ const SmetaPage = () => {
             onDelete={handleClickDelete}
           />
         ) : null}
-      </div>
+      </ListView.Content>
       <SmetaDialog
         data={selected}
         open={toggle.isOpen}
         onChangeOpen={toggle.setOpen}
       />
-    </>
+    </ListView>
   )
 }
 

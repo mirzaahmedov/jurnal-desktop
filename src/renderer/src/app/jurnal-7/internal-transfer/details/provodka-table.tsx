@@ -429,6 +429,7 @@ const NaimenovanieCells = ({
             <div className="relative">
               <Input
                 readOnly
+                disabled={!kimdan_id}
                 value={field}
                 className={inputVariants({ editor: true, error: !!errorMessage })}
                 error={!!errorMessage}

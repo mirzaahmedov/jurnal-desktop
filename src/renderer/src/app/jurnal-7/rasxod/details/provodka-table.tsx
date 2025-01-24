@@ -432,6 +432,7 @@ const NaimenovanieCells = ({
                 value={field}
                 error={!!errorMessage}
                 className={inputVariants({ editor: true, error: !!errorMessage })}
+                disabled={!kimdan_id}
                 onDoubleClick={spravochnik.open}
               />
             </div>

@@ -26,8 +26,8 @@ export const transformData = (schets: Mainbook.ReportPreviewProvodka[]) => {
     result.schet = schet.schet
 
     values.forEach((item) => {
-      result[`${item.type}_debet`] = item.summa.debet_sum
-      result[`${item.type}_kredit`] = item.summa.kredit_sum
+      result[`${item.type}_debet`] = item.summa?.debet_sum
+      result[`${item.type}_kredit`] = item.summa?.kredit_sum
     })
 
     rows.push(result)

@@ -19,7 +19,7 @@ import { Button } from '@/common/components/ui/button'
 import { EditableTable } from '@renderer/common/components/editable-table'
 import { FormElement } from '@/common/components/form'
 import { Input } from '@/common/components/ui/input'
-import { LoadingSpinner } from '@/common/components'
+import { LoadingOverlay } from '@/common/components'
 import type { PereotsenkaTable } from './config'
 import { groupColumns } from './columns'
 import { groupQueryKeys } from '@/app/super-admin/group/constants'
@@ -99,7 +99,7 @@ const PereotsenkaBatchCreateDrawer = (props: PereotsenkaBatchCreateDrawerProps) 
             className="relative h-full flex flex-col overflow-hidden"
           >
             {isFetching ? (
-              <LoadingSpinner />
+              <LoadingOverlay />
             ) : (
               <>
                 <div className="w-full flex flex-row p-5 border-b">

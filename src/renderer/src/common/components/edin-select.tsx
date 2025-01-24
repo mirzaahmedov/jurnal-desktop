@@ -13,15 +13,23 @@ const EdinSelect = ({ error, ...props }: EdinSelectProps) => {
     queryFn: unitService.getAll
   })
 
+  const options = unitList?.data ?? []
+
   return (
     <SelectField
-      disabled={isFetching}
+      disabled={isFetching || !Array.isArray(options) || !options.length}
       placeholder=""
-      options={unitList?.data ?? []}
+      options={options}
       getOptionValue={(option) => option.name}
       getOptionLabel={(option) => option.name}
       data-error={error}
       {...props}
+      onValueChange={(value) => {
+        if (isFetching || options.length === 0) {
+          return
+        }
+        props.onValueChange?.(value)
+      }}
     />
   )
 }

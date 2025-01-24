@@ -37,52 +37,52 @@ const columns: ColumnDef[] = [
   {
     key: 'summa.ajratilgan_mablag',
     header: 'Ажратилган маблағ',
-    cellElement: ({ row }) => <span>{row.summa.ajratilgan_mablag}</span>
+    cellElement: ({ row }) => <span>{row.summa?.ajratilgan_mablag}</span>
   },
   {
     key: 'summa.tulangan_mablag_smeta_buyicha',
     header: 'Туланган маблағ смета бўйича',
-    cellElement: ({ row }) => <span>{row.summa.tulangan_mablag_smeta_buyicha}</span>
+    cellElement: ({ row }) => <span>{row.summa?.tulangan_mablag_smeta_buyicha}</span>
   },
   {
     key: 'summa.kassa_rasxod',
     header: 'Касса расход',
-    cellElement: ({ row }) => <span>{row.summa.kassa_rasxod}</span>
+    cellElement: ({ row }) => <span>{row.summa?.kassa_rasxod}</span>
   },
   {
     key: 'summa.haqiqatda_harajatlar',
     header: 'Хакикатда харажатлар',
-    cellElement: ({ row }) => <span>{row.summa.haqiqatda_harajatlar}</span>
+    cellElement: ({ row }) => <span>{row.summa?.haqiqatda_harajatlar}</span>
   },
   {
     key: 'summa.qoldiq',
     header: 'Колдик',
-    cellElement: ({ row }) => <span>{row.summa.qoldiq}</span>
+    cellElement: ({ row }) => <span>{row.summa?.qoldiq}</span>
   },
   {
     key: 'year_summa.ajratilgan_mablag',
     header: 'Ажратилган маблағ',
-    cellElement: ({ row }) => <span>{row.year_summa.ajratilgan_mablag}</span>
+    cellElement: ({ row }) => <span>{row.year_summa?.ajratilgan_mablag}</span>
   },
   {
     key: 'year_summa.tulangan_mablag_smeta_buyicha',
     header: 'Туланган маблағ смета бўйича',
-    cellElement: ({ row }) => <span>{row.year_summa.tulangan_mablag_smeta_buyicha}</span>
+    cellElement: ({ row }) => <span>{row.year_summa?.tulangan_mablag_smeta_buyicha}</span>
   },
   {
     key: 'year_summa.kassa_rasxod',
     header: 'Касса расход',
-    cellElement: ({ row }) => <span>{row.year_summa.kassa_rasxod}</span>
+    cellElement: ({ row }) => <span>{row.year_summa?.kassa_rasxod}</span>
   },
   {
     key: 'year_summa.haqiqatda_harajatlar',
     header: 'Хакикатда харажатлар',
-    cellElement: ({ row }) => <span>{row.year_summa.haqiqatda_harajatlar}</span>
+    cellElement: ({ row }) => <span>{row.year_summa?.haqiqatda_harajatlar}</span>
   },
   {
     key: 'year_summa.qoldiq',
     header: 'Колдик',
-    cellElement: ({ row }) => <span>{row.year_summa.qoldiq}</span>
+    cellElement: ({ row }) => <span>{row.year_summa?.qoldiq}</span>
   }
 ]
 

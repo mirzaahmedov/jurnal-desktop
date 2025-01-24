@@ -117,8 +117,8 @@ const MainbookReportDetailsPage = () => {
   const itogo = useMemo(() => {
     return childs?.reduce(
       (result, item) => {
-        result.debet += item.debet_sum
-        result.credit += item.kredit_sum
+        result.debet += item?.debet_sum
+        result.credit += item?.kredit_sum
         return result
       },
       {
