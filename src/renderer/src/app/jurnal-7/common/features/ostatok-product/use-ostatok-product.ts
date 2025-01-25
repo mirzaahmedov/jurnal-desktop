@@ -31,9 +31,9 @@ export const useOstatokProduct = ({
         onChange(product)
       },
       params: {
-        kimning_buynida: kimdan_id,
+        responsible_id: kimdan_id,
         to: doc_date,
-        product_id: naimenovanie_tovarov_jur7_id
+        product_id: naimenovanie_tovarov_jur7_id || undefined
       },
       includeParamsInGetById: true,
       enabled: !!kimdan_id
