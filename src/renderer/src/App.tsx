@@ -9,6 +9,28 @@ import { Toaster } from './common/components/ui/toaster'
 import { UpdateManager } from './common/features/update-manager'
 import { router } from './app/router'
 import { useEffect } from 'react'
+import { initReactI18next } from 'react-i18next'
+import i18next from 'i18next'
+import uz from './locales/uz.json'
+import ru from './locales/ru.json'
+
+i18next.use(initReactI18next).init({
+  lng: 'ru',
+  fallbackLng: 'ru',
+
+  resources: {
+    uz: {
+      translation: uz
+    },
+    ru: {
+      translation: ru
+    }
+  },
+
+  interpolation: {
+    escapeValue: false
+  }
+})
 
 const queryClient = new QueryClient({
   defaultOptions: {

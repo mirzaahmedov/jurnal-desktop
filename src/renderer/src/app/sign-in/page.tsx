@@ -1,4 +1,3 @@
-import { ArrowRightToLine, Usb } from 'lucide-react'
 import {
   Form,
   FormControl,
@@ -7,23 +6,24 @@ import {
   FormLabel,
   FormMessage
 } from '@renderer/common/components/ui/form'
-import { SigninFormSchema, defaultValues } from './config'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { ArrowRightToLine, Usb } from 'lucide-react'
+import { SigninFormSchema, defaultValues } from './config'
 
+import { zodResolver } from '@hookform/resolvers/zod'
+import { SelectField } from '@renderer/common/components'
 import { Button } from '@renderer/common/components/ui/button'
 import { Checkbox } from '@renderer/common/components/ui/checkbox'
 import { Input } from '@renderer/common/components/ui/input'
-import { SelectField } from '@renderer/common/components'
-import backgroundImage from '@resources/signin-bg.png'
-import logoImage from '@resources/logo.svg'
-import { signinQuery } from './service'
-import { toast } from 'react-toastify'
 import { useAuthStore } from '@renderer/common/features/auth'
+import { useRequisitesStore } from '@renderer/common/features/requisites'
+import logoImage from '@resources/logo.svg'
+import backgroundImage from '@resources/signin-bg.png'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
-import { useRequisitesStore } from '@renderer/common/features/requisites'
-import { useState } from 'react'
-import { zodResolver } from '@hookform/resolvers/zod'
+import { toast } from 'react-toastify'
+import { signinQuery } from './service'
 
 const languageOptions = [
   {
