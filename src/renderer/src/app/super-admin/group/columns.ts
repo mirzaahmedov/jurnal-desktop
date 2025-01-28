@@ -37,6 +37,11 @@ export const groupColumns: ColumnDef<Group>[] = [
     className: 'w-32'
   },
   {
+    key: 'group_number',
+    header: 'Номер группы',
+    className: 'w-32'
+  },
+  {
     key: 'pod_group',
     header: 'Подгруппа',
     className: 'w-32'

@@ -5,7 +5,6 @@ import { NsisUpdater } from 'electron-updater'
 import { events } from './auto-updater'
 import fs from 'fs'
 import icon from '@resources/icon.png?asset'
-import { join } from 'path'
 import os from 'os'
 import path from 'path'
 
@@ -26,7 +25,7 @@ function createWindow(): void {
     autoHideMenuBar: true,
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
-      preload: join(__dirname, '../preload/index.js'),
+      preload: path.join(__dirname, '../preload/index.js'),
       sandbox: false
     }
   })
@@ -100,7 +99,7 @@ function createWindow(): void {
   if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
     mainWindow.loadURL(process.env['ELECTRON_RENDERER_URL'])
   } else {
-    mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
+    mainWindow.loadFile(path.join(__dirname, '../renderer/index.html'))
   }
 }
 

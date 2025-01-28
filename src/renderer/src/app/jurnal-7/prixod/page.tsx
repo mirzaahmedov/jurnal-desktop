@@ -107,6 +107,12 @@ const MO7PrixodPage = () => {
               <Import className="btn-icon icon-start" /> Импорт данных
             </Button>
             <DownloadFile
+              url="/jur_7/doc_prixod/template"
+              fileName={`jur7_prixod_shablon-${from}&${to}.xlsx`}
+              buttonText="Скачать шаблон"
+              params={{}}
+            />
+            <DownloadFile
               url="jur_7/doc_prixod/report"
               fileName={`jur7_prixod_report-${from}&${to}.xlsx`}
               buttonText="Скачать отчет"
