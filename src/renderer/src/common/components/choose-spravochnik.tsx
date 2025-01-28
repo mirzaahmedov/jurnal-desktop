@@ -31,7 +31,7 @@ export const ChooseSpravochnik = <T,>(props: ChooseSpravochnikProps<T>) => {
                   title="Close"
                   onClick={(e) => {
                     e.stopPropagation()
-                    spravochnik.clear
+                    spravochnik.clear()
                   }}
                   className="hover:text-destructive text-slate-400"
                 >

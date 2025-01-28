@@ -1,10 +1,10 @@
-import type { Ostatok, OstatokProduct } from '@renderer/common/models/ostatok'
+import type { OstatokProduct } from '@renderer/common/models/ostatok'
 import { formatLocaleDate, formatNumber } from '@renderer/common/lib/format'
 
 import type { ColumnDef } from '@renderer/common/components'
 import { HeaderGroup } from '@renderer/common/components/generic-table/table'
 
-export const ostatokColumns: ColumnDef<Ostatok>[] = [
+export const ostatokColumns: ColumnDef<OstatokProduct>[] = [
   {
     key: 'naimenovanie_tovarov_jur7_id',
     header: 'Код товара'
@@ -33,25 +33,25 @@ export const ostatokColumns: ColumnDef<Ostatok>[] = [
     numeric: true,
     key: 'internal.prixod.kol',
     header: 'Приход Кол.',
-    renderCell: (row) => formatNumber(row.internal.prixod.kol)
+    renderCell: (row) => formatNumber(row.internal?.kol_prixod)
   },
   {
     numeric: true,
     key: 'internal.prixod.summa',
     header: 'Приход Сумма',
-    renderCell: (row) => formatNumber(row.internal.prixod.summa)
+    renderCell: (row) => formatNumber(row.internal?.summa_prixod)
   },
   {
     numeric: true,
     key: 'internal.rasxod.kol',
     header: 'Расход Кол.',
-    renderCell: (row) => formatNumber(row.internal.rasxod.kol)
+    renderCell: (row) => formatNumber(row.internal?.kol_rasxod)
   },
   {
     numeric: true,
     key: 'internal.rasxod.summa',
     header: 'Расход Сумма',
-    renderCell: (row) => formatNumber(row.internal.rasxod.summa)
+    renderCell: (row) => formatNumber(row.internal?.summa_rasxod)
   },
   {
     numeric: true,
@@ -68,11 +68,11 @@ export const ostatokColumns: ColumnDef<Ostatok>[] = [
   {
     key: 'prixod_data.doc_date',
     header: 'Дата прихода',
-    renderCell: (row) => formatLocaleDate(row.prixod_data?.doc_date)
+    renderCell: (row) => formatLocaleDate(row.prixod_data?.data_pereotsenka)
   }
 ]
 
-export const ostatokHeaderGroups: HeaderGroup<Ostatok>[][] = [
+export const ostatokHeaderGroups: HeaderGroup<OstatokProduct>[][] = [
   [
     {
       key: 'naimenovanie_tovarov_jur7_id',
@@ -207,10 +207,10 @@ export const ostatokProductColumns: ColumnDef<OstatokProduct>[] = [
     }
   },
   {
-    key: 'prixod_data.doc_date',
-    header: 'Дата сальдо',
+    key: 'prixod_data.data_pereotsenka',
+    header: 'Дата переоценка',
     renderCell(row) {
-      return formatLocaleDate(row.prixod_data?.doc_date)
+      return formatLocaleDate(row.prixod_data?.data_pereotsenka)
     }
   }
 ]

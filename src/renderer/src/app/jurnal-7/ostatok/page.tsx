@@ -2,19 +2,19 @@ import { ChooseSpravochnik, GenericTable } from '@renderer/common/components'
 import { formatDate, getFirstDayOfMonth, getLastDayOfMonth } from '@renderer/common/lib/date'
 import { ostatokColumns, ostatokHeaderGroups } from './columns'
 
+import { MonthPicker } from '@renderer/common/components/month-picker'
 import { ButtonGroup } from '@renderer/common/components/ui/button-group'
 import { DownloadFile } from '@renderer/common/features/file'
+import { useLayout } from '@renderer/common/features/layout'
+import { useRequisitesStore } from '@renderer/common/features/requisites'
+import { useSpravochnik } from '@renderer/common/features/spravochnik'
 import { ListView } from '@renderer/common/views'
-import { MonthPicker } from '@renderer/common/components/month-picker'
+import { useQuery } from '@tanstack/react-query'
+import { useState } from 'react'
 import { createPodrazdelenie7Spravochnik } from '../podrazdelenie/service'
 import { createResponsibleSpravochnik } from '../responsible/service'
 import { ostatokQueryKeys } from './config'
 import { ostatokService } from './service'
-import { useLayout } from '@renderer/common/features/layout'
-import { useQuery } from '@tanstack/react-query'
-import { useRequisitesStore } from '@renderer/common/features/requisites'
-import { useSpravochnik } from '@renderer/common/features/spravochnik'
-import { useState } from 'react'
 
 const OstatokPage = () => {
   const [month, setMonth] = useState(new Date().getMonth() + 1)
@@ -42,9 +42,8 @@ const OstatokPage = () => {
     queryKey: [
       ostatokQueryKeys.getAll,
       {
-        year,
-        month,
-        kimning_buynida: responsibleSpravochnik.selected?.id
+        to: formatDate(new Date(year, month, 1)),
+        responsible_id: responsibleSpravochnik.selected?.id
       }
     ],
     queryFn: ostatokService.getAll,

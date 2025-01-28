@@ -45,6 +45,16 @@ export type OstatokProduct = {
     kol: number
     summa: number
   }
+
+  internal: {
+    kol: number
+    kol_rasxod: number
+    kol_prixod: number
+    summa: number
+    summa_prixod: number
+    summa_rasxod: number
+  }
+
   month: number
   year: number
   date_saldo: string
@@ -65,7 +75,7 @@ export type OstatokProduct = {
   inventar_num: string
   serial_num: string
   prixod_data: {
-    doc_date: string
+    data_pereotsenka: string
     doc_num: string
   }
   to: {

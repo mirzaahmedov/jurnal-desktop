@@ -3,18 +3,18 @@ import { SpravochnikSearchField } from '@renderer/common/features/search'
 import { SpravochnikHookOptions } from '@renderer/common/features/spravochnik'
 import { extendObject } from '@renderer/common/lib/utils'
 
-import type { Ostatok, OstatokProduct } from '@renderer/common/models/ostatok'
-import { ostatokProductColumns } from './columns'
 import { budjet } from '@renderer/common/features/crud/middleware'
+import type { OstatokProduct } from '@renderer/common/models/ostatok'
+import { ostatokProductColumns } from './columns'
 
 export const ostatokService = new CRUDService<
-  Ostatok,
+  OstatokProduct,
   {
     year: number
     month: number
   }
 >({
-  endpoint: APIEndpoints.jur7_saldo
+  endpoint: APIEndpoints.jur7_saldo_product
 }).use(budjet())
 
 export const ostatokProductService = new CRUDService<OstatokProduct>({
