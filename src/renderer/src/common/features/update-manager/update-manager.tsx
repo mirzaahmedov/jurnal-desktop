@@ -13,6 +13,7 @@ import { Progress } from '@renderer/common/components/ui/progress'
 import { cn } from '@renderer/common/lib/utils'
 import { events } from '@main/auto-updater'
 import { toast } from 'react-toastify'
+import { useUpdateManagerStore } from './store'
 
 const ipcRenderer = window.electron.ipcRenderer
 
@@ -21,6 +22,8 @@ type UpdateStatus = 'available' | 'downloading' | 'downloaded' | 'error'
 const UpdateManager = () => {
   const [status, setStatus] = useState<UpdateStatus>()
   const [progress, setProgress] = useState(0)
+
+  const { setAvailable, setRestarting } = useUpdateManagerStore()
 
   useEffect(() => {
     ipcRenderer.send('check-for-updates')
@@ -42,7 +45,12 @@ const UpdateManager = () => {
     ipcRenderer.on(events.error, (_, error) => {
       console.log(error)
       setStatus('error')
+      setRestarting(false)
       setProgress(0)
+    })
+
+    ipcRenderer.on(events.update_downloaded_silent, () => {
+      setAvailable(true)
     })
 
     return () => {

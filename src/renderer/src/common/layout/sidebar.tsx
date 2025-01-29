@@ -4,7 +4,7 @@ import {
   AccordionItem,
   AccordionTrigger
 } from '@renderer/common/components/ui/accordion'
-import { ChevronsLeft, ChevronsRight } from 'lucide-react'
+import { ChevronsLeft, ChevronsRight, RefreshCcw } from 'lucide-react'
 import { useEffect, useState } from 'react'
 
 import { Badge } from '@renderer/common/components/ui/badge'
@@ -17,6 +17,8 @@ import { create } from 'zustand'
 import { getNavElements } from './constants'
 import logo from '@resources/logo.svg'
 import { persist } from 'zustand/middleware'
+import { useUpdateManagerStore } from '@renderer/common/features/update-manager'
+import { LoadingSpinner } from '../components'
 
 type SidebarStore = {
   isCollapsed: boolean
@@ -41,6 +43,13 @@ const Sidebar = () => {
   const [version, setVersion] = useState('')
 
   const { isCollapsed, toggleCollapsed } = useSidebarStore()
+
+  const { isAvailable, isRestarting, setRestarting } = useUpdateManagerStore()
+
+  const handleRestart = async () => {
+    setRestarting(true)
+    window.api.quitAndInstall()
+  }
 
   useEffect(() => {
     window.electron.ipcRenderer.invoke('get-version').then(setVersion)
@@ -104,6 +113,20 @@ const Sidebar = () => {
           </div>
         </div>
       </ScrollArea>
+      {isAvailable ? (
+        <Button
+          className="h-12 w-full rounded-none flex items-center gap-2"
+          onClick={handleRestart}
+          disabled={isRestarting}
+        >
+          {isRestarting ? (
+            <LoadingSpinner className="mr-2 inline-block size-4 border-white border-2 border-r-transparent" />
+          ) : (
+            <RefreshCcw className="btn-icon" />
+          )}
+          Обновить и перезапустить
+        </Button>
+      ) : null}
     </aside>
   )
 }

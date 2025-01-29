@@ -6,7 +6,9 @@ interface Downloader {
 declare global {
   interface Window {
     electron: ElectronAPI
-    api: unknown
+    api: {
+      quitAndInstall(): void
+    }
     downloader: Downloader
   }
 }

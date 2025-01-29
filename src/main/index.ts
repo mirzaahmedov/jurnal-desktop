@@ -5,11 +5,16 @@ import { NsisUpdater } from 'electron-updater'
 import { events } from './auto-updater'
 import fs from 'fs'
 import icon from '@resources/icon.png?asset'
+import iconDev from '@resources/icon-dev.png?asset'
 import os from 'os'
 import path from 'path'
 
+const CHECK_UPDATES_INTERVAL = 10 * 60 * 1000
+
 const url =
   import.meta.env.VITE_MODE === 'staging' ? 'http://10.50.0.140:4006' : 'http://10.50.0.140:4005'
+// const url =
+//   import.meta.env.VITE_MODE === 'staging' ? 'http://localhost:4006' : 'http://10.50.0.140:4005'
 
 const autoUpdater = new NsisUpdater({
   provider: 'generic',
@@ -17,13 +22,17 @@ const autoUpdater = new NsisUpdater({
 })
 
 function createWindow(): void {
+  let initialCheckForUpdate = true
+
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     show: false,
     minWidth: 1920,
     minHeight: 1080,
     autoHideMenuBar: true,
-    ...(process.platform === 'linux' ? { icon } : {}),
+    ...(process.platform === 'linux'
+      ? { icon: import.meta.env.VITE_MODE === 'prod' ? icon : iconDev }
+      : {}),
     webPreferences: {
       preload: path.join(__dirname, '../preload/index.js'),
       sandbox: false
@@ -35,23 +44,39 @@ function createWindow(): void {
     mainWindow.maximize()
 
     autoUpdater.on(events.checking_for_update, () => {
-      mainWindow.webContents.send(events.checking_for_update)
+      if (initialCheckForUpdate) {
+        mainWindow.webContents.send(events.checking_for_update)
+      }
     })
 
     autoUpdater.on(events.update_available, () => {
-      mainWindow.webContents.send(events.update_available)
+      if (initialCheckForUpdate) {
+        mainWindow.webContents.send(events.update_available)
+      }
     })
 
     autoUpdater.on(events.download_progress, (progress) => {
-      mainWindow.webContents.send(events.download_progress, progress)
+      if (initialCheckForUpdate) {
+        mainWindow.webContents.send(events.download_progress, progress)
+      }
+    })
+
+    autoUpdater.on(events.update_not_available, () => {
+      initialCheckForUpdate = false
     })
 
     autoUpdater.on(events.update_downloaded, () => {
-      mainWindow.webContents.send(events.update_downloaded)
+      if (initialCheckForUpdate) {
+        mainWindow.webContents.send(events.update_downloaded)
+        initialCheckForUpdate = false
+      } else {
+        mainWindow.webContents.send(events.update_downloaded_silent)
+      }
     })
 
     autoUpdater.on(events.error, (error) => {
       mainWindow.webContents.send(events.error, error)
+      initialCheckForUpdate = false
     })
 
     ipcMain.on('check-for-updates', () => {
@@ -87,6 +112,10 @@ function createWindow(): void {
     )
 
     ipcMain.handle('get-version', () => app.getVersion())
+
+    setInterval(() => {
+      autoUpdater.checkForUpdates()
+    }, CHECK_UPDATES_INTERVAL)
   })
 
   mainWindow.webContents.setWindowOpenHandler((details) => {

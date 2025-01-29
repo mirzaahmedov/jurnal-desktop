@@ -20,6 +20,23 @@ import { SmetaGroupFilter } from './group-filter'
 
 export const smetaService = new CRUDService<Smeta, SmetaForm>({
   endpoint: APIEndpoints.smeta
+}).forRequest((type, args) => {
+  if (type === 'getAll') {
+    const params = args.config?.params
+    if (params.search) {
+      delete params.group_number
+    }
+    return {
+      config: {
+        ...args.config,
+        params: {
+          ...args.config?.params
+        }
+      }
+    }
+  }
+
+  return {}
 })
 
 type SmetaTableProps = Omit<CollapsibleTableProps<TreeNode<Smeta>>, 'data'> & {
