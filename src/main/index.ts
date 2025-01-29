@@ -32,7 +32,7 @@ function createWindow(): void {
     autoHideMenuBar: true,
     ...(process.platform === 'linux'
       ? { icon: import.meta.env.VITE_MODE === 'prod' ? icon : iconDev }
-      : {}),
+      : { icon: import.meta.env.VITE_MODE === 'prod' ? icon : iconDev }),
     webPreferences: {
       preload: path.join(__dirname, '../preload/index.js'),
       sandbox: false
