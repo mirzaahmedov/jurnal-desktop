@@ -5,7 +5,7 @@
   "raschet-schet": "Hisob raqami",
   "choose": "{{what}} tanlash",
   "from": "Davr boshi",
-  "to": "to",
+  "to": "toki",
   "load": "Yuklash",
   "remainder-from": "Davr boshiga qoldiq",
   "remainder-to": "Davr oxiriga qoldiq",
@@ -15,9 +15,11 @@
   "prixod": "Prixod",
   "rasxod": "Rasxod",
   "podotchet-litso": "Hisobdor shaxs",
-  "create-by-user": "Foydalanuvhchi tomonidan yaratildi",
+  "created-by-user": "Foydalanuvhchi tomonidan yaratildi",
   "total": "Jami",
+  "summa": "Summa",
   "daily-report": "Kunlik hisobot",
-  "cap-report": "Kunlik hisobot",
+  "cap-report": "Shapka hisobot",
+  "elements-per-page": "Sahifadagi elementlar soni",
   "no-requisites-selected": "Ushbu sahifadan foydalanish uchun avvalo rekvizitlaringizni tanlashingiz kerak"
 }

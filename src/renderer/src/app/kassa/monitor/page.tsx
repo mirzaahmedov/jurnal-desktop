@@ -59,7 +59,7 @@ const KassaMonitorPage = () => {
               <DownloadFile
                 fileName={`касса-дневной-отчет_${dates.from}&${dates.to}.xlsx`}
                 url="kassa/monitoring/daily"
-                buttonText="Дневной отчет"
+                buttonText={t('daily-report')}
                 params={{
                   main_schet_id,
                   from: dates.from,
@@ -69,7 +69,7 @@ const KassaMonitorPage = () => {
               <DownloadFile
                 fileName={`касса-шапка-отчет_${dates.from}&${dates.to}.xlsx`}
                 url="kassa/monitoring/cap"
-                buttonText="Шапка отчет"
+                buttonText={t('cap-report')}
                 params={{
                   main_schet_id,
                   from: dates.from,

@@ -6,26 +6,26 @@ import { formatLocaleDate } from '@/common/lib/format'
 export const columns: ColumnDef<KassaPrixodType>[] = [
   {
     key: 'doc_num',
-    header: 'Документ №'
+    header: 'doc_num'
   },
   {
     key: 'doc_date',
-    header: 'Дата проводки',
+    header: 'doc_date',
     renderCell(row, col) {
       return formatLocaleDate(row[col.key as keyof KassaPrixodType] as string)
     }
   },
   {
     key: 'opisanie',
-    header: 'Описания'
+    header: 'description'
   },
   {
     numeric: true,
     key: 'summa',
-    header: 'Сумма'
+    header: 'summa'
   },
   {
     key: 'spravochnik_podotchet_litso_name',
-    header: 'Подотчетное лицо'
+    header: 'podotchet-litso'
   }
 ]

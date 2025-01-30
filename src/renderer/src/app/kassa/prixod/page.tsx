@@ -1,8 +1,8 @@
+import type { KassaPrixodType } from '@/common/models'
+
 import { FooterCell, FooterRow, GenericTable } from '@/common/components'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { usePagination, useRangeDate } from '@/common/hooks'
-
-import type { KassaPrixodType } from '@/common/models'
 import { ListView } from '@/common/views'
 import { columns } from './columns'
 import { formatNumber } from '@/common/lib/format'
@@ -12,9 +12,12 @@ import { useConfirm } from '@/common/features/confirm'
 import { useLayout } from '@/common/features/layout'
 import { useNavigate } from 'react-router-dom'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
+import { useTranslation } from 'react-i18next'
+import { useMemo } from 'react'
 
 const KassaPrixodPage = () => {
   const { confirm } = useConfirm()
+  const { t } = useTranslation(['app'])
 
   const dates = useRangeDate()
   const pagination = usePagination()
@@ -55,11 +58,23 @@ const KassaPrixodPage = () => {
   }
 
   useLayout({
-    title: 'Приходные документы',
+    title: `${t('pages.kassa')} · ${t('pages.prixod-docs')}`,
     onCreate() {
       navigate('create')
     }
   })
+
+  const columnDefs = useMemo(() => {
+    return columns.map((column) => {
+      if (typeof column.header !== 'string') {
+        return column
+      }
+      return {
+        ...column,
+        header: t(column.header)
+      }
+    })
+  }, [t])
 
   return (
     <ListView>
@@ -69,7 +84,7 @@ const KassaPrixodPage = () => {
       <ListView.Content loading={isFetching || isPending}>
         <GenericTable
           data={prixodList?.data ?? []}
-          columnDefs={columns}
+          columnDefs={columnDefs}
           getRowId={(row) => row.id}
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}

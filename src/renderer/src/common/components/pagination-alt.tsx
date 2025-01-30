@@ -2,6 +2,7 @@ import Paginate from 'react-paginate'
 import { Button } from './ui/button'
 import { ArrowLeft, ArrowRight } from 'lucide-react'
 import { SelectField } from './select-field'
+import { useTranslation } from 'react-i18next'
 
 type PaginationValues = {
   page: number
@@ -12,6 +13,8 @@ type PaginationProps = PaginationValues & {
   onChange: (values: Partial<PaginationValues>) => void
 }
 const Pagination = ({ page, pageCount, limit, onChange }: PaginationProps) => {
+  const { t } = useTranslation()
+
   return (
     <div className="flex items-center justify-start gap-5">
       <Paginate
@@ -49,7 +52,7 @@ const Pagination = ({ page, pageCount, limit, onChange }: PaginationProps) => {
       />
       {pageCount > 0 && (
         <>
-          <span className="whitespace-nowrap text-sm text-slate-400">Элементов на странице</span>
+          <span className="whitespace-nowrap text-sm text-slate-400">{t('elements-per-page')}</span>
           <div>
             <SelectField
               placeholder="Элементов на странице"
