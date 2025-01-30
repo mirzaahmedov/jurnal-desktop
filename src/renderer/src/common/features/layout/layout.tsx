@@ -1,3 +1,5 @@
+import type { ReactNode } from 'react'
+import type { MainSchet } from '@/common/models'
 import { ArrowLeft, CirclePlus, LogOut, RefreshCw, Settings } from 'lucide-react'
 import { Avatar, AvatarFallback } from '@/common/components/ui/avatar'
 import { RequisitesDialog, useRequisitesStore } from '@renderer/common/features/requisites'
@@ -5,13 +7,13 @@ import { mainSchetQueryKeys, mainSchetService } from '@/app/region-spravochnik/m
 
 import { Button } from '@/common/components/ui/button'
 import { ConfigureDefaultValuesDialog } from '@/common/features/app-defaults'
-import { MainSchet } from '@/common/models'
-import type { ReactNode } from 'react'
 import { useAuthStore } from '@/common/features/auth'
 import { useLayoutStore } from './store'
 import { useLocation } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { useToggle } from '@/common/hooks/use-toggle'
+import { LocaleSelect } from '@/common/features/locales'
+import { useTranslation } from 'react-i18next'
 
 type PageLayoutProps = {
   children: ReactNode
@@ -20,6 +22,7 @@ export const PageLayout = (props: PageLayoutProps) => {
   const { children } = props
 
   const { title, content: Content, onCreate, onBack } = useLayoutStore()
+  const { t } = useTranslation()
   const { user, setUser } = useAuthStore()
   const { pathname } = useLocation()
 
@@ -89,13 +92,16 @@ export const PageLayout = (props: PageLayoutProps) => {
                 </Button>
 
                 <div className="flex flex-col gap-0.5">
-                  <p className="text-xs font-medium text-slate-500">Основной счет</p>
+                  <p className="text-xs font-medium text-slate-500">{t('main-schet')}</p>
                   <p className="text-base font-semibold">
                     {[main_schet?.account_number, schet].filter((value) => !!value).join(' - ')}
                   </p>
                 </div>
               </>
             )}
+          </div>
+          <div className="px-5">
+            <LocaleSelect />
           </div>
           {user ? (
             <div className="px-8 flex items-center gap-4">

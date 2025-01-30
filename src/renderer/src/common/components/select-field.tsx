@@ -7,7 +7,7 @@ import {
 } from '@/common/components/ui/select'
 
 import { FormControl } from './ui/form'
-import type { ForwardedRef } from 'react'
+import type { ForwardedRef, ReactNode } from 'react'
 import type { SelectProps } from '@radix-ui/react-select'
 import { cn } from '@/common/lib/utils'
 import { forwardRef } from 'react'
@@ -16,7 +16,7 @@ type SelectFieldProps<T> = SelectProps & {
   withFormControl?: boolean
   placeholder: string
   options: T[] | readonly T[]
-  getOptionLabel(data: T): string
+  getOptionLabel(data: T): ReactNode
   getOptionValue(data: T): string | number
   triggerClassName?: string
 }

@@ -90,6 +90,12 @@ select:-webkit-autofill:focus {
   }
 }
 
+@layer utilities {
+  .titlecase {
+    @apply lowercase first-letter:uppercase;
+  }
+}
+
 @layer components {
   .btn-icon {
     @apply size-[1.125rem] align-middle ml-2;

@@ -1,0 +1,23 @@
+{
+  "main-schet": "Asosiy hisob",
+  "budjet": "Byudjet",
+  "requisites": "Rekvizitlar",
+  "raschet-schet": "Hisob raqami",
+  "choose": "{{what}} tanlash",
+  "from": "Davr boshi",
+  "to": "to",
+  "load": "Yuklash",
+  "remainder-from": "Davr boshiga qoldiq",
+  "remainder-to": "Davr oxiriga qoldiq",
+  "doc_num": "Hujjat №",
+  "doc_date": "Provodka sanasi",
+  "description": "Tavsif",
+  "prixod": "Prixod",
+  "rasxod": "Rasxod",
+  "podotchet-litso": "Hisobdor shaxs",
+  "create-by-user": "Foydalanuvhchi tomonidan yaratildi",
+  "total": "Jami",
+  "daily-report": "Kunlik hisobot",
+  "cap-report": "Kunlik hisobot",
+  "no-requisites-selected": "Ushbu sahifadan foydalanish uchun avvalo rekvizitlaringizni tanlashingiz kerak"
+}

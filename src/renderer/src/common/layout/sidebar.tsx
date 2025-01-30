@@ -19,6 +19,7 @@ import logo from '@resources/logo.svg'
 import { persist } from 'zustand/middleware'
 import { useUpdateManagerStore } from '@renderer/common/features/update-manager'
 import { LoadingSpinner } from '../components'
+import { useTranslation } from 'react-i18next'
 
 type SidebarStore = {
   isCollapsed: boolean
@@ -42,8 +43,8 @@ const useSidebarStore = create(
 const Sidebar = () => {
   const [version, setVersion] = useState('')
 
+  const { t } = useTranslation(['app'])
   const { isCollapsed, toggleCollapsed } = useSidebarStore()
-
   const { isAvailable, isRestarting, setRestarting } = useUpdateManagerStore()
 
   const handleRestart = async () => {
@@ -75,11 +76,7 @@ const Sidebar = () => {
               alt="МЧС Республики Узбекистан"
               className="max-h-16"
             />
-            {!isCollapsed ? (
-              <h1 className="flex-1 text-xs font-bold">
-                O‘zbekiston Respublikasi FVV axborot tizimi &quot;Е-Moliya&quot;
-              </h1>
-            ) : null}
+            {!isCollapsed ? <h1 className="flex-1 text-xs font-bold">{t('title')}</h1> : null}
 
             <Button
               variant="ghost"
@@ -96,7 +93,7 @@ const Sidebar = () => {
           </div>
           <div className="flex-1">
             <nav>
-              <ul>{getNavElements().map((elem) => renderNavElement(elem, isCollapsed))}</ul>
+              <ul>{getNavElements(t).map((elem) => renderNavElement(elem, isCollapsed))}</ul>
             </nav>
           </div>
           <div

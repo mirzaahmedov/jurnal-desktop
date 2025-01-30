@@ -4,6 +4,7 @@ import { DatePicker } from './date-picker'
 import { FormElement } from './form'
 import { Button } from './ui/button'
 import { CircleArrowDown } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 type RangeDateValues = {
   from: string
@@ -13,6 +14,8 @@ type RangeDatePickerProps = RangeDateValues & {
   onChange: (values: Partial<RangeDateValues>) => void
 }
 const RangeDatePicker = ({ from, to, onChange }: RangeDatePickerProps) => {
+  const { t } = useTranslation()
+
   const form = useForm({
     defaultValues: {
       from,
@@ -32,7 +35,7 @@ const RangeDatePicker = ({ from, to, onChange }: RangeDatePickerProps) => {
           control={form.control}
           name="from"
           render={({ field }) => (
-            <FormElement label="За период с">
+            <FormElement label={t('from')}>
               <DatePicker
                 autoFocus
                 {...field}
@@ -44,7 +47,7 @@ const RangeDatePicker = ({ from, to, onChange }: RangeDatePickerProps) => {
           control={form.control}
           name="to"
           render={({ field }) => (
-            <FormElement label="по">
+            <FormElement label={t('to')}>
               <DatePicker {...field} />
             </FormElement>
           )}
@@ -55,7 +58,7 @@ const RangeDatePicker = ({ from, to, onChange }: RangeDatePickerProps) => {
             variant="outline"
           >
             <CircleArrowDown className="btn-icon icon-start" />
-            Загрузить
+            {t('load')}
           </Button>
         </div>
       </form>

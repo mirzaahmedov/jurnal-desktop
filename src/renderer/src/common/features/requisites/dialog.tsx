@@ -17,6 +17,7 @@ import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { useQuery } from '@tanstack/react-query'
 import { useRequisitesStore } from './store'
+import { useTranslation } from 'react-i18next'
 
 export type RequisitesDialogProps = {
   open: boolean
@@ -25,6 +26,7 @@ export type RequisitesDialogProps = {
 export const RequisitesDialog = (props: RequisitesDialogProps) => {
   const { open, onOpenChange } = props
 
+  const { t } = useTranslation()
   const { user } = useAuthStore()
   const { main_schet_id, budjet_id, setRequisites } = useRequisitesStore()
 
@@ -71,21 +73,24 @@ export const RequisitesDialog = (props: RequisitesDialogProps) => {
     >
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Выберите реквизиты</DialogTitle>
+          <DialogTitle className="titlecase">{t('choose', { what: t('requisites') })}</DialogTitle>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={onSubmit}>
+          <form
+            onSubmit={onSubmit}
+            className="flex flex-col gap-4"
+          >
             <FormField
               control={form.control}
               name="budjet_id"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Бюджет</FormLabel>
+                  <FormLabel>{t('budjet')}</FormLabel>
                   <SelectField
                     {...field}
                     withFormControl
                     disabled={isLoadingBudget}
-                    placeholder="Выберите бюджет"
+                    placeholder={t('choose', { what: t('budjet') })}
                     options={Array.isArray(budgetList?.data) ? budgetList.data : []}
                     getOptionValue={(budget) => budget.id.toString()}
                     getOptionLabel={(budget) => budget.name}
@@ -106,12 +111,12 @@ export const RequisitesDialog = (props: RequisitesDialogProps) => {
                 name="main_schet_id"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Расчетный счет</FormLabel>
+                    <FormLabel>{t('raschet-schet')}</FormLabel>
                     <SelectField
                       {...field}
                       withFormControl
                       disabled={isLoadingSchets}
-                      placeholder="Выберите расчетный счет"
+                      placeholder={t('choose', { what: t('raschet-schet') })}
                       options={Array.isArray(schetList?.data) ? schetList.data : []}
                       getOptionValue={(account) => account.main_schet_id.toString()}
                       getOptionLabel={(account) => account.account_number}

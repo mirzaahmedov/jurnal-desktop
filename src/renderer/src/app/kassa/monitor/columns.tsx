@@ -6,36 +6,36 @@ import { formatLocaleDate } from '@/common/lib/format'
 export const columns: ColumnDef<KassaMonitoringType>[] = [
   {
     key: 'doc_num',
-    header: 'Документ №'
+    header: 'doc_num'
   },
   {
     key: 'doc_date',
-    header: 'Дата проводки',
+    header: 'doc_date',
     renderCell(row, col) {
       return formatLocaleDate(row[col.key as keyof KassaMonitoringType] as string)
     }
   },
   {
     key: 'opisanie',
-    header: 'Описания'
+    header: 'description'
   },
   {
     numeric: true,
     key: 'prixod_sum',
-    header: 'Приход'
+    header: 'prixod'
   },
   {
     numeric: true,
     key: 'rasxod_sum',
-    header: 'Расход'
+    header: 'rasxod'
   },
   {
     key: 'spravochnik_podotchet_litso_name',
-    header: 'Подотчетное лицо'
+    header: 'podotchet-litso'
   },
   {
     key: 'user_id',
-    header: 'Создано пользователем',
+    header: 'created-by-user',
     renderCell(row) {
       return `${row.fio} (@${row.login})`
     }

@@ -1,6 +1,6 @@
 {
   "name": "jurnal.desktop",
-  "version": "1.0.82",
+  "version": "1.0.84",
   "description": "An Electron application with React and TypeScript",
   "main": "./out/main/index.js",
   "author": "example.com",
@@ -67,6 +67,7 @@
     "exceljs": "^4.4.0",
     "file-saver": "^2.0.5",
     "i18next": "^24.2.2",
+    "i18next-http-backend": "^3.0.2",
     "just-compare": "^2.3.0",
     "just-is-empty": "^3.4.1",
     "lucide-react": "^0.468.0",

@@ -2,6 +2,7 @@ import type { AxiosError, InternalAxiosRequestConfig } from 'axios'
 
 import axios from 'axios'
 import { useAuthStore } from '@/common/features/auth'
+import i18next from 'i18next'
 
 type ErrorResponse = {
   success: false
@@ -22,6 +23,8 @@ const http = axios.create({
 })
 
 http.interceptors.request.use((config: InternalAxiosRequestConfig) => {
+  config.headers['x-app-lang'] = i18next.language
+
   if (config.withCredentials === false) {
     return config
   }

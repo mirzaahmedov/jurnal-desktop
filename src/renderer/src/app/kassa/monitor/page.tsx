@@ -11,11 +11,15 @@ import { kassaMonitorService } from './service'
 import { useLayout } from '@/common/features/layout'
 import { useQuery } from '@tanstack/react-query'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
+import { useTranslation } from 'react-i18next'
+import { useMemo } from 'react'
 
 const KassaMonitorPage = () => {
   const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
   const pagination = usePagination()
   const dates = useRangeDate()
+
+  const { t } = useTranslation(['app', 'common'])
 
   const { data: monitorList, isFetching } = useQuery({
     queryKey: [
@@ -30,8 +34,20 @@ const KassaMonitorPage = () => {
   })
 
   useLayout({
-    title: 'Мониторинг'
+    title: `${t('pages.kassa')} · ${t('pages.monitoring')}`
   })
+
+  const columnDefs = useMemo(() => {
+    return columns.map((column) => {
+      if (typeof column.header !== 'string') {
+        return column
+      }
+      return {
+        ...column,
+        header: t(column.header)
+      }
+    })
+  }, [t])
 
   return (
     <ListView>
@@ -64,7 +80,7 @@ const KassaMonitorPage = () => {
           ) : null}
         </div>
         <div className="pt-5 flex items-center gap-5">
-          <span className="text-sm text-slate-400">Остаток на начало период:</span>
+          <span className="text-sm text-slate-400">{t('remainder-from')}</span>
           <b className="font-black text-slate-700">
             {formatNumber(monitorList?.meta?.summa_from ?? 0)}
           </b>
@@ -73,13 +89,13 @@ const KassaMonitorPage = () => {
       <ListView.Content loading={isFetching}>
         <GenericTable
           data={monitorList?.data ?? []}
-          columnDefs={columns}
+          columnDefs={columnDefs}
           getRowId={(row) => `${row.id}-${row.rasxod_sum ? 'rasxod' : 'prixod'}`}
           footer={
             <>
               <FooterRow>
                 <FooterCell
-                  title="Итого"
+                  title={t('total')}
                   colSpan={3}
                 />
                 <FooterCell
@@ -97,7 +113,7 @@ const KassaMonitorPage = () => {
       </ListView.Content>
       <ListView.Footer>
         <div className="pb-5 flex items-center gap-5">
-          <span className="text-sm text-slate-400">Остаток на конец период:</span>
+          <span className="text-sm text-slate-400">{t('remainder-to')}</span>
           <b className="font-black text-slate-700">
             {formatNumber(monitorList?.meta?.summa_to ?? 0)}
           </b>

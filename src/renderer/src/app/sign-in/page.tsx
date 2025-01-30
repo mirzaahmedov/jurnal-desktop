@@ -11,7 +11,6 @@ import { ArrowRightToLine, Usb } from 'lucide-react'
 import { SigninFormSchema, defaultValues } from './config'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { SelectField } from '@renderer/common/components'
 import { Button } from '@renderer/common/components/ui/button'
 import { Checkbox } from '@renderer/common/components/ui/checkbox'
 import { Input } from '@renderer/common/components/ui/input'
@@ -24,17 +23,8 @@ import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { signinQuery } from './service'
-
-const languageOptions = [
-  {
-    label: 'Русский',
-    value: 'ru'
-  },
-  {
-    label: 'O‘zbekcha',
-    value: 'uz'
-  }
-]
+import { LocaleSelect } from '@renderer/common/features/locales'
+import { useTranslation } from 'react-i18next'
 
 const SigninPage = () => {
   const [isPasswordVisible, setPasswordVisible] = useState(false)
@@ -43,6 +33,7 @@ const SigninPage = () => {
   const navigate = useNavigate()
 
   const { user_id, setRequisites } = useRequisitesStore()
+  const { t } = useTranslation(['sign-in', 'user', 'app'])
   const { setUser } = useAuthStore()
 
   const form = useForm({
@@ -87,8 +78,7 @@ const SigninPage = () => {
               className="h-48"
             />
             <h1 className="max-w-md text-center text-2xl leading-tight font-bold">
-              O‘zbekiston Respublikasi FVV <br />
-              axborot tizimi &quot;Е-Moliya&quot;
+              {t('title', { ns: 'app' })}
             </h1>
           </div>
           <div>
@@ -103,7 +93,7 @@ const SigninPage = () => {
                   name="login"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Login</FormLabel>
+                      <FormLabel>{t('login', { ns: 'user' })}</FormLabel>
                       <FormControl>
                         <Input
                           autoComplete="off"
@@ -119,7 +109,7 @@ const SigninPage = () => {
                   name="password"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Parol</FormLabel>
+                      <FormLabel>{t('password', { ns: 'user' })}</FormLabel>
                       <FormControl>
                         <Input
                           autoComplete="off"
@@ -139,7 +129,7 @@ const SigninPage = () => {
                       onCheckedChange={(state) => setPasswordVisible(!!state)}
                     />
                   </FormControl>
-                  <FormLabel className="!mt-0">Parolni ko‘rsatish</FormLabel>
+                  <FormLabel className="!mt-0">{t('show-password')}</FormLabel>
                   <FormMessage />
                 </FormItem>
                 <div className="flex flex-col gap-2">
@@ -148,13 +138,13 @@ const SigninPage = () => {
                     type="submit"
                     className="mt-5"
                   >
-                    <ArrowRightToLine className="btn-icon icon-start" /> Kirish
+                    <ArrowRightToLine className="btn-icon icon-start" /> {t('enter')}
                   </Button>
                   <Button
                     type="button"
                     variant="outline"
                   >
-                    <Usb className="btn-icon icon-start" /> USB kalit orqali kirish
+                    <Usb className="btn-icon icon-start" /> {t('enter-usb')}
                   </Button>
                 </div>
               </form>
@@ -162,21 +152,16 @@ const SigninPage = () => {
           </div>
         </div>
         <div className="flex justify-end">
-          <SelectField
-            defaultValue="uz"
-            placeholder="Tilni tanlang"
-            options={languageOptions}
-            getOptionLabel={(option) => option.label}
-            getOptionValue={(option) => option.value}
-            triggerClassName="w-32 bg-white"
-          />
+          <div>
+            <LocaleSelect />
+          </div>
         </div>
       </div>
       <div className="flex-1 h-full p-20">
         <img
           aria-hidden
           src={backgroundImage}
-          alt="Orqa fon rasmi"
+          alt="background image"
           className="w-full h-full object-contain"
         />
       </div>

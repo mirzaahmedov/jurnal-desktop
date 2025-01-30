@@ -9,7 +9,7 @@ import iconDev from '@resources/icon-dev.png?asset'
 import os from 'os'
 import path from 'path'
 
-const CHECK_UPDATES_INTERVAL = 10 * 60 * 1000
+const CHECK_UPDATES_INTERVAL = 1 * 60 * 1000
 
 const url =
   import.meta.env.VITE_MODE === 'staging' ? 'http://10.50.0.140:4006' : 'http://10.50.0.140:4005'

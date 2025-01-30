@@ -1,3 +1,6 @@
+import type { ComponentType, ReactNode } from 'react'
+import type { Access } from '@/common/models'
+import type { TFunction } from 'i18next'
 import {
   ArrowLeftRight,
   BadgeDollarSign,
@@ -18,7 +21,6 @@ import {
   FileUp,
   Folder,
   Group,
-  House,
   Landmark,
   LayoutGrid,
   MapPinHouse,
@@ -41,9 +43,6 @@ import {
   Warehouse,
   Weight
 } from 'lucide-react'
-import type { ComponentType, ReactNode } from 'react'
-
-import type { Access } from '@/common/models'
 import { ChangeJurnal7Defaults } from '@renderer/app/jurnal-7/common/features/defaults/change-defaults'
 import { adminRoles } from '@renderer/app/super-admin/role'
 import { omitEmptyArrayElements } from '@/common/lib/validation'
@@ -58,7 +57,7 @@ export type NavElement = {
   children?: NavElement[]
 }
 
-export const getNavElements = (): NavElement[] => {
+export const getNavElements = (t: TFunction): NavElement[] => {
   const user = useAuthStore.getState().user
   const access = user?.access_object ?? ({} as Access)
 
@@ -87,30 +86,25 @@ export const getNavElements = (): NavElement[] => {
   }
 
   return omitEmptyArrayElements<NavElement>([
-    {
-      path: '/',
-      title: 'Главная книга',
-      icon: House
-    },
     permissions.kassa
       ? {
           path: '/kassa',
-          title: '№1 - МО (Касса)',
+          title: `№1 - МО (${t('pages.kassa')})`,
           icon: BadgeDollarSign,
           children: [
             {
               path: 'monitor',
-              title: 'Мониторинг',
+              title: t('pages.monitoring'),
               icon: SquareActivity
             },
             {
               path: 'prixod',
-              title: 'Приходные документы',
+              title: t('pages.prixod-docs'),
               icon: FileDown
             },
             {
               path: 'rasxod',
-              title: 'Расходные документы',
+              title: t('pages.rasxod-docs'),
               icon: FileUp
             }
           ]
@@ -119,22 +113,22 @@ export const getNavElements = (): NavElement[] => {
     permissions.bank
       ? {
           path: '/bank',
-          title: '№2 - МО (Банк)',
+          title: `№2 - МО (${t('pages.bank')})`,
           icon: Landmark,
           children: [
             {
               path: 'monitor',
-              title: 'Мониторинг',
+              title: t('pages.monitoring'),
               icon: SquareActivity
             },
             {
               path: 'prixod',
-              title: 'Приходные документы',
+              title: t('pages.prixod-docs'),
               icon: FileDown
             },
             {
               path: 'rasxod',
-              title: 'Расходные документы',
+              title: t('pages.rasxod-docs'),
               icon: FileUp
             }
           ]
@@ -148,41 +142,41 @@ export const getNavElements = (): NavElement[] => {
     ].includes(true)
       ? {
           path: '/organization',
-          title: '№3 - МО (Организация)',
+          title: `№3 - МО (${t('pages.organization')})`,
           icon: Building2,
           children: omitEmptyArrayElements([
             permissions.organization_monitoring
               ? {
                   path: 'monitor',
-                  title: 'Об организации',
+                  title: t('pages.organization-monitoring'),
                   icon: CircleHelp
                 }
               : null,
             permissions.shartnoma
               ? {
                   path: 'shartnoma',
-                  title: 'Договор',
+                  title: t('pages.shartnoma'),
                   icon: ReceiptText
                 }
               : null,
             permissions.shartnoma
               ? {
                   path: 'shartnoma-grafik',
-                  title: 'График договорах',
+                  title: t('pages.shartnoma-grafik'),
                   icon: CalendarCheck
                 }
               : null,
             permissions.jur3
               ? {
                   path: 'akt',
-                  title: 'Акт-приём пересдач',
+                  title: t('pages.akt'),
                   icon: FileCheck2
                 }
               : null,
             permissions.jur152
               ? {
                   path: 'pokazat-uslugi',
-                  title: 'Показать услуги',
+                  title: t('pages.service'),
                   icon: Truck
                 }
               : null
@@ -192,20 +186,20 @@ export const getNavElements = (): NavElement[] => {
     [permissions.podotchet_monitoring, permissions.jur4].includes(true)
       ? {
           path: '/accountable',
-          title: '№4 - МО (Подотчетные Отчеты)',
+          title: `№4 - МО (${t('pages.podotchet')})`,
           icon: UserSquare,
           children: omitEmptyArrayElements([
             permissions.podotchet_monitoring
               ? {
                   path: 'monitor',
-                  title: 'О подотчетном лице',
+                  title: t('pages.podotchet-monitoring'),
                   icon: CircleHelp
                 }
               : null,
             permissions.jur4
               ? {
                   path: 'advance-report',
-                  title: 'Авансовые отчёты',
+                  title: t('pages.avans'),
                   icon: FileCheck
                 }
               : null
@@ -216,41 +210,41 @@ export const getNavElements = (): NavElement[] => {
       ? {
           icon: NotepadText,
           path: '/journal-7',
-          title: '№7 - МО (Материальный склад)',
+          title: `№7 - МО (${t('pages.material-warehouse')})`,
           children: [
             {
               icon: FileDown,
               path: 'prixod',
-              title: 'Приходный документ'
+              title: t('pages.prixod-docs')
             },
             {
               icon: FileUp,
               path: 'rasxod',
-              title: 'Расходный документ'
+              title: t('pages.rasxod-docs')
             },
             {
               icon: ArrowLeftRight,
               path: 'internal-transfer',
-              title: 'Внутрь. Пере. Документ'
+              title: t('pages.internal-docs')
             },
             {
               path: 'responsible',
-              title: 'Ответственное лицо',
+              title: t('pages.responsible'),
               icon: UserSquare
             },
             {
               path: 'subdivision-7',
-              title: 'Подразделение',
+              title: t('pages.podrazdelenie'),
               icon: Building
             },
             {
               path: 'ostatok',
-              title: 'Остаток',
+              title: t('pages.ostatok'),
               icon: Warehouse
             },
             {
               path: 'iznos',
-              title: 'Износ',
+              title: t('pages.iznos'),
               icon: Percent
             },
             {
@@ -265,47 +259,47 @@ export const getNavElements = (): NavElement[] => {
     permissions.spravochnik
       ? {
           path: '/spravochnik',
-          title: 'Справочник',
+          title: t('pages.spravochnik'),
           icon: NotebookTabs,
           children: [
             {
               path: 'organization',
-              title: 'Организация',
+              title: t('pages.organization'),
               icon: Building
             },
             {
               path: 'subdivision',
-              title: 'Подразделение',
+              title: t('pages.podrazdelenie'),
               icon: Building2
             },
             {
               path: 'operation-type',
-              title: 'Типы операции',
+              title: t('pages.type-operatsii'),
               icon: Folder
             },
             {
               path: 'main-schet',
-              title: 'Основной счет',
+              title: t('pages.main-schet'),
               icon: Wallet
             },
             {
               path: 'podotchet',
-              title: 'Подотчетное лицо',
+              title: t('pages.podotchet-litso'),
               icon: SquareUser
             },
             {
               path: 'sostav',
-              title: 'Состав',
+              title: t('pages.sostav'),
               icon: Users
             },
             {
               path: 'smeta-grafik',
-              title: 'Смета график',
+              title: t('pages.smeta-grafik'),
               icon: CalendarCheck
             },
             {
               path: 'podpis',
-              title: 'Подпись',
+              title: t('pages.podpis'),
               icon: Signature
             }
           ]
@@ -314,20 +308,20 @@ export const getNavElements = (): NavElement[] => {
     is_admin && [permissions.region_users, permissions.access].includes(true)
       ? {
           path: '/region',
-          title: 'Регион',
+          title: t('pages.region'),
           icon: MapPinHouse,
           children: omitEmptyArrayElements([
             permissions.region_users
               ? {
                   path: 'user',
-                  title: 'Пользователь',
+                  title: t('pages.user'),
                   icon: Users
                 }
               : null,
             permissions.access
               ? {
                   path: 'access',
-                  title: 'Доступ',
+                  title: t('pages.access'),
                   icon: ShieldCheck
                 }
               : null
@@ -337,87 +331,87 @@ export const getNavElements = (): NavElement[] => {
     is_super_admin
       ? {
           path: '/admin',
-          title: 'Админ',
+          title: t('pages.admin'),
           icon: UserCog,
           children: omitEmptyArrayElements([
             {
               path: 'mainbook',
-              title: 'Главная книга',
+              title: t('pages.mainbook'),
               icon: NotebookText
             },
             {
               path: 'expenses',
-              title: 'Хакикий харажатлар',
+              title: t('pages.real-expenses'),
               icon: Wallet
             },
             {
               path: 'ox-report',
-              title: '1-OX хисобот',
+              title: t('pages.1ox-report'),
               icon: Sheet
             },
             {
               path: 'logs',
-              title: 'Логи',
+              title: t('pages.logs'),
               icon: FileClock
             },
             {
               path: 'pereotsenka',
-              title: 'Переоценка',
+              title: t('pages.pereotsenka'),
               icon: ChartCandlestick
             },
             {
               path: 'group',
-              title: 'Группа',
+              title: t('pages.group'),
               icon: Group
             },
             {
               path: 'bank',
-              title: 'Банк',
+              title: t('pages.bank'),
               icon: Building
             },
             permissions.region
               ? {
                   path: 'region',
-                  title: 'Регион',
+                  title: t('pages.region'),
                   icon: LayoutGrid
                 }
               : null,
             permissions.role
               ? {
                   path: 'role',
-                  title: 'Роль',
+                  title: t('pages.role'),
                   icon: MonitorCog
                 }
               : null,
             permissions.users
               ? {
                   path: 'user',
-                  title: 'Пользователь',
+                  title: t('pages.user'),
                   icon: Users
                 }
               : null,
             permissions.smeta
               ? {
                   path: 'smeta',
-                  title: 'Смета',
+                  title: t('pages.smeta'),
                   icon: CircleFadingPlus
                 }
               : null,
             permissions.budjet
               ? {
                   path: 'budget',
-                  title: 'Бюджеты',
+                  title: t('pages.budjets'),
                   icon: CircleDollarSign
                 }
               : null,
             {
               path: 'operation',
-              title: 'Операции',
+              title: t('pages.operatsii'),
               icon: Percent
             },
             {
               path: 'unit',
-              title: 'Единица измерения',
+              title: t('pages.edin'),
               icon: Weight
             }
           ])
@@ -426,17 +420,17 @@ export const getNavElements = (): NavElement[] => {
     !is_super_admin
       ? {
           path: '/mainbook',
-          title: 'Главный книга',
+          title: t('pages.mainbook'),
           icon: NotebookText,
           children: [
             {
               path: 'report',
-              title: 'Создать месячный отчёт',
+              title: t('pages.create-month-report'),
               icon: CalendarPlus2
             },
             {
               path: '/',
-              title: 'Закрыть месячный отчёт',
+              title: t('pages.complete-month-report'),
               icon: CalendarX
             }
           ]
@@ -445,17 +439,17 @@ export const getNavElements = (): NavElement[] => {
     !is_super_admin
       ? {
           icon: Wallet,
-          title: 'Хакикий харажатлар',
+          title: t('pages.real-expenses'),
           path: '/expenses',
           children: [
             {
               path: 'report',
-              title: 'Создать месячный отчёт',
+              title: t('pages.create-month-report'),
               icon: CalendarPlus2
             },
             {
               path: '/',
-              title: 'Закрыть месячный отчёт',
+              title: t('pages.complete-month-report'),
               icon: CalendarX
             }
           ]
@@ -464,17 +458,17 @@ export const getNavElements = (): NavElement[] => {
     !is_super_admin
       ? {
           icon: Sheet,
-          title: '1-OX хисобот',
+          title: t('pages.1ox-report'),
           path: '/ox-report',
           children: [
             {
               path: 'report',
-              title: 'Создать месячный отчёт',
+              title: t('pages.create-month-report'),
               icon: CalendarPlus2
             },
             {
               path: '/',
-              title: 'Закрыть месячный отчёт',
+              title: t('pages.complete-month-report'),
               icon: CalendarX
             }
           ]
@@ -482,7 +476,7 @@ export const getNavElements = (): NavElement[] => {
       : null,
     {
       path: '/region-data',
-      title: 'Проверка данных',
+      title: t('pages.region-data'),
       icon: Database
     }
     // import.meta.env.DEV
