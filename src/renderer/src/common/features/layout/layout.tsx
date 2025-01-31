@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react'
+import { Fragment, type ReactNode } from 'react'
 import type { MainSchet } from '@/common/models'
 import { ArrowLeft, CirclePlus, LogOut, RefreshCw, Settings } from 'lucide-react'
 import { Avatar, AvatarFallback } from '@/common/components/ui/avatar'
@@ -9,11 +9,12 @@ import { Button } from '@/common/components/ui/button'
 import { ConfigureDefaultValuesDialog } from '@/common/features/app-defaults'
 import { useAuthStore } from '@/common/features/auth'
 import { useLayoutStore } from './store'
-import { useLocation } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { useToggle } from '@/common/hooks/use-toggle'
 import { LocaleSelect } from '@/common/features/locales'
 import { useTranslation } from 'react-i18next'
+import { CaretRightIcon } from '@radix-ui/react-icons'
 
 type PageLayoutProps = {
   children: ReactNode
@@ -21,7 +22,7 @@ type PageLayoutProps = {
 export const PageLayout = (props: PageLayoutProps) => {
   const { children } = props
 
-  const { title, content: Content, onCreate, onBack } = useLayoutStore()
+  const { title, content: Content, breadcrumbs, onCreate, onBack } = useLayoutStore()
   const { t } = useTranslation()
   const { user, setUser } = useAuthStore()
   const { pathname } = useLocation()
@@ -58,7 +59,24 @@ export const PageLayout = (props: PageLayoutProps) => {
               <ArrowLeft className="size-5" />
             </Button>
           ) : null}
-          <h1 className="text-xl">{title}</h1>
+          <ul className="flex items-center gap-5">
+            {breadcrumbs?.map((item) => (
+              <Fragment key={item.title}>
+                {item.path ? (
+                  <Link
+                    className="text-base font-medium text-slate-500 hover:text-brand"
+                    to={item.path}
+                  >
+                    {item.title}
+                  </Link>
+                ) : (
+                  <li className="text-base font-medium text-slate-500">{item.title}</li>
+                )}
+                <CaretRightIcon className="text-slate-500" />
+              </Fragment>
+            ))}
+          </ul>
+          <h1 className="text-lg">{title}</h1>
         </div>
         <div className="flex-1 flex items-center">
           <div className="flex-1">{Content && <Content key={pathname} />}</div>
@@ -66,7 +84,7 @@ export const PageLayout = (props: PageLayoutProps) => {
             {typeof onCreate === 'function' ? (
               <Button onClick={onCreate}>
                 <CirclePlus className="btn-icon icon-start" />
-                Добавить
+                {t('add')}
               </Button>
             ) : null}
           </div>

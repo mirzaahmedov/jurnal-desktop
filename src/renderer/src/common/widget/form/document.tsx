@@ -8,6 +8,7 @@ import { FormField } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
 import { cn } from '@renderer/common/lib/utils'
 import { validateDate } from '@renderer/common/lib/date'
+import { useTranslation } from 'react-i18next'
 
 type RequiredDocumentFields = {
   doc_num: string
@@ -30,11 +31,12 @@ const DocumentFields: FormEditableFieldsComponent<
   calendarProps,
   ...props
 }) => {
+  const { t } = useTranslation()
   return (
     <Fieldset
       {...props}
       className={cn(dialog && 'p-0 pb-5', props.className)}
-      name={name ?? 'Документ'}
+      name={name ?? t('document')}
     >
       <div className="flex items-center gap-5 flex-wrap">
         <FormField
@@ -42,7 +44,7 @@ const DocumentFields: FormEditableFieldsComponent<
           control={form.control as unknown as Control<RequiredDocumentFields>}
           render={({ field }) => (
             <FormElement
-              label="Документ №"
+              label={t('doc_num')}
               className="flex-1 max-w-xs"
               direction={dialog ? 'column' : 'row'}
             >
@@ -61,7 +63,7 @@ const DocumentFields: FormEditableFieldsComponent<
           control={form.control as unknown as Control<RequiredDocumentFields>}
           render={({ field }) => (
             <FormElement
-              label="Дата проводки"
+              label={t('doc_date')}
               direction={dialog ? 'column' : 'row'}
             >
               <DatePicker

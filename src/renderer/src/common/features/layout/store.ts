@@ -2,20 +2,26 @@ import { type ComponentType, useEffect } from 'react'
 import { create } from 'zustand'
 import { useEventCallback } from '@/common/hooks/use-event-callback'
 
-type Layout = {
+export interface Breadcrumb {
+  path?: string
   title: string
+}
+export interface LayoutState {
+  title: string
+  breadcrumbs?: Breadcrumb[]
   content?: ComponentType
   onCreate?: () => void
   onBack?: () => void
 }
-type LayoutStore = Layout & {
-  setLayout(state: Layout): void
+export interface LayoutStore extends LayoutState {
+  setLayout(state: LayoutState): void
 }
 const useLayoutStore = create<LayoutStore>((set) => ({
   title: '',
-  setLayout: ({ title, content, onCreate, onBack }) =>
+  setLayout: ({ title, content, onCreate, onBack, breadcrumbs }) =>
     set({
       title,
+      breadcrumbs,
       content,
       onCreate,
       onBack

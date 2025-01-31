@@ -8,8 +8,9 @@ import { ToastContainer } from 'react-toastify'
 import { Toaster } from './common/components/ui/toaster'
 import { UpdateManager } from './common/features/update-manager'
 import { router } from './app/router'
-import { useEffect } from 'react'
+import { Suspense, useEffect } from 'react'
 import { initLocales } from './common/features/locales'
+import { LoadingOverlay } from './common/components'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -40,7 +41,9 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <NuqsAdapter>
-        <RouterProvider router={router} />
+        <Suspense fallback={<LoadingOverlay />}>
+          <RouterProvider router={router} />
+        </Suspense>
         <SpravochnikProvider />
         <Toaster />
         <ToastContainer position="bottom-right" />

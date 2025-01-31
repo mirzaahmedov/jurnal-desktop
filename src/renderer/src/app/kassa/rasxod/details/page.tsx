@@ -1,7 +1,7 @@
 import type { RasxodPayloadType, RasxodPodvodkaPayloadType } from '../service'
 
 import { RasxodPayloadSchema, RasxodPodvodkaPayloadSchema, kassaRasxodService } from '../service'
-import { useCallback, useEffect } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import { useSpravochnik } from '@/common/features/spravochnik'
 import { Form } from '@/common/components/ui/form'
 import { Fieldset, AccountBalance } from '@/common/components'
@@ -13,7 +13,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { defaultValues, queryKeys } from '../constants'
 import { normalizeEmptyFields } from '@/common/lib/validation'
-import { useLayout } from '@/common/features/layout'
+import { useLayoutStore } from '@/common/features/layout'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
 import { EditableTable } from '@renderer/common/components/editable-table'
 import { podvodkaColumns } from './podvodki'
@@ -24,7 +24,7 @@ import {
 } from '@renderer/common/components/editable-table/helpers'
 import { DocumentFields, OpisanieFields, PodotchetFields, SummaFields } from '@/common/widget/form'
 import { kassaMonitorService, kassaMonitorQueryKeys } from '@renderer/app/kassa/monitor'
-import { formatDate } from '@/common/lib/date'
+import { formatDate, getFirstDayOfMonth, getLastDayOfMonth } from '@/common/lib/date'
 import { KassaRasxodOrderTemplate } from '../templates'
 import { formatNumber } from '@/common/lib/format'
 import { numberToWords } from '@/common/lib/utils'
@@ -36,14 +36,17 @@ import { ButtonGroup } from '@/common/components/ui/button-group'
 
 import { DetailsView } from '@/common/views'
 import { GenerateFile } from '@renderer/common/features/file'
+import { useTranslation } from 'react-i18next'
 
 const KassaRasxodDetailtsPage = () => {
   const { toast } = useToast()
   const { id } = useParams()
+  const { t } = useTranslation(['app'])
 
   const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
   const navigate = useNavigate()
   const queryClient = useQueryClient()
+  const setLayout = useLayoutStore((store) => store.setLayout)
 
   const form = useForm({
     resolver: zodResolver(RasxodPayloadSchema),
@@ -70,10 +73,10 @@ const KassaRasxodDetailtsPage = () => {
       kassaMonitorQueryKeys.getAll,
       {
         main_schet_id,
-        limit: 1,
+        limit: 10,
         page: 1,
-        from: formatDate(new Date()),
-        to: formatDate(new Date())
+        from: formatDate(getFirstDayOfMonth()),
+        to: formatDate(getLastDayOfMonth())
       }
     ],
     queryFn: kassaMonitorService.getAll
@@ -160,12 +163,23 @@ const KassaRasxodDetailtsPage = () => {
   const summa = form.watch('summa')
   const reminder = (monitor?.meta?.summa_to ?? 0) - (summa ?? 0) + (rasxod?.data?.summa ?? 0)
 
-  useLayout({
-    title: id === 'create' ? 'Создать расходный документ' : 'Редактировать расходный документ',
-    onBack() {
-      navigate(-1)
-    }
-  })
+  useEffect(() => {
+    setLayout({
+      title: id === 'create' ? t('create') : t('edit'),
+      breadcrumbs: [
+        {
+          title: t('pages.kassa')
+        },
+        {
+          path: '/kassa/rasxod',
+          title: t('pages.rasxod-docs')
+        }
+      ],
+      onBack() {
+        navigate(-1)
+      }
+    })
+  }, [setLayout, t])
 
   useEffect(() => {
     const summa =
@@ -185,6 +199,18 @@ const KassaRasxodDetailtsPage = () => {
     form.reset(rasxod?.data ?? defaultValues)
     setPodvodki(rasxod?.data?.childs ?? defaultValues.childs)
   }, [setPodvodki, form, rasxod, id])
+
+  const provodki = useMemo(() => {
+    return podvodkaColumns.map((column) => {
+      if (typeof column.header !== 'string') {
+        return column
+      }
+      return {
+        ...column,
+        header: t(column.header)
+      }
+    })
+  }, [t])
 
   return (
     <DetailsView>
@@ -275,7 +301,7 @@ const KassaRasxodDetailtsPage = () => {
         >
           <EditableTable
             tabIndex={4}
-            columns={podvodkaColumns}
+            columns={provodki}
             data={form.watch('childs')}
             errors={form.formState.errors.childs}
             onCreate={createEditorCreateHandler({

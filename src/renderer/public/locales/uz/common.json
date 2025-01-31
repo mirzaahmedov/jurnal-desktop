@@ -4,8 +4,8 @@
   "requisites": "Rekvizitlar",
   "raschet-schet": "Hisob raqami",
   "choose": "{{what}} tanlash",
-  "from": "Davr boshi",
-  "to": "toki",
+  "from": "Dan",
+  "to": "gacha",
   "load": "Yuklash",
   "remainder-from": "Davr boshiga qoldiq",
   "remainder-to": "Davr oxiriga qoldiq",
@@ -21,5 +21,15 @@
   "daily-report": "Kunlik hisobot",
   "cap-report": "Shapka hisobot",
   "elements-per-page": "Sahifadagi elementlar soni",
-  "no-requisites-selected": "Ushbu sahifadan foydalanish uchun avvalo rekvizitlaringizni tanlashingiz kerak"
+  "no-requisites-selected": "Ushbu sahifadan foydalanish uchun avvalo rekvizitlaringizni tanlashingiz kerak",
+  "actions": "Amallar",
+  "create": "Yaratish",
+  "edit": "Tahrirlash",
+  "document": "Hujjat",
+  "provodka": "Provodka",
+  "add": "Qo'shish",
+  "save": "Saqlash",
+  "type-operatsii": "Operatsiya turi",
+  "sostav": "Sostav",
+  "podrazdelenie": "Bo'linma"
 }

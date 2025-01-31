@@ -3,6 +3,7 @@ import type { FormEditableFieldsComponent } from './types'
 import { FormElement } from '@/common/components/form'
 import { FormField } from '@/common/components/ui/form'
 import { Textarea } from '@/common/components/ui/textarea'
+import { useTranslation } from 'react-i18next'
 
 type RequiredOpisanieFields = {
   opisanie?: string
@@ -12,6 +13,7 @@ const OpisanieFields: FormEditableFieldsComponent<RequiredOpisanieFields> = ({
   tabIndex,
   form
 }) => {
+  const { t } = useTranslation()
   return (
     <FormField
       name="opisanie"
@@ -19,7 +21,7 @@ const OpisanieFields: FormEditableFieldsComponent<RequiredOpisanieFields> = ({
       render={({ field }) => (
         <FormElement
           direction="column"
-          label="Описания"
+          label={t('description')}
         >
           <Textarea
             tabIndex={tabIndex}

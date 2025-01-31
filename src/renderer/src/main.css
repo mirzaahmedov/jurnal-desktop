@@ -134,4 +134,11 @@ select:-webkit-autofill:focus {
   .table-xs th {
     @apply !text-xs !p-1.5;
   }
+
+  .artificial-border::before {
+    @apply z-[100] content-[""] block absolute top-0 h-px bg-slate-200 left-0 right-0;
+  }
+  .artificial-border::after {
+    @apply z-[100] content-[""] block absolute bottom-0 h-px bg-slate-200 left-0 right-0;
+  }
 }

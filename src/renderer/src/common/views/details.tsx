@@ -4,6 +4,7 @@ import { Button } from '@renderer/common/components/ui/button'
 import { CircleCheck } from 'lucide-react'
 import { LoadingSpinner } from '@renderer/common/components'
 import { cn } from '@renderer/common/lib/utils'
+import { useTranslation } from 'react-i18next'
 
 type DetailsViewProps = HTMLAttributes<HTMLElement>
 const DetailsView = ({ children, className, ...props }: DetailsViewProps) => {
@@ -52,9 +53,10 @@ const DetailsViewFooter = ({ children, className, ...props }: DetailsViewFooterP
 
 type DetailsViewCreateProps = ButtonHTMLAttributes<HTMLButtonElement>
 const DetailsViewCreate = (props: DetailsViewCreateProps) => {
+  const { t } = useTranslation()
   return (
     <Button {...props}>
-      <CircleCheck className="btn-icon icon-start" /> Сохранить
+      <CircleCheck className="btn-icon icon-start" /> {t('save')}
     </Button>
   )
 }

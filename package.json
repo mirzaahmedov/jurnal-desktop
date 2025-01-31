@@ -1,6 +1,6 @@
 {
   "name": "jurnal.desktop",
-  "version": "1.0.85",
+  "version": "1.0.87",
   "description": "An Electron application with React and TypeScript",
   "main": "./out/main/index.js",
   "author": "example.com",
@@ -80,6 +80,7 @@
     "react-paginate": "^8.2.0",
     "react-router-dom": "^7.0.2",
     "react-toastify": "^11.0.2",
+    "recharts": "^2.15.1",
     "tailwind-merge": "^2.5.5",
     "tailwindcss-animate": "^1.0.7",
     "vaul": "^1.1.1",

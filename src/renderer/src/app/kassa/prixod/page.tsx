@@ -1,19 +1,19 @@
 import type { KassaPrixodType } from '@/common/models'
 
 import { FooterCell, FooterRow, GenericTable } from '@/common/components'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { usePagination, useRangeDate } from '@/common/hooks'
-import { ListView } from '@/common/views'
-import { columns } from './columns'
-import { formatNumber } from '@/common/lib/format'
-import { kassaPrixodService } from './service'
-import { queryKeys } from './constants'
 import { useConfirm } from '@/common/features/confirm'
-import { useLayout } from '@/common/features/layout'
-import { useNavigate } from 'react-router-dom'
+import { useLayoutStore } from '@/common/features/layout'
+import { usePagination, useRangeDate } from '@/common/hooks'
+import { formatNumber } from '@/common/lib/format'
+import { ListView } from '@/common/views'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useMemo } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { columns } from './columns'
+import { queryKeys } from './constants'
+import { kassaPrixodService } from './service'
 
 const KassaPrixodPage = () => {
   const { confirm } = useConfirm()
@@ -24,6 +24,7 @@ const KassaPrixodPage = () => {
   const queryClient = useQueryClient()
   const navigate = useNavigate()
   const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
+  const setLayout = useLayoutStore((store) => store.setLayout)
 
   const { data: prixodList, isFetching } = useQuery({
     queryKey: [
@@ -57,12 +58,19 @@ const KassaPrixodPage = () => {
     })
   }
 
-  useLayout({
-    title: `${t('pages.kassa')} · ${t('pages.prixod-docs')}`,
-    onCreate() {
-      navigate('create')
-    }
-  })
+  useEffect(() => {
+    setLayout({
+      title: t('pages.prixod-docs'),
+      breadcrumbs: [
+        {
+          title: t('pages.kassa')
+        }
+      ],
+      onCreate() {
+        navigate('create')
+      }
+    })
+  }, [setLayout, t])
 
   const columnDefs = useMemo(() => {
     return columns.map((column) => {
@@ -91,7 +99,7 @@ const KassaPrixodPage = () => {
           footer={
             <FooterRow>
               <FooterCell
-                title="Итого"
+                title={t('total')}
                 content={formatNumber(prixodList?.meta?.summa ?? 0)}
                 colSpan={4}
               />

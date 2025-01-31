@@ -15,6 +15,7 @@ import { GenericTableCell, GenericTableHead, GenericTableRow } from './component
 import type { Autocomplete } from '@renderer/common/lib/types'
 import { cn } from '@renderer/common/lib/utils'
 import { twMerge } from 'tailwind-merge'
+import { useTranslation } from 'react-i18next'
 
 export type ColumnDef<T extends Record<string, unknown>> = {
   numeric?: boolean
@@ -75,6 +76,8 @@ export const GenericTable = <T extends Record<string, unknown>>({
 }: GenericTableProps<T>) => {
   const [selectedRowRef, setSelectedRowRef] = useState<HTMLElement | null>(null)
 
+  const { t } = useTranslation()
+
   useEffect(() => {
     if (selectedRowRef) {
       selectedRowRef.scrollIntoView({
@@ -90,7 +93,7 @@ export const GenericTable = <T extends Record<string, unknown>>({
       className={twMerge('relative', props.className)}
     >
       {caption ? <TableCaption>A list of your recent invoices.</TableCaption> : null}
-      <TableHeader className="sticky top-0">
+      <TableHeader className="sticky top-0 z-50 artificial-border">
         {Array.isArray(headerGroups)
           ? headerGroups.map((headerGroup, index) => (
               <GenericTableRow
@@ -130,7 +133,7 @@ export const GenericTable = <T extends Record<string, unknown>>({
                     className="text-center"
                     key="actions"
                   >
-                    Действие
+                    {t('actions')}
                   </GenericTableHead>
                 ) : null}
               </GenericTableRow>

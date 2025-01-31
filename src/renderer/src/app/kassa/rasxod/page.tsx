@@ -1,26 +1,30 @@
 import { FooterCell, FooterRow, GenericTable, Pagination } from '@/common/components'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { usePagination, useRangeDate } from '@/common/hooks'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
+import { useConfirm } from '@/common/features/confirm'
+import { useLayoutStore } from '@/common/features/layout'
+import { formatNumber } from '@/common/lib/format'
 import type { KassaRasxodType } from '@/common/models'
 import { ListView } from '@/common/views'
-import { columns } from './columns'
-import { formatNumber } from '@/common/lib/format'
-import { kassaRasxodService } from './service'
-import { queryKeys } from './constants'
-import { useConfirm } from '@/common/features/confirm'
-import { useLayout } from '@/common/features/layout'
-import { useNavigate } from 'react-router-dom'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
+import { useEffect, useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router-dom'
+import { columns } from './columns'
+import { queryKeys } from './constants'
+import { kassaRasxodService } from './service'
 
 const KassaRasxodPage = () => {
   const { confirm } = useConfirm()
+  const { t } = useTranslation(['app'])
 
   const dates = useRangeDate()
   const pagination = usePagination()
   const queryClient = useQueryClient()
   const navigate = useNavigate()
   const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
+  const setLayout = useLayoutStore((store) => store.setLayout)
 
   const { data: rasxodList, isFetching } = useQuery({
     queryKey: [
@@ -55,12 +59,32 @@ const KassaRasxodPage = () => {
     })
   }
 
-  useLayout({
-    title: 'Расходные документы',
-    onCreate() {
-      navigate('create')
-    }
-  })
+  useEffect(() => {
+    setLayout({
+      title: t('pages.rasxod-docs'),
+      breadcrumbs: [
+        {
+          title: t('pages.kassa')
+        }
+      ],
+      onCreate() {
+        navigate('create')
+      }
+    })
+  }, [setLayout, t])
+
+  const columnDefs = useMemo(() => {
+    return columns.map((column) => {
+      if (typeof column.header !== 'string') {
+        return column
+      }
+
+      return {
+        ...column,
+        header: t(column.header)
+      }
+    })
+  }, [columns])
 
   return (
     <ListView>
@@ -70,14 +94,14 @@ const KassaRasxodPage = () => {
       <ListView.Content loading={isFetching || isPending}>
         <GenericTable
           data={rasxodList?.data ?? []}
-          columnDefs={columns}
+          columnDefs={columnDefs}
           getRowId={(row) => row.id}
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}
           footer={
             <FooterRow>
               <FooterCell
-                title="Итого"
+                title={t('total')}
                 content={formatNumber(rasxodList?.meta?.summa ?? 0)}
                 colSpan={4}
               />

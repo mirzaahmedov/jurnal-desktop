@@ -6,14 +6,7 @@ import { Fieldset } from '@/common/components'
 import { ButtonGroup } from '@/common/components/ui/button-group'
 import { Form } from '@/common/components/ui/form'
 import { APIEndpoints } from '@/common/features/crud'
-import { EditableTable } from '@renderer/common/components/editable-table'
-import {
-  createEditorChangeHandler,
-  createEditorCreateHandler,
-  createEditorDeleteHandler
-} from '@renderer/common/components/editable-table/helpers'
-import { useLayout } from '@/common/features/layout'
-import { useRequisitesStore } from '@renderer/common/features/requisites'
+import { useLayoutStore } from '@/common/features/layout'
 import { useSpravochnik } from '@/common/features/spravochnik'
 import { useToast } from '@/common/hooks/use-toast'
 import { formatNumber } from '@/common/lib/format'
@@ -23,8 +16,15 @@ import { normalizeEmptyFields } from '@/common/lib/validation'
 import { Operatsii } from '@/common/models'
 import { DocumentFields, OpisanieFields, PodotchetFields, SummaFields } from '@/common/widget/form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { EditableTable } from '@renderer/common/components/editable-table'
+import {
+  createEditorChangeHandler,
+  createEditorCreateHandler,
+  createEditorDeleteHandler
+} from '@renderer/common/components/editable-table/helpers'
+import { useRequisitesStore } from '@renderer/common/features/requisites'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { useCallback, useEffect } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate, useParams } from 'react-router-dom'
 import { defaultValues, queryKeys } from '../constants'
@@ -34,13 +34,15 @@ import { podvodkaColumns } from './podvodki'
 
 import { DetailsView } from '@/common/views'
 import { GenerateFile } from '@renderer/common/features/file'
+import { useTranslation } from 'react-i18next'
 
 const KassaPrixodDetailsPage = () => {
   const { toast } = useToast()
   const { id } = useParams()
+  const { t } = useTranslation(['app'])
 
   const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
-
+  const setLayout = useLayoutStore((store) => store.setLayout)
   const navigate = useNavigate()
   const queryClient = useQueryClient()
 
@@ -144,12 +146,23 @@ const KassaPrixodDetailsPage = () => {
     [form]
   )
 
-  useLayout({
-    title: id === 'create' ? 'Создать приходной документ' : 'Редактировать приходной документ',
-    onBack() {
-      navigate(-1)
-    }
-  })
+  useEffect(() => {
+    setLayout({
+      title: id === 'create' ? t('create') : t('edit'),
+      breadcrumbs: [
+        {
+          title: t('pages.kassa')
+        },
+        {
+          path: '/kassa/prixod',
+          title: t('pages.prixod-docs')
+        }
+      ],
+      onBack() {
+        navigate(-1)
+      }
+    })
+  }, [setLayout, t])
 
   useEffect(() => {
     const summa =
@@ -169,6 +182,18 @@ const KassaPrixodDetailsPage = () => {
     form.reset(prixod?.data ?? defaultValues)
     setPodvodki(prixod?.data?.childs ?? defaultValues.childs)
   }, [setPodvodki, form, prixod, id])
+
+  const provodki = useMemo(() => {
+    return podvodkaColumns.map((column) => {
+      if (typeof column.header !== 'string') {
+        return column
+      }
+      return {
+        ...column,
+        header: t(column.header)
+      }
+    })
+  }, [t])
 
   return (
     <DetailsView>
@@ -242,12 +267,12 @@ const KassaPrixodDetailsPage = () => {
           </form>
         </Form>
         <Fieldset
-          name="Подводка"
+          name={t('provodka')}
           className="flex-1 mt-5 pb-24 bg-slate-50"
         >
           <EditableTable
             tabIndex={4}
-            columns={podvodkaColumns}
+            columns={provodki}
             data={form.watch('childs')}
             errors={form.formState.errors.childs}
             onCreate={createEditorCreateHandler({

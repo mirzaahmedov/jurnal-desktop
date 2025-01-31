@@ -2,6 +2,7 @@ import type { FormSpravochnikFieldsComponent } from './types'
 import type { Podotchet } from '@/common/models'
 
 import { SpravochnikField, SpravochnikFields } from '@/common/features/spravochnik'
+import { useTranslation } from 'react-i18next'
 
 const PodotchetFields: FormSpravochnikFieldsComponent<Podotchet> = ({
   tabIndex,
@@ -12,10 +13,13 @@ const PodotchetFields: FormSpravochnikFieldsComponent<Podotchet> = ({
   ...props
 }) => {
   const { inputRef, ...spravochnikProps } = spravochnik
+
+  const { t } = useTranslation(['podotchet'])
+
   return (
     <SpravochnikFields
       {...props}
-      name={name ?? 'Подотчетное лицо'}
+      name={name ?? t('podotchet-litso')}
     >
       <div className="grid grid-cols-2 gap-5">
         <SpravochnikField
@@ -26,7 +30,7 @@ const PodotchetFields: FormSpravochnikFieldsComponent<Podotchet> = ({
           disabled={disabled}
           getInputValue={(selected) => selected?.name ?? ''}
           error={!!error?.message}
-          label="Имя"
+          label={t('name', { ns: 'podotchet' })}
         />
 
         <SpravochnikField
@@ -36,7 +40,7 @@ const PodotchetFields: FormSpravochnikFieldsComponent<Podotchet> = ({
           disabled={disabled}
           getInputValue={(selected) => selected?.rayon ?? ''}
           error={!!error?.message}
-          label="Район"
+          label={t('rayon', { ns: 'podotchet' })}
         />
       </div>
     </SpravochnikFields>

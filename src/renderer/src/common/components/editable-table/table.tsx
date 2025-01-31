@@ -8,6 +8,7 @@ import { Button } from '@renderer/common/components/ui/button'
 import type { EditorComponentType } from './editors'
 import { FieldErrors } from 'react-hook-form'
 import { useState, type ReactNode } from 'react'
+import { useTranslation } from 'react-i18next'
 
 export type EditableColumnType<T extends Record<string, unknown>> = {
   key: Autocomplete<keyof T>
@@ -43,6 +44,8 @@ export const EditableTable = <T extends Record<string, unknown>>(props: Editable
     onChange,
     params = {}
   } = props
+
+  const { t } = useTranslation()
 
   return (
     <form
@@ -118,7 +121,7 @@ export const EditableTable = <T extends Record<string, unknown>>(props: Editable
                   variant="ghost"
                   className="w-full hover:bg-slate-50 text-brand hover:text-brand"
                 >
-                  <CirclePlus className="btn-icon icon-start" /> Добавить
+                  <CirclePlus className="btn-icon icon-start" /> {t('add')}
                 </Button>
               </EditableTableCell>
             </EditableTableRow>

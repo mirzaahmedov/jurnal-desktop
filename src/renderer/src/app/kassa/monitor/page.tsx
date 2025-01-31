@@ -8,18 +8,19 @@ import { columns } from './columns'
 import { formatNumber } from '@/common/lib/format'
 import { kassaMonitorQueryKeys } from './constants'
 import { kassaMonitorService } from './service'
-import { useLayout } from '@/common/features/layout'
+import { useLayoutStore } from '@/common/features/layout'
 import { useQuery } from '@tanstack/react-query'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
 import { useTranslation } from 'react-i18next'
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 
 const KassaMonitorPage = () => {
   const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
   const pagination = usePagination()
   const dates = useRangeDate()
+  const setLayout = useLayoutStore((store) => store.setLayout)
 
-  const { t } = useTranslation(['app', 'common'])
+  const { t } = useTranslation(['app'])
 
   const { data: monitorList, isFetching } = useQuery({
     queryKey: [
@@ -33,9 +34,12 @@ const KassaMonitorPage = () => {
     queryFn: kassaMonitorService.getAll
   })
 
-  useLayout({
-    title: `${t('pages.kassa')} · ${t('pages.monitoring')}`
-  })
+  useEffect(() => {
+    setLayout({
+      title: t('pages.monitoring'),
+      breadcrumbs: [{ title: t('pages.kassa') }]
+    })
+  }, [setLayout, t])
 
   const columnDefs = useMemo(() => {
     return columns.map((column) => {

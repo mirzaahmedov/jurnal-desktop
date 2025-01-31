@@ -1,9 +1,14 @@
 import type { Operatsii, TypeSchetOperatsii } from '@/common/models'
-import { SpravochnikInput, useSpravochnik } from '@/common/features/spravochnik'
-import { useEffect, useLayoutEffect, useRef } from 'react'
+import { useSpravochnik, SpravochnikInput } from '@/common/features/spravochnik'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 
 import type { EditorComponentType } from './types'
-import { createOperatsiiSpravochnik } from '@/app/super-admin/operatsii'
+import { createOperatsiiSpravochnik, operatsiiService } from '@/app/super-admin/operatsii'
+import { AutoComplete } from '@/common/components/auto-complete'
+import { useQuery } from '@tanstack/react-query'
+import { operatsiiQueryKeys } from '@renderer/app/super-admin/operatsii/constants'
+
+// const operatsii_input_regex = /^\d+\/?\d*$/
 
 type OperatsiiEditorOptions = {
   type_schet: TypeSchetOperatsii
@@ -12,6 +17,8 @@ export const createOperatsiiEditor = <T extends { spravochnik_operatsii_id?: num
   type_schet
 }: OperatsiiEditorOptions): EditorComponentType<T> => {
   return ({ tabIndex, id, row, errors, onChange, params }) => {
+    const [innerValue, setInnerValue] = useState<null | string>(null)
+
     const paramsRef = useRef<{ onChangeOperatsii: (selected: Operatsii | undefined) => void }>(
       params as any
     )
@@ -43,18 +50,74 @@ export const createOperatsiiEditor = <T extends { spravochnik_operatsii_id?: num
       paramsRef.current?.onChangeOperatsii?.(operatsiiSpravochnik.selected)
     }, [operatsiiSpravochnik.selected])
 
-    return (
-      <SpravochnikInput
-        {...operatsiiSpravochnik}
-        editor
-        readOnly
-        tabIndex={tabIndex}
-        error={!!errors?.spravochnik_operatsii_id}
-        name="spravochnik_operatsii_id"
-        getInputValue={(selected) =>
-          selected ? `${selected.schet} / ${selected.sub_schet} - ${selected.name}` : '-'
+    const [schet, subschet] = innerValue?.split('/') ?? ''
+    const { data: operatsiiList, isFetching } = useQuery({
+      queryKey: [
+        operatsiiQueryKeys.getAll,
+        {
+          type_schet,
+          search: schet ? schet : undefined,
+          meta_search: subschet ? subschet : undefined
         }
-      />
+      ],
+      queryFn: operatsiiService.getAll,
+      enabled: !!innerValue,
+      placeholderData: (prev) => prev
+    })
+
+    return (
+      <AutoComplete
+        isFetching={isFetching}
+        disabled={innerValue === null}
+        options={operatsiiList?.data ?? []}
+        className="w-full"
+        getOptionLabel={(option) => `${option.schet} / ${option.sub_schet} - ${option.name}`}
+        getOptionValue={(option) => option.id.toString()}
+        onSelect={(option) => {
+          if (row.spravochnik_operatsii_id !== option.id) {
+            onChange?.({
+              id,
+              key: 'spravochnik_operatsii_id',
+              payload: {
+                ...row,
+                spravochnik_operatsii_id: option.id
+              }
+            })
+            setInnerValue(null)
+          }
+        }}
+      >
+        <SpravochnikInput
+          {...operatsiiSpravochnik}
+          editor
+          tabIndex={tabIndex}
+          error={!!errors?.spravochnik_operatsii_id}
+          name="spravochnik_operatsii_id"
+          onChange={(e) => {
+            const value = e.target.value
+            // if (operatsii_input_regex.test(value) || value === '') {
+            setInnerValue(value)
+            // }
+          }}
+          onBlur={() => {
+            setInnerValue(null)
+          }}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              e.preventDefault()
+            }
+          }}
+          getInputValue={(selected) => {
+            if (innerValue !== null) {
+              return innerValue
+            }
+            return selected ? formatInputValue(selected) : ''
+          }}
+        />
+      </AutoComplete>
     )
   }
 }
+
+const formatInputValue = (selected: Operatsii) =>
+  `${selected.schet} / ${selected.sub_schet} - ${selected.name}`
