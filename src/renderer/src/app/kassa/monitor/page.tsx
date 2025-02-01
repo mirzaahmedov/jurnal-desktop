@@ -2,17 +2,17 @@ import { FooterCell, FooterRow, GenericTable } from '@/common/components'
 import { usePagination, useRangeDate } from '@/common/hooks'
 
 import { ButtonGroup } from '@/common/components/ui/button-group'
-import { DownloadFile } from '@renderer/common/features/file'
-import { ListView } from '@/common/views'
-import { columns } from './columns'
+import { useLayoutStore } from '@/common/features/layout'
 import { formatNumber } from '@/common/lib/format'
+import { ListView } from '@/common/views'
+import { DownloadFile } from '@renderer/common/features/file'
+import { useRequisitesStore } from '@renderer/common/features/requisites'
+import { useQuery } from '@tanstack/react-query'
+import { useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
+import { columns } from './columns'
 import { kassaMonitorQueryKeys } from './constants'
 import { kassaMonitorService } from './service'
-import { useLayoutStore } from '@/common/features/layout'
-import { useQuery } from '@tanstack/react-query'
-import { useRequisitesStore } from '@renderer/common/features/requisites'
-import { useTranslation } from 'react-i18next'
-import { useEffect, useMemo } from 'react'
 
 const KassaMonitorPage = () => {
   const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
@@ -40,18 +40,6 @@ const KassaMonitorPage = () => {
       breadcrumbs: [{ title: t('pages.kassa') }]
     })
   }, [setLayout, t])
-
-  const columnDefs = useMemo(() => {
-    return columns.map((column) => {
-      if (typeof column.header !== 'string') {
-        return column
-      }
-      return {
-        ...column,
-        header: t(column.header)
-      }
-    })
-  }, [t])
 
   return (
     <ListView>
@@ -93,7 +81,7 @@ const KassaMonitorPage = () => {
       <ListView.Content loading={isFetching}>
         <GenericTable
           data={monitorList?.data ?? []}
-          columnDefs={columnDefs}
+          columnDefs={columns}
           getRowId={(row) => `${row.id}-${row.rasxod_sum ? 'rasxod' : 'prixod'}`}
           footer={
             <>

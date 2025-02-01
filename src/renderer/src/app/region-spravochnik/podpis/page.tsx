@@ -1,32 +1,32 @@
-import { GenericTable, LoadingOverlay, Pagination, usePagination } from '@/common/components'
+import { GenericTable } from '@/common/components'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
+import { useConfirm } from '@/common/features/confirm'
+import { useLayoutStore } from '@/common/features/layout'
+import { useToggle } from '@/common/hooks/use-toggle'
 import type { Podpis } from '@/common/models'
-import { PodpisDialog } from './dialog'
+import { usePagination } from '@renderer/common/hooks'
+import { ListView } from '@renderer/common/views'
+import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { podpisColumns } from './columns'
 import { podpisQueryKeys } from './constants'
+import { PodpisDialog } from './dialog'
 import { podpisService } from './service'
-import { useConfirm } from '@/common/features/confirm'
-import { useLayout } from '@/common/features/layout'
-import { useState } from 'react'
-import { useToggle } from '@/common/hooks/use-toggle'
 
 const PodpisPage = () => {
   const [selected, setSelected] = useState<Podpis>()
 
   const dialogToggle = useToggle()
   const queryClient = useQueryClient()
+  const pagination = usePagination()
+  const setLayout = useLayoutStore((store) => store.setLayout)
+
   const { confirm } = useConfirm()
-  const { currentPage, itemsPerPage } = usePagination()
+  const { t } = useTranslation(['app'])
 
   const { data: podpisList, isFetching } = useQuery({
-    queryKey: [
-      podpisQueryKeys.getAll,
-      {
-        page: currentPage,
-        limit: itemsPerPage
-      }
-    ],
+    queryKey: [podpisQueryKeys.getAll, pagination],
     queryFn: podpisService.getAll
   })
   const { mutate: deletePodpis, isPending } = useMutation({
@@ -52,34 +52,43 @@ const PodpisPage = () => {
     })
   }
 
-  useLayout({
-    title: 'Подписи',
-    onCreate() {
-      dialogToggle.open()
-      setSelected(undefined)
-    }
-  })
+  useEffect(() => {
+    setLayout({
+      title: t('pages.podpis'),
+      breadcrumbs: [
+        {
+          title: t('pages.spravochnik')
+        }
+      ],
+      onCreate() {
+        dialogToggle.open()
+        setSelected(undefined)
+      }
+    })
+  }, [setLayout, t])
 
   return (
-    <>
-      <div className="flex-1 relative">
-        {isFetching || isPending ? <LoadingOverlay /> : null}
+    <ListView>
+      <ListView.Content loading={isFetching || isPending}>
         <GenericTable
           data={podpisList?.data ?? []}
           columnDefs={podpisColumns}
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}
         />
-      </div>
-      <div className="px-10 py-5">
-        <Pagination pageCount={podpisList?.meta.pageCount ?? 0} />
-      </div>
+      </ListView.Content>
+      <ListView.Footer>
+        <ListView.Pagination
+          pageCount={podpisList?.meta.pageCount ?? 0}
+          {...pagination}
+        />
+      </ListView.Footer>
       <PodpisDialog
         data={selected}
         open={dialogToggle.isOpen}
         onOpenChange={dialogToggle.setOpen}
       />
-    </>
+    </ListView>
   )
 }
 

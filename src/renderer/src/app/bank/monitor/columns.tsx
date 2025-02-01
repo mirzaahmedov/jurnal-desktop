@@ -6,19 +6,18 @@ import { TooltipCellRenderer } from '@/common/components/table/renderers'
 
 export const columns: ColumnDef<BankMonitoringType>[] = [
   {
-    key: 'doc_num',
-    header: 'Документ №'
+    key: 'doc_num'
   },
   {
     key: 'doc_date',
-    header: 'Дата проводки',
     renderCell(row, col) {
       return formatLocaleDate(row[col.key as keyof BankMonitoringType] as string)
     }
   },
   {
     key: 'id_spravochnik_organization',
-    header: 'О контрагенте',
+    header: 'about-counteragent',
+    className: 'w-96',
     renderCell(row) {
       return (
         <TooltipCellRenderer
@@ -37,20 +36,19 @@ export const columns: ColumnDef<BankMonitoringType>[] = [
   {
     numeric: true,
     key: 'prixod_sum',
-    header: 'Приход'
+    header: 'prixod'
   },
   {
     numeric: true,
     key: 'rasxod_sum',
-    header: 'Расход'
+    header: 'rasxod'
   },
   {
-    key: 'opisanie',
-    header: 'Описания'
+    key: 'opisanie'
   },
   {
     key: 'user_id',
-    header: 'Создано пользователем',
+    header: 'created-by-user',
     renderCell(row) {
       return `${row.fio} (@${row.login})`
     }

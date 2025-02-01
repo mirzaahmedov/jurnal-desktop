@@ -5,7 +5,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        body: "'Nunito Sans', sans-serif"
+        body: "'Montserrat', sans-serif"
       },
       fontSize: {
         '2xs': '0.625rem',

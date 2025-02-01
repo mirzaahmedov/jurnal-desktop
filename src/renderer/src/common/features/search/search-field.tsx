@@ -41,7 +41,7 @@ export const SearchField = (props: SearchFieldProps) => {
   return (
     <div
       {...rest}
-      className={cn('flex justify-end items-center gap-2.5 px-10', className)}
+      className={cn('flex justify-end items-center gap-2.5 px-5', className)}
     >
       <div className="relative w-full max-w-xs">
         <Input
@@ -55,7 +55,7 @@ export const SearchField = (props: SearchFieldProps) => {
             }
           }}
           placeholder="Поиск..."
-          className="pl-8 shadow-none"
+          className="pl-8 shadow-none focus-visible:ring-2"
         />
         <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-4 text-gray-400" />
       </div>

@@ -1,45 +1,49 @@
 import type { PrixodPodvodkaPayloadType } from '../service'
 
-import { PrixodPayloadSchema, PrixodPodvodkaPayloadSchema, bankPrixodService } from '../service'
-import { useRequisitesStore } from '@renderer/common/features/requisites'
-import { useCallback, useEffect } from 'react'
-import { useSpravochnik } from '@/common/features/spravochnik'
-import { Form } from '@/common/components/ui/form'
-import { Fieldset } from '@/common/components'
-import { createOrganizationSpravochnik } from '@renderer/app/region-spravochnik/organization'
-import { createShartnomaSpravochnik } from '@renderer/app/organization/shartnoma'
-import { useNavigate, useParams } from 'react-router-dom'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { queryKeys, defaultValues } from '../constants'
-import { normalizeEmptyFields } from '@/common/lib/validation'
-import { useLayout } from '@/common/features/layout'
 import { mainSchetQueryKeys, mainSchetService } from '@/app/region-spravochnik/main-schet'
+import { Fieldset } from '@/common/components'
+import { Form } from '@/common/components/ui/form'
+import { useLayoutStore } from '@/common/features/layout'
+import { useSpravochnik } from '@/common/features/spravochnik'
+import { normalizeEmptyFields } from '@/common/lib/validation'
+import {
+  DocumentFields,
+  MainSchetFields,
+  OpisanieFields,
+  OrganizationFields,
+  ShartnomaFields,
+  SummaFields
+} from '@/common/widget/form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { createShartnomaSpravochnik } from '@renderer/app/organization/shartnoma'
+import { createOrganizationSpravochnik } from '@renderer/app/region-spravochnik/organization'
 import { EditableTable } from '@renderer/common/components/editable-table'
-import { podvodkaColumns } from './podvodki'
 import {
   createEditorChangeHandler,
   createEditorCreateHandler,
   createEditorDeleteHandler
 } from '@renderer/common/components/editable-table/helpers'
-import {
-  ShartnomaFields,
-  DocumentFields,
-  MainSchetFields,
-  OpisanieFields,
-  OrganizationFields,
-  SummaFields
-} from '@/common/widget/form'
+import { useRequisitesStore } from '@renderer/common/features/requisites'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useCallback, useEffect } from 'react'
+import { useForm } from 'react-hook-form'
+import { useNavigate, useParams } from 'react-router-dom'
+import { defaultValues, queryKeys } from '../constants'
+import { PrixodPayloadSchema, PrixodPodvodkaPayloadSchema, bankPrixodService } from '../service'
+import { podvodkaColumns } from './podvodki'
 
 import { DetailsView } from '@/common/views'
+import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 
 const BankPrixodDetailsPage = () => {
   const main_schet_id = useRequisitesStore((state) => state.main_schet_id)
+  const setLayout = useLayoutStore((store) => store.setLayout)
   const queryClient = useQueryClient()
   const id = useParams().id as string
   const navigate = useNavigate()
+
+  const { t } = useTranslation(['app'])
 
   const form = useForm({
     resolver: zodResolver(PrixodPayloadSchema),
@@ -169,12 +173,20 @@ const BankPrixodDetailsPage = () => {
     [form]
   )
 
-  useLayout({
-    title: id === 'create' ? 'Создать приходной документ' : 'Редактировать приходной документ',
-    onBack() {
-      navigate(-1)
-    }
-  })
+  useEffect(() => {
+    setLayout({
+      breadcrumbs: [
+        {
+          title: t('pages.bank')
+        },
+        {
+          path: '/bank/prixod',
+          title: t('pages.prixod-docs')
+        }
+      ],
+      title: id === 'create' ? t('create') : t('edit')
+    })
+  }, [setLayout, id, t])
 
   useEffect(() => {
     const summa =
@@ -211,13 +223,13 @@ const BankPrixodDetailsPage = () => {
               <div className="grid grid-cols-2 items-start border-y divide-x divide-border/50 border-border/50">
                 <MainSchetFields
                   main_schet={main_schet?.data}
-                  name="Данные получателя"
+                  name={t('receiver-info')}
                 />
                 <OrganizationFields
                   tabIndex={2}
                   error={form.formState.errors.id_spravochnik_organization}
                   spravochnik={orgSpravochnik}
-                  name="Данные плательщика"
+                  name={t('payer-info')}
                   className="bg-slate-50"
                 />
               </div>
@@ -245,7 +257,7 @@ const BankPrixodDetailsPage = () => {
           </form>
         </Form>
         <Fieldset
-          name="Подводка"
+          name={t('provodka')}
           className="flex-1 mt-5 pb-24 bg-slate-50"
         >
           <EditableTable

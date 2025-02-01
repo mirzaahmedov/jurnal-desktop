@@ -24,7 +24,7 @@ import {
 } from '@renderer/common/components/editable-table/helpers'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { useCallback, useEffect, useMemo } from 'react'
+import { useCallback, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate, useParams } from 'react-router-dom'
 import { defaultValues, queryKeys } from '../constants'
@@ -183,18 +183,6 @@ const KassaPrixodDetailsPage = () => {
     setPodvodki(prixod?.data?.childs ?? defaultValues.childs)
   }, [setPodvodki, form, prixod, id])
 
-  const provodki = useMemo(() => {
-    return podvodkaColumns.map((column) => {
-      if (typeof column.header !== 'string') {
-        return column
-      }
-      return {
-        ...column,
-        header: t(column.header)
-      }
-    })
-  }, [t])
-
   return (
     <DetailsView>
       <DetailsView.Content loading={isFetching || isCreating || isUpdating}>
@@ -272,7 +260,7 @@ const KassaPrixodDetailsPage = () => {
         >
           <EditableTable
             tabIndex={4}
-            columns={provodki}
+            columns={podvodkaColumns}
             data={form.watch('childs')}
             errors={form.formState.errors.childs}
             onCreate={createEditorCreateHandler({

@@ -4,19 +4,21 @@ import type { FieldsetProps } from '@/common/components'
 import { Fieldset } from '@/common/components'
 import { FormElement } from '@/common/components/form'
 import { Input } from '@/common/components/ui/input'
+import { useTranslation } from 'react-i18next'
 
 type MainSchetFieldsProps = Omit<FieldsetProps, 'name'> & {
   name?: string
   main_schet?: MainSchet
 }
 const MainSchetFields = ({ name, main_schet, ...props }: MainSchetFieldsProps) => {
+  const { t } = useTranslation()
   return (
     <Fieldset
       {...props}
-      name={name ?? 'Данные плательщика'}
+      name={name ?? t('receiver-info')}
     >
       <FormElement
-        label="Получатель"
+        label={t('receiver')}
         grid="2:6"
       >
         <Input
@@ -27,7 +29,7 @@ const MainSchetFields = ({ name, main_schet, ...props }: MainSchetFieldsProps) =
       </FormElement>
 
       <FormElement
-        label="Банк"
+        label={t('bank')}
         grid="2:6"
       >
         <Input
@@ -38,7 +40,7 @@ const MainSchetFields = ({ name, main_schet, ...props }: MainSchetFieldsProps) =
       </FormElement>
 
       <FormElement
-        label="МФО"
+        label={t('mfo')}
         grid="2:6"
       >
         <Input
@@ -49,7 +51,7 @@ const MainSchetFields = ({ name, main_schet, ...props }: MainSchetFieldsProps) =
       </FormElement>
 
       <FormElement
-        label="ИНН"
+        label={t('inn')}
         grid="2:6"
       >
         <Input
@@ -60,7 +62,7 @@ const MainSchetFields = ({ name, main_schet, ...props }: MainSchetFieldsProps) =
       </FormElement>
 
       <FormElement
-        label="Расчетный счет"
+        label={t('raschet-schet')}
         grid="2:6"
       >
         <Input

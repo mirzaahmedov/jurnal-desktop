@@ -11,20 +11,18 @@ import { bankRasxodPaymentService } from './service'
 export const columns: ColumnDef<BankRasxod>[] = [
   {
     fit: true,
-    key: 'doc_num',
-    header: 'Документ №'
+    key: 'doc_num'
   },
   {
     fit: true,
     key: 'doc_date',
-    header: 'Дата проводки',
     renderCell(row, col) {
       return formatLocaleDate(row[col.key as keyof BankRasxod] as string)
     }
   },
   {
     key: 'id_spravochnik_organization',
-    header: 'О получателя',
+    header: 'about-counteragent',
     renderCell(row) {
       return (
         <TooltipCellRenderer
@@ -46,7 +44,6 @@ export const columns: ColumnDef<BankRasxod>[] = [
   {
     numeric: true,
     key: 'summa',
-    header: 'Сумма',
     renderCell(row) {
       if (!row.tulangan_tulanmagan) {
         return (
@@ -63,14 +60,13 @@ export const columns: ColumnDef<BankRasxod>[] = [
   {
     fit: true,
     key: 'tulangan_tulanmagan',
-    header: 'Туланган',
+    header: 'payed',
     renderCell(row) {
       return <BankRasxodStatus row={row} />
     }
   },
   {
     key: 'opisanie',
-    header: 'Описания',
     className: 'max-w-md'
   }
 ]

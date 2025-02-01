@@ -6,19 +6,17 @@ import { TooltipCellRenderer } from '@/common/components/table/renderers'
 
 export const columns: ColumnDef<BankPrixodType>[] = [
   {
-    key: 'doc_num',
-    header: 'Документ №'
+    key: 'doc_num'
   },
   {
     key: 'doc_date',
-    header: 'Дата проводки',
     renderCell(row, col) {
       return formatLocaleDate(row[col.key as keyof BankPrixodType] as string)
     }
   },
   {
     key: 'id_spravochnik_organization',
-    header: 'О плательщике',
+    header: 'about-counteragent',
     renderCell(row) {
       return (
         <TooltipCellRenderer
@@ -39,11 +37,9 @@ export const columns: ColumnDef<BankPrixodType>[] = [
   },
   {
     numeric: true,
-    key: 'summa',
-    header: 'Сумма'
+    key: 'summa'
   },
   {
-    key: 'opisanie',
-    header: 'Описания'
+    key: 'opisanie'
   }
 ]

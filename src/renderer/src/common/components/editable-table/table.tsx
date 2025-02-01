@@ -12,7 +12,7 @@ import { useTranslation } from 'react-i18next'
 
 export type EditableColumnType<T extends Record<string, unknown>> = {
   key: Autocomplete<keyof T>
-  header: ReactNode
+  header?: ReactNode
   Editor: EditorComponentType<T>
   width?: string | number
 }
@@ -74,7 +74,7 @@ export const EditableTable = <T extends Record<string, unknown>>(props: Editable
                       key={String(key)}
                       style={{ width }}
                     >
-                      {header}
+                      {!header ? t(key.toString()) : typeof header === 'string' ? t(header) : null}
                     </EditableTableHead>
                   )
                 })

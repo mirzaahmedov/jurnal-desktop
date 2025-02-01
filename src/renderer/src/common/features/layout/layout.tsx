@@ -49,7 +49,7 @@ export const PageLayout = (props: PageLayoutProps) => {
   return (
     <main className="h-full flex flex-col bg-white">
       <header className="px-5 py-4 flex justify-between border-b border-border/50 bg-white z-[51] sticky top-0">
-        <div className="flex items-center gap-5">
+        <div className="flex items-center gap-2.5">
           {typeof onBack === 'function' ? (
             <Button
               variant="ghost"
@@ -59,24 +59,27 @@ export const PageLayout = (props: PageLayoutProps) => {
               <ArrowLeft className="size-5" />
             </Button>
           ) : null}
-          <ul className="flex items-center gap-5">
-            {breadcrumbs?.map((item) => (
-              <Fragment key={item.title}>
-                {item.path ? (
-                  <Link
-                    className="text-base font-medium text-slate-500 hover:text-brand"
-                    to={item.path}
-                  >
-                    {item.title}
-                  </Link>
-                ) : (
-                  <li className="text-base font-medium text-slate-500">{item.title}</li>
-                )}
-                <CaretRightIcon className="text-slate-500" />
-              </Fragment>
-            ))}
-          </ul>
-          <h1 className="text-lg">{title}</h1>
+          {Array.isArray(breadcrumbs) ? (
+            <ul className="flex items-center gap-2.5">
+              {breadcrumbs?.map((item) => (
+                <Fragment key={item.title}>
+                  {item.path ? (
+                    <Link
+                      className="text-base font-medium text-slate-500 hover:text-brand"
+                      to={item.path}
+                    >
+                      {item.title}
+                    </Link>
+                  ) : (
+                    <li className="text-base font-medium text-slate-500">{item.title}</li>
+                  )}
+                  <CaretRightIcon className="text-slate-500" />
+                </Fragment>
+              ))}
+            </ul>
+          ) : null}
+
+          <h1 className="text-base font-medium">{title}</h1>
         </div>
         <div className="flex-1 flex items-center">
           <div className="flex-1">{Content && <Content key={pathname} />}</div>

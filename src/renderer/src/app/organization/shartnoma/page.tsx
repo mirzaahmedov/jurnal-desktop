@@ -34,6 +34,9 @@ const ShartnomaPage = () => {
       value: orgId,
       onChange: (id) => {
         setOrgId(id)
+        pagination.onChange({
+          page: 1
+        })
       }
     })
   )

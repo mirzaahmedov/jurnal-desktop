@@ -8,15 +8,20 @@ import { bankMonitorQueryKeys } from './constants'
 import { bankMonitorService } from './service'
 import { columns } from './columns'
 import { formatNumber } from '@/common/lib/format'
-import { useLayout } from '@/common/features/layout'
+import { useLayoutStore } from '@/common/features/layout'
 import { useQuery } from '@tanstack/react-query'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
+import { useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 
 const BankMonitorPage = () => {
   const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
+  const setLayout = useLayoutStore((store) => store.setLayout)
 
   const dates = useRangeDate()
   const pagination = usePagination()
+
+  const { t } = useTranslation(['app'])
 
   const { data: monitorList, isFetching } = useQuery({
     queryKey: [
@@ -31,9 +36,16 @@ const BankMonitorPage = () => {
     enabled: !!main_schet_id
   })
 
-  useLayout({
-    title: 'Банк мониторинг'
-  })
+  useEffect(() => {
+    setLayout({
+      title: t('pages.monitoring'),
+      breadcrumbs: [
+        {
+          title: t('pages.bank')
+        }
+      ]
+    })
+  }, [setLayout, t])
 
   return (
     <ListView>
@@ -41,7 +53,7 @@ const BankMonitorPage = () => {
         <ListView.RangeDatePicker {...dates} />
         <div className="flex flex-row items-center justify-between">
           <div className="pt-5 flex items-center gap-5">
-            <span className="text-sm text-slate-400">Остаток на начало период:</span>
+            <span className="text-sm text-slate-400">{t('remainder-from')}</span>
             <b className="font-black text-slate-700">
               {formatNumber(monitorList?.meta?.summa_from ?? 0)}
             </b>
@@ -52,7 +64,7 @@ const BankMonitorPage = () => {
               <DownloadFile
                 fileName={`банк-дневной-отчет_${dates.from}&${dates.to}.xlsx`}
                 url="bank/monitoring/daily"
-                buttonText="Дневной отчет"
+                buttonText={t('daily-report')}
                 params={{
                   main_schet_id,
                   from: dates.from,
@@ -62,7 +74,7 @@ const BankMonitorPage = () => {
               <DownloadFile
                 fileName={`банк-шапка-отчет_${dates.from}&${dates.to}.xlsx`}
                 url="bank/monitoring/cap"
-                buttonText="Шапка отчет"
+                buttonText={t('cap-report')}
                 params={{
                   main_schet_id,
                   from: dates.from,
@@ -82,7 +94,7 @@ const BankMonitorPage = () => {
             <>
               <FooterRow>
                 <FooterCell
-                  title="Итого"
+                  title={t('total')}
                   colSpan={3}
                 />
                 <FooterCell
@@ -100,7 +112,7 @@ const BankMonitorPage = () => {
       </ListView.Content>
       <ListView.Footer>
         <div className="pb-5 flex items-center gap-5">
-          <span className="text-sm text-slate-400">Остаток на конец период:</span>
+          <span className="text-sm text-slate-400">{t('remainder-to')}</span>
           <b className="font-black text-slate-700">
             {formatNumber(monitorList?.meta?.summa_to ?? 0)}
           </b>

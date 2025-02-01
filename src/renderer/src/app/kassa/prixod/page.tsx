@@ -8,7 +8,7 @@ import { formatNumber } from '@/common/lib/format'
 import { ListView } from '@/common/views'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { useEffect, useMemo } from 'react'
+import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { columns } from './columns'
@@ -72,18 +72,6 @@ const KassaPrixodPage = () => {
     })
   }, [setLayout, t])
 
-  const columnDefs = useMemo(() => {
-    return columns.map((column) => {
-      if (typeof column.header !== 'string') {
-        return column
-      }
-      return {
-        ...column,
-        header: t(column.header)
-      }
-    })
-  }, [t])
-
   return (
     <ListView>
       <ListView.Header>
@@ -92,7 +80,7 @@ const KassaPrixodPage = () => {
       <ListView.Content loading={isFetching || isPending}>
         <GenericTable
           data={prixodList?.data ?? []}
-          columnDefs={columnDefs}
+          columnDefs={columns}
           getRowId={(row) => row.id}
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}

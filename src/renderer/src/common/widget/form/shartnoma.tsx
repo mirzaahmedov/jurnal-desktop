@@ -3,6 +3,7 @@ import { SpravochnikField, SpravochnikFields } from '@/common/features/spravochn
 import type { FormSpravochnikFieldsComponent } from './types'
 import type { Shartnoma } from '@/common/models'
 import { formatLocaleDate } from '@/common/lib/format'
+import { useTranslation } from 'react-i18next'
 
 const ShartnomaFields: FormSpravochnikFieldsComponent<Shartnoma> = ({
   tabIndex,
@@ -14,10 +15,12 @@ const ShartnomaFields: FormSpravochnikFieldsComponent<Shartnoma> = ({
 }) => {
   const { inputRef, ...spravochnikProps } = spravochnik
 
+  const { t } = useTranslation()
+
   return (
     <SpravochnikFields
       {...props}
-      name={name ?? 'Договор'}
+      name={name ?? t('shartnoma')}
     >
       <div className="grid grid-cols-2 gap-5">
         <SpravochnikField
@@ -28,7 +31,7 @@ const ShartnomaFields: FormSpravochnikFieldsComponent<Shartnoma> = ({
           disabled={disabled}
           getInputValue={(selected) => selected?.doc_num ?? ''}
           error={!!error?.message}
-          label="№ договора"
+          label={t('shartnoma-number')}
         />
 
         <SpravochnikField
@@ -38,7 +41,7 @@ const ShartnomaFields: FormSpravochnikFieldsComponent<Shartnoma> = ({
           disabled={disabled}
           getInputValue={(selected) => formatLocaleDate(selected?.doc_date)}
           error={!!error?.message}
-          label="Дата договора"
+          label={t('shartnoma-date')}
         />
       </div>
     </SpravochnikFields>

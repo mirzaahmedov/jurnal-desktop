@@ -14,7 +14,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { defaultValues, queryKeys } from '../constants'
 import { normalizeEmptyFields } from '@/common/lib/validation'
-import { useLayout } from '@/common/features/layout'
+import { useLayoutStore } from '@/common/features/layout'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
 import { mainSchetQueryKeys, mainSchetService } from '@/app/region-spravochnik/main-schet'
 import { EditableTable } from '@renderer/common/components/editable-table'
@@ -42,12 +42,14 @@ import { DetailsView } from '@/common/views'
 import { GeneratePorucheniya } from './generate-porucheniya'
 import { usePodpis } from '@renderer/common/features/podpis'
 import { BankRasxod, Operatsii, PodpisDoljnost, PodpisTypeDocument } from '@renderer/common/models'
+import { useTranslation } from 'react-i18next'
 
 const shartnomaRegExp = /№ .*?-сонли \d{2}.\d{2}.\d{4} йил кунги шартномага асосан\s?/
 const smetaRegExp = / Ст: \d*$\s?/
 
 const BankRasxodDetailtsPage = () => {
   const { toast } = useToast()
+  const { t } = useTranslation(['app'])
 
   const params = useParams()
   const location = useLocation() as Location<{ original?: BankRasxod }>
@@ -55,6 +57,7 @@ const BankRasxodDetailtsPage = () => {
   const queryClient = useQueryClient()
   const main_schet_id = useRequisitesStore((state) => state.main_schet_id)
   const podpis = usePodpis(PodpisTypeDocument.BANK, params.id === 'create')
+  const setLayout = useLayoutStore((store) => store.setLayout)
 
   const original = location.state?.original
 
@@ -72,8 +75,6 @@ const BankRasxodDetailtsPage = () => {
       glav_buxgalter: original?.glav_buxgalter ?? defaultValues.glav_buxgalter
     }
   })
-
-  console.log(form.watch())
 
   const orgSpravochnik = useSpravochnik(
     createOrganizationSpravochnik({
@@ -214,14 +215,6 @@ const BankRasxodDetailtsPage = () => {
   const summa = form.watch('summa')
   const reminder = (monitor?.meta?.summa_to ?? 0) - (summa ?? 0) + (rasxod?.data?.summa ?? 0)
 
-  useLayout({
-    title:
-      params.id === 'create' ? 'Создать расходный документ' : 'Редактировать расходный документ',
-    onBack() {
-      navigate(-1)
-    }
-  })
-
   useEffect(() => {
     const summa =
       podvodki
@@ -280,6 +273,21 @@ const BankRasxodDetailtsPage = () => {
     }
   }, [form, podpis])
 
+  useEffect(() => {
+    setLayout({
+      title: params.id === 'create' ? t('create') : t('edit'),
+      breadcrumbs: [
+        {
+          title: t('pages.bank')
+        },
+        {
+          path: '/bank/rasxod',
+          title: t('pages.rasxod-docs')
+        }
+      ]
+    })
+  }, [setLayout, params.id, t])
+
   return (
     <DetailsView>
       <DetailsView.Content loading={isFetching || isCreating || isUpdating}>
@@ -301,7 +309,7 @@ const BankRasxodDetailtsPage = () => {
                   error={form.formState.errors.id_spravochnik_organization}
                   spravochnik={orgSpravochnik}
                   className="bg-slate-50"
-                  name="Данные получателя"
+                  name={t('receiver-info')}
                 />
               </div>
 
@@ -376,7 +384,7 @@ const BankRasxodDetailtsPage = () => {
           </form>
         </Form>
         <Fieldset
-          name="Подводка"
+          name={t('provodka')}
           className="flex-1 mt-5 pb-24 bg-slate-50"
         >
           <EditableTable

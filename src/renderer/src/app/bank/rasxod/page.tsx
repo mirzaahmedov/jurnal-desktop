@@ -11,14 +11,18 @@ import { columns } from './columns'
 import { formatNumber } from '@renderer/common/lib/format'
 import { queryKeys } from './constants'
 import { useConfirm } from '@renderer/common/features/confirm'
-import { useLayout } from '@renderer/common/features/layout'
+import { useLayoutStore } from '@renderer/common/features/layout'
 import { useNavigate } from 'react-router-dom'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
+import { useTranslation } from 'react-i18next'
+import { useEffect } from 'react'
 
 const BankRasxodPage = () => {
   const { confirm } = useConfirm()
+  const { t } = useTranslation(['app'])
 
   const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
+  const setLayout = useLayoutStore((store) => store.setLayout)
   const dates = useRangeDate()
   const pagination = usePagination()
   const queryClient = useQueryClient()
@@ -45,13 +49,6 @@ const BankRasxodPage = () => {
     }
   })
 
-  useLayout({
-    title: 'Расходные документы',
-    onCreate() {
-      navigate('create')
-    }
-  })
-
   const handleClickEdit = (row: BankRasxod) => {
     navigate(`${row.id}`)
   }
@@ -62,6 +59,20 @@ const BankRasxodPage = () => {
       }
     })
   }
+
+  useEffect(() => {
+    setLayout({
+      title: t('pages.rasxod-docs'),
+      breadcrumbs: [
+        {
+          title: t('pages.bank')
+        }
+      ],
+      onCreate() {
+        navigate('create')
+      }
+    })
+  }, [setLayout, t, navigate])
 
   return (
     <ListView>
@@ -95,7 +106,7 @@ const BankRasxodPage = () => {
           footer={
             <FooterRow>
               <FooterCell
-                title="Итого"
+                title={t('total')}
                 content={formatNumber(rasxodList?.meta?.summa ?? 0)}
                 colSpan={4}
               />

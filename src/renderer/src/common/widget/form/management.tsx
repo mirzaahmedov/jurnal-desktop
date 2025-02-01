@@ -10,6 +10,7 @@ import { cn } from '@/common/lib/utils'
 import { http } from '@/common/lib/http'
 import { useQuery } from '@tanstack/react-query'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
+import { useTranslation } from 'react-i18next'
 
 type RequiredManagementFields = {
   rukovoditel?: string | null
@@ -25,6 +26,8 @@ const ManagementFields: FormEditableFieldsComponent<RequiredManagementFields> = 
   ...props
 }) => {
   const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
+
+  const { t } = useTranslation()
 
   const { data: fioList, isFetching } = useQuery({
     queryKey: ['management/fio', main_schet_id],
@@ -46,7 +49,7 @@ const ManagementFields: FormEditableFieldsComponent<RequiredManagementFields> = 
   return (
     <Fieldset
       {...props}
-      name={name ?? 'Подписи'}
+      name={name ?? t('podpis')}
     >
       <div
         {...containerProps}
@@ -57,7 +60,7 @@ const ManagementFields: FormEditableFieldsComponent<RequiredManagementFields> = 
           control={form.control as unknown as Control<RequiredManagementFields>}
           render={({ field }) => (
             <FormElement
-              label="Руководитель"
+              label={t('director')}
               className="w-full flex-1"
             >
               <Combobox
@@ -86,7 +89,7 @@ const ManagementFields: FormEditableFieldsComponent<RequiredManagementFields> = 
           control={form.control as unknown as Control<RequiredManagementFields>}
           render={({ field }) => (
             <FormElement
-              label="Глав Бухгалтер"
+              label={t('main_accountant')}
               className="flex-1 w-full"
             >
               <Combobox

@@ -22,7 +22,7 @@ export type ColumnDef<T extends Record<string, unknown>> = {
   fit?: boolean
   stretch?: boolean
   key: Autocomplete<keyof T>
-  header: ReactNode
+  header?: ReactNode
   className?: string
   headerClassName?: string
   rowSpan?: number
@@ -36,7 +36,7 @@ export type HeaderGroup<T extends Record<string, unknown>> = {
   fit?: boolean
   stretch?: boolean
   key: Autocomplete<keyof T>
-  header: ReactNode
+  header?: ReactNode
   headerClassName?: string
   rowSpan?: number
   colSpan?: number
@@ -122,7 +122,11 @@ export const GenericTable = <T extends Record<string, unknown>>({
                           colSpan={colSpan}
                           rowSpan={rowSpan}
                         >
-                          {header}
+                          {!header
+                            ? t(key.toString())
+                            : typeof header === 'string'
+                              ? t(header)
+                              : header}
                         </GenericTableHead>
                       )
                     })

@@ -2,6 +2,7 @@ import { SpravochnikField, SpravochnikFields } from '@/common/features/spravochn
 
 import type { FormSpravochnikFieldsComponent } from './types'
 import type { Organization } from '@/common/models'
+import { useTranslation } from 'react-i18next'
 
 const OrganizationFields: FormSpravochnikFieldsComponent<Organization, { gazna?: boolean }> = ({
   tabIndex,
@@ -13,10 +14,13 @@ const OrganizationFields: FormSpravochnikFieldsComponent<Organization, { gazna?:
   ...props
 }) => {
   const { inputRef, ...spravochnikProps } = spravochnik
+
+  const { t } = useTranslation()
+
   return (
     <SpravochnikFields
       {...props}
-      name={name ?? 'Организация'}
+      name={name ?? t('organization')}
     >
       <SpravochnikField
         {...spravochnikProps}
@@ -26,7 +30,7 @@ const OrganizationFields: FormSpravochnikFieldsComponent<Organization, { gazna?:
         disabled={disabled}
         error={!!error?.message}
         getInputValue={(selected) => selected?.name ?? ''}
-        label={name ?? 'Организация'}
+        label={t('organization')}
         formElementProps={{
           grid: '2:6'
         }}
@@ -39,7 +43,7 @@ const OrganizationFields: FormSpravochnikFieldsComponent<Organization, { gazna?:
         disabled={disabled}
         error={!!error?.message}
         getInputValue={(selected) => selected?.bank_klient ?? ''}
-        label="Банк"
+        label={t('bank')}
         formElementProps={{
           grid: '2:6'
         }}
@@ -52,7 +56,7 @@ const OrganizationFields: FormSpravochnikFieldsComponent<Organization, { gazna?:
         disabled={disabled}
         error={!!error?.message}
         getInputValue={(selected) => selected?.mfo ?? ''}
-        label="МФО"
+        label={t('mfo')}
         formElementProps={{
           grid: '2:6'
         }}
@@ -65,7 +69,7 @@ const OrganizationFields: FormSpravochnikFieldsComponent<Organization, { gazna?:
         disabled={disabled}
         error={!!error?.message}
         getInputValue={(selected) => selected?.inn ?? ''}
-        label="ИНН"
+        label={t('inn')}
         formElementProps={{
           grid: '2:6'
         }}
@@ -78,7 +82,7 @@ const OrganizationFields: FormSpravochnikFieldsComponent<Organization, { gazna?:
         disabled={disabled}
         error={!!error?.message}
         getInputValue={(selected) => selected?.raschet_schet ?? ''}
-        label="Расчетный счет"
+        label={t('raschet-schet')}
         formElementProps={{
           grid: '2:6'
         }}
@@ -92,7 +96,7 @@ const OrganizationFields: FormSpravochnikFieldsComponent<Organization, { gazna?:
           disabled={disabled}
           error={!!error?.message}
           getInputValue={(selected) => selected?.raschet_schet_gazna ?? ''}
-          label="Расчетный счет (газна)"
+          label={t('raschet-schet-gazna')}
           formElementProps={{
             grid: '2:6'
           }}

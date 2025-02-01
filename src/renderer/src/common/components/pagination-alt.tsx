@@ -1,18 +1,18 @@
-import Paginate from 'react-paginate'
-import { Button } from './ui/button'
 import { ArrowLeft, ArrowRight } from 'lucide-react'
-import { SelectField } from './select-field'
 import { useTranslation } from 'react-i18next'
+import Paginate from 'react-paginate'
+import { SelectField } from './select-field'
+import { Button } from './ui/button'
 
-type PaginationValues = {
+export interface PaginationValues {
   page: number
   limit: number
 }
-type PaginationProps = PaginationValues & {
+export interface PaginationProps extends PaginationValues {
   pageCount: number
   onChange: (values: Partial<PaginationValues>) => void
 }
-const Pagination = ({ page, pageCount, limit, onChange }: PaginationProps) => {
+export const Pagination = ({ page, pageCount, limit, onChange }: PaginationProps) => {
   const { t } = useTranslation()
 
   return (
@@ -69,5 +69,3 @@ const Pagination = ({ page, pageCount, limit, onChange }: PaginationProps) => {
     </div>
   )
 }
-export { Pagination }
-export type { PaginationProps }

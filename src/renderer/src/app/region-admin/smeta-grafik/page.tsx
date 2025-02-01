@@ -1,4 +1,3 @@
-import { Pagination, usePagination } from '@/common/components'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 import type { SmetaGrafik } from '@/common/models'
@@ -7,27 +6,31 @@ import { SmetaTable } from './components'
 import { smetaGrafikQueryKeys } from './constants'
 import { smetaGrafikService } from './service'
 import { useConfirm } from '@/common/features/confirm'
-import { useLayout } from '@/common/features/layout'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
-import { useState } from 'react'
+import { useLayoutStore } from '@/common/features/layout'
+import { useEffect, useState } from 'react'
 import { useToggle } from '@/common/hooks/use-toggle'
+import { useTranslation } from 'react-i18next'
+import { usePagination } from '@renderer/common/hooks'
+import { ListView } from '@renderer/common/views'
 
 const SmetaGrafikPage = () => {
   const [selected, setSelected] = useState<null | SmetaGrafik>(null)
 
-  const { currentPage, itemsPerPage } = usePagination()
   const { main_schet_id, budjet_id } = useRequisitesStore()
   const { confirm } = useConfirm()
   const { open, close, isOpen: active } = useToggle()
+  const { t } = useTranslation(['app'])
 
+  const pagination = usePagination()
   const queryClient = useQueryClient()
+  const setLayout = useLayoutStore((store) => store.setLayout)
 
   const { data: smetaGrafikList, isFetching } = useQuery({
     queryKey: [
       smetaGrafikQueryKeys.getAll,
       {
-        page: currentPage,
-        limit: itemsPerPage,
+        ...pagination,
         budjet_id,
         main_schet_id
       }
@@ -57,33 +60,46 @@ const SmetaGrafikPage = () => {
     })
   }
 
-  useLayout({
-    title: 'График сметы',
-    onCreate: () => {
-      setSelected(null)
-      open()
-    }
-  })
+  useEffect(() => {
+    setLayout({
+      title: t('pages.smeta-grafik'),
+      breadcrumbs: [
+        {
+          title: t('pages.spravochnik')
+        }
+      ],
+      onCreate: () => {
+        setSelected(null)
+        open()
+      }
+    })
+  }, [setLayout, t])
 
   return (
-    <>
-      <div className="relative w-full flex-1">
+    <ListView>
+      <ListView.Content
+        loading={false}
+        className="relative w-full flex-1"
+      >
         <SmetaTable
           isLoading={isFetching || isPending}
           data={smetaGrafikList?.data ?? []}
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}
         />
-      </div>
-      <div className="px-10 py-5">
-        <Pagination pageCount={smetaGrafikList?.meta?.pageCount ?? 0} />
-      </div>
+      </ListView.Content>
+      <ListView.Footer>
+        <ListView.Pagination
+          {...pagination}
+          pageCount={smetaGrafikList?.meta?.pageCount ?? 0}
+        />
+      </ListView.Footer>
       <SmetaGrafikDialog
         data={selected}
         open={active}
         onClose={close}
       />
-    </>
+    </ListView>
   )
 }
 

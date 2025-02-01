@@ -1,33 +1,37 @@
-import { GenericTable, LoadingOverlay, Pagination, usePagination } from '@/common/components'
+import { GenericTable, LoadingOverlay } from '@/common/components'
 import { SearchField, useSearch } from '@/common/features/search'
-import { useEffect, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useEffect, useState } from 'react'
 
+import { useConfirm } from '@/common/features/confirm'
+import { useLayoutStore } from '@/common/features/layout'
+import { useToggle } from '@/common/hooks/use-toggle'
 import type { Sostav } from '@/common/models'
-import SostavDialog from './dialog'
+import { usePagination } from '@renderer/common/hooks'
+import { ListView } from '@renderer/common/views'
+import { useTranslation } from 'react-i18next'
 import { sostavColumns } from './columns'
 import { sostavQueryKeys } from './constants'
+import SostavDialog from './dialog'
 import { sostavService } from './service'
-import { useConfirm } from '@/common/features/confirm'
-import { useLayout } from '@/common/features/layout'
-import { useToggle } from '@/common/hooks/use-toggle'
 
 const SostavPage = () => {
   const [selected, setSelected] = useState<Sostav | null>(null)
 
   const toggle = useToggle()
+  const pagination = usePagination()
   const queryClient = useQueryClient()
+  const setLayout = useLayoutStore((store) => store.setLayout)
 
-  const { currentPage, itemsPerPage } = usePagination()
   const { confirm } = useConfirm()
   const { search } = useSearch()
+  const { t } = useTranslation(['app'])
 
   const { data: sostavList, isFetching } = useQuery({
     queryKey: [
       sostavQueryKeys.getAll,
       {
-        page: currentPage,
-        limit: itemsPerPage,
+        ...pagination,
         search
       }
     ],
@@ -47,11 +51,19 @@ const SostavPage = () => {
       setSelected(null)
     }
   }, [toggle.isOpen])
-  useLayout({
-    title: 'Состав',
-    content: SearchField,
-    onCreate: toggle.open
-  })
+
+  useEffect(() => {
+    setLayout({
+      title: t('pages.sostav'),
+      breadcrumbs: [
+        {
+          title: t('pages.spravochnik')
+        }
+      ],
+      content: SearchField,
+      onCreate: toggle.open
+    })
+  }, [setLayout, t, toggle.open])
 
   const handleClickEdit = (row: Sostav) => {
     setSelected(row)
@@ -66,7 +78,7 @@ const SostavPage = () => {
   }
 
   return (
-    <>
+    <ListView>
       <div className="flex-1 relative">
         {isFetching || isPending ? <LoadingOverlay /> : null}
         <GenericTable
@@ -77,15 +89,18 @@ const SostavPage = () => {
           onDelete={handleClickDelete}
         />
       </div>
-      <div className="px-10 py-5">
-        <Pagination pageCount={sostavList?.meta.pageCount ?? 0} />
-      </div>
+      <ListView.Footer>
+        <ListView.Pagination
+          {...pagination}
+          pageCount={sostavList?.meta.pageCount ?? 0}
+        />
+      </ListView.Footer>
       <SostavDialog
         data={selected}
         open={toggle.isOpen}
         onChangeOpen={toggle.setOpen}
       />
-    </>
+    </ListView>
   )
 }
 

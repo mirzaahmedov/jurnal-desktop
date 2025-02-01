@@ -1,26 +1,30 @@
 import { FooterCell, FooterRow, GenericTable } from '@/common/components'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { usePagination, useRangeDate } from '@/common/hooks'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
+import { useConfirm } from '@/common/features/confirm'
+import { useLayoutStore } from '@/common/features/layout'
+import { formatNumber } from '@/common/lib/format'
 import type { BankPrixodType } from '@/common/models'
 import { ListView } from '@/common/views'
-import { bankPrixodService } from './service'
-import { columns } from './columns'
-import { formatNumber } from '@/common/lib/format'
-import { queryKeys } from './constants'
-import { useConfirm } from '@/common/features/confirm'
-import { useLayout } from '@/common/features/layout'
-import { useNavigate } from 'react-router-dom'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
+import { useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router-dom'
+import { columns } from './columns'
+import { queryKeys } from './constants'
+import { bankPrixodService } from './service'
 
 const BankPrixodPage = () => {
   const { confirm } = useConfirm()
+  const { t } = useTranslation(['app'])
 
   const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
   const dates = useRangeDate()
   const pagination = usePagination()
   const queryClient = useQueryClient()
   const navigate = useNavigate()
+  const setLayout = useLayoutStore((store) => store.setLayout)
 
   const { data: prixodList, isFetching } = useQuery({
     queryKey: [
@@ -54,12 +58,19 @@ const BankPrixodPage = () => {
     })
   }
 
-  useLayout({
-    title: 'Приходные документы',
-    onCreate() {
-      navigate('create')
-    }
-  })
+  useEffect(() => {
+    setLayout({
+      title: t('pages.prixod-docs'),
+      breadcrumbs: [
+        {
+          title: t('pages.bank')
+        }
+      ],
+      onCreate() {
+        navigate('create')
+      }
+    })
+  }, [setLayout, t])
 
   return (
     <ListView>
@@ -76,7 +87,7 @@ const BankPrixodPage = () => {
           footer={
             <FooterRow>
               <FooterCell
-                title="Итого"
+                title={t('total')}
                 content={formatNumber(prixodList?.meta?.summa ?? 0)}
                 colSpan={4}
               />

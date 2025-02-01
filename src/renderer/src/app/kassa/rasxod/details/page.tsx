@@ -1,38 +1,38 @@
 import type { RasxodPayloadType, RasxodPodvodkaPayloadType } from '../service'
 
-import { RasxodPayloadSchema, RasxodPodvodkaPayloadSchema, kassaRasxodService } from '../service'
-import { useCallback, useEffect, useMemo } from 'react'
-import { useSpravochnik } from '@/common/features/spravochnik'
-import { Form } from '@/common/components/ui/form'
-import { Fieldset, AccountBalance } from '@/common/components'
+import { mainSchetQueryKeys, mainSchetService } from '@/app/region-spravochnik/main-schet'
 import { createPodotchetSpravochnik } from '@/app/region-spravochnik/podotchet'
-import { useToast } from '@/common/hooks/use-toast'
-import { useNavigate, useParams } from 'react-router-dom'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { defaultValues, queryKeys } from '../constants'
-import { normalizeEmptyFields } from '@/common/lib/validation'
+import { AccountBalance, Fieldset } from '@/common/components'
+import { ButtonGroup } from '@/common/components/ui/button-group'
+import { Form } from '@/common/components/ui/form'
+import { APIEndpoints } from '@/common/features/crud'
 import { useLayoutStore } from '@/common/features/layout'
-import { useRequisitesStore } from '@renderer/common/features/requisites'
+import { useSpravochnik } from '@/common/features/spravochnik'
+import { useToast } from '@/common/hooks/use-toast'
+import { formatDate, getFirstDayOfMonth, getLastDayOfMonth } from '@/common/lib/date'
+import { formatNumber } from '@/common/lib/format'
+import { getDataFromCache } from '@/common/lib/query-client'
+import { numberToWords } from '@/common/lib/utils'
+import { normalizeEmptyFields } from '@/common/lib/validation'
+import { Operatsii } from '@/common/models'
+import { DocumentFields, OpisanieFields, PodotchetFields, SummaFields } from '@/common/widget/form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { kassaMonitorQueryKeys, kassaMonitorService } from '@renderer/app/kassa/monitor'
 import { EditableTable } from '@renderer/common/components/editable-table'
-import { podvodkaColumns } from './podvodki'
 import {
   createEditorChangeHandler,
   createEditorCreateHandler,
   createEditorDeleteHandler
 } from '@renderer/common/components/editable-table/helpers'
-import { DocumentFields, OpisanieFields, PodotchetFields, SummaFields } from '@/common/widget/form'
-import { kassaMonitorService, kassaMonitorQueryKeys } from '@renderer/app/kassa/monitor'
-import { formatDate, getFirstDayOfMonth, getLastDayOfMonth } from '@/common/lib/date'
+import { useRequisitesStore } from '@renderer/common/features/requisites'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useCallback, useEffect } from 'react'
+import { useForm } from 'react-hook-form'
+import { useNavigate, useParams } from 'react-router-dom'
+import { defaultValues, queryKeys } from '../constants'
+import { RasxodPayloadSchema, RasxodPodvodkaPayloadSchema, kassaRasxodService } from '../service'
 import { KassaRasxodOrderTemplate } from '../templates'
-import { formatNumber } from '@/common/lib/format'
-import { numberToWords } from '@/common/lib/utils'
-import { mainSchetQueryKeys, mainSchetService } from '@/app/region-spravochnik/main-schet'
-import { APIEndpoints } from '@/common/features/crud'
-import { getDataFromCache } from '@/common/lib/query-client'
-import { Operatsii } from '@/common/models'
-import { ButtonGroup } from '@/common/components/ui/button-group'
+import { podvodkaColumns } from './podvodki'
 
 import { DetailsView } from '@/common/views'
 import { GenerateFile } from '@renderer/common/features/file'
@@ -200,18 +200,6 @@ const KassaRasxodDetailtsPage = () => {
     setPodvodki(rasxod?.data?.childs ?? defaultValues.childs)
   }, [setPodvodki, form, rasxod, id])
 
-  const provodki = useMemo(() => {
-    return podvodkaColumns.map((column) => {
-      if (typeof column.header !== 'string') {
-        return column
-      }
-      return {
-        ...column,
-        header: t(column.header)
-      }
-    })
-  }, [t])
-
   return (
     <DetailsView>
       <DetailsView.Content loading={isFetching || isCreating || isUpdating}>
@@ -296,12 +284,12 @@ const KassaRasxodDetailtsPage = () => {
           </form>
         </Form>
         <Fieldset
-          name="Подводка"
+          name={t('provodka')}
           className="flex-1 mt-10 bg-slate-50"
         >
           <EditableTable
             tabIndex={4}
-            columns={provodki}
+            columns={podvodkaColumns}
             data={form.watch('childs')}
             errors={form.formState.errors.childs}
             onCreate={createEditorCreateHandler({

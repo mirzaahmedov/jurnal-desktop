@@ -5,19 +5,16 @@ import { formatLocaleDate } from '@/common/lib/format'
 
 export const columns: ColumnDef<KassaMonitoringType>[] = [
   {
-    key: 'doc_num',
-    header: 'doc_num'
+    key: 'doc_num'
   },
   {
     key: 'doc_date',
-    header: 'doc_date',
     renderCell(row, col) {
       return formatLocaleDate(row[col.key as keyof KassaMonitoringType] as string)
     }
   },
   {
-    key: 'opisanie',
-    header: 'description'
+    key: 'opisanie'
   },
   {
     numeric: true,

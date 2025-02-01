@@ -8,7 +8,7 @@ import { formatNumber } from '@/common/lib/format'
 import type { KassaRasxodType } from '@/common/models'
 import { ListView } from '@/common/views'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
-import { useEffect, useMemo } from 'react'
+import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { columns } from './columns'
@@ -73,19 +73,6 @@ const KassaRasxodPage = () => {
     })
   }, [setLayout, t])
 
-  const columnDefs = useMemo(() => {
-    return columns.map((column) => {
-      if (typeof column.header !== 'string') {
-        return column
-      }
-
-      return {
-        ...column,
-        header: t(column.header)
-      }
-    })
-  }, [columns])
-
   return (
     <ListView>
       <ListView.Header>
@@ -94,7 +81,7 @@ const KassaRasxodPage = () => {
       <ListView.Content loading={isFetching || isPending}>
         <GenericTable
           data={rasxodList?.data ?? []}
-          columnDefs={columnDefs}
+          columnDefs={columns}
           getRowId={(row) => row.id}
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}

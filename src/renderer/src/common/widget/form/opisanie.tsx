@@ -21,7 +21,7 @@ const OpisanieFields: FormEditableFieldsComponent<RequiredOpisanieFields> = ({
       render={({ field }) => (
         <FormElement
           direction="column"
-          label={t('description')}
+          label={t('opisanie')}
         >
           <Textarea
             tabIndex={tabIndex}
