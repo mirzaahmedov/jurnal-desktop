@@ -7,6 +7,7 @@ import { FormElement } from '@renderer/common/components/form'
 import { useDateRange } from '@/common/hooks/use-date-range'
 import { useEffect } from 'react'
 import { useJurnal7DateRange } from './use-date-range'
+import { useTranslation } from 'react-i18next'
 
 export type DateRangeFormProps = {
   form: ReturnType<typeof useDateRange>['form']
@@ -16,6 +17,7 @@ export const DateRangeForm = (props: DateRangeFormProps) => {
   const { form, onSubmit } = props
 
   const { from, to } = useJurnal7DateRange()
+  const { t } = useTranslation()
 
   useEffect(() => {
     form.reset({
@@ -34,7 +36,7 @@ export const DateRangeForm = (props: DateRangeFormProps) => {
           control={form.control}
           name="from"
           render={({ field }) => (
-            <FormElement label="За период с">
+            <FormElement label={t('from')}>
               <DatePicker
                 autoFocus
                 {...field}
@@ -46,7 +48,7 @@ export const DateRangeForm = (props: DateRangeFormProps) => {
           control={form.control}
           name="to"
           render={({ field }) => (
-            <FormElement label="по">
+            <FormElement label={t('to')}>
               <DatePicker {...field} />
             </FormElement>
           )}
@@ -57,7 +59,7 @@ export const DateRangeForm = (props: DateRangeFormProps) => {
             variant="outline"
           >
             <CircleArrowDown className="btn-icon icon-start" />
-            Загрузить
+            {t('load')}
           </Button>
         </div>
       </form>

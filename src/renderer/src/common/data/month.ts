@@ -17,16 +17,16 @@ export const monthNames: Array<{
   name: keyof YearScheduleType
   label: string
 }> = [
-  { name: 'oy_1', label: 'Январь' },
-  { name: 'oy_2', label: 'Февраль' },
-  { name: 'oy_3', label: 'Март' },
-  { name: 'oy_4', label: 'Апрель' },
-  { name: 'oy_5', label: 'Май' },
-  { name: 'oy_6', label: 'Июнь' },
-  { name: 'oy_7', label: 'Июль' },
-  { name: 'oy_8', label: 'Август' },
-  { name: 'oy_9', label: 'Сентябрь' },
-  { name: 'oy_10', label: 'Октябрь' },
-  { name: 'oy_11', label: 'Ноябрь' },
-  { name: 'oy_12', label: 'Декабрь' }
+  { name: 'oy_1', label: 'january' },
+  { name: 'oy_2', label: 'february' },
+  { name: 'oy_3', label: 'march' },
+  { name: 'oy_4', label: 'april' },
+  { name: 'oy_5', label: 'may' },
+  { name: 'oy_6', label: 'june' },
+  { name: 'oy_7', label: 'july' },
+  { name: 'oy_8', label: 'august' },
+  { name: 'oy_9', label: 'september' },
+  { name: 'oy_10', label: 'october' },
+  { name: 'oy_11', label: 'november' },
+  { name: 'oy_12', label: 'december' }
 ]

@@ -7,43 +7,40 @@ import { formatLocaleDate } from '@renderer/common/lib/format'
 export const organizationMonitorColumns: ColumnDef<OrganizationMonitor>[] = [
   {
     fit: true,
-    key: 'doc_num',
-    header: 'Документ №'
+    key: 'doc_num'
   },
   {
     fit: true,
     key: 'doc_date',
-    header: 'Дата',
     renderCell: (row) => formatLocaleDate(row.doc_date)
   },
   {
     key: 'opisanie',
-    header: 'Разъяснительный текст',
     className: 'max-w-md'
   },
   {
     key: 'organ_name',
-    header: 'Организация'
+    header: 'organization'
   },
   {
     numeric: true,
     key: 'summa_prixod',
-    header: 'Дебет'
+    header: 'debet'
   },
   {
     numeric: true,
     key: 'summa_rasxod',
-    header: 'Кредит'
+    header: 'kredit'
   },
   {
     fit: true,
     key: 'shartnoma_doc_num',
-    header: '№ договора'
+    header: 'shartnoma-number'
   },
   {
     fit: true,
     key: 'type',
-    header: 'Тип операции',
+    header: 'type-operatsii',
     renderCell: (row) => (
       <Badge
         variant="secondary"
@@ -56,7 +53,7 @@ export const organizationMonitorColumns: ColumnDef<OrganizationMonitor>[] = [
   {
     fit: true,
     key: 'user_id',
-    header: 'Создано пользователем',
+    header: 'created-by-user',
     renderCell: (row) => `${row.fio} (@${row.login})`
   }
 ]

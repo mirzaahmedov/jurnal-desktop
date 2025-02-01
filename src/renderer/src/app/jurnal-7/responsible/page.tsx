@@ -1,31 +1,38 @@
-import { GenericTable, LoadingOverlay, Pagination, usePagination } from '@/common/components'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-
 import type { Responsible } from '@/common/models'
-import ResponsibleDialog from './dialog'
+
+import { GenericTable } from '@/common/components'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useConfirm } from '@/common/features/confirm'
+import { useLayoutStore } from '@/common/features/layout'
+import { toast } from '@/common/hooks/use-toast'
+import { useToggle } from '@/common/hooks/use-toggle'
+import { usePagination } from '@renderer/common/hooks'
+import { ListView } from '@renderer/common/views'
+import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { responsibleColumns } from './columns'
 import { responsibleQueryKeys } from './constants'
 import { responsibleService } from './service'
-import { toast } from '@/common/hooks/use-toast'
-import { useConfirm } from '@/common/features/confirm'
-import { useLayout } from '@/common/features/layout'
-import { useState } from 'react'
-import { useToggle } from '@/common/hooks/use-toggle'
+
+import ResponsibleDialog from './dialog'
 
 const ResponsiblePage = () => {
   const [selected, setSelected] = useState<null | Responsible>(null)
 
   const { confirm } = useConfirm()
-  const { currentPage, itemsPerPage } = usePagination()
-  const { open, close, isOpen: active } = useToggle()
+  const { t } = useTranslation(['app'])
 
+  const setLayout = useLayoutStore((store) => store.setLayout)
+
+  const dialogToggle = useToggle()
+  const pagination = usePagination()
   const queryClient = useQueryClient()
-  const { data: revaluationList, isFetching } = useQuery({
+
+  const { data: responsibleList, isFetching } = useQuery({
     queryKey: [
       responsibleQueryKeys.getAll,
       {
-        page: currentPage,
-        limit: itemsPerPage
+        ...pagination
       }
     ],
     queryFn: responsibleService.getAll
@@ -51,16 +58,23 @@ const ResponsiblePage = () => {
     }
   })
 
-  useLayout({
-    title: 'Материально-ответственное лицо',
-    onCreate() {
-      setSelected(null)
-      open()
-    }
-  })
+  useEffect(() => {
+    setLayout({
+      title: t('pages.responsible'),
+      breadcrumbs: [
+        {
+          title: t('pages.organization')
+        }
+      ],
+      onCreate() {
+        setSelected(null)
+        dialogToggle.open()
+      }
+    })
+  }, [setLayout, t, dialogToggle.open])
 
   const handleClickEdit = (row: Responsible) => {
-    open()
+    dialogToggle.open()
     setSelected(row)
   }
   const handleClickDelete = (row: Responsible) => {
@@ -71,25 +85,27 @@ const ResponsiblePage = () => {
   }
 
   return (
-    <>
-      <div className="relative flex-1">
-        {isFetching || isPending ? <LoadingOverlay /> : null}
+    <ListView>
+      <ListView.Content loading={isFetching || isPending}>
         <GenericTable
           columnDefs={responsibleColumns}
-          data={revaluationList?.data ?? []}
+          data={responsibleList?.data ?? []}
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}
         />
-      </div>
-      <div className="px-10 py-5">
-        <Pagination pageCount={revaluationList?.meta.pageCount ?? 0} />
-      </div>
+      </ListView.Content>
+      <ListView.Footer>
+        <ListView.Pagination
+          {...pagination}
+          pageCount={responsibleList?.meta.pageCount ?? 0}
+        />
+      </ListView.Footer>
       <ResponsibleDialog
-        open={active}
-        onClose={close}
+        open={dialogToggle.isOpen}
+        onClose={dialogToggle.close}
         data={selected}
       />
-    </>
+    </ListView>
   )
 }
 

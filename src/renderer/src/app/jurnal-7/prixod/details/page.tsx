@@ -27,10 +27,11 @@ import isEmpty from 'just-is-empty'
 import { toast } from 'react-toastify'
 import { useForm } from 'react-hook-form'
 import { useJurnal7DefaultsStore } from '../../common/features/defaults'
-import { useLayout } from '@renderer/common/features/layout'
+import { useLayoutStore } from '@renderer/common/features/layout'
 import { useQueryClient } from '@tanstack/react-query'
 import { useSpravochnik } from '@renderer/common/features/spravochnik'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useTranslation } from 'react-i18next'
 
 const MO7PrixodDetailsPage = () => {
   const prevData = useRef({
@@ -39,6 +40,7 @@ const MO7PrixodDetailsPage = () => {
   })
 
   const { id } = useParams()
+  const { t } = useTranslation(['app'])
 
   const { from } = useJurnal7DefaultsStore()
   const { data: prixod, isFetching } = usePrixodGet(Number(id))
@@ -75,6 +77,7 @@ const MO7PrixodDetailsPage = () => {
     defaultValues,
     resolver: zodResolver(PrixodFormSchema)
   })
+  const setLayout = useLayoutStore((store) => store.setLayout)
   const orgSpravochnik = useSpravochnik(
     createOrganizationSpravochnik({
       value: form.watch('kimdan_id'),
@@ -176,12 +179,23 @@ const MO7PrixodDetailsPage = () => {
     }
   }, [id, from, form])
 
-  useLayout({
-    title: id === 'create' ? 'Создать приход' : 'Редактировать приход',
-    onBack() {
-      navigate(-1)
-    }
-  })
+  useEffect(() => {
+    setLayout({
+      title: id === 'create' ? t('create') : t('edit'),
+      breadcrumbs: [
+        {
+          title: t('pages.material-warehouse')
+        },
+        {
+          title: t('pages.prixod-docs'),
+          path: '/journal-7/prixod'
+        }
+      ],
+      onBack() {
+        navigate(-1)
+      }
+    })
+  }, [setLayout, navigate, id, t])
 
   const { errors } = form.formState
   useEffect(() => {
@@ -231,13 +245,13 @@ const MO7PrixodDetailsPage = () => {
             <div className="grid grid-cols-2 divide-x">
               <OrganizationFields
                 tabIndex={4}
-                name="От кого"
+                name={t('from-who')}
                 spravochnik={orgSpravochnik}
                 error={form.formState.errors.kimdan_id}
               />
               <ResponsibleFields
                 tabIndex={5}
-                name="Кому"
+                name={t('to-whom')}
                 spravochnik={responsibleSpravochnik}
                 error={form.formState.errors.kimga_id}
               />

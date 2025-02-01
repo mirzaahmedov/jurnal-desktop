@@ -9,18 +9,23 @@ import { avansQueryKeys } from './constants'
 import { avansService } from './service'
 import { toast } from '@/common/hooks/use-toast'
 import { useConfirm } from '@/common/features/confirm'
-import { useLayout } from '@/common/features/layout'
+import { useLayout, useLayoutStore } from '@/common/features/layout'
 import { useNavigate } from 'react-router-dom'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
+import { useTranslation } from 'react-i18next'
+import { useEffect } from 'react'
 
 const AvansPage = () => {
+  const dates = useRangeDate()
+  const pagination = usePagination()
   const navigate = useNavigate()
   const queryClient = useQueryClient()
 
-  const dates = useRangeDate()
-  const pagination = usePagination()
   const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
+  const setLayout = useLayoutStore((store) => store.setLayout)
+
   const { confirm } = useConfirm()
+  const { t } = useTranslation(['app'])
 
   const { data: avansList, isFetching } = useQuery({
     queryKey: [
@@ -57,12 +62,19 @@ const AvansPage = () => {
     })
   }
 
-  useLayout({
-    title: 'Авансовые отчёты',
-    onCreate() {
-      navigate('create')
-    }
-  })
+  useEffect(() => {
+    setLayout({
+      title: t('pages.avans'),
+      breadcrumbs: [
+        {
+          title: t('pages.podotchet')
+        }
+      ],
+      onCreate() {
+        navigate('create')
+      }
+    })
+  }, [setLayout, t])
 
   return (
     <ListView>

@@ -2,15 +2,16 @@ import type { ColumnDef } from '@/common/components'
 import type { ShartnomaGrafik } from '@/common/models'
 
 import { formatLocaleDate } from '@/common/lib/format'
+import { t } from 'i18next'
 
 export const shartnomaGrafikColumns: ColumnDef<ShartnomaGrafik>[] = [
   {
     key: 'shartnomalar_organization_doc_num',
-    header: '№ договора'
+    header: 'doc_num'
   },
   {
     key: 'shartnomalar_organization_doc_date',
-    header: 'Дата договора',
+    header: 'doc_date',
     renderCell: (row) =>
       row.shartnomalar_organization_doc_date
         ? formatLocaleDate(row.shartnomalar_organization_doc_date)
@@ -18,20 +19,20 @@ export const shartnomaGrafikColumns: ColumnDef<ShartnomaGrafik>[] = [
   },
   {
     key: 'smeta_number',
-    header: 'Смета'
+    header: 'smeta'
   },
   {
     key: 'shartnomalar_organization_opisanie',
-    header: 'Описание'
+    header: 'opisanie'
   },
   {
     numeric: true,
     key: 'shartnomalar_organization_summa',
-    header: 'Сумма'
+    header: 'summa'
   },
   {
     key: 'shartnomalar_organization_pudratchi_bool',
-    header: 'Поставщик',
-    renderCell: (row) => (row.shartnomalar_organization_pudratchi_bool ? 'Пудратчи' : 'Бошқа')
+    header: 'supplier',
+    renderCell: (row) => (row.shartnomalar_organization_pudratchi_bool ? t('supplier') : t('buyer'))
   }
 ]

@@ -5,12 +5,13 @@ import { ostatokColumns, ostatokHeaderGroups } from './columns'
 import { MonthPicker } from '@renderer/common/components/month-picker'
 import { ButtonGroup } from '@renderer/common/components/ui/button-group'
 import { DownloadFile } from '@renderer/common/features/file'
-import { useLayout } from '@renderer/common/features/layout'
+import { useLayoutStore } from '@renderer/common/features/layout'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
 import { useSpravochnik } from '@renderer/common/features/spravochnik'
 import { ListView } from '@renderer/common/views'
 import { useQuery } from '@tanstack/react-query'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { createPodrazdelenie7Spravochnik } from '../podrazdelenie/service'
 import { createResponsibleSpravochnik } from '../responsible/service'
 import { ostatokQueryKeys } from './config'
@@ -20,7 +21,9 @@ const OstatokPage = () => {
   const [month, setMonth] = useState(new Date().getMonth() + 1)
   const [year, setYear] = useState(new Date().getFullYear())
 
+  const setLayout = useLayoutStore((store) => store.setLayout)
   const { main_schet_id, budjet_id } = useRequisitesStore()
+  const { t } = useTranslation(['app'])
 
   const podrazdelenieSpravochnik = useSpravochnik(
     createPodrazdelenie7Spravochnik({
@@ -50,9 +53,16 @@ const OstatokPage = () => {
     enabled: !!responsibleSpravochnik.selected?.id
   })
 
-  useLayout({
-    title: 'Остаток'
-  })
+  useEffect(() => {
+    setLayout({
+      title: t('pages.ostatok'),
+      breadcrumbs: [
+        {
+          title: t('pages.material-warehouse')
+        }
+      ]
+    })
+  }, [setLayout, t])
 
   const date = new Date(`${year}-${month}-01`)
   const from = formatDate(getFirstDayOfMonth(date))

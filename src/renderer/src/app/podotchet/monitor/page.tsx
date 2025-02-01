@@ -1,12 +1,9 @@
 import {
   ChooseSpravochnik,
-  DateRangeForm,
   FooterCell,
   FooterRow,
   GenericTable,
-  LoadingOverlay,
-  Pagination,
-  usePagination
+  LoadingOverlay
 } from '@/common/components'
 import { parseAsInteger, useQueryState } from 'nuqs'
 
@@ -20,19 +17,25 @@ import { formatNumber } from '@/common/lib/format'
 import { podotchetMonitoringColumns } from './columns'
 import { podotchetMonitoringQueryKeys } from './constants'
 import { podotchetMonitoringService } from './service'
-import { useDateRange } from '@/common/hooks/use-date-range'
-import { useLayout } from '@/common/features/layout'
 import { useQuery } from '@tanstack/react-query'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
 import { useSpravochnik } from '@/common/features/spravochnik'
+import { useEffect } from 'react'
+import { usePagination, useRangeDate } from '@renderer/common/hooks'
+import { useLayoutStore } from '@renderer/common/features/layout'
+import { useTranslation } from 'react-i18next'
+import { ListView } from '@renderer/common/views'
 
 const PodotchetMonitoringPage = () => {
   const [podotchetId, setPodotchetId] = useQueryState('podotchet_id', parseAsInteger.withDefault(0))
   const [operatsii, setOperatsii] = useQueryState('operatsii', parseAsInteger.withDefault(0))
 
-  const { currentPage, itemsPerPage } = usePagination()
+  const pagination = usePagination()
+  const dates = useRangeDate()
+  const setLayout = useLayoutStore((store) => store.setLayout)
+
+  const { t } = useTranslation(['app'])
   const { main_schet_id, budjet_id } = useRequisitesStore()
-  const { from, to, form, applyFilters } = useDateRange()
 
   const podotchetSpravochnik = useSpravochnik(
     createPodotchetSpravochnik({
@@ -57,11 +60,9 @@ const PodotchetMonitoringPage = () => {
     queryKey: [
       podotchetMonitoringQueryKeys.getAll,
       {
+        ...dates,
+        ...pagination,
         main_schet_id,
-        from,
-        to,
-        page: currentPage,
-        limit: itemsPerPage,
         podotchet_id: podotchetId ? podotchetId : undefined,
         operatsii: operatsiiSpravochnik.selected?.schet
           ? operatsiiSpravochnik.selected?.schet
@@ -72,12 +73,19 @@ const PodotchetMonitoringPage = () => {
     enabled: !!main_schet_id && !!operatsiiSpravochnik.selected
   })
 
-  useLayout({
-    title: 'О подотчетном лице'
-  })
+  useEffect(() => {
+    setLayout({
+      title: t('pages.podotchet-monitoring'),
+      breadcrumbs: [
+        {
+          title: t('pages.podotchet')
+        }
+      ]
+    })
+  }, [setLayout, t])
 
   return (
-    <>
+    <ListView>
       <div className="bg-white">
         <div className="p-5 space-y-5 flex flex-col items-start">
           <div className="w-full flex flex-row gap-10 items-center justify-between">
@@ -105,49 +113,46 @@ const PodotchetMonitoringPage = () => {
 
             <ButtonGroup borderStyle="dashed">
               <DownloadFile
-                fileName={`дебитор-кредитор_отчет-${to}.xlsx`}
+                fileName={`дебитор-кредитор_отчет-${dates.to}.xlsx`}
                 url="podotchet/monitoring/prixod/rasxod/"
                 params={{
                   budjet_id,
-                  to,
+                  to: dates.to,
                   excel: true
                 }}
-                buttonText="Дебитор / Кредитор отчет"
+                buttonText={t('debitor-kreditor-report')}
               />
               {podotchetId ? (
                 <DownloadFile
-                  fileName={`лицевой-счет_${podotchetSpravochnik.selected?.name}-${from}&${to}.xlsx`}
+                  fileName={`лицевой-счет_${podotchetSpravochnik.selected?.name}-${dates.from}&${dates.to}.xlsx`}
                   url={`podotchet/monitoring/export/${podotchetId}`}
                   params={{
                     operatsii: operatsiiSpravochnik.selected?.schet,
                     main_schet_id,
-                    from,
-                    to,
+                    from: dates.from,
+                    to: dates.to,
                     excel: true
                   }}
-                  buttonText="Лицевой счет"
+                  buttonText={t('personal-account')}
                 />
               ) : null}
               {operatsiiSpravochnik.selected ? (
                 <DownloadFile
-                  fileName={`шапка_${from}&${to}-${operatsiiSpravochnik.selected.schet}.xlsx`}
+                  fileName={`шапка_${dates.from}&${dates.to}-${operatsiiSpravochnik.selected.schet}.xlsx`}
                   url={`/podotchet/monitoring/cap`}
                   params={{
                     operatsii: operatsiiSpravochnik.selected.schet,
                     main_schet_id,
-                    from,
-                    to,
+                    from: dates.from,
+                    to: dates.to,
                     excel: true
                   }}
-                  buttonText="Шапка"
+                  buttonText={t('cap-report')}
                 />
               ) : null}
             </ButtonGroup>
           </div>
-          <DateRangeForm
-            form={form}
-            onSubmit={applyFilters}
-          />
+          <ListView.RangeDatePicker {...dates} />
           <SummaFields
             summaDebet={
               monitorList?.meta && monitorList?.meta.summa_from > 0
@@ -171,7 +176,7 @@ const PodotchetMonitoringPage = () => {
             <>
               <FooterRow>
                 <FooterCell
-                  title="Итого"
+                  title={t('total')}
                   colSpan={4}
                   content={formatNumber(monitorList?.meta?.summa_prixod ?? 0)}
                 />
@@ -181,7 +186,7 @@ const PodotchetMonitoringPage = () => {
           }
         />
       </ScrollArea>
-      <div className="p-5 flex flex-col gap-5">
+      <ListView.Footer className="p-5 flex flex-col gap-5">
         <SummaFields
           summaDebet={
             monitorList?.meta && monitorList?.meta.summa_to > 0 ? monitorList?.meta?.summa_to : 0
@@ -190,9 +195,12 @@ const PodotchetMonitoringPage = () => {
             monitorList?.meta && monitorList?.meta.summa_to < 0 ? monitorList?.meta?.summa_to : 0
           }
         />
-        <Pagination pageCount={monitorList?.meta.pageCount ?? 0} />
-      </div>
-    </>
+        <ListView.Pagination
+          {...pagination}
+          pageCount={monitorList?.meta.pageCount ?? 0}
+        />
+      </ListView.Footer>
+    </ListView>
   )
 }
 
@@ -203,15 +211,16 @@ const SummaFields = ({
   summaDebet?: number
   summaKredit?: number
 }) => {
+  const { t } = useTranslation()
   return (
     <div className="w-full grid grid-cols-4 gap-40">
       <span className="text-sm text-slate-400 col-span-2"></span>
       <div className="flex gap-4 items-center">
-        <span className="text-sm text-slate-400">Дебет:</span>
+        <span className="text-sm text-slate-400">{t('debet')}:</span>
         <b className="font-black text-slate-700">{formatNumber(Math.abs(summaDebet ?? 0))}</b>
       </div>
       <div className="flex gap-4 items-center">
-        <span className="text-sm text-slate-400">Кредит:</span>
+        <span className="text-sm text-slate-400">{t('kredit')}:</span>
         <b className="font-black text-slate-700">{formatNumber(Math.abs(summaKredit ?? 0))}</b>
       </div>
     </div>

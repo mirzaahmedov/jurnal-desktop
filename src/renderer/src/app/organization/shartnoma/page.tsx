@@ -1,33 +1,37 @@
 import { ChooseSpravochnik, GenericTable } from '@renderer/common/components'
-import { SearchField, useSearch } from '@renderer/common/features/search'
+import { useSearch } from '@renderer/common/features/search'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
-import { Button } from '@renderer/common/components/ui/button'
-import { CopyPlus } from 'lucide-react'
-import { ListView } from '@renderer/common/views'
-import type { Shartnoma } from '@renderer/common/models'
 import { createOrganizationSpravochnik } from '@renderer/app/region-spravochnik/organization'
-import { shartnomaColumns } from './columns'
-import { shartnomaQueryKeys } from './constants'
-import { shartnomaService } from './service'
+import { Button } from '@renderer/common/components/ui/button'
 import { useConfirm } from '@renderer/common/features/confirm'
-import { useLayout } from '@renderer/common/features/layout'
-import { useNavigate } from 'react-router-dom'
-import { useOrgId } from './hooks'
-import { usePagination } from '@renderer/common/hooks'
+import { useLayoutStore } from '@renderer/common/features/layout'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
 import { useSpravochnik } from '@renderer/common/features/spravochnik'
+import { usePagination } from '@renderer/common/hooks'
+import type { Shartnoma } from '@renderer/common/models'
+import { ListView } from '@renderer/common/views'
+import { CopyPlus } from 'lucide-react'
+import { useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router-dom'
+import { shartnomaColumns } from './columns'
+import { shartnomaQueryKeys } from './constants'
+import { useOrgId } from './hooks'
+import { shartnomaService } from './service'
 
 const ShartnomaPage = () => {
   const [orgId, setOrgId] = useOrgId()
 
   const { confirm } = useConfirm()
   const { search } = useSearch()
+  const { t } = useTranslation(['app'])
 
   const pagination = usePagination()
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const budjet_id = useRequisitesStore((store) => store.budjet_id)
+  const setLayout = useLayoutStore((store) => store.setLayout)
 
   const orgSpravochnik = useSpravochnik(
     createOrganizationSpravochnik({
@@ -64,7 +68,7 @@ const ShartnomaPage = () => {
   })
 
   const handleClickEdit = (row: Shartnoma) => {
-    navigate(`${row.id}?org_id=${row.spravochnik_organization_id}`)
+    navigate(`${row.id}?org_id=${row.spravochnik_organization_id}&org_selected=${!!orgId}`)
   }
   const handleClickDelete = (row: Shartnoma) => {
     confirm({
@@ -74,15 +78,21 @@ const ShartnomaPage = () => {
     })
   }
 
-  useLayout({
-    title: 'Договоры',
-    content: SearchField,
-    onCreate: orgSpravochnik.selected?.id
-      ? () => {
-          navigate(`create?org_id=${orgSpravochnik.selected?.id}`)
+  useEffect(() => {
+    setLayout({
+      title: t('pages.shartnoma'),
+      onCreate: orgId
+        ? () => {
+            navigate(`create?org_id=${orgId}&org_selected=true`)
+          }
+        : undefined,
+      breadcrumbs: [
+        {
+          title: t('pages.organization')
         }
-      : undefined
-  })
+      ]
+    })
+  }, [setLayout, navigate, t, orgId])
 
   return (
     <ListView>

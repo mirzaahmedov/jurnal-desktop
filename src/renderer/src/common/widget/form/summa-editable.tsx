@@ -6,6 +6,7 @@ import type { FormEditableFieldsComponent } from './types'
 import { FormElement } from '@/common/components/form'
 import { FormField } from '@/common/components/ui/form'
 import { Textarea } from '@/common/components/ui/textarea'
+import { useTranslation } from 'react-i18next'
 
 type RequiredSummaEditableFields = {
   summa?: number
@@ -19,11 +20,12 @@ const SummaEditableFields: FormEditableFieldsComponent<RequiredSummaEditableFiel
   containerProps,
   ...props
 }) => {
+  const { t } = useTranslation()
   return (
     <Fieldset
       {...props}
       className={cn(dialog && 'p-0', props.className)}
-      name={name ?? 'Сумма'}
+      name={name ?? t('summa')}
     >
       <div
         {...containerProps}
@@ -37,7 +39,7 @@ const SummaEditableFields: FormEditableFieldsComponent<RequiredSummaEditableFiel
           control={form.control as unknown as Control<RequiredSummaEditableFields>}
           name="summa"
           render={({ field }) => (
-            <FormElement label="Сумма">
+            <FormElement label={t('summa')}>
               <NumericInput
                 {...field}
                 allowNegative={false}

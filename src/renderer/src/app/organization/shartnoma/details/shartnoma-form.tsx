@@ -21,6 +21,7 @@ import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { useSpravochnik } from '@renderer/common/features/spravochnik'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useTranslation } from 'react-i18next'
 
 type ShartnomaFormProps = {
   loading?: boolean
@@ -40,6 +41,8 @@ export const ShartnomaForm = ({
 }: ShartnomaFormProps) => {
   const queryClient = useQueryClient()
   const id = selected?.id
+
+  const { t } = useTranslation()
 
   const form = useForm({
     resolver: zodResolver(ShartnomaFormSchema),
@@ -206,7 +209,7 @@ export const ShartnomaForm = ({
             type="submit"
             disabled={isCreating || isUpdating || loading}
           >
-            {selected ? 'Обновить' : 'Создать'}
+            {t('save')}
           </Button>
         </div>
       </form>

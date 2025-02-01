@@ -5,17 +5,15 @@ import { formatLocaleDate } from '@renderer/common/lib/format'
 
 export const avansColumns: ColumnDef<Avans>[] = [
   {
-    key: 'doc_num',
-    header: 'Документ №'
+    key: 'doc_num'
   },
   {
     key: 'doc_date',
-    header: 'Документ дата',
     renderCell: (row) => formatLocaleDate(row.doc_date)
   },
   {
     key: 'spravochnik_podotchet_litso_id',
-    header: 'Подотчёт лицо',
+    header: 'podotchet-litso',
     renderCell: (row) => (
       <TooltipCellRenderer
         data={row}
@@ -29,11 +27,9 @@ export const avansColumns: ColumnDef<Avans>[] = [
   },
   {
     numeric: true,
-    key: 'summa',
-    header: 'Сумма'
+    key: 'summa'
   },
   {
-    key: 'opisanie',
-    header: 'Описание'
+    key: 'opisanie'
   }
 ]

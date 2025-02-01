@@ -2,6 +2,7 @@ import { SpravochnikField, SpravochnikFields } from '@/common/features/spravochn
 
 import type { FormSpravochnikFieldsComponent } from '@/common/widget/form'
 import type { Responsible } from '@/common/models'
+import { useTranslation } from 'react-i18next'
 
 export const ResponsibleFields: FormSpravochnikFieldsComponent<Responsible> = ({
   tabIndex,
@@ -12,10 +13,11 @@ export const ResponsibleFields: FormSpravochnikFieldsComponent<Responsible> = ({
   ...props
 }) => {
   const { inputRef, ...spravochnikProps } = spravochnik
+  const { t } = useTranslation(['podotchet'])
   return (
     <SpravochnikFields
       {...props}
-      name={name ?? 'Материально-ответственное лицо'}
+      name={name ?? t('responsible')}
     >
       <div className="grid grid-cols-2 gap-5">
         <SpravochnikField
@@ -26,7 +28,7 @@ export const ResponsibleFields: FormSpravochnikFieldsComponent<Responsible> = ({
           disabled={disabled}
           getInputValue={(selected) => selected?.fio ?? ''}
           error={!!error?.message}
-          label="Ответственный"
+          label={t('name', { ns: 'podotchet' })}
           formElementProps={{
             grid: '1:4'
           }}
@@ -39,7 +41,7 @@ export const ResponsibleFields: FormSpravochnikFieldsComponent<Responsible> = ({
           disabled={disabled}
           getInputValue={(selected) => selected?.spravochnik_podrazdelenie_jur7_name ?? ''}
           error={!!error?.message}
-          label="Подразделение"
+          label={t('podrazdelenie')}
           formElementProps={{
             grid: '1:4'
           }}

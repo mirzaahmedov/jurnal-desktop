@@ -16,24 +16,21 @@ import { inputVariants } from '@renderer/common/components'
 export const podvodkaColumns: EditableColumnType<AktProvodkaForm>[] = [
   {
     key: 'spravochnik_operatsii_id',
-    header: 'Подводка',
+    header: 'provodka',
     Editor: createOperatsiiEditor({
       type_schet: TypeSchetOperatsii.AKT
     })
   },
   {
     key: 'kol',
-    header: 'Количество',
     Editor: createNumberEditor({ key: 'kol', inputProps: { allowNegative: false } })
   },
   {
     key: 'sena',
-    header: 'Цена',
     Editor: createNumberEditor({ key: 'sena', inputProps: { allowNegative: false } })
   },
   {
     key: 'summa',
-    header: 'Сумма',
     Editor: ({ row }) => (
       <Input
         className={cn(inputVariants({ editor: true, nonfocus: true }), 'text-right')}
@@ -44,12 +41,10 @@ export const podvodkaColumns: EditableColumnType<AktProvodkaForm>[] = [
   },
   {
     key: 'nds_foiz',
-    header: 'НДС %',
     Editor: createNumberEditor({ key: 'nds_foiz', max: 99, inputProps: { allowNegative: false } })
   },
   {
     key: 'nds_summa',
-    header: 'НДС сумма',
     Editor: ({ row }) => (
       <Input
         className={cn(inputVariants({ editor: true, nonfocus: true }), 'text-right')}
@@ -60,7 +55,6 @@ export const podvodkaColumns: EditableColumnType<AktProvodkaForm>[] = [
   },
   {
     key: 'summa_s_nds',
-    header: 'Сумма с НДС',
     Editor: ({ row }) => (
       <Input
         className={cn(inputVariants({ editor: true, nonfocus: true }), 'text-right')}
@@ -74,17 +68,17 @@ export const podvodkaColumns: EditableColumnType<AktProvodkaForm>[] = [
   },
   {
     key: 'id_spravochnik_type_operatsii',
-    header: 'Тип операции',
+    header: 'type-operatsii',
     Editor: createTypeOperatsiiEditor()
   },
   {
     key: 'id_spravochnik_sostav',
-    header: 'Состав',
+    header: 'sostav',
     Editor: createStaffEditor()
   },
   {
     key: 'id_spravochnik_podrazdelenie',
-    header: 'Подразделение',
+    header: 'podrazdelenie',
     Editor: createPodrazdelenieEditor()
   }
 ]

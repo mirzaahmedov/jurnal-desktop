@@ -2,6 +2,7 @@ import type { Operatsii } from '@/common/models'
 
 import { SpravochnikFields, SpravochnikField } from '@/common/features/spravochnik'
 import { FormSpravochnikFieldsComponent } from './types'
+import { useTranslation } from 'react-i18next'
 
 const OperatsiiFields: FormSpravochnikFieldsComponent<Operatsii> = ({
   tabIndex,
@@ -12,10 +13,11 @@ const OperatsiiFields: FormSpravochnikFieldsComponent<Operatsii> = ({
   ...props
 }) => {
   const { inputRef, ...spravochnikProps } = spravochnik
+  const { t } = useTranslation()
   return (
     <SpravochnikFields
       {...props}
-      name={name ?? 'Операция'}
+      name={name ?? t('operatsii')}
     >
       <div className="grid grid-cols-2 gap-5">
         <SpravochnikField
@@ -26,7 +28,7 @@ const OperatsiiFields: FormSpravochnikFieldsComponent<Operatsii> = ({
           disabled={disabled}
           getInputValue={(selected) => selected?.name ?? ''}
           error={!!error?.message}
-          label="Операция"
+          label={t('operatsii')}
         />
 
         <SpravochnikField
@@ -36,7 +38,7 @@ const OperatsiiFields: FormSpravochnikFieldsComponent<Operatsii> = ({
           disabled={disabled}
           getInputValue={(selected) => selected?.sub_schet ?? ''}
           error={!!error?.message}
-          label="Счет/Субсчет"
+          label={`${t('schet')} / ${t('subschet')}`}
         />
       </div>
     </SpravochnikFields>

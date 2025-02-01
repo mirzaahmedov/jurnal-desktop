@@ -1,5 +1,35 @@
 import type { AdvanceReportPodvodkaPayloadType } from '../constants'
 
+import { createPodotchetSpravochnik } from '@/app/region-spravochnik/podotchet'
+import { createOperatsiiSpravochnik } from '@/app/super-admin/operatsii'
+import { Fieldset } from '@/common/components'
+import { Form } from '@/common/components/ui/form'
+import { useLayoutStore } from '@/common/features/layout'
+import { useSpravochnik } from '@/common/features/spravochnik'
+import { useToast } from '@/common/hooks/use-toast'
+import { normalizeEmptyFields } from '@/common/lib/validation'
+import { TypeSchetOperatsii } from '@/common/models'
+import {
+  DocumentFields,
+  OperatsiiFields,
+  OpisanieFields,
+  PodotchetFields,
+  SummaFields
+} from '@/common/widget/form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { EditableTable } from '@renderer/common/components/editable-table'
+import {
+  createEditorChangeHandler,
+  createEditorCreateHandler,
+  createEditorDeleteHandler
+} from '@renderer/common/components/editable-table/helpers'
+import { useRequisitesStore } from '@renderer/common/features/requisites'
+import { DetailsView } from '@renderer/common/views'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useCallback, useEffect } from 'react'
+import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
+import { useNavigate, useParams } from 'react-router-dom'
 import {
   AdvanceReportPayloadSchema,
   AdvanceReportPodvodkaPayloadSchema,
@@ -7,44 +37,18 @@ import {
   defaultValues
 } from '../constants'
 import { avansService } from '../service'
-import { useCallback, useEffect } from 'react'
-import { useSpravochnik } from '@/common/features/spravochnik'
-import { Form } from '@/common/components/ui/form'
-import { Fieldset } from '@/common/components'
-import { createOperatsiiSpravochnik } from '@/app/super-admin/operatsii'
-import { TypeSchetOperatsii } from '@/common/models'
-import { useToast } from '@/common/hooks/use-toast'
-import { useNavigate, useParams } from 'react-router-dom'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { normalizeEmptyFields } from '@/common/lib/validation'
-import { useLayout } from '@/common/features/layout'
-import { useRequisitesStore } from '@renderer/common/features/requisites'
-import { createPodotchetSpravochnik } from '@/app/region-spravochnik/podotchet'
-import { EditableTable } from '@renderer/common/components/editable-table'
 import { podvodkaColumns } from './podvodki'
-import {
-  DocumentFields,
-  OpisanieFields,
-  SummaFields,
-  PodotchetFields,
-  OperatsiiFields
-} from '@/common/widget/form'
-import { DetailsView } from '@renderer/common/views'
-import {
-  createEditorChangeHandler,
-  createEditorCreateHandler,
-  createEditorDeleteHandler
-} from '@renderer/common/components/editable-table/helpers'
 
 const AdvanceReportDetailsPage = () => {
-  const { toast } = useToast()
-
-  const main_schet_id = useRequisitesStore((state) => state.main_schet_id)
   const id = useParams().id as string
   const navigate = useNavigate()
   const queryClient = useQueryClient()
+
+  const main_schet_id = useRequisitesStore((state) => state.main_schet_id)
+  const setLayout = useLayoutStore((store) => store.setLayout)
+
+  const { toast } = useToast()
+  const { t } = useTranslation(['app'])
 
   const form = useForm({
     resolver: zodResolver(AdvanceReportPayloadSchema),
@@ -164,12 +168,23 @@ const AdvanceReportDetailsPage = () => {
     [form]
   )
 
-  useLayout({
-    title: id === 'create' ? 'Создать авансовые отчёты' : 'Редактировать авансовые отчёты',
-    onBack() {
-      navigate(-1)
-    }
-  })
+  useEffect(() => {
+    setLayout({
+      title: id === 'create' ? t('create') : t('edit'),
+      breadcrumbs: [
+        {
+          title: t('pages.podotchet')
+        },
+        {
+          path: '/accountable/avans',
+          title: t('pages.avans')
+        }
+      ],
+      onBack() {
+        navigate(-1)
+      }
+    })
+  }, [setLayout, navigate, id, t])
 
   useEffect(() => {
     const summa =
@@ -236,7 +251,7 @@ const AdvanceReportDetailsPage = () => {
           </form>
         </Form>
         <Fieldset
-          name="Подводка"
+          name={t('provodka')}
           className="flex-1 mt-10 pb-24 bg-slate-50"
         >
           <EditableTable

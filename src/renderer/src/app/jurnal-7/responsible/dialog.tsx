@@ -16,11 +16,12 @@ import type { Responsible } from '@/common/models'
 import { createPodrazdelenie7Spravochnik } from '../podrazdelenie/service'
 import { extendObject } from '@/common/lib/utils'
 import { responsibleService } from './service'
-import { toast } from '@/common/hooks/use-toast'
+import { toast } from 'react-toastify'
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
-import { useSpravochnik } from '@/common/features/spravochnik'
+import { SpravochnikInput, useSpravochnik } from '@/common/features/spravochnik'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { t } from 'i18next'
 
 export type ResponsibleDialogProps = {
   open: boolean
@@ -36,7 +37,7 @@ const ResponsibleDialog = (props: ResponsibleDialogProps) => {
     resolver: zodResolver(ResponsibleFormSchema)
   })
 
-  const subdivision7Spravochnik = useSpravochnik(
+  const podrazdelenieSpravochnik = useSpravochnik(
     createPodrazdelenie7Spravochnik({
       value: form.watch('spravochnik_podrazdelenie_jur7_id'),
       onChange(value) {
@@ -55,17 +56,11 @@ const ResponsibleDialog = (props: ResponsibleDialogProps) => {
         queryKey: [responsibleQueryKeys.getAll]
       })
       onClose()
-      toast({
-        title: 'Материально-ответственное лицо успешно создана'
-      })
+      toast.success('Материально-ответственное лицо успешно создана')
     },
     onError(error) {
       console.error(error)
-      toast({
-        variant: 'destructive',
-        title: 'Ошибка при создании материально-ответственное лицо',
-        description: error.message
-      })
+      toast.error('Ошибка при создании материально-ответственное лицо: ' + error.message)
     }
   })
   const { mutate: update, isPending: isUpdating } = useMutation({
@@ -76,17 +71,11 @@ const ResponsibleDialog = (props: ResponsibleDialogProps) => {
       queryClient.invalidateQueries({
         queryKey: [responsibleQueryKeys.getAll]
       })
-      toast({
-        title: 'Материально-ответственное лицо успешно изменена'
-      })
+      toast.success('Материально-ответственное лицо успешно изменена')
     },
     onError(error) {
       console.error(error)
-      toast({
-        variant: 'destructive',
-        title: 'Ошибка при изменении материально-ответственное лицо',
-        description: error.message
-      })
+      toast.error('Ошибка при изменении материально-ответственное лицо' + error.message)
     }
   })
 
@@ -119,7 +108,11 @@ const ResponsibleDialog = (props: ResponsibleDialogProps) => {
     >
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{data ? 'Изменить' : 'Добавить'} Материально-ответственное лицо</DialogTitle>
+          <DialogTitle className="titlecase">
+            {data
+              ? t('update-something', { something: t('responsible') })
+              : t('create-something', { something: t('responsible') })}
+          </DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form
@@ -128,13 +121,14 @@ const ResponsibleDialog = (props: ResponsibleDialogProps) => {
           >
             <div className="flex flex-col gap-6">
               <FormElement
-                label="Подразделение"
+                label={t('podrazdelenie')}
                 grid="1:2"
                 message={form.formState.errors.spravochnik_podrazdelenie_jur7_id?.message}
               >
-                <Input
-                  value={subdivision7Spravochnik.selected?.name ?? ''}
-                  onDoubleClick={subdivision7Spravochnik.open}
+                <SpravochnikInput
+                  {...podrazdelenieSpravochnik}
+                  readOnly
+                  getInputValue={(selected) => selected?.name || '-'}
                 />
               </FormElement>
               <FormField
@@ -143,7 +137,7 @@ const ResponsibleDialog = (props: ResponsibleDialogProps) => {
                 render={({ field }) => (
                   <FormElement
                     grid="1:2"
-                    label="ФИО"
+                    label={t('fio')}
                   >
                     <Input {...field} />
                   </FormElement>
@@ -155,7 +149,7 @@ const ResponsibleDialog = (props: ResponsibleDialogProps) => {
                 type="submit"
                 disabled={isCreating || isUpdating}
               >
-                {data ? 'Изменить' : 'Добавить'}
+                {t('save')}
               </Button>
             </DialogFooter>
           </form>

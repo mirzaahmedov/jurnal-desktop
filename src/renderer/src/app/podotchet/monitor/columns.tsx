@@ -7,21 +7,18 @@ import { TooltipCellRenderer } from '@/common/components/table/renderers'
 
 export const podotchetMonitoringColumns: ColumnDef<PodotchetMonitor>[] = [
   {
-    header: 'Номер документа',
     key: 'doc_num'
   },
   {
-    header: 'Дата документа',
     key: 'doc_date',
     renderCell: (row) => formatLocaleDate(row.doc_date)
   },
   {
-    header: 'Разъяснительный текст',
     key: 'opisanie'
   },
   {
     numeric: true,
-    header: 'Дебет',
+    header: 'debet',
     key: 'prixod_sum',
     renderCell(row) {
       return !row.prixod_sum ? (
@@ -41,7 +38,7 @@ export const podotchetMonitoringColumns: ColumnDef<PodotchetMonitor>[] = [
   },
   {
     numeric: true,
-    header: 'Кредит',
+    header: 'kredit',
     key: 'rasxod_sum',
     renderCell(row) {
       return !row.rasxod_sum ? (
@@ -61,12 +58,12 @@ export const podotchetMonitoringColumns: ColumnDef<PodotchetMonitor>[] = [
   },
   {
     key: 'podotchet_name',
-    header: 'Подотчет'
+    header: 'podotchet'
   },
   {
     fit: true,
     key: 'type',
-    header: 'Тип операции',
+    header: 'type-operatsii',
     renderCell: (row) => (
       <Badge
         variant="secondary"
@@ -79,7 +76,7 @@ export const podotchetMonitoringColumns: ColumnDef<PodotchetMonitor>[] = [
 
   {
     key: 'user_id',
-    header: 'Создано пользователем',
+    header: 'created-by-user',
     renderCell: (row) => `${row.fio} (@${row.login})`
   }
 ]

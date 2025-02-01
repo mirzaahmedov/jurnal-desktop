@@ -1,42 +1,49 @@
 import { DatePicker, Fieldset, NumericInput } from '@/common/components'
 import { Form, FormControl, FormField, FormItem, FormLabel } from '@/common/components/ui/form'
-import { ShartnomaGrafikFormSchema, shartnomaGrafikDetailsService } from '../service'
-import { defaultValues, shartnomaGrafikQueryKeys } from '../constants'
-import { mainSchetQueryKeys, mainSchetService } from '@renderer/app/region-spravochnik/main-schet'
 import { numberToWords, roundNumberToTwoDecimalPlaces } from '@/common/lib/utils'
+import { mainSchetQueryKeys, mainSchetService } from '@renderer/app/region-spravochnik/main-schet'
 import {
   organizationQueryKeys,
   organizationService
 } from '@renderer/app/region-spravochnik/organization'
-import { useEffect, useMemo } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useEffect, useMemo } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import { defaultValues, shartnomaGrafikQueryKeys } from '../constants'
+import { ShartnomaGrafikFormSchema, shartnomaGrafikDetailsService } from '../service'
 
-import { Button } from '@/common/components/ui/button'
-import { DetailsView } from '@/common/views'
-import { DownloadIcon } from 'lucide-react'
 import { FormElement } from '@/common/components/form'
-import { GenerateReportDialog } from '../templates/report-dialog/dialog'
+import { Button } from '@/common/components/ui/button'
 import { Input } from '@/common/components/ui/input'
 import { Textarea } from '@/common/components/ui/textarea'
-import { formatNumber } from '@/common/lib/format'
 import { monthNames } from '@/common/data/month'
-import { toast } from 'react-toastify'
-import { useForm } from 'react-hook-form'
-import { useLayout } from '@/common/features/layout'
-import { useOrgId } from '../hooks'
-import { useRequisitesStore } from '@renderer/common/features/requisites'
+import { useLayoutStore } from '@/common/features/layout'
 import { useToggle } from '@/common/hooks/use-toggle'
+import { formatNumber } from '@/common/lib/format'
+import { DetailsView } from '@/common/views'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useRequisitesStore } from '@renderer/common/features/requisites'
+import { DownloadIcon } from 'lucide-react'
+import { parseAsBoolean, useQueryState } from 'nuqs'
+import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
+import { toast } from 'react-toastify'
+import { useOrgId } from '../hooks'
+import { GenerateReportDialog } from '../templates/report-dialog/dialog'
 
 const ShartnomaGrafikDetailsPage = () => {
   const [orgId] = useOrgId()
+  const [orgSelected] = useQueryState('org_selected', parseAsBoolean.withDefault(false))
 
   const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
+  const setLayout = useLayoutStore((store) => store.setLayout)
+
   const id = useParams().id as string
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const reportToggle = useToggle()
+
+  const { t } = useTranslation(['app'])
 
   const form = useForm({
     resolver: zodResolver(ShartnomaGrafikFormSchema),
@@ -119,12 +126,23 @@ const ShartnomaGrafikDetailsPage = () => {
     )
   }, [payload])
 
-  useLayout({
-    title: 'Обновить график договора',
-    onBack() {
-      navigate(`/organization/shartnoma-grafik?org_id=${orgId}`)
-    }
-  })
+  useEffect(() => {
+    setLayout({
+      title: t('edit'),
+      breadcrumbs: [
+        {
+          title: t('pages.organization')
+        },
+        {
+          title: t('pages.shartnoma-grafik'),
+          path: '/organization/shartnoma-grafik'
+        }
+      ],
+      onBack() {
+        navigate(`/organization/shartnoma-grafik${orgSelected ? `?org_id=${orgId}` : ''}`)
+      }
+    })
+  }, [navigate, setLayout, id, t, orgId, orgSelected])
 
   useEffect(() => {
     if (!orgId) {
@@ -133,8 +151,6 @@ const ShartnomaGrafikDetailsPage = () => {
     }
   }, [orgId])
 
-  console.log('rendering shartnoma-grafik details')
-
   return (
     <DetailsView>
       <DetailsView.Content loading={isFetching}>
@@ -142,17 +158,17 @@ const ShartnomaGrafikDetailsPage = () => {
           <form onSubmit={onSubmit}>
             <div>
               <Fieldset
-                name="Платежные документы"
+                name={t('payment_docs')}
                 className="pr-0"
               >
                 <div className="flex items-center gap-5 flex-wrap">
-                  <FormElement label="Документ №">
+                  <FormElement label={t('doc_num')}>
                     <Input
                       readOnly
                       value={shartnomaGrafik?.data.doc_num}
                     />
                   </FormElement>
-                  <FormElement label="Дата проводки">
+                  <FormElement label={t('doc_date')}>
                     <DatePicker
                       readOnly
                       value={shartnomaGrafik?.data.doc_date ?? ''}
@@ -160,10 +176,10 @@ const ShartnomaGrafikDetailsPage = () => {
                   </FormElement>
                 </div>
               </Fieldset>
-              <Fieldset name="Приход">
+              <Fieldset name={t('prixod')}>
                 <div className="flex items-start gap-5">
                   <div className="flex flex-col gap-5">
-                    <FormElement label="Сумма">
+                    <FormElement label={t('summa')}>
                       <Input
                         readOnly
                         value={formatNumber(shartnomaGrafik?.data.summa ?? 0)}
@@ -188,7 +204,7 @@ const ShartnomaGrafikDetailsPage = () => {
                     name={name}
                     render={({ field }) => (
                       <FormItem key={name}>
-                        <FormLabel>{label}</FormLabel>
+                        <FormLabel>{t(label)}</FormLabel>
                         <FormControl>
                           <NumericInput
                             {...field}
@@ -223,7 +239,7 @@ const ShartnomaGrafikDetailsPage = () => {
                   disabled={!main_schet?.data || !organization?.data || !shartnomaGrafik?.data}
                 >
                   <DownloadIcon className="btn-icon icon-start" />
-                  График оплаты
+                  {t('payment-schedule')}
                 </Button>
               </div>
             </DetailsView.Footer>

@@ -75,30 +75,26 @@ type InternalTransferChildFormType = z.infer<typeof InternalTransferChildFormSch
 
 const columns: ColumnDef<InternalTransfer>[] = [
   {
-    key: 'doc_num',
-    header: '№ документа'
+    key: 'doc_num'
   },
   {
     key: 'doc_date',
-    header: 'Дата документа',
     renderCell: (row) => formatLocaleDate(row.doc_date)
   },
   {
     key: 'kimdan_name',
-    header: 'Кимдан'
+    header: 'from-who'
   },
   {
     key: 'kimga_name',
-    header: 'Кимга'
+    header: 'to-whom'
   },
   {
     numeric: true,
-    key: 'summa',
-    header: 'Сумма'
+    key: 'summa'
   },
   {
-    key: 'opisanie',
-    header: 'Описание'
+    key: 'opisanie'
   }
 ]
 

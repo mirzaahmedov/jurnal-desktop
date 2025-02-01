@@ -15,7 +15,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { queryKeys, defaultValues } from '../constants'
 import { normalizeEmptyFields } from '@renderer/common/lib/validation'
-import { useLayout } from '@renderer/common/features/layout'
+import { useLayout, useLayoutStore } from '@renderer/common/features/layout'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
 import { EditableTable } from '@renderer/common/components/editable-table'
 import { podvodkaColumns } from './provodki'
@@ -34,11 +34,15 @@ import {
   createEditorDeleteHandler
 } from '@renderer/common/components/editable-table/helpers'
 import { DetailsView } from '@/common/views'
+import { useTranslation } from 'react-i18next'
 
 const AktDetailsPage = () => {
   const { toast } = useToast()
+  const { t } = useTranslation(['app'])
 
   const main_schet_id = useRequisitesStore((state) => state.main_schet_id)
+  const setLayout = useLayoutStore((store) => store.setLayout)
+
   const id = useParams().id as string
   const navigate = useNavigate()
   const queryClient = useQueryClient()
@@ -182,12 +186,23 @@ const AktDetailsPage = () => {
     [form]
   )
 
-  useLayout({
-    title: id === 'create' ? 'Создать акт-приём пересдач' : 'Редактировать акт-приём пересдач',
-    onBack() {
-      navigate(-1)
-    }
-  })
+  useEffect(() => {
+    setLayout({
+      title: id === 'create' ? t('create') : t('edit'),
+      breadcrumbs: [
+        {
+          title: t('pages.organization')
+        },
+        {
+          path: '/organization/akt',
+          title: t('pages.akt')
+        }
+      ],
+      onBack() {
+        navigate(-1)
+      }
+    })
+  }, [setLayout, navigate, id, t])
 
   useEffect(() => {
     const summa =
@@ -231,7 +246,7 @@ const AktDetailsPage = () => {
                   tabIndex={3}
                   spravochnik={orgSpravochnik}
                   error={form.formState.errors.id_spravochnik_organization}
-                  name="Поставщик"
+                  name={t('supplier')}
                   className="bg-slate-50"
                 />
                 <div className="h-full flex flex-col divide-y divide-border">
@@ -262,7 +277,7 @@ const AktDetailsPage = () => {
           </form>
         </Form>
         <Fieldset
-          name="Подводка"
+          name={t('provodka')}
           className="flex-1 mt-10 pb-24 bg-slate-50"
         >
           <EditableTable

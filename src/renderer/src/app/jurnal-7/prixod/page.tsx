@@ -1,9 +1,9 @@
-import { FileDropzone, GenericTable, LoadingOverlay, LoadingSpinner } from '@/common/components'
+import { FileDropzone, GenericTable, LoadingSpinner } from '@/common/components'
 import { columns, queryKeys } from './config'
 import { usePrixodDelete, usePrixodList } from './service'
 
 import { useConfirm } from '@/common/features/confirm'
-import { useLayout } from '@/common/features/layout'
+import { useLayoutStore } from '@/common/features/layout'
 import { Button } from '@renderer/common/components/ui/button'
 import { ButtonGroup } from '@renderer/common/components/ui/button-group'
 import { Card } from '@renderer/common/components/ui/card'
@@ -15,24 +15,31 @@ import {
 } from '@renderer/common/components/ui/dialog'
 import { DownloadFile } from '@renderer/common/features/file'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
-import { useToggle } from '@renderer/common/hooks'
+import { usePagination, useToggle } from '@renderer/common/hooks'
 import { bytesToMegaBytes } from '@renderer/common/lib/file'
 import { http } from '@renderer/common/lib/http'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { File, Import, Trash } from 'lucide-react'
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { DateRangeForm } from '../common/components/date-range-form'
 import { useJurnal7DateRange } from '../common/components/use-date-range'
+import { useTranslation } from 'react-i18next'
+import { ListView } from '@renderer/common/views'
 
 const MO7PrixodPage = () => {
+  const [file, setFile] = useState<File>()
+
+  const pagination = usePagination()
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const dialogToggle = useToggle()
-  const [file, setFile] = useState<File>()
 
   const { confirm } = useConfirm()
+  const { t } = useTranslation(['app'])
+
+  const setLayout = useLayoutStore((store) => store.setLayout)
   const { main_schet_id, budjet_id } = useRequisitesStore()
   const { form, from, to, applyFilters } = useJurnal7DateRange()
 
@@ -69,20 +76,26 @@ const MO7PrixodPage = () => {
   })
   const { data: prixodList, isFetching } = usePrixodList({
     params: {
+      ...pagination,
       main_schet_id,
-      limit: 10,
-      page: 1,
       from,
       to
     }
   })
 
-  useLayout({
-    title: 'Приход',
-    onCreate() {
-      navigate('create')
-    }
-  })
+  useEffect(() => {
+    setLayout({
+      title: t('pages.prixod-docs'),
+      breadcrumbs: [
+        {
+          title: t('pages.material-warehouse')
+        }
+      ],
+      onCreate() {
+        navigate('create')
+      }
+    })
+  }, [setLayout, navigate, t])
 
   const handleOpenChange = useCallback(
     (open: boolean) => {
@@ -95,7 +108,7 @@ const MO7PrixodPage = () => {
   )
 
   return (
-    <>
+    <ListView>
       <div className="p-5 flex items-center justify-between">
         <DateRangeForm
           form={form}
@@ -104,25 +117,27 @@ const MO7PrixodPage = () => {
         {main_schet_id ? (
           <ButtonGroup>
             <Button onClick={dialogToggle.open}>
-              <Import className="btn-icon icon-start" /> Импорт данных
+              <Import className="btn-icon icon-start" /> {t('import-data')}
             </Button>
             <DownloadFile
               url="/jur_7/doc_prixod/template"
               fileName={`jur7_prixod_shablon-${from}&${to}.xlsx`}
-              buttonText="Скачать шаблон"
+              buttonText={t('download-something', { something: t('template') })}
               params={{}}
             />
             <DownloadFile
               url="jur_7/doc_prixod/report"
               fileName={`jur7_prixod_report-${from}&${to}.xlsx`}
-              buttonText="Скачать отчет"
+              buttonText={t('download-something', { something: t('report') })}
               params={{ from, to, main_schet_id }}
             />
           </ButtonGroup>
         ) : null}
       </div>
-      <div className="flex-1 relative">
-        {isFetching || isDeleting ? <LoadingOverlay /> : null}
+      <ListView.Content
+        loading={isFetching || isDeleting}
+        className="flex-1 relative"
+      >
         <GenericTable
           columnDefs={columns}
           data={prixodList?.data ?? []}
@@ -134,7 +149,13 @@ const MO7PrixodPage = () => {
             })
           }}
         />
-      </div>
+      </ListView.Content>
+      <ListView.Footer>
+        <ListView.Pagination
+          {...pagination}
+          pageCount={prixodList?.meta?.pageCount ?? 0}
+        />
+      </ListView.Footer>
       <Dialog
         open={dialogToggle.isOpen}
         onOpenChange={handleOpenChange}
@@ -184,7 +205,7 @@ const MO7PrixodPage = () => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </>
+    </ListView>
   )
 }
 

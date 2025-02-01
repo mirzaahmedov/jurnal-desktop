@@ -23,11 +23,14 @@ import { cn } from '@/common/lib/utils'
 import { createGroupSpravochnik } from '@/app/super-admin/group/service'
 import { toast } from 'react-toastify'
 import { useEventCallback } from '@renderer/common/hooks'
+import { useTranslation } from 'react-i18next'
 
 type ProvodkaTableProps = {
   form: UseFormReturn<PrixodFormType>
 }
 export const ProvodkaTable = ({ form, ...props }: ProvodkaTableProps) => {
+  const { t } = useTranslation()
+
   const handleChangeChildField = useEventCallback(
     (index: number, key: keyof PrixodChildFormType, value: unknown) => {
       form.setValue(`childs.${index}.${key}`, value as string | number)
@@ -60,90 +63,90 @@ export const ProvodkaTable = ({ form, ...props }: ProvodkaTableProps) => {
               rowSpan={2}
               className="w-48"
             >
-              Группа
+              {t('group')}
             </EditableTableHead>
             <EditableTableHead
               rowSpan={2}
               className="min-w-72"
             >
-              Наименования
+              {t('product-name')}
             </EditableTableHead>
             <EditableTableHead
               rowSpan={2}
               className="min-w-28"
             >
-              Серийный номер
+              {t('serial-num')}
             </EditableTableHead>
             <EditableTableHead
               rowSpan={2}
               className="min-w-28"
             >
-              Инвентарный номер
+              {t('inventar-num')}
             </EditableTableHead>
-            <EditableTableHead rowSpan={2}>Е.И</EditableTableHead>
+            <EditableTableHead rowSpan={2}>{t('ei')}</EditableTableHead>
             <EditableTableHead
               rowSpan={2}
               className="text-right"
             >
-              Количество
-            </EditableTableHead>
-            <EditableTableHead
-              rowSpan={2}
-              className="text-right"
-            >
-              Цена
+              {t('kol')}
             </EditableTableHead>
             <EditableTableHead
               rowSpan={2}
               className="text-right"
             >
-              Сумма
+              {t('sena')}
             </EditableTableHead>
             <EditableTableHead
               rowSpan={2}
               className="text-right"
             >
-              НДС(%)
+              {t('summa')}
             </EditableTableHead>
             <EditableTableHead
               rowSpan={2}
               className="text-right"
             >
-              НДС
+              {t('nds_foiz')}
             </EditableTableHead>
             <EditableTableHead
               rowSpan={2}
               className="text-right"
             >
-              Сумма с НДС
+              {t('nds')}
+            </EditableTableHead>
+            <EditableTableHead
+              rowSpan={2}
+              className="text-right"
+            >
+              {t('nds_summa')}
             </EditableTableHead>
             <EditableTableHead
               rowSpan={2}
               colSpan={2}
               className="text-center"
             >
-              Износь / Старый износ
+              {t('iznos')} / {t('iznos-eski')}
             </EditableTableHead>
             <EditableTableHead
               colSpan={2}
               className="text-center"
             >
-              Дебет
+              {t('debet')}
             </EditableTableHead>
             <EditableTableHead
               colSpan={2}
               className="text-center"
             >
-              Кредит
+              {t('kredit')}
             </EditableTableHead>
-            <EditableTableHead rowSpan={2}>Дата прихода</EditableTableHead>
+            <EditableTableHead rowSpan={2}>{t('prixod-date')}</EditableTableHead>
             <EditableTableHead rowSpan={2}></EditableTableHead>
           </EditableTableRow>
           <EditableTableRow>
-            <EditableTableHead>Счет</EditableTableHead>
-            <EditableTableHead>Субсчет</EditableTableHead>
-            <EditableTableHead>Счет</EditableTableHead>
-            <EditableTableHead className="last:border-solid">Субсчет</EditableTableHead>
+            <EditableTableHead>{t('schet')}</EditableTableHead>
+            <EditableTableHead>{t('subschet')}</EditableTableHead>
+            <EditableTableHead>{t('schet')}</EditableTableHead>
+            <EditableTableHead className="last:border-solid">{t('subschet')}</EditableTableHead>
           </EditableTableRow>
         </TableHeader>
         <TableBody>
@@ -410,7 +413,7 @@ export const ProvodkaTable = ({ form, ...props }: ProvodkaTableProps) => {
                 colSpan={100}
                 className="text-center"
               >
-                No data available.
+                {t('no-display-data')}
               </EditableTableCell>
             </EditableTableRow>
           )}
@@ -443,7 +446,7 @@ export const ProvodkaTable = ({ form, ...props }: ProvodkaTableProps) => {
                   ])
                 }}
               >
-                <CirclePlus className="btn-icon icon-start" /> Добавить
+                <CirclePlus className="btn-icon icon-start" /> {t('add')}
               </Button>
             </EditableTableCell>
           </EditableTableRow>

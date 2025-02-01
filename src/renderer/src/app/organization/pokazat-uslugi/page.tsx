@@ -2,20 +2,25 @@ import { toast, usePagination, useRangeDate } from '@/common/hooks'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 import { GenericTable } from '@/common/components'
-import { ListView } from '@/common/views'
-import type { PokazatUslugi } from '@/common/models'
-import { pokazatUslugiColumns } from './columns'
-import { pokazatUslugiService } from './service'
-import { queryKeys } from './constants'
 import { useConfirm } from '@/common/features/confirm'
-import { useLayout } from '@/common/features/layout'
-import { useNavigate } from 'react-router-dom'
+import { useLayoutStore } from '@/common/features/layout'
+import type { PokazatUslugi } from '@/common/models'
+import { ListView } from '@/common/views'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
+import { useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router-dom'
+import { pokazatUslugiColumns } from './columns'
+import { queryKeys } from './constants'
+import { pokazatUslugiService } from './service'
 
 const PokazatUslugiPage = () => {
   const { confirm } = useConfirm()
+  const { t } = useTranslation(['app'])
 
   const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
+  const setLayout = useLayoutStore((store) => store.setLayout)
+
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const pagination = usePagination()
@@ -59,12 +64,19 @@ const PokazatUslugiPage = () => {
     })
   }
 
-  useLayout({
-    title: 'Показать услуги',
-    onCreate: () => {
-      navigate('create')
-    }
-  })
+  useEffect(() => {
+    setLayout({
+      title: t('pages.service'),
+      breadcrumbs: [
+        {
+          title: t('pages.organization')
+        }
+      ],
+      onCreate() {
+        navigate('create')
+      }
+    })
+  }, [setLayout, t, navigate])
 
   return (
     <ListView>

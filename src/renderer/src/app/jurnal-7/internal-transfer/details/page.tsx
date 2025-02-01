@@ -23,15 +23,19 @@ import isEmpty from 'just-is-empty'
 import { toast } from '@/common/hooks/use-toast'
 import { useForm } from 'react-hook-form'
 import { useJurnal7DefaultsStore } from '../../common/features/defaults'
-import { useLayout } from '@/common/features/layout'
+import { useLayoutStore } from '@/common/features/layout'
 import { useSpravochnik } from '@/common/features/spravochnik'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useTranslation } from 'react-i18next'
 
 const InternalTransferDetailsPage = () => {
   const { id } = useParams()
+  const { t } = useTranslation(['app'])
 
   const { from } = useJurnal7DefaultsStore()
+  const setLayout = useLayoutStore((store) => store.setLayout)
   const { data: internalTransfer, isFetching } = useInternalTransferGet(Number(id))
+
   const { mutate: createInternalTransfer, isPending: isCreating } = useInternalTransferCreate({
     onSuccess: () => {
       toast({
@@ -119,13 +123,23 @@ const InternalTransferDetailsPage = () => {
     }
   }, [id, from, form])
 
-  useLayout({
-    title:
-      id === 'create' ? 'Создать внутрь. пере. документ' : 'Редактировать внутрь. пере. документ',
-    onBack() {
-      navigate(-1)
-    }
-  })
+  useEffect(() => {
+    setLayout({
+      title: id === 'create' ? t('create') : t('edit'),
+      breadcrumbs: [
+        {
+          title: t('pages.material-warehouse')
+        },
+        {
+          title: t('pages.internal-docs'),
+          path: '/journal-7/internal-transfer'
+        }
+      ],
+      onBack() {
+        navigate(-1)
+      }
+    })
+  }, [setLayout, navigate, id, t])
 
   const { errors } = form.formState
   useEffect(() => {
@@ -151,12 +165,12 @@ const InternalTransferDetailsPage = () => {
             </div>
             <div className="grid grid-cols-2">
               <ResponsibleFields
-                name="От кого"
+                name={t('from-who')}
                 spravochnik={kimdanResponsibleSpravochnik}
                 error={form.formState.errors.kimdan_id}
               />
               <ResponsibleFields
-                name="Кому"
+                name={t('to-whom')}
                 spravochnik={kimgaResponsibleSpravochnik}
                 error={form.formState.errors.kimga_id}
               />

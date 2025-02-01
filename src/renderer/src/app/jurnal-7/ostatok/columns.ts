@@ -1,21 +1,21 @@
 import type { OstatokProduct } from '@renderer/common/models/ostatok'
-import { formatLocaleDate, formatNumber } from '@renderer/common/lib/format'
-
 import type { ColumnDef } from '@renderer/common/components'
-import { HeaderGroup } from '@renderer/common/components/generic-table/table'
+import type { HeaderGroup } from '@renderer/common/components/generic-table/table'
+
+import { formatLocaleDate, formatNumber } from '@renderer/common/lib/format'
 
 export const ostatokColumns: ColumnDef<OstatokProduct>[] = [
   {
     key: 'naimenovanie_tovarov_jur7_id',
-    header: 'Код товара'
+    header: 'code'
   },
   {
     key: 'naimenovanie_tovarov',
-    header: 'Наименование товара'
+    header: 'name'
   },
   {
     key: 'edin',
-    header: 'Един.'
+    header: 'ei'
   },
   {
     numeric: true,
@@ -76,89 +76,89 @@ export const ostatokHeaderGroups: HeaderGroup<OstatokProduct>[][] = [
   [
     {
       key: 'naimenovanie_tovarov_jur7_id',
-      header: 'Код товара',
+      header: 'code',
       rowSpan: 2
     },
     {
       key: 'naimenovanie_tovarov',
-      header: 'Наименование товара',
+      header: 'name',
       rowSpan: 2
     },
     {
       key: 'edin',
-      header: 'Един.',
+      header: 'ei',
       rowSpan: 2
     },
     {
       key: 'from',
-      header: 'Начало',
+      header: 'start',
       colSpan: 2,
       headerClassName: 'text-center'
     },
     {
       key: 'internal.prixod',
-      header: 'Приход',
+      header: 'prixod',
       colSpan: 2,
       headerClassName: 'text-center'
     },
     {
       key: 'internal.rasxod',
-      header: 'Расход',
+      header: 'rasxod',
       colSpan: 2,
       headerClassName: 'text-center'
     },
     {
       key: 'to',
-      header: 'Конец',
+      header: 'end',
       colSpan: 2,
       headerClassName: 'text-center'
     },
     {
       key: 'prixod_data',
       rowSpan: 2,
-      header: 'Дата прихода'
+      header: 'data-prixod'
     }
   ],
   [
     {
       numeric: true,
       key: 'from.kol',
-      header: 'Кол.'
+      header: 'kol'
     },
     {
       numeric: true,
       key: 'from.summa',
-      header: 'Сумма'
+      header: 'summa'
     },
     {
       numeric: true,
       key: 'internal.prixod.kol',
-      header: 'Кол.'
+      header: 'kol'
     },
     {
       numeric: true,
       key: 'internal.prixod.summa',
-      header: 'Сумма'
+      header: 'summa'
     },
     {
       numeric: true,
       key: 'internal.rasxod.kol',
-      header: 'Кол.'
+      header: 'kol'
     },
     {
       numeric: true,
       key: 'internal.rasxod.summa',
-      header: 'Сумма'
+      header: 'summa'
     },
     {
       numeric: true,
       key: 'to.kol',
-      header: 'Кол.'
+      header: 'kol'
     },
     {
       numeric: true,
       key: 'to.summa',
-      header: 'Сумма',
+      header: 'summa',
       headerClassName: 'last:border-solid'
     }
   ]

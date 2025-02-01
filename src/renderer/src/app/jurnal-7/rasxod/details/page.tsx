@@ -5,24 +5,25 @@ import {
   ResponsibleFields,
   SummaFields
 } from '@/common/widget/form'
-import { RasxodFormSchema, defaultValues } from '../config'
 import { parseDate, withinMonth } from '@renderer/common/lib/date'
 import { useEffect, useMemo, useRef } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import { RasxodFormSchema, defaultValues } from '../config'
 import { useRasxodCreate, useRasxodGet, useRasxodUpdate } from '../service'
 
-import { DetailsView } from '@renderer/common/views'
 import { Form } from '@/common/components/ui/form'
-import { ProvodkaTable } from './provodka-table'
-import { createResponsibleSpravochnik } from '../../responsible/service'
-import { focusInvalidInput } from '@renderer/common/lib/errors'
-import isEmpty from 'just-is-empty'
-import { toast } from '@/common/hooks/use-toast'
-import { useForm } from 'react-hook-form'
-import { useJurnal7DefaultsStore } from '../../common/features/defaults'
-import { useLayout } from '@/common/features/layout'
+import { useLayoutStore } from '@/common/features/layout'
 import { useSpravochnik } from '@/common/features/spravochnik'
+import { toast } from '@/common/hooks/use-toast'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { focusInvalidInput } from '@renderer/common/lib/errors'
+import { DetailsView } from '@renderer/common/views'
+import isEmpty from 'just-is-empty'
+import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
+import { useJurnal7DefaultsStore } from '../../common/features/defaults'
+import { createResponsibleSpravochnik } from '../../responsible/service'
+import { ProvodkaTable } from './provodka-table'
 
 const MO7RasxodDetailsPage = () => {
   const prevData = useRef({
@@ -31,6 +32,9 @@ const MO7RasxodDetailsPage = () => {
   })
 
   const { id } = useParams()
+  const { t } = useTranslation(['app'])
+
+  const setLayout = useLayoutStore((store) => store.setLayout)
 
   const { from } = useJurnal7DefaultsStore()
   const { data: rasxod, isFetching } = useRasxodGet(Number(id))
@@ -138,12 +142,23 @@ const MO7RasxodDetailsPage = () => {
     }
   }, [id, from, form])
 
-  useLayout({
-    title: id === 'create' ? 'Создать расходный документ' : 'Редактировать расходный документ',
-    onBack() {
-      navigate(-1)
-    }
-  })
+  useEffect(() => {
+    setLayout({
+      title: id === 'create' ? t('create') : t('edit'),
+      breadcrumbs: [
+        {
+          title: t('pages.material-warehouse')
+        },
+        {
+          title: t('pages.rasxod-docs'),
+          path: '/journal-7/rasxod'
+        }
+      ],
+      onBack() {
+        navigate(-1)
+      }
+    })
+  }, [setLayout, navigate, id, t])
 
   const { errors } = form.formState
   useEffect(() => {
@@ -172,7 +187,7 @@ const MO7RasxodDetailsPage = () => {
             </div>
             <div className="grid grid-cols-2">
               <ResponsibleFields
-                name="От кого"
+                name={t('from-who')}
                 spravochnik={responsibleSpravochnik}
                 error={form.formState.errors.kimdan_id}
               />

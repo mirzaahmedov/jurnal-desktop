@@ -1,31 +1,37 @@
-import { GenericTable, LoadingOverlay, Pagination, usePagination } from '@/common/components'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-
 import type { Jur7Podrazdelenie } from '@/common/models'
-import Subdivision7Dialog from './dialog'
-import { subdivision7Columns } from './columns'
-import { subdivision7QueryKeys } from './constants'
-import { subdivision7Service } from './service'
-import { toast } from '@/common/hooks/use-toast'
+
+import { GenericTable } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
-import { useLayout } from '@/common/features/layout'
-import { useState } from 'react'
+import { useLayoutStore } from '@/common/features/layout'
+import { toast } from '@/common/hooks/use-toast'
 import { useToggle } from '@/common/hooks/use-toggle'
+import { usePagination } from '@renderer/common/hooks'
+import { ListView } from '@renderer/common/views'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { podrazdelenie7Columns } from './columns'
+import { subdivision7QueryKeys } from './constants'
+import Podrazdelenie7Dialog from './dialog'
+import { subdivision7Service } from './service'
 
 const Subdivision7Page = () => {
   const [selected, setSelected] = useState<null | Jur7Podrazdelenie>(null)
 
+  const pagination = usePagination()
+  const dialogToggle = useToggle()
+
+  const setLayout = useLayoutStore((store) => store.setLayout)
+
+  const { t } = useTranslation(['app'])
   const { confirm } = useConfirm()
-  const { currentPage, itemsPerPage } = usePagination()
-  const { open, close, isOpen: active } = useToggle()
 
   const queryClient = useQueryClient()
   const { data: subdivision7List, isFetching } = useQuery({
     queryKey: [
       subdivision7QueryKeys.getAll,
       {
-        page: currentPage,
-        limit: itemsPerPage
+        ...pagination
       }
     ],
     queryFn: subdivision7Service.getAll
@@ -51,16 +57,23 @@ const Subdivision7Page = () => {
     }
   })
 
-  useLayout({
-    title: 'Журнал подразделениe 7',
-    onCreate() {
-      setSelected(null)
-      open()
-    }
-  })
+  useEffect(() => {
+    setLayout({
+      title: t('pages.podrazdelenie'),
+      breadcrumbs: [
+        {
+          title: t('pages.material-warehouse')
+        }
+      ],
+      onCreate() {
+        setSelected(null)
+        dialogToggle.open()
+      }
+    })
+  }, [setLayout, t])
 
   const handleClickEdit = (row: Jur7Podrazdelenie) => {
-    open()
+    dialogToggle.open()
     setSelected(row)
   }
   const handleClickDelete = (row: Jur7Podrazdelenie) => {
@@ -73,25 +86,27 @@ const Subdivision7Page = () => {
   }
 
   return (
-    <>
-      <div className="relative flex-1">
-        {isFetching || isPending ? <LoadingOverlay /> : null}
+    <ListView>
+      <ListView.Content loading={isFetching || isPending}>
         <GenericTable
-          columnDefs={subdivision7Columns}
+          columnDefs={podrazdelenie7Columns}
           data={subdivision7List?.data ?? []}
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}
         />
-      </div>
-      <div className="px-10 py-5">
-        <Pagination pageCount={subdivision7List?.meta.pageCount ?? 0} />
-      </div>
-      <Subdivision7Dialog
-        open={active}
-        onClose={close}
-        data={selected}
+      </ListView.Content>
+      <ListView.Footer>
+        <ListView.Pagination
+          {...pagination}
+          pageCount={subdivision7List?.meta.pageCount ?? 0}
+        />
+      </ListView.Footer>
+      <Podrazdelenie7Dialog
+        open={dialogToggle.isOpen}
+        onClose={dialogToggle.close}
+        selected={selected}
       />
-    </>
+    </ListView>
   )
 }
 

@@ -3,6 +3,7 @@ import { SpravochnikField, SpravochnikFields } from '@/common/features/spravochn
 import type { FormSpravochnikFieldsComponent } from './types'
 import type { Smeta } from '@/common/models'
 import { cn } from '@renderer/common/lib/utils'
+import { useTranslation } from 'react-i18next'
 
 const SmetaFields: FormSpravochnikFieldsComponent<Smeta> = ({
   tabIndex,
@@ -15,11 +16,14 @@ const SmetaFields: FormSpravochnikFieldsComponent<Smeta> = ({
   ...props
 }) => {
   const { inputRef, ...spravochnikProps } = spravochnik
+
+  const { t } = useTranslation()
+
   return (
     <SpravochnikFields
       {...props}
       className={cn(dialog && 'p-0 mt-5', props.className)}
-      name={name ?? 'Смета'}
+      name={name ?? t('smeta')}
     >
       <div
         {...containerProps}
@@ -32,7 +36,7 @@ const SmetaFields: FormSpravochnikFieldsComponent<Smeta> = ({
           disabled={disabled}
           inputRef={inputRef}
           getInputValue={(selected) => selected?.smeta_name ?? ''}
-          label="Название"
+          label={t('name')}
           formElementProps={{
             direction: dialog ? 'column' : 'row'
           }}
@@ -45,7 +49,7 @@ const SmetaFields: FormSpravochnikFieldsComponent<Smeta> = ({
           tabIndex={-1}
           disabled={disabled}
           getInputValue={(selected) => selected?.smeta_number ?? ''}
-          label="Номер"
+          label={t('number')}
           formElementProps={{
             direction: dialog ? 'column' : 'row'
           }}

@@ -360,7 +360,7 @@ const BankRasxodDetailtsPage = () => {
                     type="porucheniya"
                     tabIndex={8}
                     fileName={`поручения-${form.watch('doc_num')}.xlsx`}
-                    buttonText="Создать Поручения"
+                    buttonText={t('create-porucheniya')}
                     data={{
                       rasxod: form.getValues(),
                       main_schet: main_schet.data,
@@ -371,7 +371,7 @@ const BankRasxodDetailtsPage = () => {
                     type="porucheniya_nalog"
                     tabIndex={8}
                     fileName={`поручения-${form.watch('doc_num')}_налог.xlsx`}
-                    buttonText="Создать Поручения (Налог)"
+                    buttonText={`${t('create-porucheniya')} (${t('tax')})`}
                     data={{
                       rasxod: form.getValues(),
                       main_schet: main_schet.data,

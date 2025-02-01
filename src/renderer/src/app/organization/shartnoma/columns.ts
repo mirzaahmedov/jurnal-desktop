@@ -5,25 +5,21 @@ import { formatLocaleDate } from '@/common/lib/format'
 
 export const shartnomaColumns: ColumnDef<Shartnoma>[] = [
   {
-    key: 'doc_num',
-    header: '№ договора'
+    key: 'doc_num'
   },
   {
     key: 'doc_date',
-    header: 'Дата договора',
     renderCell: (row) => formatLocaleDate(row.doc_date)
   },
   {
     numeric: true,
-    key: 'summa',
-    header: 'Сумма'
+    key: 'summa'
   },
   {
-    key: 'opisanie',
-    header: 'Описание'
+    key: 'opisanie'
   },
   {
     key: 'smeta_number',
-    header: 'Смета'
+    header: 'smeta'
   }
 ]

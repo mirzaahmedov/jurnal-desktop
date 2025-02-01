@@ -1,22 +1,27 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { usePagination, useRangeDate } from '@/common/hooks'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
-import type { Akt } from '@/common/models'
-import { DownloadFile } from '@renderer/common/features/file'
 import { GenericTable } from '@/common/components'
+import { useConfirm } from '@/common/features/confirm'
+import { useLayoutStore } from '@/common/features/layout'
+import type { Akt } from '@/common/models'
 import { ListView } from '@/common/views'
-import { aktService } from './service'
+import { DownloadFile } from '@renderer/common/features/file'
+import { useRequisitesStore } from '@renderer/common/features/requisites'
+import { useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router-dom'
 import { columns } from './columns'
 import { queryKeys } from './constants'
-import { useConfirm } from '@/common/features/confirm'
-import { useLayout } from '@/common/features/layout'
-import { useNavigate } from 'react-router-dom'
-import { useRequisitesStore } from '@renderer/common/features/requisites'
+import { aktService } from './service'
 
 const AktPage = () => {
   const { confirm } = useConfirm()
+  const { t } = useTranslation(['app'])
 
   const main_schet_id = useRequisitesStore((state) => state.main_schet_id)
+  const setLayout = useLayoutStore((store) => store.setLayout)
+
   const queryClient = useQueryClient()
   const navigate = useNavigate()
   const pagination = usePagination()
@@ -54,12 +59,19 @@ const AktPage = () => {
     })
   }
 
-  useLayout({
-    title: 'Акт-приём пересдач',
-    onCreate() {
-      navigate('create')
-    }
-  })
+  useEffect(() => {
+    setLayout({
+      title: t('pages.akt'),
+      breadcrumbs: [
+        {
+          title: t('pages.organization')
+        }
+      ],
+      onCreate() {
+        navigate('create')
+      }
+    })
+  }, [setLayout, t])
 
   return (
     <ListView>
@@ -73,7 +85,7 @@ const AktPage = () => {
             from: dates.from,
             to: dates.to
           }}
-          buttonText="Aкт приема пересдач шапка"
+          buttonText={t('cap-report')}
         />
       </ListView.Header>
       <ListView.Content loading={isFetching || isPending}>

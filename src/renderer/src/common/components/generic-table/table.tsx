@@ -92,7 +92,7 @@ export const GenericTable = <T extends Record<string, unknown>>({
       {...props}
       className={twMerge('relative', props.className)}
     >
-      {caption ? <TableCaption>A list of your recent invoices.</TableCaption> : null}
+      {caption ? <TableCaption>{caption}</TableCaption> : null}
       <TableHeader className="sticky top-0 z-50 artificial-border">
         {Array.isArray(headerGroups)
           ? headerGroups.map((headerGroup, index) => (
@@ -222,7 +222,7 @@ export const GenericTable = <T extends Record<string, unknown>>({
               colSpan={100}
               className="w-full text-center py-20 text-slate-400"
             >
-              {placeholder ?? 'Нет данных для отображения'}
+              {placeholder ?? t('no-display-data')}
             </GenericTableCell>
           </GenericTableRow>
         )}

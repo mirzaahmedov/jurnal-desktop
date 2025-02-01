@@ -1,52 +1,56 @@
 import type { PokazatUslugiForm, PokazatUslugiProvodkaForm } from '../service'
 
-import {
-  PokazatUslugiFormSchema,
-  PokazatUslugiProvodkaFormSchema,
-  pokazatUslugiService
-} from '../service'
-import { useCallback, useEffect } from 'react'
-import { useSpravochnik } from '@/common/features/spravochnik'
-import { Form } from '@/common/components/ui/form'
-import { TypeSchetOperatsii } from '@/common/models'
-import { useToast } from '@/common/hooks/use-toast'
-import { useNavigate, useParams } from 'react-router-dom'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { queryKeys, defaultValues } from '../constants'
-import { normalizeEmptyFields } from '@/common/lib/validation'
-import { useLayout } from '@/common/features/layout'
-import { useRequisitesStore } from '@renderer/common/features/requisites'
-import { createOrganizationSpravochnik } from '@renderer/app/region-spravochnik/organization'
 import { createOperatsiiSpravochnik } from '@/app/super-admin/operatsii'
-import { createShartnomaSpravochnik } from '@renderer/app/organization/shartnoma'
+import { Fieldset } from '@/common/components'
+import { Form } from '@/common/components/ui/form'
+import { useLayoutStore } from '@/common/features/layout'
+import { useSpravochnik } from '@/common/features/spravochnik'
+import { useToast } from '@/common/hooks/use-toast'
+import { normalizeEmptyFields } from '@/common/lib/validation'
+import { TypeSchetOperatsii } from '@/common/models'
 import {
-  OperatsiiFields,
-  ShartnomaFields,
   DocumentFields,
+  OperatsiiFields,
   OpisanieFields,
   OrganizationFields,
+  ShartnomaFields,
   SummaFields
 } from '@/common/widget/form'
-import { Fieldset } from '@/common/components'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { createShartnomaSpravochnik } from '@renderer/app/organization/shartnoma'
+import { createOrganizationSpravochnik } from '@renderer/app/region-spravochnik/organization'
 import { EditableTable } from '@renderer/common/components/editable-table'
-import { podvodkaColumns } from './podvodki'
 import {
   createEditorChangeHandler,
   createEditorCreateHandler,
   createEditorDeleteHandler
 } from '@renderer/common/components/editable-table/helpers'
+import { useRequisitesStore } from '@renderer/common/features/requisites'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useCallback, useEffect } from 'react'
+import { useForm } from 'react-hook-form'
+import { useNavigate, useParams } from 'react-router-dom'
+import { defaultValues, queryKeys } from '../constants'
+import {
+  PokazatUslugiFormSchema,
+  PokazatUslugiProvodkaFormSchema,
+  pokazatUslugiService
+} from '../service'
+import { podvodkaColumns } from './podvodki'
 
 import { DetailsView } from '@/common/views'
+import { useTranslation } from 'react-i18next'
 
 const PokazatUslugiDetailsPage = () => {
   const { toast } = useToast()
+  const { t } = useTranslation(['app'])
 
   const id = useParams().id as string
   const navigate = useNavigate()
   const queryClient = useQueryClient()
+
   const main_schet_id = useRequisitesStore((state) => state.main_schet_id)
+  const setLayout = useLayoutStore((store) => store.setLayout)
 
   const form = useForm({
     resolver: zodResolver(PokazatUslugiFormSchema),
@@ -181,12 +185,23 @@ const PokazatUslugiDetailsPage = () => {
     [form]
   )
 
-  useLayout({
-    title: id ? 'Создать услуги' : 'Редактировать услуги',
-    onBack() {
-      navigate(-1)
-    }
-  })
+  useEffect(() => {
+    setLayout({
+      title: id === 'create' ? t('create') : t('edit'),
+      breadcrumbs: [
+        {
+          title: t('pages.organization')
+        },
+        {
+          path: '/organization/pokazat-uslugi',
+          title: t('pages.service')
+        }
+      ],
+      onBack() {
+        navigate(-1)
+      }
+    })
+  }, [setLayout, navigate, id, t])
 
   useEffect(() => {
     const summa =
@@ -229,7 +244,7 @@ const PokazatUslugiDetailsPage = () => {
                 tabIndex={3}
                 spravochnik={orgSpravochnik}
                 error={form.formState.errors.id_spravochnik_organization}
-                name="Покупатель"
+                name={t('buyer')}
                 className="bg-slate-50"
               />
               <div className="h-full flex flex-col divide-y divide-border">
@@ -259,7 +274,7 @@ const PokazatUslugiDetailsPage = () => {
           </form>
         </Form>
         <Fieldset
-          name="Подводка"
+          name={t('provodka')}
           className="flex-1 mt-10 pb-24 bg-slate-50"
         >
           <EditableTable

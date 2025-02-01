@@ -6,17 +6,15 @@ import { formatLocaleDate } from '@/common/lib/format'
 
 export const columns: ColumnDef<Akt>[] = [
   {
-    key: 'doc_num',
-    header: 'Документ №'
+    key: 'doc_num'
   },
   {
     key: 'doc_date',
-    header: 'Документ дата',
     renderCell: (row) => formatLocaleDate(row.doc_date)
   },
   {
     key: 'id_spravochnik_organization',
-    header: 'Организация',
+    header: 'organization',
     renderCell: (row) => (
       <TooltipCellRenderer
         data={row}
@@ -31,7 +29,7 @@ export const columns: ColumnDef<Akt>[] = [
   },
   {
     key: 'shartnomalar_organization_id',
-    header: 'О договоре',
+    header: 'shartnoma',
     renderCell: (row) =>
       row.shartnomalar_organization_doc_num ? (
         <div>
@@ -51,11 +49,9 @@ export const columns: ColumnDef<Akt>[] = [
   },
   {
     numeric: true,
-    key: 'summa',
-    header: 'Сумма'
+    key: 'summa'
   },
   {
-    key: 'opisanie',
-    header: 'Описание'
+    key: 'opisanie'
   }
 ]

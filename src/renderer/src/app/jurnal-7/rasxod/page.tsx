@@ -1,27 +1,32 @@
-import { GenericTable, LoadingOverlay } from '@/common/components'
+import { GenericTable } from '@/common/components'
 import { columns, queryKeys } from './config'
 import { useRasxodDelete, useRasxodList } from './service'
 
-import { DateRangeForm } from '../common/components/date-range-form'
-import { toast } from '@/common/hooks/use-toast'
 import { useConfirm } from '@/common/features/confirm'
-import { useJurnal7DateRange } from '../common/components/use-date-range'
-import { useLayout } from '@/common/features/layout'
-import { useNavigate } from 'react-router-dom'
-import { useQueryClient } from '@tanstack/react-query'
+import { toast } from '@/common/hooks/use-toast'
+import { useLayoutStore } from '@renderer/common/features/layout'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
+import { usePagination } from '@renderer/common/hooks'
+import { ListView } from '@renderer/common/views'
+import { useQueryClient } from '@tanstack/react-query'
+import { useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router-dom'
+import { DateRangeForm } from '../common/components/date-range-form'
+import { useJurnal7DateRange } from '../common/components/use-date-range'
 
 const MO7RasxodPage = () => {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
+  const pagination = usePagination()
   const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
+  const setLayout = useLayoutStore((store) => store.setLayout)
 
+  const { t } = useTranslation(['app'])
   const { confirm } = useConfirm()
   const { form, from, to, applyFilters } = useJurnal7DateRange()
 
-  console.log({ from, to })
-
-  const { mutate: deleteRasxod } = useRasxodDelete({
+  const { mutate: deleteRasxod, isPending } = useRasxodDelete({
     onSuccess() {
       queryClient.invalidateQueries({
         queryKey: [queryKeys.getAll]
@@ -39,31 +44,36 @@ const MO7RasxodPage = () => {
   })
   const { data: rasxodList, isFetching } = useRasxodList({
     params: {
+      ...pagination,
       main_schet_id,
-      limit: 10,
-      page: 1,
       from,
       to
     }
   })
 
-  useLayout({
-    title: 'Расходный документ',
-    onCreate() {
-      navigate('create')
-    }
-  })
+  useEffect(() => {
+    setLayout({
+      title: t('pages.rasxod-docs'),
+      breadcrumbs: [
+        {
+          title: t('pages.material-warehouse')
+        }
+      ],
+      onCreate() {
+        navigate('create')
+      }
+    })
+  }, [setLayout, navigate, t])
 
   return (
-    <>
-      <div className="p-5">
+    <ListView>
+      <ListView.Header>
         <DateRangeForm
           form={form}
           onSubmit={applyFilters}
         />
-      </div>
-      <div className="flex-1 relative">
-        {isFetching ? <LoadingOverlay /> : null}
+      </ListView.Header>
+      <ListView.Content loading={isFetching || isPending}>
         <GenericTable
           columnDefs={columns}
           data={rasxodList?.data ?? []}
@@ -75,8 +85,14 @@ const MO7RasxodPage = () => {
             })
           }}
         />
-      </div>
-    </>
+      </ListView.Content>
+      <ListView.Footer>
+        <ListView.Pagination
+          {...pagination}
+          pageCount={rasxodList?.meta?.pageCount ?? 0}
+        />
+      </ListView.Footer>
+    </ListView>
   )
 }
 

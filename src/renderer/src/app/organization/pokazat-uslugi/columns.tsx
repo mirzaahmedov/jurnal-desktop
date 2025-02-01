@@ -6,17 +6,15 @@ import { TooltipCellRenderer } from '@/common/components/table/renderers'
 
 export const pokazatUslugiColumns: ColumnDef<PokazatUslugi>[] = [
   {
-    key: 'doc_num',
-    header: 'Документ №'
+    key: 'doc_num'
   },
   {
     key: 'doc_date',
-    header: 'Документ дата',
     renderCell: (row) => formatLocaleDate(row.doc_date)
   },
   {
     key: 'id_spravochnik_organization',
-    header: 'Организация',
+    header: 'organization',
     renderCell: (row) => (
       <TooltipCellRenderer
         data={row}
@@ -31,7 +29,7 @@ export const pokazatUslugiColumns: ColumnDef<PokazatUslugi>[] = [
   },
   {
     key: 'shartnomalar_organization_id',
-    header: 'О договоре',
+    header: 'shartnoma',
     renderCell: (row) => (
       <div>
         <h6 className="text-base leading-none font-bold">
@@ -46,11 +44,9 @@ export const pokazatUslugiColumns: ColumnDef<PokazatUslugi>[] = [
   },
   {
     numeric: true,
-    key: 'summa',
-    header: 'Сумма'
+    key: 'summa'
   },
   {
-    key: 'opisanie',
-    header: 'Описание'
+    key: 'opisanie'
   }
 ]

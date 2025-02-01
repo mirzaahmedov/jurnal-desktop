@@ -1,18 +1,20 @@
-import { ChooseSpravochnik, GenericTable, Pagination } from '@/common/components'
+import { ChooseSpravochnik, GenericTable } from '@/common/components'
 
-import { ListView } from '@/common/views'
+import { useLayoutStore } from '@/common/features/layout'
+import { useSpravochnik } from '@/common/features/spravochnik'
+import { usePagination } from '@/common/hooks'
 import type { ShartnomaGrafik } from '@/common/models'
+import { ListView } from '@/common/views'
 import { createOrganizationSpravochnik } from '@renderer/app/region-spravochnik/organization'
+import { useRequisitesStore } from '@renderer/common/features/requisites'
+import { useQuery } from '@tanstack/react-query'
+import { useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router-dom'
 import { shartnomaGrafikColumns } from './columns'
 import { shartnomaGrafikQueryKeys } from './constants'
-import { shartnomaGrafikService } from './service'
-import { useLayout } from '@/common/features/layout'
-import { useNavigate } from 'react-router-dom'
 import { useOrgId } from './hooks'
-import { usePagination } from '@/common/hooks'
-import { useQuery } from '@tanstack/react-query'
-import { useRequisitesStore } from '@renderer/common/features/requisites'
-import { useSpravochnik } from '@/common/features/spravochnik'
+import { shartnomaGrafikService } from './service'
 
 const ShartnomaGrafikPage = () => {
   const [orgId, setOrgId] = useOrgId()
@@ -20,6 +22,9 @@ const ShartnomaGrafikPage = () => {
   const budjet_id = useRequisitesStore((store) => store.budjet_id)
   const navigate = useNavigate()
   const pagination = usePagination()
+  const setLayout = useLayoutStore((store) => store.setLayout)
+
+  const { t } = useTranslation(['app'])
 
   const orgSpravochnik = useSpravochnik(
     createOrganizationSpravochnik({
@@ -42,12 +47,19 @@ const ShartnomaGrafikPage = () => {
   })
 
   const handleClickEdit = (row: ShartnomaGrafik) => {
-    navigate(`${row.id}?org_id=${row.spravochnik_organization_id}`)
+    navigate(`${row.id}?org_id=${row.spravochnik_organization_id}&org_selected=${!!orgId}`)
   }
 
-  useLayout({
-    title: 'График договорах'
-  })
+  useEffect(() => {
+    setLayout({
+      title: t('pages.shartnoma-grafik'),
+      breadcrumbs: [
+        {
+          title: t('pages.organization')
+        }
+      ]
+    })
+  }, [setLayout, navigate, t])
 
   return (
     <ListView>
@@ -76,7 +88,10 @@ const ShartnomaGrafikPage = () => {
         />
       </ListView.Content>
       <ListView.Footer>
-        <Pagination pageCount={shartnomaGrafikList?.meta?.pageCount ?? 0} />
+        <ListView.Pagination
+          {...pagination}
+          pageCount={shartnomaGrafikList?.meta?.pageCount ?? 0}
+        />
       </ListView.Footer>
     </ListView>
   )

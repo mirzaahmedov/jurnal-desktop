@@ -6,12 +6,14 @@ import type { FormEditableFieldsComponent } from '@renderer/common/widget/form'
 import type { ShartnomaFormValues } from '../service'
 import { Switch } from '@renderer/common/components/ui/switch'
 import { cn } from '@renderer/common/lib/utils'
+import { useTranslation } from 'react-i18next'
 
 const PudratchiFields: FormEditableFieldsComponent<ShartnomaFormValues> = ({
   form,
   name,
   ...props
 }) => {
+  const { t } = useTranslation()
   return (
     <Fieldset
       {...props}
@@ -24,7 +26,7 @@ const PudratchiFields: FormEditableFieldsComponent<ShartnomaFormValues> = ({
           render={({ field }) => (
             <FormItem className="flex items-center gap-5">
               <FormLabel className={cn('transition-colors', field.value && 'text-slate-400')}>
-                Покупатель
+                {t('buyer')}
               </FormLabel>
               <FormControl>
                 <Switch
@@ -38,7 +40,7 @@ const PudratchiFields: FormEditableFieldsComponent<ShartnomaFormValues> = ({
               <FormLabel
                 className={cn('transition-colors !mt-0', !field.value && 'text-slate-400')}
               >
-                Поставщик
+                {t('supplier')}
               </FormLabel>
             </FormItem>
           )}

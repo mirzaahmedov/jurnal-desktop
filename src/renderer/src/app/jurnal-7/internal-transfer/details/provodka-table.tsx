@@ -20,11 +20,13 @@ import { SpravochnikInput } from '@/common/features/spravochnik'
 import { UseFormReturn } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import { useOstatokProduct } from '../../common/features/ostatok-product/use-ostatok-product'
+import { useTranslation } from 'react-i18next'
 
 type ProvodkaTableProps = {
   form: UseFormReturn<InternalTransferFormType>
 }
 export const ProvodkaTable = ({ form }: ProvodkaTableProps) => {
+  const { t } = useTranslation()
   return (
     <form
       onSubmit={(e) => {
@@ -41,70 +43,70 @@ export const ProvodkaTable = ({ form }: ProvodkaTableProps) => {
       <Table className="border border-slate-200 table-xs">
         <TableHeader>
           <EditableTableRow>
-            <EditableTableHead rowSpan={2}>Код</EditableTableHead>
+            <EditableTableHead rowSpan={2}>{t('code')}</EditableTableHead>
             <EditableTableHead
               rowSpan={2}
               className="min-w-72"
             >
-              Наименования
+              {t('product-name')}
             </EditableTableHead>
             <EditableTableHead
               rowSpan={2}
               className="w-48"
             >
-              Группа
+              {t('group')}
             </EditableTableHead>
-            <EditableTableHead rowSpan={2}>Е.И</EditableTableHead>
+            <EditableTableHead rowSpan={2}>{t('ei')}</EditableTableHead>
             <EditableTableHead
               rowSpan={2}
               className="min-w-28"
             >
-              Серийный номер
+              {t('serial-num')}
             </EditableTableHead>
             <EditableTableHead
               rowSpan={2}
               className="min-w-28"
             >
-              Инвентарный номер
+              {t('inventar-num')}
             </EditableTableHead>
             <EditableTableHead
               rowSpan={2}
               className="text-right"
             >
-              Количество
+              {t('kol')}
             </EditableTableHead>
             <EditableTableHead
               rowSpan={2}
               className="text-right"
             >
-              Цена
+              {t('sena')}
             </EditableTableHead>
             <EditableTableHead
               rowSpan={2}
               className="text-right"
             >
-              Сумма
+              {t('summa')}
             </EditableTableHead>
             <EditableTableHead
               colSpan={2}
               className="text-center"
             >
-              Дебет
+              {t('debet')}
             </EditableTableHead>
             <EditableTableHead
               colSpan={2}
               className="text-center"
             >
-              Кредит
+              {t('kredit')}
             </EditableTableHead>
-            <EditableTableHead rowSpan={2}>Дата прихода</EditableTableHead>
+            <EditableTableHead rowSpan={2}>{t('prixod-date')}</EditableTableHead>
             <EditableTableHead rowSpan={2}></EditableTableHead>
           </EditableTableRow>
           <EditableTableRow>
-            <EditableTableHead>Счет</EditableTableHead>
-            <EditableTableHead className="w-20">Субсчет</EditableTableHead>
-            <EditableTableHead>Счет</EditableTableHead>
-            <EditableTableHead className="last:border-solid w-20">Субсчет</EditableTableHead>
+            <EditableTableHead>{t('schet')}</EditableTableHead>
+            <EditableTableHead>{t('subschet')}</EditableTableHead>
+            <EditableTableHead>{t('schet')}</EditableTableHead>
+            <EditableTableHead className="last:border-solid">{t('subschet')}</EditableTableHead>
           </EditableTableRow>
         </TableHeader>
         <TableBody>
@@ -401,7 +403,7 @@ const NaimenovanieCells = ({
       updateFormField(index, 'kredit_schet', product?.schet ?? '')
       updateFormField(index, 'debet_sub_schet', product?.provodka_subschet ?? '')
       updateFormField(index, 'kredit_sub_schet', product?.provodka_subschet ?? '')
-      updateFormField(index, 'data_pereotsenka', product.prixod_data?.doc_date)
+      updateFormField(index, 'data_pereotsenka', product.prixod_data?.data_pereotsenka)
     }
   })
 

@@ -1,9 +1,9 @@
-import { Button } from '@renderer/common/components/ui/button'
-import type { ButtonProps } from '@renderer/common/components/ui/button'
-import { Download } from 'lucide-react'
 import { LoadingSpinner } from '@renderer/common/components/loading'
+import type { ButtonProps } from '@renderer/common/components/ui/button'
+import { Button } from '@renderer/common/components/ui/button'
 import { http } from '@renderer/common/lib/http'
 import { useMutation } from '@tanstack/react-query'
+import { Download } from 'lucide-react'
 
 export type DownloadFileProps = ButtonProps & {
   url: string
@@ -44,7 +44,7 @@ export const DownloadFile = ({
       ) : (
         <>
           <Download className="btn-icon icon-start !size-4" />
-          {buttonText}
+          <span className="titlecase">{buttonText}</span>
         </>
       )}
     </Button>

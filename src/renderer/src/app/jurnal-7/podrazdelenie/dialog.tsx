@@ -10,7 +10,7 @@ import {
   DialogTitle
 } from '@/common/components/ui/dialog'
 import { Form, FormField } from '@/common/components/ui/form'
-import { toast } from '@/common/hooks/use-toast'
+import { toast } from 'react-toastify'
 import { extendObject } from '@/common/lib/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
@@ -19,16 +19,20 @@ import { useForm } from 'react-hook-form'
 import { Subdivision7PayloadSchema, defaultValues, subdivision7QueryKeys } from './constants'
 import { subdivision7Service } from './service'
 import { Input } from '@/common/components/ui/input'
+import { useTranslation } from 'react-i18next'
 
-export type Subdivision7DialogProps = {
+export type Podrazdelenie7DialogProps = {
   open: boolean
   onClose: () => void
-  data: null | Jur7Podrazdelenie
+  selected: null | Jur7Podrazdelenie
 }
-const Subdivision7Dialog = (props: Subdivision7DialogProps) => {
-  const { open, onClose, data } = props
+const Podrazdelenie7Dialog = (props: Podrazdelenie7DialogProps) => {
+  const { open, onClose, selected } = props
 
   const queryClient = useQueryClient()
+
+  const { t } = useTranslation()
+
   const form = useForm({
     defaultValues,
     resolver: zodResolver(Subdivision7PayloadSchema)
@@ -43,17 +47,11 @@ const Subdivision7Dialog = (props: Subdivision7DialogProps) => {
         queryKey: [subdivision7QueryKeys.getAll]
       })
       onClose()
-      toast({
-        title: 'Подразделениe успешно создана'
-      })
+      toast.success('Подразделениe успешно создана')
     },
     onError(error) {
       console.error(error)
-      toast({
-        variant: 'destructive',
-        title: 'Ошибка при создании подразделения',
-        description: error.message
-      })
+      toast.error('Ошибка при создании подразделения: ' + error.message)
     }
   })
   const { mutate: update, isPending: isUpdating } = useMutation({
@@ -64,26 +62,20 @@ const Subdivision7Dialog = (props: Subdivision7DialogProps) => {
       queryClient.invalidateQueries({
         queryKey: [subdivision7QueryKeys.getAll]
       })
-      toast({
-        title: 'Подразделениe успешно изменена'
-      })
+      toast.success('Подразделениe успешно изменена')
     },
     onError(error) {
       console.error(error)
-      toast({
-        variant: 'destructive',
-        title: 'Ошибка при изменении подразделения',
-        description: error.message
-      })
+      toast.error('Ошибка при изменении подразделения' + error.message)
     }
   })
 
   const onSubmit = form.handleSubmit((payload) => {
-    if (data) {
+    if (selected) {
       update(
         extendObject(
           {
-            id: data.id
+            id: selected.id
           },
           payload
         )
@@ -94,12 +86,12 @@ const Subdivision7Dialog = (props: Subdivision7DialogProps) => {
   })
 
   useEffect(() => {
-    if (data) {
-      form.reset(data)
+    if (selected) {
+      form.reset(selected)
       return
     }
     form.reset(defaultValues)
-  }, [form, data])
+  }, [form, selected])
   return (
     <Dialog
       open={open}
@@ -107,7 +99,11 @@ const Subdivision7Dialog = (props: Subdivision7DialogProps) => {
     >
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{data ? 'Изменить' : 'Добавить'} подразделение</DialogTitle>
+          <DialogTitle>
+            {selected
+              ? t('update-something', { something: t('podrazdelenie') })
+              : t('create-something', { something: t('podrazdelenie') })}
+          </DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form
@@ -120,7 +116,7 @@ const Subdivision7Dialog = (props: Subdivision7DialogProps) => {
               render={({ field }) => (
                 <FormElement
                   direction="column"
-                  label="Название"
+                  label={t('name')}
                 >
                   <Input {...field} />
                 </FormElement>
@@ -131,7 +127,7 @@ const Subdivision7Dialog = (props: Subdivision7DialogProps) => {
                 type="submit"
                 disabled={isCreating || isUpdating}
               >
-                {data ? 'Изменить' : 'Добавить'}
+                {t('save')}
               </Button>
             </DialogFooter>
           </form>
@@ -141,4 +137,4 @@ const Subdivision7Dialog = (props: Subdivision7DialogProps) => {
   )
 }
 
-export default Subdivision7Dialog
+export default Podrazdelenie7Dialog
