@@ -1,21 +1,24 @@
-import type { Group } from '@/common/models'
 import type { GroupPayloadType } from './constants'
 import type { SpravochnikHookOptions } from '@/common/features/spravochnik'
+import type { Group } from '@/common/models'
 
-import { APIEndpoints, CRUDService } from '@/common/features/crud'
-import { groupColumns } from './columns'
-import { extendObject } from '@/common/lib/utils'
-import { SpravochnikSearchField } from '@renderer/common/features/search'
-import {
-  buildTreeFromArray,
-  sortElementsByLevels,
-  type TreeNode
-} from '@renderer/common/lib/data-structure'
 import { useMemo } from 'react'
+
 import {
   CollapsibleTable,
   CollapsibleTableProps
 } from '@renderer/common/components/collapsible-table'
+import { SpravochnikSearchField } from '@renderer/common/features/search'
+import {
+  type TreeNode,
+  buildTreeFromArray,
+  sortElementsByLevels
+} from '@renderer/common/lib/data-structure'
+
+import { APIEndpoints, CRUDService } from '@/common/features/crud'
+import { extendObject } from '@/common/lib/utils'
+
+import { groupColumns } from './columns'
 
 export const groupService = new CRUDService<Group, GroupPayloadType>({
   endpoint: APIEndpoints.jur7_group

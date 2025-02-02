@@ -1,5 +1,6 @@
-import { APIEndpoints, CRUDService } from '@/common/features/crud'
 import type { OrganizationMonitor, ResponseMeta } from '@/common/models'
+
+import { APIEndpoints, CRUDService } from '@/common/features/crud'
 
 type OrgMonitorMetaType = {
   summa_prixod: number

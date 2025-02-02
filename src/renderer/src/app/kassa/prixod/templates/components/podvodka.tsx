@@ -1,4 +1,5 @@
 import { Text, View } from '@react-pdf/renderer'
+
 import { Flex, Table } from '@/common/components/pdf'
 import { formatNumber, unformatNumber } from '@/common/lib/format'
 

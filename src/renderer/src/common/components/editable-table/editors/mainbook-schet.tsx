@@ -1,7 +1,8 @@
-import { SpravochnikInput, useSpravochnik } from '@/common/features/spravochnik'
-
 import type { EditorComponentType } from './types'
+
 import { createMainbookSchetSpravochnik } from '@renderer/app/super-admin/mainbook-schet/service'
+
+import { SpravochnikInput, useSpravochnik } from '@/common/features/spravochnik'
 
 export const createMainbookSchetEditor = <
   T extends { spravochnik_main_book_schet_id?: number }

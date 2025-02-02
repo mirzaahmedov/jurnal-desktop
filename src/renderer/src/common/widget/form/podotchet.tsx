@@ -1,8 +1,9 @@
 import type { FormSpravochnikFieldsComponent } from './types'
 import type { Podotchet } from '@/common/models'
 
-import { SpravochnikField, SpravochnikFields } from '@/common/features/spravochnik'
 import { useTranslation } from 'react-i18next'
+
+import { SpravochnikField, SpravochnikFields } from '@/common/features/spravochnik'
 
 const PodotchetFields: FormSpravochnikFieldsComponent<Podotchet> = ({
   tabIndex,

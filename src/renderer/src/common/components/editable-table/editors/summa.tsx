@@ -1,4 +1,5 @@
 import type { EditorComponentType } from './types'
+
 import { NumericInput } from '@/common/components'
 import { inputVariants } from '@/common/components'
 

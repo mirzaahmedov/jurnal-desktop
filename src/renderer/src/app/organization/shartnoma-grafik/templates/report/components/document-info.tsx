@@ -1,5 +1,6 @@
-import { Flex } from '@/common/components/pdf'
 import { StyleSheet, Text } from '@react-pdf/renderer'
+
+import { Flex } from '@/common/components/pdf'
 
 type DocumentInfoProps = {
   contractDetails: string

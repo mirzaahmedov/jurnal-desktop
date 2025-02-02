@@ -1,8 +1,8 @@
+import type { OXReportValues } from './config'
+import type { OX } from '@renderer/common/models'
+
 import { APIEndpoints, CRUDService } from '@renderer/common/features/crud'
 import { budjet, main_schet } from '@renderer/common/features/crud/middleware'
-
-import type { OX } from '@renderer/common/models'
-import type { OXReportValues } from './config'
 
 export const oxReportService = new CRUDService<OX.Report, OXReportValues>({
   endpoint: APIEndpoints.ox_doc

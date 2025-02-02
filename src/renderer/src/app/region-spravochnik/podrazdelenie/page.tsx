@@ -1,16 +1,19 @@
-import { GenericTable, LoadingOverlay, Pagination, usePagination } from '@/common/components'
-import { SearchField, useSearch } from '@/common/features/search'
+import type { Podrazdelenie } from '@/common/models'
+
 import { useEffect, useState } from 'react'
+
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
-import type { Podrazdelenie } from '@/common/models'
-import SubdivisionDialog from './dialog'
-import { subdivisionColumns } from './columns'
-import { subdivisionQueryKeys } from './constants'
-import { subdivisionService } from './service'
+import { GenericTable, LoadingOverlay, Pagination, usePagination } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
 import { useLayout } from '@/common/features/layout'
+import { SearchField, useSearch } from '@/common/features/search'
 import { useToggle } from '@/common/hooks/use-toggle'
+
+import { subdivisionColumns } from './columns'
+import { subdivisionQueryKeys } from './constants'
+import SubdivisionDialog from './dialog'
+import { subdivisionService } from './service'
 
 const SubdivisionPage = () => {
   const [selected, setSelected] = useState<Podrazdelenie | null>(null)

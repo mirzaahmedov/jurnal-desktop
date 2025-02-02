@@ -1,6 +1,7 @@
 import type { ColumnDef } from '@/common/components'
-import { Copyable } from '@/common/components'
 import type { Organization } from '@/common/models'
+
+import { Copyable } from '@/common/components'
 
 export const organizationColumns: ColumnDef<Organization>[] = [
   {

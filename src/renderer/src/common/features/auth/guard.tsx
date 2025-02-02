@@ -1,6 +1,8 @@
-import { Navigate } from 'react-router-dom'
-import { useAuthStore } from './store'
 import { ReactNode } from 'react'
+
+import { Navigate } from 'react-router-dom'
+
+import { useAuthStore } from './store'
 
 type AuthGuardProps = {
   children: ReactNode

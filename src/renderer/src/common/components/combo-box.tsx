@@ -1,11 +1,13 @@
-import { Command, CommandInput, CommandItem, CommandList } from './ui/command'
-import { Popover, PopoverContent, PopoverTrigger } from './ui/popover'
+import type { ReactNode } from 'react'
 
 import { Check } from 'lucide-react'
-import { LoadingSpinner } from './loading'
-import type { ReactNode } from 'react'
-import { cn } from '@/common/lib/utils'
+
 import { useToggle } from '@/common/hooks/use-toggle'
+import { cn } from '@/common/lib/utils'
+
+import { LoadingSpinner } from './loading'
+import { Command, CommandInput, CommandItem, CommandList } from './ui/command'
+import { Popover, PopoverContent, PopoverTrigger } from './ui/popover'
 
 type ComboboxProps = {
   children: ReactNode

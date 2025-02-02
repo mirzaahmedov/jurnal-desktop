@@ -1,8 +1,9 @@
-import { SpravochnikField, SpravochnikFields } from '@/common/features/spravochnik'
-
-import type { FormSpravochnikFieldsComponent } from '@/common/widget/form'
 import type { Responsible } from '@/common/models'
+import type { FormSpravochnikFieldsComponent } from '@/common/widget/form'
+
 import { useTranslation } from 'react-i18next'
+
+import { SpravochnikField, SpravochnikFields } from '@/common/features/spravochnik'
 
 export const ResponsibleFields: FormSpravochnikFieldsComponent<Responsible> = ({
   tabIndex,

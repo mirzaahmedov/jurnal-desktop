@@ -1,8 +1,8 @@
 import type { ColumnDef } from '@/common/components'
 import type { PokazatUslugi } from '@/common/models'
 
-import { formatLocaleDate } from '@/common/lib/format'
 import { TooltipCellRenderer } from '@/common/components/table/renderers'
+import { formatLocaleDate } from '@/common/lib/format'
 
 export const pokazatUslugiColumns: ColumnDef<PokazatUslugi>[] = [
   {

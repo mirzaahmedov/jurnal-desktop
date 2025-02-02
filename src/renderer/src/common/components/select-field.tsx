@@ -1,3 +1,8 @@
+import type { SelectProps } from '@radix-ui/react-select'
+import type { ForwardedRef, ReactNode } from 'react'
+
+import { forwardRef } from 'react'
+
 import {
   Select,
   SelectContent,
@@ -5,12 +10,9 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/common/components/ui/select'
+import { cn } from '@/common/lib/utils'
 
 import { FormControl } from './ui/form'
-import type { ForwardedRef, ReactNode } from 'react'
-import type { SelectProps } from '@radix-ui/react-select'
-import { cn } from '@/common/lib/utils'
-import { forwardRef } from 'react'
 
 type SelectFieldProps<T> = SelectProps & {
   withFormControl?: boolean

@@ -1,7 +1,8 @@
-import { useForm } from 'react-hook-form'
 import { parseAsString, useQueryStates } from 'nuqs'
-import { useDefaultFilters } from '@/common/features/app-defaults'
+import { useForm } from 'react-hook-form'
+
 import { usePagination } from '@/common/components'
+import { useDefaultFilters } from '@/common/features/app-defaults'
 
 export const useDateRange = () => {
   const { setCurrentPage } = usePagination()

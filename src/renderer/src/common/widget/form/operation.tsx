@@ -1,9 +1,9 @@
 import type { FormSpravochnikFieldsComponent } from './types'
 import type { Operatsii } from '@/common/models'
 
-import { FormElement } from '@/common/components/form'
 import { Fieldset } from '@/common/components'
 import { SpravochnikInput } from '@/common/components'
+import { FormElement } from '@/common/components/form'
 import { createSpravochnikKeyBindings } from '@/common/features/spravochnik'
 
 const OperationFields: FormSpravochnikFieldsComponent<Operatsii> = ({

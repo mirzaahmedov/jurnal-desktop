@@ -1,10 +1,10 @@
+import type { RealExpensesReportProvodka } from '../config'
+import type { EditableColumnType } from '@renderer/common/components/editable-table'
+
 import {
   createNumberEditor,
   createSmetaGrafikEditor
 } from '@renderer/common/components/editable-table/editors'
-
-import type { EditableColumnType } from '@renderer/common/components/editable-table'
-import type { RealExpensesReportProvodka } from '../config'
 
 const provodkaColumns: EditableColumnType<RealExpensesReportProvodka>[] = [
   {

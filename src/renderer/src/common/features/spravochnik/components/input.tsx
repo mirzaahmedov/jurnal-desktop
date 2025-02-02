@@ -1,13 +1,16 @@
+import type { InputProps } from '@/common/components/ui/input'
+import type { VariantProps } from 'class-variance-authority'
+
 import { type HTMLAttributes, type Ref } from 'react'
+
+import { cva } from 'class-variance-authority'
+import { CircleX } from 'lucide-react'
 
 import { LoadingSpinner } from '@/common/components'
 import { Button } from '@/common/components/ui/button'
-import type { InputProps } from '@/common/components/ui/input'
 import { Input } from '@/common/components/ui/input'
 import { cn } from '@/common/lib/utils'
-import type { VariantProps } from 'class-variance-authority'
-import { cva } from 'class-variance-authority'
-import { CircleX } from 'lucide-react'
+
 import { registerKeyBindings } from './key-bindings'
 
 const inputVariants = cva('cursor-pointer', {

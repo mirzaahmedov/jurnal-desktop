@@ -1,10 +1,11 @@
 import type { BankPrixodType, ResponseMeta } from '@/common/models'
-import { validateProvodkaOperatsii, withPreprocessor } from '@/common/lib/validation'
+
+import { z } from 'zod'
 
 import { APIEndpoints } from '@/common/features/crud'
 import { CRUDService } from '@/common/features/crud'
 import { main_schet } from '@/common/features/crud/middleware'
-import { z } from 'zod'
+import { validateProvodkaOperatsii, withPreprocessor } from '@/common/lib/validation'
 
 export const bankPrixodService = new CRUDService<
   BankPrixodType,

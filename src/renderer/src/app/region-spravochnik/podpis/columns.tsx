@@ -1,6 +1,8 @@
-import { Badge } from '@renderer/common/components/ui/badge'
 import type { ColumnDef } from '@/common/components'
 import type { Podpis } from '@/common/models'
+
+import { Badge } from '@renderer/common/components/ui/badge'
+
 import { podpisDoljnostOptions } from './constants'
 import { podpisTypeDocumentOptions } from './constants'
 

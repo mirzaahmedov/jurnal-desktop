@@ -1,7 +1,9 @@
-import type { Avans } from '@/common/models'
 import type { ColumnDef } from '@/common/components'
-import { TooltipCellRenderer } from '@/common/components/table/renderers/tooltip'
+import type { Avans } from '@/common/models'
+
 import { formatLocaleDate } from '@renderer/common/lib/format'
+
+import { TooltipCellRenderer } from '@/common/components/table/renderers/tooltip'
 
 export const avansColumns: ColumnDef<Avans>[] = [
   {

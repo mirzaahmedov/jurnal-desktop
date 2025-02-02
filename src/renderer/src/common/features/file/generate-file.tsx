@@ -1,11 +1,13 @@
-import { Button } from '@renderer/common/components/ui/button'
-import type { ButtonProps } from '@renderer/common/components/ui/button'
 import type { DocumentProps } from '@react-pdf/renderer'
-import { LoadingSpinner } from '@renderer/common/components/loading'
-import { Printer } from 'lucide-react'
+import type { ButtonProps } from '@renderer/common/components/ui/button'
 import type { ReactElement } from 'react'
+
 import { pdf } from '@react-pdf/renderer'
+import { LoadingSpinner } from '@renderer/common/components/loading'
+import { Button } from '@renderer/common/components/ui/button'
 import { useMutation } from '@tanstack/react-query'
+import { Printer } from 'lucide-react'
+
 import { useToast } from '@/common/hooks/use-toast'
 
 export type GenerateFileProps = ButtonProps & {

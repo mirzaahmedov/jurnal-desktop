@@ -1,8 +1,10 @@
-import { Badge } from '@renderer/common/components/ui/badge'
 import type { ColumnDef } from '@renderer/common/components'
 import type { RealExpenses } from '@renderer/common/models'
-import { documentTypes } from '../common/data'
+
+import { Badge } from '@renderer/common/components/ui/badge'
 import { getMonthName } from '@renderer/common/lib/date'
+
+import { documentTypes } from '../common/data'
 
 export const expensesReportColumns: ColumnDef<RealExpenses.Report>[] = [
   {

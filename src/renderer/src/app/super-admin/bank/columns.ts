@@ -1,5 +1,5 @@
-import type { Bank } from '@/common/models'
 import type { ColumnDef } from '@/common/components'
+import type { Bank } from '@/common/models'
 
 const bankColumns: ColumnDef<Bank>[] = [
   {

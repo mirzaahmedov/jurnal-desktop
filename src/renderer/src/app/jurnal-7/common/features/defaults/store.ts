@@ -1,5 +1,4 @@
 import { formatDate, getFirstDayOfMonth, getLastDayOfMonth } from '@renderer/common/lib/date'
-
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 

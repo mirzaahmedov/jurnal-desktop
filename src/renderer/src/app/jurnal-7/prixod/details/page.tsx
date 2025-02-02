@@ -1,3 +1,15 @@
+import { useEffect, useMemo, useRef } from 'react'
+
+import { zodResolver } from '@hookform/resolvers/zod'
+import { createShartnomaSpravochnik } from '@renderer/app/organization/shartnoma'
+import { createOrganizationSpravochnik } from '@renderer/app/region-spravochnik/organization'
+import { Form } from '@renderer/common/components/ui/form'
+import { useLayoutStore } from '@renderer/common/features/layout'
+import { useSpravochnik } from '@renderer/common/features/spravochnik'
+import { parseDate, withinMonth } from '@renderer/common/lib/date'
+import { focusInvalidInput } from '@renderer/common/lib/errors'
+import { Operatsii, TypeSchetOperatsii } from '@renderer/common/models'
+import { DetailsView } from '@renderer/common/views'
 import {
   DocumentFields,
   DoverennostFields,
@@ -8,30 +20,20 @@ import {
   ShartnomaFields,
   SummaFields
 } from '@renderer/common/widget/form'
-import { Operatsii, TypeSchetOperatsii } from '@renderer/common/models'
-import { PrixodFormSchema, defaultValues, queryKeys } from '../config'
-import { parseDate, withinMonth } from '@renderer/common/lib/date'
-import { useEffect, useMemo, useRef } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
-import { usePrixodCreate, usePrixodGet, usePrixodUpdate } from '../service'
-
-import { DetailsView } from '@renderer/common/views'
-import { Form } from '@renderer/common/components/ui/form'
-import { ProvodkaTable } from './provodka-table'
-import { createOperatsiiSpravochnik } from '@/app/super-admin/operatsii'
-import { createOrganizationSpravochnik } from '@renderer/app/region-spravochnik/organization'
-import { createResponsibleSpravochnik } from '../../responsible/service'
-import { createShartnomaSpravochnik } from '@renderer/app/organization/shartnoma'
-import { focusInvalidInput } from '@renderer/common/lib/errors'
-import isEmpty from 'just-is-empty'
-import { toast } from 'react-toastify'
-import { useForm } from 'react-hook-form'
-import { useJurnal7DefaultsStore } from '../../common/features/defaults'
-import { useLayoutStore } from '@renderer/common/features/layout'
 import { useQueryClient } from '@tanstack/react-query'
-import { useSpravochnik } from '@renderer/common/features/spravochnik'
-import { zodResolver } from '@hookform/resolvers/zod'
+import isEmpty from 'just-is-empty'
+import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import { useNavigate, useParams } from 'react-router-dom'
+import { toast } from 'react-toastify'
+
+import { createOperatsiiSpravochnik } from '@/app/super-admin/operatsii'
+
+import { useJurnal7DefaultsStore } from '../../common/features/defaults'
+import { createResponsibleSpravochnik } from '../../responsible/service'
+import { PrixodFormSchema, defaultValues, queryKeys } from '../config'
+import { usePrixodCreate, usePrixodGet, usePrixodUpdate } from '../service'
+import { ProvodkaTable } from './provodka-table'
 
 const MO7PrixodDetailsPage = () => {
   const prevData = useRef({

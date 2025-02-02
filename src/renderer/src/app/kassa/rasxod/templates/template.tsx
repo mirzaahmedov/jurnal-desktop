@@ -1,8 +1,10 @@
 import type { PodvodkaType } from './components/podvodka'
 
-import { StyleSheet, Document, Page, View } from '@react-pdf/renderer'
-import { Header, Summary, Signatures, PodvodkaTable } from './components'
+import { Document, Page, StyleSheet, View } from '@react-pdf/renderer'
+
 import { registerFonts } from '@/common/lib/pdf'
+
+import { Header, PodvodkaTable, Signatures, Summary } from './components'
 
 registerFonts()
 

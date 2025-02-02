@@ -1,8 +1,10 @@
 import type { ColumnDef } from '@/common/components'
 import type { InternalTransfer } from '@/common/models'
+
 import { formatLocaleDate } from '@renderer/common/lib/format'
-import { withPreprocessor } from '@/common/lib/validation'
 import { z } from 'zod'
+
+import { withPreprocessor } from '@/common/lib/validation'
 
 const queryKeys = {
   getAll: 'jur7_internal/all',

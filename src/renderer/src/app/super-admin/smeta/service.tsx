@@ -1,21 +1,24 @@
-import type { Smeta } from '@/common/models'
-import type { SpravochnikHookOptions } from '@/common/features/spravochnik'
 import type { SmetaForm } from './config'
+import type { SpravochnikHookOptions } from '@/common/features/spravochnik'
+import type { Smeta } from '@/common/models'
 
-import { APIEndpoints, CRUDService } from '@/common/features/crud'
-import { extendObject } from '@/common/lib/utils'
-import { smetaColumns } from './columns'
-import { SpravochnikSearchField } from '@/common/features/search'
+import { useMemo } from 'react'
+
 import {
   CollapsibleTable,
   CollapsibleTableProps
 } from '@renderer/common/components/collapsible-table'
-import { useMemo } from 'react'
 import {
+  type TreeNode,
   buildTreeFromArray,
-  sortElementsByLevels,
-  type TreeNode
+  sortElementsByLevels
 } from '@renderer/common/lib/data-structure'
+
+import { APIEndpoints, CRUDService } from '@/common/features/crud'
+import { SpravochnikSearchField } from '@/common/features/search'
+import { extendObject } from '@/common/lib/utils'
+
+import { smetaColumns } from './columns'
 import { SmetaGroupFilter } from './group-filter'
 
 export const smetaService = new CRUDService<Smeta, SmetaForm>({

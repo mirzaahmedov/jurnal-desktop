@@ -1,12 +1,14 @@
+import { useEffect } from 'react'
+
 import { roleColumns, roleQueryKeys, roleService } from '@renderer/app/super-admin/role'
+import { useQuery } from '@tanstack/react-query'
+
+import { GenericTable } from '@/common/components'
+import { useLayout } from '@/common/features/layout'
+import { useToggle } from '@/common/hooks/use-toggle'
 
 import { AccessDialog } from './dialog'
-import { GenericTable } from '@/common/components'
-import { useEffect } from 'react'
-import { useLayout } from '@/common/features/layout'
-import { useQuery } from '@tanstack/react-query'
 import { useRoleId } from './hooks'
-import { useToggle } from '@/common/hooks/use-toggle'
 
 const AccessPage = () => {
   const [roleId, setRoleId] = useRoleId()

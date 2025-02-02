@@ -1,3 +1,8 @@
+import { DownloadFile } from '@renderer/common/features/file'
+import { Download } from 'lucide-react'
+
+import { SpravochnikInput } from '@/common/components'
+import { Button } from '@/common/components/ui/button'
 import {
   Dialog,
   DialogContent,
@@ -6,14 +11,10 @@ import {
   DialogTitle,
   DialogTrigger
 } from '@/common/components/ui/dialog'
-
-import { Button } from '@/common/components/ui/button'
-import { Download } from 'lucide-react'
-import { DownloadFile } from '@renderer/common/features/file'
 import { Label } from '@/common/components/ui/label'
-import { SpravochnikInput } from '@/common/components'
-import { createShartnomaSpravochnik } from '../shartnoma'
 import { useSpravochnik } from '@/common/features/spravochnik'
+
+import { createShartnomaSpravochnik } from '../shartnoma'
 
 type AktSverkaDialogProps = {
   from: string

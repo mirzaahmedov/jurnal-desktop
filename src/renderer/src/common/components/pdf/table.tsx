@@ -1,7 +1,8 @@
-import type { PropsWithChildren } from 'react'
 import type { TextProps, ViewProps } from '@react-pdf/renderer'
+import type { PropsWithChildren } from 'react'
 
 import { StyleSheet, Text, View } from '@react-pdf/renderer'
+
 import { mergeStyles } from '@/common/lib/utils'
 
 const Table = (props: PropsWithChildren<ViewProps>) => {

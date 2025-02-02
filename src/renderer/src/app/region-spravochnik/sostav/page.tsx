@@ -1,15 +1,18 @@
-import { GenericTable, LoadingOverlay } from '@/common/components'
-import { SearchField, useSearch } from '@/common/features/search'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import type { Sostav } from '@/common/models'
+
 import { useEffect, useState } from 'react'
 
-import { useConfirm } from '@/common/features/confirm'
-import { useLayoutStore } from '@/common/features/layout'
-import { useToggle } from '@/common/hooks/use-toggle'
-import type { Sostav } from '@/common/models'
 import { usePagination } from '@renderer/common/hooks'
 import { ListView } from '@renderer/common/views'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
+
+import { GenericTable, LoadingOverlay } from '@/common/components'
+import { useConfirm } from '@/common/features/confirm'
+import { useLayoutStore } from '@/common/features/layout'
+import { SearchField, useSearch } from '@/common/features/search'
+import { useToggle } from '@/common/hooks/use-toggle'
+
 import { sostavColumns } from './columns'
 import { sostavQueryKeys } from './constants'
 import SostavDialog from './dialog'

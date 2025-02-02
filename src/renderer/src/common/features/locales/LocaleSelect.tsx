@@ -1,9 +1,10 @@
-import { SelectField } from '@renderer/common/components'
 import { useEffect, useState } from 'react'
+
+import { SelectField } from '@renderer/common/components'
 import { useTranslation } from 'react-i18next'
 
-import flagUZ from './flags/uz.svg'
 import flagRU from './flags/ru.svg'
+import flagUZ from './flags/uz.svg'
 
 export const LocaleSelect = () => {
   const { t, i18n } = useTranslation('app')

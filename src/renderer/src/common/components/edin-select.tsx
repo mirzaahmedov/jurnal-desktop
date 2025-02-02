@@ -1,8 +1,9 @@
-import { SelectField, SelectFieldProps } from './select-field'
 import { unitQueryKeys, unitService } from '@renderer/app/super-admin/unit'
+import { useQuery } from '@tanstack/react-query'
 
 import { Unit } from '@/common/models'
-import { useQuery } from '@tanstack/react-query'
+
+import { SelectField, SelectFieldProps } from './select-field'
 
 type EdinSelectProps = Partial<SelectFieldProps<Unit>> & {
   error: boolean

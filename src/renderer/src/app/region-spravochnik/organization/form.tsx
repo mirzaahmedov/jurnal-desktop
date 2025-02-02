@@ -1,14 +1,16 @@
-import { Form, FormControl, FormField } from '@/common/components/ui/form'
 import { FormEventHandler, ReactNode, useState } from 'react'
 
-import { AutoComplete } from '@/common/components'
-import { FormElement } from '@/common/components/form'
-import { Input } from '@/common/components/ui/input'
-import { OrganizationFormPayload } from './service'
+import { useQuery } from '@tanstack/react-query'
 import { UseFormReturn } from 'react-hook-form'
+
 import { bankQueryKeys } from '@/app/super-admin/bank/config'
 import { bankService } from '@/app/super-admin/bank/service'
-import { useQuery } from '@tanstack/react-query'
+import { AutoComplete } from '@/common/components'
+import { FormElement } from '@/common/components/form'
+import { Form, FormControl, FormField } from '@/common/components/ui/form'
+import { Input } from '@/common/components/ui/input'
+
+import { OrganizationFormPayload } from './service'
 
 type OrganizationFormProps = {
   form: UseFormReturn<OrganizationFormPayload>

@@ -1,63 +1,71 @@
-import { GenericTable, LoadingOverlay, Pagination, usePagination } from '@/common/components'
-import { SearchField, useSearch } from '@/common/features/search'
-import { useEffect, useState } from 'react'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-
-import OperationTypeDialog from './dialog'
 import type { TypeOperatsii } from '@/common/models'
-import { operationTypeColumns } from './columns'
-import { operationTypeQueryKeys } from './constants'
-import { operationTypeService } from './service'
+
+import { useEffect, useState } from 'react'
+
+import { usePagination } from '@renderer/common/hooks'
+import { ListView } from '@renderer/common/views'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
+
+import { GenericTable } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
-import { useLayout } from '@/common/features/layout'
+import { useLayoutStore } from '@/common/features/layout'
+import { SearchField, useSearch } from '@/common/features/search'
 import { useToggle } from '@/common/hooks/use-toggle'
 
-const OperationTypePage = () => {
+import { typeOperatsiiColumns } from './columns'
+import { typeOperatsiiQueryKeys } from './constants'
+import { TypeOperatsiiDialog } from './dialog'
+import { typeOperatsiiService } from './service'
+
+const TypeOperatsiiPage = () => {
   const [selected, setSelected] = useState<TypeOperatsii | null>(null)
 
-  const toggle = useToggle()
+  const dialogToggle = useToggle()
+  const pagination = usePagination()
   const queryClient = useQueryClient()
+  const setLayout = useLayoutStore((store) => store.setLayout)
 
-  const { currentPage, itemsPerPage } = usePagination()
+  const { t } = useTranslation(['app'])
   const { confirm } = useConfirm()
   const { search } = useSearch()
 
   const { data: operationTypes, isFetching } = useQuery({
     queryKey: [
-      operationTypeQueryKeys.getAll,
+      typeOperatsiiQueryKeys.getAll,
       {
-        page: currentPage,
-        limit: itemsPerPage,
+        ...pagination,
         search
       }
     ],
-    queryFn: operationTypeService.getAll
+    queryFn: typeOperatsiiService.getAll
   })
   const { mutate: deleteMutation, isPending } = useMutation({
-    mutationKey: [operationTypeQueryKeys.delete],
-    mutationFn: operationTypeService.delete,
+    mutationKey: [typeOperatsiiQueryKeys.delete],
+    mutationFn: typeOperatsiiService.delete,
     onSuccess() {
       queryClient.invalidateQueries({
-        queryKey: [operationTypeQueryKeys.getAll]
+        queryKey: [typeOperatsiiQueryKeys.getAll]
       })
     }
   })
 
   useEffect(() => {
-    if (!toggle.isOpen) {
+    if (!dialogToggle.isOpen) {
       setSelected(null)
     }
-  }, [toggle.isOpen])
-
-  useLayout({
-    title: 'Типы операции',
-    content: SearchField,
-    onCreate: toggle.open
-  })
+  }, [dialogToggle.isOpen])
+  useEffect(() => {
+    setLayout({
+      title: t('pages.type-operatsii'),
+      content: SearchField,
+      onCreate: dialogToggle.open
+    })
+  }, [setLayout, t, dialogToggle.open])
 
   const handleClickEdit = (row: TypeOperatsii) => {
     setSelected(row)
-    toggle.open()
+    dialogToggle.open()
   }
   const handleClickDelete = (row: TypeOperatsii) => {
     confirm({
@@ -68,27 +76,29 @@ const OperationTypePage = () => {
   }
 
   return (
-    <>
-      <div className="flex-1 relative">
-        {isPending || isFetching ? <LoadingOverlay /> : null}
+    <ListView>
+      <ListView.Content loading={isFetching || isPending}>
         <GenericTable
           data={operationTypes?.data ?? []}
-          columnDefs={operationTypeColumns}
+          columnDefs={typeOperatsiiColumns}
           getRowId={(row) => row.id}
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}
         />
-      </div>
-      <div className="px-10 py-5">
-        <Pagination pageCount={operationTypes?.meta.pageCount ?? 0} />
-      </div>
-      <OperationTypeDialog
-        data={selected}
-        open={toggle.isOpen}
-        onChangeOpen={toggle.setOpen}
+      </ListView.Content>
+      <ListView.Footer>
+        <ListView.Pagination
+          {...pagination}
+          pageCount={operationTypes?.meta.pageCount ?? 0}
+        />
+      </ListView.Footer>
+      <TypeOperatsiiDialog
+        selected={selected}
+        open={dialogToggle.isOpen}
+        onChangeOpen={dialogToggle.setOpen}
       />
-    </>
+    </ListView>
   )
 }
 
-export default OperationTypePage
+export default TypeOperatsiiPage

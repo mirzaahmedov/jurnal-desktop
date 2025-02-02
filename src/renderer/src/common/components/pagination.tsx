@@ -1,9 +1,11 @@
-import Paginate from 'react-paginate'
-import { parseAsInteger, useQueryStates } from 'nuqs'
-import { ArrowLeft, ArrowRight } from 'lucide-react'
-import { Button } from './ui/button'
-import { SelectField } from './select-field'
 import { useCallback } from 'react'
+
+import { ArrowLeft, ArrowRight } from 'lucide-react'
+import { parseAsInteger, useQueryStates } from 'nuqs'
+import Paginate from 'react-paginate'
+
+import { SelectField } from './select-field'
+import { Button } from './ui/button'
 
 const itemsPerPageOptions = [5, 10, 15, 20, 50, 100]
 

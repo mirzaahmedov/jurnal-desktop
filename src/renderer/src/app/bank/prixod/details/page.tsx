@@ -1,19 +1,7 @@
 import type { PrixodPodvodkaPayloadType } from '../service'
 
-import { mainSchetQueryKeys, mainSchetService } from '@/app/region-spravochnik/main-schet'
-import { Fieldset } from '@/common/components'
-import { Form } from '@/common/components/ui/form'
-import { useLayoutStore } from '@/common/features/layout'
-import { useSpravochnik } from '@/common/features/spravochnik'
-import { normalizeEmptyFields } from '@/common/lib/validation'
-import {
-  DocumentFields,
-  MainSchetFields,
-  OpisanieFields,
-  OrganizationFields,
-  ShartnomaFields,
-  SummaFields
-} from '@/common/widget/form'
+import { useCallback, useEffect } from 'react'
+
 import { zodResolver } from '@hookform/resolvers/zod'
 import { createShartnomaSpravochnik } from '@renderer/app/organization/shartnoma'
 import { createOrganizationSpravochnik } from '@renderer/app/region-spravochnik/organization'
@@ -25,16 +13,30 @@ import {
 } from '@renderer/common/components/editable-table/helpers'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { useCallback, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
+import { toast } from 'react-toastify'
+
+import { mainSchetQueryKeys, mainSchetService } from '@/app/region-spravochnik/main-schet'
+import { Fieldset } from '@/common/components'
+import { Form } from '@/common/components/ui/form'
+import { useLayoutStore } from '@/common/features/layout'
+import { useSpravochnik } from '@/common/features/spravochnik'
+import { normalizeEmptyFields } from '@/common/lib/validation'
+import { DetailsView } from '@/common/views'
+import {
+  DocumentFields,
+  MainSchetFields,
+  OpisanieFields,
+  OrganizationFields,
+  ShartnomaFields,
+  SummaFields
+} from '@/common/widget/form'
+
 import { defaultValues, queryKeys } from '../constants'
 import { PrixodPayloadSchema, PrixodPodvodkaPayloadSchema, bankPrixodService } from '../service'
 import { podvodkaColumns } from './podvodki'
-
-import { DetailsView } from '@/common/views'
-import { useTranslation } from 'react-i18next'
-import { toast } from 'react-toastify'
 
 const BankPrixodDetailsPage = () => {
   const main_schet_id = useRequisitesStore((state) => state.main_schet_id)

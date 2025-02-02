@@ -1,5 +1,8 @@
-import { useEffect, useState, type ReactNode, type TableHTMLAttributes } from 'react'
+import type { Autocomplete } from '@renderer/common/lib/types'
 
+import { type ReactNode, type TableHTMLAttributes, useEffect, useState } from 'react'
+
+import { Button } from '@renderer/common/components/ui/button'
 import {
   Table,
   TableBody,
@@ -8,14 +11,13 @@ import {
   TableHeader,
   type TableProps
 } from '@renderer/common/components/ui/table'
-import { Button } from '@renderer/common/components/ui/button'
-import { Pencil, Trash2 } from 'lucide-react'
 import { formatNumber } from '@renderer/common/lib/format'
-import { GenericTableCell, GenericTableHead, GenericTableRow } from './components'
-import type { Autocomplete } from '@renderer/common/lib/types'
 import { cn } from '@renderer/common/lib/utils'
-import { twMerge } from 'tailwind-merge'
+import { Pencil, Trash2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+import { twMerge } from 'tailwind-merge'
+
+import { GenericTableCell, GenericTableHead, GenericTableRow } from './components'
 
 export type ColumnDef<T extends Record<string, unknown>> = {
   numeric?: boolean

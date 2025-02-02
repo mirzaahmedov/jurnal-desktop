@@ -1,23 +1,26 @@
-import { DatePicker, NumericInput } from '@/common/components'
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/common/components/ui/dialog'
-import { Form, FormControl, FormField, FormItem, FormLabel } from '@/common/components/ui/form'
-import type { MainSchet, Organization } from '@renderer/common/models'
 import type { ShartnomaGrafikForm } from '../../service'
-import { RadioGroup, RadioGroupItem } from '@/common/components/ui/radio-group'
-import { ReportDialogPayloadSchema, defaultValues } from './constants'
-import { buildContractDetailsText, buildContractPaymentDetailsText } from './utils'
+import type { MainSchet, Organization } from '@renderer/common/models'
+
 import { useEffect, useMemo } from 'react'
 
-import { ContractScheduleTemplate } from '../report'
-import { FormElement } from '@/common/components/form'
-import { GenerateFile } from '@renderer/common/features/file'
-import { Input } from '@/common/components/ui/input'
-import { Textarea } from '@/common/components/ui/textarea'
-import { formatDate } from '@/common/lib/date'
-import { monthNames } from '@/common/data/month'
-import { roundNumberToTwoDecimalPlaces } from '@/common/lib/utils'
-import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { GenerateFile } from '@renderer/common/features/file'
+import { useForm } from 'react-hook-form'
+
+import { DatePicker, NumericInput } from '@/common/components'
+import { FormElement } from '@/common/components/form'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/common/components/ui/dialog'
+import { Form, FormControl, FormField, FormItem, FormLabel } from '@/common/components/ui/form'
+import { Input } from '@/common/components/ui/input'
+import { RadioGroup, RadioGroupItem } from '@/common/components/ui/radio-group'
+import { Textarea } from '@/common/components/ui/textarea'
+import { monthNames } from '@/common/data/month'
+import { formatDate } from '@/common/lib/date'
+import { roundNumberToTwoDecimalPlaces } from '@/common/lib/utils'
+
+import { ContractScheduleTemplate } from '../report'
+import { ReportDialogPayloadSchema, defaultValues } from './constants'
+import { buildContractDetailsText, buildContractPaymentDetailsText } from './utils'
 
 type GenerateReportDialogProps = {
   schedule: ShartnomaGrafikForm

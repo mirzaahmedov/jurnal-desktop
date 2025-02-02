@@ -1,7 +1,7 @@
 import type { EditorComponentType } from './types'
 
 import { createPodotchetSpravochnik } from '@/app/region-spravochnik/podotchet'
-import { useSpravochnik, SpravochnikInput } from '@/common/features/spravochnik'
+import { SpravochnikInput, useSpravochnik } from '@/common/features/spravochnik'
 
 export const createPodotchetEditor = <
   T extends { id_spravochnik_podotchet_litso?: number }

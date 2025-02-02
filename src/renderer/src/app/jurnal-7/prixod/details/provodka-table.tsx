@@ -1,29 +1,31 @@
-import { CircleMinus, CirclePlus } from 'lucide-react'
-import { DatePicker, EdinSelect, NumericInput, inputVariants } from '@/common/components'
+import type { FieldError, FieldErrorsImpl, Merge, UseFormReturn } from 'react-hook-form'
+
 import {
   EditableTableCell,
   EditableTableHead,
   EditableTableRow
 } from '@renderer/common/components/editable-table'
-import type { FieldError, FieldErrorsImpl, Merge, UseFormReturn } from 'react-hook-form'
+import { Checkbox } from '@renderer/common/components/ui/checkbox'
+import { useEventCallback } from '@renderer/common/hooks'
+import { CircleMinus, CirclePlus } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
+import { toast } from 'react-toastify'
+
+import { createGroupSpravochnik } from '@/app/super-admin/group/service'
+import { DatePicker, EdinSelect, NumericInput, inputVariants } from '@/common/components'
+import { Button } from '@/common/components/ui/button'
+import { Input } from '@/common/components/ui/input'
+import { Table, TableBody, TableFooter, TableHeader } from '@/common/components/ui/table'
+import { SpravochnikInput, useSpravochnik } from '@/common/features/spravochnik'
+import { calcSena, calcSumma } from '@/common/lib/pricing'
+import { cn } from '@/common/lib/utils'
+
 import {
   PrixodChildFormSchema,
   PrixodChildFormType,
   PrixodFormType,
   defaultValues
 } from '../config'
-import { SpravochnikInput, useSpravochnik } from '@/common/features/spravochnik'
-import { Table, TableBody, TableFooter, TableHeader } from '@/common/components/ui/table'
-import { calcSena, calcSumma } from '@/common/lib/pricing'
-
-import { Button } from '@/common/components/ui/button'
-import { Checkbox } from '@renderer/common/components/ui/checkbox'
-import { Input } from '@/common/components/ui/input'
-import { cn } from '@/common/lib/utils'
-import { createGroupSpravochnik } from '@/app/super-admin/group/service'
-import { toast } from 'react-toastify'
-import { useEventCallback } from '@renderer/common/hooks'
-import { useTranslation } from 'react-i18next'
 
 type ProvodkaTableProps = {
   form: UseFormReturn<PrixodFormType>

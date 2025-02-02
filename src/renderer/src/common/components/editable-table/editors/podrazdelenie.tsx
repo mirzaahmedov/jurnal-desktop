@@ -1,7 +1,7 @@
 import type { EditorComponentType } from './types'
 
 import { createSubdivisionSpravochnik } from '@/app/region-spravochnik/podrazdelenie'
-import { useSpravochnik, SpravochnikInput } from '@/common/features/spravochnik'
+import { SpravochnikInput, useSpravochnik } from '@/common/features/spravochnik'
 
 export const createPodrazdelenieEditor = <
   T extends { id_spravochnik_podrazdelenie?: number }

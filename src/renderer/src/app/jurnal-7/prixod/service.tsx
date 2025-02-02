@@ -1,9 +1,11 @@
-import { APIEndpoints, CRUDService } from '@/common/features/crud'
-import { PrixodFormType, queryKeys } from './config'
+import type { MO7Prixod } from '@/common/models'
+
 import { UseMutationOptions, useMutation, useQuery } from '@tanstack/react-query'
+
+import { APIEndpoints, CRUDService } from '@/common/features/crud'
 import { budjet, main_schet } from '@/common/features/crud/middleware'
 
-import type { MO7Prixod } from '@/common/models'
+import { PrixodFormType, queryKeys } from './config'
 
 const prixodService = new CRUDService<MO7Prixod, PrixodFormType>({
   endpoint: APIEndpoints.jur7_prixod

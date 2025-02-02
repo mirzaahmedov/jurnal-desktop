@@ -1,5 +1,4 @@
 import { Document, Page, StyleSheet } from '@react-pdf/renderer'
-
 import { registerFonts } from '@renderer/common/lib/pdf'
 
 registerFonts()

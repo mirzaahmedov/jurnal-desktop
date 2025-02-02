@@ -1,9 +1,9 @@
-import { FormControl, FormField, FormItem, FormLabel } from '@renderer/common/components/ui/form'
-
-import type { Control } from 'react-hook-form'
-import { Fieldset } from '@renderer/common/components'
-import type { FormEditableFieldsComponent } from '@renderer/common/widget/form'
 import type { ShartnomaFormValues } from '../service'
+import type { FormEditableFieldsComponent } from '@renderer/common/widget/form'
+import type { Control } from 'react-hook-form'
+
+import { Fieldset } from '@renderer/common/components'
+import { FormControl, FormField, FormItem, FormLabel } from '@renderer/common/components/ui/form'
 import { Switch } from '@renderer/common/components/ui/switch'
 import { cn } from '@renderer/common/lib/utils'
 import { useTranslation } from 'react-i18next'

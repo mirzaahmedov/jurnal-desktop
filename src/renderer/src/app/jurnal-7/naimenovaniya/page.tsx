@@ -1,16 +1,19 @@
-import { GenericTable, LoadingOverlay, Pagination, usePagination } from '@/common/components'
+import type { Naimenovanie } from '@/common/models'
+
+import { useState } from 'react'
+
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
-import DenominationDialog from './dialog'
-import type { Naimenovanie } from '@/common/models'
-import { denominationQueryKeys } from './constants'
-import { naimenovanieColumns } from './columns'
-import { naimenovanieService } from './service'
-import { toast } from '@/common/hooks/use-toast'
+import { GenericTable, LoadingOverlay, Pagination, usePagination } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
 import { useLayout } from '@/common/features/layout'
-import { useState } from 'react'
+import { toast } from '@/common/hooks/use-toast'
 import { useToggle } from '@/common/hooks/use-toggle'
+
+import { naimenovanieColumns } from './columns'
+import { denominationQueryKeys } from './constants'
+import DenominationDialog from './dialog'
+import { naimenovanieService } from './service'
 
 const NaimenovaniePage = () => {
   const [selected, setSelected] = useState<null | Naimenovanie>(null)

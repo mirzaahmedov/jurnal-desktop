@@ -1,6 +1,8 @@
-import { cn } from '@/common/lib/utils'
-import { cva, VariantProps } from 'class-variance-authority'
 import type { HTMLAttributes } from 'react'
+
+import { VariantProps, cva } from 'class-variance-authority'
+
+import { cn } from '@/common/lib/utils'
 
 const buttonGroupVariants = cva('divide-x divide-dashed', {
   variants: {

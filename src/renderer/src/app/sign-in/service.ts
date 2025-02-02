@@ -1,5 +1,6 @@
-import type { Response } from '@/common/models'
 import type { SigninForm, SigninResponse } from './config'
+import type { Response } from '@/common/models'
+
 import { http } from '@/common/lib/http'
 
 const signinQuery = async (payload: SigninForm) => {

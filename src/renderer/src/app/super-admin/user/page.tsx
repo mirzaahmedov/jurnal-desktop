@@ -1,16 +1,19 @@
-import { GenericTable, LoadingOverlay } from '@/common/components'
-import { SearchField, useSearch } from '@renderer/common/features/search'
+import type { User } from '@/common/models'
+
 import { useEffect, useState } from 'react'
+
+import { SearchField, useSearch } from '@renderer/common/features/search'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
-import AdminUserDialog from './dialog'
-import type { User } from '@/common/models'
-import { adminUserColumns } from './columns'
-import { adminUserQueryKeys } from './constants'
-import { adminUserService } from './service'
+import { GenericTable, LoadingOverlay } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
 import { useLayout } from '@/common/features/layout'
 import { useToggle } from '@/common/hooks/use-toggle'
+
+import { adminUserColumns } from './columns'
+import { adminUserQueryKeys } from './constants'
+import AdminUserDialog from './dialog'
+import { adminUserService } from './service'
 
 const UserPage = () => {
   const [selected, setSelected] = useState<User | null>(null)

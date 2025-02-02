@@ -1,7 +1,8 @@
 import type { EditorComponentType } from './types'
+
+import { inputVariants } from '@/common/components'
 import { Input } from '@/common/components/ui/input'
 import { cn } from '@/common/lib/utils'
-import { inputVariants } from '@/common/components'
 
 const createTextEditor = <T extends Record<string, unknown>>({
   readOnly = false,

@@ -1,10 +1,11 @@
-import type { MainSchet } from '@/common/models'
 import type { FieldsetProps } from '@/common/components'
+import type { MainSchet } from '@/common/models'
+
+import { useTranslation } from 'react-i18next'
 
 import { Fieldset } from '@/common/components'
 import { FormElement } from '@/common/components/form'
 import { Input } from '@/common/components/ui/input'
-import { useTranslation } from 'react-i18next'
 
 type MainSchetFieldsProps = Omit<FieldsetProps, 'name'> & {
   name?: string

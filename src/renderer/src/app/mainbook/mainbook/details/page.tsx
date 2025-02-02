@@ -1,20 +1,21 @@
-import { FileDown, Save } from 'lucide-react'
-import { calculateColumnTotals, calculateRowTotals, transformData } from './utils'
-import { getMainbookById, getMainbookInfo, mainbookService } from '../service'
 import { useEffect, useMemo, useState } from 'react'
-import { useMutation, useQuery } from '@tanstack/react-query'
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 
-import { Button } from '@renderer/common/components/ui/button'
-import { DetailsView } from '@renderer/common/views'
-import { Mainbook } from '@renderer/common/models'
 import { MonthPicker } from '@renderer/common/components/month-picker'
-import { ReportTable } from '../report-table'
-import { formatDate } from '@renderer/common/lib/date'
-import { mainbookQueryKeys } from '../config'
-import { toast } from '@renderer/common/hooks'
+import { Button } from '@renderer/common/components/ui/button'
 import { useLayout } from '@renderer/common/features/layout'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
+import { toast } from '@renderer/common/hooks'
+import { formatDate } from '@renderer/common/lib/date'
+import { Mainbook } from '@renderer/common/models'
+import { DetailsView } from '@renderer/common/views'
+import { useMutation, useQuery } from '@tanstack/react-query'
+import { FileDown, Save } from 'lucide-react'
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
+
+import { mainbookQueryKeys } from '../config'
+import { ReportTable } from '../report-table'
+import { getMainbookById, getMainbookInfo, mainbookService } from '../service'
+import { calculateColumnTotals, calculateRowTotals, transformData } from './utils'
 
 const MainbookDetailsPage = () => {
   const budjet_id = useRequisitesStore((store) => store.budjet_id)

@@ -1,8 +1,8 @@
-import { APIEndpoints, CRUDService } from '@renderer/common/features/crud'
 import type { BankRasxod, ResponseMeta } from '@renderer/common/models'
-import { validateProvodkaOperatsii, withPreprocessor } from '@renderer/common/lib/validation'
 
+import { APIEndpoints, CRUDService } from '@renderer/common/features/crud'
 import { main_schet } from '@renderer/common/features/crud/middleware'
+import { validateProvodkaOperatsii, withPreprocessor } from '@renderer/common/lib/validation'
 import { z } from 'zod'
 
 export const bankRasxodService = new CRUDService<

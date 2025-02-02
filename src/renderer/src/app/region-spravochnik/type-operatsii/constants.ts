@@ -1,7 +1,7 @@
-export const operationTypeQueryKeys = {
-  getAll: 'operation-type/all',
-  getById: 'operation-type',
-  create: 'operation-type/create',
-  update: 'operation-type/update',
-  delete: 'operation-type/delete'
+export const typeOperatsiiQueryKeys = {
+  getAll: 'type-operatsii/all',
+  getById: 'type-operatsii',
+  create: 'type-operatsii/create',
+  update: 'type-operatsii/update',
+  delete: 'type-operatsii/delete'
 }

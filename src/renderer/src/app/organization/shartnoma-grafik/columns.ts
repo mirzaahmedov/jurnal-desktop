@@ -1,8 +1,9 @@
 import type { ColumnDef } from '@/common/components'
 import type { ShartnomaGrafik } from '@/common/models'
 
-import { formatLocaleDate } from '@/common/lib/format'
 import { t } from 'i18next'
+
+import { formatLocaleDate } from '@/common/lib/format'
 
 export const shartnomaGrafikColumns: ColumnDef<ShartnomaGrafik>[] = [
   {

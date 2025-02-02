@@ -1,8 +1,9 @@
 import type { InputHTMLAttributes } from 'react'
 
-import { cn } from '@/common/lib/utils'
-import { Input } from '@/common/components/ui/input'
 import { Search } from 'lucide-react'
+
+import { Input } from '@/common/components/ui/input'
+import { cn } from '@/common/lib/utils'
 
 export type SpravochnikSearchFieldProps = InputHTMLAttributes<HTMLInputElement> & {
   getValue: (key: string) => string | undefined

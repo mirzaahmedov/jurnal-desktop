@@ -1,9 +1,10 @@
-import { formatLocaleDate, formatNumber } from '@/common/lib/format'
-
-import { Badge } from '@renderer/common/components/ui/badge'
 import type { ColumnDef } from '@/common/components'
 import type { PodotchetMonitor } from '@/common/models'
+
+import { Badge } from '@renderer/common/components/ui/badge'
+
 import { TooltipCellRenderer } from '@/common/components/table/renderers'
+import { formatLocaleDate, formatNumber } from '@/common/lib/format'
 
 export const podotchetMonitoringColumns: ColumnDef<PodotchetMonitor>[] = [
   {

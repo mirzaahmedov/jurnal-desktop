@@ -1,33 +1,36 @@
 import type { SpravochnikHookOptions } from '@/common/features/spravochnik'
-import { z } from 'zod'
-import { APIEndpoints, CRUDService } from '@/common/features/crud'
-import { TypeOperatsii } from '@/common/models'
-import { withPreprocessor } from '@/common/lib/validation'
-import { extendObject } from '@/common/lib/utils'
-import { operationTypeColumns } from './columns'
-import { SpravochnikSearchField } from '@/common/features/search'
+import type { TypeOperatsii } from '@/common/models'
 
-export const OperationTypePayloadSchema = withPreprocessor(
+import { z } from 'zod'
+
+import { APIEndpoints, CRUDService } from '@/common/features/crud'
+import { SpravochnikSearchField } from '@/common/features/search'
+import { extendObject } from '@/common/lib/utils'
+import { withPreprocessor } from '@/common/lib/validation'
+
+import { typeOperatsiiColumns } from './columns'
+
+export const TypeOperatsiiFormSchema = withPreprocessor(
   z.object({
     name: z.string(),
     rayon: z.string()
   })
 )
-export type OperationTypePayloadType = z.infer<typeof OperationTypePayloadSchema>
+export type TypeOperatsiiFormValues = z.infer<typeof TypeOperatsiiFormSchema>
 
-export const operationTypeService = new CRUDService<TypeOperatsii, OperationTypePayloadType>({
+export const typeOperatsiiService = new CRUDService<TypeOperatsii, TypeOperatsiiFormValues>({
   endpoint: APIEndpoints.type_operatsii
 })
 
-export const createOperationTypeSpravochnik = (
+export const createTypeOperatsiiSpravochnik = (
   config: Partial<SpravochnikHookOptions<TypeOperatsii>>
 ) => {
   return extendObject(
     {
       title: 'Выберите тип операции',
       endpoint: APIEndpoints.type_operatsii,
-      columnDefs: operationTypeColumns,
-      service: operationTypeService,
+      columnDefs: typeOperatsiiColumns,
+      service: typeOperatsiiService,
       filters: [SpravochnikSearchField]
     } satisfies typeof config,
     config

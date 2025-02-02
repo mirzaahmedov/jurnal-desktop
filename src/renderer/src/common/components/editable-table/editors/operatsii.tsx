@@ -1,12 +1,14 @@
+import type { EditorComponentType } from './types'
 import type { Operatsii, TypeSchetOperatsii } from '@/common/models'
-import { useSpravochnik, SpravochnikInput } from '@/common/features/spravochnik'
+
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 
-import type { EditorComponentType } from './types'
+import { operatsiiQueryKeys } from '@renderer/app/super-admin/operatsii/constants'
+import { useQuery } from '@tanstack/react-query'
+
 import { createOperatsiiSpravochnik, operatsiiService } from '@/app/super-admin/operatsii'
 import { AutoComplete } from '@/common/components/auto-complete'
-import { useQuery } from '@tanstack/react-query'
-import { operatsiiQueryKeys } from '@renderer/app/super-admin/operatsii/constants'
+import { SpravochnikInput, useSpravochnik } from '@/common/features/spravochnik'
 
 // const operatsii_input_regex = /^\d+\/?\d*$/
 

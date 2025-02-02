@@ -1,19 +1,21 @@
-import { SelectField } from '@renderer/common/components'
-import { SearchField, useSearch } from '@renderer/common/features/search'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { parseAsString, useQueryState } from 'nuqs'
+import type { Smeta } from '@renderer/common/models'
+
 import { useEffect, useState } from 'react'
 
+import { SelectField } from '@renderer/common/components'
 import { useConfirm } from '@renderer/common/features/confirm'
 import { useLayout } from '@renderer/common/features/layout'
+import { SearchField, useSearch } from '@renderer/common/features/search'
 import { useToggle } from '@renderer/common/hooks/use-toggle'
-import type { Smeta } from '@renderer/common/models'
 import { ListView } from '@renderer/common/views'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { parseAsString, useQueryState } from 'nuqs'
+
 import { smetaColumns } from './columns'
 import { smetaQueryKeys } from './config'
 import { SmetaDialog } from './dialog'
 import { smetaFilterOptions } from './group-filter'
-import { smetaService, SmetaTable } from './service'
+import { SmetaTable, smetaService } from './service'
 
 const SmetaFilters = () => {
   const [groupNumber, setGroupNumber] = useQueryState(

@@ -1,21 +1,22 @@
-import { adminMainbookService, adminMainbookUpdateQuery } from '../service'
-import { calculateColumnTotals, calculateRowTotals, transformData } from './utils'
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMemo } from 'react'
+
+import { Button } from '@renderer/common/components/ui/button'
+import { useConfirm } from '@renderer/common/features/confirm'
+import { useLayout } from '@renderer/common/features/layout'
 import {
   useQueryBudjetId,
   useQueryDateParams,
   useQueryRegionId
 } from '@renderer/common/lib/query-params'
-
-import { Button } from '@renderer/common/components/ui/button'
-import { DetailsView } from '@renderer/common/views'
 import { Mainbook } from '@renderer/common/models'
-import { ReportTable } from '../report-table'
-import { queryKeys } from '../config'
-import { useConfirm } from '@renderer/common/features/confirm'
-import { useLayout } from '@renderer/common/features/layout'
-import { useMemo } from 'react'
+import { DetailsView } from '@renderer/common/views'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
+
+import { queryKeys } from '../config'
+import { ReportTable } from '../report-table'
+import { adminMainbookService, adminMainbookUpdateQuery } from '../service'
+import { calculateColumnTotals, calculateRowTotals, transformData } from './utils'
 
 const AdminMainbookDetailsPage = () => {
   const navigate = useNavigate()

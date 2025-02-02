@@ -1,4 +1,5 @@
 import { parseAsString, useQueryStates } from 'nuqs'
+
 import { useDefaultFilters } from '@/common/features/app-defaults'
 
 const useRangeDate = () => {

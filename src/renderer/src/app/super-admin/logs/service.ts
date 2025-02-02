@@ -1,6 +1,6 @@
-import { APIEndpoints, CRUDService } from '@renderer/common/features/crud'
-
 import type { Log } from '@renderer/common/models'
+
+import { APIEndpoints, CRUDService } from '@renderer/common/features/crud'
 
 const logService = new CRUDService<Log>({
   endpoint: APIEndpoints.logs

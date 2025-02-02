@@ -1,5 +1,21 @@
 import type { PrixodPodvodkaPayloadType } from '../service'
 
+import { useCallback, useEffect } from 'react'
+
+import { zodResolver } from '@hookform/resolvers/zod'
+import { EditableTable } from '@renderer/common/components/editable-table'
+import {
+  createEditorChangeHandler,
+  createEditorCreateHandler,
+  createEditorDeleteHandler
+} from '@renderer/common/components/editable-table/helpers'
+import { GenerateFile } from '@renderer/common/features/file'
+import { useRequisitesStore } from '@renderer/common/features/requisites'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
+import { useNavigate, useParams } from 'react-router-dom'
+
 import { mainSchetQueryKeys, mainSchetService } from '@/app/region-spravochnik/main-schet'
 import { createPodotchetSpravochnik } from '@/app/region-spravochnik/podotchet'
 import { Fieldset } from '@/common/components'
@@ -14,27 +30,13 @@ import { getDataFromCache } from '@/common/lib/query-client'
 import { numberToWords } from '@/common/lib/utils'
 import { normalizeEmptyFields } from '@/common/lib/validation'
 import { Operatsii } from '@/common/models'
+import { DetailsView } from '@/common/views'
 import { DocumentFields, OpisanieFields, PodotchetFields, SummaFields } from '@/common/widget/form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { EditableTable } from '@renderer/common/components/editable-table'
-import {
-  createEditorChangeHandler,
-  createEditorCreateHandler,
-  createEditorDeleteHandler
-} from '@renderer/common/components/editable-table/helpers'
-import { useRequisitesStore } from '@renderer/common/features/requisites'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { useCallback, useEffect } from 'react'
-import { useForm } from 'react-hook-form'
-import { useNavigate, useParams } from 'react-router-dom'
+
 import { defaultValues, queryKeys } from '../constants'
 import { PrixodPayloadSchema, PrixodPodvodkaPayloadSchema, kassaPrixodService } from '../service'
 import { KassaPrixodOrderTemplate } from '../templates'
 import { podvodkaColumns } from './podvodki'
-
-import { DetailsView } from '@/common/views'
-import { GenerateFile } from '@renderer/common/features/file'
-import { useTranslation } from 'react-i18next'
 
 const KassaPrixodDetailsPage = () => {
   const { toast } = useToast()

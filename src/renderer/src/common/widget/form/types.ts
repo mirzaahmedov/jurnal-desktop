@@ -1,7 +1,7 @@
-import type { FieldError, FieldErrors, FieldValues, UseFormReturn } from 'react-hook-form'
-import type { HTMLAttributes, RefObject } from 'react'
-
 import type { FieldsetProps } from '@/common/components'
+import type { HTMLAttributes, RefObject } from 'react'
+import type { FieldError, FieldErrors, FieldValues, UseFormReturn } from 'react-hook-form'
+
 import { UseSpravochnikReturn } from '@/common/features/spravochnik'
 
 // -----------------------------------------------------------------------------

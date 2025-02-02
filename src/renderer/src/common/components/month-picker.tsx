@@ -1,13 +1,14 @@
-import { Button, ButtonProps, buttonVariants } from '@renderer/common/components/ui/button'
-import { CalendarIcon, ChevronLeft, ChevronRight } from 'lucide-react'
-import { Popover, PopoverContent, PopoverTrigger } from './ui/popover'
-import { add, eachMonthOfInterval, endOfYear, format, isFuture, parse } from 'date-fns'
-import { formatDate, parseDate } from '@renderer/common/lib/date'
-
-import { cn } from '@renderer/common/lib/utils'
-import { ru } from 'date-fns/locale/ru'
 import { useState } from 'react'
+
+import { Button, ButtonProps, buttonVariants } from '@renderer/common/components/ui/button'
+import { formatDate, parseDate } from '@renderer/common/lib/date'
+import { cn } from '@renderer/common/lib/utils'
+import { add, eachMonthOfInterval, endOfYear, format, isFuture, parse } from 'date-fns'
+import { ru } from 'date-fns/locale/ru'
+import { CalendarIcon, ChevronLeft, ChevronRight } from 'lucide-react'
+
 import { useToggle } from '../hooks'
+import { Popover, PopoverContent, PopoverTrigger } from './ui/popover'
 
 type MonthCalendarProps = {
   currentMonth: Date

@@ -1,6 +1,6 @@
-import type { OstatokProduct } from '@renderer/common/models/ostatok'
 import type { ColumnDef } from '@renderer/common/components'
 import type { HeaderGroup } from '@renderer/common/components/generic-table/table'
+import type { OstatokProduct } from '@renderer/common/models/ostatok'
 
 import { formatLocaleDate, formatNumber } from '@renderer/common/lib/format'
 

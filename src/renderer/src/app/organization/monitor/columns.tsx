@@ -1,7 +1,7 @@
 import type { OrganizationMonitor, OrganizationMonitorProvodka } from '@/common/models'
+import type { ColumnDef } from '@renderer/common/components'
 
 import { Badge } from '@renderer/common/components/ui/badge'
-import type { ColumnDef } from '@renderer/common/components'
 import { formatLocaleDate } from '@renderer/common/lib/format'
 
 export const organizationMonitorColumns: ColumnDef<OrganizationMonitor>[] = [

@@ -1,18 +1,21 @@
-import { type Location, useLocation, useNavigate, useParams } from 'react-router-dom'
+import type { Shartnoma } from '@renderer/common/models'
 
-import { DetailsView } from '@/common/views'
+import { useEffect } from 'react'
+
 import { useLayoutStore } from '@renderer/common/features/layout'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
-import type { Shartnoma } from '@renderer/common/models'
 import { useQuery } from '@tanstack/react-query'
-import { useEffect } from 'react'
+import { parseAsBoolean, useQueryState } from 'nuqs'
 import { useTranslation } from 'react-i18next'
+import { type Location, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
+
+import { DetailsView } from '@/common/views'
+
 import { shartnomaQueryKeys } from '../constants'
 import { useOrgId } from '../hooks'
 import { shartnomaService } from '../service'
 import { ShartnomaForm } from './shartnoma-form'
-import { parseAsBoolean, useQueryState } from 'nuqs'
 
 const ShartnomaDetailsPage = () => {
   const [orgId] = useOrgId()

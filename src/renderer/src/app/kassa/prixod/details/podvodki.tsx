@@ -1,3 +1,6 @@
+import type { PrixodPodvodkaPayloadType } from '../service'
+import type { EditableColumnType } from '@renderer/common/components/editable-table'
+
 import {
   createOperatsiiEditor,
   createPodrazdelenieEditor,
@@ -6,8 +9,6 @@ import {
   createTypeOperatsiiEditor
 } from '@renderer/common/components/editable-table/editors'
 
-import type { EditableColumnType } from '@renderer/common/components/editable-table'
-import type { PrixodPodvodkaPayloadType } from '../service'
 import { TypeSchetOperatsii } from '@/common/models'
 
 export const podvodkaColumns: EditableColumnType<PrixodPodvodkaPayloadType>[] = [

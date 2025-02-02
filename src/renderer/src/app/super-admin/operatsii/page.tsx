@@ -1,17 +1,20 @@
-import { GenericTable, LoadingOverlay, Pagination, usePagination } from '@/common/components'
-import { OperatsiiFilter, useOperatsiiFilters } from './filter'
+import type { Operatsii } from '@/common/models'
+
 import { useEffect, useState } from 'react'
+
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
-import type { Operatsii } from '@/common/models'
-import { OperatsiiDialog } from './dialog'
-import { operatsiiColumns } from './columns'
-import { operatsiiQueryKeys } from './constants'
-import { operatsiiService } from './service'
+import { GenericTable, LoadingOverlay, Pagination, usePagination } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
 import { useLayout } from '@/common/features/layout'
 import { useSearch } from '@/common/features/search'
 import { useToggle } from '@/common/hooks/use-toggle'
+
+import { operatsiiColumns } from './columns'
+import { operatsiiQueryKeys } from './constants'
+import { OperatsiiDialog } from './dialog'
+import { OperatsiiFilter, useOperatsiiFilters } from './filter'
+import { operatsiiService } from './service'
 
 const OperatsiiPage = () => {
   const [selected, setSelected] = useState<Operatsii | null>(null)

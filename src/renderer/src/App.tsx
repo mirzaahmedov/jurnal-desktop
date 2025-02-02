@@ -1,16 +1,17 @@
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { Suspense, useEffect } from 'react'
 
-import { ConfirmationDialog } from './common/features/confirm'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { NuqsAdapter } from 'nuqs/adapters/react-router/v7'
 import { RouterProvider } from 'react-router-dom'
-import { SpravochnikProvider } from './common/features/spravochnik'
 import { ToastContainer } from 'react-toastify'
-import { Toaster } from './common/components/ui/toaster'
-import { UpdateManager } from './common/features/update-manager'
+
 import { router } from './app/router'
-import { Suspense, useEffect } from 'react'
-import { initLocales } from './common/features/locales'
 import { LoadingOverlay } from './common/components'
+import { Toaster } from './common/components/ui/toaster'
+import { ConfirmationDialog } from './common/features/confirm'
+import { initLocales } from './common/features/locales'
+import { SpravochnikProvider } from './common/features/spravochnik'
+import { UpdateManager } from './common/features/update-manager'
 
 const queryClient = new QueryClient({
   defaultOptions: {

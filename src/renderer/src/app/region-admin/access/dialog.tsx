@@ -1,15 +1,18 @@
-import { Dialog, DialogContent, DialogFooter, DialogTitle } from '@/common/components/ui/dialog'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Dispatch, SetStateAction, useEffect } from 'react'
-import { type AccessPayloadType, accessQueryKeys, accessOptions } from './config'
-import { accessService } from './service'
+
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
-import { Form, FormField, FormItem, FormLabel } from '@/common/components/ui/form'
+
+import { LoadingOverlay } from '@/common/components'
 import { Button } from '@/common/components/ui/button'
 import { Checkbox } from '@/common/components/ui/checkbox'
-import { cn, extendObject } from '@/common/lib/utils'
+import { Dialog, DialogContent, DialogFooter, DialogTitle } from '@/common/components/ui/dialog'
+import { Form, FormField, FormItem, FormLabel } from '@/common/components/ui/form'
 import { useToast } from '@/common/hooks/use-toast'
-import { LoadingOverlay } from '@/common/components'
+import { cn, extendObject } from '@/common/lib/utils'
+
+import { type AccessPayloadType, accessOptions, accessQueryKeys } from './config'
+import { accessService } from './service'
 
 export type AccessDialogProps = {
   roleId?: number

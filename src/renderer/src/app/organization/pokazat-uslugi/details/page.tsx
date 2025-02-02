@@ -1,21 +1,7 @@
 import type { PokazatUslugiForm, PokazatUslugiProvodkaForm } from '../service'
 
-import { createOperatsiiSpravochnik } from '@/app/super-admin/operatsii'
-import { Fieldset } from '@/common/components'
-import { Form } from '@/common/components/ui/form'
-import { useLayoutStore } from '@/common/features/layout'
-import { useSpravochnik } from '@/common/features/spravochnik'
-import { useToast } from '@/common/hooks/use-toast'
-import { normalizeEmptyFields } from '@/common/lib/validation'
-import { TypeSchetOperatsii } from '@/common/models'
-import {
-  DocumentFields,
-  OperatsiiFields,
-  OpisanieFields,
-  OrganizationFields,
-  ShartnomaFields,
-  SummaFields
-} from '@/common/widget/form'
+import { useCallback, useEffect } from 'react'
+
 import { zodResolver } from '@hookform/resolvers/zod'
 import { createShartnomaSpravochnik } from '@renderer/app/organization/shartnoma'
 import { createOrganizationSpravochnik } from '@renderer/app/region-spravochnik/organization'
@@ -27,9 +13,28 @@ import {
 } from '@renderer/common/components/editable-table/helpers'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { useCallback, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
+
+import { createOperatsiiSpravochnik } from '@/app/super-admin/operatsii'
+import { Fieldset } from '@/common/components'
+import { Form } from '@/common/components/ui/form'
+import { useLayoutStore } from '@/common/features/layout'
+import { useSpravochnik } from '@/common/features/spravochnik'
+import { useToast } from '@/common/hooks/use-toast'
+import { normalizeEmptyFields } from '@/common/lib/validation'
+import { TypeSchetOperatsii } from '@/common/models'
+import { DetailsView } from '@/common/views'
+import {
+  DocumentFields,
+  OperatsiiFields,
+  OpisanieFields,
+  OrganizationFields,
+  ShartnomaFields,
+  SummaFields
+} from '@/common/widget/form'
+
 import { defaultValues, queryKeys } from '../constants'
 import {
   PokazatUslugiFormSchema,
@@ -37,9 +42,6 @@ import {
   pokazatUslugiService
 } from '../service'
 import { podvodkaColumns } from './podvodki'
-
-import { DetailsView } from '@/common/views'
-import { useTranslation } from 'react-i18next'
 
 const PokazatUslugiDetailsPage = () => {
   const { toast } = useToast()

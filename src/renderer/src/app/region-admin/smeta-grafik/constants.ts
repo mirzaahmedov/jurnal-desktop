@@ -1,4 +1,5 @@
 import { z } from 'zod'
+
 import { withPreprocessor } from '@/common/lib/validation'
 
 const smetaGrafikQueryKeys = {

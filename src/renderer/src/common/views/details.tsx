@@ -1,9 +1,9 @@
 import type { ButtonHTMLAttributes, HTMLAttributes } from 'react'
 
-import { Button } from '@renderer/common/components/ui/button'
-import { CircleCheck } from 'lucide-react'
 import { LoadingSpinner } from '@renderer/common/components'
+import { Button } from '@renderer/common/components/ui/button'
 import { cn } from '@renderer/common/lib/utils'
+import { CircleCheck } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 type DetailsViewProps = HTMLAttributes<HTMLElement>

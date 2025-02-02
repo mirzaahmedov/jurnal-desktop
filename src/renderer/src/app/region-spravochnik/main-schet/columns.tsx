@@ -1,5 +1,6 @@
 import type { ColumnDef } from '@/common/components'
 import type { MainSchet } from '@/common/models'
+
 import { TooltipCellRenderer } from '@/common/components/table/renderers/tooltip'
 
 export const mainSchetColumns: ColumnDef<MainSchet>[] = [

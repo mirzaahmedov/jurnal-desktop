@@ -1,5 +1,6 @@
-import { APIEndpoints, CRUDService } from '@/common/features/crud'
 import type { PodotchetMonitor, ResponseMeta } from '@/common/models'
+
+import { APIEndpoints, CRUDService } from '@/common/features/crud'
 
 type PodotchetMonitorMeta = ResponseMeta & {
   summa_prixod: number

@@ -1,9 +1,11 @@
-import type { Control } from 'react-hook-form'
 import type { FormEditableFieldsComponent } from '@/common/widget/form'
+import type { Control } from 'react-hook-form'
+
+import { useTranslation } from 'react-i18next'
+
 import { FormElement } from '@/common/components/form'
 import { FormField } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
-import { useTranslation } from 'react-i18next'
 
 type RequiredDoverennostFields = {
   doverennost?: string

@@ -1,21 +1,23 @@
-import { FooterCell, FooterRow, GenericTable } from '@renderer/common/components'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { usePagination, useRangeDate } from '@renderer/common/hooks'
-
 import type { BankRasxod } from '@renderer/common/models'
+
+import { useEffect } from 'react'
+
+import { FooterCell, FooterRow, GenericTable } from '@renderer/common/components'
 import { Button } from '@renderer/common/components/ui/button'
-import { CopyPlus } from 'lucide-react'
-import { ListView } from '@renderer/common/views'
-import { bankRasxodService } from './service'
-import { columns } from './columns'
-import { formatNumber } from '@renderer/common/lib/format'
-import { queryKeys } from './constants'
 import { useConfirm } from '@renderer/common/features/confirm'
 import { useLayoutStore } from '@renderer/common/features/layout'
-import { useNavigate } from 'react-router-dom'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
+import { usePagination, useRangeDate } from '@renderer/common/hooks'
+import { formatNumber } from '@renderer/common/lib/format'
+import { ListView } from '@renderer/common/views'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { CopyPlus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
-import { useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
+
+import { columns } from './columns'
+import { queryKeys } from './constants'
+import { bankRasxodService } from './service'
 
 const BankRasxodPage = () => {
   const { confirm } = useConfirm()

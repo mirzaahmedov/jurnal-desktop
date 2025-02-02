@@ -1,9 +1,11 @@
-import { APIEndpoints, CRUDService } from '@/common/features/crud'
-import { InternalTransferFormType, queryKeys } from './config'
+import type { InternalTransfer } from '@/common/models'
+
 import { useMutation, useQuery } from '@tanstack/react-query'
 
-import type { InternalTransfer } from '@/common/models'
+import { APIEndpoints, CRUDService } from '@/common/features/crud'
 import { main_schet } from '@/common/features/crud/middleware'
+
+import { InternalTransferFormType, queryKeys } from './config'
 
 const internalTransferService = new CRUDService<InternalTransfer, InternalTransferFormType>({
   endpoint: APIEndpoints.jur7_internal

@@ -1,6 +1,7 @@
-import type { User, Access } from '@/common/models'
+import type { Access, User } from '@/common/models'
+
 import { create } from 'zustand'
-import { persist, createJSONStorage } from 'zustand/middleware'
+import { createJSONStorage, persist } from 'zustand/middleware'
 
 export type AuthStoreType = {
   isAuthenticated: boolean

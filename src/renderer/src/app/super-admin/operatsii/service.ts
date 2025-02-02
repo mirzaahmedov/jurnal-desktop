@@ -1,13 +1,15 @@
-import type { Operatsii } from '@/common/models'
 import type { SpravochnikHookOptions } from '@/common/features/spravochnik'
+import type { Operatsii } from '@/common/models'
 
 import { z } from 'zod'
-import { TypeSchetOperatsii } from '@/common/models'
+
 import { APIEndpoints, CRUDService } from '@/common/features/crud'
-import { withPreprocessor } from '@/common/lib/validation'
-import { extendObject } from '@/common/lib/utils'
-import { operatsiiColumns } from './columns'
 import { SpravochnikSearchField } from '@/common/features/search'
+import { extendObject } from '@/common/lib/utils'
+import { withPreprocessor } from '@/common/lib/validation'
+import { TypeSchetOperatsii } from '@/common/models'
+
+import { operatsiiColumns } from './columns'
 
 const OperatsiiFormSchema = withPreprocessor(
   z.object({

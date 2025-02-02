@@ -1,4 +1,5 @@
 import type { PaginationValues } from '@/common/components/pagination-alt'
+
 import { parseAsInteger, useQueryStates } from 'nuqs'
 
 const usePagination = () => {

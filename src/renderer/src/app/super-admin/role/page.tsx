@@ -1,15 +1,18 @@
-import { GenericTable, LoadingOverlay } from '@/common/components'
+import type { Role } from '@/common/models'
+
 import { useEffect, useState } from 'react'
+
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
-import type { Role } from '@/common/models'
-import RoleDialog from './dialog'
-import { roleColumns } from './columns'
-import { roleQueryKeys } from './constants'
-import { roleService } from './service'
+import { GenericTable, LoadingOverlay } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
 import { useLayout } from '@/common/features/layout'
 import { useToggle } from '@/common/hooks/use-toggle'
+
+import { roleColumns } from './columns'
+import { roleQueryKeys } from './constants'
+import RoleDialog from './dialog'
+import { roleService } from './service'
 
 const RolePage = () => {
   const [selected, setSelected] = useState<Role | null>(null)

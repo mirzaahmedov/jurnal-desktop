@@ -1,13 +1,11 @@
 import type { ColumnDef } from '@/common/components'
 import type { TypeOperatsii } from '@/common/models'
 
-export const operationTypeColumns: ColumnDef<TypeOperatsii>[] = [
+export const typeOperatsiiColumns: ColumnDef<TypeOperatsii>[] = [
   {
-    key: 'name',
-    header: 'Название'
+    key: 'name'
   },
   {
-    key: 'rayon',
-    header: 'Район'
+    key: 'rayon'
   }
 ]

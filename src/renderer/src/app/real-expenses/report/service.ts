@@ -1,7 +1,7 @@
 import { APIEndpoints, CRUDService } from '@renderer/common/features/crud'
 import { budjet, main_schet } from '@renderer/common/features/crud/middleware'
-
 import { RealExpenses } from '@renderer/common/models'
+
 import { RealExpensesReportValues } from './config'
 
 export const realExpensesReportService = new CRUDService<

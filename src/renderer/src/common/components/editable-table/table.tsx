@@ -1,14 +1,16 @@
-import { ChangeContext, DeleteContext } from './editors/types'
-import { CircleMinus, CirclePlus } from 'lucide-react'
-import { EditableTableCell, EditableTableHead, EditableTableRow } from './components'
-import { Table, TableBody, TableFooter, TableHeader } from '@renderer/common/components/ui/table'
-
-import { Autocomplete } from '@renderer/common/lib/types'
-import { Button } from '@renderer/common/components/ui/button'
 import type { EditorComponentType } from './editors'
+
+import { type ReactNode, useState } from 'react'
+
+import { Button } from '@renderer/common/components/ui/button'
+import { Table, TableBody, TableFooter, TableHeader } from '@renderer/common/components/ui/table'
+import { Autocomplete } from '@renderer/common/lib/types'
+import { CircleMinus, CirclePlus } from 'lucide-react'
 import { FieldErrors } from 'react-hook-form'
-import { useState, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
+
+import { EditableTableCell, EditableTableHead, EditableTableRow } from './components'
+import { ChangeContext, DeleteContext } from './editors/types'
 
 export type EditableColumnType<T extends Record<string, unknown>> = {
   key: Autocomplete<keyof T>

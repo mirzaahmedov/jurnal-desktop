@@ -1,8 +1,10 @@
 import * as React from 'react'
+
 import * as SwitchPrimitives from '@radix-ui/react-switch'
 
-import { LoadingSpinner } from '../loading'
 import { cn } from '@/common/lib/utils'
+
+import { LoadingSpinner } from '../loading'
 
 const Switch = React.forwardRef<
   React.ElementRef<typeof SwitchPrimitives.Root>,

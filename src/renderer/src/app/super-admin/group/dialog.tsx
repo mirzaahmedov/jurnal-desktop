@@ -1,3 +1,13 @@
+import { useEffect } from 'react'
+
+import { zodResolver } from '@hookform/resolvers/zod'
+import { createSmetaSpravochnik } from '@renderer/app/super-admin/smeta'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useForm } from 'react-hook-form'
+
+import { SpravochnikInput } from '@/common/components'
+import { FormElement } from '@/common/components/form'
+import { Button } from '@/common/components/ui/button'
 import {
   Dialog,
   DialogContent,
@@ -6,22 +16,14 @@ import {
   DialogTitle
 } from '@/common/components/ui/dialog'
 import { Form, FormField } from '@/common/components/ui/form'
-import { GroupPayloadSchema, defaultValues, groupQueryKeys } from './constants'
-import { createSpravochnikKeyBindings, useSpravochnik } from '@/common/features/spravochnik'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-
-import { Button } from '@/common/components/ui/button'
-import { FormElement } from '@/common/components/form'
-import { Group } from '@/common/models'
 import { Input } from '@/common/components/ui/input'
-import { SpravochnikInput } from '@/common/components'
-import { createSmetaSpravochnik } from '@renderer/app/super-admin/smeta'
-import { extendObject } from '@/common/lib/utils'
-import { groupService } from './service'
+import { createSpravochnikKeyBindings, useSpravochnik } from '@/common/features/spravochnik'
 import { toast } from '@/common/hooks/use-toast'
-import { useEffect } from 'react'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
+import { extendObject } from '@/common/lib/utils'
+import { Group } from '@/common/models'
+
+import { GroupPayloadSchema, defaultValues, groupQueryKeys } from './constants'
+import { groupService } from './service'
 
 type GroupDialogProps = {
   data: null | Group

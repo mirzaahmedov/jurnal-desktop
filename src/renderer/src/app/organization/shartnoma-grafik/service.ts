@@ -1,8 +1,9 @@
-import { APIEndpoints, CRUDService } from '@/common/features/crud'
 import type { ShartnomaGrafik, ShartnomaGrafikDetails } from '@/common/models'
 
-import { budjet } from '@/common/features/crud/middleware'
 import { z } from 'zod'
+
+import { APIEndpoints, CRUDService } from '@/common/features/crud'
+import { budjet } from '@/common/features/crud/middleware'
 
 export const shartnomaGrafikService = new CRUDService<ShartnomaGrafik, ShartnomaGrafikForm>({
   endpoint: APIEndpoints.shartnoma_grafik

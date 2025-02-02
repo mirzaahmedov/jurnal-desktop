@@ -1,9 +1,11 @@
-import { APIEndpoints, CRUDService } from '@renderer/common/features/crud'
 import type { SpravochnikHookOptions } from '@renderer/common/features/spravochnik'
-import { extendObject } from '@renderer/common/lib/utils'
 import type { Mainbook } from '@renderer/common/models'
-import { adminMainbookSchetColumns } from './columns'
+
+import { APIEndpoints, CRUDService } from '@renderer/common/features/crud'
 import { SpravochnikSearchField } from '@renderer/common/features/search'
+import { extendObject } from '@renderer/common/lib/utils'
+
+import { adminMainbookSchetColumns } from './columns'
 
 export const adminMainbookSchetService = new CRUDService<Mainbook.Schet>({
   endpoint: APIEndpoints.admin__mainbook_schet

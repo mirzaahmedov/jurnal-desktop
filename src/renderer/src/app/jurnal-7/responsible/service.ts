@@ -1,10 +1,11 @@
-import type { Responsible } from '@/common/models'
 import type { ResponsibleFormValues } from './constants'
 import type { SpravochnikHookOptions } from '@/common/features/spravochnik'
+import type { Responsible } from '@/common/models'
 
 import { APIEndpoints, CRUDService } from '@/common/features/crud'
-import { responsibleColumns } from './columns'
 import { extendObject } from '@/common/lib/utils'
+
+import { responsibleColumns } from './columns'
 
 export const responsibleService = new CRUDService<Responsible, ResponsibleFormValues>({
   endpoint: APIEndpoints.jur7_responsible

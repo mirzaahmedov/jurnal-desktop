@@ -1,7 +1,14 @@
-import type { Operatsii } from '@/common/models'
 import type { OperatsiiForm } from './service'
+import type { Operatsii } from '@/common/models'
 
-import { TypeSchetOperatsii } from '@/common/models'
+import { useEffect } from 'react'
+
+import { zodResolver } from '@hookform/resolvers/zod'
+import { createSmetaSpravochnik } from '@renderer/app/super-admin/smeta'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useForm } from 'react-hook-form'
+
+import { SelectField } from '@/common/components'
 import { Button } from '@/common/components/ui/button'
 import {
   Dialog,
@@ -12,24 +19,20 @@ import {
 } from '@/common/components/ui/dialog'
 import {
   Form,
+  FormControl,
   FormField,
   FormItem,
-  FormControl,
   FormLabel,
   FormMessage
 } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
-import { SelectField } from '@/common/components'
-import { useEffect } from 'react'
-import { useForm } from 'react-hook-form'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { useToast } from '@/common/hooks/use-toast'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { OperatsiiFormSchema, operatsiiService } from './service'
-import { createSmetaSpravochnik } from '@renderer/app/super-admin/smeta'
-import { operatsiiQueryKeys, operatsiiTypeSchetOptions } from './constants'
 import { useSpravochnik } from '@/common/features/spravochnik'
+import { useToast } from '@/common/hooks/use-toast'
+import { TypeSchetOperatsii } from '@/common/models'
+
+import { operatsiiQueryKeys, operatsiiTypeSchetOptions } from './constants'
 import { useOperatsiiFilters } from './filter'
+import { OperatsiiFormSchema, operatsiiService } from './service'
 
 type OperatsiiDialogProps = {
   open: boolean

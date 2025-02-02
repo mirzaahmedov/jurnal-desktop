@@ -1,14 +1,15 @@
-import { DatePicker, Fieldset } from '@/common/components'
+import type { FormEditableFieldsComponent } from './types'
+import type { Control } from 'react-hook-form'
 
 import { CalendarProps } from '@renderer/common/components/ui/calendar'
-import type { Control } from 'react-hook-form'
-import type { FormEditableFieldsComponent } from './types'
+import { validateDate } from '@renderer/common/lib/date'
+import { cn } from '@renderer/common/lib/utils'
+import { useTranslation } from 'react-i18next'
+
+import { DatePicker, Fieldset } from '@/common/components'
 import { FormElement } from '@/common/components/form'
 import { FormField } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
-import { cn } from '@renderer/common/lib/utils'
-import { validateDate } from '@renderer/common/lib/date'
-import { useTranslation } from 'react-i18next'
 
 type RequiredDocumentFields = {
   doc_num: string

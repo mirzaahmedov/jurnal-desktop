@@ -1,16 +1,19 @@
-import { ChooseSpravochnik, GenericTable } from '@/common/components'
-
-import { useLayoutStore } from '@/common/features/layout'
-import { useSpravochnik } from '@/common/features/spravochnik'
-import { usePagination } from '@/common/hooks'
 import type { ShartnomaGrafik } from '@/common/models'
-import { ListView } from '@/common/views'
+
+import { useEffect } from 'react'
+
 import { createOrganizationSpravochnik } from '@renderer/app/region-spravochnik/organization'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
 import { useQuery } from '@tanstack/react-query'
-import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
+
+import { ChooseSpravochnik, GenericTable } from '@/common/components'
+import { useLayoutStore } from '@/common/features/layout'
+import { useSpravochnik } from '@/common/features/spravochnik'
+import { usePagination } from '@/common/hooks'
+import { ListView } from '@/common/views'
+
 import { shartnomaGrafikColumns } from './columns'
 import { shartnomaGrafikQueryKeys } from './constants'
 import { useOrgId } from './hooks'

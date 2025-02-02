@@ -1,15 +1,18 @@
-import { GenericTable, LoadingOverlay, Pagination, usePagination } from '@/common/components'
+import type { Bank } from '@/common/models'
+
+import { useState } from 'react'
+
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
-import type { Bank } from '@/common/models'
-import { BankDialog } from './dialog'
-import { bankColumns } from './columns'
-import { bankQueryKeys } from './config'
-import { bankService } from './service'
+import { GenericTable, LoadingOverlay, Pagination, usePagination } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
 import { useLayout } from '@/common/features/layout'
-import { useState } from 'react'
 import { useToggle } from '@/common/hooks/use-toggle'
+
+import { bankColumns } from './columns'
+import { bankQueryKeys } from './config'
+import { BankDialog } from './dialog'
+import { bankService } from './service'
 
 const BankPage = () => {
   const [selected, setSelected] = useState<Bank>()

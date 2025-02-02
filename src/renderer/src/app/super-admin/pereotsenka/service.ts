@@ -1,11 +1,12 @@
-import type { Group, Pereotsenka, Response } from '@/common/models'
 import type { PereotsenkaForm } from './config'
 import type { SpravochnikHookOptions } from '@/common/features/spravochnik'
+import type { Group, Pereotsenka, Response } from '@/common/models'
 
 import { APIEndpoints, CRUDService } from '@/common/features/crud'
-import { extendObject } from '@/common/lib/utils'
-import { pereotsenkaColumns } from './columns'
 import { http } from '@/common/lib/http'
+import { extendObject } from '@/common/lib/utils'
+
+import { pereotsenkaColumns } from './columns'
 
 const pereotsenkaService = new CRUDService<Pereotsenka, PereotsenkaForm>({
   endpoint: APIEndpoints.jur7_pereotsenka

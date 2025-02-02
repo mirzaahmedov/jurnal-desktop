@@ -1,9 +1,11 @@
-import type { Control } from 'react-hook-form'
 import type { FormEditableFieldsComponent } from './types'
+import type { Control } from 'react-hook-form'
+
+import { useTranslation } from 'react-i18next'
+
 import { FormElement } from '@/common/components/form'
 import { FormField } from '@/common/components/ui/form'
 import { Textarea } from '@/common/components/ui/textarea'
-import { useTranslation } from 'react-i18next'
 
 type RequiredOpisanieFields = {
   opisanie?: string

@@ -1,6 +1,7 @@
+import { useTranslation } from 'react-i18next'
+
 import { formatNumber } from '@/common/lib/format'
 import { cn } from '@/common/lib/utils'
-import { useTranslation } from 'react-i18next'
 
 type AccountBalanceProps = {
   balance: number

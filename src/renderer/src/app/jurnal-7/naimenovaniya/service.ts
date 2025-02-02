@@ -1,10 +1,11 @@
-import type { Naimenovanie, NaimenovanieKol } from '@/common/models'
 import type { DenominationPayloadType } from './constants'
 import type { SpravochnikHookOptions } from '@/common/features/spravochnik'
+import type { Naimenovanie, NaimenovanieKol } from '@/common/models'
 
 import { APIEndpoints, CRUDService } from '@/common/features/crud'
-import { naimenovanieColumns, naimenovanieKolColumns } from './columns'
 import { extendObject } from '@/common/lib/utils'
+
+import { naimenovanieColumns, naimenovanieKolColumns } from './columns'
 
 export const naimenovanieService = new CRUDService<Naimenovanie, DenominationPayloadType>({
   endpoint: APIEndpoints.jur7_naimenovanie

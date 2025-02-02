@@ -1,19 +1,19 @@
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger
-} from '@renderer/common/components/ui/collapsible'
+import type { ColumnDef } from './types'
+
 import {
   GenericTableCell,
   GenericTableHead,
   GenericTableRow
 } from '@renderer/common/components/generic-table'
-import { Pencil, Plus, Trash2 } from 'lucide-react'
-import { Table, TableBody, TableHeader } from '@renderer/common/components/ui/table'
-
 import { Button } from '@renderer/common/components/ui/button'
-import type { ColumnDef } from './types'
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger
+} from '@renderer/common/components/ui/collapsible'
+import { Table, TableBody, TableHeader } from '@renderer/common/components/ui/table'
 import { cn } from '@renderer/common/lib/utils'
+import { Pencil, Plus, Trash2 } from 'lucide-react'
 
 export type CollapsibleTableProps<T> = {
   data: T[]

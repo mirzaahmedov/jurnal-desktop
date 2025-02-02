@@ -1,3 +1,6 @@
+import { useEffect, useState } from 'react'
+
+import { events } from '@main/auto-updater'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -6,13 +9,11 @@ import {
   AlertDialogFooter,
   AlertDialogTitle
 } from '@renderer/common/components/ui/alert-dialog'
-import { Check, CircleFadingArrowUp, CircleX, Download } from 'lucide-react'
-import { useEffect, useState } from 'react'
-
 import { Progress } from '@renderer/common/components/ui/progress'
 import { cn } from '@renderer/common/lib/utils'
-import { events } from '@main/auto-updater'
+import { Check, CircleFadingArrowUp, CircleX, Download } from 'lucide-react'
 import { toast } from 'react-toastify'
+
 import { useUpdateManagerStore } from './store'
 
 const ipcRenderer = window.electron.ipcRenderer

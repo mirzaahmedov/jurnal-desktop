@@ -1,5 +1,6 @@
 import type { UseFormReturn } from 'react-hook-form'
 import type { ZodSchema } from 'zod'
+
 import { focusInvalidInput } from '@renderer/common/lib/errors'
 
 const createEditorCreateHandler =

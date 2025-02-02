@@ -1,7 +1,8 @@
+import { z } from 'zod'
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
+
 import { withPreprocessor } from '@/common/lib/validation'
-import { z } from 'zod'
 
 const RequisitesSchema = withPreprocessor(
   z.object({

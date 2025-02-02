@@ -1,15 +1,18 @@
-import { GenericTable, LoadingOverlay } from '@/common/components'
+import type { User } from '@/common/models'
+
 import { useEffect, useState } from 'react'
+
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
-import RegionUserDialog from './dialog'
-import type { User } from '@/common/models'
-import { regionUserColumns } from './columns'
-import { regionUserKeys } from './constants'
-import { regionUserService } from './service'
+import { GenericTable, LoadingOverlay } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
 import { useLayout } from '@/common/features/layout'
 import { useToggle } from '@/common/hooks/use-toggle'
+
+import { regionUserColumns } from './columns'
+import { regionUserKeys } from './constants'
+import RegionUserDialog from './dialog'
+import { regionUserService } from './service'
 
 const RegionUserPage = () => {
   const [selected, setSelected] = useState<User | null>(null)

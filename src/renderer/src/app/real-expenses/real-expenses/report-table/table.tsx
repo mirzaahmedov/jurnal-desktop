@@ -1,14 +1,16 @@
+import type { Mainbook } from '@renderer/common/models'
 import type { MouseEvent, RefObject, UIEvent } from 'react'
-import { ReportTableCell, ReportTableHead, ReportTableRow } from './table-components'
-import { Table, TableBody, TableHeader } from '@renderer/common/components/ui/table'
-import { cn, parseCSSNumericValue } from '@renderer/common/lib/utils'
+
 import { createRef, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 
-import { ExpensesTableRow } from '../details/utils'
 import { LoadingOverlay } from '@renderer/common/components'
-import type { Mainbook } from '@renderer/common/models'
-import { columns } from './columns'
+import { Table, TableBody, TableHeader } from '@renderer/common/components/ui/table'
 import { formatNumber } from '@renderer/common/lib/format'
+import { cn, parseCSSNumericValue } from '@renderer/common/lib/utils'
+
+import { ExpensesTableRow } from '../details/utils'
+import { columns } from './columns'
+import { ReportTableCell, ReportTableHead, ReportTableRow } from './table-components'
 
 const stickyColumns = columns.filter((column) => column.sticky)
 

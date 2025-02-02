@@ -1,25 +1,28 @@
+import type { NavElement } from './constants'
+
+import { useEffect, useState } from 'react'
+
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger
 } from '@renderer/common/components/ui/accordion'
-import { ChevronsLeft, ChevronsRight, RefreshCcw } from 'lucide-react'
-import { useEffect, useState } from 'react'
-
 import { Badge } from '@renderer/common/components/ui/badge'
 import { Button } from '@renderer/common/components/ui/button'
-import type { NavElement } from './constants'
-import { NavLink } from 'react-router-dom'
-import { ScrollArea } from '@/common/components/ui/scroll-area'
-import { cn } from '@renderer/common/lib/utils'
-import { create } from 'zustand'
-import { getNavElements } from './constants'
-import logo from '@resources/logo.svg'
-import { persist } from 'zustand/middleware'
 import { useUpdateManagerStore } from '@renderer/common/features/update-manager'
-import { LoadingSpinner } from '../components'
+import { cn } from '@renderer/common/lib/utils'
+import logo from '@resources/logo.svg'
+import { ChevronsLeft, ChevronsRight, RefreshCcw } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+import { NavLink } from 'react-router-dom'
+import { create } from 'zustand'
+import { persist } from 'zustand/middleware'
+
+import { ScrollArea } from '@/common/components/ui/scroll-area'
+
+import { LoadingSpinner } from '../components'
+import { getNavElements } from './constants'
 
 type SidebarStore = {
   isCollapsed: boolean

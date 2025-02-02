@@ -1,4 +1,3 @@
-import type { AxiosInstance, AxiosRequestConfig } from 'axios'
 import type {
   CRUDServiceOptions,
   GetAllQueryKey,
@@ -6,10 +5,11 @@ import type {
   MiddlewareFunction,
   RequestBuilderFunction
 } from './definition'
+import type { Response } from '@/common/models'
+import type { QueryFunctionContext } from '@tanstack/react-query'
+import type { AxiosInstance, AxiosRequestConfig } from 'axios'
 
 import { APIEndpoints } from '@/common/features/crud'
-import type { QueryFunctionContext } from '@tanstack/react-query'
-import type { Response } from '@/common/models'
 import { http } from '@/common/lib/http'
 
 export class CRUDService<T, C = T, U = C, M = undefined> {

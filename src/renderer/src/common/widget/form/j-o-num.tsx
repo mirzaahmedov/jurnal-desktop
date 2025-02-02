@@ -1,8 +1,9 @@
 import type { FormSpravochnikFieldsComponent } from './types'
 import type { Operatsii } from '@/common/models'
 
-import { SpravochnikField } from '@/common/features/spravochnik'
 import { useTranslation } from 'react-i18next'
+
+import { SpravochnikField } from '@/common/features/spravochnik'
 
 const JONumFields: FormSpravochnikFieldsComponent<Operatsii> = ({
   tabIndex,

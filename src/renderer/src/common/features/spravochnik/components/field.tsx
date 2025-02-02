@@ -1,9 +1,10 @@
-import type { Ref } from 'react'
-import type { FormElementProps } from '@/common/components/form'
 import type { SpravochnikInputProps } from './input'
+import type { FormElementProps } from '@/common/components/form'
+import type { Ref } from 'react'
+
+import { FormElement } from '@/common/components/form'
 
 import { SpravochnikInput } from './input'
-import { FormElement } from '@/common/components/form'
 
 type SpravochnikFieldProps<T> = SpravochnikInputProps<T> & {
   label: string

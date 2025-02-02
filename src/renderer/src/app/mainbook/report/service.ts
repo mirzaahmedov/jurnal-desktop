@@ -1,7 +1,7 @@
 import { APIEndpoints, CRUDService } from '@renderer/common/features/crud'
 import { budjet, main_schet } from '@renderer/common/features/crud/middleware'
-
 import { Mainbook } from '@renderer/common/models'
+
 import { MainbookReportValues } from './config'
 
 export const mainbookReportService = new CRUDService<Mainbook.Report, MainbookReportValues>({

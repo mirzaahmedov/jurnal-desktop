@@ -1,6 +1,7 @@
-import { formatDate, getFirstDayOfMonth, getLastDayOfMonth } from '@/common/lib/date'
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
+
+import { formatDate, getFirstDayOfMonth, getLastDayOfMonth } from '@/common/lib/date'
 
 type DefaultFiltersState = {
   from: string

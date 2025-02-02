@@ -1,5 +1,6 @@
 import { QueryFunctionContext } from '@tanstack/react-query'
 import { AxiosInstance, AxiosRequestConfig } from 'axios'
+
 import { APIEndpoints } from './constants'
 
 export type QueryKeyParams = {

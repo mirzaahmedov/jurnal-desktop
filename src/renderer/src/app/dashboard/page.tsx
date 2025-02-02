@@ -1,8 +1,9 @@
+import { LoadingOverlay } from '@renderer/common/components'
 import { useQuery } from '@tanstack/react-query'
+
+import { mainSchetQueryKeys, mainSchetService } from '../region-spravochnik/main-schet'
 import { BankBalanceBarChart } from './components/bank-balance'
 import KassaBalance from './components/kassa-balance'
-import { mainSchetQueryKeys, mainSchetService } from '../region-spravochnik/main-schet'
-import { LoadingOverlay } from '@renderer/common/components'
 
 const DashboardPage = () => {
   const { data: mainSchets, isFetching } = useQuery({

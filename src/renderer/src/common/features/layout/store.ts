@@ -1,5 +1,7 @@
 import { type ComponentType, useEffect } from 'react'
+
 import { create } from 'zustand'
+
 import { useEventCallback } from '@/common/hooks/use-event-callback'
 
 export interface Breadcrumb {

@@ -1,17 +1,19 @@
-import { ArrowLeft, ArrowRight } from 'lucide-react'
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/common/components/ui/dialog'
-import { GenericTable, LoadingOverlay } from '@/common/components'
+import type { SpravochnikData } from './store'
+import type { KeyboardEvent } from 'react'
+
 import { useEffect, useRef, useState } from 'react'
 
-import { Button } from '@/common/components/ui/button'
-import type { KeyboardEvent } from 'react'
-import Paginate from 'react-paginate'
 import { ScrollArea } from '@renderer/common/components/ui/scroll-area'
-import type { SpravochnikData } from './store'
+import { useToggle } from '@renderer/common/hooks'
+import { useQuery } from '@tanstack/react-query'
+import { ArrowLeft, ArrowRight } from 'lucide-react'
+import Paginate from 'react-paginate'
+
+import { GenericTable, LoadingOverlay } from '@/common/components'
+import { Button } from '@/common/components/ui/button'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/common/components/ui/dialog'
 import { extendObject } from '@/common/lib/utils'
 import { normalizeEmptyFields } from '@/common/lib/validation'
-import { useQuery } from '@tanstack/react-query'
-import { useToggle } from '@renderer/common/hooks'
 
 type SpravochnikProps = {
   close: (id: string) => void

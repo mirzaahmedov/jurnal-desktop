@@ -1,5 +1,6 @@
-import { LogType } from '@renderer/common/models'
 import { SelectField } from '@renderer/common/components'
+import { LogType } from '@renderer/common/models'
+
 import { useLogType } from './hooks'
 
 const filterOptions = [

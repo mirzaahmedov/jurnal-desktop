@@ -1,37 +1,38 @@
+import { useEffect, useMemo, useRef } from 'react'
+
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Fieldset, inputVariants } from '@renderer/common/components'
 import {
   EditableTable,
   EditableTableCell,
   EditableTableRow
 } from '@renderer/common/components/editable-table'
-import { Fieldset, inputVariants } from '@renderer/common/components'
+import {
+  createEditorChangeHandler,
+  createEditorCreateHandler,
+  createEditorDeleteHandler
+} from '@renderer/common/components/editable-table/helpers'
+import { MonthPicker } from '@renderer/common/components/month-picker'
+import { Form } from '@renderer/common/components/ui/form'
+import { Input } from '@renderer/common/components/ui/input'
+import { useLayout } from '@renderer/common/features/layout'
+import { useRequisitesStore } from '@renderer/common/features/requisites'
+import { toast } from '@renderer/common/hooks'
+import { formatNumber } from '@renderer/common/lib/format'
+import { cn } from '@renderer/common/lib/utils'
+import { DetailsView } from '@renderer/common/views'
+import { useMutation, useQuery } from '@tanstack/react-query'
+import { useForm } from 'react-hook-form'
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
+
 import {
   OXReportFormSchema,
   OXReportProvodkaSchema,
   defaultValues,
   oxReportQueryKeys
 } from '../config'
-import {
-  createEditorChangeHandler,
-  createEditorCreateHandler,
-  createEditorDeleteHandler
-} from '@renderer/common/components/editable-table/helpers'
-import { useEffect, useMemo, useRef } from 'react'
-import { useMutation, useQuery } from '@tanstack/react-query'
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
-
-import { DetailsView } from '@renderer/common/views'
-import { Form } from '@renderer/common/components/ui/form'
-import { Input } from '@renderer/common/components/ui/input'
-import { MonthPicker } from '@renderer/common/components/month-picker'
-import { cn } from '@renderer/common/lib/utils'
-import { formatNumber } from '@renderer/common/lib/format'
 import { oxReportService } from '../service'
 import { provodkaColumns } from './provodka'
-import { toast } from '@renderer/common/hooks'
-import { useForm } from 'react-hook-form'
-import { useLayout } from '@renderer/common/features/layout'
-import { useRequisitesStore } from '@renderer/common/features/requisites'
-import { zodResolver } from '@hookform/resolvers/zod'
 
 const OXReportDetailsPage = () => {
   const tableRef = useRef<HTMLTableElement>(null)

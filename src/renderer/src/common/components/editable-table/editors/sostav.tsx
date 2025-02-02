@@ -1,7 +1,7 @@
 import type { EditorComponentType } from './types'
 
 import { createSostavSpravochnik } from '@/app/region-spravochnik/sostav'
-import { useSpravochnik, SpravochnikInput } from '@/common/features/spravochnik'
+import { SpravochnikInput, useSpravochnik } from '@/common/features/spravochnik'
 
 export const createStaffEditor = <
   T extends { id_spravochnik_sostav?: number }

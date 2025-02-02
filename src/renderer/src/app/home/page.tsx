@@ -1,9 +1,9 @@
-import { mainSchetQueryKeys, mainSchetService } from '@/app/region-spravochnik/main-schet'
-
-import logo from '@resources/logo.svg'
-import { useLayout } from '@/common/features/layout'
-import { useQuery } from '@tanstack/react-query'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
+import logo from '@resources/logo.svg'
+import { useQuery } from '@tanstack/react-query'
+
+import { mainSchetQueryKeys, mainSchetService } from '@/app/region-spravochnik/main-schet'
+import { useLayout } from '@/common/features/layout'
 
 const HomePage = () => {
   const main_schet_id = useRequisitesStore((store) => store.main_schet_id)

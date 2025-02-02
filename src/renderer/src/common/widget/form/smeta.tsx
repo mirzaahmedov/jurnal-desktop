@@ -1,9 +1,10 @@
-import { SpravochnikField, SpravochnikFields } from '@/common/features/spravochnik'
-
 import type { FormSpravochnikFieldsComponent } from './types'
 import type { Smeta } from '@/common/models'
+
 import { cn } from '@renderer/common/lib/utils'
 import { useTranslation } from 'react-i18next'
+
+import { SpravochnikField, SpravochnikFields } from '@/common/features/spravochnik'
 
 const SmetaFields: FormSpravochnikFieldsComponent<Smeta> = ({
   tabIndex,

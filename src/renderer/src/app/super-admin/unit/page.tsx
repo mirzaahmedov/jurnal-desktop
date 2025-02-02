@@ -1,16 +1,19 @@
+import type { Unit } from '@/common/models'
+
 import { useEffect, useState } from 'react'
+
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 import { GenericTable } from '@/common/components'
-import { ListView } from '@/common/views'
-import type { Unit } from '@/common/models'
-import { UnitDialog } from './dialog'
-import { unitColumns } from './columns'
-import { unitQueryKeys } from './constants'
-import { unitService } from './service'
 import { useConfirm } from '@/common/features/confirm'
 import { useLayout } from '@/common/features/layout'
 import { useToggle } from '@/common/hooks/use-toggle'
+import { ListView } from '@/common/views'
+
+import { unitColumns } from './columns'
+import { unitQueryKeys } from './constants'
+import { UnitDialog } from './dialog'
+import { unitService } from './service'
 
 const UnitPage = () => {
   const [selected, setSelected] = useState<Unit | null>(null)

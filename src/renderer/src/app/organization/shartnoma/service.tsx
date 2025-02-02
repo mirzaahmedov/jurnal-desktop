@@ -5,24 +5,26 @@ import type {
 } from '@/common/features/spravochnik'
 import type { Shartnoma } from '@/common/models'
 
-import { APIEndpoints, CRUDService } from '@/common/features/crud'
-import { budjet } from '@/common/features/crud/middleware'
-import { SpravochnikSearchField } from '@/common/features/search'
-import { extendObject } from '@/common/lib/utils'
-import { withPreprocessor } from '@/common/lib/validation'
+import { GenericTable } from '@renderer/common/components'
+import { Button } from '@renderer/common/components/ui/button'
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle
 } from '@renderer/common/components/ui/dialog'
+import { CopyPlus } from 'lucide-react'
 import { z } from 'zod'
+
+import { APIEndpoints, CRUDService } from '@/common/features/crud'
+import { budjet } from '@/common/features/crud/middleware'
+import { SpravochnikSearchField } from '@/common/features/search'
+import { extendObject } from '@/common/lib/utils'
+import { withPreprocessor } from '@/common/lib/validation'
+
 import { shartnomaColumns } from './columns'
 import { shartnomaQueryKeys } from './constants'
 import { ShartnomaForm } from './details/shartnoma-form'
-import { GenericTable } from '@renderer/common/components'
-import { Button } from '@renderer/common/components/ui/button'
-import { CopyPlus } from 'lucide-react'
 
 export const shartnomaService = new CRUDService<Shartnoma, ShartnomaFormValues>({
   endpoint: APIEndpoints.shartnoma

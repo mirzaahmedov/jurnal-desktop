@@ -1,9 +1,10 @@
-import { APIEndpoints, CRUDService } from '@/common/features/crud'
-import { validateProvodkaOperatsii, withPreprocessor } from '@/common/lib/validation'
-
 import type { PokazatUslugi } from '@/common/models'
-import { main_schet } from '@/common/features/crud/middleware'
+
 import { z } from 'zod'
+
+import { APIEndpoints, CRUDService } from '@/common/features/crud'
+import { main_schet } from '@/common/features/crud/middleware'
+import { validateProvodkaOperatsii, withPreprocessor } from '@/common/lib/validation'
 
 export const pokazatUslugiService = new CRUDService<PokazatUslugi, PokazatUslugiForm>({
   endpoint: APIEndpoints.pokazat_uslugi

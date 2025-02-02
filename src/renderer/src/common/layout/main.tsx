@@ -1,6 +1,8 @@
 import { Outlet } from 'react-router-dom'
+
 import { AuthGuard } from '@/common/features/auth'
 import { PageLayout } from '@/common/features/layout'
+
 import Sidebar from './sidebar'
 
 const MainLayout = () => {

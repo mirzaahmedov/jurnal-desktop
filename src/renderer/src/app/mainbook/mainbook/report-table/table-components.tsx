@@ -1,10 +1,12 @@
-import type { HTMLAttributes, TdHTMLAttributes, ThHTMLAttributes } from 'react'
-import { TableCell, TableHead, TableRow } from '@/common/components/ui/table'
-
 import type { VariantProps } from 'class-variance-authority'
-import { cn } from '@/common/lib/utils'
-import { cva } from 'class-variance-authority'
+import type { HTMLAttributes, TdHTMLAttributes, ThHTMLAttributes } from 'react'
+
 import { forwardRef } from 'react'
+
+import { cva } from 'class-variance-authority'
+
+import { TableCell, TableHead, TableRow } from '@/common/components/ui/table'
+import { cn } from '@/common/lib/utils'
 
 const cellVariants = cva(
   '[&.stuck-right]:border-l !p-0 font-bold text-xs text-right border-r border-b last:border-r-0 font-medium text-slate-600 border-slate-200',

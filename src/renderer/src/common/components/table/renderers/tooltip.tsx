@@ -1,13 +1,14 @@
 import type { HTMLAttributes, ReactNode } from 'react'
+
+import { TooltipContentProps } from '@radix-ui/react-tooltip'
+
+import { Copyable } from '@/common/components'
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger
 } from '@/common/components/ui/tooltip'
-
-import { Copyable } from '@/common/components'
-import { TooltipContentProps } from '@radix-ui/react-tooltip'
 import { cn } from '@/common/lib/utils'
 
 type TooltipCellRenderProps<T extends { id: number }> = TooltipContentProps &

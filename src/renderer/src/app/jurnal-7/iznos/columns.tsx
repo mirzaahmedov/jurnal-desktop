@@ -1,7 +1,8 @@
 import type { ColumnDef } from '@renderer/common/components'
 import type { Iznos } from '@renderer/common/models'
-import { formatLocaleDate } from '@renderer/common/lib/format'
+
 import { getMonthName } from '@renderer/common/lib/date'
+import { formatLocaleDate } from '@renderer/common/lib/format'
 
 export const columns: ColumnDef<Iznos>[] = [
   {

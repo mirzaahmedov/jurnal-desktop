@@ -1,11 +1,13 @@
-import type { Jur7Podrazdelenie } from '@/common/models'
 import type { Subdivision7PayloadType } from './constants'
 import type { SpravochnikHookOptions } from '@/common/features/spravochnik'
+import type { Jur7Podrazdelenie } from '@/common/models'
+
+import { SpravochnikSearchField } from '@renderer/common/features/search'
 
 import { APIEndpoints, CRUDService } from '@/common/features/crud'
 import { extendObject } from '@/common/lib/utils'
+
 import { podrazdelenie7Columns } from './columns'
-import { SpravochnikSearchField } from '@renderer/common/features/search'
 
 export const subdivision7Service = new CRUDService<Jur7Podrazdelenie, Subdivision7PayloadType>({
   endpoint: APIEndpoints.jur7_podrazdelenie

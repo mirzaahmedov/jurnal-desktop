@@ -1,16 +1,18 @@
-import { Combobox } from '@/common/components'
-import { Control } from 'react-hook-form'
-import { Fieldset } from '@/common/components'
 import type { FormEditableFieldsComponent } from './types'
+
+import { useRequisitesStore } from '@renderer/common/features/requisites'
+import { useQuery } from '@tanstack/react-query'
+import { Control } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
+
+import { Combobox } from '@/common/components'
+import { Fieldset } from '@/common/components'
 import { FormElement } from '@/common/components/form'
 import { FormField } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
-import { Response } from '@/common/models'
-import { cn } from '@/common/lib/utils'
 import { http } from '@/common/lib/http'
-import { useQuery } from '@tanstack/react-query'
-import { useRequisitesStore } from '@renderer/common/features/requisites'
-import { useTranslation } from 'react-i18next'
+import { cn } from '@/common/lib/utils'
+import { Response } from '@/common/models'
 
 type RequiredManagementFields = {
   rukovoditel?: string | null

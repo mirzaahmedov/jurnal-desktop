@@ -1,19 +1,20 @@
-import { FileDown, Save } from 'lucide-react'
-import { getOXById, getOXInfo, oxService } from '../service'
 import { useEffect, useState } from 'react'
-import { useMutation, useQuery } from '@tanstack/react-query'
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 
-import { Button } from '@renderer/common/components/ui/button'
-import { DetailsView } from '@renderer/common/views'
 import { MonthPicker } from '@renderer/common/components/month-picker'
-import { OX } from '@renderer/common/models'
-import { ReportTable } from '../report-table'
-import { formatDate } from '@renderer/common/lib/date'
-import { oxQueryKeys } from '../config'
-import { toast } from '@renderer/common/hooks'
+import { Button } from '@renderer/common/components/ui/button'
 import { useLayout } from '@renderer/common/features/layout'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
+import { toast } from '@renderer/common/hooks'
+import { formatDate } from '@renderer/common/lib/date'
+import { OX } from '@renderer/common/models'
+import { DetailsView } from '@renderer/common/views'
+import { useMutation, useQuery } from '@tanstack/react-query'
+import { FileDown, Save } from 'lucide-react'
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
+
+import { oxQueryKeys } from '../config'
+import { ReportTable } from '../report-table'
+import { getOXById, getOXInfo, oxService } from '../service'
 
 const OXDetailsPage = () => {
   const budjet_id = useRequisitesStore((store) => store.budjet_id)

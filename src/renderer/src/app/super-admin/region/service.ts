@@ -1,8 +1,9 @@
-import { APIEndpoints, CRUDService } from '@/common/features/crud'
-
 import type { Region } from '@/common/models'
-import { withPreprocessor } from '@/common/lib/validation'
+
 import { z } from 'zod'
+
+import { APIEndpoints, CRUDService } from '@/common/features/crud'
+import { withPreprocessor } from '@/common/lib/validation'
 
 export const RegionPayloadSchema = withPreprocessor(
   z.object({

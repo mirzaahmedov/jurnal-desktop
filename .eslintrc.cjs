@@ -14,6 +14,22 @@ module.exports = {
     'react/prop-types': 'off',
     'no-case-declarations': 'off',
     'prettier/prettier': 'off',
-    'react/display-name': 'off'
+    'react/display-name': 'off',
+    '@typescript-eslint/consistent-type-imports': [
+      'error',
+      {
+        prefer: 'type-imports', // Enforce `import type`
+        fixStyle: 'separate-type-imports' // Move type imports to the top
+      }
+    ],
+    'sort-imports': [
+      'error',
+      {
+        ignoreCase: false,
+        ignoreDeclarationSort: true, // Keep module sorting by groups
+        ignoreMemberSort: false,
+        memberSyntaxSortOrder: ['none', 'all', 'multiple', 'single']
+      }
+    ]
   }
 }

@@ -1,12 +1,13 @@
-import { Fieldset, NumericInput } from '@/common/components'
-import { cn, numberToWords } from '@/common/lib/utils'
+import type { FormEditableFieldsComponent } from './types'
 
 import { Control } from 'react-hook-form'
-import type { FormEditableFieldsComponent } from './types'
+import { useTranslation } from 'react-i18next'
+
+import { Fieldset, NumericInput } from '@/common/components'
 import { FormElement } from '@/common/components/form'
 import { FormField } from '@/common/components/ui/form'
 import { Textarea } from '@/common/components/ui/textarea'
-import { useTranslation } from 'react-i18next'
+import { cn, numberToWords } from '@/common/lib/utils'
 
 type RequiredSummaEditableFields = {
   summa?: number

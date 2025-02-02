@@ -1,104 +1,97 @@
+import type { TypeOperatsiiFormValues } from './service'
 import type { TypeOperatsii } from '@/common/models'
-import type { OperationTypePayloadType } from './service'
 
 import { useEffect } from 'react'
-import { useForm } from 'react-hook-form'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { useToast } from '@/common/hooks/use-toast'
+
 import { zodResolver } from '@hookform/resolvers/zod'
-import { operationTypeService, OperationTypePayloadSchema } from './service'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
+import { toast } from 'react-toastify'
+
+import { FormDialog } from '@/common/components/dialog'
 import { Button } from '@/common/components/ui/button'
 import {
+  FormControl,
   FormField,
   FormItem,
-  FormControl,
   FormLabel,
   FormMessage
 } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
-import { operationTypeQueryKeys } from './constants'
-import { FormDialog } from '@/common/components/dialog'
 
-type OperationTypeDialogProps = {
+import { typeOperatsiiQueryKeys } from './constants'
+import { TypeOperatsiiFormSchema, typeOperatsiiService } from './service'
+
+export interface TypeOperatsiiDialogProps {
   open: boolean
   onChangeOpen(value: boolean): void
-  data: TypeOperatsii | null
+  selected: TypeOperatsii | null
 }
-const OperationTypeDialog = (props: OperationTypeDialogProps) => {
-  const { open, onChangeOpen, data } = props
+export const TypeOperatsiiDialog = (props: TypeOperatsiiDialogProps) => {
+  const { open, onChangeOpen, selected } = props
 
-  const { toast } = useToast()
+  const { t } = useTranslation()
+
   const queryClient = useQueryClient()
-  const form = useForm<OperationTypePayloadType>({
+  const form = useForm<TypeOperatsiiFormValues>({
     defaultValues,
-    resolver: zodResolver(OperationTypePayloadSchema)
+    resolver: zodResolver(TypeOperatsiiFormSchema)
   })
 
   const { mutate: create, isPending: isCreating } = useMutation({
-    mutationKey: [operationTypeQueryKeys.create],
-    mutationFn: operationTypeService.create,
+    mutationKey: [typeOperatsiiQueryKeys.create],
+    mutationFn: typeOperatsiiService.create,
     onSuccess() {
-      toast({
-        title: 'тип операции успешно создана'
-      })
+      toast.success('тип операции успешно создана')
       form.reset(defaultValues)
       queryClient.invalidateQueries({
-        queryKey: [operationTypeQueryKeys.getAll]
+        queryKey: [typeOperatsiiQueryKeys.getAll]
       })
       onChangeOpen(false)
     },
     onError(error) {
-      toast({
-        variant: 'destructive',
-        title: 'Не удалось создать тип операции',
-        description: error.message
-      })
+      toast.error('Не удалось создать тип операции: ' + error.message)
     }
   })
   const { mutate: update, isPending: isUpdating } = useMutation({
-    mutationKey: [operationTypeQueryKeys.update],
-    mutationFn: operationTypeService.update,
+    mutationKey: [typeOperatsiiQueryKeys.update],
+    mutationFn: typeOperatsiiService.update,
     onSuccess() {
-      toast({
-        title: 'тип операции успешно обновлена'
-      })
+      toast.success('тип операции успешно обновлена')
       form.reset(defaultValues)
       queryClient.invalidateQueries({
-        queryKey: [operationTypeQueryKeys.getAll]
+        queryKey: [typeOperatsiiQueryKeys.getAll]
       })
       onChangeOpen(false)
     },
     onError(error) {
-      toast({
-        variant: 'destructive',
-        title: 'Не удалось обновить тип операции',
-        description: error.message
-      })
+      toast.error('Не удалось обновить тип операции: ' + error.message)
     }
   })
 
   const onSubmit = form.handleSubmit((payload) => {
-    if (data) {
-      update(Object.assign(payload, { id: data.id }))
+    if (selected) {
+      update(Object.assign(payload, { id: selected.id }))
     } else {
       create(payload)
     }
   })
 
   useEffect(() => {
-    if (!data) {
+    if (!selected) {
       form.reset(defaultValues)
       return
     }
 
-    form.reset(data)
-  }, [form, data])
+    form.reset(selected)
+  }, [form, selected])
 
   return (
     <FormDialog
       open={open}
       onChangeOpen={onChangeOpen}
-      name={`${data ? 'Изменить' : 'Добавить'} тип операции`}
+      name={`${selected ? 'Изменить' : 'Добавить'} тип операции`}
       form={form}
       onSubmit={onSubmit}
       footer={
@@ -106,7 +99,7 @@ const OperationTypeDialog = (props: OperationTypeDialogProps) => {
           type="submit"
           disabled={isCreating || isUpdating}
         >
-          {data ? 'Изменить' : 'Добавить'}
+          {selected ? t('create') : t('edit')}
         </Button>
       }
     >
@@ -117,7 +110,7 @@ const OperationTypeDialog = (props: OperationTypeDialogProps) => {
           render={({ field }) => (
             <FormItem>
               <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
-                <FormLabel className="text-right col-span-2">Название</FormLabel>
+                <FormLabel className="text-right col-span-2">{t('name')}</FormLabel>
                 <FormControl>
                   <Input
                     className="col-span-4"
@@ -136,7 +129,7 @@ const OperationTypeDialog = (props: OperationTypeDialogProps) => {
           render={({ field }) => (
             <FormItem>
               <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
-                <FormLabel className="text-right col-span-2">Район</FormLabel>
+                <FormLabel className="text-right col-span-2">{t('rayon')}</FormLabel>
                 <FormControl>
                   <Input
                     className="col-span-4"
@@ -156,6 +149,4 @@ const OperationTypeDialog = (props: OperationTypeDialogProps) => {
 const defaultValues = {
   name: '',
   rayon: ''
-} satisfies OperationTypePayloadType
-
-export default OperationTypeDialog
+} satisfies TypeOperatsiiFormValues

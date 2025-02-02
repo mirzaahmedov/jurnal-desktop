@@ -1,5 +1,6 @@
-import { Flex, Field, Label, Blank } from '@/common/components/pdf'
 import { Text } from '@react-pdf/renderer'
+
+import { Blank, Field, Flex, Label } from '@/common/components/pdf'
 
 const Signatures = () => {
   return (

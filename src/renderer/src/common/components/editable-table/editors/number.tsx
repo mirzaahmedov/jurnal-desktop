@@ -1,4 +1,5 @@
 import type { EditorComponentType, EditorOptions } from './types'
+
 import { NumericInput, NumericInputProps, inputVariants } from '@/common/components'
 
 const createNumberEditor = <T extends Record<string, unknown>>({

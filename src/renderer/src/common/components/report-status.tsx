@@ -1,5 +1,6 @@
-import { Badge } from '@renderer/common/components/ui/badge'
 import { FC } from 'react'
+
+import { Badge } from '@renderer/common/components/ui/badge'
 import { Mainbook } from '@renderer/common/models'
 
 export type ReportStatusProps = { status: Mainbook.Status }

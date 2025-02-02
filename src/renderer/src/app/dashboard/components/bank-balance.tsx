@@ -1,5 +1,11 @@
+import type { MainSchet } from '@renderer/common/models'
+
+import { useMemo } from 'react'
+
+import { formatNumber } from '@renderer/common/lib/format'
 import { TrendingUp } from 'lucide-react'
 import { Bar, BarChart, CartesianGrid, LabelList, XAxis } from 'recharts'
+
 import {
   Card,
   CardContent,
@@ -14,9 +20,6 @@ import {
   ChartTooltip,
   ChartTooltipContent
 } from '@/common/components/ui/chart'
-import type { MainSchet } from '@renderer/common/models'
-import { useMemo } from 'react'
-import { formatNumber } from '@renderer/common/lib/format'
 
 const chartConfig = {
   desktop: {

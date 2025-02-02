@@ -1,6 +1,7 @@
 import type { TextProps, ViewProps } from '@react-pdf/renderer'
 
 import { StyleSheet, Text, View } from '@react-pdf/renderer'
+
 import { mergeStyles } from '@/common/lib/utils'
 
 type BlankProps = TextProps & {

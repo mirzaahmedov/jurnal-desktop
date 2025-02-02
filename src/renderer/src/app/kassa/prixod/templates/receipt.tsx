@@ -1,4 +1,5 @@
 import { Flex } from '@/common/components/pdf'
+
 import { Details, HeaderReceipt, Signatures } from './components'
 
 type KassaPrixodReceiptProps = {

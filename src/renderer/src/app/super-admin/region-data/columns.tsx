@@ -1,6 +1,7 @@
-import { Badge } from '@renderer/common/components/ui/badge'
 import type { ColumnDef } from '@renderer/common/components'
 import type { RegionData } from '@renderer/common/models'
+
+import { Badge } from '@renderer/common/components/ui/badge'
 
 const CountCell = ({ count }: { count: number }) => {
   if (Number(count) < 10) {

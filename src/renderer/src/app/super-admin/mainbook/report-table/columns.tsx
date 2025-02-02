@@ -1,7 +1,7 @@
-import type { Autocomplete } from '@renderer/common/lib/types'
 import type { CompleteMonthlyReportTableItem } from '../details/utils'
-import type { ComponentType } from 'react'
 import type { ReportTableProps } from './table'
+import type { Autocomplete } from '@renderer/common/lib/types'
+import type { ComponentType } from 'react'
 
 type ColumnDef = {
   alphanumeric?: boolean

@@ -1,5 +1,21 @@
 import type { AdvanceReportPodvodkaPayloadType } from '../constants'
 
+import { useCallback, useEffect } from 'react'
+
+import { zodResolver } from '@hookform/resolvers/zod'
+import { EditableTable } from '@renderer/common/components/editable-table'
+import {
+  createEditorChangeHandler,
+  createEditorCreateHandler,
+  createEditorDeleteHandler
+} from '@renderer/common/components/editable-table/helpers'
+import { useRequisitesStore } from '@renderer/common/features/requisites'
+import { DetailsView } from '@renderer/common/views'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
+import { useNavigate, useParams } from 'react-router-dom'
+
 import { createPodotchetSpravochnik } from '@/app/region-spravochnik/podotchet'
 import { createOperatsiiSpravochnik } from '@/app/super-admin/operatsii'
 import { Fieldset } from '@/common/components'
@@ -16,20 +32,7 @@ import {
   PodotchetFields,
   SummaFields
 } from '@/common/widget/form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { EditableTable } from '@renderer/common/components/editable-table'
-import {
-  createEditorChangeHandler,
-  createEditorCreateHandler,
-  createEditorDeleteHandler
-} from '@renderer/common/components/editable-table/helpers'
-import { useRequisitesStore } from '@renderer/common/features/requisites'
-import { DetailsView } from '@renderer/common/views'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { useCallback, useEffect } from 'react'
-import { useForm } from 'react-hook-form'
-import { useTranslation } from 'react-i18next'
-import { useNavigate, useParams } from 'react-router-dom'
+
 import {
   AdvanceReportPayloadSchema,
   AdvanceReportPodvodkaPayloadSchema,

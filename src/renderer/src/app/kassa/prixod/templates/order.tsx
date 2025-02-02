@@ -1,7 +1,8 @@
 import type { PodvodkaType } from './components/podvodka'
 
 import { Flex } from '@/common/components/pdf'
-import { Header, PodvodkaTable, Details, Signatures } from './components'
+
+import { Details, Header, PodvodkaTable, Signatures } from './components'
 
 type KassaPrixodOrderProps = {
   doc_num: string

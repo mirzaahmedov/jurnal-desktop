@@ -1,5 +1,6 @@
 import type { FieldsetProps } from '@/common/components'
 import type { PropsWithChildren } from 'react'
+
 import { Fieldset } from '@/common/components'
 
 type SpravochnikFieldsProps = PropsWithChildren<

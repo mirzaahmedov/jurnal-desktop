@@ -1,7 +1,9 @@
 import { useCallback } from 'react'
-import { useDropzone } from 'react-dropzone'
-import { useEventCallback } from '../hooks'
+
 import { CloudUpload } from 'lucide-react'
+import { useDropzone } from 'react-dropzone'
+
+import { useEventCallback } from '../hooks'
 import { cn } from '../lib/utils'
 
 export interface FileDropzoneProps {

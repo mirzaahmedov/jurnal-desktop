@@ -1,39 +1,40 @@
+import { useEffect, useMemo, useRef } from 'react'
+
+import { zodResolver } from '@hookform/resolvers/zod'
+import { documentTypes } from '@renderer/app/mainbook/common/data'
+import { Fieldset, SelectField, inputVariants } from '@renderer/common/components'
 import {
   EditableTable,
   EditableTableCell,
   EditableTableRow
 } from '@renderer/common/components/editable-table'
-import { Fieldset, SelectField, inputVariants } from '@renderer/common/components'
+import {
+  createEditorChangeHandler,
+  createEditorCreateHandler,
+  createEditorDeleteHandler
+} from '@renderer/common/components/editable-table/helpers'
+import { MonthPicker } from '@renderer/common/components/month-picker'
 import { Form, FormField } from '@renderer/common/components/ui/form'
+import { Input } from '@renderer/common/components/ui/input'
+import { useLayout } from '@renderer/common/features/layout'
+import { useRequisitesStore } from '@renderer/common/features/requisites'
+import { toast } from '@renderer/common/hooks'
+import { formatNumber } from '@renderer/common/lib/format'
+import { useQueryDateParams, useQueryTypeDocument } from '@renderer/common/lib/query-params'
+import { cn } from '@renderer/common/lib/utils'
+import { DetailsView } from '@renderer/common/views'
+import { useMutation, useQuery } from '@tanstack/react-query'
+import { useForm } from 'react-hook-form'
+import { useNavigate, useParams } from 'react-router-dom'
+
 import {
   RealExpensesReportFormSchema,
   RealExpensesReportProvodkaSchema,
   defaultValues,
   realExpensesReportQueryKeys
 } from '../config'
-import {
-  createEditorChangeHandler,
-  createEditorCreateHandler,
-  createEditorDeleteHandler
-} from '@renderer/common/components/editable-table/helpers'
-import { useEffect, useMemo, useRef } from 'react'
-import { useMutation, useQuery } from '@tanstack/react-query'
-import { useNavigate, useParams } from 'react-router-dom'
-import { useQueryDateParams, useQueryTypeDocument } from '@renderer/common/lib/query-params'
-
-import { DetailsView } from '@renderer/common/views'
-import { Input } from '@renderer/common/components/ui/input'
-import { MonthPicker } from '@renderer/common/components/month-picker'
-import { cn } from '@renderer/common/lib/utils'
-import { documentTypes } from '@renderer/app/mainbook/common/data'
-import { formatNumber } from '@renderer/common/lib/format'
-import { provodkaColumns } from './provodka'
 import { realExpensesReportService } from '../service'
-import { toast } from '@renderer/common/hooks'
-import { useForm } from 'react-hook-form'
-import { useLayout } from '@renderer/common/features/layout'
-import { useRequisitesStore } from '@renderer/common/features/requisites'
-import { zodResolver } from '@hookform/resolvers/zod'
+import { provodkaColumns } from './provodka'
 
 const ExpensesReportDetailsPage = () => {
   const tableRef = useRef<HTMLTableElement>(null)

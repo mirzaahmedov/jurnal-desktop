@@ -1,9 +1,10 @@
-import { SpravochnikField, SpravochnikFields } from '@/common/features/spravochnik'
-
 import type { FormSpravochnikFieldsComponent } from './types'
 import type { Shartnoma } from '@/common/models'
-import { formatLocaleDate } from '@/common/lib/format'
+
 import { useTranslation } from 'react-i18next'
+
+import { SpravochnikField, SpravochnikFields } from '@/common/features/spravochnik'
+import { formatLocaleDate } from '@/common/lib/format'
 
 const ShartnomaFields: FormSpravochnikFieldsComponent<Shartnoma> = ({
   tabIndex,

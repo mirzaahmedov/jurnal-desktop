@@ -1,8 +1,9 @@
 import type { AxiosError, InternalAxiosRequestConfig } from 'axios'
 
 import axios from 'axios'
-import { useAuthStore } from '@/common/features/auth'
 import i18next from 'i18next'
+
+import { useAuthStore } from '@/common/features/auth'
 
 type ErrorResponse = {
   success: false

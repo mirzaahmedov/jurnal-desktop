@@ -1,6 +1,8 @@
 import { HTMLAttributes } from 'react'
-import { LoadingSpinner } from './loading'
+
 import { cn } from '@renderer/common/lib/utils'
+
+import { LoadingSpinner } from './loading'
 
 export const LoadingOverlay = ({ className, ...props }: HTMLAttributes<HTMLDivElement>) => {
   return (

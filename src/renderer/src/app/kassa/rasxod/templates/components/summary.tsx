@@ -1,4 +1,4 @@
-import { Flex, Field, Label, Value } from '@/common/components/pdf'
+import { Field, Flex, Label, Value } from '@/common/components/pdf'
 
 type SummaryProps = {
   fio: string

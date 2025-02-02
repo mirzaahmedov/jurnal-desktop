@@ -1,6 +1,5 @@
-import { parseAsStringEnum, useQueryState } from 'nuqs'
-
 import { LogType } from '@renderer/common/models'
+import { parseAsStringEnum, useQueryState } from 'nuqs'
 
 const useLogType = () => {
   return useQueryState(

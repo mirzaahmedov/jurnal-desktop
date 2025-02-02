@@ -1,26 +1,27 @@
-import { CircleMinus, CirclePlus } from 'lucide-react'
-import { DatePicker, NumericInput, inputVariants } from '@/common/components'
 import {
   EditableTableCell,
   EditableTableHead,
   EditableTableRow
 } from '@renderer/common/components/editable-table'
+import { CircleMinus, CirclePlus } from 'lucide-react'
+import { UseFormReturn } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
+import { toast } from 'react-toastify'
+
+import { DatePicker, NumericInput, inputVariants } from '@/common/components'
+import { Button } from '@/common/components/ui/button'
+import { Input } from '@/common/components/ui/input'
+import { Table, TableBody, TableFooter, TableHeader } from '@/common/components/ui/table'
+import { SpravochnikInput } from '@/common/features/spravochnik'
+import { calcSena, calcSumma } from '@/common/lib/pricing'
+
+import { useOstatokProduct } from '../../common/features/ostatok-product/use-ostatok-product'
 import {
   InternalTransferChildFormSchema,
   InternalTransferChildFormType,
   InternalTransferFormType,
   defaultValues
 } from '../config'
-import { Table, TableBody, TableFooter, TableHeader } from '@/common/components/ui/table'
-import { calcSena, calcSumma } from '@/common/lib/pricing'
-
-import { Button } from '@/common/components/ui/button'
-import { Input } from '@/common/components/ui/input'
-import { SpravochnikInput } from '@/common/features/spravochnik'
-import { UseFormReturn } from 'react-hook-form'
-import { toast } from 'react-toastify'
-import { useOstatokProduct } from '../../common/features/ostatok-product/use-ostatok-product'
-import { useTranslation } from 'react-i18next'
 
 type ProvodkaTableProps = {
   form: UseFormReturn<InternalTransferFormType>

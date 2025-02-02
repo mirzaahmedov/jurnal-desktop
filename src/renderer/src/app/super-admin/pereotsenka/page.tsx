@@ -1,22 +1,24 @@
+import type { Pereotsenka } from '@renderer/common/models'
+
+import { useState } from 'react'
+
 import {
   GenericTable,
   LoadingOverlay,
   Pagination,
   usePagination
 } from '@renderer/common/components'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-
-import type { Pereotsenka } from '@renderer/common/models'
-import { PereotsenkaBatchCreateDrawer } from './create-drawer'
-import { PereotsenkaDialog } from './dialog'
-import { pereotsenkaColumns } from './columns'
-import { pereotsenkaQueryKeys } from './config'
-import { pereotsenkaService } from './service'
-import { toast } from 'react-toastify'
 import { useConfirm } from '@renderer/common/features/confirm'
 import { useLayout } from '@renderer/common/features/layout'
-import { useState } from 'react'
 import { useToggle } from '@renderer/common/hooks/use-toggle'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { toast } from 'react-toastify'
+
+import { pereotsenkaColumns } from './columns'
+import { pereotsenkaQueryKeys } from './config'
+import { PereotsenkaBatchCreateDrawer } from './create-drawer'
+import { PereotsenkaDialog } from './dialog'
+import { pereotsenkaService } from './service'
 
 const PereotsenkaPage = () => {
   const [selected, setSelected] = useState<null | Pereotsenka>(null)

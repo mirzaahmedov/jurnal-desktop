@@ -1,4 +1,5 @@
 import type { InputHTMLAttributes } from 'react'
+
 import { SelectField } from '@renderer/common/components/select-field'
 
 export const smetaFilterOptions = [

@@ -1,10 +1,13 @@
+import type { InputProps } from './ui/input'
+import type { NumericFormatProps } from 'react-number-format'
+
 import { forwardRef, useRef } from 'react'
 
-import { Input } from './ui/input'
-import type { InputProps } from './ui/input'
 import { NumericFormat } from 'react-number-format'
-import type { NumericFormatProps } from 'react-number-format'
+
 import { cn } from '@/common/lib/utils'
+
+import { Input } from './ui/input'
 
 export type NumericInputProps = NumericFormatProps<InputProps> & {
   adjustWidth?: boolean

@@ -1,10 +1,13 @@
 import type { User } from '@/common/models'
+
 import { useEffect } from 'react'
-import { useForm } from 'react-hook-form'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { useToast } from '@/common/hooks/use-toast'
+
 import { zodResolver } from '@hookform/resolvers/zod'
-import { type AdmonUserPayloadType, AdminUserPayloadSchema, adminUserService } from './service'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useForm } from 'react-hook-form'
+
+import { regionQueryKeys, regionService } from '@/app/super-admin/region'
+import { SelectField } from '@/common/components'
 import { Button } from '@/common/components/ui/button'
 import {
   Dialog,
@@ -15,16 +18,17 @@ import {
 } from '@/common/components/ui/dialog'
 import {
   Form,
+  FormControl,
   FormField,
   FormItem,
-  FormControl,
   FormLabel,
   FormMessage
 } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
-import { SelectField } from '@/common/components'
-import { regionService, regionQueryKeys } from '@/app/super-admin/region'
+import { useToast } from '@/common/hooks/use-toast'
+
 import { adminUserQueryKeys } from './constants'
+import { AdminUserPayloadSchema, type AdmonUserPayloadType, adminUserService } from './service'
 
 type AdminUserDialogProps = {
   open: boolean

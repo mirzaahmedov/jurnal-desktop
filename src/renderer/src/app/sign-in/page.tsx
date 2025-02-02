@@ -1,3 +1,8 @@
+import { useState } from 'react'
+
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Button } from '@renderer/common/components/ui/button'
+import { Checkbox } from '@renderer/common/components/ui/checkbox'
 import {
   Form,
   FormControl,
@@ -6,25 +11,21 @@ import {
   FormLabel,
   FormMessage
 } from '@renderer/common/components/ui/form'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { ArrowRightToLine, Usb } from 'lucide-react'
-import { SigninFormSchema, defaultValues } from './config'
-
-import { zodResolver } from '@hookform/resolvers/zod'
-import { Button } from '@renderer/common/components/ui/button'
-import { Checkbox } from '@renderer/common/components/ui/checkbox'
 import { Input } from '@renderer/common/components/ui/input'
 import { useAuthStore } from '@renderer/common/features/auth'
+import { LocaleSelect } from '@renderer/common/features/locales'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
 import logoImage from '@resources/logo.svg'
 import backgroundImage from '@resources/signin-bg.png'
-import { useState } from 'react'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { ArrowRightToLine, Usb } from 'lucide-react'
 import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
+
+import { SigninFormSchema, defaultValues } from './config'
 import { signinQuery } from './service'
-import { LocaleSelect } from '@renderer/common/features/locales'
-import { useTranslation } from 'react-i18next'
 
 const SigninPage = () => {
   const [isPasswordVisible, setPasswordVisible] = useState(false)

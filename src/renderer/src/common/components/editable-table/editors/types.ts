@@ -1,6 +1,5 @@
-import type { Dispatch, FunctionComponent, InputHTMLAttributes, SetStateAction } from 'react'
-
 import type { EditableColumnType } from '../table'
+import type { Dispatch, FunctionComponent, InputHTMLAttributes, SetStateAction } from 'react'
 import type { FieldErrors } from 'react-hook-form'
 
 export type ChangeContext<T extends Record<string, unknown>, K extends keyof T = keyof T> = {

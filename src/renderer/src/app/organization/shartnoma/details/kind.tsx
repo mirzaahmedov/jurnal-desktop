@@ -1,12 +1,13 @@
-import { FormControl, FormField, FormItem, FormLabel } from '@/common/components/ui/form'
-
-import type { Control } from 'react-hook-form'
-import { Fieldset } from '@/common/components'
-import type { FormEditableFieldsComponent } from '@/common/widget/form'
 import type { ShartnomaFormValues } from '../service'
+import type { FormEditableFieldsComponent } from '@/common/widget/form'
+import type { Control } from 'react-hook-form'
+
+import { useTranslation } from 'react-i18next'
+
+import { Fieldset } from '@/common/components'
+import { FormControl, FormField, FormItem, FormLabel } from '@/common/components/ui/form'
 import { Switch } from '@/common/components/ui/switch'
 import { cn } from '@/common/lib/utils'
-import { useTranslation } from 'react-i18next'
 
 const ShartnomaKindFields: FormEditableFieldsComponent<ShartnomaFormValues> = ({
   form,

@@ -1,16 +1,16 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-
 import { GenericTable } from '@renderer/common/components'
-import { ListView } from '@renderer/common/views'
+import { useConfirm } from '@renderer/common/features/confirm'
+import { useLayout } from '@renderer/common/features/layout'
+import { useRequisitesStore } from '@renderer/common/features/requisites'
+import { toast } from '@renderer/common/hooks'
 import { OX } from '@renderer/common/models'
+import { ListView } from '@renderer/common/views'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useNavigate } from 'react-router-dom'
+
 import { oxColumns } from './columns'
 import { oxQueryKeys } from './config'
 import { oxService } from './service'
-import { toast } from '@renderer/common/hooks'
-import { useConfirm } from '@renderer/common/features/confirm'
-import { useLayout } from '@renderer/common/features/layout'
-import { useNavigate } from 'react-router-dom'
-import { useRequisitesStore } from '@renderer/common/features/requisites'
 
 const OXPage = () => {
   const budjet_id = useRequisitesStore((store) => store.budjet_id)

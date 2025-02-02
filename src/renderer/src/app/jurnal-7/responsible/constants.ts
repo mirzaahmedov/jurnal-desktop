@@ -1,5 +1,6 @@
-import { withPreprocessor } from '@/common/lib/validation'
 import { z } from 'zod'
+
+import { withPreprocessor } from '@/common/lib/validation'
 
 export const responsibleQueryKeys = {
   getAll: 'responsible/all',

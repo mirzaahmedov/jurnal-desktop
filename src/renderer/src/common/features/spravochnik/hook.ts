@@ -1,8 +1,10 @@
 import type { SpravochnikData, SpravochnikStore } from './store'
+import type { RefObject } from 'react'
+
 import { useCallback, useEffect, useId, useLayoutEffect, useRef, useState } from 'react'
 
-import type { RefObject } from 'react'
 import { useQuery } from '@tanstack/react-query'
+
 import { useSpravochnikStore } from './store'
 
 type SpravochnikHookCallbacks<T> = {

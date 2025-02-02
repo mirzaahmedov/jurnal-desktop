@@ -1,6 +1,7 @@
 import { GenericTable } from '@/common/components'
 import { GenericTableProps } from '@/common/components/generic-table/table'
 import { Organization } from '@/common/models'
+
 import { organizationColumns } from './columns'
 
 const OrganizationTable = ({

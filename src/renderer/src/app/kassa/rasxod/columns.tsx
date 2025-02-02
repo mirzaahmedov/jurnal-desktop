@@ -1,5 +1,6 @@
 import type { ColumnDef } from '@/common/components'
 import type { KassaRasxodType } from '@/common/models'
+
 import { formatLocaleDate } from '@/common/lib/format'
 
 export const columns: ColumnDef<KassaRasxodType>[] = [

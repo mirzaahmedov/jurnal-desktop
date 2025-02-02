@@ -1,18 +1,21 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-
 import type { SmetaGrafik } from '@/common/models'
-import SmetaGrafikDialog from './dialog'
-import { SmetaTable } from './components'
-import { smetaGrafikQueryKeys } from './constants'
-import { smetaGrafikService } from './service'
-import { useConfirm } from '@/common/features/confirm'
-import { useRequisitesStore } from '@renderer/common/features/requisites'
-import { useLayoutStore } from '@/common/features/layout'
+
 import { useEffect, useState } from 'react'
-import { useToggle } from '@/common/hooks/use-toggle'
-import { useTranslation } from 'react-i18next'
+
+import { useRequisitesStore } from '@renderer/common/features/requisites'
 import { usePagination } from '@renderer/common/hooks'
 import { ListView } from '@renderer/common/views'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
+
+import { useConfirm } from '@/common/features/confirm'
+import { useLayoutStore } from '@/common/features/layout'
+import { useToggle } from '@/common/hooks/use-toggle'
+
+import { SmetaTable } from './components'
+import { smetaGrafikQueryKeys } from './constants'
+import SmetaGrafikDialog from './dialog'
+import { smetaGrafikService } from './service'
 
 const SmetaGrafikPage = () => {
   const [selected, setSelected] = useState<null | SmetaGrafik>(null)

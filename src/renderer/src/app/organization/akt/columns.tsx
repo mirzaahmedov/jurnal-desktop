@@ -1,5 +1,6 @@
-import type { Akt } from '@/common/models'
 import type { ColumnDef } from '@/common/components'
+import type { Akt } from '@/common/models'
+
 import { Copyable } from '@/common/components'
 import { TooltipCellRenderer } from '@/common/components/table/renderers'
 import { formatLocaleDate } from '@/common/lib/format'

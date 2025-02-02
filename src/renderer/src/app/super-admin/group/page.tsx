@@ -1,17 +1,20 @@
-import { GroupTable, groupService } from './service'
+import type { Group } from '@/common/models'
+
+import { useState } from 'react'
+
 import { SearchField, useSearch } from '@renderer/common/features/search'
+import { ListView } from '@renderer/common/views'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
-import type { Group } from '@/common/models'
-import GroupDialog from './dialog'
-import { ListView } from '@renderer/common/views'
-import { groupColumns } from './columns'
-import { groupQueryKeys } from './constants'
-import { toast } from '@/common/hooks/use-toast'
 import { useConfirm } from '@/common/features/confirm'
 import { useLayout } from '@/common/features/layout'
-import { useState } from 'react'
+import { toast } from '@/common/hooks/use-toast'
 import { useToggle } from '@/common/hooks/use-toggle'
+
+import { groupColumns } from './columns'
+import { groupQueryKeys } from './constants'
+import GroupDialog from './dialog'
+import { GroupTable, groupService } from './service'
 
 const GroupPage = () => {
   const [selected, setSelected] = useState<null | Group>(null)

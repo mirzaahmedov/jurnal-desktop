@@ -1,11 +1,11 @@
-import type { APIEndpoints, CRUDService } from '@/common/features/crud'
-import type { ComponentType, Dispatch, SetStateAction } from 'react'
-
 import type { ColumnDef } from '@/common/components'
+import type { APIEndpoints, CRUDService } from '@/common/features/crud'
 import type { DialogProps } from '@radix-ui/react-dialog'
 import type { GenericTableProps } from '@renderer/common/components/generic-table/table'
-import { create } from 'zustand'
+import type { ComponentType, Dispatch, SetStateAction } from 'react'
+
 import { useToggle } from '@renderer/common/hooks'
+import { create } from 'zustand'
 
 export type FilterComponentProps<
   T extends Record<string, unknown> = Record<string, unknown>,

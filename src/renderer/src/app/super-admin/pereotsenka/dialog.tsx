@@ -1,5 +1,14 @@
 import type { Pereotsenka } from '@/common/models'
 
+import { useEffect } from 'react'
+
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useForm } from 'react-hook-form'
+
+import { NumericInput, SpravochnikInput } from '@/common/components'
+import { FormElement } from '@/common/components/form'
+import { Button } from '@/common/components/ui/button'
 import {
   Dialog,
   DialogContent,
@@ -8,20 +17,14 @@ import {
   DialogTitle
 } from '@/common/components/ui/dialog'
 import { Form, FormField } from '@/common/components/ui/form'
-import { useForm } from 'react-hook-form'
 import { Input } from '@/common/components/ui/input'
-import { Button } from '@/common/components/ui/button'
-import { defaultValues, PereotsenkaFormSchema, pereotsenkaQueryKeys } from './config'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { pereotsenkaService } from './service'
+import { useSpravochnik } from '@/common/features/spravochnik'
 import { toast } from '@/common/hooks/use-toast'
 import { extendObject } from '@/common/lib/utils'
-import { FormElement } from '@/common/components/form'
-import { useSpravochnik } from '@/common/features/spravochnik'
-import { useEffect } from 'react'
+
 import { createGroupSpravochnik } from '../group/service'
-import { NumericInput, SpravochnikInput } from '@/common/components'
+import { PereotsenkaFormSchema, defaultValues, pereotsenkaQueryKeys } from './config'
+import { pereotsenkaService } from './service'
 
 type PereotsenkaDialogProps = {
   data: null | Pereotsenka

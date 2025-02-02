@@ -1,20 +1,22 @@
 import type { Responsible } from '@/common/models'
 
-import { GenericTable } from '@/common/components'
+import { useEffect, useState } from 'react'
+
+import { usePagination } from '@renderer/common/hooks'
+import { ListView } from '@renderer/common/views'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
+
+import { GenericTable } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
 import { useLayoutStore } from '@/common/features/layout'
 import { toast } from '@/common/hooks/use-toast'
 import { useToggle } from '@/common/hooks/use-toggle'
-import { usePagination } from '@renderer/common/hooks'
-import { ListView } from '@renderer/common/views'
-import { useEffect, useState } from 'react'
-import { useTranslation } from 'react-i18next'
+
 import { responsibleColumns } from './columns'
 import { responsibleQueryKeys } from './constants'
-import { responsibleService } from './service'
-
 import ResponsibleDialog from './dialog'
+import { responsibleService } from './service'
 
 const ResponsiblePage = () => {
   const [selected, setSelected] = useState<null | Responsible>(null)

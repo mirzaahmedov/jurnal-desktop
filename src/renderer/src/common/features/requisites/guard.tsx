@@ -1,7 +1,8 @@
 import { CircleAlert } from 'lucide-react'
-import { Outlet } from 'react-router-dom'
-import { useRequisitesStore } from './store'
 import { useTranslation } from 'react-i18next'
+import { Outlet } from 'react-router-dom'
+
+import { useRequisitesStore } from './store'
 
 export const RequisitesGuard = () => {
   const { t } = useTranslation()

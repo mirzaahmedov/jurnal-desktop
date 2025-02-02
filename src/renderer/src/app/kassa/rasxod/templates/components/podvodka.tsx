@@ -1,4 +1,4 @@
-import { Flex, Table, Field, Label, Blank } from '@/common/components/pdf'
+import { Blank, Field, Flex, Label, Table } from '@/common/components/pdf'
 
 const columnWidths = [160, 100, 220, 100]
 

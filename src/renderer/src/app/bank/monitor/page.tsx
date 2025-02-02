@@ -1,18 +1,20 @@
-import { FooterCell, FooterRow, GenericTable } from '@/common/components'
-import { usePagination, useRangeDate } from '@/common/hooks'
+import { useEffect } from 'react'
 
-import { ButtonGroup } from '@/common/components/ui/button-group'
 import { DownloadFile } from '@renderer/common/features/file'
+import { useRequisitesStore } from '@renderer/common/features/requisites'
+import { useQuery } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
+
+import { FooterCell, FooterRow, GenericTable } from '@/common/components'
+import { ButtonGroup } from '@/common/components/ui/button-group'
+import { useLayoutStore } from '@/common/features/layout'
+import { usePagination, useRangeDate } from '@/common/hooks'
+import { formatNumber } from '@/common/lib/format'
 import { ListView } from '@/common/views'
+
+import { columns } from './columns'
 import { bankMonitorQueryKeys } from './constants'
 import { bankMonitorService } from './service'
-import { columns } from './columns'
-import { formatNumber } from '@/common/lib/format'
-import { useLayoutStore } from '@/common/features/layout'
-import { useQuery } from '@tanstack/react-query'
-import { useRequisitesStore } from '@renderer/common/features/requisites'
-import { useEffect } from 'react'
-import { useTranslation } from 'react-i18next'
 
 const BankMonitorPage = () => {
   const main_schet_id = useRequisitesStore((store) => store.main_schet_id)

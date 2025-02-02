@@ -1,20 +1,23 @@
-import { Fragment, type ReactNode } from 'react'
 import type { MainSchet } from '@/common/models'
-import { ArrowLeft, CirclePlus, LogOut, RefreshCw, Settings } from 'lucide-react'
-import { Avatar, AvatarFallback } from '@/common/components/ui/avatar'
-import { RequisitesDialog, useRequisitesStore } from '@renderer/common/features/requisites'
-import { mainSchetQueryKeys, mainSchetService } from '@/app/region-spravochnik/main-schet'
 
+import { Fragment, type ReactNode } from 'react'
+
+import { CaretRightIcon } from '@radix-ui/react-icons'
+import { RequisitesDialog, useRequisitesStore } from '@renderer/common/features/requisites'
+import { useQuery } from '@tanstack/react-query'
+import { ArrowLeft, CirclePlus, LogOut, RefreshCw, Settings } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
+import { Link, useLocation } from 'react-router-dom'
+
+import { mainSchetQueryKeys, mainSchetService } from '@/app/region-spravochnik/main-schet'
+import { Avatar, AvatarFallback } from '@/common/components/ui/avatar'
 import { Button } from '@/common/components/ui/button'
 import { ConfigureDefaultValuesDialog } from '@/common/features/app-defaults'
 import { useAuthStore } from '@/common/features/auth'
-import { useLayoutStore } from './store'
-import { Link, useLocation } from 'react-router-dom'
-import { useQuery } from '@tanstack/react-query'
-import { useToggle } from '@/common/hooks/use-toggle'
 import { LocaleSelect } from '@/common/features/locales'
-import { useTranslation } from 'react-i18next'
-import { CaretRightIcon } from '@radix-ui/react-icons'
+import { useToggle } from '@/common/hooks/use-toggle'
+
+import { useLayoutStore } from './store'
 
 type PageLayoutProps = {
   children: ReactNode

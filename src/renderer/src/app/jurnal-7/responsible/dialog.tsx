@@ -1,3 +1,15 @@
+import type { Responsible } from '@/common/models'
+
+import { useEffect } from 'react'
+
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { t } from 'i18next'
+import { useForm } from 'react-hook-form'
+import { toast } from 'react-toastify'
+
+import { FormElement } from '@/common/components/form'
+import { Button } from '@/common/components/ui/button'
 import {
   Dialog,
   DialogContent,
@@ -6,22 +18,13 @@ import {
   DialogTitle
 } from '@/common/components/ui/dialog'
 import { Form, FormField } from '@/common/components/ui/form'
-import { ResponsibleFormSchema, defaultValues, responsibleQueryKeys } from './constants'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-
-import { Button } from '@/common/components/ui/button'
-import { FormElement } from '@/common/components/form'
 import { Input } from '@/common/components/ui/input'
-import type { Responsible } from '@/common/models'
-import { createPodrazdelenie7Spravochnik } from '../podrazdelenie/service'
-import { extendObject } from '@/common/lib/utils'
-import { responsibleService } from './service'
-import { toast } from 'react-toastify'
-import { useEffect } from 'react'
-import { useForm } from 'react-hook-form'
 import { SpravochnikInput, useSpravochnik } from '@/common/features/spravochnik'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { t } from 'i18next'
+import { extendObject } from '@/common/lib/utils'
+
+import { createPodrazdelenie7Spravochnik } from '../podrazdelenie/service'
+import { ResponsibleFormSchema, defaultValues, responsibleQueryKeys } from './constants'
+import { responsibleService } from './service'
 
 export type ResponsibleDialogProps = {
   open: boolean

@@ -1,7 +1,8 @@
+import type { ReportTableProps } from './table'
 import type { Autocomplete } from '@renderer/common/lib/types'
 import type { ComponentType } from 'react'
+
 import { OX } from '@renderer/common/models'
-import type { ReportTableProps } from './table'
 
 type ColumnDef = {
   alphanumeric?: boolean

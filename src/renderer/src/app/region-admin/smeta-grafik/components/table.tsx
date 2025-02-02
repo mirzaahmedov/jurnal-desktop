@@ -1,13 +1,15 @@
 import type { SmetaGrafik } from '@/common/models'
 import type { MouseEvent, RefObject, UIEvent } from 'react'
 
-import { Table, TableBody, TableHeader } from '@/common/components/ui/table'
-import { SmetaTableRow, SmetaTableHead, SmetaTableCell } from './table-components'
-import { formatNumber } from '@/common/lib/format'
 import { createRef, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
-import { columns } from './columns'
+
 import { LoadingOverlay } from '@/common/components'
+import { Table, TableBody, TableHeader } from '@/common/components/ui/table'
+import { formatNumber } from '@/common/lib/format'
 import { parseCSSNumericValue } from '@/common/lib/utils'
+
+import { columns } from './columns'
+import { SmetaTableCell, SmetaTableHead, SmetaTableRow } from './table-components'
 
 const stickyColumns = columns.filter((column) => column.sticky)
 

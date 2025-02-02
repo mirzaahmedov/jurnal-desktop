@@ -1,6 +1,6 @@
 import { Font } from '@react-pdf/renderer'
-import tinos_bold from '@resources/fonts/tinos/tinos-bold.ttf'
 import tinos_bold_italic from '@resources/fonts/tinos/tinos-bold-italic.ttf'
+import tinos_bold from '@resources/fonts/tinos/tinos-bold.ttf'
 import tinos_italic from '@resources/fonts/tinos/tinos-italic.ttf'
 import tinos_regular from '@resources/fonts/tinos/tinos-regular.ttf'
 

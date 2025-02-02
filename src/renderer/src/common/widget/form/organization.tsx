@@ -1,8 +1,9 @@
-import { SpravochnikField, SpravochnikFields } from '@/common/features/spravochnik'
-
 import type { FormSpravochnikFieldsComponent } from './types'
 import type { Organization } from '@/common/models'
+
 import { useTranslation } from 'react-i18next'
+
+import { SpravochnikField, SpravochnikFields } from '@/common/features/spravochnik'
 
 const OrganizationFields: FormSpravochnikFieldsComponent<Organization, { gazna?: boolean }> = ({
   tabIndex,

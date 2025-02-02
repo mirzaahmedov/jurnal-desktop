@@ -1,8 +1,7 @@
-import { UseSpravochnikReturn, useSpravochnik } from '@renderer/common/features/spravochnik'
-
-import { OstatokProduct } from '@renderer/common/models'
 import { createNaimenovanieSpravochnik } from '@renderer/app/jurnal-7/naimenovaniya/service'
 import { createOstatokProductSpravochnik } from '@renderer/app/jurnal-7/ostatok'
+import { UseSpravochnikReturn, useSpravochnik } from '@renderer/common/features/spravochnik'
+import { OstatokProduct } from '@renderer/common/models'
 
 type UseOstatokProductParams = {
   naimenovanie_tovarov_jur7_id: number

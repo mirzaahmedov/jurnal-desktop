@@ -1,10 +1,11 @@
 import type { Region } from '@/common/models'
+
 import { useEffect } from 'react'
-import { useForm } from 'react-hook-form'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { useToast } from '@/common/hooks/use-toast'
+
 import { zodResolver } from '@hookform/resolvers/zod'
-import { type RegionPayloadType, RegionPayloadSchema, regionService } from './service'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useForm } from 'react-hook-form'
+
 import { Button } from '@/common/components/ui/button'
 import {
   Dialog,
@@ -15,14 +16,17 @@ import {
 } from '@/common/components/ui/dialog'
 import {
   Form,
+  FormControl,
   FormField,
   FormItem,
-  FormControl,
   FormLabel,
   FormMessage
 } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
+import { useToast } from '@/common/hooks/use-toast'
+
 import { regionQueryKeys } from './constants'
+import { RegionPayloadSchema, type RegionPayloadType, regionService } from './service'
 
 type RegionsDialogProps = {
   open: boolean

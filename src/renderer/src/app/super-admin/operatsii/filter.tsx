@@ -1,8 +1,10 @@
+import { parseAsString, useQueryStates } from 'nuqs'
+
 import { SelectField } from '@/common/components'
 import { SearchField } from '@/common/features/search'
 import { TypeSchetOperatsii } from '@/common/models'
+
 import { operatsiiTypeSchetOptions } from './constants'
-import { parseAsString, useQueryStates } from 'nuqs'
 
 const OperatsiiFilter = () => {
   const { filters, setFilters } = useOperatsiiFilters()

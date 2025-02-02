@@ -1,5 +1,4 @@
 import { PodpisDoljnost, PodpisTypeDocument } from '@renderer/common/models'
-
 import { z } from 'zod'
 
 export const podpisDoljnostOptions = [

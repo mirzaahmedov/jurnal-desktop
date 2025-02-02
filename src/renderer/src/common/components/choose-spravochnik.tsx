@@ -1,8 +1,9 @@
-import { CircleCheck, CircleX } from 'lucide-react'
-import { Popover, PopoverContent, PopoverTrigger } from './ui/popover'
+import type { UseSpravochnikReturn } from '@renderer/common/features/spravochnik'
 
 import { Button } from '@renderer/common/components/ui/button'
-import type { UseSpravochnikReturn } from '@renderer/common/features/spravochnik'
+import { CircleCheck, CircleX } from 'lucide-react'
+
+import { Popover, PopoverContent, PopoverTrigger } from './ui/popover'
 
 export type ChooseSpravochnikProps<T> = {
   disabled?: boolean

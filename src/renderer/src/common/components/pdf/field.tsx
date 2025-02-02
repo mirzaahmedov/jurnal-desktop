@@ -1,7 +1,8 @@
-import type { PropsWithChildren } from 'react'
 import type { ViewProps } from '@react-pdf/renderer'
+import type { PropsWithChildren } from 'react'
 
 import { StyleSheet, View } from '@react-pdf/renderer'
+
 import { mergeStyles } from '@/common/lib/utils'
 
 const Field = ({ children, style, ...props }: PropsWithChildren<ViewProps>) => {

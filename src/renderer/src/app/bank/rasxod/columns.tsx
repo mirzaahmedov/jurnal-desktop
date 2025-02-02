@@ -1,10 +1,12 @@
+import type { BankRasxod } from '@renderer/common/models'
+
 import { type ColumnDef } from '@renderer/common/components'
 import { TooltipCellRenderer } from '@renderer/common/components/table/renderers'
 import { Switch } from '@renderer/common/components/ui/switch'
-import { toast } from 'react-toastify'
 import { formatLocaleDate, formatNumber } from '@renderer/common/lib/format'
-import type { BankRasxod } from '@renderer/common/models'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { toast } from 'react-toastify'
+
 import { queryKeys } from './constants'
 import { bankRasxodPaymentService } from './service'
 

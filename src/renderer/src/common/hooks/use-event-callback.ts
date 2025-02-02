@@ -1,4 +1,4 @@
-import { useRef, useLayoutEffect, useCallback } from 'react'
+import { useCallback, useLayoutEffect, useRef } from 'react'
 
 const useEventCallback = <T extends (...args: any[]) => any>(func?: T): T | undefined => {
   const ref = useRef(func)

@@ -1,3 +1,7 @@
+import type { PokazatUslugiProvodkaForm } from '../service'
+import type { EditableColumnType } from '@renderer/common/components/editable-table'
+
+import { inputVariants } from '@renderer/common/components'
 import {
   createNumberEditor,
   createOperatsiiEditor,
@@ -5,13 +9,10 @@ import {
   createStaffEditor,
   createTypeOperatsiiEditor
 } from '@renderer/common/components/editable-table/editors'
-
-import type { EditableColumnType } from '@renderer/common/components/editable-table'
 import { Input } from '@renderer/common/components/ui/input'
-import type { PokazatUslugiProvodkaForm } from '../service'
-import { TypeSchetOperatsii } from '@/common/models'
 import { cn } from '@renderer/common/lib/utils'
-import { inputVariants } from '@renderer/common/components'
+
+import { TypeSchetOperatsii } from '@/common/models'
 
 export const podvodkaColumns: EditableColumnType<PokazatUslugiProvodkaForm>[] = [
   {

@@ -1,8 +1,9 @@
-import { APIEndpoints, CRUDService } from '@/common/features/crud'
-
 import type { Role } from '@/common/models'
-import { withPreprocessor } from '@/common/lib/validation'
+
 import { z } from 'zod'
+
+import { APIEndpoints, CRUDService } from '@/common/features/crud'
+import { withPreprocessor } from '@/common/lib/validation'
 
 export const RolePayloadSchema = withPreprocessor(
   z.object({
