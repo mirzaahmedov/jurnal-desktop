@@ -2,36 +2,41 @@ import type { MainSchet } from '@/common/models'
 
 import { useEffect, useState } from 'react'
 
+import { usePagination } from '@renderer/common/hooks'
+import { ListView } from '@renderer/common/views'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
+import { toast } from 'react-toastify'
 
-import { LoadingOverlay, Pagination, usePagination } from '@/common/components'
 import { GenericTable } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
-import { useLayout } from '@/common/features/layout'
+import { useLayoutStore } from '@/common/features/layout'
 import { SearchField, useSearch } from '@/common/features/search'
 import { useToggle } from '@/common/hooks/use-toggle'
 
 import { mainSchetColumns } from './columns'
 import { mainSchetQueryKeys } from './constants'
-import MainSchetDialog from './dialog'
+import { MainSchetDialog } from './dialog'
 import { mainSchetService } from './service'
 
 const MainSchetPage = () => {
   const [selected, setSelected] = useState<MainSchet | null>(null)
 
-  const { currentPage, itemsPerPage } = usePagination()
+  const { t } = useTranslation(['app'])
   const { confirm } = useConfirm()
   const { search } = useSearch()
 
-  const toggle = useToggle()
+  const dialogToggle = useToggle()
+  const pagination = usePagination()
   const queryClient = useQueryClient()
+
+  const setLayout = useLayoutStore((store) => store.setLayout)
 
   const { data: mainSchets, isFetching } = useQuery({
     queryKey: [
       mainSchetQueryKeys.getAll,
       {
-        page: currentPage,
-        limit: itemsPerPage,
+        ...pagination,
         search
       }
     ],
@@ -41,26 +46,37 @@ const MainSchetPage = () => {
     mutationKey: [mainSchetQueryKeys.delete],
     mutationFn: mainSchetService.delete,
     onSuccess() {
+      toast.success(t('delete_success'))
       queryClient.invalidateQueries({
         queryKey: [mainSchetQueryKeys.getAll]
       })
+    },
+    onError() {
+      toast.error(t('delete_failed'))
     }
   })
 
   useEffect(() => {
-    if (!toggle.isOpen) {
+    if (!dialogToggle.isOpen) {
       setSelected(null)
     }
-  }, [toggle.isOpen])
-  useLayout({
-    title: 'Основной счет',
-    content: SearchField,
-    onCreate: toggle.open
-  })
+  }, [dialogToggle.isOpen])
+  useEffect(() => {
+    setLayout({
+      title: t('pages.main-schet'),
+      breadcrumbs: [
+        {
+          title: t('pages.spravochnik')
+        }
+      ],
+      content: SearchField,
+      onCreate: dialogToggle.open
+    })
+  }, [setLayout, t, dialogToggle.open])
 
   const handleClickEdit = (row: MainSchet) => {
     setSelected(row)
-    toggle.open()
+    dialogToggle.open()
   }
   const handleClickDelete = (row: MainSchet) => {
     confirm({
@@ -71,25 +87,27 @@ const MainSchetPage = () => {
   }
 
   return (
-    <>
-      <div className="flex-1 relative">
-        {isFetching || isPending ? <LoadingOverlay /> : null}
+    <ListView>
+      <ListView.Content loading={isFetching || isPending}>
         <GenericTable
           data={mainSchets?.data ?? []}
           columnDefs={mainSchetColumns}
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}
         />
-      </div>
-      <div className="px-10 py-5">
-        <Pagination pageCount={mainSchets?.meta.pageCount ?? 0} />
-      </div>
+      </ListView.Content>
+      <ListView.Footer>
+        <ListView.Pagination
+          {...pagination}
+          pageCount={mainSchets?.meta.pageCount ?? 0}
+        />
+      </ListView.Footer>
       <MainSchetDialog
-        data={selected}
-        open={toggle.isOpen}
-        onChangeOpen={toggle.setOpen}
+        selected={selected}
+        open={dialogToggle.isOpen}
+        onChangeOpen={dialogToggle.setOpen}
       />
-    </>
+    </ListView>
   )
 }
 

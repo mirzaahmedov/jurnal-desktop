@@ -114,5 +114,17 @@
   "start-something": "Boshlang'ich {{something}}",
   "rasxod-something": "Chiqim {{something}}",
   "prixod-something": "Kirim {{something}}",
-  "end-something": "Yakuniy {{something}}"
+  "end-something": "Yakuniy {{something}}",
+  "delete_success": "Muvaffaqiyatli oʻchirildi",
+  "delete_failed": "Oʻchirishda xatolik",
+  "update_success": "Muvaffaqiyatli yangilandi",
+  "update_failed": "Yangilashda xatolik",
+  "create_success": "Muvaffaqiyatli yaratildi",
+  "create_failed": "Yaratishda xatolik",
+  "mo-nth": "M.O. {{nth}}",
+  "doljnost": "Lavozim",
+  "type-document": "Hujjat turi",
+  "numeric-order": "Tartib raqami",
+  "cancel": "Bekor qilish",
+  "okonx": "Okonks"
 }

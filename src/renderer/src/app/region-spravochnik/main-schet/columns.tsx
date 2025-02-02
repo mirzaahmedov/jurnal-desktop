@@ -6,15 +6,15 @@ import { TooltipCellRenderer } from '@/common/components/table/renderers/tooltip
 export const mainSchetColumns: ColumnDef<MainSchet>[] = [
   {
     key: 'account_name',
-    header: 'Название'
+    header: 'name'
   },
   {
     key: 'account_number',
-    header: 'Номер'
+    header: 'number'
   },
   {
     key: 'tashkilot_inn',
-    header: 'Организация',
+    header: 'organization',
     renderCell(row) {
       return (
         <TooltipCellRenderer
@@ -33,6 +33,6 @@ export const mainSchetColumns: ColumnDef<MainSchet>[] = [
   },
   {
     key: 'budjet_name',
-    header: 'Бюджет'
+    header: 'budjet'
   }
 ]

@@ -2,11 +2,14 @@ import type { Podrazdelenie } from '@/common/models'
 
 import { useEffect, useState } from 'react'
 
+import { usePagination } from '@renderer/common/hooks'
+import { ListView } from '@renderer/common/views'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
 
-import { GenericTable, LoadingOverlay, Pagination, usePagination } from '@/common/components'
+import { GenericTable } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
-import { useLayout } from '@/common/features/layout'
+import { useLayoutStore } from '@/common/features/layout'
 import { SearchField, useSearch } from '@/common/features/search'
 import { useToggle } from '@/common/hooks/use-toggle'
 
@@ -18,10 +21,13 @@ import { subdivisionService } from './service'
 const SubdivisionPage = () => {
   const [selected, setSelected] = useState<Podrazdelenie | null>(null)
 
-  const toggle = useToggle()
+  const dialogToggle = useToggle()
+  const pagination = usePagination()
   const queryClient = useQueryClient()
 
-  const { currentPage, itemsPerPage } = usePagination()
+  const setLayout = useLayoutStore((store) => store.setLayout)
+
+  const { t } = useTranslation()
   const { confirm } = useConfirm()
   const { search } = useSearch()
 
@@ -29,8 +35,7 @@ const SubdivisionPage = () => {
     queryKey: [
       subdivisionQueryKeys.getAll,
       {
-        page: currentPage,
-        limit: itemsPerPage,
+        ...pagination,
         search
       }
     ],
@@ -47,19 +52,27 @@ const SubdivisionPage = () => {
   })
 
   useEffect(() => {
-    if (!toggle.isOpen) {
+    if (!dialogToggle.isOpen) {
       setSelected(null)
     }
-  }, [toggle.isOpen])
-  useLayout({
-    title: 'Подразделение',
-    content: SearchField,
-    onCreate: toggle.open
-  })
+  }, [dialogToggle.isOpen])
+
+  useEffect(() => {
+    setLayout({
+      title: t('pages.podrazdelenie'),
+      breadcrumbs: [
+        {
+          title: t('pages.spravochnik')
+        }
+      ],
+      content: SearchField,
+      onCreate: dialogToggle.open
+    })
+  }, [setLayout, t, dialogToggle.open])
 
   const handleClickEdit = (row: Podrazdelenie) => {
     setSelected(row)
-    toggle.open()
+    dialogToggle.open()
   }
   const handleClickDelete = (row: Podrazdelenie) => {
     confirm({
@@ -70,9 +83,8 @@ const SubdivisionPage = () => {
   }
 
   return (
-    <>
-      <div className="flex-1 relative">
-        {isFetching || isPending ? <LoadingOverlay /> : null}
+    <ListView>
+      <ListView.Content loading={isFetching || isPending}>
         <GenericTable
           data={subdivisions?.data ?? []}
           columnDefs={subdivisionColumns}
@@ -80,16 +92,19 @@ const SubdivisionPage = () => {
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}
         />
-      </div>
-      <div className="px-10 py-5">
-        <Pagination pageCount={subdivisions?.meta.pageCount ?? 0} />
-      </div>
+      </ListView.Content>
+      <ListView.Footer>
+        <ListView.Pagination
+          {...pagination}
+          pageCount={subdivisions?.meta.pageCount ?? 0}
+        />
+      </ListView.Footer>
       <SubdivisionDialog
         data={selected}
-        open={toggle.isOpen}
-        onChangeOpen={toggle.setOpen}
+        open={dialogToggle.isOpen}
+        onChangeOpen={dialogToggle.setOpen}
       />
-    </>
+    </ListView>
   )
 }
 

@@ -114,5 +114,17 @@
   "start-something": "Начало {{something}}",
   "rasxod-something": "Расход {{something}}",
   "prixod-something": "Приход {{something}}",
-  "end-something": "Конец {{something}}"
+  "end-something": "Конец {{something}}",
+  "delete_success": "Удален успешно",
+  "delete_failed": "Удалить не удалось",
+  "update_success": "Обновлено успешно",
+  "update_failed": "Обновление не удалось",
+  "create_success": "Создано успешно",
+  "create_failed": "Создать не удалось",
+  "mo-nth": "М.О. {{nth}}",
+  "doljnost": "Должность",
+  "type-document": "Тип документа",
+  "numeric-order": "Номер порядка",
+  "cancel": "Отменить",
+  "okonx": "Оконкс"
 }

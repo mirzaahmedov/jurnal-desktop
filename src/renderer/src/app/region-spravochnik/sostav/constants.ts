@@ -1,4 +1,4 @@
-import { SostavForm } from './service'
+import type { SostavFormValues } from './service'
 
 export const sostavQueryKeys = {
   getAll: 'sostav/all',
@@ -8,7 +8,7 @@ export const sostavQueryKeys = {
   delete: 'sostav/delete'
 }
 
-export const defaultValues: SostavForm = {
+export const defaultValues: SostavFormValues = {
   name: '',
   rayon: ''
 }

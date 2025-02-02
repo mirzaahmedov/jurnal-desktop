@@ -5,6 +5,7 @@ import { useEffect } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 
 import { NumericInput, SelectField } from '@/common/components'
 import { FormElement } from '@/common/components/form'
@@ -35,6 +36,8 @@ type PodpisDialogProps = {
   onOpenChange: (open: boolean) => void
 }
 const PodpisDialog = ({ data, open, onOpenChange }: PodpisDialogProps) => {
+  const { t } = useTranslation()
+
   const queryClient = useQueryClient()
   const form = useForm({
     defaultValues,
@@ -108,7 +111,7 @@ const PodpisDialog = ({ data, open, onOpenChange }: PodpisDialogProps) => {
     >
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Подпись</DialogTitle>
+          <DialogTitle>{t('pages.podpis')}</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form
@@ -121,7 +124,7 @@ const PodpisDialog = ({ data, open, onOpenChange }: PodpisDialogProps) => {
               render={({ field }) => (
                 <FormElement
                   grid="1:2"
-                  label="Должность"
+                  label={t('doljnost')}
                 >
                   <SelectField
                     {...field}
@@ -141,7 +144,7 @@ const PodpisDialog = ({ data, open, onOpenChange }: PodpisDialogProps) => {
               render={({ field }) => (
                 <FormElement
                   grid="1:2"
-                  label="ФИО"
+                  label={t('fio')}
                 >
                   <Input {...field} />
                 </FormElement>
@@ -153,7 +156,7 @@ const PodpisDialog = ({ data, open, onOpenChange }: PodpisDialogProps) => {
               render={({ field }) => (
                 <FormElement
                   grid="1:2"
-                  label="Тип документа"
+                  label={t('type-document')}
                 >
                   <SelectField
                     {...field}
@@ -173,7 +176,7 @@ const PodpisDialog = ({ data, open, onOpenChange }: PodpisDialogProps) => {
               render={({ field }) => (
                 <FormElement
                   grid="1:2"
-                  label="Номер порядка"
+                  label={t('numeric-order')}
                 >
                   <NumericInput
                     {...field}
@@ -192,7 +195,7 @@ const PodpisDialog = ({ data, open, onOpenChange }: PodpisDialogProps) => {
                 type="submit"
                 disabled={isCreating || isUpdating}
               >
-                Сохранить
+                {t('save')}
               </Button>
             </DialogFooter>
           </form>

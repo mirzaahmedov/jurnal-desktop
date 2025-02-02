@@ -1,7 +1,10 @@
-import { FormEventHandler, ReactNode, useState } from 'react'
+import type { OrganizationFormPayload } from './service'
+
+import { type FormEventHandler, type ReactNode, useState } from 'react'
 
 import { useQuery } from '@tanstack/react-query'
-import { UseFormReturn } from 'react-hook-form'
+import { type UseFormReturn } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 
 import { bankQueryKeys } from '@/app/super-admin/bank/config'
 import { bankService } from '@/app/super-admin/bank/service'
@@ -10,8 +13,6 @@ import { FormElement } from '@/common/components/form'
 import { Form, FormControl, FormField } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
 
-import { OrganizationFormPayload } from './service'
-
 type OrganizationFormProps = {
   form: UseFormReturn<OrganizationFormPayload>
   onSubmit: FormEventHandler<HTMLFormElement>
@@ -19,6 +20,8 @@ type OrganizationFormProps = {
 }
 const OrganizationForm = ({ form, formActions, onSubmit }: OrganizationFormProps) => {
   const [search, setSearch] = useState('')
+
+  const { t } = useTranslation()
 
   const { data: bankList, isFetching } = useQuery({
     queryKey: [bankQueryKeys.getAll, { search }],
@@ -37,7 +40,7 @@ const OrganizationForm = ({ form, formActions, onSubmit }: OrganizationFormProps
             render={({ field }) => (
               <FormElement
                 grid="2:4"
-                label="Название"
+                label={t('name')}
               >
                 <Input {...field} />
               </FormElement>
@@ -50,7 +53,7 @@ const OrganizationForm = ({ form, formActions, onSubmit }: OrganizationFormProps
             render={({ field }) => (
               <FormElement
                 grid="2:4"
-                label="ИНН"
+                label={t('inn')}
               >
                 <Input {...field} />
               </FormElement>
@@ -63,7 +66,7 @@ const OrganizationForm = ({ form, formActions, onSubmit }: OrganizationFormProps
             render={({ field }) => (
               <FormElement
                 grid="2:4"
-                label="МФО"
+                label={t('mfo')}
               >
                 <AutoComplete
                   isFetching={isFetching}
@@ -106,7 +109,7 @@ const OrganizationForm = ({ form, formActions, onSubmit }: OrganizationFormProps
             render={({ field }) => (
               <FormElement
                 grid="2:4"
-                label="Название банка"
+                label={t('bank')}
               >
                 <FormControl>
                   <AutoComplete
@@ -150,7 +153,7 @@ const OrganizationForm = ({ form, formActions, onSubmit }: OrganizationFormProps
             render={({ field }) => (
               <FormElement
                 grid="2:4"
-                label="Расчетный счет"
+                label={t('raschet-schet')}
               >
                 <Input {...field} />
               </FormElement>
@@ -163,7 +166,7 @@ const OrganizationForm = ({ form, formActions, onSubmit }: OrganizationFormProps
             render={({ field }) => (
               <FormElement
                 grid="2:4"
-                label="Расчетный счет газна"
+                label={t('raschet-schet-gazna')}
               >
                 <Input {...field} />
               </FormElement>
@@ -176,7 +179,7 @@ const OrganizationForm = ({ form, formActions, onSubmit }: OrganizationFormProps
             render={({ field }) => (
               <FormElement
                 grid="2:4"
-                label="Оконкс"
+                label={t('okonx')}
               >
                 <Input {...field} />
               </FormElement>

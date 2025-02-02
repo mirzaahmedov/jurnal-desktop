@@ -3,11 +3,9 @@ import type { Sostav } from '@/common/models'
 
 export const sostavColumns: ColumnDef<Sostav>[] = [
   {
-    key: 'name',
-    header: 'Название'
+    key: 'name'
   },
   {
-    key: 'rayon',
-    header: 'Район'
+    key: 'rayon'
   }
 ]

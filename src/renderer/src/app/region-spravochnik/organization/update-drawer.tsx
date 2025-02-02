@@ -1,3 +1,5 @@
+import type { Organization } from '@renderer/common/models'
+
 import { useEffect } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -13,9 +15,9 @@ import {
 } from '@renderer/common/components/ui/drawer'
 import { useConfirm } from '@renderer/common/features/confirm'
 import { useSpravochnik } from '@renderer/common/features/spravochnik'
-import { Organization } from '@renderer/common/models'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 
 import { defaultValues } from './config'
@@ -39,6 +41,7 @@ const UpdateOrganizationDrawer = () => {
   })
 
   const { confirm } = useConfirm()
+  const { t } = useTranslation(['app'])
 
   const {
     data: organization,
@@ -137,7 +140,7 @@ const UpdateOrganizationDrawer = () => {
     >
       <DrawerContent className="max-h-full flex flex-col">
         <DrawerHeader>
-          <DrawerTitle>Организация</DrawerTitle>
+          <DrawerTitle>{t('pages.organization')}</DrawerTitle>
         </DrawerHeader>
         <div className="grid grid-cols-12 gap-10 flex-1 overflow-hidden">
           <div className="col-span-4 relative">
@@ -152,14 +155,14 @@ const UpdateOrganizationDrawer = () => {
                       disabled={isFetching || isUpdating}
                       type="submit"
                     >
-                      Сохранить
+                      {t('save')}
                     </Button>
                     <DrawerClose>
                       <Button
                         type="button"
                         variant="outline"
                       >
-                        Отменить
+                        {t('cancel')}
                       </Button>
                     </DrawerClose>
                   </div>
@@ -183,7 +186,7 @@ const UpdateOrganizationDrawer = () => {
                 }}
                 disabled={isFetching || orgSpravochnik.loading || isUpdating}
               >
-                Добавить
+                {t('add')}
               </Button>
             </div>
           </div>

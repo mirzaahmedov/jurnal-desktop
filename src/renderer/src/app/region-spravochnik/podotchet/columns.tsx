@@ -3,11 +3,9 @@ import type { Podotchet } from '@/common/models'
 
 export const podotchetColumns: ColumnDef<Podotchet>[] = [
   {
-    key: 'name',
-    header: 'Название'
+    key: 'name'
   },
   {
-    key: 'rayon',
-    header: 'Район'
+    key: 'rayon'
   }
 ]

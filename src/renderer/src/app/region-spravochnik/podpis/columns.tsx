@@ -12,7 +12,7 @@ const podpisColumns: ColumnDef<Podpis>[] = [
     key: 'numeric_poryadok'
   },
   {
-    header: 'Должность',
+    header: 'doljnost',
     key: 'doljnost_name',
     renderCell(row, col) {
       const doljnost = podpisDoljnostOptions.find(
@@ -32,11 +32,10 @@ const podpisColumns: ColumnDef<Podpis>[] = [
     }
   },
   {
-    header: 'ФИО',
+    header: 'fio',
     key: 'fio_name'
   },
   {
-    header: 'Тип документа',
     key: 'type_document',
     renderCell(row, col) {
       const typeDocument = podpisTypeDocumentOptions.find(

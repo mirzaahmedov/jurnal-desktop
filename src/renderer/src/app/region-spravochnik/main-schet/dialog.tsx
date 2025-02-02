@@ -6,6 +6,8 @@ import { useEffect } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
+import { toast } from 'react-toastify'
 
 import { budgetService } from '@/app/super-admin/budjet'
 import { budgetQueryKeys } from '@/app/super-admin/budjet/constants'
@@ -27,27 +29,27 @@ import {
   FormMessage
 } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
-import { useToast } from '@/common/hooks/use-toast'
 
 import { mainSchetQueryKeys } from './constants'
 import { MainSchetPayloadSchema, mainSchetService } from './service'
 
-type OrganizationDialogProps = {
+export interface MainSchetDialogProps {
   open: boolean
-  onChangeOpen(value: boolean): void
-  data: MainSchet | null
+  onChangeOpen: (value: boolean) => void
+  selected: MainSchet | null
 }
-const OrganizationDialog = (props: OrganizationDialogProps) => {
-  const { open, onChangeOpen, data } = props
+export const MainSchetDialog = (props: MainSchetDialogProps) => {
+  const { open, onChangeOpen, selected } = props
 
-  const { toast } = useToast()
+  const { t } = useTranslation()
+
   const queryClient = useQueryClient()
   const form = useForm<MainSchetPayloadType>({
     defaultValues,
     resolver: zodResolver(MainSchetPayloadSchema)
   })
 
-  const { data: budgets } = useQuery({
+  const { data: budgets, isFetching: isFetchingBudjets } = useQuery({
     queryKey: [budgetQueryKeys.getAll],
     queryFn: budgetService.getAll
   })
@@ -56,9 +58,7 @@ const OrganizationDialog = (props: OrganizationDialogProps) => {
     mutationKey: [mainSchetQueryKeys.create],
     mutationFn: mainSchetService.create,
     onSuccess() {
-      toast({
-        title: 'основной счет успешно создана'
-      })
+      toast.success(t('create-success'))
       form.reset(defaultValues)
       queryClient.invalidateQueries({
         queryKey: [mainSchetQueryKeys.getAll]
@@ -66,20 +66,14 @@ const OrganizationDialog = (props: OrganizationDialogProps) => {
       onChangeOpen(false)
     },
     onError(error) {
-      toast({
-        variant: 'destructive',
-        title: 'Не удалось создать основной счет',
-        description: error.message
-      })
+      toast.success(t('create-failed') + ': ' + error.message)
     }
   })
   const { mutate: update, isPending: isUpdating } = useMutation({
     mutationKey: [mainSchetQueryKeys.update],
     mutationFn: mainSchetService.update,
     onSuccess() {
-      toast({
-        title: 'основной счет успешно обновлена'
-      })
+      toast.success(t('create-success'))
       form.reset(defaultValues)
       queryClient.invalidateQueries({
         queryKey: [mainSchetQueryKeys.getAll]
@@ -87,30 +81,26 @@ const OrganizationDialog = (props: OrganizationDialogProps) => {
       onChangeOpen(false)
     },
     onError(error) {
-      toast({
-        variant: 'destructive',
-        title: 'Не удалось обновить основной счет',
-        description: error.message
-      })
+      toast.success(t('create-failed') + ': ' + error.message)
     }
   })
 
   const onSubmit = form.handleSubmit((payload) => {
-    if (data) {
-      update(Object.assign(payload, { id: data.id }))
+    if (selected) {
+      update(Object.assign(payload, { id: selected.id }))
     } else {
       create(payload)
     }
   })
 
   useEffect(() => {
-    if (!data) {
+    if (!selected) {
       form.reset(defaultValues)
       return
     }
 
-    form.reset(data)
-  }, [form, data])
+    form.reset(selected)
+  }, [form, selected])
 
   return (
     <Dialog
@@ -119,7 +109,9 @@ const OrganizationDialog = (props: OrganizationDialogProps) => {
     >
       <DialogContent className="h-full max-h-[700px] max-w-xl flex flex-col">
         <DialogHeader>
-          <DialogTitle>{data ? 'Изменить' : 'Добавить'} основной счет</DialogTitle>
+          <DialogTitle>
+            {selected ? t('edit') : t('create')} {t('main-schet')}
+          </DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form
@@ -133,12 +125,13 @@ const OrganizationDialog = (props: OrganizationDialogProps) => {
                 render={({ field }) => (
                   <FormItem>
                     <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
-                      <FormLabel className="text-right col-span-2">Бюджет</FormLabel>
+                      <FormLabel className="text-right col-span-2">{t('budjet')}</FormLabel>
                       <SelectField
                         {...field}
                         withFormControl
+                        disabled={isFetchingBudjets}
                         triggerClassName="col-span-4"
-                        placeholder="Выберите бюджет"
+                        placeholder={t('choose', { what: t('budjet') })}
                         options={budgets?.data ?? []}
                         getOptionLabel={(option) => option.name}
                         getOptionValue={(option) => option.id}
@@ -157,7 +150,7 @@ const OrganizationDialog = (props: OrganizationDialogProps) => {
                 render={({ field }) => (
                   <FormItem>
                     <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
-                      <FormLabel className="text-right col-span-2">Название</FormLabel>
+                      <FormLabel className="text-right col-span-2">{t('name')}</FormLabel>
                       <FormControl>
                         <Input
                           className="col-span-4"
@@ -176,7 +169,7 @@ const OrganizationDialog = (props: OrganizationDialogProps) => {
                 render={({ field }) => (
                   <FormItem>
                     <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
-                      <FormLabel className="text-right col-span-2">Номер</FormLabel>
+                      <FormLabel className="text-right col-span-2">{t('number')}</FormLabel>
                       <FormControl>
                         <Input
                           className="col-span-4"
@@ -195,7 +188,7 @@ const OrganizationDialog = (props: OrganizationDialogProps) => {
                 render={({ field }) => (
                   <FormItem>
                     <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
-                      <FormLabel className="text-right col-span-2">Название организации</FormLabel>
+                      <FormLabel className="text-right col-span-2">{t('organization')}</FormLabel>
                       <FormControl>
                         <Input
                           className="col-span-4"
@@ -214,7 +207,7 @@ const OrganizationDialog = (props: OrganizationDialogProps) => {
                 render={({ field }) => (
                   <FormItem>
                     <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
-                      <FormLabel className="text-right col-span-2">ИНН организации</FormLabel>
+                      <FormLabel className="text-right col-span-2">{t('inn')}</FormLabel>
                       <FormControl>
                         <Input
                           {...field}
@@ -233,7 +226,7 @@ const OrganizationDialog = (props: OrganizationDialogProps) => {
                 render={({ field }) => (
                   <FormItem>
                     <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
-                      <FormLabel className="text-right col-span-2">МФО организации</FormLabel>
+                      <FormLabel className="text-right col-span-2">{t('mfo')}</FormLabel>
                       <FormControl>
                         <Input
                           className="col-span-4"
@@ -252,7 +245,7 @@ const OrganizationDialog = (props: OrganizationDialogProps) => {
                 render={({ field }) => (
                   <FormItem>
                     <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
-                      <FormLabel className="text-right col-span-2">Банк организации</FormLabel>
+                      <FormLabel className="text-right col-span-2">{t('bank')}</FormLabel>
                       <FormControl>
                         <Input
                           className="col-span-4"
@@ -271,7 +264,9 @@ const OrganizationDialog = (props: OrganizationDialogProps) => {
                 render={({ field }) => (
                   <FormItem>
                     <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
-                      <FormLabel className="text-right col-span-2">Журнал 1 счет</FormLabel>
+                      <FormLabel className="text-right col-span-2">
+                        {t('mo-nth', { nth: 1 })} {t('schet')}
+                      </FormLabel>
                       <FormControl>
                         <Input
                           className="col-span-4"
@@ -289,7 +284,9 @@ const OrganizationDialog = (props: OrganizationDialogProps) => {
                 render={({ field }) => (
                   <FormItem>
                     <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
-                      <FormLabel className="text-right col-span-2">Журнал 1 субсчет</FormLabel>
+                      <FormLabel className="text-right col-span-2">
+                        {t('mo-nth', { nth: 1 })} {t('subschet')}
+                      </FormLabel>
                       <FormControl>
                         <Input
                           className="col-span-4"
@@ -308,7 +305,9 @@ const OrganizationDialog = (props: OrganizationDialogProps) => {
                 render={({ field }) => (
                   <FormItem>
                     <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
-                      <FormLabel className="text-right col-span-2">Журнал 2 счет</FormLabel>
+                      <FormLabel className="text-right col-span-2">
+                        {t('mo-nth', { nth: 2 })} {t('schet')}
+                      </FormLabel>
                       <FormControl>
                         <Input
                           className="col-span-4"
@@ -326,7 +325,9 @@ const OrganizationDialog = (props: OrganizationDialogProps) => {
                 render={({ field }) => (
                   <FormItem>
                     <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
-                      <FormLabel className="text-right col-span-2">Журнал 2 субсчет</FormLabel>
+                      <FormLabel className="text-right col-span-2">
+                        {t('mo-nth', { nth: 2 })} {t('subschet')}
+                      </FormLabel>
                       <FormControl>
                         <Input
                           className="col-span-4"
@@ -345,7 +346,9 @@ const OrganizationDialog = (props: OrganizationDialogProps) => {
                 render={({ field }) => (
                   <FormItem>
                     <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
-                      <FormLabel className="text-right col-span-2">Журнал 3 счет</FormLabel>
+                      <FormLabel className="text-right col-span-2">
+                        {t('mo-nth', { nth: 3 })} {t('schet')}
+                      </FormLabel>
                       <FormControl>
                         <Input
                           className="col-span-4"
@@ -363,7 +366,9 @@ const OrganizationDialog = (props: OrganizationDialogProps) => {
                 render={({ field }) => (
                   <FormItem>
                     <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
-                      <FormLabel className="text-right col-span-2">Журнал 3 субсчет</FormLabel>
+                      <FormLabel className="text-right col-span-2">
+                        {t('mo-nth', { nth: 3 })} {t('subschet')}
+                      </FormLabel>
                       <FormControl>
                         <Input
                           className="col-span-4"
@@ -382,7 +387,9 @@ const OrganizationDialog = (props: OrganizationDialogProps) => {
                 render={({ field }) => (
                   <FormItem>
                     <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
-                      <FormLabel className="text-right col-span-2">Журнал 4 счет</FormLabel>
+                      <FormLabel className="text-right col-span-2">
+                        {t('mo-nth', { nth: 4 })} {t('schet')}
+                      </FormLabel>
                       <FormControl>
                         <Input
                           className="col-span-4"
@@ -400,7 +407,9 @@ const OrganizationDialog = (props: OrganizationDialogProps) => {
                 render={({ field }) => (
                   <FormItem>
                     <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
-                      <FormLabel className="text-right col-span-2">Журнал 4 субсчет</FormLabel>
+                      <FormLabel className="text-right col-span-2">
+                        {t('mo-nth', { nth: 4 })} {t('subschet')}
+                      </FormLabel>
                       <FormControl>
                         <Input
                           className="col-span-4"
@@ -418,7 +427,7 @@ const OrganizationDialog = (props: OrganizationDialogProps) => {
                 type="submit"
                 disabled={isCreating || isUpdating}
               >
-                {data ? 'Изменить' : 'Добавить'}
+                {t('save')}
               </Button>
             </DialogFooter>
           </form>
@@ -445,5 +454,3 @@ const defaultValues = {
   jur4_schet: '',
   jur4_subschet: ''
 } satisfies MainSchetPayloadType
-
-export default OrganizationDialog

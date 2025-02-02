@@ -1,11 +1,12 @@
+import type { DialogProps } from '@radix-ui/react-dialog'
 import type { Organization } from '@renderer/common/models'
 
 import { useEffect } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { DialogProps } from '@radix-ui/react-dialog'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 
 import { Button } from '@/common/components/ui/button'
@@ -28,6 +29,8 @@ type CreateOrganizationDialogProps = DialogProps & {
 }
 const CreateOrganizationDialog = (props: CreateOrganizationDialogProps) => {
   const { open, onOpenChange, state } = props
+
+  const { t } = useTranslation()
 
   const original = state?.original
 
@@ -82,7 +85,7 @@ const CreateOrganizationDialog = (props: CreateOrganizationDialogProps) => {
                 disabled={isCreating}
                 type="submit"
               >
-                Добавить
+                {t('add')}
               </Button>
             </DialogFooter>
           }

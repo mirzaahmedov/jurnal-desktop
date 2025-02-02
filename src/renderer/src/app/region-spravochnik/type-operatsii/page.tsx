@@ -24,6 +24,7 @@ const TypeOperatsiiPage = () => {
   const dialogToggle = useToggle()
   const pagination = usePagination()
   const queryClient = useQueryClient()
+
   const setLayout = useLayoutStore((store) => store.setLayout)
 
   const { t } = useTranslation(['app'])

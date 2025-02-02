@@ -16,9 +16,9 @@ export const SostavFormSchema = withPreprocessor(
     rayon: z.string()
   })
 )
-export type SostavForm = z.infer<typeof SostavFormSchema>
+export type SostavFormValues = z.infer<typeof SostavFormSchema>
 
-export const sostavService = new CRUDService<Sostav, SostavForm>({
+export const sostavService = new CRUDService<Sostav, SostavFormValues>({
   endpoint: APIEndpoints.sostav
 })
 

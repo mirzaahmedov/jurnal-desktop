@@ -3,11 +3,9 @@ import type { Podrazdelenie } from '@/common/models'
 
 export const subdivisionColumns: ColumnDef<Podrazdelenie>[] = [
   {
-    key: 'name',
-    header: 'Название'
+    key: 'name'
   },
   {
-    key: 'rayon',
-    header: 'Район'
+    key: 'rayon'
   }
 ]

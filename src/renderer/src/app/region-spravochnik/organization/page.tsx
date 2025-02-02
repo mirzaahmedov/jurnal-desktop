@@ -1,3 +1,5 @@
+import type { Organization } from '@renderer/common/models'
+
 import { useEffect, useState } from 'react'
 
 import { LoadingOverlay } from '@renderer/common/components'
@@ -6,10 +8,11 @@ import { useConfirm } from '@renderer/common/features/confirm'
 import { useLayout } from '@renderer/common/features/layout'
 import { SearchField, useSearch } from '@renderer/common/features/search'
 import { usePagination, useToggle } from '@renderer/common/hooks'
-import { Organization } from '@renderer/common/models'
 import { ListView } from '@renderer/common/views'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { CopyPlus } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
+import { toast } from 'react-toastify'
 
 import { CreateOrganizationDialog } from './components/create-dialog'
 import { organizationQueryKeys } from './config'
@@ -22,6 +25,7 @@ const OrganizationPage = () => {
   const [, setParentId] = useParentId()
   const [original, setOriginal] = useState<Organization>()
 
+  const { t } = useTranslation()
   const { confirm } = useConfirm()
   const { search } = useSearch()
 
@@ -43,6 +47,7 @@ const OrganizationPage = () => {
     mutationKey: [organizationQueryKeys.delete],
     mutationFn: organizationService.delete,
     onSuccess() {
+      toast.success(t('delete-success'))
       queryClient.invalidateQueries({
         queryKey: [organizationQueryKeys.getAll]
       })

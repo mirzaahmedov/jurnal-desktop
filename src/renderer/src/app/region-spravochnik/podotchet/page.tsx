@@ -3,6 +3,7 @@ import type { Podotchet } from '@/common/models'
 import { useEffect, useState } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
 
 import { LoadingOverlay, Pagination, usePagination } from '@/common/components'
 import { GenericTable } from '@/common/components'
@@ -19,12 +20,13 @@ import { podotchetService } from './service'
 const PodotchetPage = () => {
   const [selected, setSelected] = useState<Podotchet | null>(null)
 
-  const toggle = useToggle()
+  const dialogToggle = useToggle()
   const queryClient = useQueryClient()
 
   const { currentPage, itemsPerPage } = usePagination()
   const { confirm } = useConfirm()
   const { search } = useSearch()
+  const { t } = useTranslation(['app'])
 
   const { data: podotchetList, isFetching } = useQuery({
     queryKey: [
@@ -48,20 +50,20 @@ const PodotchetPage = () => {
   })
 
   useEffect(() => {
-    if (!toggle.isOpen) {
+    if (!dialogToggle.isOpen) {
       setSelected(null)
     }
-  }, [toggle.isOpen])
+  }, [dialogToggle.isOpen])
 
   useLayout({
-    title: 'Подотчетное лицо',
+    title: t('pages.podotchet'),
     content: SearchField,
-    onCreate: toggle.open
+    onCreate: dialogToggle.open
   })
 
   const handleClickEdit = (row: Podotchet) => {
     setSelected(row)
-    toggle.open()
+    dialogToggle.open()
   }
   const handleClickDelete = (row: Podotchet) => {
     confirm({
@@ -87,8 +89,8 @@ const PodotchetPage = () => {
       </div>
       <PodotchetDialog
         selected={selected}
-        open={toggle.isOpen}
-        onOpenChange={toggle.setOpen}
+        open={dialogToggle.isOpen}
+        onOpenChange={dialogToggle.setOpen}
       />
     </>
   )

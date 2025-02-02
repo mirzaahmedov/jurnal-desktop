@@ -1,11 +1,12 @@
 import type { Podotchet } from '@/common/models'
+import type { DialogProps } from '@radix-ui/react-dialog'
 
 import { useEffect } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { DialogProps } from '@radix-ui/react-dialog'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 
 import { Button } from '@/common/components/ui/button'
 import {
@@ -33,7 +34,9 @@ type PodotchetDialogProps = DialogProps & {
   selected?: Podotchet | null
 }
 const PodotchetDialog = ({ open, onOpenChange, selected, ...props }: PodotchetDialogProps) => {
+  const { t } = useTranslation()
   const { toast } = useToast()
+
   const queryClient = useQueryClient()
   const form = useForm<PodotchetForm>({
     defaultValues,
@@ -107,7 +110,7 @@ const PodotchetDialog = ({ open, onOpenChange, selected, ...props }: PodotchetDi
     >
       <DialogContent className="max-w-xl">
         <DialogHeader>
-          <DialogTitle>{selected ? 'Изменить' : 'Добавить'} подотчетное лицо</DialogTitle>
+          <DialogTitle>{selected ? t('edit') : t('create')} подотчетное лицо</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -118,7 +121,7 @@ const PodotchetDialog = ({ open, onOpenChange, selected, ...props }: PodotchetDi
                 render={({ field }) => (
                   <FormItem>
                     <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
-                      <FormLabel className="text-right col-span-2">Название</FormLabel>
+                      <FormLabel className="text-right col-span-2">{t('name')}</FormLabel>
                       <FormControl>
                         <Input
                           className="col-span-4"
@@ -137,7 +140,7 @@ const PodotchetDialog = ({ open, onOpenChange, selected, ...props }: PodotchetDi
                 render={({ field }) => (
                   <FormItem>
                     <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
-                      <FormLabel className="text-right col-span-2">Район</FormLabel>
+                      <FormLabel className="text-right col-span-2">{t('rayon')}</FormLabel>
                       <FormControl>
                         <Input
                           className="col-span-4"
@@ -155,7 +158,7 @@ const PodotchetDialog = ({ open, onOpenChange, selected, ...props }: PodotchetDi
                 type="submit"
                 disabled={isCreating || isUpdating}
               >
-                {selected ? 'Изменить' : 'Добавить'}
+                {t('save')}
               </Button>
             </DialogFooter>
           </form>
