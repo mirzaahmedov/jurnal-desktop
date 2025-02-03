@@ -6,6 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { EditableTable } from '@renderer/common/components/editable-table'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 
 import { groupQueryKeys } from '@/app/super-admin/group/constants'
 import { LoadingOverlay } from '@/common/components'
@@ -24,7 +25,7 @@ import { toast } from '@/common/hooks/use-toast'
 
 import { groupColumns } from './columns'
 import {
-  PereotsenkaBatchForm,
+  type PereotsenkaBatchForm,
   PereotsenkaBatchFormSchema,
   defaultBatchValues,
   pereotsenkaQueryKeys
@@ -37,6 +38,8 @@ type PereotsenkaBatchCreateDrawerProps = {
 }
 const PereotsenkaBatchCreateDrawer = (props: PereotsenkaBatchCreateDrawerProps) => {
   const { open, onOpenChange } = props
+
+  const { t } = useTranslation()
 
   const queryClient = useQueryClient()
   const form = useForm<PereotsenkaTable>({
@@ -94,7 +97,9 @@ const PereotsenkaBatchCreateDrawer = (props: PereotsenkaBatchCreateDrawerProps) 
     >
       <DrawerContent className="h-[900px] max-h-[90%]">
         <DrawerHeader>
-          <DrawerTitle>Добавить переоценку</DrawerTitle>
+          <DrawerTitle className="titlecase">
+            {t('create-something', { something: t('pereotsenka') })}
+          </DrawerTitle>
         </DrawerHeader>
         <Form {...form}>
           <form
@@ -111,7 +116,7 @@ const PereotsenkaBatchCreateDrawer = (props: PereotsenkaBatchCreateDrawerProps) 
                     control={form.control}
                     render={({ field }) => (
                       <FormElement
-                        label="Название"
+                        label={t('name')}
                         className="w-full max-w-md"
                       >
                         <Input {...field} />
@@ -135,7 +140,7 @@ const PereotsenkaBatchCreateDrawer = (props: PereotsenkaBatchCreateDrawerProps) 
                     type="submit"
                     disabled={isPending}
                   >
-                    Добавить
+                    {t('add')}
                   </Button>
                   <Button
                     type="button"
@@ -143,7 +148,7 @@ const PereotsenkaBatchCreateDrawer = (props: PereotsenkaBatchCreateDrawerProps) 
                     disabled={isPending}
                     onClick={onOpenChange.bind(null, false)}
                   >
-                    Отмена
+                    {t('close')}
                   </Button>
                 </DrawerFooter>
               </>

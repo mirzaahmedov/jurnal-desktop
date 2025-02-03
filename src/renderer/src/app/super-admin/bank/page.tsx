@@ -3,6 +3,7 @@ import type { Bank } from '@/common/models'
 import { useState } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
 
 import { GenericTable, LoadingOverlay, Pagination, usePagination } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
@@ -19,6 +20,8 @@ const BankPage = () => {
 
   const dialogToggle = useToggle()
   const queryClient = useQueryClient()
+
+  const { t } = useTranslation(['app'])
   const { confirm } = useConfirm()
   const { currentPage, itemsPerPage } = usePagination()
 
@@ -57,7 +60,7 @@ const BankPage = () => {
 
   const openDialog = dialogToggle.open
   useLayout({
-    title: 'Подписи',
+    title: t('pages.bank'),
     onCreate() {
       openDialog()
     }

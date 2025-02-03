@@ -1,9 +1,11 @@
+import type { Mainbook } from '@renderer/common/models'
+
 import { GenericTable } from '@renderer/common/components'
 import { useLayout } from '@renderer/common/features/layout'
 import { serializeDateParams } from '@renderer/common/lib/query-params'
-import { Mainbook } from '@renderer/common/models'
 import { ListView } from '@renderer/common/views'
 import { useQuery } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
 import { columns } from './columns'
@@ -12,6 +14,8 @@ import { adminMainbookService } from './service'
 
 const AdminMainbookPage = () => {
   const navigate = useNavigate()
+
+  const { t } = useTranslation(['app'])
 
   const { data: reports, isFetching } = useQuery({
     queryKey: [queryKeys.getAll],
@@ -24,7 +28,7 @@ const AdminMainbookPage = () => {
   }
 
   useLayout({
-    title: 'Главная книга'
+    title: t('pages.mainbook')
   })
 
   return (

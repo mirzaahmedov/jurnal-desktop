@@ -5,6 +5,7 @@ import { useEffect } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 
 import { Button } from '@/common/components/ui/button'
 import {
@@ -37,6 +38,8 @@ const RegionsDialog = (props: RegionsDialogProps) => {
   const { open, onChangeOpen, data } = props
 
   const { toast } = useToast()
+  const { t } = useTranslation()
+
   const queryClient = useQueryClient()
   const form = useForm<RegionPayloadType>({
     defaultValues,
@@ -109,7 +112,11 @@ const RegionsDialog = (props: RegionsDialogProps) => {
     >
       <DialogContent className="max-w-xl">
         <DialogHeader>
-          <DialogTitle>{data ? 'Изменить' : 'Добавить'} регион</DialogTitle>
+          <DialogTitle className="titlecase">
+            {data
+              ? t('update-something', { something: t('region') })
+              : t('create-something', { something: t('region') })}
+          </DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -120,7 +127,7 @@ const RegionsDialog = (props: RegionsDialogProps) => {
                 render={({ field }) => (
                   <FormItem>
                     <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
-                      <FormLabel className="text-right col-span-2">Название</FormLabel>
+                      <FormLabel className="text-right col-span-2">{t('name')}</FormLabel>
                       <FormControl>
                         <Input
                           className="col-span-4"
@@ -138,7 +145,7 @@ const RegionsDialog = (props: RegionsDialogProps) => {
                 type="submit"
                 disabled={isCreating || isUpdating}
               >
-                {data ? 'Изменить' : 'Добавить'}
+                {t('save')}
               </Button>
             </DialogFooter>
           </form>

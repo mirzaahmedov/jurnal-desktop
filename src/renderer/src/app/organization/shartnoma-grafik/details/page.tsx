@@ -250,6 +250,7 @@ const ShartnomaGrafikDetailsPage = () => {
       </DetailsView.Content>
       {main_schet?.data && organization?.data && shartnomaGrafik?.data ? (
         <GenerateReportDialog
+          subschet={shartnomaGrafik.data.sub_schet ?? ''}
           open={reportToggle.isOpen}
           onChange={reportToggle.setOpen}
           schedule={form.watch()}

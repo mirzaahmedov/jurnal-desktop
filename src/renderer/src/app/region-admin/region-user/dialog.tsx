@@ -6,6 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { roleQueryKeys, roleService } from '@renderer/app/super-admin/role'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 
 import { SelectField } from '@/common/components'
 import { Button } from '@/common/components/ui/button'
@@ -43,8 +44,10 @@ const RegionUserDialog = (props: RegionUserDialogProps) => {
     queryFn: roleService.getAll
   })
 
-  const { toast } = useToast()
   const queryClient = useQueryClient()
+
+  const { t } = useTranslation()
+  const { toast } = useToast()
 
   const form = useForm<RegionUserPayloadType>({
     defaultValues,
@@ -205,7 +208,7 @@ const RegionUserDialog = (props: RegionUserDialogProps) => {
                 type="submit"
                 disabled={isCreating || isUpdating}
               >
-                {data ? 'Изменить' : 'Добавить'}
+                {t('save')}
               </Button>
             </DialogFooter>
           </form>

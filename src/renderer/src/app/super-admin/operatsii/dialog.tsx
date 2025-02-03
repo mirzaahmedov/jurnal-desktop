@@ -6,6 +6,7 @@ import { useEffect } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { createSmetaSpravochnik } from '@renderer/app/super-admin/smeta'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { t } from 'i18next'
 import { useForm } from 'react-hook-form'
 
 import { SelectField } from '@/common/components'
@@ -132,7 +133,11 @@ const OperatsiiDialog = (props: OperatsiiDialogProps) => {
     >
       <DialogContent className="max-w-xl">
         <DialogHeader>
-          <DialogTitle>{data ? 'Изменить' : 'Добавить'} операцию</DialogTitle>
+          <DialogTitle>
+            {data
+              ? t('update-something', { something: t('operatsii') })
+              : t('create-something', { something: t('operatsii') })}
+          </DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -143,7 +148,7 @@ const OperatsiiDialog = (props: OperatsiiDialogProps) => {
                 render={({ field }) => (
                   <FormItem>
                     <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
-                      <FormLabel className="text-right col-span-2">Название</FormLabel>
+                      <FormLabel className="text-right col-span-2">{t('name')}</FormLabel>
                       <FormControl>
                         <Input
                           className="col-span-4"
@@ -162,7 +167,7 @@ const OperatsiiDialog = (props: OperatsiiDialogProps) => {
                 render={({ field }) => (
                   <FormItem>
                     <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
-                      <FormLabel className="text-right col-span-2">Счет</FormLabel>
+                      <FormLabel className="text-right col-span-2">{t('schet')}</FormLabel>
                       <FormControl>
                         <Input
                           className="col-span-4"
@@ -181,7 +186,7 @@ const OperatsiiDialog = (props: OperatsiiDialogProps) => {
                 render={({ field }) => (
                   <FormItem>
                     <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
-                      <FormLabel className="text-right col-span-2">Субсчет</FormLabel>
+                      <FormLabel className="text-right col-span-2">{t('subschet')}</FormLabel>
                       <FormControl>
                         <Input
                           className="col-span-4"
@@ -200,7 +205,7 @@ const OperatsiiDialog = (props: OperatsiiDialogProps) => {
                 render={({ field }) => (
                   <FormItem>
                     <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
-                      <FormLabel className="text-right col-span-2">Тип счета</FormLabel>
+                      <FormLabel className="text-right col-span-2">{t('type_schet')}</FormLabel>
                       <SelectField
                         {...field}
                         withFormControl
@@ -222,7 +227,7 @@ const OperatsiiDialog = (props: OperatsiiDialogProps) => {
                 render={({ field }) => (
                   <FormItem>
                     <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
-                      <FormLabel className="text-right col-span-2">Смета</FormLabel>
+                      <FormLabel className="text-right col-span-2">{t('smeta')}</FormLabel>
                       <Input
                         className="col-span-4"
                         {...field}
@@ -243,7 +248,7 @@ const OperatsiiDialog = (props: OperatsiiDialogProps) => {
                 type="submit"
                 disabled={isCreating || isUpdating}
               >
-                {data ? 'Изменить' : 'Добавить'}
+                {t('save')}
               </Button>
             </DialogFooter>
           </form>

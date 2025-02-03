@@ -1,9 +1,12 @@
+import type { Group } from '@/common/models'
+
 import { useEffect } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { createSmetaSpravochnik } from '@renderer/app/super-admin/smeta'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 
 import { SpravochnikInput } from '@/common/components'
 import { FormElement } from '@/common/components/form'
@@ -20,7 +23,6 @@ import { Input } from '@/common/components/ui/input'
 import { createSpravochnikKeyBindings, useSpravochnik } from '@/common/features/spravochnik'
 import { toast } from '@/common/hooks/use-toast'
 import { extendObject } from '@/common/lib/utils'
-import { Group } from '@/common/models'
 
 import { GroupPayloadSchema, defaultValues, groupQueryKeys } from './constants'
 import { groupService } from './service'
@@ -32,6 +34,8 @@ type GroupDialogProps = {
 }
 const GroupDialog = (props: GroupDialogProps) => {
   const { data, open, onClose } = props
+
+  const { t } = useTranslation()
 
   const form = useForm({
     defaultValues,
@@ -127,7 +131,11 @@ const GroupDialog = (props: GroupDialogProps) => {
     >
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{data ? 'Изменить' : 'Добавить'} группу</DialogTitle>
+          <DialogTitle>
+            {data
+              ? t('update-something', { something: t('group') })
+              : t('create-something', { something: t('group') })}
+          </DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={onSubmit}>
@@ -137,7 +145,7 @@ const GroupDialog = (props: GroupDialogProps) => {
                 control={form.control}
                 render={({ field }) => (
                   <FormElement
-                    label="Номер группы"
+                    label={t('group_number')}
                     grid="1:2"
                   >
                     <Input {...field} />
@@ -150,7 +158,7 @@ const GroupDialog = (props: GroupDialogProps) => {
                 control={form.control}
                 render={({ field }) => (
                   <FormElement
-                    label="Наименования"
+                    label={t('name')}
                     grid="1:2"
                   >
                     <Input {...field} />
@@ -163,7 +171,7 @@ const GroupDialog = (props: GroupDialogProps) => {
                 control={form.control}
                 render={({ field }) => (
                   <FormElement
-                    label="Счет"
+                    label={t('schet')}
                     grid="1:2"
                   >
                     <Input {...field} />
@@ -176,7 +184,7 @@ const GroupDialog = (props: GroupDialogProps) => {
                 control={form.control}
                 render={({ field }) => (
                   <FormElement
-                    label="Износ (%)"
+                    label={t('iznos_foiz')}
                     grid="1:2"
                   >
                     <Input
@@ -188,7 +196,7 @@ const GroupDialog = (props: GroupDialogProps) => {
               />
 
               <FormElement
-                label="Смета"
+                label={t('smeta')}
                 grid="1:2"
                 message={form.formState.errors.smeta_id?.message || ''}
               >
@@ -209,7 +217,7 @@ const GroupDialog = (props: GroupDialogProps) => {
                 control={form.control}
                 render={({ field }) => (
                   <FormElement
-                    label="Дебет"
+                    label={t('debet')}
                     grid="1:2"
                   >
                     <Input {...field} />
@@ -222,7 +230,7 @@ const GroupDialog = (props: GroupDialogProps) => {
                 control={form.control}
                 render={({ field }) => (
                   <FormElement
-                    label="Кредит"
+                    label={t('kredit')}
                     grid="1:2"
                   >
                     <Input {...field} />
@@ -235,7 +243,7 @@ const GroupDialog = (props: GroupDialogProps) => {
                 control={form.control}
                 render={({ field }) => (
                   <FormElement
-                    label="Подгруппа"
+                    label={t('pod_group')}
                     grid="1:2"
                   >
                     <Input {...field} />
@@ -248,7 +256,7 @@ const GroupDialog = (props: GroupDialogProps) => {
                 type="submit"
                 disabled={isCreating || isUpdating}
               >
-                {data ? 'Изменить' : 'Добавить'}
+                {t('save')}
               </Button>
             </DialogFooter>
           </form>

@@ -3,47 +3,42 @@ import type { Group } from '@/common/models'
 
 export const groupColumns: ColumnDef<Group>[] = [
   {
-    key: 'name',
-    header: 'Наименования'
+    key: 'name'
   },
   {
     key: 'schet',
-    header: 'Счет',
     headerClassName: 'w-32',
     className: 'w-32'
   },
   {
     key: 'iznos_foiz',
-    header: 'Износ %',
     headerClassName: 'w-32',
     className: 'w-32'
   },
   {
     key: 'provodka_debet',
-    header: 'Дебет',
+    header: 'debet',
     headerClassName: 'w-32',
     className: 'w-32'
   },
   {
     key: 'provodka_subschet',
-    header: 'Субсчет',
+    header: 'subschet',
     headerClassName: 'w-32',
     className: 'w-32'
   },
   {
     key: 'provodka_kredit',
-    header: 'Кредит',
+    header: 'kredit',
     headerClassName: 'w-32',
     className: 'w-32'
   },
   {
     key: 'group_number',
-    header: 'Номер группы',
     className: 'w-32'
   },
   {
     key: 'pod_group',
-    header: 'Подгруппа',
     className: 'w-32'
   }
 ]

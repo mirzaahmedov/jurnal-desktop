@@ -3,7 +3,6 @@ import type { Budjet } from '@/common/models'
 
 export const budgetColumns: ColumnDef<Budjet>[] = [
   {
-    key: 'name',
-    header: 'Название'
+    key: 'name'
   }
 ]

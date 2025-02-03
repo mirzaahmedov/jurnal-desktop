@@ -1,3 +1,5 @@
+import type { Mainbook } from '@renderer/common/models'
+
 import { useMemo } from 'react'
 
 import { Button } from '@renderer/common/components/ui/button'
@@ -8,9 +10,9 @@ import {
   useQueryDateParams,
   useQueryRegionId
 } from '@renderer/common/lib/query-params'
-import { Mainbook } from '@renderer/common/models'
 import { DetailsView } from '@renderer/common/views'
 import { useMutation, useQuery } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
 import { queryKeys } from '../config'
@@ -25,6 +27,7 @@ const AdminMainbookDetailsPage = () => {
   const { region_id } = useQueryRegionId()
   const { month, year } = useQueryDateParams('date')
 
+  const { t } = useTranslation(['app'])
   const { confirm } = useConfirm()
 
   const { data: report, isFetching } = useQuery({
@@ -64,7 +67,7 @@ const AdminMainbookDetailsPage = () => {
 
   const handleAccept = () => {
     confirm({
-      title: 'Принять отчёт?',
+      title: t('reject_report'),
       onConfirm: () => {
         if (!region_id || !budjet_id) {
           return
@@ -82,7 +85,7 @@ const AdminMainbookDetailsPage = () => {
 
   const handleReject = () => {
     confirm({
-      title: 'Отклонить отчёт?',
+      title: t('reject_report'),
       onConfirm: () => {
         if (!region_id || !budjet_id) {
           return
@@ -99,7 +102,7 @@ const AdminMainbookDetailsPage = () => {
   }
 
   useLayout({
-    title: 'Детали отчёта',
+    title: t('pages.mainbook'),
     onBack: () => {
       navigate(-1)
     }
@@ -107,7 +110,7 @@ const AdminMainbookDetailsPage = () => {
 
   return (
     <DetailsView>
-      <div className="w-full relative overflow-x-hidden">
+      <div className="w-full relative overflow-x-hidden scrollbar">
         <ReportTable
           isLoading={isFetching}
           data={transformed}
@@ -120,14 +123,14 @@ const AdminMainbookDetailsPage = () => {
           disabled={isPending}
           onClick={handleAccept}
         >
-          Принять
+          {t('accept')}
         </Button>
         <Button
           variant="destructive"
           disabled={isPending}
           onClick={handleReject}
         >
-          Отказ
+          {t('reject')}
         </Button>
       </div>
     </DetailsView>

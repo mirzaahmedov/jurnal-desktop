@@ -3,16 +3,14 @@ import type { Operatsii } from '@/common/models'
 
 const operatsiiColumns: ColumnDef<Operatsii>[] = [
   {
-    key: 'name',
-    header: 'Название'
+    key: 'name'
   },
   {
-    key: 'schet',
-    header: 'Счет'
+    key: 'schet'
   },
   {
     key: 'sub_schet',
-    header: 'Субсчет'
+    header: 'subschet'
   }
 ]
 

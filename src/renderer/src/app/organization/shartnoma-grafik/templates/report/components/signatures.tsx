@@ -2,7 +2,10 @@ import { Text } from '@react-pdf/renderer'
 
 import { Blank, Field, Flex, Label } from '@/common/components/pdf'
 
-const Signatures = () => {
+interface SignatureProps {
+  year: number
+}
+const Signatures = ({ year }: SignatureProps) => {
   return (
     <Flex
       direction="column"
@@ -36,19 +39,19 @@ const Signatures = () => {
         </Flex.Item>
       </Flex>
       <Flex style={{ gap: 0 }}>
-        <Text>"№</Text>
+        <Text>&quot;№</Text>
         <Blank />
-        <Text>"</Text>
+        <Text>&quot;</Text>
       </Flex>
       <Flex>
         {[1, 2].map((i) => (
           <Flex.Item key={i}>
             <Flex style={{ gap: 0 }}>
-              <Text>"</Text>
+              <Text>&quot;</Text>
               <Blank style={{ width: 30 }} />
-              <Text>"</Text>
+              <Text>&quot;</Text>
               <Blank style={{ width: 80 }} />
-              <Text>2024г.</Text>
+              <Text>{year}г.</Text>
             </Flex>
           </Flex.Item>
         ))}

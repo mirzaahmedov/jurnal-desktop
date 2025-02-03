@@ -1,3 +1,5 @@
+import type { OX } from '@renderer/common/models'
+
 import { useMemo } from 'react'
 
 import { Button } from '@renderer/common/components/ui/button'
@@ -9,9 +11,9 @@ import {
   useQueryDateParams,
   useQueryRegionId
 } from '@renderer/common/lib/query-params'
-import { OX } from '@renderer/common/models'
 import { DetailsView } from '@renderer/common/views'
 import { useMutation, useQuery } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
 import { queryKeys } from '../config'
@@ -25,6 +27,7 @@ const AdminOXDetailsPage = () => {
   const { region_id } = useQueryRegionId()
   const { budjet_id } = useQueryBudjetId()
 
+  const { t } = useTranslation(['app'])
   const { confirm } = useConfirm()
 
   const { data: report, isFetching } = useQuery({
@@ -69,7 +72,7 @@ const AdminOXDetailsPage = () => {
 
   const handleAccept = () => {
     confirm({
-      title: 'Принять отчёт?',
+      title: t('accept-report'),
       onConfirm: () => {
         updateReport({
           status: 2,

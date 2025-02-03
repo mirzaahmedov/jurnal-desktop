@@ -1,4 +1,4 @@
-import { Workbook, Worksheet } from 'exceljs'
+import { Workbook, type Worksheet } from 'exceljs'
 
 import { array, assign, drawBorder, textbox } from './utils'
 
@@ -213,6 +213,7 @@ const renderSingleCopy = (sheet: Worksheet, startIndex: number = 1) => {
 
   rowIndex = startIndex + 12
   renderSingleTextbox(sheet, rowIndex)
+  sheet.getCell(rowIndex, 2).style.numFmt = '0.00'
 
   rowIndex = startIndex + 14
   renderCounterAgent(sheet, rowIndex)

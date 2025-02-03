@@ -3,6 +3,7 @@ import type { Budjet } from '@/common/models'
 import { useEffect, useState } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
 
 import { GenericTable, LoadingOverlay } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
@@ -20,6 +21,7 @@ const BudgetPage = () => {
   const toggle = useToggle()
   const queryClient = useQueryClient()
 
+  const { t } = useTranslation(['app'])
   const { confirm } = useConfirm()
 
   const { data: budgets, isFetching } = useQuery({
@@ -42,7 +44,7 @@ const BudgetPage = () => {
     }
   }, [toggle.isOpen])
   useLayout({
-    title: 'Бюджеты',
+    title: t('pages.budjet'),
     onCreate: toggle.open
   })
 

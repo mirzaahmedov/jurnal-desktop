@@ -26,37 +26,34 @@ const CountCell = ({ count }: { count: number }) => {
 
 const regionDataColumns: ColumnDef<RegionData>[] = [
   {
-    key: 'name',
-    header: 'Название региона'
+    key: 'name'
   },
   {
     key: 'kassa',
-    header: '№1 - МО (Касса)',
+    header: 'mo-1',
     renderCell: (row) => <CountCell count={row.counts.kassa_count} />
   },
   {
     key: 'bank',
-    header: '№2 - МО (Банк)',
+    header: 'mo-2',
     renderCell: (row) => <CountCell count={row.counts.bank_count} />
   },
   {
     key: 'organization',
-    header: '№3 - МО (Организация)',
+    header: 'mo-3',
     renderCell: (row) => <CountCell count={row.counts.organ_count} />
   },
   {
     key: 'jur7',
-    header: '№7 - МО (Материальный склад)',
+    header: 'mo-7',
     renderCell: (row) => <CountCell count={row.counts.jur7_count} />
   },
   {
     key: 'spravochnik',
-    header: 'Справочник',
     renderCell: (row) => <CountCell count={row.counts.storage_count} />
   },
   {
     key: 'total',
-    header: 'Итого',
     renderCell: (row) => <CountCell count={row.counts.total_count} />
   }
 ]

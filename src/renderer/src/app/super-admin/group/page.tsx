@@ -5,6 +5,7 @@ import { useState } from 'react'
 import { SearchField, useSearch } from '@renderer/common/features/search'
 import { ListView } from '@renderer/common/views'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
 
 import { useConfirm } from '@/common/features/confirm'
 import { useLayout } from '@/common/features/layout'
@@ -22,6 +23,7 @@ const GroupPage = () => {
   const dialogToggle = useToggle()
   const queryClient = useQueryClient()
 
+  const { t } = useTranslation(['app'])
   const { search } = useSearch()
   const { confirm } = useConfirm()
 
@@ -56,7 +58,7 @@ const GroupPage = () => {
   })
 
   useLayout({
-    title: 'Группы',
+    title: t('pages.group'),
     content: SearchField,
     onCreate() {
       setSelected(null)

@@ -3,6 +3,7 @@ import type { Region } from '@/common/models'
 import { useEffect, useState } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
 
 import { GenericTable, LoadingOverlay } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
@@ -20,6 +21,7 @@ const RegionPage = () => {
   const toggle = useToggle()
   const queryClient = useQueryClient()
 
+  const { t } = useTranslation(['app'])
   const { confirm } = useConfirm()
 
   const { data: region, isFetching } = useQuery({
@@ -42,7 +44,7 @@ const RegionPage = () => {
     }
   }, [toggle.isOpen])
   useLayout({
-    title: 'Регионы',
+    title: t('pages.region'),
     onCreate: toggle.open
   })
 

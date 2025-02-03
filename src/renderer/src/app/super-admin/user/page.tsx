@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 
 import { SearchField, useSearch } from '@renderer/common/features/search'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
 
 import { GenericTable, LoadingOverlay } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
@@ -21,6 +22,7 @@ const UserPage = () => {
   const toggle = useToggle()
   const queryClient = useQueryClient()
 
+  const { t } = useTranslation(['app'])
   const { confirm } = useConfirm()
   const { search } = useSearch()
 
@@ -49,7 +51,7 @@ const UserPage = () => {
     }
   }, [toggle.isOpen])
   useLayout({
-    title: 'Пользователи',
+    title: t('pages.user'),
     content: SearchField,
     onCreate: toggle.open
   })

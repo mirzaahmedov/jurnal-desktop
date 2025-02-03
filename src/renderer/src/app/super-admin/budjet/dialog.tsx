@@ -5,6 +5,7 @@ import { useEffect } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 
 import { Button } from '@/common/components/ui/button'
 import {
@@ -36,7 +37,9 @@ type BudgetDialogProps = {
 const BudgetDialog = (props: BudgetDialogProps) => {
   const { open, onChangeOpen, data } = props
 
+  const { t } = useTranslation()
   const { toast } = useToast()
+
   const queryClient = useQueryClient()
   const form = useForm<BudgetPayloadType>({
     defaultValues,
@@ -109,7 +112,11 @@ const BudgetDialog = (props: BudgetDialogProps) => {
     >
       <DialogContent className="max-w-xl">
         <DialogHeader>
-          <DialogTitle>{data ? 'Изменить' : 'Добавить'} бюджет</DialogTitle>
+          <DialogTitle>
+            {data
+              ? t('update-something', { something: t('budjet') })
+              : t('create-something', { something: t('budjet') })}
+          </DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -120,7 +127,7 @@ const BudgetDialog = (props: BudgetDialogProps) => {
                 render={({ field }) => (
                   <FormItem>
                     <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
-                      <FormLabel className="text-right col-span-2">Название</FormLabel>
+                      <FormLabel className="text-right col-span-2">{t('name')}</FormLabel>
                       <FormControl>
                         <Input
                           className="col-span-4"
@@ -138,7 +145,7 @@ const BudgetDialog = (props: BudgetDialogProps) => {
                 type="submit"
                 disabled={isCreating || isUpdating}
               >
-                {data ? 'Изменить' : 'Добавить'}
+                {t('save')}
               </Button>
             </DialogFooter>
           </form>

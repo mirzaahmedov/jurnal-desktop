@@ -1,3 +1,5 @@
+import type { RealExpenses } from '@renderer/common/models'
+
 import { useMemo } from 'react'
 
 import { Button } from '@renderer/common/components/ui/button'
@@ -9,9 +11,9 @@ import {
   useQueryDateParams,
   useQueryRegionId
 } from '@renderer/common/lib/query-params'
-import { RealExpenses } from '@renderer/common/models'
 import { DetailsView } from '@renderer/common/views'
 import { useMutation, useQuery } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
 import { queryKeys } from '../config'
@@ -26,6 +28,7 @@ const AdminRealExpenseDetailsPage = () => {
   const { region_id } = useQueryRegionId()
   const { budjet_id } = useQueryBudjetId()
 
+  const { t } = useTranslation(['app'])
   const { confirm } = useConfirm()
 
   const { data: report, isFetching } = useQuery({
@@ -79,7 +82,7 @@ const AdminRealExpenseDetailsPage = () => {
 
   const handleAccept = () => {
     confirm({
-      title: 'Принять отчёт?',
+      title: t('accept_report'),
       onConfirm: () => {
         updateReport({
           status: 2,
@@ -94,7 +97,7 @@ const AdminRealExpenseDetailsPage = () => {
 
   const handleReject = () => {
     confirm({
-      title: 'Отклонить отчёт?',
+      title: t('reject_report'),
       onConfirm: () => {
         updateReport({
           status: 3,
@@ -108,7 +111,7 @@ const AdminRealExpenseDetailsPage = () => {
   }
 
   useLayout({
-    title: 'Детали отчёта',
+    title: t('pages.real-expenses'),
     onBack: () => {
       navigate(-1)
     }
@@ -129,14 +132,14 @@ const AdminRealExpenseDetailsPage = () => {
           disabled={isPending}
           onClick={handleAccept}
         >
-          Принять
+          {t('accept')}
         </Button>
         <Button
           variant="destructive"
           disabled={isPending}
           onClick={handleReject}
         >
-          Отказ
+          {t('reject')}
         </Button>
       </div>
     </DetailsView>

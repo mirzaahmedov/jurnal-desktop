@@ -10,6 +10,7 @@ import { useToggle } from '@renderer/common/hooks/use-toggle'
 import { ListView } from '@renderer/common/views'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { parseAsString, useQueryState } from 'nuqs'
+import { useTranslation } from 'react-i18next'
 
 import { smetaColumns } from './columns'
 import { smetaQueryKeys } from './config'
@@ -23,6 +24,8 @@ const SmetaFilters = () => {
     parseAsString.withDefault('1')
   )
 
+  const { t } = useTranslation()
+
   return (
     <div className="flex gap-2 px-10">
       <SelectField
@@ -32,7 +35,7 @@ const SmetaFilters = () => {
         options={smetaFilterOptions}
         getOptionLabel={(option) => option.name}
         getOptionValue={(option) => option.value}
-        placeholder="Guruhni tanlang"
+        placeholder={t('choose', { what: t('group') })}
       />
       <SearchField className="w-full" />
     </div>
@@ -42,6 +45,7 @@ const SmetaPage = () => {
   const [selected, setSelected] = useState<Smeta | null>(null)
   const [groupNumber] = useQueryState('group_number', parseAsString.withDefault('1'))
 
+  const { t } = useTranslation(['app'])
   const { confirm } = useConfirm()
   const { search } = useSearch()
 
@@ -76,7 +80,7 @@ const SmetaPage = () => {
     }
   }, [toggle.isOpen])
   useLayout({
-    title: 'Смета',
+    title: t('pages.smeta'),
     content: SmetaFilters,
     onCreate: toggle.open
   })

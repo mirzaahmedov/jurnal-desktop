@@ -12,6 +12,7 @@ import { useConfirm } from '@renderer/common/features/confirm'
 import { useLayout } from '@renderer/common/features/layout'
 import { useToggle } from '@renderer/common/hooks/use-toggle'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 
 import { pereotsenkaColumns } from './columns'
@@ -23,6 +24,7 @@ import { pereotsenkaService } from './service'
 const PereotsenkaPage = () => {
   const [selected, setSelected] = useState<null | Pereotsenka>(null)
 
+  const { t } = useTranslation(['app'])
   const { confirm } = useConfirm()
   const { currentPage, itemsPerPage } = usePagination()
 
@@ -55,7 +57,7 @@ const PereotsenkaPage = () => {
   })
 
   useLayout({
-    title: 'Переоценка',
+    title: t('pages.pereotsenka'),
     onCreate: batchDialogToggle.open
   })
 

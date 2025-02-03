@@ -5,6 +5,7 @@ import { useEffect } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 
 import { NumericInput, SpravochnikInput } from '@/common/components'
 import { FormElement } from '@/common/components/form'
@@ -33,6 +34,8 @@ type PereotsenkaDialogProps = {
 }
 const PereotsenkaDialog = (props: PereotsenkaDialogProps) => {
   const { data, open, onClose } = props
+
+  const { t } = useTranslation()
 
   const form = useForm({
     defaultValues,
@@ -126,13 +129,13 @@ const PereotsenkaDialog = (props: PereotsenkaDialogProps) => {
     >
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{data ? 'Изменить переоценку' : 'Добавить переоценку'}</DialogTitle>
+          <DialogTitle>{t('update-something', { something: t('pereotsenka') })}</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={onSubmit}>
             <div className="grid gap-6 py-4">
               <FormElement
-                label="Группа"
+                label={t('group')}
                 grid="1:2"
                 message={form.formState.errors.group_jur7_id?.message}
               >
@@ -148,7 +151,7 @@ const PereotsenkaDialog = (props: PereotsenkaDialogProps) => {
                 control={form.control}
                 render={({ field }) => (
                   <FormElement
-                    label="Название"
+                    label={t('name')}
                     grid="1:2"
                   >
                     <Input {...field} />
@@ -161,7 +164,7 @@ const PereotsenkaDialog = (props: PereotsenkaDialogProps) => {
                 control={form.control}
                 render={({ field }) => (
                   <FormElement
-                    label="Износ (%)"
+                    label={t('something_foiz', { something: t('iznos') })}
                     grid="1:2"
                   >
                     <NumericInput
@@ -179,7 +182,7 @@ const PereotsenkaDialog = (props: PereotsenkaDialogProps) => {
                 type="submit"
                 disabled={isCreating || isUpdating}
               >
-                {data ? 'Изменить' : 'Добавить'}
+                {t('save')}
               </Button>
             </DialogFooter>
           </form>

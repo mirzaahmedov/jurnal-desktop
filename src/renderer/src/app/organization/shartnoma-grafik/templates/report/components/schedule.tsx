@@ -26,10 +26,11 @@ type WidthsType = [number, number, number]
 
 type ScheduleProps = {
   article: string
+  year: number
   data: ShartnomaGrafikForm
   paymentDetails: string
 }
-const Schedule = ({ article, data, paymentDetails }: ScheduleProps) => {
+const Schedule = ({ article, year, data, paymentDetails }: ScheduleProps) => {
   const [widths] = useState([20, 50, 30] as WidthsType)
   const [innerWidths] = useState([50, 25, 25] as WidthsType)
 
@@ -40,7 +41,7 @@ const Schedule = ({ article, data, paymentDetails }: ScheduleProps) => {
       <Table>
         <Table.Row>
           <Table.Column style={{ width: percentage(widths[0]) }}>
-            <ScheduleCell>{2024} йил ойлар номи</ScheduleCell>
+            <ScheduleCell>{year} йил ойлар номи</ScheduleCell>
           </Table.Column>
           <Table.Column
             style={{
@@ -57,13 +58,13 @@ const Schedule = ({ article, data, paymentDetails }: ScheduleProps) => {
                 Харажат турлари
               </ScheduleCell>
             </Table.Row>
-            <Table.Row style={{ borderBottom: 'none', height: 8 }}>
+            <Table.Row style={{ borderBottom: 'none', height: 12 }}>
               <Table.Column
                 style={{
                   width: percentage(innerWidths[0])
                 }}
               >
-                <ScheduleCell>{article}</ScheduleCell>
+                <ScheduleCell style={{ height: '100%' }}>СТ: {article}</ScheduleCell>
               </Table.Column>
               <Table.Column
                 style={{

@@ -10,6 +10,7 @@ import { LoadingOverlay } from '@renderer/common/components'
 import { Table, TableBody, TableHeader } from '@renderer/common/components/ui/table'
 import { formatNumber } from '@renderer/common/lib/format'
 import { cn, parseCSSNumericValue } from '@renderer/common/lib/utils'
+import { useTranslation } from 'react-i18next'
 
 import { columns } from './columns'
 import { ReportTableCell, ReportTableHead, ReportTableRow } from './table-components'
@@ -32,6 +33,8 @@ const ReportTable = ({ isLoading, data, onEdit, onDelete }: ReportTableProps) =>
     direction: 'left' | 'right'
     interval: NodeJS.Timeout
   } | null>(null)
+
+  const { t } = useTranslation()
 
   const [tableRef] = useState(createRef<HTMLTableElement>())
   const [columnRefs] = useState<RefObject<HTMLTableCellElement>[]>(
@@ -188,7 +191,7 @@ const ReportTable = ({ isLoading, data, onEdit, onDelete }: ReportTableProps) =>
                     colSpan={column.colSpan}
                     className={cn('text-center', column.className)}
                   >
-                    {column.header}
+                    {t(column.header.toString())}
                   </ReportTableHead>
                 )
               }
@@ -213,7 +216,7 @@ const ReportTable = ({ isLoading, data, onEdit, onDelete }: ReportTableProps) =>
                     right: rightOffset
                   }}
                 >
-                  {column.header}
+                  {t(column.header.toString())}
                 </ReportTableHead>
               )
             })}
@@ -223,8 +226,11 @@ const ReportTable = ({ isLoading, data, onEdit, onDelete }: ReportTableProps) =>
               .fill(null)
               .map(() => (
                 <>
-                  <ReportTableHead className="text-center">кредит</ReportTableHead>
-                  <ReportTableHead className="text-center">дебет</ReportTableHead>
+                  {
+                    // Todo: swap places
+                  }
+                  <ReportTableHead className="text-center">{t('kredit')}</ReportTableHead>
+                  <ReportTableHead className="text-center">{t('debet')}</ReportTableHead>
                 </>
               ))}
           </ReportTableRow>

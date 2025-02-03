@@ -5,6 +5,7 @@ import { useEffect } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 
 import { FormElement } from '@/common/components/form'
 import { Button } from '@/common/components/ui/button'
@@ -28,6 +29,8 @@ type BankDialogProps = {
   onOpenChange: (open: boolean) => void
 }
 const BankDialog = ({ data, open, onOpenChange }: BankDialogProps) => {
+  const { t } = useTranslation()
+
   const queryClient = useQueryClient()
   const form = useForm({
     defaultValues,
@@ -101,7 +104,11 @@ const BankDialog = ({ data, open, onOpenChange }: BankDialogProps) => {
     >
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Подпись</DialogTitle>
+          <DialogTitle className="titlecase">
+            {data
+              ? t('update-something', { something: t('bank') })
+              : t('create-something', { something: t('bank') })}
+          </DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form
@@ -114,7 +121,7 @@ const BankDialog = ({ data, open, onOpenChange }: BankDialogProps) => {
               render={({ field }) => (
                 <FormElement
                   grid="1:2"
-                  label="МФО"
+                  label={t('mfo')}
                 >
                   <Input {...field} />
                 </FormElement>
@@ -126,7 +133,7 @@ const BankDialog = ({ data, open, onOpenChange }: BankDialogProps) => {
               render={({ field }) => (
                 <FormElement
                   grid="1:2"
-                  label="Название банка"
+                  label={t('name')}
                 >
                   <Input {...field} />
                 </FormElement>
@@ -137,7 +144,7 @@ const BankDialog = ({ data, open, onOpenChange }: BankDialogProps) => {
                 type="submit"
                 disabled={isCreating || isUpdating}
               >
-                Сохранить
+                {t('save')}
               </Button>
             </DialogFooter>
           </form>

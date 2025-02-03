@@ -4,23 +4,22 @@ import type { Smeta } from '@/common/models'
 const smetaColumns: ColumnDef<Smeta>[] = [
   {
     key: 'smeta_name',
-    header: 'Название'
+    header: 'name'
   },
   {
     key: 'smeta_number',
-    header: 'Номер',
+    header: 'number',
     headerClassName: 'w-24',
     className: 'w-32'
   },
   {
     key: 'group_number',
-    header: 'Номер группы',
     headerClassName: 'w-24',
     className: 'w-32'
   },
   {
     key: 'father_smeta_name',
-    header: 'Смета база',
+    header: 'smeta_base',
     headerClassName: 'w-24',
     className: 'w-32'
   }

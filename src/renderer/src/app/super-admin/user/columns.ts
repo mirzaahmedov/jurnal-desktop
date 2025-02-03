@@ -3,15 +3,14 @@ import type { User } from '@/common/models'
 
 export const adminUserColumns: ColumnDef<User>[] = [
   {
-    key: 'fio',
-    header: 'Название'
+    key: 'fio'
   },
   {
     key: 'region_name',
-    header: 'Название региона'
+    header: 'region'
   },
   {
     key: 'login',
-    header: 'Логин'
+    header: 'login'
   }
 ]

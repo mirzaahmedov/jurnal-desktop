@@ -44,8 +44,9 @@
     "role": "Rol",
     "smeta": "Smeta",
     "budjets": "Budjetlar",
+    "budjet": "Budjet",
     "operatsii": "Operatsiyalar",
-    "edin": "O'lchov birliklari"
+    "edin": "O'lchov birligi"
   },
   "locales": {
     "uz": "Oʻzbekcha",

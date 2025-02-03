@@ -3,7 +3,6 @@ import type { Region } from '@/common/models'
 
 export const regionColumns: ColumnDef<Region>[] = [
   {
-    key: 'name',
-    header: 'Название'
+    key: 'name'
   }
 ]

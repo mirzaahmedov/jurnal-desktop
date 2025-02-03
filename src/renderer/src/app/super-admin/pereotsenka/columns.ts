@@ -7,16 +7,14 @@ import { createNumberEditor } from '@renderer/common/components/editable-table/e
 
 const pereotsenkaColumns: ColumnDef<Pereotsenka>[] = [
   {
-    key: 'name',
-    header: 'Название'
+    key: 'name'
   },
   {
     key: 'group_name',
-    header: 'Группа'
+    header: 'group'
   },
   {
-    key: 'pereotsenka_foiz',
-    header: 'Переоценка %'
+    key: 'pereotsenka_foiz'
   }
 ]
 
@@ -25,32 +23,29 @@ const groupColumns: EditableColumnType<
 >[] = [
   {
     key: 'name',
-    header: 'Наименования',
     Editor: createTextEditor({ key: 'name', disabled: true })
   },
   {
     key: 'schet',
-    header: 'Счет',
     Editor: createTextEditor({ key: 'schet', disabled: true })
   },
   {
     key: 'pereotsenka_foiz',
-    header: 'Переоценка %',
     Editor: createNumberEditor({ key: 'pereotsenka_foiz' })
   },
   {
     key: 'provodka_debet',
-    header: 'Дебет',
+    header: 'debet',
     Editor: createTextEditor({ key: 'provodka_debet', disabled: true })
   },
   {
     key: 'smeta_number',
-    header: 'Субсчет',
+    header: 'subschet',
     Editor: createTextEditor({ key: 'smeta_number', disabled: true })
   },
   {
     key: 'provodka_kredit',
-    header: 'Кредит',
+    header: 'kredit',
     Editor: createTextEditor({ key: 'provodka_kredit', disabled: true })
   }
 ]

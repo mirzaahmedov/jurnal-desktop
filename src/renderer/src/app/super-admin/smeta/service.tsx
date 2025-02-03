@@ -6,7 +6,7 @@ import { useMemo } from 'react'
 
 import {
   CollapsibleTable,
-  CollapsibleTableProps
+  type CollapsibleTableProps
 } from '@renderer/common/components/collapsible-table'
 import {
   type TreeNode,

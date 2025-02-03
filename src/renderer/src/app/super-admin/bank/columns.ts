@@ -3,12 +3,11 @@ import type { Bank } from '@/common/models'
 
 const bankColumns: ColumnDef<Bank>[] = [
   {
-    key: 'mfo',
-    header: 'МФО'
+    key: 'mfo'
   },
   {
     key: 'bank_name',
-    header: 'Название банка'
+    header: 'name'
   }
 ]
 

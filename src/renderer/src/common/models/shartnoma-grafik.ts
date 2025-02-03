@@ -37,6 +37,7 @@ type ShartnomaGrafikDetails = {
   doc_date: string
   summa: number
   opisanie: string
+  sub_schet: string | null
   oy_1: number
   oy_2: number
   oy_3: number

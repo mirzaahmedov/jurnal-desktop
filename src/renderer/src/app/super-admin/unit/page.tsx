@@ -3,6 +3,7 @@ import type { Unit } from '@/common/models'
 import { useEffect, useState } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
 
 import { GenericTable } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
@@ -18,6 +19,7 @@ import { unitService } from './service'
 const UnitPage = () => {
   const [selected, setSelected] = useState<Unit | null>(null)
 
+  const { t } = useTranslation(['app'])
   const { confirm } = useConfirm()
 
   const toggle = useToggle()
@@ -44,7 +46,7 @@ const UnitPage = () => {
     }
   }, [toggle.isOpen])
   useLayout({
-    title: 'Роль',
+    title: t('pages.edin'),
     onCreate: toggle.open
   })
 

@@ -24,7 +24,7 @@ const columns: ColumnDef[] = [
     className: 'px-5 !min-w-80',
     rowSpan: 2,
     key: 'name',
-    header: 'Операция'
+    header: 'operatsii'
   },
   {
     alphanumeric: true,
@@ -32,11 +32,11 @@ const columns: ColumnDef[] = [
     className: 'px-5',
     rowSpan: 2,
     key: 'schet',
-    header: 'Счет'
+    header: 'schet'
   },
   {
     key: 'start_debet',
-    header: 'Нач. сал. ',
+    header: 'start_saldo',
     colSpan: 2
   },
   {
@@ -46,7 +46,7 @@ const columns: ColumnDef[] = [
   },
   {
     key: 'jur1_debet',
-    header: 'Жур. 1',
+    header: 'mo-1-short',
     colSpan: 2
   },
   {
@@ -56,7 +56,7 @@ const columns: ColumnDef[] = [
   },
   {
     key: 'jur2_debet',
-    header: 'Жур. 2',
+    header: 'mo-2-short',
     colSpan: 2
   },
   {
@@ -66,7 +66,7 @@ const columns: ColumnDef[] = [
   },
   {
     key: 'jur3_debet',
-    header: 'Жур. 3',
+    header: 'mo-3-short',
     colSpan: 2
   },
   {
@@ -76,7 +76,7 @@ const columns: ColumnDef[] = [
   },
   {
     key: 'jur4_debet',
-    header: 'Жур. 4',
+    header: 'mo-4-short',
     colSpan: 2
   },
   {
@@ -86,7 +86,7 @@ const columns: ColumnDef[] = [
   },
   {
     key: 'jur5_debet',
-    header: 'Жур. 5',
+    header: 'mo-5-short',
     colSpan: 2
   },
   {
@@ -96,7 +96,7 @@ const columns: ColumnDef[] = [
   },
   {
     key: 'jur6_debet',
-    header: 'Жур. 6',
+    header: 'mo-6-short',
     colSpan: 2
   },
   {
@@ -106,7 +106,7 @@ const columns: ColumnDef[] = [
   },
   {
     key: 'jur7_debet',
-    header: 'Жур. 7',
+    header: 'mo-7-short',
     colSpan: 2
   },
   {
@@ -116,7 +116,7 @@ const columns: ColumnDef[] = [
   },
   {
     key: 'jur8_debet',
-    header: 'Жур. 8',
+    header: 'mo-8-short',
     colSpan: 2
   },
   {
@@ -126,7 +126,7 @@ const columns: ColumnDef[] = [
   },
   {
     key: 'end_debet',
-    header: 'Ой оборотка',
+    header: 'month-phase',
     colSpan: 2
   },
   {

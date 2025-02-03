@@ -14,6 +14,7 @@ import {
 import { Table, TableBody, TableHeader } from '@renderer/common/components/ui/table'
 import { cn } from '@renderer/common/lib/utils'
 import { Pencil, Plus, Trash2 } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 export type CollapsibleTableProps<T> = {
   data: T[]
@@ -29,6 +30,7 @@ const CollapsibleTable = <T extends { id: number; children: T[] }>({
   onEdit,
   onDelete
 }: CollapsibleTableProps<T>) => {
+  const { t } = useTranslation()
   return (
     <Table>
       <TableHeader>
@@ -43,7 +45,7 @@ const CollapsibleTable = <T extends { id: number; children: T[] }>({
                 stretch={stretch}
                 className={headerClassName}
               >
-                {header}
+                {typeof header === 'string' ? t(header) : !header ? t(key.toString()) : header}
               </GenericTableHead>
             )
           })}

@@ -3,6 +3,7 @@ import type { Role } from '@/common/models'
 import { useEffect, useState } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
 
 import { GenericTable, LoadingOverlay } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
@@ -18,6 +19,7 @@ const RolePage = () => {
   const [selected, setSelected] = useState<Role | null>(null)
 
   const { confirm } = useConfirm()
+  const { t } = useTranslation(['app'])
 
   const toggle = useToggle()
   const queryClient = useQueryClient()
@@ -43,7 +45,7 @@ const RolePage = () => {
     }
   }, [toggle.isOpen])
   useLayout({
-    title: 'Роль',
+    title: t('pages.role'),
     onCreate: toggle.open
   })
 

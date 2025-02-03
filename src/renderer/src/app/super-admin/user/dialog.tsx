@@ -5,6 +5,7 @@ import { useEffect } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 
 import { regionQueryKeys, regionService } from '@/app/super-admin/region'
 import { SelectField } from '@/common/components'
@@ -44,6 +45,8 @@ const AdminUserDialog = (props: AdminUserDialogProps) => {
   })
 
   const { toast } = useToast()
+  const { t } = useTranslation(['user'])
+
   const queryClient = useQueryClient()
 
   const form = useForm<AdmonUserPayloadType>({
@@ -117,7 +120,11 @@ const AdminUserDialog = (props: AdminUserDialogProps) => {
     >
       <DialogContent className="max-w-xl">
         <DialogHeader>
-          <DialogTitle>{data ? 'Изменить' : 'Добавить'} Пользователь</DialogTitle>
+          <DialogTitle>
+            {data
+              ? t('update-something', { something: t('user') })
+              : t('create-something', { something: t('user') })}
+          </DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -128,12 +135,12 @@ const AdminUserDialog = (props: AdminUserDialogProps) => {
                 render={({ field }) => (
                   <FormItem>
                     <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
-                      <FormLabel className="text-right col-span-2">Регион</FormLabel>
+                      <FormLabel className="text-right col-span-2">{t('region')}</FormLabel>
                       <SelectField
                         {...field}
                         withFormControl
                         triggerClassName="col-span-4"
-                        placeholder="Выберите регион"
+                        placeholder={t('choose', { what: t('region') })}
                         options={region?.data ?? []}
                         getOptionLabel={(option) => option.name}
                         getOptionValue={(option) => option.id}
@@ -151,7 +158,7 @@ const AdminUserDialog = (props: AdminUserDialogProps) => {
                 render={({ field }) => (
                   <FormItem>
                     <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
-                      <FormLabel className="text-right col-span-2">Ф.И.О.</FormLabel>
+                      <FormLabel className="text-right col-span-2">{t('fio')}</FormLabel>
                       <FormControl>
                         <Input
                           className="col-span-4"
@@ -169,7 +176,7 @@ const AdminUserDialog = (props: AdminUserDialogProps) => {
                 render={({ field }) => (
                   <FormItem>
                     <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
-                      <FormLabel className="text-right col-span-2">Логин</FormLabel>
+                      <FormLabel className="text-right col-span-2">{t('login')}</FormLabel>
                       <FormControl>
                         <Input
                           className="col-span-4"
@@ -187,7 +194,7 @@ const AdminUserDialog = (props: AdminUserDialogProps) => {
                 render={({ field }) => (
                   <FormItem>
                     <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
-                      <FormLabel className="text-right col-span-2">Пароль</FormLabel>
+                      <FormLabel className="text-right col-span-2">{t('password')}</FormLabel>
                       <FormControl>
                         <Input
                           className="col-span-4"
@@ -205,7 +212,7 @@ const AdminUserDialog = (props: AdminUserDialogProps) => {
                 type="submit"
                 disabled={isCreating || isUpdating}
               >
-                {data ? 'Изменить' : 'Добавить'}
+                {t('save')}
               </Button>
             </DialogFooter>
           </form>

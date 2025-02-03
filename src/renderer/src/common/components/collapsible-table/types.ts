@@ -6,7 +6,7 @@ type ColumnDef<T> = {
   fit?: boolean
   stretch?: boolean
   key: Autocomplete<keyof T>
-  header: ReactNode
+  header?: ReactNode
   className?: string
   headerClassName?: string
   renderCell?(row: T, col: ColumnDef<T>): ReactNode

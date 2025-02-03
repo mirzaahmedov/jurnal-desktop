@@ -3,6 +3,7 @@ import type { Operatsii } from '@/common/models'
 import { useEffect, useState } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
 
 import { GenericTable, LoadingOverlay, Pagination, usePagination } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
@@ -22,6 +23,7 @@ const OperatsiiPage = () => {
   const toggle = useToggle()
   const queryClient = useQueryClient()
 
+  const { t } = useTranslation(['app'])
   const { filters } = useOperatsiiFilters()
   const { currentPage, itemsPerPage } = usePagination()
   const { confirm } = useConfirm()
@@ -56,7 +58,7 @@ const OperatsiiPage = () => {
     }
   }, [toggle.isOpen])
   useLayout({
-    title: 'Операции',
+    title: t('pages.operatsii'),
     content: OperatsiiFilter,
     onCreate: toggle.open
   })

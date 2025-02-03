@@ -1,10 +1,9 @@
 import type { ReportTableProps } from './table'
 import type { Autocomplete } from '@renderer/common/lib/types'
+import type { OX } from '@renderer/common/models'
 import type { ComponentType } from 'react'
 
-import { OX } from '@renderer/common/models'
-
-type ColumnDef = {
+export type ColumnDef = {
   alphanumeric?: boolean
   sticky?: true
   key: Autocomplete<keyof OX.ReportPreviewProvodka>
@@ -18,14 +17,14 @@ type ColumnDef = {
   >
 }
 
-const columns: ColumnDef[] = [
+export const columns: ColumnDef[] = [
   {
     alphanumeric: true,
     sticky: true,
     className: 'px-5 !min-w-80',
     rowSpan: 2,
     key: 'smeta_name',
-    header: 'Наименование сметы'
+    header: 'name'
   },
   {
     alphanumeric: true,
@@ -33,59 +32,56 @@ const columns: ColumnDef[] = [
     className: 'px-5',
     rowSpan: 2,
     key: 'smeta_number',
-    header: 'Номер сметы'
+    header: 'smeta_number'
   },
   {
     key: 'summa.ajratilgan_mablag',
-    header: 'Ажратилган маблағ',
+    header: 'allocated-funds',
     cellElement: ({ row }) => <span>{row.summa?.ajratilgan_mablag}</span>
   },
   {
     key: 'summa.tulangan_mablag_smeta_buyicha',
-    header: 'Туланган маблағ смета бўйича',
+    header: 'payed-money',
     cellElement: ({ row }) => <span>{row.summa?.tulangan_mablag_smeta_buyicha}</span>
   },
   {
     key: 'summa.kassa_rasxod',
-    header: 'Касса расход',
+    header: 'kassa-rasxod',
     cellElement: ({ row }) => <span>{row.summa?.kassa_rasxod}</span>
   },
   {
     key: 'summa.haqiqatda_harajatlar',
-    header: 'Хакикатда харажатлар',
+    header: 'real-expenses',
     cellElement: ({ row }) => <span>{row.summa?.haqiqatda_harajatlar}</span>
   },
   {
     key: 'summa.qoldiq',
-    header: 'Колдик',
+    header: 'ostatok',
     cellElement: ({ row }) => <span>{row.summa?.qoldiq}</span>
   },
   {
     key: 'year_summa.ajratilgan_mablag',
-    header: 'Ажратилган маблағ',
+    header: 'allocated-funds',
     cellElement: ({ row }) => <span>{row.year_summa?.ajratilgan_mablag}</span>
   },
   {
     key: 'year_summa.tulangan_mablag_smeta_buyicha',
-    header: 'Туланган маблағ смета бўйича',
+    header: 'payed-money',
     cellElement: ({ row }) => <span>{row.year_summa?.tulangan_mablag_smeta_buyicha}</span>
   },
   {
     key: 'year_summa.kassa_rasxod',
-    header: 'Касса расход',
+    header: 'kassa-rasxod',
     cellElement: ({ row }) => <span>{row.year_summa?.kassa_rasxod}</span>
   },
   {
     key: 'year_summa.haqiqatda_harajatlar',
-    header: 'Хакикатда харажатлар',
+    header: 'real-expenses',
     cellElement: ({ row }) => <span>{row.year_summa?.haqiqatda_harajatlar}</span>
   },
   {
     key: 'year_summa.qoldiq',
-    header: 'Колдик',
+    header: 'ostatok',
     cellElement: ({ row }) => <span>{row.year_summa?.qoldiq}</span>
   }
 ]
-
-export { columns }
-export type { ColumnDef }

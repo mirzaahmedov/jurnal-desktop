@@ -24,6 +24,7 @@ const Sheet = ({
   schedule,
   paymentDetails
 }: SheetProps) => {
+  const year = new Date(createdDate).getFullYear()
   return (
     <Flex.Item>
       <Flex
@@ -41,10 +42,11 @@ const Sheet = ({
         />
         <Schedule
           article={article}
+          year={year}
           data={schedule}
           paymentDetails={paymentDetails}
         />
-        <Signatures />
+        <Signatures year={year} />
       </Flex>
     </Flex.Item>
   )

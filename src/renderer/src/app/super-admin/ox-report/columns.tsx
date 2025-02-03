@@ -6,30 +6,27 @@ import { formatLocaleDateTime } from '@renderer/common/lib/format'
 
 export const columns: ColumnDef<OX.AdminReport>[] = [
   {
-    key: 'year',
-    header: 'Год'
+    key: 'year'
   },
   {
     key: 'month',
-    header: 'Месяц',
     renderCell(row) {
       return getMonthName(row.month)
     }
   },
   {
     key: 'budjet_name',
-    header: 'Бюджет'
+    header: 'budjet'
   },
   {
     key: 'status',
-    header: 'Статус',
     renderCell(row) {
       return <ReportStatus status={row.status} />
     }
   },
   {
     key: 'user_id',
-    header: 'Создатель',
+    header: 'creator',
     renderCell(row) {
       return (
         <div>
@@ -41,7 +38,7 @@ export const columns: ColumnDef<OX.AdminReport>[] = [
   },
   {
     key: 'document_qabul_qilingan_vaqt',
-    header: 'Действия',
+    header: 'action',
     renderCell(row) {
       return row.user_id_qabul_qilgan ? (
         <div>
@@ -59,6 +56,6 @@ export const columns: ColumnDef<OX.AdminReport>[] = [
   },
   {
     key: 'region_name',
-    header: 'Регион'
+    header: 'region'
   }
 ]

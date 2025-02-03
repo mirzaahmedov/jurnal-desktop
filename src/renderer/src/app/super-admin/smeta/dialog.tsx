@@ -5,6 +5,7 @@ import { useEffect } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 
 import { Button } from '@/common/components/ui/button'
 import {
@@ -36,6 +37,7 @@ type SmetaDialogProps = {
 const SmetaDialog = (props: SmetaDialogProps) => {
   const { open, onChangeOpen, data } = props
 
+  const { t } = useTranslation()
   const { toast } = useToast()
 
   const queryClient = useQueryClient()
@@ -107,7 +109,11 @@ const SmetaDialog = (props: SmetaDialogProps) => {
     >
       <DialogContent className="max-w-xl">
         <DialogHeader>
-          <DialogTitle>{data ? 'Изменить' : 'Добавить'} Смета</DialogTitle>
+          <DialogTitle>
+            {data
+              ? t('update-something', { something: t('smeta') })
+              : t('create-something', { something: t('smeta') })}
+          </DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={onSubmit}>
@@ -118,7 +124,7 @@ const SmetaDialog = (props: SmetaDialogProps) => {
                 render={({ field }) => (
                   <FormItem>
                     <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
-                      <FormLabel className="text-right col-span-2">Имя Сметы</FormLabel>
+                      <FormLabel className="text-right col-span-2">{t('name')}</FormLabel>
                       <FormControl>
                         <Input
                           className="col-span-4"
@@ -136,7 +142,7 @@ const SmetaDialog = (props: SmetaDialogProps) => {
                 render={({ field }) => (
                   <FormItem>
                     <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
-                      <FormLabel className="text-right col-span-2">Номер Сметы</FormLabel>
+                      <FormLabel className="text-right col-span-2">{t('number')}</FormLabel>
                       <FormControl>
                         <Input
                           type="number"
@@ -155,7 +161,7 @@ const SmetaDialog = (props: SmetaDialogProps) => {
                 render={({ field }) => (
                   <FormItem>
                     <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
-                      <FormLabel className="text-right col-span-2">Номер Группы</FormLabel>
+                      <FormLabel className="text-right col-span-2">{t('group_number')}</FormLabel>
                       <FormControl>
                         <Input
                           type="number"
@@ -174,7 +180,7 @@ const SmetaDialog = (props: SmetaDialogProps) => {
                 render={({ field }) => (
                   <FormItem>
                     <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
-                      <FormLabel className="text-right col-span-2">Смета база</FormLabel>
+                      <FormLabel className="text-right col-span-2">{t('smeta_base')}</FormLabel>
                       <FormControl>
                         <Input
                           className="col-span-4"
@@ -192,7 +198,7 @@ const SmetaDialog = (props: SmetaDialogProps) => {
                 type="submit"
                 disabled={isCreating || isUpdating}
               >
-                {data ? 'Изменить' : 'Добавить'}
+                {t('save')}
               </Button>
             </DialogFooter>
           </form>

@@ -7,11 +7,11 @@ const BankFormSchema = z.object({
 type BankPayload = z.infer<typeof BankFormSchema>
 
 const bankQueryKeys = {
-  getAll: 'podpis/all',
-  getById: 'podpis',
-  create: 'podpis/create',
-  update: 'podpis/update',
-  delete: 'podpis/delete'
+  getAll: 'bank/all',
+  getById: 'bank',
+  create: 'bank/create',
+  update: 'bank/update',
+  delete: 'bank/delete'
 }
 
 const defaultValues: BankPayload = {

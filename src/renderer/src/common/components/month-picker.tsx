@@ -1,11 +1,13 @@
 import { useState } from 'react'
 
-import { Button, ButtonProps, buttonVariants } from '@renderer/common/components/ui/button'
+import { Button, type ButtonProps, buttonVariants } from '@renderer/common/components/ui/button'
 import { formatDate, parseDate } from '@renderer/common/lib/date'
 import { cn } from '@renderer/common/lib/utils'
 import { add, eachMonthOfInterval, endOfYear, format, isFuture, parse } from 'date-fns'
 import { ru } from 'date-fns/locale/ru'
+import { uz } from 'date-fns/locale/uz'
 import { CalendarIcon, ChevronLeft, ChevronRight } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 import { useToggle } from '../hooks'
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover'
@@ -17,6 +19,9 @@ type MonthCalendarProps = {
 
 const MonthCalendar = ({ currentMonth, onMonthChange }: MonthCalendarProps) => {
   const [currentYear, setCurrentYear] = useState(format(currentMonth, 'yyyy'))
+
+  const { i18n } = useTranslation()
+
   const firstDayCurrentYear = parse(currentYear, 'yyyy', new Date())
 
   const months = eachMonthOfInterval({
@@ -99,7 +104,7 @@ const MonthCalendar = ({ currentMonth, onMonthChange }: MonthCalendarProps) => {
                 >
                   <time dateTime={format(month, 'yyyy-MM-dd')}>
                     {format(month, 'MMM', {
-                      locale: ru
+                      locale: i18n.language === 'ru' ? ru : uz
                     })}
                   </time>
                 </Button>
@@ -119,6 +124,8 @@ type MonthPickerProps = Omit<ButtonProps, 'onChange'> & {
 const MonthPicker = ({ value, onChange, className, ...props }: MonthPickerProps) => {
   const popoverToggle = useToggle()
 
+  const { i18n } = useTranslation()
+
   const date = value ? parseDate(value) : new Date()
   const setDate = (newDate: Date) => {
     onChange(formatDate(newDate))
@@ -137,9 +144,8 @@ const MonthPicker = ({ value, onChange, className, ...props }: MonthPickerProps)
           {...props}
         >
           <CalendarIcon className="size-4 mx-0" />
-          {date.toLocaleDateString('ru-RU', {
-            month: 'long',
-            year: 'numeric'
+          {format(date, 'yyyy MMMM', {
+            locale: i18n.language === 'ru' ? ru : uz
           })}
         </Button>
       </PopoverTrigger>

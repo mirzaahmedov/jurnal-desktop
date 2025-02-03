@@ -6,6 +6,7 @@ import { useLayout } from '@renderer/common/features/layout'
 import { usePagination } from '@renderer/common/hooks'
 import { ListView } from '@renderer/common/views'
 import { useQuery } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
 
 import { regionDataColumns } from './columns'
 import { regionDataQueryKeys } from './config'
@@ -16,6 +17,8 @@ const RegionDataPage = () => {
   const [year, month] = date.split('-')
 
   const pagination = usePagination()
+
+  const { t } = useTranslation(['app'])
 
   const { data: regionDataList, isFetching } = useQuery({
     queryKey: [
@@ -30,7 +33,7 @@ const RegionDataPage = () => {
   })
 
   useLayout({
-    title: 'Данные по регионам'
+    title: t('pages.region-data')
   })
 
   return (

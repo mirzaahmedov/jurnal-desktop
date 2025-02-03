@@ -26,6 +26,7 @@ type GenerateReportDialogProps = {
   schedule: ShartnomaGrafikForm
   doc_date: string
   doc_num: string
+  subschet: string
   open: boolean
   main_schet: MainSchet
   organization: Organization
@@ -35,6 +36,7 @@ const GenerateReportDialog = ({
   schedule,
   doc_date,
   doc_num,
+  subschet,
   main_schet,
   organization,
   open,
@@ -247,7 +249,7 @@ const GenerateReportDialog = ({
           buttonText="График договора"
         >
           <ContractScheduleTemplate
-            article={''}
+            article={subschet}
             section={form.watch('section').toString()}
             subchapter={form.watch('subchapter').toString()}
             chapter={form.watch('chapter').toString()}

@@ -3,7 +3,6 @@ import type { Role } from '@/common/models'
 
 export const unitColumns: ColumnDef<Role>[] = [
   {
-    key: 'name',
-    header: 'Название'
+    key: 'name'
   }
 ]
