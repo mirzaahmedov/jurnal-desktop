@@ -1,4 +1,5 @@
 import type { RasxodPayloadType, RasxodPodvodkaPayloadType } from '../service'
+import type { BankRasxod, Operatsii } from '@renderer/common/models'
 
 import { useCallback, useEffect } from 'react'
 
@@ -13,11 +14,11 @@ import {
 } from '@renderer/common/components/editable-table/helpers'
 import { usePodpis } from '@renderer/common/features/podpis'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
-import { BankRasxod, Operatsii, PodpisDoljnost, PodpisTypeDocument } from '@renderer/common/models'
+import { PodpisDoljnost, PodpisTypeDocument } from '@renderer/common/models'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import { Location, useLocation, useNavigate, useParams } from 'react-router-dom'
+import { type Location, useLocation, useNavigate, useParams } from 'react-router-dom'
 
 import { mainSchetQueryKeys, mainSchetService } from '@/app/region-spravochnik/main-schet'
 import { AccountBalance, Fieldset } from '@/common/components'
@@ -185,7 +186,7 @@ const BankRasxodDetailtsPage = () => {
         doc_num,
         id_spravochnik_organization,
         id_shartnomalar_organization,
-        summa,
+        summa: summa,
         opisanie,
         rukovoditel,
         glav_buxgalter,
@@ -230,8 +231,14 @@ const BankRasxodDetailtsPage = () => {
       return
     }
 
-    form.reset(rasxod?.data ?? defaultValues)
-    setPodvodki(rasxod?.data?.childs ?? defaultValues.childs)
+    form.reset({
+      ...(rasxod?.data ?? defaultValues),
+      childs:
+        rasxod?.data?.childs?.map((child) => ({
+          ...child,
+          summa: (child.tulanmagan_summa || summa) ?? 0
+        })) ?? defaultValues.childs
+    })
   }, [setPodvodki, form, rasxod, params.id])
 
   useEffect(() => {
@@ -304,7 +311,10 @@ const BankRasxodDetailtsPage = () => {
               </div>
 
               <div className="grid grid-cols-2 items-start border-y divide-x divide-border/50 border-border/50">
-                <MainSchetFields main_schet={main_schet?.data} />
+                <MainSchetFields
+                  main_schet={main_schet?.data}
+                  name={t('payer-info')}
+                />
                 <OrganizationFields
                   gazna
                   tabIndex={2}

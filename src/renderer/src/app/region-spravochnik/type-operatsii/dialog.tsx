@@ -91,7 +91,11 @@ export const TypeOperatsiiDialog = (props: TypeOperatsiiDialogProps) => {
     <FormDialog
       open={open}
       onChangeOpen={onChangeOpen}
-      name={`${selected ? 'Изменить' : 'Добавить'} тип операции`}
+      name={
+        selected
+          ? t('update-something', { something: t('type-operatsii') })
+          : t('create-something', { something: t('type-operatsii') })
+      }
       form={form}
       onSubmit={onSubmit}
       footer={

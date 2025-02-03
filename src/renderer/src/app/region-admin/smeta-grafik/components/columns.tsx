@@ -22,24 +22,24 @@ const columns: ColumnDef[] = [
     sticky: true,
     className: 'px-5',
     key: 'smeta_number',
-    header: 'Смета №'
+    header: 'smeta_number'
   },
   {
     key: 'oy_1',
-    header: 'Январь'
+    header: 'january'
   },
   {
     key: 'oy_2',
-    header: 'Февраль'
+    header: 'february'
   },
   {
     key: 'oy_3',
-    header: 'Март'
+    header: 'march'
   },
   {
     sticky: true,
     key: 'itogo_1_kvartal',
-    header: '1 квартал',
+    header: '1-kvartal',
     cellElement: ({ row }) => {
       return formatNumber(
         (['oy_1', 'oy_2', 'oy_3'] as const).reduce((acc, key) => {
@@ -63,7 +63,7 @@ const columns: ColumnDef[] = [
   {
     sticky: true,
     key: 'itogo_2_kvartal',
-    header: '2 квартал',
+    header: '2-kvartal',
     cellElement: ({ row }) => {
       return formatNumber(
         (['oy_4', 'oy_5', 'oy_6'] as const).reduce((acc, key) => {
@@ -87,7 +87,7 @@ const columns: ColumnDef[] = [
   {
     sticky: true,
     key: 'itogo_3_kvartal',
-    header: '3 квартал',
+    header: '3-kvartal',
     cellElement: ({ row }) => {
       return formatNumber(
         (['oy_7', 'oy_8', 'oy_9'] as const).reduce((acc, key) => {
@@ -111,7 +111,7 @@ const columns: ColumnDef[] = [
   {
     sticky: true,
     key: 'itogo_4_kvartal',
-    header: '4 квартал',
+    header: '4-kvartal',
     cellElement: ({ row }) => {
       return formatNumber(
         (['oy_10', 'oy_11', 'oy_12'] as const).reduce((acc, key) => {
@@ -123,7 +123,7 @@ const columns: ColumnDef[] = [
   {
     sticky: true,
     key: 'itogo',
-    header: 'Итого'
+    header: 'total'
   },
   {
     sticky: true,

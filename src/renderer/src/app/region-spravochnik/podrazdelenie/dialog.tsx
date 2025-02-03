@@ -117,7 +117,9 @@ const SubdivisionDialog = (props: SubdivisionDialogProps) => {
       <DialogContent className="max-w-xl">
         <DialogHeader>
           <DialogTitle>
-            {data ? t('edit') : t('create')} {t('podrazdelenie')}
+            {data
+              ? t('update-something', { something: t('podrazdelenie') })
+              : t('create-something', { something: t('podrazdelenie') })}
           </DialogTitle>
         </DialogHeader>
         <Form {...form}>

@@ -25,6 +25,7 @@ export type BankRasxodProvodka = {
   spravochnik_operatsii_id: number
   spravochnik_operatsii_name: string
   summa: number
+  tulanmagan_summa: number
   id_spravochnik_podrazdelenie: number
   spravochnik_podrazdelenie_name: string
   id_spravochnik_sostav: number

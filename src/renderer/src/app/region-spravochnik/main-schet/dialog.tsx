@@ -110,7 +110,13 @@ export const MainSchetDialog = (props: MainSchetDialogProps) => {
       <DialogContent className="h-full max-h-[700px] max-w-xl flex flex-col">
         <DialogHeader>
           <DialogTitle>
-            {selected ? t('edit') : t('create')} {t('main-schet')}
+            {selected
+              ? t('update-something', {
+                  something: t('main-schet')
+                })
+              : t('create-something', {
+                  something: t('main-schet')
+                })}
           </DialogTitle>
         </DialogHeader>
         <Form {...form}>
@@ -265,7 +271,7 @@ export const MainSchetDialog = (props: MainSchetDialogProps) => {
                   <FormItem>
                     <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
                       <FormLabel className="text-right col-span-2">
-                        {t('mo-nth', { nth: 1 })} {t('schet')}
+                        {t('mo-nth', { nth: 1 })} <span className="lowercase">{t('schet')}</span>
                       </FormLabel>
                       <FormControl>
                         <Input
@@ -285,7 +291,7 @@ export const MainSchetDialog = (props: MainSchetDialogProps) => {
                   <FormItem>
                     <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
                       <FormLabel className="text-right col-span-2">
-                        {t('mo-nth', { nth: 1 })} {t('subschet')}
+                        {t('mo-nth', { nth: 1 })} <span className="lowercase">{t('subschet')}</span>
                       </FormLabel>
                       <FormControl>
                         <Input
@@ -306,7 +312,7 @@ export const MainSchetDialog = (props: MainSchetDialogProps) => {
                   <FormItem>
                     <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
                       <FormLabel className="text-right col-span-2">
-                        {t('mo-nth', { nth: 2 })} {t('schet')}
+                        {t('mo-nth', { nth: 2 })} <span className="lowercase">{t('schet')}</span>
                       </FormLabel>
                       <FormControl>
                         <Input
@@ -326,7 +332,7 @@ export const MainSchetDialog = (props: MainSchetDialogProps) => {
                   <FormItem>
                     <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
                       <FormLabel className="text-right col-span-2">
-                        {t('mo-nth', { nth: 2 })} {t('subschet')}
+                        {t('mo-nth', { nth: 2 })} <span className="lowercase">{t('subschet')}</span>
                       </FormLabel>
                       <FormControl>
                         <Input
@@ -347,7 +353,7 @@ export const MainSchetDialog = (props: MainSchetDialogProps) => {
                   <FormItem>
                     <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
                       <FormLabel className="text-right col-span-2">
-                        {t('mo-nth', { nth: 3 })} {t('schet')}
+                        {t('mo-nth', { nth: 3 })} <span className="lowercase">{t('schet')}</span>
                       </FormLabel>
                       <FormControl>
                         <Input
@@ -367,7 +373,7 @@ export const MainSchetDialog = (props: MainSchetDialogProps) => {
                   <FormItem>
                     <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
                       <FormLabel className="text-right col-span-2">
-                        {t('mo-nth', { nth: 3 })} {t('subschet')}
+                        {t('mo-nth', { nth: 3 })} <span className="lowercase">{t('subschet')}</span>
                       </FormLabel>
                       <FormControl>
                         <Input
@@ -388,7 +394,7 @@ export const MainSchetDialog = (props: MainSchetDialogProps) => {
                   <FormItem>
                     <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
                       <FormLabel className="text-right col-span-2">
-                        {t('mo-nth', { nth: 4 })} {t('schet')}
+                        {t('mo-nth', { nth: 4 })} <span className="lowercase">{t('schet')}</span>
                       </FormLabel>
                       <FormControl>
                         <Input
@@ -408,7 +414,7 @@ export const MainSchetDialog = (props: MainSchetDialogProps) => {
                   <FormItem>
                     <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
                       <FormLabel className="text-right col-span-2">
-                        {t('mo-nth', { nth: 4 })} {t('subschet')}
+                        {t('mo-nth', { nth: 4 })} <span className="lowercase">{t('subschet')}</span>
                       </FormLabel>
                       <FormControl>
                         <Input

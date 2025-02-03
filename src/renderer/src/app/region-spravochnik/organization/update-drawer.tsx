@@ -69,6 +69,22 @@ const UpdateOrganizationDrawer = () => {
       toast.error('Не удалось обновить организацию: ' + error.message)
     }
   })
+  const { mutate: addChildOrganization, isPending: isAddingChildOrganization } = useMutation({
+    mutationKey: [organizationQueryKeys.update],
+    mutationFn: organizationService.update,
+    onSuccess() {
+      toast.success(t('update_success'))
+      queryClient.invalidateQueries({
+        queryKey: [organizationQueryKeys.getAll]
+      })
+      queryClient.invalidateQueries({
+        queryKey: [organizationQueryKeys.getById, Number(parentId)]
+      })
+    },
+    onError(error) {
+      toast.error('Не удалось обновить организацию: ' + error.message)
+    }
+  })
 
   useEffect(() => {
     if (!parentId) {
@@ -99,7 +115,7 @@ const UpdateOrganizationDrawer = () => {
         if (!org || !organization?.data) {
           return
         }
-        updateOrganization({
+        addChildOrganization({
           ...org,
           parent_id: organization.data.id
         })
@@ -152,7 +168,7 @@ const UpdateOrganizationDrawer = () => {
                 <DrawerFooter>
                   <div className="flex flex-row gap-5">
                     <Button
-                      disabled={isFetching || isUpdating}
+                      disabled={isFetching || isUpdating || isAddingChildOrganization}
                       type="submit"
                     >
                       {t('save')}
@@ -162,7 +178,7 @@ const UpdateOrganizationDrawer = () => {
                         type="button"
                         variant="outline"
                       >
-                        {t('cancel')}
+                        {t('close')}
                       </Button>
                     </DrawerClose>
                   </div>
@@ -172,7 +188,7 @@ const UpdateOrganizationDrawer = () => {
           </div>
           <div className="col-span-8 border-l h-full flex flex-col">
             <div className="relative overflow-auto scrollbar flex-1">
-              {isFetching ? <LoadingOverlay /> : null}
+              {isFetching || isUpdating || isAddingChildOrganization ? <LoadingOverlay /> : null}
               <OrganizationTable
                 data={organization?.data.childs ?? []}
                 onEdit={handleEdit}
@@ -184,7 +200,7 @@ const UpdateOrganizationDrawer = () => {
                 onClick={() => {
                   orgSpravochnik.open()
                 }}
-                disabled={isFetching || orgSpravochnik.loading || isUpdating}
+                disabled={isFetching || orgSpravochnik.loading || isUpdating || isAddingChildOrganization}
               >
                 {t('add')}
               </Button>

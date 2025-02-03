@@ -31,6 +31,7 @@ export const RasxodPayloadSchema = withPreprocessor(
     doc_date: z.string(),
     id_spravochnik_organization: z.number(),
     summa: z.number().optional(),
+    tulanmagan_summa: z.number().optional(),
     opisanie: z.string().optional(),
     rukovoditel: z.string().optional().nullable(),
     glav_buxgalter: z.string().optional().nullable(),

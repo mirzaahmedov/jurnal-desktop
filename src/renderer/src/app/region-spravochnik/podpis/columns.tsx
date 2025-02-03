@@ -36,7 +36,7 @@ const podpisColumns: ColumnDef<Podpis>[] = [
     key: 'fio_name'
   },
   {
-    key: 'type_document',
+    key: 'type-document',
     renderCell(row, col) {
       const typeDocument = podpisTypeDocumentOptions.find(
         (item) => item.key === row[col.key as keyof Podpis]

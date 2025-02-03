@@ -59,6 +59,11 @@ const TypeOperatsiiPage = () => {
   useEffect(() => {
     setLayout({
       title: t('pages.type-operatsii'),
+      breadcrumbs: [
+        {
+          title: t('pages.spravochnik')
+        }
+      ],
       content: SearchField,
       onCreate: dialogToggle.open
     })

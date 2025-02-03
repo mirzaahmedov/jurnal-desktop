@@ -4,11 +4,12 @@ import { useEffect } from 'react'
 
 import { DownloadFile } from '@renderer/common/features/file'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
+import { formatNumber } from '@renderer/common/lib/format'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
-import { GenericTable } from '@/common/components'
+import { FooterCell, FooterRow, GenericTable } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
 import { useLayoutStore } from '@/common/features/layout'
 import { usePagination, useRangeDate } from '@/common/hooks'
@@ -22,13 +23,14 @@ const AktPage = () => {
   const { confirm } = useConfirm()
   const { t } = useTranslation(['app'])
 
-  const main_schet_id = useRequisitesStore((state) => state.main_schet_id)
-  const setLayout = useLayoutStore((store) => store.setLayout)
-
   const queryClient = useQueryClient()
   const navigate = useNavigate()
   const pagination = usePagination()
+
   const dates = useRangeDate()
+
+  const main_schet_id = useRequisitesStore((state) => state.main_schet_id)
+  const setLayout = useLayoutStore((store) => store.setLayout)
 
   const { data: aktList, isFetching } = useQuery({
     queryKey: [
@@ -98,6 +100,15 @@ const AktPage = () => {
           getRowId={(row) => row.id}
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}
+          footer={
+            <FooterRow>
+              <FooterCell
+                colSpan={5}
+                title={t('total')}
+                content={formatNumber(aktList?.meta.summa ?? 0)}
+              />
+            </FooterRow>
+          }
         />
       </ListView.Content>
       <ListView.Footer>

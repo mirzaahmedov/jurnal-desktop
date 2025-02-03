@@ -33,6 +33,7 @@ export const organizationColumns: ColumnDef<Organization>[] = [
     }
   },
   {
+    fit: true,
     key: 'raschet_schet_gazna',
     header: 'raschet-schet-gazna',
     renderCell(row) {

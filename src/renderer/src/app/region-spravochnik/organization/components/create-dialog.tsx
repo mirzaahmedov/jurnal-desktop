@@ -74,7 +74,7 @@ const CreateOrganizationDialog = (props: CreateOrganizationDialogProps) => {
     >
       <DialogContent className="max-w-xl">
         <DialogHeader>
-          <DialogTitle>Добавить организацию</DialogTitle>
+          <DialogTitle>{t('create-something', { something: t("organization")})}</DialogTitle>
         </DialogHeader>
         <OrganizationForm
           form={form}

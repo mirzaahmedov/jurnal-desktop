@@ -113,7 +113,7 @@ const SostavDialog = (props: SostavDialogProps) => {
       <DialogContent className="max-w-xl">
         <DialogHeader>
           <DialogTitle>
-            {data ? t('edit') : t('create')} {t('sostav')}
+            {data ? t('update-something', { something: t("sostav")}) : t('create-something', {something: t("sostav")})} 
           </DialogTitle>
         </DialogHeader>
         <Form {...form}>

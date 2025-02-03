@@ -126,5 +126,12 @@
   "type-document": "Тип документа",
   "numeric-order": "Номер порядка",
   "cancel": "Отменить",
-  "okonx": "Оконкс"
+  "okonx": "Оконкс",
+  "rayon": "Район",
+  "close": "Закрыть",
+  "smeta_number": "Смета №",
+  "1-kvartal": "1 квартал",
+  "2-kvartal": "2 квартал",
+  "3-kvartal": "3 квартал",
+  "4-kvartal": "4 квартал"
 }

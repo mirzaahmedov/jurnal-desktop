@@ -110,7 +110,11 @@ const PodotchetDialog = ({ open, onOpenChange, selected, ...props }: PodotchetDi
     >
       <DialogContent className="max-w-xl">
         <DialogHeader>
-          <DialogTitle>{selected ? t('edit') : t('create')} подотчетное лицо</DialogTitle>
+          <DialogTitle>
+            {selected
+              ? t('create-something', { something: t('podotchet-litso') })
+              : t('update-something', { something: t('podotchet-litso') })}
+          </DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>

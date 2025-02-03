@@ -3,6 +3,8 @@ import type { MouseEvent, RefObject, UIEvent } from 'react'
 
 import { createRef, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 
+import { useTranslation } from 'react-i18next'
+
 import { LoadingOverlay } from '@/common/components'
 import { Table, TableBody, TableHeader } from '@/common/components/ui/table'
 import { formatNumber } from '@/common/lib/format'
@@ -29,6 +31,8 @@ const SmetaTable = ({ isLoading, data, onEdit, onDelete }: SmetaTableProps) => {
     direction: 'left' | 'right'
     interval: NodeJS.Timeout
   } | null>(null)
+
+  const { t } = useTranslation()
 
   const [tableRef] = useState(createRef<HTMLTableElement>())
   const [columnRefs] = useState<RefObject<HTMLTableCellElement>[]>(
@@ -179,7 +183,7 @@ const SmetaTable = ({ isLoading, data, onEdit, onDelete }: SmetaTableProps) => {
                     alphanumeric={column.alphanumeric}
                     className={column.className}
                   >
-                    {column.header}
+                    {t(column.header)}
                   </SmetaTableHead>
                 )
               }
@@ -202,7 +206,7 @@ const SmetaTable = ({ isLoading, data, onEdit, onDelete }: SmetaTableProps) => {
                     right: rightOffset
                   }}
                 >
-                  {column.header}
+                  {t(column.header)}
                 </SmetaTableHead>
               )
             })}

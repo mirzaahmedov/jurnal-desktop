@@ -27,7 +27,7 @@ const SubdivisionPage = () => {
 
   const setLayout = useLayoutStore((store) => store.setLayout)
 
-  const { t } = useTranslation()
+  const { t } = useTranslation(['app'])
   const { confirm } = useConfirm()
   const { search } = useSearch()
 
