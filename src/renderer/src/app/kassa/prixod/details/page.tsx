@@ -1,4 +1,5 @@
 import type { PrixodPodvodkaPayloadType } from '../service'
+import type { Operatsii } from '@/common/models'
 
 import { useCallback, useEffect } from 'react'
 
@@ -29,7 +30,6 @@ import { formatNumber } from '@/common/lib/format'
 import { getDataFromCache } from '@/common/lib/query-client'
 import { numberToWords } from '@/common/lib/utils'
 import { normalizeEmptyFields } from '@/common/lib/validation'
-import { Operatsii } from '@/common/models'
 import { DetailsView } from '@/common/views'
 import { DocumentFields, OpisanieFields, PodotchetFields, SummaFields } from '@/common/widget/form'
 
@@ -43,10 +43,11 @@ const KassaPrixodDetailsPage = () => {
   const { id } = useParams()
   const { t } = useTranslation(['app'])
 
-  const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
-  const setLayout = useLayoutStore((store) => store.setLayout)
   const navigate = useNavigate()
   const queryClient = useQueryClient()
+
+  const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
+  const setLayout = useLayoutStore((store) => store.setLayout)
 
   const form = useForm({
     resolver: zodResolver(PrixodPayloadSchema),
@@ -187,7 +188,7 @@ const KassaPrixodDetailsPage = () => {
 
   return (
     <DetailsView>
-      <DetailsView.Content loading={isFetching || isCreating || isUpdating}>
+      <DetailsView.Content loading={isFetching}>
         <Form {...form}>
           <form onSubmit={onSubmit}>
             <div>
@@ -216,7 +217,10 @@ const KassaPrixodDetailsPage = () => {
             </div>
 
             <DetailsView.Footer className="flex flex-row items-center gap-10">
-              <DetailsView.Create tabIndex={5} />
+              <DetailsView.Create
+                loading={isCreating || isUpdating}
+                tabIndex={5}
+              />
 
               {main_schet?.data && form.formState.isValid ? (
                 <ButtonGroup borderStyle="dashed">

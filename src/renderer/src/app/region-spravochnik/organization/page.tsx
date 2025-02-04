@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react'
 import { LoadingOverlay } from '@renderer/common/components'
 import { Button } from '@renderer/common/components/ui/button'
 import { useConfirm } from '@renderer/common/features/confirm'
-import { useLayout } from '@renderer/common/features/layout'
+import { useLayoutStore } from '@renderer/common/features/layout'
 import { SearchField, useSearch } from '@renderer/common/features/search'
 import { usePagination, useToggle } from '@renderer/common/hooks'
 import { ListView } from '@renderer/common/views'
@@ -25,13 +25,15 @@ const OrganizationPage = () => {
   const [, setParentId] = useParentId()
   const [original, setOriginal] = useState<Organization>()
 
-  const { t } = useTranslation()
+  const { t } = useTranslation(['app'])
   const { confirm } = useConfirm()
   const { search } = useSearch()
 
   const dialogToggle = useToggle()
   const pagination = usePagination()
   const queryClient = useQueryClient()
+
+  const setLayout = useLayoutStore((store) => store.setLayout)
 
   const { data: organizations, isFetching } = useQuery({
     queryKey: [
@@ -54,13 +56,20 @@ const OrganizationPage = () => {
     }
   })
 
-  useLayout({
-    title: 'Организации',
-    content: SearchField,
-    onCreate: () => {
-      dialogToggle.open()
-    }
-  })
+  useEffect(() => {
+    setLayout({
+      title: t('pages.organization'),
+      breadcrumbs: [
+        {
+          title: t('pages.spravochnik')
+        }
+      ],
+      content: SearchField,
+      onCreate: () => {
+        dialogToggle.open()
+      }
+    })
+  }, [setLayout, t, dialogToggle.open])
 
   const handleClickEdit = (row: Organization) => {
     setParentId(row.id)

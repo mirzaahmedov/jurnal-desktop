@@ -7,7 +7,7 @@ import { CircleCheck } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 type DetailsViewProps = HTMLAttributes<HTMLElement>
-const DetailsView = ({ children, className, ...props }: DetailsViewProps) => {
+export const DetailsView = ({ children, className, ...props }: DetailsViewProps) => {
   return (
     <div
       {...props}
@@ -51,12 +51,22 @@ const DetailsViewFooter = ({ children, className, ...props }: DetailsViewFooterP
   )
 }
 
-type DetailsViewCreateProps = ButtonHTMLAttributes<HTMLButtonElement>
-const DetailsViewCreate = (props: DetailsViewCreateProps) => {
+export interface DetailsViewCreateProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  loading?: boolean
+}
+const DetailsViewCreate = ({ loading = false, disabled, ...props }: DetailsViewCreateProps) => {
   const { t } = useTranslation()
   return (
-    <Button {...props}>
-      <CircleCheck className="btn-icon icon-start" /> {t('save')}
+    <Button
+      {...props}
+      disabled={loading || disabled}
+    >
+      {loading ? (
+        <LoadingSpinner className="size-4 border-2 border-current border-r-transparent mr-2" />
+      ) : (
+        <CircleCheck className="btn-icon icon-start" />
+      )}
+      {t('save')}
     </Button>
   )
 }
@@ -65,10 +75,4 @@ DetailsView.Footer = DetailsViewFooter
 DetailsView.Content = DetailsViewContent
 DetailsView.Create = DetailsViewCreate
 
-export { DetailsView }
-export type {
-  DetailsViewProps,
-  DetailsViewContentProps,
-  DetailsViewFooterProps,
-  DetailsViewCreateProps
-}
+export type { DetailsViewProps, DetailsViewContentProps, DetailsViewFooterProps }

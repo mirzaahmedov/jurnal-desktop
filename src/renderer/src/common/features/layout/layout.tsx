@@ -62,27 +62,29 @@ export const PageLayout = (props: PageLayoutProps) => {
               <ArrowLeft className="size-5" />
             </Button>
           ) : null}
-          {Array.isArray(breadcrumbs) ? (
-            <ul className="flex items-center gap-2.5">
-              {breadcrumbs?.map((item) => (
-                <Fragment key={item.title}>
-                  {item.path ? (
-                    <Link
-                      className="text-base font-medium text-slate-500 hover:text-brand"
-                      to={item.path}
-                    >
-                      {item.title}
-                    </Link>
-                  ) : (
-                    <li className="text-base font-medium text-slate-500">{item.title}</li>
-                  )}
-                  <CaretRightIcon className="text-slate-500" />
-                </Fragment>
-              ))}
-            </ul>
-          ) : null}
+          <div className="flex flex-col gap-1.5">
+            {Array.isArray(breadcrumbs) ? (
+              <ul className="flex items-center gap-1">
+                {breadcrumbs?.map((item) => (
+                  <Fragment key={item.title}>
+                    {item.path ? (
+                      <Link
+                        className="text-xs font-medium text-slate-500 hover:text-brand"
+                        to={item.path}
+                      >
+                        {item.title}
+                      </Link>
+                    ) : (
+                      <li className="text-xs font-medium text-slate-500">{item.title}</li>
+                    )}
+                    <CaretRightIcon className="text-slate-500" />
+                  </Fragment>
+                ))}
+              </ul>
+            ) : null}
 
-          <h1 className="text-base font-medium">{title}</h1>
+            <h1 className="text-base font-semibold">{title}</h1>
+          </div>
         </div>
         <div className="flex-1 flex items-center">
           <div className="flex-1">{Content && <Content key={pathname} />}</div>
@@ -96,7 +98,7 @@ export const PageLayout = (props: PageLayoutProps) => {
           </div>
         </div>
         <div className="flex items-center divide-x">
-          <div className="flex items-center gap-1 px-8">
+          <div className="flex items-center gap-1 px-2.5 pr-5">
             <Button
               variant="ghost"
               size="icon"

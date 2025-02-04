@@ -42,7 +42,14 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <NuqsAdapter>
-        <Suspense fallback={<LoadingOverlay />}>
+        <Suspense
+          fallback={
+            <div>
+              <h1>inside fallback</h1>
+              <LoadingOverlay />
+            </div>
+          }
+        >
           <RouterProvider router={router} />
         </Suspense>
         <SpravochnikProvider />
