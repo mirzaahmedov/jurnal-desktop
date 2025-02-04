@@ -43,7 +43,7 @@ const OrganizationMonitoringPage = () => {
     createOrganizationSpravochnik({
       value: orgId,
       onChange: (id) => {
-        pagination.setPagination({
+        pagination.onChange({
           page: 1
         })
         setOrgId(id)
@@ -54,7 +54,7 @@ const OrganizationMonitoringPage = () => {
     createOperatsiiSpravochnik({
       value: operatsiiId,
       onChange: (id) => {
-        pagination.setPagination({
+        pagination.onChange({
           page: 1
         })
         setOperatsiiId(id)
