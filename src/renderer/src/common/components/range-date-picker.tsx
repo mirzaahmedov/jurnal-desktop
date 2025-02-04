@@ -1,3 +1,5 @@
+import { useEffect } from 'react'
+
 import { CircleArrowDown } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -25,6 +27,13 @@ const RangeDatePicker = ({ from, to, onChange }: RangeDatePickerProps) => {
   })
 
   const onSubmit = form.handleSubmit(onChange)
+
+  useEffect(() => {
+    form.reset({
+      from,
+      to
+    })
+  }, [form, from, to])
 
   return (
     <Form {...form}>

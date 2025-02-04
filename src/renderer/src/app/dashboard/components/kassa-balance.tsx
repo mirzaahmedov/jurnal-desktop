@@ -1,7 +1,8 @@
+import type { PieSectorDataItem } from 'recharts/types/polar/Pie'
+
 import * as React from 'react'
 
 import { Label, Pie, PieChart, Sector } from 'recharts'
-import { PieSectorDataItem } from 'recharts/types/polar/Pie'
 
 import {
   Card,
@@ -11,7 +12,7 @@ import {
   CardTitle
 } from '@/common/components/ui/card'
 import {
-  ChartConfig,
+  type ChartConfig,
   ChartContainer,
   ChartStyle,
   ChartTooltip,

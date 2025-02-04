@@ -25,6 +25,7 @@ import {
   Folder,
   Group,
   Landmark,
+  LayoutDashboard,
   LayoutGrid,
   MapPinHouse,
   MonitorCog,
@@ -88,6 +89,11 @@ export const getNavElements = (t: TFunction): NavElement[] => {
   }
 
   return omitEmptyArrayElements<NavElement>([
+    {
+      path: '/',
+      title: t('pages.main'),
+      icon: LayoutDashboard
+    },
     permissions.kassa
       ? {
           path: '/kassa',

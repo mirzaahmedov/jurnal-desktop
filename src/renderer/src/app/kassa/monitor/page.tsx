@@ -17,9 +17,10 @@ import { kassaMonitorQueryKeys } from './constants'
 import { kassaMonitorService } from './service'
 
 const KassaMonitorPage = () => {
-  const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
   const pagination = usePagination()
   const dates = useRangeDate()
+
+  const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
   const setLayout = useLayoutStore((store) => store.setLayout)
 
   const { t } = useTranslation(['app'])

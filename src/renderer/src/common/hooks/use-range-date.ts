@@ -1,12 +1,12 @@
-import { parseAsString, useQueryStates } from 'nuqs'
+import { useState } from 'react'
 
 import { useDefaultFilters } from '@/common/features/app-defaults'
 
 const useRangeDate = () => {
-  const [params, setParams] = useQueryStates({
-    from: parseAsString,
-    to: parseAsString
-  })
+  const [params, setParams] = useState<{
+    from?: string
+    to?: string
+  }>({})
 
   const defaults = useDefaultFilters()
 
