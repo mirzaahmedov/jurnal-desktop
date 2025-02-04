@@ -2,10 +2,12 @@ import type { Bank } from '@/common/models'
 
 import { useState } from 'react'
 
+import { usePagination } from '@renderer/common/hooks'
+import { ListView } from '@renderer/common/views'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 
-import { GenericTable, LoadingOverlay, Pagination, usePagination } from '@/common/components'
+import { GenericTable } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
 import { useLayout } from '@/common/features/layout'
 import { useToggle } from '@/common/hooks/use-toggle'
@@ -20,17 +22,16 @@ const BankPage = () => {
 
   const dialogToggle = useToggle()
   const queryClient = useQueryClient()
+  const pagination = usePagination()
 
   const { t } = useTranslation(['app'])
   const { confirm } = useConfirm()
-  const { currentPage, itemsPerPage } = usePagination()
 
   const { data: podpisList, isFetching } = useQuery({
     queryKey: [
       bankQueryKeys.getAll,
       {
-        page: currentPage,
-        limit: itemsPerPage
+        ...pagination
       }
     ],
     queryFn: bankService.getAll
@@ -67,25 +68,27 @@ const BankPage = () => {
   })
 
   return (
-    <>
-      <div className="flex-1 relative">
-        {isFetching || isPending ? <LoadingOverlay /> : null}
+    <ListView>
+      <ListView.Content loading={isFetching || isPending}>
         <GenericTable
           data={podpisList?.data ?? []}
           columnDefs={bankColumns}
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}
         />
-      </div>
-      <div className="px-10 py-5">
-        <Pagination pageCount={podpisList?.meta.pageCount ?? 0} />
-      </div>
+      </ListView.Content>
+      <ListView.Footer>
+        <ListView.Pagination
+          {...pagination}
+          pageCount={podpisList?.meta.pageCount ?? 0}
+        />
+      </ListView.Footer>
       <BankDialog
         data={selected}
         open={dialogToggle.isOpen}
         onOpenChange={dialogToggle.setOpen}
       />
-    </>
+    </ListView>
   )
 }
 

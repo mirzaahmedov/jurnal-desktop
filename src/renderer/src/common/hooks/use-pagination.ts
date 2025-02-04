@@ -1,31 +1,42 @@
-import type { PaginationValues } from '@/common/components/pagination-alt'
+import type { PaginationValues } from '@renderer/common/components/pagination'
 
-import { useState } from 'react'
+import { useCallback } from 'react'
 
-export interface PaginationParams {
+import { createLocationStore, useLocationState } from './use-location-state'
+
+export type PaginationParams = {
   page: number
   limit: number
 }
+
+const usePaginationStore = createLocationStore<PaginationParams>('pagination')
+const defaultPagination = {
+  page: 1,
+  limit: 10
+}
+
 export interface UsePaginationReturn extends PaginationParams {
   onChange: (values: Partial<PaginationParams>) => void
 }
 
 const usePagination = (): UsePaginationReturn => {
-  const [pagination, setPagination] = useState({
-    page: 1,
-    limit: 10
-  })
+  const paginationStore = usePaginationStore()
 
-  const handleChange = (values: Partial<PaginationValues>) => {
+  const [pagination, setPagination] = useLocationState<PaginationParams>(
+    paginationStore,
+    defaultPagination
+  )
+
+  const handleChange = useCallback((values: Partial<PaginationValues>) => {
     setPagination((prev) => ({
       ...prev,
       ...values
     }))
-  }
+  }, [])
 
   return {
-    page: pagination.page,
-    limit: pagination.limit,
+    page: pagination?.page ?? defaultPagination.page,
+    limit: pagination?.limit ?? defaultPagination.limit,
     onChange: handleChange
   }
 }

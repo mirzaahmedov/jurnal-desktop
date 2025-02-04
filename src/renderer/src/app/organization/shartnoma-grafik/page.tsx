@@ -22,9 +22,10 @@ import { shartnomaGrafikService } from './service'
 const ShartnomaGrafikPage = () => {
   const [orgId, setOrgId] = useOrgId()
 
-  const budjet_id = useRequisitesStore((store) => store.budjet_id)
   const navigate = useNavigate()
   const pagination = usePagination()
+
+  const budjet_id = useRequisitesStore((store) => store.budjet_id)
   const setLayout = useLayoutStore((store) => store.setLayout)
 
   const { t } = useTranslation(['app'])

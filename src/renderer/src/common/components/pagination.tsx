@@ -1,58 +1,20 @@
-import { useCallback } from 'react'
-
 import { ArrowLeft, ArrowRight } from 'lucide-react'
-import { parseAsInteger, useQueryStates } from 'nuqs'
+import { useTranslation } from 'react-i18next'
 import Paginate from 'react-paginate'
 
 import { SelectField } from './select-field'
 import { Button } from './ui/button'
 
-const itemsPerPageOptions = [5, 10, 15, 20, 50, 100]
-
-export const usePagination = () => {
-  const [pagination, setPagination] = useQueryStates({
-    page: parseAsInteger.withDefault(1),
-    limit: parseAsInteger.withDefault(10)
-  })
-
-  const setCurrentPage = useCallback(
-    (currentPage: number) => {
-      setPagination({ page: currentPage })
-    },
-    [setPagination]
-  )
-  const setItemsPerPage = useCallback(
-    (itemsPerPage: number) => {
-      setPagination({ limit: itemsPerPage })
-    },
-    [setPagination]
-  )
-
-  return {
-    currentPage: pagination.page,
-    setCurrentPage,
-    itemsPerPage: pagination.limit,
-    setItemsPerPage
-  }
+export interface PaginationValues {
+  page: number
+  limit: number
 }
-
-export type PaginationProps = {
+export interface PaginationProps extends PaginationValues {
   pageCount: number
-  value?: number
-  onValueChange?: (value: number) => void
-  limit?: number
-  onLimitChange?: (value: number) => void
+  onChange: (values: Partial<PaginationValues>) => void
 }
-export const Pagination = (props: PaginationProps) => {
-  const { pageCount, value, onValueChange, limit, onLimitChange } = props
-
-  const { currentPage, setCurrentPage, itemsPerPage, setItemsPerPage } = usePagination()
-
-  const page = value ?? currentPage
-  const setPage = onValueChange ?? setCurrentPage
-
-  const limitValue = limit ?? itemsPerPage
-  const setLimit = onLimitChange ?? setItemsPerPage
+export const Pagination = ({ page, pageCount, limit, onChange }: PaginationProps) => {
+  const { t } = useTranslation()
 
   return (
     <div className="flex items-center justify-start gap-5">
@@ -61,13 +23,13 @@ export const Pagination = (props: PaginationProps) => {
         pageRangeDisplayed={2}
         breakLabel="..."
         forcePage={page - 1}
-        onPageChange={({ selected }) => setPage(selected + 1)}
-        pageLabelBuilder={(page) => (
+        onPageChange={({ selected }) => onChange({ page: selected + 1 })}
+        pageLabelBuilder={(pageNumber) => (
           <Button
-            variant={currentPage === page ? 'outline' : 'ghost'}
+            variant={pageNumber === page ? 'default' : 'ghost'}
             size="icon"
           >
-            {page}
+            {pageNumber}
           </Button>
         )}
         nextLabel={
@@ -91,13 +53,13 @@ export const Pagination = (props: PaginationProps) => {
       />
       {pageCount > 0 && (
         <>
-          <span className="whitespace-nowrap text-sm text-slate-400">Элементов на странице</span>
+          <span className="whitespace-nowrap text-sm text-slate-400">{t('elements-per-page')}</span>
           <div>
             <SelectField
               placeholder="Элементов на странице"
-              value={String(limitValue)}
-              onValueChange={(value) => setLimit(Number(value))}
-              options={itemsPerPageOptions}
+              value={String(limit)}
+              onValueChange={(value) => onChange({ limit: Number(value) })}
+              options={[5, 10, 15, 20, 25, 50, 100]}
               getOptionValue={String}
               getOptionLabel={String}
               triggerClassName="min-w-[100px]"

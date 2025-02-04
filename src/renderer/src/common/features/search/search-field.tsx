@@ -2,10 +2,10 @@ import type { HTMLAttributes } from 'react'
 
 import { useEffect, useRef, useState } from 'react'
 
+import { usePagination } from '@renderer/common/hooks'
 import { Search } from 'lucide-react'
 import { useSearchParams } from 'react-router-dom'
 
-import { usePagination } from '@/common/components'
 import { Input } from '@/common/components/ui/input'
 import { cn } from '@/common/lib/utils'
 
@@ -14,9 +14,9 @@ export const SearchField = (props: SearchFieldProps) => {
   const { className, ...rest } = props
 
   const [interim, setInterim] = useState('')
-
   const [, setSearchParams] = useSearchParams()
-  const { currentPage, setCurrentPage } = usePagination()
+
+  const pagination = usePagination()
 
   const timeout = useRef<null | NodeJS.Timeout>(null)
   const callbackRef = useRef((value: string) => {
@@ -52,8 +52,10 @@ export const SearchField = (props: SearchFieldProps) => {
           value={interim}
           onChange={(e) => {
             setInterim(e.target.value)
-            if (currentPage !== 1) {
-              setCurrentPage(1)
+            if (pagination.page !== 1) {
+              pagination.onChange({
+                page: 1
+              })
             }
           }}
           placeholder="Поиск..."

@@ -7,13 +7,11 @@ import { Form, FormField } from '@renderer/common/components/ui/form'
 import { CircleArrowDown } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { useDateRange } from '@/common/hooks/use-date-range'
-
 import { useJurnal7DateRange } from './use-date-range'
 
 export type DateRangeFormProps = {
-  form: ReturnType<typeof useDateRange>['form']
-  onSubmit: ReturnType<typeof useDateRange>['applyFilters']
+  form: ReturnType<typeof useJurnal7DateRange>['form']
+  onSubmit: ReturnType<typeof useJurnal7DateRange>['applyFilters']
 }
 export const DateRangeForm = (props: DateRangeFormProps) => {
   const { form, onSubmit } = props

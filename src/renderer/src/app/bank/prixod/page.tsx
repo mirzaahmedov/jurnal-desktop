@@ -10,7 +10,7 @@ import { useNavigate } from 'react-router-dom'
 import { FooterCell, FooterRow, GenericTable } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
 import { useLayoutStore } from '@/common/features/layout'
-import { usePagination, useRangeDate } from '@/common/hooks'
+import { useDates, usePagination } from '@/common/hooks'
 import { formatNumber } from '@/common/lib/format'
 import { ListView } from '@/common/views'
 
@@ -22,11 +22,12 @@ const BankPrixodPage = () => {
   const { confirm } = useConfirm()
   const { t } = useTranslation(['app'])
 
-  const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
-  const dates = useRangeDate()
+  const dates = useDates()
   const pagination = usePagination()
   const queryClient = useQueryClient()
   const navigate = useNavigate()
+
+  const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
   const setLayout = useLayoutStore((store) => store.setLayout)
 
   const { data: prixodList, isFetching } = useQuery({

@@ -2,10 +2,12 @@ import type { Operatsii } from '@/common/models'
 
 import { useEffect, useState } from 'react'
 
+import { usePagination } from '@renderer/common/hooks'
+import { ListView } from '@renderer/common/views'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 
-import { GenericTable, LoadingOverlay, Pagination, usePagination } from '@/common/components'
+import { GenericTable } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
 import { useLayout } from '@/common/features/layout'
 import { useSearch } from '@/common/features/search'
@@ -22,10 +24,10 @@ const OperatsiiPage = () => {
 
   const toggle = useToggle()
   const queryClient = useQueryClient()
+  const pagination = usePagination()
 
   const { t } = useTranslation(['app'])
   const { filters } = useOperatsiiFilters()
-  const { currentPage, itemsPerPage } = usePagination()
   const { confirm } = useConfirm()
   const { search } = useSearch()
 
@@ -33,8 +35,7 @@ const OperatsiiPage = () => {
     queryKey: [
       operatsiiQueryKeys.getAll,
       {
-        page: currentPage,
-        limit: itemsPerPage,
+        ...pagination,
         type_schet: filters.type_schet,
         search
       },
@@ -76,9 +77,8 @@ const OperatsiiPage = () => {
   }
 
   return (
-    <>
-      <div className="flex-1 relative">
-        {isFetching || isPending ? <LoadingOverlay /> : null}
+    <ListView>
+      <ListView.Content loading={isFetching || isPending}>
         <GenericTable
           data={operations?.data ?? []}
           columnDefs={operatsiiColumns}
@@ -86,16 +86,19 @@ const OperatsiiPage = () => {
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}
         />
-      </div>
-      <div className="px-10 py-5">
-        <Pagination pageCount={operations?.meta.pageCount ?? 0} />
-      </div>
+      </ListView.Content>
+      <ListView.Footer>
+        <ListView.Pagination
+          {...pagination}
+          pageCount={operations?.meta.pageCount ?? 0}
+        />
+      </ListView.Footer>
       <OperatsiiDialog
         data={selected}
         open={toggle.isOpen}
         onChangeOpen={toggle.setOpen}
       />
-    </>
+    </ListView>
   )
 }
 

@@ -10,7 +10,7 @@ import { useNavigate } from 'react-router-dom'
 import { GenericTable } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
 import { useLayoutStore } from '@/common/features/layout'
-import { toast, usePagination, useRangeDate } from '@/common/hooks'
+import { toast, useDates, usePagination } from '@/common/hooks'
 import { ListView } from '@/common/views'
 
 import { pokazatUslugiColumns } from './columns'
@@ -27,7 +27,7 @@ const PokazatUslugiPage = () => {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const pagination = usePagination()
-  const dates = useRangeDate()
+  const dates = useDates()
 
   const { data: pokazatUslugiList, isFetching } = useQuery({
     queryKey: [

@@ -26,12 +26,12 @@ import { createGroupSpravochnik } from '../../super-admin/group/service'
 import { DenominationPayloadSchema, defaultValues, denominationQueryKeys } from './constants'
 import { naimenovanieService } from './service'
 
-type DenominationDialogProps = {
+export interface NaimenovanieDialogProps {
   data: null | Naimenovanie
   open: boolean
   onClose: () => void
 }
-const DenominationDialog = (props: DenominationDialogProps) => {
+export const NaimenovanieDialog = (props: NaimenovanieDialogProps) => {
   const { data, open, onClose } = props
 
   const form = useForm({
@@ -223,5 +223,3 @@ const DenominationDialog = (props: DenominationDialogProps) => {
     </Dialog>
   )
 }
-
-export default DenominationDialog

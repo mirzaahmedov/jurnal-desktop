@@ -17,7 +17,8 @@ const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       refetchOnWindowFocus: false,
-      refetchOnReconnect: false
+      refetchOnReconnect: false,
+      placeholderData: (prev: unknown) => prev
     }
   }
 })

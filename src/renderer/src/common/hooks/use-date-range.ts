@@ -1,16 +1,16 @@
 import { parseAsString, useQueryStates } from 'nuqs'
 import { useForm } from 'react-hook-form'
 
-import { usePagination } from '@/common/components'
 import { useDefaultFilters } from '@/common/features/app-defaults'
+import { usePagination } from '@/common/hooks/use-pagination'
 
 export const useDateRange = () => {
-  const { setCurrentPage } = usePagination()
   const [params, setParams] = useQueryStates({
     from: parseAsString,
     to: parseAsString
   })
 
+  const pagination = usePagination()
   const defaultFilters = useDefaultFilters()
 
   const from = params.from ?? defaultFilters.from
@@ -24,7 +24,9 @@ export const useDateRange = () => {
   })
 
   const applyFilters = form.handleSubmit(({ from, to }) => {
-    setCurrentPage(1)
+    pagination.onChange({
+      page: 1
+    })
     setParams({
       from,
       to

@@ -1,26 +1,36 @@
-import type { Dispatch, SetStateAction } from 'react'
-
-import { useState } from 'react'
+import { type Dispatch, type SetStateAction, useEffect } from 'react'
 
 import { useDefaultFilters } from '@/common/features/app-defaults'
 
-export interface RangeDateParams {
+import { createLocationStore, useLocationState } from './use-location-state'
+import { usePagination } from './use-pagination'
+
+export type DatesParams = {
   from?: string
   to?: string
 }
-export interface UseRangeDateReturn extends RangeDateParams {
-  onChange: Dispatch<SetStateAction<RangeDateParams>>
-}
-const useRangeDate = () => {
-  const [params, setParams] = useState<{
-    from?: string
-    to?: string
-  }>({})
 
+const useDatesStore = createLocationStore<DatesParams>('dates')
+
+export interface UseRangeDateReturn extends DatesParams {
+  onChange: Dispatch<SetStateAction<DatesParams>>
+}
+export const useDates = () => {
+  const datesStore = useDatesStore()
   const defaults = useDefaultFilters()
 
-  const from = params.from ?? defaults.from
-  const to = params.to ?? defaults.to
+  const [params, setParams] = useLocationState<DatesParams>(datesStore)
+
+  const { onChange } = usePagination()
+
+  const from = params?.from ?? defaults.from
+  const to = params?.to ?? defaults.to
+
+  useEffect(() => {
+    onChange({
+      page: 1
+    })
+  }, [from, to, onChange])
 
   return {
     from,
@@ -28,5 +38,3 @@ const useRangeDate = () => {
     onChange: setParams
   }
 }
-
-export { useRangeDate }

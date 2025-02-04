@@ -1,16 +1,16 @@
 import { useJurnal7DefaultsStore } from '@renderer/app/jurnal-7/common/features/defaults'
-import { usePagination } from '@renderer/common/components'
 import { useDefaultFilters } from '@renderer/common/features/app-defaults'
+import { usePagination } from '@renderer/common/hooks'
 import { parseAsString, useQueryStates } from 'nuqs'
 import { useForm } from 'react-hook-form'
 
 export const useJurnal7DateRange = () => {
-  const { setCurrentPage } = usePagination()
   const [params, setParams] = useQueryStates({
     from: parseAsString,
     to: parseAsString
   })
 
+  const pagination = usePagination()
   const defaultFilters = useDefaultFilters()
   const jurnal7Default = useJurnal7DefaultsStore()
 
@@ -25,7 +25,9 @@ export const useJurnal7DateRange = () => {
   })
 
   const applyFilters = form.handleSubmit(({ from, to }) => {
-    setCurrentPage(1)
+    pagination.onChange({
+      page: 1
+    })
     setParams({
       from,
       to

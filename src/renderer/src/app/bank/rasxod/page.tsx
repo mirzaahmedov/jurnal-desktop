@@ -7,7 +7,7 @@ import { Button } from '@renderer/common/components/ui/button'
 import { useConfirm } from '@renderer/common/features/confirm'
 import { useLayoutStore } from '@renderer/common/features/layout'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
-import { usePagination, useRangeDate } from '@renderer/common/hooks'
+import { useDates, usePagination } from '@renderer/common/hooks'
 import { formatNumber } from '@renderer/common/lib/format'
 import { ListView } from '@renderer/common/views'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
@@ -25,7 +25,7 @@ const BankRasxodPage = () => {
 
   const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
   const setLayout = useLayoutStore((store) => store.setLayout)
-  const dates = useRangeDate()
+  const dates = useDates()
   const pagination = usePagination()
   const queryClient = useQueryClient()
   const navigate = useNavigate()
@@ -109,7 +109,7 @@ const BankRasxodPage = () => {
             <FooterRow>
               <FooterCell
                 title={t('total')}
-                content={formatNumber(rasxodList?.meta?.summa ?? 0)}
+                content={formatNumber(rasxodList?.meta?.summa ?? 1)}
                 colSpan={4}
               />
             </FooterRow>

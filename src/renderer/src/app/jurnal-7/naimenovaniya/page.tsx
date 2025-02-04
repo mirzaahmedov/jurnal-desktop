@@ -2,9 +2,11 @@ import type { Naimenovanie } from '@/common/models'
 
 import { useState } from 'react'
 
+import { usePagination } from '@renderer/common/hooks'
+import { ListView } from '@renderer/common/views'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
-import { GenericTable, LoadingOverlay, Pagination, usePagination } from '@/common/components'
+import { GenericTable } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
 import { useLayout } from '@/common/features/layout'
 import { toast } from '@/common/hooks/use-toast'
@@ -12,24 +14,23 @@ import { useToggle } from '@/common/hooks/use-toggle'
 
 import { naimenovanieColumns } from './columns'
 import { denominationQueryKeys } from './constants'
-import DenominationDialog from './dialog'
+import { NaimenovanieDialog } from './dialog'
 import { naimenovanieService } from './service'
 
 const NaimenovaniePage = () => {
   const [selected, setSelected] = useState<null | Naimenovanie>(null)
 
   const queryClient = useQueryClient()
+  const pagination = usePagination()
 
   const { open, close, isOpen: active } = useToggle()
   const { confirm } = useConfirm()
-  const { currentPage, itemsPerPage } = usePagination()
 
   const { data: denominationList, isFetching } = useQuery({
     queryKey: [
       denominationQueryKeys.getAll,
       {
-        page: currentPage,
-        limit: itemsPerPage
+        ...pagination
       }
     ],
     queryFn: naimenovanieService.getAll
@@ -75,25 +76,27 @@ const NaimenovaniePage = () => {
   }
 
   return (
-    <>
-      <div className="relative flex-1">
-        {isPending || isFetching ? <LoadingOverlay /> : null}
+    <ListView>
+      <ListView.Content loading={isFetching || isPending}>
         <GenericTable
           columnDefs={naimenovanieColumns}
           data={denominationList?.data ?? []}
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}
         />
-      </div>
-      <div className="p-5">
-        <Pagination pageCount={denominationList?.meta?.pageCount ?? 0} />
-      </div>
-      <DenominationDialog
+      </ListView.Content>
+      <ListView.Footer>
+        <ListView.Pagination
+          {...pagination}
+          pageCount={denominationList?.meta?.pageCount ?? 0}
+        />
+      </ListView.Footer>
+      <NaimenovanieDialog
         data={selected}
         open={active}
         onClose={close}
       />
-    </>
+    </ListView>
   )
 }
 

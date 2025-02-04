@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom'
 import { GenericTable } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
 import { useLayout, useLayoutStore } from '@/common/features/layout'
-import { usePagination, useRangeDate } from '@/common/hooks'
+import { useDates, usePagination } from '@/common/hooks'
 import { toast } from '@/common/hooks/use-toast'
 import { Avans } from '@/common/models'
 import { ListView } from '@/common/views'
@@ -18,7 +18,7 @@ import { avansQueryKeys } from './constants'
 import { avansService } from './service'
 
 const AvansPage = () => {
-  const dates = useRangeDate()
+  const dates = useDates()
   const pagination = usePagination()
   const navigate = useNavigate()
   const queryClient = useQueryClient()

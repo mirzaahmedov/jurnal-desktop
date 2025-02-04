@@ -2,15 +2,12 @@ import type { Pereotsenka } from '@renderer/common/models'
 
 import { useState } from 'react'
 
-import {
-  GenericTable,
-  LoadingOverlay,
-  Pagination,
-  usePagination
-} from '@renderer/common/components'
+import { GenericTable } from '@renderer/common/components'
 import { useConfirm } from '@renderer/common/features/confirm'
 import { useLayout } from '@renderer/common/features/layout'
+import { usePagination } from '@renderer/common/hooks'
 import { useToggle } from '@renderer/common/hooks/use-toggle'
+import { ListView } from '@renderer/common/views'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
@@ -26,17 +23,17 @@ const PereotsenkaPage = () => {
 
   const { t } = useTranslation(['app'])
   const { confirm } = useConfirm()
-  const { currentPage, itemsPerPage } = usePagination()
 
   const dialogToggle = useToggle()
   const batchDialogToggle = useToggle()
   const queryClient = useQueryClient()
+  const pagination = usePagination()
+
   const { data: pereotsenkaList, isFetching } = useQuery({
     queryKey: [
       pereotsenkaQueryKeys.getAll,
       {
-        page: currentPage,
-        limit: itemsPerPage
+        ...pagination
       }
     ],
     queryFn: pereotsenkaService.getAll
@@ -75,19 +72,21 @@ const PereotsenkaPage = () => {
   }
 
   return (
-    <>
-      <div className="relative flex-1">
-        {isFetching || isPending ? <LoadingOverlay /> : null}
+    <ListView>
+      <ListView.Content loading={isFetching || isPending}>
         <GenericTable
           columnDefs={pereotsenkaColumns}
           data={pereotsenkaList?.data ?? []}
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}
         />
-      </div>
-      <div className="px-10 py-5">
-        <Pagination pageCount={pereotsenkaList?.meta.pageCount ?? 0} />
-      </div>
+      </ListView.Content>
+      <ListView.Footer>
+        <ListView.Pagination
+          {...pagination}
+          pageCount={pereotsenkaList?.meta.pageCount ?? 0}
+        />
+      </ListView.Footer>
       <PereotsenkaDialog
         data={selected}
         open={dialogToggle.isOpen}
@@ -97,7 +96,7 @@ const PereotsenkaPage = () => {
         open={batchDialogToggle.isOpen}
         onOpenChange={batchDialogToggle.setOpen}
       />
-    </>
+    </ListView>
   )
 }
 

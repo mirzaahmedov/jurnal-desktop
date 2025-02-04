@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next'
 import { FooterCell, FooterRow, GenericTable } from '@/common/components'
 import { ButtonGroup } from '@/common/components/ui/button-group'
 import { useLayoutStore } from '@/common/features/layout'
-import { usePagination, useRangeDate } from '@/common/hooks'
+import { useDates, usePagination } from '@/common/hooks'
 import { formatNumber } from '@/common/lib/format'
 import { ListView } from '@/common/views'
 
@@ -18,7 +18,7 @@ import { kassaMonitorService } from './service'
 
 const KassaMonitorPage = () => {
   const pagination = usePagination()
-  const dates = useRangeDate()
+  const dates = useDates()
 
   const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
   const setLayout = useLayoutStore((store) => store.setLayout)

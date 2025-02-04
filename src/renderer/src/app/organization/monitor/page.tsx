@@ -12,7 +12,7 @@ import { ChooseSpravochnik, FooterCell, FooterRow, GenericTable } from '@/common
 import { ButtonGroup } from '@/common/components/ui/button-group'
 import { useLayoutStore } from '@/common/features/layout'
 import { useSpravochnik } from '@/common/features/spravochnik'
-import { usePagination, useRangeDate } from '@/common/hooks'
+import { useDates, usePagination } from '@/common/hooks'
 import { formatNumber } from '@/common/lib/format'
 import {
   type OrganizationMonitor,
@@ -31,7 +31,7 @@ const OrganizationMonitoringPage = () => {
   const [operatsiiId, setOperatsiiId] = useOperatsiiId()
   const [orgId, setOrgId] = useOrgId()
 
-  const dates = useRangeDate()
+  const dates = useDates()
   const pagination = usePagination()
   const navigate = useNavigate()
   const setLayout = useLayoutStore((store) => store.setLayout)

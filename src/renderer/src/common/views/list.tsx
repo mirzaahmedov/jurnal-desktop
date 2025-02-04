@@ -1,8 +1,9 @@
 import type { HTMLAttributes } from 'react'
 
-import { LoadingOverlay } from '@/common/components'
-import { Pagination } from '@/common/components/pagination-alt'
-import { RangeDatePicker } from '@/common/components/range-date-picker'
+import { LoadingOverlay } from '@renderer/common/components'
+import { Pagination } from '@renderer/common/components/pagination'
+import { RangeDatePicker } from '@renderer/common/components/range-date-picker'
+
 import { cn } from '@/common/lib/utils'
 
 type ListViewProps = HTMLAttributes<HTMLDivElement>

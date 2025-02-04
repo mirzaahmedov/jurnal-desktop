@@ -14,7 +14,7 @@ import {
 } from '@/common/components/ui/dialog'
 import { Form, FormField } from '@/common/components/ui/form'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/common/components/ui/tabs'
-import { useDateRange } from '@/common/hooks/use-date-range'
+import { useDates } from '@/common/hooks/use-range-date'
 
 import { ManagementFields } from './components/managements'
 import { defaultValues } from './constants'
@@ -29,7 +29,7 @@ const ConfigureDefaultValuesDialog = ({ open, onClose }: ConfigureDefaultValuesD
 
   const { setDefaultFilters } = useDefaultFilters()
   const { setDefaultFormFields } = useDefaultFormFields()
-  const { setParams, from: fromParam, to: toParam } = useDateRange()
+  const dates = useDates()
 
   const form = useForm({
     defaultValues
@@ -37,14 +37,14 @@ const ConfigureDefaultValuesDialog = ({ open, onClose }: ConfigureDefaultValuesD
 
   const onSubmit = form.handleSubmit(({ from, to, rukovoditel, glav_buxgalter }) => {
     const filters: Record<string, unknown> = {}
-    if (from !== fromParam) {
+    if (from !== dates.from) {
       filters.from = from
     }
-    if (to !== toParam) {
+    if (to !== dates.to) {
       filters.to = to
     }
     setDefaultFilters(filters)
-    setParams({ from, to })
+    dates.onChange({ from, to })
     setDefaultFormFields({
       rukovoditel,
       glav_buxgalter

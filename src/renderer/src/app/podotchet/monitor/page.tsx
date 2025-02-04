@@ -3,7 +3,7 @@ import { useEffect } from 'react'
 import { DownloadFile } from '@renderer/common/features/file'
 import { useLayoutStore } from '@renderer/common/features/layout'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
-import { usePagination, useRangeDate } from '@renderer/common/hooks'
+import { useDates, usePagination } from '@renderer/common/hooks'
 import { ListView } from '@renderer/common/views'
 import { useQuery } from '@tanstack/react-query'
 import { parseAsInteger, useQueryState } from 'nuqs'
@@ -33,7 +33,7 @@ const PodotchetMonitoringPage = () => {
   const [operatsii, setOperatsii] = useQueryState('operatsii', parseAsInteger.withDefault(0))
 
   const pagination = usePagination()
-  const dates = useRangeDate()
+  const dates = useDates()
   const setLayout = useLayoutStore((store) => store.setLayout)
 
   const { t } = useTranslation(['app'])

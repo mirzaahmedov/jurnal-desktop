@@ -12,7 +12,7 @@ import { useNavigate } from 'react-router-dom'
 import { FooterCell, FooterRow, GenericTable } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
 import { useLayoutStore } from '@/common/features/layout'
-import { usePagination, useRangeDate } from '@/common/hooks'
+import { useDates, usePagination } from '@/common/hooks'
 import { ListView } from '@/common/views'
 
 import { columns } from './columns'
@@ -27,7 +27,7 @@ const AktPage = () => {
   const navigate = useNavigate()
   const pagination = usePagination()
 
-  const dates = useRangeDate()
+  const dates = useDates()
 
   const main_schet_id = useRequisitesStore((state) => state.main_schet_id)
   const setLayout = useLayoutStore((store) => store.setLayout)

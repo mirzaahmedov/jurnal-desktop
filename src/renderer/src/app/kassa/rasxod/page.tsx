@@ -7,10 +7,10 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
-import { FooterCell, FooterRow, GenericTable, Pagination } from '@/common/components'
+import { FooterCell, FooterRow, GenericTable } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
 import { useLayoutStore } from '@/common/features/layout'
-import { usePagination, useRangeDate } from '@/common/hooks'
+import { useDates, usePagination } from '@/common/hooks'
 import { formatNumber } from '@/common/lib/format'
 import { ListView } from '@/common/views'
 
@@ -22,7 +22,7 @@ const KassaRasxodPage = () => {
   const { confirm } = useConfirm()
   const { t } = useTranslation(['app'])
 
-  const dates = useRangeDate()
+  const dates = useDates()
   const pagination = usePagination()
   const queryClient = useQueryClient()
   const navigate = useNavigate()
@@ -100,7 +100,7 @@ const KassaRasxodPage = () => {
         />
       </ListView.Content>
       <ListView.Footer>
-        <Pagination
+        <ListView.Pagination
           {...pagination}
           pageCount={rasxodList?.meta.pageCount ?? 0}
         />

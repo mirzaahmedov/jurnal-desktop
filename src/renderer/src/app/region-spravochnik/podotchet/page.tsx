@@ -2,10 +2,11 @@ import type { Podotchet } from '@/common/models'
 
 import { useEffect, useState } from 'react'
 
+import { usePagination } from '@renderer/common/hooks'
+import { ListView } from '@renderer/common/views'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 
-import { LoadingOverlay, Pagination, usePagination } from '@/common/components'
 import { GenericTable } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
 import { useLayout } from '@/common/features/layout'
@@ -22,8 +23,8 @@ const PodotchetPage = () => {
 
   const dialogToggle = useToggle()
   const queryClient = useQueryClient()
+  const pagination = usePagination()
 
-  const { currentPage, itemsPerPage } = usePagination()
   const { confirm } = useConfirm()
   const { search } = useSearch()
   const { t } = useTranslation(['app'])
@@ -32,8 +33,7 @@ const PodotchetPage = () => {
     queryKey: [
       podotchetQueryKeys.getAll,
       {
-        page: currentPage,
-        limit: itemsPerPage,
+        ...pagination,
         search
       }
     ],
@@ -74,25 +74,27 @@ const PodotchetPage = () => {
   }
 
   return (
-    <>
-      <div className="relative flex-1">
-        {isFetching || isPending ? <LoadingOverlay /> : null}
+    <ListView>
+      <ListView.Content loading={isFetching || isPending}>
         <GenericTable
           data={podotchetList?.data ?? []}
           columnDefs={podotchetColumns}
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}
         />
-      </div>
-      <div className="px-10 py-5">
-        <Pagination pageCount={podotchetList?.meta.pageCount ?? 0} />
-      </div>
+      </ListView.Content>
+      <ListView.Footer>
+        <ListView.Pagination
+          {...pagination}
+          pageCount={podotchetList?.meta.pageCount ?? 0}
+        />
+      </ListView.Footer>
       <PodotchetDialog
         selected={selected}
         open={dialogToggle.isOpen}
         onOpenChange={dialogToggle.setOpen}
       />
-    </>
+    </ListView>
   )
 }
 
