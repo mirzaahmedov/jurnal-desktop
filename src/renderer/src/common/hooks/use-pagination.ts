@@ -1,18 +1,26 @@
 import type { PaginationValues } from '@/common/components/pagination-alt'
 
-import { parseAsInteger, useQueryStates } from 'nuqs'
+import { useState } from 'react'
 
-const usePagination = () => {
-  const [pagination, setPagination] = useQueryStates({
-    page: parseAsInteger.withDefault(1),
-    limit: parseAsInteger.withDefault(10)
+export interface PaginationParams {
+  page: number
+  limit: number
+}
+export interface UsePaginationReturn extends PaginationParams {
+  onChange: (values: Partial<PaginationParams>) => void
+}
+
+const usePagination = (): UsePaginationReturn => {
+  const [pagination, setPagination] = useState({
+    page: 1,
+    limit: 10
   })
 
-  const handleChange = ({ page, limit }: Partial<PaginationValues>) => {
-    setPagination({
-      page,
-      limit
-    })
+  const handleChange = (values: Partial<PaginationValues>) => {
+    setPagination((prev) => ({
+      ...prev,
+      ...values
+    }))
   }
 
   return {

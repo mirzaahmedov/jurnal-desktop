@@ -1,7 +1,16 @@
+import type { Dispatch, SetStateAction } from 'react'
+
 import { useState } from 'react'
 
 import { useDefaultFilters } from '@/common/features/app-defaults'
 
+export interface RangeDateParams {
+  from?: string
+  to?: string
+}
+export interface UseRangeDateReturn extends RangeDateParams {
+  onChange: Dispatch<SetStateAction<RangeDateParams>>
+}
 const useRangeDate = () => {
   const [params, setParams] = useState<{
     from?: string

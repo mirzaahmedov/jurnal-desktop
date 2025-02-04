@@ -26,7 +26,7 @@ export const Pagination = ({ page, pageCount, limit, onChange }: PaginationProps
         onPageChange={({ selected }) => onChange({ page: selected + 1 })}
         pageLabelBuilder={(pageNumber) => (
           <Button
-            variant={pageNumber === page ? 'outline' : 'ghost'}
+            variant={pageNumber === page ? 'default' : 'ghost'}
             size="icon"
           >
             {pageNumber}
