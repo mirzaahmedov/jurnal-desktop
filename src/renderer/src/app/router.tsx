@@ -9,8 +9,8 @@ import BankPrixodDetailsPage from './bank/prixod/details/page'
 import BankPrixodPage from './bank/prixod/page'
 import BankRasxodDetailsPage from './bank/rasxod/details/page'
 import BankRasxodPage from './bank/rasxod/page'
-// import DashboardPage from './dashboard/page'
-import HomePage from './home/page'
+import DashboardPage from './dashboard/page'
+// import HomePage from './home/page'
 import { InternalTransferDetailsPage } from './jurnal-7/internal-transfer/details/page'
 import { InternalTransferPage } from './jurnal-7/internal-transfer/page'
 import IznosPage from './jurnal-7/iznos/page'
@@ -441,7 +441,7 @@ export const routes: RouteObject[] = [
       },
       {
         index: true,
-        element: <HomePage />
+        element: <DashboardPage />
       },
       {
         path: 'demo',

@@ -16,9 +16,10 @@ import { cn } from '@renderer/common/lib/utils'
 import { Pencil, Plus, Trash2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-export type CollapsibleTableProps<T> = {
+export type CollapsibleTableProps<T, C = T> = {
   data: T[]
   columnDefs: ColumnDef<Partial<T>>[]
+  childColumnDefs?: ColumnDef<Partial<C>>[]
   onClickRow?: (row: T) => void
   onEdit?: (row: T) => void
   onDelete?: (row: T) => void
@@ -26,6 +27,7 @@ export type CollapsibleTableProps<T> = {
 const CollapsibleTable = <T extends { id: number; children: T[] }>({
   data,
   columnDefs,
+  childColumnDefs = columnDefs,
   onClickRow,
   onEdit,
   onDelete
@@ -65,7 +67,7 @@ const CollapsibleTable = <T extends { id: number; children: T[] }>({
             <CollapsibleItem
               key={row.id}
               row={row}
-              tableProps={{ columnDefs: columnDefs, onClickRow, onEdit, onDelete, data }}
+              tableProps={{ columnDefs, childColumnDefs, onClickRow, onEdit, onDelete, data }}
             />
           ))
         ) : (
@@ -86,12 +88,14 @@ const CollapsibleTable = <T extends { id: number; children: T[] }>({
 type CollapsibleItemProps<T> = {
   row: T
   tableProps: CollapsibleTableProps<T>
+  level?: number
 }
 const CollapsibleItem = <T extends { id: number; children: T[] }>({
   row,
-  tableProps
+  tableProps,
+  level = 1
 }: CollapsibleItemProps<T>) => {
-  const { columnDefs: columns, onClickRow, onEdit, onDelete } = tableProps
+  const { columnDefs, childColumnDefs, onClickRow, onEdit, onDelete } = tableProps
 
   if (!row.children?.length) {
     return (
@@ -102,7 +106,7 @@ const CollapsibleItem = <T extends { id: number; children: T[] }>({
         )}
         onClick={() => onClickRow?.(row)}
       >
-        {columns.map((col) => {
+        {(level > 1 ? childColumnDefs! : columnDefs).map((col) => {
           const { key, fit, stretch, numeric, renderCell } = col
           return (
             <GenericTableCell
@@ -160,7 +164,7 @@ const CollapsibleItem = <T extends { id: number; children: T[] }>({
     >
       <>
         <GenericTableRow onClick={() => onClickRow?.(row)}>
-          {columns.map((col, index) => {
+          {columnDefs.map((col, index) => {
             const { key, fit, stretch, numeric, renderCell } = col
             return (
               <GenericTableCell
@@ -238,6 +242,7 @@ const CollapsibleItem = <T extends { id: number; children: T[] }>({
                         key={child.id}
                         row={child}
                         tableProps={tableProps}
+                        level={level + 1}
                       />
                     ))}
                   </TableBody>

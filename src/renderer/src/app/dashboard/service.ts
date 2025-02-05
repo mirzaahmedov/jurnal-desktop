@@ -1,4 +1,5 @@
 import type { Dashboard } from './model'
+import type { PaginationParams } from '@renderer/common/hooks'
 import type { Response } from '@renderer/common/models'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 
@@ -9,12 +10,13 @@ export const getDashboardBudjetOptionsQuery = async () => {
   return res.data
 }
 
-interface GetDashboardKassaQueryParams {
+interface DashboardCommonParams {
   budjet_id: number
   to: string
 }
+
 export const getDashboardKassaQuery = async (
-  ctx: QueryFunctionContext<[string, GetDashboardKassaQueryParams]>
+  ctx: QueryFunctionContext<[string, DashboardCommonParams]>
 ) => {
   const { to, budjet_id } = ctx.queryKey[1]
   const res = await http.get<Response<Dashboard.Kassa[]>>('dashboard/kassa', {
@@ -23,21 +25,32 @@ export const getDashboardKassaQuery = async (
       to
     }
   })
-  return res.data
+  return res.data?.data?.[0]?.main_schets
 }
 
-interface GetDashboardKassaQueryParams {
-  budjet_id: number
-  to: string
-}
 export const getDashboardBankQuery = async (
-  ctx: QueryFunctionContext<[string, GetDashboardKassaQueryParams]>
+  ctx: QueryFunctionContext<[string, DashboardCommonParams]>
 ) => {
   const { to, budjet_id } = ctx.queryKey[1]
   const res = await http.get<Response<Dashboard.Bank[]>>('dashboard/bank', {
     params: {
       budjet_id,
       to
+    }
+  })
+  return res.data?.data?.[0]?.main_schets
+}
+
+export const getDashboardPodotchetQuery = async (
+  ctx: QueryFunctionContext<[string, DashboardCommonParams & PaginationParams]>
+) => {
+  const { to, budjet_id, page, limit } = ctx.queryKey[1]
+  const res = await http.get<Response<Dashboard.Podotchet[]>>('dashboard/podotchet', {
+    params: {
+      budjet_id,
+      to,
+      page,
+      limit
     }
   })
   return res.data

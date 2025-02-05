@@ -9,7 +9,7 @@ const MainLayout = () => {
   return (
     <div className="h-full flex">
       <Sidebar />
-      <div className="flex-1 overflow-auto">
+      <div className="flex-1 overflow-auto scrollbar">
         <AuthGuard>
           <PageLayout>
             <Outlet />

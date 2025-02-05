@@ -1,56 +1,30 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
-import { DatePicker, SelectField } from '@renderer/common/components'
-import { Card } from '@renderer/common/components/ui/card'
+import { DatePicker } from '@renderer/common/components'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@renderer/common/components/ui/tabs'
 import { useLayoutStore } from '@renderer/common/features/layout'
 import { formatDate } from '@renderer/common/lib/date'
-import { formatNumber } from '@renderer/common/lib/format'
-import { useQuery } from '@tanstack/react-query'
-import { parseAsString, useQueryState } from 'nuqs'
+import { useSuspenseQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 
-import KassaBalance from './components/kassa-balance'
+import { Bank } from './components/bank'
+import { Kassa } from './components/kassa'
+import { PodotchetTable } from './components/podotchet-table/podotchet-table'
 import { queryKeys } from './config'
-import {
-  getDashboardBankQuery,
-  getDashboardBudjetOptionsQuery,
-  getDashboardKassaQuery
-} from './service'
+import { getDashboardBudjetOptionsQuery } from './service'
 
 const DashboardPage = () => {
-  const [date, setDate] = useQueryState('date', parseAsString.withDefault(formatDate(new Date())))
-  const [budjet, setBudjet] = useQueryState('budjet', parseAsString.withDefault(''))
+  const { data: budjets } = useSuspenseQuery({
+    queryKey: [queryKeys.getBudjetOptions],
+    queryFn: getDashboardBudjetOptionsQuery
+  })
 
   const setLayout = useLayoutStore((store) => store.setLayout)
 
   const { t } = useTranslation(['app'])
 
-  const { data: budjets, isFetching: isFetchingBudjets } = useQuery({
-    queryKey: [queryKeys.getBudjetOptions],
-    queryFn: getDashboardBudjetOptionsQuery
-  })
-  const { data: kassa, isFetching: isFetchingKassa } = useQuery({
-    queryKey: [
-      queryKeys.getKassaFunds,
-      {
-        to: date!,
-        budjet_id: Number(budjet)!
-      }
-    ],
-    queryFn: getDashboardKassaQuery,
-    enabled: !!date && !!budjet
-  })
-  const { data: bank, isFetching: isFetchingBank } = useQuery({
-    queryKey: [
-      queryKeys.getBankFunds,
-      {
-        to: date!,
-        budjet_id: Number(budjet)!
-      }
-    ],
-    queryFn: getDashboardBankQuery,
-    enabled: !!date && !!budjet
-  })
+  const [date, setDate] = useState(formatDate(new Date()))
+  const [budjet, setBudjet] = useState(budjets?.data?.[0].id ?? 0)
 
   useEffect(() => {
     setLayout({
@@ -59,57 +33,57 @@ const DashboardPage = () => {
   }, [setLayout, t])
 
   return (
-    <div className="p-10 gap-10 space-y-5">
-      <div className="flex items-center gap-5 justify-start">
-        <DatePicker
-          value={date ?? ''}
-          onChange={setDate}
-        />
-        <SelectField
-          placeholder={t('choose', { what: t('budjet') })}
-          value={budjet}
-          onValueChange={setBudjet}
-          options={budjets?.data ?? []}
-          getOptionValue={(option) => option.id}
-          getOptionLabel={(option) => option.name}
-          triggerClassName="max-w-xs"
-        />
-      </div>
-      <div className="grid grid-cols-2 gap-5">
-        <Card className="p-5">
-          {Array.isArray(kassa?.data)
-            ? kassa.data[0].main_schets.map((schet) => (
-                <div key={schet.id}>
-                  {schet.account_number}/{schet.jur1_schet} - {formatNumber(schet.kassa.summa)}
-                </div>
-              ))
-            : null}
-        </Card>
-        <Card className="p-5">
-          <KassaBalance />
-          <div className="pb-2.5 flex justify-between">
-            <h5 className="uppercase text-xs font-bold text-brand">
-              {t('raschet-schet')} / {t('schet')}
-            </h5>
-            <h5 className="uppercase text-xs font-bold text-brand">{t('summa')}</h5>
-          </div>
-          <ul>
-            {Array.isArray(bank?.data)
-              ? bank.data[0].main_schets.map((schet) => (
-                  <li
-                    key={schet.id}
-                    className="flex justify-between"
-                  >
-                    <span className="text-sm">
-                      {schet.account_number} / {schet.jur1_schet}
-                    </span>
-                    <span className="text-base font-medium">{formatNumber(schet.bank.summa)}</span>
-                  </li>
-                ))
-              : null}
-          </ul>
-        </Card>
-      </div>
+    <div className="p-10 space-y-10">
+      <Tabs
+        value={budjet?.toString()}
+        onValueChange={(value) => setBudjet(Number(value))}
+      >
+        <div className="flex items-center gap-5 justify-between">
+          <DatePicker
+            value={date ?? ''}
+            onChange={setDate}
+          />
+
+          <TabsList>
+            {budjets?.data?.map((budjet) => (
+              <TabsTrigger
+                value={budjet.id.toString()}
+                key={budjet.id}
+              >
+                {budjet.name}
+              </TabsTrigger>
+            ))}
+          </TabsList>
+        </div>
+
+        {budjets?.data?.map((elem) => (
+          <TabsContent
+            key={elem.id}
+            value={elem.id.toString()}
+          >
+            <div className="flex flex-col gap-5 py-5">
+              <div className="grid grid-cols-2 gap-10">
+                <Kassa
+                  main_schets={budjets?.data?.find((item) => item.id === budjet)?.main_schets}
+                  date={date}
+                  budjet_id={budjet}
+                />
+                <Bank
+                  main_schets={budjets?.data?.find((item) => item.id === budjet)?.main_schets}
+                  date={date}
+                  budjet_id={budjet}
+                />
+              </div>
+              <div>
+                <PodotchetTable
+                  date={date}
+                  budjet_id={budjet}
+                />
+              </div>
+            </div>
+          </TabsContent>
+        ))}
+      </Tabs>
     </div>
   )
 }

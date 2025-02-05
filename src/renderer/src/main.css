@@ -88,6 +88,9 @@ select:-webkit-autofill:focus {
   body {
     @apply bg-background text-foreground font-body;
   }
+  .recharts-surface {
+    overflow: visible;
+  }
 }
 
 @layer utilities {

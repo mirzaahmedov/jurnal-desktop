@@ -137,6 +137,9 @@ dependencies:
   lucide-react:
     specifier: ^0.468.0
     version: 0.468.0(react@18.3.1)
+  millify:
+    specifier: ^6.1.0
+    version: 6.1.0
   nuqs:
     specifier: ^2.3.0
     version: 2.3.2(react-router-dom@7.1.5)(react@18.3.1)
@@ -5685,6 +5688,13 @@ packages:
     dependencies:
       braces: 3.0.3
       picomatch: 2.3.1
+
+  /millify@6.1.0:
+    resolution: {integrity: sha512-H/E3J6t+DQs/F2YgfDhxUVZz/dF8JXPPKTLHL/yHCcLZLtCXJDUaqvhJXQwqOVBvbyNn4T0WjLpIHd7PAw7fBA==}
+    hasBin: true
+    dependencies:
+      yargs: 17.7.2
+    dev: false
 
   /mime-db@1.52.0:
     resolution: {integrity: sha512-sPU4uV7dYlvtWJxwwxHD0PuihVNiE7TyAbQ5SWxDCB9mUYvOgroQOwYQQOKPJ8CIbE+1ETVlOoK1UC2nU3gYvg==}
