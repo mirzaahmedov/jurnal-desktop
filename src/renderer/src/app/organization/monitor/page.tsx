@@ -194,20 +194,11 @@ const OrganizationMonitoringPage = () => {
           </div>
           <ListView.RangeDatePicker {...dates} />
         </div>
-        <div className="sticky top-0">
+        <div className="sticky top-0 mt-5">
           <SummaFields
-            summaDebet={
-              organizationMonitorList?.meta?.summa_from &&
-              organizationMonitorList?.meta?.summa_from > 0
-                ? organizationMonitorList?.meta?.summa_from
-                : 0
-            }
-            summaKredit={
-              organizationMonitorList?.meta?.summa_from &&
-              organizationMonitorList?.meta?.summa_from < 0
-                ? organizationMonitorList?.meta?.summa_from
-                : 0
-            }
+            summaDebet={organizationMonitorList?.meta?.summa_from.prixod}
+            summaKredit={organizationMonitorList?.meta?.summa_from?.rasxod}
+            summaItogo={organizationMonitorList?.meta?.summa_from?.summa}
           />
         </div>
       </ListView.Header>
@@ -233,21 +224,16 @@ const OrganizationMonitoringPage = () => {
       </ListView.Content>
       <ListView.Footer>
         <SummaFields
-          summaDebet={
-            organizationMonitorList?.meta?.summa_to && organizationMonitorList?.meta?.summa_to > 0
-              ? organizationMonitorList?.meta?.summa_to
-              : 0
-          }
-          summaKredit={
-            organizationMonitorList?.meta?.summa_to && organizationMonitorList?.meta?.summa_to < 0
-              ? organizationMonitorList?.meta?.summa_to
-              : 0
-          }
+          summaDebet={organizationMonitorList?.meta?.summa_to.prixod}
+          summaKredit={organizationMonitorList?.meta?.summa_to?.rasxod}
+          summaItogo={organizationMonitorList?.meta?.summa_to?.summa}
         />
-        <ListView.Pagination
-          {...pagination}
-          pageCount={organizationMonitorList?.meta.pageCount ?? 0}
-        />
+        <div className="mt-5">
+          <ListView.Pagination
+            {...pagination}
+            pageCount={organizationMonitorList?.meta.pageCount ?? 0}
+          />
+        </div>
       </ListView.Footer>
     </ListView>
   )
@@ -255,14 +241,16 @@ const OrganizationMonitoringPage = () => {
 
 const SummaFields = ({
   summaDebet,
-  summaKredit
+  summaKredit,
+  summaItogo
 }: {
   summaDebet?: number
   summaKredit?: number
+  summaItogo?: number
 }) => {
   const { t } = useTranslation()
   return (
-    <div className="w-full grid grid-cols-4 gap-40">
+    <div className="w-full grid grid-cols-5 gap-40">
       <span className="text-sm text-slate-400 col-span-2"></span>
       <div className="flex gap-2 items-center">
         <span className="text-sm text-slate-400">{t('debet')}:</span>
@@ -275,6 +263,10 @@ const SummaFields = ({
         <b className="text-sm font-black text-slate-700">
           {formatNumber(Math.abs(summaKredit ?? 0))}
         </b>
+      </div>
+      <div className="flex gap-2 items-center">
+        <span className="text-sm text-slate-400">{t('total')}:</span>
+        <b className="text-sm font-black text-slate-700">{formatNumber(summaItogo ?? 0)}</b>
       </div>
     </div>
   )

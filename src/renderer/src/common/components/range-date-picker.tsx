@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 
+import { usePagination } from '@renderer/common/hooks/use-pagination'
 import { CircleArrowDown } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -19,6 +20,8 @@ type RangeDatePickerProps = RangeDateValues & {
 const RangeDatePicker = ({ from, to, onChange }: RangeDatePickerProps) => {
   const { t } = useTranslation()
 
+  const pagination = usePagination()
+
   const form = useForm({
     defaultValues: {
       from,
@@ -26,7 +29,12 @@ const RangeDatePicker = ({ from, to, onChange }: RangeDatePickerProps) => {
     }
   })
 
-  const onSubmit = form.handleSubmit(onChange)
+  const onSubmit = form.handleSubmit((values) => {
+    onChange(values)
+    pagination.onChange({
+      page: 1
+    })
+  })
 
   useEffect(() => {
     form.reset({

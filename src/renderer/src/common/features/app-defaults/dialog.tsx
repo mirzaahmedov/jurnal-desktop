@@ -1,6 +1,9 @@
 import { useState } from 'react'
 
+import { useDates } from '@renderer/common/hooks/use-dates'
+import { usePagination } from '@renderer/common/hooks/use-pagination'
 import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 
 import { DatePicker } from '@/common/components'
 import { FormElement } from '@/common/components/form'
@@ -14,7 +17,6 @@ import {
 } from '@/common/components/ui/dialog'
 import { Form, FormField } from '@/common/components/ui/form'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/common/components/ui/tabs'
-import { useDates } from '@/common/hooks/use-range-date'
 
 import { ManagementFields } from './components/managements'
 import { defaultValues } from './constants'
@@ -25,26 +27,30 @@ type ConfigureDefaultValuesDialogProps = {
   onClose: () => void
 }
 const ConfigureDefaultValuesDialog = ({ open, onClose }: ConfigureDefaultValuesDialogProps) => {
+  const dates = useDates()
+  const pagination = usePagination()
+
   const [currentTab, setCurrentTab] = useState<string>('filters')
+
+  const { t } = useTranslation()
 
   const { setDefaultFilters } = useDefaultFilters()
   const { setDefaultFormFields } = useDefaultFormFields()
-  const dates = useDates()
 
   const form = useForm({
     defaultValues
   })
 
   const onSubmit = form.handleSubmit(({ from, to, rukovoditel, glav_buxgalter }) => {
-    const filters: Record<string, unknown> = {}
-    if (from !== dates.from) {
-      filters.from = from
-    }
-    if (to !== dates.to) {
-      filters.to = to
-    }
-    setDefaultFilters(filters)
-    dates.onChange({ from, to })
+    setDefaultFilters({
+      from,
+      to
+    })
+    dates.onChange({
+      from: undefined,
+      to: undefined
+    })
+    pagination.onChange({ page: 1 })
     setDefaultFormFields({
       rukovoditel,
       glav_buxgalter
@@ -133,7 +139,7 @@ const ConfigureDefaultValuesDialog = ({ open, onClose }: ConfigureDefaultValuesD
               </div>
             </Tabs>
             <DialogFooter className="border-none">
-              <Button>Сохранить</Button>
+              <Button>{t('save')}</Button>
             </DialogFooter>
           </form>
         </Form>

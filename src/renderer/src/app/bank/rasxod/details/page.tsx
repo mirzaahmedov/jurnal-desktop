@@ -55,9 +55,10 @@ const BankRasxodDetailtsPage = () => {
   const { t } = useTranslation(['app'])
 
   const params = useParams()
-  const location = useLocation() as Location<{ original?: BankRasxod }>
   const navigate = useNavigate()
   const queryClient = useQueryClient()
+
+  const location = useLocation() as Location<{ original?: BankRasxod }>
   const podpis = usePodpis(PodpisTypeDocument.BANK, params.id === 'create')
 
   const main_schet_id = useRequisitesStore((state) => state.main_schet_id)
@@ -139,7 +140,7 @@ const BankRasxodDetailtsPage = () => {
     onSuccess() {
       toast({ title: 'Документ успешно создан' })
       form.reset(defaultValues)
-      navigate('/bank/rasxod')
+      navigate(-1)
       queryClient.invalidateQueries({
         queryKey: [queryKeys.getAll]
       })
@@ -155,7 +156,7 @@ const BankRasxodDetailtsPage = () => {
     mutationFn: bankRasxodService.update,
     onSuccess() {
       toast({ title: 'Документ успешно создан' })
-      navigate('/bank/rasxod')
+      navigate(-1)
       queryClient.invalidateQueries({
         queryKey: [queryKeys.getAll]
       })
@@ -303,7 +304,7 @@ const BankRasxodDetailtsPage = () => {
 
   return (
     <DetailsView>
-      <DetailsView.Content loading={isFetching || isCreating || isUpdating}>
+      <DetailsView.Content loading={isFetching}>
         <Form {...form}>
           <form onSubmit={onSubmit}>
             <div>
@@ -366,6 +367,7 @@ const BankRasxodDetailtsPage = () => {
                   isUpdating ||
                   isCreating
                 }
+                loading={isCreating || isUpdating}
                 tabIndex={7}
               />
               {summa ? <AccountBalance balance={reminder} /> : null}

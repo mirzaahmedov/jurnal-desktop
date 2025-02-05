@@ -1,9 +1,8 @@
-import { type Dispatch, type SetStateAction, useEffect } from 'react'
+import { type Dispatch, type SetStateAction } from 'react'
 
 import { useDefaultFilters } from '@/common/features/app-defaults'
 
 import { createLocationStore, useLocationState } from './use-location-state'
-import { usePagination } from './use-pagination'
 
 export type DatesParams = {
   from?: string
@@ -21,16 +20,8 @@ export const useDates = () => {
 
   const [params, setParams] = useLocationState<DatesParams>(datesStore)
 
-  const { onChange } = usePagination()
-
   const from = params?.from ?? defaults.from
   const to = params?.to ?? defaults.to
-
-  useEffect(() => {
-    onChange({
-      page: 1
-    })
-  }, [from, to, onChange])
 
   return {
     from,
