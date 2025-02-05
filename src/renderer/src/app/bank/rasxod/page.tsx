@@ -23,12 +23,13 @@ const BankRasxodPage = () => {
   const { confirm } = useConfirm()
   const { t } = useTranslation(['app'])
 
-  const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
-  const setLayout = useLayoutStore((store) => store.setLayout)
   const dates = useDates()
   const pagination = usePagination()
   const queryClient = useQueryClient()
   const navigate = useNavigate()
+
+  const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
+  const setLayout = useLayoutStore((store) => store.setLayout)
 
   const { data: rasxodList, isFetching } = useQuery({
     queryKey: [

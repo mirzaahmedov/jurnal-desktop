@@ -4,6 +4,7 @@ import { useEffect } from 'react'
 
 import { createOrganizationSpravochnik } from '@renderer/app/region-spravochnik/organization'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
+import { useLocationState } from '@renderer/common/hooks/use-location-state'
 import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
@@ -16,17 +17,16 @@ import { ListView } from '@/common/views'
 
 import { shartnomaGrafikColumns } from './columns'
 import { shartnomaGrafikQueryKeys } from './constants'
-import { useOrgId } from './hooks'
-import { shartnomaGrafikService } from './service'
+import { type LocationState, shartnomaGrafikService } from './service'
 
 const ShartnomaGrafikPage = () => {
-  const [orgId, setOrgId] = useOrgId()
-
   const navigate = useNavigate()
   const pagination = usePagination()
 
   const budjet_id = useRequisitesStore((store) => store.budjet_id)
   const setLayout = useLayoutStore((store) => store.setLayout)
+
+  const [orgId, setOrgId] = useLocationState<undefined | number>('org_id', undefined)
 
   const { t } = useTranslation(['app'])
 
@@ -51,7 +51,11 @@ const ShartnomaGrafikPage = () => {
   })
 
   const handleClickEdit = (row: ShartnomaGrafik) => {
-    navigate(`${row.id}?org_id=${row.spravochnik_organization_id}&org_selected=${!!orgId}`)
+    navigate(`${row.id}`, {
+      state: {
+        org_id: row.spravochnik_organization_id
+      } satisfies LocationState
+    })
   }
 
   useEffect(() => {

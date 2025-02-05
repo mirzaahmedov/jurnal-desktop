@@ -1,31 +1,38 @@
-import { type Dispatch, type SetStateAction } from 'react'
+import { type Dispatch, type SetStateAction, useCallback } from 'react'
 
 import { useDefaultFilters } from '@/common/features/app-defaults'
 
-import { createLocationStore, useLocationState } from './use-location-state'
+import { useLocationState } from './use-location-state'
 
 export type DatesParams = {
   from?: string
   to?: string
 }
 
-const useDatesStore = createLocationStore<DatesParams>('dates')
-
-export interface UseRangeDateReturn extends DatesParams {
+export interface UseDatesReturn extends DatesParams {
   onChange: Dispatch<SetStateAction<DatesParams>>
 }
 export const useDates = () => {
-  const datesStore = useDatesStore()
   const defaults = useDefaultFilters()
 
-  const [params, setParams] = useLocationState<DatesParams>(datesStore)
+  const [from, setFrom] = useLocationState('from', defaults.from)
+  const [to, setTo] = useLocationState('to', defaults.to)
 
-  const from = params?.from ?? defaults.from
-  const to = params?.to ?? defaults.to
+  const handleChange = useCallback(
+    (values: DatesParams) => {
+      if (values.from) {
+        setFrom(values.from)
+      }
+      if (values.to) {
+        setTo(values.to)
+      }
+    },
+    [setFrom, setTo]
+  )
 
   return {
     from,
     to,
-    onChange: setParams
+    onChange: handleChange
   }
 }

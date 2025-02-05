@@ -31,3 +31,6 @@ export const ShartnomaGrafikFormSchema = z.object({
 })
 
 export type ShartnomaGrafikForm = z.infer<typeof ShartnomaGrafikFormSchema>
+export type LocationState = {
+  org_id?: number
+}

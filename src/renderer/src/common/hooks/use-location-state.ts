@@ -4,46 +4,52 @@ import { useLocation } from 'react-router-dom'
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 
-export type ValueSetter<T> = T | ((prev: T) => T)
-export interface LocationStore<T> {
-  state: Record<string, T>
-  setState: (pathname: string, setter: ValueSetter<T>) => void
+type State = Record<string, unknown>
+type StateSetter<T> = T | ((prev: T) => T)
+export interface LocationStore {
+  values: Record<string, State>
+  setValues: (pathname: string, setter: StateSetter<State>) => void
 }
 
-export const createLocationStore = <T extends Record<string, unknown | string | number>>(
-  name: string
-) => {
-  return create(
-    persist<LocationStore<T>>(
-      (set, get) => ({
-        state: {},
-        setState(pathname, setter) {
-          set({
-            state: {
-              ...get().state,
-              [pathname]: typeof setter === 'function' ? setter(get().state[pathname]) : setter
-            }
-          })
-        }
-      }),
-      {
-        name
+const useLocationStore = create(
+  persist<LocationStore>(
+    (set, get) => ({
+      values: {},
+      setValues(pathname, setter) {
+        set({
+          values: {
+            ...get().values,
+            [pathname]: typeof setter === 'function' ? setter(get().values[pathname]) : setter
+          }
+        })
       }
-    )
+    }),
+    {
+      name: 'location-state'
+    }
   )
-}
+)
 
-export const useLocationState = <T>(store: LocationStore<T>, defaultState?: T) => {
-  const location = useLocation()
-  const pathname = location.pathname
+export const useLocationState = <T = undefined>(
+  key: string,
+  defaultState?: T
+): [T, (setter: StateSetter<T>) => void] => {
+  const { pathname } = useLocation()
+  const { setValues, values } = useLocationStore()
 
-  const state = store.state[pathname]
+  const state = values[pathname]?.[key] ?? defaultState
   const setState = useCallback(
-    (value: ValueSetter<T>) => {
-      store.setState(pathname, value)
+    (setter: StateSetter<T | undefined>) => {
+      setValues(pathname, (prev) => ({
+        ...prev,
+        [key]:
+          typeof setter === 'function'
+            ? (setter as (value: T) => void)((prev?.[key] ?? defaultState) as T)
+            : setter
+      }))
     },
-    [pathname, store.setState]
+    [setValues, pathname, key]
   )
 
-  return [state ?? defaultState, setState] as const
+  return [state as T, setState as (setter: StateSetter<T>) => void] as const
 }

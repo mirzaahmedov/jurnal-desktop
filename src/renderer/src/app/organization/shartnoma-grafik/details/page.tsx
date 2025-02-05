@@ -9,10 +9,9 @@ import {
 import { useRequisitesStore } from '@renderer/common/features/requisites'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { DownloadIcon } from 'lucide-react'
-import { parseAsBoolean, useQueryState } from 'nuqs'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import { useNavigate, useParams } from 'react-router-dom'
+import { type Location, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
 import { DatePicker, Fieldset, NumericInput } from '@/common/components'
@@ -29,21 +28,24 @@ import { numberToWords, roundNumberToTwoDecimalPlaces } from '@/common/lib/utils
 import { DetailsView } from '@/common/views'
 
 import { defaultValues, shartnomaGrafikQueryKeys } from '../constants'
-import { useOrgId } from '../hooks'
-import { ShartnomaGrafikFormSchema, shartnomaGrafikDetailsService } from '../service'
+import {
+  type LocationState,
+  ShartnomaGrafikFormSchema,
+  shartnomaGrafikDetailsService
+} from '../service'
 import { GenerateReportDialog } from '../templates/report-dialog/dialog'
 
 const ShartnomaGrafikDetailsPage = () => {
-  const [orgId] = useOrgId()
-  const [orgSelected] = useQueryState('org_selected', parseAsBoolean.withDefault(false))
-
-  const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
-  const setLayout = useLayoutStore((store) => store.setLayout)
-
-  const id = useParams().id as string
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const reportToggle = useToggle()
+
+  const params = useParams()
+  const location = useLocation() as Location<LocationState>
+  const org_id = location.state?.org_id
+
+  const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
+  const setLayout = useLayoutStore((store) => store.setLayout)
 
   const { t } = useTranslation(['app'])
 
@@ -57,19 +59,19 @@ const ShartnomaGrafikDetailsPage = () => {
     queryFn: mainSchetService.getById
   })
   const { data: organization } = useQuery({
-    queryKey: [organizationQueryKeys.getById, Number(orgId)],
+    queryKey: [organizationQueryKeys.getById, Number(org_id)],
     queryFn: organizationService.getById
   })
   const { data: shartnomaGrafik, isFetching } = useQuery({
     queryKey: [
       shartnomaGrafikQueryKeys.getById,
-      Number(id),
+      Number(params.id),
       {
         main_schet_id
       }
     ],
     queryFn: shartnomaGrafikDetailsService.getById,
-    enabled: id !== 'create' && !!main_schet_id
+    enabled: params.id !== 'create' && !!main_schet_id
   })
 
   const { mutate: update } = useMutation({
@@ -82,10 +84,10 @@ const ShartnomaGrafikDetailsPage = () => {
         queryKey: [shartnomaGrafikQueryKeys.getAll]
       })
       queryClient.invalidateQueries({
-        queryKey: [shartnomaGrafikQueryKeys.getById, id]
+        queryKey: [shartnomaGrafikQueryKeys.getById, params.id]
       })
 
-      navigate(`/organization/shartnoma-grafik?org_id=${orgId}`)
+      navigate(`/organization/shartnoma-grafik`)
     },
     onError(error) {
       toast.error('Произошла ошибка при обновлении документа: ' + error.message)
@@ -119,7 +121,7 @@ const ShartnomaGrafikDetailsPage = () => {
       oy_11: data.oy_11 ?? 0,
       oy_12: data.oy_12 ?? 0
     })
-  }, [form, shartnomaGrafik, id])
+  }, [form, shartnomaGrafik])
 
   const payload = form.watch()
   const summa = useMemo(() => {
@@ -141,17 +143,17 @@ const ShartnomaGrafikDetailsPage = () => {
         }
       ],
       onBack() {
-        navigate(`/organization/shartnoma-grafik${orgSelected ? `?org_id=${orgId}` : ''}`)
+        navigate('/organization/shartnoma-grafik')
       }
     })
-  }, [navigate, setLayout, id, t, orgId, orgSelected])
+  }, [navigate, setLayout, t, org_id])
 
   useEffect(() => {
-    if (!orgId) {
+    if (!org_id) {
       toast.error('Выберите организацию')
       navigate(`/organization/shartnoma-grafik`)
     }
-  }, [orgId])
+  }, [org_id])
 
   return (
     <DetailsView>
