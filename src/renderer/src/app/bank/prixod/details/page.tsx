@@ -39,11 +39,12 @@ import { PrixodPayloadSchema, PrixodPodvodkaPayloadSchema, bankPrixodService } f
 import { podvodkaColumns } from './podvodki'
 
 const BankPrixodDetailsPage = () => {
-  const main_schet_id = useRequisitesStore((state) => state.main_schet_id)
-  const setLayout = useLayoutStore((store) => store.setLayout)
   const queryClient = useQueryClient()
   const id = useParams().id as string
   const navigate = useNavigate()
+
+  const main_schet_id = useRequisitesStore((state) => state.main_schet_id)
+  const setLayout = useLayoutStore((store) => store.setLayout)
 
   const { t } = useTranslation(['app'])
 
@@ -177,6 +178,7 @@ const BankPrixodDetailsPage = () => {
 
   useEffect(() => {
     setLayout({
+      title: id === 'create' ? t('create') : t('edit'),
       breadcrumbs: [
         {
           title: t('pages.bank')
@@ -186,9 +188,11 @@ const BankPrixodDetailsPage = () => {
           title: t('pages.prixod-docs')
         }
       ],
-      title: id === 'create' ? t('create') : t('edit')
+      onBack() {
+        navigate(-1)
+      }
     })
-  }, [setLayout, id, t])
+  }, [setLayout, navigate, id, t])
 
   useEffect(() => {
     const summa =

@@ -58,8 +58,9 @@ const BankRasxodDetailtsPage = () => {
   const location = useLocation() as Location<{ original?: BankRasxod }>
   const navigate = useNavigate()
   const queryClient = useQueryClient()
-  const main_schet_id = useRequisitesStore((state) => state.main_schet_id)
   const podpis = usePodpis(PodpisTypeDocument.BANK, params.id === 'create')
+
+  const main_schet_id = useRequisitesStore((state) => state.main_schet_id)
   const setLayout = useLayoutStore((store) => store.setLayout)
 
   const original = location.state?.original
@@ -293,9 +294,12 @@ const BankRasxodDetailtsPage = () => {
           path: '/bank/rasxod',
           title: t('pages.rasxod-docs')
         }
-      ]
+      ],
+      onBack() {
+        navigate(-1)
+      }
     })
-  }, [setLayout, params.id, t])
+  }, [setLayout, navigate, params.id, t])
 
   return (
     <DetailsView>
