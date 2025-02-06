@@ -1,5 +1,4 @@
-const orgMonitorQueryKeys = {
-  getDefault: 'org-monitor/all',
-  getByOrgId: 'org-monitor'
+export const orgMonitoringQueryKeys = {
+  getDefault: 'org-monitoring/all',
+  getByOrgId: 'org-monitoring'
 }
-export { orgMonitorQueryKeys }

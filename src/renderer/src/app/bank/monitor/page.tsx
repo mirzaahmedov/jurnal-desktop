@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 
 import { DownloadFile } from '@renderer/common/features/file'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
+import { SearchField, useSearch } from '@renderer/common/features/search'
 import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 
@@ -23,6 +24,7 @@ const BankMonitorPage = () => {
   const dates = useDates()
   const pagination = usePagination()
 
+  const { search } = useSearch()
   const { t } = useTranslation(['app'])
 
   const { data: monitorList, isFetching } = useQuery({
@@ -30,6 +32,7 @@ const BankMonitorPage = () => {
       bankMonitorQueryKeys.getAll,
       {
         main_schet_id,
+        search,
         ...dates,
         ...pagination
       }
@@ -41,6 +44,7 @@ const BankMonitorPage = () => {
   useEffect(() => {
     setLayout({
       title: t('pages.monitoring'),
+      content: SearchField,
       breadcrumbs: [
         {
           title: t('pages.bank')

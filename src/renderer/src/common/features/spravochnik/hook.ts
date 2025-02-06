@@ -8,7 +8,7 @@ import { useQuery } from '@tanstack/react-query'
 import { useSpravochnikStore } from './store'
 
 type SpravochnikHookCallbacks<T> = {
-  onChange?: (id: number, data?: T) => void
+  onChange?: (id: number | undefined, data?: T) => void
   onClose?: () => void
 }
 
@@ -115,8 +115,8 @@ export const useSpravochnik = <T extends { id: number }>(
   ])
 
   const handleClearState = useCallback(() => {
-    setSelectedId(0)
-    callbacksRef.current.onChange?.(0, undefined)
+    setSelectedId(undefined)
+    callbacksRef.current.onChange?.(undefined, undefined)
   }, [])
 
   return {

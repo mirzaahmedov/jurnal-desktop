@@ -1,3 +1,5 @@
+import type { Shartnoma } from '@renderer/common/models'
+
 import { useEffect } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -7,7 +9,6 @@ import { Form } from '@renderer/common/components/ui/form'
 import { useSpravochnik } from '@renderer/common/features/spravochnik'
 import { parseDate } from '@renderer/common/lib/date'
 import { cn } from '@renderer/common/lib/utils'
-import { Shartnoma } from '@renderer/common/models'
 import {
   DocumentFields,
   OpisanieFields,
@@ -19,7 +20,7 @@ import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 
-import { defaultValues, shartnomaQueryKeys } from '../constants'
+import { defaultValues, shartnomaQueryKeys } from '../config'
 import { ShartnomaFormSchema, shartnomaService } from '../service'
 import { ShartnomaKindFields } from './kind'
 import { PudratchiFields } from './pudratchi'

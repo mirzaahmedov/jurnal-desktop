@@ -44,25 +44,4 @@ const AdminMainbookPage = () => {
   )
 }
 
-// const BudjetFilter = () => {
-//   const [budjet, setBudjet] = useQueryState('budjet_id', parseAsInteger)
-//   const budjetSpravochnik = useSpravochnik(
-//     createBudgetSpravochnik({
-//       value: budjet ?? 0,
-//       onChange(value) {
-//         setBudjet(value)
-//       }
-//     })
-//   )
-//   return (
-//     <div className="px-5 max-w-xs">
-//       <SpravochnikInput
-//         value={budjetSpravochnik.selected?.name ?? ''}
-//         onClear={budjetSpravochnik.clear}
-//         onDoubleClick={budjetSpravochnik.open}
-//       />
-//     </div>
-//   )
-// }
-
 export default AdminMainbookPage

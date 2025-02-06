@@ -6,10 +6,10 @@ import { SelectField } from '@renderer/common/components'
 import { useConfirm } from '@renderer/common/features/confirm'
 import { useLayout } from '@renderer/common/features/layout'
 import { SearchField, useSearch } from '@renderer/common/features/search'
+import { useLocationState } from '@renderer/common/hooks/use-location-state'
 import { useToggle } from '@renderer/common/hooks/use-toggle'
 import { ListView } from '@renderer/common/views'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { parseAsString, useQueryState } from 'nuqs'
 import { useTranslation } from 'react-i18next'
 
 import { smetaColumns } from './columns'
@@ -19,10 +19,7 @@ import { smetaFilterOptions } from './group-filter'
 import { SmetaTable, smetaService } from './service'
 
 const SmetaFilters = () => {
-  const [groupNumber, setGroupNumber] = useQueryState(
-    'group_number',
-    parseAsString.withDefault('1')
-  )
+  const [groupNumber, setGroupNumber] = useLocationState('group_number', '1')
 
   const { t } = useTranslation()
 
@@ -42,15 +39,15 @@ const SmetaFilters = () => {
   )
 }
 const SmetaPage = () => {
+  const toggle = useToggle()
+  const queryClient = useQueryClient()
+
   const [selected, setSelected] = useState<Smeta | null>(null)
-  const [groupNumber] = useQueryState('group_number', parseAsString.withDefault('1'))
+  const [groupNumber] = useLocationState('group_number', '1')
 
   const { t } = useTranslation(['app'])
   const { confirm } = useConfirm()
   const { search } = useSearch()
-
-  const toggle = useToggle()
-  const queryClient = useQueryClient()
 
   const { data: mainSchets, isFetching } = useQuery({
     queryKey: [

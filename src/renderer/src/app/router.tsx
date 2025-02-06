@@ -1,8 +1,10 @@
 import type { RouteObject } from 'react-router-dom'
 
+import { useAuthStore } from '@renderer/common/features/auth'
 import { RequisitesGuard } from '@renderer/common/features/requisites'
 import { Navigate, createHashRouter } from 'react-router-dom'
 
+// Todo: fix inconsistent imports
 import MainLayout from '../common/layout/main'
 import BankMonitorPage from './bank/monitor/page'
 import BankPrixodDetailsPage from './bank/prixod/details/page'
@@ -10,7 +12,7 @@ import BankPrixodPage from './bank/prixod/page'
 import BankRasxodDetailsPage from './bank/rasxod/details/page'
 import BankRasxodPage from './bank/rasxod/page'
 import DashboardPage from './dashboard/page'
-// import HomePage from './home/page'
+import HomePage from './home/page'
 import { InternalTransferDetailsPage } from './jurnal-7/internal-transfer/details/page'
 import { InternalTransferPage } from './jurnal-7/internal-transfer/page'
 import IznosPage from './jurnal-7/iznos/page'
@@ -70,7 +72,7 @@ import AdminMainbookPage from './super-admin/mainbook/page'
 import OperatsiiPage from './super-admin/operatsii/page'
 import AdminOXDetailsPage from './super-admin/ox-report/details/page'
 import AdminOXPage from './super-admin/ox-report/page'
-import { PereotsenkaPage } from './super-admin/pereotsenka/page'
+import PereotsenkaPage from './super-admin/pereotsenka/page'
 import AdminRealExpenseDetailsPage from './super-admin/real-expenses/details/page'
 import AdminRealExpensesPage from './super-admin/real-expenses/page'
 import RegionDataPage from './super-admin/region-data/page'
@@ -80,7 +82,14 @@ import SmetaPage from './super-admin/smeta/page'
 import UnitPage from './super-admin/unit/page'
 import UserPage from './super-admin/user/page'
 
-// import DemoPage from './demo/page'
+const FallbackRoute = () => {
+  const { user } = useAuthStore()
+  return user?.role_name === 'super-admin' ? (
+    <Navigate to="/admin/dashboard" />
+  ) : (
+    <Navigate to="/region/dashboard" />
+  )
+}
 
 export const routes: RouteObject[] = [
   {
@@ -440,7 +449,11 @@ export const routes: RouteObject[] = [
         element: <RegionDataPage />
       },
       {
-        index: true,
+        path: 'admin/dashboard',
+        element: <HomePage />
+      },
+      {
+        path: 'region/dashboard',
         element: <DashboardPage />
       },
       {
@@ -449,7 +462,7 @@ export const routes: RouteObject[] = [
       },
       {
         path: '*',
-        element: <Navigate to="/" />
+        element: <FallbackRoute />
       }
     ]
   }

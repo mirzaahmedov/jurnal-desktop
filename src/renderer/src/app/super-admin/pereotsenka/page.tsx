@@ -1,10 +1,11 @@
 import type { Pereotsenka } from '@renderer/common/models'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { GenericTable } from '@renderer/common/components'
 import { useConfirm } from '@renderer/common/features/confirm'
-import { useLayout } from '@renderer/common/features/layout'
+import { useLayoutStore } from '@renderer/common/features/layout'
+import { SearchField, useSearch } from '@renderer/common/features/search'
 import { usePagination } from '@renderer/common/hooks'
 import { useToggle } from '@renderer/common/hooks/use-toggle'
 import { ListView } from '@renderer/common/views'
@@ -19,20 +20,24 @@ import { PereotsenkaDialog } from './dialog'
 import { pereotsenkaService } from './service'
 
 const PereotsenkaPage = () => {
+  const dialogToggle = useToggle()
+  const createDialogToggle = useToggle()
+  const queryClient = useQueryClient()
+  const pagination = usePagination()
+
+  const setLayout = useLayoutStore((store) => store.setLayout)
+
   const [selected, setSelected] = useState<null | Pereotsenka>(null)
 
   const { t } = useTranslation(['app'])
+  const { search } = useSearch()
   const { confirm } = useConfirm()
-
-  const dialogToggle = useToggle()
-  const batchDialogToggle = useToggle()
-  const queryClient = useQueryClient()
-  const pagination = usePagination()
 
   const { data: pereotsenkaList, isFetching } = useQuery({
     queryKey: [
       pereotsenkaQueryKeys.getAll,
       {
+        search,
         ...pagination
       }
     ],
@@ -52,11 +57,18 @@ const PereotsenkaPage = () => {
       toast.error('Ошибка при удалении переоценки: ' + error.message)
     }
   })
-
-  useLayout({
-    title: t('pages.pereotsenka'),
-    onCreate: batchDialogToggle.open
-  })
+  useEffect(() => {
+    setLayout({
+      title: t('pages.pereotsenka'),
+      breadcrumbs: [
+        {
+          title: t('pages.admin')
+        }
+      ],
+      content: SearchField,
+      onCreate: createDialogToggle.open
+    })
+  }, [setLayout, t])
 
   const handleClickEdit = (row: Pereotsenka) => {
     setSelected(row)
@@ -93,11 +105,11 @@ const PereotsenkaPage = () => {
         onClose={dialogToggle.close}
       />
       <PereotsenkaBatchCreateDrawer
-        open={batchDialogToggle.isOpen}
-        onOpenChange={batchDialogToggle.setOpen}
+        open={createDialogToggle.isOpen}
+        onOpenChange={createDialogToggle.setOpen}
       />
     </ListView>
   )
 }
 
-export { PereotsenkaPage }
+export default PereotsenkaPage

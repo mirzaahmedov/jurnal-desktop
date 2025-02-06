@@ -3,6 +3,7 @@ import type { PokazatUslugi } from '@/common/models'
 import { useEffect } from 'react'
 
 import { useRequisitesStore } from '@renderer/common/features/requisites'
+// import { SearchField, useSearch } from '@renderer/common/features/search'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
@@ -18,9 +19,6 @@ import { queryKeys } from './constants'
 import { pokazatUslugiService } from './service'
 
 const PokazatUslugiPage = () => {
-  const { confirm } = useConfirm()
-  const { t } = useTranslation(['app'])
-
   const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
   const setLayout = useLayoutStore((store) => store.setLayout)
 
@@ -29,11 +27,16 @@ const PokazatUslugiPage = () => {
   const pagination = usePagination()
   const dates = useDates()
 
+  const { confirm } = useConfirm()
+  // const { search } = useSearch()
+  const { t } = useTranslation(['app'])
+
   const { data: pokazatUslugiList, isFetching } = useQuery({
     queryKey: [
       queryKeys.getAll,
       {
         main_schet_id,
+        // search,
         ...dates,
         ...pagination
       }
@@ -75,6 +78,7 @@ const PokazatUslugiPage = () => {
           title: t('pages.organization')
         }
       ],
+      // content: SearchField,
       onCreate() {
         navigate('create')
       }

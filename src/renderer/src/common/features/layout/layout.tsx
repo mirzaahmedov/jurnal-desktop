@@ -130,7 +130,7 @@ export const PageLayout = (props: PageLayoutProps) => {
             <LocaleSelect />
           </div>
           {user ? (
-            <div className="px-8 flex items-center gap-4">
+            <div className="px-5 flex items-center gap-4">
               <Avatar>
                 <AvatarFallback className="bg-brand text-brand-foreground">
                   {user.fio

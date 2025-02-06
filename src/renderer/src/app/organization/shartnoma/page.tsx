@@ -1,3 +1,4 @@
+import type { LocationState } from './config'
 import type { Shartnoma } from '@renderer/common/models'
 
 import { useEffect } from 'react'
@@ -8,9 +9,10 @@ import { Button } from '@renderer/common/components/ui/button'
 import { useConfirm } from '@renderer/common/features/confirm'
 import { useLayoutStore } from '@renderer/common/features/layout'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
-import { useSearch } from '@renderer/common/features/search'
+import { SearchField, useSearch } from '@renderer/common/features/search'
 import { useSpravochnik } from '@renderer/common/features/spravochnik'
 import { usePagination } from '@renderer/common/hooks'
+import { useLocationState } from '@renderer/common/hooks/use-location-state'
 import { ListView } from '@renderer/common/views'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { CopyPlus } from 'lucide-react'
@@ -18,12 +20,11 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
 import { shartnomaColumns } from './columns'
-import { shartnomaQueryKeys } from './constants'
-import { useOrgId } from './hooks'
+import { shartnomaQueryKeys } from './config'
 import { shartnomaService } from './service'
 
 const ShartnomaPage = () => {
-  const [orgId, setOrgId] = useOrgId()
+  const [orgId, setOrgId] = useLocationState<undefined | number>('org_id')
 
   const { confirm } = useConfirm()
   const { search } = useSearch()
@@ -53,7 +54,7 @@ const ShartnomaPage = () => {
       {
         search,
         budjet_id,
-        organization: orgId ? Number(orgId) : undefined,
+        organization: orgId,
         ...pagination
       }
     ],
@@ -70,7 +71,11 @@ const ShartnomaPage = () => {
   })
 
   const handleClickEdit = (row: Shartnoma) => {
-    navigate(`${row.id}?org_id=${row.spravochnik_organization_id}&org_selected=${!!orgId}`)
+    navigate(`${row.id}`, {
+      state: {
+        orgId: row.spravochnik_organization_id
+      } satisfies LocationState
+    })
   }
   const handleClickDelete = (row: Shartnoma) => {
     confirm({
@@ -83,9 +88,14 @@ const ShartnomaPage = () => {
   useEffect(() => {
     setLayout({
       title: t('pages.shartnoma'),
+      content: SearchField,
       onCreate: orgId
         ? () => {
-            navigate(`create?org_id=${orgId}&org_selected=true`)
+            navigate('create', {
+              state: {
+                orgId
+              } satisfies LocationState
+            })
           }
         : undefined,
       breadcrumbs: [
@@ -126,10 +136,14 @@ const ShartnomaPage = () => {
               size="icon"
               onClick={(e) => {
                 e.stopPropagation()
+                if (!orgId) {
+                  return
+                }
                 navigate(`create?org_id=${row.spravochnik_organization_id}`, {
                   state: {
-                    original: row
-                  }
+                    original: row,
+                    orgId
+                  } satisfies LocationState
                 })
               }}
             >

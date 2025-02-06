@@ -2,9 +2,8 @@ import type { HTMLAttributes } from 'react'
 
 import { useEffect, useRef, useState } from 'react'
 
-import { usePagination } from '@renderer/common/hooks'
+import { useLocationState, usePagination } from '@renderer/common/hooks'
 import { Search } from 'lucide-react'
-import { useSearchParams } from 'react-router-dom'
 
 import { Input } from '@/common/components/ui/input'
 import { cn } from '@/common/lib/utils'
@@ -13,32 +12,30 @@ export type SearchFieldProps = HTMLAttributes<HTMLDivElement>
 export const SearchField = (props: SearchFieldProps) => {
   const { className, ...rest } = props
 
-  const [interim, setInterim] = useState('')
-  const [, setSearchParams] = useSearchParams()
+  const [search, setSearch] = useLocationState<string>('search')
+  const [interim, setInterim] = useState(search)
 
   const pagination = usePagination()
 
   const timeout = useRef<null | NodeJS.Timeout>(null)
-  const callbackRef = useRef((value: string) => {
-    const params = new URLSearchParams(window.location.search)
-    params.set('search', value)
-    setSearchParams(params)
-  })
 
   useEffect(() => {
     if (timeout.current) {
       clearTimeout(timeout.current)
     }
     timeout.current = setTimeout(() => {
-      callbackRef.current(interim)
-    }, 1000)
+      setSearch(interim)
+      pagination.onChange({
+        page: 1
+      })
+    }, 600)
     const timer = timeout.current
     return () => {
       if (timer) {
         clearTimeout(timer)
       }
     }
-  }, [interim])
+  }, [interim, pagination.onChange, setSearch])
 
   return (
     <div
@@ -52,11 +49,6 @@ export const SearchField = (props: SearchFieldProps) => {
           value={interim}
           onChange={(e) => {
             setInterim(e.target.value)
-            if (pagination.page !== 1) {
-              pagination.onChange({
-                page: 1
-              })
-            }
           }}
           placeholder="Поиск..."
           className="pl-8 shadow-none focus-visible:ring-2"

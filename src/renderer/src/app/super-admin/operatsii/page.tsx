@@ -1,8 +1,7 @@
-import type { Operatsii } from '@/common/models'
-
 import { useEffect, useState } from 'react'
 
 import { usePagination } from '@renderer/common/hooks'
+import { useLocationState } from '@renderer/common/hooks/use-location-state'
 import { ListView } from '@renderer/common/views'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
@@ -12,11 +11,12 @@ import { useConfirm } from '@/common/features/confirm'
 import { useLayout } from '@/common/features/layout'
 import { useSearch } from '@/common/features/search'
 import { useToggle } from '@/common/hooks/use-toggle'
+import { type Operatsii, TypeSchetOperatsii } from '@/common/models'
 
 import { operatsiiColumns } from './columns'
 import { operatsiiQueryKeys } from './constants'
 import { OperatsiiDialog } from './dialog'
-import { OperatsiiFilter, useOperatsiiFilters } from './filter'
+import { OperatsiiFilter } from './filter'
 import { operatsiiService } from './service'
 
 const OperatsiiPage = () => {
@@ -26,8 +26,9 @@ const OperatsiiPage = () => {
   const queryClient = useQueryClient()
   const pagination = usePagination()
 
+  const [typeSchet] = useLocationState('type_schet', TypeSchetOperatsii.KASSA_PRIXOD)
+
   const { t } = useTranslation(['app'])
-  const { filters } = useOperatsiiFilters()
   const { confirm } = useConfirm()
   const { search } = useSearch()
 
@@ -36,10 +37,10 @@ const OperatsiiPage = () => {
       operatsiiQueryKeys.getAll,
       {
         ...pagination,
-        type_schet: filters.type_schet,
+        type_schet: typeSchet,
         search
       },
-      filters.type_schet
+      typeSchet
     ],
     queryFn: operatsiiService.getAll
   })

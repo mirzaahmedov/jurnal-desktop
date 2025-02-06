@@ -24,12 +24,12 @@ import { extendObject } from '@/common/lib/utils'
 import { Subdivision7PayloadSchema, defaultValues, subdivision7QueryKeys } from './constants'
 import { subdivision7Service } from './service'
 
-export type Podrazdelenie7DialogProps = {
+export interface Podrazdelenie7DialogProps {
   open: boolean
   onClose: () => void
   selected: null | Jur7Podrazdelenie
 }
-const Podrazdelenie7Dialog = (props: Podrazdelenie7DialogProps) => {
+export const Podrazdelenie7Dialog = (props: Podrazdelenie7DialogProps) => {
   const { open, onClose, selected } = props
 
   const queryClient = useQueryClient()
@@ -139,5 +139,3 @@ const Podrazdelenie7Dialog = (props: Podrazdelenie7DialogProps) => {
     </Dialog>
   )
 }
-
-export default Podrazdelenie7Dialog

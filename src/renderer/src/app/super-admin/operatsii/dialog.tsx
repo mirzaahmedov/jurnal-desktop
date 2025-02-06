@@ -5,6 +5,7 @@ import { useEffect } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { createSmetaSpravochnik } from '@renderer/app/super-admin/smeta'
+import { useLocationState } from '@renderer/common/hooks/use-location-state'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { t } from 'i18next'
 import { useForm } from 'react-hook-form'
@@ -32,7 +33,6 @@ import { useToast } from '@/common/hooks/use-toast'
 import { TypeSchetOperatsii } from '@/common/models'
 
 import { operatsiiQueryKeys, operatsiiTypeSchetOptions } from './constants'
-import { useOperatsiiFilters } from './filter'
 import { OperatsiiFormSchema, operatsiiService } from './service'
 
 type OperatsiiDialogProps = {
@@ -40,19 +40,19 @@ type OperatsiiDialogProps = {
   onChangeOpen(value: boolean): void
   data: Operatsii | null
 }
-const OperatsiiDialog = (props: OperatsiiDialogProps) => {
-  const { open, onChangeOpen, data } = props
+const OperatsiiDialog = ({ open, onChangeOpen, data }: OperatsiiDialogProps) => {
+  const queryClient = useQueryClient()
+
+  const [typeSchet] = useLocationState('type_schet', TypeSchetOperatsii.KASSA_PRIXOD)
 
   const { toast } = useToast()
-  const { filters } = useOperatsiiFilters()
-  const queryClient = useQueryClient()
 
   const form = useForm<OperatsiiForm>({
     defaultValues,
     resolver: zodResolver(OperatsiiFormSchema)
   })
 
-  const { mutate: create, isPending: isCreating } = useMutation({
+  const { mutate: createOperatsii, isPending: isCreating } = useMutation({
     mutationKey: [operatsiiQueryKeys.create],
     mutationFn: operatsiiService.create,
     onSuccess() {
@@ -73,7 +73,7 @@ const OperatsiiDialog = (props: OperatsiiDialogProps) => {
       })
     }
   })
-  const { mutate: update, isPending: isUpdating } = useMutation({
+  const { mutate: updateOperatsii, isPending: isUpdating } = useMutation({
     mutationKey: [operatsiiQueryKeys.update],
     mutationFn: operatsiiService.update,
     onSuccess() {
@@ -106,9 +106,9 @@ const OperatsiiDialog = (props: OperatsiiDialogProps) => {
 
   const onSubmit = (payload: OperatsiiForm) => {
     if (data) {
-      update(Object.assign(payload, { id: data.id }))
+      updateOperatsii(Object.assign(payload, { id: data.id }))
     } else {
-      create(payload)
+      createOperatsii(payload)
     }
   }
 
@@ -122,9 +122,9 @@ const OperatsiiDialog = (props: OperatsiiDialogProps) => {
   }, [form, data])
   useEffect(() => {
     if (open) {
-      form.setValue('type_schet', filters.type_schet as TypeSchetOperatsii)
+      form.setValue('type_schet', typeSchet)
     }
-  }, [form, open, filters.type_schet])
+  }, [form, open, typeSchet])
 
   return (
     <Dialog

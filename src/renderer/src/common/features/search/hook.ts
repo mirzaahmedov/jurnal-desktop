@@ -1,9 +1,9 @@
-import { useSearchParams } from 'react-router-dom'
+import { useLocationState } from '@renderer/common/hooks'
 
 export const useSearch = () => {
-  const [searchParams] = useSearchParams()
+  const [search] = useLocationState<string | undefined>('search')
 
   return {
-    search: searchParams.get('search') || undefined
+    search: search ? search : undefined
   }
 }

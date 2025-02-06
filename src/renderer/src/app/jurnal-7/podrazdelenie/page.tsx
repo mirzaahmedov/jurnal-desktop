@@ -2,6 +2,7 @@ import type { Jur7Podrazdelenie } from '@/common/models'
 
 import { useEffect, useState } from 'react'
 
+import { SearchField, useSearch } from '@renderer/common/features/search'
 import { usePagination } from '@renderer/common/hooks'
 import { ListView } from '@renderer/common/views'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
@@ -15,25 +16,27 @@ import { useToggle } from '@/common/hooks/use-toggle'
 
 import { podrazdelenie7Columns } from './columns'
 import { subdivision7QueryKeys } from './constants'
-import Podrazdelenie7Dialog from './dialog'
+import { Podrazdelenie7Dialog } from './dialog'
 import { subdivision7Service } from './service'
 
 const Subdivision7Page = () => {
-  const [selected, setSelected] = useState<null | Jur7Podrazdelenie>(null)
-
   const pagination = usePagination()
   const dialogToggle = useToggle()
+  const queryClient = useQueryClient()
 
   const setLayout = useLayoutStore((store) => store.setLayout)
 
   const { t } = useTranslation(['app'])
+  const { search } = useSearch()
   const { confirm } = useConfirm()
 
-  const queryClient = useQueryClient()
+  const [selected, setSelected] = useState<null | Jur7Podrazdelenie>(null)
+
   const { data: subdivision7List, isFetching } = useQuery({
     queryKey: [
       subdivision7QueryKeys.getAll,
       {
+        search,
         ...pagination
       }
     ],
@@ -68,6 +71,7 @@ const Subdivision7Page = () => {
           title: t('pages.material-warehouse')
         }
       ],
+      content: SearchField,
       onCreate() {
         setSelected(null)
         dialogToggle.open()

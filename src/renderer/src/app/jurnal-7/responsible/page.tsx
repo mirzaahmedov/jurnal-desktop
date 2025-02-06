@@ -2,6 +2,7 @@ import type { Responsible } from '@/common/models'
 
 import { useEffect, useState } from 'react'
 
+import { SearchField, useSearch } from '@renderer/common/features/search'
 import { usePagination } from '@renderer/common/hooks'
 import { ListView } from '@renderer/common/views'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
@@ -15,13 +16,14 @@ import { useToggle } from '@/common/hooks/use-toggle'
 
 import { responsibleColumns } from './columns'
 import { responsibleQueryKeys } from './constants'
-import ResponsibleDialog from './dialog'
+import { ResponsibleDialog } from './dialog'
 import { responsibleService } from './service'
 
 const ResponsiblePage = () => {
   const [selected, setSelected] = useState<null | Responsible>(null)
 
   const { confirm } = useConfirm()
+  const { search } = useSearch()
   const { t } = useTranslation(['app'])
 
   const setLayout = useLayoutStore((store) => store.setLayout)
@@ -34,6 +36,7 @@ const ResponsiblePage = () => {
     queryKey: [
       responsibleQueryKeys.getAll,
       {
+        search,
         ...pagination
       }
     ],
@@ -68,6 +71,7 @@ const ResponsiblePage = () => {
           title: t('pages.organization')
         }
       ],
+      content: SearchField,
       onCreate() {
         setSelected(null)
         dialogToggle.open()
@@ -105,7 +109,7 @@ const ResponsiblePage = () => {
       <ResponsibleDialog
         open={dialogToggle.isOpen}
         onClose={dialogToggle.close}
-        data={selected}
+        selected={selected}
       />
     </ListView>
   )

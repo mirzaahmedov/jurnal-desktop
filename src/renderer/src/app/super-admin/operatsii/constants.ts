@@ -1,6 +1,6 @@
 import { TypeSchetOperatsii } from '@/common/models'
 
-const operatsiiQueryKeys = {
+export const operatsiiQueryKeys = {
   getAll: 'operatsii/all',
   getById: 'operatsii',
   create: 'operatsii/create',
@@ -8,10 +8,7 @@ const operatsiiQueryKeys = {
   delete: 'operatsii/delete'
 }
 
-const operatsiiTypeSchetOptions: Array<{
-  value: TypeSchetOperatsii
-  label: string
-}> = [
+export const operatsiiTypeSchetOptions = [
   {
     value: TypeSchetOperatsii.KASSA_PRIXOD,
     label: 'Касса приход'
@@ -48,6 +45,7 @@ const operatsiiTypeSchetOptions: Array<{
     value: TypeSchetOperatsii.GENERAL,
     label: 'Общий'
   }
-]
-
-export { operatsiiQueryKeys, operatsiiTypeSchetOptions }
+] as const satisfies {
+  value: TypeSchetOperatsii
+  label: string
+}[]

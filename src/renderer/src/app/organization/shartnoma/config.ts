@@ -1,4 +1,5 @@
 import type { ShartnomaFormValues } from './service'
+import type { Shartnoma } from '@renderer/common/models'
 
 export const shartnomaQueryKeys = {
   getById: 'shartnoma',
@@ -18,4 +19,9 @@ export const defaultValues: ShartnomaFormValues = {
   pudratchi_bool: false,
   yillik_oylik: false,
   grafik_year: new Date().getFullYear()
+}
+
+export interface LocationState {
+  orgId: number
+  original?: Shartnoma
 }

@@ -34,10 +34,11 @@ export const useLocationState = <T = undefined>(
   key: string,
   defaultState?: T
 ): [T, (setter: StateSetter<T>) => void] => {
-  const { pathname } = useLocation()
-  const { setValues, values } = useLocationStore()
+  const pathname = useLocation().pathname
 
-  const state = values[pathname]?.[key] ?? defaultState
+  const state = useLocationStore((store) => store.values[pathname]?.[key] ?? defaultState)
+  const setValues = useLocationStore((store) => store.setValues)
+
   const setState = useCallback(
     (setter: StateSetter<T | undefined>) => {
       setValues(pathname, (prev) => ({

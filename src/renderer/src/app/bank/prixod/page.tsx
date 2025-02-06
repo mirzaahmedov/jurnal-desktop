@@ -3,6 +3,7 @@ import type { BankPrixodType } from '@/common/models'
 import { useEffect } from 'react'
 
 import { useRequisitesStore } from '@renderer/common/features/requisites'
+import { SearchField, useSearch } from '@renderer/common/features/search'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
@@ -20,6 +21,7 @@ import { bankPrixodService } from './service'
 
 const BankPrixodPage = () => {
   const { confirm } = useConfirm()
+  const { search } = useSearch()
   const { t } = useTranslation(['app'])
 
   const dates = useDates()
@@ -35,6 +37,7 @@ const BankPrixodPage = () => {
       queryKeys.getAll,
       {
         main_schet_id,
+        search,
         ...pagination,
         ...dates
       }
@@ -70,6 +73,7 @@ const BankPrixodPage = () => {
           title: t('pages.bank')
         }
       ],
+      content: SearchField,
       onCreate() {
         navigate('create')
       }

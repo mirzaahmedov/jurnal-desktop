@@ -4,6 +4,7 @@ import { useEffect } from 'react'
 
 import { DownloadFile } from '@renderer/common/features/file'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
+import { SearchField, useSearch } from '@renderer/common/features/search'
 import { formatNumber } from '@renderer/common/lib/format'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
@@ -20,9 +21,6 @@ import { queryKeys } from './constants'
 import { aktService } from './service'
 
 const AktPage = () => {
-  const { confirm } = useConfirm()
-  const { t } = useTranslation(['app'])
-
   const queryClient = useQueryClient()
   const navigate = useNavigate()
   const pagination = usePagination()
@@ -32,11 +30,16 @@ const AktPage = () => {
   const main_schet_id = useRequisitesStore((state) => state.main_schet_id)
   const setLayout = useLayoutStore((store) => store.setLayout)
 
+  const { confirm } = useConfirm()
+  const { search } = useSearch()
+  const { t } = useTranslation(['app'])
+
   const { data: aktList, isFetching } = useQuery({
     queryKey: [
       queryKeys.getAll,
       {
         main_schet_id,
+        search,
         ...dates,
         ...pagination
       }
@@ -72,6 +75,7 @@ const AktPage = () => {
           title: t('pages.organization')
         }
       ],
+      content: SearchField,
       onCreate() {
         navigate('create')
       }

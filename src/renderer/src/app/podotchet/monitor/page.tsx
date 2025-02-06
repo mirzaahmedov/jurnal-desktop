@@ -4,9 +4,9 @@ import { DownloadFile } from '@renderer/common/features/file'
 import { useLayoutStore } from '@renderer/common/features/layout'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
 import { useDates, usePagination } from '@renderer/common/hooks'
+import { useLocationState } from '@renderer/common/hooks/use-location-state'
 import { ListView } from '@renderer/common/views'
 import { useQuery } from '@tanstack/react-query'
-import { parseAsInteger, useQueryState } from 'nuqs'
 import { useTranslation } from 'react-i18next'
 
 import { createPodotchetSpravochnik } from '@/app/region-spravochnik/podotchet'
@@ -29,15 +29,16 @@ import { podotchetMonitoringQueryKeys } from './constants'
 import { podotchetMonitoringService } from './service'
 
 const PodotchetMonitoringPage = () => {
-  const [podotchetId, setPodotchetId] = useQueryState('podotchet_id', parseAsInteger.withDefault(0))
-  const [operatsii, setOperatsii] = useQueryState('operatsii', parseAsInteger.withDefault(0))
-
   const pagination = usePagination()
   const dates = useDates()
+
   const setLayout = useLayoutStore((store) => store.setLayout)
 
   const { t } = useTranslation(['app'])
   const { main_schet_id, budjet_id } = useRequisitesStore()
+
+  const [podotchetId, setPodotchetId] = useLocationState<undefined | number>('podotchet_id')
+  const [operatsii, setOperatsii] = useLocationState<undefined | number>('operatsii')
 
   const podotchetSpravochnik = useSpravochnik(
     createPodotchetSpravochnik({
@@ -65,10 +66,8 @@ const PodotchetMonitoringPage = () => {
         ...dates,
         ...pagination,
         main_schet_id,
-        podotchet_id: podotchetId ? podotchetId : undefined,
+        podotchet_id: podotchetId,
         operatsii: operatsiiSpravochnik.selected?.schet
-          ? operatsiiSpravochnik.selected?.schet
-          : undefined
       },
       podotchetId
     ],

@@ -23,7 +23,7 @@ import { extendObject } from '@/common/lib/utils'
 import { withPreprocessor } from '@/common/lib/validation'
 
 import { shartnomaColumns } from './columns'
-import { shartnomaQueryKeys } from './constants'
+import { shartnomaQueryKeys } from './config'
 import { ShartnomaForm } from './details/shartnoma-form'
 
 export const shartnomaService = new CRUDService<Shartnoma, ShartnomaFormValues>({

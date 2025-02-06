@@ -1,4 +1,4 @@
-import { parseAsString, useQueryStates } from 'nuqs'
+import { useLocationState } from '@renderer/common/hooks/use-location-state'
 
 import { SelectField } from '@/common/components'
 import { SearchField } from '@/common/features/search'
@@ -6,15 +6,15 @@ import { TypeSchetOperatsii } from '@/common/models'
 
 import { operatsiiTypeSchetOptions } from './constants'
 
-const OperatsiiFilter = () => {
-  const { filters, setFilters } = useOperatsiiFilters()
+export const OperatsiiFilter = () => {
+  const [typeSchet, setTypeSchet] = useLocationState('type_schet', TypeSchetOperatsii.KASSA_PRIXOD)
 
   return (
     <div className="flex items-center">
       <div className="px-10 ml-auto w-full max-w-xs">
         <SelectField
-          value={filters.type_schet}
-          onValueChange={(value) => setFilters({ type_schet: value })}
+          value={typeSchet}
+          onValueChange={(value) => setTypeSchet(value as TypeSchetOperatsii)}
           placeholder="Выберите тип операции"
           options={operatsiiTypeSchetOptions}
           getOptionValue={(option) => option.value}
@@ -25,16 +25,3 @@ const OperatsiiFilter = () => {
     </div>
   )
 }
-
-const useOperatsiiFilters = () => {
-  const [filters, setFilters] = useQueryStates({
-    type_schet: parseAsString.withDefault(TypeSchetOperatsii.KASSA_PRIXOD)
-  })
-
-  return {
-    filters,
-    setFilters
-  }
-}
-
-export { OperatsiiFilter, useOperatsiiFilters }

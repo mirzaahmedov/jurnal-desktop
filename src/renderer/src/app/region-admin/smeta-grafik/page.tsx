@@ -3,6 +3,7 @@ import type { SmetaGrafik } from '@/common/models'
 import { useEffect, useState } from 'react'
 
 import { useRequisitesStore } from '@renderer/common/features/requisites'
+import { SearchField, useSearch } from '@renderer/common/features/search'
 import { usePagination } from '@renderer/common/hooks'
 import { ListView } from '@renderer/common/views'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
@@ -14,26 +15,29 @@ import { useToggle } from '@/common/hooks/use-toggle'
 
 import { SmetaTable } from './components'
 import { smetaGrafikQueryKeys } from './constants'
-import SmetaGrafikDialog from './dialog'
+import { SmetaGrafikDialog } from './dialog'
 import { smetaGrafikService } from './service'
 
 const SmetaGrafikPage = () => {
+  const pagination = usePagination()
+  const queryClient = useQueryClient()
+  const dialogToggle = useToggle()
+
+  const setLayout = useLayoutStore((store) => store.setLayout)
+
   const [selected, setSelected] = useState<null | SmetaGrafik>(null)
 
   const { main_schet_id, budjet_id } = useRequisitesStore()
   const { confirm } = useConfirm()
-  const { open, close, isOpen: active } = useToggle()
+  const { search } = useSearch()
   const { t } = useTranslation(['app'])
-
-  const pagination = usePagination()
-  const queryClient = useQueryClient()
-  const setLayout = useLayoutStore((store) => store.setLayout)
 
   const { data: smetaGrafikList, isFetching } = useQuery({
     queryKey: [
       smetaGrafikQueryKeys.getAll,
       {
         ...pagination,
+        search,
         budjet_id,
         main_schet_id
       }
@@ -53,7 +57,7 @@ const SmetaGrafikPage = () => {
 
   const handleClickEdit = (row: SmetaGrafik) => {
     setSelected(row)
-    open()
+    dialogToggle.open()
   }
   const handleClickDelete = (row: SmetaGrafik) => {
     confirm({
@@ -71,9 +75,10 @@ const SmetaGrafikPage = () => {
           title: t('pages.spravochnik')
         }
       ],
+      content: SearchField,
       onCreate: () => {
         setSelected(null)
-        open()
+        dialogToggle.open()
       }
     })
   }, [setLayout, t])
@@ -99,8 +104,8 @@ const SmetaGrafikPage = () => {
       </ListView.Footer>
       <SmetaGrafikDialog
         data={selected}
-        open={active}
-        onClose={close}
+        open={dialogToggle.isOpen}
+        onClose={dialogToggle.close}
       />
     </ListView>
   )

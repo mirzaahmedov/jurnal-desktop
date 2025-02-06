@@ -1,16 +1,18 @@
+import type { Avans } from '@/common/models'
+
 import { useEffect } from 'react'
 
 import { useRequisitesStore } from '@renderer/common/features/requisites'
+import { SearchField, useSearch } from '@renderer/common/features/search'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
 import { GenericTable } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
-import { useLayout, useLayoutStore } from '@/common/features/layout'
+import { useLayoutStore } from '@/common/features/layout'
 import { useDates, usePagination } from '@/common/hooks'
 import { toast } from '@/common/hooks/use-toast'
-import { Avans } from '@/common/models'
 import { ListView } from '@/common/views'
 
 import { avansColumns } from './columns'
@@ -27,6 +29,7 @@ const AvansPage = () => {
   const setLayout = useLayoutStore((store) => store.setLayout)
 
   const { confirm } = useConfirm()
+  const { search } = useSearch()
   const { t } = useTranslation(['app'])
 
   const { data: avansList, isFetching } = useQuery({
@@ -34,6 +37,7 @@ const AvansPage = () => {
       avansQueryKeys.getAll,
       {
         main_schet_id,
+        search,
         ...dates,
         ...pagination
       }
@@ -72,6 +76,7 @@ const AvansPage = () => {
           title: t('pages.podotchet')
         }
       ],
+      content: SearchField,
       onCreate() {
         navigate('create')
       }

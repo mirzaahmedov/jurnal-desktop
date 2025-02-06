@@ -3,6 +3,7 @@ import { useEffect } from 'react'
 import { createOrganizationSpravochnik } from '@renderer/app/region-spravochnik/organization'
 import { DownloadFile } from '@renderer/common/features/file'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
+import { useLocationState } from '@renderer/common/hooks/use-location-state'
 import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
@@ -23,13 +24,12 @@ import { ListView } from '@/common/views'
 
 import { AktSverkaDialog } from './akt-sverka'
 import { organizationMonitorColumns } from './columns'
-import { orgMonitorQueryKeys } from './constants'
-import { useOperatsiiId, useOrgId } from './hooks'
+import { orgMonitoringQueryKeys } from './constants'
 import { orgMonitoringService } from './service'
 
 const OrganizationMonitoringPage = () => {
-  const [operatsiiId, setOperatsiiId] = useOperatsiiId()
-  const [orgId, setOrgId] = useOrgId()
+  const [operatsiiId, setOperatsiiId] = useLocationState<undefined | number>('operatsii_id')
+  const [orgId, setOrgId] = useLocationState<undefined | number>('org_id')
 
   const dates = useDates()
   const pagination = usePagination()
@@ -67,7 +67,7 @@ const OrganizationMonitoringPage = () => {
 
   const { data: organizationMonitorList, isFetching } = useQuery({
     queryKey: [
-      orgMonitorQueryKeys.getByOrgId,
+      orgMonitoringQueryKeys.getByOrgId,
       {
         main_schet_id,
         operatsii: operatsiiSpravochnik.selected ? operatsiiSpravochnik.selected.schet : undefined,

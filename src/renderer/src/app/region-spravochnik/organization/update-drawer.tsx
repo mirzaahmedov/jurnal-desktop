@@ -48,7 +48,7 @@ const UpdateOrganizationDrawer = () => {
     isFetching,
     error
   } = useQuery({
-    queryKey: [organizationQueryKeys.getById, Number(parentId)],
+    queryKey: [organizationQueryKeys.getById, parentId],
     queryFn: organizationService.getById,
     enabled: !!parentId
   })
@@ -63,7 +63,7 @@ const UpdateOrganizationDrawer = () => {
       queryClient.invalidateQueries({
         queryKey: [organizationQueryKeys.getById, Number(parentId)]
       })
-      setParentId(null)
+      setParentId(undefined)
     },
     onError(error) {
       toast.error('Не удалось обновить организацию: ' + error.message)
@@ -145,7 +145,7 @@ const UpdateOrganizationDrawer = () => {
   const open = !!parentId
   const handleClose = (open: boolean) => {
     if (!open) {
-      setParentId(null)
+      setParentId(undefined)
     }
   }
 
@@ -200,7 +200,9 @@ const UpdateOrganizationDrawer = () => {
                 onClick={() => {
                   orgSpravochnik.open()
                 }}
-                disabled={isFetching || orgSpravochnik.loading || isUpdating || isAddingChildOrganization}
+                disabled={
+                  isFetching || orgSpravochnik.loading || isUpdating || isAddingChildOrganization
+                }
               >
                 {t('add')}
               </Button>

@@ -1,7 +1,7 @@
-import { parseAsInteger, useQueryState } from 'nuqs'
+import { useLocationState } from '@renderer/common/hooks'
 
 const useParentId = () => {
-  return useQueryState('parent_id', parseAsInteger.withDefault(0))
+  return useLocationState<number | undefined>('parent_id')
 }
 
 export { useParentId }

@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 import { roleColumns, roleQueryKeys, roleService } from '@renderer/app/super-admin/role'
 import { useQuery } from '@tanstack/react-query'
@@ -8,10 +8,9 @@ import { useLayout } from '@/common/features/layout'
 import { useToggle } from '@/common/hooks/use-toggle'
 
 import { AccessDialog } from './dialog'
-import { useRoleId } from './hooks'
 
 const AccessPage = () => {
-  const [roleId, setRoleId] = useRoleId()
+  const [roleId, setRoleId] = useState<number | undefined>()
 
   const toggle = useToggle()
 
@@ -26,7 +25,7 @@ const AccessPage = () => {
 
   useEffect(() => {
     if (!toggle.isOpen) {
-      setRoleId(null)
+      setRoleId(undefined)
     }
   }, [toggle.isOpen, setRoleId])
 

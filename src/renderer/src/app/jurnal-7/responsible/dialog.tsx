@@ -26,13 +26,13 @@ import { createPodrazdelenie7Spravochnik } from '../podrazdelenie/service'
 import { ResponsibleFormSchema, defaultValues, responsibleQueryKeys } from './constants'
 import { responsibleService } from './service'
 
-export type ResponsibleDialogProps = {
+export interface ResponsibleDialogProps {
   open: boolean
   onClose: () => void
-  data: null | Responsible
+  selected: null | Responsible
 }
-const ResponsibleDialog = (props: ResponsibleDialogProps) => {
-  const { open, onClose, data } = props
+export const ResponsibleDialog = (props: ResponsibleDialogProps) => {
+  const { open, onClose, selected } = props
 
   const queryClient = useQueryClient()
   const form = useForm({
@@ -44,7 +44,7 @@ const ResponsibleDialog = (props: ResponsibleDialogProps) => {
     createPodrazdelenie7Spravochnik({
       value: form.watch('spravochnik_podrazdelenie_jur7_id'),
       onChange(value) {
-        form.setValue('spravochnik_podrazdelenie_jur7_id', value)
+        form.setValue('spravochnik_podrazdelenie_jur7_id', value!)
         form.trigger('spravochnik_podrazdelenie_jur7_id')
       }
     })
@@ -83,11 +83,11 @@ const ResponsibleDialog = (props: ResponsibleDialogProps) => {
   })
 
   const onSubmit = form.handleSubmit((payload) => {
-    if (data) {
+    if (selected) {
       update(
         extendObject(
           {
-            id: data.id
+            id: selected.id
           },
           payload
         )
@@ -98,12 +98,12 @@ const ResponsibleDialog = (props: ResponsibleDialogProps) => {
   })
 
   useEffect(() => {
-    if (data) {
-      form.reset(data)
+    if (selected) {
+      form.reset(selected)
       return
     }
     form.reset(defaultValues)
-  }, [form, data])
+  }, [form, selected])
   return (
     <Dialog
       open={open}
@@ -112,7 +112,7 @@ const ResponsibleDialog = (props: ResponsibleDialogProps) => {
       <DialogContent>
         <DialogHeader>
           <DialogTitle className="titlecase">
-            {data
+            {selected
               ? t('update-something', { something: t('responsible') })
               : t('create-something', { something: t('responsible') })}
           </DialogTitle>
@@ -161,5 +161,3 @@ const ResponsibleDialog = (props: ResponsibleDialogProps) => {
     </Dialog>
   )
 }
-
-export default ResponsibleDialog

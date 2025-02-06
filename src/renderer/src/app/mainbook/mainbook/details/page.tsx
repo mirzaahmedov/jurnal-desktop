@@ -1,3 +1,5 @@
+import type { Mainbook } from '@renderer/common/models'
+
 import { useEffect, useMemo, useState } from 'react'
 
 import { MonthPicker } from '@renderer/common/components/month-picker'
@@ -6,7 +8,6 @@ import { useLayout } from '@renderer/common/features/layout'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
 import { toast } from '@renderer/common/hooks'
 import { formatDate } from '@renderer/common/lib/date'
-import { Mainbook } from '@renderer/common/models'
 import { DetailsView } from '@renderer/common/views'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { FileDown, Save } from 'lucide-react'

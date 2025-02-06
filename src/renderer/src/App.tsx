@@ -1,7 +1,6 @@
 import { Suspense, useEffect } from 'react'
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { NuqsAdapter } from 'nuqs/adapters/react-router/v7'
 import { RouterProvider } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify'
 
@@ -17,8 +16,7 @@ const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       refetchOnWindowFocus: false,
-      refetchOnReconnect: false,
-      placeholderData: (prev: unknown) => prev
+      refetchOnReconnect: false
     }
   }
 })
@@ -42,22 +40,13 @@ function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <NuqsAdapter>
-        <Suspense
-          fallback={
-            <div>
-              <h1>inside fallback</h1>
-              <LoadingOverlay />
-            </div>
-          }
-        >
-          <RouterProvider router={router} />
-        </Suspense>
-        <SpravochnikProvider />
-        <Toaster />
-        <ToastContainer position="bottom-right" />
-        <ConfirmationDialog />
-      </NuqsAdapter>
+      <Suspense fallback={<LoadingOverlay />}>
+        <RouterProvider router={router} />
+      </Suspense>
+      <SpravochnikProvider />
+      <Toaster />
+      <ToastContainer position="bottom-right" />
+      <ConfirmationDialog />
       <UpdateManager />
     </QueryClientProvider>
   )

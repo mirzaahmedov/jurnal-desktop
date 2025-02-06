@@ -30,12 +30,12 @@ import { extendObject, roundNumberToTwoDecimalPlaces } from '@/common/lib/utils'
 import { SmetaGrafikFormSchema, defaultValues, smetaGrafikQueryKeys } from './constants'
 import { smetaGrafikService } from './service'
 
-export type SmetaGrafikDialogProps = {
+export interface SmetaGrafikDialogProps {
   open: boolean
   onClose: () => void
   data: null | SmetaGrafik
 }
-const SmetaGrafikDialog = (props: SmetaGrafikDialogProps) => {
+export const SmetaGrafikDialog = (props: SmetaGrafikDialogProps) => {
   const { open, onClose, data } = props
 
   const { main_schet_id, budjet_id } = useRequisitesStore()
@@ -245,5 +245,3 @@ const SmetaGrafikDialog = (props: SmetaGrafikDialogProps) => {
     </Dialog>
   )
 }
-
-export default SmetaGrafikDialog

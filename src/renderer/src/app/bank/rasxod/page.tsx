@@ -7,6 +7,7 @@ import { Button } from '@renderer/common/components/ui/button'
 import { useConfirm } from '@renderer/common/features/confirm'
 import { useLayoutStore } from '@renderer/common/features/layout'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
+import { SearchField, useSearch } from '@renderer/common/features/search'
 import { useDates, usePagination } from '@renderer/common/hooks'
 import { formatNumber } from '@renderer/common/lib/format'
 import { ListView } from '@renderer/common/views'
@@ -21,6 +22,7 @@ import { bankRasxodService } from './service'
 
 const BankRasxodPage = () => {
   const { confirm } = useConfirm()
+  const { search } = useSearch()
   const { t } = useTranslation(['app'])
 
   const dates = useDates()
@@ -36,6 +38,7 @@ const BankRasxodPage = () => {
       queryKeys.getAll,
       {
         main_schet_id,
+        search,
         ...dates,
         ...pagination
       }
@@ -71,6 +74,7 @@ const BankRasxodPage = () => {
           title: t('pages.bank')
         }
       ],
+      content: SearchField,
       onCreate() {
         navigate('create')
       }
