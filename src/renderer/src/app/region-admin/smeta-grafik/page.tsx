@@ -103,7 +103,7 @@ const SmetaGrafikPage = () => {
         />
       </ListView.Footer>
       <SmetaGrafikDialog
-        data={selected}
+        selected={selected}
         open={dialogToggle.isOpen}
         onClose={dialogToggle.close}
       />

@@ -33,10 +33,10 @@ import { smetaGrafikService } from './service'
 export interface SmetaGrafikDialogProps {
   open: boolean
   onClose: () => void
-  data: null | SmetaGrafik
+  selected: null | SmetaGrafik
 }
 export const SmetaGrafikDialog = (props: SmetaGrafikDialogProps) => {
-  const { open, onClose, data } = props
+  const { open, onClose, selected } = props
 
   const { main_schet_id, budjet_id } = useRequisitesStore()
 
@@ -50,7 +50,7 @@ export const SmetaGrafikDialog = (props: SmetaGrafikDialogProps) => {
     createSmetaSpravochnik({
       value: form.watch('smeta_id'),
       onChange: (value) => {
-        form.setValue('smeta_id', value)
+        form.setValue('smeta_id', value!)
       },
       params: {
         main_schet_id,
@@ -111,10 +111,10 @@ export const SmetaGrafikDialog = (props: SmetaGrafikDialogProps) => {
       })
       return
     }
-    if (data) {
+    if (selected) {
       updateSmetaGrafik(
         extendObject(payload, {
-          id: data.id,
+          id: selected.id,
           spravochnik_budjet_name_id: budjet_id
         })
       )
@@ -128,12 +128,12 @@ export const SmetaGrafikDialog = (props: SmetaGrafikDialogProps) => {
   })
 
   useEffect(() => {
-    if (data) {
-      form.reset(data)
+    if (selected) {
+      form.reset(selected)
       return
     }
     form.reset(defaultValues)
-  }, [form, data])
+  }, [form, selected])
 
   const values = form.watch()
   const summa = useMemo(() => {
@@ -149,7 +149,7 @@ export const SmetaGrafikDialog = (props: SmetaGrafikDialogProps) => {
     >
       <DialogContent className="h-full max-h-[700px] flex flex-col">
         <DialogHeader>
-          <DialogTitle>{data ? 'Изменить' : 'Добавить'} график сметы</DialogTitle>
+          <DialogTitle>{selected ? 'Изменить' : 'Добавить'} график сметы</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form
@@ -236,7 +236,7 @@ export const SmetaGrafikDialog = (props: SmetaGrafikDialogProps) => {
                 type="submit"
                 disabled={isCreating || isUpdating}
               >
-                {data ? 'Изменить' : 'Добавить'}
+                {selected ? 'Изменить' : 'Добавить'}
               </Button>
             </DialogFooter>
           </form>
