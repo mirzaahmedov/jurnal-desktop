@@ -84,6 +84,7 @@ export const Spravochnik = ({ close, spravochnik }: SpravochnikProps) => {
     switch (e.key) {
       case 'Escape':
         close(spravochnik.id)
+        spravochnik.onClose?.()
         return
       case 'Enter':
         e.preventDefault()
@@ -92,6 +93,7 @@ export const Spravochnik = ({ close, spravochnik }: SpravochnikProps) => {
           spravochnik.selectId?.(selected.id, selected)
         }
         close(spravochnik.id)
+        spravochnik.onClose?.()
         return
       case 'ArrowDown':
         const currentIndex = data?.data?.findIndex((item) => item.id === selected?.id)

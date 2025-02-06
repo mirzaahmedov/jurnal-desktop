@@ -31,6 +31,10 @@ function App() {
       }
     }
 
+    window.addEventListener('focus', (e) => {
+      console.log('activeElement', document.activeElement, 'target', e.target)
+    })
+
     window.addEventListener('keydown', handleKeyPress)
 
     return () => {
