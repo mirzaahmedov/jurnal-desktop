@@ -50,6 +50,7 @@ export const SmetaGrafikDialog = (props: SmetaGrafikDialogProps) => {
     createSmetaSpravochnik({
       value: form.watch('smeta_id'),
       onChange: (value) => {
+        // Todo: find more elegant way to deal with this
         form.setValue('smeta_id', value!)
       },
       params: {

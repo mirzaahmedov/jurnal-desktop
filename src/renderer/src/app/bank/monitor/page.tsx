@@ -74,7 +74,8 @@ const BankMonitorPage = () => {
                 params={{
                   main_schet_id,
                   from: dates.from,
-                  to: dates.to
+                  to: dates.to,
+                  excel: true
                 }}
               />
               <DownloadFile
@@ -84,7 +85,8 @@ const BankMonitorPage = () => {
                 params={{
                   main_schet_id,
                   from: dates.from,
-                  to: dates.to
+                  to: dates.to,
+                  excel: true
                 }}
               />
             </ButtonGroup>
