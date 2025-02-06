@@ -11,6 +11,7 @@ import {
   createEditorCreateHandler,
   createEditorDeleteHandler
 } from '@renderer/common/components/editable-table/helpers'
+import { DocumentType } from '@renderer/common/features/doc-num'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
@@ -223,6 +224,8 @@ const BankPrixodDetailsPage = () => {
                 <DocumentFields
                   tabIndex={1}
                   form={form}
+                  documentType={DocumentType.BANK_PRIXOD}
+                  autoGenerate={id === 'create'}
                 />
               </div>
 

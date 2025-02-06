@@ -9,6 +9,7 @@ import {
   createEditorCreateHandler,
   createEditorDeleteHandler
 } from '@renderer/common/components/editable-table/helpers'
+import { DocumentType } from '@renderer/common/features/doc-num'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
 import { DetailsView } from '@renderer/common/views'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
@@ -218,6 +219,8 @@ const AdvanceReportDetailsPage = () => {
                 <DocumentFields
                   tabIndex={1}
                   form={form}
+                  documentType={DocumentType.AVANS}
+                  autoGenerate={id === 'create'}
                 />
                 <OperatsiiFields
                   tabIndex={2}

@@ -11,6 +11,7 @@ import {
   createEditorCreateHandler,
   createEditorDeleteHandler
 } from '@renderer/common/components/editable-table/helpers'
+import { DocumentType } from '@renderer/common/features/doc-num'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
@@ -233,6 +234,8 @@ const PokazatUslugiDetailsPage = () => {
               <DocumentFields
                 tabIndex={1}
                 form={form}
+                documentType={DocumentType.SHOW_SERVICE}
+                autoGenerate={id === 'create'}
               />
               <OperatsiiFields
                 tabIndex={2}

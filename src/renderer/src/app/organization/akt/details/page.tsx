@@ -14,6 +14,7 @@ import {
   createEditorDeleteHandler
 } from '@renderer/common/components/editable-table/helpers'
 import { Form } from '@renderer/common/components/ui/form'
+import { DocumentType } from '@renderer/common/features/doc-num'
 import { useLayout, useLayoutStore } from '@renderer/common/features/layout'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
 import { useSpravochnik } from '@renderer/common/features/spravochnik'
@@ -236,6 +237,8 @@ const AktDetailsPage = () => {
                 <DocumentFields
                   tabIndex={1}
                   form={form}
+                  documentType={DocumentType.AKT}
+                  autoGenerate={id === 'create'}
                 />
                 <OperatsiiFields
                   tabIndex={2}

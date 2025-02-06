@@ -57,7 +57,6 @@ const AutoComplete = <T extends Record<string, unknown>>({
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      console.log('running', e.key)
       if (e.key === 'ArrowUp') {
         const index = options.findIndex((elem) => elem.id === selected?.id)
         if (index > 0) {

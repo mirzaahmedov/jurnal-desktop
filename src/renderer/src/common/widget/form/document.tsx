@@ -1,12 +1,15 @@
 import type { FormEditableFieldsComponent } from './types'
-import type { Control } from 'react-hook-form'
+import type { CalendarProps } from '@renderer/common/components/ui/calendar'
+import type { Control, UseFormReturn } from 'react-hook-form'
 
-import { CalendarProps } from '@renderer/common/components/ui/calendar'
-import { validateDate } from '@renderer/common/lib/date'
+import { Button } from '@renderer/common/components/ui/button'
+import { type DocumentType, useGenerateDocumentNumber } from '@renderer/common/features/doc-num'
+import { validateDate as defaultValidateDate } from '@renderer/common/lib/date'
 import { cn } from '@renderer/common/lib/utils'
+import { RefreshCw } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { DatePicker, Fieldset } from '@/common/components'
+import { DatePicker, Fieldset, LoadingSpinner } from '@/common/components'
 import { FormElement } from '@/common/components/form'
 import { FormField } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
@@ -16,11 +19,13 @@ type RequiredDocumentFields = {
   doc_date: string
 }
 
-const DocumentFields: FormEditableFieldsComponent<
+export const DocumentFields: FormEditableFieldsComponent<
   RequiredDocumentFields,
   {
-    validateDocDate?: (value: string) => boolean
+    validateDate?: (value: string) => boolean
     calendarProps?: CalendarProps
+    documentType?: DocumentType
+    autoGenerate?: boolean
   }
 > = ({
   tabIndex,
@@ -28,11 +33,27 @@ const DocumentFields: FormEditableFieldsComponent<
   form,
   disabled,
   dialog = false,
-  validateDocDate,
+  validateDate,
   calendarProps,
+  documentType,
+  autoGenerate = false,
   ...props
 }) => {
   const { t } = useTranslation()
+
+  const { refetch, isFetching } = useGenerateDocumentNumber({
+    documentType: documentType!,
+    onChange: (doc_num) => {
+      // Todo: fix this
+      console.log('doc_num', doc_num)
+      ;(form as unknown as UseFormReturn<RequiredDocumentFields>).setValue(
+        'doc_num',
+        doc_num ? doc_num.toString() : ''
+      )
+    },
+    enabled: autoGenerate && !!documentType
+  })
+
   return (
     <Fieldset
       {...props}
@@ -46,15 +67,28 @@ const DocumentFields: FormEditableFieldsComponent<
           render={({ field }) => (
             <FormElement
               label={t('doc_num')}
-              className="flex-1 max-w-xs"
+              className="flex-1 max-w-sm"
               direction={dialog ? 'column' : 'row'}
             >
-              <Input
-                autoFocus
-                tabIndex={tabIndex}
-                disabled={disabled}
-                {...field}
-              />
+              <div className="flex items-center gap-1">
+                <Input
+                  autoFocus
+                  tabIndex={tabIndex}
+                  disabled={disabled || isFetching}
+                  {...field}
+                />
+                <Button
+                  type="button"
+                  size="icon"
+                  className="size-10 flex-shrink-0"
+                  variant="outline"
+                  onClick={() => {
+                    refetch()
+                  }}
+                >
+                  {isFetching ? <LoadingSpinner className="size-5 border-2" /> : <RefreshCw />}
+                </Button>
+              </div>
             </FormElement>
           )}
         />
@@ -70,7 +104,7 @@ const DocumentFields: FormEditableFieldsComponent<
               <DatePicker
                 tabIndex={tabIndex}
                 disabled={disabled}
-                validate={validateDocDate ?? validateDate}
+                validate={validateDate ?? defaultValidateDate}
                 calendarProps={calendarProps}
                 {...field}
               />
@@ -81,5 +115,3 @@ const DocumentFields: FormEditableFieldsComponent<
     </Fieldset>
   )
 }
-
-export { DocumentFields }

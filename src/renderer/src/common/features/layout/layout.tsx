@@ -13,7 +13,7 @@ import { mainSchetQueryKeys, mainSchetService } from '@/app/region-spravochnik/m
 import { Avatar, AvatarFallback } from '@/common/components/ui/avatar'
 import { Button } from '@/common/components/ui/button'
 import { ConfigureDefaultValuesDialog } from '@/common/features/app-defaults'
-import { useAuthStore } from '@/common/features/auth'
+import { useAuthenticationStore } from '@/common/features/auth'
 import { LocaleSelect } from '@/common/features/locales'
 import { useToggle } from '@/common/hooks/use-toggle'
 
@@ -27,7 +27,7 @@ export const PageLayout = (props: PageLayoutProps) => {
 
   const { title, content: Content, breadcrumbs, onCreate, onBack } = useLayoutStore()
   const { t } = useTranslation()
-  const { user, setUser } = useAuthStore()
+  const { user, setUser } = useAuthenticationStore()
   const { pathname } = useLocation()
 
   const main_schet_id = useRequisitesStore((store) => store.main_schet_id)

@@ -12,6 +12,7 @@ import {
   createEditorCreateHandler,
   createEditorDeleteHandler
 } from '@renderer/common/components/editable-table/helpers'
+import { DocumentType, useGenerateDocumentNumber } from '@renderer/common/features/doc-num'
 import { usePodpis } from '@renderer/common/features/podpis'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
 import { PodpisDoljnost, PodpisTypeDocument } from '@renderer/common/models'
@@ -51,9 +52,6 @@ const shartnomaRegExp = /№ .*?-сонли \d{2}.\d{2}.\d{4} йил кунги 
 const smetaRegExp = / Ст: \d*$\s?/
 
 const BankRasxodDetailtsPage = () => {
-  const { toast } = useToast()
-  const { t } = useTranslation(['app'])
-
   const params = useParams()
   const navigate = useNavigate()
   const queryClient = useQueryClient()
@@ -65,6 +63,9 @@ const BankRasxodDetailtsPage = () => {
   const setLayout = useLayoutStore((store) => store.setLayout)
 
   const original = location.state?.original
+
+  const { toast } = useToast()
+  const { t } = useTranslation(['app'])
 
   const form = useForm<RasxodPayloadType>({
     resolver: zodResolver(RasxodPayloadSchema),
@@ -312,6 +313,8 @@ const BankRasxodDetailtsPage = () => {
                 <DocumentFields
                   tabIndex={1}
                   form={form}
+                  autoGenerate={params.id === 'create'}
+                  documentType={DocumentType.BANK_RASXOD}
                 />
               </div>
 

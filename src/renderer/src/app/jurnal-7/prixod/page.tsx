@@ -31,12 +31,12 @@ import { columns, queryKeys } from './config'
 import { usePrixodDelete, usePrixodList } from './service'
 
 const MO7PrixodPage = () => {
-  const [file, setFile] = useState<File>()
-
   const pagination = usePagination()
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const dialogToggle = useToggle()
+
+  const [file, setFile] = useState<File>()
 
   const { confirm } = useConfirm()
   const { t } = useTranslation(['app'])

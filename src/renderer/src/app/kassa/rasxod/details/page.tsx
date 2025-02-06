@@ -10,6 +10,7 @@ import {
   createEditorCreateHandler,
   createEditorDeleteHandler
 } from '@renderer/common/components/editable-table/helpers'
+import { DocumentType } from '@renderer/common/features/doc-num'
 import { GenerateFile } from '@renderer/common/features/file'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
@@ -212,6 +213,8 @@ const KassaRasxodDetailtsPage = () => {
                 <DocumentFields
                   tabIndex={1}
                   form={form}
+                  documentType={DocumentType.KASSA_RASXOD}
+                  autoGenerate={id === 'create'}
                 />
               </div>
 

@@ -48,7 +48,7 @@ import {
   Weight
 } from 'lucide-react'
 
-import { useAuthStore } from '@/common/features/auth'
+import { useAuthenticationStore } from '@/common/features/auth'
 import { omitEmptyArrayElements } from '@/common/lib/validation'
 
 export type NavElement = {
@@ -61,7 +61,7 @@ export type NavElement = {
 }
 
 export const getNavElements = (t: TFunction): NavElement[] => {
-  const user = useAuthStore.getState().user
+  const user = useAuthenticationStore.getState().user
   const access = user?.access_object ?? ({} as Access)
 
   const is_super_admin = user?.role_name === adminRoles.super_admin
@@ -90,7 +90,7 @@ export const getNavElements = (t: TFunction): NavElement[] => {
 
   return omitEmptyArrayElements<NavElement>([
     {
-      path: '/',
+      path: is_super_admin ? '/admin/dashboard' : '/region/dashboard',
       title: t('pages.main'),
       icon: LayoutDashboard
     },

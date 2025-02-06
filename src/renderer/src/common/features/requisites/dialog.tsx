@@ -15,7 +15,7 @@ import {
   DialogTitle
 } from '@/common/components/ui/dialog'
 import { Form, FormField, FormItem, FormLabel, FormMessage } from '@/common/components/ui/form'
-import { useAuthStore } from '@/common/features/auth'
+import { useAuthenticationStore } from '@/common/features/auth'
 
 import { queryKeys } from './constants'
 import { getMainSchetsQuery } from './service'
@@ -29,7 +29,7 @@ export const RequisitesDialog = (props: RequisitesDialogProps) => {
   const { open, onOpenChange } = props
 
   const { t } = useTranslation()
-  const { user } = useAuthStore()
+  const { user } = useAuthenticationStore()
   const { main_schet_id, budjet_id, setRequisites } = useRequisitesStore()
 
   const form = useForm({ defaultValues })

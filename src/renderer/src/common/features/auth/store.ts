@@ -3,15 +3,15 @@ import type { Access, User } from '@/common/models'
 import { create } from 'zustand'
 import { createJSONStorage, persist } from 'zustand/middleware'
 
-export type AuthStoreType = {
+export type AuthenticationStore = {
   isAuthenticated: boolean
   user?: User & { access_object: Access }
   token?: string
-  setUser(payload: Pick<AuthStoreType, 'user' | 'token'> | null): void
+  setUser(payload: Pick<AuthenticationStore, 'user' | 'token'> | null): void
 }
 
-export const useAuthStore = create<AuthStoreType>()(
-  persist<AuthStoreType>(
+export const useAuthenticationStore = create<AuthenticationStore>()(
+  persist<AuthenticationStore>(
     (set) => ({
       isAuthenticated: false,
       setUser: (payload) => {

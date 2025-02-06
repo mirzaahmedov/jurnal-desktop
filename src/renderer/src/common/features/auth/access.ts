@@ -1,9 +1,9 @@
 import { Access } from '@/common/models'
 
-import { useAuthStore } from './store'
+import { useAuthenticationStore } from './store'
 
 export const useAccess = (key: keyof Access) => {
-  const { user } = useAuthStore()
+  const { user } = useAuthenticationStore()
   const access = user?.access_object[key] ?? false
 
   return {

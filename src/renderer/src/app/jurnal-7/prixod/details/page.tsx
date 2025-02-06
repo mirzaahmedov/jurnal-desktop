@@ -4,11 +4,12 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { createShartnomaSpravochnik } from '@renderer/app/organization/shartnoma'
 import { createOrganizationSpravochnik } from '@renderer/app/region-spravochnik/organization'
 import { Form } from '@renderer/common/components/ui/form'
+import { DocumentType } from '@renderer/common/features/doc-num'
 import { useLayoutStore } from '@renderer/common/features/layout'
 import { useSpravochnik } from '@renderer/common/features/spravochnik'
 import { parseDate, withinMonth } from '@renderer/common/lib/date'
 import { focusInvalidInput } from '@renderer/common/lib/errors'
-import { Operatsii, TypeSchetOperatsii } from '@renderer/common/models'
+import { type Operatsii, TypeSchetOperatsii } from '@renderer/common/models'
 import { DetailsView } from '@renderer/common/views'
 import {
   DocumentFields,
@@ -219,13 +220,15 @@ const MO7PrixodDetailsPage = () => {
               <DocumentFields
                 tabIndex={1}
                 form={form}
-                validateDocDate={(date) => {
+                validateDate={(date) => {
                   return withinMonth(new Date(date), parseDate(from))
                 }}
                 calendarProps={{
                   fromMonth: parseDate(from),
                   toMonth: parseDate(from)
                 }}
+                documentType={DocumentType.JUR7_PRIXOD}
+                autoGenerate={id === 'create'}
               />
               <div className="flex items-center gap-5 flex-wrap pb-7 px-5">
                 <JONumFields

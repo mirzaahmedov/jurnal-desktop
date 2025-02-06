@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
+import { DocumentType } from '@renderer/common/features/doc-num'
 import { parseDate, withinMonth } from '@renderer/common/lib/date'
 import { focusInvalidInput } from '@renderer/common/lib/errors'
 import { DetailsView } from '@renderer/common/views'
@@ -175,13 +176,15 @@ const MO7RasxodDetailsPage = () => {
             <div className="grid grid-cols-2 items-end">
               <DocumentFields
                 form={form}
-                validateDocDate={(date) => {
+                validateDate={(date) => {
                   return withinMonth(new Date(date), parseDate(from))
                 }}
                 calendarProps={{
                   fromMonth: parseDate(from),
                   toMonth: parseDate(from)
                 }}
+                documentType={DocumentType.JUR7_PRIXOD}
+                autoGenerate={id === 'create'}
               />
               <div className="grid grid-cols-2 pb-7">
                 <DoverennostFields form={form} />

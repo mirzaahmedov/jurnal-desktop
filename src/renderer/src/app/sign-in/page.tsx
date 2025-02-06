@@ -12,7 +12,7 @@ import {
   FormMessage
 } from '@renderer/common/components/ui/form'
 import { Input } from '@renderer/common/components/ui/input'
-import { useAuthStore } from '@renderer/common/features/auth'
+import { useAuthenticationStore } from '@renderer/common/features/auth'
 import { LocaleSelect } from '@renderer/common/features/locales'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
 import logoImage from '@resources/logo.svg'
@@ -35,7 +35,7 @@ const SigninPage = () => {
 
   const { user_id, setRequisites } = useRequisitesStore()
   const { t } = useTranslation(['sign-in', 'user', 'app'])
-  const { setUser } = useAuthStore()
+  const { setUser } = useAuthenticationStore()
 
   const form = useForm({
     resolver: zodResolver(SigninFormSchema),

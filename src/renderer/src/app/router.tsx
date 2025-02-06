@@ -1,6 +1,6 @@
 import type { RouteObject } from 'react-router-dom'
 
-import { useAuthStore } from '@renderer/common/features/auth'
+import { useAuthenticationStore } from '@renderer/common/features/auth'
 import { RequisitesGuard } from '@renderer/common/features/requisites'
 import { Navigate, createHashRouter } from 'react-router-dom'
 
@@ -83,7 +83,7 @@ import UnitPage from './super-admin/unit/page'
 import UserPage from './super-admin/user/page'
 
 const FallbackRoute = () => {
-  const { user } = useAuthStore()
+  const { user } = useAuthenticationStore()
   return user?.role_name === 'super-admin' ? (
     <Navigate to="/admin/dashboard" />
   ) : (
