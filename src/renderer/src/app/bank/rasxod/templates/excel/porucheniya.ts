@@ -1,3 +1,4 @@
+import { formatNumber } from '@renderer/common/lib/format'
 import { Workbook, type Worksheet } from 'exceljs'
 
 import { array, assign, drawBorder, textbox } from './utils'
@@ -55,7 +56,7 @@ export const generatePorucheniya = async (params: GeneratePorucheniyaParams) => 
         6: 'Mablag`larni to`lovchining banki kodi',
         8: params.debtor_mfo
       }),
-      13: ['Summa', params.summa],
+      13: ['Summa', formatNumber(params.summa)],
       15: array({
         1: 'Mablag`larni oluvchining nomi',
         2: params.creditor_name
@@ -295,6 +296,7 @@ const renderSingleTextbox = (sheet: Worksheet, rowIndex: number, bold = false) =
 }
 
 const renderSignatures = (sheet: Worksheet, rowIndex: number) => {
+  sheet.getRow(rowIndex).height = 22
   sheet.getRow(rowIndex).eachCell((cell, i) => {
     if (i === 3 || i === 5 || i === 7) {
       textbox(cell, true)
