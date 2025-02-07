@@ -2,7 +2,7 @@ import type { ColumnDef } from '@/common/components'
 import type { Akt } from '@/common/models'
 
 import { Copyable } from '@/common/components'
-import { TooltipCellRenderer } from '@/common/components/table/renderers'
+import { TooltipCell } from '@/common/components/table/renderers'
 import { formatLocaleDate } from '@/common/lib/format'
 
 export const columns: ColumnDef<Akt>[] = [
@@ -17,7 +17,7 @@ export const columns: ColumnDef<Akt>[] = [
     key: 'id_spravochnik_organization',
     header: 'organization',
     renderCell: (row) => (
-      <TooltipCellRenderer
+      <TooltipCell
         data={row}
         title={row.spravochnik_organization_name}
         elements={{

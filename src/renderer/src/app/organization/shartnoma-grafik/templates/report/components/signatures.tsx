@@ -4,8 +4,10 @@ import { Blank, Field, Flex, Label } from '@/common/components/pdf'
 
 interface SignatureProps {
   year: number
+  rukovoditel: string
+  glav_buxgalter: string
 }
-const Signatures = ({ year }: SignatureProps) => {
+const Signatures = ({ year, rukovoditel, glav_buxgalter }: SignatureProps) => {
   return (
     <Flex
       direction="column"
@@ -15,12 +17,12 @@ const Signatures = ({ year }: SignatureProps) => {
         <Text>М.У.</Text>
         <Flex>
           <Field>
-            <Label>Бошлиқ</Label>
-            <Blank />
+            <Label>Рахбар</Label>
+            <Text style={{ fontWeight: 'bold' }}>{rukovoditel}</Text>
           </Field>
           <Field>
-            <Label>МТХ бошлиғи</Label>
-            <Blank />
+            <Label>Бош бухгалтер</Label>
+            <Text style={{ fontWeight: 'bold' }}>{glav_buxgalter}</Text>
           </Field>
         </Flex>
       </Flex>

@@ -1,7 +1,7 @@
 import type { ColumnDef } from '@/common/components'
 import type { PokazatUslugi } from '@/common/models'
 
-import { TooltipCellRenderer } from '@/common/components/table/renderers'
+import { TooltipCell } from '@/common/components/table/renderers'
 import { formatLocaleDate } from '@/common/lib/format'
 
 export const pokazatUslugiColumns: ColumnDef<PokazatUslugi>[] = [
@@ -16,7 +16,7 @@ export const pokazatUslugiColumns: ColumnDef<PokazatUslugi>[] = [
     key: 'id_spravochnik_organization',
     header: 'organization',
     renderCell: (row) => (
-      <TooltipCellRenderer
+      <TooltipCell
         data={row}
         title={row.spravochnik_organization_name}
         elements={{

@@ -10,27 +10,25 @@ import {
 } from '@/common/components/ui/tooltip'
 import { cn } from '@/common/lib/utils'
 
-export interface TooltipCellRenderProps<T>
-  extends TooltipContentProps,
-    HTMLAttributes<HTMLDivElement> {
+export interface TooltipCellProps<T> extends TooltipContentProps, HTMLAttributes<HTMLDivElement> {
   data: T
   title: string
   description?: keyof T
   elements: Partial<Record<keyof T, ReactNode>>
 }
-export const TooltipCellRenderer = <T,>({
+export const TooltipCell = <T,>({
   data,
   title,
   description,
   elements,
   className,
   ...props
-}: TooltipCellRenderProps<T>) => {
+}: TooltipCellProps<T>) => {
   return (
     <TooltipProvider>
       <Tooltip delayDuration={100}>
         <TooltipTrigger asChild>
-          <div className="-mt-1 -mb-2">
+          <div>
             <h6 className="text-sm font-bold leading-none">{title}</h6>
             <p className="mt-0.5 text-slate-400 text-xs font-medium leading-none">
               {description && data[description] ? (

@@ -2,9 +2,9 @@ import type { ColumnDef } from '@/common/components'
 import type { Podpis } from '@/common/models'
 
 import { Badge } from '@renderer/common/components/ui/badge'
+import { useTranslation } from 'react-i18next'
 
-import { podpisDoljnostOptions } from './constants'
-import { podpisTypeDocumentOptions } from './constants'
+import { getPodpisDoljnostOptions, getPodpisTypeDocumentOptions } from './config'
 
 const podpisColumns: ColumnDef<Podpis>[] = [
   {
@@ -14,21 +14,8 @@ const podpisColumns: ColumnDef<Podpis>[] = [
   {
     header: 'doljnost',
     key: 'doljnost_name',
-    renderCell(row, col) {
-      const doljnost = podpisDoljnostOptions.find(
-        (item) => item.key === row[col.key as keyof Podpis]
-      )
-      if (doljnost) {
-        return (
-          <Badge
-            variant="secondary"
-            className="bg-brand/10 text-brand hover:bg-brand/10"
-          >
-            {doljnost.name}
-          </Badge>
-        )
-      }
-      return row[col.key as keyof Podpis]
+    renderCell(row) {
+      return <DoljnostCell value={row.doljnost_name} />
     }
   },
   {
@@ -36,24 +23,44 @@ const podpisColumns: ColumnDef<Podpis>[] = [
     key: 'fio_name'
   },
   {
-    key: 'type-document',
-    renderCell(row, col) {
-      const typeDocument = podpisTypeDocumentOptions.find(
-        (item) => item.key === row[col.key as keyof Podpis]
-      )
-      if (typeDocument) {
-        return (
-          <Badge
-            variant="secondary"
-            className="bg-green-100 text-green-500 hover:bg-green-100"
-          >
-            {typeDocument.name}
-          </Badge>
-        )
-      }
-      return row[col.key as keyof Podpis]
+    key: 'type_document',
+    header: 'type-document',
+    renderCell(row) {
+      return <TypeDocumentCell value={row.type_document} />
     }
   }
 ]
+
+const DoljnostCell = ({ value }: { value: string }) => {
+  const { t } = useTranslation()
+  const doljnost = getPodpisDoljnostOptions(t).find((item) => item.key === value)
+  if (doljnost) {
+    return (
+      <Badge
+        variant="secondary"
+        className="bg-green-100 text-green-500 hover:bg-green-100"
+      >
+        {doljnost.name}
+      </Badge>
+    )
+  }
+  return value
+}
+
+const TypeDocumentCell = ({ value }: { value: string }) => {
+  const { t } = useTranslation()
+  const typeDocument = getPodpisTypeDocumentOptions(t).find((item) => item.key === value)
+  if (typeDocument) {
+    return (
+      <Badge
+        variant="secondary"
+        className="bg-green-100 text-green-500 hover:bg-green-100"
+      >
+        {typeDocument.name}
+      </Badge>
+    )
+  }
+  return value
+}
 
 export { podpisColumns }

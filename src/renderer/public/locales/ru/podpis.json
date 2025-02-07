@@ -1,0 +1,13 @@
+{
+  "doljnost": {
+    "rukovoditel": "Руководитель",
+    "glav_buxgalter": "Главный бухгалтер",
+    "nachalnik_otdela": "Начальник отдела",
+    "buxgalter": "Бухгалтер",
+    "kassir": "Кассир"
+  },
+  "documents": {
+    "bank_rasxod_porucheniya": "Банк расход поручения",
+    "shartnoma_grafik_oplati": "Договор график оплаты"
+  }
+}

@@ -57,7 +57,7 @@ const BankRasxodDetailtsPage = () => {
   const queryClient = useQueryClient()
 
   const location = useLocation() as Location<{ original?: BankRasxod }>
-  const podpis = usePodpis(PodpisTypeDocument.BANK, params.id === 'create')
+  const podpis = usePodpis(PodpisTypeDocument.BANK_RASXOD_PORUCHENIYA, params.id === 'create')
 
   const main_schet_id = useRequisitesStore((state) => state.main_schet_id)
   const setLayout = useLayoutStore((store) => store.setLayout)
@@ -67,7 +67,7 @@ const BankRasxodDetailtsPage = () => {
   const { toast } = useToast()
   const { t } = useTranslation(['app'])
 
-  const form = useForm<RasxodPayloadType>({
+  const form = useForm({
     resolver: zodResolver(RasxodPayloadSchema),
     defaultValues: {
       ...defaultValues,
@@ -272,9 +272,9 @@ const BankRasxodDetailtsPage = () => {
   }, [shartnomaSpravochnik.selected])
 
   useEffect(() => {
-    const rukovoditel = podpis.find((item) => item.doljnost_name === PodpisDoljnost.BOLIM_BOSHLIGI)
+    const rukovoditel = podpis.find((item) => item.doljnost_name === PodpisDoljnost.RUKOVODITEL)
     const glav_buxgalter = podpis.find(
-      (item) => item.doljnost_name === PodpisDoljnost.BOSH_BUXGALTER
+      (item) => item.doljnost_name === PodpisDoljnost.GLAV_BUXGALTER
     )
 
     if (rukovoditel && !form.getValues('rukovoditel')) {

@@ -1,10 +1,10 @@
 import type { BankRasxod } from '@renderer/common/models'
 
 import { type ColumnDef } from '@renderer/common/components'
-import { TooltipCellRenderer } from '@renderer/common/components/table/renderers'
+import { TooltipCell } from '@renderer/common/components/table/renderers'
 import { ProvodkaCell } from '@renderer/common/components/table/renderers/provodka'
 import { Switch } from '@renderer/common/components/ui/switch'
-import { formatLocaleDate, formatNumber } from '@renderer/common/lib/format'
+import { formatLocaleDate } from '@renderer/common/lib/format'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'react-toastify'
 
@@ -28,7 +28,7 @@ export const columns: ColumnDef<BankRasxod>[] = [
     header: 'about-counteragent',
     renderCell(row) {
       return (
-        <TooltipCellRenderer
+        <TooltipCell
           data={row}
           description="spravochnik_organization_inn"
           title={row.spravochnik_organization_name ?? '-'}
@@ -51,7 +51,7 @@ export const columns: ColumnDef<BankRasxod>[] = [
       if (!row.tulangan_tulanmagan) {
         return (
           <div className="font-bold leading-tight">
-            <div className="align-middle bg-yellow-200 px-0.5">
+            <div className="inline-block align-middle bg-yellow-200 px-0.5">
               <ProvodkaCell
                 summa={row.tulanmagan_summa}
                 schet={row.provodki_array?.[0]?.provodki_schet}
@@ -77,7 +77,7 @@ export const columns: ColumnDef<BankRasxod>[] = [
     key: 'tulangan_tulanmagan',
     header: 'payed',
     renderCell(row) {
-      return <BankRasxodStatus row={row} />
+      return <StatusCell row={row} />
     }
   },
   {
@@ -86,7 +86,7 @@ export const columns: ColumnDef<BankRasxod>[] = [
   }
 ]
 
-const BankRasxodStatus = ({ row }: { row: BankRasxod }) => {
+const StatusCell = ({ row }: { row: BankRasxod }) => {
   const queryClient = useQueryClient()
   const { mutate: updateStatus, isPending } = useMutation({
     mutationFn: bankRasxodPaymentService.update,

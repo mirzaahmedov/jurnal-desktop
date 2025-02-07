@@ -3,7 +3,7 @@ import type { BankMonitoringType } from '@/common/models'
 
 import { ProvodkaCell } from '@renderer/common/components/table/renderers/provodka'
 
-import { TooltipCellRenderer } from '@/common/components/table/renderers'
+import { TooltipCell } from '@/common/components/table/renderers'
 import { formatLocaleDate } from '@/common/lib/format'
 
 export const columns: ColumnDef<BankMonitoringType>[] = [
@@ -22,7 +22,7 @@ export const columns: ColumnDef<BankMonitoringType>[] = [
     className: 'w-96',
     renderCell(row) {
       return (
-        <TooltipCellRenderer
+        <TooltipCell
           data={row}
           description="spravochnik_organization_inn"
           title={row.spravochnik_organization_name ?? '-'}

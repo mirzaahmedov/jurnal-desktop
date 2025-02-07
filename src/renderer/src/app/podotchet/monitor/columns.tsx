@@ -6,7 +6,7 @@ import { ProvodkaCell } from '@renderer/common/components/table/renderers/provod
 import { Badge } from '@renderer/common/components/ui/badge'
 import { useTranslation } from 'react-i18next'
 
-import { TooltipCellRenderer } from '@/common/components/table/renderers'
+import { TooltipCell } from '@/common/components/table/renderers'
 import { formatLocaleDate, formatNumber } from '@/common/lib/format'
 
 export const podotchetMonitoringColumns: ColumnDef<PodotchetMonitor>[] = [
@@ -28,7 +28,7 @@ export const podotchetMonitoringColumns: ColumnDef<PodotchetMonitor>[] = [
       return !row.prixod_sum ? (
         '-'
       ) : (
-        <TooltipCellRenderer
+        <TooltipCell
           data={row}
           title={formatNumber(row.prixod_sum)}
           elements={{

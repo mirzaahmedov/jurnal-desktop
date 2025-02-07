@@ -1,0 +1,13 @@
+{
+  "doljnost": {
+    "rukovoditel": "Rahbar",
+    "glav_buxgalter": "Bosh hisobchi",
+    "nachalnik_otdela": "Bo'lim boshlig'i",
+    "buxgalter": "Hisobchi",
+    "kassir": "Kassir"
+  },
+  "documents": {
+    "bank_rasxod_porucheniya": "Bank rasxod porucheniya",
+    "shartnoma_grafik_oplati": "Shartnoma to'lov grafigi"
+  }
+}

@@ -1,7 +1,7 @@
 import { formatNumber } from '@renderer/common/lib/format'
 import { useTranslation } from 'react-i18next'
 
-import { TooltipCellRenderer } from './tooltip'
+import { TooltipCell } from './tooltip'
 
 export interface ProvodkaCellProps {
   summa: number
@@ -11,7 +11,7 @@ export interface ProvodkaCellProps {
 export const ProvodkaCell = ({ summa, schet, sub_schet }: ProvodkaCellProps) => {
   const { t } = useTranslation()
   return (
-    <TooltipCellRenderer<Omit<ProvodkaCellProps, 'summa'>>
+    <TooltipCell<Omit<ProvodkaCellProps, 'summa'>>
       data={{
         schet,
         sub_schet

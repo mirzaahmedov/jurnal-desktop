@@ -24,10 +24,10 @@ import { toast } from '@/common/hooks/use-toast'
 import {
   PodpisPayloadSchema,
   defaultValues,
-  podpisDoljnostOptions,
-  podpisQueryKeys,
-  podpisTypeDocumentOptions
-} from './constants'
+  getPodpisDoljnostOptions,
+  getPodpisTypeDocumentOptions,
+  podpisQueryKeys
+} from './config'
 import { podpisService } from './service'
 
 type PodpisDialogProps = {
@@ -36,7 +36,7 @@ type PodpisDialogProps = {
   onOpenChange: (open: boolean) => void
 }
 const PodpisDialog = ({ data, open, onOpenChange }: PodpisDialogProps) => {
-  const { t } = useTranslation(['app'])
+  const { t } = useTranslation(['app', 'podpis'])
 
   const queryClient = useQueryClient()
   const form = useForm({
@@ -100,6 +100,8 @@ const PodpisDialog = ({ data, open, onOpenChange }: PodpisDialogProps) => {
 
   useEffect(() => {
     if (open) {
+      // Todo: fix this
+      // @ts-ignore will fix this later
       form.reset(data ?? defaultValues)
     }
   }, [form, open, data])
@@ -128,10 +130,10 @@ const PodpisDialog = ({ data, open, onOpenChange }: PodpisDialogProps) => {
                 >
                   <SelectField
                     {...field}
-                    options={podpisDoljnostOptions}
+                    options={getPodpisDoljnostOptions(t)}
                     getOptionLabel={(option) => option.name}
                     getOptionValue={(option) => option.key}
-                    placeholder="Выберите должность"
+                    placeholder={t('choose', { what: t('doljnost') })}
                     onValueChange={(value) => field.onChange(value)}
                     value={field.value}
                   />
@@ -160,10 +162,10 @@ const PodpisDialog = ({ data, open, onOpenChange }: PodpisDialogProps) => {
                 >
                   <SelectField
                     {...field}
-                    options={podpisTypeDocumentOptions}
+                    options={getPodpisTypeDocumentOptions(t)}
                     getOptionLabel={(option) => option.name}
                     getOptionValue={(option) => option.key}
-                    placeholder="Выберите тип документа"
+                    placeholder={t('choose', { what: t('type_document') })}
                     onValueChange={(value) => field.onChange(value)}
                     value={field.value}
                   />

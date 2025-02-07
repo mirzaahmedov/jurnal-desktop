@@ -1,7 +1,7 @@
 import type { ColumnDef } from '@/common/components'
 import type { MainSchet } from '@/common/models'
 
-import { TooltipCellRenderer } from '@/common/components/table/renderers/tooltip'
+import { TooltipCell } from '@/common/components/table/renderers/tooltip'
 
 export const mainSchetColumns: ColumnDef<MainSchet>[] = [
   {
@@ -17,7 +17,7 @@ export const mainSchetColumns: ColumnDef<MainSchet>[] = [
     header: 'organization',
     renderCell(row) {
       return (
-        <TooltipCellRenderer
+        <TooltipCell
           data={row}
           title={row.tashkilot_nomi}
           description="tashkilot_inn"

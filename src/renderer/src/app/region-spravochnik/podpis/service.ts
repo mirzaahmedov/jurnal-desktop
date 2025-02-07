@@ -1,4 +1,4 @@
-import type { PodpisPayloadType } from './constants'
+import type { PodpisPayloadType } from './config'
 import type { Podpis } from '@/common/models'
 
 import { APIEndpoints, CRUDService } from '@/common/features/crud'

@@ -3,7 +3,7 @@ import type { Avans } from '@/common/models'
 
 import { formatLocaleDate } from '@renderer/common/lib/format'
 
-import { TooltipCellRenderer } from '@/common/components/table/renderers/tooltip'
+import { TooltipCell } from '@/common/components/table/renderers/tooltip'
 
 export const avansColumns: ColumnDef<Avans>[] = [
   {
@@ -17,7 +17,7 @@ export const avansColumns: ColumnDef<Avans>[] = [
     key: 'spravochnik_podotchet_litso_id',
     header: 'podotchet-litso',
     renderCell: (row) => (
-      <TooltipCellRenderer
+      <TooltipCell
         data={row}
         title={row.spravochnik_podotchet_litso_name}
         description="spravochnik_podotchet_litso_rayon"

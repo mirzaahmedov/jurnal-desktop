@@ -1,4 +1,4 @@
-import { podpisQueryKeys } from '@renderer/app/region-spravochnik/podpis/constants'
+import { podpisQueryKeys } from '@renderer/app/region-spravochnik/podpis/config'
 import { podpisService } from '@renderer/app/region-spravochnik/podpis/service'
 import { useQuery } from '@tanstack/react-query'
 

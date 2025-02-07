@@ -13,7 +13,7 @@ import { useLayoutStore } from '@/common/features/layout'
 import { useToggle } from '@/common/hooks/use-toggle'
 
 import { podpisColumns } from './columns'
-import { podpisQueryKeys } from './constants'
+import { podpisQueryKeys } from './config'
 import { PodpisDialog } from './dialog'
 import { podpisService } from './service'
 
@@ -29,7 +29,12 @@ const PodpisPage = () => {
   const { t } = useTranslation(['app'])
 
   const { data: podpisList, isFetching } = useQuery({
-    queryKey: [podpisQueryKeys.getAll, pagination],
+    queryKey: [
+      podpisQueryKeys.getAll,
+      {
+        ...pagination
+      }
+    ],
     queryFn: podpisService.getAll
   })
   const { mutate: deletePodpis, isPending } = useMutation({

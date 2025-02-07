@@ -1,11 +1,18 @@
 import type { ShartnomaGrafikForm } from '../../service'
-import type { MainSchet, Organization } from '@renderer/common/models'
 
 import { useEffect, useMemo } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { GenerateFile } from '@renderer/common/features/file'
+import { usePodpis } from '@renderer/common/features/podpis'
+import {
+  type MainSchet,
+  type Organization,
+  PodpisDoljnost,
+  PodpisTypeDocument
+} from '@renderer/common/models'
 import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 
 import { DatePicker, NumericInput } from '@/common/components'
 import { FormElement } from '@/common/components/form'
@@ -42,11 +49,15 @@ const GenerateReportDialog = ({
   open,
   onChange
 }: GenerateReportDialogProps) => {
+  const { t } = useTranslation(['podpis'])
+
   const form = useForm({
     defaultValues,
     resolver: zodResolver(ReportDialogPayloadSchema),
     reValidateMode: 'onChange'
   })
+
+  const podpis = usePodpis(PodpisTypeDocument.SHARTNOMA_GRAFIK_OPLATI, true)
 
   const summaTotal = useMemo(() => {
     return roundNumberToTwoDecimalPlaces(
@@ -81,6 +92,20 @@ const GenerateReportDialog = ({
       })
     )
   }, [form, main_schet, organization, doc_date, doc_num, summaTotal])
+
+  useEffect(() => {
+    const rukovoditel = podpis.find((item) => item.doljnost_name === PodpisDoljnost.RUKOVODITEL)
+    const glav_buxgalter = podpis.find(
+      (item) => item.doljnost_name === PodpisDoljnost.GLAV_BUXGALTER
+    )
+
+    if (rukovoditel && !form.getValues('rukovoditel')) {
+      form.setValue('rukovoditel', rukovoditel.fio_name)
+    }
+    if (glav_buxgalter && !form.getValues('glav_buxgalter')) {
+      form.setValue('glav_buxgalter', glav_buxgalter.fio_name)
+    }
+  }, [form, podpis])
 
   return (
     <Dialog
@@ -236,6 +261,32 @@ const GenerateReportDialog = ({
                   />
                 )}
               />
+              <div className="pt-2.5 grid grid-cols-2 gap-5">
+                <FormField
+                  control={form.control}
+                  name="rukovoditel"
+                  render={({ field }) => (
+                    <FormElement
+                      direction="column"
+                      label={t('podpis:doljnost.rukovoditel')}
+                    >
+                      <Input {...field} />
+                    </FormElement>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="glav_buxgalter"
+                  render={({ field }) => (
+                    <FormElement
+                      direction="column"
+                      label={t('podpis:doljnost.glav_buxgalter')}
+                    >
+                      <Input {...field} />
+                    </FormElement>
+                  )}
+                />
+              </div>
             </div>
           </form>
         </Form>
@@ -257,6 +308,8 @@ const GenerateReportDialog = ({
             schedule={schedule}
             paymentDetails={form.watch('payment_details')}
             contractDetails={form.watch('contract_details')}
+            rukovoditel={form.watch('rukovoditel')}
+            glav_buxgalter={form.watch('glav_buxgalter')}
           />
         </GenerateFile>
       </DialogContent>
