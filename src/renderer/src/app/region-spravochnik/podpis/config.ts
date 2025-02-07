@@ -14,6 +14,10 @@ export const getPodpisDoljnostOptions = (t: TFunction) => {
       name: t('podpis:doljnost.glav_buxgalter')
     },
     {
+      key: PodpisDoljnost.GLAV_MIB,
+      name: t('podpis:doljnost.glav_mib')
+    },
+    {
       key: PodpisDoljnost.NACHALNIK_OTDELA,
       name: t('podpis:doljnost.nachalnik_otdela')
     },
@@ -48,6 +52,7 @@ const PodpisPayloadSchema = z.object({
       PodpisDoljnost.RUKOVODITEL,
       PodpisDoljnost.NACHALNIK_OTDELA,
       PodpisDoljnost.GLAV_BUXGALTER,
+      PodpisDoljnost.GLAV_MIB,
       PodpisDoljnost.BUXGALTER,
       PodpisDoljnost.KASSIR
     ],

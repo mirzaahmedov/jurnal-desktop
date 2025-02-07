@@ -95,15 +95,13 @@ const GenerateReportDialog = ({
 
   useEffect(() => {
     const rukovoditel = podpis.find((item) => item.doljnost_name === PodpisDoljnost.RUKOVODITEL)
-    const glav_buxgalter = podpis.find(
-      (item) => item.doljnost_name === PodpisDoljnost.GLAV_BUXGALTER
-    )
+    const glav_mib = podpis.find((item) => item.doljnost_name === PodpisDoljnost.GLAV_MIB)
 
     if (rukovoditel && !form.getValues('rukovoditel')) {
       form.setValue('rukovoditel', rukovoditel.fio_name)
     }
-    if (glav_buxgalter && !form.getValues('glav_buxgalter')) {
-      form.setValue('glav_buxgalter', glav_buxgalter.fio_name)
+    if (glav_mib && !form.getValues('glav_mib')) {
+      form.setValue('glav_mib', glav_mib.fio_name)
     }
   }, [form, podpis])
 
@@ -276,11 +274,11 @@ const GenerateReportDialog = ({
                 />
                 <FormField
                   control={form.control}
-                  name="glav_buxgalter"
+                  name="glav_mib"
                   render={({ field }) => (
                     <FormElement
                       direction="column"
-                      label={t('podpis:doljnost.glav_buxgalter')}
+                      label={t('podpis:doljnost.glav_mib')}
                     >
                       <Input {...field} />
                     </FormElement>
@@ -309,7 +307,7 @@ const GenerateReportDialog = ({
             paymentDetails={form.watch('payment_details')}
             contractDetails={form.watch('contract_details')}
             rukovoditel={form.watch('rukovoditel')}
-            glav_buxgalter={form.watch('glav_buxgalter')}
+            glav_mib={form.watch('glav_mib')}
           />
         </GenerateFile>
       </DialogContent>

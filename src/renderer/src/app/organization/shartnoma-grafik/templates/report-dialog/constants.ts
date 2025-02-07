@@ -14,7 +14,7 @@ const ReportDialogPayloadSchema = withPreprocessor(
     payment_details: z.string(),
     contract_details: z.string(),
     rukovoditel: z.string(),
-    glav_buxgalter: z.string()
+    glav_mib: z.string()
   })
 )
 type ReportDialogPayloadType = z.infer<typeof ReportDialogPayloadSchema>

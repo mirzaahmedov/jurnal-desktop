@@ -155,13 +155,6 @@ const ShartnomaGrafikDetailsPage = () => {
     }
   }, [org_id])
 
-  console.log({
-    org_id,
-    main_schet: main_schet?.data,
-    organization: organization?.data,
-    shartnomaGrafik: shartnomaGrafik?.data
-  })
-
   return (
     <DetailsView>
       <DetailsView.Content loading={isFetching}>

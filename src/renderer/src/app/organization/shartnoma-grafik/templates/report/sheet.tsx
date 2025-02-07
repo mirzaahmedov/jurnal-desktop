@@ -14,7 +14,7 @@ type SheetProps = {
   schedule: ShartnomaGrafikForm
   paymentDetails: string
   rukovoditel: string
-  glav_buxgalter: string
+  glav_mib: string
 }
 const Sheet = ({
   article,
@@ -26,7 +26,7 @@ const Sheet = ({
   schedule,
   paymentDetails,
   rukovoditel,
-  glav_buxgalter
+  glav_mib
 }: SheetProps) => {
   const year = new Date(createdDate).getFullYear()
   return (
@@ -53,7 +53,7 @@ const Sheet = ({
         <Signatures
           year={year}
           rukovoditel={rukovoditel}
-          glav_buxgalter={glav_buxgalter}
+          glav_mib={glav_mib}
         />
       </Flex>
     </Flex.Item>

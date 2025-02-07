@@ -51,6 +51,11 @@ export const createOperatsiiEditor = <T extends { spravochnik_operatsii_id?: num
               spravochnik_operatsii_id: value
             }
           })
+          if (value !== undefined) {
+            setSchet(null)
+            setSchetFilter(null)
+            setSubschetFilter(null)
+          }
         },
         params: {
           type_schet
@@ -108,15 +113,15 @@ export const createOperatsiiEditor = <T extends { spravochnik_operatsii_id?: num
             placeholder={t('schet')}
             onChange={(e) => {
               setSchetFilter(e.target.value)
+              operatsiiSpravochnik.clear()
             }}
             onBlur={(e) => {
               setSchetFilter(null)
               setSchet(e.target.value)
-              if (
-                operatsiiSpravochnik.selected &&
-                operatsiiSpravochnik.selected?.schet !== e.target.value
-              ) {
-                operatsiiSpravochnik.clear()
+              const found = schetOptions?.data?.find((o) => o.schet === e.target.value)
+              console.log({ found })
+              if (!found) {
+                setSchet(null)
               }
             }}
             onKeyDown={(e) => {
