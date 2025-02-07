@@ -180,5 +180,8 @@
   "according-smeta": "По сметам",
   "kassa-rasxod": "Касса расход",
   "real-expenses": "Фактические затраты",
-  "remainder": "Остаток"
+  "remainder": "Остаток",
+  "send": "Отправить",
+  "selected-file": "Выбранный файл",
+  "id": "ИДЕНТИФИКАТОР"
 }

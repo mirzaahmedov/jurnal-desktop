@@ -6,6 +6,9 @@ import { formatLocaleDate, formatNumber } from '@renderer/common/lib/format'
 
 export const ostatokColumns: ColumnDef<OstatokProduct>[] = [
   {
+    key: 'id'
+  },
+  {
     key: 'naimenovanie_tovarov_jur7_id',
     header: 'code'
   },
@@ -75,6 +78,10 @@ export const ostatokColumns: ColumnDef<OstatokProduct>[] = [
 export const ostatokHeaderGroups: HeaderGroup<OstatokProduct>[][] = [
   [
     {
+      key: 'id',
+      rowSpan: 2
+    },
+    {
       key: 'naimenovanie_tovarov_jur7_id',
       header: 'code',
       rowSpan: 2
@@ -116,7 +123,7 @@ export const ostatokHeaderGroups: HeaderGroup<OstatokProduct>[][] = [
     {
       key: 'prixod_data',
       rowSpan: 2,
-      header: 'data-prixod'
+      header: 'prixod-date'
     }
   ],
   [
@@ -165,6 +172,9 @@ export const ostatokHeaderGroups: HeaderGroup<OstatokProduct>[][] = [
 ]
 
 export const ostatokProductColumns: ColumnDef<OstatokProduct>[] = [
+  {
+    key: 'id'
+  },
   {
     key: 'naimenovanie_tovarov_jur7_id',
     header: 'Код товара'

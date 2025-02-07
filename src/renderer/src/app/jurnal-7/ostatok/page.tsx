@@ -100,7 +100,8 @@ const OstatokPage = () => {
                 params={{
                   year,
                   month,
-                  main_schet_id
+                  main_schet_id,
+                  excel: true
                 }}
                 buttonText="Оборотка"
               />
@@ -110,7 +111,8 @@ const OstatokPage = () => {
                 params={{
                   year,
                   month,
-                  main_schet_id
+                  main_schet_id,
+                  excel: true
                 }}
                 buttonText="Материальная"
               />

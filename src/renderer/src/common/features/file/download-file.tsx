@@ -19,7 +19,7 @@ export const DownloadFile = ({
   buttonText,
   ...props
 }: DownloadFileProps) => {
-  const { mutate: downloadDocument, isPending: isDownloadingDocument } = useMutation({
+  const { mutate: downloadFile, isPending: isDownloadingFile } = useMutation({
     async mutationFn() {
       const res = await http.get(url, {
         responseType: 'arraybuffer',
@@ -33,11 +33,11 @@ export const DownloadFile = ({
   return (
     <Button
       variant="ghost"
-      disabled={isDownloadingDocument}
-      onClick={() => downloadDocument()}
+      disabled={isDownloadingFile}
+      onClick={() => downloadFile()}
       {...props}
     >
-      {isDownloadingDocument ? (
+      {isDownloadingFile ? (
         <>
           <LoadingSpinner className="btn-icon icon-start" />
           Загрузка

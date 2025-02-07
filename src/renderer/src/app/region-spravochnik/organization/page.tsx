@@ -2,9 +2,10 @@ import type { Organization } from '@renderer/common/models'
 
 import { useEffect, useState } from 'react'
 
-import { LoadingOverlay } from '@renderer/common/components'
 import { Button } from '@renderer/common/components/ui/button'
+import { ButtonGroup } from '@renderer/common/components/ui/button-group'
 import { useConfirm } from '@renderer/common/features/confirm'
+import { DownloadFile, ImportFile } from '@renderer/common/features/file'
 import { useLayoutStore } from '@renderer/common/features/layout'
 import { SearchField, useSearch } from '@renderer/common/features/search'
 import { usePagination, useToggle } from '@renderer/common/hooks'
@@ -90,8 +91,20 @@ const OrganizationPage = () => {
 
   return (
     <ListView className="relative">
-      <div className="flex-1 overflow-auto scrollbar">
-        {isFetching || isPending ? <LoadingOverlay /> : null}
+      <ListView.Header className="flex justify-end">
+        <ButtonGroup className="flex items-center gap-2.5">
+          <DownloadFile
+            fileName={`${t('organization')}-${t('import')}-${t('template')}.xlsx`}
+            url="/spravochnik/organization/template"
+            buttonText={t('download-something', { something: t('template') })}
+            params={{
+              excel: true
+            }}
+          />
+          <ImportFile url="/spravochnik/organization/import" />
+        </ButtonGroup>
+      </ListView.Header>
+      <ListView.Content loading={isFetching || isPending}>
         <OrganizationTable
           data={organizations?.data ?? []}
           onEdit={handleClickEdit}
@@ -110,7 +123,7 @@ const OrganizationPage = () => {
             </Button>
           )}
         />
-      </div>
+      </ListView.Content>
       <ListView.Footer>
         <ListView.Pagination
           {...pagination}

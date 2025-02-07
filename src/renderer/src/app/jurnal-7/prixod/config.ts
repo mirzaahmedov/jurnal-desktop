@@ -85,6 +85,9 @@ type PrixodChildFormType = z.infer<typeof PrixodChildFormSchema>
 
 const columns: ColumnDef<MO7Prixod>[] = [
   {
+    key: 'id'
+  },
+  {
     key: 'doc_num'
   },
   {

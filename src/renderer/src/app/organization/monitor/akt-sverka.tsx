@@ -56,7 +56,8 @@ const AktSverkaDialog = ({ from, to, schetId, orgId }: AktSverkaDialogProps) => 
               organ_id: orgId,
               contract_id: shartnomaSpravochnik.selected?.id || undefined,
               from,
-              to
+              to,
+              excel: true
             }}
             buttonText="Загрузить"
           />

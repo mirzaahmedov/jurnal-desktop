@@ -5,6 +5,9 @@ import { formatLocaleDate } from '@renderer/common/lib/format'
 
 export const naimenovanieColumns: ColumnDef<Naimenovanie>[] = [
   {
+    key: 'id'
+  },
+  {
     key: 'spravochnik_budjet_name',
     header: 'Бюджет'
   },

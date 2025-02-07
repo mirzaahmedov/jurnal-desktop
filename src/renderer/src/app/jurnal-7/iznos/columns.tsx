@@ -6,6 +6,9 @@ import { formatLocaleDate } from '@renderer/common/lib/format'
 
 export const columns: ColumnDef<Iznos>[] = [
   {
+    key: 'id'
+  },
+  {
     key: 'name',
     header: 'Наименование',
     className: 'w-80'

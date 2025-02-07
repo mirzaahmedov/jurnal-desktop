@@ -77,6 +77,9 @@ export type RasxodChildFormValues = z.infer<typeof RasxodChildFormSchema>
 
 const columns: ColumnDef<MO7Rasxod>[] = [
   {
+    key: 'id'
+  },
+  {
     key: 'doc_num'
   },
   {

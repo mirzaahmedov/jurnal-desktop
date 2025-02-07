@@ -1,3 +1,5 @@
+import type { Iznos } from '@renderer/common/models'
+
 import { useState } from 'react'
 
 import { GenericTable } from '@renderer/common/components'
@@ -6,7 +8,6 @@ import { useLayout } from '@renderer/common/features/layout'
 import { SearchField, useSearch } from '@renderer/common/features/search'
 import { usePagination, useToggle } from '@renderer/common/hooks'
 import { getFirstDayOfMonth } from '@renderer/common/lib/date'
-import { Iznos } from '@renderer/common/models'
 import { ListView } from '@renderer/common/views'
 import { useQuery } from '@tanstack/react-query'
 

@@ -77,6 +77,9 @@ type InternalTransferChildFormType = z.infer<typeof InternalTransferChildFormSch
 
 const columns: ColumnDef<InternalTransfer>[] = [
   {
+    key: 'id'
+  },
+  {
     key: 'doc_num'
   },
   {

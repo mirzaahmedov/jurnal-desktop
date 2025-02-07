@@ -3,6 +3,9 @@ import type { Responsible } from '@/common/models'
 
 export const responsibleColumns: ColumnDef<Responsible>[] = [
   {
+    key: 'id'
+  },
+  {
     key: 'fio',
     header: 'ФИО'
   },

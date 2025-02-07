@@ -180,5 +180,8 @@
   "according-smeta": "Smeta bo'yicha",
   "kassa-rasxod": "Kassa rasxod",
   "real-expenses": "Haqiqatda harajatlar",
-  "remainder": "Qoldiq"
+  "remainder": "Qoldiq",
+  "send": "Jo'natish",
+  "selected-file": "Tanlangan fayl",
+  "id": "ID"
 }
