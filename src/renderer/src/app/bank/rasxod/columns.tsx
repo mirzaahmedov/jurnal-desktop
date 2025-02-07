@@ -2,6 +2,7 @@ import type { BankRasxod } from '@renderer/common/models'
 
 import { type ColumnDef } from '@renderer/common/components'
 import { TooltipCellRenderer } from '@renderer/common/components/table/renderers'
+import { ProvodkaCell } from '@renderer/common/components/table/renderers/provodka'
 import { Switch } from '@renderer/common/components/ui/switch'
 import { formatLocaleDate, formatNumber } from '@renderer/common/lib/format'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
@@ -50,13 +51,25 @@ export const columns: ColumnDef<BankRasxod>[] = [
       if (!row.tulangan_tulanmagan) {
         return (
           <div className="font-bold leading-tight">
-            <span className="align-middle bg-yellow-200 px-0.5">
-              {formatNumber(row.tulanmagan_summa)}
-            </span>
+            <div className="align-middle bg-yellow-200 px-0.5">
+              <ProvodkaCell
+                summa={row.tulanmagan_summa}
+                schet={row.provodki_array?.[0]?.provodki_schet}
+                sub_schet={row.provodki_array?.[0]?.provodki_sub_schet}
+              />
+            </div>
           </div>
         )
       }
-      return <div className="font-bold">{formatNumber(row.summa)}</div>
+      return (
+        <div className="font-bold">
+          <ProvodkaCell
+            summa={row.summa}
+            schet={row.provodki_array?.[0]?.provodki_schet}
+            sub_schet={row.provodki_array?.[0]?.provodki_sub_schet}
+          />
+        </div>
+      )
     }
   },
   {

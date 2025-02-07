@@ -3,6 +3,10 @@ import { z } from 'zod'
 
 export const podpisDoljnostOptions = [
   {
+    key: PodpisDoljnost.RUKOVODITEL,
+    name: 'Руководитель'
+  },
+  {
     key: PodpisDoljnost.BOLIM_BOSHLIGI,
     name: 'Бўлим бошлиғи'
   },

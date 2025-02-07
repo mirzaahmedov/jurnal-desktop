@@ -1,6 +1,8 @@
 import type { ColumnDef } from '@/common/components'
 import type { KassaPrixodType } from '@/common/models'
 
+import { ProvodkaCell } from '@renderer/common/components/table/renderers/provodka'
+
 import { formatLocaleDate } from '@/common/lib/format'
 
 export const columns: ColumnDef<KassaPrixodType>[] = [
@@ -18,7 +20,18 @@ export const columns: ColumnDef<KassaPrixodType>[] = [
   },
   {
     numeric: true,
-    key: 'summa'
+    key: 'summa',
+    renderCell(row) {
+      return !row.summa ? (
+        '-'
+      ) : (
+        <ProvodkaCell
+          summa={row.summa}
+          schet={row.provodki_array?.[0]?.provodki_schet}
+          sub_schet={row.provodki_array?.[0]?.provodki_sub_schet}
+        />
+      )
+    }
   },
   {
     key: 'spravochnik_podotchet_litso_name',

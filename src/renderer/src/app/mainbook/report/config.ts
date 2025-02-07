@@ -19,7 +19,7 @@ export const MainbookReportFormSchema = z.object({
   type_document: z.string(),
   childs: z.array(MainbookReportProvodkaSchema)
 })
-export type MainbookReportProvodka = z.infer<typeof MainbookReportProvodkaSchema>
+export type MainbookReportProvodkaValues = z.infer<typeof MainbookReportProvodkaSchema>
 export type MainbookReportValues = z.infer<typeof MainbookReportFormSchema>
 
 export const defaultValues: MainbookReportValues = {

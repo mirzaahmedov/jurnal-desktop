@@ -1,6 +1,5 @@
+import type { TooltipContentProps } from '@radix-ui/react-tooltip'
 import type { HTMLAttributes, ReactNode } from 'react'
-
-import { TooltipContentProps } from '@radix-ui/react-tooltip'
 
 import { Copyable } from '@/common/components'
 import {
@@ -11,14 +10,15 @@ import {
 } from '@/common/components/ui/tooltip'
 import { cn } from '@/common/lib/utils'
 
-type TooltipCellRenderProps<T extends { id: number }> = TooltipContentProps &
-  HTMLAttributes<HTMLDivElement> & {
-    data: T
-    title: string
-    description?: keyof T
-    elements: Partial<Record<keyof T, ReactNode>>
-  }
-const TooltipCellRenderer = <T extends { id: number }>({
+export interface TooltipCellRenderProps<T>
+  extends TooltipContentProps,
+    HTMLAttributes<HTMLDivElement> {
+  data: T
+  title: string
+  description?: keyof T
+  elements: Partial<Record<keyof T, ReactNode>>
+}
+export const TooltipCellRenderer = <T,>({
   data,
   title,
   description,
@@ -74,6 +74,3 @@ const TooltipCellRenderer = <T extends { id: number }>({
     </TooltipProvider>
   )
 }
-
-export { TooltipCellRenderer }
-export type { TooltipCellRenderProps }

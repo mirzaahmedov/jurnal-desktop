@@ -1,8 +1,9 @@
+import type { MainbookReportValues } from './config'
+import type { Mainbook, Response } from '@renderer/common/models'
+
 import { APIEndpoints, CRUDService } from '@renderer/common/features/crud'
 import { budjet, main_schet } from '@renderer/common/features/crud/middleware'
-import { Mainbook } from '@renderer/common/models'
-
-import { MainbookReportValues } from './config'
+import { http } from '@renderer/common/lib/http'
 
 export const mainbookReportService = new CRUDService<Mainbook.Report, MainbookReportValues>({
   endpoint: APIEndpoints.mainbook__doc
@@ -47,3 +48,23 @@ export const mainbookReportService = new CRUDService<Mainbook.Report, MainbookRe
     }
     return {}
   })
+
+export interface AutofillMainbookReportQueryParams {
+  year: number
+  month: number
+  type_document: string
+}
+export const autofillMainbookReportQuery = async ({
+  year,
+  month,
+  type_document
+}: AutofillMainbookReportQueryParams) => {
+  const res = await http.get<Response<Mainbook.Autofill[]>>('/main/book/doc/auto', {
+    params: {
+      year,
+      month,
+      type_document
+    }
+  })
+  return res.data
+}

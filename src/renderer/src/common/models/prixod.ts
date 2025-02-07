@@ -15,6 +15,12 @@ export type BankPrixodType = {
   spravochnik_organization_raschet_schet_gazna?: string
   spravochnik_organization_mfo?: string
   spravochnik_organization_inn?: string
+  provodki_array: [
+    {
+      provodki_schet: string
+      provodki_sub_schet: string
+    }
+  ]
   childs?: BankPrixodPodvodkaType[]
 }
 
@@ -34,6 +40,12 @@ export type KassaPrixodType = {
   id_podotchet_litso: number
   spravochnik_podotchet_litso_name: string
   spravochnik_podotchet_litso_rayon: string
+  provodki_array: [
+    {
+      provodki_schet: string
+      provodki_sub_schet: string
+    }
+  ]
   childs?: BankPrixodPodvodkaType[]
 }
 

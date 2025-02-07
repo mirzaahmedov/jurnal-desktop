@@ -1,6 +1,8 @@
 import type { ColumnDef } from '@/common/components'
 import type { KassaMonitoringType } from '@/common/models'
 
+import { ProvodkaCell } from '@renderer/common/components/table/renderers/provodka'
+
 import { formatLocaleDate } from '@/common/lib/format'
 
 export const columns: ColumnDef<KassaMonitoringType>[] = [
@@ -19,12 +21,34 @@ export const columns: ColumnDef<KassaMonitoringType>[] = [
   {
     numeric: true,
     key: 'prixod_sum',
-    header: 'prixod'
+    header: 'prixod',
+    renderCell(row) {
+      return !row.prixod_sum ? (
+        '-'
+      ) : (
+        <ProvodkaCell
+          summa={row.prixod_sum}
+          schet={row.provodki_array?.[0]?.provodki_schet}
+          sub_schet={row.provodki_array?.[0]?.provodki_sub_schet}
+        />
+      )
+    }
   },
   {
     numeric: true,
     key: 'rasxod_sum',
-    header: 'rasxod'
+    header: 'rasxod',
+    renderCell(row) {
+      return !row.rasxod_sum ? (
+        '-'
+      ) : (
+        <ProvodkaCell
+          summa={row.rasxod_sum}
+          schet={row.provodki_array?.[0]?.provodki_schet}
+          sub_schet={row.provodki_array?.[0]?.provodki_sub_schet}
+        />
+      )
+    }
   },
   {
     key: 'spravochnik_podotchet_litso_name',

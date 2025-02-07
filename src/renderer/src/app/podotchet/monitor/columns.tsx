@@ -1,7 +1,10 @@
 import type { ColumnDef } from '@/common/components'
 import type { PodotchetMonitor } from '@/common/models'
+import type { TFunction } from 'i18next'
 
+import { ProvodkaCell } from '@renderer/common/components/table/renderers/provodka'
 import { Badge } from '@renderer/common/components/ui/badge'
+import { useTranslation } from 'react-i18next'
 
 import { TooltipCellRenderer } from '@/common/components/table/renderers'
 import { formatLocaleDate, formatNumber } from '@/common/lib/format'
@@ -45,14 +48,10 @@ export const podotchetMonitoringColumns: ColumnDef<PodotchetMonitor>[] = [
       return !row.rasxod_sum ? (
         '-'
       ) : (
-        <TooltipCellRenderer
-          data={row}
-          title={formatNumber(row.rasxod_sum)}
-          elements={{
-            provodki_schet: 'Проводка счет',
-            provodki_sub_schet: 'Проводка подсчет'
-          }}
-          className="text-start"
+        <ProvodkaCell
+          summa={row.rasxod_sum}
+          schet={row.provodki_schet}
+          sub_schet={row.provodki_sub_schet}
         />
       )
     }
@@ -65,14 +64,7 @@ export const podotchetMonitoringColumns: ColumnDef<PodotchetMonitor>[] = [
     fit: true,
     key: 'type',
     header: 'type-operatsii',
-    renderCell: (row) => (
-      <Badge
-        variant="secondary"
-        className="text-brand bg-brand/10 pointer-events-none"
-      >
-        {getProvodkaName(row.type)}
-      </Badge>
-    )
+    renderCell: (row) => <DocumentTypeCell type={row.type} />
   },
 
   {
@@ -82,26 +74,44 @@ export const podotchetMonitoringColumns: ColumnDef<PodotchetMonitor>[] = [
   }
 ]
 
-const getProvodkaName = (type: string) => {
+interface DocumentTypeCellProps {
+  type: string
+}
+const DocumentTypeCell = ({ type }: DocumentTypeCellProps) => {
+  const { t } = useTranslation(['app'])
+
+  return (
+    <Badge
+      variant="secondary"
+      className="text-brand bg-brand/10 pointer-events-none"
+    >
+      <span className="titlecase">{getProvodkaName(type, t)}</span>
+    </Badge>
+  )
+}
+
+const getProvodkaName = (type: string, t: TFunction) => {
   switch (type) {
     case 'bank_rasxod':
-      return 'Банк расход'
+      return `${t('pages.bank')} ${t('pages.rasxod-docs')}`
     case 'bank_prixod':
-      return 'Банк приход'
+      return `${t('pages.bank')} ${t('pages.prixod-docs')}`
     case 'kassa_rasxod':
-      return 'Касса расход'
+      return `${t('pages.kassa')} ${t('pages.rasxod-docs')}`
     case 'kassa_prixod':
-      return 'Касса приход'
+      return `${t('pages.kassa')} ${t('pages.prixod-docs')}`
     case 'show_service':
-      return 'Показать услуги'
+      return t('pages.service')
+    case 'avans':
+      return t('pages.avans')
     case 'akt':
-      return 'Акт-приём пересдач'
+      return t('pages.akt')
     case 'jur7_prixod':
-      return 'Журнал 7 приход'
+      return `${t('pages.material-warehouse')} ${t('pages.prixod-docs')}`
     case 'jur7_rasxod':
-      return 'Журнал 7 расход'
+      return `${t('pages.material-warehouse')} ${t('pages.rasxod-docs')}`
     case 'jur7_internal':
-      return 'Журнал 7 внутренний'
+      return `${t('pages.material-warehouse')} ${t('pages.internal-docs')}`
     default:
       return ''
   }

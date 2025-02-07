@@ -14,6 +14,12 @@ export type BankMonitoringType = {
   user_id: number
   fio: string
   login: string
+  provodki_array: [
+    {
+      provodki_schet: string
+      provodki_sub_schet: string
+    }
+  ]
 }
 
 export type KassaMonitoringType = {
@@ -28,4 +34,10 @@ export type KassaMonitoringType = {
   user_id: number
   fio: string
   login: string
+  provodki_array: [
+    {
+      provodki_schet: string
+      provodki_sub_schet: string
+    }
+  ]
 }

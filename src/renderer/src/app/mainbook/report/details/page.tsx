@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { documentTypes } from '@renderer/app/mainbook/common/data'
-import { Fieldset, SelectField, inputVariants } from '@renderer/common/components'
+import { Fieldset, LoadingOverlay, SelectField, inputVariants } from '@renderer/common/components'
 import {
   EditableTable,
   EditableTableCell,
@@ -14,25 +14,29 @@ import {
   createEditorDeleteHandler
 } from '@renderer/common/components/editable-table/helpers'
 import { MonthPicker } from '@renderer/common/components/month-picker'
+import { Button } from '@renderer/common/components/ui/button'
 import { Form, FormField } from '@renderer/common/components/ui/form'
 import { Input } from '@renderer/common/components/ui/input'
 import { useLayout } from '@renderer/common/features/layout'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
-import { toast } from '@renderer/common/hooks'
 import { formatNumber } from '@renderer/common/lib/format'
 import { cn } from '@renderer/common/lib/utils'
 import { DetailsView } from '@renderer/common/views'
 import { useMutation, useQuery } from '@tanstack/react-query'
+import { CloudDownload } from 'lucide-react'
 import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import { toast } from 'react-toastify'
 
 import {
   MainbookReportFormSchema,
   MainbookReportProvodkaSchema,
+  type MainbookReportProvodkaValues,
   defaultValues,
   mainbookReportQueryKeys
 } from '../config'
-import { mainbookReportService } from '../service'
+import { autofillMainbookReportQuery, mainbookReportService } from '../service'
 import { provodkaColumns } from './provodka'
 
 const MainbookReportDetailsPage = () => {
@@ -46,6 +50,8 @@ const MainbookReportDetailsPage = () => {
   const date = searchParams.get('date')
   const type_document = searchParams.get('type_document')
   const [year, month] = date ? date.split('-').map(Number) : [0, 0]
+
+  const { t } = useTranslation()
 
   const form = useForm({
     defaultValues: {
@@ -73,33 +79,44 @@ const MainbookReportDetailsPage = () => {
   const { mutate: createReport, isPending: isCreating } = useMutation({
     mutationFn: mainbookReportService.create,
     onSuccess() {
-      toast({
-        title: 'Запись успешно создана'
-      })
+      toast.success('Запись успешно создана')
       navigate(-1)
     },
     onError(error) {
       console.error(error)
-      toast({
-        variant: 'destructive',
-        title: error.message
-      })
+      toast.error(error.message)
     }
   })
   const { mutate: updateReport, isPending: isUpdating } = useMutation({
     mutationFn: mainbookReportService.update,
     onSuccess() {
-      toast({
-        title: 'Запись успешно обновлена'
-      })
+      toast.success('Запись успешно обновлена')
       navigate(-1)
     },
     onError(error) {
       console.error(error)
-      toast({
-        variant: 'destructive',
-        title: error.message
-      })
+      toast.error(error.message)
+    }
+  })
+  const { mutate: autofill, isPending: isAutofilling } = useMutation({
+    mutationFn: autofillMainbookReportQuery,
+    onSuccess(res) {
+      if (!Array.isArray(res.data)) {
+        throw new Error('invalid response')
+      }
+
+      form.setValue(
+        'childs',
+        res.data.map<MainbookReportProvodkaValues>((item) => ({
+          spravochnik_main_book_schet_id: item.id,
+          debet_sum: item.debet_sum,
+          kredit_sum: item.kredit_sum
+        }))
+      )
+      form.trigger('childs')
+    },
+    onError(error) {
+      toast.error(error.message ?? '')
     }
   })
 
@@ -186,94 +203,113 @@ const MainbookReportDetailsPage = () => {
           name="Подводка"
           className="flex-1 mt-5 pb-24 bg-slate-50"
         >
-          <EditableTable
-            tableRef={tableRef}
-            tabIndex={5}
-            columns={provodkaColumns}
-            data={form.watch('childs')}
-            errors={form.formState.errors.childs}
-            onCreate={createEditorCreateHandler({
-              form,
-              schema: MainbookReportProvodkaSchema,
-              defaultValues: defaultValues.childs[0]
-            })}
-            onDelete={createEditorDeleteHandler({
-              form
-            })}
-            onChange={createEditorChangeHandler({
-              form
-            })}
-            validate={({ id, key, payload }) => {
-              if (key !== 'spravochnik_main_book_schet_id') {
-                return true
+          <div>
+            <Button
+              onClick={() => {
+                autofill({
+                  year: form.getValues('year'),
+                  month: form.getValues('month'),
+                  type_document: form.getValues('type_document')
+                })
+              }}
+              disabled={
+                isAutofilling ||
+                !form.watch('year') ||
+                !form.watch('month') ||
+                !form.watch('type_document')
               }
-
-              return !form.getValues('childs').some((child, index) => {
-                if (
-                  id !== index &&
-                  payload.spravochnik_main_book_schet_id === child.spravochnik_main_book_schet_id
-                ) {
-                  toast({
-                    variant: 'destructive',
-                    title: 'Подводка с таким счетом уже существует'
-                  })
-
-                  const input = tableRef?.current?.querySelector(
-                    `[data-editorid="${index}-spravochnik_main_book_schet_id"]`
-                  ) as HTMLInputElement
-                  if (input) {
-                    setTimeout(() => {
-                      input.focus()
-                    }, 100)
-                  }
-
+            >
+              <CloudDownload className="btn-icon icon-start" /> {t('autofill')}
+            </Button>
+          </div>
+          <div>
+            <EditableTable
+              tableRef={tableRef}
+              tabIndex={5}
+              columns={provodkaColumns}
+              data={form.watch('childs')}
+              errors={form.formState.errors.childs}
+              onCreate={createEditorCreateHandler({
+                form,
+                schema: MainbookReportProvodkaSchema,
+                defaultValues: defaultValues.childs[0]
+              })}
+              onDelete={createEditorDeleteHandler({
+                form
+              })}
+              onChange={createEditorChangeHandler({
+                form
+              })}
+              validate={({ id, key, payload }) => {
+                if (key !== 'spravochnik_main_book_schet_id') {
                   return true
                 }
-                return false
-              })
-            }}
-            footerRows={
-              <EditableTableRow className="!border">
-                <EditableTableCell>
-                  <Input
-                    aria-hidden
-                    readOnly
-                    tabIndex={-1}
-                    className={cn(
-                      inputVariants({ editor: true }),
-                      'pointer-events-none text-xs text-gray-700 font-extrabold'
-                    )}
-                    value="Итого"
-                  />
-                </EditableTableCell>
-                <EditableTableCell>
-                  <Input
-                    aria-hidden
-                    readOnly
-                    tabIndex={-1}
-                    className={cn(
-                      inputVariants({ editor: true }),
-                      'pointer-events-none font-bold text-right'
-                    )}
-                    value={formatNumber(itogo.debet)}
-                  />
-                </EditableTableCell>
-                <EditableTableCell>
-                  <Input
-                    aria-hidden
-                    readOnly
-                    tabIndex={-1}
-                    className={cn(
-                      inputVariants({ editor: true }),
-                      'pointer-events-none font-bold text-right'
-                    )}
-                    value={formatNumber(itogo.credit)}
-                  />
-                </EditableTableCell>
-                <EditableTableCell></EditableTableCell>
-              </EditableTableRow>
-            }
-          />
+
+                return !form.getValues('childs').some((child, index) => {
+                  if (
+                    id !== index &&
+                    payload.spravochnik_main_book_schet_id === child.spravochnik_main_book_schet_id
+                  ) {
+                    toast.error('Подводка с таким счетом уже существует')
+
+                    const input = tableRef?.current?.querySelector(
+                      `[data-editorid="${index}-spravochnik_main_book_schet_id"]`
+                    ) as HTMLInputElement
+                    if (input) {
+                      setTimeout(() => {
+                        input.focus()
+                      }, 100)
+                    }
+
+                    return true
+                  }
+                  return false
+                })
+              }}
+              footerRows={
+                <EditableTableRow className="!border">
+                  <EditableTableCell>
+                    <Input
+                      aria-hidden
+                      readOnly
+                      tabIndex={-1}
+                      className={cn(
+                        inputVariants({ editor: true }),
+                        'pointer-events-none text-xs text-gray-700 font-extrabold'
+                      )}
+                      value="Итого"
+                    />
+                  </EditableTableCell>
+                  <EditableTableCell>
+                    <Input
+                      aria-hidden
+                      readOnly
+                      tabIndex={-1}
+                      className={cn(
+                        inputVariants({ editor: true }),
+                        'pointer-events-none font-bold text-right'
+                      )}
+                      value={formatNumber(itogo.debet)}
+                    />
+                  </EditableTableCell>
+                  <EditableTableCell>
+                    <Input
+                      aria-hidden
+                      readOnly
+                      tabIndex={-1}
+                      className={cn(
+                        inputVariants({ editor: true }),
+                        'pointer-events-none font-bold text-right'
+                      )}
+                      value={formatNumber(itogo.credit)}
+                    />
+                  </EditableTableCell>
+                  <EditableTableCell></EditableTableCell>
+                </EditableTableRow>
+              }
+            />
+            {isAutofilling ? <LoadingOverlay /> : null}
+          </div>
         </Fieldset>
       </DetailsView.Content>
     </DetailsView>

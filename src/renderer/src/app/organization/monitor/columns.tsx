@@ -1,6 +1,7 @@
 import type { OrganizationMonitor, OrganizationMonitorProvodka } from '@/common/models'
 import type { ColumnDef } from '@renderer/common/components'
 
+import { ProvodkaCell } from '@renderer/common/components/table/renderers/provodka'
 import { Badge } from '@renderer/common/components/ui/badge'
 import { formatLocaleDate } from '@renderer/common/lib/format'
 
@@ -25,12 +26,34 @@ export const organizationMonitorColumns: ColumnDef<OrganizationMonitor>[] = [
   {
     numeric: true,
     key: 'summa_prixod',
-    header: 'debet'
+    header: 'debet',
+    renderCell(row) {
+      return !row.summa_prixod ? (
+        '-'
+      ) : (
+        <ProvodkaCell
+          summa={row.summa_prixod}
+          schet={row.provodki_schet}
+          sub_schet={row.provodki_sub_schet}
+        />
+      )
+    }
   },
   {
     numeric: true,
     key: 'summa_rasxod',
-    header: 'kredit'
+    header: 'kredit',
+    renderCell(row) {
+      return !row.summa_rasxod ? (
+        '-'
+      ) : (
+        <ProvodkaCell
+          summa={row.summa_rasxod}
+          schet={row.provodki_schet}
+          sub_schet={row.provodki_sub_schet}
+        />
+      )
+    }
   },
   {
     fit: true,

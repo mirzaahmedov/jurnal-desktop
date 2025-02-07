@@ -36,7 +36,7 @@ type PodpisDialogProps = {
   onOpenChange: (open: boolean) => void
 }
 const PodpisDialog = ({ data, open, onOpenChange }: PodpisDialogProps) => {
-  const { t } = useTranslation()
+  const { t } = useTranslation(['app'])
 
   const queryClient = useQueryClient()
   const form = useForm({

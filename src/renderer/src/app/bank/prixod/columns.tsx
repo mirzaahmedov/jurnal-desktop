@@ -1,6 +1,8 @@
 import type { ColumnDef } from '@/common/components'
 import type { BankPrixodType } from '@/common/models'
 
+import { ProvodkaCell } from '@renderer/common/components/table/renderers/provodka'
+
 import { TooltipCellRenderer } from '@/common/components/table/renderers'
 import { formatLocaleDate } from '@/common/lib/format'
 
@@ -37,7 +39,18 @@ export const columns: ColumnDef<BankPrixodType>[] = [
   },
   {
     numeric: true,
-    key: 'summa'
+    key: 'summa',
+    renderCell(row) {
+      return !row.summa ? (
+        '-'
+      ) : (
+        <ProvodkaCell
+          summa={row.summa}
+          schet={row.provodki_array?.[0]?.provodki_schet}
+          sub_schet={row.provodki_array?.[0]?.provodki_sub_schet}
+        />
+      )
+    }
   },
   {
     key: 'opisanie'

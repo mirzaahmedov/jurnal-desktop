@@ -17,6 +17,12 @@ export type BankRasxod = {
   rukovoditel: string | null
   tulanmagan_summa: number
   tulangan_tulanmagan: boolean
+  provodki_array: [
+    {
+      provodki_schet: string
+      provodki_sub_schet: string
+    }
+  ]
   childs: BankRasxodProvodka[]
 }
 
@@ -46,6 +52,12 @@ export type KassaRasxodType = {
   spravochnik_podotchet_litso_name: string
   spravochnik_podotchet_litso_rayon: string
   spravochnik_operatsii_own_id: number
+  provodki_array: [
+    {
+      provodki_schet: string
+      provodki_sub_schet: string
+    }
+  ]
   childs: KassaRasxodProvodkaType[]
 }
 

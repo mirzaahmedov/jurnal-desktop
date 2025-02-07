@@ -1,9 +1,12 @@
 import type { MainSchetPayloadType } from './service'
 import type { MainSchet } from '@/common/models'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
+import { bankQueryKeys } from '@renderer/app/super-admin/bank/config'
+import { bankService } from '@renderer/app/super-admin/bank/service'
+import { FormElement } from '@renderer/common/components/form'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -11,7 +14,7 @@ import { toast } from 'react-toastify'
 
 import { budgetService } from '@/app/super-admin/budjet'
 import { budgetQueryKeys } from '@/app/super-admin/budjet/constants'
-import { SelectField } from '@/common/components'
+import { AutoComplete, SelectField } from '@/common/components'
 import { Button } from '@/common/components/ui/button'
 import {
   Dialog,
@@ -41,12 +44,22 @@ export interface MainSchetDialogProps {
 export const MainSchetDialog = (props: MainSchetDialogProps) => {
   const { open, onChangeOpen, selected } = props
 
+  const queryClient = useQueryClient()
+
+  const [search, setSearch] = useState('')
+
   const { t } = useTranslation()
 
-  const queryClient = useQueryClient()
   const form = useForm<MainSchetPayloadType>({
     defaultValues,
     resolver: zodResolver(MainSchetPayloadSchema)
+  })
+
+  const { data: bankList, isFetching } = useQuery({
+    queryKey: [bankQueryKeys.getAll, { search }],
+    queryFn: bankService.getAll,
+    enabled: !!search,
+    placeholderData: (prev) => prev
   })
 
   const { data: budgets, isFetching: isFetchingBudjets } = useQuery({
@@ -230,18 +243,42 @@ export const MainSchetDialog = (props: MainSchetDialogProps) => {
                 name="tashkilot_mfo"
                 control={form.control}
                 render={({ field }) => (
-                  <FormItem>
-                    <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
-                      <FormLabel className="text-right col-span-2">{t('mfo')}</FormLabel>
-                      <FormControl>
-                        <Input
-                          className="col-span-4"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage className="text-end col-span-6" />
-                    </div>
-                  </FormItem>
+                  <FormElement
+                    grid="2:4"
+                    label={t('mfo')}
+                  >
+                    <AutoComplete
+                      isFetching={isFetching}
+                      disabled={search === ''}
+                      options={bankList?.data ?? []}
+                      className="col-span-4"
+                      getOptionLabel={(option) => `${option.mfo} ${option.bank_name}`}
+                      getOptionValue={(option) => option.mfo}
+                      onSelect={(option) => {
+                        form.setValue('tashkilot_mfo', option.mfo)
+                        form.setValue('tashkilot_bank', option.bank_name)
+                        setSearch('')
+                      }}
+                    >
+                      <Input
+                        {...field}
+                        onChange={(e) => {
+                          field.onChange(e)
+                          console.log('e.target.value', e.target.value)
+                          setSearch(e.target.value)
+                        }}
+                        onBlur={() => {
+                          setSearch('')
+                          field.onBlur()
+                        }}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            e.preventDefault()
+                          }
+                        }}
+                      />
+                    </AutoComplete>
+                  </FormElement>
                 )}
               />
 
@@ -249,18 +286,43 @@ export const MainSchetDialog = (props: MainSchetDialogProps) => {
                 name="tashkilot_bank"
                 control={form.control}
                 render={({ field }) => (
-                  <FormItem>
-                    <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
-                      <FormLabel className="text-right col-span-2">{t('bank')}</FormLabel>
-                      <FormControl>
+                  <FormElement
+                    grid="2:4"
+                    label={t('bank')}
+                  >
+                    <FormControl>
+                      <AutoComplete
+                        isFetching={isFetching}
+                        disabled={search === ''}
+                        options={bankList?.data ?? []}
+                        className="col-span-4"
+                        getOptionLabel={(option) => `${option.mfo} ${option.bank_name}`}
+                        getOptionValue={(option) => option.mfo}
+                        onSelect={(option) => {
+                          form.setValue('tashkilot_mfo', option.mfo)
+                          form.setValue('tashkilot_bank', option.bank_name)
+                          setSearch('')
+                        }}
+                      >
                         <Input
-                          className="col-span-4"
                           {...field}
+                          onChange={(e) => {
+                            field.onChange(e)
+                            setSearch(e.target.value)
+                          }}
+                          onBlur={() => {
+                            setSearch('')
+                            field.onBlur()
+                          }}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                              e.preventDefault()
+                            }
+                          }}
                         />
-                      </FormControl>
-                      <FormMessage className="text-end col-span-6" />
-                    </div>
-                  </FormItem>
+                      </AutoComplete>
+                    </FormControl>
+                  </FormElement>
                 )}
               />
 

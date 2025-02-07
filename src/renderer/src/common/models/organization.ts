@@ -32,6 +32,8 @@ type OrganizationMonitor = {
   opisanie: string
   summa_rasxod: number
   summa_prixod: number
+  provodki_schet: string
+  provodki_sub_schet: string
   user_id: number
   login: string
   fio: string

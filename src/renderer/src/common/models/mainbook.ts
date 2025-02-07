@@ -18,6 +18,16 @@ export namespace Mainbook {
     updated_at: string
   }
 
+  export interface Autofill {
+    id: number
+    name: string
+    schet: string
+    created_at: string
+    updated_at: string
+    debet_sum: number
+    kredit_sum: number
+  }
+
   export type AdminReport = {
     month: number
     year: number

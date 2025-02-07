@@ -13,7 +13,7 @@ import {
 import { useToggle } from '@renderer/common/hooks'
 import { http } from '@renderer/common/lib/http'
 import { useMutation } from '@tanstack/react-query'
-import { File, Import, Trash } from 'lucide-react'
+import { File, Trash, UploadCloud } from 'lucide-react'
 import millify from 'millify'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
@@ -41,6 +41,7 @@ export const ImportFile = ({ url, params }: ImportFileDialogProps) => {
     onSuccess() {
       toast.success('Данные импортированы успешно')
       setFile(undefined)
+      dialogToggle.close()
     },
     onError() {
       toast.error('Не удалось импортировать данные')
@@ -64,7 +65,7 @@ export const ImportFile = ({ url, params }: ImportFileDialogProps) => {
     >
       <DialogTrigger>
         <Button>
-          <Import className="btn-icon icon-start" /> {t('import-data')}
+          <UploadCloud className="btn-icon icon-start" /> {t('import-data')}
         </Button>
       </DialogTrigger>
       <DialogContent className="pt-10">

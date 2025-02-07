@@ -155,6 +155,13 @@ const ShartnomaGrafikDetailsPage = () => {
     }
   }, [org_id])
 
+  console.log({
+    org_id,
+    main_schet: main_schet?.data,
+    organization: organization?.data,
+    shartnomaGrafik: shartnomaGrafik?.data
+  })
+
   return (
     <DetailsView>
       <DetailsView.Content loading={isFetching}>
@@ -230,7 +237,7 @@ const ShartnomaGrafikDetailsPage = () => {
                 <DetailsView.Create disabled={summa !== shartnomaGrafik?.data.summa} />
                 {(shartnomaGrafik?.data.summa ?? 0) - summa ? (
                   <p className="flex items-center gap-5">
-                    <b className="text-sm text-slate-500">Остаток:</b>
+                    <b className="text-sm text-slate-500">{t('remainder')}:</b>
                     <span className="font-bold text-destructive">
                       {formatNumber((shartnomaGrafik?.data.summa ?? 0) - summa)}
                     </span>

@@ -3,6 +3,7 @@ import type { ShartnomaGrafikForm } from '../../../service'
 import { useState } from 'react'
 
 import { Text } from '@react-pdf/renderer'
+import { useTranslation } from 'react-i18next'
 
 import { Table } from '@/common/components/pdf'
 import { monthNames } from '@/common/data/month'
@@ -33,6 +34,8 @@ type ScheduleProps = {
 const Schedule = ({ article, year, data, paymentDetails }: ScheduleProps) => {
   const [widths] = useState([20, 50, 30] as WidthsType)
   const [innerWidths] = useState([50, 25, 25] as WidthsType)
+
+  const { t } = useTranslation()
 
   const total = monthNames.reduce((acc, { name }) => acc + data[name], 0)
 
@@ -94,7 +97,7 @@ const Schedule = ({ article, year, data, paymentDetails }: ScheduleProps) => {
         {monthNames.map(({ name, label }) => (
           <ScheduleRow
             key={name}
-            name={label}
+            name={t(label, { lng: 'ru' })}
             value={formatNumber(data[name])}
             widths={widths}
             innerWidths={innerWidths}

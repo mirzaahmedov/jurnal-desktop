@@ -174,6 +174,8 @@ export const ShartnomaForm = ({
               tabIndex={1}
               dialog={dialog}
               form={form}
+              documentType={DocumentType.CONTRACT}
+              autoGenerate={!selected}
             />
           </div>
 
