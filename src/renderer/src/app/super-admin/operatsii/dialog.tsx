@@ -32,7 +32,7 @@ import { useSpravochnik } from '@/common/features/spravochnik'
 import { useToast } from '@/common/hooks/use-toast'
 import { TypeSchetOperatsii } from '@/common/models'
 
-import { operatsiiQueryKeys, operatsiiTypeSchetOptions } from './constants'
+import { operatsiiQueryKeys, operatsiiTypeSchetOptions } from './config'
 import { OperatsiiFormSchema, operatsiiService } from './service'
 
 type OperatsiiDialogProps = {

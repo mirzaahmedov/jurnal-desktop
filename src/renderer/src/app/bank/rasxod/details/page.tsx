@@ -12,7 +12,7 @@ import {
   createEditorCreateHandler,
   createEditorDeleteHandler
 } from '@renderer/common/components/editable-table/helpers'
-import { DocumentType, useGenerateDocumentNumber } from '@renderer/common/features/doc-num'
+import { DocumentType } from '@renderer/common/features/doc-num'
 import { usePodpis } from '@renderer/common/features/podpis'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
 import { PodpisDoljnost, PodpisTypeDocument } from '@renderer/common/models'
@@ -48,8 +48,8 @@ import { RasxodPayloadSchema, RasxodPodvodkaPayloadSchema, bankRasxodService } f
 import { GeneratePorucheniya } from './generate-porucheniya'
 import { podvodkaColumns } from './podvodki'
 
-const shartnomaRegExp = /№ .*?-сонли \d{2}.\d{2}.\d{4} йил кунги шартномага асосан\s?/
-const smetaRegExp = / Ст: \d*$\s?/
+const shartnomaRegExp = /№ (.*?)-сонли \d{2}.\d{2}.\d{4} йил кунги шартномага асосан\s?/
+const smetaRegExp = / Ст:(.*?)$/
 
 const BankRasxodDetailtsPage = () => {
   const params = useParams()
@@ -430,10 +430,15 @@ const BankRasxodDetailtsPage = () => {
                   form.setValue('opisanie', form.getValues('opisanie')!.replace(smetaRegExp, ''))
                   return
                 }
+                console.log(
+                  'opisanie',
+                  smetaRegExp.test(form.getValues('opisanie') || ''),
+                  form.getValues('opisanie')
+                )
                 if (smetaRegExp.test(form.getValues('opisanie') || '')) {
                   form.setValue(
                     'opisanie',
-                    form.getValues('opisanie')!.replace(smetaRegExp, `Ст: ${selected.sub_schet}`)
+                    form.getValues('opisanie')!.replace(smetaRegExp, ` Ст: ${selected.sub_schet}`)
                   )
                   return
                 }

@@ -4,7 +4,7 @@ import { SelectField } from '@/common/components'
 import { SearchField } from '@/common/features/search'
 import { TypeSchetOperatsii } from '@/common/models'
 
-import { operatsiiTypeSchetOptions } from './constants'
+import { operatsiiTypeSchetOptions } from './config'
 
 export const OperatsiiFilter = () => {
   const [typeSchet, setTypeSchet] = useLocationState('type_schet', TypeSchetOperatsii.KASSA_PRIXOD)

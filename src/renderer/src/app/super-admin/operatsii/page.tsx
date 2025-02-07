@@ -14,7 +14,7 @@ import { useToggle } from '@/common/hooks/use-toggle'
 import { type Operatsii, TypeSchetOperatsii } from '@/common/models'
 
 import { operatsiiColumns } from './columns'
-import { operatsiiQueryKeys } from './constants'
+import { operatsiiQueryKeys } from './config'
 import { OperatsiiDialog } from './dialog'
 import { OperatsiiFilter } from './filter'
 import { operatsiiService } from './service'

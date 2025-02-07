@@ -9,13 +9,14 @@ import {
 
 import { Command, CommandEmpty, CommandItem, CommandList } from '@/common/components/ui/command'
 import { Popover, PopoverContent, PopoverTrigger } from '@/common/components/ui/popover'
-import { useToggle } from '@/common/hooks'
+import { useEventCallback, useToggle } from '@/common/hooks'
 
 import { LoadingSpinner } from './loading'
 
 type AutoCompleteProps<T> = PropsWithChildren<{
   isFetching: boolean
   disabled?: boolean
+  value?: unknown
   options: T[]
   getOptionLabel: (option: T) => ReactNode
   getOptionValue: (option: T) => string
@@ -26,6 +27,7 @@ const AutoComplete = <T extends Record<string, unknown>>({
   isFetching,
   disabled,
   options,
+  value,
   getOptionLabel,
   getOptionValue,
   onSelect,
@@ -35,10 +37,9 @@ const AutoComplete = <T extends Record<string, unknown>>({
   const [selected, setSelected] = useState<T | null>(null)
 
   const commandRef = useRef<HTMLDivElement>(null)
-  const callbacksRef = useRef<Pick<AutoCompleteProps<T>, 'onSelect'>>({
-    onSelect
-  })
-  callbacksRef.current = { onSelect }
+
+  const onSelectEvent = useEventCallback(onSelect)
+  const getOptionValueCallback = useEventCallback(getOptionValue)
 
   const toggle = useToggle()
 
@@ -49,37 +50,41 @@ const AutoComplete = <T extends Record<string, unknown>>({
 
     setSelected(options[0])
     if (options.length === 1) {
-      callbacksRef.current?.onSelect?.(options[0])
+      onSelectEvent?.(options[0])
     }
-  }, [options])
+  }, [options, onSelectEvent])
 
   const open = toggle.isOpen && !disabled && Array.isArray(options) && options.length !== 1
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      if (!selected || !open) {
+        return
+      }
       if (e.key === 'ArrowUp') {
-        const index = options.findIndex((elem) => elem.id === selected?.id)
+        const index = options.findIndex(
+          (elem) => getOptionValueCallback(elem) === getOptionValueCallback(selected)
+        )
         if (index > 0) {
           const newOption = options[index - 1]
           setSelected(newOption)
-          scrollIntoElement(commandRef.current!, newOption?.id as number)
+          scrollIntoElement(commandRef.current!, getOptionValueCallback(newOption))
         }
         return
       }
       if (e.key === 'ArrowDown') {
-        const index = options.findIndex((elem) => elem.id === selected?.id)
+        const index = options.findIndex(
+          (elem) => getOptionValueCallback(elem) === getOptionValueCallback(selected)
+        )
         if (index < options.length - 1) {
           const newOption = options[index + 1]
           setSelected(newOption)
-          scrollIntoElement(commandRef.current!, newOption?.id as number)
+          scrollIntoElement(commandRef.current!, getOptionValueCallback(newOption))
         }
         return
       }
       if (e.key === 'Enter') {
-        if (!selected) {
-          return
-        }
-        callbacksRef.current.onSelect(selected)
+        onSelectEvent?.(selected)
       }
     }
 
@@ -88,7 +93,7 @@ const AutoComplete = <T extends Record<string, unknown>>({
     return () => {
       window.removeEventListener('keydown', handleKeyDown)
     }
-  }, [options, open, selected])
+  }, [options, open, selected, getOptionValueCallback])
 
   return (
     <Popover
@@ -135,11 +140,16 @@ const AutoComplete = <T extends Record<string, unknown>>({
                     toggle.close()
                   }}
                   className="break-all"
-                  data-highlighted={selected?.id === item.id}
-                  data-selected={selected?.id === item.id}
-                  data-elementid={item.id}
+                  data-highlighted={
+                    selected ? getOptionValue(selected) === getOptionValue(item) : false
+                  }
+                  data-selected={
+                    selected ? getOptionValue(selected) === getOptionValue(item) : false
+                  }
+                  data-elementid={getOptionValue(item)}
+                  disabled={value === getOptionValue(item)}
                 >
-                  {getOptionLabel(item)}
+                  {value === getOptionValue(item) ? '✓' : null} {getOptionLabel(item)}
                 </CommandItem>
               ))
             ) : null}
@@ -150,7 +160,7 @@ const AutoComplete = <T extends Record<string, unknown>>({
   )
 }
 
-const scrollIntoElement = (container: HTMLDivElement, id: number) => {
+const scrollIntoElement = (container: HTMLDivElement, id: unknown) => {
   const element = container.querySelector('[data-elementid="' + id + '"]')
   if (element) {
     element.scrollIntoView({

@@ -45,14 +45,16 @@ const DashboardPage = () => {
           />
 
           <TabsList>
-            {budjets?.data?.map((budjet) => (
-              <TabsTrigger
-                value={budjet.id.toString()}
-                key={budjet.id}
-              >
-                {budjet.name}
-              </TabsTrigger>
-            ))}
+            {budjets?.data
+              ?.sort((a, b) => a.id - b.id)
+              ?.map((budjet) => (
+                <TabsTrigger
+                  value={budjet.id.toString()}
+                  key={budjet.id}
+                >
+                  {budjet.name}
+                </TabsTrigger>
+              ))}
           </TabsList>
         </div>
 

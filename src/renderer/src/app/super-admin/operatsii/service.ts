@@ -1,6 +1,8 @@
 import type { SpravochnikHookOptions } from '@/common/features/spravochnik'
-import type { Operatsii } from '@/common/models'
+import type { Operatsii, Response } from '@/common/models'
+import type { QueryFunctionContext } from '@tanstack/react-query'
 
+import { http } from '@renderer/common/lib/http'
 import { z } from 'zod'
 
 import { APIEndpoints, CRUDService } from '@/common/features/crud'
@@ -11,7 +13,7 @@ import { TypeSchetOperatsii } from '@/common/models'
 
 import { operatsiiColumns } from './columns'
 
-const OperatsiiFormSchema = withPreprocessor(
+export const OperatsiiFormSchema = withPreprocessor(
   z.object({
     name: z.string(),
     schet: z.string(),
@@ -30,13 +32,28 @@ const OperatsiiFormSchema = withPreprocessor(
     smeta_id: z.number().optional()
   })
 )
-type OperatsiiForm = z.infer<typeof OperatsiiFormSchema>
+export type OperatsiiForm = z.infer<typeof OperatsiiFormSchema>
+export type OperatsiiOption = {
+  schet: string
+}
 
-const operatsiiService = new CRUDService<Operatsii, OperatsiiForm>({
+export const getOperatsiiSchetOptionsQuery = async (
+  ctx: QueryFunctionContext<[string, { type_schet: string }]>
+) => {
+  const type_schet = ctx.queryKey[1].type_schet
+  const res = await http.get<Response<OperatsiiOption[]>>('/spravochnik/operatsii/unique', {
+    params: {
+      type_schet
+    }
+  })
+  return res.data
+}
+
+export const operatsiiService = new CRUDService<Operatsii, OperatsiiForm>({
   endpoint: APIEndpoints.operatsii
 })
 
-const createOperatsiiSpravochnik = (config: Partial<SpravochnikHookOptions<Operatsii>>) => {
+export const createOperatsiiSpravochnik = (config: Partial<SpravochnikHookOptions<Operatsii>>) => {
   return extendObject(
     {
       title: 'Выберите операцию',
@@ -48,6 +65,3 @@ const createOperatsiiSpravochnik = (config: Partial<SpravochnikHookOptions<Opera
     config
   )
 }
-
-export { OperatsiiFormSchema, createOperatsiiSpravochnik, operatsiiService }
-export type { OperatsiiForm }

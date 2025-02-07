@@ -2,6 +2,7 @@ import { TypeSchetOperatsii } from '@/common/models'
 
 export const operatsiiQueryKeys = {
   getAll: 'operatsii/all',
+  getSchetOptions: 'operatsii/options',
   getById: 'operatsii',
   create: 'operatsii/create',
   update: 'operatsii/update',
