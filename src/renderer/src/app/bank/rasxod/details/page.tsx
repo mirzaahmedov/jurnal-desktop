@@ -1,4 +1,4 @@
-import type { RasxodPayloadType, RasxodPodvodkaPayloadType } from '../service'
+import type { RasxodFormValues, RasxodPodvodkaFormValues } from '../service'
 import type { BankRasxod, Operatsii } from '@renderer/common/models'
 
 import { useCallback, useEffect } from 'react'
@@ -12,6 +12,7 @@ import {
   createEditorCreateHandler,
   createEditorDeleteHandler
 } from '@renderer/common/components/editable-table/helpers'
+// import { FormElement } from '@renderer/common/components/form'
 import { DocumentType } from '@renderer/common/features/doc-num'
 import { usePodpis } from '@renderer/common/features/podpis'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
@@ -44,7 +45,7 @@ import {
 
 import { bankMonitorQueryKeys, bankMonitorService } from '../../monitor'
 import { defaultValues, queryKeys } from '../constants'
-import { RasxodPayloadSchema, RasxodPodvodkaPayloadSchema, bankRasxodService } from '../service'
+import { RasxodFormSchema, RasxodPodvodkaFormSchema, bankRasxodService } from '../service'
 import { GeneratePorucheniya } from './generate-porucheniya'
 import { podvodkaColumns } from './podvodki'
 
@@ -68,7 +69,7 @@ const BankRasxodDetailtsPage = () => {
   const { t } = useTranslation(['app'])
 
   const form = useForm({
-    resolver: zodResolver(RasxodPayloadSchema),
+    resolver: zodResolver(RasxodFormSchema),
     defaultValues: {
       ...defaultValues,
       doc_date: original?.doc_date ?? defaultValues.doc_date,
@@ -170,7 +171,7 @@ const BankRasxodDetailtsPage = () => {
     }
   })
 
-  const onSubmit = form.handleSubmit((payload: RasxodPayloadType) => {
+  const onSubmit = form.handleSubmit((payload: RasxodFormValues) => {
     const {
       doc_date,
       doc_num,
@@ -193,7 +194,7 @@ const BankRasxodDetailtsPage = () => {
         opisanie,
         rukovoditel,
         glav_buxgalter,
-        childs: podvodki.map(normalizeEmptyFields<RasxodPodvodkaPayloadType>)
+        childs: podvodki.map(normalizeEmptyFields<RasxodPodvodkaFormValues>)
       })
       return
     }
@@ -206,13 +207,13 @@ const BankRasxodDetailtsPage = () => {
       opisanie,
       rukovoditel,
       glav_buxgalter,
-      childs: podvodki.map(normalizeEmptyFields<RasxodPodvodkaPayloadType>)
+      childs: podvodki.map(normalizeEmptyFields<RasxodPodvodkaFormValues>)
     })
   })
 
   const podvodki = form.watch('childs')
   const setPodvodki = useCallback(
-    (payload: RasxodPodvodkaPayloadType[]) => {
+    (payload: RasxodPodvodkaFormValues[]) => {
       form.setValue('childs', payload)
     },
     [form]
@@ -244,9 +245,10 @@ const BankRasxodDetailtsPage = () => {
     })
   }, [setPodvodki, form, rasxod, params.id])
 
+  // Todo: fix this it should not generate while updating
   useEffect(() => {
     if (!shartnomaSpravochnik.selected) {
-      form.setValue('opisanie', form.getValues('opisanie')?.replace(shartnomaRegExp, ''))
+      form.setValue('opisanie', form.getValues('opisanie')?.replace(shartnomaRegExp, '') ?? '')
       return
     }
 
@@ -260,14 +262,14 @@ const BankRasxodDetailtsPage = () => {
           ?.replace(
             shartnomaRegExp,
             `№ ${doc_num}-сонли ${formatLocaleDate(doc_date)} йил кунги шартномага асосан `
-          )
+          ) ?? ''
       )
       return
     }
     form.setValue(
       'opisanie',
       `№ ${doc_num}-сонли ${formatLocaleDate(doc_date)} йил кунги шартномага асосан ` +
-        form.getValues('opisanie')
+        (form.getValues('opisanie') ?? '')
     )
   }, [shartnomaSpravochnik.selected])
 
@@ -332,6 +334,30 @@ const BankRasxodDetailtsPage = () => {
                   name={t('receiver-info')}
                 />
               </div>
+              {/* <div className="p-5 flex items-center gap-10">
+                <FormElement
+                  label={t('raschet-schet')}
+                  className="flex-1"
+                >
+                  <SelectField
+                    options={raschetSchetOptions}
+                    getOptionValue={(o) => o.id}
+                    getOptionLabel={(o) => o.raschet_schet}
+                    triggerClassName="max-w-xs"
+                  />
+                </FormElement>
+                <FormElement
+                  label={t('raschet-schet-gazna')}
+                  className="flex-1"
+                >
+                  <SelectField
+                    options={raschetSchetGaznaOptions}
+                    getOptionValue={(o) => o.id}
+                    getOptionLabel={(o) => o.raschet_schet_gazna}
+                    triggerClassName="max-w-xs"
+                  />
+                </FormElement>
+              </div> */}
 
               <div className="grid grid-cols-2 gap-10">
                 <SummaFields data={{ summa: form.watch('summa') }} />
@@ -415,7 +441,7 @@ const BankRasxodDetailtsPage = () => {
             errors={form.formState.errors.childs}
             onCreate={createEditorCreateHandler({
               form,
-              schema: RasxodPodvodkaPayloadSchema,
+              schema: RasxodPodvodkaFormSchema,
               defaultValues: defaultValues.childs[0]
             })}
             onDelete={createEditorDeleteHandler({
@@ -427,23 +453,22 @@ const BankRasxodDetailtsPage = () => {
             params={{
               onChangeOperatsii: (selected: Operatsii | undefined) => {
                 if (!selected) {
-                  form.setValue('opisanie', form.getValues('opisanie')!.replace(smetaRegExp, ''))
+                  form.setValue('opisanie', form.getValues('opisanie')?.replace(smetaRegExp, '')) ??
+                    ''
                   return
                 }
-                console.log(
-                  'opisanie',
-                  smetaRegExp.test(form.getValues('opisanie') || ''),
-                  form.getValues('opisanie')
-                )
                 if (smetaRegExp.test(form.getValues('opisanie') || '')) {
                   form.setValue(
                     'opisanie',
-                    form.getValues('opisanie')!.replace(smetaRegExp, ` Ст: ${selected.sub_schet}`)
+                    form.getValues('opisanie')?.replace(smetaRegExp, ` Ст: ${selected.sub_schet}`)
                   )
                   return
                 }
 
-                form.setValue('opisanie', `${form.getValues('opisanie')} Ст: ${selected.sub_schet}`)
+                form.setValue(
+                  'opisanie',
+                  `${form.getValues('opisanie') ?? ''} Ст: ${selected.sub_schet}`
+                )
               }
             }}
           />
@@ -452,5 +477,17 @@ const BankRasxodDetailtsPage = () => {
     </DetailsView>
   )
 }
+
+// const raschetSchetOptions: Organization.RaschetSchet[] = [
+//   { id: 1, spravochnik_organization_id: 100, raschet_schet: '12345678901234567890' },
+//   { id: 2, spravochnik_organization_id: 100, raschet_schet: '98765432109876543210' },
+//   { id: 3, spravochnik_organization_id: 100, raschet_schet: '56789012345678901234' }
+// ]
+
+// const raschetSchetGaznaOptions: Organization.RaschetSchetGazna[] = [
+//   { id: 1, spravochnik_organization_id: 100, raschet_schet_gazna: '11223344556677889900' },
+//   { id: 2, spravochnik_organization_id: 100, raschet_schet_gazna: '99887766554433221100' },
+//   { id: 3, spravochnik_organization_id: 100, raschet_schet_gazna: '55667788990011223344' }
+// ]
 
 export default BankRasxodDetailtsPage

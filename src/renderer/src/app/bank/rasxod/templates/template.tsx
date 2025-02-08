@@ -1,4 +1,4 @@
-import type { RasxodPayloadType } from '../service'
+import type { RasxodFormValues } from '../service'
 import type { MainSchet, Organization } from '@/common/models'
 
 import { Document, Page, StyleSheet } from '@react-pdf/renderer'
@@ -14,7 +14,7 @@ registerFonts()
 
 type BankRasxodPorucheniyaTemplateProps = {
   type: 'normal' | 'tax'
-  rasxod: RasxodPayloadType
+  rasxod: RasxodFormValues
   main_schet: MainSchet
   organization: Organization
 }

@@ -1,4 +1,4 @@
-import type { RasxodPodvodkaPayloadType } from '../service'
+import type { RasxodPodvodkaFormValues } from '../service'
 import type { EditableColumnType } from '@renderer/common/components/editable-table'
 
 import {
@@ -12,7 +12,7 @@ import {
 
 import { TypeSchetOperatsii } from '@/common/models'
 
-export const podvodkaColumns: EditableColumnType<RasxodPodvodkaPayloadType>[] = [
+export const podvodkaColumns: EditableColumnType<RasxodPodvodkaFormValues>[] = [
   {
     key: 'spravochnik_operatsii_id',
     header: 'provodka',

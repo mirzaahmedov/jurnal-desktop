@@ -93,7 +93,7 @@ const FallbackRoute = () => {
 
 export const routes: RouteObject[] = [
   {
-    path: '/signin',
+    path: '/',
     element: <SigninPage />
   },
   {

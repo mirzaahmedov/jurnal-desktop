@@ -1,15 +1,15 @@
-import { ButtonHTMLAttributes } from 'react'
+import type { RasxodFormValues } from '../service'
+import type { MainSchet, Organization } from '@renderer/common/models'
+import type { ButtonHTMLAttributes } from 'react'
 
 import { LoadingSpinner } from '@renderer/common/components'
 import { Button } from '@renderer/common/components/ui/button'
 import { useToast } from '@renderer/common/hooks'
 import { formatLocaleDate } from '@renderer/common/lib/format'
 import { numberToWords } from '@renderer/common/lib/utils'
-import { MainSchet, Organization } from '@renderer/common/models'
 import { useMutation } from '@tanstack/react-query'
 import { Printer } from 'lucide-react'
 
-import { RasxodPayloadType } from '../service'
 import { generatePorucheniya } from '../templates/excel/porucheniya'
 import { generatePorucheniyaNalog } from '../templates/excel/porucheniya_nalog'
 
@@ -18,7 +18,7 @@ type GeneratePorucheniyaParams = Omit<ButtonHTMLAttributes<HTMLButtonElement>, '
   fileName: string
   buttonText: string
   data: {
-    rasxod: RasxodPayloadType
+    rasxod: RasxodFormValues
     main_schet: MainSchet
     organization: Organization
   }

@@ -57,7 +57,11 @@ const SigninPage = () => {
       })
       queryClient.clear()
       toast.success('Вы успешно вошли в систему')
-      navigate('/')
+      if (res?.data?.result.role_name === 'super-admin') {
+        navigate('/admin/dashboard')
+        return
+      }
+      navigate('/region/dashboard')
     },
     onError(error) {
       toast.error(error.message ?? 'Не удалось войти в систему')

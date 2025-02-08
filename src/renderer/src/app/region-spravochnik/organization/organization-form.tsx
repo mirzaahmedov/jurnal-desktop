@@ -1,4 +1,4 @@
-import type { OrganizationFormPayload } from './service'
+import type { OrganizationFormValues } from './service'
 
 import { type FormEventHandler, type ReactNode, useState } from 'react'
 
@@ -14,7 +14,7 @@ import { Form, FormControl, FormField } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
 
 type OrganizationFormProps = {
-  form: UseFormReturn<OrganizationFormPayload>
+  form: UseFormReturn<OrganizationFormValues>
   onSubmit: FormEventHandler<HTMLFormElement>
   formActions: ReactNode
 }
@@ -22,6 +22,25 @@ const OrganizationForm = ({ form, formActions, onSubmit }: OrganizationFormProps
   const [search, setSearch] = useState('')
 
   const { t } = useTranslation()
+  // const {
+  //   fields: raschetSchets,
+  //   append: appendRaschetSchet,
+  //   remove: removeRaschetSchet
+  // } = useFieldArray({
+  //   control: form.control,
+  //   name: 'raschet_schet',
+  //   rules: {
+  //     minLength: 1
+  //   }
+  // })
+  // const {
+  //   fields: raschetSchetsGazna,
+  //   append: appendRaschetSchetGazna,
+  //   remove: removeRaschetSchetGazna
+  // } = useFieldArray({
+  //   control: form.control,
+  //   name: 'raschet_schet_gazna'
+  // })
 
   const { data: bankList, isFetching } = useQuery({
     queryKey: [bankQueryKeys.getAll, { search }],
@@ -33,7 +52,7 @@ const OrganizationForm = ({ form, formActions, onSubmit }: OrganizationFormProps
   return (
     <Form {...form}>
       <form onSubmit={onSubmit}>
-        <div className="grid gap-4 py-4">
+        <div className="grid gap-6 py-4">
           <FormField
             name="name"
             control={form.control}
@@ -146,6 +165,103 @@ const OrganizationForm = ({ form, formActions, onSubmit }: OrganizationFormProps
               </FormElement>
             )}
           />
+
+          {/* <div className="grid grid-cols-6">
+            <FormLabel className="col-span-2 text-end">{t('raschet-schet')}</FormLabel>
+          </div>
+          <ul className="flex flex-col gap-6">
+            {raschetSchets.map((field, index) => (
+              <FormField
+                key={field.id}
+                control={form.control}
+                name={`raschet_schet.${index}.raschet_schet`}
+                render={({ field }) => (
+                  <li key={index}>
+                    <FormElement
+                      grid="2:4"
+                      label={(index + 1).toString()}
+                    >
+                      <div className="flex items-center justify-between gap-5">
+                        <Input {...field} />
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          className="btn-icon !mx-0 hover:text-red-500"
+                          disabled={raschetSchets.length === 1}
+                          onClick={() => removeRaschetSchet(index)}
+                        >
+                          <Trash />
+                        </Button>
+                      </div>
+                    </FormElement>
+                  </li>
+                )}
+              />
+            ))}
+          </ul>
+          <div className="grid grid-cols-6 mt-1">
+            <div className="col-span-2"></div>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() =>
+                appendRaschetSchet({
+                  raschet_schet: ''
+                })
+              }
+              className="col-span-4"
+            >
+              <Plus className="btn-icon icon-start" /> {t('add')}
+            </Button>
+          </div>
+
+          <div className="grid grid-cols-6">
+            <FormLabel className="col-span-2 text-end">{t('raschet-schet-gazna')}</FormLabel>
+          </div>
+          {raschetSchetsGazna.map((field, index) => (
+            <FormField
+              key={field.id}
+              control={form.control}
+              name={`raschet_schet_gazna.${index}.raschet_schet_gazna`}
+              render={({ field }) => (
+                <FormElement
+                  key={index}
+                  grid="2:4"
+                  label={(index + 1).toString()}
+                >
+                  <div className="flex items-center justify-between gap-5">
+                    <Input {...field} />
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      className="btn-icon !mx-0 hover:text-red-500"
+                      disabled={raschetSchetsGazna.length === 1}
+                      onClick={() => removeRaschetSchetGazna(index)}
+                    >
+                      <Trash />
+                    </Button>
+                  </div>
+                </FormElement>
+              )}
+            />
+          ))}
+          <div className="grid grid-cols-6">
+            <div className="col-span-2"></div>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() =>
+                appendRaschetSchetGazna({
+                  raschet_schet_gazna: ''
+                })
+              }
+              className="col-span-4"
+            >
+              <Plus className="btn-icon icon-start" /> {t('add')}
+            </Button>
+          </div> */}
 
           <FormField
             name="raschet_schet"

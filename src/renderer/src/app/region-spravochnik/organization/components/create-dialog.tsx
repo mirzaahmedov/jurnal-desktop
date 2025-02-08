@@ -19,7 +19,7 @@ import {
 } from '@/common/components/ui/dialog'
 
 import { defaultValues, organizationQueryKeys } from '../config'
-import { OrganizationForm } from '../form'
+import { OrganizationForm } from '../organization-form'
 import { OrganizationFormSchema, organizationService } from '../service'
 
 type CreateOrganizationDialogProps = DialogProps & {
@@ -72,24 +72,26 @@ const CreateOrganizationDialog = (props: CreateOrganizationDialogProps) => {
       open={open}
       onOpenChange={onOpenChange}
     >
-      <DialogContent className="max-w-xl">
+      <DialogContent className="max-w-xl max-h-[80%] flex flex-col">
         <DialogHeader>
-          <DialogTitle>{t('create-something', { something: t("organization")})}</DialogTitle>
+          <DialogTitle>{t('create-something', { something: t('organization') })}</DialogTitle>
         </DialogHeader>
-        <OrganizationForm
-          form={form}
-          onSubmit={onSubmit}
-          formActions={
-            <DialogFooter>
-              <Button
-                disabled={isCreating}
-                type="submit"
-              >
-                {t('add')}
-              </Button>
-            </DialogFooter>
-          }
-        />
+        <div className="flex-1 overflow-auto noscroll-bar">
+          <OrganizationForm
+            form={form}
+            onSubmit={onSubmit}
+            formActions={
+              <DialogFooter>
+                <Button
+                  disabled={isCreating}
+                  type="submit"
+                >
+                  {t('add')}
+                </Button>
+              </DialogFooter>
+            }
+          />
+        </div>
       </DialogContent>
     </Dialog>
   )

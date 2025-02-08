@@ -1,4 +1,4 @@
-import { ReactNode } from 'react'
+import type { ReactNode } from 'react'
 
 import { Navigate } from 'react-router-dom'
 
@@ -9,5 +9,5 @@ type AuthGuardProps = {
 }
 export const AuthGuard = (props: AuthGuardProps) => {
   const { isAuthenticated } = useAuthenticationStore()
-  return isAuthenticated ? props.children : <Navigate to="/signin" />
+  return isAuthenticated ? props.children : <Navigate to="/" />
 }

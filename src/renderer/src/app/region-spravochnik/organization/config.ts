@@ -1,4 +1,4 @@
-import type { OrganizationFormPayload } from './service'
+import type { OrganizationFormValues } from './service'
 
 const organizationQueryKeys = {
   getAll: 'organization/all',
@@ -8,13 +8,23 @@ const organizationQueryKeys = {
   delete: 'organization/delete'
 }
 
-const defaultValues: OrganizationFormPayload = {
+const defaultValues: OrganizationFormValues = {
   name: '',
   bank_klient: '',
   inn: '',
   mfo: '',
   raschet_schet: '',
   raschet_schet_gazna: '',
+  // raschet_schet: [
+  //   {
+  //     raschet_schet: ''
+  //   }
+  // ],
+  // raschet_schet_gazna: [
+  //   {
+  //     raschet_schet_gazna: ''
+  //   }
+  // ],
   okonx: ''
 }
 

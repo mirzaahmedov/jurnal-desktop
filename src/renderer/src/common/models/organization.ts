@@ -1,17 +1,19 @@
-type Organization = {
+export interface Organization {
   parent_id?: number
   id: number
   name: string
   bank_klient: string
   raschet_schet: string
   raschet_schet_gazna: string
+  // raschet_schet: Organization.RaschetSchet[]
+  // raschet_schet_gazna: Organization.RaschetSchetGazna[]
   mfo: string
   inn: string
   okonx: string
   childs: Organization[]
 }
 
-type OrganizationMonitorProvodka =
+export type OrganizationMonitorProvodka =
   | 'bank_prixod'
   | 'bank_rasxod'
   | 'kassa_prixod'
@@ -22,7 +24,7 @@ type OrganizationMonitorProvodka =
   | 'jur7_rasxod'
   | 'jur7_internal'
 
-type OrganizationMonitor = {
+export interface OrganizationMonitor {
   id: number
   shartnoma_id: number
   shrtnoma_doc_num: string
@@ -41,4 +43,15 @@ type OrganizationMonitor = {
   type: OrganizationMonitorProvodka
 }
 
-export type { Organization, OrganizationMonitor, OrganizationMonitorProvodka }
+export namespace Organization {
+  export interface RaschetSchet {
+    id: number
+    spravochnik_organization_id: number
+    raschet_schet: string
+  }
+  export interface RaschetSchetGazna {
+    id: number
+    spravochnik_organization_id: number
+    raschet_schet_gazna: string
+  }
+}

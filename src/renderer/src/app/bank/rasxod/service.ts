@@ -7,14 +7,14 @@ import { z } from 'zod'
 
 export const bankRasxodService = new CRUDService<
   BankRasxod,
-  RasxodPayloadType,
-  RasxodPayloadType,
+  RasxodFormValues,
+  RasxodFormValues,
   { summa: number } & ResponseMeta
 >({
   endpoint: APIEndpoints.bank_rasxod
 }).use(main_schet())
 
-export const RasxodPodvodkaPayloadSchema = withPreprocessor(
+export const RasxodPodvodkaFormSchema = withPreprocessor(
   z.object({
     spravochnik_operatsii_id: z.number(),
     summa: z.number().min(1),
@@ -25,7 +25,7 @@ export const RasxodPodvodkaPayloadSchema = withPreprocessor(
   })
 )
 
-export const RasxodPayloadSchema = withPreprocessor(
+export const RasxodFormSchema = withPreprocessor(
   z.object({
     doc_num: z.string(),
     doc_date: z.string(),
@@ -36,12 +36,12 @@ export const RasxodPayloadSchema = withPreprocessor(
     rukovoditel: z.string().optional().nullable(),
     glav_buxgalter: z.string().optional().nullable(),
     id_shartnomalar_organization: z.number().optional(),
-    childs: z.array(RasxodPodvodkaPayloadSchema).superRefine(validateProvodkaOperatsii)
+    childs: z.array(RasxodPodvodkaFormSchema).superRefine(validateProvodkaOperatsii)
   })
 )
 
-export type RasxodPodvodkaPayloadType = z.infer<typeof RasxodPodvodkaPayloadSchema>
-export type RasxodPayloadType = z.infer<typeof RasxodPayloadSchema>
+export type RasxodPodvodkaFormValues = z.infer<typeof RasxodPodvodkaFormSchema>
+export type RasxodFormValues = z.infer<typeof RasxodFormSchema>
 
 export const bankRasxodPaymentService = new CRUDService<undefined, { status: boolean }>({
   endpoint: APIEndpoints.bank_rasxod_payment

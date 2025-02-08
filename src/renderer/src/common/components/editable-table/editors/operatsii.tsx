@@ -1,7 +1,7 @@
 import type { EditorComponentType } from './types'
 import type { Operatsii, TypeSchetOperatsii } from '@renderer/common/models'
 
-import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { useLayoutEffect, useRef, useState } from 'react'
 
 import {
   createOperatsiiSpravochnik,
@@ -26,7 +26,7 @@ export const createOperatsiiEditor = <T extends { spravochnik_operatsii_id?: num
     const [schetFilter, setSchetFilter] = useState<null | string>(null)
     const [subschetFilter, setSubschetFilter] = useState<null | string>(null)
 
-    const [disabled, setDisabled] = useState<boolean>(false)
+    const [, setDisabled] = useState<boolean>(false)
     const [schet, setSchet] = useState<null | string>(null)
 
     const { t } = useTranslation()
@@ -42,7 +42,7 @@ export const createOperatsiiEditor = <T extends { spravochnik_operatsii_id?: num
     const operatsiiSpravochnik = useSpravochnik(
       createOperatsiiSpravochnik({
         value: row.spravochnik_operatsii_id || undefined,
-        onChange: (value) => {
+        onChange: (value, selected) => {
           onChange?.({
             id,
             key: 'spravochnik_operatsii_id',
@@ -51,6 +51,7 @@ export const createOperatsiiEditor = <T extends { spravochnik_operatsii_id?: num
               spravochnik_operatsii_id: value
             }
           })
+          paramsRef.current?.onChangeOperatsii?.(selected)
           if (value !== undefined) {
             setSchet(null)
             setSchetFilter(null)
@@ -62,10 +63,6 @@ export const createOperatsiiEditor = <T extends { spravochnik_operatsii_id?: num
         }
       })
     )
-
-    useEffect(() => {
-      paramsRef.current?.onChangeOperatsii?.(operatsiiSpravochnik.selected)
-    }, [operatsiiSpravochnik.selected])
 
     const { data: schetOptions, isFetching: isFetchingSchetOptions } = useQuery({
       queryKey: [operatsiiQueryKeys.getSchetOptions, { type_schet }],
@@ -93,7 +90,8 @@ export const createOperatsiiEditor = <T extends { spravochnik_operatsii_id?: num
       <div className="w-full flex">
         <AutoComplete
           isFetching={isFetchingSchetOptions}
-          disabled={schetFilter === null}
+          // disabled={schetFilter === null}
+          disabled={true}
           options={filteredSchetOptions}
           className="w-full border-r"
           getOptionLabel={(option) => option.schet}
@@ -107,6 +105,7 @@ export const createOperatsiiEditor = <T extends { spravochnik_operatsii_id?: num
           <SpravochnikInput
             {...operatsiiSpravochnik}
             editor
+            readOnly
             tabIndex={tabIndex}
             error={!!errors?.spravochnik_operatsii_id}
             name="spravochnik_operatsii_id"
@@ -143,7 +142,8 @@ export const createOperatsiiEditor = <T extends { spravochnik_operatsii_id?: num
         <AutoComplete
           isFetching={isFetching}
           options={operatsiiList?.data ?? []}
-          disabled={disabled}
+          // disabled={disabled}
+          disabled={true}
           className="w-full"
           value={row.spravochnik_operatsii_id?.toString()}
           getOptionLabel={(option) => option.sub_schet}
@@ -158,6 +158,8 @@ export const createOperatsiiEditor = <T extends { spravochnik_operatsii_id?: num
                   spravochnik_operatsii_id: option.id
                 }
               })
+              paramsRef.current?.onChangeOperatsii?.(option)
+
               setSubschetFilter(null)
               setDisabled(true)
               inputRef?.current?.focus()
@@ -167,6 +169,7 @@ export const createOperatsiiEditor = <T extends { spravochnik_operatsii_id?: num
           <SpravochnikInput
             {...operatsiiSpravochnik}
             editor
+            readOnly
             inputRef={inputRef}
             tabIndex={tabIndex}
             error={!!errors?.spravochnik_operatsii_id}

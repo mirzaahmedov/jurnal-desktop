@@ -16,7 +16,7 @@ import { FormControl } from './ui/form'
 
 type SelectFieldProps<T> = SelectProps & {
   withFormControl?: boolean
-  placeholder: string
+  placeholder?: string
   options: T[] | readonly T[]
   getOptionLabel(data: T): ReactNode
   getOptionValue(data: T): string | number

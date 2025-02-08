@@ -21,12 +21,24 @@ export const OrganizationFormSchema = withPreprocessor(
     bank_klient: z.string(),
     raschet_schet: z.string(),
     raschet_schet_gazna: z.string(),
+    // raschet_schet: z.array(
+    //   z.object({
+    //     id: z.number().optional(),
+    //     raschet_schet: z.string().nonempty()
+    //   })
+    // ),
+    // raschet_schet_gazna: z.array(
+    //   z.object({
+    //     id: z.number().optional(),
+    //     raschet_schet_gazna: z.string().nonempty()
+    //   })
+    // ),
     okonx: z.string()
   })
 )
-export type OrganizationFormPayload = z.infer<typeof OrganizationFormSchema>
+export type OrganizationFormValues = z.infer<typeof OrganizationFormSchema>
 
-export const organizationService = new CRUDService<Organization, OrganizationFormPayload>({
+export const organizationService = new CRUDService<Organization, OrganizationFormValues>({
   endpoint: APIEndpoints.organization
 })
 

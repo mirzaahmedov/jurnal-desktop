@@ -1,4 +1,4 @@
-import type { RasxodPayloadType } from './service'
+import type { RasxodFormValues } from './service'
 
 export const queryKeys = {
   getAll: 'bank-rasxod/all',
@@ -8,7 +8,7 @@ export const queryKeys = {
   create: 'bank-rasxod/create'
 }
 
-export const defaultValues: RasxodPayloadType = {
+export const defaultValues: RasxodFormValues = {
   doc_num: '',
   doc_date: '',
   opisanie: '',

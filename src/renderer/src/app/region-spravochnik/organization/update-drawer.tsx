@@ -22,8 +22,8 @@ import { toast } from 'react-toastify'
 
 import { defaultValues } from './config'
 import { organizationQueryKeys } from './config'
-import { OrganizationForm } from './form'
 import { useParentId } from './hooks'
+import { OrganizationForm } from './organization-form'
 import {
   OrganizationFormSchema,
   createOrganizationSpravochnik,
@@ -158,8 +158,8 @@ const UpdateOrganizationDrawer = () => {
         <DrawerHeader>
           <DrawerTitle>{t('pages.organization')}</DrawerTitle>
         </DrawerHeader>
-        <div className="grid grid-cols-12 gap-10 flex-1 overflow-hidden">
-          <div className="col-span-4 relative">
+        <div className="grid grid-cols-12 flex-1 overflow-hidden">
+          <div className="col-span-4 relative overflow-auto p-5 scrollbar">
             {isFetching ? <LoadingOverlay /> : null}
             <OrganizationForm
               form={form}
