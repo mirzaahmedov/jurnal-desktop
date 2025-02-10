@@ -72,6 +72,7 @@ const TypeOperatsiiPage = lazy(() => import('./region-spravochnik/type-operatsii
 const BankSpravochnikPage = lazy(() => import('./super-admin/bank/page'))
 const BudgetPage = lazy(() => import('./super-admin/budjet/page'))
 const GroupPage = lazy(() => import('./super-admin/group/page'))
+const RegionGroupPage = lazy(() => import('./region-spravochnik/group/page'))
 const LogsPage = lazy(() => import('./super-admin/logs/page'))
 const AdminMainbookDetailsPage = lazy(() => import('./super-admin/mainbook/details/page'))
 const AdminMainbookPage = lazy(() => import('./super-admin/mainbook/page'))
@@ -89,7 +90,7 @@ const UnitPage = lazy(() => import('./super-admin/unit/page'))
 const UserPage = lazy(() => import('./super-admin/user/page'))
 
 const FallbackRoute = () => {
-  const { user } = useAuthenticationStore()
+  const user = useAuthenticationStore((store) => store.user)
   return user?.role_name === 'super-admin' ? (
     <Navigate to="/admin/dashboard" />
   ) : (
@@ -230,6 +231,10 @@ export const routes: RouteObject[] = [
           {
             path: 'smeta-grafik',
             element: <SmetaGrafikPage />
+          },
+          {
+            path: 'group',
+            element: <RegionGroupPage />
           },
           {
             path: 'podpis',

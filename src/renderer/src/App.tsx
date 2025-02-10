@@ -1,7 +1,6 @@
 import { Suspense, useEffect } from 'react'
 
 import { QueryClientProvider } from '@tanstack/react-query'
-// import { createPortal } from 'react-dom'
 import { RouterProvider } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify'
 
@@ -15,18 +14,6 @@ import { UpdateManager } from './common/features/update-manager'
 import { queryClient } from './common/lib/query-client'
 
 initLocales()
-
-// const ToastProvider = () => {
-//   return createPortal(
-//     <ToastContainer
-//       position="bottom-right"
-//       toastStyle={{
-//         width: 400
-//       }}
-//     />,
-//     document.getElementById('toasts')!
-//   )
-// }
 
 function App() {
   useEffect(() => {
@@ -53,7 +40,8 @@ function App() {
       <ToastContainer
         position="bottom-right"
         toastStyle={{
-          width: 400
+          width: 400,
+          pointerEvents: 'auto'
         }}
       />
       <ConfirmationDialog />

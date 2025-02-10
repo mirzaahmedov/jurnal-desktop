@@ -95,7 +95,7 @@ const TypeOperatsiiPage = () => {
       <ListView.Footer>
         <ListView.Pagination
           {...pagination}
-          pageCount={operationTypes?.meta.pageCount ?? 0}
+          pageCount={operationTypes?.meta?.pageCount ?? 0}
         />
       </ListView.Footer>
       <TypeOperatsiiDialog

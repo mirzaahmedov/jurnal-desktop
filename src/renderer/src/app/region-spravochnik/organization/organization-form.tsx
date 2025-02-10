@@ -107,7 +107,6 @@ const OrganizationForm = ({ form, formActions, onSubmit }: OrganizationFormProps
                       {...field}
                       onChange={(e) => {
                         field.onChange(e)
-                        console.log('e.target.value', e.target.value)
                         setSearch(e.target.value)
                       }}
                       onFocus={open}

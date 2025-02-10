@@ -19,18 +19,18 @@ export const OrganizationFormSchema = withPreprocessor(
     mfo: z.string(),
     inn: z.string(),
     bank_klient: z.string(),
-    raschet_schet: z.array(
-      z.object({
-        id: z.number().optional(),
-        raschet_schet: z.string().nonempty()
-      })
-    ),
-    raschet_schet_gazna: z.array(
-      z.object({
-        id: z.number().optional(),
-        raschet_schet_gazna: z.string().nonempty()
-      })
-    ),
+    // raschet_schet: z.array(
+    //   z.object({
+    //     id: z.number().optional(),
+    //     raschet_schet: z.string().nonempty()
+    //   })
+    // ),
+    // raschet_schet_gazna: z.array(
+    //   z.object({
+    //     id: z.number().optional(),
+    //     raschet_schet_gazna: z.string().nonempty()
+    //   })
+    // ),
     okonx: z.string()
   })
 )

@@ -14,9 +14,9 @@ export const HttpErrorToast = ({ closeToast, data }: ToastContentProps<HttpError
   return (
     <div className="flex items-center">
       <div>
-        <h1 className="text-base text-foreground font-medium">{title}</h1>
+        <h1 className="text-sm text-slate-500 font-medium">{title}</h1>
       </div>
-      <div className="flex gap-1">
+      <div className="flex gap-1 text-slate-500">
         {details ? (
           <Button
             variant="ghost"

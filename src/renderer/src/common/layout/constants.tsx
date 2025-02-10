@@ -306,6 +306,11 @@ export const getNavElements = (t: TFunction): NavElement[] => {
               icon: CalendarCheck
             },
             {
+              path: 'group',
+              title: t('pages.group'),
+              icon: Group
+            },
+            {
               path: 'podpis',
               title: t('pages.podpis'),
               icon: Signature
