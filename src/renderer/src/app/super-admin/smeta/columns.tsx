@@ -3,6 +3,9 @@ import type { Smeta } from '@/common/models'
 
 const smetaColumns: ColumnDef<Smeta>[] = [
   {
+    key: 'id'
+  },
+  {
     key: 'smeta_name',
     header: 'name'
   },
