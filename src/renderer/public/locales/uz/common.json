@@ -184,5 +184,10 @@
   "send": "Jo'natish",
   "selected-file": "Tanlangan fayl",
   "id": "ID",
-  "autofill": "Avtomatik to'ldirish"
+  "autofill": "Avtomatik to'ldirish",
+  "action-successful": "Amaliyot muvofaqiyatli bajarildi",
+  "action-failed": "Nimadir xato ketdi. Iltimos, qayta urinib ko‘ring.",
+  "retry": "Qayta yuborish",
+  "nothing-found": "Hech narsa topilmadi",
+  "reports": "Hisobotlar"
 }

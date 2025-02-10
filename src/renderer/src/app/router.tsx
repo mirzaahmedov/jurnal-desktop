@@ -1,86 +1,92 @@
 import type { RouteObject } from 'react-router-dom'
 
+import { lazy } from 'react'
+
 import { useAuthenticationStore } from '@renderer/common/features/auth'
 import { RequisitesGuard } from '@renderer/common/features/requisites'
 import { Navigate, createHashRouter } from 'react-router-dom'
 
-// Todo: fix inconsistent imports
-import MainLayout from '../common/layout/main'
-import BankMonitorPage from './bank/monitor/page'
-import BankPrixodDetailsPage from './bank/prixod/details/page'
-import BankPrixodPage from './bank/prixod/page'
-import BankRasxodDetailsPage from './bank/rasxod/details/page'
-import BankRasxodPage from './bank/rasxod/page'
 import DashboardPage from './dashboard/page'
 import HomePage from './home/page'
-import { InternalTransferDetailsPage } from './jurnal-7/internal-transfer/details/page'
-import { InternalTransferPage } from './jurnal-7/internal-transfer/page'
-import IznosPage from './jurnal-7/iznos/page'
-import OstatokPage from './jurnal-7/ostatok/page'
-import Subdivision7Page from './jurnal-7/podrazdelenie/page'
-import { MO7PrixodDetailsPage } from './jurnal-7/prixod/details/page'
-import { MO7PrixodPage } from './jurnal-7/prixod/page'
-import { MO7RasxodDetailsPage } from './jurnal-7/rasxod/details/page'
-import { MO7RasxodPage } from './jurnal-7/rasxod/page'
-import ResponsiblePage from './jurnal-7/responsible/page'
-import KassaMonitorPage from './kassa/monitor/page'
-import KassaPrixodDetailsPage from './kassa/prixod/details/page'
-import KassaPrixodPage from './kassa/prixod/page'
-import KassaRasxodDetailtsPage from './kassa/rasxod/details/page'
-import KassaRasxodPage from './kassa/rasxod/page'
-import MainbookDetailsPage from './mainbook/mainbook/details/page'
-import MainbookPage from './mainbook/mainbook/page'
-import MainbookReportDetailsPage from './mainbook/report/details/page'
-import MainbookReportPage from './mainbook/report/page'
-import AktDetailsPage from './organization/akt/details/page'
-import AktPage from './organization/akt/page'
-import OrganizationMonitorPage from './organization/monitor/page'
-import PokazatUslugiDetailsPage from './organization/pokazat-uslugi/details/page'
-import PokazatUslugiPage from './organization/pokazat-uslugi/page'
-import ShartnomaGrafikDetailsPage from './organization/shartnoma-grafik/details/page'
-import ShartnomaGrafikPage from './organization/shartnoma-grafik/page'
-import ShartnomaDetailsPage from './organization/shartnoma/details/page'
-import ShartnomaPage from './organization/shartnoma/page'
-import OXDetailsPage from './ox-report/ox-report/details/page'
-import OXPage from './ox-report/ox-report/page'
-import OXReportDetailsPage from './ox-report/report/details/page'
-import OXReportPage from './ox-report/report/page'
-import AdvanceReportDetailsPage from './podotchet/avans/details/page'
-import AvansPage from './podotchet/avans/page'
-import PodotchetMonitoringPage from './podotchet/monitor/page'
-import ExpensesDetailsPage from './real-expenses/real-expenses/details/page'
-import ExpensesPage from './real-expenses/real-expenses/page'
-import ExpensesReportDetailsPage from './real-expenses/report/details/page'
-import RealExpensesReportPage from './real-expenses/report/page'
-import AccessPage from './region-admin/access/page'
-import RegionUserPage from './region-admin/region-user'
-import SmetaGrafikPage from './region-admin/smeta-grafik/page'
-import MainSchetPage from './region-spravochnik/main-schet/page'
-import OrganizationPage from './region-spravochnik/organization/page'
-import AccountablePage from './region-spravochnik/podotchet'
-import PodpisPage from './region-spravochnik/podpis/page'
-import SubdivisionPage from './region-spravochnik/podrazdelenie/page'
-import SostavPage from './region-spravochnik/sostav/page'
-import TypeOperatsiiPage from './region-spravochnik/type-operatsii/page'
 import SigninPage from './sign-in'
-import BankSpravochnikPage from './super-admin/bank/page'
-import BudgetPage from './super-admin/budjet/page'
-import GroupPage from './super-admin/group/page'
-import LogsPage from './super-admin/logs/page'
-import AdminMainbookDetailsPage from './super-admin/mainbook/details/page'
-import AdminMainbookPage from './super-admin/mainbook/page'
-import OperatsiiPage from './super-admin/operatsii/page'
-import AdminOXDetailsPage from './super-admin/ox-report/details/page'
-import AdminOXPage from './super-admin/ox-report/page'
-import PereotsenkaPage from './super-admin/pereotsenka/page'
-import AdminRealExpenseDetailsPage from './super-admin/real-expenses/details/page'
-import AdminRealExpensesPage from './super-admin/real-expenses/page'
-import RegionDataPage from './super-admin/region-data/page'
-import RegionPage from './super-admin/region/page'
-import RolePage from './super-admin/role/page'
-import SmetaPage from './super-admin/smeta/page'
-import UnitPage from './super-admin/unit/page'
-import UserPage from './super-admin/user/page'
+
+const MainLayout = lazy(() => import('../common/layout/main'))
+const BankMonitorPage = lazy(() => import('./bank/monitor/page'))
+const BankPrixodDetailsPage = lazy(() => import('./bank/prixod/details/page'))
+const BankPrixodPage = lazy(() => import('./bank/prixod/page'))
+const BankRasxodDetailsPage = lazy(() => import('./bank/rasxod/details/page'))
+const BankRasxodPage = lazy(() => import('./bank/rasxod/page'))
+const Jurnal7InternalTransferDetailsPage = lazy(
+  () => import('./jurnal-7/internal-transfer/details/page')
+)
+const Jurnal7InternalTransferPage = lazy(() => import('./jurnal-7/internal-transfer/page'))
+const IznosPage = lazy(() => import('./jurnal-7/iznos/page'))
+const OstatokPage = lazy(() => import('./jurnal-7/ostatok/page'))
+const Subdivision7Page = lazy(() => import('./jurnal-7/podrazdelenie/page'))
+const Jurnal7PrixodDetailsPage = lazy(() => import('./jurnal-7/prixod/details/page'))
+const Jurnal7PrixodPage = lazy(() => import('./jurnal-7/prixod/page'))
+const Jurnal7RasxodDetailsPage = lazy(() => import('./jurnal-7/rasxod/details/page'))
+const Jurnal7RasxodPage = lazy(() => import('./jurnal-7/rasxod/page'))
+const ResponsiblePage = lazy(() => import('./jurnal-7/responsible/page'))
+const KassaMonitorPage = lazy(() => import('./kassa/monitor/page'))
+const KassaPrixodDetailsPage = lazy(() => import('./kassa/prixod/details/page'))
+const KassaPrixodPage = lazy(() => import('./kassa/prixod/page'))
+const KassaRasxodDetailtsPage = lazy(() => import('./kassa/rasxod/details/page'))
+const KassaRasxodPage = lazy(() => import('./kassa/rasxod/page'))
+const MainbookDetailsPage = lazy(() => import('./mainbook/mainbook/details/page'))
+const MainbookPage = lazy(() => import('./mainbook/mainbook/page'))
+const MainbookReportDetailsPage = lazy(() => import('./mainbook/report/details/page'))
+const MainbookReportPage = lazy(() => import('./mainbook/report/page'))
+const AktDetailsPage = lazy(() => import('./organization/akt/details/page'))
+const AktPage = lazy(() => import('./organization/akt/page'))
+const OrganizationMonitorPage = lazy(() => import('./organization/monitor/page'))
+const PokazatUslugiDetailsPage = lazy(() => import('./organization/pokazat-uslugi/details/page'))
+const PokazatUslugiPage = lazy(() => import('./organization/pokazat-uslugi/page'))
+const ShartnomaGrafikDetailsPage = lazy(
+  () => import('./organization/shartnoma-grafik/details/page')
+)
+const ShartnomaGrafikPage = lazy(() => import('./organization/shartnoma-grafik/page'))
+const ShartnomaDetailsPage = lazy(() => import('./organization/shartnoma/details/page'))
+const ShartnomaPage = lazy(() => import('./organization/shartnoma/page'))
+const OXDetailsPage = lazy(() => import('./ox-report/ox-report/details/page'))
+const OXPage = lazy(() => import('./ox-report/ox-report/page'))
+const OXReportDetailsPage = lazy(() => import('./ox-report/report/details/page'))
+const OXReportPage = lazy(() => import('./ox-report/report/page'))
+const AdvanceReportDetailsPage = lazy(() => import('./podotchet/avans/details/page'))
+const AvansPage = lazy(() => import('./podotchet/avans/page'))
+const PodotchetMonitoringPage = lazy(() => import('./podotchet/monitor/page'))
+const ExpensesDetailsPage = lazy(() => import('./real-expenses/real-expenses/details/page'))
+const ExpensesPage = lazy(() => import('./real-expenses/real-expenses/page'))
+const ExpensesReportDetailsPage = lazy(() => import('./real-expenses/report/details/page'))
+const RealExpensesReportPage = lazy(() => import('./real-expenses/report/page'))
+const AccessPage = lazy(() => import('./region-admin/access/page'))
+const RegionUserPage = lazy(() => import('./region-admin/region-user'))
+const SmetaGrafikPage = lazy(() => import('./region-admin/smeta-grafik/page'))
+const MainSchetPage = lazy(() => import('./region-spravochnik/main-schet/page'))
+const OrganizationPage = lazy(() => import('./region-spravochnik/organization/page'))
+const AccountablePage = lazy(() => import('./region-spravochnik/podotchet'))
+const PodpisPage = lazy(() => import('./region-spravochnik/podpis/page'))
+const SubdivisionPage = lazy(() => import('./region-spravochnik/podrazdelenie/page'))
+const SostavPage = lazy(() => import('./region-spravochnik/sostav/page'))
+const TypeOperatsiiPage = lazy(() => import('./region-spravochnik/type-operatsii/page'))
+const BankSpravochnikPage = lazy(() => import('./super-admin/bank/page'))
+const BudgetPage = lazy(() => import('./super-admin/budjet/page'))
+const GroupPage = lazy(() => import('./super-admin/group/page'))
+const LogsPage = lazy(() => import('./super-admin/logs/page'))
+const AdminMainbookDetailsPage = lazy(() => import('./super-admin/mainbook/details/page'))
+const AdminMainbookPage = lazy(() => import('./super-admin/mainbook/page'))
+const OperatsiiPage = lazy(() => import('./super-admin/operatsii/page'))
+const AdminOXDetailsPage = lazy(() => import('./super-admin/ox-report/details/page'))
+const AdminOXPage = lazy(() => import('./super-admin/ox-report/page'))
+const PereotsenkaPage = lazy(() => import('./super-admin/pereotsenka/page'))
+const AdminRealExpenseDetailsPage = lazy(() => import('./super-admin/real-expenses/details/page'))
+const AdminRealExpensesPage = lazy(() => import('./super-admin/real-expenses/page'))
+const RegionDataPage = lazy(() => import('./super-admin/region-data/page'))
+const RegionPage = lazy(() => import('./super-admin/region/page'))
+const RolePage = lazy(() => import('./super-admin/role/page'))
+const SmetaPage = lazy(() => import('./super-admin/smeta/page'))
+const UnitPage = lazy(() => import('./super-admin/unit/page'))
+const UserPage = lazy(() => import('./super-admin/user/page'))
 
 const FallbackRoute = () => {
   const { user } = useAuthenticationStore()
@@ -349,27 +355,27 @@ export const routes: RouteObject[] = [
           },
           {
             path: 'prixod',
-            element: <MO7PrixodPage />
+            element: <Jurnal7PrixodPage />
           },
           {
             path: 'prixod/:id',
-            element: <MO7PrixodDetailsPage />
+            element: <Jurnal7PrixodDetailsPage />
           },
           {
             path: 'rasxod',
-            element: <MO7RasxodPage />
+            element: <Jurnal7RasxodPage />
           },
           {
             path: 'rasxod/:id',
-            element: <MO7RasxodDetailsPage />
+            element: <Jurnal7RasxodDetailsPage />
           },
           {
             path: 'internal-transfer',
-            element: <InternalTransferPage />
+            element: <Jurnal7InternalTransferPage />
           },
           {
             path: 'internal-transfer/:id',
-            element: <InternalTransferDetailsPage />
+            element: <Jurnal7InternalTransferDetailsPage />
           },
           {
             path: 'ostatok',

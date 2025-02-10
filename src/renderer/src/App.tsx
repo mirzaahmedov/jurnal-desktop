@@ -1,6 +1,7 @@
 import { Suspense, useEffect } from 'react'
 
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { QueryClientProvider } from '@tanstack/react-query'
+// import { createPortal } from 'react-dom'
 import { RouterProvider } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify'
 
@@ -11,17 +12,21 @@ import { ConfirmationDialog } from './common/features/confirm'
 import { initLocales } from './common/features/locales'
 import { SpravochnikProvider } from './common/features/spravochnik'
 import { UpdateManager } from './common/features/update-manager'
-
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: false
-    }
-  }
-})
+import { queryClient } from './common/lib/query-client'
 
 initLocales()
+
+// const ToastProvider = () => {
+//   return createPortal(
+//     <ToastContainer
+//       position="bottom-right"
+//       toastStyle={{
+//         width: 400
+//       }}
+//     />,
+//     document.getElementById('toasts')!
+//   )
+// }
 
 function App() {
   useEffect(() => {
@@ -45,7 +50,12 @@ function App() {
       </Suspense>
       <SpravochnikProvider />
       <Toaster />
-      <ToastContainer position="bottom-right" />
+      <ToastContainer
+        position="bottom-right"
+        toastStyle={{
+          width: 400
+        }}
+      />
       <ConfirmationDialog />
       <UpdateManager />
     </QueryClientProvider>

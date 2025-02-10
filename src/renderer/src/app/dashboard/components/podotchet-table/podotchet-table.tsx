@@ -36,7 +36,10 @@ export const PodotchetTable = ({ date, budjet_id }: PodotchetTableProps) => {
     enabled: !!date && !!budjet_id
   })
 
-  const podotchetData = useMemo(() => normalizePodotchetData(podotchets?.data), [podotchets])
+  const podotchetData = useMemo(
+    () => normalizePodotchetData(podotchets?.data ?? undefined),
+    [podotchets]
+  )
 
   return (
     <Card>

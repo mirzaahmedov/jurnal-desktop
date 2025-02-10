@@ -28,7 +28,7 @@ import { RasxodFormSchema, defaultValues } from '../config'
 import { useRasxodCreate, useRasxodGet, useRasxodUpdate } from '../service'
 import { ProvodkaTable } from './provodka-table'
 
-const MO7RasxodDetailsPage = () => {
+const Jurnal7RasxodDetailsPage = () => {
   const prevData = useRef({
     kimdan_id: 0,
     kimga_id: 0
@@ -219,4 +219,4 @@ const MO7RasxodDetailsPage = () => {
   )
 }
 
-export { MO7RasxodDetailsPage }
+export default Jurnal7RasxodDetailsPage

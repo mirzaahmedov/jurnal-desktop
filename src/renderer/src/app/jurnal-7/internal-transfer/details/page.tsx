@@ -31,7 +31,7 @@ import {
 } from '../service'
 import { ProvodkaTable } from './provodka-table'
 
-const InternalTransferDetailsPage = () => {
+const Jurnal7InternalTransferDetailsPage = () => {
   const { id } = useParams()
   const { t } = useTranslation(['app'])
 
@@ -204,4 +204,4 @@ const InternalTransferDetailsPage = () => {
   )
 }
 
-export { InternalTransferDetailsPage }
+export default Jurnal7InternalTransferDetailsPage

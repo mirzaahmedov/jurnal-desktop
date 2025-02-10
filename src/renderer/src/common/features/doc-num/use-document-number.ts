@@ -27,8 +27,6 @@ export const useGenerateDocumentNumber = ({
     enabled
   })
 
-  console.log('query', query, query.data, enabled)
-
   useEffect(() => {
     if (query.isFetchedAfterMount) {
       onChangeEvent(query.data)

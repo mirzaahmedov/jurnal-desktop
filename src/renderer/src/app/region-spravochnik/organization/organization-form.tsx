@@ -2,15 +2,17 @@ import type { OrganizationFormValues } from './service'
 
 import { type FormEventHandler, type ReactNode, useState } from 'react'
 
+import { Button } from '@renderer/common/components/ui/button'
 import { useQuery } from '@tanstack/react-query'
-import { type UseFormReturn } from 'react-hook-form'
+import { Plus, Trash } from 'lucide-react'
+import { type UseFormReturn, useFieldArray } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
 import { bankQueryKeys } from '@/app/super-admin/bank/config'
 import { bankService } from '@/app/super-admin/bank/service'
 import { AutoComplete } from '@/common/components'
 import { FormElement } from '@/common/components/form'
-import { Form, FormControl, FormField } from '@/common/components/ui/form'
+import { Form, FormControl, FormField, FormLabel } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
 
 type OrganizationFormProps = {
@@ -22,25 +24,25 @@ const OrganizationForm = ({ form, formActions, onSubmit }: OrganizationFormProps
   const [search, setSearch] = useState('')
 
   const { t } = useTranslation()
-  // const {
-  //   fields: raschetSchets,
-  //   append: appendRaschetSchet,
-  //   remove: removeRaschetSchet
-  // } = useFieldArray({
-  //   control: form.control,
-  //   name: 'raschet_schet',
-  //   rules: {
-  //     minLength: 1
-  //   }
-  // })
-  // const {
-  //   fields: raschetSchetsGazna,
-  //   append: appendRaschetSchetGazna,
-  //   remove: removeRaschetSchetGazna
-  // } = useFieldArray({
-  //   control: form.control,
-  //   name: 'raschet_schet_gazna'
-  // })
+  const {
+    fields: raschetSchets,
+    append: appendRaschetSchet,
+    remove: removeRaschetSchet
+  } = useFieldArray({
+    control: form.control,
+    name: 'raschet_schet',
+    rules: {
+      minLength: 1
+    }
+  })
+  const {
+    fields: raschetSchetsGazna,
+    append: appendRaschetSchetGazna,
+    remove: removeRaschetSchetGazna
+  } = useFieldArray({
+    control: form.control,
+    name: 'raschet_schet_gazna'
+  })
 
   const { data: bankList, isFetching } = useQuery({
     queryKey: [bankQueryKeys.getAll, { search }],
@@ -100,23 +102,27 @@ const OrganizationForm = ({ form, formActions, onSubmit }: OrganizationFormProps
                     setSearch('')
                   }}
                 >
-                  <Input
-                    {...field}
-                    onChange={(e) => {
-                      field.onChange(e)
-                      console.log('e.target.value', e.target.value)
-                      setSearch(e.target.value)
-                    }}
-                    onBlur={() => {
-                      setSearch('')
-                      field.onBlur()
-                    }}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter') {
-                        e.preventDefault()
-                      }
-                    }}
-                  />
+                  {({ open, close }) => (
+                    <Input
+                      {...field}
+                      onChange={(e) => {
+                        field.onChange(e)
+                        console.log('e.target.value', e.target.value)
+                        setSearch(e.target.value)
+                      }}
+                      onFocus={open}
+                      onBlur={() => {
+                        setSearch('')
+                        close()
+                        field.onBlur()
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault()
+                        }
+                      }}
+                    />
+                  )}
                 </AutoComplete>
               </FormElement>
             )}
@@ -144,29 +150,33 @@ const OrganizationForm = ({ form, formActions, onSubmit }: OrganizationFormProps
                       setSearch('')
                     }}
                   >
-                    <Input
-                      {...field}
-                      onChange={(e) => {
-                        field.onChange(e)
-                        setSearch(e.target.value)
-                      }}
-                      onBlur={() => {
-                        setSearch('')
-                        field.onBlur()
-                      }}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter') {
-                          e.preventDefault()
-                        }
-                      }}
-                    />
+                    {({ open, close }) => (
+                      <Input
+                        {...field}
+                        onChange={(e) => {
+                          field.onChange(e)
+                          setSearch(e.target.value)
+                        }}
+                        onFocus={open}
+                        onBlur={() => {
+                          setSearch('')
+                          close()
+                          field.onBlur()
+                        }}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            e.preventDefault()
+                          }
+                        }}
+                      />
+                    )}
                   </AutoComplete>
                 </FormControl>
               </FormElement>
             )}
           />
 
-          {/* <div className="grid grid-cols-6">
+          <div className="grid grid-cols-6">
             <FormLabel className="col-span-2 text-end">{t('raschet-schet')}</FormLabel>
           </div>
           <ul className="flex flex-col gap-6">
@@ -261,7 +271,7 @@ const OrganizationForm = ({ form, formActions, onSubmit }: OrganizationFormProps
             >
               <Plus className="btn-icon icon-start" /> {t('add')}
             </Button>
-          </div> */}
+          </div>
 
           <FormField
             name="raschet_schet"

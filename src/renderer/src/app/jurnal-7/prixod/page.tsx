@@ -19,7 +19,7 @@ import { useJurnal7DateRange } from '../common/components/use-date-range'
 import { columns, queryKeys } from './config'
 import { usePrixodDelete, usePrixodList } from './service'
 
-const MO7PrixodPage = () => {
+const Jurnal7PrixodPage = () => {
   const pagination = usePagination()
   const navigate = useNavigate()
   const queryClient = useQueryClient()
@@ -130,4 +130,4 @@ const MO7PrixodPage = () => {
   )
 }
 
-export { MO7PrixodPage }
+export default Jurnal7PrixodPage

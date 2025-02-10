@@ -1,19 +1,27 @@
 import { useEffect } from 'react'
 
 import { createOrganizationSpravochnik } from '@renderer/app/region-spravochnik/organization'
+import { Button } from '@renderer/common/components/ui/button'
 import { DownloadFile } from '@renderer/common/features/file'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
 import { useLocationState } from '@renderer/common/hooks/use-location-state'
 import { useQuery } from '@tanstack/react-query'
+import { Download } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
 import { createOperatsiiSpravochnik } from '@/app/super-admin/operatsii'
 import { ChooseSpravochnik, FooterCell, FooterRow, GenericTable } from '@/common/components'
 import { ButtonGroup } from '@/common/components/ui/button-group'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger
+} from '@/common/components/ui/dropdown-menu'
 import { useLayoutStore } from '@/common/features/layout'
 import { useSpravochnik } from '@/common/features/spravochnik'
-import { useDates, usePagination } from '@/common/hooks'
+import { useDates, usePagination, useToggle } from '@/common/hooks'
 import { formatNumber } from '@/common/lib/format'
 import {
   type OrganizationMonitor,
@@ -35,6 +43,7 @@ const OrganizationMonitoringPage = () => {
   const pagination = usePagination()
   const navigate = useNavigate()
   const setLayout = useLayoutStore((store) => store.setLayout)
+  const dropdownToggle = useToggle()
 
   const { main_schet_id, budjet_id } = useRequisitesStore()
   const { t } = useTranslation(['app'])
@@ -129,58 +138,91 @@ const OrganizationMonitoringPage = () => {
             </div>
             {main_schet_id && operatsiiSpravochnik.selected?.schet ? (
               <ButtonGroup borderStyle="dashed">
-                <DownloadFile
-                  fileName={`дебитор-кредитор_отчет-${dates.to}.xlsx`}
-                  url="organization/monitoring/prixod/rasxod"
-                  params={{
-                    main_schet_id,
-                    budjet_id,
-                    to: dates.to,
-                    operatsii: operatsiiSpravochnik.selected?.schet,
-                    excel: true
-                  }}
-                  buttonText="Дебитор / Кредитор отчет"
-                />
-                <DownloadFile
-                  fileName={`сводный-отчет-${dates.from}&${dates.to}.xlsx`}
-                  url="/organization/monitoring/order"
-                  params={{
-                    main_schet_id,
-                    organ_id: orgId ? orgId : undefined,
-                    from: dates.from,
-                    to: dates.to,
-                    schet: operatsiiSpravochnik.selected?.schet,
-                    excel: true,
-                    contract: false
-                  }}
-                  buttonText="Сводный отчет"
-                />
-                <DownloadFile
-                  fileName={`сводный-отчет-${dates.from}&${dates.to}.xlsx`}
-                  url="/organization/monitoring/order"
-                  params={{
-                    main_schet_id,
-                    organ_id: orgId ? orgId : undefined,
-                    from: dates.from,
-                    to: dates.to,
-                    schet: operatsiiSpravochnik.selected?.schet,
-                    excel: true,
-                    contract: true
-                  }}
-                  buttonText="Сводный отчет (по договору)"
-                />
-                <DownloadFile
-                  fileName={`сводный-отчет-${dates.to}-счет&${operatsiiSpravochnik.selected?.schet}.xlsx`}
-                  url="/organization/monitoring/cap"
-                  params={{
-                    main_schet_id,
-                    from: dates.from,
-                    to: dates.to,
-                    operatsii: operatsiiSpravochnik.selected?.schet,
-                    excel: true
-                  }}
-                  buttonText="Шапка"
-                />
+                <DropdownMenu open={dropdownToggle.isOpen}>
+                  <DropdownMenuTrigger
+                    asChild
+                    onClick={dropdownToggle.open}
+                  >
+                    <Button variant="ghost">
+                      <Download className="btn-icon icon-start" />
+                      <span className="titlecase">
+                        {t('download-something', { something: t('reports') })}
+                      </span>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent
+                    side="bottom"
+                    onInteractOutside={dropdownToggle.close}
+                  >
+                    <DropdownMenuItem>
+                      <DownloadFile
+                        fileName={`сводный-отчет-${dates.to}-счет&${operatsiiSpravochnik.selected?.schet}.xlsx`}
+                        url="/organization/monitoring/cap"
+                        params={{
+                          main_schet_id,
+                          from: dates.from,
+                          to: dates.to,
+                          operatsii: operatsiiSpravochnik.selected?.schet,
+                          excel: true
+                        }}
+                        buttonText="Шапка"
+                        className="w-full inline-flex items-center justify-start"
+                      />
+                    </DropdownMenuItem>
+
+                    <DropdownMenuItem>
+                      <DownloadFile
+                        fileName={`дебитор-кредитор_отчет-${dates.to}.xlsx`}
+                        url="organization/monitoring/prixod/rasxod"
+                        params={{
+                          main_schet_id,
+                          budjet_id,
+                          to: dates.to,
+                          operatsii: operatsiiSpravochnik.selected?.schet,
+                          excel: true
+                        }}
+                        buttonText="Дебитор / Кредитор отчет"
+                        className="w-full inline-flex items-center justify-start"
+                      />
+                    </DropdownMenuItem>
+
+                    <DropdownMenuItem>
+                      <DownloadFile
+                        fileName={`сводный-отчет-${dates.from}&${dates.to}.xlsx`}
+                        url="/organization/monitoring/order"
+                        params={{
+                          main_schet_id,
+                          organ_id: orgId ? orgId : undefined,
+                          from: dates.from,
+                          to: dates.to,
+                          schet: operatsiiSpravochnik.selected?.schet,
+                          excel: true,
+                          contract: false
+                        }}
+                        buttonText="Сводный отчет"
+                        className="w-full inline-flex items-center justify-start"
+                      />
+                    </DropdownMenuItem>
+
+                    <DropdownMenuItem>
+                      <DownloadFile
+                        fileName={`сводный-отчет-${dates.from}&${dates.to}.xlsx`}
+                        url="/organization/monitoring/order"
+                        params={{
+                          main_schet_id,
+                          organ_id: orgId ? orgId : undefined,
+                          from: dates.from,
+                          to: dates.to,
+                          schet: operatsiiSpravochnik.selected?.schet,
+                          excel: true,
+                          contract: true
+                        }}
+                        buttonText="Сводный отчет (по договору)"
+                        className="w-full inline-flex items-center justify-start"
+                      />
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
                 {orgId ? (
                   <AktSverkaDialog
                     orgId={orgId}
@@ -215,9 +257,11 @@ const OrganizationMonitoringPage = () => {
               <FooterCell
                 colSpan={5}
                 title={t('total')}
-                content={formatNumber(organizationMonitorList?.meta.summa_prixod ?? 0)}
+                content={formatNumber(organizationMonitorList?.meta?.summa_prixod ?? 0)}
               />
-              <FooterCell content={formatNumber(organizationMonitorList?.meta.summa_rasxod ?? 0)} />
+              <FooterCell
+                content={formatNumber(organizationMonitorList?.meta?.summa_rasxod ?? 0)}
+              />
             </FooterRow>
           }
         />
@@ -231,7 +275,7 @@ const OrganizationMonitoringPage = () => {
         <div className="mt-5">
           <ListView.Pagination
             {...pagination}
-            pageCount={organizationMonitorList?.meta.pageCount ?? 0}
+            pageCount={organizationMonitorList?.meta?.pageCount ?? 0}
           />
         </div>
       </ListView.Footer>

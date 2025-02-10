@@ -17,7 +17,7 @@ import { useJurnal7DateRange } from '../common/components/use-date-range'
 import { columns, queryKeys } from './config'
 import { useRasxodDelete, useRasxodList } from './service'
 
-const MO7RasxodPage = () => {
+const Jurnal7RasxodPage = () => {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const pagination = usePagination()
@@ -98,4 +98,4 @@ const MO7RasxodPage = () => {
   )
 }
 
-export { MO7RasxodPage }
+export default Jurnal7RasxodPage

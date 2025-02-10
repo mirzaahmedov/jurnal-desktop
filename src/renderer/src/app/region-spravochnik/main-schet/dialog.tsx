@@ -260,23 +260,27 @@ export const MainSchetDialog = (props: MainSchetDialogProps) => {
                         setSearch('')
                       }}
                     >
-                      <Input
-                        {...field}
-                        onChange={(e) => {
-                          field.onChange(e)
-                          console.log('e.target.value', e.target.value)
-                          setSearch(e.target.value)
-                        }}
-                        onBlur={() => {
-                          setSearch('')
-                          field.onBlur()
-                        }}
-                        onKeyDown={(e) => {
-                          if (e.key === 'Enter') {
-                            e.preventDefault()
-                          }
-                        }}
-                      />
+                      {({ open, close }) => (
+                        <Input
+                          {...field}
+                          onChange={(e) => {
+                            field.onChange(e)
+                            console.log('e.target.value', e.target.value)
+                            setSearch(e.target.value)
+                          }}
+                          onFocus={open}
+                          onBlur={() => {
+                            setSearch('')
+                            close()
+                            field.onBlur()
+                          }}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                              e.preventDefault()
+                            }
+                          }}
+                        />
+                      )}
                     </AutoComplete>
                   </FormElement>
                 )}
@@ -304,22 +308,26 @@ export const MainSchetDialog = (props: MainSchetDialogProps) => {
                           setSearch('')
                         }}
                       >
-                        <Input
-                          {...field}
-                          onChange={(e) => {
-                            field.onChange(e)
-                            setSearch(e.target.value)
-                          }}
-                          onBlur={() => {
-                            setSearch('')
-                            field.onBlur()
-                          }}
-                          onKeyDown={(e) => {
-                            if (e.key === 'Enter') {
-                              e.preventDefault()
-                            }
-                          }}
-                        />
+                        {({ open, close }) => (
+                          <Input
+                            {...field}
+                            onChange={(e) => {
+                              field.onChange(e)
+                              setSearch(e.target.value)
+                            }}
+                            onFocus={open}
+                            onBlur={() => {
+                              setSearch('')
+                              close()
+                              field.onBlur()
+                            }}
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter') {
+                                e.preventDefault()
+                              }
+                            }}
+                          />
+                        )}
                       </AutoComplete>
                     </FormControl>
                   </FormElement>

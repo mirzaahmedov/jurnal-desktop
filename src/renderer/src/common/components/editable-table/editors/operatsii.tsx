@@ -1,7 +1,7 @@
 import type { EditorComponentType } from './types'
 import type { Operatsii, TypeSchetOperatsii } from '@renderer/common/models'
 
-import { useLayoutEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 
 import {
   createOperatsiiSpravochnik,
@@ -11,6 +11,7 @@ import {
 } from '@renderer/app/super-admin/operatsii'
 import { AutoComplete } from '@renderer/common/components/auto-complete'
 import { SpravochnikInput, useSpravochnik } from '@renderer/common/features/spravochnik'
+import { useDebounceValue } from '@renderer/common/hooks'
 import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 
@@ -23,11 +24,10 @@ export const createOperatsiiEditor = <T extends { spravochnik_operatsii_id?: num
   return ({ tabIndex, id, row, errors, onChange, params }) => {
     const inputRef = useRef<HTMLInputElement>(null)
 
-    const [schetFilter, setSchetFilter] = useState<null | string>(null)
-    const [subschetFilter, setSubschetFilter] = useState<null | string>(null)
+    const [schet, setSchet] = useState<string>()
+    const [subschet, setSubschet] = useState<string>()
 
-    const [, setDisabled] = useState<boolean>(false)
-    const [schet, setSchet] = useState<null | string>(null)
+    const [debouncedSchet] = useDebounceValue(schet)
 
     const { t } = useTranslation()
 
@@ -52,11 +52,6 @@ export const createOperatsiiEditor = <T extends { spravochnik_operatsii_id?: num
             }
           })
           paramsRef.current?.onChangeOperatsii?.(selected)
-          if (value !== undefined) {
-            setSchet(null)
-            setSchetFilter(null)
-            setSubschetFilter(null)
-          }
         },
         params: {
           type_schet
@@ -65,86 +60,83 @@ export const createOperatsiiEditor = <T extends { spravochnik_operatsii_id?: num
     )
 
     const { data: schetOptions, isFetching: isFetchingSchetOptions } = useQuery({
-      queryKey: [operatsiiQueryKeys.getSchetOptions, { type_schet }],
+      queryKey: [
+        operatsiiQueryKeys.getSchetOptions,
+        {
+          type_schet
+        }
+      ],
       queryFn: getOperatsiiSchetOptionsQuery
     })
+    const filteredSchetOptions =
+      schetOptions?.data?.filter((o) => o.schet.includes(schet ?? '')) ?? []
 
-    const { data: operatsiiList, isFetching } = useQuery({
+    const { data: operatsiiOptions, isFetching } = useQuery({
       queryKey: [
         operatsiiQueryKeys.getAll,
         {
           type_schet,
-          schet: schet ? schet : undefined,
-          sub_schet: subschetFilter ? subschetFilter : undefined
+          schet: debouncedSchet ? debouncedSchet : undefined
         }
       ],
       queryFn: operatsiiService.getAll,
-      enabled: !!schet,
-      placeholderData: (prev) => prev
+      enabled: !!schet && !operatsiiSpravochnik.selected
     })
+    const filteredOperatsiiOptions =
+      operatsiiOptions?.data?.filter((o) => o.sub_schet.includes(subschet ?? '')) ?? []
 
-    const filteredSchetOptions =
-      schetOptions?.data?.filter((o) => o.schet.includes(schetFilter ?? '')) ?? []
+    useEffect(() => {
+      if (operatsiiSpravochnik.selected) {
+        setSchet(operatsiiSpravochnik.selected?.schet)
+        setSubschet(operatsiiSpravochnik.selected?.sub_schet)
+      }
+    }, [operatsiiSpravochnik.selected])
 
     return (
-      <div className="w-full flex">
+      <div className="w-full grid grid-cols-2">
         <AutoComplete
+          autoSelectSingleResult={false}
           isFetching={isFetchingSchetOptions}
-          // disabled={schetFilter === null}
-          disabled={true}
           options={filteredSchetOptions}
-          className="w-full border-r"
+          disabled={!!operatsiiSpravochnik.selected}
           getOptionLabel={(option) => option.schet}
           getOptionValue={(option) => option.schet}
           onSelect={(option) => {
             setSchet(option.schet)
-            setSchetFilter(null)
             inputRef.current?.focus()
           }}
+          className="border-r"
         >
-          <SpravochnikInput
-            {...operatsiiSpravochnik}
-            editor
-            readOnly
-            tabIndex={tabIndex}
-            error={!!errors?.spravochnik_operatsii_id}
-            name="spravochnik_operatsii_id"
-            placeholder={t('schet')}
-            onChange={(e) => {
-              setSchetFilter(e.target.value)
-              operatsiiSpravochnik.clear()
-            }}
-            onBlur={(e) => {
-              setSchetFilter(null)
-              setSchet(e.target.value)
-              const found = schetOptions?.data?.find((o) => o.schet === e.target.value)
-              console.log({ found })
-              if (!found) {
-                setSchet(null)
-              }
-            }}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                e.preventDefault()
-              }
-            }}
-            getInputValue={(selected) => {
-              if (schetFilter !== null) {
-                return schetFilter
-              }
-              if (schet !== null) {
-                return schet
-              }
-              return selected ? selected.schet : ''
-            }}
-          />
+          {({ open, close }) => (
+            <SpravochnikInput
+              {...operatsiiSpravochnik}
+              editor
+              type="text"
+              tabIndex={tabIndex}
+              error={!!errors?.spravochnik_operatsii_id}
+              name="spravochnik_operatsii_id"
+              placeholder={t('schet')}
+              onChange={(e) => {
+                operatsiiSpravochnik.clear()
+                setSchet(e.target.value)
+                setSubschet(undefined)
+              }}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  e.preventDefault()
+                }
+              }}
+              onFocus={open}
+              onBlur={close}
+              getInputValue={() => schet ?? ''}
+            />
+          )}
         </AutoComplete>
         <AutoComplete
+          autoSelectSingleResult={false}
           isFetching={isFetching}
-          options={operatsiiList?.data ?? []}
-          // disabled={disabled}
-          disabled={true}
-          className="w-full"
+          options={filteredOperatsiiOptions ?? []}
+          disabled={(!!operatsiiSpravochnik.selected && subschet !== undefined) || !schet}
           value={row.spravochnik_operatsii_id?.toString()}
           getOptionLabel={(option) => option.sub_schet}
           getOptionValue={(option) => option.id.toString()}
@@ -158,46 +150,44 @@ export const createOperatsiiEditor = <T extends { spravochnik_operatsii_id?: num
                   spravochnik_operatsii_id: option.id
                 }
               })
-              paramsRef.current?.onChangeOperatsii?.(option)
+              setSchet(option.schet)
+              setSubschet(option.sub_schet)
 
-              setSubschetFilter(null)
-              setDisabled(true)
-              inputRef?.current?.focus()
+              paramsRef.current?.onChangeOperatsii?.(option)
+              requestAnimationFrame(() => {
+                inputRef.current?.focus()
+              })
             }
           }}
         >
-          <SpravochnikInput
-            {...operatsiiSpravochnik}
-            editor
-            readOnly
-            inputRef={inputRef}
-            tabIndex={tabIndex}
-            error={!!errors?.spravochnik_operatsii_id}
-            name="spravochnik_operatsii_id"
-            placeholder={t('subschet')}
-            onChange={(e) => {
-              setSubschetFilter(e.target.value)
-              setDisabled(false)
-            }}
-            onBlur={() => {
-              setSubschetFilter(null)
-              setDisabled(true)
-            }}
-            onFocus={() => {
-              setDisabled(false)
-            }}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                e.preventDefault()
-              }
-            }}
-            getInputValue={(selected) => {
-              if (subschetFilter !== null) {
-                return subschetFilter
-              }
-              return selected ? selected.sub_schet : ''
-            }}
-          />
+          {({ open, close }) => (
+            <SpravochnikInput
+              {...operatsiiSpravochnik}
+              editor
+              type="text"
+              inputRef={inputRef}
+              tabIndex={tabIndex}
+              error={!!errors?.spravochnik_operatsii_id}
+              data-error={false}
+              name="spravochnik_operatsii_id"
+              placeholder={t('subschet')}
+              onChange={(e) => {
+                setSubschet(e.target.value)
+                operatsiiSpravochnik.clear()
+              }}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  e.preventDefault()
+                }
+              }}
+              getInputValue={() => {
+                return subschet ?? ''
+              }}
+              onFocus={open}
+              onBlur={close}
+              className="w-full"
+            />
+          )}
         </AutoComplete>
       </div>
     )

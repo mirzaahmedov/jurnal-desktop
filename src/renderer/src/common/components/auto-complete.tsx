@@ -1,31 +1,28 @@
-import {
-  type PropsWithChildren,
-  type ReactNode,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState
-} from 'react'
+import { type KeyboardEvent, type ReactNode, useLayoutEffect, useRef, useState } from 'react'
 
 import { Command, CommandEmpty, CommandItem, CommandList } from '@/common/components/ui/command'
 import { Popover, PopoverContent, PopoverTrigger } from '@/common/components/ui/popover'
-import { useEventCallback, useToggle } from '@/common/hooks'
+import { type UseToggleReturn, useEventCallback, useToggle } from '@/common/hooks'
 
+import { EmptyList } from './empty-states'
 import { LoadingSpinner } from './loading'
 
-type AutoCompleteProps<T> = PropsWithChildren<{
+type AutoCompleteProps<T> = {
   isFetching: boolean
   disabled?: boolean
+  autoSelectSingleResult?: boolean
   value?: unknown
   options: T[]
   getOptionLabel: (option: T) => ReactNode
   getOptionValue: (option: T) => string
   onSelect: (option: T) => void
   className?: string
-}>
+  children: (toggle: UseToggleReturn) => ReactNode
+}
 const AutoComplete = <T extends Record<string, unknown>>({
   isFetching,
   disabled,
+  autoSelectSingleResult = true,
   options,
   value,
   getOptionLabel,
@@ -34,83 +31,69 @@ const AutoComplete = <T extends Record<string, unknown>>({
   className,
   children
 }: AutoCompleteProps<T>) => {
-  const [selected, setSelected] = useState<T | null>(null)
-
   const commandRef = useRef<HTMLDivElement>(null)
 
+  const popoverToggle = useToggle()
   const onSelectEvent = useEventCallback(onSelect)
-  const getOptionValueCallback = useEventCallback(getOptionValue)
 
-  const toggle = useToggle()
+  const [selected, setSelected] = useState<T | null>(null)
 
   useLayoutEffect(() => {
     if (!Array.isArray(options)) {
       return
     }
-
     setSelected(options[0])
-    if (options.length === 1) {
+  }, [options, onSelectEvent])
+  useLayoutEffect(() => {
+    if (Array.isArray(options) && options.length === 1 && autoSelectSingleResult) {
       onSelectEvent?.(options[0])
     }
-  }, [options, onSelectEvent])
+  }, [options, onSelectEvent, autoSelectSingleResult])
 
-  const open = toggle.isOpen && !disabled && Array.isArray(options) && options.length !== 1
-
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (!selected || !open) {
-        return
-      }
-      if (e.key === 'ArrowUp') {
-        const index = options.findIndex(
-          (elem) => getOptionValueCallback(elem) === getOptionValueCallback(selected)
-        )
-        if (index > 0) {
-          const newOption = options[index - 1]
-          setSelected(newOption)
-          scrollIntoElement(commandRef.current!, getOptionValueCallback(newOption))
-        }
-        return
-      }
-      if (e.key === 'ArrowDown') {
-        const index = options.findIndex(
-          (elem) => getOptionValueCallback(elem) === getOptionValueCallback(selected)
-        )
-        if (index < options.length - 1) {
-          const newOption = options[index + 1]
-          setSelected(newOption)
-          scrollIntoElement(commandRef.current!, getOptionValueCallback(newOption))
-        }
-        return
-      }
-      if (e.key === 'Enter') {
-        onSelectEvent?.(selected)
-      }
+  const handleKeyDown = (e: KeyboardEvent) => {
+    if (!selected || !open) {
+      return
     }
-
-    window.addEventListener('keydown', handleKeyDown)
-
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown)
+    if (e.key === 'ArrowUp') {
+      const index = options.findIndex((elem) => getOptionValue(elem) === getOptionValue(selected))
+      if (index > 0) {
+        const newOption = options[index - 1]
+        setSelected(newOption)
+        scrollIntoElement(commandRef.current!, getOptionValue(newOption))
+      }
+      return
     }
-  }, [options, open, selected, getOptionValueCallback])
+    if (e.key === 'ArrowDown') {
+      const index = options.findIndex((elem) => getOptionValue(elem) === getOptionValue(selected))
+      if (index < options.length - 1) {
+        const newOption = options[index + 1]
+        setSelected(newOption)
+        scrollIntoElement(commandRef.current!, getOptionValue(newOption))
+      }
+      return
+    }
+    if (e.key === 'Enter') {
+      onSelectEvent?.(selected)
+    }
+  }
+
+  const open = popoverToggle.isOpen && !disabled
 
   return (
     <Popover
       open={open}
+      onOpenChange={popoverToggle.setOpen}
       modal={true}
     >
       <PopoverTrigger
         className={className}
         onFocus={(e) => {
-          ;(e.target.children[0] as HTMLInputElement)?.focus?.()
-          toggle.open()
+          const input = e.target.querySelector('input')
+          input?.focus?.()
         }}
-        onBlur={() => {
-          toggle.close()
-        }}
+        onKeyDown={handleKeyDown}
       >
-        {children}
+        {children(popoverToggle)}
       </PopoverTrigger>
       <PopoverContent
         onOpenAutoFocus={(e) => e.preventDefault()}
@@ -123,7 +106,12 @@ const AutoComplete = <T extends Record<string, unknown>>({
           shouldFilter={false}
         >
           <CommandList>
-            <CommandEmpty autoFocus={false}>Ничего не найдено</CommandEmpty>
+            <CommandEmpty
+              autoFocus={false}
+              className="text-sm text-center"
+            >
+              <EmptyList iconProps={{ className: 'w-32' }} />
+            </CommandEmpty>
             {isFetching ? (
               <CommandItem
                 disabled
@@ -137,7 +125,7 @@ const AutoComplete = <T extends Record<string, unknown>>({
                   key={getOptionValue(item)}
                   onSelect={() => {
                     onSelect(item)
-                    toggle.close()
+                    popoverToggle.close()
                   }}
                   className="break-all"
                   data-highlighted={

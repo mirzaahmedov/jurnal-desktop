@@ -1,4 +1,4 @@
-type ResponseMeta = {
+export type ResponseMeta = {
   backPage: number | null
   count: number
   currentPage: number
@@ -6,10 +6,17 @@ type ResponseMeta = {
   pageCount: number
 }
 
-type Response<T, M = ResponseMeta> = {
-  success: boolean
-  data: T
-  meta: M extends undefined ? ResponseMeta : M
-}
-
-export type { Response, ResponseMeta }
+export type Response<T, M = ResponseMeta> =
+  | {
+      success: true
+      data: T
+      meta: M extends undefined ? ResponseMeta : M
+    }
+  | {
+      success: false
+      code: number
+      message: string
+      meta: null
+      data: null
+      time: string
+    }

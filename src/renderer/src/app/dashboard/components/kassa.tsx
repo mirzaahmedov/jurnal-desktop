@@ -16,7 +16,7 @@ import { useTranslation } from 'react-i18next'
 
 import { queryKeys } from '../config'
 import { getDashboardKassaQuery } from '../service'
-import { GenericPieChart } from './generic-pie-chart'
+import { GenericPieChart, getPieChartColors } from './generic-pie-chart'
 
 export interface KassaProps {
   date?: string
@@ -39,24 +39,25 @@ export const Kassa = ({ budjet_id, date, main_schets }: KassaProps) => {
   })
 
   const chartConfig = useMemo(() => {
-    return (
-      main_schets?.reduce((config, schet) => {
-        config[schet.id] = {
-          label: `${schet.account_number} / ${schet.jur1_schet}`
-        }
-        return config
-      }, {} as ChartConfig) ?? {}
-    )
+    if (!Array.isArray(main_schets)) return {}
+
+    return main_schets.reduce((config, schet) => {
+      config[schet.id] = {
+        label: `${schet.account_number} / ${schet.jur1_schet}`
+      }
+      return config
+    }, {} as ChartConfig)
   }, [main_schets])
 
   const chartData = useMemo(() => {
-    return (
-      data?.map((schet) => ({
-        main_schet_id: schet?.id,
-        summa: schet?.kassa?.summa ?? 0,
-        fill: getRandomColor()
-      })) ?? []
-    )
+    if (!Array.isArray(data)) return []
+
+    const colors = getPieChartColors(data.length)
+    return data?.map((schet, i) => ({
+      main_schet_id: schet?.id,
+      summa: schet?.kassa?.summa ?? 0,
+      fill: colors[i]
+    }))
   }, [data])
 
   const total = useMemo(() => {
@@ -109,10 +110,4 @@ export const Kassa = ({ budjet_id, date, main_schets }: KassaProps) => {
       </CardContent>
     </Card>
   )
-}
-
-const getRandomColor = () => {
-  return `#${Math.floor(Math.random() * 16777215)
-    .toString(16)
-    .padStart(6, '0')}`
 }

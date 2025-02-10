@@ -120,7 +120,7 @@ export const useSpravochnik = <T extends { id: number }>(
   }, [])
 
   return {
-    selected: selected?.data,
+    selected: selected?.data ?? undefined,
     loading,
     isOpen: isOpen(id),
     inputRef,

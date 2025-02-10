@@ -76,7 +76,7 @@ const CreateOrganizationDialog = (props: CreateOrganizationDialogProps) => {
         <DialogHeader>
           <DialogTitle>{t('create-something', { something: t('organization') })}</DialogTitle>
         </DialogHeader>
-        <div className="flex-1 overflow-auto noscroll-bar">
+        <div className="flex-1 overflow-y-auto px-1 noscroll-bar">
           <OrganizationForm
             form={form}
             onSubmit={onSubmit}

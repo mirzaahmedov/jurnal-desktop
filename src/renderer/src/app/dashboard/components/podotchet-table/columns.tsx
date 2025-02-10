@@ -26,6 +26,7 @@ export const podotchetColumns: ColumnDef<PodochetTableRow>[] = [
   {
     numeric: true,
     key: 'prixod',
+    className: 'w-72',
     renderCell(row) {
       return formatNumber(
         row?.children?.reduce((total, schet) => {
@@ -37,6 +38,7 @@ export const podotchetColumns: ColumnDef<PodochetTableRow>[] = [
   {
     numeric: true,
     key: 'rasxod',
+    className: 'w-72',
     renderCell(row) {
       return formatNumber(
         row?.children?.reduce((total, schet) => {
@@ -63,6 +65,7 @@ export const podotchetChildsColumns: ColumnDef<PodochetTableRow['children'][numb
     numeric: true,
     key: 'podotchet.prixod',
     header: 'prixod',
+    className: 'w-72',
     renderCell(row) {
       return formatNumber(row.podotchet.prixod)
     }
@@ -71,6 +74,7 @@ export const podotchetChildsColumns: ColumnDef<PodochetTableRow['children'][numb
     numeric: true,
     key: 'podotchet.rasxod',
     header: 'rasxod',
+    className: 'w-72',
     renderCell(row) {
       return formatNumber(row.podotchet.rasxod)
     }

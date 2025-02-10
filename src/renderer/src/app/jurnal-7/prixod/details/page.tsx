@@ -36,7 +36,7 @@ import { PrixodFormSchema, defaultValues, queryKeys } from '../config'
 import { usePrixodCreate, usePrixodGet, usePrixodUpdate } from '../service'
 import { ProvodkaTable } from './provodka-table'
 
-const MO7PrixodDetailsPage = () => {
+const Jurnal7PrixodDetailsPage = () => {
   const prevData = useRef({
     kimdan_id: 0,
     kimga_id: 0
@@ -294,4 +294,4 @@ const MO7PrixodDetailsPage = () => {
   )
 }
 
-export { MO7PrixodDetailsPage }
+export default Jurnal7PrixodDetailsPage

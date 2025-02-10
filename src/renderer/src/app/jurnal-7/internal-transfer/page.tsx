@@ -17,7 +17,7 @@ import { useJurnal7DateRange } from '../common/components/use-date-range'
 import { columns, queryKeys } from './config'
 import { useInternalTransferDelete, useInternalTransferList } from './service'
 
-const InternalTransferPage = () => {
+const Jurnal7InternalTransferPage = () => {
   const pagination = usePagination()
   const navigate = useNavigate()
   const queryClient = useQueryClient()
@@ -91,11 +91,11 @@ const InternalTransferPage = () => {
       <ListView.Footer>
         <ListView.Pagination
           {...pagination}
-          pageCount={transferList?.meta.pageCount ?? 0}
+          pageCount={transferList?.meta?.pageCount ?? 0}
         />
       </ListView.Footer>
     </ListView>
   )
 }
 
-export { InternalTransferPage }
+export default Jurnal7InternalTransferPage

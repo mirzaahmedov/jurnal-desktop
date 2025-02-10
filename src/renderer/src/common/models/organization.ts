@@ -3,10 +3,8 @@ export interface Organization {
   id: number
   name: string
   bank_klient: string
-  raschet_schet: string
-  raschet_schet_gazna: string
-  // raschet_schet: Organization.RaschetSchet[]
-  // raschet_schet_gazna: Organization.RaschetSchetGazna[]
+  raschet_schet: Organization.RaschetSchet[]
+  raschet_schet_gazna: Organization.RaschetSchetGazna[]
   mfo: string
   inn: string
   okonx: string
@@ -24,7 +22,7 @@ export type OrganizationMonitorProvodka =
   | 'jur7_rasxod'
   | 'jur7_internal'
 
-export interface OrganizationMonitor {
+export type OrganizationMonitor = {
   id: number
   shartnoma_id: number
   shrtnoma_doc_num: string

@@ -17,6 +17,7 @@ import { Pencil, Trash2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { twMerge } from 'tailwind-merge'
 
+import { EmptyList } from '../empty-states'
 import { GenericTableCell, GenericTableHead, GenericTableRow } from './components'
 
 export type ColumnDef<T extends Record<string, unknown>> = {
@@ -224,7 +225,13 @@ export const GenericTable = <T extends Record<string, unknown>>({
               colSpan={100}
               className="w-full text-center py-20 text-slate-400"
             >
-              {placeholder ?? t('no-display-data')}
+              <EmptyList
+                iconProps={{
+                  className: 'w-40'
+                }}
+              >
+                {placeholder}
+              </EmptyList>
             </GenericTableCell>
           </GenericTableRow>
         )}

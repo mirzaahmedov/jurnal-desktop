@@ -28,6 +28,9 @@ export function handleAxiosError(error: AxiosError): ErrorResponse {
 }
 
 export const focusInvalidInput = () => {
+  if ((document.activeElement as HTMLInputElement)?.dataset.error) {
+    return
+  }
   const inputElement = document.querySelector('input[data-error=true]') as HTMLInputElement
   if (inputElement) {
     inputElement.focus()
