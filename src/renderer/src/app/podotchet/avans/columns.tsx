@@ -1,11 +1,16 @@
 import type { ColumnDef } from '@/common/components'
 import type { Avans } from '@/common/models'
 
+import { IDCell } from '@renderer/common/components/table/renderers/id'
 import { formatLocaleDate } from '@renderer/common/lib/format'
 
 import { TooltipCell } from '@/common/components/table/renderers/tooltip'
 
 export const avansColumns: ColumnDef<Avans>[] = [
+  {
+    key: 'id',
+    renderCell: IDCell
+  },
   {
     key: 'doc_num'
   },

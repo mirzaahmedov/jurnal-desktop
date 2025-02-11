@@ -56,7 +56,7 @@ const CollapsibleTable = <T extends { id: number; children: T[] }>({
               key="actions"
               className="w-32"
             >
-              Действия
+              {t('actions')}
             </GenericTableHead>
           ) : null}
         </GenericTableRow>
@@ -172,7 +172,7 @@ const CollapsibleItem = <T extends { id: number; children: T[] }>({
                 fit={fit}
                 stretch={stretch}
                 numeric={numeric}
-                className={cn('font-bold', col.className)}
+                className={cn('font-bold', index === 0 && 'flex items-center', col.className)}
               >
                 {index === 0 && (
                   <CollapsibleTrigger

@@ -13,7 +13,7 @@ import {
 import { useToggle } from '@renderer/common/hooks'
 import { http } from '@renderer/common/lib/http'
 import { useMutation } from '@tanstack/react-query'
-import { File, Trash, UploadCloud } from 'lucide-react'
+import { File, FileUp, Trash } from 'lucide-react'
 import millify from 'millify'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
@@ -64,8 +64,8 @@ export const ImportFile = ({ url, params }: ImportFileDialogProps) => {
       onOpenChange={handleOpenChange}
     >
       <DialogTrigger>
-        <Button>
-          <UploadCloud className="btn-icon icon-start" /> {t('import-data')}
+        <Button variant="secondary">
+          <FileUp className="btn-icon icon-start" /> {t('import-data')}
         </Button>
       </DialogTrigger>
       <DialogContent className="pt-10">
@@ -73,14 +73,14 @@ export const ImportFile = ({ url, params }: ImportFileDialogProps) => {
         <div>
           {file ? (
             <div className="flex flex-col gap-1">
-              <h6 className="text-xs uppercase font-bold">{t('selected-file')}</h6>
-              <Card className="px-5 py-3 flex items-center gap-2.5">
-                <div className="bg-brand rounded-full size-10 flex items-center justify-center">
-                  <File className="size-5 text-white" />
+              <h6 className="text-xs text-slate-400 uppercase font-bold">{t('selected-file')}</h6>
+              <Card className="mt-2 px-5 py-3 flex items-center gap-5">
+                <div className="rounded-full size-12 flex items-center justify-center bg-slate-100">
+                  <File className="size-5 text-brand" />
                 </div>
                 <div className="flex-1">
-                  <p className="font-bold">{file.name}</p>
-                  <p className="text-xs font-bold text-slate-500">
+                  <p className="font-bold text-sm text-slate-700">{file.name}</p>
+                  <p className="text-xs font-bold text-slate-500 mt-1">
                     {millify(file.size, {
                       space: true,
                       units: ['', 'KB', 'MB', 'GB']

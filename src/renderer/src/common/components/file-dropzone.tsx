@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 
-import { CloudUpload } from 'lucide-react'
+import { Upload } from 'lucide-react'
 import { useDropzone } from 'react-dropzone'
 
 import { useEventCallback } from '../hooks'
@@ -22,14 +22,19 @@ export const FileDropzone = ({ onUpload }: FileDropzoneProps) => {
     <div
       {...getRootProps()}
       className={cn(
-        'flex flex-col items-center gap-10 px-10 py-[25%] border-4 border-dashed border-slate-300',
+        'group flex flex-col items-center gap-10 px-10 py-[25%] border-4 border-dashed border-slate-300 active:text-brand cursor-pointer',
         isDragActive && 'border-brand'
       )}
     >
-      <CloudUpload className={cn('size-32 text-slate-400', isDragActive && 'text-brand')} />
+      <Upload
+        className={cn(
+          'size-32 text-slate-400 group-active:text-brand',
+          isDragActive && 'text-brand'
+        )}
+      />
       <h6
         className={cn(
-          'text-sm text-center font-normal text-slate-500',
+          'text-xs text-center font-normal text-slate-400 group-active:text-brand',
           isDragActive && 'text-brand'
         )}
       >

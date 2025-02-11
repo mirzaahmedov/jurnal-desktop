@@ -1,9 +1,12 @@
 import type { ColumnDef } from '@/common/components'
 import type { Smeta } from '@/common/models'
 
-const smetaColumns: ColumnDef<Smeta>[] = [
+import { IDCell } from '@renderer/common/components/table/renderers/id'
+
+export const smetaColumns: ColumnDef<Smeta>[] = [
   {
-    key: 'id'
+    key: 'id',
+    renderCell: IDCell
   },
   {
     key: 'smeta_name',
@@ -27,5 +30,3 @@ const smetaColumns: ColumnDef<Smeta>[] = [
     className: 'w-32'
   }
 ]
-
-export { smetaColumns }

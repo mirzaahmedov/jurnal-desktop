@@ -1,9 +1,15 @@
 import type { ColumnDef } from '@/common/components'
 import type { Organization } from '@/common/models'
 
+import { IDCell } from '@renderer/common/components/table/renderers/id'
+
 import { Copyable } from '@/common/components'
 
 export const organizationColumns: ColumnDef<Organization>[] = [
+  {
+    key: 'id',
+    renderCell: IDCell
+  },
   {
     key: 'name',
     className: 'min-w-80'
@@ -29,7 +35,7 @@ export const organizationColumns: ColumnDef<Organization>[] = [
     key: 'raschet_schet',
     header: 'raschet-schet',
     renderCell(row) {
-      return <Copyable value={row.raschet_schet}>{row.raschet_schet}</Copyable>
+      return row.account_numbers?.map((schet) => schet.raschet_schet)?.join(',')
     }
   },
   {
@@ -37,7 +43,7 @@ export const organizationColumns: ColumnDef<Organization>[] = [
     key: 'raschet_schet_gazna',
     header: 'raschet-schet-gazna',
     renderCell(row) {
-      return <Copyable value={row.raschet_schet_gazna}>{row.raschet_schet_gazna}</Copyable>
+      return row.gaznas?.map((schet) => schet.raschet_schet_gazna)?.join(',')
     }
   }
 ]

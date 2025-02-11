@@ -1,11 +1,16 @@
 import type { ColumnDef } from '@/common/components'
 import type { KassaPrixodType } from '@/common/models'
 
+import { IDCell } from '@renderer/common/components/table/renderers/id'
 import { ProvodkaCell } from '@renderer/common/components/table/renderers/provodka'
 
 import { formatLocaleDate } from '@/common/lib/format'
 
 export const columns: ColumnDef<KassaPrixodType>[] = [
+  {
+    key: 'id',
+    renderCell: IDCell
+  },
   {
     key: 'doc_num'
   },

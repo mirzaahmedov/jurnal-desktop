@@ -4,8 +4,13 @@ import type { EditableColumnType } from '@renderer/common/components/editable-ta
 
 import { createTextEditor } from '@renderer/common/components/editable-table/editors'
 import { createNumberEditor } from '@renderer/common/components/editable-table/editors/number'
+import { IDCell } from '@renderer/common/components/table/renderers/id'
 
-const pereotsenkaColumns: ColumnDef<Pereotsenka>[] = [
+export const pereotsenkaColumns: ColumnDef<Pereotsenka>[] = [
+  {
+    key: 'id',
+    renderCell: IDCell
+  },
   {
     key: 'name'
   },
@@ -18,7 +23,7 @@ const pereotsenkaColumns: ColumnDef<Pereotsenka>[] = [
   }
 ]
 
-const groupColumns: EditableColumnType<
+export const groupColumns: EditableColumnType<
   Omit<Group, 'id'> & Pick<Pereotsenka, 'pereotsenka_foiz' | 'group_jur7_id'>
 >[] = [
   {
@@ -49,5 +54,3 @@ const groupColumns: EditableColumnType<
     Editor: createTextEditor({ key: 'provodka_kredit', disabled: true })
   }
 ]
-
-export { pereotsenkaColumns, groupColumns }

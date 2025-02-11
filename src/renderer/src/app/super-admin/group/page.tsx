@@ -2,6 +2,7 @@ import type { Group } from '@/common/models'
 
 import { useState } from 'react'
 
+import { ImportFile } from '@renderer/common/features/file'
 import { SearchField, useSearch } from '@renderer/common/features/search'
 import { ListView } from '@renderer/common/views'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
@@ -81,6 +82,9 @@ const GroupPage = () => {
 
   return (
     <ListView>
+      <ListView.Header className="flex items-center justify-end">
+        <ImportFile url="/jur_7/group/import" />
+      </ListView.Header>
       <ListView.Content loading={isFetching || isPending}>
         <GroupTable
           columnDefs={groupColumns}

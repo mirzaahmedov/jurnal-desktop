@@ -1,9 +1,15 @@
 import type { ColumnDef } from '@/common/components'
 import type { MainSchet } from '@/common/models'
 
+import { IDCell } from '@renderer/common/components/table/renderers/id'
+
 import { TooltipCell } from '@/common/components/table/renderers/tooltip'
 
 export const mainSchetColumns: ColumnDef<MainSchet>[] = [
+  {
+    key: 'id',
+    renderCell: IDCell
+  },
   {
     key: 'account_name',
     header: 'name'

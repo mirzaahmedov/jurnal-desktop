@@ -2,8 +2,13 @@ import type { ColumnDef } from '@/common/components'
 import type { RaschetSchet } from '@/common/models'
 
 import { TooltipCell } from '@renderer/common/components/table/renderers'
+import { IDCell } from '@renderer/common/components/table/renderers/id'
 
 export const raschetSchetColumns: ColumnDef<RaschetSchet>[] = [
+  {
+    key: 'id',
+    renderCell: (row) => <IDCell id={row.account_number.id} />
+  },
   {
     key: 'raschet_schet',
     header: 'raschet-schet',

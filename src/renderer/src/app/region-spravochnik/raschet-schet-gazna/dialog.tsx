@@ -123,7 +123,7 @@ export const RaschetSchetGaznaDialog = ({
     >
       <DialogContent className="max-w-xl">
         <DialogHeader>
-          <DialogTitle>
+          <DialogTitle className="titlecase">
             {data
               ? t('update-something', { something: t('raschet-schet-gazna') })
               : t('create-something', { something: t('raschet-schet-gazna') })}

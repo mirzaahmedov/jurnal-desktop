@@ -1,12 +1,17 @@
 import type { ColumnDef } from '@/common/components'
 import type { Podpis } from '@/common/models'
 
+import { IDCell } from '@renderer/common/components/table/renderers/id'
 import { Badge } from '@renderer/common/components/ui/badge'
 import { useTranslation } from 'react-i18next'
 
 import { getPodpisDoljnostOptions, getPodpisTypeDocumentOptions } from './config'
 
 const podpisColumns: ColumnDef<Podpis>[] = [
+  {
+    key: 'id',
+    renderCell: IDCell
+  },
   {
     header: '№',
     key: 'numeric_poryadok'

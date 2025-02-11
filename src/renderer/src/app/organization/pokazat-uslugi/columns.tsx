@@ -1,10 +1,16 @@
 import type { ColumnDef } from '@/common/components'
 import type { PokazatUslugi } from '@/common/models'
 
+import { IDCell } from '@renderer/common/components/table/renderers/id'
+
 import { TooltipCell } from '@/common/components/table/renderers'
 import { formatLocaleDate } from '@/common/lib/format'
 
 export const pokazatUslugiColumns: ColumnDef<PokazatUslugi>[] = [
+  {
+    key: 'id',
+    renderCell: IDCell
+  },
   {
     key: 'doc_num'
   },

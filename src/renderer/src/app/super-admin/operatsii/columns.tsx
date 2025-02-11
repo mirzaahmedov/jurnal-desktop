@@ -1,7 +1,13 @@
 import type { ColumnDef } from '@/common/components'
 import type { Operatsii } from '@/common/models'
 
-const operatsiiColumns: ColumnDef<Operatsii>[] = [
+import { IDCell } from '@renderer/common/components/table/renderers/id'
+
+export const operatsiiColumns: ColumnDef<Operatsii>[] = [
+  {
+    key: 'id',
+    renderCell: IDCell
+  },
   {
     key: 'name'
   },
@@ -13,5 +19,3 @@ const operatsiiColumns: ColumnDef<Operatsii>[] = [
     header: 'subschet'
   }
 ]
-
-export { operatsiiColumns }

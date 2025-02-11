@@ -2,6 +2,7 @@ import type { BankRasxod } from '@renderer/common/models'
 
 import { type ColumnDef } from '@renderer/common/components'
 import { TooltipCell } from '@renderer/common/components/table/renderers'
+import { IDCell } from '@renderer/common/components/table/renderers/id'
 import { ProvodkaCell } from '@renderer/common/components/table/renderers/provodka'
 import { Switch } from '@renderer/common/components/ui/switch'
 import { formatLocaleDate } from '@renderer/common/lib/format'
@@ -11,6 +12,10 @@ import { queryKeys } from './constants'
 import { bankRasxodPaymentService } from './service'
 
 export const columns: ColumnDef<BankRasxod>[] = [
+  {
+    key: 'id',
+    renderCell: IDCell
+  },
   {
     fit: true,
     key: 'doc_num'

@@ -107,7 +107,7 @@ const RaschetSchetGaznaPage = () => {
 
   return (
     <ListView>
-      <div className="p-5 flex items-center">
+      <ListView.Header>
         <ChooseSpravochnik
           spravochnik={orgSpravochnik}
           placeholder="Выберите организацию"
@@ -122,7 +122,7 @@ const RaschetSchetGaznaPage = () => {
             { name: 'Банк:', value: selected?.bank_klient }
           ]}
         />
-      </div>
+      </ListView.Header>
       <ListView.Content loading={isFetching || isPending}>
         <GenericTable
           data={raschetSchets?.data ?? []}

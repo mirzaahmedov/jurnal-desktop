@@ -1,11 +1,16 @@
 import type { ColumnDef } from '@/common/components'
 import type { ShartnomaGrafik } from '@/common/models'
 
+import { IDCell } from '@renderer/common/components/table/renderers/id'
 import { t } from 'i18next'
 
 import { formatLocaleDate } from '@/common/lib/format'
 
 export const shartnomaGrafikColumns: ColumnDef<ShartnomaGrafik>[] = [
+  {
+    key: 'id',
+    renderCell: IDCell
+  },
   {
     key: 'shartnomalar_organization_doc_num',
     header: 'doc_num'

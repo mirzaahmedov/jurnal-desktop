@@ -1,12 +1,17 @@
 import type { ColumnDef } from '@/common/components'
 import type { BankMonitoringType } from '@/common/models'
 
+import { IDCell } from '@renderer/common/components/table/renderers/id'
 import { ProvodkaCell } from '@renderer/common/components/table/renderers/provodka'
 
 import { TooltipCell } from '@/common/components/table/renderers'
 import { formatLocaleDate } from '@/common/lib/format'
 
 export const columns: ColumnDef<BankMonitoringType>[] = [
+  {
+    key: 'id',
+    renderCell: IDCell
+  },
   {
     key: 'doc_num'
   },

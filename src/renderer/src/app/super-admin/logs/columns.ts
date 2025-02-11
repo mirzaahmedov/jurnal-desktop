@@ -1,10 +1,9 @@
 import type { ColumnDef } from '@renderer/common/components'
 import type { Log } from '@renderer/common/models'
 
-const logColumns: ColumnDef<Log>[] = [
+export const logColumns: ColumnDef<Log>[] = [
   {
-    key: 'id',
-    header: 'Идентификатор'
+    key: 'id'
   },
   {
     key: 'date',
@@ -19,5 +18,3 @@ const logColumns: ColumnDef<Log>[] = [
     header: 'Пользователь'
   }
 ]
-
-export { logColumns }
