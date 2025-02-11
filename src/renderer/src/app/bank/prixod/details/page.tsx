@@ -97,7 +97,6 @@ const BankPrixodDetailsPage = () => {
     mutationKey: [queryKeys.create],
     mutationFn: bankPrixodService.create,
     onSuccess() {
-      toast.success('Документ успешно создан')
       form.reset(defaultValues)
       queryClient.invalidateQueries({
         queryKey: [queryKeys.getAll]
@@ -107,10 +106,6 @@ const BankPrixodDetailsPage = () => {
       })
 
       navigate(-1)
-    },
-    onError(error) {
-      console.error(error)
-      toast.error(error.message)
     }
   })
 
@@ -118,8 +113,6 @@ const BankPrixodDetailsPage = () => {
     mutationKey: [queryKeys.update, id],
     mutationFn: bankPrixodService.update,
     onSuccess() {
-      toast.success('Документ успешно обновлен')
-
       queryClient.invalidateQueries({
         queryKey: [queryKeys.getAll]
       })

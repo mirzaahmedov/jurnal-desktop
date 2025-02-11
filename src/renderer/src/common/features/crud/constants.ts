@@ -56,5 +56,7 @@ export enum APIEndpoints {
   realcost_doc = 'real/cost/doc',
   realcost_report = 'real/cost/report',
   ox_doc = 'ox/doc',
-  ox_report = 'ox/report'
+  ox_report = 'ox/report',
+  raschet_schet = 'spravochnik/organization/account_number',
+  raschet_schet_gazna = 'spravochnik/organization/gazna'
 }

@@ -6,7 +6,7 @@ import { type HTMLAttributes, type Ref } from 'react'
 import { cva } from 'class-variance-authority'
 import { CircleX } from 'lucide-react'
 
-import { LoadingSpinner } from '@/common/components'
+import { Spinner } from '@/common/components'
 import { Button } from '@/common/components/ui/button'
 import { Input } from '@/common/components/ui/input'
 import { cn } from '@/common/lib/utils'
@@ -73,7 +73,7 @@ const SpravochnikInput = <T extends Record<string, unknown>>({
       />
       {loading ? (
         <div className="flex items-center absolute right-2 top-0 bottom-0">
-          <LoadingSpinner className="size-5 border-brand/40 border-r-transparent border-[3px]" />
+          <Spinner className="size-5 border-brand/40 border-r-transparent border-[3px]" />
         </div>
       ) : (
         <div className="flex items-center invisible absolute right-0 top-0 bottom-0 text-foreground/50 [input:focus+&]:text-brand group-focus-within:visible group-hover:visible px-1">

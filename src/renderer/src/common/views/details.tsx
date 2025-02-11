@@ -1,6 +1,6 @@
 import type { ButtonHTMLAttributes, HTMLAttributes } from 'react'
 
-import { LoadingSpinner } from '@renderer/common/components'
+import { Spinner } from '@renderer/common/components'
 import { Button } from '@renderer/common/components/ui/button'
 import { cn } from '@renderer/common/lib/utils'
 import { CircleCheck } from 'lucide-react'
@@ -32,7 +32,7 @@ const DetailsViewContent = ({
       {...props}
       className="h-full flex items-center justify-center"
     >
-      <LoadingSpinner />
+      <Spinner />
     </div>
   ) : (
     <div className={cn('flex-1 overflow-y-auto scrollbar', className)}>{children}</div>
@@ -62,7 +62,7 @@ const DetailsViewCreate = ({ loading = false, disabled, ...props }: DetailsViewC
       disabled={loading || disabled}
     >
       {loading ? (
-        <LoadingSpinner className="size-4 border-2 border-current border-r-transparent mr-2" />
+        <Spinner className="size-4 border-2 border-current border-r-transparent mr-2" />
       ) : (
         <CircleCheck className="btn-icon icon-start" />
       )}

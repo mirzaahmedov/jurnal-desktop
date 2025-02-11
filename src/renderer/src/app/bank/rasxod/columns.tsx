@@ -6,7 +6,6 @@ import { ProvodkaCell } from '@renderer/common/components/table/renderers/provod
 import { Switch } from '@renderer/common/components/ui/switch'
 import { formatLocaleDate } from '@renderer/common/lib/format'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { toast } from 'react-toastify'
 
 import { queryKeys } from './constants'
 import { bankRasxodPaymentService } from './service'
@@ -91,13 +90,9 @@ const StatusCell = ({ row }: { row: BankRasxod }) => {
   const { mutate: updateStatus, isPending } = useMutation({
     mutationFn: bankRasxodPaymentService.update,
     onSuccess() {
-      toast.success('Статус успешно обновлен')
       queryClient.invalidateQueries({
         queryKey: [queryKeys.getAll]
       })
-    },
-    onError() {
-      toast.error('Ошибка при обновлении статуса')
     }
   })
 

@@ -5,7 +5,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/common/components/ui/
 import { type UseToggleReturn, useEventCallback, useToggle } from '@/common/hooks'
 
 import { EmptyList } from './empty-states'
-import { LoadingSpinner } from './loading'
+import { Spinner } from './loading'
 
 type AutoCompleteProps<T> = {
   isFetching: boolean
@@ -117,7 +117,7 @@ const AutoComplete = <T extends Record<string, unknown>>({
                 disabled
                 className="flex justify-center"
               >
-                <LoadingSpinner />
+                <Spinner />
               </CommandItem>
             ) : Array.isArray(options) ? (
               options.map((item) => (

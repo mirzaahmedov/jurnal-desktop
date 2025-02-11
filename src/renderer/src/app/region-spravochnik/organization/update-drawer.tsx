@@ -162,6 +162,8 @@ const UpdateOrganizationDrawer = () => {
           <div className="col-span-4 relative overflow-auto p-5 scrollbar">
             {isFetching ? <LoadingOverlay /> : null}
             <OrganizationForm
+              data={organization?.data}
+              actionType="update"
               form={form}
               onSubmit={onSubmit}
               formActions={
@@ -190,7 +192,7 @@ const UpdateOrganizationDrawer = () => {
             <div className="relative overflow-auto scrollbar flex-1">
               {isFetching || isUpdating || isAddingChildOrganization ? <LoadingOverlay /> : null}
               <OrganizationTable
-                data={organization?.data.childs ?? []}
+                data={organization?.data?.childs ?? []}
                 onEdit={handleEdit}
                 onDelete={handleDelete}
               />

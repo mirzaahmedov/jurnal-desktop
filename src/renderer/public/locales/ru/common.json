@@ -3,7 +3,7 @@
   "budjet": "Бюджет",
   "requisites": "Реквизиты",
   "raschet-schet": "Расчетный счет",
-  "raschet-schet-gazna": "Расчетный счет (газна)",
+  "raschet-schet-gazna": "Расчетный счет газна",
   "choose": "Выбрать {{what}}",
   "from": "За период с",
   "to": "по",
@@ -185,9 +185,9 @@
   "selected-file": "Выбранный файл",
   "id": "Идентификатор",
   "autofill": "Автозаполнение",
-  "action-successful": "Действие успешно выполнено",
-  "action-failed": "Что-то пошло не так. Попробуйте ещё раз.",
   "retry": "Отправить снова",
   "nothing-found": "Ничего не найдено",
-  "reports": "Отчеты"
+  "reports": "Отчеты",
+  "action-successful": "Действие успешно выполнено",
+  "something-went-wrong": "Что-то пошло не так, попробуйте еще раз."
 }

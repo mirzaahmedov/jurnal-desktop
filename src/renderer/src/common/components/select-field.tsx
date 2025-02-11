@@ -45,7 +45,7 @@ const SelectFieldComponent = <T extends Record<string, unknown>>(
       {withFormControl ? (
         <FormControl>
           <SelectTrigger
-            className={cn('shadow-none focus:ring-2 focus:ring-brand', triggerClassName)}
+            className={cn('shadow-none focus:ring-2 focus:ring-brand bg-white', triggerClassName)}
           >
             <SelectValue
               placeholder={placeholder}
@@ -54,7 +54,7 @@ const SelectFieldComponent = <T extends Record<string, unknown>>(
           </SelectTrigger>
         </FormControl>
       ) : (
-        <SelectTrigger className={cn('shadow-none', triggerClassName)}>
+        <SelectTrigger className={cn('shadow-none bg-white', triggerClassName)}>
           <SelectValue
             placeholder={placeholder}
             ref={ref}

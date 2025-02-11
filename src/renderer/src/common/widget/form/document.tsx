@@ -9,7 +9,7 @@ import { cn } from '@renderer/common/lib/utils'
 import { RefreshCw } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { DatePicker, Fieldset, LoadingSpinner } from '@/common/components'
+import { DatePicker, Fieldset, Spinner } from '@/common/components'
 import { FormElement } from '@/common/components/form'
 import { FormField } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
@@ -86,7 +86,7 @@ export const DocumentFields: FormEditableFieldsComponent<
                     refetch()
                   }}
                 >
-                  {isFetching ? <LoadingSpinner className="size-5 border-2" /> : <RefreshCw />}
+                  {isFetching ? <Spinner className="size-5 border-2" /> : <RefreshCw />}
                 </Button>
               </div>
             </FormElement>

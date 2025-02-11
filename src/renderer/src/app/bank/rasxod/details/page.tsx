@@ -12,7 +12,6 @@ import {
   createEditorCreateHandler,
   createEditorDeleteHandler
 } from '@renderer/common/components/editable-table/helpers'
-// import { FormElement } from '@renderer/common/components/form'
 import { DocumentType } from '@renderer/common/features/doc-num'
 import { usePodpis } from '@renderer/common/features/podpis'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
@@ -28,7 +27,6 @@ import { ButtonGroup } from '@/common/components/ui/button-group'
 import { Form } from '@/common/components/ui/form'
 import { useLayoutStore } from '@/common/features/layout'
 import { useSpravochnik } from '@/common/features/spravochnik'
-import { useToast } from '@/common/hooks/use-toast'
 import { formatDate } from '@/common/lib/date'
 import { formatLocaleDate } from '@/common/lib/format'
 import { normalizeEmptyFields } from '@/common/lib/validation'
@@ -65,7 +63,6 @@ const BankRasxodDetailtsPage = () => {
 
   const original = location.state?.original
 
-  const { toast } = useToast()
   const { t } = useTranslation(['app'])
 
   const form = useForm({
@@ -90,6 +87,8 @@ const BankRasxodDetailtsPage = () => {
         form.setValue('id_spravochnik_organization', value)
         form.setValue('id_shartnomalar_organization', 0)
         form.trigger('id_spravochnik_organization')
+        form.setValue('organization_by_raschet_schet_id', 0)
+        form.setValue('organization_by_raschet_schet_gazna_id', 0)
       }
     })
   )
@@ -140,7 +139,6 @@ const BankRasxodDetailtsPage = () => {
   const { mutate: create, isPending: isCreating } = useMutation({
     mutationFn: bankRasxodService.create,
     onSuccess() {
-      toast({ title: 'Документ успешно создан' })
       form.reset(defaultValues)
       navigate(-1)
       queryClient.invalidateQueries({
@@ -149,15 +147,11 @@ const BankRasxodDetailtsPage = () => {
       queryClient.invalidateQueries({
         queryKey: [queryKeys.getById, params.id]
       })
-    },
-    onError(error) {
-      toast({ title: error.message, variant: 'destructive' })
     }
   })
   const { mutate: update, isPending: isUpdating } = useMutation({
     mutationFn: bankRasxodService.update,
     onSuccess() {
-      toast({ title: 'Документ успешно создан' })
       navigate(-1)
       queryClient.invalidateQueries({
         queryKey: [queryKeys.getAll]
@@ -165,9 +159,6 @@ const BankRasxodDetailtsPage = () => {
       queryClient.invalidateQueries({
         queryKey: [queryKeys.getById, params.id]
       })
-    },
-    onError(error) {
-      toast({ title: error.message, variant: 'destructive' })
     }
   })
 
@@ -180,6 +171,8 @@ const BankRasxodDetailtsPage = () => {
       rukovoditel,
       glav_buxgalter,
       id_shartnomalar_organization,
+      organization_by_raschet_schet_id,
+      organization_by_raschet_schet_gazna_id,
       summa
     } = payload
 
@@ -194,6 +187,8 @@ const BankRasxodDetailtsPage = () => {
         opisanie,
         rukovoditel,
         glav_buxgalter,
+        organization_by_raschet_schet_id,
+        organization_by_raschet_schet_gazna_id,
         childs: podvodki.map(normalizeEmptyFields<RasxodPodvodkaFormValues>)
       })
       return
@@ -207,6 +202,8 @@ const BankRasxodDetailtsPage = () => {
       opisanie,
       rukovoditel,
       glav_buxgalter,
+      organization_by_raschet_schet_id,
+      organization_by_raschet_schet_gazna_id,
       childs: podvodki.map(normalizeEmptyFields<RasxodPodvodkaFormValues>)
     })
   })
@@ -305,6 +302,8 @@ const BankRasxodDetailtsPage = () => {
     })
   }, [setLayout, navigate, params.id, t])
 
+  console.log(form.watch())
+
   return (
     <DetailsView>
       <DetailsView.Content loading={isFetching}>
@@ -327,6 +326,7 @@ const BankRasxodDetailtsPage = () => {
                 />
                 <OrganizationFields
                   gazna
+                  form={form as any}
                   tabIndex={2}
                   error={form.formState.errors.id_spravochnik_organization}
                   spravochnik={orgSpravochnik}
@@ -334,30 +334,6 @@ const BankRasxodDetailtsPage = () => {
                   name={t('receiver-info')}
                 />
               </div>
-              {/* <div className="p-5 flex items-center gap-10">
-                <FormElement
-                  label={t('raschet-schet')}
-                  className="flex-1"
-                >
-                  <SelectField
-                    options={raschetSchetOptions}
-                    getOptionValue={(o) => o.id}
-                    getOptionLabel={(o) => o.raschet_schet}
-                    triggerClassName="max-w-xs"
-                  />
-                </FormElement>
-                <FormElement
-                  label={t('raschet-schet-gazna')}
-                  className="flex-1"
-                >
-                  <SelectField
-                    options={raschetSchetGaznaOptions}
-                    getOptionValue={(o) => o.id}
-                    getOptionLabel={(o) => o.raschet_schet_gazna}
-                    triggerClassName="max-w-xs"
-                  />
-                </FormElement>
-              </div> */}
 
               <div className="grid grid-cols-2 gap-10">
                 <SummaFields data={{ summa: form.watch('summa') }} />

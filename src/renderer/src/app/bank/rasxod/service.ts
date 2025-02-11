@@ -30,6 +30,8 @@ export const RasxodFormSchema = withPreprocessor(
     doc_num: z.string(),
     doc_date: z.string(),
     id_spravochnik_organization: z.number(),
+    organization_by_raschet_schet_id: z.number(),
+    organization_by_raschet_schet_gazna_id: z.number(),
     summa: z.number().optional(),
     tulanmagan_summa: z.number().optional(),
     opisanie: z.string().optional(),

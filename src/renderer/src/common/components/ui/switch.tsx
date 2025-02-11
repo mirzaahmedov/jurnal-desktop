@@ -4,7 +4,7 @@ import * as SwitchPrimitives from '@radix-ui/react-switch'
 
 import { cn } from '@/common/lib/utils'
 
-import { LoadingSpinner } from '../loading'
+import { Spinner } from '../loading'
 
 const Switch = React.forwardRef<
   React.ElementRef<typeof SwitchPrimitives.Root>,
@@ -23,7 +23,7 @@ const Switch = React.forwardRef<
         'pointer-events-none flex items-center justify-center h-4 w-4 rounded-full bg-background shadow-lg ring-0 transition-transform data-[state=checked]:translate-x-4 data-[state=unchecked]:translate-x-0'
       )}
     >
-      {props.loading ? <LoadingSpinner className="size-3 border-2" /> : null}
+      {props.loading ? <Spinner className="size-3 border-2" /> : null}
     </SwitchPrimitives.Thumb>
   </SwitchPrimitives.Root>
 ))

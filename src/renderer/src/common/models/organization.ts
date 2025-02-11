@@ -1,10 +1,10 @@
-export interface Organization {
+export type Organization = {
   parent_id?: number
   id: number
   name: string
   bank_klient: string
-  raschet_schet: Organization.RaschetSchet[]
-  raschet_schet_gazna: Organization.RaschetSchetGazna[]
+  account_numbers: Organization.RaschetSchet[]
+  gaznas: Organization.RaschetSchetGazna[]
   mfo: string
   inn: string
   okonx: string
@@ -42,12 +42,12 @@ export type OrganizationMonitor = {
 }
 
 export namespace Organization {
-  export interface RaschetSchet {
+  export type RaschetSchet = {
     id: number
     spravochnik_organization_id: number
     raschet_schet: string
   }
-  export interface RaschetSchetGazna {
+  export type RaschetSchetGazna = {
     id: number
     spravochnik_organization_id: number
     raschet_schet_gazna: string

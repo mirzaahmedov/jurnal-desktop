@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react'
 
-import { FileDropzone, LoadingSpinner } from '@renderer/common/components'
+import { FileDropzone, Spinner } from '@renderer/common/components'
 import { Button } from '@renderer/common/components/ui/button'
 import { Card } from '@renderer/common/components/ui/card'
 import {
@@ -106,7 +106,7 @@ export const ImportFile = ({ url, params }: ImportFileDialogProps) => {
             }}
           >
             {isPending ? (
-              <LoadingSpinner className="mr-2 inline-block size-4 border-white border-2 border-r-transparent" />
+              <Spinner className="mr-2 inline-block size-4 border-white border-2 border-r-transparent" />
             ) : null}
             {t('send')}
           </Button>

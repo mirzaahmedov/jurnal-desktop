@@ -1,12 +1,14 @@
 import type { OrganizationFormValues } from './service'
+import type { Organization } from '@renderer/common/models'
 
 import { type FormEventHandler, type ReactNode, useState } from 'react'
 
 import { Button } from '@renderer/common/components/ui/button'
 import { useQuery } from '@tanstack/react-query'
-import { Plus, Trash } from 'lucide-react'
+import { Pencil, Plus, Trash } from 'lucide-react'
 import { type UseFormReturn, useFieldArray } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router-dom'
 
 import { bankQueryKeys } from '@/app/super-admin/bank/config'
 import { bankService } from '@/app/super-admin/bank/service'
@@ -16,12 +18,22 @@ import { Form, FormControl, FormField, FormLabel } from '@/common/components/ui/
 import { Input } from '@/common/components/ui/input'
 
 type OrganizationFormProps = {
+  data?: Organization
+  actionType?: 'create' | 'update'
   form: UseFormReturn<OrganizationFormValues>
   onSubmit: FormEventHandler<HTMLFormElement>
   formActions: ReactNode
 }
-const OrganizationForm = ({ form, formActions, onSubmit }: OrganizationFormProps) => {
+const OrganizationForm = ({
+  data,
+  actionType = 'create',
+  form,
+  formActions,
+  onSubmit
+}: OrganizationFormProps) => {
   const [search, setSearch] = useState('')
+
+  const navigate = useNavigate()
 
   const { t } = useTranslation()
   const {
@@ -30,7 +42,7 @@ const OrganizationForm = ({ form, formActions, onSubmit }: OrganizationFormProps
     remove: removeRaschetSchet
   } = useFieldArray({
     control: form.control,
-    name: 'raschet_schet',
+    name: 'account_numbers',
     rules: {
       minLength: 1
     }
@@ -41,7 +53,7 @@ const OrganizationForm = ({ form, formActions, onSubmit }: OrganizationFormProps
     remove: removeRaschetSchetGazna
   } = useFieldArray({
     control: form.control,
-    name: 'raschet_schet_gazna'
+    name: 'gaznas'
   })
 
   const { data: bankList, isFetching } = useQuery({
@@ -175,15 +187,32 @@ const OrganizationForm = ({ form, formActions, onSubmit }: OrganizationFormProps
             )}
           />
 
-          <div className="grid grid-cols-6">
+          <div className="grid grid-cols-6 gap-5 items-center">
             <FormLabel className="col-span-2 text-end">{t('raschet-schet')}</FormLabel>
+            <div>
+              {actionType !== 'create' ? (
+                <Button
+                  variant="ghost"
+                  type="button"
+                  onClick={() => {
+                    navigate('/spravochnik/raschet-schet', {
+                      state: {
+                        org_id: data?.id
+                      }
+                    })
+                  }}
+                >
+                  <Pencil className="btn-icon !mx-0" />
+                </Button>
+              ) : null}
+            </div>
           </div>
           <ul className="flex flex-col gap-6">
             {raschetSchets.map((field, index) => (
               <FormField
                 key={field.id}
                 control={form.control}
-                name={`raschet_schet.${index}.raschet_schet`}
+                name={`account_numbers.${index}.raschet_schet`}
                 render={({ field }) => (
                   <li key={index}>
                     <FormElement
@@ -191,17 +220,22 @@ const OrganizationForm = ({ form, formActions, onSubmit }: OrganizationFormProps
                       label={(index + 1).toString()}
                     >
                       <div className="flex items-center justify-between gap-5">
-                        <Input {...field} />
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="icon"
-                          className="btn-icon !mx-0 hover:text-red-500"
-                          disabled={raschetSchets.length === 1}
-                          onClick={() => removeRaschetSchet(index)}
-                        >
-                          <Trash />
-                        </Button>
+                        <Input
+                          {...field}
+                          readOnly={actionType !== 'create'}
+                        />
+                        {actionType === 'create' ? (
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            className="btn-icon !mx-0 hover:text-red-500"
+                            disabled={raschetSchets.length === 1}
+                            onClick={() => removeRaschetSchet(index)}
+                          >
+                            <Trash />
+                          </Button>
+                        ) : null}
                       </div>
                     </FormElement>
                   </li>
@@ -209,30 +243,49 @@ const OrganizationForm = ({ form, formActions, onSubmit }: OrganizationFormProps
               />
             ))}
           </ul>
-          <div className="grid grid-cols-6 mt-1">
-            <div className="col-span-2"></div>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() =>
-                appendRaschetSchet({
-                  raschet_schet: ''
-                })
-              }
-              className="col-span-4"
-            >
-              <Plus className="btn-icon icon-start" /> {t('add')}
-            </Button>
-          </div>
+          {actionType === 'create' ? (
+            <div className="grid grid-cols-6 mt-1">
+              <div className="col-span-2"></div>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() =>
+                  appendRaschetSchet({
+                    raschet_schet: ''
+                  })
+                }
+                className="col-span-4"
+              >
+                <Plus className="btn-icon icon-start" /> {t('add')}
+              </Button>
+            </div>
+          ) : null}
 
-          <div className="grid grid-cols-6">
+          <div className="grid grid-cols-6 gap-5 items-center">
             <FormLabel className="col-span-2 text-end">{t('raschet-schet-gazna')}</FormLabel>
+            <div>
+              {actionType !== 'create' ? (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  onClick={() => {
+                    navigate('/spravochnik/raschet-schet-gazna', {
+                      state: {
+                        org_id: data?.id
+                      }
+                    })
+                  }}
+                >
+                  <Pencil className="btn-icon !mx-0" />
+                </Button>
+              ) : null}
+            </div>
           </div>
           {raschetSchetsGazna.map((field, index) => (
             <FormField
               key={field.id}
               control={form.control}
-              name={`raschet_schet_gazna.${index}.raschet_schet_gazna`}
+              name={`gaznas.${index}.raschet_schet_gazna`}
               render={({ field }) => (
                 <FormElement
                   key={index}
@@ -240,63 +293,44 @@ const OrganizationForm = ({ form, formActions, onSubmit }: OrganizationFormProps
                   label={(index + 1).toString()}
                 >
                   <div className="flex items-center justify-between gap-5">
-                    <Input {...field} />
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="icon"
-                      className="btn-icon !mx-0 hover:text-red-500"
-                      disabled={raschetSchetsGazna.length === 1}
-                      onClick={() => removeRaschetSchetGazna(index)}
-                    >
-                      <Trash />
-                    </Button>
+                    <Input
+                      {...field}
+                      readOnly={actionType !== 'create'}
+                    />
+                    {actionType === 'create' ? (
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        className="btn-icon !mx-0 hover:text-red-500"
+                        disabled={raschetSchetsGazna.length === 1}
+                        onClick={() => removeRaschetSchetGazna(index)}
+                      >
+                        <Trash />
+                      </Button>
+                    ) : null}
                   </div>
                 </FormElement>
               )}
             />
           ))}
-          <div className="grid grid-cols-6">
-            <div className="col-span-2"></div>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() =>
-                appendRaschetSchetGazna({
-                  raschet_schet_gazna: ''
-                })
-              }
-              className="col-span-4"
-            >
-              <Plus className="btn-icon icon-start" /> {t('add')}
-            </Button>
-          </div>
-
-          <FormField
-            name="raschet_schet"
-            control={form.control}
-            render={({ field }) => (
-              <FormElement
-                grid="2:4"
-                label={t('raschet-schet')}
+          {actionType === 'create' ? (
+            <div className="grid grid-cols-6">
+              <div className="col-span-2"></div>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() =>
+                  appendRaschetSchetGazna({
+                    raschet_schet_gazna: ''
+                  })
+                }
+                className="col-span-4"
               >
-                <Input {...field} />
-              </FormElement>
-            )}
-          />
-
-          <FormField
-            name="raschet_schet_gazna"
-            control={form.control}
-            render={({ field }) => (
-              <FormElement
-                grid="2:4"
-                label={t('raschet-schet-gazna')}
-              >
-                <Input {...field} />
-              </FormElement>
-            )}
-          />
+                <Plus className="btn-icon icon-start" /> {t('add')}
+              </Button>
+            </div>
+          ) : null}
 
           <FormField
             name="okonx"

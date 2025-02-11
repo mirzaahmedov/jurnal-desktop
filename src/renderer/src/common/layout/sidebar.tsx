@@ -21,7 +21,7 @@ import { persist } from 'zustand/middleware'
 
 import { ScrollArea } from '@/common/components/ui/scroll-area'
 
-import { LoadingSpinner } from '../components'
+import { Spinner } from '../components'
 import { getNavElements } from './constants'
 
 type SidebarStore = {
@@ -120,7 +120,7 @@ const Sidebar = () => {
           disabled={isRestarting}
         >
           {isRestarting ? (
-            <LoadingSpinner className="mr-2 inline-block size-4 border-white border-2 border-r-transparent" />
+            <Spinner className="mr-2 inline-block size-4 border-white border-2 border-r-transparent" />
           ) : (
             <RefreshCcw className="btn-icon" />
           )}

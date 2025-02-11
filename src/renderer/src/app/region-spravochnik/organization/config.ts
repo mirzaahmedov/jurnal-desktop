@@ -13,18 +13,16 @@ const defaultValues: OrganizationFormValues = {
   bank_klient: '',
   inn: '',
   mfo: '',
-  raschet_schet: '',
-  raschet_schet_gazna: '',
-  // raschet_schet: [
-  //   {
-  //     raschet_schet: ''
-  //   }
-  // ],
-  // raschet_schet_gazna: [
-  //   {
-  //     raschet_schet_gazna: ''
-  //   }
-  // ],
+  account_numbers: [
+    {
+      raschet_schet: ''
+    }
+  ],
+  gaznas: [
+    {
+      raschet_schet_gazna: ''
+    }
+  ],
   okonx: ''
 }
 

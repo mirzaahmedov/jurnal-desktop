@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next'
 
 import { GenericTable, LoadingOverlay } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
-import { useLayout } from '@/common/features/layout'
+import { useLayoutStore } from '@/common/features/layout'
 import { useToggle } from '@/common/hooks/use-toggle'
 
 import { adminUserColumns } from './columns'
@@ -21,6 +21,8 @@ const UserPage = () => {
 
   const toggle = useToggle()
   const queryClient = useQueryClient()
+
+  const setLayout = useLayoutStore((store) => store.setLayout)
 
   const { t } = useTranslation(['app'])
   const { confirm } = useConfirm()
@@ -50,11 +52,18 @@ const UserPage = () => {
       setSelected(null)
     }
   }, [toggle.isOpen])
-  useLayout({
-    title: t('pages.user'),
-    content: SearchField,
-    onCreate: toggle.open
-  })
+  useEffect(() => {
+    setLayout({
+      title: t('pages.user'),
+      content: SearchField,
+      breadcrumbs: [
+        {
+          title: t('pages.admin')
+        }
+      ],
+      onCreate: toggle.open
+    })
+  }, [setLayout, t, toggle.open])
 
   const handleClickEdit = (row: User) => {
     setSelected(row)

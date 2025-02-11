@@ -2,13 +2,45 @@ import type { ToastContentProps } from 'react-toastify'
 
 import { Button } from '@renderer/common/components/ui/button'
 import { Clipboard, Repeat, X } from 'lucide-react'
+import { toast } from 'react-toastify'
 
-interface HttpErrorToastOptions {
+export interface NotifyOptions {
   title: string
-  refetch: VoidFunction
+  variant?: 'error' | 'success' | 'info'
+  refetch?: VoidFunction
   details?: string
 }
-export const HttpErrorToast = ({ closeToast, data }: ToastContentProps<HttpErrorToastOptions>) => {
+export const notify = ({ variant = 'info', title, refetch, details }: NotifyOptions) => {
+  switch (variant) {
+    case 'info':
+      toast.info(title)
+      break
+    case 'success':
+      toast.success(title)
+      break
+    case 'error':
+      toast.error(ErrorToastContent, {
+        data: {
+          title,
+          refetch,
+          details
+        }
+      })
+      break
+    default:
+      toast(title)
+  }
+}
+
+interface ErrorToastContentOptions {
+  title: string
+  refetch?: VoidFunction
+  details?: string
+}
+export const ErrorToastContent = ({
+  closeToast,
+  data
+}: ToastContentProps<ErrorToastContentOptions>) => {
   const { title, refetch, details } = data ?? {}
 
   return (
@@ -25,7 +57,7 @@ export const HttpErrorToast = ({ closeToast, data }: ToastContentProps<HttpError
               window.navigator.clipboard.writeText(details)
             }}
           >
-            <Clipboard className="btn-icon !mx-auto" />
+            <Clipboard className="size-4" />
           </Button>
         ) : null}
         <Button
@@ -33,14 +65,14 @@ export const HttpErrorToast = ({ closeToast, data }: ToastContentProps<HttpError
           size="icon"
           onClick={refetch}
         >
-          <Repeat className="btn-icon !mx-auto" />
+          <Repeat className="size-4" />
         </Button>
         <Button
           variant="ghost"
           size="icon"
           onClick={closeToast}
         >
-          <X className="btn-icon !mx-auto" />
+          <X className="size-4" />
         </Button>
       </div>
     </div>

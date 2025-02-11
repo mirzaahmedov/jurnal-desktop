@@ -1,8 +1,7 @@
 import type { FieldsetProps } from '@/common/components'
+import type { UseSpravochnikReturn } from '@/common/features/spravochnik'
 import type { HTMLAttributes, RefObject } from 'react'
 import type { FieldError, FieldErrors, FieldValues, UseFormReturn } from 'react-hook-form'
-
-import { UseSpravochnikReturn } from '@/common/features/spravochnik'
 
 // -----------------------------------------------------------------------------
 // Form Fields Components
@@ -62,7 +61,7 @@ type FormSpravochnikFieldsComponentProps<T> = Omit<FieldsetProps, 'name'> & {
 type FormSpravochnikFieldsComponent<
   T extends Record<string, unknown>,
   P = Record<string, unknown>
-> = (props: FormSpravochnikFieldsComponentProps<T> & P) => JSX.Element
+> = (props: Omit<FormSpravochnikFieldsComponentProps<T>, 'form'> & P) => JSX.Element
 
 export type {
   FormFieldsComponentProps,

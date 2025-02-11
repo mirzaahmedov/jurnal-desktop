@@ -1,6 +1,6 @@
 import type { ButtonProps } from '@renderer/common/components/ui/button'
 
-import { LoadingSpinner } from '@renderer/common/components/loading'
+import { Spinner } from '@renderer/common/components/loading'
 import { Button } from '@renderer/common/components/ui/button'
 import { http } from '@renderer/common/lib/http'
 import { useMutation } from '@tanstack/react-query'
@@ -39,7 +39,7 @@ export const DownloadFile = ({
     >
       {isDownloadingFile ? (
         <>
-          <LoadingSpinner className="btn-icon icon-start" />
+          <Spinner className="btn-icon icon-start" />
           Загрузка
         </>
       ) : (

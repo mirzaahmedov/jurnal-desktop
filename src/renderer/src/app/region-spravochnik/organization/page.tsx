@@ -127,7 +127,7 @@ const OrganizationPage = () => {
       <ListView.Footer>
         <ListView.Pagination
           {...pagination}
-          pageCount={organizations?.meta.pageCount ?? 0}
+          pageCount={organizations?.meta?.pageCount ?? 0}
         />
       </ListView.Footer>
       <UpdateOrganizationDrawer />

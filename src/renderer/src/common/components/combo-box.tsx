@@ -5,7 +5,7 @@ import { Check } from 'lucide-react'
 import { useToggle } from '@/common/hooks/use-toggle'
 import { cn } from '@/common/lib/utils'
 
-import { LoadingSpinner } from './loading'
+import { Spinner } from './loading'
 import { Command, CommandInput, CommandItem, CommandList } from './ui/command'
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover'
 
@@ -29,7 +29,7 @@ const Combobox = ({ children, loading = false, options, value, onChange }: Combo
         side="top"
       >
         {loading ? (
-          <LoadingSpinner />
+          <Spinner />
         ) : (
           <Command>
             <CommandInput />

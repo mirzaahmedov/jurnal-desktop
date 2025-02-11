@@ -8,6 +8,8 @@ import { Navigate, createHashRouter } from 'react-router-dom'
 
 import DashboardPage from './dashboard/page'
 import HomePage from './home/page'
+import RaschetSchetPage from './region-spravochnik/raschet-schet'
+import RaschetSchetGaznaPage from './region-spravochnik/raschet-schet-gazna'
 import SigninPage from './sign-in'
 
 const MainLayout = lazy(() => import('../common/layout/main'))
@@ -207,6 +209,14 @@ export const routes: RouteObject[] = [
           {
             path: 'organization',
             element: <OrganizationPage />
+          },
+          {
+            path: 'raschet-schet',
+            element: <RaschetSchetPage />
+          },
+          {
+            path: 'raschet-schet-gazna',
+            element: <RaschetSchetGaznaPage />
           },
           {
             path: 'subdivision',

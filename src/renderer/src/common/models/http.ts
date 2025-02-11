@@ -16,7 +16,7 @@ export type Response<T, M = ResponseMeta> =
       success: false
       code: number
       message: string
-      meta: null
-      data: null
+      data: undefined
+      meta: undefined
       time: string
     }

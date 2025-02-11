@@ -2,7 +2,7 @@ import type { RasxodFormValues } from '../service'
 import type { MainSchet, Organization } from '@renderer/common/models'
 import type { ButtonHTMLAttributes } from 'react'
 
-import { LoadingSpinner } from '@renderer/common/components'
+import { Spinner } from '@renderer/common/components'
 import { Button } from '@renderer/common/components/ui/button'
 import { useToast } from '@renderer/common/hooks'
 import { formatLocaleDate } from '@renderer/common/lib/format'
@@ -80,7 +80,7 @@ export const GeneratePorucheniya = ({
     >
       {isGeneratingDocument ? (
         <>
-          <LoadingSpinner className="btn-icon icon-start" />
+          <Spinner className="btn-icon icon-start" />
           Загрузка
         </>
       ) : (

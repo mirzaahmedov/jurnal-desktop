@@ -3,7 +3,7 @@ import type { ButtonProps } from '@renderer/common/components/ui/button'
 import type { ReactElement } from 'react'
 
 import { pdf } from '@react-pdf/renderer'
-import { LoadingSpinner } from '@renderer/common/components/loading'
+import { Spinner } from '@renderer/common/components/loading'
 import { Button } from '@renderer/common/components/ui/button'
 import { useMutation } from '@tanstack/react-query'
 import { Printer } from 'lucide-react'
@@ -44,7 +44,7 @@ export const GenerateFile = ({ children, fileName, buttonText, ...props }: Gener
     >
       {isGeneratingDocument ? (
         <>
-          <LoadingSpinner className="btn-icon icon-start" />
+          <Spinner className="btn-icon icon-start" />
           Загрузка
         </>
       ) : (

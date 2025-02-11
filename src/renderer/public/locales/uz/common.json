@@ -3,7 +3,7 @@
   "budjet": "Byudjet",
   "requisites": "Rekvizitlar",
   "raschet-schet": "Hisob raqami",
-  "raschet-schet-gazna": "Hisob raqami (g'azna)",
+  "raschet-schet-gazna": "Hisob raqami g'azna",
   "choose": "{{what}} tanlash",
   "from": "Dan",
   "to": "gacha",
@@ -185,9 +185,9 @@
   "selected-file": "Tanlangan fayl",
   "id": "ID",
   "autofill": "Avtomatik to'ldirish",
-  "action-successful": "Amaliyot muvofaqiyatli bajarildi",
-  "action-failed": "Nimadir xato ketdi. Iltimos, qayta urinib ko‘ring.",
   "retry": "Qayta yuborish",
   "nothing-found": "Hech narsa topilmadi",
-  "reports": "Hisobotlar"
+  "reports": "Hisobotlar",
+  "action-successful": "Amaliyot muvofaqiyatli bajarildi",
+  "something-went-wrong": "Nimadir xato ketdi, qayta urinib ko‘ring"
 }

@@ -1,6 +1,6 @@
 import { cn } from '@/common/lib/utils'
 
-export const LoadingSpinner = (props: React.HTMLAttributes<HTMLDivElement>) => {
+export const Spinner = (props: React.HTMLAttributes<HTMLDivElement>) => {
   return (
     <div
       {...props}

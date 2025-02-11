@@ -2,7 +2,7 @@ import { HTMLAttributes } from 'react'
 
 import { cn } from '@renderer/common/lib/utils'
 
-import { LoadingSpinner } from './loading'
+import { Spinner } from './loading'
 
 export const LoadingOverlay = ({ className, ...props }: HTMLAttributes<HTMLDivElement>) => {
   return (
@@ -13,7 +13,7 @@ export const LoadingOverlay = ({ className, ...props }: HTMLAttributes<HTMLDivEl
         className
       )}
     >
-      <LoadingSpinner />
+      <Spinner />
     </div>
   )
 }
