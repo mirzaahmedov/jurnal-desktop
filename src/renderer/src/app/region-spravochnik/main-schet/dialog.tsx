@@ -13,7 +13,7 @@ import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 
 import { budgetService } from '@/app/super-admin/budjet'
-import { budgetQueryKeys } from '@/app/super-admin/budjet/constants'
+import { budjetQueryKeys } from '@/app/super-admin/budjet/constants'
 import { AutoComplete, SelectField } from '@/common/components'
 import { Button } from '@/common/components/ui/button'
 import {
@@ -63,7 +63,7 @@ export const MainSchetDialog = (props: MainSchetDialogProps) => {
   })
 
   const { data: budgets, isFetching: isFetchingBudjets } = useQuery({
-    queryKey: [budgetQueryKeys.getAll],
+    queryKey: [budjetQueryKeys.getAll],
     queryFn: budgetService.getAll
   })
 

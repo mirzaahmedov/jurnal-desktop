@@ -7,7 +7,7 @@ import { useLocationState, usePagination } from '@renderer/common/hooks'
 import { ListView } from '@renderer/common/views'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 import { ChooseSpravochnik, GenericTable } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
@@ -27,6 +27,7 @@ const RaschetSchetPage = () => {
 
   const toggle = useToggle()
   const location = useLocation()
+  const navigate = useNavigate()
   const pagination = usePagination()
   const queryClient = useQueryClient()
   const setLayout = useLayoutStore((store) => store.setLayout)
@@ -82,9 +83,10 @@ const RaschetSchetPage = () => {
         }
       ],
       content: SearchField,
+      onBack: location.state ? () => navigate(-1) : undefined,
       onCreate: orgId ? toggle.open : undefined
     })
-  }, [setLayout, t, toggle.open, orgId])
+  }, [setLayout, t, toggle.open, orgId, navigate, location.state])
 
   useEffect(() => {
     if (location.state?.org_id) {

@@ -1,25 +1,27 @@
+import type { UseFormReturn } from 'react-hook-form'
+
 import {
   EditableTableCell,
   EditableTableHead,
   EditableTableRow
 } from '@renderer/common/components/editable-table'
+import { formatDate } from '@renderer/common/lib/date'
 import { CircleMinus, CirclePlus } from 'lucide-react'
-import { UseFormReturn } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 
-import { DatePicker, NumericInput, inputVariants } from '@/common/components'
+import { DatePicker, NumericInput } from '@/common/components'
 import { Button } from '@/common/components/ui/button'
 import { Input } from '@/common/components/ui/input'
 import { Table, TableBody, TableFooter, TableHeader } from '@/common/components/ui/table'
-import { SpravochnikInput } from '@/common/features/spravochnik'
+import { SpravochnikInput, inputVariants } from '@/common/features/spravochnik'
 import { calcSena, calcSumma } from '@/common/lib/pricing'
 
 import { useOstatokProduct } from '../../common/features/ostatok-product/use-ostatok-product'
 import {
   RasxodChildFormSchema,
-  RasxodChildFormValues,
-  RasxodFormValues,
+  type RasxodChildFormValues,
+  type RasxodFormValues,
   defaultValues
 } from '../config'
 
@@ -404,7 +406,7 @@ const NaimenovanieCells = ({
       updateFormField(index, 'kredit_schet', product?.schet ?? '')
       updateFormField(index, 'debet_sub_schet', product?.provodka_subschet ?? '')
       updateFormField(index, 'kredit_sub_schet', product?.provodka_subschet ?? '')
-      updateFormField(index, 'data_pereotsenka', product.prixod_data?.data_pereotsenka)
+      updateFormField(index, 'data_pereotsenka', formatDate(product.prixod_data?.data_pereotsenka))
     }
   })
 

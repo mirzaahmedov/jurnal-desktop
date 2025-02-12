@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { documentTypes } from '@renderer/app/mainbook/common/data'
-import { Fieldset, SelectField, inputVariants } from '@renderer/common/components'
+import { Fieldset, SelectField } from '@renderer/common/components'
 import {
   EditableTable,
   EditableTableCell,
@@ -18,6 +18,7 @@ import { Form, FormField } from '@renderer/common/components/ui/form'
 import { Input } from '@renderer/common/components/ui/input'
 import { useLayout } from '@renderer/common/features/layout'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
+import { inputVariants } from '@renderer/common/features/spravochnik'
 import { toast } from '@renderer/common/hooks'
 import { formatNumber } from '@renderer/common/lib/format'
 import { useQueryDateParams, useQueryTypeDocument } from '@renderer/common/lib/query-params'

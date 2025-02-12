@@ -1,12 +1,14 @@
 import type { ColumnDef } from '@renderer/common/components'
 import type { Iznos } from '@renderer/common/models'
 
+import { IDCell } from '@renderer/common/components/table/renderers/id'
 import { getMonthName } from '@renderer/common/lib/date'
 import { formatLocaleDate } from '@renderer/common/lib/format'
 
 export const columns: ColumnDef<Iznos>[] = [
   {
-    key: 'id'
+    key: 'id',
+    renderCell: IDCell
   },
   {
     key: 'name',

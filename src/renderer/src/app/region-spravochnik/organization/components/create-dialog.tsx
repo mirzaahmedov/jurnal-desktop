@@ -5,6 +5,7 @@ import { useEffect } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { ErrorBoundary } from 'react-error-boundary'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
@@ -67,30 +68,37 @@ const CreateOrganizationDialog = (props: CreateOrganizationDialogProps) => {
     form.reset(original ?? defaultValues)
   }, [form, original])
 
+  console.log('createOrganization')
+
   return (
     <Dialog
       open={open}
       onOpenChange={onOpenChange}
     >
-      <DialogContent className="max-w-xl max-h-[80%] flex flex-col">
+      <DialogContent className="max-w-2xl max-h-[80%] flex flex-col">
         <DialogHeader>
           <DialogTitle>{t('create-something', { something: t('organization') })}</DialogTitle>
         </DialogHeader>
         <div className="flex-1 overflow-y-auto px-1 noscroll-bar">
-          <OrganizationForm
-            form={form}
-            onSubmit={onSubmit}
-            formActions={
-              <DialogFooter>
-                <Button
-                  disabled={isCreating}
-                  type="submit"
-                >
-                  {t('add')}
-                </Button>
-              </DialogFooter>
-            }
-          />
+          <ErrorBoundary
+            fallback="error"
+            onError={(err) => console.log(err)}
+          >
+            <OrganizationForm
+              form={form}
+              onSubmit={onSubmit}
+              formActions={
+                <DialogFooter>
+                  <Button
+                    disabled={isCreating}
+                    type="submit"
+                  >
+                    {t('add')}
+                  </Button>
+                </DialogFooter>
+              }
+            />
+          </ErrorBoundary>
         </div>
       </DialogContent>
     </Dialog>

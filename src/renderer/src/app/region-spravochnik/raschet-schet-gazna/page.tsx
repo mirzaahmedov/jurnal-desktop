@@ -7,7 +7,7 @@ import { useLocationState, usePagination } from '@renderer/common/hooks'
 import { ListView } from '@renderer/common/views'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 import { ChooseSpravochnik, GenericTable } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
@@ -26,6 +26,7 @@ const RaschetSchetGaznaPage = () => {
   const [orgId, setOrgId] = useLocationState<number | undefined>('org_id', undefined)
 
   const toggle = useToggle()
+  const navigate = useNavigate()
   const location = useLocation()
   const pagination = usePagination()
   const queryClient = useQueryClient()
@@ -47,7 +48,7 @@ const RaschetSchetGaznaPage = () => {
     })
   )
 
-  const { data: raschetSchets, isFetching } = useQuery({
+  const { data: raschetSchetsGazna, isFetching } = useQuery({
     queryKey: [
       raschetSchetGaznaQueryKeys.getAll,
       {
@@ -82,9 +83,10 @@ const RaschetSchetGaznaPage = () => {
         }
       ],
       content: SearchField,
+      onBack: location.state ? () => navigate(-1) : undefined,
       onCreate: orgId ? toggle.open : undefined
     })
-  }, [setLayout, t, toggle.open, orgId])
+  }, [setLayout, t, toggle.open, orgId, navigate, location.state])
 
   useEffect(() => {
     if (location.state?.org_id) {
@@ -125,7 +127,7 @@ const RaschetSchetGaznaPage = () => {
       </ListView.Header>
       <ListView.Content loading={isFetching || isPending}>
         <GenericTable
-          data={raschetSchets?.data ?? []}
+          data={raschetSchetsGazna?.data ?? []}
           columnDefs={raschetSchetGaznaColumns}
           getRowId={(row) => row.gazna?.id}
           onEdit={handleClickEdit}
@@ -135,7 +137,7 @@ const RaschetSchetGaznaPage = () => {
       <ListView.Footer>
         <ListView.Pagination
           {...pagination}
-          pageCount={raschetSchets?.meta?.pageCount ?? 0}
+          pageCount={raschetSchetsGazna?.meta?.pageCount ?? 0}
         />
       </ListView.Footer>
       <RaschetSchetGaznaDialog

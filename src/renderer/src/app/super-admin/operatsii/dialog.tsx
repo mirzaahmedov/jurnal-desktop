@@ -32,6 +32,7 @@ import { useSpravochnik } from '@/common/features/spravochnik'
 import { useToast } from '@/common/hooks/use-toast'
 import { TypeSchetOperatsii } from '@/common/models'
 
+import { createBudjetSpravochnik } from '../budjet'
 import { operatsiiQueryKeys, operatsiiTypeSchetOptions } from './config'
 import { OperatsiiFormSchema, operatsiiService } from './service'
 
@@ -44,6 +45,7 @@ const OperatsiiDialog = ({ open, onChangeOpen, data }: OperatsiiDialogProps) => 
   const queryClient = useQueryClient()
 
   const [typeSchet] = useLocationState('type_schet', TypeSchetOperatsii.KASSA_PRIXOD)
+  const [budjet] = useLocationState<number | undefined>('budjet_id', undefined)
 
   const { toast } = useToast()
 
@@ -103,6 +105,14 @@ const OperatsiiDialog = ({ open, onChangeOpen, data }: OperatsiiDialogProps) => 
       }
     })
   )
+  const budjetSpravochnik = useSpravochnik(
+    createBudjetSpravochnik({
+      value: form.watch('budjet_id'),
+      onChange: (id) => {
+        form.setValue('budjet_id', id ?? 0)
+      }
+    })
+  )
 
   const onSubmit = (payload: OperatsiiForm) => {
     if (data) {
@@ -123,8 +133,9 @@ const OperatsiiDialog = ({ open, onChangeOpen, data }: OperatsiiDialogProps) => 
   useEffect(() => {
     if (open) {
       form.setValue('type_schet', typeSchet)
+      form.setValue('budjet_id', budjet ?? 0)
     }
-  }, [form, open, typeSchet])
+  }, [form, open, typeSchet, budjet])
 
   return (
     <Dialog
@@ -229,13 +240,36 @@ const OperatsiiDialog = ({ open, onChangeOpen, data }: OperatsiiDialogProps) => 
                     <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
                       <FormLabel className="text-right col-span-2">{t('smeta')}</FormLabel>
                       <Input
-                        className="col-span-4"
                         {...field}
+                        readOnly
+                        className="col-span-4"
                         value={`${
                           smetaSpravochnik.selected?.smeta_number ?? ''
                         } - ${smetaSpravochnik.selected?.smeta_name ?? ''}`}
                         onChange={undefined}
                         onDoubleClick={smetaSpravochnik.open}
+                      />
+                      <FormMessage className="text-end col-span-6" />
+                    </div>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                name="budjet_id"
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
+                      <FormLabel className="text-right col-span-2">{t('budjet')}</FormLabel>
+                      <Input
+                        {...field}
+                        readOnly
+                        className="col-span-4"
+                        value={`${
+                          budjetSpravochnik.selected?.name ?? ''
+                        } - ${budjetSpravochnik.selected?.name ?? ''}`}
+                        onChange={undefined}
+                        onDoubleClick={budjetSpravochnik.open}
                       />
                       <FormMessage className="text-end col-span-6" />
                     </div>
@@ -263,7 +297,8 @@ const defaultValues = {
   schet: '',
   sub_schet: '',
   type_schet: TypeSchetOperatsii.KASSA_PRIXOD,
-  smeta_id: 0
+  smeta_id: 0,
+  budjet_id: 0
 } satisfies OperatsiiForm
 
 export { OperatsiiDialog }

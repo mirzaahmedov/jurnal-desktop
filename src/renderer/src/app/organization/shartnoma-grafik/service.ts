@@ -5,12 +5,12 @@ import { z } from 'zod'
 import { APIEndpoints, CRUDService } from '@/common/features/crud'
 import { budjet } from '@/common/features/crud/middleware'
 
-export const shartnomaGrafikService = new CRUDService<ShartnomaGrafik, ShartnomaGrafikForm>({
+export const shartnomaGrafikService = new CRUDService<ShartnomaGrafik, ShartnomaGrafikFormValues>({
   endpoint: APIEndpoints.shartnoma_grafik
 }).use(budjet())
 export const shartnomaGrafikDetailsService = new CRUDService<
   ShartnomaGrafikDetails,
-  ShartnomaGrafikForm
+  ShartnomaGrafikFormValues
 >({
   endpoint: APIEndpoints.shartnoma_grafik
 }).use(budjet())
@@ -27,10 +27,14 @@ export const ShartnomaGrafikFormSchema = z.object({
   oy_9: z.number(),
   oy_10: z.number(),
   oy_11: z.number(),
-  oy_12: z.number()
+  oy_12: z.number(),
+  smeta_id: z.number(),
+  id_shartnomalar_organization: z.number()
 })
 
-export type ShartnomaGrafikForm = z.infer<typeof ShartnomaGrafikFormSchema>
+export type ShartnomaGrafikFormValues = z.infer<typeof ShartnomaGrafikFormSchema>
+
 export type LocationState = {
   org_id?: number
+  shartnoma_id?: number
 }

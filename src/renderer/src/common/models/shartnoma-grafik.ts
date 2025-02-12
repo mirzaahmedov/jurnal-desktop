@@ -36,8 +36,7 @@ type ShartnomaGrafikDetails = {
   doc_num: string
   doc_date: string
   summa: number
-  opisanie: string
-  sub_schet: string | null
+  opisanie: any
   oy_1: number
   oy_2: number
   oy_3: number
@@ -51,6 +50,8 @@ type ShartnomaGrafikDetails = {
   oy_11: number
   oy_12: number
   year: number
+  smeta_id: number
+  sub_schet: string
 }
 
 export type { ShartnomaGrafik, ShartnomaGrafikDetails }

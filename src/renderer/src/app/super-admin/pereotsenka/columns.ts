@@ -19,6 +19,7 @@ export const pereotsenkaColumns: ColumnDef<Pereotsenka>[] = [
     header: 'group'
   },
   {
+    fit: true,
     key: 'pereotsenka_foiz'
   }
 ]

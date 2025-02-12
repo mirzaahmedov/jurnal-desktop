@@ -1,6 +1,8 @@
 import type { EditorComponentType, EditorOptions } from './types'
 
-import { NumericInput, NumericInputProps, inputVariants } from '@/common/components'
+import { inputVariants } from '@renderer/common/features/spravochnik'
+
+import { NumericInput, type NumericInputProps } from '@/common/components'
 
 const createNumberEditor = <T extends Record<string, unknown>>({
   readOnly = false,

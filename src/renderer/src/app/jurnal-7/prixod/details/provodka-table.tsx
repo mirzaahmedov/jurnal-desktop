@@ -12,18 +12,18 @@ import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 
 import { createGroupSpravochnik } from '@/app/super-admin/group/service'
-import { DatePicker, EdinSelect, NumericInput, inputVariants } from '@/common/components'
+import { DatePicker, EdinSelect, NumericInput } from '@/common/components'
 import { Button } from '@/common/components/ui/button'
 import { Input } from '@/common/components/ui/input'
 import { Table, TableBody, TableFooter, TableHeader } from '@/common/components/ui/table'
-import { SpravochnikInput, useSpravochnik } from '@/common/features/spravochnik'
+import { SpravochnikInput, inputVariants, useSpravochnik } from '@/common/features/spravochnik'
 import { calcSena, calcSumma } from '@/common/lib/pricing'
 import { cn } from '@/common/lib/utils'
 
 import {
   PrixodChildFormSchema,
-  PrixodChildFormType,
-  PrixodFormType,
+  type PrixodChildFormType,
+  type PrixodFormType,
   defaultValues
 } from '../config'
 

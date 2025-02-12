@@ -65,7 +65,7 @@ export const ImportFile = ({ url, params }: ImportFileDialogProps) => {
     >
       <DialogTrigger>
         <Button variant="secondary">
-          <FileUp className="btn-icon icon-start" /> {t('import-data')}
+          <FileUp className="btn-icon icon-start" /> {t('import-excel')}
         </Button>
       </DialogTrigger>
       <DialogContent className="pt-10">

@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 
-import { createBudgetSpravochnik } from '@/app/super-admin/budjet'
+import { createBudjetSpravochnik } from '@/app/super-admin/budjet'
 import { FormElement } from '@/common/components/form'
 import { Button } from '@/common/components/ui/button'
 import {
@@ -40,7 +40,7 @@ export const NaimenovanieDialog = (props: NaimenovanieDialogProps) => {
   })
 
   const budgetSpravochnik = useSpravochnik(
-    createBudgetSpravochnik({
+    createBudjetSpravochnik({
       value: form.watch('spravochnik_budjet_name_id'),
       onChange(value) {
         form.setValue('spravochnik_budjet_name_id', value)

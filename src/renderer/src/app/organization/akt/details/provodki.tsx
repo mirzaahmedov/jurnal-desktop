@@ -1,7 +1,6 @@
 import type { AktProvodkaForm } from '../service'
 import type { EditableColumnType } from '@renderer/common/components/editable-table'
 
-import { inputVariants } from '@renderer/common/components'
 import {
   createOperatsiiEditor,
   createPodrazdelenieEditor,
@@ -10,6 +9,7 @@ import {
 } from '@renderer/common/components/editable-table/editors'
 import { createNumberEditor } from '@renderer/common/components/editable-table/editors/number'
 import { Input } from '@renderer/common/components/ui/input'
+import { inputVariants } from '@renderer/common/features/spravochnik'
 import { cn } from '@renderer/common/lib/utils'
 
 import { TypeSchetOperatsii } from '@/common/models'

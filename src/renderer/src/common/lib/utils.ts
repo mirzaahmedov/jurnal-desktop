@@ -97,7 +97,7 @@ const extendObject = <T extends Record<string, unknown>, D extends Record<string
 }
 
 const roundNumberToTwoDecimalPlaces = (num: number): number => {
-  return Math.round((num + Number.EPSILON) * 100) / 100
+  return Math.round(num * 100) / 100
 }
 
 const splitStringByLength = (str: string, n: number): string[] => {

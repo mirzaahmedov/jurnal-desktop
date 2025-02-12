@@ -8,7 +8,6 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
-import { SpravochnikInput } from '@/common/components'
 import { FormElement } from '@/common/components/form'
 import { Button } from '@/common/components/ui/button'
 import {
@@ -20,7 +19,7 @@ import {
 } from '@/common/components/ui/dialog'
 import { Form, FormField } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
-import { createSpravochnikKeyBindings, useSpravochnik } from '@/common/features/spravochnik'
+import { SpravochnikInput, useSpravochnik } from '@/common/features/spravochnik'
 import { toast } from '@/common/hooks/use-toast'
 import { extendObject } from '@/common/lib/utils'
 
@@ -201,14 +200,8 @@ const GroupDialog = (props: GroupDialogProps) => {
                 message={form.formState.errors.smeta_id?.message || ''}
               >
                 <SpravochnikInput
-                  readOnly
-                  value={form.watch('provodka_subschet')}
-                  onDoubleClick={smetaSpravochnik.open}
-                  onClear={smetaSpravochnik.clear}
-                  onKeyDown={createSpravochnikKeyBindings({
-                    open: smetaSpravochnik.open,
-                    clear: smetaSpravochnik.clear
-                  })}
+                  {...smetaSpravochnik}
+                  getInputValue={() => form.watch('provodka_subschet')}
                 />
               </FormElement>
 

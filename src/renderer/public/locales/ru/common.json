@@ -96,7 +96,8 @@
   "download-something": "Скачать {{something}}",
   "create-something": "Создать {{something}}",
   "update-something": "Обновить {{something}}",
-  "import-data": "Импорт данных",
+  "import-excel": "Импорт из Excel",
+  "export-excel": "Экспорт в Excel",
   "group": "Группа",
   "group_number": "Номер группы",
   "pod_group": "Подгруппа",
@@ -189,5 +190,6 @@
   "nothing-found": "Ничего не найдено",
   "reports": "Отчеты",
   "action-successful": "Действие успешно выполнено",
-  "something-went-wrong": "Что-то пошло не так, попробуйте еще раз."
+  "something-went-wrong": "Что-то пошло не так, попробуйте еще раз.",
+  "difference": "Разница"
 }

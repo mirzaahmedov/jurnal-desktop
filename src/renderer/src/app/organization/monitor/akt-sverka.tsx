@@ -1,7 +1,6 @@
 import { DownloadFile } from '@renderer/common/features/file'
 import { Download } from 'lucide-react'
 
-import { SpravochnikInput } from '@/common/components'
 import { Button } from '@/common/components/ui/button'
 import {
   Dialog,
@@ -12,7 +11,7 @@ import {
   DialogTrigger
 } from '@/common/components/ui/dialog'
 import { Label } from '@/common/components/ui/label'
-import { useSpravochnik } from '@/common/features/spravochnik'
+import { SpravochnikInput, useSpravochnik } from '@/common/features/spravochnik'
 
 import { createShartnomaSpravochnik } from '../shartnoma'
 
@@ -39,11 +38,10 @@ const AktSverkaDialog = ({ from, to, schetId, orgId }: AktSverkaDialogProps) => 
         <div className="mt-4 flex flex-col gap-2">
           <Label htmlFor="shartnoma">Договор (Необязательный)</Label>
           <SpravochnikInput
-            id="shartnoma"
-            name="shartnoma"
-            value={`№${shartnomaSpravochnik.selected?.doc_num ?? ''} - ${shartnomaSpravochnik.selected?.doc_date ?? ''}`}
-            onDoubleClick={shartnomaSpravochnik.open}
-            onClear={shartnomaSpravochnik.clear}
+            {...shartnomaSpravochnik}
+            getInputValue={(selected) =>
+              `№${selected?.doc_num ?? ''} - ${selected?.doc_date ?? ''}`
+            }
           />
         </div>
 

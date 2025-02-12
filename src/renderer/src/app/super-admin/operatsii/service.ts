@@ -2,6 +2,8 @@ import type { SpravochnikHookOptions } from '@/common/features/spravochnik'
 import type { Operatsii, Response } from '@/common/models'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 
+import { budjet } from '@renderer/common/features/crud/middleware'
+import { getBudjetId } from '@renderer/common/features/requisites'
 import { http } from '@renderer/common/lib/http'
 import { z } from 'zod'
 
@@ -29,7 +31,8 @@ export const OperatsiiFormSchema = withPreprocessor(
       TypeSchetOperatsii.JUR7,
       TypeSchetOperatsii.GENERAL
     ]),
-    smeta_id: z.number().optional()
+    smeta_id: z.number().optional(),
+    budjet_id: z.number()
   })
 )
 export type OperatsiiForm = z.infer<typeof OperatsiiFormSchema>
@@ -43,6 +46,7 @@ export const getOperatsiiSchetOptionsQuery = async (
   const type_schet = ctx.queryKey[1].type_schet
   const res = await http.get<Response<OperatsiiOption[]>>('/spravochnik/operatsii/unique', {
     params: {
+      budjet_id: getBudjetId(),
       type_schet
     }
   })
@@ -51,7 +55,7 @@ export const getOperatsiiSchetOptionsQuery = async (
 
 export const operatsiiService = new CRUDService<Operatsii, OperatsiiForm>({
   endpoint: APIEndpoints.operatsii
-})
+}).use(budjet())
 
 export const createOperatsiiSpravochnik = (config: Partial<SpravochnikHookOptions<Operatsii>>) => {
   return extendObject(

@@ -1,4 +1,4 @@
-import type { ShartnomaGrafikForm } from '../../../service'
+import type { ShartnomaGrafikFormValues } from '../../../service'
 
 import { useState } from 'react'
 
@@ -28,7 +28,7 @@ type WidthsType = [number, number, number]
 type ScheduleProps = {
   article: string
   year: number
-  data: ShartnomaGrafikForm
+  data: ShartnomaGrafikFormValues
   paymentDetails: string
 }
 const Schedule = ({ article, year, data, paymentDetails }: ScheduleProps) => {

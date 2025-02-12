@@ -1,6 +1,7 @@
 import type { ColumnDef } from '@/common/components'
 import type { MO7Rasxod } from '@/common/models'
 
+import { IDCell } from '@renderer/common/components/table/renderers/id'
 import { formatLocaleDate } from '@renderer/common/lib/format'
 import { z } from 'zod'
 
@@ -77,7 +78,8 @@ export type RasxodChildFormValues = z.infer<typeof RasxodChildFormSchema>
 
 const columns: ColumnDef<MO7Rasxod>[] = [
   {
-    key: 'id'
+    key: 'id',
+    renderCell: IDCell
   },
   {
     key: 'doc_num'

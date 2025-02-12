@@ -45,7 +45,7 @@ export const useSpravochnik = <T extends { id: number }>(
 
   const queryKey = options.queryKeys?.getById ?? options.endpoint ?? 'spravochnik/id'
 
-  const { data: selected, isLoading: loading } = useQuery({
+  const { data: selected, isFetching: loading } = useQuery({
     queryKey: [queryKey, selectedId, options.includeParamsInGetById ? options.params : undefined],
     queryFn: options.service.getById,
     enabled: !!selectedId,

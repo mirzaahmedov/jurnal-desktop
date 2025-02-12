@@ -195,31 +195,6 @@ export const ShartnomaForm = ({
             />
           </div>
 
-          {/* <div className="p-5 flex items-center gap-10">
-            <FormElement
-              label={t('raschet-schet')}
-              className="flex-1"
-            >
-              <SelectField
-                options={raschetSchetOptions}
-                getOptionValue={(o) => o.id}
-                getOptionLabel={(o) => o.raschet_schet}
-                triggerClassName="max-w-xs"
-              />
-            </FormElement>
-            <FormElement
-              label={t('raschet-schet-gazna')}
-              className="flex-1"
-            >
-              <SelectField
-                options={raschetSchetGaznaOptions}
-                getOptionValue={(o) => o.id}
-                getOptionLabel={(o) => o.raschet_schet_gazna}
-                triggerClassName="max-w-xs"
-              />
-            </FormElement>
-          </div> */}
-
           <div className={cn('p-5', dialog && 'p-0 pt-5')}>
             <OpisanieFields form={form} />
           </div>
@@ -248,15 +223,3 @@ export const ShartnomaForm = ({
     </Form>
   )
 }
-
-// const raschetSchetOptions: Organization.RaschetSchet[] = [
-//   { id: 1, spravochnik_organization_id: 100, raschet_schet: '12345678901234567890' },
-//   { id: 2, spravochnik_organization_id: 100, raschet_schet: '98765432109876543210' },
-//   { id: 3, spravochnik_organization_id: 100, raschet_schet: '56789012345678901234' }
-// ]
-
-// const raschetSchetGaznaOptions: Organization.RaschetSchetGazna[] = [
-//   { id: 1, spravochnik_organization_id: 100, raschet_schet_gazna: '11223344556677889900' },
-//   { id: 2, spravochnik_organization_id: 100, raschet_schet_gazna: '99887766554433221100' },
-//   { id: 3, spravochnik_organization_id: 100, raschet_schet_gazna: '55667788990011223344' }
-// ]

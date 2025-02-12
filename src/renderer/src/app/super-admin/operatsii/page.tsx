@@ -26,6 +26,7 @@ const OperatsiiPage = () => {
   const queryClient = useQueryClient()
   const pagination = usePagination()
 
+  const [budjet] = useLocationState<number | undefined>('budjet_id', undefined)
   const [typeSchet] = useLocationState('type_schet', TypeSchetOperatsii.KASSA_PRIXOD)
 
   const { t } = useTranslation(['app'])
@@ -37,6 +38,7 @@ const OperatsiiPage = () => {
       operatsiiQueryKeys.getAll,
       {
         ...pagination,
+        budjet_id: budjet,
         type_schet: typeSchet,
         search
       },
@@ -91,7 +93,7 @@ const OperatsiiPage = () => {
       <ListView.Footer>
         <ListView.Pagination
           {...pagination}
-          pageCount={operations?.meta.pageCount ?? 0}
+          pageCount={operations?.meta?.pageCount ?? 0}
         />
       </ListView.Footer>
       <OperatsiiDialog

@@ -302,8 +302,6 @@ const BankRasxodDetailtsPage = () => {
     })
   }, [setLayout, navigate, params.id, t])
 
-  console.log(form.watch())
-
   return (
     <DetailsView>
       <DetailsView.Content loading={isFetching}>
@@ -377,7 +375,7 @@ const BankRasxodDetailtsPage = () => {
               />
               {summa ? <AccountBalance balance={reminder} /> : null}
 
-              {main_schet?.data && orgSpravochnik.selected && form.formState.isValid ? (
+              {main_schet?.data && orgSpravochnik.selected ? (
                 <ButtonGroup borderStyle="dashed">
                   <GeneratePorucheniya
                     type="porucheniya"
@@ -453,17 +451,5 @@ const BankRasxodDetailtsPage = () => {
     </DetailsView>
   )
 }
-
-// const raschetSchetOptions: Organization.RaschetSchet[] = [
-//   { id: 1, spravochnik_organization_id: 100, raschet_schet: '12345678901234567890' },
-//   { id: 2, spravochnik_organization_id: 100, raschet_schet: '98765432109876543210' },
-//   { id: 3, spravochnik_organization_id: 100, raschet_schet: '56789012345678901234' }
-// ]
-
-// const raschetSchetGaznaOptions: Organization.RaschetSchetGazna[] = [
-//   { id: 1, spravochnik_organization_id: 100, raschet_schet_gazna: '11223344556677889900' },
-//   { id: 2, spravochnik_organization_id: 100, raschet_schet_gazna: '99887766554433221100' },
-//   { id: 3, spravochnik_organization_id: 100, raschet_schet_gazna: '55667788990011223344' }
-// ]
 
 export default BankRasxodDetailtsPage

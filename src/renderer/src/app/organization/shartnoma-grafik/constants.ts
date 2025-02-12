@@ -1,4 +1,4 @@
-import type { ShartnomaGrafikForm } from './service'
+import type { ShartnomaGrafikFormValues } from './service'
 
 export const shartnomaGrafikQueryKeys = {
   getById: 'shartnoma-grafik',
@@ -8,7 +8,7 @@ export const shartnomaGrafikQueryKeys = {
   delete: 'shartnoma-grafik/delete'
 }
 
-export const defaultValues: ShartnomaGrafikForm = {
+export const defaultValues: ShartnomaGrafikFormValues = {
   oy_1: 0,
   oy_2: 0,
   oy_3: 0,

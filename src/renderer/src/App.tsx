@@ -9,7 +9,6 @@ import { LoadingOverlay } from './common/components'
 import { Toaster } from './common/components/ui/toaster'
 import { ConfirmationDialog } from './common/features/confirm'
 import { initLocales } from './common/features/locales'
-import { SpravochnikProvider } from './common/features/spravochnik'
 import { UpdateManager } from './common/features/update-manager'
 import { queryClient } from './common/lib/query-client'
 
@@ -35,7 +34,6 @@ function App() {
       <Suspense fallback={<LoadingOverlay />}>
         <RouterProvider router={router} />
       </Suspense>
-      <SpravochnikProvider />
       <Toaster />
       <ToastContainer
         position="bottom-right"

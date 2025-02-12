@@ -30,7 +30,7 @@ export const Copyable = (props: CopyableProps) => {
         variant="ghost"
         size="icon"
         className={cn(
-          'ml-1 align-middle invisible size-6 text-slate-400 transition-colors group-hover:visible',
+          'ml-1 align-middle invisible size-8 text-slate-400 transition-colors group-hover:visible',
           isCopied && 'visible text-brand hover:text-brand'
         )}
         onClick={(e) => {
@@ -42,7 +42,11 @@ export const Copyable = (props: CopyableProps) => {
           }, 5000)
         }}
       >
-        {isCopied ? <ClipboardCheck className="size-4" /> : <ClipboardPlus className="size-4" />}
+        {isCopied ? (
+          <ClipboardCheck className="size-5 text-green-500" />
+        ) : (
+          <ClipboardPlus className="size-5" />
+        )}
       </Button>
     </span>
   )

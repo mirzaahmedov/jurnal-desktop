@@ -1,4 +1,4 @@
-import type { ShartnomaGrafikForm } from '../../service'
+import type { ShartnomaGrafikFormValues } from '../../service'
 
 import { Flex } from '@/common/components/pdf'
 
@@ -11,7 +11,7 @@ type SheetProps = {
   chapter: string
   contractDetails: string
   createdDate: string
-  schedule: ShartnomaGrafikForm
+  schedule: ShartnomaGrafikFormValues
   paymentDetails: string
   rukovoditel: string
   glav_mib: string

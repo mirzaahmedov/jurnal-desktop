@@ -7,7 +7,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
-import { NumericInput, SpravochnikInput } from '@/common/components'
+import { NumericInput } from '@/common/components'
 import { FormElement } from '@/common/components/form'
 import { Button } from '@/common/components/ui/button'
 import {
@@ -19,6 +19,7 @@ import {
 } from '@/common/components/ui/dialog'
 import { Form, FormField } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
+import { SpravochnikInput } from '@/common/features/spravochnik'
 import { useSpravochnik } from '@/common/features/spravochnik'
 import { toast } from '@/common/hooks/use-toast'
 import { extendObject } from '@/common/lib/utils'
@@ -129,7 +130,7 @@ const PereotsenkaDialog = (props: PereotsenkaDialogProps) => {
     >
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{t('update-something', { something: t('pereotsenka') })}</DialogTitle>
+          <DialogTitle>{t('update-something', { something: t('pages.pereotsenka') })}</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={onSubmit}>
@@ -140,9 +141,8 @@ const PereotsenkaDialog = (props: PereotsenkaDialogProps) => {
                 message={form.formState.errors.group_jur7_id?.message}
               >
                 <SpravochnikInput
-                  readOnly
-                  value={groupSpravochnik.selected?.name ?? ''}
-                  onDoubleClick={groupSpravochnik.open}
+                  {...groupSpravochnik}
+                  getInputValue={(selected) => selected?.name ?? ''}
                 />
               </FormElement>
 

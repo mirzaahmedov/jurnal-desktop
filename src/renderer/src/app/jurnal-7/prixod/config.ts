@@ -1,6 +1,7 @@
 import type { ColumnDef } from '@/common/components'
 import type { MO7Prixod } from '@/common/models'
 
+import { IDCell } from '@renderer/common/components/table/renderers/id'
 import { formatLocaleDate } from '@renderer/common/lib/format'
 import { z } from 'zod'
 
@@ -85,7 +86,8 @@ type PrixodChildFormType = z.infer<typeof PrixodChildFormSchema>
 
 const columns: ColumnDef<MO7Prixod>[] = [
   {
-    key: 'id'
+    key: 'id',
+    renderCell: IDCell
   },
   {
     key: 'doc_num'

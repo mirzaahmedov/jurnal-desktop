@@ -20,7 +20,7 @@ export const budgetService = new CRUDService<Budjet, BudgetPayloadType>({
   endpoint: APIEndpoints.budjet_name
 })
 
-export const createBudgetSpravochnik = (config: Partial<SpravochnikHookOptions<Budjet>>) => {
+export const createBudjetSpravochnik = (config: Partial<SpravochnikHookOptions<Budjet>>) => {
   return extendObject(
     {
       title: 'Выберите бюджет',

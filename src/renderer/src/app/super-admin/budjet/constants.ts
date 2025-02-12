@@ -1,7 +1,7 @@
-export const budgetQueryKeys = {
-  getAll: 'budget/all',
-  getById: 'budget',
-  create: 'budget/create',
-  update: 'budget/update',
-  delete: 'budget/delete'
+export const budjetQueryKeys = {
+  getAll: 'budjet/all',
+  getById: 'budjet',
+  create: 'budjet/create',
+  update: 'budjet/update',
+  delete: 'budjet/delete'
 }

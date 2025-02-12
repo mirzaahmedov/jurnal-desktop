@@ -96,7 +96,7 @@ const PereotsenkaPage = () => {
       <ListView.Footer>
         <ListView.Pagination
           {...pagination}
-          pageCount={pereotsenkaList?.meta.pageCount ?? 0}
+          pageCount={pereotsenkaList?.meta?.pageCount ?? 0}
         />
       </ListView.Footer>
       <PereotsenkaDialog

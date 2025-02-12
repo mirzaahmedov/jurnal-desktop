@@ -81,14 +81,23 @@ const PereotsenkaBatchCreateDrawer = (props: PereotsenkaBatchCreateDrawerProps) 
 
   useEffect(() => {
     if (!Array.isArray(pereotsenkaLatest?.data)) {
+      form.reset()
       return
     }
-    form.setValue('array', pereotsenkaLatest.data)
+    form.setValue(
+      'array',
+      pereotsenkaLatest.data.map((group) => ({
+        ...group,
+        group_jur7_id: group.id
+      }))
+    )
   }, [form, pereotsenkaLatest])
 
   const onSubmit = form.handleSubmit((values) => {
     createBatchPereotsenka(values)
   })
+
+  console.log({ errors: form.formState.errors, data: form.watch() })
 
   return (
     <Drawer
@@ -146,7 +155,7 @@ const PereotsenkaBatchCreateDrawer = (props: PereotsenkaBatchCreateDrawerProps) 
                     type="button"
                     variant="ghost"
                     disabled={isPending}
-                    onClick={onOpenChange.bind(null, false)}
+                    onClick={() => onOpenChange(false)}
                   >
                     {t('close')}
                   </Button>

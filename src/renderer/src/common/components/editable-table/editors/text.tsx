@@ -1,6 +1,7 @@
 import type { EditorComponentType } from './types'
 
-import { inputVariants } from '@/common/components'
+import { inputVariants } from '@renderer/common/features/spravochnik'
+
 import { Input } from '@/common/components/ui/input'
 import { cn } from '@/common/lib/utils'
 

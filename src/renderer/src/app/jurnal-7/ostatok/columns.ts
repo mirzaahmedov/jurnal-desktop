@@ -2,11 +2,13 @@ import type { ColumnDef } from '@renderer/common/components'
 import type { HeaderGroup } from '@renderer/common/components/generic-table/table'
 import type { OstatokProduct } from '@renderer/common/models/ostatok'
 
+import { IDCell } from '@renderer/common/components/table/renderers/id'
 import { formatLocaleDate, formatNumber } from '@renderer/common/lib/format'
 
 export const ostatokColumns: ColumnDef<OstatokProduct>[] = [
   {
-    key: 'id'
+    key: 'id',
+    renderCell: IDCell
   },
   {
     key: 'naimenovanie_tovarov_jur7_id',
@@ -173,7 +175,8 @@ export const ostatokHeaderGroups: HeaderGroup<OstatokProduct>[][] = [
 
 export const ostatokProductColumns: ColumnDef<OstatokProduct>[] = [
   {
-    key: 'id'
+    key: 'id',
+    renderCell: IDCell
   },
   {
     key: 'naimenovanie_tovarov_jur7_id',

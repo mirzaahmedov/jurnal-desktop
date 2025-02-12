@@ -2,6 +2,7 @@ import type { Responsible } from '@/common/models'
 
 import { useEffect, useState } from 'react'
 
+import { DownloadFile } from '@renderer/common/features/file'
 import { SearchField, useSearch } from '@renderer/common/features/search'
 import { usePagination } from '@renderer/common/hooks'
 import { ListView } from '@renderer/common/views'
@@ -92,6 +93,18 @@ const ResponsiblePage = () => {
 
   return (
     <ListView>
+      <ListView.Header>
+        <DownloadFile
+          url="/jur_7/responsible"
+          params={{
+            page: 1,
+            limit: 9999,
+            excel: true
+          }}
+          fileName={`${t('responsible')}.xlsx`}
+          buttonText={t('export-excel')}
+        />
+      </ListView.Header>
       <ListView.Content loading={isFetching || isPending}>
         <GenericTable
           columnDefs={responsibleColumns}
@@ -103,7 +116,7 @@ const ResponsiblePage = () => {
       <ListView.Footer>
         <ListView.Pagination
           {...pagination}
-          pageCount={responsibleList?.meta.pageCount ?? 0}
+          pageCount={responsibleList?.meta?.pageCount ?? 0}
         />
       </ListView.Footer>
       <ResponsibleDialog

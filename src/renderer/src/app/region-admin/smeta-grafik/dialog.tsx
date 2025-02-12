@@ -7,9 +7,10 @@ import { createSmetaSpravochnik } from '@renderer/app/super-admin/smeta'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 import { NumericFormat } from 'react-number-format'
 
-import { NumericInput, SpravochnikInput } from '@/common/components'
+import { NumericInput } from '@/common/components'
 import { FormElement } from '@/common/components/form'
 import { Button } from '@/common/components/ui/button'
 import {
@@ -22,7 +23,7 @@ import {
 import { Form, FormField } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
 import { monthNames } from '@/common/data/month'
-import { createSpravochnikKeyBindings, useSpravochnik } from '@/common/features/spravochnik'
+import { SpravochnikInput, useSpravochnik } from '@/common/features/spravochnik'
 import { toast } from '@/common/hooks/use-toast'
 import { formatNumber } from '@/common/lib/format'
 import { extendObject, roundNumberToTwoDecimalPlaces } from '@/common/lib/utils'
@@ -38,6 +39,7 @@ export interface SmetaGrafikDialogProps {
 export const SmetaGrafikDialog = (props: SmetaGrafikDialogProps) => {
   const { open, onClose, selected } = props
 
+  const { t } = useTranslation()
   const { main_schet_id, budjet_id } = useRequisitesStore()
 
   const queryClient = useQueryClient()
@@ -180,32 +182,18 @@ export const SmetaGrafikDialog = (props: SmetaGrafikDialogProps) => {
               )}
             />
 
-            <FormField
-              name="smeta_id"
-              control={form.control}
-              render={({ field }) => (
-                <FormElement
-                  direction="column"
-                  label="Смета"
-                >
-                  <SpravochnikInput
-                    className="col-span-4"
-                    {...field}
-                    value={`${
-                      smetaSpravochnik.selected?.smeta_number ?? ''
-                    } - ${smetaSpravochnik.selected?.smeta_name ?? ''}`}
-                    ref={smetaSpravochnik.inputRef}
-                    onChange={undefined}
-                    onKeyDown={createSpravochnikKeyBindings({
-                      open: smetaSpravochnik.open,
-                      clear: smetaSpravochnik.clear
-                    })}
-                    onDoubleClick={smetaSpravochnik.open}
-                    onClear={smetaSpravochnik.clear}
-                  />
-                </FormElement>
-              )}
-            />
+            <FormElement
+              direction="column"
+              label="Смета"
+            >
+              <SpravochnikInput
+                {...smetaSpravochnik}
+                className="col-span-4"
+                getInputValue={(selected) =>
+                  `${selected?.smeta_number ?? ''} - ${selected?.smeta_name ?? ''}`
+                }
+              />
+            </FormElement>
 
             <div className="grid grid-cols-2 gap-6">
               {monthNames.map(({ name, label }) => (
@@ -216,7 +204,7 @@ export const SmetaGrafikDialog = (props: SmetaGrafikDialogProps) => {
                   render={({ field }) => (
                     <FormElement
                       direction="column"
-                      label={label}
+                      label={t(label)}
                     >
                       <NumericInput
                         {...field}

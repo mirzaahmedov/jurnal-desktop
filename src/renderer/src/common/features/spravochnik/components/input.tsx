@@ -20,6 +20,9 @@ const inputVariants = cva('cursor-pointer', {
     },
     error: {
       true: 'focus-visible:ring-destructive'
+    },
+    nonfocus: {
+      true: 'focus-visible:ring-none transition-none'
     }
   },
   compoundVariants: [

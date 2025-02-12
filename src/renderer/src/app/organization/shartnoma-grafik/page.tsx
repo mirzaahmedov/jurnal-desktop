@@ -3,9 +3,11 @@ import type { ShartnomaGrafik } from '@/common/models'
 import { useEffect } from 'react'
 
 import { createOrganizationSpravochnik } from '@renderer/app/region-spravochnik/organization'
+import { Button } from '@renderer/common/components/ui/button'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
 import { useLocationState } from '@renderer/common/hooks/use-location-state'
 import { useQuery } from '@tanstack/react-query'
+import { PlusCircle } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
@@ -67,7 +69,7 @@ const ShartnomaGrafikPage = () => {
         }
       ]
     })
-  }, [setLayout, navigate, t])
+  }, [setLayout, t])
 
   return (
     <ListView>
@@ -80,7 +82,7 @@ const ShartnomaGrafikPage = () => {
             getElements={(selected) => [
               { name: 'ИНН:', value: selected?.inn },
               { name: 'МФО:', value: selected?.mfo },
-              { name: 'Расчетный счет:', value: selected?.raschet_schet },
+              { name: 'Расчетный счет:', value: selected?.account_numbers.join(',') },
               { name: 'Банк:', value: selected?.bank_klient }
             ]}
           />
@@ -93,6 +95,23 @@ const ShartnomaGrafikPage = () => {
           getRowId={(row) => row.id}
           onEdit={handleClickEdit}
           placeholder={!orgSpravochnik.selected ? 'Выберите организацию' : undefined}
+          customActions={(row) => (
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={(e) => {
+                e.stopPropagation()
+                navigate('create', {
+                  state: {
+                    shartnoma_id: row.id_shartnomalar_organization,
+                    org_id: row.spravochnik_organization_id
+                  } satisfies LocationState
+                })
+              }}
+            >
+              <PlusCircle className="btn-icon !mx-0" />
+            </Button>
+          )}
         />
       </ListView.Content>
       <ListView.Footer>

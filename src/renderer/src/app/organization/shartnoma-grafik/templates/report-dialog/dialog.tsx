@@ -1,4 +1,4 @@
-import type { ShartnomaGrafikForm } from '../../service'
+import type { ShartnomaGrafikFormValues } from '../../service'
 
 import { useEffect, useMemo } from 'react'
 
@@ -30,7 +30,7 @@ import { ReportDialogPayloadSchema, defaultValues } from './constants'
 import { buildContractDetailsText, buildContractPaymentDetailsText } from './utils'
 
 type GenerateReportDialogProps = {
-  schedule: ShartnomaGrafikForm
+  schedule: ShartnomaGrafikFormValues
   doc_date: string
   doc_num: string
   subschet: string

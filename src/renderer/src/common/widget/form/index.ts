@@ -2,7 +2,6 @@ export * from './types'
 
 export * from './podotchet'
 export * from './document'
-export * from './operation'
 export * from './operatsii'
 export * from './summa'
 export * from './summa-editable'

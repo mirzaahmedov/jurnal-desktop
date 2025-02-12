@@ -4,6 +4,7 @@ type Operatsii = {
   schet: string
   sub_schet: string
   smeta_id: number
+  budjet_id: number
 }
 
 enum TypeSchetOperatsii {

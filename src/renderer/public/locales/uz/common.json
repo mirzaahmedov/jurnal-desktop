@@ -96,7 +96,8 @@
   "download-something": "{{something}}ni yuklash",
   "create-something": "{{something}} yaratish",
   "update-something": "{{something}}ni tahrirlash",
-  "import-data": "Ma'lumotlarni import qilish",
+  "import-excel": "Excel-dan import qilish",
+  "export-excel": "Excel-ga eksport qilish",
   "group": "Guruh",
   "group_number": "Guruh raqami",
   "pod_group": "Ichki guruh",
@@ -189,5 +190,6 @@
   "nothing-found": "Hech narsa topilmadi",
   "reports": "Hisobotlar",
   "action-successful": "Amaliyot muvofaqiyatli bajarildi",
-  "something-went-wrong": "Nimadir xato ketdi, qayta urinib ko‘ring"
+  "something-went-wrong": "Nimadir xato ketdi, qayta urinib ko‘ring",
+  "difference": "Farq"
 }

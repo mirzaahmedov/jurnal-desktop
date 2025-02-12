@@ -1,9 +1,12 @@
 import type { ColumnDef } from '@/common/components'
 import type { Jur7Podrazdelenie } from '@/common/models'
 
+import { IDCell } from '@renderer/common/components/table/renderers/id'
+
 export const podrazdelenie7Columns: ColumnDef<Jur7Podrazdelenie>[] = [
   {
-    key: 'id'
+    key: 'id',
+    renderCell: IDCell
   },
   {
     key: 'name'
