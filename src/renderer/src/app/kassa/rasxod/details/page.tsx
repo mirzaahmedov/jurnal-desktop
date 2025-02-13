@@ -1,4 +1,5 @@
 import type { RasxodPayloadType, RasxodPodvodkaPayloadType } from '../service'
+import type { Operatsii } from '@/common/models'
 
 import { useCallback, useEffect } from 'react'
 
@@ -32,7 +33,6 @@ import { formatNumber } from '@/common/lib/format'
 import { getDataFromCache } from '@/common/lib/query-client'
 import { numberToWords } from '@/common/lib/utils'
 import { normalizeEmptyFields } from '@/common/lib/validation'
-import { Operatsii } from '@/common/models'
 import { DetailsView } from '@/common/views'
 import { DocumentFields, OpisanieFields, PodotchetFields, SummaFields } from '@/common/widget/form'
 
@@ -240,7 +240,6 @@ const KassaRasxodDetailtsPage = () => {
                 disabled={
                   !monitor?.meta?.summa_to ||
                   monitor?.meta?.summa_to < 0 ||
-                  !summa ||
                   reminder < 0 ||
                   isFetchingMonitor ||
                   isFetching ||

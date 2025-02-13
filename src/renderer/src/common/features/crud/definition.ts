@@ -1,7 +1,7 @@
-import { QueryFunctionContext } from '@tanstack/react-query'
-import { AxiosInstance, AxiosRequestConfig } from 'axios'
+import type { QueryFunctionContext } from '@tanstack/react-query'
+import type { AxiosInstance, AxiosRequestConfig } from 'axios'
 
-import { APIEndpoints } from './constants'
+import type { APIEndpoints } from './constants'
 
 export type QueryKeyParams = {
   main_schet_id?: number

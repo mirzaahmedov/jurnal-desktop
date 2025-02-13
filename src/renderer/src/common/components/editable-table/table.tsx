@@ -4,13 +4,13 @@ import { type ReactNode, useState } from 'react'
 
 import { Button } from '@renderer/common/components/ui/button'
 import { Table, TableBody, TableFooter, TableHeader } from '@renderer/common/components/ui/table'
-import { Autocomplete } from '@renderer/common/lib/types'
+import type { Autocomplete } from '@renderer/common/lib/types'
 import { CircleMinus, CirclePlus } from 'lucide-react'
-import { FieldErrors } from 'react-hook-form'
+import type { FieldErrors } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
 import { EditableTableCell, EditableTableHead, EditableTableRow } from './components'
-import { ChangeContext, DeleteContext } from './editors/types'
+import type { ChangeContext, DeleteContext } from './editors/types'
 
 export type EditableColumnType<T extends Record<string, unknown>> = {
   key: Autocomplete<keyof T>

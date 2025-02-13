@@ -1,4 +1,4 @@
-import { Cell, Worksheet } from 'exceljs'
+import type { Cell, Worksheet } from 'exceljs'
 
 export const inrange = (value: number, min: number, max: number) => {
   return value >= min && value <= max

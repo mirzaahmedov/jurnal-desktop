@@ -2,14 +2,14 @@ import type { FormEditableFieldsComponent } from '@/common/widget/form'
 
 import { useRequisitesStore } from '@renderer/common/features/requisites'
 import { useQuery } from '@tanstack/react-query'
-import { Control } from 'react-hook-form'
+import type { Control } from 'react-hook-form'
 
 import { Combobox } from '@/common/components'
 import { FormElement } from '@/common/components/form'
 import { FormField } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
 import { http } from '@/common/lib/http'
-import { Response } from '@/common/models'
+import type { Response } from '@/common/models'
 
 type RequiredManagementFields = {
   rukovoditel?: string | null

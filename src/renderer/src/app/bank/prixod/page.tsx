@@ -97,7 +97,7 @@ const BankPrixodPage = () => {
               <FooterCell
                 title={t('total')}
                 content={formatNumber(prixodList?.meta?.summa ?? 0)}
-                colSpan={4}
+                colSpan={5}
               />
             </FooterRow>
           }

@@ -93,7 +93,7 @@ const KassaMonitorPage = () => {
               <FooterRow>
                 <FooterCell
                   title={t('total')}
-                  colSpan={3}
+                  colSpan={4}
                 />
                 <FooterCell
                   content={formatNumber(monitorList?.meta?.prixod_sum ?? 0)}
@@ -117,7 +117,7 @@ const KassaMonitorPage = () => {
         </div>
         <ListView.Pagination
           {...pagination}
-          pageCount={monitorList?.meta.pageCount ?? 0}
+          pageCount={monitorList?.meta?.pageCount ?? 0}
         />
       </ListView.Footer>
     </ListView>

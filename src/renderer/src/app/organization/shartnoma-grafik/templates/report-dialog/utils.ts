@@ -1,5 +1,5 @@
 import { formatLocaleDate } from '@renderer/common/lib/format'
-import { MainSchet, Organization } from '@renderer/common/models'
+import type { MainSchet, Organization } from '@renderer/common/models'
 
 import { numberToWords, roundNumberToTwoDecimalPlaces } from '@/common/lib/utils'
 

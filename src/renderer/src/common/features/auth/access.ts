@@ -1,4 +1,4 @@
-import { Access } from '@/common/models'
+import type { Access } from '@/common/models'
 
 import { useAuthenticationStore } from './store'
 

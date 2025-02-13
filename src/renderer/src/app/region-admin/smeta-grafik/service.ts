@@ -1,8 +1,8 @@
 import type { SmetaGrafikForm } from './constants'
 import type { SmetaGrafik } from '@/common/models'
 
-import { ColumnDef } from '@renderer/common/components'
-import { SpravochnikHookOptions } from '@renderer/common/features/spravochnik'
+import type { ColumnDef } from '@renderer/common/components'
+import type { SpravochnikHookOptions } from '@renderer/common/features/spravochnik'
 import { extendObject } from '@renderer/common/lib/utils'
 
 import { APIEndpoints, CRUDService } from '@/common/features/crud'

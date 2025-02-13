@@ -4,7 +4,7 @@ import type { DialogProps } from '@radix-ui/react-dialog'
 import type { GenericTableProps } from '@renderer/common/components/generic-table/table'
 import type { ComponentType, Dispatch, SetStateAction } from 'react'
 
-import { useToggle } from '@renderer/common/hooks'
+import type { useToggle } from '@renderer/common/hooks'
 import { create } from 'zustand'
 
 export type FilterComponentProps<

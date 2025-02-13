@@ -9,14 +9,20 @@ import { Spinner } from './loading'
 import { Command, CommandInput, CommandItem, CommandList } from './ui/command'
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover'
 
-type ComboboxProps = {
+export type ComboboxProps = {
   children: ReactNode
   loading?: boolean
   options: string[]
   value: string
   onChange?: (value: string) => void
 }
-const Combobox = ({ children, loading = false, options, value, onChange }: ComboboxProps) => {
+export const Combobox = ({
+  children,
+  loading = false,
+  options,
+  value,
+  onChange
+}: ComboboxProps) => {
   const { isOpen: active, close, setOpen: setActive } = useToggle()
   return (
     <Popover
@@ -36,6 +42,7 @@ const Combobox = ({ children, loading = false, options, value, onChange }: Combo
             <CommandList>
               {options.map((option) => (
                 <CommandItem
+                  key={option}
                   value={option}
                   onSelect={(value) => {
                     onChange?.(value)
@@ -59,6 +66,3 @@ const Combobox = ({ children, loading = false, options, value, onChange }: Combo
     </Popover>
   )
 }
-
-export { Combobox }
-export type { ComboboxProps }

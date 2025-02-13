@@ -6,7 +6,9 @@ import { useEffect } from 'react'
 
 import { SelectField } from '@renderer/common/components'
 import { FormElement } from '@renderer/common/components/form'
+import { Button } from '@renderer/common/components/ui/button'
 import { FormField } from '@renderer/common/components/ui/form'
+import { CircleX } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { SpravochnikField, SpravochnikFields } from '@/common/features/spravochnik'
@@ -39,15 +41,12 @@ const OrganizationFields: FormSpravochnikFieldsComponent<Organization, Organizat
       return
     }
 
-    const { account_numbers, gaznas } = spravochnikProps.selected ?? {}
+    const { account_numbers } = spravochnikProps.selected ?? {}
 
     if (Array.isArray(account_numbers) && account_numbers.length === 1) {
       form.setValue('organization_by_raschet_schet_id', account_numbers[0].id)
     }
-    if (Array.isArray(gaznas) && gaznas.length === 1) {
-      form.setValue('organization_by_raschet_schet_id', gaznas[0].id)
-    }
-  }, [spravochnikProps.selected, form])
+  }, [form, spravochnikProps.selected])
 
   return (
     <SpravochnikFields
@@ -117,16 +116,34 @@ const OrganizationFields: FormSpravochnikFieldsComponent<Organization, Organizat
                 label={t('raschet-schet')}
                 grid="2:6"
               >
-                <SelectField
-                  {...field}
-                  withFormControl
-                  disabled={spravochnikProps.loading}
-                  options={spravochnikProps.selected?.account_numbers ?? []}
-                  getOptionLabel={(o) => o.raschet_schet}
-                  getOptionValue={(o) => o.id}
-                  value={String(field.value)}
-                  onValueChange={(value) => field.onChange(Number(value))}
-                />
+                <div className="flex items-center gap-2">
+                  <SelectField
+                    {...field}
+                    withFormControl
+                    disabled={spravochnikProps.loading}
+                    options={spravochnikProps.selected?.account_numbers ?? []}
+                    getOptionLabel={(o) => o.raschet_schet}
+                    getOptionValue={(o) => o.id}
+                    value={field.value ? String(field.value) : ''}
+                    onValueChange={(value) => {
+                      field.onChange(Number(value))
+                      if (value) {
+                        form.resetField('organization_by_raschet_schet_gazna_id')
+                      }
+                    }}
+                  />
+                  <Button
+                    type="button"
+                    size="icon"
+                    variant="ghost"
+                    className="text-slate-400 hover:text-red-500"
+                    onClick={() => {
+                      field.onChange(undefined)
+                    }}
+                  >
+                    <CircleX />
+                  </Button>
+                </div>
               </FormElement>
             )}
           />
@@ -139,16 +156,34 @@ const OrganizationFields: FormSpravochnikFieldsComponent<Organization, Organizat
                   label={t('raschet-schet-gazna')}
                   grid="2:6"
                 >
-                  <SelectField
-                    {...field}
-                    withFormControl
-                    disabled={spravochnikProps.loading}
-                    options={spravochnikProps.selected?.gaznas ?? []}
-                    getOptionLabel={(o) => o.raschet_schet_gazna}
-                    getOptionValue={(o) => o.id}
-                    value={String(field.value)}
-                    onValueChange={(value) => field.onChange(Number(value))}
-                  />
+                  <div className="flex items-center gap-2">
+                    <SelectField
+                      {...field}
+                      withFormControl
+                      disabled={spravochnikProps.loading}
+                      options={spravochnikProps.selected?.gaznas ?? []}
+                      getOptionLabel={(o) => o.raschet_schet_gazna}
+                      getOptionValue={(o) => o.id}
+                      value={field.value ? String(field.value) : ''}
+                      onValueChange={(value) => {
+                        field.onChange(Number(value))
+                        if (value) {
+                          form.resetField('organization_by_raschet_schet_id')
+                        }
+                      }}
+                    />
+                    <Button
+                      type="button"
+                      size="icon"
+                      variant="ghost"
+                      className="text-slate-400 hover:text-red-500"
+                      onClick={() => {
+                        field.onChange(undefined)
+                      }}
+                    >
+                      <CircleX />
+                    </Button>
+                  </div>
                 </FormElement>
               )}
             />

@@ -1,4 +1,4 @@
-import { RasxodPayloadType } from './service'
+import type { RasxodPayloadType } from './service'
 
 export const queryKeys = {
   getAll: 'kassa-rasxod/all',

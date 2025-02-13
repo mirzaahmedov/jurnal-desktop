@@ -8,7 +8,7 @@ import { Table, TableBody, TableHeader } from '@renderer/common/components/ui/ta
 import { formatNumber } from '@renderer/common/lib/format'
 import { cn, parseCSSNumericValue } from '@renderer/common/lib/utils'
 
-import { ExpensesTableRow } from '../details/utils'
+import type { ExpensesTableRow } from '../details/utils'
 import { columns } from './columns'
 import { ReportTableCell, ReportTableHead, ReportTableRow } from './table-components'
 

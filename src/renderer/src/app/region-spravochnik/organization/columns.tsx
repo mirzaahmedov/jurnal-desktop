@@ -34,16 +34,35 @@ export const organizationColumns: ColumnDef<Organization>[] = [
   {
     key: 'raschet_schet',
     header: 'raschet-schet',
+    className: 'py-2',
     renderCell(row) {
-      return row.account_numbers?.map((schet) => schet.raschet_schet)?.join(',')
+      return (
+        <ul>
+          {row.account_numbers?.map((schet) => (
+            <li key={schet.id}>
+              <Copyable value={schet.raschet_schet}>{schet.raschet_schet}</Copyable>
+            </li>
+          ))}
+        </ul>
+      )
+      return
     }
   },
   {
     fit: true,
     key: 'raschet_schet_gazna',
     header: 'raschet-schet-gazna',
+    className: 'py-2',
     renderCell(row) {
-      return row.gaznas?.map((schet) => schet.raschet_schet_gazna)?.join(',')
+      return (
+        <ul>
+          {row.gaznas?.map((schet) => (
+            <li key={schet.id}>
+              <Copyable value={schet.raschet_schet_gazna}>{schet.raschet_schet_gazna}</Copyable>
+            </li>
+          ))}
+        </ul>
+      )
     }
   }
 ]

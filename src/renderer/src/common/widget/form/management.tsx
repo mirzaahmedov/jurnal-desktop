@@ -2,7 +2,7 @@ import type { FormEditableFieldsComponent } from './types'
 
 import { useRequisitesStore } from '@renderer/common/features/requisites'
 import { useQuery } from '@tanstack/react-query'
-import { Control } from 'react-hook-form'
+import type { Control } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
 import { Combobox } from '@/common/components'
@@ -12,7 +12,7 @@ import { FormField } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
 import { http } from '@/common/lib/http'
 import { cn } from '@/common/lib/utils'
-import { Response } from '@/common/models'
+import type { Response } from '@/common/models'
 
 type RequiredManagementFields = {
   rukovoditel?: string | null
