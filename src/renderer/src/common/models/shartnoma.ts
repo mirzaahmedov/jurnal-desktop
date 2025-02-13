@@ -1,3 +1,18 @@
+export type ShartnomaGrafik = {
+  oy_1: number
+  oy_2: number
+  oy_3: number
+  oy_4: number
+  oy_5: number
+  oy_6: number
+  oy_7: number
+  oy_8: number
+  oy_9: number
+  oy_10: number
+  oy_11: number
+  oy_12: number
+}
+
 type Shartnoma = {
   id: number
   spravochnik_organization_id: number
@@ -11,6 +26,7 @@ type Shartnoma = {
   pudratchi_bool: boolean
   grafik_year?: number
   yillik_oylik: boolean
+  grafiks: ShartnomaGrafik[]
 }
 
 export type { Shartnoma }

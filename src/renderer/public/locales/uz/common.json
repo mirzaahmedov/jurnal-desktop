@@ -190,5 +190,7 @@
   "nothing-found": "Hech narsa topilmadi",
   "reports": "Hisobotlar",
   "something-went-wrong": "Nimadir xato ketdi, qayta urinib ko‘ring",
-  "difference": "Farq"
+  "difference": "Farq",
+  "details": "Tafsilotlar",
+  "grafik": "Grafik"
 }

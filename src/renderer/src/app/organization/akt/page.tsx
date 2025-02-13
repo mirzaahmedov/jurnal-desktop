@@ -108,9 +108,9 @@ const AktPage = () => {
           footer={
             <FooterRow>
               <FooterCell
-                colSpan={5}
+                colSpan={6}
                 title={t('total')}
-                content={formatNumber(aktList?.meta.summa ?? 0)}
+                content={formatNumber(aktList?.meta?.summa ?? 0)}
               />
             </FooterRow>
           }
@@ -119,7 +119,7 @@ const AktPage = () => {
       <ListView.Footer>
         <ListView.Pagination
           {...pagination}
-          pageCount={aktList?.meta.pageCount ?? 0}
+          pageCount={aktList?.meta?.pageCount ?? 0}
         />
       </ListView.Footer>
     </ListView>

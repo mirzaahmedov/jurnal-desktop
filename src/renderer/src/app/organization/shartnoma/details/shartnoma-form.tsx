@@ -1,6 +1,6 @@
 import type { Shartnoma } from '@renderer/common/models'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { createSmetaSpravochnik } from '@renderer/app/super-admin/smeta'
@@ -8,6 +8,7 @@ import { createSmetaSpravochnik } from '@renderer/app/super-admin/smeta'
 // import { FormElement } from '@renderer/common/components/form'
 import { Button } from '@renderer/common/components/ui/button'
 import { Form } from '@renderer/common/components/ui/form'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@renderer/common/components/ui/tabs'
 import { DocumentType } from '@renderer/common/features/doc-num'
 import { useSpravochnik } from '@renderer/common/features/spravochnik'
 import { parseDate } from '@renderer/common/lib/date'
@@ -27,6 +28,12 @@ import { defaultValues, shartnomaQueryKeys } from '../config'
 import { ShartnomaFormSchema, shartnomaService } from '../service'
 import { ShartnomaKindFields } from './kind'
 import { PudratchiFields } from './pudratchi'
+import { ShartnomaGrafikForm } from './shartnoma-grafik-form'
+
+enum TabOption {
+  DETAILS = 'DETAILS',
+  GRAFIK = 'GRAFIK'
+}
 
 type ShartnomaFormProps = {
   loading?: boolean
@@ -46,6 +53,8 @@ export const ShartnomaForm = ({
 }: ShartnomaFormProps) => {
   const queryClient = useQueryClient()
   const id = selected?.id
+
+  const [tabValue, setTabValue] = useState<TabOption>(TabOption.DETAILS)
 
   const { t } = useTranslation()
 
@@ -117,7 +126,8 @@ export const ShartnomaForm = ({
       opisanie,
       pudratchi_bool,
       yillik_oylik,
-      grafik_year
+      grafik_year,
+      grafiks
     } = payload
 
     if (selected) {
@@ -132,7 +142,8 @@ export const ShartnomaForm = ({
         opisanie,
         pudratchi_bool,
         yillik_oylik,
-        grafik_year
+        grafik_year,
+        grafiks
       })
       return
     }
@@ -147,7 +158,8 @@ export const ShartnomaForm = ({
       opisanie,
       pudratchi_bool,
       yillik_oylik,
-      grafik_year: parseDate(doc_date).getFullYear()
+      grafik_year: parseDate(doc_date).getFullYear(),
+      grafiks
     })
   })
 
@@ -170,55 +182,72 @@ export const ShartnomaForm = ({
   return (
     <Form {...form}>
       <form onSubmit={onSubmit}>
-        <div>
-          <div className="flex">
-            <DocumentFields
-              tabIndex={1}
-              dialog={dialog}
-              form={form}
-              documentType={DocumentType.CONTRACT}
-              autoGenerate={!selected}
-            />
+        <Tabs
+          value={tabValue}
+          onValueChange={(value) => setTabValue(value as TabOption)}
+        >
+          <div className="p-5">
+            <TabsList>
+              <TabsTrigger value={TabOption.DETAILS}>{t('details')}</TabsTrigger>
+              <TabsTrigger value={TabOption.GRAFIK}>{t('grafik')}</TabsTrigger>
+            </TabsList>
           </div>
+          <TabsContent value={TabOption.DETAILS}>
+            <div>
+              <div className="flex">
+                <DocumentFields
+                  tabIndex={1}
+                  dialog={dialog}
+                  form={form}
+                  documentType={DocumentType.CONTRACT}
+                  autoGenerate={!selected}
+                />
+              </div>
 
-          <div className={cn('grid grid-cols-2 gap-10', dialog && 'grid-cols-1 gap-1')}>
-            <SummaEditableFields
-              dialog={dialog}
-              tabIndex={2}
-              form={form}
-            />
-            <SmetaFields
-              tabIndex={3}
-              dialog={dialog}
-              error={form.formState.errors.smeta_id}
-              spravochnik={smetaSpravochnik}
-            />
-          </div>
+              <div className={cn('grid grid-cols-2 gap-10', dialog && 'grid-cols-1 gap-1')}>
+                <SummaEditableFields
+                  dialog={dialog}
+                  tabIndex={2}
+                  form={form}
+                />
+                <SmetaFields
+                  tabIndex={3}
+                  dialog={dialog}
+                  error={form.formState.errors.smeta_id}
+                  spravochnik={smetaSpravochnik}
+                />
+              </div>
 
-          <div className={cn('p-5', dialog && 'p-0 pt-5')}>
-            <OpisanieFields form={form} />
-          </div>
+              <div className={cn('p-5', dialog && 'p-0 pt-5')}>
+                <OpisanieFields form={form} />
+              </div>
 
-          <div className={cn('grid grid-cols-2 gap-10', dialog && 'gap-20')}>
-            <PudratchiFields
-              form={form}
-              className={dialog ? 'p-0' : undefined}
-            />
-            <ShartnomaKindFields
-              form={form}
-              className={dialog ? 'p-0' : undefined}
-            />
-          </div>
-        </div>
+              <div className={cn('grid grid-cols-2 gap-10', dialog && 'gap-20')}>
+                <PudratchiFields
+                  form={form}
+                  className={dialog ? 'p-0' : undefined}
+                />
+                <ShartnomaKindFields
+                  form={form}
+                  className={dialog ? 'p-0' : undefined}
+                />
+              </div>
+            </div>
 
-        <div className={cn('p-5', dialog && 'p-0 pt-5')}>
-          <Button
-            type="submit"
-            disabled={isCreating || isUpdating || loading}
-          >
-            {t('save')}
-          </Button>
-        </div>
+            <div className={cn('p-5', dialog && 'p-0 pt-5')}>
+              <Button
+                type="submit"
+                disabled={isCreating || isUpdating || loading}
+              >
+                {t('save')}
+              </Button>
+            </div>
+          </TabsContent>
+          <TabsContent value={TabOption.GRAFIK}>
+            <h1>Grafik</h1>
+            {/* <ShartnomaGrafikForm form={form} /> */}
+          </TabsContent>
+        </Tabs>
       </form>
     </Form>
   )

@@ -41,7 +41,23 @@ export const ShartnomaFormSchema = withPreprocessor(
     summa: z.coerce.number().min(1),
     pudratchi_bool: z.boolean(),
     grafik_year: z.number().optional(),
-    yillik_oylik: z.boolean()
+    yillik_oylik: z.boolean(),
+    grafiks: z.array(
+      z.object({
+        oy_1: z.number(),
+        oy_2: z.number(),
+        oy_3: z.number(),
+        oy_4: z.number(),
+        oy_5: z.number(),
+        oy_6: z.number(),
+        oy_7: z.number(),
+        oy_8: z.number(),
+        oy_9: z.number(),
+        oy_10: z.number(),
+        oy_11: z.number(),
+        oy_12: z.number()
+      })
+    )
   })
 )
 export type ShartnomaFormValues = z.infer<typeof ShartnomaFormSchema>

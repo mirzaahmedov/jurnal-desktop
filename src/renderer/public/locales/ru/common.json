@@ -191,5 +191,7 @@
   "reports": "Отчеты",
   "action-successful": "Действие успешно выполнено",
   "something-went-wrong": "Что-то пошло не так, попробуйте еще раз.",
-  "difference": "Разница"
+  "difference": "Разница",
+  "details": "Подробности",
+  "grafik": "График"
 }

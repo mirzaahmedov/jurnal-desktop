@@ -178,7 +178,7 @@ const PodotchetMonitoringPage = () => {
               <FooterRow>
                 <FooterCell
                   title={t('total')}
-                  colSpan={4}
+                  colSpan={5}
                   content={formatNumber(monitorList?.meta?.summa_prixod ?? 0)}
                 />
                 <FooterCell content={formatNumber(monitorList?.meta?.summa_rasxod ?? 0)} />
@@ -198,7 +198,7 @@ const PodotchetMonitoringPage = () => {
         />
         <ListView.Pagination
           {...pagination}
-          pageCount={monitorList?.meta.pageCount ?? 0}
+          pageCount={monitorList?.meta?.pageCount ?? 0}
         />
       </ListView.Footer>
     </ListView>

@@ -236,7 +236,7 @@ export const GenericTable = <T extends Record<string, unknown>>({
           </GenericTableRow>
         )}
       </TableBody>
-      {footer ? <TableFooter>{footer}</TableFooter> : null}
+      {footer ? <TableFooter className="sticky bottom-0">{footer}</TableFooter> : null}
     </Table>
   )
 }

@@ -238,9 +238,9 @@ const OrganizationMonitoringPage = () => {
         </div>
         <div className="sticky top-0 mt-5">
           <SummaFields
-            summaDebet={organizationMonitorList?.meta?.summa_from.prixod}
-            summaKredit={organizationMonitorList?.meta?.summa_from?.rasxod}
-            summaItogo={organizationMonitorList?.meta?.summa_from?.summa}
+            summaDebet={organizationMonitorList?.meta?.summa_from_object.prixod_sum}
+            summaKredit={organizationMonitorList?.meta?.summa_from_object?.rasxod_sum}
+            summaItogo={organizationMonitorList?.meta?.summa_from_object?.summa}
           />
         </div>
       </ListView.Header>
@@ -255,22 +255,20 @@ const OrganizationMonitoringPage = () => {
           footer={
             <FooterRow>
               <FooterCell
-                colSpan={5}
+                colSpan={6}
                 title={t('total')}
-                content={formatNumber(organizationMonitorList?.meta?.summa_prixod ?? 0)}
+                content={formatNumber(organizationMonitorList?.meta?.prixod_sum ?? 0)}
               />
-              <FooterCell
-                content={formatNumber(organizationMonitorList?.meta?.summa_rasxod ?? 0)}
-              />
+              <FooterCell content={formatNumber(organizationMonitorList?.meta?.rasxod_sum ?? 0)} />
             </FooterRow>
           }
         />
       </ListView.Content>
       <ListView.Footer>
         <SummaFields
-          summaDebet={organizationMonitorList?.meta?.summa_to.prixod}
-          summaKredit={organizationMonitorList?.meta?.summa_to?.rasxod}
-          summaItogo={organizationMonitorList?.meta?.summa_to?.summa}
+          summaDebet={organizationMonitorList?.meta?.summa_to_object.prixod_sum}
+          summaKredit={organizationMonitorList?.meta?.summa_to_object?.rasxod_sum}
+          summaItogo={organizationMonitorList?.meta?.summa_to_object?.summa}
         />
         <div className="mt-5">
           <ListView.Pagination

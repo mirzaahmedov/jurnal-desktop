@@ -1,4 +1,4 @@
-type Operatsii = {
+export type Operatsii = {
   id: number
   name: string
   schet: string
@@ -7,7 +7,7 @@ type Operatsii = {
   budjet_id: number
 }
 
-enum TypeSchetOperatsii {
+export enum TypeSchetOperatsii {
   KASSA_PRIXOD = 'kassa_prixod',
   KASSA_RASXOD = 'kassa_rasxod',
   BANK_PRIXOD = 'bank_prixod',
@@ -18,6 +18,3 @@ enum TypeSchetOperatsii {
   JUR7 = 'jur7',
   GENERAL = 'general'
 }
-
-export { TypeSchetOperatsii }
-export type { Operatsii }
