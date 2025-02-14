@@ -30,7 +30,7 @@ export const podotchetColumns: ColumnDef<PodochetTableRow>[] = [
     renderCell(row) {
       return formatNumber(
         row?.children?.reduce((total, schet) => {
-          return total + (schet?.podotchet?.prixod ?? 0)
+          return total + (schet?.podotchet?.prixod_sum ?? 0)
         }, 0)
       )
     }
@@ -42,7 +42,7 @@ export const podotchetColumns: ColumnDef<PodochetTableRow>[] = [
     renderCell(row) {
       return formatNumber(
         row?.children?.reduce((total, schet) => {
-          return total + (schet?.podotchet?.rasxod ?? 0)
+          return total + (schet?.podotchet?.rasxod_sum ?? 0)
         }, 0)
       )
     }
@@ -67,7 +67,7 @@ export const podotchetChildsColumns: ColumnDef<PodochetTableRow['children'][numb
     header: 'prixod',
     className: 'w-72',
     renderCell(row) {
-      return formatNumber(row.podotchet.prixod)
+      return formatNumber(row.podotchet.prixod_sum)
     }
   },
   {
@@ -76,7 +76,7 @@ export const podotchetChildsColumns: ColumnDef<PodochetTableRow['children'][numb
     header: 'rasxod',
     className: 'w-72',
     renderCell(row) {
-      return formatNumber(row.podotchet.rasxod)
+      return formatNumber(row.podotchet.rasxod_sum)
     }
   }
 ]

@@ -1,16 +1,16 @@
 import type { EditorComponentType } from './editors'
+import type { ChangeContext, DeleteContext } from './editors/types'
+import type { Autocomplete } from '@renderer/common/lib/types'
+import type { FieldErrors } from 'react-hook-form'
 
 import { type ReactNode, useState } from 'react'
 
 import { Button } from '@renderer/common/components/ui/button'
 import { Table, TableBody, TableFooter, TableHeader } from '@renderer/common/components/ui/table'
-import type { Autocomplete } from '@renderer/common/lib/types'
 import { CircleMinus, CirclePlus } from 'lucide-react'
-import type { FieldErrors } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
 import { EditableTableCell, EditableTableHead, EditableTableRow } from './components'
-import type { ChangeContext, DeleteContext } from './editors/types'
 
 export type EditableColumnType<T extends Record<string, unknown>> = {
   key: Autocomplete<keyof T>
@@ -50,10 +50,10 @@ export const EditableTable = <T extends Record<string, unknown>>(props: Editable
   const { t } = useTranslation()
 
   return (
-    <form
+    <div
       onSubmit={(e) => {
         e.preventDefault()
-        onCreate?.()
+        e.stopPropagation()
       }}
       onFocus={(e) => {
         e.target.scrollIntoView({
@@ -122,6 +122,7 @@ export const EditableTable = <T extends Record<string, unknown>>(props: Editable
                   type="submit"
                   variant="ghost"
                   className="w-full hover:bg-slate-50 text-brand hover:text-brand"
+                  onClick={onCreate}
                 >
                   <CirclePlus className="btn-icon icon-start" /> {t('add')}
                 </Button>
@@ -130,7 +131,7 @@ export const EditableTable = <T extends Record<string, unknown>>(props: Editable
           </TableFooter>
         )}
       </Table>
-    </form>
+    </div>
   )
 }
 

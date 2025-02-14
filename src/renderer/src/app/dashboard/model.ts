@@ -127,8 +127,9 @@ export namespace Dashboard {
         updated_at: string
         isdeleted: boolean
         podotchet: {
-          rasxod: number
-          prixod: number
+          prixod_sum: number
+          rasxod_sum: number
+          summa: number
         }
       }>
     }>

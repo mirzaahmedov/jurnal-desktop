@@ -30,8 +30,8 @@ const ShartnomaPage = () => {
   const { search } = useSearch()
   const { t } = useTranslation(['app'])
 
-  const pagination = usePagination()
   const navigate = useNavigate()
+  const pagination = usePagination()
   const queryClient = useQueryClient()
   const budjet_id = useRequisitesStore((store) => store.budjet_id)
   const setLayout = useLayoutStore((store) => store.setLayout)
@@ -54,7 +54,7 @@ const ShartnomaPage = () => {
       {
         search,
         budjet_id,
-        organization: orgId,
+        organ_id: orgId,
         ...pagination
       }
     ],
@@ -136,13 +136,10 @@ const ShartnomaPage = () => {
               size="icon"
               onClick={(e) => {
                 e.stopPropagation()
-                if (!orgId) {
-                  return
-                }
-                navigate(`create?org_id=${row.spravochnik_organization_id}`, {
+                navigate('create', {
                   state: {
                     original: row,
-                    orgId
+                    orgId: row.spravochnik_organization_id
                   } satisfies LocationState
                 })
               }}

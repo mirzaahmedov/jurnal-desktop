@@ -73,7 +73,7 @@ const BankPrixodDetailsPage = () => {
         form.trigger('id_shartnomalar_organization')
       },
       params: {
-        organization: form.watch('id_spravochnik_organization')
+        organ_id: form.watch('id_spravochnik_organization')
       }
     })
   )

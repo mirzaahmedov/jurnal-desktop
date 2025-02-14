@@ -7,18 +7,26 @@ import { FormElement } from '@/common/components/form'
 import { Input } from '@/common/components/ui/input'
 import { Textarea } from '@/common/components/ui/textarea'
 import { formatNumber } from '@/common/lib/format'
-import { numberToWords } from '@/common/lib/utils'
+import { cn, numberToWords } from '@/common/lib/utils'
 
-const SummaFields: FormFieldsComponent<{
-  summa?: number
-}> = ({ data, name, ...props }) => {
+const SummaFields: FormFieldsComponent<
+  {
+    summa?: number
+    dialog?: boolean
+  },
+  HTMLInputElement,
+  {
+    dialog?: boolean
+  }
+> = ({ data, dialog = false, name, ...props }) => {
   const { t } = useTranslation()
   return (
     <Fieldset
       {...props}
+      className={cn(dialog && 'p-0', props.className)}
       name={name ?? t('summa')}
     >
-      <div className="flex items-start gap-5">
+      <div className={cn('flex items-start gap-5', dialog && 'flex-col items-stretch')}>
         <FormElement label={t('summa')}>
           <Input
             readOnly

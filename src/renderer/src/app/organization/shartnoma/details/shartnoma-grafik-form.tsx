@@ -1,47 +1,104 @@
-import type { ShartnomaFormValues } from '../service'
-import type { FC } from 'react'
+import type { UseFormReturn } from 'react-hook-form'
 
-import { NumericInput } from '@renderer/common/components'
-import { type FieldArrayWithId, type UseFormReturn, useFieldArray } from 'react-hook-form'
+import { type FC, useEffect, useRef } from 'react'
+
+import {
+  EditableTable,
+  EditableTableCell,
+  EditableTableRow
+} from '@renderer/common/components/editable-table'
+import {
+  createEditorChangeHandler,
+  createEditorCreateHandler,
+  createEditorDeleteHandler
+} from '@renderer/common/components/editable-table/helpers'
+import { Input } from '@renderer/common/components/ui/input'
+import { inputVariants } from '@renderer/common/features/spravochnik'
+import { formatNumber } from '@renderer/common/lib/format'
+import { cn } from '@renderer/common/lib/utils'
+import { t } from 'i18next'
+import { toast } from 'react-toastify'
+
+import { defaultValues } from '../config'
+import { type ShartnomaFormValues, ShartnomaGrafikFormSchema } from '../service'
+import { provodkaColumns } from './provodka'
 
 export const ShartnomaGrafikForm: FC<{
   form: UseFormReturn<ShartnomaFormValues>
-}> = ({ form }) => {
-  const { fields } = useFieldArray({
-    control: form.control,
-    name: 'grafiks'
-  })
-  return (
-    <div>
-      <ul>
-        {fields.map((field, index) => (
-          <GrafikRow
-            form={form}
-            index={index}
-            key={field.id}
-            field={field}
-          />
-        ))}
-      </ul>
-    </div>
-  )
-}
+  itogo: number
+}> = ({ form, itogo }) => {
+  const tableRef = useRef<HTMLTableElement>(null)
 
-export const GrafikRow: FC<{
-  form: UseFormReturn<ShartnomaFormValues>
-  index: number
-  field: FieldArrayWithId<ShartnomaFormValues, 'grafiks', 'id'>
-}> = ({ form, index, field }) => {
+  useEffect(() => {
+    if (itogo !== 0) {
+      form.trigger('grafiks')
+    }
+  }, [form, itogo])
+
   return (
-    <li key={field.id}>
-      <ul className="flex items-center">
-        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((i) => (
-          <NumericInput
-            key={i}
-            {...form.register(`grafiks.${index}.oy_${i}` as any)}
-          />
-        ))}
-      </ul>
-    </li>
+    <EditableTable
+      tableRef={tableRef}
+      tabIndex={5}
+      columns={provodkaColumns}
+      data={form.watch('grafiks')}
+      errors={form.formState.errors.grafiks}
+      onCreate={createEditorCreateHandler({
+        form,
+        schema: ShartnomaGrafikFormSchema,
+        defaultValues: defaultValues.grafiks[0],
+        field: 'grafiks'
+      })}
+      onDelete={createEditorDeleteHandler({
+        form,
+        field: 'grafiks'
+      })}
+      onChange={createEditorChangeHandler({
+        form,
+        field: 'grafiks'
+      })}
+      validate={({ id, key, payload }) => {
+        if (key !== 'smeta_id') {
+          return true
+        }
+
+        return !form.getValues('grafiks').some((child, index) => {
+          if (id !== index && payload.smeta_id === child.smeta_id) {
+            toast.error('Проводка с этой сметой уже существует')
+
+            const input = tableRef?.current?.querySelector(
+              `[data-editorid="${index}-smeta_id"]`
+            ) as HTMLInputElement
+            if (input) {
+              setTimeout(() => {
+                input.focus()
+              }, 100)
+            }
+
+            return true
+          }
+          return false
+        })
+      }}
+      footerRows={
+        <EditableTableRow className="!border">
+          <EditableTableCell colSpan={13}>
+            <div className="flex items-center">
+              <h1 className="px-3 font-bold">{t('total')}</h1>
+              <Input
+                aria-hidden
+                readOnly
+                tabIndex={-1}
+                className={cn(
+                  inputVariants({ editor: true }),
+                  'pointer-events-none font-bold text-right'
+                )}
+                value={formatNumber(itogo)}
+              />
+            </div>
+          </EditableTableCell>
+          <EditableTableCell></EditableTableCell>
+        </EditableTableRow>
+      }
+    />
   )
 }

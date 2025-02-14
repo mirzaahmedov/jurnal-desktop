@@ -18,7 +18,7 @@ const ShartnomaDetailsPage = () => {
   const navigate = useNavigate()
   const location = useLocation() as Location<LocationState>
 
-  const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
+  const budjet_id = useRequisitesStore((store) => store.budjet_id)
   const setLayout = useLayoutStore((store) => store.setLayout)
 
   const original = location.state?.original
@@ -31,7 +31,7 @@ const ShartnomaDetailsPage = () => {
       shartnomaQueryKeys.getById,
       Number(id),
       {
-        main_schet_id
+        budjet_id
       }
     ],
     queryFn: shartnomaService.getById,

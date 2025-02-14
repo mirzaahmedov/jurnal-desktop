@@ -168,13 +168,13 @@ export const getNavElements = (t: TFunction): NavElement[] => {
                   icon: ReceiptText
                 }
               : null,
-            permissions.shartnoma
-              ? {
-                  path: 'shartnoma-grafik',
-                  title: t('pages.shartnoma-grafik'),
-                  icon: CalendarCheck
-                }
-              : null,
+            // permissions.shartnoma
+            //   ? {
+            //       path: 'shartnoma-grafik',
+            //       title: t('pages.shartnoma-grafik'),
+            //       icon: CalendarCheck
+            //     }
+            //   : null,
             permissions.jur3
               ? {
                   path: 'akt',

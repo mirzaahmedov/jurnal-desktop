@@ -92,7 +92,7 @@ const PokazatUslugiDetailsPage = () => {
         form.trigger('shartnomalar_organization_id')
       },
       params: {
-        organization: form.watch('id_spravochnik_organization'),
+        organ_id: form.watch('id_spravochnik_organization'),
         pudratchi_bool: false
       }
     })

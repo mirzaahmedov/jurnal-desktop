@@ -14,7 +14,7 @@ import {
   DialogTitle
 } from '@renderer/common/components/ui/dialog'
 import { CopyPlus } from 'lucide-react'
-import { z } from 'zod'
+import { ZodIssueCode, z } from 'zod'
 
 import { APIEndpoints, CRUDService } from '@/common/features/crud'
 import { budjet } from '@/common/features/crud/middleware'
@@ -30,37 +30,60 @@ export const shartnomaService = new CRUDService<Shartnoma, ShartnomaFormValues>(
   endpoint: APIEndpoints.shartnoma
 }).use(budjet())
 
+export const ShartnomaGrafikFormSchema = z
+  .object({
+    oy_1: z.number(),
+    oy_2: z.number(),
+    oy_3: z.number(),
+    oy_4: z.number(),
+    oy_5: z.number(),
+    oy_6: z.number(),
+    oy_7: z.number(),
+    oy_8: z.number(),
+    oy_9: z.number(),
+    oy_10: z.number(),
+    oy_11: z.number(),
+    oy_12: z.number(),
+    smeta_id: z.number().min(1)
+  })
+  .superRefine((values, ctx) => {
+    if (
+      [
+        values.oy_1,
+        values.oy_2,
+        values.oy_3,
+        values.oy_4,
+        values.oy_5,
+        values.oy_6,
+        values.oy_7,
+        values.oy_8,
+        values.oy_9,
+        values.oy_10,
+        values.oy_11,
+        values.oy_12
+      ].every((value) => !value)
+    ) {
+      ctx.addIssue({
+        code: ZodIssueCode.custom,
+        message: 'Required',
+        path: ['oy_1']
+      })
+    }
+  })
 export const ShartnomaFormSchema = withPreprocessor(
   z.object({
     spravochnik_organization_id: z.number(),
     doc_num: z.string(),
     doc_date: z.string(),
-    smeta_id: z.number(),
-    smeta2_id: z.number().optional(),
     opisanie: z.string().optional(),
-    summa: z.coerce.number().min(1),
     pudratchi_bool: z.boolean(),
     grafik_year: z.number().optional(),
     yillik_oylik: z.boolean(),
-    grafiks: z.array(
-      z.object({
-        oy_1: z.number(),
-        oy_2: z.number(),
-        oy_3: z.number(),
-        oy_4: z.number(),
-        oy_5: z.number(),
-        oy_6: z.number(),
-        oy_7: z.number(),
-        oy_8: z.number(),
-        oy_9: z.number(),
-        oy_10: z.number(),
-        oy_11: z.number(),
-        oy_12: z.number()
-      })
-    )
+    grafiks: z.array(ShartnomaGrafikFormSchema)
   })
 )
 export type ShartnomaFormValues = z.infer<typeof ShartnomaFormSchema>
+export type ShartnomaGrafikFormValues = z.infer<typeof ShartnomaGrafikFormSchema>
 
 const ShartnomaSpravochnikDialog = ({
   open,
@@ -77,15 +100,18 @@ const ShartnomaSpravochnikDialog = ({
       open={open}
       onOpenChange={onOpenChange}
     >
-      <DialogContent>
+      <DialogContent className="max-w-7xl">
         <DialogHeader>
           <DialogTitle>Добавить договор</DialogTitle>
         </DialogHeader>
-        <ShartnomaForm
-          organization={organization}
-          original={original}
-          onSuccess={() => onOpenChange?.(false)}
-        />
+        <div className="px-1 w-full overflow-hidden">
+          <ShartnomaForm
+            dialog={false}
+            organization={organization}
+            original={original}
+            onSuccess={() => onOpenChange?.(false)}
+          />
+        </div>
       </DialogContent>
     </Dialog>
   )

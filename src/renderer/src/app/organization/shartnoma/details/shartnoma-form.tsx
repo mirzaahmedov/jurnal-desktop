@@ -1,24 +1,15 @@
 import type { Shartnoma } from '@renderer/common/models'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { createSmetaSpravochnik } from '@renderer/app/super-admin/smeta'
-// import { SelectField } from '@renderer/common/components'
-// import { FormElement } from '@renderer/common/components/form'
 import { Button } from '@renderer/common/components/ui/button'
 import { Form } from '@renderer/common/components/ui/form'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@renderer/common/components/ui/tabs'
 import { DocumentType } from '@renderer/common/features/doc-num'
-import { useSpravochnik } from '@renderer/common/features/spravochnik'
 import { parseDate } from '@renderer/common/lib/date'
 import { cn } from '@renderer/common/lib/utils'
-import {
-  DocumentFields,
-  OpisanieFields,
-  SmetaFields,
-  SummaEditableFields
-} from '@renderer/common/widget/form'
+import { DocumentFields, OpisanieFields, SummaFields } from '@renderer/common/widget/form'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -60,18 +51,12 @@ export const ShartnomaForm = ({
 
   const form = useForm({
     resolver: zodResolver(ShartnomaFormSchema),
-    defaultValues: original ?? defaultValues
+    defaultValues: {
+      ...defaultValues,
+      ...original,
+      grafiks: defaultValues.grafiks
+    }
   })
-
-  const smetaSpravochnik = useSpravochnik(
-    createSmetaSpravochnik({
-      value: form.watch('smeta_id'),
-      onChange: (value) => {
-        form.setValue('smeta_id', value)
-        form.trigger('smeta_id')
-      }
-    })
-  )
 
   const { mutate: create, isPending: isCreating } = useMutation({
     mutationKey: [shartnomaQueryKeys.create],
@@ -120,9 +105,6 @@ export const ShartnomaForm = ({
       doc_date,
       doc_num,
       spravochnik_organization_id,
-      smeta_id,
-      smeta2_id,
-      summa,
       opisanie,
       pudratchi_bool,
       yillik_oylik,
@@ -136,9 +118,6 @@ export const ShartnomaForm = ({
         doc_date,
         doc_num,
         spravochnik_organization_id,
-        smeta_id,
-        smeta2_id,
-        summa,
         opisanie,
         pudratchi_bool,
         yillik_oylik,
@@ -152,9 +131,6 @@ export const ShartnomaForm = ({
       doc_date,
       doc_num,
       spravochnik_organization_id,
-      smeta_id,
-      smeta2_id,
-      summa,
       opisanie,
       pudratchi_bool,
       yillik_oylik,
@@ -165,7 +141,12 @@ export const ShartnomaForm = ({
 
   useEffect(() => {
     if (!selected) {
-      form.reset(original ?? defaultValues)
+      if (original) {
+        original.grafiks = defaultValues.grafiks
+        form.reset(original)
+      } else {
+        form.reset(defaultValues)
+      }
       return
     }
     form.reset(selected)
@@ -179,6 +160,36 @@ export const ShartnomaForm = ({
     }
   }, [form, organization])
 
+  const errors = form.formState.errors
+  useEffect(() => {
+    if (errors?.grafiks) {
+      setTabValue(TabOption.GRAFIK)
+    } else {
+      setTabValue(TabOption.DETAILS)
+    }
+  }, [errors])
+
+  const grafiks = form.watch('grafiks')
+  const itogo = useMemo(() => {
+    return grafiks?.reduce(
+      (result, grafik) =>
+        result +
+        ((grafik?.oy_1 ?? 0) +
+          (grafik?.oy_2 ?? 0) +
+          (grafik?.oy_3 ?? 0) +
+          (grafik?.oy_4 ?? 0) +
+          (grafik?.oy_5 ?? 0) +
+          (grafik?.oy_6 ?? 0) +
+          (grafik?.oy_7 ?? 0) +
+          (grafik?.oy_8 ?? 0) +
+          (grafik?.oy_9 ?? 0) +
+          (grafik?.oy_10 ?? 0) +
+          (grafik?.oy_11 ?? 0) +
+          (grafik?.oy_12 ?? 0)),
+      0
+    )
+  }, [grafiks])
+
   return (
     <Form {...form}>
       <form onSubmit={onSubmit}>
@@ -186,7 +197,7 @@ export const ShartnomaForm = ({
           value={tabValue}
           onValueChange={(value) => setTabValue(value as TabOption)}
         >
-          <div className="p-5">
+          <div className={cn('p-5', dialog && 'px-0')}>
             <TabsList>
               <TabsTrigger value={TabOption.DETAILS}>{t('details')}</TabsTrigger>
               <TabsTrigger value={TabOption.GRAFIK}>{t('grafik')}</TabsTrigger>
@@ -205,16 +216,12 @@ export const ShartnomaForm = ({
               </div>
 
               <div className={cn('grid grid-cols-2 gap-10', dialog && 'grid-cols-1 gap-1')}>
-                <SummaEditableFields
+                <SummaFields
                   dialog={dialog}
                   tabIndex={2}
-                  form={form}
-                />
-                <SmetaFields
-                  tabIndex={3}
-                  dialog={dialog}
-                  error={form.formState.errors.smeta_id}
-                  spravochnik={smetaSpravochnik}
+                  data={{
+                    summa: itogo
+                  }}
                 />
               </div>
 
@@ -233,20 +240,26 @@ export const ShartnomaForm = ({
                 />
               </div>
             </div>
-
-            <div className={cn('p-5', dialog && 'p-0 pt-5')}>
-              <Button
-                type="submit"
-                disabled={isCreating || isUpdating || loading}
-              >
-                {t('save')}
-              </Button>
+          </TabsContent>
+          <TabsContent
+            value={TabOption.GRAFIK}
+            className="w-full overflow-x-auto scrollbar"
+          >
+            <div className={cn('p-5 relative w-[2400px]', dialog && 'px-0')}>
+              <ShartnomaGrafikForm
+                form={form}
+                itogo={itogo}
+              />
             </div>
           </TabsContent>
-          <TabsContent value={TabOption.GRAFIK}>
-            <h1>Grafik</h1>
-            {/* <ShartnomaGrafikForm form={form} /> */}
-          </TabsContent>
+          <div className={cn('p-5', dialog && 'p-0 pt-5')}>
+            <Button
+              type="submit"
+              disabled={isCreating || isUpdating || loading}
+            >
+              {t('save')}
+            </Button>
+          </div>
         </Tabs>
       </form>
     </Form>

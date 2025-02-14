@@ -42,6 +42,7 @@ import { provodkaColumns } from './provodka'
 
 const MainbookReportDetailsPage = () => {
   const tableRef = useRef<HTMLTableElement>(null)
+
   const navigate = useNavigate()
   const params = useParams()
   const budjet_id = useRequisitesStore((store) => store.budjet_id)

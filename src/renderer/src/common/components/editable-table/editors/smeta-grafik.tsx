@@ -2,11 +2,14 @@ import type { EditorComponentType } from './types'
 
 import { useEffect } from 'react'
 
-import { createSmetaSpravochnik } from '@renderer/app/super-admin/smeta'
+import { createSmetaGrafikSpravochnik } from '@renderer/app/region-admin/smeta-grafik/service'
+import { formatNumber } from '@renderer/common/lib/format'
 
 import { SpravochnikInput, useSpravochnik } from '@/common/features/spravochnik'
 
-export const createSmetaEditor = <T extends { smeta_id?: number }>(): EditorComponentType<T> => {
+export const createSmetaGrafikEditor = <
+  T extends { smeta_grafik_id?: number }
+>(): EditorComponentType<T> => {
   const Editor: EditorComponentType<T> = ({
     tabIndex,
     id,
@@ -18,22 +21,22 @@ export const createSmetaEditor = <T extends { smeta_id?: number }>(): EditorComp
     ...props
   }) => {
     const smetaSpravochnik = useSpravochnik(
-      createSmetaSpravochnik({
-        value: row.smeta_id || undefined,
+      createSmetaGrafikSpravochnik({
+        value: row.smeta_grafik_id || undefined,
         onChange: (value) => {
           if (
             validate &&
-            !validate({ id, key: 'smeta_id', payload: { ...row, smeta_id: value } })
+            !validate({ id, key: 'smeta_grafik_id', payload: { ...row, smeta_grafik_id: value } })
           ) {
             smetaSpravochnik.clear()
             return
           }
           onChange?.({
             id,
-            key: 'smeta_id',
+            key: 'smeta_grafik_id',
             payload: {
               ...row,
-              smeta_id: value
+              smeta_grafik_id: value
             }
           })
         }
@@ -52,9 +55,13 @@ export const createSmetaEditor = <T extends { smeta_id?: number }>(): EditorComp
         editor
         readOnly
         tabIndex={tabIndex}
-        error={!!errors?.smeta_id}
+        error={!!errors?.smeta_grafik_id}
         name="smeta_id"
-        getInputValue={(selected) => (selected ? `${selected.smeta_number}` : '-')}
+        getInputValue={(selected) =>
+          selected
+            ? `${selected.smeta_number} - ${formatNumber(selected.itogo)} so'm - ${selected.smeta_name}`
+            : '-'
+        }
         {...props}
       />
     )

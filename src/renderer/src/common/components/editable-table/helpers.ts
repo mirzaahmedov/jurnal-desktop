@@ -3,56 +3,56 @@ import type { ZodSchema } from 'zod'
 
 import { focusInvalidInput } from '@renderer/common/lib/errors'
 
-const createEditorCreateHandler =
+export const createEditorCreateHandler =
   ({
     schema,
     form,
-    defaultValues
+    defaultValues,
+    field = 'childs'
   }: {
     schema: ZodSchema<any>
     form: UseFormReturn<any>
     defaultValues: any
+    field?: string
   }) =>
   () => {
-    for (const [index, row] of form.getValues('childs').entries()) {
+    for (const [index, row] of form.getValues(field).entries()) {
       const validation = schema.safeParse(row)
       if (!validation.success) {
         console.log('validation failed for podvodka', index, validation.error)
-        form.trigger('childs').then(() => {
+        form.trigger(field).then(() => {
           focusInvalidInput()
         })
         return
       }
     }
 
-    form.setValue('childs', [...form.getValues('childs'), defaultValues])
+    form.setValue(field, [...form.getValues(field), defaultValues])
   }
 
-const createEditorDeleteHandler =
-  ({ form }: { form: UseFormReturn<any> }) =>
+export const createEditorDeleteHandler =
+  ({ form, field = 'childs' }: { form: UseFormReturn<any>; field?: string }) =>
   ({ id }: { id: number }) => {
-    if (form.getValues('childs').length === 1) {
+    if (form.getValues(field).length === 1) {
       return
     }
     form.setValue(
-      'childs',
-      (form.getValues('childs') as []).filter((_, index) => index !== id)
+      field,
+      (form.getValues(field) as []).filter((_, index) => index !== id)
     )
   }
 
-const createEditorChangeHandler =
-  ({ form }: { form: UseFormReturn<any> }) =>
+export const createEditorChangeHandler =
+  ({ form, field = 'childs' }: { form: UseFormReturn<any>; field?: string }) =>
   ({ id, key, payload }: { id: number; key: any; payload: any }) => {
     form.setValue(
-      'childs',
-      (form.getValues('childs') as []).map((value, index) => {
+      field,
+      (form.getValues(field) as []).map((value, index) => {
         if (index === id) {
           return payload
         }
         return value
       })
     )
-    form.trigger(`childs.${id}.${key as any}` as any)
+    form.trigger(`${field}.${id}.${key as any}` as any)
   }
-
-export { createEditorCreateHandler, createEditorDeleteHandler, createEditorChangeHandler }

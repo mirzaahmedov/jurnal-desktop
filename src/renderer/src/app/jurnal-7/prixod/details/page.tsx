@@ -107,7 +107,7 @@ const Jurnal7PrixodDetailsPage = () => {
         form.trigger('id_shartnomalar_organization')
       },
       params: {
-        organization: form.watch('kimdan_id')
+        organ_id: form.watch('kimdan_id')
       }
     })
   )

@@ -13,9 +13,6 @@ export const defaultValues: ShartnomaFormValues = {
   spravochnik_organization_id: 0,
   doc_num: '',
   doc_date: '',
-  summa: 0,
-  smeta_id: 0,
-  smeta2_id: 0,
   pudratchi_bool: false,
   yillik_oylik: false,
   grafik_year: new Date().getFullYear(),
@@ -32,7 +29,8 @@ export const defaultValues: ShartnomaFormValues = {
       oy_9: 0,
       oy_10: 0,
       oy_11: 0,
-      oy_12: 0
+      oy_12: 0,
+      smeta_id: 0
     }
   ]
 }

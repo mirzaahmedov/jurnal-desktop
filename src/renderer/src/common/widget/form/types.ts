@@ -20,8 +20,9 @@ type FormFieldsComponentProps<TypeData extends Record<string, unknown>, TypeElem
 }
 type FormFieldsComponent<
   TypeData extends Record<string, unknown>,
-  TypeElement = HTMLInputElement
-> = (props: FormFieldsComponentProps<TypeData, TypeElement>) => JSX.Element
+  TypeElement = HTMLInputElement,
+  TypeProps = {}
+> = (props: FormFieldsComponentProps<TypeData, TypeElement> & TypeProps) => JSX.Element
 
 // -----------------------------------------------------------------------------
 // Form Editable Fields Components

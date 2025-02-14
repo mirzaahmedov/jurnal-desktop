@@ -21,7 +21,7 @@ const ListView = ({ children, className, ...props }: ListViewProps) => {
 const ListViewHeader = ({ children, className, ...props }: HTMLAttributes<HTMLDivElement>) => {
   return (
     <div
-      className={cn('p-5', className)}
+      className={cn('p-5 flex items-center flex-wrap', className)}
       {...props}
     >
       {children}

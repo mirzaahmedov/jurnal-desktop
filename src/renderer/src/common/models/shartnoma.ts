@@ -1,4 +1,5 @@
 export type ShartnomaGrafik = {
+  smeta_id: number
   oy_1: number
   oy_2: number
   oy_3: number
@@ -18,9 +19,6 @@ type Shartnoma = {
   spravochnik_organization_id: number
   doc_num: string
   doc_date: string
-  smeta_id: number
-  smeta_number?: number
-  smeta2_id?: number
   opisanie?: string
   summa: number
   pudratchi_bool: boolean

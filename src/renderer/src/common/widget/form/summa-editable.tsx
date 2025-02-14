@@ -1,6 +1,6 @@
 import type { FormEditableFieldsComponent } from './types'
-
 import type { Control } from 'react-hook-form'
+
 import { useTranslation } from 'react-i18next'
 
 import { Fieldset, NumericInput } from '@/common/components'
@@ -12,7 +12,7 @@ import { cn, numberToWords } from '@/common/lib/utils'
 type RequiredSummaEditableFields = {
   summa?: number
 }
-const SummaEditableFields: FormEditableFieldsComponent<RequiredSummaEditableFields> = ({
+export const SummaEditableFields: FormEditableFieldsComponent<RequiredSummaEditableFields> = ({
   tabIndex,
   name,
   form,
@@ -63,5 +63,3 @@ const SummaEditableFields: FormEditableFieldsComponent<RequiredSummaEditableFiel
     </Fieldset>
   )
 }
-
-export { SummaEditableFields }
