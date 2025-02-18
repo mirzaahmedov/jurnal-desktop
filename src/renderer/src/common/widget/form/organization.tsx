@@ -163,12 +163,6 @@ const OrganizationFields: FormSpravochnikFieldsComponent<Organization, Organizat
                       getOptionValue={(o) => o.id}
                       value={field.value ? String(field.value) : ''}
                       onValueChange={(value) => {
-                        {
-                          console.log({
-                            value: value,
-                            options: spravochnikProps.selected?.gaznas ?? []
-                          })
-                        }
                         field.onChange(Number(value))
                       }}
                     />

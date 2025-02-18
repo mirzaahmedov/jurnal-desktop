@@ -3,6 +3,7 @@ import type { Shartnoma } from '@/common/models'
 import type { UseFormReturn } from 'react-hook-form'
 
 import { SelectField } from '@renderer/common/components'
+import { FormElement } from '@renderer/common/components/form'
 import { useTranslation } from 'react-i18next'
 
 import { SpravochnikField, SpravochnikFields } from '@/common/features/spravochnik'
@@ -21,6 +22,8 @@ export const ShartnomaFields: FormSpravochnikFieldsComponent<
   const { t } = useTranslation()
 
   const shartnoma_grafik_id = form?.watch('shartnoma_grafik_id')
+
+  console.log({ shartnoma_grafik_id, grafiks: spravochnikProps.selected?.grafiks ?? [] })
 
   return (
     <SpravochnikFields
@@ -50,15 +53,19 @@ export const ShartnomaFields: FormSpravochnikFieldsComponent<
         />
 
         {form ? (
-          <SelectField
-            options={spravochnikProps.selected?.grafiks ?? []}
-            getOptionValue={(o) => o.id}
-            getOptionLabel={(o) => o.smeta?.smeta_number}
-            value={shartnoma_grafik_id ? String(shartnoma_grafik_id) : ''}
-            onValueChange={(value) => {
-              form?.setValue('shartnoma_grafik_id', value ? Number(value) : 0)
-            }}
-          />
+          <FormElement label={t('smeta')}>
+            <SelectField
+              withFormControl
+              disabled={spravochnikProps.loading}
+              options={spravochnikProps.selected?.grafiks ?? []}
+              getOptionValue={(o) => o.id}
+              getOptionLabel={(o) => o.smeta?.smeta_number}
+              value={shartnoma_grafik_id ? String(shartnoma_grafik_id) : ''}
+              onValueChange={(value) => {
+                form?.setValue('shartnoma_grafik_id', value ? Number(value) : 0)
+              }}
+            />
+          </FormElement>
         ) : null}
       </div>
     </SpravochnikFields>

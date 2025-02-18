@@ -267,6 +267,7 @@ const Jurnal7PrixodDetailsPage = () => {
                 disabled={!form.watch('kimdan_id')}
                 spravochnik={shartnomaSpravochnik}
                 error={form.formState.errors.id_shartnomalar_organization}
+                form={form as any}
               />
               <SummaFields
                 data={{

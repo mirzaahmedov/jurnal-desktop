@@ -93,7 +93,7 @@ const ShartnomaSpravochnikDialog = ({
   params,
   state
 }: SpravochnikDialogProps) => {
-  const organization = params?.organization ? Number(params.organization) : 0
+  const organization = params?.organ_id ? Number(params.organ_id) : 0
 
   const original = state?.original as Shartnoma
 

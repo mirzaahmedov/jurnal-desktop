@@ -190,6 +190,8 @@ export const ShartnomaForm = ({
     )
   }, [grafiks])
 
+  console.log({ errors: form.formState.errors })
+
   return (
     <Form {...form}>
       <form onSubmit={onSubmit}>

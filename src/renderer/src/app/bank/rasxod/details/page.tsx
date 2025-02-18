@@ -180,7 +180,7 @@ const BankRasxodDetailtsPage = () => {
       rukovoditel,
       glav_buxgalter,
       id_shartnomalar_organization,
-      grafik_id,
+      shartnoma_grafik_id,
       organization_by_raschet_schet_id,
       organization_by_raschet_schet_gazna_id,
       summa
@@ -197,7 +197,7 @@ const BankRasxodDetailtsPage = () => {
         opisanie,
         rukovoditel,
         glav_buxgalter,
-        grafik_id,
+        shartnoma_grafik_id,
         organization_by_raschet_schet_id,
         organization_by_raschet_schet_gazna_id,
         childs: podvodki.map(normalizeEmptyFields<RasxodPodvodkaFormValues>)
@@ -213,7 +213,7 @@ const BankRasxodDetailtsPage = () => {
       opisanie,
       rukovoditel,
       glav_buxgalter,
-      grafik_id,
+      shartnoma_grafik_id,
       organization_by_raschet_schet_id,
       organization_by_raschet_schet_gazna_id,
       childs: podvodki.map(normalizeEmptyFields<RasxodPodvodkaFormValues>)

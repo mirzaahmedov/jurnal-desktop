@@ -78,6 +78,7 @@ const PrixodFormSchema = withPreprocessor(
     kimdan_id: z.number(),
     kimga_id: z.number(),
     id_shartnomalar_organization: z.number().optional(),
+    shartnoma_grafik_id: z.number().optional(),
     childs: z.array(PrixodChildFormSchema)
   })
 )
