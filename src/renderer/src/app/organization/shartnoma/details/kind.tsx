@@ -9,7 +9,7 @@ import { FormControl, FormField, FormItem, FormLabel } from '@/common/components
 import { Switch } from '@/common/components/ui/switch'
 import { cn } from '@/common/lib/utils'
 
-const ShartnomaKindFields: FormEditableFieldsComponent<ShartnomaFormValues> = ({
+export const ShartnomaKindFields: FormEditableFieldsComponent<ShartnomaFormValues> = ({
   form,
   name,
   ...props
@@ -50,5 +50,3 @@ const ShartnomaKindFields: FormEditableFieldsComponent<ShartnomaFormValues> = ({
     </Fieldset>
   )
 }
-
-export { ShartnomaKindFields }

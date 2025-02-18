@@ -17,13 +17,34 @@ export interface ShartnomaGrafik {
 
 export interface Shartnoma {
   id: number
-  spravochnik_organization_id: number
   doc_num: string
   doc_date: string
-  opisanie?: string
+  user_id: number
   summa: number
+  opisanie: string
+  smeta_id: any
+  smeta2_id: any
+  spravochnik_organization_id: number
   pudratchi_bool: boolean
-  grafik_year?: number
-  yillik_oylik: boolean
-  grafiks: ShartnomaGrafik[]
+  created_at: string
+  updated_at: string
+  isdeleted: boolean
+  yillik_oylik: any
+  budjet_id: number
+  organization: {
+    id: number
+    name: string
+    okonx: string
+    bank_klient: string
+    raschet_schet: string
+    raschet_schet_gazna: string
+    inn: string
+    mfo: string
+    user_id: number
+    created_at: string
+    updated_at: string
+    isdeleted: boolean
+    parent_id: any
+  }
+  grafiks: Array<ShartnomaGrafik>
 }

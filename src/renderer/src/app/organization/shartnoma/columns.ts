@@ -23,9 +23,5 @@ export const shartnomaColumns: ColumnDef<Shartnoma>[] = [
   },
   {
     key: 'opisanie'
-  },
-  {
-    key: 'smeta_number',
-    header: 'smeta'
   }
 ]

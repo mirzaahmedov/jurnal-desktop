@@ -13,6 +13,7 @@ import {
   DialogHeader,
   DialogTitle
 } from '@renderer/common/components/ui/dialog'
+import { formatDate } from '@renderer/common/lib/date'
 import { CopyPlus } from 'lucide-react'
 import { ZodIssueCode, z } from 'zod'
 
@@ -75,11 +76,11 @@ export const ShartnomaFormSchema = withPreprocessor(
   z.object({
     spravochnik_organization_id: z.number(),
     doc_num: z.string(),
-    doc_date: z.string(),
+    doc_date: z.string().transform((date) => formatDate(date)),
     opisanie: z.string().optional(),
     pudratchi_bool: z.boolean(),
     grafik_year: z.number().optional(),
-    yillik_oylik: z.boolean(),
+    yillik_oylik: z.boolean().optional(),
     grafiks: z.array(ShartnomaGrafikFormSchema)
   })
 )

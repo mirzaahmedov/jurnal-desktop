@@ -117,7 +117,10 @@ const ShartnomaPage = () => {
             getElements={(selected) => [
               { name: 'ИНН:', value: selected?.inn },
               { name: 'МФО:', value: selected?.mfo },
-              { name: 'Расчетный счет:', value: selected?.raschet_schet },
+              {
+                name: 'Расчетный счет:',
+                value: selected?.account_numbers.map((schet) => schet.raschet_schet).join(',')
+              },
               { name: 'Банк:', value: selected?.bank_klient }
             ]}
           />

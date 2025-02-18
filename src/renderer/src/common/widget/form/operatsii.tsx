@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 
 import { SpravochnikField, SpravochnikFields } from '@/common/features/spravochnik'
 
-const OperatsiiFields: FormSpravochnikFieldsComponent<Operatsii> = ({
+export const OperatsiiFields: FormSpravochnikFieldsComponent<Operatsii> = ({
   tabIndex,
   disabled,
   error,
@@ -46,5 +46,3 @@ const OperatsiiFields: FormSpravochnikFieldsComponent<Operatsii> = ({
     </SpravochnikFields>
   )
 }
-
-export { OperatsiiFields }

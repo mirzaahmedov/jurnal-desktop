@@ -86,7 +86,7 @@ const RolePage = lazy(() => import('./super-admin/role/page'))
 const SmetaPage = lazy(() => import('./super-admin/smeta/page'))
 const UnitPage = lazy(() => import('./super-admin/unit/page'))
 const UserPage = lazy(() => import('./super-admin/user/page'))
-const DemoPage = lazy(() => import('./demo/page'))
+const DemoPage = lazy(() => import('./_demo/page'))
 
 const FallbackRoute = () => {
   const user = useAuthenticationStore((store) => store.user)
