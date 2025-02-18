@@ -1,4 +1,4 @@
-import type { ShartnomaSmetaGrafikOptions } from '../types'
+import type { ShartnomaGrafik } from '@/common/models/shartnoma'
 
 import { useEffect, useState } from 'react'
 
@@ -24,7 +24,7 @@ const ScheduleCell: typeof Table.Cell = ({ children, style, ...props }) => {
 
 interface ShartnomaSmetaGrafiksTableProps {
   year: number
-  grafiks: ShartnomaSmetaGrafikOptions[]
+  grafiks: ShartnomaGrafik[]
   paymentDetails: string
   singlePage: boolean
 }
@@ -74,7 +74,9 @@ export const ShartnomaSmetaGrafiksTable = ({
                     borderRightWidth: index === grafiks.length - 1 ? 0 : 1
                   }}
                 >
-                  <ScheduleCell style={{ height: '100%' }}>СТ: {grafik?.sub_schet}</ScheduleCell>
+                  <ScheduleCell style={{ height: '100%' }}>
+                    СТ: {grafik?.smeta?.smeta_number}
+                  </ScheduleCell>
                 </Table.Column>
               ))}
               {grafiks.length < 2
@@ -133,8 +135,8 @@ export const ShartnomaSmetaGrafiksTable = ({
 
 type ScheduleRowProps = {
   name: string
-  field: keyof ShartnomaSmetaGrafikOptions
-  grafiks: ShartnomaSmetaGrafikOptions[]
+  field: keyof ShartnomaGrafik
+  grafiks: ShartnomaGrafik[]
   widths: number[]
   innerWidths: number[]
 }

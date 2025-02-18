@@ -13,7 +13,7 @@ type SpravochnikFieldProps<T> = SpravochnikInputProps<T> & {
   inputRef?: Ref<HTMLInputElement>
   customInput?: React.ReactNode
 }
-const SpravochnikField = <T extends Record<string, unknown>>({
+const SpravochnikField = <T extends object>({
   label,
   formElementProps,
   inputRef,

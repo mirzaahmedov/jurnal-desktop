@@ -1,9 +1,18 @@
-import type { ColumnDef } from '@/common/components'
 import type { Shartnoma } from '@/common/models'
 
 import { IDCell } from '@renderer/common/components/table/renderers/id'
 
+import { type ColumnDef } from '@/common/components'
 import { formatLocaleDate } from '@/common/lib/format'
+
+const ShartnomaSmetaCell = (row: Shartnoma) => {
+  return row.grafiks.map((g, i) => (
+    <>
+      {i !== 0 ? ', ' : null}
+      <b>{g.smeta?.smeta_number}</b>
+    </>
+  ))
+}
 
 export const shartnomaColumns: ColumnDef<Shartnoma>[] = [
   {
@@ -20,6 +29,11 @@ export const shartnomaColumns: ColumnDef<Shartnoma>[] = [
   {
     numeric: true,
     key: 'summa'
+  },
+  {
+    key: 'grafiks',
+    header: 'smeta',
+    renderCell: ShartnomaSmetaCell
   },
   {
     key: 'opisanie'

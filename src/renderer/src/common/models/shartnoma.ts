@@ -1,6 +1,10 @@
+import type { Organization } from './organization'
+import type { Smeta } from './smeta'
+
 export interface ShartnomaGrafik {
-  smeta_id: number
-  sub_schet: string
+  id: number
+  id_shartnomalar_organization: number
+  user_id: number
   oy_1: number
   oy_2: number
   oy_3: number
@@ -13,6 +17,15 @@ export interface ShartnomaGrafik {
   oy_10: number
   oy_11: number
   oy_12: number
+  year: number
+  created_at: string
+  updated_at: string
+  isdeleted: boolean
+  yillik_oylik: boolean
+  budjet_id: number
+  smeta_id: number
+  itogo: number
+  smeta: Smeta
 }
 
 export interface Shartnoma {
@@ -20,7 +33,7 @@ export interface Shartnoma {
   doc_num: string
   doc_date: string
   user_id: number
-  summa: number
+  summa: string
   opisanie: string
   smeta_id: any
   smeta2_id: any
@@ -31,20 +44,6 @@ export interface Shartnoma {
   isdeleted: boolean
   yillik_oylik: any
   budjet_id: number
-  organization: {
-    id: number
-    name: string
-    okonx: string
-    bank_klient: string
-    raschet_schet: string
-    raschet_schet_gazna: string
-    inn: string
-    mfo: string
-    user_id: number
-    created_at: string
-    updated_at: string
-    isdeleted: boolean
-    parent_id: any
-  }
-  grafiks: Array<ShartnomaGrafik>
+  organization: Organization
+  grafiks: ShartnomaGrafik[]
 }

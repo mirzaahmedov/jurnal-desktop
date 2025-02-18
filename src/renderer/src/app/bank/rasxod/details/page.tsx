@@ -85,7 +85,7 @@ const BankRasxodDetailtsPage = () => {
     createOrganizationSpravochnik({
       value: form.watch('id_spravochnik_organization'),
       onChange: (value) => {
-        form.setValue('id_spravochnik_organization', value)
+        form.setValue('id_spravochnik_organization', value ?? 0)
         form.setValue('id_shartnomalar_organization', 0)
         form.trigger('id_spravochnik_organization')
         form.setValue('organization_by_raschet_schet_id', 0)
@@ -180,6 +180,7 @@ const BankRasxodDetailtsPage = () => {
       rukovoditel,
       glav_buxgalter,
       id_shartnomalar_organization,
+      grafik_id,
       organization_by_raschet_schet_id,
       organization_by_raschet_schet_gazna_id,
       summa
@@ -196,6 +197,7 @@ const BankRasxodDetailtsPage = () => {
         opisanie,
         rukovoditel,
         glav_buxgalter,
+        grafik_id,
         organization_by_raschet_schet_id,
         organization_by_raschet_schet_gazna_id,
         childs: podvodki.map(normalizeEmptyFields<RasxodPodvodkaFormValues>)
@@ -211,6 +213,7 @@ const BankRasxodDetailtsPage = () => {
       opisanie,
       rukovoditel,
       glav_buxgalter,
+      grafik_id,
       organization_by_raschet_schet_id,
       organization_by_raschet_schet_gazna_id,
       childs: podvodki.map(normalizeEmptyFields<RasxodPodvodkaFormValues>)
@@ -349,6 +352,7 @@ const BankRasxodDetailtsPage = () => {
                   tabIndex={3}
                   disabled={!form.watch('id_spravochnik_organization')}
                   spravochnik={shartnomaSpravochnik}
+                  form={form as any}
                   error={form.formState.errors.id_shartnomalar_organization}
                 />
               </div>

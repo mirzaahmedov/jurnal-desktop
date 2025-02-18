@@ -45,7 +45,7 @@ type SpravochnikInputProps<T> = InputProps &
     divProps?: HTMLAttributes<HTMLDivElement>
   }
 
-const SpravochnikInput = <T extends Record<string, unknown>>({
+const SpravochnikInput = <T extends object>({
   inputRef,
   loading = false,
   error = false,

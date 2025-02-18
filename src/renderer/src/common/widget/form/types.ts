@@ -59,10 +59,9 @@ type FormSpravochnikFieldsComponentProps<T> = Omit<FieldsetProps, 'name'> & {
   spravochnik: UseSpravochnikReturn<T>
   containerProps?: HTMLAttributes<HTMLDivElement>
 }
-type FormSpravochnikFieldsComponent<
-  T extends Record<string, unknown>,
-  P = Record<string, unknown>
-> = (props: Omit<FormSpravochnikFieldsComponentProps<T>, 'form'> & P) => JSX.Element
+type FormSpravochnikFieldsComponent<T extends object, P = Record<string, unknown>> = (
+  props: Omit<FormSpravochnikFieldsComponentProps<T>, 'form'> & P
+) => JSX.Element
 
 export type {
   FormFieldsComponentProps,
