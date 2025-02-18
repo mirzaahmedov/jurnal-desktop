@@ -29,9 +29,10 @@ const TextBox = ({ children, style, fullWidth = false, ...props }: BoxProps) => 
 const styles = StyleSheet.create({
   textBox: {
     fontWeight: 'bold',
-    fontSize: 11,
     lineHeight: 1,
-    border: '1.5px solid black',
+    paddingTop: 2,
+    borderWidth: 1.5,
+    borderColor: 'black',
     paddingHorizontal: 3
   }
 })

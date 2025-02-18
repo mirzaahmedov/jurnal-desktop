@@ -1,0 +1,174 @@
+import type { ShartnomaSmetaGrafikOptions } from '../types'
+
+import { useEffect, useState } from 'react'
+
+import { Text } from '@react-pdf/renderer'
+import { Table } from '@renderer/common/components/pdf'
+import { monthNames } from '@renderer/common/data/month'
+import { formatNumber } from '@renderer/common/lib/format'
+import { mergeStyles } from '@renderer/common/lib/utils'
+import { useTranslation } from 'react-i18next'
+
+const ScheduleCell: typeof Table.Cell = ({ children, style, ...props }) => {
+  return (
+    <Table.Cell
+      {...props}
+      style={mergeStyles(style, {
+        padding: 1
+      })}
+    >
+      {children}
+    </Table.Cell>
+  )
+}
+
+interface ShartnomaSmetaGrafiksTableProps {
+  year: number
+  grafiks: ShartnomaSmetaGrafikOptions[]
+  paymentDetails: string
+  singlePage: boolean
+}
+export const ShartnomaSmetaGrafiksTable = ({
+  year,
+  grafiks,
+  paymentDetails,
+  singlePage
+}: ShartnomaSmetaGrafiksTableProps) => {
+  const [widths, setWidths] = useState(singlePage ? [15, 60, 25] : [10, 75, 15])
+  const [innerWidths] = useState([100, 100, 100, 100, 100, 100, 100])
+
+  const { t } = useTranslation()
+
+  useEffect(() => {
+    setWidths(singlePage ? [15, 60, 25] : [10, 75, 15])
+  }, [singlePage])
+
+  return (
+    <>
+      <Table>
+        <Table.Row>
+          <Table.Column style={{ width: percentage(widths[0]) }}>
+            <ScheduleCell>{year} йил ойлар номи</ScheduleCell>
+          </Table.Column>
+          <Table.Column
+            style={{
+              width: percentage(widths[1])
+            }}
+          >
+            <Table.Row>
+              <ScheduleCell
+                style={{
+                  width: '100%',
+                  textAlign: 'center'
+                }}
+              >
+                Харажат турлари
+              </ScheduleCell>
+            </Table.Row>
+            <Table.Row style={{ borderBottom: 'none', height: 12 }}>
+              {grafiks?.map((grafik, index) => (
+                <Table.Column
+                  key={index}
+                  style={{
+                    width: percentage(innerWidths[index]),
+                    borderRightWidth: index === grafiks.length - 1 ? 0 : 1
+                  }}
+                >
+                  <ScheduleCell style={{ height: '100%' }}>СТ: {grafik?.smeta_number}</ScheduleCell>
+                </Table.Column>
+              ))}
+            </Table.Row>
+          </Table.Column>
+          <ScheduleCell
+            style={{
+              width: percentage(widths[2])
+            }}
+          >
+            Жами
+          </ScheduleCell>
+        </Table.Row>
+        {monthNames.map(({ name, label }) => (
+          <ScheduleRow
+            key={name}
+            name={t(label, { lng: 'ru' })}
+            field={name}
+            grafiks={grafiks}
+            widths={widths}
+            innerWidths={innerWidths}
+          />
+        ))}
+        <ScheduleRow
+          name="Жами"
+          field="itogo"
+          grafiks={grafiks}
+          widths={widths}
+          innerWidths={innerWidths}
+        />
+      </Table>
+      <Text
+        style={{
+          fontWeight: 'bold',
+          textDecoration: 'underline'
+        }}
+      >
+        {paymentDetails}
+      </Text>
+    </>
+  )
+}
+
+type ScheduleRowProps = {
+  name: string
+  field: keyof ShartnomaSmetaGrafikOptions
+  grafiks: ShartnomaSmetaGrafikOptions[]
+  widths: number[]
+  innerWidths: number[]
+}
+const ScheduleRow = ({ name, field, grafiks, widths, innerWidths }: ScheduleRowProps) => {
+  const itogo = grafiks.reduce((result, grafik) => result + Number(grafik[field]), 0)
+  return (
+    <Table.Row>
+      <Table.Column style={{ width: percentage(widths[0]) }}>
+        <ScheduleCell
+          style={{
+            textAlign: 'left',
+            fontStyle: 'italic',
+            fontWeight: 'bold'
+          }}
+        >
+          {name}
+        </ScheduleCell>
+      </Table.Column>
+      <Table.Column
+        style={{
+          width: percentage(widths[1])
+        }}
+      >
+        <Table.Row style={{ borderBottom: 'none' }}>
+          {grafiks?.map((grafik, index) => (
+            <Table.Column
+              key={index}
+              style={{
+                width: percentage(innerWidths[index]),
+                borderRightWidth: index === grafiks.length - 1 ? 0 : 1
+              }}
+            >
+              <ScheduleCell>{formatNumber(Number(grafik[field]))}</ScheduleCell>
+            </Table.Column>
+          ))}
+        </Table.Row>
+      </Table.Column>
+      <ScheduleCell
+        style={{
+          width: percentage(widths[2])
+        }}
+      >
+        {formatNumber(itogo)}
+      </ScheduleCell>
+    </Table.Row>
+  )
+}
+
+const percentage = (...values: number[]) => {
+  return values.reduce((acc, value) => acc + value, 0) + '%'
+}

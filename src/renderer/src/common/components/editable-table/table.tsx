@@ -119,7 +119,7 @@ export const EditableTable = <T extends Record<string, unknown>>(props: Editable
             <EditableTableRow>
               <EditableTableCell colSpan={100}>
                 <Button
-                  type="submit"
+                  type="button"
                   variant="ghost"
                   className="w-full hover:bg-slate-50 text-brand hover:text-brand"
                   onClick={onCreate}

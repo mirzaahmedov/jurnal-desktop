@@ -45,10 +45,12 @@ export const DocumentFields: FormEditableFieldsComponent<
     documentType: documentType!,
     onChange: (doc_num) => {
       // Todo: fix this
-      ;(form as unknown as UseFormReturn<RequiredDocumentFields>).setValue(
-        'doc_num',
-        doc_num ? doc_num.toString() : ''
-      )
+      if (!(form as unknown as UseFormReturn<RequiredDocumentFields>).getValues('doc_num')) {
+        ;(form as unknown as UseFormReturn<RequiredDocumentFields>).setValue(
+          'doc_num',
+          doc_num ? doc_num.toString() : ''
+        )
+      }
     },
     enabled: autoGenerate && !!documentType
   })

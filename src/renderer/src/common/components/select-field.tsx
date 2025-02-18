@@ -40,6 +40,11 @@ const SelectFieldComponent = <T extends Record<string, unknown>>(
   return (
     <Select
       {...rest}
+      onValueChange={(value) => {
+        if (options.length !== 0) {
+          rest?.onValueChange?.(value)
+        }
+      }}
       disabled={disabled || options.length === 0}
     >
       {withFormControl ? (

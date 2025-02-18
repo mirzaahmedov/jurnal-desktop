@@ -13,16 +13,12 @@ export interface UsePaginationReturn extends PaginationParams {
   onChange: (values: Partial<PaginationParams>) => void
 }
 
-const usePagination = (): UsePaginationReturn => {
+export const usePagination = (): UsePaginationReturn => {
   const [page, setPage] = useLocationState('page', 1)
   const [limit, setLimit] = useLocationState('limit', 10)
 
   const handleChange = useCallback(
     (values: Partial<PaginationValues>) => {
-      setPage((prev) => {
-        console.log(prev)
-        return 1
-      })
       if (values.page) {
         setPage(values.page)
       }
@@ -39,5 +35,3 @@ const usePagination = (): UsePaginationReturn => {
     onChange: handleChange
   }
 }
-
-export { usePagination }

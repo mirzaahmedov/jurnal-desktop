@@ -1,0 +1,26 @@
+{
+  "doc_num": "TO'LOV TOPSHIRIQNOMASI RAQAMI",
+  "doc_date": "Hujjat sanasi",
+  "valuation_date": "Valyutalashtirish sanasi",
+
+  "debtor": "Mablag'larni to'lovchining",
+  "debet": "DEBET",
+  "creditor": "Mablag'larni oluvchining",
+  "credit": "KREDIT",
+
+  "name": "nomi",
+  "account_number": "hisobvarag'i",
+  "inn": "STIRi",
+  "bank": "banki nomi",
+  "mfo": "banki kodi",
+  "summa": "Summa",
+
+  "summa_words": "Summa (so'z bilan)",
+  "gazna_account_number": "Daromad shaxsiy g''aznahisob varag'i",
+  "opisanie": "To'lov maqsadi",
+  "rukovoditel": "Rahbar",
+  "glav_buxgalter": "Bosh buхgalter",
+  "verified": "Tekshirilgan",
+  "approved": "Ma'qullangan",
+  "transfered": "Bank tomonidan o'tkazilgan"
+}

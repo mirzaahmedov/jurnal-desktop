@@ -168,13 +168,6 @@ export const getNavElements = (t: TFunction): NavElement[] => {
                   icon: ReceiptText
                 }
               : null,
-            // permissions.shartnoma
-            //   ? {
-            //       path: 'shartnoma-grafik',
-            //       title: t('pages.shartnoma-grafik'),
-            //       icon: CalendarCheck
-            //     }
-            //   : null,
             permissions.jur3
               ? {
                   path: 'akt',
@@ -502,13 +495,13 @@ export const getNavElements = (t: TFunction): NavElement[] => {
       path: '/region-data',
       title: t('pages.region-data'),
       icon: Database
-    }
-    // import.meta.env.DEV
-    //   ? {
-    //       path: '/demo',
-    //       title: 'Demo page',
-    //       icon: Database
-    //     }
-    //   : null
+    },
+    import.meta.env.DEV
+      ? {
+          path: '/demo',
+          title: 'Demo page',
+          icon: Database
+        }
+      : null
   ])
 }

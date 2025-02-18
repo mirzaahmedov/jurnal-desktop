@@ -44,7 +44,8 @@ export const ShartnomaGrafikFormSchema = z
     oy_10: z.number(),
     oy_11: z.number(),
     oy_12: z.number(),
-    smeta_id: z.number().min(1)
+    smeta_id: z.number().min(1),
+    sub_schet: z.string().optional()
   })
   .superRefine((values, ctx) => {
     if (

@@ -2,9 +2,9 @@ import type { ColumnDef } from '@/common/components'
 import type { APIEndpoints, CRUDService } from '@/common/features/crud'
 import type { DialogProps } from '@radix-ui/react-dialog'
 import type { GenericTableProps } from '@renderer/common/components/generic-table/table'
+import type { useToggle } from '@renderer/common/hooks'
 import type { ComponentType, Dispatch, SetStateAction } from 'react'
 
-import type { useToggle } from '@renderer/common/hooks'
 import { create } from 'zustand'
 
 export type FilterComponentProps<
@@ -22,7 +22,7 @@ export type SpravochnikDialogProps = DialogProps & {
   state?: SpravochnikLocalState
   setState?: Dispatch<SetStateAction<SpravochnikLocalState>>
 }
-export type SpravochnikTableProps<T extends Record<string, unknown>> = {
+export type SpravochnikTableProps<T extends object> = {
   data: T[]
   columnDefs: ColumnDef<T>[]
   selectedRowId?: string

@@ -21,18 +21,18 @@ const tens = [
 const hundred = 'yuz'
 const thousands = ['', 'ming', 'million', 'milliard', 'trillion', 'kuadrillion']
 
-const getDecimalPart = (value: number) => {
+export const getDecimalPart = (value: number) => {
   return Math.round((value + Number.EPSILON) * 100) % 100
 }
 
-const capitalize = (str: string): string => {
+export const capitalize = (str: string): string => {
   if (!str || typeof str !== 'string') {
     return ''
   }
   return str.charAt(0).toUpperCase() + str.slice(1)
 }
 
-const numberToWords = (num: number, initial: boolean = true): string => {
+export const numberToWords = (num: number, initial: boolean = true): string => {
   if (initial) {
     const decimalPart = getDecimalPart(num)
     const integerPart = Math.floor(num)
@@ -86,7 +86,7 @@ const numberToWords = (num: number, initial: boolean = true): string => {
   return results.join(' ')
 }
 
-const extendObject = <T extends Record<string, unknown>, D extends Record<string, unknown>>(
+export const extendObject = <T extends Record<string, unknown>, D extends Record<string, unknown>>(
   target: T | undefined,
   data: D
 ): T & D => {
@@ -96,11 +96,11 @@ const extendObject = <T extends Record<string, unknown>, D extends Record<string
   return Object.assign(target, data)
 }
 
-const roundNumberToTwoDecimalPlaces = (num: number): number => {
+export const roundNumberToTwoDecimalPlaces = (num: number): number => {
   return Math.round(num * 100) / 100
 }
 
-const splitStringByLength = (str: string, n: number): string[] => {
+export const splitStringByLength = (str: string, n: number): string[] => {
   const result: string[] = []
   for (let i = 0; i < str.length; i += n) {
     result.push(str.slice(i, i + n))
@@ -108,7 +108,7 @@ const splitStringByLength = (str: string, n: number): string[] => {
   return result
 }
 
-const mergeStyles = (...styles: any[]) => {
+export const mergeStyles = (...styles: any[]) => {
   return styles.reduce((acc, style) => {
     if (!style) {
       return acc
@@ -122,17 +122,31 @@ const mergeStyles = (...styles: any[]) => {
   }, {})
 }
 
-const parseCSSNumericValue = (value: string) => {
+export const parseCSSNumericValue = (value: string) => {
   return parseFloat(value.replace(/[^0-9.-]/g, ''))
 }
 
-export {
-  mergeStyles,
-  numberToWords,
-  capitalize,
-  getDecimalPart,
-  extendObject,
-  roundNumberToTwoDecimalPlaces,
-  splitStringByLength,
-  parseCSSNumericValue
+export const monthFields = [
+  'oy_1',
+  'oy_2',
+  'oy_3',
+  'oy_4',
+  'oy_5',
+  'oy_6',
+  'oy_7',
+  'oy_8',
+  'oy_9',
+  'oy_10',
+  'oy_11',
+  'oy_12'
+] as const
+export type MonthField = (typeof monthFields)[number]
+
+export const calculateAnnualTotalSum = (values: Record<MonthField, number>) => {
+  return monthFields.reduce((result, field) => {
+    if (field in values) {
+      return result + values[field]
+    }
+    return result
+  }, 0)
 }

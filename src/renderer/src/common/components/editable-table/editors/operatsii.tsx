@@ -110,6 +110,11 @@ export const createOperatsiiEditor = <T extends { spravochnik_operatsii_id?: num
           {({ open, close }) => (
             <SpravochnikInput
               {...operatsiiSpravochnik}
+              clear={() => {
+                operatsiiSpravochnik.clear()
+                setSchet('')
+                setSubschet('')
+              }}
               editor
               type="text"
               tabIndex={tabIndex}
@@ -163,6 +168,11 @@ export const createOperatsiiEditor = <T extends { spravochnik_operatsii_id?: num
           {({ open, close }) => (
             <SpravochnikInput
               {...operatsiiSpravochnik}
+              clear={() => {
+                operatsiiSpravochnik.clear()
+                setSchet('')
+                setSubschet('')
+              }}
               editor
               type="text"
               inputRef={inputRef}

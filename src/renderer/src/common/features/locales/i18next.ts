@@ -1,7 +1,23 @@
 import i18next from 'i18next'
-import httpBackend from 'i18next-http-backend'
 import { initReactI18next } from 'react-i18next'
 import { z } from 'zod'
+
+import appRU from './translations/ru/app.json'
+import commonRU from './translations/ru/common.json'
+import dashboardRU from './translations/ru/dashboard.json'
+import podotchetRU from './translations/ru/podotchet.json'
+import podpisRU from './translations/ru/podpis.json'
+import porucheniyaRU from './translations/ru/porucheniya.json'
+import signInRU from './translations/ru/sign-in.json'
+import userRU from './translations/ru/user.json'
+import appUZ from './translations/uz/app.json'
+import commonUZ from './translations/uz/common.json'
+import dashboardUZ from './translations/uz/dashboard.json'
+import podotchetUZ from './translations/uz/podotchet.json'
+import podpisUZ from './translations/uz/podpis.json'
+import porucheniyaUZ from './translations/uz/porucheniya.json'
+import signInUZ from './translations/uz/sign-in.json'
+import userUZ from './translations/uz/user.json'
 
 const localeSchema = z.enum(['uz', 'ru']).catch('ru')
 
@@ -11,22 +27,38 @@ i18next.on('languageChanged', (lang) => {
 
 export const initLocales = () => {
   const lang = localeSchema.safeParse(localStorage.getItem('app-lang'))
-  return i18next
-    .use(httpBackend)
-    .use(initReactI18next)
-    .init({
-      lng: lang.data,
-      fallbackLng: 'ru',
+  return i18next.use(initReactI18next).init({
+    lng: lang.data,
+    fallbackLng: 'ru',
 
-      defaultNS: 'common',
-      fallbackNS: ['common'],
+    defaultNS: 'common',
+    fallbackNS: ['common'],
 
-      backend: {
-        loadPath: './locales/{{lng}}/{{ns}}.json'
+    resources: {
+      ru: {
+        app: appRU,
+        common: commonRU,
+        dashboard: dashboardRU,
+        podotchet: podotchetRU,
+        podpis: podpisRU,
+        porucheniya: porucheniyaRU,
+        'sign-in': signInRU,
+        user: userRU
       },
-
-      interpolation: {
-        escapeValue: false
+      uz: {
+        app: appUZ,
+        common: commonUZ,
+        dashboard: dashboardUZ,
+        podotchet: podotchetUZ,
+        podpis: podpisUZ,
+        porucheniya: porucheniyaUZ,
+        'sign-in': signInUZ,
+        user: userUZ
       }
-    })
+    },
+
+    interpolation: {
+      escapeValue: false
+    }
+  })
 }

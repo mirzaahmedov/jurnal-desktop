@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 10
+    gap: 5
   }
 })
 Flex.Item = FlexItem

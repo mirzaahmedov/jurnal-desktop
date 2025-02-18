@@ -20,6 +20,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { type Location, useLocation, useNavigate, useParams } from 'react-router-dom'
+import { toast } from 'react-toastify'
 
 import { mainSchetQueryKeys, mainSchetService } from '@/app/region-spravochnik/main-schet'
 import { AccountBalance, Fieldset } from '@/common/components'
@@ -44,8 +45,8 @@ import {
 import { bankMonitorQueryKeys, bankMonitorService } from '../../monitor'
 import { defaultValues, queryKeys } from '../constants'
 import { RasxodFormSchema, RasxodPodvodkaFormSchema, bankRasxodService } from '../service'
-import { GeneratePorucheniya } from './generate-porucheniya'
 import { podvodkaColumns } from './podvodki'
+import { PorucheniyaDropdown } from './porucheniya-dropdown'
 
 const shartnomaRegExp = /№ (.*?)-сонли \d{2}.\d{2}.\d{4} йил кунги шартномага асосан\s?/
 const smetaRegExp = / Ст:(.*?)$/
@@ -138,8 +139,9 @@ const BankRasxodDetailtsPage = () => {
   })
   const { mutate: create, isPending: isCreating } = useMutation({
     mutationFn: bankRasxodService.create,
-    onSuccess() {
+    onSuccess(response) {
       form.reset(defaultValues)
+      toast.success(response?.message ?? t('action-successful'))
       navigate(-1)
       queryClient.invalidateQueries({
         queryKey: [queryKeys.getAll]
@@ -147,18 +149,25 @@ const BankRasxodDetailtsPage = () => {
       queryClient.invalidateQueries({
         queryKey: [queryKeys.getById, params.id]
       })
+    },
+    onError(error) {
+      toast.error(error.message ?? t('something-went-wrong'))
     }
   })
   const { mutate: update, isPending: isUpdating } = useMutation({
     mutationFn: bankRasxodService.update,
-    onSuccess() {
+    onSuccess(response) {
       navigate(-1)
+      toast.success(response?.message ?? t('action-successful'))
       queryClient.invalidateQueries({
         queryKey: [queryKeys.getAll]
       })
       queryClient.invalidateQueries({
         queryKey: [queryKeys.getById, params.id]
       })
+    },
+    onError(error) {
+      toast.error(error.message ?? t('something-went-wrong'))
     }
   })
 
@@ -328,6 +337,7 @@ const BankRasxodDetailtsPage = () => {
                   tabIndex={2}
                   error={form.formState.errors.id_spravochnik_organization}
                   spravochnik={orgSpravochnik}
+                  disabled={isFetching}
                   className="bg-slate-50"
                   name={t('receiver-info')}
                 />
@@ -377,27 +387,10 @@ const BankRasxodDetailtsPage = () => {
 
               {main_schet?.data && orgSpravochnik.selected ? (
                 <ButtonGroup borderStyle="dashed">
-                  <GeneratePorucheniya
-                    type="porucheniya"
-                    tabIndex={8}
-                    fileName={`поручения-${form.watch('doc_num')}.xlsx`}
-                    buttonText={t('create-porucheniya')}
-                    data={{
-                      rasxod: form.getValues(),
-                      main_schet: main_schet.data,
-                      organization: orgSpravochnik.selected
-                    }}
-                  />
-                  <GeneratePorucheniya
-                    type="porucheniya_nalog"
-                    tabIndex={8}
-                    fileName={`поручения-${form.watch('doc_num')}_налог.xlsx`}
-                    buttonText={`${t('create-porucheniya')} (${t('tax')})`}
-                    data={{
-                      rasxod: form.getValues(),
-                      main_schet: main_schet.data,
-                      organization: orgSpravochnik.selected
-                    }}
+                  <PorucheniyaDropdown
+                    rasxod={form.getValues()}
+                    main_schet={main_schet.data}
+                    organization={orgSpravochnik.selected}
                   />
                 </ButtonGroup>
               ) : null}

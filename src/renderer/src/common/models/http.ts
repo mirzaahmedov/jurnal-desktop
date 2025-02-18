@@ -11,6 +11,7 @@ export type Response<T, M = ResponseMeta> =
       success: true
       data: T
       meta: M extends undefined ? ResponseMeta : M
+      message?: string
     }
   | {
       success: false

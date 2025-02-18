@@ -24,13 +24,15 @@ const Seperator = ({ vertical, fullWidth = false }: SeperatorProps) => {
 const styles = StyleSheet.create({
   lineHorizontal: {
     height: 1,
-    borderBottom: '1px dashed black',
-    marginVertical: 5
+    borderBottomWidth: 1,
+    borderStyle: 'dotted',
+    marginVertical: 1
   },
   lineVertical: {
     height: '100%',
     width: 1,
-    borderRight: '1px dashed black'
+    borderRightWidth: 1,
+    borderStyle: 'dotted'
   }
 })
 

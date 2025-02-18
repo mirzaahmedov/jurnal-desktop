@@ -114,7 +114,7 @@ const BankRasxodPage = () => {
             <FooterRow>
               <FooterCell
                 title={t('total')}
-                content={formatNumber(rasxodList?.meta?.summa ?? 1)}
+                content={formatNumber(rasxodList?.meta?.summa ?? 0)}
                 colSpan={5}
               />
             </FooterRow>

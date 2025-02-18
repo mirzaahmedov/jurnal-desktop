@@ -44,10 +44,6 @@ const AktPage = lazy(() => import('./organization/akt/page'))
 const OrganizationMonitorPage = lazy(() => import('./organization/monitor/page'))
 const PokazatUslugiDetailsPage = lazy(() => import('./organization/pokazat-uslugi/details/page'))
 const PokazatUslugiPage = lazy(() => import('./organization/pokazat-uslugi/page'))
-const ShartnomaGrafikDetailsPage = lazy(
-  () => import('./organization/shartnoma-grafik/details/page')
-)
-const ShartnomaGrafikPage = lazy(() => import('./organization/shartnoma-grafik/page'))
 const ShartnomaDetailsPage = lazy(() => import('./organization/shartnoma/details/page'))
 const ShartnomaPage = lazy(() => import('./organization/shartnoma/page'))
 const OXDetailsPage = lazy(() => import('./ox-report/ox-report/details/page'))
@@ -90,6 +86,7 @@ const RolePage = lazy(() => import('./super-admin/role/page'))
 const SmetaPage = lazy(() => import('./super-admin/smeta/page'))
 const UnitPage = lazy(() => import('./super-admin/unit/page'))
 const UserPage = lazy(() => import('./super-admin/user/page'))
+const DemoPage = lazy(() => import('./demo/page'))
 
 const FallbackRoute = () => {
   const user = useAuthenticationStore((store) => store.user)
@@ -124,14 +121,6 @@ export const routes: RouteObject[] = [
           {
             path: 'shartnoma/:id',
             element: <ShartnomaDetailsPage />
-          },
-          {
-            path: 'shartnoma-grafik',
-            element: <ShartnomaGrafikPage />
-          },
-          {
-            path: 'shartnoma-grafik/:id',
-            element: <ShartnomaGrafikDetailsPage />
           },
           {
             path: 'akt',
@@ -479,7 +468,7 @@ export const routes: RouteObject[] = [
       },
       {
         path: 'demo',
-        element: null
+        element: import.meta.env.DEV ? <DemoPage /> : null
       },
       {
         path: '*',

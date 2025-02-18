@@ -1,5 +1,6 @@
-export type ShartnomaGrafik = {
+export interface ShartnomaGrafik {
   smeta_id: number
+  sub_schet: string
   oy_1: number
   oy_2: number
   oy_3: number
@@ -14,7 +15,7 @@ export type ShartnomaGrafik = {
   oy_12: number
 }
 
-type Shartnoma = {
+export interface Shartnoma {
   id: number
   spravochnik_organization_id: number
   doc_num: string
@@ -26,5 +27,3 @@ type Shartnoma = {
   yillik_oylik: boolean
   grafiks: ShartnomaGrafik[]
 }
-
-export type { Shartnoma }

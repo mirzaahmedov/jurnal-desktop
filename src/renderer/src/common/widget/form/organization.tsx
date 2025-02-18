@@ -37,7 +37,7 @@ const OrganizationFields: FormSpravochnikFieldsComponent<Organization, Organizat
   const { t } = useTranslation()
 
   useEffect(() => {
-    if (!form) {
+    if (!form || form.getValues('organization_by_raschet_schet_id')) {
       return
     }
 
@@ -120,16 +120,13 @@ const OrganizationFields: FormSpravochnikFieldsComponent<Organization, Organizat
                   <SelectField
                     {...field}
                     withFormControl
-                    disabled={spravochnikProps.loading}
+                    disabled={disabled || spravochnikProps.loading}
                     options={spravochnikProps.selected?.account_numbers ?? []}
                     getOptionLabel={(o) => o.raschet_schet}
                     getOptionValue={(o) => o.id}
                     value={field.value ? String(field.value) : ''}
                     onValueChange={(value) => {
                       field.onChange(Number(value))
-                      if (value) {
-                        form.resetField('organization_by_raschet_schet_gazna_id')
-                      }
                     }}
                   />
                   <Button
@@ -160,16 +157,19 @@ const OrganizationFields: FormSpravochnikFieldsComponent<Organization, Organizat
                     <SelectField
                       {...field}
                       withFormControl
-                      disabled={spravochnikProps.loading}
+                      disabled={disabled || spravochnikProps.loading || !spravochnikProps.selected}
                       options={spravochnikProps.selected?.gaznas ?? []}
                       getOptionLabel={(o) => o.raschet_schet_gazna}
                       getOptionValue={(o) => o.id}
                       value={field.value ? String(field.value) : ''}
                       onValueChange={(value) => {
-                        field.onChange(Number(value))
-                        if (value) {
-                          form.resetField('organization_by_raschet_schet_id')
+                        {
+                          console.log({
+                            value: value,
+                            options: spravochnikProps.selected?.gaznas ?? []
+                          })
                         }
+                        field.onChange(Number(value))
                       }}
                     />
                     <Button

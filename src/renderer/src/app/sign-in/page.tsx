@@ -52,8 +52,8 @@ const SigninPage = () => {
         })
       }
       setUser({
-        token: res.data.token,
-        user: res.data.result
+        token: res.data?.token,
+        user: res.data?.result
       })
       queryClient.clear()
       toast.success('Вы успешно вошли в систему')

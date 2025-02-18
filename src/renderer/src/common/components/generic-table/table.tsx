@@ -20,7 +20,7 @@ import { twMerge } from 'tailwind-merge'
 import { EmptyList } from '../empty-states'
 import { GenericTableCell, GenericTableHead, GenericTableRow } from './components'
 
-export type ColumnDef<T extends Record<string, unknown>> = {
+export type ColumnDef<T extends object> = {
   numeric?: boolean
   fit?: boolean
   stretch?: boolean
@@ -34,7 +34,7 @@ export type ColumnDef<T extends Record<string, unknown>> = {
   renderCell?(row: T, col: ColumnDef<T>): ReactNode
 }
 
-export type HeaderGroup<T extends Record<string, unknown>> = {
+export type HeaderGroup<T extends object> = {
   numeric?: boolean
   fit?: boolean
   stretch?: boolean
@@ -46,23 +46,22 @@ export type HeaderGroup<T extends Record<string, unknown>> = {
   renderHeader?(row: T): ReactNode
 }
 
-export type GenericTableProps<T extends Record<string, unknown>> =
-  TableHTMLAttributes<HTMLTableElement> &
-    TableProps & {
-      caption?: string
-      data: T[]
-      columnDefs: ColumnDef<T>[]
-      headerGroups?: HeaderGroup<T>[][]
-      placeholder?: string
-      getRowId?(row: T): string | number
-      onClickRow?(row: T): void
-      onDelete?(row: T): void
-      onEdit?(row: T): void
-      customActions?: (row: T) => ReactNode
-      selectedRowId?: string | number
-      footer?: ReactNode
-    }
-export const GenericTable = <T extends Record<string, unknown>>({
+export type GenericTableProps<T extends object> = TableHTMLAttributes<HTMLTableElement> &
+  TableProps & {
+    caption?: string
+    data: T[]
+    columnDefs: ColumnDef<T>[]
+    headerGroups?: HeaderGroup<T>[][]
+    placeholder?: string
+    getRowId?(row: T): string | number
+    onClickRow?(row: T): void
+    onDelete?(row: T): void
+    onEdit?(row: T): void
+    customActions?: (row: T) => ReactNode
+    selectedRowId?: string | number
+    footer?: ReactNode
+  }
+export const GenericTable = <T extends object>({
   caption,
   data,
   columnDefs,
@@ -241,10 +240,7 @@ export const GenericTable = <T extends Record<string, unknown>>({
   )
 }
 
-const defaultCellRenderer = <T extends Record<string, unknown>>(
-  row: T,
-  col: ColumnDef<T>
-): ReactNode => {
+const defaultCellRenderer = <T extends object>(row: T, col: ColumnDef<T>): ReactNode => {
   if (col.numeric) {
     return row[col.key as keyof T] ? formatNumber(Number(row[col.key as keyof T])) : '-'
   }
