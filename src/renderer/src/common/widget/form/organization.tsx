@@ -2,8 +2,6 @@ import type { FormSpravochnikFieldsComponent } from './types'
 import type { Organization } from '@/common/models'
 import type { UseFormReturn } from 'react-hook-form'
 
-import { useEffect } from 'react'
-
 import { SelectField } from '@renderer/common/components'
 import { FormElement } from '@renderer/common/components/form'
 import { Button } from '@renderer/common/components/ui/button'
@@ -35,18 +33,6 @@ const OrganizationFields: FormSpravochnikFieldsComponent<Organization, Organizat
   const { inputRef, ...spravochnikProps } = spravochnik
 
   const { t } = useTranslation()
-
-  useEffect(() => {
-    if (!form || form.getValues('organization_by_raschet_schet_id')) {
-      return
-    }
-
-    const { account_numbers } = spravochnikProps.selected ?? {}
-
-    if (Array.isArray(account_numbers) && account_numbers.length === 1) {
-      form.setValue('organization_by_raschet_schet_id', account_numbers[0].id)
-    }
-  }, [form, spravochnikProps.selected])
 
   return (
     <SpravochnikFields

@@ -84,9 +84,17 @@ const Jurnal7PrixodDetailsPage = () => {
   const orgSpravochnik = useSpravochnik(
     createOrganizationSpravochnik({
       value: form.watch('kimdan_id'),
-      onChange: (value) => {
-        form.setValue('kimdan_id', value)
+      onChange: (value, organization) => {
+        form.setValue('kimdan_id', value ?? 0)
         form.trigger('kimdan_id')
+
+        if (organization?.account_numbers?.length === 1) {
+          form.setValue('organization_by_raschet_schet_id', organization.account_numbers[0].id)
+        } else {
+          form.setValue('organization_by_raschet_schet_id', 0)
+        }
+
+        form.setValue('organization_by_raschet_schet_gazna_id', 0)
       }
     })
   )
@@ -94,7 +102,7 @@ const Jurnal7PrixodDetailsPage = () => {
     createResponsibleSpravochnik({
       value: form.watch('kimga_id'),
       onChange: (value) => {
-        form.setValue('kimga_id', value)
+        form.setValue('kimga_id', value ?? 0)
         form.trigger('kimga_id')
       }
     })
@@ -252,6 +260,7 @@ const Jurnal7PrixodDetailsPage = () => {
                 tabIndex={4}
                 name={t('from-who')}
                 spravochnik={orgSpravochnik}
+                form={form as any}
                 error={form.formState.errors.kimdan_id}
               />
               <ResponsibleFields

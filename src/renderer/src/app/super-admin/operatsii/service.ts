@@ -51,6 +51,19 @@ export const getOperatsiiSchetOptionsQuery = async (
 
 export const operatsiiService = new CRUDService<Operatsii, OperatsiiForm>({
   endpoint: APIEndpoints.operatsii
+}).forRequest((type, { config }) => {
+  if (type === 'getAll') {
+    const params = config.params
+    if (params?.type_schet === TypeSchetOperatsii.ALL) {
+      delete params.type_schet
+    }
+    return {
+      config: {
+        params
+      }
+    }
+  }
+  return {}
 })
 
 export const createOperatsiiSpravochnik = (config: Partial<SpravochnikHookOptions<Operatsii>>) => {

@@ -29,7 +29,10 @@ export const PokazatUslugiFormSchema = withPreprocessor(
     opisanie: z.string().optional(),
     spravochnik_operatsii_own_id: z.number(),
     id_spravochnik_organization: z.number(),
+    shartnoma_grafik_id: z.number().optional(),
     shartnomalar_organization_id: z.number().optional(),
+    organization_by_raschet_schet_id: z.number(),
+    organization_by_raschet_schet_gazna_id: z.number().optional(),
     childs: z.array(PokazatUslugiProvodkaFormSchema).superRefine(validateProvodkaOperatsii)
   })
 )

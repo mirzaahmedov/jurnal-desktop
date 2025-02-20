@@ -33,6 +33,7 @@ export const shartnomaService = new CRUDService<Shartnoma, ShartnomaFormValues>(
 
 export const ShartnomaGrafikFormSchema = z
   .object({
+    id: z.number().optional(),
     oy_1: z.number(),
     oy_2: z.number(),
     oy_3: z.number(),

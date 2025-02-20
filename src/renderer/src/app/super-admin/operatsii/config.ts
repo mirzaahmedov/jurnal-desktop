@@ -45,6 +45,10 @@ export const operatsiiTypeSchetOptions = [
   {
     value: TypeSchetOperatsii.GENERAL,
     label: 'Общий'
+  },
+  {
+    value: TypeSchetOperatsii.ALL,
+    label: 'Все'
   }
 ] as const satisfies {
   value: TypeSchetOperatsii

@@ -15,7 +15,7 @@ import {
 } from '@renderer/common/components/editable-table/helpers'
 import { Form } from '@renderer/common/components/ui/form'
 import { DocumentType } from '@renderer/common/features/doc-num'
-import { useLayout, useLayoutStore } from '@renderer/common/features/layout'
+import { useLayoutStore } from '@renderer/common/features/layout'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
 import { useSpravochnik } from '@renderer/common/features/spravochnik'
 import { useToast } from '@renderer/common/hooks/use-toast'
@@ -59,10 +59,18 @@ const AktDetailsPage = () => {
   const orgSpravochnik = useSpravochnik(
     createOrganizationSpravochnik({
       value: form.watch('id_spravochnik_organization'),
-      onChange: (value) => {
+      onChange: (value, organization) => {
         form.setValue('shartnomalar_organization_id', 0)
-        form.setValue('id_spravochnik_organization', value)
+        form.setValue('id_spravochnik_organization', value ?? 0)
         form.trigger('id_spravochnik_organization')
+
+        if (organization?.account_numbers?.length === 1) {
+          form.setValue('organization_by_raschet_schet_id', organization.account_numbers[0].id)
+        } else {
+          form.setValue('organization_by_raschet_schet_id', 0)
+        }
+
+        form.setValue('organization_by_raschet_schet_gazna_id', 0)
       }
     })
   )
@@ -71,7 +79,7 @@ const AktDetailsPage = () => {
     createOperatsiiSpravochnik({
       value: form.watch('spravochnik_operatsii_own_id'),
       onChange: (value) => {
-        form.setValue('spravochnik_operatsii_own_id', value)
+        form.setValue('spravochnik_operatsii_own_id', value ?? 0)
         form.trigger('spravochnik_operatsii_own_id')
       },
       params: {
@@ -151,7 +159,10 @@ const AktDetailsPage = () => {
       doc_num,
       id_spravochnik_organization,
       spravochnik_operatsii_own_id,
+      shartnoma_grafik_id,
       shartnomalar_organization_id,
+      organization_by_raschet_schet_id,
+      organization_by_raschet_schet_gazna_id,
       opisanie,
       summa
     } = payload
@@ -163,7 +174,10 @@ const AktDetailsPage = () => {
         doc_num,
         spravochnik_operatsii_own_id,
         shartnomalar_organization_id,
+        shartnoma_grafik_id,
         id_spravochnik_organization,
+        organization_by_raschet_schet_id,
+        organization_by_raschet_schet_gazna_id,
         opisanie,
         summa,
         childs: podvodki.map(normalizeEmptyFields<AktProvodkaForm>)
@@ -176,6 +190,9 @@ const AktDetailsPage = () => {
       spravochnik_operatsii_own_id,
       shartnomalar_organization_id,
       id_spravochnik_organization,
+      shartnoma_grafik_id,
+      organization_by_raschet_schet_id,
+      organization_by_raschet_schet_gazna_id,
       opisanie,
       summa,
       childs: podvodki.map(normalizeEmptyFields<AktProvodkaForm>)
@@ -251,6 +268,7 @@ const AktDetailsPage = () => {
                 <OrganizationFields
                   tabIndex={3}
                   spravochnik={orgSpravochnik}
+                  form={form as any}
                   error={form.formState.errors.id_spravochnik_organization}
                   name={t('supplier')}
                   className="bg-slate-50"
@@ -260,6 +278,7 @@ const AktDetailsPage = () => {
                     tabIndex={4}
                     disabled={!form.watch('id_spravochnik_organization')}
                     spravochnik={shartnomaSpravochnik}
+                    form={form as any}
                     error={form.formState.errors.shartnomalar_organization_id}
                   />
                   <SummaFields data={{ summa: form.watch('summa') }} />

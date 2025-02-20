@@ -31,6 +31,9 @@ const AktFormSchema = withPreprocessor(
     spravochnik_operatsii_own_id: z.number(),
     id_spravochnik_organization: z.number(),
     shartnomalar_organization_id: z.number().optional(),
+    shartnoma_grafik_id: z.number().optional(),
+    organization_by_raschet_schet_id: z.number(),
+    organization_by_raschet_schet_gazna_id: z.number().optional(),
     childs: z.array(AktProvodkaFormSchema).superRefine(validateProvodkaOperatsii)
   })
 )

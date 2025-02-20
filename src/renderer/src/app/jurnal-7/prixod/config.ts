@@ -25,6 +25,7 @@ const defaultValues: PrixodFormType = {
   kimdan_id: 0,
   kimga_id: 0,
   id_shartnomalar_organization: 0,
+  organization_by_raschet_schet_id: 0,
   childs: [
     {
       name: '',
@@ -78,6 +79,8 @@ const PrixodFormSchema = withPreprocessor(
     kimdan_id: z.number(),
     kimga_id: z.number(),
     id_shartnomalar_organization: z.number().optional(),
+    organization_by_raschet_schet_id: z.number(),
+    organization_by_raschet_schet_gazna_id: z.number().optional(),
     shartnoma_grafik_id: z.number().optional(),
     childs: z.array(PrixodChildFormSchema)
   })

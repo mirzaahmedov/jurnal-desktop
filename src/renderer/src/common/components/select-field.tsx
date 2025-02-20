@@ -41,7 +41,7 @@ const SelectFieldComponent = <T extends Record<string, unknown>>(
     <Select
       {...rest}
       onValueChange={(value) => {
-        if (options.length !== 0) {
+        if (options.length !== 0 && value) {
           rest?.onValueChange?.(value)
         }
       }}

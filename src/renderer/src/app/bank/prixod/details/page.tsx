@@ -57,10 +57,18 @@ const BankPrixodDetailsPage = () => {
   const orgSpravochnik = useSpravochnik(
     createOrganizationSpravochnik({
       value: form.watch('id_spravochnik_organization'),
-      onChange: (value) => {
-        form.setValue('id_spravochnik_organization', value)
+      onChange: (value, organization) => {
+        form.setValue('id_spravochnik_organization', value ?? 0)
         form.setValue('id_shartnomalar_organization', 0)
         form.trigger('id_spravochnik_organization')
+
+        if (organization?.account_numbers?.length === 1) {
+          form.setValue('organization_by_raschet_schet_id', organization.account_numbers[0].id)
+        } else {
+          form.setValue('organization_by_raschet_schet_id', 0)
+        }
+
+        form.setValue('organization_by_raschet_schet_gazna_id', 0)
       }
     })
   )
@@ -135,6 +143,9 @@ const BankPrixodDetailsPage = () => {
       id_spravochnik_organization,
       opisanie,
       id_shartnomalar_organization,
+      shartnoma_grafik_id,
+      organization_by_raschet_schet_id,
+      organization_by_raschet_schet_gazna_id,
       summa
     } = payload
 
@@ -145,6 +156,10 @@ const BankPrixodDetailsPage = () => {
         doc_num,
         id_spravochnik_organization,
         id_shartnomalar_organization,
+        shartnoma_grafik_id,
+
+        organization_by_raschet_schet_id,
+        organization_by_raschet_schet_gazna_id,
         summa,
         opisanie,
         childs: podvodki.map(normalizeEmptyFields<PrixodPodvodkaPayloadType>)
@@ -156,6 +171,9 @@ const BankPrixodDetailsPage = () => {
       doc_num,
       id_spravochnik_organization,
       id_shartnomalar_organization,
+      shartnoma_grafik_id,
+      organization_by_raschet_schet_id,
+      organization_by_raschet_schet_gazna_id,
       summa,
       opisanie,
       childs: podvodki.map(normalizeEmptyFields<PrixodPodvodkaPayloadType>)
@@ -231,6 +249,7 @@ const BankPrixodDetailsPage = () => {
                   tabIndex={2}
                   error={form.formState.errors.id_spravochnik_organization}
                   spravochnik={orgSpravochnik}
+                  form={form as any}
                   name={t('payer-info')}
                   className="bg-slate-50"
                 />
@@ -242,6 +261,7 @@ const BankPrixodDetailsPage = () => {
                   tabIndex={3}
                   disabled={!form.watch('id_spravochnik_organization')}
                   spravochnik={shartnomaSpravochnik}
+                  form={form as any}
                   error={form.formState.errors.id_shartnomalar_organization}
                 />
               </div>

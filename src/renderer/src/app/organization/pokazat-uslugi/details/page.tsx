@@ -63,10 +63,18 @@ const PokazatUslugiDetailsPage = () => {
   const orgSpravochnik = useSpravochnik(
     createOrganizationSpravochnik({
       value: form.watch('id_spravochnik_organization'),
-      onChange: (value) => {
+      onChange: (value, organization) => {
         form.setValue('shartnomalar_organization_id', 0)
-        form.setValue('id_spravochnik_organization', value)
+        form.setValue('id_spravochnik_organization', value ?? 0)
         form.trigger('id_spravochnik_organization')
+
+        if (organization?.account_numbers?.length === 1) {
+          form.setValue('organization_by_raschet_schet_id', organization.account_numbers[0].id)
+        } else {
+          form.setValue('organization_by_raschet_schet_id', 0)
+        }
+
+        form.setValue('organization_by_raschet_schet_gazna_id', 0)
       }
     })
   )
@@ -75,7 +83,7 @@ const PokazatUslugiDetailsPage = () => {
     createOperatsiiSpravochnik({
       value: form.watch('spravochnik_operatsii_own_id'),
       onChange: (value) => {
-        form.setValue('spravochnik_operatsii_own_id', value)
+        form.setValue('spravochnik_operatsii_own_id', value ?? 0)
         form.trigger('spravochnik_operatsii_own_id')
       },
       params: {
@@ -149,7 +157,10 @@ const PokazatUslugiDetailsPage = () => {
       doc_num,
       id_spravochnik_organization,
       spravochnik_operatsii_own_id,
+      shartnoma_grafik_id,
       shartnomalar_organization_id,
+      organization_by_raschet_schet_id,
+      organization_by_raschet_schet_gazna_id,
       opisanie,
       summa
     } = payload
@@ -161,7 +172,10 @@ const PokazatUslugiDetailsPage = () => {
         doc_num,
         spravochnik_operatsii_own_id,
         shartnomalar_organization_id,
+        shartnoma_grafik_id,
         id_spravochnik_organization,
+        organization_by_raschet_schet_id,
+        organization_by_raschet_schet_gazna_id,
         opisanie,
         summa,
         childs: podvodki.map(normalizeEmptyFields<PokazatUslugiProvodkaForm>)
@@ -173,7 +187,10 @@ const PokazatUslugiDetailsPage = () => {
       doc_num,
       spravochnik_operatsii_own_id,
       shartnomalar_organization_id,
+      shartnoma_grafik_id,
       id_spravochnik_organization,
+      organization_by_raschet_schet_id,
+      organization_by_raschet_schet_gazna_id,
       opisanie,
       summa,
       childs: podvodki.map(normalizeEmptyFields<PokazatUslugiProvodkaForm>)
@@ -248,6 +265,7 @@ const PokazatUslugiDetailsPage = () => {
               <OrganizationFields
                 tabIndex={3}
                 spravochnik={orgSpravochnik}
+                form={form as any}
                 error={form.formState.errors.id_spravochnik_organization}
                 name={t('buyer')}
                 className="bg-slate-50"
@@ -256,6 +274,7 @@ const PokazatUslugiDetailsPage = () => {
                 <ShartnomaFields
                   tabIndex={4}
                   disabled={!form.watch('id_spravochnik_organization')}
+                  form={form as any}
                   spravochnik={shartnomaSpravochnik}
                   error={form.formState.errors.shartnomalar_organization_id}
                 />

@@ -34,7 +34,10 @@ export const PrixodPayloadSchema = withPreprocessor(
     id_spravochnik_organization: z.number(),
     summa: z.number().optional(),
     opisanie: z.string().optional(),
+    shartnoma_grafik_id: z.number().optional(),
     id_shartnomalar_organization: z.number().optional(),
+    organization_by_raschet_schet_id: z.number(),
+    organization_by_raschet_schet_gazna_id: z.number().optional(),
     childs: z.array(PrixodPodvodkaPayloadSchema).superRefine(validateProvodkaOperatsii)
   })
 )

@@ -68,8 +68,6 @@ const CreateOrganizationDialog = (props: CreateOrganizationDialogProps) => {
     form.reset(original ?? defaultValues)
   }, [form, original])
 
-  console.log('createOrganization')
-
   return (
     <Dialog
       open={open}

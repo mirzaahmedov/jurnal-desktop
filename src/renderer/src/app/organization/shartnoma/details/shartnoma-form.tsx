@@ -142,8 +142,10 @@ export const ShartnomaForm = ({
   useEffect(() => {
     if (!selected) {
       if (original) {
-        original.grafiks = defaultValues.grafiks
-        form.reset(original)
+        form.reset({
+          ...original,
+          grafiks: defaultValues.grafiks
+        })
       } else {
         form.reset(defaultValues)
       }

@@ -63,7 +63,7 @@ const AdvanceReportDetailsPage = () => {
     createOperatsiiSpravochnik({
       value: form.watch('spravochnik_operatsii_own_id'),
       onChange: (value) => {
-        form.setValue('spravochnik_operatsii_own_id', value)
+        form.setValue('spravochnik_operatsii_own_id', value ?? 0)
         form.trigger('spravochnik_operatsii_own_id')
       },
       params: {
@@ -76,7 +76,7 @@ const AdvanceReportDetailsPage = () => {
     createPodotchetSpravochnik({
       value: form.watch('spravochnik_podotchet_litso_id'),
       onChange: (value) => {
-        form.setValue('spravochnik_podotchet_litso_id', value)
+        form.setValue('spravochnik_podotchet_litso_id', value ?? 0)
         form.trigger('spravochnik_podotchet_litso_id')
       }
     })

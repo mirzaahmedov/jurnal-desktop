@@ -123,7 +123,9 @@ const OperatsiiDialog = ({ open, onChangeOpen, data }: OperatsiiDialogProps) => 
   }, [form, data])
   useEffect(() => {
     if (open) {
-      form.setValue('type_schet', typeSchet)
+      if (typeSchet !== TypeSchetOperatsii.ALL) {
+        form.setValue('type_schet', typeSchet)
+      }
     }
   }, [form, open, typeSchet, budjet])
 
@@ -210,7 +212,9 @@ const OperatsiiDialog = ({ open, onChangeOpen, data }: OperatsiiDialogProps) => 
                       <SelectField
                         {...field}
                         withFormControl
-                        options={operatsiiTypeSchetOptions}
+                        options={operatsiiTypeSchetOptions.filter(
+                          (o) => o.value !== TypeSchetOperatsii.ALL
+                        )}
                         placeholder="Выберите тип операции"
                         getOptionLabel={(option) => option.label}
                         getOptionValue={(option) => option.value}

@@ -23,8 +23,6 @@ export const ShartnomaFields: FormSpravochnikFieldsComponent<
 
   const shartnoma_grafik_id = form?.watch('shartnoma_grafik_id')
 
-  console.log({ shartnoma_grafik_id, grafiks: spravochnikProps.selected?.grafiks ?? [] })
-
   return (
     <SpravochnikFields
       {...props}
