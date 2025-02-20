@@ -13,7 +13,7 @@ export enum TypeSchetOperatsii {
   KASSA_RASXOD = 'kassa_rasxod',
   BANK_PRIXOD = 'bank_prixod',
   BANK_RASXOD = 'bank_rasxod',
-  AKT = 'Akt_priyom_peresdach',
+  AKT = 'akt',
   AVANS_OTCHET = 'avans_otchet',
   POKAZAT_USLUGI = 'show_service',
   JUR7 = 'jur7',
