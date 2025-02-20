@@ -8,6 +8,8 @@ declare global {
     electron: ElectronAPI
     api: {
       quitAndInstall(): void
+      getZoomFactor(): Promise<number>
+      setZoomFactor(factor: number): void
     }
     downloader: Downloader
   }

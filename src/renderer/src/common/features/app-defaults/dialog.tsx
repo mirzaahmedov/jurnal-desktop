@@ -5,7 +5,7 @@ import { usePagination } from '@renderer/common/hooks/use-pagination'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
-import { DatePicker } from '@/common/components'
+import { DatePicker, SelectField } from '@/common/components'
 import { FormElement } from '@/common/components/form'
 import { Button } from '@/common/components/ui/button'
 import {
@@ -22,6 +22,12 @@ import { ManagementFields } from './components/managements'
 import { defaultValues } from './constants'
 import { useDefaultFilters, useDefaultFormFields } from './store'
 
+enum TabOption {
+  Fitlers = 'Filters',
+  Form = 'Form',
+  UI = 'ui'
+}
+
 type ConfigureDefaultValuesDialogProps = {
   open: boolean
   onClose: () => void
@@ -30,7 +36,7 @@ const ConfigureDefaultValuesDialog = ({ open, onClose }: ConfigureDefaultValuesD
   const dates = useDates()
   const pagination = usePagination()
 
-  const [currentTab, setCurrentTab] = useState<string>('filters')
+  const [tabValue, setTabValue] = useState<TabOption>(TabOption.Fitlers)
 
   const { t } = useTranslation()
 
@@ -73,31 +79,37 @@ const ConfigureDefaultValuesDialog = ({ open, onClose }: ConfigureDefaultValuesD
             className="flex-1 flex flex-col mt-4"
           >
             <Tabs
-              value={currentTab}
-              onValueChange={setCurrentTab}
+              value={tabValue}
+              onValueChange={(value) => setTabValue(value as TabOption)}
               className="flex-1"
             >
               <div className="h-full flex flex-row gap-5">
                 <div className="h-full w-48">
                   <TabsList className="h-full w-full flex-col justify-start p-1 bg-transparent">
                     <TabsTrigger
-                      value="filters"
+                      value={TabOption.Fitlers}
                       className="w-full justify-start px-3 py-1.5 !shadow-none data-[state=active]:bg-slate-100 data-[state=active]:text-brand"
                     >
                       Фильтры
                     </TabsTrigger>
                     <TabsTrigger
-                      value="form"
+                      value={TabOption.Form}
                       className="w-full justify-start px-3 py-1.5 !shadow-none data-[state=active]:bg-slate-100 data-[state=active]:text-brand"
                     >
                       Форма
+                    </TabsTrigger>
+                    <TabsTrigger
+                      value={TabOption.UI}
+                      className="w-full justify-start px-3 py-1.5 !shadow-none data-[state=active]:bg-slate-100 data-[state=active]:text-brand"
+                    >
+                      Интерфейс
                     </TabsTrigger>
                   </TabsList>
                 </div>
                 <div className="h-full flex-1">
                   <TabsContent
                     tabIndex={-1}
-                    value="filters"
+                    value={TabOption.Fitlers}
                   >
                     <div className="space-y-4">
                       <FormField
@@ -126,7 +138,7 @@ const ConfigureDefaultValuesDialog = ({ open, onClose }: ConfigureDefaultValuesD
                       />
                     </div>
                   </TabsContent>
-                  <TabsContent value="form">
+                  <TabsContent value={TabOption.Form}>
                     <ManagementFields
                       form={form}
                       className="p-0"
@@ -134,6 +146,17 @@ const ConfigureDefaultValuesDialog = ({ open, onClose }: ConfigureDefaultValuesD
                         className: 'flex-col'
                       }}
                     />
+                  </TabsContent>
+                  <TabsContent value={TabOption.UI}>
+                    <FormElement label="Масштаб">
+                      <SelectField
+                        defaultValue="1"
+                        onValueChange={(value) => window.api.setZoomFactor(Number(value))}
+                        options={[0.25, 0.5, 0.75, 1, 1.5, 2, 3]}
+                        getOptionLabel={(o) => `${o * 100}%`}
+                        getOptionValue={(o) => o}
+                      />
+                    </FormElement>
                   </TabsContent>
                 </div>
               </div>

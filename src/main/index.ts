@@ -1,7 +1,7 @@
 import { electronApp, is, optimizer } from '@electron-toolkit/utils'
 import iconDev from '@resources/icon-dev.png?asset'
 import icon from '@resources/icon.png?asset'
-import { BrowserWindow, app, ipcMain, shell } from 'electron'
+import { BrowserWindow, app, ipcMain, shell, webFrame } from 'electron'
 import { NsisUpdater } from 'electron-updater'
 import fs from 'fs'
 import os from 'os'
@@ -13,8 +13,6 @@ const CHECK_UPDATES_INTERVAL = 1 * 60 * 1000
 
 const url =
   import.meta.env.VITE_MODE === 'staging' ? 'http://10.50.0.140:4006' : 'http://10.50.0.140:4005'
-// const url =
-//   import.meta.env.VITE_MODE === 'staging' ? 'http://localhost:4006' : 'http://10.50.0.140:4005'
 
 const autoUpdater = new NsisUpdater({
   provider: 'generic',
@@ -112,6 +110,12 @@ function createWindow(): void {
     )
 
     ipcMain.handle('get-version', () => app.getVersion())
+    ipcMain.handle('set-zoom-factor', (_, factor) => {
+      mainWindow.webContents.setZoomFactor(factor)
+    })
+    ipcMain.handle('get-zoom-factor', () => {
+      return webFrame.getZoomFactor()
+    })
 
     setInterval(() => {
       autoUpdater.checkForUpdates()

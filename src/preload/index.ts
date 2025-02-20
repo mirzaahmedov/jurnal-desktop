@@ -5,6 +5,12 @@ import { contextBridge, ipcRenderer } from 'electron'
 const api = {
   quitAndInstall() {
     ipcRenderer.send('restart')
+  },
+  setZoomFactor(factor: number) {
+    ipcRenderer.invoke('set-zoom-factor', factor)
+  },
+  getZoomFactor() {
+    return ipcRenderer.invoke('get-zoom-factor')
   }
 }
 
