@@ -2,20 +2,19 @@ import { z } from 'zod'
 
 import { useDefaultFilters, useDefaultFormFields } from './store'
 
-const ConfigureDefaultValuesPayloadSchema = z.object({
+export const ConfigureDefaultValuesPayloadSchema = z.object({
   from: z.string().optional(),
   to: z.string().optional(),
   rukovoditel: z.string().optional(),
-  glav_buxgalter: z.string().optional()
+  glav_buxgalter: z.string().optional(),
+  zoomFactor: z.number().optional()
 })
-type ConfigureDefaultValuesPayloadType = z.infer<typeof ConfigureDefaultValuesPayloadSchema>
+export type ConfigureDefaultValuesPayloadType = z.infer<typeof ConfigureDefaultValuesPayloadSchema>
 
-const defaultValues: ConfigureDefaultValuesPayloadType = {
+export const defaultValues: ConfigureDefaultValuesPayloadType = {
   from: useDefaultFilters.getState().from,
   to: useDefaultFilters.getState().to,
   rukovoditel: useDefaultFormFields.getState().rukovoditel,
-  glav_buxgalter: useDefaultFormFields.getState().glav_buxgalter
+  glav_buxgalter: useDefaultFormFields.getState().glav_buxgalter,
+  zoomFactor: 1
 }
-
-export { ConfigureDefaultValuesPayloadSchema, defaultValues }
-export type { ConfigureDefaultValuesPayloadType }

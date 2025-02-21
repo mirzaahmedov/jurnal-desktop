@@ -1,7 +1,7 @@
 import { electronApp, is, optimizer } from '@electron-toolkit/utils'
 import iconDev from '@resources/icon-dev.png?asset'
 import icon from '@resources/icon.png?asset'
-import { BrowserWindow, app, ipcMain, shell, webFrame } from 'electron'
+import { BrowserWindow, app, ipcMain, shell } from 'electron'
 import { NsisUpdater } from 'electron-updater'
 import fs from 'fs'
 import os from 'os'
@@ -114,7 +114,7 @@ function createWindow(): void {
       mainWindow.webContents.setZoomFactor(factor)
     })
     ipcMain.handle('get-zoom-factor', () => {
-      return webFrame.getZoomFactor()
+      return mainWindow.webContents.getZoomFactor()
     })
 
     setInterval(() => {

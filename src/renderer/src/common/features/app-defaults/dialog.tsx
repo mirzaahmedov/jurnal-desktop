@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { useDates } from '@renderer/common/hooks/use-dates'
 import { usePagination } from '@renderer/common/hooks/use-pagination'
@@ -32,7 +32,10 @@ type ConfigureDefaultValuesDialogProps = {
   open: boolean
   onClose: () => void
 }
-const ConfigureDefaultValuesDialog = ({ open, onClose }: ConfigureDefaultValuesDialogProps) => {
+export const ConfigureDefaultValuesDialog = ({
+  open,
+  onClose
+}: ConfigureDefaultValuesDialogProps) => {
   const dates = useDates()
   const pagination = usePagination()
 
@@ -47,7 +50,7 @@ const ConfigureDefaultValuesDialog = ({ open, onClose }: ConfigureDefaultValuesD
     defaultValues
   })
 
-  const onSubmit = form.handleSubmit(({ from, to, rukovoditel, glav_buxgalter }) => {
+  const onSubmit = form.handleSubmit(({ from, to, rukovoditel, glav_buxgalter, zoomFactor }) => {
     setDefaultFilters({
       from,
       to
@@ -61,8 +64,19 @@ const ConfigureDefaultValuesDialog = ({ open, onClose }: ConfigureDefaultValuesD
       rukovoditel,
       glav_buxgalter
     })
+    if (zoomFactor) {
+      window.api.setZoomFactor(zoomFactor)
+    }
     onClose()
   })
+
+  useEffect(() => {
+    if (open) {
+      window.api.getZoomFactor().then((factor) => {
+        form.setValue('zoomFactor', factor)
+      })
+    }
+  }, [form, open])
 
   return (
     <Dialog
@@ -148,15 +162,22 @@ const ConfigureDefaultValuesDialog = ({ open, onClose }: ConfigureDefaultValuesD
                     />
                   </TabsContent>
                   <TabsContent value={TabOption.UI}>
-                    <FormElement label="Масштаб">
-                      <SelectField
-                        defaultValue="1"
-                        onValueChange={(value) => window.api.setZoomFactor(Number(value))}
-                        options={[0.25, 0.5, 0.75, 1, 1.5, 2, 3]}
-                        getOptionLabel={(o) => `${o * 100}%`}
-                        getOptionValue={(o) => o}
-                      />
-                    </FormElement>
+                    <FormField
+                      control={form.control}
+                      name="zoomFactor"
+                      render={({ field }) => (
+                        <FormElement label="Масштаб">
+                          <SelectField
+                            value={field.value?.toString()}
+                            defaultValue="1"
+                            onValueChange={(value) => field.onChange(Number(value))}
+                            options={[0.25, 0.5, 0.75, 1, 1.5, 2, 3]}
+                            getOptionLabel={(o) => `${o * 100}%`}
+                            getOptionValue={(o) => o}
+                          />
+                        </FormElement>
+                      )}
+                    />
                   </TabsContent>
                 </div>
               </div>
@@ -170,5 +191,3 @@ const ConfigureDefaultValuesDialog = ({ open, onClose }: ConfigureDefaultValuesD
     </Dialog>
   )
 }
-
-export { ConfigureDefaultValuesDialog }
