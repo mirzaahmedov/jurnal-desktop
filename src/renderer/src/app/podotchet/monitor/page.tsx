@@ -179,9 +179,9 @@ const PodotchetMonitoringPage = () => {
                 <FooterCell
                   title={t('total')}
                   colSpan={5}
-                  content={formatNumber(monitorList?.meta?.summa_prixod ?? 0)}
+                  content={formatNumber(monitorList?.meta?.prixod_sum ?? 0)}
                 />
-                <FooterCell content={formatNumber(monitorList?.meta?.summa_rasxod ?? 0)} />
+                <FooterCell content={formatNumber(monitorList?.meta?.rasxod_sum ?? 0)} />
               </FooterRow>
             </>
           }

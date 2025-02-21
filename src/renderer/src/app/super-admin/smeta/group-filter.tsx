@@ -4,6 +4,10 @@ import { SelectField } from '@renderer/common/components/select-field'
 
 export const smetaFilterOptions = [
   {
+    name: 'Barchasi',
+    value: 'all'
+  },
+  {
     name: 'I-guruh “Ish haqi va unga tenglashtirilgan to‘lovlar”',
     value: 1
   },

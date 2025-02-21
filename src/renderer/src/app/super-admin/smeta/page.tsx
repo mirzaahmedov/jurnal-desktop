@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 
 import { SelectField } from '@renderer/common/components'
 import { useConfirm } from '@renderer/common/features/confirm'
-import { useLayout } from '@renderer/common/features/layout'
+import { useLayoutStore } from '@renderer/common/features/layout'
 import { SearchField, useSearch } from '@renderer/common/features/search'
 import { useLocationState } from '@renderer/common/hooks/use-location-state'
 import { useToggle } from '@renderer/common/hooks/use-toggle'
@@ -42,8 +42,10 @@ const SmetaPage = () => {
   const toggle = useToggle()
   const queryClient = useQueryClient()
 
+  const setLayout = useLayoutStore((store) => store.setLayout)
+
   const [selected, setSelected] = useState<Smeta | null>(null)
-  const [groupNumber] = useLocationState('group_number', '1')
+  const [groupNumber] = useLocationState('group_number', 'all')
 
   const { t } = useTranslation(['app'])
   const { confirm } = useConfirm()
@@ -55,7 +57,7 @@ const SmetaPage = () => {
       {
         page: 1,
         limit: 10000,
-        group_number: groupNumber,
+        group_number: groupNumber !== 'all' ? groupNumber : undefined,
         search
       }
     ],
@@ -76,11 +78,13 @@ const SmetaPage = () => {
       setSelected(null)
     }
   }, [toggle.isOpen])
-  useLayout({
-    title: t('pages.smeta'),
-    content: SmetaFilters,
-    onCreate: toggle.open
-  })
+  useEffect(() => {
+    setLayout({
+      title: t('pages.smeta'),
+      content: SmetaFilters,
+      onCreate: toggle.open
+    })
+  }, [setLayout])
 
   const handleClickEdit = (row: Smeta) => {
     setSelected(row)
