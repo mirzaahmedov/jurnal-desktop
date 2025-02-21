@@ -1,10 +1,10 @@
 {
   "doljnost": {
-    "rukovoditel": "Руководитель",
-    "glav_buxgalter": "Главный бухгалтер",
-    "glav_mib": "Глава МИБ",
-    "nachalnik_otdela": "Начальник отдела",
-    "buxgalter": "Бухгалтер",
+    "rukovoditel": "Раҳбар",
+    "glav_buxgalter": "Бош ҳисобчи",
+    "glav_mib": "МИБ Бошлиғи",
+    "nachalnik_otdela": "Бўлим бошлиғи",
+    "buxgalter": "Ҳисобчи",
     "kassir": "Кассир"
   },
   "documents": {

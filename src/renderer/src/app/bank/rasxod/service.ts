@@ -2,7 +2,7 @@ import type { BankRasxod, ResponseMeta } from '@renderer/common/models'
 
 import { APIEndpoints, CRUDService } from '@renderer/common/features/crud'
 import { main_schet } from '@renderer/common/features/crud/middleware'
-import { validateProvodkaOperatsii, withPreprocessor } from '@renderer/common/lib/validation'
+import { withPreprocessor } from '@renderer/common/lib/validation'
 import { z } from 'zod'
 
 export const bankRasxodService = new CRUDService<
@@ -39,7 +39,7 @@ export const RasxodFormSchema = withPreprocessor(
     rukovoditel: z.string().optional().nullable(),
     glav_buxgalter: z.string().optional().nullable(),
     id_shartnomalar_organization: z.number().optional(),
-    childs: z.array(RasxodPodvodkaFormSchema).superRefine(validateProvodkaOperatsii)
+    childs: z.array(RasxodPodvodkaFormSchema)
   })
 )
 

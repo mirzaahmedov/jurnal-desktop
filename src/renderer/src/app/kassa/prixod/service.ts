@@ -2,10 +2,9 @@ import type { KassaPrixodType, ResponseMeta } from '@/common/models'
 
 import { z } from 'zod'
 
-import { APIEndpoints } from '@/common/features/crud'
-import { CRUDService } from '@/common/features/crud'
+import { APIEndpoints, CRUDService } from '@/common/features/crud'
 import { main_schet } from '@/common/features/crud/middleware'
-import { validateProvodkaOperatsii, withPreprocessor } from '@/common/lib/validation'
+import { withPreprocessor } from '@/common/lib/validation'
 
 export const kassaPrixodService = new CRUDService<
   KassaPrixodType,
@@ -33,7 +32,7 @@ export const PrixodPayloadSchema = withPreprocessor(
     id_podotchet_litso: z.number().optional(),
     summa: z.number().optional(),
     opisanie: z.string().optional(),
-    childs: z.array(PrixodPodvodkaPayloadSchema).superRefine(validateProvodkaOperatsii)
+    childs: z.array(PrixodPodvodkaPayloadSchema)
   })
 )
 

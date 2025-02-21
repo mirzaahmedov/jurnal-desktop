@@ -12,14 +12,14 @@ import { useTranslation } from 'react-i18next'
 
 import { EditableTableCell, EditableTableHead, EditableTableRow } from './components'
 
-export type EditableColumnType<T extends Record<string, unknown>> = {
+export type EditableColumnType<T extends object> = {
   key: Autocomplete<keyof T>
   header?: ReactNode
   Editor: EditorComponentType<T>
   width?: string | number
 }
 
-export type EditableTableProps<T extends Record<string, unknown>> = {
+export type EditableTableProps<T extends object> = {
   tableRef?: React.RefObject<HTMLTableElement>
   tabIndex?: number
   data: T[]
@@ -33,7 +33,7 @@ export type EditableTableProps<T extends Record<string, unknown>> = {
   footerRows?: ReactNode
   validate?(ctx: ChangeContext<T>): boolean
 }
-export const EditableTable = <T extends Record<string, unknown>>(props: EditableTableProps<T>) => {
+export const EditableTable = <T extends object>(props: EditableTableProps<T>) => {
   const {
     tableRef,
     tabIndex,
@@ -93,6 +93,7 @@ export const EditableTable = <T extends Record<string, unknown>>(props: Editable
                   index={index}
                   tabIndex={tabIndex}
                   row={row}
+                  data={data}
                   columns={columns}
                   errors={errors}
                   onChange={onChange}
@@ -135,22 +136,24 @@ export const EditableTable = <T extends Record<string, unknown>>(props: Editable
   )
 }
 
-type EditableTableRowRendererProps<T extends Record<string, unknown>> = {
+type EditableTableRowRendererProps<T extends object> = {
   tabIndex?: number
   index: number
   columns: EditableColumnType<T>[]
   row: T
+  data: T[]
   errors?: FieldErrors<{ example: T[] }>['example']
   onDelete?(ctx: DeleteContext): void
   onChange?(ctx: ChangeContext<T>): void
   params: Record<string, unknown>
   validate?: (ctx: ChangeContext<T>) => boolean
 }
-const EditableTableRowRenderer = <T extends Record<string, unknown>>({
+const EditableTableRowRenderer = <T extends object>({
   tabIndex,
   index,
   columns,
   row,
+  data,
   errors,
   onDelete,
   onChange,
@@ -172,6 +175,7 @@ const EditableTableRowRenderer = <T extends Record<string, unknown>>({
               tabIndex={tabIndex}
               id={index}
               row={row}
+              data={data}
               col={col}
               onChange={onChange}
               errors={errors?.[index] as FieldErrors<T>}

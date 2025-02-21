@@ -9,7 +9,6 @@ import { usePodpis } from '@renderer/common/features/podpis'
 import {
   type MainSchet,
   type Organization,
-  PodpisDoljnost,
   PodpisTypeDocument,
   type ShartnomaGrafik
 } from '@renderer/common/models'
@@ -103,18 +102,6 @@ export const ShartnomaSmetaGrafikGeneratePDFDocumentDialog = ({
       })
     )
   }, [form, main_schet, organization, doc_date, doc_num, summaTotal])
-
-  useEffect(() => {
-    const rukovoditel = podpis.find((item) => item.doljnost_name === PodpisDoljnost.RUKOVODITEL)
-    const glav_mib = podpis.find((item) => item.doljnost_name === PodpisDoljnost.GLAV_MIB)
-
-    if (rukovoditel && !form.getValues('rukovoditel')) {
-      form.setValue('rukovoditel', rukovoditel.fio_name)
-    }
-    if (glav_mib && !form.getValues('glav_mib')) {
-      form.setValue('glav_mib', glav_mib.fio_name)
-    }
-  }, [form, podpis])
 
   useEffect(() => {
     form.setValue('singlePage', grafiks.length <= 3)
@@ -286,30 +273,6 @@ export const ShartnomaSmetaGrafikGeneratePDFDocumentDialog = ({
               <div className="pt-2.5 grid grid-cols-2 gap-5">
                 <FormField
                   control={form.control}
-                  name="rukovoditel"
-                  render={({ field }) => (
-                    <FormElement
-                      direction="column"
-                      label={t('podpis:doljnost.rukovoditel')}
-                    >
-                      <Input {...field} />
-                    </FormElement>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="glav_mib"
-                  render={({ field }) => (
-                    <FormElement
-                      direction="column"
-                      label={t('podpis:doljnost.glav_mib')}
-                    >
-                      <Input {...field} />
-                    </FormElement>
-                  )}
-                />
-                <FormField
-                  control={form.control}
                   name="singlePage"
                   render={({ field }) => (
                     <FormItem className="col-span-2 flex items-center gap-2">
@@ -366,8 +329,7 @@ export const ShartnomaSmetaGrafikGeneratePDFDocumentDialog = ({
               grafiks={grafiksData}
               paymentDetails={form.watch('payment_details')}
               shartnomaDetails={form.watch('contract_details')}
-              rukovoditel={form.watch('rukovoditel')}
-              glav_mib={form.watch('glav_mib')}
+              podpis={podpis}
               paddingLeft={form.watch('paddingLeft')}
               paddingTop={form.watch('paddingTop')}
               paddingRight={form.watch('paddingRight')}

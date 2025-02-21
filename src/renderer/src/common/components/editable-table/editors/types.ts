@@ -1,8 +1,8 @@
 import type { EditableColumnType } from '../table'
-import type { Dispatch, FunctionComponent, InputHTMLAttributes, SetStateAction } from 'react'
+import type { Dispatch, FC, InputHTMLAttributes, SetStateAction } from 'react'
 import type { FieldErrors } from 'react-hook-form'
 
-export type ChangeContext<T extends Record<string, unknown>, K extends keyof T = keyof T> = {
+export type ChangeContext<T extends object, K extends keyof T = keyof T> = {
   id: number
   key: K
   payload: T
@@ -12,10 +12,11 @@ export type DeleteContext = {
   id: number
 }
 
-export type EditorComponentType<T extends Record<string, unknown>> = FunctionComponent<{
+export type EditorComponentType<T extends object> = FC<{
   tabIndex?: number
   id: number
   row: T
+  data: T[]
   col: EditableColumnType<T>
   max?: number
   errors?: FieldErrors<T>

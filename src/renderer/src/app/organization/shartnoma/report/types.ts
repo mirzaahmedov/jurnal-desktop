@@ -1,3 +1,4 @@
+import type { Podpis } from '@renderer/common/models'
 import type { ShartnomaGrafik } from '@renderer/common/models/shartnoma'
 
 export interface ShartnomaGrafikPDFDocumentOptions {
@@ -7,7 +8,6 @@ export interface ShartnomaGrafikPDFDocumentOptions {
   createdDate: string
   shartnomaDetails: string
   paymentDetails: string
-  glav_mib: string
-  rukovoditel: string
+  podpis: Podpis[]
   grafiks: ShartnomaGrafik[]
 }

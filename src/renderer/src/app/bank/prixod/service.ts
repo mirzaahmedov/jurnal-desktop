@@ -2,10 +2,9 @@ import type { BankPrixodType, ResponseMeta } from '@/common/models'
 
 import { z } from 'zod'
 
-import { APIEndpoints } from '@/common/features/crud'
-import { CRUDService } from '@/common/features/crud'
+import { APIEndpoints, CRUDService } from '@/common/features/crud'
 import { main_schet } from '@/common/features/crud/middleware'
-import { validateProvodkaOperatsii, withPreprocessor } from '@/common/lib/validation'
+import { withPreprocessor } from '@/common/lib/validation'
 
 export const bankPrixodService = new CRUDService<
   BankPrixodType,
@@ -38,7 +37,7 @@ export const PrixodPayloadSchema = withPreprocessor(
     id_shartnomalar_organization: z.number().optional(),
     organization_by_raschet_schet_id: z.number(),
     organization_by_raschet_schet_gazna_id: z.number().optional(),
-    childs: z.array(PrixodPodvodkaPayloadSchema).superRefine(validateProvodkaOperatsii)
+    childs: z.array(PrixodPodvodkaPayloadSchema)
   })
 )
 

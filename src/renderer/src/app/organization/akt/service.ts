@@ -5,7 +5,7 @@ import { z } from 'zod'
 
 import { APIEndpoints, CRUDService } from '@/common/features/crud'
 import { main_schet } from '@/common/features/crud/middleware'
-import { validateProvodkaOperatsii, withPreprocessor } from '@/common/lib/validation'
+import { withPreprocessor } from '@/common/lib/validation'
 
 const aktService = new CRUDService<Akt, AktForm, AktForm, ResponseMeta & { summa: number }>({
   endpoint: APIEndpoints.akt_priyom
@@ -34,12 +34,12 @@ const AktFormSchema = withPreprocessor(
     shartnoma_grafik_id: z.number().optional(),
     organization_by_raschet_schet_id: z.number(),
     organization_by_raschet_schet_gazna_id: z.number().optional(),
-    childs: z.array(AktProvodkaFormSchema).superRefine(validateProvodkaOperatsii)
+    childs: z.array(AktProvodkaFormSchema)
   })
 )
 
 type AktForm = z.infer<typeof AktFormSchema>
 type AktProvodkaForm = z.infer<typeof AktProvodkaFormSchema>
 
-export { aktService, AktFormSchema, AktProvodkaFormSchema }
+export { AktFormSchema, AktProvodkaFormSchema, aktService }
 export type { AktForm, AktProvodkaForm }

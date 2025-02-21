@@ -2,7 +2,7 @@ import type { ShartnomaGrafikPDFDocumentOptions } from './types'
 
 import { Flex } from '@/common/components/pdf'
 
-import { DocumentInfo, Header, ShartnomaSmetaGrafiksTable, Signatures } from './components'
+import { DocumentInfo, Header, Podpises, ShartnomaSmetaGrafiksTable } from './components'
 
 export interface PaperSheetProps extends ShartnomaGrafikPDFDocumentOptions {
   singlePage: boolean
@@ -15,8 +15,7 @@ export const PaperSheet = ({
   createdDate,
   grafiks,
   paymentDetails,
-  rukovoditel,
-  glav_mib,
+  podpis,
   singlePage
 }: PaperSheetProps) => {
   const year = new Date(createdDate).getFullYear()
@@ -41,10 +40,9 @@ export const PaperSheet = ({
           paymentDetails={paymentDetails}
           singlePage={singlePage}
         />
-        <Signatures
+        <Podpises
           year={year}
-          rukovoditel={rukovoditel}
-          glav_mib={glav_mib}
+          podpises={podpis}
         />
       </Flex>
     </Flex.Item>

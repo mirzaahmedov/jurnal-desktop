@@ -4,7 +4,7 @@ import { z } from 'zod'
 
 import { APIEndpoints, CRUDService } from '@/common/features/crud'
 import { main_schet } from '@/common/features/crud/middleware'
-import { validateProvodkaOperatsii, withPreprocessor } from '@/common/lib/validation'
+import { withPreprocessor } from '@/common/lib/validation'
 
 export const pokazatUslugiService = new CRUDService<PokazatUslugi, PokazatUslugiForm>({
   endpoint: APIEndpoints.pokazat_uslugi
@@ -33,7 +33,7 @@ export const PokazatUslugiFormSchema = withPreprocessor(
     shartnomalar_organization_id: z.number().optional(),
     organization_by_raschet_schet_id: z.number(),
     organization_by_raschet_schet_gazna_id: z.number().optional(),
-    childs: z.array(PokazatUslugiProvodkaFormSchema).superRefine(validateProvodkaOperatsii)
+    childs: z.array(PokazatUslugiProvodkaFormSchema)
   })
 )
 export type PokazatUslugiForm = z.infer<typeof PokazatUslugiFormSchema>
