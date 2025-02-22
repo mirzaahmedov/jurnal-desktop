@@ -54,25 +54,30 @@ const DatePicker = forwardRef<HTMLButtonElement, DatePickerProps>(
   ) => {
     const inputRef = useRef<HTMLInputElement>(null)
 
+    const [monthValue, setMonthValue] = useState(value ? parseDate(value) : new Date())
     const [internalValue, setInternalValue] = useState(formatValue(value ?? ''))
 
     const calendarToggle = useToggle()
 
     useEffect(() => {
       setInternalValue(formatValue(value ?? ''))
+      setMonthValue(value ? parseDate(value) : new Date())
     }, [formatValue, value])
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
       const value = e.target.value
       setInternalValue(value)
       if (validate(localeDateToISO(value))) {
-        onChange?.(unformatValue(value))
+        const rawValue = unformatValue(value)
+        onChange?.(rawValue)
+        setMonthValue(parseDate(rawValue))
       }
     }
 
     const handleBlur = () => {
       if (!internalValue) {
         onChange?.('')
+        setMonthValue(new Date())
         return
       }
       if (!validate(localeDateToISO(internalValue))) {
@@ -96,9 +101,7 @@ const DatePicker = forwardRef<HTMLButtonElement, DatePickerProps>(
       calendarToggle.setOpen(active)
     }
 
-    console.log({
-      date: parseDate(value ?? '')
-    })
+    const selected = value ? parseDate(value) : undefined
 
     return (
       <Popover
@@ -142,15 +145,15 @@ const DatePicker = forwardRef<HTMLButtonElement, DatePickerProps>(
           <Calendar
             {...calendarProps}
             mode="single"
-            selected={value ? parseDate(value) : undefined}
+            selected={selected}
+            month={monthValue}
+            onMonthChange={setMonthValue}
             onSelect={(date) => {
-              if (!date) {
-                return
-              }
-              if (!validate(formatDate(date))) {
+              if (!date || !validate(formatDate(date))) {
                 return
               }
               onChange?.(formatDate(date))
+              setMonthValue(date)
               calendarToggle.close()
             }}
           />
