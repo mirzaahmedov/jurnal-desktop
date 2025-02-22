@@ -6,15 +6,18 @@ import { SelectField } from '@renderer/common/components'
 import { FormElement } from '@renderer/common/components/form'
 import { Button } from '@renderer/common/components/ui/button'
 import { FormField } from '@renderer/common/components/ui/form'
+import { Input } from '@renderer/common/components/ui/input'
 import { CircleX } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { SpravochnikField, SpravochnikFields } from '@/common/features/spravochnik'
 
 export interface OrganizationFieldsProps {
+  displayGazna?: boolean
+  displayPorucheniya?: boolean
   readOnly?: boolean
-  gazna?: boolean
   form?: UseFormReturn<{
+    organization_porucheniya_name?: string
     organization_by_raschet_schet_id: number
     organization_by_raschet_schet_gazna_id: number
   }>
@@ -26,7 +29,8 @@ const OrganizationFields: FormSpravochnikFieldsComponent<Organization, Organizat
   error,
   name,
   spravochnik,
-  gazna = false,
+  displayGazna = false,
+  displayPorucheniya = false,
   form,
   ...props
 }) => {
@@ -49,9 +53,24 @@ const OrganizationFields: FormSpravochnikFieldsComponent<Organization, Organizat
         getInputValue={(selected) => selected?.name ?? ''}
         label={t('organization')}
         formElementProps={{
-          grid: '2:6'
+          grid: '2:5'
         }}
       />
+
+      {displayPorucheniya && form ? (
+        <FormField
+          control={form.control}
+          name="organization_porucheniya_name"
+          render={({ field }) => (
+            <FormElement
+              label={`${t('organization')} (${t('porucheniya').toLowerCase()})`}
+              grid="2:5"
+            >
+              <Input {...field} />
+            </FormElement>
+          )}
+        />
+      ) : null}
 
       <SpravochnikField
         {...spravochnikProps}
@@ -62,7 +81,7 @@ const OrganizationFields: FormSpravochnikFieldsComponent<Organization, Organizat
         getInputValue={(selected) => selected?.bank_klient ?? ''}
         label={t('bank')}
         formElementProps={{
-          grid: '2:6'
+          grid: '2:5'
         }}
       />
 
@@ -75,7 +94,7 @@ const OrganizationFields: FormSpravochnikFieldsComponent<Organization, Organizat
         getInputValue={(selected) => selected?.mfo ?? ''}
         label={t('mfo')}
         formElementProps={{
-          grid: '2:6'
+          grid: '2:5'
         }}
       />
 
@@ -88,7 +107,7 @@ const OrganizationFields: FormSpravochnikFieldsComponent<Organization, Organizat
         getInputValue={(selected) => selected?.inn ?? ''}
         label={t('inn')}
         formElementProps={{
-          grid: '2:6'
+          grid: '2:5'
         }}
       />
 
@@ -100,7 +119,7 @@ const OrganizationFields: FormSpravochnikFieldsComponent<Organization, Organizat
             render={({ field }) => (
               <FormElement
                 label={t('raschet-schet')}
-                grid="2:6"
+                grid="2:5"
               >
                 <div className="flex items-center gap-2">
                   <SelectField
@@ -130,14 +149,14 @@ const OrganizationFields: FormSpravochnikFieldsComponent<Organization, Organizat
               </FormElement>
             )}
           />
-          {gazna ? (
+          {displayGazna ? (
             <FormField
               control={form.control}
               name="organization_by_raschet_schet_gazna_id"
               render={({ field }) => (
                 <FormElement
                   label={t('raschet-schet-gazna')}
-                  grid="2:6"
+                  grid="2:5"
                 >
                   <div className="flex items-center gap-2">
                     <SelectField
@@ -180,11 +199,11 @@ const OrganizationFields: FormSpravochnikFieldsComponent<Organization, Organizat
             getInputValue={(selected) => selected?.account_numbers?.[0]?.raschet_schet ?? ''}
             label={t('raschet-schet')}
             formElementProps={{
-              grid: '2:6'
+              grid: '2:5'
             }}
           />
 
-          {gazna ? (
+          {displayGazna ? (
             <SpravochnikField
               {...spravochnikProps}
               readOnly
@@ -194,7 +213,7 @@ const OrganizationFields: FormSpravochnikFieldsComponent<Organization, Organizat
               getInputValue={(selected) => selected?.gaznas?.[0]?.raschet_schet_gazna ?? ''}
               label={t('raschet-schet-gazna')}
               formElementProps={{
-                grid: '2:6'
+                grid: '2:5'
               }}
             />
           ) : null}

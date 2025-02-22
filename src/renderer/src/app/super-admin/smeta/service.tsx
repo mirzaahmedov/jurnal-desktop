@@ -25,7 +25,10 @@ export const smetaService = new CRUDService<Smeta, SmetaForm>({
   endpoint: APIEndpoints.smeta
 })
 
-type SmetaTableProps = Omit<CollapsibleTableProps<TreeNode<Smeta>>, 'data'> & {
+type SmetaTableProps = Omit<
+  CollapsibleTableProps<TreeNode<Smeta>, TreeNode<Smeta>>,
+  'data' | 'getChildRows' | 'getRowId'
+> & {
   data: Smeta[]
 }
 export const SmetaTable = ({ data, columnDefs: columns, ...props }: SmetaTableProps) => {
@@ -38,8 +41,11 @@ export const SmetaTable = ({ data, columnDefs: columns, ...props }: SmetaTablePr
       ),
     [data]
   )
+
   return (
     <CollapsibleTable
+      getRowId={(row) => row.id}
+      getChildRows={(row) => row.children}
       data={treeData}
       columnDefs={columns}
       {...props}

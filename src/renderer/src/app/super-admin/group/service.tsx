@@ -24,7 +24,10 @@ export const groupService = new CRUDService<Group, GroupPayloadType>({
   endpoint: APIEndpoints.jur7_group
 })
 
-type GroupTableProps = Omit<CollapsibleTableProps<TreeNode<Group>>, 'data'> & {
+type GroupTableProps = Omit<
+  CollapsibleTableProps<TreeNode<Group>, TreeNode<Group>>,
+  'data' | 'getRowId' | 'getChildRows'
+> & {
   data: Group[]
 }
 export const GroupTable = ({ data, ...props }: GroupTableProps) => {
@@ -40,6 +43,8 @@ export const GroupTable = ({ data, ...props }: GroupTableProps) => {
   return (
     <CollapsibleTable
       data={treeData}
+      getRowId={(row) => row.id}
+      getChildRows={(row) => row.children}
       {...props}
     />
   )

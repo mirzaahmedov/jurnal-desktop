@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 
-import { ChooseSpravochnik, GenericTable } from '@renderer/common/components'
+import { ChooseSpravochnik } from '@renderer/common/components'
+import { CollapsibleTable } from '@renderer/common/components/collapsible-table'
 import { MonthPicker } from '@renderer/common/components/month-picker'
 import { ButtonGroup } from '@renderer/common/components/ui/button-group'
 import { DownloadFile } from '@renderer/common/features/file'
@@ -14,7 +15,7 @@ import { useTranslation } from 'react-i18next'
 
 import { createPodrazdelenie7Spravochnik } from '../podrazdelenie/service'
 import { createResponsibleSpravochnik } from '../responsible/service'
-import { ostatokColumns, ostatokHeaderGroups } from './columns'
+import { ostatokPodotchetColumns, ostatokProductColumns } from './columns'
 import { ostatokQueryKeys } from './config'
 import { ostatokService } from './service'
 
@@ -25,6 +26,10 @@ const OstatokPage = () => {
   const setLayout = useLayoutStore((store) => store.setLayout)
   const { main_schet_id, budjet_id } = useRequisitesStore()
   const { t } = useTranslation(['app'])
+
+  const date = new Date(`${year}-${month}-01`)
+  const from = formatDate(getFirstDayOfMonth(date))
+  const to = formatDate(getLastDayOfMonth(date))
 
   const podrazdelenieSpravochnik = useSpravochnik(
     createPodrazdelenie7Spravochnik({
@@ -46,12 +51,12 @@ const OstatokPage = () => {
     queryKey: [
       ostatokQueryKeys.getAll,
       {
-        to: formatDate(new Date(year, month, 1)),
-        responsible_id: responsibleSpravochnik.selected?.id
+        from,
+        to,
+        kimning_buynida: responsibleSpravochnik.selected?.id
       }
     ],
-    queryFn: ostatokService.getAll,
-    enabled: !!responsibleSpravochnik.selected?.id
+    queryFn: ostatokService.getAll
   })
 
   useEffect(() => {
@@ -64,10 +69,6 @@ const OstatokPage = () => {
       ]
     })
   }, [setLayout, t])
-
-  const date = new Date(`${year}-${month}-01`)
-  const from = formatDate(getFirstDayOfMonth(date))
-  const to = formatDate(getLastDayOfMonth(date))
 
   return (
     <ListView>
@@ -149,10 +150,19 @@ const OstatokPage = () => {
             }}
           />
         </div>
-        <GenericTable
-          columnDefs={ostatokColumns}
-          headerGroups={ostatokHeaderGroups}
+        <CollapsibleTable
           data={ostatokList?.data ?? []}
+          columnDefs={ostatokPodotchetColumns}
+          getRowId={(row) => row.id}
+          getChildRows={(row) => row.products}
+          renderChildRows={(rows) => (
+            <CollapsibleTable
+              data={rows}
+              columnDefs={ostatokProductColumns}
+              getRowId={(row) => row.id}
+              getChildRows={() => undefined}
+            />
+          )}
         />
       </ListView.Content>
     </ListView>

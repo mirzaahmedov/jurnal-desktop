@@ -31,6 +31,7 @@ export const RasxodFormSchema = withPreprocessor(
     doc_date: z.string(),
     id_spravochnik_organization: z.number(),
     shartnoma_grafik_id: z.number().optional(),
+    organization_porucheniya_name: z.string().optional(),
     organization_by_raschet_schet_id: z.number(),
     organization_by_raschet_schet_gazna_id: z.number().optional(),
     summa: z.number().optional(),

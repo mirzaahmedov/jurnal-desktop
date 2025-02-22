@@ -3,7 +3,7 @@ import { arrayStartsWith, removeTrailingZeros } from '@renderer/common/lib/array
 export type TreeNode<T> = T & {
   _levels: number[]
   _included?: boolean
-  children: TreeNode<T>[]
+  children?: TreeNode<T>[]
 }
 export type PreprocessFn = <T>(arrays: TreeNode<T>[]) => TreeNode<T>[]
 
@@ -48,7 +48,7 @@ export const buildTreeFromArray = <T extends Record<string, unknown>>(
       return false
     })
 
-    parent.children = children
+    parent.children = children.length > 0 ? children : undefined
   }
 
   const nodes = normalized.filter((item) => {

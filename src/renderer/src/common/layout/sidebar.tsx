@@ -19,8 +19,6 @@ import { NavLink } from 'react-router-dom'
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 
-import { ScrollArea } from '@/common/components/ui/scroll-area'
-
 import { Spinner } from '../components'
 import { getNavElements } from './constants'
 
@@ -66,53 +64,47 @@ const Sidebar = () => {
         maxWidth: isCollapsed ? 112 : undefined
       }}
     >
-      <ScrollArea className="h-full">
-        <div className="flex flex-col min-h-full">
-          <div
-            className={cn(
-              'flex items-center justify-between p-5 gap-2.5 text-sm bg-white border-b border-slate-200 z-10',
-              isCollapsed && 'flex-col-reverse'
-            )}
-          >
-            <img
-              src={logo}
-              alt="МЧС Республики Узбекистан"
-              className="max-h-16"
-            />
-            {!isCollapsed ? <h1 className="flex-1 text-xs font-bold">{t('title')}</h1> : null}
+      <div
+        className={cn(
+          'flex items-center justify-between p-5 gap-2.5 text-sm bg-white border-b border-slate-200 z-10',
+          isCollapsed && 'flex-col-reverse'
+        )}
+      >
+        <img
+          src={logo}
+          alt="МЧС Республики Узбекистан"
+          className="max-h-16"
+        />
+        {!isCollapsed ? <h1 className="flex-1 text-xs font-bold">{t('title')}</h1> : null}
 
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={toggleCollapsed}
-              className="text-slate-500"
-            >
-              {isCollapsed ? (
-                <ChevronsRight className="size-5" />
-              ) : (
-                <ChevronsLeft className="size-5" />
-              )}
-            </Button>
-          </div>
-          <div className="flex-1">
-            <nav>
-              <ul>{getNavElements(t).map((elem) => renderNavElement(elem, isCollapsed))}</ul>
-            </nav>
-          </div>
-          <div
-            className={cn(
-              'flex items-center p-5 gap-2 flex-wrap justify-center',
-              isCollapsed && 'px-1'
-            )}
-          >
-            <ApplicationBadge />
-            <p className="text-xs text-slate-500 font-medium">
-              {!isCollapsed && 'Электрон молия тизими '}
-              v.{version}
-            </p>
-          </div>
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={toggleCollapsed}
+          className="text-slate-500"
+        >
+          {isCollapsed ? <ChevronsRight className="size-5" /> : <ChevronsLeft className="size-5" />}
+        </Button>
+      </div>
+      <div className="h-full flex flex-col overflow-y-auto scrollbar">
+        <div className="flex-1">
+          <nav>
+            <ul>{getNavElements(t).map((elem) => renderNavElement(elem, isCollapsed))}</ul>
+          </nav>
         </div>
-      </ScrollArea>
+        <div
+          className={cn(
+            'flex items-center p-5 gap-2 flex-wrap justify-center',
+            isCollapsed && 'px-1'
+          )}
+        >
+          <ApplicationBadge />
+          <p className="text-xs text-slate-500 font-medium">
+            {!isCollapsed && 'Электрон молия тизими '}
+            v.{version}
+          </p>
+        </div>
+      </div>
       {isAvailable ? (
         <Button
           className="h-12 w-full rounded-none flex items-center gap-2"

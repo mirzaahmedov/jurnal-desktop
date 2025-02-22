@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next'
 
 import { queryKeys } from '../../config'
 import { getDashboardPodotchetQuery } from '../../service'
-import { normalizePodotchetData, podotchetChildsColumns, podotchetColumns } from './columns'
+import { normalizePodotchetData, podotchetChildColumns, podotchetColumns } from './columns'
 
 export interface PodotchetTableProps {
   date?: string
@@ -48,13 +48,20 @@ export const PodotchetTable = ({ date, budjet_id }: PodotchetTableProps) => {
       </CardHeader>
       <CardContent className="p-0 relative">
         {isFetching ? <LoadingOverlay /> : null}
-        {
-          // Todo: fix this
-        }
         <CollapsibleTable
-          columnDefs={podotchetColumns as any}
-          childColumnDefs={podotchetChildsColumns}
-          data={podotchetData as any}
+          columnDefs={podotchetColumns}
+          getChildRows={(row) => row.children}
+          renderChildRows={(rows) => (
+            <CollapsibleTable
+              displayHeader={false}
+              getRowId={(row) => row.id}
+              getChildRows={() => undefined}
+              data={rows}
+              columnDefs={podotchetChildColumns}
+            />
+          )}
+          getRowId={(row) => row.id}
+          data={podotchetData}
         />
         <div className="p-5">
           <Pagination

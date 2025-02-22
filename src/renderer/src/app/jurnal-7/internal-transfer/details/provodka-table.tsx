@@ -397,7 +397,7 @@ const NaimenovanieCells = ({
         return
       }
 
-      updateFormField(index, 'naimenovanie_tovarov_jur7_id', product.naimenovanie_tovarov_jur7_id)
+      updateFormField(index, 'naimenovanie_tovarov_jur7_id', product.id)
       updateFormField(index, 'kol', product.to.kol)
       updateFormField(index, 'max_kol', product.to.kol)
       updateFormField(index, 'sena', product.sena)
@@ -406,7 +406,7 @@ const NaimenovanieCells = ({
       updateFormField(index, 'kredit_schet', product?.schet ?? '')
       updateFormField(index, 'debet_sub_schet', product?.provodka_subschet ?? '')
       updateFormField(index, 'kredit_sub_schet', product?.provodka_subschet ?? '')
-      updateFormField(index, 'data_pereotsenka', formatDate(product.prixod_data?.data_pereotsenka))
+      updateFormField(index, 'data_pereotsenka', formatDate(product.prixod_data?.doc_date))
     }
   })
 

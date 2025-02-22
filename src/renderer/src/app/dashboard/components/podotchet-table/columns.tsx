@@ -49,7 +49,7 @@ export const podotchetColumns: ColumnDef<PodochetTableRow>[] = [
   }
 ]
 
-export const podotchetChildsColumns: ColumnDef<PodochetTableRow['children'][number]>[] = [
+export const podotchetChildColumns: ColumnDef<PodochetTableRow['children'][number]>[] = [
   {
     key: 'account_number',
     renderCell(row) {

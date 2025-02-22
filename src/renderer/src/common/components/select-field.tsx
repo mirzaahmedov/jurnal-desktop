@@ -14,7 +14,7 @@ import { cn } from '@/common/lib/utils'
 
 import { FormControl } from './ui/form'
 
-type SelectFieldProps<T> = SelectProps & {
+export type SelectFieldProps<T> = SelectProps & {
   withFormControl?: boolean
   placeholder?: string
   options: T[] | readonly T[]
@@ -24,10 +24,7 @@ type SelectFieldProps<T> = SelectProps & {
 }
 
 const SelectFieldComponent = <T extends Record<string, unknown>>(
-  props: SelectFieldProps<T>,
-  ref: ForwardedRef<HTMLSpanElement>
-) => {
-  const {
+  {
     withFormControl = false,
     placeholder,
     options,
@@ -35,14 +32,16 @@ const SelectFieldComponent = <T extends Record<string, unknown>>(
     getOptionLabel,
     triggerClassName,
     disabled,
-    ...rest
-  } = props
+    ...props
+  }: SelectFieldProps<T>,
+  ref: ForwardedRef<HTMLSpanElement>
+) => {
   return (
     <Select
-      {...rest}
+      {...props}
       onValueChange={(value) => {
         if (options.length !== 0 && value) {
-          rest?.onValueChange?.(value)
+          props?.onValueChange?.(value)
         }
       }}
       disabled={disabled || options.length === 0}
@@ -84,5 +83,3 @@ const SelectFieldComponent = <T extends Record<string, unknown>>(
 export const SelectField = forwardRef(SelectFieldComponent) as <T>(
   props: SelectFieldProps<T> & { ref?: ForwardedRef<HTMLSpanElement> }
 ) => ReturnType<typeof SelectFieldComponent>
-
-export type { SelectFieldProps }

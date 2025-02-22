@@ -19,7 +19,7 @@ import { smetaFilterOptions } from './group-filter'
 import { SmetaTable, smetaService } from './service'
 
 const SmetaFilters = () => {
-  const [groupNumber, setGroupNumber] = useLocationState('group_number', '1')
+  const [groupNumber, setGroupNumber] = useLocationState('group_number', 'all')
 
   const { t } = useTranslation()
 

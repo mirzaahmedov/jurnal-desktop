@@ -7,7 +7,7 @@ import { TypeSchetOperatsii } from '@/common/models'
 import { operatsiiTypeSchetOptions } from './config'
 
 export const OperatsiiFilter = () => {
-  const [typeSchet, setTypeSchet] = useLocationState('type_schet', TypeSchetOperatsii.KASSA_PRIXOD)
+  const [typeSchet, setTypeSchet] = useLocationState('type_schet', TypeSchetOperatsii.ALL)
 
   return (
     <div className="flex items-center">

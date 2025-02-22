@@ -1,51 +1,31 @@
-export type Ostatok = {
+export interface Ostatok {
   id: number
-  user_id: number
-  naimenovanie_tovarov_jur7_id: number
-  sena: number
-  from: {
-    kol: number
-    summa: number
-  }
-  month: number
-  year: number
-  date_saldo: string
-  kimning_buynida: number
-  naimenovanie_tovarov: string
-  edin: string
-  group_jur7_id: number
-  group_jur7_name: string
-  prixod_doc_date: string
-  prixod_data: {
-    doc_date: string
-    doc_num: string
-  }
-  internal: {
-    prixod: {
-      kol: number
-      summa: number
-    }
-    rasxod: {
-      kol: number
-      summa: number
-    }
-  }
-  to: {
-    kol: number
-    summa: number
-  }
+  fio: string
+  spravochnik_podrazdelenie_jur7_id: number
+  spravochnik_podrazdelenie_jur7_name: string
+  products: OstatokProduct[]
 }
 
-export type OstatokProduct = {
+export interface OstatokProduct {
   id: number
-  user_id: number
-  naimenovanie_tovarov_jur7_id: number
-  sena: number
+  name: string
+  edin: string
+  group_jur7_id: number
+  spravochnik_budjet_name_id: number
+  inventar_num: string
+  serial_num: string
+  group_jur7_name: string
+  iznos_foiz: number
+  spravochnik_budjet_name: string
   from: {
     kol: number
+    kol_rasxod: number
+    kol_prixod: number
     summa: number
+    summa_prixod: number
+    summa_rasxod: number
+    sena: number
   }
-
   internal: {
     kol: number
     kol_rasxod: number
@@ -53,33 +33,19 @@ export type OstatokProduct = {
     summa: number
     summa_prixod: number
     summa_rasxod: number
-  }
-
-  month: number
-  year: number
-  date_saldo: string
-  kimning_buynida: number
-  naimenovanie_tovarov: string
-  edin: string
-  group_jur7_id: number
-  group_name: string
-  schet: string
-  iznos_foiz: number
-  provodka_debet: string
-  group_number: string
-  provodka_kredit: string
-  provodka_subschet: string
-  roman_numeral: string
-  pod_group: string
-  spravochnik_budjet_name_id: number
-  inventar_num: string
-  serial_num: string
-  prixod_data: {
-    data_pereotsenka: string
-    doc_num: string
+    sena: any
   }
   to: {
     kol: number
+    kol_rasxod: number
+    kol_prixod: number
     summa: number
+    summa_prixod: number
+    summa_rasxod: number
+    sena: number
+  }
+  prixod_data: {
+    doc_date: string
+    doc_num: string
   }
 }

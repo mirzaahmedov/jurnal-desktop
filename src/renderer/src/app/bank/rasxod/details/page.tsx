@@ -319,6 +319,9 @@ const BankRasxodDetailtsPage = () => {
       }
     })
   }, [setLayout, navigate, params.id, t])
+  useEffect(() => {
+    form.setValue('organization_porucheniya_name', orgSpravochnik.selected?.name ?? '')
+  }, [form, orgSpravochnik.selected])
 
   return (
     <DetailsView>
@@ -341,7 +344,8 @@ const BankRasxodDetailtsPage = () => {
                   name={t('payer-info')}
                 />
                 <OrganizationFields
-                  gazna
+                  displayGazna
+                  displayPorucheniya
                   form={form as any}
                   tabIndex={2}
                   error={form.formState.errors.id_spravochnik_organization}
@@ -400,7 +404,11 @@ const BankRasxodDetailtsPage = () => {
                   <PorucheniyaDropdown
                     rasxod={form.getValues()}
                     main_schet={main_schet.data}
-                    organization={orgSpravochnik.selected}
+                    organization={{
+                      ...orgSpravochnik.selected,
+                      name:
+                        form.watch('organization_porucheniya_name') ?? orgSpravochnik.selected.name
+                    }}
                   />
                 </ButtonGroup>
               ) : null}

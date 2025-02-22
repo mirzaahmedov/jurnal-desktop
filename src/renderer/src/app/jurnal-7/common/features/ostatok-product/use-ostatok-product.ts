@@ -1,8 +1,10 @@
+import type { UseSpravochnikReturn } from '@renderer/common/features/spravochnik'
+import type { OstatokProduct } from '@renderer/common/models'
+
 import { createNaimenovanieSpravochnik } from '@renderer/app/jurnal-7/naimenovaniya/service'
 import { createOstatokProductSpravochnik } from '@renderer/app/jurnal-7/ostatok'
-import type { UseSpravochnikReturn} from '@renderer/common/features/spravochnik';
 import { useSpravochnik } from '@renderer/common/features/spravochnik'
-import type { OstatokProduct } from '@renderer/common/models'
+import { formatDate, getFirstDayOfMonth } from '@renderer/common/lib/date'
 
 type UseOstatokProductParams = {
   naimenovanie_tovarov_jur7_id: number
@@ -27,12 +29,13 @@ export const useOstatokProduct = ({
 }: UseOstatokProductParams): UseOstatokProductReturn => {
   const productOstatokSpravochnik = useSpravochnik(
     createOstatokProductSpravochnik({
-      onChange(_, product) {
-        onChange(product)
+      onChange(_, ostatok) {
+        onChange(ostatok as any)
       },
       params: {
-        responsible_id: kimdan_id,
-        to: doc_date,
+        kimning_buynida: kimdan_id,
+        from: formatDate(getFirstDayOfMonth(new Date(doc_date))),
+        to: formatDate(getFirstDayOfMonth(new Date(doc_date))),
         product_id: naimenovanie_tovarov_jur7_id || undefined
       },
       includeParamsInGetById: true,
@@ -53,6 +56,6 @@ export const useOstatokProduct = ({
     inventar_num: product?.inventar_num ?? '',
     group_jur7_number: product?.group_number ?? '',
     naimenovanie_tovarov_jur7_name: product?.name ?? '',
-    spravochnik: productOstatokSpravochnik
+    spravochnik: productOstatokSpravochnik as any
   }
 }
