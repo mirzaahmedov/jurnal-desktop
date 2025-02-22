@@ -19,7 +19,7 @@ import { adminUserService } from './service'
 const UserPage = () => {
   const [selected, setSelected] = useState<User | null>(null)
 
-  const toggle = useToggle()
+  const dialogToggle = useToggle()
   const queryClient = useQueryClient()
 
   const setLayout = useLayoutStore((store) => store.setLayout)
@@ -48,10 +48,10 @@ const UserPage = () => {
   })
 
   useEffect(() => {
-    if (!toggle.isOpen) {
+    if (!dialogToggle.isOpen) {
       setSelected(null)
     }
-  }, [toggle.isOpen])
+  }, [dialogToggle.isOpen])
   useEffect(() => {
     setLayout({
       title: t('pages.user'),
@@ -61,13 +61,13 @@ const UserPage = () => {
           title: t('pages.admin')
         }
       ],
-      onCreate: toggle.open
+      onCreate: dialogToggle.open
     })
-  }, [setLayout, t, toggle.open])
+  }, [setLayout, t, dialogToggle.open])
 
   const handleClickEdit = (row: User) => {
     setSelected(row)
-    toggle.open()
+    dialogToggle.open()
   }
   const handleClickDelete = (row: User) => {
     confirm({
@@ -90,8 +90,8 @@ const UserPage = () => {
       </div>
       <AdminUserDialog
         data={selected}
-        open={toggle.isOpen}
-        onChangeOpen={toggle.setOpen}
+        open={dialogToggle.isOpen}
+        onChangeOpen={dialogToggle.setOpen}
       />
     </>
   )

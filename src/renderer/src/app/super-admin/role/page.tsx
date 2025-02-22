@@ -2,12 +2,15 @@ import type { Role } from '@/common/models'
 
 import { useEffect, useState } from 'react'
 
+import { SearchField, useSearch } from '@renderer/common/features/search'
+import { usePagination } from '@renderer/common/hooks'
+import { ListView } from '@renderer/common/views'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 
-import { GenericTable, LoadingOverlay } from '@/common/components'
+import { GenericTable } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
-import { useLayout } from '@/common/features/layout'
+import { useLayoutStore } from '@/common/features/layout'
 import { useToggle } from '@/common/hooks/use-toggle'
 
 import { roleColumns } from './columns'
@@ -19,13 +22,23 @@ const RolePage = () => {
   const [selected, setSelected] = useState<Role | null>(null)
 
   const { confirm } = useConfirm()
+  const { search } = useSearch()
   const { t } = useTranslation(['app'])
 
-  const toggle = useToggle()
+  const pagination = usePagination()
+  const dialogToggle = useToggle()
   const queryClient = useQueryClient()
 
-  const { data: role, isFetching } = useQuery({
-    queryKey: [roleQueryKeys.getAll],
+  const setLayout = useLayoutStore((store) => store.setLayout)
+
+  const { data: roles, isFetching } = useQuery({
+    queryKey: [
+      roleQueryKeys.getAll,
+      {
+        ...pagination,
+        search
+      }
+    ],
     queryFn: roleService.getAll
   })
 
@@ -40,18 +53,21 @@ const RolePage = () => {
   })
 
   useEffect(() => {
-    if (!toggle.isOpen) {
+    if (!dialogToggle.isOpen) {
       setSelected(null)
     }
-  }, [toggle.isOpen])
-  useLayout({
-    title: t('pages.role'),
-    onCreate: toggle.open
-  })
+  }, [dialogToggle.isOpen])
+  useEffect(() => {
+    setLayout({
+      title: t('pages.role'),
+      content: SearchField,
+      onCreate: dialogToggle.open
+    })
+  }, [setLayout])
 
   const handleClickEdit = (row: Role) => {
     setSelected(row)
-    toggle.open()
+    dialogToggle.open()
   }
   const handleClickDelete = (row: Role) => {
     confirm({
@@ -62,22 +78,27 @@ const RolePage = () => {
   }
 
   return (
-    <>
-      <div className="flex-1 relative">
-        {isFetching || isPending ? <LoadingOverlay /> : null}
+    <ListView>
+      <ListView.Content loading={isFetching || isPending}>
         <GenericTable
-          data={role?.data ?? []}
+          data={roles?.data ?? []}
           columnDefs={roleColumns}
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}
         />
-      </div>
+      </ListView.Content>
+      <ListView.Footer>
+        <ListView.Pagination
+          pageCount={roles?.meta?.pageCount ?? 0}
+          {...pagination}
+        />
+      </ListView.Footer>
       <RoleDialog
         data={selected}
-        open={toggle.isOpen}
-        onChangeOpen={toggle.setOpen}
+        open={dialogToggle.isOpen}
+        onChangeOpen={dialogToggle.setOpen}
       />
-    </>
+    </ListView>
   )
 }
 

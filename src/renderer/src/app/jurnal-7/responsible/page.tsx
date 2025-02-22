@@ -69,7 +69,7 @@ const ResponsiblePage = () => {
       title: t('pages.responsible'),
       breadcrumbs: [
         {
-          title: t('pages.organization')
+          title: t('pages.material-warehouse')
         }
       ],
       content: SearchField,

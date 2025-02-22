@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 
 import { useRequisitesStore } from '@renderer/common/features/requisites'
+import { SearchField, useSearch } from '@renderer/common/features/search'
 import { usePagination } from '@renderer/common/hooks'
 import { ListView } from '@renderer/common/views'
 import { useQueryClient } from '@tanstack/react-query'
@@ -26,6 +27,7 @@ const Jurnal7InternalTransferPage = () => {
 
   const { t } = useTranslation(['app'])
   const { confirm } = useConfirm()
+  const { search } = useSearch()
   const { form, from, to, applyFilters } = useJurnal7DateRange()
 
   const { mutate: deleteInternalTransfer, isPending } = useInternalTransferDelete({
@@ -47,6 +49,7 @@ const Jurnal7InternalTransferPage = () => {
   const { data: transferList, isFetching } = useInternalTransferList({
     params: {
       ...pagination,
+      search,
       main_schet_id,
       from,
       to
@@ -56,6 +59,7 @@ const Jurnal7InternalTransferPage = () => {
   useEffect(() => {
     setLayout({
       title: t('pages.internal-docs'),
+      content: SearchField,
       breadcrumbs: [
         {
           title: t('pages.material-warehouse')

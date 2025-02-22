@@ -3,6 +3,7 @@ import { useEffect } from 'react'
 import { DownloadFile } from '@renderer/common/features/file'
 import { useLayoutStore } from '@renderer/common/features/layout'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
+import { SearchField, useSearch } from '@renderer/common/features/search'
 import { useDates, usePagination } from '@renderer/common/hooks'
 import { useLocationState } from '@renderer/common/hooks/use-location-state'
 import { ListView } from '@renderer/common/views'
@@ -35,6 +36,7 @@ const PodotchetMonitoringPage = () => {
   const setLayout = useLayoutStore((store) => store.setLayout)
 
   const { t } = useTranslation(['app'])
+  const { search } = useSearch()
   const { main_schet_id, budjet_id } = useRequisitesStore()
 
   const [podotchetId, setPodotchetId] = useLocationState<undefined | number>('podotchet_id')
@@ -65,6 +67,7 @@ const PodotchetMonitoringPage = () => {
       {
         ...dates,
         ...pagination,
+        search,
         main_schet_id,
         podotchet_id: podotchetId,
         operatsii: operatsiiSpravochnik.selected?.schet
@@ -77,6 +80,7 @@ const PodotchetMonitoringPage = () => {
   useEffect(() => {
     setLayout({
       title: t('pages.podotchet-monitoring'),
+      content: SearchField,
       breadcrumbs: [
         {
           title: t('pages.podotchet')

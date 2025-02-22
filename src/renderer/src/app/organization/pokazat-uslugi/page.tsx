@@ -3,7 +3,7 @@ import type { PokazatUslugi } from '@/common/models'
 import { useEffect } from 'react'
 
 import { useRequisitesStore } from '@renderer/common/features/requisites'
-// import { SearchField, useSearch } from '@renderer/common/features/search'
+import { SearchField, useSearch } from '@renderer/common/features/search'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
@@ -28,7 +28,7 @@ const PokazatUslugiPage = () => {
   const dates = useDates()
 
   const { confirm } = useConfirm()
-  // const { search } = useSearch()
+  const { search } = useSearch()
   const { t } = useTranslation(['app'])
 
   const { data: pokazatUslugiList, isFetching } = useQuery({
@@ -36,7 +36,7 @@ const PokazatUslugiPage = () => {
       queryKeys.getAll,
       {
         main_schet_id,
-        // search,
+        search,
         ...dates,
         ...pagination
       }
@@ -78,7 +78,7 @@ const PokazatUslugiPage = () => {
           title: t('pages.organization')
         }
       ],
-      // content: SearchField,
+      content: SearchField,
       onCreate() {
         navigate('create')
       }
@@ -101,7 +101,7 @@ const PokazatUslugiPage = () => {
       <ListView.Footer>
         <ListView.Pagination
           {...pagination}
-          pageCount={pokazatUslugiList?.meta.pageCount ?? 0}
+          pageCount={pokazatUslugiList?.meta?.pageCount ?? 0}
         />
       </ListView.Footer>
     </ListView>

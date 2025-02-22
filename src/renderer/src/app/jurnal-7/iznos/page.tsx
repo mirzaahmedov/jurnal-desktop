@@ -1,15 +1,16 @@
 import type { Iznos } from '@renderer/common/models'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { GenericTable } from '@renderer/common/components'
 import { MonthPicker } from '@renderer/common/components/month-picker'
-import { useLayout } from '@renderer/common/features/layout'
+import { useLayoutStore } from '@renderer/common/features/layout'
 import { SearchField, useSearch } from '@renderer/common/features/search'
 import { usePagination, useToggle } from '@renderer/common/hooks'
 import { getFirstDayOfMonth } from '@renderer/common/lib/date'
 import { ListView } from '@renderer/common/views'
 import { useQuery } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
 
 import { columns } from './columns'
 import { iznosQueryKeys } from './config'
@@ -21,10 +22,13 @@ const IznosPage = () => {
   const pagination = usePagination()
   const dialogToggle = useToggle()
 
+  const setLayout = useLayoutStore((store) => store.setLayout)
+
   const [year, setYear] = useState<number>(date.getFullYear())
   const [month, setMonth] = useState<number>(date.getMonth() + 1)
   const [selected, setSelected] = useState<Iznos | null>(null)
 
+  const { t } = useTranslation(['app'])
   const { search } = useSearch()
 
   const { data: iznosList, isFetching } = useQuery({
@@ -40,10 +44,17 @@ const IznosPage = () => {
     queryFn: iznosService.getAll
   })
 
-  useLayout({
-    title: 'Износ',
-    content: SearchField
-  })
+  useEffect(() => {
+    setLayout({
+      title: t('pages.iznos'),
+      content: SearchField,
+      breadcrumbs: [
+        {
+          title: t('pages.material-warehouse')
+        }
+      ]
+    })
+  }, [setLayout])
 
   const handleEdit = (row: Iznos) => {
     setSelected(row)

@@ -3,6 +3,7 @@ import { useEffect } from 'react'
 import { ButtonGroup } from '@renderer/common/components/ui/button-group'
 import { DownloadFile, ImportFile } from '@renderer/common/features/file'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
+import { SearchField, useSearch } from '@renderer/common/features/search'
 import { usePagination } from '@renderer/common/hooks'
 import { ListView } from '@renderer/common/views'
 import { useQueryClient } from '@tanstack/react-query'
@@ -25,6 +26,7 @@ const Jurnal7PrixodPage = () => {
   const queryClient = useQueryClient()
 
   const { confirm } = useConfirm()
+  const { search } = useSearch()
   const { t } = useTranslation(['app'])
 
   const setLayout = useLayoutStore((store) => store.setLayout)
@@ -45,6 +47,7 @@ const Jurnal7PrixodPage = () => {
   const { data: prixodList, isFetching } = usePrixodList({
     params: {
       ...pagination,
+      search,
       main_schet_id,
       from,
       to
@@ -54,6 +57,7 @@ const Jurnal7PrixodPage = () => {
   useEffect(() => {
     setLayout({
       title: t('pages.prixod-docs'),
+      content: SearchField,
       breadcrumbs: [
         {
           title: t('pages.material-warehouse')

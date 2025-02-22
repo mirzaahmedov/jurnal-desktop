@@ -7,6 +7,7 @@ import { ButtonGroup } from '@renderer/common/components/ui/button-group'
 import { DownloadFile } from '@renderer/common/features/file'
 import { useLayoutStore } from '@renderer/common/features/layout'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
+import { SearchField, useSearch } from '@renderer/common/features/search'
 import { useSpravochnik } from '@renderer/common/features/spravochnik'
 import { formatDate, getFirstDayOfMonth, getLastDayOfMonth } from '@renderer/common/lib/date'
 import { ListView } from '@renderer/common/views'
@@ -24,6 +25,8 @@ const OstatokPage = () => {
   const [year, setYear] = useState(new Date().getFullYear())
 
   const setLayout = useLayoutStore((store) => store.setLayout)
+
+  const { search } = useSearch()
   const { main_schet_id, budjet_id } = useRequisitesStore()
   const { t } = useTranslation(['app'])
 
@@ -53,6 +56,7 @@ const OstatokPage = () => {
       {
         from,
         to,
+        search,
         kimning_buynida: responsibleSpravochnik.selected?.id
       }
     ],
@@ -62,6 +66,7 @@ const OstatokPage = () => {
   useEffect(() => {
     setLayout({
       title: t('pages.ostatok'),
+      content: SearchField,
       breadcrumbs: [
         {
           title: t('pages.material-warehouse')

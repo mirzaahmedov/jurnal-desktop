@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 
 import { DownloadFile } from '@renderer/common/features/file'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
+import { SearchField, useSearch } from '@renderer/common/features/search'
 import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 
@@ -19,6 +20,7 @@ import { kassaMonitorService } from './service'
 const KassaMonitorPage = () => {
   const pagination = usePagination()
   const dates = useDates()
+  const { search } = useSearch()
 
   const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
   const setLayout = useLayoutStore((store) => store.setLayout)
@@ -30,6 +32,7 @@ const KassaMonitorPage = () => {
       kassaMonitorQueryKeys.getAll,
       {
         main_schet_id,
+        search,
         ...dates,
         ...pagination
       }
@@ -40,7 +43,8 @@ const KassaMonitorPage = () => {
   useEffect(() => {
     setLayout({
       title: t('pages.monitoring'),
-      breadcrumbs: [{ title: t('pages.kassa') }]
+      breadcrumbs: [{ title: t('pages.kassa') }],
+      content: SearchField
     })
   }, [setLayout, t])
 
@@ -76,7 +80,7 @@ const KassaMonitorPage = () => {
             </ButtonGroup>
           ) : null}
         </div>
-        <div className="pt-5 flex items-center gap-5">
+        <div className="w-full pt-5 flex items-center gap-5">
           <span className="text-sm text-slate-400">{t('remainder-from')}</span>
           <b className="font-black text-slate-700">
             {formatNumber(monitorList?.meta?.summa_from ?? 0)}

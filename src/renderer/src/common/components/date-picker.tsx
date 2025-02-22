@@ -2,8 +2,8 @@ import type { InputProps } from './ui/input'
 import type { PatternFormatProps } from 'react-number-format'
 
 import {
-  type ButtonHTMLAttributes,
   type ChangeEvent,
+  type HTMLAttributes,
   type KeyboardEvent,
   forwardRef,
   useEffect,
@@ -22,13 +22,14 @@ import { formatDate, localeDateToISO, parseDate, validateDate } from '@/common/l
 import { formatLocaleDate, unformatLocaleDate } from '@/common/lib/format'
 import { cn } from '@/common/lib/utils'
 
+import { Button } from './ui/button'
 import { Input } from './ui/input'
 
 export type DatePickerProps = Omit<PatternFormatProps<InputProps>, 'format' | 'onChange'> & {
   value?: string
   onChange?: (value: string) => void
   className?: string
-  triggerProps?: ButtonHTMLAttributes<HTMLButtonElement>
+  triggerProps?: HTMLAttributes<HTMLDivElement>
   placeholder?: string
   formatValue?: (value: string) => string
   unformatValue?: (value: string) => string
@@ -100,34 +101,36 @@ const DatePicker = forwardRef<HTMLButtonElement, DatePickerProps>(
         open={calendarToggle.isOpen}
         onOpenChange={handleChangeActive}
       >
-        <PopoverTrigger
-          asChild
-          ref={ref}
+        <div
+          {...triggerProps}
+          className={cn('relative min-w-52', triggerProps.className)}
         >
-          <button
-            tabIndex={-1}
-            onFocus={() => {
-              inputRef.current?.focus()
-            }}
-            {...triggerProps}
-            className={cn('relative min-w-52', triggerProps.className)}
+          <PatternFormat
+            {...props}
+            getInputRef={inputRef}
+            customInput={Input}
+            format="##.##.####"
+            mask={['д', 'д', 'м', 'м', 'г', 'г', 'г', 'г']}
+            value={internalValue}
+            onChange={handleChange}
+            placeholder={placeholder ?? 'дд.мм.гггг'}
+            onBlur={handleBlur}
+            onKeyDown={handleKeyDown}
+            className={cn('w-full', className)}
+          />
+          <PopoverTrigger
+            asChild
+            ref={ref}
           >
-            <PatternFormat
-              {...props}
-              getInputRef={inputRef}
-              customInput={Input}
-              format="##.##.####"
-              mask={['д', 'д', 'м', 'м', 'г', 'г', 'г', 'г']}
-              value={internalValue}
-              onChange={handleChange}
-              placeholder={placeholder ?? 'дд.мм.гггг'}
-              onBlur={handleBlur}
-              onKeyDown={handleKeyDown}
-              className={cn('w-full', className)}
-            />
-            <CalendarIcon className="absolute top-1/2 right-2 -translate-y-1/2 mr-2 h-4 w-4 text-slate-500" />
-          </button>
-        </PopoverTrigger>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="group absolute top-1/2 right-2 -translate-y-1/2 size-7"
+            >
+              <CalendarIcon className="h-4 w-4 text-slate-500 group-hover:text-brand" />
+            </Button>
+          </PopoverTrigger>
+        </div>
         <PopoverContent
           className="w-auto p-0"
           onOpenAutoFocus={(e) => e.preventDefault()}
@@ -135,7 +138,7 @@ const DatePicker = forwardRef<HTMLButtonElement, DatePickerProps>(
           <Calendar
             {...calendarProps}
             mode="single"
-            selected={value ? parseDate(value) : undefined}
+            selected={(internalValue ?? value) ? parseDate(internalValue ?? value) : undefined}
             onSelect={(date) => {
               if (!date) {
                 return

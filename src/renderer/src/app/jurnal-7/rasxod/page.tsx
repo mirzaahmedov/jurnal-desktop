@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 
 import { useLayoutStore } from '@renderer/common/features/layout'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
+import { SearchField, useSearch } from '@renderer/common/features/search'
 import { usePagination } from '@renderer/common/hooks'
 import { ListView } from '@renderer/common/views'
 import { useQueryClient } from '@tanstack/react-query'
@@ -25,6 +26,7 @@ const Jurnal7RasxodPage = () => {
   const setLayout = useLayoutStore((store) => store.setLayout)
 
   const { t } = useTranslation(['app'])
+  const { search } = useSearch()
   const { confirm } = useConfirm()
   const { form, from, to, applyFilters } = useJurnal7DateRange()
 
@@ -47,6 +49,7 @@ const Jurnal7RasxodPage = () => {
   const { data: rasxodList, isFetching } = useRasxodList({
     params: {
       ...pagination,
+      search,
       main_schet_id,
       from,
       to
@@ -56,6 +59,7 @@ const Jurnal7RasxodPage = () => {
   useEffect(() => {
     setLayout({
       title: t('pages.rasxod-docs'),
+      content: SearchField,
       breadcrumbs: [
         {
           title: t('pages.material-warehouse')

@@ -2,12 +2,13 @@ import type { Region } from '@/common/models'
 
 import { useEffect, useState } from 'react'
 
+import { SearchField, useSearch } from '@renderer/common/features/search'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 
 import { GenericTable, LoadingOverlay } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
-import { useLayout } from '@/common/features/layout'
+import { useLayoutStore } from '@/common/features/layout'
 import { useToggle } from '@/common/hooks/use-toggle'
 
 import { regionColumns } from './columns'
@@ -18,14 +19,17 @@ import { regionService } from './service'
 const RegionPage = () => {
   const [selected, setSelected] = useState<Region | null>(null)
 
-  const toggle = useToggle()
+  const setLayout = useLayoutStore((store) => store.setLayout)
+
+  const dialogToggle = useToggle()
   const queryClient = useQueryClient()
 
   const { t } = useTranslation(['app'])
+  const { search } = useSearch()
   const { confirm } = useConfirm()
 
   const { data: region, isFetching } = useQuery({
-    queryKey: [regionQueryKeys.getAll],
+    queryKey: [regionQueryKeys.getAll, { search }],
     queryFn: regionService.getAll
   })
   const { mutate: deleteMutation, isPending } = useMutation({
@@ -39,18 +43,21 @@ const RegionPage = () => {
   })
 
   useEffect(() => {
-    if (!toggle.isOpen) {
+    if (!dialogToggle.isOpen) {
       setSelected(null)
     }
-  }, [toggle.isOpen])
-  useLayout({
-    title: t('pages.region'),
-    onCreate: toggle.open
-  })
+  }, [dialogToggle.isOpen])
+  useEffect(() => {
+    setLayout({
+      title: t('pages.region'),
+      content: SearchField,
+      onCreate: dialogToggle.open
+    })
+  }, [setLayout, t])
 
   const handleClickEdit = (row: Region) => {
     setSelected(row)
-    toggle.open()
+    dialogToggle.open()
   }
 
   const handleClickDelete = (row: Region) => {
@@ -75,8 +82,8 @@ const RegionPage = () => {
 
       <RegionsDialog
         data={selected}
-        open={toggle.isOpen}
-        onChangeOpen={toggle.setOpen}
+        open={dialogToggle.isOpen}
+        onChangeOpen={dialogToggle.setOpen}
       />
     </>
   )

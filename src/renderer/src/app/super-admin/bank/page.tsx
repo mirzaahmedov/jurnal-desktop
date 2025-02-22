@@ -1,7 +1,8 @@
 import type { Bank } from '@/common/models'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
+import { SearchField, useSearch } from '@renderer/common/features/search'
 import { usePagination } from '@renderer/common/hooks'
 import { ListView } from '@renderer/common/views'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
@@ -9,7 +10,7 @@ import { useTranslation } from 'react-i18next'
 
 import { GenericTable } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
-import { useLayout } from '@/common/features/layout'
+import { useLayoutStore } from '@/common/features/layout'
 import { useToggle } from '@/common/hooks/use-toggle'
 
 import { bankColumns } from './columns'
@@ -20,17 +21,21 @@ import { bankService } from './service'
 const BankPage = () => {
   const [selected, setSelected] = useState<Bank>()
 
+  const setLayout = useLayoutStore((store) => store.setLayout)
+
   const dialogToggle = useToggle()
   const queryClient = useQueryClient()
   const pagination = usePagination()
 
   const { t } = useTranslation(['app'])
+  const { search } = useSearch()
   const { confirm } = useConfirm()
 
   const { data: podpisList, isFetching } = useQuery({
     queryKey: [
       bankQueryKeys.getAll,
       {
+        search,
         ...pagination
       }
     ],
@@ -59,13 +64,15 @@ const BankPage = () => {
     })
   }
 
-  const openDialog = dialogToggle.open
-  useLayout({
-    title: t('pages.bank'),
-    onCreate() {
-      openDialog()
-    }
-  })
+  useEffect(() => {
+    setLayout({
+      title: t('pages.bank'),
+      content: SearchField,
+      onCreate() {
+        dialogToggle.open()
+      }
+    })
+  }, [t, dialogToggle])
 
   return (
     <ListView>
@@ -80,7 +87,7 @@ const BankPage = () => {
       <ListView.Footer>
         <ListView.Pagination
           {...pagination}
-          pageCount={podpisList?.meta.pageCount ?? 0}
+          pageCount={podpisList?.meta?.pageCount ?? 0}
         />
       </ListView.Footer>
       <BankDialog

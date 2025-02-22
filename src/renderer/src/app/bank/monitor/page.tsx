@@ -57,7 +57,7 @@ const BankMonitorPage = () => {
     <ListView>
       <ListView.Header>
         <ListView.RangeDatePicker {...dates} />
-        <div className="flex flex-row items-center justify-between">
+        <div className="w-full flex flex-row items-center justify-between">
           <div className="pt-5 flex items-center gap-5">
             <span className="text-sm text-slate-400">{t('remainder-from')}</span>
             <b className="font-black text-slate-700">

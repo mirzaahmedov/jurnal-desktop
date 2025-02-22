@@ -4,6 +4,7 @@ import { createOrganizationSpravochnik } from '@renderer/app/region-spravochnik/
 import { Button } from '@renderer/common/components/ui/button'
 import { DownloadFile } from '@renderer/common/features/file'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
+import { SearchField, useSearch } from '@renderer/common/features/search'
 import { useLocationState } from '@renderer/common/hooks/use-location-state'
 import { useQuery } from '@tanstack/react-query'
 import { Download } from 'lucide-react'
@@ -46,6 +47,7 @@ const OrganizationMonitoringPage = () => {
   const dropdownToggle = useToggle()
 
   const { main_schet_id, budjet_id } = useRequisitesStore()
+  const { search } = useSearch()
   const { t } = useTranslation(['app'])
 
   const orgSpravochnik = useSpravochnik(
@@ -81,6 +83,7 @@ const OrganizationMonitoringPage = () => {
         main_schet_id,
         operatsii: operatsiiSpravochnik.selected ? operatsiiSpravochnik.selected.schet : undefined,
         organ_id: orgId ? orgId : undefined,
+        search,
         ...dates,
         ...pagination
       }
@@ -92,6 +95,7 @@ const OrganizationMonitoringPage = () => {
   useEffect(() => {
     setLayout({
       title: t('pages.organization-monitoring'),
+      content: SearchField,
       breadcrumbs: [
         {
           title: t('pages.organization')
@@ -131,7 +135,10 @@ const OrganizationMonitoringPage = () => {
                 getElements={(selected) => [
                   { name: 'ИНН:', value: selected?.inn },
                   { name: 'МФО:', value: selected?.mfo },
-                  { name: 'Расчетный счет:', value: selected?.raschet_schet },
+                  {
+                    name: 'Расчетный счет:',
+                    value: selected?.account_numbers.map((a) => a.raschet_schet).join(',')
+                  },
                   { name: 'Банк:', value: selected?.bank_klient }
                 ]}
               />

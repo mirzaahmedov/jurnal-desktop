@@ -3,6 +3,7 @@ import type { KassaRasxodType } from '@/common/models'
 import { useEffect } from 'react'
 
 import { useRequisitesStore } from '@renderer/common/features/requisites'
+import { SearchField, useSearch } from '@renderer/common/features/search'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
@@ -21,6 +22,7 @@ import { kassaRasxodService } from './service'
 const KassaRasxodPage = () => {
   const { confirm } = useConfirm()
   const { t } = useTranslation(['app'])
+  const { search } = useSearch()
 
   const dates = useDates()
   const pagination = usePagination()
@@ -34,6 +36,7 @@ const KassaRasxodPage = () => {
       queryKeys.getAll,
       {
         main_schet_id,
+        search,
         ...dates,
         ...pagination
       }
@@ -65,6 +68,7 @@ const KassaRasxodPage = () => {
   useEffect(() => {
     setLayout({
       title: t('pages.rasxod-docs'),
+      content: SearchField,
       breadcrumbs: [
         {
           title: t('pages.kassa')
