@@ -17,7 +17,7 @@ import { Progress } from '@renderer/common/components/ui/progress'
 import { useToggle } from '@renderer/common/hooks'
 import { http } from '@renderer/common/lib/http'
 import { useMutation } from '@tanstack/react-query'
-import { CircleX, FileUp } from 'lucide-react'
+import { CircleX, FolderUp } from 'lucide-react'
 import millify from 'millify'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
@@ -85,7 +85,7 @@ export const ImportFile = ({ url, params }: ImportFileDialogProps) => {
     >
       <DialogTrigger>
         <Button>
-          <FileUp className="btn-icon icon-start" /> {t('import-excel')}
+          <FolderUp className="btn-icon icon-start" /> {t('import-excel')}
         </Button>
       </DialogTrigger>
       <DialogContent className="pt-10">

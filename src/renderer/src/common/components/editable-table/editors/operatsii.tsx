@@ -106,6 +106,9 @@ export const createOperatsiiEditor = <T extends { spravochnik_operatsii_id?: num
             inputRef.current?.focus()
           }}
           className="border-r"
+          popoverProps={{
+            onCloseAutoFocus: (e) => e.preventDefault()
+          }}
         >
           {({ open, close }) => (
             <SpravochnikInput
@@ -159,9 +162,6 @@ export const createOperatsiiEditor = <T extends { spravochnik_operatsii_id?: num
               setSubschet(option.sub_schet)
 
               paramsRef.current?.onChangeOperatsii?.(option)
-              requestAnimationFrame(() => {
-                inputRef.current?.focus()
-              })
             }
           }}
         >

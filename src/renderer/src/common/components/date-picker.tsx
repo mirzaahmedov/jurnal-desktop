@@ -36,7 +36,7 @@ export type DatePickerProps = Omit<PatternFormatProps<InputProps>, 'format' | 'o
   validate?: (value: string) => boolean
   calendarProps?: CalendarProps
 }
-const DatePicker = forwardRef<HTMLButtonElement, DatePickerProps>(
+export const DatePicker = forwardRef<HTMLButtonElement, DatePickerProps>(
   (
     {
       value,
@@ -164,5 +164,3 @@ const DatePicker = forwardRef<HTMLButtonElement, DatePickerProps>(
 )
 
 DatePicker.displayName = 'DatePicker'
-
-export { DatePicker }

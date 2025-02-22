@@ -1,8 +1,7 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 
 import { ChooseSpravochnik } from '@renderer/common/components'
 import { CollapsibleTable } from '@renderer/common/components/collapsible-table'
-import { MonthPicker } from '@renderer/common/components/month-picker'
 import { Button } from '@renderer/common/components/ui/button'
 import { ButtonGroup } from '@renderer/common/components/ui/button-group'
 import {
@@ -16,8 +15,7 @@ import { useLayoutStore } from '@renderer/common/features/layout'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
 import { SearchField, useSearch } from '@renderer/common/features/search'
 import { useSpravochnik } from '@renderer/common/features/spravochnik'
-import { useToggle } from '@renderer/common/hooks'
-import { formatDate, getFirstDayOfMonth, getLastDayOfMonth } from '@renderer/common/lib/date'
+import { useDates, useToggle } from '@renderer/common/hooks'
 import { ListView } from '@renderer/common/views'
 import { useQuery } from '@tanstack/react-query'
 import { Download } from 'lucide-react'
@@ -30,19 +28,13 @@ import { ostatokQueryKeys } from './config'
 import { ostatokService } from './service'
 
 const OstatokPage = () => {
-  const [month, setMonth] = useState(new Date().getMonth() + 1)
-  const [year, setYear] = useState(new Date().getFullYear())
-
   const dropdownToggle = useToggle()
+  const dates = useDates()
   const setLayout = useLayoutStore((store) => store.setLayout)
 
   const { search } = useSearch()
   const { t } = useTranslation(['app'])
   const { main_schet_id, budjet_id } = useRequisitesStore()
-
-  const date = new Date(`${year}-${month}-01`)
-  const from = formatDate(getFirstDayOfMonth(date))
-  const to = formatDate(getLastDayOfMonth(date))
 
   const podrazdelenieSpravochnik = useSpravochnik(
     createPodrazdelenie7Spravochnik({
@@ -64,8 +56,7 @@ const OstatokPage = () => {
     queryKey: [
       ostatokQueryKeys.getAll,
       {
-        from,
-        to,
+        ...dates,
         search,
         kimning_buynida: responsibleSpravochnik.selected?.id
       }
@@ -87,7 +78,7 @@ const OstatokPage = () => {
 
   return (
     <ListView>
-      <ListView.Content loading={isFetching}>
+      <ListView.Header>
         <div className="flex gap-10 justify-between p-5">
           <div className="flex gap-5">
             <ChooseSpravochnik
@@ -128,11 +119,11 @@ const OstatokPage = () => {
                 >
                   <DropdownMenuItem>
                     <DownloadFile
-                      fileName={`оборотка_${year}-${month}.xlsx`}
+                      fileName={`оборотка_${dates.from}-${dates.to}.xlsx`}
                       url="/jur_7/monitoring/obrotka/report"
                       params={{
-                        year,
-                        month,
+                        from: dates.from,
+                        to: dates.to,
                         main_schet_id,
                         excel: true
                       }}
@@ -142,11 +133,11 @@ const OstatokPage = () => {
 
                   <DropdownMenuItem>
                     <DownloadFile
-                      fileName={`материальная_${year}-${month}.xlsx`}
+                      fileName={`материальная_${dates.from}-${dates.to}.xlsx`}
                       url="/jur_7/monitoring/material/report"
                       params={{
-                        year,
-                        month,
+                        from: dates.from,
+                        to: dates.to,
                         main_schet_id,
                         excel: true
                       }}
@@ -156,11 +147,11 @@ const OstatokPage = () => {
 
                   <DropdownMenuItem>
                     <DownloadFile
-                      fileName={`шапка_${year}-${month}.xlsx`}
+                      fileName={`шапка_${dates.from}-${dates.to}.xlsx`}
                       url="/jur_7/monitoring/cap/report"
                       params={{
-                        from,
-                        to,
+                        from: dates.from,
+                        to: dates.to,
                         budjet_id,
                         excel: true
                       }}
@@ -170,11 +161,11 @@ const OstatokPage = () => {
 
                   <DropdownMenuItem>
                     <DownloadFile
-                      fileName={`шапка2_${year}-${month}.xlsx`}
+                      fileName={`шапка2_${dates.from}-${dates.to}.xlsx`}
                       url="/jur_7/monitoring/cap/back/report"
                       params={{
-                        from,
-                        to,
+                        from: dates.from,
+                        to: dates.to,
                         budjet_id,
                         excel: true
                       }}
@@ -201,15 +192,10 @@ const OstatokPage = () => {
               />
             </ButtonGroup>
           </div>
-          <MonthPicker
-            value={`${year}-${month}-01`}
-            onChange={(date) => {
-              const [year, month] = date.split('-').map(Number)
-              setYear(year)
-              setMonth(month)
-            }}
-          />
         </div>
+        <ListView.RangeDatePicker {...dates} />
+      </ListView.Header>
+      <ListView.Content loading={isFetching}>
         <CollapsibleTable
           data={ostatokList?.data ?? []}
           columnDefs={ostatokPodotchetColumns}

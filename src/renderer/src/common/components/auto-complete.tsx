@@ -1,8 +1,11 @@
+import type { PopoverContentProps } from '@radix-ui/react-popover'
+
 import { type KeyboardEvent, type ReactNode, useLayoutEffect, useRef, useState } from 'react'
 
 import { Command, CommandEmpty, CommandItem, CommandList } from '@/common/components/ui/command'
 import { Popover, PopoverContent, PopoverTrigger } from '@/common/components/ui/popover'
 import { type UseToggleReturn, useEventCallback, useToggle } from '@/common/hooks'
+import { cn } from '@/common/lib/utils'
 
 import { EmptyList } from './empty-states'
 import { Spinner } from './loading'
@@ -17,6 +20,7 @@ type AutoCompleteProps<T> = {
   getOptionValue: (option: T) => string
   onSelect: (option: T) => void
   className?: string
+  popoverProps?: PopoverContentProps
   children: (toggle: UseToggleReturn) => ReactNode
 }
 const AutoComplete = <T extends Record<string, unknown>>({
@@ -29,7 +33,8 @@ const AutoComplete = <T extends Record<string, unknown>>({
   getOptionValue,
   onSelect,
   className,
-  children
+  children,
+  popoverProps = {}
 }: AutoCompleteProps<T>) => {
   const commandRef = useRef<HTMLDivElement>(null)
 
@@ -97,9 +102,9 @@ const AutoComplete = <T extends Record<string, unknown>>({
       </PopoverTrigger>
       <PopoverContent
         onOpenAutoFocus={(e) => e.preventDefault()}
-        onCloseAutoFocus={(e) => e.preventDefault()}
         align="start"
-        className="w-[var(--radix-popover-trigger-width)]"
+        {...popoverProps}
+        className={cn('w-[var(--radix-popover-trigger-width)]', popoverProps.className)}
       >
         <Command
           ref={commandRef}
