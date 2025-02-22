@@ -3,15 +3,24 @@ import { useEffect, useState } from 'react'
 import { ChooseSpravochnik } from '@renderer/common/components'
 import { CollapsibleTable } from '@renderer/common/components/collapsible-table'
 import { MonthPicker } from '@renderer/common/components/month-picker'
+import { Button } from '@renderer/common/components/ui/button'
 import { ButtonGroup } from '@renderer/common/components/ui/button-group'
-import { DownloadFile } from '@renderer/common/features/file'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger
+} from '@renderer/common/components/ui/dropdown-menu'
+import { DownloadFile, ImportFile } from '@renderer/common/features/file'
 import { useLayoutStore } from '@renderer/common/features/layout'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
 import { SearchField, useSearch } from '@renderer/common/features/search'
 import { useSpravochnik } from '@renderer/common/features/spravochnik'
+import { useToggle } from '@renderer/common/hooks'
 import { formatDate, getFirstDayOfMonth, getLastDayOfMonth } from '@renderer/common/lib/date'
 import { ListView } from '@renderer/common/views'
 import { useQuery } from '@tanstack/react-query'
+import { Download } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { createPodrazdelenie7Spravochnik } from '../podrazdelenie/service'
@@ -24,11 +33,12 @@ const OstatokPage = () => {
   const [month, setMonth] = useState(new Date().getMonth() + 1)
   const [year, setYear] = useState(new Date().getFullYear())
 
+  const dropdownToggle = useToggle()
   const setLayout = useLayoutStore((store) => store.setLayout)
 
   const { search } = useSearch()
-  const { main_schet_id, budjet_id } = useRequisitesStore()
   const { t } = useTranslation(['app'])
+  const { main_schet_id, budjet_id } = useRequisitesStore()
 
   const date = new Date(`${year}-${month}-01`)
   const from = formatDate(getFirstDayOfMonth(date))
@@ -99,50 +109,95 @@ const OstatokPage = () => {
             />
           </div>
           <div>
-            <ButtonGroup borderStyle="dashed">
+            <ButtonGroup className="flex gap-5">
+              <DropdownMenu open={dropdownToggle.isOpen}>
+                <DropdownMenuTrigger
+                  asChild
+                  onClick={dropdownToggle.open}
+                >
+                  <Button variant="ghost">
+                    <Download className="btn-icon icon-start" />
+                    <span className="titlecase">
+                      {t('download-something', { something: t('reports') })}
+                    </span>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
+                  side="bottom"
+                  onInteractOutside={dropdownToggle.close}
+                >
+                  <DropdownMenuItem>
+                    <DownloadFile
+                      fileName={`оборотка_${year}-${month}.xlsx`}
+                      url="/jur_7/monitoring/obrotka/report"
+                      params={{
+                        year,
+                        month,
+                        main_schet_id,
+                        excel: true
+                      }}
+                      buttonText="Оборотка"
+                    />
+                  </DropdownMenuItem>
+
+                  <DropdownMenuItem>
+                    <DownloadFile
+                      fileName={`материальная_${year}-${month}.xlsx`}
+                      url="/jur_7/monitoring/material/report"
+                      params={{
+                        year,
+                        month,
+                        main_schet_id,
+                        excel: true
+                      }}
+                      buttonText="Материальная"
+                    />
+                  </DropdownMenuItem>
+
+                  <DropdownMenuItem>
+                    <DownloadFile
+                      fileName={`шапка_${year}-${month}.xlsx`}
+                      url="/jur_7/monitoring/cap/report"
+                      params={{
+                        from,
+                        to,
+                        budjet_id,
+                        excel: true
+                      }}
+                      buttonText="Шапка"
+                    />
+                  </DropdownMenuItem>
+
+                  <DropdownMenuItem>
+                    <DownloadFile
+                      fileName={`шапка2_${year}-${month}.xlsx`}
+                      url="/jur_7/monitoring/cap/back/report"
+                      params={{
+                        from,
+                        to,
+                        budjet_id,
+                        excel: true
+                      }}
+                      buttonText="Шапка (2)"
+                    />
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+
               <DownloadFile
-                fileName={`оборотка_${year}-${month}.xlsx`}
-                url="/jur_7/monitoring/obrotka/report"
+                fileName={`${t('pages.ostatok')}-${t('import')}-${t('template')}.xlsx`}
+                url="/jur_7/saldo/temlate"
+                buttonText={t('download-something', { something: t('template') })}
                 params={{
-                  year,
-                  month,
+                  excel: true
+                }}
+              />
+              <ImportFile
+                url="/jur_7/saldo/import"
+                params={{
                   main_schet_id,
-                  excel: true
+                  budjet_id
                 }}
-                buttonText="Оборотка"
-              />
-              <DownloadFile
-                fileName={`материальная_${year}-${month}.xlsx`}
-                url="/jur_7/monitoring/material/report"
-                params={{
-                  year,
-                  month,
-                  main_schet_id,
-                  excel: true
-                }}
-                buttonText="Материальная"
-              />
-              <DownloadFile
-                fileName={`шапка_${year}-${month}.xlsx`}
-                url="/jur_7/monitoring/cap/report"
-                params={{
-                  from,
-                  to,
-                  budjet_id,
-                  excel: true
-                }}
-                buttonText="Шапка"
-              />
-              <DownloadFile
-                fileName={`шапка2_${year}-${month}.xlsx`}
-                url="/jur_7/monitoring/cap/back/report"
-                params={{
-                  from,
-                  to,
-                  budjet_id,
-                  excel: true
-                }}
-                buttonText="Шапка (2)"
               />
             </ButtonGroup>
           </div>

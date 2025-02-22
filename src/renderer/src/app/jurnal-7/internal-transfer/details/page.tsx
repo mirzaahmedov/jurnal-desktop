@@ -79,7 +79,7 @@ const Jurnal7InternalTransferDetailsPage = () => {
     createResponsibleSpravochnik({
       value: form.watch('kimdan_id'),
       onChange: (value) => {
-        form.setValue('kimdan_id', value)
+        form.setValue('kimdan_id', value ?? 0)
         form.trigger('kimdan_id')
       }
     })
@@ -88,7 +88,7 @@ const Jurnal7InternalTransferDetailsPage = () => {
     createResponsibleSpravochnik({
       value: form.watch('kimga_id'),
       onChange: (value) => {
-        form.setValue('kimga_id', value)
+        form.setValue('kimga_id', value ?? 0)
         form.trigger('kimga_id')
       }
     })

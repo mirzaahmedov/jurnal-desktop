@@ -96,6 +96,10 @@ const DatePicker = forwardRef<HTMLButtonElement, DatePickerProps>(
       calendarToggle.setOpen(active)
     }
 
+    console.log({
+      date: parseDate(value ?? '')
+    })
+
     return (
       <Popover
         open={calendarToggle.isOpen}
@@ -138,7 +142,7 @@ const DatePicker = forwardRef<HTMLButtonElement, DatePickerProps>(
           <Calendar
             {...calendarProps}
             mode="single"
-            selected={(internalValue ?? value) ? parseDate(internalValue ?? value) : undefined}
+            selected={value ? parseDate(value) : undefined}
             onSelect={(date) => {
               if (!date) {
                 return

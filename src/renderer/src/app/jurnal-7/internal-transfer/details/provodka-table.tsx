@@ -400,12 +400,12 @@ const NaimenovanieCells = ({
       updateFormField(index, 'naimenovanie_tovarov_jur7_id', product.id)
       updateFormField(index, 'kol', product.to.kol)
       updateFormField(index, 'max_kol', product.to.kol)
-      updateFormField(index, 'sena', product.sena)
-      updateFormField(index, 'summa', calcSumma(product.to.kol, product.sena))
-      updateFormField(index, 'debet_schet', product?.schet ?? '')
-      updateFormField(index, 'kredit_schet', product?.schet ?? '')
-      updateFormField(index, 'debet_sub_schet', product?.provodka_subschet ?? '')
-      updateFormField(index, 'kredit_sub_schet', product?.provodka_subschet ?? '')
+      updateFormField(index, 'sena', product.to.sena)
+      updateFormField(index, 'summa', calcSumma(product.to.kol, product.to.sena))
+      updateFormField(index, 'debet_schet', product?.group?.schet ?? '')
+      updateFormField(index, 'kredit_schet', product?.group?.schet ?? '')
+      updateFormField(index, 'debet_sub_schet', product?.group?.provodka_subschet ?? '')
+      updateFormField(index, 'kredit_sub_schet', product?.group?.provodka_subschet ?? '')
       updateFormField(index, 'data_pereotsenka', formatDate(product.prixod_data?.doc_date))
     }
   })
@@ -423,7 +423,7 @@ const NaimenovanieCells = ({
               error: !!errorMessage
             })}
             error={!!errorMessage}
-            getInputValue={(selected) => String(selected?.naimenovanie_tovarov_jur7_id) ?? ''}
+            getInputValue={(selected) => String(selected?.id) ?? ''}
             {...spravochnik}
           />
         </div>

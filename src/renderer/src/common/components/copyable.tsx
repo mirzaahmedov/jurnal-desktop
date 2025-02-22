@@ -43,7 +43,7 @@ export const Copyable = (props: CopyableProps) => {
         }}
       >
         {isCopied ? (
-          <ClipboardCheck className="size-5 text-green-500" />
+          <ClipboardCheck className="size-5 text-blue-600" />
         ) : (
           <ClipboardPlus className="size-5" />
         )}

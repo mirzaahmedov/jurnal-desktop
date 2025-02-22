@@ -48,4 +48,20 @@ export interface OstatokProduct {
     doc_date: string
     doc_num: string
   }
+  group: {
+    id: number
+    smeta_id: any
+    name: string
+    schet: string
+    iznos_foiz: number
+    provodka_debet: string
+    provodka_subschet: string
+    group_number: string
+    provodka_kredit: string
+    roman_numeral: any
+    pod_group: string
+    created_at: string
+    updated_at: string
+    isdeleted: boolean
+  }
 }
