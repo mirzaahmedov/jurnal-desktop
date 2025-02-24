@@ -17,7 +17,6 @@ import { toast } from 'react-toastify'
 
 import { defaultValues, shartnomaQueryKeys } from '../config'
 import { ShartnomaFormSchema, shartnomaService } from '../service'
-import { ShartnomaKindFields } from './kind'
 import { PudratchiFields } from './pudratchi'
 import { ShartnomaGrafikForm } from './shartnoma-grafik-form'
 
@@ -107,7 +106,6 @@ export const ShartnomaForm = ({
       spravochnik_organization_id,
       opisanie,
       pudratchi_bool,
-      yillik_oylik,
       grafik_year,
       grafiks
     } = payload
@@ -120,7 +118,6 @@ export const ShartnomaForm = ({
         spravochnik_organization_id,
         opisanie,
         pudratchi_bool,
-        yillik_oylik,
         grafik_year,
         grafiks
       })
@@ -133,7 +130,6 @@ export const ShartnomaForm = ({
       spravochnik_organization_id,
       opisanie,
       pudratchi_bool,
-      yillik_oylik,
       grafik_year: parseDate(doc_date).getFullYear(),
       grafiks
     })
@@ -222,7 +218,6 @@ export const ShartnomaForm = ({
               <div className={cn('grid grid-cols-2 gap-10', dialog && 'grid-cols-1 gap-1')}>
                 <SummaFields
                   dialog={dialog}
-                  tabIndex={2}
                   data={{
                     summa: itogo
                   }}
@@ -230,16 +225,16 @@ export const ShartnomaForm = ({
               </div>
 
               <div className={cn('p-5', dialog && 'p-0 pt-5')}>
-                <OpisanieFields form={form} />
+                <OpisanieFields
+                  tabIndex={2}
+                  form={form}
+                />
               </div>
 
               <div className={cn('grid grid-cols-2 gap-10', dialog && 'gap-20')}>
                 <PudratchiFields
                   form={form}
-                  className={dialog ? 'p-0' : undefined}
-                />
-                <ShartnomaKindFields
-                  form={form}
+                  tabIndex={3}
                   className={dialog ? 'p-0' : undefined}
                 />
               </div>
@@ -259,6 +254,7 @@ export const ShartnomaForm = ({
           <div className={cn('p-5', dialog && 'p-0 pt-5')}>
             <Button
               type="submit"
+              tabIndex={4}
               disabled={isCreating || isUpdating || loading}
             >
               {t('save')}

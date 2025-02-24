@@ -274,7 +274,10 @@ const BankPrixodDetailsPage = () => {
               </div>
             </div>
             <DetailsView.Footer>
-              <DetailsView.Create disabled={isFetching || isUpdating || isCreating} />
+              <DetailsView.Create
+                tabIndex={6}
+                disabled={isFetching || isUpdating || isCreating}
+              />
             </DetailsView.Footer>
           </form>
         </Form>

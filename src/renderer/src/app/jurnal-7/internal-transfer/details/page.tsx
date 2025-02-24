@@ -156,6 +156,7 @@ const Jurnal7InternalTransferDetailsPage = () => {
           <form onSubmit={onSubmit}>
             <div className="grid grid-cols-2 items-end">
               <DocumentFields
+                tabIndex={1}
                 form={form}
                 validateDate={(date) => {
                   return withinMonth(new Date(date), parseDate(from))
@@ -170,11 +171,13 @@ const Jurnal7InternalTransferDetailsPage = () => {
             </div>
             <div className="grid grid-cols-2">
               <ResponsibleFields
+                tabIndex={2}
                 name={t('from-who')}
                 spravochnik={kimdanResponsibleSpravochnik}
                 error={form.formState.errors.kimdan_id}
               />
               <ResponsibleFields
+                tabIndex={3}
                 name={t('to-whom')}
                 spravochnik={kimgaResponsibleSpravochnik}
                 error={form.formState.errors.kimga_id}
@@ -188,16 +191,25 @@ const Jurnal7InternalTransferDetailsPage = () => {
               />
             </div>
             <div className="p-5">
-              <OpisanieFields form={form} />
+              <OpisanieFields
+                tabIndex={4}
+                form={form}
+              />
             </div>
             <DetailsView.Footer>
-              <DetailsView.Create disabled={isCreating || isUpdating} />
+              <DetailsView.Create
+                tabIndex={6}
+                disabled={isCreating || isUpdating}
+              />
             </DetailsView.Footer>
           </form>
         </Form>
 
         <div className="p-5 mb-28 overflow-x-auto scrollbar">
-          <ProvodkaTable form={form} />
+          <ProvodkaTable
+            tabIndex={5}
+            form={form}
+          />
         </div>
       </DetailsView.Content>
     </DetailsView>

@@ -66,7 +66,10 @@ const OrganizationFields: FormSpravochnikFieldsComponent<Organization, Organizat
               label={`${t('organization')} (${t('porucheniya').toLowerCase()})`}
               grid="2:5"
             >
-              <Input {...field} />
+              <Input
+                tabIndex={tabIndex}
+                {...field}
+              />
             </FormElement>
           )}
         />
@@ -125,6 +128,7 @@ const OrganizationFields: FormSpravochnikFieldsComponent<Organization, Organizat
                   <SelectField
                     {...field}
                     withFormControl
+                    tabIndex={tabIndex}
                     disabled={disabled || spravochnikProps.loading}
                     options={spravochnikProps.selected?.account_numbers ?? []}
                     getOptionLabel={(o) => o.raschet_schet}
@@ -162,6 +166,7 @@ const OrganizationFields: FormSpravochnikFieldsComponent<Organization, Organizat
                     <SelectField
                       {...field}
                       withFormControl
+                      tabIndex={tabIndex}
                       disabled={disabled || spravochnikProps.loading || !spravochnikProps.selected}
                       options={spravochnikProps.selected?.gaznas ?? []}
                       getOptionLabel={(o) => o.raschet_schet_gazna}

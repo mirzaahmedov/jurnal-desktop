@@ -3,7 +3,6 @@ import type { KeyboardEvent } from 'react'
 
 import { useEffect, useRef, useState } from 'react'
 
-import { ScrollArea } from '@renderer/common/components/ui/scroll-area'
 import { useToggle } from '@renderer/common/hooks'
 import { useQuery } from '@tanstack/react-query'
 import { ArrowLeft, ArrowRight } from 'lucide-react'
@@ -146,7 +145,6 @@ export const Spravochnik = ({ close, spravochnik }: SpravochnikProps) => {
           className="max-w-screen-2xl w-full p-0 gap-0 h-3/5 overflow-auto flex flex-col"
           onKeyDown={handleKeyDown}
         >
-          {isFetching ? <LoadingOverlay /> : null}
           <DialogHeader className="flex-0 p-5 flex items-center flex-row">
             <DialogTitle>{spravochnik?.title}</DialogTitle>
 
@@ -172,7 +170,8 @@ export const Spravochnik = ({ close, spravochnik }: SpravochnikProps) => {
             </div>
           ) : Array.isArray(spravochnik?.columnDefs) ? (
             <>
-              <ScrollArea className="flex-1">
+              <div className="flex-1 relative overflow-auto scrollbar">
+                {isFetching ? <LoadingOverlay /> : null}
                 {CustomTable ? (
                   <CustomTable
                     data={data?.data ?? []}
@@ -201,7 +200,7 @@ export const Spravochnik = ({ close, spravochnik }: SpravochnikProps) => {
                     {...spravochnik.tableProps}
                   />
                 )}
-              </ScrollArea>
+              </div>
               <div className="flex-0 p-5">
                 {data?.meta?.pageCount ? (
                   <Paginate

@@ -21,6 +21,7 @@ export type SelectFieldProps<T> = SelectProps & {
   getOptionLabel(data: T): ReactNode
   getOptionValue(data: T): string | number
   triggerClassName?: string
+  tabIndex?: number
 }
 
 const SelectFieldComponent = <T extends Record<string, unknown>>(
@@ -32,6 +33,7 @@ const SelectFieldComponent = <T extends Record<string, unknown>>(
     getOptionLabel,
     triggerClassName,
     disabled,
+    tabIndex,
     ...props
   }: SelectFieldProps<T>,
   ref: ForwardedRef<HTMLSpanElement>
@@ -50,6 +52,7 @@ const SelectFieldComponent = <T extends Record<string, unknown>>(
         <FormControl>
           <SelectTrigger
             className={cn('shadow-none focus:ring-2 focus:ring-brand bg-white', triggerClassName)}
+            tabIndex={tabIndex}
           >
             <SelectValue
               placeholder={placeholder}
@@ -58,7 +61,10 @@ const SelectFieldComponent = <T extends Record<string, unknown>>(
           </SelectTrigger>
         </FormControl>
       ) : (
-        <SelectTrigger className={cn('shadow-none bg-white', triggerClassName)}>
+        <SelectTrigger
+          className={cn('shadow-none bg-white', triggerClassName)}
+          tabIndex={tabIndex}
+        >
           <SelectValue
             placeholder={placeholder}
             ref={ref}

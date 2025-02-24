@@ -120,6 +120,7 @@ export const EditableTable = <T extends object>(props: EditableTableProps<T>) =>
             <EditableTableRow>
               <EditableTableCell colSpan={100}>
                 <Button
+                  tabIndex={tabIndex}
                   type="button"
                   variant="ghost"
                   className="w-full hover:bg-slate-50 text-brand hover:text-brand"
@@ -191,9 +192,10 @@ const EditableTableRowRenderer = <T extends object>({
       {typeof onDelete === 'function' && (
         <EditableTableCell className="whitespace-nowrap w-0">
           <Button
+            tabIndex={tabIndex}
             type="button"
             variant="ghost"
-            className="hover:bg-slate-50 hover:text-brand text-slate-400"
+            className="hover:bg-slate-50 hover:text-red-500 text-red-400"
             onClick={() => onDelete?.({ id: index })}
           >
             <CircleMinus className="btn-icon !mx-0" />

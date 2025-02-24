@@ -71,6 +71,9 @@ export const DatePicker = forwardRef<HTMLButtonElement, DatePickerProps>(
         const rawValue = unformatValue(value)
         onChange?.(rawValue)
         setMonthValue(parseDate(rawValue))
+      } else {
+        onChange?.('')
+        setMonthValue(new Date())
       }
     }
 
@@ -86,7 +89,16 @@ export const DatePicker = forwardRef<HTMLButtonElement, DatePickerProps>(
       }
     }
 
-    const handleKeyDown = (e: KeyboardEvent) => {
+    const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+      const value = e.currentTarget.value
+      if (e.key.match(/[0-9]/)) {
+        if (validate(localeDateToISO(unformatValue(value)))) {
+          calendarToggle.open()
+        } else {
+          calendarToggle.close()
+        }
+        return
+      }
       if (e.key === 'Enter') {
         e.preventDefault()
         e.stopPropagation()
@@ -150,6 +162,8 @@ export const DatePicker = forwardRef<HTMLButtonElement, DatePickerProps>(
             onMonthChange={setMonthValue}
             onSelect={(date) => {
               if (!date || !validate(formatDate(date))) {
+                onChange?.('')
+                setMonthValue(new Date())
                 return
               }
               onChange?.(formatDate(date))

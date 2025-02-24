@@ -27,8 +27,9 @@ import {
 
 type ProvodkaTableProps = {
   form: UseFormReturn<RasxodFormValues>
+  tabIndex: number
 }
-export const ProvodkaTable = ({ form }: ProvodkaTableProps) => {
+export const ProvodkaTable = ({ form, tabIndex }: ProvodkaTableProps) => {
   const { t } = useTranslation()
   return (
     <form
@@ -117,6 +118,7 @@ export const ProvodkaTable = ({ form }: ProvodkaTableProps) => {
             form.watch('childs').map((row, index) => {
               return (
                 <Provodka
+                  tabIndex={tabIndex}
                   key={index}
                   index={index}
                   row={row}
@@ -142,6 +144,7 @@ export const ProvodkaTable = ({ form }: ProvodkaTableProps) => {
                 type="submit"
                 variant="ghost"
                 className="w-full hover:bg-slate-50 text-brand hover:text-brand"
+                tabIndex={tabIndex}
                 onClick={() => {
                   const childs = form.getValues('childs')
                   if (
@@ -176,8 +179,9 @@ type ProvodkaProps = {
   index: number
   row: RasxodChildFormValues
   form: UseFormReturn<RasxodFormValues>
+  tabIndex: number
 }
-const Provodka = ({ index, row, form }: ProvodkaProps) => {
+const Provodka = ({ index, row, form, tabIndex }: ProvodkaProps) => {
   const handleChangeChildField = (
     index: number,
     key: keyof RasxodChildFormValues,
@@ -194,6 +198,7 @@ const Provodka = ({ index, row, form }: ProvodkaProps) => {
         row={row}
         kimdan_id={form.watch('kimdan_id')}
         doc_date={form.watch('doc_date')}
+        tabIndex={tabIndex}
         errorMessage={form.formState.errors.childs?.[index]?.naimenovanie_tovarov_jur7_id?.message}
         updateFormField={handleChangeChildField}
       />
@@ -216,6 +221,7 @@ const Provodka = ({ index, row, form }: ProvodkaProps) => {
               error: !!form.formState.errors.childs?.[index]?.kol
             })}
             error={!!form.formState.errors.childs?.[index]?.kol}
+            tabIndex={tabIndex}
           />
         </div>
       </EditableTableCell>
@@ -237,6 +243,7 @@ const Provodka = ({ index, row, form }: ProvodkaProps) => {
               error: !!form.formState.errors.childs?.[index]?.sena
             })}
             error={!!form.formState.errors.childs?.[index]?.sena}
+            tabIndex={tabIndex}
           />
         </div>
       </EditableTableCell>
@@ -258,6 +265,7 @@ const Provodka = ({ index, row, form }: ProvodkaProps) => {
               error: !!form.formState.errors.childs?.[index]?.summa
             })}
             error={!!form.formState.errors.childs?.[index]?.summa}
+            tabIndex={tabIndex}
           />
         </div>
       </EditableTableCell>
@@ -274,6 +282,7 @@ const Provodka = ({ index, row, form }: ProvodkaProps) => {
               error: !!form.formState.errors.childs?.[index]?.debet_schet
             })}
             error={!!form.formState.errors.childs?.[index]?.debet_schet}
+            tabIndex={tabIndex}
           />
         </div>
       </EditableTableCell>
@@ -289,6 +298,7 @@ const Provodka = ({ index, row, form }: ProvodkaProps) => {
               error: !!form.formState.errors.childs?.[index]?.debet_sub_schet
             })}
             error={!!form.formState.errors.childs?.[index]?.debet_sub_schet}
+            tabIndex={tabIndex}
           />
         </div>
       </EditableTableCell>
@@ -304,6 +314,7 @@ const Provodka = ({ index, row, form }: ProvodkaProps) => {
               error: !!form.formState.errors.childs?.[index]?.kredit_schet
             })}
             error={!!form.formState.errors.childs?.[index]?.kredit_schet}
+            tabIndex={tabIndex}
           />
         </div>
       </EditableTableCell>
@@ -319,6 +330,7 @@ const Provodka = ({ index, row, form }: ProvodkaProps) => {
               error: !!form.formState.errors.childs?.[index]?.kredit_sub_schet
             })}
             error={!!form.formState.errors.childs?.[index]?.kredit_sub_schet}
+            tabIndex={tabIndex}
           />
         </div>
       </EditableTableCell>
@@ -338,6 +350,7 @@ const Provodka = ({ index, row, form }: ProvodkaProps) => {
             triggerProps={{
               className: 'min-w-32'
             }}
+            tabIndex={tabIndex}
           />
         </div>
       </EditableTableCell>
@@ -357,6 +370,7 @@ const Provodka = ({ index, row, form }: ProvodkaProps) => {
               childs.filter((_, i) => i !== index)
             )
           }}
+          tabIndex={tabIndex}
         >
           <CircleMinus className="btn-icon !mx-0" />
         </Button>
@@ -370,6 +384,7 @@ type NaimenovanieCellsProps = {
   row: RasxodChildFormValues
   kimdan_id: number
   doc_date: string
+  tabIndex: number
   updateFormField: (index: number, key: keyof RasxodChildFormValues, value: unknown) => void
   errorMessage?: string
 }
@@ -378,6 +393,7 @@ const NaimenovanieCells = ({
   row,
   kimdan_id,
   doc_date,
+  tabIndex,
   updateFormField,
   errorMessage
 }: NaimenovanieCellsProps) => {
@@ -417,6 +433,7 @@ const NaimenovanieCells = ({
           <SpravochnikInput
             readOnly
             disabled={!kimdan_id}
+            tabIndex={tabIndex}
             value={row.naimenovanie_tovarov_jur7_id || ''}
             className={inputVariants({
               editor: true,
@@ -436,6 +453,7 @@ const NaimenovanieCells = ({
                 readOnly
                 value={field}
                 error={!!errorMessage}
+                tabIndex={-1}
                 className={inputVariants({ editor: true, error: !!errorMessage })}
                 disabled={!kimdan_id}
                 onDoubleClick={spravochnik.open}

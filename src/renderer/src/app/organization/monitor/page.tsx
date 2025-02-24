@@ -129,6 +129,7 @@ const OrganizationMonitoringPage = () => {
                 ]}
               />
               <ChooseSpravochnik
+                disabled={!operatsiiSpravochnik.selected}
                 spravochnik={orgSpravochnik}
                 placeholder="Выберите организацию"
                 getName={(selected) => selected.name}
@@ -243,7 +244,7 @@ const OrganizationMonitoringPage = () => {
           </div>
           <ListView.RangeDatePicker {...dates} />
         </div>
-        <div className="sticky top-0 mt-5">
+        <div className="w-full sticky top-0 mt-5">
           <SummaFields
             summaDebet={organizationMonitorList?.meta?.summa_from_object.prixod_sum}
             summaKredit={organizationMonitorList?.meta?.summa_from_object?.rasxod_sum}

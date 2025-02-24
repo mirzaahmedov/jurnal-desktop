@@ -81,7 +81,6 @@ export const ShartnomaFormSchema = withPreprocessor(
     opisanie: z.string().optional(),
     pudratchi_bool: z.boolean(),
     grafik_year: z.number().optional(),
-    yillik_oylik: z.boolean().optional(),
     grafiks: z.array(ShartnomaGrafikFormSchema)
   })
 )

@@ -11,6 +11,7 @@ import { useTranslation } from 'react-i18next'
 const PudratchiFields: FormEditableFieldsComponent<ShartnomaFormValues> = ({
   form,
   name,
+  tabIndex,
   ...props
 }) => {
   const { t } = useTranslation()
@@ -32,6 +33,7 @@ const PudratchiFields: FormEditableFieldsComponent<ShartnomaFormValues> = ({
                 <Switch
                   className="text-right !mt-0"
                   {...field}
+                  tabIndex={tabIndex}
                   value={field.name}
                   checked={field.value}
                   onCheckedChange={field.onChange}

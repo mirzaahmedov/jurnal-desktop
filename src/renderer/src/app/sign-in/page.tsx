@@ -102,6 +102,7 @@ const SigninPage = () => {
                       <FormControl>
                         <Input
                           autoComplete="off"
+                          autoFocus
                           {...field}
                         />
                       </FormControl>

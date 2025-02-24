@@ -53,6 +53,7 @@ export const ShartnomaFields: FormSpravochnikFieldsComponent<
         {form ? (
           <FormElement label={t('smeta')}>
             <SelectField
+              tabIndex={tabIndex}
               withFormControl
               disabled={spravochnikProps.loading}
               options={spravochnikProps.selected?.grafiks ?? []}

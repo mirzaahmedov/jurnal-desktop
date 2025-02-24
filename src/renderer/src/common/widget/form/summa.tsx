@@ -9,7 +9,7 @@ import { Textarea } from '@/common/components/ui/textarea'
 import { formatNumber } from '@/common/lib/format'
 import { cn, numberToWords } from '@/common/lib/utils'
 
-const SummaFields: FormFieldsComponent<
+export const SummaFields: FormFieldsComponent<
   {
     summa?: number
     dialog?: boolean
@@ -32,7 +32,7 @@ const SummaFields: FormFieldsComponent<
             readOnly
             tabIndex={-1}
             value={formatNumber(data?.summa ?? 0)}
-            className="text-right"
+            className="text-slate-600 text-right text-lg font-bold"
           />
         </FormElement>
 
@@ -46,5 +46,3 @@ const SummaFields: FormFieldsComponent<
     </Fieldset>
   )
 }
-
-export { SummaFields }

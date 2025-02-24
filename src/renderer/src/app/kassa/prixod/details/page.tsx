@@ -228,7 +228,7 @@ const KassaPrixodDetailsPage = () => {
               {main_schet?.data && form.formState.isValid ? (
                 <ButtonGroup borderStyle="dashed">
                   <GenerateFile
-                    tabIndex={8}
+                    tabIndex={6}
                     fileName={`приходной-кассовый-ордер-${form.watch('doc_num')}.pdf`}
                     buttonText="Создать приходной кассовый ордер"
                   >

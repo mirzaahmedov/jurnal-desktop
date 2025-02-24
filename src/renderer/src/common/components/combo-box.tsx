@@ -23,11 +23,11 @@ export const Combobox = ({
   value,
   onChange
 }: ComboboxProps) => {
-  const { isOpen: active, close, setOpen: setActive } = useToggle()
+  const { isOpen, close, setOpen } = useToggle()
   return (
     <Popover
-      open={active}
-      onOpenChange={setActive}
+      open={isOpen}
+      onOpenChange={setOpen}
     >
       <PopoverTrigger>{children}</PopoverTrigger>
       <PopoverContent

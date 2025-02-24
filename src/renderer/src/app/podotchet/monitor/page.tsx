@@ -53,7 +53,9 @@ const PodotchetMonitoringPage = () => {
   const operatsiiSpravochnik = useSpravochnik(
     createOperatsiiSpravochnik({
       value: operatsii,
-      onChange: (id) => setOperatsii(id),
+      onChange: (id) => {
+        setOperatsii(id)
+      },
       params: {
         type_schet: TypeSchetOperatsii.GENERAL
       }
@@ -106,6 +108,7 @@ const PodotchetMonitoringPage = () => {
                 ]}
               />
               <ChooseSpravochnik
+                disabled={!operatsiiSpravochnik.selected}
                 spravochnik={podotchetSpravochnik}
                 placeholder="Выберите подотчетное лицо"
                 getName={(selected) => selected.name}

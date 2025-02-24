@@ -27,6 +27,7 @@ export type ColumnDef<T extends object> = {
   key: Autocomplete<keyof T>
   header?: ReactNode
   className?: string
+  width?: number
   headerClassName?: string
   rowSpan?: number
   colSpan?: number
@@ -43,6 +44,7 @@ export type HeaderGroup<T extends object> = {
   headerClassName?: string
   rowSpan?: number
   colSpan?: number
+  width?: number
   renderHeader?(row: T): ReactNode
 }
 
@@ -164,7 +166,7 @@ export const GenericTable = <T extends object>({
             >
               {Array.isArray(columnDefs)
                 ? columnDefs.map((col) => {
-                    const { key, fit, stretch, numeric, renderCell, className } = col
+                    const { key, fit, stretch, numeric, renderCell, className, width } = col
                     return (
                       <GenericTableCell
                         key={key.toString()}
@@ -175,6 +177,7 @@ export const GenericTable = <T extends object>({
                           selectedRowId === getRowId(row) && 'text-brand/100',
                           className
                         )}
+                        width={width}
                       >
                         {typeof renderCell === 'function'
                           ? renderCell(row, col)
@@ -235,7 +238,7 @@ export const GenericTable = <T extends object>({
           </GenericTableRow>
         )}
       </TableBody>
-      {footer ? <TableFooter className="sticky bottom-0">{footer}</TableFooter> : null}
+      {footer ? <TableFooter>{footer}</TableFooter> : null}
     </Table>
   )
 }

@@ -27,8 +27,9 @@ import {
 
 type ProvodkaTableProps = {
   form: UseFormReturn<InternalTransferFormType>
+  tabIndex: number
 }
-export const ProvodkaTable = ({ form }: ProvodkaTableProps) => {
+export const ProvodkaTable = ({ form, tabIndex }: ProvodkaTableProps) => {
   const { t } = useTranslation()
   return (
     <form
@@ -121,6 +122,7 @@ export const ProvodkaTable = ({ form }: ProvodkaTableProps) => {
                   index={index}
                   row={row}
                   form={form}
+                  tabIndex={tabIndex}
                 />
               )
             })
@@ -174,10 +176,11 @@ export const ProvodkaTable = ({ form }: ProvodkaTableProps) => {
 
 type ProvodkaProps = {
   index: number
+  tabIndex: number
   row: InternalTransferChildFormType
   form: UseFormReturn<InternalTransferFormType>
 }
-const Provodka = ({ index, row, form }: ProvodkaProps) => {
+const Provodka = ({ index, tabIndex, row, form }: ProvodkaProps) => {
   const handleChangeChildField = (
     index: number,
     key: keyof InternalTransferChildFormType,
@@ -191,6 +194,7 @@ const Provodka = ({ index, row, form }: ProvodkaProps) => {
     <EditableTableRow key={index}>
       <NaimenovanieCells
         index={index}
+        tabIndex={tabIndex}
         row={row}
         kimdan_id={form.watch('kimdan_id')}
         doc_date={form.watch('doc_date')}
@@ -201,6 +205,7 @@ const Provodka = ({ index, row, form }: ProvodkaProps) => {
         <div className="relative">
           <NumericInput
             adjustWidth
+            tabIndex={tabIndex}
             allowNegative={false}
             isAllowed={(values) => (values.floatValue ?? 0) <= (row.max_kol || Infinity)}
             value={row.kol || ''}
@@ -223,6 +228,7 @@ const Provodka = ({ index, row, form }: ProvodkaProps) => {
         <div className="relative">
           <NumericInput
             adjustWidth
+            tabIndex={tabIndex}
             allowNegative={false}
             value={row.sena || ''}
             onValueChange={(values, src) => {
@@ -244,6 +250,7 @@ const Provodka = ({ index, row, form }: ProvodkaProps) => {
         <div className="relative">
           <NumericInput
             adjustWidth
+            tabIndex={tabIndex}
             allowNegative={false}
             value={row.summa || ''}
             onValueChange={(values, src) => {
@@ -265,6 +272,7 @@ const Provodka = ({ index, row, form }: ProvodkaProps) => {
       <EditableTableCell>
         <div className="relative">
           <Input
+            tabIndex={tabIndex}
             value={row.debet_schet}
             onChange={(e) => {
               handleChangeChildField(index, 'debet_schet', e.target.value)
@@ -280,6 +288,7 @@ const Provodka = ({ index, row, form }: ProvodkaProps) => {
       <EditableTableCell>
         <div className="relative">
           <Input
+            tabIndex={tabIndex}
             value={row.debet_sub_schet}
             onChange={(e) => {
               handleChangeChildField(index, 'debet_sub_schet', e.target.value)
@@ -295,6 +304,7 @@ const Provodka = ({ index, row, form }: ProvodkaProps) => {
       <EditableTableCell>
         <div className="relative">
           <Input
+            tabIndex={tabIndex}
             value={row.kredit_schet}
             onChange={(e) => {
               handleChangeChildField(index, 'kredit_schet', e.target.value)
@@ -310,6 +320,7 @@ const Provodka = ({ index, row, form }: ProvodkaProps) => {
       <EditableTableCell>
         <div className="relative">
           <Input
+            tabIndex={tabIndex}
             value={row.kredit_sub_schet}
             onChange={(e) => {
               handleChangeChildField(index, 'kredit_sub_schet', e.target.value)
@@ -325,6 +336,7 @@ const Provodka = ({ index, row, form }: ProvodkaProps) => {
       <EditableTableCell>
         <div className="relative">
           <DatePicker
+            tabIndex={tabIndex}
             value={row.data_pereotsenka}
             onChange={(date) => {
               handleChangeChildField(index, 'data_pereotsenka', date)
@@ -344,6 +356,7 @@ const Provodka = ({ index, row, form }: ProvodkaProps) => {
 
       <EditableTableCell className="whitespace-nowrap w-0">
         <Button
+          tabIndex={tabIndex}
           type="button"
           variant="ghost"
           className="hover:bg-slate-50 hover:text-brand text-slate-400"
@@ -367,6 +380,7 @@ const Provodka = ({ index, row, form }: ProvodkaProps) => {
 
 type NaimenovanieCellsProps = {
   index: number
+  tabIndex: number
   row: InternalTransferChildFormType
   kimdan_id: number
   doc_date: string
@@ -375,6 +389,7 @@ type NaimenovanieCellsProps = {
 }
 const NaimenovanieCells = ({
   index,
+  tabIndex,
   row,
   kimdan_id,
   doc_date,
@@ -416,6 +431,7 @@ const NaimenovanieCells = ({
         <div className="relative">
           <SpravochnikInput
             readOnly
+            tabIndex={tabIndex}
             disabled={!kimdan_id}
             value={row.naimenovanie_tovarov_jur7_id || ''}
             className={inputVariants({
@@ -434,6 +450,7 @@ const NaimenovanieCells = ({
             <div className="relative">
               <Input
                 readOnly
+                tabIndex={-1}
                 disabled={!kimdan_id}
                 value={field}
                 className={inputVariants({ editor: true, error: !!errorMessage })}

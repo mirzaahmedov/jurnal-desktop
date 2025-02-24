@@ -291,13 +291,19 @@ const Jurnal7PrixodDetailsPage = () => {
               />
             </div>
             <DetailsView.Footer>
-              <DetailsView.Create disabled={isCreating || isUpdating} />
+              <DetailsView.Create
+                tabIndex={9}
+                disabled={isCreating || isUpdating}
+              />
             </DetailsView.Footer>
           </form>
         </Form>
 
         <div className="p-5 mb-28 w-full overflow-x-auto scrollbar">
-          <ProvodkaTable form={form} />
+          <ProvodkaTable
+            form={form}
+            tabIndex={8}
+          />
         </div>
       </DetailsView.Content>
     </DetailsView>

@@ -75,7 +75,7 @@ export const DocumentFields: FormEditableFieldsComponent<
                 <Input
                   autoFocus
                   tabIndex={tabIndex}
-                  disabled={disabled || isFetching}
+                  disabled={disabled}
                   {...field}
                 />
                 <Button
@@ -83,6 +83,7 @@ export const DocumentFields: FormEditableFieldsComponent<
                   size="icon"
                   className="size-10 flex-shrink-0"
                   variant="outline"
+                  disabled={isFetching}
                   onClick={() => {
                     refetch()
                   }}

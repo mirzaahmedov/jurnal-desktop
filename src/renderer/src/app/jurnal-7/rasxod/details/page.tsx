@@ -80,7 +80,7 @@ const Jurnal7RasxodDetailsPage = () => {
     createResponsibleSpravochnik({
       value: form.watch('kimdan_id'),
       onChange: (value) => {
-        form.setValue('kimdan_id', value)
+        form.setValue('kimdan_id', value ?? 0)
         form.trigger('kimdan_id')
       }
     })
@@ -175,6 +175,7 @@ const Jurnal7RasxodDetailsPage = () => {
           <form onSubmit={onSubmit}>
             <div className="grid grid-cols-2 items-end">
               <DocumentFields
+                tabIndex={1}
                 form={form}
                 validateDate={(date) => {
                   return withinMonth(new Date(date), parseDate(from))
@@ -187,11 +188,15 @@ const Jurnal7RasxodDetailsPage = () => {
                 autoGenerate={id === 'create'}
               />
               <div className="grid grid-cols-2 pb-7">
-                <DoverennostFields form={form} />
+                <DoverennostFields
+                  tabIndex={2}
+                  form={form}
+                />
               </div>
             </div>
             <div className="grid grid-cols-2">
               <ResponsibleFields
+                tabIndex={3}
                 name={t('from-who')}
                 spravochnik={responsibleSpravochnik}
                 error={form.formState.errors.kimdan_id}
@@ -203,16 +208,25 @@ const Jurnal7RasxodDetailsPage = () => {
               />
             </div>
             <div className="p-5">
-              <OpisanieFields form={form} />
+              <OpisanieFields
+                tabIndex={4}
+                form={form}
+              />
             </div>
             <DetailsView.Footer>
-              <DetailsView.Create disabled={isCreating || isUpdating} />
+              <DetailsView.Create
+                tabIndex={6}
+                disabled={isCreating || isUpdating}
+              />
             </DetailsView.Footer>
           </form>
         </Form>
 
         <div className="p-5 mb-28 overflow-x-auto scrollbar">
-          <ProvodkaTable form={form} />
+          <ProvodkaTable
+            tabIndex={5}
+            form={form}
+          />
         </div>
       </DetailsView.Content>
     </DetailsView>

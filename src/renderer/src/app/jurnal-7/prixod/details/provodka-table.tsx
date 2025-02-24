@@ -28,9 +28,10 @@ import {
 } from '../config'
 
 type ProvodkaTableProps = {
+  tabIndex: number
   form: UseFormReturn<PrixodFormType>
 }
-export const ProvodkaTable = ({ form, ...props }: ProvodkaTableProps) => {
+export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) => {
   const { t } = useTranslation()
 
   const handleChangeChildField = useEventCallback(
@@ -162,6 +163,7 @@ export const ProvodkaTable = ({ form, ...props }: ProvodkaTableProps) => {
                     index={index}
                     row={row}
                     errors={errors}
+                    tabIndex={tabIndex}
                     onChangeField={handleChangeChildField}
                   />
                   <EditableTableCell>
@@ -181,6 +183,7 @@ export const ProvodkaTable = ({ form, ...props }: ProvodkaTableProps) => {
                           editor: true,
                           error: !!errors?.kol
                         })}
+                        tabIndex={tabIndex}
                       />
                     </div>
                   </EditableTableCell>
@@ -201,6 +204,7 @@ export const ProvodkaTable = ({ form, ...props }: ProvodkaTableProps) => {
                           error: !!errors?.sena
                         })}
                         error={!!errors.sena}
+                        tabIndex={tabIndex}
                       />
                     </div>
                   </EditableTableCell>
@@ -225,6 +229,7 @@ export const ProvodkaTable = ({ form, ...props }: ProvodkaTableProps) => {
                           error: !!errors?.summa
                         })}
                         error={!!errors.summa}
+                        tabIndex={tabIndex}
                       />
                     </div>
                   </EditableTableCell>
@@ -243,6 +248,7 @@ export const ProvodkaTable = ({ form, ...props }: ProvodkaTableProps) => {
                           error: !!errors?.nds_foiz
                         })}
                         error={!!errors.nds_foiz}
+                        tabIndex={tabIndex}
                       />
                     </div>
                   </EditableTableCell>
@@ -287,6 +293,7 @@ export const ProvodkaTable = ({ form, ...props }: ProvodkaTableProps) => {
                           }
                           handleChangeChildField(index, 'iznos', Boolean(checked))
                         }}
+                        tabIndex={tabIndex}
                       />
                     </div>
                   </EditableTableCell>
@@ -304,6 +311,7 @@ export const ProvodkaTable = ({ form, ...props }: ProvodkaTableProps) => {
                           error: !!errors?.eski_iznos_summa
                         })}
                         error={!!errors.eski_iznos_summa}
+                        tabIndex={tabIndex}
                       />
                     </div>
                   </EditableTableCell>
@@ -319,6 +327,7 @@ export const ProvodkaTable = ({ form, ...props }: ProvodkaTableProps) => {
                           error: !!errors?.debet_schet
                         })}
                         error={!!errors.debet_schet}
+                        tabIndex={tabIndex}
                       />
                     </div>
                   </EditableTableCell>
@@ -334,6 +343,7 @@ export const ProvodkaTable = ({ form, ...props }: ProvodkaTableProps) => {
                           error: !!errors?.debet_sub_schet
                         })}
                         error={!!errors.debet_sub_schet}
+                        tabIndex={tabIndex}
                       />
                     </div>
                   </EditableTableCell>
@@ -349,6 +359,7 @@ export const ProvodkaTable = ({ form, ...props }: ProvodkaTableProps) => {
                           editor: true,
                           error: !!errors?.kredit_schet
                         })}
+                        tabIndex={tabIndex}
                       />
                     </div>
                   </EditableTableCell>
@@ -364,6 +375,7 @@ export const ProvodkaTable = ({ form, ...props }: ProvodkaTableProps) => {
                           error: !!errors?.kredit_sub_schet
                         })}
                         error={!!errors.kredit_sub_schet}
+                        tabIndex={tabIndex}
                       />
                     </div>
                   </EditableTableCell>
@@ -383,6 +395,7 @@ export const ProvodkaTable = ({ form, ...props }: ProvodkaTableProps) => {
                           className: 'min-w-32'
                         }}
                         error={!!errors.data_pereotsenka}
+                        tabIndex={tabIndex}
                       />
                     </div>
                   </EditableTableCell>
@@ -402,6 +415,7 @@ export const ProvodkaTable = ({ form, ...props }: ProvodkaTableProps) => {
                           childs.filter((_, i) => i !== index)
                         )
                       }}
+                      tabIndex={tabIndex}
                     >
                       <CircleMinus className="btn-icon !mx-0" />
                     </Button>
@@ -427,6 +441,7 @@ export const ProvodkaTable = ({ form, ...props }: ProvodkaTableProps) => {
                 type="submit"
                 variant="ghost"
                 className="w-full hover:bg-slate-50 text-brand hover:text-brand"
+                tabIndex={tabIndex}
                 onClick={() => {
                   const childs = form.getValues('childs')
                   if (
@@ -461,10 +476,17 @@ export const ProvodkaTable = ({ form, ...props }: ProvodkaTableProps) => {
 type NaimenovanieCellsProps = {
   index: number
   row: PrixodChildFormType
+  tabIndex: number
   errors: Merge<FieldError, FieldErrorsImpl<PrixodChildFormType>>
   onChangeField: (index: number, key: keyof PrixodChildFormType, value: unknown) => void
 }
-const NaimenovanieCells = ({ index, row, errors, onChangeField }: NaimenovanieCellsProps) => {
+const NaimenovanieCells = ({
+  index,
+  row,
+  errors,
+  tabIndex,
+  onChangeField
+}: NaimenovanieCellsProps) => {
   const groupSpravochnik = useSpravochnik(
     createGroupSpravochnik({
       value: row.group_jur7_id,
@@ -482,6 +504,7 @@ const NaimenovanieCells = ({ index, row, errors, onChangeField }: NaimenovanieCe
       <EditableTableCell>
         <div className="relative">
           <SpravochnikInput
+            tabIndex={tabIndex}
             readOnly
             error={!!errors.group_jur7_id}
             className={cn(
@@ -496,6 +519,7 @@ const NaimenovanieCells = ({ index, row, errors, onChangeField }: NaimenovanieCe
       <EditableTableCell>
         <div className="relative">
           <Input
+            tabIndex={tabIndex}
             error={!!errors.name}
             value={row.name}
             onChange={(e) => {
@@ -508,6 +532,7 @@ const NaimenovanieCells = ({ index, row, errors, onChangeField }: NaimenovanieCe
       <EditableTableCell>
         <div className="relative">
           <Input
+            tabIndex={tabIndex}
             error={!!errors.serial_num}
             value={row.serial_num}
             onChange={(e) => {
@@ -520,6 +545,7 @@ const NaimenovanieCells = ({ index, row, errors, onChangeField }: NaimenovanieCe
       <EditableTableCell>
         <div className="relative">
           <Input
+            tabIndex={tabIndex}
             error={!!errors.inventar_num}
             value={row.inventar_num}
             onChange={(e) => {
@@ -532,6 +558,7 @@ const NaimenovanieCells = ({ index, row, errors, onChangeField }: NaimenovanieCe
       <EditableTableCell>
         <div className="relative">
           <EdinSelect
+            tabIndex={tabIndex}
             error={!!errors.inventar_num}
             value={row.edin}
             onValueChange={(edin) => {
