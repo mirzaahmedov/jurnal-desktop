@@ -48,6 +48,7 @@ export const SummaEditableFields: FormEditableFieldsComponent<RequiredSummaEdita
                 disabled={disabled}
                 value={field.value || ''}
                 onValueChange={(values) => field.onChange(values.floatValue ?? 0)}
+                className="text-lg font-bold text-slate-600"
               />
             </FormElement>
           )}

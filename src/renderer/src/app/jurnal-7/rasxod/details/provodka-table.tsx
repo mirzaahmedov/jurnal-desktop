@@ -50,15 +50,15 @@ export const ProvodkaTable = ({ form, tabIndex }: ProvodkaTableProps) => {
             <EditableTableHead rowSpan={2}>{t('code')}</EditableTableHead>
             <EditableTableHead
               rowSpan={2}
-              className="w-48"
-            >
-              {t('group')}
-            </EditableTableHead>
-            <EditableTableHead
-              rowSpan={2}
               className="min-w-72"
             >
               {t('product-name')}
+            </EditableTableHead>
+            <EditableTableHead
+              rowSpan={2}
+              className="w-48"
+            >
+              {t('group')}
             </EditableTableHead>
             <EditableTableHead rowSpan={2}>{t('ei')}</EditableTableHead>
             <EditableTableHead

@@ -8,6 +8,16 @@ import { useAuthenticationStore } from '@/common/features/auth'
 type ErrorResponse = {
   success: false
   message: string
+  meta?: unknown
+}
+
+export class HttpResponseError extends Error {
+  meta: unknown
+  constructor(message: string, meta?: unknown) {
+    super(message)
+    this.name = 'APIResponseError'
+    this.meta = meta
+  }
 }
 
 // ? 'http://147.45.107.174:3005'
@@ -57,7 +67,7 @@ http.interceptors.response.use(
     if (response) {
       const data = response.data as ErrorResponse
       const message = data?.message || (error as AxiosError)?.message
-      throw new Error(message)
+      throw new HttpResponseError(message, data?.meta)
     }
 
     const message = (error as AxiosError)?.message

@@ -137,6 +137,7 @@ export const createOperatsiiEditor = <T extends { spravochnik_operatsii_id?: num
               onFocus={open}
               onBlur={close}
               getInputValue={() => schet ?? ''}
+              onMouseDown={(e) => e.stopPropagation()}
             />
           )}
         </AutoComplete>
@@ -196,6 +197,7 @@ export const createOperatsiiEditor = <T extends { spravochnik_operatsii_id?: num
               onFocus={open}
               onBlur={close}
               className="w-full"
+              onMouseDown={(e) => e.stopPropagation()}
             />
           )}
         </AutoComplete>

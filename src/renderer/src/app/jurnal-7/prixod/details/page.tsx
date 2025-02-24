@@ -48,8 +48,8 @@ const Jurnal7PrixodDetailsPage = () => {
   const { from } = useJurnal7DefaultsStore()
   const { data: prixod, isFetching } = usePrixodGet(Number(id))
   const { mutate: createPrixod, isPending: isCreating } = usePrixodCreate({
-    onSuccess: () => {
-      toast.success('Приход успешно создан')
+    onSuccess: (res) => {
+      toast.success(res?.message)
       navigate(-1)
       queryClient.invalidateQueries({
         queryKey: [queryKeys.getAll]
@@ -57,12 +57,12 @@ const Jurnal7PrixodDetailsPage = () => {
     },
     onError(error) {
       console.log(error)
-      toast.error('Ошибка при создании прихода: ' + error.message)
+      toast.error(error?.message)
     }
   })
   const { mutate: updatePrixod, isPending: isUpdating } = usePrixodUpdate({
-    onSuccess() {
-      toast.success('Приход успешно обновлен')
+    onSuccess(res) {
+      toast.success(res?.message)
       navigate(-1)
       queryClient.invalidateQueries({
         queryKey: [queryKeys.getAll]
@@ -70,7 +70,7 @@ const Jurnal7PrixodDetailsPage = () => {
     },
     onError(error) {
       console.log(error)
-      toast.error('Ошибка при обновлении прихода: ' + error.message)
+      toast.error(error?.message)
     }
   })
 

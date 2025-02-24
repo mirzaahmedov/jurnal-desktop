@@ -1,17 +1,32 @@
-import { useEffect } from 'react'
+import type { TFunction } from 'i18next'
 
+import { useEffect, useState } from 'react'
+
+import { DataList } from '@renderer/common/components/data-list'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle
+} from '@renderer/common/components/ui/alert-dialog'
+import { Badge } from '@renderer/common/components/ui/badge'
 import { ButtonGroup } from '@renderer/common/components/ui/button-group'
 import { DownloadFile } from '@renderer/common/features/file'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
 import { SearchField, useSearch } from '@renderer/common/features/search'
 import { usePagination } from '@renderer/common/hooks'
+import { formatLocaleDate, formatNumber } from '@renderer/common/lib/format'
+import { HttpResponseError } from '@renderer/common/lib/http'
 import { ListView } from '@renderer/common/views'
 import { useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
-import { GenericTable } from '@/common/components'
+import { Copyable, GenericTable } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
 import { useLayoutStore } from '@/common/features/layout'
 
@@ -20,7 +35,29 @@ import { useJurnal7DateRange } from '../common/components/use-date-range'
 import { columns, queryKeys } from './config'
 import { usePrixodDelete, usePrixodList } from './service'
 
+interface PrixodErrorDocument {
+  id: number
+  doc_num: string
+  doc_date: string
+  opisanie: any
+  summa: string
+  kimga_name: any
+  spravochnik_organization_okonx: any
+  spravochnik_organization_bank_klient: any
+  spravochnik_organization_raschet_schet: any
+  spravochnik_organization_raschet_schet_gazna: any
+  spravochnik_organization_mfo: any
+  spravochnik_organization_inn: any
+  kimdan_name: string
+  type: string
+}
+
 const Jurnal7PrixodPage = () => {
+  const [error, setError] = useState<{
+    document?: PrixodErrorDocument
+    message: string
+  }>()
+
   const pagination = usePagination()
   const navigate = useNavigate()
   const queryClient = useQueryClient()
@@ -34,14 +71,21 @@ const Jurnal7PrixodPage = () => {
   const { form, from, to, applyFilters } = useJurnal7DateRange()
 
   const { mutate: deletePrixod, isPending: isDeleting } = usePrixodDelete({
-    onSuccess() {
+    onSuccess(res) {
       queryClient.invalidateQueries({
         queryKey: [queryKeys.getAll]
       })
-      toast.success('Приход успешно удален')
+      toast.success(res?.message)
     },
-    onError() {
-      toast.error('Ошибка при удалении прихода')
+    onError(error) {
+      console.log({ error })
+      if (error instanceof HttpResponseError) {
+        setError({
+          message: error?.message ?? '',
+          document: error.meta?.[0] as PrixodErrorDocument
+        })
+      }
+      toast.error(error?.message)
     }
   })
   const { data: prixodList, isFetching } = usePrixodList({
@@ -102,7 +146,6 @@ const Jurnal7PrixodPage = () => {
           onEdit={(row) => navigate(`${row.id}`)}
           onDelete={(row) => {
             confirm({
-              title: 'Удалить приход?',
               onConfirm: () => deletePrixod(row.id)
             })
           }}
@@ -114,8 +157,74 @@ const Jurnal7PrixodPage = () => {
           pageCount={prixodList?.meta?.pageCount ?? 0}
         />
       </ListView.Footer>
+      {error?.document ? (
+        <AlertDialog
+          open
+          onOpenChange={(isOpen) => {
+            if (!isOpen) {
+              setError(undefined)
+            }
+          }}
+        >
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle className="font-bold text-2xl">{error.message}</AlertDialogTitle>
+            </AlertDialogHeader>
+            <div>
+              <DataList items={getErrorDocumentItems(t, error.document)} />
+            </div>
+            <AlertDialogFooter>
+              <AlertDialogCancel>{t('cancel')}</AlertDialogCancel>
+              <AlertDialogAction>{t('show_document')}</AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      ) : null}
     </ListView>
   )
+}
+
+const getErrorDocumentItems = (t: TFunction, document: PrixodErrorDocument) => {
+  return [
+    {
+      name: t('type-document'),
+      value:
+        document.type === 'rasxod' ? <Badge>{t('rasxod')}</Badge> : <Badge>{t('prixod')}</Badge>
+    },
+    {
+      name: t('doc_date'),
+      value: formatLocaleDate(document.doc_date)
+    },
+    {
+      name: t('doc_num'),
+      value: (
+        <Copyable
+          side="start"
+          value={document.doc_num}
+        >
+          {document.doc_num}
+        </Copyable>
+      )
+    },
+    {
+      name: t('from-who'),
+      value: document.kimdan_name
+    },
+    {
+      name: t('to-whom'),
+      value: document.kimga_name
+    },
+    {
+      name: t('opisanie'),
+      value: document.opisanie
+    },
+    {
+      name: t('summa'),
+      value: (
+        <span className="text-xl">{formatNumber(document.summa ? Number(document.summa) : 0)}</span>
+      )
+    }
+  ]
 }
 
 export default Jurnal7PrixodPage

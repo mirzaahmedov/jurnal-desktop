@@ -511,7 +511,7 @@ const NaimenovanieCells = ({
               inputVariants({ editor: true, error: !!errors.group_jur7_id }),
               'disabled:opacity-100'
             )}
-            getInputValue={(selected) => selected?.group_number ?? ''}
+            getInputValue={(selected) => (selected?.group_number || selected?.name) ?? ''}
             {...groupSpravochnik}
           />
         </div>

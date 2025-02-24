@@ -54,7 +54,7 @@ export const useOstatokProduct = ({
     edin: product?.edin ?? '',
     serial_num: product?.serial_num ?? '',
     inventar_num: product?.inventar_num ?? '',
-    group_jur7_number: product?.group_number ?? '',
+    group_jur7_number: (product?.group_number || product?.group_name) ?? '',
     naimenovanie_tovarov_jur7_name: product?.name ?? '',
     spravochnik: productOstatokSpravochnik as any
   }

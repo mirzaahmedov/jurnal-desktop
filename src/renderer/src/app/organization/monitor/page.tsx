@@ -265,9 +265,11 @@ const OrganizationMonitoringPage = () => {
               <FooterCell
                 colSpan={6}
                 title={t('total')}
-                content={formatNumber(organizationMonitorList?.meta?.prixod_sum ?? 0)}
+                content={formatNumber(organizationMonitorList?.meta?.page_prixod_sum ?? 0)}
               />
-              <FooterCell content={formatNumber(organizationMonitorList?.meta?.rasxod_sum ?? 0)} />
+              <FooterCell
+                content={formatNumber(organizationMonitorList?.meta?.page_rasxod_sum ?? 0)}
+              />
             </FooterRow>
           }
         />

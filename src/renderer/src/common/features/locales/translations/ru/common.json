@@ -201,5 +201,6 @@
   "additional-options": "Дополнительные параметры",
   "print-2-in-single-page": "Печатать 2 на одной странице",
   "shartnoma-grafik": "График договора",
-  "date_does_not_exists": "Дата не существует"
+  "date_does_not_exists": "Дата не существует",
+  "show_document": "Показать документ"
 }
