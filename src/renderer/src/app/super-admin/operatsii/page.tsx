@@ -22,12 +22,11 @@ import { operatsiiService } from './service'
 const OperatsiiPage = () => {
   const [selected, setSelected] = useState<Operatsii | null>(null)
 
-  const toggle = useToggle()
+  const dialogToggle = useToggle()
   const queryClient = useQueryClient()
   const pagination = usePagination()
 
-  const [budjet] = useLocationState<number | undefined>('budjet_id', undefined)
-  const [typeSchet] = useLocationState('type_schet', TypeSchetOperatsii.KASSA_PRIXOD)
+  const [typeSchet] = useLocationState('type_schet', TypeSchetOperatsii.ALL)
 
   const { t } = useTranslation(['app'])
   const { confirm } = useConfirm()
@@ -38,7 +37,6 @@ const OperatsiiPage = () => {
       operatsiiQueryKeys.getAll,
       {
         ...pagination,
-        budjet_id: budjet,
         type_schet: typeSchet,
         search
       },
@@ -57,19 +55,19 @@ const OperatsiiPage = () => {
   })
 
   useEffect(() => {
-    if (!toggle.isOpen) {
+    if (!dialogToggle.isOpen) {
       setSelected(null)
     }
-  }, [toggle.isOpen])
+  }, [dialogToggle.isOpen])
   useLayout({
     title: t('pages.operatsii'),
     content: OperatsiiFilter,
-    onCreate: toggle.open
+    onCreate: dialogToggle.open
   })
 
   const handleClickEdit = (row: Operatsii) => {
     setSelected(row)
-    toggle.open()
+    dialogToggle.open()
   }
   const handleClickDelete = (row: Operatsii) => {
     confirm({
@@ -98,8 +96,8 @@ const OperatsiiPage = () => {
       </ListView.Footer>
       <OperatsiiDialog
         data={selected}
-        open={toggle.isOpen}
-        onChangeOpen={toggle.setOpen}
+        open={dialogToggle.isOpen}
+        onChangeOpen={dialogToggle.setOpen}
       />
     </ListView>
   )

@@ -23,6 +23,23 @@ import { SmetaGroupFilter } from './group-filter'
 
 export const smetaService = new CRUDService<Smeta, SmetaForm>({
   endpoint: APIEndpoints.smeta
+}).forRequest((type, ctx) => {
+  if (type === 'getAll') {
+    const params = ctx.config.params ?? {}
+    if (params.group_number === 'all') {
+      delete params.group_number
+    }
+    return {
+      config: {
+        ...ctx.config,
+        params: {
+          ...ctx.config.params,
+          ...params
+        }
+      }
+    }
+  }
+  return {}
 })
 
 type SmetaTableProps = Omit<
@@ -54,7 +71,7 @@ export const SmetaTable = ({ data, columnDefs: columns, ...props }: SmetaTablePr
 }
 
 const defaultFilters = {
-  group_number: 1
+  group_number: 'all'
 }
 
 export const createSmetaSpravochnik = (config: Partial<SpravochnikHookOptions<Smeta>>) => {

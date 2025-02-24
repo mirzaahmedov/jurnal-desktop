@@ -29,8 +29,8 @@ type SmetaGroupFilterProps = InputHTMLAttributes<HTMLInputElement> & {
   getValue: (key: string) => string | undefined
   setValue: (key: string, value: string) => void
 }
-const SmetaGroupFilter = ({ getValue, setValue }: SmetaGroupFilterProps) => {
-  const value = getValue('group_number') || '1'
+export const SmetaGroupFilter = ({ getValue, setValue }: SmetaGroupFilterProps) => {
+  const value = getValue('group_number') || 'all'
 
   return (
     <SelectField
@@ -44,5 +44,3 @@ const SmetaGroupFilter = ({ getValue, setValue }: SmetaGroupFilterProps) => {
     />
   )
 }
-
-export { SmetaGroupFilter }

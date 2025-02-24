@@ -48,17 +48,15 @@ export const validateLocaleDate = (formatted: string): boolean => {
 }
 
 export const validateDate = (dateString: string): boolean => {
-  const date = new Date(dateString)
-
-  const parts = dateString.split('-').map(Number)
-  if (parts.length !== 3) {
+  if (!dateString || !date_iso_regex.test(dateString)) {
     return false
   }
 
-  const [year, month, day] = parts
+  const date = new Date(dateString)
+
+  const [year, month, day] = dateString.split('-').map(Number)
 
   return (
-    date_iso_regex.test(dateString) &&
     !isNaN(date.getTime()) &&
     date.getDate() === day &&
     date.getMonth() + 1 === month &&

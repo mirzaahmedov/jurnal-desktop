@@ -67,12 +67,15 @@ export const DatePicker = forwardRef<HTMLButtonElement, DatePickerProps>(
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
       const value = e.target.value
       setInternalValue(value)
-      if (validate(localeDateToISO(value))) {
+      const isValid = validate(localeDateToISO(value))
+      console.log('change', { isValid, value: localeDateToISO(value) })
+      if (isValid) {
         const rawValue = unformatValue(value)
         onChange?.(rawValue)
         setMonthValue(parseDate(rawValue))
       } else {
         onChange?.('')
+        setInternalValue('')
         setMonthValue(new Date())
       }
     }
@@ -85,14 +88,16 @@ export const DatePicker = forwardRef<HTMLButtonElement, DatePickerProps>(
       }
       if (!validate(localeDateToISO(internalValue))) {
         toast.error('Неверный формат даты или дата не существует')
+        onChange?.('')
         setInternalValue(formatValue(value ?? ''))
       }
     }
 
-    const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+    const handleKeyUp = (e: KeyboardEvent<HTMLInputElement>) => {
       const value = e.currentTarget.value
       if (e.key.match(/[0-9]/)) {
-        if (validate(localeDateToISO(unformatValue(value)))) {
+        const isValid = validate(localeDateToISO(value))
+        if (isValid) {
           calendarToggle.open()
         } else {
           calendarToggle.close()
@@ -134,7 +139,7 @@ export const DatePicker = forwardRef<HTMLButtonElement, DatePickerProps>(
             onChange={handleChange}
             placeholder={placeholder ?? 'дд.мм.гггг'}
             onBlur={handleBlur}
-            onKeyDown={handleKeyDown}
+            onKeyUp={handleKeyUp}
             className={cn('w-full', className)}
           />
           <PopoverTrigger
@@ -145,6 +150,7 @@ export const DatePicker = forwardRef<HTMLButtonElement, DatePickerProps>(
               variant="ghost"
               size="icon"
               className="group absolute top-1/2 right-2 -translate-y-1/2 size-7"
+              tabIndex={-1}
             >
               <CalendarIcon className="h-4 w-4 text-slate-500 group-hover:text-brand" />
             </Button>
