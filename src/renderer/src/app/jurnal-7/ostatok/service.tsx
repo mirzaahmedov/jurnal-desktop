@@ -2,13 +2,12 @@ import type {
   SpravochnikHookOptions,
   SpravochnikTableProps
 } from '@renderer/common/features/spravochnik'
-import type { Ostatok, OstatokProduct } from '@renderer/common/models/ostatok'
+import type { Ostatok } from '@renderer/common/models/ostatok'
 
 import { useMemo } from 'react'
 
 import { GenericTable } from '@renderer/common/components'
 import { APIEndpoints, CRUDService } from '@renderer/common/features/crud'
-import { budjet } from '@renderer/common/features/crud/middleware'
 import { SpravochnikSearchField } from '@renderer/common/features/search'
 import { extendObject } from '@renderer/common/lib/utils'
 
@@ -16,24 +15,22 @@ import { ostatokSpravochnikColumns } from './columns'
 
 export const ostatokService = new CRUDService<Ostatok>({
   endpoint: APIEndpoints.jur7_saldo
-})
-  .use(budjet())
-  .forRequest((type, ctx) => {
-    if (type === 'getById') {
-      const { product_id } = ctx.ctx?.queryKey[2] ?? ({} as any)
-      return {
-        url: ctx.endpoint,
-        config: {
-          ...ctx.config,
-          params: {
-            ...ctx.config.params,
-            product_id
-          }
+}).forRequest((type, ctx) => {
+  if (type === 'getById') {
+    const { product_id } = ctx.ctx?.queryKey[2] ?? ({} as any)
+    return {
+      url: ctx.endpoint,
+      config: {
+        ...ctx.config,
+        params: {
+          ...ctx.config.params,
+          product_id
         }
       }
     }
-    return {}
-  })
+  }
+  return {}
+})
 
 const OstatokSpravochnikTable = ({
   data,
@@ -42,7 +39,9 @@ const OstatokSpravochnikTable = ({
   const ostatokData = useMemo(() => {
     return data?.[0]?.products ?? []
   }, [data])
+  // Todo: fix this
   return (
+    // @ts-expect-error soehtingz
     <GenericTable
       {...props}
       data={ostatokData}

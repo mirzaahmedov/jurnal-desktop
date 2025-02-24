@@ -1,4 +1,6 @@
-import { useEffect } from 'react'
+import type { OstatokProduct } from '@renderer/common/models'
+
+import { useEffect, useState } from 'react'
 
 import { ChooseSpravochnik } from '@renderer/common/components'
 import { CollapsibleTable } from '@renderer/common/components/collapsible-table'
@@ -10,30 +12,37 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger
 } from '@renderer/common/components/ui/dropdown-menu'
+import { useConfirm } from '@renderer/common/features/confirm'
 import { DownloadFile, ImportFile } from '@renderer/common/features/file'
 import { useLayoutStore } from '@renderer/common/features/layout'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
 import { SearchField, useSearch } from '@renderer/common/features/search'
 import { useSpravochnik } from '@renderer/common/features/spravochnik'
 import { useDates, useToggle } from '@renderer/common/hooks'
+import { HttpResponseError } from '@renderer/common/lib/http'
 import { ListView } from '@renderer/common/views'
-import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Download } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+import { toast } from 'react-toastify'
 
 import { createPodrazdelenie7Spravochnik } from '../podrazdelenie/service'
 import { createResponsibleSpravochnik } from '../responsible/service'
 import { ostatokPodotchetColumns, ostatokProductColumns } from './columns'
 import { ostatokQueryKeys } from './config'
+import { ErrorAlert, type ErrorData, type ErrorDataDocument } from './error-alert'
 import { ostatokService } from './service'
 
 const OstatokPage = () => {
+  const [error, setError] = useState<ErrorData>()
+
   const dropdownToggle = useToggle()
   const dates = useDates()
   const setLayout = useLayoutStore((store) => store.setLayout)
   const queryClient = useQueryClient()
 
   const { search } = useSearch()
+  const { confirm } = useConfirm()
   const { t } = useTranslation(['app'])
   const { main_schet_id, budjet_id } = useRequisitesStore()
 
@@ -65,6 +74,27 @@ const OstatokPage = () => {
     queryFn: ostatokService.getAll
   })
 
+  const { mutate: deleteOstatok, isPending: isDeleting } = useMutation({
+    mutationKey: [ostatokQueryKeys.delete],
+    mutationFn: ostatokService.delete,
+    onSuccess(res) {
+      queryClient.invalidateQueries({
+        queryKey: [ostatokQueryKeys.getAll]
+      })
+      toast.success(res?.message)
+    },
+    onError(error) {
+      console.log(error)
+      if (error instanceof HttpResponseError) {
+        setError({
+          message: error?.message ?? '',
+          document: error.meta as ErrorDataDocument
+        })
+      }
+      toast.error(error?.message)
+    }
+  })
+
   useEffect(() => {
     setLayout({
       title: t('pages.ostatok'),
@@ -76,6 +106,14 @@ const OstatokPage = () => {
       ]
     })
   }, [setLayout, t])
+
+  const handleDelete = (row: OstatokProduct) => {
+    confirm({
+      onConfirm() {
+        deleteOstatok(row.id)
+      }
+    })
+  }
 
   return (
     <ListView>
@@ -207,7 +245,7 @@ const OstatokPage = () => {
           <ListView.RangeDatePicker {...dates} />
         </div>
       </ListView.Header>
-      <ListView.Content loading={isFetching}>
+      <ListView.Content loading={isFetching || isDeleting}>
         <CollapsibleTable
           data={ostatokList?.data ?? []}
           columnDefs={ostatokPodotchetColumns}
@@ -219,10 +257,23 @@ const OstatokPage = () => {
               columnDefs={ostatokProductColumns}
               getRowId={(row) => row.id}
               getChildRows={() => undefined}
+              onDelete={handleDelete}
             />
           )}
         />
       </ListView.Content>
+
+      {error?.document ? (
+        <ErrorAlert
+          open
+          onOpenChange={(isOpen) => {
+            if (!isOpen) {
+              setError(undefined)
+            }
+          }}
+          error={error}
+        />
+      ) : null}
     </ListView>
   )
 }
