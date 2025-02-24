@@ -1,3 +1,4 @@
+import type { RasxodFormValues } from './config'
 import type { MO7Rasxod } from '@/common/models'
 
 import { useMutation, useQuery } from '@tanstack/react-query'
@@ -5,7 +6,6 @@ import { useMutation, useQuery } from '@tanstack/react-query'
 import { APIEndpoints, CRUDService } from '@/common/features/crud'
 import { main_schet } from '@/common/features/crud/middleware'
 
-import type { RasxodFormValues} from './config';
 import { queryKeys } from './config'
 
 const rasxodService = new CRUDService<MO7Rasxod, RasxodFormValues>({
@@ -32,8 +32,8 @@ const useRasxodGet = (id: number) => {
 }
 
 type UseRasxodCreateParams = {
-  onSuccess?: () => void
-  onError?: () => void
+  onSuccess?: (res: any) => void
+  onError?: (res: any) => void
 }
 const useRasxodCreate = ({ onSuccess, onError }: UseRasxodCreateParams) => {
   return useMutation({

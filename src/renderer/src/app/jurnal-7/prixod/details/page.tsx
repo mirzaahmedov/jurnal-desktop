@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { createShartnomaSpravochnik } from '@renderer/app/organization/shartnoma'
@@ -9,6 +9,7 @@ import { useLayoutStore } from '@renderer/common/features/layout'
 import { useSpravochnik } from '@renderer/common/features/spravochnik'
 import { parseDate, withinMonth } from '@renderer/common/lib/date'
 import { focusInvalidInput } from '@renderer/common/lib/errors'
+import { HttpResponseError } from '@renderer/common/lib/http'
 import { type Operatsii, TypeSchetOperatsii } from '@renderer/common/models'
 import { DetailsView } from '@renderer/common/views'
 import {
@@ -33,10 +34,13 @@ import { createOperatsiiSpravochnik } from '@/app/super-admin/operatsii'
 import { useJurnal7DefaultsStore } from '../../common/features/defaults'
 import { createResponsibleSpravochnik } from '../../responsible/service'
 import { PrixodFormSchema, defaultValues, queryKeys } from '../config'
+import { ErrorAlert, type ErrorData, type ErrorDataDocument } from '../error-alert'
 import { usePrixodCreate, usePrixodGet, usePrixodUpdate } from '../service'
 import { ProvodkaTable } from './provodka-table'
 
 const Jurnal7PrixodDetailsPage = () => {
+  const [error, setError] = useState<ErrorData>()
+
   const prevData = useRef({
     kimdan_id: 0,
     kimga_id: 0
@@ -57,6 +61,12 @@ const Jurnal7PrixodDetailsPage = () => {
     },
     onError(error) {
       console.log(error)
+      if (error instanceof HttpResponseError) {
+        setError({
+          message: error?.message ?? '',
+          document: error.meta?.[0] as ErrorDataDocument
+        })
+      }
       toast.error(error?.message)
     }
   })
@@ -70,6 +80,12 @@ const Jurnal7PrixodDetailsPage = () => {
     },
     onError(error) {
       console.log(error)
+      if (error instanceof HttpResponseError) {
+        setError({
+          message: error?.message ?? '',
+          document: error.meta?.[0] as ErrorDataDocument
+        })
+      }
       toast.error(error?.message)
     }
   })
@@ -306,6 +322,18 @@ const Jurnal7PrixodDetailsPage = () => {
           />
         </div>
       </DetailsView.Content>
+
+      {error?.document ? (
+        <ErrorAlert
+          open
+          onOpenChange={(isOpen) => {
+            if (!isOpen) {
+              setError(undefined)
+            }
+          }}
+          error={error}
+        />
+      ) : null}
     </DetailsView>
   )
 }

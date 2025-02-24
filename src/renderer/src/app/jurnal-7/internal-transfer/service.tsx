@@ -1,3 +1,4 @@
+import type { InternalTransferFormType } from './config'
 import type { InternalTransfer } from '@/common/models'
 
 import { useMutation, useQuery } from '@tanstack/react-query'
@@ -5,7 +6,6 @@ import { useMutation, useQuery } from '@tanstack/react-query'
 import { APIEndpoints, CRUDService } from '@/common/features/crud'
 import { main_schet } from '@/common/features/crud/middleware'
 
-import type { InternalTransferFormType} from './config';
 import { queryKeys } from './config'
 
 const internalTransferService = new CRUDService<InternalTransfer, InternalTransferFormType>({
@@ -32,8 +32,8 @@ const useInternalTransferGet = (id: number) => {
 }
 
 type UseInternalTransferCreateParams = {
-  onSuccess?: () => void
-  onError?: () => void
+  onSuccess?: (res: any) => void
+  onError?: (res: any) => void
 }
 const useInternalTransferCreate = ({ onSuccess, onError }: UseInternalTransferCreateParams) => {
   return useMutation({

@@ -129,6 +129,7 @@ const OstatokPage = () => {
                         excel: true
                       }}
                       buttonText="Оборотка"
+                      className="w-full"
                     />
                   </DropdownMenuItem>
 
@@ -143,6 +144,7 @@ const OstatokPage = () => {
                         excel: true
                       }}
                       buttonText="Материальная"
+                      className="w-full"
                     />
                   </DropdownMenuItem>
 
@@ -157,6 +159,7 @@ const OstatokPage = () => {
                         excel: true
                       }}
                       buttonText="Шапка"
+                      className="w-full"
                     />
                   </DropdownMenuItem>
 
@@ -171,6 +174,7 @@ const OstatokPage = () => {
                         excel: true
                       }}
                       buttonText="Шапка (2)"
+                      className="w-full"
                     />
                   </DropdownMenuItem>
                 </DropdownMenuContent>

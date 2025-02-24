@@ -9,11 +9,11 @@ import isEmpty from 'just-is-empty'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
+import { toast } from 'react-toastify'
 
 import { Form } from '@/common/components/ui/form'
 import { useLayoutStore } from '@/common/features/layout'
 import { useSpravochnik } from '@/common/features/spravochnik'
-import { toast } from '@/common/hooks/use-toast'
 import {
   DocumentFields,
   DoverennostFields,
@@ -42,31 +42,21 @@ const Jurnal7RasxodDetailsPage = () => {
   const { from } = useJurnal7DefaultsStore()
   const { data: rasxod, isFetching } = useRasxodGet(Number(id))
   const { mutate: createRasxod, isPending: isCreating } = useRasxodCreate({
-    onSuccess: () => {
-      toast({
-        title: 'Расходный документ успешно создан'
-      })
+    onSuccess: (res) => {
+      toast.success(res?.message)
       navigate(-1)
     },
-    onError() {
-      toast({
-        title: 'Ошибка при создании расходного документа',
-        variant: 'destructive'
-      })
+    onError(error) {
+      toast.error(error?.message)
     }
   })
   const { mutate: updateRasxod, isPending: isUpdating } = useRasxodUpdate({
-    onSuccess() {
-      toast({
-        title: 'Расходный документ успешно обновлен'
-      })
+    onSuccess: (res) => {
+      toast.success(res?.message)
       navigate(-1)
     },
-    onError() {
-      toast({
-        title: 'Ошибка при обновлении расходного документа',
-        variant: 'destructive'
-      })
+    onError(error) {
+      toast.error(error?.message)
     }
   })
 

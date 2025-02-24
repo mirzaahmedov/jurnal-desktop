@@ -9,11 +9,11 @@ import isEmpty from 'just-is-empty'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
+import { toast } from 'react-toastify'
 
 import { Form } from '@/common/components/ui/form'
 import { useLayoutStore } from '@/common/features/layout'
 import { useSpravochnik } from '@/common/features/spravochnik'
-import { toast } from '@/common/hooks/use-toast'
 import {
   DocumentFields,
   OpisanieFields,
@@ -40,32 +40,22 @@ const Jurnal7InternalTransferDetailsPage = () => {
   const { data: internalTransfer, isFetching } = useInternalTransferGet(Number(id))
 
   const { mutate: createInternalTransfer, isPending: isCreating } = useInternalTransferCreate({
-    onSuccess: () => {
-      toast({
-        title: 'Внутренний перевод успешно создан'
-      })
+    onSuccess: (res) => {
+      toast.success(res?.message)
       navigate(-1)
     },
-    onError() {
-      toast({
-        title: 'Ошибка при создании внутреннего перевода',
-        variant: 'destructive'
-      })
+    onError(error) {
+      toast.error(error?.message)
     }
   })
 
   const { mutate: updateInternalTransfer, isPending: isUpdating } = useInternalTransferUpdate({
-    onSuccess() {
-      toast({
-        title: 'Внутренний перевод успешно обновлен'
-      })
+    onSuccess: (res) => {
+      toast.success(res?.message)
       navigate(-1)
     },
-    onError() {
-      toast({
-        title: 'Ошибка при обновлении внутреннего перевода',
-        variant: 'destructive'
-      })
+    onError(error) {
+      toast.error(error?.message)
     }
   })
 

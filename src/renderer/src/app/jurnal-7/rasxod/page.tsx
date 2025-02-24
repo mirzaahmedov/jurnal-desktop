@@ -8,10 +8,10 @@ import { ListView } from '@renderer/common/views'
 import { useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
 
 import { GenericTable } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
-import { toast } from '@/common/hooks/use-toast'
 
 import { DateRangeForm } from '../common/components/date-range-form'
 import { useJurnal7DateRange } from '../common/components/use-date-range'
@@ -31,19 +31,14 @@ const Jurnal7RasxodPage = () => {
   const { form, from, to, applyFilters } = useJurnal7DateRange()
 
   const { mutate: deleteRasxod, isPending } = useRasxodDelete({
-    onSuccess() {
+    onSuccess(res) {
       queryClient.invalidateQueries({
         queryKey: [queryKeys.getAll]
       })
-      toast({
-        title: 'Расход успешно удален'
-      })
+      toast.success(res?.message)
     },
-    onError() {
-      toast({
-        title: 'Ошибка при удалении расхода',
-        variant: 'destructive'
-      })
+    onError(error) {
+      toast.error(error?.message)
     }
   })
   const { data: rasxodList, isFetching } = useRasxodList({
@@ -86,7 +81,6 @@ const Jurnal7RasxodPage = () => {
           onEdit={(row) => navigate(`${row.id}`)}
           onDelete={(row) => {
             confirm({
-              title: 'Удалить расходный документ?',
               onConfirm: () => deleteRasxod(row.id)
             })
           }}
