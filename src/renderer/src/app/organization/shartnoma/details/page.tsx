@@ -97,17 +97,19 @@ const ShartnomaDetailsPage = () => {
         />
       </DetailsView.Content>
       <DetailsView.Footer>
-        <Button
-          type="button"
-          variant="ghost"
-          onClick={reportToggle.open}
-          disabled={!main_schet?.data || !organization?.data || !shartnoma?.data}
-        >
-          <DownloadIcon className="btn-icon icon-start" />
-          {t('payment-schedule')}
-        </Button>
+        {id !== 'create' ? (
+          <Button
+            type="button"
+            variant="ghost"
+            onClick={reportToggle.open}
+            disabled={!main_schet?.data || !organization?.data || !shartnoma?.data}
+          >
+            <DownloadIcon className="btn-icon icon-start" />
+            {t('payment-schedule')}
+          </Button>
+        ) : null}
       </DetailsView.Footer>
-      {main_schet?.data && organization?.data && shartnoma?.data ? (
+      {id !== 'create' && main_schet?.data && organization?.data && shartnoma?.data ? (
         <ShartnomaSmetaGrafikGeneratePDFDocumentDialog
           open={reportToggle.isOpen}
           onChange={reportToggle.setOpen}

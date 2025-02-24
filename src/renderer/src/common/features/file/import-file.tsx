@@ -30,8 +30,9 @@ const acceptFiles: Accept = {
 export interface ImportFileDialogProps {
   url: string
   params?: Record<string, unknown>
+  onSuccess?: VoidFunction
 }
-export const ImportFile = ({ url, params }: ImportFileDialogProps) => {
+export const ImportFile = ({ url, params, onSuccess }: ImportFileDialogProps) => {
   const dialogToggle = useToggle()
 
   const [file, setFile] = useState<File>()
@@ -55,13 +56,14 @@ export const ImportFile = ({ url, params }: ImportFileDialogProps) => {
       })
       return res.data
     },
-    onSuccess() {
-      toast.success('Данные импортированы успешно')
+    onSuccess(res) {
+      toast.success(res?.message ?? 'Данные импортированы успешно')
       setFile(undefined)
       dialogToggle.close()
+      onSuccess?.()
     },
-    onError() {
-      toast.error('Не удалось импортировать данные')
+    onError(error) {
+      toast.error(error.message ?? 'Не удалось импортировать данные')
     },
     onSettled() {
       setProgress(null)

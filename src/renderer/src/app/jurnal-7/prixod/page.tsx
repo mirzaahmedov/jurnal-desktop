@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 
 import { ButtonGroup } from '@renderer/common/components/ui/button-group'
-import { DownloadFile, ImportFile } from '@renderer/common/features/file'
+import { DownloadFile } from '@renderer/common/features/file'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
 import { SearchField, useSearch } from '@renderer/common/features/search'
 import { usePagination } from '@renderer/common/hooks'
@@ -30,7 +30,7 @@ const Jurnal7PrixodPage = () => {
   const { t } = useTranslation(['app'])
 
   const setLayout = useLayoutStore((store) => store.setLayout)
-  const { main_schet_id, budjet_id } = useRequisitesStore()
+  const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
   const { form, from, to, applyFilters } = useJurnal7DateRange()
 
   const { mutate: deletePrixod, isPending: isDeleting } = usePrixodDelete({
@@ -78,22 +78,6 @@ const Jurnal7PrixodPage = () => {
         />
         {main_schet_id ? (
           <ButtonGroup>
-            <ImportFile
-              url="/jur_7/doc_prixod/import"
-              params={{
-                main_schet_id,
-                budjet_id
-              }}
-            />
-            <DownloadFile
-              url="/jur_7/doc_prixod/template"
-              fileName={`jur7_prixod_shablon-${from}&${to}.xlsx`}
-              buttonText={t('download-something', { something: t('template') })}
-              params={{
-                excel: true
-              }}
-              className="ml-2.5"
-            />
             <DownloadFile
               url="jur_7/doc_prixod/report"
               fileName={`jur7_prixod_report-${from}&${to}.xlsx`}

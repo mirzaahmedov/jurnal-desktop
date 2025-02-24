@@ -1,8 +1,7 @@
 import type { InputProps } from './ui/input'
-import type { PatternFormatProps } from 'react-number-format'
+import type { OnValueChange, PatternFormatProps } from 'react-number-format'
 
 import {
-  type ChangeEvent,
   type HTMLAttributes,
   type KeyboardEvent,
   forwardRef,
@@ -12,6 +11,7 @@ import {
 } from 'react'
 
 import { Calendar as CalendarIcon } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { PatternFormat } from 'react-number-format'
 import { toast } from 'react-toastify'
 
@@ -59,21 +59,28 @@ export const DatePicker = forwardRef<HTMLButtonElement, DatePickerProps>(
 
     const calendarToggle = useToggle()
 
+    const { t } = useTranslation()
+
     useEffect(() => {
       setInternalValue(formatValue(value ?? ''))
       setMonthValue(value ? parseDate(value) : new Date())
     }, [formatValue, value])
 
-    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-      const value = e.target.value
+    const handleChange: OnValueChange = (values) => {
+      const value = values.formattedValue
       setInternalValue(value)
+
+      if (values.value.length !== 8) {
+        return
+      }
+
       const isValid = validate(localeDateToISO(value))
-      console.log('change', { isValid, value: localeDateToISO(value) })
       if (isValid) {
         const rawValue = unformatValue(value)
         onChange?.(rawValue)
         setMonthValue(parseDate(rawValue))
       } else {
+        toast.error(t('date_does_not_exists'))
         onChange?.('')
         setInternalValue('')
         setMonthValue(new Date())
@@ -87,15 +94,15 @@ export const DatePicker = forwardRef<HTMLButtonElement, DatePickerProps>(
         return
       }
       if (!validate(localeDateToISO(internalValue))) {
-        toast.error('Неверный формат даты или дата не существует')
+        toast.error(t('date_does_not_exists'))
         onChange?.('')
-        setInternalValue(formatValue(value ?? ''))
+        setInternalValue('')
       }
     }
 
     const handleKeyUp = (e: KeyboardEvent<HTMLInputElement>) => {
       const value = e.currentTarget.value
-      if (e.key.match(/[0-9]/)) {
+      if (e.key.match(/[0-9]/) || e.key === 'Backspace' || e.key === 'Delete') {
         const isValid = validate(localeDateToISO(value))
         if (isValid) {
           calendarToggle.open()
@@ -136,7 +143,7 @@ export const DatePicker = forwardRef<HTMLButtonElement, DatePickerProps>(
             format="##.##.####"
             mask={['д', 'д', 'м', 'м', 'г', 'г', 'г', 'г']}
             value={internalValue}
-            onChange={handleChange}
+            onValueChange={handleChange}
             placeholder={placeholder ?? 'дд.мм.гггг'}
             onBlur={handleBlur}
             onKeyUp={handleKeyUp}
@@ -159,6 +166,7 @@ export const DatePicker = forwardRef<HTMLButtonElement, DatePickerProps>(
         <PopoverContent
           className="w-auto p-0"
           onOpenAutoFocus={(e) => e.preventDefault()}
+          onCloseAutoFocus={(e) => e.preventDefault()}
         >
           <Calendar
             {...calendarProps}

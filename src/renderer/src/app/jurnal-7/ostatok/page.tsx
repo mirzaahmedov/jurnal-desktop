@@ -17,7 +17,7 @@ import { SearchField, useSearch } from '@renderer/common/features/search'
 import { useSpravochnik } from '@renderer/common/features/spravochnik'
 import { useDates, useToggle } from '@renderer/common/hooks'
 import { ListView } from '@renderer/common/views'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { Download } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
@@ -31,6 +31,7 @@ const OstatokPage = () => {
   const dropdownToggle = useToggle()
   const dates = useDates()
   const setLayout = useLayoutStore((store) => store.setLayout)
+  const queryClient = useQueryClient()
 
   const { search } = useSearch()
   const { t } = useTranslation(['app'])
@@ -78,9 +79,9 @@ const OstatokPage = () => {
 
   return (
     <ListView>
-      <ListView.Header>
-        <div className="flex gap-10 justify-between p-5">
-          <div className="flex gap-5">
+      <ListView.Header className="w-full flex flex-col gap-5">
+        <div className="w-full flex items-center justify-between">
+          <div className="flex items-center gap-5">
             <ChooseSpravochnik
               spravochnik={podrazdelenieSpravochnik}
               placeholder="Выберите подразделение"
@@ -189,11 +190,18 @@ const OstatokPage = () => {
                   main_schet_id,
                   budjet_id
                 }}
+                onSuccess={() => {
+                  queryClient.invalidateQueries({
+                    queryKey: [ostatokQueryKeys.getAll]
+                  })
+                }}
               />
             </ButtonGroup>
           </div>
         </div>
-        <ListView.RangeDatePicker {...dates} />
+        <div className="w-full">
+          <ListView.RangeDatePicker {...dates} />
+        </div>
       </ListView.Header>
       <ListView.Content loading={isFetching}>
         <CollapsibleTable
