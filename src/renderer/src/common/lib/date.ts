@@ -1,5 +1,5 @@
-const date_regex = /^\d{1,2}.\d{1,2}.\d{4}$/
-const date_iso_regex = /^\d{4}-\d{1,2}-\d{1,2}$/
+export const date_regex = /^\d{1,2}.\d{1,2}.\d{4}$/
+export const date_iso_regex = /^\d{4}-\d{1,2}-\d{1,2}$/
 
 export const getFirstDayOfMonth = (date: Date = new Date()) => {
   return new Date(date.getFullYear(), date.getMonth(), 1)

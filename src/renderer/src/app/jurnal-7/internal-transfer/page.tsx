@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 
 import { useRequisitesStore } from '@renderer/common/features/requisites'
 import { SearchField, useSearch } from '@renderer/common/features/search'
-import { usePagination } from '@renderer/common/hooks'
+import { useDates, usePagination } from '@renderer/common/hooks'
 import { ListView } from '@renderer/common/views'
 import { useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
@@ -13,12 +13,11 @@ import { useConfirm } from '@/common/features/confirm'
 import { useLayoutStore } from '@/common/features/layout'
 import { toast } from '@/common/hooks/use-toast'
 
-import { DateRangeForm } from '../common/components/date-range-form'
-import { useJurnal7DateRange } from '../common/components/use-date-range'
 import { columns, queryKeys } from './config'
 import { useInternalTransferDelete, useInternalTransferList } from './service'
 
 const Jurnal7InternalTransferPage = () => {
+  const dates = useDates()
   const pagination = usePagination()
   const navigate = useNavigate()
   const queryClient = useQueryClient()
@@ -28,7 +27,6 @@ const Jurnal7InternalTransferPage = () => {
   const { t } = useTranslation(['app'])
   const { confirm } = useConfirm()
   const { search } = useSearch()
-  const { form, from, to, applyFilters } = useJurnal7DateRange()
 
   const { mutate: deleteInternalTransfer, isPending } = useInternalTransferDelete({
     onSuccess() {
@@ -49,10 +47,9 @@ const Jurnal7InternalTransferPage = () => {
   const { data: transferList, isFetching } = useInternalTransferList({
     params: {
       ...pagination,
+      ...dates,
       search,
-      main_schet_id,
-      from,
-      to
+      main_schet_id
     }
   })
 
@@ -74,10 +71,7 @@ const Jurnal7InternalTransferPage = () => {
   return (
     <ListView>
       <ListView.Header>
-        <DateRangeForm
-          form={form}
-          onSubmit={applyFilters}
-        />
+        <ListView.RangeDatePicker {...dates} />
       </ListView.Header>
       <ListView.Content loading={isFetching || isPending}>
         <GenericTable

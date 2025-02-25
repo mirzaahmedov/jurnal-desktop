@@ -8,6 +8,7 @@ import { Navigate, createHashRouter } from 'react-router-dom'
 
 import DashboardPage from './dashboard/page'
 import HomePage from './home/page'
+import IznosDetailsPage from './jurnal-7/iznos/details/page'
 import RaschetSchetPage from './region-spravochnik/raschet-schet'
 import RaschetSchetGaznaPage from './region-spravochnik/raschet-schet-gazna'
 import SigninPage from './sign-in'
@@ -388,6 +389,10 @@ export const routes: RouteObject[] = [
           {
             path: 'iznos',
             element: <IznosPage />
+          },
+          {
+            path: 'iznos/:id',
+            element: <IznosDetailsPage />
           }
         ]
       },

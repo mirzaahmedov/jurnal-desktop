@@ -35,7 +35,7 @@ export type DatePickerProps = Omit<PatternFormatProps<InputProps>, 'format' | 'o
   formatValue?: (value: string) => string
   unformatValue?: (value: string) => string
   validate?: (value: string) => boolean
-  calendarProps?: DayPickerSingleProps
+  calendarProps?: Omit<DayPickerSingleProps, 'mode'>
 }
 export const DatePicker = forwardRef<HTMLButtonElement, DatePickerProps>(
   (
@@ -85,7 +85,9 @@ export const DatePicker = forwardRef<HTMLButtonElement, DatePickerProps>(
         onChange?.(rawValue)
         setMonthValue(parseDate(rawValue))
       } else {
-        toast.error(t('date_does_not_exists'))
+        if (validate === validateDate) {
+          toast.error(t('date_does_not_exist'))
+        }
         onChange?.('')
         setInternalValue('')
         setMonthValue(new Date())
@@ -99,7 +101,9 @@ export const DatePicker = forwardRef<HTMLButtonElement, DatePickerProps>(
         return
       }
       if (!validate(localeDateToISO(internalValue))) {
-        toast.error(t('date_does_not_exists'))
+        if (validate === validateDate) {
+          toast.error(t('date_does_not_exist'))
+        }
         onChange?.('')
         setInternalValue('')
       }
@@ -185,7 +189,6 @@ export const DatePicker = forwardRef<HTMLButtonElement, DatePickerProps>(
                 return
               }
               if (!date || !validate(formatDate(date))) {
-                console.log({ date }, 'invalid')
                 onChange?.('')
                 setMonthValue(new Date())
                 calendarToggle.close()

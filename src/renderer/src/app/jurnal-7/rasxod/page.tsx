@@ -4,6 +4,7 @@ import { useLayoutStore } from '@renderer/common/features/layout'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
 import { SearchField, useSearch } from '@renderer/common/features/search'
 import { usePagination } from '@renderer/common/hooks'
+import { useDates } from '@renderer/common/hooks'
 import { ListView } from '@renderer/common/views'
 import { useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
@@ -13,12 +14,11 @@ import { toast } from 'react-toastify'
 import { GenericTable } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
 
-import { DateRangeForm } from '../common/components/date-range-form'
-import { useJurnal7DateRange } from '../common/components/use-date-range'
 import { columns, queryKeys } from './config'
 import { useRasxodDelete, useRasxodList } from './service'
 
 const Jurnal7RasxodPage = () => {
+  const dates = useDates()
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const pagination = usePagination()
@@ -28,7 +28,6 @@ const Jurnal7RasxodPage = () => {
   const { t } = useTranslation(['app'])
   const { search } = useSearch()
   const { confirm } = useConfirm()
-  const { form, from, to, applyFilters } = useJurnal7DateRange()
 
   const { mutate: deleteRasxod, isPending } = useRasxodDelete({
     onSuccess(res) {
@@ -44,10 +43,9 @@ const Jurnal7RasxodPage = () => {
   const { data: rasxodList, isFetching } = useRasxodList({
     params: {
       ...pagination,
+      ...dates,
       search,
-      main_schet_id,
-      from,
-      to
+      main_schet_id
     }
   })
 
@@ -69,10 +67,7 @@ const Jurnal7RasxodPage = () => {
   return (
     <ListView>
       <ListView.Header>
-        <DateRangeForm
-          form={form}
-          onSubmit={applyFilters}
-        />
+        <ListView.RangeDatePicker {...dates} />
       </ListView.Header>
       <ListView.Content loading={isFetching || isPending}>
         <GenericTable

@@ -17,6 +17,23 @@ export interface OstatokProduct {
   group_jur7_name: string
   iznos_foiz: number
   spravochnik_budjet_name: string
+  iznos: boolean
+  group: {
+    id: number
+    smeta_id: any
+    name: string
+    schet: string
+    iznos_foiz: number
+    provodka_debet: string
+    provodka_subschet: string
+    group_number: string
+    provodka_kredit: string
+    roman_numeral: any
+    pod_group: string
+    created_at: string
+    updated_at: string
+    isdeleted: boolean
+  }
   from: {
     kol: number
     kol_rasxod: number
@@ -33,7 +50,7 @@ export interface OstatokProduct {
     summa: number
     summa_prixod: number
     summa_rasxod: number
-    sena: any
+    sena: number
   }
   to: {
     kol: number
@@ -45,23 +62,19 @@ export interface OstatokProduct {
     sena: number
   }
   prixod_data: {
+    id: number
     doc_date: string
     doc_num: string
   }
-  group: {
-    id: number
-    smeta_id: any
-    name: string
-    schet: string
-    iznos_foiz: number
-    provodka_debet: string
-    provodka_subschet: string
-    group_number: string
-    provodka_kredit: string
-    roman_numeral: any
-    pod_group: string
-    created_at: string
-    updated_at: string
-    isdeleted: boolean
+  iznos_data: {
+    eski_iznos_summa: number
+    iznos_summa: number
+    summa: number
+    year: number
+    month: number
+    kol: number
+    sena: number
+    new_summa: number
+    responsible_id: number
   }
 }

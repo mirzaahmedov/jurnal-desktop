@@ -1,10 +1,9 @@
 import type { FormEditableFieldsComponent } from './types'
-import type { CalendarProps } from '@renderer/common/components/ui/calendar'
+import type { DayPickerSingleProps } from 'react-day-picker'
 import type { Control, UseFormReturn } from 'react-hook-form'
 
 import { Button } from '@renderer/common/components/ui/button'
 import { type DocumentType, useGenerateDocumentNumber } from '@renderer/common/features/doc-num'
-import { validateDate as defaultValidateDate } from '@renderer/common/lib/date'
 import { cn } from '@renderer/common/lib/utils'
 import { RefreshCw } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
@@ -23,7 +22,7 @@ export const DocumentFields: FormEditableFieldsComponent<
   RequiredDocumentFields,
   {
     validateDate?: (value: string) => boolean
-    calendarProps?: CalendarProps
+    calendarProps?: Omit<DayPickerSingleProps, 'mode'>
     documentType?: DocumentType
     autoGenerate?: boolean
   }
@@ -106,7 +105,7 @@ export const DocumentFields: FormEditableFieldsComponent<
               <DatePicker
                 tabIndex={tabIndex}
                 disabled={disabled}
-                validate={validateDate ?? defaultValidateDate}
+                validate={validateDate}
                 calendarProps={calendarProps}
                 {...field}
               />

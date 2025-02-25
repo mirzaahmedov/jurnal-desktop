@@ -11,6 +11,7 @@ import { getFirstDayOfMonth } from '@renderer/common/lib/date'
 import { ListView } from '@renderer/common/views'
 import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router-dom'
 
 import { columns } from './columns'
 import { iznosQueryKeys } from './config'
@@ -18,6 +19,7 @@ import { EditIznosDialog } from './edit-dialog'
 import { iznosService } from './service'
 
 const IznosPage = () => {
+  const navigate = useNavigate()
   const date = getFirstDayOfMonth()
   const pagination = usePagination()
   const dialogToggle = useToggle()
@@ -47,6 +49,9 @@ const IznosPage = () => {
   useEffect(() => {
     setLayout({
       title: t('pages.iznos'),
+      onCreate() {
+        navigate('create')
+      },
       content: SearchField,
       breadcrumbs: [
         {

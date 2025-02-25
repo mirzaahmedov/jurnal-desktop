@@ -5,6 +5,7 @@ import {
   EditableTableHead,
   EditableTableRow
 } from '@renderer/common/components/editable-table'
+import { useDefaultFilters } from '@renderer/common/features/app-defaults'
 import { formatDate } from '@renderer/common/lib/date'
 import { CircleMinus, CirclePlus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
@@ -399,6 +400,8 @@ const NaimenovanieCells = ({
   updateFormField,
   errorMessage
 }: NaimenovanieCellsProps) => {
+  const from = useDefaultFilters((store) => store.from)
+
   const {
     naimenovanie_tovarov_jur7_name,
     group_jur7_number,
@@ -410,6 +413,7 @@ const NaimenovanieCells = ({
     naimenovanie_tovarov_jur7_id: row.naimenovanie_tovarov_jur7_id,
     kimdan_id,
     doc_date,
+    from,
     disabledIds: form.getValues('childs').map((child) => child.naimenovanie_tovarov_jur7_id),
     onChange(product) {
       if (!product) {

@@ -4,7 +4,7 @@ import { ButtonGroup } from '@renderer/common/components/ui/button-group'
 import { DownloadFile } from '@renderer/common/features/file'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
 import { SearchField, useSearch } from '@renderer/common/features/search'
-import { usePagination } from '@renderer/common/hooks'
+import { useDates, usePagination } from '@renderer/common/hooks'
 import { HttpResponseError } from '@renderer/common/lib/http'
 import { ListView } from '@renderer/common/views'
 import { useQueryClient } from '@tanstack/react-query'
@@ -16,8 +16,6 @@ import { GenericTable } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
 import { useLayoutStore } from '@/common/features/layout'
 
-import { DateRangeForm } from '../common/components/date-range-form'
-import { useJurnal7DateRange } from '../common/components/use-date-range'
 import { columns, queryKeys } from './config'
 import { ErrorAlert, type ErrorData, type ErrorDataDocument } from './error-alert'
 import { usePrixodDelete, usePrixodList } from './service'
@@ -25,6 +23,7 @@ import { usePrixodDelete, usePrixodList } from './service'
 const Jurnal7PrixodPage = () => {
   const [error, setError] = useState<ErrorData>()
 
+  const dates = useDates()
   const pagination = usePagination()
   const navigate = useNavigate()
   const queryClient = useQueryClient()
@@ -35,7 +34,6 @@ const Jurnal7PrixodPage = () => {
 
   const setLayout = useLayoutStore((store) => store.setLayout)
   const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
-  const { form, from, to, applyFilters } = useJurnal7DateRange()
 
   const { mutate: deletePrixod, isPending: isDeleting } = usePrixodDelete({
     onSuccess(res) {
@@ -58,10 +56,9 @@ const Jurnal7PrixodPage = () => {
   const { data: prixodList, isFetching } = usePrixodList({
     params: {
       ...pagination,
+      ...dates,
       search,
-      main_schet_id,
-      from,
-      to
+      main_schet_id
     }
   })
 
@@ -82,27 +79,24 @@ const Jurnal7PrixodPage = () => {
 
   return (
     <ListView>
-      <div className="p-5 flex items-center justify-between">
-        <DateRangeForm
-          form={form}
-          onSubmit={applyFilters}
-        />
+      <ListView.Header>
+        <ListView.RangeDatePicker {...dates} />
         {main_schet_id ? (
           <ButtonGroup>
             <DownloadFile
               url="jur_7/doc_prixod/report"
-              fileName={`jur7_prixod_report-${from}&${to}.xlsx`}
+              fileName={`jur7_prixod_report-${dates.from}&${dates.to}.xlsx`}
               buttonText={t('download-something', { something: t('report') })}
               params={{
-                from,
-                to,
+                from: dates.from,
+                to: dates.to,
                 main_schet_id,
                 excel: true
               }}
             />
           </ButtonGroup>
         ) : null}
-      </div>
+      </ListView.Header>
       <ListView.Content
         loading={isFetching || isDeleting}
         className="flex-1 relative"

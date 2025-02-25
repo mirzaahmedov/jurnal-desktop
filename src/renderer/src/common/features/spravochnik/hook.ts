@@ -121,10 +121,6 @@ export const useSpravochnik = <T extends { id: number }>(
     close
   ])
 
-  console.log({
-    selected: selectedId
-  })
-
   const handleClearState = useCallback(() => {
     setSelectedId(undefined)
     callbacksRef.current.onChange?.(undefined, undefined)

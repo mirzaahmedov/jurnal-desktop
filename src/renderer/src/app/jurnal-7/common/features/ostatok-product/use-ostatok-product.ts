@@ -4,11 +4,11 @@ import type { OstatokProduct } from '@renderer/common/models'
 import { createNaimenovanieSpravochnik } from '@renderer/app/jurnal-7/naimenovaniya/service'
 import { createOstatokProductSpravochnik } from '@renderer/app/jurnal-7/ostatok'
 import { useSpravochnik } from '@renderer/common/features/spravochnik'
-import { formatDate, getFirstDayOfMonth } from '@renderer/common/lib/date'
 
 type UseOstatokProductParams = {
   naimenovanie_tovarov_jur7_id: number
   kimdan_id: number
+  from: string
   doc_date: string
   disabledIds: number[]
   onChange: (product?: OstatokProduct) => void
@@ -25,6 +25,7 @@ export type UseOstatokProductReturn = {
 export const useOstatokProduct = ({
   naimenovanie_tovarov_jur7_id,
   kimdan_id,
+  from,
   doc_date,
   disabledIds,
   onChange
@@ -36,8 +37,8 @@ export const useOstatokProduct = ({
       },
       params: {
         kimning_buynida: kimdan_id,
-        from: formatDate(getFirstDayOfMonth(new Date(doc_date))),
-        to: formatDate(getFirstDayOfMonth(new Date(doc_date))),
+        from,
+        to: doc_date,
         product_id: naimenovanie_tovarov_jur7_id || undefined
       },
       includeParamsInGetById: true,

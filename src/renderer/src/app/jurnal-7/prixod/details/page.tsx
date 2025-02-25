@@ -4,11 +4,13 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { createShartnomaSpravochnik } from '@renderer/app/organization/shartnoma'
 import { createOrganizationSpravochnik } from '@renderer/app/region-spravochnik/organization'
 import { Form } from '@renderer/common/components/ui/form'
+import { useDefaultFilters } from '@renderer/common/features/app-defaults'
 import { DocumentType } from '@renderer/common/features/doc-num'
 import { useLayoutStore } from '@renderer/common/features/layout'
 import { useSpravochnik } from '@renderer/common/features/spravochnik'
-import { parseDate, withinMonth } from '@renderer/common/lib/date'
+import { date_iso_regex, parseDate, validateDate, withinMonth } from '@renderer/common/lib/date'
 import { focusInvalidInput } from '@renderer/common/lib/errors'
+import { formatLocaleDate } from '@renderer/common/lib/format'
 import { HttpResponseError } from '@renderer/common/lib/http'
 import { type Operatsii, TypeSchetOperatsii } from '@renderer/common/models'
 import { DetailsView } from '@renderer/common/views'
@@ -29,10 +31,9 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
+import { createResponsibleSpravochnik } from '@/app/jurnal-7/responsible/service'
 import { createOperatsiiSpravochnik } from '@/app/super-admin/operatsii'
 
-import { useJurnal7DefaultsStore } from '../../common/features/defaults'
-import { createResponsibleSpravochnik } from '../../responsible/service'
 import { PrixodFormSchema, defaultValues, queryKeys } from '../config'
 import { ErrorAlert, type ErrorData, type ErrorDataDocument } from '../error-alert'
 import { usePrixodCreate, usePrixodGet, usePrixodUpdate } from '../service'
@@ -48,8 +49,8 @@ const Jurnal7PrixodDetailsPage = () => {
 
   const { id } = useParams()
   const { t } = useTranslation(['app'])
+  const { from, to } = useDefaultFilters()
 
-  const { from } = useJurnal7DefaultsStore()
   const { data: prixod, isFetching } = usePrixodGet(Number(id))
   const { mutate: createPrixod, isPending: isCreating } = usePrixodCreate({
     onSuccess: (res) => {
@@ -245,7 +246,23 @@ const Jurnal7PrixodDetailsPage = () => {
                 tabIndex={1}
                 form={form}
                 validateDate={(date) => {
-                  return withinMonth(new Date(date), parseDate(from))
+                  if (!validateDate(date)) {
+                    if (date_iso_regex.test(date)) {
+                      toast.error(t('date_does_not_exist'))
+                    }
+                    return false
+                  }
+                  const isValid =
+                    parseDate(from) <= parseDate(date) && parseDate(date) <= parseDate(to)
+                  if (!isValid && date?.length === 10) {
+                    toast.error(
+                      t('out_of_range', {
+                        minDate: formatLocaleDate(from),
+                        maxDate: formatLocaleDate(to)
+                      })
+                    )
+                  }
+                  return isValid
                 }}
                 calendarProps={{
                   fromMonth: parseDate(from),

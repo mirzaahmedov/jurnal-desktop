@@ -123,8 +123,7 @@ export const ShartnomaSmetaGrafiksTable = ({
       </Table>
       <Text
         style={{
-          fontWeight: 'bold',
-          textDecoration: 'underline'
+          fontWeight: 'bold'
         }}
       >
         {paymentDetails}

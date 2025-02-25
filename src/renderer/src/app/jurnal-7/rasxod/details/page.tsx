@@ -1,9 +1,11 @@
 import { useEffect, useMemo, useRef } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useDefaultFilters } from '@renderer/common/features/app-defaults'
 import { DocumentType } from '@renderer/common/features/doc-num'
-import { parseDate, withinMonth } from '@renderer/common/lib/date'
+import { date_iso_regex, parseDate, validateDate, withinMonth } from '@renderer/common/lib/date'
 import { focusInvalidInput } from '@renderer/common/lib/errors'
+import { formatLocaleDate } from '@renderer/common/lib/format'
 import { DetailsView } from '@renderer/common/views'
 import isEmpty from 'just-is-empty'
 import { useForm } from 'react-hook-form'
@@ -22,7 +24,6 @@ import {
   SummaFields
 } from '@/common/widget/form'
 
-import { useJurnal7DefaultsStore } from '../../common/features/defaults'
 import { createResponsibleSpravochnik } from '../../responsible/service'
 import { RasxodFormSchema, defaultValues } from '../config'
 import { useRasxodCreate, useRasxodGet, useRasxodUpdate } from '../service'
@@ -34,12 +35,17 @@ const Jurnal7RasxodDetailsPage = () => {
     kimga_id: 0
   })
 
+  const setLayout = useLayoutStore((store) => store.setLayout)
+  const navigate = useNavigate()
+  const form = useForm({
+    defaultValues,
+    resolver: zodResolver(RasxodFormSchema)
+  })
+
   const { id } = useParams()
   const { t } = useTranslation(['app'])
+  const { from, to } = useDefaultFilters()
 
-  const setLayout = useLayoutStore((store) => store.setLayout)
-
-  const { from } = useJurnal7DefaultsStore()
   const { data: rasxod, isFetching } = useRasxodGet(Number(id))
   const { mutate: createRasxod, isPending: isCreating } = useRasxodCreate({
     onSuccess: (res) => {
@@ -58,12 +64,6 @@ const Jurnal7RasxodDetailsPage = () => {
     onError(error) {
       toast.error(error?.message)
     }
-  })
-
-  const navigate = useNavigate()
-  const form = useForm({
-    defaultValues,
-    resolver: zodResolver(RasxodFormSchema)
   })
 
   const responsibleSpravochnik = useSpravochnik(
@@ -168,7 +168,23 @@ const Jurnal7RasxodDetailsPage = () => {
                 tabIndex={1}
                 form={form}
                 validateDate={(date) => {
-                  return withinMonth(new Date(date), parseDate(from))
+                  if (!validateDate(date)) {
+                    if (date_iso_regex.test(date)) {
+                      toast.error(t('date_does_not_exist'))
+                    }
+                    return false
+                  }
+                  const isValid =
+                    parseDate(from) <= parseDate(date) && parseDate(date) <= parseDate(to)
+                  if (!isValid && date?.length === 10) {
+                    toast.error(
+                      t('out_of_range', {
+                        minDate: formatLocaleDate(from),
+                        maxDate: formatLocaleDate(to)
+                      })
+                    )
+                  }
+                  return isValid
                 }}
                 calendarProps={{
                   fromMonth: parseDate(from),
