@@ -1,4 +1,5 @@
 import type { InputProps } from './ui/input'
+import type { DayPickerSingleProps } from 'react-day-picker'
 import type { OnValueChange, PatternFormatProps } from 'react-number-format'
 
 import {
@@ -15,7 +16,7 @@ import { useTranslation } from 'react-i18next'
 import { PatternFormat } from 'react-number-format'
 import { toast } from 'react-toastify'
 
-import { Calendar, type CalendarProps } from '@/common/components/ui/calendar'
+import { Calendar } from '@/common/components/ui/calendar'
 import { Popover, PopoverContent, PopoverTrigger } from '@/common/components/ui/popover'
 import { useToggle } from '@/common/hooks/use-toggle'
 import { formatDate, localeDateToISO, parseDate, validateDate } from '@/common/lib/date'
@@ -34,7 +35,7 @@ export type DatePickerProps = Omit<PatternFormatProps<InputProps>, 'format' | 'o
   formatValue?: (value: string) => string
   unformatValue?: (value: string) => string
   validate?: (value: string) => boolean
-  calendarProps?: CalendarProps
+  calendarProps?: DayPickerSingleProps
 }
 export const DatePicker = forwardRef<HTMLButtonElement, DatePickerProps>(
   (
@@ -62,6 +63,9 @@ export const DatePicker = forwardRef<HTMLButtonElement, DatePickerProps>(
     const { t } = useTranslation()
 
     useEffect(() => {
+      if (document.activeElement && document.activeElement === inputRef.current) {
+        return
+      }
       setInternalValue(formatValue(value ?? ''))
       setMonthValue(value ? parseDate(value) : new Date())
     }, [formatValue, value])
@@ -71,6 +75,7 @@ export const DatePicker = forwardRef<HTMLButtonElement, DatePickerProps>(
       setInternalValue(value)
 
       if (values.value.length !== 8) {
+        onChange?.('')
         return
       }
 
@@ -174,10 +179,16 @@ export const DatePicker = forwardRef<HTMLButtonElement, DatePickerProps>(
             selected={selected}
             month={monthValue}
             onMonthChange={setMonthValue}
-            onSelect={(date) => {
+            onDayClick={(date) => {
+              if (selected && date?.getTime() === selected.getTime()) {
+                calendarToggle.close()
+                return
+              }
               if (!date || !validate(formatDate(date))) {
+                console.log({ date }, 'invalid')
                 onChange?.('')
                 setMonthValue(new Date())
+                calendarToggle.close()
                 return
               }
               onChange?.(formatDate(date))
