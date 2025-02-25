@@ -10,6 +10,7 @@ type UseOstatokProductParams = {
   naimenovanie_tovarov_jur7_id: number
   kimdan_id: number
   doc_date: string
+  disabledIds: number[]
   onChange: (product?: OstatokProduct) => void
 }
 export type UseOstatokProductReturn = {
@@ -23,9 +24,10 @@ export type UseOstatokProductReturn = {
 
 export const useOstatokProduct = ({
   naimenovanie_tovarov_jur7_id,
-  onChange,
   kimdan_id,
-  doc_date
+  doc_date,
+  disabledIds,
+  onChange
 }: UseOstatokProductParams): UseOstatokProductReturn => {
   const productOstatokSpravochnik = useSpravochnik(
     createOstatokProductSpravochnik({
@@ -39,7 +41,8 @@ export const useOstatokProduct = ({
         product_id: naimenovanie_tovarov_jur7_id || undefined
       },
       includeParamsInGetById: true,
-      enabled: !!kimdan_id
+      enabled: !!kimdan_id,
+      disabledIds
     })
   )
   const naimenovanieSpravochnik = useSpravochnik(

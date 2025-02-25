@@ -13,10 +13,11 @@ type SpravochnikHookCallbacks<T> = {
 }
 
 export type SpravochnikHookOptions<T extends { id: number }> = SpravochnikHookCallbacks<T> &
-  Omit<SpravochnikData<T>, 'id'> & {
+  Omit<SpravochnikData<T>, 'id' | 'disabledIds'> & {
     value?: number
     enabled?: boolean
     includeParamsInGetById?: boolean
+    disabledIds?: number[]
   }
 
 export type UseSpravochnikReturn<T> = {
@@ -37,6 +38,9 @@ export const useSpravochnik = <T extends { id: number }>(
   const callbacksRef = useRef<SpravochnikHookCallbacks<T>>({
     onChange: options.onChange,
     onClose: options.onClose
+  })
+  const paramsRef = useRef<Pick<SpravochnikData<T>, 'disabledIds'>>({
+    disabledIds: options.disabledIds ?? []
   })
 
   const [selectedId, setSelectedId] = useState<undefined | number>()
@@ -82,6 +86,8 @@ export const useSpravochnik = <T extends { id: number }>(
       columnDefs: options.columnDefs,
       service: options.service,
       queryKeys: options.queryKeys,
+      disabledIds: paramsRef.current.disabledIds,
+      selectedId,
       onClose: () => {
         callbacksRef.current.onClose?.()
         if (inputRef.current) {
@@ -110,9 +116,14 @@ export const useSpravochnik = <T extends { id: number }>(
     options.CustomTable,
     options.Dialog,
     options.queryKeys,
+    selectedId,
     open,
     close
   ])
+
+  console.log({
+    selected: selectedId
+  })
 
   const handleClearState = useCallback(() => {
     setSelectedId(undefined)

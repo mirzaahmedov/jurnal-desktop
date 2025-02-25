@@ -196,6 +196,7 @@ const Provodka = ({ index, row, form, tabIndex }: ProvodkaProps) => {
       <NaimenovanieCells
         index={index}
         row={row}
+        form={form}
         kimdan_id={form.watch('kimdan_id')}
         doc_date={form.watch('doc_date')}
         tabIndex={tabIndex}
@@ -382,6 +383,7 @@ const Provodka = ({ index, row, form, tabIndex }: ProvodkaProps) => {
 type NaimenovanieCellsProps = {
   index: number
   row: RasxodChildFormValues
+  form: UseFormReturn<RasxodFormValues>
   kimdan_id: number
   doc_date: string
   tabIndex: number
@@ -391,6 +393,7 @@ type NaimenovanieCellsProps = {
 const NaimenovanieCells = ({
   index,
   row,
+  form,
   kimdan_id,
   doc_date,
   tabIndex,
@@ -408,6 +411,7 @@ const NaimenovanieCells = ({
     naimenovanie_tovarov_jur7_id: row.naimenovanie_tovarov_jur7_id,
     kimdan_id,
     doc_date,
+    disabledIds: form.getValues('childs').map((child) => child.naimenovanie_tovarov_jur7_id),
     onChange(product) {
       if (!product) {
         return

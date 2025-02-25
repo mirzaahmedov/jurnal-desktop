@@ -195,6 +195,7 @@ const Provodka = ({ index, tabIndex, row, form }: ProvodkaProps) => {
       <NaimenovanieCells
         index={index}
         tabIndex={tabIndex}
+        form={form}
         row={row}
         kimdan_id={form.watch('kimdan_id')}
         doc_date={form.watch('doc_date')}
@@ -381,6 +382,7 @@ const Provodka = ({ index, tabIndex, row, form }: ProvodkaProps) => {
 type NaimenovanieCellsProps = {
   index: number
   tabIndex: number
+  form: UseFormReturn<InternalTransferFormType>
   row: InternalTransferChildFormType
   kimdan_id: number
   doc_date: string
@@ -390,6 +392,7 @@ type NaimenovanieCellsProps = {
 const NaimenovanieCells = ({
   index,
   tabIndex,
+  form,
   row,
   kimdan_id,
   doc_date,
@@ -407,6 +410,7 @@ const NaimenovanieCells = ({
     naimenovanie_tovarov_jur7_id: row.naimenovanie_tovarov_jur7_id,
     kimdan_id,
     doc_date,
+    disabledIds: form.getValues('childs').map((child) => child.naimenovanie_tovarov_jur7_id),
     onChange(product) {
       if (!product) {
         return

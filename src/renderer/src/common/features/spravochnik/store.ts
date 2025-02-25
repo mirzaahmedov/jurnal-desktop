@@ -25,18 +25,22 @@ export type SpravochnikDialogProps = DialogProps & {
 export type SpravochnikTableProps<T extends object> = {
   data: T[]
   columnDefs: ColumnDef<T>[]
-  selectedRowId?: string
+  activeRowId?: string
+  disabledIds: number[]
+  selectedId?: number
   onClickRow(row: T): void
   dialogToggle?: ReturnType<typeof useToggle>
   state?: SpravochnikLocalState
   setState?: Dispatch<SetStateAction<SpravochnikLocalState>>
 }
 
-export type SpravochnikData<T extends Record<string, unknown>> = {
+export type SpravochnikData<T extends object> = {
   id: string
   endpoint: APIEndpoints
   title?: string
   service: CRUDService<T>
+  selectedId?: number
+  disabledIds: number[]
   selectId?: (id: number, data: T) => void
   onClose?: () => void
   queryKeys?: {
@@ -52,7 +56,7 @@ export type SpravochnikData<T extends Record<string, unknown>> = {
   CustomTable?: ComponentType<SpravochnikTableProps<T>>
   tableProps?: Partial<GenericTableProps<T>>
 }
-export type SpravochnikStore<T extends Record<string, unknown>> = {
+export type SpravochnikStore<T extends object> = {
   isOpen: (id: string) => boolean
   open(spravochnik: SpravochnikData<T>): void
   close(id: string): void

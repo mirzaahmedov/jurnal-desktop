@@ -55,12 +55,14 @@ export type GenericTableProps<T extends object> = TableHTMLAttributes<HTMLTableE
     columnDefs: ColumnDef<T>[]
     headerGroups?: HeaderGroup<T>[][]
     placeholder?: string
+    selectedId?: number
+    disabledIds?: number[]
     getRowId?(row: T): string | number
     onClickRow?(row: T): void
     onDelete?(row: T): void
     onEdit?(row: T): void
     customActions?: (row: T) => ReactNode
-    selectedRowId?: string | number
+    activeRowId?: string | number
     footer?: ReactNode
   }
 export const GenericTable = <T extends object>({
@@ -70,10 +72,12 @@ export const GenericTable = <T extends object>({
   headerGroups = [columnDefs],
   placeholder,
   getRowId = defaultRowIdGetter,
+  disabledIds = [],
+  selectedId = 0,
   onClickRow,
   onDelete,
   onEdit,
-  selectedRowId,
+  activeRowId,
   footer,
   customActions,
   ...props
@@ -90,6 +94,10 @@ export const GenericTable = <T extends object>({
       })
     }
   }, [selectedRowRef])
+
+  console.log({
+    selected: selectedId
+  })
 
   return (
     <Table
@@ -150,77 +158,82 @@ export const GenericTable = <T extends object>({
       </TableHeader>
       <TableBody>
         {Array.isArray(data) && data.length ? (
-          data.map((row) => (
-            <GenericTableRow
-              key={getRowId(row)}
-              onClick={() => onClickRow?.(row)}
-              ref={(el) => {
-                if (selectedRowId === getRowId(row)) {
-                  setSelectedRowRef(el)
-                }
-              }}
-              className={cn(
-                selectedRowId === getRowId(row) &&
-                  'bg-brand/5 even:bg-brand/5 hover:bg-brand/5 transition-none'
-              )}
-            >
-              {Array.isArray(columnDefs)
-                ? columnDefs.map((col) => {
-                    const { key, fit, stretch, numeric, renderCell, className, width } = col
-                    return (
-                      <GenericTableCell
-                        key={key.toString()}
-                        fit={fit}
-                        stretch={stretch}
-                        numeric={numeric}
-                        className={cn(
-                          selectedRowId === getRowId(row) && 'text-brand/100',
-                          className
-                        )}
-                        width={width}
-                      >
-                        {typeof renderCell === 'function'
-                          ? renderCell(row, col)
-                          : defaultCellRenderer(row, col)}
-                      </GenericTableCell>
-                    )
-                  })
-                : null}
+          data.map((row) => {
+            return (
+              <GenericTableRow
+                key={getRowId(row)}
+                onClick={() => onClickRow?.(row)}
+                ref={(el) => {
+                  if (activeRowId === getRowId(row)) {
+                    setSelectedRowRef(el)
+                  }
+                }}
+                className={cn(
+                  'group',
+                  activeRowId === getRowId(row) &&
+                    'ring-2 ring-inset ring-offset-1 ring-brand transition-none',
+                  disabledIds.includes(Number(getRowId(row))) && 'opacity-50 pointer-events-none'
+                )}
+                data-selected={selectedId === Number(getRowId(row))}
+              >
+                {Array.isArray(columnDefs)
+                  ? columnDefs.map((col) => {
+                      const { key, fit, stretch, numeric, renderCell, className, width } = col
+                      return (
+                        <GenericTableCell
+                          key={key.toString()}
+                          fit={fit}
+                          stretch={stretch}
+                          numeric={numeric}
+                          className={cn(
+                            activeRowId === getRowId(row) && 'text-brand/100',
+                            className
+                          )}
+                          width={width}
+                        >
+                          {typeof renderCell === 'function'
+                            ? renderCell(row, col)
+                            : defaultCellRenderer(row, col)}
+                        </GenericTableCell>
+                      )
+                    })
+                  : null}
 
-              {onDelete || onEdit || customActions ? (
-                <GenericTableCell className="py-1">
-                  <div className="flex items-center whitespace-nowrap w-full gap-1">
-                    {onEdit && (
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          onEdit(row)
-                        }}
-                      >
-                        <Pencil className="size-4" />
-                      </Button>
-                    )}
-                    {onDelete && (
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          onDelete(row)
-                        }}
-                        className="text-destructive hover:text-destructive"
-                      >
-                        <Trash2 className="size-4" />
-                      </Button>
-                    )}
-                    {customActions?.(row)}
-                  </div>
-                </GenericTableCell>
-              ) : null}
-            </GenericTableRow>
-          ))
+                {onDelete || onEdit || customActions ? (
+                  <GenericTableCell className="py-1">
+                    <div className="flex items-center whitespace-nowrap w-full gap-1">
+                      {onEdit && (
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            onEdit(row)
+                          }}
+                        >
+                          <Pencil className="size-4" />
+                        </Button>
+                      )}
+                      {onDelete && (
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            onDelete(row)
+                          }}
+                          className="text-destructive hover:text-destructive"
+                        >
+                          <Trash2 className="size-4" />
+                        </Button>
+                      )}
+                      {customActions?.(row)}
+                    </div>
+                  </GenericTableCell>
+                ) : null}
+              </GenericTableRow>
+            )
+          })
         ) : (
           <GenericTableRow className="pointer-events-none">
             <GenericTableCell

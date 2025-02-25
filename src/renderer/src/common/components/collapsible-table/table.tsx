@@ -23,6 +23,8 @@ export type CollapsibleTableProps<T extends object, C extends object> = {
   displayHeader?: boolean
   data: T[]
   columnDefs: ColumnDef<NoInfer<T>>[]
+  disabledIds?: number[]
+  selectedId?: number
   getRowId: (row: T) => number | string
   getChildRows: (row: T) => C[] | undefined
   renderChildRows?: (rows: NoInfer<C>[]) => ReactNode
@@ -34,6 +36,8 @@ export const CollapsibleTable = <T extends object, C extends object = T>({
   displayHeader = true,
   data,
   columnDefs,
+  disabledIds,
+  selectedId,
   getRowId,
   getChildRows,
   renderChildRows,
@@ -87,6 +91,8 @@ export const CollapsibleTable = <T extends object, C extends object = T>({
                 onClickRow,
                 onEdit,
                 onDelete,
+                disabledIds,
+                selectedId,
                 data
               }}
             />
@@ -120,17 +126,28 @@ const CollapsibleItem = <T extends object, C extends object>({
   tableProps,
   level = 1
 }: CollapsibleItemProps<T, C>) => {
-  const { columnDefs, getRowId, getChildRows, renderChildRows, onClickRow, onEdit, onDelete } =
-    tableProps
+  const {
+    columnDefs,
+    getRowId,
+    getChildRows,
+    renderChildRows,
+    onClickRow,
+    onEdit,
+    onDelete,
+    disabledIds,
+    selectedId
+  } = tableProps
 
   if (!Array.isArray(getChildRows(row))) {
     return (
       <GenericTableRow
         key={getRowId(row)}
         className={cn(
-          'even:bg-transparent even:hover:bg-transparent odd:bg-transparent hover:bg-transparent'
+          'even:bg-transparent even:hover:bg-transparent odd:bg-transparent hover:bg-transparent',
+          disabledIds?.includes(Number(getRowId(row))) && 'opacity-50 pointer-events-none'
         )}
         onClick={() => onClickRow?.(row)}
+        data-selected={selectedId === Number(getRowId(row))}
       >
         {columnDefs.map((col) => {
           const { key, fit, stretch, numeric, renderCell } = col

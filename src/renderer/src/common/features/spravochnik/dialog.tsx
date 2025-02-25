@@ -121,6 +121,10 @@ export const Spravochnik = ({ close, spravochnik }: SpravochnikProps) => {
   const CustomTable = spravochnik?.CustomTable
   const CustomDialog = spravochnik?.Dialog
 
+  console.log({
+    selected: spravochnik.selectedId
+  })
+
   return (
     <>
       {CustomDialog ? (
@@ -176,7 +180,9 @@ export const Spravochnik = ({ close, spravochnik }: SpravochnikProps) => {
                   <CustomTable
                     data={data?.data ?? []}
                     columnDefs={spravochnik.columnDefs}
-                    selectedRowId={String(selected?.id)}
+                    activeRowId={String(selected?.id)}
+                    disabledIds={spravochnik.disabledIds}
+                    selectedId={spravochnik.selectedId}
                     onClickRow={(row) => {
                       spravochnik.selectId?.(row.id, row)
                       close(spravochnik.id)
@@ -191,12 +197,14 @@ export const Spravochnik = ({ close, spravochnik }: SpravochnikProps) => {
                     data={data?.data ?? []}
                     columnDefs={spravochnik?.columnDefs}
                     getRowId={(row) => String(row.id)}
-                    selectedRowId={String(selected?.id)}
+                    activeRowId={String(selected?.id)}
                     onClickRow={(row) => {
                       spravochnik.selectId?.(row.id, row)
                       close(spravochnik.id)
                       spravochnik.onClose?.()
                     }}
+                    disabledIds={spravochnik.disabledIds}
+                    selectedId={spravochnik.selectedId}
                     {...spravochnik.tableProps}
                   />
                 )}

@@ -7,7 +7,7 @@ import { z } from 'zod'
 
 import { withPreprocessor } from '@/common/lib/validation'
 
-const queryKeys = {
+export const queryKeys = {
   getAll: 'jur7_rasxod/all',
   get: 'jur7_rasxod/get',
   create: 'jur7_rasxod/create',
@@ -15,7 +15,7 @@ const queryKeys = {
   delete: 'jur7_rasxod/delete'
 }
 
-const defaultValues: RasxodFormValues = {
+export const defaultValues: RasxodFormValues = {
   type_document: 1,
   doc_num: '',
   doc_date: '',
@@ -37,7 +37,7 @@ const defaultValues: RasxodFormValues = {
   ]
 }
 
-const RasxodChildFormSchema = withPreprocessor(
+export const RasxodChildFormSchema = withPreprocessor(
   z.object({
     naimenovanie_tovarov_jur7_id: z.number(),
     kol: z.number(),
@@ -51,7 +51,7 @@ const RasxodChildFormSchema = withPreprocessor(
     data_pereotsenka: z.string()
   })
 )
-const RasxodFormSchema = withPreprocessor(
+export const RasxodFormSchema = withPreprocessor(
   z.object({
     type_document: z.number().optional(),
     doc_num: z.string(),
@@ -76,7 +76,7 @@ const RasxodFormSchema = withPreprocessor(
 export type RasxodFormValues = z.infer<typeof RasxodFormSchema>
 export type RasxodChildFormValues = z.infer<typeof RasxodChildFormSchema>
 
-const columns: ColumnDef<MO7Rasxod>[] = [
+export const columns: ColumnDef<MO7Rasxod>[] = [
   {
     key: 'id',
     renderCell: IDCell
@@ -93,10 +93,6 @@ const columns: ColumnDef<MO7Rasxod>[] = [
     header: 'from-who'
   },
   {
-    key: 'kimga_name',
-    header: 'to-whom'
-  },
-  {
     numeric: true,
     key: 'summa'
   },
@@ -104,5 +100,3 @@ const columns: ColumnDef<MO7Rasxod>[] = [
     key: 'opisanie'
   }
 ]
-
-export { queryKeys, defaultValues, columns, RasxodFormSchema, RasxodChildFormSchema }

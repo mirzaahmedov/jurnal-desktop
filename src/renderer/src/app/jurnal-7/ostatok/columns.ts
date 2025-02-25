@@ -96,7 +96,8 @@ export const ostatokSpravochnikColumns: ColumnDef<OstatokProduct>[] = [
   },
   {
     key: 'sena',
-    header: 'Цена'
+    header: 'Цена',
+    renderCell: (row) => row.to.sena
   },
   {
     key: 'to.kol',
@@ -117,7 +118,7 @@ export const ostatokSpravochnikColumns: ColumnDef<OstatokProduct>[] = [
     header: 'Един.'
   },
   {
-    key: 'group_name',
+    key: 'group_jur7_name',
     header: 'Группа'
   },
   {
