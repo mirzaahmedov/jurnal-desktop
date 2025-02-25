@@ -2,6 +2,7 @@ import type {
   SpravochnikHookOptions,
   SpravochnikTableProps
 } from '@renderer/common/features/spravochnik'
+import type { Response } from '@renderer/common/models'
 import type { Ostatok } from '@renderer/common/models/ostatok'
 
 import { useMemo } from 'react'
@@ -14,7 +15,15 @@ import { extendObject } from '@renderer/common/lib/utils'
 import { ostatokSpravochnikColumns } from './columns'
 
 export const ostatokService = new CRUDService<Ostatok>({
-  endpoint: APIEndpoints.jur7_saldo
+  endpoint: APIEndpoints.jur7_saldo,
+  getRequestData: {
+    getAll: (res: Response<{ responsibles: Ostatok[] }>) => {
+      console.log(res)
+      return {
+        data: res?.data?.responsibles ?? []
+      } as Response<Ostatok[]>
+    }
+  }
 }).forRequest((type, ctx) => {
   if (type === 'getById') {
     const { product_id } = ctx.ctx?.queryKey[2] ?? ({} as any)
@@ -37,7 +46,7 @@ const OstatokSpravochnikTable = ({
   ...props
 }: Omit<SpravochnikTableProps<Ostatok>, 'columnDefs'>) => {
   const ostatokData = useMemo(() => {
-    return data?.[0]?.products ?? []
+    return (data as any)?.[0]?.products ?? []
   }, [data])
   // Todo: fix this
   return (

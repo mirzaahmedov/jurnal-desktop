@@ -35,7 +35,7 @@ import { formatDate } from '@/common/lib/date'
 import { calculateAnnualTotalSum, roundNumberToTwoDecimalPlaces } from '@/common/lib/utils'
 
 import { ShartnomaGrafikPDFDocument } from '../ShartnomaGrafik'
-import { ReportDialogFormSchema, defaultValues } from './constants'
+import { ReportDialogFormSchema, defaultValues } from './config'
 import { buildContractDetailsText, buildContractPaymentDetailsText } from './utils'
 
 export interface ShartnomaSmetaGrafikGeneratePDFDocumentDialogProps {

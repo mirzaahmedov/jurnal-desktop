@@ -18,6 +18,7 @@ export const Podpises = ({ year, podpises }: PodpisProps) => {
     <Flex
       direction="column"
       alignItems="stretch"
+      style={{ marginTop: 30 }}
     >
       <Flex alignItems="flex-start">
         <Text>М.У.</Text>
@@ -96,7 +97,8 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    flexWrap: 'wrap'
+    flexWrap: 'wrap',
+    gap: 10
   },
   podpis: {
     flex: 1,
@@ -104,6 +106,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
-    paddingBottom: 15
+    paddingBottom: 30
   }
 })

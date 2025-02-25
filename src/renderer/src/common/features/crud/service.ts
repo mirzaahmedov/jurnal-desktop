@@ -16,9 +16,11 @@ export class CRUDService<T, C = T, U = C, M = undefined> {
   private middleware: MiddlewareFunction[]
   private endpoint: APIEndpoints
   private client: AxiosInstance
+  private options: CRUDServiceOptions
   private requestBuilder?: RequestBuilderFunction
 
   constructor(options: CRUDServiceOptions) {
+    this.options = options
     this.endpoint = options.endpoint
     this.client = options.client ?? http
     this.middleware = []
@@ -48,7 +50,9 @@ export class CRUDService<T, C = T, U = C, M = undefined> {
 
     const res = await this.client.get<Response<T[], M>>(url, this.proccessMiddleware(config))
 
-    return res.data
+    return this.options.getRequestData?.getAll
+      ? this.options.getRequestData?.getAll(res.data as any)
+      : res.data
   }
 
   async getById(ctx: QueryFunctionContext<GetByIdQueryKey>) {

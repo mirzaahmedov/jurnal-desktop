@@ -1,5 +1,7 @@
-import { formatLocaleDate } from '@renderer/common/lib/format'
 import type { MainSchet, Organization } from '@renderer/common/models'
+
+import { validateDate } from '@renderer/common/lib/date'
+import { formatLocaleDate } from '@renderer/common/lib/format'
 
 import { numberToWords, roundNumberToTwoDecimalPlaces } from '@/common/lib/utils'
 
@@ -7,7 +9,7 @@ type BuildContractPaymentDetailsTextParams = {
   percentageValue: string
   summaValue: number
   summaTotal: number
-  paymentDate: string
+  paymentDate?: string
 }
 export const buildContractPaymentDetailsText = ({
   percentageValue,
@@ -15,9 +17,15 @@ export const buildContractPaymentDetailsText = ({
   summaTotal,
   paymentDate
 }: BuildContractPaymentDetailsTextParams) => {
-  const date = new Date(paymentDate)
-  const month = date.toLocaleString('ru', { month: 'long' })
-  const year = date.getFullYear()
+  let month = '__________________'
+  let year = '__________'
+
+  if (paymentDate && validateDate(paymentDate)) {
+    const date = new Date(paymentDate)
+    month = date.toLocaleString('ru', { month: 'long' })
+    year = date.getFullYear().toString()
+  }
+
   const summa =
     percentageValue === 'custom' ? summaValue : (summaTotal * Number(percentageValue)) / 100
   const percentage =

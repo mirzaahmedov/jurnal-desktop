@@ -10,7 +10,7 @@ export const ReportDialogFormSchema = withPreprocessor(
     chapter: z.number(),
     percentage: z.string(),
     summa_value: z.number(),
-    payment_date: z.string(),
+    payment_date: z.string().optional(),
     payment_details: z.string(),
     contract_details: z.string(),
     orientation: z.enum([DocumentOrientation.LANDSCAPE, DocumentOrientation.PORTRAIT]),
