@@ -2,8 +2,7 @@ import type { ColumnDef } from '@/common/components'
 import type { MainSchet } from '@/common/models'
 
 import { IDCell } from '@renderer/common/components/table/renderers/id'
-
-import { TooltipCell } from '@/common/components/table/renderers/tooltip'
+import { TooltipCell } from '@renderer/common/components/table/renderers/tooltip-old'
 
 export const mainSchetColumns: ColumnDef<MainSchet>[] = [
   {

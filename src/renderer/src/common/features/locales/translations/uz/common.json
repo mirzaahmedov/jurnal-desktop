@@ -202,5 +202,8 @@
   "shartnoma-grafik": "Shartnoma grafik",
   "date_does_not_exist": "Sana mavjud emas",
   "show_document": "Hujjatni ko'rsatish",
-  "out_of_range": "Tanlangan sana belgilangan diapazondan tashqarida. Iltimos, {{minDate}} va {{maxDate}} oralig‘ida sanani tanlang."
+  "out_of_range": "Tanlangan sana belgilangan diapazondan tashqarida. Iltimos, {{minDate}} va {{maxDate}} oralig‘ida sanani tanlang.",
+  "create_saldo": "Saldo yaratish",
+  "checking_saldo": "Saldoni tekshirish",
+  "no_saldo": "Bu oy uchun saldo yaratilmagan"
 }

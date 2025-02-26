@@ -7,8 +7,7 @@ import { ProvodkaCell } from '@renderer/common/components/table/renderers/provod
 import { Badge } from '@renderer/common/components/ui/badge'
 import { useTranslation } from 'react-i18next'
 
-import { TooltipCell } from '@/common/components/table/renderers'
-import { formatLocaleDate, formatNumber } from '@/common/lib/format'
+import { formatLocaleDate } from '@/common/lib/format'
 
 export const podotchetMonitoringColumns: ColumnDef<PodotchetMonitor>[] = [
   {
@@ -33,14 +32,14 @@ export const podotchetMonitoringColumns: ColumnDef<PodotchetMonitor>[] = [
       return !row.prixod_sum ? (
         '-'
       ) : (
-        <TooltipCell
-          data={row}
-          title={formatNumber(row.prixod_sum)}
-          elements={{
-            provodki_schet: 'Проводка счет',
-            provodki_sub_schet: 'Проводка субсчет'
-          }}
-          className="text-start"
+        <ProvodkaCell
+          summa={row.prixod_sum}
+          provodki={[
+            {
+              provodki_schet: row.provodki_schet,
+              provodki_sub_schet: row.provodki_sub_schet
+            }
+          ]}
         />
       )
     }
@@ -54,9 +53,13 @@ export const podotchetMonitoringColumns: ColumnDef<PodotchetMonitor>[] = [
         '-'
       ) : (
         <ProvodkaCell
-          summa={row.rasxod_sum}
-          schet={row.provodki_schet}
-          sub_schet={row.provodki_sub_schet}
+          summa={row.prixod_sum}
+          provodki={[
+            {
+              provodki_schet: row.provodki_schet,
+              provodki_sub_schet: row.provodki_sub_schet
+            }
+          ]}
         />
       )
     }

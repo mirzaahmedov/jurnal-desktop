@@ -1,4 +1,4 @@
-type PokazatUslugi = {
+export interface PokazatUslugi {
   id: number
   doc_num: string
   doc_date: string
@@ -12,10 +12,14 @@ type PokazatUslugi = {
   shartnomalar_organization_id: number
   shartnomalar_organization_doc_num: string
   shartnomalar_organization_doc_date: string
+  provodki_array: Array<{
+    provodki_schet: string
+    provodki_sub_schet: string
+  }>
   childs: PokazatUslugiProvodka[]
 }
 
-type PokazatUslugiProvodka = {
+export interface PokazatUslugiProvodka {
   spravochnik_operatsii_id: number
   kol: number
   sena: number
@@ -24,5 +28,3 @@ type PokazatUslugiProvodka = {
   id_spravochnik_sostav?: number
   id_spravochnik_type_operatsii?: number
 }
-
-export type { PokazatUslugi, PokazatUslugiProvodka }

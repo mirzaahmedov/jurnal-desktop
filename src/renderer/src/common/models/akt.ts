@@ -1,4 +1,4 @@
-type Akt = {
+export interface Akt {
   id: number
   doc_num: string
   doc_date: string
@@ -12,10 +12,14 @@ type Akt = {
   shartnomalar_organization_id: number
   shartnomalar_organization_doc_num: string
   shartnomalar_organization_doc_date: string
+  provodki_array: Array<{
+    provodki_schet: string
+    provodki_sub_schet: string
+  }>
   childs: AktProvodka[]
 }
 
-type AktProvodka = {
+export interface AktProvodka {
   spravochnik_operatsii_id: number
   kol: number
   sena: number
@@ -24,5 +28,3 @@ type AktProvodka = {
   id_spravochnik_sostav?: number
   id_spravochnik_type_operatsii?: number
 }
-
-export type { Akt, AktProvodka }

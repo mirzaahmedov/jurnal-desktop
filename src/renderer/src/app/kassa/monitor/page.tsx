@@ -51,7 +51,7 @@ const KassaMonitorPage = () => {
   return (
     <ListView>
       <ListView.Header>
-        <div className="flex items-center justify-between">
+        <div className="w-full flex items-center justify-between">
           <ListView.RangeDatePicker {...dates} />
           {main_schet_id ? (
             <ButtonGroup borderStyle="dashed">

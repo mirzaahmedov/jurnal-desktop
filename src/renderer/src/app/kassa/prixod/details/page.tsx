@@ -17,6 +17,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
+import { toast } from 'react-toastify'
 
 import { mainSchetQueryKeys, mainSchetService } from '@/app/region-spravochnik/main-schet'
 import { createPodotchetSpravochnik } from '@/app/region-spravochnik/podotchet'
@@ -26,7 +27,6 @@ import { Form } from '@/common/components/ui/form'
 import { APIEndpoints } from '@/common/features/crud'
 import { useLayoutStore } from '@/common/features/layout'
 import { useSpravochnik } from '@/common/features/spravochnik'
-import { useToast } from '@/common/hooks/use-toast'
 import { formatNumber } from '@/common/lib/format'
 import { getDataFromCache } from '@/common/lib/query-client'
 import { numberToWords } from '@/common/lib/utils'
@@ -40,7 +40,6 @@ import { KassaPrixodOrderTemplate } from '../templates'
 import { podvodkaColumns } from './podvodki'
 
 const KassaPrixodDetailsPage = () => {
-  const { toast } = useToast()
   const { id } = useParams()
   const { t } = useTranslation(['app'])
 
@@ -84,8 +83,9 @@ const KassaPrixodDetailsPage = () => {
 
   const { mutate: create, isPending: isCreating } = useMutation({
     mutationFn: kassaPrixodService.create,
-    onSuccess() {
-      toast({ title: 'Документ успешно создан' })
+    onSuccess(res) {
+      toast.success(res.message)
+
       form.reset(defaultValues)
       navigate('/kassa/prixod')
       queryClient.invalidateQueries({
@@ -96,14 +96,15 @@ const KassaPrixodDetailsPage = () => {
       })
     },
     onError(error) {
-      toast({ title: error.message, variant: 'destructive' })
+      toast.error(error.message)
     }
   })
 
   const { mutate: update, isPending: isUpdating } = useMutation({
     mutationFn: kassaPrixodService.update,
-    onSuccess() {
-      toast({ title: 'Документ успешно обновлен' })
+    onSuccess(res) {
+      toast.success(res.message)
+
       navigate('/kassa/prixod')
       queryClient.invalidateQueries({
         queryKey: [queryKeys.getAll]
@@ -113,7 +114,7 @@ const KassaPrixodDetailsPage = () => {
       })
     },
     onError(error) {
-      toast({ title: error.message, variant: 'destructive' })
+      toast.error(error.message)
     }
   })
 

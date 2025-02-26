@@ -38,8 +38,12 @@ export const organizationMonitorColumns: ColumnDef<OrganizationMonitor>[] = [
       ) : (
         <ProvodkaCell
           summa={row.summa_prixod}
-          schet={row.provodki_schet}
-          sub_schet={row.provodki_sub_schet}
+          provodki={[
+            {
+              provodki_schet: row.provodki_schet,
+              provodki_sub_schet: row.provodki_sub_schet
+            }
+          ]}
         />
       )
     }
@@ -54,8 +58,12 @@ export const organizationMonitorColumns: ColumnDef<OrganizationMonitor>[] = [
       ) : (
         <ProvodkaCell
           summa={row.summa_rasxod}
-          schet={row.provodki_schet}
-          sub_schet={row.provodki_sub_schet}
+          provodki={[
+            {
+              provodki_schet: row.provodki_schet,
+              provodki_sub_schet: row.provodki_sub_schet
+            }
+          ]}
         />
       )
     }

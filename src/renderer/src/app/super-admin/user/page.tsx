@@ -3,10 +3,12 @@ import type { User } from '@/common/models'
 import { useEffect, useState } from 'react'
 
 import { SearchField, useSearch } from '@renderer/common/features/search'
+import { usePagination } from '@renderer/common/hooks'
+import { ListView } from '@renderer/common/views'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 
-import { GenericTable, LoadingOverlay } from '@/common/components'
+import { GenericTable } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
 import { useLayoutStore } from '@/common/features/layout'
 import { useToggle } from '@/common/hooks/use-toggle'
@@ -20,6 +22,7 @@ const UserPage = () => {
   const [selected, setSelected] = useState<User | null>(null)
 
   const dialogToggle = useToggle()
+  const pagination = usePagination()
   const queryClient = useQueryClient()
 
   const setLayout = useLayoutStore((store) => store.setLayout)
@@ -32,6 +35,7 @@ const UserPage = () => {
     queryKey: [
       adminUserQueryKeys.getAll,
       {
+        ...pagination,
         search
       }
     ],
@@ -78,22 +82,27 @@ const UserPage = () => {
   }
 
   return (
-    <>
-      <div className="relative">
-        {isFetching || isPending ? <LoadingOverlay /> : null}
+    <ListView>
+      <ListView.Content loading={isFetching || isPending}>
         <GenericTable
           data={users?.data ?? []}
           columnDefs={adminUserColumns}
           onDelete={handleClickDelete}
           onEdit={handleClickEdit}
         />
-      </div>
+      </ListView.Content>
       <AdminUserDialog
         data={selected}
         open={dialogToggle.isOpen}
         onChangeOpen={dialogToggle.setOpen}
       />
-    </>
+      <ListView.Footer>
+        <ListView.Pagination
+          pageCount={users?.meta?.pageCount ?? 0}
+          {...pagination}
+        />
+      </ListView.Footer>
+    </ListView>
   )
 }
 

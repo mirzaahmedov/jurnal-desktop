@@ -1,9 +1,14 @@
 import { useEffect, useMemo, useRef } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useDefaultFilters } from '@renderer/common/features/app-defaults'
 import { DocumentType } from '@renderer/common/features/doc-num'
-import { date_iso_regex, parseDate, validateDate, withinMonth } from '@renderer/common/lib/date'
+import {
+  date_iso_regex,
+  formatDate,
+  parseDate,
+  validateDate,
+  withinMonth
+} from '@renderer/common/lib/date'
 import { focusInvalidInput } from '@renderer/common/lib/errors'
 import { formatLocaleDate } from '@renderer/common/lib/format'
 import { DetailsView } from '@renderer/common/views'
@@ -13,6 +18,7 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
+import { useOstatokStore } from '@/app/jurnal-7/ostatok/store'
 import { Form } from '@/common/components/ui/form'
 import { useLayoutStore } from '@/common/features/layout'
 import { useSpravochnik } from '@/common/features/spravochnik'
@@ -44,7 +50,7 @@ const Jurnal7RasxodDetailsPage = () => {
 
   const { id } = useParams()
   const { t } = useTranslation(['app'])
-  const { from, to } = useDefaultFilters()
+  const { minDate, maxDate } = useOstatokStore()
 
   const { data: rasxod, isFetching } = useRasxodGet(Number(id))
   const { mutate: createRasxod, isPending: isCreating } = useRasxodCreate({
@@ -127,13 +133,12 @@ const Jurnal7RasxodDetailsPage = () => {
       return
     }
 
-    const defaultDate = parseDate(from)
     const docDate = parseDate(form.watch('doc_date'))
 
-    if (!docDate || !withinMonth(docDate, defaultDate)) {
-      form.setValue('doc_date', from)
+    if (!docDate || !withinMonth(docDate, minDate)) {
+      form.setValue('doc_date', formatDate(minDate))
     }
-  }, [id, from, form])
+  }, [id, minDate, form])
 
   useEffect(() => {
     setLayout({
@@ -174,21 +179,20 @@ const Jurnal7RasxodDetailsPage = () => {
                     }
                     return false
                   }
-                  const isValid =
-                    parseDate(from) <= parseDate(date) && parseDate(date) <= parseDate(to)
+                  const isValid = minDate <= parseDate(date) && parseDate(date) <= maxDate
                   if (!isValid && date?.length === 10) {
                     toast.error(
                       t('out_of_range', {
-                        minDate: formatLocaleDate(from),
-                        maxDate: formatLocaleDate(to)
+                        minDate: formatLocaleDate(formatDate(minDate)),
+                        maxDate: formatLocaleDate(formatDate(maxDate))
                       })
                     )
                   }
                   return isValid
                 }}
                 calendarProps={{
-                  fromMonth: parseDate(from),
-                  toMonth: parseDate(from)
+                  fromMonth: minDate,
+                  toMonth: maxDate
                 }}
                 documentType={DocumentType.JUR7_PRIXOD}
                 autoGenerate={id === 'create'}

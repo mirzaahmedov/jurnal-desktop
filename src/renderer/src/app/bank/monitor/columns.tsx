@@ -50,8 +50,7 @@ export const columns: ColumnDef<BankMonitoringType>[] = [
       ) : (
         <ProvodkaCell
           summa={row.prixod_sum}
-          schet={row.provodki_array?.[0]?.provodki_schet}
-          sub_schet={row.provodki_array?.[0]?.provodki_sub_schet}
+          provodki={row.provodki_array}
         />
       )
     }
@@ -66,8 +65,7 @@ export const columns: ColumnDef<BankMonitoringType>[] = [
       ) : (
         <ProvodkaCell
           summa={row.rasxod_sum}
-          schet={row.provodki_array?.[0]?.provodki_schet}
-          sub_schet={row.provodki_array?.[0]?.provodki_sub_schet}
+          provodki={row.provodki_array}
         />
       )
     }

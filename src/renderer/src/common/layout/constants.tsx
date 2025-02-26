@@ -2,6 +2,7 @@ import type { Access } from '@/common/models'
 import type { TFunction } from 'i18next'
 import type { ComponentType, ReactNode } from 'react'
 
+import { OstatokController } from '@renderer/app/jurnal-7/ostatok/ostatok-controller'
 import { adminRoles } from '@renderer/app/super-admin/role'
 import {
   ArrowLeftRight,
@@ -247,6 +248,12 @@ export const getNavElements = (t: TFunction): NavElement[] => {
               path: 'iznos',
               title: t('pages.iznos'),
               icon: Percent
+            },
+            {
+              noLink: true,
+              path: '',
+              title: <OstatokController />,
+              icon: null
             }
           ]
         }

@@ -1,16 +1,21 @@
-import type { ReactNode } from 'react'
+import type { HTMLAttributes, ReactNode } from 'react'
+
+import { cn } from '@/common/lib/utils'
 
 export interface DataListItem {
   name: ReactNode
   value: ReactNode
 }
 
-export interface DataListProps {
+export interface DataListProps extends HTMLAttributes<HTMLUListElement> {
   items: DataListItem[]
 }
-export const DataList = ({ items }: DataListProps) => {
+export const DataList = ({ items, className, ...props }: DataListProps) => {
   return (
-    <ul className="flex flex-col gap-2">
+    <ul
+      className={cn('flex flex-col gap-2', className)}
+      {...props}
+    >
       {items.map((item, index) => (
         <DataListItem
           key={index}

@@ -1,9 +1,14 @@
 import { useEffect, useMemo } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useDefaultFilters } from '@renderer/common/features/app-defaults'
 import { DocumentType } from '@renderer/common/features/doc-num'
-import { date_iso_regex, parseDate, validateDate, withinMonth } from '@renderer/common/lib/date'
+import {
+  date_iso_regex,
+  formatDate,
+  parseDate,
+  validateDate,
+  withinMonth
+} from '@renderer/common/lib/date'
 import { focusInvalidInput } from '@renderer/common/lib/errors'
 import { formatLocaleDate } from '@renderer/common/lib/format'
 import { DetailsView } from '@renderer/common/views'
@@ -13,6 +18,8 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
+import { useOstatokStore } from '@/app/jurnal-7/ostatok/store'
+import { createResponsibleSpravochnik } from '@/app/jurnal-7/responsible/service'
 import { Form } from '@/common/components/ui/form'
 import { useLayoutStore } from '@/common/features/layout'
 import { useSpravochnik } from '@/common/features/spravochnik'
@@ -23,7 +30,6 @@ import {
   SummaFields
 } from '@/common/widget/form'
 
-import { createResponsibleSpravochnik } from '../../responsible/service'
 import { InternalTransferFormSchema, defaultValues } from '../config'
 import {
   useInternalTransferCreate,
@@ -33,12 +39,12 @@ import {
 import { ProvodkaTable } from './provodka-table'
 
 const Jurnal7InternalTransferDetailsPage = () => {
+  const setLayout = useLayoutStore((store) => store.setLayout)
+
   const { id } = useParams()
   const { t } = useTranslation(['app'])
-
-  const { from, to } = useDefaultFilters()
-  const setLayout = useLayoutStore((store) => store.setLayout)
   const { data: internalTransfer, isFetching } = useInternalTransferGet(Number(id))
+  const { minDate, maxDate } = useOstatokStore()
 
   const { mutate: createInternalTransfer, isPending: isCreating } = useInternalTransferCreate({
     onSuccess: (res) => {
@@ -111,13 +117,12 @@ const Jurnal7InternalTransferDetailsPage = () => {
       return
     }
 
-    const defaultDate = parseDate(from)
     const docDate = parseDate(form.watch('doc_date'))
 
-    if (!docDate || !withinMonth(docDate, defaultDate)) {
-      form.setValue('doc_date', from)
+    if (!docDate || !withinMonth(docDate, minDate)) {
+      form.setValue('doc_date', formatDate(minDate))
     }
-  }, [id, from, form])
+  }, [id, minDate, form])
 
   useEffect(() => {
     setLayout({
@@ -158,21 +163,20 @@ const Jurnal7InternalTransferDetailsPage = () => {
                     }
                     return false
                   }
-                  const isValid =
-                    parseDate(from) <= parseDate(date) && parseDate(date) <= parseDate(to)
+                  const isValid = minDate <= parseDate(date) && parseDate(date) <= maxDate
                   if (!isValid && date?.length === 10) {
                     toast.error(
                       t('out_of_range', {
-                        minDate: formatLocaleDate(from),
-                        maxDate: formatLocaleDate(to)
+                        minDate: formatLocaleDate(formatDate(minDate)),
+                        maxDate: formatLocaleDate(formatDate(maxDate))
                       })
                     )
                   }
                   return isValid
                 }}
                 calendarProps={{
-                  fromMonth: parseDate(from),
-                  toMonth: parseDate(to)
+                  fromMonth: minDate,
+                  toMonth: maxDate
                 }}
                 documentType={DocumentType.JUR7_INTERNAL}
                 autoGenerate={id === 'create'}

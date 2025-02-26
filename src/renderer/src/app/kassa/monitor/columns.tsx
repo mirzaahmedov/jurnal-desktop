@@ -16,8 +16,8 @@ export const columns: ColumnDef<KassaMonitoringType>[] = [
   },
   {
     key: 'doc_date',
-    renderCell(row, col) {
-      return formatLocaleDate(row[col.key as keyof KassaMonitoringType] as string)
+    renderCell(row) {
+      return formatLocaleDate(row.doc_date)
     }
   },
   {
@@ -33,8 +33,7 @@ export const columns: ColumnDef<KassaMonitoringType>[] = [
       ) : (
         <ProvodkaCell
           summa={row.prixod_sum}
-          schet={row.provodki_array?.[0]?.provodki_schet}
-          sub_schet={row.provodki_array?.[0]?.provodki_sub_schet}
+          provodki={row.provodki_array}
         />
       )
     }
@@ -49,8 +48,7 @@ export const columns: ColumnDef<KassaMonitoringType>[] = [
       ) : (
         <ProvodkaCell
           summa={row.rasxod_sum}
-          schet={row.provodki_array?.[0]?.provodki_schet}
-          sub_schet={row.provodki_array?.[0]?.provodki_sub_schet}
+          provodki={row.provodki_array}
         />
       )
     }

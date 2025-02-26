@@ -2,6 +2,7 @@ import type { ColumnDef } from '@/common/components'
 import type { PokazatUslugi } from '@/common/models'
 
 import { IDCell } from '@renderer/common/components/table/renderers/id'
+import { ProvodkaCell } from '@renderer/common/components/table/renderers/provodka'
 
 import { TooltipCell } from '@/common/components/table/renderers'
 import { formatLocaleDate } from '@/common/lib/format'
@@ -50,7 +51,13 @@ export const pokazatUslugiColumns: ColumnDef<PokazatUslugi>[] = [
   },
   {
     numeric: true,
-    key: 'summa'
+    key: 'summa',
+    renderCell: (row) => (
+      <ProvodkaCell
+        summa={row.summa}
+        provodki={row.provodki_array}
+      />
+    )
   },
   {
     key: 'opisanie'

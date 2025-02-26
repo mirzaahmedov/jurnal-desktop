@@ -16,8 +16,8 @@ export const columns: ColumnDef<KassaRasxodType>[] = [
   },
   {
     key: 'doc_date',
-    renderCell(row, col) {
-      return formatLocaleDate(row[col.key as keyof KassaRasxodType] as string)
+    renderCell(row) {
+      return formatLocaleDate(row.doc_date)
     }
   },
   {
@@ -32,8 +32,7 @@ export const columns: ColumnDef<KassaRasxodType>[] = [
       ) : (
         <ProvodkaCell
           summa={row.summa}
-          schet={row.provodki_array?.[0]?.provodki_schet}
-          sub_schet={row.provodki_array?.[0]?.provodki_sub_schet}
+          provodki={row.provodki_array}
         />
       )
     }

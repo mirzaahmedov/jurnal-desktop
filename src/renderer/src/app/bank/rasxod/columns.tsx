@@ -58,8 +58,7 @@ export const columns: ColumnDef<BankRasxod>[] = [
             <div className="inline-block align-middle bg-yellow-200 px-0.5">
               <ProvodkaCell
                 summa={row.tulanmagan_summa}
-                schet={row.provodki_array?.[0]?.provodki_schet}
-                sub_schet={row.provodki_array?.[0]?.provodki_sub_schet}
+                provodki={row.provodki_array}
               />
             </div>
           </div>
@@ -69,8 +68,7 @@ export const columns: ColumnDef<BankRasxod>[] = [
         <div className="font-bold">
           <ProvodkaCell
             summa={row.summa}
-            schet={row.provodki_array?.[0]?.provodki_schet}
-            sub_schet={row.provodki_array?.[0]?.provodki_sub_schet}
+            provodki={row.provodki_array}
           />
         </div>
       )

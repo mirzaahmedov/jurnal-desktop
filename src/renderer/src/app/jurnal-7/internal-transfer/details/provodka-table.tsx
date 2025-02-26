@@ -11,6 +11,7 @@ import { CircleMinus, CirclePlus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 
+import { useOstatokProduct } from '@/app/jurnal-7/ostatok/use-ostatok-product'
 import { DatePicker, NumericInput } from '@/common/components'
 import { Button } from '@/common/components/ui/button'
 import { Input } from '@/common/components/ui/input'
@@ -18,7 +19,6 @@ import { Table, TableBody, TableFooter, TableHeader } from '@/common/components/
 import { SpravochnikInput, inputVariants } from '@/common/features/spravochnik'
 import { calcSena, calcSumma } from '@/common/lib/pricing'
 
-import { useOstatokProduct } from '../../common/features/ostatok-product/use-ostatok-product'
 import {
   InternalTransferChildFormSchema,
   type InternalTransferChildFormType,

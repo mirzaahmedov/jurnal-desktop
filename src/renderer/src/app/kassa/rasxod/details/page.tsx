@@ -18,6 +18,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
+import { toast } from 'react-toastify'
 
 import { mainSchetQueryKeys, mainSchetService } from '@/app/region-spravochnik/main-schet'
 import { createPodotchetSpravochnik } from '@/app/region-spravochnik/podotchet'
@@ -27,8 +28,6 @@ import { Form } from '@/common/components/ui/form'
 import { APIEndpoints } from '@/common/features/crud'
 import { useLayoutStore } from '@/common/features/layout'
 import { useSpravochnik } from '@/common/features/spravochnik'
-import { useToast } from '@/common/hooks/use-toast'
-import { formatDate, getFirstDayOfMonth, getLastDayOfMonth } from '@/common/lib/date'
 import { formatNumber } from '@/common/lib/format'
 import { getDataFromCache } from '@/common/lib/query-client'
 import { numberToWords } from '@/common/lib/utils'
@@ -42,7 +41,6 @@ import { KassaRasxodOrderTemplate } from '../templates'
 import { podvodkaColumns } from './podvodki'
 
 const KassaRasxodDetailtsPage = () => {
-  const { toast } = useToast()
   const { id } = useParams()
   const { t } = useTranslation(['app'])
 
@@ -78,11 +76,12 @@ const KassaRasxodDetailtsPage = () => {
         main_schet_id,
         limit: 10,
         page: 1,
-        from: formatDate(getFirstDayOfMonth()),
-        to: formatDate(getLastDayOfMonth())
+        from: form.watch('doc_date'),
+        to: form.watch('doc_date')
       }
     ],
-    queryFn: kassaMonitorService.getAll
+    queryFn: kassaMonitorService.getAll,
+    enabled: !!form.watch('doc_date')
   })
   const { data: rasxod, isFetching } = useQuery({
     queryKey: [
@@ -97,26 +96,26 @@ const KassaRasxodDetailtsPage = () => {
   })
   const { mutate: create, isPending: isCreating } = useMutation({
     mutationFn: kassaRasxodService.create,
-    onSuccess() {
-      toast({ title: 'Документ успешно создан' })
+    onSuccess(res) {
+      toast.success(res.message)
+
       form.reset(defaultValues)
-      form.reset(defaultValues)
-      navigate('/kassa/rasxod')
       queryClient.invalidateQueries({
         queryKey: [queryKeys.getAll]
       })
       queryClient.invalidateQueries({
         queryKey: [queryKeys.getById, id]
       })
+      navigate('/kassa/rasxod')
     },
     onError(error) {
-      toast({ title: error.message, variant: 'destructive' })
+      toast.error(error.message)
     }
   })
   const { mutate: update, isPending: isUpdating } = useMutation({
     mutationFn: kassaRasxodService.update,
-    onSuccess() {
-      toast({ title: 'Документ успешно создан' })
+    onSuccess(res) {
+      toast.success(res.message)
       navigate('/kassa/rasxod')
       queryClient.invalidateQueries({
         queryKey: [queryKeys.getAll]
@@ -126,7 +125,7 @@ const KassaRasxodDetailtsPage = () => {
       })
     },
     onError(error) {
-      toast({ title: error.message, variant: 'destructive' })
+      toast.error(error.message)
     }
   })
 
@@ -249,7 +248,9 @@ const KassaRasxodDetailtsPage = () => {
                 tabIndex={5}
               />
 
-              {summa ? <AccountBalance balance={reminder} /> : null}
+              {!form.watch('doc_date') || isFetchingMonitor ? null : (
+                <AccountBalance balance={reminder} />
+              )}
 
               {main_schet?.data && form.formState.isValid ? (
                 <ButtonGroup borderStyle="dashed">

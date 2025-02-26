@@ -44,10 +44,10 @@ export type RequestBuilderFunction = (
   args: RequestBuilderArgs
 ) => RequestBuilderReturnType
 
-export type CRUDServiceOptions = {
+export type CRUDServiceOptions<T, M> = {
   endpoint: APIEndpoints
   client?: AxiosInstance
   getRequestData?: {
-    [key in CRUDServiceMethodType]?: (res: Response<any>) => any
+    getAll: (res: Response<any>) => Response<T[], M>
   }
 }

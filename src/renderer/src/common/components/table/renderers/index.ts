@@ -1,1 +1,2 @@
-export * from './tooltip'
+export * from './tooltip-old'
+export * from './hover-info'

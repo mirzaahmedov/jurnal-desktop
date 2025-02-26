@@ -2,6 +2,7 @@ import type { ColumnDef } from '@/common/components'
 import type { Akt } from '@/common/models'
 
 import { IDCell } from '@renderer/common/components/table/renderers/id'
+import { ProvodkaCell } from '@renderer/common/components/table/renderers/provodka'
 
 import { Copyable } from '@/common/components'
 import { TooltipCell } from '@/common/components/table/renderers'
@@ -56,7 +57,13 @@ export const columns: ColumnDef<Akt>[] = [
   },
   {
     numeric: true,
-    key: 'summa'
+    key: 'summa',
+    renderCell: (row) => (
+      <ProvodkaCell
+        summa={row.summa}
+        provodki={row.provodki_array}
+      />
+    )
   },
   {
     key: 'opisanie'

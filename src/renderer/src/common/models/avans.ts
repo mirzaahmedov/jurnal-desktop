@@ -8,6 +8,10 @@ type Avans = {
   spravochnik_podotchet_litso_name: string
   spravochnik_podotchet_litso_rayon: string
   spravochnik_operatsii_own_id: number
+  provodki_array: Array<{
+    provodki_schet: string
+    provodki_sub_schet: string
+  }>
   childs: Array<AvansProvodka>
 }
 

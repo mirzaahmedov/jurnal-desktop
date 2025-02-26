@@ -2,9 +2,9 @@ import type { ColumnDef } from '@/common/components'
 import type { Avans } from '@/common/models'
 
 import { IDCell } from '@renderer/common/components/table/renderers/id'
+import { ProvodkaCell } from '@renderer/common/components/table/renderers/provodka'
+import { TooltipCell } from '@renderer/common/components/table/renderers/tooltip-old'
 import { formatLocaleDate } from '@renderer/common/lib/format'
-
-import { TooltipCell } from '@/common/components/table/renderers/tooltip'
 
 export const avansColumns: ColumnDef<Avans>[] = [
   {
@@ -34,7 +34,13 @@ export const avansColumns: ColumnDef<Avans>[] = [
   },
   {
     numeric: true,
-    key: 'summa'
+    key: 'summa',
+    renderCell: (row) => (
+      <ProvodkaCell
+        summa={row.summa}
+        provodki={row.provodki_array}
+      />
+    )
   },
   {
     key: 'opisanie'

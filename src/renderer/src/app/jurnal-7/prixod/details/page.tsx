@@ -4,11 +4,16 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { createShartnomaSpravochnik } from '@renderer/app/organization/shartnoma'
 import { createOrganizationSpravochnik } from '@renderer/app/region-spravochnik/organization'
 import { Form } from '@renderer/common/components/ui/form'
-import { useDefaultFilters } from '@renderer/common/features/app-defaults'
 import { DocumentType } from '@renderer/common/features/doc-num'
 import { useLayoutStore } from '@renderer/common/features/layout'
 import { useSpravochnik } from '@renderer/common/features/spravochnik'
-import { date_iso_regex, parseDate, validateDate, withinMonth } from '@renderer/common/lib/date'
+import {
+  date_iso_regex,
+  formatDate,
+  parseDate,
+  validateDate,
+  withinMonth
+} from '@renderer/common/lib/date'
 import { focusInvalidInput } from '@renderer/common/lib/errors'
 import { formatLocaleDate } from '@renderer/common/lib/format'
 import { HttpResponseError } from '@renderer/common/lib/http'
@@ -31,6 +36,7 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
+import { useOstatokStore } from '@/app/jurnal-7/ostatok/store'
 import { createResponsibleSpravochnik } from '@/app/jurnal-7/responsible/service'
 import { createOperatsiiSpravochnik } from '@/app/super-admin/operatsii'
 
@@ -49,7 +55,7 @@ const Jurnal7PrixodDetailsPage = () => {
 
   const { id } = useParams()
   const { t } = useTranslation(['app'])
-  const { from, to } = useDefaultFilters()
+  const { minDate, maxDate } = useOstatokStore()
 
   const { data: prixod, isFetching } = usePrixodGet(Number(id))
   const { mutate: createPrixod, isPending: isCreating } = usePrixodCreate({
@@ -198,14 +204,12 @@ const Jurnal7PrixodDetailsPage = () => {
     if (id !== 'create') {
       return
     }
-
-    const defaultDate = parseDate(from)
     const docDate = parseDate(form.watch('doc_date'))
 
-    if (!docDate || !withinMonth(docDate, defaultDate)) {
-      form.setValue('doc_date', from)
+    if (!docDate || !withinMonth(docDate, minDate)) {
+      form.setValue('doc_date', formatDate(minDate))
     }
-  }, [id, from, form])
+  }, [id, minDate, form])
 
   useEffect(() => {
     setLayout({
@@ -252,21 +256,20 @@ const Jurnal7PrixodDetailsPage = () => {
                     }
                     return false
                   }
-                  const isValid =
-                    parseDate(from) <= parseDate(date) && parseDate(date) <= parseDate(to)
+                  const isValid = minDate <= parseDate(date) && parseDate(date) <= maxDate
                   if (!isValid && date?.length === 10) {
                     toast.error(
                       t('out_of_range', {
-                        minDate: formatLocaleDate(from),
-                        maxDate: formatLocaleDate(to)
+                        minDate: formatLocaleDate(formatDate(minDate)),
+                        maxDate: formatLocaleDate(formatDate(maxDate))
                       })
                     )
                   }
                   return isValid
                 }}
                 calendarProps={{
-                  fromMonth: parseDate(from),
-                  toMonth: parseDate(from)
+                  fromMonth: minDate,
+                  toMonth: maxDate
                 }}
                 documentType={DocumentType.JUR7_PRIXOD}
                 autoGenerate={id === 'create'}

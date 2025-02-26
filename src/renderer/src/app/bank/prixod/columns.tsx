@@ -51,8 +51,7 @@ export const columns: ColumnDef<BankPrixodType>[] = [
       ) : (
         <ProvodkaCell
           summa={row.summa}
-          schet={row.provodki_array?.[0]?.provodki_schet}
-          sub_schet={row.provodki_array?.[0]?.provodki_sub_schet}
+          provodki={row.provodki_array}
         />
       )
     }

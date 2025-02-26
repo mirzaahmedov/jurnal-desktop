@@ -19,7 +19,7 @@ export const Copyable = (props: CopyableProps) => {
   return (
     <span
       className={cn(
-        'group relative inline-flex items-center',
+        'group/copyable relative inline-flex items-center gap-1',
         side === 'end' && 'flex-row',
         side === 'start' && 'flex-row-reverse',
         className
@@ -30,7 +30,7 @@ export const Copyable = (props: CopyableProps) => {
         variant="ghost"
         size="icon"
         className={cn(
-          'ml-1 align-middle invisible size-8 text-slate-400 transition-colors group-hover:visible',
+          'ml-1 align-middle invisible size-8 text-slate-400 transition-colors group-hover/copyable:visible',
           isCopied && 'visible text-brand hover:text-brand'
         )}
         onClick={(e) => {
