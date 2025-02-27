@@ -2,11 +2,10 @@ import type { OstatokProduct } from '@renderer/common/models'
 
 import { useEffect, useState } from 'react'
 
-import { ChooseSpravochnik, DatePicker } from '@renderer/common/components'
+import { ChooseSpravochnik, DatePicker, GenericTable } from '@renderer/common/components'
 import { CollapsibleTable } from '@renderer/common/components/collapsible-table'
 import { Button } from '@renderer/common/components/ui/button'
 import { ButtonGroup } from '@renderer/common/components/ui/button-group'
-import { Checkbox } from '@renderer/common/components/ui/checkbox'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,6 +13,7 @@ import {
   DropdownMenuTrigger
 } from '@renderer/common/components/ui/dropdown-menu'
 import { FormField } from '@renderer/common/components/ui/form'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@renderer/common/components/ui/tabs'
 import { useConfirm } from '@renderer/common/features/confirm'
 import { DownloadFile, ImportFile } from '@renderer/common/features/file'
 import { useLayoutStore } from '@renderer/common/features/layout'
@@ -39,11 +39,16 @@ import { ErrorAlert, type ErrorData, type ErrorDataDocument } from './error-aler
 import { getOstatokListQuery, ostatokService } from './service'
 import { useOstatokStore } from './store'
 
+enum TabOption {
+  PRODUCTS = 'PRODUCTS',
+  RESPONSIBLE = 'RESPONSIBLE'
+}
+
 const OstatokPage = () => {
   const { minDate, maxDate } = useOstatokStore()
 
-  const [responsible, setResponsible] = useState(true)
   const [error, setError] = useState<ErrorData>()
+  const [tabValue, setTabValue] = useState<TabOption>(TabOption.RESPONSIBLE)
   const [selectedDate, setSelectedDate] = useState<undefined | Date>(minDate)
 
   const dropdownToggle = useToggle()
@@ -76,14 +81,14 @@ const OstatokPage = () => {
     })
   )
 
-  const { data: ostatokList, isFetching } = useQuery({
+  const { data: ostatok, isFetching } = useQuery({
     queryKey: [
       ostatokQueryKeys.getAll,
       {
         to: formatDate(selectedDate!),
         search,
         kimning_buynida: responsibleSpravochnik.selected?.id,
-        responsible,
+        responsible: tabValue === TabOption.RESPONSIBLE,
         budjet_id: budjet_id!,
         page: pagination.page,
         limit: pagination.limit
@@ -168,14 +173,6 @@ const OstatokPage = () => {
                 { name: 'Подразделение', value: selected.spravochnik_podrazdelenie_jur7_name }
               ]}
             />
-
-            <div className="flex items-center gap-2.5">
-              <Checkbox
-                checked={responsible}
-                onCheckedChange={(state) => setResponsible(!!state)}
-              />
-              <span className="text-sm font-bold">{t('responsible')}</span>
-            </div>
           </div>
           <div>
             <ButtonGroup className="flex gap-5">
@@ -278,76 +275,102 @@ const OstatokPage = () => {
             </ButtonGroup>
           </div>
         </div>
-
-        <form
-          onSubmit={onSubmit}
-          className="w-full flex items-center justify-start gap-5"
-        >
-          <FormField
-            control={form.control}
-            name="date"
-            render={({ field }) => (
-              <DatePicker
-                value={field.value ? formatDate(field.value) : ''}
-                onChange={(value) => {
-                  field.onChange(value ? parseDate(value) : undefined)
-                }}
-                validate={(date) => {
-                  if (!validateDate(date)) {
-                    if (date_iso_regex.test(date)) {
-                      toast.error(t('date_does_not_exist'))
-                    }
-                    return false
-                  }
-                  const isValid = minDate <= parseDate(date) && parseDate(date) <= maxDate
-                  if (!isValid && date?.length === 10) {
-                    toast.error(
-                      t('out_of_range', {
-                        minDate: formatLocaleDate(formatDate(minDate)),
-                        maxDate: formatLocaleDate(formatDate(maxDate))
-                      })
-                    )
-                  }
-                  return isValid
-                }}
-                calendarProps={{
-                  fromMonth: minDate,
-                  toMonth: maxDate
-                }}
-              />
-            )}
-          />
-          <Button type="submit">
-            <CircleArrowDown className="btn-icon icon-start" />
-            {t('load')}
-          </Button>
-        </form>
       </ListView.Header>
-      <ListView.Content loading={isFetching || isDeleting}>
-        <CollapsibleTable
-          data={ostatokList?.data?.responsibles ?? []}
-          columnDefs={ostatokPodotchetColumns}
-          getRowId={(row) => row.id}
-          getChildRows={(row) => row.products}
-          renderChildRows={(rows) => (
-            <CollapsibleTable
-              data={rows}
-              columnDefs={ostatokProductColumns}
-              getRowId={(row) => row.id}
-              getChildRows={() => undefined}
-              onDelete={handleDelete}
-            />
-          )}
-        />
-      </ListView.Content>
-      {responsible ? (
-        <ListView.Footer>
-          <ListView.Pagination
-            pageCount={ostatokList?.meta?.pageCount ?? 0}
-            {...pagination}
-          />
-        </ListView.Footer>
-      ) : null}
+      <Tabs
+        value={tabValue}
+        onValueChange={(value) => setTabValue(value as TabOption)}
+        asChild
+      >
+        <>
+          <div className="p-5 pt-0 w-full flex items-center justify-between gap-5">
+            <TabsList>
+              <TabsTrigger value={TabOption.RESPONSIBLE}>{t('responsible')}</TabsTrigger>
+              <TabsTrigger value={TabOption.PRODUCTS}>{t('products')}</TabsTrigger>
+            </TabsList>
+
+            <form
+              onSubmit={onSubmit}
+              className="flex items-center justify-start gap-5"
+            >
+              <FormField
+                control={form.control}
+                name="date"
+                render={({ field }) => (
+                  <DatePicker
+                    value={field.value ? formatDate(field.value) : ''}
+                    onChange={(value) => {
+                      field.onChange(value ? parseDate(value) : undefined)
+                    }}
+                    validate={(date) => {
+                      if (!validateDate(date)) {
+                        if (date_iso_regex.test(date)) {
+                          toast.error(t('date_does_not_exist'))
+                        }
+                        return false
+                      }
+                      const isValid = minDate <= parseDate(date) && parseDate(date) <= maxDate
+                      if (!isValid && date?.length === 10) {
+                        toast.error(
+                          t('out_of_range', {
+                            minDate: formatLocaleDate(formatDate(minDate)),
+                            maxDate: formatLocaleDate(formatDate(maxDate))
+                          })
+                        )
+                      }
+                      return isValid
+                    }}
+                    calendarProps={{
+                      fromMonth: minDate,
+                      toMonth: maxDate
+                    }}
+                  />
+                )}
+              />
+              <Button type="submit">
+                <CircleArrowDown className="btn-icon icon-start" />
+                {t('load')}
+              </Button>
+            </form>
+          </div>
+          <TabsContent value={TabOption.RESPONSIBLE}>
+            <ListView.Content loading={isFetching || isDeleting}>
+              <CollapsibleTable
+                data={ostatok?.data?.responsibles ?? []}
+                columnDefs={ostatokPodotchetColumns}
+                getRowId={(row) => row.id}
+                getChildRows={(row) => row.products}
+                renderChildRows={(rows) => (
+                  <CollapsibleTable
+                    data={rows}
+                    columnDefs={ostatokProductColumns}
+                    getRowId={(row) => row.id}
+                    getChildRows={() => undefined}
+                    onDelete={handleDelete}
+                  />
+                )}
+              />
+            </ListView.Content>
+          </TabsContent>
+          <TabsContent
+            value={TabOption.PRODUCTS}
+            className="flex-1 flex flex-col"
+          >
+            <ListView.Content loading={isFetching || isDeleting}>
+              <GenericTable
+                data={ostatok?.data?.products ?? []}
+                columnDefs={ostatokProductColumns}
+                getRowId={(row) => row.id}
+              />
+            </ListView.Content>
+            <ListView.Footer>
+              <ListView.Pagination
+                pageCount={ostatok?.meta?.pageCount ?? 0}
+                {...pagination}
+              />
+            </ListView.Footer>
+          </TabsContent>
+        </>
+      </Tabs>
 
       {error?.document ? (
         <ErrorAlert

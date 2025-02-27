@@ -7,10 +7,12 @@ import { formatLocaleDate, formatNumber } from '@renderer/common/lib/format'
 export const ostatokPodotchetColumns: ColumnDef<Ostatok>[] = [
   {
     key: 'id',
-    renderCell: IDCell
+    renderCell: IDCell,
+    width: 160
   },
   {
-    key: 'fio'
+    key: 'fio',
+    width: 600
   },
   {
     key: 'spravochnik_podrazdelenie_jur7_name',

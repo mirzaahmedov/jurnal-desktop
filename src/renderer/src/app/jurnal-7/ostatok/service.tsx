@@ -96,7 +96,7 @@ export const getOstatokListQuery = async (
       },
       ResponseMeta
     >
-  >(`${APIEndpoints.jur7_saldo}/check`, {
+  >(`${APIEndpoints.jur7_saldo}`, {
     params: {
       search,
       kimning_buynida,

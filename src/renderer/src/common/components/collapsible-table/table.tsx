@@ -52,7 +52,7 @@ export const CollapsibleTable = <T extends object, C extends object = T>({
         <TableHeader>
           <GenericTableRow className="hover:bg-transparent border-t border-slate-200">
             {columnDefs.map((col) => {
-              const { key, header, fit, stretch, numeric, headerClassName } = col
+              const { key, header, fit, stretch, numeric, headerClassName, width } = col
               return (
                 <GenericTableHead
                   key={key.toString()}
@@ -60,6 +60,7 @@ export const CollapsibleTable = <T extends object, C extends object = T>({
                   fit={fit}
                   stretch={stretch}
                   className={headerClassName}
+                  style={{ width }}
                 >
                   {typeof header === 'string' ? t(header) : !header ? t(key.toString()) : header}
                 </GenericTableHead>
@@ -150,7 +151,7 @@ const CollapsibleItem = <T extends object, C extends object>({
         data-selected={selectedId === Number(getRowId(row))}
       >
         {columnDefs.map((col) => {
-          const { key, fit, stretch, numeric, renderCell } = col
+          const { key, fit, stretch, numeric, renderCell, width } = col
           return (
             <GenericTableCell
               key={key.toString()}
@@ -158,6 +159,7 @@ const CollapsibleItem = <T extends object, C extends object>({
               stretch={stretch}
               numeric={numeric}
               className={col.className}
+              style={{ width }}
             >
               {typeof renderCell === 'function'
                 ? renderCell(row, col)
@@ -208,7 +210,7 @@ const CollapsibleItem = <T extends object, C extends object>({
       <>
         <GenericTableRow onClick={() => onClickRow?.(row)}>
           {columnDefs.map((col, index) => {
-            const { key, fit, stretch, numeric, renderCell } = col
+            const { key, fit, stretch, numeric, renderCell, width } = col
             return (
               <GenericTableCell
                 key={key.toString()}
@@ -216,6 +218,7 @@ const CollapsibleItem = <T extends object, C extends object>({
                 stretch={stretch}
                 numeric={numeric}
                 className={cn('font-bold', index === 0 && 'flex items-center', col.className)}
+                style={{ width }}
               >
                 {index === 0 && (
                   <CollapsibleTrigger

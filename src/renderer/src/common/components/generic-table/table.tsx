@@ -122,7 +122,8 @@ export const GenericTable = <T extends object>({
                         numeric,
                         headerClassName,
                         colSpan,
-                        rowSpan
+                        rowSpan,
+                        width
                       } = col
                       return (
                         <GenericTableHead
@@ -133,6 +134,7 @@ export const GenericTable = <T extends object>({
                           className={headerClassName}
                           colSpan={colSpan}
                           rowSpan={rowSpan}
+                          style={{ width }}
                         >
                           {!header
                             ? t(key.toString())
@@ -189,7 +191,7 @@ export const GenericTable = <T extends object>({
                             activeRowId === getRowId(row) && 'text-brand/100',
                             className
                           )}
-                          width={width}
+                          style={{ width }}
                         >
                           {typeof renderCell === 'function'
                             ? renderCell(row, col)

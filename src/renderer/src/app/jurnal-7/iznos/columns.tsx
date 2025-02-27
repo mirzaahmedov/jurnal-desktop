@@ -17,10 +17,12 @@ export const columns: ColumnDef<Iznos>[] = [
     className: 'min-w-[400px] whitespace-pre-wrap'
   },
   {
+    fit: true,
     key: 'inventar_num',
     header: 'Инвентар №'
   },
   {
+    fit: true,
     key: 'serial_num',
     header: 'Серийный номер'
   },

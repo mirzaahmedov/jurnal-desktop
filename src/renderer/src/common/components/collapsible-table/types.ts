@@ -9,6 +9,7 @@ type ColumnDef<T> = {
   header?: ReactNode
   className?: string
   headerClassName?: string
+  width?: number
   renderCell?(row: T, col: ColumnDef<T>): ReactNode
 }
 
