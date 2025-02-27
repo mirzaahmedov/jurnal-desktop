@@ -16,8 +16,9 @@ type RangeDateValues = {
 }
 type RangeDatePickerProps = RangeDateValues & {
   onChange: (values: Partial<RangeDateValues>) => void
+  validateDate?: (date: string) => boolean
 }
-const RangeDatePicker = ({ from, to, onChange }: RangeDatePickerProps) => {
+const RangeDatePicker = ({ from, to, onChange, validateDate }: RangeDatePickerProps) => {
   const { t } = useTranslation()
 
   const pagination = usePagination()
@@ -56,6 +57,7 @@ const RangeDatePicker = ({ from, to, onChange }: RangeDatePickerProps) => {
             <FormElement label={t('from')}>
               <DatePicker
                 autoFocus
+                validate={validateDate}
                 {...field}
               />
             </FormElement>
@@ -66,7 +68,10 @@ const RangeDatePicker = ({ from, to, onChange }: RangeDatePickerProps) => {
           name="to"
           render={({ field }) => (
             <FormElement label={t('to')}>
-              <DatePicker {...field} />
+              <DatePicker
+                validate={validateDate}
+                {...field}
+              />
             </FormElement>
           )}
         />

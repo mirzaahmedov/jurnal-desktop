@@ -12,10 +12,12 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
+import { useOstatokStore } from '@/app/jurnal-7/ostatok/store'
 import { GenericTable } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
 import { useLayoutStore } from '@/common/features/layout'
 
+import { validateOstatokDate } from '../ostatok/validate-date'
 import { columns, queryKeys } from './config'
 import { ErrorAlert, type ErrorData, type ErrorDataDocument } from './error-alert'
 import { usePrixodDelete, usePrixodList } from './service'
@@ -28,9 +30,10 @@ const Jurnal7PrixodPage = () => {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
 
-  const { confirm } = useConfirm()
-  const { search } = useSearch()
   const { t } = useTranslation(['app'])
+  const { search } = useSearch()
+  const { confirm } = useConfirm()
+  const { recheckOstatok } = useOstatokStore()
 
   const setLayout = useLayoutStore((store) => store.setLayout)
   const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
@@ -41,6 +44,7 @@ const Jurnal7PrixodPage = () => {
         queryKey: [queryKeys.getAll]
       })
       toast.success(res?.message)
+      recheckOstatok?.()
     },
     onError(error) {
       console.log(error)
@@ -80,22 +84,27 @@ const Jurnal7PrixodPage = () => {
   return (
     <ListView>
       <ListView.Header>
-        <ListView.RangeDatePicker {...dates} />
-        {main_schet_id ? (
-          <ButtonGroup>
-            <DownloadFile
-              url="jur_7/doc_prixod/report"
-              fileName={`jur7_prixod_report-${dates.from}&${dates.to}.xlsx`}
-              buttonText={t('download-something', { something: t('report') })}
-              params={{
-                from: dates.from,
-                to: dates.to,
-                main_schet_id,
-                excel: true
-              }}
-            />
-          </ButtonGroup>
-        ) : null}
+        <div className="w-full flex items-center justify-between gap-5">
+          <ListView.RangeDatePicker
+            {...dates}
+            validateDate={validateOstatokDate}
+          />
+          {main_schet_id ? (
+            <ButtonGroup>
+              <DownloadFile
+                url="jur_7/doc_prixod/report"
+                fileName={`jur7_prixod_report-${dates.from}&${dates.to}.xlsx`}
+                buttonText={t('download-something', { something: t('report') })}
+                params={{
+                  from: dates.from,
+                  to: dates.to,
+                  main_schet_id,
+                  excel: true
+                }}
+              />
+            </ButtonGroup>
+          ) : null}
+        </div>
       </ListView.Header>
       <ListView.Content
         loading={isFetching || isDeleting}

@@ -11,9 +11,11 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
+import { useOstatokStore } from '@/app/jurnal-7/ostatok/store'
 import { GenericTable } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
 
+import { validateOstatokDate } from '../ostatok/validate-date'
 import { columns, queryKeys } from './config'
 import { useRasxodDelete, useRasxodList } from './service'
 
@@ -28,6 +30,7 @@ const Jurnal7RasxodPage = () => {
   const { t } = useTranslation(['app'])
   const { search } = useSearch()
   const { confirm } = useConfirm()
+  const { recheckOstatok } = useOstatokStore()
 
   const { mutate: deleteRasxod, isPending } = useRasxodDelete({
     onSuccess(res) {
@@ -35,6 +38,7 @@ const Jurnal7RasxodPage = () => {
         queryKey: [queryKeys.getAll]
       })
       toast.success(res?.message)
+      recheckOstatok?.()
     },
     onError(error) {
       toast.error(error?.message)
@@ -67,7 +71,10 @@ const Jurnal7RasxodPage = () => {
   return (
     <ListView>
       <ListView.Header>
-        <ListView.RangeDatePicker {...dates} />
+        <ListView.RangeDatePicker
+          {...dates}
+          validateDate={validateOstatokDate}
+        />
       </ListView.Header>
       <ListView.Content loading={isFetching || isPending}>
         <GenericTable

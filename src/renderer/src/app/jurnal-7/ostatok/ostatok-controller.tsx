@@ -17,7 +17,7 @@ import { useOstatokStore } from './store'
 
 export const OstatokController = () => {
   const { t } = useTranslation()
-  const { minDate, setDate } = useOstatokStore()
+  const { minDate, setDate, setRecheckOstatok } = useOstatokStore()
   const { main_schet_id, budjet_id } = useRequisitesStore()
 
   const { pathname } = useLocation()
@@ -71,6 +71,9 @@ export const OstatokController = () => {
       toast.error(t('no_saldo'))
     }
   }, [t, isCheckingSaldo, isFetched])
+  useEffect(() => {
+    setRecheckOstatok(refetchCheck)
+  }, [setRecheckOstatok, refetchCheck])
 
   return (
     <form

@@ -12,6 +12,7 @@ import {
 import { focusInvalidInput } from '@renderer/common/lib/errors'
 import { formatLocaleDate } from '@renderer/common/lib/format'
 import { DetailsView } from '@renderer/common/views'
+import { useQueryClient } from '@tanstack/react-query'
 import isEmpty from 'just-is-empty'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -31,7 +32,7 @@ import {
 } from '@/common/widget/form'
 
 import { createResponsibleSpravochnik } from '../../responsible/service'
-import { RasxodFormSchema, defaultValues } from '../config'
+import { RasxodFormSchema, defaultValues, queryKeys } from '../config'
 import { useRasxodCreate, useRasxodGet, useRasxodUpdate } from '../service'
 import { ProvodkaTable } from './provodka-table'
 
@@ -41,6 +42,7 @@ const Jurnal7RasxodDetailsPage = () => {
     kimga_id: 0
   })
 
+  const queryClient = useQueryClient()
   const setLayout = useLayoutStore((store) => store.setLayout)
   const navigate = useNavigate()
   const form = useForm({
@@ -50,13 +52,17 @@ const Jurnal7RasxodDetailsPage = () => {
 
   const { id } = useParams()
   const { t } = useTranslation(['app'])
-  const { minDate, maxDate } = useOstatokStore()
+  const { minDate, maxDate, recheckOstatok } = useOstatokStore()
 
   const { data: rasxod, isFetching } = useRasxodGet(Number(id))
   const { mutate: createRasxod, isPending: isCreating } = useRasxodCreate({
     onSuccess: (res) => {
       toast.success(res?.message)
       navigate(-1)
+      queryClient.invalidateQueries({
+        queryKey: [queryKeys.getAll]
+      })
+      recheckOstatok?.()
     },
     onError(error) {
       toast.error(error?.message)
@@ -66,6 +72,10 @@ const Jurnal7RasxodDetailsPage = () => {
     onSuccess: (res) => {
       toast.success(res?.message)
       navigate(-1)
+      queryClient.invalidateQueries({
+        queryKey: [queryKeys.getAll]
+      })
+      recheckOstatok?.()
     },
     onError(error) {
       toast.error(error?.message)

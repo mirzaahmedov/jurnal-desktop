@@ -55,7 +55,7 @@ const Jurnal7PrixodDetailsPage = () => {
 
   const { id } = useParams()
   const { t } = useTranslation(['app'])
-  const { minDate, maxDate } = useOstatokStore()
+  const { minDate, maxDate, recheckOstatok } = useOstatokStore()
 
   const { data: prixod, isFetching } = usePrixodGet(Number(id))
   const { mutate: createPrixod, isPending: isCreating } = usePrixodCreate({
@@ -65,6 +65,7 @@ const Jurnal7PrixodDetailsPage = () => {
       queryClient.invalidateQueries({
         queryKey: [queryKeys.getAll]
       })
+      recheckOstatok?.()
     },
     onError(error) {
       console.log(error)
@@ -84,6 +85,7 @@ const Jurnal7PrixodDetailsPage = () => {
       queryClient.invalidateQueries({
         queryKey: [queryKeys.getAll]
       })
+      recheckOstatok?.()
     },
     onError(error) {
       console.log(error)

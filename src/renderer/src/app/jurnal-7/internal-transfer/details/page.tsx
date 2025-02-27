@@ -12,6 +12,7 @@ import {
 import { focusInvalidInput } from '@renderer/common/lib/errors'
 import { formatLocaleDate } from '@renderer/common/lib/format'
 import { DetailsView } from '@renderer/common/views'
+import { useQueryClient } from '@tanstack/react-query'
 import isEmpty from 'just-is-empty'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -30,7 +31,7 @@ import {
   SummaFields
 } from '@/common/widget/form'
 
-import { InternalTransferFormSchema, defaultValues } from '../config'
+import { InternalTransferFormSchema, defaultValues, queryKeys } from '../config'
 import {
   useInternalTransferCreate,
   useInternalTransferGet,
@@ -39,17 +40,22 @@ import {
 import { ProvodkaTable } from './provodka-table'
 
 const Jurnal7InternalTransferDetailsPage = () => {
+  const queryClient = useQueryClient()
   const setLayout = useLayoutStore((store) => store.setLayout)
 
   const { id } = useParams()
   const { t } = useTranslation(['app'])
   const { data: internalTransfer, isFetching } = useInternalTransferGet(Number(id))
-  const { minDate, maxDate } = useOstatokStore()
+  const { minDate, maxDate, recheckOstatok } = useOstatokStore()
 
   const { mutate: createInternalTransfer, isPending: isCreating } = useInternalTransferCreate({
     onSuccess: (res) => {
       toast.success(res?.message)
+      queryClient.invalidateQueries({
+        queryKey: [queryKeys.getAll]
+      })
       navigate(-1)
+      recheckOstatok?.()
     },
     onError(error) {
       toast.error(error?.message)
@@ -59,7 +65,11 @@ const Jurnal7InternalTransferDetailsPage = () => {
   const { mutate: updateInternalTransfer, isPending: isUpdating } = useInternalTransferUpdate({
     onSuccess: (res) => {
       toast.success(res?.message)
+      queryClient.invalidateQueries({
+        queryKey: [queryKeys.getAll]
+      })
       navigate(-1)
+      recheckOstatok?.()
     },
     onError(error) {
       toast.error(error?.message)

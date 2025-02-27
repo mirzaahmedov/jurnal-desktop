@@ -8,11 +8,13 @@ import { useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
+import { useOstatokStore } from '@/app/jurnal-7/ostatok/store'
 import { GenericTable } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
 import { useLayoutStore } from '@/common/features/layout'
 import { toast } from '@/common/hooks/use-toast'
 
+import { validateOstatokDate } from '../ostatok/validate-date'
 import { columns, queryKeys } from './config'
 import { useInternalTransferDelete, useInternalTransferList } from './service'
 
@@ -27,6 +29,7 @@ const Jurnal7InternalTransferPage = () => {
   const { t } = useTranslation(['app'])
   const { confirm } = useConfirm()
   const { search } = useSearch()
+  const { recheckOstatok } = useOstatokStore()
 
   const { mutate: deleteInternalTransfer, isPending } = useInternalTransferDelete({
     onSuccess() {
@@ -36,6 +39,7 @@ const Jurnal7InternalTransferPage = () => {
       toast({
         title: 'Внутренний перевод успешно удален'
       })
+      recheckOstatok?.()
     },
     onError() {
       toast({
@@ -71,7 +75,10 @@ const Jurnal7InternalTransferPage = () => {
   return (
     <ListView>
       <ListView.Header>
-        <ListView.RangeDatePicker {...dates} />
+        <ListView.RangeDatePicker
+          {...dates}
+          validateDate={validateOstatokDate}
+        />
       </ListView.Header>
       <ListView.Content loading={isFetching || isPending}>
         <GenericTable
