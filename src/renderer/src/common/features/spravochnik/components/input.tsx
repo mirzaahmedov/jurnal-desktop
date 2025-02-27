@@ -79,7 +79,7 @@ const SpravochnikInput = <T extends object>({
           <Spinner className="size-5 border-brand/40 border-r-transparent border-[3px]" />
         </div>
       ) : (
-        <div className="flex items-center invisible absolute right-0 top-0 bottom-0 text-foreground/50 [input:focus+&]:text-brand group-focus-within:visible group-hover:visible px-1">
+        <div className="flex items-center invisible absolute right-0 top-0 bottom-0 text-foreground/50 [input:focus+&]:text-brand group-focus-within:visible group-hover:visible group-focus-within:group-disabled:invisible group-hover:group-disabled:visible px-1">
           <Button
             type="button"
             variant="ghost"

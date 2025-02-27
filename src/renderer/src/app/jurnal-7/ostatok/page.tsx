@@ -20,7 +20,7 @@ import { useLayoutStore } from '@renderer/common/features/layout'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
 import { SearchField, useSearch } from '@renderer/common/features/search'
 import { useSpravochnik } from '@renderer/common/features/spravochnik'
-import { useToggle } from '@renderer/common/hooks'
+import { usePagination, useToggle } from '@renderer/common/hooks'
 import { date_iso_regex, formatDate, parseDate, validateDate } from '@renderer/common/lib/date'
 import { formatLocaleDate } from '@renderer/common/lib/format'
 import { HttpResponseError } from '@renderer/common/lib/http'
@@ -36,7 +36,7 @@ import { createResponsibleSpravochnik } from '../responsible/service'
 import { ostatokPodotchetColumns, ostatokProductColumns } from './columns'
 import { defaultValues, ostatokQueryKeys } from './config'
 import { ErrorAlert, type ErrorData, type ErrorDataDocument } from './error-alert'
-import { ostatokService } from './service'
+import { getOstatokListQuery, ostatokService } from './service'
 import { useOstatokStore } from './store'
 
 const OstatokPage = () => {
@@ -47,6 +47,7 @@ const OstatokPage = () => {
   const [selectedDate, setSelectedDate] = useState<undefined | Date>(minDate)
 
   const dropdownToggle = useToggle()
+  const pagination = usePagination()
   const queryClient = useQueryClient()
   const setLayout = useLayoutStore((store) => store.setLayout)
 
@@ -82,11 +83,14 @@ const OstatokPage = () => {
         to: formatDate(selectedDate!),
         search,
         kimning_buynida: responsibleSpravochnik.selected?.id,
-        responsible
+        responsible,
+        budjet_id: budjet_id!,
+        page: pagination.page,
+        limit: pagination.limit
       }
     ],
-    queryFn: ostatokService.getAll,
-    enabled: !!selectedDate
+    queryFn: getOstatokListQuery,
+    enabled: !!selectedDate && !!budjet_id
   })
 
   const { mutate: deleteOstatok, isPending: isDeleting } = useMutation({
@@ -321,7 +325,7 @@ const OstatokPage = () => {
       </ListView.Header>
       <ListView.Content loading={isFetching || isDeleting}>
         <CollapsibleTable
-          data={ostatokList?.data ?? []}
+          data={ostatokList?.data?.responsibles ?? []}
           columnDefs={ostatokPodotchetColumns}
           getRowId={(row) => row.id}
           getChildRows={(row) => row.products}
@@ -336,6 +340,14 @@ const OstatokPage = () => {
           )}
         />
       </ListView.Content>
+      {responsible ? (
+        <ListView.Footer>
+          <ListView.Pagination
+            pageCount={ostatokList?.meta?.pageCount ?? 0}
+            {...pagination}
+          />
+        </ListView.Footer>
+      ) : null}
 
       {error?.document ? (
         <ErrorAlert

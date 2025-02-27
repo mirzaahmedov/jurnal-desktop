@@ -80,15 +80,11 @@ const IznosPage = () => {
           />
         </div>
       </ListView.Header>
-      <ListView.Content
-        loading={isFetching}
-        className="relative overflow-auto scrollbar"
-      >
+      <ListView.Content loading={isFetching}>
         <GenericTable
           columnDefs={columns}
           data={iznosList?.data ?? []}
           onEdit={handleEdit}
-          className="overflow-hidden w-full whitespace-nowrap"
         />
         <EditIznosDialog
           selected={selected}

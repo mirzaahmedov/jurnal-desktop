@@ -2,8 +2,8 @@ import type {
   SpravochnikHookOptions,
   SpravochnikTableProps
 } from '@renderer/common/features/spravochnik'
-import type { Response } from '@renderer/common/models'
-import type { Ostatok } from '@renderer/common/models/ostatok'
+import type { Response, ResponseMeta } from '@renderer/common/models'
+import type { Ostatok, OstatokProduct } from '@renderer/common/models/ostatok'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 
 import { useMemo } from 'react'
@@ -71,6 +71,45 @@ const OstatokSpravochnikTable = ({
   )
 }
 
+export const getOstatokListQuery = async (
+  ctx: QueryFunctionContext<
+    [
+      string,
+      {
+        search?: string
+        kimning_buynida?: number
+        responsible: boolean
+        budjet_id: number
+        to: string
+        page: number
+        limit: number
+      }
+    ]
+  >
+) => {
+  const { search, kimning_buynida, responsible, budjet_id, to, page, limit } = ctx.queryKey[1] ?? {}
+  const res = await http.get<
+    Response<
+      {
+        responsibles: Ostatok[]
+        products: OstatokProduct[]
+      },
+      ResponseMeta
+    >
+  >(`${APIEndpoints.jur7_saldo}/check`, {
+    params: {
+      search,
+      kimning_buynida,
+      responsible,
+      budjet_id,
+      to,
+      page: responsible ? undefined : page,
+      limit: responsible ? undefined : limit
+    }
+  })
+  return res.data
+}
+
 export const getOstatokCheck = async (
   ctx: QueryFunctionContext<
     [
@@ -105,7 +144,8 @@ export const createOstatokProductSpravochnik = (
       endpoint: APIEndpoints.jur7_saldo,
       columnDefs: [],
       CustomTable: OstatokSpravochnikTable,
-      service: ostatokService,
+      // fix this issue
+      service: ostatokService as any,
       filters: [SpravochnikSearchField]
     } satisfies typeof config,
     config
