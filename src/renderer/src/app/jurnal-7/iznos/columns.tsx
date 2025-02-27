@@ -13,6 +13,7 @@ export const columns: ColumnDef<Iznos>[] = [
   {
     key: 'name',
     header: 'Наименование',
+    headerClassName: 'min-w-[400px] whitespace-pre-wrap',
     className: 'min-w-[400px] whitespace-pre-wrap'
   },
   {

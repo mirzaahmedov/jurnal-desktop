@@ -7,11 +7,13 @@ import { MonthPicker } from '@renderer/common/components/month-picker'
 import { useLayoutStore } from '@renderer/common/features/layout'
 import { SearchField, useSearch } from '@renderer/common/features/search'
 import { usePagination, useToggle } from '@renderer/common/hooks'
-import { getFirstDayOfMonth } from '@renderer/common/lib/date'
+import { formatDate, parseDate } from '@renderer/common/lib/date'
 import { ListView } from '@renderer/common/views'
 import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
+
+import { useOstatokStore } from '@/app/jurnal-7/ostatok/store'
 
 import { columns } from './columns'
 import { iznosQueryKeys } from './config'
@@ -20,25 +22,23 @@ import { iznosService } from './service'
 
 const IznosPage = () => {
   const navigate = useNavigate()
-  const date = getFirstDayOfMonth()
   const pagination = usePagination()
   const dialogToggle = useToggle()
 
   const setLayout = useLayoutStore((store) => store.setLayout)
 
-  const [year, setYear] = useState<number>(date.getFullYear())
-  const [month, setMonth] = useState<number>(date.getMonth() + 1)
-  const [selected, setSelected] = useState<Iznos | null>(null)
-
   const { t } = useTranslation(['app'])
   const { search } = useSearch()
+  const { minDate, setDate } = useOstatokStore()
+
+  const [selected, setSelected] = useState<Iznos | null>(null)
 
   const { data: iznosList, isFetching } = useQuery({
     queryKey: [
       iznosQueryKeys.getAll,
       {
-        month: month || undefined,
-        year: year || undefined,
+        month: minDate.getMonth() + 1,
+        year: minDate.getFullYear(),
         search: search || undefined,
         ...pagination
       }
@@ -71,11 +71,9 @@ const IznosPage = () => {
       <ListView.Header>
         <div className="flex items-center">
           <MonthPicker
-            value={year && month ? `${year}-${month}-01` : ''}
+            value={formatDate(minDate)}
             onChange={(date) => {
-              const [year, month] = date?.split('-')?.map(Number) ?? []
-              setYear(year)
-              setMonth(month)
+              setDate(parseDate(date))
             }}
           />
         </div>
