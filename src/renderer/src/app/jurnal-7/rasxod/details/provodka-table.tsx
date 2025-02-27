@@ -421,7 +421,7 @@ const NaimenovanieCells = ({
         return
       }
 
-      updateFormField(index, 'naimenovanie_tovarov_jur7_id', product.id)
+      updateFormField(index, 'naimenovanie_tovarov_jur7_id', product.naimenovanie_tovarov_jur7_id)
       updateFormField(index, 'kol', product.to.kol)
       updateFormField(index, 'max_kol', product.to.kol)
       updateFormField(index, 'sena', product.to.sena)

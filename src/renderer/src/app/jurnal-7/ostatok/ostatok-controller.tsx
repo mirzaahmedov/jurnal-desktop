@@ -8,6 +8,7 @@ import { formatDate, parseDate } from '@renderer/common/lib/date'
 import { cn } from '@renderer/common/lib/utils'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
+import { useLocation } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
 import { ostatokQueryKeys } from './config'
@@ -19,10 +20,15 @@ export const OstatokController = () => {
   const { minDate, setDate } = useOstatokStore()
   const { main_schet_id, budjet_id } = useRequisitesStore()
 
+  const { pathname } = useLocation()
+
+  const enabled = !!main_schet_id && !!budjet_id && pathname.includes('journal-7')
+
   const {
     data: checkResult,
     refetch: refetchCheck,
-    isFetching: isCheckingSaldo
+    isFetching: isCheckingSaldo,
+    isFetched
   } = useQuery({
     queryKey: [
       ostatokQueryKeys.check,
@@ -34,7 +40,9 @@ export const OstatokController = () => {
       }
     ],
     queryFn: getOstatokCheck,
-    enabled: !!main_schet_id && !!budjet_id
+    refetchOnReconnect: false,
+    refetchOnWindowFocus: false,
+    enabled
   })
 
   const { mutate: createOstatok, isPending: isCreatingOstatok } = useMutation({
@@ -59,10 +67,10 @@ export const OstatokController = () => {
   }
 
   useEffect(() => {
-    if (!checkResult?.data?.length && !isCheckingSaldo) {
+    if (!checkResult?.data?.length && !isCheckingSaldo && isFetched) {
       toast.error(t('no_saldo'))
     }
-  }, [t, isCheckingSaldo])
+  }, [t, isCheckingSaldo, isFetched])
 
   return (
     <form
@@ -74,6 +82,7 @@ export const OstatokController = () => {
           'w-56',
           !checkResult?.data?.length &&
             !isCheckingSaldo &&
+            isFetched &&
             'bg-red-100 border-red-500 text-red-500 hover:bg-red-100 hover:border-red-500 hover:text-red-500'
         )}
         value={formatDate(minDate)}

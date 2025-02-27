@@ -37,7 +37,15 @@ type Jur7InternalTransfer = {
   opisanie?: string
   summa: number
   kimdan_name: string
-  kimga_name: string
+  kimga: {
+    id: number
+    spravochnik_podrazdelenie_jur7_id: number
+    fio: string
+    user_id: number
+    created_at: string
+    updated_at: string
+    isdeleted: boolean
+  }
   childs: Jur7Child[]
 }
 

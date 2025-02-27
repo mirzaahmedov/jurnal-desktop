@@ -8,6 +8,7 @@ export interface Ostatok {
 
 export interface OstatokProduct {
   id: number
+  naimenovanie_tovarov_jur7_id: number
   name: string
   edin: string
   group_jur7_id: number

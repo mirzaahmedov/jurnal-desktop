@@ -17,6 +17,15 @@ type InternalTransfer = {
   summa: number
   kimdan_name: string
   kimga_name: string
+  kimga: {
+    id: number
+    spravochnik_podrazdelenie_jur7_id: number
+    fio: string
+    user_id: number
+    created_at: string
+    updated_at: string
+    isdeleted: boolean
+  }
   childs: InternalTransferChild[]
 }
 

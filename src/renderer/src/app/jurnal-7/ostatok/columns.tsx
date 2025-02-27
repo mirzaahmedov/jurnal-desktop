@@ -87,8 +87,9 @@ export const ostatokProductColumns: ColumnDef<OstatokProduct>[] = [
 
 export const ostatokSpravochnikColumns: ColumnDef<OstatokProduct>[] = [
   {
-    key: 'id',
-    renderCell: IDCell
+    key: 'naimenovanie_tovarov_jur7_id',
+    header: 'id',
+    renderCell: (row) => <IDCell id={row.naimenovanie_tovarov_jur7_id} />
   },
   {
     key: 'name',

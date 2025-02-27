@@ -93,8 +93,9 @@ const columns: ColumnDef<InternalTransfer>[] = [
     header: 'from-who'
   },
   {
-    key: 'kimga_name',
-    header: 'to-whom'
+    key: 'kimga',
+    header: 'to-whom',
+    renderCell: (row) => row?.kimga?.fio
   },
   {
     numeric: true,
