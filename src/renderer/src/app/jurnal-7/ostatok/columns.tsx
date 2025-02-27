@@ -24,7 +24,8 @@ export const ostatokProductColumns: ColumnDef<OstatokProduct>[] = [
     renderCell: IDCell
   },
   {
-    key: 'name'
+    key: 'name',
+    className: 'min-w-[400px]'
   },
   {
     key: 'edin',

@@ -6,6 +6,7 @@ import { ChooseSpravochnik, DatePicker } from '@renderer/common/components'
 import { CollapsibleTable } from '@renderer/common/components/collapsible-table'
 import { Button } from '@renderer/common/components/ui/button'
 import { ButtonGroup } from '@renderer/common/components/ui/button-group'
+import { Checkbox } from '@renderer/common/components/ui/checkbox'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -41,6 +42,7 @@ import { useOstatokStore } from './store'
 const OstatokPage = () => {
   const { minDate, maxDate } = useOstatokStore()
 
+  const [responsible, setResponsible] = useState(true)
   const [error, setError] = useState<ErrorData>()
   const [selectedDate, setSelectedDate] = useState<undefined | Date>(minDate)
 
@@ -79,7 +81,8 @@ const OstatokPage = () => {
       {
         to: formatDate(selectedDate!),
         search,
-        kimning_buynida: responsibleSpravochnik.selected?.id
+        kimning_buynida: responsibleSpravochnik.selected?.id,
+        responsible
       }
     ],
     queryFn: ostatokService.getAll,
@@ -161,6 +164,14 @@ const OstatokPage = () => {
                 { name: 'Подразделение', value: selected.spravochnik_podrazdelenie_jur7_name }
               ]}
             />
+
+            <div className="flex items-center gap-2.5">
+              <Checkbox
+                checked={responsible}
+                onCheckedChange={(state) => setResponsible(!!state)}
+              />
+              <span className="text-sm font-bold">{t('responsible')}</span>
+            </div>
           </div>
           <div>
             <ButtonGroup className="flex gap-5">

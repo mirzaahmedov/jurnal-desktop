@@ -3,6 +3,7 @@ import { useEffect } from 'react'
 import { groupColumns } from '@renderer/app/super-admin/group/columns'
 import { groupQueryKeys } from '@renderer/app/super-admin/group/constants'
 import { GroupTable, groupService } from '@renderer/app/super-admin/group/service'
+import { DownloadFile } from '@renderer/common/features/file'
 import { SearchField, useSearch } from '@renderer/common/features/search'
 import { ListView } from '@renderer/common/views'
 import { useQuery } from '@tanstack/react-query'
@@ -42,6 +43,18 @@ const RegionGroupPage = () => {
 
   return (
     <ListView>
+      <ListView.Header>
+        <DownloadFile
+          url="/jur_7/group/export"
+          params={{
+            page: 1,
+            limit: 10000000,
+            excel: true
+          }}
+          fileName={`${t('group')}.xlsx`}
+          buttonText={t('export-excel')}
+        />
+      </ListView.Header>
       <ListView.Content loading={isFetching}>
         <GroupTable
           columnDefs={groupColumns}

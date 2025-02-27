@@ -98,7 +98,7 @@ const ResponsiblePage = () => {
           url="/jur_7/responsible"
           params={{
             page: 1,
-            limit: 9999,
+            limit: 1000000,
             excel: true
           }}
           fileName={`${t('responsible')}.xlsx`}
