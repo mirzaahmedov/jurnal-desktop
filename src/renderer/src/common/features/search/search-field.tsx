@@ -8,10 +8,10 @@ import { Search } from 'lucide-react'
 import { Input } from '@/common/components/ui/input'
 import { cn } from '@/common/lib/utils'
 
-export type SearchFieldProps = HTMLAttributes<HTMLDivElement>
-export const SearchField = (props: SearchFieldProps) => {
-  const { className, ...rest } = props
-
+export type SearchFieldProps = HTMLAttributes<HTMLDivElement> & {
+  containerProps?: HTMLAttributes<HTMLDivElement>
+}
+export const SearchField = ({ className, containerProps, ...props }: SearchFieldProps) => {
   const [search, setSearch] = useLocationState<string>('search')
   const [interim, setInterim] = useState(search)
 
@@ -39,10 +39,13 @@ export const SearchField = (props: SearchFieldProps) => {
 
   return (
     <div
-      {...rest}
+      {...props}
       className={cn('flex justify-end items-center gap-2.5 px-5', className)}
     >
-      <div className="relative w-full max-w-xs">
+      <div
+        {...containerProps}
+        className={cn('relative w-full max-w-xs', containerProps?.className)}
+      >
         <Input
           name="search"
           id="search"

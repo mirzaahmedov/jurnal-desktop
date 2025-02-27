@@ -12,6 +12,7 @@ import IznosDetailsPage from './jurnal-7/iznos/details/page'
 import RaschetSchetPage from './region-spravochnik/raschet-schet'
 import RaschetSchetGaznaPage from './region-spravochnik/raschet-schet-gazna'
 import SigninPage from './sign-in'
+import ZarplataSpravochnikPage from './super-admin/zarplata/spravochnik/page'
 
 const MainLayout = lazy(() => import('../common/layout/main'))
 const BankMonitorPage = lazy(() => import('./bank/monitor/page'))
@@ -325,6 +326,10 @@ export const routes: RouteObject[] = [
           {
             path: 'ox-report/:id',
             element: <AdminOXDetailsPage />
+          },
+          {
+            path: 'zarplata/spravochnik',
+            element: <ZarplataSpravochnikPage />
           }
         ]
       },

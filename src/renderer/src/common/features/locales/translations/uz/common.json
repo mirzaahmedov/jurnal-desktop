@@ -205,5 +205,8 @@
   "out_of_range": "Tanlangan sana belgilangan diapazondan tashqarida. Iltimos, {{minDate}} va {{maxDate}} oralig‘ida sanani tanlang.",
   "create_saldo": "Saldo yaratish",
   "checking_saldo": "Saldoni tekshirish",
-  "no_saldo": "Bu oy uchun saldo yaratilmagan"
+  "no_saldo": "Bu oy uchun saldo yaratilmagan",
+  "type": "Turi",
+  "sena_1": "Narx 1",
+  "sena_2": "Narx 2"
 }

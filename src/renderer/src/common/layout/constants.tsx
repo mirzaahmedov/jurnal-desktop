@@ -7,6 +7,7 @@ import { adminRoles } from '@renderer/app/super-admin/role'
 import {
   ArrowLeftRight,
   BadgeDollarSign,
+  Banknote,
   Building,
   Building2,
   CalendarCheck,
@@ -35,6 +36,7 @@ import {
   NotepadText,
   Percent,
   ReceiptText,
+  Settings2,
   Sheet,
   ShieldCheck,
   Signature,
@@ -350,7 +352,7 @@ export const getNavElements = (t: TFunction): NavElement[] => {
           path: '/admin',
           title: t('pages.admin'),
           icon: UserCog,
-          children: omitEmptyArrayElements([
+          children: omitEmptyArrayElements<NavElement>([
             {
               path: 'mainbook',
               title: t('pages.mainbook'),
@@ -430,6 +432,18 @@ export const getNavElements = (t: TFunction): NavElement[] => {
               path: 'unit',
               title: t('pages.edin'),
               icon: Weight
+            },
+            {
+              path: 'zarplata',
+              title: t('pages.zarplata'),
+              icon: Banknote,
+              children: [
+                {
+                  path: 'spravochnik',
+                  title: t('pages.spravochnik'),
+                  icon: Settings2
+                }
+              ]
             }
           ])
         }
