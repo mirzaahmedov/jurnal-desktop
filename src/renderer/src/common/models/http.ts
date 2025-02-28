@@ -18,6 +18,6 @@ export type Response<T, M = ResponseMeta> =
       code: number
       message: string
       data: undefined
-      meta?: any
+      meta?: null
       time: string
     }

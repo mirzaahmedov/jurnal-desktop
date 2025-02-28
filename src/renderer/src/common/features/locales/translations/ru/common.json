@@ -210,5 +210,8 @@
   "type": "Тип",
   "sena_1": "Цена 1",
   "sena_2": "Цена 2",
-  "products": "Продукты"
+  "products": "Продукты",
+  "subordinate-organizations": "Подчиненные организации",
+  "all": "Все",
+  "selected_organizations": "Выбранные организации"
 }

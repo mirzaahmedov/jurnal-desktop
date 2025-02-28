@@ -95,10 +95,6 @@ export const GenericTable = <T extends object>({
     }
   }, [selectedRowRef])
 
-  console.log({
-    selected: selectedId
-  })
-
   return (
     <Table
       {...props}

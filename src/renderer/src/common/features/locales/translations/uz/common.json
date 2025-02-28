@@ -209,5 +209,8 @@
   "type": "Turi",
   "sena_1": "Narx 1",
   "sena_2": "Narx 2",
-  "products": "Mahsulotlar"
+  "products": "Mahsulotlar",
+  "subordinate-organizations": "Bo'ysunuvchi tashkilotlar",
+  "all": "Barchasi",
+  "selected_organizations": "Tanlangan tashkilotlar"
 }

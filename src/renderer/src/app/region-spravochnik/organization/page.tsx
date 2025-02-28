@@ -11,20 +11,21 @@ import { SearchField, useSearch } from '@renderer/common/features/search'
 import { usePagination, useToggle } from '@renderer/common/hooks'
 import { ListView } from '@renderer/common/views'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { CopyPlus } from 'lucide-react'
+import { CopyPlus, LayoutList } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 
 import { CreateOrganizationDialog } from './components/create-dialog'
 import { organizationQueryKeys } from './config'
-import { useParentId } from './hooks'
 import { organizationService } from './service'
+import { SubordinateOrganizations } from './subordinate-organization'
 import { OrganizationTable } from './table'
 import { UpdateOrganizationDrawer } from './update-drawer'
 
 const OrganizationPage = () => {
-  const [, setParentId] = useParentId()
   const [original, setOriginal] = useState<Organization>()
+
+  const [parentId, setParentId] = useState<number>()
 
   const { t } = useTranslation(['app'])
   const { confirm } = useConfirm()
@@ -110,17 +111,29 @@ const OrganizationPage = () => {
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}
           customActions={(row) => (
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={(e) => {
-                e.stopPropagation()
-                setOriginal(row)
-                dialogToggle?.open()
-              }}
-            >
-              <CopyPlus className="size-4" />
-            </Button>
+            <>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  setOriginal(row)
+                  dialogToggle?.open()
+                }}
+              >
+                <CopyPlus className="size-4" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  setParentId(row.id)
+                }}
+              >
+                <LayoutList className="size-4" />
+              </Button>
+            </>
           )}
         />
       </ListView.Content>
@@ -136,6 +149,15 @@ const OrganizationPage = () => {
         onOpenChange={dialogToggle.setOpen}
         state={{
           original
+        }}
+      />
+      <SubordinateOrganizations
+        parentId={parentId}
+        open={!!parentId}
+        onOpenChange={(open) => {
+          if (!open) {
+            setParentId(undefined)
+          }
         }}
       />
     </ListView>
