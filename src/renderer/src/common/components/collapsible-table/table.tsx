@@ -224,6 +224,8 @@ const CollapsibleItem = <T extends object, C extends object>({
     )
   }
 
+  console.log({ width })
+
   return (
     <Collapsible
       key={getRowId(row)}
@@ -303,10 +305,12 @@ const CollapsibleItem = <T extends object, C extends object>({
           <GenericTableRow>
             <GenericTableCell
               colSpan={100}
-              className="p-0 overflow-x-hidden"
-              style={{ width }}
+              className="p-0"
             >
-              <div className="pl-[60px] bg-white min-w-0 max-h-[500px] overflow-auto scrollbar">
+              <div
+                style={{ width }}
+                className="pl-[60px] bg-white min-w-0 max-h-[500px] overflow-auto scrollbar"
+              >
                 {typeof renderChildRows === 'function' ? (
                   renderChildRows(getChildRows(row)!)
                 ) : (

@@ -158,20 +158,24 @@ export const SubordinateOrganizations = ({
         </Tabs>
         <DialogFooter className="p-0 m-0">
           <div className="w-full p-5 flex items-center justify-between">
-            <Pagination
-              page={page}
-              limit={limit}
-              onChange={({ page, limit }) => {
-                if (page) {
-                  setPage(page)
-                }
-                if (limit) {
-                  setLimit(limit)
-                }
-              }}
-              pageCount={organizations?.meta?.pageCount ?? 0}
-            />
-            <Button>{t('save')}</Button>
+            {tabValue === TabOption.ALL ? (
+              <>
+                <Pagination
+                  page={page}
+                  limit={limit}
+                  onChange={({ page, limit }) => {
+                    if (page) {
+                      setPage(page)
+                    }
+                    if (limit) {
+                      setLimit(limit)
+                    }
+                  }}
+                  pageCount={organizations?.meta?.pageCount ?? 0}
+                />
+                <Button>{t('save')}</Button>
+              </>
+            ) : null}
           </div>
         </DialogFooter>
       </DialogContent>
