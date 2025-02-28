@@ -1,5 +1,6 @@
 import type { ColumnDef } from './types'
-import type { ReactNode } from 'react'
+
+import { type ReactNode, useLayoutEffect, useState } from 'react'
 
 import {
   GenericTableCell,
@@ -47,10 +48,10 @@ export const CollapsibleTable = <T extends object, C extends object = T>({
 }: CollapsibleTableProps<T, C>) => {
   const { t } = useTranslation()
   return (
-    <Table>
+    <Table className="relative">
       {displayHeader ? (
-        <TableHeader>
-          <GenericTableRow className="hover:bg-transparent border-t border-slate-200">
+        <TableHeader className="sticky top-0 z-50">
+          <GenericTableRow className="bg-slate-100 hover:bg-slate-100 border-t border-slate-200">
             {columnDefs.map((col) => {
               const { key, header, fit, stretch, numeric, headerClassName, width } = col
               return (
@@ -139,6 +140,26 @@ const CollapsibleItem = <T extends object, C extends object>({
     selectedId
   } = tableProps
 
+  const [rowRef, setRowRef] = useState<HTMLTableRowElement | null>(null)
+  const [width, setWidth] = useState<number>()
+
+  useLayoutEffect(() => {
+    const handleUpdateWidth = () => {
+      if (!rowRef) {
+        return
+      }
+      setWidth(rowRef.getBoundingClientRect().width)
+    }
+
+    window.addEventListener('resize', handleUpdateWidth)
+
+    handleUpdateWidth()
+
+    return () => {
+      window.removeEventListener('resize', handleUpdateWidth)
+    }
+  }, [rowRef])
+
   if (!Array.isArray(getChildRows(row))) {
     return (
       <GenericTableRow
@@ -208,7 +229,10 @@ const CollapsibleItem = <T extends object, C extends object>({
       asChild
     >
       <>
-        <GenericTableRow onClick={() => onClickRow?.(row)}>
+        <GenericTableRow
+          ref={setRowRef}
+          onClick={() => onClickRow?.(row)}
+        >
           {columnDefs.map((col, index) => {
             const { key, fit, stretch, numeric, renderCell, width } = col
             return (
@@ -280,11 +304,14 @@ const CollapsibleItem = <T extends object, C extends object>({
               colSpan={100}
               className="p-0"
             >
-              <div className="pl-[60px] bg-white">
+              <div
+                className="pl-[60px] bg-white min-w-0 max-h-96 overflow-auto scrollbar"
+                style={{ width }}
+              >
                 {typeof renderChildRows === 'function' ? (
                   renderChildRows(getChildRows(row)!)
                 ) : (
-                  <Table>
+                  <Table className="overflow-hidden">
                     <TableBody>
                       {getChildRows(row)!.map((child) => (
                         <CollapsibleItem

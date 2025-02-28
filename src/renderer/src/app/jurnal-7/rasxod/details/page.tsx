@@ -2,15 +2,8 @@ import { useEffect, useMemo, useRef } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { DocumentType } from '@renderer/common/features/doc-num'
-import {
-  date_iso_regex,
-  formatDate,
-  parseDate,
-  validateDate,
-  withinMonth
-} from '@renderer/common/lib/date'
+import { formatDate, parseDate, withinMonth } from '@renderer/common/lib/date'
 import { focusInvalidInput } from '@renderer/common/lib/errors'
-import { formatLocaleDate } from '@renderer/common/lib/format'
 import { DetailsView } from '@renderer/common/views'
 import { useQueryClient } from '@tanstack/react-query'
 import isEmpty from 'just-is-empty'
@@ -20,6 +13,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
 import { useOstatokStore } from '@/app/jurnal-7/ostatok/store'
+import { validateOstatokDate } from '@/app/jurnal-7/ostatok/utils'
 import { Form } from '@/common/components/ui/form'
 import { useLayoutStore } from '@/common/features/layout'
 import { useSpravochnik } from '@/common/features/spravochnik'
@@ -182,24 +176,7 @@ const Jurnal7RasxodDetailsPage = () => {
               <DocumentFields
                 tabIndex={1}
                 form={form}
-                validateDate={(date) => {
-                  if (!validateDate(date)) {
-                    if (date_iso_regex.test(date)) {
-                      toast.error(t('date_does_not_exist'))
-                    }
-                    return false
-                  }
-                  const isValid = minDate <= parseDate(date) && parseDate(date) <= maxDate
-                  if (!isValid && date?.length === 10) {
-                    toast.error(
-                      t('out_of_range', {
-                        minDate: formatLocaleDate(formatDate(minDate)),
-                        maxDate: formatLocaleDate(formatDate(maxDate))
-                      })
-                    )
-                  }
-                  return isValid
-                }}
+                validateDate={validateOstatokDate}
                 calendarProps={{
                   fromMonth: minDate,
                   toMonth: maxDate

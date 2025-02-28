@@ -332,8 +332,14 @@ const OstatokPage = () => {
               </Button>
             </form>
           </div>
-          <TabsContent value={TabOption.RESPONSIBLE}>
-            <ListView.Content loading={isFetching || isDeleting}>
+          <TabsContent
+            value={TabOption.RESPONSIBLE}
+            className="data-[state=active]:flex-1 flex flex-col overflow-hidden"
+          >
+            <ListView.Content
+              loading={isFetching || isDeleting}
+              className="overflow-x-hidden"
+            >
               <CollapsibleTable
                 data={ostatok?.data?.responsibles ?? []}
                 columnDefs={ostatokPodotchetColumns}
@@ -353,7 +359,7 @@ const OstatokPage = () => {
           </TabsContent>
           <TabsContent
             value={TabOption.PRODUCTS}
-            className="flex-1 flex flex-col"
+            className="data-[state=active]:flex-1 flex flex-col overflow-hidden"
           >
             <ListView.Content loading={isFetching || isDeleting}>
               <GenericTable

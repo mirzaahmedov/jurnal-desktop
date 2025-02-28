@@ -1,3 +1,5 @@
+import type { DayPickerSingleProps } from 'react-day-picker'
+
 import { useEffect } from 'react'
 
 import { usePagination } from '@renderer/common/hooks/use-pagination'
@@ -17,8 +19,15 @@ type RangeDateValues = {
 type RangeDatePickerProps = RangeDateValues & {
   onChange: (values: Partial<RangeDateValues>) => void
   validateDate?: (date: string) => boolean
+  calendarProps?: Omit<DayPickerSingleProps, 'mode'>
 }
-const RangeDatePicker = ({ from, to, onChange, validateDate }: RangeDatePickerProps) => {
+const RangeDatePicker = ({
+  from,
+  to,
+  onChange,
+  validateDate,
+  calendarProps
+}: RangeDatePickerProps) => {
   const { t } = useTranslation()
 
   const pagination = usePagination()
@@ -58,6 +67,7 @@ const RangeDatePicker = ({ from, to, onChange, validateDate }: RangeDatePickerPr
               <DatePicker
                 autoFocus
                 validate={validateDate}
+                calendarProps={calendarProps}
                 {...field}
               />
             </FormElement>
@@ -70,6 +80,7 @@ const RangeDatePicker = ({ from, to, onChange, validateDate }: RangeDatePickerPr
             <FormElement label={t('to')}>
               <DatePicker
                 validate={validateDate}
+                calendarProps={calendarProps}
                 {...field}
               />
             </FormElement>

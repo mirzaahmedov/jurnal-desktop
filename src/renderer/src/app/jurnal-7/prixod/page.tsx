@@ -13,11 +13,11 @@ import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
 import { useOstatokStore } from '@/app/jurnal-7/ostatok/store'
+import { validateOstatokDate } from '@/app/jurnal-7/ostatok/utils'
 import { GenericTable } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
 import { useLayoutStore } from '@/common/features/layout'
 
-import { validateOstatokDate } from '../ostatok/validate-date'
 import { columns, queryKeys } from './config'
 import { ErrorAlert, type ErrorData, type ErrorDataDocument } from './error-alert'
 import { usePrixodDelete, usePrixodList } from './service'
@@ -33,7 +33,7 @@ const Jurnal7PrixodPage = () => {
   const { t } = useTranslation(['app'])
   const { search } = useSearch()
   const { confirm } = useConfirm()
-  const { recheckOstatok } = useOstatokStore()
+  const { recheckOstatok, minDate, maxDate } = useOstatokStore()
 
   const setLayout = useLayoutStore((store) => store.setLayout)
   const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
@@ -88,6 +88,10 @@ const Jurnal7PrixodPage = () => {
           <ListView.RangeDatePicker
             {...dates}
             validateDate={validateOstatokDate}
+            calendarProps={{
+              fromMonth: minDate,
+              toMonth: maxDate
+            }}
           />
           {main_schet_id ? (
             <ButtonGroup>
