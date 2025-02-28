@@ -366,6 +366,7 @@ const OstatokPage = () => {
                 data={ostatok?.data?.products ?? []}
                 columnDefs={ostatokProductColumns}
                 getRowId={(row) => row.id}
+                onDelete={handleDelete}
               />
             </ListView.Content>
             <ListView.Footer>

@@ -11,6 +11,7 @@ import HomePage from './home/page'
 import RaschetSchetPage from './region-spravochnik/raschet-schet'
 import RaschetSchetGaznaPage from './region-spravochnik/raschet-schet-gazna'
 import SigninPage from './sign-in'
+import AdminOstatokPage from './super-admin/ostatok/page'
 import ZarplataSpravochnikPage from './super-admin/zarplata/spravochnik/page'
 
 const MainLayout = lazy(() => import('../common/layout/main'))
@@ -258,6 +259,10 @@ export const routes: RouteObject[] = [
       {
         path: 'admin',
         children: [
+          {
+            path: 'ostatok',
+            element: <AdminOstatokPage />
+          },
           {
             path: 'logs',
             element: <LogsPage />

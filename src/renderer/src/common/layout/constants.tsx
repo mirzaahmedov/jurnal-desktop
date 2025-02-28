@@ -354,6 +354,11 @@ export const getNavElements = (t: TFunction): NavElement[] => {
           icon: UserCog,
           children: omitEmptyArrayElements<NavElement>([
             {
+              path: 'ostatok',
+              title: t('pages.ostatok'),
+              icon: Warehouse
+            },
+            {
               path: 'mainbook',
               title: t('pages.mainbook'),
               icon: NotebookText

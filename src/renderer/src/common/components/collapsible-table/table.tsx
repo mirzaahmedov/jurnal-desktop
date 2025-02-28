@@ -144,19 +144,20 @@ const CollapsibleItem = <T extends object, C extends object>({
   const [width, setWidth] = useState<number>()
 
   useLayoutEffect(() => {
+    const row = rowRef
     const handleUpdateWidth = () => {
-      if (!rowRef) {
+      if (!row) {
         return
       }
-      setWidth(rowRef.getBoundingClientRect().width)
+      setWidth(row.getBoundingClientRect().width)
     }
 
-    window.addEventListener('resize', handleUpdateWidth)
+    row?.addEventListener('resize', handleUpdateWidth)
 
     handleUpdateWidth()
 
     return () => {
-      window.removeEventListener('resize', handleUpdateWidth)
+      row?.removeEventListener('resize', handleUpdateWidth)
     }
   }, [rowRef])
 
@@ -302,12 +303,10 @@ const CollapsibleItem = <T extends object, C extends object>({
           <GenericTableRow>
             <GenericTableCell
               colSpan={100}
-              className="p-0"
+              className="p-0 overflow-x-hidden"
+              style={{ width }}
             >
-              <div
-                className="pl-[60px] bg-white min-w-0 max-h-96 overflow-auto scrollbar"
-                style={{ width }}
-              >
+              <div className="pl-[60px] bg-white min-w-0 max-h-[500px] overflow-auto scrollbar">
                 {typeof renderChildRows === 'function' ? (
                   renderChildRows(getChildRows(row)!)
                 ) : (

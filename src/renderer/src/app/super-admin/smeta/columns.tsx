@@ -7,29 +7,24 @@ export const smetaColumns: ColumnDef<Smeta>[] = [
   {
     key: 'id',
     renderCell: IDCell,
-    className: 'w-40',
-    headerClassName: 'w-40'
+    width: 160
   },
   {
-    stretch: true,
     key: 'smeta_name',
     header: 'name'
   },
   {
     key: 'smeta_number',
     header: 'number',
-    headerClassName: 'w-32',
-    className: 'w-32'
+    width: 160
   },
   {
     key: 'group_number',
-    headerClassName: '!w-32',
-    className: '!w-32'
+    width: 160
   },
   {
     key: 'father_smeta_name',
     header: 'smeta_base',
-    headerClassName: '!w-32',
-    className: '!w-32'
+    width: 160
   }
 ]
