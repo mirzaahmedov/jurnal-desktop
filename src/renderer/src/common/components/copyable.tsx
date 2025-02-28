@@ -1,4 +1,4 @@
-import { type ReactNode, useState } from 'react'
+import { type ButtonHTMLAttributes, type ReactNode, useState } from 'react'
 
 import { ClipboardCheck, ClipboardPlus } from 'lucide-react'
 
@@ -10,10 +10,15 @@ type CopyableProps = {
   value: string | number
   className?: string
   side?: 'start' | 'end'
+  buttonProps?: ButtonHTMLAttributes<HTMLButtonElement>
 }
-export const Copyable = (props: CopyableProps) => {
-  const { children, value, className, side = 'end' } = props
-
+export const Copyable = ({
+  children,
+  value,
+  className,
+  side = 'end',
+  buttonProps
+}: CopyableProps) => {
   const [isCopied, setCopied] = useState(false)
 
   return (
@@ -29,10 +34,6 @@ export const Copyable = (props: CopyableProps) => {
       <Button
         variant="ghost"
         size="icon"
-        className={cn(
-          'ml-1 align-middle invisible size-8 text-slate-400 transition-colors group-hover/copyable:visible',
-          isCopied && 'visible text-brand hover:text-brand'
-        )}
         onClick={(e) => {
           e.stopPropagation()
           window.navigator.clipboard.writeText(String(value))
@@ -41,6 +42,12 @@ export const Copyable = (props: CopyableProps) => {
             setCopied(false)
           }, 5000)
         }}
+        {...buttonProps}
+        className={cn(
+          'ml-1 align-middle invisible size-8 text-slate-400 transition-colors group-hover/copyable:visible',
+          isCopied && 'visible text-brand hover:text-brand',
+          buttonProps?.className
+        )}
       >
         {isCopied ? (
           <ClipboardCheck className="size-5 text-blue-600" />
