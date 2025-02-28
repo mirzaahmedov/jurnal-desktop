@@ -12,11 +12,16 @@ export type DatesParams = {
 export interface UseDatesReturn extends DatesParams {
   onChange: Dispatch<SetStateAction<DatesParams>>
 }
-export const useDates = () => {
+
+export interface UseDatesOptions {
+  defaultFrom?: string
+  defaultTo?: string
+}
+export const useDates = ({ defaultFrom, defaultTo }: UseDatesOptions = {}) => {
   const defaults = useDefaultFilters()
 
-  const [from, setFrom] = useLocationState('from', defaults.from)
-  const [to, setTo] = useLocationState('to', defaults.to)
+  const [from, setFrom] = useLocationState('from', defaultFrom ?? defaults.from)
+  const [to, setTo] = useLocationState('to', defaultTo ?? defaults.to)
 
   const handleChange = useCallback(
     (values: DatesParams) => {

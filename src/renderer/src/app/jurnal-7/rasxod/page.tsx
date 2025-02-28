@@ -5,6 +5,7 @@ import { useRequisitesStore } from '@renderer/common/features/requisites'
 import { SearchField, useSearch } from '@renderer/common/features/search'
 import { usePagination } from '@renderer/common/hooks'
 import { useDates } from '@renderer/common/hooks'
+import { formatDate } from '@renderer/common/lib/date'
 import { ListView } from '@renderer/common/views'
 import { useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
@@ -20,7 +21,6 @@ import { columns, queryKeys } from './config'
 import { useRasxodDelete, useRasxodList } from './service'
 
 const Jurnal7RasxodPage = () => {
-  const dates = useDates()
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const pagination = usePagination()
@@ -31,6 +31,11 @@ const Jurnal7RasxodPage = () => {
   const { search } = useSearch()
   const { confirm } = useConfirm()
   const { recheckOstatok, minDate, maxDate } = useOstatokStore()
+
+  const dates = useDates({
+    defaultFrom: formatDate(minDate),
+    defaultTo: formatDate(maxDate)
+  })
 
   const { mutate: deleteRasxod, isPending } = useRasxodDelete({
     onSuccess(res) {

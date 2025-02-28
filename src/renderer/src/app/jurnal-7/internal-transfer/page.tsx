@@ -3,6 +3,7 @@ import { useEffect } from 'react'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
 import { SearchField, useSearch } from '@renderer/common/features/search'
 import { useDates, usePagination } from '@renderer/common/hooks'
+import { formatDate } from '@renderer/common/lib/date'
 import { ListView } from '@renderer/common/views'
 import { useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
@@ -19,7 +20,6 @@ import { columns, queryKeys } from './config'
 import { useInternalTransferDelete, useInternalTransferList } from './service'
 
 const Jurnal7InternalTransferPage = () => {
-  const dates = useDates()
   const pagination = usePagination()
   const navigate = useNavigate()
   const queryClient = useQueryClient()
@@ -30,6 +30,11 @@ const Jurnal7InternalTransferPage = () => {
   const { confirm } = useConfirm()
   const { search } = useSearch()
   const { recheckOstatok, minDate, maxDate } = useOstatokStore()
+
+  const dates = useDates({
+    defaultFrom: formatDate(minDate),
+    defaultTo: formatDate(maxDate)
+  })
 
   const { mutate: deleteInternalTransfer, isPending } = useInternalTransferDelete({
     onSuccess() {

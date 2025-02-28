@@ -1,6 +1,10 @@
 import { useEffect, useState } from 'react'
 
-import { getOstatokListQuery } from '@renderer/app/jurnal-7/ostatok'
+import {
+  defaultValues,
+  ostatokPodotchetColumns,
+  ostatokProductColumns
+} from '@renderer/app/jurnal-7/ostatok'
 import { createPodrazdelenie7Spravochnik } from '@renderer/app/jurnal-7/podrazdelenie/service'
 import { createResponsibleSpravochnik } from '@renderer/app/jurnal-7/responsible/service'
 import { ChooseSpravochnik, DatePicker, GenericTable } from '@renderer/common/components'
@@ -19,9 +23,7 @@ import { CircleArrowDown } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
-import { ostatokPodotchetColumns, ostatokProductColumns } from './columns'
-import { defaultValues, ostatokQueryKeys } from './config'
-import { ErrorAlert, type ErrorData } from './error-alert'
+import { getAdminOstatokListQuery } from './service'
 
 enum TabOption {
   PRODUCTS = 'PRODUCTS',
@@ -29,9 +31,8 @@ enum TabOption {
 }
 
 const AdminOstatokPage = () => {
-  const [error, setError] = useState<ErrorData>()
   const [tabValue, setTabValue] = useState<TabOption>(TabOption.RESPONSIBLE)
-  const [selectedDate, setSelectedDate] = useState<undefined | Date>(new Date())
+  const [selectedDate, setSelectedDate] = useState<undefined | Date>(defaultValues.date)
 
   const pagination = usePagination()
   const setLayout = useLayoutStore((store) => store.setLayout)
@@ -61,18 +62,17 @@ const AdminOstatokPage = () => {
 
   const { data: ostatok, isFetching } = useQuery({
     queryKey: [
-      ostatokQueryKeys.getAll,
+      '/admin/ostatok',
       {
         to: formatDate(selectedDate!),
         search,
         kimning_buynida: responsibleSpravochnik.selected?.id,
         responsible: tabValue === TabOption.RESPONSIBLE,
         page: pagination.page,
-        limit: pagination.limit,
-        budjet_id: undefined!
+        limit: pagination.limit
       }
     ],
-    queryFn: getOstatokListQuery,
+    queryFn: getAdminOstatokListQuery,
     enabled: !!selectedDate
   })
 
@@ -91,6 +91,8 @@ const AdminOstatokPage = () => {
   const onSubmit = form.handleSubmit((values) => {
     setSelectedDate(values.date)
   })
+
+  console.log({ date: form.watch('date') })
 
   return (
     <ListView>
@@ -195,18 +197,6 @@ const AdminOstatokPage = () => {
           </TabsContent>
         </>
       </Tabs>
-
-      {error?.document ? (
-        <ErrorAlert
-          open
-          onOpenChange={(isOpen) => {
-            if (!isOpen) {
-              setError(undefined)
-            }
-          }}
-          error={error}
-        />
-      ) : null}
     </ListView>
   )
 }

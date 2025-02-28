@@ -5,6 +5,7 @@ import { DownloadFile } from '@renderer/common/features/file'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
 import { SearchField, useSearch } from '@renderer/common/features/search'
 import { useDates, usePagination } from '@renderer/common/hooks'
+import { formatDate } from '@renderer/common/lib/date'
 import { HttpResponseError } from '@renderer/common/lib/http'
 import { ListView } from '@renderer/common/views'
 import { useQueryClient } from '@tanstack/react-query'
@@ -25,7 +26,6 @@ import { usePrixodDelete, usePrixodList } from './service'
 const Jurnal7PrixodPage = () => {
   const [error, setError] = useState<ErrorData>()
 
-  const dates = useDates()
   const pagination = usePagination()
   const navigate = useNavigate()
   const queryClient = useQueryClient()
@@ -34,6 +34,11 @@ const Jurnal7PrixodPage = () => {
   const { search } = useSearch()
   const { confirm } = useConfirm()
   const { recheckOstatok, minDate, maxDate } = useOstatokStore()
+
+  const dates = useDates({
+    defaultFrom: formatDate(minDate),
+    defaultTo: formatDate(maxDate)
+  })
 
   const setLayout = useLayoutStore((store) => store.setLayout)
   const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
