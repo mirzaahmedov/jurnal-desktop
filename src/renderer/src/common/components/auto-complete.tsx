@@ -23,7 +23,7 @@ type AutoCompleteProps<T> = {
   popoverProps?: PopoverContentProps
   children: (toggle: UseToggleReturn) => ReactNode
 }
-const AutoComplete = <T extends Record<string, unknown>>({
+const AutoComplete = <T extends object>({
   isFetching,
   disabled,
   autoSelectSingleResult = true,

@@ -23,7 +23,10 @@ export const SpravochnikTypeSelect = forwardRef<HTMLSpanElement, SpravochnikType
   ({ value, onChange, triggerClassName, ...props }, ref) => {
     const { data: options, isFetching } = useQuery({
       queryKey: [queryKeys.getTypes],
-      queryFn: ZarplataSpravochnikService.getTypes
+      queryFn: ZarplataSpravochnikService.getTypes,
+      refetchOnMount: false,
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false
     })
 
     const onChangeEvent = useEventCallback(onChange!)

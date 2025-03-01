@@ -104,7 +104,7 @@ select:-webkit-autofill:focus {
     @apply size-[1.125rem] align-middle ml-2;
   }
   .btn-icon.icon-start {
-    @apply ml-0 mr-2;
+    @apply ml-0 mr-0;
   }
 
   .noscroll-bar::-webkit-scrollbar {

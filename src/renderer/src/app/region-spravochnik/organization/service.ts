@@ -1,6 +1,7 @@
 import type { SpravochnikHookOptions } from '@/common/features/spravochnik'
-import type { Organization } from '@/common/models'
+import type { Organization, Response } from '@/common/models'
 
+import { http } from '@renderer/common/lib/http'
 import { z } from 'zod'
 
 import { APIEndpoints, CRUDService } from '@/common/features/crud'
@@ -9,8 +10,8 @@ import { extendObject } from '@/common/lib/utils'
 import { withPreprocessor } from '@/common/lib/validation'
 
 import { organizationColumns } from './columns'
-import { CreateOrganizationDialog } from './components/create-dialog'
 import { organizationQueryKeys } from './config'
+import { OrganizationDialog } from './dialog'
 
 export const OrganizationFormSchema = withPreprocessor(
   z.object({
@@ -40,6 +41,23 @@ export const organizationService = new CRUDService<Organization, OrganizationFor
   endpoint: APIEndpoints.organization
 })
 
+export interface UpdateChildOrganizationParams {
+  parentId: number
+  childs: {
+    id: number
+  }[]
+}
+export const updateChildOrganizationsQuery = async ({
+  parentId,
+  childs
+}: UpdateChildOrganizationParams) => {
+  const res = await http.put<Response<Organization>>(`${APIEndpoints.organization}/parent`, {
+    parent_id: parentId,
+    organization_ids: childs
+  })
+  return res.data
+}
+
 export const createOrganizationSpravochnik = (
   config: Partial<SpravochnikHookOptions<Organization>>
 ) => {
@@ -50,7 +68,7 @@ export const createOrganizationSpravochnik = (
       columnDefs: organizationColumns,
       service: organizationService,
       filters: [SpravochnikSearchField],
-      Dialog: CreateOrganizationDialog,
+      Dialog: OrganizationDialog,
       queryKeys: organizationQueryKeys
     } satisfies typeof config,
     config

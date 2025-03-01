@@ -11,18 +11,18 @@ import { SearchField, useSearch } from '@renderer/common/features/search'
 import { usePagination, useToggle } from '@renderer/common/hooks'
 import { ListView } from '@renderer/common/views'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { CopyPlus, LayoutList } from 'lucide-react'
+import { CopyPlus, ListTree } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 
-import { CreateOrganizationDialog } from './components/create-dialog'
 import { organizationQueryKeys } from './config'
+import { OrganizationDialog } from './dialog'
 import { organizationService } from './service'
 import { SubordinateOrganizations } from './subordinate-organization'
 import { OrganizationTable } from './table'
-import { UpdateOrganizationDrawer } from './update-drawer'
 
 const OrganizationPage = () => {
+  const [selected, setSelected] = useState<Organization>()
   const [original, setOriginal] = useState<Organization>()
 
   const [parentId, setParentId] = useState<number>()
@@ -69,12 +69,14 @@ const OrganizationPage = () => {
       content: SearchField,
       onCreate: () => {
         dialogToggle.open()
+        setSelected(undefined)
       }
     })
   }, [setLayout, t, dialogToggle.open])
 
   const handleClickEdit = (row: Organization) => {
-    setParentId(row.id)
+    dialogToggle.open()
+    setSelected(row)
   }
   const handleClickDelete = (row: Organization) => {
     confirm({
@@ -131,7 +133,7 @@ const OrganizationPage = () => {
                   setParentId(row.id)
                 }}
               >
-                <LayoutList className="size-4" />
+                <ListTree className="size-4" />
               </Button>
             </>
           )}
@@ -143,10 +145,10 @@ const OrganizationPage = () => {
           pageCount={organizations?.meta?.pageCount ?? 0}
         />
       </ListView.Footer>
-      <UpdateOrganizationDrawer />
-      <CreateOrganizationDialog
+      <OrganizationDialog
         open={dialogToggle.isOpen}
         onOpenChange={dialogToggle.setOpen}
+        selected={selected}
         state={{
           original
         }}

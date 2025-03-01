@@ -7,6 +7,7 @@ import { type ReactNode, type TableHTMLAttributes, useEffect, useMemo, useState 
 import { Pagination } from '@renderer/common/components/pagination'
 import { Badge } from '@renderer/common/components/ui/badge'
 import { Button } from '@renderer/common/components/ui/button'
+import { Checkbox } from '@renderer/common/components/ui/checkbox'
 import {
   Dialog,
   DialogContent,
@@ -25,17 +26,25 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@renderer/common/components/ui/tabs'
 import { formatNumber } from '@renderer/common/lib/format'
 import { cn } from '@renderer/common/lib/utils'
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { Pencil, Trash2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+import { toast } from 'react-toastify'
 import { twMerge } from 'tailwind-merge'
 
-import { GenericTableCell, GenericTableHead, GenericTableRow } from '@/common/components'
+import {
+  Copyable,
+  GenericTable,
+  GenericTableCell,
+  GenericTableHead,
+  GenericTableRow,
+  LoadingOverlay
+} from '@/common/components'
 import { EmptyList } from '@/common/components/empty-states'
 
 import { organizationColumns } from './columns'
 import { organizationQueryKeys } from './config'
-import { organizationService } from './service'
+import { organizationService, updateChildOrganizationsQuery } from './service'
 
 enum TabOption {
   ALL = 'ALL',
@@ -75,6 +84,18 @@ export const SubordinateOrganizations = ({
     queryFn: organizationService.getAll
   })
 
+  const { mutate: updateChildOrganizations, isPending } = useMutation({
+    mutationKey: [organizationQueryKeys.update],
+    mutationFn: updateChildOrganizationsQuery,
+    onSuccess(res) {
+      onOpenChange?.(false)
+      toast.success(res?.message)
+    },
+    onError(error) {
+      toast.error(error?.message)
+    }
+  })
+
   useEffect(() => {
     if (!organization?.data?.childs) {
       return
@@ -94,7 +115,7 @@ export const SubordinateOrganizations = ({
       open={open}
       onOpenChange={onOpenChange}
     >
-      <DialogContent className="max-w-screen-2xl w-full p-0 h-3/5 overflow-hidden gap-0">
+      <DialogContent className="max-w-screen-2xl w-full p-0 h-3/5 overflow-hidden gap-0 flex flex-col">
         <Tabs
           value={tabValue}
           onValueChange={(value) => setTabValue(value as TabOption)}
@@ -104,7 +125,6 @@ export const SubordinateOrganizations = ({
             <DialogTitle>{t('subordinate-organizations')}</DialogTitle>
             <div className="flex-1 flex items-center">
               <TabsList>
-                <TabsTrigger value={TabOption.ALL}>{t('all')}</TabsTrigger>
                 <TabsTrigger
                   value={TabOption.SELECTED}
                   className="flex items-center gap-5"
@@ -112,17 +132,40 @@ export const SubordinateOrganizations = ({
                   {t('selected_organizations')}
                   {selected.length ? <Badge>{selected.length}</Badge> : null}
                 </TabsTrigger>
+                <TabsTrigger value={TabOption.ALL}>{t('add')}</TabsTrigger>
               </TabsList>
             </div>
           </DialogHeader>
           <TabsContent
-            value={TabOption.ALL}
-            className="data-[state=active]:flex-1 data-[state=active]:flex flex-col overflow-hidden"
+            value={TabOption.SELECTED}
+            className="data-[state=active]:flex-1 flex flex-col overflow-hidden relative"
           >
+            {isFetching || isFetchingOrganizations ? <LoadingOverlay /> : null}
+            <div className="flex-1 overflow-auto scrollbar">
+              <GenericTable
+                columnDefs={organizationColumns}
+                data={selected ?? []}
+                onDelete={(organization) => {
+                  setSelected((prev) => {
+                    if (prev.find((o) => o.id === organization.id)) {
+                      return prev.filter((o) => o.id !== organization.id)
+                    }
+                    return prev
+                  })
+                }}
+              />
+            </div>
+          </TabsContent>
+
+          <TabsContent
+            value={TabOption.ALL}
+            className="data-[state=active]:flex-1 data-[state=active]:flex flex-col overflow-hidden relative"
+          >
+            {isFetching || isFetchingOrganizations ? <LoadingOverlay /> : null}
             <div className="flex-1 overflow-auto scrollbar">
               <MultiSelectSpravochnikTable
                 selectedIds={selectedIds}
-                columnDefs={organizationColumns}
+                columnDefs={columnDefs}
                 data={organizations?.data ?? []}
                 onClickRow={(organization) => {
                   setSelected((prev) => {
@@ -135,47 +178,42 @@ export const SubordinateOrganizations = ({
               />
             </div>
           </TabsContent>
-          <TabsContent
-            value={TabOption.SELECTED}
-            className="data-[state=active]:flex-1 flex flex-col overflow-hidden"
-          >
-            <div className="flex-1 overflow-auto scrollbar">
-              <MultiSelectSpravochnikTable
-                selectedIds={selectedIds}
-                columnDefs={organizationColumns}
-                data={selected ?? []}
-                onClickRow={(organization) => {
-                  setSelected((prev) => {
-                    if (prev.find((o) => o.id === organization.id)) {
-                      return prev.filter((o) => o.id !== organization.id)
-                    }
-                    return prev
-                  })
-                }}
-              />
-            </div>
-          </TabsContent>
         </Tabs>
         <DialogFooter className="p-0 m-0">
-          <div className="w-full p-5 flex items-center justify-between">
+          <div className="w-full p-5 flex items-center">
             {tabValue === TabOption.ALL ? (
-              <>
-                <Pagination
-                  page={page}
-                  limit={limit}
-                  onChange={({ page, limit }) => {
-                    if (page) {
-                      setPage(page)
-                    }
-                    if (limit) {
-                      setLimit(limit)
-                    }
-                  }}
-                  pageCount={organizations?.meta?.pageCount ?? 0}
-                />
-                <Button>{t('save')}</Button>
-              </>
+              <Pagination
+                page={page}
+                limit={limit}
+                onChange={({ page, limit }) => {
+                  if (page) {
+                    setPage(page)
+                  }
+                  if (limit) {
+                    setLimit(limit)
+                  }
+                }}
+                pageCount={organizations?.meta?.pageCount ?? 0}
+              />
             ) : null}
+            <Button
+              disabled={!parentId}
+              loading={isPending}
+              onClick={() => {
+                if (!parentId) {
+                  return
+                }
+                updateChildOrganizations({
+                  parentId,
+                  childs: selectedIds.map((id) => ({
+                    id
+                  }))
+                })
+              }}
+              className="ml-auto"
+            >
+              {t('save')}
+            </Button>
           </div>
         </DialogFooter>
       </DialogContent>
@@ -195,7 +233,7 @@ export type ColumnDef<T extends object> = {
   rowSpan?: number
   colSpan?: number
   renderHeader?(row: T): ReactNode
-  renderCell?(row: T, col: ColumnDef<T>): ReactNode
+  renderCell?(row: T, col: ColumnDef<T>, params: unknown): ReactNode
 }
 
 export type MultiSelectSpravochnikTableProps<T extends object> =
@@ -330,7 +368,7 @@ export const MultiSelectSpravochnikTable = <T extends object>({
                           style={{ width }}
                         >
                           {typeof renderCell === 'function'
-                            ? renderCell(row, col)
+                            ? renderCell(row, col, { selectedIds })
                             : defaultCellRenderer(row, col)}
                         </GenericTableCell>
                       )
@@ -406,3 +444,107 @@ const defaultRowIdGetter = <T,>(row: T): string => {
   }
   return ''
 }
+
+const columnDefs: ColumnDef<Organization>[] = [
+  {
+    key: 'id',
+    className: 'pr-1',
+    renderCell: (row, _, params) => {
+      const { selectedIds } = params as {
+        selectedIds: number[]
+      }
+      return (
+        <div className="flex items-center gap-2">
+          <Checkbox
+            checked={selectedIds.includes(row.id)}
+            className="size-5"
+          />
+          <Copyable value={row.id}>
+            <b>#{row.id}</b>
+          </Copyable>
+        </div>
+      )
+    }
+  },
+  {
+    key: 'name',
+    className: 'min-w-[300px]'
+  },
+  {
+    key: 'inn',
+    className: 'pr-0',
+    renderCell(row) {
+      return (
+        <Copyable
+          value={row.inn}
+          className="gap-0"
+        >
+          {row.inn}
+        </Copyable>
+      )
+    }
+  },
+  {
+    key: 'mfo',
+    className: 'pr-0',
+    renderCell(row) {
+      return (
+        <Copyable
+          value={row.mfo}
+          className="gap-0"
+        >
+          {row.mfo}
+        </Copyable>
+      )
+    }
+  },
+  {
+    key: 'bank_klient',
+    header: 'bank',
+    className: 'min-w-[300px] break-all'
+  },
+  {
+    key: 'raschet_schet',
+    header: 'raschet-schet',
+    className: 'py-2 pr-0',
+    renderCell(row) {
+      return (
+        <ul>
+          {row.account_numbers?.map((schet) => (
+            <li key={schet.id}>
+              <Copyable
+                className="gap-0"
+                value={schet.raschet_schet}
+              >
+                {schet.raschet_schet}
+              </Copyable>
+            </li>
+          ))}
+        </ul>
+      )
+      return
+    }
+  },
+  {
+    fit: true,
+    key: 'raschet_schet_gazna',
+    header: 'raschet-schet-gazna',
+    className: 'py-2 pr-0',
+    renderCell(row) {
+      return (
+        <ul>
+          {row.gaznas?.map((schet) => (
+            <li key={schet.id}>
+              <Copyable
+                className="gap-0"
+                value={schet.raschet_schet_gazna}
+              >
+                {schet.raschet_schet_gazna}
+              </Copyable>
+            </li>
+          ))}
+        </ul>
+      )
+    }
+  }
+]

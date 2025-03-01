@@ -24,7 +24,7 @@ type OrganizationFormProps = {
   onSubmit: FormEventHandler<HTMLFormElement>
   formActions: ReactNode
 }
-const OrganizationForm = ({
+export const OrganizationForm = ({
   data,
   actionType = 'create',
   form,
@@ -65,8 +65,11 @@ const OrganizationForm = ({
 
   return (
     <Form {...form}>
-      <form onSubmit={onSubmit}>
-        <div className="grid gap-6 py-4">
+      <form
+        onSubmit={onSubmit}
+        className="flex-1 flex flex-col overflow-y-hidden p-1"
+      >
+        <div className="flex-1 grid gap-6 py-4 px-1 overflow-y-auto noscroll-bar">
           <FormField
             name="name"
             control={form.control}
@@ -345,10 +348,8 @@ const OrganizationForm = ({
             )}
           />
         </div>
-        {formActions}
+        <div>{formActions}</div>
       </form>
     </Form>
   )
 }
-
-export { OrganizationForm }
