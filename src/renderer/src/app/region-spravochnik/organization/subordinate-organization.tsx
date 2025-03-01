@@ -59,7 +59,7 @@ export const SubordinateOrganizations = ({
   open,
   onOpenChange
 }: SubordinateOrganizationsProps) => {
-  const [tabValue, setTabValue] = useState(TabOption.ALL)
+  const [tabValue, setTabValue] = useState(TabOption.SELECTED)
   const [selected, setSelected] = useState<Organization[]>([])
   const [page, setPage] = useState(1)
   const [limit, setLimit] = useState(10)
