@@ -415,7 +415,10 @@ const NaimenovanieCells = ({
     kimdan_id,
     from,
     doc_date,
-    disabledIds: form.getValues('childs').map((child) => child.naimenovanie_tovarov_jur7_id),
+    disabledIds: form
+      .getValues('childs')
+      .map((child) => child.naimenovanie_tovarov_jur7_id)
+      .filter(Boolean),
     onChange(product) {
       if (!product) {
         return

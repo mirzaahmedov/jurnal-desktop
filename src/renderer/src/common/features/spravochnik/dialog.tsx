@@ -88,6 +88,9 @@ export const Spravochnik = ({ close, spravochnik }: SpravochnikProps) => {
       case 'Enter':
         e.preventDefault()
         e.stopPropagation()
+        if (!selected || spravochnik.disabledIds.includes(selected.id)) {
+          return
+        }
         if (selected) {
           spravochnik.selectId?.(selected.id, selected)
         }
@@ -120,10 +123,6 @@ export const Spravochnik = ({ close, spravochnik }: SpravochnikProps) => {
 
   const CustomTable = spravochnik?.CustomTable
   const CustomDialog = spravochnik?.Dialog
-
-  console.log({
-    selected: spravochnik.selectedId
-  })
 
   return (
     <>
@@ -188,6 +187,7 @@ export const Spravochnik = ({ close, spravochnik }: SpravochnikProps) => {
                       close(spravochnik.id)
                       spravochnik.onClose?.()
                     }}
+                    getRowId={spravochnik.getRowId ?? ((row) => row.id)}
                     state={state}
                     setState={setState}
                     dialogToggle={dialogToggle}
@@ -196,7 +196,7 @@ export const Spravochnik = ({ close, spravochnik }: SpravochnikProps) => {
                   <GenericTable
                     data={data?.data ?? []}
                     columnDefs={spravochnik?.columnDefs}
-                    getRowId={(row) => String(row.id)}
+                    getRowId={spravochnik.getRowId ?? ((row) => String(row.id))}
                     activeRowId={String(selected?.id)}
                     onClickRow={(row) => {
                       spravochnik.selectId?.(row.id, row)

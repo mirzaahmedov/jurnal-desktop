@@ -43,6 +43,12 @@ export const useSpravochnik = <T extends { id: number }>(
     disabledIds: options.disabledIds ?? []
   })
 
+  useLayoutEffect(() => {
+    paramsRef.current = {
+      disabledIds: options.disabledIds ?? []
+    }
+  })
+
   const [selectedId, setSelectedId] = useState<undefined | number>()
 
   const { isOpen, open, close } = useSpravochnikStore() as SpravochnikStore<T>
@@ -86,6 +92,7 @@ export const useSpravochnik = <T extends { id: number }>(
       columnDefs: options.columnDefs,
       service: options.service,
       queryKeys: options.queryKeys,
+      getRowId: options.getRowId,
       disabledIds: paramsRef.current.disabledIds,
       selectedId,
       onClose: () => {
@@ -116,6 +123,7 @@ export const useSpravochnik = <T extends { id: number }>(
     options.CustomTable,
     options.Dialog,
     options.queryKeys,
+    options.getRowId,
     selectedId,
     open,
     close

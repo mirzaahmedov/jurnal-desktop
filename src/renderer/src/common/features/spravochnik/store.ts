@@ -29,6 +29,7 @@ export type SpravochnikTableProps<T extends object> = {
   disabledIds: number[]
   selectedId?: number
   onClickRow(row: T): void
+  getRowId?: (row: T) => string | number
   dialogToggle?: ReturnType<typeof useToggle>
   state?: SpravochnikLocalState
   setState?: Dispatch<SetStateAction<SpravochnikLocalState>>
@@ -47,6 +48,7 @@ export type SpravochnikData<T extends object> = {
     getAll: string
     getById: string
   }
+  getRowId?: (row: T) => number | string
   columnDefs: ColumnDef<T>[]
   params?: Record<string, unknown>
   filters?: ComponentType<FilterComponentProps>[]

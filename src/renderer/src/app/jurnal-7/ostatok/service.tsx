@@ -144,7 +144,9 @@ export const createOstatokProductSpravochnik = (
       endpoint: APIEndpoints.jur7_saldo,
       columnDefs: [],
       CustomTable: OstatokSpravochnikTable,
-      // fix this issue
+      // TODO: fix this issue
+      getRowId: ((row: OstatokProduct) => row.naimenovanie_tovarov_jur7_id) as any,
+      // TODO: fix this issue
       service: ostatokService as any,
       filters: [SpravochnikSearchField]
     } satisfies typeof config,

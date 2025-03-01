@@ -97,6 +97,8 @@ const Jurnal7InternalTransferDetailsPage = () => {
     })
   )
 
+  console.log(form.watch('kimga_id'), form.watch('kimdan_id'))
+
   const onSubmit = form.handleSubmit((values) => {
     if (id === 'create') {
       createInternalTransfer(values)
