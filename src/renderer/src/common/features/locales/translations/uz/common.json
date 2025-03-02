@@ -210,7 +210,9 @@
   "sena_1": "Narx 1",
   "sena_2": "Narx 2",
   "products": "Mahsulotlar",
-  "subordinate-organizations": "Bo'ysunuvchi tashkilotlar",
+  "subordinate_organizations": "Bo'ysunuvchi tashkilotlar",
   "all": "Barchasi",
-  "selected_organizations": "Tanlangan tashkilotlar"
+  "selected_organizations": "Tanlangan tashkilotlar",
+  "load_file": "Fayldan yuklash",
+  "drop_or_select_file": "Fayllarni shu yerga tashlang yoki tanlash uchun bosing."
 }

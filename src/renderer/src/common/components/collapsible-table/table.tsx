@@ -24,6 +24,7 @@ export type CollapsibleTableProps<T extends object, C extends object> = {
   displayHeader?: boolean
   data: T[]
   columnDefs: ColumnDef<NoInfer<T>>[]
+  width?: number
   disabledIds?: number[]
   selectedId?: number
   getRowId: (row: T) => number | string
@@ -37,6 +38,7 @@ export const CollapsibleTable = <T extends object, C extends object = T>({
   displayHeader = true,
   data,
   columnDefs,
+  width,
   disabledIds,
   selectedId,
   getRowId,
@@ -48,7 +50,7 @@ export const CollapsibleTable = <T extends object, C extends object = T>({
 }: CollapsibleTableProps<T, C>) => {
   const { t } = useTranslation()
   return (
-    <Table className="relative">
+    <Table style={{ width }}>
       {displayHeader ? (
         <TableHeader className="sticky top-0 z-50">
           <GenericTableRow className="bg-slate-100 hover:bg-slate-100 border-t border-slate-200">
@@ -224,8 +226,6 @@ const CollapsibleItem = <T extends object, C extends object>({
     )
   }
 
-  console.log({ width })
-
   return (
     <Collapsible
       key={getRowId(row)}
@@ -302,18 +302,18 @@ const CollapsibleItem = <T extends object, C extends object>({
           ) : null}
         </GenericTableRow>
         <CollapsibleContent asChild>
-          <GenericTableRow>
+          <GenericTableRow className="bg-white">
             <GenericTableCell
               colSpan={100}
               className="p-0"
             >
-              <div
-                style={{ width }}
-                className="pl-[60px] bg-white min-w-0 max-h-[500px] overflow-auto scrollbar"
-              >
-                {typeof renderChildRows === 'function' ? (
-                  renderChildRows(getChildRows(row)!)
-                ) : (
+              {typeof renderChildRows === 'function' ? (
+                renderChildRows(getChildRows(row)!)
+              ) : (
+                <div
+                  style={{ width }}
+                  className="pl-14"
+                >
                   <Table className="overflow-hidden">
                     <TableBody>
                       {getChildRows(row)!.map((child) => (
@@ -326,8 +326,8 @@ const CollapsibleItem = <T extends object, C extends object>({
                       ))}
                     </TableBody>
                   </Table>
-                )}
-              </div>
+                </div>
+              )}
             </GenericTableCell>
           </GenericTableRow>
         </CollapsibleContent>

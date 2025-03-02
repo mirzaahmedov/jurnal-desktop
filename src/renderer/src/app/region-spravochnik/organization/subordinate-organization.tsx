@@ -122,7 +122,7 @@ export const SubordinateOrganizations = ({
           className="flex flex-col h-full overflow-hidden"
         >
           <DialogHeader className="flex-0 px-5 py-1 flex gap-10 items-center flex-row justify-between">
-            <DialogTitle>{t('subordinate-organizations')}</DialogTitle>
+            <DialogTitle>{t('subordinate_organizations')}</DialogTitle>
             <div className="flex-1 flex items-center">
               <TabsList>
                 <TabsTrigger

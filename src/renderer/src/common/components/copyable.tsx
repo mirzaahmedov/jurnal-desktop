@@ -44,15 +44,15 @@ export const Copyable = ({
         }}
         {...buttonProps}
         className={cn(
-          'ml-1 align-middle invisible size-8 text-slate-400 transition-colors group-hover/copyable:visible',
+          'ml-1 align-middle invisible size-[1.5rem] text-slate-400 transition-colors group-hover/copyable:visible',
           isCopied && 'visible text-brand hover:text-brand',
           buttonProps?.className
         )}
       >
         {isCopied ? (
-          <ClipboardCheck className="size-5 text-blue-600" />
+          <ClipboardCheck className="size-4 text-blue-600" />
         ) : (
-          <ClipboardPlus className="size-5" />
+          <ClipboardPlus className="size-4" />
         )}
       </Button>
     </span>

@@ -20,7 +20,8 @@ import { useLayoutStore } from '@renderer/common/features/layout'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
 import { SearchField, useSearch } from '@renderer/common/features/search'
 import { useSpravochnik } from '@renderer/common/features/spravochnik'
-import { usePagination, useToggle } from '@renderer/common/hooks'
+import { useElementWidth, usePagination, useToggle } from '@renderer/common/hooks'
+import { useSidebarStore } from '@renderer/common/layout/sidebar'
 import { date_iso_regex, formatDate, parseDate, validateDate } from '@renderer/common/lib/date'
 import { formatLocaleDate } from '@renderer/common/lib/format'
 import { HttpResponseError } from '@renderer/common/lib/http'
@@ -55,11 +56,15 @@ const OstatokPage = () => {
   const pagination = usePagination()
   const queryClient = useQueryClient()
   const setLayout = useLayoutStore((store) => store.setLayout)
+  const isCollapsed = useSidebarStore((store) => store.isCollapsed)
 
   const { search } = useSearch()
   const { confirm } = useConfirm()
   const { t } = useTranslation(['app'])
   const { main_schet_id, budjet_id } = useRequisitesStore()
+  const { width, setElementRef } = useElementWidth({
+    trigger: isCollapsed
+  })
 
   const form = useForm({
     defaultValues
@@ -333,6 +338,7 @@ const OstatokPage = () => {
             </form>
           </div>
           <TabsContent
+            ref={setElementRef}
             value={TabOption.RESPONSIBLE}
             className="data-[state=active]:flex-1 flex flex-col overflow-hidden"
           >
@@ -345,14 +351,20 @@ const OstatokPage = () => {
                 columnDefs={ostatokPodotchetColumns}
                 getRowId={(row) => row.id}
                 getChildRows={(row) => row.products}
+                width={width}
                 renderChildRows={(rows) => (
-                  <CollapsibleTable
-                    data={rows}
-                    columnDefs={ostatokProductColumns}
-                    getRowId={(row) => row.id}
-                    getChildRows={() => undefined}
-                    onDelete={handleDelete}
-                  />
+                  <div
+                    style={{ width }}
+                    className="overflow-x-auto scrollbar pl-14"
+                  >
+                    <CollapsibleTable
+                      data={rows}
+                      columnDefs={ostatokProductColumns}
+                      getRowId={(row) => row.id}
+                      getChildRows={() => undefined}
+                      onDelete={handleDelete}
+                    />
+                  </div>
                 )}
               />
             </ListView.Content>

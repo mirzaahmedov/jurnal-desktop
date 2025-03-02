@@ -22,13 +22,13 @@ import { persist } from 'zustand/middleware'
 import { Spinner } from '../components'
 import { getNavElements } from './constants'
 
-type SidebarStore = {
+export interface SidebarStore {
   isCollapsed: boolean
   toggleCollapsed: () => void
   setCollapsed: (collapsed: boolean) => void
 }
 
-const useSidebarStore = create(
+export const useSidebarStore = create(
   persist<SidebarStore>(
     (set) => ({
       isCollapsed: false,

@@ -90,7 +90,7 @@ export const ImportFile = ({ url, params, onSuccess }: ImportFileDialogProps) =>
           <FolderUp className="btn-icon icon-start" /> {t('import-excel')}
         </Button>
       </DialogTrigger>
-      <DialogContent className="pt-10">
+      <DialogContent className="pt-10 w-full max-w-2xl">
         <FileDropzone
           onUpload={setFile}
           accept={acceptFiles}

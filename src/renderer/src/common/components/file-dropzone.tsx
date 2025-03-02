@@ -1,16 +1,20 @@
 import { useCallback } from 'react'
 
-import { Upload } from 'lucide-react'
+import { AspectRatio } from '@radix-ui/react-aspect-ratio'
 import { type Accept, useDropzone } from 'react-dropzone'
+import { useTranslation } from 'react-i18next'
 
 import { useEventCallback } from '../hooks'
 import { cn } from '../lib/utils'
+import { Upload } from './icons/Upload'
 
 export interface FileDropzoneProps {
   onUpload: (file: File) => void
   accept: Accept
 }
 export const FileDropzone = ({ onUpload, accept }: FileDropzoneProps) => {
+  const { t } = useTranslation()
+
   const onUploadCallback = useEventCallback(onUpload)
 
   const onDrop = useCallback((files: File[]) => {
@@ -23,28 +27,29 @@ export const FileDropzone = ({ onUpload, accept }: FileDropzoneProps) => {
   })
 
   return (
-    <div
+    <AspectRatio
       {...getRootProps()}
+      ratio={1}
       className={cn(
-        'group flex flex-col items-center gap-10 px-10 py-[25%] border-2 border-dashed border-slate-300 bg-slate-50 active:text-brand cursor-pointer hover:bg-slate-100 hover:border-slate-400 transition-colors',
+        'group flex flex-col items-center justify-center gap-2.5 px-10 border-4 border-dashed border-slate-300 bg-slate-50 active:text-brand cursor-pointer hover:bg-slate-100 hover:border-slate-400 rounded-lg transition-colors',
         isDragActive && 'border-brand'
       )}
     >
       <Upload
         className={cn(
-          'size-24 text-slate-400 group-active:text-brand',
+          'size-48 text-slate-300 group-hover:text-slate-400 group-hover:scale-125 group-active:text-brand transition-all',
           isDragActive && 'text-brand'
         )}
       />
       <h6
         className={cn(
-          'text-sm text-center text-slate-400 font-medium group-active:text-brand group-hover:text-slate-500',
+          'w-full max-w-md text-base text-center text-slate-400 font-medium group-active:text-brand group-hover:text-slate-500 transition-colors',
           isDragActive && 'text-brand'
         )}
       >
-        Перетащите сюда файлы для загрузки или щелкните, чтобы выбрать файлы на вашем устройстве.
+        {t('drop_or_select_file')}
       </h6>
       <input {...getInputProps()} />
-    </div>
+    </AspectRatio>
   )
 }

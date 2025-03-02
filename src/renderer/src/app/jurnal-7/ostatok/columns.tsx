@@ -83,7 +83,7 @@ export const ostatokProductColumns: ColumnDef<OstatokProduct>[] = [
   },
   {
     key: 'prixod_data.doc_date',
-    header: 'Дата прихода',
+    header: 'Дата',
     renderCell: (row) => formatLocaleDate(row.prixod_data?.doc_date)
   }
 ]

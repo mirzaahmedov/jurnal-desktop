@@ -213,5 +213,7 @@
   "products": "Продукты",
   "subordinate-organizations": "Подчиненные организации",
   "all": "Все",
-  "selected_organizations": "Выбранные организации"
+  "selected_organizations": "Выбранные организации",
+  "load_file": "Загрузить из файла",
+  "drop_or_select_file": "Перетащите файлы сюда или щелкните, чтобы выбрать."
 }

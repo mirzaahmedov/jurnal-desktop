@@ -17,7 +17,6 @@ import {
   CircleDollarSign,
   CircleFadingPlus,
   CircleHelp,
-  CreditCard,
   Database,
   FileCheck,
   FileCheck2,
@@ -271,16 +270,16 @@ export const getNavElements = (t: TFunction): NavElement[] => {
               title: t('pages.organization'),
               icon: Building
             },
-            {
-              path: 'raschet-schet',
-              title: t('raschet-schet'),
-              icon: CreditCard
-            },
-            {
-              path: 'raschet-schet-gazna',
-              title: t('raschet-schet-gazna'),
-              icon: CreditCard
-            },
+            // {
+            //   path: 'raschet-schet',
+            //   title: t('raschet-schet'),
+            //   icon: CreditCard
+            // },
+            // {
+            //   path: 'raschet-schet-gazna',
+            //   title: t('raschet-schet-gazna'),
+            //   icon: CreditCard
+            // },
             {
               path: 'subdivision',
               title: t('pages.podrazdelenie'),

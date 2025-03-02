@@ -1,16 +1,19 @@
-import { ErrorBoundary } from 'react-error-boundary'
+import type { ColumnDef } from '@renderer/common/components/collapsible-table'
+import type { Organization } from '@renderer/common/models'
 
-import { DemoShartnomaGrafik } from './shartnoma/Demo'
+import { GenericTable } from '@renderer/common/components'
+
+const users: Organization[] = []
+const columnDefs: ColumnDef<Organization>[] = []
 
 const DemoPage = () => {
   return (
     <div className="flex-1 w-full h-full">
-      <ErrorBoundary
-        onError={console.log}
-        fallback="error"
-      >
-        <DemoShartnomaGrafik />
-      </ErrorBoundary>
+      <GenericTable
+        data={users}
+        getRowId={(row) => row.id}
+        columnDefs={columnDefs}
+      />
     </div>
   )
 }

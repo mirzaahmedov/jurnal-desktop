@@ -17,7 +17,7 @@ export const GroupPayloadSchema = withPreprocessor(
     name: z.string(),
     schet: z.string(),
     group_number: z.string(),
-    iznos_foiz: z.coerce.number(),
+    iznos_foiz: z.coerce.number().optional(),
     provodka_debet: z.string(),
     provodka_subschet: z.string(),
     provodka_kredit: z.string(),
