@@ -57,14 +57,14 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
       className="w-[2500px]"
     >
       <Table
-        className="border border-slate-200 table-xs"
+        className="relative border border-slate-200 table-xs"
         {...props}
       >
-        <TableHeader>
+        <TableHeader className="sticky top-0 z-50">
           <EditableTableRow>
             <EditableTableHead
               rowSpan={2}
-              className="w-48"
+              className="w-24"
             >
               {t('group')}
             </EditableTableHead>
@@ -142,10 +142,18 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
             >
               {t('kredit')}
             </EditableTableHead>
+            <EditableTableHead
+              colSpan={2}
+              className="text-center"
+            >
+              {t('iznos')}
+            </EditableTableHead>
             <EditableTableHead rowSpan={2}>{t('prixod-date')}</EditableTableHead>
             <EditableTableHead rowSpan={2}></EditableTableHead>
           </EditableTableRow>
           <EditableTableRow>
+            <EditableTableHead>{t('schet')}</EditableTableHead>
+            <EditableTableHead>{t('subschet')}</EditableTableHead>
             <EditableTableHead>{t('schet')}</EditableTableHead>
             <EditableTableHead>{t('subschet')}</EditableTableHead>
             <EditableTableHead>{t('schet')}</EditableTableHead>
@@ -286,6 +294,7 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
                   <EditableTableCell>
                     <div className="relative flex items-center justify-center px-4">
                       <Checkbox
+                        disabled
                         checked={row.iznos}
                         onCheckedChange={(checked) => {
                           if (!checked) {
@@ -347,6 +356,7 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
                       />
                     </div>
                   </EditableTableCell>
+
                   <EditableTableCell>
                     <div className="relative">
                       <Input
@@ -379,6 +389,40 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
                       />
                     </div>
                   </EditableTableCell>
+
+                  <EditableTableCell>
+                    <div className="relative">
+                      <Input
+                        value={row.iznos_schet}
+                        onChange={(e) => {
+                          handleChangeChildField(index, 'iznos_schet', e.target.value)
+                        }}
+                        error={!!errors?.iznos_schet}
+                        className={inputVariants({
+                          editor: true,
+                          error: !!errors?.iznos_schet
+                        })}
+                        tabIndex={tabIndex}
+                      />
+                    </div>
+                  </EditableTableCell>
+                  <EditableTableCell>
+                    <div className="relative">
+                      <Input
+                        value={row.iznos_sub_schet}
+                        onChange={(e) => {
+                          handleChangeChildField(index, 'iznos_sub_schet', e.target.value)
+                        }}
+                        className={inputVariants({
+                          editor: true,
+                          error: !!errors?.iznos_sub_schet
+                        })}
+                        error={!!errors.iznos_sub_schet}
+                        tabIndex={tabIndex}
+                      />
+                    </div>
+                  </EditableTableCell>
+
                   <EditableTableCell>
                     <div className="relative">
                       <DatePicker
@@ -495,6 +539,9 @@ const NaimenovanieCells = ({
         onChangeField(index, 'debet_sub_schet', group?.provodka_subschet ?? '')
         onChangeField(index, 'kredit_sub_schet', group?.provodka_subschet ?? '')
         onChangeField(index, 'group_jur7_id', id)
+        onChangeField(index, 'iznos', group && group?.iznos_foiz > 0)
+        onChangeField(index, 'iznos_schet', group?.schet ?? '')
+        onChangeField(index, 'iznos_sub_schet', group?.provodka_subschet ?? '')
       }
     })
   )

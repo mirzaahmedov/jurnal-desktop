@@ -101,7 +101,7 @@ select:-webkit-autofill:focus {
 
 @layer components {
   .btn-icon {
-    @apply size-[1.125rem] align-middle ml-2;
+    @apply size-[1.125rem] align-middle;
   }
   .btn-icon.icon-start {
     @apply ml-0 mr-0;

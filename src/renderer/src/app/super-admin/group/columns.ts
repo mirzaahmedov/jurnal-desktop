@@ -6,7 +6,8 @@ import { IDCell } from '@renderer/common/components/table/renderers/id'
 export const groupColumns: ColumnDef<Group>[] = [
   {
     key: 'id',
-    renderCell: IDCell
+    renderCell: IDCell,
+    width: 160
   },
   {
     key: 'name'

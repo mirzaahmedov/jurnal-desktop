@@ -40,10 +40,14 @@ export interface MainSchetDialogProps {
   open: boolean
   onChangeOpen: (value: boolean) => void
   selected: MainSchet | null
+  original?: MainSchet
 }
-export const MainSchetDialog = (props: MainSchetDialogProps) => {
-  const { open, onChangeOpen, selected } = props
-
+export const MainSchetDialog = ({
+  open,
+  onChangeOpen,
+  selected,
+  original
+}: MainSchetDialogProps) => {
   const queryClient = useQueryClient()
 
   const [search, setSearch] = useState('')
@@ -108,12 +112,23 @@ export const MainSchetDialog = (props: MainSchetDialogProps) => {
 
   useEffect(() => {
     if (!selected) {
-      form.reset(defaultValues)
+      form.reset(
+        original
+          ? {
+              ...defaultValues,
+              tashkilot_nomi: original.tashkilot_nomi,
+              tashkilot_mfo: original.tashkilot_mfo,
+              tashkilot_bank: original.tashkilot_bank,
+              tashkilot_inn: original.tashkilot_inn,
+              account_name: original.account_name
+            }
+          : defaultValues
+      )
       return
     }
 
     form.reset(selected)
-  }, [form, selected])
+  }, [form, selected, original])
 
   return (
     <Dialog
@@ -188,7 +203,7 @@ export const MainSchetDialog = (props: MainSchetDialogProps) => {
                 render={({ field }) => (
                   <FormItem>
                     <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
-                      <FormLabel className="text-right col-span-2">{t('number')}</FormLabel>
+                      <FormLabel className="text-right col-span-2">{t('raschet-schet')}</FormLabel>
                       <FormControl>
                         <Input
                           className="col-span-4"

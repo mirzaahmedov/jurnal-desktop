@@ -1,6 +1,6 @@
 import type { ColumnDef } from './types'
 
-import { type ReactNode, useLayoutEffect, useState } from 'react'
+import { type ReactNode } from 'react'
 
 import {
   GenericTableCell,
@@ -139,29 +139,9 @@ const CollapsibleItem = <T extends object, C extends object>({
     onEdit,
     onDelete,
     disabledIds,
-    selectedId
+    selectedId,
+    width
   } = tableProps
-
-  const [rowRef, setRowRef] = useState<HTMLTableRowElement | null>(null)
-  const [width, setWidth] = useState<number>()
-
-  useLayoutEffect(() => {
-    const row = rowRef
-    const handleUpdateWidth = () => {
-      if (!row) {
-        return
-      }
-      setWidth(row.getBoundingClientRect().width)
-    }
-
-    row?.addEventListener('resize', handleUpdateWidth)
-
-    handleUpdateWidth()
-
-    return () => {
-      row?.removeEventListener('resize', handleUpdateWidth)
-    }
-  }, [rowRef])
 
   if (!Array.isArray(getChildRows(row))) {
     return (
@@ -232,10 +212,7 @@ const CollapsibleItem = <T extends object, C extends object>({
       asChild
     >
       <>
-        <GenericTableRow
-          ref={setRowRef}
-          onClick={() => onClickRow?.(row)}
-        >
+        <GenericTableRow onClick={() => onClickRow?.(row)}>
           {columnDefs.map((col, index) => {
             const { key, fit, stretch, numeric, renderCell, width } = col
             return (
@@ -302,17 +279,17 @@ const CollapsibleItem = <T extends object, C extends object>({
           ) : null}
         </GenericTableRow>
         <CollapsibleContent asChild>
-          <GenericTableRow className="bg-white">
+          <GenericTableRow>
             <GenericTableCell
               colSpan={100}
-              className="p-0"
+              className="p-0 bg-white"
             >
               {typeof renderChildRows === 'function' ? (
                 renderChildRows(getChildRows(row)!)
               ) : (
                 <div
-                  style={{ width }}
                   className="pl-14"
+                  style={{ width }}
                 >
                   <Table className="overflow-hidden">
                     <TableBody>

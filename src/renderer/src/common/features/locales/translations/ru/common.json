@@ -211,7 +211,7 @@
   "sena_1": "Цена 1",
   "sena_2": "Цена 2",
   "products": "Продукты",
-  "subordinate-organizations": "Подчиненные организации",
+  "subordinate_organizations": "Подчиненные организации",
   "all": "Все",
   "selected_organizations": "Выбранные организации",
   "load_file": "Загрузить из файла",

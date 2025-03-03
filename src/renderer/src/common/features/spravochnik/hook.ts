@@ -60,7 +60,9 @@ export const useSpravochnik = <T extends { id: number }>(
     queryFn: options.service.getById,
     enabled: !!selectedId,
     placeholderData: undefined,
-    refetchOnMount: false
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+    refetchOnWindowFocus: false
   })
 
   useLayoutEffect(() => {

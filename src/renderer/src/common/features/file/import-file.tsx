@@ -30,7 +30,7 @@ const acceptFiles: Accept = {
 export interface ImportFileDialogProps {
   url: string
   params?: Record<string, unknown>
-  onSuccess?: VoidFunction
+  onSuccess?: (res: unknown) => void
 }
 export const ImportFile = ({ url, params, onSuccess }: ImportFileDialogProps) => {
   const dialogToggle = useToggle()
@@ -60,7 +60,7 @@ export const ImportFile = ({ url, params, onSuccess }: ImportFileDialogProps) =>
       toast.success(res?.message ?? 'Данные импортированы успешно')
       setFile(undefined)
       dialogToggle.close()
-      onSuccess?.()
+      onSuccess?.(res)
     },
     onError(error) {
       toast.error(error.message ?? 'Не удалось импортировать данные')
@@ -90,7 +90,7 @@ export const ImportFile = ({ url, params, onSuccess }: ImportFileDialogProps) =>
           <FolderUp className="btn-icon icon-start" /> {t('import-excel')}
         </Button>
       </DialogTrigger>
-      <DialogContent className="pt-10 w-full max-w-2xl">
+      <DialogContent className="pt-10 w-full max-w-xl">
         <FileDropzone
           onUpload={setFile}
           accept={acceptFiles}

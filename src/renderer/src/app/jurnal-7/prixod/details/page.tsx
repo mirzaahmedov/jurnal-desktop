@@ -1,3 +1,6 @@
+import type { PrixodImportResponse } from './types'
+import type { Response } from '@renderer/common/models'
+
 import { useEffect, useMemo, useRef, useState } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -33,6 +36,7 @@ import { useOstatokStore } from '@/app/jurnal-7/ostatok/store'
 import { validateOstatokDate } from '@/app/jurnal-7/ostatok/utils'
 import { createResponsibleSpravochnik } from '@/app/jurnal-7/responsible/service'
 import { createOperatsiiSpravochnik } from '@/app/super-admin/operatsii'
+import { DownloadFile, ImportFile } from '@/common/features/file'
 
 import { PrixodFormSchema, defaultValues, queryKeys } from '../config'
 import { ErrorAlert, type ErrorData, type ErrorDataDocument } from '../error-alert'
@@ -142,6 +146,7 @@ const Jurnal7PrixodDetailsPage = () => {
     createOperatsiiSpravochnik({
       onChange: (_, operatsii) => {
         form.setValue('j_o_num', operatsii?.schet ?? '')
+        form.trigger('j_o_num')
         form.setValue(
           'childs',
           form.getValues('childs').map((child) => ({
@@ -149,6 +154,7 @@ const Jurnal7PrixodDetailsPage = () => {
             kredit_schet: child.kredit_schet || operatsii?.schet || ''
           }))
         )
+        form.trigger('childs')
       },
       params: {
         type_schet: TypeSchetOperatsii.GENERAL
@@ -314,11 +320,49 @@ const Jurnal7PrixodDetailsPage = () => {
           </form>
         </Form>
 
-        <div className="p-5 mb-28 w-full overflow-x-auto scrollbar">
-          <ProvodkaTable
-            form={form}
-            tabIndex={8}
-          />
+        <div className="p-5 pb-32 w-full overflow-hidden flex flex-col gap-5">
+          <div className="flex items-center justify-end gap-2">
+            <ImportFile
+              url="/jur_7/doc_prixod/read"
+              onSuccess={(res) => {
+                const rows = (res as Response<PrixodImportResponse[]>)?.data ?? []
+                form.setValue(
+                  'childs',
+                  rows.map((r) => ({
+                    name: r.name,
+                    group_jur7_id: r.group_jur7_id,
+                    edin: r.edin,
+                    sena: r.sena,
+                    kol: r.kol,
+                    summa: r.summa,
+                    data_pereotsenka: form.watch('doc_date'),
+                    debet_schet: r.group.schet,
+                    debet_sub_schet: r.group.provodka_subschet,
+                    kredit_schet: form.watch('j_o_num'),
+                    kredit_sub_schet: r.group.provodka_subschet,
+                    inventar_num: r.inventar_num,
+                    serial_num: r.serial_num,
+                    iznos: r.group?.iznos_foiz > 0,
+                    eski_iznos_summa: r.eski_iznos_summa,
+                    nds_foiz: r.nds_foiz
+                  }))
+                )
+                form.trigger('childs')
+              }}
+            />
+            <DownloadFile
+              url="/jur_7/doc_prixod/template"
+              fileName={`${t('pages.material-warehouse')}_${t('pages.prixod-docs')}__${t('template')}.xlsx`}
+              params={{}}
+              buttonText={`${t('template')}`}
+            />
+          </div>
+          <div className="max-h-[600px] overflow-x-auto scrollbar">
+            <ProvodkaTable
+              form={form}
+              tabIndex={8}
+            />
+          </div>
         </div>
       </DetailsView.Content>
 

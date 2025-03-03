@@ -99,13 +99,14 @@ const MainSchetPage = () => {
       <ListView.Footer>
         <ListView.Pagination
           {...pagination}
-          pageCount={mainSchets?.meta.pageCount ?? 0}
+          pageCount={mainSchets?.meta?.pageCount ?? 0}
         />
       </ListView.Footer>
       <MainSchetDialog
         selected={selected}
         open={dialogToggle.isOpen}
         onChangeOpen={dialogToggle.setOpen}
+        original={mainSchets?.data?.[0] ?? undefined}
       />
     </ListView>
   )
