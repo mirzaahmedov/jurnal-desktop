@@ -15,8 +15,10 @@ type InternalTransfer = {
   doc_date: string
   opisanie?: string
   summa: number
+  kimdan_id: number
   kimdan_name: string
   kimga_name: string
+  kimga_id: number
   kimga: {
     id: number
     spravochnik_podrazdelenie_jur7_id: number

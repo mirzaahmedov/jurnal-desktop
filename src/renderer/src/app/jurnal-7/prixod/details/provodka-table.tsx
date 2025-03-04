@@ -60,7 +60,7 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
         className="relative border border-slate-200 table-xs"
         {...props}
       >
-        <TableHeader className="sticky top-0 z-50">
+        <TableHeader className="sticky top-0 z-[5]">
           <EditableTableRow>
             <EditableTableHead
               rowSpan={2}
@@ -148,6 +148,7 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
             >
               {t('iznos')}
             </EditableTableHead>
+            <EditableTableHead rowSpan={2}>{t('iznos_start_date')}</EditableTableHead>
             <EditableTableHead rowSpan={2}>{t('prixod-date')}</EditableTableHead>
             <EditableTableHead rowSpan={2}></EditableTableHead>
           </EditableTableRow>
@@ -170,6 +171,7 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
                   <NaimenovanieCells
                     index={index}
                     row={row}
+                    form={form}
                     errors={errors}
                     tabIndex={tabIndex}
                     onChangeField={handleChangeChildField}
@@ -291,17 +293,12 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
                       />
                     </div>
                   </EditableTableCell>
+
                   <EditableTableCell>
                     <div className="relative flex items-center justify-center px-4">
                       <Checkbox
                         disabled
                         checked={row.iznos}
-                        onCheckedChange={(checked) => {
-                          if (!checked) {
-                            handleChangeChildField(index, 'eski_iznos_summa', 0)
-                          }
-                          handleChangeChildField(index, 'iznos', Boolean(checked))
-                        }}
                         tabIndex={tabIndex}
                       />
                     </div>
@@ -324,6 +321,7 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
                       />
                     </div>
                   </EditableTableCell>
+
                   <EditableTableCell>
                     <div className="relative">
                       <Input
@@ -426,6 +424,27 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
                   <EditableTableCell>
                     <div className="relative">
                       <DatePicker
+                        value={row.iznos_start ?? ''}
+                        onChange={(date) => {
+                          handleChangeChildField(index, 'iznos_start', date)
+                        }}
+                        placeholder="дд.мм.гггг"
+                        className={inputVariants({
+                          editor: true,
+                          error: !!errors?.iznos_start
+                        })}
+                        triggerProps={{
+                          className: 'min-w-32'
+                        }}
+                        error={!!errors.iznos_start}
+                        tabIndex={tabIndex}
+                      />
+                    </div>
+                  </EditableTableCell>
+
+                  <EditableTableCell>
+                    <div className="relative">
+                      <DatePicker
                         value={row.data_pereotsenka}
                         onChange={(date) => {
                           handleChangeChildField(index, 'data_pereotsenka', date)
@@ -520,6 +539,7 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
 type NaimenovanieCellsProps = {
   index: number
   row: PrixodChildFormType
+  form: UseFormReturn<PrixodFormType>
   tabIndex: number
   errors: Merge<FieldError, FieldErrorsImpl<PrixodChildFormType>>
   onChangeField: (index: number, key: keyof PrixodChildFormType, value: unknown) => void
@@ -527,6 +547,7 @@ type NaimenovanieCellsProps = {
 const NaimenovanieCells = ({
   index,
   row,
+  form,
   errors,
   tabIndex,
   onChangeField
@@ -535,13 +556,15 @@ const NaimenovanieCells = ({
     createGroupSpravochnik({
       value: row.group_jur7_id,
       onChange: (id, group) => {
+        const iznos = group && group?.iznos_foiz > 0
         onChangeField(index, 'debet_schet', group?.schet ?? '')
         onChangeField(index, 'debet_sub_schet', group?.provodka_subschet ?? '')
         onChangeField(index, 'kredit_sub_schet', group?.provodka_subschet ?? '')
         onChangeField(index, 'group_jur7_id', id)
-        onChangeField(index, 'iznos', group && group?.iznos_foiz > 0)
-        onChangeField(index, 'iznos_schet', group?.schet ?? '')
-        onChangeField(index, 'iznos_sub_schet', group?.provodka_subschet ?? '')
+        onChangeField(index, 'iznos', iznos)
+        onChangeField(index, 'iznos_schet', iznos ? (group?.schet ?? '') : '')
+        onChangeField(index, 'iznos_sub_schet', iznos ? (group?.provodka_subschet ?? '') : '')
+        onChangeField(index, 'iznos_start', iznos ? (form.watch('doc_date') ?? '') : '')
       }
     })
   )

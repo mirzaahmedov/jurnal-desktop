@@ -214,5 +214,12 @@
   "all": "Barchasi",
   "selected_organizations": "Tanlangan tashkilotlar",
   "load_file": "Fayldan yuklash",
-  "drop_or_select_file": "Fayllarni shu yerga tashlang yoki tanlash uchun bosing."
+  "drop_or_select_file": "Fayllarni shu yerga tashlang yoki tanlash uchun bosing.",
+  "please_create_saldo": "Ilovadan foydalanish uchun iltimos, saldo yarating.",
+  "saldo_update_required": "Saldoni yangilanish talab qilinadi",
+  "please_update_saldo_to_continue": "Ilovadan foydalanishni davom ettirish uchun quyidagi oylar uchun saldo yangilanishi kerak",
+  "continue": "Davom etish",
+  "you_can_continue_working_now": "Endi ushbu oynani yopib, ishlashda davom etishingiz mumkin.",
+  "recomputing_saldo": "Saldo qayta hisoblanmoqda, iltimos, kuting...",
+  "iznos_start_date": "Iznos boshlanish sanasi"
 }

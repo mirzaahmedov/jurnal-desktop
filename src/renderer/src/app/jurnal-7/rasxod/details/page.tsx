@@ -13,7 +13,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
 import { useOstatokStore } from '@/app/jurnal-7/ostatok/store'
-import { validateOstatokDate } from '@/app/jurnal-7/ostatok/utils'
+import { handleOstatokResponse, validateOstatokDate } from '@/app/jurnal-7/ostatok/utils'
 import { Form } from '@/common/components/ui/form'
 import { useLayoutStore } from '@/common/features/layout'
 import { useSpravochnik } from '@/common/features/spravochnik'
@@ -52,6 +52,7 @@ const Jurnal7RasxodDetailsPage = () => {
   const { mutate: createRasxod, isPending: isCreating } = useRasxodCreate({
     onSuccess: (res) => {
       toast.success(res?.message)
+      handleOstatokResponse(res)
       navigate(-1)
       queryClient.invalidateQueries({
         queryKey: [queryKeys.getAll]
@@ -65,6 +66,7 @@ const Jurnal7RasxodDetailsPage = () => {
   const { mutate: updateRasxod, isPending: isUpdating } = useRasxodUpdate({
     onSuccess: (res) => {
       toast.success(res?.message)
+      handleOstatokResponse(res)
       navigate(-1)
       queryClient.invalidateQueries({
         queryKey: [queryKeys.getAll]

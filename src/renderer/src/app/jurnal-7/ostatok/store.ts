@@ -1,17 +1,53 @@
 import { getFirstDayOfMonth, getLastDayOfMonth } from '@renderer/common/lib/date'
 import { create } from 'zustand'
 
+export interface MonthValue {
+  year: number
+  month: number
+}
+
 export interface OstatokStore {
   minDate: Date
   maxDate: Date
+  queuedMonths: MonthValue[]
+  enqueueMonth: (...values: MonthValue[]) => void
+  dequeueMonth: (...values: MonthValue[]) => MonthValue[]
   recheckOstatok?: VoidFunction
   setRecheckOstatok: (recheckOstatok: VoidFunction) => void
   setDate: (date: Date) => void
 }
 
-export const useOstatokStore = create<OstatokStore>((set) => ({
+export const useOstatokStore = create<OstatokStore>((set, get) => ({
   minDate: getFirstDayOfMonth(),
   maxDate: getLastDayOfMonth(),
+  queuedMonths: [],
+  enqueueMonth: (...values) => {
+    const newValues = [...get().queuedMonths]
+    values.forEach((value) => {
+      const exists = newValues.find((v) => v.month === value.month && v.year === value.year)
+      if (!exists) {
+        newValues.push(value)
+      }
+    })
+    set({
+      queuedMonths: newValues.sort(compareMonthValues)
+    })
+  },
+  dequeueMonth(...values) {
+    const newValues = [...get().queuedMonths]
+    values.forEach((value) => {
+      const index = newValues.findIndex((v) => v.month === value.month && v.year === value.year)
+      if (index !== -1) {
+        newValues.splice(index, 1)
+      }
+    })
+    newValues.sort(compareMonthValues)
+
+    set({
+      queuedMonths: newValues
+    })
+    return newValues
+  },
   setRecheckOstatok: (recheckOstatok) => {
     set({
       recheckOstatok
@@ -24,3 +60,10 @@ export const useOstatokStore = create<OstatokStore>((set) => ({
     })
   }
 }))
+
+export const compareMonthValues = (a: MonthValue, b: MonthValue) => {
+  if (a.year - b.year) {
+    return -1
+  }
+  return a.month - b.month
+}

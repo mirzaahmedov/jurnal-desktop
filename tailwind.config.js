@@ -69,6 +69,13 @@ export default {
         }
       },
       keyframes: {
+        shake: {
+          '0%, 100%': { transform: 'translateX(0) rotate(0deg)' },
+          '20%': { transform: 'translateX(-4px) rotate(-5deg)' },
+          '40%': { transform: 'translateX(4px) rotate(5deg)' },
+          '60%': { transform: 'translateX(-4px) rotate(-5deg)' },
+          '80%': { transform: 'translateX(4px) rotate(5deg)' }
+        },
         'accordion-down': {
           from: {
             height: '0'
@@ -88,7 +95,8 @@ export default {
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
-        'accordion-up': 'accordion-up 0.2s ease-out'
+        'accordion-up': 'accordion-up 0.2s ease-out',
+        shake: 'shake 0.4s ease-in-out 2'
       }
     }
   },

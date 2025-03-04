@@ -4,6 +4,7 @@ import { Spinner } from '@renderer/common/components'
 import { MonthPicker } from '@renderer/common/components/month-picker'
 import { Button } from '@renderer/common/components/ui/button'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
+import { useBoundingClientRect, useLocationStore } from '@renderer/common/hooks'
 import { formatDate, parseDate } from '@renderer/common/lib/date'
 import { cn } from '@renderer/common/lib/utils'
 import { useMutation, useQuery } from '@tanstack/react-query'
@@ -17,8 +18,10 @@ import { useOstatokStore } from './store'
 
 export const OstatokController = () => {
   const { t } = useTranslation()
-  const { minDate, setDate, setRecheckOstatok } = useOstatokStore()
+  const { minDate, setDate, setRecheckOstatok, dequeueMonth } = useOstatokStore()
   const { main_schet_id, budjet_id } = useRequisitesStore()
+  const { values, setValues } = useLocationStore()
+  const { setElementRef } = useBoundingClientRect()
 
   const { pathname } = useLocation()
 
@@ -48,9 +51,10 @@ export const OstatokController = () => {
   const { mutate: createOstatok, isPending: isCreatingOstatok } = useMutation({
     mutationKey: [ostatokQueryKeys.create],
     mutationFn: ostatokService.create,
-    onSuccess(res) {
+    onSuccess(res, values) {
       toast.success(res.message)
       refetchCheck()
+      dequeueMonth(values)
     },
     onError(error) {
       toast.error(error.message)
@@ -77,24 +81,33 @@ export const OstatokController = () => {
 
   return (
     <form
-      className="flex flex-col gap-2"
+      ref={setElementRef}
+      className="flex flex-col gap-2 -m-2 p-2"
       onSubmit={handleSubmit}
     >
-      <MonthPicker
-        className={cn(
-          'w-56',
-          !checkResult?.data?.length &&
-            !isCheckingSaldo &&
-            isFetched &&
-            'bg-red-100 border-red-500 text-red-500 hover:bg-red-100 hover:border-red-500 hover:text-red-500'
-        )}
-        value={formatDate(minDate)}
-        onChange={(value) => {
-          setDate(parseDate(value))
-        }}
-        name="saldo-date"
-        id="saldo-date"
-      />
+      <div>
+        <MonthPicker
+          className={cn(
+            'w-56',
+            !checkResult?.data?.length &&
+              !isCheckingSaldo &&
+              isFetched &&
+              'bg-red-100 border-red-500 text-red-500 hover:bg-red-100 hover:border-red-500 hover:text-red-500'
+          )}
+          value={formatDate(minDate)}
+          onChange={(value) => {
+            setDate(parseDate(value))
+
+            Object.keys(values).forEach((pathname) => {
+              if (pathname.includes('journal-7')) {
+                setValues(pathname, {})
+              }
+            })
+          }}
+          name="saldo-date"
+          id="saldo-date"
+        />
+      </div>
       <Button
         className="flex items-center gap-4"
         disabled={isCreatingOstatok}

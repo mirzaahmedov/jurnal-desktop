@@ -17,10 +17,7 @@ type UseInternalTransferListParams = {
 }
 
 const useInternalTransferList = ({ params }: UseInternalTransferListParams) => {
-  return useQuery({
-    queryKey: [queryKeys.getAll, params],
-    queryFn: internalTransferService.getAll
-  })
+  return
 }
 
 const useInternalTransferGet = (id: number) => {

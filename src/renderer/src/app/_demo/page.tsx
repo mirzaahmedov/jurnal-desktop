@@ -1,19 +1,40 @@
-import type { ColumnDef } from '@renderer/common/components/collapsible-table'
-import type { Organization } from '@renderer/common/models'
+import { formatDate } from '@renderer/common/lib/date'
 
-import { GenericTable } from '@renderer/common/components'
-
-const users: Organization[] = []
-const columnDefs: ColumnDef<Organization>[] = []
+import { useOstatokStore } from '../jurnal-7/ostatok/store'
 
 const DemoPage = () => {
+  const { queuedMonths, enqueueMonth } = useOstatokStore()
+
   return (
     <div className="flex-1 w-full h-full">
-      <GenericTable
-        data={users}
-        getRowId={(row) => row.id}
-        columnDefs={columnDefs}
-      />
+      <ul>
+        {queuedMonths.map((m) => (
+          <li key={`${m.year}-${m.month}`}>{formatDate(new Date(m.year, m.month))}</li>
+        ))}
+      </ul>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault()
+          const formData = new FormData(e.currentTarget)
+          const year = Number(formData.get('year'))
+          const month = Number(formData.get('month'))
+
+          enqueueMonth({
+            year,
+            month
+          })
+        }}
+      >
+        <input
+          type="number"
+          name="year"
+        />
+        <input
+          type="number"
+          name="month"
+        />
+        <button type="submit">submit</button>
+      </form>
     </div>
   )
 }

@@ -3,22 +3,21 @@ import { useEffect } from 'react'
 import { useLayoutStore } from '@renderer/common/features/layout'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
 import { SearchField, useSearch } from '@renderer/common/features/search'
-import { usePagination } from '@renderer/common/hooks'
-import { useDates } from '@renderer/common/hooks'
+import { useDates, usePagination } from '@renderer/common/hooks'
 import { formatDate } from '@renderer/common/lib/date'
 import { ListView } from '@renderer/common/views'
-import { useQueryClient } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
 import { useOstatokStore } from '@/app/jurnal-7/ostatok/store'
-import { validateOstatokDate } from '@/app/jurnal-7/ostatok/utils'
+import { handleOstatokError, validateOstatokDate } from '@/app/jurnal-7/ostatok/utils'
 import { GenericTable } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
 
 import { columns, queryKeys } from './config'
-import { useRasxodDelete, useRasxodList } from './service'
+import { rasxodService, useRasxodDelete } from './service'
 
 const Jurnal7RasxodPage = () => {
   const navigate = useNavigate()
@@ -30,7 +29,7 @@ const Jurnal7RasxodPage = () => {
   const { t } = useTranslation(['app'])
   const { search } = useSearch()
   const { confirm } = useConfirm()
-  const { recheckOstatok, minDate, maxDate } = useOstatokStore()
+  const { recheckOstatok, minDate, maxDate, queuedMonths } = useOstatokStore()
 
   const dates = useDates({
     defaultFrom: formatDate(minDate),
@@ -49,14 +48,28 @@ const Jurnal7RasxodPage = () => {
       toast.error(error?.message)
     }
   })
-  const { data: rasxodList, isFetching } = useRasxodList({
-    params: {
-      ...pagination,
-      ...dates,
-      search,
-      main_schet_id
-    }
+
+  const {
+    data: rasxodList,
+    isFetching,
+    error: rasxodListError
+  } = useQuery({
+    queryKey: [
+      queryKeys.getAll,
+      {
+        ...pagination,
+        ...dates,
+        search,
+        main_schet_id
+      }
+    ],
+    queryFn: rasxodService.getAll,
+    enabled: queuedMonths.length === 0
   })
+
+  useEffect(() => {
+    handleOstatokError(rasxodListError)
+  }, [rasxodListError])
 
   useEffect(() => {
     setLayout({

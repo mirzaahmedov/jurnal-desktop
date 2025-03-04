@@ -7,7 +7,7 @@ import { z } from 'zod'
 
 import { withPreprocessor } from '@/common/lib/validation'
 
-const queryKeys = {
+export const queryKeys = {
   getAll: 'jur7_prixod/all',
   get: 'jur7_prixod/get',
   create: 'jur7_prixod/create',
@@ -15,7 +15,7 @@ const queryKeys = {
   delete: 'jur7_prixod/delete'
 }
 
-const defaultValues: PrixodFormType = {
+export const defaultValues: PrixodFormType = {
   type_document: 1,
   doc_num: '',
   doc_date: '',
@@ -48,7 +48,7 @@ const defaultValues: PrixodFormType = {
   ]
 }
 
-const PrixodChildFormSchema = withPreprocessor(
+export const PrixodChildFormSchema = withPreprocessor(
   z.object({
     name: z.string(),
     edin: z.string(),
@@ -63,14 +63,36 @@ const PrixodChildFormSchema = withPreprocessor(
     eski_iznos_summa: z.number().optional(),
     iznos_schet: z.string().optional(),
     iznos_sub_schet: z.string().optional(),
+    iznos_start: z.string().optional(),
     debet_schet: z.string(),
     debet_sub_schet: z.string(),
     kredit_schet: z.string(),
     kredit_sub_schet: z.string(),
     data_pereotsenka: z.string()
   })
-)
-const PrixodFormSchema = withPreprocessor(
+).superRefine((values, ctx) => {
+  if (values.iznos) {
+    if (!values.iznos_start) {
+      ctx.addIssue({
+        code: 'custom',
+        path: ['iznos_start']
+      })
+    }
+    if (!values.iznos_schet) {
+      ctx.addIssue({
+        code: 'custom',
+        path: ['iznos_schet']
+      })
+    }
+    if (!values.iznos_sub_schet) {
+      ctx.addIssue({
+        code: 'custom',
+        path: ['iznos_sub_schet']
+      })
+    }
+  }
+})
+export const PrixodFormSchema = withPreprocessor(
   z.object({
     type_document: z.number().optional(),
     doc_num: z.string(),
@@ -87,10 +109,10 @@ const PrixodFormSchema = withPreprocessor(
     childs: z.array(PrixodChildFormSchema)
   })
 )
-type PrixodFormType = z.infer<typeof PrixodFormSchema>
-type PrixodChildFormType = z.infer<typeof PrixodChildFormSchema>
+export type PrixodFormType = z.infer<typeof PrixodFormSchema>
+export type PrixodChildFormType = z.infer<typeof PrixodChildFormSchema>
 
-const columns: ColumnDef<MO7Prixod>[] = [
+export const columns: ColumnDef<MO7Prixod>[] = [
   {
     key: 'id',
     renderCell: IDCell
@@ -118,6 +140,3 @@ const columns: ColumnDef<MO7Prixod>[] = [
     key: 'opisanie'
   }
 ]
-
-export { queryKeys, defaultValues, columns, PrixodFormSchema, PrixodChildFormSchema }
-export type { PrixodFormType, PrixodChildFormType }

@@ -16,12 +16,7 @@ type UseRasxodListParams = {
   params?: Record<string, unknown>
 }
 
-const useRasxodList = ({ params }: UseRasxodListParams) => {
-  return useQuery({
-    queryKey: [queryKeys.getAll, params],
-    queryFn: rasxodService.getAll
-  })
-}
+const useRasxodList = ({ params }: UseRasxodListParams) => {}
 
 const useRasxodGet = (id: number) => {
   return useQuery({

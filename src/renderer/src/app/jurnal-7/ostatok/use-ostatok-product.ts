@@ -2,7 +2,7 @@ import type { UseSpravochnikReturn } from '@renderer/common/features/spravochnik
 import type { OstatokProduct } from '@renderer/common/models'
 
 import { createNaimenovanieSpravochnik } from '@renderer/app/jurnal-7/naimenovaniya/service'
-import { createOstatokProductSpravochnik } from '@renderer/app/jurnal-7/ostatok'
+import { OstatokViewOption, createOstatokProductSpravochnik } from '@renderer/app/jurnal-7/ostatok'
 import { useSpravochnik } from '@renderer/common/features/spravochnik'
 
 type UseOstatokProductParams = {
@@ -39,6 +39,7 @@ export const useOstatokProduct = ({
         kimning_buynida: kimdan_id,
         from,
         to: doc_date,
+        type: OstatokViewOption.RESPONSIBLE,
         product_id: naimenovanie_tovarov_jur7_id || undefined
       },
       includeParamsInGetById: true,

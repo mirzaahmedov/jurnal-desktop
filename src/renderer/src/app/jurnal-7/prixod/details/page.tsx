@@ -33,7 +33,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
 import { useOstatokStore } from '@/app/jurnal-7/ostatok/store'
-import { validateOstatokDate } from '@/app/jurnal-7/ostatok/utils'
+import { handleOstatokResponse, validateOstatokDate } from '@/app/jurnal-7/ostatok/utils'
 import { createResponsibleSpravochnik } from '@/app/jurnal-7/responsible/service'
 import { createOperatsiiSpravochnik } from '@/app/super-admin/operatsii'
 import { DownloadFile, ImportFile } from '@/common/features/file'
@@ -59,6 +59,7 @@ const Jurnal7PrixodDetailsPage = () => {
   const { mutate: createPrixod, isPending: isCreating } = usePrixodCreate({
     onSuccess: (res) => {
       toast.success(res?.message)
+      handleOstatokResponse(res)
       navigate(-1)
       queryClient.invalidateQueries({
         queryKey: [queryKeys.getAll]
@@ -79,6 +80,7 @@ const Jurnal7PrixodDetailsPage = () => {
   const { mutate: updatePrixod, isPending: isUpdating } = usePrixodUpdate({
     onSuccess(res) {
       toast.success(res?.message)
+      handleOstatokResponse(res)
       navigate(-1)
       queryClient.invalidateQueries({
         queryKey: [queryKeys.getAll]
@@ -198,7 +200,8 @@ const Jurnal7PrixodDetailsPage = () => {
       'childs',
       form.getValues('childs').map((child) => ({
         ...child,
-        data_pereotsenka: child.data_pereotsenka ? child.data_pereotsenka : doc_date
+        data_pereotsenka: child.data_pereotsenka ? child.data_pereotsenka : doc_date,
+        iznos_start: child.iznos ? (child.iznos_start ?? doc_date) : ''
       }))
     )
   }, [form, doc_date])

@@ -19,12 +19,18 @@ export const columns: ColumnDef<Iznos>[] = [
   {
     fit: true,
     key: 'inventar_num',
-    header: 'Инвентар №'
+    header: 'Инвентар №',
+    renderCell: (row) => {
+      return row.product.inventar_num
+    }
   },
   {
     fit: true,
     key: 'serial_num',
-    header: 'Серийный номер'
+    header: 'Серийный номер',
+    renderCell: (row) => {
+      return row.product.serial_num
+    }
   },
   {
     key: 'kol',
@@ -47,11 +53,19 @@ export const columns: ColumnDef<Iznos>[] = [
     }
   },
   {
+    key: 'iznos_schet',
+    header: 'schet'
+  },
+  {
+    key: 'iznos_sub_schet',
+    header: 'subschet'
+  },
+  {
     fit: true,
-    key: 'iznos_start_date',
+    key: '',
     header: 'Дата начала износа',
     renderCell(row) {
-      return formatLocaleDate(row.iznos_start_date)
+      return formatLocaleDate(row.doc_date)
     }
   },
   {
@@ -61,7 +75,7 @@ export const columns: ColumnDef<Iznos>[] = [
   },
   {
     numeric: true,
-    key: 'month_iznos_summa',
+    key: 'iznos_summa_bir_oylik',
     header: 'Сумма износа (Месяц)'
   },
   {

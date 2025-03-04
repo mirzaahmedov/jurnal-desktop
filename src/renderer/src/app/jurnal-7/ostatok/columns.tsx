@@ -96,6 +96,7 @@ export const ostatokSpravochnikColumns: ColumnDef<OstatokProduct>[] = [
   },
   {
     key: 'name',
+    width: 200,
     header: 'Наименование товара'
   },
   {

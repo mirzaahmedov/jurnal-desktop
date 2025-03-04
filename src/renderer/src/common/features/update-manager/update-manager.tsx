@@ -20,7 +20,7 @@ const ipcRenderer = window.electron.ipcRenderer
 
 type UpdateStatus = 'available' | 'downloading' | 'downloaded' | 'error'
 
-const UpdateManager = () => {
+export const UpdateManager = () => {
   const [status, setStatus] = useState<UpdateStatus>()
   const [progress, setProgress] = useState(0)
 
@@ -146,5 +146,3 @@ const AlertIcon = ({ type }: AlertIconProps) => {
     </div>
   )
 }
-
-export { UpdateManager }

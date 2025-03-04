@@ -8,20 +8,20 @@ import { useDates, usePagination } from '@renderer/common/hooks'
 import { formatDate } from '@renderer/common/lib/date'
 import { HttpResponseError } from '@renderer/common/lib/http'
 import { ListView } from '@renderer/common/views'
-import { useQueryClient } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
 import { useOstatokStore } from '@/app/jurnal-7/ostatok/store'
-import { validateOstatokDate } from '@/app/jurnal-7/ostatok/utils'
+import { handleOstatokError, validateOstatokDate } from '@/app/jurnal-7/ostatok/utils'
 import { GenericTable } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
 import { useLayoutStore } from '@/common/features/layout'
 
 import { columns, queryKeys } from './config'
 import { ErrorAlert, type ErrorData, type ErrorDataDocument } from './error-alert'
-import { usePrixodDelete, usePrixodList } from './service'
+import { prixodService, usePrixodDelete } from './service'
 
 const Jurnal7PrixodPage = () => {
   const [error, setError] = useState<ErrorData>()
@@ -33,7 +33,7 @@ const Jurnal7PrixodPage = () => {
   const { t } = useTranslation(['app'])
   const { search } = useSearch()
   const { confirm } = useConfirm()
-  const { recheckOstatok, minDate, maxDate } = useOstatokStore()
+  const { recheckOstatok, minDate, maxDate, queuedMonths } = useOstatokStore()
 
   const dates = useDates({
     defaultFrom: formatDate(minDate),
@@ -62,14 +62,27 @@ const Jurnal7PrixodPage = () => {
       toast.error(error?.message)
     }
   })
-  const { data: prixodList, isFetching } = usePrixodList({
-    params: {
-      ...pagination,
-      ...dates,
-      search,
-      main_schet_id
-    }
+  const {
+    data: prixodList,
+    isFetching,
+    error: prixodListError
+  } = useQuery({
+    queryKey: [
+      queryKeys.getAll,
+      {
+        ...pagination,
+        ...dates,
+        search,
+        main_schet_id
+      }
+    ],
+    queryFn: prixodService.getAll,
+    enabled: queuedMonths.length === 0
   })
+
+  useEffect(() => {
+    handleOstatokError(prixodListError)
+  }, [prixodListError])
 
   useEffect(() => {
     setLayout({

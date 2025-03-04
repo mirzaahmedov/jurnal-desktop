@@ -37,19 +37,15 @@ import { createResponsibleSpravochnik } from '../responsible/service'
 import { ostatokPodotchetColumns, ostatokProductColumns } from './columns'
 import { defaultValues, ostatokQueryKeys } from './config'
 import { ErrorAlert, type ErrorData, type ErrorDataDocument } from './error-alert'
-import { getOstatokListQuery, ostatokService } from './service'
+import { OstatokViewOption, getOstatokListQuery, ostatokService } from './service'
 import { useOstatokStore } from './store'
-
-enum TabOption {
-  PRODUCTS = 'PRODUCTS',
-  RESPONSIBLE = 'RESPONSIBLE'
-}
+import { handleOstatokError } from './utils'
 
 const OstatokPage = () => {
   const { minDate, maxDate } = useOstatokStore()
 
   const [error, setError] = useState<ErrorData>()
-  const [tabValue, setTabValue] = useState<TabOption>(TabOption.RESPONSIBLE)
+  const [tabValue, setTabValue] = useState(OstatokViewOption.RESPONSIBLE)
   const [selectedDate, setSelectedDate] = useState<undefined | Date>(minDate)
 
   const dropdownToggle = useToggle()
@@ -86,14 +82,18 @@ const OstatokPage = () => {
     })
   )
 
-  const { data: ostatok, isFetching } = useQuery({
+  const {
+    data: ostatok,
+    isFetching,
+    error: ostatokError
+  } = useQuery({
     queryKey: [
       ostatokQueryKeys.getAll,
       {
         to: formatDate(selectedDate!),
         search,
         kimning_buynida: responsibleSpravochnik.selected?.id,
-        responsible: tabValue === TabOption.RESPONSIBLE,
+        type: tabValue,
         budjet_id: budjet_id!,
         page: pagination.page,
         limit: pagination.limit
@@ -124,6 +124,9 @@ const OstatokPage = () => {
     }
   })
 
+  useEffect(() => {
+    handleOstatokError(ostatokError)
+  }, [ostatokError])
   useEffect(() => {
     const date = form.getValues('date')
     if (date && minDate < date && date < maxDate) {
@@ -283,14 +286,14 @@ const OstatokPage = () => {
       </ListView.Header>
       <Tabs
         value={tabValue}
-        onValueChange={(value) => setTabValue(value as TabOption)}
+        onValueChange={(value) => setTabValue(value as OstatokViewOption)}
         asChild
       >
         <>
           <div className="p-5 pt-0 w-full flex items-center justify-between gap-5">
             <TabsList>
-              <TabsTrigger value={TabOption.RESPONSIBLE}>{t('responsible')}</TabsTrigger>
-              <TabsTrigger value={TabOption.PRODUCTS}>{t('products')}</TabsTrigger>
+              <TabsTrigger value={OstatokViewOption.RESPONSIBLE}>{t('responsible')}</TabsTrigger>
+              <TabsTrigger value={OstatokViewOption.PRODUCT}>{t('products')}</TabsTrigger>
             </TabsList>
 
             <form
@@ -331,7 +334,10 @@ const OstatokPage = () => {
                   />
                 )}
               />
-              <Button type="submit">
+              <Button
+                variant="outline"
+                type="submit"
+              >
                 <CircleArrowDown className="btn-icon icon-start" />
                 {t('load')}
               </Button>
@@ -339,7 +345,7 @@ const OstatokPage = () => {
           </div>
           <TabsContent
             ref={setElementRef}
-            value={TabOption.RESPONSIBLE}
+            value={OstatokViewOption.RESPONSIBLE}
             className="data-[state=active]:flex-1 flex flex-col overflow-hidden"
           >
             <ListView.Content
@@ -370,7 +376,7 @@ const OstatokPage = () => {
             </ListView.Content>
           </TabsContent>
           <TabsContent
-            value={TabOption.PRODUCTS}
+            value={OstatokViewOption.PRODUCT}
             className="data-[state=active]:flex-1 flex flex-col overflow-hidden"
           >
             <ListView.Content loading={isFetching || isDeleting}>

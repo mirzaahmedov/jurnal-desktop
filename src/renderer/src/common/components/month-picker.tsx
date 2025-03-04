@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { Button, type ButtonProps, buttonVariants } from '@renderer/common/components/ui/button'
 import { formatDate, parseDate } from '@renderer/common/lib/date'
 import { cn } from '@renderer/common/lib/utils'
-import { add, eachMonthOfInterval, endOfYear, format, isFuture, parse } from 'date-fns'
+import { add, eachMonthOfInterval, endOfYear, format, parse } from 'date-fns'
 import { ru } from 'date-fns/locale/ru'
 import { uz } from 'date-fns/locale/uz'
 import { CalendarIcon, ChevronLeft, ChevronRight } from 'lucide-react'
@@ -75,7 +75,6 @@ const MonthCalendar = ({ currentMonth, onMonthChange }: MonthCalendarProps) => {
                   'absolute right-1 disabled:bg-slate-100'
                 )}
                 type="button"
-                disabled={isFuture(add(firstDayCurrentYear, { years: 1 }))}
                 onClick={nextYear}
               >
                 <ChevronRight className="h-4 w-4" />
@@ -95,7 +94,6 @@ const MonthCalendar = ({ currentMonth, onMonthChange }: MonthCalendarProps) => {
               >
                 <Button
                   name="day"
-                  disabled={isFuture(month)}
                   role="gridcell"
                   variant="ghost"
                   tabIndex={-1}

@@ -5,19 +5,19 @@ import { SearchField, useSearch } from '@renderer/common/features/search'
 import { useDates, usePagination } from '@renderer/common/hooks'
 import { formatDate } from '@renderer/common/lib/date'
 import { ListView } from '@renderer/common/views'
-import { useQueryClient } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
 import { useOstatokStore } from '@/app/jurnal-7/ostatok/store'
-import { validateOstatokDate } from '@/app/jurnal-7/ostatok/utils'
+import { handleOstatokError, validateOstatokDate } from '@/app/jurnal-7/ostatok/utils'
 import { GenericTable } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
 import { useLayoutStore } from '@/common/features/layout'
 import { toast } from '@/common/hooks/use-toast'
 
 import { columns, queryKeys } from './config'
-import { useInternalTransferDelete, useInternalTransferList } from './service'
+import { internalTransferService, useInternalTransferDelete } from './service'
 
 const Jurnal7InternalTransferPage = () => {
   const pagination = usePagination()
@@ -29,7 +29,7 @@ const Jurnal7InternalTransferPage = () => {
   const { t } = useTranslation(['app'])
   const { confirm } = useConfirm()
   const { search } = useSearch()
-  const { recheckOstatok, minDate, maxDate } = useOstatokStore()
+  const { recheckOstatok, minDate, maxDate, queuedMonths } = useOstatokStore()
 
   const dates = useDates({
     defaultFrom: formatDate(minDate),
@@ -53,14 +53,28 @@ const Jurnal7InternalTransferPage = () => {
       })
     }
   })
-  const { data: transferList, isFetching } = useInternalTransferList({
-    params: {
-      ...pagination,
-      ...dates,
-      search,
-      main_schet_id
-    }
+
+  const {
+    data: transferList,
+    isFetching,
+    error: transferListError
+  } = useQuery({
+    queryKey: [
+      queryKeys.getAll,
+      {
+        ...pagination,
+        ...dates,
+        search,
+        main_schet_id
+      }
+    ],
+    queryFn: internalTransferService.getAll,
+    enabled: queuedMonths.length === 0
   })
+
+  useEffect(() => {
+    handleOstatokError(transferListError)
+  }, [transferListError])
 
   useEffect(() => {
     setLayout({

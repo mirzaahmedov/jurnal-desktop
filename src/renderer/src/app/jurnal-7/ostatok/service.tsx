@@ -18,6 +18,12 @@ import { z } from 'zod'
 
 import { ostatokSpravochnikColumns } from './columns'
 
+export enum OstatokViewOption {
+  PRODUCT = 'product',
+  RESPONSIBLE = 'responsible',
+  GROUP = 'group'
+}
+
 export const OstatokFormSchema = z.object({
   month: z.number(),
   year: z.number()
@@ -29,7 +35,8 @@ export const ostatokService = new CRUDService<Ostatok, OstatokFormValues>({
   getRequestData: {
     getAll: (res: Response<{ responsibles: Ostatok[] }>) => {
       return {
-        data: res?.data?.responsibles ?? []
+        data: res?.data?.responsibles ?? [],
+        meta: res.meta
       } as Response<Ostatok[]>
     }
   }
@@ -78,7 +85,7 @@ export const getOstatokListQuery = async (
       {
         search?: string
         kimning_buynida?: number
-        responsible: boolean
+        type: OstatokViewOption
         budjet_id: number
         to: string
         page: number
@@ -87,7 +94,7 @@ export const getOstatokListQuery = async (
     ]
   >
 ) => {
-  const { search, kimning_buynida, responsible, budjet_id, to, page, limit } = ctx.queryKey[1] ?? {}
+  const { search, kimning_buynida, type, budjet_id, to, page, limit } = ctx.queryKey[1] ?? {}
   const res = await http.get<
     Response<
       {
@@ -100,11 +107,11 @@ export const getOstatokListQuery = async (
     params: {
       search,
       kimning_buynida,
-      responsible,
+      type,
       budjet_id,
       to,
-      page: responsible ? undefined : page,
-      limit: responsible ? undefined : limit
+      page,
+      limit
     }
   })
   return res.data

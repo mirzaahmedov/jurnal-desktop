@@ -20,6 +20,7 @@ export const notify = ({ variant = 'info', title, refetch, details }: NotifyOpti
       break
     case 'error':
       toast.error(ErrorToastContent, {
+        closeButton: false,
         data: {
           title,
           refetch,
@@ -60,13 +61,15 @@ export const ErrorToastContent = ({
             <Clipboard className="size-4" />
           </Button>
         ) : null}
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={refetch}
-        >
-          <Repeat className="size-4" />
-        </Button>
+        {refetch ? (
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={refetch}
+          >
+            <Repeat className="size-4" />
+          </Button>
+        ) : null}
         <Button
           variant="ghost"
           size="icon"

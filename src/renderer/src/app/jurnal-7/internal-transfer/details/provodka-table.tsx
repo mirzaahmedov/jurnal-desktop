@@ -5,6 +5,7 @@ import {
   EditableTableHead,
   EditableTableRow
 } from '@renderer/common/components/editable-table'
+import { Checkbox } from '@renderer/common/components/ui/checkbox'
 import { useDefaultFilters } from '@renderer/common/features/app-defaults'
 import { formatDate } from '@renderer/common/lib/date'
 import { CircleMinus, CirclePlus } from 'lucide-react'
@@ -93,6 +94,13 @@ export const ProvodkaTable = ({ form, tabIndex }: ProvodkaTableProps) => {
               {t('summa')}
             </EditableTableHead>
             <EditableTableHead
+              rowSpan={2}
+              colSpan={2}
+              className="text-center"
+            >
+              {t('iznos')} / {t('iznos-eski')}
+            </EditableTableHead>
+            <EditableTableHead
               colSpan={2}
               className="text-center"
             >
@@ -104,10 +112,19 @@ export const ProvodkaTable = ({ form, tabIndex }: ProvodkaTableProps) => {
             >
               {t('kredit')}
             </EditableTableHead>
+            <EditableTableHead
+              colSpan={2}
+              className="text-center"
+            >
+              {t('iznos')}
+            </EditableTableHead>
+            <EditableTableHead rowSpan={2}>{t('iznos_start_date')}</EditableTableHead>
             <EditableTableHead rowSpan={2}>{t('prixod-date')}</EditableTableHead>
             <EditableTableHead rowSpan={2}></EditableTableHead>
           </EditableTableRow>
           <EditableTableRow>
+            <EditableTableHead>{t('schet')}</EditableTableHead>
+            <EditableTableHead>{t('subschet')}</EditableTableHead>
             <EditableTableHead>{t('schet')}</EditableTableHead>
             <EditableTableHead>{t('subschet')}</EditableTableHead>
             <EditableTableHead>{t('schet')}</EditableTableHead>
@@ -272,6 +289,40 @@ const Provodka = ({ index, tabIndex, row, form }: ProvodkaProps) => {
       </EditableTableCell>
 
       <EditableTableCell>
+        <div className="relative flex items-center justify-center px-4">
+          <Checkbox
+            disabled
+            checked={row.iznos}
+            onCheckedChange={(checked) => {
+              if (!checked) {
+                handleChangeChildField(index, 'eski_iznos_summa', 0)
+              }
+              handleChangeChildField(index, 'iznos', Boolean(checked))
+            }}
+            tabIndex={tabIndex}
+          />
+        </div>
+      </EditableTableCell>
+      <EditableTableCell>
+        <div className="relative flex items-center justify-center">
+          <NumericInput
+            disabled={!row.iznos}
+            adjustWidth
+            value={row.eski_iznos_summa || ''}
+            onValueChange={(values) => {
+              handleChangeChildField(index, 'eski_iznos_summa', values.floatValue)
+            }}
+            className={inputVariants({
+              editor: true,
+              error: !!form.formState.errors?.childs?.[index]?.eski_iznos_summa
+            })}
+            error={!!form.formState.errors?.childs?.[index]?.eski_iznos_summa}
+            tabIndex={tabIndex}
+          />
+        </div>
+      </EditableTableCell>
+
+      <EditableTableCell>
         <div className="relative">
           <Input
             tabIndex={tabIndex}
@@ -303,6 +354,7 @@ const Provodka = ({ index, tabIndex, row, form }: ProvodkaProps) => {
           />
         </div>
       </EditableTableCell>
+
       <EditableTableCell>
         <div className="relative">
           <Input
@@ -335,6 +387,63 @@ const Provodka = ({ index, tabIndex, row, form }: ProvodkaProps) => {
           />
         </div>
       </EditableTableCell>
+
+      <EditableTableCell>
+        <div className="relative">
+          <Input
+            value={row.iznos_schet}
+            onChange={(e) => {
+              handleChangeChildField(index, 'iznos_schet', e.target.value)
+            }}
+            error={!!form.formState.errors?.childs?.[index]?.iznos_schet}
+            className={inputVariants({
+              editor: true,
+              error: !!form.formState.errors?.childs?.[index]?.iznos_schet
+            })}
+            tabIndex={tabIndex}
+          />
+        </div>
+      </EditableTableCell>
+      <EditableTableCell>
+        <div className="relative">
+          <Input
+            value={row.iznos_sub_schet}
+            onChange={(e) => {
+              handleChangeChildField(index, 'iznos_sub_schet', e.target.value)
+            }}
+            className={inputVariants({
+              editor: true,
+              error: !!form.formState.errors?.childs?.[index]?.iznos_sub_schet
+            })}
+            error={!!form.formState.errors?.childs?.[index]?.iznos_sub_schet}
+            tabIndex={tabIndex}
+          />
+        </div>
+      </EditableTableCell>
+
+      <EditableTableCell>
+        <div className="relative">
+          <DatePicker
+            disabled
+            value={row.iznos_start ?? ''}
+            onChange={(date) => {
+              handleChangeChildField(index, 'iznos_start', date)
+            }}
+            placeholder="дд.мм.гггг"
+            className={inputVariants({
+              editor: true,
+              error: !!form.formState.errors?.childs?.[index]?.iznos_start,
+              className: 'disabled:opacity-100'
+            })}
+            triggerProps={{
+              className: 'min-w-32'
+            }}
+            error={!!form.formState.errors?.childs?.[index]?.iznos_start}
+            tabIndex={tabIndex}
+          />
+        </div>
+      </EditableTableCell>
+
       <EditableTableCell>
         <div className="relative">
           <DatePicker
@@ -430,6 +539,11 @@ const NaimenovanieCells = ({
       updateFormField(index, 'debet_sub_schet', product?.group?.provodka_subschet ?? '')
       updateFormField(index, 'kredit_sub_schet', product?.group?.provodka_subschet ?? '')
       updateFormField(index, 'data_pereotsenka', formatDate(product.prixod_data?.doc_date))
+      updateFormField(index, 'iznos', product.iznos)
+      updateFormField(index, 'eski_iznos_summa', product.eski_iznos_summa)
+      updateFormField(index, 'iznos_schet', product.iznos_schet)
+      updateFormField(index, 'iznos_sub_schet', product.iznos_sub_schet)
+      updateFormField(index, 'iznos_start', product.iznos_start)
     }
   })
 

@@ -1,32 +1,21 @@
+import type { PrixodFormType } from './config'
 import type { MO7Prixod } from '@/common/models'
+import type { UseMutationOptions } from '@tanstack/react-query'
 
-import type { UseMutationOptions} from '@tanstack/react-query';
 import { useMutation, useQuery } from '@tanstack/react-query'
 
 import { APIEndpoints, CRUDService } from '@/common/features/crud'
 import { budjet, main_schet } from '@/common/features/crud/middleware'
 
-import type { PrixodFormType} from './config';
 import { queryKeys } from './config'
 
-const prixodService = new CRUDService<MO7Prixod, PrixodFormType>({
+export const prixodService = new CRUDService<MO7Prixod, PrixodFormType>({
   endpoint: APIEndpoints.jur7_prixod
 })
   .use(main_schet())
   .use(budjet())
 
-type UsePrixodListParams = {
-  params?: Record<string, unknown>
-}
-
-const usePrixodList = ({ params }: UsePrixodListParams) => {
-  return useQuery({
-    queryKey: [queryKeys.getAll, params],
-    queryFn: prixodService.getAll
-  })
-}
-
-const usePrixodGet = (id: number) => {
+export const usePrixodGet = (id: number) => {
   return useQuery({
     queryKey: [queryKeys.get, id],
     queryFn: prixodService.getById,
@@ -34,8 +23,8 @@ const usePrixodGet = (id: number) => {
   })
 }
 
-type UsePrixodParams = Pick<UseMutationOptions<any, Error, any>, 'onSuccess' | 'onError'>
-const usePrixodCreate = ({ onSuccess, onError }: UsePrixodParams) => {
+export type UsePrixodParams = Pick<UseMutationOptions<any, Error, any>, 'onSuccess' | 'onError'>
+export const usePrixodCreate = ({ onSuccess, onError }: UsePrixodParams) => {
   return useMutation({
     mutationKey: [queryKeys.create],
     mutationFn: prixodService.create,
@@ -43,7 +32,7 @@ const usePrixodCreate = ({ onSuccess, onError }: UsePrixodParams) => {
     onError
   })
 }
-const usePrixodUpdate = ({ onSuccess, onError }: UsePrixodParams) => {
+export const usePrixodUpdate = ({ onSuccess, onError }: UsePrixodParams) => {
   return useMutation({
     mutationKey: [queryKeys.update],
     mutationFn: prixodService.update,
@@ -52,20 +41,11 @@ const usePrixodUpdate = ({ onSuccess, onError }: UsePrixodParams) => {
   })
 }
 
-const usePrixodDelete = ({ onSuccess, onError }: UsePrixodParams) => {
+export const usePrixodDelete = ({ onSuccess, onError }: UsePrixodParams) => {
   return useMutation({
     mutationKey: [queryKeys.delete],
     mutationFn: prixodService.delete,
     onSuccess,
     onError
   })
-}
-
-export {
-  prixodService,
-  usePrixodList,
-  usePrixodGet,
-  usePrixodCreate,
-  usePrixodUpdate,
-  usePrixodDelete
 }

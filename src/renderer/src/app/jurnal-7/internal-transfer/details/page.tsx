@@ -13,7 +13,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
 import { useOstatokStore } from '@/app/jurnal-7/ostatok/store'
-import { validateOstatokDate } from '@/app/jurnal-7/ostatok/utils'
+import { handleOstatokResponse, validateOstatokDate } from '@/app/jurnal-7/ostatok/utils'
 import { createResponsibleSpravochnik } from '@/app/jurnal-7/responsible/service'
 import { Form } from '@/common/components/ui/form'
 import { useLayoutStore } from '@/common/features/layout'
@@ -45,6 +45,7 @@ const Jurnal7InternalTransferDetailsPage = () => {
   const { mutate: createInternalTransfer, isPending: isCreating } = useInternalTransferCreate({
     onSuccess: (res) => {
       toast.success(res?.message)
+      handleOstatokResponse(res)
       queryClient.invalidateQueries({
         queryKey: [queryKeys.getAll]
       })
@@ -59,6 +60,7 @@ const Jurnal7InternalTransferDetailsPage = () => {
   const { mutate: updateInternalTransfer, isPending: isUpdating } = useInternalTransferUpdate({
     onSuccess: (res) => {
       toast.success(res?.message)
+      handleOstatokResponse(res)
       queryClient.invalidateQueries({
         queryKey: [queryKeys.getAll]
       })
@@ -97,8 +99,6 @@ const Jurnal7InternalTransferDetailsPage = () => {
     })
   )
 
-  console.log(form.watch('kimga_id'), form.watch('kimdan_id'))
-
   const onSubmit = form.handleSubmit((values) => {
     if (id === 'create') {
       createInternalTransfer(values)
@@ -116,7 +116,14 @@ const Jurnal7InternalTransferDetailsPage = () => {
   }, [values])
 
   useEffect(() => {
-    form.reset(internalTransfer?.data ? internalTransfer.data : defaultValues)
+    form.reset(
+      internalTransfer?.data
+        ? {
+            ...internalTransfer.data,
+            kimga_id: internalTransfer.data.kimga_id ?? internalTransfer.data.kimga.id
+          }
+        : defaultValues
+    )
   }, [form, internalTransfer])
   useEffect(() => {
     if (id !== 'create') {

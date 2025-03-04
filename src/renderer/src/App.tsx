@@ -1,9 +1,11 @@
 import { Suspense, useEffect } from 'react'
 
 import { QueryClientProvider } from '@tanstack/react-query'
+import { ErrorBoundary } from 'react-error-boundary'
 import { RouterProvider } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify'
 
+import { OstatokUpdateManager } from './app/jurnal-7/ostatok/ostatok-update-manager'
 import { router } from './app/router'
 import { LoadingOverlay } from './common/components'
 import { Toaster } from './common/components/ui/toaster'
@@ -32,7 +34,12 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <Suspense fallback={<LoadingOverlay />}>
-        <RouterProvider router={router} />
+        <ErrorBoundary
+          onError={(err) => console.log(err)}
+          fallback={'error'}
+        >
+          <RouterProvider router={router} />
+        </ErrorBoundary>
       </Suspense>
       <Toaster />
       <ToastContainer
@@ -44,6 +51,7 @@ function App() {
       />
       <ConfirmationDialog />
       <UpdateManager />
+      <OstatokUpdateManager />
     </QueryClientProvider>
   )
 }

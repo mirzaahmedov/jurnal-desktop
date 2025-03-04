@@ -10,8 +10,7 @@ export interface LocationStore {
   setValues: (pathname: string, setter: StateSetter<State>) => void
 }
 
-// Todo: remove persist
-const useLocationStore = create<LocationStore>((set, get) => ({
+export const useLocationStore = create<LocationStore>((set, get) => ({
   values: {},
   setValues(pathname, setter) {
     set({
