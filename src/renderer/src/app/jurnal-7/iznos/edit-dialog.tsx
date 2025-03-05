@@ -50,7 +50,7 @@ export const EditIznosDialog = ({ selected, ...props }: EditIznosDialogProps) =>
   const onSubmit = form.handleSubmit((values) => {
     if (!selected) return
     updateIznos({
-      id: selected?.id,
+      id: selected.id,
       ...values
     })
   })
@@ -61,7 +61,7 @@ export const EditIznosDialog = ({ selected, ...props }: EditIznosDialogProps) =>
       return
     }
     form.reset({
-      iznos_start_date: selected.iznos_start_date,
+      iznos_start_date: selected.iznos_start,
       eski_iznos_summa: selected.eski_iznos_summa
     })
   }, [form, selected])

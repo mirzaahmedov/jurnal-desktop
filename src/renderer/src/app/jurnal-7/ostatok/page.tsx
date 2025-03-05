@@ -34,7 +34,7 @@ import { toast } from 'react-toastify'
 
 import { createPodrazdelenie7Spravochnik } from '../podrazdelenie/service'
 import { createResponsibleSpravochnik } from '../responsible/service'
-import { ostatokPodotchetColumns, ostatokProductColumns } from './columns'
+import { ostatokGroupColumns, ostatokProductColumns, ostatokResponsibleColumns } from './columns'
 import { defaultValues, ostatokQueryKeys } from './config'
 import { ErrorAlert, type ErrorData, type ErrorDataDocument } from './error-alert'
 import { OstatokViewOption, getOstatokListQuery, ostatokService } from './service'
@@ -294,6 +294,7 @@ const OstatokPage = () => {
             <TabsList>
               <TabsTrigger value={OstatokViewOption.RESPONSIBLE}>{t('responsible')}</TabsTrigger>
               <TabsTrigger value={OstatokViewOption.PRODUCT}>{t('products')}</TabsTrigger>
+              <TabsTrigger value={OstatokViewOption.GROUP}>{t('group')}</TabsTrigger>
             </TabsList>
 
             <form
@@ -346,7 +347,7 @@ const OstatokPage = () => {
           <TabsContent
             ref={setElementRef}
             value={OstatokViewOption.RESPONSIBLE}
-            className="data-[state=active]:flex-1 flex flex-col overflow-hidden"
+            className="flex-1 hidden data-[state=active]:flex flex-col overflow-hidden"
           >
             <ListView.Content
               loading={isFetching || isDeleting}
@@ -354,7 +355,7 @@ const OstatokPage = () => {
             >
               <CollapsibleTable
                 data={ostatok?.data?.responsibles ?? []}
-                columnDefs={ostatokPodotchetColumns}
+                columnDefs={ostatokResponsibleColumns}
                 getRowId={(row) => row.id}
                 getChildRows={(row) => row.products}
                 width={width}
@@ -377,7 +378,7 @@ const OstatokPage = () => {
           </TabsContent>
           <TabsContent
             value={OstatokViewOption.PRODUCT}
-            className="data-[state=active]:flex-1 flex flex-col overflow-hidden"
+            className="flex-1 hidden data-[state=active]:flex flex-col overflow-hidden"
           >
             <ListView.Content loading={isFetching || isDeleting}>
               <GenericTable
@@ -385,6 +386,40 @@ const OstatokPage = () => {
                 columnDefs={ostatokProductColumns}
                 getRowId={(row) => row.id}
                 onDelete={handleDelete}
+              />
+            </ListView.Content>
+            <ListView.Footer>
+              <ListView.Pagination
+                pageCount={ostatok?.meta?.pageCount ?? 0}
+                {...pagination}
+              />
+            </ListView.Footer>
+          </TabsContent>
+          <TabsContent
+            value={OstatokViewOption.GROUP}
+            className="flex-1 hidden data-[state=active]:flex flex-col overflow-hidden"
+          >
+            <ListView.Content loading={isFetching || isDeleting}>
+              <CollapsibleTable
+                data={ostatok?.data?.groups ?? []}
+                columnDefs={ostatokGroupColumns}
+                getRowId={(row) => row.id}
+                getChildRows={(row) => row.products}
+                width={width}
+                renderChildRows={(rows) => (
+                  <div
+                    style={{ width }}
+                    className="overflow-x-auto scrollbar pl-14"
+                  >
+                    <CollapsibleTable
+                      data={rows}
+                      columnDefs={ostatokProductColumns}
+                      getRowId={(row) => row.id}
+                      getChildRows={() => undefined}
+                      onDelete={handleDelete}
+                    />
+                  </div>
+                )}
               />
             </ListView.Content>
             <ListView.Footer>

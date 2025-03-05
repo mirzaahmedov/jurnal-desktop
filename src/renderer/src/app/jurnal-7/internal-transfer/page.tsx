@@ -8,13 +8,17 @@ import { ListView } from '@renderer/common/views'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
 
 import { useOstatokStore } from '@/app/jurnal-7/ostatok/store'
-import { handleOstatokError, validateOstatokDate } from '@/app/jurnal-7/ostatok/utils'
+import {
+  handleOstatokError,
+  handleOstatokResponse,
+  validateOstatokDate
+} from '@/app/jurnal-7/ostatok/utils'
 import { GenericTable } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
 import { useLayoutStore } from '@/common/features/layout'
-import { toast } from '@/common/hooks/use-toast'
 
 import { columns, queryKeys } from './config'
 import { internalTransferService, useInternalTransferDelete } from './service'
@@ -37,20 +41,17 @@ const Jurnal7InternalTransferPage = () => {
   })
 
   const { mutate: deleteInternalTransfer, isPending } = useInternalTransferDelete({
-    onSuccess() {
+    onSuccess(res) {
+      handleOstatokResponse(res)
+
       queryClient.invalidateQueries({
         queryKey: [queryKeys.getAll]
       })
-      toast({
-        title: 'Внутренний перевод успешно удален'
-      })
+      toast.success(res?.message)
       recheckOstatok?.()
     },
-    onError() {
-      toast({
-        title: 'Ошибка при удалении внутреннего перевода',
-        variant: 'destructive'
-      })
+    onError(error) {
+      toast.error(error?.message ?? t('something-went-wrong'))
     }
   })
 
@@ -110,7 +111,6 @@ const Jurnal7InternalTransferPage = () => {
           onEdit={(row) => navigate(`${row.id}`)}
           onDelete={(row) => {
             confirm({
-              title: 'Удалить внутренний перевод?',
               onConfirm: () => deleteInternalTransfer(row.id)
             })
           }}

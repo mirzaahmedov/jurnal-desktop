@@ -1,8 +1,25 @@
-export interface Ostatok {
+export interface OstatokResponsible {
   id: number
   fio: string
   spravochnik_podrazdelenie_jur7_id: number
   spravochnik_podrazdelenie_jur7_name: string
+  products: OstatokProduct[]
+}
+
+export interface OstatokGroup {
+  id: number
+  smeta_id: number
+  name: string
+  schet: string
+  iznos_foiz: number
+  provodka_debet: string
+  group_number: string
+  provodka_kredit: string
+  provodka_subschet: string
+  roman_numeral: any
+  pod_group: string
+  smeta_name: string
+  smeta_number: string
   products: OstatokProduct[]
 }
 

@@ -79,7 +79,8 @@ const IznosPage = () => {
         type: OstatokViewOption.PRODUCT,
         budjet_id: budjet_id!,
         page: pagination.page,
-        limit: pagination.limit
+        limit: pagination.limit,
+        iznos: true
       }
     ],
     queryFn: getOstatokListQuery,

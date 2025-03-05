@@ -93,7 +93,7 @@ const ResponsiblePage = () => {
 
   return (
     <ListView>
-      <ListView.Header>
+      <ListView.Header className="flex items-center justify-end">
         <DownloadFile
           url="/jur_7/responsible"
           params={{

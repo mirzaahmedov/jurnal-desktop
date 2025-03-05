@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react'
 
 import {
   defaultValues,
-  ostatokPodotchetColumns,
-  ostatokProductColumns
+  ostatokProductColumns,
+  ostatokResponsibleColumns
 } from '@renderer/app/jurnal-7/ostatok'
 import { createPodrazdelenie7Spravochnik } from '@renderer/app/jurnal-7/podrazdelenie/service'
 import { createResponsibleSpravochnik } from '@renderer/app/jurnal-7/responsible/service'
@@ -163,7 +163,7 @@ const AdminOstatokPage = () => {
             >
               <CollapsibleTable
                 data={ostatok?.data?.responsibles ?? []}
-                columnDefs={ostatokPodotchetColumns}
+                columnDefs={ostatokResponsibleColumns}
                 getRowId={(row) => row.id}
                 getChildRows={(row) => row.products}
                 renderChildRows={(rows) => (

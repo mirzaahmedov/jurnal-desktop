@@ -29,9 +29,7 @@ export const podotchetMonitoringColumns: ColumnDef<PodotchetMonitor>[] = [
     header: 'debet',
     key: 'prixod_sum',
     renderCell(row) {
-      return !row.prixod_sum ? (
-        '-'
-      ) : (
+      return row.prixod_sum ? (
         <ProvodkaCell
           summa={row.prixod_sum}
           provodki={[
@@ -41,6 +39,8 @@ export const podotchetMonitoringColumns: ColumnDef<PodotchetMonitor>[] = [
             }
           ]}
         />
+      ) : (
+        '-'
       )
     }
   },
@@ -49,11 +49,9 @@ export const podotchetMonitoringColumns: ColumnDef<PodotchetMonitor>[] = [
     header: 'kredit',
     key: 'rasxod_sum',
     renderCell(row) {
-      return !row.rasxod_sum ? (
-        '-'
-      ) : (
+      return row.rasxod_sum ? (
         <ProvodkaCell
-          summa={row.prixod_sum}
+          summa={row.rasxod_sum}
           provodki={[
             {
               provodki_schet: row.provodki_schet,
@@ -61,6 +59,8 @@ export const podotchetMonitoringColumns: ColumnDef<PodotchetMonitor>[] = [
             }
           ]}
         />
+      ) : (
+        '-'
       )
     }
   },

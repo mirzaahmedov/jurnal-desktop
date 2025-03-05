@@ -18,6 +18,7 @@ export interface Iznos {
   iznos: boolean
   doc_num: string
   region_id: number
+  iznos_start: string
   iznos_schet: string
   iznos_sub_schet: string
   iznos_summa: number

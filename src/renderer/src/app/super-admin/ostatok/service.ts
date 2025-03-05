@@ -1,4 +1,9 @@
-import type { Ostatok, OstatokProduct, Response, ResponseMeta } from '@renderer/common/models'
+import type {
+  OstatokProduct,
+  OstatokResponsible,
+  Response,
+  ResponseMeta
+} from '@renderer/common/models'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 
 import { APIEndpoints } from '@renderer/common/features/crud'
@@ -23,7 +28,7 @@ export const getAdminOstatokListQuery = async (
   const res = await http.get<
     Response<
       {
-        responsibles: Ostatok[]
+        responsibles: OstatokResponsible[]
         products: OstatokProduct[]
       },
       ResponseMeta

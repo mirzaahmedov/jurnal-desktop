@@ -12,7 +12,11 @@ import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
 import { useOstatokStore } from '@/app/jurnal-7/ostatok/store'
-import { handleOstatokError, validateOstatokDate } from '@/app/jurnal-7/ostatok/utils'
+import {
+  handleOstatokError,
+  handleOstatokResponse,
+  validateOstatokDate
+} from '@/app/jurnal-7/ostatok/utils'
 import { GenericTable } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
 
@@ -38,6 +42,7 @@ const Jurnal7RasxodPage = () => {
 
   const { mutate: deleteRasxod, isPending } = useRasxodDelete({
     onSuccess(res) {
+      handleOstatokResponse(res)
       queryClient.invalidateQueries({
         queryKey: [queryKeys.getAll]
       })

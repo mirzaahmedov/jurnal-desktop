@@ -1,10 +1,14 @@
 import type { ColumnDef } from '@renderer/common/components'
-import type { Ostatok, OstatokProduct } from '@renderer/common/models/ostatok'
+import type {
+  OstatokGroup,
+  OstatokProduct,
+  OstatokResponsible
+} from '@renderer/common/models/ostatok'
 
 import { IDCell } from '@renderer/common/components/table/renderers/id'
 import { formatLocaleDate, formatNumber } from '@renderer/common/lib/format'
 
-export const ostatokPodotchetColumns: ColumnDef<Ostatok>[] = [
+export const ostatokResponsibleColumns: ColumnDef<OstatokResponsible>[] = [
   {
     key: 'id',
     renderCell: IDCell,
@@ -17,6 +21,40 @@ export const ostatokPodotchetColumns: ColumnDef<Ostatok>[] = [
   {
     key: 'spravochnik_podrazdelenie_jur7_name',
     header: 'podrazdelenie'
+  }
+]
+
+export const ostatokGroupColumns: ColumnDef<OstatokGroup>[] = [
+  {
+    key: 'id',
+    renderCell: IDCell,
+    width: 160
+  },
+  {
+    key: 'name',
+    width: 600
+  },
+  {
+    key: 'group_number'
+  },
+  {
+    key: 'iznos_foiz',
+    header: 'iznos'
+  },
+  {
+    key: 'schet'
+  },
+  {
+    key: 'provodka_debet',
+    header: 'debet'
+  },
+  {
+    key: 'iznos_foiz',
+    header: 'kredit'
+  },
+  {
+    key: 'iznos_foiz',
+    header: 'subschet'
   }
 ]
 

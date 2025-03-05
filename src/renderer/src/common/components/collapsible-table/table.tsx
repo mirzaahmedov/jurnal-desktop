@@ -167,7 +167,7 @@ const CollapsibleItem = <T extends object, C extends object>({
             >
               {typeof renderCell === 'function'
                 ? renderCell(row, col)
-                : String(row[col.key as keyof T])}
+                : String(row?.[col?.key as keyof T])}
             </GenericTableCell>
           )
         })}
@@ -242,7 +242,7 @@ const CollapsibleItem = <T extends object, C extends object>({
                 )}
                 {typeof renderCell === 'function'
                   ? renderCell(row, col)
-                  : String(row[col.key as keyof T])}
+                  : String(row?.[col?.key as keyof T] ?? '')}
               </GenericTableCell>
             )
           })}

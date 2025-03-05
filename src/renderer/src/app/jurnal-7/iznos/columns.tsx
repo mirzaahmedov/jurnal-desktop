@@ -65,7 +65,7 @@ export const columns: ColumnDef<Iznos>[] = [
     key: '',
     header: 'Дата начала износа',
     renderCell(row) {
-      return formatLocaleDate(row.doc_date)
+      return formatLocaleDate(row.iznos_start)
     }
   },
   {
