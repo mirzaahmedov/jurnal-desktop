@@ -94,6 +94,7 @@ export interface Iznos {
     kol: number
     summa: number
     iznos_summa: number
+    iznos_summa_bir_oylik: number
     sena: number
   }
 }

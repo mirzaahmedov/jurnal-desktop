@@ -3,7 +3,7 @@ import type { Iznos } from '@renderer/common/models'
 
 import { IDCell } from '@renderer/common/components/table/renderers/id'
 import { getMonthName } from '@renderer/common/lib/date'
-import { formatLocaleDate } from '@renderer/common/lib/format'
+import { formatLocaleDate, formatNumber } from '@renderer/common/lib/format'
 
 export const columns: ColumnDef<Iznos>[] = [
   {
@@ -74,17 +74,18 @@ export const columns: ColumnDef<Iznos>[] = [
     numeric: true,
     key: 'iznos_summa',
     header: 'Сумма износа (Общий)',
-    renderCell: (row) => row.to.iznos_summa
+    renderCell: (row) => formatNumber(row.to.iznos_summa ?? 0)
   },
   {
     numeric: true,
     key: 'iznos_summa_bir_oylik',
     header: 'Сумма износа (Месяц)',
-    renderCell: (row) => row.to.iznos_summa_bir_oylik
+    renderCell: (row) => formatNumber(row.to.iznos_summa_bir_oylik ?? 0)
   },
   {
     numeric: true,
     key: 'eski_iznos_summa',
-    header: 'Сумма износа (Старый)'
+    header: 'Сумма износа (Старый)',
+    renderCell: (row) => formatNumber(row.eski_iznos_summa)
   }
 ]
