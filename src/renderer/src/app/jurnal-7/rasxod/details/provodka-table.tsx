@@ -58,7 +58,7 @@ export const ProvodkaTable = ({ form, tabIndex }: ProvodkaTableProps) => {
             </EditableTableHead>
             <EditableTableHead
               rowSpan={2}
-              className="w-48"
+              className="w-20"
             >
               {t('group')}
             </EditableTableHead>
@@ -98,7 +98,7 @@ export const ProvodkaTable = ({ form, tabIndex }: ProvodkaTableProps) => {
               colSpan={2}
               className="text-center"
             >
-              {t('iznos')} / {t('iznos-eski')}
+              {t('iznos')}
             </EditableTableHead>
             <EditableTableHead
               colSpan={2}
