@@ -73,12 +73,14 @@ export const columns: ColumnDef<Iznos>[] = [
   {
     numeric: true,
     key: 'iznos_summa',
-    header: 'Сумма износа (Общий)'
+    header: 'Сумма износа (Общий)',
+    renderCell: (row) => row.to.iznos_summa
   },
   {
     numeric: true,
     key: 'iznos_summa_bir_oylik',
-    header: 'Сумма износа (Месяц)'
+    header: 'Сумма износа (Месяц)',
+    renderCell: (row) => row.to.iznos_summa_bir_oylik
   },
   {
     numeric: true,
