@@ -257,8 +257,8 @@ const OrganizationMonitoringPage = () => {
           columnDefs={organizationMonitorColumns}
           data={organizationMonitorList?.data ?? []}
           onEdit={handleClickEdit}
-          getRowId={(row) => {
-            return `${row.id}-${row.type}-${Math.random()}`
+          getRowKey={(row) => {
+            return `${row.id}-${row.type}`
           }}
           footer={
             <FooterRow>

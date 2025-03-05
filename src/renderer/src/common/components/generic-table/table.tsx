@@ -57,7 +57,8 @@ export type GenericTableProps<T extends object> = TableHTMLAttributes<HTMLTableE
     placeholder?: string
     selectedId?: number
     disabledIds?: number[]
-    getRowId?(row: T): string | number
+    getRowId?: (row: T) => string | number
+    getRowKey?: (row: T) => string | number
     onClickRow?(row: T): void
     onDelete?(row: T): void
     onEdit?(row: T): void
@@ -72,6 +73,7 @@ export const GenericTable = <T extends object>({
   headerGroups = [columnDefs],
   placeholder,
   getRowId = defaultRowIdGetter,
+  getRowKey = getRowId,
   disabledIds = [],
   selectedId = 0,
   onClickRow,
@@ -159,7 +161,7 @@ export const GenericTable = <T extends object>({
           data.map((row) => {
             return (
               <GenericTableRow
-                key={getRowId(row)}
+                key={getRowKey(row)}
                 onClick={() => onClickRow?.(row)}
                 ref={(el) => {
                   if (activeRowId === getRowId(row)) {

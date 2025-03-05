@@ -180,6 +180,7 @@ const PodotchetMonitoringPage = () => {
         <GenericTable
           columnDefs={podotchetMonitoringColumns}
           data={monitorList?.data ?? []}
+          getRowKey={(row) => `${row.type}-${row.id}`}
           footer={
             <>
               <FooterRow>
