@@ -34,12 +34,14 @@ export const columns: ColumnDef<Iznos>[] = [
   },
   {
     key: 'kol',
-    header: 'Количество'
+    header: 'Количество',
+    renderCell: (row) => row.to.kol
   },
   {
     numeric: true,
     key: 'sena',
-    header: 'Цена'
+    header: 'Цена',
+    renderCell: (row) => row.to.sena
   },
   {
     key: 'year',
