@@ -222,5 +222,6 @@
   "continue": "Продолжать",
   "you_can_continue_working_now": "Теперь вы можете закрыть это окно и продолжить работу.",
   "recomputing_saldo": "Пересчет сальдо, пожалуйста, подождите...",
-  "iznos_start_date": "Дата начало износа"
+  "iznos_start_date": "Дата начало износа",
+  "selected_products": "Выбранные продукты"
 }

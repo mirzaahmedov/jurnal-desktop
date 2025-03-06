@@ -5,7 +5,7 @@ import { SearchField, useSearch } from '@renderer/common/features/search'
 import { useDates, usePagination } from '@renderer/common/hooks'
 import { formatDate } from '@renderer/common/lib/date'
 import { ListView } from '@renderer/common/views'
-import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
@@ -21,7 +21,7 @@ import { useConfirm } from '@/common/features/confirm'
 import { useLayoutStore } from '@/common/features/layout'
 
 import { columns, queryKeys } from './config'
-import { internalTransferService, useInternalTransferDelete } from './service'
+import { internalTransferService } from './service'
 
 const Jurnal7InternalTransferPage = () => {
   const pagination = usePagination()
@@ -40,15 +40,18 @@ const Jurnal7InternalTransferPage = () => {
     defaultTo: formatDate(maxDate)
   })
 
-  const { mutate: deleteInternalTransfer, isPending } = useInternalTransferDelete({
+  const { mutate: deleteTransfer, isPending } = useMutation({
+    mutationKey: [queryKeys.delete],
+    mutationFn: internalTransferService.delete,
     onSuccess(res) {
       handleOstatokResponse(res)
-
-      queryClient.invalidateQueries({
-        queryKey: [queryKeys.getAll]
-      })
       toast.success(res?.message)
       recheckOstatok?.()
+      requestAnimationFrame(() => {
+        queryClient.invalidateQueries({
+          queryKey: [queryKeys.getAll]
+        })
+      })
     },
     onError(error) {
       toast.error(error?.message ?? t('something-went-wrong'))
@@ -111,7 +114,7 @@ const Jurnal7InternalTransferPage = () => {
           onEdit={(row) => navigate(`${row.id}`)}
           onDelete={(row) => {
             confirm({
-              onConfirm: () => deleteInternalTransfer(row.id)
+              onConfirm: () => deleteTransfer(row.id)
             })
           }}
         />

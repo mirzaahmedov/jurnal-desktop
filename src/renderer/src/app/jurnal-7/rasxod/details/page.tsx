@@ -105,7 +105,21 @@ const Jurnal7RasxodDetailsPage = () => {
   }, [childs])
 
   useEffect(() => {
-    form.reset(rasxod?.data ? rasxod.data : defaultValues)
+    if (rasxod?.data) {
+      form.reset({
+        ...rasxod.data,
+        childs: rasxod.data.childs.map((child) => ({
+          ...child,
+          name: child.product.name,
+          group_number: child.group.group_number,
+          edin: child.product.edin,
+          inventar_num: child.product.inventar_num,
+          serial_num: child.product.serial_num
+        }))
+      })
+      return
+    }
+    form.reset(defaultValues)
   }, [form, rasxod])
 
   const kimdan_id = form.watch('kimdan_id')

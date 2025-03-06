@@ -540,7 +540,7 @@ const NaimenovanieCells = ({
       updateFormField(index, 'kredit_sub_schet', product?.group?.provodka_subschet ?? '')
       updateFormField(index, 'data_pereotsenka', formatDate(product.prixod_data?.doc_date))
       updateFormField(index, 'iznos', product.iznos)
-      updateFormField(index, 'eski_iznos_summa', product.eski_iznos_summa)
+      updateFormField(index, 'eski_iznos_summa', product.to.iznos_summa)
       updateFormField(index, 'iznos_schet', product.iznos_schet)
       updateFormField(index, 'iznos_sub_schet', product.iznos_sub_schet)
       updateFormField(index, 'iznos_start', product.iznos_start)

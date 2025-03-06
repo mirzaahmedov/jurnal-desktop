@@ -20,7 +20,13 @@ import { twMerge } from 'tailwind-merge'
 import { EmptyList } from '../empty-states'
 import { GenericTableCell, GenericTableHead, GenericTableRow } from './components'
 
-export type ColumnDef<T extends object> = {
+export type CellRenderer<T extends object> = (
+  row: T,
+  col: ColumnDef<T>,
+  tableProps: GenericTableProps<T>
+) => ReactNode
+
+export interface ColumnDef<T extends object> {
   numeric?: boolean
   fit?: boolean
   stretch?: boolean
@@ -32,10 +38,10 @@ export type ColumnDef<T extends object> = {
   rowSpan?: number
   colSpan?: number
   renderHeader?(row: T): ReactNode
-  renderCell?(row: T, col: ColumnDef<T>): ReactNode
+  renderCell?: CellRenderer<T>
 }
 
-export type HeaderGroup<T extends object> = {
+export interface HeaderGroup<T extends object> {
   numeric?: boolean
   fit?: boolean
   stretch?: boolean
@@ -48,42 +54,45 @@ export type HeaderGroup<T extends object> = {
   renderHeader?(row: T): ReactNode
 }
 
-export type GenericTableProps<T extends object> = TableHTMLAttributes<HTMLTableElement> &
-  TableProps & {
-    caption?: string
-    data: T[]
-    columnDefs: ColumnDef<T>[]
-    headerGroups?: HeaderGroup<T>[][]
-    placeholder?: string
-    selectedId?: number
-    disabledIds?: number[]
-    getRowId?: (row: T) => string | number
-    getRowKey?: (row: T) => string | number
-    onClickRow?(row: T): void
-    onDelete?(row: T): void
-    onEdit?(row: T): void
-    customActions?: (row: T) => ReactNode
-    activeRowId?: string | number
-    footer?: ReactNode
-  }
-export const GenericTable = <T extends object>({
-  caption,
-  data,
-  columnDefs,
-  headerGroups = [columnDefs],
-  placeholder,
-  getRowId = defaultRowIdGetter,
-  getRowKey = getRowId,
-  disabledIds = [],
-  selectedId = 0,
-  onClickRow,
-  onDelete,
-  onEdit,
-  activeRowId,
-  footer,
-  customActions,
-  ...props
-}: GenericTableProps<T>) => {
+export interface GenericTableProps<T extends object>
+  extends TableHTMLAttributes<HTMLTableElement>,
+    TableProps {
+  caption?: string
+  data: T[]
+  columnDefs: ColumnDef<T>[]
+  headerGroups?: HeaderGroup<T>[][]
+  placeholder?: string
+  selectedIds?: number[]
+  disabledIds?: number[]
+  getRowId?: (row: T) => string | number
+  getRowKey?: (row: T) => string | number
+  onClickRow?(row: T): void
+  onDelete?(row: T): void
+  onEdit?(row: T): void
+  customActions?: (row: T) => ReactNode
+  activeRowId?: string | number
+  footer?: ReactNode
+}
+export const GenericTable = <T extends object>(props: GenericTableProps<T>) => {
+  const {
+    caption,
+    data,
+    columnDefs,
+    headerGroups = [columnDefs],
+    placeholder,
+    getRowId = defaultRowIdGetter,
+    getRowKey = getRowId,
+    disabledIds = [],
+    selectedIds = [],
+    onClickRow,
+    onDelete,
+    onEdit,
+    activeRowId,
+    footer,
+    customActions,
+    ...restProps
+  } = props
+
   const [selectedRowRef, setSelectedRowRef] = useState<HTMLElement | null>(null)
 
   const { t } = useTranslation()
@@ -99,11 +108,11 @@ export const GenericTable = <T extends object>({
 
   return (
     <Table
-      {...props}
-      className={twMerge('relative', props.className)}
+      {...restProps}
+      className={twMerge('relative', restProps.className)}
     >
       {caption ? <TableCaption>{caption}</TableCaption> : null}
-      <TableHeader className="sticky top-0 z-50 artificial-border">
+      <TableHeader className="artificial-border sticky top-0 z-50">
         {Array.isArray(headerGroups)
           ? headerGroups.map((headerGroup, index) => (
               <GenericTableRow
@@ -171,10 +180,12 @@ export const GenericTable = <T extends object>({
                 className={cn(
                   'group',
                   activeRowId === getRowId(row) &&
-                    'ring-2 ring-inset ring-offset-1 ring-brand transition-none',
-                  disabledIds.includes(Number(getRowId(row))) && 'opacity-50 pointer-events-none'
+                    'bg-slate-100 even:bg-slate-100 hover:bg-slate-100 hover:even:bg-slate-100 !border-t !font-bold transition-none',
+                  disabledIds.includes(Number(getRowId(row))) && 'opacity-50 pointer-events-none',
+                  selectedIds.includes(Number(getRowId(row))) &&
+                    'bg-brand/5 even:bg-brand/5 hover:bg-brand/5 hover:even:bg-brand/5 border-brand/20 [&>td]:border-brand/20'
                 )}
-                data-selected={selectedId === Number(getRowId(row))}
+                data-selected={selectedIds.includes(Number(getRowId(row)))}
               >
                 {Array.isArray(columnDefs)
                   ? columnDefs.map((col) => {
@@ -186,13 +197,13 @@ export const GenericTable = <T extends object>({
                           stretch={stretch}
                           numeric={numeric}
                           className={cn(
-                            activeRowId === getRowId(row) && 'text-brand/100',
+                            activeRowId === getRowId(row) && 'text-brand/100 font-bold',
                             className
                           )}
                           style={{ width }}
                         >
                           {typeof renderCell === 'function'
-                            ? renderCell(row, col)
+                            ? renderCell(row, col, props)
                             : defaultCellRenderer(row, col)}
                         </GenericTableCell>
                       )
@@ -256,13 +267,13 @@ export const GenericTable = <T extends object>({
   )
 }
 
-const defaultCellRenderer = <T extends object>(row: T, col: ColumnDef<T>): ReactNode => {
+export const defaultCellRenderer = <T extends object>(row: T, col: ColumnDef<T>): ReactNode => {
   if (col.numeric) {
     return row[col.key as keyof T] ? formatNumber(Number(row[col.key as keyof T])) : '-'
   }
   return row[col.key as keyof T] ? String(row[col.key as keyof T]) : '-'
 }
-const defaultRowIdGetter = <T,>(row: T): string => {
+export const defaultRowIdGetter = <T,>(row: T): string => {
   if (row !== null && typeof row === 'object' && 'id' in row) {
     return String(row['id'])
   }

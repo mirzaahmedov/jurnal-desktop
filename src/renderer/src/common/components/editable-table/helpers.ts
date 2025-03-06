@@ -33,9 +33,6 @@ export const createEditorCreateHandler =
 export const createEditorDeleteHandler =
   ({ form, field = 'childs' }: { form: UseFormReturn<any>; field?: string }) =>
   ({ id }: { id: number }) => {
-    if (form.getValues(field).length === 1) {
-      return
-    }
     form.setValue(
       field,
       (form.getValues(field) as []).filter((_, index) => index !== id)

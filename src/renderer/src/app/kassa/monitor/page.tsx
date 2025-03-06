@@ -91,7 +91,8 @@ const KassaMonitorPage = () => {
         <GenericTable
           data={monitorList?.data ?? []}
           columnDefs={columns}
-          getRowId={(row) => `${row.id}-${row.rasxod_sum ? 'rasxod' : 'prixod'}`}
+          getRowKey={(row) => `${row.id}-${row.rasxod_sum ? 'rasxod' : 'prixod'}`}
+          getRowId={(row) => row.id}
           footer={
             <>
               <FooterRow>

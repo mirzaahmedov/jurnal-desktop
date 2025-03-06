@@ -1,5 +1,5 @@
 import type { RasxodFormValues } from './config'
-import type { MO7Rasxod } from '@/common/models'
+import type { Jur7Rasxod } from '@/common/models'
 
 import { useMutation, useQuery } from '@tanstack/react-query'
 
@@ -8,7 +8,7 @@ import { main_schet } from '@/common/features/crud/middleware'
 
 import { queryKeys } from './config'
 
-const rasxodService = new CRUDService<MO7Rasxod, RasxodFormValues>({
+const rasxodService = new CRUDService<Jur7Rasxod, RasxodFormValues>({
   endpoint: APIEndpoints.jur7_rasxod
 }).use(main_schet())
 

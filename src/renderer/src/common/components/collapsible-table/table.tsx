@@ -1,6 +1,5 @@
-import type { ColumnDef } from './types'
-
-import { type ReactNode } from 'react'
+import type { ColumnDef } from '@renderer/common/components'
+import type { ReactNode } from 'react'
 
 import {
   GenericTableCell,
@@ -166,7 +165,7 @@ const CollapsibleItem = <T extends object, C extends object>({
               style={{ width }}
             >
               {typeof renderCell === 'function'
-                ? renderCell(row, col)
+                ? renderCell(row, col, tableProps)
                 : String(row?.[col?.key as keyof T])}
             </GenericTableCell>
           )
@@ -241,7 +240,7 @@ const CollapsibleItem = <T extends object, C extends object>({
                   </CollapsibleTrigger>
                 )}
                 {typeof renderCell === 'function'
-                  ? renderCell(row, col)
+                  ? renderCell(row, col, tableProps)
                   : String(row?.[col?.key as keyof T] ?? '')}
               </GenericTableCell>
             )

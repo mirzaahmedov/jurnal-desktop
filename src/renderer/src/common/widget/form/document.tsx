@@ -44,7 +44,7 @@ export const DocumentFields: FormEditableFieldsComponent<
     documentType: documentType!,
     onChange: (doc_num) => {
       // Todo: fix this
-      if (!(form as unknown as UseFormReturn<RequiredDocumentFields>).getValues('doc_num')) {
+      if (!(form as unknown as UseFormReturn<RequiredDocumentFields>).getValues('doc_num').trim()) {
         ;(form as unknown as UseFormReturn<RequiredDocumentFields>).setValue(
           'doc_num',
           doc_num ? doc_num.toString() : ''

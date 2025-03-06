@@ -1,10 +1,10 @@
 import type { DialogProps } from '@radix-ui/react-dialog'
-import type { Iznos } from '@renderer/common/models'
+import type { OstatokProduct } from '@renderer/common/models'
 
 import { useEffect } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { DatePicker, NumericInput } from '@renderer/common/components'
+import { NumericInput } from '@renderer/common/components'
 import { FormElement } from '@renderer/common/components/form'
 import { Button } from '@renderer/common/components/ui/button'
 import {
@@ -22,7 +22,7 @@ import { IznosFormSchema, defaultValues, iznosQueryKeys } from './config'
 import { iznosService } from './service'
 
 type EditIznosDialogProps = DialogProps & {
-  selected: Iznos | null
+  selected: OstatokProduct | null
 }
 export const EditIznosDialog = ({ selected, ...props }: EditIznosDialogProps) => {
   const queryClient = useQueryClient()
@@ -61,8 +61,7 @@ export const EditIznosDialog = ({ selected, ...props }: EditIznosDialogProps) =>
       return
     }
     form.reset({
-      iznos_start_date: selected.iznos_start,
-      eski_iznos_summa: selected.eski_iznos_summa
+      iznos_summa: selected?.to?.iznos_summa ?? defaultValues.iznos_summa
     })
   }, [form, selected])
 
@@ -80,22 +79,10 @@ export const EditIznosDialog = ({ selected, ...props }: EditIznosDialogProps) =>
             >
               <FormField
                 control={form.control}
-                name="iznos_start_date"
+                name="iznos_summa"
                 render={({ field }) => (
                   <FormElement
-                    label="Дата начала износа"
-                    direction="column"
-                  >
-                    <DatePicker {...field} />
-                  </FormElement>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="eski_iznos_summa"
-                render={({ field }) => (
-                  <FormElement
-                    label="Старый сумма износ"
+                    label="Сумма износ"
                     direction="column"
                   >
                     <NumericInput

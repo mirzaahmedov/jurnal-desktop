@@ -1,5 +1,3 @@
-import type { UseFormReturn } from 'react-hook-form'
-
 import {
   EditableTableCell,
   EditableTableHead,
@@ -7,8 +5,10 @@ import {
 } from '@renderer/common/components/editable-table'
 import { Checkbox } from '@renderer/common/components/ui/checkbox'
 import { useDefaultFilters } from '@renderer/common/features/app-defaults'
+import { type UseToggleReturn, useToggle } from '@renderer/common/hooks'
 import { formatDate } from '@renderer/common/lib/date'
 import { CircleMinus, CirclePlus } from 'lucide-react'
+import { type UseFormReturn, useFieldArray } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 
@@ -20,6 +20,7 @@ import { Table, TableBody, TableFooter, TableHeader } from '@/common/components/
 import { SpravochnikInput, inputVariants } from '@/common/features/spravochnik'
 import { calcSena, calcSumma } from '@/common/lib/pricing'
 
+import { OstatokSpravochnikDialog } from '../../ostatok/spravochnik/dialog'
 import {
   RasxodChildFormSchema,
   type RasxodChildFormValues,
@@ -33,6 +34,14 @@ type ProvodkaTableProps = {
 }
 export const ProvodkaTable = ({ form, tabIndex }: ProvodkaTableProps) => {
   const { t } = useTranslation()
+
+  const { append } = useFieldArray({
+    control: form.control,
+    name: 'childs'
+  })
+
+  const spravochnikToggle = useToggle()
+
   return (
     <form
       onSubmit={(e) => {
@@ -46,6 +55,42 @@ export const ProvodkaTable = ({ form, tabIndex }: ProvodkaTableProps) => {
       }}
       className="w-[2000px]"
     >
+      <OstatokSpravochnikDialog
+        kimning_buynida={form.watch('kimdan_id')}
+        to={form.watch('doc_date')}
+        open={spravochnikToggle.isOpen}
+        disabledIds={form
+          .watch('childs')
+          .map((child) => child.naimenovanie_tovarov_jur7_id)
+          .filter(Boolean)}
+        onOpenChange={spravochnikToggle.setOpen}
+        onSelect={(products) => {
+          append(
+            products.map((p) => ({
+              naimenovanie_tovarov_jur7_id: p.naimenovanie_tovarov_jur7_id,
+              name: p.product.name,
+              group_number: p.group.group_number,
+              edin: p.product.edin,
+              inventar_num: p.product.inventar_num,
+              serial_num: p.product.serial_num,
+              kol: p.to.kol,
+              max_kol: p.to.kol,
+              sena: p.to.sena,
+              summa: calcSumma(p.to.kol, p.to.sena),
+              debet_schet: p?.group?.provodka_debet ?? '',
+              kredit_schet: p?.group?.schet ?? '',
+              debet_sub_schet: p?.group?.provodka_subschet ?? '',
+              kredit_sub_schet: p?.group?.provodka_subschet ?? '',
+              data_pereotsenka: formatDate(p.prixod_data?.doc_date),
+              iznos: p.iznos,
+              eski_iznos_summa: p.to.iznos_summa,
+              iznos_schet: p.iznos_schet,
+              iznos_sub_schet: p.iznos_sub_schet,
+              iznos_start: p.iznos_start ?? undefined
+            }))
+          )
+        }}
+      />
       <Table className="border border-slate-200 table-xs">
         <TableHeader>
           <EditableTableRow>
@@ -137,6 +182,7 @@ export const ProvodkaTable = ({ form, tabIndex }: ProvodkaTableProps) => {
               return (
                 <Provodka
                   tabIndex={tabIndex}
+                  spravochnikToggle={spravochnikToggle}
                   key={index}
                   index={index}
                   row={row}
@@ -197,9 +243,10 @@ type ProvodkaProps = {
   index: number
   row: RasxodChildFormValues
   form: UseFormReturn<RasxodFormValues>
+  spravochnikToggle: UseToggleReturn
   tabIndex: number
 }
-const Provodka = ({ index, row, form, tabIndex }: ProvodkaProps) => {
+const Provodka = ({ index, spravochnikToggle, row, form, tabIndex }: ProvodkaProps) => {
   const handleChangeChildField = (
     index: number,
     key: keyof RasxodChildFormValues,
@@ -213,6 +260,7 @@ const Provodka = ({ index, row, form, tabIndex }: ProvodkaProps) => {
     <EditableTableRow key={index}>
       <NaimenovanieCells
         index={index}
+        spravochnikToggle={spravochnikToggle}
         row={row}
         form={form}
         kimdan_id={form.watch('kimdan_id')}
@@ -294,12 +342,6 @@ const Provodka = ({ index, row, form, tabIndex }: ProvodkaProps) => {
           <Checkbox
             disabled
             checked={row.iznos}
-            onCheckedChange={(checked) => {
-              if (!checked) {
-                handleChangeChildField(index, 'eski_iznos_summa', 0)
-              }
-              handleChangeChildField(index, 'iznos', Boolean(checked))
-            }}
             tabIndex={tabIndex}
           />
         </div>
@@ -473,9 +515,6 @@ const Provodka = ({ index, row, form, tabIndex }: ProvodkaProps) => {
           className="hover:bg-slate-50 hover:text-brand text-slate-400"
           onClick={() => {
             const childs = form.getValues('childs')
-            if (!Array.isArray(childs) || childs.length === 1) {
-              return
-            }
             form.setValue(
               'childs',
               childs.filter((_, i) => i !== index)
@@ -492,6 +531,7 @@ const Provodka = ({ index, row, form, tabIndex }: ProvodkaProps) => {
 
 type NaimenovanieCellsProps = {
   index: number
+  spravochnikToggle: UseToggleReturn
   row: RasxodChildFormValues
   form: UseFormReturn<RasxodFormValues>
   kimdan_id: number
@@ -502,6 +542,7 @@ type NaimenovanieCellsProps = {
 }
 const NaimenovanieCells = ({
   index,
+  spravochnikToggle,
   row,
   form,
   kimdan_id,
@@ -512,50 +553,50 @@ const NaimenovanieCells = ({
 }: NaimenovanieCellsProps) => {
   const from = useDefaultFilters((store) => store.from)
 
-  const {
-    naimenovanie_tovarov_jur7_name,
-    group_jur7_number,
-    edin,
-    inventar_num,
-    serial_num,
-    spravochnik
-  } = useOstatokProduct({
-    naimenovanie_tovarov_jur7_id: row.naimenovanie_tovarov_jur7_id,
-    kimdan_id,
-    from,
-    doc_date,
-    disabledIds: form
-      .getValues('childs')
-      .map((child) => child.naimenovanie_tovarov_jur7_id)
-      .filter(Boolean),
-    onChange(product) {
-      if (!product) {
-        return
-      }
+  // const {
+  //   naimenovanie_tovarov_jur7_name,
+  //   group_jur7_number,
+  //   edin,
+  //   inventar_num,
+  //   serial_num,
+  //   spravochnik
+  // } = useOstatokProduct({
+  //   naimenovanie_tovarov_jur7_id: row.naimenovanie_tovarov_jur7_id,
+  //   kimdan_id,
+  //   from,
+  //   doc_date,
+  //   disabledIds: form
+  //     .getValues('childs')
+  //     .map((child) => child.naimenovanie_tovarov_jur7_id)
+  //     .filter(Boolean),
+  //   onChange(product) {
+  //     if (!product) {
+  //       return
+  //     }
 
-      updateFormField(index, 'naimenovanie_tovarov_jur7_id', product.naimenovanie_tovarov_jur7_id)
-      updateFormField(index, 'kol', product.to.kol)
-      updateFormField(index, 'max_kol', product.to.kol)
-      updateFormField(index, 'sena', product.to.sena)
-      updateFormField(index, 'summa', calcSumma(product.to.kol, product.to.sena))
-      updateFormField(index, 'debet_schet', product?.group?.provodka_debet ?? '')
-      updateFormField(index, 'kredit_schet', product?.group?.schet ?? '')
-      updateFormField(index, 'debet_sub_schet', product?.group?.provodka_subschet ?? '')
-      updateFormField(index, 'kredit_sub_schet', product?.group?.provodka_subschet ?? '')
-      updateFormField(index, 'data_pereotsenka', formatDate(product.prixod_data?.doc_date))
-      updateFormField(index, 'iznos', product.iznos)
-      updateFormField(index, 'eski_iznos_summa', product.eski_iznos_summa)
-      updateFormField(index, 'iznos_schet', product.iznos_schet)
-      updateFormField(index, 'iznos_sub_schet', product.iznos_sub_schet)
-      updateFormField(index, 'iznos_start', product.iznos_start)
-    }
-  })
+  //     updateFormField(index, 'naimenovanie_tovarov_jur7_id', product.naimenovanie_tovarov_jur7_id)
+  //     updateFormField(index, 'kol', product.to.kol)
+  //     updateFormField(index, 'max_kol', product.to.kol)
+  //     updateFormField(index, 'sena', product.to.sena)
+  //     updateFormField(index, 'summa', calcSumma(product.to.kol, product.to.sena))
+  //     updateFormField(index, 'debet_schet', product?.group?.provodka_debet ?? '')
+  //     updateFormField(index, 'kredit_schet', product?.group?.schet ?? '')
+  //     updateFormField(index, 'debet_sub_schet', product?.group?.provodka_subschet ?? '')
+  //     updateFormField(index, 'kredit_sub_schet', product?.group?.provodka_subschet ?? '')
+  //     updateFormField(index, 'data_pereotsenka', formatDate(product.prixod_data?.doc_date))
+  //     updateFormField(index, 'iznos', product.iznos)
+  //     updateFormField(index, 'eski_iznos_summa', product.to.iznos_summa)
+  //     updateFormField(index, 'iznos_schet', product.iznos_schet)
+  //     updateFormField(index, 'iznos_sub_schet', product.iznos_sub_schet)
+  //     updateFormField(index, 'iznos_start', product.iznos_start)
+  //   }
+  // })
 
   return (
     <>
       <EditableTableCell>
         <div className="relative">
-          <SpravochnikInput
+          <Input
             readOnly
             disabled={!kimdan_id}
             tabIndex={tabIndex}
@@ -565,23 +606,22 @@ const NaimenovanieCells = ({
               error: !!errorMessage
             })}
             error={!!errorMessage}
-            getInputValue={(selected) => String(selected?.id) ?? ''}
-            {...spravochnik}
+            onDoubleClick={spravochnikToggle.open}
           />
         </div>
       </EditableTableCell>
-      {[naimenovanie_tovarov_jur7_name, group_jur7_number, edin, serial_num, inventar_num].map(
+      {[row.name, row.group_number, row.edin, row.serial_num, row.inventar_num].map(
         (field, index) => (
           <EditableTableCell key={index}>
             <div className="relative">
               <Input
                 readOnly
-                value={field}
+                value={field ?? ''}
                 error={!!errorMessage}
                 tabIndex={-1}
                 className={inputVariants({ editor: true, error: !!errorMessage })}
                 disabled={!kimdan_id}
-                onDoubleClick={spravochnik.open}
+                onDoubleClick={spravochnikToggle.open}
               />
             </div>
           </EditableTableCell>

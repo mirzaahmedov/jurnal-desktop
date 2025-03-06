@@ -8,7 +8,7 @@ import { useDates, usePagination } from '@renderer/common/hooks'
 import { formatDate } from '@renderer/common/lib/date'
 import { HttpResponseError } from '@renderer/common/lib/http'
 import { ListView } from '@renderer/common/views'
-import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
@@ -25,7 +25,7 @@ import { useLayoutStore } from '@/common/features/layout'
 
 import { columns, queryKeys } from './config'
 import { ErrorAlert, type ErrorData, type ErrorDataDocument } from './error-alert'
-import { prixodService, usePrixodDelete } from './service'
+import { prixodService } from './service'
 
 const Jurnal7PrixodPage = () => {
   const [error, setError] = useState<ErrorData>()
@@ -47,14 +47,18 @@ const Jurnal7PrixodPage = () => {
   const setLayout = useLayoutStore((store) => store.setLayout)
   const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
 
-  const { mutate: deletePrixod, isPending: isDeleting } = usePrixodDelete({
+  const { mutate: deletePrixod, isPending: isDeleting } = useMutation({
+    mutationKey: [queryKeys.delete],
+    mutationFn: prixodService.delete,
     onSuccess(res) {
       handleOstatokResponse(res)
-      queryClient.invalidateQueries({
-        queryKey: [queryKeys.getAll]
-      })
       toast.success(res?.message)
       recheckOstatok?.()
+      requestAnimationFrame(() => {
+        queryClient.invalidateQueries({
+          queryKey: [queryKeys.getAll]
+        })
+      })
     },
     onError(error) {
       console.log(error)
@@ -67,6 +71,7 @@ const Jurnal7PrixodPage = () => {
       toast.error(error?.message)
     }
   })
+
   const {
     data: prixodList,
     isFetching,

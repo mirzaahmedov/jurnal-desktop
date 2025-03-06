@@ -366,8 +366,8 @@ const OstatokPage = () => {
                   >
                     <CollapsibleTable
                       data={rows}
-                      columnDefs={ostatokProductColumns}
-                      getRowId={(row) => row.id}
+                      columnDefs={ostatokProductColumns.filter((col) => col.key !== 'responsible')}
+                      getRowId={(row) => row.naimenovanie_tovarov_jur7_id}
                       getChildRows={() => undefined}
                       onDelete={handleDelete}
                     />
@@ -384,7 +384,7 @@ const OstatokPage = () => {
               <GenericTable
                 data={ostatok?.data?.products ?? []}
                 columnDefs={ostatokProductColumns}
-                getRowId={(row) => row.id}
+                getRowId={(row) => row.naimenovanie_tovarov_jur7_id}
                 onDelete={handleDelete}
               />
             </ListView.Content>
@@ -414,7 +414,7 @@ const OstatokPage = () => {
                     <CollapsibleTable
                       data={rows}
                       columnDefs={ostatokProductColumns}
-                      getRowId={(row) => row.id}
+                      getRowId={(row) => row.naimenovanie_tovarov_jur7_id}
                       getChildRows={() => undefined}
                       onDelete={handleDelete}
                     />

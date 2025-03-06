@@ -1,4 +1,4 @@
-import type { Iznos } from '@renderer/common/models'
+import type { OstatokProduct } from '@renderer/common/models'
 
 import { useEffect, useState } from 'react'
 
@@ -10,20 +10,18 @@ import { useRequisitesStore } from '@renderer/common/features/requisites'
 import { SearchField, useSearch } from '@renderer/common/features/search'
 import { useSpravochnik } from '@renderer/common/features/spravochnik'
 import { usePagination, useToggle } from '@renderer/common/hooks'
-import { date_iso_regex, formatDate, parseDate, validateDate } from '@renderer/common/lib/date'
-import { formatLocaleDate } from '@renderer/common/lib/format'
+import { formatDate, parseDate } from '@renderer/common/lib/date'
 import { ListView } from '@renderer/common/views'
 import { useQuery } from '@tanstack/react-query'
 import { CircleArrowDown } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
-import { toast } from 'react-toastify'
 
 import { useOstatokStore } from '@/app/jurnal-7/ostatok/store'
 
 import { OstatokViewOption, defaultValues, getOstatokListQuery } from '../ostatok'
-import { handleOstatokError } from '../ostatok/utils'
+import { handleOstatokError, validateOstatokDate } from '../ostatok/utils'
 import { createPodrazdelenie7Spravochnik } from '../podrazdelenie/service'
 import { createResponsibleSpravochnik } from '../responsible/service'
 import { columns } from './columns'
@@ -42,7 +40,7 @@ const IznosPage = () => {
   const { search } = useSearch()
   const { minDate, maxDate } = useOstatokStore()
 
-  const [selected, setSelected] = useState<Iznos | null>(null)
+  const [selected, setSelected] = useState<OstatokProduct | null>(null)
   const [selectedDate, setSelectedDate] = useState<undefined | Date>(minDate)
 
   const form = useForm({
@@ -105,7 +103,7 @@ const IznosPage = () => {
     })
   }, [setLayout])
 
-  const handleEdit = (row: Iznos) => {
+  const handleEdit = (row: OstatokProduct) => {
     setSelected(row)
     dialogToggle.open()
   }
@@ -151,24 +149,7 @@ const IznosPage = () => {
                   onChange={(value) => {
                     field.onChange(value ? parseDate(value) : undefined)
                   }}
-                  validate={(date) => {
-                    if (!validateDate(date)) {
-                      if (date_iso_regex.test(date)) {
-                        toast.error(t('date_does_not_exist'))
-                      }
-                      return false
-                    }
-                    const isValid = minDate <= parseDate(date) && parseDate(date) <= maxDate
-                    if (!isValid && date?.length === 10) {
-                      toast.error(
-                        t('out_of_range', {
-                          minDate: formatLocaleDate(formatDate(minDate)),
-                          maxDate: formatLocaleDate(formatDate(maxDate))
-                        })
-                      )
-                    }
-                    return isValid
-                  }}
+                  validate={validateOstatokDate}
                   calendarProps={{
                     fromMonth: minDate,
                     toMonth: maxDate
@@ -189,7 +170,8 @@ const IznosPage = () => {
       <ListView.Content loading={isFetching}>
         <GenericTable
           columnDefs={columns}
-          data={(iznosList?.data?.products as unknown as Iznos[]) ?? []}
+          getRowId={(row) => row.naimenovanie_tovarov_jur7_id}
+          data={(iznosList?.data?.products as unknown as OstatokProduct[]) ?? []}
           onEdit={handleEdit}
         />
         <EditIznosDialog

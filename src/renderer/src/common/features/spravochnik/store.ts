@@ -27,7 +27,7 @@ export type SpravochnikTableProps<T extends object> = {
   columnDefs: ColumnDef<T>[]
   activeRowId?: string
   disabledIds: number[]
-  selectedId?: number
+  selectedIds: number[]
   onClickRow(row: T): void
   getRowId?: (row: T) => string | number
   dialogToggle?: ReturnType<typeof useToggle>

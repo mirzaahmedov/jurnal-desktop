@@ -6,7 +6,7 @@ import { SearchField, useSearch } from '@renderer/common/features/search'
 import { useDates, usePagination } from '@renderer/common/hooks'
 import { formatDate } from '@renderer/common/lib/date'
 import { ListView } from '@renderer/common/views'
-import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
@@ -21,7 +21,7 @@ import { GenericTable } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
 
 import { columns, queryKeys } from './config'
-import { rasxodService, useRasxodDelete } from './service'
+import { rasxodService } from './service'
 
 const Jurnal7RasxodPage = () => {
   const navigate = useNavigate()
@@ -40,14 +40,18 @@ const Jurnal7RasxodPage = () => {
     defaultTo: formatDate(maxDate)
   })
 
-  const { mutate: deleteRasxod, isPending } = useRasxodDelete({
+  const { mutate: deleteRasxod, isPending } = useMutation({
+    mutationKey: [queryKeys.delete],
+    mutationFn: rasxodService.delete,
     onSuccess(res) {
       handleOstatokResponse(res)
-      queryClient.invalidateQueries({
-        queryKey: [queryKeys.getAll]
-      })
       toast.success(res?.message)
       recheckOstatok?.()
+      requestAnimationFrame(() => {
+        queryClient.invalidateQueries({
+          queryKey: [queryKeys.getAll]
+        })
+      })
     },
     onError(error) {
       toast.error(error?.message)

@@ -67,16 +67,18 @@ export const ostatokService = new CRUDService<OstatokResponsible, OstatokFormVal
 const OstatokSpravochnikTable = ({
   data,
   ...props
-}: Omit<SpravochnikTableProps<OstatokProduct>, 'columnDefs'>) => {
+}: Omit<SpravochnikTableProps<OstatokResponsible>, 'columnDefs'>) => {
   const ostatokData = useMemo(() => {
     return (data as any)?.[0]?.products ?? []
   }, [data])
   // Todo: fix this
   return (
+    // @ts-expect-error fix this later
     <GenericTable
       {...props}
       data={ostatokData}
       columnDefs={ostatokSpravochnikColumns}
+      getRowId={(row) => row.naimenovanie_tovarov_jur7_id}
     />
   )
 }
@@ -156,10 +158,9 @@ export const createOstatokProductSpravochnik = (
       title: 'Выбрать товар',
       endpoint: APIEndpoints.jur7_saldo,
       columnDefs: [],
-      // @ts-expect-error fix this later
       CustomTable: OstatokSpravochnikTable,
       // TODO: fix this issue
-      getRowId: ((row: OstatokProduct) => row.naimenovanie_tovarov_jur7_id) as any,
+      // getRowId: ((row: OstatokProduct) => row.naimenovanie_tovarov_jur7_id) as any,
       // TODO: fix this issue
       service: ostatokService as any,
       filters: [SpravochnikSearchField]

@@ -72,6 +72,11 @@ export const ostatokProductColumns: ColumnDef<OstatokProduct>[] = [
     header: 'ei'
   },
   {
+    key: 'responsible',
+    header: 'responsible',
+    renderCell: (row) => row.responsible.fio
+  },
+  {
     numeric: true,
     key: 'from.kol',
     header: 'Начало Кол.',
@@ -130,7 +135,7 @@ export const ostatokSpravochnikColumns: ColumnDef<OstatokProduct>[] = [
   {
     key: 'naimenovanie_tovarov_jur7_id',
     header: 'id',
-    renderCell: (row) => <IDCell id={row.naimenovanie_tovarov_jur7_id} />
+    renderCell: IDCell
   },
   {
     key: 'name',
@@ -145,24 +150,21 @@ export const ostatokSpravochnikColumns: ColumnDef<OstatokProduct>[] = [
   {
     key: 'to.kol',
     header: 'Кол-во',
-    renderCell(row) {
-      return row.to.kol
-    }
+    renderCell: (row) => row.to.kol
   },
   {
     key: 'to.summa',
     header: 'Сумма',
-    renderCell(row) {
-      return row.to.summa
-    }
+    renderCell: (row) => row.to.summa
   },
   {
     key: 'edin',
     header: 'Един.'
   },
   {
-    key: 'group_jur7_name',
-    header: 'Группа'
+    key: 'group',
+    header: 'Группа',
+    renderCell: (row) => row.group.group_number
   },
   {
     key: 'prixod_data.data_pereotsenka',

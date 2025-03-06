@@ -1,8 +1,9 @@
 import type { DialogProps } from '@radix-ui/react-dialog'
-import type { Organization } from '@renderer/common/models'
+import type { OstatokProduct } from '@renderer/common/models'
 
 import { useEffect, useMemo, useState } from 'react'
 
+import { GenericTable, LoadingOverlay } from '@renderer/common/components'
 import { Pagination } from '@renderer/common/components/pagination'
 import { Badge } from '@renderer/common/components/ui/badge'
 import { Button } from '@renderer/common/components/ui/button'
@@ -14,121 +15,108 @@ import {
   DialogTitle
 } from '@renderer/common/components/ui/dialog'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@renderer/common/components/ui/tabs'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useRequisitesStore } from '@renderer/common/features/requisites'
+import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
-import { toast } from 'react-toastify'
 
-import { GenericTable, LoadingOverlay } from '@/common/components'
-
-import { organizationColumns } from './columns'
-import { organizationQueryKeys } from './config'
-import { organizationService, updateChildOrganizationsQuery } from './service'
+import { ostatokProductColumns } from '../columns'
+import { ostatokQueryKeys } from '../config'
+import { OstatokViewOption, getOstatokListQuery } from '../service'
 
 enum TabOption {
-  SELECTED = 'SELECTED',
-  ALL = 'ALL'
+  ALL = 'ALL',
+  SELECTED = 'SELECTED'
 }
 
-interface SubordinateOrganizationsProps extends DialogProps {
-  parentId?: number
+export interface OstatokSpravochnikDialogProps extends DialogProps {
+  kimning_buynida: number
+  to: string
+  disabledIds: number[]
+  onSelect: (selected: OstatokProduct[]) => void
 }
-export const SubordinateOrganizations = ({
-  parentId,
+export const OstatokSpravochnikDialog = ({
   open,
-  onOpenChange
-}: SubordinateOrganizationsProps) => {
-  const queryClient = useQueryClient()
+  onOpenChange,
+  to,
+  kimning_buynida,
+  disabledIds,
+  onSelect
+}: OstatokSpravochnikDialogProps) => {
+  const budjet_id = useRequisitesStore((store) => store.budjet_id)
 
-  const [tabValue, setTabValue] = useState(TabOption.SELECTED)
-  const [selected, setSelected] = useState<Organization[]>([])
+  const [tabValue, setTabValue] = useState(TabOption.ALL)
+  const [selected, setSelected] = useState<OstatokProduct[]>([])
+  const [search, setSearch] = useState('')
   const [page, setPage] = useState(1)
   const [limit, setLimit] = useState(10)
 
   const { t } = useTranslation()
-
-  const { data: organization, isFetching } = useQuery({
-    queryKey: [organizationQueryKeys.getById, parentId],
-    queryFn: organizationService.getById,
-    enabled: !!parentId && open
-  })
-  const { data: organizations, isFetching: isFetchingOrganizations } = useQuery({
+  const { data: ostatok, isFetching } = useQuery({
     queryKey: [
-      organizationQueryKeys.getAll,
+      ostatokQueryKeys.getAll,
       {
+        type: OstatokViewOption.PRODUCT,
+        to,
+        budjet_id: budjet_id!,
         page,
         limit,
-        parent: false,
-        parent_id: parentId
+        kimning_buynida,
+        search: search ? search : undefined
       }
     ],
-    queryFn: organizationService.getAll
+    queryFn: getOstatokListQuery,
+    enabled: !!budjet_id && !!kimning_buynida
   })
 
-  const { mutate: updateChildOrganizations, isPending } = useMutation({
-    mutationKey: [organizationQueryKeys.update],
-    mutationFn: updateChildOrganizationsQuery,
-    onSuccess(res) {
-      onOpenChange?.(false)
-      toast.success(res?.message)
-      queryClient.invalidateQueries({
-        queryKey: [organizationQueryKeys.getById, parentId]
-      })
-    },
-    onError(error) {
-      toast.error(error?.message)
-    }
-  })
-
-  useEffect(() => {
-    if (!organization?.data?.childs) {
-      return
-    }
-    setSelected(organization.data.childs)
-  }, [organization])
   useEffect(() => {
     if (!open) {
+      setSearch('')
       setPage(1)
-      setTabValue(TabOption.SELECTED)
+      setTabValue(TabOption.ALL)
+      setSelected([])
     }
   }, [open])
 
-  const selectedIds = useMemo(() => selected.map((o) => o.id), [selected])
+  const selectedIds = useMemo(() => selected.map((e) => e.naimenovanie_tovarov_jur7_id), [selected])
+
+  console.log({ disabledIds })
 
   return (
     <Dialog
       open={open}
       onOpenChange={onOpenChange}
     >
-      <DialogContent className="max-w-screen-2xl w-full p-0 h-3/5 overflow-hidden gap-0 flex flex-col">
+      <DialogContent className="max-w-screen-7xl w-full p-0 h-0 min-h-[70%] overflow-hidden gap-0 flex flex-col">
         <Tabs
           value={tabValue}
           onValueChange={(value) => setTabValue(value as TabOption)}
           className="flex flex-col h-full overflow-hidden"
         >
           <DialogHeader className="flex-0 px-5 py-1 flex gap-10 items-center flex-row justify-between">
-            <DialogTitle>{t('subordinate_organizations')}</DialogTitle>
+            <DialogTitle>{t('products')}</DialogTitle>
             <div className="flex-1 flex items-center">
               <TabsList>
+                <TabsTrigger value={TabOption.ALL}>{t('add')}</TabsTrigger>
                 <TabsTrigger
                   value={TabOption.SELECTED}
                   className="flex items-center gap-5"
                 >
-                  {t('selected_organizations')}
+                  {t('selected_products')}
                   {selected.length ? <Badge>{selected.length}</Badge> : null}
                 </TabsTrigger>
-                <TabsTrigger value={TabOption.ALL}>{t('add')}</TabsTrigger>
               </TabsList>
             </div>
           </DialogHeader>
           <TabsContent
             value={TabOption.SELECTED}
-            className="data-[state=active]:flex-1 flex flex-col overflow-hidden relative"
+            className="hidden data-[state=active]:flex flex-1 flex-col overflow-hidden relative"
           >
-            {isFetching || isFetchingOrganizations ? <LoadingOverlay /> : null}
+            {isFetching ? <LoadingOverlay /> : null}
             <div className="flex-1 overflow-auto scrollbar">
               <GenericTable
-                columnDefs={organizationColumns}
+                columnDefs={ostatokProductColumns}
                 data={selected ?? []}
+                getRowId={(row) => row.naimenovanie_tovarov_jur7_id}
                 onDelete={(organization) => {
                   setSelected((prev) => {
                     if (prev.find((o) => o.id === organization.id)) {
@@ -143,14 +131,16 @@ export const SubordinateOrganizations = ({
 
           <TabsContent
             value={TabOption.ALL}
-            className="data-[state=active]:flex-1 data-[state=active]:flex flex-col overflow-hidden relative"
+            className="hidden data-[state=active]:flex flex-1 flex-col overflow-hidden relative"
           >
-            {isFetching || isFetchingOrganizations ? <LoadingOverlay /> : null}
+            {isFetching ? <LoadingOverlay /> : null}
             <div className="flex-1 overflow-auto scrollbar">
               <GenericTable
                 selectedIds={selectedIds}
-                columnDefs={organizationColumns}
-                data={organizations?.data ?? []}
+                disabledIds={disabledIds}
+                columnDefs={ostatokProductColumns}
+                getRowId={(row) => row.naimenovanie_tovarov_jur7_id}
+                data={ostatok?.data?.products ?? []}
                 onClickRow={(organization) => {
                   setSelected((prev) => {
                     if (prev.find((o) => o.id === organization.id)) {
@@ -177,26 +167,19 @@ export const SubordinateOrganizations = ({
                     setLimit(limit)
                   }
                 }}
-                pageCount={organizations?.meta?.pageCount ?? 0}
+                pageCount={ostatok?.meta?.pageCount ?? 0}
               />
             ) : null}
             <Button
-              disabled={!parentId}
-              loading={isPending}
+              disabled={isFetching}
+              loading={isFetching}
               onClick={() => {
-                if (!parentId) {
-                  return
-                }
-                updateChildOrganizations({
-                  parentId,
-                  childs: selectedIds.map((id) => ({
-                    id
-                  }))
-                })
+                onSelect?.(selected)
+                onOpenChange?.(false)
               }}
               className="ml-auto"
             >
-              {t('save')}
+              {t('add')}
             </Button>
           </div>
         </DialogFooter>

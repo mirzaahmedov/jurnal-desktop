@@ -1,5 +1,5 @@
 import type { ColumnDef } from '@/common/components'
-import type { MO7Rasxod } from '@/common/models'
+import type { Jur7Rasxod } from '@/common/models'
 
 import { IDCell } from '@renderer/common/components/table/renderers/id'
 import { formatLocaleDate } from '@renderer/common/lib/format'
@@ -15,6 +15,17 @@ export const queryKeys = {
   delete: 'jur7_rasxod/delete'
 }
 
+export const defaultChildValues = {
+  naimenovanie_tovarov_jur7_id: 0,
+  kol: 0,
+  sena: 0,
+  summa: 0,
+  debet_schet: '',
+  debet_sub_schet: '',
+  kredit_schet: '',
+  kredit_sub_schet: '',
+  data_pereotsenka: ''
+}
 export const defaultValues: RasxodFormValues = {
   type_document: 1,
   doc_num: '',
@@ -22,24 +33,17 @@ export const defaultValues: RasxodFormValues = {
   opisanie: '',
   doverennost: '',
   kimdan_id: 0,
-  childs: [
-    {
-      naimenovanie_tovarov_jur7_id: 0,
-      kol: 0,
-      sena: 0,
-      summa: 0,
-      debet_schet: '',
-      debet_sub_schet: '',
-      kredit_schet: '',
-      kredit_sub_schet: '',
-      data_pereotsenka: ''
-    }
-  ]
+  childs: [defaultChildValues]
 }
 
 export const RasxodChildFormSchema = withPreprocessor(
   z.object({
     naimenovanie_tovarov_jur7_id: z.number(),
+    name: z.string().optional().nullable(),
+    group_number: z.string().optional().nullable(),
+    edin: z.string().optional().nullable(),
+    inventar_num: z.string().optional().nullable(),
+    serial_num: z.string().optional().nullable(),
     kol: z.number(),
     max_kol: z.number().optional(),
     sena: z.number(),
@@ -81,7 +85,7 @@ export const RasxodFormSchema = withPreprocessor(
 export type RasxodFormValues = z.infer<typeof RasxodFormSchema>
 export type RasxodChildFormValues = z.infer<typeof RasxodChildFormSchema>
 
-export const columns: ColumnDef<MO7Rasxod>[] = [
+export const columns: ColumnDef<Jur7Rasxod>[] = [
   {
     key: 'id',
     renderCell: IDCell

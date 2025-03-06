@@ -173,7 +173,7 @@ export const Spravochnik = ({ close, spravochnik }: SpravochnikProps) => {
             </div>
           ) : Array.isArray(spravochnik?.columnDefs) ? (
             <>
-              <div className="flex-1 relative overflow-auto scrollbar">
+              <div className="flex-1 relative overflow-auto scrollbar scroll-pt-16">
                 {isFetching ? <LoadingOverlay /> : null}
                 {CustomTable ? (
                   <CustomTable
@@ -181,7 +181,7 @@ export const Spravochnik = ({ close, spravochnik }: SpravochnikProps) => {
                     columnDefs={spravochnik.columnDefs}
                     activeRowId={String(selected?.id)}
                     disabledIds={spravochnik.disabledIds}
-                    selectedId={spravochnik.selectedId}
+                    selectedIds={spravochnik.selectedId ? [spravochnik.selectedId] : []}
                     onClickRow={(row) => {
                       spravochnik.selectId?.(row.id, row)
                       close(spravochnik.id)
@@ -204,7 +204,7 @@ export const Spravochnik = ({ close, spravochnik }: SpravochnikProps) => {
                       spravochnik.onClose?.()
                     }}
                     disabledIds={spravochnik.disabledIds}
-                    selectedId={spravochnik.selectedId}
+                    selectedIds={spravochnik.selectedId ? [spravochnik.selectedId] : []}
                     {...spravochnik.tableProps}
                   />
                 )}

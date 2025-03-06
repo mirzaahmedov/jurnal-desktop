@@ -1,3 +1,7 @@
+import type { Group } from './group'
+import type { Naimenovanie } from './naimenovanie'
+import type { Responsible } from './responsible'
+
 export interface OstatokResponsible {
   id: number
   fio: string
@@ -43,66 +47,26 @@ export interface OstatokProduct {
   iznos: boolean
   doc_num: string
   region_id: number
-  iznos_schet: any
-  iznos_sub_schet: any
+  iznos_schet: string
+  iznos_sub_schet: string
   iznos_summa: number
-  iznos_start: string | null
   eski_iznos_summa: number
+  iznos_start: any
   responsible_id: number
-  product: {
-    id: number
-    user_id: number
-    spravochnik_budjet_name_id: number
-    name: string
-    edin: string
-    group_jur7_id: number
-    created_at: string
-    updated_at: string
-    isdeleted: boolean
-    inventar_num: string
-    serial_num: string
-    iznos: boolean
-  }
+  product: Naimenovanie
   name: string
   edin: string
   group_jur7_name: string
-  prixod_data: {
-    doc_num: string
-    doc_date: string
-    doc_id: number
-  }
-  group: {
-    id: number
-    smeta_id: any
-    name: string
-    schet: string
-    iznos_foiz: number
-    provodka_debet: string
-    provodka_subschet: string
-    group_number: string
-    provodka_kredit: string
-    roman_numeral: any
-    pod_group: string
-    created_at: string
-    updated_at: string
-    isdeleted: boolean
-  }
-  responsible: {
-    id: number
-    spravochnik_podrazdelenie_jur7_id: number
-    fio: string
-    user_id: number
-    created_at: string
-    updated_at: string
-    isdeleted: boolean
-  }
+  prixod_data: { type; doc_num: string; doc_date: string; doc_id: number }
+  group: Group
+  responsible: Responsible
   from: {
     kol: number
     sena: number
     summa: number
     iznos_summa: number
-    iznos_schet: any
-    iznos_sub_schet: any
+    iznos_schet: string
+    iznos_sub_schet: string
   }
   internal: {
     kol: number
@@ -120,5 +84,7 @@ export interface OstatokProduct {
     summa: number
     iznos_summa: number
     sena: number
+    month_iznos: number
+    eski_iznos_summa: number
   }
 }

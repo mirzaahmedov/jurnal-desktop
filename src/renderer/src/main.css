@@ -144,7 +144,7 @@ select:-webkit-autofill:focus {
   }
 
   .artificial-border::before {
-    @apply z-[100] content-[""] block absolute top-0 h-px bg-slate-200 left-0 right-0;
+    @apply z-[100] content-[""] block absolute -top-0 -translate-y-px h-0.5 bg-slate-200 left-0 right-0;
   }
   .artificial-border::after {
     @apply z-[100] content-[""] block absolute bottom-0 h-px bg-slate-200 left-0 right-0;

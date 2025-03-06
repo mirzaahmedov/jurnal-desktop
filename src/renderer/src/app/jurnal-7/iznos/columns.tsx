@@ -1,11 +1,11 @@
 import type { ColumnDef } from '@renderer/common/components'
-import type { Iznos } from '@renderer/common/models'
+import type { OstatokProduct } from '@renderer/common/models'
 
 import { IDCell } from '@renderer/common/components/table/renderers/id'
 import { getMonthName } from '@renderer/common/lib/date'
 import { formatLocaleDate, formatNumber } from '@renderer/common/lib/format'
 
-export const columns: ColumnDef<Iznos>[] = [
+export const columns: ColumnDef<OstatokProduct>[] = [
   {
     key: 'id',
     renderCell: IDCell
@@ -20,17 +20,13 @@ export const columns: ColumnDef<Iznos>[] = [
     fit: true,
     key: 'inventar_num',
     header: 'Инвентар №',
-    renderCell: (row) => {
-      return row.product.inventar_num
-    }
+    renderCell: (row) => row.product.inventar_num
   },
   {
     fit: true,
     key: 'serial_num',
     header: 'Серийный номер',
-    renderCell: (row) => {
-      return row.product.serial_num
-    }
+    renderCell: (row) => row.product.serial_num
   },
   {
     key: 'kol',
@@ -50,9 +46,7 @@ export const columns: ColumnDef<Iznos>[] = [
   {
     key: 'month',
     header: 'Месяц',
-    renderCell(row) {
-      return getMonthName(row.month)
-    }
+    renderCell: (row) => getMonthName(row.month)
   },
   {
     key: 'iznos_schet',
@@ -66,9 +60,7 @@ export const columns: ColumnDef<Iznos>[] = [
     fit: true,
     key: '',
     header: 'Дата начала износа',
-    renderCell(row) {
-      return formatLocaleDate(row.iznos_start)
-    }
+    renderCell: (row) => formatLocaleDate(row.iznos_start)
   },
   {
     numeric: true,
@@ -80,12 +72,12 @@ export const columns: ColumnDef<Iznos>[] = [
     numeric: true,
     key: 'iznos_summa_bir_oylik',
     header: 'Сумма износа (Месяц)',
-    renderCell: (row) => formatNumber(row.to.iznos_summa_bir_oylik ?? 0)
+    renderCell: (row) => formatNumber(row.to.month_iznos ?? 0)
   },
   {
     numeric: true,
     key: 'eski_iznos_summa',
     header: 'Сумма износа (Старый)',
-    renderCell: (row) => formatNumber(row.eski_iznos_summa)
+    renderCell: (row) => formatNumber(row.to.eski_iznos_summa)
   }
 ]

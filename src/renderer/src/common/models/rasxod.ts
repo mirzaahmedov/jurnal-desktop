@@ -1,3 +1,6 @@
+import type { Group } from './group'
+import type { Naimenovanie } from './naimenovanie'
+
 export type BankRasxod = {
   id: number
   doc_num: string
@@ -71,18 +74,34 @@ export type KassaRasxodProvodkaType = {
   spravochnik_operatsii_own_id: number
 }
 
-type MO7RasxodChild = {
+export interface Jur7RasxodChild {
+  id: number
+  user_id: number
+  document_rasxod_jur7_id: number
   naimenovanie_tovarov_jur7_id: number
   kol: number
   sena: number
+  nds_foiz: any
+  nds_summa: any
+  summa_s_nds: any
   summa: number
   debet_schet: string
   debet_sub_schet: string
   kredit_schet: string
   kredit_sub_schet: string
   data_pereotsenka: string
+  main_schet_id: number
+  created_at: string
+  updated_at: string
+  isdeleted: boolean
+  iznos_schet: string
+  iznos_sub_schet: string
+  iznos_summa: number
+  iznos: boolean
+  product: Naimenovanie
+  group: Group
 }
-type MO7Rasxod = {
+export interface Jur7Rasxod {
   id: number
   doc_num: string
   doc_date: string
@@ -90,7 +109,5 @@ type MO7Rasxod = {
   summa: number
   kimdan_name: string
   kimga_name: string
-  childs: MO7RasxodChild[]
+  childs: Jur7RasxodChild[]
 }
-
-export type { MO7RasxodChild, MO7Rasxod }

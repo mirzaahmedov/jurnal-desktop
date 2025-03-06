@@ -1,4 +1,4 @@
-type Jur7Child = {
+export interface Jur7Child {
   naimenovanie_tovarov_jur7_id: number
   kol: number
   sena: number
@@ -10,7 +10,7 @@ type Jur7Child = {
   kredit_sub_schet: string
   data_pereotsenka: string
 }
-type Jur7Rasxod = {
+export interface Jur7Rasxod {
   id: number
   doc_num: string
   doc_date: string
@@ -20,7 +20,7 @@ type Jur7Rasxod = {
   kimga_name: string
   childs: Jur7Child[]
 }
-type Jur7Prixod = {
+export interface Jur7Prixod {
   id: number
   doc_num: string
   doc_date: string
@@ -30,7 +30,7 @@ type Jur7Prixod = {
   kimga_name: string
   childs: Jur7Child[]
 }
-type Jur7InternalTransfer = {
+export interface Jur7InternalTransfer {
   id: number
   doc_num: string
   doc_date: string
@@ -48,5 +48,3 @@ type Jur7InternalTransfer = {
   }
   childs: Jur7Child[]
 }
-
-export type { Jur7Prixod, Jur7Rasxod, Jur7InternalTransfer, Jur7Child }
