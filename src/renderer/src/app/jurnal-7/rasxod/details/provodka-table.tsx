@@ -82,7 +82,7 @@ export const ProvodkaTable = ({ form, tabIndex }: ProvodkaTableProps) => {
               kredit_sub_schet: p?.group?.provodka_subschet ?? '',
               data_pereotsenka: formatDate(p.prixod_data?.doc_date),
               iznos: p.iznos,
-              eski_iznos_summa: p.to.iznos_summa,
+              iznos_summa: p.to.iznos_summa,
               iznos_schet: p.iznos_schet,
               iznos_sub_schet: p.iznos_sub_schet,
               iznos_start: p.iznos_start ?? undefined,
@@ -346,15 +346,15 @@ const Provodka = ({ index, spravochnikToggle, row, form, tabIndex }: ProvodkaPro
           <NumericInput
             disabled={!row.iznos}
             adjustWidth
-            value={row.eski_iznos_summa || ''}
+            value={row.iznos_summa || ''}
             onValueChange={(values) => {
-              handleChangeChildField(index, 'eski_iznos_summa', values.floatValue)
+              handleChangeChildField(index, 'iznos_summa', values.floatValue)
             }}
             className={inputVariants({
               editor: true,
-              error: !!form.formState.errors?.childs?.[index]?.eski_iznos_summa
+              error: !!form.formState.errors?.childs?.[index]?.iznos_summa
             })}
-            error={!!form.formState.errors?.childs?.[index]?.eski_iznos_summa}
+            error={!!form.formState.errors?.childs?.[index]?.iznos_summa}
             tabIndex={tabIndex}
           />
         </div>
