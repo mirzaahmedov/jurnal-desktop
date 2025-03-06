@@ -2,7 +2,8 @@ import type { OstatokProduct } from '@renderer/common/models'
 
 import { useEffect, useState } from 'react'
 
-import { ChooseSpravochnik, DatePicker, GenericTable } from '@renderer/common/components'
+import { createGroupSpravochnik } from '@renderer/app/super-admin/group/service'
+import { ChooseSpravochnik, DatePicker } from '@renderer/common/components'
 import { CollapsibleTable } from '@renderer/common/components/collapsible-table'
 import { Button } from '@renderer/common/components/ui/button'
 import { ButtonGroup } from '@renderer/common/components/ui/button-group'
@@ -13,7 +14,6 @@ import {
   DropdownMenuTrigger
 } from '@renderer/common/components/ui/dropdown-menu'
 import { FormField } from '@renderer/common/components/ui/form'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@renderer/common/components/ui/tabs'
 import { useConfirm } from '@renderer/common/features/confirm'
 import { DownloadFile, ImportFile } from '@renderer/common/features/file'
 import { useLayoutStore } from '@renderer/common/features/layout'
@@ -32,12 +32,11 @@ import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 
-import { createPodrazdelenie7Spravochnik } from '../podrazdelenie/service'
 import { createResponsibleSpravochnik } from '../responsible/service'
-import { ostatokGroupColumns, ostatokProductColumns, ostatokResponsibleColumns } from './columns'
+import { ostatokGroupColumns, ostatokProductColumns } from './columns'
 import { defaultValues, ostatokQueryKeys } from './config'
 import { ErrorAlert, type ErrorData, type ErrorDataDocument } from './error-alert'
-import { OstatokViewOption, getOstatokListQuery, ostatokService } from './service'
+import { getOstatokListQuery, ostatokService } from './service'
 import { useOstatokStore } from './store'
 import { handleOstatokError } from './utils'
 
@@ -45,7 +44,6 @@ const OstatokPage = () => {
   const { minDate, maxDate } = useOstatokStore()
 
   const [error, setError] = useState<ErrorData>()
-  const [tabValue, setTabValue] = useState(OstatokViewOption.RESPONSIBLE)
   const [selectedDate, setSelectedDate] = useState<undefined | Date>(minDate)
 
   const dropdownToggle = useToggle()
@@ -66,21 +64,8 @@ const OstatokPage = () => {
     defaultValues
   })
 
-  const podrazdelenieSpravochnik = useSpravochnik(
-    createPodrazdelenie7Spravochnik({
-      onChange: () => {
-        responsibleSpravochnik.clear()
-      }
-    })
-  )
-  const responsibleSpravochnik = useSpravochnik(
-    createResponsibleSpravochnik({
-      params: {
-        podraz_id: podrazdelenieSpravochnik.selected?.id
-      },
-      enabled: !!podrazdelenieSpravochnik.selected
-    })
-  )
+  const groupSpravochnik = useSpravochnik(createGroupSpravochnik({}))
+  const responsibleSpravochnik = useSpravochnik(createResponsibleSpravochnik({}))
 
   const {
     data: ostatok,
@@ -93,7 +78,7 @@ const OstatokPage = () => {
         to: formatDate(selectedDate!),
         search,
         kimning_buynida: responsibleSpravochnik.selected?.id,
-        type: tabValue,
+        group_id: groupSpravochnik.selected?.id,
         budjet_id: budjet_id!,
         page: pagination.page,
         limit: pagination.limit
@@ -165,20 +150,19 @@ const OstatokPage = () => {
         <div className="w-full flex items-center justify-between">
           <div className="flex items-center gap-5">
             <ChooseSpravochnik
-              spravochnik={podrazdelenieSpravochnik}
-              placeholder="Выберите подразделение"
-              getName={(selected) => selected.name}
+              spravochnik={groupSpravochnik}
+              placeholder={t('choose', { what: t('group') })}
+              getName={(selected) => `${selected.group_number} / ${selected.name}`}
               getElements={(selected) => [{ name: 'Наименование', value: selected.name }]}
             />
 
             <ChooseSpravochnik
-              disabled={!podrazdelenieSpravochnik.selected}
               spravochnik={responsibleSpravochnik}
-              placeholder="Выберите ответственное лицо"
+              placeholder={t('choose', { what: t('responsible') })}
               getName={(selected) => selected.fio}
               getElements={(selected) => [
-                { name: 'ФИО', value: selected.fio },
-                { name: 'Подразделение', value: selected.spravochnik_podrazdelenie_jur7_name }
+                { name: t('fio'), value: selected.fio },
+                { name: t('podrazdelenie'), value: selected.spravochnik_podrazdelenie_jur7_name }
               ]}
             />
           </div>
@@ -284,153 +268,85 @@ const OstatokPage = () => {
           </div>
         </div>
       </ListView.Header>
-      <Tabs
-        value={tabValue}
-        onValueChange={(value) => setTabValue(value as OstatokViewOption)}
-        asChild
-      >
-        <>
-          <div className="p-5 pt-0 w-full flex items-center justify-between gap-5">
-            <TabsList>
-              <TabsTrigger value={OstatokViewOption.RESPONSIBLE}>{t('responsible')}</TabsTrigger>
-              <TabsTrigger value={OstatokViewOption.PRODUCT}>{t('products')}</TabsTrigger>
-              <TabsTrigger value={OstatokViewOption.GROUP}>{t('group')}</TabsTrigger>
-            </TabsList>
-
-            <form
-              onSubmit={onSubmit}
-              className="flex items-center justify-start gap-5"
-            >
-              <FormField
-                control={form.control}
-                name="date"
-                render={({ field }) => (
-                  <DatePicker
-                    value={field.value ? formatDate(field.value) : ''}
-                    onChange={(value) => {
-                      field.onChange(value ? parseDate(value) : undefined)
-                    }}
-                    validate={(date) => {
-                      if (!validateDate(date)) {
-                        if (date_iso_regex.test(date)) {
-                          toast.error(t('date_does_not_exist'))
-                        }
-                        return false
-                      }
-                      const isValid = minDate <= parseDate(date) && parseDate(date) <= maxDate
-                      if (!isValid && date?.length === 10) {
-                        toast.error(
-                          t('out_of_range', {
-                            minDate: formatLocaleDate(formatDate(minDate)),
-                            maxDate: formatLocaleDate(formatDate(maxDate))
-                          })
-                        )
-                      }
-                      return isValid
-                    }}
-                    calendarProps={{
-                      fromMonth: minDate,
-                      toMonth: maxDate
-                    }}
-                  />
-                )}
+      <div className="p-5 pt-0 w-full flex items-center justify-between gap-5">
+        <form
+          onSubmit={onSubmit}
+          className="flex items-center justify-start gap-5"
+        >
+          <FormField
+            control={form.control}
+            name="date"
+            render={({ field }) => (
+              <DatePicker
+                value={field.value ? formatDate(field.value) : ''}
+                onChange={(value) => {
+                  field.onChange(value ? parseDate(value) : undefined)
+                }}
+                validate={(date) => {
+                  if (!validateDate(date)) {
+                    if (date_iso_regex.test(date)) {
+                      toast.error(t('date_does_not_exist'))
+                    }
+                    return false
+                  }
+                  const isValid = minDate <= parseDate(date) && parseDate(date) <= maxDate
+                  if (!isValid && date?.length === 10) {
+                    toast.error(
+                      t('out_of_range', {
+                        minDate: formatLocaleDate(formatDate(minDate)),
+                        maxDate: formatLocaleDate(formatDate(maxDate))
+                      })
+                    )
+                  }
+                  return isValid
+                }}
+                calendarProps={{
+                  fromMonth: minDate,
+                  toMonth: maxDate
+                }}
               />
-              <Button
-                variant="outline"
-                type="submit"
+            )}
+          />
+          <Button
+            variant="outline"
+            type="submit"
+          >
+            <CircleArrowDown className="btn-icon icon-start" />
+            {t('load')}
+          </Button>
+        </form>
+      </div>
+      <ListView.Content loading={isFetching || isDeleting}>
+        <div ref={setElementRef}>
+          <CollapsibleTable
+            data={ostatok?.data ?? []}
+            columnDefs={ostatokGroupColumns}
+            getRowId={(row) => row.id}
+            getChildRows={(row) => row.products}
+            width={width}
+            renderChildRows={(rows) => (
+              <div
+                style={{ width }}
+                className="overflow-x-auto scrollbar pl-14"
               >
-                <CircleArrowDown className="btn-icon icon-start" />
-                {t('load')}
-              </Button>
-            </form>
-          </div>
-          <TabsContent
-            ref={setElementRef}
-            value={OstatokViewOption.RESPONSIBLE}
-            className="flex-1 hidden data-[state=active]:flex flex-col overflow-hidden"
-          >
-            <ListView.Content
-              loading={isFetching || isDeleting}
-              className="overflow-x-hidden"
-            >
-              <CollapsibleTable
-                data={ostatok?.data?.responsibles ?? []}
-                columnDefs={ostatokResponsibleColumns}
-                getRowId={(row) => row.id}
-                getChildRows={(row) => row.products}
-                width={width}
-                renderChildRows={(rows) => (
-                  <div
-                    style={{ width }}
-                    className="overflow-x-auto scrollbar pl-14"
-                  >
-                    <CollapsibleTable
-                      data={rows}
-                      columnDefs={ostatokProductColumns.filter((col) => col.key !== 'responsible')}
-                      getRowId={(row) => row.naimenovanie_tovarov_jur7_id}
-                      getChildRows={() => undefined}
-                      onDelete={handleDelete}
-                    />
-                  </div>
-                )}
-              />
-            </ListView.Content>
-          </TabsContent>
-          <TabsContent
-            value={OstatokViewOption.PRODUCT}
-            className="flex-1 hidden data-[state=active]:flex flex-col overflow-hidden"
-          >
-            <ListView.Content loading={isFetching || isDeleting}>
-              <GenericTable
-                data={ostatok?.data?.products ?? []}
-                columnDefs={ostatokProductColumns}
-                getRowId={(row) => row.naimenovanie_tovarov_jur7_id}
-                onDelete={handleDelete}
-              />
-            </ListView.Content>
-            <ListView.Footer>
-              <ListView.Pagination
-                pageCount={ostatok?.meta?.pageCount ?? 0}
-                {...pagination}
-              />
-            </ListView.Footer>
-          </TabsContent>
-          <TabsContent
-            value={OstatokViewOption.GROUP}
-            className="flex-1 hidden data-[state=active]:flex flex-col overflow-hidden"
-          >
-            <ListView.Content loading={isFetching || isDeleting}>
-              <CollapsibleTable
-                data={ostatok?.data?.groups ?? []}
-                columnDefs={ostatokGroupColumns}
-                getRowId={(row) => row.id}
-                getChildRows={(row) => row.products}
-                width={width}
-                renderChildRows={(rows) => (
-                  <div
-                    style={{ width }}
-                    className="overflow-x-auto scrollbar pl-14"
-                  >
-                    <CollapsibleTable
-                      data={rows}
-                      columnDefs={ostatokProductColumns}
-                      getRowId={(row) => row.naimenovanie_tovarov_jur7_id}
-                      getChildRows={() => undefined}
-                      onDelete={handleDelete}
-                    />
-                  </div>
-                )}
-              />
-            </ListView.Content>
-            <ListView.Footer>
-              <ListView.Pagination
-                pageCount={ostatok?.meta?.pageCount ?? 0}
-                {...pagination}
-              />
-            </ListView.Footer>
-          </TabsContent>
-        </>
-      </Tabs>
+                <CollapsibleTable
+                  data={rows}
+                  columnDefs={ostatokProductColumns}
+                  getRowId={(row) => row.naimenovanie_tovarov_jur7_id}
+                  getChildRows={() => undefined}
+                  onDelete={handleDelete}
+                />
+              </div>
+            )}
+          />
+        </div>
+      </ListView.Content>
+      <ListView.Footer>
+        <ListView.Pagination
+          pageCount={ostatok?.meta?.pageCount ?? 0}
+          {...pagination}
+        />
+      </ListView.Footer>
 
       {error?.document ? (
         <ErrorAlert

@@ -3,11 +3,7 @@ import type {
   SpravochnikTableProps
 } from '@renderer/common/features/spravochnik'
 import type { Response, ResponseMeta } from '@renderer/common/models'
-import type {
-  OstatokGroup,
-  OstatokProduct,
-  OstatokResponsible
-} from '@renderer/common/models/ostatok'
+import type { OstatokGroup } from '@renderer/common/models/ostatok'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 
 import { useMemo } from 'react'
@@ -34,16 +30,8 @@ export const OstatokFormSchema = z.object({
 })
 export type OstatokFormValues = z.infer<typeof OstatokFormSchema>
 
-export const ostatokService = new CRUDService<OstatokResponsible, OstatokFormValues>({
-  endpoint: APIEndpoints.jur7_saldo,
-  getRequestData: {
-    getAll: (res: Response<{ responsibles: OstatokResponsible[] }>) => {
-      return {
-        data: res?.data?.responsibles ?? [],
-        meta: res.meta
-      } as Response<OstatokResponsible[]>
-    }
-  }
+export const ostatokService = new CRUDService<OstatokGroup, OstatokFormValues>({
+  endpoint: APIEndpoints.jur7_saldo
 })
   .forRequest((type, ctx) => {
     if (type === 'getById') {
@@ -67,7 +55,7 @@ export const ostatokService = new CRUDService<OstatokResponsible, OstatokFormVal
 const OstatokSpravochnikTable = ({
   data,
   ...props
-}: Omit<SpravochnikTableProps<OstatokResponsible>, 'columnDefs'>) => {
+}: Omit<SpravochnikTableProps<OstatokGroup>, 'columnDefs'>) => {
   const ostatokData = useMemo(() => {
     return (data as any)?.[0]?.products ?? []
   }, [data])
@@ -90,7 +78,7 @@ export const getOstatokListQuery = async (
       {
         search?: string
         kimning_buynida?: number
-        type: OstatokViewOption
+        group_id?: number
         budjet_id: number
         to: string
         page: number
@@ -100,21 +88,11 @@ export const getOstatokListQuery = async (
     ]
   >
 ) => {
-  const { search, kimning_buynida, type, budjet_id, to, page, limit, iznos } = ctx.queryKey[1] ?? {}
-  const res = await http.get<
-    Response<
-      {
-        responsibles: OstatokResponsible[]
-        products: OstatokProduct[]
-        groups: OstatokGroup[]
-      },
-      ResponseMeta
-    >
-  >(`${APIEndpoints.jur7_saldo}`, {
+  const { search, kimning_buynida, budjet_id, to, page, limit, iznos } = ctx.queryKey[1] ?? {}
+  const res = await http.get<Response<OstatokGroup[], ResponseMeta>>(`${APIEndpoints.jur7_saldo}`, {
     params: {
       search,
       kimning_buynida,
-      type,
       budjet_id,
       to,
       page,
@@ -139,7 +117,7 @@ export const getOstatokCheck = async (
   >
 ) => {
   const { month, year, main_schet_id, budjet_id } = ctx.queryKey[1] ?? {}
-  const res = await http.get<Response<OstatokResponsible[]>>(`${APIEndpoints.jur7_saldo}/check`, {
+  const res = await http.get<Response<OstatokGroup[]>>(`${APIEndpoints.jur7_saldo}/check`, {
     params: {
       month,
       year,
@@ -151,7 +129,7 @@ export const getOstatokCheck = async (
 }
 
 export const createOstatokProductSpravochnik = (
-  config: Partial<SpravochnikHookOptions<OstatokResponsible>>
+  config: Partial<SpravochnikHookOptions<OstatokGroup>>
 ) => {
   return extendObject(
     {

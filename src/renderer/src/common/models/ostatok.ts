@@ -2,14 +2,6 @@ import type { Group } from './group'
 import type { Naimenovanie } from './naimenovanie'
 import type { Responsible } from './responsible'
 
-export interface OstatokResponsible {
-  id: number
-  fio: string
-  spravochnik_podrazdelenie_jur7_id: number
-  spravochnik_podrazdelenie_jur7_name: string
-  products: OstatokProduct[]
-}
-
 export interface OstatokGroup {
   id: number
   smeta_id: number

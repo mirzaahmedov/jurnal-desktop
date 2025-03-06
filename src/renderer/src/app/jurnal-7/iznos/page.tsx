@@ -74,7 +74,6 @@ const IznosPage = () => {
         to: formatDate(selectedDate!),
         search,
         kimning_buynida: responsibleSpravochnik.selected?.id,
-        type: OstatokViewOption.PRODUCT,
         budjet_id: budjet_id!,
         page: pagination.page,
         limit: pagination.limit,
