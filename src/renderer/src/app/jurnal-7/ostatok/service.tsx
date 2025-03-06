@@ -81,22 +81,19 @@ export const getOstatokListQuery = async (
         group_id?: number
         budjet_id: number
         to: string
-        page: number
-        limit: number
         iznos?: boolean
       }
     ]
   >
 ) => {
-  const { search, kimning_buynida, budjet_id, to, page, limit, iznos } = ctx.queryKey[1] ?? {}
+  const { search, kimning_buynida, group_id, budjet_id, to, iznos } = ctx.queryKey[1] ?? {}
   const res = await http.get<Response<OstatokGroup[], ResponseMeta>>(`${APIEndpoints.jur7_saldo}`, {
     params: {
       search,
       kimning_buynida,
+      group_id,
       budjet_id,
       to,
-      page,
-      limit,
       iznos
     }
   })

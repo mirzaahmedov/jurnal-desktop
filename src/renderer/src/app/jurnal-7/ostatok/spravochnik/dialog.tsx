@@ -4,7 +4,7 @@ import type { OstatokProduct } from '@renderer/common/models'
 import { useEffect, useMemo, useState } from 'react'
 
 import { GenericTable, LoadingOverlay } from '@renderer/common/components'
-import { Pagination } from '@renderer/common/components/pagination'
+import { CollapsibleTable } from '@renderer/common/components/collapsible-table'
 import { Badge } from '@renderer/common/components/ui/badge'
 import { Button } from '@renderer/common/components/ui/button'
 import {
@@ -16,12 +16,13 @@ import {
 } from '@renderer/common/components/ui/dialog'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@renderer/common/components/ui/tabs'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
+import { useElementWidth } from '@renderer/common/hooks'
 import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 
-import { ostatokProductColumns } from '../columns'
+import { ostatokGroupColumns, ostatokProductColumns } from '../columns'
 import { ostatokQueryKeys } from '../config'
-import { OstatokViewOption, getOstatokListQuery } from '../service'
+import { getOstatokListQuery } from '../service'
 
 enum TabOption {
   ALL = 'ALL',
@@ -47,19 +48,18 @@ export const OstatokSpravochnikDialog = ({
   const [tabValue, setTabValue] = useState(TabOption.ALL)
   const [selected, setSelected] = useState<OstatokProduct[]>([])
   const [search, setSearch] = useState('')
-  const [page, setPage] = useState(1)
-  const [limit, setLimit] = useState(10)
 
   const { t } = useTranslation()
+  const { width, setElementRef } = useElementWidth({
+    trigger: false
+  })
+
   const { data: ostatok, isFetching } = useQuery({
     queryKey: [
       ostatokQueryKeys.getAll,
       {
-        type: OstatokViewOption.PRODUCT,
         to,
         budjet_id: budjet_id!,
-        page,
-        limit,
         kimning_buynida,
         search: search ? search : undefined
       }
@@ -71,15 +71,12 @@ export const OstatokSpravochnikDialog = ({
   useEffect(() => {
     if (!open) {
       setSearch('')
-      setPage(1)
       setTabValue(TabOption.ALL)
       setSelected([])
     }
   }, [open])
 
   const selectedIds = useMemo(() => selected.map((e) => e.naimenovanie_tovarov_jur7_id), [selected])
-
-  console.log({ disabledIds })
 
   return (
     <Dialog
@@ -134,42 +131,44 @@ export const OstatokSpravochnikDialog = ({
             className="hidden data-[state=active]:flex flex-1 flex-col overflow-hidden relative"
           >
             {isFetching ? <LoadingOverlay /> : null}
-            <div className="flex-1 overflow-auto scrollbar">
-              <GenericTable
-                selectedIds={selectedIds}
-                disabledIds={disabledIds}
-                columnDefs={ostatokProductColumns}
-                getRowId={(row) => row.naimenovanie_tovarov_jur7_id}
-                data={ostatok?.data?.products ?? []}
-                onClickRow={(organization) => {
-                  setSelected((prev) => {
-                    if (prev.find((o) => o.id === organization.id)) {
-                      return prev.filter((o) => o.id !== organization.id)
-                    }
-                    return [...prev, organization]
-                  })
-                }}
+            <div
+              className="flex-1 overflow-auto scrollbar"
+              ref={setElementRef}
+            >
+              <CollapsibleTable
+                data={ostatok?.data ?? []}
+                columnDefs={ostatokGroupColumns}
+                getRowId={(row) => row.id}
+                getChildRows={(row) => row.products}
+                width={width}
+                renderChildRows={(rows) => (
+                  <div
+                    style={{ width }}
+                    className="overflow-x-auto scrollbar pl-14"
+                  >
+                    <GenericTable
+                      selectedIds={selectedIds}
+                      disabledIds={disabledIds}
+                      data={rows}
+                      columnDefs={ostatokProductColumns}
+                      getRowId={(row) => row.naimenovanie_tovarov_jur7_id}
+                      onClickRow={(organization) => {
+                        setSelected((prev) => {
+                          if (prev.find((o) => o.id === organization.id)) {
+                            return prev.filter((o) => o.id !== organization.id)
+                          }
+                          return [...prev, organization]
+                        })
+                      }}
+                    />
+                  </div>
+                )}
               />
             </div>
           </TabsContent>
         </Tabs>
         <DialogFooter className="p-0 m-0">
           <div className="w-full p-5 flex items-center">
-            {tabValue === TabOption.ALL ? (
-              <Pagination
-                page={page}
-                limit={limit}
-                onChange={({ page, limit }) => {
-                  if (page) {
-                    setPage(page)
-                  }
-                  if (limit) {
-                    setLimit(limit)
-                  }
-                }}
-                pageCount={ostatok?.meta?.pageCount ?? 0}
-              />
-            ) : null}
             <Button
               disabled={isFetching}
               loading={isFetching}

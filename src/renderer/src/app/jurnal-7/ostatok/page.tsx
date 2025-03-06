@@ -20,7 +20,7 @@ import { useLayoutStore } from '@renderer/common/features/layout'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
 import { SearchField, useSearch } from '@renderer/common/features/search'
 import { useSpravochnik } from '@renderer/common/features/spravochnik'
-import { useElementWidth, usePagination, useToggle } from '@renderer/common/hooks'
+import { useElementWidth, useToggle } from '@renderer/common/hooks'
 import { useSidebarStore } from '@renderer/common/layout/sidebar'
 import { date_iso_regex, formatDate, parseDate, validateDate } from '@renderer/common/lib/date'
 import { formatLocaleDate } from '@renderer/common/lib/format'
@@ -47,7 +47,6 @@ const OstatokPage = () => {
   const [selectedDate, setSelectedDate] = useState<undefined | Date>(minDate)
 
   const dropdownToggle = useToggle()
-  const pagination = usePagination()
   const queryClient = useQueryClient()
   const setLayout = useLayoutStore((store) => store.setLayout)
   const isCollapsed = useSidebarStore((store) => store.isCollapsed)
@@ -79,9 +78,7 @@ const OstatokPage = () => {
         search,
         kimning_buynida: responsibleSpravochnik.selected?.id,
         group_id: groupSpravochnik.selected?.id,
-        budjet_id: budjet_id!,
-        page: pagination.page,
-        limit: pagination.limit
+        budjet_id: budjet_id!
       }
     ],
     queryFn: getOstatokListQuery,
@@ -152,7 +149,7 @@ const OstatokPage = () => {
             <ChooseSpravochnik
               spravochnik={groupSpravochnik}
               placeholder={t('choose', { what: t('group') })}
-              getName={(selected) => `${selected.group_number} / ${selected.name}`}
+              getName={(selected) => `${selected.group_number ?? ''} / ${selected.name}`}
               getElements={(selected) => [{ name: 'Наименование', value: selected.name }]}
             />
 
@@ -341,13 +338,6 @@ const OstatokPage = () => {
           />
         </div>
       </ListView.Content>
-      <ListView.Footer>
-        <ListView.Pagination
-          pageCount={ostatok?.meta?.pageCount ?? 0}
-          {...pagination}
-        />
-      </ListView.Footer>
-
       {error?.document ? (
         <ErrorAlert
           open

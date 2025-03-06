@@ -45,6 +45,7 @@ export const RasxodChildFormSchema = withPreprocessor(
     inventar_num: z.string().optional().nullable(),
     serial_num: z.string().optional().nullable(),
     kol: z.number(),
+    group_jur7_id: z.number(),
     max_kol: z.number().optional(),
     sena: z.number(),
     summa: z.number().min(1),
