@@ -1,28 +1,9 @@
-import type { ColumnDef } from '@renderer/common/components'
-import type {
-  OstatokGroup,
-  OstatokProduct,
-  OstatokResponsible
-} from '@renderer/common/models/ostatok'
+import type { OstatokGroup, OstatokProduct } from '@renderer/common/models/ostatok'
 
+import { type ColumnDef, Copyable } from '@renderer/common/components'
+import { HoverInfoCell } from '@renderer/common/components/table/renderers'
 import { IDCell } from '@renderer/common/components/table/renderers/id'
 import { formatLocaleDate, formatNumber } from '@renderer/common/lib/format'
-
-export const ostatokResponsibleColumns: ColumnDef<OstatokResponsible>[] = [
-  {
-    key: 'id',
-    renderCell: IDCell,
-    width: 160
-  },
-  {
-    key: 'fio',
-    width: 600
-  },
-  {
-    key: 'spravochnik_podrazdelenie_jur7_name',
-    header: 'podrazdelenie'
-  }
-]
 
 export const ostatokGroupColumns: ColumnDef<OstatokGroup>[] = [
   {
@@ -73,8 +54,15 @@ export const ostatokProductColumns: ColumnDef<OstatokProduct>[] = [
   },
   {
     key: 'responsible',
-    header: 'responsible',
-    renderCell: (row) => row.responsible.fio
+    header: 'responsible_short',
+    className: 'min-w-[200px]',
+    renderCell: (row) => (
+      <HoverInfoCell
+        title={row.responsible.fio}
+        secondaryText={<Copyable value={row.responsible.id}>#{row.responsible.id}</Copyable>}
+        hoverContent={null}
+      />
+    )
   },
   {
     numeric: true,

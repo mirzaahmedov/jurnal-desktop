@@ -26,7 +26,8 @@ export const MainSchetPayloadSchema = withPreprocessor(
     jur3_schet: z.string(),
     jur3_subschet: z.string().optional(),
     jur4_schet: z.string(),
-    jur4_subschet: z.string().optional()
+    jur4_subschet: z.string().optional(),
+    gazna_number: z.string().optional()
   })
 )
 export type MainSchetPayloadType = z.infer<typeof MainSchetPayloadSchema>

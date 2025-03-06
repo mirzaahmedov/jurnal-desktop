@@ -135,7 +135,7 @@ export const MainSchetDialog = ({
       open={open}
       onOpenChange={onChangeOpen}
     >
-      <DialogContent className="h-full max-h-[700px] max-w-xl flex flex-col">
+      <DialogContent className="h-full max-h-[700px] max-w-2xl flex flex-col">
         <DialogHeader>
           <DialogTitle>
             {selected
@@ -204,6 +204,27 @@ export const MainSchetDialog = ({
                   <FormItem>
                     <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
                       <FormLabel className="text-right col-span-2">{t('raschet-schet')}</FormLabel>
+                      <FormControl>
+                        <Input
+                          className="col-span-4"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage className="text-end col-span-6" />
+                    </div>
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                name="gazna_number"
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
+                      <FormLabel className="text-right col-span-2">
+                        {t('raschet-schet-gazna')}
+                      </FormLabel>
                       <FormControl>
                         <Input
                           className="col-span-4"

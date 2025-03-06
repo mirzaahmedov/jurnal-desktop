@@ -93,6 +93,7 @@
   "from-who": "От кого",
   "to-whom": "Кому",
   "responsible": "Материально-ответственное лицо",
+  "responsible_short": "Мат-отв. лицо",
   "template": "Шаблон",
   "report": "Отчет",
   "download-something": "Скачать {{something}}",
@@ -223,5 +224,8 @@
   "you_can_continue_working_now": "Теперь вы можете закрыть это окно и продолжить работу.",
   "recomputing_saldo": "Пересчет сальдо, пожалуйста, подождите...",
   "iznos_start_date": "Дата начало износа",
+  "iznos_summa_total": "Сумма износа (Общий)",
+  "iznos_summa_month": "Сумма износа (Месяц)",
+  "iznos_summa_old": "Сумма износа (Старый)",
   "selected_products": "Выбранные продукты"
 }

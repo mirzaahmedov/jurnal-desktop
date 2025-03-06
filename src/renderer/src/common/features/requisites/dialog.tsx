@@ -3,6 +3,7 @@ import { useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router-dom'
 
 import { budgetService, budjetQueryKeys } from '@/app/super-admin/budjet'
 import { SelectField } from '@/common/components'
@@ -25,8 +26,8 @@ export type RequisitesDialogProps = {
   open: boolean
   onOpenChange: (value: boolean) => void
 }
-export const RequisitesDialog = (props: RequisitesDialogProps) => {
-  const { open, onOpenChange } = props
+export const RequisitesDialog = ({ open, onOpenChange }: RequisitesDialogProps) => {
+  const navigate = useNavigate()
 
   const { t } = useTranslation()
   const { user } = useAuthenticationStore()
@@ -52,6 +53,8 @@ export const RequisitesDialog = (props: RequisitesDialogProps) => {
 
   const onSubmit = form.handleSubmit((values) => {
     const { main_schet_id, budjet_id } = values
+
+    navigate('/region/dashboard')
 
     setRequisites({
       main_schet_id,

@@ -1,10 +1,6 @@
 import { useEffect, useState } from 'react'
 
-import {
-  defaultValues,
-  ostatokProductColumns,
-  ostatokResponsibleColumns
-} from '@renderer/app/jurnal-7/ostatok'
+import { defaultValues, ostatokProductColumns } from '@renderer/app/jurnal-7/ostatok'
 import { createPodrazdelenie7Spravochnik } from '@renderer/app/jurnal-7/podrazdelenie/service'
 import { createResponsibleSpravochnik } from '@renderer/app/jurnal-7/responsible/service'
 import { ChooseSpravochnik, DatePicker, GenericTable } from '@renderer/common/components'
@@ -92,8 +88,6 @@ const AdminOstatokPage = () => {
     setSelectedDate(values.date)
   })
 
-  console.log({ date: form.watch('date') })
-
   return (
     <ListView>
       <ListView.Header className="w-full flex flex-col gap-5">
@@ -163,7 +157,7 @@ const AdminOstatokPage = () => {
             >
               <CollapsibleTable
                 data={ostatok?.data?.responsibles ?? []}
-                columnDefs={ostatokResponsibleColumns}
+                columnDefs={[]}
                 getRowId={(row) => row.id}
                 getChildRows={(row) => row.products}
                 renderChildRows={(rows) => (

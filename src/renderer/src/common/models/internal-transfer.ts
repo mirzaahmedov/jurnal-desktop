@@ -1,5 +1,6 @@
 import type { Group } from './group'
 import type { Naimenovanie } from './naimenovanie'
+import type { Responsible } from './responsible'
 
 export interface InternalTransferChild {
   naimenovanie_tovarov_jur7_id: number
@@ -24,14 +25,7 @@ export interface InternalTransfer {
   kimdan_name: string
   kimga_name: string
   kimga_id: number
-  kimga: {
-    id: number
-    spravochnik_podrazdelenie_jur7_id: number
-    fio: string
-    user_id: number
-    created_at: string
-    updated_at: string
-    isdeleted: boolean
-  }
+  kimdan: Responsible
+  kimga: Responsible
   childs: InternalTransferChild[]
 }

@@ -122,6 +122,8 @@ const Jurnal7InternalTransferDetailsPage = () => {
     }
     form.reset({
       ...internalTransfer.data,
+      kimdan_id: internalTransfer.data.kimdan.id,
+      kimga_id: internalTransfer.data.kimga.id,
       childs: internalTransfer.data.childs.map((child) => ({
         ...child,
         name: child.product.name,

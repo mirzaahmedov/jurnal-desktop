@@ -1,3 +1,5 @@
+import { useState } from 'react'
+
 import {
   EditableTableCell,
   EditableTableHead,
@@ -5,7 +7,7 @@ import {
 } from '@renderer/common/components/editable-table'
 import { EmptyList } from '@renderer/common/components/empty-states'
 import { Checkbox } from '@renderer/common/components/ui/checkbox'
-import { type UseToggleReturn, useToggle } from '@renderer/common/hooks'
+import { useToggle } from '@renderer/common/hooks'
 import { formatDate } from '@renderer/common/lib/date'
 import { CircleMinus, CirclePlus } from 'lucide-react'
 import { type UseFormReturn, useFieldArray } from 'react-hook-form'
@@ -32,14 +34,16 @@ type ProvodkaTableProps = {
   tabIndex: number
 }
 export const ProvodkaTable = ({ form, tabIndex }: ProvodkaTableProps) => {
+  const spravochnikToggle = useToggle()
+
+  const [rowIndex, setRowIndex] = useState(0)
+
   const { t } = useTranslation()
 
-  const { append } = useFieldArray({
+  const { remove, insert } = useFieldArray({
     control: form.control,
     name: 'childs'
   })
-
-  const spravochnikToggle = useToggle()
 
   return (
     <form
@@ -62,9 +66,16 @@ export const ProvodkaTable = ({ form, tabIndex }: ProvodkaTableProps) => {
           .watch('childs')
           .map((child) => child.naimenovanie_tovarov_jur7_id)
           .filter(Boolean)}
-        onOpenChange={spravochnikToggle.setOpen}
+        onOpenChange={(open) => {
+          if (!open) {
+            setRowIndex(0)
+          }
+          spravochnikToggle.setOpen(open)
+        }}
         onSelect={(products) => {
-          append(
+          remove(rowIndex)
+          insert(
+            rowIndex,
             products.map((p) => ({
               naimenovanie_tovarov_jur7_id: p.naimenovanie_tovarov_jur7_id,
               name: p.product.name,
@@ -182,7 +193,10 @@ export const ProvodkaTable = ({ form, tabIndex }: ProvodkaTableProps) => {
               return (
                 <Provodka
                   tabIndex={tabIndex}
-                  spravochnikToggle={spravochnikToggle}
+                  openDialog={(index) => {
+                    spravochnikToggle.open()
+                    setRowIndex(index)
+                  }}
                   key={index}
                   index={index}
                   row={row}
@@ -242,10 +256,10 @@ type ProvodkaProps = {
   index: number
   row: RasxodChildFormValues
   form: UseFormReturn<RasxodFormValues>
-  spravochnikToggle: UseToggleReturn
+  openDialog: (rowIndex: number) => void
   tabIndex: number
 }
-const Provodka = ({ index, spravochnikToggle, row, form, tabIndex }: ProvodkaProps) => {
+const Provodka = ({ index, openDialog, row, form, tabIndex }: ProvodkaProps) => {
   const handleChangeChildField = (
     index: number,
     key: keyof RasxodChildFormValues,
@@ -258,7 +272,9 @@ const Provodka = ({ index, spravochnikToggle, row, form, tabIndex }: ProvodkaPro
   return (
     <EditableTableRow key={index}>
       <NaimenovanieCells
-        spravochnikToggle={spravochnikToggle}
+        openDialog={() => {
+          openDialog(index)
+        }}
         row={row}
         kimdan_id={form.watch('kimdan_id')}
         tabIndex={tabIndex}
@@ -525,14 +541,14 @@ const Provodka = ({ index, spravochnikToggle, row, form, tabIndex }: ProvodkaPro
 }
 
 type NaimenovanieCellsProps = {
-  spravochnikToggle: UseToggleReturn
+  openDialog: VoidFunction
   row: RasxodChildFormValues
   kimdan_id: number
   tabIndex: number
   errorMessage?: string
 }
 const NaimenovanieCells = ({
-  spravochnikToggle,
+  openDialog,
   row,
   kimdan_id,
   tabIndex,
@@ -552,7 +568,7 @@ const NaimenovanieCells = ({
               error: !!errorMessage
             })}
             error={!!errorMessage}
-            onDoubleClick={spravochnikToggle.open}
+            onDoubleClick={openDialog}
           />
         </div>
       </EditableTableCell>
@@ -567,7 +583,7 @@ const NaimenovanieCells = ({
                 tabIndex={-1}
                 className={inputVariants({ editor: true, error: !!errorMessage })}
                 disabled={!kimdan_id}
-                onDoubleClick={spravochnikToggle.open}
+                onDoubleClick={openDialog}
               />
             </div>
           </EditableTableCell>

@@ -72,6 +72,17 @@ const MainSchetFields = ({ name, main_schet, ...props }: MainSchetFieldsProps) =
           value={main_schet?.account_number}
         />
       </FormElement>
+
+      <FormElement
+        label={t('raschet-schet-gazna')}
+        grid="2:6"
+      >
+        <Input
+          readOnly
+          tabIndex={-1}
+          value={main_schet?.gazna_number}
+        />
+      </FormElement>
     </Fieldset>
   )
 }

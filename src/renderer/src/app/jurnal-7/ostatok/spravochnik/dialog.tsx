@@ -51,7 +51,7 @@ export const OstatokSpravochnikDialog = ({
 
   const { t } = useTranslation()
   const { width, setElementRef } = useElementWidth({
-    trigger: false
+    trigger: true
   })
 
   const { data: ostatok, isFetching } = useQuery({
@@ -127,44 +127,39 @@ export const OstatokSpravochnikDialog = ({
           </TabsContent>
 
           <TabsContent
+            ref={setElementRef}
             value={TabOption.ALL}
-            className="hidden data-[state=active]:flex flex-1 flex-col overflow-hidden relative"
+            className="hidden data-[state=active]:block w-full flex-1 relative overflow-y-auto overflow-x-hidden scrollbar"
           >
             {isFetching ? <LoadingOverlay /> : null}
-            <div
-              className="flex-1 overflow-auto scrollbar"
-              ref={setElementRef}
-            >
-              <CollapsibleTable
-                data={ostatok?.data ?? []}
-                columnDefs={ostatokGroupColumns}
-                getRowId={(row) => row.id}
-                getChildRows={(row) => row.products}
-                width={width}
-                renderChildRows={(rows) => (
-                  <div
-                    style={{ width }}
-                    className="overflow-x-auto scrollbar pl-14"
-                  >
-                    <GenericTable
-                      selectedIds={selectedIds}
-                      disabledIds={disabledIds}
-                      data={rows}
-                      columnDefs={ostatokProductColumns}
-                      getRowId={(row) => row.naimenovanie_tovarov_jur7_id}
-                      onClickRow={(organization) => {
-                        setSelected((prev) => {
-                          if (prev.find((o) => o.id === organization.id)) {
-                            return prev.filter((o) => o.id !== organization.id)
-                          }
-                          return [...prev, organization]
-                        })
-                      }}
-                    />
-                  </div>
-                )}
-              />
-            </div>
+            <CollapsibleTable
+              data={ostatok?.data ?? []}
+              columnDefs={ostatokGroupColumns}
+              getRowId={(row) => row.id}
+              getChildRows={(row) => row.products}
+              renderChildRows={(rows) => (
+                <div
+                  style={{ width }}
+                  className="overflow-x-auto scrollbar pl-14"
+                >
+                  <GenericTable
+                    selectedIds={selectedIds}
+                    disabledIds={disabledIds}
+                    data={rows}
+                    columnDefs={ostatokProductColumns}
+                    getRowId={(row) => row.naimenovanie_tovarov_jur7_id}
+                    onClickRow={(organization) => {
+                      setSelected((prev) => {
+                        if (prev.find((o) => o.id === organization.id)) {
+                          return prev.filter((o) => o.id !== organization.id)
+                        }
+                        return [...prev, organization]
+                      })
+                    }}
+                  />
+                </div>
+              )}
+            />
           </TabsContent>
         </Tabs>
         <DialogFooter className="p-0 m-0">

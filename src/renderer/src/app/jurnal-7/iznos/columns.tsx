@@ -1,6 +1,7 @@
-import type { ColumnDef } from '@renderer/common/components'
 import type { OstatokProduct } from '@renderer/common/models'
 
+import { type ColumnDef, Copyable } from '@renderer/common/components'
+import { HoverInfoCell } from '@renderer/common/components/table/renderers'
 import { IDCell } from '@renderer/common/components/table/renderers/id'
 import { getMonthName } from '@renderer/common/lib/date'
 import { formatLocaleDate, formatNumber } from '@renderer/common/lib/format'
@@ -12,40 +13,47 @@ export const columns: ColumnDef<OstatokProduct>[] = [
   },
   {
     key: 'name',
-    header: 'Наименование',
     headerClassName: 'min-w-[400px] whitespace-pre-wrap',
     className: 'min-w-[400px] whitespace-pre-wrap'
   },
   {
+    key: 'responsible',
+    header: 'responsible_short',
+    className: 'min-w-[200px]',
+    renderCell: (row) => (
+      <HoverInfoCell
+        title={row.responsible.fio}
+        secondaryText={<Copyable value={row.responsible.id}>#{row.responsible.id}</Copyable>}
+        hoverContent={null}
+      />
+    )
+  },
+  {
     fit: true,
     key: 'inventar_num',
-    header: 'Инвентар №',
+    header: 'inventar-num',
     renderCell: (row) => row.product.inventar_num
   },
   {
     fit: true,
     key: 'serial_num',
-    header: 'Серийный номер',
+    header: 'serial-num',
     renderCell: (row) => row.product.serial_num
   },
   {
     key: 'kol',
-    header: 'Количество',
     renderCell: (row) => row.to.kol
   },
   {
     numeric: true,
     key: 'sena',
-    header: 'Цена',
     renderCell: (row) => row.to.sena
   },
   {
-    key: 'year',
-    header: 'Год'
+    key: 'year'
   },
   {
     key: 'month',
-    header: 'Месяц',
     renderCell: (row) => getMonthName(row.month)
   },
   {
@@ -59,25 +67,25 @@ export const columns: ColumnDef<OstatokProduct>[] = [
   {
     fit: true,
     key: '',
-    header: 'Дата начала износа',
+    header: 'iznos_start_date',
     renderCell: (row) => formatLocaleDate(row.iznos_start)
   },
   {
     numeric: true,
     key: 'iznos_summa',
-    header: 'Сумма износа (Общий)',
+    header: 'iznos_summa_total',
     renderCell: (row) => formatNumber(row.to.iznos_summa ?? 0)
   },
   {
     numeric: true,
     key: 'iznos_summa_bir_oylik',
-    header: 'Сумма износа (Месяц)',
+    header: 'iznos_summa_month',
     renderCell: (row) => formatNumber(row.to.month_iznos ?? 0)
   },
   {
     numeric: true,
     key: 'eski_iznos_summa',
-    header: 'Сумма износа (Старый)',
+    header: 'iznos_summa_old',
     renderCell: (row) => formatNumber(row.to.eski_iznos_summa)
   }
 ]

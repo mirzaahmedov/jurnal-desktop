@@ -1,6 +1,7 @@
 type MainSchet = {
   id: number
   account_number: string
+  gazna_number: string
   spravochnik_budjet_name_id: number
   tashkilot_nomi: string
   tashkilot_bank: string

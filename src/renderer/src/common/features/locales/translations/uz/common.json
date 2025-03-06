@@ -93,6 +93,7 @@
   "from-who": "Kimdan",
   "to-whom": "Kimga",
   "responsible": "Javobgar shaxs",
+  "responsible_short": "Javobgar",
   "template": "Shablon",
   "report": "Hisobot",
   "download-something": "{{something}}ni yuklash",
@@ -222,5 +223,8 @@
   "you_can_continue_working_now": "Endi ushbu oynani yopib, ishlashda davom etishingiz mumkin.",
   "recomputing_saldo": "Saldo qayta hisoblanmoqda, iltimos, kuting...",
   "iznos_start_date": "Iznos boshlanish sanasi",
+  "iznos_summa_total": "Iznos summa (Umumiy)",
+  "iznos_summa_month": "Iznos summa (Oy)",
+  "iznos_summa_old": "Iznos summa (eski)",
   "selected_products": "Tanlangan mahsulotlar"
 }

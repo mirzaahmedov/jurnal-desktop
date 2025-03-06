@@ -15,7 +15,11 @@ export const mainSchetColumns: ColumnDef<MainSchet>[] = [
   },
   {
     key: 'account_number',
-    header: 'number'
+    header: 'raschet-schet'
+  },
+  {
+    key: 'gazna_number',
+    header: 'raschet-schet-gazna'
   },
   {
     key: 'tashkilot_inn',

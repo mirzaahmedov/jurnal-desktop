@@ -35,14 +35,16 @@ export const HoverInfoCell = ({
             ) : null}
           </div>
         </TooltipTrigger>
-        <TooltipContent
-          align="center"
-          onClick={(e) => e.stopPropagation()}
-          {...hoverContentProps}
-          className={cn('bg-white shadow-xl p-5', hoverContentProps.className)}
-        >
-          {hoverContent}
-        </TooltipContent>
+        {hoverContent ? (
+          <TooltipContent
+            align="center"
+            onClick={(e) => e.stopPropagation()}
+            {...hoverContentProps}
+            className={cn('bg-white shadow-xl p-5', hoverContentProps.className)}
+          >
+            {hoverContent}
+          </TooltipContent>
+        ) : null}
       </Tooltip>
     </TooltipProvider>
   )
