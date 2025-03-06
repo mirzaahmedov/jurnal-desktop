@@ -80,12 +80,22 @@ http.interceptors.response.use(
       const data = response.data as ErrorResponse
       const message = data?.message || (error as AxiosError)?.message
 
+      let requestData: any
+
+      try {
+        if (error.config?.headers['Content-Type'] === 'application/json' && error?.config?.data) {
+          requestData = JSON.parse(error.config.data)
+        }
+      } catch (err: any) {
+        console.error({ error: (err as Error)?.message ?? err, requestData: error?.config?.data })
+      }
+
       const details = JSON.stringify(
         {
           message,
           url: error.config?.url,
           method: error.config?.method?.toUpperCase(),
-          requestData: error.config?.data ? JSON.parse(error.config.data) : null,
+          requestData,
           status: error.response?.status,
           statusText: error.response?.statusText,
           responseData: error.response?.data,

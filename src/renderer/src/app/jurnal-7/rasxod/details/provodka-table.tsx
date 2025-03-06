@@ -256,8 +256,8 @@ type ProvodkaProps = {
   index: number
   row: RasxodChildFormValues
   form: UseFormReturn<RasxodFormValues>
-  openDialog: (rowIndex: number) => void
   tabIndex: number
+  openDialog: (rowIndex: number) => void
 }
 const Provodka = ({ index, openDialog, row, form, tabIndex }: ProvodkaProps) => {
   const handleChangeChildField = (
@@ -272,13 +272,13 @@ const Provodka = ({ index, openDialog, row, form, tabIndex }: ProvodkaProps) => 
   return (
     <EditableTableRow key={index}>
       <NaimenovanieCells
-        openDialog={() => {
-          openDialog(index)
-        }}
         row={row}
         kimdan_id={form.watch('kimdan_id')}
         tabIndex={tabIndex}
         errorMessage={form.formState.errors.childs?.[index]?.naimenovanie_tovarov_jur7_id?.message}
+        openDialog={() => {
+          openDialog(index)
+        }}
       />
       <EditableTableCell>
         <div className="relative">
@@ -541,18 +541,18 @@ const Provodka = ({ index, openDialog, row, form, tabIndex }: ProvodkaProps) => 
 }
 
 type NaimenovanieCellsProps = {
-  openDialog: VoidFunction
   row: RasxodChildFormValues
   kimdan_id: number
   tabIndex: number
   errorMessage?: string
+  openDialog: VoidFunction
 }
 const NaimenovanieCells = ({
-  openDialog,
   row,
   kimdan_id,
   tabIndex,
-  errorMessage
+  errorMessage,
+  openDialog
 }: NaimenovanieCellsProps) => {
   return (
     <>

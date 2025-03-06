@@ -37,7 +37,7 @@ export const FileDropzone = ({ onUpload, accept }: FileDropzoneProps) => {
     >
       <Upload
         className={cn(
-          'size-40 text-slate-300 group-hover:text-slate-400 group-hover:scale-110 group-active:text-brand transition-all',
+          'size-40 text-slate-300 group-hover:text-slate-400 group-hover:scale-105 group-active:text-brand transition-all',
           isDragActive && 'text-brand'
         )}
       />

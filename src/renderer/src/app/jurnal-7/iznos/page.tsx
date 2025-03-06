@@ -109,14 +109,14 @@ const IznosPage = () => {
           <div className="flex items-center justify-between gap-5">
             <ChooseSpravochnik
               spravochnik={groupSpravochnik}
-              placeholder={t('choose', { what: t('group') })}
+              placeholder={t('choose', { what: t('group').toLowerCase() })}
               getName={(selected) => `${selected.group_number ?? ''} / ${selected.name}`}
               getElements={(selected) => [{ name: 'Наименование', value: selected.name }]}
             />
 
             <ChooseSpravochnik
               spravochnik={responsibleSpravochnik}
-              placeholder={t('choose', { what: t('group') })}
+              placeholder={t('choose', { what: t('responsible').toLowerCase() })}
               getName={(selected) => selected.fio}
               getElements={(selected) => [
                 { name: 'ФИО', value: selected.fio },

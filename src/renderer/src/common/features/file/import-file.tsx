@@ -57,13 +57,11 @@ export const ImportFile = ({ url, params, onSuccess }: ImportFileDialogProps) =>
       return res.data
     },
     onSuccess(res) {
+      console.log({ res })
       toast.success(res?.message ?? 'Данные импортированы успешно')
       setFile(undefined)
       dialogToggle.close()
       onSuccess?.(res)
-    },
-    onError(error) {
-      toast.error(error.message ?? 'Не удалось импортировать данные')
     },
     onSettled() {
       setProgress(null)

@@ -106,10 +106,14 @@ const getErrorDocumentItems = (t: TFunction, document: ErrorDataDocument) => {
       name: t('from-who'),
       value: document.kimdan_name
     },
-    {
-      name: t('to-whom'),
-      value: document.kimga_name
-    },
+    ...(document.type === 'rasxod'
+      ? []
+      : [
+          {
+            name: t('to-whom'),
+            value: document.kimga_name
+          }
+        ]),
     {
       name: t('opisanie'),
       value: document.opisanie

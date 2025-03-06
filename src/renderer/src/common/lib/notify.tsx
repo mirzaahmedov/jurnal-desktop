@@ -45,7 +45,7 @@ export const ErrorToastContent = ({
   const { title, refetch, details } = data ?? {}
 
   return (
-    <div className="flex items-center">
+    <div className="flex items-center justify-between">
       <div>
         <h1 className="text-sm text-slate-500 font-medium">{title}</h1>
       </div>
