@@ -2,14 +2,16 @@ import type { OstatokProduct } from '@renderer/common/models'
 
 import { useEffect, useState } from 'react'
 
-import { ChooseSpravochnik, DatePicker, GenericTable } from '@renderer/common/components'
+import { ChooseSpravochnik, DatePicker } from '@renderer/common/components'
+import { CollapsibleTable } from '@renderer/common/components/collapsible-table'
 import { Button } from '@renderer/common/components/ui/button'
 import { FormField } from '@renderer/common/components/ui/form'
 import { useLayoutStore } from '@renderer/common/features/layout'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
 import { SearchField, useSearch } from '@renderer/common/features/search'
 import { useSpravochnik } from '@renderer/common/features/spravochnik'
-import { usePagination, useToggle } from '@renderer/common/hooks'
+import { useElementWidth, usePagination, useToggle } from '@renderer/common/hooks'
+import { useSidebarStore } from '@renderer/common/layout/sidebar'
 import { formatDate, parseDate } from '@renderer/common/lib/date'
 import { ListView } from '@renderer/common/views'
 import { useQuery } from '@tanstack/react-query'
@@ -20,9 +22,9 @@ import { useNavigate } from 'react-router-dom'
 
 import { useOstatokStore } from '@/app/jurnal-7/ostatok/store'
 
-import { OstatokViewOption, defaultValues, getOstatokListQuery } from '../ostatok'
+import { defaultValues, getOstatokListQuery, ostatokGroupColumns } from '../ostatok'
 import { handleOstatokError, validateOstatokDate } from '../ostatok/utils'
-import { createPodrazdelenie7Spravochnik } from '../podrazdelenie/service'
+import { createPodrazdelenie7Spravochnik as createGroupSpravochnik } from '../podrazdelenie/service'
 import { createResponsibleSpravochnik } from '../responsible/service'
 import { columns } from './columns'
 import { iznosQueryKeys } from './config'
@@ -35,10 +37,14 @@ const IznosPage = () => {
 
   const budjet_id = useRequisitesStore((store) => store.budjet_id)
   const setLayout = useLayoutStore((store) => store.setLayout)
+  const isCollapsed = useSidebarStore((store) => store.isCollapsed)
 
   const { t } = useTranslation(['app'])
   const { search } = useSearch()
   const { minDate, maxDate } = useOstatokStore()
+  const { setElementRef, width } = useElementWidth({
+    trigger: isCollapsed
+  })
 
   const [selected, setSelected] = useState<OstatokProduct | null>(null)
   const [selectedDate, setSelectedDate] = useState<undefined | Date>(minDate)
@@ -47,21 +53,8 @@ const IznosPage = () => {
     defaultValues
   })
 
-  const podrazdelenieSpravochnik = useSpravochnik(
-    createPodrazdelenie7Spravochnik({
-      onChange: () => {
-        responsibleSpravochnik.clear()
-      }
-    })
-  )
-  const responsibleSpravochnik = useSpravochnik(
-    createResponsibleSpravochnik({
-      params: {
-        podraz_id: podrazdelenieSpravochnik.selected?.id
-      },
-      enabled: !!podrazdelenieSpravochnik.selected
-    })
-  )
+  const groupSpravochnik = useSpravochnik(createGroupSpravochnik({}))
+  const responsibleSpravochnik = useSpravochnik(createResponsibleSpravochnik({}))
 
   const {
     data: iznosList,
@@ -74,6 +67,7 @@ const IznosPage = () => {
         to: formatDate(selectedDate!),
         search,
         kimning_buynida: responsibleSpravochnik.selected?.id,
+        group_id: groupSpravochnik.selected?.id,
         budjet_id: budjet_id!,
         page: pagination.page,
         limit: pagination.limit,
@@ -117,14 +111,14 @@ const IznosPage = () => {
         <div className="w-full flex items-center justify-between gap-5">
           <div className="flex items-center justify-between gap-5">
             <ChooseSpravochnik
-              spravochnik={podrazdelenieSpravochnik}
+              spravochnik={groupSpravochnik}
               placeholder="Выберите подразделение"
               getName={(selected) => selected.name}
               getElements={(selected) => [{ name: 'Наименование', value: selected.name }]}
             />
 
             <ChooseSpravochnik
-              disabled={!podrazdelenieSpravochnik.selected}
+              disabled={!groupSpravochnik.selected}
               spravochnik={responsibleSpravochnik}
               placeholder="Выберите ответственное лицо"
               getName={(selected) => selected.fio}
@@ -167,12 +161,30 @@ const IznosPage = () => {
         </div>
       </ListView.Header>
       <ListView.Content loading={isFetching}>
-        <GenericTable
-          columnDefs={columns}
-          getRowId={(row) => row.naimenovanie_tovarov_jur7_id}
-          data={(iznosList?.data?.products as unknown as OstatokProduct[]) ?? []}
-          onEdit={handleEdit}
-        />
+        <div ref={setElementRef}>
+          <CollapsibleTable
+            data={iznosList?.data ?? []}
+            columnDefs={ostatokGroupColumns}
+            getRowId={(row) => row.id}
+            getChildRows={(row) => row.products}
+            width={width}
+            renderChildRows={(rows) => (
+              <div
+                style={{ width }}
+                className="overflow-x-auto scrollbar pl-14"
+              >
+                <CollapsibleTable
+                  data={rows}
+                  columnDefs={columns}
+                  getRowId={(row) => row.naimenovanie_tovarov_jur7_id}
+                  getChildRows={() => undefined}
+                  onEdit={handleEdit}
+                />
+              </div>
+            )}
+          />
+        </div>
+
         <EditIznosDialog
           selected={selected}
           open={dialogToggle.isOpen}
