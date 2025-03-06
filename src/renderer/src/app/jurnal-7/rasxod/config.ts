@@ -15,8 +15,9 @@ export const queryKeys = {
   delete: 'jur7_rasxod/delete'
 }
 
-export const defaultChildValues = {
+export const defaultChildValues: RasxodChildFormValues = {
   naimenovanie_tovarov_jur7_id: 0,
+  group_jur7_id: 0,
   kol: 0,
   sena: 0,
   summa: 0,

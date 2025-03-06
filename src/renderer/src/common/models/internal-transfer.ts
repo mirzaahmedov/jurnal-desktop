@@ -1,4 +1,7 @@
-type InternalTransferChild = {
+import type { Group } from './group'
+import type { Naimenovanie } from './naimenovanie'
+
+export interface InternalTransferChild {
   naimenovanie_tovarov_jur7_id: number
   kol: number
   sena: number
@@ -8,8 +11,10 @@ type InternalTransferChild = {
   kredit_schet: string
   kredit_sub_schet: string
   data_pereotsenka: string
+  product: Naimenovanie
+  group: Group
 }
-type InternalTransfer = {
+export interface InternalTransfer {
   id: number
   doc_num: string
   doc_date: string
@@ -30,5 +35,3 @@ type InternalTransfer = {
   }
   childs: InternalTransferChild[]
 }
-
-export type { InternalTransferChild, InternalTransfer }

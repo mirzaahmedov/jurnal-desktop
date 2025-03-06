@@ -25,6 +25,7 @@ const defaultValues: InternalTransferFormType = {
   childs: [
     {
       naimenovanie_tovarov_jur7_id: 0,
+      group_jur7_id: 0,
       kol: 0,
       sena: 0,
       summa: 0,
@@ -40,7 +41,13 @@ const defaultValues: InternalTransferFormType = {
 const InternalTransferChildFormSchema = withPreprocessor(
   z.object({
     naimenovanie_tovarov_jur7_id: z.number(),
+    name: z.string().optional().nullable(),
+    group_number: z.string().optional().nullable(),
+    edin: z.string().optional().nullable(),
+    inventar_num: z.string().optional().nullable(),
+    serial_num: z.string().optional().nullable(),
     kol: z.number(),
+    group_jur7_id: z.number(),
     max_kol: z.number().optional(),
     sena: z.number(),
     summa: z.number().min(1),

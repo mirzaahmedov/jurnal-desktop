@@ -116,14 +116,21 @@ const Jurnal7InternalTransferDetailsPage = () => {
   }, [values])
 
   useEffect(() => {
-    form.reset(
-      internalTransfer?.data
-        ? {
-            ...internalTransfer.data,
-            kimga_id: internalTransfer.data.kimga_id ?? internalTransfer.data.kimga.id
-          }
-        : defaultValues
-    )
+    if (!internalTransfer?.data) {
+      form.reset(defaultValues)
+      return
+    }
+    form.reset({
+      ...internalTransfer.data,
+      childs: internalTransfer.data.childs.map((child) => ({
+        ...child,
+        name: child.product.name,
+        group_number: child.group.group_number,
+        edin: child.product.edin,
+        inventar_num: child.product.inventar_num,
+        serial_num: child.product.serial_num
+      }))
+    })
   }, [form, internalTransfer])
   useEffect(() => {
     if (id !== 'create') {

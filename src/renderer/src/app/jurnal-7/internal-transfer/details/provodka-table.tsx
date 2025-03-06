@@ -1,28 +1,28 @@
-import type { UseFormReturn } from 'react-hook-form'
-
 import {
   EditableTableCell,
   EditableTableHead,
   EditableTableRow
 } from '@renderer/common/components/editable-table'
+import { EmptyList } from '@renderer/common/components/empty-states'
 import { Checkbox } from '@renderer/common/components/ui/checkbox'
-import { useDefaultFilters } from '@renderer/common/features/app-defaults'
+import { type UseToggleReturn, useToggle } from '@renderer/common/hooks'
 import { formatDate } from '@renderer/common/lib/date'
 import { CircleMinus, CirclePlus } from 'lucide-react'
+import { type UseFormReturn, useFieldArray } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 
-import { useOstatokProduct } from '@/app/jurnal-7/ostatok/use-ostatok-product'
 import { DatePicker, NumericInput } from '@/common/components'
 import { Button } from '@/common/components/ui/button'
 import { Input } from '@/common/components/ui/input'
 import { Table, TableBody, TableFooter, TableHeader } from '@/common/components/ui/table'
-import { SpravochnikInput, inputVariants } from '@/common/features/spravochnik'
+import { inputVariants } from '@/common/features/spravochnik'
 import { calcSena, calcSumma } from '@/common/lib/pricing'
 
+import { OstatokSpravochnikDialog } from '../../ostatok/spravochnik/dialog'
 import {
-  InternalTransferChildFormSchema,
   type InternalTransferChildFormType,
+  InternalTransferFormSchema,
   type InternalTransferFormType,
   defaultValues
 } from '../config'
@@ -33,6 +33,14 @@ type ProvodkaTableProps = {
 }
 export const ProvodkaTable = ({ form, tabIndex }: ProvodkaTableProps) => {
   const { t } = useTranslation()
+
+  const { append } = useFieldArray({
+    control: form.control,
+    name: 'childs'
+  })
+
+  const spravochnikToggle = useToggle()
+
   return (
     <form
       onSubmit={(e) => {
@@ -44,8 +52,45 @@ export const ProvodkaTable = ({ form, tabIndex }: ProvodkaTableProps) => {
           block: 'start'
         })
       }}
-      className="whitespace-nowrap w-[2000px]"
+      className="w-[2000px]"
     >
+      <OstatokSpravochnikDialog
+        kimning_buynida={form.watch('kimdan_id')}
+        to={form.watch('doc_date')}
+        open={spravochnikToggle.isOpen}
+        disabledIds={form
+          .watch('childs')
+          .map((child) => child.naimenovanie_tovarov_jur7_id)
+          .filter(Boolean)}
+        onOpenChange={spravochnikToggle.setOpen}
+        onSelect={(products) => {
+          append(
+            products.map((p) => ({
+              naimenovanie_tovarov_jur7_id: p.naimenovanie_tovarov_jur7_id,
+              name: p.product.name,
+              group_number: p.group.group_number,
+              edin: p.product.edin,
+              inventar_num: p.product.inventar_num,
+              serial_num: p.product.serial_num,
+              kol: p.to.kol,
+              max_kol: p.to.kol,
+              sena: p.to.sena,
+              summa: calcSumma(p.to.kol, p.to.sena),
+              debet_schet: p?.group?.provodka_debet ?? '',
+              kredit_schet: p?.group?.schet ?? '',
+              debet_sub_schet: p?.group?.provodka_subschet ?? '',
+              kredit_sub_schet: p?.group?.provodka_subschet ?? '',
+              data_pereotsenka: formatDate(p.prixod_data?.doc_date),
+              iznos: p.iznos,
+              eski_iznos_summa: p.to.iznos_summa,
+              iznos_schet: p.iznos_schet,
+              iznos_sub_schet: p.iznos_sub_schet,
+              iznos_start: p.iznos_start ?? undefined,
+              group_jur7_id: p.product.group_jur7_id
+            }))
+          )
+        }}
+      />
       <Table className="border border-slate-200 table-xs">
         <TableHeader>
           <EditableTableRow>
@@ -132,25 +177,25 @@ export const ProvodkaTable = ({ form, tabIndex }: ProvodkaTableProps) => {
           </EditableTableRow>
         </TableHeader>
         <TableBody>
-          {Array.isArray(form.watch('childs')) ? (
+          {Array.isArray(form.watch('childs')) && form.watch('childs').length ? (
             form.watch('childs').map((row, index) => {
               return (
                 <Provodka
+                  tabIndex={tabIndex}
+                  spravochnikToggle={spravochnikToggle}
                   key={index}
                   index={index}
                   row={row}
                   form={form}
-                  tabIndex={tabIndex}
                 />
               )
             })
           ) : (
             <EditableTableRow>
-              <EditableTableCell
-                colSpan={100}
-                className="text-center"
-              >
-                No data available.
+              <EditableTableCell colSpan={100}>
+                <div className="grid place-items-center text-center p-5">
+                  <EmptyList className="size-36" />
+                </div>
               </EditableTableCell>
             </EditableTableRow>
           )}
@@ -162,11 +207,12 @@ export const ProvodkaTable = ({ form, tabIndex }: ProvodkaTableProps) => {
                 type="submit"
                 variant="ghost"
                 className="w-full hover:bg-slate-50 text-brand hover:text-brand"
+                tabIndex={tabIndex}
                 onClick={() => {
                   const childs = form.getValues('childs')
                   if (
                     !Array.isArray(childs) ||
-                    !childs.every((c) => InternalTransferChildFormSchema.safeParse(c).success)
+                    !childs.every((c) => InternalTransferFormSchema.safeParse(c).success)
                   ) {
                     form.trigger('childs')
                     toast.error('Неверные данные')
@@ -182,7 +228,7 @@ export const ProvodkaTable = ({ form, tabIndex }: ProvodkaTableProps) => {
                   ])
                 }}
               >
-                <CirclePlus className="btn-icon icon-start" /> Добавить
+                <CirclePlus className="btn-icon icon-start" /> {t('add')}
               </Button>
             </EditableTableCell>
           </EditableTableRow>
@@ -194,11 +240,12 @@ export const ProvodkaTable = ({ form, tabIndex }: ProvodkaTableProps) => {
 
 type ProvodkaProps = {
   index: number
-  tabIndex: number
   row: InternalTransferChildFormType
   form: UseFormReturn<InternalTransferFormType>
+  spravochnikToggle: UseToggleReturn
+  tabIndex: number
 }
-const Provodka = ({ index, tabIndex, row, form }: ProvodkaProps) => {
+const Provodka = ({ index, spravochnikToggle, row, form, tabIndex }: ProvodkaProps) => {
   const handleChangeChildField = (
     index: number,
     key: keyof InternalTransferChildFormType,
@@ -211,20 +258,16 @@ const Provodka = ({ index, tabIndex, row, form }: ProvodkaProps) => {
   return (
     <EditableTableRow key={index}>
       <NaimenovanieCells
-        index={index}
-        tabIndex={tabIndex}
-        form={form}
+        spravochnikToggle={spravochnikToggle}
         row={row}
         kimdan_id={form.watch('kimdan_id')}
-        doc_date={form.watch('doc_date')}
+        tabIndex={tabIndex}
         errorMessage={form.formState.errors.childs?.[index]?.naimenovanie_tovarov_jur7_id?.message}
-        updateFormField={handleChangeChildField}
       />
       <EditableTableCell>
         <div className="relative">
           <NumericInput
             adjustWidth
-            tabIndex={tabIndex}
             allowNegative={false}
             isAllowed={(values) => (values.floatValue ?? 0) <= (row.max_kol || Infinity)}
             value={row.kol || ''}
@@ -240,6 +283,7 @@ const Provodka = ({ index, tabIndex, row, form }: ProvodkaProps) => {
               error: !!form.formState.errors.childs?.[index]?.kol
             })}
             error={!!form.formState.errors.childs?.[index]?.kol}
+            tabIndex={tabIndex}
           />
         </div>
       </EditableTableCell>
@@ -247,7 +291,6 @@ const Provodka = ({ index, tabIndex, row, form }: ProvodkaProps) => {
         <div className="relative">
           <NumericInput
             adjustWidth
-            tabIndex={tabIndex}
             allowNegative={false}
             value={row.sena || ''}
             onValueChange={(values, src) => {
@@ -262,6 +305,7 @@ const Provodka = ({ index, tabIndex, row, form }: ProvodkaProps) => {
               error: !!form.formState.errors.childs?.[index]?.sena
             })}
             error={!!form.formState.errors.childs?.[index]?.sena}
+            tabIndex={tabIndex}
           />
         </div>
       </EditableTableCell>
@@ -269,12 +313,11 @@ const Provodka = ({ index, tabIndex, row, form }: ProvodkaProps) => {
         <div className="relative">
           <NumericInput
             adjustWidth
-            tabIndex={tabIndex}
             allowNegative={false}
             value={row.summa || ''}
             onValueChange={(values, src) => {
               const sena = calcSena(values.floatValue ?? 0, row.kol)
-              if (src.source === 'event' && sena !== row.sena && (values.floatValue ?? 0) !== 0) {
+              if (src.source === 'event' && (values.floatValue ?? 0) !== 0 && row.sena !== sena) {
                 handleChangeChildField(index, 'sena', sena)
               }
               handleChangeChildField(index, 'summa', values.floatValue)
@@ -284,6 +327,7 @@ const Provodka = ({ index, tabIndex, row, form }: ProvodkaProps) => {
               error: !!form.formState.errors.childs?.[index]?.summa
             })}
             error={!!form.formState.errors.childs?.[index]?.summa}
+            tabIndex={tabIndex}
           />
         </div>
       </EditableTableCell>
@@ -293,12 +337,6 @@ const Provodka = ({ index, tabIndex, row, form }: ProvodkaProps) => {
           <Checkbox
             disabled
             checked={row.iznos}
-            onCheckedChange={(checked) => {
-              if (!checked) {
-                handleChangeChildField(index, 'eski_iznos_summa', 0)
-              }
-              handleChangeChildField(index, 'iznos', Boolean(checked))
-            }}
             tabIndex={tabIndex}
           />
         </div>
@@ -325,7 +363,6 @@ const Provodka = ({ index, tabIndex, row, form }: ProvodkaProps) => {
       <EditableTableCell>
         <div className="relative">
           <Input
-            tabIndex={tabIndex}
             value={row.debet_schet}
             onChange={(e) => {
               handleChangeChildField(index, 'debet_schet', e.target.value)
@@ -335,13 +372,13 @@ const Provodka = ({ index, tabIndex, row, form }: ProvodkaProps) => {
               error: !!form.formState.errors.childs?.[index]?.debet_schet
             })}
             error={!!form.formState.errors.childs?.[index]?.debet_schet}
+            tabIndex={tabIndex}
           />
         </div>
       </EditableTableCell>
       <EditableTableCell>
         <div className="relative">
           <Input
-            tabIndex={tabIndex}
             value={row.debet_sub_schet}
             onChange={(e) => {
               handleChangeChildField(index, 'debet_sub_schet', e.target.value)
@@ -351,6 +388,7 @@ const Provodka = ({ index, tabIndex, row, form }: ProvodkaProps) => {
               error: !!form.formState.errors.childs?.[index]?.debet_sub_schet
             })}
             error={!!form.formState.errors.childs?.[index]?.debet_sub_schet}
+            tabIndex={tabIndex}
           />
         </div>
       </EditableTableCell>
@@ -358,7 +396,6 @@ const Provodka = ({ index, tabIndex, row, form }: ProvodkaProps) => {
       <EditableTableCell>
         <div className="relative">
           <Input
-            tabIndex={tabIndex}
             value={row.kredit_schet}
             onChange={(e) => {
               handleChangeChildField(index, 'kredit_schet', e.target.value)
@@ -368,13 +405,13 @@ const Provodka = ({ index, tabIndex, row, form }: ProvodkaProps) => {
               error: !!form.formState.errors.childs?.[index]?.kredit_schet
             })}
             error={!!form.formState.errors.childs?.[index]?.kredit_schet}
+            tabIndex={tabIndex}
           />
         </div>
       </EditableTableCell>
       <EditableTableCell>
         <div className="relative">
           <Input
-            tabIndex={tabIndex}
             value={row.kredit_sub_schet}
             onChange={(e) => {
               handleChangeChildField(index, 'kredit_sub_schet', e.target.value)
@@ -384,6 +421,7 @@ const Provodka = ({ index, tabIndex, row, form }: ProvodkaProps) => {
               error: !!form.formState.errors.childs?.[index]?.kredit_sub_schet
             })}
             error={!!form.formState.errors.childs?.[index]?.kredit_sub_schet}
+            tabIndex={tabIndex}
           />
         </div>
       </EditableTableCell>
@@ -447,7 +485,6 @@ const Provodka = ({ index, tabIndex, row, form }: ProvodkaProps) => {
       <EditableTableCell>
         <div className="relative">
           <DatePicker
-            tabIndex={tabIndex}
             value={row.data_pereotsenka}
             onChange={(date) => {
               handleChangeChildField(index, 'data_pereotsenka', date)
@@ -461,26 +498,24 @@ const Provodka = ({ index, tabIndex, row, form }: ProvodkaProps) => {
             triggerProps={{
               className: 'min-w-32'
             }}
+            tabIndex={tabIndex}
           />
         </div>
       </EditableTableCell>
 
       <EditableTableCell className="whitespace-nowrap w-0">
         <Button
-          tabIndex={tabIndex}
           type="button"
           variant="ghost"
           className="hover:bg-slate-50 hover:text-brand text-slate-400"
           onClick={() => {
             const childs = form.getValues('childs')
-            if (!Array.isArray(childs) || childs.length === 1) {
-              return
-            }
             form.setValue(
               'childs',
               childs.filter((_, i) => i !== index)
             )
           }}
+          tabIndex={tabIndex}
         >
           <CircleMinus className="btn-icon !mx-0" />
         </Button>
@@ -490,94 +525,49 @@ const Provodka = ({ index, tabIndex, row, form }: ProvodkaProps) => {
 }
 
 type NaimenovanieCellsProps = {
-  index: number
-  tabIndex: number
-  form: UseFormReturn<InternalTransferFormType>
+  spravochnikToggle: UseToggleReturn
   row: InternalTransferChildFormType
   kimdan_id: number
-  doc_date: string
-  updateFormField: (index: number, key: keyof InternalTransferChildFormType, value: unknown) => void
+  tabIndex: number
   errorMessage?: string
 }
 const NaimenovanieCells = ({
-  index,
-  tabIndex,
-  form,
+  spravochnikToggle,
   row,
   kimdan_id,
-  doc_date,
-  updateFormField,
+  tabIndex,
   errorMessage
 }: NaimenovanieCellsProps) => {
-  const from = useDefaultFilters((store) => store.from)
-
-  const {
-    naimenovanie_tovarov_jur7_name,
-    group_jur7_number,
-    edin,
-    inventar_num,
-    serial_num,
-    spravochnik
-  } = useOstatokProduct({
-    naimenovanie_tovarov_jur7_id: row.naimenovanie_tovarov_jur7_id,
-    kimdan_id,
-    doc_date,
-    from,
-    disabledIds: form.getValues('childs').map((child) => child.naimenovanie_tovarov_jur7_id),
-    onChange(product) {
-      if (!product) {
-        return
-      }
-
-      updateFormField(index, 'naimenovanie_tovarov_jur7_id', product.naimenovanie_tovarov_jur7_id)
-      updateFormField(index, 'kol', product.to.kol)
-      updateFormField(index, 'max_kol', product.to.kol)
-      updateFormField(index, 'sena', product.to.sena)
-      updateFormField(index, 'summa', calcSumma(product.to.kol, product.to.sena))
-      updateFormField(index, 'debet_schet', product?.group?.schet ?? '')
-      updateFormField(index, 'kredit_schet', product?.group?.schet ?? '')
-      updateFormField(index, 'debet_sub_schet', product?.group?.provodka_subschet ?? '')
-      updateFormField(index, 'kredit_sub_schet', product?.group?.provodka_subschet ?? '')
-      updateFormField(index, 'data_pereotsenka', formatDate(product.prixod_data?.doc_date))
-      updateFormField(index, 'iznos', product.iznos)
-      updateFormField(index, 'eski_iznos_summa', product.to.iznos_summa)
-      updateFormField(index, 'iznos_schet', product.iznos_schet)
-      updateFormField(index, 'iznos_sub_schet', product.iznos_sub_schet)
-      updateFormField(index, 'iznos_start', product.iznos_start)
-    }
-  })
-
   return (
     <>
       <EditableTableCell>
         <div className="relative">
-          <SpravochnikInput
+          <Input
             readOnly
-            tabIndex={tabIndex}
             disabled={!kimdan_id}
+            tabIndex={tabIndex}
             value={row.naimenovanie_tovarov_jur7_id || ''}
             className={inputVariants({
               editor: true,
               error: !!errorMessage
             })}
             error={!!errorMessage}
-            getInputValue={(selected) => String(selected?.id) ?? ''}
-            {...spravochnik}
+            onDoubleClick={spravochnikToggle.open}
           />
         </div>
       </EditableTableCell>
-      {[naimenovanie_tovarov_jur7_name, group_jur7_number, edin, serial_num, inventar_num].map(
+      {[row.name, row.group_number, row.edin, row.serial_num, row.inventar_num].map(
         (field, index) => (
           <EditableTableCell key={index}>
             <div className="relative">
               <Input
                 readOnly
-                tabIndex={-1}
-                disabled={!kimdan_id}
-                value={field}
-                className={inputVariants({ editor: true, error: !!errorMessage })}
+                value={field ?? ''}
                 error={!!errorMessage}
-                onDoubleClick={spravochnik.open}
+                tabIndex={-1}
+                className={inputVariants({ editor: true, error: !!errorMessage })}
+                disabled={!kimdan_id}
+                onDoubleClick={spravochnikToggle.open}
               />
             </div>
           </EditableTableCell>
