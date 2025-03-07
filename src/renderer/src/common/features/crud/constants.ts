@@ -1,4 +1,4 @@
-export enum APIEndpoints {
+export enum ApiEndpoints {
   sostav = 'spravochnik/sostav',
   main_schet = 'spravochnik/main-schet',
   podotchet_litso = 'spravochnik/podotchet-litso',
@@ -61,4 +61,10 @@ export enum APIEndpoints {
   ox_report = 'ox/report',
   raschet_schet = 'spravochnik/organization/account_number',
   raschet_schet_gazna = 'spravochnik/organization/gazna'
+}
+
+export enum ApiStatusCodes {
+  DOCS_HAVE = 1001,
+  OK = 1000,
+  SALDO_CREATE = 1002
 }

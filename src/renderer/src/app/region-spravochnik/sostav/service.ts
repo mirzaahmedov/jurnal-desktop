@@ -3,7 +3,7 @@ import type { Sostav } from '@/common/models'
 
 import { z } from 'zod'
 
-import { APIEndpoints, CRUDService } from '@/common/features/crud'
+import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 import { SpravochnikSearchField } from '@/common/features/search'
 import { extendObject } from '@/common/lib/utils'
 import { withPreprocessor } from '@/common/lib/validation'
@@ -19,14 +19,14 @@ export const SostavFormSchema = withPreprocessor(
 export type SostavFormValues = z.infer<typeof SostavFormSchema>
 
 export const sostavService = new CRUDService<Sostav, SostavFormValues>({
-  endpoint: APIEndpoints.sostav
+  endpoint: ApiEndpoints.sostav
 })
 
 export const createSostavSpravochnik = (config: Partial<SpravochnikHookOptions<Sostav>>) => {
   return extendObject(
     {
       title: 'Выберите состав',
-      endpoint: APIEndpoints.sostav,
+      endpoint: ApiEndpoints.sostav,
       columnDefs: sostavColumns,
       service: sostavService,
       filters: [SpravochnikSearchField]

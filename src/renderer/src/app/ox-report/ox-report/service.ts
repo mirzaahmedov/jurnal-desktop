@@ -1,13 +1,13 @@
 import type { OX, Response } from '@renderer/common/models'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 
-import { APIEndpoints, CRUDService } from '@renderer/common/features/crud'
+import { ApiEndpoints, CRUDService } from '@renderer/common/features/crud'
 import { budjet, main_schet } from '@renderer/common/features/crud/middleware'
 import { http } from '@renderer/common/lib/http'
 
 export const getOXInfo = async (ctx: QueryFunctionContext) => {
   const response = await http.get<Response<OX.ReportPreviewDetails>>(
-    APIEndpoints.ox_report + '/info',
+    ApiEndpoints.ox_report + '/info',
     {
       params: ctx.queryKey[1]
     }
@@ -16,14 +16,14 @@ export const getOXInfo = async (ctx: QueryFunctionContext) => {
 }
 export const getOXById = async (ctx: QueryFunctionContext) => {
   const response = await http.get<Response<OX.ReportPreviewDetails>>(
-    `${APIEndpoints.ox_report}/id`,
+    `${ApiEndpoints.ox_report}/id`,
     { params: ctx.queryKey[2] }
   )
   return response.data
 }
 
 export const oxService = new CRUDService<OX.ReportPreview, any>({
-  endpoint: APIEndpoints.ox_report
+  endpoint: ApiEndpoints.ox_report
 })
   .use(budjet())
   .use(main_schet())

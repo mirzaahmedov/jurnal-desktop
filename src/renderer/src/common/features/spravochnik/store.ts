@@ -1,5 +1,5 @@
 import type { ColumnDef } from '@/common/components'
-import type { APIEndpoints, CRUDService } from '@/common/features/crud'
+import type { ApiEndpoints, CRUDService } from '@/common/features/crud'
 import type { DialogProps } from '@radix-ui/react-dialog'
 import type { GenericTableProps } from '@renderer/common/components/generic-table/table'
 import type { useToggle } from '@renderer/common/hooks'
@@ -37,7 +37,7 @@ export type SpravochnikTableProps<T extends object> = {
 
 export type SpravochnikData<T extends object> = {
   id: string
-  endpoint: APIEndpoints
+  endpoint: ApiEndpoints
   title?: string
   service: CRUDService<T>
   selectedId?: number

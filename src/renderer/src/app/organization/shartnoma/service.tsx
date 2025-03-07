@@ -17,7 +17,7 @@ import { formatDate } from '@renderer/common/lib/date'
 import { CopyPlus } from 'lucide-react'
 import { ZodIssueCode, z } from 'zod'
 
-import { APIEndpoints, CRUDService } from '@/common/features/crud'
+import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 import { budjet } from '@/common/features/crud/middleware'
 import { SpravochnikSearchField } from '@/common/features/search'
 import { extendObject } from '@/common/lib/utils'
@@ -28,7 +28,7 @@ import { shartnomaQueryKeys } from './config'
 import { ShartnomaForm } from './details/shartnoma-form'
 
 export const shartnomaService = new CRUDService<Shartnoma, ShartnomaFormValues>({
-  endpoint: APIEndpoints.shartnoma
+  endpoint: ApiEndpoints.shartnoma
 }).use(budjet())
 
 export const ShartnomaGrafikFormSchema = z
@@ -150,7 +150,7 @@ export const createShartnomaSpravochnik = (config: Partial<SpravochnikHookOption
   return extendObject(
     {
       title: 'Выберите договор',
-      endpoint: APIEndpoints.shartnoma,
+      endpoint: ApiEndpoints.shartnoma,
       columnDefs: shartnomaColumns,
       service: shartnomaService,
       queryKeys: shartnomaQueryKeys,

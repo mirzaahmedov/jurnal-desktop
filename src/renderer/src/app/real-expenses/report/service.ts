@@ -1,14 +1,14 @@
-import { APIEndpoints, CRUDService } from '@renderer/common/features/crud'
-import { budjet, main_schet } from '@renderer/common/features/crud/middleware'
+import type { RealExpensesReportValues } from './config'
 import type { RealExpenses } from '@renderer/common/models'
 
-import type { RealExpensesReportValues } from './config'
+import { ApiEndpoints, CRUDService } from '@renderer/common/features/crud'
+import { budjet, main_schet } from '@renderer/common/features/crud/middleware'
 
 export const realExpensesReportService = new CRUDService<
   RealExpenses.Report,
   RealExpensesReportValues
 >({
-  endpoint: APIEndpoints.realcost_doc
+  endpoint: ApiEndpoints.realcost_doc
 })
   .use(budjet())
   .use(main_schet())

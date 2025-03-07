@@ -33,11 +33,11 @@ const unformatLocaleDate = (date: string) => {
   return value
 }
 
-const formatNumber = (num: number) => {
+const formatNumber = (num: number, minimumFractionDigits = 2, maximumFractionDigits = 2) => {
   return Intl.NumberFormat('ru-RU', {
     style: 'decimal',
-    maximumFractionDigits: 2,
-    minimumFractionDigits: 2
+    maximumFractionDigits,
+    minimumFractionDigits
   }).format(num)
 }
 

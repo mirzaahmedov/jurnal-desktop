@@ -1,12 +1,12 @@
 import type { MainbookReportValues } from './config'
 import type { Mainbook, Response } from '@renderer/common/models'
 
-import { APIEndpoints, CRUDService } from '@renderer/common/features/crud'
+import { ApiEndpoints, CRUDService } from '@renderer/common/features/crud'
 import { budjet, main_schet } from '@renderer/common/features/crud/middleware'
 import { http } from '@renderer/common/lib/http'
 
 export const mainbookReportService = new CRUDService<Mainbook.Report, MainbookReportValues>({
-  endpoint: APIEndpoints.mainbook__doc
+  endpoint: ApiEndpoints.mainbook__doc
 })
   .use(budjet())
   .use(main_schet())

@@ -14,7 +14,7 @@ import {
   sortElementsByLevels
 } from '@renderer/common/lib/data-structure'
 
-import { APIEndpoints, CRUDService } from '@/common/features/crud'
+import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 import { SpravochnikSearchField } from '@/common/features/search'
 import { extendObject } from '@/common/lib/utils'
 
@@ -22,7 +22,7 @@ import { smetaColumns } from './columns'
 import { SmetaGroupFilter } from './group-filter'
 
 export const smetaService = new CRUDService<Smeta, SmetaForm>({
-  endpoint: APIEndpoints.smeta
+  endpoint: ApiEndpoints.smeta
 }).forRequest((type, ctx) => {
   if (type === 'getAll') {
     const params = ctx.config.params ?? {}
@@ -78,7 +78,7 @@ export const createSmetaSpravochnik = (config: Partial<SpravochnikHookOptions<Sm
   return extendObject(
     {
       title: 'Выберите смету',
-      endpoint: APIEndpoints.smeta,
+      endpoint: ApiEndpoints.smeta,
       columnDefs: smetaColumns,
       service: smetaService,
       filters: [SpravochnikSearchField, SmetaGroupFilter],

@@ -2,12 +2,12 @@ import type { PokazatUslugi } from '@/common/models'
 
 import { z } from 'zod'
 
-import { APIEndpoints, CRUDService } from '@/common/features/crud'
+import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 import { main_schet } from '@/common/features/crud/middleware'
 import { withPreprocessor } from '@/common/lib/validation'
 
 export const pokazatUslugiService = new CRUDService<PokazatUslugi, PokazatUslugiForm>({
-  endpoint: APIEndpoints.pokazat_uslugi
+  endpoint: ApiEndpoints.pokazat_uslugi
 }).use(main_schet())
 
 export const PokazatUslugiProvodkaFormSchema = withPreprocessor(

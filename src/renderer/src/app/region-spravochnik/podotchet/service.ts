@@ -3,7 +3,7 @@ import type { Podotchet } from '@/common/models'
 
 import { z } from 'zod'
 
-import { APIEndpoints, CRUDService } from '@/common/features/crud'
+import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 import { SpravochnikSearchField } from '@/common/features/search'
 import { extendObject } from '@/common/lib/utils'
 import { withPreprocessor } from '@/common/lib/validation'
@@ -21,14 +21,14 @@ export const PodotchetFormSchema = withPreprocessor(
 export type PodotchetForm = z.infer<typeof PodotchetFormSchema>
 
 export const podotchetService = new CRUDService<Podotchet, PodotchetForm>({
-  endpoint: APIEndpoints.podotchet_litso
+  endpoint: ApiEndpoints.podotchet_litso
 })
 
 export const createPodotchetSpravochnik = (config: Partial<SpravochnikHookOptions<Podotchet>>) => {
   return extendObject(
     {
       title: 'Выберите подотчетное лицо',
-      endpoint: APIEndpoints.podotchet_litso,
+      endpoint: ApiEndpoints.podotchet_litso,
       columnDefs: podotchetColumns,
       service: podotchetService,
       queryKeys: podotchetQueryKeys,

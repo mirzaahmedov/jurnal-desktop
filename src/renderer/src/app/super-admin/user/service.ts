@@ -2,7 +2,7 @@ import type { User } from '@/common/models'
 
 import { z } from 'zod'
 
-import { APIEndpoints, CRUDService } from '@/common/features/crud'
+import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 import { withPreprocessor } from '@/common/lib/validation'
 
 export const AdminUserPayloadSchema = withPreprocessor(
@@ -16,5 +16,5 @@ export const AdminUserPayloadSchema = withPreprocessor(
 export type AdmonUserPayloadType = z.infer<typeof AdminUserPayloadSchema>
 
 export const adminUserService = new CRUDService<User, AdmonUserPayloadType>({
-  endpoint: APIEndpoints.admin_user
+  endpoint: ApiEndpoints.admin_user
 })

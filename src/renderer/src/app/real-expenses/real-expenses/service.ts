@@ -1,13 +1,13 @@
 import type { RealExpenses, Response } from '@renderer/common/models'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 
-import { APIEndpoints, CRUDService } from '@renderer/common/features/crud'
+import { ApiEndpoints, CRUDService } from '@renderer/common/features/crud'
 import { budjet, main_schet } from '@renderer/common/features/crud/middleware'
 import { http } from '@renderer/common/lib/http'
 
 export const getRealExpenseInfo = async (ctx: QueryFunctionContext) => {
   const response = await http.get<Response<RealExpenses.ReportPreviewInfo>>(
-    APIEndpoints.realcost_report + '/info',
+    ApiEndpoints.realcost_report + '/info',
     {
       params: ctx.queryKey[1]
     }
@@ -16,14 +16,14 @@ export const getRealExpenseInfo = async (ctx: QueryFunctionContext) => {
 }
 export const getRealExpenseById = async (ctx: QueryFunctionContext) => {
   const response = await http.get<Response<RealExpenses.ReportPreviewDetails>>(
-    `${APIEndpoints.realcost_report}/id`,
+    `${ApiEndpoints.realcost_report}/id`,
     { params: ctx.queryKey[2] }
   )
   return response.data
 }
 
 export const realExpensesService = new CRUDService<RealExpenses.ReportPreview, any>({
-  endpoint: APIEndpoints.realcost_report
+  endpoint: ApiEndpoints.realcost_report
 })
   .use(budjet())
   .use(main_schet())

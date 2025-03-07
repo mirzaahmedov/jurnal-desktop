@@ -4,13 +4,13 @@ import type { UseMutationOptions } from '@tanstack/react-query'
 
 import { useMutation, useQuery } from '@tanstack/react-query'
 
-import { APIEndpoints, CRUDService } from '@/common/features/crud'
+import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 import { budjet, main_schet } from '@/common/features/crud/middleware'
 
 import { queryKeys } from './config'
 
 export const prixodService = new CRUDService<MO7Prixod, PrixodFormType>({
-  endpoint: APIEndpoints.jur7_prixod
+  endpoint: ApiEndpoints.jur7_prixod
 })
   .use(main_schet())
   .use(budjet())

@@ -6,7 +6,7 @@ import type {
 } from '@renderer/common/models'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 
-import { APIEndpoints } from '@renderer/common/features/crud'
+import { ApiEndpoints } from '@renderer/common/features/crud'
 import { http } from '@renderer/common/lib/http'
 
 export const getAdminOstatokListQuery = async (
@@ -33,7 +33,7 @@ export const getAdminOstatokListQuery = async (
       },
       ResponseMeta
     >
-  >(`${APIEndpoints.admin__saldo}`, {
+  >(`${ApiEndpoints.admin__saldo}`, {
     params: {
       search,
       kimning_buynida,

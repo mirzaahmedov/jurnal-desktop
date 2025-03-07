@@ -4,13 +4,13 @@ import type { Jur7Podrazdelenie } from '@/common/models'
 
 import { SpravochnikSearchField } from '@renderer/common/features/search'
 
-import { APIEndpoints, CRUDService } from '@/common/features/crud'
+import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 import { extendObject } from '@/common/lib/utils'
 
 import { podrazdelenie7Columns } from './columns'
 
 export const subdivision7Service = new CRUDService<Jur7Podrazdelenie, Subdivision7PayloadType>({
-  endpoint: APIEndpoints.jur7_podrazdelenie
+  endpoint: ApiEndpoints.jur7_podrazdelenie
 })
 
 export const createPodrazdelenie7Spravochnik = (
@@ -19,7 +19,7 @@ export const createPodrazdelenie7Spravochnik = (
   return extendObject(
     {
       title: 'Выберите подразделение',
-      endpoint: APIEndpoints.jur7_podrazdelenie,
+      endpoint: ApiEndpoints.jur7_podrazdelenie,
       columnDefs: podrazdelenie7Columns,
       filters: [SpravochnikSearchField],
       service: subdivision7Service

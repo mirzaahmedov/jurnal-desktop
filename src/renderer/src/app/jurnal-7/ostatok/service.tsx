@@ -9,7 +9,7 @@ import type { QueryFunctionContext } from '@tanstack/react-query'
 import { useMemo } from 'react'
 
 import { GenericTable } from '@renderer/common/components'
-import { APIEndpoints, CRUDService } from '@renderer/common/features/crud'
+import { ApiEndpoints, CRUDService } from '@renderer/common/features/crud'
 import { budjet, main_schet } from '@renderer/common/features/crud/middleware'
 import { SpravochnikSearchField } from '@renderer/common/features/search'
 import { http } from '@renderer/common/lib/http'
@@ -32,7 +32,7 @@ export type OstatokFormValues = z.infer<typeof OstatokFormSchema>
 
 // Todo: remove this service
 export const ostatokService = new CRUDService<OstatokGroup, OstatokFormValues>({
-  endpoint: APIEndpoints.jur7_saldo
+  endpoint: ApiEndpoints.jur7_saldo
 })
   .forRequest((type, ctx) => {
     if (type === 'getById') {
@@ -80,7 +80,7 @@ export interface DeleteOstatokArgs {
   month: number
 }
 export const deleteOstatokBatchQuery = async ({ ids, year, month }: DeleteOstatokArgs) => {
-  const res = await http.delete(APIEndpoints.jur7_saldo, {
+  const res = await http.delete(ApiEndpoints.jur7_saldo, {
     data: {
       ids,
       year,
@@ -106,7 +106,7 @@ export const getOstatokListQuery = async (
   >
 ) => {
   const { search, kimning_buynida, group_id, budjet_id, to, iznos } = ctx.queryKey[1] ?? {}
-  const res = await http.get<Response<OstatokGroup[], ResponseMeta>>(`${APIEndpoints.jur7_saldo}`, {
+  const res = await http.get<Response<OstatokGroup[], ResponseMeta>>(`${ApiEndpoints.jur7_saldo}`, {
     params: {
       search,
       kimning_buynida,
@@ -133,7 +133,7 @@ export const getOstatokCheck = async (
   >
 ) => {
   const { month, year, main_schet_id, budjet_id } = ctx.queryKey[1] ?? {}
-  const res = await http.get<Response<OstatokGroup[]>>(`${APIEndpoints.jur7_saldo}/check`, {
+  const res = await http.get<Response<OstatokGroup[]>>(`${ApiEndpoints.jur7_saldo}/check`, {
     params: {
       month,
       year,
@@ -150,7 +150,7 @@ export const createOstatokProductSpravochnik = (
   return extendObject(
     {
       title: 'Выбрать товар',
-      endpoint: APIEndpoints.jur7_saldo,
+      endpoint: ApiEndpoints.jur7_saldo,
       columnDefs: [],
       CustomTable: OstatokSpravochnikTable,
       // TODO: fix this issue

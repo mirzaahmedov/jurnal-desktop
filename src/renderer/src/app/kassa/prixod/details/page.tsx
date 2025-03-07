@@ -24,7 +24,7 @@ import { createPodotchetSpravochnik } from '@/app/region-spravochnik/podotchet'
 import { Fieldset } from '@/common/components'
 import { ButtonGroup } from '@/common/components/ui/button-group'
 import { Form } from '@/common/components/ui/form'
-import { APIEndpoints } from '@/common/features/crud'
+import { ApiEndpoints } from '@/common/features/crud'
 import { useLayoutStore } from '@/common/features/layout'
 import { useSpravochnik } from '@/common/features/spravochnik'
 import { formatNumber } from '@/common/lib/format'
@@ -245,7 +245,7 @@ const KassaPrixodDetailsPage = () => {
                         .watch('childs')
                         .map(({ summa, spravochnik_operatsii_id }) => {
                           const result = getDataFromCache<Operatsii>(queryClient, [
-                            APIEndpoints.operatsii,
+                            ApiEndpoints.operatsii,
                             spravochnik_operatsii_id
                           ])
                           const operation = result?.data?.name ?? ''

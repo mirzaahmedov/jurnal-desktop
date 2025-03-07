@@ -2,7 +2,7 @@ import type { Role } from '@/common/models'
 
 import { z } from 'zod'
 
-import { APIEndpoints, CRUDService } from '@/common/features/crud'
+import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 import { withPreprocessor } from '@/common/lib/validation'
 
 export const RolePayloadSchema = withPreprocessor(
@@ -13,5 +13,5 @@ export const RolePayloadSchema = withPreprocessor(
 export type RolePayloadType = z.infer<typeof RolePayloadSchema>
 
 export const roleService = new CRUDService<Role, RolePayloadType>({
-  endpoint: APIEndpoints.role
+  endpoint: ApiEndpoints.role
 })

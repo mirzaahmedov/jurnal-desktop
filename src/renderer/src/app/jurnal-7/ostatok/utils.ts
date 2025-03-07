@@ -1,3 +1,4 @@
+import { ApiStatusCodes } from '@renderer/common/features/crud'
 import { date_iso_regex, formatDate, parseDate, validateDate } from '@renderer/common/lib/date'
 import { formatLocaleDate } from '@renderer/common/lib/format'
 import { HttpResponseError } from '@renderer/common/lib/http'
@@ -38,4 +39,33 @@ export const handleOstatokError = (error: Error | null) => {
     const meta = error.meta as MonthValue[]
     useOstatokStore.getState().enqueueMonth(...meta)
   }
+}
+
+export interface ExistingDocument {
+  id: number
+  doc_num: string
+  doc_date: string
+  type: 'prixod' | 'internal' | 'rasxod'
+}
+export const handleOstatokUpdateGetExistingDocument = (error: unknown) => {
+  if (
+    error instanceof HttpResponseError &&
+    typeof error.meta === 'object' &&
+    error.meta !== null &&
+    'code' in error.meta &&
+    error.meta?.code === ApiStatusCodes.DOCS_HAVE
+  ) {
+    const meta =
+      (error.meta as {
+        code: number
+        docs: ExistingDocument[]
+        saldo_id: {
+          id: number
+        }
+      }) ?? {}
+    if (Array.isArray(meta.docs)) {
+      return meta
+    }
+  }
+  return null
 }

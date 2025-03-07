@@ -1,6 +1,6 @@
 import type { PodotchetMonitor } from '@/common/models'
 
-import { APIEndpoints, CRUDService } from '@/common/features/crud'
+import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 
 type PodotchetMonitorMeta = {
   pageCount: number
@@ -54,7 +54,7 @@ const podotchetMonitoringService = new CRUDService<
   undefined,
   PodotchetMonitorMeta
 >({
-  endpoint: APIEndpoints.podotchet_monitoring
+  endpoint: ApiEndpoints.podotchet_monitoring
 })
 
 export { podotchetMonitoringService }

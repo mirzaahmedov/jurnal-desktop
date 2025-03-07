@@ -1,6 +1,6 @@
 import type { OrganizationMonitor, ResponseMeta } from '@/common/models'
 
-import { APIEndpoints, CRUDService } from '@/common/features/crud'
+import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 
 type SummaObject = {
   summa: number
@@ -32,7 +32,7 @@ const orgMonitorService = new CRUDService<
   undefined,
   ResponseMeta & OrgMonitorMetaType
 >({
-  endpoint: APIEndpoints.organization_monitoring
+  endpoint: ApiEndpoints.organization_monitoring
 })
 
 export { orgMonitorService as orgMonitoringService }

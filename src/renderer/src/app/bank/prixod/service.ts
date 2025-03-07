@@ -2,7 +2,7 @@ import type { BankPrixodType, ResponseMeta } from '@/common/models'
 
 import { z } from 'zod'
 
-import { APIEndpoints, CRUDService } from '@/common/features/crud'
+import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 import { main_schet } from '@/common/features/crud/middleware'
 import { withPreprocessor } from '@/common/lib/validation'
 
@@ -12,7 +12,7 @@ export const bankPrixodService = new CRUDService<
   PrixodPayloadType,
   { summa: number } & ResponseMeta
 >({
-  endpoint: APIEndpoints.bank_prixod
+  endpoint: ApiEndpoints.bank_prixod
 }).use(main_schet())
 
 export const PrixodPodvodkaPayloadSchema = withPreprocessor(

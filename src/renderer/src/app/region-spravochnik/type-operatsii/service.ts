@@ -3,7 +3,7 @@ import type { TypeOperatsii } from '@/common/models'
 
 import { z } from 'zod'
 
-import { APIEndpoints, CRUDService } from '@/common/features/crud'
+import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 import { SpravochnikSearchField } from '@/common/features/search'
 import { extendObject } from '@/common/lib/utils'
 import { withPreprocessor } from '@/common/lib/validation'
@@ -19,7 +19,7 @@ export const TypeOperatsiiFormSchema = withPreprocessor(
 export type TypeOperatsiiFormValues = z.infer<typeof TypeOperatsiiFormSchema>
 
 export const typeOperatsiiService = new CRUDService<TypeOperatsii, TypeOperatsiiFormValues>({
-  endpoint: APIEndpoints.type_operatsii
+  endpoint: ApiEndpoints.type_operatsii
 })
 
 export const createTypeOperatsiiSpravochnik = (
@@ -28,7 +28,7 @@ export const createTypeOperatsiiSpravochnik = (
   return extendObject(
     {
       title: 'Выберите тип операции',
-      endpoint: APIEndpoints.type_operatsii,
+      endpoint: ApiEndpoints.type_operatsii,
       columnDefs: typeOperatsiiColumns,
       service: typeOperatsiiService,
       filters: [SpravochnikSearchField]

@@ -4,7 +4,7 @@ import type { Organization, Response } from '@/common/models'
 import { http } from '@renderer/common/lib/http'
 import { z } from 'zod'
 
-import { APIEndpoints, CRUDService } from '@/common/features/crud'
+import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 import { SpravochnikSearchField } from '@/common/features/search'
 import { extendObject } from '@/common/lib/utils'
 import { withPreprocessor } from '@/common/lib/validation'
@@ -38,7 +38,7 @@ export const OrganizationFormSchema = withPreprocessor(
 export type OrganizationFormValues = z.infer<typeof OrganizationFormSchema>
 
 export const organizationService = new CRUDService<Organization, OrganizationFormValues>({
-  endpoint: APIEndpoints.organization
+  endpoint: ApiEndpoints.organization
 })
 
 export interface UpdateChildOrganizationParams {
@@ -51,7 +51,7 @@ export const updateChildOrganizationsQuery = async ({
   parentId,
   childs
 }: UpdateChildOrganizationParams) => {
-  const res = await http.put<Response<Organization>>(`${APIEndpoints.organization}/parent`, {
+  const res = await http.put<Response<Organization>>(`${ApiEndpoints.organization}/parent`, {
     parent_id: parentId,
     organization_ids: childs
   })
@@ -64,7 +64,7 @@ export const createOrganizationSpravochnik = (
   return extendObject(
     {
       title: 'Выберите организацию',
-      endpoint: APIEndpoints.organization,
+      endpoint: ApiEndpoints.organization,
       columnDefs: organizationColumns,
       service: organizationService,
       filters: [SpravochnikSearchField],

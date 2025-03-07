@@ -1,6 +1,6 @@
 import type { BankRasxod, ResponseMeta } from '@renderer/common/models'
 
-import { APIEndpoints, CRUDService } from '@renderer/common/features/crud'
+import { ApiEndpoints, CRUDService } from '@renderer/common/features/crud'
 import { main_schet } from '@renderer/common/features/crud/middleware'
 import { withPreprocessor } from '@renderer/common/lib/validation'
 import { z } from 'zod'
@@ -11,7 +11,7 @@ export const bankRasxodService = new CRUDService<
   RasxodFormValues,
   { summa: number } & ResponseMeta
 >({
-  endpoint: APIEndpoints.bank_rasxod
+  endpoint: ApiEndpoints.bank_rasxod
 }).use(main_schet())
 
 export const RasxodPodvodkaFormSchema = withPreprocessor(
@@ -48,5 +48,5 @@ export type RasxodPodvodkaFormValues = z.infer<typeof RasxodPodvodkaFormSchema>
 export type RasxodFormValues = z.infer<typeof RasxodFormSchema>
 
 export const bankRasxodPaymentService = new CRUDService<undefined, { status: boolean }>({
-  endpoint: APIEndpoints.bank_rasxod_payment
+  endpoint: ApiEndpoints.bank_rasxod_payment
 }).use(main_schet())

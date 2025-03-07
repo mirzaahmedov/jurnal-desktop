@@ -31,7 +31,6 @@ import { useElementWidth, useToggle } from '@renderer/common/hooks'
 import { useSidebarStore } from '@renderer/common/layout/sidebar'
 import { date_iso_regex, formatDate, parseDate, validateDate } from '@renderer/common/lib/date'
 import { formatLocaleDate } from '@renderer/common/lib/format'
-import { HttpResponseError } from '@renderer/common/lib/http'
 import { ListView } from '@renderer/common/views'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { CircleArrowDown, CopyCheck, Download, Trash2 } from 'lucide-react'
@@ -42,15 +41,24 @@ import { toast } from 'react-toastify'
 import { createResponsibleSpravochnik } from '../responsible/service'
 import { ostatokGroupColumns, ostatokProductColumns } from './columns'
 import { defaultValues, ostatokQueryKeys } from './config'
-import { ErrorAlert, type ErrorData, type ErrorDataDocument } from './error-alert'
+import { ExistingDocsAlert } from './error-alert'
 import { deleteOstatokBatchQuery, getOstatokListQuery } from './service'
 import { useOstatokStore } from './store'
-import { handleOstatokError } from './utils'
+import {
+  type ExistingDocument,
+  handleOstatokError,
+  handleOstatokResponse,
+  handleOstatokUpdateGetExistingDocument
+} from './utils'
 
 const OstatokPage = () => {
-  const { minDate, maxDate } = useOstatokStore()
+  const { minDate, maxDate, queuedMonths } = useOstatokStore()
 
-  const [error, setError] = useState<ErrorData>()
+  const [existingDocsError, setExistingDocsError] = useState<{
+    message: string
+    docs: ExistingDocument[]
+    product?: OstatokProduct
+  }>()
   const [selectedRows, setSelectedRows] = useState<OstatokProduct[]>([])
   const [selectedDate, setSelectedDate] = useState<undefined | Date>(minDate)
 
@@ -91,7 +99,8 @@ const OstatokPage = () => {
       }
     ],
     queryFn: getOstatokListQuery,
-    enabled: !!selectedDate && !!budjet_id
+    placeholderData: undefined,
+    enabled: !!selectedDate && !!budjet_id && queuedMonths.length === 0
   })
 
   const { mutate: deleteOstatok, isPending: isDeleting } = useMutation({
@@ -101,17 +110,22 @@ const OstatokPage = () => {
       queryClient.invalidateQueries({
         queryKey: [ostatokQueryKeys.getAll]
       })
+      setSelectedRows([])
+      handleOstatokResponse(res)
       toast.success(res?.message)
     },
     onError(error) {
       console.log(error)
-      if (error instanceof HttpResponseError) {
-        setError({
-          message: error?.message ?? '',
-          document: error.meta as ErrorDataDocument
+      const result = handleOstatokUpdateGetExistingDocument(error)
+      if (result) {
+        setExistingDocsError({
+          message: error.message,
+          docs: result.docs,
+          product: selectedRows.find((r) => r.id === result?.saldo_id?.id)
         })
+      } else {
+        setExistingDocsError(undefined)
       }
-      toast.error(error?.message)
     }
   })
 
@@ -137,6 +151,9 @@ const OstatokPage = () => {
       ]
     })
   }, [setLayout, t])
+  useEffect(() => {
+    setSelectedRows([])
+  }, [ostatok])
 
   const handleDelete = (ids: number[]) => {
     if (!selectedDate) {
@@ -408,15 +425,17 @@ const OstatokPage = () => {
           />
         </div>
       </ListView.Content>
-      {error?.document ? (
-        <ErrorAlert
+      {existingDocsError ? (
+        <ExistingDocsAlert
           open
           onOpenChange={(isOpen) => {
             if (!isOpen) {
-              setError(undefined)
+              setExistingDocsError(undefined)
             }
           }}
-          error={error}
+          message={existingDocsError.message}
+          docs={existingDocsError.docs}
+          product={existingDocsError.product}
         />
       ) : null}
 

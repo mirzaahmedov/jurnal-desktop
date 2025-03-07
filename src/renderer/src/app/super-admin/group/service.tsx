@@ -15,13 +15,13 @@ import {
   sortElementsByLevels
 } from '@renderer/common/lib/data-structure'
 
-import { APIEndpoints, CRUDService } from '@/common/features/crud'
+import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 import { extendObject } from '@/common/lib/utils'
 
 import { groupColumns } from './columns'
 
 export const groupService = new CRUDService<Group, GroupPayloadType>({
-  endpoint: APIEndpoints.jur7_group
+  endpoint: ApiEndpoints.jur7_group
 })
 
 type GroupTableProps = Omit<
@@ -54,7 +54,7 @@ export const createGroupSpravochnik = (config: Partial<SpravochnikHookOptions<Gr
   return extendObject(
     {
       title: 'Выберите группу',
-      endpoint: APIEndpoints.jur7_group,
+      endpoint: ApiEndpoints.jur7_group,
       columnDefs: groupColumns,
       service: groupService,
       filters: [SpravochnikSearchField],

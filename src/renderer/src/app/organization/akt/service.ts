@@ -3,12 +3,12 @@ import type { ResponseMeta } from '@renderer/common/models'
 
 import { z } from 'zod'
 
-import { APIEndpoints, CRUDService } from '@/common/features/crud'
+import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 import { main_schet } from '@/common/features/crud/middleware'
 import { withPreprocessor } from '@/common/lib/validation'
 
 const aktService = new CRUDService<Akt, AktForm, AktForm, ResponseMeta & { summa: number }>({
-  endpoint: APIEndpoints.akt_priyom
+  endpoint: ApiEndpoints.akt_priyom
 }).use(main_schet())
 
 const AktProvodkaFormSchema = withPreprocessor(

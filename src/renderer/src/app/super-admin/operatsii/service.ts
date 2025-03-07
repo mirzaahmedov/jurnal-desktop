@@ -5,7 +5,7 @@ import type { QueryFunctionContext } from '@tanstack/react-query'
 import { http } from '@renderer/common/lib/http'
 import { z } from 'zod'
 
-import { APIEndpoints, CRUDService } from '@/common/features/crud'
+import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 import { SpravochnikSearchField } from '@/common/features/search'
 import { extendObject } from '@/common/lib/utils'
 import { withPreprocessor } from '@/common/lib/validation'
@@ -50,7 +50,7 @@ export const getOperatsiiSchetOptionsQuery = async (
 }
 
 export const operatsiiService = new CRUDService<Operatsii, OperatsiiForm>({
-  endpoint: APIEndpoints.operatsii
+  endpoint: ApiEndpoints.operatsii
 }).forRequest((type, { config }) => {
   if (type === 'getAll') {
     const params = config.params
@@ -70,7 +70,7 @@ export const createOperatsiiSpravochnik = (config: Partial<SpravochnikHookOption
   return extendObject(
     {
       title: 'Выберите операцию',
-      endpoint: APIEndpoints.operatsii,
+      endpoint: ApiEndpoints.operatsii,
       columnDefs: operatsiiColumns,
       service: operatsiiService,
       filters: [SpravochnikSearchField]
