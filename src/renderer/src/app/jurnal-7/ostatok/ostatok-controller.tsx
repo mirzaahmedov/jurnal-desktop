@@ -40,7 +40,8 @@ export const OstatokController = () => {
         month: minDate.getMonth() + 1,
         main_schet_id: main_schet_id!,
         budjet_id: budjet_id!
-      }
+      },
+      pathname
     ],
     queryFn: getOstatokCheck,
     refetchOnReconnect: false,

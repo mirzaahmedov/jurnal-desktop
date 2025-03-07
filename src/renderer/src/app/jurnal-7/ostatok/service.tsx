@@ -128,7 +128,8 @@ export const getOstatokCheck = async (
         year: number
         main_schet_id: number
         budjet_id: number
-      }
+      },
+      string
     ]
   >
 ) => {
