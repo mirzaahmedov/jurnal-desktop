@@ -126,6 +126,7 @@ const Jurnal7InternalTransferDetailsPage = () => {
       kimga_id: internalTransfer.data.kimga.id,
       childs: internalTransfer.data.childs.map((child) => ({
         ...child,
+        group_jur7_id: child.group.id,
         name: child.product.name,
         group_number: child.group.group_number,
         edin: child.product.edin,

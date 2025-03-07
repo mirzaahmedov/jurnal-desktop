@@ -83,7 +83,10 @@ export const OstatokSpravochnikDialog = ({
       open={open}
       onOpenChange={onOpenChange}
     >
-      <DialogContent className="max-w-screen-7xl w-full p-0 h-0 min-h-[70%] overflow-hidden gap-0 flex flex-col">
+      <DialogContent
+        ref={setElementRef}
+        className="max-w-full w-full p-0 h-0 min-h-[70%] overflow-hidden gap-0 flex flex-col"
+      >
         <Tabs
           value={tabValue}
           onValueChange={(value) => setTabValue(value as TabOption)}
@@ -127,7 +130,6 @@ export const OstatokSpravochnikDialog = ({
           </TabsContent>
 
           <TabsContent
-            ref={setElementRef}
             value={TabOption.ALL}
             className="hidden data-[state=active]:block w-full flex-1 relative overflow-y-auto overflow-x-hidden scrollbar"
           >
@@ -137,10 +139,11 @@ export const OstatokSpravochnikDialog = ({
               columnDefs={ostatokGroupColumns}
               getRowId={(row) => row.id}
               getChildRows={(row) => row.products}
+              className="w-full"
               renderChildRows={(rows) => (
                 <div
+                  className="min-w-full overflow-x-auto scrollbar pl-14"
                   style={{ width }}
-                  className="overflow-x-auto scrollbar pl-14"
                 >
                   <GenericTable
                     selectedIds={selectedIds}
@@ -148,6 +151,7 @@ export const OstatokSpravochnikDialog = ({
                     data={rows}
                     columnDefs={ostatokProductColumns}
                     getRowId={(row) => row.naimenovanie_tovarov_jur7_id}
+                    className="w-full"
                     onClickRow={(organization) => {
                       setSelected((prev) => {
                         if (prev.find((o) => o.id === organization.id)) {

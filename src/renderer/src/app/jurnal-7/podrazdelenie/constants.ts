@@ -2,7 +2,7 @@ import { z } from 'zod'
 
 import { withPreprocessor } from '@/common/lib/validation'
 
-export const subdivision7QueryKeys = {
+export const podrazdelenieQueryKeys = {
   getAll: 'subdivision-7/all',
   getById: 'subdivision-7',
   create: 'subdivision-7/create',

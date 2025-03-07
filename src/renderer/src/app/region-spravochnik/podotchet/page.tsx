@@ -86,7 +86,7 @@ const PodotchetPage = () => {
       <ListView.Footer>
         <ListView.Pagination
           {...pagination}
-          pageCount={podotchetList?.meta.pageCount ?? 0}
+          pageCount={podotchetList?.meta?.pageCount ?? 0}
         />
       </ListView.Footer>
       <PodotchetDialog

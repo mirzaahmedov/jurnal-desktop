@@ -13,12 +13,12 @@ import { useLayoutStore } from '@/common/features/layout'
 import { SearchField, useSearch } from '@/common/features/search'
 import { useToggle } from '@/common/hooks/use-toggle'
 
-import { subdivisionColumns } from './columns'
-import { subdivisionQueryKeys } from './constants'
-import SubdivisionDialog from './dialog'
-import { subdivisionService } from './service'
+import { podrazdelenieColumns } from './columns'
+import { podrazdelenieQueryKeys } from './constants'
+import PodrazdelenieDialog from './dialog'
+import { podrazdelenieService } from './service'
 
-const SubdivisionPage = () => {
+const PodrazdeleniePage = () => {
   const [selected, setSelected] = useState<Podrazdelenie | null>(null)
 
   const dialogToggle = useToggle()
@@ -31,22 +31,22 @@ const SubdivisionPage = () => {
   const { confirm } = useConfirm()
   const { search } = useSearch()
 
-  const { data: subdivisions, isFetching } = useQuery({
+  const { data: podrazdelenieList, isFetching } = useQuery({
     queryKey: [
-      subdivisionQueryKeys.getAll,
+      podrazdelenieQueryKeys.getAll,
       {
         ...pagination,
         search
       }
     ],
-    queryFn: subdivisionService.getAll
+    queryFn: podrazdelenieService.getAll
   })
   const { mutate: deleteMutation, isPending } = useMutation({
-    mutationKey: [subdivisionQueryKeys.delete],
-    mutationFn: subdivisionService.delete,
+    mutationKey: [podrazdelenieQueryKeys.delete],
+    mutationFn: podrazdelenieService.delete,
     onSuccess() {
       queryClient.invalidateQueries({
-        queryKey: [subdivisionQueryKeys.getAll]
+        queryKey: [podrazdelenieQueryKeys.getAll]
       })
     }
   })
@@ -86,8 +86,8 @@ const SubdivisionPage = () => {
     <ListView>
       <ListView.Content loading={isFetching || isPending}>
         <GenericTable
-          data={subdivisions?.data ?? []}
-          columnDefs={subdivisionColumns}
+          data={podrazdelenieList?.data ?? []}
+          columnDefs={podrazdelenieColumns}
           getRowId={(row) => row.id}
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}
@@ -96,10 +96,10 @@ const SubdivisionPage = () => {
       <ListView.Footer>
         <ListView.Pagination
           {...pagination}
-          pageCount={subdivisions?.meta.pageCount ?? 0}
+          pageCount={podrazdelenieList?.meta?.pageCount ?? 0}
         />
       </ListView.Footer>
-      <SubdivisionDialog
+      <PodrazdelenieDialog
         data={selected}
         open={dialogToggle.isOpen}
         onChangeOpen={dialogToggle.setOpen}
@@ -108,4 +108,4 @@ const SubdivisionPage = () => {
   )
 }
 
-export default SubdivisionPage
+export default PodrazdeleniePage

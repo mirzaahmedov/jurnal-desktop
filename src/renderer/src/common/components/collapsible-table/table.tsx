@@ -26,6 +26,7 @@ export type CollapsibleTableProps<T extends object, C extends object> = {
   width?: number
   disabledIds?: number[]
   selectedId?: number
+  className?: string
   getRowId: (row: T) => number | string
   getChildRows: (row: T) => C[] | undefined
   renderChildRows?: (rows: NoInfer<C>[]) => ReactNode
@@ -40,6 +41,7 @@ export const CollapsibleTable = <T extends object, C extends object = T>({
   width,
   disabledIds,
   selectedId,
+  className,
   getRowId,
   getChildRows,
   renderChildRows,
@@ -49,7 +51,10 @@ export const CollapsibleTable = <T extends object, C extends object = T>({
 }: CollapsibleTableProps<T, C>) => {
   const { t } = useTranslation()
   return (
-    <Table style={{ width }}>
+    <Table
+      style={{ width }}
+      className={className}
+    >
       {displayHeader ? (
         <TableHeader className="sticky top-0 z-50 artificial-border">
           <GenericTableRow className="bg-slate-100 hover:bg-slate-100 border-t border-slate-200">

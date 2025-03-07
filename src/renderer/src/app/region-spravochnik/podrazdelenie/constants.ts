@@ -1,7 +1,7 @@
-export const subdivisionQueryKeys = {
-  getAll: 'subdivision/all',
-  getById: 'subdivision',
-  create: 'subdivision/create',
-  update: 'subdivision/update',
-  delete: 'subdivision/delete'
+export const podrazdelenieQueryKeys = {
+  getAll: 'podrazdelenie/all',
+  getById: 'podrazdelenie',
+  create: 'podrazdelenie/create',
+  update: 'podrazdelenie/update',
+  delete: 'podrazdelenie/delete'
 }

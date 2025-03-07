@@ -3,7 +3,7 @@ import type { Podrazdelenie } from '@/common/models'
 
 import { IDCell } from '@renderer/common/components/table/renderers/id'
 
-export const subdivisionColumns: ColumnDef<Podrazdelenie>[] = [
+export const podrazdelenieColumns: ColumnDef<Podrazdelenie>[] = [
   {
     key: 'id',
     renderCell: IDCell

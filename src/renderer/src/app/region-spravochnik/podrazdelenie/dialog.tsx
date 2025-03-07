@@ -26,40 +26,40 @@ import {
 import { Input } from '@/common/components/ui/input'
 import { useToast } from '@/common/hooks/use-toast'
 
-import { subdivisionQueryKeys } from './constants'
+import { podrazdelenieQueryKeys } from './constants'
 import {
-  SubdivisionPayloadSchema,
-  type SubdivisionPayloadType,
-  subdivisionService
+  PodrazdelenieFormSchema,
+  type PodrazdelenieFormValues,
+  podrazdelenieService
 } from './service'
 
-type SubdivisionDialogProps = {
+type PodrazdelenieDialogProps = {
   open: boolean
   onChangeOpen(value: boolean): void
   data: Podrazdelenie | null
 }
-const SubdivisionDialog = (props: SubdivisionDialogProps) => {
+const PodrazdelenieDialog = (props: PodrazdelenieDialogProps) => {
   const { open, onChangeOpen, data } = props
 
   const { t } = useTranslation()
   const { toast } = useToast()
 
   const queryClient = useQueryClient()
-  const form = useForm<SubdivisionPayloadType>({
+  const form = useForm<PodrazdelenieFormValues>({
     defaultValues,
-    resolver: zodResolver(SubdivisionPayloadSchema)
+    resolver: zodResolver(PodrazdelenieFormSchema)
   })
 
   const { mutate: create, isPending: isCreating } = useMutation({
-    mutationKey: [subdivisionQueryKeys.create],
-    mutationFn: subdivisionService.create,
+    mutationKey: [podrazdelenieQueryKeys.create],
+    mutationFn: podrazdelenieService.create,
     onSuccess() {
       toast({
         title: 'Подразделения успешно создана'
       })
       form.reset(defaultValues)
       queryClient.invalidateQueries({
-        queryKey: [subdivisionQueryKeys.getAll]
+        queryKey: [podrazdelenieQueryKeys.getAll]
       })
       onChangeOpen(false)
     },
@@ -72,14 +72,14 @@ const SubdivisionDialog = (props: SubdivisionDialogProps) => {
     }
   })
   const { mutate: update, isPending: isUpdating } = useMutation({
-    mutationKey: [subdivisionQueryKeys.update],
-    mutationFn: subdivisionService.update,
+    mutationKey: [podrazdelenieQueryKeys.update],
+    mutationFn: podrazdelenieService.update,
     onSuccess() {
       toast({
         title: 'Подразделения успешно обновлена'
       })
       queryClient.invalidateQueries({
-        queryKey: [subdivisionQueryKeys.getAll]
+        queryKey: [podrazdelenieQueryKeys.getAll]
       })
       onChangeOpen(false)
     },
@@ -92,7 +92,7 @@ const SubdivisionDialog = (props: SubdivisionDialogProps) => {
     }
   })
 
-  const onSubmit = (payload: SubdivisionPayloadType) => {
+  const onSubmit = (payload: PodrazdelenieFormValues) => {
     if (data) {
       update(Object.assign(payload, { id: data.id }))
     } else {
@@ -181,6 +181,6 @@ const SubdivisionDialog = (props: SubdivisionDialogProps) => {
 const defaultValues = {
   name: '',
   rayon: ''
-} satisfies SubdivisionPayloadType
+} satisfies PodrazdelenieFormValues
 
-export default SubdivisionDialog
+export default PodrazdelenieDialog

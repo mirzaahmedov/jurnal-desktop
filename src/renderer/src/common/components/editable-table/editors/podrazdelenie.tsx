@@ -1,6 +1,6 @@
 import type { EditorComponentType } from './types'
 
-import { createSubdivisionSpravochnik } from '@/app/region-spravochnik/podrazdelenie'
+import { createPodrazdelenieSpravochnik } from '@/app/region-spravochnik/podrazdelenie'
 import { SpravochnikInput, useSpravochnik } from '@/common/features/spravochnik'
 
 export const createPodrazdelenieEditor = <
@@ -8,7 +8,7 @@ export const createPodrazdelenieEditor = <
 >(): EditorComponentType<T> => {
   return ({ tabIndex, id, row, errors, onChange }) => {
     const podrazdelnieSpravochnik = useSpravochnik(
-      createSubdivisionSpravochnik({
+      createPodrazdelenieSpravochnik({
         value: row.id_spravochnik_podrazdelenie || undefined,
         onChange: (value) => {
           onChange?.({

@@ -21,8 +21,8 @@ import { Form, FormField } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
 import { extendObject } from '@/common/lib/utils'
 
-import { Subdivision7PayloadSchema, defaultValues, subdivision7QueryKeys } from './constants'
-import { subdivision7Service } from './service'
+import { Subdivision7PayloadSchema, defaultValues, podrazdelenieQueryKeys } from './constants'
+import { podrazdelenieService } from './service'
 
 export interface Podrazdelenie7DialogProps {
   open: boolean
@@ -42,12 +42,12 @@ export const Podrazdelenie7Dialog = (props: Podrazdelenie7DialogProps) => {
   })
 
   const { mutate: create, isPending: isCreating } = useMutation({
-    mutationKey: [subdivision7QueryKeys.create],
-    mutationFn: subdivision7Service.create,
+    mutationKey: [podrazdelenieQueryKeys.create],
+    mutationFn: podrazdelenieService.create,
     onSuccess() {
       form.reset(defaultValues)
       queryClient.invalidateQueries({
-        queryKey: [subdivision7QueryKeys.getAll]
+        queryKey: [podrazdelenieQueryKeys.getAll]
       })
       onClose()
       toast.success('Подразделениe успешно создана')
@@ -58,12 +58,12 @@ export const Podrazdelenie7Dialog = (props: Podrazdelenie7DialogProps) => {
     }
   })
   const { mutate: update, isPending: isUpdating } = useMutation({
-    mutationKey: [subdivision7QueryKeys.update],
-    mutationFn: subdivision7Service.update,
+    mutationKey: [podrazdelenieQueryKeys.update],
+    mutationFn: podrazdelenieService.update,
     onSuccess() {
       onClose()
       queryClient.invalidateQueries({
-        queryKey: [subdivision7QueryKeys.getAll]
+        queryKey: [podrazdelenieQueryKeys.getAll]
       })
       toast.success('Подразделениe успешно изменена')
     },

@@ -14,10 +14,10 @@ import { useLayoutStore } from '@/common/features/layout'
 import { toast } from '@/common/hooks/use-toast'
 import { useToggle } from '@/common/hooks/use-toggle'
 
-import { podrazdelenie7Columns } from './columns'
-import { subdivision7QueryKeys } from './constants'
+import { podrazdelenieColumns } from './columns'
+import { podrazdelenieQueryKeys } from './constants'
 import { Podrazdelenie7Dialog } from './dialog'
-import { subdivision7Service } from './service'
+import { podrazdelenieService } from './service'
 
 const Subdivision7Page = () => {
   const pagination = usePagination()
@@ -32,22 +32,22 @@ const Subdivision7Page = () => {
 
   const [selected, setSelected] = useState<null | Jur7Podrazdelenie>(null)
 
-  const { data: subdivision7List, isFetching } = useQuery({
+  const { data: podrazdelenieList, isFetching } = useQuery({
     queryKey: [
-      subdivision7QueryKeys.getAll,
+      podrazdelenieQueryKeys.getAll,
       {
         search,
         ...pagination
       }
     ],
-    queryFn: subdivision7Service.getAll
+    queryFn: podrazdelenieService.getAll
   })
   const { mutate: deleteMutation, isPending } = useMutation({
-    mutationKey: [subdivision7QueryKeys.delete],
-    mutationFn: subdivision7Service.delete,
+    mutationKey: [podrazdelenieQueryKeys.delete],
+    mutationFn: podrazdelenieService.delete,
     onSuccess() {
       queryClient.invalidateQueries({
-        queryKey: [subdivision7QueryKeys.getAll]
+        queryKey: [podrazdelenieQueryKeys.getAll]
       })
       toast({
         title: 'Подразделениe удалено'
@@ -96,8 +96,8 @@ const Subdivision7Page = () => {
     <ListView>
       <ListView.Content loading={isFetching || isPending}>
         <GenericTable
-          columnDefs={podrazdelenie7Columns}
-          data={subdivision7List?.data ?? []}
+          columnDefs={podrazdelenieColumns}
+          data={podrazdelenieList?.data ?? []}
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}
         />
@@ -105,7 +105,7 @@ const Subdivision7Page = () => {
       <ListView.Footer>
         <ListView.Pagination
           {...pagination}
-          pageCount={subdivision7List?.meta.pageCount ?? 0}
+          pageCount={podrazdelenieList?.meta?.pageCount ?? 0}
         />
       </ListView.Footer>
       <Podrazdelenie7Dialog

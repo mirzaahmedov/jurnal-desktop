@@ -112,6 +112,7 @@ const Jurnal7RasxodDetailsPage = () => {
           ...child,
           name: child.product.name,
           group_number: child.group.group_number,
+          group_jur7_id: child.group.id,
           edin: child.product.edin,
           inventar_num: child.product.inventar_num,
           serial_num: child.product.serial_num

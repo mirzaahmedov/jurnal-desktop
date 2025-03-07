@@ -95,7 +95,7 @@ const SostavPage = () => {
       <ListView.Footer>
         <ListView.Pagination
           {...pagination}
-          pageCount={sostavList?.meta.pageCount ?? 0}
+          pageCount={sostavList?.meta?.pageCount ?? 0}
         />
       </ListView.Footer>
       <SostavDialog
