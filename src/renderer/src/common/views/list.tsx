@@ -1,4 +1,4 @@
-import type { HTMLAttributes } from 'react'
+import { type HTMLAttributes, forwardRef } from 'react'
 
 import { LoadingOverlay } from '@renderer/common/components'
 import { Pagination } from '@renderer/common/components/pagination'
@@ -32,17 +32,20 @@ const ListViewHeader = ({ children, className, ...props }: HTMLAttributes<HTMLDi
 type ListViewContentProps = HTMLAttributes<HTMLDivElement> & {
   loading: boolean
 }
-const ListViewContent = ({ loading, children, className, ...props }: ListViewContentProps) => {
-  return (
-    <div
-      className={cn('flex-1 relative overflow-auto scrollbar', className)}
-      {...props}
-    >
-      {loading ? <LoadingOverlay /> : null}
-      {children}
-    </div>
-  )
-}
+const ListViewContent = forwardRef<HTMLDivElement, ListViewContentProps>(
+  ({ loading, children, className, ...props }, ref) => {
+    return (
+      <div
+        ref={ref}
+        className={cn('flex-1 relative overflow-auto scrollbar', className)}
+        {...props}
+      >
+        {loading ? <LoadingOverlay /> : null}
+        {children}
+      </div>
+    )
+  }
+)
 
 const ListViewFooter = ({ children, className, ...props }: HTMLAttributes<HTMLDivElement>) => {
   return (

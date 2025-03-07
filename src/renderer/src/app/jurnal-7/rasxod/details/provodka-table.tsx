@@ -168,7 +168,6 @@ export const ProvodkaTable = ({ form, tabIndex }: ProvodkaTableProps) => {
             >
               {t('iznos')}
             </EditableTableHead>
-            <EditableTableHead rowSpan={2}>{t('iznos_start_date')}</EditableTableHead>
             <EditableTableHead rowSpan={2}>{t('prixod-date')}</EditableTableHead>
             <EditableTableHead rowSpan={2}></EditableTableHead>
           </EditableTableRow>
@@ -455,29 +454,6 @@ const Provodka = ({ rowIndex, row, form, tabIndex, onOpenDialog, onRemove }: Pro
               error: !!form.formState.errors?.childs?.[rowIndex]?.iznos_sub_schet
             })}
             error={!!form.formState.errors?.childs?.[rowIndex]?.iznos_sub_schet}
-            tabIndex={tabIndex}
-          />
-        </div>
-      </EditableTableCell>
-
-      <EditableTableCell>
-        <div className="relative">
-          <DatePicker
-            disabled
-            value={row.iznos_start ?? ''}
-            onChange={(date) => {
-              handleChangeChildField(rowIndex, 'iznos_start', date)
-            }}
-            placeholder="дд.мм.гггг"
-            className={inputVariants({
-              editor: true,
-              error: !!form.formState.errors?.childs?.[rowIndex]?.iznos_start,
-              className: 'disabled:opacity-100'
-            })}
-            triggerProps={{
-              className: 'min-w-32'
-            }}
-            error={!!form.formState.errors?.childs?.[rowIndex]?.iznos_start}
             tabIndex={tabIndex}
           />
         </div>

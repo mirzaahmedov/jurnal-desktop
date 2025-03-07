@@ -401,50 +401,47 @@ const OstatokPage = () => {
           ) : null}
         </div>
       </div>
-      <ListView.Content loading={isFetching || isDeleting}>
-        <div
-          ref={setElementRef}
-          className="overflow-x-hidden"
-        >
-          <CollapsibleTable
-            data={ostatok?.data ?? []}
-            columnDefs={ostatokGroupColumns}
-            getRowId={(row) => row.id}
-            getChildRows={(row) => row.products}
-            width={width}
-            renderChildRows={(rows) => (
-              <div
-                style={{ width }}
-                className="overflow-x-auto scrollbar pl-14"
-              >
-                <GenericTable
-                  data={rows}
-                  columnDefs={ostatokProductColumns}
-                  getRowId={(row) => row.naimenovanie_tovarov_jur7_id}
-                  selectedIds={selectedIds}
-                  params={{
-                    onCheckedChange: (row: OstatokProduct) => {
-                      setSelectedRows((prev) => {
-                        if (
-                          prev.find(
-                            (p) =>
-                              p.naimenovanie_tovarov_jur7_id === row.naimenovanie_tovarov_jur7_id
-                          )
-                        ) {
-                          return prev.filter(
-                            (p) =>
-                              p.naimenovanie_tovarov_jur7_id !== row.naimenovanie_tovarov_jur7_id
-                          )
-                        }
-                        return [...prev, row]
-                      })
-                    }
-                  }}
-                />
-              </div>
-            )}
-          />
-        </div>
+      <ListView.Content
+        ref={setElementRef}
+        loading={isFetching || isDeleting}
+        className="overflow-x-hidden"
+      >
+        <CollapsibleTable
+          data={ostatok?.data ?? []}
+          columnDefs={ostatokGroupColumns}
+          getRowId={(row) => row.id}
+          getChildRows={(row) => row.products}
+          width={width}
+          renderChildRows={(rows) => (
+            <div
+              style={{ width }}
+              className="overflow-x-auto scrollbar pl-14"
+            >
+              <GenericTable
+                data={rows}
+                columnDefs={ostatokProductColumns}
+                getRowId={(row) => row.naimenovanie_tovarov_jur7_id}
+                selectedIds={selectedIds}
+                params={{
+                  onCheckedChange: (row: OstatokProduct) => {
+                    setSelectedRows((prev) => {
+                      if (
+                        prev.find(
+                          (p) => p.naimenovanie_tovarov_jur7_id === row.naimenovanie_tovarov_jur7_id
+                        )
+                      ) {
+                        return prev.filter(
+                          (p) => p.naimenovanie_tovarov_jur7_id !== row.naimenovanie_tovarov_jur7_id
+                        )
+                      }
+                      return [...prev, row]
+                    })
+                  }
+                }}
+              />
+            </div>
+          )}
+        />
       </ListView.Content>
       {existingDocsError ? (
         <ExistingDocumentsAlert

@@ -55,7 +55,6 @@ export const RasxodChildFormSchema = withPreprocessor(
     kredit_schet: z.string(),
     kredit_sub_schet: z.string(),
     iznos: z.boolean().optional(),
-    iznos_start: z.string().optional(),
     iznos_summa: z.number().optional(),
     iznos_schet: z.string().optional(),
     iznos_sub_schet: z.string().optional(),
