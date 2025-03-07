@@ -41,14 +41,14 @@ import { toast } from 'react-toastify'
 import { createResponsibleSpravochnik } from '../responsible/service'
 import { ostatokGroupColumns, ostatokProductColumns } from './columns'
 import { defaultValues, ostatokQueryKeys } from './config'
-import { ExistingDocsAlert } from './error-alert'
+import { ExistingDocumentsAlert } from './existing-document-alert'
 import { deleteOstatokBatchQuery, getOstatokListQuery } from './service'
 import { useOstatokStore } from './store'
 import {
   type ExistingDocument,
   handleOstatokError,
-  handleOstatokResponse,
-  handleOstatokUpdateGetExistingDocument
+  handleOstatokExistingDocumentError,
+  handleOstatokResponse
 } from './utils'
 
 const OstatokPage = () => {
@@ -116,7 +116,7 @@ const OstatokPage = () => {
     },
     onError(error) {
       console.log(error)
-      const result = handleOstatokUpdateGetExistingDocument(error)
+      const result = handleOstatokExistingDocumentError<ExistingDocument>(error)
       if (result) {
         setExistingDocsError({
           message: error.message,
@@ -426,7 +426,7 @@ const OstatokPage = () => {
         </div>
       </ListView.Content>
       {existingDocsError ? (
-        <ExistingDocsAlert
+        <ExistingDocumentsAlert
           open
           onOpenChange={(isOpen) => {
             if (!isOpen) {

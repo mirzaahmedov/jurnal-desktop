@@ -1,4 +1,4 @@
-import type { PrixodImportResponse } from './types'
+import type { ExistingDocument, PrixodImportResult } from './interfaces'
 import type { Response } from '@renderer/common/models'
 
 import { useEffect, useMemo, useRef, useState } from 'react'
@@ -12,7 +12,6 @@ import { useLayoutStore } from '@renderer/common/features/layout'
 import { useSpravochnik } from '@renderer/common/features/spravochnik'
 import { formatDate, parseDate, withinMonth } from '@renderer/common/lib/date'
 import { focusInvalidInput } from '@renderer/common/lib/errors'
-import { HttpResponseError } from '@renderer/common/lib/http'
 import { type Operatsii, TypeSchetOperatsii } from '@renderer/common/models'
 import { DetailsView } from '@renderer/common/views'
 import {
@@ -33,18 +32,25 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
 import { useOstatokStore } from '@/app/jurnal-7/ostatok/store'
-import { handleOstatokResponse, validateOstatokDate } from '@/app/jurnal-7/ostatok/utils'
+import {
+  handleOstatokExistingDocumentError,
+  handleOstatokResponse,
+  validateOstatokDate
+} from '@/app/jurnal-7/ostatok/utils'
 import { createResponsibleSpravochnik } from '@/app/jurnal-7/responsible/service'
 import { createOperatsiiSpravochnik } from '@/app/super-admin/operatsii'
 import { DownloadFile, ImportFile } from '@/common/features/file'
 
 import { PrixodFormSchema, defaultValues, queryKeys } from '../config'
-import { ErrorAlert, type ErrorData, type ErrorDataDocument } from '../error-alert'
 import { usePrixodCreate, usePrixodGet, usePrixodUpdate } from '../service'
+import { ExistingDocumentsAlert } from './existing-document-alert'
 import { ProvodkaTable } from './provodka-table'
 
 const Jurnal7PrixodDetailsPage = () => {
-  const [error, setError] = useState<ErrorData>()
+  const [existingDocsError, setExistingDocsError] = useState<{
+    message: string
+    docs: ExistingDocument[]
+  }>()
 
   const prevData = useRef({
     kimdan_id: 0,
@@ -65,16 +71,6 @@ const Jurnal7PrixodDetailsPage = () => {
         queryKey: [queryKeys.getAll]
       })
       recheckOstatok?.()
-    },
-    onError(error) {
-      console.log(error)
-      if (error instanceof HttpResponseError) {
-        setError({
-          message: error?.message ?? '',
-          document: error.meta?.[0] as ErrorDataDocument
-        })
-      }
-      toast.error(error?.message)
     }
   })
   const { mutate: updatePrixod, isPending: isUpdating } = usePrixodUpdate({
@@ -88,14 +84,15 @@ const Jurnal7PrixodDetailsPage = () => {
       recheckOstatok?.()
     },
     onError(error) {
-      console.log(error)
-      if (error instanceof HttpResponseError) {
-        setError({
-          message: error?.message ?? '',
-          document: error.meta?.[0] as ErrorDataDocument
+      const result = handleOstatokExistingDocumentError<ExistingDocument>(error)
+      if (result) {
+        setExistingDocsError({
+          message: error.message,
+          docs: result.docs
         })
+      } else {
+        setExistingDocsError(undefined)
       }
-      toast.error(error?.message)
     }
   })
 
@@ -328,7 +325,7 @@ const Jurnal7PrixodDetailsPage = () => {
             <ImportFile
               url="/jur_7/doc_prixod/read"
               onSuccess={(res) => {
-                const rows = (res as Response<PrixodImportResponse[]>)?.data ?? []
+                const rows = (res as Response<PrixodImportResult[]>)?.data ?? []
                 form.setValue(
                   'childs',
                   rows.map((r) => ({
@@ -369,15 +366,16 @@ const Jurnal7PrixodDetailsPage = () => {
         </div>
       </DetailsView.Content>
 
-      {error?.document ? (
-        <ErrorAlert
+      {existingDocsError ? (
+        <ExistingDocumentsAlert
           open
           onOpenChange={(isOpen) => {
             if (!isOpen) {
-              setError(undefined)
+              setExistingDocsError(undefined)
             }
           }}
-          error={error}
+          docs={existingDocsError.docs}
+          message={existingDocsError.message}
         />
       ) : null}
     </DetailsView>

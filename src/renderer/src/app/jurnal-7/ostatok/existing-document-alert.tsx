@@ -20,12 +20,17 @@ import { Eye } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
-export interface ExistingDocsAlertProps extends DialogProps {
+export interface ExistingDocumentsAlertProps extends DialogProps {
   message: string
   docs: ExistingDocument[]
   product?: OstatokProduct
 }
-export const ExistingDocsAlert = ({ docs, message, product, ...props }: ExistingDocsAlertProps) => {
+export const ExistingDocumentsAlert = ({
+  docs,
+  message,
+  product,
+  ...props
+}: ExistingDocumentsAlertProps) => {
   const navigate = useNavigate()
   const { t } = useTranslation()
 

@@ -47,7 +47,7 @@ export interface ExistingDocument {
   doc_date: string
   type: 'prixod' | 'internal' | 'rasxod'
 }
-export const handleOstatokUpdateGetExistingDocument = (error: unknown) => {
+export const handleOstatokExistingDocumentError = <T>(error: unknown) => {
   if (
     error instanceof HttpResponseError &&
     typeof error.meta === 'object' &&
@@ -58,7 +58,7 @@ export const handleOstatokUpdateGetExistingDocument = (error: unknown) => {
     const meta =
       (error.meta as {
         code: number
-        docs: ExistingDocument[]
+        docs: T[]
         saldo_id: {
           id: number
         }

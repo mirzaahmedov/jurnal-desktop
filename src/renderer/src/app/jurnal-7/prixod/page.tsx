@@ -1,3 +1,5 @@
+import type { ExistingDocument } from './details/interfaces'
+
 import { useEffect, useState } from 'react'
 
 import { ButtonGroup } from '@renderer/common/components/ui/button-group'
@@ -6,7 +8,6 @@ import { useRequisitesStore } from '@renderer/common/features/requisites'
 import { SearchField, useSearch } from '@renderer/common/features/search'
 import { useDates, usePagination } from '@renderer/common/hooks'
 import { formatDate } from '@renderer/common/lib/date'
-import { HttpResponseError } from '@renderer/common/lib/http'
 import { ListView } from '@renderer/common/views'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
@@ -16,6 +17,7 @@ import { toast } from 'react-toastify'
 import { useOstatokStore } from '@/app/jurnal-7/ostatok/store'
 import {
   handleOstatokError,
+  handleOstatokExistingDocumentError,
   handleOstatokResponse,
   validateOstatokDate
 } from '@/app/jurnal-7/ostatok/utils'
@@ -24,11 +26,14 @@ import { useConfirm } from '@/common/features/confirm'
 import { useLayoutStore } from '@/common/features/layout'
 
 import { columns, queryKeys } from './config'
-import { ErrorAlert, type ErrorData, type ErrorDataDocument } from './error-alert'
+import { ExistingDocumentsAlert } from './details/existing-document-alert'
 import { prixodService } from './service'
 
 const Jurnal7PrixodPage = () => {
-  const [error, setError] = useState<ErrorData>()
+  const [existingDocsError, setExistingDocsError] = useState<{
+    message: string
+    docs: ExistingDocument[]
+  }>()
 
   const pagination = usePagination()
   const navigate = useNavigate()
@@ -61,14 +66,15 @@ const Jurnal7PrixodPage = () => {
       })
     },
     onError(error) {
-      console.log(error)
-      if (error instanceof HttpResponseError) {
-        setError({
-          message: error?.message ?? '',
-          document: error.meta?.[0] as ErrorDataDocument
+      const result = handleOstatokExistingDocumentError<ExistingDocument>(error)
+      if (result) {
+        setExistingDocsError({
+          message: error.message,
+          docs: result.docs
         })
+      } else {
+        setExistingDocsError(undefined)
       }
-      toast.error(error?.message)
     }
   })
 
@@ -159,15 +165,16 @@ const Jurnal7PrixodPage = () => {
           pageCount={prixodList?.meta?.pageCount ?? 0}
         />
       </ListView.Footer>
-      {error?.document ? (
-        <ErrorAlert
-          error={error}
+      {existingDocsError ? (
+        <ExistingDocumentsAlert
           open
           onOpenChange={(isOpen) => {
             if (!isOpen) {
-              setError(undefined)
+              setExistingDocsError(undefined)
             }
           }}
+          docs={existingDocsError.docs}
+          message={existingDocsError.message}
         />
       ) : null}
     </ListView>

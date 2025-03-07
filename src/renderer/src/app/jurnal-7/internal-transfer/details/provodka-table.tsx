@@ -9,7 +9,6 @@ import { EmptyList } from '@renderer/common/components/empty-states'
 import { Checkbox } from '@renderer/common/components/ui/checkbox'
 import { useToggle } from '@renderer/common/hooks'
 import { formatDate } from '@renderer/common/lib/date'
-import { ColumnDef } from '@tanstack/react-table'
 import { CircleMinus, CirclePlus } from 'lucide-react'
 import { type UseFormReturn, useFieldArray } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -573,23 +572,3 @@ const NaimenovanieCells = ({
     </>
   )
 }
-
-// const columnDefs: ColumnDef<InternalTransferChildFormType>[] = [
-//   {
-//     accessorKey: 'naimenovanie_tovarov_jur7_id',
-//     cell: ({ row, table }) => (
-//       <Input
-//         readOnly
-//         disabled={!(table.options.meta as any)?.kimdan_id}
-//         tabIndex={tabIndex}
-//         value={row.naimenovanie_tovarov_jur7_id || ''}
-//         className={inputVariants({
-//           editor: true,
-//           error: !!errorMessage
-//         })}
-//         error={!!errorMessage}
-//         onDoubleClick={openDialog}
-//       />
-//     )
-//   }
-// ]

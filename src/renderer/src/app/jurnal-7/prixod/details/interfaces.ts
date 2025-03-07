@@ -1,4 +1,21 @@
-export interface PrixodImportResponse {
+export interface ExistingDocument {
+  id: number
+  doc_num: string
+  doc_date: string
+  opisanie: string | null
+  summa: string
+  kimga_name: string
+  spravochnik_organization_okonx: string
+  spravochnik_organization_bank_klient: string
+  spravochnik_organization_raschet_schet: string
+  spravochnik_organization_raschet_schet_gazna: string
+  spravochnik_organization_mfo: string
+  spravochnik_organization_inn: string
+  kimdan_name: string
+  type: 'internal' | 'prixod' | 'rasxod'
+}
+
+export interface PrixodImportResult {
   name: string
   group_jur7_id: number
   inventar_num: string
