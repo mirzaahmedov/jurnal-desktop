@@ -4,7 +4,9 @@ import type { DialogProps } from '@radix-ui/react-dialog'
 import { GenericTableCell, GenericTableHead } from '@renderer/common/components'
 import {
   AlertDialog,
+  AlertDialogCancel,
   AlertDialogContent,
+  AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle
 } from '@renderer/common/components/ui/alert-dialog'
@@ -103,6 +105,9 @@ export const FileValidationErrorAlert = ({
             </TableBody>
           </Table>
         </div>
+        <AlertDialogFooter>
+          <AlertDialogCancel>{t('close')}</AlertDialogCancel>
+        </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
   )
