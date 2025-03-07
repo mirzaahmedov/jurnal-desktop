@@ -226,5 +226,7 @@
   "iznos_summa_total": "Iznos summa (Umumiy)",
   "iznos_summa_month": "Iznos summa (Oy)",
   "iznos_summa_old": "Iznos summa (eski)",
-  "selected_products": "Tanlangan mahsulotlar"
+  "selected_products": "Tanlangan mahsulotlar",
+  "selected_elements": "Tanlangan elementlar",
+  "delete_selected": "Tanlanganlarni o‘chirish"
 }

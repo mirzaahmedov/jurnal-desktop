@@ -29,8 +29,9 @@ export const useOstatokStore = create<OstatokStore>((set, get) => ({
         newValues.push(value)
       }
     })
+    newValues.sort(compareMonthValues)
     set({
-      queuedMonths: newValues.sort(compareMonthValues)
+      queuedMonths: newValues
     })
   },
   dequeueMonth(...values) {
@@ -41,8 +42,8 @@ export const useOstatokStore = create<OstatokStore>((set, get) => ({
         newValues.splice(index, 1)
       }
     })
-    newValues.sort(compareMonthValues)
 
+    newValues.sort(compareMonthValues)
     set({
       queuedMonths: newValues
     })
@@ -62,8 +63,5 @@ export const useOstatokStore = create<OstatokStore>((set, get) => ({
 }))
 
 export const compareMonthValues = (a: MonthValue, b: MonthValue) => {
-  if (a.year - b.year) {
-    return -1
-  }
-  return a.month - b.month
+  return a.year - b.year || a.month - b.month
 }

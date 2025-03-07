@@ -1,12 +1,19 @@
 import type { OstatokProduct } from '@renderer/common/models'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 import { createGroupSpravochnik } from '@renderer/app/super-admin/group/service'
-import { ChooseSpravochnik, DatePicker } from '@renderer/common/components'
+import { ChooseSpravochnik, DatePicker, GenericTable } from '@renderer/common/components'
 import { CollapsibleTable } from '@renderer/common/components/collapsible-table'
+import { Badge } from '@renderer/common/components/ui/badge'
 import { Button } from '@renderer/common/components/ui/button'
 import { ButtonGroup } from '@renderer/common/components/ui/button-group'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle
+} from '@renderer/common/components/ui/dialog'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -27,7 +34,7 @@ import { formatLocaleDate } from '@renderer/common/lib/format'
 import { HttpResponseError } from '@renderer/common/lib/http'
 import { ListView } from '@renderer/common/views'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { CircleArrowDown, Download } from 'lucide-react'
+import { CircleArrowDown, CopyCheck, Download, Trash2 } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
@@ -36,7 +43,7 @@ import { createResponsibleSpravochnik } from '../responsible/service'
 import { ostatokGroupColumns, ostatokProductColumns } from './columns'
 import { defaultValues, ostatokQueryKeys } from './config'
 import { ErrorAlert, type ErrorData, type ErrorDataDocument } from './error-alert'
-import { getOstatokListQuery, ostatokService } from './service'
+import { deleteOstatokBatchQuery, getOstatokListQuery } from './service'
 import { useOstatokStore } from './store'
 import { handleOstatokError } from './utils'
 
@@ -44,9 +51,11 @@ const OstatokPage = () => {
   const { minDate, maxDate } = useOstatokStore()
 
   const [error, setError] = useState<ErrorData>()
+  const [selectedRows, setSelectedRows] = useState<OstatokProduct[]>([])
   const [selectedDate, setSelectedDate] = useState<undefined | Date>(minDate)
 
   const dropdownToggle = useToggle()
+  const selectedToggle = useToggle()
   const queryClient = useQueryClient()
   const setLayout = useLayoutStore((store) => store.setLayout)
   const isCollapsed = useSidebarStore((store) => store.isCollapsed)
@@ -87,7 +96,7 @@ const OstatokPage = () => {
 
   const { mutate: deleteOstatok, isPending: isDeleting } = useMutation({
     mutationKey: [ostatokQueryKeys.delete],
-    mutationFn: ostatokService.delete,
+    mutationFn: deleteOstatokBatchQuery,
     onSuccess(res) {
       queryClient.invalidateQueries({
         queryKey: [ostatokQueryKeys.getAll]
@@ -129,17 +138,36 @@ const OstatokPage = () => {
     })
   }, [setLayout, t])
 
-  const handleDelete = (row: OstatokProduct) => {
+  const handleDelete = (ids: number[]) => {
+    if (!selectedDate) {
+      return
+    }
     confirm({
       onConfirm() {
-        deleteOstatok(row.id)
+        deleteOstatok({
+          ids: ids.map((id) => ({
+            id
+          })),
+          year: selectedDate.getFullYear(),
+          month: selectedDate.getMonth() + 1
+        })
       }
+    })
+  }
+  const handleRemoveSelected = (row: OstatokProduct) => {
+    setSelectedRows((prev) => {
+      return prev.filter((p) => p.naimenovanie_tovarov_jur7_id !== row.naimenovanie_tovarov_jur7_id)
     })
   }
 
   const onSubmit = form.handleSubmit((values) => {
     setSelectedDate(values.date)
   })
+
+  const selectedIds = useMemo(
+    () => selectedRows.map((row) => row.naimenovanie_tovarov_jur7_id),
+    [selectedRows]
+  )
 
   return (
     <ListView>
@@ -312,9 +340,34 @@ const OstatokPage = () => {
             {t('load')}
           </Button>
         </form>
+
+        <div className="flex items-center gap-5">
+          {selectedIds.length > 0 ? (
+            <>
+              <Button
+                variant="ghost"
+                onClick={selectedToggle.open}
+              >
+                <CopyCheck className="btn-icon" /> {t('selected_elements')}
+                <Badge>{selectedRows.length}</Badge>
+              </Button>
+              <Button
+                variant="destructive"
+                onClick={() => handleDelete(selectedRows.map((row) => row.id))}
+                disabled={isDeleting}
+                loading={isDeleting}
+              >
+                <Trash2 className="btn-icon" /> {t('delete_selected')}
+              </Button>
+            </>
+          ) : null}
+        </div>
       </div>
       <ListView.Content loading={isFetching || isDeleting}>
-        <div ref={setElementRef}>
+        <div
+          ref={setElementRef}
+          className="overflow-x-hidden"
+        >
           <CollapsibleTable
             data={ostatok?.data ?? []}
             columnDefs={ostatokGroupColumns}
@@ -326,12 +379,29 @@ const OstatokPage = () => {
                 style={{ width }}
                 className="overflow-x-auto scrollbar pl-14"
               >
-                <CollapsibleTable
+                <GenericTable
                   data={rows}
                   columnDefs={ostatokProductColumns}
                   getRowId={(row) => row.naimenovanie_tovarov_jur7_id}
-                  getChildRows={() => undefined}
-                  onDelete={handleDelete}
+                  selectedIds={selectedIds}
+                  params={{
+                    onCheckedChange: (row: OstatokProduct) => {
+                      setSelectedRows((prev) => {
+                        if (
+                          prev.find(
+                            (p) =>
+                              p.naimenovanie_tovarov_jur7_id === row.naimenovanie_tovarov_jur7_id
+                          )
+                        ) {
+                          return prev.filter(
+                            (p) =>
+                              p.naimenovanie_tovarov_jur7_id !== row.naimenovanie_tovarov_jur7_id
+                          )
+                        }
+                        return [...prev, row]
+                      })
+                    }
+                  }}
                 />
               </div>
             )}
@@ -349,6 +419,25 @@ const OstatokPage = () => {
           error={error}
         />
       ) : null}
+
+      <Dialog
+        open={selectedToggle.isOpen}
+        onOpenChange={selectedToggle.setOpen}
+      >
+        <DialogContent className="w-full max-w-full h-full max-h-[600px] flex flex-col">
+          <DialogHeader>
+            <DialogTitle>{t('selected_elements')}</DialogTitle>
+          </DialogHeader>
+          <div className="overflow-auto scrollbar flex-1">
+            <GenericTable
+              data={selectedRows}
+              columnDefs={ostatokProductColumns}
+              getRowId={(row) => row.naimenovanie_tovarov_jur7_id}
+              onDelete={handleRemoveSelected}
+            />
+          </div>
+        </DialogContent>
+      </Dialog>
     </ListView>
   )
 }

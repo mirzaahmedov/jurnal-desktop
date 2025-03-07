@@ -30,6 +30,7 @@ export const OstatokFormSchema = z.object({
 })
 export type OstatokFormValues = z.infer<typeof OstatokFormSchema>
 
+// Todo: remove this service
 export const ostatokService = new CRUDService<OstatokGroup, OstatokFormValues>({
   endpoint: APIEndpoints.jur7_saldo
 })
@@ -69,6 +70,24 @@ const OstatokSpravochnikTable = ({
       getRowId={(row) => row.naimenovanie_tovarov_jur7_id}
     />
   )
+}
+
+export interface DeleteOstatokArgs {
+  ids: Array<{
+    id: number
+  }>
+  year: number
+  month: number
+}
+export const deleteOstatokBatchQuery = async ({ ids, year, month }: DeleteOstatokArgs) => {
+  const res = await http.delete(APIEndpoints.jur7_saldo, {
+    data: {
+      ids,
+      year,
+      month
+    }
+  })
+  return res.data
 }
 
 export const getOstatokListQuery = async (

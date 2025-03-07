@@ -72,6 +72,7 @@ export interface GenericTableProps<T extends object>
   customActions?: (row: T) => ReactNode
   activeRowId?: string | number
   footer?: ReactNode
+  params?: Record<string, unknown>
 }
 export const GenericTable = <T extends object>(props: GenericTableProps<T>) => {
   const {
