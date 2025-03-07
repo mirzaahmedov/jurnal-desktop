@@ -12,7 +12,9 @@ export const queryClient = new QueryClient({
       retry: 0,
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
-      gcTime: 0
+      gcTime: 0,
+      staleTime: 0,
+      placeholderData: () => []
     }
   }
 })

@@ -66,5 +66,6 @@ export enum ApiEndpoints {
 export enum ApiStatusCodes {
   DOCS_HAVE = 1001,
   OK = 1000,
-  SALDO_CREATE = 1002
+  SALDO_CREATE = 1002,
+  EXCEL_IMPORT_INVALID = 1003
 }

@@ -16,7 +16,7 @@ import {
 import { Progress } from '@renderer/common/components/ui/progress'
 import { useToggle } from '@renderer/common/hooks'
 import { http } from '@renderer/common/lib/http'
-import { useMutation } from '@tanstack/react-query'
+import { type MutationOptions, useMutation } from '@tanstack/react-query'
 import { CircleX, FolderUp } from 'lucide-react'
 import millify from 'millify'
 import { useTranslation } from 'react-i18next'
@@ -31,8 +31,9 @@ export interface ImportFileDialogProps {
   url: string
   params?: Record<string, unknown>
   onSuccess?: (res: unknown) => void
+  onError?: MutationOptions<unknown, Error, File>['onError']
 }
-export const ImportFile = ({ url, params, onSuccess }: ImportFileDialogProps) => {
+export const ImportFile = ({ url, params, onSuccess, onError }: ImportFileDialogProps) => {
   const dialogToggle = useToggle()
 
   const [file, setFile] = useState<File>()
@@ -62,6 +63,9 @@ export const ImportFile = ({ url, params, onSuccess }: ImportFileDialogProps) =>
       setFile(undefined)
       dialogToggle.close()
       onSuccess?.(res)
+    },
+    onError(...args) {
+      onError?.(...args)
     },
     onSettled() {
       setProgress(null)

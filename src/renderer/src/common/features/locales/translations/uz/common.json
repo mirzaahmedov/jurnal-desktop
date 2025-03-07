@@ -229,5 +229,6 @@
   "iznos_summa_old": "Iznos summa (eski)",
   "selected_products": "Tanlangan mahsulotlar",
   "selected_elements": "Tanlangan elementlar",
-  "delete_selected": "Tanlanganlarni o‘chirish"
+  "delete_selected": "Tanlanganlarni o‘chirish",
+  "row": "Qator"
 }

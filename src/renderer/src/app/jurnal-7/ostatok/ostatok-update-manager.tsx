@@ -28,7 +28,7 @@ export const OstatokUpdateManager = () => {
 
   const [completed, setCompleted] = useState<MonthValue[]>([])
 
-  const { queuedMonths, dequeueMonth } = useOstatokStore()
+  const { queuedMonths, dequeueMonth, clearQueue } = useOstatokStore()
   const { t, i18n } = useTranslation()
 
   const {
@@ -54,6 +54,7 @@ export const OstatokUpdateManager = () => {
   useEffect(() => {
     if (!dialogToggle.isOpen) {
       setCompleted([])
+      clearQueue()
     }
   }, [dialogToggle.isOpen])
 

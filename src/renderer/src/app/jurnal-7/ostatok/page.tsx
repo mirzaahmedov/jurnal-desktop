@@ -23,6 +23,11 @@ import {
 import { FormField } from '@renderer/common/components/ui/form'
 import { useConfirm } from '@renderer/common/features/confirm'
 import { DownloadFile, ImportFile } from '@renderer/common/features/file'
+import { FileValidationErrorAlert } from '@renderer/common/features/file/file-validation-error-alert'
+import {
+  type ImportValidationErrorRow,
+  handleImportValidationError
+} from '@renderer/common/features/file/utils'
 import { useLayoutStore } from '@renderer/common/features/layout'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
 import { SearchField, useSearch } from '@renderer/common/features/search'
@@ -58,6 +63,10 @@ const OstatokPage = () => {
     message: string
     docs: ExistingDocument[]
     product?: OstatokProduct
+  }>()
+  const [validationError, setValidationError] = useState<{
+    message: string
+    doc: ImportValidationErrorRow
   }>()
   const [selectedRows, setSelectedRows] = useState<OstatokProduct[]>([])
   const [selectedDate, setSelectedDate] = useState<undefined | Date>(minDate)
@@ -99,8 +108,9 @@ const OstatokPage = () => {
       }
     ],
     queryFn: getOstatokListQuery,
-    placeholderData: undefined,
-    enabled: !!selectedDate && !!budjet_id && queuedMonths.length === 0
+    enabled: !!selectedDate && !!budjet_id && queuedMonths.length === 0,
+    select: (data) =>
+      !!selectedDate && !!budjet_id && queuedMonths.length === 0 ? data : undefined
   })
 
   const { mutate: deleteOstatok, isPending: isDeleting } = useMutation({
@@ -305,6 +315,17 @@ const OstatokPage = () => {
                     queryKey: [ostatokQueryKeys.getAll]
                   })
                 }}
+                onError={(error) => {
+                  const doc = handleImportValidationError(error)
+                  if (doc) {
+                    setValidationError({
+                      doc,
+                      message: error?.message
+                    })
+                  } else {
+                    setValidationError(undefined)
+                  }
+                }}
               />
             </ButtonGroup>
           </div>
@@ -436,6 +457,18 @@ const OstatokPage = () => {
           message={existingDocsError.message}
           docs={existingDocsError.docs}
           product={existingDocsError.product}
+        />
+      ) : null}
+      {validationError ? (
+        <FileValidationErrorAlert
+          open
+          onOpenChange={(open) => {
+            if (!open) {
+              setValidationError(undefined)
+            }
+          }}
+          message={validationError.message}
+          doc={validationError.doc}
         />
       ) : null}
 

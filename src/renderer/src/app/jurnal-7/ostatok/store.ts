@@ -10,6 +10,7 @@ export interface OstatokStore {
   minDate: Date
   maxDate: Date
   queuedMonths: MonthValue[]
+  clearQueue: VoidFunction
   enqueueMonth: (...values: MonthValue[]) => void
   dequeueMonth: (...values: MonthValue[]) => MonthValue[]
   recheckOstatok?: VoidFunction
@@ -48,6 +49,9 @@ export const useOstatokStore = create<OstatokStore>((set, get) => ({
       queuedMonths: newValues
     })
     return newValues
+  },
+  clearQueue() {
+    set({ queuedMonths: [] })
   },
   setRecheckOstatok: (recheckOstatok) => {
     set({
