@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next'
 
 import { getPodpisDoljnostOptions, getPodpisTypeDocumentOptions } from './config'
 
-const podpisColumns: ColumnDef<Podpis>[] = [
+export const podpisColumns: ColumnDef<Podpis>[] = [
   {
     key: 'id',
     renderCell: IDCell
@@ -67,5 +67,3 @@ const TypeDocumentCell = ({ value }: { value: string }) => {
   }
   return value
 }
-
-export { podpisColumns }

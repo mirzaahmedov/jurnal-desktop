@@ -7,6 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import { toast } from 'react-toastify'
 
 import { Button } from '@/common/components/ui/button'
 import {
@@ -25,20 +26,18 @@ import {
   FormMessage
 } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
-import { useToast } from '@/common/hooks/use-toast'
 
 import { podotchetQueryKeys } from './constants'
-import { type PodotchetForm, PodotchetFormSchema, podotchetService } from './service'
+import { PodotchetFormSchema, type PodotchetFormValues, podotchetService } from './service'
 
-type PodotchetDialogProps = DialogProps & {
+export interface PodotchetDialogProps extends DialogProps {
   selected?: Podotchet | null
 }
 const PodotchetDialog = ({ open, onOpenChange, selected, ...props }: PodotchetDialogProps) => {
   const { t } = useTranslation()
-  const { toast } = useToast()
 
   const queryClient = useQueryClient()
-  const form = useForm<PodotchetForm>({
+  const form = useForm<PodotchetFormValues>({
     defaultValues,
     resolver: zodResolver(PodotchetFormSchema)
   })
@@ -46,46 +45,28 @@ const PodotchetDialog = ({ open, onOpenChange, selected, ...props }: PodotchetDi
   const { mutate: create, isPending: isCreating } = useMutation({
     mutationKey: [podotchetQueryKeys.create],
     mutationFn: podotchetService.create,
-    onSuccess() {
-      toast({
-        title: 'подотчетное лицо успешно создана'
-      })
+    onSuccess(res) {
+      toast.success(res?.message)
       form.reset(defaultValues)
       queryClient.invalidateQueries({
         queryKey: [podotchetQueryKeys.getAll]
       })
       onOpenChange?.(false)
-    },
-    onError(error) {
-      toast({
-        variant: 'destructive',
-        title: 'Не удалось создать подотчетное лицо',
-        description: error.message
-      })
     }
   })
   const { mutate: update, isPending: isUpdating } = useMutation({
     mutationKey: [podotchetQueryKeys.update],
     mutationFn: podotchetService.update,
-    onSuccess() {
-      toast({
-        title: 'подотчетное лицо успешно обновлена'
-      })
+    onSuccess(res) {
+      toast.success(res?.message)
       queryClient.invalidateQueries({
         queryKey: [podotchetQueryKeys.getAll]
       })
       onOpenChange?.(false)
-    },
-    onError(error) {
-      toast({
-        variant: 'destructive',
-        title: 'Не удалось обновить подотчетное лицо',
-        description: error.message
-      })
     }
   })
 
-  const onSubmit = (payload: PodotchetForm) => {
+  const onSubmit = (payload: PodotchetFormValues) => {
     if (selected) {
       update(Object.assign(payload, { id: selected.id }))
     } else {
@@ -112,8 +93,8 @@ const PodotchetDialog = ({ open, onOpenChange, selected, ...props }: PodotchetDi
         <DialogHeader>
           <DialogTitle>
             {selected
-              ? t('create-something', { something: t('podotchet-litso') })
-              : t('update-something', { something: t('podotchet-litso') })}
+              ? t('update-something', { something: t('podotchet-litso') })
+              : t('create-something', { something: t('podotchet-litso') })}
           </DialogTitle>
         </DialogHeader>
         <Form {...form}>
@@ -175,6 +156,6 @@ const PodotchetDialog = ({ open, onOpenChange, selected, ...props }: PodotchetDi
 const defaultValues = {
   name: '',
   rayon: ''
-} satisfies PodotchetForm
+} satisfies PodotchetFormValues
 
 export default PodotchetDialog

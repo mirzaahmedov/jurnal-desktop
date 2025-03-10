@@ -6,6 +6,7 @@ import { usePagination } from '@renderer/common/hooks'
 import { ListView } from '@renderer/common/views'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
+import { toast } from 'react-toastify'
 
 import { GenericTable } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
@@ -42,7 +43,8 @@ const PodotchetPage = () => {
   const { mutate: deleteMutation, isPending } = useMutation({
     mutationKey: [podotchetQueryKeys.delete],
     mutationFn: podotchetService.delete,
-    onSuccess() {
+    onSuccess(res) {
+      toast.success(res?.message)
       queryClient.invalidateQueries({
         queryKey: [podotchetQueryKeys.getAll]
       })

@@ -24,6 +24,7 @@ export const usePagination = (): UsePaginationReturn => {
       }
       if (values.limit) {
         setLimit(values.limit)
+        setPage(1)
       }
     },
     [setPage, setLimit]

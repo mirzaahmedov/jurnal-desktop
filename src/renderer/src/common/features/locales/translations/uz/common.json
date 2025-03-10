@@ -230,5 +230,8 @@
   "selected_products": "Tanlangan mahsulotlar",
   "selected_elements": "Tanlangan elementlar",
   "delete_selected": "Tanlanganlarni o‘chirish",
-  "row": "Qator"
+  "row": "Qator",
+  "search": "Qidirish",
+  "search...": "Qidirish...",
+  "view_all": "Barchasini ko'rish"
 }

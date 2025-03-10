@@ -74,12 +74,16 @@ const defaultFilters = {
   group_number: 'all'
 }
 
-export const createSmetaSpravochnik = (config: Partial<SpravochnikHookOptions<Smeta>>) => {
+export const createSmetaSpravochnik = (
+  config: Partial<SpravochnikHookOptions<TreeNode<Smeta>>>
+) => {
   return extendObject(
     {
       title: 'Выберите смету',
       endpoint: ApiEndpoints.smeta,
       columnDefs: smetaColumns,
+      // Todo: fix this
+      // @ts-expect-error fix this later
       service: smetaService,
       filters: [SpravochnikSearchField, SmetaGroupFilter],
       defaultFilters,

@@ -99,7 +99,7 @@ const SostavPage = () => {
         />
       </ListView.Footer>
       <SostavDialog
-        data={selected}
+        selected={selected}
         open={toggle.isOpen}
         onChangeOpen={toggle.setOpen}
       />

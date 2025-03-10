@@ -74,31 +74,25 @@ export const MainSchetDialog = ({
   const { mutate: create, isPending: isCreating } = useMutation({
     mutationKey: [mainSchetQueryKeys.create],
     mutationFn: mainSchetService.create,
-    onSuccess() {
-      toast.success(t('create-success'))
+    onSuccess(res) {
+      toast.success(res?.message)
       form.reset(defaultValues)
       queryClient.invalidateQueries({
         queryKey: [mainSchetQueryKeys.getAll]
       })
       onChangeOpen(false)
-    },
-    onError(error) {
-      toast.success(t('create-failed') + ': ' + error.message)
     }
   })
   const { mutate: update, isPending: isUpdating } = useMutation({
     mutationKey: [mainSchetQueryKeys.update],
     mutationFn: mainSchetService.update,
-    onSuccess() {
-      toast.success(t('create-success'))
+    onSuccess(res) {
+      toast.success(res?.message)
       form.reset(defaultValues)
       queryClient.invalidateQueries({
         queryKey: [mainSchetQueryKeys.getAll]
       })
       onChangeOpen(false)
-    },
-    onError(error) {
-      toast.success(t('create-failed') + ': ' + error.message)
     }
   })
 

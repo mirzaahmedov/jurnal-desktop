@@ -5,7 +5,7 @@ import { GenericTable } from '@/common/components'
 
 import { organizationColumns } from './columns'
 
-const OrganizationTable = ({
+export const OrganizationTable = ({
   data,
   ...props
 }: Omit<GenericTableProps<Organization>, 'columnDefs' | 'getRowId'>) => {
@@ -18,5 +18,3 @@ const OrganizationTable = ({
     />
   )
 }
-
-export { OrganizationTable }

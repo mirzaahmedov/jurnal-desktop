@@ -6,6 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import { toast } from 'react-toastify'
 
 import { Button } from '@/common/components/ui/button'
 import {
@@ -24,7 +25,6 @@ import {
   FormMessage
 } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
-import { useToast } from '@/common/hooks/use-toast'
 
 import { podrazdelenieQueryKeys } from './constants'
 import {
@@ -33,16 +33,13 @@ import {
   podrazdelenieService
 } from './service'
 
-type PodrazdelenieDialogProps = {
+interface PodrazdelenieDialogProps {
   open: boolean
   onChangeOpen(value: boolean): void
-  data: Podrazdelenie | null
+  selected: Podrazdelenie | null
 }
-const PodrazdelenieDialog = (props: PodrazdelenieDialogProps) => {
-  const { open, onChangeOpen, data } = props
-
+export const PodrazdelenieDialog = ({ open, onChangeOpen, selected }: PodrazdelenieDialogProps) => {
   const { t } = useTranslation()
-  const { toast } = useToast()
 
   const queryClient = useQueryClient()
   const form = useForm<PodrazdelenieFormValues>({
@@ -53,61 +50,42 @@ const PodrazdelenieDialog = (props: PodrazdelenieDialogProps) => {
   const { mutate: create, isPending: isCreating } = useMutation({
     mutationKey: [podrazdelenieQueryKeys.create],
     mutationFn: podrazdelenieService.create,
-    onSuccess() {
-      toast({
-        title: 'Подразделения успешно создана'
-      })
-      form.reset(defaultValues)
+    onSuccess(res) {
+      toast.success(res?.message)
       queryClient.invalidateQueries({
         queryKey: [podrazdelenieQueryKeys.getAll]
       })
       onChangeOpen(false)
-    },
-    onError(error) {
-      toast({
-        variant: 'destructive',
-        title: 'Не удалось создать подразделению',
-        description: error.message
-      })
     }
   })
   const { mutate: update, isPending: isUpdating } = useMutation({
     mutationKey: [podrazdelenieQueryKeys.update],
     mutationFn: podrazdelenieService.update,
-    onSuccess() {
-      toast({
-        title: 'Подразделения успешно обновлена'
-      })
+    onSuccess(res) {
+      toast.success(res?.message)
       queryClient.invalidateQueries({
         queryKey: [podrazdelenieQueryKeys.getAll]
       })
       onChangeOpen(false)
-    },
-    onError(error) {
-      toast({
-        variant: 'destructive',
-        title: 'Не удалось обновить подразделению',
-        description: error.message
-      })
     }
   })
 
   const onSubmit = (payload: PodrazdelenieFormValues) => {
-    if (data) {
-      update(Object.assign(payload, { id: data.id }))
+    if (selected) {
+      update(Object.assign(payload, { id: selected.id }))
     } else {
       create(payload)
     }
   }
 
   useEffect(() => {
-    if (!data) {
+    if (!selected) {
       form.reset(defaultValues)
       return
     }
 
-    form.reset(data)
-  }, [form, data])
+    form.reset(selected)
+  }, [form, selected])
 
   return (
     <Dialog
@@ -117,7 +95,7 @@ const PodrazdelenieDialog = (props: PodrazdelenieDialogProps) => {
       <DialogContent className="max-w-xl">
         <DialogHeader>
           <DialogTitle>
-            {data
+            {selected
               ? t('update-something', { something: t('podrazdelenie') })
               : t('create-something', { something: t('podrazdelenie') })}
           </DialogTitle>

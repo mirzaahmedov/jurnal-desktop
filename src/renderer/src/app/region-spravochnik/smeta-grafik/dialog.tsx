@@ -9,6 +9,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { NumericFormat } from 'react-number-format'
+import { toast } from 'react-toastify'
 
 import { NumericInput } from '@/common/components'
 import { FormElement } from '@/common/components/form'
@@ -24,7 +25,6 @@ import { Form, FormField } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
 import { monthNames } from '@/common/data/month'
 import { SpravochnikInput, useSpravochnik } from '@/common/features/spravochnik'
-import { toast } from '@/common/hooks/use-toast'
 import { formatNumber } from '@/common/lib/format'
 import { extendObject, roundNumberToTwoDecimalPlaces } from '@/common/lib/utils'
 
@@ -36,10 +36,8 @@ export interface SmetaGrafikDialogProps {
   onClose: () => void
   selected: null | SmetaGrafik
 }
-export const SmetaGrafikDialog = (props: SmetaGrafikDialogProps) => {
-  const { open, onClose, selected } = props
-
-  const { t } = useTranslation()
+export const SmetaGrafikDialog = ({ open, onClose, selected }: SmetaGrafikDialogProps) => {
+  const { t } = useTranslation(['app'])
   const { main_schet_id, budjet_id } = useRequisitesStore()
 
   const queryClient = useQueryClient()
@@ -65,53 +63,29 @@ export const SmetaGrafikDialog = (props: SmetaGrafikDialogProps) => {
   const { mutate: createSmetaGrafik, isPending: isCreating } = useMutation({
     mutationKey: [smetaGrafikQueryKeys.create],
     mutationFn: smetaGrafikService.create,
-    onSuccess() {
-      form.reset(defaultValues)
+    onSuccess(res) {
+      toast.success(res?.message)
       queryClient.invalidateQueries({
         queryKey: [smetaGrafikQueryKeys.getAll]
       })
       onClose()
-      toast({
-        title: 'График сметы успешно создан'
-      })
-    },
-    onError(error) {
-      console.error(error)
-      toast({
-        variant: 'destructive',
-        title: 'Ошибка при создании графика сметы',
-        description: error.message
-      })
     }
   })
   const { mutate: updateSmetaGrafik, isPending: isUpdating } = useMutation({
     mutationKey: [smetaGrafikQueryKeys.update],
     mutationFn: smetaGrafikService.update,
-    onSuccess() {
+    onSuccess(res) {
+      toast.success(res?.message)
       onClose()
       queryClient.invalidateQueries({
         queryKey: [smetaGrafikQueryKeys.getAll]
-      })
-      toast({
-        title: 'График сметы успешно изменен'
-      })
-    },
-    onError(error) {
-      console.error(error)
-      toast({
-        variant: 'destructive',
-        title: 'Ошибка при изменении графика сметы',
-        description: error.message
       })
     }
   })
 
   const onSubmit = form.handleSubmit((payload) => {
     if (!main_schet_id) {
-      toast({
-        variant: 'destructive',
-        title: 'Выберите счет'
-      })
+      toast.error('Выберите счет')
       return
     }
     if (selected) {
@@ -152,7 +126,11 @@ export const SmetaGrafikDialog = (props: SmetaGrafikDialogProps) => {
     >
       <DialogContent className="h-full max-h-[700px] flex flex-col">
         <DialogHeader>
-          <DialogTitle>{selected ? 'Изменить' : 'Добавить'} график сметы</DialogTitle>
+          <DialogTitle>
+            {selected
+              ? t('update-something', { something: t('pages.smeta-grafik') })
+              : t('create-something', { something: t('pages.smeta-grafik') })}
+          </DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form
@@ -219,13 +197,13 @@ export const SmetaGrafikDialog = (props: SmetaGrafikDialogProps) => {
             </div>
             <DialogFooter className="w-full mt-5 sticky bottom-0 bg-white shadow-[0px_5px_0px_5px_white] flex flex-row !justify-between items-center">
               <h4 className="font-bold text-start">
-                Сумма: {formatNumber(roundNumberToTwoDecimalPlaces(summa))}
+                {t('total')}: {formatNumber(roundNumberToTwoDecimalPlaces(summa))}
               </h4>
               <Button
                 type="submit"
                 disabled={isCreating || isUpdating}
               >
-                {selected ? 'Изменить' : 'Добавить'}
+                {t('save')}
               </Button>
             </DialogFooter>
           </form>

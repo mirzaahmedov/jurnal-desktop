@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from 'react'
 
 import { GenericTable, LoadingOverlay } from '@renderer/common/components'
 import { CollapsibleTable } from '@renderer/common/components/collapsible-table'
+import { SearchInputDebounced } from '@renderer/common/components/search-input-debounced'
 import { Badge } from '@renderer/common/components/ui/badge'
 import { Button } from '@renderer/common/components/ui/button'
 import {
@@ -92,20 +93,24 @@ export const OstatokSpravochnikDialog = ({
           onValueChange={(value) => setTabValue(value as TabOption)}
           className="flex flex-col h-full overflow-hidden"
         >
-          <DialogHeader className="flex-0 px-5 py-1 flex gap-10 items-center flex-row justify-between">
+          <DialogHeader className="flex-0 px-5 py-1 flex gap-10 items-center flex-row">
             <DialogTitle>{t('products')}</DialogTitle>
-            <div className="flex-1 flex items-center">
-              <TabsList>
-                <TabsTrigger value={TabOption.ALL}>{t('add')}</TabsTrigger>
-                <TabsTrigger
-                  value={TabOption.SELECTED}
-                  className="flex items-center gap-5"
-                >
-                  {t('selected_products')}
-                  {selected.length ? <Badge>{selected.length}</Badge> : null}
-                </TabsTrigger>
-              </TabsList>
-            </div>
+            <TabsList>
+              <TabsTrigger value={TabOption.ALL}>{t('add')}</TabsTrigger>
+              <TabsTrigger
+                value={TabOption.SELECTED}
+                className="flex items-center gap-5"
+              >
+                {t('selected_products')}
+                {selected.length ? <Badge>{selected.length}</Badge> : null}
+              </TabsTrigger>
+            </TabsList>
+            {tabValue === TabOption.ALL ? (
+              <SearchInputDebounced
+                value={search}
+                onChangeValue={setSearch}
+              />
+            ) : null}
           </DialogHeader>
           <TabsContent
             value={TabOption.SELECTED}

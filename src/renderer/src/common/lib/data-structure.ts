@@ -25,7 +25,7 @@ export const buildTreeFromArray = <T extends Record<string, unknown>>(
       children: [],
       _levels: levels,
       _included: false
-    }
+    } as TreeNode<T>
   })
 
   preprocessors.forEach((fn) => {

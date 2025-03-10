@@ -45,14 +45,11 @@ const MainSchetPage = () => {
   const { mutate: deleteMutation, isPending } = useMutation({
     mutationKey: [mainSchetQueryKeys.delete],
     mutationFn: mainSchetService.delete,
-    onSuccess() {
-      toast.success(t('delete_success'))
+    onSuccess(res) {
+      toast.success(res?.message)
       queryClient.invalidateQueries({
         queryKey: [mainSchetQueryKeys.getAll]
       })
-    },
-    onError() {
-      toast.error(t('delete_failed'))
     }
   })
 

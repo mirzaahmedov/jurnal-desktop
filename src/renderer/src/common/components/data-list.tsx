@@ -8,15 +8,15 @@ export interface DataListItem {
 }
 
 export interface DataListProps extends HTMLAttributes<HTMLUListElement> {
-  items: DataListItem[]
+  list: DataListItem[]
 }
-export const DataList = ({ items, className, ...props }: DataListProps) => {
+export const DataList = ({ list, className, ...props }: DataListProps) => {
   return (
     <ul
-      className={cn('flex flex-col gap-2', className)}
+      className={cn('flex flex-col gap-2 text-foreground', className)}
       {...props}
     >
-      {items.map((item, index) => (
+      {list.map((item, index) => (
         <DataListItem
           key={index}
           item={item}
@@ -31,7 +31,7 @@ export const DataListItem = ({ item }: { item: DataListItem }) => {
     <li className="flex items-center gap-2 justify-between">
       <span className="text-sm">{item.name}</span>
       <span className="flex-1 border-b border-slate-200 border-dotted h-5"></span>
-      <b>{item.value}</b>
+      <b className="break-all text-end">{item.value}</b>
     </li>
   )
 }

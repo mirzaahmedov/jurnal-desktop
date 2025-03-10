@@ -1,6 +1,6 @@
 import type { OrganizationFormValues } from './service'
 
-const organizationQueryKeys = {
+export const organizationQueryKeys = {
   getAll: 'organization/all',
   getById: 'organization',
   create: 'organization/create',
@@ -8,7 +8,7 @@ const organizationQueryKeys = {
   delete: 'organization/delete'
 }
 
-const defaultValues: OrganizationFormValues = {
+export const defaultValues: OrganizationFormValues = {
   name: '',
   bank_klient: '',
   inn: '',
@@ -25,5 +25,3 @@ const defaultValues: OrganizationFormValues = {
   ],
   okonx: ''
 }
-
-export { defaultValues, organizationQueryKeys }

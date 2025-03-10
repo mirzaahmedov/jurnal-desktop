@@ -45,7 +45,7 @@ export const getPodpisTypeDocumentOptions = (t: TFunction) => {
   ] as const
 }
 
-const PodpisPayloadSchema = z.object({
+export const PodpisPayloadSchema = z.object({
   numeric_poryadok: z.number().min(1),
   doljnost_name: z.enum(
     [
@@ -68,9 +68,9 @@ const PodpisPayloadSchema = z.object({
     }
   )
 })
-type PodpisPayloadType = z.infer<typeof PodpisPayloadSchema>
+export type PodpisPayloadType = z.infer<typeof PodpisPayloadSchema>
 
-const podpisQueryKeys = {
+export const podpisQueryKeys = {
   getAll: 'podpis/all',
   getById: 'podpis',
   create: 'podpis/create',
@@ -78,12 +78,9 @@ const podpisQueryKeys = {
   delete: 'podpis/delete'
 }
 
-const defaultValues: PodpisPayloadType = {
+export const defaultValues: PodpisPayloadType = {
   numeric_poryadok: 1,
   doljnost_name: PodpisDoljnost.NACHALNIK_OTDELA,
   fio_name: '',
   type_document: PodpisTypeDocument.BANK_RASXOD_PORUCHENIYA
 }
-
-export { PodpisPayloadSchema, podpisQueryKeys, defaultValues }
-export type { PodpisPayloadType }

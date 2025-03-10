@@ -7,6 +7,7 @@ import { usePagination } from '@renderer/common/hooks'
 import { ListView } from '@renderer/common/views'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
+import { toast } from 'react-toastify'
 
 import { GenericTable } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
@@ -43,7 +44,8 @@ const PodpisPage = () => {
   const { mutate: deletePodpis, isPending } = useMutation({
     mutationKey: [podpisQueryKeys.delete],
     mutationFn: podpisService.delete,
-    onSuccess() {
+    onSuccess(res) {
+      toast.success(res?.message)
       queryClient.invalidateQueries({
         queryKey: [podpisQueryKeys.getAll]
       })
@@ -56,7 +58,6 @@ const PodpisPage = () => {
   }
   const handleClickDelete = (data: Podpis) => {
     confirm({
-      title: 'Удаление подписи',
       onConfirm() {
         deletePodpis(data.id)
       }
@@ -96,7 +97,7 @@ const PodpisPage = () => {
         />
       </ListView.Footer>
       <PodpisDialog
-        data={selected}
+        selected={selected}
         open={dialogToggle.isOpen}
         onOpenChange={dialogToggle.setOpen}
       />

@@ -56,7 +56,7 @@ export const ErrorAlert = ({ error, ...props }: ErrorAlertProps) => {
           <AlertDialogTitle className="font-bold text-2xl">{error.message}</AlertDialogTitle>
         </AlertDialogHeader>
         <div>
-          <DataList items={getErrorDocumentItems(t, error.document)} />
+          <DataList list={getErrorDocumentItems(t, error.document)} />
         </div>
         <AlertDialogFooter>
           <AlertDialogCancel>{t('cancel')}</AlertDialogCancel>

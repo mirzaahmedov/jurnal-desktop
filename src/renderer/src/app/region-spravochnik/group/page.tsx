@@ -23,7 +23,7 @@ const RegionGroupPage = () => {
       {
         search,
         page: 1,
-        limit: 10000
+        limit: 10000000
       }
     ],
     queryFn: groupService.getAll
@@ -45,6 +45,7 @@ const RegionGroupPage = () => {
     <ListView>
       <ListView.Header>
         <DownloadFile
+          variant="default"
           url="/jur_7/group/export"
           params={{
             page: 1,

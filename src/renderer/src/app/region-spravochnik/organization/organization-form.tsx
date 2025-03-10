@@ -17,7 +17,7 @@ import { FormElement } from '@/common/components/form'
 import { Form, FormControl, FormField, FormLabel } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
 
-type OrganizationFormProps = {
+interface OrganizationFormProps {
   data?: Organization
   actionType?: 'create' | 'update'
   form: UseFormReturn<OrganizationFormValues>

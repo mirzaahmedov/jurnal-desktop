@@ -8,6 +8,7 @@ import { usePagination } from '@renderer/common/hooks'
 import { ListView } from '@renderer/common/views'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
+import { toast } from 'react-toastify'
 
 import { useConfirm } from '@/common/features/confirm'
 import { useLayoutStore } from '@/common/features/layout'
@@ -48,7 +49,8 @@ const SmetaGrafikPage = () => {
   const { mutate: deleteSmetaGrafik, isPending } = useMutation({
     mutationKey: [smetaGrafikQueryKeys.delete],
     mutationFn: smetaGrafikService.delete,
-    onSuccess() {
+    onSuccess(res) {
+      toast.success(res?.message)
       queryClient.invalidateQueries({
         queryKey: [smetaGrafikQueryKeys.getAll]
       })

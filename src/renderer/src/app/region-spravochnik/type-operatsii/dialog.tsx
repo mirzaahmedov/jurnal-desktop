@@ -20,7 +20,7 @@ import {
 } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
 
-import { typeOperatsiiQueryKeys } from './constants'
+import { typeOperatsiiQueryKeys } from './config'
 import { TypeOperatsiiFormSchema, typeOperatsiiService } from './service'
 
 export interface TypeOperatsiiDialogProps {
@@ -28,9 +28,7 @@ export interface TypeOperatsiiDialogProps {
   onChangeOpen(value: boolean): void
   selected: TypeOperatsii | null
 }
-export const TypeOperatsiiDialog = (props: TypeOperatsiiDialogProps) => {
-  const { open, onChangeOpen, selected } = props
-
+export const TypeOperatsiiDialog = ({ open, onChangeOpen, selected }: TypeOperatsiiDialogProps) => {
   const { t } = useTranslation()
 
   const queryClient = useQueryClient()
@@ -42,31 +40,25 @@ export const TypeOperatsiiDialog = (props: TypeOperatsiiDialogProps) => {
   const { mutate: create, isPending: isCreating } = useMutation({
     mutationKey: [typeOperatsiiQueryKeys.create],
     mutationFn: typeOperatsiiService.create,
-    onSuccess() {
-      toast.success('тип операции успешно создана')
+    onSuccess(res) {
+      toast.success(res?.message)
       form.reset(defaultValues)
       queryClient.invalidateQueries({
         queryKey: [typeOperatsiiQueryKeys.getAll]
       })
       onChangeOpen(false)
-    },
-    onError(error) {
-      toast.error('Не удалось создать тип операции: ' + error.message)
     }
   })
   const { mutate: update, isPending: isUpdating } = useMutation({
     mutationKey: [typeOperatsiiQueryKeys.update],
     mutationFn: typeOperatsiiService.update,
-    onSuccess() {
-      toast.success('тип операции успешно обновлена')
+    onSuccess(res) {
+      toast.success(res?.message)
       form.reset(defaultValues)
       queryClient.invalidateQueries({
         queryKey: [typeOperatsiiQueryKeys.getAll]
       })
       onChangeOpen(false)
-    },
-    onError(error) {
-      toast.error('Не удалось обновить тип операции: ' + error.message)
     }
   })
 
@@ -103,7 +95,7 @@ export const TypeOperatsiiDialog = (props: TypeOperatsiiDialogProps) => {
           type="submit"
           disabled={isCreating || isUpdating}
         >
-          {selected ? t('create') : t('edit')}
+          {t('save')}
         </Button>
       }
     >

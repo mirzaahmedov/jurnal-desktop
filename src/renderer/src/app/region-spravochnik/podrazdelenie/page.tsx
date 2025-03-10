@@ -6,6 +6,7 @@ import { usePagination } from '@renderer/common/hooks'
 import { ListView } from '@renderer/common/views'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
+import { toast } from 'react-toastify'
 
 import { GenericTable } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
@@ -44,7 +45,8 @@ const PodrazdeleniePage = () => {
   const { mutate: deleteMutation, isPending } = useMutation({
     mutationKey: [podrazdelenieQueryKeys.delete],
     mutationFn: podrazdelenieService.delete,
-    onSuccess() {
+    onSuccess(res) {
+      toast.success(res?.message)
       queryClient.invalidateQueries({
         queryKey: [podrazdelenieQueryKeys.getAll]
       })
@@ -100,7 +102,7 @@ const PodrazdeleniePage = () => {
         />
       </ListView.Footer>
       <PodrazdelenieDialog
-        data={selected}
+        selected={selected}
         open={dialogToggle.isOpen}
         onChangeOpen={dialogToggle.setOpen}
       />

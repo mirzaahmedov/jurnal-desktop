@@ -6,6 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import { toast } from 'react-toastify'
 
 import { NumericInput, SelectField } from '@/common/components'
 import { FormElement } from '@/common/components/form'
@@ -19,7 +20,6 @@ import {
 } from '@/common/components/ui/dialog'
 import { Form, FormField } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
-import { toast } from '@/common/hooks/use-toast'
 
 import {
   PodpisPayloadSchema,
@@ -30,12 +30,12 @@ import {
 } from './config'
 import { podpisService } from './service'
 
-type PodpisDialogProps = {
-  data?: Podpis
+interface PodpisDialogProps {
+  selected?: Podpis
   open: boolean
   onOpenChange: (open: boolean) => void
 }
-const PodpisDialog = ({ data, open, onOpenChange }: PodpisDialogProps) => {
+export const PodpisDialog = ({ selected, open, onOpenChange }: PodpisDialogProps) => {
   const { t } = useTranslation(['app', 'podpis'])
 
   const queryClient = useQueryClient()
@@ -47,50 +47,32 @@ const PodpisDialog = ({ data, open, onOpenChange }: PodpisDialogProps) => {
   const { mutate: createPodpis, isPending: isCreating } = useMutation({
     mutationKey: [podpisQueryKeys.create],
     mutationFn: podpisService.create,
-    onSuccess() {
-      toast({
-        title: 'Подпись успешно создан'
-      })
+    onSuccess(res) {
+      toast.success(res?.message)
       form.reset(defaultValues)
       queryClient.invalidateQueries({
         queryKey: [podpisQueryKeys.getAll]
       })
       onOpenChange(false)
-    },
-    onError(error) {
-      toast({
-        variant: 'destructive',
-        title: 'Не удалось создать подпись',
-        description: error.message
-      })
     }
   })
   const { mutate: updatePodpis, isPending: isUpdating } = useMutation({
     mutationKey: [podpisQueryKeys.update],
     mutationFn: podpisService.update,
-    onSuccess() {
-      toast({
-        title: 'Подпись успешно обновлен'
-      })
+    onSuccess(res) {
+      toast.success(res?.message)
       form.reset(defaultValues)
       queryClient.invalidateQueries({
         queryKey: [podpisQueryKeys.getAll]
       })
       onOpenChange(false)
-    },
-    onError(error) {
-      toast({
-        variant: 'destructive',
-        title: 'Не удалось обновить подпись',
-        description: error.message
-      })
     }
   })
 
   const handleSubmit = form.handleSubmit((values) => {
-    if (data) {
+    if (selected) {
       updatePodpis({
-        id: data.id,
+        id: selected.id,
         ...values
       })
       return
@@ -100,11 +82,9 @@ const PodpisDialog = ({ data, open, onOpenChange }: PodpisDialogProps) => {
 
   useEffect(() => {
     if (open) {
-      // Todo: fix this
-      // @ts-ignore will fix this later
-      form.reset(data ?? defaultValues)
+      form.reset(selected ?? defaultValues)
     }
-  }, [form, open, data])
+  }, [form, open, selected])
 
   return (
     <Dialog
@@ -206,5 +186,3 @@ const PodpisDialog = ({ data, open, onOpenChange }: PodpisDialogProps) => {
     </Dialog>
   )
 }
-
-export { PodpisDialog }

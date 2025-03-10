@@ -21,12 +21,12 @@ import {
 
 import { defaultValues, organizationQueryKeys } from './config'
 import { OrganizationForm } from './organization-form'
-import { OrganizationFormSchema, organizationService } from './service'
+import { OrganizationFormSchema, type OrganizationFormValues, organizationService } from './service'
 
-type OrganizationDialogProps = DialogProps & {
+export interface OrganizationDialogProps extends DialogProps {
   selected?: Organization
   state?: {
-    original?: Organization
+    original?: OrganizationFormValues
   }
 }
 export const OrganizationDialog = ({
@@ -55,9 +55,6 @@ export const OrganizationDialog = ({
         queryKey: [organizationQueryKeys.getAll]
       })
       onOpenChange?.(false)
-    },
-    onError(error) {
-      toast.error(error.message)
     }
   })
   const { mutate: updateOrganization, isPending: isUpdating } = useMutation({
@@ -73,9 +70,6 @@ export const OrganizationDialog = ({
         queryKey: [organizationQueryKeys.getById, selected?.id]
       })
       onOpenChange?.(false)
-    },
-    onError(error) {
-      toast.error(error.message)
     }
   })
 
@@ -125,7 +119,7 @@ export const OrganizationDialog = ({
                   disabled={isCreating || isUpdating}
                   type="submit"
                 >
-                  {selected ? t('save') : t('add')}
+                  {t('save')}
                 </Button>
               </DialogFooter>
             }

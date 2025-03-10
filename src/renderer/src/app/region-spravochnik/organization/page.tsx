@@ -15,16 +15,15 @@ import { CopyPlus, ListTree } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 
-import { organizationQueryKeys } from './config'
+import { defaultValues, organizationQueryKeys } from './config'
 import { OrganizationDialog } from './dialog'
-import { organizationService } from './service'
+import { type OrganizationFormValues, organizationService } from './service'
 import { SubordinateOrganizations } from './subordinate-organization'
 import { OrganizationTable } from './table'
 
 const OrganizationPage = () => {
   const [selected, setSelected] = useState<Organization>()
-  const [original, setOriginal] = useState<Organization>()
-
+  const [original, setOriginal] = useState<OrganizationFormValues>()
   const [parentId, setParentId] = useState<number>()
 
   const { t } = useTranslation(['app'])
@@ -50,8 +49,8 @@ const OrganizationPage = () => {
   const { mutate: deleteOrganization, isPending } = useMutation({
     mutationKey: [organizationQueryKeys.delete],
     mutationFn: organizationService.delete,
-    onSuccess() {
-      toast.success(t('delete-success'))
+    onSuccess(res) {
+      toast.success(res?.message)
       queryClient.invalidateQueries({
         queryKey: [organizationQueryKeys.getAll]
       })
@@ -69,7 +68,6 @@ const OrganizationPage = () => {
       content: SearchField,
       onCreate: () => {
         dialogToggle.open()
-        setSelected(undefined)
       }
     })
   }, [setLayout, t, dialogToggle.open])
@@ -85,9 +83,25 @@ const OrganizationPage = () => {
       }
     })
   }
+  const handleClickDuplicate = (row: Organization) => {
+    setOriginal({
+      name: row.name,
+      bank_klient: row.bank_klient,
+      inn: row.inn,
+      mfo: row.mfo,
+      okonx: row.mfo,
+      account_numbers: defaultValues.account_numbers,
+      gaznas: defaultValues.gaznas
+    })
+    dialogToggle?.open()
+  }
+  const handleClickChildren = (row: Organization) => {
+    setParentId(row.id)
+  }
 
   useEffect(() => {
     if (!dialogToggle.isOpen) {
+      setSelected(undefined)
       setOriginal(undefined)
     }
   }, [dialogToggle.isOpen])
@@ -119,8 +133,7 @@ const OrganizationPage = () => {
                 size="icon"
                 onClick={(e) => {
                   e.stopPropagation()
-                  setOriginal(row)
-                  dialogToggle?.open()
+                  handleClickDuplicate(row)
                 }}
               >
                 <CopyPlus className="size-4" />
@@ -130,7 +143,7 @@ const OrganizationPage = () => {
                 size="icon"
                 onClick={(e) => {
                   e.stopPropagation()
-                  setParentId(row.id)
+                  handleClickChildren(row)
                 }}
               >
                 <ListTree className="size-4" />

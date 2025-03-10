@@ -41,7 +41,7 @@ export const organizationService = new CRUDService<Organization, OrganizationFor
   endpoint: ApiEndpoints.organization
 })
 
-export interface UpdateChildOrganizationParams {
+export interface UpdateChildOrganizationArgs {
   parentId: number
   childs: {
     id: number
@@ -50,7 +50,7 @@ export interface UpdateChildOrganizationParams {
 export const updateChildOrganizationsQuery = async ({
   parentId,
   childs
-}: UpdateChildOrganizationParams) => {
+}: UpdateChildOrganizationArgs) => {
   const res = await http.put<Response<Organization>>(`${ApiEndpoints.organization}/parent`, {
     parent_id: parentId,
     organization_ids: childs

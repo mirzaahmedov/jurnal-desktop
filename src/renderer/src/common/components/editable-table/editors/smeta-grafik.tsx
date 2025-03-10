@@ -2,7 +2,7 @@ import type { EditorComponentType } from './types'
 
 import { useEffect } from 'react'
 
-import { createSmetaGrafikSpravochnik } from '@renderer/app/region-admin/smeta-grafik/service'
+import { createSmetaGrafikSpravochnik } from '@renderer/app/region-spravochnik/smeta-grafik/service'
 import { formatNumber } from '@renderer/common/lib/format'
 
 import { SpravochnikInput, useSpravochnik } from '@/common/features/spravochnik'

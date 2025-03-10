@@ -6,6 +6,7 @@ import { usePagination } from '@renderer/common/hooks'
 import { ListView } from '@renderer/common/views'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
+import { toast } from 'react-toastify'
 
 import { GenericTable } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
@@ -14,7 +15,7 @@ import { SearchField, useSearch } from '@/common/features/search'
 import { useToggle } from '@/common/hooks/use-toggle'
 
 import { typeOperatsiiColumns } from './columns'
-import { typeOperatsiiQueryKeys } from './constants'
+import { typeOperatsiiQueryKeys } from './config'
 import { TypeOperatsiiDialog } from './dialog'
 import { typeOperatsiiService } from './service'
 
@@ -44,7 +45,8 @@ const TypeOperatsiiPage = () => {
   const { mutate: deleteMutation, isPending } = useMutation({
     mutationKey: [typeOperatsiiQueryKeys.delete],
     mutationFn: typeOperatsiiService.delete,
-    onSuccess() {
+    onSuccess(res) {
+      toast.success(res?.message)
       queryClient.invalidateQueries({
         queryKey: [typeOperatsiiQueryKeys.getAll]
       })

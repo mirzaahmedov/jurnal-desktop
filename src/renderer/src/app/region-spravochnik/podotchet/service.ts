@@ -18,9 +18,9 @@ export const PodotchetFormSchema = withPreprocessor(
     rayon: z.string()
   })
 )
-export type PodotchetForm = z.infer<typeof PodotchetFormSchema>
+export type PodotchetFormValues = z.infer<typeof PodotchetFormSchema>
 
-export const podotchetService = new CRUDService<Podotchet, PodotchetForm>({
+export const podotchetService = new CRUDService<Podotchet, PodotchetFormValues>({
   endpoint: ApiEndpoints.podotchet_litso
 })
 

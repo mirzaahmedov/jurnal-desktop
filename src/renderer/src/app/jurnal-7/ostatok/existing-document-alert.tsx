@@ -43,7 +43,7 @@ export const ExistingDocumentsAlert = ({
         <div className="flex flex-col gap-10">
           {product ? (
             <div>
-              <DataList items={getProductFields(t, product)} />
+              <DataList list={getProductFields(t, product)} />
             </div>
           ) : null}
           <ul className="divide-y">

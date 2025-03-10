@@ -8,8 +8,6 @@ import { Navigate, createHashRouter } from 'react-router-dom'
 
 import DashboardPage from './dashboard/page'
 import HomePage from './home/page'
-import RaschetSchetPage from './region-spravochnik/raschet-schet'
-import RaschetSchetGaznaPage from './region-spravochnik/raschet-schet-gazna'
 import SigninPage from './sign-in'
 import AdminOstatokPage from './super-admin/ostatok/page'
 import ZarplataSpravochnikPage from './super-admin/zarplata/spravochnik/page'
@@ -61,7 +59,7 @@ const ExpensesReportDetailsPage = lazy(() => import('./real-expenses/report/deta
 const RealExpensesReportPage = lazy(() => import('./real-expenses/report/page'))
 const AccessPage = lazy(() => import('./region-admin/access/page'))
 const RegionUserPage = lazy(() => import('./region-admin/region-user'))
-const SmetaGrafikPage = lazy(() => import('./region-admin/smeta-grafik/page'))
+const SmetaGrafikPage = lazy(() => import('./region-spravochnik/smeta-grafik/page'))
 const MainSchetPage = lazy(() => import('./region-spravochnik/main-schet/page'))
 const OrganizationPage = lazy(() => import('./region-spravochnik/organization/page'))
 const AccountablePage = lazy(() => import('./region-spravochnik/podotchet'))
@@ -200,14 +198,6 @@ export const routes: RouteObject[] = [
           {
             path: 'organization',
             element: <OrganizationPage />
-          },
-          {
-            path: 'raschet-schet',
-            element: <RaschetSchetPage />
-          },
-          {
-            path: 'raschet-schet-gazna',
-            element: <RaschetSchetGaznaPage />
           },
           {
             path: 'subdivision',

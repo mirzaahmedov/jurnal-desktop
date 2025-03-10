@@ -4,6 +4,7 @@ import type { Organization } from '@renderer/common/models'
 import { useEffect, useMemo, useState } from 'react'
 
 import { Pagination } from '@renderer/common/components/pagination'
+import { SearchInputDebounced } from '@renderer/common/components/search-input-debounced'
 import { Badge } from '@renderer/common/components/ui/badge'
 import { Button } from '@renderer/common/components/ui/button'
 import {
@@ -43,6 +44,7 @@ export const SubordinateOrganizations = ({
   const [selected, setSelected] = useState<Organization[]>([])
   const [page, setPage] = useState(1)
   const [limit, setLimit] = useState(10)
+  const [search, setSearch] = useState('')
 
   const { t } = useTranslation()
 
@@ -58,7 +60,8 @@ export const SubordinateOrganizations = ({
         page,
         limit,
         parent: false,
-        parent_id: parentId
+        parent_id: parentId,
+        search: search ? search : undefined
       }
     ],
     queryFn: organizationService.getAll
@@ -73,9 +76,6 @@ export const SubordinateOrganizations = ({
       queryClient.invalidateQueries({
         queryKey: [organizationQueryKeys.getById, parentId]
       })
-    },
-    onError(error) {
-      toast.error(error?.message)
     }
   })
 
@@ -105,20 +105,25 @@ export const SubordinateOrganizations = ({
           onValueChange={(value) => setTabValue(value as TabOption)}
           className="flex flex-col h-full overflow-hidden"
         >
-          <DialogHeader className="flex-0 px-5 py-1 flex gap-10 items-center flex-row justify-between">
+          <DialogHeader className="flex-0 px-5 py-1 flex gap-10 items-center flex-row">
             <DialogTitle>{t('subordinate_organizations')}</DialogTitle>
-            <div className="flex-1 flex items-center">
-              <TabsList>
-                <TabsTrigger
-                  value={TabOption.SELECTED}
-                  className="flex items-center gap-5"
-                >
-                  {t('selected_organizations')}
-                  {selected.length ? <Badge>{selected.length}</Badge> : null}
-                </TabsTrigger>
-                <TabsTrigger value={TabOption.ALL}>{t('add')}</TabsTrigger>
-              </TabsList>
-            </div>
+            <TabsList>
+              <TabsTrigger
+                value={TabOption.SELECTED}
+                className="flex items-center gap-5"
+              >
+                {t('selected_organizations')}
+                {selected.length ? <Badge>{selected.length}</Badge> : null}
+              </TabsTrigger>
+              <TabsTrigger value={TabOption.ALL}>{t('add')}</TabsTrigger>
+            </TabsList>
+
+            {tabValue === TabOption.ALL ? (
+              <SearchInputDebounced
+                value={search}
+                onChangeValue={setSearch}
+              />
+            ) : null}
           </DialogHeader>
           <TabsContent
             value={TabOption.SELECTED}

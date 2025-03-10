@@ -1,8 +1,10 @@
 import type { ColumnDef } from '@/common/components'
 import type { MainSchet } from '@/common/models'
 
+import { DataList } from '@renderer/common/components/data-list'
+import { HoverInfoCell } from '@renderer/common/components/table/renderers'
 import { IDCell } from '@renderer/common/components/table/renderers/id'
-import { TooltipCell } from '@renderer/common/components/table/renderers/tooltip-old'
+import { Trans } from 'react-i18next'
 
 export const mainSchetColumns: ColumnDef<MainSchet>[] = [
   {
@@ -26,16 +28,31 @@ export const mainSchetColumns: ColumnDef<MainSchet>[] = [
     header: 'organization',
     renderCell(row) {
       return (
-        <TooltipCell
-          data={row}
+        <HoverInfoCell
           title={row.tashkilot_nomi}
-          description="tashkilot_inn"
-          elements={{
-            tashkilot_inn: 'ИНН',
-            tashkilot_bank: 'Банк',
-            tashkilot_mfo: 'МФО',
-            tashkilot_nomi: 'Название'
-          }}
+          secondaryText={row.tashkilot_inn}
+          hoverContent={
+            <DataList
+              list={[
+                {
+                  name: <Trans>name</Trans>,
+                  value: row.tashkilot_nomi
+                },
+                {
+                  name: <Trans>inn</Trans>,
+                  value: row.tashkilot_inn
+                },
+                {
+                  name: <Trans>bank</Trans>,
+                  value: row.tashkilot_bank
+                },
+                {
+                  name: <Trans>mfo</Trans>,
+                  value: row.tashkilot_mfo
+                }
+              ]}
+            />
+          }
         />
       )
     }

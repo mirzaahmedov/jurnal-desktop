@@ -1,9 +1,11 @@
 import type { OstatokGroup, OstatokProduct } from '@renderer/common/models/ostatok'
 
 import { type ColumnDef, Copyable } from '@renderer/common/components'
+import { DataList } from '@renderer/common/components/data-list'
 import { HoverInfoCell } from '@renderer/common/components/table/renderers'
 import { IDCell } from '@renderer/common/components/table/renderers/id'
 import { formatLocaleDate, formatNumber } from '@renderer/common/lib/format'
+import { Trans } from 'react-i18next'
 
 export const ostatokGroupColumns: ColumnDef<OstatokGroup>[] = [
   {
@@ -46,7 +48,46 @@ export const ostatokProductColumns: ColumnDef<OstatokProduct>[] = [
   },
   {
     key: 'name',
-    className: 'min-w-[400px]'
+    className: 'min-w-[400px]',
+    renderCell: (row) => (
+      <HoverInfoCell
+        title={row.name}
+        hoverContent={
+          <DataList
+            className="min-w-52"
+            list={[
+              {
+                name: <Trans>id</Trans>,
+                value: (
+                  <Copyable
+                    side="start"
+                    value={row.product.id}
+                  >
+                    #{row.product.id}
+                  </Copyable>
+                )
+              },
+              {
+                name: <Trans>name</Trans>,
+                value: row.product.name
+              },
+              {
+                name: <Trans>ei</Trans>,
+                value: `${row.product.edin}`
+              },
+              {
+                name: <Trans>inventar-num</Trans>,
+                value: row.product.inventar_num
+              },
+              {
+                name: <Trans>serial-num</Trans>,
+                value: row.product.serial_num
+              }
+            ]}
+          />
+        }
+      />
+    )
   },
   {
     key: 'edin',

@@ -6,6 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import { toast } from 'react-toastify'
 
 import { Button } from '@/common/components/ui/button'
 import {
@@ -24,20 +25,16 @@ import {
   FormMessage
 } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
-import { useToast } from '@/common/hooks/use-toast'
 
 import { defaultValues, sostavQueryKeys } from './constants'
 import { SostavFormSchema, sostavService } from './service'
 
-type SostavDialogProps = {
+interface SostavDialogProps {
   open: boolean
   onChangeOpen(value: boolean): void
-  data: Sostav | null
+  selected: Sostav | null
 }
-const SostavDialog = (props: SostavDialogProps) => {
-  const { open, onChangeOpen, data } = props
-
-  const { toast } = useToast()
+const SostavDialog = ({ open, onChangeOpen, selected }: SostavDialogProps) => {
   const { t } = useTranslation()
 
   const queryClient = useQueryClient()
@@ -49,61 +46,42 @@ const SostavDialog = (props: SostavDialogProps) => {
   const { mutate: create, isPending: isCreating } = useMutation({
     mutationKey: [sostavQueryKeys.create],
     mutationFn: sostavService.create,
-    onSuccess() {
-      toast({
-        title: 'Состав успешно создан'
-      })
-      form.reset(defaultValues)
+    onSuccess(res) {
+      toast.success(res?.message)
       queryClient.invalidateQueries({
         queryKey: [sostavQueryKeys.getAll]
       })
       onChangeOpen(false)
-    },
-    onError(error) {
-      toast({
-        variant: 'destructive',
-        title: 'Не удалось создать состав',
-        description: error.message
-      })
     }
   })
   const { mutate: update, isPending: isUpdating } = useMutation({
     mutationKey: [sostavQueryKeys.update],
     mutationFn: sostavService.update,
-    onSuccess() {
-      toast({
-        title: 'Состав успешно обновлена'
-      })
+    onSuccess(res) {
+      toast.success(res?.message)
       queryClient.invalidateQueries({
         queryKey: [sostavQueryKeys.getAll]
       })
       onChangeOpen(false)
-    },
-    onError(error) {
-      toast({
-        variant: 'destructive',
-        title: 'Не удалось обновить состав',
-        description: error.message
-      })
     }
   })
 
   const onSubmit = form.handleSubmit((payload) => {
-    if (data) {
-      update(Object.assign(payload, { id: data.id }))
+    if (selected) {
+      update(Object.assign(payload, { id: selected.id }))
     } else {
       create(payload)
     }
   })
 
   useEffect(() => {
-    if (!data) {
+    if (!selected) {
       form.reset(defaultValues)
       return
     }
 
-    form.reset(data)
-  }, [form, data])
+    form.reset(selected)
+  }, [form, selected])
 
   return (
     <Dialog
@@ -113,7 +91,9 @@ const SostavDialog = (props: SostavDialogProps) => {
       <DialogContent className="max-w-xl">
         <DialogHeader>
           <DialogTitle>
-            {data ? t('update-something', { something: t("sostav")}) : t('create-something', {something: t("sostav")})} 
+            {selected
+              ? t('update-something', { something: t('sostav') })
+              : t('create-something', { something: t('sostav') })}
           </DialogTitle>
         </DialogHeader>
         <Form {...form}>

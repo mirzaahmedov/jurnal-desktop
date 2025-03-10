@@ -2,7 +2,11 @@ import type { SmetaTableProps } from './table'
 import type { SmetaGrafik } from '@/common/models'
 import type { ComponentType } from 'react'
 
+import { Copyable } from '@renderer/common/components'
+import { DataList } from '@renderer/common/components/data-list'
+import { HoverInfoCell } from '@renderer/common/components/table/renderers'
 import { Pencil, Trash2 } from 'lucide-react'
+import { Trans } from 'react-i18next'
 
 import { Button } from '@/common/components/ui/button'
 import { formatNumber } from '@/common/lib/format'
@@ -22,7 +26,48 @@ const columns: ColumnDef[] = [
     sticky: true,
     className: 'px-5',
     key: 'smeta_number',
-    header: 'smeta_number'
+    header: 'smeta_number',
+    cellElement: ({ row }) => (
+      <HoverInfoCell
+        title={row.smeta_number}
+        titleProps={{
+          className: 'text-xs'
+        }}
+        hoverContent={
+          <DataList
+            className="font-normal text-sm"
+            list={[
+              {
+                name: <Trans>id</Trans>,
+                value: (
+                  <Copyable
+                    side="start"
+                    value={row.smeta_id}
+                  >
+                    #{row.smeta_id}
+                  </Copyable>
+                )
+              },
+              {
+                name: <Trans>number</Trans>,
+                value: row.smeta_number
+              },
+              {
+                name: <Trans>name</Trans>,
+                value: row.smeta_name
+              }
+            ]}
+          />
+        }
+      />
+    )
+  },
+  {
+    alphanumeric: true,
+    sticky: true,
+    className: 'px-5',
+    key: 'year',
+    header: 'year'
   },
   {
     key: 'oy_1',
