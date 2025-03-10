@@ -2,6 +2,7 @@
 
 interface ImportMetaEnv {
   readonly VITE_MODE: 'staging' | 'prod'
+  readonly VITE_DEV_URL?: string
 }
 
 interface ImportMeta {

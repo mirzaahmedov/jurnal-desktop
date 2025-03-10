@@ -1,6 +1,7 @@
 import { electronApp, is, optimizer } from '@electron-toolkit/utils'
 import iconDev from '@resources/icon-dev.png?asset'
 import icon from '@resources/icon.png?asset'
+import dotenv from 'dotenv'
 import { BrowserWindow, app, ipcMain, shell } from 'electron'
 import { NsisUpdater } from 'electron-updater'
 import fs from 'fs'
@@ -8,6 +9,10 @@ import os from 'os'
 import path from 'path'
 
 import { events } from './auto-updater'
+
+if (import.meta.env.DEV) {
+  dotenv.config()
+}
 
 const CHECK_UPDATES_INTERVAL = 1 * 60 * 1000
 
