@@ -234,5 +234,11 @@
   "row": "Ряд",
   "search": "Поиск",
   "search...": "Поиск...",
-  "view_all": "Показать все"
+  "view_all": "Показать все",
+  "form": "Форма",
+  "interface": "Интерфейс",
+  "filters": "Фильтры",
+  "report-title": "Название отчета",
+  "configure-programm": "Настроить программу",
+  "choose-report_title": "Выберите название отчета"
 }

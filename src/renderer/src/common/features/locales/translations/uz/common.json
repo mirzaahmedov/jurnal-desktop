@@ -233,5 +233,11 @@
   "row": "Qator",
   "search": "Qidirish",
   "search...": "Qidirish...",
-  "view_all": "Barchasini ko'rish"
+  "view_all": "Barchasini ko'rish",
+  "form": "Forma",
+  "interface": "Interfeys",
+  "filters": "Filtrlar",
+  "report-title": "Hisobot sarlavhasi",
+  "configure-programm": "Dasturni sozlash",
+  "choose-report_title": "Hisobot sarlavhasini tanlang"
 }

@@ -6,6 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import { toast } from 'react-toastify'
 
 import { Button } from '@/common/components/ui/button'
 import {
@@ -24,9 +25,8 @@ import {
   FormMessage
 } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
-import { useToast } from '@/common/hooks/use-toast'
 
-import { unitQueryKeys } from './config'
+import { reportTitleQueryKeys } from './config'
 import { ReportTitleFormSchema, type ReportTitleFormValues, reportTitleService } from './service'
 
 type UnitDialogProps = {
@@ -35,7 +35,6 @@ type UnitDialogProps = {
   selected: ReportTitle | null
 }
 const UnitDialog = ({ open, onChangeOpen, selected }: UnitDialogProps) => {
-  const { toast } = useToast()
   const { t } = useTranslation(['app'])
 
   const queryClient = useQueryClient()
@@ -46,44 +45,26 @@ const UnitDialog = ({ open, onChangeOpen, selected }: UnitDialogProps) => {
   })
 
   const { mutate: create, isPending: isCreating } = useMutation({
-    mutationKey: [unitQueryKeys.create],
+    mutationKey: [reportTitleQueryKeys.create],
     mutationFn: reportTitleService.create,
-    onSuccess() {
-      toast({
-        title: 'Роль успешно создана'
-      })
+    onSuccess(res) {
+      toast.success(res?.message)
       form.reset(defaultValues)
       queryClient.invalidateQueries({
-        queryKey: [unitQueryKeys.getAll]
+        queryKey: [reportTitleQueryKeys.getAll]
       })
       onChangeOpen(false)
-    },
-    onError(error) {
-      toast({
-        variant: 'destructive',
-        title: 'Не удалось создать роль',
-        description: error.message
-      })
     }
   })
   const { mutate: update, isPending: isUpdating } = useMutation({
-    mutationKey: [unitQueryKeys.update],
+    mutationKey: [reportTitleQueryKeys.update],
     mutationFn: reportTitleService.update,
-    onSuccess() {
-      toast({
-        title: 'Роль успешно обновлена'
-      })
+    onSuccess(res) {
+      toast(res?.message)
       queryClient.invalidateQueries({
-        queryKey: [unitQueryKeys.getAll]
+        queryKey: [reportTitleQueryKeys.getAll]
       })
       onChangeOpen(false)
-    },
-    onError(error) {
-      toast({
-        variant: 'destructive',
-        title: 'Не удалось обновить роль',
-        description: error.message
-      })
     }
   })
 

@@ -28,6 +28,7 @@ import {
   Landmark,
   LayoutDashboard,
   LayoutGrid,
+  LetterText,
   MapPinHouse,
   MonitorCog,
   NotebookTabs,
@@ -352,6 +353,11 @@ export const getNavElements = (t: TFunction): NavElement[] => {
           title: t('pages.admin'),
           icon: UserCog,
           children: omitEmptyArrayElements<NavElement>([
+            {
+              path: 'report-title',
+              title: t('pages.report-title'),
+              icon: LetterText
+            },
             {
               path: 'ostatok',
               title: t('pages.ostatok'),

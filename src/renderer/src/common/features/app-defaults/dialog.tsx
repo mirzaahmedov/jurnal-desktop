@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react'
 
+import { reportTitleQueryKeys, reportTitleService } from '@renderer/app/super-admin/report-title'
 import { useDates } from '@renderer/common/hooks/use-dates'
 import { usePagination } from '@renderer/common/hooks/use-pagination'
+import { useQuery } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
@@ -20,12 +22,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/common/components/ui
 
 import { ManagementFields } from './components/managements'
 import { defaultValues } from './constants'
-import { useDefaultFilters, useDefaultFormFields } from './store'
+import { useDefaultFilters, useDefaultFormFields, useSettingsStore } from './store'
 
 enum TabOption {
   Fitlers = 'Filters',
   Form = 'Form',
-  UI = 'ui'
+  UI = 'UI',
+  Report = 'Report'
 }
 
 type ConfigureDefaultValuesDialogProps = {
@@ -45,30 +48,41 @@ export const ConfigureDefaultValuesDialog = ({
 
   const { setDefaultFilters } = useDefaultFilters()
   const { setDefaultFormFields } = useDefaultFormFields()
+  const { setSettings } = useSettingsStore()
+
+  const { data: reportTitles, isFetching } = useQuery({
+    queryKey: [reportTitleQueryKeys.getAll, { page: 1, limit: 1000000 }],
+    queryFn: reportTitleService.getAll
+  })
 
   const form = useForm({
     defaultValues
   })
 
-  const onSubmit = form.handleSubmit(({ from, to, rukovoditel, glav_buxgalter, zoomFactor }) => {
-    setDefaultFilters({
-      from,
-      to
-    })
-    dates.onChange({
-      from: undefined,
-      to: undefined
-    })
-    pagination.onChange({ page: 1 })
-    setDefaultFormFields({
-      rukovoditel,
-      glav_buxgalter
-    })
-    if (zoomFactor) {
-      window.api.setZoomFactor(zoomFactor)
+  const onSubmit = form.handleSubmit(
+    ({ from, to, rukovoditel, glav_buxgalter, zoomFactor, report_title_id }) => {
+      setDefaultFilters({
+        from,
+        to
+      })
+      dates.onChange({
+        from: undefined,
+        to: undefined
+      })
+      pagination.onChange({ page: 1 })
+      setDefaultFormFields({
+        rukovoditel,
+        glav_buxgalter
+      })
+      if (zoomFactor) {
+        window.api.setZoomFactor(zoomFactor)
+      }
+      setSettings({
+        report_title_id
+      })
+      onClose()
     }
-    onClose()
-  })
+  )
 
   useEffect(() => {
     if (open) {
@@ -85,7 +99,7 @@ export const ConfigureDefaultValuesDialog = ({
     >
       <DialogContent className="flex flex-col w-full max-w-3xl h-full max-h-[400px]">
         <DialogHeader>
-          <DialogTitle>Настроить значения по умолчанию</DialogTitle>
+          <DialogTitle>{t('configure-programm')}</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form
@@ -104,19 +118,25 @@ export const ConfigureDefaultValuesDialog = ({
                       value={TabOption.Fitlers}
                       className="w-full justify-start px-3 py-1.5 !shadow-none data-[state=active]:bg-slate-100 data-[state=active]:text-brand"
                     >
-                      Фильтры
+                      {t('filters')}
                     </TabsTrigger>
                     <TabsTrigger
                       value={TabOption.Form}
                       className="w-full justify-start px-3 py-1.5 !shadow-none data-[state=active]:bg-slate-100 data-[state=active]:text-brand"
                     >
-                      Форма
+                      {t('form')}
                     </TabsTrigger>
                     <TabsTrigger
                       value={TabOption.UI}
                       className="w-full justify-start px-3 py-1.5 !shadow-none data-[state=active]:bg-slate-100 data-[state=active]:text-brand"
                     >
-                      Интерфейс
+                      {t('interface')}
+                    </TabsTrigger>
+                    <TabsTrigger
+                      value={TabOption.Report}
+                      className="w-full justify-start px-3 py-1.5 !shadow-none data-[state=active]:bg-slate-100 data-[state=active]:text-brand"
+                    >
+                      {t('report')}
                     </TabsTrigger>
                   </TabsList>
                 </div>
@@ -174,6 +194,26 @@ export const ConfigureDefaultValuesDialog = ({
                             options={[0.25, 0.5, 0.75, 1, 1.5, 2, 3]}
                             getOptionLabel={(o) => `${o * 100}%`}
                             getOptionValue={(o) => o}
+                          />
+                        </FormElement>
+                      )}
+                    />
+                  </TabsContent>
+                  <TabsContent value={TabOption.Report}>
+                    <FormField
+                      control={form.control}
+                      name="report_title_id"
+                      render={({ field }) => (
+                        <FormElement label={t('report-title')}>
+                          <SelectField
+                            disabled={isFetching}
+                            value={field.value?.toString()}
+                            onValueChange={(value) => {
+                              field.onChange(value ? Number(value) : undefined)
+                            }}
+                            options={reportTitles?.data ?? []}
+                            getOptionLabel={(o) => o.name}
+                            getOptionValue={(o) => o.id}
                           />
                         </FormElement>
                       )}

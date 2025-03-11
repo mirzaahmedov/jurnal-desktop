@@ -87,6 +87,7 @@ const SmetaPage = lazy(() => import('./super-admin/smeta/page'))
 const UnitPage = lazy(() => import('./super-admin/unit/page'))
 const UserPage = lazy(() => import('./super-admin/user/page'))
 const DemoPage = lazy(() => import('./_demo/page'))
+const ReportTitlePage = lazy(() => import('./super-admin/report-title'))
 
 const FallbackRoute = () => {
   const user = useAuthenticationStore((store) => store.user)
@@ -249,6 +250,10 @@ export const routes: RouteObject[] = [
       {
         path: 'admin',
         children: [
+          {
+            path: 'report-title',
+            element: <ReportTitlePage />
+          },
           {
             path: 'ostatok',
             element: <AdminOstatokPage />

@@ -1,7 +1,7 @@
-export const unitQueryKeys = {
-  getAll: 'unit/all',
-  getById: 'unit',
-  create: 'unit/create',
-  update: 'unit/update',
-  delete: 'unit/delete'
+export const reportTitleQueryKeys = {
+  getAll: 'report-title/all',
+  getById: 'report-title',
+  create: 'report-title/create',
+  update: 'report-title/update',
+  delete: 'report-title/delete'
 }

@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 
+import { useSettingsStore } from '@renderer/common/features/app-defaults'
 import { DownloadFile } from '@renderer/common/features/file'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
 import { SearchField, useSearch } from '@renderer/common/features/search'
@@ -20,6 +21,7 @@ import { bankMonitorService } from './service'
 const BankMonitorPage = () => {
   const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
   const setLayout = useLayoutStore((store) => store.setLayout)
+  const report_title_id = useSettingsStore((store) => store.report_title_id)
 
   const dates = useDates()
   const pagination = usePagination()
@@ -65,7 +67,7 @@ const BankMonitorPage = () => {
             </b>
           </div>
 
-          {main_schet_id ? (
+          {main_schet_id && report_title_id ? (
             <ButtonGroup borderStyle="dashed">
               <DownloadFile
                 fileName={`банк-дневной-отчет_${dates.from}&${dates.to}.xlsx`}
@@ -73,6 +75,7 @@ const BankMonitorPage = () => {
                 buttonText={t('daily-report')}
                 params={{
                   main_schet_id,
+                  report_title_id,
                   from: dates.from,
                   to: dates.to,
                   excel: true
@@ -84,6 +87,7 @@ const BankMonitorPage = () => {
                 buttonText={t('cap-report')}
                 params={{
                   main_schet_id,
+                  report_title_id,
                   from: dates.from,
                   to: dates.to,
                   excel: true
