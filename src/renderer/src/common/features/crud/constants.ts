@@ -60,7 +60,8 @@ export enum ApiEndpoints {
   ox_doc = 'ox/doc',
   ox_report = 'ox/report',
   raschet_schet = 'spravochnik/organization/account_number',
-  raschet_schet_gazna = 'spravochnik/organization/gazna'
+  raschet_schet_gazna = 'spravochnik/organization/gazna',
+  report_title = '/admin/spravochnik/report_title'
 }
 
 export enum ApiStatusCodes {

@@ -93,10 +93,10 @@ const IznosPage = () => {
     })
   }, [setLayout])
 
-  const handleEdit = (row: OstatokProduct) => {
-    setSelected(row)
-    dialogToggle.open()
-  }
+  // const handleEdit = (row: OstatokProduct) => {
+  //   setSelected(row)
+  //   dialogToggle.open()
+  // }
 
   const onSubmit = form.handleSubmit((values) => {
     setSelectedDate(values.date)
@@ -174,7 +174,6 @@ const IznosPage = () => {
                   columnDefs={columns}
                   getRowId={(row) => row.naimenovanie_tovarov_jur7_id}
                   getChildRows={() => undefined}
-                  onEdit={handleEdit}
                 />
               </div>
             )}

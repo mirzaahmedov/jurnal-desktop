@@ -24,6 +24,7 @@ export class HttpResponseError extends Error {
   }
 }
 
+// ? 'http://147.45.107.174:3006/v2'
 // ? 'http://147.45.107.174:3005'
 // ? 'http://10.50.0.140:3006'
 // ? 'http://10.51.2.242:3005'
@@ -33,7 +34,7 @@ const baseURL = import.meta.env.DEV
     ? import.meta.env.VITE_DEV_URL
     : 'http://147.45.107.174:3006/v2'
   : import.meta.env.VITE_MODE === 'staging'
-    ? 'http://147.45.107.174:3005'
+    ? 'http://147.45.107.174:3006/v2'
     : 'http://10.50.0.140:3005'
 
 export const http = axios.create({
