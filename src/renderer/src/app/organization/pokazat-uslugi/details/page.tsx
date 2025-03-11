@@ -13,6 +13,7 @@ import {
 } from '@renderer/common/components/editable-table/helpers'
 import { DocumentType } from '@renderer/common/features/doc-num'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
+import { useSnippets } from '@renderer/common/features/snippents/use-snippets'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -47,6 +48,9 @@ import { podvodkaColumns } from './podvodki'
 const PokazatUslugiDetailsPage = () => {
   const { toast } = useToast()
   const { t } = useTranslation(['app'])
+  const { snippets, addSnippet, removeSnippet } = useSnippets({
+    ns: 'pokazat-uslugi'
+  })
 
   const id = useParams().id as string
   const navigate = useNavigate()
@@ -286,6 +290,9 @@ const PokazatUslugiDetailsPage = () => {
               <OpisanieFields
                 tabIndex={5}
                 form={form}
+                snippets={snippets}
+                addSnippet={addSnippet}
+                removeSnippet={removeSnippet}
               />
             </div>
 

@@ -13,6 +13,7 @@ import {
 import { DocumentType } from '@renderer/common/features/doc-num'
 import { GenerateFile } from '@renderer/common/features/file'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
+import { useSnippets } from '@renderer/common/features/snippents/use-snippets'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -42,6 +43,9 @@ import { podvodkaColumns } from './podvodki'
 const KassaPrixodDetailsPage = () => {
   const { id } = useParams()
   const { t } = useTranslation(['app'])
+  const { snippets, addSnippet, removeSnippet } = useSnippets({
+    ns: 'kassa_prixod'
+  })
 
   const navigate = useNavigate()
   const queryClient = useQueryClient()
@@ -216,6 +220,9 @@ const KassaPrixodDetailsPage = () => {
                 <OpisanieFields
                   tabIndex={3}
                   form={form}
+                  snippets={snippets}
+                  addSnippet={addSnippet}
+                  removeSnippet={removeSnippet}
                 />
               </div>
             </div>

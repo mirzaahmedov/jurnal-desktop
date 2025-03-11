@@ -240,5 +240,6 @@
   "filters": "Фильтры",
   "report-title": "Название отчета",
   "configure-programm": "Настроить программу",
-  "choose-report_title": "Выберите название отчета"
+  "choose-report_title": "Выберите название отчета",
+  "content": "Содержание"
 }

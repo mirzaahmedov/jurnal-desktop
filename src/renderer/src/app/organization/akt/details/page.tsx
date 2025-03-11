@@ -17,6 +17,7 @@ import { Form } from '@renderer/common/components/ui/form'
 import { DocumentType } from '@renderer/common/features/doc-num'
 import { useLayoutStore } from '@renderer/common/features/layout'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
+import { useSnippets } from '@renderer/common/features/snippents/use-snippets'
 import { useSpravochnik } from '@renderer/common/features/spravochnik'
 import { useToast } from '@renderer/common/hooks/use-toast'
 import { normalizeEmptyFields } from '@renderer/common/lib/validation'
@@ -43,6 +44,9 @@ import { podvodkaColumns } from './provodki'
 const AktDetailsPage = () => {
   const { toast } = useToast()
   const { t } = useTranslation(['app'])
+  const { snippets, addSnippet, removeSnippet } = useSnippets({
+    ns: 'akt'
+  })
 
   const main_schet_id = useRequisitesStore((state) => state.main_schet_id)
   const setLayout = useLayoutStore((store) => store.setLayout)
@@ -289,6 +293,9 @@ const AktDetailsPage = () => {
                 <OpisanieFields
                   tabIndex={5}
                   form={form}
+                  snippets={snippets}
+                  addSnippet={addSnippet}
+                  removeSnippet={removeSnippet}
                 />
               </div>
             </div>

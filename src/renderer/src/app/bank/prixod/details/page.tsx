@@ -13,6 +13,7 @@ import {
 } from '@renderer/common/components/editable-table/helpers'
 import { DocumentType } from '@renderer/common/features/doc-num'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
+import { useSnippets } from '@renderer/common/features/snippents/use-snippets'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -48,6 +49,9 @@ const BankPrixodDetailsPage = () => {
   const setLayout = useLayoutStore((store) => store.setLayout)
 
   const { t } = useTranslation(['app'])
+  const { snippets, addSnippet, removeSnippet } = useSnippets({
+    ns: 'bank_prixod'
+  })
 
   const form = useForm({
     resolver: zodResolver(PrixodPayloadSchema),
@@ -270,6 +274,9 @@ const BankPrixodDetailsPage = () => {
                 <OpisanieFields
                   tabIndex={4}
                   form={form}
+                  snippets={snippets}
+                  addSnippet={addSnippet}
+                  removeSnippet={removeSnippet}
                 />
               </div>
             </div>

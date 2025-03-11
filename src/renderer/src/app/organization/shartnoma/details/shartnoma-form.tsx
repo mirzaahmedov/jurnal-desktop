@@ -7,6 +7,7 @@ import { Button } from '@renderer/common/components/ui/button'
 import { Form } from '@renderer/common/components/ui/form'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@renderer/common/components/ui/tabs'
 import { DocumentType } from '@renderer/common/features/doc-num'
+import { useSnippets } from '@renderer/common/features/snippents/use-snippets'
 import { parseDate } from '@renderer/common/lib/date'
 import { cn } from '@renderer/common/lib/utils'
 import { DocumentFields, OpisanieFields, SummaFields } from '@renderer/common/widget/form'
@@ -47,6 +48,9 @@ export const ShartnomaForm = ({
   const [tabValue, setTabValue] = useState<TabOption>(TabOption.DETAILS)
 
   const { t } = useTranslation()
+  const { snippets, addSnippet, removeSnippet } = useSnippets({
+    ns: 'shartnoma'
+  })
 
   const form = useForm({
     resolver: zodResolver(ShartnomaFormSchema),
@@ -228,6 +232,9 @@ export const ShartnomaForm = ({
                 <OpisanieFields
                   tabIndex={2}
                   form={form}
+                  snippets={snippets}
+                  addSnippet={addSnippet}
+                  removeSnippet={removeSnippet}
                 />
               </div>
 

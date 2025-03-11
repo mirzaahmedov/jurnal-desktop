@@ -2,6 +2,7 @@ import { useEffect, useMemo } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { DocumentType } from '@renderer/common/features/doc-num'
+import { useSnippets } from '@renderer/common/features/snippents/use-snippets'
 import { formatDate, parseDate, withinMonth } from '@renderer/common/lib/date'
 import { focusInvalidInput } from '@renderer/common/lib/errors'
 import { DetailsView } from '@renderer/common/views'
@@ -41,6 +42,9 @@ const Jurnal7InternalTransferDetailsPage = () => {
   const { t } = useTranslation(['app'])
   const { data: internalTransfer, isFetching } = useInternalTransferGet(Number(id))
   const { minDate, maxDate, recheckOstatok } = useOstatokStore()
+  const { snippets, addSnippet, removeSnippet } = useSnippets({
+    ns: 'jur7_internal'
+  })
 
   const { mutate: createInternalTransfer, isPending: isCreating } = useInternalTransferCreate({
     onSuccess: (res) => {
@@ -213,6 +217,9 @@ const Jurnal7InternalTransferDetailsPage = () => {
               <OpisanieFields
                 tabIndex={4}
                 form={form}
+                snippets={snippets}
+                addSnippet={addSnippet}
+                removeSnippet={removeSnippet}
               />
             </div>
             <DetailsView.Footer>

@@ -11,6 +11,7 @@ import {
 } from '@renderer/common/components/editable-table/helpers'
 import { DocumentType } from '@renderer/common/features/doc-num'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
+import { useSnippets } from '@renderer/common/features/snippents/use-snippets'
 import { DetailsView } from '@renderer/common/views'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
@@ -53,6 +54,9 @@ const AdvanceReportDetailsPage = () => {
 
   const { toast } = useToast()
   const { t } = useTranslation(['app'])
+  const { snippets, addSnippet, removeSnippet } = useSnippets({
+    ns: 'avans'
+  })
 
   const form = useForm({
     resolver: zodResolver(AdvanceReportPayloadSchema),
@@ -244,6 +248,9 @@ const AdvanceReportDetailsPage = () => {
                 <OpisanieFields
                   tabIndex={4}
                   form={form}
+                  snippets={snippets}
+                  addSnippet={addSnippet}
+                  removeSnippet={removeSnippet}
                 />
               </div>
             </div>

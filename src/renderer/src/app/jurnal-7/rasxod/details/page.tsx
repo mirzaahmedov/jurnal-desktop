@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { DocumentType } from '@renderer/common/features/doc-num'
+import { useSnippets } from '@renderer/common/features/snippents/use-snippets'
 import { formatDate, parseDate, withinMonth } from '@renderer/common/lib/date'
 import { focusInvalidInput } from '@renderer/common/lib/errors'
 import { DetailsView } from '@renderer/common/views'
@@ -47,6 +48,9 @@ const Jurnal7RasxodDetailsPage = () => {
   const { id } = useParams()
   const { t } = useTranslation(['app'])
   const { minDate, maxDate, recheckOstatok } = useOstatokStore()
+  const { snippets, addSnippet, removeSnippet } = useSnippets({
+    ns: 'jur7_rasxod'
+  })
 
   const { data: rasxod, isFetching } = useRasxodGet(Number(id))
   const { mutate: createRasxod, isPending: isCreating } = useRasxodCreate({
@@ -225,6 +229,9 @@ const Jurnal7RasxodDetailsPage = () => {
               <OpisanieFields
                 tabIndex={4}
                 form={form}
+                snippets={snippets}
+                addSnippet={addSnippet}
+                removeSnippet={removeSnippet}
               />
             </div>
             <DetailsView.Footer>

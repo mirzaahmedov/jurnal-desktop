@@ -15,6 +15,7 @@ import {
 import { DocumentType } from '@renderer/common/features/doc-num'
 import { usePodpis } from '@renderer/common/features/podpis'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
+import { useSnippets } from '@renderer/common/features/snippents/use-snippets'
 import { PodpisDoljnost, PodpisTypeDocument } from '@renderer/common/models'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
@@ -65,6 +66,9 @@ const BankRasxodDetailtsPage = () => {
   const original = location.state?.original
 
   const { t } = useTranslation(['app'])
+  const { snippets, addSnippet, removeSnippet } = useSnippets({
+    ns: 'bank_rasxod'
+  })
 
   const form = useForm({
     resolver: zodResolver(RasxodFormSchema),
@@ -371,6 +375,9 @@ const BankRasxodDetailtsPage = () => {
                 <OpisanieFields
                   tabIndex={4}
                   form={form}
+                  snippets={snippets}
+                  addSnippet={addSnippet}
+                  removeSnippet={removeSnippet}
                 />
               </div>
               <div className="grid grid-cols-3">

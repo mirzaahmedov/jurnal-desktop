@@ -9,6 +9,7 @@ import { createOrganizationSpravochnik } from '@renderer/app/region-spravochnik/
 import { Form } from '@renderer/common/components/ui/form'
 import { DocumentType } from '@renderer/common/features/doc-num'
 import { useLayoutStore } from '@renderer/common/features/layout'
+import { useSnippets } from '@renderer/common/features/snippents/use-snippets'
 import { useSpravochnik } from '@renderer/common/features/spravochnik'
 import { formatDate, parseDate, withinMonth } from '@renderer/common/lib/date'
 import { focusInvalidInput } from '@renderer/common/lib/errors'
@@ -60,6 +61,9 @@ const Jurnal7PrixodDetailsPage = () => {
   const { id } = useParams()
   const { t } = useTranslation(['app'])
   const { minDate, maxDate, recheckOstatok } = useOstatokStore()
+  const { snippets, addSnippet, removeSnippet } = useSnippets({
+    ns: 'jur7_prixod'
+  })
 
   const { data: prixod, isFetching } = usePrixodGet(Number(id))
   const { mutate: createPrixod, isPending: isCreating } = usePrixodCreate({
@@ -309,6 +313,9 @@ const Jurnal7PrixodDetailsPage = () => {
               <OpisanieFields
                 tabIndex={7}
                 form={form}
+                snippets={snippets}
+                addSnippet={addSnippet}
+                removeSnippet={removeSnippet}
               />
             </div>
             <DetailsView.Footer>
