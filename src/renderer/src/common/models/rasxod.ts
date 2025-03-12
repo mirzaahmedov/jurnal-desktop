@@ -15,7 +15,7 @@ export type BankRasxod = {
   spravochnik_organization_raschet_schet?: string
   spravochnik_organization_raschet_schet_gazna?: string
   spravochnik_organization_mfo?: string
-  spravochnik_organization_inn?: string
+  spravochnik_organization_inn: string
   glav_buxgalter: string | null
   rukovoditel: string | null
   tulanmagan_summa: number

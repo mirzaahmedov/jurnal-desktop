@@ -15,14 +15,20 @@ import { useDebounceValue } from '@renderer/common/hooks'
 import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 
-type OperatsiiEditorOptions = {
+type Filter<T extends object> = { [K in keyof T]: T[K] extends number ? K : never }
+
+interface OperatsiiEditorOptions<T extends object> {
   type_schet: TypeSchetOperatsii
+  key?: keyof Filter<T>
 }
-export const createOperatsiiEditor = <T extends { spravochnik_operatsii_id?: number }>({
-  type_schet
-}: OperatsiiEditorOptions): EditorComponentType<T> => {
+export const createOperatsiiEditor = <T extends object>({
+  type_schet,
+  key
+}: OperatsiiEditorOptions<T>): EditorComponentType<T> => {
   return ({ tabIndex, id, row, errors, onChange, params }) => {
     const inputRef = useRef<HTMLInputElement>(null)
+
+    const accessKey = key ?? ('spravochnik_operatsii_id' as keyof T)
 
     const [schet, setSchet] = useState<string>()
     const [subschet, setSubschet] = useState<string>()
@@ -41,11 +47,11 @@ export const createOperatsiiEditor = <T extends { spravochnik_operatsii_id?: num
 
     const operatsiiSpravochnik = useSpravochnik(
       createOperatsiiSpravochnik({
-        value: row.spravochnik_operatsii_id || undefined,
+        value: (row[accessKey] as number) || undefined,
         onChange: (value, selected) => {
           onChange?.({
             id,
-            key: 'spravochnik_operatsii_id',
+            key: accessKey,
             payload: {
               ...row,
               spravochnik_operatsii_id: value
@@ -121,8 +127,8 @@ export const createOperatsiiEditor = <T extends { spravochnik_operatsii_id?: num
               editor
               type="text"
               tabIndex={tabIndex}
-              error={!!errors?.spravochnik_operatsii_id}
-              name="spravochnik_operatsii_id"
+              error={!!errors?.[accessKey as any]}
+              name={accessKey as string}
               placeholder={t('schet')}
               onChange={(e) => {
                 operatsiiSpravochnik.clear()
@@ -146,17 +152,17 @@ export const createOperatsiiEditor = <T extends { spravochnik_operatsii_id?: num
           isFetching={isFetching}
           options={filteredOperatsiiOptions ?? []}
           disabled={(!!operatsiiSpravochnik.selected && subschet !== undefined) || !schet}
-          value={row.spravochnik_operatsii_id?.toString()}
+          value={row?.[accessKey]?.toString()}
           getOptionLabel={(option) => option.sub_schet}
           getOptionValue={(option) => option.id.toString()}
           onSelect={(option) => {
-            if (row.spravochnik_operatsii_id !== option.id) {
+            if (row?.[accessKey] !== option.id) {
               onChange?.({
                 id,
-                key: 'spravochnik_operatsii_id',
+                key: accessKey,
                 payload: {
                   ...row,
-                  spravochnik_operatsii_id: option.id
+                  [accessKey]: option.id
                 }
               })
               setSchet(option.schet)
@@ -178,9 +184,9 @@ export const createOperatsiiEditor = <T extends { spravochnik_operatsii_id?: num
               type="text"
               inputRef={inputRef}
               tabIndex={tabIndex}
-              error={!!errors?.spravochnik_operatsii_id}
+              error={!!errors?.[accessKey as any]}
               data-error={false}
-              name="spravochnik_operatsii_id"
+              name={accessKey as string}
               placeholder={t('subschet')}
               onChange={(e) => {
                 setSubschet(e.target.value)

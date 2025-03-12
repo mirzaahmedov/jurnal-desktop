@@ -1,12 +1,14 @@
 import type { BankRasxod } from '@renderer/common/models'
 
-import { type ColumnDef } from '@renderer/common/components'
-import { TooltipCell } from '@renderer/common/components/table/renderers'
+import { type ColumnDef, Copyable } from '@renderer/common/components'
+import { DataList } from '@renderer/common/components/data-list'
+import { HoverInfoCell } from '@renderer/common/components/table/renderers'
 import { IDCell } from '@renderer/common/components/table/renderers/id'
 import { ProvodkaCell } from '@renderer/common/components/table/renderers/provodka'
 import { Switch } from '@renderer/common/components/ui/switch'
 import { formatLocaleDate } from '@renderer/common/lib/format'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { Trans } from 'react-i18next'
 
 import { queryKeys } from './constants'
 import { bankRasxodPaymentService } from './service'
@@ -30,23 +32,57 @@ export const columns: ColumnDef<BankRasxod>[] = [
   {
     key: 'id_spravochnik_organization',
     header: 'about-counteragent',
-    renderCell(row) {
-      return (
-        <TooltipCell
-          data={row}
-          description="spravochnik_organization_inn"
-          title={row.spravochnik_organization_name ?? '-'}
-          elements={{
-            spravochnik_organization_inn: 'ИНН',
-            spravochnik_organization_okonx: 'ОКОНХ',
-            spravochnik_organization_bank_klient: 'Банк клиент',
-            spravochnik_organization_raschet_schet: 'Расчет счет',
-            spravochnik_organization_raschet_schet_gazna: 'Расчет счет Газна',
-            spravochnik_organization_mfo: 'МФО'
-          }}
-        />
-      )
-    }
+    renderCell: (row) => (
+      <HoverInfoCell
+        title={row.spravochnik_organization_name}
+        secondaryText={
+          <Copyable value={row.spravochnik_organization_inn}>
+            #{row.spravochnik_organization_inn}
+          </Copyable>
+        }
+        hoverContent={
+          <DataList
+            list={[
+              {
+                name: <Trans>id</Trans>,
+                value: (
+                  <Copyable
+                    side="start"
+                    value={row.id_spravochnik_organization}
+                  >
+                    #{row.id_spravochnik_organization}
+                  </Copyable>
+                )
+              },
+              {
+                name: <Trans>name</Trans>,
+                value: row.spravochnik_organization_name
+              },
+              {
+                name: <Trans>bank</Trans>,
+                value: row.spravochnik_organization_bank_klient
+              },
+              {
+                name: <Trans>okonx</Trans>,
+                value: row.spravochnik_organization_okonx
+              },
+              {
+                name: <Trans>inn</Trans>,
+                value: row.spravochnik_organization_inn
+              },
+              {
+                name: <Trans>raschet-schet</Trans>,
+                value: row.spravochnik_organization_raschet_schet
+              },
+              {
+                name: <Trans>raschet-schet-gazna</Trans>,
+                value: row.spravochnik_organization_raschet_schet_gazna
+              }
+            ]}
+          />
+        }
+      />
+    )
   },
   {
     numeric: true,

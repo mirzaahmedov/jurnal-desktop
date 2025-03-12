@@ -31,7 +31,7 @@ export const DataListItem = ({ item }: { item: DataListItem }) => {
     <li className="flex items-center gap-2 justify-between">
       <span className="text-sm">{item.name}</span>
       <span className="flex-1 border-b border-slate-200 border-dotted h-5"></span>
-      <b className="break-all text-end">{item.value}</b>
+      <b className="break-all text-end text-sm">{item.value}</b>
     </li>
   )
 }

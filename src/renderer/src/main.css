@@ -173,20 +173,27 @@ select:-webkit-autofill:focus {
   .tree_node {
     position: relative;
   }
-  .tree_node::before {
+  .tree_node::before,
+  .tree_node::after {
     content: '';
     display: block;
     position: absolute;
     left: 0;
     top: 0;
-    height: 100%;
     width: 0;
     padding-left: 20px;
     @apply border-l;
   }
-  .tree_node:last-child::before {
+
+  .tree_node::before {
     height: 50%;
-    @apply border-b;
+    @apply border-b rounded-bl-lg;
+  }
+  .tree_node::after {
+    height: 100%;
+  }
+  .tree_node:last-child::after {
+    height: 0%;
   }
 }
 

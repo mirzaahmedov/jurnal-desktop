@@ -184,7 +184,12 @@ export const getNavElements = (t: TFunction): NavElement[] => {
                   title: t('pages.service'),
                   icon: Truck
                 }
-              : null
+              : null,
+            {
+              path: 'ostatok',
+              title: t('pages.ostatok'),
+              icon: CircleFadingPlus
+            }
           ])
         }
       : null,
@@ -272,16 +277,6 @@ export const getNavElements = (t: TFunction): NavElement[] => {
               title: t('pages.organization'),
               icon: Building
             },
-            // {
-            //   path: 'raschet-schet',
-            //   title: t('raschet-schet'),
-            //   icon: CreditCard
-            // },
-            // {
-            //   path: 'raschet-schet-gazna',
-            //   title: t('raschet-schet-gazna'),
-            //   icon: CreditCard
-            // },
             {
               path: 'subdivision',
               title: t('pages.podrazdelenie'),

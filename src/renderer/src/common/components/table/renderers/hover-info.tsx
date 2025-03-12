@@ -16,7 +16,7 @@ export interface HoverInfoCellProps extends Omit<HTMLAttributes<HTMLDivElement>,
   secondaryText?: ReactNode
   titleProps?: HTMLAttributes<HTMLHeadingElement>
   secondaryTextProps?: HTMLAttributes<HTMLHeadingElement>
-  hoverContent: ReactNode
+  hoverContent?: ReactNode
   hoverContentProps?: TooltipContentProps
 }
 export const HoverInfoCell = ({

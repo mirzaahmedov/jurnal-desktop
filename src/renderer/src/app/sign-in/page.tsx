@@ -62,9 +62,6 @@ const SigninPage = () => {
         return
       }
       navigate('/region/dashboard')
-    },
-    onError(error) {
-      toast.error(error.message ?? 'Не удалось войти в систему')
     }
   })
 

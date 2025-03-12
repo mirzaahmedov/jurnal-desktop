@@ -9,9 +9,11 @@ import { Navigate, createHashRouter } from 'react-router-dom'
 import DashboardPage from './dashboard/page'
 import HomePage from './home/page'
 import SigninPage from './sign-in'
-import AdminOstatokPage from './super-admin/ostatok/page'
-import ZarplataSpravochnikPage from './super-admin/zarplata/spravochnik/page'
 
+const AdminOstatokPage = lazy(() => import('./super-admin/ostatok/page'))
+const ZarplataSpravochnikPage = lazy(() => import('./super-admin/zarplata/spravochnik/page'))
+const OrganOstatokPage = lazy(() => import('./organization/ostatok/page'))
+const OrganOstatokDetailsPage = lazy(() => import('./organization/ostatok/details/page'))
 const MainLayout = lazy(() => import('../common/layout/main'))
 const BankMonitorPage = lazy(() => import('./bank/monitor/page'))
 const BankPrixodDetailsPage = lazy(() => import('./bank/prixod/details/page'))
@@ -139,6 +141,14 @@ export const routes: RouteObject[] = [
           {
             path: 'pokazat-uslugi/:id',
             element: <PokazatUslugiDetailsPage />
+          },
+          {
+            path: 'ostatok',
+            element: <OrganOstatokPage />
+          },
+          {
+            path: 'ostatok/:id',
+            element: <OrganOstatokDetailsPage />
           }
         ]
       },

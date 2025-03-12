@@ -1,15 +1,15 @@
-import type { Avans } from '@/common/models'
+import type { OrganizationOstatok } from '@/common/models'
 
 import { DataList } from '@renderer/common/components/data-list'
-import { HoverInfoCell } from '@renderer/common/components/table/renderers'
 import { IDCell } from '@renderer/common/components/table/renderers/id'
 import { ProvodkaCell } from '@renderer/common/components/table/renderers/provodka'
-import { formatLocaleDate } from '@renderer/common/lib/format'
 import { Trans } from 'react-i18next'
 
 import { type ColumnDef, Copyable } from '@/common/components'
+import { HoverInfoCell } from '@/common/components/table/renderers'
+import { formatLocaleDate } from '@/common/lib/format'
 
-export const avansColumns: ColumnDef<Avans>[] = [
+export const pokazatUslugiColumns: ColumnDef<OrganizationOstatok>[] = [
   {
     key: 'id',
     renderCell: IDCell
@@ -22,12 +22,12 @@ export const avansColumns: ColumnDef<Avans>[] = [
     renderCell: (row) => formatLocaleDate(row.doc_date)
   },
   {
-    key: 'spravochnik_podotchet_litso_id',
-    header: 'podotchet-litso',
+    key: 'organ_id',
+    header: 'organization',
     renderCell: (row) => (
       <HoverInfoCell
-        title={row.spravochnik_podotchet_litso_name}
-        secondaryText={row.spravochnik_podotchet_litso_rayon}
+        title={row.organ_name}
+        secondaryText={<Copyable value={row.organ_inn}>#{row.organ_inn}</Copyable>}
         hoverContent={
           <DataList
             list={[
@@ -36,19 +36,27 @@ export const avansColumns: ColumnDef<Avans>[] = [
                 value: (
                   <Copyable
                     side="start"
-                    value={row.spravochnik_operatsii_own_id}
+                    value={row.organ_id}
                   >
-                    #{row.spravochnik_operatsii_own_id}
+                    #{row.organ_id}
                   </Copyable>
                 )
               },
               {
                 name: <Trans>name</Trans>,
-                value: row.spravochnik_podotchet_litso_name
+                value: row.organ_name
               },
               {
-                name: <Trans>rayon</Trans>,
-                value: row.spravochnik_podotchet_litso_rayon
+                name: <Trans>inn</Trans>,
+                value: row.organ_inn
+              },
+              {
+                name: <Trans>bank</Trans>,
+                value: row.organ_bank_name
+              },
+              {
+                name: <Trans>mfo</Trans>,
+                value: row.organ_bank_mfo
               }
             ]}
           />
@@ -61,7 +69,7 @@ export const avansColumns: ColumnDef<Avans>[] = [
     key: 'summa',
     renderCell: (row) => (
       <ProvodkaCell
-        summa={row.summa}
+        summa={row.prixod ? row.prixod_summa : row.rasxod_summa}
         provodki={row.provodki_array}
       />
     )

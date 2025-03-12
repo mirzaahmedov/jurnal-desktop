@@ -44,7 +44,7 @@ export const Copyable = ({
         }}
         {...buttonProps}
         className={cn(
-          'ml-1 align-middle invisible size-[1.5rem] text-slate-400 transition-colors group-hover/copyable:visible',
+          '-my-[5px] ml-1 align-middle invisible size-[1.5rem] text-slate-400 transition-colors group-hover/copyable:visible',
           isCopied && 'visible text-brand hover:text-brand',
           buttonProps?.className
         )}

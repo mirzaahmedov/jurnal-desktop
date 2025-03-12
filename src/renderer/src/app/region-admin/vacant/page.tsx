@@ -158,7 +158,7 @@ const VacantPage = () => {
       </div>
       <div className="relative p-5 h-full flex flex-col">
         {isFetchingVacants || isFetchingUserVacants ? <LoadingOverlay /> : null}
-        {userId && vacants ? (
+        {userId && vacants?.data ? (
           <div className="flex-1">
             <div className="flex items-center gap-5 px-5">
               <Checkbox

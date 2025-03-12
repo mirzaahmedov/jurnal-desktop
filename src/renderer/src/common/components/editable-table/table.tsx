@@ -10,6 +10,7 @@ import { Table, TableBody, TableFooter, TableHeader } from '@renderer/common/com
 import { CircleMinus, CirclePlus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
+import { EmptyList } from '../empty-states'
 import { EditableTableCell, EditableTableHead, EditableTableRow } from './components'
 
 export interface EditableColumnType<T extends object> {
@@ -107,9 +108,15 @@ export const EditableTable = <T extends object>(props: EditableTableProps<T>) =>
             <EditableTableRow>
               <EditableTableCell
                 colSpan={100}
-                className="text-center"
+                className="text-center py-5"
               >
-                {placeholder ?? 'No data available.'}
+                <EmptyList
+                  iconProps={{
+                    className: 'w-40'
+                  }}
+                >
+                  {placeholder}
+                </EmptyList>
               </EditableTableCell>
             </EditableTableRow>
           )}

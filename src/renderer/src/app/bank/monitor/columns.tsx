@@ -1,10 +1,12 @@
-import type { ColumnDef } from '@/common/components'
 import type { BankMonitoringType } from '@/common/models'
 
+import { DataList } from '@renderer/common/components/data-list'
 import { IDCell } from '@renderer/common/components/table/renderers/id'
 import { ProvodkaCell } from '@renderer/common/components/table/renderers/provodka'
+import { Trans } from 'react-i18next'
 
-import { TooltipCell } from '@/common/components/table/renderers'
+import { type ColumnDef, Copyable } from '@/common/components'
+import { HoverInfoCell } from '@/common/components/table/renderers'
 import { formatLocaleDate } from '@/common/lib/format'
 
 export const columns: ColumnDef<BankMonitoringType>[] = [
@@ -25,20 +27,45 @@ export const columns: ColumnDef<BankMonitoringType>[] = [
     key: 'id_spravochnik_organization',
     header: 'about-counteragent',
     className: 'w-96',
-    renderCell(row) {
-      return (
-        <TooltipCell
-          data={row}
-          description="spravochnik_organization_inn"
-          title={row.spravochnik_organization_name ?? '-'}
-          elements={{
-            spravochnik_organization_name: 'Наименование',
-            spravochnik_organization_raschet_schet: 'Расчетный счет',
-            spravochnik_organization_inn: 'ИНН'
-          }}
-        />
-      )
-    }
+    renderCell: (row) => (
+      <HoverInfoCell
+        title={row.spravochnik_organization_name}
+        secondaryText={
+          <Copyable value={row.spravochnik_organization_inn}>
+            #{row.spravochnik_organization_inn}
+          </Copyable>
+        }
+        hoverContent={
+          <DataList
+            list={[
+              {
+                name: <Trans>id</Trans>,
+                value: (
+                  <Copyable
+                    side="start"
+                    value={row.id_spravochnik_organization}
+                  >
+                    #{row.id_spravochnik_organization}
+                  </Copyable>
+                )
+              },
+              {
+                name: <Trans>name</Trans>,
+                value: row.spravochnik_organization_name
+              },
+              {
+                name: <Trans>inn</Trans>,
+                value: row.spravochnik_organization_inn
+              },
+              {
+                name: <Trans>raschet-schet</Trans>,
+                value: row.spravochnik_organization_raschet_schet
+              }
+            ]}
+          />
+        }
+      />
+    )
   },
   {
     numeric: true,
