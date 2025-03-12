@@ -1,10 +1,10 @@
 import type { ColumnDef } from '@/common/components'
 import type { Group } from '@/common/models'
-import type { TreeNode } from '@renderer/common/lib/data-structure'
+import type { PathTreeNode } from '@renderer/common/lib/tree/path-tree'
 
 import { IDCell } from '@renderer/common/components/table/renderers/id'
 
-export const groupColumns: ColumnDef<TreeNode<Group>>[] = [
+export const groupColumns: ColumnDef<PathTreeNode<Group>>[] = [
   {
     key: 'id',
     renderCell: IDCell,

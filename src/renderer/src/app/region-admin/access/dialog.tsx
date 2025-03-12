@@ -1,4 +1,5 @@
-import type { Dispatch, SetStateAction} from 'react';
+import type { Dispatch, SetStateAction } from 'react'
+
 import { useEffect } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
@@ -82,7 +83,7 @@ const AccessDialog = (props: AccessDialogProps) => {
   }, [form, access])
 
   const onSubmit = form.handleSubmit((payload) => {
-    if (!access || !roleId) {
+    if (!access?.data || !roleId) {
       return
     }
     update({
@@ -114,7 +115,7 @@ const AccessDialog = (props: AccessDialogProps) => {
       onOpenChange={onOpenChange}
     >
       <DialogContent className="max-w-screen-md">
-        <DialogTitle>Доступ для "{access?.data.role_name}"</DialogTitle>
+        <DialogTitle>Доступ для &quot;{access?.data?.role_name}&quot;</DialogTitle>
         <div className="relative">
           {isFetching ? <LoadingOverlay /> : null}
           <Form {...form}>

@@ -37,6 +37,11 @@ const AccessPage = () => {
   useEffect(() => {
     setLayout({
       title: t('pages.access'),
+      breadcrumbs: [
+        {
+          title: t('pages.admin')
+        }
+      ],
       content: SearchField
     })
   }, [setLayout])

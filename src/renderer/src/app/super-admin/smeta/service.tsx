@@ -9,10 +9,10 @@ import {
   type CollapsibleTableProps
 } from '@renderer/common/components/collapsible-table'
 import {
-  type TreeNode,
-  buildTreeFromArray,
-  sortElementsByLevels
-} from '@renderer/common/lib/data-structure'
+  type PathTreeNode,
+  arrayToTreeByPathKey,
+  sortElementsByPath
+} from '@renderer/common/lib/tree/path-tree'
 
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 import { SpravochnikSearchField } from '@/common/features/search'
@@ -43,7 +43,7 @@ export const smetaService = new CRUDService<Smeta, SmetaForm>({
 })
 
 type SmetaTableProps = Omit<
-  CollapsibleTableProps<TreeNode<Smeta>, TreeNode<Smeta>>,
+  CollapsibleTableProps<PathTreeNode<Smeta>, PathTreeNode<Smeta>>,
   'data' | 'getChildRows' | 'getRowId'
 > & {
   data: Smeta[]
@@ -51,11 +51,11 @@ type SmetaTableProps = Omit<
 export const SmetaTable = ({ data, columnDefs: columns, ...props }: SmetaTableProps) => {
   const treeData = useMemo(
     () =>
-      buildTreeFromArray(
-        data,
-        (smeta) => smeta.father_smeta_name,
-        (array) => array.sort(sortElementsByLevels)
-      ),
+      arrayToTreeByPathKey({
+        array: data,
+        getPathKey: (smeta) => smeta.father_smeta_name,
+        preprocessors: [(array) => array.sort(sortElementsByPath)]
+      }),
     [data]
   )
 
@@ -75,7 +75,7 @@ const defaultFilters = {
 }
 
 export const createSmetaSpravochnik = (
-  config: Partial<SpravochnikHookOptions<TreeNode<Smeta>>>
+  config: Partial<SpravochnikHookOptions<PathTreeNode<Smeta>>>
 ) => {
   return extendObject(
     {

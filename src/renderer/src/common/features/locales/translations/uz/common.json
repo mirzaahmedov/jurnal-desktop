@@ -240,5 +240,7 @@
   "report-title": "Hisobot sarlavhasi",
   "configure-programm": "Dasturni sozlash",
   "choose-report_title": "Hisobot sarlavhasini tanlang",
-  "content": "Matn"
+  "content": "Matn",
+  "vacant": "Vakant",
+  "first_select_user": "Avval foydalanuvchini tanlang"
 }

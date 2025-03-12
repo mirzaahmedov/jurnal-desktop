@@ -42,6 +42,7 @@ import {
   Signature,
   SquareActivity,
   SquareUser,
+  SquareUserRound,
   Truck,
   UserCog,
   UserSquare,
@@ -324,7 +325,7 @@ export const getNavElements = (t: TFunction): NavElement[] => {
           ]
         }
       : null,
-    is_admin && [permissions.region_users, permissions.access].includes(true)
+    is_admin
       ? {
           path: '/region',
           title: t('pages.region'),
@@ -343,7 +344,12 @@ export const getNavElements = (t: TFunction): NavElement[] => {
                   title: t('pages.access'),
                   icon: ShieldCheck
                 }
-              : null
+              : null,
+            {
+              path: 'vacant',
+              title: t('pages.vacant'),
+              icon: SquareUserRound
+            }
           ])
         }
       : null,

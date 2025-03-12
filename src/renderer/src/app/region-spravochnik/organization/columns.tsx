@@ -85,6 +85,7 @@ export const organizationColumns: ColumnDef<Organization>[] = [
                 <Button
                   variant="link"
                   className="p-0 text-xs text-brand gap-0.5"
+                  onClick={(e) => e.stopPropagation()}
                 >
                   <ArrowDownLeft className="size-4" />
                   <Trans>view_all</Trans>
@@ -143,6 +144,7 @@ export const organizationColumns: ColumnDef<Organization>[] = [
                 <Button
                   variant="link"
                   className="p-0 text-xs text-brand gap-0.5"
+                  onClick={(e) => e.stopPropagation()}
                 >
                   <ArrowDownLeft className="size-4" />
                   <Trans>view_all</Trans>

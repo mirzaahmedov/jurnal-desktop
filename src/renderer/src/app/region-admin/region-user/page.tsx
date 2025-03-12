@@ -3,10 +3,11 @@ import type { User } from '@/common/models'
 import { useEffect, useState } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
 
 import { GenericTable, LoadingOverlay } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
-import { useLayout } from '@/common/features/layout'
+import { useLayoutStore } from '@/common/features/layout'
 import { useToggle } from '@/common/hooks/use-toggle'
 
 import { regionUserColumns } from './columns'
@@ -15,12 +16,14 @@ import RegionUserDialog from './dialog'
 import { regionUserService } from './service'
 
 const RegionUserPage = () => {
-  const [selected, setSelected] = useState<User | null>(null)
-
   const toggle = useToggle()
   const queryClient = useQueryClient()
+  const setLayout = useLayoutStore((store) => store.setLayout)
+
+  const [selected, setSelected] = useState<User | null>(null)
 
   const { confirm } = useConfirm()
+  const { t } = useTranslation(['app'])
 
   const { data: regionUsers, isFetching } = useQuery({
     queryKey: [regionUserKeys.getAll],
@@ -41,11 +44,17 @@ const RegionUserPage = () => {
       setSelected(null)
     }
   }, [toggle.isOpen])
-
-  useLayout({
-    title: 'Пользователи',
-    onCreate: toggle.open
-  })
+  useEffect(() => {
+    setLayout({
+      title: t('pages.user'),
+      breadcrumbs: [
+        {
+          title: t('pages.admin')
+        }
+      ],
+      onCreate: toggle.open
+    })
+  }, [t, setLayout])
 
   const handleClickEdit = (row: User) => {
     setSelected(row)

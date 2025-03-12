@@ -93,6 +93,11 @@ select:-webkit-autofill:focus {
   body {
     @apply bg-background text-foreground font-body;
   }
+
+  b {
+    font-weight: bold;
+  }
+
   .recharts-surface {
     overflow: visible;
   }
@@ -148,6 +153,25 @@ select:-webkit-autofill:focus {
   }
   .artificial-border::after {
     @apply z-[100] content-[""] block absolute bottom-0 h-px bg-slate-200 left-0 right-0;
+  }
+
+  .tree_node {
+    position: relative;
+  }
+  .tree_node::before {
+    content: '';
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 0;
+    padding-left: 20px;
+    @apply border-l;
+  }
+  .tree_node:last-child::before {
+    height: 50%;
+    @apply border-b;
   }
 }
 

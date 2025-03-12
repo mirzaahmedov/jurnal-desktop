@@ -1,10 +1,10 @@
 import type { ColumnDef } from '@/common/components'
 import type { Smeta } from '@/common/models'
-import type { TreeNode } from '@renderer/common/lib/data-structure'
+import type { PathTreeNode } from '@renderer/common/lib/tree/path-tree'
 
 import { IDCell } from '@renderer/common/components/table/renderers/id'
 
-export const smetaColumns: ColumnDef<TreeNode<Smeta>>[] = [
+export const smetaColumns: ColumnDef<PathTreeNode<Smeta>>[] = [
   {
     key: 'id',
     renderCell: IDCell,

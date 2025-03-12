@@ -241,5 +241,7 @@
   "report-title": "Название отчета",
   "configure-programm": "Настроить программу",
   "choose-report_title": "Выберите название отчета",
-  "content": "Содержание"
+  "content": "Содержание",
+  "vacant": "Вакантно",
+  "first_select_user": "Сначала выберите пользователь"
 }

@@ -10,10 +10,10 @@ import {
 } from '@renderer/common/components/collapsible-table'
 import { SpravochnikSearchField } from '@renderer/common/features/search'
 import {
-  type TreeNode,
-  buildTreeFromArray,
-  sortElementsByLevels
-} from '@renderer/common/lib/data-structure'
+  type PathTreeNode,
+  arrayToTreeByPathKey,
+  sortElementsByPath
+} from '@renderer/common/lib/tree/path-tree'
 
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 import { extendObject } from '@/common/lib/utils'
@@ -25,7 +25,7 @@ export const groupService = new CRUDService<Group, GroupPayloadType>({
 })
 
 type GroupTableProps = Omit<
-  CollapsibleTableProps<TreeNode<Group>, TreeNode<Group>>,
+  CollapsibleTableProps<PathTreeNode<Group>, PathTreeNode<Group>>,
   'data' | 'getRowId' | 'getChildRows'
 > & {
   data: Group[]
@@ -33,11 +33,11 @@ type GroupTableProps = Omit<
 export const GroupTable = ({ data, ...props }: GroupTableProps) => {
   const treeData = useMemo(
     () =>
-      buildTreeFromArray(
-        data,
-        (group) => group.pod_group,
-        (array) => array.sort(sortElementsByLevels)
-      ),
+      arrayToTreeByPathKey({
+        array: data,
+        getPathKey: (group) => group.pod_group,
+        preprocessors: [(array) => array.sort(sortElementsByPath)]
+      }),
     [data]
   )
   return (
