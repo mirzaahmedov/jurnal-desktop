@@ -100,6 +100,7 @@
   "download-something": "{{something}}ni yuklash",
   "create-something": "{{something}} yaratish",
   "update-something": "{{something}}ni tahrirlash",
+  "edit-resource": "{{resource}}ni tahrirlash",
   "import-excel": "Excel-dan import qilish",
   "export-excel": "Excel-ga eksport qilish",
   "group": "Guruh",

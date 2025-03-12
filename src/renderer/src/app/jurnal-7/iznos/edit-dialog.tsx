@@ -14,8 +14,10 @@ import {
   DialogTitle
 } from '@renderer/common/components/ui/dialog'
 import { Form, FormField } from '@renderer/common/components/ui/form'
+import { capitalize } from '@renderer/common/lib/string'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 
 import { IznosFormSchema, defaultValues, iznosQueryKeys } from './config'
@@ -26,6 +28,8 @@ type EditIznosDialogProps = DialogProps & {
 }
 export const EditIznosDialog = ({ selected, ...props }: EditIznosDialogProps) => {
   const queryClient = useQueryClient()
+
+  const { t } = useTranslation()
 
   const { mutate: updateIznos, isPending } = useMutation({
     mutationFn: iznosService.update,
@@ -69,7 +73,7 @@ export const EditIznosDialog = ({ selected, ...props }: EditIznosDialogProps) =>
     <Dialog {...props}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Редактировать износ</DialogTitle>
+          <DialogTitle>{capitalize(t('edit-resource', { resource: t('iznos') }))}</DialogTitle>
         </DialogHeader>
         <div className="pt-5">
           <Form {...form}>
@@ -82,7 +86,7 @@ export const EditIznosDialog = ({ selected, ...props }: EditIznosDialogProps) =>
                 name="iznos_summa"
                 render={({ field }) => (
                   <FormElement
-                    label="Сумма износ"
+                    label={t('iznos_summa_old')}
                     direction="column"
                   >
                     <NumericInput

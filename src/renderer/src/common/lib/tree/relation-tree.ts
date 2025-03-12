@@ -1,21 +1,23 @@
-export type ReletionTreeNode<T> = T & {
-  children: ReletionTreeNode<T>[]
+export type ReletionTreeNode<T, I> = T & {
+  children: ReletionTreeNode<T, I>[]
+  path: I[]
+  parents: ReletionTreeNode<T, I>[]
 }
 
-export type PreprocessFn = <T>(arrays: ReletionTreeNode<T>[]) => ReletionTreeNode<T>[]
+export type PreprocessFn = <T, I>(arrays: ReletionTreeNode<T, I>[]) => ReletionTreeNode<T, I>[]
 
-export interface ArrayToTreeByRelationsArgs<T> {
+export interface ArrayToTreeByRelationsArgs<T, I> {
   array: T[]
-  getId: (item: T) => unknown
-  getParentId: (item: T) => unknown
+  getId: (item: T) => I
+  getParentId: (item: T) => I
   preprocessors?: PreprocessFn[]
 }
-export const arrayToTreeByReletions = <T extends object>({
+export const arrayToTreeByReletions = <T extends object, I = unknown>({
   array,
   getId,
   getParentId,
   preprocessors = []
-}: ArrayToTreeByRelationsArgs<T>) => {
+}: ArrayToTreeByRelationsArgs<T, I>) => {
   if (!array || !Array.isArray(array)) {
     return []
   }
@@ -24,8 +26,10 @@ export const arrayToTreeByReletions = <T extends object>({
     (item) =>
       ({
         ...item,
-        children: []
-      }) as ReletionTreeNode<T>
+        children: [],
+        path: [],
+        parents: []
+      }) as ReletionTreeNode<T, I>
   )
 
   preprocessors.forEach((fn) => {
@@ -37,7 +41,14 @@ export const arrayToTreeByReletions = <T extends object>({
 
   while (nodes.length > 0) {
     const node = nodes.shift()!
-    const children = normalized.filter((item) => getParentId(item) === getId(node))
+    const children = normalized.filter((item) => {
+      if (getParentId(item) === getId(node)) {
+        item.path.push(...node.path, getId(node))
+        item.parents.push(...node.parents, node)
+        return true
+      }
+      return false
+    })
     node.children = children
     nodes.push(...children)
   }

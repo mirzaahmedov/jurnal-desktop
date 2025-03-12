@@ -15,7 +15,7 @@ export const queryKeys = {
   delete: 'jur7_prixod/delete'
 }
 
-export const defaultValues: PrixodFormType = {
+export const defaultValues: PrixodFormValues = {
   type_document: 1,
   doc_num: '',
   doc_date: '',
@@ -53,6 +53,7 @@ export const PrixodChildFormSchema = withPreprocessor(
     name: z.string(),
     edin: z.string(),
     group_jur7_id: z.number(),
+    group_number: z.string().optional().nullable(),
     inventar_num: z.string(),
     serial_num: z.string(),
     kol: z.number(),
@@ -109,8 +110,8 @@ export const PrixodFormSchema = withPreprocessor(
     childs: z.array(PrixodChildFormSchema)
   })
 )
-export type PrixodFormType = z.infer<typeof PrixodFormSchema>
-export type PrixodChildFormType = z.infer<typeof PrixodChildFormSchema>
+export type PrixodFormValues = z.infer<typeof PrixodFormSchema>
+export type PrixodChildFormValues = z.infer<typeof PrixodChildFormSchema>
 
 export const columns: ColumnDef<MO7Prixod>[] = [
   {

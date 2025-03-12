@@ -2,6 +2,7 @@ import type { Vacant } from '@renderer/common/models/vacant'
 
 import { useEffect, useMemo, useState } from 'react'
 
+import { CaretDownIcon } from '@radix-ui/react-icons'
 import { GenericTable, LoadingOverlay } from '@renderer/common/components'
 import { Button } from '@renderer/common/components/ui/button'
 import { Checkbox } from '@renderer/common/components/ui/checkbox'
@@ -18,7 +19,7 @@ import {
 } from '@renderer/common/lib/tree/relation-tree'
 import { cn } from '@renderer/common/lib/utils'
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { AlertTriangle, Plus } from 'lucide-react'
+import { AlertTriangle } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 
@@ -27,6 +28,8 @@ import { regionUserKeys } from '../region-user/constants'
 import { columnDefs } from './columns'
 import { vacantQueryKeys } from './config'
 import { createVacantGrantQuery, getUserVacantIdsQuery, getVacantListQuery } from './service'
+
+type VacantTreeNode = ReletionTreeNode<Vacant, number | null>
 
 const VacantPage = () => {
   const authUserId = useAuthenticationStore((store) => store.user?.id)
@@ -100,6 +103,48 @@ const VacantPage = () => {
     [vacants?.data]
   )
 
+  const handleSelectAll = () => {
+    if (!vacants?.data) {
+      return
+    }
+    if (selectedIds.length !== vacants.data.length) {
+      setSelectedIds(vacants.data.map((v) => v.id))
+      return
+    }
+    setSelectedIds([])
+  }
+  const handleSelectNode = (node: VacantTreeNode) => {
+    const ids: number[] = []
+
+    const getChildrenIds = (node: VacantTreeNode) => {
+      ids.push(node.id)
+
+      node.children.forEach((child) => getChildrenIds(child))
+    }
+
+    getChildrenIds(node)
+
+    setSelectedIds((prev) => {
+      if (prev.includes(node.id)) {
+        return prev.filter((id) => !ids.includes(id) && !node.path.includes(id))
+      }
+      const newIds = Array.from(new Set([...prev, ...ids]))
+
+      const hasAllChildNodesSelected = (node: VacantTreeNode) => {
+        return node.children.every(
+          (child) => newIds.includes(child.id) && hasAllChildNodesSelected(child)
+        )
+      }
+
+      node.parents.forEach((parent) => {
+        if (hasAllChildNodesSelected(parent)) {
+          newIds.push(parent.id)
+        }
+      })
+      return newIds
+    })
+  }
+
   return (
     <div className="grid grid-cols-2 h-full divide-x">
       <div className="relative overflow-y-auto">
@@ -113,25 +158,32 @@ const VacantPage = () => {
       </div>
       <div className="relative p-5 h-full flex flex-col">
         {isFetchingVacants || isFetchingUserVacants ? <LoadingOverlay /> : null}
-        {userId ? (
+        {userId && vacants ? (
           <div className="flex-1">
-            <div>
-              <Checkbox checked="indeterminate" />
+            <div className="flex items-center gap-5 px-5">
+              <Checkbox
+                checked={
+                  selectedIds.length === vacants.data.length
+                    ? true
+                    : selectedIds.length > 0
+                      ? 'indeterminate'
+                      : false
+                }
+                onClick={handleSelectAll}
+                className="size-5"
+              />
+              <div>
+                <span>{selectedIds.length} </span>
+                {t('selected_elements')}
+              </div>
             </div>
-            <ul className="divide-y">
+            <ul className="divide-y mt-2">
               {vacantsTree.map((item) => (
                 <TreeNode
                   key={item.id}
                   vacant={item}
                   selectedIds={selectedIds}
-                  onSelect={(id) => {
-                    setSelectedIds((prev) => {
-                      if (prev.includes(id)) {
-                        return prev.filter((e) => e !== id)
-                      }
-                      return [...prev, id]
-                    })
-                  }}
+                  onSelect={handleSelectNode}
                 />
               ))}
             </ul>
@@ -165,10 +217,16 @@ const VacantPage = () => {
   )
 }
 
+const hasSelectedChildNode = (node: VacantTreeNode, selectedIds: number[]) => {
+  return !!node.children.find((child) => {
+    return selectedIds.includes(child.id) || hasSelectedChildNode(child, selectedIds)
+  })
+}
+
 interface TreeNodeProps {
-  vacant: ReletionTreeNode<Vacant>
+  vacant: VacantTreeNode
   selectedIds: number[]
-  onSelect: (id: number) => void
+  onSelect: (node: VacantTreeNode) => void
   level?: number
 }
 const TreeNode = ({ vacant, selectedIds, onSelect, level = 1 }: TreeNodeProps) => {
@@ -181,12 +239,18 @@ const TreeNode = ({ vacant, selectedIds, onSelect, level = 1 }: TreeNodeProps) =
         )}
         onClick={(e) => {
           e.stopPropagation()
-          onSelect(vacant.id)
+          onSelect(vacant)
         }}
       >
         <Checkbox
           className="size-5"
-          checked={selectedIds.includes(vacant.id)}
+          checked={
+            selectedIds.includes(vacant.id)
+              ? true
+              : hasSelectedChildNode(vacant, selectedIds)
+                ? 'indeterminate'
+                : false
+          }
         />
         {vacant.name}
       </li>
@@ -202,12 +266,18 @@ const TreeNode = ({ vacant, selectedIds, onSelect, level = 1 }: TreeNodeProps) =
         )}
         onClick={(e) => {
           e.preventDefault()
-          onSelect(vacant.id)
+          onSelect(vacant)
         }}
       >
         <Checkbox
           className="size-5"
-          checked={selectedIds.includes(vacant.id)}
+          checked={
+            selectedIds.includes(vacant.id)
+              ? true
+              : hasSelectedChildNode(vacant, selectedIds)
+                ? 'indeterminate'
+                : false
+          }
         />
         <h4 className="flex-1">{vacant.name}</h4>
         <CollapsibleTrigger asChild>
@@ -217,7 +287,7 @@ const TreeNode = ({ vacant, selectedIds, onSelect, level = 1 }: TreeNodeProps) =
             onClick={(e) => e.stopPropagation()}
             className="size-6"
           >
-            <Plus className="btn-icon" />
+            <CaretDownIcon className="btn-icon" />
           </Button>
         </CollapsibleTrigger>
       </li>

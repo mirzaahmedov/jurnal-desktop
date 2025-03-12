@@ -13,10 +13,10 @@ import { cn } from '@/common/lib/utils'
 
 import { registerKeyBindings } from './key-bindings'
 
-const inputVariants = cva('cursor-pointer', {
+export const inputVariants = cva('cursor-pointer', {
   variants: {
     editor: {
-      true: 'border-none rounded-none hover:ring-0 bg-transparent py-5'
+      true: 'border-none rounded-none hover:ring-0 bg-transparent py-5 block border-box'
     },
     error: {
       true: 'focus-visible:ring-destructive'
@@ -34,18 +34,17 @@ const inputVariants = cva('cursor-pointer', {
   ]
 })
 
-type SpravochnikInputProps<T> = InputProps &
-  VariantProps<typeof inputVariants> & {
-    inputRef?: Ref<HTMLInputElement>
-    loading?: boolean
-    selected?: T
-    getInputValue: (value?: T) => string
-    open?: () => void
-    clear?: () => void
-    divProps?: HTMLAttributes<HTMLDivElement>
-  }
+export interface SpravochnikInputProps<T> extends InputProps, VariantProps<typeof inputVariants> {
+  inputRef?: Ref<HTMLInputElement>
+  loading?: boolean
+  selected?: T
+  getInputValue: (value?: T) => string
+  open?: () => void
+  clear?: () => void
+  divProps?: HTMLAttributes<HTMLDivElement>
+}
 
-const SpravochnikInput = <T extends object>({
+export const SpravochnikInput = <T extends object>({
   inputRef,
   loading = false,
   error = false,
@@ -94,6 +93,3 @@ const SpravochnikInput = <T extends object>({
     </div>
   )
 }
-
-export { inputVariants, SpravochnikInput }
-export type { SpravochnikInputProps }

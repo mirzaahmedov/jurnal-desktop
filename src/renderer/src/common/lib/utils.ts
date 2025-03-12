@@ -1,6 +1,8 @@
 import { type ClassValue, clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 
+import { capitalize } from './string'
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
@@ -23,13 +25,6 @@ const thousands = ['', 'ming', 'million', 'milliard', 'trillion', 'kuadrillion']
 
 export const getDecimalPart = (value: number) => {
   return Math.round((value + Number.EPSILON) * 100) % 100
-}
-
-export const capitalize = (str: string): string => {
-  if (!str || typeof str !== 'string') {
-    return ''
-  }
-  return str.charAt(0).toUpperCase() + str.slice(1)
 }
 
 export const numberToWords = (num: number, initial: boolean = true): string => {

@@ -52,7 +52,7 @@ export const Provodka = ({ form }: ProvodkaProps) => {
       ref={tableRef}
       className="h-[600px] overflow-auto scrollbar p-1"
     >
-      <Table className="border-collapse">
+      <Table className="border-separate border-spacing-0">
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
             <EditableTableRow key={headerGroup.id}>
@@ -74,6 +74,7 @@ export const Provodka = ({ form }: ProvodkaProps) => {
                     colSpan={header.colSpan}
                     rowSpan={rowSpan}
                     style={{ width: header.getSize() }}
+                    className="border-b"
                   >
                     {flexRender(header.column.columnDef.header, header.getContext())}
                   </EditableTableHead>
@@ -92,9 +93,13 @@ export const Provodka = ({ form }: ProvodkaProps) => {
                   height: `${virtualRow.size}px`,
                   transform: `translateY(${virtualRow.start - index * virtualRow.size}px)`
                 }}
+                className="p-1"
               >
                 {row.getVisibleCells().map((cell) => (
-                  <EditableTableCell key={cell.id}>
+                  <EditableTableCell
+                    key={cell.id}
+                    className="border-b p-px"
+                  >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </EditableTableCell>
                 ))}

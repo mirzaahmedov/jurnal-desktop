@@ -22,20 +22,20 @@ import { cn } from '@/common/lib/utils'
 
 import {
   PrixodChildFormSchema,
-  type PrixodChildFormType,
-  type PrixodFormType,
+  type PrixodChildFormValues,
+  type PrixodFormValues,
   defaultValues
 } from '../config'
 
 type ProvodkaTableProps = {
   tabIndex: number
-  form: UseFormReturn<PrixodFormType>
+  form: UseFormReturn<PrixodFormValues>
 }
 export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) => {
   const { t } = useTranslation()
 
   const handleChangeChildField = useEventCallback(
-    (index: number, key: keyof PrixodChildFormType, value: unknown) => {
+    (index: number, key: keyof PrixodChildFormValues, value: unknown) => {
       form.setValue(`childs.${index}.${key}`, value as string | number)
       form.trigger(`childs.${index}.${key}`)
     }
@@ -538,11 +538,11 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
 
 type NaimenovanieCellsProps = {
   index: number
-  row: PrixodChildFormType
-  form: UseFormReturn<PrixodFormType>
+  row: PrixodChildFormValues
+  form: UseFormReturn<PrixodFormValues>
   tabIndex: number
-  errors: Merge<FieldError, FieldErrorsImpl<PrixodChildFormType>>
-  onChangeField: (index: number, key: keyof PrixodChildFormType, value: unknown) => void
+  errors: Merge<FieldError, FieldErrorsImpl<PrixodChildFormValues>>
+  onChangeField: (index: number, key: keyof PrixodChildFormValues, value: unknown) => void
 }
 const NaimenovanieCells = ({
   index,
@@ -629,7 +629,7 @@ const NaimenovanieCells = ({
         <div className="relative">
           <EdinSelect
             tabIndex={tabIndex}
-            error={!!errors.inventar_num}
+            error={!!errors.edin}
             value={row.edin}
             onValueChange={(edin) => {
               onChangeField(index, 'edin', edin)

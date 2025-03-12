@@ -12,14 +12,14 @@ import { useTranslation } from 'react-i18next'
 
 import { EditableTableCell, EditableTableHead, EditableTableRow } from './components'
 
-export type EditableColumnType<T extends object> = {
+export interface EditableColumnType<T extends object> {
   key: Autocomplete<keyof T>
   header?: ReactNode
   Editor: EditorComponentType<T>
   width?: string | number
 }
 
-export type EditableTableProps<T extends object> = {
+export interface EditableTableProps<T extends object> {
   tableRef?: React.RefObject<HTMLTableElement>
   tabIndex?: number
   data: T[]
