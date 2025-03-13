@@ -1,15 +1,15 @@
+import type { SelectFieldProps } from './select-field'
+import type { Unit } from '@/common/models'
+
 import { unitQueryKeys, unitService } from '@renderer/app/super-admin/unit'
 import { useQuery } from '@tanstack/react-query'
 
-import type { Unit } from '@/common/models'
-
-import type { SelectFieldProps } from './select-field';
 import { SelectField } from './select-field'
 
-type EdinSelectProps = Partial<SelectFieldProps<Unit>> & {
+export interface EdinSelectProps extends Partial<SelectFieldProps<Unit>> {
   error: boolean
 }
-const EdinSelect = ({ error, ...props }: EdinSelectProps) => {
+export const EdinSelect = ({ error, ...props }: EdinSelectProps) => {
   const { data: unitList, isFetching } = useQuery({
     queryKey: [unitQueryKeys.getAll],
     queryFn: unitService.getAll
@@ -35,5 +35,3 @@ const EdinSelect = ({ error, ...props }: EdinSelectProps) => {
     />
   )
 }
-
-export { EdinSelect }

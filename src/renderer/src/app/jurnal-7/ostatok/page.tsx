@@ -8,6 +8,7 @@ import { CollapsibleTable } from '@renderer/common/components/collapsible-table'
 import { Badge } from '@renderer/common/components/ui/badge'
 import { Button } from '@renderer/common/components/ui/button'
 import { ButtonGroup } from '@renderer/common/components/ui/button-group'
+import { Checkbox } from '@renderer/common/components/ui/checkbox'
 import {
   Dialog,
   DialogContent,
@@ -40,7 +41,7 @@ import { ListView } from '@renderer/common/views'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { CircleArrowDown, CopyCheck, Download, Trash2 } from 'lucide-react'
 import { useForm } from 'react-hook-form'
-import { useTranslation } from 'react-i18next'
+import { Trans, useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 
 import { createResponsibleSpravochnik } from '../responsible/service'
@@ -419,7 +420,60 @@ const OstatokPage = () => {
             >
               <GenericTable
                 data={rows}
-                columnDefs={ostatokProductColumns}
+                columnDefs={ostatokProductColumns.map((column) => {
+                  if (column.key === 'id') {
+                    return {
+                      ...column,
+                      renderHeader: () => {
+                        return (
+                          <div className="flex items-center gap-2">
+                            <Checkbox
+                              checked={
+                                rows.every((r) =>
+                                  selectedIds.includes(r.naimenovanie_tovarov_jur7_id)
+                                )
+                                  ? true
+                                  : rows.some((r) =>
+                                        selectedIds.includes(r.naimenovanie_tovarov_jur7_id)
+                                      )
+                                    ? 'indeterminate'
+                                    : false
+                              }
+                              className="size-5"
+                              onClick={() => {
+                                setSelectedRows((prev) => {
+                                  const newValues = [...prev]
+                                  const ids = prev.map((p) => p.naimenovanie_tovarov_jur7_id)
+                                  if (
+                                    rows.every((r) => ids.includes(r.naimenovanie_tovarov_jur7_id))
+                                  ) {
+                                    return prev.filter(
+                                      (p) =>
+                                        !rows.find(
+                                          (r) =>
+                                            r.naimenovanie_tovarov_jur7_id ===
+                                            p.naimenovanie_tovarov_jur7_id
+                                        )
+                                    )
+                                  }
+                                  rows.forEach((r) => {
+                                    if (!ids.includes(r.naimenovanie_tovarov_jur7_id)) {
+                                      newValues.push(r)
+                                    }
+                                  })
+
+                                  return newValues
+                                })
+                              }}
+                            />
+                            <Trans>id</Trans>
+                          </div>
+                        )
+                      }
+                    }
+                  }
+                  return column
+                })}
                 getRowId={(row) => row.naimenovanie_tovarov_jur7_id}
                 selectedIds={selectedIds}
                 params={{
@@ -473,8 +527,8 @@ const OstatokPage = () => {
         open={selectedToggle.isOpen}
         onOpenChange={selectedToggle.setOpen}
       >
-        <DialogContent className="w-full max-w-full h-full max-h-[600px] flex flex-col">
-          <DialogHeader>
+        <DialogContent className="w-full max-w-full h-full max-h-[600px] flex flex-col p-0">
+          <DialogHeader className="p-5 pb-0">
             <DialogTitle>{t('selected_elements')}</DialogTitle>
           </DialogHeader>
           <div className="overflow-auto scrollbar flex-1">

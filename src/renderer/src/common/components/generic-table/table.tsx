@@ -37,7 +37,7 @@ export interface ColumnDef<T extends object> {
   headerClassName?: string
   rowSpan?: number
   colSpan?: number
-  renderHeader?(row: T): ReactNode
+  renderHeader?(): ReactNode
   renderCell?: CellRenderer<T>
 }
 
@@ -51,7 +51,7 @@ export interface HeaderGroup<T extends object> {
   rowSpan?: number
   colSpan?: number
   width?: number
-  renderHeader?(row: T): ReactNode
+  renderHeader?(): ReactNode
 }
 
 export interface GenericTableProps<T extends object>
@@ -125,6 +125,7 @@ export const GenericTable = <T extends object>(props: GenericTableProps<T>) => {
                       const {
                         key,
                         header,
+                        renderHeader,
                         fit,
                         stretch,
                         numeric,
@@ -144,11 +145,13 @@ export const GenericTable = <T extends object>(props: GenericTableProps<T>) => {
                           rowSpan={rowSpan}
                           style={{ width }}
                         >
-                          {!header
-                            ? t(key.toString())
-                            : typeof header === 'string'
-                              ? t(header)
-                              : header}
+                          {renderHeader
+                            ? renderHeader()
+                            : !header
+                              ? t(key.toString())
+                              : typeof header === 'string'
+                                ? t(header)
+                                : header}
                         </GenericTableHead>
                       )
                     })
