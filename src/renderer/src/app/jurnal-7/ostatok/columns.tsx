@@ -11,7 +11,7 @@ export const ostatokGroupColumns: ColumnDef<OstatokGroup>[] = [
   {
     key: 'id',
     renderCell: IDCell,
-    width: 160
+    width: 200
   },
   {
     key: 'name',

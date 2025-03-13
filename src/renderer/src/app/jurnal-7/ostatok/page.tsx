@@ -1,4 +1,4 @@
-import type { OstatokProduct } from '@renderer/common/models'
+import type { OstatokGroup, OstatokProduct } from '@renderer/common/models'
 
 import { useEffect, useMemo, useState } from 'react'
 
@@ -409,10 +409,74 @@ const OstatokPage = () => {
       >
         <CollapsibleTable
           data={ostatok?.data ?? []}
-          columnDefs={ostatokGroupColumns}
+          columnDefs={ostatokGroupColumns.map((column) => {
+            if (column.key === 'id') {
+              const count =
+                ostatok?.data?.reduce((total, group) => total + group.products?.length, 0) ?? 0
+              return {
+                ...column,
+                renderHeader: () => (
+                  <div className="flex items-center gap-5">
+                    <Checkbox
+                      checked={
+                        count === selectedIds.length && selectedIds.length > 0
+                          ? true
+                          : selectedIds.length > 0
+                            ? 'indeterminate'
+                            : false
+                      }
+                      onClick={() => {
+                        if (count !== selectedIds.length) {
+                          setSelectedRows(ostatok?.data?.flatMap((group) => group.products) ?? [])
+                          return
+                        }
+                        setSelectedRows([])
+                      }}
+                      className="size-5"
+                    />
+                    <Trans>id</Trans>
+                  </div>
+                )
+              }
+            }
+            return column
+          })}
           getRowId={(row) => row.id}
           getChildRows={(row) => row.products}
           width={width}
+          selectedIds={selectedIds}
+          getRowSelected={({ row, selectedIds }) => {
+            const productIds = row.products.map((p) => p.naimenovanie_tovarov_jur7_id)
+            const count = productIds.filter((id) => selectedIds.includes(id)).length
+
+            if (count === productIds.length) {
+              return true
+            }
+
+            if (count > 0) {
+              return 'indeterminate'
+            }
+
+            return false
+          }}
+          params={{
+            onCheckedChange: (row: OstatokGroup) => {
+              const productIds = row.products.map((p) => p.naimenovanie_tovarov_jur7_id)
+              const count = productIds.filter((id) => selectedIds.includes(id)).length
+
+              if (count !== productIds.length) {
+                setSelectedRows((prev) => {
+                  const newValues = Array.from(new Set([...prev, ...row.products]))
+                  return newValues
+                })
+                return
+              }
+
+              setSelectedRows((prev) =>
+                prev.filter((p) => !productIds.includes(p.naimenovanie_tovarov_jur7_id))
+              )
+            }
+          }}
           renderChildRows={(rows) => (
             <div
               style={{ width }}
@@ -420,62 +484,12 @@ const OstatokPage = () => {
             >
               <GenericTable
                 data={rows}
-                columnDefs={ostatokProductColumns.map((column) => {
-                  if (column.key === 'id') {
-                    return {
-                      ...column,
-                      renderHeader: () => {
-                        return (
-                          <div className="flex items-center gap-2">
-                            <Checkbox
-                              checked={
-                                rows.every((r) =>
-                                  selectedIds.includes(r.naimenovanie_tovarov_jur7_id)
-                                )
-                                  ? true
-                                  : rows.some((r) =>
-                                        selectedIds.includes(r.naimenovanie_tovarov_jur7_id)
-                                      )
-                                    ? 'indeterminate'
-                                    : false
-                              }
-                              className="size-5"
-                              onClick={() => {
-                                setSelectedRows((prev) => {
-                                  const newValues = [...prev]
-                                  const ids = prev.map((p) => p.naimenovanie_tovarov_jur7_id)
-                                  if (
-                                    rows.every((r) => ids.includes(r.naimenovanie_tovarov_jur7_id))
-                                  ) {
-                                    return prev.filter(
-                                      (p) =>
-                                        !rows.find(
-                                          (r) =>
-                                            r.naimenovanie_tovarov_jur7_id ===
-                                            p.naimenovanie_tovarov_jur7_id
-                                        )
-                                    )
-                                  }
-                                  rows.forEach((r) => {
-                                    if (!ids.includes(r.naimenovanie_tovarov_jur7_id)) {
-                                      newValues.push(r)
-                                    }
-                                  })
-
-                                  return newValues
-                                })
-                              }}
-                            />
-                            <Trans>id</Trans>
-                          </div>
-                        )
-                      }
-                    }
-                  }
-                  return column
-                })}
+                columnDefs={ostatokProductColumns}
                 getRowId={(row) => row.naimenovanie_tovarov_jur7_id}
                 selectedIds={selectedIds}
+                headerProps={{
+                  className: 'z-[49]'
+                }}
                 params={{
                   onCheckedChange: (row: OstatokProduct) => {
                     setSelectedRows((prev) => {

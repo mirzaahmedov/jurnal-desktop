@@ -1,6 +1,13 @@
+import type { CheckedState } from '@radix-ui/react-checkbox'
 import type { Autocomplete } from '@renderer/common/lib/types'
 
-import { type ReactNode, type TableHTMLAttributes, useEffect, useState } from 'react'
+import {
+  type HTMLAttributes,
+  type ReactNode,
+  type TableHTMLAttributes,
+  useEffect,
+  useState
+} from 'react'
 
 import { Button } from '@renderer/common/components/ui/button'
 import {
@@ -59,6 +66,7 @@ export interface GenericTableProps<T extends object>
     TableProps {
   caption?: string
   data: T[]
+  headerProps?: HTMLAttributes<HTMLTableSectionElement>
   columnDefs: ColumnDef<T>[]
   headerGroups?: HeaderGroup<T>[][]
   placeholder?: string
@@ -66,6 +74,7 @@ export interface GenericTableProps<T extends object>
   disabledIds?: number[]
   getRowId?: (row: T) => string | number
   getRowKey?: (row: T) => string | number
+  getRowSelected?: GetRowSelected<T>
   onClickRow?(row: T): void
   onDelete?(row: T): void
   onEdit?(row: T): void
@@ -79,9 +88,10 @@ export const GenericTable = <T extends object>(props: GenericTableProps<T>) => {
     caption,
     data,
     columnDefs,
+    headerProps,
     headerGroups = [columnDefs],
     placeholder,
-    getRowId = defaultRowIdGetter,
+    getRowId = defaultGetRowId,
     getRowKey = getRowId,
     disabledIds = [],
     selectedIds = [],
@@ -113,7 +123,10 @@ export const GenericTable = <T extends object>(props: GenericTableProps<T>) => {
       className={twMerge('relative', restProps.className)}
     >
       {caption ? <TableCaption>{caption}</TableCaption> : null}
-      <TableHeader className="artificial-border sticky top-0 z-50">
+      <TableHeader
+        {...headerProps}
+        className={cn('artificial-border sticky top-0 z-50', headerProps?.className)}
+      >
         {Array.isArray(headerGroups)
           ? headerGroups.map((headerGroup, index) => (
               <GenericTableRow
@@ -277,9 +290,15 @@ export const defaultCellRenderer = <T extends object>(row: T, col: ColumnDef<T>)
   }
   return row[col.key as keyof T] ? String(row[col.key as keyof T]) : '-'
 }
-export const defaultRowIdGetter = <T,>(row: T): string => {
+export const defaultGetRowId = <T,>(row: T): string => {
   if (row !== null && typeof row === 'object' && 'id' in row) {
     return String(row['id'])
   }
   return ''
 }
+
+export type GetRowSelected<T> = (args: {
+  row: T
+  selectedIds: number[]
+  getRowId: (row: T) => number | string
+}) => CheckedState

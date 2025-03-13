@@ -35,7 +35,7 @@ const baseURL = import.meta.env.DEV
     : 'http://147.45.107.174:3006/v2'
   : import.meta.env.VITE_MODE === 'staging'
     ? 'http://147.45.107.174:3006/v2'
-    : 'http://10.50.0.140:3005'
+    : 'http://10.50.0.140:3006/v2'
 
 export const http = axios.create({
   baseURL

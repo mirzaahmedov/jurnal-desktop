@@ -1,6 +1,7 @@
-import type { ColumnDef } from '@renderer/common/components'
+import type { ColumnDef, GetRowSelected } from '@renderer/common/components'
 import type { ReactNode } from 'react'
 
+import { CaretDownIcon } from '@radix-ui/react-icons'
 import {
   GenericTableCell,
   GenericTableHead,
@@ -14,7 +15,7 @@ import {
 } from '@renderer/common/components/ui/collapsible'
 import { Table, TableBody, TableHeader } from '@renderer/common/components/ui/table'
 import { cn } from '@renderer/common/lib/utils'
-import { Pencil, Plus, Trash2 } from 'lucide-react'
+import { Pencil, Trash2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { EmptyList } from '../empty-states'
@@ -25,10 +26,12 @@ export type CollapsibleTableProps<T extends object, C extends object> = {
   columnDefs: ColumnDef<NoInfer<T>>[]
   width?: number
   disabledIds?: number[]
-  selectedId?: number
+  selectedIds?: number[]
   className?: string
+  params?: Record<string, unknown>
   getRowId: (row: T) => number | string
   getChildRows: (row: T) => C[] | undefined
+  getRowSelected?: GetRowSelected<T>
   renderChildRows?: (rows: NoInfer<C>[]) => ReactNode
   onClickRow?: (row: T) => void
   onEdit?: (row: T) => void
@@ -40,9 +43,11 @@ export const CollapsibleTable = <T extends object, C extends object = T>({
   columnDefs,
   width,
   disabledIds,
-  selectedId,
+  selectedIds,
   className,
+  params,
   getRowId,
+  getRowSelected,
   getChildRows,
   renderChildRows,
   onClickRow,
@@ -59,7 +64,8 @@ export const CollapsibleTable = <T extends object, C extends object = T>({
         <TableHeader className="sticky top-0 z-50 artificial-border">
           <GenericTableRow className="bg-slate-100 hover:bg-slate-100 border-t border-slate-200">
             {columnDefs.map((col) => {
-              const { key, header, fit, stretch, numeric, headerClassName, width } = col
+              const { key, header, fit, stretch, numeric, headerClassName, width, renderHeader } =
+                col
               return (
                 <GenericTableHead
                   key={key.toString()}
@@ -69,7 +75,13 @@ export const CollapsibleTable = <T extends object, C extends object = T>({
                   className={headerClassName}
                   style={{ width }}
                 >
-                  {typeof header === 'string' ? t(header) : !header ? t(key.toString()) : header}
+                  {renderHeader
+                    ? renderHeader()
+                    : typeof header === 'string'
+                      ? t(header)
+                      : !header
+                        ? t(key.toString())
+                        : header}
                 </GenericTableHead>
               )
             })}
@@ -93,15 +105,17 @@ export const CollapsibleTable = <T extends object, C extends object = T>({
               row={row}
               tableProps={{
                 columnDefs,
+                disabledIds,
+                selectedIds,
+                data,
+                params,
                 getRowId,
+                getRowSelected,
                 getChildRows,
                 renderChildRows,
                 onClickRow,
                 onEdit,
-                onDelete,
-                disabledIds,
-                selectedId,
-                data
+                onDelete
               }}
             />
           ))
@@ -143,7 +157,7 @@ const CollapsibleItem = <T extends object, C extends object>({
     onEdit,
     onDelete,
     disabledIds,
-    selectedId,
+    selectedIds,
     width
   } = tableProps
 
@@ -156,7 +170,7 @@ const CollapsibleItem = <T extends object, C extends object>({
           disabledIds?.includes(Number(getRowId(row))) && 'opacity-50 pointer-events-none'
         )}
         onClick={() => onClickRow?.(row)}
-        data-selected={selectedId === Number(getRowId(row))}
+        data-selected={selectedIds?.includes(Number(getRowId(row)))}
       >
         {columnDefs.map((col) => {
           const { key, fit, stretch, numeric, renderCell, width } = col
@@ -238,9 +252,9 @@ const CollapsibleItem = <T extends object, C extends object>({
                     <Button
                       size="icon"
                       variant="outline"
-                      className="size-6 align-middle mr-2"
+                      className="size-6 align-middle mr-4"
                     >
-                      <Plus className="btn-icon !size-3.5 !ml-0" />
+                      <CaretDownIcon className="btn-icon !size-3.5 !ml-0" />
                     </Button>
                   </CollapsibleTrigger>
                 )}

@@ -1,6 +1,6 @@
 {
   "name": "jurnal.desktop",
-  "version": "1.0.136",
+  "version": "1.0.137",
   "description": "An Electron application with React and TypeScript",
   "main": "./out/main/index.js",
   "author": "example.com",
@@ -22,8 +22,8 @@
     "build-prod": "cross-env VITE_MODE=prod electron-vite build",
     "postinstall": "electron-builder install-app-deps",
     "build:unpack": "pnpm run build && electron-builder --dir",
-    "build:win": "pnpm run build && cross-env VITE_MODE=staging electron-builder --win --ia32 --x64",
-    "build:win-prod": "pnpm run build-prod && cross-env VITE_MODE=prod electron-builder --win --ia32",
+    "build:win": "pnpm run build && cross-env VITE_MODE=staging electron-builder --win",
+    "build:win-prod": "pnpm run build-prod && cross-env VITE_MODE=prod electron-builder --win",
     "build:mac": "electron-vite build && electron-builder --mac",
     "build:linux": "electron-vite build && electron-builder --linux"
   },
