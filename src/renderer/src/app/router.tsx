@@ -8,6 +8,8 @@ import { Navigate, createHashRouter } from 'react-router-dom'
 
 import DashboardPage from './dashboard/page'
 import HomePage from './home/page'
+import PodotchetOstatokDetailsPage from './podotchet/ostatok/details/page'
+import PodotchetOstatokPage from './podotchet/ostatok/page'
 import SigninPage from './sign-in'
 
 const AdminOstatokPage = lazy(() => import('./super-admin/ostatok/page'))
@@ -362,6 +364,14 @@ export const routes: RouteObject[] = [
           {
             path: 'advance-report/:id',
             element: <AdvanceReportDetailsPage />
+          },
+          {
+            path: 'ostatok',
+            element: <PodotchetOstatokPage />
+          },
+          {
+            path: 'ostatok/:id',
+            element: <PodotchetOstatokDetailsPage />
           }
         ]
       },

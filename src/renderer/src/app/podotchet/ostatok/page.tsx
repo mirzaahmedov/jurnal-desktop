@@ -1,4 +1,4 @@
-import type { Avans } from '@/common/models'
+import type { PodotchetOstatok } from '@/common/models'
 
 import { useEffect } from 'react'
 
@@ -15,26 +15,26 @@ import { useLayoutStore } from '@/common/features/layout'
 import { useDates, usePagination } from '@/common/hooks'
 import { ListView } from '@/common/views'
 
-import { avansColumns } from './columns'
-import { avansQueryKeys } from './constants'
-import { avansService } from './service'
+import { podotchetOstatokColumns } from './columns'
+import { podotchetOstatokQueryKeys } from './config'
+import { podotchetOstatokService } from './service'
 
-const AvansPage = () => {
-  const dates = useDates()
-  const pagination = usePagination()
-  const navigate = useNavigate()
-  const queryClient = useQueryClient()
-
+const PodotchetOstatokPage = () => {
   const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
   const setLayout = useLayoutStore((store) => store.setLayout)
+
+  const navigate = useNavigate()
+  const queryClient = useQueryClient()
+  const pagination = usePagination()
+  const dates = useDates()
 
   const { confirm } = useConfirm()
   const { search } = useSearch()
   const { t } = useTranslation(['app'])
 
-  const { data: avansList, isFetching } = useQuery({
+  const { data: organOstatokList, isFetching } = useQuery({
     queryKey: [
-      avansQueryKeys.getAll,
+      podotchetOstatokQueryKeys.getAll,
       {
         main_schet_id,
         search,
@@ -42,44 +42,44 @@ const AvansPage = () => {
         ...pagination
       }
     ],
-    queryFn: avansService.getAll
+    queryFn: podotchetOstatokService.getAll
   })
-  const { mutate: deleteMutation, isPending } = useMutation({
-    mutationKey: [avansQueryKeys.delete],
-    mutationFn: avansService.delete,
+  const { mutate: deletePodotchetOstatok, isPending } = useMutation({
+    mutationKey: [podotchetOstatokQueryKeys.delete],
+    mutationFn: podotchetOstatokService.delete,
     onSuccess(res) {
       toast.success(res?.message)
       queryClient.invalidateQueries({
-        queryKey: [avansQueryKeys.getAll]
+        queryKey: [podotchetOstatokQueryKeys.getAll]
       })
     }
   })
 
-  const handleClickEdit = (row: Avans) => {
+  const handleClickEdit = (row: PodotchetOstatok) => {
     navigate(`${row.id}`)
   }
-  const handleClickDelete = (row: Avans) => {
+  const handleClickDelete = (row: PodotchetOstatok) => {
     confirm({
       onConfirm() {
-        deleteMutation(row.id)
+        deletePodotchetOstatok(row.id)
       }
     })
   }
 
   useEffect(() => {
     setLayout({
-      title: t('pages.avans'),
+      title: t('pages.ostatok'),
       breadcrumbs: [
         {
           title: t('pages.podotchet')
         }
       ],
       content: SearchField,
-      onCreate() {
+      onCreate: () => {
         navigate('create')
       }
     })
-  }, [setLayout, t])
+  }, [setLayout, t, navigate])
 
   return (
     <ListView>
@@ -88,8 +88,8 @@ const AvansPage = () => {
       </ListView.Header>
       <ListView.Content loading={isFetching || isPending}>
         <GenericTable
-          columnDefs={avansColumns}
-          data={avansList?.data ?? []}
+          data={organOstatokList?.data ?? []}
+          columnDefs={podotchetOstatokColumns}
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}
         />
@@ -97,11 +97,11 @@ const AvansPage = () => {
       <ListView.Footer>
         <ListView.Pagination
           {...pagination}
-          pageCount={avansList?.meta?.pageCount ?? 0}
+          pageCount={organOstatokList?.meta?.pageCount ?? 0}
         />
       </ListView.Footer>
     </ListView>
   )
 }
 
-export default AvansPage
+export default PodotchetOstatokPage

@@ -5,6 +5,7 @@ type Avans = {
   opisanie: string
   summa: number
   id_podotchet_litso: number
+  id_spravochnik_podotchet_litso: number
   spravochnik_podotchet_litso_name: string
   spravochnik_podotchet_litso_rayon: string
   spravochnik_operatsii_own_id: number

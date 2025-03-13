@@ -16,7 +16,8 @@ export const podvodkaColumns: EditableColumnType<AdvanceReportPodvodkaPayloadTyp
     key: 'spravochnik_operatsii_id',
     header: 'provodka',
     Editor: createOperatsiiEditor({
-      type_schet: TypeSchetOperatsii.AVANS_OTCHET
+      type_schet: TypeSchetOperatsii.AVANS_OTCHET,
+      field: 'spravochnik_operatsii_id'
     })
   },
   {

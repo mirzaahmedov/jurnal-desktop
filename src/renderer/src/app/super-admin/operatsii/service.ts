@@ -38,7 +38,7 @@ export type OperatsiiOption = {
 }
 
 export const getOperatsiiSchetOptionsQuery = async (
-  ctx: QueryFunctionContext<[string, { type_schet: string }]>
+  ctx: QueryFunctionContext<[string, { type_schet?: string }]>
 ) => {
   const type_schet = ctx.queryKey[1].type_schet
   const res = await http.get<Response<OperatsiiOption[]>>('/spravochnik/operatsii/unique', {

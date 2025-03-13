@@ -212,7 +212,12 @@ export const getNavElements = (t: TFunction): NavElement[] => {
                   title: t('pages.avans'),
                   icon: FileCheck
                 }
-              : null
+              : null,
+            {
+              path: 'ostatok',
+              title: t('pages.ostatok'),
+              icon: CircleFadingPlus
+            }
           ])
         }
       : null,

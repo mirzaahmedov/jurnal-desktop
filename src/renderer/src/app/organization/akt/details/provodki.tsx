@@ -19,7 +19,8 @@ export const podvodkaColumns: EditableColumnType<AktProvodkaForm>[] = [
     key: 'spravochnik_operatsii_id',
     header: 'provodka',
     Editor: createOperatsiiEditor({
-      type_schet: TypeSchetOperatsii.AKT
+      type_schet: TypeSchetOperatsii.AKT,
+      field: 'spravochnik_operatsii_id'
     })
   },
   {

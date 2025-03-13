@@ -17,18 +17,27 @@ import { useTranslation } from 'react-i18next'
 
 type Filter<T extends object> = { [K in keyof T]: T[K] extends number ? K : never }
 
-interface OperatsiiEditorOptions<T extends object> {
-  type_schet: TypeSchetOperatsii
-  key?: keyof Filter<T>
+export const withEditorProps = <Options extends object>(
+  editorConstructor: <T extends object, Field extends keyof Filter<T> & string>(
+    options: Options & { field: Field }
+  ) => EditorComponentType<T>
+) => {
+  return editorConstructor
 }
-export const createOperatsiiEditor = <T extends object>({
-  type_schet,
-  key
-}: OperatsiiEditorOptions<T>): EditorComponentType<T> => {
-  return ({ tabIndex, id, row, errors, onChange, params }) => {
-    const inputRef = useRef<HTMLInputElement>(null)
 
-    const accessKey = key ?? ('spravochnik_operatsii_id' as keyof T)
+export const createOperatsiiEditor = withEditorProps<{
+  type_schet?: TypeSchetOperatsii
+}>(({ field, type_schet }) => {
+  return ({ tabIndex, id, row, errors, onChange, params }) => {
+    const error = errors?.[field as keyof typeof errors]
+    const value = row[field] as number | undefined
+
+    const inputRef = useRef<HTMLInputElement>(null)
+    const editorState = useRef<{
+      clickedOutside: boolean
+    }>({
+      clickedOutside: false
+    })
 
     const [schet, setSchet] = useState<string>()
     const [subschet, setSubschet] = useState<string>()
@@ -47,14 +56,14 @@ export const createOperatsiiEditor = <T extends object>({
 
     const operatsiiSpravochnik = useSpravochnik(
       createOperatsiiSpravochnik({
-        value: (row[accessKey] as number) || undefined,
+        value: value || undefined,
         onChange: (value, selected) => {
           onChange?.({
             id,
-            key: accessKey,
+            key: field,
             payload: {
               ...row,
-              spravochnik_operatsii_id: value
+              [field]: value
             }
           })
           paramsRef.current?.onChangeOperatsii?.(selected)
@@ -127,8 +136,8 @@ export const createOperatsiiEditor = <T extends object>({
               editor
               type="text"
               tabIndex={tabIndex}
-              error={!!errors?.[accessKey as any]}
-              name={accessKey as string}
+              error={!!error}
+              name={`${field}-schet`}
               placeholder={t('schet')}
               onChange={(e) => {
                 operatsiiSpravochnik.clear()
@@ -152,23 +161,34 @@ export const createOperatsiiEditor = <T extends object>({
           isFetching={isFetching}
           options={filteredOperatsiiOptions ?? []}
           disabled={(!!operatsiiSpravochnik.selected && subschet !== undefined) || !schet}
-          value={row?.[accessKey]?.toString()}
+          value={value?.toString()}
           getOptionLabel={(option) => option.sub_schet}
           getOptionValue={(option) => option.id.toString()}
           onSelect={(option) => {
-            if (row?.[accessKey] !== option.id) {
+            if (value !== option.id) {
               onChange?.({
                 id,
-                key: accessKey,
+                key: field,
                 payload: {
                   ...row,
-                  [accessKey]: option.id
+                  [field]: option.id
                 }
               })
               setSchet(option.schet)
               setSubschet(option.sub_schet)
 
               paramsRef.current?.onChangeOperatsii?.(option)
+            }
+          }}
+          popoverProps={{
+            onCloseAutoFocus: (e) => {
+              if (editorState.current.clickedOutside) {
+                e.preventDefault()
+                editorState.current.clickedOutside = false
+              }
+            },
+            onInteractOutside: () => {
+              editorState.current.clickedOutside = true
             }
           }}
         >
@@ -184,9 +204,9 @@ export const createOperatsiiEditor = <T extends object>({
               type="text"
               inputRef={inputRef}
               tabIndex={tabIndex}
-              error={!!errors?.[accessKey as any]}
+              error={!!error}
               data-error={false}
-              name={accessKey as string}
+              name={`${field}-subschet`}
               placeholder={t('subschet')}
               onChange={(e) => {
                 setSubschet(e.target.value)
@@ -210,4 +230,4 @@ export const createOperatsiiEditor = <T extends object>({
       </div>
     )
   }
-}
+})

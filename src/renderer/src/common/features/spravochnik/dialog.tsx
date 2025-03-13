@@ -80,6 +80,9 @@ export const Spravochnik = ({ close, spravochnik }: SpravochnikProps) => {
   }
 
   const handleKeyDown = (e: KeyboardEvent) => {
+    if (isFetching) {
+      return
+    }
     switch (e.key) {
       case 'Escape':
         close(spravochnik.id)

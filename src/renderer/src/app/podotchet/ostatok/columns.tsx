@@ -1,4 +1,4 @@
-import type { OrganizationOstatok } from '@/common/models'
+import type { PodotchetOstatok } from '@/common/models'
 
 import { DataList } from '@renderer/common/components/data-list'
 import { IDCell } from '@renderer/common/components/table/renderers/id'
@@ -10,7 +10,7 @@ import { type ColumnDef, Copyable } from '@/common/components'
 import { HoverInfoCell } from '@/common/components/table/renderers'
 import { formatLocaleDate } from '@/common/lib/format'
 
-export const pokazatUslugiColumns: ColumnDef<OrganizationOstatok>[] = [
+export const podotchetOstatokColumns: ColumnDef<PodotchetOstatok>[] = [
   {
     key: 'id',
     renderCell: IDCell
@@ -23,12 +23,12 @@ export const pokazatUslugiColumns: ColumnDef<OrganizationOstatok>[] = [
     renderCell: (row) => formatLocaleDate(row.doc_date)
   },
   {
-    key: 'organ_id',
+    key: 'podotchet_id',
     header: 'organization',
     renderCell: (row) => (
       <HoverInfoCell
-        title={row.organ_name}
-        secondaryText={<Copyable value={row.organ_inn}>#{row.organ_inn}</Copyable>}
+        title={row.podotchet_name}
+        secondaryText={row.podotchet_rayon}
         hoverContent={
           <DataList
             list={[
@@ -37,27 +37,19 @@ export const pokazatUslugiColumns: ColumnDef<OrganizationOstatok>[] = [
                 value: (
                   <Copyable
                     side="start"
-                    value={row.organ_id}
+                    value={row.podotchet_id}
                   >
-                    #{row.organ_id}
+                    #{row.podotchet_id}
                   </Copyable>
                 )
               },
               {
                 name: <Trans>name</Trans>,
-                value: row.organ_name
+                value: row.podotchet_name
               },
               {
-                name: <Trans>inn</Trans>,
-                value: row.organ_inn
-              },
-              {
-                name: <Trans>bank</Trans>,
-                value: row.organ_bank_name
-              },
-              {
-                name: <Trans>mfo</Trans>,
-                value: row.organ_bank_mfo
+                name: <Trans>rayon</Trans>,
+                value: row.podotchet_rayon
               }
             ]}
           />

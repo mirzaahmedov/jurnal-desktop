@@ -1,4 +1,4 @@
-import type { PokazatUslugi } from '@/common/models'
+import type { OrganizationOstatok } from '@/common/models'
 
 import { useEffect } from 'react'
 
@@ -44,7 +44,7 @@ const OrganizationOstatokPage = () => {
     ],
     queryFn: organizationOstatokService.getAll
   })
-  const { mutate: deletePokazatUslugi, isPending } = useMutation({
+  const { mutate: deleteOrganizationOstatok, isPending } = useMutation({
     mutationKey: [organOstatokQueryKeys.delete],
     mutationFn: organizationOstatokService.delete,
     onSuccess(res) {
@@ -55,13 +55,13 @@ const OrganizationOstatokPage = () => {
     }
   })
 
-  const handleClickEdit = (row: PokazatUslugi) => {
+  const handleClickEdit = (row: OrganizationOstatok) => {
     navigate(`${row.id}`)
   }
-  const handleClickDelete = (row: PokazatUslugi) => {
+  const handleClickDelete = (row: OrganizationOstatok) => {
     confirm({
       onConfirm() {
-        deletePokazatUslugi(row.id)
+        deleteOrganizationOstatok(row.id)
       }
     })
   }

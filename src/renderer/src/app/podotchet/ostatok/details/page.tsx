@@ -1,8 +1,7 @@
 import { useEffect, useMemo } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { createShartnomaSpravochnik } from '@renderer/app/organization/shartnoma'
-import { createOrganizationSpravochnik } from '@renderer/app/region-spravochnik/organization'
+import { createPodotchetSpravochnik } from '@renderer/app/region-spravochnik/podotchet'
 import { EditableTable } from '@renderer/common/components/editable-table'
 import {
   createEditorChangeHandler,
@@ -24,27 +23,21 @@ import { Form } from '@/common/components/ui/form'
 import { useLayoutStore } from '@/common/features/layout'
 import { useSpravochnik } from '@/common/features/spravochnik'
 import { DetailsView } from '@/common/views'
-import {
-  DocumentFields,
-  OpisanieFields,
-  OrganizationFields,
-  ShartnomaFields,
-  SummaFields
-} from '@/common/widget/form'
+import { DocumentFields, OpisanieFields, PodotchetFields, SummaFields } from '@/common/widget/form'
 
-import { defaultValues, organOstatokQueryKeys } from '../config'
+import { defaultValues, podotchetOstatokQueryKeys } from '../config'
 import {
-  OrganizationOstatokFormSchema,
-  OrganizationOstatokProvodkaFormSchema,
-  organizationOstatokService
+  PodotchetOstatokFormSchema,
+  PodotchetOstatokProvodkaFormSchema,
+  podotchetOstatokService
 } from '../service'
 import { createRequestPayload, parseResponseData } from '../utils'
 import { podvodkaColumns } from './podvodki'
 
-const OrganOstatokDetailsPage = () => {
+const PodotchetOstatokDetailsPage = () => {
   const { t } = useTranslation(['app'])
   const { snippets, addSnippet, removeSnippet } = useSnippets({
-    ns: 'organ-ostatok'
+    ns: 'podotochet-ostatok'
   })
 
   const id = useParams().id as string
@@ -55,77 +48,52 @@ const OrganOstatokDetailsPage = () => {
   const setLayout = useLayoutStore((store) => store.setLayout)
 
   const form = useForm({
-    resolver: zodResolver(OrganizationOstatokFormSchema),
+    resolver: zodResolver(PodotchetOstatokFormSchema),
     defaultValues
   })
 
-  const organSpravochnik = useSpravochnik(
-    createOrganizationSpravochnik({
-      value: form.watch('id_spravochnik_organization'),
-      onChange: (value, organization) => {
-        form.setValue('shartnomalar_organization_id', 0)
-        form.setValue('id_spravochnik_organization', value ?? 0, {
-          shouldValidate: true
-        })
-
-        if (organization?.account_numbers?.length === 1) {
-          form.setValue('organization_by_raschet_schet_id', organization.account_numbers[0].id)
-        } else {
-          form.setValue('organization_by_raschet_schet_id', 0)
-        }
-
-        form.setValue('organization_by_raschet_schet_gazna_id', 0)
-      }
-    })
-  )
-
-  const shartnomaSpravochnik = useSpravochnik(
-    createShartnomaSpravochnik({
-      value: form.watch('shartnomalar_organization_id'),
+  const podotchetSpravochnik = useSpravochnik(
+    createPodotchetSpravochnik({
+      value: form.watch('spravochnik_podotchet_litso_id'),
       onChange: (value) => {
-        form.setValue('shartnomalar_organization_id', value ?? 0, {
-          shouldValidate: true
-        })
-      },
-      params: {
-        organ_id: form.watch('id_spravochnik_organization'),
-        pudratchi_bool: false
+        form.setValue('spravochnik_podotchet_litso_id', value ?? 0)
+        form.trigger('spravochnik_podotchet_litso_id')
       }
     })
   )
 
-  const { data: organOstatok, isFetching } = useQuery({
-    queryKey: [organOstatokQueryKeys.getById, Number(id), { main_schet_id }],
-    queryFn: organizationOstatokService.getById,
+  const { data: podotchetOstatok, isFetching } = useQuery({
+    queryKey: [podotchetOstatokQueryKeys.getById, Number(id), { main_schet_id }],
+    queryFn: podotchetOstatokService.getById,
     enabled: id !== 'create'
   })
   const { mutate: createOstatok, isPending: isCreating } = useMutation({
-    mutationKey: [organOstatokQueryKeys.create],
-    mutationFn: organizationOstatokService.create,
+    mutationKey: [podotchetOstatokQueryKeys.create],
+    mutationFn: podotchetOstatokService.create,
     onSuccess(res) {
       toast.success(res?.message)
       queryClient.invalidateQueries({
-        queryKey: [organOstatokQueryKeys.getAll]
+        queryKey: [podotchetOstatokQueryKeys.getAll]
       })
       queryClient.invalidateQueries({
-        queryKey: [organOstatokQueryKeys.getById, id]
+        queryKey: [podotchetOstatokQueryKeys.getById, id]
       })
-      navigate('/organization/ostatok')
+      navigate(-1)
     }
   })
 
   const { mutate: updateOstatok, isPending: isUpdating } = useMutation({
-    mutationKey: [organOstatokQueryKeys.update, id],
-    mutationFn: organizationOstatokService.update,
+    mutationKey: [podotchetOstatokQueryKeys.update, id],
+    mutationFn: podotchetOstatokService.update,
     onSuccess(res) {
       toast.success(res?.message)
       queryClient.invalidateQueries({
-        queryKey: [organOstatokQueryKeys.getAll]
+        queryKey: [podotchetOstatokQueryKeys.getAll]
       })
       queryClient.invalidateQueries({
-        queryKey: [organOstatokQueryKeys.getById, id]
+        queryKey: [podotchetOstatokQueryKeys.getById, id]
       })
-      navigate('/organization/ostatok')
+      navigate(-1)
     }
   })
 
@@ -148,7 +116,7 @@ const OrganOstatokDetailsPage = () => {
       title: id === 'create' ? t('create') : t('edit'),
       breadcrumbs: [
         {
-          title: t('pages.organization')
+          title: t('pages.podotchet')
         },
         {
           path: '/organization/ostatok',
@@ -172,13 +140,13 @@ const OrganOstatokDetailsPage = () => {
       return
     }
 
-    if (organOstatok?.data) {
-      form.reset(parseResponseData(organOstatok.data))
+    if (podotchetOstatok?.data) {
+      form.reset(parseResponseData(podotchetOstatok.data))
       return
     }
 
     form.reset(defaultValues)
-  }, [form, organOstatok, id])
+  }, [form, podotchetOstatok, id])
 
   return (
     <DetailsView>
@@ -195,24 +163,14 @@ const OrganOstatokDetailsPage = () => {
             </div>
 
             <div className="grid grid-cols-2 items-start border-y divide-x divide-border/50 border-border/50">
-              <OrganizationFields
-                tabIndex={3}
-                spravochnik={organSpravochnik}
-                form={form as any}
-                error={form.formState.errors.id_spravochnik_organization}
-                name={t('buyer')}
-                className="bg-slate-50"
-              />
-              <div className="h-full flex flex-col divide-y divide-border">
-                <ShartnomaFields
-                  tabIndex={4}
-                  disabled={!form.watch('id_spravochnik_organization')}
-                  form={form as any}
-                  spravochnik={shartnomaSpravochnik}
-                  error={form.formState.errors.shartnomalar_organization_id}
+              <div className="h-full bg-slate-50">
+                <PodotchetFields
+                  tabIndex={3}
+                  spravochnik={podotchetSpravochnik}
+                  error={form.formState.errors.spravochnik_podotchet_litso_id}
                 />
-                <SummaFields data={{ summa }} />
               </div>
+              <SummaFields data={{ summa }} />
             </div>
 
             <div className="mt-5 p-5">
@@ -262,7 +220,7 @@ const OrganOstatokDetailsPage = () => {
             errors={form.formState.errors.childs}
             onCreate={createEditorCreateHandler({
               form,
-              schema: OrganizationOstatokProvodkaFormSchema,
+              schema: PodotchetOstatokProvodkaFormSchema,
               defaultValues: defaultValues.childs[0]
             })}
             onChange={createEditorChangeHandler({
@@ -278,4 +236,4 @@ const OrganOstatokDetailsPage = () => {
   )
 }
 
-export default OrganOstatokDetailsPage
+export default PodotchetOstatokDetailsPage

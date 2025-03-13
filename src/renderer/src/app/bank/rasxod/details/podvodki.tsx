@@ -17,7 +17,8 @@ export const podvodkaColumns: EditableColumnType<RasxodPodvodkaFormValues>[] = [
     key: 'spravochnik_operatsii_id',
     header: 'provodka',
     Editor: createOperatsiiEditor({
-      type_schet: TypeSchetOperatsii.BANK_RASXOD
+      type_schet: TypeSchetOperatsii.BANK_RASXOD,
+      field: 'spravochnik_operatsii_id'
     })
   },
   {

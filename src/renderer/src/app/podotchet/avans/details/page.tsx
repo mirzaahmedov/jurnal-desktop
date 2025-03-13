@@ -1,6 +1,6 @@
 import type { AdvanceReportPodvodkaPayloadType } from '../constants'
 
-import { useCallback, useEffect } from 'react'
+import { useEffect } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { EditableTable } from '@renderer/common/components/editable-table'
@@ -17,6 +17,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
+import { toast } from 'react-toastify'
 
 import { createPodotchetSpravochnik } from '@/app/region-spravochnik/podotchet'
 import { createOperatsiiSpravochnik } from '@/app/super-admin/operatsii'
@@ -24,7 +25,6 @@ import { Fieldset } from '@/common/components'
 import { Form } from '@/common/components/ui/form'
 import { useLayoutStore } from '@/common/features/layout'
 import { useSpravochnik } from '@/common/features/spravochnik'
-import { useToast } from '@/common/hooks/use-toast'
 import { normalizeEmptyFields } from '@/common/lib/validation'
 import { TypeSchetOperatsii } from '@/common/models'
 import {
@@ -52,7 +52,6 @@ const AdvanceReportDetailsPage = () => {
   const main_schet_id = useRequisitesStore((state) => state.main_schet_id)
   const setLayout = useLayoutStore((store) => store.setLayout)
 
-  const { toast } = useToast()
   const { t } = useTranslation(['app'])
   const { snippets, addSnippet, removeSnippet } = useSnippets({
     ns: 'avans'
@@ -67,8 +66,7 @@ const AdvanceReportDetailsPage = () => {
     createOperatsiiSpravochnik({
       value: form.watch('spravochnik_operatsii_own_id'),
       onChange: (value) => {
-        form.setValue('spravochnik_operatsii_own_id', value ?? 0)
-        form.trigger('spravochnik_operatsii_own_id')
+        form.setValue('spravochnik_operatsii_own_id', value ?? 0, { shouldValidate: true })
       },
       params: {
         type_schet: TypeSchetOperatsii.GENERAL
@@ -78,10 +76,10 @@ const AdvanceReportDetailsPage = () => {
 
   const podotchetSpravochnik = useSpravochnik(
     createPodotchetSpravochnik({
-      value: form.watch('spravochnik_podotchet_litso_id'),
+      value: form.watch('id_spravochnik_podotchet_litso'),
       onChange: (value) => {
-        form.setValue('spravochnik_podotchet_litso_id', value ?? 0)
-        form.trigger('spravochnik_podotchet_litso_id')
+        form.setValue('id_spravochnik_podotchet_litso', value ?? 0, { shouldValidate: true })
+        form.setValue('spravochnik_podotchet_litso_id', value ?? 0, { shouldValidate: true })
       }
     })
   )
@@ -100,8 +98,8 @@ const AdvanceReportDetailsPage = () => {
   const { mutate: create, isPending: isCreating } = useMutation({
     mutationKey: [avansQueryKeys.create],
     mutationFn: avansService.create,
-    onSuccess() {
-      toast({ title: 'Документ успешно создан' })
+    onSuccess(res) {
+      toast.success(res?.message)
       form.reset(defaultValues)
       queryClient.invalidateQueries({
         queryKey: [avansQueryKeys.getAll]
@@ -110,18 +108,15 @@ const AdvanceReportDetailsPage = () => {
         queryKey: [avansQueryKeys.getById, id]
       })
 
-      navigate('/accountable/advance-report')
-    },
-    onError(error) {
-      toast({ title: error.message, variant: 'destructive' })
+      navigate(-1)
     }
   })
 
   const { mutate: update, isPending: isUpdating } = useMutation({
     mutationKey: [avansQueryKeys.update, id],
     mutationFn: avansService.update,
-    onSuccess() {
-      toast({ title: 'Документ успешно обновлен' })
+    onSuccess(res) {
+      toast.success(res?.message)
 
       queryClient.invalidateQueries({
         queryKey: [avansQueryKeys.getAll]
@@ -130,10 +125,7 @@ const AdvanceReportDetailsPage = () => {
         queryKey: [avansQueryKeys.getById, id]
       })
 
-      navigate('/accountable/advance-report')
-    },
-    onError(error) {
-      toast({ title: error.message, variant: 'destructive' })
+      navigate(-1)
     }
   })
 
@@ -143,6 +135,7 @@ const AdvanceReportDetailsPage = () => {
       doc_num,
       spravochnik_operatsii_own_id,
       spravochnik_podotchet_litso_id,
+      id_spravochnik_podotchet_litso,
       opisanie
     } = payload
 
@@ -153,6 +146,7 @@ const AdvanceReportDetailsPage = () => {
         doc_num,
         spravochnik_operatsii_own_id,
         spravochnik_podotchet_litso_id,
+        id_spravochnik_podotchet_litso,
         opisanie,
         childs: podvodki.map(normalizeEmptyFields<AdvanceReportPodvodkaPayloadType>)
       })
@@ -163,18 +157,13 @@ const AdvanceReportDetailsPage = () => {
       doc_num,
       spravochnik_operatsii_own_id,
       spravochnik_podotchet_litso_id,
+      id_spravochnik_podotchet_litso,
       opisanie,
       childs: podvodki.map(normalizeEmptyFields<AdvanceReportPodvodkaPayloadType>)
     })
   })
 
   const podvodki = form.watch('childs')
-  const setPodvodki = useCallback(
-    (payload: AdvanceReportPodvodkaPayloadType[]) => {
-      form.setValue('childs', payload)
-    },
-    [form]
-  )
 
   useEffect(() => {
     setLayout({
@@ -205,13 +194,20 @@ const AdvanceReportDetailsPage = () => {
   useEffect(() => {
     if (id === 'create') {
       form.reset(defaultValues)
-      setPodvodki(defaultValues.childs)
       return
     }
 
-    form.reset(prixod?.data ?? defaultValues)
-    setPodvodki(prixod?.data?.childs ?? defaultValues.childs)
-  }, [setPodvodki, form, prixod, id])
+    if (prixod?.data) {
+      form.reset({
+        ...prixod.data,
+        spravochnik_podotchet_litso_id: prixod.data.id_spravochnik_podotchet_litso,
+        id_spravochnik_podotchet_litso: prixod.data.id_spravochnik_podotchet_litso
+      })
+      return
+    }
+
+    form.reset(defaultValues)
+  }, [form, prixod, id])
 
   return (
     <DetailsView>
@@ -238,7 +234,10 @@ const AdvanceReportDetailsPage = () => {
                   <PodotchetFields
                     tabIndex={3}
                     spravochnik={podotchetSpravochnik}
-                    error={form.formState.errors.spravochnik_podotchet_litso_id}
+                    error={
+                      form.formState.errors.id_spravochnik_podotchet_litso ||
+                      form.formState.errors.spravochnik_podotchet_litso_id
+                    }
                   />
                 </div>
                 <SummaFields data={{ summa: form.watch('summa') }} />

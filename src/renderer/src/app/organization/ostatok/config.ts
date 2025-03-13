@@ -11,18 +11,18 @@ export const organOstatokQueryKeys = {
 export const defaultValues: OrganizationOstatokFormValues = {
   doc_date: '',
   doc_num: '',
-  organ_id: 0,
+  id_spravochnik_organization: 0,
   organization_by_raschet_schet_id: 0,
-  organ_account_number_id: 0,
-  organ_gazna_number_id: 0,
-  contract_id: 0,
-  contract_grafik_id: 0,
+  organization_by_raschet_schet_gazna_id: 0,
+  shartnomalar_organization_id: 0,
+  shartnoma_grafik_id: 0,
   prixod: true,
   rasxod: false,
+  opisanie: '',
   childs: [
     {
-      operatsii_id: 71,
-      summa: 50
+      spravochnik_operatsii_id: 0,
+      summa: 0
     }
   ]
 }
