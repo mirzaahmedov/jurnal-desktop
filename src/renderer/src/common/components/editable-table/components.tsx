@@ -11,7 +11,7 @@ export const EditableTableCell = ({
   return (
     <TableCell
       {...props}
-      className={cn('border-r border-slate-200 last:border-none p-px', className)}
+      className={cn('border-r border-b border-slate-200 p-px', className)}
     >
       {children}
     </TableCell>
@@ -27,7 +27,7 @@ export const EditableTableHead = ({
     <TableHead
       {...props}
       className={cn(
-        'px-3 border-r border-slate-200 last:border-none !bg-slate-100 text-foreground text-xs font-extrabold',
+        'px-3 border-r border-b border-slate-200 !bg-slate-100 text-foreground text-xs font-extrabold',
         className
       )}
     >

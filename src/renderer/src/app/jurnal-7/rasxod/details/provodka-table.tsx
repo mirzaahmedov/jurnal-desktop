@@ -144,8 +144,7 @@ export const ProvodkaTable = ({ form, tabIndex }: ProvodkaTableProps) => {
               {t('summa')}
             </EditableTableHead>
             <EditableTableHead
-              rowSpan={2}
-              colSpan={2}
+              colSpan={4}
               className="text-center"
             >
               {t('iznos')}
@@ -162,18 +161,20 @@ export const ProvodkaTable = ({ form, tabIndex }: ProvodkaTableProps) => {
             >
               {t('kredit')}
             </EditableTableHead>
-            <EditableTableHead
-              colSpan={2}
-              className="text-center"
-            >
-              {t('iznos')}
-            </EditableTableHead>
             <EditableTableHead rowSpan={2}>{t('prixod-date')}</EditableTableHead>
             <EditableTableHead rowSpan={2}></EditableTableHead>
           </EditableTableRow>
           <EditableTableRow>
+            <EditableTableHead>{t('iznos')}</EditableTableHead>
+            <EditableTableHead
+              className="text-right"
+              style={{ width: 150 }}
+            >
+              {t('summa')}
+            </EditableTableHead>
             <EditableTableHead>{t('schet')}</EditableTableHead>
             <EditableTableHead>{t('subschet')}</EditableTableHead>
+
             <EditableTableHead>{t('schet')}</EditableTableHead>
             <EditableTableHead>{t('subschet')}</EditableTableHead>
             <EditableTableHead>{t('schet')}</EditableTableHead>
@@ -359,6 +360,38 @@ const Provodka = ({ rowIndex, row, form, tabIndex, onOpenDialog, onRemove }: Pro
           />
         </div>
       </EditableTableCell>
+      <EditableTableCell>
+        <div className="relative">
+          <Input
+            value={row.iznos_schet}
+            onChange={(e) => {
+              handleChangeChildField(rowIndex, 'iznos_schet', e.target.value)
+            }}
+            error={!!form.formState.errors?.childs?.[rowIndex]?.iznos_schet}
+            className={inputVariants({
+              editor: true,
+              error: !!form.formState.errors?.childs?.[rowIndex]?.iznos_schet
+            })}
+            tabIndex={tabIndex}
+          />
+        </div>
+      </EditableTableCell>
+      <EditableTableCell>
+        <div className="relative">
+          <Input
+            value={row.iznos_sub_schet}
+            onChange={(e) => {
+              handleChangeChildField(rowIndex, 'iznos_sub_schet', e.target.value)
+            }}
+            className={inputVariants({
+              editor: true,
+              error: !!form.formState.errors?.childs?.[rowIndex]?.iznos_sub_schet
+            })}
+            error={!!form.formState.errors?.childs?.[rowIndex]?.iznos_sub_schet}
+            tabIndex={tabIndex}
+          />
+        </div>
+      </EditableTableCell>
 
       <EditableTableCell>
         <div className="relative">
@@ -421,39 +454,6 @@ const Provodka = ({ rowIndex, row, form, tabIndex, onOpenDialog, onRemove }: Pro
               error: !!form.formState.errors.childs?.[rowIndex]?.kredit_sub_schet
             })}
             error={!!form.formState.errors.childs?.[rowIndex]?.kredit_sub_schet}
-            tabIndex={tabIndex}
-          />
-        </div>
-      </EditableTableCell>
-
-      <EditableTableCell>
-        <div className="relative">
-          <Input
-            value={row.iznos_schet}
-            onChange={(e) => {
-              handleChangeChildField(rowIndex, 'iznos_schet', e.target.value)
-            }}
-            error={!!form.formState.errors?.childs?.[rowIndex]?.iznos_schet}
-            className={inputVariants({
-              editor: true,
-              error: !!form.formState.errors?.childs?.[rowIndex]?.iznos_schet
-            })}
-            tabIndex={tabIndex}
-          />
-        </div>
-      </EditableTableCell>
-      <EditableTableCell>
-        <div className="relative">
-          <Input
-            value={row.iznos_sub_schet}
-            onChange={(e) => {
-              handleChangeChildField(rowIndex, 'iznos_sub_schet', e.target.value)
-            }}
-            className={inputVariants({
-              editor: true,
-              error: !!form.formState.errors?.childs?.[rowIndex]?.iznos_sub_schet
-            })}
-            error={!!form.formState.errors?.childs?.[rowIndex]?.iznos_sub_schet}
             tabIndex={tabIndex}
           />
         </div>

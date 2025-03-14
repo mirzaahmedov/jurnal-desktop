@@ -61,7 +61,7 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
         className="relative border border-slate-200 table-xs"
         {...props}
       >
-        <TableHeader className="sticky top-0 z-[5]">
+        <TableHeader className="sticky top-0">
           <EditableTableRow>
             <EditableTableHead
               rowSpan={2}
@@ -148,7 +148,12 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
           </EditableTableRow>
           <EditableTableRow>
             <EditableTableHead>{t('iznos')}</EditableTableHead>
-            <EditableTableHead>{t('iznos_summa_old')}</EditableTableHead>
+            <EditableTableHead
+              className="text-end"
+              style={{ width: 150 }}
+            >
+              {t('iznos_summa_old')}
+            </EditableTableHead>
             <EditableTableHead>{t('schet')}</EditableTableHead>
             <EditableTableHead>{t('subschet')}</EditableTableHead>
             <EditableTableHead>{t('iznos_start_date')}</EditableTableHead>

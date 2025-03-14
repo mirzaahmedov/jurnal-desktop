@@ -9,7 +9,7 @@ import { TableCell, TableHead, TableRow } from '@/common/components/ui/table'
 import { cn } from '@/common/lib/utils'
 
 const cellVariants = cva(
-  'px-6 py-4 border-r last:border-none font-medium text-slate-600 border-slate-200',
+  'px-6 py-4 border-r border-b font-medium text-slate-600 border-slate-200',
   {
     variants: {
       fit: {
@@ -50,7 +50,7 @@ export const GenericTableCell = ({
 }
 
 const headVariants = cva(
-  'px-6 py-4 text-xs font-extrabold border-r last:border-none !bg-transparent text-foreground border-slate-200',
+  'px-6 py-4 text-xs font-extrabold border-r border-b !bg-transparent text-foreground border-slate-200',
   {
     variants: {
       fit: {
@@ -90,9 +90,7 @@ export const GenericTableHead = ({
   )
 }
 
-const rowVariants = cva(
-  'cursor-pointer !border-b border-slate-200 even:bg-slate-50 hover:bg-white even:hover:bg-slate-50'
-)
+const rowVariants = cva('cursor-pointer even:bg-slate-50 hover:bg-white even:hover:bg-slate-50')
 
 export const GenericTableRow = forwardRef<HTMLTableRowElement, HTMLAttributes<HTMLTableRowElement>>(
   ({ children, ...props }, ref) => {
