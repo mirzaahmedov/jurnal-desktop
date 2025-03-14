@@ -1,6 +1,6 @@
 import type { KassaPrixodType, ResponseMeta } from '@/common/models'
 
-import { z } from 'zod'
+import { ZodIssueCode, z } from 'zod'
 
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 import { main_schet } from '@/common/features/crud/middleware'
@@ -26,14 +26,34 @@ export const PrixodPodvodkaPayloadSchema = withPreprocessor(
 )
 
 export const PrixodPayloadSchema = withPreprocessor(
-  z.object({
-    doc_num: z.string(),
-    doc_date: z.string(),
-    id_podotchet_litso: z.number().optional(),
-    summa: z.number().optional(),
-    opisanie: z.string().optional(),
-    childs: z.array(PrixodPodvodkaPayloadSchema)
-  })
+  z
+    .object({
+      doc_num: z.string(),
+      doc_date: z.string(),
+      id_podotchet_litso: z.number().optional(),
+      main_zarplata_id: z.number().optional(),
+      is_zarplata: z.boolean().optional(),
+      summa: z.number().optional(),
+      opisanie: z.string().optional(),
+      childs: z.array(PrixodPodvodkaPayloadSchema)
+    })
+    .superRefine((values, ctx) => {
+      if (values.is_zarplata && !values.main_zarplata_id) {
+        ctx.addIssue({
+          code: ZodIssueCode.custom,
+          path: ['main_zarplata_id']
+        })
+        return
+      }
+
+      if (!values.is_zarplata && !values.id_podotchet_litso) {
+        ctx.addIssue({
+          code: ZodIssueCode.custom,
+          path: ['id_podotchet_litso']
+        })
+        return
+      }
+    })
 )
 
 export type PrixodPodvodkaPayloadType = z.infer<typeof PrixodPodvodkaPayloadSchema>

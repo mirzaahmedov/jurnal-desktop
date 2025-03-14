@@ -39,7 +39,7 @@ export type SpravochnikData<T extends object> = {
   id: string
   endpoint: ApiEndpoints
   title?: string
-  service: CRUDService<T>
+  service: Pick<CRUDService<T>, 'getAll' | 'getById'>
   selectedId?: number
   disabledIds: number[]
   selectId?: (id: number, data: T) => void

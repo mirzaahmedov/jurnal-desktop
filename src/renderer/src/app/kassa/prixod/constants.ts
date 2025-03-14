@@ -14,6 +14,7 @@ export const defaultValues: PrixodPayloadType = {
   opisanie: '',
   summa: 0,
   id_podotchet_litso: 0,
+  is_zarplata: false,
   childs: [
     {
       spravochnik_operatsii_id: 0,

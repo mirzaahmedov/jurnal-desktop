@@ -40,6 +40,7 @@ export type KassaPrixodType = {
   id_podotchet_litso: number
   spravochnik_podotchet_litso_name: string
   spravochnik_podotchet_litso_rayon: string
+  main_zarplata_id: number
   provodki_array: [
     {
       provodki_schet: string

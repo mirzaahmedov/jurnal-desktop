@@ -243,5 +243,7 @@
   "choose-report_title": "Hisobot sarlavhasini tanlang",
   "content": "Matn",
   "vacant": "Vakant",
-  "first_select_user": "Avval foydalanuvchini tanlang"
+  "first_select_user": "Avval foydalanuvchini tanlang",
+  "zarplata": "Ish haqi",
+  "other": "Boshqa"
 }

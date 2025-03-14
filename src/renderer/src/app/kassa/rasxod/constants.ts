@@ -12,6 +12,7 @@ export const defaultValues: RasxodPayloadType = {
   doc_num: '',
   doc_date: '',
   id_podotchet_litso: 0,
+  is_zarplata: false,
   childs: [
     {
       spravochnik_operatsii_id: 0,

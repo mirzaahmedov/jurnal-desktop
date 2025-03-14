@@ -35,3 +35,5 @@ export const useAuthenticationStore = create<AuthenticationStore>()(
     }
   )
 )
+
+export const getUserId = () => useAuthenticationStore.getState()?.user?.id

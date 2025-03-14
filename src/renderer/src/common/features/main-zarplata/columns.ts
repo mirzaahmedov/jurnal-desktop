@@ -1,16 +1,15 @@
 import type { ColumnDef } from '@/common/components'
-import type { Podotchet } from '@/common/models'
+import type { MainZarplata } from '@/common/models'
 
 import { IDCell } from '@renderer/common/components/table/renderers/id'
 
-export const podotchetColumns: ColumnDef<Podotchet>[] = [
+export const mainZarplataColumns: ColumnDef<MainZarplata>[] = [
   {
     key: 'id',
     renderCell: IDCell
   },
   {
-    key: 'name',
-    header: 'fio'
+    key: 'fio'
   },
   {
     key: 'rayon'

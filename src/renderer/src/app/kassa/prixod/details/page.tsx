@@ -1,7 +1,7 @@
 import type { PrixodPodvodkaPayloadType } from '../service'
 import type { Operatsii } from '@/common/models'
 
-import { useCallback, useEffect } from 'react'
+import { useEffect } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { EditableTable } from '@renderer/common/components/editable-table'
@@ -10,10 +10,13 @@ import {
   createEditorCreateHandler,
   createEditorDeleteHandler
 } from '@renderer/common/components/editable-table/helpers'
+import { Switch } from '@renderer/common/components/ui/switch'
 import { DocumentType } from '@renderer/common/features/doc-num'
 import { GenerateFile } from '@renderer/common/features/file'
+import { createMainZarplataSpravochnik } from '@renderer/common/features/main-zarplata/service'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
 import { useSnippets } from '@renderer/common/features/snippents/use-snippets'
+import { MainZarplataFields } from '@renderer/common/widget/form/main-zarplata'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -41,17 +44,16 @@ import { KassaPrixodOrderTemplate } from '../templates'
 import { podvodkaColumns } from './podvodki'
 
 const KassaPrixodDetailsPage = () => {
+  const navigate = useNavigate()
+  const queryClient = useQueryClient()
+  const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
+  const setLayout = useLayoutStore((store) => store.setLayout)
+
   const { id } = useParams()
   const { t } = useTranslation(['app'])
   const { snippets, addSnippet, removeSnippet } = useSnippets({
     ns: 'kassa_prixod'
   })
-
-  const navigate = useNavigate()
-  const queryClient = useQueryClient()
-
-  const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
-  const setLayout = useLayoutStore((store) => store.setLayout)
 
   const form = useForm({
     resolver: zodResolver(PrixodPayloadSchema),
@@ -62,8 +64,18 @@ const KassaPrixodDetailsPage = () => {
     createPodotchetSpravochnik({
       value: form.watch('id_podotchet_litso'),
       onChange: (value) => {
-        form.setValue('id_podotchet_litso', value)
-        form.trigger('id_podotchet_litso')
+        form.setValue('id_podotchet_litso', value, { shouldValidate: true })
+        form.setValue('main_zarplata_id', 0)
+      }
+    })
+  )
+
+  const mainZarplataSpravochnik = useSpravochnik(
+    createMainZarplataSpravochnik({
+      value: form.watch('main_zarplata_id'),
+      onChange: (id) => {
+        form.setValue('main_zarplata_id', id, { shouldValidate: true })
+        form.setValue('id_podotchet_litso', 0)
       }
     })
   )
@@ -85,62 +97,59 @@ const KassaPrixodDetailsPage = () => {
     enabled: id !== 'create'
   })
 
-  const { mutate: create, isPending: isCreating } = useMutation({
+  const { mutate: createPrixod, isPending: isCreating } = useMutation({
     mutationFn: kassaPrixodService.create,
     onSuccess(res) {
       toast.success(res.message)
 
-      form.reset(defaultValues)
-      navigate('/kassa/prixod')
       queryClient.invalidateQueries({
         queryKey: [queryKeys.getAll]
       })
       queryClient.invalidateQueries({
         queryKey: [queryKeys.getById, id]
       })
-    },
-    onError(error) {
-      toast.error(error.message)
+
+      navigate(-1)
     }
   })
 
-  const { mutate: update, isPending: isUpdating } = useMutation({
+  const { mutate: updatePrixod, isPending: isUpdating } = useMutation({
     mutationFn: kassaPrixodService.update,
     onSuccess(res) {
       toast.success(res.message)
 
-      navigate('/kassa/prixod')
       queryClient.invalidateQueries({
         queryKey: [queryKeys.getAll]
       })
       queryClient.invalidateQueries({
         queryKey: [queryKeys.getById, id]
       })
-    },
-    onError(error) {
-      toast.error(error.message)
+
+      navigate(-1)
     }
   })
 
   const onSubmit = form.handleSubmit((payload) => {
-    const { doc_date, doc_num, opisanie, id_podotchet_litso, summa } = payload
+    const { doc_date, doc_num, opisanie, id_podotchet_litso, main_zarplata_id, summa } = payload
 
     if (id !== 'create') {
-      update({
+      updatePrixod({
         id: Number(id),
         doc_date,
         doc_num,
         id_podotchet_litso,
+        main_zarplata_id,
         summa,
         opisanie,
         childs: podvodki.map(normalizeEmptyFields<PrixodPodvodkaPayloadType>)
       })
       return
     }
-    create({
+    createPrixod({
       doc_date,
       doc_num,
       id_podotchet_litso,
+      main_zarplata_id,
       summa,
       opisanie,
       childs: podvodki.map(normalizeEmptyFields<PrixodPodvodkaPayloadType>)
@@ -148,12 +157,6 @@ const KassaPrixodDetailsPage = () => {
   })
 
   const podvodki = form.watch('childs')
-  const setPodvodki = useCallback(
-    (payload: PrixodPodvodkaPayloadType[]) => {
-      form.setValue('childs', payload)
-    },
-    [form]
-  )
 
   useEffect(() => {
     setLayout({
@@ -182,15 +185,16 @@ const KassaPrixodDetailsPage = () => {
   }, [form, podvodki])
 
   useEffect(() => {
-    if (id === 'create') {
+    if (id === 'create' || !prixod?.data) {
       form.reset(defaultValues)
-      setPodvodki(defaultValues.childs)
       return
     }
 
-    form.reset(prixod?.data ?? defaultValues)
-    setPodvodki(prixod?.data?.childs ?? defaultValues.childs)
-  }, [setPodvodki, form, prixod, id])
+    form.reset({
+      ...prixod.data,
+      is_zarplata: !!prixod.data.main_zarplata_id
+    })
+  }, [form, prixod, id])
 
   return (
     <DetailsView>
@@ -208,11 +212,27 @@ const KassaPrixodDetailsPage = () => {
               </div>
 
               <div className="grid grid-cols-2 items-start border-y divide-x divide-border/50 border-border/50">
-                <PodotchetFields
-                  tabIndex={2}
-                  spravochnik={podotchetSpravochnik}
-                  error={form.formState.errors.id_podotchet_litso}
-                />
+                <div className="col-span-2 p-5 border-b border-slate-100 flex items-center gap-4">
+                  <label className="text-sm font-medium">{t('other')}</label>
+                  <Switch
+                    checked={form.watch('is_zarplata')}
+                    onCheckedChange={(checked) => form.setValue('is_zarplata', !!checked)}
+                  />
+                  <label className="text-sm font-medium">{t('zarplata')}</label>
+                </div>
+                {form.watch('is_zarplata') ? (
+                  <MainZarplataFields
+                    tabIndex={2}
+                    spravochnik={mainZarplataSpravochnik}
+                    error={form.formState.errors.main_zarplata_id}
+                  />
+                ) : (
+                  <PodotchetFields
+                    tabIndex={2}
+                    spravochnik={podotchetSpravochnik}
+                    error={form.formState.errors.id_podotchet_litso}
+                  />
+                )}
                 <SummaFields data={{ summa: form.watch('summa') }} />
               </div>
 

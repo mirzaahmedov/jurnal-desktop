@@ -52,6 +52,7 @@ export type KassaRasxodType = {
   opisanie: string
   summa: number
   id_podotchet_litso: number
+  main_zarplata_id: number
   spravochnik_podotchet_litso_name: string
   spravochnik_podotchet_litso_rayon: string
   spravochnik_operatsii_own_id: number

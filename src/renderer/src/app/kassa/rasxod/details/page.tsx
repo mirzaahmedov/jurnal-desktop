@@ -1,7 +1,7 @@
 import type { RasxodPayloadType, RasxodPodvodkaPayloadType } from '../service'
 import type { Operatsii } from '@/common/models'
 
-import { useCallback, useEffect } from 'react'
+import { useEffect } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { kassaMonitorQueryKeys, kassaMonitorService } from '@renderer/app/kassa/monitor'
@@ -11,10 +11,13 @@ import {
   createEditorCreateHandler,
   createEditorDeleteHandler
 } from '@renderer/common/components/editable-table/helpers'
+import { Switch } from '@renderer/common/components/ui/switch'
 import { DocumentType } from '@renderer/common/features/doc-num'
 import { GenerateFile } from '@renderer/common/features/file'
+import { createMainZarplataSpravochnik } from '@renderer/common/features/main-zarplata/service'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
 import { useSnippets } from '@renderer/common/features/snippents/use-snippets'
+import { MainZarplataFields } from '@renderer/common/widget/form/main-zarplata'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -62,8 +65,18 @@ const KassaRasxodDetailtsPage = () => {
     createPodotchetSpravochnik({
       value: form.watch('id_podotchet_litso'),
       onChange: (value) => {
-        form.setValue('id_podotchet_litso', value)
-        form.trigger('id_podotchet_litso')
+        form.setValue('id_podotchet_litso', value, { shouldValidate: true })
+        form.setValue('main_zarplata_id', 0)
+      }
+    })
+  )
+
+  const mainZarplataSpravochnik = useSpravochnik(
+    createMainZarplataSpravochnik({
+      value: form.watch('main_zarplata_id'),
+      onChange: (id) => {
+        form.setValue('main_zarplata_id', id, { shouldValidate: true })
+        form.setValue('id_podotchet_litso', 0)
       }
     })
   )
@@ -98,7 +111,7 @@ const KassaRasxodDetailtsPage = () => {
     queryFn: kassaRasxodService.getById,
     enabled: id !== 'create'
   })
-  const { mutate: create, isPending: isCreating } = useMutation({
+  const { mutate: createRasxod, isPending: isCreating } = useMutation({
     mutationFn: kassaRasxodService.create,
     onSuccess(res) {
       toast.success(res.message)
@@ -110,48 +123,44 @@ const KassaRasxodDetailtsPage = () => {
       queryClient.invalidateQueries({
         queryKey: [queryKeys.getById, id]
       })
-      navigate('/kassa/rasxod')
-    },
-    onError(error) {
-      toast.error(error.message)
+      navigate(-1)
     }
   })
-  const { mutate: update, isPending: isUpdating } = useMutation({
+  const { mutate: updateRasxod, isPending: isUpdating } = useMutation({
     mutationFn: kassaRasxodService.update,
     onSuccess(res) {
       toast.success(res.message)
-      navigate('/kassa/rasxod')
       queryClient.invalidateQueries({
         queryKey: [queryKeys.getAll]
       })
       queryClient.invalidateQueries({
         queryKey: [queryKeys.getById, id]
       })
-    },
-    onError(error) {
-      toast.error(error.message)
+      navigate(-1)
     }
   })
 
   const onSubmit = form.handleSubmit((payload: RasxodPayloadType) => {
-    const { doc_date, doc_num, opisanie, id_podotchet_litso, summa } = payload
+    const { doc_date, doc_num, opisanie, id_podotchet_litso, main_zarplata_id, summa } = payload
 
     if (id !== 'create') {
-      update({
+      updateRasxod({
         id: Number(id),
         doc_date,
         doc_num,
         id_podotchet_litso,
+        main_zarplata_id,
         summa,
         opisanie,
         childs: podvodki.map(normalizeEmptyFields<RasxodPodvodkaPayloadType>)
       })
       return
     }
-    create({
+    createRasxod({
       doc_date,
       doc_num,
       id_podotchet_litso,
+      main_zarplata_id,
       summa,
       opisanie,
       childs: podvodki.map(normalizeEmptyFields<RasxodPodvodkaPayloadType>)
@@ -159,12 +168,6 @@ const KassaRasxodDetailtsPage = () => {
   })
 
   const podvodki = form.watch('childs')
-  const setPodvodki = useCallback(
-    (payload: RasxodPodvodkaPayloadType[]) => {
-      form.setValue('childs', payload)
-    },
-    [form]
-  )
 
   const summa = form.watch('summa')
   const reminder = (monitor?.meta?.summa_to ?? 0) - (summa ?? 0) + (rasxod?.data?.summa ?? 0)
@@ -196,19 +199,23 @@ const KassaRasxodDetailtsPage = () => {
   }, [form, podvodki])
 
   useEffect(() => {
-    if (id === 'create') {
+    if (id === 'create' || !rasxod?.data) {
       form.reset(defaultValues)
-      setPodvodki(defaultValues.childs)
       return
     }
 
-    form.reset(rasxod?.data ?? defaultValues)
-    setPodvodki(rasxod?.data?.childs ?? defaultValues.childs)
-  }, [setPodvodki, form, rasxod, id])
+    form.reset({
+      ...rasxod.data,
+      main_zarplata_id: Number(rasxod.data.main_zarplata_id),
+      is_zarplata: !!rasxod?.data?.main_zarplata_id
+    })
+  }, [form, rasxod, id])
+
+  console.log({ errors: form.formState.errors })
 
   return (
     <DetailsView>
-      <DetailsView.Content loading={isFetching || isCreating || isUpdating}>
+      <DetailsView.Content loading={isFetching}>
         <Form {...form}>
           <form onSubmit={onSubmit}>
             <div>
@@ -222,11 +229,27 @@ const KassaRasxodDetailtsPage = () => {
               </div>
 
               <div className="grid grid-cols-2 items-start border-y divide-x divide-border/50 border-border/50">
-                <PodotchetFields
-                  tabIndex={2}
-                  spravochnik={podotchetSpravochnik}
-                  error={form.formState.errors.id_podotchet_litso}
-                />
+                <div className="col-span-2 p-5 border-b border-slate-100 flex items-center gap-4">
+                  <label className="text-sm font-medium">{t('other')}</label>
+                  <Switch
+                    checked={form.watch('is_zarplata')}
+                    onCheckedChange={(checked) => form.setValue('is_zarplata', !!checked)}
+                  />
+                  <label className="text-sm font-medium">{t('zarplata')}</label>
+                </div>
+                {form.watch('is_zarplata') ? (
+                  <MainZarplataFields
+                    tabIndex={2}
+                    spravochnik={mainZarplataSpravochnik}
+                    error={form.formState.errors.main_zarplata_id}
+                  />
+                ) : (
+                  <PodotchetFields
+                    tabIndex={2}
+                    spravochnik={podotchetSpravochnik}
+                    error={form.formState.errors.id_podotchet_litso}
+                  />
+                )}
                 <SummaFields data={{ summa: form.watch('summa') }} />
               </div>
 
@@ -252,6 +275,7 @@ const KassaRasxodDetailtsPage = () => {
                   isUpdating ||
                   isCreating
                 }
+                loading={isCreating || isUpdating}
                 tabIndex={5}
               />
 
