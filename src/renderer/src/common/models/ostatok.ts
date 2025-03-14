@@ -21,6 +21,8 @@ export interface OstatokProduct {
   debet_sub_schet: string
   kredit_schet: string
   kredit_sub_schet: string
+  year: number
+  month: number
   prixodData: {
     docNum: string
     docDate: string
