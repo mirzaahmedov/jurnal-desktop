@@ -397,32 +397,36 @@ const OstatokPage = () => {
         <GenericTable
           columnDefs={ostatokProductColumns.map((column) => {
             if (column.key === 'id') {
-              const count =
-                ostatok?.data?.filter((p) => selectedIds.includes(p.product_id)).length ?? 0
               return {
                 ...column,
-                renderHeader: () => (
-                  <div className="flex items-center gap-5">
-                    <Checkbox
-                      checked={
-                        count === selectedIds.length && selectedIds.length > 0
-                          ? true
-                          : selectedIds.length > 0
-                            ? 'indeterminate'
-                            : false
-                      }
-                      onClick={() => {
-                        if (count !== selectedIds.length) {
+                renderHeader: () => {
+                  const count =
+                    ostatok?.data?.filter((p) => selectedIds.includes(p.product_id)).length ?? 0
+
+                  const checked =
+                    ostatok?.data?.length && ostatok.data.length === count
+                      ? true
+                      : count > 0
+                        ? 'indeterminate'
+                        : false
+
+                  return (
+                    <div className="flex items-center gap-5">
+                      <Checkbox
+                        checked={checked}
+                        onClick={() => {
+                          if (checked === true) {
+                            setSelectedRows([])
+                            return
+                          }
                           setSelectedRows(ostatok?.data ?? [])
-                          return
-                        }
-                        setSelectedRows([])
-                      }}
-                      className="size-5"
-                    />
-                    <Trans>id</Trans>
-                  </div>
-                )
+                        }}
+                        className="size-5"
+                      />
+                      <Trans>id</Trans>
+                    </div>
+                  )
+                }
               }
             }
             return column
