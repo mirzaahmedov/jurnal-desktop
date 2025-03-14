@@ -17,7 +17,7 @@ import { createGroupSpravochnik } from '@/app/super-admin/group/service'
 import { DatePicker, EdinSelect, NumericInput } from '@/common/components'
 import { Button } from '@/common/components/ui/button'
 import { Input } from '@/common/components/ui/input'
-import { Table, TableBody, TableFooter, TableHeader } from '@/common/components/ui/table'
+import { Table, TableBody, TableHeader } from '@/common/components/ui/table'
 import { SpravochnikInput, inputVariants, useSpravochnik } from '@/common/features/spravochnik'
 import { calcSena, calcSumma } from '@/common/lib/pricing'
 import { cn } from '@/common/lib/utils'
@@ -53,7 +53,7 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
   }, [pageCount])
 
   return (
-    <>
+    <div>
       <div className="overflow-x-auto scrollbar">
         <div
           onFocus={(e) => {
@@ -70,7 +70,9 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
           >
             <TableHeader className="sticky top-0 z-50">
               <EditableTableRow>
-                <EditableTableHead rowSpan={2}>№</EditableTableHead>
+                <EditableTableHead rowSpan={2}>
+                  <div className="px-3">№</div>
+                </EditableTableHead>
                 <EditableTableHead
                   rowSpan={2}
                   className="w-24"
@@ -515,38 +517,34 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
                 </EditableTableRow>
               )}
             </TableBody>
-            <TableFooter>
-              <EditableTableRow>
-                <EditableTableCell colSpan={100}>
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    className="w-full hover:bg-slate-50 text-brand hover:text-brand"
-                    tabIndex={tabIndex}
-                    onClick={() => {
-                      const newChilds = [
-                        ...form.getValues('childs'),
-                        {
-                          ...defaultValues.childs[0],
-                          kredit_schet: form.getValues('j_o_num'),
-                          data_pereotsenka: form.getValues('doc_date')
-                        }
-                      ]
-                      form.setValue('childs', newChilds)
-                      setTimeout(() => {
-                        setPage(Math.ceil(newChilds.length / PAGE_SIZE))
-                      })
-                    }}
-                  >
-                    <CirclePlus className="btn-icon icon-start" /> {t('add')}
-                  </Button>
-                </EditableTableCell>
-              </EditableTableRow>
-            </TableFooter>
           </Table>
         </div>
       </div>
-      <div className="flex items-center justify-center">
+      <div>
+        <Button
+          type="button"
+          variant="ghost"
+          className="w-full hover:bg-slate-50 text-brand hover:text-brand border"
+          tabIndex={tabIndex}
+          onClick={() => {
+            const newChilds = [
+              ...form.getValues('childs'),
+              {
+                ...defaultValues.childs[0],
+                kredit_schet: form.getValues('j_o_num'),
+                data_pereotsenka: form.getValues('doc_date')
+              }
+            ]
+            form.setValue('childs', newChilds)
+            setTimeout(() => {
+              setPage(Math.ceil(newChilds.length / PAGE_SIZE))
+            })
+          }}
+        >
+          <CirclePlus className="btn-icon icon-start" /> {t('add')}
+        </Button>
+      </div>
+      <div className="mt-5 flex items-center justify-center">
         <Pagination
           displayLimit={false}
           page={page}
@@ -555,7 +553,7 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
           pageCount={pageCount}
         />
       </div>
-    </>
+    </div>
   )
 }
 
