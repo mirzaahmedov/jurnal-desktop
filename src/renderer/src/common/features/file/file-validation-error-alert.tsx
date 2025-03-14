@@ -34,17 +34,17 @@ export const FileValidationErrorAlert = ({
             <TableHeader>
               <TableRow>
                 <GenericTableHead>{t('row')}</GenericTableHead>
+                <GenericTableHead>{t('responsible')}</GenericTableHead>
                 <GenericTableHead>{t('name')}</GenericTableHead>
-                <GenericTableHead>{t('doc_num')}</GenericTableHead>
-                <GenericTableHead>{t('doc_num')}</GenericTableHead>
-                <GenericTableHead>{t('ei')}</GenericTableHead>
-                <GenericTableHead>{t('iznos_summa_old')}</GenericTableHead>
                 <GenericTableHead>{t('group')}</GenericTableHead>
-                <GenericTableHead>{t('kol')}</GenericTableHead>
-                <GenericTableHead>{t('summa')}</GenericTableHead>
+                <GenericTableHead>{t('ei')}</GenericTableHead>
                 <GenericTableHead>{t('month')}</GenericTableHead>
                 <GenericTableHead>{t('year')}</GenericTableHead>
-                <GenericTableHead>{t('responsible')}</GenericTableHead>
+                <GenericTableHead>{t('kol')}</GenericTableHead>
+                <GenericTableHead>{t('summa')}</GenericTableHead>
+                <GenericTableHead>{t('iznos_summa_old')}</GenericTableHead>
+                <GenericTableHead>{t('doc_num')}</GenericTableHead>
+                <GenericTableHead>{t('doc_num')}</GenericTableHead>
               </TableRow>
             </TableHeader>
             <TableBody>

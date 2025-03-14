@@ -36,8 +36,9 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
 
   const handleChangeChildField = useEventCallback(
     (index: number, key: keyof PrixodChildFormValues, value: unknown) => {
-      form.setValue(`childs.${index}.${key}`, value as string | number)
-      form.trigger(`childs.${index}.${key}`)
+      form.setValue(`childs.${index}.${key}`, value as string | number, {
+        shouldValidate: true
+      })
     }
   )!
 
@@ -124,11 +125,10 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
               {t('nds_summa')}
             </EditableTableHead>
             <EditableTableHead
-              rowSpan={2}
-              colSpan={2}
+              colSpan={5}
               className="text-center"
             >
-              {t('iznos')} / {t('iznos-eski')}
+              {t('iznos')}
             </EditableTableHead>
             <EditableTableHead
               colSpan={2}
@@ -142,19 +142,17 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
             >
               {t('kredit')}
             </EditableTableHead>
-            <EditableTableHead
-              colSpan={2}
-              className="text-center"
-            >
-              {t('iznos')}
-            </EditableTableHead>
-            <EditableTableHead rowSpan={2}>{t('iznos_start_date')}</EditableTableHead>
+
             <EditableTableHead rowSpan={2}>{t('prixod-date')}</EditableTableHead>
             <EditableTableHead rowSpan={2}></EditableTableHead>
           </EditableTableRow>
           <EditableTableRow>
+            <EditableTableHead>{t('iznos')}</EditableTableHead>
+            <EditableTableHead>{t('iznos_summa_old')}</EditableTableHead>
             <EditableTableHead>{t('schet')}</EditableTableHead>
             <EditableTableHead>{t('subschet')}</EditableTableHead>
+            <EditableTableHead>{t('iznos_start_date')}</EditableTableHead>
+
             <EditableTableHead>{t('schet')}</EditableTableHead>
             <EditableTableHead>{t('subschet')}</EditableTableHead>
             <EditableTableHead>{t('schet')}</EditableTableHead>
@@ -325,6 +323,62 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
                   <EditableTableCell>
                     <div className="relative">
                       <Input
+                        readOnly={!row.iznos}
+                        value={row.iznos_schet}
+                        onChange={(e) => {
+                          handleChangeChildField(index, 'iznos_schet', e.target.value)
+                        }}
+                        error={!!errors?.iznos_schet}
+                        className={inputVariants({
+                          editor: true,
+                          error: !!errors?.iznos_schet
+                        })}
+                        tabIndex={tabIndex}
+                      />
+                    </div>
+                  </EditableTableCell>
+                  <EditableTableCell>
+                    <div className="relative">
+                      <Input
+                        readOnly={!row.iznos}
+                        value={row.iznos_sub_schet}
+                        onChange={(e) => {
+                          handleChangeChildField(index, 'iznos_sub_schet', e.target.value)
+                        }}
+                        className={inputVariants({
+                          editor: true,
+                          error: !!errors?.iznos_sub_schet
+                        })}
+                        error={!!errors.iznos_sub_schet}
+                        tabIndex={tabIndex}
+                      />
+                    </div>
+                  </EditableTableCell>
+
+                  <EditableTableCell>
+                    <div className="relative">
+                      <DatePicker
+                        value={row.iznos_start ?? ''}
+                        onChange={(date) => {
+                          handleChangeChildField(index, 'iznos_start', date)
+                        }}
+                        placeholder="дд.мм.гггг"
+                        className={inputVariants({
+                          editor: true,
+                          error: !!errors?.iznos_start
+                        })}
+                        triggerProps={{
+                          className: 'min-w-32'
+                        }}
+                        error={!!errors.iznos_start}
+                        tabIndex={tabIndex}
+                      />
+                    </div>
+                  </EditableTableCell>
+
+                  <EditableTableCell>
+                    <div className="relative">
+                      <Input
                         value={row.debet_schet}
                         onChange={(e) => {
                           handleChangeChildField(index, 'debet_schet', e.target.value)
@@ -383,60 +437,6 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
                           error: !!errors?.kredit_sub_schet
                         })}
                         error={!!errors.kredit_sub_schet}
-                        tabIndex={tabIndex}
-                      />
-                    </div>
-                  </EditableTableCell>
-
-                  <EditableTableCell>
-                    <div className="relative">
-                      <Input
-                        value={row.iznos_schet}
-                        onChange={(e) => {
-                          handleChangeChildField(index, 'iznos_schet', e.target.value)
-                        }}
-                        error={!!errors?.iznos_schet}
-                        className={inputVariants({
-                          editor: true,
-                          error: !!errors?.iznos_schet
-                        })}
-                        tabIndex={tabIndex}
-                      />
-                    </div>
-                  </EditableTableCell>
-                  <EditableTableCell>
-                    <div className="relative">
-                      <Input
-                        value={row.iznos_sub_schet}
-                        onChange={(e) => {
-                          handleChangeChildField(index, 'iznos_sub_schet', e.target.value)
-                        }}
-                        className={inputVariants({
-                          editor: true,
-                          error: !!errors?.iznos_sub_schet
-                        })}
-                        error={!!errors.iznos_sub_schet}
-                        tabIndex={tabIndex}
-                      />
-                    </div>
-                  </EditableTableCell>
-
-                  <EditableTableCell>
-                    <div className="relative">
-                      <DatePicker
-                        value={row.iznos_start ?? ''}
-                        onChange={(date) => {
-                          handleChangeChildField(index, 'iznos_start', date)
-                        }}
-                        placeholder="дд.мм.гггг"
-                        className={inputVariants({
-                          editor: true,
-                          error: !!errors?.iznos_start
-                        })}
-                        triggerProps={{
-                          className: 'min-w-32'
-                        }}
-                        error={!!errors.iznos_start}
                         tabIndex={tabIndex}
                       />
                     </div>

@@ -9,7 +9,6 @@ import {
   createEditorDeleteHandler
 } from '@renderer/common/components/editable-table/helpers'
 import { Switch } from '@renderer/common/components/ui/switch'
-import { DocumentType } from '@renderer/common/features/doc-num'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
 import { useSnippets } from '@renderer/common/features/snippents/use-snippets'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
@@ -157,8 +156,6 @@ const PodotchetOstatokDetailsPage = () => {
               <DocumentFields
                 tabIndex={1}
                 form={form}
-                documentType={DocumentType.SHOW_SERVICE}
-                autoGenerate={id === 'create'}
               />
             </div>
 

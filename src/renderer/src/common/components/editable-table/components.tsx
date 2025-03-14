@@ -11,7 +11,7 @@ export const EditableTableCell = ({
   return (
     <TableCell
       {...props}
-      className={cn('p-0 border-r border-slate-200 last:border-none', className)}
+      className={cn('border-r border-slate-200 last:border-none p-px', className)}
     >
       {children}
     </TableCell>

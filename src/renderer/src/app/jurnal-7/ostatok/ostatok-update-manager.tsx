@@ -127,6 +127,7 @@ export const OstatokUpdateManager = () => {
                 </div>
                 <div className="flex justify-end gap-5">
                   <Button
+                    type="button"
                     disabled={queuedMonths.length === 0}
                     onClick={() => {
                       updateOstatok(queuedMonths[0])

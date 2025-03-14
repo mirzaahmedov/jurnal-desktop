@@ -352,9 +352,11 @@ const Jurnal7PrixodDetailsPage = () => {
                     iznos: r.group?.iznos_foiz > 0,
                     eski_iznos_summa: r.eski_iznos_summa,
                     nds_foiz: r.nds_foiz
-                  }))
+                  })),
+                  {
+                    shouldValidate: true
+                  }
                 )
-                form.trigger('childs')
               }}
             />
             <DownloadFile
