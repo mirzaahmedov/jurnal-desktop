@@ -55,14 +55,11 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
   return (
     <>
       <div className="overflow-x-auto scrollbar">
-        <form
-          onSubmit={(e) => {
-            e.preventDefault()
-          }}
+        <div
           onFocus={(e) => {
             e.currentTarget.scrollIntoView({
               behavior: 'smooth',
-              block: 'start'
+              block: 'nearest'
             })
           }}
           className="w-[2500px]"
@@ -547,7 +544,7 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
               </EditableTableRow>
             </TableFooter>
           </Table>
-        </form>
+        </div>
       </div>
       <div className="flex items-center justify-center">
         <Pagination

@@ -40,14 +40,14 @@ export const ProvodkaTable = ({ form, tabIndex }: ProvodkaTableProps) => {
   })
 
   return (
-    <form
+    <div
       onSubmit={(e) => {
         e.preventDefault()
       }}
       onFocus={(e) => {
         e.currentTarget.scrollIntoView({
           behavior: 'smooth',
-          block: 'start'
+          block: 'nearest'
         })
       }}
       className="w-[2000px]"
@@ -213,7 +213,7 @@ export const ProvodkaTable = ({ form, tabIndex }: ProvodkaTableProps) => {
           <EditableTableRow>
             <EditableTableCell colSpan={100}>
               <Button
-                type="submit"
+                type="button"
                 variant="ghost"
                 className="w-full hover:bg-slate-50 text-brand hover:text-brand"
                 tabIndex={tabIndex}
@@ -230,7 +230,7 @@ export const ProvodkaTable = ({ form, tabIndex }: ProvodkaTableProps) => {
           </EditableTableRow>
         </TableFooter>
       </Table>
-    </form>
+    </div>
   )
 }
 
