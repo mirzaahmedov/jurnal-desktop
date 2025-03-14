@@ -1,10 +1,9 @@
-import type { OstatokGroup, OstatokProduct } from '@renderer/common/models'
+import type { OstatokProduct } from '@renderer/common/models'
 
 import { useEffect, useMemo, useState } from 'react'
 
 import { createGroupSpravochnik } from '@renderer/app/super-admin/group/service'
 import { ChooseSpravochnik, DatePicker, GenericTable } from '@renderer/common/components'
-import { CollapsibleTable } from '@renderer/common/components/collapsible-table'
 import { Badge } from '@renderer/common/components/ui/badge'
 import { Button } from '@renderer/common/components/ui/button'
 import { ButtonGroup } from '@renderer/common/components/ui/button-group'
@@ -33,8 +32,7 @@ import { useLayoutStore } from '@renderer/common/features/layout'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
 import { SearchField, useSearch } from '@renderer/common/features/search'
 import { useSpravochnik } from '@renderer/common/features/spravochnik'
-import { useElementWidth, useToggle } from '@renderer/common/hooks'
-import { useSidebarStore } from '@renderer/common/layout/sidebar'
+import { usePagination, useToggle } from '@renderer/common/hooks'
 import { date_iso_regex, formatDate, parseDate, validateDate } from '@renderer/common/lib/date'
 import { formatLocaleDate } from '@renderer/common/lib/format'
 import { ListView } from '@renderer/common/views'
@@ -45,10 +43,10 @@ import { Trans, useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 
 import { createResponsibleSpravochnik } from '../responsible/service'
-import { ostatokGroupColumns, ostatokProductColumns } from './columns'
+import { ostatokProductColumns } from './columns'
 import { defaultValues, ostatokQueryKeys } from './config'
 import { ExistingDocumentsAlert } from './existing-document-alert'
-import { deleteOstatokBatchQuery, getOstatokListQuery } from './service'
+import { deleteOstatokBatchQuery, ostatokProductService } from './service'
 import { useOstatokStore } from './store'
 import {
   type ExistingDocument,
@@ -75,16 +73,13 @@ const OstatokPage = () => {
   const dropdownToggle = useToggle()
   const selectedToggle = useToggle()
   const queryClient = useQueryClient()
+  const pagination = usePagination()
   const setLayout = useLayoutStore((store) => store.setLayout)
-  const isCollapsed = useSidebarStore((store) => store.isCollapsed)
 
   const { search } = useSearch()
   const { confirm } = useConfirm()
   const { t } = useTranslation(['app'])
   const { main_schet_id, budjet_id } = useRequisitesStore()
-  const { width, setElementRef } = useElementWidth({
-    trigger: isCollapsed
-  })
 
   const form = useForm({
     defaultValues
@@ -101,14 +96,16 @@ const OstatokPage = () => {
     queryKey: [
       ostatokQueryKeys.getAll,
       {
+        page: pagination.page,
+        limit: pagination.limit,
         to: formatDate(selectedDate!),
         search,
-        kimning_buynida: responsibleSpravochnik.selected?.id,
+        responsible_id: responsibleSpravochnik.selected?.id,
         group_id: groupSpravochnik.selected?.id,
         budjet_id: budjet_id!
       }
     ],
-    queryFn: getOstatokListQuery,
+    queryFn: ostatokProductService.getAll,
     enabled: !!selectedDate && !!budjet_id && queuedMonths.length === 0,
     select: (data) =>
       !!selectedDate && !!budjet_id && queuedMonths.length === 0 ? data : undefined
@@ -162,9 +159,6 @@ const OstatokPage = () => {
       ]
     })
   }, [setLayout, t])
-  useEffect(() => {
-    setSelectedRows([])
-  }, [ostatok])
 
   const handleDelete = (ids: number[]) => {
     if (!selectedDate) {
@@ -182,9 +176,9 @@ const OstatokPage = () => {
       }
     })
   }
-  const handleRemoveSelected = (row: OstatokProduct) => {
+  const handleDeselectRow = (row: OstatokProduct) => {
     setSelectedRows((prev) => {
-      return prev.filter((p) => p.naimenovanie_tovarov_jur7_id !== row.naimenovanie_tovarov_jur7_id)
+      return prev.filter((p) => p.product_id !== row.product_id)
     })
   }
 
@@ -192,10 +186,7 @@ const OstatokPage = () => {
     setSelectedDate(values.date)
   })
 
-  const selectedIds = useMemo(
-    () => selectedRows.map((row) => row.naimenovanie_tovarov_jur7_id),
-    [selectedRows]
-  )
+  const selectedIds = useMemo(() => selectedRows.map((row) => row.product_id), [selectedRows])
 
   return (
     <ListView>
@@ -402,17 +393,12 @@ const OstatokPage = () => {
           ) : null}
         </div>
       </div>
-      <ListView.Content
-        ref={setElementRef}
-        loading={isFetching || isDeleting}
-        className="overflow-x-hidden"
-      >
-        <CollapsibleTable
-          data={ostatok?.data ?? []}
-          columnDefs={ostatokGroupColumns.map((column) => {
+      <ListView.Content loading={isFetching || isDeleting}>
+        <GenericTable
+          columnDefs={ostatokProductColumns.map((column) => {
             if (column.key === 'id') {
               const count =
-                ostatok?.data?.reduce((total, group) => total + group.products?.length, 0) ?? 0
+                ostatok?.data?.filter((p) => selectedIds.includes(p.product_id)).length ?? 0
               return {
                 ...column,
                 renderHeader: () => (
@@ -427,7 +413,7 @@ const OstatokPage = () => {
                       }
                       onClick={() => {
                         if (count !== selectedIds.length) {
-                          setSelectedRows(ostatok?.data?.flatMap((group) => group.products) ?? [])
+                          setSelectedRows(ostatok?.data ?? [])
                           return
                         }
                         setSelectedRows([])
@@ -441,74 +427,19 @@ const OstatokPage = () => {
             }
             return column
           })}
-          getRowId={(row) => row.id}
-          getChildRows={(row) => row.products}
-          width={width}
+          data={ostatok?.data ?? []}
+          getRowId={(row) => row.product_id}
           selectedIds={selectedIds}
-          getRowSelected={({ row, selectedIds }) => {
-            const productIds = row.products.map((p) => p.naimenovanie_tovarov_jur7_id)
-            const count = productIds.filter((id) => selectedIds.includes(id)).length
-
-            if (count === productIds.length) {
-              return true
-            }
-
-            if (count > 0) {
-              return 'indeterminate'
-            }
-
-            return false
-          }}
           params={{
-            onCheckedChange: (row: OstatokGroup) => {
-              const productIds = row.products.map((p) => p.naimenovanie_tovarov_jur7_id)
-              const count = productIds.filter((id) => selectedIds.includes(id)).length
-
-              if (count !== productIds.length) {
-                setSelectedRows((prev) => {
-                  const newValues = Array.from(new Set([...prev, ...row.products]))
-                  return newValues
-                })
-                return
-              }
-
-              setSelectedRows((prev) =>
-                prev.filter((p) => !productIds.includes(p.naimenovanie_tovarov_jur7_id))
-              )
+            onCheckedChange: (row: OstatokProduct) => {
+              setSelectedRows((prev) => {
+                if (prev.find((p) => p.product_id === row.product_id)) {
+                  return prev.filter((p) => p.product_id !== row.product_id)
+                }
+                return [...prev, row]
+              })
             }
           }}
-          renderChildRows={(rows) => (
-            <div
-              style={{ width }}
-              className="overflow-x-auto scrollbar pl-14"
-            >
-              <GenericTable
-                data={rows}
-                columnDefs={ostatokProductColumns}
-                getRowId={(row) => row.naimenovanie_tovarov_jur7_id}
-                selectedIds={selectedIds}
-                headerProps={{
-                  className: 'z-[49]'
-                }}
-                params={{
-                  onCheckedChange: (row: OstatokProduct) => {
-                    setSelectedRows((prev) => {
-                      if (
-                        prev.find(
-                          (p) => p.naimenovanie_tovarov_jur7_id === row.naimenovanie_tovarov_jur7_id
-                        )
-                      ) {
-                        return prev.filter(
-                          (p) => p.naimenovanie_tovarov_jur7_id !== row.naimenovanie_tovarov_jur7_id
-                        )
-                      }
-                      return [...prev, row]
-                    })
-                  }
-                }}
-              />
-            </div>
-          )}
         />
       </ListView.Content>
       {existingDocsError ? (
@@ -549,12 +480,19 @@ const OstatokPage = () => {
             <GenericTable
               data={selectedRows}
               columnDefs={ostatokProductColumns}
-              getRowId={(row) => row.naimenovanie_tovarov_jur7_id}
-              onDelete={handleRemoveSelected}
+              getRowId={(row) => row.product_id}
+              onDelete={handleDeselectRow}
             />
           </div>
         </DialogContent>
       </Dialog>
+
+      <ListView.Footer>
+        <ListView.Pagination
+          pageCount={ostatok?.meta?.pageCount ?? 0}
+          {...pagination}
+        />
+      </ListView.Footer>
     </ListView>
   )
 }

@@ -6,7 +6,7 @@ import { IDCell } from '@renderer/common/components/table/renderers/id'
 import { getMonthName } from '@renderer/common/lib/date'
 import { formatLocaleDate, formatNumber } from '@renderer/common/lib/format'
 
-export const columns: ColumnDef<OstatokProduct>[] = [
+export const iznosColumns: ColumnDef<OstatokProduct>[] = [
   {
     key: 'id',
     renderCell: IDCell
@@ -22,8 +22,8 @@ export const columns: ColumnDef<OstatokProduct>[] = [
     className: 'min-w-[200px]',
     renderCell: (row) => (
       <HoverInfoCell
-        title={row.responsible.fio}
-        secondaryText={<Copyable value={row.responsible.id}>#{row.responsible.id}</Copyable>}
+        title={row.fio}
+        secondaryText={<Copyable value={row.responsible_id}>#{row.responsible_id}</Copyable>}
         hoverContent={null}
       />
     )
@@ -32,13 +32,13 @@ export const columns: ColumnDef<OstatokProduct>[] = [
     fit: true,
     key: 'inventar_num',
     header: 'inventar-num',
-    renderCell: (row) => row.product.inventar_num
+    renderCell: (row) => row.inventar_num
   },
   {
     fit: true,
     key: 'serial_num',
     header: 'serial-num',
-    renderCell: (row) => row.product.serial_num
+    renderCell: (row) => row.serial_num
   },
   {
     key: 'kol',
@@ -80,12 +80,12 @@ export const columns: ColumnDef<OstatokProduct>[] = [
     numeric: true,
     key: 'iznos_summa_bir_oylik',
     header: 'iznos_summa_month',
-    renderCell: (row) => formatNumber(row.to.month_iznos ?? 0)
+    renderCell: (row) => formatNumber(row.month_iznos_summa ?? 0)
   },
   {
     numeric: true,
     key: 'eski_iznos_summa',
     header: 'iznos_summa_old',
-    renderCell: (row) => formatNumber(row.to.eski_iznos_summa)
+    renderCell: (row) => formatNumber(row.eski_iznos_summa)
   }
 ]

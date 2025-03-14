@@ -3,16 +3,14 @@ import type { OstatokProduct } from '@renderer/common/models'
 import { useEffect, useState } from 'react'
 
 import { createGroupSpravochnik } from '@renderer/app/super-admin/group/service'
-import { ChooseSpravochnik, DatePicker } from '@renderer/common/components'
-import { CollapsibleTable } from '@renderer/common/components/collapsible-table'
+import { ChooseSpravochnik, DatePicker, GenericTable } from '@renderer/common/components'
 import { Button } from '@renderer/common/components/ui/button'
 import { FormField } from '@renderer/common/components/ui/form'
 import { useLayoutStore } from '@renderer/common/features/layout'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
 import { SearchField, useSearch } from '@renderer/common/features/search'
 import { useSpravochnik } from '@renderer/common/features/spravochnik'
-import { useElementWidth, useToggle } from '@renderer/common/hooks'
-import { useSidebarStore } from '@renderer/common/layout/sidebar'
+import { usePagination, useToggle } from '@renderer/common/hooks'
 import { formatDate, parseDate } from '@renderer/common/lib/date'
 import { ListView } from '@renderer/common/views'
 import { useQuery } from '@tanstack/react-query'
@@ -23,10 +21,10 @@ import { useNavigate } from 'react-router-dom'
 
 import { useOstatokStore } from '@/app/jurnal-7/ostatok/store'
 
-import { defaultValues, getOstatokListQuery, ostatokGroupColumns } from '../ostatok'
+import { defaultValues, ostatokProductService } from '../ostatok'
 import { handleOstatokError, validateOstatokDate } from '../ostatok/utils'
 import { createResponsibleSpravochnik } from '../responsible/service'
-import { columns } from './columns'
+import { iznosColumns } from './columns'
 import { iznosQueryKeys } from './config'
 import { EditIznosDialog } from './edit-dialog'
 
@@ -34,18 +32,15 @@ const IznosPage = () => {
   const navigate = useNavigate()
   const dialogToggle = useToggle()
 
+  const pagination = usePagination()
   const budjet_id = useRequisitesStore((store) => store.budjet_id)
   const setLayout = useLayoutStore((store) => store.setLayout)
-  const isCollapsed = useSidebarStore((store) => store.isCollapsed)
 
   const { t } = useTranslation(['app'])
   const { search } = useSearch()
   const { minDate, maxDate } = useOstatokStore()
-  const { setElementRef, width } = useElementWidth({
-    trigger: isCollapsed
-  })
 
-  const [selected, setSelected] = useState<OstatokProduct | null>(null)
+  const [selected] = useState<OstatokProduct | null>(null)
   const [selectedDate, setSelectedDate] = useState<undefined | Date>(minDate)
 
   const form = useForm({
@@ -56,13 +51,15 @@ const IznosPage = () => {
   const responsibleSpravochnik = useSpravochnik(createResponsibleSpravochnik({}))
 
   const {
-    data: iznosList,
+    data: iznos,
     isFetching,
     error: iznosError
   } = useQuery({
     queryKey: [
       iznosQueryKeys.getAll,
       {
+        page: pagination.page,
+        limit: pagination.limit,
         to: formatDate(selectedDate!),
         search,
         kimning_buynida: responsibleSpravochnik.selected?.id,
@@ -71,7 +68,7 @@ const IznosPage = () => {
         iznos: true
       }
     ],
-    queryFn: getOstatokListQuery,
+    queryFn: ostatokProductService.getAll,
     enabled: !!selectedDate
   })
 
@@ -157,28 +154,11 @@ const IznosPage = () => {
         </div>
       </ListView.Header>
       <ListView.Content loading={isFetching}>
-        <div ref={setElementRef}>
-          <CollapsibleTable
-            data={iznosList?.data ?? []}
-            columnDefs={ostatokGroupColumns}
-            getRowId={(row) => row.id}
-            getChildRows={(row) => row.products}
-            width={width}
-            renderChildRows={(rows) => (
-              <div
-                style={{ width }}
-                className="overflow-x-auto scrollbar pl-14"
-              >
-                <CollapsibleTable
-                  data={rows}
-                  columnDefs={columns}
-                  getRowId={(row) => row.naimenovanie_tovarov_jur7_id}
-                  getChildRows={() => undefined}
-                />
-              </div>
-            )}
-          />
-        </div>
+        <GenericTable
+          columnDefs={iznosColumns}
+          data={iznos?.data ?? []}
+          getRowId={(row) => row.product_id}
+        />
 
         <EditIznosDialog
           selected={selected}
@@ -186,6 +166,12 @@ const IznosPage = () => {
           onOpenChange={dialogToggle.setOpen}
         />
       </ListView.Content>
+      <ListView.Footer>
+        <ListView.Pagination
+          pageCount={iznos?.meta?.pageCount ?? 0}
+          {...pagination}
+        />
+      </ListView.Footer>
     </ListView>
   )
 }

@@ -1,22 +1,10 @@
-import type {
-  SpravochnikHookOptions,
-  SpravochnikTableProps
-} from '@renderer/common/features/spravochnik'
-import type { Response, ResponseMeta } from '@renderer/common/models'
-import type { OstatokGroup } from '@renderer/common/models/ostatok'
+import type { OstatokProduct, Response } from '@renderer/common/models'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 
-import { useMemo } from 'react'
-
-import { GenericTable } from '@renderer/common/components'
 import { ApiEndpoints, CRUDService } from '@renderer/common/features/crud'
 import { budjet, main_schet } from '@renderer/common/features/crud/middleware'
-import { SpravochnikSearchField } from '@renderer/common/features/search'
 import { http } from '@renderer/common/lib/http'
-import { extendObject } from '@renderer/common/lib/utils'
 import { z } from 'zod'
-
-import { ostatokSpravochnikColumns } from './columns'
 
 export enum OstatokViewOption {
   PRODUCT = 'product',
@@ -31,46 +19,15 @@ export const OstatokFormSchema = z.object({
 export type OstatokFormValues = z.infer<typeof OstatokFormSchema>
 
 // Todo: remove this service
-export const ostatokService = new CRUDService<OstatokGroup, OstatokFormValues>({
+export const ostatokService = new CRUDService<never, OstatokFormValues>({
   endpoint: ApiEndpoints.jur7_saldo
 })
-  .forRequest((type, ctx) => {
-    if (type === 'getById') {
-      const { product_id } = ctx.ctx?.queryKey[2] ?? ({} as any)
-      return {
-        url: ctx.endpoint,
-        config: {
-          ...ctx.config,
-          params: {
-            ...ctx.config.params,
-            product_id
-          }
-        }
-      }
-    }
-    return {}
-  })
   .use(main_schet())
   .use(budjet())
 
-const OstatokSpravochnikTable = ({
-  data,
-  ...props
-}: Omit<SpravochnikTableProps<OstatokGroup>, 'columnDefs'>) => {
-  const ostatokData = useMemo(() => {
-    return (data as any)?.[0]?.products ?? []
-  }, [data])
-  // Todo: fix this
-  return (
-    // @ts-expect-error fix this later
-    <GenericTable
-      {...props}
-      data={ostatokData}
-      columnDefs={ostatokSpravochnikColumns}
-      getRowId={(row) => row.naimenovanie_tovarov_jur7_id}
-    />
-  )
-}
+export const ostatokProductService = new CRUDService<OstatokProduct>({
+  endpoint: ApiEndpoints.saldo_product
+})
 
 export interface DeleteOstatokArgs {
   ids: Array<{
@@ -85,35 +42,6 @@ export const deleteOstatokBatchQuery = async ({ ids, year, month }: DeleteOstato
       ids,
       year,
       month
-    }
-  })
-  return res.data
-}
-
-export const getOstatokListQuery = async (
-  ctx: QueryFunctionContext<
-    [
-      string,
-      {
-        search?: string
-        kimning_buynida?: number
-        group_id?: number
-        budjet_id: number
-        to: string
-        iznos?: boolean
-      }
-    ]
-  >
-) => {
-  const { search, kimning_buynida, group_id, budjet_id, to, iznos } = ctx.queryKey[1] ?? {}
-  const res = await http.get<Response<OstatokGroup[], ResponseMeta>>(`${ApiEndpoints.jur7_saldo}`, {
-    params: {
-      search,
-      kimning_buynida,
-      group_id,
-      budjet_id,
-      to,
-      iznos
     }
   })
   return res.data
@@ -134,7 +62,7 @@ export const getOstatokCheck = async (
   >
 ) => {
   const { month, year, main_schet_id, budjet_id } = ctx.queryKey[1] ?? {}
-  const res = await http.get<Response<OstatokGroup[]>>(`${ApiEndpoints.jur7_saldo}/check`, {
+  const res = await http.get<Response<unknown[]>>(`${ApiEndpoints.jur7_saldo}/check`, {
     params: {
       month,
       year,
@@ -143,23 +71,4 @@ export const getOstatokCheck = async (
     }
   })
   return res.data
-}
-
-export const createOstatokProductSpravochnik = (
-  config: Partial<SpravochnikHookOptions<OstatokGroup>>
-) => {
-  return extendObject(
-    {
-      title: 'Выбрать товар',
-      endpoint: ApiEndpoints.jur7_saldo,
-      columnDefs: [],
-      CustomTable: OstatokSpravochnikTable,
-      // TODO: fix this issue
-      // getRowId: ((row: OstatokProduct) => row.naimenovanie_tovarov_jur7_id) as any,
-      // TODO: fix this issue
-      service: ostatokService as any,
-      filters: [SpravochnikSearchField]
-    } satisfies typeof config,
-    config
-  )
 }

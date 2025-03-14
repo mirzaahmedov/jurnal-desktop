@@ -44,6 +44,7 @@ export enum ApiEndpoints {
   jur7_unit = 'jur_7/unit',
   jur7_saldo = 'jur_7/saldo',
   admin__saldo = 'admin/saldo',
+  saldo_product = 'jur_7/saldo/product',
   jur7_saldo_product = 'jur_7/monitoring/saldo',
   jur7_iznos_summa = 'jur_7/saldo/iznos_summa',
   spravochnik_bank = 'spravochnik/bank',

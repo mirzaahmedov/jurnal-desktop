@@ -57,7 +57,7 @@ export const ProvodkaTable = ({ form, tabIndex }: ProvodkaTableProps) => {
       className="w-[2000px]"
     >
       <OstatokSpravochnikDialog
-        kimning_buynida={form.watch('kimdan_id')}
+        responsible_id={form.watch('kimdan_id')}
         to={form.watch('doc_date')}
         open={spravochnikToggle.isOpen}
         disabledIds={form
@@ -70,27 +70,27 @@ export const ProvodkaTable = ({ form, tabIndex }: ProvodkaTableProps) => {
           insert(
             rowIndex,
             products.map((p) => ({
-              naimenovanie_tovarov_jur7_id: p.naimenovanie_tovarov_jur7_id,
-              name: p.product.name,
-              group_number: p.group.group_number,
-              edin: p.product.edin,
-              inventar_num: p.product.inventar_num,
-              serial_num: p.product.serial_num,
+              naimenovanie_tovarov_jur7_id: p.product_id,
+              name: p.name,
+              group_number: p.group_number ?? p.group_name,
+              edin: p.edin,
+              inventar_num: p.inventar_num,
+              serial_num: p.serial_num,
               kol: p.to.kol,
               max_kol: p.to.kol,
               sena: p.to.sena,
               summa: calcSumma(p.to.kol, p.to.sena),
-              debet_schet: p?.group?.provodka_debet ?? '',
-              kredit_schet: p?.group?.schet ?? '',
-              debet_sub_schet: p?.group?.provodka_subschet ?? '',
-              kredit_sub_schet: p?.group?.provodka_subschet ?? '',
-              data_pereotsenka: formatDate(p.prixod_data?.doc_date),
+              debet_schet: p.debet_schet ?? '',
+              kredit_schet: p?.kredit_schet ?? '',
+              debet_sub_schet: p?.debet_sub_schet ?? '',
+              kredit_sub_schet: p?.kredit_sub_schet ?? '',
+              data_pereotsenka: formatDate(p.prixodData?.docDate),
               iznos: p.iznos,
               iznos_summa: p.to.iznos_summa,
               iznos_schet: p.iznos_schet,
               iznos_sub_schet: p.iznos_sub_schet,
               iznos_start: p.iznos_start ?? undefined,
-              group_jur7_id: p.product.group_jur7_id
+              group_jur7_id: p.group_id
             }))
           )
         }}
