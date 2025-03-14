@@ -10,10 +10,17 @@ export interface PaginationValues {
   limit: number
 }
 export interface PaginationProps extends PaginationValues {
+  displayLimit?: boolean
   pageCount: number
   onChange: (values: Partial<PaginationValues>) => void
 }
-export const Pagination = ({ page, pageCount, limit, onChange }: PaginationProps) => {
+export const Pagination = ({
+  displayLimit = true,
+  page,
+  pageCount,
+  limit,
+  onChange
+}: PaginationProps) => {
   const { t } = useTranslation()
 
   return (
@@ -51,9 +58,9 @@ export const Pagination = ({ page, pageCount, limit, onChange }: PaginationProps
         pageCount={pageCount}
         renderOnZeroPageCount={null}
       />
-      {pageCount > 0 && (
+      {pageCount > 0 && displayLimit && (
         <>
-          <span className="whitespace-nowrap text-sm text-slate-400">{t('elements-per-page')}</span>
+          <span className="whitespace-nowrap text-sm font-medium">{t('elements-per-page')}</span>
           <div>
             <SelectField
               placeholder="Элементов на странице"

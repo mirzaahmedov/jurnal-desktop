@@ -61,7 +61,7 @@ export const CollapsibleTable = <T extends object, C extends object = T>({
       className={className}
     >
       {displayHeader ? (
-        <TableHeader className="sticky top-0 z-50 artificial-border">
+        <TableHeader className="sticky top-0 z-50">
           <GenericTableRow className="bg-slate-100 hover:bg-slate-100 border-t border-slate-200">
             {columnDefs.map((col) => {
               const { key, header, fit, stretch, numeric, headerClassName, width, renderHeader } =

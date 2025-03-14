@@ -58,7 +58,7 @@ export const ShartnomaFields: FormSpravochnikFieldsComponent<
               disabled={spravochnikProps.loading}
               options={spravochnikProps.selected?.grafiks ?? []}
               getOptionValue={(o) => o.id}
-              getOptionLabel={(o) => o.smeta?.smeta_number}
+              getOptionLabel={(o) => `${o.smeta?.smeta_number} - ${o.smeta?.smeta_name}`}
               value={shartnoma_grafik_id ? String(shartnoma_grafik_id) : ''}
               onValueChange={(value) => {
                 form?.setValue('shartnoma_grafik_id', value ? Number(value) : 0)

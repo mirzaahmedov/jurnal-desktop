@@ -125,7 +125,7 @@ export const GenericTable = <T extends object>(props: GenericTableProps<T>) => {
       {caption ? <TableCaption>{caption}</TableCaption> : null}
       <TableHeader
         {...headerProps}
-        className={cn('artificial-border sticky top-0 z-50', headerProps?.className)}
+        className={cn('sticky top-0 z-50', headerProps?.className)}
       >
         {Array.isArray(headerGroups)
           ? headerGroups.map((headerGroup, index) => (

@@ -98,21 +98,6 @@ select:-webkit-autofill:focus {
     font-weight: 700;
   }
 
-  /* .provodka_table * {
-    box-sizing: border-box;
-  }
-
-  .provodka_table {
-    border-collapse: collapse;
-  }
-
-  .provodka_table input {
-    height: 40px;
-    padding: 0;
-    border: 0;
-    box-sizing: border-box;
-  } */
-
   .recharts-surface {
     overflow: visible;
   }

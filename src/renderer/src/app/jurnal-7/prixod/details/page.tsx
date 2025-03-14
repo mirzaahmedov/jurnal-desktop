@@ -366,12 +366,10 @@ const Jurnal7PrixodDetailsPage = () => {
               buttonText={`${t('template')}`}
             />
           </div>
-          <div className="max-h-[600px] overflow-x-auto scrollbar">
-            <ProvodkaTable
-              form={form}
-              tabIndex={8}
-            />
-          </div>
+          <ProvodkaTable
+            form={form}
+            tabIndex={8}
+          />
         </div>
       </DetailsView.Content>
 

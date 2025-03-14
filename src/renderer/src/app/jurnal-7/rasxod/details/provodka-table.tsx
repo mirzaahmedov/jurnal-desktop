@@ -178,7 +178,7 @@ export const ProvodkaTable = ({ form, tabIndex }: ProvodkaTableProps) => {
             <EditableTableHead>{t('schet')}</EditableTableHead>
             <EditableTableHead>{t('subschet')}</EditableTableHead>
             <EditableTableHead>{t('schet')}</EditableTableHead>
-            <EditableTableHead className="last:border-solid">{t('subschet')}</EditableTableHead>
+            <EditableTableHead>{t('subschet')}</EditableTableHead>
           </EditableTableRow>
         </TableHeader>
         <TableBody>

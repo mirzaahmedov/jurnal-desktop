@@ -16,7 +16,7 @@ import { registerKeyBindings } from './key-bindings'
 export const inputVariants = cva('cursor-pointer', {
   variants: {
     editor: {
-      true: 'border-none rounded-none hover:ring-0 bg-transparent py-5 block border-box'
+      true: 'border-none rounded-none hover:ring-0 bg-transparent py-5'
     },
     error: {
       true: 'focus-visible:ring-destructive'
