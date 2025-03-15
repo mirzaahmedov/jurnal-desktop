@@ -72,6 +72,34 @@ export const ostatokProductColumns: ColumnDef<OstatokProduct>[] = [
     )
   },
   {
+    key: 'group_id',
+    header: 'group',
+    className: 'min-w-[260px]',
+    renderCell: (row) => (
+      <HoverInfoCell
+        title={row.group_name}
+        hoverContent={
+          <DataList
+            list={[
+              {
+                name: <Trans>id</Trans>,
+                value: <Copyable value={row.group_id}>#{row.group_id}</Copyable>
+              },
+              {
+                name: <Trans>name</Trans>,
+                value: row.group_name
+              },
+              {
+                name: <Trans>number</Trans>,
+                value: row.group_number
+              }
+            ]}
+          />
+        }
+      />
+    )
+  },
+  {
     numeric: true,
     key: 'from.kol',
     header: 'Начало Кол.',

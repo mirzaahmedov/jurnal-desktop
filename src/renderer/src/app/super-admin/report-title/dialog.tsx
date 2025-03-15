@@ -29,12 +29,12 @@ import { Input } from '@/common/components/ui/input'
 import { reportTitleQueryKeys } from './config'
 import { ReportTitleFormSchema, type ReportTitleFormValues, reportTitleService } from './service'
 
-type UnitDialogProps = {
+type ReportTitleDialogProps = {
   open: boolean
   onChangeOpen(value: boolean): void
   selected: ReportTitle | null
 }
-const UnitDialog = ({ open, onChangeOpen, selected }: UnitDialogProps) => {
+const ReportTitleDialog = ({ open, onChangeOpen, selected }: ReportTitleDialogProps) => {
   const { t } = useTranslation(['app'])
 
   const queryClient = useQueryClient()
@@ -44,7 +44,7 @@ const UnitDialog = ({ open, onChangeOpen, selected }: UnitDialogProps) => {
     resolver: zodResolver(ReportTitleFormSchema)
   })
 
-  const { mutate: create, isPending: isCreating } = useMutation({
+  const { mutate: createReportTitle, isPending: isCreating } = useMutation({
     mutationKey: [reportTitleQueryKeys.create],
     mutationFn: reportTitleService.create,
     onSuccess(res) {
@@ -56,7 +56,7 @@ const UnitDialog = ({ open, onChangeOpen, selected }: UnitDialogProps) => {
       onChangeOpen(false)
     }
   })
-  const { mutate: update, isPending: isUpdating } = useMutation({
+  const { mutate: updateReportTitle, isPending: isUpdating } = useMutation({
     mutationKey: [reportTitleQueryKeys.update],
     mutationFn: reportTitleService.update,
     onSuccess(res) {
@@ -70,9 +70,9 @@ const UnitDialog = ({ open, onChangeOpen, selected }: UnitDialogProps) => {
 
   const onSubmit = (payload: ReportTitleFormValues) => {
     if (selected) {
-      update(Object.assign(payload, { id: selected.id }))
+      updateReportTitle(Object.assign(payload, { id: selected.id }))
     } else {
-      create(payload)
+      createReportTitle(payload)
     }
   }
 
@@ -94,8 +94,8 @@ const UnitDialog = ({ open, onChangeOpen, selected }: UnitDialogProps) => {
         <DialogHeader>
           <DialogTitle>
             {selected
-              ? t('update-something', { something: t('pages.edin') })
-              : t('create-something', { something: t('pages.edin') })}
+              ? t('update-something', { something: t('pages.report_title') })
+              : t('create-something', { something: t('pages.report_title') })}
           </DialogTitle>
         </DialogHeader>
         <Form {...form}>
@@ -139,4 +139,4 @@ const defaultValues = {
   name: ''
 } satisfies ReportTitleFormValues
 
-export { UnitDialog }
+export { ReportTitleDialog as UnitDialog }

@@ -6,6 +6,7 @@ import { HoverInfoCell } from '@renderer/common/components/table/renderers'
 import { IDCell } from '@renderer/common/components/table/renderers/id'
 import { getMonthName } from '@renderer/common/lib/date'
 import { formatLocaleDate, formatNumber } from '@renderer/common/lib/format'
+import { Trans } from 'react-i18next'
 
 export const iznosColumns: ColumnDef<OstatokProduct>[] = [
   {
@@ -32,6 +33,7 @@ export const iznosColumns: ColumnDef<OstatokProduct>[] = [
   {
     key: 'group_id',
     header: 'group',
+    className: 'min-w-[260px]',
     renderCell: (row) => (
       <HoverInfoCell
         title={row.group_name}
@@ -39,15 +41,15 @@ export const iznosColumns: ColumnDef<OstatokProduct>[] = [
           <DataList
             list={[
               {
-                name: 'id',
+                name: <Trans>id</Trans>,
                 value: <Copyable value={row.group_id}>#{row.group_id}</Copyable>
               },
               {
-                name: 'name',
+                name: <Trans>name</Trans>,
                 value: row.group_name
               },
               {
-                name: 'number',
+                name: <Trans>number</Trans>,
                 value: row.group_number
               }
             ]}

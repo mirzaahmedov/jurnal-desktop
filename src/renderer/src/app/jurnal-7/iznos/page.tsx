@@ -17,7 +17,6 @@ import { useQuery } from '@tanstack/react-query'
 import { CircleArrowDown } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router-dom'
 
 import { useOstatokStore } from '@/app/jurnal-7/ostatok/store'
 
@@ -29,7 +28,6 @@ import { iznosQueryKeys } from './config'
 import { EditIznosDialog } from './edit-dialog'
 
 const IznosPage = () => {
-  const navigate = useNavigate()
   const dialogToggle = useToggle()
 
   const pagination = usePagination()
@@ -78,9 +76,6 @@ const IznosPage = () => {
   useEffect(() => {
     setLayout({
       title: t('pages.iznos'),
-      onCreate() {
-        navigate('create')
-      },
       content: SearchField,
       breadcrumbs: [
         {
