@@ -46,35 +46,13 @@ export const ErrorToastContent = ({
 }: ToastContentProps<ErrorToastContentOptions>) => {
   const { title, refetch, details } = data ?? {}
 
-  const [copied, setCopied] = useState(false)
-
-  const handleCopy = () => {
-    window.navigator.clipboard.writeText(details!)
-    setCopied(true)
-    setTimeout(() => {
-      setCopied(false)
-    }, 1000)
-  }
-
   return (
     <div className="w-full flex items-center justify-between gap-2">
       <div className="flex-1">
         <h1 className="text-sm text-slate-500 font-medium">{title}</h1>
       </div>
       <div className="flex gap-1 text-slate-500">
-        {details ? (
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={handleCopy}
-          >
-            {copied ? (
-              <ClipboardCheck className="size-5 text-brand" />
-            ) : (
-              <ClipboardPlus className="size-5" />
-            )}
-          </Button>
-        ) : null}
+        {details ? <CopyButton details={details} /> : null}
         {refetch ? (
           <Button
             variant="ghost"
@@ -93,5 +71,31 @@ export const ErrorToastContent = ({
         </Button>
       </div>
     </div>
+  )
+}
+
+const CopyButton = ({ details }: { details: string }) => {
+  const [copied, setCopied] = useState(false)
+
+  const handleCopy = () => {
+    window.navigator.clipboard.writeText(details!)
+    setCopied(true)
+    setTimeout(() => {
+      setCopied(false)
+    }, 1000)
+  }
+
+  return (
+    <Button
+      variant="ghost"
+      size="icon"
+      onClick={handleCopy}
+    >
+      {copied ? (
+        <ClipboardCheck className="size-5 text-brand" />
+      ) : (
+        <ClipboardPlus className="size-5" />
+      )}
+    </Button>
   )
 }

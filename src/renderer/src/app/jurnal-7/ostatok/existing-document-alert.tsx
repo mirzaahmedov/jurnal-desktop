@@ -86,16 +86,16 @@ export const ExistingDocumentsAlert = ({
   )
 }
 
-const getProductFields = (t: TFunction, product: OstatokProduct) => {
+const getProductFields = (t: TFunction, product: OstatokProduct = {} as any) => {
   return [
     {
       name: t('code'),
       value: (
         <Copyable
           side="start"
-          value={product.naimenovanie_tovarov_jur7_id}
+          value={product.name}
         >
-          #{product.naimenovanie_tovarov_jur7_id}
+          #{product.name}
         </Copyable>
       )
     },
@@ -105,45 +105,49 @@ const getProductFields = (t: TFunction, product: OstatokProduct) => {
     },
     {
       name: t('group'),
-      value: <p className="font-medium">{product.group.name}</p>
+      value: <p className="font-medium">{product.group_name}</p>
     },
     {
       name: t('doc_date'),
-      value: formatLocaleDate(product.doc_date)
+      value: formatLocaleDate(product.prixodData.docDate)
     },
     {
       name: t('doc_num'),
       value: (
         <Copyable
           side="start"
-          value={product.doc_num}
+          value={product.prixodData.docNum}
         >
-          {product.doc_num}
+          {product.prixodData.docNum}
         </Copyable>
       )
     },
     {
       name: t('responsible_short'),
-      value: product.responsible.fio
+      value: product.fio
     },
     {
       name: t('sena'),
       value: (
-        <span className="text-xl">{formatNumber(product.sena ? Number(product.sena) : 0)}</span>
+        <span className="text-xl">
+          {formatNumber(product.to?.sena ? Number(product.to?.sena) : 0)}
+        </span>
       )
     },
     {
       name: t('kol'),
       value: (
         <span className="text-xl">
-          x{formatNumber(product.kol ? Number(product.kol) : 0, 0, 0)}
+          x{formatNumber(product.to?.kol ? Number(product.to?.kol) : 0, 0, 0)}
         </span>
       )
     },
     {
       name: t('summa'),
       value: (
-        <span className="text-xl">{formatNumber(product.summa ? Number(product.summa) : 0)}</span>
+        <span className="text-xl">
+          {formatNumber(product.to?.summa ? Number(product.to?.summa) : 0)}
+        </span>
       )
     }
   ]

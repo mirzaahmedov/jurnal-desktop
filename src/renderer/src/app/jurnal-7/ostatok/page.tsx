@@ -123,7 +123,6 @@ const OstatokPage = () => {
       toast.success(res?.message)
     },
     onError(error) {
-      console.log(error)
       const result = handleOstatokExistingDocumentError<ExistingDocument>(error)
       if (result) {
         setExistingDocsError({
