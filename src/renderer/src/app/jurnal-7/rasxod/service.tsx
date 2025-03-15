@@ -8,17 +8,11 @@ import { main_schet } from '@/common/features/crud/middleware'
 
 import { queryKeys } from './config'
 
-const rasxodService = new CRUDService<Jur7Rasxod, RasxodFormValues>({
+export const rasxodService = new CRUDService<Jur7Rasxod, RasxodFormValues>({
   endpoint: ApiEndpoints.jur7_rasxod
 }).use(main_schet())
 
-type UseRasxodListParams = {
-  params?: Record<string, unknown>
-}
-
-const useRasxodList = ({ params }: UseRasxodListParams) => {}
-
-const useRasxodGet = (id: number) => {
+export const useRasxodGet = (id: number) => {
   return useQuery({
     queryKey: [queryKeys.get, id],
     queryFn: rasxodService.getById,
@@ -30,7 +24,7 @@ type UseRasxodCreateParams = {
   onSuccess?: (res: any) => void
   onError?: (res: any) => void
 }
-const useRasxodCreate = ({ onSuccess, onError }: UseRasxodCreateParams) => {
+export const useRasxodCreate = ({ onSuccess, onError }: UseRasxodCreateParams) => {
   return useMutation({
     mutationKey: [queryKeys.create],
     mutationFn: rasxodService.create,
@@ -38,7 +32,7 @@ const useRasxodCreate = ({ onSuccess, onError }: UseRasxodCreateParams) => {
     onError
   })
 }
-const useRasxodUpdate = ({ onSuccess, onError }: UseRasxodCreateParams) => {
+export const useRasxodUpdate = ({ onSuccess, onError }: UseRasxodCreateParams) => {
   return useMutation({
     mutationKey: [queryKeys.update],
     mutationFn: rasxodService.update,
@@ -46,20 +40,11 @@ const useRasxodUpdate = ({ onSuccess, onError }: UseRasxodCreateParams) => {
     onError
   })
 }
-const useRasxodDelete = ({ onSuccess, onError }: UseRasxodCreateParams) => {
+export const useRasxodDelete = ({ onSuccess, onError }: UseRasxodCreateParams) => {
   return useMutation({
     mutationKey: [queryKeys.delete],
     mutationFn: rasxodService.delete,
     onSuccess,
     onError
   })
-}
-
-export {
-  rasxodService,
-  useRasxodList,
-  useRasxodGet,
-  useRasxodCreate,
-  useRasxodUpdate,
-  useRasxodDelete
 }

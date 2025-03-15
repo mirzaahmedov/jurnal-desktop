@@ -8,19 +8,11 @@ import { main_schet } from '@/common/features/crud/middleware'
 
 import { queryKeys } from './config'
 
-const internalTransferService = new CRUDService<InternalTransfer, InternalTransferFormType>({
+export const internalTransferService = new CRUDService<InternalTransfer, InternalTransferFormType>({
   endpoint: ApiEndpoints.jur7_internal
 }).use(main_schet())
 
-type UseInternalTransferListParams = {
-  params?: Record<string, unknown>
-}
-
-const useInternalTransferList = ({ params }: UseInternalTransferListParams) => {
-  return
-}
-
-const useInternalTransferGet = (id: number) => {
+export const useInternalTransferGet = (id: number) => {
   return useQuery({
     queryKey: [queryKeys.get, id],
     queryFn: internalTransferService.getById,
@@ -32,7 +24,10 @@ type UseInternalTransferCreateParams = {
   onSuccess?: (res: any) => void
   onError?: (res: any) => void
 }
-const useInternalTransferCreate = ({ onSuccess, onError }: UseInternalTransferCreateParams) => {
+export const useInternalTransferCreate = ({
+  onSuccess,
+  onError
+}: UseInternalTransferCreateParams) => {
   return useMutation({
     mutationKey: [queryKeys.create],
     mutationFn: internalTransferService.create,
@@ -41,7 +36,10 @@ const useInternalTransferCreate = ({ onSuccess, onError }: UseInternalTransferCr
   })
 }
 
-const useInternalTransferUpdate = ({ onSuccess, onError }: UseInternalTransferCreateParams) => {
+export const useInternalTransferUpdate = ({
+  onSuccess,
+  onError
+}: UseInternalTransferCreateParams) => {
   return useMutation({
     mutationKey: [queryKeys.update],
     mutationFn: internalTransferService.update,
@@ -49,20 +47,14 @@ const useInternalTransferUpdate = ({ onSuccess, onError }: UseInternalTransferCr
     onError
   })
 }
-const useInternalTransferDelete = ({ onSuccess, onError }: UseInternalTransferCreateParams) => {
+export const useInternalTransferDelete = ({
+  onSuccess,
+  onError
+}: UseInternalTransferCreateParams) => {
   return useMutation({
     mutationKey: [queryKeys.delete],
     mutationFn: internalTransferService.delete,
     onSuccess,
     onError
   })
-}
-
-export {
-  internalTransferService,
-  useInternalTransferList,
-  useInternalTransferGet,
-  useInternalTransferCreate,
-  useInternalTransferUpdate,
-  useInternalTransferDelete
 }

@@ -28,6 +28,8 @@ export const ostatokService = new CRUDService<never, OstatokFormValues>({
 export const ostatokProductService = new CRUDService<OstatokProduct>({
   endpoint: ApiEndpoints.saldo_product
 })
+  .use(main_schet())
+  .use(budjet())
 
 export interface DeleteOstatokArgs {
   ids: Array<{

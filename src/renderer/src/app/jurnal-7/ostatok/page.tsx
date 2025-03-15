@@ -102,7 +102,8 @@ const OstatokPage = () => {
         search,
         responsible_id: responsibleSpravochnik.selected?.id,
         group_id: groupSpravochnik.selected?.id,
-        budjet_id: budjet_id!
+        budjet_id: budjet_id!,
+        main_schet_id
       }
     ],
     queryFn: ostatokProductService.getAll,
