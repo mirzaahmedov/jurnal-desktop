@@ -7,7 +7,7 @@ import { RangeDatePicker } from '@renderer/common/components/range-date-picker'
 import { cn } from '@/common/lib/utils'
 
 type ListViewProps = HTMLAttributes<HTMLDivElement>
-const ListView = ({ children, className, ...props }: ListViewProps) => {
+export const ListView = ({ children, className, ...props }: ListViewProps) => {
   return (
     <div
       {...props}
@@ -63,5 +63,3 @@ ListView.RangeDatePicker = RangeDatePicker
 ListView.Content = ListViewContent
 ListView.Pagination = Pagination
 ListView.Footer = ListViewFooter
-
-export { ListView }

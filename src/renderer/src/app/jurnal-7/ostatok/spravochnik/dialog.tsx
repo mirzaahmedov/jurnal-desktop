@@ -57,12 +57,13 @@ export const OstatokSpravochnikDialog = ({
     queryKey: [
       ostatokQueryKeys.getAll,
       {
+        to,
         page: pagination.page,
         limit: pagination.limit,
-        to,
         budjet_id: budjet_id!,
-        responsible_id,
-        search: search ? search : undefined
+        search: search ? search : undefined,
+        rasxod: true,
+        responsible_id
       }
     ],
     queryFn: ostatokProductService.getAll,

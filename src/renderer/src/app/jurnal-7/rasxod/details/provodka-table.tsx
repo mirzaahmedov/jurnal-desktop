@@ -484,7 +484,7 @@ const Provodka = ({ rowIndex, row, form, tabIndex, onOpenDialog, onRemove }: Pro
         <Button
           type="button"
           variant="ghost"
-          className="hover:bg-slate-50 hover:text-brand text-slate-400"
+          className="hover:bg-slate-50 hover:text-brand text-red-500"
           onClick={() => {
             onRemove(rowIndex)
           }}

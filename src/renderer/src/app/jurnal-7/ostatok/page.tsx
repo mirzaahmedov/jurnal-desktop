@@ -411,7 +411,7 @@ const OstatokPage = () => {
                         : false
 
                   return (
-                    <div className="flex items-center gap-5">
+                    <div className="flex items-center gap-2">
                       <Checkbox
                         checked={checked}
                         onClick={() => {

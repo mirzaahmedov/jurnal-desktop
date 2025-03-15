@@ -1,7 +1,9 @@
 import type { ToastContentProps } from 'react-toastify'
 
+import { useState } from 'react'
+
 import { Button } from '@renderer/common/components/ui/button'
-import { Clipboard, Repeat, X } from 'lucide-react'
+import { ClipboardCheck, ClipboardPlus, Repeat, X } from 'lucide-react'
 import { toast } from 'react-toastify'
 
 export interface NotifyOptions {
@@ -44,9 +46,19 @@ export const ErrorToastContent = ({
 }: ToastContentProps<ErrorToastContentOptions>) => {
   const { title, refetch, details } = data ?? {}
 
+  const [copied, setCopied] = useState(false)
+
+  const handleCopy = () => {
+    window.navigator.clipboard.writeText(details!)
+    setCopied(true)
+    setTimeout(() => {
+      setCopied(false)
+    }, 1000)
+  }
+
   return (
-    <div className="flex items-center justify-between">
-      <div>
+    <div className="w-full flex items-center justify-between gap-2">
+      <div className="flex-1">
         <h1 className="text-sm text-slate-500 font-medium">{title}</h1>
       </div>
       <div className="flex gap-1 text-slate-500">
@@ -54,11 +66,13 @@ export const ErrorToastContent = ({
           <Button
             variant="ghost"
             size="icon"
-            onClick={() => {
-              window.navigator.clipboard.writeText(details)
-            }}
+            onClick={handleCopy}
           >
-            <Clipboard className="size-4" />
+            {copied ? (
+              <ClipboardCheck className="size-5 text-brand" />
+            ) : (
+              <ClipboardPlus className="size-5" />
+            )}
           </Button>
         ) : null}
         {refetch ? (

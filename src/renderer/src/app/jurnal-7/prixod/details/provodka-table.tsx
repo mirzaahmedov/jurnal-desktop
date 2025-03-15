@@ -378,6 +378,7 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
                       <EditableTableCell>
                         <div className="relative">
                           <DatePicker
+                            readOnly={!row.iznos}
                             value={row.iznos_start ?? ''}
                             onChange={(date) => {
                               handleChangeChildField(index, 'iznos_start', date)
@@ -487,7 +488,7 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
                         <Button
                           type="button"
                           variant="ghost"
-                          className="hover:bg-slate-50 hover:text-brand text-slate-400"
+                          className="hover:bg-slate-50 hover:text-brand text-red-500"
                           onClick={() => {
                             const childs = form.getValues('childs')
                             if (!Array.isArray(childs) || childs.length === 1) {
