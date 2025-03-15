@@ -1,6 +1,6 @@
 import { type FormEventHandler, useEffect } from 'react'
 
-import { Spinner } from '@renderer/common/components'
+import { LoadingOverlay, Spinner } from '@renderer/common/components'
 import { MonthPicker } from '@renderer/common/components/month-picker'
 import { Button } from '@renderer/common/components/ui/button'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
@@ -109,6 +109,7 @@ export const OstatokController = () => {
           id="saldo-date"
         />
       </div>
+      {isCreatingOstatok ? <LoadingOverlay /> : null}
       <Button
         className="flex items-center gap-4"
         disabled={isCreatingOstatok}
