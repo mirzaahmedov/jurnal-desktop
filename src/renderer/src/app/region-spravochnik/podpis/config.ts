@@ -41,6 +41,10 @@ export const getPodpisTypeDocumentOptions = (t: TFunction) => {
     {
       key: PodpisTypeDocument.SHARTNOMA_GRAFIK_OPLATI,
       name: t('podpis:documents.shartnoma_grafik_oplati')
+    },
+    {
+      key: PodpisTypeDocument.CAP,
+      name: t('podpis:documents.cap')
     }
   ] as const
 }
@@ -62,7 +66,11 @@ export const PodpisPayloadSchema = z.object({
   ),
   fio_name: z.string(),
   type_document: z.enum(
-    [PodpisTypeDocument.BANK_RASXOD_PORUCHENIYA, PodpisTypeDocument.SHARTNOMA_GRAFIK_OPLATI],
+    [
+      PodpisTypeDocument.BANK_RASXOD_PORUCHENIYA,
+      PodpisTypeDocument.SHARTNOMA_GRAFIK_OPLATI,
+      PodpisTypeDocument.CAP
+    ],
     {
       message: `Type document must be one of: ${Object.values(PodpisTypeDocument).join(', ')}`
     }

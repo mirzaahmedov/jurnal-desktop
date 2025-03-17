@@ -41,6 +41,8 @@ export interface ColumnDef<T extends object> {
   header?: ReactNode
   className?: string
   width?: number
+  minWidth?: number
+  maxWidth?: number
   headerClassName?: string
   rowSpan?: number
   colSpan?: number
@@ -58,6 +60,8 @@ export interface HeaderGroup<T extends object> {
   rowSpan?: number
   colSpan?: number
   width?: number
+  minWidth?: number
+  maxWidth?: number
   renderHeader?(): ReactNode
 }
 
@@ -145,7 +149,9 @@ export const GenericTable = <T extends object>(props: GenericTableProps<T>) => {
                         headerClassName,
                         colSpan,
                         rowSpan,
-                        width
+                        width,
+                        minWidth,
+                        maxWidth
                       } = col
                       return (
                         <GenericTableHead
@@ -156,7 +162,11 @@ export const GenericTable = <T extends object>(props: GenericTableProps<T>) => {
                           className={headerClassName}
                           colSpan={colSpan}
                           rowSpan={rowSpan}
-                          style={{ width }}
+                          style={{
+                            width,
+                            minWidth,
+                            maxWidth
+                          }}
                         >
                           {renderHeader
                             ? renderHeader()
@@ -206,7 +216,17 @@ export const GenericTable = <T extends object>(props: GenericTableProps<T>) => {
               >
                 {Array.isArray(columnDefs)
                   ? columnDefs.map((col) => {
-                      const { key, fit, stretch, numeric, renderCell, className, width } = col
+                      const {
+                        key,
+                        fit,
+                        stretch,
+                        numeric,
+                        renderCell,
+                        className,
+                        width,
+                        minWidth,
+                        maxWidth
+                      } = col
                       return (
                         <GenericTableCell
                           key={key.toString()}
@@ -217,7 +237,11 @@ export const GenericTable = <T extends object>(props: GenericTableProps<T>) => {
                             activeRowId === getRowId(row) && 'text-brand/100 font-bold',
                             className
                           )}
-                          style={{ width }}
+                          style={{
+                            width,
+                            minWidth,
+                            maxWidth
+                          }}
                         >
                           {typeof renderCell === 'function'
                             ? renderCell(row, col, props)

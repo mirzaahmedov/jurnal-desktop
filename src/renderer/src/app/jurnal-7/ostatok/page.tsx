@@ -137,6 +137,8 @@ const OstatokPage = () => {
     }
   })
 
+  console.log({ ostatokError })
+
   useEffect(() => {
     handleOstatokError(ostatokError)
   }, [ostatokError])
@@ -435,6 +437,7 @@ const OstatokPage = () => {
           })}
           data={ostatok?.data ?? []}
           getRowId={(row) => row.product_id}
+          getRowKey={(row) => row.id}
           selectedIds={selectedIds}
           params={{
             onCheckedChange: (row: OstatokProduct) => {
@@ -487,6 +490,7 @@ const OstatokPage = () => {
               data={selectedRows}
               columnDefs={ostatokProductColumns}
               getRowId={(row) => row.product_id}
+              getRowKey={(row) => row.id}
               onDelete={handleDeselectRow}
             />
           </div>

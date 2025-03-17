@@ -36,7 +36,7 @@ const IznosPage = () => {
 
   const { t } = useTranslation(['app'])
   const { search } = useSearch()
-  const { minDate, maxDate } = useOstatokStore()
+  const { minDate, maxDate, queuedMonths } = useOstatokStore()
 
   const [selected] = useState<OstatokProduct | null>(null)
   const [selectedDate, setSelectedDate] = useState<undefined | Date>(minDate)
@@ -67,12 +67,22 @@ const IznosPage = () => {
       }
     ],
     queryFn: ostatokProductService.getAll,
-    enabled: !!selectedDate
+    enabled: !!selectedDate && !!budjet_id && queuedMonths.length === 0,
+    select: (data) =>
+      !!selectedDate && !!budjet_id && queuedMonths.length === 0 ? data : undefined
   })
 
   useEffect(() => {
     handleOstatokError(iznosError)
   }, [iznosError])
+  useEffect(() => {
+    const date = form.getValues('date')
+    if (date && minDate < date && date < maxDate) {
+      return
+    }
+    form.setValue('date', minDate)
+    setSelectedDate(minDate)
+  }, [form, minDate, maxDate])
   useEffect(() => {
     setLayout({
       title: t('pages.iznos'),
@@ -153,6 +163,7 @@ const IznosPage = () => {
           columnDefs={iznosColumns}
           data={iznos?.data ?? []}
           getRowId={(row) => row.product_id}
+          getRowKey={(row) => row.id}
         />
 
         <EditIznosDialog

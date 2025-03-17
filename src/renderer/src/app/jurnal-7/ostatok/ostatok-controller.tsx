@@ -56,9 +56,6 @@ export const OstatokController = () => {
       toast.success(res.message)
       refetchCheck()
       dequeueMonth(values)
-    },
-    onError(error) {
-      toast.error(error.message)
     }
   })
 

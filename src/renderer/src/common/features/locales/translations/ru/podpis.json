@@ -9,6 +9,7 @@
   },
   "documents": {
     "bank_rasxod_porucheniya": "Банк расход поручения",
-    "shartnoma_grafik_oplati": "Договор график оплаты"
+    "shartnoma_grafik_oplati": "Договор график оплаты",
+    "cap": "Шапка"
   }
 }

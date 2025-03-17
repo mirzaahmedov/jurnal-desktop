@@ -9,7 +9,8 @@ export enum PodpisDoljnost {
 
 export enum PodpisTypeDocument {
   BANK_RASXOD_PORUCHENIYA = 'BANK_RASXOD_PORUCHENIYA',
-  SHARTNOMA_GRAFIK_OPLATI = 'SHARTNOMA_GRAFIK_OPLATI'
+  SHARTNOMA_GRAFIK_OPLATI = 'SHARTNOMA_GRAFIK_OPLATI',
+  CAP = 'cap'
 }
 
 type Podpis = {

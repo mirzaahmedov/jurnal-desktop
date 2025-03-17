@@ -10,11 +10,12 @@ import { Trans } from 'react-i18next'
 export const ostatokProductColumns: ColumnDef<OstatokProduct>[] = [
   {
     key: 'id',
-    renderCell: IDCell
+    renderCell: IDCell,
+    minWidth: 180
   },
   {
     key: 'name',
-    className: 'min-w-[400px]',
+    minWidth: 400,
     renderCell: (row) => (
       <HoverInfoCell
         title={row.name}
@@ -57,12 +58,13 @@ export const ostatokProductColumns: ColumnDef<OstatokProduct>[] = [
   },
   {
     key: 'edin',
-    header: 'ei'
+    header: 'ei',
+    minWidth: 100
   },
   {
     key: 'responsible',
     header: 'responsible_short',
-    className: 'min-w-[200px]',
+    minWidth: 200,
     renderCell: (row) => (
       <HoverInfoCell
         title={row.fio}
@@ -74,7 +76,7 @@ export const ostatokProductColumns: ColumnDef<OstatokProduct>[] = [
   {
     key: 'group_id',
     header: 'group',
-    className: 'min-w-[260px]',
+    minWidth: 260,
     renderCell: (row) => (
       <HoverInfoCell
         title={row.group_name}
@@ -139,7 +141,7 @@ export const ostatokProductColumns: ColumnDef<OstatokProduct>[] = [
     numeric: true,
     key: 'to.kol',
     header: 'Конец Кол.',
-    renderCell: (row) => formatNumber(row.to.kol)
+    renderCell: (row) => `x${row.to.kol}`
   },
   {
     numeric: true,
