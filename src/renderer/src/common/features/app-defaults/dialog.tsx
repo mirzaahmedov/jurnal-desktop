@@ -1,3 +1,5 @@
+import type { DialogProps } from '@radix-ui/react-dialog'
+
 import { useEffect, useState } from 'react'
 
 import { reportTitleQueryKeys, reportTitleService } from '@renderer/app/super-admin/report-title'
@@ -19,6 +21,7 @@ import {
 } from '@/common/components/ui/dialog'
 import { Form, FormField } from '@/common/components/ui/form'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/common/components/ui/tabs'
+import { useConfirm } from '@/common/features/confirm'
 
 import { ManagementFields } from './components/managements'
 import { defaultValues } from './constants'
@@ -31,13 +34,10 @@ enum TabOption {
   Report = 'Report'
 }
 
-type ConfigureDefaultValuesDialogProps = {
-  open: boolean
-  onClose: () => void
-}
+interface ConfigureDefaultValuesDialogProps extends DialogProps {}
 export const ConfigureDefaultValuesDialog = ({
   open,
-  onClose
+  onOpenChange
 }: ConfigureDefaultValuesDialogProps) => {
   const dates = useDates()
   const pagination = usePagination()
@@ -46,6 +46,7 @@ export const ConfigureDefaultValuesDialog = ({
 
   const { t } = useTranslation()
 
+  const { confirm } = useConfirm()
   const { setDefaultFilters } = useDefaultFilters()
   const { setDefaultFormFields } = useDefaultFormFields()
   const { setSettings } = useSettingsStore()
@@ -59,35 +60,56 @@ export const ConfigureDefaultValuesDialog = ({
     defaultValues
   })
 
-  const onSubmit = form.handleSubmit(
-    ({ from, to, rukovoditel, glav_buxgalter, zoomFactor, report_title_id }) => {
-      setDefaultFilters({
-        from,
-        to
+  const onSubmit = form.handleSubmit((values) => {
+    setDefaultFilters({
+      from: values.from,
+      to: values.to
+    })
+    setSettings({
+      report_title_id: values.report_title_id
+    })
+    setDefaultFormFields({
+      rukovoditel: values.rukovoditel,
+      glav_buxgalter: values.glav_buxgalter
+    })
+
+    window.api.setZoomFactor(values.zoomFactor)
+
+    dates.onChange({
+      from: undefined,
+      to: undefined
+    })
+    pagination.onChange({
+      page: 1
+    })
+
+    form.reset(values)
+
+    onOpenChange?.(false)
+  })
+
+  const handleClose = (open: boolean) => {
+    if (!open && form.formState.isDirty) {
+      confirm({
+        title: t('unsaved_changes_want_to_exit'),
+        onConfirm: () => {
+          form.reset({}, { keepDefaultValues: true })
+          onOpenChange?.(false)
+        }
       })
-      dates.onChange({
-        from: undefined,
-        to: undefined
-      })
-      pagination.onChange({ page: 1 })
-      setDefaultFormFields({
-        rukovoditel,
-        glav_buxgalter
-      })
-      if (zoomFactor) {
-        window.api.setZoomFactor(zoomFactor)
-      }
-      setSettings({
-        report_title_id
-      })
-      onClose()
+
+      return
     }
-  )
+    onOpenChange?.(open)
+  }
 
   useEffect(() => {
     if (open) {
-      window.api.getZoomFactor().then((factor) => {
-        form.setValue('zoomFactor', factor)
+      window.api.getZoomFactor().then((zoomFactor) => {
+        form.setValue('zoomFactor', zoomFactor)
+        form.resetField('zoomFactor', {
+          defaultValue: zoomFactor
+        })
       })
     }
   }, [form, open])
@@ -95,7 +117,7 @@ export const ConfigureDefaultValuesDialog = ({
   return (
     <Dialog
       open={open}
-      onOpenChange={onClose}
+      onOpenChange={handleClose}
     >
       <DialogContent className="flex flex-col w-full max-w-3xl h-full max-h-[400px]">
         <DialogHeader>
@@ -206,6 +228,7 @@ export const ConfigureDefaultValuesDialog = ({
                       render={({ field }) => (
                         <FormElement label={t('report-title')}>
                           <SelectField
+                            {...field}
                             disabled={isFetching}
                             value={field.value?.toString()}
                             onValueChange={(value) => {

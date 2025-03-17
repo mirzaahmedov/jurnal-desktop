@@ -169,7 +169,7 @@ export const PageLayout = (props: PageLayoutProps) => {
       />
       <ConfigureDefaultValuesDialog
         open={appDefaultsToggle.isOpen}
-        onClose={appDefaultsToggle.close}
+        onOpenChange={appDefaultsToggle.setOpen}
       />
     </main>
   )

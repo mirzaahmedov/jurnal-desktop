@@ -1,5 +1,3 @@
-import { useEffect } from 'react'
-
 import { useQuery } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -17,6 +15,7 @@ import {
 } from '@/common/components/ui/dialog'
 import { Form, FormField, FormItem, FormLabel, FormMessage } from '@/common/components/ui/form'
 import { useAuthenticationStore } from '@/common/features/auth'
+import { useConfirm } from '@/common/features/confirm'
 
 import { queryKeys } from './constants'
 import { getMainSchetsQuery } from './service'
@@ -28,27 +27,31 @@ export type RequisitesDialogProps = {
 }
 export const RequisitesDialog = ({ open, onOpenChange }: RequisitesDialogProps) => {
   const navigate = useNavigate()
+  const setRequisites = useRequisitesStore((store) => store.setRequisites)
 
   const { t } = useTranslation()
+  const { confirm } = useConfirm()
   const { user } = useAuthenticationStore()
-  const { main_schet_id, budjet_id, setRequisites } = useRequisitesStore()
 
-  const form = useForm({ defaultValues })
+  const form = useForm({
+    defaultValues
+  })
 
-  const { data: budgetList, isLoading: isLoadingBudget } = useQuery({
+  const { data: budjets, isLoading: isLoadingBudget } = useQuery({
     queryKey: [budjetQueryKeys.getAll],
-    queryFn: budgetService.getAll
+    queryFn: budgetService.getAll,
+    enabled: open
   })
   const { data: schetList, isLoading: isLoadingSchets } = useQuery({
     queryKey: [
       queryKeys.getAll,
       {
-        budjet_id: form.watch('budjet_id'),
+        budjet_id: form.watch('budjet_id')!,
         region_id: user?.region_id ?? 0
       }
     ],
     queryFn: getMainSchetsQuery,
-    enabled: !!form.watch('budjet_id') && !!user?.region_id
+    enabled: !!form.watch('budjet_id') && !!user?.region_id && open
   })
 
   const onSubmit = form.handleSubmit((values) => {
@@ -61,20 +64,31 @@ export const RequisitesDialog = ({ open, onOpenChange }: RequisitesDialogProps) 
       budjet_id,
       user_id: user?.id
     })
+
+    form.reset(values)
     onOpenChange(false)
   })
 
-  useEffect(() => {
-    if (open) {
-      form.setValue('budjet_id', budjet_id ?? 0)
-      form.setValue('main_schet_id', main_schet_id ?? 0)
+  const handleClose = (open: boolean) => {
+    if (!open && form.formState.isDirty) {
+      confirm({
+        title: t('unsaved_changes_want_to_exit'),
+        onConfirm: () => {
+          form.reset({}, { keepDefaultValues: true })
+          onOpenChange(false)
+        }
+      })
+      return
     }
-  }, [form, open, main_schet_id, budjet_id])
+    onOpenChange(open)
+  }
+
+  console.log(form.formState.defaultValues, form.formState.isDirty)
 
   return (
     <Dialog
       open={open}
-      onOpenChange={onOpenChange}
+      onOpenChange={handleClose}
     >
       <DialogContent>
         <DialogHeader>
@@ -96,12 +110,15 @@ export const RequisitesDialog = ({ open, onOpenChange }: RequisitesDialogProps) 
                     withFormControl
                     disabled={isLoadingBudget}
                     placeholder={t('choose', { what: t('budjet') })}
-                    options={Array.isArray(budgetList?.data) ? budgetList.data : []}
+                    options={Array.isArray(budjets?.data) ? budjets.data : []}
                     getOptionValue={(budget) => budget.id.toString()}
                     getOptionLabel={(budget) => budget.name}
                     value={field.value ? field.value.toString() : ''}
                     onValueChange={(value) => {
-                      form.setValue('main_schet_id', 0)
+                      form.setValue('main_schet_id', 0, {
+                        shouldDirty: true,
+                        shouldValidate: true
+                      })
                       field.onChange(Number(value))
                     }}
                   />
@@ -134,7 +151,7 @@ export const RequisitesDialog = ({ open, onOpenChange }: RequisitesDialogProps) 
               />
             ) : null}
             <DialogFooter>
-              <Button disabled={!form.watch('main_schet_id')}>Сохранить</Button>
+              <Button disabled={!form.watch('main_schet_id')}>{t('save')}</Button>
             </DialogFooter>
           </form>
         </Form>
@@ -143,6 +160,6 @@ export const RequisitesDialog = ({ open, onOpenChange }: RequisitesDialogProps) 
   )
 }
 const defaultValues = {
-  budjet_id: 0,
-  main_schet_id: 0
+  budjet_id: useRequisitesStore.getState().budjet_id,
+  main_schet_id: useRequisitesStore.getState().main_schet_id
 }

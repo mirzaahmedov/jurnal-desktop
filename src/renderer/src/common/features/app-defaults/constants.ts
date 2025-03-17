@@ -7,7 +7,7 @@ export const ConfigureDefaultValuesPayloadSchema = z.object({
   to: z.string().optional(),
   rukovoditel: z.string().optional(),
   glav_buxgalter: z.string().optional(),
-  zoomFactor: z.number().optional(),
+  zoomFactor: z.number(),
   report_title_id: z.number().optional()
 })
 export type ConfigureDefaultValuesPayloadType = z.infer<typeof ConfigureDefaultValuesPayloadSchema>

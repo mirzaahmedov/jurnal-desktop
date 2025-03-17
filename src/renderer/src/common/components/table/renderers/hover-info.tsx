@@ -43,7 +43,7 @@ export const HoverInfoCell = ({
               <p
                 {...secondaryTextProps}
                 className={cn(
-                  'mt-2 text-brand text-xs font-bold leading-none',
+                  'mt-2 text-brand text-xs font-bold leading-none h-3',
                   secondaryTextProps?.className
                 )}
               >

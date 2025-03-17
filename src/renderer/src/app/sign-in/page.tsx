@@ -130,6 +130,7 @@ const SigninPage = () => {
                     <Checkbox
                       checked={isPasswordVisible}
                       onCheckedChange={(state) => setPasswordVisible(!!state)}
+                      className="size-5"
                     />
                   </FormControl>
                   <FormLabel className="!mt-0">{t('show-password')}</FormLabel>

@@ -246,5 +246,6 @@
   "first_select_user": "Avval foydalanuvchini tanlang",
   "zarplata": "Ish haqi",
   "other": "Boshqa",
-  "refresh_page": "Sahifani yangilash"
+  "refresh_page": "Sahifani yangilash",
+  "unsaved_changes_want_to_exit": "Saqlanmagan o‘zgarishlar mavjud. Chiqishni xohlaysizmi?"
 }

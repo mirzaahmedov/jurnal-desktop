@@ -113,7 +113,7 @@ export const createOperatsiiEditor = withEditorProps<{
           autoSelectSingleResult={false}
           isFetching={isFetchingSchetOptions}
           options={filteredSchetOptions}
-          disabled={!!operatsiiSpravochnik.selected}
+          disabled={!!operatsiiSpravochnik.selected || !schet}
           getOptionLabel={(option) => option.schet}
           getOptionValue={(option) => option.schet}
           onSelect={(option) => {
