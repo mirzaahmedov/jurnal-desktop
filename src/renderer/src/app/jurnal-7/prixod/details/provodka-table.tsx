@@ -316,7 +316,6 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
                       <EditableTableCell>
                         <div className="relative flex items-center justify-center px-4">
                           <Checkbox
-                            disabled
                             checked={row.iznos}
                             tabIndex={tabIndex}
                           />
@@ -325,7 +324,6 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
                       <EditableTableCell>
                         <div className="relative flex items-center justify-center">
                           <NumericInput
-                            disabled={!row.iznos}
                             adjustWidth
                             value={row.eski_iznos_summa || ''}
                             onValueChange={(values) => {
@@ -344,7 +342,6 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
                       <EditableTableCell>
                         <div className="relative">
                           <Input
-                            readOnly={!row.iznos}
                             value={row.iznos_schet}
                             onChange={(e) => {
                               handleChangeChildField(index, 'iznos_schet', e.target.value)
@@ -361,7 +358,6 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
                       <EditableTableCell>
                         <div className="relative">
                           <Input
-                            readOnly={!row.iznos}
                             value={row.iznos_sub_schet}
                             onChange={(e) => {
                               handleChangeChildField(index, 'iznos_sub_schet', e.target.value)

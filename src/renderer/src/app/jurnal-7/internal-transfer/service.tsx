@@ -6,16 +6,16 @@ import { useMutation, useQuery } from '@tanstack/react-query'
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 import { main_schet } from '@/common/features/crud/middleware'
 
-import { queryKeys } from './config'
+import { internalQueryKeys } from './config'
 
-export const internalTransferService = new CRUDService<InternalTransfer, InternalTransferFormType>({
+export const internalService = new CRUDService<InternalTransfer, InternalTransferFormType>({
   endpoint: ApiEndpoints.jur7_internal
 }).use(main_schet())
 
 export const useInternalTransferGet = (id: number) => {
   return useQuery({
-    queryKey: [queryKeys.get, id],
-    queryFn: internalTransferService.getById,
+    queryKey: [internalQueryKeys.get, id],
+    queryFn: internalService.getById,
     enabled: !!id
   })
 }
@@ -29,8 +29,8 @@ export const useInternalTransferCreate = ({
   onError
 }: UseInternalTransferCreateParams) => {
   return useMutation({
-    mutationKey: [queryKeys.create],
-    mutationFn: internalTransferService.create,
+    mutationKey: [internalQueryKeys.create],
+    mutationFn: internalService.create,
     onSuccess,
     onError
   })
@@ -41,8 +41,8 @@ export const useInternalTransferUpdate = ({
   onError
 }: UseInternalTransferCreateParams) => {
   return useMutation({
-    mutationKey: [queryKeys.update],
-    mutationFn: internalTransferService.update,
+    mutationKey: [internalQueryKeys.update],
+    mutationFn: internalService.update,
     onSuccess,
     onError
   })
@@ -52,8 +52,8 @@ export const useInternalTransferDelete = ({
   onError
 }: UseInternalTransferCreateParams) => {
   return useMutation({
-    mutationKey: [queryKeys.delete],
-    mutationFn: internalTransferService.delete,
+    mutationKey: [internalQueryKeys.delete],
+    mutationFn: internalService.delete,
     onSuccess,
     onError
   })

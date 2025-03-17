@@ -11,7 +11,7 @@ export const ostatokProductColumns: ColumnDef<OstatokProduct>[] = [
   {
     key: 'id',
     renderCell: IDCell,
-    minWidth: 180
+    minWidth: 160
   },
   {
     key: 'name',
@@ -105,19 +105,19 @@ export const ostatokProductColumns: ColumnDef<OstatokProduct>[] = [
     numeric: true,
     key: 'from.kol',
     header: 'Начало Кол.',
-    renderCell: (row) => formatNumber(row.from.kol)
+    renderCell: (row) => row.from?.kol
   },
   {
     numeric: true,
     key: 'from.summa',
     header: 'Начало Сумма',
-    renderCell: (row) => formatNumber(row.from.summa)
+    renderCell: (row) => formatNumber(row.from?.summa)
   },
   {
     numeric: true,
     key: 'internal.prixod.kol',
     header: 'Приход Кол.',
-    renderCell: (row) => formatNumber(row.internal?.kol_prixod)
+    renderCell: (row) => row.internal?.kol_prixod
   },
   {
     numeric: true,
@@ -129,7 +129,7 @@ export const ostatokProductColumns: ColumnDef<OstatokProduct>[] = [
     numeric: true,
     key: 'internal.rasxod.kol',
     header: 'Расход Кол.',
-    renderCell: (row) => formatNumber(row.internal?.kol_rasxod)
+    renderCell: (row) => row.internal?.kol_rasxod
   },
   {
     numeric: true,
@@ -141,13 +141,13 @@ export const ostatokProductColumns: ColumnDef<OstatokProduct>[] = [
     numeric: true,
     key: 'to.kol',
     header: 'Конец Кол.',
-    renderCell: (row) => `x${row.to.kol}`
+    renderCell: (row) => row.to?.kol
   },
   {
     numeric: true,
     key: 'to.summa',
     header: 'Конец Сумма',
-    renderCell: (row) => formatNumber(row.to.summa)
+    renderCell: (row) => formatNumber(row.to?.summa)
   },
   {
     key: 'prixod_data.doc_date',

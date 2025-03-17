@@ -25,7 +25,8 @@ import { GenericTable } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
 import { useLayoutStore } from '@/common/features/layout'
 
-import { columns, queryKeys } from './config'
+import { prixodColumns } from './columns'
+import { prixodQueryKeys } from './config'
 import { ExistingDocumentsAlert } from './details/existing-document-alert'
 import { prixodService } from './service'
 
@@ -53,7 +54,7 @@ const Jurnal7PrixodPage = () => {
   const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
 
   const { mutate: deletePrixod, isPending: isDeleting } = useMutation({
-    mutationKey: [queryKeys.delete],
+    mutationKey: [prixodQueryKeys.delete],
     mutationFn: prixodService.delete,
     onSuccess(res) {
       handleOstatokResponse(res)
@@ -61,7 +62,7 @@ const Jurnal7PrixodPage = () => {
       recheckOstatok?.()
       requestAnimationFrame(() => {
         queryClient.invalidateQueries({
-          queryKey: [queryKeys.getAll]
+          queryKey: [prixodQueryKeys.getAll]
         })
       })
     },
@@ -79,12 +80,12 @@ const Jurnal7PrixodPage = () => {
   })
 
   const {
-    data: prixodList,
+    data: prixods,
     isFetching,
     error: prixodListError
   } = useQuery({
     queryKey: [
-      queryKeys.getAll,
+      prixodQueryKeys.getAll,
       {
         ...pagination,
         ...dates,
@@ -149,8 +150,8 @@ const Jurnal7PrixodPage = () => {
         className="flex-1 relative"
       >
         <GenericTable
-          columnDefs={columns}
-          data={prixodList?.data ?? []}
+          columnDefs={prixodColumns}
+          data={prixods?.data ?? []}
           onEdit={(row) => navigate(`${row.id}`)}
           onDelete={(row) => {
             confirm({
@@ -162,7 +163,7 @@ const Jurnal7PrixodPage = () => {
       <ListView.Footer>
         <ListView.Pagination
           {...pagination}
-          pageCount={prixodList?.meta?.pageCount ?? 0}
+          pageCount={prixods?.meta?.pageCount ?? 0}
         />
       </ListView.Footer>
       {existingDocsError ? (

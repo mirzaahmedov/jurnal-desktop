@@ -27,7 +27,7 @@ import {
 } from '@/common/widget/form'
 
 import { createResponsibleSpravochnik } from '../../responsible/service'
-import { RasxodFormSchema, defaultValues, queryKeys } from '../config'
+import { RasxodFormSchema, defaultValues, rasxodQueryKeys } from '../config'
 import { useRasxodCreate, useRasxodGet, useRasxodUpdate } from '../service'
 import { ProvodkaTable } from './provodka-table'
 
@@ -59,7 +59,7 @@ const Jurnal7RasxodDetailsPage = () => {
       handleOstatokResponse(res)
       navigate(-1)
       queryClient.invalidateQueries({
-        queryKey: [queryKeys.getAll]
+        queryKey: [rasxodQueryKeys.getAll]
       })
       recheckOstatok?.()
     },
@@ -73,7 +73,7 @@ const Jurnal7RasxodDetailsPage = () => {
       handleOstatokResponse(res)
       navigate(-1)
       queryClient.invalidateQueries({
-        queryKey: [queryKeys.getAll]
+        queryKey: [rasxodQueryKeys.getAll]
       })
       recheckOstatok?.()
     },

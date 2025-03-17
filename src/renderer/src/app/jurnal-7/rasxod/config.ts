@@ -1,13 +1,8 @@
-import type { ColumnDef } from '@/common/components'
-import type { Jur7Rasxod } from '@/common/models'
-
-import { IDCell } from '@renderer/common/components/table/renderers/id'
-import { formatLocaleDate } from '@renderer/common/lib/format'
 import { z } from 'zod'
 
 import { withPreprocessor } from '@/common/lib/validation'
 
-export const queryKeys = {
+export const rasxodQueryKeys = {
   getAll: 'jur7_rasxod/all',
   get: 'jur7_rasxod/get',
   create: 'jur7_rasxod/create',
@@ -85,28 +80,3 @@ export const RasxodFormSchema = withPreprocessor(
 )
 export type RasxodFormValues = z.infer<typeof RasxodFormSchema>
 export type RasxodChildFormValues = z.infer<typeof RasxodChildFormSchema>
-
-export const columns: ColumnDef<Jur7Rasxod>[] = [
-  {
-    key: 'id',
-    renderCell: IDCell
-  },
-  {
-    key: 'doc_num'
-  },
-  {
-    key: 'doc_date',
-    renderCell: (row) => formatLocaleDate(row.doc_date)
-  },
-  {
-    key: 'kimdan_name',
-    header: 'from-who'
-  },
-  {
-    numeric: true,
-    key: 'summa'
-  },
-  {
-    key: 'opisanie'
-  }
-]

@@ -11,17 +11,17 @@ import { Trans } from 'react-i18next'
 export const iznosColumns: ColumnDef<OstatokProduct>[] = [
   {
     key: 'id',
-    renderCell: IDCell
+    renderCell: IDCell,
+    minWidth: 160
   },
   {
     key: 'name',
-    headerClassName: 'min-w-[400px] whitespace-pre-wrap',
-    className: 'min-w-[400px] whitespace-pre-wrap'
+    minWidth: 400
   },
   {
     key: 'responsible',
     header: 'responsible_short',
-    className: 'min-w-[200px]',
+    minWidth: 200,
     renderCell: (row) => (
       <HoverInfoCell
         title={row.fio}
@@ -33,7 +33,7 @@ export const iznosColumns: ColumnDef<OstatokProduct>[] = [
   {
     key: 'group_id',
     header: 'group',
-    className: 'min-w-[260px]',
+    minWidth: 260,
     renderCell: (row) => (
       <HoverInfoCell
         title={row.group_name}
@@ -71,32 +71,37 @@ export const iznosColumns: ColumnDef<OstatokProduct>[] = [
     renderCell: (row) => row.serial_num
   },
   {
+    numeric: true,
     key: 'kol',
-    renderCell: (row) => row.to.kol
+    renderCell: (row) => row.to?.kol
   },
   {
     numeric: true,
     key: 'sena',
-    renderCell: (row) => row.to.sena
+    renderCell: (row) => formatNumber(row.to?.sena)
   },
   {
+    fit: true,
     key: 'year'
   },
   {
+    fit: true,
     key: 'month',
     renderCell: (row) => getMonthName(row.month)
   },
   {
+    fit: true,
     key: 'iznos_schet',
     header: 'schet'
   },
   {
+    fit: true,
     key: 'iznos_sub_schet',
     header: 'subschet'
   },
   {
     fit: true,
-    key: '',
+    key: 'iznos_start_date',
     header: 'iznos_start_date',
     renderCell: (row) => formatLocaleDate(row.iznos_start)
   },

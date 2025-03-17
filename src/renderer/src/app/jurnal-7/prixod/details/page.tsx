@@ -42,7 +42,7 @@ import { createResponsibleSpravochnik } from '@/app/jurnal-7/responsible/service
 import { createOperatsiiSpravochnik } from '@/app/super-admin/operatsii'
 import { DownloadFile, ImportFile } from '@/common/features/file'
 
-import { PrixodFormSchema, defaultValues, queryKeys } from '../config'
+import { PrixodFormSchema, defaultValues, prixodQueryKeys } from '../config'
 import { usePrixodCreate, usePrixodGet, usePrixodUpdate } from '../service'
 import { ExistingDocumentsAlert } from './existing-document-alert'
 import { ProvodkaTable } from './provodka-table'
@@ -72,7 +72,7 @@ const Jurnal7PrixodDetailsPage = () => {
       handleOstatokResponse(res)
       navigate(-1)
       queryClient.invalidateQueries({
-        queryKey: [queryKeys.getAll]
+        queryKey: [prixodQueryKeys.getAll]
       })
       recheckOstatok?.()
     }
@@ -83,7 +83,7 @@ const Jurnal7PrixodDetailsPage = () => {
       handleOstatokResponse(res)
       navigate(-1)
       queryClient.invalidateQueries({
-        queryKey: [queryKeys.getAll]
+        queryKey: [prixodQueryKeys.getAll]
       })
       recheckOstatok?.()
     },

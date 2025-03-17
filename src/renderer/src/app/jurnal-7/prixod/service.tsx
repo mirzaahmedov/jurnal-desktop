@@ -7,7 +7,7 @@ import { useMutation, useQuery } from '@tanstack/react-query'
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 import { budjet, main_schet } from '@/common/features/crud/middleware'
 
-import { queryKeys } from './config'
+import { prixodQueryKeys } from './config'
 
 export const prixodService = new CRUDService<MO7Prixod, PrixodFormValues>({
   endpoint: ApiEndpoints.jur7_prixod
@@ -17,7 +17,7 @@ export const prixodService = new CRUDService<MO7Prixod, PrixodFormValues>({
 
 export const usePrixodGet = (id: number) => {
   return useQuery({
-    queryKey: [queryKeys.get, id],
+    queryKey: [prixodQueryKeys.get, id],
     queryFn: prixodService.getById,
     enabled: !!id
   })
@@ -26,7 +26,7 @@ export const usePrixodGet = (id: number) => {
 export type UsePrixodParams = Pick<UseMutationOptions<any, Error, any>, 'onSuccess' | 'onError'>
 export const usePrixodCreate = ({ onSuccess, onError }: UsePrixodParams) => {
   return useMutation({
-    mutationKey: [queryKeys.create],
+    mutationKey: [prixodQueryKeys.create],
     mutationFn: prixodService.create,
     onSuccess,
     onError
@@ -34,7 +34,7 @@ export const usePrixodCreate = ({ onSuccess, onError }: UsePrixodParams) => {
 }
 export const usePrixodUpdate = ({ onSuccess, onError }: UsePrixodParams) => {
   return useMutation({
-    mutationKey: [queryKeys.update],
+    mutationKey: [prixodQueryKeys.update],
     mutationFn: prixodService.update,
     onSuccess,
     onError
@@ -43,7 +43,7 @@ export const usePrixodUpdate = ({ onSuccess, onError }: UsePrixodParams) => {
 
 export const usePrixodDelete = ({ onSuccess, onError }: UsePrixodParams) => {
   return useMutation({
-    mutationKey: [queryKeys.delete],
+    mutationKey: [prixodQueryKeys.delete],
     mutationFn: prixodService.delete,
     onSuccess,
     onError

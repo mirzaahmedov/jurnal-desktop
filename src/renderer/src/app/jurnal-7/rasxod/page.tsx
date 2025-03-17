@@ -20,7 +20,8 @@ import {
 import { GenericTable } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
 
-import { columns, queryKeys } from './config'
+import { rasxodColumns } from './columns'
+import { rasxodQueryKeys } from './config'
 import { rasxodService } from './service'
 
 const Jurnal7RasxodPage = () => {
@@ -41,7 +42,7 @@ const Jurnal7RasxodPage = () => {
   })
 
   const { mutate: deleteRasxod, isPending } = useMutation({
-    mutationKey: [queryKeys.delete],
+    mutationKey: [rasxodQueryKeys.delete],
     mutationFn: rasxodService.delete,
     onSuccess(res) {
       handleOstatokResponse(res)
@@ -49,12 +50,9 @@ const Jurnal7RasxodPage = () => {
       recheckOstatok?.()
       requestAnimationFrame(() => {
         queryClient.invalidateQueries({
-          queryKey: [queryKeys.getAll]
+          queryKey: [rasxodQueryKeys.getAll]
         })
       })
-    },
-    onError(error) {
-      toast.error(error?.message)
     }
   })
 
@@ -64,7 +62,7 @@ const Jurnal7RasxodPage = () => {
     error: rasxodListError
   } = useQuery({
     queryKey: [
-      queryKeys.getAll,
+      rasxodQueryKeys.getAll,
       {
         ...pagination,
         ...dates,
@@ -109,7 +107,7 @@ const Jurnal7RasxodPage = () => {
       </ListView.Header>
       <ListView.Content loading={isFetching || isPending}>
         <GenericTable
-          columnDefs={columns}
+          columnDefs={rasxodColumns}
           data={rasxodList?.data ?? []}
           onEdit={(row) => navigate(`${row.id}`)}
           onDelete={(row) => {

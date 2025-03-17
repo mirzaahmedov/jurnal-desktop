@@ -1,13 +1,8 @@
-import type { ColumnDef } from '@/common/components'
-import type { InternalTransfer } from '@/common/models'
-
-import { IDCell } from '@renderer/common/components/table/renderers/id'
-import { formatLocaleDate } from '@renderer/common/lib/format'
 import { z } from 'zod'
 
 import { withPreprocessor } from '@/common/lib/validation'
 
-const queryKeys = {
+export const internalQueryKeys = {
   getAll: 'jur7_internal/all',
   get: 'jur7_internal/get',
   create: 'jur7_internal/create',
@@ -15,7 +10,7 @@ const queryKeys = {
   delete: 'jur7_internal/delete'
 }
 
-const defaultValues: InternalTransferFormType = {
+export const defaultValues: InternalTransferFormType = {
   type_document: 1,
   doc_num: '',
   doc_date: '',
@@ -38,7 +33,7 @@ const defaultValues: InternalTransferFormType = {
   ]
 }
 
-const InternalTransferChildFormSchema = withPreprocessor(
+export const InternalTransferChildFormSchema = withPreprocessor(
   z.object({
     naimenovanie_tovarov_jur7_id: z.number(),
     name: z.string().optional().nullable(),
@@ -63,7 +58,7 @@ const InternalTransferChildFormSchema = withPreprocessor(
     data_pereotsenka: z.string()
   })
 )
-const InternalTransferFormSchema = withPreprocessor(
+export const InternalTransferFormSchema = withPreprocessor(
   z.object({
     type_document: z.number().optional(),
     doc_num: z.string(),
@@ -85,44 +80,5 @@ const InternalTransferFormSchema = withPreprocessor(
     })
   })
 )
-type InternalTransferFormType = z.infer<typeof InternalTransferFormSchema>
-type InternalTransferChildFormType = z.infer<typeof InternalTransferChildFormSchema>
-
-const columns: ColumnDef<InternalTransfer>[] = [
-  {
-    key: 'id',
-    renderCell: IDCell
-  },
-  {
-    key: 'doc_num'
-  },
-  {
-    key: 'doc_date',
-    renderCell: (row) => formatLocaleDate(row.doc_date)
-  },
-  {
-    key: 'kimdan_name',
-    header: 'from-who'
-  },
-  {
-    key: 'kimga',
-    header: 'to-whom',
-    renderCell: (row) => row?.kimga?.fio
-  },
-  {
-    numeric: true,
-    key: 'summa'
-  },
-  {
-    key: 'opisanie'
-  }
-]
-
-export {
-  queryKeys,
-  defaultValues,
-  columns,
-  InternalTransferFormSchema,
-  InternalTransferChildFormSchema
-}
-export type { InternalTransferFormType, InternalTransferChildFormType }
+export type InternalTransferFormType = z.infer<typeof InternalTransferFormSchema>
+export type InternalTransferChildFormType = z.infer<typeof InternalTransferChildFormSchema>

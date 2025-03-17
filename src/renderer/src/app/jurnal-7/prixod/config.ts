@@ -1,13 +1,8 @@
-import type { ColumnDef } from '@/common/components'
-import type { MO7Prixod } from '@/common/models'
-
-import { IDCell } from '@renderer/common/components/table/renderers/id'
-import { formatLocaleDate } from '@renderer/common/lib/format'
 import { z } from 'zod'
 
 import { withPreprocessor } from '@/common/lib/validation'
 
-export const queryKeys = {
+export const prixodQueryKeys = {
   getAll: 'jur7_prixod/all',
   get: 'jur7_prixod/get',
   create: 'jur7_prixod/create',
@@ -112,32 +107,3 @@ export const PrixodFormSchema = withPreprocessor(
 )
 export type PrixodFormValues = z.infer<typeof PrixodFormSchema>
 export type PrixodChildFormValues = z.infer<typeof PrixodChildFormSchema>
-
-export const columns: ColumnDef<MO7Prixod>[] = [
-  {
-    key: 'id',
-    renderCell: IDCell
-  },
-  {
-    key: 'doc_num'
-  },
-  {
-    key: 'doc_date',
-    renderCell: (row) => formatLocaleDate(row.doc_date)
-  },
-  {
-    key: 'kimdan_name',
-    header: 'from-who'
-  },
-  {
-    key: 'kimga_name',
-    header: 'to-whom'
-  },
-  {
-    numeric: true,
-    key: 'summa'
-  },
-  {
-    key: 'opisanie'
-  }
-]

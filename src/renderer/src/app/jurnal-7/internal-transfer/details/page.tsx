@@ -26,7 +26,7 @@ import {
   SummaFields
 } from '@/common/widget/form'
 
-import { InternalTransferFormSchema, defaultValues, queryKeys } from '../config'
+import { InternalTransferFormSchema, defaultValues, internalQueryKeys } from '../config'
 import {
   useInternalTransferCreate,
   useInternalTransferGet,
@@ -51,7 +51,7 @@ const Jurnal7InternalTransferDetailsPage = () => {
       toast.success(res?.message)
       handleOstatokResponse(res)
       queryClient.invalidateQueries({
-        queryKey: [queryKeys.getAll]
+        queryKey: [internalQueryKeys.getAll]
       })
       navigate(-1)
       recheckOstatok?.()
@@ -66,7 +66,7 @@ const Jurnal7InternalTransferDetailsPage = () => {
       toast.success(res?.message)
       handleOstatokResponse(res)
       queryClient.invalidateQueries({
-        queryKey: [queryKeys.getAll]
+        queryKey: [internalQueryKeys.getAll]
       })
       navigate(-1)
       recheckOstatok?.()

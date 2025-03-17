@@ -20,8 +20,9 @@ import { GenericTable } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
 import { useLayoutStore } from '@/common/features/layout'
 
-import { columns, queryKeys } from './config'
-import { internalTransferService } from './service'
+import { internalColumns } from './columns'
+import { internalQueryKeys } from './config'
+import { internalService } from './service'
 
 const Jurnal7InternalTransferPage = () => {
   const pagination = usePagination()
@@ -41,20 +42,17 @@ const Jurnal7InternalTransferPage = () => {
   })
 
   const { mutate: deleteTransfer, isPending } = useMutation({
-    mutationKey: [queryKeys.delete],
-    mutationFn: internalTransferService.delete,
+    mutationKey: [internalQueryKeys.delete],
+    mutationFn: internalService.delete,
     onSuccess(res) {
       handleOstatokResponse(res)
       toast.success(res?.message)
       recheckOstatok?.()
       requestAnimationFrame(() => {
         queryClient.invalidateQueries({
-          queryKey: [queryKeys.getAll]
+          queryKey: [internalQueryKeys.getAll]
         })
       })
-    },
-    onError(error) {
-      toast.error(error?.message ?? t('something-went-wrong'))
     }
   })
 
@@ -64,7 +62,7 @@ const Jurnal7InternalTransferPage = () => {
     error: transferListError
   } = useQuery({
     queryKey: [
-      queryKeys.getAll,
+      internalQueryKeys.getAll,
       {
         ...pagination,
         ...dates,
@@ -72,7 +70,7 @@ const Jurnal7InternalTransferPage = () => {
         main_schet_id
       }
     ],
-    queryFn: internalTransferService.getAll,
+    queryFn: internalService.getAll,
     enabled: queuedMonths.length === 0
   })
 
@@ -109,7 +107,7 @@ const Jurnal7InternalTransferPage = () => {
       </ListView.Header>
       <ListView.Content loading={isFetching || isPending}>
         <GenericTable
-          columnDefs={columns}
+          columnDefs={internalColumns}
           data={transferList?.data ?? []}
           onEdit={(row) => navigate(`${row.id}`)}
           onDelete={(row) => {
