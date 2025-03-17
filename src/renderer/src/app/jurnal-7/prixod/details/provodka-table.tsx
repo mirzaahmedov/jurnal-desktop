@@ -13,6 +13,7 @@ import { useEventCallback } from '@renderer/common/hooks'
 import { CircleMinus, CirclePlus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
+import { validateOstatokDate } from '@/app/jurnal-7/ostatok/utils'
 import { createGroupSpravochnik } from '@/app/super-admin/group/service'
 import { DatePicker, EdinSelect, NumericInput } from '@/common/components'
 import { Button } from '@/common/components/ui/button'
@@ -480,6 +481,7 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
                             }}
                             error={!!errors.data_pereotsenka}
                             tabIndex={tabIndex}
+                            validate={validateOstatokDate}
                           />
                         </div>
                       </EditableTableCell>

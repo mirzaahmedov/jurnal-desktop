@@ -171,7 +171,9 @@ const OstatokPage = () => {
             id
           })),
           year: selectedDate.getFullYear(),
-          month: selectedDate.getMonth() + 1
+          month: selectedDate.getMonth() + 1,
+          budjet_id: budjet_id!,
+          main_schet_id: main_schet_id!
         })
       }
     })

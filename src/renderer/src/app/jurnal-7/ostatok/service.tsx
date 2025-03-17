@@ -37,13 +37,25 @@ export interface DeleteOstatokArgs {
   }>
   year: number
   month: number
+  budjet_id: number
+  main_schet_id: number
 }
-export const deleteOstatokBatchQuery = async ({ ids, year, month }: DeleteOstatokArgs) => {
+export const deleteOstatokBatchQuery = async ({
+  ids,
+  year,
+  month,
+  budjet_id,
+  main_schet_id
+}: DeleteOstatokArgs) => {
   const res = await http.delete(ApiEndpoints.jur7_saldo, {
     data: {
       ids,
       year,
       month
+    },
+    params: {
+      budjet_id,
+      main_schet_id
     }
   })
   return res.data
