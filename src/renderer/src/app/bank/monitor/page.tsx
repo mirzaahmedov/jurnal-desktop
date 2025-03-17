@@ -19,7 +19,6 @@ import { bankMonitorQueryKeys } from './constants'
 import { bankMonitorService } from './service'
 
 const BankMonitorPage = () => {
-  const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
   const setLayout = useLayoutStore((store) => store.setLayout)
   const report_title_id = useSettingsStore((store) => store.report_title_id)
 
@@ -28,6 +27,7 @@ const BankMonitorPage = () => {
 
   const { search } = useSearch()
   const { t } = useTranslation(['app'])
+  const { main_schet_id, budjet_id } = useRequisitesStore()
 
   const { data: monitorList, isFetching } = useQuery({
     queryKey: [
@@ -87,6 +87,7 @@ const BankMonitorPage = () => {
                 buttonText={t('cap-report')}
                 params={{
                   main_schet_id,
+                  budjet_id,
                   report_title_id,
                   from: dates.from,
                   to: dates.to,

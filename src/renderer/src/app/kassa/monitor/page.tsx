@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 
+import { useSettingsStore } from '@renderer/common/features/app-defaults'
 import { DownloadFile } from '@renderer/common/features/file'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
 import { SearchField, useSearch } from '@renderer/common/features/search'
@@ -18,14 +19,15 @@ import { kassaMonitorQueryKeys } from './constants'
 import { kassaMonitorService } from './service'
 
 const KassaMonitorPage = () => {
-  const pagination = usePagination()
   const dates = useDates()
-  const { search } = useSearch()
+  const pagination = usePagination()
+  const report_title_id = useSettingsStore((store) => store.report_title_id)
 
-  const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
   const setLayout = useLayoutStore((store) => store.setLayout)
 
   const { t } = useTranslation(['app'])
+  const { search } = useSearch()
+  const { main_schet_id, budjet_id } = useRequisitesStore()
 
   const { data: monitorList, isFetching } = useQuery({
     queryKey: [
@@ -61,6 +63,7 @@ const KassaMonitorPage = () => {
                 buttonText={t('daily-report')}
                 params={{
                   main_schet_id,
+                  report_title_id,
                   from: dates.from,
                   to: dates.to,
                   excel: true
@@ -72,6 +75,8 @@ const KassaMonitorPage = () => {
                 buttonText={t('cap-report')}
                 params={{
                   main_schet_id,
+                  budjet_id,
+                  report_title_id,
                   from: dates.from,
                   to: dates.to,
                   excel: true
