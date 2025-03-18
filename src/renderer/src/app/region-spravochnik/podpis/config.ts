@@ -45,6 +45,10 @@ export const getPodpisTypeDocumentOptions = (t: TFunction) => {
     {
       key: PodpisTypeDocument.CAP,
       name: t('podpis:documents.cap')
+    },
+    {
+      key: PodpisTypeDocument.DAYS_REPORT,
+      name: t('podpis:documents.days_report')
     }
   ] as const
 }
@@ -69,6 +73,7 @@ export const PodpisPayloadSchema = z.object({
     [
       PodpisTypeDocument.BANK_RASXOD_PORUCHENIYA,
       PodpisTypeDocument.SHARTNOMA_GRAFIK_OPLATI,
+      PodpisTypeDocument.DAYS_REPORT,
       PodpisTypeDocument.CAP
     ],
     {

@@ -10,15 +10,14 @@ export enum PodpisDoljnost {
 export enum PodpisTypeDocument {
   BANK_RASXOD_PORUCHENIYA = 'BANK_RASXOD_PORUCHENIYA',
   SHARTNOMA_GRAFIK_OPLATI = 'SHARTNOMA_GRAFIK_OPLATI',
+  DAYS_REPORT = 'daysReport',
   CAP = 'cap'
 }
 
-type Podpis = {
+export interface Podpis {
   id: number
   numeric_poryadok: number
   doljnost_name: PodpisDoljnost
   fio_name: string
   type_document: PodpisTypeDocument
 }
-
-export type { Podpis }
