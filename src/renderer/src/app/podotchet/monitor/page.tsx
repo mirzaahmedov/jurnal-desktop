@@ -150,8 +150,9 @@ const PodotchetMonitoringPage = () => {
                 fileName={`${t('cap')}-${dates.from}&${dates.to}.xlsx`}
                 url={`/podotchet/monitoring/cap`}
                 params={{
-                  operatsii: operatsiiSpravochnik.selected?.schet,
+                  budjet_id,
                   main_schet_id,
+                  operatsii: operatsiiSpravochnik.selected?.schet,
                   from: dates.from,
                   to: dates.to,
                   excel: true,
