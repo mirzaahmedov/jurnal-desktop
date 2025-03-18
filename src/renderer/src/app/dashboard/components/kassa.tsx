@@ -14,9 +14,11 @@ import { formatNumber } from '@renderer/common/lib/format'
 import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 
+import { getColors } from '@/common/lib/color'
+
 import { queryKeys } from '../config'
 import { getDashboardKassaQuery } from '../service'
-import { GenericPieChart, getPieChartColors } from './generic-pie-chart'
+import { GenericPieChart } from './generic-pie-chart'
 
 export interface KassaProps {
   date?: string
@@ -52,7 +54,7 @@ export const Kassa = ({ budjet_id, date, main_schets }: KassaProps) => {
   const chartData = useMemo(() => {
     if (!Array.isArray(data)) return []
 
-    const colors = getPieChartColors(data.length)
+    const colors = getColors(data.length)
     return data?.map((schet, i) => ({
       main_schet_id: schet?.id,
       summa: schet?.kassa?.summa ?? 0,

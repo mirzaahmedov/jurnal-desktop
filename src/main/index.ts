@@ -17,7 +17,9 @@ if (import.meta.env.DEV) {
 const CHECK_UPDATES_INTERVAL = 1 * 60 * 1000
 
 const url =
-  import.meta.env.VITE_MODE === 'staging' ? 'http://192.168.102.68:4006' : 'http://10.50.0.140:4005'
+  import.meta.env.VITE_MODE === 'staging'
+    ? 'https://nafaqa.fizmasoft.uz'
+    : 'http://10.50.0.140:4005'
 
 const autoUpdater = new NsisUpdater({
   provider: 'generic',

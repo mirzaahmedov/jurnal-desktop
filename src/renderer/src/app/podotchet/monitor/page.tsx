@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 
+import { useSettingsStore } from '@renderer/common/features/app-defaults'
 import { DownloadFile } from '@renderer/common/features/file'
 import { useLayoutStore } from '@renderer/common/features/layout'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
@@ -32,6 +33,7 @@ import { podotchetMonitoringService } from './service'
 const PodotchetMonitoringPage = () => {
   const pagination = usePagination()
   const dates = useDates()
+  const report_title_id = useSettingsStore((store) => store.report_title_id)
 
   const setLayout = useLayoutStore((store) => store.setLayout)
 
@@ -153,7 +155,8 @@ const PodotchetMonitoringPage = () => {
                     main_schet_id,
                     from: dates.from,
                     to: dates.to,
-                    excel: true
+                    excel: true,
+                    report_title_id
                   }}
                   buttonText={t('cap-report')}
                 />

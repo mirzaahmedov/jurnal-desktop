@@ -1,6 +1,5 @@
 import { formatNumber } from '@renderer/common/lib/format'
 import { useTranslation } from 'react-i18next'
-import { Fragment } from 'react/jsx-runtime'
 
 import { Copyable } from '@/common/components/copyable'
 
@@ -21,22 +20,22 @@ export const ProvodkaCell = ({ summa, provodki }: ProvodkaCellProps) => {
     <HoverInfoCell
       title={formatNumber(summa)}
       hoverContent={
-        <ul className="text-foreground grid grid-cols-2 grid-flow-col auto-cols-max gap-x-5 gap-y-2">
-          <li className="font-bold text-xs border-b border-slate-100 pb-2 uppercase">
-            {t('schet')}
-          </li>
-          <li className="col-span-full font-bold text-xs border-b border-slate-100 pb-2 mb-2 uppercase">
-            {t('subschet')}
-          </li>
+        <ul className="text-foreground flex flex-col gap-y-2">
+          <ul className="flex items-center justify-between">
+            <li className="font-bold text-xs border-b border-slate-100 pb-2 uppercase">
+              {t('schet')}
+            </li>
+            <li className="col-span-full font-bold text-xs border-b border-slate-100 pb-2 mb-2 uppercase">
+              {t('subschet')}
+            </li>
+          </ul>
           {provodki.map((p, i) => (
-            <Fragment key={i}>
+            <ul
+              key={i}
+              className="flex justify-between"
+            >
               <li>
-                <Copyable
-                  side="start"
-                  value={p.provodki_schet}
-                >
-                  {p.provodki_schet}
-                </Copyable>
+                <Copyable value={p.provodki_schet}>{p.provodki_schet}</Copyable>
               </li>
               <li className="col-span-full">
                 <Copyable
@@ -46,7 +45,7 @@ export const ProvodkaCell = ({ summa, provodki }: ProvodkaCellProps) => {
                   {p.provodki_sub_schet}
                 </Copyable>
               </li>
-            </Fragment>
+            </ul>
           ))}
         </ul>
       }

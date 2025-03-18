@@ -2,10 +2,12 @@ import { useEffect } from 'react'
 
 import { createOrganizationSpravochnik } from '@renderer/app/region-spravochnik/organization'
 import { Button } from '@renderer/common/components/ui/button'
+import { useSettingsStore } from '@renderer/common/features/app-defaults'
 import { DownloadFile } from '@renderer/common/features/file'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
 import { SearchField, useSearch } from '@renderer/common/features/search'
 import { useLocationState } from '@renderer/common/hooks/use-location-state'
+import { getProvodkaURL } from '@renderer/common/lib/provodka'
 import { useQuery } from '@tanstack/react-query'
 import { Download } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
@@ -24,11 +26,7 @@ import { useLayoutStore } from '@/common/features/layout'
 import { useSpravochnik } from '@/common/features/spravochnik'
 import { useDates, usePagination, useToggle } from '@/common/hooks'
 import { formatNumber } from '@/common/lib/format'
-import {
-  type OrganizationMonitor,
-  type OrganizationMonitorProvodka,
-  TypeSchetOperatsii
-} from '@/common/models'
+import { type OrganizationMonitor, TypeSchetOperatsii } from '@/common/models'
 import { ListView } from '@/common/views'
 
 import { AktSverkaDialog } from './akt-sverka'
@@ -40,11 +38,12 @@ const OrganizationMonitoringPage = () => {
   const [operatsiiId, setOperatsiiId] = useLocationState<undefined | number>('operatsii_id')
   const [orgId, setOrgId] = useLocationState<undefined | number>('org_id')
 
-  const dates = useDates()
-  const pagination = usePagination()
   const navigate = useNavigate()
-  const setLayout = useLayoutStore((store) => store.setLayout)
+  const dates = useDates()
   const dropdownToggle = useToggle()
+  const pagination = usePagination()
+  const setLayout = useLayoutStore((store) => store.setLayout)
+  const report_title_id = useSettingsStore((store) => store.report_title_id)
 
   const { main_schet_id, budjet_id } = useRequisitesStore()
   const { search } = useSearch()
@@ -105,7 +104,7 @@ const OrganizationMonitoringPage = () => {
   }, [setLayout, t])
 
   const handleClickEdit = (row: OrganizationMonitor) => {
-    const path = getProvodkaPath(row)
+    const path = getProvodkaURL(row)
     if (!path) {
       return
     }
@@ -144,7 +143,7 @@ const OrganizationMonitoringPage = () => {
                 ]}
               />
             </div>
-            {main_schet_id && operatsiiSpravochnik.selected?.schet ? (
+            {main_schet_id ? (
               <ButtonGroup borderStyle="dashed">
                 <DropdownMenu open={dropdownToggle.isOpen}>
                   <DropdownMenuTrigger
@@ -164,71 +163,79 @@ const OrganizationMonitoringPage = () => {
                   >
                     <DropdownMenuItem>
                       <DownloadFile
-                        fileName={`сводный-отчет-${dates.to}-счет&${operatsiiSpravochnik.selected?.schet}.xlsx`}
+                        fileName={`${t('cap')}-${dates.to}.xlsx`}
                         url="/organization/monitoring/cap"
                         params={{
+                          budjet_id,
                           main_schet_id,
                           from: dates.from,
                           to: dates.to,
-                          operatsii: operatsiiSpravochnik.selected?.schet,
-                          excel: true
+                          report_title_id,
+                          excel: true,
+                          operatsii: operatsiiSpravochnik.selected?.schet
                         }}
                         buttonText="Шапка"
                         className="w-full inline-flex items-center justify-start"
                       />
                     </DropdownMenuItem>
 
-                    <DropdownMenuItem>
-                      <DownloadFile
-                        fileName={`дебитор-кредитор_отчет-${dates.to}.xlsx`}
-                        url="organization/monitoring/prixod/rasxod"
-                        params={{
-                          main_schet_id,
-                          budjet_id,
-                          to: dates.to,
-                          operatsii: operatsiiSpravochnik.selected?.schet,
-                          excel: true
-                        }}
-                        buttonText="Дебитор / Кредитор отчет"
-                        className="w-full inline-flex items-center justify-start"
-                      />
-                    </DropdownMenuItem>
+                    {operatsiiSpravochnik.selected?.schet ? (
+                      <DropdownMenuItem>
+                        <DownloadFile
+                          fileName={`дебитор-кредитор_отчет-${dates.to}.xlsx`}
+                          url="organization/monitoring/prixod/rasxod"
+                          params={{
+                            main_schet_id,
+                            budjet_id,
+                            to: dates.to,
+                            operatsii: operatsiiSpravochnik.selected?.schet,
+                            excel: true
+                          }}
+                          buttonText="Дебитор / Кредитор отчет"
+                          className="w-full inline-flex items-center justify-start"
+                        />
+                      </DropdownMenuItem>
+                    ) : null}
 
-                    <DropdownMenuItem>
-                      <DownloadFile
-                        fileName={`сводный-отчет-${dates.from}&${dates.to}.xlsx`}
-                        url="/organization/monitoring/order"
-                        params={{
-                          main_schet_id,
-                          organ_id: orgId ? orgId : undefined,
-                          from: dates.from,
-                          to: dates.to,
-                          schet: operatsiiSpravochnik.selected?.schet,
-                          excel: true,
-                          contract: false
-                        }}
-                        buttonText="Сводный отчет"
-                        className="w-full inline-flex items-center justify-start"
-                      />
-                    </DropdownMenuItem>
+                    {operatsiiSpravochnik.selected?.schet ? (
+                      <DropdownMenuItem>
+                        <DownloadFile
+                          fileName={`сводный-отчет-${dates.from}&${dates.to}.xlsx`}
+                          url="/organization/monitoring/order"
+                          params={{
+                            main_schet_id,
+                            organ_id: orgId ? orgId : undefined,
+                            from: dates.from,
+                            to: dates.to,
+                            schet: operatsiiSpravochnik.selected?.schet,
+                            excel: true,
+                            contract: false
+                          }}
+                          buttonText="Сводный отчет"
+                          className="w-full inline-flex items-center justify-start"
+                        />
+                      </DropdownMenuItem>
+                    ) : null}
 
-                    <DropdownMenuItem>
-                      <DownloadFile
-                        fileName={`сводный-отчет-${dates.from}&${dates.to}.xlsx`}
-                        url="/organization/monitoring/order"
-                        params={{
-                          main_schet_id,
-                          organ_id: orgId ? orgId : undefined,
-                          from: dates.from,
-                          to: dates.to,
-                          schet: operatsiiSpravochnik.selected?.schet,
-                          excel: true,
-                          contract: true
-                        }}
-                        buttonText="Сводный отчет (по договору)"
-                        className="w-full inline-flex items-center justify-start"
-                      />
-                    </DropdownMenuItem>
+                    {operatsiiSpravochnik.selected?.schet ? (
+                      <DropdownMenuItem>
+                        <DownloadFile
+                          fileName={`сводный-отчет-${dates.from}&${dates.to}.xlsx`}
+                          url="/organization/monitoring/order"
+                          params={{
+                            main_schet_id,
+                            organ_id: orgId ? orgId : undefined,
+                            from: dates.from,
+                            to: dates.to,
+                            schet: operatsiiSpravochnik.selected?.schet,
+                            excel: true,
+                            contract: true
+                          }}
+                          buttonText="Сводный отчет (по договору)"
+                          className="w-full inline-flex items-center justify-start"
+                        />
+                      </DropdownMenuItem>
+                    ) : null}
                   </DropdownMenuContent>
                 </DropdownMenu>
                 {orgId ? (
@@ -322,26 +329,6 @@ const SummaFields = ({
       </div>
     </div>
   )
-}
-
-const getProvodkaPath = ({ type, id }: { type: OrganizationMonitorProvodka; id: number }) => {
-  switch (type) {
-    case 'bank_rasxod':
-      return `/bank/rasxod/${id}`
-    case 'bank_prixod':
-      return `/bank/prixod/${id}`
-    case 'kassa_rasxod':
-      return `/kassa/rasxod/${id}`
-    case 'kassa_prixod':
-      return `/kassa/prixod/${id}`
-    case 'show_service':
-      return `/organization/pokazat-uslugi/${id}`
-    case 'akt':
-      return `/organization/akt/${id}`
-
-    default:
-      return ''
-  }
 }
 
 export default OrganizationMonitoringPage

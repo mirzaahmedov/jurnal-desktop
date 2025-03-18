@@ -247,5 +247,18 @@
   "zarplata": "Ish haqi",
   "other": "Boshqa",
   "refresh_page": "Sahifani yangilash",
-  "unsaved_changes_want_to_exit": "Saqlanmagan o‘zgarishlar mavjud. Chiqishni xohlaysizmi?"
+  "unsaved_changes_want_to_exit": "Saqlanmagan o‘zgarishlar mavjud. Chiqishni xohlaysizmi?",
+  "date": "Sana",
+  "provodka_type": {
+    "bank_rasxod": "Bank xarajat",
+    "bank_prixod": "Bank kirim",
+    "kassa_rasxod": "Kassa xarajat",
+    "kassa_prixod": "Kassa kirim",
+    "show_service": "Xizmatlarni ko'rsatish",
+    "akt": "Qabul qilish va qayta topshirish",
+    "avans": "Avanslar hisoboti",
+    "jur7_prixod": "7-Jurnal kirim",
+    "jur7_rasxod": "7-Jurnal xarajat",
+    "jur7_internal": "7-Jurnal ichki aylanma"
+  }
 }

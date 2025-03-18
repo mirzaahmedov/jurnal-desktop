@@ -1,4 +1,6 @@
-export type Organization = {
+import type { ProvodkaType } from './monitoring'
+
+export interface Organization {
   parent_id?: number
   id: number
   name: string
@@ -11,21 +13,13 @@ export type Organization = {
   childs: Organization[]
 }
 
-export type OrganizationMonitorProvodka =
-  | 'bank_prixod'
-  | 'bank_rasxod'
-  | 'kassa_prixod'
-  | 'kassa_rasxod'
-  | 'show_service'
-  | 'akt'
-  | 'jur7_prixod'
-  | 'jur7_rasxod'
-  | 'jur7_internal'
-
-export type OrganizationMonitor = {
+export interface OrganizationMonitor {
   id: number
   shartnoma_id: number
-  shrtnoma_doc_num: string
+  shartnoma_doc_date: string
+  shartnoma_doc_num: string
+  organ_id: number
+  organ_inn: string
   organ_name: string
   doc_num: string
   doc_date: string
@@ -38,7 +32,7 @@ export type OrganizationMonitor = {
   login: string
   fio: string
   schet_array: Array<string>
-  type: OrganizationMonitorProvodka
+  type: ProvodkaType
 }
 
 export namespace Organization {

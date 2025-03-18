@@ -1,3 +1,16 @@
+export enum ProvodkaType {
+  BANK_PRIXOD = 'bank_prixod',
+  BANK_RASXOD = 'bank_rasxod',
+  KASSA_PRIXOD = 'kassa_prixod',
+  KASSA_RASXOD = 'kassa_rasxod',
+  SHOW_SERVICE = 'show_service',
+  AKT = 'akt',
+  AVANS = 'avans',
+  JUR7_PRIXOD = 'jur7_prixod',
+  JUR7_RASXOD = 'jur7_rasxod',
+  JUR7_INTERNAL = 'jur7_internal'
+}
+
 export type BankMonitoringType = {
   id: number
   doc_num: string
