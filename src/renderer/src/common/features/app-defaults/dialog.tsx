@@ -3,14 +3,15 @@ import type { DialogProps } from '@radix-ui/react-dialog'
 import { useEffect, useState } from 'react'
 
 import { reportTitleQueryKeys, reportTitleService } from '@renderer/app/super-admin/report-title'
+import { Slider } from '@renderer/common/components/ui/slider'
 import { useDates } from '@renderer/common/hooks/use-dates'
 import { usePagination } from '@renderer/common/hooks/use-pagination'
+import { capitalize } from '@renderer/common/lib/string'
 import { useQuery } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
 import { DatePicker, SelectField } from '@/common/components'
-import { FormElement } from '@/common/components/form'
 import { Button } from '@/common/components/ui/button'
 import {
   Dialog,
@@ -19,9 +20,10 @@ import {
   DialogHeader,
   DialogTitle
 } from '@/common/components/ui/dialog'
-import { Form, FormField } from '@/common/components/ui/form'
+import { Form, FormField, FormLabel } from '@/common/components/ui/form'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/common/components/ui/tabs'
 import { useConfirm } from '@/common/features/confirm'
+import { LanguageSelect } from '@/common/features/locales'
 
 import { defaultValues } from './constants'
 import { useDefaultFilters, useSettingsStore } from './store'
@@ -40,9 +42,9 @@ export const ConfigureDefaultValuesDialog = ({
   const dates = useDates()
   const pagination = usePagination()
 
-  const [tabValue, setTabValue] = useState<TabOption>(TabOption.Fitlers)
+  const { t, i18n } = useTranslation()
 
-  const { t } = useTranslation()
+  const [tabValue, setTabValue] = useState<TabOption>(TabOption.Fitlers)
 
   const { confirm } = useConfirm()
   const { setDefaultFilters } = useDefaultFilters()
@@ -66,6 +68,7 @@ export const ConfigureDefaultValuesDialog = ({
       report_title_id: values.report_title_id
     })
     window.api.setZoomFactor(values.zoomFactor)
+    i18n.changeLanguage(values.language)
 
     dates.onChange({
       from: undefined,
@@ -104,13 +107,27 @@ export const ConfigureDefaultValuesDialog = ({
       })
     }
   }, [form, open])
+  useEffect(() => {
+    const handleChangeLanguage = (language: string) => {
+      form.setValue('language', language)
+      form.resetField('language', {
+        defaultValue: language
+      })
+    }
+
+    i18n.on('languageChanged', handleChangeLanguage)
+
+    return () => {
+      i18n.off('languageChanged', handleChangeLanguage)
+    }
+  }, [i18n])
 
   return (
     <Dialog
       open={open}
       onOpenChange={handleClose}
     >
-      <DialogContent className="flex flex-col w-full max-w-3xl h-full max-h-[400px]">
+      <DialogContent className="flex flex-col w-full max-w-4xl h-full max-h-[400px]">
         <DialogHeader>
           <DialogTitle>{t('configure-programm')}</DialogTitle>
         </DialogHeader>
@@ -126,22 +143,22 @@ export const ConfigureDefaultValuesDialog = ({
             >
               <div className="h-full flex flex-row gap-5">
                 <div className="h-full w-48">
-                  <TabsList className="h-full w-full flex-col justify-start p-1 bg-transparent">
+                  <TabsList className="h-full w-full flex-col justify-start p-2 bg-transparent border">
                     <TabsTrigger
                       value={TabOption.Fitlers}
-                      className="w-full justify-start px-3 py-1.5 !shadow-none data-[state=active]:bg-slate-100 data-[state=active]:text-brand"
+                      className="w-full justify-start px-3 py-1.5 data-[state=active]:bg-brand/5 data-[state=active]:text-brand font-semibold !shadow-none"
                     >
                       {t('filters')}
                     </TabsTrigger>
                     <TabsTrigger
                       value={TabOption.UI}
-                      className="w-full justify-start px-3 py-1.5 !shadow-none data-[state=active]:bg-slate-100 data-[state=active]:text-brand"
+                      className="w-full justify-start px-3 py-1.5 data-[state=active]:bg-brand/5 data-[state=active]:text-brand font-semibold !shadow-none"
                     >
                       {t('interface')}
                     </TabsTrigger>
                     <TabsTrigger
                       value={TabOption.Report}
-                      className="w-full justify-start px-3 py-1.5 !shadow-none data-[state=active]:bg-slate-100 data-[state=active]:text-brand"
+                      className="w-full justify-start px-3 py-1.5 data-[state=active]:bg-brand/5 data-[state=active]:text-brand font-semibold !shadow-none"
                     >
                       {t('report')}
                     </TabsTrigger>
@@ -152,57 +169,74 @@ export const ConfigureDefaultValuesDialog = ({
                     tabIndex={-1}
                     value={TabOption.Fitlers}
                   >
-                    <div className="space-y-4">
+                    <div className="flex flex-col gap-2">
                       <FormField
                         control={form.control}
                         name="from"
                         render={({ field }) => (
-                          <FormElement
-                            label="Дата с"
-                            grid="1:4"
-                          >
+                          <div className="flex items-center justify-between gap-10">
+                            <FormLabel>{t('from')}</FormLabel>
                             <DatePicker {...field} />
-                          </FormElement>
+                          </div>
                         )}
                       />
                       <FormField
                         control={form.control}
                         name="to"
                         render={({ field }) => (
-                          <FormElement
-                            label="Дата по"
-                            grid="1:4"
-                          >
+                          <div className="flex items-center justify-between gap-10">
+                            <FormLabel>{capitalize(t('to'))}</FormLabel>
                             <DatePicker {...field} />
-                          </FormElement>
+                          </div>
                         )}
                       />
                     </div>
                   </TabsContent>
                   <TabsContent value={TabOption.UI}>
-                    <FormField
-                      control={form.control}
-                      name="zoomFactor"
-                      render={({ field }) => (
-                        <FormElement label="Масштаб">
-                          <SelectField
-                            value={field.value?.toString()}
-                            defaultValue="1"
-                            onValueChange={(value) => field.onChange(Number(value))}
-                            options={[0.25, 0.5, 0.75, 1, 1.5, 2, 3]}
-                            getOptionLabel={(o) => `${o * 100}%`}
-                            getOptionValue={(o) => o}
-                          />
-                        </FormElement>
-                      )}
-                    />
+                    <div className="flex flex-col gap-2">
+                      <FormField
+                        control={form.control}
+                        name="language"
+                        render={({ field }) => (
+                          <div className="flex items-center justify-between gap-10">
+                            <FormLabel>{t('language')}</FormLabel>
+                            <div>
+                              <LanguageSelect
+                                value={field.value}
+                                onValueChange={(value) => field.onChange(value)}
+                              />
+                            </div>
+                          </div>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="zoomFactor"
+                        render={({ field }) => (
+                          <div className="flex items-center justify-between gap-10 min-h-10">
+                            <FormLabel>{t('zoom')}</FormLabel>
+                            <div className="w-full flex items-center gap-5">
+                              <Slider
+                                step={0.25}
+                                min={0.5}
+                                max={2}
+                                value={[field.value]}
+                                onValueChange={(value) => field.onChange(value[0])}
+                              />
+                              <span>{field.value * 100}%</span>
+                            </div>
+                          </div>
+                        )}
+                      />
+                    </div>
                   </TabsContent>
                   <TabsContent value={TabOption.Report}>
                     <FormField
                       control={form.control}
                       name="report_title_id"
                       render={({ field }) => (
-                        <FormElement label={t('report-title')}>
+                        <div className="flex items-center justify-between gap-10 min-h-10">
+                          <FormLabel>{t('name')}</FormLabel>
                           <SelectField
                             {...field}
                             disabled={isFetching}
@@ -214,7 +248,7 @@ export const ConfigureDefaultValuesDialog = ({
                             getOptionLabel={(o) => o.name}
                             getOptionValue={(o) => o.id}
                           />
-                        </FormElement>
+                        </div>
                       )}
                     />
                   </TabsContent>

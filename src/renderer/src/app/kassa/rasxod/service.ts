@@ -45,14 +45,6 @@ export const RasxodPayloadSchema = withPreprocessor(
         })
         return
       }
-
-      if (!values.is_zarplata && !values.id_podotchet_litso) {
-        ctx.addIssue({
-          code: ZodIssueCode.custom,
-          path: ['id_podotchet_litso']
-        })
-        return
-      }
     })
 )
 

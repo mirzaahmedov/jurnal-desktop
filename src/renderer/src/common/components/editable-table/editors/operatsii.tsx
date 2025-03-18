@@ -84,7 +84,7 @@ export const createOperatsiiEditor = withEditorProps<{
       queryFn: getOperatsiiSchetOptionsQuery
     })
     const filteredSchetOptions =
-      schetOptions?.data?.filter((o) => o.schet.includes(schet ?? '')) ?? []
+      schetOptions?.data?.filter((o) => o.schet?.includes(schet ?? '')) ?? []
 
     const { data: operatsiiOptions, isFetching } = useQuery({
       queryKey: [
@@ -98,7 +98,7 @@ export const createOperatsiiEditor = withEditorProps<{
       enabled: !!schet && !operatsiiSpravochnik.selected
     })
     const filteredOperatsiiOptions =
-      operatsiiOptions?.data?.filter((o) => o.sub_schet.includes(subschet ?? '')) ?? []
+      operatsiiOptions?.data?.filter((o) => o.sub_schet?.includes(subschet ?? '')) ?? []
 
     useEffect(() => {
       if (operatsiiSpravochnik.selected) {

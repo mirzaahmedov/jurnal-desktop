@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button } from '@renderer/common/components/ui/button'
@@ -13,7 +13,7 @@ import {
 } from '@renderer/common/components/ui/form'
 import { Input } from '@renderer/common/components/ui/input'
 import { useAuthenticationStore } from '@renderer/common/features/auth'
-import { LocaleSelect } from '@renderer/common/features/locales'
+import { LanguageSelect } from '@renderer/common/features/locales'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
 import logoImage from '@resources/logo.svg'
 import backgroundImage from '@resources/signin-bg.png'
@@ -28,13 +28,15 @@ import { SigninFormSchema, defaultValues } from './config'
 import { signinQuery } from './service'
 
 const SigninPage = () => {
+  const { t, i18n } = useTranslation(['sign-in', 'user', 'app'])
+
+  const [language, setLanguage] = useState(i18n.language)
   const [isPasswordVisible, setPasswordVisible] = useState(false)
 
   const queryClient = useQueryClient()
   const navigate = useNavigate()
 
   const { user_id, setRequisites } = useRequisitesStore()
-  const { t } = useTranslation(['sign-in', 'user', 'app'])
   const { setUser } = useAuthenticationStore()
 
   const form = useForm({
@@ -56,7 +58,7 @@ const SigninPage = () => {
         user: res.data?.result
       })
       queryClient.clear()
-      toast.success('Вы успешно вошли в систему')
+      toast.success(res?.message)
       if (res?.data?.result.role_name === 'super-admin') {
         navigate('/admin/dashboard')
         return
@@ -64,6 +66,14 @@ const SigninPage = () => {
       navigate('/region/dashboard')
     }
   })
+
+  useEffect(() => {
+    i18n.on('languageChanged', setLanguage)
+
+    return () => {
+      i18n.off('languageChanged', setLanguage)
+    }
+  }, [i18n])
 
   const onSubmit = form.handleSubmit((values) => {
     signin(values)
@@ -157,7 +167,13 @@ const SigninPage = () => {
         </div>
         <div className="flex justify-end">
           <div>
-            <LocaleSelect />
+            <LanguageSelect
+              value={language}
+              onValueChange={(value) => {
+                i18n.changeLanguage(value)
+                setLanguage(value)
+              }}
+            />
           </div>
         </div>
       </div>

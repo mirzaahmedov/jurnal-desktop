@@ -1,32 +1,22 @@
-import { useEffect, useState } from 'react'
-
-import { SelectField } from '@renderer/common/components'
 import { useTranslation } from 'react-i18next'
+
+import { SelectField } from '@/common/components'
 
 import flagRU from './flags/ru.svg'
 import flagUZ from './flags/uz.svg'
 
-export const LocaleSelect = () => {
-  const { t, i18n } = useTranslation('app')
-  const [value, setValue] = useState(i18n.language)
-
-  useEffect(() => {
-    i18n.on('languageChanged', setValue)
-
-    return () => {
-      i18n.off('languageChanged', setValue)
-    }
-  }, [i18n])
-
+export interface LanguageSelectProps {
+  value: string
+  onValueChange: (value: string) => void
+}
+export const LanguageSelect = ({ value, onValueChange }: LanguageSelectProps) => {
+  const { t } = useTranslation(['app'])
   return (
     <SelectField
       placeholder="Choose language"
-      options={localeOptions}
+      options={languageOptions}
       value={value}
-      onValueChange={(locale) => {
-        setValue(value)
-        i18n.changeLanguage(locale)
-      }}
+      onValueChange={onValueChange}
       getOptionLabel={(option) => (
         <div className="flex items-center gap-2.5">
           <img
@@ -40,7 +30,7 @@ export const LocaleSelect = () => {
     />
   )
 }
-const localeOptions = [
+const languageOptions = [
   {
     value: 'uz',
     name: 'uz',

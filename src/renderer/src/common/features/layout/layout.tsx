@@ -14,7 +14,6 @@ import { Avatar, AvatarFallback } from '@/common/components/ui/avatar'
 import { Button } from '@/common/components/ui/button'
 import { ConfigureDefaultValuesDialog } from '@/common/features/app-defaults'
 import { useAuthenticationStore } from '@/common/features/auth'
-import { LocaleSelect } from '@/common/features/locales'
 import { useToggle } from '@/common/hooks/use-toggle'
 
 import { useLayoutStore } from './store'
@@ -22,11 +21,10 @@ import { useLayoutStore } from './store'
 type PageLayoutProps = {
   children: ReactNode
 }
-export const PageLayout = (props: PageLayoutProps) => {
-  const { children } = props
+export const PageLayout = ({ children }: PageLayoutProps) => {
+  const { t } = useTranslation()
 
   const { title, content: Content, breadcrumbs, onCreate, onBack } = useLayoutStore()
-  const { t } = useTranslation()
   const { user, setUser } = useAuthenticationStore()
   const { pathname } = useLocation()
 
@@ -125,9 +123,6 @@ export const PageLayout = (props: PageLayoutProps) => {
                 </div>
               </>
             )}
-          </div>
-          <div className="px-5">
-            <LocaleSelect />
           </div>
           {user ? (
             <div className="px-5 flex items-center gap-4">

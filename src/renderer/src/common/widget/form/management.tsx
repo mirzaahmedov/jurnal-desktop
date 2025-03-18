@@ -67,7 +67,11 @@ export const ManagementFields: FormEditableFieldsComponent<RequiredManagementFie
             >
               <Combobox
                 loading={isFetching}
-                options={Array.isArray(fioList?.data?.rukovoditel) ? fioList.data.rukovoditel : []}
+                options={
+                  Array.isArray(fioList?.data?.rukovoditel)
+                    ? fioList.data.rukovoditel.filter(Boolean)
+                    : []
+                }
                 value={field.value ?? ''}
                 onChange={field.onChange}
               >
@@ -97,7 +101,9 @@ export const ManagementFields: FormEditableFieldsComponent<RequiredManagementFie
               <Combobox
                 loading={isFetching}
                 options={
-                  Array.isArray(fioList?.data?.glav_buxgalter) ? fioList.data.glav_buxgalter : []
+                  Array.isArray(fioList?.data?.glav_buxgalter)
+                    ? fioList.data.glav_buxgalter.filter(Boolean)
+                    : []
                 }
                 value={field.value ?? ''}
                 onChange={field.onChange}

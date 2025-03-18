@@ -26,29 +26,6 @@ export const useDefaultFilters = create<DefaultFiltersStore>()(
   )
 )
 
-export interface DefaultFormFieldsState {
-  rukovoditel: string
-  glav_buxgalter: string
-}
-export interface DefaultFormFieldsStore extends DefaultFormFieldsState {
-  setDefaultFormFields: (fields: Partial<DefaultFormFieldsState>) => void
-}
-
-export const useDefaultFormFields = create<DefaultFormFieldsStore>()(
-  persist(
-    (set) => ({
-      rukovoditel: '',
-      glav_buxgalter: '',
-      setDefaultFormFields: (fields) => {
-        set(fields)
-      }
-    }),
-    {
-      name: 'default-form-fields'
-    }
-  )
-)
-
 export interface SettingsStore {
   report_title_id?: number
   setSettings: (values: Pick<SettingsStore, 'report_title_id'>) => void
