@@ -1,3 +1,5 @@
+import type { ProvodkaType } from './monitoring'
+
 type Podotchet = {
   id: number
   name: string
@@ -16,7 +18,7 @@ type PodotchetMonitor = {
   user_id: number
   fio: string
   login: string
-  type: string
+  type: ProvodkaType
   operatsii?: string
   provodki_schet: string
   provodki_sub_schet: string

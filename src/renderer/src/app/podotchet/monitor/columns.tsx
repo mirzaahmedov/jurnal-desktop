@@ -1,11 +1,9 @@
 import type { ColumnDef } from '@/common/components'
 import type { PodotchetMonitor } from '@/common/models'
-import type { TFunction } from 'i18next'
 
+import { ProvodkaBadge } from '@renderer/common/components/provodka-badge'
 import { IDCell } from '@renderer/common/components/table/renderers/id'
 import { ProvodkaCell } from '@renderer/common/components/table/renderers/provodka'
-import { Badge } from '@renderer/common/components/ui/badge'
-import { useTranslation } from 'react-i18next'
 
 import { formatLocaleDate } from '@/common/lib/format'
 
@@ -74,7 +72,7 @@ export const podotchetMonitoringColumns: ColumnDef<PodotchetMonitor>[] = [
     fit: true,
     key: 'type',
     header: 'type-operatsii',
-    renderCell: (row) => <DocumentTypeCell type={row.type} />
+    renderCell: (row) => <ProvodkaBadge type={row.type} />
   },
 
   {
@@ -83,46 +81,3 @@ export const podotchetMonitoringColumns: ColumnDef<PodotchetMonitor>[] = [
     renderCell: (row) => `${row.fio} (@${row.login})`
   }
 ]
-
-interface DocumentTypeCellProps {
-  type: string
-}
-const DocumentTypeCell = ({ type }: DocumentTypeCellProps) => {
-  const { t } = useTranslation(['app'])
-
-  return (
-    <Badge
-      variant="secondary"
-      className="text-brand bg-brand/10 pointer-events-none"
-    >
-      <span className="titlecase">{getProvodkaName(type, t)}</span>
-    </Badge>
-  )
-}
-
-const getProvodkaName = (type: string, t: TFunction) => {
-  switch (type) {
-    case 'bank_rasxod':
-      return `${t('pages.bank')} ${t('pages.rasxod-docs')}`
-    case 'bank_prixod':
-      return `${t('pages.bank')} ${t('pages.prixod-docs')}`
-    case 'kassa_rasxod':
-      return `${t('pages.kassa')} ${t('pages.rasxod-docs')}`
-    case 'kassa_prixod':
-      return `${t('pages.kassa')} ${t('pages.prixod-docs')}`
-    case 'show_service':
-      return t('pages.service')
-    case 'avans':
-      return t('pages.avans')
-    case 'akt':
-      return t('pages.akt')
-    case 'jur7_prixod':
-      return `${t('pages.material-warehouse')} ${t('pages.prixod-docs')}`
-    case 'jur7_rasxod':
-      return `${t('pages.material-warehouse')} ${t('pages.rasxod-docs')}`
-    case 'jur7_internal':
-      return `${t('pages.material-warehouse')} ${t('pages.internal-docs')}`
-    default:
-      return ''
-  }
-}

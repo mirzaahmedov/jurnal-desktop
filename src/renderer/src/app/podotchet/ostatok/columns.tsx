@@ -1,14 +1,13 @@
-import type { PodotchetOstatok } from '@/common/models'
-
 import { DataList } from '@renderer/common/components/data-list'
+import { ProvodkaBadge } from '@renderer/common/components/provodka-badge'
 import { IDCell } from '@renderer/common/components/table/renderers/id'
 import { ProvodkaCell } from '@renderer/common/components/table/renderers/provodka'
-import { Badge } from '@renderer/common/components/ui/badge'
 import { Trans } from 'react-i18next'
 
 import { type ColumnDef, Copyable } from '@/common/components'
 import { HoverInfoCell } from '@/common/components/table/renderers'
 import { formatLocaleDate } from '@/common/lib/format'
+import { type PodotchetOstatok, ProvodkaType } from '@/common/models'
 
 export const podotchetOstatokColumns: ColumnDef<PodotchetOstatok>[] = [
   {
@@ -60,16 +59,13 @@ export const podotchetOstatokColumns: ColumnDef<PodotchetOstatok>[] = [
   {
     key: 'rasxod',
     header: 'type',
-    renderCell: (row) =>
-      row.rasxod ? (
-        <Badge>
-          <Trans>rasxod</Trans>
-        </Badge>
-      ) : (
-        <Badge variant="outline">
-          <Trans>prixod</Trans>
-        </Badge>
-      )
+    renderCell: (row) => (
+      <ProvodkaBadge
+        type={
+          row.rasxod ? ProvodkaType.PODOTCHET_SALDO_RASXOD : ProvodkaType.PODOTCHET_SALDO_PRIXOD
+        }
+      />
+    )
   },
   {
     numeric: true,

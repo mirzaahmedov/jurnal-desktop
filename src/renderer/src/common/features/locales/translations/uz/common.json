@@ -259,6 +259,8 @@
     "avans": "Avanslar hisoboti",
     "jur7_prixod": "7-Jurnal kirim",
     "jur7_rasxod": "7-Jurnal xarajat",
-    "jur7_internal": "7-Jurnal ichki aylanma"
+    "jur7_internal": "7-Jurnal ichki aylanma",
+    "saldo_rasxod": "Saldo xarajat",
+    "saldo_prixod": "Saldo kirim"
   }
 }

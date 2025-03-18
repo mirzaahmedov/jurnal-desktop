@@ -15,7 +15,7 @@ import { useLayoutStore } from '@/common/features/layout'
 import { useDates, usePagination } from '@/common/hooks'
 import { ListView } from '@/common/views'
 
-import { pokazatUslugiColumns } from './columns'
+import { organOstatokColumns } from './columns'
 import { organOstatokQueryKeys } from './config'
 import { organizationOstatokService } from './service'
 
@@ -89,7 +89,7 @@ const OrganizationOstatokPage = () => {
       <ListView.Content loading={isFetching || isPending}>
         <GenericTable
           data={organOstatokList?.data ?? []}
-          columnDefs={pokazatUslugiColumns}
+          columnDefs={organOstatokColumns}
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}
         />

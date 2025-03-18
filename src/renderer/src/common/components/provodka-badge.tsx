@@ -52,20 +52,45 @@ export const getProvodkaBadgeOptions = (type: ProvodkaType): ProvodkaBadgeOption
         name: <Trans>provodka_type.akt</Trans>,
         color: colors[5]
       }
+    case ProvodkaType.AVANS:
+      return {
+        name: <Trans>provodka_type.avans</Trans>,
+        color: colors[6]
+      }
     case ProvodkaType.JUR7_PRIXOD:
       return {
         name: <Trans>provodka_type.jur7_prixod</Trans>,
-        color: colors[6]
+        color: colors[7]
       }
     case ProvodkaType.JUR7_RASXOD:
       return {
         name: <Trans>provodka_type.jur7_rasxod</Trans>,
-        color: colors[7]
+        color: colors[8]
       }
     case ProvodkaType.JUR7_INTERNAL:
       return {
         name: <Trans>provodka_type.jur7_internal</Trans>,
-        color: colors[8]
+        color: colors[9]
+      }
+    case ProvodkaType.PODOTCHET_SALDO_RASXOD:
+      return {
+        name: <Trans>provodka_type.saldo_rasxod</Trans>,
+        color: colors[10]
+      }
+    case ProvodkaType.PODOTCHET_SALDO_PRIXOD:
+      return {
+        name: <Trans>provodka_type.saldo_prixod</Trans>,
+        color: colors[11]
+      }
+    case ProvodkaType.ORGAN_SALDO_RASXOD:
+      return {
+        name: <Trans>provodka_type.saldo_rasxod</Trans>,
+        color: colors[12]
+      }
+    case ProvodkaType.ORGAN_SALDO_PRIXOD:
+      return {
+        name: <Trans>provodka_type.saldo_prixod</Trans>,
+        color: colors[13]
       }
 
     default:

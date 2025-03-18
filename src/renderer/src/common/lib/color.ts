@@ -8,7 +8,12 @@ export const predefinedColors = [
   '#FF851B', // Orange
   '#20C997', // Teal
   '#E83E8C', // Pink
-  '#6C757D' // Gray
+  '#6C757D', // Gray,
+  '#FF5733', // Light Red
+  '#c800de', // Light Green
+  '#3357FF', // Light Blue
+  '#FF33A1', // Light Pink
+  '#33FFF5' // Light Cyan]
 ]
 
 export const getRandomColor = (existingColors: string[]) => {
