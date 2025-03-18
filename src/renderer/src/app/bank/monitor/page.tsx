@@ -75,6 +75,7 @@ const BankMonitorPage = () => {
                 buttonText={t('daily-report')}
                 params={{
                   main_schet_id,
+                  budjet_id,
                   report_title_id,
                   from: dates.from,
                   to: dates.to,
