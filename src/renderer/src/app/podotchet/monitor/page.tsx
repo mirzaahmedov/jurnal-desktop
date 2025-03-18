@@ -146,21 +146,19 @@ const PodotchetMonitoringPage = () => {
                   buttonText={t('personal-account')}
                 />
               ) : null}
-              {operatsiiSpravochnik.selected ? (
-                <DownloadFile
-                  fileName={`шапка_${dates.from}&${dates.to}-${operatsiiSpravochnik.selected.schet}.xlsx`}
-                  url={`/podotchet/monitoring/cap`}
-                  params={{
-                    operatsii: operatsiiSpravochnik.selected.schet,
-                    main_schet_id,
-                    from: dates.from,
-                    to: dates.to,
-                    excel: true,
-                    report_title_id
-                  }}
-                  buttonText={t('cap-report')}
-                />
-              ) : null}
+              <DownloadFile
+                fileName={`${t('cap')}-${dates.from}&${dates.to}.xlsx`}
+                url={`/podotchet/monitoring/cap`}
+                params={{
+                  operatsii: operatsiiSpravochnik.selected?.schet,
+                  main_schet_id,
+                  from: dates.from,
+                  to: dates.to,
+                  excel: true,
+                  report_title_id
+                }}
+                buttonText={t('cap-report')}
+              />
             </ButtonGroup>
           </div>
           <ListView.RangeDatePicker {...dates} />

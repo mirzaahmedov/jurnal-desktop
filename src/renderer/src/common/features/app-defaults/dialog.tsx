@@ -23,13 +23,11 @@ import { Form, FormField } from '@/common/components/ui/form'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/common/components/ui/tabs'
 import { useConfirm } from '@/common/features/confirm'
 
-import { ManagementFields } from './components/managements'
 import { defaultValues } from './constants'
-import { useDefaultFilters, useDefaultFormFields, useSettingsStore } from './store'
+import { useDefaultFilters, useSettingsStore } from './store'
 
 enum TabOption {
   Fitlers = 'Filters',
-  Form = 'Form',
   UI = 'UI',
   Report = 'Report'
 }
@@ -48,7 +46,6 @@ export const ConfigureDefaultValuesDialog = ({
 
   const { confirm } = useConfirm()
   const { setDefaultFilters } = useDefaultFilters()
-  const { setDefaultFormFields } = useDefaultFormFields()
   const { setSettings } = useSettingsStore()
 
   const { data: reportTitles, isFetching } = useQuery({
@@ -68,11 +65,6 @@ export const ConfigureDefaultValuesDialog = ({
     setSettings({
       report_title_id: values.report_title_id
     })
-    setDefaultFormFields({
-      rukovoditel: values.rukovoditel,
-      glav_buxgalter: values.glav_buxgalter
-    })
-
     window.api.setZoomFactor(values.zoomFactor)
 
     dates.onChange({
@@ -97,7 +89,6 @@ export const ConfigureDefaultValuesDialog = ({
           onOpenChange?.(false)
         }
       })
-
       return
     }
     onOpenChange?.(open)
@@ -141,12 +132,6 @@ export const ConfigureDefaultValuesDialog = ({
                       className="w-full justify-start px-3 py-1.5 !shadow-none data-[state=active]:bg-slate-100 data-[state=active]:text-brand"
                     >
                       {t('filters')}
-                    </TabsTrigger>
-                    <TabsTrigger
-                      value={TabOption.Form}
-                      className="w-full justify-start px-3 py-1.5 !shadow-none data-[state=active]:bg-slate-100 data-[state=active]:text-brand"
-                    >
-                      {t('form')}
                     </TabsTrigger>
                     <TabsTrigger
                       value={TabOption.UI}
@@ -193,15 +178,6 @@ export const ConfigureDefaultValuesDialog = ({
                         )}
                       />
                     </div>
-                  </TabsContent>
-                  <TabsContent value={TabOption.Form}>
-                    <ManagementFields
-                      form={form}
-                      className="p-0"
-                      containerProps={{
-                        className: 'flex-col'
-                      }}
-                    />
                   </TabsContent>
                   <TabsContent value={TabOption.UI}>
                     <FormField
