@@ -1,7 +1,8 @@
 import { useEffect } from 'react'
 
 import { useRequisitesStore } from '@renderer/common/features/requisites'
-import { SearchField, useSearch } from '@renderer/common/features/search'
+import { SearchField } from '@renderer/common/features/search/search-field'
+import { useSearch } from '@renderer/common/features/search/use-search'
 import { useDates, usePagination } from '@renderer/common/hooks'
 import { formatDate } from '@renderer/common/lib/date'
 import { ListView } from '@renderer/common/views'

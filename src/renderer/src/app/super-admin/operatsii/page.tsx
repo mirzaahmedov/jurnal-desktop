@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 
+import { useSearch } from '@renderer/common/features/search/use-search'
 import { usePagination } from '@renderer/common/hooks'
 import { useLocationState } from '@renderer/common/hooks/use-location-state'
 import { ListView } from '@renderer/common/views'
@@ -9,7 +10,6 @@ import { useTranslation } from 'react-i18next'
 import { GenericTable } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
 import { useLayout } from '@/common/features/layout'
-import { useSearch } from '@/common/features/search'
 import { useToggle } from '@/common/hooks/use-toggle'
 import { type Operatsii, TypeSchetOperatsii } from '@/common/models'
 

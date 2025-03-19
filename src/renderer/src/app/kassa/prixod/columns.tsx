@@ -9,7 +9,9 @@ import { formatLocaleDate } from '@/common/lib/format'
 export const columns: ColumnDef<KassaPrixodType>[] = [
   {
     key: 'id',
-    renderCell: IDCell
+    renderCell: IDCell,
+    width: 160,
+    minWidth: 160
   },
   {
     key: 'doc_num'

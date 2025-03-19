@@ -12,16 +12,21 @@ import { type OrganizationOstatok, ProvodkaType } from '@/common/models'
 export const organOstatokColumns: ColumnDef<OrganizationOstatok>[] = [
   {
     key: 'id',
-    renderCell: IDCell
+    renderCell: IDCell,
+    width: 160,
+    minWidth: 160
   },
   {
+    fit: true,
     key: 'doc_num'
   },
   {
+    fit: true,
     key: 'doc_date',
     renderCell: (row) => formatLocaleDate(row.doc_date)
   },
   {
+    width: 350,
     key: 'organ_id',
     header: 'organization',
     renderCell: (row) => (
@@ -65,6 +70,7 @@ export const organOstatokColumns: ColumnDef<OrganizationOstatok>[] = [
     )
   },
   {
+    fit: true,
     key: 'rasxod',
     header: 'type',
     renderCell: (row) => (
@@ -84,6 +90,7 @@ export const organOstatokColumns: ColumnDef<OrganizationOstatok>[] = [
     )
   },
   {
+    width: 350,
     key: 'opisanie'
   }
 ]

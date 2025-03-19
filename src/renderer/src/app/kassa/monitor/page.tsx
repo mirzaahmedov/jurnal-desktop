@@ -3,7 +3,9 @@ import { useEffect } from 'react'
 import { useSettingsStore } from '@renderer/common/features/app-defaults'
 import { DownloadFile } from '@renderer/common/features/file'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
-import { SearchField, useSearch } from '@renderer/common/features/search'
+import { SearchField } from '@renderer/common/features/search/search-field'
+import { useSearch } from '@renderer/common/features/search/use-search'
+import { useSidebarStore } from '@renderer/common/layout/sidebar'
 import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 
@@ -24,6 +26,7 @@ const KassaMonitorPage = () => {
   const report_title_id = useSettingsStore((store) => store.report_title_id)
 
   const setLayout = useLayoutStore((store) => store.setLayout)
+  const setCollapsed = useSidebarStore((store) => store.setCollapsed)
 
   const { t } = useTranslation(['app'])
   const { search } = useSearch()
@@ -43,12 +46,17 @@ const KassaMonitorPage = () => {
   })
 
   useEffect(() => {
+    setCollapsed(true)
     setLayout({
       title: t('pages.monitoring'),
-      breadcrumbs: [{ title: t('pages.kassa') }],
+      breadcrumbs: [
+        {
+          title: t('pages.kassa')
+        }
+      ],
       content: SearchField
     })
-  }, [setLayout, t])
+  }, [setLayout, setCollapsed, t])
 
   return (
     <ListView>

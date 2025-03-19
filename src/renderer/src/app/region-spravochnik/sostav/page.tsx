@@ -2,6 +2,8 @@ import type { Sostav } from '@/common/models'
 
 import { useEffect, useState } from 'react'
 
+import { SearchField } from '@renderer/common/features/search/search-field'
+import { useSearch } from '@renderer/common/features/search/use-search'
 import { usePagination } from '@renderer/common/hooks'
 import { ListView } from '@renderer/common/views'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
@@ -10,7 +12,6 @@ import { useTranslation } from 'react-i18next'
 import { GenericTable, LoadingOverlay } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
 import { useLayoutStore } from '@/common/features/layout'
-import { SearchField, useSearch } from '@/common/features/search'
 import { useToggle } from '@/common/hooks/use-toggle'
 
 import { sostavColumns } from './columns'

@@ -2,6 +2,8 @@ import type { MainSchet } from '@/common/models'
 
 import { useEffect, useState } from 'react'
 
+import { SearchField } from '@renderer/common/features/search/search-field'
+import { useSearch } from '@renderer/common/features/search/use-search'
 import { usePagination } from '@renderer/common/hooks'
 import { ListView } from '@renderer/common/views'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
@@ -11,7 +13,6 @@ import { toast } from 'react-toastify'
 import { GenericTable } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
 import { useLayoutStore } from '@/common/features/layout'
-import { SearchField, useSearch } from '@/common/features/search'
 import { useToggle } from '@/common/hooks/use-toggle'
 
 import { mainSchetColumns } from './columns'

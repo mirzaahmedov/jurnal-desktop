@@ -13,13 +13,13 @@ import {
   DialogHeader,
   DialogTitle
 } from '@renderer/common/components/ui/dialog'
+import { SpravochnikSearchField } from '@renderer/common/features/search/spravochnik-search-field'
 import { formatDate } from '@renderer/common/lib/date'
 import { CopyPlus } from 'lucide-react'
 import { ZodIssueCode, z } from 'zod'
 
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 import { budjet } from '@/common/features/crud/middleware'
-import { SpravochnikSearchField } from '@/common/features/search'
 import { extendObject } from '@/common/lib/utils'
 import { withPreprocessor } from '@/common/lib/validation'
 

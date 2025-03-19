@@ -13,8 +13,9 @@ type PodotchetMonitor = {
   prixod_sum: number
   rasxod_sum: number
   opisanie: string
-  podotchet_litso_id: number
+  podotchet_id: number
   podotchet_name: string
+  podotchet_rayon: string
   user_id: number
   fio: string
   login: string

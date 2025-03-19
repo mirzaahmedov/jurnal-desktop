@@ -13,10 +13,12 @@ import { Trans } from 'react-i18next'
 import { queryKeys } from './constants'
 import { bankRasxodPaymentService } from './service'
 
-export const columns: ColumnDef<BankRasxod>[] = [
+export const rasxodColumns: ColumnDef<BankRasxod>[] = [
   {
     key: 'id',
-    renderCell: IDCell
+    renderCell: IDCell,
+    width: 160,
+    minWidth: 160
   },
   {
     fit: true,

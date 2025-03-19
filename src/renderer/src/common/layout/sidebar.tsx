@@ -197,23 +197,9 @@ const renderNavElement = (elem: null | NavElement, isCollapsed: boolean, rootPat
 const ApplicationBadge = () => {
   switch (true) {
     case import.meta.env.DEV:
-      return (
-        <Badge
-          variant="secondary"
-          className="bg-brand/10 hover:bg-brand/10 text-brand"
-        >
-          Разработка
-        </Badge>
-      )
+      return <Badge>Разработка</Badge>
     case import.meta.env.VITE_MODE === 'staging':
-      return (
-        <Badge
-          variant="secondary"
-          className="bg-emerald-50 text-emerald-500"
-        >
-          Тестирование
-        </Badge>
-      )
+      return <Badge className="bg-emerald-400 hover:bg-emerald-500">Тестирование</Badge>
     default:
       return null
   }

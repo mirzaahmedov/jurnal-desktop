@@ -8,7 +8,7 @@ import {
   CollapsibleTable,
   type CollapsibleTableProps
 } from '@renderer/common/components/collapsible-table'
-import { SpravochnikSearchField } from '@renderer/common/features/search'
+import { SpravochnikSearchField } from '@renderer/common/features/search/spravochnik-search-field'
 import {
   type PathTreeNode,
   arrayToTreeByPathKey,

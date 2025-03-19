@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
 
 import { roleColumns, roleQueryKeys, roleService } from '@renderer/app/super-admin/role'
-import { SearchField, useSearch } from '@renderer/common/features/search'
+import { SearchField } from '@renderer/common/features/search/search-field'
+import { useSearch } from '@renderer/common/features/search/use-search'
 import { usePagination } from '@renderer/common/hooks'
 import { ListView } from '@renderer/common/views'
 import { useQuery } from '@tanstack/react-query'

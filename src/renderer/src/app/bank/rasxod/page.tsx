@@ -7,7 +7,8 @@ import { Button } from '@renderer/common/components/ui/button'
 import { useConfirm } from '@renderer/common/features/confirm'
 import { useLayoutStore } from '@renderer/common/features/layout'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
-import { SearchField, useSearch } from '@renderer/common/features/search'
+import { SearchField } from '@renderer/common/features/search/search-field'
+import { useSearch } from '@renderer/common/features/search/use-search'
 import { useDates, usePagination } from '@renderer/common/hooks'
 import { formatNumber } from '@renderer/common/lib/format'
 import { ListView } from '@renderer/common/views'
@@ -16,7 +17,7 @@ import { CopyPlus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
-import { columns } from './columns'
+import { rasxodColumns } from './columns'
 import { queryKeys } from './constants'
 import { bankRasxodService } from './service'
 
@@ -89,7 +90,7 @@ const BankRasxodPage = () => {
       <ListView.Content loading={isFetching || isPending}>
         <GenericTable
           data={rasxodList?.data ?? []}
-          columnDefs={columns}
+          columnDefs={rasxodColumns}
           getRowId={(row) => row.id}
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}

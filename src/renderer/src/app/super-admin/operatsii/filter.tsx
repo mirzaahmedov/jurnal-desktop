@@ -1,7 +1,7 @@
+import { SearchField } from '@renderer/common/features/search/search-field'
 import { useLocationState } from '@renderer/common/hooks/use-location-state'
 
 import { SelectField } from '@/common/components'
-import { SearchField } from '@/common/features/search'
 import { TypeSchetOperatsii } from '@/common/models'
 
 import { operatsiiTypeSchetOptions } from './config'

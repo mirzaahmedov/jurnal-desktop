@@ -3,7 +3,9 @@ import { useEffect } from 'react'
 import { useSettingsStore } from '@renderer/common/features/app-defaults'
 import { DownloadFile } from '@renderer/common/features/file'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
-import { SearchField, useSearch } from '@renderer/common/features/search'
+import { SearchField } from '@renderer/common/features/search/search-field'
+import { useSearch } from '@renderer/common/features/search/use-search'
+import { useSidebarStore } from '@renderer/common/layout/sidebar'
 import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 
@@ -20,8 +22,9 @@ import { bankMonitorService } from './service'
 
 const BankMonitorPage = () => {
   const setLayout = useLayoutStore((store) => store.setLayout)
-  const report_title_id = useSettingsStore((store) => store.report_title_id)
+  const setCollapsed = useSidebarStore((store) => store.setCollapsed)
 
+  const report_title_id = useSettingsStore((store) => store.report_title_id)
   const dates = useDates()
   const pagination = usePagination()
 
@@ -44,6 +47,7 @@ const BankMonitorPage = () => {
   })
 
   useEffect(() => {
+    setCollapsed(true)
     setLayout({
       title: t('pages.monitoring'),
       content: SearchField,
@@ -53,7 +57,7 @@ const BankMonitorPage = () => {
         }
       ]
     })
-  }, [setLayout, t])
+  }, [setLayout, setCollapsed, t])
 
   return (
     <ListView>

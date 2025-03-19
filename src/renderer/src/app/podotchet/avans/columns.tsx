@@ -12,16 +12,21 @@ import { type ColumnDef, Copyable } from '@/common/components'
 export const avansColumns: ColumnDef<Avans>[] = [
   {
     key: 'id',
-    renderCell: IDCell
+    renderCell: IDCell,
+    width: 160,
+    minWidth: 160
   },
   {
+    fit: true,
     key: 'doc_num'
   },
   {
+    fit: true,
     key: 'doc_date',
     renderCell: (row) => formatLocaleDate(row.doc_date)
   },
   {
+    width: 350,
     key: 'spravochnik_podotchet_litso_id',
     header: 'podotchet-litso',
     renderCell: (row) => (
@@ -67,6 +72,7 @@ export const avansColumns: ColumnDef<Avans>[] = [
     )
   },
   {
+    width: 350,
     key: 'opisanie'
   }
 ]

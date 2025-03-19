@@ -4,6 +4,7 @@ import { ProvodkaBadge } from '@renderer/common/components/provodka-badge'
 import { HoverInfoCell } from '@renderer/common/components/table/renderers'
 import { IDCell } from '@renderer/common/components/table/renderers/id'
 import { ProvodkaCell } from '@renderer/common/components/table/renderers/provodka'
+import { UserCell } from '@renderer/common/components/table/renderers/user'
 import { formatLocaleDate } from '@renderer/common/lib/format'
 import { Trans } from 'react-i18next'
 
@@ -13,6 +14,7 @@ export const organizationMonitorColumns: ColumnDef<OrganizationMonitor>[] = [
   {
     key: 'id',
     renderCell: IDCell,
+    width: 160,
     minWidth: 160
   },
   {
@@ -156,6 +158,11 @@ export const organizationMonitorColumns: ColumnDef<OrganizationMonitor>[] = [
     fit: true,
     key: 'user_id',
     header: 'created-by-user',
-    renderCell: (row) => `${row.fio} (@${row.login})`
+    renderCell: (row) => (
+      <UserCell
+        fio={row.fio}
+        login={row.login}
+      />
+    )
   }
 ]

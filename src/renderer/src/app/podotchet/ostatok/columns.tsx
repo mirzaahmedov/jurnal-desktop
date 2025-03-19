@@ -12,16 +12,21 @@ import { type PodotchetOstatok, ProvodkaType } from '@/common/models'
 export const podotchetOstatokColumns: ColumnDef<PodotchetOstatok>[] = [
   {
     key: 'id',
-    renderCell: IDCell
+    renderCell: IDCell,
+    width: 160,
+    minWidth: 160
   },
   {
+    fit: true,
     key: 'doc_num'
   },
   {
+    fit: true,
     key: 'doc_date',
     renderCell: (row) => formatLocaleDate(row.doc_date)
   },
   {
+    width: 350,
     key: 'podotchet_id',
     header: 'organization',
     renderCell: (row) => (
@@ -57,6 +62,7 @@ export const podotchetOstatokColumns: ColumnDef<PodotchetOstatok>[] = [
     )
   },
   {
+    fit: true,
     key: 'rasxod',
     header: 'type',
     renderCell: (row) => (
@@ -78,6 +84,7 @@ export const podotchetOstatokColumns: ColumnDef<PodotchetOstatok>[] = [
     )
   },
   {
+    width: 350,
     key: 'opisanie'
   }
 ]

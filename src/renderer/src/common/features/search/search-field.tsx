@@ -43,11 +43,14 @@ export const SearchField = ({ className, containerProps, ...props }: SearchField
   return (
     <div
       {...props}
-      className={cn('flex justify-end items-center gap-2.5 px-5', className)}
+      className={cn('flex justify-end items-center gap-2.5 px-2.5', className)}
     >
       <div
         {...containerProps}
-        className={cn('relative w-full max-w-xs', containerProps?.className)}
+        className={cn(
+          'relative w-80 focus-within:w-96 transition-[width]',
+          containerProps?.className
+        )}
       >
         <Input
           required
@@ -59,7 +62,7 @@ export const SearchField = ({ className, containerProps, ...props }: SearchField
             setInterim(e.target.value)
           }}
           placeholder={t('search...')}
-          className="rounded-md pl-10 shadow-none focus:ring-red-400 focus-visible:ring-[3px] valid:focus:bg-transparent valid:bg-brand/5"
+          className="rounded-md pl-10 font-medium shadow-none focus:ring-red-400 focus-visible:ring-[3px] valid:focus:bg-slate-50 bg-slate-50 valid:bg-brand/10 valid:border-brand/20"
         />
         <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-5 text-slate-400" />
       </div>

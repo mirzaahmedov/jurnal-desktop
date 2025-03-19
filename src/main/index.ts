@@ -125,7 +125,9 @@ function createWindow(): void {
     })
 
     setInterval(() => {
-      autoUpdater.checkForUpdates()
+      if (!autoUpdater.isUpdaterActive()) {
+        autoUpdater.checkForUpdates()
+      }
     }, CHECK_UPDATES_INTERVAL)
   })
 

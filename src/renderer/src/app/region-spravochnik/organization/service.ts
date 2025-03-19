@@ -1,11 +1,11 @@
 import type { SpravochnikHookOptions } from '@/common/features/spravochnik'
 import type { Organization, Response } from '@/common/models'
 
+import { SpravochnikSearchField } from '@renderer/common/features/search/spravochnik-search-field'
 import { http } from '@renderer/common/lib/http'
 import { z } from 'zod'
 
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
-import { SpravochnikSearchField } from '@/common/features/search'
 import { extendObject } from '@/common/lib/utils'
 import { withPreprocessor } from '@/common/lib/validation'
 

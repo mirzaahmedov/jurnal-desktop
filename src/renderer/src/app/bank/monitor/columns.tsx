@@ -3,6 +3,7 @@ import type { BankMonitoringType } from '@/common/models'
 import { DataList } from '@renderer/common/components/data-list'
 import { IDCell } from '@renderer/common/components/table/renderers/id'
 import { ProvodkaCell } from '@renderer/common/components/table/renderers/provodka'
+import { UserCell } from '@renderer/common/components/table/renderers/user'
 import { Trans } from 'react-i18next'
 
 import { type ColumnDef, Copyable } from '@/common/components'
@@ -12,21 +13,25 @@ import { formatLocaleDate } from '@/common/lib/format'
 export const columns: ColumnDef<BankMonitoringType>[] = [
   {
     key: 'id',
-    renderCell: IDCell
+    renderCell: IDCell,
+    width: 160,
+    minWidth: 160
   },
   {
+    fit: true,
     key: 'doc_num'
   },
   {
+    fit: true,
     key: 'doc_date',
     renderCell(row, col) {
       return formatLocaleDate(row[col.key as keyof BankMonitoringType] as string)
     }
   },
   {
+    minWidth: 350,
     key: 'id_spravochnik_organization',
     header: 'about-counteragent',
-    className: 'w-96',
     renderCell: (row) => (
       <HoverInfoCell
         title={row.spravochnik_organization_name}
@@ -98,13 +103,18 @@ export const columns: ColumnDef<BankMonitoringType>[] = [
     }
   },
   {
+    minWidth: 350,
     key: 'opisanie'
   },
   {
+    fit: true,
     key: 'user_id',
     header: 'created-by-user',
-    renderCell(row) {
-      return `${row.fio} (@${row.login})`
-    }
+    renderCell: (row) => (
+      <UserCell
+        fio={row.fio}
+        login={row.login}
+      />
+    )
   }
 ]

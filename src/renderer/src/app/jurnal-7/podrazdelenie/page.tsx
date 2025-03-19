@@ -2,7 +2,8 @@ import type { Jur7Podrazdelenie } from '@/common/models'
 
 import { useEffect, useState } from 'react'
 
-import { SearchField, useSearch } from '@renderer/common/features/search'
+import { SearchField } from '@renderer/common/features/search/search-field'
+import { useSearch } from '@renderer/common/features/search/use-search'
 import { usePagination } from '@renderer/common/hooks'
 import { ListView } from '@renderer/common/views'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'

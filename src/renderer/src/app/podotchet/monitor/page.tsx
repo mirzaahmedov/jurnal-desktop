@@ -4,9 +4,11 @@ import { useSettingsStore } from '@renderer/common/features/app-defaults'
 import { DownloadFile } from '@renderer/common/features/file'
 import { useLayoutStore } from '@renderer/common/features/layout'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
-import { SearchField, useSearch } from '@renderer/common/features/search'
+import { SearchField } from '@renderer/common/features/search/search-field'
+import { useSearch } from '@renderer/common/features/search/use-search'
 import { useDates, usePagination } from '@renderer/common/hooks'
 import { useLocationState } from '@renderer/common/hooks/use-location-state'
+import { useSidebarStore } from '@renderer/common/layout/sidebar'
 import { ListView } from '@renderer/common/views'
 import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
@@ -21,7 +23,6 @@ import {
   LoadingOverlay
 } from '@/common/components'
 import { ButtonGroup } from '@/common/components/ui/button-group'
-import { ScrollArea } from '@/common/components/ui/scroll-area'
 import { useSpravochnik } from '@/common/features/spravochnik'
 import { formatNumber } from '@/common/lib/format'
 import { TypeSchetOperatsii } from '@/common/models'
@@ -36,6 +37,7 @@ const PodotchetMonitoringPage = () => {
   const report_title_id = useSettingsStore((store) => store.report_title_id)
 
   const setLayout = useLayoutStore((store) => store.setLayout)
+  const setCollapsed = useSidebarStore((store) => store.setCollapsed)
 
   const { t } = useTranslation(['app'])
   const { search } = useSearch()
@@ -82,6 +84,7 @@ const PodotchetMonitoringPage = () => {
   })
 
   useEffect(() => {
+    setCollapsed(true)
     setLayout({
       title: t('pages.podotchet-monitoring'),
       content: SearchField,
@@ -91,93 +94,91 @@ const PodotchetMonitoringPage = () => {
         }
       ]
     })
-  }, [setLayout, t])
+  }, [setLayout, setCollapsed, t])
 
   return (
     <ListView>
-      <div className="bg-white">
-        <div className="p-5 space-y-5 flex flex-col items-start">
-          <div className="w-full flex flex-row gap-10 items-center justify-between">
-            <div className="flex-1 flex flex-row gap-5 items-center">
-              <ChooseSpravochnik
-                spravochnik={operatsiiSpravochnik}
-                placeholder="Выберите операцию"
-                getName={(selected) => selected.name}
-                getElements={(selected) => [
-                  { name: 'Наименование', value: selected.name },
-                  { name: 'Счет', value: selected.schet },
-                  { name: 'Субсчет', value: selected.sub_schet }
-                ]}
-              />
-              <ChooseSpravochnik
-                disabled={!operatsiiSpravochnik.selected}
-                spravochnik={podotchetSpravochnik}
-                placeholder="Выберите подотчетное лицо"
-                getName={(selected) => selected.name}
-                getElements={(selected) => [
-                  { name: 'Наименование', value: selected.name },
-                  { name: 'Регион', value: selected?.rayon }
-                ]}
-              />
-            </div>
+      <ListView.Header className="space-y-5">
+        <div className="w-full flex flex-row gap-10 items-center justify-between">
+          <div className="flex-1 flex flex-row gap-5 items-center">
+            <ChooseSpravochnik
+              spravochnik={operatsiiSpravochnik}
+              placeholder="Выберите операцию"
+              getName={(selected) => selected.name}
+              getElements={(selected) => [
+                { name: 'Наименование', value: selected.name },
+                { name: 'Счет', value: selected.schet },
+                { name: 'Субсчет', value: selected.sub_schet }
+              ]}
+            />
+            <ChooseSpravochnik
+              disabled={!operatsiiSpravochnik.selected}
+              spravochnik={podotchetSpravochnik}
+              placeholder="Выберите подотчетное лицо"
+              getName={(selected) => selected.name}
+              getElements={(selected) => [
+                { name: 'Наименование', value: selected.name },
+                { name: 'Регион', value: selected?.rayon }
+              ]}
+            />
+          </div>
 
-            <ButtonGroup borderStyle="dashed">
+          <ButtonGroup borderStyle="dashed">
+            <DownloadFile
+              fileName={`дебитор-кредитор_отчет-${dates.to}.xlsx`}
+              url="podotchet/monitoring/prixod/rasxod/"
+              params={{
+                budjet_id,
+                to: dates.to,
+                excel: true
+              }}
+              buttonText={t('debitor-kreditor-report')}
+            />
+            {podotchetId ? (
               <DownloadFile
-                fileName={`дебитор-кредитор_отчет-${dates.to}.xlsx`}
-                url="podotchet/monitoring/prixod/rasxod/"
+                fileName={`лицевой-счет_${podotchetSpravochnik.selected?.name}-${dates.from}&${dates.to}.xlsx`}
+                url={`podotchet/monitoring/export/${podotchetId}`}
                 params={{
-                  budjet_id,
+                  operatsii: operatsiiSpravochnik.selected?.schet,
+                  main_schet_id,
+                  from: dates.from,
                   to: dates.to,
                   excel: true
                 }}
-                buttonText={t('debitor-kreditor-report')}
+                buttonText={t('personal-account')}
               />
-              {podotchetId ? (
-                <DownloadFile
-                  fileName={`лицевой-счет_${podotchetSpravochnik.selected?.name}-${dates.from}&${dates.to}.xlsx`}
-                  url={`podotchet/monitoring/export/${podotchetId}`}
-                  params={{
-                    operatsii: operatsiiSpravochnik.selected?.schet,
-                    main_schet_id,
-                    from: dates.from,
-                    to: dates.to,
-                    excel: true
-                  }}
-                  buttonText={t('personal-account')}
-                />
-              ) : null}
-              <DownloadFile
-                fileName={`${t('cap')}-${dates.from}&${dates.to}.xlsx`}
-                url={`/podotchet/monitoring/cap`}
-                params={{
-                  budjet_id,
-                  main_schet_id,
-                  operatsii: operatsiiSpravochnik.selected?.schet,
-                  from: dates.from,
-                  to: dates.to,
-                  excel: true,
-                  report_title_id
-                }}
-                buttonText={t('cap-report')}
-              />
-            </ButtonGroup>
-          </div>
-          <ListView.RangeDatePicker {...dates} />
-          <SummaFields
-            summaDebet={
-              monitorList?.meta && monitorList?.meta.summa_from > 0
-                ? monitorList?.meta?.summa_from
-                : 0
-            }
-            summaKredit={
-              monitorList?.meta && monitorList?.meta.summa_from < 0
-                ? monitorList?.meta?.summa_from
-                : 0
-            }
-          />
+            ) : null}
+            <DownloadFile
+              fileName={`${t('cap')}-${dates.from}&${dates.to}.xlsx`}
+              url={`/podotchet/monitoring/cap`}
+              params={{
+                budjet_id,
+                main_schet_id,
+                operatsii: operatsiiSpravochnik.selected?.schet,
+                from: dates.from,
+                to: dates.to,
+                excel: true,
+                report_title_id
+              }}
+              buttonText={t('cap-report')}
+            />
+          </ButtonGroup>
         </div>
-      </div>
-      <ScrollArea className="flex-1 relative">
+        <ListView.RangeDatePicker {...dates} />
+        <SummaFields
+          summaDebet={
+            monitorList?.meta && monitorList?.meta.summa_from > 0
+              ? monitorList?.meta?.summa_from
+              : 0
+          }
+          summaKredit={
+            monitorList?.meta && monitorList?.meta.summa_from < 0
+              ? monitorList?.meta?.summa_from
+              : 0
+          }
+        />
+      </ListView.Header>
+      <ListView.Content loading={isFetching}>
         {isFetching ? <LoadingOverlay /> : null}
         <GenericTable
           columnDefs={podotchetMonitoringColumns}
@@ -196,7 +197,7 @@ const PodotchetMonitoringPage = () => {
             </>
           }
         />
-      </ScrollArea>
+      </ListView.Content>
       <ListView.Footer className="p-5 flex flex-col gap-5">
         <SummaFields
           summaDebet={

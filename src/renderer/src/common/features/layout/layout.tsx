@@ -89,7 +89,7 @@ export const PageLayout = ({ children }: PageLayoutProps) => {
           <div>
             {typeof onCreate === 'function' ? (
               <Button onClick={onCreate}>
-                <CirclePlus className="btn-icon icon-start" />
+                <CirclePlus className="btn-icon" />
                 {t('add')}
               </Button>
             ) : null}

@@ -3,24 +3,30 @@ import type { KassaMonitoringType } from '@/common/models'
 
 import { IDCell } from '@renderer/common/components/table/renderers/id'
 import { ProvodkaCell } from '@renderer/common/components/table/renderers/provodka'
+import { UserCell } from '@renderer/common/components/table/renderers/user'
 
 import { formatLocaleDate } from '@/common/lib/format'
 
 export const columns: ColumnDef<KassaMonitoringType>[] = [
   {
     key: 'id',
-    renderCell: IDCell
+    renderCell: IDCell,
+    width: 160,
+    minWidth: 160
   },
   {
+    fit: true,
     key: 'doc_num'
   },
   {
+    fit: true,
     key: 'doc_date',
     renderCell(row) {
       return formatLocaleDate(row.doc_date)
     }
   },
   {
+    width: 350,
     key: 'opisanie'
   },
   {
@@ -54,14 +60,19 @@ export const columns: ColumnDef<KassaMonitoringType>[] = [
     }
   },
   {
+    width: 350,
     key: 'spravochnik_podotchet_litso_name',
     header: 'podotchet-litso'
   },
   {
+    fit: true,
     key: 'user_id',
     header: 'created-by-user',
-    renderCell(row) {
-      return `${row.fio} (@${row.login})`
-    }
+    renderCell: (row) => (
+      <UserCell
+        fio={row.fio}
+        login={row.login}
+      />
+    )
   }
 ]

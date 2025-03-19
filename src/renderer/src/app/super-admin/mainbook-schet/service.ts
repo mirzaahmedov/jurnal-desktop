@@ -2,7 +2,7 @@ import type { SpravochnikHookOptions } from '@renderer/common/features/spravochn
 import type { Mainbook } from '@renderer/common/models'
 
 import { ApiEndpoints, CRUDService } from '@renderer/common/features/crud'
-import { SpravochnikSearchField } from '@renderer/common/features/search'
+import { SpravochnikSearchField } from '@renderer/common/features/search/spravochnik-search-field'
 import { extendObject } from '@renderer/common/lib/utils'
 
 import { adminMainbookSchetColumns } from './columns'

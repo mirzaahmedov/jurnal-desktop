@@ -13,16 +13,21 @@ import { formatLocaleDate } from '@/common/lib/format'
 export const columns: ColumnDef<Akt>[] = [
   {
     key: 'id',
-    renderCell: IDCell
+    renderCell: IDCell,
+    width: 160,
+    minWidth: 160
   },
   {
+    fit: true,
     key: 'doc_num'
   },
   {
+    fit: true,
     key: 'doc_date',
     renderCell: (row) => formatLocaleDate(row.doc_date)
   },
   {
+    width: 350,
     key: 'id_spravochnik_organization',
     header: 'organization',
     renderCell: (row) => (
@@ -66,6 +71,7 @@ export const columns: ColumnDef<Akt>[] = [
     )
   },
   {
+    fit: true,
     key: 'shartnomalar_organization_id',
     header: 'shartnoma',
     renderCell: (row) =>
@@ -112,6 +118,7 @@ export const columns: ColumnDef<Akt>[] = [
     )
   },
   {
+    width: 350,
     key: 'opisanie'
   }
 ]

@@ -8,6 +8,7 @@ import {
   CollapsibleTable,
   type CollapsibleTableProps
 } from '@renderer/common/components/collapsible-table'
+import { SpravochnikSearchField } from '@renderer/common/features/search/spravochnik-search-field'
 import {
   type PathTreeNode,
   arrayToTreeByPathKey,
@@ -15,7 +16,6 @@ import {
 } from '@renderer/common/lib/tree/path-tree'
 
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
-import { SpravochnikSearchField } from '@/common/features/search'
 import { extendObject } from '@/common/lib/utils'
 
 import { smetaColumns } from './columns'
