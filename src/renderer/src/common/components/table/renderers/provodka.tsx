@@ -18,7 +18,7 @@ export const ProvodkaCell = ({ summa, provodki }: ProvodkaCellProps) => {
   const { t } = useTranslation()
   return (
     <HoverInfoCell
-      title={formatNumber(summa)}
+      title={<b className="font-black">{formatNumber(summa)}</b>}
       hoverContent={
         <ul className="text-foreground flex flex-col gap-y-2">
           <ul className="flex items-center justify-between">

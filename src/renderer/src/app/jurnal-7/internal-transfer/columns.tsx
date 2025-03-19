@@ -1,10 +1,10 @@
 import type { ColumnDef } from '@renderer/common/components'
-import type { MO7Prixod } from '@renderer/common/models'
+import type { InternalTransfer } from '@renderer/common/models'
 
 import { IDCell } from '@renderer/common/components/table/renderers/id'
-import { formatLocaleDate } from '@renderer/common/lib/format'
+import { formatLocaleDate, formatNumber } from '@renderer/common/lib/format'
 
-export const prixodColumns: ColumnDef<MO7Prixod>[] = [
+export const internalColumns: ColumnDef<InternalTransfer>[] = [
   {
     key: 'id',
     renderCell: IDCell,
@@ -21,22 +21,24 @@ export const prixodColumns: ColumnDef<MO7Prixod>[] = [
     renderCell: (row) => formatLocaleDate(row.doc_date)
   },
   {
+    minWidth: 300,
     key: 'kimdan_name',
-    header: 'from-who',
-    minWidth: 300
+    header: 'from-who'
   },
   {
-    key: 'kimga_name',
+    minWidth: 300,
+    key: 'kimga',
     header: 'to-whom',
-    minWidth: 300
+    renderCell: (row) => row?.kimga?.fio
   },
   {
     numeric: true,
+    minWidth: 120,
     key: 'summa',
-    minWidth: 120
+    renderCell: (row) => <b className="font-black">{formatNumber(row.summa)}</b>
   },
   {
-    key: 'opisanie',
-    minWidth: 300
+    minWidth: 300,
+    key: 'opisanie'
   }
 ]

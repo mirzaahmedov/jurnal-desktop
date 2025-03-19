@@ -40,14 +40,7 @@ const DoljnostCell = ({ value }: { value: string }) => {
   const { t } = useTranslation()
   const doljnost = getPodpisDoljnostOptions(t).find((item) => item.key === value)
   if (doljnost) {
-    return (
-      <Badge
-        variant="secondary"
-        className="bg-green-100 text-green-500 hover:bg-green-100"
-      >
-        {doljnost.name}
-      </Badge>
-    )
+    return <Badge>{doljnost.name}</Badge>
   }
   return value
 }
@@ -56,14 +49,7 @@ const TypeDocumentCell = ({ value }: { value: string }) => {
   const { t } = useTranslation()
   const typeDocument = getPodpisTypeDocumentOptions(t).find((item) => item.key === value)
   if (typeDocument) {
-    return (
-      <Badge
-        variant="secondary"
-        className="bg-green-100 text-green-500 hover:bg-green-100"
-      >
-        {typeDocument.name}
-      </Badge>
-    )
+    return <Badge variant="secondary">{typeDocument.name}</Badge>
   }
   return value
 }

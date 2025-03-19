@@ -25,7 +25,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/common/components/ui
 import { useConfirm } from '@/common/features/confirm'
 import { LanguageSelect } from '@/common/features/locales'
 
-import { defaultValues } from './constants'
 import { useDefaultFilters, useSettingsStore } from './store'
 
 enum TabOption {
@@ -47,8 +46,8 @@ export const ConfigureDefaultValuesDialog = ({
   const [tabValue, setTabValue] = useState<TabOption>(TabOption.Fitlers)
 
   const { confirm } = useConfirm()
-  const { setDefaultFilters } = useDefaultFilters()
-  const { setSettings } = useSettingsStore()
+  const { from, to, setDefaultFilters } = useDefaultFilters()
+  const { report_title_id, setSettings } = useSettingsStore()
 
   const { data: reportTitles, isFetching } = useQuery({
     queryKey: [reportTitleQueryKeys.getAll, { page: 1, limit: 1000000 }],
@@ -56,7 +55,13 @@ export const ConfigureDefaultValuesDialog = ({
   })
 
   const form = useForm({
-    defaultValues
+    defaultValues: {
+      from,
+      to,
+      language: i18n.language,
+      zoomFactor: 1,
+      report_title_id
+    }
   })
 
   const onSubmit = form.handleSubmit((values) => {

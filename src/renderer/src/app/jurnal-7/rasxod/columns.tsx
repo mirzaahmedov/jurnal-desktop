@@ -2,7 +2,7 @@ import type { ColumnDef } from '@renderer/common/components'
 import type { Jur7Rasxod } from '@renderer/common/models'
 
 import { IDCell } from '@renderer/common/components/table/renderers/id'
-import { formatLocaleDate } from '@renderer/common/lib/format'
+import { formatLocaleDate, formatNumber } from '@renderer/common/lib/format'
 
 export const rasxodColumns: ColumnDef<Jur7Rasxod>[] = [
   {
@@ -28,7 +28,8 @@ export const rasxodColumns: ColumnDef<Jur7Rasxod>[] = [
   {
     numeric: true,
     key: 'summa',
-    minWidth: 120
+    minWidth: 120,
+    renderCell: (row) => <b className="font-black">{formatNumber(row.summa)}</b>
   },
   {
     minWidth: 300,

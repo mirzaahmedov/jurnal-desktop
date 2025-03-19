@@ -234,7 +234,7 @@ export const GenericTable = <T extends object>(props: GenericTableProps<T>) => {
                           stretch={stretch}
                           numeric={numeric}
                           className={cn(
-                            activeRowId === getRowId(row) && 'text-brand/100 font-bold',
+                            activeRowId === getRowId(row) && 'text-brand font-bold',
                             className
                           )}
                           style={{
