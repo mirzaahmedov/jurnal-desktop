@@ -96,7 +96,7 @@ export const PageLayout = ({ children }: PageLayoutProps) => {
           </div>
         </div>
         <div className="flex items-center divide-x">
-          <div className="flex items-center gap-1 px-2.5 pr-5">
+          <div className="flex items-center gap-1 px-2.5 pr-2.5">
             <Button
               variant="ghost"
               size="icon"
@@ -125,7 +125,7 @@ export const PageLayout = ({ children }: PageLayoutProps) => {
             )}
           </div>
           {user ? (
-            <div className="px-5 flex items-center gap-4">
+            <div className="px-2.5 flex items-center gap-4">
               <Avatar>
                 <AvatarFallback className="bg-brand text-brand-foreground">
                   {user.fio
@@ -146,7 +146,7 @@ export const PageLayout = ({ children }: PageLayoutProps) => {
               </div>
             </div>
           ) : null}
-          <div className="pl-8 flex items-center gap-2">
+          <div className="pl-2.5 flex items-center gap-2">
             <Button
               variant="ghost"
               size="icon"

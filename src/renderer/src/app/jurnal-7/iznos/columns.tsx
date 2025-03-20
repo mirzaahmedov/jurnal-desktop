@@ -12,11 +12,51 @@ export const iznosColumns: ColumnDef<OstatokProduct>[] = [
   {
     key: 'id',
     renderCell: IDCell,
+    width: 160,
     minWidth: 160
   },
   {
     key: 'name',
-    minWidth: 400
+    minWidth: 400,
+    renderCell: (row) => (
+      <HoverInfoCell
+        title={<span className="text-xs">{row.name}</span>}
+        hoverContent={
+          <DataList
+            className="min-w-52"
+            list={[
+              {
+                name: <Trans>id</Trans>,
+                value: (
+                  <Copyable
+                    side="start"
+                    value={row.name}
+                  >
+                    #{row.product_id}
+                  </Copyable>
+                )
+              },
+              {
+                name: <Trans>name</Trans>,
+                value: row.name
+              },
+              {
+                name: <Trans>ei</Trans>,
+                value: `${row.edin}`
+              },
+              {
+                name: <Trans>inventar-num</Trans>,
+                value: row.inventar_num
+              },
+              {
+                name: <Trans>serial-num</Trans>,
+                value: row.serial_num
+              }
+            ]}
+          />
+        }
+      />
+    )
   },
   {
     key: 'responsible',
@@ -36,7 +76,7 @@ export const iznosColumns: ColumnDef<OstatokProduct>[] = [
     minWidth: 260,
     renderCell: (row) => (
       <HoverInfoCell
-        title={row.group_name}
+        title={<span className="text-xs">{row.group_name}</span>}
         hoverContent={
           <DataList
             list={[

@@ -7,10 +7,11 @@ import {
   EditableTableHead,
   EditableTableRow
 } from '@renderer/common/components/editable-table'
+import { EmptyList } from '@renderer/common/components/empty-states'
 import { Pagination } from '@renderer/common/components/pagination'
 import { Checkbox } from '@renderer/common/components/ui/checkbox'
 import { useEventCallback } from '@renderer/common/hooks'
-import { CircleMinus, CirclePlus } from 'lucide-react'
+import { CircleMinus, CirclePlus, TableOfContents } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { validateOstatokDate } from '@/app/jurnal-7/ostatok/utils'
@@ -72,7 +73,7 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
             <TableHeader className="sticky top-0 z-50">
               <EditableTableRow>
                 <EditableTableHead rowSpan={2}>
-                  <div className="px-3">№</div>
+                  <div className="px-1">№</div>
                 </EditableTableHead>
                 <EditableTableHead
                   rowSpan={2}
@@ -155,7 +156,14 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
                 </EditableTableHead>
 
                 <EditableTableHead rowSpan={2}>{t('prixod-date')}</EditableTableHead>
-                <EditableTableHead rowSpan={2}></EditableTableHead>
+                <EditableTableHead
+                  rowSpan={2}
+                  className="px-3"
+                >
+                  <div className="flex justify-center">
+                    <TableOfContents className="size-5 text-slate-500" />
+                  </div>
+                </EditableTableHead>
               </EditableTableRow>
               <EditableTableRow>
                 <EditableTableHead>{t('iznos')}</EditableTableHead>
@@ -176,13 +184,13 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
               </EditableTableRow>
             </TableHeader>
             <TableBody>
-              {Array.isArray(childs) ? (
+              {Array.isArray(childs) && childs.length ? (
                 childs.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE).map((row, rowIndex) => {
                   const index = (page - 1) * PAGE_SIZE + rowIndex
                   const errors = form.formState.errors.childs?.[index] || {}
                   return (
                     <EditableTableRow key={index}>
-                      <EditableTableCell className="px-3 font-medium bg-slate-50">
+                      <EditableTableCell className="px-3 font-medium">
                         {index + 1}
                       </EditableTableCell>
                       <NaimenovanieCells
@@ -488,10 +496,6 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
                           variant="ghost"
                           className="hover:bg-slate-50 hover:text-brand text-red-500"
                           onClick={() => {
-                            const childs = form.getValues('childs')
-                            if (!Array.isArray(childs) || childs.length === 1) {
-                              return
-                            }
                             form.setValue(
                               'childs',
                               childs.filter((_, i) => i !== index)
@@ -509,9 +513,15 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
                 <EditableTableRow>
                   <EditableTableCell
                     colSpan={100}
-                    className="text-center"
+                    className="text-center p-5"
                   >
-                    {t('no-display-data')}
+                    <EmptyList
+                      iconProps={{
+                        className: 'w-40'
+                      }}
+                    >
+                      {t('no-display-data')}
+                    </EmptyList>
                   </EditableTableCell>
                 </EditableTableRow>
               )}

@@ -46,27 +46,34 @@ import { toast } from 'react-toastify'
 import { createResponsibleSpravochnik } from '../responsible/service'
 import { ostatokProductColumns } from './columns'
 import { defaultValues, ostatokQueryKeys } from './config'
-import { ExistingDocumentsAlert } from './existing-document-alert'
+import { DeleteExistingDocumentsAlert } from './delete-existing-document-alert'
+import { DeleteExistingSaldoAlert } from './delete-existing-saldo-alert'
 import { deleteOstatokBatchQuery, ostatokProductService } from './service'
 import { useOstatokStore } from './store'
 import {
-  type ExistingDocument,
+  type OstatokDeleteExistingDocument,
+  type OstatokDeleteExistingSaldo,
+  handleOstatokDeleteExistingSaldoError,
   handleOstatokError,
   handleOstatokExistingDocumentError,
   handleOstatokResponse
 } from './utils'
 
 const OstatokPage = () => {
-  const { minDate, maxDate, queuedMonths } = useOstatokStore()
+  const { minDate, maxDate, queuedMonths, recheckOstatok } = useOstatokStore()
 
-  const [existingDocsError, setExistingDocsError] = useState<{
+  const [deleteExistingDocumentError, setDeleteExistingDocumentError] = useState<{
     message: string
-    docs: ExistingDocument[]
+    docs: OstatokDeleteExistingDocument[]
     product?: OstatokProduct
+  }>()
+  const [deleteExistingSaldoError, setDeleteExistingSaldoError] = useState<{
+    message: string
+    data: OstatokDeleteExistingSaldo
   }>()
   const [validationError, setValidationError] = useState<{
     message: string
-    doc: ImportValidationErrorRow
+    result: ImportValidationErrorRow
   }>()
   const [selectedRows, setSelectedRows] = useState<OstatokProduct[]>([])
   const [selectedDate, setSelectedDate] = useState<undefined | Date>(minDate)
@@ -125,20 +132,18 @@ const OstatokPage = () => {
       toast.success(res?.message)
     },
     onError(error) {
-      const result = handleOstatokExistingDocumentError<ExistingDocument>(error)
+      const result = handleOstatokExistingDocumentError<OstatokDeleteExistingDocument>(error)
       if (result) {
-        setExistingDocsError({
+        setDeleteExistingDocumentError({
           message: error.message,
           docs: result.docs,
           product: selectedRows.find((r) => r.id === result?.saldo_id?.id)
         })
       } else {
-        setExistingDocsError(undefined)
+        setDeleteExistingDocumentError(undefined)
       }
     }
   })
-
-  console.log({ ostatokError })
 
   useEffect(() => {
     handleOstatokError(ostatokError)
@@ -311,16 +316,26 @@ const OstatokPage = () => {
                   queryClient.invalidateQueries({
                     queryKey: [ostatokQueryKeys.getAll]
                   })
+                  recheckOstatok?.()
                 }}
                 onError={(error) => {
-                  const doc = handleImportValidationError(error)
-                  if (doc) {
+                  const result = handleImportValidationError(error)
+                  if (result) {
                     setValidationError({
-                      doc,
+                      result,
                       message: error?.message
                     })
                   } else {
                     setValidationError(undefined)
+                  }
+                  const existingDocument = handleOstatokDeleteExistingSaldoError(error)
+                  if (existingDocument) {
+                    setDeleteExistingSaldoError({
+                      message: error.message,
+                      data: existingDocument.docs
+                    })
+                  } else {
+                    setDeleteExistingDocumentError(undefined)
                   }
                 }}
               />
@@ -405,13 +420,17 @@ const OstatokPage = () => {
               return {
                 ...column,
                 renderHeader: () => {
-                  const count =
-                    ostatok?.data?.filter((p) => selectedIds.includes(p.product_id)).length ?? 0
+                  const currentPageProducts = ostatok?.data ?? []
+                  const currentPageProductIds = currentPageProducts.map((p) => p.product_id) ?? []
+                  const currentPageSelectedIds = selectedRows
+                    .map((p) => p.product_id)
+                    .filter((id) => currentPageProductIds.includes(id))
 
                   const checked =
-                    ostatok?.data?.length && ostatok.data.length === count
+                    currentPageProductIds.length === currentPageSelectedIds.length &&
+                    currentPageProducts.length > 0
                       ? true
-                      : count > 0
+                      : currentPageSelectedIds.length > 0 && currentPageProducts.length > 0
                         ? 'indeterminate'
                         : false
 
@@ -421,10 +440,22 @@ const OstatokPage = () => {
                         checked={checked}
                         onClick={() => {
                           if (checked === true) {
-                            setSelectedRows([])
+                            setSelectedRows((prev) => {
+                              return prev.filter(
+                                (p) => !currentPageSelectedIds.includes(p.product_id)
+                              )
+                            })
                             return
                           }
-                          setSelectedRows(ostatok?.data ?? [])
+
+                          setSelectedRows((prev) => {
+                            return [
+                              ...prev,
+                              ...currentPageProducts.filter(
+                                (p) => !currentPageSelectedIds.includes(p.product_id)
+                              )
+                            ]
+                          })
                         }}
                         className="size-5"
                       />
@@ -452,17 +483,29 @@ const OstatokPage = () => {
           }}
         />
       </ListView.Content>
-      {existingDocsError ? (
-        <ExistingDocumentsAlert
+      {deleteExistingDocumentError ? (
+        <DeleteExistingDocumentsAlert
           open
           onOpenChange={(isOpen) => {
             if (!isOpen) {
-              setExistingDocsError(undefined)
+              setDeleteExistingDocumentError(undefined)
             }
           }}
-          message={existingDocsError.message}
-          docs={existingDocsError.docs}
-          product={existingDocsError.product}
+          message={deleteExistingDocumentError.message}
+          docs={deleteExistingDocumentError.docs}
+          product={deleteExistingDocumentError.product}
+        />
+      ) : null}
+      {deleteExistingSaldoError ? (
+        <DeleteExistingSaldoAlert
+          open
+          onOpenChange={(isOpen) => {
+            if (!isOpen) {
+              setDeleteExistingSaldoError(undefined)
+            }
+          }}
+          message={deleteExistingSaldoError.message}
+          data={deleteExistingSaldoError.data}
         />
       ) : null}
       {validationError ? (
@@ -474,7 +517,7 @@ const OstatokPage = () => {
             }
           }}
           message={validationError.message}
-          doc={validationError.doc}
+          doc={validationError.result}
         />
       ) : null}
 

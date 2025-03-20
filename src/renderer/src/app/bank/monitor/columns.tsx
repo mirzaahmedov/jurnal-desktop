@@ -112,6 +112,7 @@ export const columns: ColumnDef<BankMonitoringType>[] = [
     header: 'created-by-user',
     renderCell: (row) => (
       <UserCell
+        id={row.user_id}
         fio={row.fio}
         login={row.login}
       />

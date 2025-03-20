@@ -18,7 +18,7 @@ export const ostatokProductColumns: ColumnDef<OstatokProduct>[] = [
     minWidth: 400,
     renderCell: (row) => (
       <HoverInfoCell
-        title={row.name}
+        title={<span className="text-xs">{row.name}</span>}
         hoverContent={
           <DataList
             className="min-w-52"
@@ -79,7 +79,7 @@ export const ostatokProductColumns: ColumnDef<OstatokProduct>[] = [
     minWidth: 260,
     renderCell: (row) => (
       <HoverInfoCell
-        title={row.group_name}
+        title={<span className="text-xs">{row.group_name}</span>}
         hoverContent={
           <DataList
             list={[

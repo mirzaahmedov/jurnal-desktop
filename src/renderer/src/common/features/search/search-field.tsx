@@ -43,7 +43,7 @@ export const SearchField = ({ className, containerProps, ...props }: SearchField
   return (
     <div
       {...props}
-      className={cn('flex justify-end items-center gap-2.5 px-2.5', className)}
+      className={cn('flex justify-end items-center gap-2.5 px-5', className)}
     >
       <div
         {...containerProps}

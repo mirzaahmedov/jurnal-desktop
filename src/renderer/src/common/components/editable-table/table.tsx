@@ -69,6 +69,12 @@ export const EditableTable = <T extends object>(props: EditableTableProps<T>) =>
       >
         <TableHeader>
           <EditableTableRow>
+            <EditableTableHead
+              key="line_number"
+              className="px-3"
+            >
+              №
+            </EditableTableHead>
             {Array.isArray(columns)
               ? columns.map((col) => {
                   const { key, header, width } = col
@@ -172,6 +178,12 @@ const EditableTableRowRenderer = <T extends object>({
 
   return (
     <EditableTableRow>
+      <EditableTableCell
+        key="line_number"
+        className="px-3 font-medium"
+      >
+        {index + 1}.
+      </EditableTableCell>
       {columns.map((col) => {
         const { key, Editor, width } = col
         return (

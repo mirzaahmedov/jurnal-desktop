@@ -41,7 +41,7 @@ export const handleOstatokError = (error: Error | null) => {
   }
 }
 
-export interface ExistingDocument {
+export interface OstatokDeleteExistingDocument {
   id: number
   doc_num: string
   doc_date: string
@@ -64,6 +64,32 @@ export const handleOstatokExistingDocumentError = <T>(error: unknown) => {
         }
       }) ?? {}
     if (Array.isArray(meta.docs)) {
+      return meta
+    }
+  }
+  return null
+}
+
+export interface OstatokDeleteExistingSaldo {
+  year: number
+  month: number
+  main_schet_id: number
+  account_number: string
+}
+export const handleOstatokDeleteExistingSaldoError = (error: unknown) => {
+  if (
+    error instanceof HttpResponseError &&
+    typeof error.meta === 'object' &&
+    error.meta !== null &&
+    'code' in error.meta &&
+    error.meta?.code === ApiStatusCodes.DOCS_HAVE
+  ) {
+    const meta =
+      (error.meta as {
+        code: number
+        docs: OstatokDeleteExistingSaldo
+      }) ?? {}
+    if (meta.docs) {
       return meta
     }
   }

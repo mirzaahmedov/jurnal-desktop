@@ -1,4 +1,4 @@
-import type { ExistingDocument } from './utils'
+import type { OstatokDeleteExistingDocument } from './utils'
 import type { DialogProps } from '@radix-ui/react-dialog'
 import type { OstatokProduct } from '@renderer/common/models'
 import type { TFunction } from 'i18next'
@@ -20,17 +20,17 @@ import { Eye } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
-export interface ExistingDocumentsAlertProps extends DialogProps {
+export interface DeleteExistingDocumentsAlertProps extends DialogProps {
   message: string
-  docs: ExistingDocument[]
+  docs: OstatokDeleteExistingDocument[]
   product?: OstatokProduct
 }
-export const ExistingDocumentsAlert = ({
+export const DeleteExistingDocumentsAlert = ({
   docs,
   message,
   product,
   ...props
-}: ExistingDocumentsAlertProps) => {
+}: DeleteExistingDocumentsAlertProps) => {
   const navigate = useNavigate()
   const { t } = useTranslation()
 

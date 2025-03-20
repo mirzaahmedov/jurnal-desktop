@@ -160,6 +160,7 @@ export const organizationMonitorColumns: ColumnDef<OrganizationMonitor>[] = [
     header: 'created-by-user',
     renderCell: (row) => (
       <UserCell
+        id={row.user_id}
         fio={row.fio}
         login={row.login}
       />

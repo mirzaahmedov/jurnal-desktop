@@ -119,6 +119,7 @@ export const podotchetMonitoringColumns: ColumnDef<PodotchetMonitor>[] = [
     header: 'created-by-user',
     renderCell: (row) => (
       <UserCell
+        id={row.user_id}
         fio={row.fio}
         login={row.login}
       />
