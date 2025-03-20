@@ -468,19 +468,7 @@ export const getNavElements = (t: TFunction): NavElement[] => {
       ? {
           path: '/mainbook',
           title: t('pages.mainbook'),
-          icon: NotebookText,
-          children: [
-            {
-              path: 'report',
-              title: t('pages.create-month-report'),
-              icon: CalendarPlus2
-            },
-            {
-              path: '/',
-              title: t('pages.complete-month-report'),
-              icon: CalendarX
-            }
-          ]
+          icon: NotebookText
         }
       : null,
     !is_super_admin

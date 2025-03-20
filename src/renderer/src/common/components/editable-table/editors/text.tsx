@@ -5,7 +5,7 @@ import { inputVariants } from '@renderer/common/features/spravochnik'
 import { Input } from '@/common/components/ui/input'
 import { cn } from '@/common/lib/utils'
 
-const createTextEditor = <T extends Record<string, unknown>>({
+const createTextEditor = <T extends object>({
   readOnly = false,
   disabled = false,
   key

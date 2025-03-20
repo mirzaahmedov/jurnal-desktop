@@ -47,10 +47,7 @@ export const Provodka = ({ form, tabIndex }: ProvodkaProps) => {
           </EditableTableRow>
         ))}
       </TableHeader>
-      <TableBody>
-        {table.getRowModel().rows.map((row) => (
-        ))}
-      </TableBody>
+      <TableBody></TableBody>
     </Table>
   )
 }

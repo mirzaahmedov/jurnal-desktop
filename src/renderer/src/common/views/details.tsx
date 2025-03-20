@@ -1,6 +1,6 @@
 import type { ButtonHTMLAttributes, HTMLAttributes } from 'react'
 
-import { Spinner } from '@renderer/common/components'
+import { LoadingOverlay, Spinner } from '@renderer/common/components'
 import { Button } from '@renderer/common/components/ui/button'
 import { cn } from '@renderer/common/lib/utils'
 import { CircleCheck } from 'lucide-react'
@@ -28,12 +28,7 @@ const DetailsViewContent = ({
   ...props
 }: DetailsViewContentProps) => {
   return loading ? (
-    <div
-      {...props}
-      className="h-full flex items-center justify-center"
-    >
-      <Spinner />
-    </div>
+    <LoadingOverlay {...props} />
   ) : (
     <div className={cn('flex-1 overflow-y-auto scrollbar', className)}>{children}</div>
   )

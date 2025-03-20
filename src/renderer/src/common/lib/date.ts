@@ -64,24 +64,26 @@ export const validateDate = (dateString: string): boolean => {
   )
 }
 
+export const monthNames = [
+  'january',
+  'february',
+  'march',
+  'april',
+  'may',
+  'june',
+  'july',
+  'august',
+  'september',
+  'october',
+  'november',
+  'december'
+]
+
 export const getMonthName = (monthNumber: number) => {
   if (monthNumber < 1 || monthNumber > 12) {
     return ''
   }
-  return [
-    'Январь',
-    'Февраль',
-    'Март',
-    'Апрель',
-    'Май',
-    'Июнь',
-    'Июль',
-    'Август',
-    'Сентябрь',
-    'Октябрь',
-    'Ноябрь',
-    'Декабрь'
-  ][monthNumber - 1]
+  return monthNames[monthNumber - 1]
 }
 
 export const withinMonth = (date: Date, month: Date) => {

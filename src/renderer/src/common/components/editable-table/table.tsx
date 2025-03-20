@@ -13,18 +13,20 @@ import { useTranslation } from 'react-i18next'
 import { EmptyList } from '../empty-states'
 import { EditableTableCell, EditableTableHead, EditableTableRow } from './components'
 
-export interface EditableColumnType<T extends object> {
+export interface EditableColumnDef<T extends object> {
   key: Autocomplete<keyof T>
   header?: ReactNode
   Editor: EditorComponentType<T>
   width?: string | number
+  minWidth?: string | number
+  maxWidth?: string | number
 }
 
 export interface EditableTableProps<T extends object> {
   tableRef?: React.RefObject<HTMLTableElement>
   tabIndex?: number
   data: T[]
-  columns: EditableColumnType<T>[]
+  columns: EditableColumnDef<T>[]
   errors?: FieldErrors<{ example: T[] }>['example']
   placeholder?: string
   onDelete?(ctx: DeleteContext): void
@@ -71,17 +73,21 @@ export const EditableTable = <T extends object>(props: EditableTableProps<T>) =>
           <EditableTableRow>
             <EditableTableHead
               key="line_number"
-              className="px-3"
+              className="px-3 whitespace-nowrap w-0"
             >
               №
             </EditableTableHead>
             {Array.isArray(columns)
               ? columns.map((col) => {
-                  const { key, header, width } = col
+                  const { key, header, width, minWidth, maxWidth } = col
                   return (
                     <EditableTableHead
                       key={String(key)}
-                      style={{ width }}
+                      style={{
+                        width,
+                        minWidth,
+                        maxWidth
+                      }}
                     >
                       {!header ? t(key.toString()) : typeof header === 'string' ? t(header) : null}
                     </EditableTableHead>
@@ -153,7 +159,7 @@ export const EditableTable = <T extends object>(props: EditableTableProps<T>) =>
 type EditableTableRowRendererProps<T extends object> = {
   tabIndex?: number
   index: number
-  columns: EditableColumnType<T>[]
+  columns: EditableColumnDef<T>[]
   row: T
   data: T[]
   errors?: FieldErrors<{ example: T[] }>['example']
@@ -182,14 +188,14 @@ const EditableTableRowRenderer = <T extends object>({
         key="line_number"
         className="px-3 font-medium"
       >
-        {index + 1}.
+        {index + 1}
       </EditableTableCell>
       {columns.map((col) => {
-        const { key, Editor, width } = col
+        const { key, Editor, width, minWidth, maxWidth } = col
         return (
           <EditableTableCell
             key={String(key)}
-            style={{ width }}
+            style={{ width, minWidth, maxWidth }}
           >
             <Editor
               tabIndex={tabIndex}

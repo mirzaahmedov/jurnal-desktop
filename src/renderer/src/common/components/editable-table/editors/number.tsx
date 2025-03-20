@@ -4,7 +4,7 @@ import { inputVariants } from '@renderer/common/features/spravochnik'
 
 import { NumericInput, type NumericInputProps } from '@/common/components'
 
-const createNumberEditor = <T extends Record<string, unknown>>({
+const createNumberEditor = <T extends object>({
   readOnly = false,
   key,
   max,

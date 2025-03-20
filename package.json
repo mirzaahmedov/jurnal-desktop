@@ -1,6 +1,6 @@
 {
   "name": "jurnal.desktop",
-  "version": "1.0.151",
+  "version": "1.0.152",
   "description": "An Electron application with React and TypeScript",
   "main": "./out/main/index.js",
   "author": "example.com",
@@ -25,7 +25,8 @@
     "build:win": "pnpm run build && cross-env VITE_MODE=staging electron-builder --win",
     "build:win-prod": "pnpm run build-prod && cross-env VITE_MODE=prod electron-builder --win",
     "build:mac": "electron-vite build && electron-builder --mac",
-    "build:linux": "electron-vite build && electron-builder --linux"
+    "build:linux": "electron-vite build && electron-builder --linux",
+    "clean": "rm -rf out dist"
   },
   "dependencies": {
     "@electron-toolkit/preload": "^3.0.1",

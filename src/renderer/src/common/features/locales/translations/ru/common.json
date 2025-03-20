@@ -18,6 +18,7 @@
   "internal": "Внутренний",
   "podotchet-litso": "Подотчетное лицо",
   "created-by-user": "Создано пользователем",
+  "accepted-by-user": "Принято пользователем",
   "total": "Итого",
   "summa": "Сумма",
   "daily-report": "Ежедневный отчет",
@@ -265,5 +266,17 @@
     "saldo_prixod": "Сальдо приход"
   },
   "language": "Язык",
-  "zoom": "Масштаб"
+  "zoom": "Масштаб",
+  "information": "Информация",
+  "mainbook": {
+    "mo-nth": "М.О. {{nth}}",
+    "from": "Нач.",
+    "to": "Кон.",
+    "internal": "Внутр.",
+    "send": "Отправлено",
+    "reject": "Отклонено",
+    "accept": "Принято",
+    "accept_report": "Принять отчет?",
+    "reject_report": "Отклонить отчет?"
+  }
 }

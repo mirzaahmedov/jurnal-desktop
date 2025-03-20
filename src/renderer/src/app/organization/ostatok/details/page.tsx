@@ -87,8 +87,7 @@ const OrganOstatokDetailsPage = () => {
         })
       },
       params: {
-        organ_id: form.watch('id_spravochnik_organization'),
-        pudratchi_bool: false
+        organ_id: form.watch('id_spravochnik_organization')
       }
     })
   )

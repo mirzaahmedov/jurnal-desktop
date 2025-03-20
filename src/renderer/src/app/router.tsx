@@ -39,10 +39,8 @@ const KassaPrixodDetailsPage = lazy(() => import('./kassa/prixod/details/page'))
 const KassaPrixodPage = lazy(() => import('./kassa/prixod/page'))
 const KassaRasxodDetailtsPage = lazy(() => import('./kassa/rasxod/details/page'))
 const KassaRasxodPage = lazy(() => import('./kassa/rasxod/page'))
-const MainbookDetailsPage = lazy(() => import('./mainbook/mainbook/details/page'))
-const MainbookPage = lazy(() => import('./mainbook/mainbook/page'))
-const MainbookReportDetailsPage = lazy(() => import('./mainbook/report/details/page'))
-const MainbookReportPage = lazy(() => import('./mainbook/report/page'))
+const MainbookPage = lazy(() => import('./reports/mainbook/page'))
+const MainbookDetailsPage = lazy(() => import('./reports/mainbook/details/page'))
 const AktDetailsPage = lazy(() => import('./organization/akt/details/page'))
 const AktPage = lazy(() => import('./organization/akt/page'))
 const OrganizationMonitorPage = lazy(() => import('./organization/monitor/page'))
@@ -76,8 +74,8 @@ const BudgetPage = lazy(() => import('./super-admin/budjet/page'))
 const GroupPage = lazy(() => import('./super-admin/group/page'))
 const RegionGroupPage = lazy(() => import('./region-spravochnik/group/page'))
 const LogsPage = lazy(() => import('./super-admin/logs/page'))
-const AdminMainbookDetailsPage = lazy(() => import('./super-admin/mainbook/details/page'))
-const AdminMainbookPage = lazy(() => import('./super-admin/mainbook/page'))
+const AdminMainbookDetailsPage = lazy(() => import('./super-admin/reports/mainbook/details/page'))
+const AdminMainbookPage = lazy(() => import('./super-admin/reports/mainbook/page'))
 const OperatsiiPage = lazy(() => import('./super-admin/operatsii/page'))
 const AdminOXDetailsPage = lazy(() => import('./super-admin/ox-report/details/page'))
 const AdminOXPage = lazy(() => import('./super-admin/ox-report/page'))
@@ -423,24 +421,11 @@ export const routes: RouteObject[] = [
       },
       {
         path: 'mainbook',
-        children: [
-          {
-            path: 'report',
-            element: <MainbookReportPage />
-          },
-          {
-            path: 'report/:id',
-            element: <MainbookReportDetailsPage />
-          },
-          {
-            index: true,
-            element: <MainbookPage />
-          },
-          {
-            path: ':id',
-            element: <MainbookDetailsPage />
-          }
-        ]
+        element: <MainbookPage />
+      },
+      {
+        path: 'mainbook/:id',
+        element: <MainbookDetailsPage />
       },
       {
         path: 'expenses',

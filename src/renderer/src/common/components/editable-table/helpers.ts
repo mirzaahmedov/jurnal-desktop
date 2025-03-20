@@ -7,7 +7,7 @@ export const createEditorCreateHandler =
     defaultValues,
     field = 'childs'
   }: {
-    schema: ZodSchema<any>
+    schema?: ZodSchema<any>
     form: UseFormReturn<any>
     defaultValues: any
     field?: string
