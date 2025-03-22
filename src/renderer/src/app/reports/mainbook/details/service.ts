@@ -16,6 +16,8 @@ export interface MainbookAutoFill {
   updated_at: string
   is_deleted: boolean
   sort_order: number
+  prixod: number
+  rasxod: number
   sub_childs: Array<MainbookAutoFillSubChild>
 }
 export interface AutoFillMainbookArgs {
