@@ -1,10 +1,9 @@
-import type { EditableColumnDef } from '@renderer/common/components/editable-table/table'
+import type { EditableColumnDef } from '@renderer/common/components/editable-table/interface'
 
 import { useEffect, useMemo } from 'react'
 
 import { EditableTable } from '@renderer/common/components/editable-table'
 import { createNumberEditor } from '@renderer/common/components/editable-table/editors'
-import { createEditorDeleteHandler } from '@renderer/common/components/editable-table/helpers'
 import { MonthPicker } from '@renderer/common/components/month-picker'
 import { Button } from '@renderer/common/components/ui/button'
 import { useLayoutStore } from '@renderer/common/features/layout'
@@ -131,39 +130,41 @@ const MainbookDetailsPage = () => {
         const jurNumber = type.name.match(/\d+/)?.[0]
         return [
           {
-            key: `${type.id}_rasxod`,
-            width: 160,
-            minWidth: 160,
-            header: `${jurNumber ? t('mainbook.mo-nth', { nth: jurNumber }) : t(`mainbook.${type.name}`)} ${t('rasxod').toLowerCase()}`,
-            Editor: createNumberEditor({
-              key: `${type.id}_rasxod`,
-              readOnly: true
-            })
-          },
-          {
-            key: `${type.id}_prixod`,
-            width: 160,
-            minWidth: 160,
-            header: `${jurNumber ? t('mainbook.mo-nth', { nth: jurNumber }) : t(`mainbook.${type.name}`)} ${t('prixod').toLowerCase()}`,
-            Editor: createNumberEditor({
-              key: `${type.id}_prixod`,
-              readOnly: true
-            })
+            key: type.id,
+            header: t('mainbook.mo-nth', { nth: jurNumber }),
+            headerClassName: 'text-center',
+            columns: [
+              {
+                key: `${type.id}_rasxod`,
+                width: 150,
+                minWidth: 150,
+                header: t('rasxod'),
+                headerClassName: 'text-center',
+                Editor: createNumberEditor({
+                  key: `${type.id}_rasxod`,
+                  readOnly: true,
+                  defaultValue: 0
+                })
+              },
+              {
+                key: `${type.id}_prixod`,
+                width: 150,
+                minWidth: 150,
+                header: t('prixod'),
+                headerClassName: 'text-center',
+                Editor: createNumberEditor({
+                  key: `${type.id}_prixod`,
+                  readOnly: true,
+                  defaultValue: 0
+                })
+              }
+            ]
           }
         ] as EditableColumnDef<any>[]
       }) ?? [])
     ],
     [types]
   )
-  // const defaultProvodkaValues = useMemo(
-  //   () =>
-  //     types?.data?.reduce((result, type) => {
-  //       result[`${type.id}_prixod`] = 0
-  //       result[`${type.id}_rasxod`] = 0
-  //       return result
-  //     }, {}),
-  //   [types]
-  // )
 
   const onSubmit = form.handleSubmit((values) => {
     if (!types?.data) {
@@ -205,10 +206,16 @@ const MainbookDetailsPage = () => {
   })
 
   return (
-    <DetailsView>
-      <form onSubmit={onSubmit}>
-        <DetailsView.Content loading={isFetching || isFetchingAutofill || isFetchingTypes}>
-          <div className="relative p-5 flex flex-col gap-5 pb-20">
+    <DetailsView className="h-full">
+      <DetailsView.Content
+        loading={isFetching || isFetchingAutofill || isFetchingTypes}
+        className="overflow-hidden h-full pb-20"
+      >
+        <form
+          onSubmit={onSubmit}
+          className="h-full"
+        >
+          <div className="relative p-5 h-full flex flex-col gap-5">
             <div className="flex items-center justify-between gap-5">
               <MonthPicker
                 value={date}
@@ -226,14 +233,14 @@ const MainbookDetailsPage = () => {
                 {t('autofill')}
               </Button>
             </div>
-            <div className="overflow-auto scrollbar">
+            <div className="overflow-auto scrollbar flex-1 relative">
               <EditableTable
-                columns={columns}
+                columnDefs={columns}
                 data={form.watch('childs')}
-                onDelete={createEditorDeleteHandler({ form })}
               />
             </div>
           </div>
+
           <DetailsView.Footer>
             <Button
               type="submit"
@@ -243,8 +250,8 @@ const MainbookDetailsPage = () => {
               {t('save')}
             </Button>
           </DetailsView.Footer>
-        </DetailsView.Content>
-      </form>
+        </form>
+      </DetailsView.Content>
     </DetailsView>
   )
 }

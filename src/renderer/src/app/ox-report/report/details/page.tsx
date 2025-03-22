@@ -178,7 +178,7 @@ const OXReportDetailsPage = () => {
           <EditableTable
             tableRef={tableRef}
             tabIndex={5}
-            columns={provodkaColumns}
+            columnDefs={provodkaColumns}
             data={form.watch('childs')}
             errors={form.formState.errors.childs}
             onCreate={createEditorCreateHandler({

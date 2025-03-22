@@ -5,14 +5,16 @@ import { inputVariants } from '@renderer/common/features/spravochnik'
 import { Input } from '@/common/components/ui/input'
 import { cn } from '@/common/lib/utils'
 
-const createTextEditor = <T extends object>({
+export const createTextEditor = <T extends object>({
   readOnly = false,
   disabled = false,
-  key
+  key,
+  defaultValue
 }: {
   readOnly?: boolean
   disabled?: boolean
   key: keyof T
+  defaultValue?: string
 }): EditorComponentType<T> => {
   return ({ tabIndex, id, row, errors, onChange }) => {
     return (
@@ -22,7 +24,11 @@ const createTextEditor = <T extends object>({
           disabled={disabled}
           name={key as string}
           tabIndex={tabIndex}
-          value={typeof row[key] === 'string' || typeof row[key] === 'number' ? row[key] : ''}
+          value={
+            typeof row[key] === 'string' || typeof row[key] === 'number'
+              ? row[key]
+              : (defaultValue ?? '')
+          }
           onChange={(e) =>
             onChange?.({
               id,
@@ -47,5 +53,3 @@ const createTextEditor = <T extends object>({
     )
   }
 }
-
-export { createTextEditor }

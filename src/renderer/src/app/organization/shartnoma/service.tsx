@@ -127,7 +127,7 @@ const ShartnomaSpravochnikTable = ({
   return (
     <GenericTable
       {...props}
-      customActions={(row) => (
+      actions={(row) => (
         <Button
           variant="ghost"
           size="icon"

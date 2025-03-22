@@ -1,0 +1,60 @@
+import type { TableProps } from '@/common/components/ui/table'
+import type { CheckedState } from '@radix-ui/react-checkbox'
+import type { Autocomplete } from '@renderer/common/lib/types'
+import type { HTMLAttributes, ReactNode, TableHTMLAttributes } from 'react'
+
+export type CellRenderer<T extends object> = (
+  row: T,
+  col: ColumnDef<T>,
+  tableProps: GenericTableProps<T>
+) => ReactNode
+
+export interface ColumnDef<T extends object> {
+  numeric?: boolean
+  fit?: boolean
+  stretch?: boolean
+  key: Autocomplete<keyof T>
+  header?: ReactNode
+  className?: string
+  width?: number
+  minWidth?: number
+  maxWidth?: number
+  headerClassName?: string
+  renderHeader?(): ReactNode
+  renderCell?: CellRenderer<T>
+  columns?: ColumnDef<T>[]
+}
+
+export type HeaderColumnDef<T> = T & {
+  _depth: number
+  _colSpan: number
+  _rowSpan: number
+}
+
+export interface GenericTableProps<T extends object>
+  extends TableHTMLAttributes<HTMLTableElement>,
+    TableProps {
+  caption?: string
+  data: T[]
+  headerProps?: HTMLAttributes<HTMLTableSectionElement>
+  columnDefs: ColumnDef<T>[]
+  placeholder?: string
+  selectedIds?: number[]
+  disabledIds?: number[]
+  getRowId?: (row: T) => string | number
+  getRowKey?: (row: T) => string | number
+  getRowSelected?: GetRowSelectedFn<T>
+  onClickRow?(row: T): void
+  onDelete?(row: T): void
+  onEdit?(row: T): void
+  actions?: (row: T) => ReactNode
+  activeRowId?: string | number
+  footer?: ReactNode
+  params?: Record<string, unknown>
+}
+
+export type GetRowSelectedFn<T> = (args: {
+  row: T
+  selectedIds: number[]
+  getRowId: (row: T) => number | string
+}) => CheckedState

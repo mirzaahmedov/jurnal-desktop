@@ -1,13 +1,6 @@
-import type { CheckedState } from '@radix-ui/react-checkbox'
-import type { Autocomplete } from '@renderer/common/lib/types'
+import type { ColumnDef, GenericTableProps } from './interface'
 
-import {
-  type HTMLAttributes,
-  type ReactNode,
-  type TableHTMLAttributes,
-  useEffect,
-  useState
-} from 'react'
+import { type ReactNode, useEffect, useMemo, useState } from 'react'
 
 import { Button } from '@renderer/common/components/ui/button'
 import {
@@ -15,8 +8,7 @@ import {
   TableBody,
   TableCaption,
   TableFooter,
-  TableHeader,
-  type TableProps
+  TableHeader
 } from '@renderer/common/components/ui/table'
 import { formatNumber } from '@renderer/common/lib/format'
 import { cn } from '@renderer/common/lib/utils'
@@ -26,74 +18,14 @@ import { twMerge } from 'tailwind-merge'
 
 import { EmptyList } from '../empty-states'
 import { GenericTableCell, GenericTableHead, GenericTableRow } from './components'
+import { getAccessorColumns, getHeaderGroups } from './utils'
 
-export type CellRenderer<T extends object> = (
-  row: T,
-  col: ColumnDef<T>,
-  tableProps: GenericTableProps<T>
-) => ReactNode
-
-export interface ColumnDef<T extends object> {
-  numeric?: boolean
-  fit?: boolean
-  stretch?: boolean
-  key: Autocomplete<keyof T>
-  header?: ReactNode
-  className?: string
-  width?: number
-  minWidth?: number
-  maxWidth?: number
-  headerClassName?: string
-  rowSpan?: number
-  colSpan?: number
-  renderHeader?(): ReactNode
-  renderCell?: CellRenderer<T>
-}
-
-export interface HeaderGroup<T extends object> {
-  numeric?: boolean
-  fit?: boolean
-  stretch?: boolean
-  key: Autocomplete<keyof T>
-  header?: ReactNode
-  headerClassName?: string
-  rowSpan?: number
-  colSpan?: number
-  width?: number
-  minWidth?: number
-  maxWidth?: number
-  renderHeader?(): ReactNode
-}
-
-export interface GenericTableProps<T extends object>
-  extends TableHTMLAttributes<HTMLTableElement>,
-    TableProps {
-  caption?: string
-  data: T[]
-  headerProps?: HTMLAttributes<HTMLTableSectionElement>
-  columnDefs: ColumnDef<T>[]
-  headerGroups?: HeaderGroup<T>[][]
-  placeholder?: string
-  selectedIds?: number[]
-  disabledIds?: number[]
-  getRowId?: (row: T) => string | number
-  getRowKey?: (row: T) => string | number
-  getRowSelected?: GetRowSelected<T>
-  onClickRow?(row: T): void
-  onDelete?(row: T): void
-  onEdit?(row: T): void
-  customActions?: (row: T) => ReactNode
-  activeRowId?: string | number
-  footer?: ReactNode
-  params?: Record<string, unknown>
-}
 export const GenericTable = <T extends object>(props: GenericTableProps<T>) => {
   const {
     caption,
     data,
     columnDefs,
     headerProps,
-    headerGroups = [columnDefs],
     placeholder,
     getRowId = defaultGetRowId,
     getRowKey = getRowId,
@@ -104,8 +36,8 @@ export const GenericTable = <T extends object>(props: GenericTableProps<T>) => {
     onEdit,
     activeRowId,
     footer,
-    customActions,
-    ...restProps
+    actions,
+    ...tableProps
   } = props
 
   const [selectedRowRef, setSelectedRowRef] = useState<HTMLElement | null>(null)
@@ -121,17 +53,26 @@ export const GenericTable = <T extends object>(props: GenericTableProps<T>) => {
     }
   }, [selectedRowRef])
 
+  const headerGroups = useMemo(
+    () => (Array.isArray(columnDefs) ? getHeaderGroups(columnDefs) : []),
+    [columnDefs]
+  )
+  const accessorColumns = useMemo(
+    () => (Array.isArray(columnDefs) ? getAccessorColumns(columnDefs) : []),
+    [columnDefs]
+  )
+
   return (
     <Table
-      {...restProps}
-      className={twMerge('relative', restProps.className)}
+      {...tableProps}
+      className={twMerge('relative', tableProps.className)}
     >
       {caption ? <TableCaption>{caption}</TableCaption> : null}
       <TableHeader
         {...headerProps}
         className={cn('sticky top-0 z-50 shadow-sm', headerProps?.className)}
       >
-        {Array.isArray(headerGroups)
+        {Array.isArray(columnDefs)
           ? headerGroups.map((headerGroup, index) => (
               <GenericTableRow
                 key={index}
@@ -140,6 +81,8 @@ export const GenericTable = <T extends object>(props: GenericTableProps<T>) => {
                 {Array.isArray(headerGroup)
                   ? headerGroup.map((col) => {
                       const {
+                        _colSpan,
+                        _rowSpan,
                         key,
                         header,
                         renderHeader,
@@ -147,8 +90,6 @@ export const GenericTable = <T extends object>(props: GenericTableProps<T>) => {
                         stretch,
                         numeric,
                         headerClassName,
-                        colSpan,
-                        rowSpan,
                         width,
                         minWidth,
                         maxWidth
@@ -160,8 +101,8 @@ export const GenericTable = <T extends object>(props: GenericTableProps<T>) => {
                           fit={fit}
                           stretch={stretch}
                           className={headerClassName}
-                          colSpan={colSpan}
-                          rowSpan={rowSpan}
+                          colSpan={_colSpan}
+                          rowSpan={_rowSpan}
                           style={{
                             width,
                             minWidth,
@@ -179,7 +120,7 @@ export const GenericTable = <T extends object>(props: GenericTableProps<T>) => {
                       )
                     })
                   : null}
-                {onDelete || onEdit || customActions ? (
+                {onDelete || onEdit || actions ? (
                   <GenericTableHead
                     fit
                     className="text-center"
@@ -215,7 +156,7 @@ export const GenericTable = <T extends object>(props: GenericTableProps<T>) => {
                 data-selected={selectedIds.includes(Number(getRowId(row)))}
               >
                 {Array.isArray(columnDefs)
-                  ? columnDefs.map((col) => {
+                  ? accessorColumns.map((col) => {
                       const {
                         key,
                         fit,
@@ -251,7 +192,7 @@ export const GenericTable = <T extends object>(props: GenericTableProps<T>) => {
                     })
                   : null}
 
-                {onDelete || onEdit || customActions ? (
+                {onDelete || onEdit || actions ? (
                   <GenericTableCell className="py-1">
                     <div className="flex items-center whitespace-nowrap w-full gap-1">
                       {onEdit && (
@@ -279,7 +220,7 @@ export const GenericTable = <T extends object>(props: GenericTableProps<T>) => {
                           <Trash2 className="size-4" />
                         </Button>
                       )}
-                      {customActions?.(row)}
+                      {actions?.(row)}
                     </div>
                   </GenericTableCell>
                 ) : null}
@@ -320,9 +261,3 @@ export const defaultGetRowId = <T,>(row: T): string => {
   }
   return ''
 }
-
-export type GetRowSelected<T> = (args: {
-  row: T
-  selectedIds: number[]
-  getRowId: (row: T) => number | string
-}) => CheckedState

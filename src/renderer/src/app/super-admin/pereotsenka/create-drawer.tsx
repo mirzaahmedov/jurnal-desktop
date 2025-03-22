@@ -135,7 +135,7 @@ const PereotsenkaBatchCreateDrawer = (props: PereotsenkaBatchCreateDrawerProps) 
                 </div>
                 <div className="p-5 overflow-auto scrollbar flex-1">
                   <EditableTable
-                    columns={groupColumns as any}
+                    columnDefs={groupColumns as any}
                     data={form.watch('array')}
                     errors={form.formState.errors.array}
                     onChange={(ctx) => {

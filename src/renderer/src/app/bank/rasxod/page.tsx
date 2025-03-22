@@ -94,7 +94,7 @@ const BankRasxodPage = () => {
           getRowId={(row) => row.id}
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}
-          customActions={(row) => (
+          actions={(row) => (
             <Button
               variant="ghost"
               size="icon"

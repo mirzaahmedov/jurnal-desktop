@@ -134,7 +134,7 @@ const ShartnomaPage = () => {
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}
           placeholder={!orgSpravochnik.selected ? 'Выберите организацию' : undefined}
-          customActions={(row) => (
+          actions={(row) => (
             <Button
               variant="ghost"
               size="icon"

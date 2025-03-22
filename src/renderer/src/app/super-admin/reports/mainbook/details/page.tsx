@@ -140,7 +140,7 @@ const AdminMainbookDetailsPage = () => {
           </div>
           <div className="overflow-auto scrollbar">
             <EditableTable
-              columns={columns}
+              columnDefs={columns}
               data={data}
             />
           </div>

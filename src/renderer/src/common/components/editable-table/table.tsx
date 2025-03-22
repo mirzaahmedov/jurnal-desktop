@@ -1,9 +1,8 @@
-import type { EditorComponentType } from './editors'
 import type { ChangeContext, DeleteContext } from './editors/types'
-import type { Autocomplete } from '@renderer/common/lib/types'
+import type { EditableColumnDef } from './interface'
 import type { FieldErrors } from 'react-hook-form'
 
-import { type ReactNode, useState } from 'react'
+import { type ReactNode, useMemo, useState } from 'react'
 
 import { Button } from '@renderer/common/components/ui/button'
 import { Table, TableBody, TableFooter, TableHeader } from '@renderer/common/components/ui/table'
@@ -11,22 +10,15 @@ import { CircleMinus, CirclePlus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { EmptyList } from '../empty-states'
+import { getHeaderGroups } from '../generic-table/utils'
 import { EditableTableCell, EditableTableHead, EditableTableRow } from './components'
-
-export interface EditableColumnDef<T extends object> {
-  key: Autocomplete<keyof T>
-  header?: ReactNode
-  Editor: EditorComponentType<T>
-  width?: string | number
-  minWidth?: string | number
-  maxWidth?: string | number
-}
+import { getAccessorColumns } from './utils'
 
 export interface EditableTableProps<T extends object> {
   tableRef?: React.RefObject<HTMLTableElement>
   tabIndex?: number
   data: T[]
-  columns: EditableColumnDef<T>[]
+  columnDefs: EditableColumnDef<T>[]
   errors?: FieldErrors<{ example: T[] }>['example']
   placeholder?: string
   onDelete?(ctx: DeleteContext): void
@@ -41,7 +33,7 @@ export const EditableTable = <T extends object>(props: EditableTableProps<T>) =>
     tableRef,
     tabIndex,
     data,
-    columns,
+    columnDefs,
     errors,
     placeholder,
     onCreate,
@@ -51,6 +43,8 @@ export const EditableTable = <T extends object>(props: EditableTableProps<T>) =>
   } = props
 
   const { t } = useTranslation()
+
+  const headerGroups = useMemo(() => getHeaderGroups(columnDefs), [columnDefs])
 
   return (
     <div
@@ -69,33 +63,58 @@ export const EditableTable = <T extends object>(props: EditableTableProps<T>) =>
         ref={tableRef}
         className="border border-slate-200"
       >
-        <TableHeader>
-          <EditableTableRow>
-            <EditableTableHead
-              key="line_number"
-              className="px-3 whitespace-nowrap w-0"
-            >
-              №
-            </EditableTableHead>
-            {Array.isArray(columns)
-              ? columns.map((col) => {
-                  const { key, header, width, minWidth, maxWidth } = col
-                  return (
+        <TableHeader className="sticky top-0 z-50">
+          {Array.isArray(columnDefs)
+            ? headerGroups.map((headerGroup, index) => (
+                <EditableTableRow key={index}>
+                  {index === 0 ? (
                     <EditableTableHead
-                      key={String(key)}
-                      style={{
-                        width,
-                        minWidth,
-                        maxWidth
-                      }}
+                      key="line_number"
+                      className="px-3 whitespace-nowrap w-0"
+                      rowSpan={headerGroups.length}
                     >
-                      {!header ? t(key.toString()) : typeof header === 'string' ? t(header) : null}
+                      №
                     </EditableTableHead>
-                  )
-                })
-              : null}
-            {typeof onDelete === 'function' && <EditableTableHead key="delete"></EditableTableHead>}
-          </EditableTableRow>
+                  ) : null}
+                  {Array.isArray(headerGroup)
+                    ? headerGroup.map((col) => {
+                        const {
+                          _colSpan,
+                          _rowSpan,
+                          key,
+                          header,
+                          width,
+                          minWidth,
+                          maxWidth,
+                          headerClassName
+                        } = col
+                        return (
+                          <EditableTableHead
+                            key={String(key)}
+                            style={{
+                              width,
+                              minWidth,
+                              maxWidth
+                            }}
+                            colSpan={_colSpan}
+                            rowSpan={_rowSpan}
+                            className={headerClassName}
+                          >
+                            {!header
+                              ? t(key.toString())
+                              : typeof header === 'string'
+                                ? t(header)
+                                : null}
+                          </EditableTableHead>
+                        )
+                      })
+                    : null}
+                  {typeof onDelete === 'function' && index === 0 ? (
+                    <EditableTableHead key="delete"></EditableTableHead>
+                  ) : null}
+                </EditableTableRow>
+              ))
+            : null}
         </TableHeader>
         <TableBody>
           {Array.isArray(data) && data.length ? (
@@ -107,7 +126,7 @@ export const EditableTable = <T extends object>(props: EditableTableProps<T>) =>
                   tabIndex={tabIndex}
                   row={row}
                   data={data}
-                  columns={columns}
+                  columnDefs={columnDefs}
                   errors={errors}
                   onChange={onChange}
                   onDelete={onDelete}
@@ -159,7 +178,7 @@ export const EditableTable = <T extends object>(props: EditableTableProps<T>) =>
 type EditableTableRowRendererProps<T extends object> = {
   tabIndex?: number
   index: number
-  columns: EditableColumnDef<T>[]
+  columnDefs: EditableColumnDef<T>[]
   row: T
   data: T[]
   errors?: FieldErrors<{ example: T[] }>['example']
@@ -171,7 +190,7 @@ type EditableTableRowRendererProps<T extends object> = {
 const EditableTableRowRenderer = <T extends object>({
   tabIndex,
   index,
-  columns,
+  columnDefs,
   row,
   data,
   errors,
@@ -182,6 +201,8 @@ const EditableTableRowRenderer = <T extends object>({
 }: EditableTableRowRendererProps<T>) => {
   const [state, setState] = useState<Record<string, unknown>>({})
 
+  const accessorColumns = useMemo(() => getAccessorColumns(columnDefs), [columnDefs])
+
   return (
     <EditableTableRow>
       <EditableTableCell
@@ -190,30 +211,33 @@ const EditableTableRowRenderer = <T extends object>({
       >
         {index + 1}
       </EditableTableCell>
-      {columns.map((col) => {
-        const { key, Editor, width, minWidth, maxWidth } = col
-        return (
-          <EditableTableCell
-            key={String(key)}
-            style={{ width, minWidth, maxWidth }}
-          >
-            <Editor
-              tabIndex={tabIndex}
-              id={index}
-              row={row}
-              data={data}
-              col={col}
-              onChange={onChange}
-              errors={errors?.[index] as FieldErrors<T>}
-              state={state}
-              setState={setState}
-              params={params}
-              validate={validate}
-              data-editorId={`${index}-${String(key)}`}
-            />
-          </EditableTableCell>
-        )
-      })}
+      {Array.isArray(columnDefs)
+        ? accessorColumns.map((col) => {
+            const { key, Editor, width, minWidth, maxWidth, className } = col
+            return (
+              <EditableTableCell
+                key={String(key)}
+                style={{ width, minWidth, maxWidth }}
+                className={className}
+              >
+                <Editor
+                  tabIndex={tabIndex}
+                  id={index}
+                  row={row}
+                  data={data}
+                  col={col}
+                  onChange={onChange}
+                  errors={errors?.[index] as FieldErrors<T>}
+                  state={state}
+                  setState={setState}
+                  params={params}
+                  validate={validate}
+                  data-editorId={`${index}-${String(key)}`}
+                />
+              </EditableTableCell>
+            )
+          })
+        : null}
       {typeof onDelete === 'function' && (
         <EditableTableCell className="whitespace-nowrap w-0">
           <Button

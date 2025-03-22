@@ -4,14 +4,16 @@ import { inputVariants } from '@renderer/common/features/spravochnik'
 
 import { NumericInput, type NumericInputProps } from '@/common/components'
 
-const createNumberEditor = <T extends object>({
+export const createNumberEditor = <T extends object>({
   readOnly = false,
   key,
   max,
-  inputProps
+  inputProps,
+  defaultValue
 }: EditorOptions<T, NumericInputProps> & {
   readOnly?: boolean
   max?: number
+  defaultValue?: number
 }): EditorComponentType<T> => {
   const EditorComponent: EditorComponentType<T> = ({ tabIndex, id, row, errors, onChange }) => {
     return (
@@ -30,8 +32,8 @@ const createNumberEditor = <T extends object>({
             typeof row[key] === 'string' || typeof row[key] === 'number'
               ? Number(row[key]) !== 0
                 ? Number(row[key])
-                : ''
-              : ''
+                : (defaultValue ?? '')
+              : (defaultValue ?? '')
           }
           onValueChange={(values) =>
             onChange?.({
@@ -56,5 +58,3 @@ const createNumberEditor = <T extends object>({
   }
   return EditorComponent
 }
-
-export { createNumberEditor }

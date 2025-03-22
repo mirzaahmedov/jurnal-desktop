@@ -39,7 +39,7 @@ export const ShartnomaGrafikForm: FC<{
     <EditableTable
       tableRef={tableRef}
       tabIndex={5}
-      columns={provodkaColumns}
+      columnDefs={provodkaColumns}
       data={form.watch('grafiks')}
       errors={form.formState.errors.grafiks}
       onCreate={createEditorCreateHandler({

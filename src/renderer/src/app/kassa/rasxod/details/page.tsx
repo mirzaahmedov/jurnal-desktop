@@ -325,7 +325,7 @@ const KassaRasxodDetailtsPage = () => {
         >
           <EditableTable
             tabIndex={4}
-            columns={podvodkaColumns}
+            columnDefs={podvodkaColumns}
             data={form.watch('childs')}
             errors={form.formState.errors.childs}
             onCreate={createEditorCreateHandler({
