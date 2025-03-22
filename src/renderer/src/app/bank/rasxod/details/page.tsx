@@ -239,7 +239,9 @@ const BankRasxodDetailtsPage = () => {
   )
 
   const summa = form.watch('summa')
-  const reminder = (monitor?.meta?.summa_to ?? 0) - (summa ?? 0) + (rasxod?.data?.summa ?? 0)
+  const reminder = monitor?.meta
+    ? (monitor?.meta?.summa_to ?? 0) - (summa ?? 0) + (rasxod?.data?.summa ?? 0)
+    : 0
 
   useEffect(() => {
     const summa =
@@ -392,14 +394,7 @@ const BankRasxodDetailtsPage = () => {
             <DetailsView.Footer className="flex flex-row gap-10">
               <DetailsView.Create
                 disabled={
-                  !monitor?.meta?.summa_to ||
-                  monitor?.meta?.summa_to < 0 ||
-                  !summa ||
-                  reminder < 0 ||
-                  isFetchingMonitor ||
-                  isFetching ||
-                  isUpdating ||
-                  isCreating
+                  reminder < 0 || isFetchingMonitor || isFetching || isUpdating || isCreating
                 }
                 loading={isCreating || isUpdating}
                 tabIndex={7}

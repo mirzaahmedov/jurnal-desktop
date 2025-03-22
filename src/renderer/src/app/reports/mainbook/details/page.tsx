@@ -118,11 +118,11 @@ const MainbookDetailsPage = () => {
     () => [
       ...provodkiColumns,
       ...(types?.data?.flatMap((type) => {
-        const jurNumber = type.name.match(/\d+/)?.[0]
+        const jurNum = type.name.match(/\d+/)?.[0]
         return [
           {
             key: type.id,
-            header: t('mainbook.mo-nth', { nth: jurNumber }),
+            header: jurNum ? t('mainbook.mo-nth', { nth: jurNum }) : t(`mainbook.${type.name}`),
             headerClassName: 'text-center',
             columns: [
               {

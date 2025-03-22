@@ -421,11 +421,17 @@ export const routes: RouteObject[] = [
       },
       {
         path: 'mainbook',
-        element: <MainbookPage />
-      },
-      {
-        path: 'mainbook/:id',
-        element: <MainbookDetailsPage />
+        element: <RequisitesGuard />,
+        children: [
+          {
+            index: true,
+            element: <MainbookPage />
+          },
+          {
+            path: ':id',
+            element: <MainbookDetailsPage />
+          }
+        ]
       },
       {
         path: 'expenses',

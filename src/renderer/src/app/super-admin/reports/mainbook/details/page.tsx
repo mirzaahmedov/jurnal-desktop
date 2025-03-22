@@ -70,11 +70,11 @@ const AdminMainbookDetailsPage = () => {
     () => [
       ...provodkiColumns,
       ...(types?.data?.flatMap((type) => {
-        const jurNumber = type.name.match(/\d+/)?.[0]
+        const jurNum = type.name.match(/\d+/)?.[0]
         return [
           {
             key: type.id,
-            header: t('mainbook.mo-nth', { nth: jurNumber }),
+            header: jurNum ? t('mainbook.mo-nth', { nth: jurNum }) : t(`mainbook.${type.name}`),
             headerClassName: 'text-center',
             columns: [
               {
@@ -135,9 +135,12 @@ const AdminMainbookDetailsPage = () => {
   const data = useMemo(() => transformGetByIdData(mainbook?.data?.childs ?? []), [mainbook])
 
   return (
-    <DetailsView>
-      <DetailsView.Content loading={isFetching || isFetchingTypes || isUpdatingMainbook}>
-        <div className="relative p-5 flex flex-col gap-5 pb-20">
+    <DetailsView className="h-full">
+      <DetailsView.Content
+        loading={isFetching || isFetchingTypes || isUpdatingMainbook}
+        className="h-full pb-20 overflow-hidden"
+      >
+        <div className="h-full flex flex-col gap-5 p-5">
           <div className="flex items-center justify-between gap-5">
             <MonthPicker
               disabled
@@ -149,7 +152,7 @@ const AdminMainbookDetailsPage = () => {
               onChange={() => {}}
             />
           </div>
-          <div className="overflow-auto scrollbar">
+          <div className="relative flex-1 overflow-auto scrollbar">
             <EditableTable
               columnDefs={columns}
               data={data}

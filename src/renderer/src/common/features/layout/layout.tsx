@@ -119,7 +119,7 @@ export const PageLayout = ({ children }: PageLayoutProps) => {
 
                 <div
                   className="flex flex-col gap-0.5 cursor-pointer"
-                  onClick={mainSchetInfoToggle.open}
+                  onClick={main_schet ? mainSchetInfoToggle.open : undefined}
                 >
                   <p className="text-xs font-medium text-slate-500">{t('main-schet')}</p>
                   <p className="text-base font-semibold">
