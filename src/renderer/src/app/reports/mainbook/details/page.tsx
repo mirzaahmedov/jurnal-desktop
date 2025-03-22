@@ -233,6 +233,9 @@ const MainbookDetailsPage = () => {
               <EditableTable
                 columnDefs={columns}
                 data={form.watch('childs')}
+                getRowClassName={({ index, data }) =>
+                  index === (data?.length ?? 0) - 1 ? '[&_input]:font-bold' : ''
+                }
               />
             </div>
           </div>

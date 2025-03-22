@@ -6,6 +6,7 @@ import { type ReactNode, useMemo, useState } from 'react'
 
 import { Button } from '@renderer/common/components/ui/button'
 import { Table, TableBody, TableFooter, TableHeader } from '@renderer/common/components/ui/table'
+import { cn } from '@renderer/common/lib/utils'
 import { CircleMinus, CirclePlus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
@@ -19,7 +20,9 @@ export interface EditableTableProps<T extends object> {
   tabIndex?: number
   data: T[]
   columnDefs: EditableColumnDef<T>[]
+  className?: string
   errors?: FieldErrors<{ example: T[] }>['example']
+  getRowClassName?: (args: { index: number; row: T; data: T[] }) => string
   placeholder?: string
   onDelete?(ctx: DeleteContext): void
   onChange?(ctx: ChangeContext<T>): void
@@ -34,12 +37,15 @@ export const EditableTable = <T extends object>(props: EditableTableProps<T>) =>
     tabIndex,
     data,
     columnDefs,
+    className,
     errors,
     placeholder,
     onCreate,
     onDelete,
     onChange,
-    params = {}
+    params = {},
+    validate,
+    getRowClassName
   } = props
 
   const { t } = useTranslation()
@@ -61,7 +67,7 @@ export const EditableTable = <T extends object>(props: EditableTableProps<T>) =>
     >
       <Table
         ref={tableRef}
-        className="border border-slate-200"
+        className={cn('border border-slate-200', className)}
       >
         <TableHeader className="sticky top-0 z-50">
           {Array.isArray(columnDefs)
@@ -131,7 +137,8 @@ export const EditableTable = <T extends object>(props: EditableTableProps<T>) =>
                   onChange={onChange}
                   onDelete={onDelete}
                   params={params}
-                  validate={props.validate}
+                  validate={validate}
+                  getRowClassName={getRowClassName}
                 />
               )
             })
@@ -175,17 +182,21 @@ export const EditableTable = <T extends object>(props: EditableTableProps<T>) =>
   )
 }
 
-type EditableTableRowRendererProps<T extends object> = {
+interface EditableTableRowRendererProps<T extends object>
+  extends Pick<
+    EditableTableProps<T>,
+    | 'getRowClassName'
+    | 'validate'
+    | 'params'
+    | 'onDelete'
+    | 'onChange'
+    | 'errors'
+    | 'data'
+    | 'columnDefs'
+  > {
   tabIndex?: number
   index: number
-  columnDefs: EditableColumnDef<T>[]
   row: T
-  data: T[]
-  errors?: FieldErrors<{ example: T[] }>['example']
-  onDelete?(ctx: DeleteContext): void
-  onChange?(ctx: ChangeContext<T>): void
-  params: Record<string, unknown>
-  validate?: (ctx: ChangeContext<T>) => boolean
 }
 const EditableTableRowRenderer = <T extends object>({
   tabIndex,
@@ -197,14 +208,15 @@ const EditableTableRowRenderer = <T extends object>({
   onDelete,
   onChange,
   params,
-  validate
+  validate,
+  getRowClassName
 }: EditableTableRowRendererProps<T>) => {
   const [state, setState] = useState<Record<string, unknown>>({})
 
   const accessorColumns = useMemo(() => getAccessorColumns(columnDefs), [columnDefs])
 
   return (
-    <EditableTableRow>
+    <EditableTableRow className={getRowClassName?.({ index, row, data })}>
       <EditableTableCell
         key="line_number"
         className="px-3 font-medium"
@@ -230,7 +242,7 @@ const EditableTableRowRenderer = <T extends object>({
                   errors={errors?.[index] as FieldErrors<T>}
                   state={state}
                   setState={setState}
-                  params={params}
+                  params={params!}
                   validate={validate}
                   data-editorId={`${index}-${String(key)}`}
                 />
