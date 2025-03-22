@@ -1,3 +1,5 @@
+import { useEffect } from 'react'
+
 import { useQuery } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -27,11 +29,11 @@ export type RequisitesDialogProps = {
 }
 export const RequisitesDialog = ({ open, onOpenChange }: RequisitesDialogProps) => {
   const navigate = useNavigate()
-  const setRequisites = useRequisitesStore((store) => store.setRequisites)
 
   const { t } = useTranslation()
   const { confirm } = useConfirm()
   const { user } = useAuthenticationStore()
+  const { main_schet_id, setRequisites } = useRequisitesStore()
 
   const form = useForm({
     defaultValues
@@ -83,7 +85,14 @@ export const RequisitesDialog = ({ open, onOpenChange }: RequisitesDialogProps) 
     onOpenChange(open)
   }
 
-  console.log(form.formState.defaultValues, form.formState.isDirty)
+  useEffect(() => {
+    if (!main_schet_id) {
+      form.reset({
+        budjet_id: 0,
+        main_schet_id: 0
+      })
+    }
+  }, [form, main_schet_id])
 
   return (
     <Dialog
