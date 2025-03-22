@@ -28,10 +28,10 @@ export const DataList = ({ list, className, ...props }: DataListProps) => {
 
 export const DataListItem = ({ item }: { item: DataListItem }) => {
   return (
-    <li className="flex items-center gap-2 justify-between text-sm">
+    <li className="flex items-start gap-2 justify-between text-sm">
       <span className="text-xs">{item.name}</span>
       <span className="flex-1 border-b border-slate-200 border-dotted h-5"></span>
-      <b className="break-all text-end">{item.value}</b>
+      <b className="break-words text-end">{item.value}</b>
     </li>
   )
 }

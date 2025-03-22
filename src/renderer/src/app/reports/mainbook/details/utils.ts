@@ -1,7 +1,7 @@
 import type { MainbookAutoFill, MainbookAutoFillSubChild } from './service'
 import type { Mainbook } from '@renderer/common/models'
 
-export const transformMainbookAutofillData = (types: MainbookAutoFill[]) => {
+export const transformMainbookAutoFillData = (types: MainbookAutoFill[]) => {
   const schetsMap = new Map<string, { id: number; child: MainbookAutoFillSubChild }[]>()
 
   types.forEach((type) => {

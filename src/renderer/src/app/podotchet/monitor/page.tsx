@@ -8,7 +8,6 @@ import { SearchField } from '@renderer/common/features/search/search-field'
 import { useSearch } from '@renderer/common/features/search/use-search'
 import { useDates, usePagination } from '@renderer/common/hooks'
 import { useLocationState } from '@renderer/common/hooks/use-location-state'
-import { useSidebarStore } from '@renderer/common/layout/sidebar'
 import { ListView } from '@renderer/common/views'
 import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
@@ -37,7 +36,6 @@ const PodotchetMonitoringPage = () => {
   const report_title_id = useSettingsStore((store) => store.report_title_id)
 
   const setLayout = useLayoutStore((store) => store.setLayout)
-  const setCollapsed = useSidebarStore((store) => store.setCollapsed)
 
   const { t } = useTranslation(['app'])
   const { search } = useSearch()
@@ -84,7 +82,6 @@ const PodotchetMonitoringPage = () => {
   })
 
   useEffect(() => {
-    setCollapsed(true)
     setLayout({
       title: t('pages.podotchet-monitoring'),
       content: SearchField,
@@ -94,7 +91,7 @@ const PodotchetMonitoringPage = () => {
         }
       ]
     })
-  }, [setLayout, setCollapsed, t])
+  }, [setLayout, t])
 
   return (
     <ListView>

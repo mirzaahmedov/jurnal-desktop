@@ -8,7 +8,6 @@ import { useRequisitesStore } from '@renderer/common/features/requisites'
 import { SearchField } from '@renderer/common/features/search/search-field'
 import { useSearch } from '@renderer/common/features/search/use-search'
 import { useLocationState } from '@renderer/common/hooks/use-location-state'
-import { useSidebarStore } from '@renderer/common/layout/sidebar'
 import { getProvodkaURL } from '@renderer/common/lib/provodka'
 import { useQuery } from '@tanstack/react-query'
 import { Download } from 'lucide-react'
@@ -47,7 +46,6 @@ const OrganizationMonitoringPage = () => {
   const report_title_id = useSettingsStore((store) => store.report_title_id)
 
   const setLayout = useLayoutStore((store) => store.setLayout)
-  const setCollapsed = useSidebarStore((store) => store.setCollapsed)
 
   const { main_schet_id, budjet_id } = useRequisitesStore()
   const { search } = useSearch()
@@ -96,7 +94,6 @@ const OrganizationMonitoringPage = () => {
   })
 
   useEffect(() => {
-    setCollapsed(true)
     setLayout({
       title: t('pages.organization-monitoring'),
       content: SearchField,
@@ -106,7 +103,7 @@ const OrganizationMonitoringPage = () => {
         }
       ]
     })
-  }, [setLayout, setCollapsed, t])
+  }, [setLayout, t])
 
   const handleClickEdit = (row: OrganizationMonitor) => {
     const path = getProvodkaURL(row)

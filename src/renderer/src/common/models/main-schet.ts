@@ -1,4 +1,4 @@
-type MainSchet = {
+export type MainSchet = {
   id: number
   account_number: string
   gazna_number: string
@@ -16,7 +16,7 @@ type MainSchet = {
   jur3_subschet: string
   jur4_schet: string
   jur4_subschet: string
+  jur5_schet: string
+  jur7_schet: string
   budjet_name: string
 }
-
-export type { MainSchet }

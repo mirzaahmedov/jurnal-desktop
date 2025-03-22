@@ -384,7 +384,7 @@ export const MainSchetDialog = ({
                   </FormItem>
                 )}
               />
-              <FormField
+              {/* <FormField
                 name="jur1_subschet"
                 control={form.control}
                 render={({ field }) => (
@@ -403,7 +403,7 @@ export const MainSchetDialog = ({
                     </div>
                   </FormItem>
                 )}
-              />
+              /> */}
 
               <FormField
                 name="jur2_schet"
@@ -425,7 +425,7 @@ export const MainSchetDialog = ({
                   </FormItem>
                 )}
               />
-              <FormField
+              {/* <FormField
                 name="jur2_subschet"
                 control={form.control}
                 render={({ field }) => (
@@ -444,7 +444,7 @@ export const MainSchetDialog = ({
                     </div>
                   </FormItem>
                 )}
-              />
+              /> */}
 
               <FormField
                 name="jur3_schet"
@@ -466,7 +466,7 @@ export const MainSchetDialog = ({
                   </FormItem>
                 )}
               />
-              <FormField
+              {/* <FormField
                 name="jur3_subschet"
                 control={form.control}
                 render={({ field }) => (
@@ -485,7 +485,7 @@ export const MainSchetDialog = ({
                     </div>
                   </FormItem>
                 )}
-              />
+              /> */}
 
               <FormField
                 name="jur4_schet"
@@ -507,7 +507,7 @@ export const MainSchetDialog = ({
                   </FormItem>
                 )}
               />
-              <FormField
+              {/* <FormField
                 name="jur4_subschet"
                 control={form.control}
                 render={({ field }) => (
@@ -515,6 +515,47 @@ export const MainSchetDialog = ({
                     <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
                       <FormLabel className="text-right col-span-2">
                         {t('mo-nth', { nth: 4 })} <span className="lowercase">{t('subschet')}</span>
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          className="col-span-4"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage className="text-end col-span-6" />
+                    </div>
+                  </FormItem>
+                )}
+              /> */}
+
+              <FormField
+                name="jur5_schet"
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
+                      <FormLabel className="text-right col-span-2">
+                        {t('mo-nth', { nth: 5 })} <span className="lowercase">{t('schet')}</span>
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          className="col-span-4"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage className="text-end col-span-6" />
+                    </div>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                name="jur7_schet"
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
+                      <FormLabel className="text-right col-span-2">
+                        {t('mo-nth', { nth: 7 })} <span className="lowercase">{t('schet')}</span>
                       </FormLabel>
                       <FormControl>
                         <Input
@@ -558,5 +599,7 @@ const defaultValues = {
   jur3_schet: '',
   jur3_subschet: '',
   jur4_schet: '',
-  jur4_subschet: ''
+  jur4_subschet: '',
+  jur5_schet: '',
+  jur7_schet: ''
 } satisfies MainSchetPayloadType

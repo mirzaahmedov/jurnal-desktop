@@ -7,7 +7,6 @@ import { createNumberEditor } from '@renderer/common/components/editable-table/e
 import { MonthPicker } from '@renderer/common/components/month-picker'
 import { Button } from '@renderer/common/components/ui/button'
 import { useLayoutStore } from '@renderer/common/features/layout'
-import { useRequisitesStore } from '@renderer/common/features/requisites'
 import { formatDate } from '@renderer/common/lib/date'
 import { DetailsView } from '@renderer/common/views'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
@@ -20,11 +19,10 @@ import { mainbookQueryKeys } from '../config'
 import { mainbookService } from '../service'
 import { defaultValues } from './config'
 import { provodkiColumns } from './provodki'
-import { type MainbookAutoFillSubChild, getMainbookAutoFill, getMainbookTypes } from './service'
-import { transformGetByIdData, transformMainbookAutofillData } from './utils'
+import { type MainbookAutoFillSubChild, autoFillMainbookData, getMainbookTypes } from './service'
+import { transformGetByIdData, transformMainbookAutoFillData } from './utils'
 
 const MainbookDetailsPage = () => {
-  const budjet_id = useRequisitesStore((store) => store.budjet_id)
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const setLayout = useLayoutStore((store) => store.setLayout)
@@ -45,21 +43,14 @@ const MainbookDetailsPage = () => {
     queryKey: [mainbookQueryKeys.getTypes],
     queryFn: getMainbookTypes
   })
-  const {
-    data: autofill,
-    isFetching: isFetchingAutofill,
-    refetch
-  } = useQuery({
-    queryKey: [
-      mainbookQueryKeys.getAutoFill,
-      {
-        budjet_id: budjet_id!,
-        month: form.watch('month'),
-        year: form.watch('year')
+  const { isPending: isAutoFillingMainbook, mutate: autoFillMainbook } = useMutation({
+    mutationKey: [mainbookQueryKeys.autoFill],
+    mutationFn: autoFillMainbookData,
+    onSuccess: (res) => {
+      if (res?.data) {
+        form.setValue('childs', transformMainbookAutoFillData(res.data))
       }
-    ],
-    queryFn: getMainbookAutoFill,
-    enabled: false
+    }
   })
 
   const { mutate: createMainbook, isPending: isCreatingMainbook } = useMutation({
@@ -118,10 +109,10 @@ const MainbookDetailsPage = () => {
     })
   }, [setLayout, navigate, t, id])
   useEffect(() => {
-    if (autofill?.data) {
-      form.setValue('childs', transformMainbookAutofillData(autofill.data))
+    if (id === 'create') {
+      autoFillMainbook({ year, month })
     }
-  }, [autofill])
+  }, [id, year, month])
 
   const columns = useMemo(
     () => [
@@ -135,18 +126,6 @@ const MainbookDetailsPage = () => {
             headerClassName: 'text-center',
             columns: [
               {
-                key: `${type.id}_rasxod`,
-                width: 150,
-                minWidth: 150,
-                header: t('rasxod'),
-                headerClassName: 'text-center',
-                Editor: createNumberEditor({
-                  key: `${type.id}_rasxod`,
-                  readOnly: true,
-                  defaultValue: 0
-                })
-              },
-              {
                 key: `${type.id}_prixod`,
                 width: 150,
                 minWidth: 150,
@@ -154,6 +133,18 @@ const MainbookDetailsPage = () => {
                 headerClassName: 'text-center',
                 Editor: createNumberEditor({
                   key: `${type.id}_prixod`,
+                  readOnly: true,
+                  defaultValue: 0
+                })
+              },
+              {
+                key: `${type.id}_rasxod`,
+                width: 150,
+                minWidth: 150,
+                header: t('rasxod'),
+                headerClassName: 'text-center',
+                Editor: createNumberEditor({
+                  key: `${type.id}_rasxod`,
                   readOnly: true,
                   defaultValue: 0
                 })
@@ -208,7 +199,7 @@ const MainbookDetailsPage = () => {
   return (
     <DetailsView className="h-full">
       <DetailsView.Content
-        loading={isFetching || isFetchingAutofill || isFetchingTypes}
+        loading={isFetching || isAutoFillingMainbook || isFetchingTypes}
         className="overflow-hidden h-full pb-20"
       >
         <form
@@ -223,15 +214,20 @@ const MainbookDetailsPage = () => {
                   const date = new Date(value)
                   form.setValue('year', date.getFullYear())
                   form.setValue('month', date.getMonth() + 1)
+                  if (id !== 'create') {
+                    autoFillMainbook({ year: date.getFullYear(), month: date.getMonth() + 1 })
+                  }
                 }}
               />
-              <Button
-                type="button"
-                onClick={() => refetch()}
-                loading={isFetchingAutofill}
-              >
-                {t('autofill')}
-              </Button>
+              {id !== 'create' ? (
+                <Button
+                  type="button"
+                  onClick={() => autoFillMainbook({ year, month })}
+                  loading={isAutoFillingMainbook}
+                >
+                  {t('autofill')}
+                </Button>
+              ) : null}
             </div>
             <div className="overflow-auto scrollbar flex-1 relative">
               <EditableTable

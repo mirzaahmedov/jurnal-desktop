@@ -1,5 +1,4 @@
 import type { Response } from '@renderer/common/models'
-import type { QueryFunctionContext } from '@tanstack/react-query'
 
 import { ApiEndpoints } from '@renderer/common/features/crud'
 import { getBudjetId } from '@renderer/common/features/requisites'
@@ -19,17 +18,15 @@ export interface MainbookAutoFill {
   sort_order: number
   sub_childs: Array<MainbookAutoFillSubChild>
 }
-export interface GetMainbookAutoFillQueryParams {
-  budjet_id: number
+export interface AutoFillMainbookArgs {
   month: number
   year: number
 }
-export const getMainbookAutoFill = async (
-  ctx: QueryFunctionContext<[string, GetMainbookAutoFillQueryParams]>
-) => {
+export const autoFillMainbookData = async ({ year, month }: AutoFillMainbookArgs) => {
   const res = await http.get<Response<MainbookAutoFill[]>>(`${ApiEndpoints.mainbook}/data`, {
     params: {
-      ...ctx.queryKey[1],
+      year,
+      month,
       budjet_id: getBudjetId()
     }
   })

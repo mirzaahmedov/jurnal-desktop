@@ -16,6 +16,7 @@ import { ConfigureDefaultValuesDialog } from '@/common/features/app-defaults'
 import { useAuthenticationStore } from '@/common/features/auth'
 import { useToggle } from '@/common/hooks/use-toggle'
 
+import { MainSchetInfoDialog } from './main-schet-info'
 import { useLayoutStore } from './store'
 
 type PageLayoutProps = {
@@ -32,6 +33,7 @@ export const PageLayout = ({ children }: PageLayoutProps) => {
 
   const mainSchetToggle = useToggle()
   const appDefaultsToggle = useToggle()
+  const mainSchetInfoToggle = useToggle()
 
   const { data: main_schet_data } = useQuery({
     queryKey: [mainSchetQueryKeys.getById, main_schet_id],
@@ -115,7 +117,10 @@ export const PageLayout = ({ children }: PageLayoutProps) => {
                   <RefreshCw />
                 </Button>
 
-                <div className="flex flex-col gap-0.5">
+                <div
+                  className="flex flex-col gap-0.5 cursor-pointer"
+                  onClick={mainSchetInfoToggle.open}
+                >
                   <p className="text-xs font-medium text-slate-500">{t('main-schet')}</p>
                   <p className="text-base font-semibold">
                     {[main_schet?.account_number, schet].filter((value) => !!value).join(' - ')}
@@ -165,6 +170,10 @@ export const PageLayout = ({ children }: PageLayoutProps) => {
       <ConfigureDefaultValuesDialog
         open={appDefaultsToggle.isOpen}
         onOpenChange={appDefaultsToggle.setOpen}
+      />
+      <MainSchetInfoDialog
+        open={mainSchetInfoToggle.isOpen}
+        onOpenChange={mainSchetInfoToggle.setOpen}
       />
     </main>
   )

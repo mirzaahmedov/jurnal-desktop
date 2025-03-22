@@ -18,6 +18,7 @@ export const MainSchetPayloadSchema = withPreprocessor(
     tashkilot_mfo: z.string(),
     tashkilot_inn: z.string(),
     account_number: z.string(),
+    gazna_number: z.string().optional(),
     account_name: z.string(),
     jur1_schet: z.string(),
     jur1_subschet: z.string().optional(),
@@ -27,7 +28,8 @@ export const MainSchetPayloadSchema = withPreprocessor(
     jur3_subschet: z.string().optional(),
     jur4_schet: z.string(),
     jur4_subschet: z.string().optional(),
-    gazna_number: z.string().optional()
+    jur5_schet: z.string(),
+    jur7_schet: z.string()
   })
 )
 export type MainSchetPayloadType = z.infer<typeof MainSchetPayloadSchema>

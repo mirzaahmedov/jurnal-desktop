@@ -1,6 +1,6 @@
 export const mainbookQueryKeys = {
   getAll: 'mainbook/all',
-  getAutoFill: 'mainbook/autofill',
+  autoFill: 'mainbook/autofill',
   getTypes: 'mainbook/types',
   getById: 'mainbook/id',
   delete: 'mainbook/delete',
