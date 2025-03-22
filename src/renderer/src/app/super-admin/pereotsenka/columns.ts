@@ -1,6 +1,6 @@
 import type { ColumnDef } from '@/common/components'
 import type { Group, Pereotsenka } from '@/common/models'
-import type { EditableColumnType } from '@renderer/common/components/editable-table'
+import type { EditableColumnDef } from '@renderer/common/components/editable-table'
 
 import { createTextEditor } from '@renderer/common/components/editable-table/editors'
 import { createNumberEditor } from '@renderer/common/components/editable-table/editors/number'
@@ -24,7 +24,7 @@ export const pereotsenkaColumns: ColumnDef<Pereotsenka>[] = [
   }
 ]
 
-export const groupColumns: EditableColumnType<
+export const groupColumns: EditableColumnDef<
   Omit<Group, 'id'> & Pick<Pereotsenka, 'pereotsenka_foiz' | 'group_jur7_id'>
 >[] = [
   {

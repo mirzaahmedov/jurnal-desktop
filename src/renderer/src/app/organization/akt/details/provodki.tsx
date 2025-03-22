@@ -1,5 +1,5 @@
 import type { AktProvodkaForm } from '../service'
-import type { EditableColumnType } from '@renderer/common/components/editable-table'
+import type { EditableColumnDef } from '@renderer/common/components/editable-table'
 
 import {
   createOperatsiiEditor,
@@ -14,7 +14,7 @@ import { cn } from '@renderer/common/lib/utils'
 
 import { TypeSchetOperatsii } from '@/common/models'
 
-export const podvodkaColumns: EditableColumnType<AktProvodkaForm>[] = [
+export const podvodkaColumns: EditableColumnDef<AktProvodkaForm>[] = [
   {
     key: 'spravochnik_operatsii_id',
     header: 'provodka',

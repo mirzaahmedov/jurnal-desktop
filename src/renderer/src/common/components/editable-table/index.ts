@@ -1,4 +1,3 @@
-export type { EditableColumnDef as EditableColumnType } from './table'
-
-export { EditableTable } from './table'
-export { EditableTableCell, EditableTableHead, EditableTableRow } from './components'
+export * from './interface'
+export * from './table'
+export * from './components'

@@ -1,12 +1,12 @@
 import type { ShartnomaGrafikFormValues } from '../service'
-import type { EditableColumnType } from '@renderer/common/components/editable-table'
+import type { EditableColumnDef } from '@renderer/common/components/editable-table'
 
 import {
   createNumberEditor,
   createSmetaEditor
 } from '@renderer/common/components/editable-table/editors'
 
-export const provodkaColumns: EditableColumnType<ShartnomaGrafikFormValues>[] = [
+export const provodkaColumns: EditableColumnDef<ShartnomaGrafikFormValues>[] = [
   {
     key: 'smeta_id',
     header: 'smeta',

@@ -1,5 +1,5 @@
 import type { ColumnDef } from '@renderer/common/components'
-import type { EditableColumnType } from '@renderer/common/components/editable-table'
+import type { EditableColumnDef } from '@renderer/common/components/editable-table'
 
 import { useMemo } from 'react'
 
@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next'
 
 export const useLocaleColumnDefs = <
   T extends Record<string, unknown>,
-  C extends ColumnDef<T> | EditableColumnType<T>
+  C extends ColumnDef<T> | EditableColumnDef<T>
 >(
   columns: C[]
 ) => {

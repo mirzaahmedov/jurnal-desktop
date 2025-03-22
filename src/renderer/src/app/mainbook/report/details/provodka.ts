@@ -1,12 +1,12 @@
 import type { MainbookReportProvodkaValues } from '../config'
-import type { EditableColumnType } from '@renderer/common/components/editable-table'
+import type { EditableColumnDef } from '@renderer/common/components/editable-table'
 
 import {
   createMainbookSchetEditor,
   createNumberEditor
 } from '@renderer/common/components/editable-table/editors'
 
-const provodkaColumns: EditableColumnType<MainbookReportProvodkaValues>[] = [
+const provodkaColumns: EditableColumnDef<MainbookReportProvodkaValues>[] = [
   {
     key: 'spravochnik_main_book_schet_id',
     header: 'Подводка',

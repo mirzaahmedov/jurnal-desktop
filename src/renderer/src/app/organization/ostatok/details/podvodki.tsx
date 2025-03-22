@@ -1,5 +1,5 @@
 import type { OrganizationOstatokProvodkaFormValues } from '../service'
-import type { EditableColumnType } from '@renderer/common/components/editable-table'
+import type { EditableColumnDef } from '@renderer/common/components/editable-table'
 
 import {
   createOperatsiiEditor,
@@ -10,7 +10,7 @@ import {
 } from '@renderer/common/components/editable-table/editors'
 import { TypeSchetOperatsii } from '@renderer/common/models'
 
-export const podvodkaColumns: EditableColumnType<OrganizationOstatokProvodkaFormValues>[] = [
+export const podvodkaColumns: EditableColumnDef<OrganizationOstatokProvodkaFormValues>[] = [
   {
     key: 'spravochnik_operatsii_id',
     header: 'provodka',

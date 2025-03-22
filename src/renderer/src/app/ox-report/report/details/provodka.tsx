@@ -1,5 +1,5 @@
 import type { OXReportProvodka } from '../config'
-import type { EditableColumnType } from '@renderer/common/components/editable-table'
+import type { EditableColumnDef } from '@renderer/common/components/editable-table'
 import type { SmetaGrafik } from '@renderer/common/models'
 
 import { NumericInput } from '@renderer/common/components'
@@ -16,7 +16,7 @@ const getMonthAllocated = (month?: number, smeta?: SmetaGrafik) => {
   return smeta['oy_' + month]
 }
 
-const provodkaColumns: EditableColumnType<OXReportProvodka>[] = [
+const provodkaColumns: EditableColumnDef<OXReportProvodka>[] = [
   {
     key: 'smeta_grafik_id',
     header: 'Смета',
