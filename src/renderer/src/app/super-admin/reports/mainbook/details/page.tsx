@@ -73,24 +73,35 @@ const AdminMainbookDetailsPage = () => {
         const jurNumber = type.name.match(/\d+/)?.[0]
         return [
           {
-            key: `${type.id}_rasxod`,
-            width: 160,
-            minWidth: 160,
-            header: `${jurNumber ? t('mainbook.mo-nth', { nth: jurNumber }) : t(`mainbook.${type.name}`)} ${t('rasxod').toLowerCase()}`,
-            Editor: createNumberEditor({
-              key: `${type.id}_rasxod`,
-              readOnly: true
-            })
-          },
-          {
-            key: `${type.id}_prixod`,
-            width: 160,
-            minWidth: 160,
-            header: `${jurNumber ? t('mainbook.mo-nth', { nth: jurNumber }) : t(`mainbook.${type.name}`)} ${t('prixod').toLowerCase()}`,
-            Editor: createNumberEditor({
-              key: `${type.id}_prixod`,
-              readOnly: true
-            })
+            key: type.id,
+            header: t('mainbook.mo-nth', { nth: jurNumber }),
+            headerClassName: 'text-center',
+            columns: [
+              {
+                key: `${type.id}_prixod`,
+                width: 150,
+                minWidth: 150,
+                header: t('prixod'),
+                headerClassName: 'text-center',
+                Editor: createNumberEditor({
+                  key: `${type.id}_prixod`,
+                  readOnly: true,
+                  defaultValue: 0
+                })
+              },
+              {
+                key: `${type.id}_rasxod`,
+                width: 150,
+                minWidth: 150,
+                header: t('rasxod'),
+                headerClassName: 'text-center',
+                Editor: createNumberEditor({
+                  key: `${type.id}_rasxod`,
+                  readOnly: true,
+                  defaultValue: 0
+                })
+              }
+            ]
           }
         ] as EditableColumnDef<any>[]
       }) ?? [])

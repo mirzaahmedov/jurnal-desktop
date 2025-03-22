@@ -1,4 +1,4 @@
-import type { EditableColumnDef } from '@renderer/common/components/editable-table/table'
+import type { EditableColumnDef } from '@renderer/common/components/editable-table/interface'
 
 import { createTextEditor } from '@renderer/common/components/editable-table/editors'
 
