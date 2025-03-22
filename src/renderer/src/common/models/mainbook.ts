@@ -134,6 +134,8 @@ export interface Mainbook {
 export interface MainbookChild {
   type_id: number
   type_name: string
+  prixod: number
+  rasxod: number
   sub_childs: Array<{
     id: number
     schet: string

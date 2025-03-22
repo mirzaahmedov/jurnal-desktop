@@ -16,11 +16,12 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
+import { transformGetByIdData } from '@/app/reports/mainbook/details/utils'
+
 import { mainbookQueryKeys } from '../config'
 import { adminMainbookService } from '../service'
 import { provodkiColumns } from './provodki'
 import { getMainbookTypes } from './service'
-import { transformGetByIdData } from './utils'
 
 const AdminMainbookDetailsPage = () => {
   const navigate = useNavigate()

@@ -1,6 +1,8 @@
 import type { MainbookAutoFill, MainbookAutoFillSubChild } from './service'
 import type { Mainbook } from '@renderer/common/models'
 
+import { t } from 'i18next'
+
 export const transformMainbookAutoFillData = (types: MainbookAutoFill[]) => {
   const schetsMap = new Map<string, { id: number; child: MainbookAutoFillSubChild }[]>()
 
@@ -35,6 +37,12 @@ export const transformGetByIdData = (types: Mainbook['childs']) => {
   const schetsMap = new Map<string, { id: number; child: MainbookAutoFillSubChild }[]>()
 
   types.forEach((type) => {
+    type.sub_childs.push({
+      id: type.type_id + Math.random(),
+      rasxod: type.rasxod,
+      prixod: type.prixod,
+      schet: t('total')
+    })
     type.sub_childs.forEach((subChild) => {
       if (!schetsMap.has(subChild.schet)) {
         schetsMap.set(subChild.schet, [])
