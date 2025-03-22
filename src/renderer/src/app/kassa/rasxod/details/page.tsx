@@ -46,7 +46,7 @@ import { podvodkaColumns } from './podvodki'
 
 const KassaRasxodDetailtsPage = () => {
   const { id } = useParams()
-  const { t } = useTranslation(['app'])
+  const { t, i18n } = useTranslation(['app'])
   const { snippets, addSnippet, removeSnippet } = useSnippets({
     ns: 'kassa_rasxod'
   })
@@ -170,7 +170,9 @@ const KassaRasxodDetailtsPage = () => {
   const podvodki = form.watch('childs')
 
   const summa = form.watch('summa')
-  const reminder = (monitor?.meta?.summa_to ?? 0) - (summa ?? 0) + (rasxod?.data?.summa ?? 0)
+  const reminder = monitor?.meta
+    ? (monitor?.meta?.summa_to ?? 0) - (summa ?? 0) + (rasxod?.data?.summa ?? 0)
+    : 0
 
   useEffect(() => {
     setLayout({
@@ -267,13 +269,7 @@ const KassaRasxodDetailtsPage = () => {
             <DetailsView.Footer className="flex flex-row items-center gap-10">
               <DetailsView.Create
                 disabled={
-                  !monitor?.meta?.summa_to ||
-                  monitor?.meta?.summa_to < 0 ||
-                  reminder < 0 ||
-                  isFetchingMonitor ||
-                  isFetching ||
-                  isUpdating ||
-                  isCreating
+                  reminder < 0 || isFetchingMonitor || isFetching || isUpdating || isCreating
                 }
                 loading={isCreating || isUpdating}
                 tabIndex={5}
@@ -295,7 +291,7 @@ const KassaRasxodDetailtsPage = () => {
                       doc_num={form.watch('doc_num')}
                       fio={podotchetSpravochnik.selected?.name ?? ''}
                       summa={formatNumber(form.watch('summa') ?? 0)}
-                      summaWords={numberToWords(form.watch('summa') ?? 0)}
+                      summaWords={numberToWords(form.watch('summa') ?? 0, i18n.language)}
                       podvodkaList={form
                         .watch('childs')
                         .map(({ summa, spravochnik_operatsii_id }) => {

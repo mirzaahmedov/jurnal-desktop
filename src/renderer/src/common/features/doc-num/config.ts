@@ -9,7 +9,9 @@ export enum DocumentType {
   JUR7_RASXOD = 'jur7_rasxod',
   JUR7_INTERNAL = 'jur7_internal',
   SHOW_SERVICE = 'show_service',
-  CONTRACT = 'contract'
+  CONTRACT = 'contract',
+  ORGAN_SALDO = 'organ_saldo',
+  PODOTCHET_SALDO = 'podotchet_saldo'
 }
 
 export const queryKeys = {

@@ -21,7 +21,7 @@ export const SummaEditableFields: FormEditableFieldsComponent<RequiredSummaEdita
   containerProps,
   ...props
 }) => {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   return (
     <Fieldset
       {...props}
@@ -58,7 +58,7 @@ export const SummaEditableFields: FormEditableFieldsComponent<RequiredSummaEdita
           readOnly
           tabIndex={-1}
           className="flex-1"
-          value={numberToWords(form.watch().summa ?? 0)}
+          value={numberToWords(form.watch().summa ?? 0, i18n.language)}
         />
       </div>
     </Fieldset>

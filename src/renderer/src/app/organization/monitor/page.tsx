@@ -242,7 +242,7 @@ const OrganizationMonitoringPage = () => {
                 </DropdownMenu>
                 {orgId ? (
                   <AktSverkaDialog
-                    orgId={orgId}
+                    organId={orgId}
                     schetId={main_schet_id}
                     from={dates.from}
                     to={dates.to}

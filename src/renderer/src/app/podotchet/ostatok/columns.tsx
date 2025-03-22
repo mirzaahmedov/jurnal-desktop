@@ -1,5 +1,4 @@
 import { DataList } from '@renderer/common/components/data-list'
-import { ProvodkaBadge } from '@renderer/common/components/provodka-badge'
 import { IDCell } from '@renderer/common/components/table/renderers/id'
 import { ProvodkaCell } from '@renderer/common/components/table/renderers/provodka'
 import { Trans } from 'react-i18next'
@@ -7,7 +6,7 @@ import { Trans } from 'react-i18next'
 import { type ColumnDef, Copyable } from '@/common/components'
 import { HoverInfoCell } from '@/common/components/table/renderers'
 import { formatLocaleDate } from '@/common/lib/format'
-import { type PodotchetOstatok, ProvodkaType } from '@/common/models'
+import { type PodotchetOstatok } from '@/common/models'
 
 export const podotchetOstatokColumns: ColumnDef<PodotchetOstatok>[] = [
   {
@@ -62,26 +61,32 @@ export const podotchetOstatokColumns: ColumnDef<PodotchetOstatok>[] = [
     )
   },
   {
-    fit: true,
-    key: 'rasxod',
-    header: 'type',
-    renderCell: (row) => (
-      <ProvodkaBadge
-        type={
-          row.rasxod ? ProvodkaType.PODOTCHET_SALDO_RASXOD : ProvodkaType.PODOTCHET_SALDO_PRIXOD
-        }
-      />
-    )
+    numeric: true,
+    key: 'prixod_summa',
+    header: 'prixod',
+    renderCell: (row) =>
+      !row.prixod_summa ? (
+        '-'
+      ) : (
+        <ProvodkaCell
+          summa={row.prixod_summa}
+          provodki={row.provodki_array}
+        />
+      )
   },
   {
     numeric: true,
-    key: 'summa',
-    renderCell: (row) => (
-      <ProvodkaCell
-        summa={row.prixod ? row.prixod_summa : row.rasxod_summa}
-        provodki={row.provodki_array}
-      />
-    )
+    key: 'rasxod_summa',
+    header: 'rasxod',
+    renderCell: (row) =>
+      !row.rasxod_summa ? (
+        '-'
+      ) : (
+        <ProvodkaCell
+          summa={row.rasxod_summa}
+          provodki={row.provodki_array}
+        />
+      )
   },
   {
     width: 350,

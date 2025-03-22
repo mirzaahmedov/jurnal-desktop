@@ -7,38 +7,54 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-const digits = ['', 'bir', 'ikki', 'uch', "to'rt", 'besh', 'olti', 'yetti', 'sakkiz', "to'qqiz"]
-const tens = [
-  '',
-  "o'n",
-  'yigirma',
-  "o'ttiz",
-  'qirq',
-  'ellik',
-  'oltmish',
-  'yetmish',
-  'sakson',
-  "to'qson"
-]
-const hundred = 'yuz'
-const thousands = ['', 'ming', 'million', 'milliard', 'trillion', 'kuadrillion']
+const cyrillic = {
+  digits: ['', 'бир', 'икки', 'уч', 'тўрт', 'беш', 'олти', 'етти', 'саккиз', 'тўққиз'],
+  tens: ['', 'ўн', 'йигирма', 'ўттиз', 'қирқ', 'эллик', 'олтмиш', 'етмиш', 'саксон', 'тўқсон'],
+  hundred: 'юз',
+  thousands: ['', 'минг', 'миллион', 'миллиард', 'триллион', 'куадриллион'],
+  sum: 'сўм',
+  tiyin: 'тийин'
+}
+const latin = {
+  digits: ['', 'bir', 'ikki', 'uch', "to'rt", 'besh', 'olti', 'yetti', 'sakkiz', "to'qqiz"],
+  tens: [
+    '',
+    "o'n",
+    'yigirma',
+    "o'ttiz",
+    'qirq',
+    'ellik',
+    'oltmish',
+    'yetmish',
+    'sakson',
+    "to'qson"
+  ],
+  hundred: 'yuz',
+  thousands: ['', 'ming', 'million', 'milliard', 'trillion', 'kuadrillion'],
+  sum: 'so‘m',
+  tiyin: 'tiyin'
+}
 
 export const getDecimalPart = (value: number) => {
   return Math.round((value + Number.EPSILON) * 100) % 100
 }
 
-export const numberToWords = (num: number, initial: boolean = true): string => {
+export const numberToWords = (num: number, locale: string, initial: boolean = true): string => {
+  const resource = locale === 'uz' ? latin : cyrillic
+
+  const { digits, tens, hundred, thousands, sum, tiyin } = resource
+
   if (initial) {
     const decimalPart = getDecimalPart(num)
     const integerPart = Math.floor(num)
     return capitalize(
-      (numberToWords(integerPart, false) || '0') +
+      (numberToWords(integerPart, locale, false) || '0') +
         ' ' +
-        'so`m' +
+        sum +
         ' ' +
         (decimalPart % 100 || '00') +
         ' ' +
-        'tiyin'
+        tiyin
     )
   }
 

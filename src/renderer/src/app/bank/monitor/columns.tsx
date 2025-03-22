@@ -76,8 +76,8 @@ export const columns: ColumnDef<BankMonitoringType>[] = [
     numeric: true,
     key: 'prixod_sum',
     header: 'prixod',
-    renderCell(row) {
-      return !row.prixod_sum ? (
+    renderCell: (row) =>
+      !row.prixod_sum ? (
         '-'
       ) : (
         <ProvodkaCell
@@ -85,14 +85,13 @@ export const columns: ColumnDef<BankMonitoringType>[] = [
           provodki={row.provodki_array}
         />
       )
-    }
   },
   {
     numeric: true,
     key: 'rasxod_sum',
     header: 'rasxod',
-    renderCell(row) {
-      return !row.rasxod_sum ? (
+    renderCell: (row) =>
+      !row.rasxod_sum ? (
         '-'
       ) : (
         <ProvodkaCell
@@ -100,7 +99,6 @@ export const columns: ColumnDef<BankMonitoringType>[] = [
           provodki={row.provodki_array}
         />
       )
-    }
   },
   {
     minWidth: 350,

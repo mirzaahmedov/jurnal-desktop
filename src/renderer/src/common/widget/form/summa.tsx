@@ -19,7 +19,7 @@ export const SummaFields: FormFieldsComponent<
     dialog?: boolean
   }
 > = ({ data, dialog = false, name, ...props }) => {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   return (
     <Fieldset
       {...props}
@@ -40,7 +40,7 @@ export const SummaFields: FormFieldsComponent<
           readOnly
           tabIndex={-1}
           className="flex-1"
-          value={numberToWords(data?.summa ?? 0)}
+          value={numberToWords(data?.summa ?? 0, i18n.language)}
         />
       </div>
     </Fieldset>

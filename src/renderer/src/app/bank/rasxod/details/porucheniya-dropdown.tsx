@@ -31,7 +31,7 @@ export const PorucheniyaDropdown = ({
 }: PorucheniyaDropdownProps) => {
   const dropdownToggle = useToggle()
 
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
 
   return (
     <DropdownMenu open={dropdownToggle.isOpen}>
@@ -78,7 +78,7 @@ export const PorucheniyaDropdown = ({
               creditor_bank={organization.bank_klient}
               creditor_mfo={organization.mfo}
               summa={rasxod.summa!}
-              summaWords={numberToWords(rasxod.summa!)}
+              summaWords={numberToWords(rasxod.summa!, i18n.language)}
               opisanie={rasxod.opisanie ?? ' '}
               rukovoditel={rasxod.rukovoditel ?? ' '}
               glav_buxgalter={rasxod.glav_buxgalter ?? ' '}
@@ -116,7 +116,7 @@ export const PorucheniyaDropdown = ({
               creditor_bank={organization.bank_klient}
               creditor_mfo={organization.mfo}
               summa={rasxod.summa!}
-              summaWords={numberToWords(rasxod.summa!)}
+              summaWords={numberToWords(rasxod.summa!, i18n.language)}
               opisanie={rasxod.opisanie ?? ' '}
               rukovoditel={rasxod.rukovoditel ?? ' '}
               glav_buxgalter={rasxod.glav_buxgalter ?? ' '}

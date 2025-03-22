@@ -15,14 +15,20 @@ import { SpravochnikInput, useSpravochnik } from '@/common/features/spravochnik'
 
 import { createShartnomaSpravochnik } from '../shartnoma'
 
-type AktSverkaDialogProps = {
+interface AktSverkaDialogProps {
   from: string
   to: string
   schetId: number
-  orgId: number
+  organId: number
 }
-const AktSverkaDialog = ({ from, to, schetId, orgId }: AktSverkaDialogProps) => {
-  const shartnomaSpravochnik = useSpravochnik(createShartnomaSpravochnik({}))
+export const AktSverkaDialog = ({ from, to, schetId, organId }: AktSverkaDialogProps) => {
+  const shartnomaSpravochnik = useSpravochnik(
+    createShartnomaSpravochnik({
+      params: {
+        organ_id: organId
+      }
+    })
+  )
   return (
     <Dialog>
       <DialogTrigger>
@@ -51,7 +57,7 @@ const AktSverkaDialog = ({ from, to, schetId, orgId }: AktSverkaDialogProps) => 
             url="organization/monitoring/akt/sverka"
             params={{
               main_schet_id: schetId,
-              organ_id: orgId,
+              organ_id: organId,
               contract_id: shartnomaSpravochnik.selected?.id || undefined,
               from,
               to,
@@ -64,5 +70,3 @@ const AktSverkaDialog = ({ from, to, schetId, orgId }: AktSverkaDialogProps) => 
     </Dialog>
   )
 }
-
-export { AktSverkaDialog }

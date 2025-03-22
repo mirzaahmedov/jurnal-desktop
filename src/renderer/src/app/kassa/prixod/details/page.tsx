@@ -50,7 +50,7 @@ const KassaPrixodDetailsPage = () => {
   const setLayout = useLayoutStore((store) => store.setLayout)
 
   const { id } = useParams()
-  const { t } = useTranslation(['app'])
+  const { t, i18n } = useTranslation(['app'])
   const { snippets, addSnippet, removeSnippet } = useSnippets({
     ns: 'kassa_prixod'
   })
@@ -265,7 +265,7 @@ const KassaPrixodDetailsPage = () => {
                       doc_num={form.watch('doc_num')}
                       fio={podotchetSpravochnik.selected?.name ?? ''}
                       summa={formatNumber(form.watch('summa') ?? 0)}
-                      summaWords={numberToWords(form.watch('summa') ?? 0)}
+                      summaWords={numberToWords(form.watch('summa') ?? 0, i18n.language)}
                       workplace=""
                       opisanie={form.watch('opisanie') ?? ''}
                       podvodkaList={form
