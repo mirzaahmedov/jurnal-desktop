@@ -11,12 +11,12 @@ import { useLayout } from '@/common/features/layout'
 import { useToggle } from '@/common/hooks/use-toggle'
 import { ListView } from '@/common/views'
 
-import { reportTitleColumns } from './columns'
-import { reportTitleQueryKeys } from './config'
-import { ReportTitleDialog } from './dialog'
-import { reportTitleService } from './service'
+import { videoModuleColumns } from './columns'
+import { videoModuleQueryKeys } from './config'
+import { VideoModuleDialog } from './dialog'
+import { videoModuleService } from './service'
 
-const ReportTitlePage = () => {
+const VideoModulePage = () => {
   const [selected, setSelected] = useState<ReportTitle | null>(null)
 
   const { t } = useTranslation(['app'])
@@ -26,16 +26,16 @@ const ReportTitlePage = () => {
   const queryClient = useQueryClient()
 
   const { data: reportTitles, isFetching } = useQuery({
-    queryKey: [reportTitleQueryKeys.getAll],
-    queryFn: reportTitleService.getAll
+    queryKey: [videoModuleQueryKeys.getAll],
+    queryFn: videoModuleService.getAll
   })
 
   const { mutate: deleteReportTitle, isPending } = useMutation({
-    mutationKey: [reportTitleQueryKeys.delete],
-    mutationFn: reportTitleService.delete,
+    mutationKey: [videoModuleQueryKeys.delete],
+    mutationFn: videoModuleService.delete,
     onSuccess() {
       queryClient.invalidateQueries({
-        queryKey: [reportTitleQueryKeys.getAll]
+        queryKey: [videoModuleQueryKeys.getAll]
       })
     }
   })
@@ -46,7 +46,7 @@ const ReportTitlePage = () => {
     }
   }, [dialogToggle.isOpen])
   useLayout({
-    title: t('pages.report-title'),
+    title: t('pages.video_module'),
     onCreate: dialogToggle.open
   })
 
@@ -67,12 +67,12 @@ const ReportTitlePage = () => {
       <ListView.Content loading={isFetching || isPending}>
         <GenericTable
           data={reportTitles?.data ?? []}
-          columnDefs={reportTitleColumns}
+          columnDefs={videoModuleColumns}
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}
         />
       </ListView.Content>
-      <ReportTitleDialog
+      <VideoModuleDialog
         selected={selected}
         open={dialogToggle.isOpen}
         onChangeOpen={dialogToggle.setOpen}
@@ -81,4 +81,4 @@ const ReportTitlePage = () => {
   )
 }
 
-export default ReportTitlePage
+export default VideoModulePage

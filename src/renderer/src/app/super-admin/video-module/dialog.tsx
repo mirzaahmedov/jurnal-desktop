@@ -1,8 +1,9 @@
-import type { ReportTitle } from '@/common/models'
+import type { VideoModule } from '@/common/models'
 
 import { useEffect } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
+import { capitalize } from '@renderer/common/lib/string'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -26,53 +27,53 @@ import {
 } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
 
-import { reportTitleQueryKeys } from './config'
-import { ReportTitleFormSchema, type ReportTitleFormValues, reportTitleService } from './service'
+import { videoModuleQueryKeys } from './config'
+import { VideoModuleFormSchema, type VideoModuleFormValues, videoModuleService } from './service'
 
-interface ReportTitleDialogProps {
+export interface VideoModuleDialogProps {
   open: boolean
   onChangeOpen: (value: boolean) => void
-  selected: ReportTitle | null
+  selected: VideoModule | null
 }
-export const ReportTitleDialog = ({ open, onChangeOpen, selected }: ReportTitleDialogProps) => {
+export const VideoModuleDialog = ({ open, onChangeOpen, selected }: VideoModuleDialogProps) => {
   const { t } = useTranslation(['app'])
 
   const queryClient = useQueryClient()
 
-  const form = useForm<ReportTitleFormValues>({
+  const form = useForm<VideoModuleFormValues>({
     defaultValues,
-    resolver: zodResolver(ReportTitleFormSchema)
+    resolver: zodResolver(VideoModuleFormSchema)
   })
 
-  const { mutate: createReportTitle, isPending: isCreating } = useMutation({
-    mutationKey: [reportTitleQueryKeys.create],
-    mutationFn: reportTitleService.create,
+  const { mutate: createVideoModule, isPending: isCreating } = useMutation({
+    mutationKey: [videoModuleQueryKeys.create],
+    mutationFn: videoModuleService.create,
     onSuccess(res) {
       toast.success(res?.message)
       form.reset(defaultValues)
       queryClient.invalidateQueries({
-        queryKey: [reportTitleQueryKeys.getAll]
+        queryKey: [videoModuleQueryKeys.getAll]
       })
       onChangeOpen(false)
     }
   })
-  const { mutate: updateReportTitle, isPending: isUpdating } = useMutation({
-    mutationKey: [reportTitleQueryKeys.update],
-    mutationFn: reportTitleService.update,
+  const { mutate: updateVideoModule, isPending: isUpdating } = useMutation({
+    mutationKey: [videoModuleQueryKeys.update],
+    mutationFn: videoModuleService.update,
     onSuccess(res) {
-      toast(res?.message)
+      toast.success(res?.message)
       queryClient.invalidateQueries({
-        queryKey: [reportTitleQueryKeys.getAll]
+        queryKey: [videoModuleQueryKeys.getAll]
       })
       onChangeOpen(false)
     }
   })
 
-  const onSubmit = form.handleSubmit((payload: ReportTitleFormValues) => {
+  const onSubmit = form.handleSubmit((payload: VideoModuleFormValues) => {
     if (selected) {
-      updateReportTitle(Object.assign(payload, { id: selected.id }))
+      updateVideoModule(Object.assign(payload, { id: selected.id }))
     } else {
-      createReportTitle(payload)
+      createVideoModule(payload)
     }
   })
 
@@ -94,8 +95,8 @@ export const ReportTitleDialog = ({ open, onChangeOpen, selected }: ReportTitleD
         <DialogHeader>
           <DialogTitle>
             {selected
-              ? t('update-something', { something: t('pages.report_title') })
-              : t('create-something', { something: t('pages.report_title') })}
+              ? capitalize(t('update-something', { something: t('pages.video_module') }))
+              : capitalize(t('create-something', { something: t('pages.video_module') }))}
           </DialogTitle>
         </DialogHeader>
         <Form {...form}>
@@ -137,4 +138,4 @@ export const ReportTitleDialog = ({ open, onChangeOpen, selected }: ReportTitleD
 
 const defaultValues = {
   name: ''
-} satisfies ReportTitleFormValues
+} satisfies VideoModuleFormValues

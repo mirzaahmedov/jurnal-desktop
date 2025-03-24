@@ -23,6 +23,7 @@ import {
   FileClock,
   FileDown,
   FileUp,
+  FileVideo,
   Folder,
   Group,
   Landmark,
@@ -363,6 +364,11 @@ export const getNavElements = (t: TFunction): NavElement[] => {
               path: 'report-title',
               title: t('pages.report-title'),
               icon: LetterText
+            },
+            {
+              path: 'video-module',
+              title: t('pages.video_module'),
+              icon: FileVideo
             },
             {
               path: 'ostatok',
