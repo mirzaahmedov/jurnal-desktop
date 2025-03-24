@@ -11,7 +11,7 @@ import {
 import { Button } from '@renderer/common/components/ui/button'
 import { useToggle } from '@renderer/common/hooks'
 import { cn } from '@renderer/common/lib/utils'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { format } from 'date-fns'
 import { ru } from 'date-fns/locale/ru'
 import { uz } from 'date-fns/locale/uz'
@@ -19,11 +19,13 @@ import { AlertTriangle } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 
+import { iznosQueryKeys } from '../iznos/config'
 import { ostatokQueryKeys } from './config'
 import { ostatokService } from './service'
 import { type MonthValue, useOstatokStore } from './store'
 
 export const OstatokUpdateManager = () => {
+  const queryClient = useQueryClient()
   const dialogToggle = useToggle()
 
   const [completed, setCompleted] = useState<MonthValue[]>([])
@@ -45,6 +47,12 @@ export const OstatokUpdateManager = () => {
       if (newQueue.length > 0) {
         updateOstatok(newQueue[0])
       }
+      queryClient.invalidateQueries({
+        queryKey: [ostatokQueryKeys.getAll]
+      })
+      queryClient.invalidateQueries({
+        queryKey: [iznosQueryKeys.getAll]
+      })
     },
     onError(error) {
       toast.error(error.message)

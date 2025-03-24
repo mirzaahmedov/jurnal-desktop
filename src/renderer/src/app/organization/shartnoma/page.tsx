@@ -19,13 +19,14 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { CopyPlus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
 
 import { shartnomaColumns } from './columns'
 import { shartnomaQueryKeys } from './config'
 import { shartnomaService } from './service'
 
 const ShartnomaPage = () => {
-  const [orgId, setOrgId] = useLocationState<undefined | number>('org_id')
+  const [organId, setOrganId] = useLocationState<undefined | number>('org_id')
 
   const { confirm } = useConfirm()
   const { search } = useSearch()
@@ -37,11 +38,11 @@ const ShartnomaPage = () => {
   const budjet_id = useRequisitesStore((store) => store.budjet_id)
   const setLayout = useLayoutStore((store) => store.setLayout)
 
-  const orgSpravochnik = useSpravochnik(
+  const organSpravochnik = useSpravochnik(
     createOrganizationSpravochnik({
-      value: orgId,
+      value: organId,
       onChange: (id) => {
-        setOrgId(id)
+        setOrganId(id)
         pagination.onChange({
           page: 1
         })
@@ -55,7 +56,7 @@ const ShartnomaPage = () => {
       {
         search,
         budjet_id,
-        organ_id: orgId,
+        organ_id: organId,
         ...pagination
       }
     ],
@@ -64,7 +65,8 @@ const ShartnomaPage = () => {
   const { mutate: deleteMutation, isPending } = useMutation({
     mutationKey: [shartnomaQueryKeys.delete],
     mutationFn: shartnomaService.delete,
-    onSuccess() {
+    onSuccess(res) {
+      toast.success(res?.message)
       queryClient.invalidateQueries({
         queryKey: [shartnomaQueryKeys.getAll]
       })
@@ -90,11 +92,11 @@ const ShartnomaPage = () => {
     setLayout({
       title: t('pages.shartnoma'),
       content: SearchField,
-      onCreate: orgId
+      onCreate: organId
         ? () => {
             navigate('create', {
               state: {
-                orgId
+                orgId: organId
               } satisfies LocationState
             })
           }
@@ -105,14 +107,14 @@ const ShartnomaPage = () => {
         }
       ]
     })
-  }, [setLayout, navigate, t, orgId])
+  }, [setLayout, navigate, t, organId])
 
   return (
     <ListView>
       <ListView.Header>
         <div className="flex items-center">
           <ChooseSpravochnik
-            spravochnik={orgSpravochnik}
+            spravochnik={organSpravochnik}
             placeholder="Выберите организацию"
             getName={(selected) => selected.name}
             getElements={(selected) => [
@@ -133,7 +135,7 @@ const ShartnomaPage = () => {
           columnDefs={shartnomaColumns}
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}
-          placeholder={!orgSpravochnik.selected ? 'Выберите организацию' : undefined}
+          placeholder={!organSpravochnik.selected ? 'Выберите организацию' : undefined}
           actions={(row) => (
             <Button
               variant="ghost"

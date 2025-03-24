@@ -21,6 +21,8 @@ import {
 import { GenericTable } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
 
+import { iznosQueryKeys } from '../iznos/config'
+import { ostatokQueryKeys } from '../ostatok'
 import { rasxodColumns } from './columns'
 import { rasxodQueryKeys } from './config'
 import { rasxodService } from './service'
@@ -35,7 +37,7 @@ const Jurnal7RasxodPage = () => {
   const { t } = useTranslation(['app'])
   const { search } = useSearch()
   const { confirm } = useConfirm()
-  const { recheckOstatok, minDate, maxDate, queuedMonths } = useOstatokStore()
+  const { minDate, maxDate, queuedMonths } = useOstatokStore()
 
   const dates = useDates({
     defaultFrom: formatDate(minDate),
@@ -48,10 +50,18 @@ const Jurnal7RasxodPage = () => {
     onSuccess(res) {
       handleOstatokResponse(res)
       toast.success(res?.message)
-      recheckOstatok?.()
       requestAnimationFrame(() => {
         queryClient.invalidateQueries({
           queryKey: [rasxodQueryKeys.getAll]
+        })
+        queryClient.invalidateQueries({
+          queryKey: [ostatokQueryKeys.check]
+        })
+        queryClient.invalidateQueries({
+          queryKey: [ostatokQueryKeys.getAll]
+        })
+        queryClient.invalidateQueries({
+          queryKey: [iznosQueryKeys.getAll]
         })
       })
     }

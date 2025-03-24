@@ -7,18 +7,21 @@ import { useRequisitesStore } from '@renderer/common/features/requisites'
 import { useBoundingClientRect, useLocationStore } from '@renderer/common/hooks'
 import { formatDate, parseDate } from '@renderer/common/lib/date'
 import { cn } from '@renderer/common/lib/utils'
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
+import { iznosQueryKeys } from '../iznos/config'
 import { ostatokQueryKeys } from './config'
 import { getOstatokCheck, ostatokService } from './service'
 import { useOstatokStore } from './store'
 
 export const OstatokController = () => {
+  const queryClient = useQueryClient()
+
   const { t } = useTranslation()
-  const { minDate, setDate, setRecheckOstatok, dequeueMonth } = useOstatokStore()
+  const { minDate, setDate, dequeueMonth } = useOstatokStore()
   const { main_schet_id, budjet_id } = useRequisitesStore()
   const { values, setValues } = useLocationStore()
   const { setElementRef } = useBoundingClientRect()
@@ -29,7 +32,6 @@ export const OstatokController = () => {
 
   const {
     data: checkResult,
-    refetch: refetchCheck,
     isFetching: isCheckingSaldo,
     isFetched
   } = useQuery({
@@ -54,8 +56,16 @@ export const OstatokController = () => {
     mutationFn: ostatokService.create,
     onSuccess(res, values) {
       toast.success(res.message)
-      refetchCheck()
       dequeueMonth(values)
+      queryClient.invalidateQueries({
+        queryKey: [ostatokQueryKeys.getAll]
+      })
+      queryClient.invalidateQueries({
+        queryKey: [ostatokQueryKeys.check]
+      })
+      queryClient.invalidateQueries({
+        queryKey: [iznosQueryKeys.getAll]
+      })
     }
   })
 
@@ -73,9 +83,6 @@ export const OstatokController = () => {
       toast.error(t('no_saldo'))
     }
   }, [t, isCheckingSaldo, isFetched])
-  useEffect(() => {
-    setRecheckOstatok(refetchCheck)
-  }, [setRecheckOstatok, refetchCheck])
 
   return (
     <form

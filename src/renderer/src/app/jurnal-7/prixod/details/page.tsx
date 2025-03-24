@@ -42,6 +42,8 @@ import { createResponsibleSpravochnik } from '@/app/jurnal-7/responsible/service
 import { createOperatsiiSpravochnik } from '@/app/super-admin/operatsii'
 import { DownloadFile, ImportFile } from '@/common/features/file'
 
+import { iznosQueryKeys } from '../../iznos/config'
+import { ostatokQueryKeys } from '../../ostatok'
 import { PrixodFormSchema, defaultValues, prixodQueryKeys } from '../config'
 import { usePrixodCreate, usePrixodGet, usePrixodUpdate } from '../service'
 import { ExistingDocumentsAlert } from './existing-document-alert'
@@ -60,7 +62,7 @@ const Jurnal7PrixodDetailsPage = () => {
 
   const { id } = useParams()
   const { t } = useTranslation(['app'])
-  const { minDate, maxDate, recheckOstatok } = useOstatokStore()
+  const { minDate, maxDate } = useOstatokStore()
   const { snippets, addSnippet, removeSnippet } = useSnippets({
     ns: 'jur7_prixod'
   })
@@ -74,7 +76,15 @@ const Jurnal7PrixodDetailsPage = () => {
       queryClient.invalidateQueries({
         queryKey: [prixodQueryKeys.getAll]
       })
-      recheckOstatok?.()
+      queryClient.invalidateQueries({
+        queryKey: [ostatokQueryKeys.check]
+      })
+      queryClient.invalidateQueries({
+        queryKey: [ostatokQueryKeys.getAll]
+      })
+      queryClient.invalidateQueries({
+        queryKey: [iznosQueryKeys.getAll]
+      })
     }
   })
   const { mutate: updatePrixod, isPending: isUpdating } = usePrixodUpdate({
@@ -85,7 +95,15 @@ const Jurnal7PrixodDetailsPage = () => {
       queryClient.invalidateQueries({
         queryKey: [prixodQueryKeys.getAll]
       })
-      recheckOstatok?.()
+      queryClient.invalidateQueries({
+        queryKey: [ostatokQueryKeys.check]
+      })
+      queryClient.invalidateQueries({
+        queryKey: [ostatokQueryKeys.getAll]
+      })
+      queryClient.invalidateQueries({
+        queryKey: [iznosQueryKeys.getAll]
+      })
     },
     onError(error) {
       const result = handleOstatokExistingDocumentError<ExistingDocument>(error)

@@ -26,6 +26,8 @@ import {
   SummaFields
 } from '@/common/widget/form'
 
+import { iznosQueryKeys } from '../../iznos/config'
+import { ostatokQueryKeys } from '../../ostatok'
 import { createResponsibleSpravochnik } from '../../responsible/service'
 import { RasxodFormSchema, defaultValues, rasxodQueryKeys } from '../config'
 import { useRasxodCreate, useRasxodGet, useRasxodUpdate } from '../service'
@@ -47,7 +49,7 @@ const Jurnal7RasxodDetailsPage = () => {
 
   const { id } = useParams()
   const { t } = useTranslation(['app'])
-  const { minDate, maxDate, recheckOstatok } = useOstatokStore()
+  const { minDate, maxDate } = useOstatokStore()
   const { snippets, addSnippet, removeSnippet } = useSnippets({
     ns: 'jur7_rasxod'
   })
@@ -61,7 +63,15 @@ const Jurnal7RasxodDetailsPage = () => {
       queryClient.invalidateQueries({
         queryKey: [rasxodQueryKeys.getAll]
       })
-      recheckOstatok?.()
+      queryClient.invalidateQueries({
+        queryKey: [ostatokQueryKeys.check]
+      })
+      queryClient.invalidateQueries({
+        queryKey: [ostatokQueryKeys.getAll]
+      })
+      queryClient.invalidateQueries({
+        queryKey: [iznosQueryKeys.getAll]
+      })
     },
     onError(error) {
       toast.error(error?.message)
@@ -75,7 +85,15 @@ const Jurnal7RasxodDetailsPage = () => {
       queryClient.invalidateQueries({
         queryKey: [rasxodQueryKeys.getAll]
       })
-      recheckOstatok?.()
+      queryClient.invalidateQueries({
+        queryKey: [ostatokQueryKeys.check]
+      })
+      queryClient.invalidateQueries({
+        queryKey: [ostatokQueryKeys.getAll]
+      })
+      queryClient.invalidateQueries({
+        queryKey: [iznosQueryKeys.getAll]
+      })
     },
     onError(error) {
       toast.error(error?.message)

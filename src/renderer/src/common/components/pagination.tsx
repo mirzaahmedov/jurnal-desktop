@@ -1,7 +1,10 @@
+import { useEffect } from 'react'
+
 import { ArrowLeft, ArrowRight } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import Paginate from 'react-paginate'
 
+import { useEventCallback } from '../hooks'
 import { SelectField } from './select-field'
 import { Button } from './ui/button'
 
@@ -22,6 +25,14 @@ export const Pagination = ({
   onChange
 }: PaginationProps) => {
   const { t } = useTranslation()
+
+  const onChangeEvent = useEventCallback(onChange)
+
+  useEffect(() => {
+    if (pageCount && page > pageCount) {
+      onChangeEvent({ page: page > 1 ? page - 1 : 1 })
+    }
+  }, [pageCount, page, onChangeEvent])
 
   return (
     <div className="flex items-center justify-start gap-5">

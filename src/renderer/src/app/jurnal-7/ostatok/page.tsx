@@ -43,6 +43,7 @@ import { useForm } from 'react-hook-form'
 import { Trans, useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 
+import { iznosQueryKeys } from '../iznos/config'
 import { createResponsibleSpravochnik } from '../responsible/service'
 import { ostatokProductColumns } from './columns'
 import { defaultValues, ostatokQueryKeys } from './config'
@@ -60,7 +61,7 @@ import {
 } from './utils'
 
 const OstatokPage = () => {
-  const { minDate, maxDate, queuedMonths, recheckOstatok } = useOstatokStore()
+  const { minDate, maxDate, queuedMonths } = useOstatokStore()
 
   const [deleteExistingDocumentError, setDeleteExistingDocumentError] = useState<{
     message: string
@@ -126,6 +127,12 @@ const OstatokPage = () => {
     onSuccess(res) {
       queryClient.invalidateQueries({
         queryKey: [ostatokQueryKeys.getAll]
+      })
+      queryClient.invalidateQueries({
+        queryKey: [iznosQueryKeys.getAll]
+      })
+      queryClient.invalidateQueries({
+        queryKey: [ostatokQueryKeys.check]
       })
       setSelectedRows([])
       handleOstatokResponse(res)
@@ -206,7 +213,7 @@ const OstatokPage = () => {
             <ChooseSpravochnik
               spravochnik={groupSpravochnik}
               placeholder={t('choose', { what: t('group').toLowerCase() })}
-              getName={(selected) => `${selected.group_number ?? ''} / ${selected.name}`}
+              getName={(selected) => `${selected.group_number ?? ''} - ${selected.name}`}
               getElements={(selected) => [{ name: 'Наименование', value: selected.name }]}
             />
 
@@ -316,7 +323,12 @@ const OstatokPage = () => {
                   queryClient.invalidateQueries({
                     queryKey: [ostatokQueryKeys.getAll]
                   })
-                  recheckOstatok?.()
+                  queryClient.invalidateQueries({
+                    queryKey: [iznosQueryKeys.getAll]
+                  })
+                  queryClient.invalidateQueries({
+                    queryKey: [ostatokQueryKeys.check]
+                  })
                 }}
                 onError={(error) => {
                   const result = handleImportValidationError(error)

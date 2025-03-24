@@ -101,7 +101,9 @@ const PodotchetMonitoringPage = () => {
             <ChooseSpravochnik
               spravochnik={operatsiiSpravochnik}
               placeholder="Выберите операцию"
-              getName={(selected) => selected.name}
+              getName={(selected) =>
+                selected ? `${selected.schet} - ${selected.sub_schet} ${selected.name}` : ''
+              }
               getElements={(selected) => [
                 { name: 'Наименование', value: selected.name },
                 { name: 'Счет', value: selected.schet },

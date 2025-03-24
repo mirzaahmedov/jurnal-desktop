@@ -26,6 +26,8 @@ import {
   SummaFields
 } from '@/common/widget/form'
 
+import { iznosQueryKeys } from '../../iznos/config'
+import { ostatokQueryKeys } from '../../ostatok'
 import { InternalTransferFormSchema, defaultValues, internalQueryKeys } from '../config'
 import {
   useInternalTransferCreate,
@@ -41,7 +43,7 @@ const Jurnal7InternalTransferDetailsPage = () => {
   const { id } = useParams()
   const { t } = useTranslation(['app'])
   const { data: internalTransfer, isFetching } = useInternalTransferGet(Number(id))
-  const { minDate, maxDate, recheckOstatok } = useOstatokStore()
+  const { minDate, maxDate } = useOstatokStore()
   const { snippets, addSnippet, removeSnippet } = useSnippets({
     ns: 'jur7_internal'
   })
@@ -54,7 +56,15 @@ const Jurnal7InternalTransferDetailsPage = () => {
         queryKey: [internalQueryKeys.getAll]
       })
       navigate(-1)
-      recheckOstatok?.()
+      queryClient.invalidateQueries({
+        queryKey: [ostatokQueryKeys.check]
+      })
+      queryClient.invalidateQueries({
+        queryKey: [ostatokQueryKeys.getAll]
+      })
+      queryClient.invalidateQueries({
+        queryKey: [iznosQueryKeys.getAll]
+      })
     },
     onError(error) {
       toast.error(error?.message)
@@ -69,7 +79,15 @@ const Jurnal7InternalTransferDetailsPage = () => {
         queryKey: [internalQueryKeys.getAll]
       })
       navigate(-1)
-      recheckOstatok?.()
+      queryClient.invalidateQueries({
+        queryKey: [ostatokQueryKeys.check]
+      })
+      queryClient.invalidateQueries({
+        queryKey: [ostatokQueryKeys.getAll]
+      })
+      queryClient.invalidateQueries({
+        queryKey: [iznosQueryKeys.getAll]
+      })
     },
     onError(error) {
       toast.error(error?.message)

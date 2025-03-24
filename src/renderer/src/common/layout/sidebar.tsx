@@ -171,7 +171,7 @@ const renderNavElement = (elem: null | NavElement, isCollapsed: boolean, rootPat
           title={String(elem.title)}
         >
           {elem.icon && <elem.icon className="size-5" />}
-          {!isCollapsed ? <span className="font-bold text-sm">{elem.title}</span> : null}
+          <span className={cn('font-bold text-sm', isCollapsed && 'hidden')}>{elem.title}</span>
         </div>
       ) : (
         <NavLink
@@ -187,7 +187,7 @@ const renderNavElement = (elem: null | NavElement, isCollapsed: boolean, rootPat
           title={String(elem.title)}
         >
           {elem.icon && <elem.icon className="size-5" />}
-          {!isCollapsed ? <span className="font-bold text-sm">{elem.title}</span> : null}
+          <span className={cn('font-bold text-sm', isCollapsed && 'hidden')}>{elem.title}</span>
         </NavLink>
       )}
     </li>

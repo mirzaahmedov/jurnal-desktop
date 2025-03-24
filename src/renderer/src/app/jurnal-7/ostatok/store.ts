@@ -13,8 +13,6 @@ export interface OstatokStore {
   clearQueue: VoidFunction
   enqueueMonth: (...values: MonthValue[]) => void
   dequeueMonth: (...values: MonthValue[]) => MonthValue[]
-  recheckOstatok?: VoidFunction
-  setRecheckOstatok: (recheckOstatok: VoidFunction) => void
   setDate: (date: Date) => void
 }
 
@@ -52,11 +50,6 @@ export const useOstatokStore = create<OstatokStore>((set, get) => ({
   },
   clearQueue() {
     set({ queuedMonths: [] })
-  },
-  setRecheckOstatok: (recheckOstatok) => {
-    set({
-      recheckOstatok
-    })
   },
   setDate: (date: Date) => {
     set({

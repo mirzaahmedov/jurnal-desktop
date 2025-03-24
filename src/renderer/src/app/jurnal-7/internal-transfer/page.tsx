@@ -21,6 +21,8 @@ import { GenericTable } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
 import { useLayoutStore } from '@/common/features/layout'
 
+import { iznosQueryKeys } from '../iznos/config'
+import { ostatokQueryKeys } from '../ostatok'
 import { internalColumns } from './columns'
 import { internalQueryKeys } from './config'
 import { internalService } from './service'
@@ -35,7 +37,7 @@ const Jurnal7InternalTransferPage = () => {
   const { t } = useTranslation(['app'])
   const { confirm } = useConfirm()
   const { search } = useSearch()
-  const { recheckOstatok, minDate, maxDate, queuedMonths } = useOstatokStore()
+  const { minDate, maxDate, queuedMonths } = useOstatokStore()
 
   const dates = useDates({
     defaultFrom: formatDate(minDate),
@@ -48,10 +50,18 @@ const Jurnal7InternalTransferPage = () => {
     onSuccess(res) {
       handleOstatokResponse(res)
       toast.success(res?.message)
-      recheckOstatok?.()
       requestAnimationFrame(() => {
         queryClient.invalidateQueries({
           queryKey: [internalQueryKeys.getAll]
+        })
+        queryClient.invalidateQueries({
+          queryKey: [ostatokQueryKeys.check]
+        })
+        queryClient.invalidateQueries({
+          queryKey: [ostatokQueryKeys.getAll]
+        })
+        queryClient.invalidateQueries({
+          queryKey: [iznosQueryKeys.getAll]
         })
       })
     }
