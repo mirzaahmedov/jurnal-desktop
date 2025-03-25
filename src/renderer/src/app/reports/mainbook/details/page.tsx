@@ -128,8 +128,8 @@ const MainbookDetailsPage = () => {
             columns: [
               {
                 key: `${type.id}_prixod`,
-                width: 130,
-                minWidth: 130,
+                width: 120,
+                minWidth: 120,
                 header: t('prixod'),
                 headerClassName: 'text-center',
                 Editor: createNumberEditor({
