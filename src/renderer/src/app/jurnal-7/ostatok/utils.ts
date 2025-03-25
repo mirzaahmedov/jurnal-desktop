@@ -45,6 +45,8 @@ export interface OstatokDeleteExistingDocument {
   id: number
   doc_num: string
   doc_date: string
+  account_number: string
+  main_schet_id: number
   type: 'prixod' | 'internal' | 'rasxod'
 }
 export const handleOstatokExistingDocumentError = <T>(error: unknown) => {

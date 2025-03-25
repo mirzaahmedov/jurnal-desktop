@@ -32,7 +32,7 @@ export const OrganizationFormSchema = withPreprocessor(
         raschet_schet_gazna: z.string().nonempty()
       })
     ),
-    okonx: z.string()
+    okonx: z.string().optional()
   })
 )
 export type OrganizationFormValues = z.infer<typeof OrganizationFormSchema>

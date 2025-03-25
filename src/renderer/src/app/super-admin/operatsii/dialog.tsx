@@ -1,5 +1,6 @@
-import type { OperatsiiForm } from './service'
+import type { OperatsiiFormValues } from './service'
 import type { Operatsii } from '@/common/models'
+import type { DialogProps } from '@radix-ui/react-dialog'
 
 import { useEffect } from 'react'
 
@@ -9,6 +10,7 @@ import { useLocationState } from '@renderer/common/hooks/use-location-state'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { t } from 'i18next'
 import { useForm } from 'react-hook-form'
+import { toast } from 'react-toastify'
 
 import { SelectField } from '@/common/components'
 import { Button } from '@/common/components/ui/button'
@@ -29,26 +31,28 @@ import {
 } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
 import { useSpravochnik } from '@/common/features/spravochnik'
-import { useToast } from '@/common/hooks/use-toast'
 import { TypeSchetOperatsii } from '@/common/models'
 
 import { operatsiiQueryKeys, operatsiiTypeSchetOptions } from './config'
 import { OperatsiiFormSchema, operatsiiService } from './service'
 
-type OperatsiiDialogProps = {
-  open: boolean
-  onChangeOpen(value: boolean): void
-  data: Operatsii | null
+interface OperatsiiDialogProps extends DialogProps {
+  selected: Operatsii | null
+  original: Partial<OperatsiiFormValues> | null
 }
-const OperatsiiDialog = ({ open, onChangeOpen, data }: OperatsiiDialogProps) => {
+export const OperatsiiDialog = ({
+  open,
+  onOpenChange,
+  selected,
+  original,
+  ...props
+}: OperatsiiDialogProps) => {
   const queryClient = useQueryClient()
 
   const [typeSchet] = useLocationState('type_schet', TypeSchetOperatsii.KASSA_PRIXOD)
   const [budjet] = useLocationState<number | undefined>('budjet_id', undefined)
 
-  const { toast } = useToast()
-
-  const form = useForm<OperatsiiForm>({
+  const form = useForm<OperatsiiFormValues>({
     defaultValues,
     resolver: zodResolver(OperatsiiFormSchema)
   })
@@ -56,42 +60,24 @@ const OperatsiiDialog = ({ open, onChangeOpen, data }: OperatsiiDialogProps) => 
   const { mutate: createOperatsii, isPending: isCreating } = useMutation({
     mutationKey: [operatsiiQueryKeys.create],
     mutationFn: operatsiiService.create,
-    onSuccess() {
-      toast({
-        title: 'Операция успешно создана'
-      })
+    onSuccess(res) {
+      toast.success(res?.message)
       form.reset(defaultValues)
       queryClient.invalidateQueries({
         queryKey: [operatsiiQueryKeys.getAll]
       })
-      onChangeOpen(false)
-    },
-    onError(error) {
-      toast({
-        variant: 'destructive',
-        title: 'Не удалось создать операцию',
-        description: error.message
-      })
+      onOpenChange?.(false)
     }
   })
   const { mutate: updateOperatsii, isPending: isUpdating } = useMutation({
     mutationKey: [operatsiiQueryKeys.update],
     mutationFn: operatsiiService.update,
-    onSuccess() {
-      toast({
-        title: 'Операция успешно обновлена'
-      })
+    onSuccess(res) {
+      toast.success(res?.message)
       queryClient.invalidateQueries({
         queryKey: [operatsiiQueryKeys.getAll]
       })
-      onChangeOpen(false)
-    },
-    onError(error) {
-      toast({
-        variant: 'destructive',
-        title: 'Не удалось обновить операцию',
-        description: error.message
-      })
+      onOpenChange?.(false)
     }
   })
 
@@ -99,28 +85,36 @@ const OperatsiiDialog = ({ open, onChangeOpen, data }: OperatsiiDialogProps) => 
     createSmetaSpravochnik({
       value: form.watch('smeta_id'),
       onChange: (id, smeta) => {
-        form.setValue('smeta_id', id)
-        form.setValue('sub_schet', smeta?.smeta_number ?? '')
+        form.setValue('smeta_id', id, { shouldValidate: true })
+        form.setValue('sub_schet', smeta?.smeta_number ?? '', { shouldValidate: true })
       }
     })
   )
 
-  const onSubmit = (payload: OperatsiiForm) => {
-    if (data) {
-      updateOperatsii(Object.assign(payload, { id: data.id }))
+  const onSubmit = form.handleSubmit((payload) => {
+    if (selected) {
+      updateOperatsii(Object.assign(payload, { id: selected.id }))
     } else {
       createOperatsii(payload)
     }
-  }
+  })
 
   useEffect(() => {
-    if (!data) {
-      form.reset(defaultValues)
+    if (selected) {
+      form.reset(selected)
       return
     }
 
-    form.reset(data)
-  }, [form, data])
+    if (original) {
+      form.reset({
+        ...defaultValues,
+        ...original
+      })
+      return
+    }
+
+    form.reset(defaultValues)
+  }, [form, selected, original])
   useEffect(() => {
     if (open) {
       if (typeSchet !== TypeSchetOperatsii.ALL) {
@@ -132,18 +126,19 @@ const OperatsiiDialog = ({ open, onChangeOpen, data }: OperatsiiDialogProps) => 
   return (
     <Dialog
       open={open}
-      onOpenChange={onChangeOpen}
+      onOpenChange={onOpenChange}
+      {...props}
     >
       <DialogContent className="max-w-xl">
         <DialogHeader>
           <DialogTitle>
-            {data
+            {selected
               ? t('update-something', { something: t('operatsii') })
               : t('create-something', { something: t('operatsii') })}
           </DialogTitle>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)}>
+          <form onSubmit={onSubmit}>
             <div className="grid gap-4 py-4">
               <FormField
                 name="name"
@@ -270,6 +265,4 @@ const defaultValues = {
   sub_schet: '',
   type_schet: TypeSchetOperatsii.KASSA_PRIXOD,
   smeta_id: 0
-} satisfies OperatsiiForm
-
-export { OperatsiiDialog }
+} satisfies OperatsiiFormValues

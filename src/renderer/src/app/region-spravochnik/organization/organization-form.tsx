@@ -335,7 +335,7 @@ export const OrganizationForm = ({
             </div>
           ) : null}
 
-          <FormField
+          {/* <FormField
             name="okonx"
             control={form.control}
             render={({ field }) => (
@@ -346,7 +346,7 @@ export const OrganizationForm = ({
                 <Input {...field} />
               </FormElement>
             )}
-          />
+          /> */}
         </div>
         <div>{formActions}</div>
       </form>

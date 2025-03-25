@@ -4,6 +4,7 @@ import type { Organization } from '@renderer/common/models'
 import { useEffect } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
+import { capitalize } from '@renderer/common/lib/string'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { ErrorBoundary } from 'react-error-boundary'
 import { useForm } from 'react-hook-form'
@@ -103,7 +104,9 @@ export const OrganizationDialog = ({
       <DialogContent className="max-w-2xl max-h-[80%] flex flex-col">
         <DialogHeader>
           <DialogTitle>
-            {selected ? t('organization') : t('create-something', { something: t('organization') })}
+            {selected
+              ? t('organization')
+              : capitalize(t('create-something', { something: t('organization') }))}
           </DialogTitle>
         </DialogHeader>
         <ErrorBoundary

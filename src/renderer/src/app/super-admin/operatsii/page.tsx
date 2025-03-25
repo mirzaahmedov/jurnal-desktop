@@ -1,30 +1,40 @@
 import { useEffect, useState } from 'react'
 
-import { useSearch } from '@renderer/common/features/search/use-search'
-import { usePagination } from '@renderer/common/hooks'
-import { useLocationState } from '@renderer/common/hooks/use-location-state'
-import { ListView } from '@renderer/common/views'
+import { Button } from '@renderer/common/components/ui/button'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger
+} from '@renderer/common/components/ui/dropdown-menu'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { CopyPlus, Ellipsis } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { GenericTable } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
-import { useLayout } from '@/common/features/layout'
+import { useLayoutStore } from '@/common/features/layout'
+import { useSearch } from '@/common/features/search/use-search'
+import { usePagination } from '@/common/hooks'
+import { useLocationState } from '@/common/hooks/use-location-state'
 import { useToggle } from '@/common/hooks/use-toggle'
 import { type Operatsii, TypeSchetOperatsii } from '@/common/models'
+import { ListView } from '@/common/views'
 
 import { operatsiiColumns } from './columns'
 import { operatsiiQueryKeys } from './config'
 import { OperatsiiDialog } from './dialog'
 import { OperatsiiFilter } from './filter'
-import { operatsiiService } from './service'
+import { type OperatsiiFormValues, operatsiiService } from './service'
 
 const OperatsiiPage = () => {
   const [selected, setSelected] = useState<Operatsii | null>(null)
+  const [original, setOriginal] = useState<Partial<OperatsiiFormValues> | null>(null)
 
   const dialogToggle = useToggle()
   const queryClient = useQueryClient()
   const pagination = usePagination()
+  const setLayout = useLayoutStore((store) => store.setLayout)
 
   const [typeSchet] = useLocationState('type_schet', TypeSchetOperatsii.ALL)
 
@@ -42,9 +52,10 @@ const OperatsiiPage = () => {
       },
       typeSchet
     ],
-    queryFn: operatsiiService.getAll
+    queryFn: operatsiiService.getAll,
+    placeholderData: (prev) => prev
   })
-  const { mutate: deleteMutation, isPending } = useMutation({
+  const { mutate: deleteOperatsii, isPending } = useMutation({
     mutationKey: [operatsiiQueryKeys.delete],
     mutationFn: operatsiiService.delete,
     onSuccess() {
@@ -59,21 +70,40 @@ const OperatsiiPage = () => {
       setSelected(null)
     }
   }, [dialogToggle.isOpen])
-  useLayout({
-    title: t('pages.operatsii'),
-    content: OperatsiiFilter,
-    onCreate: dialogToggle.open
-  })
+  useEffect(() => {
+    setLayout({
+      title: t('pages.operatsii'),
+      content: OperatsiiFilter,
+      onCreate: () => {
+        dialogToggle.open()
+        setSelected(null)
+        setOriginal(null)
+      }
+    })
+  }, [setLayout, dialogToggle.open, t])
 
   const handleClickEdit = (row: Operatsii) => {
     setSelected(row)
+    setOriginal(null)
     dialogToggle.open()
   }
   const handleClickDelete = (row: Operatsii) => {
     confirm({
       onConfirm() {
-        deleteMutation(row.id)
+        deleteOperatsii(row.id)
       }
+    })
+  }
+  const handleClickDuplicate = (row: Operatsii) => {
+    setSelected(null)
+    setOriginal({
+      schet: row.schet,
+      type_schet: row.type_schet,
+      smeta_id: row.smeta_id,
+      sub_schet: row.sub_schet
+    })
+    requestAnimationFrame(() => {
+      dialogToggle.open()
     })
   }
 
@@ -86,6 +116,31 @@ const OperatsiiPage = () => {
           getRowId={(row) => row.id}
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}
+          actions={(row) => (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  size="icon"
+                  variant="ghost"
+                >
+                  <Ellipsis className="size-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                side="left"
+                className="p-2"
+                onCloseAutoFocus={(e) => e.preventDefault()}
+              >
+                <DropdownMenuItem
+                  className="text-slate-600 hover:!text-brand cursor-pointer"
+                  onSelect={() => handleClickDuplicate(row)}
+                >
+                  <CopyPlus className="btn-icon" />
+                  <span className="text-sm font-medium">{t('duplicate')}</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
         />
       </ListView.Content>
       <ListView.Footer>
@@ -95,9 +150,10 @@ const OperatsiiPage = () => {
         />
       </ListView.Footer>
       <OperatsiiDialog
-        data={selected}
+        selected={selected}
+        original={original}
         open={dialogToggle.isOpen}
-        onChangeOpen={dialogToggle.setOpen}
+        onOpenChange={dialogToggle.setOpen}
       />
     </ListView>
   )

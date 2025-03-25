@@ -8,7 +8,7 @@ import { useSearch } from '@renderer/common/features/search/use-search'
 import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 
-import { FooterCell, FooterRow, GenericTable } from '@/common/components'
+import { FooterCell, FooterRow, GenericTable, SummaTotal } from '@/common/components'
 import { ButtonGroup } from '@/common/components/ui/button-group'
 import { useLayoutStore } from '@/common/features/layout'
 import { useDates, usePagination } from '@/common/hooks'
@@ -58,16 +58,9 @@ const BankMonitorPage = () => {
 
   return (
     <ListView>
-      <ListView.Header>
-        <ListView.RangeDatePicker {...dates} />
-        <div className="w-full flex flex-row items-center justify-between">
-          <div className="pt-5 flex items-center gap-5">
-            <span className="text-sm text-slate-400">{t('remainder-from')}</span>
-            <b className="font-black text-slate-700">
-              {formatNumber(monitorList?.meta?.summa_from ?? 0)}
-            </b>
-          </div>
-
+      <ListView.Header className="space-y-4">
+        <div className="w-full flex items-center justify-between">
+          <ListView.RangeDatePicker {...dates} />
           {main_schet_id && report_title_id ? (
             <ButtonGroup borderStyle="dashed">
               <DownloadFile
@@ -99,6 +92,20 @@ const BankMonitorPage = () => {
             </ButtonGroup>
           ) : null}
         </div>
+        <SummaTotal>
+          <SummaTotal.Value
+            name={t('remainder-from')}
+            value={formatNumber(monitorList?.meta?.summa_from_object?.summa ?? 0)}
+          />
+          <SummaTotal.Value
+            name={t('debet')}
+            value={formatNumber(monitorList?.meta?.summa_from_object?.prixod_summa ?? 0)}
+          />
+          <SummaTotal.Value
+            name={t('kredit')}
+            value={formatNumber(monitorList?.meta?.summa_from_object?.rasxod_summa ?? 0)}
+          />
+        </SummaTotal>
       </ListView.Header>
       <ListView.Content loading={isFetching}>
         <GenericTable
@@ -114,11 +121,11 @@ const BankMonitorPage = () => {
                   colSpan={4}
                 />
                 <FooterCell
-                  content={formatNumber(monitorList?.meta?.prixod_sum ?? 0)}
+                  content={formatNumber(monitorList?.meta?.page_prixod_sum ?? 0)}
                   colSpan={1}
                 />
                 <FooterCell
-                  content={formatNumber(monitorList?.meta?.rasxod_sum ?? 0)}
+                  content={formatNumber(monitorList?.meta?.page_rasxod_sum ?? 0)}
                   colSpan={1}
                 />
               </FooterRow>
@@ -127,12 +134,20 @@ const BankMonitorPage = () => {
         />
       </ListView.Content>
       <ListView.Footer>
-        <div className="pb-5 flex items-center gap-5">
-          <span className="text-sm text-slate-400">{t('remainder-to')}</span>
-          <b className="font-black text-slate-700">
-            {formatNumber(monitorList?.meta?.summa_to ?? 0)}
-          </b>
-        </div>
+        <SummaTotal className="pb-5">
+          <SummaTotal.Value
+            name={t('remainder-to')}
+            value={formatNumber(monitorList?.meta?.summa_to_object?.summa ?? 0)}
+          />
+          <SummaTotal.Value
+            name={t('debet')}
+            value={formatNumber(monitorList?.meta?.summa_to_object?.prixod_summa ?? 0)}
+          />
+          <SummaTotal.Value
+            name={t('kredit')}
+            value={formatNumber(monitorList?.meta?.summa_to_object?.rasxod_summa ?? 0)}
+          />
+        </SummaTotal>
         <ListView.Pagination
           {...pagination}
           pageCount={monitorList?.meta?.pageCount ?? 0}

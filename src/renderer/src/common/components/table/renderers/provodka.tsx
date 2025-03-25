@@ -5,14 +5,14 @@ import { Copyable } from '@/common/components/copyable'
 
 import { HoverInfoCell } from './hover-info'
 
-interface ProvodkaItem {
+interface ProvodkaChild {
   provodki_schet: string
   provodki_sub_schet: string
 }
 
 export interface ProvodkaCellProps {
   summa: number
-  provodki: ProvodkaItem[]
+  provodki: ProvodkaChild[]
 }
 export const ProvodkaCell = ({ summa, provodki }: ProvodkaCellProps) => {
   const { t } = useTranslation()
@@ -29,24 +29,26 @@ export const ProvodkaCell = ({ summa, provodki }: ProvodkaCellProps) => {
               {t('subschet')}
             </li>
           </ul>
-          {provodki.map((p, i) => (
-            <ul
-              key={i}
-              className="flex justify-between"
-            >
-              <li>
-                <Copyable value={p.provodki_schet}>{p.provodki_schet}</Copyable>
-              </li>
-              <li className="col-span-full">
-                <Copyable
-                  side="start"
-                  value={p.provodki_sub_schet}
+          {Array.isArray(provodki)
+            ? provodki.map((p, i) => (
+                <ul
+                  key={i}
+                  className="flex justify-between"
                 >
-                  {p.provodki_sub_schet}
-                </Copyable>
-              </li>
-            </ul>
-          ))}
+                  <li>
+                    <Copyable value={p.provodki_schet}>{p.provodki_schet}</Copyable>
+                  </li>
+                  <li className="col-span-full">
+                    <Copyable
+                      side="start"
+                      value={p.provodki_sub_schet}
+                    >
+                      {p.provodki_sub_schet}
+                    </Copyable>
+                  </li>
+                </ul>
+              ))
+            : null}
         </ul>
       }
     />

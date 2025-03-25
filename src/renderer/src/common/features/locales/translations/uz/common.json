@@ -277,5 +277,7 @@
     "accept": "Qabul qilingan",
     "accept_report": "Hisobotni qabul qilish?",
     "reject_report": "Hisobotni rad etish?"
-  }
+  },
+  "duplicate": "Nusxalash",
+  "main_schet_mismatch": "Ushbu ma’lumot boshqa asosiy hisobga tegishli. To‘g‘ri hisobni tanlang."
 }

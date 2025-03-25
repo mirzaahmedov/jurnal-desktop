@@ -16,7 +16,7 @@ export interface ColumnDef<T extends object> {
   key: Autocomplete<keyof T>
   header?: ReactNode
   className?: string
-  width?: number
+  width?: number | string
   minWidth?: number
   maxWidth?: number
   headerClassName?: string

@@ -62,6 +62,9 @@ export const GenericTable = <T extends object>(props: GenericTableProps<T>) => {
     [columnDefs]
   )
 
+  const actionsCount = [onEdit, onDelete, actions].filter(Boolean).length
+  const actionsWidth = actionsCount * 36 + (actionsCount - 1) * 4 + 48
+
   return (
     <Table
       {...tableProps}
@@ -125,6 +128,10 @@ export const GenericTable = <T extends object>(props: GenericTableProps<T>) => {
                     fit
                     className="text-center"
                     key="actions"
+                    style={{
+                      width: actionsWidth,
+                      minWidth: actionsWidth
+                    }}
                   >
                     {t('actions')}
                   </GenericTableHead>

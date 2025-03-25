@@ -15,7 +15,13 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
 import { createOperatsiiSpravochnik } from '@/app/super-admin/operatsii'
-import { ChooseSpravochnik, FooterCell, FooterRow, GenericTable } from '@/common/components'
+import {
+  ChooseSpravochnik,
+  FooterCell,
+  FooterRow,
+  GenericTable,
+  SummaTotal
+} from '@/common/components'
 import { ButtonGroup } from '@/common/components/ui/button-group'
 import {
   DropdownMenu,
@@ -77,7 +83,7 @@ const OrganizationMonitoringPage = () => {
     })
   )
 
-  const { data: organizationMonitorList, isFetching } = useQuery({
+  const { data: monitorList, isFetching } = useQuery({
     queryKey: [
       orgMonitoringQueryKeys.getByOrgId,
       {
@@ -256,17 +262,26 @@ const OrganizationMonitoringPage = () => {
           <ListView.RangeDatePicker {...dates} />
         </div>
         <div className="w-full sticky top-0 mt-5">
-          <SummaFields
-            summaDebet={organizationMonitorList?.meta?.summa_from_object.prixod_sum}
-            summaKredit={organizationMonitorList?.meta?.summa_from_object?.rasxod_sum}
-            summaItogo={organizationMonitorList?.meta?.summa_from_object?.summa}
-          />
+          <SummaTotal className="pt-5">
+            <SummaTotal.Value
+              name={t('remainder-from')}
+              value={formatNumber(monitorList?.meta?.summa_from_object?.summa ?? 0)}
+            />
+            <SummaTotal.Value
+              name={t('debet')}
+              value={formatNumber(monitorList?.meta?.summa_from_object?.prixod_summa ?? 0)}
+            />
+            <SummaTotal.Value
+              name={t('kredit')}
+              value={formatNumber(monitorList?.meta?.summa_from_object?.rasxod_summa ?? 0)}
+            />
+          </SummaTotal>
         </div>
       </ListView.Header>
       <ListView.Content loading={isFetching}>
         <GenericTable
           columnDefs={organizationMonitorColumns}
-          data={organizationMonitorList?.data ?? []}
+          data={monitorList?.data ?? []}
           onEdit={handleClickEdit}
           getRowKey={(row) => {
             return `${row.id}-${row.type}`
@@ -276,62 +291,36 @@ const OrganizationMonitoringPage = () => {
               <FooterCell
                 colSpan={6}
                 title={t('total')}
-                content={formatNumber(organizationMonitorList?.meta?.page_prixod_sum ?? 0)}
+                content={formatNumber(monitorList?.meta?.page_prixod_sum ?? 0)}
               />
-              <FooterCell
-                content={formatNumber(organizationMonitorList?.meta?.page_rasxod_sum ?? 0)}
-              />
+              <FooterCell content={formatNumber(monitorList?.meta?.page_rasxod_sum ?? 0)} />
             </FooterRow>
           }
         />
       </ListView.Content>
       <ListView.Footer>
-        <SummaFields
-          summaDebet={organizationMonitorList?.meta?.summa_to_object.prixod_sum}
-          summaKredit={organizationMonitorList?.meta?.summa_to_object?.rasxod_sum}
-          summaItogo={organizationMonitorList?.meta?.summa_to_object?.summa}
-        />
+        <SummaTotal className="pt-5">
+          <SummaTotal.Value
+            name={t('remainder-to')}
+            value={formatNumber(monitorList?.meta?.summa_to_object?.summa ?? 0)}
+          />
+          <SummaTotal.Value
+            name={t('debet')}
+            value={formatNumber(monitorList?.meta?.summa_to_object?.prixod_summa ?? 0)}
+          />
+          <SummaTotal.Value
+            name={t('kredit')}
+            value={formatNumber(monitorList?.meta?.summa_to_object?.rasxod_summa ?? 0)}
+          />
+        </SummaTotal>
         <div className="mt-5">
           <ListView.Pagination
             {...pagination}
-            pageCount={organizationMonitorList?.meta?.pageCount ?? 0}
+            pageCount={monitorList?.meta?.pageCount ?? 0}
           />
         </div>
       </ListView.Footer>
     </ListView>
-  )
-}
-
-const SummaFields = ({
-  summaDebet,
-  summaKredit,
-  summaItogo
-}: {
-  summaDebet?: number
-  summaKredit?: number
-  summaItogo?: number
-}) => {
-  const { t } = useTranslation()
-  return (
-    <div className="w-full grid grid-cols-5 gap-40">
-      <span className="text-sm text-slate-400 col-span-2"></span>
-      <div className="flex gap-2 items-center">
-        <span className="text-sm text-slate-400">{t('debet')}:</span>
-        <b className="text-sm font-black text-slate-700">
-          {formatNumber(Math.abs(summaDebet ?? 0))}
-        </b>
-      </div>
-      <div className="flex gap-2 items-center">
-        <span className="text-sm text-slate-400">{t('kredit')}:</span>
-        <b className="text-sm font-black text-slate-700">
-          {formatNumber(Math.abs(summaKredit ?? 0))}
-        </b>
-      </div>
-      <div className="flex gap-2 items-center">
-        <span className="text-sm text-slate-400">{t('total')}:</span>
-        <b className="text-sm font-black text-slate-700">{formatNumber(summaItogo ?? 0)}</b>
-      </div>
-    </div>
   )
 }
 

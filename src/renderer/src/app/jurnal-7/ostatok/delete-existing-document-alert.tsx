@@ -15,10 +15,12 @@ import {
 } from '@renderer/common/components/ui/alert-dialog'
 import { Badge } from '@renderer/common/components/ui/badge'
 import { Button } from '@renderer/common/components/ui/button'
+import { useRequisitesStore } from '@renderer/common/features/requisites'
 import { formatLocaleDate, formatNumber } from '@renderer/common/lib/format'
 import { Eye } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
 
 export interface DeleteExistingDocumentsAlertProps extends DialogProps {
   message: string
@@ -34,9 +36,11 @@ export const DeleteExistingDocumentsAlert = ({
   const navigate = useNavigate()
   const { t } = useTranslation()
 
+  const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
+
   return (
     <AlertDialog {...props}>
-      <AlertDialogContent className="max-w-xl">
+      <AlertDialogContent className="max-w-4xl">
         <AlertDialogHeader>
           <AlertDialogTitle className="font-bold text-2xl">{message}</AlertDialogTitle>
         </AlertDialogHeader>
@@ -47,12 +51,20 @@ export const DeleteExistingDocumentsAlert = ({
             </div>
           ) : null}
           <ul className="divide-y">
+            <li className="grid grid-cols-8 items-center gap-4 py-2 text-xs">
+              <b>{t('id')}</b>
+              <b>№</b>
+              <b>{t('date')}</b>
+              <b className="col-span-3 text-end">{t('main-schet')}</b>
+              <b className="text-end">{t('type')}</b>
+              <b className="text-end">{t('actions')}</b>
+            </li>
             {docs.map((doc) => {
               const documentUrl = getDocumentUrl(doc.type, doc.id)
               return (
                 <li
                   key={doc.id}
-                  className="grid grid-cols-5 items-center gap-2 py-2"
+                  className="grid grid-cols-8 items-center gap-4 py-2"
                 >
                   <Copyable value={doc.id}>
                     <b>#{doc.id}</b>
@@ -61,7 +73,21 @@ export const DeleteExistingDocumentsAlert = ({
                     <b>{doc.doc_num}</b>
                   </Copyable>
                   <span className="text-sm">{formatLocaleDate(doc.doc_date)}</span>
-                  <span>
+                  <div className="col-span-3 flex flex-col items-end">
+                    <Copyable
+                      side="start"
+                      value={doc.account_number}
+                    >
+                      {doc.account_number}
+                    </Copyable>
+                    <Copyable
+                      side="start"
+                      value={doc.main_schet_id}
+                    >
+                      <b>#{doc.main_schet_id}</b>
+                    </Copyable>
+                  </div>
+                  <span className="text-end">
                     <Badge variant="secondary">{t(doc.type)}</Badge>
                   </span>
                   <Button
@@ -69,7 +95,13 @@ export const DeleteExistingDocumentsAlert = ({
                     variant="outline"
                     className="justify-self-end"
                     disabled={!documentUrl}
-                    onClick={() => navigate(documentUrl!)}
+                    onClick={() => {
+                      if (main_schet_id !== doc.main_schet_id) {
+                        toast.error(t('main_schet_mismatch'))
+                      } else {
+                        navigate(documentUrl!)
+                      }
+                    }}
                   >
                     <Eye className="btn-icon" />
                   </Button>
@@ -93,9 +125,9 @@ const getProductFields = (t: TFunction, product: OstatokProduct = {} as any) => 
       value: (
         <Copyable
           side="start"
-          value={product.name}
+          value={product.id}
         >
-          #{product.name}
+          #{product.id}
         </Copyable>
       )
     },

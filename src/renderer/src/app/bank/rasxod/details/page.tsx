@@ -1,5 +1,5 @@
 import type { RasxodFormValues, RasxodPodvodkaFormValues } from '../service'
-import type { BankRasxod, Operatsii } from '@renderer/common/models'
+import type { BankRasxod } from '@renderer/common/models'
 
 import { useCallback, useEffect } from 'react'
 
@@ -30,7 +30,6 @@ import { Form } from '@/common/components/ui/form'
 import { useLayoutStore } from '@/common/features/layout'
 import { useSpravochnik } from '@/common/features/spravochnik'
 import { formatDate } from '@/common/lib/date'
-import { formatLocaleDate } from '@/common/lib/format'
 import { normalizeEmptyFields } from '@/common/lib/validation'
 import { DetailsView } from '@/common/views'
 import {
@@ -48,9 +47,6 @@ import { defaultValues, queryKeys } from '../constants'
 import { RasxodFormSchema, RasxodPodvodkaFormSchema, bankRasxodService } from '../service'
 import { podvodkaColumns } from './podvodki'
 import { PorucheniyaDropdown } from './porucheniya-dropdown'
-
-const shartnomaRegExp = /№ (.*?)-сонли \d{2}.\d{2}.\d{4} йил кунги шартномага асосан\s?/
-const smetaRegExp = / Ст:(.*?)$/
 
 const BankRasxodDetailtsPage = () => {
   const params = useParams()
@@ -266,34 +262,6 @@ const BankRasxodDetailtsPage = () => {
     })
   }, [setPodvodki, form, rasxod, params.id])
 
-  // Todo: fix this it should not generate while updating
-  useEffect(() => {
-    if (!shartnomaSpravochnik.selected) {
-      form.setValue('opisanie', form.getValues('opisanie')?.replace(shartnomaRegExp, '') ?? '')
-      return
-    }
-
-    const { doc_num, doc_date } = shartnomaSpravochnik.selected
-
-    if (shartnomaRegExp.test(form.getValues('opisanie') || '')) {
-      form.setValue(
-        'opisanie',
-        form
-          .getValues('opisanie')
-          ?.replace(
-            shartnomaRegExp,
-            `№ ${doc_num}-сонли ${formatLocaleDate(doc_date)} йил кунги шартномага асосан `
-          ) ?? ''
-      )
-      return
-    }
-    form.setValue(
-      'opisanie',
-      `№ ${doc_num}-сонли ${formatLocaleDate(doc_date)} йил кунги шартномага асосан ` +
-        (form.getValues('opisanie') ?? '')
-    )
-  }, [shartnomaSpravochnik.selected])
-
   useEffect(() => {
     const rukovoditel = podpis.find((item) => item.doljnost_name === PodpisDoljnost.RUKOVODITEL)
     const glav_buxgalter = podpis.find(
@@ -437,27 +405,6 @@ const BankRasxodDetailtsPage = () => {
             onChange={createEditorChangeHandler({
               form
             })}
-            params={{
-              onChangeOperatsii: (selected: Operatsii | undefined) => {
-                if (!selected) {
-                  form.setValue('opisanie', form.getValues('opisanie')?.replace(smetaRegExp, '')) ??
-                    ''
-                  return
-                }
-                if (smetaRegExp.test(form.getValues('opisanie') || '')) {
-                  form.setValue(
-                    'opisanie',
-                    form.getValues('opisanie')?.replace(smetaRegExp, ` Ст: ${selected.sub_schet}`)
-                  )
-                  return
-                }
-
-                form.setValue(
-                  'opisanie',
-                  `${form.getValues('opisanie') ?? ''} Ст: ${selected.sub_schet}`
-                )
-              }
-            }}
           />
         </Fieldset>
       </DetailsView.Content>

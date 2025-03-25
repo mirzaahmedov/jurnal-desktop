@@ -32,7 +32,7 @@ export const OperatsiiFormSchema = withPreprocessor(
     smeta_id: z.number().optional()
   })
 )
-export type OperatsiiForm = z.infer<typeof OperatsiiFormSchema>
+export type OperatsiiFormValues = z.infer<typeof OperatsiiFormSchema>
 export type OperatsiiOption = {
   schet: string
 }
@@ -49,7 +49,7 @@ export const getOperatsiiSchetOptionsQuery = async (
   return res.data
 }
 
-export const operatsiiService = new CRUDService<Operatsii, OperatsiiForm>({
+export const operatsiiService = new CRUDService<Operatsii, OperatsiiFormValues>({
   endpoint: ApiEndpoints.operatsii
 }).forRequest((type, { config }) => {
   if (type === 'getAll') {

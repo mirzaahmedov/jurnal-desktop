@@ -19,7 +19,8 @@ import {
   FooterCell,
   FooterRow,
   GenericTable,
-  LoadingOverlay
+  LoadingOverlay,
+  SummaTotal
 } from '@/common/components'
 import { ButtonGroup } from '@/common/components/ui/button-group'
 import { useSpravochnik } from '@/common/features/spravochnik'
@@ -164,18 +165,22 @@ const PodotchetMonitoringPage = () => {
           </ButtonGroup>
         </div>
         <ListView.RangeDatePicker {...dates} />
-        <SummaFields
-          summaDebet={
-            monitorList?.meta && monitorList?.meta.summa_from > 0
-              ? monitorList?.meta?.summa_from
-              : 0
-          }
-          summaKredit={
-            monitorList?.meta && monitorList?.meta.summa_from < 0
-              ? monitorList?.meta?.summa_from
-              : 0
-          }
-        />
+        <div className="w-full sticky top-0 mt-5">
+          <SummaTotal className="pt-5">
+            <SummaTotal.Value
+              name={t('remainder-from')}
+              value={formatNumber(monitorList?.meta?.summa_from_object?.summa ?? 0)}
+            />
+            <SummaTotal.Value
+              name={t('debet')}
+              value={formatNumber(monitorList?.meta?.summa_from_object?.prixod_summa ?? 0)}
+            />
+            <SummaTotal.Value
+              name={t('kredit')}
+              value={formatNumber(monitorList?.meta?.summa_from_object?.rasxod_summa ?? 0)}
+            />
+          </SummaTotal>
+        </div>
       </ListView.Header>
       <ListView.Content loading={isFetching}>
         {isFetching ? <LoadingOverlay /> : null}
@@ -189,52 +194,37 @@ const PodotchetMonitoringPage = () => {
                 <FooterCell
                   title={t('total')}
                   colSpan={5}
-                  content={formatNumber(monitorList?.meta?.prixod_sum ?? 0)}
+                  content={formatNumber(monitorList?.meta?.page_prixod_sum ?? 0)}
                 />
-                <FooterCell content={formatNumber(monitorList?.meta?.rasxod_sum ?? 0)} />
+                <FooterCell content={formatNumber(monitorList?.meta?.page_rasxod_sum ?? 0)} />
               </FooterRow>
             </>
           }
         />
       </ListView.Content>
       <ListView.Footer className="p-5 flex flex-col gap-5">
-        <SummaFields
-          summaDebet={
-            monitorList?.meta && monitorList?.meta.summa_to > 0 ? monitorList?.meta?.summa_to : 0
-          }
-          summaKredit={
-            monitorList?.meta && monitorList?.meta.summa_to < 0 ? monitorList?.meta?.summa_to : 0
-          }
-        />
+        <div className="w-full sticky top-0 mt-5">
+          <SummaTotal>
+            <SummaTotal.Value
+              name={t('remainder-to')}
+              value={formatNumber(monitorList?.meta?.summa_to_object?.summa ?? 0)}
+            />
+            <SummaTotal.Value
+              name={t('debet')}
+              value={formatNumber(monitorList?.meta?.summa_to_object?.prixod_summa ?? 0)}
+            />
+            <SummaTotal.Value
+              name={t('kredit')}
+              value={formatNumber(monitorList?.meta?.summa_to_object?.rasxod_summa ?? 0)}
+            />
+          </SummaTotal>
+        </div>
         <ListView.Pagination
           {...pagination}
           pageCount={monitorList?.meta?.pageCount ?? 0}
         />
       </ListView.Footer>
     </ListView>
-  )
-}
-
-const SummaFields = ({
-  summaDebet,
-  summaKredit
-}: {
-  summaDebet?: number
-  summaKredit?: number
-}) => {
-  const { t } = useTranslation()
-  return (
-    <div className="w-full grid grid-cols-4 gap-40">
-      <span className="text-sm text-slate-400 col-span-2"></span>
-      <div className="flex gap-4 items-center">
-        <span className="text-sm text-slate-400">{t('debet')}:</span>
-        <b className="font-black text-slate-700">{formatNumber(Math.abs(summaDebet ?? 0))}</b>
-      </div>
-      <div className="flex gap-4 items-center">
-        <span className="text-sm text-slate-400">{t('kredit')}:</span>
-        <b className="font-black text-slate-700">{formatNumber(Math.abs(summaKredit ?? 0))}</b>
-      </div>
-    </div>
   )
 }
 

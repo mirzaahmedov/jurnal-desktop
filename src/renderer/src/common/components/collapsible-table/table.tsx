@@ -1,4 +1,4 @@
-import type { ColumnDef, GetRowSelected } from '@renderer/common/components'
+import type { ColumnDef, GetRowSelectedFn } from '@renderer/common/components'
 import type { ReactNode } from 'react'
 
 import { CaretDownIcon } from '@radix-ui/react-icons'
@@ -31,7 +31,7 @@ export type CollapsibleTableProps<T extends object, C extends object> = {
   params?: Record<string, unknown>
   getRowId: (row: T) => number | string
   getChildRows: (row: T) => C[] | undefined
-  getRowSelected?: GetRowSelected<T>
+  getRowSelected?: GetRowSelectedFn<T>
   renderChildRows?: (rows: NoInfer<C>[]) => ReactNode
   onClickRow?: (row: T) => void
   onEdit?: (row: T) => void

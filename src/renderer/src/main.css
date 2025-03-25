@@ -42,6 +42,8 @@ select:-webkit-autofill:focus {
     --destructive: 0 84% 60%;
     --destructive-foreground: 210 40% 98%;
     --border: 214.3 31.8% 91.4%;
+    --scrollbar: 214.3 31.8% 90%;
+    --scrollbar-hover: 211 100% 80%;
     --input: 214.3 31.8% 91.4%;
     --ring: 222.2 84% 4.9%;
     --chart-1: 12 76% 61%;
@@ -117,6 +119,10 @@ select:-webkit-autofill:focus {
     @apply ml-0 mr-0;
   }
 
+  .noscroll-bar {
+    scrollbar-width: none;
+  }
+
   .noscroll-bar::-webkit-scrollbar {
     width: 0;
     height: 0;
@@ -124,7 +130,7 @@ select:-webkit-autofill:focus {
 
   .scrollbar {
     scrollbar-width: thin;
-    scrollbar-color: var(--border) var(--background);
+    scrollbar-color: hsl(var(--scrollbar)) hsl(var(--background));
   }
 
   .scrollbar::-webkit-scrollbar {
@@ -133,12 +139,12 @@ select:-webkit-autofill:focus {
   }
 
   .scrollbar::-webkit-scrollbar-thumb {
-    background-color: var(--border);
+    background-color: hsl(var(--scrollbar));
     border-radius: 3px;
   }
 
   .scrollbar::-webkit-scrollbar-track {
-    background-color: var(--background);
+    background-color: hsl(var(--background));
   }
 
   .table-xs input {
