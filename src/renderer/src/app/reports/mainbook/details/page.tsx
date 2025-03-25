@@ -8,6 +8,7 @@ import { MonthPicker } from '@renderer/common/components/month-picker'
 import { Button } from '@renderer/common/components/ui/button'
 import { useLayoutStore } from '@renderer/common/features/layout'
 import { formatDate } from '@renderer/common/lib/date'
+import { cn } from '@renderer/common/lib/utils'
 import { DetailsView } from '@renderer/common/views'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
@@ -127,8 +128,8 @@ const MainbookDetailsPage = () => {
             columns: [
               {
                 key: `${type.id}_prixod`,
-                width: 150,
-                minWidth: 150,
+                width: 130,
+                minWidth: 130,
                 header: t('prixod'),
                 headerClassName: 'text-center',
                 Editor: createNumberEditor({
@@ -139,8 +140,8 @@ const MainbookDetailsPage = () => {
               },
               {
                 key: `${type.id}_rasxod`,
-                width: 150,
-                minWidth: 150,
+                width: 120,
+                minWidth: 120,
                 header: t('rasxod'),
                 headerClassName: 'text-center',
                 Editor: createNumberEditor({
@@ -234,7 +235,7 @@ const MainbookDetailsPage = () => {
                 columnDefs={columns}
                 data={form.watch('childs')}
                 getRowClassName={({ index, data }) =>
-                  index === (data?.length ?? 0) - 1 ? '[&_input]:font-bold' : ''
+                  cn('[&_input]:p-1 ', index === (data?.length ?? 0) - 1 && '[&_input]:font-bold')
                 }
               />
             </div>

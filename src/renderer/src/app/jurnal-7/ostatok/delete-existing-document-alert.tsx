@@ -3,6 +3,7 @@ import type { DialogProps } from '@radix-ui/react-dialog'
 import type { OstatokProduct } from '@renderer/common/models'
 import type { TFunction } from 'i18next'
 
+import { mainSchetQueryKeys, mainSchetService } from '@renderer/app/region-spravochnik/main-schet'
 import { Copyable } from '@renderer/common/components'
 import { DataList } from '@renderer/common/components/data-list'
 import {
@@ -15,9 +16,11 @@ import {
 } from '@renderer/common/components/ui/alert-dialog'
 import { Badge } from '@renderer/common/components/ui/badge'
 import { Button } from '@renderer/common/components/ui/button'
-import { useRequisitesStore } from '@renderer/common/features/requisites'
+import { RequisitesDialog, useRequisitesStore } from '@renderer/common/features/requisites'
+import { useToggle } from '@renderer/common/hooks'
 import { formatLocaleDate, formatNumber } from '@renderer/common/lib/format'
-import { Eye } from 'lucide-react'
+import { useQuery } from '@tanstack/react-query'
+import { Eye, RefreshCw } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
@@ -34,9 +37,15 @@ export const DeleteExistingDocumentsAlert = ({
   ...props
 }: DeleteExistingDocumentsAlertProps) => {
   const navigate = useNavigate()
+  const requisitesDialogToggle = useToggle()
+  const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
+
   const { t } = useTranslation()
 
-  const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
+  const { data: main_schet } = useQuery({
+    queryKey: [mainSchetQueryKeys.getById, main_schet_id],
+    queryFn: mainSchetService.getById
+  })
 
   return (
     <AlertDialog {...props}>
@@ -99,7 +108,13 @@ export const DeleteExistingDocumentsAlert = ({
                       if (main_schet_id !== doc.main_schet_id) {
                         toast.error(t('main_schet_mismatch'))
                       } else {
-                        navigate(documentUrl!)
+                        navigate(documentUrl!, {
+                          state: {
+                            product,
+                            message,
+                            docs
+                          }
+                        })
                       }
                     }}
                   >
@@ -110,8 +125,29 @@ export const DeleteExistingDocumentsAlert = ({
             })}
           </ul>
         </div>
-        <AlertDialogFooter>
-          <AlertDialogCancel>{t('cancel')}</AlertDialogCancel>
+        <AlertDialogFooter className="items-end">
+          <div className="flex items-center flex-1">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={requisitesDialogToggle.open}
+            >
+              <RefreshCw />
+            </Button>
+
+            <div className="flex flex-col gap-0.5 cursor-pointer">
+              <p className="text-xs font-medium text-slate-500">{t('main-schet')}</p>
+              <p className="text-base font-semibold">
+                {[main_schet?.data?.account_number].filter((value) => !!value).join(' - ')}
+              </p>
+            </div>
+
+            <RequisitesDialog
+              open={requisitesDialogToggle.isOpen}
+              onOpenChange={requisitesDialogToggle.setOpen}
+            />
+          </div>
+          <AlertDialogCancel>{t('close')}</AlertDialogCancel>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

@@ -20,7 +20,7 @@ export const DownloadFile = ({
   ...props
 }: DownloadFileProps) => {
   const { mutate: downloadFile, isPending: isDownloadingFile } = useMutation({
-    async mutationFn() {
+    mutationFn: async () => {
       const res = await http.get(url, {
         responseType: 'arraybuffer',
         params

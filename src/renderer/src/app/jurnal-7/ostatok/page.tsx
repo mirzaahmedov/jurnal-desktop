@@ -33,7 +33,7 @@ import { useRequisitesStore } from '@renderer/common/features/requisites'
 import { SearchField } from '@renderer/common/features/search/search-field'
 import { useSearch } from '@renderer/common/features/search/use-search'
 import { useSpravochnik } from '@renderer/common/features/spravochnik'
-import { usePagination, useToggle } from '@renderer/common/hooks'
+import { useLocationState, usePagination, useToggle } from '@renderer/common/hooks'
 import { date_iso_regex, formatDate, parseDate, validateDate } from '@renderer/common/lib/date'
 import { formatLocaleDate } from '@renderer/common/lib/format'
 import { ListView } from '@renderer/common/views'
@@ -63,11 +63,14 @@ import {
 const OstatokPage = () => {
   const { minDate, maxDate, queuedMonths } = useOstatokStore()
 
-  const [deleteExistingDocumentError, setDeleteExistingDocumentError] = useState<{
-    message: string
-    docs: OstatokDeleteExistingDocument[]
-    product?: OstatokProduct
-  }>()
+  const [deleteExistingDocumentError, setDeleteExistingDocumentError] = useLocationState<
+    | {
+        message: string
+        docs: OstatokDeleteExistingDocument[]
+        product?: OstatokProduct
+      }
+    | undefined
+  >('delete_existing_document_error', undefined)
   const [deleteExistingSaldoError, setDeleteExistingSaldoError] = useState<{
     message: string
     data: OstatokDeleteExistingSaldo
@@ -76,7 +79,8 @@ const OstatokPage = () => {
     message: string
     result: ImportValidationErrorRow
   }>()
-  const [selectedRows, setSelectedRows] = useState<OstatokProduct[]>([])
+
+  const [selectedRows, setSelectedRows] = useLocationState<OstatokProduct[]>('selected_rows', [])
   const [selectedDate, setSelectedDate] = useState<undefined | Date>(minDate)
 
   const dropdownToggle = useToggle()

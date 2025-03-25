@@ -1,4 +1,4 @@
-import type { AxiosError, InternalAxiosRequestConfig } from 'axios'
+import type { AxiosError, AxiosResponse, InternalAxiosRequestConfig } from 'axios'
 
 import axios from 'axios'
 import i18next, { t } from 'i18next'
@@ -80,7 +80,7 @@ http.interceptors.response.use(
 
     const response = error.response
     if (response) {
-      const data = response.data as ErrorResponse
+      const data = getResponseData(response)
       const message = data?.message || (error as AxiosError)?.message
 
       let requestData: any
@@ -96,7 +96,7 @@ http.interceptors.response.use(
       const details = JSON.stringify(
         {
           message,
-          url: error.config?.url,
+          url: `${error.config?.baseURL}/${error.config?.url?.replace(/^\//, '')}`,
           method: error.config?.method?.toUpperCase(),
           requestData,
           status: error.response?.status,
@@ -127,3 +127,22 @@ http.interceptors.response.use(
     throw new Error(message)
   }
 )
+
+export const getResponseData = (
+  response: AxiosResponse<any, any> | undefined
+): ErrorResponse | undefined => {
+  if (response && response.data) {
+    try {
+      if (response.data instanceof ArrayBuffer) {
+        const decoded = JSON.parse(new TextDecoder().decode(response.data))
+        return decoded
+      } else {
+        return response.data
+      }
+    } catch {
+      return undefined
+    }
+  }
+
+  return undefined
+}
