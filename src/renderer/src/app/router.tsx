@@ -7,8 +7,12 @@ import { RequisitesSelectedGuard } from '@renderer/common/features/requisites'
 import { DuplicateSchetsGuard } from '@renderer/common/features/requisites/duplicate-schets-guard'
 import { Navigate, createHashRouter } from 'react-router-dom'
 
+import BankOstatokDetailsPage from './bank/ostatok/details/page'
+import BankOstatokPage from './bank/ostatok/page'
 import DashboardPage from './dashboard/page'
 import HomePage from './home/page'
+import KassaOstatokDetailsPage from './kassa/ostatok/details/page'
+import KassaOstatokPage from './kassa/ostatok/page'
 import PodotchetOstatokDetailsPage from './podotchet/ostatok/details/page'
 import PodotchetOstatokPage from './podotchet/ostatok/page'
 import SigninPage from './sign-in'
@@ -175,6 +179,14 @@ export const routes: RouteObject[] = [
           {
             path: 'monitor',
             element: <KassaMonitorPage />
+          },
+          {
+            path: 'ostatok',
+            element: <KassaOstatokPage />
+          },
+          {
+            path: 'ostatok/:id',
+            element: <KassaOstatokDetailsPage />
           }
         ]
       },
@@ -201,6 +213,14 @@ export const routes: RouteObject[] = [
           {
             path: 'monitor',
             element: <BankMonitorPage />
+          },
+          {
+            path: 'ostatok',
+            element: <BankOstatokPage />
+          },
+          {
+            path: 'ostatok/:id',
+            element: <BankOstatokDetailsPage />
           }
         ]
       },

@@ -1,4 +1,4 @@
-import type { NavElement } from './constants'
+import type { NavElement } from './config'
 
 import { useEffect, useState } from 'react'
 
@@ -20,7 +20,7 @@ import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 
 import { Spinner } from '../components'
-import { getNavElements } from './constants'
+import { getNavElements } from './config'
 
 export interface SidebarStore {
   isCollapsed: boolean

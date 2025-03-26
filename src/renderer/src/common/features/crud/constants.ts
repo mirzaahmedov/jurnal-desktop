@@ -66,7 +66,9 @@ export enum ApiEndpoints {
   raschet_schet_gazna = 'spravochnik/organization/gazna',
   report_title = 'admin/spravochnik/report_title',
   organ_saldo = 'organ/saldo',
-  podotchet_saldo = 'podotchet/saldo'
+  podotchet_saldo = 'podotchet/saldo',
+  bank_saldo = 'bank/saldo',
+  kassa_saldo = 'kassa/saldo'
 }
 
 export enum ApiStatusCodes {

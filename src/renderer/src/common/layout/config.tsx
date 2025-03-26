@@ -119,6 +119,11 @@ export const getNavElements = (t: TFunction): NavElement[] => {
               path: 'rasxod',
               title: t('pages.rasxod-docs'),
               icon: FileUp
+            },
+            {
+              path: 'ostatok',
+              title: t('pages.ostatok'),
+              icon: CircleFadingPlus
             }
           ]
         }
@@ -143,6 +148,11 @@ export const getNavElements = (t: TFunction): NavElement[] => {
               path: 'rasxod',
               title: t('pages.rasxod-docs'),
               icon: FileUp
+            },
+            {
+              path: 'ostatok',
+              title: t('pages.ostatok'),
+              icon: CircleFadingPlus
             }
           ]
         }

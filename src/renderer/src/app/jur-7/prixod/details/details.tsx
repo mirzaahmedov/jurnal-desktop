@@ -205,7 +205,15 @@ const PrixodDetails = ({ id, onSuccess }: PrixodDetailsProps) => {
   }, [values])
 
   useEffect(() => {
-    form.reset(prixod?.data ? prixod?.data : defaultValues)
+    form.reset(
+      prixod?.data
+        ? {
+            ...defaultValues,
+            ...prixod?.data,
+            childs: prixod?.data?.childs ?? []
+          }
+        : defaultValues
+    )
   }, [form, prixod])
 
   const kimdan_id = form.watch('kimdan_id')
