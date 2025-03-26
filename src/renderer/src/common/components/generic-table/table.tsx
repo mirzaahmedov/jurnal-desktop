@@ -130,7 +130,8 @@ export const GenericTable = <T extends object>(props: GenericTableProps<T>) => {
                     key="actions"
                     style={{
                       width: actionsWidth,
-                      minWidth: actionsWidth
+                      minWidth: actionsWidth,
+                      maxWidth: actionsWidth
                     }}
                   >
                     {t('actions')}
@@ -200,7 +201,14 @@ export const GenericTable = <T extends object>(props: GenericTableProps<T>) => {
                   : null}
 
                 {onDelete || onEdit || actions ? (
-                  <GenericTableCell className="py-1">
+                  <GenericTableCell
+                    className="py-1"
+                    style={{
+                      width: actionsWidth,
+                      minWidth: actionsWidth,
+                      maxWidth: actionsWidth
+                    }}
+                  >
                     <div className="flex items-center whitespace-nowrap w-full gap-1">
                       {onEdit && (
                         <Button

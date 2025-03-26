@@ -45,7 +45,7 @@ const MainSchetPage = () => {
     ],
     queryFn: mainSchetService.getAll
   })
-  const { mutate: deleteMutation, isPending } = useMutation({
+  const { mutate: deleteMainSchet, isPending } = useMutation({
     mutationKey: [mainSchetQueryKeys.delete],
     mutationFn: mainSchetService.delete,
     onSuccess(res) {
@@ -84,7 +84,7 @@ const MainSchetPage = () => {
   const handleClickDelete = (row: MainSchet) => {
     confirm({
       onConfirm() {
-        deleteMutation(row.id)
+        deleteMainSchet(row.id)
       }
     })
   }
