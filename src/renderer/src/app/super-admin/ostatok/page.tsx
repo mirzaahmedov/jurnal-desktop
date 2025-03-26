@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 
-import { defaultValues, ostatokProductColumns } from '@renderer/app/jurnal-7/ostatok'
-import { createPodrazdelenie7Spravochnik } from '@renderer/app/jurnal-7/podrazdelenie/service'
-import { createResponsibleSpravochnik } from '@renderer/app/jurnal-7/responsible/service'
+import { defaultValues, ostatokProductColumns } from '@renderer/app/jur-7/ostatok'
+import { createPodrazdelenie7Spravochnik } from '@renderer/app/jur-7/podrazdelenie/service'
+import { createResponsibleSpravochnik } from '@renderer/app/jur-7/responsible/service'
 import { ChooseSpravochnik, DatePicker, GenericTable } from '@renderer/common/components'
 import { CollapsibleTable } from '@renderer/common/components/collapsible-table'
 import { Button } from '@renderer/common/components/ui/button'

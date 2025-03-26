@@ -135,6 +135,9 @@
   "type-document": "Hujjat turi",
   "numeric-order": "Tartib raqami",
   "cancel": "Bekor qilish",
+  "confirm": "Tasdiqlash",
+  "resolved": "Hal qilindi",
+  "removed": "O'chirildi",
   "okonx": "Okonks",
   "rayon": "Rayon",
   "close": "Yopish",
@@ -249,6 +252,7 @@
   "other": "Boshqa",
   "refresh_page": "Sahifani yangilash",
   "unsaved_changes_want_to_exit": "Saqlanmagan o‘zgarishlar mavjud. Chiqishni xohlaysizmi?",
+  "sure_to_delete": "O'chirishni tasdiqlaysizmi?",
   "date": "Sana",
   "provodka_type": {
     "bank_rasxod": "Bank xarajat",
@@ -279,5 +283,6 @@
     "reject_report": "Hisobotni rad etish?"
   },
   "duplicate": "Nusxalash",
+  "duplicate_schets": "Takrorlangan schyot raqamlari mavjud. Har bir schyot raqami yagona ekanligini tekshiring.",
   "main_schet_mismatch": "Ushbu ma’lumot boshqa asosiy hisobga tegishli. To‘g‘ri hisobni tanlang."
 }

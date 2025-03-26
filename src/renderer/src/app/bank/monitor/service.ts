@@ -10,6 +10,13 @@ export type BankMonitorMetaType = {
   rasxod_sum: number
 }
 
+// {page_prixod_sum: number
+//   page_rasxod_sum: number
+//   page_total_sum: number
+
+//   summa_from_object?: SummaObject
+//   summa_to_object?: SummaObject}
+
 export const bankMonitorService = new CRUDService<
   BankMonitoringType,
   undefined,

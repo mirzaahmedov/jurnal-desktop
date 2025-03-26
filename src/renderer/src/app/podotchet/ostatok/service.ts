@@ -1,5 +1,5 @@
 import type { OrganizationOstatokPayload } from './utils'
-import type { PodotchetOstatok } from '@renderer/common/models'
+import type { PodotchetOstatok, ResponseMeta } from '@renderer/common/models'
 
 import { withPreprocessor } from '@renderer/common/lib/validation'
 import { z } from 'zod'
@@ -7,9 +7,21 @@ import { z } from 'zod'
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 import { main_schet } from '@/common/features/crud/middleware'
 
+type PodotchetOstatokMeta = ResponseMeta & {
+  from_summa: number
+  page_prixod_summa: number
+  page_rasxod_summa: number
+  prixod_summa: number
+  rasxod_summa: number
+  summa: number
+  to_summa: number
+}
+
 export const podotchetOstatokService = new CRUDService<
   PodotchetOstatok,
-  OrganizationOstatokPayload
+  OrganizationOstatokPayload,
+  OrganizationOstatokPayload,
+  PodotchetOstatokMeta
 >({
   endpoint: ApiEndpoints.podotchet_saldo
 }).use(main_schet())

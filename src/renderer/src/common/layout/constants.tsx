@@ -2,7 +2,7 @@ import type { Access } from '@/common/models'
 import type { TFunction } from 'i18next'
 import type { ComponentType, ReactNode } from 'react'
 
-import { OstatokController } from '@renderer/app/jurnal-7/ostatok/ostatok-controller'
+import { OstatokController } from '@renderer/app/jur-7/ostatok/ostatok-controller'
 import { adminRoles } from '@renderer/app/super-admin/role'
 import {
   ArrowLeftRight,

@@ -1,5 +1,5 @@
 export * from './dialog'
 export * from './service'
-export * from './constants'
+export * from './config'
 export * from './store'
-export * from './guard'
+export * from './requisites-selected-guard'

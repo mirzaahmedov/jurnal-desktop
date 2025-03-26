@@ -2,7 +2,7 @@ import type { Group } from './group'
 import type { Naimenovanie } from './naimenovanie'
 import type { Responsible } from './responsible'
 
-export interface InternalTransferChild {
+export interface InternalChild {
   naimenovanie_tovarov_jur7_id: number
   kol: number
   sena: number
@@ -15,7 +15,7 @@ export interface InternalTransferChild {
   product: Naimenovanie
   group: Group
 }
-export interface InternalTransfer {
+export interface Internal {
   id: number
   doc_num: string
   doc_date: string
@@ -27,5 +27,5 @@ export interface InternalTransfer {
   kimga_id: number
   kimdan: Responsible
   kimga: Responsible
-  childs: InternalTransferChild[]
+  childs: InternalChild[]
 }

@@ -5,7 +5,7 @@ import { ErrorBoundary } from 'react-error-boundary'
 import { RouterProvider } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify'
 
-import { OstatokUpdateManager } from './app/jurnal-7/ostatok/ostatok-update-manager'
+import { OstatokUpdateManager } from './app/jur-7/ostatok/ostatok-update-manager'
 import { router } from './app/router'
 import { LoadingOverlay } from './common/components'
 import { Toaster } from './common/components/ui/toaster'

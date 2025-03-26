@@ -3,7 +3,8 @@ import type { RouteObject } from 'react-router-dom'
 import { lazy } from 'react'
 
 import { useAuthenticationStore } from '@renderer/common/features/auth'
-import { RequisitesGuard } from '@renderer/common/features/requisites'
+import { RequisitesSelectedGuard } from '@renderer/common/features/requisites'
+import { DuplicateSchetsGuard } from '@renderer/common/features/requisites/duplicate-schets-guard'
 import { Navigate, createHashRouter } from 'react-router-dom'
 
 import DashboardPage from './dashboard/page'
@@ -23,18 +24,16 @@ const BankPrixodDetailsPage = lazy(() => import('./bank/prixod/details/page'))
 const BankPrixodPage = lazy(() => import('./bank/prixod/page'))
 const BankRasxodDetailsPage = lazy(() => import('./bank/rasxod/details/page'))
 const BankRasxodPage = lazy(() => import('./bank/rasxod/page'))
-const Jurnal7InternalTransferDetailsPage = lazy(
-  () => import('./jurnal-7/internal-transfer/details/page')
-)
-const Jurnal7InternalTransferPage = lazy(() => import('./jurnal-7/internal-transfer/page'))
-const IznosPage = lazy(() => import('./jurnal-7/iznos/page'))
-const OstatokPage = lazy(() => import('./jurnal-7/ostatok/page'))
-const Subdivision7Page = lazy(() => import('./jurnal-7/podrazdelenie/page'))
-const Jurnal7PrixodDetailsPage = lazy(() => import('./jurnal-7/prixod/details/page'))
-const Jurnal7PrixodPage = lazy(() => import('./jurnal-7/prixod/page'))
-const Jurnal7RasxodDetailsPage = lazy(() => import('./jurnal-7/rasxod/details/page'))
-const Jurnal7RasxodPage = lazy(() => import('./jurnal-7/rasxod/page'))
-const ResponsiblePage = lazy(() => import('./jurnal-7/responsible/page'))
+const Jurnal7InternalTransferDetailsPage = lazy(() => import('./jur-7/internal/details/page'))
+const Jurnal7InternalTransferPage = lazy(() => import('./jur-7/internal/page'))
+const IznosPage = lazy(() => import('./jur-7/iznos/page'))
+const OstatokPage = lazy(() => import('./jur-7/ostatok/page'))
+const Subdivision7Page = lazy(() => import('./jur-7/podrazdelenie/page'))
+const Jurnal7PrixodDetailsPage = lazy(() => import('./jur-7/prixod/details/page'))
+const Jurnal7PrixodPage = lazy(() => import('./jur-7/prixod/page'))
+const Jurnal7RasxodDetailsPage = lazy(() => import('./jur-7/rasxod/details/page'))
+const Jurnal7RasxodPage = lazy(() => import('./jur-7/rasxod/page'))
+const ResponsiblePage = lazy(() => import('./jur-7/responsible/page'))
 const KassaMonitorPage = lazy(() => import('./kassa/monitor/page'))
 const KassaPrixodDetailsPage = lazy(() => import('./kassa/prixod/details/page'))
 const KassaPrixodPage = lazy(() => import('./kassa/prixod/page'))
@@ -113,7 +112,7 @@ export const routes: RouteObject[] = [
     children: [
       {
         path: 'organization',
-        element: <RequisitesGuard />,
+        element: <RequisitesSelectedGuard />,
         children: [
           {
             path: 'monitor',
@@ -155,7 +154,7 @@ export const routes: RouteObject[] = [
       },
       {
         path: 'kassa',
-        element: <RequisitesGuard />,
+        element: <RequisitesSelectedGuard />,
         children: [
           {
             path: 'prixod',
@@ -181,7 +180,7 @@ export const routes: RouteObject[] = [
       },
       {
         path: 'bank',
-        element: <RequisitesGuard />,
+        element: <RequisitesSelectedGuard />,
         children: [
           {
             path: 'prixod',
@@ -354,7 +353,7 @@ export const routes: RouteObject[] = [
       },
       {
         path: 'accountable',
-        element: <RequisitesGuard />,
+        element: <RequisitesSelectedGuard />,
         children: [
           {
             path: 'monitor',
@@ -380,7 +379,7 @@ export const routes: RouteObject[] = [
       },
       {
         path: 'journal-7',
-        element: <RequisitesGuard />,
+        element: <RequisitesSelectedGuard />,
         children: [
           {
             path: 'responsible',
@@ -426,15 +425,21 @@ export const routes: RouteObject[] = [
       },
       {
         path: 'mainbook',
-        element: <RequisitesGuard />,
+        element: <RequisitesSelectedGuard />,
         children: [
           {
-            index: true,
-            element: <MainbookPage />
-          },
-          {
-            path: ':id',
-            element: <MainbookDetailsPage />
+            path: '*',
+            element: <DuplicateSchetsGuard />,
+            children: [
+              {
+                index: true,
+                element: <MainbookPage />
+              },
+              {
+                path: ':id',
+                element: <MainbookDetailsPage />
+              }
+            ]
           }
         ]
       },

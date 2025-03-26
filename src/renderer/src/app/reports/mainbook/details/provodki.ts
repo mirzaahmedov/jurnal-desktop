@@ -10,7 +10,8 @@ export const provodkiColumns: EditableColumnDef<ProvodkaRow>[] = [
   {
     key: 'schet',
     minWidth: 100,
-    className: 'font-bold',
+    headerClassName: 'sticky left-0 z-50',
+    className: 'font-bold sticky left-0 bg-background z-10',
     Editor: createTextEditor({
       key: 'schet',
       readOnly: true

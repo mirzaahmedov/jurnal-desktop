@@ -2,6 +2,8 @@ import type { MainSchet } from '@/common/models'
 
 import { useEffect, useState } from 'react'
 
+import { requisitesQueryKeys } from '@renderer/common/features/requisites'
+import { DuplicateSchetsAlert } from '@renderer/common/features/requisites/duplicate-schets-alert'
 import { SearchField } from '@renderer/common/features/search/search-field'
 import { useSearch } from '@renderer/common/features/search/use-search'
 import { usePagination } from '@renderer/common/hooks'
@@ -50,6 +52,9 @@ const MainSchetPage = () => {
       toast.success(res?.message)
       queryClient.invalidateQueries({
         queryKey: [mainSchetQueryKeys.getAll]
+      })
+      queryClient.invalidateQueries({
+        queryKey: [requisitesQueryKeys.checkDuplicates]
       })
     }
   })
@@ -106,6 +111,7 @@ const MainSchetPage = () => {
         onChangeOpen={dialogToggle.setOpen}
         original={mainSchets?.data?.[0] ?? undefined}
       />
+      <DuplicateSchetsAlert />
     </ListView>
   )
 }

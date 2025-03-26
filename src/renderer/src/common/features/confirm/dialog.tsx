@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next'
+
 import {
   AlertDialog,
   AlertDialogAction,
@@ -12,9 +14,11 @@ import {
 import { useConfirm } from './store'
 
 export const ConfirmationDialog = () => {
+  const { t } = useTranslation()
+
   const {
     isOpen,
-    title = 'Вы уверены, что хотите удалить этот элемент?',
+    title = t('sure_to_delete'),
     description,
     close,
     onConfirm,
@@ -36,13 +40,13 @@ export const ConfirmationDialog = () => {
             onClick={onCancel}
             className="text-xs"
           >
-            Отмена
+            {t('cancel')}
           </AlertDialogCancel>
           <AlertDialogAction
             onClick={onConfirm}
             className="text-xs"
           >
-            Подтверждать
+            {t('confirm')}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

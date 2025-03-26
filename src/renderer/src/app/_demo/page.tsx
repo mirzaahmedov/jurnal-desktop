@@ -1,6 +1,6 @@
 import { formatDate } from '@renderer/common/lib/date'
 
-import { useOstatokStore } from '../jurnal-7/ostatok/store'
+import { useOstatokStore } from '../jur-7/ostatok/store'
 
 const DemoPage = () => {
   const { queuedMonths, enqueueMonth } = useOstatokStore()

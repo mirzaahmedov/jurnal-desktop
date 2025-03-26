@@ -30,3 +30,20 @@ export const getMainSchetsQuery = async (ctx: QueryFunctionContext<QueryKeyType>
   )
   return res.data
 }
+
+export interface DuplicateSchet {
+  jur1_schet: string
+  count: number
+}
+
+export const checkSchetsDuplicateQuery = async (
+  ctx: QueryFunctionContext<[string, { budjet_id: number }]>
+) => {
+  const { budjet_id } = ctx.queryKey[1]
+  const res = await http.get<Response<DuplicateSchet[]>>('/features/check/schets', {
+    params: {
+      budjet_id
+    }
+  })
+  return res.data
+}

@@ -7,6 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { bankQueryKeys } from '@renderer/app/super-admin/bank/config'
 import { bankService } from '@renderer/app/super-admin/bank/service'
 import { FormElement } from '@renderer/common/components/form'
+import { requisitesQueryKeys } from '@renderer/common/features/requisites'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -80,6 +81,9 @@ export const MainSchetDialog = ({
       queryClient.invalidateQueries({
         queryKey: [mainSchetQueryKeys.getAll]
       })
+      queryClient.invalidateQueries({
+        queryKey: [requisitesQueryKeys.checkDuplicates]
+      })
       onChangeOpen(false)
     }
   })
@@ -91,6 +95,9 @@ export const MainSchetDialog = ({
       form.reset(defaultValues)
       queryClient.invalidateQueries({
         queryKey: [mainSchetQueryKeys.getAll]
+      })
+      queryClient.invalidateQueries({
+        queryKey: [requisitesQueryKeys.checkDuplicates]
       })
       onChangeOpen(false)
     }
