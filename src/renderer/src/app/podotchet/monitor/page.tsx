@@ -176,22 +176,20 @@ const PodotchetMonitoringPage = () => {
           </ButtonGroup>
         </div>
         <ListView.RangeDatePicker {...dates} />
-        <div className="w-full sticky top-0 mt-5">
-          <SummaTotal className="pt-5">
-            <SummaTotal.Value
-              name={t('remainder-from')}
-              value={formatNumber(monitorList?.meta?.summa_from_object?.summa ?? 0)}
-            />
-            <SummaTotal.Value
-              name={t('debet')}
-              value={formatNumber(monitorList?.meta?.summa_from_object?.prixod_sum ?? 0)}
-            />
-            <SummaTotal.Value
-              name={t('kredit')}
-              value={formatNumber(monitorList?.meta?.summa_from_object?.rasxod_sum ?? 0)}
-            />
-          </SummaTotal>
-        </div>
+        <SummaTotal>
+          <SummaTotal.Value
+            name={t('remainder-from')}
+            value={formatNumber(monitorList?.meta?.summa_from_object?.summa ?? 0)}
+          />
+          <SummaTotal.Value
+            name={t('debet')}
+            value={formatNumber(monitorList?.meta?.summa_from_object?.prixod_sum ?? 0)}
+          />
+          <SummaTotal.Value
+            name={t('kredit')}
+            value={formatNumber(monitorList?.meta?.summa_from_object?.rasxod_sum ?? 0)}
+          />
+        </SummaTotal>
       </ListView.Header>
       <ListView.Content loading={isFetching}>
         {isFetching ? <LoadingOverlay /> : null}
@@ -215,22 +213,20 @@ const PodotchetMonitoringPage = () => {
         />
       </ListView.Content>
       <ListView.Footer className="p-5 flex flex-col gap-5">
-        <div className="w-full sticky top-0 mt-5">
-          <SummaTotal>
-            <SummaTotal.Value
-              name={t('remainder-to')}
-              value={formatNumber(monitorList?.meta?.summa_to_object?.summa ?? 0)}
-            />
-            <SummaTotal.Value
-              name={t('debet')}
-              value={formatNumber(monitorList?.meta?.summa_to_object?.prixod_sum ?? 0)}
-            />
-            <SummaTotal.Value
-              name={t('kredit')}
-              value={formatNumber(monitorList?.meta?.summa_to_object?.rasxod_sum ?? 0)}
-            />
-          </SummaTotal>
-        </div>
+        <SummaTotal className="pb-5">
+          <SummaTotal.Value
+            name={t('remainder-to')}
+            value={formatNumber(monitorList?.meta?.summa_to_object?.summa ?? 0)}
+          />
+          <SummaTotal.Value
+            name={t('debet')}
+            value={formatNumber(monitorList?.meta?.summa_to_object?.prixod_sum ?? 0)}
+          />
+          <SummaTotal.Value
+            name={t('kredit')}
+            value={formatNumber(monitorList?.meta?.summa_to_object?.rasxod_sum ?? 0)}
+          />
+        </SummaTotal>
         <ListView.Pagination
           {...pagination}
           pageCount={monitorList?.meta?.pageCount ?? 0}

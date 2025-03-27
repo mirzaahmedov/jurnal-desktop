@@ -260,9 +260,7 @@ const OrganizationMonitoringPage = () => {
             ) : null}
           </div>
           <ListView.RangeDatePicker {...dates} />
-        </div>
-        <div className="w-full sticky top-0 mt-5">
-          <SummaTotal className="pt-5">
+          <SummaTotal>
             <SummaTotal.Value
               name={t('remainder-from')}
               value={formatNumber(monitorList?.meta?.summa_from_object?.summa ?? 0)}
@@ -299,7 +297,7 @@ const OrganizationMonitoringPage = () => {
         />
       </ListView.Content>
       <ListView.Footer>
-        <SummaTotal className="pt-5">
+        <SummaTotal className="pb-5">
           <SummaTotal.Value
             name={t('remainder-to')}
             value={formatNumber(monitorList?.meta?.summa_to_object?.summa ?? 0)}
@@ -313,12 +311,10 @@ const OrganizationMonitoringPage = () => {
             value={formatNumber(monitorList?.meta?.summa_to_object?.rasxod_sum ?? 0)}
           />
         </SummaTotal>
-        <div className="mt-5">
-          <ListView.Pagination
-            {...pagination}
-            pageCount={monitorList?.meta?.pageCount ?? 0}
-          />
-        </div>
+        <ListView.Pagination
+          {...pagination}
+          pageCount={monitorList?.meta?.pageCount ?? 0}
+        />
       </ListView.Footer>
     </ListView>
   )
