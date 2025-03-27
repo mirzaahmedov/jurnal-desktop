@@ -1,4 +1,4 @@
-import type { OrganizationOstatok } from '@/common/models'
+import type { KassaOstatok } from '@/common/models'
 
 import { useEffect } from 'react'
 
@@ -57,10 +57,10 @@ const KassaOstatokPage = () => {
     }
   })
 
-  const handleClickEdit = (row: OrganizationOstatok) => {
+  const handleClickEdit = (row: KassaOstatok) => {
     navigate(`${row.id}`)
   }
-  const handleClickDelete = (row: OrganizationOstatok) => {
+  const handleClickDelete = (row: KassaOstatok) => {
     confirm({
       onConfirm() {
         deleteOstatok(row.id)

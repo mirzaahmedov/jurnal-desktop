@@ -8,9 +8,11 @@ import { SearchField } from '@renderer/common/features/search/search-field'
 import { useSearch } from '@renderer/common/features/search/use-search'
 import { useDates, usePagination } from '@renderer/common/hooks'
 import { useLocationState } from '@renderer/common/hooks/use-location-state'
+import { getProvodkaURL } from '@renderer/common/lib/provodka'
 import { ListView } from '@renderer/common/views'
 import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router-dom'
 
 import { createPodotchetSpravochnik } from '@/app/region-spravochnik/podotchet'
 import { createOperatsiiSpravochnik } from '@/app/super-admin/operatsii'
@@ -25,15 +27,16 @@ import {
 import { ButtonGroup } from '@/common/components/ui/button-group'
 import { useSpravochnik } from '@/common/features/spravochnik'
 import { formatNumber } from '@/common/lib/format'
-import { TypeSchetOperatsii } from '@/common/models'
+import { type PodotchetMonitor, TypeSchetOperatsii } from '@/common/models'
 
 import { podotchetMonitoringColumns } from './columns'
 import { podotchetMonitoringQueryKeys } from './constants'
 import { podotchetMonitoringService } from './service'
 
 const PodotchetMonitoringPage = () => {
-  const pagination = usePagination()
   const dates = useDates()
+  const navigate = useNavigate()
+  const pagination = usePagination()
   const report_title_id = useSettingsStore((store) => store.report_title_id)
 
   const setLayout = useLayoutStore((store) => store.setLayout)
@@ -93,6 +96,14 @@ const PodotchetMonitoringPage = () => {
       ]
     })
   }, [setLayout, t])
+
+  const handleClickEdit = (row: PodotchetMonitor) => {
+    const path = getProvodkaURL(row)
+    if (!path) {
+      return
+    }
+    navigate(path)
+  }
 
   return (
     <ListView>
@@ -173,11 +184,11 @@ const PodotchetMonitoringPage = () => {
             />
             <SummaTotal.Value
               name={t('debet')}
-              value={formatNumber(monitorList?.meta?.summa_from_object?.prixod_summa ?? 0)}
+              value={formatNumber(monitorList?.meta?.summa_from_object?.prixod_sum ?? 0)}
             />
             <SummaTotal.Value
               name={t('kredit')}
-              value={formatNumber(monitorList?.meta?.summa_from_object?.rasxod_summa ?? 0)}
+              value={formatNumber(monitorList?.meta?.summa_from_object?.rasxod_sum ?? 0)}
             />
           </SummaTotal>
         </div>
@@ -188,6 +199,7 @@ const PodotchetMonitoringPage = () => {
           columnDefs={podotchetMonitoringColumns}
           data={monitorList?.data ?? []}
           getRowKey={(row) => `${row.type}-${row.id}`}
+          onEdit={handleClickEdit}
           footer={
             <>
               <FooterRow>
@@ -211,11 +223,11 @@ const PodotchetMonitoringPage = () => {
             />
             <SummaTotal.Value
               name={t('debet')}
-              value={formatNumber(monitorList?.meta?.summa_to_object?.prixod_summa ?? 0)}
+              value={formatNumber(monitorList?.meta?.summa_to_object?.prixod_sum ?? 0)}
             />
             <SummaTotal.Value
               name={t('kredit')}
-              value={formatNumber(monitorList?.meta?.summa_to_object?.rasxod_summa ?? 0)}
+              value={formatNumber(monitorList?.meta?.summa_to_object?.rasxod_sum ?? 0)}
             />
           </SummaTotal>
         </div>

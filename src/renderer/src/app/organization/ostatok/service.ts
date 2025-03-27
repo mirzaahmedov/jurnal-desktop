@@ -1,5 +1,5 @@
 import type { OrganizationOstatokPayload } from './utils'
-import type { OrganizationOstatok } from '@/common/models'
+import type { OrganizationOstatok, ResponseMeta } from '@/common/models'
 
 import { withPreprocessor } from '@renderer/common/lib/validation'
 import { z } from 'zod'
@@ -7,9 +7,26 @@ import { z } from 'zod'
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 import { main_schet } from '@/common/features/crud/middleware'
 
+interface OrganOstatokMeta extends ResponseMeta {
+  internal_prixod_summa: number
+  internal_rasxod_summa: number
+  internal_summa: number
+  page_prixod_summa: number
+  page_rasxod_summa: number
+  page_summa: number
+  from_summa: number
+  to_summa: number
+  from_summa_prixod: number
+  from_summa_rasxod: number
+  to_summa_prixod: number
+  to_summa_rasxod: number
+}
+
 export const organizationOstatokService = new CRUDService<
   OrganizationOstatok,
-  OrganizationOstatokPayload
+  OrganizationOstatokPayload,
+  OrganizationOstatokPayload,
+  OrganOstatokMeta
 >({
   endpoint: ApiEndpoints.organ_saldo
 }).use(main_schet())

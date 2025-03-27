@@ -16,7 +16,8 @@ import KassaOstatokPage from './kassa/ostatok/page'
 import PodotchetOstatokDetailsPage from './podotchet/ostatok/details/page'
 import PodotchetOstatokPage from './podotchet/ostatok/page'
 import SigninPage from './sign-in'
-import VideoModulePage from './super-admin/video-module'
+
+const VideoTutorialsPage = lazy(() => import('./super-admin/video-tutorials/page'))
 
 const AdminOstatokPage = lazy(() => import('./super-admin/ostatok/page'))
 const ZarplataSpravochnikPage = lazy(() => import('./super-admin/zarplata/spravochnik/page'))
@@ -290,8 +291,8 @@ export const routes: RouteObject[] = [
             element: <ReportTitlePage />
           },
           {
-            path: 'video-module',
-            element: <VideoModulePage />
+            path: 'video-tutorials',
+            element: <VideoTutorialsPage />
           },
           {
             path: 'ostatok',

@@ -5,12 +5,13 @@ import { useEffect } from 'react'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
 import { SearchField } from '@renderer/common/features/search/search-field'
 import { useSearch } from '@renderer/common/features/search/use-search'
+import { formatNumber } from '@renderer/common/lib/format'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
-import { GenericTable } from '@/common/components'
+import { FooterCell, FooterRow, GenericTable, SummaTotal } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
 import { useLayoutStore } from '@/common/features/layout'
 import { useDates, usePagination } from '@/common/hooks'
@@ -86,6 +87,20 @@ const OrganizationOstatokPage = () => {
     <ListView>
       <ListView.Header>
         <ListView.RangeDatePicker {...dates} />
+        <SummaTotal className="mt-5">
+          <SummaTotal.Value
+            name={t('remainder-from')}
+            value={formatNumber(organOstatokList?.meta?.from_summa ?? 0)}
+          />
+          <SummaTotal.Value
+            name={t('debet')}
+            value={formatNumber(organOstatokList?.meta?.from_summa_prixod ?? 0)}
+          />
+          <SummaTotal.Value
+            name={t('kredit')}
+            value={formatNumber(organOstatokList?.meta?.from_summa_rasxod ?? 0)}
+          />
+        </SummaTotal>
       </ListView.Header>
       <ListView.Content loading={isFetching || isPending}>
         <GenericTable
@@ -93,9 +108,36 @@ const OrganizationOstatokPage = () => {
           columnDefs={organOstatokColumns}
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}
+          footer={
+            <FooterRow>
+              <FooterCell
+                title={t('total')}
+                colSpan={5}
+                content={formatNumber(organOstatokList?.meta?.page_prixod_summa ?? 0)}
+              />
+              <FooterCell
+                title={undefined}
+                content={formatNumber(organOstatokList?.meta?.page_rasxod_summa ?? 0)}
+              />
+            </FooterRow>
+          }
         />
       </ListView.Content>
       <ListView.Footer>
+        <SummaTotal className="mb-5">
+          <SummaTotal.Value
+            name={t('remainder-to')}
+            value={formatNumber(organOstatokList?.meta?.to_summa ?? 0)}
+          />
+          <SummaTotal.Value
+            name={t('debet')}
+            value={formatNumber(organOstatokList?.meta?.to_summa_prixod ?? 0)}
+          />
+          <SummaTotal.Value
+            name={t('kredit')}
+            value={formatNumber(organOstatokList?.meta?.to_summa_rasxod ?? 0)}
+          />
+        </SummaTotal>
         <ListView.Pagination
           {...pagination}
           pageCount={organOstatokList?.meta?.pageCount ?? 0}

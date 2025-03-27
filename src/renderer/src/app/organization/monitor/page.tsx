@@ -269,11 +269,11 @@ const OrganizationMonitoringPage = () => {
             />
             <SummaTotal.Value
               name={t('debet')}
-              value={formatNumber(monitorList?.meta?.summa_from_object?.prixod_summa ?? 0)}
+              value={formatNumber(monitorList?.meta?.summa_from_object?.prixod_sum ?? 0)}
             />
             <SummaTotal.Value
               name={t('kredit')}
-              value={formatNumber(monitorList?.meta?.summa_from_object?.rasxod_summa ?? 0)}
+              value={formatNumber(monitorList?.meta?.summa_from_object?.rasxod_sum ?? 0)}
             />
           </SummaTotal>
         </div>
@@ -306,11 +306,11 @@ const OrganizationMonitoringPage = () => {
           />
           <SummaTotal.Value
             name={t('debet')}
-            value={formatNumber(monitorList?.meta?.summa_to_object?.prixod_summa ?? 0)}
+            value={formatNumber(monitorList?.meta?.summa_to_object?.prixod_sum ?? 0)}
           />
           <SummaTotal.Value
             name={t('kredit')}
-            value={formatNumber(monitorList?.meta?.summa_to_object?.rasxod_summa ?? 0)}
+            value={formatNumber(monitorList?.meta?.summa_to_object?.rasxod_sum ?? 0)}
           />
         </SummaTotal>
         <div className="mt-5">

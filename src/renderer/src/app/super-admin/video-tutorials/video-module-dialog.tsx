@@ -28,14 +28,14 @@ import {
 import { Input } from '@/common/components/ui/input'
 
 import { videoModuleQueryKeys } from './config'
-import { VideoModuleFormSchema, type VideoModuleFormValues, videoModuleService } from './service'
+import { VideoModuleFormSchema, type VideoModuleFormValues, VideoModuleService } from './service'
 
 export interface VideoModuleDialogProps {
   open: boolean
-  onChangeOpen: (value: boolean) => void
+  onOpenChange: (value: boolean) => void
   selected: VideoModule | null
 }
-export const VideoModuleDialog = ({ open, onChangeOpen, selected }: VideoModuleDialogProps) => {
+export const VideoModuleDialog = ({ open, onOpenChange, selected }: VideoModuleDialogProps) => {
   const { t } = useTranslation(['app'])
 
   const queryClient = useQueryClient()
@@ -47,25 +47,25 @@ export const VideoModuleDialog = ({ open, onChangeOpen, selected }: VideoModuleD
 
   const { mutate: createVideoModule, isPending: isCreating } = useMutation({
     mutationKey: [videoModuleQueryKeys.create],
-    mutationFn: videoModuleService.create,
+    mutationFn: VideoModuleService.create,
     onSuccess(res) {
       toast.success(res?.message)
       form.reset(defaultValues)
       queryClient.invalidateQueries({
         queryKey: [videoModuleQueryKeys.getAll]
       })
-      onChangeOpen(false)
+      onOpenChange(false)
     }
   })
   const { mutate: updateVideoModule, isPending: isUpdating } = useMutation({
     mutationKey: [videoModuleQueryKeys.update],
-    mutationFn: videoModuleService.update,
+    mutationFn: VideoModuleService.update,
     onSuccess(res) {
       toast.success(res?.message)
       queryClient.invalidateQueries({
         queryKey: [videoModuleQueryKeys.getAll]
       })
-      onChangeOpen(false)
+      onOpenChange(false)
     }
   })
 
@@ -89,7 +89,7 @@ export const VideoModuleDialog = ({ open, onChangeOpen, selected }: VideoModuleD
   return (
     <Dialog
       open={open}
-      onOpenChange={onChangeOpen}
+      onOpenChange={onOpenChange}
     >
       <DialogContent className="max-w-xl">
         <DialogHeader>
@@ -125,6 +125,7 @@ export const VideoModuleDialog = ({ open, onChangeOpen, selected }: VideoModuleD
               <Button
                 type="submit"
                 disabled={isCreating || isUpdating}
+                loading={isCreating || isUpdating}
               >
                 {t('save')}
               </Button>
@@ -136,6 +137,6 @@ export const VideoModuleDialog = ({ open, onChangeOpen, selected }: VideoModuleD
   )
 }
 
-const defaultValues = {
+const defaultValues: VideoModuleFormValues = {
   name: ''
-} satisfies VideoModuleFormValues
+}

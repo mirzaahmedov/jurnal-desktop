@@ -5,7 +5,7 @@ import { Fragment, type ReactNode } from 'react'
 import { CaretRightIcon } from '@radix-ui/react-icons'
 import { RequisitesDialog, useRequisitesStore } from '@renderer/common/features/requisites'
 import { useQuery } from '@tanstack/react-query'
-import { ArrowLeft, CirclePlus, LogOut, RefreshCw, Settings } from 'lucide-react'
+import { ArrowLeft, LogOut, Plus, RefreshCw, Settings } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Link, useLocation } from 'react-router-dom'
 
@@ -91,8 +91,8 @@ export const PageLayout = ({ children }: PageLayoutProps) => {
           <div>
             {typeof onCreate === 'function' ? (
               <Button onClick={onCreate}>
-                <CirclePlus className="btn-icon" />
                 {t('add')}
+                <Plus className="btn-icon" />
               </Button>
             ) : null}
           </div>

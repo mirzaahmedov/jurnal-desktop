@@ -7,14 +7,19 @@ import { z } from 'zod'
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 import { main_schet } from '@/common/features/crud/middleware'
 
-type PodotchetOstatokMeta = ResponseMeta & {
-  from_summa: number
+interface PodotchetOstatokMeta extends ResponseMeta {
+  internal_prixod_summa: number
+  internal_rasxod_summa: number
+  internal_summa: number
   page_prixod_summa: number
   page_rasxod_summa: number
-  prixod_summa: number
-  rasxod_summa: number
-  summa: number
+  page_summa: number
+  from_summa: number
   to_summa: number
+  from_summa_prixod: number
+  from_summa_rasxod: number
+  to_summa_prixod: number
+  to_summa_rasxod: number
 }
 
 export const podotchetOstatokService = new CRUDService<

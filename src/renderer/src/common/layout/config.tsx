@@ -376,8 +376,8 @@ export const getNavElements = (t: TFunction): NavElement[] => {
               icon: LetterText
             },
             {
-              path: 'video-module',
-              title: t('pages.video_module'),
+              path: 'video-tutorials',
+              title: t('pages.video_tutorials'),
               icon: FileVideo
             },
             {

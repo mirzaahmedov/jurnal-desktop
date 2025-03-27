@@ -49,6 +49,7 @@ export enum ApiEndpoints {
   jur7_iznos_summa = 'jur_7/saldo/iznos_summa',
   spravochnik_bank = 'spravochnik/bank',
   admin_spravochnik_video_module = 'admin/spravochnik/video_module',
+  admin_video = 'admin/video',
   tables_count = 'admin/control/tables/count',
   logs = 'log/get',
   mainbook = 'main/book',

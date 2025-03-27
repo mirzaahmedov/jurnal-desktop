@@ -87,14 +87,20 @@ const PodotchetOstatokPage = () => {
     <ListView>
       <ListView.Header>
         <ListView.RangeDatePicker {...dates} />
-        <div className="w-full sticky top-0">
-          <SummaTotal className="pt-5">
-            <SummaTotal.Value
-              name={t('remainder-from')}
-              value={formatNumber(podotchetOstatokList?.meta?.from_summa ?? 0)}
-            />
-          </SummaTotal>
-        </div>
+        <SummaTotal className="mt-5">
+          <SummaTotal.Value
+            name={t('remainder-from')}
+            value={formatNumber(podotchetOstatokList?.meta?.from_summa ?? 0)}
+          />
+          <SummaTotal.Value
+            name={t('debet')}
+            value={formatNumber(podotchetOstatokList?.meta?.from_summa_prixod ?? 0)}
+          />
+          <SummaTotal.Value
+            name={t('kredit')}
+            value={formatNumber(podotchetOstatokList?.meta?.from_summa_rasxod ?? 0)}
+          />
+        </SummaTotal>
       </ListView.Header>
       <ListView.Content loading={isFetching || isPending}>
         <GenericTable
@@ -103,30 +109,35 @@ const PodotchetOstatokPage = () => {
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}
           footer={
-            <>
-              <FooterRow>
-                <FooterCell
-                  title={t('total')}
-                  colSpan={5}
-                  content={formatNumber(podotchetOstatokList?.meta?.page_prixod_summa ?? 0)}
-                />
-                <FooterCell
-                  content={formatNumber(podotchetOstatokList?.meta?.page_rasxod_summa ?? 0)}
-                />
-              </FooterRow>
-            </>
+            <FooterRow>
+              <FooterCell
+                title={t('total')}
+                colSpan={5}
+                content={formatNumber(podotchetOstatokList?.meta?.page_prixod_summa ?? 0)}
+              />
+              <FooterCell
+                title={undefined}
+                content={formatNumber(podotchetOstatokList?.meta?.page_rasxod_summa ?? 0)}
+              />
+            </FooterRow>
           }
         />
       </ListView.Content>
       <ListView.Footer>
-        <div className="w-full sticky top-0 mt-5">
-          <SummaTotal className="pb-5">
-            <SummaTotal.Value
-              name={t('remainder-to')}
-              value={formatNumber(podotchetOstatokList?.meta?.to_summa ?? 0)}
-            />
-          </SummaTotal>
-        </div>
+        <SummaTotal className="mb-5">
+          <SummaTotal.Value
+            name={t('remainder-to')}
+            value={formatNumber(podotchetOstatokList?.meta?.to_summa ?? 0)}
+          />
+          <SummaTotal.Value
+            name={t('debet')}
+            value={formatNumber(podotchetOstatokList?.meta?.to_summa_prixod ?? 0)}
+          />
+          <SummaTotal.Value
+            name={t('kredit')}
+            value={formatNumber(podotchetOstatokList?.meta?.to_summa_rasxod ?? 0)}
+          />
+        </SummaTotal>
         <ListView.Pagination
           {...pagination}
           pageCount={podotchetOstatokList?.meta?.pageCount ?? 0}

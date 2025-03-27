@@ -1,4 +1,4 @@
-import type { OrganizationOstatok } from '@/common/models'
+import type { BankOstatok } from '@/common/models'
 
 import { useEffect } from 'react'
 
@@ -57,10 +57,10 @@ const BankOstatokPage = () => {
     }
   })
 
-  const handleClickEdit = (row: OrganizationOstatok) => {
+  const handleClickEdit = (row: BankOstatok) => {
     navigate(`${row.id}`)
   }
-  const handleClickDelete = (row: OrganizationOstatok) => {
+  const handleClickDelete = (row: BankOstatok) => {
     confirm({
       onConfirm() {
         deleteOstatok(row.id)

@@ -94,7 +94,7 @@ export const ImportFile = ({ url, params, onSuccess, onError }: ImportFileDialog
       </DialogTrigger>
       <DialogContent className="pt-10 w-full max-w-xl">
         <FileDropzone
-          onUpload={setFile}
+          onSelect={setFile}
           accept={acceptFiles}
         />
         <div>

@@ -13,7 +13,8 @@ type SummaObject = {
   jur7_prixod_sum_rasxod: number
 }
 
-type OrgMonitorMetaType = {
+interface OrganMonitorMeta
+  extends Omit<ResponseMeta, 'summa_from_object' | 'summa_to_object' | 'summa_object'> {
   page_prixod_sum: number
   page_rasxod_sum: number
   page_total_sum: number
@@ -30,7 +31,7 @@ const orgMonitorService = new CRUDService<
   OrganizationMonitor,
   undefined,
   undefined,
-  ResponseMeta & OrgMonitorMetaType
+  OrganMonitorMeta
 >({
   endpoint: ApiEndpoints.organization_monitoring
 })
