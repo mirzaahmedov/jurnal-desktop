@@ -207,8 +207,8 @@ const MainbookDetailsPage = () => {
           onSubmit={onSubmit}
           className="h-full"
         >
-          <div className="relative p-5 h-full flex flex-col gap-5">
-            <div className="flex items-center justify-between gap-5">
+          <div className="relative h-full flex flex-col gap-5">
+            <div className="flex items-center justify-between gap-5 p-5">
               <MonthPicker
                 value={date}
                 onChange={(value) => {
@@ -235,7 +235,11 @@ const MainbookDetailsPage = () => {
                 columnDefs={columns}
                 data={form.watch('childs')}
                 getRowClassName={({ index, data }) =>
-                  cn('[&_input]:p-1 ', index === (data?.length ?? 0) - 1 && '[&_input]:font-bold')
+                  cn(
+                    '[&_input]:p-1 ',
+                    index === (data?.length ?? 0) - 1 &&
+                      '[&_input]:font-bold sticky bottom-0 z-50 shadow !blur-none'
+                  )
                 }
               />
             </div>

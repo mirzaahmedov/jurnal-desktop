@@ -1,8 +1,10 @@
-import { http } from '@renderer/common/lib/http'
+import { useAuthenticationStore } from '@/common/features/auth'
+import { http } from '@/common/lib/http'
 
 export interface GetVideoURLArgs {
   id: number
 }
 export const getVideoURL = ({ id }: GetVideoURLArgs) => {
-  return `${http.defaults.baseURL}/admin/video/watch/${id}`
+  const { token } = useAuthenticationStore.getState()
+  return `${http.defaults.baseURL}/admin/video/watch/${id}?token=${token}`
 }

@@ -2,12 +2,12 @@ import type { ChangeContext, DeleteContext } from './editors/types'
 import type { EditableColumnDef } from './interface'
 import type { FieldErrors } from 'react-hook-form'
 
-import { type ReactNode, useMemo, useState } from 'react'
+import { type ReactNode, type RefObject, useMemo, useState } from 'react'
 
 import { Button } from '@renderer/common/components/ui/button'
 import { Table, TableBody, TableFooter, TableHeader } from '@renderer/common/components/ui/table'
 import { cn } from '@renderer/common/lib/utils'
-import { CircleMinus, CirclePlus } from 'lucide-react'
+import { CircleMinus, CirclePlus, Eye } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { EmptyList } from '../empty-states'
@@ -16,7 +16,7 @@ import { EditableTableCell, EditableTableHead, EditableTableRow } from './compon
 import { getAccessorColumns } from './utils'
 
 export interface EditableTableProps<T extends object> {
-  tableRef?: React.RefObject<HTMLTableElement>
+  tableRef?: RefObject<HTMLTableElement>
   tabIndex?: number
   data: T[]
   columnDefs: EditableColumnDef<T>[]
@@ -48,6 +48,8 @@ export const EditableTable = <T extends object>(props: EditableTableProps<T>) =>
     getRowClassName
   } = props
 
+  const [highlightedRows, setHighlightedRows] = useState<number[]>([])
+
   const { t } = useTranslation()
 
   const headerGroups = useMemo(() => getHeaderGroups(columnDefs), [columnDefs])
@@ -76,10 +78,30 @@ export const EditableTable = <T extends object>(props: EditableTableProps<T>) =>
                   {index === 0 ? (
                     <EditableTableHead
                       key="line_number"
-                      className="px-3 whitespace-nowrap w-0"
+                      className={cn(
+                        'px-3 whitespace-nowrap w-0',
+                        highlightedRows.length && 'cursor-pointer'
+                      )}
                       rowSpan={headerGroups.length}
+                      onClick={
+                        highlightedRows
+                          ? () => {
+                              setHighlightedRows([])
+                            }
+                          : undefined
+                      }
                     >
-                      №
+                      {highlightedRows.length ? (
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          className="w-full"
+                        >
+                          <Eye className="btn-icon" />
+                        </Button>
+                      ) : (
+                        '№'
+                      )}
                     </EditableTableHead>
                   ) : null}
                   {Array.isArray(headerGroup)
@@ -139,6 +161,16 @@ export const EditableTable = <T extends object>(props: EditableTableProps<T>) =>
                   params={params}
                   validate={validate}
                   getRowClassName={getRowClassName}
+                  highlightedRows={highlightedRows}
+                  onHighlight={(index) => {
+                    setHighlightedRows((prev) => {
+                      if (prev.includes(index)) {
+                        return prev.filter((i) => i !== index)
+                      } else {
+                        return [...prev, index]
+                      }
+                    })
+                  }}
                 />
               )
             })
@@ -197,6 +229,8 @@ interface EditableTableRowRendererProps<T extends object>
   tabIndex?: number
   index: number
   row: T
+  highlightedRows: number[]
+  onHighlight?(index: number): void
 }
 const EditableTableRowRenderer = <T extends object>({
   tabIndex,
@@ -209,17 +243,25 @@ const EditableTableRowRenderer = <T extends object>({
   onChange,
   params,
   validate,
-  getRowClassName
+  getRowClassName,
+  highlightedRows,
+  onHighlight
 }: EditableTableRowRendererProps<T>) => {
   const [state, setState] = useState<Record<string, unknown>>({})
 
   const accessorColumns = useMemo(() => getAccessorColumns(columnDefs), [columnDefs])
 
   return (
-    <EditableTableRow className={getRowClassName?.({ index, row, data })}>
+    <EditableTableRow
+      data-blurred={highlightedRows.length && !highlightedRows.includes(index)}
+      className={getRowClassName?.({ index, row, data })}
+    >
       <EditableTableCell
         key="line_number"
-        className="px-3 font-medium"
+        className="px-3 font-medium cursor-pointer hover:bg-slate-50"
+        onClick={() => {
+          onHighlight?.(index)
+        }}
       >
         {index + 1}
       </EditableTableCell>

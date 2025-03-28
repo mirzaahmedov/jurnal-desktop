@@ -133,9 +133,7 @@ export const GenericTable = <T extends object>(props: GenericTableProps<T>) => {
                       minWidth: actionsWidth,
                       maxWidth: actionsWidth
                     }}
-                  >
-                    {t('actions')}
-                  </GenericTableHead>
+                  ></GenericTableHead>
                 ) : null}
               </GenericTableRow>
             ))
