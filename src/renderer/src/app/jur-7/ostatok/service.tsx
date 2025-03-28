@@ -34,14 +34,12 @@ export interface DeleteOstatokArgs {
   year: number
   month: number
   budjet_id: number
-  main_schet_id: number
 }
 export const deleteOstatokBatchQuery = async ({
   ids,
   year,
   month,
-  budjet_id,
-  main_schet_id
+  budjet_id
 }: DeleteOstatokArgs) => {
   const res = await http.delete(ApiEndpoints.jur7_saldo, {
     data: {
@@ -50,8 +48,7 @@ export const deleteOstatokBatchQuery = async ({
       month
     },
     params: {
-      budjet_id,
-      main_schet_id
+      budjet_id
     }
   })
   return res.data
@@ -64,19 +61,17 @@ export const getOstatokCheck = async (
       {
         month: number
         year: number
-        main_schet_id: number
         budjet_id: number
       },
       string
     ]
   >
 ) => {
-  const { month, year, main_schet_id, budjet_id } = ctx.queryKey[1] ?? {}
+  const { month, year, budjet_id } = ctx.queryKey[1] ?? {}
   const res = await http.get<Response<unknown[]>>(`${ApiEndpoints.jur7_saldo}/check`, {
     params: {
       month,
       year,
-      main_schet_id,
       budjet_id
     }
   })

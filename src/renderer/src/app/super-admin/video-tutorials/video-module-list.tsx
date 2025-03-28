@@ -23,10 +23,15 @@ import { VideoModuleService } from './service'
 import { VideoModuleDialog } from './video-module-dialog'
 
 export interface VideoModuleListProps {
+  readOnly?: boolean
   selectedId: number | null
   onSelect: (selected: VideoModule) => void
 }
-export const VideoModuleList = ({ selectedId, onSelect }: VideoModuleListProps) => {
+export const VideoModuleList = ({
+  readOnly = false,
+  selectedId,
+  onSelect
+}: VideoModuleListProps) => {
   const dialogToggle = useToggle()
   const queryClient = useQueryClient()
 
@@ -88,48 +93,52 @@ export const VideoModuleList = ({ selectedId, onSelect }: VideoModuleListProps) 
               <li
                 key={videoModule.id}
                 className={cn(
-                  'flex items-center gap-3 py-1 px-4 m-1.5 cursor-pointer hover:bg-slate-50 text-slate-600 transition-colors rounded-md',
+                  'flex items-center gap-3 h-11 px-4 m-1.5 cursor-pointer hover:bg-slate-50 text-slate-600 transition-colors rounded-md',
                   selectedId === videoModule.id && 'text-brand bg-brand/5 hover:bg-brand/5'
                 )}
                 onClick={() => onSelect?.(videoModule)}
               >
                 <Play className="size-4" />
                 <span className="text-sm font-semibold flex-1">{videoModule.name}</span>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      disabled={isDeletingVideoModule}
-                    >
-                      <Ellipsis className="btn-icon" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent>
-                    <DropdownMenuItem
-                      className="cursor-pointer text-sm font-medium"
-                      onClick={() => handleClickEdit(videoModule)}
-                    >
-                      <Pencil className="btn-icon" /> {t('edit')}
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      className="cursor-pointer text-red-500 hover:!text-red-500 text-sm font-medium"
-                      onClick={() => handleClickDelete(videoModule)}
-                    >
-                      <Trash2 className="btn-icon" /> {t('delete')}
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+                {readOnly ? null : (
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        disabled={isDeletingVideoModule}
+                      >
+                        <Ellipsis className="btn-icon" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent>
+                      <DropdownMenuItem
+                        className="cursor-pointer text-sm font-medium"
+                        onClick={() => handleClickEdit(videoModule)}
+                      >
+                        <Pencil className="btn-icon" /> {t('edit')}
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        className="cursor-pointer text-red-500 hover:!text-red-500 text-sm font-medium"
+                        onClick={() => handleClickDelete(videoModule)}
+                      >
+                        <Trash2 className="btn-icon" /> {t('delete')}
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                )}
               </li>
             ))
           : null}
       </ul>
-      <div className="p-5 text-center">
-        <Button onClick={handleClickCreate}>
-          {t('add')}
-          <Plus className="btn-icon" />
-        </Button>
-      </div>
+      {readOnly ? null : (
+        <div className="p-5 text-center">
+          <Button onClick={handleClickCreate}>
+            {t('add')}
+            <Plus className="btn-icon" />
+          </Button>
+        </div>
+      )}
       <VideoModuleDialog
         open={dialogToggle.isOpen}
         onOpenChange={dialogToggle.setOpen}

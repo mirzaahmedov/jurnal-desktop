@@ -99,6 +99,13 @@ export const getNavElements = (t: TFunction): NavElement[] => {
       title: t('pages.main'),
       icon: LayoutDashboard
     },
+    !is_super_admin
+      ? {
+          path: '/video-tutorials',
+          title: t('pages.video_tutorials'),
+          icon: FileVideo
+        }
+      : null,
     permissions.kassa
       ? {
           path: '/kassa',

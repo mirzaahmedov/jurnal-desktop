@@ -15,45 +15,49 @@ import { useTranslation } from 'react-i18next'
 import { getVideoURL } from './utils'
 
 export interface VideoCardProps {
+  readOnly?: boolean
   video: Video
   onEdit?: (selected: Video) => void
   onDelete?: (selected: Video) => void
 }
-export const VideoCard = ({ video, onEdit, onDelete }: VideoCardProps) => {
+export const VideoCard = ({ readOnly = false, video, onEdit, onDelete }: VideoCardProps) => {
   const { t } = useTranslation()
 
   return (
     <div className="p-2 space-y-2">
       <VideoPlayer src={getVideoURL({ id: video.id })} />
-      <div className="flex items-start gap-2">
+      <div className="flex items-start gap-4">
+        <h4 className="font-bold text-2xl text-brand h-full align-middle">{video.sort_order}.</h4>
         <div className="spacey-y-1 flex-1">
           <h6 className="font-bold text-sm">{video.name}</h6>
           <p className="mt-0.5 text-sm text-slate-500">{formatLocaleDateTime(video.created_at)}</p>
         </div>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-            >
-              <Ellipsis className="btn-icon" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <DropdownMenuItem
-              className="cursor-pointer text-sm font-medium"
-              onClick={() => onEdit?.(video)}
-            >
-              <Pencil className="btn-icon" /> {t('edit')}
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              className="cursor-pointer text-red-500 hover:!text-red-500 text-sm font-medium"
-              onClick={() => onDelete?.(video)}
-            >
-              <Trash2 className="btn-icon" /> {t('delete')}
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        {readOnly ? null : (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+              >
+                <Ellipsis className="btn-icon" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuItem
+                className="cursor-pointer text-sm font-medium"
+                onClick={() => onEdit?.(video)}
+              >
+                <Pencil className="btn-icon" /> {t('edit')}
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                className="cursor-pointer text-red-500 hover:!text-red-500 text-sm font-medium"
+                onClick={() => onDelete?.(video)}
+              >
+                <Trash2 className="btn-icon" /> {t('delete')}
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
       </div>
     </div>
   )

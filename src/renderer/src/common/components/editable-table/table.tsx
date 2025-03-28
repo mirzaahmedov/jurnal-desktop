@@ -79,7 +79,7 @@ export const EditableTable = <T extends object>(props: EditableTableProps<T>) =>
                     <EditableTableHead
                       key="line_number"
                       className={cn(
-                        'px-3 whitespace-nowrap w-0',
+                        'px-3 whitespace-nowrap w-0 min-w-11',
                         highlightedRows.length && 'cursor-pointer'
                       )}
                       rowSpan={headerGroups.length}

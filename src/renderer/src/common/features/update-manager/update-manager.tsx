@@ -60,6 +60,7 @@ export const UpdateManager = () => {
       ipcRenderer.removeAllListeners(events.download_progress)
       ipcRenderer.removeAllListeners(events.update_downloaded)
       ipcRenderer.removeAllListeners(events.error)
+      ipcRenderer.removeAllListeners(events.update_downloaded_silent)
     }
   }, [])
 

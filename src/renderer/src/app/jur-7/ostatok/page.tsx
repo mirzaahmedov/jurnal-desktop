@@ -84,12 +84,12 @@ const OstatokPage = () => {
   const selectedToggle = useToggle()
   const queryClient = useQueryClient()
   const pagination = usePagination()
+  const budjet_id = useRequisitesStore((store) => store.budjet_id)
   const setLayout = useLayoutStore((store) => store.setLayout)
 
   const { search } = useSearch()
   const { confirm } = useConfirm()
   const { t } = useTranslation(['app'])
-  const { main_schet_id, budjet_id } = useRequisitesStore()
 
   const form = useForm({
     defaultValues
@@ -187,8 +187,7 @@ const OstatokPage = () => {
           })),
           year: selectedDate.getFullYear(),
           month: selectedDate.getMonth() + 1,
-          budjet_id: budjet_id!,
-          main_schet_id: main_schet_id!
+          budjet_id: budjet_id!
         })
       }
     })
@@ -252,7 +251,7 @@ const OstatokPage = () => {
                         url="/jur_7/monitoring/obrotka/report"
                         params={{
                           to: formatDate(selectedDate),
-                          main_schet_id,
+                          budjet_id,
                           excel: true
                         }}
                         buttonText="Оборотка"
@@ -266,7 +265,7 @@ const OstatokPage = () => {
                         url="/jur_7/monitoring/material/report"
                         params={{
                           to: formatDate(selectedDate),
-                          main_schet_id,
+                          budjet_id,
                           excel: true
                         }}
                         buttonText="Материальная"
@@ -316,7 +315,6 @@ const OstatokPage = () => {
               <ImportFile
                 url="/jur_7/saldo/import"
                 params={{
-                  main_schet_id,
                   budjet_id
                 }}
                 onSuccess={() => {

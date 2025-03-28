@@ -5,15 +5,12 @@ import type { TFunction } from 'i18next'
 
 import { useState } from 'react'
 
-import { useQuery } from '@tanstack/react-query'
-import { Pencil, RefreshCw } from 'lucide-react'
+import { Pencil } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
-import { toast } from 'react-toastify'
 
 import InternalDetails from '@/app/jur-7/internal/details/details'
 import PrixodDetails from '@/app/jur-7/prixod/details/details'
 import RasxodDetails from '@/app/jur-7/rasxod/details/details'
-import { mainSchetQueryKeys, mainSchetService } from '@/app/region-spravochnik/main-schet'
 import { Copyable } from '@/common/components'
 import { DataList } from '@/common/components/data-list'
 import {
@@ -28,8 +25,6 @@ import {
 import { Badge } from '@/common/components/ui/badge'
 import { Button } from '@/common/components/ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/common/components/ui/dialog'
-import { RequisitesDialog, useRequisitesStore } from '@/common/features/requisites'
-import { useToggle } from '@/common/hooks'
 import { formatLocaleDate, formatNumber } from '@/common/lib/format'
 
 export interface DeleteExistingDocumentsAlertProps extends DialogProps {
@@ -45,17 +40,9 @@ export const DeleteExistingDocumentsAlert = ({
   onRemove,
   ...props
 }: DeleteExistingDocumentsAlertProps) => {
-  const requisitesDialogToggle = useToggle()
-  const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
-
   const [selected, setSelected] = useState<OstatokDeleteExistingDocument | undefined>()
 
   const { t } = useTranslation()
-
-  const { data: main_schet } = useQuery({
-    queryKey: [mainSchetQueryKeys.getById, main_schet_id],
-    queryFn: mainSchetService.getById
-  })
 
   return (
     <AlertDialog {...props}>
@@ -113,11 +100,7 @@ export const DeleteExistingDocumentsAlert = ({
                     variant="outline"
                     className="justify-self-end"
                     onClick={() => {
-                      if (main_schet_id !== doc.main_schet_id) {
-                        toast.error(t('main_schet_mismatch'))
-                      } else {
-                        setSelected(doc)
-                      }
+                      setSelected(doc)
                     }}
                   >
                     <Pencil className="btn-icon" />
@@ -172,28 +155,6 @@ export const DeleteExistingDocumentsAlert = ({
         </Dialog>
 
         <AlertDialogFooter className="items-end">
-          <div className="flex items-center flex-1">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={requisitesDialogToggle.open}
-            >
-              <RefreshCw />
-            </Button>
-
-            <div className="flex flex-col gap-0.5 cursor-pointer">
-              <p className="text-xs font-medium text-slate-500">{t('main-schet')}</p>
-              <p className="text-base font-semibold">
-                {[main_schet?.data?.account_number].filter((value) => !!value).join(' - ')}
-              </p>
-            </div>
-
-            <RequisitesDialog
-              open={requisitesDialogToggle.isOpen}
-              onOpenChange={requisitesDialogToggle.setOpen}
-            />
-          </div>
-
           <AlertDialogCancel>{t('close')}</AlertDialogCancel>
           <AlertDialogAction
             onClick={() => {

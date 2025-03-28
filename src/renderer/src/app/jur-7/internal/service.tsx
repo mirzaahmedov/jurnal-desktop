@@ -4,13 +4,13 @@ import type { Internal } from '@/common/models'
 import { useMutation, useQuery } from '@tanstack/react-query'
 
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
-import { main_schet } from '@/common/features/crud/middleware'
+import { budjet } from '@/common/features/crud/middleware'
 
 import { internalQueryKeys } from './config'
 
 export const internalService = new CRUDService<Internal, InternalFormValues>({
   endpoint: ApiEndpoints.jur7_internal
-}).use(main_schet())
+}).use(budjet())
 
 export const useInternalGet = (id: number) => {
   return useQuery({

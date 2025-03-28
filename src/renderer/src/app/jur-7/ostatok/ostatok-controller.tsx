@@ -19,16 +19,16 @@ import { useOstatokStore } from './store'
 
 export const OstatokController = () => {
   const queryClient = useQueryClient()
+  const budjet_id = useRequisitesStore((store) => store.budjet_id)
 
   const { t } = useTranslation()
   const { minDate, setDate, dequeueMonth } = useOstatokStore()
-  const { main_schet_id, budjet_id } = useRequisitesStore()
   const { values, setValues } = useLocationStore()
   const { setElementRef } = useBoundingClientRect()
 
   const { pathname } = useLocation()
 
-  const enabled = !!main_schet_id && !!budjet_id && pathname.includes('journal-7')
+  const enabled = !!budjet_id && pathname.includes('journal-7')
 
   const {
     data: checkResult,
@@ -40,7 +40,6 @@ export const OstatokController = () => {
       {
         year: minDate.getFullYear(),
         month: minDate.getMonth() + 1,
-        main_schet_id: main_schet_id!,
         budjet_id: budjet_id!
       },
       pathname

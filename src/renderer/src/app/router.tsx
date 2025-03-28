@@ -17,7 +17,8 @@ import PodotchetOstatokDetailsPage from './podotchet/ostatok/details/page'
 import PodotchetOstatokPage from './podotchet/ostatok/page'
 import SigninPage from './sign-in'
 
-const VideoTutorialsPage = lazy(() => import('./super-admin/video-tutorials/page'))
+const AdminVideoTutorialsPage = lazy(() => import('./super-admin/video-tutorials/page'))
+const VideoTutorialsPage = lazy(() => import('./video-tutorials/page'))
 
 const AdminOstatokPage = lazy(() => import('./super-admin/ostatok/page'))
 const ZarplataSpravochnikPage = lazy(() => import('./super-admin/zarplata/spravochnik/page'))
@@ -292,7 +293,7 @@ export const routes: RouteObject[] = [
           },
           {
             path: 'video-tutorials',
-            element: <VideoTutorialsPage />
+            element: <AdminVideoTutorialsPage />
           },
           {
             path: 'ostatok',
@@ -517,6 +518,10 @@ export const routes: RouteObject[] = [
       {
         path: 'region/dashboard',
         element: <DashboardPage />
+      },
+      {
+        path: 'video-tutorials',
+        element: <VideoTutorialsPage />
       },
       {
         path: 'demo',
