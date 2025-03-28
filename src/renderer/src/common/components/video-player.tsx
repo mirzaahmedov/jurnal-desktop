@@ -1,6 +1,13 @@
 import type { DetailedHTMLProps, HTMLAttributes, SourceHTMLAttributes } from 'react'
 
-import { BigPlayButton, Player } from 'video-react'
+import {
+  BigPlayButton,
+  ControlBar,
+  ForwardControl,
+  PlayToggle,
+  Player,
+  ReplayControl
+} from 'video-react'
 
 import { cn } from '../lib/utils'
 
@@ -23,6 +30,11 @@ export const VideoPlayer = ({ sourceProps, src, className, ...props }: VideoPlay
           src={src}
         />
         <BigPlayButton position="center" />
+        <ControlBar>
+          <PlayToggle />
+          <ReplayControl seconds={5} />
+          <ForwardControl seconds={5} />
+        </ControlBar>
       </Player>
     </div>
   )

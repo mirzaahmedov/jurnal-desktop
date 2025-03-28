@@ -207,8 +207,8 @@ const MainbookDetailsPage = () => {
           onSubmit={onSubmit}
           className="h-full"
         >
-          <div className="relative h-full flex flex-col gap-5">
-            <div className="flex items-center justify-between gap-5 p-5">
+          <div className="relative h-full flex flex-col">
+            <div className="flex items-center justify-between gap-5 p-5 border-b">
               <MonthPicker
                 value={date}
                 onChange={(value) => {
@@ -238,7 +238,7 @@ const MainbookDetailsPage = () => {
                   cn(
                     '[&_input]:p-1 ',
                     index === (data?.length ?? 0) - 1 &&
-                      '[&_input]:font-bold sticky bottom-0 z-50 shadow !blur-none'
+                      '[&_input]:font-bold sticky bottom-0 z-50 shadow-sm-up'
                   )
                 }
               />

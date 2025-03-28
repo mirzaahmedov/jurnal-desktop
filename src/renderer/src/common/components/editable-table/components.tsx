@@ -47,7 +47,7 @@ export const EditableTableRow = ({
   return (
     <TableRow
       {...props}
-      className={cn('group/row data-[blurred=true]:blur-sm hover:bg-white', className)}
+      className={cn('group/row hover:bg-white', className)}
     >
       {children}
     </TableRow>

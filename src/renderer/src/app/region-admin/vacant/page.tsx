@@ -14,8 +14,8 @@ import {
 import { useAuthenticationStore } from '@renderer/common/features/auth'
 import { useLayoutStore } from '@renderer/common/features/layout'
 import {
-  type ReletionTreeNode,
-  arrayToTreeByReletions
+  type RelationTreeNode,
+  arrayToTreeByRelations
 } from '@renderer/common/lib/tree/relation-tree'
 import { cn } from '@renderer/common/lib/utils'
 import { useMutation, useQuery } from '@tanstack/react-query'
@@ -28,11 +28,12 @@ import { regionUserKeys } from '../region-user/constants'
 import { columnDefs } from './columns'
 import { vacantQueryKeys } from './config'
 import { createVacantGrantQuery, getUserVacantIdsQuery, getVacantListQuery } from './service'
+import { VacantTree } from './vacant-tree'
 
-type VacantTreeNode = ReletionTreeNode<Vacant, number | null>
+type VacantTreeNode = RelationTreeNode<Vacant, number | null>
 
 const VacantPage = () => {
-  const authUserId = useAuthenticationStore((store) => store.user?.id)
+  const userOwnId = useAuthenticationStore((store) => store.user?.id)
   const setLayout = useLayoutStore((store) => store.setLayout)
 
   const [userId, setUserId] = useState<number>()
@@ -70,9 +71,9 @@ const VacantPage = () => {
   })
 
   const { data: vacants, isFetching: isFetchingVacants } = useQuery({
-    queryKey: [vacantQueryKeys.getAll, { userId: authUserId! }],
+    queryKey: [vacantQueryKeys.getAll, { userId: userOwnId! }],
     queryFn: getVacantListQuery,
-    enabled: !!userId
+    enabled: !!userId && !!userOwnId
   })
 
   useEffect(() => {
@@ -93,9 +94,9 @@ const VacantPage = () => {
     setSelectedIds(Array.isArray(userVacants) ? userVacants : [])
   }, [userVacants])
 
-  const vacantsTree = useMemo(
+  const treeData = useMemo(
     () =>
-      arrayToTreeByReletions({
+      arrayToTreeByRelations({
         array: vacants?.data ?? [],
         getId: (node) => node.id,
         getParentId: (node) => node.parentId
@@ -177,16 +178,13 @@ const VacantPage = () => {
                 {t('selected_elements')}
               </div>
             </div>
-            <ul className="divide-y mt-2">
-              {vacantsTree.map((item) => (
-                <TreeNode
-                  key={item.id}
-                  vacant={item}
-                  selectedIds={selectedIds}
-                  onSelect={handleSelectNode}
-                />
-              ))}
-            </ul>
+            <div className="mt-2">
+              <VacantTree
+                data={treeData}
+                onSelectNode={handleSelectNode}
+                selectedIds={selectedIds}
+              />
+            </div>
           </div>
         ) : (
           <div className="flex flex-col gap-5 items-center justify-center mt-72 flex-1">

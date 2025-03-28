@@ -19,7 +19,7 @@ import { useNavigate } from 'react-router-dom'
 
 import { rasxodColumns } from './columns'
 import { queryKeys } from './constants'
-import { bankRasxodService } from './service'
+import { RasxodService } from './service'
 
 const BankRasxodPage = () => {
   const { confirm } = useConfirm()
@@ -44,11 +44,11 @@ const BankRasxodPage = () => {
         ...pagination
       }
     ],
-    queryFn: bankRasxodService.getAll
+    queryFn: RasxodService.getAll
   })
   const { mutate: deleteMutation, isPending } = useMutation({
     mutationKey: [queryKeys.delete],
-    mutationFn: bankRasxodService.delete,
+    mutationFn: RasxodService.delete,
     onSuccess() {
       queryClient.invalidateQueries({
         queryKey: [queryKeys.getAll]
@@ -84,8 +84,15 @@ const BankRasxodPage = () => {
 
   return (
     <ListView>
-      <ListView.Header>
+      <ListView.Header className="gap-5">
         <ListView.RangeDatePicker {...dates} />
+        <Button
+          onClick={() => {
+            navigate('import-zarplata')
+          }}
+        >
+          import zarplata
+        </Button>
       </ListView.Header>
       <ListView.Content loading={isFetching || isPending}>
         <GenericTable

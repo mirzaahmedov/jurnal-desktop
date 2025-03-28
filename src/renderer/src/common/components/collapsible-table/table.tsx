@@ -32,7 +32,7 @@ export type CollapsibleTableProps<T extends object, C extends object> = {
   getRowId: (row: T) => number | string
   getChildRows: (row: T) => C[] | undefined
   getRowSelected?: GetRowSelectedFn<T>
-  renderChildRows?: (rows: NoInfer<C>[]) => ReactNode
+  renderChildRows?: (rows: NoInfer<C>[], row: T) => ReactNode
   onClickRow?: (row: T) => void
   onEdit?: (row: T) => void
   onDelete?: (row: T) => void
@@ -61,7 +61,7 @@ export const CollapsibleTable = <T extends object, C extends object = T>({
       className={className}
     >
       {displayHeader ? (
-        <TableHeader className="sticky top-0 z-50">
+        <TableHeader className="sticky top-0 z-50 shadow-sm">
           <GenericTableRow className="bg-slate-100 hover:bg-slate-100 border-t border-slate-200">
             {columnDefs.map((col) => {
               const { key, header, fit, stretch, numeric, headerClassName, width, renderHeader } =
@@ -239,28 +239,36 @@ const CollapsibleItem = <T extends object, C extends object>({
                 fit={fit}
                 stretch={stretch}
                 numeric={numeric}
-                className={cn('font-bold', index === 0 && 'flex items-center', col.className)}
+                className={cn('font-bold', col.className)}
                 style={{ width }}
               >
-                {index === 0 && (
-                  <CollapsibleTrigger
-                    asChild
-                    onClick={(e) => {
-                      e.stopPropagation()
-                    }}
-                  >
-                    <Button
-                      size="icon"
-                      variant="outline"
-                      className="size-6 align-middle mr-4"
+                {index === 0 ? (
+                  <div className="flex items-center">
+                    <CollapsibleTrigger
+                      asChild
+                      onClick={(e) => {
+                        e.stopPropagation()
+                      }}
                     >
-                      <CaretDownIcon className="btn-icon !size-3.5 !ml-0" />
-                    </Button>
-                  </CollapsibleTrigger>
+                      <Button
+                        size="icon"
+                        variant="outline"
+                        className="flex-shrink-0 size-6 align-middle mr-4"
+                      >
+                        <CaretDownIcon className="btn-icon !size-3.5 !ml-0" />
+                      </Button>
+                    </CollapsibleTrigger>
+                    {typeof renderCell === 'function'
+                      ? renderCell(row, col, tableProps)
+                      : String(row?.[col?.key as keyof T] ?? '')}
+                  </div>
+                ) : (
+                  <>
+                    {typeof renderCell === 'function'
+                      ? renderCell(row, col, tableProps)
+                      : String(row?.[col?.key as keyof T] ?? '')}
+                  </>
                 )}
-                {typeof renderCell === 'function'
-                  ? renderCell(row, col, tableProps)
-                  : String(row?.[col?.key as keyof T] ?? '')}
               </GenericTableCell>
             )
           })}
@@ -303,7 +311,7 @@ const CollapsibleItem = <T extends object, C extends object>({
               className="p-0 bg-white"
             >
               {typeof renderChildRows === 'function' ? (
-                renderChildRows(getChildRows(row)!)
+                renderChildRows(getChildRows(row)!, row)
               ) : (
                 <div
                   className="pl-14"

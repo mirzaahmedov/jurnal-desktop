@@ -1,10 +1,10 @@
-export type ReletionTreeNode<T, I> = T & {
-  children: ReletionTreeNode<T, I>[]
+export type RelationTreeNode<T, I> = T & {
+  children: RelationTreeNode<T, I>[]
   path: I[]
-  parents: ReletionTreeNode<T, I>[]
+  parents: RelationTreeNode<T, I>[]
 }
 
-export type PreprocessFn = <T, I>(arrays: ReletionTreeNode<T, I>[]) => ReletionTreeNode<T, I>[]
+export type PreprocessFn = <T, I>(arrays: RelationTreeNode<T, I>[]) => RelationTreeNode<T, I>[]
 
 export interface ArrayToTreeByRelationsArgs<T, I> {
   array: T[]
@@ -12,7 +12,7 @@ export interface ArrayToTreeByRelationsArgs<T, I> {
   getParentId: (item: T) => I
   preprocessors?: PreprocessFn[]
 }
-export const arrayToTreeByReletions = <T extends object, I = unknown>({
+export const arrayToTreeByRelations = <T extends object, I = unknown>({
   array,
   getId,
   getParentId,
@@ -29,7 +29,7 @@ export const arrayToTreeByReletions = <T extends object, I = unknown>({
         children: [],
         path: [],
         parents: []
-      }) as ReletionTreeNode<T, I>
+      }) as RelationTreeNode<T, I>
   )
 
   preprocessors.forEach((fn) => {

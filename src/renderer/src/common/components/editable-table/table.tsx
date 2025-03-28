@@ -7,7 +7,7 @@ import { type ReactNode, type RefObject, useMemo, useState } from 'react'
 import { Button } from '@renderer/common/components/ui/button'
 import { Table, TableBody, TableFooter, TableHeader } from '@renderer/common/components/ui/table'
 import { cn } from '@renderer/common/lib/utils'
-import { CircleMinus, CirclePlus, Eye } from 'lucide-react'
+import { CircleMinus, CirclePlus, SquareMinus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { EmptyList } from '../empty-states'
@@ -71,7 +71,7 @@ export const EditableTable = <T extends object>(props: EditableTableProps<T>) =>
         ref={tableRef}
         className={cn('border border-slate-200', className)}
       >
-        <TableHeader className="sticky top-0 z-50">
+        <TableHeader className="sticky top-0 z-50 shadow-sm">
           {Array.isArray(columnDefs)
             ? headerGroups.map((headerGroup, index) => (
                 <EditableTableRow key={index}>
@@ -97,11 +97,9 @@ export const EditableTable = <T extends object>(props: EditableTableProps<T>) =>
                           variant="ghost"
                           className="w-full"
                         >
-                          <Eye className="btn-icon" />
+                          <SquareMinus className="btn-icon" />
                         </Button>
-                      ) : (
-                        '№'
-                      )}
+                      ) : null}
                     </EditableTableHead>
                   ) : null}
                   {Array.isArray(headerGroup)
@@ -253,12 +251,12 @@ const EditableTableRowRenderer = <T extends object>({
 
   return (
     <EditableTableRow
-      data-blurred={highlightedRows.length && !highlightedRows.includes(index)}
+      data-highlighted={highlightedRows.includes(index)}
       className={getRowClassName?.({ index, row, data })}
     >
       <EditableTableCell
         key="line_number"
-        className="px-3 font-medium cursor-pointer hover:bg-slate-50"
+        className="px-3 font-medium cursor-pointer hover:bg-slate-50 group-data-[highlighted=true]/row:bg-brand/10 group-data-[highlighted=true]/row:border-brand/20"
         onClick={() => {
           onHighlight?.(index)
         }}
@@ -272,7 +270,10 @@ const EditableTableRowRenderer = <T extends object>({
               <EditableTableCell
                 key={String(key)}
                 style={{ width, minWidth, maxWidth }}
-                className={className}
+                className={cn(
+                  'group-data-[highlighted=true]/row:bg-brand/10 group-data-[highlighted=true]/row:border-brand/20',
+                  className
+                )}
               >
                 <Editor
                   tabIndex={tabIndex}

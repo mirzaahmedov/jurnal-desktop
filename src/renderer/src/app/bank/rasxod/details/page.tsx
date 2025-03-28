@@ -44,7 +44,7 @@ import {
 
 import { bankMonitorQueryKeys, bankMonitorService } from '../../monitor'
 import { defaultValues, queryKeys } from '../constants'
-import { RasxodFormSchema, RasxodPodvodkaFormSchema, bankRasxodService } from '../service'
+import { RasxodFormSchema, RasxodPodvodkaFormSchema, RasxodService } from '../service'
 import { podvodkaColumns } from './podvodki'
 import { PorucheniyaDropdown } from './porucheniya-dropdown'
 
@@ -140,11 +140,11 @@ const BankRasxodDetailtsPage = () => {
         main_schet_id
       }
     ],
-    queryFn: bankRasxodService.getById,
+    queryFn: RasxodService.getById,
     enabled: params.id !== 'create'
   })
   const { mutate: create, isPending: isCreating } = useMutation({
-    mutationFn: bankRasxodService.create,
+    mutationFn: RasxodService.create,
     onSuccess(response) {
       form.reset(defaultValues)
       toast.success(response?.message ?? t('action-successful'))
@@ -161,7 +161,7 @@ const BankRasxodDetailtsPage = () => {
     }
   })
   const { mutate: update, isPending: isUpdating } = useMutation({
-    mutationFn: bankRasxodService.update,
+    mutationFn: RasxodService.update,
     onSuccess(response) {
       navigate(-1)
       toast.success(response?.message ?? t('action-successful'))

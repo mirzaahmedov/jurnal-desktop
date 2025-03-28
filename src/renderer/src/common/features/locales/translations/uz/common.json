@@ -288,5 +288,7 @@
   "main_schet_mismatch": "Ushbu ma’lumot boshqa asosiy hisobga tegishli. To‘g‘ri hisobni tanlang.",
   "sort_order": "Tartib raqami",
   "file_is_required": "Faylni tanlashing kerak.",
-  "video": "Video"
+  "video": "Video",
+  "maximize": "Kattalashtirish",
+  "minimize": "Kichiklashtirish"
 }

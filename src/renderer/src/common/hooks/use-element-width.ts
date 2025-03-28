@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
 
 export interface UseElementWidthParams {
-  trigger: boolean
+  trigger?: boolean
 }
-export const useElementWidth = ({ trigger }: UseElementWidthParams) => {
+export const useElementWidth = ({ trigger }: UseElementWidthParams = { trigger: false }) => {
   const [width, setWidth] = useState<number>()
   const [elementRef, setElementRef] = useState<HTMLElement | null>(null)
 

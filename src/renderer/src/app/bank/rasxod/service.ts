@@ -5,7 +5,7 @@ import { main_schet } from '@renderer/common/features/crud/middleware'
 import { withPreprocessor } from '@renderer/common/lib/validation'
 import { z } from 'zod'
 
-export const bankRasxodService = new CRUDService<
+export const RasxodService = new CRUDService<
   BankRasxod,
   RasxodFormValues,
   RasxodFormValues,

@@ -119,6 +119,7 @@ export const VideoDialog = ({ open, onOpenChange, selected, moduleId }: VideoDia
   useEffect(() => {
     if (!open) {
       setFile(null)
+      setEditingFile(false)
       form.reset(defaultValues)
     }
   }, [open, onOpenChange, form])
