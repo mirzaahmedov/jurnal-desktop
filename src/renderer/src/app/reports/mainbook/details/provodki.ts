@@ -2,7 +2,7 @@ import type { EditableColumnDef } from '@renderer/common/components/editable-tab
 
 import { createTextEditor } from '@renderer/common/components/editable-table/editors'
 
-interface ProvodkaRow {
+export interface ProvodkaRow {
   schet: string
 }
 

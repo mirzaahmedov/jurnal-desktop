@@ -1,26 +1,23 @@
-import type { EditableColumnDef } from '@renderer/common/components/editable-table'
-
 import { useEffect, useMemo } from 'react'
 
-import { EditableTable } from '@renderer/common/components/editable-table'
-import { createNumberEditor } from '@renderer/common/components/editable-table/editors'
-import { MonthPicker } from '@renderer/common/components/month-picker'
-import { Button } from '@renderer/common/components/ui/button'
-import { useConfirm } from '@renderer/common/features/confirm'
-import { useLayoutStore } from '@renderer/common/features/layout'
-import { formatDate } from '@renderer/common/lib/date'
-import { MainbookStatus } from '@renderer/common/models'
-import { DetailsView } from '@renderer/common/views'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
-import { transformGetByIdData } from '@/app/reports/mainbook/details/utils'
+import { MainbookTable } from '@/app/reports/mainbook/details/mainbook-table'
+import { provodkiColumns } from '@/app/reports/mainbook/details/provodki'
+import { getMainbookColumns, transformGetByIdData } from '@/app/reports/mainbook/details/utils'
+import { MonthPicker } from '@/common/components/month-picker'
+import { Button } from '@/common/components/ui/button'
+import { useConfirm } from '@/common/features/confirm'
+import { useLayoutStore } from '@/common/features/layout'
+import { formatDate } from '@/common/lib/date'
+import { MainbookStatus } from '@/common/models'
+import { DetailsView } from '@/common/views'
 
 import { mainbookQueryKeys } from '../config'
 import { adminMainbookService } from '../service'
-import { provodkiColumns } from './provodki'
 import { getMainbookTypes } from './service'
 
 const AdminMainbookDetailsPage = () => {
@@ -68,45 +65,7 @@ const AdminMainbookDetailsPage = () => {
   }, [setLayout, navigate, t, id])
 
   const columns = useMemo(
-    () => [
-      ...provodkiColumns,
-      ...(types?.data?.flatMap((type) => {
-        const jurNum = type.name.match(/\d+/)?.[0]
-        return [
-          {
-            key: type.id,
-            header: jurNum ? t('mainbook.mo-nth', { nth: jurNum }) : t(`mainbook.${type.name}`),
-            headerClassName: 'text-center',
-            columns: [
-              {
-                key: `${type.id}_prixod`,
-                width: 150,
-                minWidth: 150,
-                header: t('prixod'),
-                headerClassName: 'text-center',
-                Editor: createNumberEditor({
-                  key: `${type.id}_prixod`,
-                  readOnly: true,
-                  defaultValue: 0
-                })
-              },
-              {
-                key: `${type.id}_rasxod`,
-                width: 150,
-                minWidth: 150,
-                header: t('rasxod'),
-                headerClassName: 'text-center',
-                Editor: createNumberEditor({
-                  key: `${type.id}_rasxod`,
-                  readOnly: true,
-                  defaultValue: 0
-                })
-              }
-            ]
-          }
-        ] as EditableColumnDef<any>[]
-      }) ?? [])
-    ],
+    () => [...provodkiColumns, ...getMainbookColumns(types?.data ?? [])],
     [types]
   )
 
@@ -141,8 +100,8 @@ const AdminMainbookDetailsPage = () => {
         loading={isFetching || isFetchingTypes || isUpdatingMainbook}
         className="h-full pb-20 overflow-hidden"
       >
-        <div className="h-full flex flex-col gap-5 p-5">
-          <div className="flex items-center justify-between gap-5">
+        <div className="h-full flex flex-col">
+          <div className="flex items-center justify-between gap-5 p-5 border-b">
             <MonthPicker
               disabled
               value={
@@ -151,15 +110,13 @@ const AdminMainbookDetailsPage = () => {
                   : formatDate(new Date())
               }
               onChange={() => {}}
+              className="disabled:opacity-100"
             />
           </div>
           <div className="relative flex-1 overflow-auto scrollbar">
-            <EditableTable
-              columnDefs={columns}
+            <MainbookTable
+              columns={columns}
               data={data}
-              getRowClassName={({ index, data }) =>
-                index === (data?.length ?? 0) - 1 ? '[&_input]:font-bold' : ''
-              }
             />
           </div>
         </div>

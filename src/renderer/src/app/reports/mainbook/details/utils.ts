@@ -1,6 +1,8 @@
-import type { MainbookAutoFill, MainbookAutoFillSubChild } from './service'
+import type { MainbookAutoFill, MainbookAutoFillSubChild, MainbookType } from './service'
+import type { EditableColumnDef } from '@renderer/common/components/editable-table'
 import type { Mainbook } from '@renderer/common/models'
 
+import { createNumberEditor } from '@renderer/common/components/editable-table/editors'
 import { t } from 'i18next'
 
 export const transformMainbookAutoFillData = (types: MainbookAutoFill[]) => {
@@ -72,4 +74,45 @@ export const transformGetByIdData = (types: Mainbook['childs']) => {
   })
 
   return rows
+}
+
+export const getMainbookColumns = (types: MainbookType[]) => {
+  return (
+    types?.flatMap((type) => {
+      const jurNum = type.name.match(/\d+/)?.[0]
+      return [
+        {
+          key: type.id,
+          header: jurNum ? t('mainbook.mo-nth', { nth: jurNum }) : t(`mainbook.${type.name}`),
+          headerClassName: 'text-center',
+          columns: [
+            {
+              key: `${type.id}_prixod`,
+              width: 120,
+              minWidth: 120,
+              header: t('prixod'),
+              headerClassName: 'text-center',
+              Editor: createNumberEditor({
+                key: `${type.id}_prixod`,
+                readOnly: true,
+                defaultValue: 0
+              })
+            },
+            {
+              key: `${type.id}_rasxod`,
+              width: 120,
+              minWidth: 120,
+              header: t('rasxod'),
+              headerClassName: 'text-center',
+              Editor: createNumberEditor({
+                key: `${type.id}_rasxod`,
+                readOnly: true,
+                defaultValue: 0
+              })
+            }
+          ]
+        }
+      ] as EditableColumnDef<any>[]
+    }) ?? []
+  )
 }

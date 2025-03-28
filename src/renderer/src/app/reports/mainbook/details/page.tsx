@@ -1,14 +1,9 @@
-import type { EditableColumnDef } from '@renderer/common/components/editable-table/interface'
-
 import { useEffect, useMemo } from 'react'
 
-import { EditableTable } from '@renderer/common/components/editable-table'
-import { createNumberEditor } from '@renderer/common/components/editable-table/editors'
 import { MonthPicker } from '@renderer/common/components/month-picker'
 import { Button } from '@renderer/common/components/ui/button'
 import { useLayoutStore } from '@renderer/common/features/layout'
 import { formatDate } from '@renderer/common/lib/date'
-import { cn } from '@renderer/common/lib/utils'
 import { DetailsView } from '@renderer/common/views'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
@@ -19,9 +14,10 @@ import { toast } from 'react-toastify'
 import { mainbookQueryKeys } from '../config'
 import { mainbookService } from '../service'
 import { defaultValues } from './config'
+import { MainbookTable } from './mainbook-table'
 import { provodkiColumns } from './provodki'
 import { type MainbookAutoFillSubChild, autoFillMainbookData, getMainbookTypes } from './service'
-import { transformGetByIdData, transformMainbookAutoFillData } from './utils'
+import { getMainbookColumns, transformGetByIdData, transformMainbookAutoFillData } from './utils'
 
 const MainbookDetailsPage = () => {
   const navigate = useNavigate()
@@ -116,45 +112,7 @@ const MainbookDetailsPage = () => {
   }, [id, year, month])
 
   const columns = useMemo(
-    () => [
-      ...provodkiColumns,
-      ...(types?.data?.flatMap((type) => {
-        const jurNum = type.name.match(/\d+/)?.[0]
-        return [
-          {
-            key: type.id,
-            header: jurNum ? t('mainbook.mo-nth', { nth: jurNum }) : t(`mainbook.${type.name}`),
-            headerClassName: 'text-center',
-            columns: [
-              {
-                key: `${type.id}_prixod`,
-                width: 120,
-                minWidth: 120,
-                header: t('prixod'),
-                headerClassName: 'text-center',
-                Editor: createNumberEditor({
-                  key: `${type.id}_prixod`,
-                  readOnly: true,
-                  defaultValue: 0
-                })
-              },
-              {
-                key: `${type.id}_rasxod`,
-                width: 120,
-                minWidth: 120,
-                header: t('rasxod'),
-                headerClassName: 'text-center',
-                Editor: createNumberEditor({
-                  key: `${type.id}_rasxod`,
-                  readOnly: true,
-                  defaultValue: 0
-                })
-              }
-            ]
-          }
-        ] as EditableColumnDef<any>[]
-      }) ?? [])
-    ],
+    () => [...provodkiColumns, ...getMainbookColumns(types?.data ?? [])],
     [types]
   )
 
@@ -231,16 +189,9 @@ const MainbookDetailsPage = () => {
               ) : null}
             </div>
             <div className="overflow-auto scrollbar flex-1 relative">
-              <EditableTable
-                columnDefs={columns}
+              <MainbookTable
+                columns={columns}
                 data={form.watch('childs')}
-                getRowClassName={({ index, data }) =>
-                  cn(
-                    '[&_input]:p-1 ',
-                    index === (data?.length ?? 0) - 1 &&
-                      '[&_input]:font-bold sticky bottom-0 z-50 shadow-sm-up'
-                  )
-                }
               />
             </div>
           </div>
