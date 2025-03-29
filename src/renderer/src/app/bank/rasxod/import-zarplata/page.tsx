@@ -8,10 +8,12 @@ import { GenericTable, LoadingOverlay } from '@renderer/common/components'
 import { CollapsibleTable } from '@renderer/common/components/collapsible-table'
 import { Button } from '@renderer/common/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@renderer/common/components/ui/tabs'
+import { useRequisitesStore } from '@renderer/common/features/requisites'
 import { arrayToTreeByRelations } from '@renderer/common/lib/tree/relation-tree'
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { X } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+import { toast } from 'react-toastify'
 
 import { VacantTree } from '@/app/region-admin/vacant/vacant-tree'
 import { Drawer, DrawerClose, DrawerContent, DrawerHeader } from '@/common/components/ui/drawer'
@@ -27,7 +29,7 @@ import {
   uderjanieProvodkaColumns
 } from './columns'
 import { NachislenieQueryKeys, UderjanieQueryKeys, uderjanieTypes } from './config'
-import { NachislenieService, UderjanieService } from './service'
+import { BankRasxodImportService, NachislenieService, UderjanieService } from './service'
 
 enum TabOption {
   Uderjanie = 'uderjanie',
@@ -37,6 +39,7 @@ enum TabOption {
 const ImportZarplataPage = () => {
   const userOwnId = useAuthenticationStore((store) => store.user?.id)
   const setLayout = useLayoutStore((store) => store.setLayout)
+  const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
 
   const [vacantId, setVacantId] = useState<number>()
   const [tabValue, setTabValue] = useState<TabOption>(TabOption.Uderjanie)
@@ -70,6 +73,13 @@ const ImportZarplataPage = () => {
     ],
     queryFn: UderjanieService.getAliment,
     enabled: !!userOwnId && !!selectedRow
+  })
+
+  const { mutate: importZarplata, isPending: isImportingZarplata } = useMutation({
+    mutationFn: BankRasxodImportService.importZarplata,
+    onSuccess: (res) => {
+      toast.success(res?.message)
+    }
   })
 
   useEffect(() => {
@@ -206,6 +216,26 @@ const ImportZarplataPage = () => {
                 />
               </div>
             </TabsContent>
+            {tabValue === TabOption.Aliment ? (
+              <div className="p-5">
+                <Button
+                  type="button"
+                  loading={isImportingZarplata}
+                  disabled={isImportingZarplata || !main_schet_id || !aliment}
+                  onClick={() => {
+                    if (!main_schet_id || !aliment) {
+                      return
+                    }
+                    importZarplata({
+                      main_schet_id: main_schet_id!,
+                      data: aliment
+                    })
+                  }}
+                >
+                  {t('send')}
+                </Button>
+              </div>
+            ) : null}
           </Tabs>
         </DrawerContent>
       </Drawer>

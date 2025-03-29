@@ -195,11 +195,11 @@ export const uderjanieDopOplataProvodkaColumns: ColumnDef<UderjanieDopOplataProv
 
 export const uderjanieAlimentColumns: ColumnDef<UderjanieAliment>[] = [
   {
+    key: 'opisanie'
+  },
+  {
     numeric: true,
     key: 'summa',
     minWidth: 200
-  },
-  {
-    key: 'opisanie'
   }
 ]

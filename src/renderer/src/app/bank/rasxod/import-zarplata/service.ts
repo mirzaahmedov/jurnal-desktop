@@ -1,5 +1,8 @@
-import type { Nachislenie, Uderjanie, UderjanieAliment } from '@/common/models'
+import type { Nachislenie, Response, Uderjanie, UderjanieAliment } from '@/common/models'
 import type { QueryFunctionContext } from '@tanstack/react-query'
+
+import { ApiEndpoints } from '@renderer/common/features/crud'
+import { http } from '@renderer/common/lib/http'
 
 import { zarplataApi } from '@/common/lib/zarplata'
 
@@ -41,6 +44,22 @@ export class UderjanieService {
       {
         params: {
           tabelDocNum
+        }
+      }
+    )
+    return res.data
+  }
+}
+
+export class BankRasxodImportService {
+  static async importZarplata(args: { data: UderjanieAliment[]; main_schet_id: number }) {
+    const { data, main_schet_id } = args
+    const res = await http.post<Response<unknown>>(
+      `${ApiEndpoints.bank_rasxod}/import`,
+      { docs: data },
+      {
+        params: {
+          main_schet_id
         }
       }
     )
