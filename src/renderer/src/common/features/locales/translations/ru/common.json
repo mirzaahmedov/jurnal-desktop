@@ -291,5 +291,16 @@
   "file_is_required": "Необходимо выбрать файл.",
   "video": "Видео",
   "maximize": "Развернуть",
-  "minimize": "Свернуть"
+  "minimize": "Свернуть",
+  "nachislenie": "Начисления",
+  "uderjanie": "Удержания",
+  "doplata": "Доплата",
+  "aliment": "Алимент",
+  "na_ruki": "На руки",
+  "kartochka": "На карточку",
+  "zvanie": "Звание",
+  "foiz": "Процент",
+  "razmer": "Размер",
+  "vid_uderjanie": "Вид удержание",
+  "import_zarplata": "Импорт из Зарплаты"
 }

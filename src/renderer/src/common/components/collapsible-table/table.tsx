@@ -30,6 +30,7 @@ export type CollapsibleTableProps<T extends object, C extends object> = {
   className?: string
   params?: Record<string, unknown>
   getRowId: (row: T) => number | string
+  getRowKey?: (row: T, rowIndex: number) => string | number
   getChildRows: (row: T) => C[] | undefined
   getRowSelected?: GetRowSelectedFn<T>
   renderChildRows?: (rows: NoInfer<C>[], row: T) => ReactNode
@@ -47,6 +48,7 @@ export const CollapsibleTable = <T extends object, C extends object = T>({
   className,
   params,
   getRowId,
+  getRowKey,
   getRowSelected,
   getChildRows,
   renderChildRows,
@@ -99,9 +101,9 @@ export const CollapsibleTable = <T extends object, C extends object = T>({
 
       <TableBody>
         {Array.isArray(data) && data.length ? (
-          data.map((row) => (
+          data.map((row, rowIndex) => (
             <CollapsibleItem
-              key={getRowId(row)}
+              key={getRowKey ? getRowKey(row, rowIndex) : getRowId(row)}
               row={row}
               tableProps={{
                 columnDefs,
@@ -110,6 +112,7 @@ export const CollapsibleTable = <T extends object, C extends object = T>({
                 data,
                 params,
                 getRowId,
+                getRowKey,
                 getRowSelected,
                 getChildRows,
                 renderChildRows,
@@ -184,8 +187,9 @@ const CollapsibleItem = <T extends object, C extends object>({
               style={{ width }}
             >
               {typeof renderCell === 'function'
-                ? renderCell(row, col, tableProps)
-                : String(row?.[col?.key as keyof T])}
+                ? // Todo fis this type
+                  renderCell(row, col, tableProps)
+                : String(row?.[col?.key as keyof T] ?? '')}
             </GenericTableCell>
           )
         })}

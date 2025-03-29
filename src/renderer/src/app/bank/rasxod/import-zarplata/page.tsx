@@ -1,30 +1,51 @@
 import type { Nachislenie } from '@renderer/common/models'
 
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 import { vacantQueryKeys } from '@renderer/app/region-admin/vacant/config'
 import { getVacantListQuery } from '@renderer/app/region-admin/vacant/service'
-import { GenericTable } from '@renderer/common/components'
+import { GenericTable, LoadingOverlay } from '@renderer/common/components'
 import { CollapsibleTable } from '@renderer/common/components/collapsible-table'
-import { useElementWidth } from '@renderer/common/hooks'
+import { Button } from '@renderer/common/components/ui/button'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@renderer/common/components/ui/tabs'
 import { arrayToTreeByRelations } from '@renderer/common/lib/tree/relation-tree'
 import { useQuery } from '@tanstack/react-query'
+import { X } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { VacantTree } from '@/app/region-admin/vacant/vacant-tree'
-import { Drawer, DrawerContent } from '@/common/components/ui/drawer'
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle
+} from '@/common/components/ui/drawer'
 import { useAuthenticationStore } from '@/common/features/auth'
 import { useLayoutStore } from '@/common/features/layout'
 
-import { nachieslenieColumns, uderjanieColumns } from './columns'
-import { NachislenieQueryKeys } from './config'
+import {
+  nachieslenieColumns,
+  uderjanieAlimentColumns,
+  uderjanieColumns,
+  uderjanieDopOplataProvodkaColumns,
+  uderjanieNachislenieProvodkaColumns,
+  uderjanieProvodkaColumns
+} from './columns'
+import { NachislenieQueryKeys, UderjanieQueryKeys, uderjanieTypes } from './config'
 import { NachislenieService, UderjanieService } from './service'
+
+enum TabOption {
+  Uderjanie = 'uderjanie',
+  Aliment = 'aliment'
+}
 
 const ImportZarplataPage = () => {
   const userOwnId = useAuthenticationStore((store) => store.user?.id)
   const setLayout = useLayoutStore((store) => store.setLayout)
 
   const [vacantId, setVacantId] = useState<number>()
+  const [tabValue, setTabValue] = useState<TabOption>(TabOption.Uderjanie)
   const [selectedRow, setSelectedRow] = useState<Nachislenie>()
 
   const { t } = useTranslation(['app'])
@@ -34,12 +55,12 @@ const ImportZarplataPage = () => {
     queryFn: getVacantListQuery,
     enabled: !!userOwnId
   })
-  const { data: nachislenie } = useQuery({
+  const { data: nachislenie, isFetching: isFetchingNachislenie } = useQuery({
     queryKey: [NachislenieQueryKeys.getAll, { userId: userOwnId!, vacantId: vacantId! }],
     queryFn: NachislenieService.getAll,
     enabled: !!userOwnId && !!vacantId
   })
-  const { data: uderjanie } = useQuery({
+  const { data: uderjanie, isFetching: isFetchingUderjanie } = useQuery({
     queryKey: [
       NachislenieQueryKeys.getAll,
       { userId: userOwnId!, tabelDocNum: selectedRow?.tabelDocNum ?? 0 }
@@ -47,6 +68,30 @@ const ImportZarplataPage = () => {
     queryFn: UderjanieService.getAll,
     enabled: !!userOwnId && !!selectedRow
   })
+
+  const { data: aliment, isFetching: isFetchingAliment } = useQuery({
+    queryKey: [
+      UderjanieQueryKeys.getAliment,
+      { userId: userOwnId!, tabelDocNum: selectedRow?.tabelDocNum ?? 0 }
+    ],
+    queryFn: UderjanieService.getAliment,
+    enabled: !!userOwnId && !!selectedRow
+  })
+
+  useEffect(() => {
+    setLayout({
+      title: t('import_zarplata'),
+      breadcrumbs: [
+        {
+          title: t('pages.bank')
+        },
+        {
+          title: t('pages.rasxod-docs'),
+          path: '/bank/rasxod'
+        }
+      ]
+    })
+  }, [setLayout, t])
 
   const treeData = useMemo(
     () =>
@@ -60,7 +105,8 @@ const ImportZarplataPage = () => {
 
   return (
     <div className="h-full flex divide-x overflow-hidden">
-      <aside className="max-w-lg">
+      <aside className="w-full max-w-md relative overflow-y-auto">
+        {isFetchingVacants ? <LoadingOverlay /> : null}
         <VacantTree
           data={treeData}
           selectedIds={vacantId ? [vacantId] : []}
@@ -70,10 +116,12 @@ const ImportZarplataPage = () => {
         />
       </aside>
       <main className="flex-1 flex flex-col overflow-hidden divide-y">
-        <div className="flex-1 overflow-auto scrollbar">
+        <div className="relative flex-1 overflow-auto scrollbar">
+          {isFetchingNachislenie ? <LoadingOverlay /> : null}
           <GenericTable
             columnDefs={nachieslenieColumns}
             data={nachislenie ?? []}
+            className="table-generic-xs"
             onClickRow={(row) => {
               setSelectedRow(row)
             }}
@@ -85,50 +133,87 @@ const ImportZarplataPage = () => {
         onClose={() => setSelectedRow(undefined)}
       >
         <DrawerContent className="h-full max-h-[800px]">
-          <div className="overflow-auto scrollbar relative">
-            <CollapsibleTable
-              columnDefs={uderjanieColumns}
-              data={uderjanie ?? []}
-              getRowId={(row) => row.mainZarplataId}
-              getChildRows={() => []}
-              renderChildRows={(_, parentRow) => (
-                <div className="sticky left-0 pl-16">
-                  <CollapsibleTable
-                    displayHeader={false}
-                    data={(
-                      ['rootObjectNachislenie', 'rootObjectUderjanie', 'rootDopOplata'] as const
-                    ).map((name) => ({ name }))}
-                    columnDefs={[{ key: 'name' }]}
-                    getRowId={(row) => row.name}
-                    getChildRows={() => []}
-                    renderChildRows={(_, row) => (
-                      <div className="pl-16">
+          <Tabs
+            value={tabValue}
+            onValueChange={(value) => setTabValue(value as TabOption)}
+            className="h-full overflow-hidden flex flex-col"
+          >
+            <DrawerHeader className="flex items-center justify-between">
+              <DrawerTitle>{t('uderjanie')}</DrawerTitle>
+              <TabsList>
+                <TabsTrigger value={TabOption.Uderjanie}>{t('uderjanie')}</TabsTrigger>
+                <TabsTrigger value={TabOption.Aliment}>{t('aliment')}</TabsTrigger>
+              </TabsList>
+              <DrawerClose>
+                <Button
+                  size="icon"
+                  variant="outline"
+                >
+                  <X className="btn-icon" />
+                </Button>
+              </DrawerClose>
+            </DrawerHeader>
+            <TabsContent
+              value={TabOption.Uderjanie}
+              className="flex-1 overflow-hidden"
+            >
+              <div className="h-full overflow-auto scrollbar relative">
+                {isFetchingUderjanie ? <LoadingOverlay /> : null}
+                <CollapsibleTable
+                  columnDefs={uderjanieColumns}
+                  data={uderjanie ?? []}
+                  getRowId={(row) => row.mainZarplataId}
+                  getChildRows={() => []}
+                  className="table-generic-xs"
+                  renderChildRows={(_, parentRow) => {
+                    return (
+                      <div className="sticky left-0 pl-16">
                         <CollapsibleTable
-                          columnDefs={[
-                            {
-                              key: 'name'
-                            },
-                            {
-                              key: 'foiz'
-                            },
-                            {
-                              key: 'summa'
-                            },
-                            {
-                              key: 'type_code'
-                            }
-                          ]}
-                          data={parentRow?.[row.name]?.rows ?? []}
-                          getChildRows={() => undefined}
-                          getRowId={(row) => row.name}
+                          displayHeader={false}
+                          data={uderjanieTypes}
+                          columnDefs={[{ key: 'name', renderCell: (row) => row.name }]}
+                          getRowId={(row) => row.key}
+                          getChildRows={() => []}
+                          renderChildRows={(_, row) => {
+                            const columns =
+                              row.key === 'rootObjectNachislenie'
+                                ? uderjanieNachislenieProvodkaColumns
+                                : row.key === 'rootObjectUderjanie'
+                                  ? uderjanieProvodkaColumns
+                                  : uderjanieDopOplataProvodkaColumns
+                            return (
+                              <div className="pl-16">
+                                <CollapsibleTable
+                                  columnDefs={columns as any[]}
+                                  data={(parentRow?.[row.key]?.rows as any[]) ?? []}
+                                  getChildRows={() => undefined}
+                                  getRowId={() => ''}
+                                  getRowKey={(_, index) => index}
+                                />
+                              </div>
+                            )
+                          }}
                         />
                       </div>
-                    )}
-                  />
-                </div>
-              )}
-            />
-          </div>
+                    )
+                  }}
+                />
+              </div>
+            </TabsContent>
+            <TabsContent
+              value={TabOption.Aliment}
+              className="flex-1 overflow-hidden"
+            >
+              <div className="h-full overflow-auto scrollbar relative">
+                {isFetchingAliment ? <LoadingOverlay /> : null}
+                <GenericTable
+                  columnDefs={uderjanieAlimentColumns}
+                  data={aliment ?? []}
+                  className="table-generic-xs"
+                />
+              </div>
+            </TabsContent>
+          </Tabs>
         </DrawerContent>
       </Drawer>
     </div>

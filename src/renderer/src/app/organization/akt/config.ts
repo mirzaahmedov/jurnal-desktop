@@ -1,4 +1,4 @@
-import type { AktForm } from './service'
+import type { AktFormValues } from './service'
 
 export const queryKeys = {
   getById: 'akt',
@@ -8,12 +8,13 @@ export const queryKeys = {
   delete: 'akt/delete'
 }
 
-export const defaultValues: AktForm = {
+export const defaultValues: AktFormValues = {
   doc_num: '',
   doc_date: '',
   summa: 0,
   spravochnik_operatsii_own_id: 0,
   id_spravochnik_organization: 0,
+  organization_by_raschet_schet_id: 0,
   childs: [
     {
       spravochnik_operatsii_id: 0,

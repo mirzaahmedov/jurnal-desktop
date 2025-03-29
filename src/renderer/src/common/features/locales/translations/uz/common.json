@@ -290,5 +290,16 @@
   "file_is_required": "Faylni tanlashing kerak.",
   "video": "Video",
   "maximize": "Kattalashtirish",
-  "minimize": "Kichiklashtirish"
+  "minimize": "Kichiklashtirish",
+  "nachislenie": "Hisoblangan",
+  "uderjanie": "Ushlanma",
+  "doplata": "Qo'shimcha to'lov",
+  "aliment": "Aliment",
+  "na_ruki": "Qo'lga",
+  "kartochka": "Kartaga",
+  "zvanie": "Lavozim",
+  "foiz": "Foiz",
+  "razmer": "O'lchami",
+  "vid_uderjanie": "Ushlanma turi",
+  "import_zarplata": "Zarplatadan import qilish"
 }

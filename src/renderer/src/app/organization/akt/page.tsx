@@ -18,7 +18,7 @@ import { useDates, usePagination } from '@/common/hooks'
 import { ListView } from '@/common/views'
 
 import { columns } from './columns'
-import { queryKeys } from './constants'
+import { queryKeys } from './config'
 import { aktService } from './service'
 
 const AktPage = () => {

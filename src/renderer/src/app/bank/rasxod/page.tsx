@@ -90,8 +90,9 @@ const BankRasxodPage = () => {
           onClick={() => {
             navigate('import-zarplata')
           }}
+          className="ml-auto"
         >
-          import zarplata
+          {t('import_zarplata')}
         </Button>
       </ListView.Header>
       <ListView.Content loading={isFetching || isPending}>

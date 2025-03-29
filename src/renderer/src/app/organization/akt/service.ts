@@ -7,22 +7,27 @@ import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 import { main_schet } from '@/common/features/crud/middleware'
 import { withPreprocessor } from '@/common/lib/validation'
 
-const aktService = new CRUDService<Akt, AktForm, AktForm, ResponseMeta & { summa: number }>({
+export const aktService = new CRUDService<
+  Akt,
+  AktFormValues,
+  AktFormValues,
+  ResponseMeta & { summa: number }
+>({
   endpoint: ApiEndpoints.akt_priyom
 }).use(main_schet())
 
-const AktProvodkaFormSchema = withPreprocessor(
+export const AktProvodkaFormSchema = withPreprocessor(
   z.object({
     spravochnik_operatsii_id: z.number(),
-    kol: z.number().optional(),
-    sena: z.number().optional(),
+    kol: z.number().min(1),
+    sena: z.number().min(1),
     nds_foiz: z.number().optional(),
     id_spravochnik_podrazdelenie: z.number().optional(),
     id_spravochnik_sostav: z.number().optional(),
     id_spravochnik_type_operatsii: z.number().optional()
   })
 )
-const AktFormSchema = withPreprocessor(
+export const AktFormSchema = withPreprocessor(
   z.object({
     doc_num: z.string(),
     doc_date: z.string(),
@@ -38,8 +43,5 @@ const AktFormSchema = withPreprocessor(
   })
 )
 
-type AktForm = z.infer<typeof AktFormSchema>
-type AktProvodkaForm = z.infer<typeof AktProvodkaFormSchema>
-
-export { AktFormSchema, AktProvodkaFormSchema, aktService }
-export type { AktForm, AktProvodkaForm }
+export type AktFormValues = z.infer<typeof AktFormSchema>
+export type AktProvodkaFormValues = z.infer<typeof AktProvodkaFormSchema>

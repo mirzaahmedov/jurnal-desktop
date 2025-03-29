@@ -1,4 +1,4 @@
-import type { Nachislenie, Uderjanie } from '@/common/models'
+import type { Nachislenie, Uderjanie, UderjanieAliment } from '@/common/models'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 
 import { zarplataApi } from '@/common/lib/zarplata'
@@ -30,6 +30,20 @@ export class UderjanieService {
         tabelDocNum
       }
     })
+    return res.data
+  }
+  static async getAliment(
+    ctx: QueryFunctionContext<[string, { userId: number; tabelDocNum: number }]>
+  ) {
+    const { userId, tabelDocNum } = ctx.queryKey[1]
+    const res = await zarplataApi.get<UderjanieAliment[]>(
+      `Uderjanie/nachislenie-aliment/${userId}`,
+      {
+        params: {
+          tabelDocNum
+        }
+      }
+    )
     return res.data
   }
 }

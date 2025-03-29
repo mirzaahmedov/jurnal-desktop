@@ -21,7 +21,7 @@ export interface VacantTreeProps {
 
 export const VacantTree = ({ data, selectedIds, onSelectNode }: VacantTreeProps) => {
   return (
-    <ul className="divide-y">
+    <ul className="divide-y text-sm">
       {data.map((node) => (
         <TreeNode
           key={node.id}

@@ -1,4 +1,4 @@
-import type { AktForm, AktProvodkaForm } from '../service'
+import type { AktFormValues, AktProvodkaFormValues } from '../service'
 
 import { useCallback, useEffect } from 'react'
 
@@ -37,7 +37,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 
 import { DetailsView } from '@/common/views'
 
-import { defaultValues, queryKeys } from '../constants'
+import { defaultValues, queryKeys } from '../config'
 import { AktFormSchema, AktProvodkaFormSchema, aktService } from '../service'
 import { podvodkaColumns } from './provodki'
 
@@ -157,7 +157,7 @@ const AktDetailsPage = () => {
     }
   })
 
-  const onSubmit = form.handleSubmit((payload: AktForm) => {
+  const onSubmit = form.handleSubmit((payload: AktFormValues) => {
     const {
       doc_date,
       doc_num,
@@ -184,7 +184,7 @@ const AktDetailsPage = () => {
         organization_by_raschet_schet_gazna_id,
         opisanie,
         summa,
-        childs: podvodki.map(normalizeEmptyFields<AktProvodkaForm>)
+        childs: podvodki.map(normalizeEmptyFields<AktProvodkaFormValues>)
       })
       return
     }
@@ -199,13 +199,13 @@ const AktDetailsPage = () => {
       organization_by_raschet_schet_gazna_id,
       opisanie,
       summa,
-      childs: podvodki.map(normalizeEmptyFields<AktProvodkaForm>)
+      childs: podvodki.map(normalizeEmptyFields<AktProvodkaFormValues>)
     })
   })
 
   const podvodki = form.watch('childs')
   const setPodvodki = useCallback(
-    (payload: AktProvodkaForm[]) => {
+    (payload: AktProvodkaFormValues[]) => {
       form.setValue('childs', payload)
     },
     [form]
@@ -247,6 +247,8 @@ const AktDetailsPage = () => {
     form.reset(akt?.data ?? defaultValues)
     setPodvodki(akt?.data?.childs ?? defaultValues.childs)
   }, [setPodvodki, form, akt, id])
+
+  console.log({ errors: form.formState.errors })
 
   return (
     <DetailsView>
