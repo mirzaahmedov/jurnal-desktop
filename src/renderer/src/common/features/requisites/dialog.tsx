@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
-import { budgetService, budjetQueryKeys } from '@/app/super-admin/budjet'
+import { BudgetService, budjetQueryKeys } from '@/app/super-admin/budjet'
 import { SelectField } from '@/common/components'
 import { Button } from '@/common/components/ui/button'
 import {
@@ -38,7 +38,7 @@ export const RequisitesDialog = ({ open, onOpenChange }: RequisitesDialogProps) 
 
   const { data: budjets, isLoading: isLoadingBudget } = useQuery({
     queryKey: [budjetQueryKeys.getAll],
-    queryFn: budgetService.getAll,
+    queryFn: BudgetService.getAll,
     enabled: open
   })
   const { data: schetList, isLoading: isLoadingSchets } = useQuery({

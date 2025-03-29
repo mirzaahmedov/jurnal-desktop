@@ -27,7 +27,7 @@ import { Input } from '@/common/components/ui/input'
 import { useToast } from '@/common/hooks/use-toast'
 
 import { budjetQueryKeys } from './constants'
-import { BudgetPayloadSchema, type BudgetPayloadType, budgetService } from './service'
+import { BudgetFormSchema, type BudgetFormValues, BudgetService } from './service'
 
 type BudgetDialogProps = {
   open: boolean
@@ -41,14 +41,14 @@ const BudgetDialog = (props: BudgetDialogProps) => {
   const { toast } = useToast()
 
   const queryClient = useQueryClient()
-  const form = useForm<BudgetPayloadType>({
+  const form = useForm<BudgetFormValues>({
     defaultValues,
-    resolver: zodResolver(BudgetPayloadSchema)
+    resolver: zodResolver(BudgetFormSchema)
   })
 
   const { mutate: create, isPending: isCreating } = useMutation({
     mutationKey: [budjetQueryKeys.create],
-    mutationFn: budgetService.create,
+    mutationFn: BudgetService.create,
     onSuccess() {
       toast({
         title: 'бюджет успешно создана'
@@ -69,7 +69,7 @@ const BudgetDialog = (props: BudgetDialogProps) => {
   })
   const { mutate: update, isPending: isUpdating } = useMutation({
     mutationKey: [budjetQueryKeys.update],
-    mutationFn: budgetService.update,
+    mutationFn: BudgetService.update,
     onSuccess() {
       toast({
         title: 'бюджет успешно обновлена'
@@ -88,7 +88,7 @@ const BudgetDialog = (props: BudgetDialogProps) => {
     }
   })
 
-  const onSubmit = (payload: BudgetPayloadType) => {
+  const onSubmit = (payload: BudgetFormValues) => {
     if (data) {
       update(Object.assign(payload, { id: data.id }))
     } else {
@@ -157,6 +157,6 @@ const BudgetDialog = (props: BudgetDialogProps) => {
 
 const defaultValues = {
   name: ''
-} satisfies BudgetPayloadType
+} satisfies BudgetFormValues
 
 export default BudgetDialog

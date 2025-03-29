@@ -9,14 +9,14 @@ import { withPreprocessor } from '@/common/lib/validation'
 
 import { budgetColumns } from './columns'
 
-export const BudgetPayloadSchema = withPreprocessor(
+export const BudgetFormSchema = withPreprocessor(
   z.object({
     name: z.string()
   })
 )
-export type BudgetPayloadType = z.infer<typeof BudgetPayloadSchema>
+export type BudgetFormValues = z.infer<typeof BudgetFormSchema>
 
-export const budgetService = new CRUDService<Budjet, BudgetPayloadType>({
+export const BudgetService = new CRUDService<Budjet, BudgetFormValues>({
   endpoint: ApiEndpoints.budjet_name
 })
 
@@ -26,7 +26,7 @@ export const createBudjetSpravochnik = (config: Partial<SpravochnikHookOptions<B
       title: 'Выберите бюджет',
       endpoint: ApiEndpoints.budjet_name,
       columnDefs: budgetColumns,
-      service: budgetService
+      service: BudgetService
     } satisfies typeof config,
     config
   )

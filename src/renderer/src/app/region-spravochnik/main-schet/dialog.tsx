@@ -13,7 +13,7 @@ import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 
-import { budgetService } from '@/app/super-admin/budjet'
+import { BudgetService } from '@/app/super-admin/budjet'
 import { budjetQueryKeys } from '@/app/super-admin/budjet/constants'
 import { AutoComplete, SelectField } from '@/common/components'
 import { Button } from '@/common/components/ui/button'
@@ -69,7 +69,7 @@ export const MainSchetDialog = ({
 
   const { data: budgets, isFetching: isFetchingBudjets } = useQuery({
     queryKey: [budjetQueryKeys.getAll],
-    queryFn: budgetService.getAll
+    queryFn: BudgetService.getAll
   })
 
   const { mutate: create, isPending: isCreating } = useMutation({

@@ -5,10 +5,10 @@ import { MonthNameCell } from '@renderer/common/components/table/renderers/month
 import { UserCell } from '@renderer/common/components/table/renderers/user'
 import { Badge } from '@renderer/common/components/ui/badge'
 import { cn } from '@renderer/common/lib/utils'
-import { type Mainbook, MainbookStatus } from '@renderer/common/models'
+import { type AdminMainbook, MainbookStatus } from '@renderer/common/models'
 import { Trans } from 'react-i18next'
 
-export const mainbookColumns: ColumnDef<Mainbook>[] = [
+export const mainbookColumns: ColumnDef<AdminMainbook>[] = [
   {
     key: 'id',
     renderCell: IDCell,
@@ -21,6 +21,10 @@ export const mainbookColumns: ColumnDef<Mainbook>[] = [
   },
   {
     key: 'year'
+  },
+  {
+    key: 'region_name',
+    header: 'region'
   },
   {
     key: 'status',

@@ -1,10 +1,9 @@
-import type { Mainbook } from '@renderer/common/models'
+import type { AdminMainbook } from '@renderer/common/models'
 
 import { useEffect } from 'react'
 
 import { GenericTable } from '@renderer/common/components'
 import { useLayoutStore } from '@renderer/common/features/layout'
-import { useRequisitesStore } from '@renderer/common/features/requisites'
 import { usePagination } from '@renderer/common/hooks'
 import { ListView } from '@renderer/common/views'
 import { useQuery } from '@tanstack/react-query'
@@ -13,13 +12,17 @@ import { useNavigate } from 'react-router-dom'
 
 import { mainbookColumns } from './columns'
 import { mainbookQueryKeys } from './config'
+import { MainbookFilters, useBudjetFilter, useMonthFilter, useYearFilter } from './filters'
 import { adminMainbookService } from './service'
 
 const AdminMainbookPage = () => {
   const pagination = usePagination()
-  const budjet_id = useRequisitesStore((store) => store.budjet_id)
   const navigate = useNavigate()
   const setLayout = useLayoutStore((store) => store.setLayout)
+
+  const [year] = useYearFilter()
+  const [month] = useMonthFilter()
+  const [budjet_id] = useBudjetFilter()
 
   const { t } = useTranslation(['app'])
 
@@ -27,9 +30,11 @@ const AdminMainbookPage = () => {
     queryKey: [
       mainbookQueryKeys.getAll,
       {
-        budjet_id,
         page: pagination.page,
-        limit: pagination.limit
+        limit: pagination.limit,
+        year,
+        month,
+        budjet_id
       }
     ],
     queryFn: adminMainbookService.getAll
@@ -37,11 +42,12 @@ const AdminMainbookPage = () => {
 
   useEffect(() => {
     setLayout({
-      title: t('pages.mainbook')
+      title: t('pages.mainbook'),
+      content: MainbookFilters
     })
   }, [setLayout, navigate, t])
 
-  const handleEdit = (row: Mainbook) => {
+  const handleEdit = (row: AdminMainbook) => {
     navigate(`${row.id}`)
   }
 

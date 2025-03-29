@@ -25,6 +25,7 @@ import { toast } from 'react-toastify'
 
 import { mainbookColumns } from './columns'
 import { mainbookQueryKeys } from './config'
+import { MainbookFilters, useYearFilter } from './filters'
 import { mainbookService } from './service'
 
 const MainbookPage = () => {
@@ -35,6 +36,8 @@ const MainbookPage = () => {
   const navigate = useNavigate()
   const setLayout = useLayoutStore((store) => store.setLayout)
 
+  const [year] = useYearFilter()
+
   const { t } = useTranslation(['app'])
   const { confirm } = useConfirm()
 
@@ -44,7 +47,8 @@ const MainbookPage = () => {
       {
         budjet_id,
         page: pagination.page,
-        limit: pagination.limit
+        limit: pagination.limit,
+        year
       }
     ],
     queryFn: mainbookService.getAll
@@ -63,6 +67,7 @@ const MainbookPage = () => {
   useEffect(() => {
     setLayout({
       title: t('pages.mainbook'),
+      content: MainbookFilters,
       onCreate: () => {
         navigate('create')
       }

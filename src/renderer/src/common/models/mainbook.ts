@@ -143,3 +143,21 @@ export interface MainbookChild {
     rasxod: number
   }>
 }
+
+export interface AdminMainbook {
+  id: number
+  status: number
+  accept_time: string
+  send_time: string
+  user_id: number
+  fio: string
+  login: string
+  year: number
+  month: number
+  budjet_id: number
+  budjet_name: string
+  accept_user_id: number
+  accept_user_fio: string
+  accept_user_login: string
+  region_name: string
+}
