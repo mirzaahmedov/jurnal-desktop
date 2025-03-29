@@ -10,6 +10,7 @@ import { formatNumber } from '@renderer/common/lib/format'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
 
 import { FooterCell, FooterRow, GenericTable } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
@@ -50,7 +51,8 @@ const AktPage = () => {
   const { mutate: deleteAkt, isPending } = useMutation({
     mutationKey: [queryKeys.delete],
     mutationFn: aktService.delete,
-    onSuccess() {
+    onSuccess(res) {
+      toast.success(res?.message)
       queryClient.invalidateQueries({
         queryKey: [queryKeys.getAll]
       })

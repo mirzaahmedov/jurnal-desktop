@@ -1,11 +1,10 @@
-import type { AktFormValues, AktProvodkaFormValues } from '../service'
+import type { AktProvodkaFormValues } from '../service'
 
 import { useCallback, useEffect } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { createShartnomaSpravochnik } from '@renderer/app/organization/shartnoma'
 import { createOrganizationSpravochnik } from '@renderer/app/region-spravochnik/organization'
-import { createOperatsiiSpravochnik } from '@renderer/app/super-admin/operatsii'
 import { Fieldset } from '@renderer/common/components'
 import { EditableTable } from '@renderer/common/components/editable-table'
 import {
@@ -19,12 +18,9 @@ import { useLayoutStore } from '@renderer/common/features/layout'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
 import { useSnippets } from '@renderer/common/features/snippents/use-snippets'
 import { useSpravochnik } from '@renderer/common/features/spravochnik'
-import { useToast } from '@renderer/common/hooks/use-toast'
 import { normalizeEmptyFields } from '@renderer/common/lib/validation'
-import { TypeSchetOperatsii } from '@renderer/common/models'
 import {
   DocumentFields,
-  OperatsiiFields,
   OpisanieFields,
   OrganizationFields,
   ShartnomaFields,
@@ -34,6 +30,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
+import { toast } from 'react-toastify'
 
 import { DetailsView } from '@/common/views'
 
@@ -42,7 +39,6 @@ import { AktFormSchema, AktProvodkaFormSchema, aktService } from '../service'
 import { podvodkaColumns } from './provodki'
 
 const AktDetailsPage = () => {
-  const { toast } = useToast()
   const { t } = useTranslation(['app'])
   const { snippets, addSnippet, removeSnippet } = useSnippets({
     ns: 'akt'
@@ -79,19 +75,6 @@ const AktDetailsPage = () => {
     })
   )
 
-  const operatsiiSpravochnik = useSpravochnik(
-    createOperatsiiSpravochnik({
-      value: form.watch('spravochnik_operatsii_own_id'),
-      onChange: (value) => {
-        form.setValue('spravochnik_operatsii_own_id', value ?? 0)
-        form.trigger('spravochnik_operatsii_own_id')
-      },
-      params: {
-        type_schet: TypeSchetOperatsii.GENERAL
-      }
-    })
-  )
-
   const shartnomaSpravochnik = useSpravochnik(
     createShartnomaSpravochnik({
       value: form.watch('shartnomalar_organization_id'),
@@ -120,8 +103,8 @@ const AktDetailsPage = () => {
   const { mutate: create, isPending: isCreating } = useMutation({
     mutationKey: [queryKeys.create],
     mutationFn: aktService.create,
-    onSuccess() {
-      toast({ title: 'Документ успешно создан' })
+    onSuccess(res) {
+      toast.success(res?.message)
       form.reset(defaultValues)
       queryClient.invalidateQueries({
         queryKey: [queryKeys.getAll]
@@ -130,18 +113,15 @@ const AktDetailsPage = () => {
         queryKey: [queryKeys.getById, id]
       })
 
-      navigate('/organization/akt')
-    },
-    onError(error) {
-      toast({ title: error.message, variant: 'destructive' })
+      navigate(-1)
     }
   })
 
   const { mutate: update, isPending: isUpdating } = useMutation({
     mutationKey: [queryKeys.update, id],
     mutationFn: aktService.update,
-    onSuccess() {
-      toast({ title: 'Документ успешно обновлен' })
+    onSuccess(res) {
+      toast.success(res?.message)
 
       queryClient.invalidateQueries({
         queryKey: [queryKeys.getAll]
@@ -150,19 +130,15 @@ const AktDetailsPage = () => {
         queryKey: [queryKeys.getById, id]
       })
 
-      navigate('/organization/akt')
-    },
-    onError(error) {
-      toast({ title: error.message, variant: 'destructive' })
+      navigate(-1)
     }
   })
 
-  const onSubmit = form.handleSubmit((payload: AktFormValues) => {
+  const onSubmit = form.handleSubmit((payload) => {
     const {
       doc_date,
       doc_num,
       id_spravochnik_organization,
-      spravochnik_operatsii_own_id,
       shartnoma_grafik_id,
       shartnomalar_organization_id,
       organization_by_raschet_schet_id,
@@ -176,7 +152,6 @@ const AktDetailsPage = () => {
         id: Number(id),
         doc_date,
         doc_num,
-        spravochnik_operatsii_own_id,
         shartnomalar_organization_id,
         shartnoma_grafik_id,
         id_spravochnik_organization,
@@ -191,7 +166,6 @@ const AktDetailsPage = () => {
     create({
       doc_date,
       doc_num,
-      spravochnik_operatsii_own_id,
       shartnomalar_organization_id,
       id_spravochnik_organization,
       shartnoma_grafik_id,
@@ -262,11 +236,6 @@ const AktDetailsPage = () => {
                   form={form}
                   documentType={DocumentType.AKT}
                   autoGenerate={id === 'create'}
-                />
-                <OperatsiiFields
-                  tabIndex={2}
-                  spravochnik={operatsiiSpravochnik}
-                  error={form.formState.errors.spravochnik_operatsii_own_id}
                 />
               </div>
 

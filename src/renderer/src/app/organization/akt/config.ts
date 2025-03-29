@@ -12,7 +12,6 @@ export const defaultValues: AktFormValues = {
   doc_num: '',
   doc_date: '',
   summa: 0,
-  spravochnik_operatsii_own_id: 0,
   id_spravochnik_organization: 0,
   organization_by_raschet_schet_id: 0,
   childs: [
