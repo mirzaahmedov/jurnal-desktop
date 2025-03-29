@@ -139,7 +139,6 @@ const ImportZarplataPage = () => {
             className="h-full overflow-hidden flex flex-col"
           >
             <DrawerHeader className="flex items-center justify-between">
-              <DrawerTitle>{t('uderjanie')}</DrawerTitle>
               <TabsList>
                 <TabsTrigger value={TabOption.Uderjanie}>{t('uderjanie')}</TabsTrigger>
                 <TabsTrigger value={TabOption.Aliment}>{t('aliment')}</TabsTrigger>
