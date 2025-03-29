@@ -14,13 +14,7 @@ import { X } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { VacantTree } from '@/app/region-admin/vacant/vacant-tree'
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerHeader,
-  DrawerTitle
-} from '@/common/components/ui/drawer'
+import { Drawer, DrawerClose, DrawerContent, DrawerHeader } from '@/common/components/ui/drawer'
 import { useAuthenticationStore } from '@/common/features/auth'
 import { useLayoutStore } from '@/common/features/layout'
 
