@@ -1,6 +1,7 @@
 import type { Vacant } from '@renderer/common/models/vacant'
 
 import { CaretDownIcon } from '@radix-ui/react-icons'
+import { EmptyList } from '@renderer/common/components/empty-states'
 import { Button } from '@renderer/common/components/ui/button'
 import { Checkbox } from '@renderer/common/components/ui/checkbox'
 import {
@@ -22,14 +23,18 @@ export interface VacantTreeProps {
 export const VacantTree = ({ data, selectedIds, onSelectNode }: VacantTreeProps) => {
   return (
     <ul className="divide-y text-sm">
-      {data.map((node) => (
-        <TreeNode
-          key={node.id}
-          vacant={node}
-          selectedIds={selectedIds}
-          onSelect={onSelectNode}
-        />
-      ))}
+      {data?.length ? (
+        data.map((node) => (
+          <TreeNode
+            key={node.id}
+            vacant={node}
+            selectedIds={selectedIds}
+            onSelect={onSelectNode}
+          />
+        ))
+      ) : (
+        <EmptyList iconProps={{ className: 'w-40' }} />
+      )}
     </ul>
   )
 }
