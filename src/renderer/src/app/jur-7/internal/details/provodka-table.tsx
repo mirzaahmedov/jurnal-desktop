@@ -76,10 +76,10 @@ export const ProvodkaTable = ({ form, tabIndex }: ProvodkaTableProps) => {
               max_kol: p.to.kol,
               sena: p.to.sena,
               summa: calcSumma(p.to.kol, p.to.sena),
-              debet_schet: p.debet_schet ?? '',
-              kredit_schet: p?.kredit_schet ?? '',
-              debet_sub_schet: p?.debet_sub_schet ?? '',
-              kredit_sub_schet: p?.kredit_sub_schet ?? '',
+              debet_schet: p.kredit_schet ?? '',
+              kredit_schet: p?.debet_schet ?? '',
+              debet_sub_schet: p?.kredit_sub_schet ?? '',
+              kredit_sub_schet: p?.debet_sub_schet ?? '',
               data_pereotsenka: formatDate(p.prixodData?.docDate),
               iznos: p.iznos,
               iznos_summa: p.to.iznos_summa,
@@ -239,6 +239,8 @@ type ProvodkaProps = {
   onRemove: (rowIndex: number) => void
 }
 const Provodka = ({ rowIndex, onOpenDialog, onRemove, row, form, tabIndex }: ProvodkaProps) => {
+  const errors = form.formState.errors.childs?.[rowIndex]
+
   const handleChangeChildField = (
     index: number,
     key: keyof InternalProvodkaFormValues,
@@ -254,9 +256,7 @@ const Provodka = ({ rowIndex, onOpenDialog, onRemove, row, form, tabIndex }: Pro
         row={row}
         kimdan_id={form.watch('kimdan_id')}
         tabIndex={tabIndex}
-        errorMessage={
-          form.formState.errors.childs?.[rowIndex]?.naimenovanie_tovarov_jur7_id?.message
-        }
+        errorMessage={errors?.naimenovanie_tovarov_jur7_id?.message}
         openDialog={() => {
           onOpenDialog(rowIndex)
         }}
@@ -277,9 +277,9 @@ const Provodka = ({ rowIndex, onOpenDialog, onRemove, row, form, tabIndex }: Pro
             }}
             className={inputVariants({
               editor: true,
-              error: !!form.formState.errors.childs?.[rowIndex]?.kol
+              error: !!errors?.kol
             })}
-            error={!!form.formState.errors.childs?.[rowIndex]?.kol}
+            error={!!errors?.kol}
             tabIndex={tabIndex}
           />
         </div>
@@ -299,9 +299,9 @@ const Provodka = ({ rowIndex, onOpenDialog, onRemove, row, form, tabIndex }: Pro
             }}
             className={inputVariants({
               editor: true,
-              error: !!form.formState.errors.childs?.[rowIndex]?.sena
+              error: !!errors?.sena
             })}
-            error={!!form.formState.errors.childs?.[rowIndex]?.sena}
+            error={!!errors?.sena}
             tabIndex={tabIndex}
           />
         </div>
@@ -321,9 +321,9 @@ const Provodka = ({ rowIndex, onOpenDialog, onRemove, row, form, tabIndex }: Pro
             }}
             className={inputVariants({
               editor: true,
-              error: !!form.formState.errors.childs?.[rowIndex]?.summa
+              error: !!errors?.summa
             })}
-            error={!!form.formState.errors.childs?.[rowIndex]?.summa}
+            error={!!errors?.summa}
             tabIndex={tabIndex}
           />
         </div>
@@ -349,10 +349,10 @@ const Provodka = ({ rowIndex, onOpenDialog, onRemove, row, form, tabIndex }: Pro
             }}
             className={inputVariants({
               editor: true,
-              error: !!form.formState.errors?.childs?.[rowIndex]?.iznos_summa,
+              error: !!errors?.iznos_summa,
               className: 'w-40'
             })}
-            error={!!form.formState.errors?.childs?.[rowIndex]?.iznos_summa}
+            error={!!errors?.iznos_summa}
             tabIndex={tabIndex}
           />
         </div>
@@ -365,10 +365,10 @@ const Provodka = ({ rowIndex, onOpenDialog, onRemove, row, form, tabIndex }: Pro
             onChange={(e) => {
               handleChangeChildField(rowIndex, 'iznos_schet', e.target.value)
             }}
-            error={!!form.formState.errors?.childs?.[rowIndex]?.iznos_schet}
+            error={!!errors?.iznos_schet}
             className={inputVariants({
               editor: true,
-              error: !!form.formState.errors?.childs?.[rowIndex]?.iznos_schet
+              error: !!errors?.iznos_schet
             })}
             tabIndex={tabIndex}
           />
@@ -383,9 +383,9 @@ const Provodka = ({ rowIndex, onOpenDialog, onRemove, row, form, tabIndex }: Pro
             }}
             className={inputVariants({
               editor: true,
-              error: !!form.formState.errors?.childs?.[rowIndex]?.iznos_sub_schet
+              error: !!errors?.iznos_sub_schet
             })}
-            error={!!form.formState.errors?.childs?.[rowIndex]?.iznos_sub_schet}
+            error={!!errors?.iznos_sub_schet}
             tabIndex={tabIndex}
           />
         </div>
@@ -402,13 +402,13 @@ const Provodka = ({ rowIndex, onOpenDialog, onRemove, row, form, tabIndex }: Pro
             placeholder="дд.мм.гггг"
             className={inputVariants({
               editor: true,
-              error: !!form.formState.errors?.childs?.[rowIndex]?.iznos_start,
+              error: !!errors?.iznos_start,
               className: 'disabled:opacity-100'
             })}
             triggerProps={{
               className: 'min-w-32'
             }}
-            error={!!form.formState.errors?.childs?.[rowIndex]?.iznos_start}
+            error={!!errors?.iznos_start}
             tabIndex={tabIndex}
           />
         </div>
@@ -423,9 +423,9 @@ const Provodka = ({ rowIndex, onOpenDialog, onRemove, row, form, tabIndex }: Pro
             }}
             className={inputVariants({
               editor: true,
-              error: !!form.formState.errors.childs?.[rowIndex]?.debet_schet
+              error: !!errors?.debet_schet
             })}
-            error={!!form.formState.errors.childs?.[rowIndex]?.debet_schet}
+            error={!!errors?.debet_schet}
             tabIndex={tabIndex}
           />
         </div>
@@ -439,9 +439,9 @@ const Provodka = ({ rowIndex, onOpenDialog, onRemove, row, form, tabIndex }: Pro
             }}
             className={inputVariants({
               editor: true,
-              error: !!form.formState.errors.childs?.[rowIndex]?.debet_sub_schet
+              error: !!errors?.debet_sub_schet
             })}
-            error={!!form.formState.errors.childs?.[rowIndex]?.debet_sub_schet}
+            error={!!errors?.debet_sub_schet}
             tabIndex={tabIndex}
           />
         </div>
@@ -450,15 +450,16 @@ const Provodka = ({ rowIndex, onOpenDialog, onRemove, row, form, tabIndex }: Pro
       <EditableTableCell>
         <div className="relative">
           <Input
+            readOnly
             value={row.kredit_schet}
             onChange={(e) => {
               handleChangeChildField(rowIndex, 'kredit_schet', e.target.value)
             }}
             className={inputVariants({
               editor: true,
-              error: !!form.formState.errors.childs?.[rowIndex]?.kredit_schet
+              error: !!errors?.kredit_schet
             })}
-            error={!!form.formState.errors.childs?.[rowIndex]?.kredit_schet}
+            error={!!errors?.kredit_schet}
             tabIndex={tabIndex}
           />
         </div>
@@ -466,15 +467,16 @@ const Provodka = ({ rowIndex, onOpenDialog, onRemove, row, form, tabIndex }: Pro
       <EditableTableCell>
         <div className="relative">
           <Input
+            readOnly
             value={row.kredit_sub_schet}
             onChange={(e) => {
               handleChangeChildField(rowIndex, 'kredit_sub_schet', e.target.value)
             }}
             className={inputVariants({
               editor: true,
-              error: !!form.formState.errors.childs?.[rowIndex]?.kredit_sub_schet
+              error: !!errors?.kredit_sub_schet
             })}
-            error={!!form.formState.errors.childs?.[rowIndex]?.kredit_sub_schet}
+            error={!!errors?.kredit_sub_schet}
             tabIndex={tabIndex}
           />
         </div>
@@ -490,9 +492,9 @@ const Provodka = ({ rowIndex, onOpenDialog, onRemove, row, form, tabIndex }: Pro
             placeholder="дд.мм.гггг"
             className={inputVariants({
               editor: true,
-              error: !!form.formState.errors.childs?.[rowIndex]?.data_pereotsenka
+              error: !!errors?.data_pereotsenka
             })}
-            error={!!form.formState.errors.childs?.[rowIndex]?.data_pereotsenka}
+            error={!!errors?.data_pereotsenka}
             triggerProps={{
               className: 'min-w-32'
             }}

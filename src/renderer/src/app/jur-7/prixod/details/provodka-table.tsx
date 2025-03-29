@@ -77,9 +77,10 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
           >
             <TableHeader className="sticky top-0 z-50">
               <EditableTableRow>
-                <EditableTableHead rowSpan={2}>
-                  <div className="px-1">№</div>
-                </EditableTableHead>
+                <EditableTableHead
+                  className="min-w-11"
+                  rowSpan={2}
+                ></EditableTableHead>
                 <EditableTableHead
                   rowSpan={2}
                   className="w-24"

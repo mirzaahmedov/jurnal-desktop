@@ -133,7 +133,7 @@ const KassaMonitorPage = () => {
         />
       </ListView.Content>
       <ListView.Footer>
-        <SummaTotal>
+        <SummaTotal className="pb-5">
           <SummaTotal.Value
             name={t('remainder-to')}
             value={formatNumber(monitorList?.meta?.summa_to_object?.summa ?? 0)}
