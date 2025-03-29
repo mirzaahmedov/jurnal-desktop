@@ -24,7 +24,7 @@ export const VideoPlayer = ({ sourceProps, src, className, ...props }: VideoPlay
       className={cn('rounded-md overflow-hidden', className)}
       {...props}
     >
-      <Player>
+      <Player preload="none">
         <source
           {...sourceProps}
           src={src}

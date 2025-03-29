@@ -302,5 +302,6 @@
   "foiz": "Процент",
   "razmer": "Размер",
   "vid_uderjanie": "Вид удержание",
-  "import_zarplata": "Импорт из Зарплаты"
+  "import_zarplata": "Импорт из Зарплаты",
+  "super-admin": "Супер админ"
 }
