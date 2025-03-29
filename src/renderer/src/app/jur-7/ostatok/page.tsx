@@ -21,6 +21,7 @@ import {
   DropdownMenuTrigger
 } from '@renderer/common/components/ui/dropdown-menu'
 import { FormField } from '@renderer/common/components/ui/form'
+import { useSettingsStore } from '@renderer/common/features/app-defaults'
 import { useConfirm } from '@renderer/common/features/confirm'
 import { DownloadFile, ImportFile } from '@renderer/common/features/file'
 import { FileValidationErrorAlert } from '@renderer/common/features/file/file-validation-error-alert'
@@ -85,6 +86,7 @@ const OstatokPage = () => {
   const queryClient = useQueryClient()
   const pagination = usePagination()
   const budjet_id = useRequisitesStore((store) => store.budjet_id)
+  const report_title_id = useSettingsStore((store) => store.report_title_id)
   const setLayout = useLayoutStore((store) => store.setLayout)
 
   const { search } = useSearch()
@@ -278,8 +280,10 @@ const OstatokPage = () => {
                         fileName={`шапка_${formatDate(selectedDate)}.xlsx`}
                         url="/jur_7/monitoring/cap/report"
                         params={{
-                          to: formatDate(selectedDate),
+                          month: selectedDate.getMonth() + 1,
+                          year: selectedDate.getFullYear(),
                           budjet_id,
+                          report_title_id,
                           excel: true
                         }}
                         buttonText="Шапка"
