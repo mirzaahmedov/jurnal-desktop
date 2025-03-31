@@ -1,4 +1,6 @@
-import { useEffect, useMemo } from 'react'
+import type { EditableTableMethods } from '@/common/components/editable-table'
+
+import { type KeyboardEvent, useEffect, useMemo, useRef } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
@@ -6,9 +8,10 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
 import { MainbookTable } from '@/app/reports/mainbook/details/mainbook-table'
-import { provodkiColumns } from '@/app/reports/mainbook/details/provodki'
+import { type ProvodkaRow, provodkiColumns } from '@/app/reports/mainbook/details/provodki'
 import { getMainbookColumns, transformGetByIdData } from '@/app/reports/mainbook/details/utils'
 import { MonthPicker } from '@/common/components/month-picker'
+import { SearchInput } from '@/common/components/search-input'
 import { Button } from '@/common/components/ui/button'
 import { useConfirm } from '@/common/features/confirm'
 import { useLayoutStore } from '@/common/features/layout'
@@ -21,6 +24,7 @@ import { adminMainbookService } from '../service'
 import { getMainbookTypes } from './service'
 
 const AdminMainbookDetailsPage = () => {
+  const tableMethods = useRef<EditableTableMethods>(null)
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const setLayout = useLayoutStore((store) => store.setLayout)
@@ -68,6 +72,7 @@ const AdminMainbookDetailsPage = () => {
     () => [...provodkiColumns, ...getMainbookColumns(types?.data ?? [])],
     [types]
   )
+  const data = useMemo(() => transformGetByIdData(mainbook?.data?.childs ?? []), [mainbook])
 
   const handleReject = () => {
     confirm({
@@ -92,7 +97,22 @@ const AdminMainbookDetailsPage = () => {
     })
   }
 
-  const data = useMemo(() => transformGetByIdData(mainbook?.data?.childs ?? []), [mainbook])
+  const handleSearch = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      e.stopPropagation()
+      e.preventDefault()
+
+      const value = e.currentTarget.value
+      if (value.length > 0) {
+        const rows: ProvodkaRow[] = data
+        const index = rows.findIndex((row) =>
+          row.schet?.toLowerCase()?.includes(value?.toLowerCase())
+        )
+        tableMethods.current?.setHighlightedRows([index])
+        tableMethods.current?.scrollToRow(index)
+      }
+    }
+  }
 
   return (
     <DetailsView className="h-full">
@@ -102,6 +122,7 @@ const AdminMainbookDetailsPage = () => {
       >
         <div className="h-full flex flex-col">
           <div className="flex items-center justify-between gap-5 p-5 border-b">
+            <SearchInput onKeyDown={handleSearch} />
             <MonthPicker
               disabled
               value={
@@ -117,6 +138,7 @@ const AdminMainbookDetailsPage = () => {
             <MainbookTable
               columns={columns}
               data={data}
+              methods={tableMethods}
             />
           </div>
         </div>

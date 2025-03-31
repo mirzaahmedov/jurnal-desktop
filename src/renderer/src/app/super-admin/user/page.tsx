@@ -2,8 +2,8 @@ import type { User } from '@/common/models'
 
 import { useEffect, useState } from 'react'
 
-import { SearchField } from '@renderer/common/features/search/search-field'
-import { useSearch } from '@renderer/common/features/search/use-search'
+import { SearchFilterDebounced } from '@renderer/common/features/filters/search/search-filter-debounced'
+import { useSearchFilter } from '@renderer/common/features/filters/search/search-filter-debounced'
 import { usePagination } from '@renderer/common/hooks'
 import { ListView } from '@renderer/common/views'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
@@ -30,7 +30,7 @@ const UserPage = () => {
 
   const { t } = useTranslation(['app'])
   const { confirm } = useConfirm()
-  const { search } = useSearch()
+  const [search] = useSearchFilter()
 
   const { data: users, isFetching } = useQuery({
     queryKey: [
@@ -60,7 +60,7 @@ const UserPage = () => {
   useEffect(() => {
     setLayout({
       title: t('pages.user'),
-      content: SearchField,
+      content: SearchFilterDebounced,
       breadcrumbs: [
         {
           title: t('pages.admin')

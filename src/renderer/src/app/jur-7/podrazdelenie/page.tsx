@@ -2,8 +2,8 @@ import type { Jur7Podrazdelenie } from '@/common/models'
 
 import { useEffect, useState } from 'react'
 
-import { SearchField } from '@renderer/common/features/search/search-field'
-import { useSearch } from '@renderer/common/features/search/use-search'
+import { SearchFilterDebounced } from '@renderer/common/features/filters/search/search-filter-debounced'
+import { useSearchFilter } from '@renderer/common/features/filters/search/search-filter-debounced'
 import { usePagination } from '@renderer/common/hooks'
 import { ListView } from '@renderer/common/views'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
@@ -28,7 +28,7 @@ const Subdivision7Page = () => {
   const setLayout = useLayoutStore((store) => store.setLayout)
 
   const { t } = useTranslation(['app'])
-  const { search } = useSearch()
+  const [search] = useSearchFilter()
   const { confirm } = useConfirm()
 
   const [selected, setSelected] = useState<null | Jur7Podrazdelenie>(null)
@@ -72,7 +72,7 @@ const Subdivision7Page = () => {
           title: t('pages.material-warehouse')
         }
       ],
-      content: SearchField,
+      content: SearchFilterDebounced,
       onCreate() {
         setSelected(null)
         dialogToggle.open()

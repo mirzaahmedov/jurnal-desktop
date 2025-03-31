@@ -4,8 +4,8 @@ import { groupColumns } from '@renderer/app/super-admin/group/columns'
 import { groupQueryKeys } from '@renderer/app/super-admin/group/constants'
 import { GroupTable, groupService } from '@renderer/app/super-admin/group/service'
 import { DownloadFile } from '@renderer/common/features/file'
-import { SearchField } from '@renderer/common/features/search/search-field'
-import { useSearch } from '@renderer/common/features/search/use-search'
+import { SearchFilterDebounced } from '@renderer/common/features/filters/search/search-filter-debounced'
+import { useSearchFilter } from '@renderer/common/features/filters/search/search-filter-debounced'
 import { ListView } from '@renderer/common/views'
 import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
@@ -16,7 +16,7 @@ const RegionGroupPage = () => {
   const setLayout = useLayoutStore((store) => store.setLayout)
 
   const { t } = useTranslation(['app'])
-  const { search } = useSearch()
+  const [search] = useSearchFilter()
 
   const { data: groupList, isFetching } = useQuery({
     queryKey: [
@@ -38,7 +38,7 @@ const RegionGroupPage = () => {
           title: t('pages.spravochnik')
         }
       ],
-      content: SearchField
+      content: SearchFilterDebounced
     })
   }, [setLayout])
 

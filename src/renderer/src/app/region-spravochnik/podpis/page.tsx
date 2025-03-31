@@ -2,8 +2,8 @@ import type { Podpis } from '@/common/models'
 
 import { useEffect, useState } from 'react'
 
-import { SearchField } from '@renderer/common/features/search/search-field'
-import { useSearch } from '@renderer/common/features/search/use-search'
+import { SearchFilterDebounced } from '@renderer/common/features/filters/search/search-filter-debounced'
+import { useSearchFilter } from '@renderer/common/features/filters/search/search-filter-debounced'
 import { usePagination } from '@renderer/common/hooks'
 import { ListView } from '@renderer/common/views'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
@@ -29,7 +29,7 @@ const PodpisPage = () => {
   const setLayout = useLayoutStore((store) => store.setLayout)
 
   const { confirm } = useConfirm()
-  const { search } = useSearch()
+  const [search] = useSearchFilter()
   const { t } = useTranslation(['app'])
 
   const { data: podpisList, isFetching } = useQuery({
@@ -68,7 +68,7 @@ const PodpisPage = () => {
   useEffect(() => {
     setLayout({
       title: t('pages.podpis'),
-      content: SearchField,
+      content: SearchFilterDebounced,
       breadcrumbs: [
         {
           title: t('pages.spravochnik')

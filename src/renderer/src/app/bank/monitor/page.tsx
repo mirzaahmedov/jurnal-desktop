@@ -2,9 +2,9 @@ import { useEffect } from 'react'
 
 import { useSettingsStore } from '@renderer/common/features/app-defaults'
 import { DownloadFile } from '@renderer/common/features/file'
+import { SearchFilterDebounced } from '@renderer/common/features/filters/search/search-filter-debounced'
+import { useSearchFilter } from '@renderer/common/features/filters/search/search-filter-debounced'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
-import { SearchField } from '@renderer/common/features/search/search-field'
-import { useSearch } from '@renderer/common/features/search/use-search'
 import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 
@@ -26,7 +26,7 @@ const BankMonitorPage = () => {
   const dates = useDates()
   const pagination = usePagination()
 
-  const { search } = useSearch()
+  const [search] = useSearchFilter()
   const { t } = useTranslation(['app'])
   const { main_schet_id, budjet_id } = useRequisitesStore()
 
@@ -47,7 +47,7 @@ const BankMonitorPage = () => {
   useEffect(() => {
     setLayout({
       title: t('pages.monitoring'),
-      content: SearchField,
+      content: SearchFilterDebounced,
       breadcrumbs: [
         {
           title: t('pages.bank')

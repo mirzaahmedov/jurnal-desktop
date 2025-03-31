@@ -3,9 +3,9 @@ import type { Akt } from '@/common/models'
 import { useEffect } from 'react'
 
 import { DownloadFile } from '@renderer/common/features/file'
+import { SearchFilterDebounced } from '@renderer/common/features/filters/search/search-filter-debounced'
+import { useSearchFilter } from '@renderer/common/features/filters/search/search-filter-debounced'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
-import { SearchField } from '@renderer/common/features/search/search-field'
-import { useSearch } from '@renderer/common/features/search/use-search'
 import { formatNumber } from '@renderer/common/lib/format'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
@@ -33,7 +33,7 @@ const AktPage = () => {
   const setLayout = useLayoutStore((store) => store.setLayout)
 
   const { confirm } = useConfirm()
-  const { search } = useSearch()
+  const [search] = useSearchFilter()
   const { t } = useTranslation(['app'])
 
   const { data: aktList, isFetching } = useQuery({
@@ -78,7 +78,7 @@ const AktPage = () => {
           title: t('pages.organization')
         }
       ],
-      content: SearchField,
+      content: SearchFilterDebounced,
       onCreate() {
         navigate('create')
       }

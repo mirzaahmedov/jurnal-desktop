@@ -4,9 +4,9 @@ import { useEffect, useState } from 'react'
 
 import { GenericTable } from '@renderer/common/components'
 import { useConfirm } from '@renderer/common/features/confirm'
+import { SearchFilterDebounced } from '@renderer/common/features/filters/search/search-filter-debounced'
+import { useSearchFilter } from '@renderer/common/features/filters/search/search-filter-debounced'
 import { useLayoutStore } from '@renderer/common/features/layout'
-import { SearchField } from '@renderer/common/features/search/search-field'
-import { useSearch } from '@renderer/common/features/search/use-search'
 import { usePagination } from '@renderer/common/hooks'
 import { useToggle } from '@renderer/common/hooks/use-toggle'
 import { ListView } from '@renderer/common/views'
@@ -31,7 +31,7 @@ const PereotsenkaPage = () => {
   const [selected, setSelected] = useState<null | Pereotsenka>(null)
 
   const { t } = useTranslation(['app'])
-  const { search } = useSearch()
+  const [search] = useSearchFilter()
   const { confirm } = useConfirm()
 
   const { data: pereotsenkaList, isFetching } = useQuery({
@@ -66,7 +66,7 @@ const PereotsenkaPage = () => {
           title: t('pages.admin')
         }
       ],
-      content: SearchField,
+      content: SearchFilterDebounced,
       onCreate: createDialogToggle.open
     })
   }, [setLayout, t])

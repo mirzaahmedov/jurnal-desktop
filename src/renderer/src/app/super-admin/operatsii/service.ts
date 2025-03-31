@@ -2,7 +2,7 @@ import type { SpravochnikHookOptions } from '@/common/features/spravochnik'
 import type { Operatsii, Response } from '@/common/models'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 
-import { SpravochnikSearchField } from '@renderer/common/features/search/spravochnik-search-field'
+import { SpravochnikSearchField } from '@renderer/common/features/filters/search/search-filter-spravochnik'
 import { http } from '@renderer/common/lib/http'
 import { z } from 'zod'
 

@@ -4,9 +4,9 @@ import { createOrganizationSpravochnik } from '@renderer/app/region-spravochnik/
 import { Button } from '@renderer/common/components/ui/button'
 import { useSettingsStore } from '@renderer/common/features/app-defaults'
 import { DownloadFile } from '@renderer/common/features/file'
+import { SearchFilterDebounced } from '@renderer/common/features/filters/search/search-filter-debounced'
+import { useSearchFilter } from '@renderer/common/features/filters/search/search-filter-debounced'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
-import { SearchField } from '@renderer/common/features/search/search-field'
-import { useSearch } from '@renderer/common/features/search/use-search'
 import { useLocationState } from '@renderer/common/hooks/use-location-state'
 import { getProvodkaURL } from '@renderer/common/lib/provodka'
 import { useQuery } from '@tanstack/react-query'
@@ -54,7 +54,7 @@ const OrganizationMonitoringPage = () => {
   const setLayout = useLayoutStore((store) => store.setLayout)
 
   const { main_schet_id, budjet_id } = useRequisitesStore()
-  const { search } = useSearch()
+  const [search] = useSearchFilter()
   const { t } = useTranslation(['app'])
 
   const orgSpravochnik = useSpravochnik(
@@ -102,7 +102,7 @@ const OrganizationMonitoringPage = () => {
   useEffect(() => {
     setLayout({
       title: t('pages.organization-monitoring'),
-      content: SearchField,
+      content: SearchFilterDebounced,
       breadcrumbs: [
         {
           title: t('pages.organization')

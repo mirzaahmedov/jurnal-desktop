@@ -3,8 +3,8 @@ import type { Responsible } from '@/common/models'
 import { useEffect, useState } from 'react'
 
 import { DownloadFile } from '@renderer/common/features/file'
-import { SearchField } from '@renderer/common/features/search/search-field'
-import { useSearch } from '@renderer/common/features/search/use-search'
+import { SearchFilterDebounced } from '@renderer/common/features/filters/search/search-filter-debounced'
+import { useSearchFilter } from '@renderer/common/features/filters/search/search-filter-debounced'
 import { usePagination } from '@renderer/common/hooks'
 import { ListView } from '@renderer/common/views'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
@@ -25,7 +25,7 @@ const ResponsiblePage = () => {
   const [selected, setSelected] = useState<null | Responsible>(null)
 
   const { confirm } = useConfirm()
-  const { search } = useSearch()
+  const [search] = useSearchFilter()
   const { t } = useTranslation(['app'])
 
   const setLayout = useLayoutStore((store) => store.setLayout)
@@ -73,7 +73,7 @@ const ResponsiblePage = () => {
           title: t('pages.material-warehouse')
         }
       ],
-      content: SearchField,
+      content: SearchFilterDebounced,
       onCreate() {
         setSelected(null)
         dialogToggle.open()

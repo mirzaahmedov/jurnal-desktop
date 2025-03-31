@@ -1,7 +1,7 @@
 import type { ColumnDef } from '@/common/components'
 import type { ApiEndpoints, CRUDService } from '@/common/features/crud'
 import type { DialogProps } from '@radix-ui/react-dialog'
-import type { GenericTableProps } from '@renderer/common/components/generic-table/table'
+import type { GenericTableProps } from '@renderer/common/components/generic-table/interface'
 import type { useToggle } from '@renderer/common/hooks'
 import type { ComponentType, Dispatch, SetStateAction } from 'react'
 

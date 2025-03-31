@@ -4,21 +4,19 @@ import { useEventCallback } from '@/common/hooks'
 
 import { SearchInput, type SearchInputProps } from './search-input'
 
-const DEFAULT_DEBOUNCE_MS = 600
-
 export interface SpravochnikSearchFieldProps extends SearchInputProps {
-  onChangeValue: (value: string) => void
+  onValueChange: (value: string) => void
   debounceMS?: number
 }
 export const SearchInputDebounced = ({
   value,
   onChange,
-  onChangeValue,
-  debounceMS = DEFAULT_DEBOUNCE_MS,
+  onValueChange,
+  debounceMS = 600,
   ...props
 }: SpravochnikSearchFieldProps) => {
   const timeoutRef = useRef<NodeJS.Timeout>()
-  const onChangeValueEvent = useEventCallback(onChangeValue!)
+  const onChangeValueEvent = useEventCallback(onValueChange!)
 
   const [internalValue, setInternalValue] = useState('')
 

@@ -1,8 +1,7 @@
-import type { ChangeContext, DeleteContext } from './editors/types'
-import type { EditableColumnDef } from './interface'
+import type { EditableTableProps } from './interface'
 import type { FieldErrors } from 'react-hook-form'
 
-import { type ReactNode, type RefObject, useMemo, useState } from 'react'
+import { useImperativeHandle, useMemo, useRef, useState } from 'react'
 
 import { Button } from '@renderer/common/components/ui/button'
 import { Table, TableBody, TableFooter, TableHeader } from '@renderer/common/components/ui/table'
@@ -15,22 +14,6 @@ import { getHeaderGroups } from '../generic-table/utils'
 import { EditableTableCell, EditableTableHead, EditableTableRow } from './components'
 import { getAccessorColumns } from './utils'
 
-export interface EditableTableProps<T extends object> {
-  tableRef?: RefObject<HTMLTableElement>
-  tabIndex?: number
-  data: T[]
-  columnDefs: EditableColumnDef<T>[]
-  className?: string
-  errors?: FieldErrors<{ example: T[] }>['example']
-  getRowClassName?: (args: { index: number; row: T; data: T[] }) => string
-  placeholder?: string
-  onDelete?(ctx: DeleteContext): void
-  onChange?(ctx: ChangeContext<T>): void
-  onCreate?(): void
-  params?: Record<string, unknown>
-  footerRows?: ReactNode
-  validate?(ctx: ChangeContext<T>): boolean
-}
 export const EditableTable = <T extends object>(props: EditableTableProps<T>) => {
   const {
     tableRef,
@@ -45,14 +28,41 @@ export const EditableTable = <T extends object>(props: EditableTableProps<T>) =>
     onChange,
     params = {},
     validate,
-    getRowClassName
+    getRowClassName,
+    methods
   } = props
+
+  const innerRef = useRef<HTMLTableElement>(null)
+  const ref = tableRef || innerRef
 
   const [highlightedRows, setHighlightedRows] = useState<number[]>([])
 
   const { t } = useTranslation()
 
   const headerGroups = useMemo(() => getHeaderGroups(columnDefs), [columnDefs])
+
+  useImperativeHandle(
+    methods,
+    () => ({
+      highlightRow: (rowIndex) => {
+        setHighlightedRows((prev) => {
+          if (prev.includes(rowIndex)) {
+            return prev.filter((i) => i !== rowIndex)
+          } else {
+            return [...prev, rowIndex]
+          }
+        })
+      },
+      setHighlightedRows: setHighlightedRows,
+      scrollToRow: (rowIndex: number) => {
+        ref.current?.querySelector(`[data-rowId="${rowIndex}"]`)?.scrollIntoView({
+          behavior: 'smooth',
+          block: 'nearest'
+        })
+      }
+    }),
+    []
+  )
 
   return (
     <div
@@ -68,7 +78,7 @@ export const EditableTable = <T extends object>(props: EditableTableProps<T>) =>
       }}
     >
       <Table
-        ref={tableRef}
+        ref={ref}
         className={cn('border border-slate-200', className)}
       >
         <TableHeader className="sticky top-0 z-50 shadow-sm">
@@ -251,6 +261,7 @@ const EditableTableRowRenderer = <T extends object>({
 
   return (
     <EditableTableRow
+      data-rowId={index}
       data-highlighted={highlightedRows.includes(index)}
       className={getRowClassName?.({ index, row, data })}
     >

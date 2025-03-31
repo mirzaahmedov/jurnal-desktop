@@ -3,8 +3,8 @@ import type { Group } from '@/common/models'
 import { useState } from 'react'
 
 import { DownloadFile, ImportFile } from '@renderer/common/features/file'
-import { SearchField } from '@renderer/common/features/search/search-field'
-import { useSearch } from '@renderer/common/features/search/use-search'
+import { SearchFilterDebounced } from '@renderer/common/features/filters/search/search-filter-debounced'
+import { useSearchFilter } from '@renderer/common/features/filters/search/search-filter-debounced'
 import { ListView } from '@renderer/common/views'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
@@ -26,7 +26,7 @@ const GroupPage = () => {
   const queryClient = useQueryClient()
 
   const { t } = useTranslation(['app'])
-  const { search } = useSearch()
+  const [search] = useSearchFilter()
   const { confirm } = useConfirm()
 
   const { data: groupList, isFetching } = useQuery({
@@ -61,7 +61,7 @@ const GroupPage = () => {
 
   useLayout({
     title: t('pages.group'),
-    content: SearchField,
+    content: SearchFilterDebounced,
     onCreate() {
       setSelected(null)
       dialogToggle.open()

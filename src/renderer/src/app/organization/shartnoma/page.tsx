@@ -7,10 +7,10 @@ import { createOrganizationSpravochnik } from '@renderer/app/region-spravochnik/
 import { ChooseSpravochnik, GenericTable } from '@renderer/common/components'
 import { Button } from '@renderer/common/components/ui/button'
 import { useConfirm } from '@renderer/common/features/confirm'
+import { SearchFilterDebounced } from '@renderer/common/features/filters/search/search-filter-debounced'
+import { useSearchFilter } from '@renderer/common/features/filters/search/search-filter-debounced'
 import { useLayoutStore } from '@renderer/common/features/layout'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
-import { SearchField } from '@renderer/common/features/search/search-field'
-import { useSearch } from '@renderer/common/features/search/use-search'
 import { useSpravochnik } from '@renderer/common/features/spravochnik'
 import { usePagination } from '@renderer/common/hooks'
 import { useLocationState } from '@renderer/common/hooks/use-location-state'
@@ -29,7 +29,7 @@ const ShartnomaPage = () => {
   const [organId, setOrganId] = useLocationState<undefined | number>('org_id')
 
   const { confirm } = useConfirm()
-  const { search } = useSearch()
+  const [search] = useSearchFilter()
   const { t } = useTranslation(['app'])
 
   const navigate = useNavigate()
@@ -91,7 +91,7 @@ const ShartnomaPage = () => {
   useEffect(() => {
     setLayout({
       title: t('pages.shartnoma'),
-      content: SearchField,
+      content: SearchFilterDebounced,
       onCreate: organId
         ? () => {
             navigate('create', {

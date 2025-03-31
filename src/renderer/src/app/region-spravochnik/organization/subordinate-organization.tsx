@@ -121,7 +121,7 @@ export const SubordinateOrganizations = ({
             {tabValue === TabOption.ALL ? (
               <SearchInputDebounced
                 value={search}
-                onChangeValue={setSearch}
+                onValueChange={setSearch}
               />
             ) : null}
           </DialogHeader>

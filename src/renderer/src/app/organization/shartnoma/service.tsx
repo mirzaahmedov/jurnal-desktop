@@ -13,7 +13,7 @@ import {
   DialogHeader,
   DialogTitle
 } from '@renderer/common/components/ui/dialog'
-import { SpravochnikSearchField } from '@renderer/common/features/search/spravochnik-search-field'
+import { SpravochnikSearchField } from '@renderer/common/features/filters/search/search-filter-spravochnik'
 import { formatDate } from '@renderer/common/lib/date'
 import { CopyPlus } from 'lucide-react'
 import { ZodIssueCode, z } from 'zod'

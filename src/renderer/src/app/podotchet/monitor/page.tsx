@@ -2,10 +2,10 @@ import { useEffect } from 'react'
 
 import { useSettingsStore } from '@renderer/common/features/app-defaults'
 import { DownloadFile } from '@renderer/common/features/file'
+import { SearchFilterDebounced } from '@renderer/common/features/filters/search/search-filter-debounced'
+import { useSearchFilter } from '@renderer/common/features/filters/search/search-filter-debounced'
 import { useLayoutStore } from '@renderer/common/features/layout'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
-import { SearchField } from '@renderer/common/features/search/search-field'
-import { useSearch } from '@renderer/common/features/search/use-search'
 import { useDates, usePagination } from '@renderer/common/hooks'
 import { useLocationState } from '@renderer/common/hooks/use-location-state'
 import { getProvodkaURL } from '@renderer/common/lib/provodka'
@@ -42,7 +42,7 @@ const PodotchetMonitoringPage = () => {
   const setLayout = useLayoutStore((store) => store.setLayout)
 
   const { t } = useTranslation(['app'])
-  const { search } = useSearch()
+  const [search] = useSearchFilter()
   const { main_schet_id, budjet_id } = useRequisitesStore()
 
   const [podotchetId, setPodotchetId] = useLocationState<undefined | number>('podotchet_id')
@@ -88,7 +88,7 @@ const PodotchetMonitoringPage = () => {
   useEffect(() => {
     setLayout({
       title: t('pages.podotchet-monitoring'),
-      content: SearchField,
+      content: SearchFilterDebounced,
       breadcrumbs: [
         {
           title: t('pages.podotchet')

@@ -19,7 +19,7 @@ export const MainbookFilters = () => {
   const [budjet_id, setBudjetId] = useBudjetFilter()
 
   return (
-    <div className="flex items-center gap-5 px-5">
+    <div className="flex items-center gap-5">
       <YearSelect
         value={year}
         onValueChange={setYear}

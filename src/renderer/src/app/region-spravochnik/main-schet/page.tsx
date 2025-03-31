@@ -2,10 +2,10 @@ import type { MainSchet } from '@/common/models'
 
 import { useEffect, useState } from 'react'
 
+import { SearchFilterDebounced } from '@renderer/common/features/filters/search/search-filter-debounced'
+import { useSearchFilter } from '@renderer/common/features/filters/search/search-filter-debounced'
 import { requisitesQueryKeys } from '@renderer/common/features/requisites'
 import { DuplicateSchetsAlert } from '@renderer/common/features/requisites/duplicate-schets-alert'
-import { SearchField } from '@renderer/common/features/search/search-field'
-import { useSearch } from '@renderer/common/features/search/use-search'
 import { usePagination } from '@renderer/common/hooks'
 import { ListView } from '@renderer/common/views'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
@@ -27,7 +27,7 @@ const MainSchetPage = () => {
 
   const { t } = useTranslation(['app'])
   const { confirm } = useConfirm()
-  const { search } = useSearch()
+  const [search] = useSearchFilter()
 
   const dialogToggle = useToggle()
   const pagination = usePagination()
@@ -72,7 +72,7 @@ const MainSchetPage = () => {
           title: t('pages.spravochnik')
         }
       ],
-      content: SearchField,
+      content: SearchFilterDebounced,
       onCreate: dialogToggle.open
     })
   }, [setLayout, t, dialogToggle.open])

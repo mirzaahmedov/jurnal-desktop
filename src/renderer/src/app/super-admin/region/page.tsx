@@ -2,8 +2,8 @@ import type { Region } from '@/common/models'
 
 import { useEffect, useState } from 'react'
 
-import { SearchField } from '@renderer/common/features/search/search-field'
-import { useSearch } from '@renderer/common/features/search/use-search'
+import { SearchFilterDebounced } from '@renderer/common/features/filters/search/search-filter-debounced'
+import { useSearchFilter } from '@renderer/common/features/filters/search/search-filter-debounced'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 
@@ -26,7 +26,7 @@ const RegionPage = () => {
   const queryClient = useQueryClient()
 
   const { t } = useTranslation(['app'])
-  const { search } = useSearch()
+  const [search] = useSearchFilter()
   const { confirm } = useConfirm()
 
   const { data: region, isFetching } = useQuery({
@@ -51,7 +51,7 @@ const RegionPage = () => {
   useEffect(() => {
     setLayout({
       title: t('pages.region'),
-      content: SearchField,
+      content: SearchFilterDebounced,
       onCreate: dialogToggle.open
     })
   }, [setLayout, t])

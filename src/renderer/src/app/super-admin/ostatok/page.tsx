@@ -8,9 +8,9 @@ import { CollapsibleTable } from '@renderer/common/components/collapsible-table'
 import { Button } from '@renderer/common/components/ui/button'
 import { FormField } from '@renderer/common/components/ui/form'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@renderer/common/components/ui/tabs'
+import { SearchFilterDebounced } from '@renderer/common/features/filters/search/search-filter-debounced'
+import { useSearchFilter } from '@renderer/common/features/filters/search/search-filter-debounced'
 import { useLayoutStore } from '@renderer/common/features/layout'
-import { SearchField } from '@renderer/common/features/search/search-field'
-import { useSearch } from '@renderer/common/features/search/use-search'
 import { useSpravochnik } from '@renderer/common/features/spravochnik'
 import { usePagination } from '@renderer/common/hooks'
 import { formatDate, parseDate } from '@renderer/common/lib/date'
@@ -34,7 +34,7 @@ const AdminOstatokPage = () => {
   const pagination = usePagination()
   const setLayout = useLayoutStore((store) => store.setLayout)
 
-  const { search } = useSearch()
+  const [search] = useSearchFilter()
   const { t } = useTranslation(['app'])
 
   const form = useForm({
@@ -76,7 +76,7 @@ const AdminOstatokPage = () => {
   useEffect(() => {
     setLayout({
       title: t('pages.ostatok'),
-      content: SearchField,
+      content: SearchFilterDebounced,
       breadcrumbs: [
         {
           title: t('pages.admin')

@@ -1,7 +1,7 @@
 import type { SpravochnikHookOptions } from '@/common/features/spravochnik'
 import type { Organization, Response } from '@/common/models'
 
-import { SpravochnikSearchField } from '@renderer/common/features/search/spravochnik-search-field'
+import { SpravochnikSearchField } from '@renderer/common/features/filters/search/search-filter-spravochnik'
 import { http } from '@renderer/common/lib/http'
 import { z } from 'zod'
 

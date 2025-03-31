@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 
 import { roleColumns, roleQueryKeys, roleService } from '@renderer/app/super-admin/role'
-import { SearchField } from '@renderer/common/features/search/search-field'
-import { useSearch } from '@renderer/common/features/search/use-search'
+import { SearchFilterDebounced } from '@renderer/common/features/filters/search/search-filter-debounced'
+import { useSearchFilter } from '@renderer/common/features/filters/search/search-filter-debounced'
 import { usePagination } from '@renderer/common/hooks'
 import { ListView } from '@renderer/common/views'
 import { useQuery } from '@tanstack/react-query'
@@ -21,7 +21,7 @@ const AccessPage = () => {
   const dialogToggle = useToggle()
   const pagination = usePagination()
 
-  const { search } = useSearch()
+  const [search] = useSearchFilter()
   const { t } = useTranslation(['app'])
 
   const { data: roleList, isFetching } = useQuery({
@@ -43,7 +43,7 @@ const AccessPage = () => {
           title: t('pages.admin')
         }
       ],
-      content: SearchField
+      content: SearchFilterDebounced
     })
   }, [setLayout])
   useEffect(() => {

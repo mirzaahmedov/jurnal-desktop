@@ -8,7 +8,7 @@ import {
   CollapsibleTable,
   type CollapsibleTableProps
 } from '@renderer/common/components/collapsible-table'
-import { SpravochnikSearchField } from '@renderer/common/features/search/spravochnik-search-field'
+import { SpravochnikSearchField } from '@renderer/common/features/filters/search/search-filter-spravochnik'
 import {
   type PathTreeNode,
   arrayToTreeByPathKey,
@@ -19,7 +19,7 @@ import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 import { extendObject } from '@/common/lib/utils'
 
 import { smetaColumns } from './columns'
-import { SmetaGroupFilter } from './group-filter'
+import { SmetaGroupFilter } from './filter'
 
 export const smetaService = new CRUDService<Smeta, SmetaForm>({
   endpoint: ApiEndpoints.smeta

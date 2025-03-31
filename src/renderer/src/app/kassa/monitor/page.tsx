@@ -2,9 +2,9 @@ import { useEffect } from 'react'
 
 import { useSettingsStore } from '@renderer/common/features/app-defaults'
 import { DownloadFile } from '@renderer/common/features/file'
+import { SearchFilterDebounced } from '@renderer/common/features/filters/search/search-filter-debounced'
+import { useSearchFilter } from '@renderer/common/features/filters/search/search-filter-debounced'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
-import { SearchField } from '@renderer/common/features/search/search-field'
-import { useSearch } from '@renderer/common/features/search/use-search'
 import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 
@@ -27,7 +27,7 @@ const KassaMonitorPage = () => {
   const setLayout = useLayoutStore((store) => store.setLayout)
 
   const { t } = useTranslation(['app'])
-  const { search } = useSearch()
+  const [search] = useSearchFilter()
   const { main_schet_id, budjet_id } = useRequisitesStore()
 
   const { data: monitorList, isFetching } = useQuery({
@@ -51,7 +51,7 @@ const KassaMonitorPage = () => {
           title: t('pages.kassa')
         }
       ],
-      content: SearchField
+      content: SearchFilterDebounced
     })
   }, [setLayout, t])
 

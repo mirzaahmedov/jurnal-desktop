@@ -2,9 +2,9 @@ import type { SmetaGrafik } from '@/common/models'
 
 import { useEffect, useState } from 'react'
 
+import { SearchFilterDebounced } from '@renderer/common/features/filters/search/search-filter-debounced'
+import { useSearchFilter } from '@renderer/common/features/filters/search/search-filter-debounced'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
-import { SearchField } from '@renderer/common/features/search/search-field'
-import { useSearch } from '@renderer/common/features/search/use-search'
 import { usePagination } from '@renderer/common/hooks'
 import { ListView } from '@renderer/common/views'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
@@ -31,7 +31,7 @@ const SmetaGrafikPage = () => {
 
   const { main_schet_id, budjet_id } = useRequisitesStore()
   const { confirm } = useConfirm()
-  const { search } = useSearch()
+  const [search] = useSearchFilter()
   const { t } = useTranslation(['app'])
 
   const { data: smetaGrafikList, isFetching } = useQuery({
@@ -78,7 +78,7 @@ const SmetaGrafikPage = () => {
           title: t('pages.spravochnik')
         }
       ],
-      content: SearchField,
+      content: SearchFilterDebounced,
       onCreate: () => {
         setSelected(null)
         dialogToggle.open()

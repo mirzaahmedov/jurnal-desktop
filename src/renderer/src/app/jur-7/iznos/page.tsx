@@ -7,10 +7,10 @@ import { createGroupSpravochnik } from '@renderer/app/super-admin/group/service'
 import { ChooseSpravochnik, DatePicker, GenericTable } from '@renderer/common/components'
 import { Button } from '@renderer/common/components/ui/button'
 import { FormField } from '@renderer/common/components/ui/form'
+import { SearchFilterDebounced } from '@renderer/common/features/filters/search/search-filter-debounced'
+import { useSearchFilter } from '@renderer/common/features/filters/search/search-filter-debounced'
 import { useLayoutStore } from '@renderer/common/features/layout'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
-import { SearchField } from '@renderer/common/features/search/search-field'
-import { useSearch } from '@renderer/common/features/search/use-search'
 import { useSpravochnik } from '@renderer/common/features/spravochnik'
 import { usePagination, useToggle } from '@renderer/common/hooks'
 import { formatDate, parseDate } from '@renderer/common/lib/date'
@@ -35,7 +35,7 @@ const IznosPage = () => {
   const setLayout = useLayoutStore((store) => store.setLayout)
 
   const { t } = useTranslation(['app'])
-  const { search } = useSearch()
+  const [search] = useSearchFilter()
   const { minDate, maxDate, queuedMonths } = useOstatokStore()
 
   const [selected] = useState<OstatokProduct | null>(null)
@@ -86,7 +86,7 @@ const IznosPage = () => {
   useEffect(() => {
     setLayout({
       title: t('pages.iznos'),
-      content: SearchField,
+      content: SearchFilterDebounced,
       breadcrumbs: [
         {
           title: t('pages.material-warehouse')

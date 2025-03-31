@@ -7,6 +7,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger
 } from '@renderer/common/components/ui/dropdown-menu'
+import { useSearchFilter } from '@renderer/common/features/filters/search/search-filter-debounced'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { CopyPlus, Ellipsis } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
@@ -14,17 +15,15 @@ import { useTranslation } from 'react-i18next'
 import { GenericTable } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
 import { useLayoutStore } from '@/common/features/layout'
-import { useSearch } from '@/common/features/search/use-search'
 import { usePagination } from '@/common/hooks'
-import { useLocationState } from '@/common/hooks/use-location-state'
 import { useToggle } from '@/common/hooks/use-toggle'
-import { type Operatsii, TypeSchetOperatsii } from '@/common/models'
+import { type Operatsii } from '@/common/models'
 import { ListView } from '@/common/views'
 
 import { operatsiiColumns } from './columns'
 import { operatsiiQueryKeys } from './config'
 import { OperatsiiDialog } from './dialog'
-import { OperatsiiFilter } from './filter'
+import { OperatsiiFilter, useTypeSchetFilter } from './filter'
 import { type OperatsiiFormValues, operatsiiService } from './service'
 
 const OperatsiiPage = () => {
@@ -36,11 +35,11 @@ const OperatsiiPage = () => {
   const pagination = usePagination()
   const setLayout = useLayoutStore((store) => store.setLayout)
 
-  const [typeSchet] = useLocationState('type_schet', TypeSchetOperatsii.ALL)
+  const [typeSchet] = useTypeSchetFilter()
 
   const { t } = useTranslation(['app'])
   const { confirm } = useConfirm()
-  const { search } = useSearch()
+  const [search] = useSearchFilter()
 
   const { data: operations, isFetching } = useQuery({
     queryKey: [

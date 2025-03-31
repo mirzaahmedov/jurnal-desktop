@@ -11,9 +11,9 @@ import {
 } from '@renderer/app/jur-7/ostatok/utils'
 import { ButtonGroup } from '@renderer/common/components/ui/button-group'
 import { DownloadFile } from '@renderer/common/features/file'
+import { SearchFilterDebounced } from '@renderer/common/features/filters/search/search-filter-debounced'
+import { useSearchFilter } from '@renderer/common/features/filters/search/search-filter-debounced'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
-import { SearchField } from '@renderer/common/features/search/search-field'
-import { useSearch } from '@renderer/common/features/search/use-search'
 import { useDates, usePagination } from '@renderer/common/hooks'
 import { formatDate } from '@renderer/common/lib/date'
 import { ListView } from '@renderer/common/views'
@@ -44,7 +44,7 @@ const Jurnal7PrixodPage = () => {
   const queryClient = useQueryClient()
 
   const { t } = useTranslation(['app'])
-  const { search } = useSearch()
+  const [search] = useSearchFilter()
   const { confirm } = useConfirm()
   const { minDate, maxDate, queuedMonths } = useOstatokStore()
 
@@ -115,7 +115,7 @@ const Jurnal7PrixodPage = () => {
   useEffect(() => {
     setLayout({
       title: t('pages.prixod-docs'),
-      content: SearchField,
+      content: SearchFilterDebounced,
       breadcrumbs: [
         {
           title: t('pages.material-warehouse')

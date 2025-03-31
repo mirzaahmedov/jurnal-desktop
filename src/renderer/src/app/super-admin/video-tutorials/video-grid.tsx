@@ -30,7 +30,7 @@ export const VideoGrid = ({
 }: VideoGirdProps) => {
   const { t } = useTranslation()
 
-  const [tabValue, setTabValue] = useState<TabOption>(TabOption.SuperAdmin)
+  const [tabValue, setTabValue] = useState<TabOption>(TabOption.Region)
 
   const { data: videos, isFetching } = useQuery({
     queryKey: [

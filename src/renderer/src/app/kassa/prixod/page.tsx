@@ -2,9 +2,9 @@ import type { KassaPrixodType } from '@/common/models'
 
 import { useEffect } from 'react'
 
+import { SearchFilterDebounced } from '@renderer/common/features/filters/search/search-filter-debounced'
+import { useSearchFilter } from '@renderer/common/features/filters/search/search-filter-debounced'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
-import { SearchField } from '@renderer/common/features/search/search-field'
-import { useSearch } from '@renderer/common/features/search/use-search'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
@@ -23,7 +23,7 @@ import { kassaPrixodService } from './service'
 const KassaPrixodPage = () => {
   const { confirm } = useConfirm()
   const { t } = useTranslation(['app'])
-  const { search } = useSearch()
+  const [search] = useSearchFilter()
 
   const dates = useDates()
   const pagination = usePagination()
@@ -68,7 +68,7 @@ const KassaPrixodPage = () => {
   useEffect(() => {
     setLayout({
       title: t('pages.prixod-docs'),
-      content: SearchField,
+      content: SearchFilterDebounced,
       breadcrumbs: [
         {
           title: t('pages.kassa')

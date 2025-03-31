@@ -1,14 +1,12 @@
-import type { FC } from 'react'
-
 import { Badge } from '@renderer/common/components/ui/badge'
-import { Mainbook } from '@renderer/common/models'
+import { MainbookStatus } from '@renderer/common/models'
 import { useTranslation } from 'react-i18next'
 
-export type ReportStatusProps = { status: Mainbook.Status }
-export const ReportStatus: FC<ReportStatusProps> = ({ status }) => {
+export type ReportStatusProps = { status: MainbookStatus }
+export const ReportStatus = ({ status }: ReportStatusProps) => {
   const { t } = useTranslation()
   switch (status) {
-    case Mainbook.Status.SENT:
+    case MainbookStatus.SEND:
       return (
         <Badge
           variant="secondary"
@@ -17,7 +15,7 @@ export const ReportStatus: FC<ReportStatusProps> = ({ status }) => {
           {t('sent')}
         </Badge>
       )
-    case Mainbook.Status.ACCEPTED:
+    case MainbookStatus.ACCEPT:
       return (
         <Badge
           variant="secondary"
@@ -26,7 +24,7 @@ export const ReportStatus: FC<ReportStatusProps> = ({ status }) => {
           {t('recieved')}
         </Badge>
       )
-    case Mainbook.Status.REJECTED:
+    case MainbookStatus.REJECT:
       return (
         <Badge
           variant="secondary"

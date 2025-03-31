@@ -1,7 +1,7 @@
 import type { SpravochnikHookOptions } from '@/common/features/spravochnik'
 import type { Sostav } from '@/common/models'
 
-import { SpravochnikSearchField } from '@renderer/common/features/search/spravochnik-search-field'
+import { SpravochnikSearchField } from '@renderer/common/features/filters/search/search-filter-spravochnik'
 import { z } from 'zod'
 
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'

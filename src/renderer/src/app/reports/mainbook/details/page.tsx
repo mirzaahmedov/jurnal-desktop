@@ -1,15 +1,19 @@
-import { useEffect, useMemo } from 'react'
+import type { EditableTableMethods } from '@/common/components/editable-table'
 
-import { MonthPicker } from '@renderer/common/components/month-picker'
-import { Button } from '@renderer/common/components/ui/button'
-import { useLayoutStore } from '@renderer/common/features/layout'
-import { formatDate } from '@renderer/common/lib/date'
-import { DetailsView } from '@renderer/common/views'
+import { type KeyboardEvent, useEffect, useMemo, useRef } from 'react'
+
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
+
+import { MonthPicker } from '@/common/components/month-picker'
+import { SearchInput } from '@/common/components/search-input'
+import { Button } from '@/common/components/ui/button'
+import { useLayoutStore } from '@/common/features/layout'
+import { formatDate } from '@/common/lib/date'
+import { DetailsView } from '@/common/views'
 
 import { mainbookQueryKeys } from '../config'
 import { mainbookService } from '../service'
@@ -20,6 +24,7 @@ import { type MainbookAutoFillSubChild, autoFillMainbookData, getMainbookTypes }
 import { getMainbookColumns, transformGetByIdData, transformMainbookAutoFillData } from './utils'
 
 const MainbookDetailsPage = () => {
+  const tableMethods = useRef<EditableTableMethods>(null)
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const setLayout = useLayoutStore((store) => store.setLayout)
@@ -155,6 +160,23 @@ const MainbookDetailsPage = () => {
     }
   })
 
+  const handleSearch = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      e.stopPropagation()
+      e.preventDefault()
+
+      const value = e.currentTarget.value
+      if (value.length > 0) {
+        const rows = form.getValues('childs')
+        const index = rows.findIndex((row) =>
+          row.schet?.toLowerCase()?.includes(value?.toLowerCase())
+        )
+        tableMethods.current?.setHighlightedRows([index])
+        tableMethods.current?.scrollToRow(index)
+      }
+    }
+  }
+
   return (
     <DetailsView className="h-full">
       <DetailsView.Content
@@ -167,31 +189,35 @@ const MainbookDetailsPage = () => {
         >
           <div className="relative h-full flex flex-col">
             <div className="flex items-center justify-between gap-5 p-5 border-b">
-              <MonthPicker
-                value={date}
-                onChange={(value) => {
-                  const date = new Date(value)
-                  form.setValue('year', date.getFullYear())
-                  form.setValue('month', date.getMonth() + 1)
-                  if (id !== 'create') {
-                    autoFillMainbook({ year: date.getFullYear(), month: date.getMonth() + 1 })
-                  }
-                }}
-              />
-              {id !== 'create' ? (
-                <Button
-                  type="button"
-                  onClick={() => autoFillMainbook({ year, month })}
-                  loading={isAutoFillingMainbook}
-                >
-                  {t('autofill')}
-                </Button>
-              ) : null}
+              <SearchInput onKeyDown={handleSearch} />
+              <div className="flex items-center gap-5">
+                <MonthPicker
+                  value={date}
+                  onChange={(value) => {
+                    const date = new Date(value)
+                    form.setValue('year', date.getFullYear())
+                    form.setValue('month', date.getMonth() + 1)
+                    if (id !== 'create') {
+                      autoFillMainbook({ year: date.getFullYear(), month: date.getMonth() + 1 })
+                    }
+                  }}
+                />
+                {id !== 'create' ? (
+                  <Button
+                    type="button"
+                    onClick={() => autoFillMainbook({ year, month })}
+                    loading={isAutoFillingMainbook}
+                  >
+                    {t('autofill')}
+                  </Button>
+                ) : null}
+              </div>
             </div>
             <div className="overflow-auto scrollbar flex-1 relative">
               <MainbookTable
                 columns={columns}
                 data={form.watch('childs')}
+                methods={tableMethods}
               />
             </div>
           </div>

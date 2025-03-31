@@ -106,7 +106,7 @@ export const OstatokSpravochnikDialog = ({
             {tabValue === TabOption.ALL ? (
               <SearchInputDebounced
                 value={search}
-                onChangeValue={setSearch}
+                onValueChange={setSearch}
               />
             ) : null}
           </DialogHeader>

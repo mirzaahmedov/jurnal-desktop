@@ -3,7 +3,6 @@ import type { MainSchet } from '@/common/models'
 import { Fragment, type ReactNode } from 'react'
 
 import { CaretRightIcon } from '@radix-ui/react-icons'
-import { RequisitesDialog, useRequisitesStore } from '@renderer/common/features/requisites'
 import { useQuery } from '@tanstack/react-query'
 import { ArrowLeft, LogOut, Plus, RefreshCw, Settings } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
@@ -14,6 +13,7 @@ import { Avatar, AvatarFallback } from '@/common/components/ui/avatar'
 import { Button } from '@/common/components/ui/button'
 import { ConfigureDefaultValuesDialog } from '@/common/features/app-defaults'
 import { useAuthenticationStore } from '@/common/features/auth'
+import { RequisitesDialog, useRequisitesStore } from '@/common/features/requisites'
 import { useToggle } from '@/common/hooks/use-toggle'
 
 import { MainSchetInfoDialog } from './main-schet-info'
@@ -87,7 +87,7 @@ export const PageLayout = ({ children }: PageLayoutProps) => {
           </div>
         </div>
         <div className="flex-1 flex items-center">
-          <div className="flex-1">{Content && <Content key={pathname} />}</div>
+          <div className="flex-1 px-5">{Content && <Content key={pathname} />}</div>
           <div>
             {typeof onCreate === 'function' ? (
               <Button onClick={onCreate}>

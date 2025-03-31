@@ -29,10 +29,10 @@ import {
   type ImportValidationErrorRow,
   handleImportValidationError
 } from '@renderer/common/features/file/utils'
+import { SearchFilterDebounced } from '@renderer/common/features/filters/search/search-filter-debounced'
+import { useSearchFilter } from '@renderer/common/features/filters/search/search-filter-debounced'
 import { useLayoutStore } from '@renderer/common/features/layout'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
-import { SearchField } from '@renderer/common/features/search/search-field'
-import { useSearch } from '@renderer/common/features/search/use-search'
 import { useSpravochnik } from '@renderer/common/features/spravochnik'
 import { usePagination, useToggle } from '@renderer/common/hooks'
 import { date_iso_regex, formatDate, parseDate, validateDate } from '@renderer/common/lib/date'
@@ -89,7 +89,7 @@ const OstatokPage = () => {
   const report_title_id = useSettingsStore((store) => store.report_title_id)
   const setLayout = useLayoutStore((store) => store.setLayout)
 
-  const { search } = useSearch()
+  const [search] = useSearchFilter()
   const { confirm } = useConfirm()
   const { t } = useTranslation(['app'])
 
@@ -168,7 +168,7 @@ const OstatokPage = () => {
   useEffect(() => {
     setLayout({
       title: t('pages.ostatok'),
-      content: SearchField,
+      content: SearchFilterDebounced,
       breadcrumbs: [
         {
           title: t('pages.material-warehouse')

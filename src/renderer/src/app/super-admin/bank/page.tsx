@@ -2,8 +2,8 @@ import type { Bank } from '@/common/models'
 
 import { useEffect, useState } from 'react'
 
-import { SearchField } from '@renderer/common/features/search/search-field'
-import { useSearch } from '@renderer/common/features/search/use-search'
+import { SearchFilterDebounced } from '@renderer/common/features/filters/search/search-filter-debounced'
+import { useSearchFilter } from '@renderer/common/features/filters/search/search-filter-debounced'
 import { usePagination } from '@renderer/common/hooks'
 import { ListView } from '@renderer/common/views'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
@@ -29,7 +29,7 @@ const BankPage = () => {
   const pagination = usePagination()
 
   const { t } = useTranslation(['app'])
-  const { search } = useSearch()
+  const [search] = useSearchFilter()
   const { confirm } = useConfirm()
 
   const { data: podpisList, isFetching } = useQuery({
@@ -68,7 +68,7 @@ const BankPage = () => {
   useEffect(() => {
     setLayout({
       title: t('pages.bank'),
-      content: SearchField,
+      content: SearchFilterDebounced,
       onCreate() {
         dialogToggle.open()
       }

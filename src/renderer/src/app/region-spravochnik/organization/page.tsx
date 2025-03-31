@@ -6,9 +6,9 @@ import { Button } from '@renderer/common/components/ui/button'
 import { ButtonGroup } from '@renderer/common/components/ui/button-group'
 import { useConfirm } from '@renderer/common/features/confirm'
 import { DownloadFile, ImportFile } from '@renderer/common/features/file'
+import { SearchFilterDebounced } from '@renderer/common/features/filters/search/search-filter-debounced'
+import { useSearchFilter } from '@renderer/common/features/filters/search/search-filter-debounced'
 import { useLayoutStore } from '@renderer/common/features/layout'
-import { SearchField } from '@renderer/common/features/search/search-field'
-import { useSearch } from '@renderer/common/features/search/use-search'
 import { usePagination, useToggle } from '@renderer/common/hooks'
 import { ListView } from '@renderer/common/views'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
@@ -29,7 +29,7 @@ const OrganizationPage = () => {
 
   const { t } = useTranslation(['app'])
   const { confirm } = useConfirm()
-  const { search } = useSearch()
+  const [search] = useSearchFilter()
 
   const dialogToggle = useToggle()
   const pagination = usePagination()
@@ -66,7 +66,7 @@ const OrganizationPage = () => {
           title: t('pages.spravochnik')
         }
       ],
-      content: SearchField,
+      content: SearchFilterDebounced,
       onCreate: () => {
         dialogToggle.open()
       }
