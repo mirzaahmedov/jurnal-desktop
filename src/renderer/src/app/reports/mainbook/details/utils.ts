@@ -88,26 +88,32 @@ export const getMainbookColumns = (types: MainbookType[]) => {
           columns: [
             {
               key: `${type.id}_prixod`,
-              width: 120,
-              minWidth: 120,
+              // width: 120,
+              // minWidth: 120,
               header: t('prixod'),
               headerClassName: 'text-center',
               Editor: createNumberEditor({
                 key: `${type.id}_prixod`,
                 readOnly: true,
-                defaultValue: 0
+                defaultValue: 0,
+                inputProps: {
+                  adjustWidth: true
+                }
               })
             },
             {
               key: `${type.id}_rasxod`,
-              width: 120,
-              minWidth: 120,
+              // width: 120,
+              // minWidth: 120,
               header: t('rasxod'),
               headerClassName: 'text-center',
               Editor: createNumberEditor({
                 key: `${type.id}_rasxod`,
                 readOnly: true,
-                defaultValue: 0
+                defaultValue: 0,
+                inputProps: {
+                  adjustWidth: true
+                }
               })
             }
           ]

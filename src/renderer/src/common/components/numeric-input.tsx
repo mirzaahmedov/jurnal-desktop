@@ -1,7 +1,7 @@
 import type { InputProps } from './ui/input'
 import type { NumericFormatProps } from 'react-number-format'
 
-import { forwardRef, useRef } from 'react'
+import { forwardRef, useLayoutEffect, useRef } from 'react'
 
 import { NumericFormat } from 'react-number-format'
 
@@ -15,6 +15,18 @@ export type NumericInputProps = NumericFormatProps<InputProps> & {
 export const NumericInput = forwardRef<HTMLInputElement, NumericInputProps>(
   ({ className, adjustWidth, ...props }, forwardedRef) => {
     const inputRef = useRef<HTMLInputElement>()
+
+    useLayoutEffect(() => {
+      if (adjustWidth) {
+        const input = inputRef.current
+        if (input) {
+          const size = input.value.length - 1
+          requestAnimationFrame(() => {
+            input.style.minWidth = `${size}ch`
+          })
+        }
+      }
+    }, [adjustWidth, props.value])
 
     return (
       <NumericFormat
@@ -34,16 +46,7 @@ export const NumericInput = forwardRef<HTMLInputElement, NumericInputProps>(
         customInput={Input}
         className={cn('text-end', className)}
         {...props}
-        onValueChange={(values, src) => {
-          props.onValueChange?.(values, src)
-          if (adjustWidth) {
-            const input = inputRef.current
-            if (input) {
-              input.style.minWidth = `${input.value.length}ch`
-            }
-          }
-        }}
-        onChange={undefined}
+        onValueChange={props.onValueChange}
       />
     )
   }

@@ -1,4 +1,4 @@
-import type { EditableColumnDef } from '../table'
+import type { EditableColumnDef } from '../interface'
 import type { Dispatch, FC, InputHTMLAttributes, SetStateAction } from 'react'
 import type { FieldErrors } from 'react-hook-form'
 

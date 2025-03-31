@@ -1,40 +1,33 @@
-import { formatDate } from '@renderer/common/lib/date'
-
-import { useOstatokStore } from '../jur-7/ostatok/store'
+import { useState } from 'react'
 
 const DemoPage = () => {
-  const { queuedMonths, enqueueMonth } = useOstatokStore()
+  const [inputValue, setInputValue] = useState('')
 
   return (
     <div className="flex-1 w-full h-full">
-      <ul>
-        {queuedMonths.map((m) => (
-          <li key={`${m.year}-${m.month}`}>{formatDate(new Date(m.year, m.month))}</li>
-        ))}
-      </ul>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault()
-          const formData = new FormData(e.currentTarget)
-          const year = Number(formData.get('year'))
-          const month = Number(formData.get('month'))
+      <input
+        type="text"
+        value={inputValue}
+        onChange={(e) => {
+          console.log('onChange', e.target.value)
+          setInputValue(e.target.value)
+        }}
+      />
 
-          enqueueMonth({
-            year,
-            month
-          })
+      <button
+        onClick={() => {
+          setInputValue('hello')
         }}
       >
-        <input
-          type="number"
-          name="year"
-        />
-        <input
-          type="number"
-          name="month"
-        />
-        <button type="submit">submit</button>
-      </form>
+        set hello
+      </button>
+      <button
+        onClick={() => {
+          setInputValue('world')
+        }}
+      >
+        set world
+      </button>
     </div>
   )
 }
