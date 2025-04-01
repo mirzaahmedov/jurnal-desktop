@@ -1,4 +1,4 @@
-import type { KassaPrixodType, ResponseMeta } from '@/common/models'
+import type { KassaPrixod, ResponseMeta } from '@/common/models'
 
 import { ZodIssueCode, z } from 'zod'
 
@@ -7,7 +7,7 @@ import { main_schet } from '@/common/features/crud/middleware'
 import { withPreprocessor } from '@/common/lib/validation'
 
 export const kassaPrixodService = new CRUDService<
-  KassaPrixodType,
+  KassaPrixod,
   PrixodPayloadType,
   PrixodPayloadType,
   { summa: number } & ResponseMeta

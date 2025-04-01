@@ -1,12 +1,12 @@
 import type { ColumnDef } from '@/common/components'
-import type { KassaPrixodType } from '@/common/models'
+import type { KassaPrixod } from '@/common/models'
 
 import { IDCell } from '@renderer/common/components/table/renderers/id'
 import { ProvodkaCell } from '@renderer/common/components/table/renderers/provodka'
 
 import { formatLocaleDate } from '@/common/lib/format'
 
-export const columns: ColumnDef<KassaPrixodType>[] = [
+export const columns: ColumnDef<KassaPrixod>[] = [
   {
     key: 'id',
     renderCell: IDCell,
@@ -19,7 +19,7 @@ export const columns: ColumnDef<KassaPrixodType>[] = [
   {
     key: 'doc_date',
     renderCell(row, col) {
-      return formatLocaleDate(row[col.key as keyof KassaPrixodType] as string)
+      return formatLocaleDate(row[col.key as keyof KassaPrixod] as string)
     }
   },
   {

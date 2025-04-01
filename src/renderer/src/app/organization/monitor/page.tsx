@@ -1,19 +1,11 @@
 import { useEffect } from 'react'
 
-import { createOrganizationSpravochnik } from '@renderer/app/region-spravochnik/organization'
-import { Button } from '@renderer/common/components/ui/button'
-import { useSettingsStore } from '@renderer/common/features/app-defaults'
-import { DownloadFile } from '@renderer/common/features/file'
-import { SearchFilterDebounced } from '@renderer/common/features/filters/search/search-filter-debounced'
-import { useSearchFilter } from '@renderer/common/features/filters/search/search-filter-debounced'
-import { useRequisitesStore } from '@renderer/common/features/requisites'
-import { useLocationState } from '@renderer/common/hooks/use-location-state'
-import { getProvodkaURL } from '@renderer/common/lib/provodka'
 import { useQuery } from '@tanstack/react-query'
 import { Download } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
+import { createOrganizationSpravochnik } from '@/app/region-spravochnik/organization'
 import { createOperatsiiSpravochnik } from '@/app/super-admin/operatsii'
 import {
   ChooseSpravochnik,
@@ -22,6 +14,7 @@ import {
   GenericTable,
   SummaTotal
 } from '@/common/components'
+import { Button } from '@/common/components/ui/button'
 import { ButtonGroup } from '@/common/components/ui/button-group'
 import {
   DropdownMenu,
@@ -29,10 +22,17 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger
 } from '@/common/components/ui/dropdown-menu'
+import { useSettingsStore } from '@/common/features/app-defaults'
+import { DownloadFile } from '@/common/features/file'
+import { SearchFilterDebounced } from '@/common/features/filters/search/search-filter-debounced'
+import { useSearchFilter } from '@/common/features/filters/search/search-filter-debounced'
 import { useLayoutStore } from '@/common/features/layout'
+import { useRequisitesStore } from '@/common/features/requisites'
 import { useSpravochnik } from '@/common/features/spravochnik'
 import { useDates, usePagination, useToggle } from '@/common/hooks'
+import { useLocationState } from '@/common/hooks/use-location-state'
 import { formatNumber } from '@/common/lib/format'
+import { getProvodkaURL } from '@/common/lib/provodka'
 import { type OrganizationMonitor, TypeSchetOperatsii } from '@/common/models'
 import { ListView } from '@/common/views'
 
@@ -42,9 +42,6 @@ import { orgMonitoringQueryKeys } from './constants'
 import { orgMonitoringService } from './service'
 
 const OrganizationMonitoringPage = () => {
-  const [operatsiiId, setOperatsiiId] = useLocationState<undefined | number>('operatsii_id')
-  const [orgId, setOrgId] = useLocationState<undefined | number>('org_id')
-
   const navigate = useNavigate()
   const dates = useDates()
   const dropdownToggle = useToggle()
@@ -53,8 +50,11 @@ const OrganizationMonitoringPage = () => {
 
   const setLayout = useLayoutStore((store) => store.setLayout)
 
-  const { main_schet_id, budjet_id } = useRequisitesStore()
+  const [operatsiiId, setOperatsiiId] = useLocationState<undefined | number>('operatsii_id')
+  const [orgId, setOrgId] = useLocationState<undefined | number>('org_id')
   const [search] = useSearchFilter()
+
+  const { main_schet_id, budjet_id } = useRequisitesStore()
   const { t } = useTranslation(['app'])
 
   const orgSpravochnik = useSpravochnik(
@@ -184,7 +184,7 @@ const OrganizationMonitoringPage = () => {
                           excel: true,
                           operatsii: operatsiiSpravochnik.selected?.schet
                         }}
-                        buttonText="Шапка"
+                        buttonText={t('cap')}
                         className="w-full inline-flex items-center justify-start"
                       />
                     </DropdownMenuItem>
@@ -206,6 +206,22 @@ const OrganizationMonitoringPage = () => {
                         />
                       </DropdownMenuItem>
                     ) : null}
+
+                    <DropdownMenuItem>
+                      <DownloadFile
+                        fileName={`${t('pages.organization')}-${t('pages.prixod-docs')}-${dates.from}-${dates.to}.xlsx`}
+                        url="/organization/monitoring/prixod"
+                        params={{
+                          budjet_id,
+                          main_schet_id,
+                          from: dates.from,
+                          to: dates.to,
+                          report_title_id,
+                          excel: true
+                        }}
+                        buttonText={t('pages.prixod-docs')}
+                      />
+                    </DropdownMenuItem>
 
                     {operatsiiSpravochnik.selected?.schet ? (
                       <DropdownMenuItem>

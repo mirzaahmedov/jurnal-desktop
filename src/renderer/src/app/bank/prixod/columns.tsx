@@ -1,4 +1,4 @@
-import type { BankPrixodType } from '@/common/models'
+import type { BankPrixod } from '@/common/models'
 
 import { DataList } from '@renderer/common/components/data-list'
 import { IDCell } from '@renderer/common/components/table/renderers/id'
@@ -9,7 +9,7 @@ import { type ColumnDef, Copyable } from '@/common/components'
 import { HoverInfoCell } from '@/common/components/table/renderers'
 import { formatLocaleDate } from '@/common/lib/format'
 
-export const columns: ColumnDef<BankPrixodType>[] = [
+export const columns: ColumnDef<BankPrixod>[] = [
   {
     key: 'id',
     renderCell: IDCell,
@@ -22,7 +22,7 @@ export const columns: ColumnDef<BankPrixodType>[] = [
   {
     key: 'doc_date',
     renderCell(row, col) {
-      return formatLocaleDate(row[col.key as keyof BankPrixodType] as string)
+      return formatLocaleDate(row[col.key as keyof BankPrixod] as string)
     }
   },
   {

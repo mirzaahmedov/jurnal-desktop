@@ -1,4 +1,4 @@
-export type BankPrixodType = {
+export interface BankPrixod {
   id: number
   doc_num: string
   doc_date: string
@@ -21,17 +21,17 @@ export type BankPrixodType = {
       provodki_sub_schet: string
     }
   ]
-  childs?: BankPrixodPodvodkaType[]
+  childs?: BankPrixodPodvodka[]
 }
 
-export type BankPrixodPodvodkaType = {
+export interface BankPrixodPodvodka {
   id: number
   user_id: number
   spravochnik_operatsii_id: number
   summa: number
 }
 
-export type KassaPrixodType = {
+export interface KassaPrixod {
   id: number
   doc_num: string
   doc_date: string
@@ -47,7 +47,7 @@ export type KassaPrixodType = {
       provodki_sub_schet: string
     }
   ]
-  childs?: BankPrixodPodvodkaType[]
+  childs?: BankPrixodPodvodka[]
 }
 
 type MO7PrixodChild = {
@@ -62,7 +62,7 @@ type MO7PrixodChild = {
   data_pereotsenka: string
   iznos_foiz?: number
 }
-type MO7Prixod = {
+export type MO7Prixod = {
   id: number
   doc_num: string
   doc_date: string
@@ -72,5 +72,3 @@ type MO7Prixod = {
   kimga_name: string
   childs: MO7PrixodChild[]
 }
-
-export type { MO7Prixod }

@@ -1,4 +1,4 @@
-import type { BankPrixodType, ResponseMeta } from '@/common/models'
+import type { BankPrixod, ResponseMeta } from '@/common/models'
 
 import { z } from 'zod'
 
@@ -7,7 +7,7 @@ import { main_schet } from '@/common/features/crud/middleware'
 import { withPreprocessor } from '@/common/lib/validation'
 
 export const bankPrixodService = new CRUDService<
-  BankPrixodType,
+  BankPrixod,
   PrixodPayloadType,
   PrixodPayloadType,
   { summa: number } & ResponseMeta

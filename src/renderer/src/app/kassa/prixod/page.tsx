@@ -1,17 +1,19 @@
-import type { KassaPrixodType } from '@/common/models'
+import type { KassaPrixod } from '@/common/models'
 
 import { useEffect } from 'react'
 
-import { SearchFilterDebounced } from '@renderer/common/features/filters/search/search-filter-debounced'
-import { useSearchFilter } from '@renderer/common/features/filters/search/search-filter-debounced'
-import { useRequisitesStore } from '@renderer/common/features/requisites'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
 import { FooterCell, FooterRow, GenericTable } from '@/common/components'
+import { useSettingsStore } from '@/common/features/app-defaults'
 import { useConfirm } from '@/common/features/confirm'
+import { DownloadFile } from '@/common/features/file'
+import { SearchFilterDebounced } from '@/common/features/filters/search/search-filter-debounced'
+import { useSearchFilter } from '@/common/features/filters/search/search-filter-debounced'
 import { useLayoutStore } from '@/common/features/layout'
+import { useRequisitesStore } from '@/common/features/requisites'
 import { useDates, usePagination } from '@/common/hooks'
 import { formatNumber } from '@/common/lib/format'
 import { ListView } from '@/common/views'
@@ -21,16 +23,19 @@ import { queryKeys } from './constants'
 import { kassaPrixodService } from './service'
 
 const KassaPrixodPage = () => {
-  const { confirm } = useConfirm()
-  const { t } = useTranslation(['app'])
-  const [search] = useSearchFilter()
-
   const dates = useDates()
   const pagination = usePagination()
   const queryClient = useQueryClient()
   const navigate = useNavigate()
-  const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
+
   const setLayout = useLayoutStore((store) => store.setLayout)
+
+  const [search] = useSearchFilter()
+
+  const { confirm } = useConfirm()
+  const { t } = useTranslation(['app'])
+  const { report_title_id } = useSettingsStore()
+  const { budjet_id, main_schet_id } = useRequisitesStore()
 
   const { data: prixodList, isFetching } = useQuery({
     queryKey: [
@@ -54,10 +59,10 @@ const KassaPrixodPage = () => {
     }
   })
 
-  const handleClickEdit = (row: KassaPrixodType) => {
+  const handleClickEdit = (row: KassaPrixod) => {
     navigate(`${row.id}`)
   }
-  const handleClickDelete = (row: KassaPrixodType) => {
+  const handleClickDelete = (row: KassaPrixod) => {
     confirm({
       onConfirm() {
         deleteMutation(row.id)
@@ -82,8 +87,21 @@ const KassaPrixodPage = () => {
 
   return (
     <ListView>
-      <ListView.Header>
+      <ListView.Header className="flex items-center justify-between">
         <ListView.RangeDatePicker {...dates} />
+        <DownloadFile
+          fileName={`${t('pages.kassa')}-${t('pages.prixod-docs')}-${dates.from}-${dates.to}.xlsx`}
+          url="/kassa/monitoring/prixod"
+          params={{
+            budjet_id,
+            main_schet_id,
+            from: dates.from,
+            to: dates.to,
+            report_title_id,
+            excel: true
+          }}
+          buttonText={t('report')}
+        />
       </ListView.Header>
       <ListView.Content loading={isFetching || isPending}>
         <GenericTable
