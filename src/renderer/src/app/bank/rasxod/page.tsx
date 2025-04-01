@@ -1,38 +1,48 @@
-import type { BankRasxod } from '@renderer/common/models'
+import type { BankRasxod } from '@/common/models'
 
 import { useEffect } from 'react'
 
-import { FooterCell, FooterRow, GenericTable } from '@renderer/common/components'
-import { Button } from '@renderer/common/components/ui/button'
-import { useConfirm } from '@renderer/common/features/confirm'
-import { SearchFilterDebounced } from '@renderer/common/features/filters/search/search-filter-debounced'
-import { useSearchFilter } from '@renderer/common/features/filters/search/search-filter-debounced'
-import { useLayoutStore } from '@renderer/common/features/layout'
-import { useRequisitesStore } from '@renderer/common/features/requisites'
-import { useDates, usePagination } from '@renderer/common/hooks'
-import { formatNumber } from '@renderer/common/lib/format'
-import { ListView } from '@renderer/common/views'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle
+} from '@renderer/common/components/ui/dialog'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { CopyPlus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
+import { FooterCell, FooterRow, GenericTable } from '@/common/components'
+import { Button } from '@/common/components/ui/button'
+import { useConfirm } from '@/common/features/confirm'
+import { SearchFilterDebounced } from '@/common/features/filters/search/search-filter-debounced'
+import { useSearchFilter } from '@/common/features/filters/search/search-filter-debounced'
+import { useLayoutStore } from '@/common/features/layout'
+import { useRequisitesStore } from '@/common/features/requisites'
+import { useDates, usePagination, useToggle } from '@/common/hooks'
+import { formatNumber } from '@/common/lib/format'
+import { ListView } from '@/common/views'
+
 import { rasxodColumns } from './columns'
 import { queryKeys } from './constants'
+import { BankRasxodImportZarplata } from './import-zarplata/import-zarplata'
 import { RasxodService } from './service'
 
 const BankRasxodPage = () => {
-  const { confirm } = useConfirm()
-  const [search] = useSearchFilter()
-  const { t } = useTranslation(['app'])
-
   const dates = useDates()
+  const navigate = useNavigate()
   const pagination = usePagination()
   const queryClient = useQueryClient()
-  const navigate = useNavigate()
+  const importDialogToggle = useToggle()
 
   const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
   const setLayout = useLayoutStore((store) => store.setLayout)
+
+  const [search] = useSearchFilter()
+
+  const { confirm } = useConfirm()
+  const { t } = useTranslation(['app'])
 
   const { data: rasxodList, isFetching } = useQuery({
     queryKey: [
@@ -46,7 +56,7 @@ const BankRasxodPage = () => {
     ],
     queryFn: RasxodService.getAll
   })
-  const { mutate: deleteMutation, isPending } = useMutation({
+  const { mutate: deleteRasxod, isPending } = useMutation({
     mutationKey: [queryKeys.delete],
     mutationFn: RasxodService.delete,
     onSuccess() {
@@ -62,7 +72,7 @@ const BankRasxodPage = () => {
   const handleClickDelete = (row: BankRasxod) => {
     confirm({
       onConfirm() {
-        deleteMutation(row.id)
+        deleteRasxod(row.id)
       }
     })
   }
@@ -88,7 +98,8 @@ const BankRasxodPage = () => {
         <ListView.RangeDatePicker {...dates} />
         <Button
           onClick={() => {
-            navigate('import-zarplata')
+            // navigate('import-zarplata')
+            importDialogToggle.open()
           }}
           className="ml-auto"
         >
@@ -136,6 +147,17 @@ const BankRasxodPage = () => {
           pageCount={rasxodList?.meta?.pageCount ?? 0}
         />
       </ListView.Footer>
+      <Dialog
+        open={importDialogToggle.isOpen}
+        onOpenChange={importDialogToggle.setOpen}
+      >
+        <DialogContent className="w-full max-w-[1820px] h-full max-h-[980px] flex flex-col">
+          <DialogHeader>
+            <DialogTitle>{t('import_zarplata')}</DialogTitle>
+          </DialogHeader>
+          <BankRasxodImportZarplata />
+        </DialogContent>
+      </Dialog>
     </ListView>
   )
 }

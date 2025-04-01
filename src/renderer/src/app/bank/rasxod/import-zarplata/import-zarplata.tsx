@@ -1,29 +1,24 @@
 import type { Nachislenie } from '@/common/models'
 import type { Vacant } from '@renderer/common/models/vacant'
 
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 
+import { Dialog, DialogContent, DialogHeader } from '@renderer/common/components/ui/dialog'
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { X } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
-import { vacantQueryKeys } from '@/app/region-admin/vacant/config'
-import { getVacantListQuery } from '@/app/region-admin/vacant/service'
-import { VacantTree } from '@/app/region-admin/vacant/vacant-tree'
 import { GenericTable, LoadingOverlay } from '@/common/components'
 import { CollapsibleTable } from '@/common/components/collapsible-table'
 import { Button } from '@/common/components/ui/button'
-import { Drawer, DrawerClose, DrawerContent, DrawerHeader } from '@/common/components/ui/drawer'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/common/components/ui/tabs'
 import { useAuthenticationStore } from '@/common/features/auth'
 import { useLayoutStore } from '@/common/features/layout'
 import { useRequisitesStore } from '@/common/features/requisites'
-import { type RelationTreeNode, arrayToTreeByRelations } from '@/common/lib/tree/relation-tree'
+import { type RelationTreeNode } from '@/common/lib/tree/relation-tree'
 
 import {
-  nachieslenieColumns,
   uderjanieAlimentColumns,
   uderjanieColumns,
   uderjanieDopOplataProvodkaColumns,
@@ -31,39 +26,28 @@ import {
   uderjanieProvodkaColumns
 } from './columns'
 import { NachislenieQueryKeys, UderjanieQueryKeys, uderjanieTypes } from './config'
-import { BankRasxodImportService, NachislenieService, UderjanieService } from './service'
+import { NachislenieTable } from './nachislenie-table'
+import { BankRasxodImportService, UderjanieService } from './service'
 import { getVacantRayon } from './utils'
+import { Vacants } from './vacants'
 
 enum TabOption {
   Uderjanie = 'uderjanie',
   Aliment = 'aliment'
 }
 
-const ImportZarplataPage = () => {
+export const BankRasxodImportZarplata = () => {
   const navigate = useNavigate()
   const userOwnId = useAuthenticationStore((store) => store.user?.id)
   const setLayout = useLayoutStore((store) => store.setLayout)
   const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
 
-  const [tabValue, setTabValue] = useState<TabOption>(TabOption.Uderjanie)
+  const [tabValue, setTabValue] = useState<TabOption>(TabOption.Aliment)
   const [selectedVacant, setSelectedVacant] = useState<RelationTreeNode<Vacant, number | null>>()
   const [selectedRow, setSelectedRow] = useState<Nachislenie>()
 
   const { t } = useTranslation(['app'])
 
-  const { data: vacants, isFetching: isFetchingVacants } = useQuery({
-    queryKey: [vacantQueryKeys.getAll, { userId: userOwnId! }],
-    queryFn: getVacantListQuery,
-    enabled: !!userOwnId
-  })
-  const { data: nachislenie, isFetching: isFetchingNachislenie } = useQuery({
-    queryKey: [
-      NachislenieQueryKeys.getAll,
-      { userId: userOwnId!, rayon: selectedVacant ? getVacantRayon(selectedVacant!) : '' }
-    ],
-    queryFn: NachislenieService.getElementsByRayon,
-    enabled: !!userOwnId && !!selectedVacant
-  })
   const { data: uderjanie, isFetching: isFetchingUderjanie } = useQuery({
     queryKey: [
       NachislenieQueryKeys.getAll,
@@ -107,67 +91,38 @@ const ImportZarplataPage = () => {
     })
   }, [setLayout, t, navigate])
 
-  const treeData = useMemo(
-    () =>
-      arrayToTreeByRelations({
-        array: vacants?.data ?? [],
-        getId: (node) => node.id,
-        getParentId: (node) => node.parentId
-      }),
-    [vacants]
-  )
-
-  console.log({ selectedRow })
-
   return (
     <div className="h-full flex divide-x overflow-hidden">
       <aside className="w-full max-w-md relative overflow-y-auto">
-        {isFetchingVacants ? <LoadingOverlay /> : null}
-        <VacantTree
-          data={treeData}
-          selectedIds={selectedVacant ? [selectedVacant.id] : []}
-          onSelectNode={(vacant) => {
-            setSelectedVacant(vacant)
-          }}
+        <Vacants
+          selected={selectedVacant}
+          onSelect={setSelectedVacant}
         />
       </aside>
       <main className="flex-1 flex flex-col overflow-hidden divide-y">
-        <div className="relative flex-1 overflow-auto scrollbar">
-          {isFetchingNachislenie ? <LoadingOverlay /> : null}
-          <GenericTable
-            columnDefs={nachieslenieColumns}
-            data={nachislenie ?? []}
-            className="table-generic-xs"
-            onClickRow={(row) => {
-              setSelectedRow(row)
-            }}
-          />
-        </div>
+        <NachislenieTable
+          rayon={selectedVacant ? getVacantRayon(selectedVacant!) : undefined}
+          onSelect={setSelectedRow}
+        />
       </main>
-      <Drawer
+      <Dialog
         open={!!selectedRow}
-        onClose={() => setSelectedRow(undefined)}
+        onOpenChange={(open) => (open ? undefined : setSelectedRow(undefined))}
       >
-        <DrawerContent className="h-full max-h-[800px]">
+        <DialogContent className="w-full max-w-[1820px] h-full max-h-[980px] flex flex-col">
           <Tabs
             value={tabValue}
             onValueChange={(value) => setTabValue(value as TabOption)}
-            className="h-full overflow-hidden flex flex-col"
+            className="h-full overflow-hidden flex flex-col gap-5"
           >
-            <DrawerHeader className="flex items-center justify-between">
-              <TabsList>
-                <TabsTrigger value={TabOption.Uderjanie}>{t('uderjanie')}</TabsTrigger>
-                <TabsTrigger value={TabOption.Aliment}>{t('aliment')}</TabsTrigger>
-              </TabsList>
-              <DrawerClose>
-                <Button
-                  size="icon"
-                  variant="outline"
-                >
-                  <X className="btn-icon" />
-                </Button>
-              </DrawerClose>
-            </DrawerHeader>
+            <DialogHeader>
+              <div>
+                <TabsList>
+                  <TabsTrigger value={TabOption.Uderjanie}>{t('uderjanie')}</TabsTrigger>
+                  <TabsTrigger value={TabOption.Aliment}>{t('aliment')}</TabsTrigger>
+                </TabsList>
+              </div>
+            </DialogHeader>
             <TabsContent
               value={TabOption.Uderjanie}
               className="flex-1 overflow-hidden"
@@ -229,7 +184,7 @@ const ImportZarplataPage = () => {
               </div>
             </TabsContent>
             {tabValue === TabOption.Aliment ? (
-              <div className="p-5">
+              <div>
                 <Button
                   type="button"
                   loading={isImportingZarplata}
@@ -249,10 +204,8 @@ const ImportZarplataPage = () => {
               </div>
             ) : null}
           </Tabs>
-        </DrawerContent>
-      </Drawer>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }
-
-export default ImportZarplataPage

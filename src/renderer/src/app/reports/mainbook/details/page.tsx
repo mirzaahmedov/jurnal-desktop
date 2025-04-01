@@ -148,14 +148,14 @@ const MainbookDetailsPage = () => {
       createMainbook({
         month: values.month,
         year: values.year,
-        childs: payload.filter((child) => child.type_id !== 9)
+        childs: payload
       })
     } else {
       updateMainbook({
         id: Number(id),
         month: values.month,
         year: values.year,
-        childs: payload.filter((child) => child.type_id !== 9)
+        childs: payload
       })
     }
   })
