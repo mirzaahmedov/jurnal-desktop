@@ -126,6 +126,8 @@ const MainbookDetailsPage = () => {
       return
     }
 
+    values.childs.pop()
+
     const payload: {
       type_id: number
       sub_childs: MainbookAutoFillSubChild[]
