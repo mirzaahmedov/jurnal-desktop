@@ -184,6 +184,7 @@ const MainbookDetailsPage = () => {
         className="overflow-hidden h-full pb-20"
       >
         <form
+          noValidate
           onSubmit={onSubmit}
           className="h-full"
         >
