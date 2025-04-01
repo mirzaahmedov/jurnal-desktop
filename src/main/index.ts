@@ -10,17 +10,17 @@ import path from 'path'
 
 import { events } from './auto-updater'
 
-let counter = 0
+// let counter = 0
 let interval: NodeJS.Timeout | null = null
 let initialCheckForUpdate = true
 let windows: BrowserWindow[] = []
 
-const folderPath = path.join(os.homedir(), 'Downloads/E-Moliya')
+// const folderPath = path.join(os.homedir(), 'Downloads/E-Moliya')
 
-const logMessage = (message: any) => {
-  const filePath = path.join(folderPath, 'log.txt')
-  fs.appendFileSync(filePath, `${new Date().toISOString()} - ${message}\n`)
-}
+// const logMessage = (message: any) => {
+//   const filePath = path.join(folderPath, 'log.txt')
+//   fs.appendFileSync(filePath, `${new Date().toISOString()} - ${message}\n`)
+// }
 
 if (import.meta.env.DEV) {
   dotenv.config()
@@ -221,11 +221,10 @@ app.whenReady().then(() => {
 
   if (!interval) {
     interval = setInterval(() => {
-      logMessage(`Checking for updates... ${counter}`)
       if (!autoUpdater.isUpdaterActive()) {
         autoUpdater.checkForUpdates()
       }
-      counter += 1
+      // counter += 1
     }, CHECK_UPDATES_INTERVAL)
   }
 })
