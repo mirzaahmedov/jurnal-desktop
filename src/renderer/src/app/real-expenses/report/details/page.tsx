@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useRef } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { documentTypes } from '@renderer/app/mainbook/common/data'
 import { Fieldset, SelectField } from '@renderer/common/components'
 import {
   EditableTable,
@@ -35,6 +34,7 @@ import {
   realExpensesReportQueryKeys
 } from '../config'
 import { realExpensesReportService } from '../service'
+import { documentTypes } from './config'
 import { provodkaColumns } from './provodka'
 
 const ExpensesReportDetailsPage = () => {

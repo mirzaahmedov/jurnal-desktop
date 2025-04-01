@@ -31,35 +31,6 @@ export const nachieslenieColumns: ColumnDef<Nachislenie>[] = [
     renderCell: (row) => formatLocaleDate(row.docDate)
   },
   {
-    key: 'typeVedomost',
-    header: 'type',
-    minWidth: 120
-  },
-  {
-    key: 'fio',
-    minWidth: 250
-  },
-  {
-    key: 'description',
-    header: 'opisanie',
-    width: 250,
-    minWidth: 250
-  },
-  {
-    key: 'doljnostName',
-    header: 'doljnost',
-    minWidth: 150
-  },
-  {
-    key: 'zvanieName',
-    header: 'zvanie',
-    minWidth: 150
-  },
-  {
-    fit: true,
-    key: 'kartochka'
-  },
-  {
     key: 'nachislenieYear',
     header: 'year'
   },
@@ -67,6 +38,32 @@ export const nachieslenieColumns: ColumnDef<Nachislenie>[] = [
     key: 'nachislenieMonth',
     header: 'month',
     renderCell: (row) => <MonthNameCell monthNumber={row.nachislenieMonth} />
+  },
+  {
+    numeric: true,
+    key: 'nachislenieSum',
+    header: 'nachislenie'
+  },
+  {
+    numeric: true,
+    key: 'dopOplataSum',
+    header: 'doplata'
+  },
+  {
+    numeric: true,
+    key: 'uderjanieSum',
+    header: 'uderjanie'
+  },
+  {
+    numeric: true,
+    key: 'naRuki',
+    header: 'na_ruki'
+  },
+  {
+    key: 'description',
+    header: 'opisanie',
+    width: 250,
+    minWidth: 250
   }
 ]
 

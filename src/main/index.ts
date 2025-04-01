@@ -10,15 +10,23 @@ import path from 'path'
 
 import { events } from './auto-updater'
 
+let counter = 0
+let interval: NodeJS.Timeout | null = null
 let initialCheckForUpdate = true
 let windows: BrowserWindow[] = []
+
+const folderPath = path.join(os.homedir(), 'Downloads/E-Moliya')
+
+const logMessage = (message: any) => {
+  const filePath = path.join(folderPath, 'log.txt')
+  fs.appendFileSync(filePath, `${new Date().toISOString()} - ${message}\n`)
+}
 
 if (import.meta.env.DEV) {
   dotenv.config()
 }
 
-// const CHECK_UPDATES_INTERVAL = 1 * 60 * 1000
-const CHECK_UPDATES_INTERVAL = 2 * 1000
+const CHECK_UPDATES_INTERVAL = 30 * 1000
 
 const url =
   import.meta.env.VITE_MODE === 'staging'
@@ -211,11 +219,15 @@ app.whenReady().then(() => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow()
   })
 
-  setInterval(() => {
-    if (!autoUpdater.isUpdaterActive()) {
-      autoUpdater.checkForUpdates()
-    }
-  }, CHECK_UPDATES_INTERVAL)
+  if (!interval) {
+    interval = setInterval(() => {
+      logMessage(`Checking for updates... ${counter}`)
+      if (!autoUpdater.isUpdaterActive()) {
+        autoUpdater.checkForUpdates()
+      }
+      counter += 1
+    }, CHECK_UPDATES_INTERVAL)
+  }
 })
 
 // Quit when all windows are closed, except on macOS. There, it's common
@@ -227,20 +239,25 @@ app.on('window-all-closed', () => {
   }
 })
 
+const cleanup = () => {
+  if (interval) clearInterval(interval)
+}
+
+app.on('before-quit', () => {
+  cleanup()
+})
+app.on('quit', () => {
+  cleanup()
+})
+
 const locked = app.requestSingleInstanceLock()
 if (locked) {
   app.on('second-instance', () => {
     createWindow()
   })
 } else {
-  app.quit()
+  app.exit(0)
 }
-
-// if (process.argv.includes('--new-window')) {
-//   app.whenReady().then(() => {
-//     createWindow()
-//   })
-// }
 
 // In this file you can include the rest of your app"s specific main process
 // code. You can also put them in separate files and require them here.

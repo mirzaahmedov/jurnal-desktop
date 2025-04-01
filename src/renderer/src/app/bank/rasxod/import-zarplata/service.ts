@@ -7,14 +7,16 @@ import { http } from '@renderer/common/lib/http'
 import { zarplataApi } from '@/common/lib/zarplata'
 
 export class NachislenieService {
-  static async getAll(ctx: QueryFunctionContext<[string, { userId: number; vacantId: number }]>) {
-    const { userId, vacantId } = ctx.queryKey[1]
-    const res = await zarplataApi.get<Nachislenie[]>('Nachislenie', {
+  static async getElementsByRayon(
+    ctx: QueryFunctionContext<[string, { userId: number; rayon: string }]>
+  ) {
+    const { userId, rayon } = ctx.queryKey[1]
+    const res = await zarplataApi.get<Nachislenie[]>('Nachislenie/get-items-with-rayon', {
       params: {
         PageIndex: 1,
         PageSize: 10000000,
         userId,
-        vacantId
+        rayon
       }
     })
     return res.data

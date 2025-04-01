@@ -1,24 +1,26 @@
-import type { Nachislenie } from '@renderer/common/models'
+import type { Nachislenie } from '@/common/models'
+import type { Vacant } from '@renderer/common/models/vacant'
 
 import { useEffect, useMemo, useState } from 'react'
 
-import { vacantQueryKeys } from '@renderer/app/region-admin/vacant/config'
-import { getVacantListQuery } from '@renderer/app/region-admin/vacant/service'
-import { GenericTable, LoadingOverlay } from '@renderer/common/components'
-import { CollapsibleTable } from '@renderer/common/components/collapsible-table'
-import { Button } from '@renderer/common/components/ui/button'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@renderer/common/components/ui/tabs'
-import { useRequisitesStore } from '@renderer/common/features/requisites'
-import { arrayToTreeByRelations } from '@renderer/common/lib/tree/relation-tree'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { X } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
+import { vacantQueryKeys } from '@/app/region-admin/vacant/config'
+import { getVacantListQuery } from '@/app/region-admin/vacant/service'
 import { VacantTree } from '@/app/region-admin/vacant/vacant-tree'
+import { GenericTable, LoadingOverlay } from '@/common/components'
+import { CollapsibleTable } from '@/common/components/collapsible-table'
+import { Button } from '@/common/components/ui/button'
 import { Drawer, DrawerClose, DrawerContent, DrawerHeader } from '@/common/components/ui/drawer'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/common/components/ui/tabs'
 import { useAuthenticationStore } from '@/common/features/auth'
 import { useLayoutStore } from '@/common/features/layout'
+import { useRequisitesStore } from '@/common/features/requisites'
+import { type RelationTreeNode, arrayToTreeByRelations } from '@/common/lib/tree/relation-tree'
 
 import {
   nachieslenieColumns,
@@ -30,6 +32,7 @@ import {
 } from './columns'
 import { NachislenieQueryKeys, UderjanieQueryKeys, uderjanieTypes } from './config'
 import { BankRasxodImportService, NachislenieService, UderjanieService } from './service'
+import { getVacantRayon } from './utils'
 
 enum TabOption {
   Uderjanie = 'uderjanie',
@@ -37,12 +40,13 @@ enum TabOption {
 }
 
 const ImportZarplataPage = () => {
+  const navigate = useNavigate()
   const userOwnId = useAuthenticationStore((store) => store.user?.id)
   const setLayout = useLayoutStore((store) => store.setLayout)
   const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
 
-  const [vacantId, setVacantId] = useState<number>()
   const [tabValue, setTabValue] = useState<TabOption>(TabOption.Uderjanie)
+  const [selectedVacant, setSelectedVacant] = useState<RelationTreeNode<Vacant, number | null>>()
   const [selectedRow, setSelectedRow] = useState<Nachislenie>()
 
   const { t } = useTranslation(['app'])
@@ -53,9 +57,12 @@ const ImportZarplataPage = () => {
     enabled: !!userOwnId
   })
   const { data: nachislenie, isFetching: isFetchingNachislenie } = useQuery({
-    queryKey: [NachislenieQueryKeys.getAll, { userId: userOwnId!, vacantId: vacantId! }],
-    queryFn: NachislenieService.getAll,
-    enabled: !!userOwnId && !!vacantId
+    queryKey: [
+      NachislenieQueryKeys.getAll,
+      { userId: userOwnId!, rayon: selectedVacant ? getVacantRayon(selectedVacant!) : '' }
+    ],
+    queryFn: NachislenieService.getElementsByRayon,
+    enabled: !!userOwnId && !!selectedVacant
   })
   const { data: uderjanie, isFetching: isFetchingUderjanie } = useQuery({
     queryKey: [
@@ -93,9 +100,12 @@ const ImportZarplataPage = () => {
           title: t('pages.rasxod-docs'),
           path: '/bank/rasxod'
         }
-      ]
+      ],
+      onBack: () => {
+        navigate(-1)
+      }
     })
-  }, [setLayout, t])
+  }, [setLayout, t, navigate])
 
   const treeData = useMemo(
     () =>
@@ -107,15 +117,17 @@ const ImportZarplataPage = () => {
     [vacants]
   )
 
+  console.log({ selectedRow })
+
   return (
     <div className="h-full flex divide-x overflow-hidden">
       <aside className="w-full max-w-md relative overflow-y-auto">
         {isFetchingVacants ? <LoadingOverlay /> : null}
         <VacantTree
           data={treeData}
-          selectedIds={vacantId ? [vacantId] : []}
+          selectedIds={selectedVacant ? [selectedVacant.id] : []}
           onSelectNode={(vacant) => {
-            setVacantId(vacant.id)
+            setSelectedVacant(vacant)
           }}
         />
       </aside>
