@@ -267,6 +267,8 @@ const OstatokPage = () => {
                         url="/jur_7/monitoring/material/report"
                         params={{
                           to: formatDate(selectedDate),
+                          year: selectedDate.getFullYear(),
+                          month: selectedDate.getMonth() + 1,
                           budjet_id,
                           excel: true
                         }}
