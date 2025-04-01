@@ -26,8 +26,8 @@ import { ListView } from '@/common/views'
 
 import { rasxodColumns } from './columns'
 import { queryKeys } from './constants'
-import { BankRasxodImportZarplata } from './import-zarplata/import-zarplata'
 import { RasxodService } from './service'
+import { ImportAliment } from './zarplata/import-aliment'
 
 const BankRasxodPage = () => {
   const dates = useDates()
@@ -155,7 +155,7 @@ const BankRasxodPage = () => {
           <DialogHeader>
             <DialogTitle>{t('import_zarplata')}</DialogTitle>
           </DialogHeader>
-          <BankRasxodImportZarplata />
+          <ImportAliment />
         </DialogContent>
       </Dialog>
     </ListView>

@@ -59,3 +59,14 @@ export interface UderjanieAliment {
   organizationByRaschetSchetGaznaId: number
   childs: UderjanieAlimentProvodka[]
 }
+export interface UderjaniePlastik {
+  idSpravochnikOrganization: any
+  summa: number
+  opisanie: string
+  organizationByRaschetSchetId: any
+  organizationByRaschetSchetGaznaId: any
+  childs: Array<{
+    spravochnikOperatsiiId: number
+    summa: number
+  }>
+}

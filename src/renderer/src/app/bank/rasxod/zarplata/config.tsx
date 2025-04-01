@@ -8,7 +8,8 @@ export const NachislenieQueryKeys = {
 
 export const UderjanieQueryKeys = {
   getAll: 'nachislenie/all',
-  getAliment: 'nachislenie/aliment'
+  getAliment: 'nachislenie/aliment',
+  getPlastik: 'nachislenie/plastik'
 }
 
 export interface UderjanieType {

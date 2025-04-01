@@ -1,36 +1,39 @@
 import type { RasxodFormValues, RasxodPodvodkaFormValues } from '../service'
-import type { BankRasxod } from '@renderer/common/models'
+import type { BankRasxod } from '@/common/models'
 
 import { useCallback, useEffect } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { createShartnomaSpravochnik } from '@renderer/app/organization/shartnoma'
-import { createOrganizationSpravochnik } from '@renderer/app/region-spravochnik/organization'
-import { EditableTable } from '@renderer/common/components/editable-table'
-import {
-  createEditorChangeHandler,
-  createEditorCreateHandler,
-  createEditorDeleteHandler
-} from '@renderer/common/components/editable-table/helpers'
-import { DocumentType } from '@renderer/common/features/doc-num'
-import { usePodpis } from '@renderer/common/features/podpis'
-import { useRequisitesStore } from '@renderer/common/features/requisites'
-import { useSnippets } from '@renderer/common/features/snippents/use-snippets'
-import { PodpisDoljnost, PodpisTypeDocument } from '@renderer/common/models'
+import { Button } from '@renderer/common/components/ui/button'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { type Location, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
+import { createShartnomaSpravochnik } from '@/app/organization/shartnoma'
 import { mainSchetQueryKeys, mainSchetService } from '@/app/region-spravochnik/main-schet'
+import { createOrganizationSpravochnik } from '@/app/region-spravochnik/organization'
 import { AccountBalance, Fieldset } from '@/common/components'
+import { EditableTable } from '@/common/components/editable-table'
+import {
+  createEditorChangeHandler,
+  createEditorCreateHandler,
+  createEditorDeleteHandler
+} from '@/common/components/editable-table/helpers'
 import { ButtonGroup } from '@/common/components/ui/button-group'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/common/components/ui/dialog'
 import { Form } from '@/common/components/ui/form'
+import { DocumentType } from '@/common/features/doc-num'
 import { useLayoutStore } from '@/common/features/layout'
+import { usePodpis } from '@/common/features/podpis'
+import { useRequisitesStore } from '@/common/features/requisites'
+import { useSnippets } from '@/common/features/snippents/use-snippets'
 import { useSpravochnik } from '@/common/features/spravochnik'
+import { useToggle } from '@/common/hooks'
 import { formatDate } from '@/common/lib/date'
 import { normalizeEmptyFields } from '@/common/lib/validation'
+import { PodpisDoljnost, PodpisTypeDocument } from '@/common/models'
 import { DetailsView } from '@/common/views'
 import {
   DocumentFields,
@@ -45,6 +48,7 @@ import {
 import { bankMonitorQueryKeys, bankMonitorService } from '../../monitor'
 import { defaultValues, queryKeys } from '../constants'
 import { RasxodFormSchema, RasxodPodvodkaFormSchema, RasxodService } from '../service'
+import { ImportPlastik } from '../zarplata/import-plastik'
 import { podvodkaColumns } from './podvodki'
 import { PorucheniyaDropdown } from './porucheniya-dropdown'
 
@@ -52,6 +56,7 @@ const BankRasxodDetailtsPage = () => {
   const params = useParams()
   const navigate = useNavigate()
   const queryClient = useQueryClient()
+  const importDialogToggle = useToggle()
 
   const location = useLocation() as Location<{ original?: BankRasxod }>
   const podpis = usePodpis(PodpisTypeDocument.BANK_RASXOD_PORUCHENIYA, params.id === 'create')
@@ -359,7 +364,7 @@ const BankRasxodDetailtsPage = () => {
               </div>
             </div>
 
-            <DetailsView.Footer className="flex flex-row gap-10">
+            <DetailsView.Footer className="flex flex-row gap-5">
               <DetailsView.Create
                 disabled={
                   reminder < 0 || isFetchingMonitor || isFetching || isUpdating || isCreating
@@ -367,6 +372,16 @@ const BankRasxodDetailtsPage = () => {
                 loading={isCreating || isUpdating}
                 tabIndex={7}
               />
+              <Button
+                variant="outline"
+                type="button"
+                onClick={() => {
+                  importDialogToggle.open()
+                }}
+              >
+                {t('choose_zarplata')}
+              </Button>
+
               {summa ? <AccountBalance balance={reminder} /> : null}
 
               {main_schet?.data && orgSpravochnik.selected ? (
@@ -408,6 +423,31 @@ const BankRasxodDetailtsPage = () => {
           />
         </Fieldset>
       </DetailsView.Content>
+
+      <Dialog
+        open={importDialogToggle.isOpen}
+        onOpenChange={importDialogToggle.setOpen}
+      >
+        <DialogContent className="w-full max-w-[1820px] h-full max-h-[980px] flex flex-col">
+          <DialogHeader>
+            <DialogTitle>{t('import_zarplata')}</DialogTitle>
+          </DialogHeader>
+          <ImportPlastik
+            onSelect={({ opisanie, childs }) => {
+              form.setValue('opisanie', opisanie, { shouldValidate: true })
+              form.setValue(
+                'childs',
+                childs.map(({ summa }) => ({
+                  spravochnik_operatsii_id: 0,
+                  summa
+                })),
+                { shouldValidate: true }
+              )
+              importDialogToggle.close()
+            }}
+          />
+        </DialogContent>
+      </Dialog>
     </DetailsView>
   )
 }

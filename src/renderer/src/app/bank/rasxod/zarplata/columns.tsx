@@ -5,6 +5,7 @@ import type {
   UderjanieAliment,
   UderjanieDopOplataProvodka,
   UderjanieNachislenieProvodka,
+  UderjaniePlastik,
   UderjanieProvodka
 } from '@/common/models'
 
@@ -191,6 +192,17 @@ export const uderjanieDopOplataProvodkaColumns: ColumnDef<UderjanieDopOplataProv
 ]
 
 export const uderjanieAlimentColumns: ColumnDef<UderjanieAliment>[] = [
+  {
+    key: 'opisanie'
+  },
+  {
+    numeric: true,
+    key: 'summa',
+    minWidth: 200
+  }
+]
+
+export const uderjaniePlastikColumns: ColumnDef<UderjaniePlastik>[] = [
   {
     key: 'opisanie'
   },
