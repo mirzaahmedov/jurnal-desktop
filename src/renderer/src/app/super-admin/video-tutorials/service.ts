@@ -9,7 +9,8 @@ import { withPreprocessor } from '@/common/lib/validation'
 
 export const VideoModuleFormSchema = withPreprocessor(
   z.object({
-    name: z.string()
+    name: z.string(),
+    status: z.boolean()
   })
 )
 export type VideoModuleFormValues = z.infer<typeof VideoModuleFormSchema>
@@ -26,12 +27,11 @@ export const VideoModuleService = new CRUDService<VideoModule, VideoModuleFormVa
 })
 
 export class VideoService {
-  static async getAll(ctx: QueryFunctionContext<[string, { module_id: number; status: boolean }]>) {
-    const { module_id, status } = ctx.queryKey[1] ?? {}
+  static async getAll(ctx: QueryFunctionContext<[string, { module_id: number }]>) {
+    const { module_id } = ctx.queryKey[1] ?? {}
     const res = await http.get<Response<Video[]>>(ApiEndpoints.admin_video, {
       params: {
-        module_id,
-        status
+        module_id
       }
     })
     return res.data

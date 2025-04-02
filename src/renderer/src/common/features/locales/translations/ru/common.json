@@ -306,5 +306,6 @@
   "import_zarplata": "Импорт из зарплаты",
   "choose_zarplata": "Выбрать из зарплаты",
   "plastik": "Пластик",
+  "admin": "Админ",
   "super-admin": "Супер админ"
 }

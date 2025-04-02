@@ -1,6 +1,7 @@
 export interface VideoModule {
   id: number
   name: string
+  status: boolean
 }
 
 export interface Video {

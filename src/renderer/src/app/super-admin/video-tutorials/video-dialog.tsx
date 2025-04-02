@@ -3,7 +3,6 @@ import type { Video } from '@/common/models'
 import { useEffect, useState } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Label } from '@renderer/common/components/ui/label'
 import { VideoPlayer } from '@renderer/common/components/video-player'
 import { capitalize } from '@renderer/common/lib/string'
 import { cn } from '@renderer/common/lib/utils'
@@ -30,7 +29,6 @@ import {
   FormMessage
 } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
-import { RadioGroup, RadioGroupItem } from '@/common/components/ui/radio-group'
 
 import { videoQueryKeys } from './config'
 import { VideoFormSchema, type VideoFormValues, VideoService } from './service'
@@ -172,39 +170,6 @@ export const VideoDialog = ({ open, onOpenChange, selected, moduleId }: VideoDia
                           type="number"
                           {...field}
                         />
-                      </FormControl>
-                      <FormMessage className="text-end col-span-6" />
-                    </div>
-                  </FormItem>
-                )}
-              />
-              <FormField
-                name="status"
-                control={form.control}
-                render={({ field }) => (
-                  <FormItem>
-                    <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
-                      <div className="col-span-2"></div>
-                      <FormControl className="col-span-4">
-                        <RadioGroup
-                          value={String(field.value)}
-                          onValueChange={(value) => field.onChange(value === 'true' ? true : false)}
-                        >
-                          <div className="flex items-center space-x-2">
-                            <RadioGroupItem
-                              value="true"
-                              id="super-admin"
-                            />
-                            <Label htmlFor="super-admin">{t('super-admin')}</Label>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <RadioGroupItem
-                              value="false"
-                              id="region"
-                            />
-                            <Label htmlFor="region">{t('region')}</Label>
-                          </div>
-                        </RadioGroup>
                       </FormControl>
                       <FormMessage className="text-end col-span-6" />
                     </div>

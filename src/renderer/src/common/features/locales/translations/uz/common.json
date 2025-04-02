@@ -305,5 +305,6 @@
   "import_zarplata": "Zarplatadan import qilish",
   "choose_zarplata": "Zarplatadan tanlash",
   "plastik": "Plastik",
+  "admin": "Admin",
   "super-admin": "Super admin"
 }
