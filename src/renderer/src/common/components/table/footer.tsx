@@ -9,7 +9,7 @@ export type FooterRowProps = HTMLAttributes<HTMLTableRowElement> & {
 export const FooterRow = ({ children, className, ...props }: FooterRowProps) => {
   return (
     <GenericTableRow
-      className={cn('pointer-events-none', className)}
+      className={cn('pointer-events-none bg-white even:bg-white', className)}
       {...props}
     >
       {children}

@@ -2,7 +2,7 @@ import type { BankPrixod } from '@/common/models'
 
 import { useEffect } from 'react'
 
-import { useSettingsStore } from '@renderer/common/features/app-defaults'
+import { useSettingsStore } from '@renderer/common/features/settings'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'

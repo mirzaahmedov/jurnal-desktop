@@ -2,12 +2,12 @@ import type { KassaPrixod } from '@/common/models'
 
 import { useEffect } from 'react'
 
+import { useSettingsStore } from '@renderer/common/features/settings'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
 import { FooterCell, FooterRow, GenericTable } from '@/common/components'
-import { useSettingsStore } from '@/common/features/app-defaults'
 import { useConfirm } from '@/common/features/confirm'
 import { DownloadFile } from '@/common/features/file'
 import { SearchFilterDebounced } from '@/common/features/filters/search/search-filter-debounced'

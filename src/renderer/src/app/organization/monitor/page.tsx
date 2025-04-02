@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 
+import { useSettingsStore } from '@renderer/common/features/settings'
 import { useQuery } from '@tanstack/react-query'
 import { Download } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
@@ -21,7 +22,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger
 } from '@/common/components/ui/dropdown-menu'
-import { useSettingsStore } from '@/common/features/app-defaults'
 import { DownloadFile } from '@/common/features/file'
 import { SearchFilterDebounced } from '@/common/features/filters/search/search-filter-debounced'
 import { useSearchFilter } from '@/common/features/filters/search/search-filter-debounced'
@@ -241,14 +241,6 @@ const OrganizationMonitoringPage = () => {
               name={t('remainder-from')}
               value={formatNumber(monitorList?.meta?.summa_from_object?.summa ?? 0)}
             />
-            <SummaTotal.Value
-              name={t('debet')}
-              value={formatNumber(monitorList?.meta?.summa_from_object?.prixod_sum ?? 0)}
-            />
-            <SummaTotal.Value
-              name={t('kredit')}
-              value={formatNumber(monitorList?.meta?.summa_from_object?.rasxod_sum ?? 0)}
-            />
           </SummaTotal>
         </div>
       </ListView.Header>
@@ -261,14 +253,24 @@ const OrganizationMonitoringPage = () => {
             return `${row.id}-${row.type}`
           }}
           footer={
-            <FooterRow>
-              <FooterCell
-                colSpan={6}
-                title={t('total')}
-                content={formatNumber(monitorList?.meta?.page_prixod_sum ?? 0)}
-              />
-              <FooterCell content={formatNumber(monitorList?.meta?.page_rasxod_sum ?? 0)} />
-            </FooterRow>
+            <>
+              <FooterRow>
+                <FooterCell
+                  colSpan={6}
+                  title={t('total')}
+                  content={formatNumber(monitorList?.meta?.page_prixod_sum ?? 0)}
+                />
+                <FooterCell content={formatNumber(monitorList?.meta?.page_rasxod_sum ?? 0)} />
+              </FooterRow>
+              <FooterRow>
+                <FooterCell
+                  colSpan={6}
+                  title={t('total_period')}
+                  content={formatNumber(monitorList?.meta?.prixod_sum ?? 0)}
+                />
+                <FooterCell content={formatNumber(monitorList?.meta?.rasxod_sum ?? 0)} />
+              </FooterRow>
+            </>
           }
         />
       </ListView.Content>
@@ -277,14 +279,6 @@ const OrganizationMonitoringPage = () => {
           <SummaTotal.Value
             name={t('remainder-to')}
             value={formatNumber(monitorList?.meta?.summa_to_object?.summa ?? 0)}
-          />
-          <SummaTotal.Value
-            name={t('debet')}
-            value={formatNumber(monitorList?.meta?.summa_to_object?.prixod_sum ?? 0)}
-          />
-          <SummaTotal.Value
-            name={t('kredit')}
-            value={formatNumber(monitorList?.meta?.summa_to_object?.rasxod_sum ?? 0)}
           />
         </SummaTotal>
         <ListView.Pagination

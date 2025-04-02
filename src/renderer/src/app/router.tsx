@@ -2,20 +2,24 @@ import type { RouteObject } from 'react-router-dom'
 
 import { lazy } from 'react'
 
-import { useAuthenticationStore } from '@renderer/common/features/auth'
-import { RequisitesSelectedGuard } from '@renderer/common/features/requisites'
-import { DuplicateSchetsGuard } from '@renderer/common/features/requisites/duplicate-schets-guard'
 import { Navigate, createHashRouter } from 'react-router-dom'
 
-import BankOstatokDetailsPage from './bank/ostatok/details/page'
-import BankOstatokPage from './bank/ostatok/page'
+import { useAuthenticationStore } from '@/common/features/auth'
+import { RequisitesSelectedGuard } from '@/common/features/requisites'
+import { DuplicateSchetsGuard } from '@/common/features/requisites/duplicate-schets-guard'
+
 import DashboardPage from './dashboard/page'
 import HomePage from './home/page'
-import KassaOstatokDetailsPage from './kassa/ostatok/details/page'
-import KassaOstatokPage from './kassa/ostatok/page'
-import PodotchetOstatokDetailsPage from './podotchet/ostatok/details/page'
-import PodotchetOstatokPage from './podotchet/ostatok/page'
 import SigninPage from './sign-in'
+
+const KassaOstatokDetailsPage = lazy(() => import('./kassa/ostatok/details/page'))
+const KassaOstatokPage = lazy(() => import('./kassa/ostatok/page'))
+const PodotchetOstatokDetailsPage = lazy(() => import('./podotchet/ostatok/details/page'))
+const PodotchetOstatokPage = lazy(() => import('./podotchet/ostatok/page'))
+const BankOstatokDetailsPage = lazy(() => import('./bank/ostatok/details/page'))
+const BankOstatokPage = lazy(() => import('./bank/ostatok/page'))
+
+const PrixodSchetsPage = lazy(() => import('./super-admin/prixod-schet/page'))
 
 const AdminVideoTutorialsPage = lazy(() => import('./super-admin/video-tutorials/page'))
 const VideoTutorialsPage = lazy(() => import('./video-tutorials/page'))
@@ -367,6 +371,10 @@ export const routes: RouteObject[] = [
           {
             path: 'prixodbook/:id',
             element: <AdminPrixodbookDetailsPage />
+          },
+          {
+            path: 'prixod-schets',
+            element: <PrixodSchetsPage />
           },
           {
             path: 'expenses',

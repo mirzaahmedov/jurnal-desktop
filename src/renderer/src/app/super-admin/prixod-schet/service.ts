@@ -1,17 +1,18 @@
-import type { ReportTitle } from '@/common/models'
+import type { PrixodSchet } from '@/common/models'
 
 import { z } from 'zod'
 
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 import { withPreprocessor } from '@/common/lib/validation'
 
-export const ReportTitleFormSchema = withPreprocessor(
+export const PrixodSchetFormSchema = withPreprocessor(
   z.object({
-    name: z.string()
+    name: z.string(),
+    schet: z.string()
   })
 )
-export type ReportTitleFormValues = z.infer<typeof ReportTitleFormSchema>
+export type PrixodSchetFormValues = z.infer<typeof PrixodSchetFormSchema>
 
-export const reportTitleService = new CRUDService<ReportTitle, ReportTitleFormValues>({
-  endpoint: ApiEndpoints.report_title
+export const PrixodSchetService = new CRUDService<PrixodSchet, PrixodSchetFormValues>({
+  endpoint: ApiEndpoints.admin_prixod_schets
 })

@@ -1,10 +1,10 @@
 import { useEffect } from 'react'
 
-import { useSettingsStore } from '@renderer/common/features/app-defaults'
 import { DownloadFile } from '@renderer/common/features/file'
 import { SearchFilterDebounced } from '@renderer/common/features/filters/search/search-filter-debounced'
 import { useSearchFilter } from '@renderer/common/features/filters/search/search-filter-debounced'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
+import { useSettingsStore } from '@renderer/common/features/settings'
 import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 
@@ -97,14 +97,6 @@ const BankMonitorPage = () => {
             name={t('remainder-from')}
             value={formatNumber(monitorList?.meta?.summa_from_object?.summa ?? 0)}
           />
-          <SummaTotal.Value
-            name={t('debet')}
-            value={formatNumber(monitorList?.meta?.summa_from_object?.prixod_summa ?? 0)}
-          />
-          <SummaTotal.Value
-            name={t('kredit')}
-            value={formatNumber(monitorList?.meta?.summa_from_object?.rasxod_summa ?? 0)}
-          />
         </SummaTotal>
       </ListView.Header>
       <ListView.Content loading={isFetching}>
@@ -129,6 +121,20 @@ const BankMonitorPage = () => {
                   colSpan={1}
                 />
               </FooterRow>
+              <FooterRow>
+                <FooterCell
+                  title={t('total_period')}
+                  colSpan={4}
+                />
+                <FooterCell
+                  content={formatNumber(monitorList?.meta?.prixod_sum ?? 0)}
+                  colSpan={1}
+                />
+                <FooterCell
+                  content={formatNumber(monitorList?.meta?.rasxod_sum ?? 0)}
+                  colSpan={1}
+                />
+              </FooterRow>
             </>
           }
         />
@@ -138,14 +144,6 @@ const BankMonitorPage = () => {
           <SummaTotal.Value
             name={t('remainder-to')}
             value={formatNumber(monitorList?.meta?.summa_to_object?.summa ?? 0)}
-          />
-          <SummaTotal.Value
-            name={t('debet')}
-            value={formatNumber(monitorList?.meta?.summa_to_object?.prixod_summa ?? 0)}
-          />
-          <SummaTotal.Value
-            name={t('kredit')}
-            value={formatNumber(monitorList?.meta?.summa_to_object?.rasxod_summa ?? 0)}
           />
         </SummaTotal>
         <ListView.Pagination

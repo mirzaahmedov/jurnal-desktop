@@ -23,7 +23,7 @@ export const VideoFormSchema = z.object({
 export type VideoFormValues = z.infer<typeof VideoFormSchema>
 
 export const VideoModuleService = new CRUDService<VideoModule, VideoModuleFormValues>({
-  endpoint: ApiEndpoints.admin_spravochnik_video_module
+  endpoint: ApiEndpoints.admin_video_module
 })
 
 export class VideoService {

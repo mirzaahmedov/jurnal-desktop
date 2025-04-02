@@ -102,6 +102,10 @@ export const ostatokProductColumns: ColumnDef<OstatokProduct>[] = [
     )
   },
   {
+    key: 'debet_schet',
+    header: 'schet'
+  },
+  {
     numeric: true,
     key: 'from.kol',
     header: 'Начало Кол.',

@@ -1,10 +1,10 @@
 import { useEffect } from 'react'
 
-import { useSettingsStore } from '@renderer/common/features/app-defaults'
 import { DownloadFile } from '@renderer/common/features/file'
 import { SearchFilterDebounced } from '@renderer/common/features/filters/search/search-filter-debounced'
 import { useSearchFilter } from '@renderer/common/features/filters/search/search-filter-debounced'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
+import { useSettingsStore } from '@renderer/common/features/settings'
 import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 

@@ -1,24 +1,30 @@
-import type { ButtonProps } from '@renderer/common/components/ui/button'
+import type { ButtonProps } from '@/common/components/ui/button'
 
-import { Spinner } from '@renderer/common/components/loading'
-import { Button } from '@renderer/common/components/ui/button'
-import { http } from '@renderer/common/lib/http'
 import { useMutation } from '@tanstack/react-query'
 import { Download } from 'lucide-react'
 
+import { Spinner } from '@/common/components/loading'
+import { Button } from '@/common/components/ui/button'
+import { useSettingsStore } from '@/common/features/settings'
+import { http } from '@/common/lib/http'
+
 export type DownloadFileProps = ButtonProps & {
+  requireTitle?: boolean
   url: string
   params: Record<string, any>
   fileName: string
   buttonText?: string
 }
 export const DownloadFile = ({
+  requireTitle,
   url,
   params,
   fileName,
   buttonText,
   ...props
 }: DownloadFileProps) => {
+  const report_title_id = useSettingsStore((store) => store.report_title_id)
+
   const { mutate: downloadFile, isPending: isDownloadingFile } = useMutation({
     mutationFn: async () => {
       const res = await http.get(url, {
@@ -30,11 +36,18 @@ export const DownloadFile = ({
     }
   })
 
+  const handleDownloadFile = () => {
+    if (requireTitle && !report_title_id) {
+      alert('Пожалуйста, введите название отчета')
+    }
+    ;() => downloadFile()
+  }
+
   return (
     <Button
       variant="ghost"
       disabled={isDownloadingFile}
-      onClick={() => downloadFile()}
+      onClick={handleDownloadFile}
       {...props}
     >
       {isDownloadingFile ? (

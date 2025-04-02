@@ -3,6 +3,7 @@ import type { MainSchet } from '@/common/models'
 import { Fragment, type ReactNode } from 'react'
 
 import { CaretRightIcon } from '@radix-ui/react-icons'
+import { SettingsDialog } from '@renderer/common/features/settings'
 import { useQuery } from '@tanstack/react-query'
 import { ArrowLeft, LogOut, Plus, RefreshCw, Settings } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
@@ -11,7 +12,6 @@ import { Link, useLocation } from 'react-router-dom'
 import { mainSchetQueryKeys, mainSchetService } from '@/app/region-spravochnik/main-schet'
 import { Avatar, AvatarFallback } from '@/common/components/ui/avatar'
 import { Button } from '@/common/components/ui/button'
-import { ConfigureDefaultValuesDialog } from '@/common/features/app-defaults'
 import { useAuthenticationStore } from '@/common/features/auth'
 import { RequisitesDialog, useRequisitesStore } from '@/common/features/requisites'
 import { useToggle } from '@/common/hooks/use-toggle'
@@ -167,7 +167,7 @@ export const PageLayout = ({ children }: PageLayoutProps) => {
         open={mainSchetToggle.isOpen}
         onOpenChange={mainSchetToggle.setOpen}
       />
-      <ConfigureDefaultValuesDialog
+      <SettingsDialog
         open={appDefaultsToggle.isOpen}
         onOpenChange={appDefaultsToggle.setOpen}
       />

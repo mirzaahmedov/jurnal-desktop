@@ -2,6 +2,8 @@ import type { FormSpravochnikFieldsComponent } from './types'
 import type { Shartnoma } from '@/common/models'
 import type { UseFormReturn } from 'react-hook-form'
 
+import { useEffect } from 'react'
+
 import { SelectField } from '@renderer/common/components'
 import { FormElement } from '@renderer/common/components/form'
 import { useTranslation } from 'react-i18next'
@@ -22,6 +24,12 @@ export const ShartnomaFields: FormSpravochnikFieldsComponent<
   const { t } = useTranslation()
 
   const shartnoma_grafik_id = form?.watch('shartnoma_grafik_id')
+
+  useEffect(() => {
+    if (spravochnikProps.selected) {
+      form?.setValue('shartnoma_grafik_id', spravochnikProps.selected.grafiks[0]?.id ?? 0)
+    }
+  }, [spravochnikProps.selected])
 
   return (
     <SpravochnikFields

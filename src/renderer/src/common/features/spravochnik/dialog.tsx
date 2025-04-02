@@ -5,7 +5,8 @@ import { useEffect, useRef, useState } from 'react'
 
 import { useToggle } from '@renderer/common/hooks'
 import { useQuery } from '@tanstack/react-query'
-import { ArrowLeft, ArrowRight } from 'lucide-react'
+import { ArrowLeft, ArrowRight, Plus } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import Paginate from 'react-paginate'
 
 import { GenericTable, LoadingOverlay } from '@/common/components'
@@ -26,6 +27,8 @@ export const Spravochnik = ({ close, spravochnik }: SpravochnikProps) => {
   const [state, setState] = useState<Record<string, unknown>>({})
   const [queryParams, setQueryParams] = useState<Record<string, unknown>>({})
   const [selected, setSelected] = useState<{ id: number } | undefined>(undefined)
+
+  const { t } = useTranslation()
 
   const dialogToggle = useToggle()
 
@@ -154,7 +157,7 @@ export const Spravochnik = ({ close, spravochnik }: SpravochnikProps) => {
           <DialogHeader className="flex-0 p-5 flex items-center flex-row">
             <DialogTitle>{spravochnik?.title}</DialogTitle>
 
-            <div className="flex-1 flex items-center gap-5 px-10">
+            <div className="flex-1 flex items-center gap-5 pl-10 pr-5">
               {spravochnik?.filters?.map((FilterComponent, id) => (
                 <FilterComponent
                   key={id}
@@ -163,9 +166,13 @@ export const Spravochnik = ({ close, spravochnik }: SpravochnikProps) => {
                 />
               ))}
               {CustomDialog ? (
-                <>
-                  <Button onClick={dialogToggle.open}>Добавить</Button>
-                </>
+                <Button
+                  onClick={dialogToggle.open}
+                  className="ml-auto"
+                >
+                  {t('add')}
+                  <Plus />
+                </Button>
               ) : null}
             </div>
           </DialogHeader>

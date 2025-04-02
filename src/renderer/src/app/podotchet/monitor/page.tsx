@@ -1,6 +1,5 @@
 import { useEffect } from 'react'
 
-import { useSettingsStore } from '@renderer/common/features/app-defaults'
 import { DownloadFile } from '@renderer/common/features/file'
 import {
   SearchFilterDebounced,
@@ -8,6 +7,7 @@ import {
 } from '@renderer/common/features/filters/search/search-filter-debounced'
 import { useLayoutStore } from '@renderer/common/features/layout'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
+import { useSettingsStore } from '@renderer/common/features/settings'
 import { useDates, usePagination } from '@renderer/common/hooks'
 import { useLocationState } from '@renderer/common/hooks/use-location-state'
 import { getProvodkaURL } from '@renderer/common/lib/provodka'
@@ -154,14 +154,6 @@ const PodotchetMonitoringPage = () => {
             name={t('remainder-from')}
             value={formatNumber(monitorList?.meta?.summa_from_object?.summa ?? 0)}
           />
-          <SummaTotal.Value
-            name={t('debet')}
-            value={formatNumber(monitorList?.meta?.summa_from_object?.prixod_sum ?? 0)}
-          />
-          <SummaTotal.Value
-            name={t('kredit')}
-            value={formatNumber(monitorList?.meta?.summa_from_object?.rasxod_sum ?? 0)}
-          />
         </SummaTotal>
       </ListView.Header>
       <ListView.Content loading={isFetching}>
@@ -181,6 +173,14 @@ const PodotchetMonitoringPage = () => {
                 />
                 <FooterCell content={formatNumber(monitorList?.meta?.page_rasxod_sum ?? 0)} />
               </FooterRow>
+              <FooterRow>
+                <FooterCell
+                  title={t('total_period')}
+                  colSpan={5}
+                  content={formatNumber(monitorList?.meta?.prixod_sum ?? 0)}
+                />
+                <FooterCell content={formatNumber(monitorList?.meta?.rasxod_sum ?? 0)} />
+              </FooterRow>
             </>
           }
         />
@@ -190,14 +190,6 @@ const PodotchetMonitoringPage = () => {
           <SummaTotal.Value
             name={t('remainder-to')}
             value={formatNumber(monitorList?.meta?.summa_to_object?.summa ?? 0)}
-          />
-          <SummaTotal.Value
-            name={t('debet')}
-            value={formatNumber(monitorList?.meta?.summa_to_object?.prixod_sum ?? 0)}
-          />
-          <SummaTotal.Value
-            name={t('kredit')}
-            value={formatNumber(monitorList?.meta?.summa_to_object?.rasxod_sum ?? 0)}
           />
         </SummaTotal>
         <ListView.Pagination

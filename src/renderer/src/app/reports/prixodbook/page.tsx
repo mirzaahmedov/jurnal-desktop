@@ -10,11 +10,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger
 } from '@renderer/common/components/ui/dropdown-menu'
-import { useSettingsStore } from '@renderer/common/features/app-defaults'
 import { useConfirm } from '@renderer/common/features/confirm'
 import { DownloadFile } from '@renderer/common/features/file'
 import { useLayoutStore } from '@renderer/common/features/layout'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
+import { useSettingsStore } from '@renderer/common/features/settings'
 import { usePagination } from '@renderer/common/hooks'
 import { ListView } from '@renderer/common/views'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'

@@ -86,24 +86,24 @@ const Sidebar = () => {
           {isCollapsed ? <ChevronsRight className="size-5" /> : <ChevronsLeft className="size-5" />}
         </Button>
       </div>
-      <div className="h-full flex flex-col overflow-y-auto scrollbar">
+      <div className="h-full flex-1 flex flex-col overflow-y-auto scrollbar">
         <div className="flex-1">
           <nav>
             <ul>{getNavElements(t).map((elem) => renderNavElement(elem, isCollapsed))}</ul>
           </nav>
         </div>
-        <div
-          className={cn(
-            'flex items-center p-5 gap-2 flex-wrap justify-center',
-            isCollapsed && 'px-1'
-          )}
-        >
-          <ApplicationBadge />
-          <p className="text-xs text-slate-500 font-medium">
-            {!isCollapsed && 'Электрон молия тизими '}
-            v.{version}
-          </p>
-        </div>
+      </div>
+      <div
+        className={cn(
+          'flex items-center p-5 gap-2 flex-wrap justify-center border-t',
+          isCollapsed && 'px-1'
+        )}
+      >
+        <ApplicationBadge />
+        <p className="text-xs text-slate-500 font-medium">
+          {!isCollapsed && 'Электрон молия тизими '}
+          v.{version}
+        </p>
       </div>
       {isAvailable ? (
         <Button

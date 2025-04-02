@@ -1,3 +1,4 @@
+import type { SettingsFormValues } from './config'
 import type { DialogProps } from '@radix-ui/react-dialog'
 
 import { useEffect, useState } from 'react'
@@ -25,7 +26,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/common/components/ui
 import { useConfirm } from '@/common/features/confirm'
 import { LanguageSelect } from '@/common/features/locales'
 
-import { useDefaultFilters, useSettingsStore } from './store'
+import { useSettingsStore } from './store'
 
 enum TabOption {
   Fitlers = 'Filters',
@@ -33,46 +34,39 @@ enum TabOption {
   Report = 'Report'
 }
 
-interface ConfigureDefaultValuesDialogProps extends DialogProps {}
-export const ConfigureDefaultValuesDialog = ({
-  open,
-  onOpenChange
-}: ConfigureDefaultValuesDialogProps) => {
+export const SettingsDialog = ({ open, onOpenChange }: DialogProps) => {
   const dates = useDates()
   const pagination = usePagination()
 
   const { t, i18n } = useTranslation()
 
-  const [tabValue, setTabValue] = useState<TabOption>(TabOption.Fitlers)
+  const [tabValue, setTabValue] = useState(TabOption.Fitlers)
 
   const { confirm } = useConfirm()
-  const { from, to, setDefaultFilters } = useDefaultFilters()
-  const { report_title_id, setSettings } = useSettingsStore()
+  const { default_start_date, default_end_date, report_title_id, setSettings } = useSettingsStore()
 
   const { data: reportTitles, isFetching } = useQuery({
     queryKey: [reportTitleQueryKeys.getAll, { page: 1, limit: 1000000 }],
     queryFn: reportTitleService.getAll
   })
 
-  const form = useForm({
+  const form = useForm<SettingsFormValues>({
     defaultValues: {
-      from,
-      to,
+      default_start_date,
+      default_end_date,
       language: i18n.language,
-      zoomFactor: 1,
+      zoom: 1,
       report_title_id
     }
   })
 
   const onSubmit = form.handleSubmit((values) => {
-    setDefaultFilters({
-      from: values.from,
-      to: values.to
-    })
     setSettings({
-      report_title_id: values.report_title_id
+      report_title_id: values.report_title_id,
+      default_start_date: values.default_start_date,
+      default_end_date: values.default_end_date
     })
-    window.api.setZoomFactor(values.zoomFactor)
+    window.api.setZoomFactor(values.zoom)
     i18n.changeLanguage(values.language)
 
     dates.onChange({
@@ -105,8 +99,8 @@ export const ConfigureDefaultValuesDialog = ({
   useEffect(() => {
     if (open) {
       window.api.getZoomFactor().then((zoomFactor) => {
-        form.setValue('zoomFactor', zoomFactor)
-        form.resetField('zoomFactor', {
+        form.setValue('zoom', zoomFactor)
+        form.resetField('zoom', {
           defaultValue: zoomFactor
         })
       })
@@ -177,20 +171,20 @@ export const ConfigureDefaultValuesDialog = ({
                     <div className="flex flex-col gap-2">
                       <FormField
                         control={form.control}
-                        name="from"
+                        name="default_start_date"
                         render={({ field }) => (
                           <div className="flex items-center justify-between gap-10">
-                            <FormLabel>{t('from')}</FormLabel>
+                            <FormLabel>{t('start_date')}</FormLabel>
                             <DatePicker {...field} />
                           </div>
                         )}
                       />
                       <FormField
                         control={form.control}
-                        name="to"
+                        name="default_end_date"
                         render={({ field }) => (
                           <div className="flex items-center justify-between gap-10">
-                            <FormLabel>{capitalize(t('to'))}</FormLabel>
+                            <FormLabel>{capitalize(t('end_date'))}</FormLabel>
                             <DatePicker {...field} />
                           </div>
                         )}
@@ -216,7 +210,7 @@ export const ConfigureDefaultValuesDialog = ({
                       />
                       <FormField
                         control={form.control}
-                        name="zoomFactor"
+                        name="zoom"
                         render={({ field }) => (
                           <div className="flex items-center justify-between gap-10 min-h-10">
                             <FormLabel>{t('zoom')}</FormLabel>

@@ -1,6 +1,6 @@
 import { type Dispatch, type SetStateAction, useCallback } from 'react'
 
-import { useDefaultFilters } from '@/common/features/app-defaults'
+import { useSettingsStore } from '@/common/features/settings'
 
 import { useLocationState } from './use-location-state'
 
@@ -18,10 +18,10 @@ export interface UseDatesOptions {
   defaultTo?: string
 }
 export const useDates = ({ defaultFrom, defaultTo }: UseDatesOptions = {}) => {
-  const defaults = useDefaultFilters()
+  const { default_start_date, default_end_date } = useSettingsStore()
 
-  const [from, setFrom] = useLocationState('from', defaultFrom ?? defaults.from)
-  const [to, setTo] = useLocationState('to', defaultTo ?? defaults.to)
+  const [from, setFrom] = useLocationState('from', defaultFrom ?? default_start_date)
+  const [to, setTo] = useLocationState('to', defaultTo ?? default_end_date)
 
   const handleChange = useCallback(
     (values: DatesParams) => {

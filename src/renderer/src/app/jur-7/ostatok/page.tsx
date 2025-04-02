@@ -21,7 +21,6 @@ import {
   DropdownMenuTrigger
 } from '@renderer/common/components/ui/dropdown-menu'
 import { FormField } from '@renderer/common/components/ui/form'
-import { useSettingsStore } from '@renderer/common/features/app-defaults'
 import { useConfirm } from '@renderer/common/features/confirm'
 import { DownloadFile, ImportFile } from '@renderer/common/features/file'
 import { FileValidationErrorAlert } from '@renderer/common/features/file/file-validation-error-alert'
@@ -33,6 +32,7 @@ import { SearchFilterDebounced } from '@renderer/common/features/filters/search/
 import { useSearchFilter } from '@renderer/common/features/filters/search/search-filter-debounced'
 import { useLayoutStore } from '@renderer/common/features/layout'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
+import { useSettingsStore } from '@renderer/common/features/settings'
 import { useSpravochnik } from '@renderer/common/features/spravochnik'
 import { usePagination, useToggle } from '@renderer/common/hooks'
 import { date_iso_regex, formatDate, parseDate, validateDate } from '@renderer/common/lib/date'

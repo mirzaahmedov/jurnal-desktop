@@ -1,4 +1,4 @@
-import type { ReportTitle } from '@/common/models'
+import type { PrixodSchet } from '@/common/models'
 
 import { useEffect, useState } from 'react'
 
@@ -12,12 +12,12 @@ import { useToggle } from '@/common/hooks/use-toggle'
 import { ListView } from '@/common/views'
 
 import { prixodSchetColumns } from './columns'
-import { reportTitleQueryKeys } from './config'
-import { ReportTitleDialog } from './dialog'
-import { reportTitleService } from './service'
+import { prixodSchetQueryKeys } from './config'
+import { PrixodSchetDialog } from './dialog'
+import { PrixodSchetService } from './service'
 
-const ReportTitlePage = () => {
-  const [selected, setSelected] = useState<ReportTitle | null>(null)
+const PrixodSchetsPage = () => {
+  const [selected, setSelected] = useState<PrixodSchet | null>(null)
 
   const { t } = useTranslation(['app'])
   const { confirm } = useConfirm()
@@ -25,17 +25,17 @@ const ReportTitlePage = () => {
   const dialogToggle = useToggle()
   const queryClient = useQueryClient()
 
-  const { data: reportTitles, isFetching } = useQuery({
-    queryKey: [reportTitleQueryKeys.getAll],
-    queryFn: reportTitleService.getAll
+  const { data: prixodSchets, isFetching } = useQuery({
+    queryKey: [prixodSchetQueryKeys.getAll],
+    queryFn: PrixodSchetService.getAll
   })
 
-  const { mutate: deleteReportTitle, isPending } = useMutation({
-    mutationKey: [reportTitleQueryKeys.delete],
-    mutationFn: reportTitleService.delete,
+  const { mutate: deletePrixodSchet, isPending: isDeletingPrixodSchets } = useMutation({
+    mutationKey: [prixodSchetQueryKeys.delete],
+    mutationFn: PrixodSchetService.delete,
     onSuccess() {
       queryClient.invalidateQueries({
-        queryKey: [reportTitleQueryKeys.getAll]
+        queryKey: [prixodSchetQueryKeys.getAll]
       })
     }
   })
@@ -46,33 +46,33 @@ const ReportTitlePage = () => {
     }
   }, [dialogToggle.isOpen])
   useLayout({
-    title: t('pages.report-title'),
+    title: t('pages.prixod_schets'),
     onCreate: dialogToggle.open
   })
 
-  const handleClickEdit = (row: ReportTitle) => {
+  const handleClickEdit = (row: PrixodSchet) => {
     setSelected(row)
     dialogToggle.open()
   }
-  const handleClickDelete = (row: ReportTitle) => {
+  const handleClickDelete = (row: PrixodSchet) => {
     confirm({
       onConfirm() {
-        deleteReportTitle(row.id)
+        deletePrixodSchet(row.id)
       }
     })
   }
 
   return (
     <ListView>
-      <ListView.Content loading={isFetching || isPending}>
+      <ListView.Content loading={isFetching || isDeletingPrixodSchets}>
         <GenericTable
-          data={reportTitles?.data ?? []}
+          data={prixodSchets?.data ?? []}
           columnDefs={prixodSchetColumns}
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}
         />
       </ListView.Content>
-      <ReportTitleDialog
+      <PrixodSchetDialog
         selected={selected}
         open={dialogToggle.isOpen}
         onChangeOpen={dialogToggle.setOpen}
@@ -81,4 +81,4 @@ const ReportTitlePage = () => {
   )
 }
 
-export default ReportTitlePage
+export default PrixodSchetsPage

@@ -1,8 +1,9 @@
-import type { ReportTitle } from '@/common/models'
+import type { PrixodSchet } from '@/common/models'
 
 import { useEffect } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
+import { capitalize } from '@renderer/common/lib/string'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -26,53 +27,58 @@ import {
 } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
 
-import { reportTitleQueryKeys } from './config'
-import { ReportTitleFormSchema, type ReportTitleFormValues, reportTitleService } from './service'
+import { prixodSchetQueryKeys } from './config'
+import { PrixodSchetFormSchema, type PrixodSchetFormValues, PrixodSchetService } from './service'
 
-interface ReportTitleDialogProps {
+interface PrixodSchetDialogProps {
   open: boolean
   onChangeOpen: (value: boolean) => void
-  selected: ReportTitle | null
+  selected: PrixodSchet | null
 }
-export const ReportTitleDialog = ({ open, onChangeOpen, selected }: ReportTitleDialogProps) => {
+export const PrixodSchetDialog = ({ open, onChangeOpen, selected }: PrixodSchetDialogProps) => {
   const { t } = useTranslation(['app'])
 
   const queryClient = useQueryClient()
 
-  const form = useForm<ReportTitleFormValues>({
+  const form = useForm({
     defaultValues,
-    resolver: zodResolver(ReportTitleFormSchema)
+    resolver: zodResolver(PrixodSchetFormSchema)
   })
 
-  const { mutate: createReportTitle, isPending: isCreating } = useMutation({
-    mutationKey: [reportTitleQueryKeys.create],
-    mutationFn: reportTitleService.create,
+  const { mutate: createPrixodSchet, isPending: isCreatingPrixodSchet } = useMutation({
+    mutationKey: [prixodSchetQueryKeys.create],
+    mutationFn: PrixodSchetService.create,
     onSuccess(res) {
       toast.success(res?.message)
+
       form.reset(defaultValues)
       queryClient.invalidateQueries({
-        queryKey: [reportTitleQueryKeys.getAll]
+        queryKey: [prixodSchetQueryKeys.getAll]
       })
       onChangeOpen(false)
     }
   })
-  const { mutate: updateReportTitle, isPending: isUpdating } = useMutation({
-    mutationKey: [reportTitleQueryKeys.update],
-    mutationFn: reportTitleService.update,
+  const { mutate: updatePrixodSchet, isPending: isUpdating } = useMutation({
+    mutationKey: [prixodSchetQueryKeys.update],
+    mutationFn: PrixodSchetService.update,
     onSuccess(res) {
       toast(res?.message)
+
       queryClient.invalidateQueries({
-        queryKey: [reportTitleQueryKeys.getAll]
+        queryKey: [prixodSchetQueryKeys.getAll]
       })
       onChangeOpen(false)
     }
   })
 
-  const onSubmit = form.handleSubmit((payload: ReportTitleFormValues) => {
+  const onSubmit = form.handleSubmit((values) => {
     if (selected) {
-      updateReportTitle(Object.assign(payload, { id: selected.id }))
+      updatePrixodSchet({
+        ...values,
+        id: selected.id
+      })
     } else {
-      createReportTitle(payload)
+      createPrixodSchet(values)
     }
   })
 
@@ -94,8 +100,8 @@ export const ReportTitleDialog = ({ open, onChangeOpen, selected }: ReportTitleD
         <DialogHeader>
           <DialogTitle>
             {selected
-              ? t('update-something', { something: t('pages.report_title') })
-              : t('create-something', { something: t('pages.report_title') })}
+              ? capitalize(t('update-something', { something: t('pages.prixod_schets') }))
+              : capitalize(t('create-something', { something: t('pages.prixod_schets') }))}
           </DialogTitle>
         </DialogHeader>
         <Form {...form}>
@@ -119,11 +125,29 @@ export const ReportTitleDialog = ({ open, onChangeOpen, selected }: ReportTitleD
                   </FormItem>
                 )}
               />
+              <FormField
+                name="schet"
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
+                      <FormLabel className="text-right col-span-2">{t('schet')}</FormLabel>
+                      <FormControl>
+                        <Input
+                          className="col-span-4"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage className="text-end col-span-6" />
+                    </div>
+                  </FormItem>
+                )}
+              />
             </div>
             <DialogFooter>
               <Button
                 type="submit"
-                disabled={isCreating || isUpdating}
+                disabled={isCreatingPrixodSchet || isUpdating}
               >
                 {t('save')}
               </Button>
@@ -135,6 +159,7 @@ export const ReportTitleDialog = ({ open, onChangeOpen, selected }: ReportTitleD
   )
 }
 
-const defaultValues = {
-  name: ''
-} satisfies ReportTitleFormValues
+const defaultValues: PrixodSchetFormValues = {
+  name: '',
+  schet: ''
+}
