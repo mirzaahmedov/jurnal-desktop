@@ -1,14 +1,15 @@
-import type { ColumnDef } from '@renderer/common/components'
+import type { ColumnDef } from '@/common/components'
 
-import { IDCell } from '@renderer/common/components/table/renderers/id'
-import { MonthNameCell } from '@renderer/common/components/table/renderers/month-name'
-import { UserCell } from '@renderer/common/components/table/renderers/user'
-import { Badge } from '@renderer/common/components/ui/badge'
-import { cn } from '@renderer/common/lib/utils'
-import { type AdminMainbook, MainbookStatus } from '@renderer/common/models'
 import { Trans } from 'react-i18next'
 
-export const mainbookColumns: ColumnDef<AdminMainbook>[] = [
+import { IDCell } from '@/common/components/table/renderers/id'
+import { MonthNameCell } from '@/common/components/table/renderers/month-name'
+import { UserCell } from '@/common/components/table/renderers/user'
+import { Badge } from '@/common/components/ui/badge'
+import { cn } from '@/common/lib/utils'
+import { type Prixodbook, PrixodbookStatus } from '@/common/models'
+
+export const prixodbookColumns: ColumnDef<Prixodbook>[] = [
   {
     key: 'id',
     renderCell: IDCell,
@@ -23,21 +24,17 @@ export const mainbookColumns: ColumnDef<AdminMainbook>[] = [
     key: 'year'
   },
   {
-    key: 'region_name',
-    header: 'region'
-  },
-  {
     key: 'status',
     renderCell: (row) => (
       <Badge
         className={cn(
-          row.status === MainbookStatus.REJECT && 'bg-red-500',
-          row.status === MainbookStatus.ACCEPT && 'bg-green-500'
+          row.status === PrixodbookStatus.REJECT && 'bg-red-500',
+          row.status === PrixodbookStatus.ACCEPT && 'bg-green-500'
         )}
       >
-        {row.status === MainbookStatus.SEND ? (
+        {row.status === PrixodbookStatus.SEND ? (
           <Trans>reports_common.send</Trans>
-        ) : row.status === MainbookStatus.REJECT ? (
+        ) : row.status === PrixodbookStatus.REJECT ? (
           <Trans>reports_common.reject</Trans>
         ) : (
           <Trans>reports_common.accept</Trans>

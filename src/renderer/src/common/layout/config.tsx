@@ -8,6 +8,8 @@ import {
   ArrowLeftRight,
   BadgeDollarSign,
   Banknote,
+  Book,
+  BookDown,
   Building,
   Building2,
   CalendarCheck,
@@ -33,7 +35,6 @@ import {
   MapPinHouse,
   MonitorCog,
   NotebookTabs,
-  NotebookText,
   NotepadText,
   Percent,
   ReceiptText,
@@ -395,7 +396,12 @@ export const getNavElements = (t: TFunction): NavElement[] => {
             {
               path: 'mainbook',
               title: t('pages.mainbook'),
-              icon: NotebookText
+              icon: Book
+            },
+            {
+              path: 'prixodbook',
+              title: t('pages.prixodbook'),
+              icon: BookDown
             },
             {
               path: 'expenses',
@@ -491,7 +497,14 @@ export const getNavElements = (t: TFunction): NavElement[] => {
       ? {
           path: '/mainbook',
           title: t('pages.mainbook'),
-          icon: NotebookText
+          icon: Book
+        }
+      : null,
+    !is_super_admin
+      ? {
+          path: '/prixodbook',
+          title: t('pages.prixodbook'),
+          icon: BookDown
         }
       : null,
     !is_super_admin

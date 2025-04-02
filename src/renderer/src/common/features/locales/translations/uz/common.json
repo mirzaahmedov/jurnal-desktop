@@ -273,7 +273,7 @@
   "language": "Til",
   "zoom": "Masshtab",
   "information": "Ma'lumot",
-  "mainbook": {
+  "reports_common": {
     "mo-nth": "M.O. {{nth}}",
     "from": "Bosh.",
     "to": "Yak.",

@@ -32,11 +32,11 @@ export const mainbookColumns: ColumnDef<Mainbook>[] = [
         )}
       >
         {row.status === MainbookStatus.SEND ? (
-          <Trans>mainbook.send</Trans>
+          <Trans>reports_common.send</Trans>
         ) : row.status === MainbookStatus.REJECT ? (
-          <Trans>mainbook.reject</Trans>
+          <Trans>reports_common.reject</Trans>
         ) : (
-          <Trans>mainbook.accept</Trans>
+          <Trans>reports_common.accept</Trans>
         )}
       </Badge>
     )

@@ -47,6 +47,8 @@ const KassaRasxodDetailtsPage = lazy(() => import('./kassa/rasxod/details/page')
 const KassaRasxodPage = lazy(() => import('./kassa/rasxod/page'))
 const MainbookPage = lazy(() => import('./reports/mainbook/page'))
 const MainbookDetailsPage = lazy(() => import('./reports/mainbook/details/page'))
+const PrixodbookPage = lazy(() => import('./reports/prixodbook/page'))
+const PrixodbookDetailsPage = lazy(() => import('./reports/prixodbook/details/page'))
 const AktDetailsPage = lazy(() => import('./organization/akt/details/page'))
 const AktPage = lazy(() => import('./organization/akt/page'))
 const OrganizationMonitorPage = lazy(() => import('./organization/monitor/page'))
@@ -80,8 +82,15 @@ const BudgetPage = lazy(() => import('./super-admin/budjet/page'))
 const GroupPage = lazy(() => import('./super-admin/group/page'))
 const RegionGroupPage = lazy(() => import('./region-spravochnik/group/page'))
 const LogsPage = lazy(() => import('./super-admin/logs/page'))
+
 const AdminMainbookDetailsPage = lazy(() => import('./super-admin/reports/mainbook/details/page'))
 const AdminMainbookPage = lazy(() => import('./super-admin/reports/mainbook/page'))
+
+const AdminPrixodbookDetailsPage = lazy(
+  () => import('./super-admin/reports/prixodbook/details/page')
+)
+const AdminPrixodbookPage = lazy(() => import('./super-admin/reports/prixodbook/page'))
+
 const OperatsiiPage = lazy(() => import('./super-admin/operatsii/page'))
 const AdminOXDetailsPage = lazy(() => import('./super-admin/ox-report/details/page'))
 const AdminOXPage = lazy(() => import('./super-admin/ox-report/page'))
@@ -352,6 +361,14 @@ export const routes: RouteObject[] = [
             element: <AdminMainbookDetailsPage />
           },
           {
+            path: 'prixodbook',
+            element: <AdminPrixodbookPage />
+          },
+          {
+            path: 'prixodbook/:id',
+            element: <AdminPrixodbookDetailsPage />
+          },
+          {
             path: 'expenses',
             element: <AdminRealExpensesPage />
           },
@@ -460,6 +477,26 @@ export const routes: RouteObject[] = [
               {
                 path: ':id',
                 element: <MainbookDetailsPage />
+              }
+            ]
+          }
+        ]
+      },
+      {
+        path: 'prixodbook',
+        element: <RequisitesSelectedGuard />,
+        children: [
+          {
+            path: '*',
+            element: <DuplicateSchetsGuard />,
+            children: [
+              {
+                index: true,
+                element: <PrixodbookPage />
+              },
+              {
+                path: ':id',
+                element: <PrixodbookDetailsPage />
               }
             ]
           }

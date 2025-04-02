@@ -1,12 +1,13 @@
-import type { MainbookAutoFill, MainbookAutoFillSubChild, MainbookType } from './service'
-import type { EditableColumnDef } from '@renderer/common/components/editable-table'
-import type { Mainbook } from '@renderer/common/models'
+import type { PrixodbookAutoFill, PrixodbookAutoFillSubChild, PrixodbookType } from './service'
+import type { EditableColumnDef } from '@/common/components/editable-table'
+import type { Prixodbook } from '@/common/models'
 
-import { createNumberEditor } from '@renderer/common/components/editable-table/editors'
 import { t } from 'i18next'
 
-export const transformMainbookAutoFillData = (types: MainbookAutoFill[]) => {
-  const schetsMap = new Map<string, { id: number; child: MainbookAutoFillSubChild }[]>()
+import { createNumberEditor } from '@/common/components/editable-table/editors'
+
+export const transformPrixodbookAutoFillData = (types: PrixodbookAutoFill[]) => {
+  const schetsMap = new Map<string, { id: number; child: PrixodbookAutoFillSubChild }[]>()
 
   types.forEach((type) => {
     type.sub_childs.push({
@@ -40,8 +41,8 @@ export const transformMainbookAutoFillData = (types: MainbookAutoFill[]) => {
   return rows
 }
 
-export const transformGetByIdData = (types: Mainbook['childs']) => {
-  const schetsMap = new Map<string, { id: number; child: MainbookAutoFillSubChild }[]>()
+export const transformGetByIdData = (types: Prixodbook['childs']) => {
+  const schetsMap = new Map<string, { id: number; child: PrixodbookAutoFillSubChild }[]>()
 
   types.forEach((type) => {
     type.sub_childs.push({
@@ -76,7 +77,7 @@ export const transformGetByIdData = (types: Mainbook['childs']) => {
   return rows
 }
 
-export const getMainbookColumns = (types: MainbookType[]) => {
+export const getPrixodbookColumns = (types: PrixodbookType[]) => {
   return (
     types?.flatMap((type) => {
       const jurNum = type.name.match(/\d+/)?.[0]

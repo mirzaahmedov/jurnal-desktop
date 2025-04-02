@@ -274,7 +274,7 @@
   "language": "Язык",
   "zoom": "Масштаб",
   "information": "Информация",
-  "mainbook": {
+  "reports_common": {
     "mo-nth": "М.О. {{nth}}",
     "from": "Нач.",
     "to": "Кон.",

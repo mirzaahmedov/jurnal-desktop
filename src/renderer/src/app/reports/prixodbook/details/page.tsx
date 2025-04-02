@@ -16,15 +16,23 @@ import { useLayoutStore } from '@/common/features/layout'
 import { formatDate } from '@/common/lib/date'
 import { DetailsView } from '@/common/views'
 
-import { mainbookQueryKeys } from '../config'
-import { mainbookService } from '../service'
+import { prixodbookQueryKeys } from '../config'
+import { prixodbookService } from '../service'
 import { defaultValues } from './config'
-import { MainbookTable } from './mainbook-table'
+import { PrixodbookTable } from './prixodbook-table'
 import { provodkiColumns } from './provodki'
-import { type MainbookAutoFillSubChild, autoFillMainbookData, getMainbookTypes } from './service'
-import { getMainbookColumns, transformGetByIdData, transformMainbookAutoFillData } from './utils'
+import {
+  type PrixodbookAutoFillSubChild,
+  autoFillPrixodbookData,
+  getPrixodbookTypes
+} from './service'
+import {
+  getPrixodbookColumns,
+  transformGetByIdData,
+  transformPrixodbookAutoFillData
+} from './utils'
 
-const MainbookDetailsPage = () => {
+const PrixodbookDetailsPage = () => {
   const tableMethods = useRef<EditableTableMethods>(null)
   const navigate = useNavigate()
   const queryClient = useQueryClient()
@@ -38,46 +46,41 @@ const MainbookDetailsPage = () => {
     defaultValues
   })
 
-  const { data: mainbook, isFetching } = useQuery({
-    queryKey: [mainbookQueryKeys.getById, Number(id)],
-    queryFn: mainbookService.getById,
+  const { data: prixodbook, isFetching } = useQuery({
+    queryKey: [prixodbookQueryKeys.getById, Number(id)],
+    queryFn: prixodbookService.getById,
     enabled: id !== 'create'
   })
   const { data: types, isFetching: isFetchingTypes } = useQuery({
-    queryKey: [
-      mainbookQueryKeys.getTypes,
-      {
-        budjet_id
-      }
-    ],
-    queryFn: getMainbookTypes
+    queryKey: [prixodbookQueryKeys.getTypes, { budjet_id }],
+    queryFn: getPrixodbookTypes
   })
-  const { isPending: isAutoFillingMainbook, mutate: autoFillMainbook } = useMutation({
-    mutationKey: [mainbookQueryKeys.autoFill],
-    mutationFn: autoFillMainbookData,
+  const { isPending: isAutoFillingPrixodbook, mutate: autoFillPrixodbook } = useMutation({
+    mutationKey: [prixodbookQueryKeys.autoFill],
+    mutationFn: autoFillPrixodbookData,
     onSuccess: (res) => {
       if (res?.data) {
-        form.setValue('childs', transformMainbookAutoFillData(res.data))
+        form.setValue('childs', transformPrixodbookAutoFillData(res.data))
       }
     }
   })
 
-  const { mutate: createMainbook, isPending: isCreatingMainbook } = useMutation({
-    mutationFn: mainbookService.create,
+  const { mutate: createPrixodbook, isPending: isCreatingPrixodbook } = useMutation({
+    mutationFn: prixodbookService.create,
     onSuccess: (res) => {
       toast.success(res?.message)
       queryClient.invalidateQueries({
-        queryKey: [mainbookQueryKeys.getAll]
+        queryKey: [prixodbookQueryKeys.getAll]
       })
       navigate(-1)
     }
   })
-  const { mutate: updateMainbook, isPending: isUpdatingMainbook } = useMutation({
-    mutationFn: mainbookService.update,
+  const { mutate: updatePrixodbook, isPending: isUpdatingPrixodbook } = useMutation({
+    mutationFn: prixodbookService.update,
     onSuccess: (res) => {
       toast.success(res?.message)
       queryClient.invalidateQueries({
-        queryKey: [mainbookQueryKeys.getAll]
+        queryKey: [prixodbookQueryKeys.getAll]
       })
       navigate(-1)
     }
@@ -96,20 +99,20 @@ const MainbookDetailsPage = () => {
       })
       return
     }
-    if (mainbook?.data) {
+    if (prixodbook?.data) {
       form.reset({
-        month: mainbook.data.month,
-        year: mainbook.data.year,
-        childs: transformGetByIdData(mainbook.data.childs)
+        month: prixodbook.data.month,
+        year: prixodbook.data.year,
+        childs: transformGetByIdData(prixodbook.data.childs)
       })
     }
-  }, [form, mainbook, id])
+  }, [form, prixodbook, id])
   useEffect(() => {
     setLayout({
       title: id === 'create' ? t('create') : t('edit'),
       breadcrumbs: [
         {
-          title: t('pages.mainbook')
+          title: t('pages.prixodbook')
         }
       ],
       onBack: () => {
@@ -119,12 +122,12 @@ const MainbookDetailsPage = () => {
   }, [setLayout, navigate, t, id])
   useEffect(() => {
     if (id === 'create') {
-      autoFillMainbook({ year, month, budjet_id: budjet_id! })
+      autoFillPrixodbook({ year, month, budjet_id: budjet_id! })
     }
   }, [id, year, month, budjet_id])
 
   const columns = useMemo(
-    () => [...provodkiColumns, ...getMainbookColumns(types?.data ?? [])],
+    () => [...provodkiColumns, ...getPrixodbookColumns(types?.data ?? [])],
     [types]
   )
 
@@ -137,7 +140,7 @@ const MainbookDetailsPage = () => {
 
     const payload: {
       type_id: number
-      sub_childs: MainbookAutoFillSubChild[]
+      sub_childs: PrixodbookAutoFillSubChild[]
     }[] = []
 
     types?.data?.forEach((type) => {
@@ -148,19 +151,19 @@ const MainbookDetailsPage = () => {
             schet: child.schet,
             prixod: child[`${type.id}_prixod`] || 0,
             rasxod: child[`${type.id}_rasxod`] || 0
-          } as MainbookAutoFillSubChild
+          } as PrixodbookAutoFillSubChild
         })
       })
     })
 
     if (id === 'create') {
-      createMainbook({
+      createPrixodbook({
         month: values.month,
         year: values.year,
         childs: payload
       })
     } else {
-      updateMainbook({
+      updatePrixodbook({
         id: Number(id),
         month: values.month,
         year: values.year,
@@ -189,7 +192,7 @@ const MainbookDetailsPage = () => {
   return (
     <DetailsView className="h-full">
       <DetailsView.Content
-        loading={isFetching || isAutoFillingMainbook || isFetchingTypes}
+        loading={isFetching || isAutoFillingPrixodbook || isFetchingTypes}
         className="overflow-hidden h-full pb-20"
       >
         <form
@@ -208,7 +211,7 @@ const MainbookDetailsPage = () => {
                     form.setValue('year', date.getFullYear())
                     form.setValue('month', date.getMonth() + 1)
                     if (id !== 'create') {
-                      autoFillMainbook({
+                      autoFillPrixodbook({
                         year: date.getFullYear(),
                         month: date.getMonth() + 1,
                         budjet_id: budjet_id!
@@ -219,8 +222,8 @@ const MainbookDetailsPage = () => {
                 {id !== 'create' ? (
                   <Button
                     type="button"
-                    onClick={() => autoFillMainbook({ year, month, budjet_id: budjet_id! })}
-                    loading={isAutoFillingMainbook}
+                    onClick={() => autoFillPrixodbook({ year, month, budjet_id: budjet_id! })}
+                    loading={isAutoFillingPrixodbook}
                   >
                     {t('autofill')}
                   </Button>
@@ -228,7 +231,7 @@ const MainbookDetailsPage = () => {
               </div>
             </div>
             <div className="overflow-auto scrollbar flex-1 relative">
-              <MainbookTable
+              <PrixodbookTable
                 columns={columns}
                 data={form.watch('childs')}
                 methods={tableMethods}
@@ -239,8 +242,8 @@ const MainbookDetailsPage = () => {
           <DetailsView.Footer>
             <Button
               type="submit"
-              disabled={isCreatingMainbook || isUpdatingMainbook}
-              loading={isCreatingMainbook || isUpdatingMainbook}
+              disabled={isCreatingPrixodbook || isUpdatingPrixodbook}
+              loading={isCreatingPrixodbook || isUpdatingPrixodbook}
             >
               {t('save')}
             </Button>
@@ -251,4 +254,4 @@ const MainbookDetailsPage = () => {
   )
 }
 
-export default MainbookDetailsPage
+export default PrixodbookDetailsPage

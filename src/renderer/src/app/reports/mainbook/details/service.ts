@@ -1,7 +1,7 @@
 import type { Response } from '@renderer/common/models'
+import type { QueryFunctionContext } from '@tanstack/react-query'
 
 import { ApiEndpoints } from '@renderer/common/features/crud'
-import { getBudjetId } from '@renderer/common/features/requisites'
 import { http } from '@renderer/common/lib/http'
 
 export interface MainbookAutoFillSubChild {
@@ -23,13 +23,14 @@ export interface MainbookAutoFill {
 export interface AutoFillMainbookArgs {
   month: number
   year: number
+  budjet_id: number
 }
-export const autoFillMainbookData = async ({ year, month }: AutoFillMainbookArgs) => {
+export const autoFillMainbookData = async ({ year, month, budjet_id }: AutoFillMainbookArgs) => {
   const res = await http.get<Response<MainbookAutoFill[]>>(`${ApiEndpoints.mainbook}/data`, {
     params: {
       year,
       month,
-      budjet_id: getBudjetId()
+      budjet_id
     }
   })
   return res.data
@@ -43,10 +44,16 @@ export interface MainbookType {
   is_deleted: boolean
   sort_order: number
 }
-export const getMainbookTypes = async () => {
+export interface GetMainbookTypeArgs {
+  budjet_id?: number
+}
+export const getMainbookTypes = async (
+  ctx: QueryFunctionContext<[string, GetMainbookTypeArgs]>
+) => {
+  const { budjet_id } = ctx.queryKey[1]
   const res = await http.get<Response<MainbookType[]>>(`${ApiEndpoints.mainbook}/type`, {
     params: {
-      budjet_id: getBudjetId()
+      budjet_id
     }
   })
   return res.data

@@ -7,23 +7,23 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
-import { MainbookTable } from '@/app/reports/mainbook/details/mainbook-table'
-import { type ProvodkaRow, provodkiColumns } from '@/app/reports/mainbook/details/provodki'
-import { getMainbookTypes } from '@/app/reports/mainbook/details/service'
-import { getMainbookColumns, transformGetByIdData } from '@/app/reports/mainbook/details/utils'
+import { PrixodbookTable } from '@/app/reports/prixodbook/details/prixodbook-table'
+import { type ProvodkaRow, provodkiColumns } from '@/app/reports/prixodbook/details/provodki'
+import { getPrixodbookTypes } from '@/app/reports/prixodbook/details/service'
+import { getPrixodbookColumns, transformGetByIdData } from '@/app/reports/prixodbook/details/utils'
 import { MonthPicker } from '@/common/components/month-picker'
 import { SearchInput } from '@/common/components/search-input'
 import { Button } from '@/common/components/ui/button'
 import { useConfirm } from '@/common/features/confirm'
 import { useLayoutStore } from '@/common/features/layout'
 import { formatDate } from '@/common/lib/date'
-import { MainbookStatus } from '@/common/models'
+import { PrixodbookStatus } from '@/common/models'
 import { DetailsView } from '@/common/views'
 
-import { mainbookQueryKeys } from '../config'
-import { adminMainbookService } from '../service'
+import { prixodbookQueryKeys } from '../config'
+import { adminPrixodbookService } from '../service'
 
-const AdminMainbookDetailsPage = () => {
+const AdminPrixodbookDetailsPage = () => {
   const tableMethods = useRef<EditableTableMethods>(null)
   const navigate = useNavigate()
   const queryClient = useQueryClient()
@@ -33,22 +33,22 @@ const AdminMainbookDetailsPage = () => {
   const { confirm } = useConfirm()
   const { t } = useTranslation(['app'])
 
-  const { data: mainbook, isFetching } = useQuery({
-    queryKey: [mainbookQueryKeys.getById, Number(id)],
-    queryFn: adminMainbookService.getById,
+  const { data: prixodbook, isFetching } = useQuery({
+    queryKey: [prixodbookQueryKeys.getById, Number(id)],
+    queryFn: adminPrixodbookService.getById,
     enabled: id !== 'create'
   })
   const { data: types, isFetching: isFetchingTypes } = useQuery({
-    queryKey: [mainbookQueryKeys.getTypes, {}],
-    queryFn: getMainbookTypes
+    queryKey: [prixodbookQueryKeys.getTypes, {}],
+    queryFn: getPrixodbookTypes
   })
 
-  const { mutate: updateMainbook, isPending: isUpdatingMainbook } = useMutation({
-    mutationFn: adminMainbookService.update,
+  const { mutate: updatePrixodbook, isPending: isUpdatingPrixodbook } = useMutation({
+    mutationFn: adminPrixodbookService.update,
     onSuccess: (res) => {
       toast.success(res?.message)
       queryClient.invalidateQueries({
-        queryKey: [mainbookQueryKeys.getAll]
+        queryKey: [prixodbookQueryKeys.getAll]
       })
       navigate(-1)
     }
@@ -59,7 +59,7 @@ const AdminMainbookDetailsPage = () => {
       title: id === 'create' ? t('create') : t('edit'),
       breadcrumbs: [
         {
-          title: t('pages.mainbook')
+          title: t('pages.prixodbook')
         }
       ],
       onBack: () => {
@@ -69,18 +69,18 @@ const AdminMainbookDetailsPage = () => {
   }, [setLayout, navigate, t, id])
 
   const columns = useMemo(
-    () => [...provodkiColumns, ...getMainbookColumns(types?.data ?? [])],
+    () => [...provodkiColumns, ...getPrixodbookColumns(types?.data ?? [])],
     [types]
   )
-  const data = useMemo(() => transformGetByIdData(mainbook?.data?.childs ?? []), [mainbook])
+  const data = useMemo(() => transformGetByIdData(prixodbook?.data?.childs ?? []), [prixodbook])
 
   const handleReject = () => {
     confirm({
       title: t('reject_report'),
       onConfirm: () => {
-        updateMainbook({
+        updatePrixodbook({
           id: Number(id),
-          status: MainbookStatus.REJECT
+          status: PrixodbookStatus.REJECT
         })
       }
     })
@@ -89,9 +89,9 @@ const AdminMainbookDetailsPage = () => {
     confirm({
       title: t('accept_report'),
       onConfirm: () => {
-        updateMainbook({
+        updatePrixodbook({
           id: Number(id),
-          status: MainbookStatus.ACCEPT
+          status: PrixodbookStatus.ACCEPT
         })
       }
     })
@@ -117,7 +117,7 @@ const AdminMainbookDetailsPage = () => {
   return (
     <DetailsView className="h-full">
       <DetailsView.Content
-        loading={isFetching || isFetchingTypes || isUpdatingMainbook}
+        loading={isFetching || isFetchingTypes || isUpdatingPrixodbook}
         className="h-full pb-20 overflow-hidden"
       >
         <div className="h-full flex flex-col">
@@ -126,8 +126,8 @@ const AdminMainbookDetailsPage = () => {
             <MonthPicker
               disabled
               value={
-                mainbook?.data
-                  ? formatDate(new Date(mainbook.data.year ?? 0, mainbook.data.month - 1))
+                prixodbook?.data
+                  ? formatDate(new Date(prixodbook.data.year ?? 0, prixodbook.data.month - 1))
                   : formatDate(new Date())
               }
               onChange={() => {}}
@@ -135,7 +135,7 @@ const AdminMainbookDetailsPage = () => {
             />
           </div>
           <div className="relative flex-1 overflow-auto scrollbar">
-            <MainbookTable
+            <PrixodbookTable
               columns={columns}
               data={data}
               methods={tableMethods}
@@ -144,14 +144,14 @@ const AdminMainbookDetailsPage = () => {
         </div>
         <DetailsView.Footer className="flex gap-5">
           <Button
-            disabled={isUpdatingMainbook}
+            disabled={isUpdatingPrixodbook}
             type="button"
             onClick={handleAccept}
           >
             {t('accept')}
           </Button>
           <Button
-            disabled={isUpdatingMainbook}
+            disabled={isUpdatingPrixodbook}
             type="button"
             variant="destructive"
             onClick={handleReject}
@@ -164,4 +164,4 @@ const AdminMainbookDetailsPage = () => {
   )
 }
 
-export default AdminMainbookDetailsPage
+export default AdminPrixodbookDetailsPage

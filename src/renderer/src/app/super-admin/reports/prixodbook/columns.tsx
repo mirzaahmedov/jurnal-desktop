@@ -5,10 +5,10 @@ import { MonthNameCell } from '@renderer/common/components/table/renderers/month
 import { UserCell } from '@renderer/common/components/table/renderers/user'
 import { Badge } from '@renderer/common/components/ui/badge'
 import { cn } from '@renderer/common/lib/utils'
-import { type AdminMainbook, MainbookStatus } from '@renderer/common/models'
+import { type AdminPrixodbook, PrixodbookStatus } from '@renderer/common/models'
 import { Trans } from 'react-i18next'
 
-export const mainbookColumns: ColumnDef<AdminMainbook>[] = [
+export const prixodbookColumns: ColumnDef<AdminPrixodbook>[] = [
   {
     key: 'id',
     renderCell: IDCell,
@@ -31,13 +31,13 @@ export const mainbookColumns: ColumnDef<AdminMainbook>[] = [
     renderCell: (row) => (
       <Badge
         className={cn(
-          row.status === MainbookStatus.REJECT && 'bg-red-500',
-          row.status === MainbookStatus.ACCEPT && 'bg-green-500'
+          row.status === PrixodbookStatus.REJECT && 'bg-red-500',
+          row.status === PrixodbookStatus.ACCEPT && 'bg-green-500'
         )}
       >
-        {row.status === MainbookStatus.SEND ? (
+        {row.status === PrixodbookStatus.SEND ? (
           <Trans>reports_common.send</Trans>
-        ) : row.status === MainbookStatus.REJECT ? (
+        ) : row.status === PrixodbookStatus.REJECT ? (
           <Trans>reports_common.reject</Trans>
         ) : (
           <Trans>reports_common.accept</Trans>
