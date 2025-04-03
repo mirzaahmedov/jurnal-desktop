@@ -111,7 +111,7 @@ export const VideoModuleList = ({
           <div className="p-4 py-4">
             <TabsList className="w-full">
               <TabsTrigger
-                className="flex-1 text-xs font-bold text-slate-500 data-[state=active]:text-brand data-[state=active]:shadow-none"
+                className="flex-1"
                 value={TabOption.All}
               >
                 {t('all')}

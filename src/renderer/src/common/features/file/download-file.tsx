@@ -6,23 +6,25 @@ import { Download } from 'lucide-react'
 import { Spinner } from '@/common/components/loading'
 import { Button } from '@/common/components/ui/button'
 import { useSettingsStore } from '@/common/features/settings'
+import { useToggle } from '@/common/hooks'
 import { http } from '@/common/lib/http'
 
+import { SelectReportTitleAlert } from './select-report-title-alert'
+
 export type DownloadFileProps = ButtonProps & {
-  requireTitle?: boolean
   url: string
   params: Record<string, any>
   fileName: string
   buttonText?: string
 }
 export const DownloadFile = ({
-  requireTitle,
   url,
   params,
   fileName,
   buttonText,
   ...props
 }: DownloadFileProps) => {
+  const alertToggle = useToggle()
   const report_title_id = useSettingsStore((store) => store.report_title_id)
 
   const { mutate: downloadFile, isPending: isDownloadingFile } = useMutation({
@@ -37,30 +39,37 @@ export const DownloadFile = ({
   })
 
   const handleDownloadFile = () => {
-    if (requireTitle && !report_title_id) {
-      alert('Пожалуйста, введите название отчета')
+    if (!report_title_id) {
+      alertToggle.open()
+      return
     }
-    ;() => downloadFile()
+    downloadFile()
   }
 
   return (
-    <Button
-      variant="ghost"
-      disabled={isDownloadingFile}
-      onClick={handleDownloadFile}
-      {...props}
-    >
-      {isDownloadingFile ? (
-        <>
-          <Spinner className="btn-icon icon-start" />
-          Загрузка
-        </>
-      ) : (
-        <>
-          <Download className="btn-icon icon-start !size-4" />
-          <span className="titlecase">{buttonText}</span>
-        </>
-      )}
-    </Button>
+    <>
+      <Button
+        variant="ghost"
+        disabled={isDownloadingFile}
+        onClick={handleDownloadFile}
+        {...props}
+      >
+        {isDownloadingFile ? (
+          <>
+            <Spinner className="btn-icon icon-start" />
+            Загрузка
+          </>
+        ) : (
+          <>
+            <Download className="btn-icon icon-start !size-4" />
+            <span className="titlecase">{buttonText}</span>
+          </>
+        )}
+      </Button>
+      <SelectReportTitleAlert
+        open={alertToggle.isOpen}
+        onOpenChange={alertToggle.setOpen}
+      />
+    </>
   )
 }
