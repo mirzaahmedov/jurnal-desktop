@@ -14,22 +14,29 @@ export const columns: ColumnDef<KassaRasxodType>[] = [
     minWidth: 160
   },
   {
+    sort: true,
+    fit: true,
+    minWidth: 200,
     key: 'doc_num'
   },
   {
+    fit: true,
+    sort: true,
+    minWidth: 200,
     key: 'doc_date',
-    renderCell(row) {
-      return formatLocaleDate(row.doc_date)
-    }
+    renderCell: (row) => formatLocaleDate(row.doc_date)
   },
   {
-    key: 'opisanie'
+    fill: true,
+    key: 'opisanie',
+    minWidth: 350
   },
   {
     numeric: true,
     key: 'summa',
-    renderCell(row) {
-      return !row.summa ? (
+    minWidth: 200,
+    renderCell: (row) =>
+      !row.summa ? (
         '-'
       ) : (
         <ProvodkaCell
@@ -37,9 +44,10 @@ export const columns: ColumnDef<KassaRasxodType>[] = [
           provodki={row.provodki_array}
         />
       )
-    }
   },
   {
+    fill: true,
+    minWidth: 350,
     key: 'spravochnik_podotchet_litso_name',
     header: 'podotchet-litso'
   }

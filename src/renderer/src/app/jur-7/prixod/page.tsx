@@ -22,7 +22,7 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
-import { GenericTable } from '@/common/components'
+import { GenericTable, useTableSort } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
 import { useLayoutStore } from '@/common/features/layout'
 
@@ -43,10 +43,12 @@ const Jurnal7PrixodPage = () => {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
 
-  const { t } = useTranslation(['app'])
   const [search] = useSearchFilter()
+
+  const { t } = useTranslation(['app'])
   const { confirm } = useConfirm()
   const { minDate, maxDate, queuedMonths } = useOstatokStore()
+  const { sorting, handleSort, getColumnSorted } = useTableSort()
 
   const dates = useDates({
     defaultFrom: formatDate(minDate),
@@ -98,6 +100,7 @@ const Jurnal7PrixodPage = () => {
     queryKey: [
       prixodQueryKeys.getAll,
       {
+        ...sorting,
         ...pagination,
         ...dates,
         search,
@@ -169,6 +172,8 @@ const Jurnal7PrixodPage = () => {
               onConfirm: () => deletePrixod(row.id)
             })
           }}
+          getColumnSorted={getColumnSorted}
+          onSort={handleSort}
         />
       </ListView.Content>
       <ListView.Footer>

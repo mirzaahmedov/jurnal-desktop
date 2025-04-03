@@ -18,7 +18,7 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
-import { GenericTable } from '@/common/components'
+import { GenericTable, useTableSort } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
 
 import { iznosQueryKeys } from '../iznos/config'
@@ -34,10 +34,12 @@ const Jurnal7RasxodPage = () => {
   const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
   const setLayout = useLayoutStore((store) => store.setLayout)
 
-  const { t } = useTranslation(['app'])
   const [search] = useSearchFilter()
+
+  const { t } = useTranslation(['app'])
   const { confirm } = useConfirm()
   const { minDate, maxDate, queuedMonths } = useOstatokStore()
+  const { sorting, handleSort, getColumnSorted } = useTableSort()
 
   const dates = useDates({
     defaultFrom: formatDate(minDate),
@@ -77,6 +79,7 @@ const Jurnal7RasxodPage = () => {
       {
         ...pagination,
         ...dates,
+        ...sorting,
         search,
         main_schet_id
       }
@@ -126,6 +129,8 @@ const Jurnal7RasxodPage = () => {
               onConfirm: () => deleteRasxod(row.id)
             })
           }}
+          getColumnSorted={getColumnSorted}
+          onSort={handleSort}
         />
       </ListView.Content>
       <ListView.Footer>

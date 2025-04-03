@@ -14,16 +14,21 @@ export const bankOstatokColumns: ColumnDef<BankOstatok>[] = [
     minWidth: 160
   },
   {
+    sort: true,
     fit: true,
+    minWidth: 200,
     key: 'doc_num'
   },
   {
+    sort: true,
     fit: true,
+    minWidth: 200,
     key: 'doc_date',
     renderCell: (row) => formatLocaleDate(row.doc_date)
   },
   {
     numeric: true,
+    minWidth: 200,
     header: 'prixod',
     key: 'prixod_summa',
     renderCell: (row) =>
@@ -38,6 +43,7 @@ export const bankOstatokColumns: ColumnDef<BankOstatok>[] = [
   },
   {
     numeric: true,
+    minWidth: 200,
     header: 'rasxod',
     key: 'rasxod_summa',
     renderCell: (row) =>
@@ -51,7 +57,8 @@ export const bankOstatokColumns: ColumnDef<BankOstatok>[] = [
       )
   },
   {
-    width: 350,
+    fill: true,
+    minWidth: 350,
     key: 'opisanie'
   }
 ]

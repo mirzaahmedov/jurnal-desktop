@@ -12,33 +12,40 @@ export const internalColumns: ColumnDef<Internal>[] = [
     minWidth: 160
   },
   {
+    sort: true,
     fit: true,
+    minWidth: 200,
     key: 'doc_num'
   },
   {
+    sort: true,
     fit: true,
+    minWidth: 200,
     key: 'doc_date',
     renderCell: (row) => formatLocaleDate(row.doc_date)
   },
   {
-    minWidth: 300,
+    fill: true,
+    minWidth: 350,
     key: 'kimdan_name',
     header: 'from-who'
   },
   {
-    minWidth: 300,
+    fill: true,
+    minWidth: 350,
     key: 'kimga',
     header: 'to-whom',
     renderCell: (row) => row?.kimga?.fio
   },
   {
     numeric: true,
-    minWidth: 120,
+    minWidth: 200,
     key: 'summa',
     renderCell: (row) => <b className="font-black">{formatNumber(row.summa)}</b>
   },
   {
-    minWidth: 300,
+    fill: true,
+    minWidth: 350,
     key: 'opisanie'
   }
 ]

@@ -4,7 +4,7 @@ import type { Shartnoma } from '@renderer/common/models'
 import { useEffect } from 'react'
 
 import { createOrganizationSpravochnik } from '@renderer/app/region-spravochnik/organization'
-import { ChooseSpravochnik, GenericTable } from '@renderer/common/components'
+import { ChooseSpravochnik, GenericTable, useTableSort } from '@renderer/common/components'
 import { Button } from '@renderer/common/components/ui/button'
 import { useConfirm } from '@renderer/common/features/confirm'
 import { SearchFilterDebounced } from '@renderer/common/features/filters/search/search-filter-debounced'
@@ -29,8 +29,10 @@ const ShartnomaPage = () => {
   const [organId, setOrganId] = useLocationState<undefined | number>('org_id')
 
   const { confirm } = useConfirm()
-  const [search] = useSearchFilter()
+  const { sorting, handleSort, getColumnSorted } = useTableSort()
   const { t } = useTranslation(['app'])
+
+  const [search] = useSearchFilter()
 
   const navigate = useNavigate()
   const pagination = usePagination()
@@ -57,6 +59,7 @@ const ShartnomaPage = () => {
         search,
         budjet_id,
         organ_id: organId,
+        ...sorting,
         ...pagination
       }
     ],
@@ -115,16 +118,16 @@ const ShartnomaPage = () => {
         <div className="flex items-center">
           <ChooseSpravochnik
             spravochnik={organSpravochnik}
-            placeholder="Выберите организацию"
+            placeholder={t('choose', { what: t('organization') })}
             getName={(selected) => selected.name}
             getElements={(selected) => [
-              { name: 'ИНН:', value: selected?.inn },
-              { name: 'МФО:', value: selected?.mfo },
+              { name: t('inn'), value: selected?.inn },
+              { name: t('mfo'), value: selected?.mfo },
               {
-                name: 'Расчетный счет:',
+                name: t('raschet-schet'),
                 value: selected?.account_numbers.map((schet) => schet.raschet_schet).join(',')
               },
-              { name: 'Банк:', value: selected?.bank_klient }
+              { name: t('bank'), value: selected?.bank_klient }
             ]}
           />
         </div>
@@ -136,6 +139,8 @@ const ShartnomaPage = () => {
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}
           placeholder={!organSpravochnik.selected ? 'Выберите организацию' : undefined}
+          getColumnSorted={getColumnSorted}
+          onSort={handleSort}
           actions={(row) => (
             <Button
               variant="ghost"

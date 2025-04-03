@@ -311,5 +311,6 @@
   "admin": "Admin",
   "super-admin": "Super admin",
   "start_date": "Boshlang'ich sana",
-  "end_date": "Yakuniy sana"
+  "end_date": "Yakuniy sana",
+  "please_select_report_title": "Iltimos, hisobot nomini tanlang va keyin yuklab oling."
 }

@@ -12,27 +12,33 @@ export const rasxodColumns: ColumnDef<Jur7Rasxod>[] = [
     minWidth: 160
   },
   {
+    sort: true,
     fit: true,
+    minWidth: 200,
     key: 'doc_num'
   },
   {
+    sort: true,
     fit: true,
+    minWidth: 200,
     key: 'doc_date',
     renderCell: (row) => formatLocaleDate(row.doc_date)
   },
   {
-    minWidth: 300,
+    fill: true,
+    minWidth: 350,
     key: 'kimdan_name',
     header: 'from-who'
   },
   {
     numeric: true,
+    minWidth: 200,
     key: 'summa',
-    minWidth: 120,
     renderCell: (row) => <b className="font-black">{formatNumber(row.summa)}</b>
   },
   {
-    minWidth: 300,
+    fill: true,
+    minWidth: 350,
     key: 'opisanie'
   }
 ]

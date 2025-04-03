@@ -3,6 +3,11 @@ import type { CheckedState } from '@radix-ui/react-checkbox'
 import type { Autocomplete } from '@renderer/common/lib/types'
 import type { HTMLAttributes, ReactNode, TableHTMLAttributes } from 'react'
 
+export enum TableSortDirection {
+  ASC = 'ASC',
+  DESC = 'DESC'
+}
+
 export type CellRenderer<T extends object> = (
   row: T,
   col: ColumnDef<T>,
@@ -12,7 +17,9 @@ export type CellRenderer<T extends object> = (
 export interface ColumnDef<T extends object> {
   numeric?: boolean
   fit?: boolean
+  fill?: boolean
   stretch?: boolean
+  sort?: boolean
   key: Autocomplete<keyof T>
   header?: ReactNode
   className?: string
@@ -44,9 +51,11 @@ export interface GenericTableProps<T extends object>
   getRowId?: (row: T) => string | number
   getRowKey?: (row: T) => string | number
   getRowSelected?: GetRowSelectedFn<T>
+  getColumnSorted?: (column: ColumnDef<T>) => TableSortDirection | undefined
   onClickRow?(row: T): void
   onDelete?(row: T): void
   onEdit?(row: T): void
+  onSort?(column: ColumnDef<T>, direction: TableSortDirection | undefined): void
   actions?: (row: T) => ReactNode
   activeRowId?: string | number
   footer?: ReactNode

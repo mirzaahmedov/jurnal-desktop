@@ -1,5 +1,3 @@
-import type { ColumnDef, GenericTableProps } from './interface'
-
 import { type ReactNode, useEffect, useMemo, useState } from 'react'
 
 import { Button } from '@renderer/common/components/ui/button'
@@ -12,12 +10,13 @@ import {
 } from '@renderer/common/components/ui/table'
 import { formatNumber } from '@renderer/common/lib/format'
 import { cn } from '@renderer/common/lib/utils'
-import { Pencil, Trash2 } from 'lucide-react'
+import { ArrowDown10, ArrowDownNarrowWide, ArrowUp01, Pencil, Trash2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { twMerge } from 'tailwind-merge'
 
 import { EmptyList } from '../empty-states'
 import { GenericTableCell, GenericTableHead, GenericTableRow } from './components'
+import { type ColumnDef, type GenericTableProps, TableSortDirection } from './interface'
 import { getAccessorColumns, getHeaderGroups } from './utils'
 
 export const GenericTable = <T extends object>(props: GenericTableProps<T>) => {
@@ -29,11 +28,13 @@ export const GenericTable = <T extends object>(props: GenericTableProps<T>) => {
     placeholder,
     getRowId = defaultGetRowId,
     getRowKey = getRowId,
+    getColumnSorted,
     disabledIds = [],
     selectedIds = [],
     onClickRow,
     onDelete,
     onEdit,
+    onSort,
     activeRowId,
     footer,
     actions,
@@ -62,6 +63,21 @@ export const GenericTable = <T extends object>(props: GenericTableProps<T>) => {
     [columnDefs]
   )
 
+  const handleSort = (column: ColumnDef<T>, direction: TableSortDirection | undefined) => {
+    if (!onSort || !getColumnSorted) return
+
+    switch (direction) {
+      case TableSortDirection.DESC:
+        onSort(column, TableSortDirection.ASC)
+        break
+      case TableSortDirection.ASC:
+        onSort(column, undefined)
+        break
+      default:
+        onSort(column, TableSortDirection.DESC)
+    }
+  }
+
   const actionsCount = [onEdit, onDelete, actions].filter(Boolean).length
   const actionsWidth = actionsCount * 36 + (actionsCount - 1) * 4 + 48
 
@@ -82,7 +98,7 @@ export const GenericTable = <T extends object>(props: GenericTableProps<T>) => {
                 className="hover:bg-slate-100 border-t border-slate-200 bg-slate-100 even:bg-slate-100 even:hover:bg-slate-100"
               >
                 {Array.isArray(headerGroup)
-                  ? headerGroup.map((col) => {
+                  ? headerGroup.map((column) => {
                       const {
                         _colSpan,
                         _rowSpan,
@@ -90,18 +106,23 @@ export const GenericTable = <T extends object>(props: GenericTableProps<T>) => {
                         header,
                         renderHeader,
                         fit,
+                        fill,
                         stretch,
                         numeric,
+                        sort,
                         headerClassName,
                         width,
                         minWidth,
                         maxWidth
-                      } = col
+                      } = column
+                      const sorted = getColumnSorted?.(column)
                       return (
                         <GenericTableHead
                           key={key.toString()}
                           numeric={numeric}
                           fit={fit}
+                          fill={fill}
+                          sort={column.sort}
                           stretch={stretch}
                           className={headerClassName}
                           colSpan={_colSpan}
@@ -111,6 +132,7 @@ export const GenericTable = <T extends object>(props: GenericTableProps<T>) => {
                             minWidth,
                             maxWidth
                           }}
+                          onClick={column.sort ? () => handleSort(column, sorted) : undefined}
                         >
                           {renderHeader
                             ? renderHeader()
@@ -119,6 +141,17 @@ export const GenericTable = <T extends object>(props: GenericTableProps<T>) => {
                               : typeof header === 'string'
                                 ? t(header)
                                 : header}
+                          {sort ? (
+                            <span className="inline-block ml-2.5 -my-10 size-5 align-middle">
+                              {sorted === TableSortDirection.DESC ? (
+                                <ArrowDown10 className="size-5 text-brand" />
+                              ) : sorted === TableSortDirection.ASC ? (
+                                <ArrowUp01 className="size-5 text-brand" />
+                              ) : (
+                                <ArrowDownNarrowWide className="size-5 text-slate-400" />
+                              )}
+                            </span>
+                          ) : null}
                         </GenericTableHead>
                       )
                     })
@@ -126,7 +159,7 @@ export const GenericTable = <T extends object>(props: GenericTableProps<T>) => {
                 {onDelete || onEdit || actions ? (
                   <GenericTableHead
                     fit
-                    className="text-center"
+                    className="text-center sticky right-0 z-10 !bg-inherit border-l"
                     key="actions"
                     style={{
                       width: actionsWidth,
@@ -166,6 +199,7 @@ export const GenericTable = <T extends object>(props: GenericTableProps<T>) => {
                       const {
                         key,
                         fit,
+                        fill,
                         stretch,
                         numeric,
                         renderCell,
@@ -178,6 +212,7 @@ export const GenericTable = <T extends object>(props: GenericTableProps<T>) => {
                         <GenericTableCell
                           key={key.toString()}
                           fit={fit}
+                          fill={fill}
                           stretch={stretch}
                           numeric={numeric}
                           className={cn(
@@ -200,7 +235,7 @@ export const GenericTable = <T extends object>(props: GenericTableProps<T>) => {
 
                 {onDelete || onEdit || actions ? (
                   <GenericTableCell
-                    className="py-1"
+                    className="py-1 sticky right-0 bg-inherit shadow-sm border-l"
                     style={{
                       width: actionsWidth,
                       minWidth: actionsWidth,

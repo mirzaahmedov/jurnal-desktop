@@ -12,7 +12,7 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
-import { FooterCell, FooterRow, GenericTable } from '@/common/components'
+import { FooterCell, FooterRow, GenericTable, useTableSort } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
 import { useLayoutStore } from '@/common/features/layout'
 import { useDates, usePagination } from '@/common/hooks'
@@ -32,8 +32,10 @@ const AktPage = () => {
   const main_schet_id = useRequisitesStore((state) => state.main_schet_id)
   const setLayout = useLayoutStore((store) => store.setLayout)
 
-  const { confirm } = useConfirm()
   const [search] = useSearchFilter()
+
+  const { confirm } = useConfirm()
+  const { sorting, handleSort, getColumnSorted } = useTableSort()
   const { t } = useTranslation(['app'])
 
   const { data: aktList, isFetching } = useQuery({
@@ -42,13 +44,14 @@ const AktPage = () => {
       {
         main_schet_id,
         search,
+        ...sorting,
         ...dates,
         ...pagination
       }
     ],
     queryFn: aktService.getAll
   })
-  const { mutate: deleteAkt, isPending } = useMutation({
+  const { mutate: deleteAkt, isPending: isDeletingAkt } = useMutation({
     mutationKey: [queryKeys.delete],
     mutationFn: aktService.delete,
     onSuccess(res) {
@@ -83,7 +86,7 @@ const AktPage = () => {
         navigate('create')
       }
     })
-  }, [setLayout, t])
+  }, [setLayout, t, navigate])
 
   return (
     <ListView>
@@ -101,13 +104,15 @@ const AktPage = () => {
           buttonText={t('cap-report')}
         />
       </ListView.Header>
-      <ListView.Content loading={isFetching || isPending}>
+      <ListView.Content loading={isFetching || isDeletingAkt}>
         <GenericTable
           data={aktList?.data ?? []}
           columnDefs={columns}
           getRowId={(row) => row.id}
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}
+          getColumnSorted={getColumnSorted}
+          onSort={handleSort}
           footer={
             <FooterRow>
               <FooterCell

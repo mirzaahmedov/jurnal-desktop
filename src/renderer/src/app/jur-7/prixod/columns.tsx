@@ -12,32 +12,39 @@ export const prixodColumns: ColumnDef<MO7Prixod>[] = [
     minWidth: 160
   },
   {
+    sort: true,
     fit: true,
+    minWidth: 200,
     key: 'doc_num'
   },
   {
+    sort: true,
     fit: true,
+    minWidth: 200,
     key: 'doc_date',
     renderCell: (row) => formatLocaleDate(row.doc_date)
   },
   {
+    fill: true,
+    minWidth: 350,
     key: 'kimdan_name',
-    header: 'from-who',
-    minWidth: 300
+    header: 'from-who'
   },
   {
+    fill: true,
+    minWidth: 350,
     key: 'kimga_name',
-    header: 'to-whom',
-    minWidth: 300
+    header: 'to-whom'
   },
   {
     numeric: true,
+    minWidth: 200,
     key: 'summa',
-    minWidth: 120,
     renderCell: (row) => <b className="font-black">{formatNumber(row.summa)}</b>
   },
   {
-    key: 'opisanie',
-    minWidth: 300
+    fill: true,
+    minWidth: 350,
+    key: 'opisanie'
   }
 ]

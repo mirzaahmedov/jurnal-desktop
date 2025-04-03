@@ -1,4 +1,4 @@
-import type { AdvanceReportPayloadType } from './constants'
+import type { AdvanceReportPayloadType } from './config'
 import type { Avans } from '@/common/models'
 
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'

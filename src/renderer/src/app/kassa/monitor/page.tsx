@@ -8,7 +8,7 @@ import { useSettingsStore } from '@renderer/common/features/settings'
 import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 
-import { FooterCell, FooterRow, GenericTable, SummaTotal } from '@/common/components'
+import { FooterCell, FooterRow, GenericTable, SummaTotal, useTableSort } from '@/common/components'
 import { ButtonGroup } from '@/common/components/ui/button-group'
 import { useLayoutStore } from '@/common/features/layout'
 import { useDates, usePagination } from '@/common/hooks'
@@ -26,8 +26,10 @@ const KassaMonitorPage = () => {
 
   const setLayout = useLayoutStore((store) => store.setLayout)
 
-  const { t } = useTranslation(['app'])
   const [search] = useSearchFilter()
+
+  const { t } = useTranslation(['app'])
+  const { sorting, handleSort, getColumnSorted } = useTableSort()
   const { main_schet_id, budjet_id } = useRequisitesStore()
 
   const { data: monitorList, isFetching } = useQuery({
@@ -36,6 +38,7 @@ const KassaMonitorPage = () => {
       {
         main_schet_id,
         search,
+        ...sorting,
         ...dates,
         ...pagination
       }
@@ -112,6 +115,8 @@ const KassaMonitorPage = () => {
           columnDefs={columns}
           getRowKey={(row) => `${row.id}-${row.rasxod_sum ? 'rasxod' : 'prixod'}`}
           getRowId={(row) => row.id}
+          getColumnSorted={getColumnSorted}
+          onSort={handleSort}
           footer={
             <>
               <FooterRow>

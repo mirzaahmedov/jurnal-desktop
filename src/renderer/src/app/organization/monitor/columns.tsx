@@ -18,16 +18,21 @@ export const organizationMonitorColumns: ColumnDef<OrganizationMonitor>[] = [
     minWidth: 160
   },
   {
+    sort: true,
     fit: true,
+    minWidth: 200,
     key: 'doc_num'
   },
   {
+    sort: true,
     fit: true,
+    minWidth: 200,
     key: 'doc_date',
     renderCell: (row) => formatLocaleDate(row.doc_date)
   },
   {
-    minWidth: 300,
+    fill: true,
+    minWidth: 350,
     key: 'organ_name',
     header: 'organization',
     renderCell: (row) => (
@@ -104,6 +109,7 @@ export const organizationMonitorColumns: ColumnDef<OrganizationMonitor>[] = [
   },
   {
     numeric: true,
+    minWidth: 200,
     key: 'summa_prixod',
     header: 'debet',
     renderCell(row) {
@@ -124,6 +130,7 @@ export const organizationMonitorColumns: ColumnDef<OrganizationMonitor>[] = [
   },
   {
     numeric: true,
+    minWidth: 200,
     key: 'summa_rasxod',
     header: 'kredit',
     renderCell(row) {
@@ -142,17 +149,17 @@ export const organizationMonitorColumns: ColumnDef<OrganizationMonitor>[] = [
       )
     }
   },
-
-  {
-    minWidth: 300,
-    key: 'opisanie',
-    className: 'max-w-md'
-  },
   {
     fit: true,
     key: 'type',
     header: 'type-operatsii',
     renderCell: (row) => <ProvodkaBadge type={row.type} />
+  },
+  {
+    fill: true,
+    minWidth: 350,
+    key: 'opisanie',
+    className: 'max-w-md'
   },
   {
     fit: true,

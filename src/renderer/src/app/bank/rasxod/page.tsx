@@ -13,7 +13,7 @@ import { CopyPlus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
-import { FooterCell, FooterRow, GenericTable } from '@/common/components'
+import { FooterCell, FooterRow, GenericTable, useTableSort } from '@/common/components'
 import { Button } from '@/common/components/ui/button'
 import { useConfirm } from '@/common/features/confirm'
 import { SearchFilterDebounced } from '@/common/features/filters/search/search-filter-debounced'
@@ -41,6 +41,7 @@ const BankRasxodPage = () => {
 
   const [search] = useSearchFilter()
 
+  const { sorting, handleSort, getColumnSorted } = useTableSort()
   const { confirm } = useConfirm()
   const { t } = useTranslation(['app'])
 
@@ -50,6 +51,7 @@ const BankRasxodPage = () => {
       {
         main_schet_id,
         search,
+        ...sorting,
         ...dates,
         ...pagination
       }
@@ -98,7 +100,6 @@ const BankRasxodPage = () => {
         <ListView.RangeDatePicker {...dates} />
         <Button
           onClick={() => {
-            // navigate('import-zarplata')
             importDialogToggle.open()
           }}
           className="ml-auto"
@@ -113,6 +114,8 @@ const BankRasxodPage = () => {
           getRowId={(row) => row.id}
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}
+          getColumnSorted={getColumnSorted}
+          onSort={handleSort}
           actions={(row) => (
             <Button
               variant="ghost"

@@ -17,7 +17,7 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
-import { GenericTable } from '@/common/components'
+import { GenericTable, useTableSort } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
 import { useLayoutStore } from '@/common/features/layout'
 
@@ -34,10 +34,12 @@ const InternalPage = () => {
   const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
   const setLayout = useLayoutStore((store) => store.setLayout)
 
+  const [search] = useSearchFilter()
+
   const { t } = useTranslation(['app'])
   const { confirm } = useConfirm()
-  const [search] = useSearchFilter()
   const { minDate, maxDate, queuedMonths } = useOstatokStore()
+  const { sorting, handleSort, getColumnSorted } = useTableSort()
 
   const dates = useDates({
     defaultFrom: formatDate(minDate),
@@ -77,6 +79,7 @@ const InternalPage = () => {
       {
         ...pagination,
         ...dates,
+        ...sorting,
         search,
         main_schet_id
       }
@@ -126,6 +129,8 @@ const InternalPage = () => {
               onConfirm: () => deleteInternal(row.id)
             })
           }}
+          getColumnSorted={getColumnSorted}
+          onSort={handleSort}
         />
       </ListView.Content>
       <ListView.Footer>

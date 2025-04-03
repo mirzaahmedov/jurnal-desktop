@@ -9,7 +9,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
-import { FooterCell, FooterRow, GenericTable } from '@/common/components'
+import { FooterCell, FooterRow, GenericTable, useTableSort } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
 import { useLayoutStore } from '@/common/features/layout'
 import { useDates, usePagination } from '@/common/hooks'
@@ -23,6 +23,8 @@ import { kassaRasxodService } from './service'
 const KassaRasxodPage = () => {
   const { confirm } = useConfirm()
   const { t } = useTranslation(['app'])
+  const { sorting, handleSort, getColumnSorted } = useTableSort()
+
   const [search] = useSearchFilter()
 
   const dates = useDates()
@@ -38,13 +40,14 @@ const KassaRasxodPage = () => {
       {
         main_schet_id,
         search,
+        ...sorting,
         ...dates,
         ...pagination
       }
     ],
     queryFn: kassaRasxodService.getAll
   })
-  const { mutate: deleteMutation, isPending } = useMutation({
+  const { mutate: deleteRasxod, isPending } = useMutation({
     mutationKey: [queryKeys.delete],
     mutationFn: kassaRasxodService.delete,
     onSuccess() {
@@ -61,7 +64,7 @@ const KassaRasxodPage = () => {
   const handleClickDelete = (row: KassaRasxodType) => {
     confirm({
       onConfirm() {
-        deleteMutation(row.id)
+        deleteRasxod(row.id)
       }
     })
   }
@@ -79,7 +82,7 @@ const KassaRasxodPage = () => {
         navigate('create')
       }
     })
-  }, [setLayout, t])
+  }, [setLayout, t, navigate])
 
   return (
     <ListView>
@@ -93,6 +96,8 @@ const KassaRasxodPage = () => {
           getRowId={(row) => row.id}
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}
+          getColumnSorted={getColumnSorted}
+          onSort={handleSort}
           footer={
             <FooterRow>
               <FooterCell

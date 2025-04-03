@@ -14,11 +14,15 @@ export const kassaOstatokColumns: ColumnDef<KassaOstatok>[] = [
     minWidth: 160
   },
   {
+    sort: true,
     fit: true,
+    minWidth: 200,
     key: 'doc_num'
   },
   {
     fit: true,
+    sort: true,
+    minWidth: 200,
     key: 'doc_date',
     renderCell: (row) => formatLocaleDate(row.doc_date)
   },
@@ -26,6 +30,7 @@ export const kassaOstatokColumns: ColumnDef<KassaOstatok>[] = [
     numeric: true,
     header: 'prixod',
     key: 'prixod_summa',
+    minWidth: 200,
     renderCell: (row) =>
       !row.prixod_summa ? (
         '-'
@@ -40,6 +45,7 @@ export const kassaOstatokColumns: ColumnDef<KassaOstatok>[] = [
     numeric: true,
     header: 'rasxod',
     key: 'rasxod_summa',
+    minWidth: 200,
     renderCell: (row) =>
       !row.rasxod_summa ? (
         '-'
@@ -51,7 +57,8 @@ export const kassaOstatokColumns: ColumnDef<KassaOstatok>[] = [
       )
   },
   {
-    width: 350,
+    fill: true,
+    minWidth: 350,
     key: 'opisanie'
   }
 ]

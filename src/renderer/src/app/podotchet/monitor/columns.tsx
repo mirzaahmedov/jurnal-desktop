@@ -19,62 +19,23 @@ export const podotchetMonitoringColumns: ColumnDef<PodotchetMonitor>[] = [
     minWidth: 160
   },
   {
+    sort: true,
     fit: true,
+    minWidth: 200,
     key: 'doc_num'
   },
   {
+    sort: true,
     fit: true,
+    minWidth: 200,
     key: 'doc_date',
     renderCell: (row) => formatLocaleDate(row.doc_date)
   },
   {
-    key: 'opisanie',
-    minWidth: 300
-  },
-  {
-    numeric: true,
-    header: 'debet',
-    key: 'prixod_sum',
-    renderCell(row) {
-      return row.prixod_sum ? (
-        <ProvodkaCell
-          summa={row.prixod_sum}
-          provodki={[
-            {
-              provodki_schet: row.provodki_schet,
-              provodki_sub_schet: row.provodki_sub_schet
-            }
-          ]}
-        />
-      ) : (
-        '-'
-      )
-    }
-  },
-  {
-    numeric: true,
-    header: 'kredit',
-    key: 'rasxod_sum',
-    renderCell(row) {
-      return row.rasxod_sum ? (
-        <ProvodkaCell
-          summa={row.rasxod_sum}
-          provodki={[
-            {
-              provodki_schet: row.provodki_schet,
-              provodki_sub_schet: row.provodki_sub_schet
-            }
-          ]}
-        />
-      ) : (
-        '-'
-      )
-    }
-  },
-  {
+    fill: true,
+    minWidth: 350,
     key: 'podotchet_name',
     header: 'podotchet-litso',
-    minWidth: 300,
     renderCell: (row) => (
       <HoverInfoCell
         title={row.podotchet_name}
@@ -108,10 +69,57 @@ export const podotchetMonitoringColumns: ColumnDef<PodotchetMonitor>[] = [
     )
   },
   {
+    numeric: true,
+    minWidth: 200,
+    header: 'debet',
+    key: 'prixod_sum',
+    renderCell(row) {
+      return row.prixod_sum ? (
+        <ProvodkaCell
+          summa={row.prixod_sum}
+          provodki={[
+            {
+              provodki_schet: row.provodki_schet,
+              provodki_sub_schet: row.provodki_sub_schet
+            }
+          ]}
+        />
+      ) : (
+        '-'
+      )
+    }
+  },
+  {
+    numeric: true,
+    minWidth: 200,
+    header: 'kredit',
+    key: 'rasxod_sum',
+    renderCell(row) {
+      return row.rasxod_sum ? (
+        <ProvodkaCell
+          summa={row.rasxod_sum}
+          provodki={[
+            {
+              provodki_schet: row.provodki_schet,
+              provodki_sub_schet: row.provodki_sub_schet
+            }
+          ]}
+        />
+      ) : (
+        '-'
+      )
+    }
+  },
+  {
     fit: true,
     key: 'type',
     header: 'type-operatsii',
     renderCell: (row) => <ProvodkaBadge type={row.type} />
+  },
+  {
+    fill: true,
+    minWidth: 350,
+    key: 'opisanie'
   },
   {
     fit: true,

@@ -12,7 +12,8 @@ import {
   FooterCell,
   FooterRow,
   GenericTable,
-  SummaTotal
+  SummaTotal,
+  useTableSort
 } from '@/common/components'
 import { Button } from '@/common/components/ui/button'
 import { ButtonGroup } from '@/common/components/ui/button-group'
@@ -54,6 +55,7 @@ const OrganizationMonitoringPage = () => {
   const [organId, setOrganId] = useOrganFilter()
   const [search] = useSearchFilter()
 
+  const { sorting, handleSort, getColumnSorted } = useTableSort()
   const { main_schet_id, budjet_id } = useRequisitesStore()
   const { t } = useTranslation(['app'])
 
@@ -91,6 +93,7 @@ const OrganizationMonitoringPage = () => {
         organ_id: organId ? organId : undefined,
         operatsii: operatsiiSpravochnik.selected ? operatsiiSpravochnik.selected.schet : undefined,
         search,
+        ...sorting,
         ...dates,
         ...pagination
       }
@@ -294,6 +297,8 @@ const OrganizationMonitoringPage = () => {
           getRowKey={(row) => {
             return `${row.id}-${row.type}`
           }}
+          getColumnSorted={getColumnSorted}
+          onSort={handleSort}
           footer={
             <>
               <FooterRow>

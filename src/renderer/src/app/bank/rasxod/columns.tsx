@@ -22,16 +22,20 @@ export const rasxodColumns: ColumnDef<BankRasxod>[] = [
   },
   {
     fit: true,
+    sort: true,
+    minWidth: 200,
     key: 'doc_num'
   },
   {
     fit: true,
+    sort: true,
+    minWidth: 200,
     key: 'doc_date',
-    renderCell(row, col) {
-      return formatLocaleDate(row[col.key as keyof BankRasxod] as string)
-    }
+    renderCell: (row) => formatLocaleDate(row.doc_date)
   },
   {
+    fill: true,
+    minWidth: 350,
     key: 'id_spravochnik_organization',
     header: 'about-counteragent',
     renderCell: (row) => (
@@ -87,9 +91,10 @@ export const rasxodColumns: ColumnDef<BankRasxod>[] = [
     )
   },
   {
+    minWidth: 200,
     numeric: true,
     key: 'summa',
-    renderCell(row) {
+    renderCell: (row) => {
       if (!row.tulangan_tulanmagan) {
         return (
           <div className="font-bold leading-tight">
@@ -116,11 +121,11 @@ export const rasxodColumns: ColumnDef<BankRasxod>[] = [
     fit: true,
     key: 'tulangan_tulanmagan',
     header: 'payed',
-    renderCell(row) {
-      return <StatusCell row={row} />
-    }
+    renderCell: (row) => <StatusCell row={row} />
   },
   {
+    fill: true,
+    minWidth: 350,
     key: 'opisanie',
     className: 'max-w-md'
   }

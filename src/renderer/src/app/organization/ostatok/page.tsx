@@ -11,7 +11,7 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
-import { FooterCell, FooterRow, GenericTable, SummaTotal } from '@/common/components'
+import { FooterCell, FooterRow, GenericTable, SummaTotal, useTableSort } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
 import { useLayoutStore } from '@/common/features/layout'
 import { useDates, usePagination } from '@/common/hooks'
@@ -30,8 +30,10 @@ const OrganizationOstatokPage = () => {
   const pagination = usePagination()
   const dates = useDates()
 
-  const { confirm } = useConfirm()
   const [search] = useSearchFilter()
+
+  const { confirm } = useConfirm()
+  const { sorting, handleSort, getColumnSorted } = useTableSort()
   const { t } = useTranslation(['app'])
 
   const { data: organOstatokList, isFetching } = useQuery({
@@ -40,13 +42,14 @@ const OrganizationOstatokPage = () => {
       {
         main_schet_id,
         search,
+        ...sorting,
         ...dates,
         ...pagination
       }
     ],
     queryFn: organizationOstatokService.getAll
   })
-  const { mutate: deleteOrganizationOstatok, isPending } = useMutation({
+  const { mutate: deleteOrganOstatok, isPending: isDeletingOrganOstatok } = useMutation({
     mutationKey: [organOstatokQueryKeys.delete],
     mutationFn: organizationOstatokService.delete,
     onSuccess(res) {
@@ -63,7 +66,7 @@ const OrganizationOstatokPage = () => {
   const handleClickDelete = (row: OrganizationOstatok) => {
     confirm({
       onConfirm() {
-        deleteOrganizationOstatok(row.id)
+        deleteOrganOstatok(row.id)
       }
     })
   }
@@ -102,12 +105,14 @@ const OrganizationOstatokPage = () => {
           />
         </SummaTotal>
       </ListView.Header>
-      <ListView.Content loading={isFetching || isPending}>
+      <ListView.Content loading={isFetching || isDeletingOrganOstatok}>
         <GenericTable
           data={organOstatokList?.data ?? []}
           columnDefs={organOstatokColumns}
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}
+          getColumnSorted={getColumnSorted}
+          onSort={handleSort}
           footer={
             <FooterRow>
               <FooterCell

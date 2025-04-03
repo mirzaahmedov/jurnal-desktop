@@ -7,11 +7,13 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
-import { FooterCell, FooterRow, GenericTable } from '@/common/components'
+import { FooterCell, FooterRow, GenericTable, useTableSort } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
 import { DownloadFile } from '@/common/features/file'
-import { SearchFilterDebounced } from '@/common/features/filters/search/search-filter-debounced'
-import { useSearchFilter } from '@/common/features/filters/search/search-filter-debounced'
+import {
+  SearchFilterDebounced,
+  useSearchFilter
+} from '@/common/features/filters/search/search-filter-debounced'
 import { useLayoutStore } from '@/common/features/layout'
 import { useRequisitesStore } from '@/common/features/requisites'
 import { useDates, usePagination } from '@/common/hooks'
@@ -33,6 +35,7 @@ const KassaPrixodPage = () => {
   const [search] = useSearchFilter()
 
   const { confirm } = useConfirm()
+  const { sorting, handleSort, getColumnSorted } = useTableSort()
   const { t } = useTranslation(['app'])
   const { report_title_id } = useSettingsStore()
   const { budjet_id, main_schet_id } = useRequisitesStore()
@@ -43,6 +46,7 @@ const KassaPrixodPage = () => {
       {
         main_schet_id,
         search,
+        ...sorting,
         ...dates,
         ...pagination
       }
@@ -110,6 +114,8 @@ const KassaPrixodPage = () => {
           getRowId={(row) => row.id}
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}
+          onSort={handleSort}
+          getColumnSorted={getColumnSorted}
           footer={
             <FooterRow>
               <FooterCell

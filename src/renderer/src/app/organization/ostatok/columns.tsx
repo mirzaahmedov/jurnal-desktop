@@ -16,16 +16,21 @@ export const organOstatokColumns: ColumnDef<OrganizationOstatok>[] = [
     minWidth: 160
   },
   {
+    sort: true,
     fit: true,
+    minWidth: 200,
     key: 'doc_num'
   },
   {
+    sort: true,
     fit: true,
+    minWidth: 200,
     key: 'doc_date',
     renderCell: (row) => formatLocaleDate(row.doc_date)
   },
   {
-    width: 350,
+    fill: true,
+    minWidth: 350,
     key: 'organ_id',
     header: 'organization',
     renderCell: (row) => (
@@ -70,6 +75,7 @@ export const organOstatokColumns: ColumnDef<OrganizationOstatok>[] = [
   },
   {
     numeric: true,
+    minWidth: 200,
     header: 'prixod',
     key: 'prixod_summa',
     renderCell: (row) =>
@@ -84,6 +90,7 @@ export const organOstatokColumns: ColumnDef<OrganizationOstatok>[] = [
   },
   {
     numeric: true,
+    minWidth: 200,
     header: 'rasxod',
     key: 'rasxod_summa',
     renderCell: (row) =>
@@ -97,7 +104,8 @@ export const organOstatokColumns: ColumnDef<OrganizationOstatok>[] = [
       )
   },
   {
-    width: 350,
+    fill: true,
+    minWidth: 350,
     key: 'opisanie'
   }
 ]

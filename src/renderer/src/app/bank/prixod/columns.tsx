@@ -17,15 +17,21 @@ export const columns: ColumnDef<BankPrixod>[] = [
     minWidth: 160
   },
   {
+    fit: true,
+    sort: true,
+    minWidth: 200,
     key: 'doc_num'
   },
   {
+    fit: true,
+    sort: true,
+    minWidth: 200,
     key: 'doc_date',
-    renderCell(row, col) {
-      return formatLocaleDate(row[col.key as keyof BankPrixod] as string)
-    }
+    renderCell: (row) => formatLocaleDate(row.doc_date)
   },
   {
+    fill: true,
+    minWidth: 350,
     key: 'id_spravochnik_organization',
     header: 'about-counteragent',
     renderCell: (row) => (
@@ -82,6 +88,7 @@ export const columns: ColumnDef<BankPrixod>[] = [
   },
   {
     numeric: true,
+    minWidth: 200,
     key: 'summa',
     renderCell(row) {
       return !row.summa ? (
@@ -95,6 +102,8 @@ export const columns: ColumnDef<BankPrixod>[] = [
     }
   },
   {
+    fill: true,
+    minWidth: 350,
     key: 'opisanie'
   }
 ]

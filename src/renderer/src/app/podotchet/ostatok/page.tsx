@@ -11,7 +11,7 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
-import { FooterCell, FooterRow, GenericTable, SummaTotal } from '@/common/components'
+import { FooterCell, FooterRow, GenericTable, SummaTotal, useTableSort } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
 import { useLayoutStore } from '@/common/features/layout'
 import { useDates, usePagination } from '@/common/hooks'
@@ -30,8 +30,10 @@ const PodotchetOstatokPage = () => {
   const pagination = usePagination()
   const dates = useDates()
 
-  const { confirm } = useConfirm()
   const [search] = useSearchFilter()
+
+  const { sorting, handleSort, getColumnSorted } = useTableSort()
+  const { confirm } = useConfirm()
   const { t } = useTranslation(['app'])
 
   const { data: podotchetOstatokList, isFetching } = useQuery({
@@ -40,6 +42,7 @@ const PodotchetOstatokPage = () => {
       {
         main_schet_id,
         search,
+        ...sorting,
         ...dates,
         ...pagination
       }
@@ -108,6 +111,8 @@ const PodotchetOstatokPage = () => {
           columnDefs={podotchetOstatokColumns}
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}
+          getColumnSorted={getColumnSorted}
+          onSort={handleSort}
           footer={
             <FooterRow>
               <FooterCell

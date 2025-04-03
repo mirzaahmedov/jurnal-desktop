@@ -15,6 +15,9 @@ const cellVariants = cva(
       fit: {
         true: 'whitespace-nowrap w-0'
       },
+      fill: {
+        true: 'w-full'
+      },
       stretch: {
         true: 'whitespace-nowrap w-full'
       },
@@ -27,6 +30,7 @@ const cellVariants = cva(
 
 export const GenericTableCell = ({
   fit,
+  fill,
   stretch,
   numeric,
   children,
@@ -38,6 +42,7 @@ export const GenericTableCell = ({
       className={cn(
         cellVariants({
           fit,
+          fill,
           stretch,
           numeric
         }),
@@ -50,17 +55,23 @@ export const GenericTableCell = ({
 }
 
 const headVariants = cva(
-  'px-6 py-4 text-xs font-extrabold border-r border-b !bg-transparent text-foreground border-slate-200',
+  'relative px-6 py-4 text-xs font-extrabold border-r border-b !bg-transparent text-foreground border-slate-200',
   {
     variants: {
       fit: {
         true: 'whitespace-nowrap w-full w-0'
+      },
+      fill: {
+        true: 'w-full'
       },
       stretch: {
         true: 'whitespace-nowrap w-full'
       },
       numeric: {
         true: 'text-right whitespace-nowrap w-0'
+      },
+      sort: {
+        true: 'hover:!bg-slate-200/50 transition-colors cursor-pointer'
       }
     }
   }
@@ -68,8 +79,10 @@ const headVariants = cva(
 
 export const GenericTableHead = ({
   fit,
+  fill,
   stretch,
   numeric,
+  sort,
   children,
   ...props
 }: ThHTMLAttributes<HTMLTableCellElement> & VariantProps<typeof headVariants>) => {
@@ -79,8 +92,10 @@ export const GenericTableHead = ({
       className={cn(
         headVariants({
           fit,
+          fill,
           stretch,
-          numeric
+          numeric,
+          sort
         }),
         props.className
       )}

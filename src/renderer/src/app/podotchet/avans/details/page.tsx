@@ -1,4 +1,4 @@
-import type { AdvanceReportPodvodkaPayloadType } from '../constants'
+import type { AdvanceReportPodvodkaPayloadType } from '../config'
 
 import { useEffect } from 'react'
 
@@ -40,7 +40,7 @@ import {
   AdvanceReportPodvodkaPayloadSchema,
   avansQueryKeys,
   defaultValues
-} from '../constants'
+} from '../config'
 import { avansService } from '../service'
 import { podvodkaColumns } from './podvodki'
 

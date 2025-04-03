@@ -1,4 +1,4 @@
-import type { AdvanceReportPodvodkaPayloadType } from '../constants'
+import type { AdvanceReportPodvodkaPayloadType } from '../config'
 import type { EditableColumnDef } from '@renderer/common/components/editable-table'
 
 import {

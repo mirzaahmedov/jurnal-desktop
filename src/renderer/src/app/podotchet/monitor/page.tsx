@@ -23,7 +23,8 @@ import {
   FooterRow,
   GenericTable,
   LoadingOverlay,
-  SummaTotal
+  SummaTotal,
+  useTableSort
 } from '@/common/components'
 import { ButtonGroup } from '@/common/components/ui/button-group'
 import { useSpravochnik } from '@/common/features/spravochnik'
@@ -31,7 +32,7 @@ import { formatNumber } from '@/common/lib/format'
 import { type PodotchetMonitor, TypeSchetOperatsii } from '@/common/models'
 
 import { podotchetMonitoringColumns } from './columns'
-import { podotchetMonitoringQueryKeys } from './constants'
+import { podotchetMonitoringQueryKeys } from './config'
 import { useOperatsiiFilter, usePodotchetFilter } from './filters'
 import { podotchetMonitoringService } from './service'
 
@@ -43,8 +44,10 @@ const PodotchetMonitoringPage = () => {
 
   const setLayout = useLayoutStore((store) => store.setLayout)
 
-  const { t } = useTranslation(['app'])
   const [search] = useSearchFilter()
+
+  const { t } = useTranslation(['app'])
+  const { sorting, handleSort, getColumnSorted } = useTableSort()
   const { main_schet_id, budjet_id } = useRequisitesStore()
 
   const [operatsiiId, setOperatsiiId] = useOperatsiiFilter()
@@ -78,12 +81,13 @@ const PodotchetMonitoringPage = () => {
     queryKey: [
       podotchetMonitoringQueryKeys.getAll,
       {
-        ...dates,
-        ...pagination,
         search,
         main_schet_id,
         operatsii: operatsiiSpravochnik.selected?.schet,
-        podotchet_id: podotchetId
+        podotchet_id: podotchetId,
+        ...sorting,
+        ...dates,
+        ...pagination
       },
       podotchetId
     ],
@@ -198,6 +202,8 @@ const PodotchetMonitoringPage = () => {
           data={monitorList?.data ?? []}
           getRowKey={(row) => `${row.type}-${row.id}`}
           onEdit={handleClickEdit}
+          getColumnSorted={getColumnSorted}
+          onSort={handleSort}
           footer={
             <>
               <FooterRow>

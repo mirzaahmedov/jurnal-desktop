@@ -10,14 +10,14 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
-import { GenericTable } from '@/common/components'
+import { GenericTable, useTableSort } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
 import { useLayoutStore } from '@/common/features/layout'
 import { useDates, usePagination } from '@/common/hooks'
 import { ListView } from '@/common/views'
 
 import { avansColumns } from './columns'
-import { avansQueryKeys } from './constants'
+import { avansQueryKeys } from './config'
 import { avansService } from './service'
 
 const AvansPage = () => {
@@ -29,8 +29,10 @@ const AvansPage = () => {
   const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
   const setLayout = useLayoutStore((store) => store.setLayout)
 
-  const { confirm } = useConfirm()
   const [search] = useSearchFilter()
+
+  const { sorting, handleSort, getColumnSorted } = useTableSort()
+  const { confirm } = useConfirm()
   const { t } = useTranslation(['app'])
 
   const { data: avansList, isFetching } = useQuery({
@@ -39,6 +41,7 @@ const AvansPage = () => {
       {
         main_schet_id,
         search,
+        ...sorting,
         ...dates,
         ...pagination
       }
@@ -80,7 +83,7 @@ const AvansPage = () => {
         navigate('create')
       }
     })
-  }, [setLayout, t])
+  }, [setLayout, t, navigate])
 
   return (
     <ListView>
@@ -93,6 +96,8 @@ const AvansPage = () => {
           data={avansList?.data ?? []}
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}
+          getColumnSorted={getColumnSorted}
+          onSort={handleSort}
         />
       </ListView.Content>
       <ListView.Footer>

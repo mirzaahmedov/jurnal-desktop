@@ -19,16 +19,19 @@ export const columns: ColumnDef<BankMonitoringType>[] = [
   },
   {
     fit: true,
+    sort: true,
+    minWidth: 200,
     key: 'doc_num'
   },
   {
     fit: true,
+    sort: true,
+    minWidth: 200,
     key: 'doc_date',
-    renderCell(row, col) {
-      return formatLocaleDate(row[col.key as keyof BankMonitoringType] as string)
-    }
+    renderCell: (row) => formatLocaleDate(row.doc_date)
   },
   {
+    fill: true,
     minWidth: 350,
     key: 'id_spravochnik_organization',
     header: 'about-counteragent',
@@ -75,6 +78,7 @@ export const columns: ColumnDef<BankMonitoringType>[] = [
   {
     numeric: true,
     key: 'prixod_sum',
+    minWidth: 200,
     header: 'prixod',
     renderCell: (row) =>
       !row.prixod_sum ? (
@@ -89,6 +93,7 @@ export const columns: ColumnDef<BankMonitoringType>[] = [
   {
     numeric: true,
     key: 'rasxod_sum',
+    minWidth: 200,
     header: 'rasxod',
     renderCell: (row) =>
       !row.rasxod_sum ? (
@@ -101,6 +106,7 @@ export const columns: ColumnDef<BankMonitoringType>[] = [
       )
   },
   {
+    fill: true,
     minWidth: 350,
     key: 'opisanie'
   },

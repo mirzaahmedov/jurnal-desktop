@@ -17,16 +17,21 @@ export const avansColumns: ColumnDef<Avans>[] = [
     minWidth: 160
   },
   {
+    sort: true,
     fit: true,
+    minWidth: 200,
     key: 'doc_num'
   },
   {
+    sort: true,
     fit: true,
+    minWidth: 200,
     key: 'doc_date',
     renderCell: (row) => formatLocaleDate(row.doc_date)
   },
   {
-    width: 350,
+    fill: true,
+    minWidth: 350,
     key: 'spravochnik_podotchet_litso_id',
     header: 'podotchet-litso',
     renderCell: (row) => (
@@ -63,6 +68,7 @@ export const avansColumns: ColumnDef<Avans>[] = [
   },
   {
     numeric: true,
+    minWidth: 200,
     key: 'summa',
     renderCell: (row) => (
       <ProvodkaCell
@@ -72,7 +78,8 @@ export const avansColumns: ColumnDef<Avans>[] = [
     )
   },
   {
-    width: 350,
+    fill: true,
+    minWidth: 350,
     key: 'opisanie'
   }
 ]

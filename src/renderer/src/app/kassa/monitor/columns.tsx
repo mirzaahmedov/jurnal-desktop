@@ -15,26 +15,30 @@ export const columns: ColumnDef<KassaMonitoringType>[] = [
     minWidth: 160
   },
   {
+    sort: true,
     fit: true,
+    minWidth: 200,
     key: 'doc_num'
   },
   {
     fit: true,
+    sort: true,
+    minWidth: 200,
     key: 'doc_date',
-    renderCell(row) {
-      return formatLocaleDate(row.doc_date)
-    }
+    renderCell: (row) => formatLocaleDate(row.doc_date)
   },
   {
-    width: 350,
-    key: 'opisanie'
+    fill: true,
+    key: 'opisanie',
+    minWidth: 350
   },
   {
     numeric: true,
     key: 'prixod_sum',
     header: 'prixod',
-    renderCell(row) {
-      return !row.prixod_sum ? (
+    minWidth: 200,
+    renderCell: (row) =>
+      !row.prixod_sum ? (
         '-'
       ) : (
         <ProvodkaCell
@@ -42,14 +46,14 @@ export const columns: ColumnDef<KassaMonitoringType>[] = [
           provodki={row.provodki_array}
         />
       )
-    }
   },
   {
     numeric: true,
     key: 'rasxod_sum',
     header: 'rasxod',
-    renderCell(row) {
-      return !row.rasxod_sum ? (
+    minWidth: 200,
+    renderCell: (row) =>
+      !row.rasxod_sum ? (
         '-'
       ) : (
         <ProvodkaCell
@@ -57,16 +61,17 @@ export const columns: ColumnDef<KassaMonitoringType>[] = [
           provodki={row.provodki_array}
         />
       )
-    }
   },
   {
-    width: 350,
+    fill: true,
+    minWidth: 350,
     key: 'spravochnik_podotchet_litso_name',
     header: 'podotchet-litso'
   },
   {
     fit: true,
     key: 'user_id',
+    minWidth: 200,
     header: 'created-by-user',
     renderCell: (row) => (
       <UserCell

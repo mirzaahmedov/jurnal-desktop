@@ -8,11 +8,12 @@ import { useRequisitesStore } from '@renderer/common/features/requisites'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
 
-import { GenericTable } from '@/common/components'
+import { GenericTable, useTableSort } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
 import { useLayoutStore } from '@/common/features/layout'
-import { toast, useDates, usePagination } from '@/common/hooks'
+import { useDates, usePagination } from '@/common/hooks'
 import { ListView } from '@/common/views'
 
 import { pokazatUslugiColumns } from './columns'
@@ -28,8 +29,10 @@ const PokazatUslugiPage = () => {
   const pagination = usePagination()
   const dates = useDates()
 
-  const { confirm } = useConfirm()
   const [search] = useSearchFilter()
+
+  const { confirm } = useConfirm()
+  const { sorting, handleSort, getColumnSorted } = useTableSort()
   const { t } = useTranslation(['app'])
 
   const { data: pokazatUslugiList, isFetching } = useQuery({
@@ -38,6 +41,7 @@ const PokazatUslugiPage = () => {
       {
         main_schet_id,
         search,
+        ...sorting,
         ...dates,
         ...pagination
       }
@@ -47,15 +51,10 @@ const PokazatUslugiPage = () => {
   const { mutate: deletePokazatUslugi, isPending } = useMutation({
     mutationKey: [queryKeys.delete],
     mutationFn: pokazatUslugiService.delete,
-    onSuccess() {
+    onSuccess(res) {
+      toast.success(res?.message)
       queryClient.invalidateQueries({
         queryKey: [queryKeys.getAll]
-      })
-    },
-    onError() {
-      toast({
-        title: 'Ошибка при удалении показа услуги',
-        variant: 'destructive'
       })
     }
   })
@@ -97,6 +96,8 @@ const PokazatUslugiPage = () => {
           columnDefs={pokazatUslugiColumns}
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}
+          getColumnSorted={getColumnSorted}
+          onSort={handleSort}
         />
       </ListView.Content>
       <ListView.Footer>

@@ -17,13 +17,21 @@ export const pokazatUslugiColumns: ColumnDef<PokazatUslugi>[] = [
     minWidth: 160
   },
   {
+    sort: true,
+    fit: true,
+    minWidth: 200,
     key: 'doc_num'
   },
   {
+    sort: true,
+    fit: true,
+    minWidth: 200,
     key: 'doc_date',
     renderCell: (row) => formatLocaleDate(row.doc_date)
   },
   {
+    fill: true,
+    minWidth: 350,
     key: 'id_spravochnik_organization',
     header: 'organization',
     renderCell: (row) => (
@@ -67,6 +75,7 @@ export const pokazatUslugiColumns: ColumnDef<PokazatUslugi>[] = [
     )
   },
   {
+    fit: true,
     key: 'shartnomalar_organization_id',
     header: 'shartnoma',
     renderCell: (row) =>
@@ -104,6 +113,7 @@ export const pokazatUslugiColumns: ColumnDef<PokazatUslugi>[] = [
   },
   {
     numeric: true,
+    minWidth: 200,
     key: 'summa',
     renderCell: (row) => (
       <ProvodkaCell
@@ -113,6 +123,8 @@ export const pokazatUslugiColumns: ColumnDef<PokazatUslugi>[] = [
     )
   },
   {
+    fill: true,
+    minWidth: 350,
     key: 'opisanie'
   }
 ]
