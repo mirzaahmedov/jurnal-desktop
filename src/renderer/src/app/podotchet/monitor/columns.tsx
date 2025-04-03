@@ -4,8 +4,8 @@ import { DataList } from '@renderer/common/components/data-list'
 import { ProvodkaBadge } from '@renderer/common/components/provodka-badge'
 import { HoverInfoCell } from '@renderer/common/components/table/renderers'
 import { IDCell } from '@renderer/common/components/table/renderers/id'
-import { ProvodkaCell } from '@renderer/common/components/table/renderers/provodka'
-import { ProvodkaOperatsiiCell } from '@renderer/common/components/table/renderers/provodka-operatsii'
+import { ProvodkaCell } from '@renderer/common/components/table/renderers/provodka-operatsii'
+import { SummaCell } from '@renderer/common/components/table/renderers/summa'
 import { UserCell } from '@renderer/common/components/table/renderers/user'
 import { Trans } from 'react-i18next'
 
@@ -76,19 +76,7 @@ export const podotchetMonitoringColumns: ColumnDef<PodotchetMonitor>[] = [
     header: 'debet',
     key: 'prixod_sum',
     renderCell(row) {
-      return row.prixod_sum ? (
-        <ProvodkaCell
-          summa={row.prixod_sum}
-          provodki={[
-            {
-              provodki_schet: row.provodki_schet,
-              provodki_sub_schet: row.provodki_sub_schet
-            }
-          ]}
-        />
-      ) : (
-        '-'
-      )
+      return row.prixod_sum ? <SummaCell summa={row.prixod_sum} /> : '-'
     }
   },
   {
@@ -97,26 +85,14 @@ export const podotchetMonitoringColumns: ColumnDef<PodotchetMonitor>[] = [
     header: 'kredit',
     key: 'rasxod_sum',
     renderCell(row) {
-      return row.rasxod_sum ? (
-        <ProvodkaCell
-          summa={row.rasxod_sum}
-          provodki={[
-            {
-              provodki_schet: row.provodki_schet,
-              provodki_sub_schet: row.provodki_sub_schet
-            }
-          ]}
-        />
-      ) : (
-        '-'
-      )
+      return row.rasxod_sum ? <SummaCell summa={row.rasxod_sum} /> : '-'
     }
   },
   {
     minWidth: 200,
     key: 'provodka',
     renderCell: (row) => (
-      <ProvodkaOperatsiiCell
+      <ProvodkaCell
         provodki={[
           {
             provodki_schet: row.provodki_schet,

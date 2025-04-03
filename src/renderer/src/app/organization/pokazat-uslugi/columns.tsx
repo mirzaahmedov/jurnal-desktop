@@ -2,8 +2,8 @@ import type { PokazatUslugi } from '@/common/models'
 
 import { DataList } from '@renderer/common/components/data-list'
 import { IDCell } from '@renderer/common/components/table/renderers/id'
-import { ProvodkaCell } from '@renderer/common/components/table/renderers/provodka'
-import { ProvodkaOperatsiiCell } from '@renderer/common/components/table/renderers/provodka-operatsii'
+import { ProvodkaCell } from '@renderer/common/components/table/renderers/provodka-operatsii'
+import { SummaCell } from '@renderer/common/components/table/renderers/summa'
 import { Trans } from 'react-i18next'
 
 import { type ColumnDef, Copyable } from '@/common/components'
@@ -117,17 +117,12 @@ export const pokazatUslugiColumns: ColumnDef<PokazatUslugi>[] = [
     numeric: true,
     minWidth: 200,
     key: 'summa',
-    renderCell: (row) => (
-      <ProvodkaCell
-        summa={row.summa}
-        provodki={row.provodki_array}
-      />
-    )
+    renderCell: (row) => <SummaCell summa={row.summa} />
   },
   {
     minWidth: 200,
     key: 'provodka',
-    renderCell: (row) => <ProvodkaOperatsiiCell provodki={row.provodki_array} />
+    renderCell: (row) => <ProvodkaCell provodki={row.provodki_array} />
   },
   {
     fill: true,

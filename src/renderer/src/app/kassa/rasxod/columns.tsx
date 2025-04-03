@@ -2,8 +2,8 @@ import type { ColumnDef } from '@/common/components'
 import type { KassaRasxodType } from '@/common/models'
 
 import { IDCell } from '@renderer/common/components/table/renderers/id'
-import { ProvodkaCell } from '@renderer/common/components/table/renderers/provodka'
-import { ProvodkaOperatsiiCell } from '@renderer/common/components/table/renderers/provodka-operatsii'
+import { ProvodkaCell } from '@renderer/common/components/table/renderers/provodka-operatsii'
+import { SummaCell } from '@renderer/common/components/table/renderers/summa'
 
 import { formatLocaleDate } from '@/common/lib/format'
 
@@ -37,20 +37,12 @@ export const columns: ColumnDef<KassaRasxodType>[] = [
     numeric: true,
     key: 'summa',
     minWidth: 200,
-    renderCell: (row) =>
-      !row.summa ? (
-        '-'
-      ) : (
-        <ProvodkaCell
-          summa={row.summa}
-          provodki={row.provodki_array}
-        />
-      )
+    renderCell: (row) => (!row.summa ? '-' : <SummaCell summa={row.summa} />)
   },
   {
     minWidth: 200,
     key: 'provodka',
-    renderCell: (row) => <ProvodkaOperatsiiCell provodki={row.provodki_array} />
+    renderCell: (row) => <ProvodkaCell provodki={row.provodki_array} />
   },
   {
     fill: true,

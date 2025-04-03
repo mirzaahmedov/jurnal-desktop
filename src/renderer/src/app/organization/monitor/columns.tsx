@@ -3,8 +3,8 @@ import { DataList } from '@renderer/common/components/data-list'
 import { ProvodkaBadge } from '@renderer/common/components/provodka-badge'
 import { HoverInfoCell } from '@renderer/common/components/table/renderers'
 import { IDCell } from '@renderer/common/components/table/renderers/id'
-import { ProvodkaCell } from '@renderer/common/components/table/renderers/provodka'
-import { ProvodkaOperatsiiCell } from '@renderer/common/components/table/renderers/provodka-operatsii'
+import { ProvodkaCell } from '@renderer/common/components/table/renderers/provodka-operatsii'
+import { SummaCell } from '@renderer/common/components/table/renderers/summa'
 import { UserCell } from '@renderer/common/components/table/renderers/user'
 import { formatLocaleDate } from '@renderer/common/lib/format'
 import { Trans } from 'react-i18next'
@@ -115,19 +115,7 @@ export const organizationMonitorColumns: ColumnDef<OrganizationMonitor>[] = [
     key: 'summa_prixod',
     header: 'debet',
     renderCell(row) {
-      return !row.summa_prixod ? (
-        '-'
-      ) : (
-        <ProvodkaCell
-          summa={row.summa_prixod}
-          provodki={[
-            {
-              provodki_schet: row.provodki_schet,
-              provodki_sub_schet: row.provodki_sub_schet
-            }
-          ]}
-        />
-      )
+      return !row.summa_prixod ? '-' : <SummaCell summa={row.summa_prixod} />
     }
   },
   {
@@ -136,26 +124,14 @@ export const organizationMonitorColumns: ColumnDef<OrganizationMonitor>[] = [
     key: 'summa_rasxod',
     header: 'kredit',
     renderCell(row) {
-      return !row.summa_rasxod ? (
-        '-'
-      ) : (
-        <ProvodkaCell
-          summa={row.summa_rasxod}
-          provodki={[
-            {
-              provodki_schet: row.provodki_schet,
-              provodki_sub_schet: row.provodki_sub_schet
-            }
-          ]}
-        />
-      )
+      return !row.summa_rasxod ? '-' : <SummaCell summa={row.summa_rasxod} />
     }
   },
   {
     minWidth: 200,
     key: 'provodka',
     renderCell: (row) => (
-      <ProvodkaOperatsiiCell
+      <ProvodkaCell
         provodki={[
           {
             provodki_schet: row.provodki_schet,

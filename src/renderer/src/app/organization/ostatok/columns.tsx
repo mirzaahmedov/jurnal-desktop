@@ -1,7 +1,7 @@
 import { DataList } from '@renderer/common/components/data-list'
 import { IDCell } from '@renderer/common/components/table/renderers/id'
-import { ProvodkaCell } from '@renderer/common/components/table/renderers/provodka'
-import { ProvodkaOperatsiiCell } from '@renderer/common/components/table/renderers/provodka-operatsii'
+import { ProvodkaCell } from '@renderer/common/components/table/renderers/provodka-operatsii'
+import { SummaCell } from '@renderer/common/components/table/renderers/summa'
 import { Trans } from 'react-i18next'
 
 import { type ColumnDef, Copyable } from '@/common/components'
@@ -80,35 +80,19 @@ export const organOstatokColumns: ColumnDef<OrganizationOstatok>[] = [
     minWidth: 200,
     header: 'prixod',
     key: 'prixod_summa',
-    renderCell: (row) =>
-      !row.prixod_summa ? (
-        '-'
-      ) : (
-        <ProvodkaCell
-          summa={row.prixod_summa}
-          provodki={row.provodki_array}
-        />
-      )
+    renderCell: (row) => (!row.prixod_summa ? '-' : <SummaCell summa={row.prixod_summa} />)
   },
   {
     numeric: true,
     minWidth: 200,
     header: 'rasxod',
     key: 'rasxod_summa',
-    renderCell: (row) =>
-      !row.rasxod_summa ? (
-        '-'
-      ) : (
-        <ProvodkaCell
-          summa={row.rasxod_summa}
-          provodki={row.provodki_array}
-        />
-      )
+    renderCell: (row) => (!row.rasxod_summa ? '-' : <SummaCell summa={row.rasxod_summa} />)
   },
   {
     minWidth: 200,
     key: 'provodka',
-    renderCell: (row) => <ProvodkaOperatsiiCell provodki={row.provodki_array} />
+    renderCell: (row) => <ProvodkaCell provodki={row.provodki_array} />
   },
   {
     fill: true,

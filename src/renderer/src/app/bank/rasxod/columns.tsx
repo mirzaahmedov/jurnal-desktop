@@ -1,5 +1,6 @@
 import type { BankRasxod } from '@/common/models'
 
+import { SummaCell } from '@renderer/common/components/table/renderers/summa'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { Trans } from 'react-i18next'
 
@@ -7,8 +8,7 @@ import { type ColumnDef, Copyable } from '@/common/components'
 import { DataList } from '@/common/components/data-list'
 import { HoverInfoCell } from '@/common/components/table/renderers'
 import { IDCell } from '@/common/components/table/renderers/id'
-import { ProvodkaCell } from '@/common/components/table/renderers/provodka'
-import { ProvodkaOperatsiiCell } from '@/common/components/table/renderers/provodka-operatsii'
+import { ProvodkaCell } from '@/common/components/table/renderers/provodka-operatsii'
 import { Switch } from '@/common/components/ui/switch'
 import { formatLocaleDate } from '@/common/lib/format'
 
@@ -102,20 +102,14 @@ export const rasxodColumns: ColumnDef<BankRasxod>[] = [
         return (
           <div className="font-bold leading-tight">
             <div className="inline-block align-middle bg-yellow-200 px-0.5">
-              <ProvodkaCell
-                summa={row.tulanmagan_summa}
-                provodki={row.provodki_array}
-              />
+              <SummaCell summa={row.tulanmagan_summa} />
             </div>
           </div>
         )
       }
       return (
         <div className="font-bold">
-          <ProvodkaCell
-            summa={row.summa}
-            provodki={row.provodki_array}
-          />
+          <SummaCell summa={row.summa} />
         </div>
       )
     }
@@ -123,7 +117,7 @@ export const rasxodColumns: ColumnDef<BankRasxod>[] = [
   {
     minWidth: 200,
     key: 'provodka',
-    renderCell: (row) => <ProvodkaOperatsiiCell provodki={row.provodki_array ?? []} />
+    renderCell: (row) => <ProvodkaCell provodki={row.provodki_array ?? []} />
   },
   {
     fit: true,

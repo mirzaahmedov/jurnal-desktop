@@ -1,14 +1,14 @@
 import type { ColumnDef } from '@/common/components'
 import type { Akt } from '@/common/models'
 
+import { SummaCell } from '@renderer/common/components/table/renderers/summa'
 import { Trans } from 'react-i18next'
 
 import { Copyable } from '@/common/components'
 import { DataList } from '@/common/components/data-list'
 import { HoverInfoCell } from '@/common/components/table/renderers'
 import { IDCell } from '@/common/components/table/renderers/id'
-import { ProvodkaCell } from '@/common/components/table/renderers/provodka'
-import { ProvodkaOperatsiiCell } from '@/common/components/table/renderers/provodka-operatsii'
+import { ProvodkaCell } from '@/common/components/table/renderers/provodka-operatsii'
 import { formatLocaleDate } from '@/common/lib/format'
 
 export const columns: ColumnDef<Akt>[] = [
@@ -118,17 +118,12 @@ export const columns: ColumnDef<Akt>[] = [
     numeric: true,
     minWidth: 200,
     key: 'summa',
-    renderCell: (row) => (
-      <ProvodkaCell
-        summa={row.summa}
-        provodki={row.provodki_array}
-      />
-    )
+    renderCell: (row) => <SummaCell summa={row.summa} />
   },
   {
     minWidth: 200,
     key: 'provodka',
-    renderCell: (row) => <ProvodkaOperatsiiCell provodki={row.provodki_array} />
+    renderCell: (row) => <ProvodkaCell provodki={row.provodki_array} />
   },
   {
     fill: true,

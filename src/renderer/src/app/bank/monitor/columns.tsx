@@ -2,8 +2,8 @@ import type { BankMonitoringType } from '@/common/models'
 
 import { DataList } from '@renderer/common/components/data-list'
 import { IDCell } from '@renderer/common/components/table/renderers/id'
-import { ProvodkaCell } from '@renderer/common/components/table/renderers/provodka'
-import { ProvodkaOperatsiiCell } from '@renderer/common/components/table/renderers/provodka-operatsii'
+import { ProvodkaCell } from '@renderer/common/components/table/renderers/provodka-operatsii'
+import { SummaCell } from '@renderer/common/components/table/renderers/summa'
 import { UserCell } from '@renderer/common/components/table/renderers/user'
 import { Trans } from 'react-i18next'
 
@@ -82,35 +82,19 @@ export const columns: ColumnDef<BankMonitoringType>[] = [
     key: 'prixod_sum',
     minWidth: 200,
     header: 'prixod',
-    renderCell: (row) =>
-      !row.prixod_sum ? (
-        '-'
-      ) : (
-        <ProvodkaCell
-          summa={row.prixod_sum}
-          provodki={row.provodki_array}
-        />
-      )
+    renderCell: (row) => (!row.prixod_sum ? '-' : <SummaCell summa={row.prixod_sum} />)
   },
   {
     numeric: true,
     key: 'rasxod_sum',
     minWidth: 200,
     header: 'rasxod',
-    renderCell: (row) =>
-      !row.rasxod_sum ? (
-        '-'
-      ) : (
-        <ProvodkaCell
-          summa={row.rasxod_sum}
-          provodki={row.provodki_array}
-        />
-      )
+    renderCell: (row) => (!row.rasxod_sum ? '-' : <SummaCell summa={row.rasxod_sum} />)
   },
   {
     minWidth: 200,
     key: 'provodka',
-    renderCell: (row) => <ProvodkaOperatsiiCell provodki={row.provodki_array} />
+    renderCell: (row) => <ProvodkaCell provodki={row.provodki_array} />
   },
   {
     fill: true,

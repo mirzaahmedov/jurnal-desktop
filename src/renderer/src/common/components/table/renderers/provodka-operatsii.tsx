@@ -5,10 +5,10 @@ interface ProvodkaChild {
   provodki_sub_schet: string
 }
 
-export interface ProvodkaOperatsiiCellProps {
+export interface ProvodkaCellProps {
   provodki: ProvodkaChild[]
 }
-export const ProvodkaOperatsiiCell = ({ provodki }: ProvodkaOperatsiiCellProps) => {
+export const ProvodkaCell = ({ provodki }: ProvodkaCellProps) => {
   return (
     <ExpandableList
       items={provodki}
