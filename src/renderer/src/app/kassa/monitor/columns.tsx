@@ -3,6 +3,7 @@ import type { KassaMonitoringType } from '@/common/models'
 
 import { IDCell } from '@renderer/common/components/table/renderers/id'
 import { ProvodkaCell } from '@renderer/common/components/table/renderers/provodka'
+import { ProvodkaOperatsiiCell } from '@renderer/common/components/table/renderers/provodka-operatsii'
 import { UserCell } from '@renderer/common/components/table/renderers/user'
 
 import { formatLocaleDate } from '@/common/lib/format'
@@ -62,6 +63,11 @@ export const columns: ColumnDef<KassaMonitoringType>[] = [
           provodki={row.provodki_array}
         />
       )
+  },
+  {
+    minWidth: 200,
+    key: 'provodka',
+    renderCell: (row) => <ProvodkaOperatsiiCell provodki={row.provodki_array} />
   },
   {
     fill: true,

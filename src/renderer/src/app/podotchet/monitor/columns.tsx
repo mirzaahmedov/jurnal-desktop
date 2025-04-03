@@ -5,6 +5,7 @@ import { ProvodkaBadge } from '@renderer/common/components/provodka-badge'
 import { HoverInfoCell } from '@renderer/common/components/table/renderers'
 import { IDCell } from '@renderer/common/components/table/renderers/id'
 import { ProvodkaCell } from '@renderer/common/components/table/renderers/provodka'
+import { ProvodkaOperatsiiCell } from '@renderer/common/components/table/renderers/provodka-operatsii'
 import { UserCell } from '@renderer/common/components/table/renderers/user'
 import { Trans } from 'react-i18next'
 
@@ -110,6 +111,20 @@ export const podotchetMonitoringColumns: ColumnDef<PodotchetMonitor>[] = [
         '-'
       )
     }
+  },
+  {
+    minWidth: 200,
+    key: 'provodka',
+    renderCell: (row) => (
+      <ProvodkaOperatsiiCell
+        provodki={[
+          {
+            provodki_schet: row.provodki_schet,
+            provodki_sub_schet: row.provodki_sub_schet
+          }
+        ]}
+      />
+    )
   },
   {
     fit: true,

@@ -1,15 +1,9 @@
 import type { ColumnDef } from '@/common/components'
 import type { Organization } from '@/common/models'
 
-import { PopoverTrigger } from '@radix-ui/react-popover'
-import { DataList } from '@renderer/common/components/data-list'
-import { IDCell } from '@renderer/common/components/table/renderers/id'
-import { Button } from '@renderer/common/components/ui/button'
-import { Popover, PopoverContent } from '@renderer/common/components/ui/popover'
-import { ArrowDownLeft } from 'lucide-react'
-import { Trans } from 'react-i18next'
-
 import { Copyable } from '@/common/components'
+import { ExpandableList } from '@/common/components/table/renderers/expandable-list'
+import { IDCell } from '@/common/components/table/renderers/id'
 
 export const organizationColumns: ColumnDef<Organization>[] = [
   {
@@ -59,117 +53,39 @@ export const organizationColumns: ColumnDef<Organization>[] = [
     key: 'raschet_schet',
     header: 'raschet-schet',
     className: 'py-2',
-    renderCell(row) {
-      return (
-        <div className="flex flex-col items-end">
-          <div className="w-full">
-            <DataList
-              className="text-sm"
-              list={row.account_numbers.slice(0, 2).map((schet, index) => ({
-                name: index + 1,
-                value: (
-                  <Copyable
-                    side="start"
-                    className="gap-0 text-sm"
-                    value={schet.raschet_schet}
-                  >
-                    {schet.raschet_schet}
-                  </Copyable>
-                )
-              }))}
-            />
-          </div>
-          {row.account_numbers.length > 2 ? (
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  variant="link"
-                  className="p-0 text-xs text-brand gap-0.5"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <ArrowDownLeft className="size-4" />
-                  <Trans>view_all</Trans>
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent align="end">
-                <DataList
-                  list={row.account_numbers.map((schet, index) => ({
-                    name: index + 1,
-                    value: (
-                      <Copyable
-                        side="start"
-                        className="gap-0 text-sm"
-                        value={schet.raschet_schet}
-                      >
-                        {schet.raschet_schet}
-                      </Copyable>
-                    )
-                  }))}
-                />
-              </PopoverContent>
-            </Popover>
-          ) : null}
-        </div>
-      )
-    }
+    renderCell: (row) => (
+      <ExpandableList
+        items={row.account_numbers}
+        renderItem={(account_number) => (
+          <Copyable
+            side="start"
+            className="gap-0 text-sm"
+            value={account_number.raschet_schet}
+          >
+            {account_number.raschet_schet}
+          </Copyable>
+        )}
+      />
+    )
   },
   {
     fit: true,
     key: 'raschet_schet_gazna',
     header: 'raschet-schet-gazna',
     className: 'py-2',
-    renderCell(row) {
-      return (
-        <div className="flex flex-col items-end">
-          <div className="w-full">
-            <DataList
-              className="text-sm"
-              list={row.gaznas.slice(0, 2).map((schet, index) => ({
-                name: index + 1,
-                value: (
-                  <Copyable
-                    side="start"
-                    className="gap-0 text-sm"
-                    value={schet.raschet_schet_gazna}
-                  >
-                    {schet.raschet_schet_gazna}
-                  </Copyable>
-                )
-              }))}
-            />
-          </div>
-          {row.gaznas.length > 2 ? (
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  variant="link"
-                  className="p-0 text-xs text-brand gap-0.5"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <ArrowDownLeft className="size-4" />
-                  <Trans>view_all</Trans>
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent align="end">
-                <DataList
-                  list={row.gaznas.map((schet, index) => ({
-                    name: index + 1,
-                    value: (
-                      <Copyable
-                        side="start"
-                        className="gap-0 text-sm"
-                        value={schet.raschet_schet_gazna}
-                      >
-                        {schet.raschet_schet_gazna}
-                      </Copyable>
-                    )
-                  }))}
-                />
-              </PopoverContent>
-            </Popover>
-          ) : null}
-        </div>
-      )
-    }
+    renderCell: (row) => (
+      <ExpandableList
+        items={row.gaznas}
+        renderItem={(gazna) => (
+          <Copyable
+            side="start"
+            className="gap-0 text-sm"
+            value={gazna.raschet_schet_gazna}
+          >
+            {gazna.raschet_schet_gazna}
+          </Copyable>
+        )}
+      />
+    )
   }
 ]

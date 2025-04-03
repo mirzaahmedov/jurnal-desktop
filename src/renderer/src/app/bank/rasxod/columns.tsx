@@ -121,7 +121,7 @@ export const rasxodColumns: ColumnDef<BankRasxod>[] = [
     }
   },
   {
-    minWidth: 160,
+    minWidth: 200,
     key: 'provodka',
     renderCell: (row) => <ProvodkaOperatsiiCell provodki={row.provodki_array ?? []} />
   },

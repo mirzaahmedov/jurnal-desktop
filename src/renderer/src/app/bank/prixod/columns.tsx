@@ -3,6 +3,7 @@ import type { BankPrixod } from '@/common/models'
 import { DataList } from '@renderer/common/components/data-list'
 import { IDCell } from '@renderer/common/components/table/renderers/id'
 import { ProvodkaCell } from '@renderer/common/components/table/renderers/provodka'
+import { ProvodkaOperatsiiCell } from '@renderer/common/components/table/renderers/provodka-operatsii'
 import { Trans } from 'react-i18next'
 
 import { type ColumnDef, Copyable } from '@/common/components'
@@ -101,6 +102,11 @@ export const columns: ColumnDef<BankPrixod>[] = [
         />
       )
     }
+  },
+  {
+    minWidth: 200,
+    key: 'provodka',
+    renderCell: (row) => <ProvodkaOperatsiiCell provodki={row.provodki_array} />
   },
   {
     fill: true,

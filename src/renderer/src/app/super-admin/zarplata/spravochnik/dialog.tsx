@@ -10,6 +10,7 @@ import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 
 import { createOperatsiiSpravochnik } from '@/app/super-admin/operatsii'
+import { createSmetaSpravochnik } from '@/app/super-admin/smeta'
 import { Button } from '@/common/components/ui/button'
 import {
   Dialog,
@@ -87,9 +88,15 @@ export const ZarplataSpravochnikDialog = ({
   const operatsiiSpravochnik = useSpravochnik(
     createOperatsiiSpravochnik({
       value: form.watch('spravochnikOperatsiiId'),
-      onChange: (id, operatsii) => {
+      onChange: (id) => {
         form.setValue('spravochnikOperatsiiId', id ?? 0, { shouldValidate: true })
-        form.setValue('subSchet', operatsii?.sub_schet ?? '', { shouldValidate: true })
+      }
+    })
+  )
+  const smetaSpravochnik = useSpravochnik(
+    createSmetaSpravochnik({
+      onChange: (_, smeta) => {
+        form.setValue('subSchet', smeta?.smeta_number ?? '', { shouldValidate: true })
       }
     })
   )
@@ -178,6 +185,7 @@ export const ZarplataSpravochnikDialog = ({
                       <FormControl>
                         <Input
                           className="col-span-4"
+                          onDoubleClick={smetaSpravochnik.open}
                           {...field}
                         />
                       </FormControl>

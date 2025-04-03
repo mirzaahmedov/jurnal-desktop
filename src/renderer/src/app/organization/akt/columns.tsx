@@ -126,9 +126,9 @@ export const columns: ColumnDef<Akt>[] = [
     )
   },
   {
-    minWidth: 160,
+    minWidth: 200,
     key: 'provodka',
-    renderCell: (row) => <ProvodkaOperatsiiCell provodki={row.provodki_array ?? []} />
+    renderCell: (row) => <ProvodkaOperatsiiCell provodki={row.provodki_array} />
   },
   {
     fill: true,

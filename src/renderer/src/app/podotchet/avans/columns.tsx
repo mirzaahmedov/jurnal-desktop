@@ -4,6 +4,7 @@ import { DataList } from '@renderer/common/components/data-list'
 import { HoverInfoCell } from '@renderer/common/components/table/renderers'
 import { IDCell } from '@renderer/common/components/table/renderers/id'
 import { ProvodkaCell } from '@renderer/common/components/table/renderers/provodka'
+import { ProvodkaOperatsiiCell } from '@renderer/common/components/table/renderers/provodka-operatsii'
 import { formatLocaleDate } from '@renderer/common/lib/format'
 import { Trans } from 'react-i18next'
 
@@ -77,6 +78,11 @@ export const avansColumns: ColumnDef<Avans>[] = [
         provodki={row.provodki_array}
       />
     )
+  },
+  {
+    minWidth: 200,
+    key: 'provodka',
+    renderCell: (row) => <ProvodkaOperatsiiCell provodki={row.provodki_array} />
   },
   {
     fill: true,
