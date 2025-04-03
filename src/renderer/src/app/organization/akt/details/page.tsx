@@ -1,42 +1,46 @@
-import type { AktProvodkaFormValues } from '../service'
+import type { AktProvodkaFormValues } from '../config'
 
 import { useCallback, useEffect } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { createShartnomaSpravochnik } from '@renderer/app/organization/shartnoma'
-import { createOrganizationSpravochnik } from '@renderer/app/region-spravochnik/organization'
-import { Fieldset } from '@renderer/common/components'
-import { EditableTable } from '@renderer/common/components/editable-table'
-import {
-  createEditorChangeHandler,
-  createEditorCreateHandler,
-  createEditorDeleteHandler
-} from '@renderer/common/components/editable-table/helpers'
-import { Form } from '@renderer/common/components/ui/form'
-import { DocumentType } from '@renderer/common/features/doc-num'
-import { useLayoutStore } from '@renderer/common/features/layout'
-import { useRequisitesStore } from '@renderer/common/features/requisites'
-import { useSnippets } from '@renderer/common/features/snippents/use-snippets'
-import { useSpravochnik } from '@renderer/common/features/spravochnik'
-import { normalizeEmptyFields } from '@renderer/common/lib/validation'
-import {
-  DocumentFields,
-  OpisanieFields,
-  OrganizationFields,
-  ShartnomaFields,
-  SummaFields
-} from '@renderer/common/widget/form'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
+import { createShartnomaSpravochnik } from '@/app/organization/shartnoma'
+import { createOrganizationSpravochnik } from '@/app/region-spravochnik/organization'
+import { createOperatsiiSpravochnik } from '@/app/super-admin/operatsii'
+import { Fieldset } from '@/common/components'
+import { EditableTable } from '@/common/components/editable-table'
+import {
+  createEditorChangeHandler,
+  createEditorCreateHandler,
+  createEditorDeleteHandler
+} from '@/common/components/editable-table/helpers'
+import { Form } from '@/common/components/ui/form'
+import { DocumentType } from '@/common/features/doc-num'
+import { useLayoutStore } from '@/common/features/layout'
+import { useRequisitesStore } from '@/common/features/requisites'
+import { useSnippets } from '@/common/features/snippents/use-snippets'
+import { useSpravochnik } from '@/common/features/spravochnik'
+import { normalizeEmptyFields } from '@/common/lib/validation'
+import { TypeSchetOperatsii } from '@/common/models'
 import { DetailsView } from '@/common/views'
+import {
+  DocumentFields,
+  OperatsiiFields,
+  OpisanieFields,
+  OrganizationFields,
+  ShartnomaFields,
+  SummaFields
+} from '@/common/widget/form'
 
 import { defaultValues, queryKeys } from '../config'
-import { AktFormSchema, AktProvodkaFormSchema, aktService } from '../service'
-import { podvodkaColumns } from './provodki'
+import { AktFormSchema, AktProvodkaFormSchema } from '../config'
+import { aktService } from '../service'
+import { provodkaColumns } from './provodki'
 
 const AktDetailsPage = () => {
   const { t } = useTranslation(['app'])
@@ -55,6 +59,105 @@ const AktDetailsPage = () => {
     resolver: zodResolver(AktFormSchema),
     defaultValues: defaultValues
   })
+
+  const { data: akt, isFetching: isFetchingAkt } = useQuery({
+    queryKey: [
+      queryKeys.getById,
+      Number(id),
+      {
+        main_schet_id
+      }
+    ],
+    queryFn: aktService.getById,
+    enabled: id !== 'create'
+  })
+  const { mutate: createAkt, isPending: isCreating } = useMutation({
+    mutationKey: [queryKeys.create],
+    mutationFn: aktService.create,
+    onSuccess(res) {
+      toast.success(res?.message)
+      form.reset(defaultValues)
+      queryClient.invalidateQueries({
+        queryKey: [queryKeys.getAll]
+      })
+      queryClient.invalidateQueries({
+        queryKey: [queryKeys.getById, id]
+      })
+
+      navigate(-1)
+    }
+  })
+
+  const { mutate: updateAkt, isPending: isUpdating } = useMutation({
+    mutationKey: [queryKeys.update, id],
+    mutationFn: aktService.update,
+    onSuccess(res) {
+      toast.success(res?.message)
+
+      queryClient.invalidateQueries({
+        queryKey: [queryKeys.getAll]
+      })
+      queryClient.invalidateQueries({
+        queryKey: [queryKeys.getById, id]
+      })
+
+      navigate(-1)
+    }
+  })
+
+  const onSubmit = form.handleSubmit((payload) => {
+    const {
+      doc_date,
+      doc_num,
+      id_spravochnik_organization,
+      spravochnik_operatsii_own_id,
+      shartnoma_grafik_id,
+      shartnomalar_organization_id,
+      organization_by_raschet_schet_id,
+      organization_by_raschet_schet_gazna_id,
+      opisanie,
+      summa
+    } = payload
+
+    if (id !== 'create') {
+      updateAkt({
+        id: Number(id),
+        doc_date,
+        doc_num,
+        shartnomalar_organization_id,
+        shartnoma_grafik_id,
+        id_spravochnik_organization,
+        spravochnik_operatsii_own_id,
+        organization_by_raschet_schet_id,
+        organization_by_raschet_schet_gazna_id,
+        opisanie,
+        summa,
+        childs: podvodki.map(normalizeEmptyFields<AktProvodkaFormValues>)
+      })
+      return
+    }
+    createAkt({
+      doc_date,
+      doc_num,
+      shartnomalar_organization_id,
+      id_spravochnik_organization,
+      spravochnik_operatsii_own_id,
+      shartnoma_grafik_id,
+      organization_by_raschet_schet_id,
+      organization_by_raschet_schet_gazna_id,
+      opisanie,
+      summa,
+      childs: podvodki.map(normalizeEmptyFields<AktProvodkaFormValues>)
+    })
+  })
+
+  const podvodki = form.watch('childs')
+  const setPodvodki = useCallback(
+    (payload: AktProvodkaFormValues[]) => {
+      form.setValue('childs', payload)
+    },
+    [form]
+  )
 
   const orgSpravochnik = useSpravochnik(
     createOrganizationSpravochnik({
@@ -89,100 +192,17 @@ const AktDetailsPage = () => {
     })
   )
 
-  const { data: akt, isFetching } = useQuery({
-    queryKey: [
-      queryKeys.getById,
-      Number(id),
-      {
-        main_schet_id
+  const operatsiiSpravochnik = useSpravochnik(
+    createOperatsiiSpravochnik({
+      value: form.watch('spravochnik_operatsii_own_id'),
+      onChange: (value) => {
+        form.setValue('spravochnik_operatsii_own_id', value ?? 0)
+        form.trigger('spravochnik_operatsii_own_id')
+      },
+      params: {
+        type_schet: TypeSchetOperatsii.GENERAL
       }
-    ],
-    queryFn: aktService.getById,
-    enabled: id !== 'create'
-  })
-  const { mutate: create, isPending: isCreating } = useMutation({
-    mutationKey: [queryKeys.create],
-    mutationFn: aktService.create,
-    onSuccess(res) {
-      toast.success(res?.message)
-      form.reset(defaultValues)
-      queryClient.invalidateQueries({
-        queryKey: [queryKeys.getAll]
-      })
-      queryClient.invalidateQueries({
-        queryKey: [queryKeys.getById, id]
-      })
-
-      navigate(-1)
-    }
-  })
-
-  const { mutate: update, isPending: isUpdating } = useMutation({
-    mutationKey: [queryKeys.update, id],
-    mutationFn: aktService.update,
-    onSuccess(res) {
-      toast.success(res?.message)
-
-      queryClient.invalidateQueries({
-        queryKey: [queryKeys.getAll]
-      })
-      queryClient.invalidateQueries({
-        queryKey: [queryKeys.getById, id]
-      })
-
-      navigate(-1)
-    }
-  })
-
-  const onSubmit = form.handleSubmit((payload) => {
-    const {
-      doc_date,
-      doc_num,
-      id_spravochnik_organization,
-      shartnoma_grafik_id,
-      shartnomalar_organization_id,
-      organization_by_raschet_schet_id,
-      organization_by_raschet_schet_gazna_id,
-      opisanie,
-      summa
-    } = payload
-
-    if (id !== 'create') {
-      update({
-        id: Number(id),
-        doc_date,
-        doc_num,
-        shartnomalar_organization_id,
-        shartnoma_grafik_id,
-        id_spravochnik_organization,
-        organization_by_raschet_schet_id,
-        organization_by_raschet_schet_gazna_id,
-        opisanie,
-        summa,
-        childs: podvodki.map(normalizeEmptyFields<AktProvodkaFormValues>)
-      })
-      return
-    }
-    create({
-      doc_date,
-      doc_num,
-      shartnomalar_organization_id,
-      id_spravochnik_organization,
-      shartnoma_grafik_id,
-      organization_by_raschet_schet_id,
-      organization_by_raschet_schet_gazna_id,
-      opisanie,
-      summa,
-      childs: podvodki.map(normalizeEmptyFields<AktProvodkaFormValues>)
     })
-  })
-
-  const podvodki = form.watch('childs')
-  const setPodvodki = useCallback(
-    (payload: AktProvodkaFormValues[]) => {
-      form.setValue('childs', payload)
-    },
-    [form]
   )
 
   useEffect(() => {
@@ -226,7 +246,7 @@ const AktDetailsPage = () => {
 
   return (
     <DetailsView>
-      <DetailsView.Content loading={isFetching || isCreating || isUpdating}>
+      <DetailsView.Content loading={isFetchingAkt || isCreating || isUpdating}>
         <Form {...form}>
           <form onSubmit={onSubmit}>
             <div>
@@ -236,6 +256,11 @@ const AktDetailsPage = () => {
                   form={form}
                   documentType={DocumentType.AKT}
                   autoGenerate={id === 'create'}
+                />
+                <OperatsiiFields
+                  tabIndex={2}
+                  spravochnik={operatsiiSpravochnik}
+                  error={form.formState.errors.spravochnik_operatsii_own_id}
                 />
               </div>
 
@@ -285,7 +310,7 @@ const AktDetailsPage = () => {
         >
           <EditableTable
             tabIndex={6}
-            columnDefs={podvodkaColumns}
+            columnDefs={provodkaColumns}
             data={form.watch('childs')}
             errors={form.formState.errors.childs}
             onCreate={createEditorCreateHandler({

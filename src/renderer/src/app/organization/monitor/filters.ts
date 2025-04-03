@@ -1,23 +1,8 @@
-import { create } from 'zustand'
-import { persist } from 'zustand/middleware'
+import { useLocationState } from '@renderer/common/hooks'
 
-type DefaultFiltersState = {
-  operatsiiId: number
+export const useOperatsiiFilter = () => {
+  return useLocationState<undefined | number>('operatsii_id')
 }
-type DefaultFiltersStore = DefaultFiltersState & {
-  setOperatsiiId: (id: number) => void
+export const useOrganFilter = () => {
+  return useLocationState<undefined | number>('organ_id')
 }
-
-const useFiltersStore = create(
-  persist<DefaultFiltersStore>(
-    (set) => ({
-      operatsiiId: 0,
-      setOperatsiiId: (id: number) => set({ operatsiiId: id })
-    }),
-    {
-      name: 'filters/org-monitor'
-    }
-  )
-)
-
-export { useFiltersStore }

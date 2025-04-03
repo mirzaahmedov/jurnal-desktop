@@ -1,12 +1,12 @@
 import { useEffect } from 'react'
 
-import { useSettingsStore } from '@renderer/common/features/settings'
 import { useQuery } from '@tanstack/react-query'
 import { Download } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
 import { createOrganizationSpravochnik } from '@/app/region-spravochnik/organization'
+import { createOperatsiiSpravochnik } from '@/app/super-admin/operatsii'
 import {
   ChooseSpravochnik,
   FooterCell,
@@ -27,17 +27,18 @@ import { SearchFilterDebounced } from '@/common/features/filters/search/search-f
 import { useSearchFilter } from '@/common/features/filters/search/search-filter-debounced'
 import { useLayoutStore } from '@/common/features/layout'
 import { useRequisitesStore } from '@/common/features/requisites'
+import { useSettingsStore } from '@/common/features/settings'
 import { useSpravochnik } from '@/common/features/spravochnik'
 import { useDates, usePagination, useToggle } from '@/common/hooks'
-import { useLocationState } from '@/common/hooks/use-location-state'
 import { formatNumber } from '@/common/lib/format'
 import { getProvodkaURL } from '@/common/lib/provodka'
-import { type OrganizationMonitor } from '@/common/models'
+import { type OrganizationMonitor, TypeSchetOperatsii } from '@/common/models'
 import { ListView } from '@/common/views'
 
 import { AktSverkaDialog } from './akt-sverka'
 import { organizationMonitorColumns } from './columns'
 import { orgMonitoringQueryKeys } from './constants'
+import { useOperatsiiFilter, useOrganFilter } from './filters'
 import { orgMonitoringService } from './service'
 
 const OrganizationMonitoringPage = () => {
@@ -49,7 +50,8 @@ const OrganizationMonitoringPage = () => {
 
   const setLayout = useLayoutStore((store) => store.setLayout)
 
-  const [orgId, setOrgId] = useLocationState<undefined | number>('org_id')
+  const [operatsiiId, setOperatsiiId] = useOperatsiiFilter()
+  const [organId, setOrganId] = useOrganFilter()
   const [search] = useSearchFilter()
 
   const { main_schet_id, budjet_id } = useRequisitesStore()
@@ -57,12 +59,26 @@ const OrganizationMonitoringPage = () => {
 
   const orgSpravochnik = useSpravochnik(
     createOrganizationSpravochnik({
-      value: orgId,
+      value: organId,
       onChange: (id) => {
         pagination.onChange({
           page: 1
         })
-        setOrgId(id)
+        setOrganId(id)
+      }
+    })
+  )
+  const operatsiiSpravochnik = useSpravochnik(
+    createOperatsiiSpravochnik({
+      value: operatsiiId,
+      onChange: (id) => {
+        pagination.onChange({
+          page: 1
+        })
+        setOperatsiiId(id)
+      },
+      params: {
+        type_schet: TypeSchetOperatsii.GENERAL
       }
     })
   )
@@ -72,14 +88,15 @@ const OrganizationMonitoringPage = () => {
       orgMonitoringQueryKeys.getByOrgId,
       {
         main_schet_id,
-        organ_id: orgId ? orgId : undefined,
+        organ_id: organId ? organId : undefined,
+        operatsii: operatsiiSpravochnik.selected ? operatsiiSpravochnik.selected.schet : undefined,
         search,
         ...dates,
         ...pagination
       }
     ],
     queryFn: orgMonitoringService.getAll,
-    enabled: !!main_schet_id
+    enabled: !!main_schet_id && !!operatsiiSpravochnik.selected
   })
 
   useEffect(() => {
@@ -109,17 +126,33 @@ const OrganizationMonitoringPage = () => {
           <div className="w-full flex flex-row items-center justify-between">
             <div className="flex flex-row items-center gap-5">
               <ChooseSpravochnik
+                spravochnik={operatsiiSpravochnik}
+                placeholder={t('choose', {
+                  what: t('operatsii')
+                })}
+                getName={(selected) =>
+                  selected ? `${selected.schet} - ${selected.sub_schet} ${selected.name}` : ''
+                }
+                getElements={(selected) => [
+                  { name: t('name'), value: selected.name },
+                  { name: t('schet'), value: selected.schet },
+                  { name: t('subschet'), value: selected.sub_schet }
+                ]}
+              />
+              <ChooseSpravochnik
                 spravochnik={orgSpravochnik}
-                placeholder="Выберите организацию"
+                placeholder={t('choose', {
+                  what: t('organization')
+                })}
                 getName={(selected) => selected.name}
                 getElements={(selected) => [
-                  { name: 'ИНН:', value: selected?.inn },
-                  { name: 'МФО:', value: selected?.mfo },
+                  { name: t('inn'), value: selected?.inn },
+                  { name: t('mfo'), value: selected?.mfo },
                   {
-                    name: 'Расчетный счет:',
+                    name: t('raschet-schet'),
                     value: selected?.account_numbers.map((a) => a.raschet_schet).join(',')
                   },
-                  { name: 'Банк:', value: selected?.bank_klient }
+                  { name: t('bank'), value: selected?.bank_klient }
                 ]}
               />
             </div>
@@ -139,6 +172,7 @@ const OrganizationMonitoringPage = () => {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent
                     side="bottom"
+                    align="end"
                     onInteractOutside={dropdownToggle.close}
                   >
                     <DropdownMenuItem>
@@ -151,6 +185,7 @@ const OrganizationMonitoringPage = () => {
                           from: dates.from,
                           to: dates.to,
                           report_title_id,
+                          operatsii: operatsiiSpravochnik.selected?.schet,
                           excel: true
                         }}
                         buttonText={t('cap')}
@@ -166,67 +201,74 @@ const OrganizationMonitoringPage = () => {
                           main_schet_id,
                           budjet_id,
                           to: dates.to,
+                          operatsii: operatsiiSpravochnik.selected?.schet,
                           excel: true
                         }}
-                        buttonText="Дебитор / Кредитор отчет"
+                        buttonText={t('debitor_kreditor_report')}
                         className="w-full inline-flex items-center justify-start"
                       />
                     </DropdownMenuItem>
 
-                    <DropdownMenuItem>
-                      <DownloadFile
-                        fileName={`${t('pages.organization')}-${t('pages.prixod-docs')}-${dates.from}-${dates.to}.xlsx`}
-                        url="/organization/monitoring/prixod"
-                        params={{
-                          budjet_id,
-                          main_schet_id,
-                          from: dates.from,
-                          to: dates.to,
-                          report_title_id,
-                          excel: true
-                        }}
-                        buttonText={t('pages.prixod-docs')}
-                      />
-                    </DropdownMenuItem>
+                    {operatsiiSpravochnik.selected?.schet ? (
+                      <>
+                        <DropdownMenuItem>
+                          <DownloadFile
+                            fileName={`${t('pages.organization')}-${t('pages.prixod-docs')}-${dates.from}-${dates.to}.xlsx`}
+                            url="/organization/monitoring/prixod"
+                            params={{
+                              budjet_id,
+                              main_schet_id,
+                              from: dates.from,
+                              to: dates.to,
+                              report_title_id,
+                              operatsii: operatsiiSpravochnik.selected?.schet,
+                              excel: true
+                            }}
+                            buttonText={t('pages.prixod-docs')}
+                          />
+                        </DropdownMenuItem>
 
-                    <DropdownMenuItem>
-                      <DownloadFile
-                        fileName={`сводный-отчет-${dates.from}&${dates.to}.xlsx`}
-                        url="/organization/monitoring/order"
-                        params={{
-                          main_schet_id,
-                          organ_id: orgId ? orgId : undefined,
-                          from: dates.from,
-                          to: dates.to,
-                          excel: true,
-                          contract: false
-                        }}
-                        buttonText="Сводный отчет"
-                        className="w-full inline-flex items-center justify-start"
-                      />
-                    </DropdownMenuItem>
+                        <DropdownMenuItem>
+                          <DownloadFile
+                            fileName={`сводный-отчет-${dates.from}&${dates.to}.xlsx`}
+                            url="/organization/monitoring/order"
+                            params={{
+                              main_schet_id,
+                              organ_id: organId ? organId : undefined,
+                              from: dates.from,
+                              to: dates.to,
+                              excel: true,
+                              operatsii: operatsiiSpravochnik.selected?.schet,
+                              contract: false
+                            }}
+                            buttonText={t('summarized_report')}
+                            className="w-full inline-flex items-center justify-start"
+                          />
+                        </DropdownMenuItem>
 
-                    <DropdownMenuItem>
-                      <DownloadFile
-                        fileName={`сводный-отчет-${dates.from}&${dates.to}.xlsx`}
-                        url="/organization/monitoring/order"
-                        params={{
-                          main_schet_id,
-                          organ_id: orgId ? orgId : undefined,
-                          from: dates.from,
-                          to: dates.to,
-                          excel: true,
-                          contract: true
-                        }}
-                        buttonText="Сводный отчет (по договору)"
-                        className="w-full inline-flex items-center justify-start"
-                      />
-                    </DropdownMenuItem>
+                        <DropdownMenuItem>
+                          <DownloadFile
+                            fileName={`сводный-отчет-${dates.from}&${dates.to}.xlsx`}
+                            url="/organization/monitoring/order"
+                            params={{
+                              main_schet_id,
+                              organ_id: organId ? organId : undefined,
+                              from: dates.from,
+                              to: dates.to,
+                              excel: true,
+                              contract: true
+                            }}
+                            buttonText={t('summarized_report_by_contract')}
+                            className="w-full inline-flex items-center justify-start"
+                          />
+                        </DropdownMenuItem>
+                      </>
+                    ) : null}
                   </DropdownMenuContent>
                 </DropdownMenu>
-                {orgId ? (
+                {organId ? (
                   <AktSverkaDialog
-                    organId={orgId}
+                    organId={organId}
                     schetId={main_schet_id}
                     from={dates.from}
                     to={dates.to}

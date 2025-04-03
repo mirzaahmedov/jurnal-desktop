@@ -1,30 +1,30 @@
-import type { PokazatUslugiForm, PokazatUslugiProvodkaForm } from '../service'
+import type { PokazatUslugiFormValues, PokazatUslugiProvodkaFormValues } from '../config'
 
 import { useCallback, useEffect } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { createShartnomaSpravochnik } from '@renderer/app/organization/shartnoma'
-import { createOrganizationSpravochnik } from '@renderer/app/region-spravochnik/organization'
-import { EditableTable } from '@renderer/common/components/editable-table'
-import {
-  createEditorChangeHandler,
-  createEditorCreateHandler,
-  createEditorDeleteHandler
-} from '@renderer/common/components/editable-table/helpers'
-import { DocumentType } from '@renderer/common/features/doc-num'
-import { useRequisitesStore } from '@renderer/common/features/requisites'
-import { useSnippets } from '@renderer/common/features/snippents/use-snippets'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
+import { toast } from 'react-toastify'
 
+import { createShartnomaSpravochnik } from '@/app/organization/shartnoma'
+import { createOrganizationSpravochnik } from '@/app/region-spravochnik/organization'
 import { createOperatsiiSpravochnik } from '@/app/super-admin/operatsii'
 import { Fieldset } from '@/common/components'
+import { EditableTable } from '@/common/components/editable-table'
+import {
+  createEditorChangeHandler,
+  createEditorCreateHandler,
+  createEditorDeleteHandler
+} from '@/common/components/editable-table/helpers'
 import { Form } from '@/common/components/ui/form'
+import { DocumentType } from '@/common/features/doc-num'
 import { useLayoutStore } from '@/common/features/layout'
+import { useRequisitesStore } from '@/common/features/requisites'
+import { useSnippets } from '@/common/features/snippents/use-snippets'
 import { useSpravochnik } from '@/common/features/spravochnik'
-import { useToast } from '@/common/hooks/use-toast'
 import { normalizeEmptyFields } from '@/common/lib/validation'
 import { TypeSchetOperatsii } from '@/common/models'
 import { DetailsView } from '@/common/views'
@@ -37,16 +37,12 @@ import {
   SummaFields
 } from '@/common/widget/form'
 
-import { defaultValues, queryKeys } from '../constants'
-import {
-  PokazatUslugiFormSchema,
-  PokazatUslugiProvodkaFormSchema,
-  pokazatUslugiService
-} from '../service'
+import { defaultValues, queryKeys } from '../config'
+import { PokazatUslugiFormSchema, PokazatUslugiProvodkaFormSchema } from '../config'
+import { pokazatUslugiService } from '../service'
 import { podvodkaColumns } from './podvodki'
 
 const PokazatUslugiDetailsPage = () => {
-  const { toast } = useToast()
   const { t } = useTranslation(['app'])
   const { snippets, addSnippet, removeSnippet } = useSnippets({
     ns: 'pokazat-uslugi'
@@ -118,8 +114,8 @@ const PokazatUslugiDetailsPage = () => {
   const { mutate: create, isPending: isCreating } = useMutation({
     mutationKey: [queryKeys.create],
     mutationFn: pokazatUslugiService.create,
-    onSuccess() {
-      toast({ title: 'Документ успешно создан' })
+    onSuccess(res) {
+      toast.success(res?.message)
 
       queryClient.invalidateQueries({
         queryKey: [queryKeys.getAll]
@@ -128,18 +124,15 @@ const PokazatUslugiDetailsPage = () => {
         queryKey: [queryKeys.getById, id]
       })
 
-      navigate('/organization/pokazat-uslugi')
-    },
-    onError(error) {
-      toast({ title: error.message, variant: 'destructive' })
+      navigate(-1)
     }
   })
 
   const { mutate: update, isPending: isUpdating } = useMutation({
     mutationKey: [queryKeys.update, id],
     mutationFn: pokazatUslugiService.update,
-    onSuccess() {
-      toast({ title: 'Документ успешно обновлен' })
+    onSuccess(res) {
+      toast.success(res?.message)
 
       queryClient.invalidateQueries({
         queryKey: [queryKeys.getAll]
@@ -148,14 +141,11 @@ const PokazatUslugiDetailsPage = () => {
         queryKey: [queryKeys.getById, id]
       })
 
-      navigate('/organization/pokazat-uslugi')
-    },
-    onError(error) {
-      toast({ title: error.message, variant: 'destructive' })
+      navigate(-1)
     }
   })
 
-  const onSubmit = form.handleSubmit((payload: PokazatUslugiForm) => {
+  const onSubmit = form.handleSubmit((payload: PokazatUslugiFormValues) => {
     const {
       doc_date,
       doc_num,
@@ -182,7 +172,7 @@ const PokazatUslugiDetailsPage = () => {
         organization_by_raschet_schet_gazna_id,
         opisanie,
         summa,
-        childs: podvodki.map(normalizeEmptyFields<PokazatUslugiProvodkaForm>)
+        childs: podvodki.map(normalizeEmptyFields<PokazatUslugiProvodkaFormValues>)
       })
       return
     }
@@ -197,13 +187,13 @@ const PokazatUslugiDetailsPage = () => {
       organization_by_raschet_schet_gazna_id,
       opisanie,
       summa,
-      childs: podvodki.map(normalizeEmptyFields<PokazatUslugiProvodkaForm>)
+      childs: podvodki.map(normalizeEmptyFields<PokazatUslugiProvodkaFormValues>)
     })
   })
 
   const podvodki = form.watch('childs')
   const setPodvodki = useCallback(
-    (payload: PokazatUslugiProvodkaForm[]) => {
+    (payload: PokazatUslugiProvodkaFormValues[]) => {
       form.setValue('childs', payload)
     },
     [form]

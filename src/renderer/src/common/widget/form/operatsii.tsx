@@ -21,7 +21,7 @@ export const OperatsiiFields: FormSpravochnikFieldsComponent<Operatsii> = ({
       {...props}
       name={name ?? t('operatsii')}
     >
-      <div className="grid grid-cols-2 gap-5">
+      <div className="flex items-center gap-5">
         <SpravochnikField
           {...spravochnikProps}
           readOnly
@@ -31,6 +31,9 @@ export const OperatsiiFields: FormSpravochnikFieldsComponent<Operatsii> = ({
           getInputValue={(selected) => selected?.name ?? ''}
           error={!!error?.message}
           label={t('operatsii')}
+          formElementProps={{
+            className: 'flex-1'
+          }}
         />
 
         <SpravochnikField
@@ -38,9 +41,14 @@ export const OperatsiiFields: FormSpravochnikFieldsComponent<Operatsii> = ({
           readOnly
           tabIndex={-1}
           disabled={disabled}
-          getInputValue={(selected) => selected?.sub_schet ?? ''}
+          getInputValue={(selected) =>
+            selected ? `${selected?.schet} - ${selected?.sub_schet}` : ''
+          }
           error={!!error?.message}
-          label={`${t('schet')} / ${t('subschet')}`}
+          label={`${t('schet')} - ${t('subschet')}`}
+          formElementProps={{
+            className: 'w-72'
+          }}
         />
       </div>
     </SpravochnikFields>

@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 
+import { createOperatsiiSpravochnik } from '@renderer/app/super-admin/operatsii'
 import { DownloadFile } from '@renderer/common/features/file'
 import {
   SearchFilterDebounced,
@@ -9,7 +10,6 @@ import { useLayoutStore } from '@renderer/common/features/layout'
 import { useRequisitesStore } from '@renderer/common/features/requisites'
 import { useSettingsStore } from '@renderer/common/features/settings'
 import { useDates, usePagination } from '@renderer/common/hooks'
-import { useLocationState } from '@renderer/common/hooks/use-location-state'
 import { getProvodkaURL } from '@renderer/common/lib/provodka'
 import { ListView } from '@renderer/common/views'
 import { useQuery } from '@tanstack/react-query'
@@ -28,10 +28,11 @@ import {
 import { ButtonGroup } from '@/common/components/ui/button-group'
 import { useSpravochnik } from '@/common/features/spravochnik'
 import { formatNumber } from '@/common/lib/format'
-import { type PodotchetMonitor } from '@/common/models'
+import { type PodotchetMonitor, TypeSchetOperatsii } from '@/common/models'
 
 import { podotchetMonitoringColumns } from './columns'
 import { podotchetMonitoringQueryKeys } from './constants'
+import { useOperatsiiFilter, usePodotchetFilter } from './filters'
 import { podotchetMonitoringService } from './service'
 
 const PodotchetMonitoringPage = () => {
@@ -46,8 +47,23 @@ const PodotchetMonitoringPage = () => {
   const [search] = useSearchFilter()
   const { main_schet_id, budjet_id } = useRequisitesStore()
 
-  const [podotchetId, setPodotchetId] = useLocationState<undefined | number>('podotchet_id')
+  const [operatsiiId, setOperatsiiId] = useOperatsiiFilter()
+  const [podotchetId, setPodotchetId] = usePodotchetFilter()
 
+  const operatsiiSpravochnik = useSpravochnik(
+    createOperatsiiSpravochnik({
+      value: operatsiiId,
+      onChange: (id) => {
+        pagination.onChange({
+          page: 1
+        })
+        setOperatsiiId(id)
+      },
+      params: {
+        type_schet: TypeSchetOperatsii.GENERAL
+      }
+    })
+  )
   const podotchetSpravochnik = useSpravochnik(
     createPodotchetSpravochnik({
       value: podotchetId,
@@ -66,11 +82,12 @@ const PodotchetMonitoringPage = () => {
         ...pagination,
         search,
         main_schet_id,
+        operatsii: operatsiiSpravochnik.selected?.schet,
         podotchet_id: podotchetId
       },
       podotchetId
     ],
-    enabled: !!main_schet_id
+    enabled: !!main_schet_id && !!operatsiiSpravochnik.selected
   })
 
   useEffect(() => {
@@ -99,12 +116,28 @@ const PodotchetMonitoringPage = () => {
         <div className="w-full flex flex-row gap-10 items-center justify-between">
           <div className="flex-1 flex flex-row gap-5 items-center">
             <ChooseSpravochnik
+              spravochnik={operatsiiSpravochnik}
+              placeholder={t('choose', {
+                what: t('operatsii')
+              })}
+              getName={(selected) =>
+                selected ? `${selected.schet} - ${selected.sub_schet} ${selected.name}` : ''
+              }
+              getElements={(selected) => [
+                { name: t('name'), value: selected.name },
+                { name: t('schet'), value: selected.schet },
+                { name: t('subschet'), value: selected.sub_schet }
+              ]}
+            />
+            <ChooseSpravochnik
               spravochnik={podotchetSpravochnik}
-              placeholder="Выберите подотчетное лицо"
+              placeholder={t('choose', {
+                what: t('podotchet')
+              })}
               getName={(selected) => selected.name}
               getElements={(selected) => [
-                { name: 'Наименование', value: selected.name },
-                { name: 'Регион', value: selected?.rayon }
+                { name: t('name'), value: selected.name },
+                { name: t('region'), value: selected?.rayon }
               ]}
             />
           </div>
@@ -118,7 +151,7 @@ const PodotchetMonitoringPage = () => {
                 to: dates.to,
                 excel: true
               }}
-              buttonText={t('debitor-kreditor-report')}
+              buttonText={t('debitor_kreditor_report')}
             />
             {podotchetId ? (
               <DownloadFile
@@ -128,9 +161,10 @@ const PodotchetMonitoringPage = () => {
                   main_schet_id,
                   from: dates.from,
                   to: dates.to,
+                  operatsii: operatsiiSpravochnik.selected?.schet,
                   excel: true
                 }}
-                buttonText={t('personal-account')}
+                buttonText={t('personal_account')}
               />
             ) : null}
             <DownloadFile
@@ -142,6 +176,7 @@ const PodotchetMonitoringPage = () => {
                 from: dates.from,
                 to: dates.to,
                 excel: true,
+                operatsii: operatsiiSpravochnik.selected?.schet,
                 report_title_id
               }}
               buttonText={t('cap-report')}

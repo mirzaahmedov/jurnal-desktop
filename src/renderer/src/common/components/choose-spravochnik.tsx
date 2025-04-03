@@ -56,7 +56,7 @@ export const ChooseSpravochnik = <T,>(props: ChooseSpravochnikProps<T>) => {
           </PopoverTrigger>
           <PopoverContent
             align="start"
-            className="w-full max-w-md"
+            className="w-[var(--radix-popover-trigger-width)] min-w-96"
           >
             <ul className="text-xs space-y-1.5">
               {getElements(spravochnik.selected).map(({ name, value }) => (

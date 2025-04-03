@@ -16,7 +16,7 @@ import { toast, useDates, usePagination } from '@/common/hooks'
 import { ListView } from '@/common/views'
 
 import { pokazatUslugiColumns } from './columns'
-import { queryKeys } from './constants'
+import { queryKeys } from './config'
 import { pokazatUslugiService } from './service'
 
 const PokazatUslugiPage = () => {
