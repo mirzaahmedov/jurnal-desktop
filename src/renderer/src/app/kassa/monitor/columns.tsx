@@ -9,6 +9,7 @@ import { formatLocaleDate } from '@/common/lib/format'
 
 export const columns: ColumnDef<KassaMonitoringType>[] = [
   {
+    sort: true,
     key: 'id',
     renderCell: IDCell,
     width: 160,

@@ -1,20 +1,23 @@
-import type { BankRasxod } from '@renderer/common/models'
+import type { BankRasxod } from '@/common/models'
 
-import { type ColumnDef, Copyable } from '@renderer/common/components'
-import { DataList } from '@renderer/common/components/data-list'
-import { HoverInfoCell } from '@renderer/common/components/table/renderers'
-import { IDCell } from '@renderer/common/components/table/renderers/id'
-import { ProvodkaCell } from '@renderer/common/components/table/renderers/provodka'
-import { Switch } from '@renderer/common/components/ui/switch'
-import { formatLocaleDate } from '@renderer/common/lib/format'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { Trans } from 'react-i18next'
+
+import { type ColumnDef, Copyable } from '@/common/components'
+import { DataList } from '@/common/components/data-list'
+import { HoverInfoCell } from '@/common/components/table/renderers'
+import { IDCell } from '@/common/components/table/renderers/id'
+import { ProvodkaCell } from '@/common/components/table/renderers/provodka'
+import { ProvodkaOperatsiiCell } from '@/common/components/table/renderers/provodka-operatsii'
+import { Switch } from '@/common/components/ui/switch'
+import { formatLocaleDate } from '@/common/lib/format'
 
 import { queryKeys } from './constants'
 import { bankRasxodPaymentService } from './service'
 
 export const rasxodColumns: ColumnDef<BankRasxod>[] = [
   {
+    sort: true,
     key: 'id',
     renderCell: IDCell,
     width: 160,
@@ -116,6 +119,11 @@ export const rasxodColumns: ColumnDef<BankRasxod>[] = [
         </div>
       )
     }
+  },
+  {
+    minWidth: 160,
+    key: 'provodka',
+    renderCell: (row) => <ProvodkaOperatsiiCell provodki={row.provodki_array ?? []} />
   },
   {
     fit: true,

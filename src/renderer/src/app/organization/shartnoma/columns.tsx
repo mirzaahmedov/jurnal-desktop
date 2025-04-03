@@ -16,6 +16,7 @@ const ShartnomaSmetaCell = (row: Shartnoma) => {
 
 export const shartnomaColumns: ColumnDef<Shartnoma>[] = [
   {
+    sort: true,
     width: 160,
     minWidth: 160,
     key: 'id',

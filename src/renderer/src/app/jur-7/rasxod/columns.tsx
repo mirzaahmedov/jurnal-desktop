@@ -6,6 +6,7 @@ import { formatLocaleDate, formatNumber } from '@renderer/common/lib/format'
 
 export const rasxodColumns: ColumnDef<Jur7Rasxod>[] = [
   {
+    sort: true,
     key: 'id',
     renderCell: IDCell,
     width: 160,

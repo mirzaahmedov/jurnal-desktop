@@ -29,11 +29,7 @@ import {
 import { Input } from '@/common/components/ui/input'
 import { SpravochnikInput, useSpravochnik } from '@/common/features/spravochnik'
 
-import {
-  ZarplataSpravochnikFormSchema,
-  type ZarplataSpravochnikFormValues,
-  defaultValues
-} from './config'
+import { ZarplataSpravochnikFormSchema, defaultValues } from './config'
 import { ZarplataSpravochnikService } from './service'
 import { SpravochnikTypeSelect } from './spravochnik-type-select'
 
@@ -91,14 +87,14 @@ export const ZarplataSpravochnikDialog = ({
   const operatsiiSpravochnik = useSpravochnik(
     createOperatsiiSpravochnik({
       value: form.watch('spravochnikOperatsiiId'),
-      onChange: (id) => {
-        form.setValue('spravochnikOperatsiiId', id ?? 0)
-        form.trigger('spravochnikOperatsiiId')
+      onChange: (id, operatsii) => {
+        form.setValue('spravochnikOperatsiiId', id ?? 0, { shouldValidate: true })
+        form.setValue('subSchet', operatsii?.sub_schet ?? '', { shouldValidate: true })
       }
     })
   )
 
-  const onSubmit = (values: ZarplataSpravochnikFormValues) => {
+  const onSubmit = form.handleSubmit((values) => {
     if (selected) {
       updateOperatsii({
         id: selected.id,
@@ -107,7 +103,7 @@ export const ZarplataSpravochnikDialog = ({
     } else {
       createOperatsii(values)
     }
-  }
+  })
 
   useEffect(() => {
     if (!selected || !open) {
@@ -132,7 +128,7 @@ export const ZarplataSpravochnikDialog = ({
           </DialogTitle>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)}>
+          <form onSubmit={onSubmit}>
             <div className="grid gap-4 py-4">
               <FormField
                 name="name"

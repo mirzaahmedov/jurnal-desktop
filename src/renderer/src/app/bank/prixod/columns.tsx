@@ -11,6 +11,7 @@ import { formatLocaleDate } from '@/common/lib/format'
 
 export const columns: ColumnDef<BankPrixod>[] = [
   {
+    sort: true,
     key: 'id',
     renderCell: IDCell,
     width: 160,

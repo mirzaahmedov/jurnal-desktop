@@ -8,6 +8,7 @@ import { formatLocaleDate } from '@/common/lib/format'
 
 export const kassaOstatokColumns: ColumnDef<KassaOstatok>[] = [
   {
+    sort: true,
     key: 'id',
     renderCell: IDCell,
     width: 160,

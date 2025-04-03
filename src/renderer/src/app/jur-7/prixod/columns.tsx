@@ -6,6 +6,7 @@ import { formatLocaleDate, formatNumber } from '@renderer/common/lib/format'
 
 export const prixodColumns: ColumnDef<MO7Prixod>[] = [
   {
+    sort: true,
     key: 'id',
     renderCell: IDCell,
     width: 160,

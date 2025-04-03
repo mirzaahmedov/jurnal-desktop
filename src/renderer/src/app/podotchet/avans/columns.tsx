@@ -11,6 +11,7 @@ import { type ColumnDef, Copyable } from '@/common/components'
 
 export const avansColumns: ColumnDef<Avans>[] = [
   {
+    sort: true,
     key: 'id',
     renderCell: IDCell,
     width: 160,

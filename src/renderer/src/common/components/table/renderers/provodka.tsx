@@ -1,7 +1,7 @@
-import { formatNumber } from '@renderer/common/lib/format'
 import { useTranslation } from 'react-i18next'
 
 import { Copyable } from '@/common/components/copyable'
+import { formatNumber } from '@/common/lib/format'
 
 import { HoverInfoCell } from './hover-info'
 

@@ -12,6 +12,7 @@ import { formatLocaleDate } from '@/common/lib/format'
 
 export const columns: ColumnDef<BankMonitoringType>[] = [
   {
+    sort: true,
     key: 'id',
     renderCell: IDCell,
     width: 160,

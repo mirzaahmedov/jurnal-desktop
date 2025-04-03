@@ -11,6 +11,7 @@ import { formatLocaleDate } from '@/common/lib/format'
 
 export const pokazatUslugiColumns: ColumnDef<PokazatUslugi>[] = [
   {
+    sort: true,
     key: 'id',
     renderCell: IDCell,
     width: 160,

@@ -8,6 +8,7 @@ import { formatLocaleDate } from '@/common/lib/format'
 
 export const columns: ColumnDef<KassaPrixod>[] = [
   {
+    sort: true,
     key: 'id',
     renderCell: IDCell,
     width: 160,

@@ -10,6 +10,7 @@ import { type PodotchetOstatok } from '@/common/models'
 
 export const podotchetOstatokColumns: ColumnDef<PodotchetOstatok>[] = [
   {
+    sort: true,
     key: 'id',
     renderCell: IDCell,
     width: 160,

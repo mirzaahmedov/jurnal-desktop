@@ -10,6 +10,7 @@ import { type OrganizationOstatok } from '@/common/models'
 
 export const organOstatokColumns: ColumnDef<OrganizationOstatok>[] = [
   {
+    sort: true,
     key: 'id',
     renderCell: IDCell,
     width: 160,

@@ -12,6 +12,7 @@ import { type OrganizationMonitor } from '@/common/models'
 
 export const organizationMonitorColumns: ColumnDef<OrganizationMonitor>[] = [
   {
+    sort: true,
     key: 'id',
     renderCell: IDCell,
     width: 160,

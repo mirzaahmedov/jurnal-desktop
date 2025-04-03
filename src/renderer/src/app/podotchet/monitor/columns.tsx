@@ -13,6 +13,7 @@ import { formatLocaleDate } from '@/common/lib/format'
 
 export const podotchetMonitoringColumns: ColumnDef<PodotchetMonitor>[] = [
   {
+    sort: true,
     key: 'id',
     renderCell: IDCell,
     width: 160,

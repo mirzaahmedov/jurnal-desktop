@@ -1,17 +1,19 @@
 import type { ColumnDef } from '@/common/components'
 import type { Akt } from '@/common/models'
 
-import { DataList } from '@renderer/common/components/data-list'
-import { IDCell } from '@renderer/common/components/table/renderers/id'
-import { ProvodkaCell } from '@renderer/common/components/table/renderers/provodka'
 import { Trans } from 'react-i18next'
 
 import { Copyable } from '@/common/components'
+import { DataList } from '@/common/components/data-list'
 import { HoverInfoCell } from '@/common/components/table/renderers'
+import { IDCell } from '@/common/components/table/renderers/id'
+import { ProvodkaCell } from '@/common/components/table/renderers/provodka'
+import { ProvodkaOperatsiiCell } from '@/common/components/table/renderers/provodka-operatsii'
 import { formatLocaleDate } from '@/common/lib/format'
 
 export const columns: ColumnDef<Akt>[] = [
   {
+    sort: true,
     key: 'id',
     renderCell: IDCell,
     width: 160,
@@ -122,6 +124,11 @@ export const columns: ColumnDef<Akt>[] = [
         provodki={row.provodki_array}
       />
     )
+  },
+  {
+    minWidth: 160,
+    key: 'provodka',
+    renderCell: (row) => <ProvodkaOperatsiiCell provodki={row.provodki_array ?? []} />
   },
   {
     fill: true,
