@@ -112,8 +112,8 @@ export const KassaOstatokDialog = ({ open, onOpenChange, selected }: KassaOstato
         <DialogHeader>
           <DialogTitle>
             {selected
-              ? capitalize(t('update-something', { something: t('pages.prixod_schets') }))
-              : capitalize(t('create-something', { something: t('pages.prixod_schets') }))}
+              ? capitalize(t('update-something', { something: t('pages.ostatok') }))
+              : capitalize(t('create-something', { something: t('pages.ostatok') }))}
           </DialogTitle>
         </DialogHeader>
         <Form {...form}>
@@ -169,7 +169,8 @@ export const KassaOstatokDialog = ({ open, onOpenChange, selected }: KassaOstato
                       <FormControl>
                         <NumericInput
                           className="col-span-4"
-                          {...field}
+                          value={field.value}
+                          onValueChange={(values) => field.onChange(values.floatValue)}
                         />
                       </FormControl>
                       <FormMessage className="text-end col-span-6" />

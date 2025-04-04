@@ -3,7 +3,7 @@ import type { KassaOstatok, ResponseMeta } from '@/common/models'
 import { z } from 'zod'
 
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
-import { main_schet } from '@/common/features/crud/middleware'
+import { budjet } from '@/common/features/crud/middleware'
 import { withPreprocessor } from '@/common/lib/validation'
 
 interface KassaOstatokMeta extends ResponseMeta {
@@ -28,7 +28,7 @@ export const KassaOstatokService = new CRUDService<
   KassaOstatokMeta
 >({
   endpoint: ApiEndpoints.kassa_saldo
-}).use(main_schet())
+}).use(budjet())
 
 export const KassaOstatokFormSchema = withPreprocessor(
   z.object({
