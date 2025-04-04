@@ -10,7 +10,6 @@ import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 
-import { useOstatokStore } from '@/app/jur-7/ostatok/store'
 import {
   handleOstatokExistingDocumentError,
   handleOstatokResponse,
@@ -23,6 +22,7 @@ import { createOperatsiiSpravochnik } from '@/app/super-admin/operatsii'
 import { Form } from '@/common/components/ui/form'
 import { DocumentType } from '@/common/features/doc-num'
 import { DownloadFile, ImportFile } from '@/common/features/file'
+import { useSelectedMonthStore } from '@/common/features/selected-month/store'
 import { useSnippets } from '@/common/features/snippents/use-snippets'
 import { useSpravochnik } from '@/common/features/spravochnik'
 import { formatDate, parseDate, withinMonth } from '@/common/lib/date'
@@ -65,7 +65,7 @@ const PrixodDetails = ({ id, onSuccess }: PrixodDetailsProps) => {
   }>()
 
   const { t } = useTranslation(['app'])
-  const { minDate, maxDate } = useOstatokStore()
+  const { startDate, endDate } = useSelectedMonthStore()
   const { snippets, addSnippet, removeSnippet } = useSnippets({
     ns: 'jur7_prixod'
   })
@@ -243,10 +243,10 @@ const PrixodDetails = ({ id, onSuccess }: PrixodDetailsProps) => {
     }
     const docDate = parseDate(form.watch('doc_date'))
 
-    if (!docDate || !withinMonth(docDate, minDate)) {
-      form.setValue('doc_date', formatDate(minDate))
+    if (!docDate || !withinMonth(docDate, startDate)) {
+      form.setValue('doc_date', formatDate(startDate))
     }
-  }, [id, minDate, form])
+  }, [id, startDate, form])
 
   const { errors } = form.formState
   useEffect(() => {
@@ -271,8 +271,8 @@ const PrixodDetails = ({ id, onSuccess }: PrixodDetailsProps) => {
                 calendarProps={
                   id === 'create'
                     ? {
-                        fromMonth: minDate,
-                        toMonth: maxDate
+                        fromMonth: startDate,
+                        toMonth: endDate
                       }
                     : undefined
                 }

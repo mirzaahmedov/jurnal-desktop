@@ -6,7 +6,6 @@ import { CircleMinus, CirclePlus, TableOfContents } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 
-import { useOstatokStore } from '@/app/jur-7/ostatok/store'
 import { validateOstatokDate } from '@/app/jur-7/ostatok/utils'
 import { createGroupSpravochnik } from '@/app/super-admin/group/service'
 import { DatePicker, EdinSelect, NumericInput } from '@/common/components'
@@ -21,6 +20,7 @@ import { Button } from '@/common/components/ui/button'
 import { Checkbox } from '@/common/components/ui/checkbox'
 import { Input } from '@/common/components/ui/input'
 import { Table, TableBody, TableHeader } from '@/common/components/ui/table'
+import { useSelectedMonthStore } from '@/common/features/selected-month/store'
 import { SpravochnikInput, inputVariants, useSpravochnik } from '@/common/features/spravochnik'
 import { useEventCallback } from '@/common/hooks'
 import { calcSena, calcSumma } from '@/common/lib/pricing'
@@ -40,7 +40,7 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
   const [page, setPage] = useState(1)
 
   const { t } = useTranslation()
-  const { minDate, maxDate } = useOstatokStore()
+  const { startDate, endDate } = useSelectedMonthStore()
 
   const childs = form.watch('childs')
   const pageCount = Math.ceil(childs.length / PAGE_SIZE)
@@ -495,8 +495,8 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
                             calendarProps={
                               params.id === 'create'
                                 ? {
-                                    fromMonth: minDate,
-                                    toMonth: maxDate
+                                    fromMonth: startDate,
+                                    toMonth: endDate
                                   }
                                 : undefined
                             }

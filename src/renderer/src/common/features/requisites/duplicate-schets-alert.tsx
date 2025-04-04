@@ -15,8 +15,8 @@ import {
 } from '@/common/components/ui/alert-dialog'
 import {
   type DuplicateSchet,
+  RequisitesQueryKeys,
   checkSchetsDuplicateQuery,
-  requisitesQueryKeys,
   useRequisitesStore
 } from '@/common/features/requisites'
 import { useToggle } from '@/common/hooks'
@@ -29,7 +29,7 @@ export const DuplicateSchetsAlert = () => {
 
   const { data: duplicates, isFetching } = useQuery({
     queryKey: [
-      requisitesQueryKeys.checkDuplicates,
+      RequisitesQueryKeys.duplicates,
       {
         budjet_id: budjet_id!
       }

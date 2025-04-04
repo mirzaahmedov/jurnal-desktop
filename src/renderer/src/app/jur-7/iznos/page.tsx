@@ -15,6 +15,7 @@ import { FormField } from '@/common/components/ui/form'
 import { SearchFilterDebounced } from '@/common/features/filters/search/search-filter-debounced'
 import { useSearchFilter } from '@/common/features/filters/search/search-filter-debounced'
 import { useRequisitesStore } from '@/common/features/requisites'
+import { useSelectedMonthStore } from '@/common/features/selected-month/store'
 import { useSpravochnik } from '@/common/features/spravochnik'
 import { usePagination, useToggle } from '@/common/hooks'
 import { useLayoutStore } from '@/common/layout/store'
@@ -36,11 +37,12 @@ const IznosPage = () => {
   const setLayout = useLayoutStore((store) => store.setLayout)
 
   const { t } = useTranslation(['app'])
-  const [search] = useSearchFilter()
-  const { minDate, maxDate, queuedMonths } = useOstatokStore()
+  const { queuedMonths } = useOstatokStore()
+  const { startDate, endDate } = useSelectedMonthStore()
 
+  const [search] = useSearchFilter()
   const [selected] = useState<OstatokProduct | null>(null)
-  const [selectedDate, setSelectedDate] = useState<undefined | Date>(minDate)
+  const [selectedDate, setSelectedDate] = useState<undefined | Date>(startDate)
 
   const form = useForm({
     defaultValues
@@ -78,12 +80,12 @@ const IznosPage = () => {
   }, [iznosError])
   useEffect(() => {
     const date = form.getValues('date')
-    if (date && minDate < date && date < maxDate) {
+    if (date && startDate < date && date < endDate) {
       return
     }
-    form.setValue('date', minDate)
-    setSelectedDate(minDate)
-  }, [form, minDate, maxDate])
+    form.setValue('date', startDate)
+    setSelectedDate(startDate)
+  }, [form, startDate, endDate])
   useEffect(() => {
     setLayout({
       title: t('pages.iznos'),
@@ -143,8 +145,8 @@ const IznosPage = () => {
                   }}
                   validate={validateOstatokDate}
                   calendarProps={{
-                    fromMonth: minDate,
-                    toMonth: maxDate
+                    fromMonth: startDate,
+                    toMonth: endDate
                   }}
                 />
               )}

@@ -5,7 +5,7 @@ import { Outlet, useNavigate } from 'react-router-dom'
 
 import { LoadingOverlay } from '@/common/components'
 
-import { requisitesQueryKeys } from './config'
+import { RequisitesQueryKeys } from './config'
 import { checkSchetsDuplicateQuery } from './service'
 import { useRequisitesStore } from './store'
 
@@ -15,7 +15,7 @@ export const DuplicateSchetsGuard = () => {
 
   const { data: duplicates, isFetching } = useQuery({
     queryKey: [
-      requisitesQueryKeys.checkDuplicates,
+      RequisitesQueryKeys.duplicates,
       {
         budjet_id: budjet_id!
       }

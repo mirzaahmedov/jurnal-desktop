@@ -1,26 +1,13 @@
 export interface KassaOstatok {
   id: number
-  doc_num: string
-  doc_date: string
-  rasxod_summa: number
-  prixod_summa: number
-  prixod: boolean
-  rasxod: boolean
-  opisanie: string
-  user_id: number
   main_schet_id: number
+  summa: number
+  month: number
+  year: number
+  user_id: number
   created_at: string
-  updated_at: any
+  updated_at: string
   isdeleted: boolean
-  provodki_array: Array<{
-    provodki_schet: string
-    provodki_sub_schet: string
-  }>
-  childs: Array<{
-    operatsii_id: number
-    podraz_id: any
-    sostav_id: any
-    type_operatsii_id: any
-    summa: number
-  }>
+  budjet_id: number
+  date_saldo: string
 }

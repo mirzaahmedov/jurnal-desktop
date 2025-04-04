@@ -1,4 +1,4 @@
-export const requisitesQueryKeys = {
+export const RequisitesQueryKeys = {
   getAll: 'main-schet/getAll',
-  checkDuplicates: 'main-schet/checkDuplicates'
+  duplicates: 'main-schet/checkDuplicates'
 }

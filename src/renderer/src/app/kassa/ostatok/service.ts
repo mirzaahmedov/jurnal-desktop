@@ -1,4 +1,3 @@
-import type { KassaOstatokPayload } from './utils'
 import type { KassaOstatok, ResponseMeta } from '@/common/models'
 
 import { z } from 'zod'
@@ -22,35 +21,22 @@ interface KassaOstatokMeta extends ResponseMeta {
   to_summa_rasxod: number
 }
 
-export const kassaOstatokService = new CRUDService<
+export const KassaOstatokService = new CRUDService<
   KassaOstatok,
-  KassaOstatokPayload,
-  KassaOstatokPayload,
+  KassaOstatokFormValues,
+  KassaOstatokFormValues,
   KassaOstatokMeta
 >({
   endpoint: ApiEndpoints.kassa_saldo
 }).use(main_schet())
 
-export const KassaOstatokProvodkaFormSchema = withPreprocessor(
-  z.object({
-    spravochnik_operatsii_id: z.number(),
-    summa: z.number().min(1),
-    id_spravochnik_podrazdelenie: z.number().optional(),
-    id_spravochnik_sostav: z.number().optional(),
-    id_spravochnik_type_operatsii: z.number().optional()
-  })
-)
-
 export const KassaOstatokFormSchema = withPreprocessor(
   z.object({
-    doc_num: z.string(),
-    doc_date: z.string(),
-    opisanie: z.string().optional(),
-    prixod: z.boolean(),
-    rasxod: z.boolean(),
-    childs: z.array(KassaOstatokProvodkaFormSchema)
+    summa: z.number(),
+    year: z.number(),
+    month: z.number(),
+    main_schet_id: z.number().optional()
   })
 )
 
 export type KassaOstatokFormValues = z.infer<typeof KassaOstatokFormSchema>
-export type KassaOstatokProvodkaFormValues = z.infer<typeof KassaOstatokProvodkaFormSchema>

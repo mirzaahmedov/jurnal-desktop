@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-import { useOstatokStore } from './store'
+import { useSelectedMonthStore } from '@/common/features/selected-month/store'
 
 export const ostatokQueryKeys = {
   getAll: 'ostatok/all',
@@ -15,5 +15,5 @@ export const OstatokFiltersSchema = z.object({
 export type OstatokFiltersValues = z.infer<typeof OstatokFiltersSchema>
 
 export const defaultValues: OstatokFiltersValues = {
-  date: useOstatokStore.getState().minDate
+  date: useSelectedMonthStore.getState().startDate
 }

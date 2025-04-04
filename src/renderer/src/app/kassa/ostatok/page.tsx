@@ -9,53 +9,55 @@ import { toast } from 'react-toastify'
 
 import { FooterCell, FooterRow, GenericTable, SummaTotal, useTableSort } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
-import { SearchFilterDebounced } from '@/common/features/filters/search/search-filter-debounced'
-import { useSearchFilter } from '@/common/features/filters/search/search-filter-debounced'
 import { useRequisitesStore } from '@/common/features/requisites'
-import { useDates, usePagination } from '@/common/hooks'
+import { usePagination, useToggle } from '@/common/hooks'
 import { useLayoutStore } from '@/common/layout/store'
 import { formatNumber } from '@/common/lib/format'
 import { ListView } from '@/common/views'
 
 import { kassaOstatokColumns } from './columns'
-import { kassaOstatokQueryKeys } from './config'
-import { kassaOstatokService } from './service'
+import { KassaOstatokQueryKeys } from './config'
+import { KassaOstatokDialog } from './dialog'
+import { KassaOstatokFilters, useMonthFilter, useYearFilter } from './filters'
+import { KassaOstatokService } from './service'
 
 const KassaOstatokPage = () => {
-  const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
   const setLayout = useLayoutStore((store) => store.setLayout)
 
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const pagination = usePagination()
-  const dates = useDates()
+  const dialogToggle = useToggle()
 
-  const [search] = useSearchFilter()
+  const [year] = useYearFilter()
+  const [month] = useMonthFilter()
 
   const { confirm } = useConfirm()
-  const { sorting, handleSort, getColumnSorted } = useTableSort()
   const { t } = useTranslation(['app'])
+  const { budjet_id, main_schet_id } = useRequisitesStore()
+  const { sorting, handleSort, getColumnSorted } = useTableSort()
 
   const { data: kassaOstatokList, isFetching } = useQuery({
     queryKey: [
-      kassaOstatokQueryKeys.getAll,
+      KassaOstatokQueryKeys.getAll,
       {
         main_schet_id,
-        search,
+        budjet_id,
+        year,
+        month,
         ...sorting,
-        ...dates,
         ...pagination
       }
     ],
-    queryFn: kassaOstatokService.getAll
+    queryFn: KassaOstatokService.getAll
   })
   const { mutate: deleteOstatok, isPending } = useMutation({
-    mutationKey: [kassaOstatokQueryKeys.delete],
-    mutationFn: kassaOstatokService.delete,
+    mutationKey: [KassaOstatokQueryKeys.delete],
+    mutationFn: KassaOstatokService.delete,
     onSuccess(res) {
       toast.success(res?.message)
       queryClient.invalidateQueries({
-        queryKey: [kassaOstatokQueryKeys.getAll]
+        queryKey: [KassaOstatokQueryKeys.getAll]
       })
     }
   })
@@ -79,17 +81,14 @@ const KassaOstatokPage = () => {
           title: t('pages.organization')
         }
       ],
-      content: SearchFilterDebounced,
-      onCreate: () => {
-        navigate('create')
-      }
+      content: KassaOstatokFilters,
+      onCreate: dialogToggle.open
     })
-  }, [setLayout, t, navigate])
+  }, [setLayout, t, navigate, dialogToggle.open])
 
   return (
     <ListView>
       <ListView.Header>
-        <ListView.RangeDatePicker {...dates} />
         <SummaTotal className="mt-5">
           <SummaTotal.Value
             name={t('remainder-from')}
@@ -148,6 +147,11 @@ const KassaOstatokPage = () => {
           pageCount={kassaOstatokList?.meta?.pageCount ?? 0}
         />
       </ListView.Footer>
+      <KassaOstatokDialog
+        open={dialogToggle.isOpen}
+        onOpenChange={dialogToggle.setOpen}
+        selected={null}
+      />
     </ListView>
   )
 }

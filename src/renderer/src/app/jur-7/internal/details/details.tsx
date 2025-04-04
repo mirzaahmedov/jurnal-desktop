@@ -9,11 +9,11 @@ import { toast } from 'react-toastify'
 
 import { iznosQueryKeys } from '@/app/jur-7/iznos/config'
 import { ostatokQueryKeys } from '@/app/jur-7/ostatok'
-import { useOstatokStore } from '@/app/jur-7/ostatok/store'
 import { handleOstatokResponse, validateOstatokDate } from '@/app/jur-7/ostatok/utils'
 import { createResponsibleSpravochnik } from '@/app/jur-7/responsible/service'
 import { Form } from '@/common/components/ui/form'
 import { DocumentType } from '@/common/features/doc-num'
+import { useSelectedMonthStore } from '@/common/features/selected-month/store'
 import { useSnippets } from '@/common/features/snippents/use-snippets'
 import { useSpravochnik } from '@/common/features/spravochnik'
 import { formatDate, parseDate, withinMonth } from '@/common/lib/date'
@@ -38,7 +38,7 @@ const InternalDetails = ({ id, onSuccess: onSuccess }: InternalDetailsProps) => 
   const queryClient = useQueryClient()
 
   const { t } = useTranslation(['app'])
-  const { minDate, maxDate } = useOstatokStore()
+  const { startDate, endDate } = useSelectedMonthStore()
 
   const { snippets, addSnippet, removeSnippet } = useSnippets({
     ns: 'jur7_internal'
@@ -159,10 +159,10 @@ const InternalDetails = ({ id, onSuccess: onSuccess }: InternalDetailsProps) => 
 
     const docDate = parseDate(form.watch('doc_date'))
 
-    if (!docDate || !withinMonth(docDate, minDate)) {
-      form.setValue('doc_date', formatDate(minDate))
+    if (!docDate || !withinMonth(docDate, startDate)) {
+      form.setValue('doc_date', formatDate(startDate))
     }
-  }, [id, minDate, form])
+  }, [id, startDate, form])
 
   const { errors } = form.formState
   useEffect(() => {
@@ -182,8 +182,8 @@ const InternalDetails = ({ id, onSuccess: onSuccess }: InternalDetailsProps) => 
                 calendarProps={
                   id === 'create'
                     ? {
-                        fromMonth: minDate,
-                        toMonth: maxDate
+                        fromMonth: startDate,
+                        toMonth: endDate
                       }
                     : undefined
                 }

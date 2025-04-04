@@ -1,6 +1,8 @@
 import type { KassaOstatokFormValues } from './service'
 
-export const kassaOstatokQueryKeys = {
+import { useSelectedMonthStore } from '@/common/features/selected-month/store'
+
+export const KassaOstatokQueryKeys = {
   getById: 'kassa-saldo',
   getAll: 'kassa-saldo/all',
   create: 'kassa-saldo/create',
@@ -9,15 +11,7 @@ export const kassaOstatokQueryKeys = {
 }
 
 export const defaultValues: KassaOstatokFormValues = {
-  doc_date: '',
-  doc_num: '',
-  prixod: true,
-  rasxod: false,
-  opisanie: '',
-  childs: [
-    {
-      spravochnik_operatsii_id: 0,
-      summa: 0
-    }
-  ]
+  year: useSelectedMonthStore.getState().startDate.getFullYear(),
+  month: useSelectedMonthStore.getState().startDate.getMonth() + 1,
+  summa: 0
 }

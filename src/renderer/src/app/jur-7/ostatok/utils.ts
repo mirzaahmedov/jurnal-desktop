@@ -2,6 +2,7 @@ import { t } from 'i18next'
 import { toast } from 'react-toastify'
 
 import { ApiStatusCodes } from '@/common/features/crud'
+import { useSelectedMonthStore } from '@/common/features/selected-month/store'
 import { date_iso_regex, formatDate, parseDate, validateDate } from '@/common/lib/date'
 import { formatLocaleDate } from '@/common/lib/format'
 import { HttpResponseError } from '@/common/lib/http'
@@ -9,19 +10,19 @@ import { HttpResponseError } from '@/common/lib/http'
 import { type MonthValue, useOstatokStore } from './store'
 
 export const validateOstatokDate = (date: string) => {
-  const { minDate, maxDate } = useOstatokStore.getState()
+  const { startDate, endDate } = useSelectedMonthStore.getState()
   if (!validateDate(date)) {
     if (date_iso_regex.test(date)) {
       toast.error(t('date_does_not_exist'))
     }
     return false
   }
-  const isValid = minDate <= parseDate(date) && parseDate(date) <= maxDate
+  const isValid = startDate <= parseDate(date) && parseDate(date) <= endDate
   if (!isValid && date?.length === 10) {
     toast.error(
       t('out_of_range', {
-        minDate: formatLocaleDate(formatDate(minDate)),
-        maxDate: formatLocaleDate(formatDate(maxDate))
+        minDate: formatLocaleDate(formatDate(startDate)),
+        maxDate: formatLocaleDate(formatDate(endDate))
       })
     )
   }

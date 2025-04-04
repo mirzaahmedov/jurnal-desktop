@@ -18,7 +18,7 @@ import { Form, FormField, FormItem, FormLabel, FormMessage } from '@/common/comp
 import { useAuthenticationStore } from '@/common/features/auth'
 import { useConfirm } from '@/common/features/confirm'
 
-import { requisitesQueryKeys } from './config'
+import { RequisitesQueryKeys } from './config'
 import { getMainSchetsQuery } from './service'
 import { useRequisitesStore } from './store'
 
@@ -43,7 +43,7 @@ export const RequisitesDialog = ({ open, onOpenChange }: RequisitesDialogProps) 
   })
   const { data: schetList, isLoading: isLoadingSchets } = useQuery({
     queryKey: [
-      requisitesQueryKeys.getAll,
+      RequisitesQueryKeys.getAll,
       {
         budjet_id: form.watch('budjet_id')!,
         region_id: user?.region_id ?? 0

@@ -12,7 +12,6 @@ import DashboardPage from './dashboard/page'
 import HomePage from './home/page'
 import SigninPage from './sign-in'
 
-const KassaOstatokDetailsPage = lazy(() => import('./kassa/ostatok/details/page'))
 const KassaOstatokPage = lazy(() => import('./kassa/ostatok/page'))
 const PodotchetOstatokDetailsPage = lazy(() => import('./podotchet/ostatok/details/page'))
 const PodotchetOstatokPage = lazy(() => import('./podotchet/ostatok/page'))
@@ -198,10 +197,6 @@ export const routes: RouteObject[] = [
           {
             path: 'ostatok',
             element: <KassaOstatokPage />
-          },
-          {
-            path: 'ostatok/:id',
-            element: <KassaOstatokDetailsPage />
           }
         ]
       },

@@ -32,6 +32,7 @@ import {
 import { SearchFilterDebounced } from '@/common/features/filters/search/search-filter-debounced'
 import { useSearchFilter } from '@/common/features/filters/search/search-filter-debounced'
 import { useRequisitesStore } from '@/common/features/requisites'
+import { useSelectedMonthStore } from '@/common/features/selected-month/store'
 import { useSettingsStore } from '@/common/features/settings'
 import { useSpravochnik } from '@/common/features/spravochnik'
 import { usePagination, useToggle } from '@/common/hooks'
@@ -58,7 +59,8 @@ import {
 } from './utils'
 
 const OstatokPage = () => {
-  const { minDate, maxDate, queuedMonths } = useOstatokStore()
+  const { startDate, endDate } = useSelectedMonthStore()
+  const { queuedMonths } = useOstatokStore()
 
   const [deleteExistingDocumentError, setDeleteExistingDocumentError] = useState<{
     message: string
@@ -75,7 +77,7 @@ const OstatokPage = () => {
   }>()
 
   const [selectedRows, setSelectedRows] = useState<OstatokProduct[]>([])
-  const [selectedDate, setSelectedDate] = useState<undefined | Date>(minDate)
+  const [selectedDate, setSelectedDate] = useState<undefined | Date>(startDate)
 
   const dropdownToggle = useToggle()
   const selectedToggle = useToggle()
@@ -155,12 +157,12 @@ const OstatokPage = () => {
   }, [ostatokError])
   useEffect(() => {
     const date = form.getValues('date')
-    if (date && minDate < date && date < maxDate) {
+    if (date && startDate < date && date < endDate) {
       return
     }
-    form.setValue('date', minDate)
-    setSelectedDate(minDate)
-  }, [form, minDate, maxDate])
+    form.setValue('date', startDate)
+    setSelectedDate(startDate)
+  }, [form, startDate, endDate])
   useEffect(() => {
     setLayout({
       title: t('pages.ostatok'),
@@ -376,20 +378,20 @@ const OstatokPage = () => {
                     }
                     return false
                   }
-                  const isValid = minDate <= parseDate(date) && parseDate(date) <= maxDate
+                  const isValid = startDate <= parseDate(date) && parseDate(date) <= endDate
                   if (!isValid && date?.length === 10) {
                     toast.error(
                       t('out_of_range', {
-                        minDate: formatLocaleDate(formatDate(minDate)),
-                        maxDate: formatLocaleDate(formatDate(maxDate))
+                        startDate: formatLocaleDate(formatDate(startDate)),
+                        endDate: formatLocaleDate(formatDate(endDate))
                       })
                     )
                   }
                   return isValid
                 }}
                 calendarProps={{
-                  fromMonth: minDate,
-                  toMonth: maxDate
+                  fromMonth: startDate,
+                  toMonth: endDate
                 }}
               />
             )}

@@ -21,6 +21,7 @@ import { DownloadFile } from '@/common/features/file'
 import { SearchFilterDebounced } from '@/common/features/filters/search/search-filter-debounced'
 import { useSearchFilter } from '@/common/features/filters/search/search-filter-debounced'
 import { useRequisitesStore } from '@/common/features/requisites'
+import { useSelectedMonthStore } from '@/common/features/selected-month/store'
 import { useDates, usePagination } from '@/common/hooks'
 import { useLayoutStore } from '@/common/layout/store'
 import { formatDate } from '@/common/lib/date'
@@ -47,12 +48,13 @@ const Jurnal7PrixodPage = () => {
 
   const { t } = useTranslation(['app'])
   const { confirm } = useConfirm()
-  const { minDate, maxDate, queuedMonths } = useOstatokStore()
+  const { queuedMonths } = useOstatokStore()
+  const { startDate, endDate } = useSelectedMonthStore()
   const { sorting, handleSort, getColumnSorted } = useTableSort()
 
   const dates = useDates({
-    defaultFrom: formatDate(minDate),
-    defaultTo: formatDate(maxDate)
+    defaultFrom: formatDate(startDate),
+    defaultTo: formatDate(endDate)
   })
 
   const setLayout = useLayoutStore((store) => store.setLayout)
@@ -138,8 +140,8 @@ const Jurnal7PrixodPage = () => {
             {...dates}
             validateDate={validateOstatokDate}
             calendarProps={{
-              fromMonth: minDate,
-              toMonth: maxDate
+              fromMonth: startDate,
+              toMonth: endDate
             }}
           />
           {main_schet_id ? (

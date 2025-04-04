@@ -1,25 +1,18 @@
 import { create } from 'zustand'
 
-import { getFirstDayOfMonth, getLastDayOfMonth } from '@/common/lib/date'
-
 export interface MonthValue {
   year: number
   month: number
 }
 
 export interface OstatokStore {
-  minDate: Date
-  maxDate: Date
   queuedMonths: MonthValue[]
   clearQueue: VoidFunction
   enqueueMonth: (...values: MonthValue[]) => void
   dequeueMonth: (...values: MonthValue[]) => MonthValue[]
-  setDate: (date: Date) => void
 }
 
 export const useOstatokStore = create<OstatokStore>((set, get) => ({
-  minDate: getFirstDayOfMonth(),
-  maxDate: getLastDayOfMonth(),
   queuedMonths: [],
   enqueueMonth: (...values) => {
     const newValues = [...get().queuedMonths]
@@ -51,12 +44,6 @@ export const useOstatokStore = create<OstatokStore>((set, get) => ({
   },
   clearQueue() {
     set({ queuedMonths: [] })
-  },
-  setDate: (date: Date) => {
-    set({
-      minDate: getFirstDayOfMonth(date),
-      maxDate: getLastDayOfMonth(date)
-    })
   }
 }))
 

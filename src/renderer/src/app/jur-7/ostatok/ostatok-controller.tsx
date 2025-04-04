@@ -5,12 +5,11 @@ import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
-import { LoadingOverlay, Spinner } from '@/common/components'
-import { MonthPicker } from '@/common/components/month-picker'
+import { LoadingOverlay } from '@/common/components'
 import { Button } from '@/common/components/ui/button'
 import { useRequisitesStore } from '@/common/features/requisites'
-import { useBoundingClientRect, useLocationStore } from '@/common/hooks'
-import { formatDate, parseDate } from '@/common/lib/date'
+import { useSelectedMonthStore } from '@/common/features/selected-month/store'
+import { useBoundingClientRect } from '@/common/hooks'
 import { cn } from '@/common/lib/utils'
 
 import { iznosQueryKeys } from '../iznos/config'
@@ -20,11 +19,12 @@ import { useOstatokStore } from './store'
 
 export const OstatokController = () => {
   const queryClient = useQueryClient()
+  const startDate = useSelectedMonthStore((store) => store.startDate)
   const budjet_id = useRequisitesStore((store) => store.budjet_id)
 
   const { t } = useTranslation()
-  const { minDate, setDate, dequeueMonth } = useOstatokStore()
-  const { values, setValues } = useLocationStore()
+  const { dequeueMonth } = useOstatokStore()
+
   const { setElementRef } = useBoundingClientRect()
 
   const { pathname } = useLocation()
@@ -39,8 +39,8 @@ export const OstatokController = () => {
     queryKey: [
       ostatokQueryKeys.check,
       {
-        year: minDate.getFullYear(),
-        month: minDate.getMonth() + 1,
+        year: startDate.getFullYear(),
+        month: startDate.getMonth() + 1,
         budjet_id: budjet_id!
       },
       pathname
@@ -73,8 +73,8 @@ export const OstatokController = () => {
     e.preventDefault()
 
     createOstatok({
-      month: minDate.getMonth() + 1,
-      year: minDate.getFullYear()
+      month: startDate.getMonth() + 1,
+      year: startDate.getFullYear()
     })
   }
 
@@ -87,45 +87,21 @@ export const OstatokController = () => {
   return (
     <form
       ref={setElementRef}
-      className="flex flex-col gap-2 -m-2 p-2"
       onSubmit={handleSubmit}
     >
-      <div>
-        <MonthPicker
-          className={cn(
-            'w-56',
-            !checkResult?.data?.length &&
-              !isCheckingSaldo &&
-              isFetched &&
-              'bg-red-100 border-red-500 text-red-500 hover:bg-red-100 hover:border-red-500 hover:text-red-500'
-          )}
-          value={formatDate(minDate)}
-          onChange={(value) => {
-            setDate(parseDate(value))
-
-            Object.keys(values).forEach((pathname) => {
-              if (pathname.includes('journal-7')) {
-                setValues(pathname, {})
-              }
-            })
-          }}
-          name="saldo-date"
-          id="saldo-date"
-        />
-      </div>
       {isCreatingOstatok ? <LoadingOverlay /> : null}
       <Button
-        className="flex items-center gap-4"
         disabled={isCreatingOstatok}
-      >
-        {isCreatingOstatok ? (
-          <>
-            <Spinner className="text-white size-5 border-2" />
-            {t('create_saldo')}
-          </>
-        ) : (
-          t('create_saldo')
+        loading={isCreatingOstatok}
+        className={cn(
+          'w-full',
+          !checkResult?.data?.length &&
+            !isCheckingSaldo &&
+            isFetched &&
+            'bg-red-100 border-red-500 text-red-500 hover:bg-red-100 hover:border-red-500 hover:text-red-500'
         )}
+      >
+        {t('create_saldo')}
       </Button>
     </form>
   )

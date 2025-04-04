@@ -2,9 +2,7 @@ import type { KassaOstatok } from '@/common/models'
 
 import { type ColumnDef } from '@/common/components'
 import { IDCell } from '@/common/components/table/renderers/id'
-import { ProvodkaCell } from '@/common/components/table/renderers/provodka-operatsii'
-import { SummaCell } from '@/common/components/table/renderers/summa'
-import { formatLocaleDate } from '@/common/lib/format'
+import { getMonthName } from '@/common/lib/date'
 
 export const kassaOstatokColumns: ColumnDef<KassaOstatok>[] = [
   {
@@ -15,40 +13,10 @@ export const kassaOstatokColumns: ColumnDef<KassaOstatok>[] = [
     minWidth: 160
   },
   {
-    sort: true,
-    fit: true,
-    minWidth: 200,
-    key: 'doc_num'
+    key: 'year'
   },
   {
-    fit: true,
-    sort: true,
-    minWidth: 200,
-    key: 'doc_date',
-    renderCell: (row) => formatLocaleDate(row.doc_date)
-  },
-  {
-    numeric: true,
-    header: 'prixod',
-    key: 'prixod_summa',
-    minWidth: 200,
-    renderCell: (row) => (!row.prixod_summa ? '-' : <SummaCell summa={row.prixod_summa} />)
-  },
-  {
-    numeric: true,
-    header: 'rasxod',
-    key: 'rasxod_summa',
-    minWidth: 200,
-    renderCell: (row) => (!row.rasxod_summa ? '-' : <SummaCell summa={row.rasxod_summa} />)
-  },
-  {
-    minWidth: 200,
-    key: 'provodka',
-    renderCell: (row) => <ProvodkaCell provodki={row.provodki_array} />
-  },
-  {
-    fill: true,
-    minWidth: 350,
-    key: 'opisanie'
+    key: 'month',
+    renderCell: (row) => getMonthName(row.month)
   }
 ]

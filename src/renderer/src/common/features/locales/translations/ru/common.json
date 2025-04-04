@@ -161,6 +161,7 @@
   "something_foiz": "{{something}} (%)",
   "smeta_base": "Смета база",
   "region": "Регион",
+  "region_admin": "Регион админ",
   "user": "Пользователь",
   "login": "Логин",
   "password": "Пароль",

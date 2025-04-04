@@ -10,7 +10,7 @@ import { GenericTable } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
 import { SearchFilterDebounced } from '@/common/features/filters/search/search-filter-debounced'
 import { useSearchFilter } from '@/common/features/filters/search/search-filter-debounced'
-import { requisitesQueryKeys } from '@/common/features/requisites'
+import { RequisitesQueryKeys } from '@/common/features/requisites'
 import { DuplicateSchetsAlert } from '@/common/features/requisites/duplicate-schets-alert'
 import { usePagination } from '@/common/hooks'
 import { useToggle } from '@/common/hooks/use-toggle'
@@ -54,7 +54,7 @@ const MainSchetPage = () => {
         queryKey: [mainSchetQueryKeys.getAll]
       })
       queryClient.invalidateQueries({
-        queryKey: [requisitesQueryKeys.checkDuplicates]
+        queryKey: [RequisitesQueryKeys.duplicates]
       })
     }
   })

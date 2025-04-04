@@ -1,13 +1,19 @@
 import { create } from 'zustand'
 
+import { getFirstDayOfMonth, getLastDayOfMonth } from '@/common/lib/date'
+
 export interface SelectedMonthStore {
-  selectedMonth: Date
+  startDate: Date
+  endDate: Date
   setSelectedMonth: (month: Date) => void
-  resetSelectedMonth: () => void
 }
 
 export const useSelectedMonthStore = create<SelectedMonthStore>((set) => ({
-  selectedMonth: new Date(),
-  setSelectedMonth: (month: Date) => set({ selectedMonth: month }),
-  resetSelectedMonth: () => set({ selectedMonth: new Date() })
+  startDate: getFirstDayOfMonth(new Date()),
+  endDate: getLastDayOfMonth(new Date()),
+  setSelectedMonth: (month: Date) =>
+    set({
+      startDate: getFirstDayOfMonth(month),
+      endDate: getLastDayOfMonth(month)
+    })
 }))

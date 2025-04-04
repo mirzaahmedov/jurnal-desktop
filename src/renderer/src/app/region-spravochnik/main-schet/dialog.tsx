@@ -32,7 +32,7 @@ import {
   FormMessage
 } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
-import { requisitesQueryKeys } from '@/common/features/requisites'
+import { RequisitesQueryKeys } from '@/common/features/requisites'
 
 import { mainSchetQueryKeys } from './constants'
 import { MainSchetPayloadSchema, mainSchetService } from './service'
@@ -82,7 +82,7 @@ export const MainSchetDialog = ({
         queryKey: [mainSchetQueryKeys.getAll]
       })
       queryClient.invalidateQueries({
-        queryKey: [requisitesQueryKeys.checkDuplicates]
+        queryKey: [RequisitesQueryKeys.duplicates]
       })
       onChangeOpen(false)
     }
@@ -97,7 +97,7 @@ export const MainSchetDialog = ({
         queryKey: [mainSchetQueryKeys.getAll]
       })
       queryClient.invalidateQueries({
-        queryKey: [requisitesQueryKeys.checkDuplicates]
+        queryKey: [RequisitesQueryKeys.duplicates]
       })
       onChangeOpen(false)
     }

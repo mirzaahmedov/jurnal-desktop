@@ -1,5 +1,8 @@
 import type { User } from '@/common/models'
 
+import { Trans, useTranslation } from 'react-i18next'
+
+import { DataList } from '@/common/components/data-list'
 import { Avatar, AvatarFallback } from '@/common/components/ui/avatar'
 import { Button } from '@/common/components/ui/button'
 import { Popover, PopoverContent, PopoverTrigger } from '@/common/components/ui/popover'
@@ -8,38 +11,60 @@ export interface UserProfileProps {
   user: User
 }
 export const UserProfile = ({ user }: UserProfileProps) => {
+  const { t } = useTranslation()
   return (
-    <div className="px-2.5 flex items-center gap-4">
-      <Popover>
-        <PopoverTrigger asChild>
-          <Button
-            size="icon"
-            variant="ghost"
-            className="size-auto p-1 rounded-full"
-          >
-            <Avatar>
-              <AvatarFallback className="bg-brand text-brand-foreground">
-                {user.fio
-                  ?.split(' ')
-                  .filter((w) => Boolean(w?.trim()))
-                  .slice(0, 2)
-                  .map((w) => w?.[0]?.toUpperCase())}
-              </AvatarFallback>
-            </Avatar>
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent align="end">
-          <div className="flex flex-col gap-0.5">
-            <h6 className="text-base font-semibold">{user.fio}</h6>
-            <p className="text-xs font-medium text-slate-500">
-              {[
-                user.region_name,
-                user.role_name === 'region-admin' ? 'Регион админ' : user.role_name
-              ].join(' - ')}
-            </p>
-          </div>
-        </PopoverContent>
-      </Popover>
-    </div>
+    <Popover>
+      <PopoverTrigger asChild>
+        <Button
+          size="icon"
+          variant="ghost"
+          className="size-auto p-1 rounded-full"
+        >
+          <Avatar>
+            <AvatarFallback className="bg-brand text-brand-foreground">
+              {user.fio
+                ?.split(' ')
+                .filter((w) => Boolean(w?.trim()))
+                .slice(0, 2)
+                .map((w) => w?.[0]?.toUpperCase())}
+            </AvatarFallback>
+          </Avatar>
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent
+        align="end"
+        className="w-[22.5rem] p-8"
+      >
+        <div className="flex flex-col items-center">
+          <Avatar className="text-2xl !size-16">
+            <AvatarFallback className="bg-brand text-brand-foreground">
+              {user.fio
+                ?.split(' ')
+                .filter((w) => Boolean(w?.trim()))
+                .slice(0, 2)
+                .map((w) => w?.[0]?.toUpperCase())}
+            </AvatarFallback>
+          </Avatar>
+          <h6 className="text-xl text-center font-semibold mt-2">{user.fio}</h6>
+          <DataList
+            className="mt-4 w-full"
+            list={[
+              {
+                name: <Trans>login</Trans>,
+                value: user.login
+              },
+              {
+                name: <Trans>region</Trans>,
+                value: user.region_name
+              },
+              {
+                name: <Trans>role</Trans>,
+                value: user.role_name === 'region-admin' ? t('region_admin') : user.role_name
+              }
+            ]}
+          />
+        </div>
+      </PopoverContent>
+    </Popover>
   )
 }

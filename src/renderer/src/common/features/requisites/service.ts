@@ -24,8 +24,7 @@ export const getMainSchetsQuery = async (ctx: QueryFunctionContext<QueryKeyType>
       params: {
         budjet_id,
         region_id
-      },
-      withCredentials: false
+      }
     }
   )
   return res.data

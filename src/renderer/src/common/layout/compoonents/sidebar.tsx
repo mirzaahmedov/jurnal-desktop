@@ -165,14 +165,16 @@ const renderNavElement = (elem: null | NavElement, isCollapsed: boolean, rootPat
       {elem.noLink ? (
         <div
           className={cn(
-            'flex items-center py-3 gap-2.5 border-b border-slate-200 group-last:border-none',
+            'w-full flex items-center py-3 gap-2.5 border-b border-slate-200 group-last:border-none',
             isCollapsed && 'justify-center',
             elem.className
           )}
           title={String(elem.title)}
         >
           {elem.icon && <elem.icon className="size-5" />}
-          <span className={cn('font-bold text-sm', isCollapsed && 'hidden')}>{elem.title}</span>
+          <span className={cn('w-full font-bold text-sm', isCollapsed && 'hidden')}>
+            {elem.title}
+          </span>
         </div>
       ) : (
         <NavLink

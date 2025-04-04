@@ -16,6 +16,7 @@ import { useConfirm } from '@/common/features/confirm'
 import { SearchFilterDebounced } from '@/common/features/filters/search/search-filter-debounced'
 import { useSearchFilter } from '@/common/features/filters/search/search-filter-debounced'
 import { useRequisitesStore } from '@/common/features/requisites'
+import { useSelectedMonthStore } from '@/common/features/selected-month/store'
 import { useDates, usePagination } from '@/common/hooks'
 import { useLayoutStore } from '@/common/layout/store'
 import { formatDate } from '@/common/lib/date'
@@ -38,12 +39,13 @@ const InternalPage = () => {
 
   const { t } = useTranslation(['app'])
   const { confirm } = useConfirm()
-  const { minDate, maxDate, queuedMonths } = useOstatokStore()
+  const { queuedMonths } = useOstatokStore()
+  const { startDate, endDate } = useSelectedMonthStore()
   const { sorting, handleSort, getColumnSorted } = useTableSort()
 
   const dates = useDates({
-    defaultFrom: formatDate(minDate),
-    defaultTo: formatDate(maxDate)
+    defaultFrom: formatDate(startDate),
+    defaultTo: formatDate(endDate)
   })
 
   const { mutate: deleteInternal, isPending } = useMutation({
@@ -114,8 +116,8 @@ const InternalPage = () => {
           {...dates}
           validateDate={validateOstatokDate}
           calendarProps={{
-            fromMonth: minDate,
-            toMonth: maxDate
+            fromMonth: startDate,
+            toMonth: startDate
           }}
         />
       </ListView.Header>
