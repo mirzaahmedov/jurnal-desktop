@@ -1,8 +1,9 @@
 import { useEffect } from 'react'
 
-import { LoadingOverlay } from '@renderer/common/components'
 import { useQuery } from '@tanstack/react-query'
 import { Outlet, useNavigate } from 'react-router-dom'
+
+import { LoadingOverlay } from '@/common/components'
 
 import { requisitesQueryKeys } from './config'
 import { checkSchetsDuplicateQuery } from './service'

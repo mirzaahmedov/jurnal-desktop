@@ -1,19 +1,20 @@
 import type { EditorComponentType } from './types'
-import type { Operatsii, TypeSchetOperatsii } from '@renderer/common/models'
+import type { Operatsii, TypeSchetOperatsii } from '@/common/models'
 
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+
+import { useQuery } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
 
 import {
   createOperatsiiSpravochnik,
   getOperatsiiSchetOptionsQuery,
   operatsiiQueryKeys,
   operatsiiService
-} from '@renderer/app/super-admin/operatsii'
-import { AutoComplete } from '@renderer/common/components/auto-complete'
-import { SpravochnikInput, useSpravochnik } from '@renderer/common/features/spravochnik'
-import { useDebounceValue } from '@renderer/common/hooks'
-import { useQuery } from '@tanstack/react-query'
-import { useTranslation } from 'react-i18next'
+} from '@/app/super-admin/operatsii'
+import { AutoComplete } from '@/common/components/auto-complete'
+import { SpravochnikInput, useSpravochnik } from '@/common/features/spravochnik'
+import { useDebounceValue } from '@/common/hooks'
 
 type Filter<T extends object> = { [K in keyof T]: T[K] extends number ? K : never }
 

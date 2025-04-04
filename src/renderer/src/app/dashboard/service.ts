@@ -1,9 +1,9 @@
 import type { Dashboard } from './model'
-import type { PaginationParams } from '@renderer/common/hooks'
-import type { Response } from '@renderer/common/models'
+import type { PaginationParams } from '@/common/hooks'
+import type { Response } from '@/common/models'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 
-import { http } from '@renderer/common/lib/http'
+import { http } from '@/common/lib/http'
 
 export const getDashboardBudjetOptionsQuery = async () => {
   const res = await http.get<Response<Dashboard.Budjet[]>>('dashboard/budjet')

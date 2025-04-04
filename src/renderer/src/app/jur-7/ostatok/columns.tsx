@@ -1,11 +1,12 @@
-import type { OstatokProduct } from '@renderer/common/models/ostatok'
+import type { OstatokProduct } from '@/common/models/ostatok'
 
-import { type ColumnDef, Copyable } from '@renderer/common/components'
-import { DataList } from '@renderer/common/components/data-list'
-import { HoverInfoCell } from '@renderer/common/components/table/renderers'
-import { IDCell } from '@renderer/common/components/table/renderers/id'
-import { formatLocaleDate, formatNumber } from '@renderer/common/lib/format'
 import { Trans } from 'react-i18next'
+
+import { type ColumnDef, Copyable } from '@/common/components'
+import { DataList } from '@/common/components/data-list'
+import { HoverInfoCell } from '@/common/components/table/renderers'
+import { IDCell } from '@/common/components/table/renderers/id'
+import { formatLocaleDate, formatNumber } from '@/common/lib/format'
 
 export const ostatokProductColumns: ColumnDef<OstatokProduct>[] = [
   {

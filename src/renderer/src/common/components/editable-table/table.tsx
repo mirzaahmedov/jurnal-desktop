@@ -3,11 +3,12 @@ import type { FieldErrors } from 'react-hook-form'
 
 import { useImperativeHandle, useMemo, useRef, useState } from 'react'
 
-import { Button } from '@renderer/common/components/ui/button'
-import { Table, TableBody, TableFooter, TableHeader } from '@renderer/common/components/ui/table'
-import { cn } from '@renderer/common/lib/utils'
 import { CircleMinus, CirclePlus, SquareMinus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+
+import { Button } from '@/common/components/ui/button'
+import { Table, TableBody, TableFooter, TableHeader } from '@/common/components/ui/table'
+import { cn } from '@/common/lib/utils'
 
 import { EmptyList } from '../empty-states'
 import { getHeaderGroups } from '../generic-table/utils'

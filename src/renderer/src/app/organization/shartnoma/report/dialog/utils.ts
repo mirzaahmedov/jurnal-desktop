@@ -1,9 +1,9 @@
-import type { MainSchet, Organization } from '@renderer/common/models'
+import type { MainSchet, Organization } from '@/common/models'
 
-import { validateDate } from '@renderer/common/lib/date'
-import { formatLocaleDate } from '@renderer/common/lib/format'
 import i18next from 'i18next'
 
+import { validateDate } from '@/common/lib/date'
+import { formatLocaleDate } from '@/common/lib/format'
 import { numberToWords, roundNumberToTwoDecimalPlaces } from '@/common/lib/utils'
 
 type BuildContractPaymentDetailsTextParams = {

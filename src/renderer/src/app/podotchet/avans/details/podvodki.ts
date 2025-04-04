@@ -1,5 +1,5 @@
 import type { AdvanceReportPodvodkaPayloadType } from '../config'
-import type { EditableColumnDef } from '@renderer/common/components/editable-table'
+import type { EditableColumnDef } from '@/common/components/editable-table'
 
 import {
   createOperatsiiEditor,
@@ -7,8 +7,7 @@ import {
   createStaffEditor,
   createSummaEditor,
   createTypeOperatsiiEditor
-} from '@renderer/common/components/editable-table/editors'
-
+} from '@/common/components/editable-table/editors'
 import { TypeSchetOperatsii } from '@/common/models'
 
 export const podvodkaColumns: EditableColumnDef<AdvanceReportPodvodkaPayloadType>[] = [

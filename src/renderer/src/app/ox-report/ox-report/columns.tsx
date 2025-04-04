@@ -1,9 +1,9 @@
-import type { ColumnDef } from '@renderer/common/components'
-import type { OX } from '@renderer/common/models'
+import type { ColumnDef } from '@/common/components'
+import type { OX } from '@/common/models'
 
-import { Badge } from '@renderer/common/components/ui/badge'
-import { getMonthName } from '@renderer/common/lib/date'
-import { formatLocaleDateTime } from '@renderer/common/lib/format'
+import { Badge } from '@/common/components/ui/badge'
+import { getMonthName } from '@/common/lib/date'
+import { formatLocaleDateTime } from '@/common/lib/format'
 
 export const statusMap = {
   1: (

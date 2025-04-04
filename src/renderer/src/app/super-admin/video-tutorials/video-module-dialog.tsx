@@ -3,9 +3,6 @@ import type { VideoModule } from '@/common/models'
 import { useEffect } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Label } from '@renderer/common/components/ui/label'
-import { RadioGroup, RadioGroupItem } from '@renderer/common/components/ui/radio-group'
-import { capitalize } from '@renderer/common/lib/string'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -28,6 +25,9 @@ import {
   FormMessage
 } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
+import { Label } from '@/common/components/ui/label'
+import { RadioGroup, RadioGroupItem } from '@/common/components/ui/radio-group'
+import { capitalize } from '@/common/lib/string'
 
 import { videoModuleQueryKeys } from './config'
 import { VideoModuleFormSchema, type VideoModuleFormValues, VideoModuleService } from './service'

@@ -1,7 +1,7 @@
-import type { Mainbook } from '@renderer/common/models'
+import type { Mainbook } from '@/common/models'
 
-import { ApiEndpoints, CRUDService } from '@renderer/common/features/crud'
-import { budjet } from '@renderer/common/features/crud/middleware'
+import { ApiEndpoints, CRUDService } from '@/common/features/crud'
+import { budjet } from '@/common/features/crud/middleware'
 
 export interface MainbookPayloadChild {
   type_id: number

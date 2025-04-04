@@ -3,11 +3,11 @@ import type { Group } from '@/common/models'
 import { useEffect } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { createSmetaSpravochnik } from '@renderer/app/super-admin/smeta'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
+import { createSmetaSpravochnik } from '@/app/super-admin/smeta'
 import { FormElement } from '@/common/components/form'
 import { Button } from '@/common/components/ui/button'
 import {

@@ -8,17 +8,16 @@ export interface Breadcrumb {
   path?: string
   title: string
 }
-export interface LayoutState {
+
+export interface LayoutStore {
   title: string
   breadcrumbs?: Breadcrumb[]
   content?: ComponentType
   onCreate?: () => void
   onBack?: () => void
+  setLayout: (state: Omit<LayoutStore, 'setLayout'>) => void
 }
-export interface LayoutStore extends LayoutState {
-  setLayout(state: LayoutState): void
-}
-const useLayoutStore = create<LayoutStore>((set) => ({
+export const useLayoutStore = create<LayoutStore>((set) => ({
   title: '',
   setLayout: ({ title, content, onCreate, onBack, breadcrumbs }) =>
     set({
@@ -30,13 +29,13 @@ const useLayoutStore = create<LayoutStore>((set) => ({
     })
 }))
 
-type UseLayoutParams = {
+export type UseLayoutParams = {
   title: string
   content?: ComponentType
   onCreate?: () => void
   onBack?: () => void
 }
-const useLayout = ({ title, content, onCreate, onBack }: UseLayoutParams) => {
+export const useLayout = ({ title, content, onCreate, onBack }: UseLayoutParams) => {
   const { setLayout } = useLayoutStore()
 
   const onCreateCallback = useEventCallback(onCreate)
@@ -51,5 +50,3 @@ const useLayout = ({ title, content, onCreate, onBack }: UseLayoutParams) => {
     })
   }, [setLayout, title, content, onCreateCallback, onBackCallback])
 }
-
-export { useLayout, useLayoutStore }

@@ -1,5 +1,6 @@
 import { Text } from '@react-pdf/renderer'
-import { Flex } from '@renderer/common/components/pdf'
+
+import { Flex } from '@/common/components/pdf'
 
 const Header = () => {
   return (

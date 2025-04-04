@@ -1,8 +1,9 @@
 import { AspectRatio } from '@radix-ui/react-aspect-ratio'
-import { FormField } from '@renderer/common/components/ui/form'
-import { Input } from '@renderer/common/components/ui/input'
-import { withForm } from '@renderer/common/hoc'
-import { cn } from '@renderer/common/lib/utils'
+
+import { FormField } from '@/common/components/ui/form'
+import { Input } from '@/common/components/ui/input'
+import { withForm } from '@/common/hoc'
+import { cn } from '@/common/lib/utils'
 
 export const DocumentPaddingFields = withForm<
   {

@@ -1,8 +1,9 @@
-// import { Button } from '@renderer/common/components/ui/button'
-// import { useToggle } from '@renderer/common/hooks'
+// import { Button } from '@/common/components/ui/button'
+// import { useToggle } from '@/common/hooks'
 // import { ShartnomaSmetaGrafikGeneratePDFDocumentDialog } from './dialog/ShartnomaGrafikDialog'
 import { PDFViewer } from '@react-pdf/renderer'
-import { DocumentOrientation } from '@renderer/common/widget/form'
+
+import { DocumentOrientation } from '@/common/widget/form'
 
 import { ShartnomaGrafikPDFDocument } from './ShartnomaGrafik'
 import { data } from './data'

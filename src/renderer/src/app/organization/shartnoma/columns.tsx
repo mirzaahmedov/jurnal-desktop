@@ -1,8 +1,7 @@
 import type { Shartnoma } from '@/common/models'
 
-import { IDCell } from '@renderer/common/components/table/renderers/id'
-
 import { type ColumnDef } from '@/common/components'
+import { IDCell } from '@/common/components/table/renderers/id'
 import { formatLocaleDate, formatNumber } from '@/common/lib/format'
 
 const ShartnomaSmetaCell = (row: Shartnoma) => {

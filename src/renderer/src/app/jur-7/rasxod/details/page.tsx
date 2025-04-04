@@ -1,8 +1,9 @@
 import { useEffect } from 'react'
 
-import { useLayoutStore } from '@renderer/common/features/layout'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
+
+import { useLayoutStore } from '@/common/layout/store'
 
 import RasxodDetails from './details'
 

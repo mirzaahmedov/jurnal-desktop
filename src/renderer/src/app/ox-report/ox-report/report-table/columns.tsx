@@ -1,6 +1,6 @@
 import type { ReportTableProps } from './table'
-import type { Autocomplete } from '@renderer/common/lib/types'
-import type { OX } from '@renderer/common/models'
+import type { Autocomplete } from '@/common/lib/types'
+import type { OX } from '@/common/models'
 import type { ComponentType } from 'react'
 
 type ColumnDef = {

@@ -1,8 +1,10 @@
 import type { OstatokDeleteExistingSaldo } from './utils'
 import type { DialogProps } from '@radix-ui/react-dialog'
 
-import { Copyable } from '@renderer/common/components'
-import { DataList } from '@renderer/common/components/data-list'
+import { Trans, useTranslation } from 'react-i18next'
+
+import { Copyable } from '@/common/components'
+import { DataList } from '@/common/components/data-list'
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -10,8 +12,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle
-} from '@renderer/common/components/ui/alert-dialog'
-import { Trans, useTranslation } from 'react-i18next'
+} from '@/common/components/ui/alert-dialog'
 
 export interface DeleteExistingSaldoAlertProps extends DialogProps {
   message: string

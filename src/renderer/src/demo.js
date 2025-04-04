@@ -208,7 +208,7 @@
 
 // export { removeTrailingZeros, arrayStartsWith }
 
-// import type { Smeta } from '@renderer/common/models'
+// import type { Smeta } from '@/common/models'
 
 // type TreeNode = Smeta & {
 //   _levels: number[]

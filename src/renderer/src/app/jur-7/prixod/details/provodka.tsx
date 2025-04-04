@@ -2,21 +2,22 @@ import type { PrixodFormValues, PrixodProvodkaFormValues } from '../config'
 
 import { useRef } from 'react'
 
-import { createGroupSpravochnik } from '@renderer/app/super-admin/group/service'
-import { NumericInput } from '@renderer/common/components'
-import {
-  EditableTableCell,
-  EditableTableHead,
-  EditableTableRow
-} from '@renderer/common/components/editable-table'
-import { Checkbox } from '@renderer/common/components/ui/checkbox'
-import { Input } from '@renderer/common/components/ui/input'
-import { Table, TableBody, TableHeader } from '@renderer/common/components/ui/table'
-import { inputVariants, useSpravochnik } from '@renderer/common/features/spravochnik'
 import { type ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { useVirtualizer } from '@tanstack/react-virtual'
 import { type UseFormReturn, useFieldArray } from 'react-hook-form'
 import { Trans } from 'react-i18next'
+
+import { createGroupSpravochnik } from '@/app/super-admin/group/service'
+import { NumericInput } from '@/common/components'
+import {
+  EditableTableCell,
+  EditableTableHead,
+  EditableTableRow
+} from '@/common/components/editable-table'
+import { Checkbox } from '@/common/components/ui/checkbox'
+import { Input } from '@/common/components/ui/input'
+import { Table, TableBody, TableHeader } from '@/common/components/ui/table'
+import { inputVariants, useSpravochnik } from '@/common/features/spravochnik'
 
 type ProvodkaProps = {
   form: UseFormReturn<PrixodFormValues>

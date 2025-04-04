@@ -1,5 +1,5 @@
-import type { ColumnDef } from '@renderer/common/components'
-import type { Log } from '@renderer/common/models'
+import type { ColumnDef } from '@/common/components'
+import type { Log } from '@/common/models'
 
 export const logColumns: ColumnDef<Log>[] = [
   {

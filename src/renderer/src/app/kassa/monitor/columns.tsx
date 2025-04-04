@@ -1,11 +1,10 @@
 import type { ColumnDef } from '@/common/components'
 import type { KassaMonitoringType } from '@/common/models'
 
-import { IDCell } from '@renderer/common/components/table/renderers/id'
-import { ProvodkaCell } from '@renderer/common/components/table/renderers/provodka-operatsii'
-import { SummaCell } from '@renderer/common/components/table/renderers/summa'
-import { UserCell } from '@renderer/common/components/table/renderers/user'
-
+import { IDCell } from '@/common/components/table/renderers/id'
+import { ProvodkaCell } from '@/common/components/table/renderers/provodka-operatsii'
+import { SummaCell } from '@/common/components/table/renderers/summa'
+import { UserCell } from '@/common/components/table/renderers/user'
 import { formatLocaleDate } from '@/common/lib/format'
 
 export const columns: ColumnDef<KassaMonitoringType>[] = [

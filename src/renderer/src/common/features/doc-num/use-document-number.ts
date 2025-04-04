@@ -1,7 +1,8 @@
 import { useEffect } from 'react'
 
-import { useEventCallback } from '@renderer/common/hooks'
 import { useQuery } from '@tanstack/react-query'
+
+import { useEventCallback } from '@/common/hooks'
 
 import { type DocumentType, queryKeys } from './config'
 import { getDocumentNumberQuery } from './service'

@@ -1,6 +1,6 @@
 import type { KassaOstatokFormValues } from './service'
 
-import { normalizeEmptyFields } from '@renderer/common/lib/validation'
+import { normalizeEmptyFields } from '@/common/lib/validation'
 
 export interface KassaOstatokPayloadChild {
   operatsii_id: number

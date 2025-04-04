@@ -1,7 +1,7 @@
 import type { ColumnDef } from '@/common/components'
 import type { Budjet } from '@/common/models'
 
-import { IDCell } from '@renderer/common/components/table/renderers/id'
+import { IDCell } from '@/common/components/table/renderers/id'
 
 export const budgetColumns: ColumnDef<Budjet>[] = [
   {

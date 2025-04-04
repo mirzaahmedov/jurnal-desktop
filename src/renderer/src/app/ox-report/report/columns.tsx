@@ -1,7 +1,7 @@
-import type { ColumnDef } from '@renderer/common/components'
-import type { OX } from '@renderer/common/models'
+import type { ColumnDef } from '@/common/components'
+import type { OX } from '@/common/models'
 
-import { getMonthName } from '@renderer/common/lib/date'
+import { getMonthName } from '@/common/lib/date'
 
 export const oxReportColumns: ColumnDef<OX.Report>[] = [
   {

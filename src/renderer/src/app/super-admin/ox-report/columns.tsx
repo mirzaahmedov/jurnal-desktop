@@ -1,8 +1,8 @@
-import type { OX } from '@renderer/common/models'
+import type { OX } from '@/common/models'
 
-import { type ColumnDef, ReportStatus } from '@renderer/common/components'
-import { getMonthName } from '@renderer/common/lib/date'
-import { formatLocaleDateTime } from '@renderer/common/lib/format'
+import { type ColumnDef, ReportStatus } from '@/common/components'
+import { getMonthName } from '@/common/lib/date'
+import { formatLocaleDateTime } from '@/common/lib/format'
 
 export const columns: ColumnDef<OX.AdminReport>[] = [
   {

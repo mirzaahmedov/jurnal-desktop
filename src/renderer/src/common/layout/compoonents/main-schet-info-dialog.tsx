@@ -1,16 +1,11 @@
 import type { DialogProps } from '@radix-ui/react-dialog'
 
-import { mainSchetQueryKeys, mainSchetService } from '@renderer/app/region-spravochnik/main-schet'
-import { DataList } from '@renderer/common/components/data-list'
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle
-} from '@renderer/common/components/ui/dialog'
 import { useQuery } from '@tanstack/react-query'
 import { Trans } from 'react-i18next'
 
+import { mainSchetQueryKeys, mainSchetService } from '@/app/region-spravochnik/main-schet'
+import { DataList } from '@/common/components/data-list'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/common/components/ui/dialog'
 import { useRequisitesStore } from '@/common/features/requisites'
 
 export const MainSchetInfoDialog = (props: DialogProps) => {

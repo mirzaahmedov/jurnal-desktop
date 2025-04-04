@@ -2,17 +2,17 @@ import type { User } from '@/common/models'
 
 import { useEffect, useState } from 'react'
 
-import { SearchFilterDebounced } from '@renderer/common/features/filters/search/search-filter-debounced'
-import { useSearchFilter } from '@renderer/common/features/filters/search/search-filter-debounced'
-import { usePagination } from '@renderer/common/hooks'
-import { ListView } from '@renderer/common/views'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 
 import { GenericTable } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
-import { useLayoutStore } from '@/common/features/layout'
+import { SearchFilterDebounced } from '@/common/features/filters/search/search-filter-debounced'
+import { useSearchFilter } from '@/common/features/filters/search/search-filter-debounced'
+import { usePagination } from '@/common/hooks'
 import { useToggle } from '@/common/hooks/use-toggle'
+import { useLayoutStore } from '@/common/layout/store'
+import { ListView } from '@/common/views'
 
 import { adminUserColumns } from './columns'
 import { adminUserQueryKeys } from './constants'

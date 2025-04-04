@@ -1,7 +1,8 @@
-import { formatDate } from '@renderer/common/lib/date'
-import { withPreprocessor } from '@renderer/common/lib/validation'
-import { DocumentOrientation } from '@renderer/common/widget/form'
 import { z } from 'zod'
+
+import { formatDate } from '@/common/lib/date'
+import { withPreprocessor } from '@/common/lib/validation'
+import { DocumentOrientation } from '@/common/widget/form'
 
 export const ReportDialogFormSchema = withPreprocessor(
   z.object({

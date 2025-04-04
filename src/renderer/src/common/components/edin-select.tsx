@@ -1,8 +1,9 @@
 import type { SelectFieldProps } from './select-field'
 import type { Unit } from '@/common/models'
 
-import { unitQueryKeys, unitService } from '@renderer/app/super-admin/unit'
 import { useQuery } from '@tanstack/react-query'
+
+import { unitQueryKeys, unitService } from '@/app/super-admin/unit'
 
 import { SelectField } from './select-field'
 

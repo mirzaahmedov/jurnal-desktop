@@ -1,5 +1,6 @@
-import { withPreprocessor } from '@renderer/common/lib/validation'
 import { z } from 'zod'
+
+import { withPreprocessor } from '@/common/lib/validation'
 
 export const queryKeys = {
   getById: 'pokazat-uslugi',

@@ -1,10 +1,11 @@
 import type { RasxodFormValues, RasxodProvodkaFormValues } from '../config'
 import type { UseFormReturn } from 'react-hook-form'
 
-import { EditableTableHead, EditableTableRow } from '@renderer/common/components/editable-table'
-import { Table, TableBody, TableHeader } from '@renderer/common/components/ui/table'
 import { type ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { Trans } from 'react-i18next'
+
+import { EditableTableHead, EditableTableRow } from '@/common/components/editable-table'
+import { Table, TableBody, TableHeader } from '@/common/components/ui/table'
 
 type ProvodkaProps = {
   form: UseFormReturn<RasxodFormValues>

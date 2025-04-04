@@ -1,9 +1,10 @@
-import { GenericTable } from '@renderer/common/components'
-import { useLayout } from '@renderer/common/features/layout'
-import { useDates } from '@renderer/common/hooks'
-import { ListView } from '@renderer/common/views'
 import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
+
+import { GenericTable } from '@/common/components'
+import { useDates } from '@/common/hooks'
+import { useLayout } from '@/common/layout/store'
+import { ListView } from '@/common/views'
 
 import { logColumns } from './columns'
 import { logQueryKeys } from './config'

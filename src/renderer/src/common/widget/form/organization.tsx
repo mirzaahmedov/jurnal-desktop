@@ -4,14 +4,14 @@ import type { UseFormReturn } from 'react-hook-form'
 
 import { useEffect } from 'react'
 
-import { SelectField } from '@renderer/common/components'
-import { FormElement } from '@renderer/common/components/form'
-import { Button } from '@renderer/common/components/ui/button'
-import { FormField } from '@renderer/common/components/ui/form'
-import { Input } from '@renderer/common/components/ui/input'
 import { CircleX } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
+import { SelectField } from '@/common/components'
+import { FormElement } from '@/common/components/form'
+import { Button } from '@/common/components/ui/button'
+import { FormField } from '@/common/components/ui/form'
+import { Input } from '@/common/components/ui/input'
 import { SpravochnikField, SpravochnikFields } from '@/common/features/spravochnik'
 
 export interface OrganizationFieldsProps {

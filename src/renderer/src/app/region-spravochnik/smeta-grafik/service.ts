@@ -1,11 +1,10 @@
 import type { SmetaGrafikForm } from './constants'
+import type { ColumnDef } from '@/common/components'
+import type { SpravochnikHookOptions } from '@/common/features/spravochnik'
 import type { SmetaGrafik } from '@/common/models'
-import type { ColumnDef } from '@renderer/common/components'
-import type { SpravochnikHookOptions } from '@renderer/common/features/spravochnik'
-
-import { extendObject } from '@renderer/common/lib/utils'
 
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
+import { extendObject } from '@/common/lib/utils'
 
 export const smetaGrafikService = new CRUDService<SmetaGrafik, SmetaGrafikForm>({
   endpoint: ApiEndpoints.smeta_grafik

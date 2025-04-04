@@ -1,10 +1,11 @@
 import type { ButtonHTMLAttributes, HTMLAttributes } from 'react'
 
-import { LoadingOverlay, Spinner } from '@renderer/common/components'
-import { Button } from '@renderer/common/components/ui/button'
-import { cn } from '@renderer/common/lib/utils'
 import { CircleCheck } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+
+import { LoadingOverlay, Spinner } from '@/common/components'
+import { Button } from '@/common/components/ui/button'
+import { cn } from '@/common/lib/utils'
 
 type DetailsViewProps = HTMLAttributes<HTMLElement>
 export const DetailsView = ({ children, className, ...props }: DetailsViewProps) => {

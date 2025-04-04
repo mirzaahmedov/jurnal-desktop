@@ -1,9 +1,10 @@
 import type { MainbookAutoFill, MainbookAutoFillSubChild, MainbookType } from './service'
-import type { EditableColumnDef } from '@renderer/common/components/editable-table'
-import type { Mainbook } from '@renderer/common/models'
+import type { EditableColumnDef } from '@/common/components/editable-table'
+import type { Mainbook } from '@/common/models'
 
-import { createNumberEditor } from '@renderer/common/components/editable-table/editors'
 import { t } from 'i18next'
+
+import { createNumberEditor } from '@/common/components/editable-table/editors'
 
 export const transformMainbookAutoFillData = (types: MainbookAutoFill[]) => {
   const schetsMap = new Map<string, { id: number; child: MainbookAutoFillSubChild }[]>()

@@ -1,20 +1,17 @@
-import type { RealExpenses } from '@renderer/common/models'
+import type { RealExpenses } from '@/common/models'
 
 import { useMemo } from 'react'
 
-import { Button } from '@renderer/common/components/ui/button'
-import { useConfirm } from '@renderer/common/features/confirm'
-import { useLayout } from '@renderer/common/features/layout'
-import { toast } from '@renderer/common/hooks'
-import {
-  useQueryBudjetId,
-  useQueryDateParams,
-  useQueryRegionId
-} from '@renderer/common/lib/query-params'
-import { DetailsView } from '@renderer/common/views'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
+
+import { Button } from '@/common/components/ui/button'
+import { useConfirm } from '@/common/features/confirm'
+import { toast } from '@/common/hooks'
+import { useLayout } from '@/common/layout/store'
+import { useQueryBudjetId, useQueryDateParams, useQueryRegionId } from '@/common/lib/query-params'
+import { DetailsView } from '@/common/views'
 
 import { queryKeys } from '../config'
 import { ReportTable } from '../report-table'

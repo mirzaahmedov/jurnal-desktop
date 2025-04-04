@@ -1,5 +1,5 @@
 import type { ShartnomaFormValues } from './service'
-import type { Shartnoma } from '@renderer/common/models'
+import type { Shartnoma } from '@/common/models'
 
 export const shartnomaQueryKeys = {
   getById: 'shartnoma',

@@ -1,7 +1,6 @@
-import { SearchFilterDebounced } from '@renderer/common/features/filters/search/search-filter-debounced'
-import { useLocationState } from '@renderer/common/hooks/use-location-state'
-
 import { SelectField } from '@/common/components'
+import { SearchFilterDebounced } from '@/common/features/filters/search/search-filter-debounced'
+import { useLocationState } from '@/common/hooks/use-location-state'
 import { TypeSchetOperatsii } from '@/common/models'
 
 import { operatsiiTypeSchetOptions } from './config'

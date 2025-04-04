@@ -3,11 +3,12 @@ import type { ShartnomaSmetaGrafikOptions } from '../types'
 import { useEffect, useState } from 'react'
 
 import { Text } from '@react-pdf/renderer'
-import { Table } from '@renderer/common/components/pdf'
-import { monthNames } from '@renderer/common/data/month'
-import { formatNumber } from '@renderer/common/lib/format'
-import { mergeStyles } from '@renderer/common/lib/utils'
 import { useTranslation } from 'react-i18next'
+
+import { Table } from '@/common/components/pdf'
+import { monthNames } from '@/common/data/month'
+import { formatNumber } from '@/common/lib/format'
+import { mergeStyles } from '@/common/lib/utils'
 
 const ScheduleCell: typeof Table.Cell = ({ children, style, ...props }) => {
   return (

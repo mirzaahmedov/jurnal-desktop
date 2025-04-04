@@ -1,25 +1,25 @@
 import { useEffect } from 'react'
 
-import { useOstatokStore } from '@renderer/app/jur-7/ostatok/store'
-import {
-  handleOstatokError,
-  handleOstatokResponse,
-  validateOstatokDate
-} from '@renderer/app/jur-7/ostatok/utils'
-import { SearchFilterDebounced } from '@renderer/common/features/filters/search/search-filter-debounced'
-import { useSearchFilter } from '@renderer/common/features/filters/search/search-filter-debounced'
-import { useRequisitesStore } from '@renderer/common/features/requisites'
-import { useDates, usePagination } from '@renderer/common/hooks'
-import { formatDate } from '@renderer/common/lib/date'
-import { ListView } from '@renderer/common/views'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
+import { useOstatokStore } from '@/app/jur-7/ostatok/store'
+import {
+  handleOstatokError,
+  handleOstatokResponse,
+  validateOstatokDate
+} from '@/app/jur-7/ostatok/utils'
 import { GenericTable, useTableSort } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
-import { useLayoutStore } from '@/common/features/layout'
+import { SearchFilterDebounced } from '@/common/features/filters/search/search-filter-debounced'
+import { useSearchFilter } from '@/common/features/filters/search/search-filter-debounced'
+import { useRequisitesStore } from '@/common/features/requisites'
+import { useDates, usePagination } from '@/common/hooks'
+import { useLayoutStore } from '@/common/layout/store'
+import { formatDate } from '@/common/lib/date'
+import { ListView } from '@/common/views'
 
 import { iznosQueryKeys } from '../iznos/config'
 import { ostatokQueryKeys } from '../ostatok'

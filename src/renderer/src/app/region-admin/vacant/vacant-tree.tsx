@@ -1,16 +1,17 @@
-import type { Vacant } from '@renderer/common/models/vacant'
+import type { Vacant } from '@/common/models/vacant'
 
 import { CaretDownIcon } from '@radix-ui/react-icons'
-import { EmptyList } from '@renderer/common/components/empty-states'
-import { Button } from '@renderer/common/components/ui/button'
-import { Checkbox } from '@renderer/common/components/ui/checkbox'
+
+import { EmptyList } from '@/common/components/empty-states'
+import { Button } from '@/common/components/ui/button'
+import { Checkbox } from '@/common/components/ui/checkbox'
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger
-} from '@renderer/common/components/ui/collapsible'
-import { type RelationTreeNode } from '@renderer/common/lib/tree/relation-tree'
-import { cn } from '@renderer/common/lib/utils'
+} from '@/common/components/ui/collapsible'
+import { type RelationTreeNode } from '@/common/lib/tree/relation-tree'
+import { cn } from '@/common/lib/utils'
 
 type VacantTreeNode = RelationTreeNode<Vacant, number | null>
 

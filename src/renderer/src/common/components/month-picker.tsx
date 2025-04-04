@@ -1,13 +1,14 @@
 import { useState } from 'react'
 
-import { Button, type ButtonProps, buttonVariants } from '@renderer/common/components/ui/button'
-import { formatDate, parseDate } from '@renderer/common/lib/date'
-import { cn } from '@renderer/common/lib/utils'
 import { add, eachMonthOfInterval, endOfYear, format, parse } from 'date-fns'
 import { ru } from 'date-fns/locale/ru'
 import { uz } from 'date-fns/locale/uz'
 import { CalendarIcon, ChevronLeft, ChevronRight } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+
+import { Button, type ButtonProps, buttonVariants } from '@/common/components/ui/button'
+import { formatDate, parseDate } from '@/common/lib/date'
+import { cn } from '@/common/lib/utils'
 
 import { useToggle } from '../hooks'
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover'

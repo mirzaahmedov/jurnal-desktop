@@ -1,6 +1,6 @@
 import type { PodotchetOstatokFormValues } from './service'
 
-import { normalizeEmptyFields } from '@renderer/common/lib/validation'
+import { normalizeEmptyFields } from '@/common/lib/validation'
 
 export interface OrganizationOstatokPayloadChild {
   operatsii_id: number

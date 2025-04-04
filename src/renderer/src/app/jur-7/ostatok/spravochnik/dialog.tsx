@@ -1,25 +1,26 @@
+import type { OstatokProduct } from '@/common/models'
 import type { DialogProps } from '@radix-ui/react-dialog'
-import type { OstatokProduct } from '@renderer/common/models'
 
 import { useEffect, useMemo, useState } from 'react'
 
-import { GenericTable, LoadingOverlay } from '@renderer/common/components'
-import { Pagination } from '@renderer/common/components/pagination'
-import { SearchInputDebounced } from '@renderer/common/components/search-input-debounced'
-import { Badge } from '@renderer/common/components/ui/badge'
-import { Button } from '@renderer/common/components/ui/button'
+import { useQuery } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
+
+import { GenericTable, LoadingOverlay } from '@/common/components'
+import { Pagination } from '@/common/components/pagination'
+import { SearchInputDebounced } from '@/common/components/search-input-debounced'
+import { Badge } from '@/common/components/ui/badge'
+import { Button } from '@/common/components/ui/button'
 import {
   Dialog,
   DialogContent,
   DialogFooter,
   DialogHeader,
   DialogTitle
-} from '@renderer/common/components/ui/dialog'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@renderer/common/components/ui/tabs'
-import { useRequisitesStore } from '@renderer/common/features/requisites'
-import { usePagination } from '@renderer/common/hooks'
-import { useQuery } from '@tanstack/react-query'
-import { useTranslation } from 'react-i18next'
+} from '@/common/components/ui/dialog'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/common/components/ui/tabs'
+import { useRequisitesStore } from '@/common/features/requisites'
+import { usePagination } from '@/common/hooks'
 
 import { ostatokProductColumns } from '../columns'
 import { ostatokQueryKeys } from '../config'

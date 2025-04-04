@@ -1,17 +1,7 @@
-import type { NavElement } from './config'
+import type { NavElement } from '../config'
 
 import { useEffect, useState } from 'react'
 
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger
-} from '@renderer/common/components/ui/accordion'
-import { Badge } from '@renderer/common/components/ui/badge'
-import { Button } from '@renderer/common/components/ui/button'
-import { useUpdateManagerStore } from '@renderer/common/features/update-manager'
-import { cn } from '@renderer/common/lib/utils'
 import logo from '@resources/logo.svg'
 import { ChevronsLeft, ChevronsRight, RefreshCcw } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
@@ -19,8 +9,19 @@ import { NavLink } from 'react-router-dom'
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 
-import { Spinner } from '../components'
-import { getNavElements } from './config'
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger
+} from '@/common/components/ui/accordion'
+import { Badge } from '@/common/components/ui/badge'
+import { Button } from '@/common/components/ui/button'
+import { useUpdateManagerStore } from '@/common/features/update-manager'
+import { cn } from '@/common/lib/utils'
+
+import { Spinner } from '../../components'
+import { getNavElements } from '../config'
 
 export interface SidebarStore {
   isCollapsed: boolean
@@ -41,7 +42,7 @@ export const useSidebarStore = create(
   )
 )
 
-const Sidebar = () => {
+export const Sidebar = () => {
   const [version, setVersion] = useState('')
 
   const { t } = useTranslation(['app'])
@@ -204,5 +205,3 @@ const ApplicationBadge = () => {
       return null
   }
 }
-
-export default Sidebar

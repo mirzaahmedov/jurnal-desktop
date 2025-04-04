@@ -2,13 +2,13 @@ import type { Video } from '@/common/models'
 
 import { useEffect, useState } from 'react'
 
-import { useLayoutStore } from '@renderer/common/features/layout'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 
 import { useConfirm } from '@/common/features/confirm'
 import { useToggle } from '@/common/hooks/use-toggle'
+import { useLayoutStore } from '@/common/layout/store'
 
 import { videoQueryKeys } from './config'
 import { VideoService } from './service'

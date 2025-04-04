@@ -1,14 +1,14 @@
 import type { FormEditableFieldsComponent } from './types'
-import type { UseSnippetsReturn } from '@renderer/common/features/snippents/use-snippets'
+import type { UseSnippetsReturn } from '@/common/features/snippents/use-snippets'
 import type { Control, UseFormReturn } from 'react-hook-form'
 
-import { SelectSnippetDialog } from '@renderer/common/features/snippents/select-snippet-dialog'
-import { useToggle } from '@renderer/common/hooks'
 import { useTranslation } from 'react-i18next'
 
 import { FormElement } from '@/common/components/form'
 import { FormField } from '@/common/components/ui/form'
 import { Textarea } from '@/common/components/ui/textarea'
+import { SelectSnippetDialog } from '@/common/features/snippents/select-snippet-dialog'
+import { useToggle } from '@/common/hooks'
 
 interface RequiredOpisanieFields {
   opisanie?: string

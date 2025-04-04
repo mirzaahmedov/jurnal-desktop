@@ -1,16 +1,17 @@
-import type { Video } from '@renderer/common/models'
+import type { Video } from '@/common/models'
 
-import { Button } from '@renderer/common/components/ui/button'
+import { Ellipsis, Pencil, Trash2 } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
+
+import { Button } from '@/common/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger
-} from '@renderer/common/components/ui/dropdown-menu'
-import { VideoPlayer } from '@renderer/common/components/video-player'
-import { formatLocaleDateTime } from '@renderer/common/lib/format'
-import { Ellipsis, Pencil, Trash2 } from 'lucide-react'
-import { useTranslation } from 'react-i18next'
+} from '@/common/components/ui/dropdown-menu'
+import { VideoPlayer } from '@/common/components/video-player'
+import { formatLocaleDateTime } from '@/common/lib/format'
 
 import { getVideoURL } from './utils'
 

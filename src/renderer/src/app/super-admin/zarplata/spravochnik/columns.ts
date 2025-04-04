@@ -1,7 +1,7 @@
-import type { ColumnDef } from '@renderer/common/components'
-import type { Zarplata } from '@renderer/common/models'
+import type { ColumnDef } from '@/common/components'
+import type { Zarplata } from '@/common/models'
 
-import { IDCell } from '@renderer/common/components/table/renderers/id'
+import { IDCell } from '@/common/components/table/renderers/id'
 
 export const columnDefs: ColumnDef<Zarplata.Spravochnik>[] = [
   {

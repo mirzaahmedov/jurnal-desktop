@@ -1,13 +1,15 @@
-import { GenericTable } from '@renderer/common/components'
-import { useConfirm } from '@renderer/common/features/confirm'
-import { useLayout } from '@renderer/common/features/layout'
-import { useRequisitesStore } from '@renderer/common/features/requisites'
-import { toast } from '@renderer/common/hooks'
-import { serializeDateParams } from '@renderer/common/lib/query-params'
-import type { RealExpenses } from '@renderer/common/models'
-import { ListView } from '@renderer/common/views'
+import type { RealExpenses } from '@/common/models'
+
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
+
+import { GenericTable } from '@/common/components'
+import { useConfirm } from '@/common/features/confirm'
+import { useRequisitesStore } from '@/common/features/requisites'
+import { toast } from '@/common/hooks'
+import { useLayout } from '@/common/layout/store'
+import { serializeDateParams } from '@/common/lib/query-params'
+import { ListView } from '@/common/views'
 
 import { expensesReportColumns } from './columns'
 import { realExpensesReportQueryKeys } from './config'

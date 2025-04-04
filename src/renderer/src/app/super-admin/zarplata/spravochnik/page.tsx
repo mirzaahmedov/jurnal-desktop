@@ -1,17 +1,19 @@
-import type { Zarplata } from '@renderer/common/models'
+import type { Zarplata } from '@/common/models'
 
 import { useEffect, useState } from 'react'
 
-import { GenericTable } from '@renderer/common/components'
-import { useLayoutStore } from '@renderer/common/features/layout'
-import { useLocationState, usePagination, useToggle } from '@renderer/common/hooks'
-import { ListView } from '@renderer/common/views'
 import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 
+import { GenericTable } from '@/common/components'
+import { useSearchFilter } from '@/common/features/filters/search/search-filter-debounced'
+import { useToggle } from '@/common/hooks'
+import { useLayoutStore } from '@/common/layout/store'
+import { ListView } from '@/common/views'
+
 import { columnDefs } from './columns'
 import { ZarplataSpravochnikDialog } from './dialog'
-import { SpravochnikFilters } from './filters'
+import { SpravochnikFilters, useTypeFilter } from './filters'
 import { ZarplataSpravochnikService } from './service'
 
 const { queryKeys } = ZarplataSpravochnikService
@@ -20,19 +22,18 @@ const ZarplataSpravochnikPage = () => {
   const { t } = useTranslation(['app'])
 
   const [selected, setSelected] = useState<Zarplata.Spravochnik>()
-  const [typeCode] = useLocationState<number | undefined>('type')
+  const [search] = useSearchFilter()
+  const [typeCode] = useTypeFilter()
 
   const dialogToggle = useToggle()
-  const pagination = usePagination()
   const setLayout = useLayoutStore((store) => store.setLayout)
 
   const { data: spravochniks, isFetching } = useQuery({
     queryKey: [
       queryKeys.getAll,
       {
-        PageIndex: pagination.page,
-        PageSize: pagination.limit,
-        types_type_code: typeCode!
+        types_type_code: typeCode!,
+        name: search
       }
     ],
     queryFn: ZarplataSpravochnikService.getAll,

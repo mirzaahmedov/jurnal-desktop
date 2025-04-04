@@ -1,10 +1,10 @@
 import type { InputHTMLAttributes } from 'react'
 
-import { SearchFilterDebounced } from '@renderer/common/features/filters/search/search-filter-debounced'
-import { useLocationState } from '@renderer/common/hooks'
 import { useTranslation } from 'react-i18next'
 
 import { SelectField } from '@/common/components/select-field'
+import { SearchFilterDebounced } from '@/common/features/filters/search/search-filter-debounced'
+import { useLocationState } from '@/common/hooks'
 
 export const useGroupNumberFilter = () => {
   return useLocationState('group_number', 'all')

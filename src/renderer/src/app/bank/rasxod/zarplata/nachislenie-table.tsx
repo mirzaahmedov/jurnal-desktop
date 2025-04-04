@@ -1,9 +1,9 @@
 import type { Nachislenie } from '@/common/models'
 
-import { useAuthenticationStore } from '@renderer/common/features/auth'
 import { useQuery } from '@tanstack/react-query'
 
 import { GenericTable, LoadingOverlay } from '@/common/components'
+import { useAuthenticationStore } from '@/common/features/auth'
 
 import { nachieslenieColumns } from './columns'
 import { NachislenieQueryKeys } from './config'

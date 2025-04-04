@@ -1,6 +1,6 @@
 import type { EditorComponentType } from './editors'
 import type { ChangeContext, DeleteContext } from './editors/types'
-import type { Autocomplete } from '@renderer/common/lib/types'
+import type { Autocomplete } from '@/common/lib/types'
 import type { ReactNode, RefObject } from 'react'
 import type { FieldErrors } from 'react-hook-form'
 

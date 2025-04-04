@@ -1,9 +1,8 @@
 import type { OrganizationFormValues } from './service'
-import type { Organization } from '@renderer/common/models'
+import type { Organization } from '@/common/models'
 
 import { type FormEventHandler, type ReactNode, useState } from 'react'
 
-import { Button } from '@renderer/common/components/ui/button'
 import { useQuery } from '@tanstack/react-query'
 import { Pencil, Plus, Trash } from 'lucide-react'
 import { type UseFormReturn, useFieldArray } from 'react-hook-form'
@@ -14,6 +13,7 @@ import { bankQueryKeys } from '@/app/super-admin/bank/config'
 import { bankService } from '@/app/super-admin/bank/service'
 import { AutoComplete } from '@/common/components'
 import { FormElement } from '@/common/components/form'
+import { Button } from '@/common/components/ui/button'
 import { Form, FormControl, FormField, FormLabel } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
 

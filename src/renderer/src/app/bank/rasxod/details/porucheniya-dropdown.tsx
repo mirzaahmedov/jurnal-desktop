@@ -1,20 +1,21 @@
 import type { RasxodFormValues } from '../service'
-import type { MainSchet, Organization } from '@renderer/common/models'
+import type { MainSchet, Organization } from '@/common/models'
 import type { ButtonHTMLAttributes } from 'react'
 
-import { Button } from '@renderer/common/components/ui/button'
+import { Download } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
+
+import { Button } from '@/common/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger
-} from '@renderer/common/components/ui/dropdown-menu'
-import { GenerateFile } from '@renderer/common/features/file'
-import { useToggle } from '@renderer/common/hooks'
-import { formatLocaleDate } from '@renderer/common/lib/format'
-import { numberToWords } from '@renderer/common/lib/utils'
-import { Download } from 'lucide-react'
-import { useTranslation } from 'react-i18next'
+} from '@/common/components/ui/dropdown-menu'
+import { GenerateFile } from '@/common/features/file'
+import { useToggle } from '@/common/hooks'
+import { formatLocaleDate } from '@/common/lib/format'
+import { numberToWords } from '@/common/lib/utils'
 
 import { PorucheniyaPDFDocument } from '../report'
 import { PorucheniyaType } from '../report/PaperSheet'

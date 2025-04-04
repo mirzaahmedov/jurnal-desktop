@@ -1,18 +1,19 @@
-import type { Pereotsenka } from '@renderer/common/models'
+import type { Pereotsenka } from '@/common/models'
 
 import { useEffect, useState } from 'react'
 
-import { GenericTable } from '@renderer/common/components'
-import { useConfirm } from '@renderer/common/features/confirm'
-import { SearchFilterDebounced } from '@renderer/common/features/filters/search/search-filter-debounced'
-import { useSearchFilter } from '@renderer/common/features/filters/search/search-filter-debounced'
-import { useLayoutStore } from '@renderer/common/features/layout'
-import { usePagination } from '@renderer/common/hooks'
-import { useToggle } from '@renderer/common/hooks/use-toggle'
-import { ListView } from '@renderer/common/views'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
+
+import { GenericTable } from '@/common/components'
+import { useConfirm } from '@/common/features/confirm'
+import { SearchFilterDebounced } from '@/common/features/filters/search/search-filter-debounced'
+import { useSearchFilter } from '@/common/features/filters/search/search-filter-debounced'
+import { usePagination } from '@/common/hooks'
+import { useToggle } from '@/common/hooks/use-toggle'
+import { useLayoutStore } from '@/common/layout/store'
+import { ListView } from '@/common/views'
 
 import { pereotsenkaColumns } from './columns'
 import { pereotsenkaQueryKeys } from './config'

@@ -1,12 +1,13 @@
 import type { ShartnomaFormValues } from '../service'
-import type { FormEditableFieldsComponent } from '@renderer/common/widget/form'
+import type { FormEditableFieldsComponent } from '@/common/widget/form'
 import type { Control } from 'react-hook-form'
 
-import { Fieldset } from '@renderer/common/components'
-import { FormControl, FormField, FormItem, FormLabel } from '@renderer/common/components/ui/form'
-import { Switch } from '@renderer/common/components/ui/switch'
-import { cn } from '@renderer/common/lib/utils'
 import { useTranslation } from 'react-i18next'
+
+import { Fieldset } from '@/common/components'
+import { FormControl, FormField, FormItem, FormLabel } from '@/common/components/ui/form'
+import { Switch } from '@/common/components/ui/switch'
+import { cn } from '@/common/lib/utils'
 
 const PudratchiFields: FormEditableFieldsComponent<ShartnomaFormValues> = ({
   form,

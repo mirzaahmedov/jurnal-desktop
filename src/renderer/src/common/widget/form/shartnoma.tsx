@@ -4,10 +4,10 @@ import type { UseFormReturn } from 'react-hook-form'
 
 import { useEffect } from 'react'
 
-import { SelectField } from '@renderer/common/components'
-import { FormElement } from '@renderer/common/components/form'
 import { useTranslation } from 'react-i18next'
 
+import { SelectField } from '@/common/components'
+import { FormElement } from '@/common/components/form'
 import { SpravochnikField, SpravochnikFields } from '@/common/features/spravochnik'
 import { formatLocaleDate } from '@/common/lib/format'
 

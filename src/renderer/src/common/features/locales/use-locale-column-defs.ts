@@ -1,5 +1,5 @@
-import type { ColumnDef } from '@renderer/common/components'
-import type { EditableColumnDef } from '@renderer/common/components/editable-table'
+import type { ColumnDef } from '@/common/components'
+import type { EditableColumnDef } from '@/common/components/editable-table'
 
 import { useMemo } from 'react'
 

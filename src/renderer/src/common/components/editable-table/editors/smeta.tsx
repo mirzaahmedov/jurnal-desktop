@@ -2,8 +2,7 @@ import type { EditorComponentType } from './types'
 
 import { useEffect } from 'react'
 
-import { createSmetaSpravochnik } from '@renderer/app/super-admin/smeta'
-
+import { createSmetaSpravochnik } from '@/app/super-admin/smeta'
 import { SpravochnikInput, useSpravochnik } from '@/common/features/spravochnik'
 
 export const createSmetaEditor = <T extends { smeta_id?: number }>(): EditorComponentType<T> => {

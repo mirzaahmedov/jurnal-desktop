@@ -5,21 +5,16 @@ import type {
 } from '@/common/features/spravochnik'
 import type { Shartnoma } from '@/common/models'
 
-import { GenericTable } from '@renderer/common/components'
-import { Button } from '@renderer/common/components/ui/button'
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle
-} from '@renderer/common/components/ui/dialog'
-import { SpravochnikSearchField } from '@renderer/common/features/filters/search/search-filter-spravochnik'
-import { formatDate } from '@renderer/common/lib/date'
 import { CopyPlus } from 'lucide-react'
 import { ZodIssueCode, z } from 'zod'
 
+import { GenericTable } from '@/common/components'
+import { Button } from '@/common/components/ui/button'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/common/components/ui/dialog'
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 import { budjet } from '@/common/features/crud/middleware'
+import { SpravochnikSearchField } from '@/common/features/filters/search/search-filter-spravochnik'
+import { formatDate } from '@/common/lib/date'
 import { extendObject } from '@/common/lib/utils'
 import { withPreprocessor } from '@/common/lib/validation'
 

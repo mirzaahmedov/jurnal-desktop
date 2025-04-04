@@ -2,22 +2,23 @@ import type { UseFormReturn } from 'react-hook-form'
 
 import { type FC, useEffect, useRef } from 'react'
 
+import { t } from 'i18next'
+import { toast } from 'react-toastify'
+
 import {
   EditableTable,
   EditableTableCell,
   EditableTableRow
-} from '@renderer/common/components/editable-table'
+} from '@/common/components/editable-table'
 import {
   createEditorChangeHandler,
   createEditorCreateHandler,
   createEditorDeleteHandler
-} from '@renderer/common/components/editable-table/helpers'
-import { Input } from '@renderer/common/components/ui/input'
-import { inputVariants } from '@renderer/common/features/spravochnik'
-import { formatNumber } from '@renderer/common/lib/format'
-import { cn } from '@renderer/common/lib/utils'
-import { t } from 'i18next'
-import { toast } from 'react-toastify'
+} from '@/common/components/editable-table/helpers'
+import { Input } from '@/common/components/ui/input'
+import { inputVariants } from '@/common/features/spravochnik'
+import { formatNumber } from '@/common/lib/format'
+import { cn } from '@/common/lib/utils'
 
 import { defaultValues } from '../config'
 import { type ShartnomaFormValues, ShartnomaGrafikFormSchema } from '../service'

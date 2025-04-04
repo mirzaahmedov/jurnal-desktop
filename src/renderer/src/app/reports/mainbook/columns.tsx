@@ -1,12 +1,13 @@
-import type { ColumnDef } from '@renderer/common/components'
+import type { ColumnDef } from '@/common/components'
 
-import { IDCell } from '@renderer/common/components/table/renderers/id'
-import { MonthNameCell } from '@renderer/common/components/table/renderers/month-name'
-import { UserCell } from '@renderer/common/components/table/renderers/user'
-import { Badge } from '@renderer/common/components/ui/badge'
-import { cn } from '@renderer/common/lib/utils'
-import { type Mainbook, MainbookStatus } from '@renderer/common/models'
 import { Trans } from 'react-i18next'
+
+import { IDCell } from '@/common/components/table/renderers/id'
+import { MonthNameCell } from '@/common/components/table/renderers/month-name'
+import { UserCell } from '@/common/components/table/renderers/user'
+import { Badge } from '@/common/components/ui/badge'
+import { cn } from '@/common/lib/utils'
+import { type Mainbook, MainbookStatus } from '@/common/models'
 
 export const mainbookColumns: ColumnDef<Mainbook>[] = [
   {

@@ -1,13 +1,15 @@
+import type { ReactNode } from 'react'
+
 import { ArrowDownLeft } from 'lucide-react'
 import { Trans } from 'react-i18next'
 
-import { DataList } from '../../data-list'
-import { Button } from '../../ui/button'
-import { Popover, PopoverContent, PopoverTrigger } from '../../ui/popover'
+import { DataList } from '@/common/components/data-list'
+import { Button } from '@/common/components/ui/button'
+import { Popover, PopoverContent, PopoverTrigger } from '@/common/components/ui/popover'
 
 export interface ExpandableListProps<T> {
   items: T[]
-  renderItem: (item: T) => React.ReactNode
+  renderItem: (item: T) => ReactNode
 }
 export const ExpandableList = <T,>({ items, renderItem }: ExpandableListProps<T>) => {
   if (!Array.isArray(items) || items.length === 0) {
@@ -26,16 +28,18 @@ export const ExpandableList = <T,>({ items, renderItem }: ExpandableListProps<T>
       </div>
       {items.length > 2 ? (
         <Popover>
-          <PopoverTrigger asChild>
-            <Button
-              variant="link"
-              className="p-0 text-xs text-brand gap-0.5"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <ArrowDownLeft className="size-4" />
-              <Trans>view_all</Trans>
-            </Button>
-          </PopoverTrigger>
+          <div className="w-full">
+            <PopoverTrigger asChild>
+              <Button
+                variant="link"
+                className="p-0 text-xs text-brand gap-0.5"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <ArrowDownLeft className="size-4" />
+                <Trans>view_all</Trans>
+              </Button>
+            </PopoverTrigger>
+          </div>
           <PopoverContent align="end">
             <DataList
               list={items.map((item, index) => ({

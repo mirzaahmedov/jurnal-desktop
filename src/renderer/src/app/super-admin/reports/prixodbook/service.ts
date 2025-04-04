@@ -1,6 +1,6 @@
-import type { AdminPrixodbook, PrixodbookStatus } from '@renderer/common/models'
+import type { AdminPrixodbook, PrixodbookStatus } from '@/common/models'
 
-import { ApiEndpoints, CRUDService } from '@renderer/common/features/crud'
+import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 
 export const adminPrixodbookService = new CRUDService<
   AdminPrixodbook,

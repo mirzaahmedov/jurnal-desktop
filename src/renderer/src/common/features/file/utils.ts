@@ -1,4 +1,4 @@
-import { HttpResponseError } from '@renderer/common/lib/http'
+import { HttpResponseError } from '@/common/lib/http'
 
 import { ApiStatusCodes } from '../crud'
 

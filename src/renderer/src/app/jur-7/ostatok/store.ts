@@ -1,5 +1,6 @@
-import { getFirstDayOfMonth, getLastDayOfMonth } from '@renderer/common/lib/date'
 import { create } from 'zustand'
+
+import { getFirstDayOfMonth, getLastDayOfMonth } from '@/common/lib/date'
 
 export interface MonthValue {
   year: number

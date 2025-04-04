@@ -1,27 +1,28 @@
-import type { Mainbook } from '@renderer/common/models'
+import type { Mainbook } from '@/common/models'
 
 import { useEffect } from 'react'
 
-import { GenericTable } from '@renderer/common/components'
-import { Button } from '@renderer/common/components/ui/button'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger
-} from '@renderer/common/components/ui/dropdown-menu'
-import { useConfirm } from '@renderer/common/features/confirm'
-import { DownloadFile } from '@renderer/common/features/file'
-import { useLayoutStore } from '@renderer/common/features/layout'
-import { useRequisitesStore } from '@renderer/common/features/requisites'
-import { useSettingsStore } from '@renderer/common/features/settings'
-import { usePagination } from '@renderer/common/hooks'
-import { ListView } from '@renderer/common/views'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Ellipsis } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
+
+import { GenericTable } from '@/common/components'
+import { Button } from '@/common/components/ui/button'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger
+} from '@/common/components/ui/dropdown-menu'
+import { useConfirm } from '@/common/features/confirm'
+import { DownloadFile } from '@/common/features/file'
+import { useRequisitesStore } from '@/common/features/requisites'
+import { useSettingsStore } from '@/common/features/settings'
+import { usePagination } from '@/common/hooks'
+import { useLayoutStore } from '@/common/layout/store'
+import { ListView } from '@/common/views'
 
 import { mainbookColumns } from './columns'
 import { mainbookQueryKeys } from './config'

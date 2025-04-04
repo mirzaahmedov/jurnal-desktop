@@ -1,22 +1,22 @@
 import { useEffect, useState } from 'react'
 
-import { Button } from '@renderer/common/components/ui/button'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger
-} from '@renderer/common/components/ui/dropdown-menu'
-import { useSearchFilter } from '@renderer/common/features/filters/search/search-filter-debounced'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { CopyPlus, Ellipsis } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { GenericTable } from '@/common/components'
+import { Button } from '@/common/components/ui/button'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger
+} from '@/common/components/ui/dropdown-menu'
 import { useConfirm } from '@/common/features/confirm'
-import { useLayoutStore } from '@/common/features/layout'
+import { useSearchFilter } from '@/common/features/filters/search/search-filter-debounced'
 import { usePagination } from '@/common/hooks'
 import { useToggle } from '@/common/hooks/use-toggle'
+import { useLayoutStore } from '@/common/layout/store'
 import { type Operatsii } from '@/common/models'
 import { ListView } from '@/common/views'
 

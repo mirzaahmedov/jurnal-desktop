@@ -2,15 +2,15 @@ import type { Region } from '@/common/models'
 
 import { useEffect, useState } from 'react'
 
-import { SearchFilterDebounced } from '@renderer/common/features/filters/search/search-filter-debounced'
-import { useSearchFilter } from '@renderer/common/features/filters/search/search-filter-debounced'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 
 import { GenericTable, LoadingOverlay } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
-import { useLayoutStore } from '@/common/features/layout'
+import { SearchFilterDebounced } from '@/common/features/filters/search/search-filter-debounced'
+import { useSearchFilter } from '@/common/features/filters/search/search-filter-debounced'
 import { useToggle } from '@/common/hooks/use-toggle'
+import { useLayoutStore } from '@/common/layout/store'
 
 import { regionColumns } from './columns'
 import { regionQueryKeys } from './constants'

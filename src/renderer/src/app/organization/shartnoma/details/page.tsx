@@ -1,20 +1,17 @@
 import { useEffect } from 'react'
 
-import { mainSchetQueryKeys, mainSchetService } from '@renderer/app/region-spravochnik/main-schet'
-import {
-  organizationQueryKeys,
-  organizationService
-} from '@renderer/app/region-spravochnik/organization'
-import { Button } from '@renderer/common/components/ui/button'
-import { useLayoutStore } from '@renderer/common/features/layout'
-import { useRequisitesStore } from '@renderer/common/features/requisites'
-import { useToggle } from '@renderer/common/hooks'
 import { useQuery } from '@tanstack/react-query'
 import { DownloadIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { type Location, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
+import { mainSchetQueryKeys, mainSchetService } from '@/app/region-spravochnik/main-schet'
+import { organizationQueryKeys, organizationService } from '@/app/region-spravochnik/organization'
+import { Button } from '@/common/components/ui/button'
+import { useRequisitesStore } from '@/common/features/requisites'
+import { useToggle } from '@/common/hooks'
+import { useLayoutStore } from '@/common/layout/store'
 import { DetailsView } from '@/common/views'
 
 import { type LocationState, shartnomaQueryKeys } from '../config'

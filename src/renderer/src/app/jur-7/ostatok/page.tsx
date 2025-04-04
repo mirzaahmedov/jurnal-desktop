@@ -1,48 +1,44 @@
-import type { OstatokProduct } from '@renderer/common/models'
+import type { OstatokProduct } from '@/common/models'
 
 import { useEffect, useMemo, useState } from 'react'
 
-import { createGroupSpravochnik } from '@renderer/app/super-admin/group/service'
-import { ChooseSpravochnik, DatePicker, GenericTable } from '@renderer/common/components'
-import { Badge } from '@renderer/common/components/ui/badge'
-import { Button } from '@renderer/common/components/ui/button'
-import { ButtonGroup } from '@renderer/common/components/ui/button-group'
-import { Checkbox } from '@renderer/common/components/ui/checkbox'
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle
-} from '@renderer/common/components/ui/dialog'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger
-} from '@renderer/common/components/ui/dropdown-menu'
-import { FormField } from '@renderer/common/components/ui/form'
-import { useConfirm } from '@renderer/common/features/confirm'
-import { DownloadFile, ImportFile } from '@renderer/common/features/file'
-import { FileValidationErrorAlert } from '@renderer/common/features/file/file-validation-error-alert'
-import {
-  type ImportValidationErrorRow,
-  handleImportValidationError
-} from '@renderer/common/features/file/utils'
-import { SearchFilterDebounced } from '@renderer/common/features/filters/search/search-filter-debounced'
-import { useSearchFilter } from '@renderer/common/features/filters/search/search-filter-debounced'
-import { useLayoutStore } from '@renderer/common/features/layout'
-import { useRequisitesStore } from '@renderer/common/features/requisites'
-import { useSettingsStore } from '@renderer/common/features/settings'
-import { useSpravochnik } from '@renderer/common/features/spravochnik'
-import { usePagination, useToggle } from '@renderer/common/hooks'
-import { date_iso_regex, formatDate, parseDate, validateDate } from '@renderer/common/lib/date'
-import { formatLocaleDate } from '@renderer/common/lib/format'
-import { ListView } from '@renderer/common/views'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { CircleArrowDown, CopyCheck, Download, Trash2 } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { Trans, useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
+
+import { createGroupSpravochnik } from '@/app/super-admin/group/service'
+import { ChooseSpravochnik, DatePicker, GenericTable } from '@/common/components'
+import { Badge } from '@/common/components/ui/badge'
+import { Button } from '@/common/components/ui/button'
+import { ButtonGroup } from '@/common/components/ui/button-group'
+import { Checkbox } from '@/common/components/ui/checkbox'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/common/components/ui/dialog'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger
+} from '@/common/components/ui/dropdown-menu'
+import { FormField } from '@/common/components/ui/form'
+import { useConfirm } from '@/common/features/confirm'
+import { DownloadFile, ImportFile } from '@/common/features/file'
+import { FileValidationErrorAlert } from '@/common/features/file/file-validation-error-alert'
+import {
+  type ImportValidationErrorRow,
+  handleImportValidationError
+} from '@/common/features/file/utils'
+import { SearchFilterDebounced } from '@/common/features/filters/search/search-filter-debounced'
+import { useSearchFilter } from '@/common/features/filters/search/search-filter-debounced'
+import { useRequisitesStore } from '@/common/features/requisites'
+import { useSettingsStore } from '@/common/features/settings'
+import { useSpravochnik } from '@/common/features/spravochnik'
+import { usePagination, useToggle } from '@/common/hooks'
+import { useLayoutStore } from '@/common/layout/store'
+import { date_iso_regex, formatDate, parseDate, validateDate } from '@/common/lib/date'
+import { formatLocaleDate } from '@/common/lib/format'
+import { ListView } from '@/common/views'
 
 import { iznosQueryKeys } from '../iznos/config'
 import { createResponsibleSpravochnik } from '../responsible/service'

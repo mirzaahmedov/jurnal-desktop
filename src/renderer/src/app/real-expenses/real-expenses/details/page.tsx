@@ -1,17 +1,19 @@
+import type { RealExpenses } from '@/common/models'
+
 import { useEffect, useMemo, useState } from 'react'
 
-import { MonthPicker } from '@renderer/common/components/month-picker'
-import { Button } from '@renderer/common/components/ui/button'
-import { useLayout } from '@renderer/common/features/layout'
-import { useRequisitesStore } from '@renderer/common/features/requisites'
-import { toast } from '@renderer/common/hooks'
-import { formatDate } from '@renderer/common/lib/date'
-import { useQueryDateParams } from '@renderer/common/lib/query-params'
-import type { RealExpenses } from '@renderer/common/models'
-import { DetailsView } from '@renderer/common/views'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { FileDown, Save } from 'lucide-react'
 import { useNavigate, useParams } from 'react-router-dom'
+
+import { MonthPicker } from '@/common/components/month-picker'
+import { Button } from '@/common/components/ui/button'
+import { useRequisitesStore } from '@/common/features/requisites'
+import { toast } from '@/common/hooks'
+import { useLayout } from '@/common/layout/store'
+import { formatDate } from '@/common/lib/date'
+import { useQueryDateParams } from '@/common/lib/query-params'
+import { DetailsView } from '@/common/views'
 
 import { expensesQueryKeys } from '../config'
 import { ReportTable } from '../report-table'

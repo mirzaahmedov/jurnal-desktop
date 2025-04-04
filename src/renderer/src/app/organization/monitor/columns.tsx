@@ -1,14 +1,14 @@
-import { type ColumnDef, Copyable } from '@renderer/common/components'
-import { DataList } from '@renderer/common/components/data-list'
-import { ProvodkaBadge } from '@renderer/common/components/provodka-badge'
-import { HoverInfoCell } from '@renderer/common/components/table/renderers'
-import { IDCell } from '@renderer/common/components/table/renderers/id'
-import { ProvodkaCell } from '@renderer/common/components/table/renderers/provodka-operatsii'
-import { SummaCell } from '@renderer/common/components/table/renderers/summa'
-import { UserCell } from '@renderer/common/components/table/renderers/user'
-import { formatLocaleDate } from '@renderer/common/lib/format'
 import { Trans } from 'react-i18next'
 
+import { type ColumnDef, Copyable } from '@/common/components'
+import { DataList } from '@/common/components/data-list'
+import { ProvodkaBadge } from '@/common/components/provodka-badge'
+import { HoverInfoCell } from '@/common/components/table/renderers'
+import { IDCell } from '@/common/components/table/renderers/id'
+import { ProvodkaCell } from '@/common/components/table/renderers/provodka-operatsii'
+import { SummaCell } from '@/common/components/table/renderers/summa'
+import { UserCell } from '@/common/components/table/renderers/user'
+import { formatLocaleDate } from '@/common/lib/format'
 import { type OrganizationMonitor } from '@/common/models'
 
 export const organizationMonitorColumns: ColumnDef<OrganizationMonitor>[] = [

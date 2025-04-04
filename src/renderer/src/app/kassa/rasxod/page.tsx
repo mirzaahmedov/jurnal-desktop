@@ -2,17 +2,17 @@ import type { KassaRasxodType } from '@/common/models'
 
 import { useEffect } from 'react'
 
-import { SearchFilterDebounced } from '@renderer/common/features/filters/search/search-filter-debounced'
-import { useSearchFilter } from '@renderer/common/features/filters/search/search-filter-debounced'
-import { useRequisitesStore } from '@renderer/common/features/requisites'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
 import { FooterCell, FooterRow, GenericTable, useTableSort } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
-import { useLayoutStore } from '@/common/features/layout'
+import { SearchFilterDebounced } from '@/common/features/filters/search/search-filter-debounced'
+import { useSearchFilter } from '@/common/features/filters/search/search-filter-debounced'
+import { useRequisitesStore } from '@/common/features/requisites'
 import { useDates, usePagination } from '@/common/hooks'
+import { useLayoutStore } from '@/common/layout/store'
 import { formatNumber } from '@/common/lib/format'
 import { ListView } from '@/common/views'
 

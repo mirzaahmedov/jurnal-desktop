@@ -1,5 +1,5 @@
 import type { ShartnomaGrafikPDFDocumentOptions } from './types'
-import type { DocumentOrientation } from '@renderer/common/widget/form'
+import type { DocumentOrientation } from '@/common/widget/form'
 
 import { Document, Page, StyleSheet, View } from '@react-pdf/renderer'
 

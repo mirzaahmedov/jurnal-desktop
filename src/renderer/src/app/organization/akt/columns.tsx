@@ -1,7 +1,6 @@
 import type { ColumnDef } from '@/common/components'
 import type { Akt } from '@/common/models'
 
-import { SummaCell } from '@renderer/common/components/table/renderers/summa'
 import { Trans } from 'react-i18next'
 
 import { Copyable } from '@/common/components'
@@ -9,6 +8,7 @@ import { DataList } from '@/common/components/data-list'
 import { HoverInfoCell } from '@/common/components/table/renderers'
 import { IDCell } from '@/common/components/table/renderers/id'
 import { ProvodkaCell } from '@/common/components/table/renderers/provodka-operatsii'
+import { SummaCell } from '@/common/components/table/renderers/summa'
 import { formatLocaleDate } from '@/common/lib/format'
 
 export const columns: ColumnDef<Akt>[] = [

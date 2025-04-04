@@ -1,4 +1,4 @@
-import { useLocationState } from '@renderer/common/hooks'
+import { useLocationState } from '@/common/hooks'
 
 export const useOperatsiiFilter = () => {
   return useLocationState<undefined | number>('operatsii_id')

@@ -2,7 +2,6 @@ import type { FormEditableFieldsComponent } from './types'
 import type { Response } from '@/common/models'
 import type { Control } from 'react-hook-form'
 
-import { useRequisitesStore } from '@renderer/common/features/requisites'
 import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 
@@ -11,6 +10,7 @@ import { Fieldset } from '@/common/components'
 import { FormElement } from '@/common/components/form'
 import { FormField } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
+import { useRequisitesStore } from '@/common/features/requisites'
 import { http } from '@/common/lib/http'
 import { cn } from '@/common/lib/utils'
 

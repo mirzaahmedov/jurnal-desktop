@@ -1,6 +1,6 @@
 import type { HTMLAttributes } from 'react'
 
-import { cn } from '@renderer/common/lib/utils'
+import { cn } from '@/common/lib/utils'
 
 import { Spinner } from './loading'
 

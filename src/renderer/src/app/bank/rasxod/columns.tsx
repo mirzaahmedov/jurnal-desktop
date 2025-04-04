@@ -1,6 +1,5 @@
 import type { BankRasxod } from '@/common/models'
 
-import { SummaCell } from '@renderer/common/components/table/renderers/summa'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { Trans } from 'react-i18next'
 
@@ -9,6 +8,7 @@ import { DataList } from '@/common/components/data-list'
 import { HoverInfoCell } from '@/common/components/table/renderers'
 import { IDCell } from '@/common/components/table/renderers/id'
 import { ProvodkaCell } from '@/common/components/table/renderers/provodka-operatsii'
+import { SummaCell } from '@/common/components/table/renderers/summa'
 import { Switch } from '@/common/components/ui/switch'
 import { formatLocaleDate } from '@/common/lib/format'
 

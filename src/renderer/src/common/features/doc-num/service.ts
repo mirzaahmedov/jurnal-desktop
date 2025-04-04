@@ -1,9 +1,10 @@
 import type { DocumentType, queryKeys } from './config'
-import type { Response } from '@renderer/common/models'
+import type { Response } from '@/common/models'
 
-import { getMainschetId } from '@renderer/common/features/requisites'
-import { http } from '@renderer/common/lib/http'
 import { type QueryFunctionContext } from '@tanstack/react-query'
+
+import { getMainschetId } from '@/common/features/requisites'
+import { http } from '@/common/lib/http'
 
 interface GetDocumentNumberResponse {
   doc_num: number

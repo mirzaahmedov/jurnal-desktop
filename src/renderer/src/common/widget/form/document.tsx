@@ -2,16 +2,16 @@ import type { FormEditableFieldsComponent } from './types'
 import type { DayPickerSingleProps } from 'react-day-picker'
 import type { Control, UseFormReturn } from 'react-hook-form'
 
-import { Button } from '@renderer/common/components/ui/button'
-import { type DocumentType, useGenerateDocumentNumber } from '@renderer/common/features/doc-num'
-import { cn } from '@renderer/common/lib/utils'
 import { RefreshCw } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { DatePicker, Fieldset, Spinner } from '@/common/components'
 import { FormElement } from '@/common/components/form'
+import { Button } from '@/common/components/ui/button'
 import { FormField } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
+import { type DocumentType, useGenerateDocumentNumber } from '@/common/features/doc-num'
+import { cn } from '@/common/lib/utils'
 
 type RequiredDocumentFields = {
   doc_num: string

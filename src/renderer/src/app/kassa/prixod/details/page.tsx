@@ -4,19 +4,6 @@ import type { Operatsii } from '@/common/models'
 import { useEffect } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { EditableTable } from '@renderer/common/components/editable-table'
-import {
-  createEditorChangeHandler,
-  createEditorCreateHandler,
-  createEditorDeleteHandler
-} from '@renderer/common/components/editable-table/helpers'
-import { Switch } from '@renderer/common/components/ui/switch'
-import { DocumentType } from '@renderer/common/features/doc-num'
-import { GenerateFile } from '@renderer/common/features/file'
-import { createMainZarplataSpravochnik } from '@renderer/common/features/main-zarplata/service'
-import { useRequisitesStore } from '@renderer/common/features/requisites'
-import { useSnippets } from '@renderer/common/features/snippents/use-snippets'
-import { MainZarplataFields } from '@renderer/common/widget/form/main-zarplata'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -26,17 +13,30 @@ import { toast } from 'react-toastify'
 import { mainSchetQueryKeys, mainSchetService } from '@/app/region-spravochnik/main-schet'
 import { createPodotchetSpravochnik } from '@/app/region-spravochnik/podotchet'
 import { Fieldset } from '@/common/components'
+import { EditableTable } from '@/common/components/editable-table'
+import {
+  createEditorChangeHandler,
+  createEditorCreateHandler,
+  createEditorDeleteHandler
+} from '@/common/components/editable-table/helpers'
 import { ButtonGroup } from '@/common/components/ui/button-group'
 import { Form } from '@/common/components/ui/form'
+import { Switch } from '@/common/components/ui/switch'
 import { ApiEndpoints } from '@/common/features/crud'
-import { useLayoutStore } from '@/common/features/layout'
+import { DocumentType } from '@/common/features/doc-num'
+import { GenerateFile } from '@/common/features/file'
+import { createMainZarplataSpravochnik } from '@/common/features/main-zarplata/service'
+import { useRequisitesStore } from '@/common/features/requisites'
+import { useSnippets } from '@/common/features/snippents/use-snippets'
 import { useSpravochnik } from '@/common/features/spravochnik'
+import { useLayoutStore } from '@/common/layout/store'
 import { formatNumber } from '@/common/lib/format'
 import { getDataFromCache } from '@/common/lib/query-client'
 import { numberToWords } from '@/common/lib/utils'
 import { normalizeEmptyFields } from '@/common/lib/validation'
 import { DetailsView } from '@/common/views'
 import { DocumentFields, OpisanieFields, PodotchetFields, SummaFields } from '@/common/widget/form'
+import { MainZarplataFields } from '@/common/widget/form/main-zarplata'
 
 import { defaultValues, queryKeys } from '../constants'
 import { PrixodPayloadSchema, PrixodPodvodkaPayloadSchema, kassaPrixodService } from '../service'

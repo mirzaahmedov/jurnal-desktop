@@ -3,7 +3,6 @@ import type { Zarplata } from '@/common/models'
 import { useEffect } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { NumericInput } from '@renderer/common/components'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { t } from 'i18next'
 import { useForm } from 'react-hook-form'
@@ -11,6 +10,7 @@ import { toast } from 'react-toastify'
 
 import { createOperatsiiSpravochnik } from '@/app/super-admin/operatsii'
 import { createSmetaSpravochnik } from '@/app/super-admin/smeta'
+import { NumericInput } from '@/common/components'
 import { Button } from '@/common/components/ui/button'
 import {
   Dialog,

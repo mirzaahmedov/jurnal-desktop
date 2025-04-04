@@ -1,4 +1,4 @@
-import type { PaginationValues } from '@renderer/common/components/pagination'
+import type { PaginationValues } from '@/common/components/pagination'
 
 import { useCallback } from 'react'
 

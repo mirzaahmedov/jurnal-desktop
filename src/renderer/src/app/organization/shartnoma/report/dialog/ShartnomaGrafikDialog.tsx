@@ -2,23 +2,14 @@ import { useEffect, useMemo } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@radix-ui/react-collapsible'
-import { Button } from '@renderer/common/components/ui/button'
-import { Checkbox } from '@renderer/common/components/ui/checkbox'
-import { GenerateFile } from '@renderer/common/features/file'
-import { usePodpis } from '@renderer/common/features/podpis'
-import {
-  type MainSchet,
-  type Organization,
-  PodpisTypeDocument,
-  type ShartnomaGrafik
-} from '@renderer/common/models'
-import { DocumentOrientation, DocumentPaddingFields } from '@renderer/common/widget/form'
 import { Settings2 } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
 import { DatePicker, NumericInput } from '@/common/components'
 import { FormElement } from '@/common/components/form'
+import { Button } from '@/common/components/ui/button'
+import { Checkbox } from '@/common/components/ui/checkbox'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/common/components/ui/dialog'
 import {
   Form,
@@ -31,8 +22,17 @@ import {
 import { Input } from '@/common/components/ui/input'
 import { RadioGroup, RadioGroupItem } from '@/common/components/ui/radio-group'
 import { Textarea } from '@/common/components/ui/textarea'
+import { GenerateFile } from '@/common/features/file'
+import { usePodpis } from '@/common/features/podpis'
 import { formatDate } from '@/common/lib/date'
 import { calculateAnnualTotalSum, roundNumberToTwoDecimalPlaces } from '@/common/lib/utils'
+import {
+  type MainSchet,
+  type Organization,
+  PodpisTypeDocument,
+  type ShartnomaGrafik
+} from '@/common/models'
+import { DocumentOrientation, DocumentPaddingFields } from '@/common/widget/form'
 
 import { ShartnomaGrafikPDFDocument } from '../ShartnomaGrafik'
 import { ReportDialogFormSchema, defaultValues } from './config'

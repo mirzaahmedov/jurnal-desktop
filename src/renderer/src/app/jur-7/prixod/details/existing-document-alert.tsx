@@ -1,7 +1,11 @@
 import type { ExistingDocument } from './interfaces'
 import type { DialogProps } from '@radix-ui/react-dialog'
 
-import { Copyable } from '@renderer/common/components'
+import { Eye } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router-dom'
+
+import { Copyable } from '@/common/components'
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -9,9 +13,9 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle
-} from '@renderer/common/components/ui/alert-dialog'
-import { Badge } from '@renderer/common/components/ui/badge'
-import { Button } from '@renderer/common/components/ui/button'
+} from '@/common/components/ui/alert-dialog'
+import { Badge } from '@/common/components/ui/badge'
+import { Button } from '@/common/components/ui/button'
 import {
   Table,
   TableBody,
@@ -19,11 +23,8 @@ import {
   TableHead,
   TableHeader,
   TableRow
-} from '@renderer/common/components/ui/table'
-import { formatLocaleDate } from '@renderer/common/lib/format'
-import { Eye } from 'lucide-react'
-import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router-dom'
+} from '@/common/components/ui/table'
+import { formatLocaleDate } from '@/common/lib/format'
 
 export interface ExistingDocumentsAlertProps extends DialogProps {
   message: string

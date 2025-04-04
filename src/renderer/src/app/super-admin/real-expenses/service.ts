@@ -1,7 +1,7 @@
-import type { RealExpenses } from '@renderer/common/models'
+import type { RealExpenses } from '@/common/models'
 
-import { ApiEndpoints, CRUDService } from '@renderer/common/features/crud'
-import { http } from '@renderer/common/lib/http'
+import { ApiEndpoints, CRUDService } from '@/common/features/crud'
+import { http } from '@/common/lib/http'
 
 export const adminRealExpensesService = new CRUDService<RealExpenses.AdminReport>({
   endpoint: ApiEndpoints.admin__realcost

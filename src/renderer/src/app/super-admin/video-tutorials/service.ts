@@ -1,10 +1,10 @@
 import type { Response, Video, VideoModule } from '@/common/models'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 
-import { http } from '@renderer/common/lib/http'
 import { z } from 'zod'
 
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
+import { http } from '@/common/lib/http'
 import { withPreprocessor } from '@/common/lib/validation'
 
 export const VideoModuleFormSchema = withPreprocessor(

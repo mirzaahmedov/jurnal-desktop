@@ -1,5 +1,5 @@
-import { useLocationState } from '@renderer/common/hooks/use-location-state'
-import { LogType } from '@renderer/common/models'
+import { useLocationState } from '@/common/hooks/use-location-state'
+import { LogType } from '@/common/models'
 
 const useLogType = () => {
   return useLocationState('type', LogType.POST)

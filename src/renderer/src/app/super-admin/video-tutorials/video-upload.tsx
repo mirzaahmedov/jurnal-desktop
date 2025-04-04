@@ -1,10 +1,11 @@
 import { useMemo } from 'react'
 
-import { FileDropzone } from '@renderer/common/components'
-import { Button } from '@renderer/common/components/ui/button'
-import { VideoPlayer } from '@renderer/common/components/video-player'
 import { FileVideo, Trash2 } from 'lucide-react'
 import millify from 'millify'
+
+import { FileDropzone } from '@/common/components'
+import { Button } from '@/common/components/ui/button'
+import { VideoPlayer } from '@/common/components/video-player'
 
 export interface VideoUploadProps {
   file: File | null

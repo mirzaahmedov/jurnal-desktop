@@ -3,15 +3,11 @@ import type { DialogProps } from '@radix-ui/react-dialog'
 
 import { useEffect, useState } from 'react'
 
-import { reportTitleQueryKeys, reportTitleService } from '@renderer/app/super-admin/report-title'
-import { Slider } from '@renderer/common/components/ui/slider'
-import { useDates } from '@renderer/common/hooks/use-dates'
-import { usePagination } from '@renderer/common/hooks/use-pagination'
-import { capitalize } from '@renderer/common/lib/string'
 import { useQuery } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
+import { reportTitleQueryKeys, reportTitleService } from '@/app/super-admin/report-title'
 import { DatePicker, SelectField } from '@/common/components'
 import { Button } from '@/common/components/ui/button'
 import {
@@ -22,9 +18,13 @@ import {
   DialogTitle
 } from '@/common/components/ui/dialog'
 import { Form, FormField, FormLabel } from '@/common/components/ui/form'
+import { Slider } from '@/common/components/ui/slider'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/common/components/ui/tabs'
 import { useConfirm } from '@/common/features/confirm'
 import { LanguageSelect } from '@/common/features/locales'
+import { useDates } from '@/common/hooks/use-dates'
+import { usePagination } from '@/common/hooks/use-pagination'
+import { capitalize } from '@/common/lib/string'
 
 import { useSettingsStore } from './store'
 

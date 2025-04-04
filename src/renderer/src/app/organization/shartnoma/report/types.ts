@@ -1,5 +1,5 @@
-import type { Podpis } from '@renderer/common/models'
-import type { ShartnomaGrafik } from '@renderer/common/models/shartnoma'
+import type { Podpis } from '@/common/models'
+import type { ShartnomaGrafik } from '@/common/models/shartnoma'
 
 export interface ShartnomaGrafikPDFDocumentOptions {
   chapter: string

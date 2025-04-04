@@ -2,27 +2,27 @@ import type { FieldError, FieldErrorsImpl, Merge, UseFormReturn } from 'react-ho
 
 import { useEffect, useState } from 'react'
 
-import { useOstatokStore } from '@renderer/app/jur-7/ostatok/store'
-import { validateOstatokDate } from '@renderer/app/jur-7/ostatok/utils'
-import {
-  EditableTableCell,
-  EditableTableHead,
-  EditableTableRow
-} from '@renderer/common/components/editable-table'
-import { EmptyList } from '@renderer/common/components/empty-states'
-import { Pagination } from '@renderer/common/components/pagination'
-import { Checkbox } from '@renderer/common/components/ui/checkbox'
-import { useEventCallback } from '@renderer/common/hooks'
 import { CircleMinus, CirclePlus, TableOfContents } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 
+import { useOstatokStore } from '@/app/jur-7/ostatok/store'
+import { validateOstatokDate } from '@/app/jur-7/ostatok/utils'
 import { createGroupSpravochnik } from '@/app/super-admin/group/service'
 import { DatePicker, EdinSelect, NumericInput } from '@/common/components'
+import {
+  EditableTableCell,
+  EditableTableHead,
+  EditableTableRow
+} from '@/common/components/editable-table'
+import { EmptyList } from '@/common/components/empty-states'
+import { Pagination } from '@/common/components/pagination'
 import { Button } from '@/common/components/ui/button'
+import { Checkbox } from '@/common/components/ui/checkbox'
 import { Input } from '@/common/components/ui/input'
 import { Table, TableBody, TableHeader } from '@/common/components/ui/table'
 import { SpravochnikInput, inputVariants, useSpravochnik } from '@/common/features/spravochnik'
+import { useEventCallback } from '@/common/hooks'
 import { calcSena, calcSumma } from '@/common/lib/pricing'
 import { cn } from '@/common/lib/utils'
 

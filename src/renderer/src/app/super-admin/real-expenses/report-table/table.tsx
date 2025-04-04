@@ -3,11 +3,12 @@ import type { MouseEvent, RefObject, UIEvent } from 'react'
 
 import { createRef, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 
-import { LoadingOverlay } from '@renderer/common/components'
-import { Table, TableBody, TableHeader } from '@renderer/common/components/ui/table'
-import { formatNumber } from '@renderer/common/lib/format'
-import { cn, parseCSSNumericValue } from '@renderer/common/lib/utils'
 import { useTranslation } from 'react-i18next'
+
+import { LoadingOverlay } from '@/common/components'
+import { Table, TableBody, TableHeader } from '@/common/components/ui/table'
+import { formatNumber } from '@/common/lib/format'
+import { cn, parseCSSNumericValue } from '@/common/lib/utils'
 
 import { columns } from './columns'
 import { ReportTableCell, ReportTableHead, ReportTableRow } from './table-components'

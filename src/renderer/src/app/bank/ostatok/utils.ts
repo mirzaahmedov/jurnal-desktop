@@ -1,6 +1,6 @@
 import type { BankOstatokFormValues } from './service'
 
-import { normalizeEmptyFields } from '@renderer/common/lib/validation'
+import { normalizeEmptyFields } from '@/common/lib/validation'
 
 export interface BankOstatokPayloadChild {
   operatsii_id: number

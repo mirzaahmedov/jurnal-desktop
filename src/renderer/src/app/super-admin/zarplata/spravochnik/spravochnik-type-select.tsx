@@ -1,11 +1,12 @@
-import type { Zarplata } from '@renderer/common/models'
+import type { Zarplata } from '@/common/models'
 
 import { forwardRef, useEffect } from 'react'
 
-import { SelectField, type SelectFieldProps } from '@renderer/common/components'
-import { useEventCallback } from '@renderer/common/hooks'
-import { cn } from '@renderer/common/lib/utils'
 import { useQuery } from '@tanstack/react-query'
+
+import { SelectField, type SelectFieldProps } from '@/common/components'
+import { useEventCallback } from '@/common/hooks'
+import { cn } from '@/common/lib/utils'
 
 import { ZarplataSpravochnikService } from './service'
 

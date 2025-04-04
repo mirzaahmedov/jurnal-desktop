@@ -1,11 +1,12 @@
 import { useMemo, useState } from 'react'
 
-import { LoadingOverlay } from '@renderer/common/components'
-import { CollapsibleTable } from '@renderer/common/components/collapsible-table'
-import { Pagination } from '@renderer/common/components/pagination'
-import { Card, CardContent, CardHeader, CardTitle } from '@renderer/common/components/ui/card'
 import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
+
+import { LoadingOverlay } from '@/common/components'
+import { CollapsibleTable } from '@/common/components/collapsible-table'
+import { Pagination } from '@/common/components/pagination'
+import { Card, CardContent, CardHeader, CardTitle } from '@/common/components/ui/card'
 
 import { queryKeys } from '../../config'
 import { getDashboardPodotchetQuery } from '../../service'

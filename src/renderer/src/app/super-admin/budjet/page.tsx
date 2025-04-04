@@ -7,8 +7,8 @@ import { useTranslation } from 'react-i18next'
 
 import { GenericTable, LoadingOverlay } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
-import { useLayout } from '@/common/features/layout'
 import { useToggle } from '@/common/hooks/use-toggle'
+import { useLayout } from '@/common/layout/store'
 
 import { budgetColumns } from './columns'
 import { budjetQueryKeys } from './constants'

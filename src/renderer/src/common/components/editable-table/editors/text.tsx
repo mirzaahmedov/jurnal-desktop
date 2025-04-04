@@ -1,8 +1,7 @@
 import type { EditorComponentType } from './types'
 
-import { inputVariants } from '@renderer/common/features/spravochnik'
-
 import { Input } from '@/common/components/ui/input'
+import { inputVariants } from '@/common/features/spravochnik'
 import { cn } from '@/common/lib/utils'
 
 export const createTextEditor = <T extends object>({

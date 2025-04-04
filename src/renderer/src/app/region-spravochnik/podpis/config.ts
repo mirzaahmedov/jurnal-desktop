@@ -1,7 +1,8 @@
 import type { TFunction } from 'i18next'
 
-import { PodpisDoljnost, PodpisTypeDocument } from '@renderer/common/models'
 import { z } from 'zod'
+
+import { PodpisDoljnost, PodpisTypeDocument } from '@/common/models'
 
 export const getPodpisDoljnostOptions = (t: TFunction) => {
   return [

@@ -1,30 +1,31 @@
 import { useEffect, useMemo, useRef } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Fieldset } from '@renderer/common/components'
+import { useMutation, useQuery } from '@tanstack/react-query'
+import { useForm } from 'react-hook-form'
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
+
+import { Fieldset } from '@/common/components'
 import {
   EditableTable,
   EditableTableCell,
   EditableTableRow
-} from '@renderer/common/components/editable-table'
+} from '@/common/components/editable-table'
 import {
   createEditorChangeHandler,
   createEditorCreateHandler,
   createEditorDeleteHandler
-} from '@renderer/common/components/editable-table/helpers'
-import { MonthPicker } from '@renderer/common/components/month-picker'
-import { Form } from '@renderer/common/components/ui/form'
-import { Input } from '@renderer/common/components/ui/input'
-import { useLayout } from '@renderer/common/features/layout'
-import { useRequisitesStore } from '@renderer/common/features/requisites'
-import { inputVariants } from '@renderer/common/features/spravochnik'
-import { toast } from '@renderer/common/hooks'
-import { formatNumber } from '@renderer/common/lib/format'
-import { cn } from '@renderer/common/lib/utils'
-import { DetailsView } from '@renderer/common/views'
-import { useMutation, useQuery } from '@tanstack/react-query'
-import { useForm } from 'react-hook-form'
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
+} from '@/common/components/editable-table/helpers'
+import { MonthPicker } from '@/common/components/month-picker'
+import { Form } from '@/common/components/ui/form'
+import { Input } from '@/common/components/ui/input'
+import { useRequisitesStore } from '@/common/features/requisites'
+import { inputVariants } from '@/common/features/spravochnik'
+import { toast } from '@/common/hooks'
+import { useLayout } from '@/common/layout/store'
+import { formatNumber } from '@/common/lib/format'
+import { cn } from '@/common/lib/utils'
+import { DetailsView } from '@/common/views'
 
 import {
   OXReportFormSchema,

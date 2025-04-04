@@ -2,10 +2,11 @@ import type { DayPickerSingleProps } from 'react-day-picker'
 
 import { useEffect } from 'react'
 
-import { usePagination } from '@renderer/common/hooks/use-pagination'
 import { CircleArrowDown } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+
+import { usePagination } from '@/common/hooks/use-pagination'
 
 import { DatePicker } from './date-picker'
 import { FormElement } from './form'

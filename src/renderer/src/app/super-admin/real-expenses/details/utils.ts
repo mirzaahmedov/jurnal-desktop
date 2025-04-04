@@ -1,4 +1,4 @@
-import type { RealExpenses } from '@renderer/common/models'
+import type { RealExpenses } from '@/common/models'
 
 export const transformData = (childs: RealExpenses.ReportPreviewProvodka[]) => {
   const grafiksMap = new Map<number, Grafik[]>()

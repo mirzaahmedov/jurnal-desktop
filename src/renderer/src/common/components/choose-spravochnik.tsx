@@ -1,7 +1,8 @@
-import type { UseSpravochnikReturn } from '@renderer/common/features/spravochnik'
+import type { UseSpravochnikReturn } from '@/common/features/spravochnik'
 
-import { Button } from '@renderer/common/components/ui/button'
 import { CircleCheck, CircleX } from 'lucide-react'
+
+import { Button } from '@/common/components/ui/button'
 
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover'
 

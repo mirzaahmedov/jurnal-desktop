@@ -1,27 +1,25 @@
-import type { Vacant } from '@renderer/common/models/vacant'
+import type { Vacant } from '@/common/models/vacant'
 
 import { useEffect, useMemo, useState } from 'react'
 
 import { CaretDownIcon } from '@radix-ui/react-icons'
-import { GenericTable, LoadingOverlay } from '@renderer/common/components'
-import { Button } from '@renderer/common/components/ui/button'
-import { Checkbox } from '@renderer/common/components/ui/checkbox'
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger
-} from '@renderer/common/components/ui/collapsible'
-import { useAuthenticationStore } from '@renderer/common/features/auth'
-import { useLayoutStore } from '@renderer/common/features/layout'
-import {
-  type RelationTreeNode,
-  arrayToTreeByRelations
-} from '@renderer/common/lib/tree/relation-tree'
-import { cn } from '@renderer/common/lib/utils'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { AlertTriangle } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
+
+import { GenericTable, LoadingOverlay } from '@/common/components'
+import { Button } from '@/common/components/ui/button'
+import { Checkbox } from '@/common/components/ui/checkbox'
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger
+} from '@/common/components/ui/collapsible'
+import { useAuthenticationStore } from '@/common/features/auth'
+import { useLayoutStore } from '@/common/layout/store'
+import { type RelationTreeNode, arrayToTreeByRelations } from '@/common/lib/tree/relation-tree'
+import { cn } from '@/common/lib/utils'
 
 import { regionUserService } from '../region-user'
 import { regionUserKeys } from '../region-user/constants'

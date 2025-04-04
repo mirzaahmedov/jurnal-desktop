@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react'
 
-import { DatePicker } from '@renderer/common/components'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@renderer/common/components/ui/tabs'
-import { useLayoutStore } from '@renderer/common/features/layout'
-import { formatDate } from '@renderer/common/lib/date'
 import { useSuspenseQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
+
+import { DatePicker } from '@/common/components'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/common/components/ui/tabs'
+import { useLayoutStore } from '@/common/layout/store'
+import { formatDate } from '@/common/lib/date'
 
 import { Bank } from './components/bank'
 import { Kassa } from './components/kassa'

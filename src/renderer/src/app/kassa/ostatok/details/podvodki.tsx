@@ -1,5 +1,5 @@
 import type { KassaOstatokProvodkaFormValues } from '../service'
-import type { EditableColumnDef } from '@renderer/common/components/editable-table'
+import type { EditableColumnDef } from '@/common/components/editable-table'
 
 import {
   createOperatsiiEditor,
@@ -7,8 +7,8 @@ import {
   createStaffEditor,
   createSummaEditor,
   createTypeOperatsiiEditor
-} from '@renderer/common/components/editable-table/editors'
-import { TypeSchetOperatsii } from '@renderer/common/models'
+} from '@/common/components/editable-table/editors'
+import { TypeSchetOperatsii } from '@/common/models'
 
 export const provodkaColumns: EditableColumnDef<KassaOstatokProvodkaFormValues>[] = [
   {

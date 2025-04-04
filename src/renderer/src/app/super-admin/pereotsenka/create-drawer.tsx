@@ -3,13 +3,13 @@ import type { PereotsenkaTable } from './config'
 import { useEffect } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { EditableTable } from '@renderer/common/components/editable-table'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
 import { groupQueryKeys } from '@/app/super-admin/group/constants'
 import { LoadingOverlay } from '@/common/components'
+import { EditableTable } from '@/common/components/editable-table'
 import { FormElement } from '@/common/components/form'
 import { Button } from '@/common/components/ui/button'
 import {

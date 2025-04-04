@@ -1,5 +1,5 @@
 import type { Nachislenie, UderjaniePlastik } from '@/common/models'
-import type { Vacant } from '@renderer/common/models/vacant'
+import type { Vacant } from '@/common/models/vacant'
 
 import { useState } from 'react'
 

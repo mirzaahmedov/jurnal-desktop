@@ -1,26 +1,34 @@
 import type { ExistingDocument, PrixodImportResult } from './interfaces'
-import type { Response } from '@renderer/common/models'
+import type { Response } from '@/common/models'
 
 import { useEffect, useMemo, useRef, useState } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useOstatokStore } from '@renderer/app/jur-7/ostatok/store'
+import { useQueryClient } from '@tanstack/react-query'
+import isEmpty from 'just-is-empty'
+import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
+import { toast } from 'react-toastify'
+
+import { useOstatokStore } from '@/app/jur-7/ostatok/store'
 import {
   handleOstatokExistingDocumentError,
   handleOstatokResponse,
   validateOstatokDate
-} from '@renderer/app/jur-7/ostatok/utils'
-import { createResponsibleSpravochnik } from '@renderer/app/jur-7/responsible/service'
-import { createShartnomaSpravochnik } from '@renderer/app/organization/shartnoma'
-import { createOrganizationSpravochnik } from '@renderer/app/region-spravochnik/organization'
-import { Form } from '@renderer/common/components/ui/form'
-import { DocumentType } from '@renderer/common/features/doc-num'
-import { useSnippets } from '@renderer/common/features/snippents/use-snippets'
-import { useSpravochnik } from '@renderer/common/features/spravochnik'
-import { formatDate, parseDate, withinMonth } from '@renderer/common/lib/date'
-import { focusInvalidInput } from '@renderer/common/lib/errors'
-import { type Operatsii, TypeSchetOperatsii } from '@renderer/common/models'
-import { DetailsView } from '@renderer/common/views'
+} from '@/app/jur-7/ostatok/utils'
+import { createResponsibleSpravochnik } from '@/app/jur-7/responsible/service'
+import { createShartnomaSpravochnik } from '@/app/organization/shartnoma'
+import { createOrganizationSpravochnik } from '@/app/region-spravochnik/organization'
+import { createOperatsiiSpravochnik } from '@/app/super-admin/operatsii'
+import { Form } from '@/common/components/ui/form'
+import { DocumentType } from '@/common/features/doc-num'
+import { DownloadFile, ImportFile } from '@/common/features/file'
+import { useSnippets } from '@/common/features/snippents/use-snippets'
+import { useSpravochnik } from '@/common/features/spravochnik'
+import { formatDate, parseDate, withinMonth } from '@/common/lib/date'
+import { focusInvalidInput } from '@/common/lib/errors'
+import { type Operatsii, TypeSchetOperatsii } from '@/common/models'
+import { DetailsView } from '@/common/views'
 import {
   DocumentFields,
   DoverennostFields,
@@ -30,15 +38,7 @@ import {
   ResponsibleFields,
   ShartnomaFields,
   SummaFields
-} from '@renderer/common/widget/form'
-import { useQueryClient } from '@tanstack/react-query'
-import isEmpty from 'just-is-empty'
-import { useForm } from 'react-hook-form'
-import { useTranslation } from 'react-i18next'
-import { toast } from 'react-toastify'
-
-import { createOperatsiiSpravochnik } from '@/app/super-admin/operatsii'
-import { DownloadFile, ImportFile } from '@/common/features/file'
+} from '@/common/widget/form'
 
 import { iznosQueryKeys } from '../../iznos/config'
 import { ostatokQueryKeys } from '../../ostatok'

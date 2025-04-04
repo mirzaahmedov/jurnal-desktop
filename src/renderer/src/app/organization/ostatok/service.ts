@@ -1,11 +1,11 @@
 import type { OrganizationOstatokPayload } from './utils'
 import type { OrganizationOstatok, ResponseMeta } from '@/common/models'
 
-import { withPreprocessor } from '@renderer/common/lib/validation'
 import { z } from 'zod'
 
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 import { main_schet } from '@/common/features/crud/middleware'
+import { withPreprocessor } from '@/common/lib/validation'
 
 interface OrganOstatokMeta extends ResponseMeta {
   internal_prixod_summa: number

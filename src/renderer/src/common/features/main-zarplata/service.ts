@@ -1,11 +1,12 @@
 import type { SpravochnikHookOptions } from '../spravochnik'
-import type { MainZarplata, Response } from '@renderer/common/models'
+import type { MainZarplata, Response } from '@/common/models'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 
-import { capitalize } from '@renderer/common/lib/string'
-import { extendObject } from '@renderer/common/lib/utils'
-import { zarplataApi } from '@renderer/common/lib/zarplata'
 import { t } from 'i18next'
+
+import { capitalize } from '@/common/lib/string'
+import { extendObject } from '@/common/lib/utils'
+import { zarplataApi } from '@/common/lib/zarplata'
 
 import { getUserId } from '../auth'
 import { mainZarplataColumns } from './columns'

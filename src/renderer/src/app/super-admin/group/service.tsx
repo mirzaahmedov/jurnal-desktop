@@ -4,18 +4,14 @@ import type { Group } from '@/common/models'
 
 import { useMemo } from 'react'
 
-import {
-  CollapsibleTable,
-  type CollapsibleTableProps
-} from '@renderer/common/components/collapsible-table'
-import { SpravochnikSearchField } from '@renderer/common/features/filters/search/search-filter-spravochnik'
+import { CollapsibleTable, type CollapsibleTableProps } from '@/common/components/collapsible-table'
+import { ApiEndpoints, CRUDService } from '@/common/features/crud'
+import { SpravochnikSearchField } from '@/common/features/filters/search/search-filter-spravochnik'
 import {
   type PathTreeNode,
   arrayToTreeByPathKey,
   sortElementsByPath
-} from '@renderer/common/lib/tree/path-tree'
-
-import { ApiEndpoints, CRUDService } from '@/common/features/crud'
+} from '@/common/lib/tree/path-tree'
 import { extendObject } from '@/common/lib/utils'
 
 import { groupColumns } from './columns'

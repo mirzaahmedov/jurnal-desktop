@@ -1,11 +1,11 @@
 import type { KassaOstatokPayload } from './utils'
 import type { KassaOstatok, ResponseMeta } from '@/common/models'
 
-import { withPreprocessor } from '@renderer/common/lib/validation'
 import { z } from 'zod'
 
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 import { main_schet } from '@/common/features/crud/middleware'
+import { withPreprocessor } from '@/common/lib/validation'
 
 interface KassaOstatokMeta extends ResponseMeta {
   internal_prixod_summa: number

@@ -1,13 +1,13 @@
 import type { OXReportProvodka } from '../config'
-import type { EditableColumnDef } from '@renderer/common/components/editable-table'
-import type { SmetaGrafik } from '@renderer/common/models'
+import type { EditableColumnDef } from '@/common/components/editable-table'
+import type { SmetaGrafik } from '@/common/models'
 
-import { NumericInput } from '@renderer/common/components'
+import { NumericInput } from '@/common/components'
 import {
   createNumberEditor,
   createSmetaGrafikEditor
-} from '@renderer/common/components/editable-table/editors'
-import { inputVariants } from '@renderer/common/features/spravochnik'
+} from '@/common/components/editable-table/editors'
+import { inputVariants } from '@/common/features/spravochnik'
 
 const getMonthAllocated = (month?: number, smeta?: SmetaGrafik) => {
   if (!month || !smeta) {

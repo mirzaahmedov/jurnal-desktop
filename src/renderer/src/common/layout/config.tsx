@@ -2,8 +2,6 @@ import type { Access } from '@/common/models'
 import type { TFunction } from 'i18next'
 import type { ComponentType, ReactNode } from 'react'
 
-import { OstatokController } from '@renderer/app/jur-7/ostatok/ostatok-controller'
-import { adminRoles } from '@renderer/app/super-admin/role'
 import {
   ArrowLeftRight,
   BadgeDollarSign,
@@ -54,6 +52,8 @@ import {
   Weight
 } from 'lucide-react'
 
+import { OstatokController } from '@/app/jur-7/ostatok/ostatok-controller'
+import { adminRoles } from '@/app/super-admin/role'
 import { useAuthenticationStore } from '@/common/features/auth'
 import { omitEmptyArrayElements } from '@/common/lib/validation'
 

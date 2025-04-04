@@ -1,4 +1,3 @@
-import { DownloadFile } from '@renderer/common/features/file'
 import { Download } from 'lucide-react'
 
 import { Button } from '@/common/components/ui/button'
@@ -11,6 +10,7 @@ import {
   DialogTrigger
 } from '@/common/components/ui/dialog'
 import { Label } from '@/common/components/ui/label'
+import { DownloadFile } from '@/common/features/file'
 import { SpravochnikInput, useSpravochnik } from '@/common/features/spravochnik'
 
 import { createShartnomaSpravochnik } from '../shartnoma'

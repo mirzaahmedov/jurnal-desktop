@@ -2,9 +2,10 @@ import type { ToastContentProps } from 'react-toastify'
 
 import { useState } from 'react'
 
-import { Button } from '@renderer/common/components/ui/button'
 import { ClipboardCheck, ClipboardPlus, Repeat, X } from 'lucide-react'
 import { toast } from 'react-toastify'
+
+import { Button } from '@/common/components/ui/button'
 
 export interface NotifyOptions {
   title: string

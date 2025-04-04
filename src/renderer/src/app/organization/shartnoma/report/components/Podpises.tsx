@@ -1,11 +1,11 @@
-import type { Podpis } from '@renderer/common/models'
+import type { Podpis } from '@/common/models'
 
 import { StyleSheet, Text, View } from '@react-pdf/renderer'
-import { getPodpisDoljnostOptions } from '@renderer/app/region-spravochnik/podpis/config'
-import { splitArrayToChunks } from '@renderer/common/lib/array'
 import { useTranslation } from 'react-i18next'
 
+import { getPodpisDoljnostOptions } from '@/app/region-spravochnik/podpis/config'
 import { Blank, Field, Flex, Label } from '@/common/components/pdf'
+import { splitArrayToChunks } from '@/common/lib/array'
 
 interface PodpisProps {
   year: number

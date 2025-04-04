@@ -1,6 +1,5 @@
 import { type ReactNode, useEffect } from 'react'
 
-import { useToggle } from '@renderer/common/hooks'
 import { useQuery } from '@tanstack/react-query'
 import { t } from 'i18next'
 import { useTranslation } from 'react-i18next'
@@ -20,6 +19,7 @@ import {
   requisitesQueryKeys,
   useRequisitesStore
 } from '@/common/features/requisites'
+import { useToggle } from '@/common/hooks'
 
 export const DuplicateSchetsAlert = () => {
   const alertToggle = useToggle()

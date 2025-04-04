@@ -1,13 +1,14 @@
-import type { OX } from '@renderer/common/models'
+import type { OX } from '@/common/models'
 
-import { GenericTable } from '@renderer/common/components'
-import { useConfirm } from '@renderer/common/features/confirm'
-import { useLayout } from '@renderer/common/features/layout'
-import { useRequisitesStore } from '@renderer/common/features/requisites'
-import { toast } from '@renderer/common/hooks'
-import { ListView } from '@renderer/common/views'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
+
+import { GenericTable } from '@/common/components'
+import { useConfirm } from '@/common/features/confirm'
+import { useRequisitesStore } from '@/common/features/requisites'
+import { toast } from '@/common/hooks'
+import { useLayout } from '@/common/layout/store'
+import { ListView } from '@/common/views'
 
 import { oxReportColumns } from './columns'
 import { oxReportQueryKeys } from './config'

@@ -1,7 +1,10 @@
 import type { Dashboard } from '../model'
-import type { ChartConfig } from '@renderer/common/components/ui/chart'
+import type { ChartConfig } from '@/common/components/ui/chart'
 
 import { useMemo } from 'react'
+
+import { useQuery } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
 
 import {
   Card,
@@ -9,12 +12,9 @@ import {
   CardDescription,
   CardHeader,
   CardTitle
-} from '@renderer/common/components/ui/card'
-import { formatNumber } from '@renderer/common/lib/format'
-import { useQuery } from '@tanstack/react-query'
-import { useTranslation } from 'react-i18next'
-
+} from '@/common/components/ui/card'
 import { getColors } from '@/common/lib/color'
+import { formatNumber } from '@/common/lib/format'
 
 import { queryKeys } from '../config'
 import { getDashboardBankQuery } from '../service'

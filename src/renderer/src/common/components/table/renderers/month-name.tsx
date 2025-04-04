@@ -1,5 +1,6 @@
-import { getMonthName } from '@renderer/common/lib/date'
 import { Trans } from 'react-i18next'
+
+import { getMonthName } from '@/common/lib/date'
 
 interface MonthNameProps {
   monthNumber: number

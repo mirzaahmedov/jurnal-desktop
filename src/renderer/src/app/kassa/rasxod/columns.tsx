@@ -1,10 +1,9 @@
 import type { ColumnDef } from '@/common/components'
 import type { KassaRasxodType } from '@/common/models'
 
-import { IDCell } from '@renderer/common/components/table/renderers/id'
-import { ProvodkaCell } from '@renderer/common/components/table/renderers/provodka-operatsii'
-import { SummaCell } from '@renderer/common/components/table/renderers/summa'
-
+import { IDCell } from '@/common/components/table/renderers/id'
+import { ProvodkaCell } from '@/common/components/table/renderers/provodka-operatsii'
+import { SummaCell } from '@/common/components/table/renderers/summa'
 import { formatLocaleDate } from '@/common/lib/format'
 
 export const columns: ColumnDef<KassaRasxodType>[] = [

@@ -1,8 +1,8 @@
 import type { ColumnDef } from '@/common/components'
 import type { Naimenovanie, NaimenovanieKol } from '@/common/models'
 
-import { IDCell } from '@renderer/common/components/table/renderers/id'
-import { formatLocaleDate } from '@renderer/common/lib/format'
+import { IDCell } from '@/common/components/table/renderers/id'
+import { formatLocaleDate } from '@/common/lib/format'
 
 export const naimenovanieColumns: ColumnDef<Naimenovanie>[] = [
   {

@@ -4,18 +4,17 @@ import type { MainSchet } from '@/common/models'
 import { useEffect, useState } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { bankQueryKeys } from '@renderer/app/super-admin/bank/config'
-import { bankService } from '@renderer/app/super-admin/bank/service'
-import { FormElement } from '@renderer/common/components/form'
-import { requisitesQueryKeys } from '@renderer/common/features/requisites'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 
+import { bankQueryKeys } from '@/app/super-admin/bank/config'
+import { bankService } from '@/app/super-admin/bank/service'
 import { BudgetService } from '@/app/super-admin/budjet'
 import { budjetQueryKeys } from '@/app/super-admin/budjet/constants'
 import { AutoComplete, SelectField } from '@/common/components'
+import { FormElement } from '@/common/components/form'
 import { Button } from '@/common/components/ui/button'
 import {
   Dialog,
@@ -33,6 +32,7 @@ import {
   FormMessage
 } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
+import { requisitesQueryKeys } from '@/common/features/requisites'
 
 import { mainSchetQueryKeys } from './constants'
 import { MainSchetPayloadSchema, mainSchetService } from './service'

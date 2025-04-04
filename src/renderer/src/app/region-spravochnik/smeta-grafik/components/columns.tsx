@@ -2,12 +2,12 @@ import type { SmetaTableProps } from './table'
 import type { SmetaGrafik } from '@/common/models'
 import type { ComponentType } from 'react'
 
-import { Copyable } from '@renderer/common/components'
-import { DataList } from '@renderer/common/components/data-list'
-import { HoverInfoCell } from '@renderer/common/components/table/renderers'
 import { Pencil, Trash2 } from 'lucide-react'
 import { Trans } from 'react-i18next'
 
+import { Copyable } from '@/common/components'
+import { DataList } from '@/common/components/data-list'
+import { HoverInfoCell } from '@/common/components/table/renderers'
 import { Button } from '@/common/components/ui/button'
 import { formatNumber } from '@/common/lib/format'
 

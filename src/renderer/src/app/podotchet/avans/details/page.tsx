@@ -3,16 +3,6 @@ import type { AdvanceReportPodvodkaPayloadType } from '../config'
 import { useEffect } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { EditableTable } from '@renderer/common/components/editable-table'
-import {
-  createEditorChangeHandler,
-  createEditorCreateHandler,
-  createEditorDeleteHandler
-} from '@renderer/common/components/editable-table/helpers'
-import { DocumentType } from '@renderer/common/features/doc-num'
-import { useRequisitesStore } from '@renderer/common/features/requisites'
-import { useSnippets } from '@renderer/common/features/snippents/use-snippets'
-import { DetailsView } from '@renderer/common/views'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -22,11 +12,21 @@ import { toast } from 'react-toastify'
 import { createPodotchetSpravochnik } from '@/app/region-spravochnik/podotchet'
 import { createOperatsiiSpravochnik } from '@/app/super-admin/operatsii'
 import { Fieldset } from '@/common/components'
+import { EditableTable } from '@/common/components/editable-table'
+import {
+  createEditorChangeHandler,
+  createEditorCreateHandler,
+  createEditorDeleteHandler
+} from '@/common/components/editable-table/helpers'
 import { Form } from '@/common/components/ui/form'
-import { useLayoutStore } from '@/common/features/layout'
+import { DocumentType } from '@/common/features/doc-num'
+import { useRequisitesStore } from '@/common/features/requisites'
+import { useSnippets } from '@/common/features/snippents/use-snippets'
 import { useSpravochnik } from '@/common/features/spravochnik'
+import { useLayoutStore } from '@/common/layout/store'
 import { normalizeEmptyFields } from '@/common/lib/validation'
 import { TypeSchetOperatsii } from '@/common/models'
+import { DetailsView } from '@/common/views'
 import {
   DocumentFields,
   OperatsiiFields,

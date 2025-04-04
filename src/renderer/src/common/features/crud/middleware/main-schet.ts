@@ -1,8 +1,7 @@
 import type { MiddlewareFunction } from '../definition'
 import type { AxiosRequestConfig } from 'axios'
 
-import { getBudjetId, getMainschetId } from '@renderer/common/features/requisites'
-
+import { getBudjetId, getMainschetId } from '@/common/features/requisites'
 import { extendObject } from '@/common/lib/utils'
 
 export const main_schet: () => MiddlewareFunction = () => {

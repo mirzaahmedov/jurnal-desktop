@@ -5,13 +5,12 @@ import type { DialogProps } from '@radix-ui/react-dialog'
 import { useEffect } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { createSmetaSpravochnik } from '@renderer/app/super-admin/smeta'
-import { useLocationState } from '@renderer/common/hooks/use-location-state'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { t } from 'i18next'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 
+import { createSmetaSpravochnik } from '@/app/super-admin/smeta'
 import { SelectField } from '@/common/components'
 import { Button } from '@/common/components/ui/button'
 import {
@@ -31,6 +30,7 @@ import {
 } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
 import { useSpravochnik } from '@/common/features/spravochnik'
+import { useLocationState } from '@/common/hooks/use-location-state'
 import { TypeSchetOperatsii } from '@/common/models'
 
 import { operatsiiQueryKeys, operatsiiTypeSchetOptions } from './config'

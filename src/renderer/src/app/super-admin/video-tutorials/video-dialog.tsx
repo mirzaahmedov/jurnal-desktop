@@ -3,9 +3,6 @@ import type { Video } from '@/common/models'
 import { useEffect, useState } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { VideoPlayer } from '@renderer/common/components/video-player'
-import { capitalize } from '@renderer/common/lib/string'
-import { cn } from '@renderer/common/lib/utils'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { SquarePen, X } from 'lucide-react'
 import { useForm } from 'react-hook-form'
@@ -29,6 +26,9 @@ import {
   FormMessage
 } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
+import { VideoPlayer } from '@/common/components/video-player'
+import { capitalize } from '@/common/lib/string'
+import { cn } from '@/common/lib/utils'
 
 import { videoQueryKeys } from './config'
 import { VideoFormSchema, type VideoFormValues, VideoService } from './service'

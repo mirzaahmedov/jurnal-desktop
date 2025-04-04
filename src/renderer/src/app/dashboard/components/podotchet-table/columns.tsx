@@ -1,8 +1,9 @@
 import type { Dashboard } from '../../model'
-import type { ColumnDef } from '@renderer/common/components/collapsible-table'
+import type { ColumnDef } from '@/common/components/collapsible-table'
 
-import { formatNumber } from '@renderer/common/lib/format'
 import { t } from 'i18next'
+
+import { formatNumber } from '@/common/lib/format'
 
 export const normalizePodotchetData = (podotchets?: Dashboard.Podotchet[]) =>
   podotchets?.map((podotchet) => {

@@ -1,14 +1,15 @@
-import type { AdminPrixodbook } from '@renderer/common/models'
+import type { AdminPrixodbook } from '@/common/models'
 
 import { useEffect } from 'react'
 
-import { GenericTable } from '@renderer/common/components'
-import { useLayoutStore } from '@renderer/common/features/layout'
-import { usePagination } from '@renderer/common/hooks'
-import { ListView } from '@renderer/common/views'
 import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
+
+import { GenericTable } from '@/common/components'
+import { usePagination } from '@/common/hooks'
+import { useLayoutStore } from '@/common/layout/store'
+import { ListView } from '@/common/views'
 
 import { prixodbookColumns } from './columns'
 import { prixodbookQueryKeys } from './config'

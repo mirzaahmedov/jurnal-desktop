@@ -1,10 +1,10 @@
 import { Outlet } from 'react-router-dom'
 
 import { AuthGuard } from '@/common/features/auth'
-import { PageLayout } from '@/common/features/layout'
+import { SpravochnikProvider } from '@/common/features/spravochnik'
 
-import { SpravochnikProvider } from '../features/spravochnik'
-import Sidebar from './sidebar'
+import { Header } from './compoonents/header'
+import { Sidebar } from './compoonents/sidebar'
 
 const MainLayout = () => {
   return (
@@ -12,9 +12,10 @@ const MainLayout = () => {
       <Sidebar />
       <div className="flex-1 overflow-auto scrollbar">
         <AuthGuard>
-          <PageLayout>
+          <main className="h-full flex flex-col bg-white">
+            <Header />
             <Outlet />
-          </PageLayout>
+          </main>
         </AuthGuard>
       </div>
       <SpravochnikProvider />

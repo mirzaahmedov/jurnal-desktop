@@ -1,16 +1,16 @@
 import { useEffect, useState } from 'react'
 
-import { roleColumns, roleQueryKeys, roleService } from '@renderer/app/super-admin/role'
-import { SearchFilterDebounced } from '@renderer/common/features/filters/search/search-filter-debounced'
-import { useSearchFilter } from '@renderer/common/features/filters/search/search-filter-debounced'
-import { usePagination } from '@renderer/common/hooks'
-import { ListView } from '@renderer/common/views'
 import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 
+import { roleColumns, roleQueryKeys, roleService } from '@/app/super-admin/role'
 import { GenericTable } from '@/common/components'
-import { useLayoutStore } from '@/common/features/layout'
+import { SearchFilterDebounced } from '@/common/features/filters/search/search-filter-debounced'
+import { useSearchFilter } from '@/common/features/filters/search/search-filter-debounced'
+import { usePagination } from '@/common/hooks'
 import { useToggle } from '@/common/hooks/use-toggle'
+import { useLayoutStore } from '@/common/layout/store'
+import { ListView } from '@/common/views'
 
 import { AccessDialog } from './dialog'
 

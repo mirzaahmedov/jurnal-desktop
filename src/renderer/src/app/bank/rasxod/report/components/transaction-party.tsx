@@ -1,8 +1,8 @@
 import { Text, View } from '@react-pdf/renderer'
-import { normalizeSpaces } from '@renderer/common/lib/text'
 import { useTranslation } from 'react-i18next'
 
 import { Flex, Label, TextBox } from '@/common/components/pdf'
+import { normalizeSpaces } from '@/common/lib/text'
 
 interface TransactionPartyProps {
   type: 'debtor' | 'creditor'

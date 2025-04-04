@@ -1,7 +1,7 @@
-import type { OX } from '@renderer/common/models'
+import type { OX } from '@/common/models'
 
-import { ApiEndpoints, CRUDService } from '@renderer/common/features/crud'
-import { http } from '@renderer/common/lib/http'
+import { ApiEndpoints, CRUDService } from '@/common/features/crud'
+import { http } from '@/common/lib/http'
 
 export const adminOXService = new CRUDService<OX.AdminReport>({
   endpoint: ApiEndpoints.admin__ox

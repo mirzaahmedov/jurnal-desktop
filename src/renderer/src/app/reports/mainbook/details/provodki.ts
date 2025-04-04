@@ -1,6 +1,6 @@
-import type { EditableColumnDef } from '@renderer/common/components/editable-table/interface'
+import type { EditableColumnDef } from '@/common/components/editable-table/interface'
 
-import { createTextEditor } from '@renderer/common/components/editable-table/editors'
+import { createTextEditor } from '@/common/components/editable-table/editors'
 
 export interface ProvodkaRow {
   schet: string

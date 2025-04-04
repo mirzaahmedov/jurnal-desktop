@@ -1,22 +1,23 @@
 import { type SVGAttributes, useEffect, useState } from 'react'
 
 import { CaretLeftIcon } from '@radix-ui/react-icons'
-import {
-  AlertDialog,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogHeader,
-  AlertDialogTitle
-} from '@renderer/common/components/ui/alert-dialog'
-import { Button } from '@renderer/common/components/ui/button'
-import { useToggle } from '@renderer/common/hooks'
-import { cn } from '@renderer/common/lib/utils'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { format } from 'date-fns'
 import { ru } from 'date-fns/locale/ru'
 import { uz } from 'date-fns/locale/uz'
 import { AlertTriangle } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogHeader,
+  AlertDialogTitle
+} from '@/common/components/ui/alert-dialog'
+import { Button } from '@/common/components/ui/button'
+import { useToggle } from '@/common/hooks'
+import { cn } from '@/common/lib/utils'
 
 import { iznosQueryKeys } from '../iznos/config'
 import { ostatokQueryKeys } from './config'

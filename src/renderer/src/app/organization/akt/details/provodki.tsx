@@ -1,17 +1,16 @@
 import type { AktProvodkaFormValues } from '../config'
-import type { EditableColumnDef } from '@renderer/common/components/editable-table'
+import type { EditableColumnDef } from '@/common/components/editable-table'
 
 import {
   createOperatsiiEditor,
   createPodrazdelenieEditor,
   createStaffEditor,
   createTypeOperatsiiEditor
-} from '@renderer/common/components/editable-table/editors'
-import { createNumberEditor } from '@renderer/common/components/editable-table/editors/number'
-import { Input } from '@renderer/common/components/ui/input'
-import { inputVariants } from '@renderer/common/features/spravochnik'
-import { cn } from '@renderer/common/lib/utils'
-
+} from '@/common/components/editable-table/editors'
+import { createNumberEditor } from '@/common/components/editable-table/editors/number'
+import { Input } from '@/common/components/ui/input'
+import { inputVariants } from '@/common/features/spravochnik'
+import { cn } from '@/common/lib/utils'
 import { TypeSchetOperatsii } from '@/common/models'
 
 export const provodkaColumns: EditableColumnDef<AktProvodkaFormValues>[] = [

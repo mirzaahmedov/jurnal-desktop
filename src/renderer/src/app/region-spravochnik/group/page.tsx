@@ -1,16 +1,16 @@
 import { useEffect } from 'react'
 
-import { groupColumns } from '@renderer/app/super-admin/group/columns'
-import { groupQueryKeys } from '@renderer/app/super-admin/group/constants'
-import { GroupTable, groupService } from '@renderer/app/super-admin/group/service'
-import { DownloadFile } from '@renderer/common/features/file'
-import { SearchFilterDebounced } from '@renderer/common/features/filters/search/search-filter-debounced'
-import { useSearchFilter } from '@renderer/common/features/filters/search/search-filter-debounced'
-import { ListView } from '@renderer/common/views'
 import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 
-import { useLayoutStore } from '@/common/features/layout'
+import { groupColumns } from '@/app/super-admin/group/columns'
+import { groupQueryKeys } from '@/app/super-admin/group/constants'
+import { GroupTable, groupService } from '@/app/super-admin/group/service'
+import { DownloadFile } from '@/common/features/file'
+import { SearchFilterDebounced } from '@/common/features/filters/search/search-filter-debounced'
+import { useSearchFilter } from '@/common/features/filters/search/search-filter-debounced'
+import { useLayoutStore } from '@/common/layout/store'
+import { ListView } from '@/common/views'
 
 const RegionGroupPage = () => {
   const setLayout = useLayoutStore((store) => store.setLayout)

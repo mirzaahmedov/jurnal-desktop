@@ -3,7 +3,6 @@ import type { PrixodSchet } from '@/common/models'
 import { useEffect } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { capitalize } from '@renderer/common/lib/string'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -26,6 +25,7 @@ import {
   FormMessage
 } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
+import { capitalize } from '@/common/lib/string'
 
 import { prixodSchetQueryKeys } from './config'
 import { PrixodSchetFormSchema, type PrixodSchetFormValues, PrixodSchetService } from './service'

@@ -2,25 +2,26 @@ import type { Accept } from 'react-dropzone'
 
 import { useCallback, useState } from 'react'
 
-import { FileDropzone, Spinner } from '@renderer/common/components'
-import { XlsFile } from '@renderer/common/components/icons/XlsFile'
-import { Button } from '@renderer/common/components/ui/button'
-import { Card } from '@renderer/common/components/ui/card'
+import { type MutationOptions, useMutation } from '@tanstack/react-query'
+import { CircleX, UploadCloud } from 'lucide-react'
+import millify from 'millify'
+import { useTranslation } from 'react-i18next'
+import { toast } from 'react-toastify'
+
+import { FileDropzone, Spinner } from '@/common/components'
+import { XlsFile } from '@/common/components/icons/XlsFile'
+import { Button } from '@/common/components/ui/button'
+import { Card } from '@/common/components/ui/card'
 import {
   Dialog,
   DialogClose,
   DialogContent,
   DialogFooter,
   DialogTrigger
-} from '@renderer/common/components/ui/dialog'
-import { Progress } from '@renderer/common/components/ui/progress'
-import { useToggle } from '@renderer/common/hooks'
-import { http } from '@renderer/common/lib/http'
-import { type MutationOptions, useMutation } from '@tanstack/react-query'
-import { CircleX, UploadCloud } from 'lucide-react'
-import millify from 'millify'
-import { useTranslation } from 'react-i18next'
-import { toast } from 'react-toastify'
+} from '@/common/components/ui/dialog'
+import { Progress } from '@/common/components/ui/progress'
+import { useToggle } from '@/common/hooks'
+import { http } from '@/common/lib/http'
 
 const acceptFiles: Accept = {
   'application/vnd.ms-excel': [],

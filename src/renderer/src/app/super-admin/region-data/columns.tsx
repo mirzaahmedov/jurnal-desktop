@@ -1,7 +1,7 @@
-import type { ColumnDef } from '@renderer/common/components'
-import type { RegionData } from '@renderer/common/models'
+import type { ColumnDef } from '@/common/components'
+import type { RegionData } from '@/common/models'
 
-import { Badge } from '@renderer/common/components/ui/badge'
+import { Badge } from '@/common/components/ui/badge'
 
 const CountCell = ({ count }: { count: number }) => {
   if (Number(count) < 10) {

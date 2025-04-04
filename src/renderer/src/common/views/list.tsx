@@ -1,11 +1,11 @@
 import { type HTMLAttributes, forwardRef, useState } from 'react'
 
-import { LoadingOverlay } from '@renderer/common/components'
-import { Pagination } from '@renderer/common/components/pagination'
-import { RangeDatePicker } from '@renderer/common/components/range-date-picker'
 import { Maximize, Minimize } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
+import { LoadingOverlay } from '@/common/components'
+import { Pagination } from '@/common/components/pagination'
+import { RangeDatePicker } from '@/common/components/range-date-picker'
 import { Button } from '@/common/components/ui/button'
 import { cn } from '@/common/lib/utils'
 

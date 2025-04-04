@@ -7,9 +7,8 @@ import type {
 } from '@/common/models'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 
-import { ApiEndpoints } from '@renderer/common/features/crud'
-import { http } from '@renderer/common/lib/http'
-
+import { ApiEndpoints } from '@/common/features/crud'
+import { http } from '@/common/lib/http'
 import { zarplataApi } from '@/common/lib/zarplata'
 
 export class NachislenieService {

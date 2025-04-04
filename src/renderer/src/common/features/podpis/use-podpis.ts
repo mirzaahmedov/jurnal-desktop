@@ -1,6 +1,7 @@
-import { podpisQueryKeys } from '@renderer/app/region-spravochnik/podpis/config'
-import { podpisService } from '@renderer/app/region-spravochnik/podpis/service'
 import { useQuery } from '@tanstack/react-query'
+
+import { podpisQueryKeys } from '@/app/region-spravochnik/podpis/config'
+import { podpisService } from '@/app/region-spravochnik/podpis/service'
 
 export const usePodpis = (type: string, enabled: boolean = true) => {
   const { data: podpis } = useQuery({

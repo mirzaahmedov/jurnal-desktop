@@ -1,12 +1,13 @@
-import type { RealExpenses } from '@renderer/common/models'
+import type { RealExpenses } from '@/common/models'
 
-import { GenericTable } from '@renderer/common/components'
-import { useLayout } from '@renderer/common/features/layout'
-import { serializeDateParams } from '@renderer/common/lib/query-params'
-import { ListView } from '@renderer/common/views'
 import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
+
+import { GenericTable } from '@/common/components'
+import { useLayout } from '@/common/layout/store'
+import { serializeDateParams } from '@/common/lib/query-params'
+import { ListView } from '@/common/views'
 
 import { columns } from './columns'
 import { queryKeys } from './config'

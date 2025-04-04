@@ -2,17 +2,17 @@ import type { Group } from '@/common/models'
 
 import { useState } from 'react'
 
-import { DownloadFile, ImportFile } from '@renderer/common/features/file'
-import { SearchFilterDebounced } from '@renderer/common/features/filters/search/search-filter-debounced'
-import { useSearchFilter } from '@renderer/common/features/filters/search/search-filter-debounced'
-import { ListView } from '@renderer/common/views'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 
 import { useConfirm } from '@/common/features/confirm'
-import { useLayout } from '@/common/features/layout'
+import { DownloadFile, ImportFile } from '@/common/features/file'
+import { SearchFilterDebounced } from '@/common/features/filters/search/search-filter-debounced'
+import { useSearchFilter } from '@/common/features/filters/search/search-filter-debounced'
 import { toast } from '@/common/hooks/use-toast'
 import { useToggle } from '@/common/hooks/use-toggle'
+import { useLayout } from '@/common/layout/store'
+import { ListView } from '@/common/views'
 
 import { groupColumns } from './columns'
 import { groupQueryKeys } from './constants'

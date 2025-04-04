@@ -1,8 +1,8 @@
 import type { RealExpensesReportValues } from './config'
-import type { RealExpenses } from '@renderer/common/models'
+import type { RealExpenses } from '@/common/models'
 
-import { ApiEndpoints, CRUDService } from '@renderer/common/features/crud'
-import { budjet, main_schet } from '@renderer/common/features/crud/middleware'
+import { ApiEndpoints, CRUDService } from '@/common/features/crud'
+import { budjet, main_schet } from '@/common/features/crud/middleware'
 
 export const realExpensesReportService = new CRUDService<
   RealExpenses.Report,

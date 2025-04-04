@@ -1,4 +1,4 @@
-import type { Response } from '@renderer/common/models'
+import type { Response } from '@/common/models'
 
 class MockCRUDService<T extends { id: number }> {
   constructor(private data: T[]) {}

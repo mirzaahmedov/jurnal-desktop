@@ -1,8 +1,12 @@
 import type { DialogProps } from '@radix-ui/react-dialog'
 import type { TFunction } from 'i18next'
 
-import { Copyable } from '@renderer/common/components'
-import { DataList } from '@renderer/common/components/data-list'
+import { Eye, TriangleAlert } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router-dom'
+
+import { Copyable } from '@/common/components'
+import { DataList } from '@/common/components/data-list'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -11,12 +15,9 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle
-} from '@renderer/common/components/ui/alert-dialog'
-import { Badge } from '@renderer/common/components/ui/badge'
-import { formatLocaleDate, formatNumber } from '@renderer/common/lib/format'
-import { Eye, TriangleAlert } from 'lucide-react'
-import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router-dom'
+} from '@/common/components/ui/alert-dialog'
+import { Badge } from '@/common/components/ui/badge'
+import { formatLocaleDate, formatNumber } from '@/common/lib/format'
 
 export interface ErrorDataDocument {
   id: number

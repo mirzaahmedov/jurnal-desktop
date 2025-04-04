@@ -1,12 +1,13 @@
 import { useState } from 'react'
 
-import { GenericTable } from '@renderer/common/components'
-import { MonthPicker } from '@renderer/common/components/month-picker'
-import { useLayout } from '@renderer/common/features/layout'
-import { usePagination } from '@renderer/common/hooks'
-import { ListView } from '@renderer/common/views'
 import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
+
+import { GenericTable } from '@/common/components'
+import { MonthPicker } from '@/common/components/month-picker'
+import { usePagination } from '@/common/hooks'
+import { useLayout } from '@/common/layout/store'
+import { ListView } from '@/common/views'
 
 import { regionDataColumns } from './columns'
 import { regionDataQueryKeys } from './config'

@@ -3,7 +3,6 @@ import type { KeyboardEvent } from 'react'
 
 import { useEffect, useRef, useState } from 'react'
 
-import { useToggle } from '@renderer/common/hooks'
 import { useQuery } from '@tanstack/react-query'
 import { ArrowLeft, ArrowRight, Plus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
@@ -12,6 +11,7 @@ import Paginate from 'react-paginate'
 import { GenericTable, LoadingOverlay } from '@/common/components'
 import { Button } from '@/common/components/ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/common/components/ui/dialog'
+import { useToggle } from '@/common/hooks'
 import { extendObject } from '@/common/lib/utils'
 import { normalizeEmptyFields } from '@/common/lib/validation'
 

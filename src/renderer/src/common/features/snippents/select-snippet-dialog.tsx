@@ -2,23 +2,18 @@ import type { UseSnippetsReturn } from './use-snippets'
 import type { DialogProps } from '@radix-ui/react-dialog'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { EmptyList } from '@renderer/common/components/empty-states'
-import { FormElement } from '@renderer/common/components/form'
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogTrigger
-} from '@renderer/common/components/ui/dialog'
-import { Form, FormField } from '@renderer/common/components/ui/form'
-import { Input } from '@renderer/common/components/ui/input'
-import { Textarea } from '@renderer/common/components/ui/textarea'
-import { useToggle } from '@renderer/common/hooks'
 import { Trash2 } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
+import { EmptyList } from '@/common/components/empty-states'
+import { FormElement } from '@/common/components/form'
 import { Button } from '@/common/components/ui/button'
+import { Dialog, DialogContent, DialogFooter, DialogTrigger } from '@/common/components/ui/dialog'
+import { Form, FormField } from '@/common/components/ui/form'
+import { Input } from '@/common/components/ui/input'
+import { Textarea } from '@/common/components/ui/textarea'
+import { useToggle } from '@/common/hooks'
 
 import { type Snippet, SnippetSchema, defaultValues } from './config'
 

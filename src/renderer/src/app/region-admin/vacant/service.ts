@@ -1,7 +1,7 @@
-import type { Vacant } from '@renderer/common/models/vacant'
+import type { Vacant } from '@/common/models/vacant'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 
-import { zarplataApi } from '@renderer/app/super-admin/zarplata/common/api'
+import { zarplataApi } from '@/app/super-admin/zarplata/common/api'
 
 export const getVacantListQuery = async (
   ctx: QueryFunctionContext<

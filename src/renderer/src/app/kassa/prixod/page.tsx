@@ -2,7 +2,6 @@ import type { KassaPrixod } from '@/common/models'
 
 import { useEffect } from 'react'
 
-import { useSettingsStore } from '@renderer/common/features/settings'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
@@ -14,9 +13,10 @@ import {
   SearchFilterDebounced,
   useSearchFilter
 } from '@/common/features/filters/search/search-filter-debounced'
-import { useLayoutStore } from '@/common/features/layout'
 import { useRequisitesStore } from '@/common/features/requisites'
+import { useSettingsStore } from '@/common/features/settings'
 import { useDates, usePagination } from '@/common/hooks'
+import { useLayoutStore } from '@/common/layout/store'
 import { formatNumber } from '@/common/lib/format'
 import { ListView } from '@/common/views'
 

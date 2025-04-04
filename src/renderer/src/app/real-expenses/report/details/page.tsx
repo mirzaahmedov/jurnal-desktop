@@ -1,31 +1,32 @@
 import { useEffect, useMemo, useRef } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Fieldset, SelectField } from '@renderer/common/components'
+import { useMutation, useQuery } from '@tanstack/react-query'
+import { useForm } from 'react-hook-form'
+import { useNavigate, useParams } from 'react-router-dom'
+
+import { Fieldset, SelectField } from '@/common/components'
 import {
   EditableTable,
   EditableTableCell,
   EditableTableRow
-} from '@renderer/common/components/editable-table'
+} from '@/common/components/editable-table'
 import {
   createEditorChangeHandler,
   createEditorCreateHandler,
   createEditorDeleteHandler
-} from '@renderer/common/components/editable-table/helpers'
-import { MonthPicker } from '@renderer/common/components/month-picker'
-import { Form, FormField } from '@renderer/common/components/ui/form'
-import { Input } from '@renderer/common/components/ui/input'
-import { useLayout } from '@renderer/common/features/layout'
-import { useRequisitesStore } from '@renderer/common/features/requisites'
-import { inputVariants } from '@renderer/common/features/spravochnik'
-import { toast } from '@renderer/common/hooks'
-import { formatNumber } from '@renderer/common/lib/format'
-import { useQueryDateParams, useQueryTypeDocument } from '@renderer/common/lib/query-params'
-import { cn } from '@renderer/common/lib/utils'
-import { DetailsView } from '@renderer/common/views'
-import { useMutation, useQuery } from '@tanstack/react-query'
-import { useForm } from 'react-hook-form'
-import { useNavigate, useParams } from 'react-router-dom'
+} from '@/common/components/editable-table/helpers'
+import { MonthPicker } from '@/common/components/month-picker'
+import { Form, FormField } from '@/common/components/ui/form'
+import { Input } from '@/common/components/ui/input'
+import { useRequisitesStore } from '@/common/features/requisites'
+import { inputVariants } from '@/common/features/spravochnik'
+import { toast } from '@/common/hooks'
+import { useLayout } from '@/common/layout/store'
+import { formatNumber } from '@/common/lib/format'
+import { useQueryDateParams, useQueryTypeDocument } from '@/common/lib/query-params'
+import { cn } from '@/common/lib/utils'
+import { DetailsView } from '@/common/views'
 
 import {
   RealExpensesReportFormSchema,

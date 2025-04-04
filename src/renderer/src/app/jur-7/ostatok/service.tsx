@@ -1,10 +1,11 @@
-import type { OstatokProduct, Response } from '@renderer/common/models'
+import type { OstatokProduct, Response } from '@/common/models'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 
-import { ApiEndpoints, CRUDService } from '@renderer/common/features/crud'
-import { budjet } from '@renderer/common/features/crud/middleware'
-import { http } from '@renderer/common/lib/http'
 import { z } from 'zod'
+
+import { ApiEndpoints, CRUDService } from '@/common/features/crud'
+import { budjet } from '@/common/features/crud/middleware'
+import { http } from '@/common/lib/http'
 
 export enum OstatokViewOption {
   PRODUCT = 'product',

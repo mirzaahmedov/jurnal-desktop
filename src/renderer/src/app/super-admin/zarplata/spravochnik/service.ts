@@ -1,5 +1,5 @@
 import type { ZarplataSpravochnikFormValues } from './config'
-import type { PaginationParams, Response } from '@/app/super-admin/zarplata/common/api'
+import type { Response } from '@/app/super-admin/zarplata/common/api'
 import type { Zarplata } from '@/common/models'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 
@@ -17,17 +17,16 @@ export class ZarplataSpravochnikService {
   }
 
   static async getAll(
-    ctx: QueryFunctionContext<[string, PaginationParams & { types_type_code: number }]>
+    ctx: QueryFunctionContext<[string, { types_type_code: number; name?: string }]>
   ): Promise<Zarplata.Spravochnik[]> {
-    const { PageIndex, PageSize, types_type_code } = ctx.queryKey[1]
+    const { types_type_code, name } = ctx.queryKey[1]
 
     const res = await zarplataApi.get<Zarplata.Spravochnik[]>(
       `${ZarplataSpravochnikService.endpoint}/get-by-query`,
       {
         params: {
-          PageIndex,
-          PageSize,
-          types_type_code
+          types_type_code,
+          name
         }
       }
     )

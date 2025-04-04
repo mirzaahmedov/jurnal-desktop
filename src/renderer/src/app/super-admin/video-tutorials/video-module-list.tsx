@@ -2,23 +2,23 @@ import type { VideoModule } from '@/common/models'
 
 import { useEffect, useState } from 'react'
 
-import { LoadingOverlay } from '@renderer/common/components'
-import { Badge } from '@renderer/common/components/ui/badge'
-import { Button } from '@renderer/common/components/ui/button'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger
-} from '@renderer/common/components/ui/dropdown-menu'
-import { Tabs, TabsList, TabsTrigger } from '@renderer/common/components/ui/tabs'
-import { useConfirm } from '@renderer/common/features/confirm'
-import { useToggle } from '@renderer/common/hooks'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Ellipsis, Pencil, Play, Plus, Trash2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 
+import { LoadingOverlay } from '@/common/components'
+import { Badge } from '@/common/components/ui/badge'
+import { Button } from '@/common/components/ui/button'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger
+} from '@/common/components/ui/dropdown-menu'
+import { Tabs, TabsList, TabsTrigger } from '@/common/components/ui/tabs'
+import { useConfirm } from '@/common/features/confirm'
+import { useToggle } from '@/common/hooks'
 import { cn } from '@/common/lib/utils'
 
 import { videoModuleQueryKeys } from './config'

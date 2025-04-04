@@ -1,22 +1,23 @@
-import type { ColumnDef, GetRowSelectedFn } from '@renderer/common/components'
+import type { ColumnDef, GetRowSelectedFn } from '@/common/components'
 import type { ReactNode } from 'react'
 
 import { CaretDownIcon } from '@radix-ui/react-icons'
+import { Pencil, Trash2 } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
+
 import {
   GenericTableCell,
   GenericTableHead,
   GenericTableRow
-} from '@renderer/common/components/generic-table'
-import { Button } from '@renderer/common/components/ui/button'
+} from '@/common/components/generic-table'
+import { Button } from '@/common/components/ui/button'
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger
-} from '@renderer/common/components/ui/collapsible'
-import { Table, TableBody, TableHeader } from '@renderer/common/components/ui/table'
-import { cn } from '@renderer/common/lib/utils'
-import { Pencil, Trash2 } from 'lucide-react'
-import { useTranslation } from 'react-i18next'
+} from '@/common/components/ui/collapsible'
+import { Table, TableBody, TableHeader } from '@/common/components/ui/table'
+import { cn } from '@/common/lib/utils'
 
 import { EmptyList } from '../empty-states'
 

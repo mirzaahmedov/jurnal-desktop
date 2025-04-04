@@ -1,4 +1,4 @@
-import { arrayStartsWith, removeTrailingZeros } from '@renderer/common/lib/array'
+import { arrayStartsWith, removeTrailingZeros } from '@/common/lib/array'
 
 export type PathTreeNode<T> = T & {
   _path: number[]

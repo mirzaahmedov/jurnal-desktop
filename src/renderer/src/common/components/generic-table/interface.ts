@@ -1,6 +1,6 @@
 import type { TableProps } from '@/common/components/ui/table'
+import type { Autocomplete } from '@/common/lib/types'
 import type { CheckedState } from '@radix-ui/react-checkbox'
-import type { Autocomplete } from '@renderer/common/lib/types'
 import type { HTMLAttributes, ReactNode, TableHTMLAttributes } from 'react'
 
 export enum TableSortDirection {

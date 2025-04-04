@@ -1,16 +1,18 @@
+import type { OX } from '@/common/models'
+
 import { useEffect, useState } from 'react'
 
-import { MonthPicker } from '@renderer/common/components/month-picker'
-import { Button } from '@renderer/common/components/ui/button'
-import { useLayout } from '@renderer/common/features/layout'
-import { useRequisitesStore } from '@renderer/common/features/requisites'
-import { toast } from '@renderer/common/hooks'
-import { formatDate } from '@renderer/common/lib/date'
-import type { OX } from '@renderer/common/models'
-import { DetailsView } from '@renderer/common/views'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { FileDown, Save } from 'lucide-react'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
+
+import { MonthPicker } from '@/common/components/month-picker'
+import { Button } from '@/common/components/ui/button'
+import { useRequisitesStore } from '@/common/features/requisites'
+import { toast } from '@/common/hooks'
+import { useLayout } from '@/common/layout/store'
+import { formatDate } from '@/common/lib/date'
+import { DetailsView } from '@/common/views'
 
 import { oxQueryKeys } from '../config'
 import { ReportTable } from '../report-table'

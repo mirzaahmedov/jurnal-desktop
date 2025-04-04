@@ -1,5 +1,5 @@
 import type { PokazatUslugiProvodkaFormValues } from '../config'
-import type { EditableColumnDef } from '@renderer/common/components/editable-table'
+import type { EditableColumnDef } from '@/common/components/editable-table'
 
 import {
   createNumberEditor,
@@ -7,11 +7,10 @@ import {
   createPodrazdelenieEditor,
   createStaffEditor,
   createTypeOperatsiiEditor
-} from '@renderer/common/components/editable-table/editors'
-import { Input } from '@renderer/common/components/ui/input'
-import { inputVariants } from '@renderer/common/features/spravochnik'
-import { cn } from '@renderer/common/lib/utils'
-
+} from '@/common/components/editable-table/editors'
+import { Input } from '@/common/components/ui/input'
+import { inputVariants } from '@/common/features/spravochnik'
+import { cn } from '@/common/lib/utils'
 import { TypeSchetOperatsii } from '@/common/models'
 
 export const podvodkaColumns: EditableColumnDef<PokazatUslugiProvodkaFormValues>[] = [

@@ -2,10 +2,9 @@ import type { EditorComponentType } from './types'
 
 import { useEffect } from 'react'
 
-import { createSmetaGrafikSpravochnik } from '@renderer/app/region-spravochnik/smeta-grafik/service'
-import { formatNumber } from '@renderer/common/lib/format'
-
+import { createSmetaGrafikSpravochnik } from '@/app/region-spravochnik/smeta-grafik/service'
 import { SpravochnikInput, useSpravochnik } from '@/common/features/spravochnik'
+import { formatNumber } from '@/common/lib/format'
 
 export const createSmetaGrafikEditor = <
   T extends { smeta_grafik_id?: number }

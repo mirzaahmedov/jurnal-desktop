@@ -2,7 +2,6 @@ import type { PieSectorDataItem } from 'recharts/types/polar/Pie'
 
 import { useId } from 'react'
 
-import { formatNumber } from '@renderer/common/lib/format'
 import { millify } from 'millify'
 import { useTranslation } from 'react-i18next'
 import { Label, Pie, PieChart, Sector } from 'recharts'
@@ -14,6 +13,7 @@ import {
   ChartTooltip,
   ChartTooltipContent
 } from '@/common/components/ui/chart'
+import { formatNumber } from '@/common/lib/format'
 
 export interface GenericPieChartData {
   main_schet_id: number

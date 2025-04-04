@@ -1,8 +1,8 @@
-import type { ColumnDef } from '@renderer/common/components'
-import type { Internal } from '@renderer/common/models'
+import type { ColumnDef } from '@/common/components'
+import type { Internal } from '@/common/models'
 
-import { IDCell } from '@renderer/common/components/table/renderers/id'
-import { formatLocaleDate, formatNumber } from '@renderer/common/lib/format'
+import { IDCell } from '@/common/components/table/renderers/id'
+import { formatLocaleDate, formatNumber } from '@/common/lib/format'
 
 export const internalColumns: ColumnDef<Internal>[] = [
   {

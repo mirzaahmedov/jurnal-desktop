@@ -1,6 +1,7 @@
-import { Badge } from '@renderer/common/components/ui/badge'
-import { MainbookStatus } from '@renderer/common/models'
 import { useTranslation } from 'react-i18next'
+
+import { Badge } from '@/common/components/ui/badge'
+import { MainbookStatus } from '@/common/models'
 
 export type ReportStatusProps = { status: MainbookStatus }
 export const ReportStatus = ({ status }: ReportStatusProps) => {

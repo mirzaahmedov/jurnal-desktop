@@ -1,17 +1,17 @@
 import { useEffect } from 'react'
 
-import { DownloadFile } from '@renderer/common/features/file'
-import { SearchFilterDebounced } from '@renderer/common/features/filters/search/search-filter-debounced'
-import { useSearchFilter } from '@renderer/common/features/filters/search/search-filter-debounced'
-import { useRequisitesStore } from '@renderer/common/features/requisites'
-import { useSettingsStore } from '@renderer/common/features/settings'
 import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 
 import { FooterCell, FooterRow, GenericTable, SummaTotal, useTableSort } from '@/common/components'
 import { ButtonGroup } from '@/common/components/ui/button-group'
-import { useLayoutStore } from '@/common/features/layout'
+import { DownloadFile } from '@/common/features/file'
+import { SearchFilterDebounced } from '@/common/features/filters/search/search-filter-debounced'
+import { useSearchFilter } from '@/common/features/filters/search/search-filter-debounced'
+import { useRequisitesStore } from '@/common/features/requisites'
+import { useSettingsStore } from '@/common/features/settings'
 import { useDates, usePagination } from '@/common/hooks'
+import { useLayoutStore } from '@/common/layout/store'
 import { formatNumber } from '@/common/lib/format'
 import { ListView } from '@/common/views'
 

@@ -3,11 +3,11 @@ import type { User } from '@/common/models'
 import { useEffect } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { roleQueryKeys, roleService } from '@renderer/app/super-admin/role'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
+import { roleQueryKeys, roleService } from '@/app/super-admin/role'
 import { SelectField } from '@/common/components'
 import { Button } from '@/common/components/ui/button'
 import {

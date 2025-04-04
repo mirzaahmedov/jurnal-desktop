@@ -1,18 +1,19 @@
 import { type ReactNode, useEffect, useMemo, useState } from 'react'
 
-import { Button } from '@renderer/common/components/ui/button'
+import { ArrowDown10, ArrowUp01, Pencil, Trash2 } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
+import { twMerge } from 'tailwind-merge'
+
+import { Button } from '@/common/components/ui/button'
 import {
   Table,
   TableBody,
   TableCaption,
   TableFooter,
   TableHeader
-} from '@renderer/common/components/ui/table'
-import { formatNumber } from '@renderer/common/lib/format'
-import { cn } from '@renderer/common/lib/utils'
-import { ArrowDown10, ArrowDownNarrowWide, ArrowUp01, Pencil, Trash2 } from 'lucide-react'
-import { useTranslation } from 'react-i18next'
-import { twMerge } from 'tailwind-merge'
+} from '@/common/components/ui/table'
+import { formatNumber } from '@/common/lib/format'
+import { cn } from '@/common/lib/utils'
 
 import { EmptyList } from '../empty-states'
 import { GenericTableCell, GenericTableHead, GenericTableRow } from './components'
@@ -148,7 +149,7 @@ export const GenericTable = <T extends object>(props: GenericTableProps<T>) => {
                               ) : sorted === TableSortDirection.ASC ? (
                                 <ArrowUp01 className="size-5 text-brand" />
                               ) : (
-                                <ArrowDownNarrowWide className="size-5 text-slate-400" />
+                                <ArrowDown10 className="size-5 text-slate-400" />
                               )}
                             </span>
                           ) : null}

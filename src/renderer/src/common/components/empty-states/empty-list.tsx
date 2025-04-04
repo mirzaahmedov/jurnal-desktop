@@ -1,7 +1,8 @@
 import type { HTMLAttributes, SVGAttributes } from 'react'
 
-import { cn } from '@renderer/common/lib/utils'
 import { useTranslation } from 'react-i18next'
+
+import { cn } from '@/common/lib/utils'
 
 import { EmptyInbox } from './empty-inbox'
 

@@ -1,8 +1,7 @@
 import type { EditorComponentType } from './types'
 
-import { inputVariants } from '@renderer/common/features/spravochnik'
-
 import { NumericInput } from '@/common/components'
+import { inputVariants } from '@/common/features/spravochnik'
 
 export const createSummaEditor = <T extends { summa?: number }>(): EditorComponentType<T> => {
   return ({ tabIndex, id, row, errors, onChange }) => {

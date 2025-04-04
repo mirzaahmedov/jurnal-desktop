@@ -1,7 +1,9 @@
 import type { ImportValidationErrorRow } from './utils'
 import type { DialogProps } from '@radix-ui/react-dialog'
 
-import { GenericTableCell, GenericTableHead } from '@renderer/common/components'
+import { useTranslation } from 'react-i18next'
+
+import { GenericTableCell, GenericTableHead } from '@/common/components'
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -9,9 +11,8 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle
-} from '@renderer/common/components/ui/alert-dialog'
-import { Table, TableBody, TableHeader, TableRow } from '@renderer/common/components/ui/table'
-import { useTranslation } from 'react-i18next'
+} from '@/common/components/ui/alert-dialog'
+import { Table, TableBody, TableHeader, TableRow } from '@/common/components/ui/table'
 
 export interface FileValidationErrorAlertProps extends DialogProps {
   message: string

@@ -2,9 +2,8 @@ import type { ResponsibleFormValues } from './constants'
 import type { SpravochnikHookOptions } from '@/common/features/spravochnik'
 import type { Responsible } from '@/common/models'
 
-import { SpravochnikSearchField } from '@renderer/common/features/filters/search/search-filter-spravochnik'
-
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
+import { SpravochnikSearchField } from '@/common/features/filters/search/search-filter-spravochnik'
 import { extendObject } from '@/common/lib/utils'
 
 import { responsibleColumns } from './columns'

@@ -1,6 +1,6 @@
 import type { ColumnDef, HeaderColumnDef } from './interface'
 
-import { getTreeBreadth, getTreeDepth } from '@renderer/common/lib/tree/utils'
+import { getTreeBreadth, getTreeDepth } from '@/common/lib/tree/utils'
 
 export const getHeaderGroups = <T extends object>(
   columns: ColumnDef<T>[]

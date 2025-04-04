@@ -1,10 +1,9 @@
+import type { Organization } from '@/common/models'
 import type { DialogProps } from '@radix-ui/react-dialog'
-import type { Organization } from '@renderer/common/models'
 
 import { useEffect } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { capitalize } from '@renderer/common/lib/string'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { ErrorBoundary } from 'react-error-boundary'
 import { useForm } from 'react-hook-form'
@@ -19,6 +18,7 @@ import {
   DialogHeader,
   DialogTitle
 } from '@/common/components/ui/dialog'
+import { capitalize } from '@/common/lib/string'
 
 import { defaultValues, organizationQueryKeys } from './config'
 import { OrganizationForm } from './organization-form'

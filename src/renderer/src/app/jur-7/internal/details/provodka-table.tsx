@@ -1,23 +1,23 @@
 import { useState } from 'react'
 
-import {
-  EditableTableCell,
-  EditableTableHead,
-  EditableTableRow
-} from '@renderer/common/components/editable-table'
-import { EmptyList } from '@renderer/common/components/empty-states'
-import { Checkbox } from '@renderer/common/components/ui/checkbox'
-import { useToggle } from '@renderer/common/hooks'
-import { formatDate } from '@renderer/common/lib/date'
 import { CircleMinus, CirclePlus } from 'lucide-react'
 import { type UseFormReturn, useFieldArray } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
 import { DatePicker, NumericInput } from '@/common/components'
+import {
+  EditableTableCell,
+  EditableTableHead,
+  EditableTableRow
+} from '@/common/components/editable-table'
+import { EmptyList } from '@/common/components/empty-states'
 import { Button } from '@/common/components/ui/button'
+import { Checkbox } from '@/common/components/ui/checkbox'
 import { Input } from '@/common/components/ui/input'
 import { Table, TableBody, TableFooter, TableHeader } from '@/common/components/ui/table'
 import { inputVariants } from '@/common/features/spravochnik'
+import { useToggle } from '@/common/hooks'
+import { formatDate } from '@/common/lib/date'
 import { calcSena, calcSumma } from '@/common/lib/pricing'
 
 import { OstatokSpravochnikDialog } from '../../ostatok/spravochnik/dialog'

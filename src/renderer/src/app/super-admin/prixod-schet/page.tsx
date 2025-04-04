@@ -7,8 +7,8 @@ import { useTranslation } from 'react-i18next'
 
 import { GenericTable } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
-import { useLayout } from '@/common/features/layout'
 import { useToggle } from '@/common/hooks/use-toggle'
+import { useLayout } from '@/common/layout/store'
 import { ListView } from '@/common/views'
 
 import { prixodSchetColumns } from './columns'

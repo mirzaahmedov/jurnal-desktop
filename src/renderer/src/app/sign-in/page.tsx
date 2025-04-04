@@ -1,20 +1,6 @@
 import { useEffect, useState } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Button } from '@renderer/common/components/ui/button'
-import { Checkbox } from '@renderer/common/components/ui/checkbox'
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage
-} from '@renderer/common/components/ui/form'
-import { Input } from '@renderer/common/components/ui/input'
-import { useAuthenticationStore } from '@renderer/common/features/auth'
-import { LanguageSelect } from '@renderer/common/features/locales'
-import { useRequisitesStore } from '@renderer/common/features/requisites'
 import logoImage from '@resources/logo.svg'
 import backgroundImage from '@resources/signin-bg.png'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
@@ -23,6 +9,21 @@ import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
+
+import { Button } from '@/common/components/ui/button'
+import { Checkbox } from '@/common/components/ui/checkbox'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage
+} from '@/common/components/ui/form'
+import { Input } from '@/common/components/ui/input'
+import { useAuthenticationStore } from '@/common/features/auth'
+import { LanguageSelect } from '@/common/features/locales'
+import { useRequisitesStore } from '@/common/features/requisites'
 
 import { SigninFormSchema, defaultValues } from './config'
 import { signinQuery } from './service'

@@ -2,13 +2,13 @@ import type { Smeta } from '@/common/models'
 
 import { useEffect, useState } from 'react'
 
-import { useSearchFilter } from '@renderer/common/features/filters/search/search-filter-debounced'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 
 import { useConfirm } from '@/common/features/confirm'
-import { useLayoutStore } from '@/common/features/layout'
+import { useSearchFilter } from '@/common/features/filters/search/search-filter-debounced'
 import { useToggle } from '@/common/hooks/use-toggle'
+import { useLayoutStore } from '@/common/layout/store'
 import { ListView } from '@/common/views'
 
 import { smetaColumns } from './columns'

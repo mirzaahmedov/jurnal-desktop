@@ -1,18 +1,12 @@
 import { useCallback, useLayoutEffect, useRef } from 'react'
 
-const useEventCallback = <T extends (...args: any[]) => any>(func: T): T => {
+export const useEventCallback = <T extends ((...args: any[]) => any) | undefined>(func: T): T => {
   const ref = useRef(func)
+
   useLayoutEffect(() => {
     ref.current = func
   }, [func])
-  const cb = useCallback((...args: Parameters<T>) => ref.current?.(...args), [])
+  const cb = useCallback((...args: any[]) => ref.current?.(...args), [])
 
-  if (!func) {
-    // @ts-ignore will fix this later
-    // Todo: fix this annoying
-    return
-  }
-  return cb as ReturnType<T>
+  return (func ? cb : undefined) as T
 }
-
-export { useEventCallback }

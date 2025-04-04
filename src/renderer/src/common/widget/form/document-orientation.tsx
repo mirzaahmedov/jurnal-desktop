@@ -1,8 +1,9 @@
-import { SelectField } from '@renderer/common/components'
-import { FormField } from '@renderer/common/components/ui/form'
-import { withForm } from '@renderer/common/hoc'
 import { RectangleHorizontal, RectangleVertical } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+
+import { SelectField } from '@/common/components'
+import { FormField } from '@/common/components/ui/form'
+import { withForm } from '@/common/hoc'
 
 export enum DocumentOrientation {
   PORTRAIT = 'portrait',

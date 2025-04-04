@@ -2,12 +2,6 @@ import type { BankRasxod } from '@/common/models'
 
 import { useEffect } from 'react'
 
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle
-} from '@renderer/common/components/ui/dialog'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { CopyPlus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
@@ -15,12 +9,13 @@ import { useNavigate } from 'react-router-dom'
 
 import { FooterCell, FooterRow, GenericTable, useTableSort } from '@/common/components'
 import { Button } from '@/common/components/ui/button'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/common/components/ui/dialog'
 import { useConfirm } from '@/common/features/confirm'
 import { SearchFilterDebounced } from '@/common/features/filters/search/search-filter-debounced'
 import { useSearchFilter } from '@/common/features/filters/search/search-filter-debounced'
-import { useLayoutStore } from '@/common/features/layout'
 import { useRequisitesStore } from '@/common/features/requisites'
 import { useDates, usePagination, useToggle } from '@/common/hooks'
+import { useLayoutStore } from '@/common/layout/store'
 import { formatNumber } from '@/common/lib/format'
 import { ListView } from '@/common/views'
 

@@ -1,24 +1,20 @@
+import type { OstatokProduct } from '@/common/models'
 import type { DialogProps } from '@radix-ui/react-dialog'
-import type { OstatokProduct } from '@renderer/common/models'
 
 import { useEffect } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { NumericInput } from '@renderer/common/components'
-import { FormElement } from '@renderer/common/components/form'
-import { Button } from '@renderer/common/components/ui/button'
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle
-} from '@renderer/common/components/ui/dialog'
-import { Form, FormField } from '@renderer/common/components/ui/form'
-import { capitalize } from '@renderer/common/lib/string'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
+
+import { NumericInput } from '@/common/components'
+import { FormElement } from '@/common/components/form'
+import { Button } from '@/common/components/ui/button'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/common/components/ui/dialog'
+import { Form, FormField } from '@/common/components/ui/form'
+import { capitalize } from '@/common/lib/string'
 
 import { IznosFormSchema, defaultValues, iznosQueryKeys } from './config'
 import { iznosService } from './service'
