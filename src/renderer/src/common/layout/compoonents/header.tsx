@@ -90,7 +90,9 @@ export const Header = () => {
         </div>
       </div>
       <div className="flex items-center gap-2">
-        <SelectedMonth />
+        <div className="pr-2.5">
+          <SelectedMonth />
+        </div>
         <Requisites
           data={main_schet}
           schet={schet}

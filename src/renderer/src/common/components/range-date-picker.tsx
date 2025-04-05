@@ -9,20 +9,19 @@ import { useTranslation } from 'react-i18next'
 import { usePagination } from '@/common/hooks/use-pagination'
 
 import { DatePicker } from './date-picker'
-import { FormElement } from './form'
 import { Button } from './ui/button'
 import { Form, FormField } from './ui/form'
 
-type RangeDateValues = {
+interface RangeDateValues {
   from: string
   to: string
 }
-type RangeDatePickerProps = RangeDateValues & {
+export interface RangeDatePickerProps extends RangeDateValues {
   onChange: (values: Partial<RangeDateValues>) => void
   validateDate?: (date: string) => boolean
   calendarProps?: Omit<DayPickerSingleProps, 'mode'>
 }
-const RangeDatePicker = ({
+export const RangeDatePicker = ({
   from,
   to,
   onChange,
@@ -57,34 +56,31 @@ const RangeDatePicker = ({
   return (
     <Form {...form}>
       <form
-        className="flex items-center gap-10"
+        className="flex items-center gap-5"
         onSubmit={onSubmit}
       >
         <FormField
           control={form.control}
           name="from"
           render={({ field }) => (
-            <FormElement label={t('from')}>
-              <DatePicker
-                autoFocus
-                validate={validateDate}
-                calendarProps={calendarProps}
-                {...field}
-              />
-            </FormElement>
+            <DatePicker
+              autoFocus
+              validate={validateDate}
+              calendarProps={calendarProps}
+              {...field}
+            />
           )}
         />
+        -
         <FormField
           control={form.control}
           name="to"
           render={({ field }) => (
-            <FormElement label={t('to')}>
-              <DatePicker
-                validate={validateDate}
-                calendarProps={calendarProps}
-                {...field}
-              />
-            </FormElement>
+            <DatePicker
+              validate={validateDate}
+              calendarProps={calendarProps}
+              {...field}
+            />
           )}
         />
         <div className="space-x-1">
@@ -100,6 +96,3 @@ const RangeDatePicker = ({
     </Form>
   )
 }
-
-export { RangeDatePicker }
-export type { RangeDatePickerProps }

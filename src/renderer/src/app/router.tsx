@@ -12,11 +12,10 @@ import DashboardPage from './dashboard/page'
 import HomePage from './home/page'
 import SigninPage from './sign-in'
 
-const KassaOstatokPage = lazy(() => import('./kassa/ostatok/page'))
+const KassaSaldoPage = lazy(() => import('./jur_1/saldo/page'))
+const BankSaldoPage = lazy(() => import('./jur_2/saldo/page'))
 const PodotchetOstatokDetailsPage = lazy(() => import('./podotchet/ostatok/details/page'))
 const PodotchetOstatokPage = lazy(() => import('./podotchet/ostatok/page'))
-const BankOstatokDetailsPage = lazy(() => import('./bank/ostatok/details/page'))
-const BankOstatokPage = lazy(() => import('./bank/ostatok/page'))
 
 const PrixodSchetsPage = lazy(() => import('./super-admin/prixod-schet/page'))
 
@@ -28,26 +27,26 @@ const ZarplataSpravochnikPage = lazy(() => import('./super-admin/zarplata/spravo
 const OrganOstatokPage = lazy(() => import('./organization/ostatok/page'))
 const OrganOstatokDetailsPage = lazy(() => import('./organization/ostatok/details/page'))
 const MainLayout = lazy(() => import('../common/layout/main'))
-const BankMonitorPage = lazy(() => import('./bank/monitor/page'))
-const BankPrixodDetailsPage = lazy(() => import('./bank/prixod/details/page'))
-const BankPrixodPage = lazy(() => import('./bank/prixod/page'))
-const BankRasxodDetailsPage = lazy(() => import('./bank/rasxod/details/page'))
-const BankRasxodPage = lazy(() => import('./bank/rasxod/page'))
-const Jurnal7InternalTransferDetailsPage = lazy(() => import('./jur-7/internal/details/page'))
-const Jurnal7InternalTransferPage = lazy(() => import('./jur-7/internal/page'))
-const IznosPage = lazy(() => import('./jur-7/iznos/page'))
-const OstatokPage = lazy(() => import('./jur-7/ostatok/page'))
-const Subdivision7Page = lazy(() => import('./jur-7/podrazdelenie/page'))
-const Jurnal7PrixodDetailsPage = lazy(() => import('./jur-7/prixod/details/page'))
-const Jurnal7PrixodPage = lazy(() => import('./jur-7/prixod/page'))
-const Jurnal7RasxodDetailsPage = lazy(() => import('./jur-7/rasxod/details/page'))
-const Jurnal7RasxodPage = lazy(() => import('./jur-7/rasxod/page'))
-const ResponsiblePage = lazy(() => import('./jur-7/responsible/page'))
-const KassaMonitorPage = lazy(() => import('./kassa/monitor/page'))
-const KassaPrixodDetailsPage = lazy(() => import('./kassa/prixod/details/page'))
-const KassaPrixodPage = lazy(() => import('./kassa/prixod/page'))
-const KassaRasxodDetailtsPage = lazy(() => import('./kassa/rasxod/details/page'))
-const KassaRasxodPage = lazy(() => import('./kassa/rasxod/page'))
+const BankMonitorPage = lazy(() => import('./jur_2/monitor/page'))
+const BankPrixodDetailsPage = lazy(() => import('./jur_2/prixod/details/page'))
+const BankPrixodPage = lazy(() => import('./jur_2/prixod/page'))
+const BankRasxodDetailsPage = lazy(() => import('./jur_2/rasxod/details/page'))
+const BankRasxodPage = lazy(() => import('./jur_2/rasxod/page'))
+const Jurnal7InternalTransferDetailsPage = lazy(() => import('./jur_7/internal/details/page'))
+const Jurnal7InternalTransferPage = lazy(() => import('./jur_7/internal/page'))
+const IznosPage = lazy(() => import('./jur_7/iznos/page'))
+const OstatokPage = lazy(() => import('./jur_7/saldo/page'))
+const Subdivision7Page = lazy(() => import('./jur_7/podrazdelenie/page'))
+const Jurnal7PrixodDetailsPage = lazy(() => import('./jur_7/prixod/details/page'))
+const Jurnal7PrixodPage = lazy(() => import('./jur_7/prixod/page'))
+const Jurnal7RasxodDetailsPage = lazy(() => import('./jur_7/rasxod/details/page'))
+const Jurnal7RasxodPage = lazy(() => import('./jur_7/rasxod/page'))
+const ResponsiblePage = lazy(() => import('./jur_7/responsible/page'))
+const KassaMonitorPage = lazy(() => import('./jur_1/monitor/page'))
+const KassaPrixodDetailsPage = lazy(() => import('./jur_1/prixod/details/page'))
+const KassaPrixodPage = lazy(() => import('./jur_1/prixod/page'))
+const KassaRasxodDetailtsPage = lazy(() => import('./jur_1/rasxod/details/page'))
+const KassaRasxodPage = lazy(() => import('./jur_1/rasxod/page'))
 const MainbookPage = lazy(() => import('./reports/mainbook/page'))
 const MainbookDetailsPage = lazy(() => import('./reports/mainbook/details/page'))
 const PrixodbookPage = lazy(() => import('./reports/prixodbook/page'))
@@ -196,7 +195,7 @@ export const routes: RouteObject[] = [
           },
           {
             path: 'ostatok',
-            element: <KassaOstatokPage />
+            element: <KassaSaldoPage />
           }
         ]
       },
@@ -226,11 +225,7 @@ export const routes: RouteObject[] = [
           },
           {
             path: 'ostatok',
-            element: <BankOstatokPage />
-          },
-          {
-            path: 'ostatok/:id',
-            element: <BankOstatokDetailsPage />
+            element: <BankSaldoPage />
           }
         ]
       },

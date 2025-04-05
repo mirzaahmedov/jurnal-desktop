@@ -5,9 +5,9 @@ import { CircleArrowDown } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
-import { defaultValues, ostatokProductColumns } from '@/app/jur-7/ostatok'
-import { createPodrazdelenie7Spravochnik } from '@/app/jur-7/podrazdelenie/service'
-import { createResponsibleSpravochnik } from '@/app/jur-7/responsible/service'
+import { createPodrazdelenie7Spravochnik } from '@/app/jur_7/podrazdelenie/service'
+import { createResponsibleSpravochnik } from '@/app/jur_7/responsible/service'
+import { defaultValues, ostatokProductColumns } from '@/app/jur_7/saldo'
 import { ChooseSpravochnik, DatePicker, GenericTable } from '@/common/components'
 import { CollapsibleTable } from '@/common/components/collapsible-table'
 import { Button } from '@/common/components/ui/button'
@@ -76,7 +76,7 @@ const AdminOstatokPage = () => {
 
   useEffect(() => {
     setLayout({
-      title: t('pages.ostatok'),
+      title: t('pages.saldo'),
       content: SearchFilterDebounced,
       breadcrumbs: [
         {

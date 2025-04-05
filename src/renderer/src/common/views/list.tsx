@@ -9,7 +9,7 @@ import { RangeDatePicker } from '@/common/components/range-date-picker'
 import { Button } from '@/common/components/ui/button'
 import { cn } from '@/common/lib/utils'
 
-type ListViewProps = HTMLAttributes<HTMLDivElement>
+export interface ListViewProps extends HTMLAttributes<HTMLDivElement> {}
 export const ListView = ({ children, className, ...props }: ListViewProps) => {
   const [maximized, setMaximized] = useState(false)
 
@@ -57,7 +57,7 @@ const ListViewHeader = ({ children, className, ...props }: HTMLAttributes<HTMLDi
   )
 }
 
-type ListViewContentProps = HTMLAttributes<HTMLDivElement> & {
+export interface ListViewContentProps extends HTMLAttributes<HTMLDivElement> {
   loading: boolean
 }
 const ListViewContent = forwardRef<HTMLDivElement, ListViewContentProps>(
@@ -75,7 +75,8 @@ const ListViewContent = forwardRef<HTMLDivElement, ListViewContentProps>(
   }
 )
 
-const ListViewFooter = ({ children, className, ...props }: HTMLAttributes<HTMLDivElement>) => {
+export interface ListViewFooterProps extends HTMLAttributes<HTMLDivElement> {}
+const ListViewFooter = ({ children, className, ...props }: ListViewFooterProps) => {
   return (
     <div
       className={cn('p-5', className)}

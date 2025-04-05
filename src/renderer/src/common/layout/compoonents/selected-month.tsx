@@ -1,7 +1,7 @@
 import { useLocation } from 'react-router-dom'
 
 import { MonthPicker } from '@/common/components/month-picker'
-import { useSelectedMonthStore } from '@/common/features/selected-month/store'
+import { useSelectedMonthStore } from '@/common/features/selected-month'
 import { useLocationStore } from '@/common/hooks'
 import { formatDate, parseDate } from '@/common/lib/date'
 

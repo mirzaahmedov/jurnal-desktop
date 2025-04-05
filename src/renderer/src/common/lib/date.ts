@@ -1,5 +1,5 @@
-export const date_regex = /^\d{1,2}.\d{1,2}.\d{4}$/
-export const date_iso_regex = /^\d{4}-\d{1,2}-\d{1,2}$/
+export const DateRegex = /^\d{1,2}.\d{1,2}.\d{4}$/
+export const ISODateRegex = /^\d{4}-\d{1,2}-\d{1,2}$/
 
 export const getFirstDayOfMonth = (date: Date = new Date()) => {
   return new Date(date.getFullYear(), date.getMonth(), 1)
@@ -39,7 +39,7 @@ export const validateLocaleDate = (formatted: string): boolean => {
   const [day, month, year] = parts
 
   return (
-    date_regex.test(formatted) &&
+    DateRegex.test(formatted) &&
     !isNaN(date.getTime()) &&
     date.getDate() === day &&
     date.getMonth() + 1 === month &&
@@ -48,7 +48,7 @@ export const validateLocaleDate = (formatted: string): boolean => {
 }
 
 export const validateDate = (dateString: string): boolean => {
-  if (!dateString || !date_iso_regex.test(dateString)) {
+  if (!dateString || !ISODateRegex.test(dateString)) {
     return false
   }
 

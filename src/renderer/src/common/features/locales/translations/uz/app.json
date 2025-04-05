@@ -1,5 +1,9 @@
 {
   "title": "O‘zbekiston Respublikasi\n FVV 'Е-Moliya'",
+  "title_short": "E-Moliya",
+  "update_and_restart": "Yangilash va qayta ishga tushirish",
+  "development": "Dasturchi",
+  "testing": "Sinovlash",
   "pages": {
     "main": "Asosiy sahifa",
     "monitoring": "Monitoring",
@@ -20,7 +24,7 @@
     "material-warehouse": "Materiallar ombori",
     "responsible": "Javobgar shaxs",
     "podrazdelenie": "Bo'linma",
-    "ostatok": "Qoldiq",
+    "saldo": "Saldo",
     "iznos": "Iznos",
     "spravochnik": "Spravochnik",
     "type-operatsii": "Opertsiya turi",

@@ -3,6 +3,8 @@ import type { ForwardedRef, ReactNode } from 'react'
 
 import { forwardRef } from 'react'
 
+import { X } from 'lucide-react'
+
 import {
   Select,
   SelectContent,
@@ -12,10 +14,12 @@ import {
 } from '@/common/components/ui/select'
 import { cn } from '@/common/lib/utils'
 
+import { Button } from './ui/button'
 import { FormControl } from './ui/form'
 
 export type SelectFieldProps<T> = SelectProps & {
   withFormControl?: boolean
+  withReset?: boolean
   placeholder?: string
   options: T[] | readonly T[]
   getOptionLabel(data: T): ReactNode
@@ -27,6 +31,7 @@ export type SelectFieldProps<T> = SelectProps & {
 const SelectFieldComponent = <T extends Record<string, unknown>>(
   {
     withFormControl = false,
+    withReset = false,
     placeholder,
     options,
     getOptionValue,
@@ -34,6 +39,8 @@ const SelectFieldComponent = <T extends Record<string, unknown>>(
     triggerClassName,
     disabled,
     tabIndex,
+    value,
+    onValueChange,
     ...props
   }: SelectFieldProps<T>,
   ref: ForwardedRef<HTMLSpanElement>
@@ -41,9 +48,10 @@ const SelectFieldComponent = <T extends Record<string, unknown>>(
   return (
     <Select
       {...props}
+      value={value}
       onValueChange={(value) => {
         if (options.length !== 0 && value) {
-          props?.onValueChange?.(value)
+          onValueChange?.(value)
         }
       }}
       disabled={disabled || options.length === 0}
@@ -58,6 +66,20 @@ const SelectFieldComponent = <T extends Record<string, unknown>>(
               placeholder={placeholder}
               ref={ref}
             />
+            {withReset ? (
+              <Button
+                type="button"
+                size="icon"
+                variant="ghost"
+                onPointerDown={(e) => {
+                  e.stopPropagation()
+                  onValueChange?.('')
+                }}
+                className="ml-auto mr-1 size-5"
+              >
+                <X className="size-4 opacity-50" />
+              </Button>
+            ) : null}
           </SelectTrigger>
         </FormControl>
       ) : (
@@ -69,6 +91,20 @@ const SelectFieldComponent = <T extends Record<string, unknown>>(
             placeholder={placeholder}
             ref={ref}
           />
+          {withReset ? (
+            <Button
+              type="button"
+              size="icon"
+              variant="ghost"
+              onPointerDown={(e) => {
+                e.stopPropagation()
+                onValueChange?.('')
+              }}
+              className="ml-auto mr-1 size-5"
+            >
+              <X className="size-4 opacity-50" />
+            </Button>
+          ) : null}
         </SelectTrigger>
       )}
 

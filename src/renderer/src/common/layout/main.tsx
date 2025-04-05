@@ -4,7 +4,7 @@ import { AuthGuard } from '@/common/features/auth'
 import { SpravochnikProvider } from '@/common/features/spravochnik'
 
 import { Header } from './compoonents/header'
-import { Sidebar } from './compoonents/sidebar'
+import { Sidebar } from './compoonents/sidebar/sidebar'
 
 const MainLayout = () => {
   return (

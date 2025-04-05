@@ -1,5 +1,9 @@
 {
   "title": "МЧС Республики Узбекистан\n 'E-Moliya'",
+  "title_short": "E-Moliya",
+  "update_and_restart": "Обновить и перезапустить",
+  "development": "Разработка",
+  "testing": "Тестирование",
   "pages": {
     "main": "Главная страница",
     "monitoring": "Мониторинг",
@@ -20,7 +24,7 @@
     "material-warehouse": "Материальный склад",
     "responsible": "Ответственное лицо",
     "podrazdelenie": "Подразделение",
-    "ostatok": "Остаток",
+    "saldo": "Сальдо",
     "iznos": "Износ",
     "spravochnik": "Справочник",
     "type-operatsii": "Тип операции",

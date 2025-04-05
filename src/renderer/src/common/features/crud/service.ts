@@ -13,11 +13,11 @@ import type { AxiosInstance, AxiosRequestConfig } from 'axios'
 import { http } from '@/common/lib/http'
 
 export class CRUDService<T, C = T, U = C, M = undefined> {
-  private middleware: MiddlewareFunction[]
-  private endpoint: ApiEndpoints
-  private client: AxiosInstance
-  private options: CRUDServiceOptions<T, M>
-  private requestBuilder?: RequestBuilderFunction
+  public middleware: MiddlewareFunction[]
+  public endpoint: ApiEndpoints
+  public client: AxiosInstance
+  public options: CRUDServiceOptions<T, M>
+  public requestBuilder?: RequestBuilderFunction
 
   constructor(options: CRUDServiceOptions<T, M>) {
     this.options = options

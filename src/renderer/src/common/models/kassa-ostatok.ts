@@ -1,4 +1,4 @@
-export interface KassaOstatok {
+export interface KassaSaldo {
   id: number
   main_schet_id: number
   summa: number

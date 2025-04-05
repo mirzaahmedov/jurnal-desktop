@@ -62,7 +62,7 @@ export const PrixodSchetDialog = ({ open, onChangeOpen, selected }: PrixodSchetD
     mutationKey: [prixodSchetQueryKeys.update],
     mutationFn: PrixodSchetService.update,
     onSuccess(res) {
-      toast(res?.message)
+      toast.success(res?.message)
 
       queryClient.invalidateQueries({
         queryKey: [prixodSchetQueryKeys.getAll]

@@ -73,7 +73,7 @@ const PodotchetOstatokPage = () => {
 
   useEffect(() => {
     setLayout({
-      title: t('pages.ostatok'),
+      title: t('pages.saldo'),
       breadcrumbs: [
         {
           title: t('pages.podotchet')

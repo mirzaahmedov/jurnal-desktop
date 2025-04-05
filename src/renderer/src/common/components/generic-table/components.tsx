@@ -55,7 +55,7 @@ export const GenericTableCell = ({
 }
 
 const headVariants = cva(
-  'relative px-6 py-4 text-xs font-extrabold border-r border-b !bg-transparent text-foreground border-slate-200',
+  'select-none relative px-6 py-4 text-xs font-extrabold border-r border-b !bg-transparent text-foreground border-slate-200',
   {
     variants: {
       fit: {

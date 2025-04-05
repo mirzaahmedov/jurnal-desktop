@@ -120,7 +120,7 @@ const PodotchetOstatokDetailsPage = () => {
         },
         {
           path: '/organization/ostatok',
-          title: t('pages.ostatok')
+          title: t('pages.saldo')
         }
       ],
       onBack() {

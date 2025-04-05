@@ -1,6 +1,7 @@
 import { type Dispatch, type SetStateAction, useCallback } from 'react'
 
-import { useSettingsStore } from '@/common/features/settings'
+import { useSelectedMonthStore } from '@/common/features/selected-month'
+import { formatDate } from '@/common/lib/date'
 
 import { useLocationState } from './use-location-state'
 
@@ -18,10 +19,10 @@ export interface UseDatesOptions {
   defaultTo?: string
 }
 export const useDates = ({ defaultFrom, defaultTo }: UseDatesOptions = {}) => {
-  const { default_start_date, default_end_date } = useSettingsStore()
+  const { startDate, endDate } = useSelectedMonthStore()
 
-  const [from, setFrom] = useLocationState('from', defaultFrom ?? default_start_date)
-  const [to, setTo] = useLocationState('to', defaultTo ?? default_end_date)
+  const [from, setFrom] = useLocationState('from', defaultFrom ?? formatDate(startDate))
+  const [to, setTo] = useLocationState('to', defaultTo ?? formatDate(endDate))
 
   const handleChange = useCallback(
     (values: DatesParams) => {

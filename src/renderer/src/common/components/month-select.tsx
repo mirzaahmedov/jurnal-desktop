@@ -15,16 +15,16 @@ export interface MonthSelectProps
     SelectFieldProps<number>,
     'options' | 'value' | 'onValueChange' | 'getOptionValue' | 'getOptionLabel'
   > {
-  value?: number
-  onValueChange?: (value: number) => void
+  value?: number | undefined
+  onValueChange?: (value: number | undefined) => void
 }
 export const MonthSelect = ({ value, onValueChange, ...props }: MonthSelectProps) => {
   const { t } = useTranslation()
   return (
     <SelectField
-      value={value ? String(value) : undefined}
+      value={value ? String(value) : ''}
       onValueChange={(value) => {
-        onValueChange?.(Number(value))
+        onValueChange?.(value ? Number(value) : undefined)
       }}
       options={monthOptions}
       getOptionValue={(option) => option}
