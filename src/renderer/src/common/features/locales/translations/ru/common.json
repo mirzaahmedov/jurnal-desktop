@@ -315,5 +315,8 @@
   "super-admin": "Супер админ",
   "start_date": "Начальная дата",
   "end_date": "Конечная дата",
-  "please_select_report_title": "Пожалуйста, выберите название отчета перед загрузкой."
+  "please_select_report_title": "Пожалуйста, выберите название отчета перед загрузкой.",
+  "monthly_saldo": "Сальдо по месяцам",
+  "no_saldo_short": "Нет сальдо",
+  "saldo_exists_short": "Есть сальдо"
 }

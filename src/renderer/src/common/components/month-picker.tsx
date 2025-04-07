@@ -13,13 +13,13 @@ import { cn } from '@/common/lib/utils'
 import { useToggle } from '../hooks'
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover'
 
-type MonthCalendarProps = {
-  currentMonth: Date
+export interface MonthCalendarProps {
+  month: Date
   onMonthChange: (newMonth: Date) => void
 }
 
-const MonthCalendar = ({ currentMonth, onMonthChange }: MonthCalendarProps) => {
-  const [currentYear, setCurrentYear] = useState(format(currentMonth, 'yyyy'))
+export const MonthCalendar = ({ month, onMonthChange }: MonthCalendarProps) => {
+  const [currentYear, setCurrentYear] = useState(format(month, 'yyyy'))
 
   const { i18n } = useTranslation()
 
@@ -116,11 +116,11 @@ const MonthCalendar = ({ currentMonth, onMonthChange }: MonthCalendarProps) => {
   )
 }
 
-type MonthPickerProps = Omit<ButtonProps, 'onChange'> & {
+export interface MonthPickerProps extends Omit<ButtonProps, 'onChange'> {
   value: string
   onChange: (value: string) => void
 }
-const MonthPicker = ({ value, onChange, className, ...props }: MonthPickerProps) => {
+export const MonthPicker = ({ value, onChange, className, ...props }: MonthPickerProps) => {
   const popoverToggle = useToggle()
 
   const { i18n } = useTranslation()
@@ -150,12 +150,10 @@ const MonthPicker = ({ value, onChange, className, ...props }: MonthPickerProps)
       </PopoverTrigger>
       <PopoverContent>
         <MonthCalendar
-          currentMonth={date}
+          month={date}
           onMonthChange={setDate}
         />
       </PopoverContent>
     </Popover>
   )
 }
-
-export { MonthPicker, MonthCalendar }

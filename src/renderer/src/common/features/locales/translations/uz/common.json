@@ -314,5 +314,8 @@
   "super-admin": "Super admin",
   "start_date": "Boshlang'ich sana",
   "end_date": "Yakuniy sana",
-  "please_select_report_title": "Iltimos, hisobot nomini tanlang va keyin yuklab oling."
+  "please_select_report_title": "Iltimos, hisobot nomini tanlang va keyin yuklab oling.",
+  "monthly_saldo": "Oy bo‘yicha saldo",
+  "no_saldo_short": "Saldo yo‘q",
+  "saldo_exists_short": "Saldo mavjud"
 }

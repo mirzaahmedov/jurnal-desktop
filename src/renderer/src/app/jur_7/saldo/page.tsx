@@ -3,7 +3,7 @@ import type { OstatokProduct } from '@/common/models'
 import { useEffect, useMemo, useState } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { CircleArrowDown, CopyCheck, Download, Trash2 } from 'lucide-react'
+import { CalendarDays, CircleArrowDown, CopyCheck, Download, Trash2 } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { Trans, useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
@@ -47,6 +47,7 @@ import { createResponsibleSpravochnik } from '../responsible/service'
 import { ostatokProductColumns } from './columns'
 import { DeleteExistingDocumentsAlert } from './components/delete-existing-document-alert'
 import { DeleteExistingSaldoAlert } from './components/delete-existing-saldo-alert'
+import { MonthlySaldoTrackerDialog } from './components/monthly-saldo-tracker-dialog'
 import { defaultValues, ostatokQueryKeys } from './config'
 import { deleteOstatokBatchQuery, ostatokProductService } from './service'
 import {
@@ -59,7 +60,7 @@ import {
 } from './utils'
 
 const OstatokPage = () => {
-  const { startDate, endDate } = useSelectedMonthStore()
+  const { startDate, endDate, setSelectedMonth } = useSelectedMonthStore()
   const { queuedMonths } = useSaldoController({
     ns: SaldoNamespace.JUR_7
   })
@@ -80,16 +81,17 @@ const OstatokPage = () => {
 
   const [selectedRows, setSelectedRows] = useState<OstatokProduct[]>([])
   const [selectedDate, setSelectedDate] = useState<undefined | Date>(startDate)
+  const [search] = useSearchFilter()
 
   const dropdownToggle = useToggle()
   const selectedToggle = useToggle()
+  const saldoMonthlyTrackerDialogToggle = useToggle()
   const queryClient = useQueryClient()
   const pagination = usePagination()
   const budjet_id = useRequisitesStore((store) => store.budjet_id)
   const report_title_id = useSettingsStore((store) => store.report_title_id)
   const setLayout = useLayoutStore((store) => store.setLayout)
 
-  const [search] = useSearchFilter()
   const { confirm } = useConfirm()
   const { t } = useTranslation(['app'])
 
@@ -165,6 +167,7 @@ const OstatokPage = () => {
     form.setValue('date', startDate)
     setSelectedDate(startDate)
   }, [form, startDate, endDate])
+
   useEffect(() => {
     setLayout({
       title: t('pages.saldo'),
@@ -318,6 +321,13 @@ const OstatokPage = () => {
                   excel: true
                 }}
               />
+              <Button
+                variant="ghost"
+                onClick={saldoMonthlyTrackerDialogToggle.open}
+              >
+                <CalendarDays className="btn-icon" />
+                {t('monthly_saldo')}
+              </Button>
               <ImportFile
                 url="/jur_7/saldo/import"
                 params={{
@@ -566,6 +576,17 @@ const OstatokPage = () => {
           </div>
         </DialogContent>
       </Dialog>
+
+      <MonthlySaldoTrackerDialog
+        open={saldoMonthlyTrackerDialogToggle.isOpen}
+        onOpenChange={saldoMonthlyTrackerDialogToggle.setOpen}
+        onSelect={(month) => {
+          form.setValue('date', month)
+          setSelectedMonth(month)
+          setSelectedDate(month)
+          saldoMonthlyTrackerDialogToggle.close()
+        }}
+      />
 
       <ListView.Footer>
         <ListView.Pagination
