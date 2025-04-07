@@ -1,5 +1,3 @@
-import { useEffect } from 'react'
-
 import { useQuery } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -30,7 +28,8 @@ export const RequisitesDialog = ({ open, onOpenChange }: RequisitesDialogProps) 
   const { t } = useTranslation()
   const { confirm } = useConfirm()
   const { user } = useAuthenticationStore()
-  const { main_schet_id, setRequisites } = useRequisitesStore()
+
+  const setRequisites = useRequisitesStore((store) => store.setRequisites)
 
   const form = useForm({
     defaultValues
@@ -53,16 +52,17 @@ export const RequisitesDialog = ({ open, onOpenChange }: RequisitesDialogProps) 
     enabled: !!form.watch('budjet_id') && !!user?.region_id && open
   })
 
-  const onSubmit = form.handleSubmit((values) => {
-    const { main_schet_id, budjet_id } = values
-
+  const onSubmit = form.handleSubmit(({ main_schet_id, budjet_id }) => {
     setRequisites({
       main_schet_id,
       budjet_id,
       user_id: user?.id
     })
 
-    form.reset(values)
+    form.reset({
+      budjet_id,
+      main_schet_id
+    })
     onOpenChange(false)
   })
 
@@ -79,15 +79,6 @@ export const RequisitesDialog = ({ open, onOpenChange }: RequisitesDialogProps) 
     }
     onOpenChange(open)
   }
-
-  useEffect(() => {
-    if (!main_schet_id) {
-      form.reset({
-        budjet_id: 0,
-        main_schet_id: 0
-      })
-    }
-  }, [form, main_schet_id])
 
   return (
     <Dialog
@@ -155,7 +146,7 @@ export const RequisitesDialog = ({ open, onOpenChange }: RequisitesDialogProps) 
               />
             ) : null}
             <DialogFooter>
-              <Button disabled={!form.watch('main_schet_id')}>{t('save')}</Button>
+              <Button>{t('save')}</Button>
             </DialogFooter>
           </form>
         </Form>

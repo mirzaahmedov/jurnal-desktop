@@ -5,7 +5,7 @@ import { lazy } from 'react'
 import { Navigate, createHashRouter } from 'react-router-dom'
 
 import { useAuthenticationStore } from '@/common/features/auth'
-import { RequisitesSelectedGuard } from '@/common/features/requisites'
+import { BudjetSelectedGuard, MainSchetSelectedGuard } from '@/common/features/requisites'
 import { DuplicateSchetsGuard } from '@/common/features/requisites/duplicate-schets-guard'
 
 import DashboardPage from './dashboard/page'
@@ -129,7 +129,7 @@ export const routes: RouteObject[] = [
     children: [
       {
         path: 'organization',
-        element: <RequisitesSelectedGuard />,
+        element: <MainSchetSelectedGuard />,
         children: [
           {
             path: 'monitor',
@@ -171,7 +171,7 @@ export const routes: RouteObject[] = [
       },
       {
         path: 'kassa',
-        element: <RequisitesSelectedGuard />,
+        element: <MainSchetSelectedGuard />,
         children: [
           {
             path: 'prixod',
@@ -201,7 +201,7 @@ export const routes: RouteObject[] = [
       },
       {
         path: 'bank',
-        element: <RequisitesSelectedGuard />,
+        element: <MainSchetSelectedGuard />,
         children: [
           {
             path: 'prixod',
@@ -250,7 +250,13 @@ export const routes: RouteObject[] = [
           },
           {
             path: 'main-schet',
-            element: <MainSchetPage />
+            element: <BudjetSelectedGuard />,
+            children: [
+              {
+                index: true,
+                element: <MainSchetPage />
+              }
+            ]
           },
           {
             path: 'sostav',
@@ -390,7 +396,7 @@ export const routes: RouteObject[] = [
       },
       {
         path: 'accountable',
-        element: <RequisitesSelectedGuard />,
+        element: <MainSchetSelectedGuard />,
         children: [
           {
             path: 'monitor',
@@ -416,7 +422,7 @@ export const routes: RouteObject[] = [
       },
       {
         path: 'journal-7',
-        element: <RequisitesSelectedGuard />,
+        element: <MainSchetSelectedGuard />,
         children: [
           {
             path: 'responsible',
@@ -462,7 +468,7 @@ export const routes: RouteObject[] = [
       },
       {
         path: 'mainbook',
-        element: <RequisitesSelectedGuard />,
+        element: <MainSchetSelectedGuard />,
         children: [
           {
             path: '*',
@@ -482,7 +488,7 @@ export const routes: RouteObject[] = [
       },
       {
         path: 'prixodbook',
-        element: <RequisitesSelectedGuard />,
+        element: <MainSchetSelectedGuard />,
         children: [
           {
             path: '*',

@@ -26,8 +26,8 @@ export const OperatsiiFormSchema = withPreprocessor(
       TypeSchetOperatsii.AKT,
       TypeSchetOperatsii.AVANS_OTCHET,
       TypeSchetOperatsii.POKAZAT_USLUGI,
-      TypeSchetOperatsii.JUR7,
-      TypeSchetOperatsii.GENERAL
+      TypeSchetOperatsii.JUR3,
+      TypeSchetOperatsii.JUR4
     ]),
     smeta_id: z.number().optional()
   })

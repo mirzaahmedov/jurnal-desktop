@@ -10,7 +10,7 @@ import { GenericTable } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
 import { SearchFilterDebounced } from '@/common/features/filters/search/search-filter-debounced'
 import { useSearchFilter } from '@/common/features/filters/search/search-filter-debounced'
-import { RequisitesQueryKeys } from '@/common/features/requisites'
+import { RequisitesQueryKeys, useRequisitesStore } from '@/common/features/requisites'
 import { DuplicateSchetsAlert } from '@/common/features/requisites/duplicate-schets-alert'
 import { usePagination } from '@/common/hooks'
 import { useToggle } from '@/common/hooks/use-toggle'
@@ -18,21 +18,22 @@ import { useLayoutStore } from '@/common/layout/store'
 import { ListView } from '@/common/views'
 
 import { mainSchetColumns } from './columns'
-import { mainSchetQueryKeys } from './constants'
+import { mainSchetQueryKeys } from './config'
 import { MainSchetDialog } from './dialog'
 import { mainSchetService } from './service'
 
 const MainSchetPage = () => {
   const [selected, setSelected] = useState<MainSchet | null>(null)
+  const [search] = useSearchFilter()
 
   const { t } = useTranslation(['app'])
   const { confirm } = useConfirm()
-  const [search] = useSearchFilter()
 
   const dialogToggle = useToggle()
   const pagination = usePagination()
   const queryClient = useQueryClient()
 
+  const budjet_id = useRequisitesStore((store) => store.budjet_id)
   const setLayout = useLayoutStore((store) => store.setLayout)
 
   const { data: mainSchets, isFetching } = useQuery({
@@ -40,6 +41,7 @@ const MainSchetPage = () => {
       mainSchetQueryKeys.getAll,
       {
         ...pagination,
+        budjet_id,
         search
       }
     ],

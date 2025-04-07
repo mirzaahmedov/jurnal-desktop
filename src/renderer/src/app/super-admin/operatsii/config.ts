@@ -39,12 +39,12 @@ export const operatsiiTypeSchetOptions = [
     label: 'Аванс Отчёт'
   },
   {
-    value: TypeSchetOperatsii.JUR7,
-    label: 'Журнал 7'
+    value: TypeSchetOperatsii.JUR3,
+    label: 'Журнал 3'
   },
   {
-    value: TypeSchetOperatsii.GENERAL,
-    label: 'Общий'
+    value: TypeSchetOperatsii.JUR4,
+    label: 'Журнал 4'
   },
   {
     value: TypeSchetOperatsii.ALL,

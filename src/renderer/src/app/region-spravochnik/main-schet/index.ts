@@ -1,5 +1,5 @@
-export { default } from './page'
+export * from './page'
 
 export * from './columns'
 export * from './service'
-export * from './constants'
+export * from './config'

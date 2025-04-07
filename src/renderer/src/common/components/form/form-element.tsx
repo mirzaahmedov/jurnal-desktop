@@ -1,4 +1,4 @@
-import type { PropsWithChildren } from 'react'
+import type { PropsWithChildren, ReactNode } from 'react'
 
 import { cn } from '@/common/lib/utils'
 
@@ -7,7 +7,7 @@ import { FormControl, FormItem, FormLabel, FormMessage } from '../ui/form'
 export type FormElementProps = PropsWithChildren<{
   controlled?: boolean
   error?: boolean
-  label: string
+  label: ReactNode
   grid?: `${number}:${number}`
   message?: string
   direction?: 'row' | 'column'

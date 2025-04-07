@@ -1,11 +1,11 @@
-import type { MainSchetPayloadType } from './service'
 import type { MainSchet } from '@/common/models'
 
 import { useEffect, useState } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { useForm } from 'react-hook-form'
+import { Plus, Trash } from 'lucide-react'
+import { useFieldArray, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 
@@ -32,10 +32,10 @@ import {
   FormMessage
 } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
-import { RequisitesQueryKeys } from '@/common/features/requisites'
+import { RequisitesQueryKeys, useRequisitesStore } from '@/common/features/requisites'
 
-import { mainSchetQueryKeys } from './constants'
-import { MainSchetPayloadSchema, mainSchetService } from './service'
+import { MainSchetFormSchema, defaultValues, mainSchetQueryKeys } from './config'
+import { mainSchetService } from './service'
 
 export interface MainSchetDialogProps {
   open: boolean
@@ -50,14 +50,18 @@ export const MainSchetDialog = ({
   original
 }: MainSchetDialogProps) => {
   const queryClient = useQueryClient()
+  const budjet_id = useRequisitesStore((store) => store.budjet_id)
 
   const [search, setSearch] = useState('')
 
   const { t } = useTranslation()
 
-  const form = useForm<MainSchetPayloadType>({
-    defaultValues,
-    resolver: zodResolver(MainSchetPayloadSchema)
+  const form = useForm({
+    defaultValues: {
+      ...defaultValues,
+      spravochnik_budjet_name_id: budjet_id!
+    },
+    resolver: zodResolver(MainSchetFormSchema)
   })
 
   const { data: bankList, isFetching } = useQuery({
@@ -67,12 +71,12 @@ export const MainSchetDialog = ({
     placeholderData: (prev) => prev
   })
 
-  const { data: budgets, isFetching: isFetchingBudjets } = useQuery({
+  const { data: budgets } = useQuery({
     queryKey: [budjetQueryKeys.getAll],
     queryFn: BudgetService.getAll
   })
 
-  const { mutate: create, isPending: isCreating } = useMutation({
+  const { mutate: createMainSchet, isPending: isCreatingMainSchet } = useMutation({
     mutationKey: [mainSchetQueryKeys.create],
     mutationFn: mainSchetService.create,
     onSuccess(res) {
@@ -87,7 +91,7 @@ export const MainSchetDialog = ({
       onChangeOpen(false)
     }
   })
-  const { mutate: update, isPending: isUpdating } = useMutation({
+  const { mutate: updateMainSchet, isPending: isUpdatingMainSchet } = useMutation({
     mutationKey: [mainSchetQueryKeys.update],
     mutationFn: mainSchetService.update,
     onSuccess(res) {
@@ -103,11 +107,14 @@ export const MainSchetDialog = ({
     }
   })
 
-  const onSubmit = form.handleSubmit((payload) => {
+  const onSubmit = form.handleSubmit((values) => {
     if (selected) {
-      update(Object.assign(payload, { id: selected.id }))
+      updateMainSchet({
+        ...values,
+        id: selected.id
+      })
     } else {
-      create(payload)
+      createMainSchet(values)
     }
   })
 
@@ -117,19 +124,40 @@ export const MainSchetDialog = ({
         original
           ? {
               ...defaultValues,
+              spravochnik_budjet_name_id: budjet_id,
               tashkilot_nomi: original.tashkilot_nomi,
               tashkilot_mfo: original.tashkilot_mfo,
               tashkilot_bank: original.tashkilot_bank,
               tashkilot_inn: original.tashkilot_inn,
               account_name: original.account_name
             }
-          : defaultValues
+          : {
+              ...defaultValues,
+              spravochnik_budjet_name_id: budjet_id
+            }
       )
       return
     }
 
     form.reset(selected)
   }, [form, selected, original])
+
+  const {
+    fields: jur3Schets,
+    append: appendJur3Schets,
+    remove: removeJur3Schets
+  } = useFieldArray({
+    control: form.control,
+    name: 'jur3_schets'
+  })
+  const {
+    fields: jur4Schets,
+    append: appendJur4Schets,
+    remove: removeJur4Schets
+  } = useFieldArray({
+    control: form.control,
+    name: 'jur4_schets'
+  })
 
   return (
     <Dialog
@@ -164,8 +192,8 @@ export const MainSchetDialog = ({
                       <SelectField
                         {...field}
                         withFormControl
-                        disabled={isFetchingBudjets}
-                        triggerClassName="col-span-4"
+                        disabled={true}
+                        triggerClassName="col-span-4 disabled:opacity-100"
                         placeholder={t('choose', { what: t('budjet') })}
                         options={budgets?.data ?? []}
                         getOptionLabel={(option) => option.name}
@@ -391,26 +419,6 @@ export const MainSchetDialog = ({
                   </FormItem>
                 )}
               />
-              {/* <FormField
-                name="jur1_subschet"
-                control={form.control}
-                render={({ field }) => (
-                  <FormItem>
-                    <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
-                      <FormLabel className="text-right col-span-2">
-                        {t('mo-nth', { nth: 1 })} <span className="lowercase">{t('subschet')}</span>
-                      </FormLabel>
-                      <FormControl>
-                        <Input
-                          className="col-span-4"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage className="text-end col-span-6" />
-                    </div>
-                  </FormItem>
-                )}
-              /> */}
 
               <FormField
                 name="jur2_schet"
@@ -432,154 +440,115 @@ export const MainSchetDialog = ({
                   </FormItem>
                 )}
               />
-              {/* <FormField
-                name="jur2_subschet"
-                control={form.control}
-                render={({ field }) => (
-                  <FormItem>
-                    <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
-                      <FormLabel className="text-right col-span-2">
-                        {t('mo-nth', { nth: 2 })} <span className="lowercase">{t('subschet')}</span>
-                      </FormLabel>
-                      <FormControl>
-                        <Input
-                          className="col-span-4"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage className="text-end col-span-6" />
-                    </div>
-                  </FormItem>
-                )}
-              /> */}
 
-              <FormField
-                name="jur3_schet"
-                control={form.control}
-                render={({ field }) => (
-                  <FormItem>
-                    <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
-                      <FormLabel className="text-right col-span-2">
-                        {t('mo-nth', { nth: 3 })} <span className="lowercase">{t('schet')}</span>
-                      </FormLabel>
-                      <FormControl>
-                        <Input
-                          className="col-span-4"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage className="text-end col-span-6" />
-                    </div>
-                  </FormItem>
-                )}
-              />
-              {/* <FormField
-                name="jur3_subschet"
-                control={form.control}
-                render={({ field }) => (
-                  <FormItem>
-                    <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
-                      <FormLabel className="text-right col-span-2">
-                        {t('mo-nth', { nth: 3 })} <span className="lowercase">{t('subschet')}</span>
-                      </FormLabel>
-                      <FormControl>
-                        <Input
-                          className="col-span-4"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage className="text-end col-span-6" />
-                    </div>
-                  </FormItem>
-                )}
-              /> */}
+              <div className="grid grid-cols-6 gap-5 items-center">
+                <FormLabel className="col-span-2 text-end">
+                  {t('mo-nth', { nth: 3 })} {t('schet')}
+                </FormLabel>
+              </div>
+              <ul className="flex flex-col gap-6">
+                {jur3Schets.map((field, index) => (
+                  <FormField
+                    key={field.id}
+                    control={form.control}
+                    name={`jur3_schets.${index}.schet`}
+                    render={({ field }) => (
+                      <li key={index}>
+                        <FormElement
+                          grid="2:4"
+                          label={index + 1}
+                        >
+                          <div className="flex items-center justify-between gap-5">
+                            <Input {...field} />
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="icon"
+                              className="btn-icon !mx-0 hover:text-red-500"
+                              disabled={jur3Schets.length === 1}
+                              onClick={() => removeJur3Schets(index)}
+                            >
+                              <Trash />
+                            </Button>
+                          </div>
+                        </FormElement>
+                      </li>
+                    )}
+                  />
+                ))}
+              </ul>
+              <div className="grid grid-cols-6 mt-1">
+                <div className="col-span-2"></div>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() =>
+                    appendJur3Schets({
+                      schet: ''
+                    })
+                  }
+                  className="col-span-4"
+                >
+                  <Plus className="btn-icon icon-start" /> {t('add')}
+                </Button>
+              </div>
 
-              <FormField
-                name="jur4_schet"
-                control={form.control}
-                render={({ field }) => (
-                  <FormItem>
-                    <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
-                      <FormLabel className="text-right col-span-2">
-                        {t('mo-nth', { nth: 4 })} <span className="lowercase">{t('schet')}</span>
-                      </FormLabel>
-                      <FormControl>
-                        <Input
-                          className="col-span-4"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage className="text-end col-span-6" />
-                    </div>
-                  </FormItem>
-                )}
-              />
-              {/* <FormField
-                name="jur4_subschet"
-                control={form.control}
-                render={({ field }) => (
-                  <FormItem>
-                    <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
-                      <FormLabel className="text-right col-span-2">
-                        {t('mo-nth', { nth: 4 })} <span className="lowercase">{t('subschet')}</span>
-                      </FormLabel>
-                      <FormControl>
-                        <Input
-                          className="col-span-4"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage className="text-end col-span-6" />
-                    </div>
-                  </FormItem>
-                )}
-              /> */}
-
-              <FormField
-                name="jur5_schet"
-                control={form.control}
-                render={({ field }) => (
-                  <FormItem>
-                    <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
-                      <FormLabel className="text-right col-span-2">
-                        {t('mo-nth', { nth: 5 })} <span className="lowercase">{t('schet')}</span>
-                      </FormLabel>
-                      <FormControl>
-                        <Input
-                          className="col-span-4"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage className="text-end col-span-6" />
-                    </div>
-                  </FormItem>
-                )}
-              />
-              <FormField
-                name="jur7_schet"
-                control={form.control}
-                render={({ field }) => (
-                  <FormItem>
-                    <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
-                      <FormLabel className="text-right col-span-2">
-                        {t('mo-nth', { nth: 7 })} <span className="lowercase">{t('schet')}</span>
-                      </FormLabel>
-                      <FormControl>
-                        <Input
-                          className="col-span-4"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage className="text-end col-span-6" />
-                    </div>
-                  </FormItem>
-                )}
-              />
+              <div className="grid grid-cols-6 gap-5 items-center">
+                <FormLabel className="col-span-2 text-end">
+                  {t('mo-nth', { nth: 4 })} {t('schet')}
+                </FormLabel>
+              </div>
+              <ul className="flex flex-col gap-6">
+                {jur4Schets.map((field, index) => (
+                  <FormField
+                    key={field.id}
+                    control={form.control}
+                    name={`jur4_schets.${index}.schet`}
+                    render={({ field }) => (
+                      <li key={index}>
+                        <FormElement
+                          grid="2:4"
+                          label={index + 1}
+                        >
+                          <div className="flex items-center justify-between gap-5">
+                            <Input {...field} />
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="icon"
+                              className="btn-icon !mx-0 hover:text-red-500"
+                              disabled={jur4Schets.length === 1}
+                              onClick={() => removeJur4Schets(index)}
+                            >
+                              <Trash />
+                            </Button>
+                          </div>
+                        </FormElement>
+                      </li>
+                    )}
+                  />
+                ))}
+              </ul>
+              <div className="grid grid-cols-6 mt-1">
+                <div className="col-span-2"></div>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() =>
+                    appendJur4Schets({
+                      schet: ''
+                    })
+                  }
+                  className="col-span-4"
+                >
+                  <Plus className="btn-icon icon-start" /> {t('add')}
+                </Button>
+              </div>
             </div>
             <DialogFooter className="w-full mt-5 sticky bottom-0 bg-white shadow-[0px_5px_0px_5px_white]">
               <Button
                 type="submit"
-                disabled={isCreating || isUpdating}
+                disabled={isCreatingMainSchet || isUpdatingMainSchet}
               >
                 {t('save')}
               </Button>
@@ -590,23 +559,3 @@ export const MainSchetDialog = ({
     </Dialog>
   )
 }
-
-const defaultValues = {
-  spravochnik_budjet_name_id: 0,
-  account_name: '',
-  account_number: '',
-  tashkilot_nomi: '',
-  tashkilot_inn: '',
-  tashkilot_mfo: '',
-  tashkilot_bank: '',
-  jur1_schet: '',
-  jur1_subschet: '',
-  jur2_schet: '',
-  jur2_subschet: '',
-  jur3_schet: '',
-  jur3_subschet: '',
-  jur4_schet: '',
-  jur4_subschet: '',
-  jur5_schet: '',
-  jur7_schet: ''
-} satisfies MainSchetPayloadType

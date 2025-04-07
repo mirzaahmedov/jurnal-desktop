@@ -16,7 +16,7 @@ export enum TypeSchetOperatsii {
   AKT = 'akt',
   AVANS_OTCHET = 'avans_otchet',
   POKAZAT_USLUGI = 'show_service',
-  JUR7 = 'jur7',
-  GENERAL = 'general',
+  JUR3 = 'jur3',
+  JUR4 = 'jur4',
   ALL = 'all'
 }

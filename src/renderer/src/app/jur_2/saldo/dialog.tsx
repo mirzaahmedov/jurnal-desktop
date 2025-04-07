@@ -28,6 +28,11 @@ import {
 } from '@/common/components/ui/form'
 import { YearSelect } from '@/common/components/year-select'
 import { useRequisitesStore } from '@/common/features/requisites'
+import {
+  SaldoNamespace,
+  handleSaldoErrorDates,
+  handleSaldoResponseDates
+} from '@/common/features/saldo'
 import { useSelectedMonthStore } from '@/common/features/selected-month'
 import { capitalize } from '@/common/lib/string'
 
@@ -62,6 +67,10 @@ export const BankSaldoDialog = ({ open, onOpenChange, selected }: BankSaldoDialo
         queryKey: [BankSaldoQueryKeys.getAll]
       })
       onOpenChange(false)
+      handleSaldoResponseDates(SaldoNamespace.JUR_2, res)
+    },
+    onError(error) {
+      handleSaldoErrorDates(SaldoNamespace.JUR_2, error)
     }
   })
   const { mutate: updateSaldo, isPending: isUpdatingSaldo } = useMutation({
@@ -74,6 +83,10 @@ export const BankSaldoDialog = ({ open, onOpenChange, selected }: BankSaldoDialo
         queryKey: [BankSaldoQueryKeys.getAll]
       })
       onOpenChange(false)
+      handleSaldoResponseDates(SaldoNamespace.JUR_2, res)
+    },
+    onError(error) {
+      handleSaldoErrorDates(SaldoNamespace.JUR_2, error)
     }
   })
 

@@ -10,6 +10,11 @@ import { toast } from 'react-toastify'
 import { FooterCell, FooterRow, GenericTable } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
 import { useRequisitesStore } from '@/common/features/requisites'
+import {
+  SaldoNamespace,
+  handleSaldoErrorDates,
+  handleSaldoResponseDates
+} from '@/common/features/saldo'
 import { useToggle } from '@/common/hooks'
 import { useLayoutStore } from '@/common/layout/store'
 import { formatNumber } from '@/common/lib/format'
@@ -54,6 +59,10 @@ const KassaSaldoPage = () => {
       queryClient.invalidateQueries({
         queryKey: [KassaSaldoQueryKeys.getAll]
       })
+      handleSaldoResponseDates(SaldoNamespace.JUR_1, res)
+    },
+    onError(error) {
+      handleSaldoErrorDates(SaldoNamespace.JUR_1, error)
     }
   })
 

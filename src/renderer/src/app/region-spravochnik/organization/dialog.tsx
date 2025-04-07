@@ -46,7 +46,7 @@ export const OrganizationDialog = ({
     resolver: zodResolver(OrganizationFormSchema)
   })
 
-  const { mutate: createOrganization, isPending: isCreating } = useMutation({
+  const { mutate: createOrganization, isPending: isCreatingOrganization } = useMutation({
     mutationKey: [organizationQueryKeys.create],
     mutationFn: organizationService.create,
     onSuccess(res) {
@@ -58,7 +58,7 @@ export const OrganizationDialog = ({
       onOpenChange?.(false)
     }
   })
-  const { mutate: updateOrganization, isPending: isUpdating } = useMutation({
+  const { mutate: updateOrganization, isPending: isUpdatingOrganization } = useMutation({
     mutationKey: [organizationQueryKeys.update],
     mutationFn: organizationService.update,
     onSuccess(res) {
@@ -119,7 +119,7 @@ export const OrganizationDialog = ({
             formActions={
               <DialogFooter>
                 <Button
-                  disabled={isCreating || isUpdating}
+                  disabled={isCreatingOrganization || isUpdatingOrganization}
                   type="submit"
                 >
                   {t('save')}
