@@ -260,6 +260,7 @@
   "refresh_page": "Sahifani yangilash",
   "unsaved_changes_want_to_exit": "Saqlanmagan o‘zgarishlar mavjud. Chiqishni xohlaysizmi?",
   "sure_to_delete": "O'chirishni tasdiqlaysizmi?",
+  "sure_to_delete_all": "Barcha ma'lumotlarni o‘chirmoqchimisiz? Tasdiqlash uchun parol kerak.",
   "date": "Sana",
   "provodka_type": {
     "bank_rasxod": "Bank xarajat",
@@ -317,5 +318,8 @@
   "please_select_report_title": "Iltimos, hisobot nomini tanlang va keyin yuklab oling.",
   "monthly_saldo": "Oy bo‘yicha saldo",
   "no_saldo_short": "Saldo yo‘q",
-  "saldo_exists_short": "Saldo mavjud"
+  "saldo_exists_short": "Saldo mavjud",
+  "unknown_type": "Turi nomaʼlum",
+  "delete_all": "Barchasini o'chirish",
+  "required_field": "Majburiy maydon"
 }

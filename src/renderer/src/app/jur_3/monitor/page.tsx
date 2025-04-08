@@ -40,7 +40,7 @@ import { AktSverkaDialog } from './akt-sverka'
 import { organizationMonitorColumns } from './columns'
 import { orgMonitoringQueryKeys } from './constants'
 import { useOperatsiiFilter, useOrganFilter } from './filters'
-import { orgMonitoringService } from './service'
+import { OrganMonitoringService } from './service'
 
 const OrganizationMonitoringPage = () => {
   const navigate = useNavigate()
@@ -56,7 +56,7 @@ const OrganizationMonitoringPage = () => {
   const [search] = useSearchFilter()
 
   const { sorting, handleSort, getColumnSorted } = useTableSort()
-  const { main_schet_id, budjet_id } = useRequisitesStore()
+  const { main_schet_id, budjet_id, jur3_schet_id } = useRequisitesStore()
   const { t } = useTranslation(['app'])
 
   const orgSpravochnik = useSpravochnik(
@@ -80,7 +80,7 @@ const OrganizationMonitoringPage = () => {
         setOperatsiiId(id)
       },
       params: {
-        type_schet: TypeSchetOperatsii.GENERAL
+        type_schet: TypeSchetOperatsii.JUR3
       }
     })
   )
@@ -90,6 +90,7 @@ const OrganizationMonitoringPage = () => {
       orgMonitoringQueryKeys.getByOrgId,
       {
         main_schet_id,
+        schet_id: jur3_schet_id,
         organ_id: organId ? organId : undefined,
         operatsii: operatsiiSpravochnik.selected ? operatsiiSpravochnik.selected.schet : undefined,
         search,
@@ -98,7 +99,7 @@ const OrganizationMonitoringPage = () => {
         ...pagination
       }
     ],
-    queryFn: orgMonitoringService.getAll,
+    queryFn: OrganMonitoringService.getAll,
     enabled: !!main_schet_id && !!operatsiiSpravochnik.selected
   })
 

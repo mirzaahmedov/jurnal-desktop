@@ -28,7 +28,7 @@ export const Jur2SaldoUpdateManager = () => {
     error
   } = useMutation({
     mutationKey: [BankSaldoService.create],
-    mutationFn: BankSaldoService.createAuto,
+    mutationFn: BankSaldoService.autoCreate,
     onSuccess(_, values) {
       const newQueue = dequeueMonth(values)
       setCompleted((prev) => [...prev, values])

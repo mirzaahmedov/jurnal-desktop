@@ -12,6 +12,11 @@ import { useConfirm } from '@/common/features/confirm'
 import { SearchFilterDebounced } from '@/common/features/filters/search/search-filter-debounced'
 import { useSearchFilter } from '@/common/features/filters/search/search-filter-debounced'
 import { useRequisitesStore } from '@/common/features/requisites'
+import {
+  SaldoNamespace,
+  handleSaldoErrorDates,
+  handleSaldoResponseDates
+} from '@/common/features/saldo'
 import { useDates, usePagination } from '@/common/hooks'
 import { useLayoutStore } from '@/common/layout/store'
 import { ListView } from '@/common/views'
@@ -21,7 +26,6 @@ import { queryKeys } from './config'
 import { pokazatUslugiService } from './service'
 
 const PokazatUslugiPage = () => {
-  const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
   const setLayout = useLayoutStore((store) => store.setLayout)
 
   const navigate = useNavigate()
@@ -31,6 +35,7 @@ const PokazatUslugiPage = () => {
 
   const [search] = useSearchFilter()
 
+  const { main_schet_id, jur3_schet_id } = useRequisitesStore()
   const { confirm } = useConfirm()
   const { sorting, handleSort, getColumnSorted } = useTableSort()
   const { t } = useTranslation(['app'])
@@ -40,6 +45,7 @@ const PokazatUslugiPage = () => {
       queryKeys.getAll,
       {
         main_schet_id,
+        schet_id: jur3_schet_id,
         search,
         ...sorting,
         ...dates,
@@ -56,6 +62,10 @@ const PokazatUslugiPage = () => {
       queryClient.invalidateQueries({
         queryKey: [queryKeys.getAll]
       })
+      handleSaldoResponseDates(SaldoNamespace.JUR_3, res)
+    },
+    onError(error) {
+      handleSaldoErrorDates(SaldoNamespace.JUR_3, error)
     }
   })
 

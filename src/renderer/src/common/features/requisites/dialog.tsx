@@ -1,7 +1,11 @@
+import { useEffect } from 'react'
+
+import { zodResolver } from '@hookform/resolvers/zod'
 import { useQuery } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
+import { mainSchetService } from '@/app/region-spravochnik/main-schet'
 import { BudgetService, budjetQueryKeys } from '@/app/super-admin/budjet'
 import { SelectField } from '@/common/components'
 import { Button } from '@/common/components/ui/button'
@@ -18,7 +22,7 @@ import { useConfirm } from '@/common/features/confirm'
 
 import { RequisitesQueryKeys } from './config'
 import { getMainSchetsQuery } from './service'
-import { useRequisitesStore } from './store'
+import { RequisitesFormSchema, type RequisitesFormValues, useRequisitesStore } from './store'
 
 export type RequisitesDialogProps = {
   open: boolean
@@ -32,7 +36,8 @@ export const RequisitesDialog = ({ open, onOpenChange }: RequisitesDialogProps) 
   const setRequisites = useRequisitesStore((store) => store.setRequisites)
 
   const form = useForm({
-    defaultValues
+    defaultValues,
+    resolver: zodResolver(RequisitesFormSchema)
   })
 
   const { data: budjets, isLoading: isLoadingBudget } = useQuery({
@@ -40,7 +45,7 @@ export const RequisitesDialog = ({ open, onOpenChange }: RequisitesDialogProps) 
     queryFn: BudgetService.getAll,
     enabled: open
   })
-  const { data: schetList, isLoading: isLoadingSchets } = useQuery({
+  const { data: main_schets, isLoading: isLoadingSchets } = useQuery({
     queryKey: [
       RequisitesQueryKeys.getAll,
       {
@@ -52,19 +57,47 @@ export const RequisitesDialog = ({ open, onOpenChange }: RequisitesDialogProps) 
     enabled: !!form.watch('budjet_id') && !!user?.region_id && open
   })
 
-  const onSubmit = form.handleSubmit(({ main_schet_id, budjet_id }) => {
-    setRequisites({
-      main_schet_id,
-      budjet_id,
-      user_id: user?.id
-    })
-
-    form.reset({
-      budjet_id,
-      main_schet_id
-    })
-    onOpenChange(false)
+  const { data: main_schet } = useQuery({
+    queryKey: [RequisitesQueryKeys.getMainSchetById, form.watch('main_schet_id')],
+    queryFn: mainSchetService.getById,
+    enabled: !!form.watch('main_schet_id')
   })
+
+  const onSubmit = form.handleSubmit(
+    ({ main_schet_id, budjet_id, jur3_schet_id, jur4_schet_id }) => {
+      if (main_schet_id && !jur3_schet_id) {
+        form.setError('jur3_schet_id', {
+          type: 'required',
+          message: t('required_field')
+        })
+        return
+      }
+
+      if (main_schet_id && !jur4_schet_id) {
+        form.setError('jur4_schet_id', {
+          type: 'required',
+          message: t('required_field')
+        })
+        return
+      }
+
+      setRequisites({
+        main_schet_id,
+        budjet_id,
+        jur3_schet_id,
+        jur4_schet_id,
+        user_id: user?.id
+      })
+
+      form.reset({
+        budjet_id,
+        main_schet_id,
+        jur3_schet_id,
+        jur4_schet_id
+      })
+      onOpenChange(false)
+    }
+  )
 
   const handleClose = (open: boolean) => {
     if (!open && form.formState.isDirty) {
@@ -79,6 +112,17 @@ export const RequisitesDialog = ({ open, onOpenChange }: RequisitesDialogProps) 
     }
     onOpenChange(open)
   }
+
+  useEffect(() => {
+    if (open) {
+      form.reset({
+        budjet_id: useRequisitesStore.getState().budjet_id,
+        main_schet_id: useRequisitesStore.getState().main_schet_id,
+        jur3_schet_id: useRequisitesStore.getState().jur3_schet_id,
+        jur4_schet_id: useRequisitesStore.getState().jur4_schet_id
+      })
+    }
+  }, [open])
 
   return (
     <Dialog
@@ -134,17 +178,85 @@ export const RequisitesDialog = ({ open, onOpenChange }: RequisitesDialogProps) 
                       withFormControl
                       disabled={isLoadingSchets}
                       placeholder={t('choose', { what: t('raschet-schet') })}
-                      options={Array.isArray(schetList?.data) ? schetList.data : []}
+                      options={Array.isArray(main_schets?.data) ? main_schets.data : []}
                       getOptionValue={(account) => account.main_schet_id.toString()}
                       getOptionLabel={(account) => account.account_number}
                       value={field.value ? field.value.toString() : ''}
-                      onValueChange={(value) => field.onChange(Number(value))}
+                      onValueChange={(value) => {
+                        form.setValue('jur3_schet_id', 0, {
+                          shouldDirty: true,
+                          shouldValidate: true
+                        })
+                        form.setValue('jur4_schet_id', 0, {
+                          shouldDirty: true,
+                          shouldValidate: true
+                        })
+                        field.onChange(Number(value))
+                      }}
                     />
                     <FormMessage />
                   </FormItem>
                 )}
               />
             ) : null}
+
+            {main_schet ? (
+              <>
+                <FormField
+                  control={form.control}
+                  name="jur3_schet_id"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>
+                        {t('mo-nth', { nth: 3 })} {t('schet')}
+                      </FormLabel>
+                      <SelectField
+                        {...field}
+                        withFormControl
+                        placeholder={t('choose', { what: t('schet') })}
+                        options={
+                          Array.isArray(main_schet.data?.jur3_schets)
+                            ? main_schet.data?.jur3_schets
+                            : []
+                        }
+                        getOptionValue={(schet) => schet.id}
+                        getOptionLabel={(schet) => schet.schet}
+                        value={field.value ? field.value.toString() : ''}
+                        onValueChange={(value) => field.onChange(Number(value))}
+                      />
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="jur4_schet_id"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>
+                        {t('mo-nth', { nth: 4 })} {t('schet')}
+                      </FormLabel>
+                      <SelectField
+                        {...field}
+                        withFormControl
+                        placeholder={t('choose', { what: t('schet') })}
+                        options={
+                          Array.isArray(main_schet.data?.jur4_schets)
+                            ? main_schet.data?.jur4_schets
+                            : []
+                        }
+                        getOptionValue={(schet) => schet.id}
+                        getOptionLabel={(schet) => schet.schet}
+                        value={field.value ? field.value.toString() : ''}
+                        onValueChange={(value) => field.onChange(Number(value))}
+                      />
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </>
+            ) : null}
+
             <DialogFooter>
               <Button>{t('save')}</Button>
             </DialogFooter>
@@ -154,7 +266,9 @@ export const RequisitesDialog = ({ open, onOpenChange }: RequisitesDialogProps) 
     </Dialog>
   )
 }
-const defaultValues = {
+const defaultValues: RequisitesFormValues = {
   budjet_id: useRequisitesStore.getState().budjet_id,
-  main_schet_id: useRequisitesStore.getState().main_schet_id
+  main_schet_id: useRequisitesStore.getState().main_schet_id,
+  jur3_schet_id: useRequisitesStore.getState().jur3_schet_id,
+  jur4_schet_id: useRequisitesStore.getState().jur4_schet_id
 }

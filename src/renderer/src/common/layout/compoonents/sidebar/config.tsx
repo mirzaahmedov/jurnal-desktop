@@ -16,7 +16,6 @@ import {
   ChartCandlestick,
   CircleDollarSign,
   CircleFadingPlus,
-  CircleHelp,
   Database,
   FileCheck,
   FileCheck2,
@@ -54,6 +53,7 @@ import {
 
 import { Jur1SaldoController } from '@/app/jur_1/saldo/components/saldo-controller'
 import { Jur2SaldoController } from '@/app/jur_2/saldo/components/saldo-controller'
+import { Jur3SaldoController } from '@/app/jur_3/saldo/components/saldo-controller'
 import { Jur7SaldoController } from '@/app/jur_7/saldo/components/saldo-controller'
 import { adminRoles } from '@/app/super-admin/role'
 import { useAuthenticationStore } from '@/common/features/auth'
@@ -194,7 +194,7 @@ export const getNavElements = (t: TFunction): NavElement[] => {
               ? {
                   path: 'monitor',
                   title: t('pages.organization-monitoring'),
-                  icon: CircleHelp
+                  icon: SquareActivity
                 }
               : null,
             permissions.shartnoma
@@ -222,6 +222,12 @@ export const getNavElements = (t: TFunction): NavElement[] => {
               path: 'ostatok',
               title: t('pages.saldo'),
               icon: CircleFadingPlus
+            },
+            {
+              displayOnly: true,
+              path: '',
+              title: <Jur3SaldoController />,
+              icon: null
             }
           ])
         }
@@ -236,7 +242,7 @@ export const getNavElements = (t: TFunction): NavElement[] => {
               ? {
                   path: 'monitor',
                   title: t('pages.podotchet-monitoring'),
-                  icon: CircleHelp
+                  icon: SquareActivity
                 }
               : null,
             permissions.jur4
@@ -260,6 +266,11 @@ export const getNavElements = (t: TFunction): NavElement[] => {
           path: '/journal-7',
           title: `№7 - МО (${t('pages.material-warehouse')})`,
           children: [
+            {
+              icon: SquareActivity,
+              path: 'monitor',
+              title: t('pages.monitoring')
+            },
             {
               icon: FileDown,
               path: 'prixod',

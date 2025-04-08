@@ -48,3 +48,33 @@ export interface Jur7InternalTransfer {
   }
   childs: Jur7Child[]
 }
+
+export interface Jur7Monitoring {
+  id: number
+  doc_num: string
+  doc_date: string
+  opisanie: any
+  summa_rasxod: number
+  summa_prixod: number
+  from_id: number
+  from_name: string
+  to_id: number
+  to_name: string
+  user_id: number
+  login: string
+  fio: string
+  kredit_schet: string
+  kredit_sub_schet: string
+  debet_schet: string
+  debet_sub_schet: string
+  type: Jur7MonitoringType
+  combined_doc_date: string
+  combined_id: number
+  combined_doc_num: string
+}
+
+export enum Jur7MonitoringType {
+  prixod = 'prixod',
+  rasxod = 'rasxod',
+  internal = 'internal'
+}

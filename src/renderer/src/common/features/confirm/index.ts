@@ -1,2 +1,2 @@
-export { ConfirmationDialog } from './dialog'
-export { useConfirm } from './store'
+export * from './confirmation-dialog'
+export * from './store'

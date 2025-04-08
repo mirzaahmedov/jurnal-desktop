@@ -1,12 +1,14 @@
 export enum SaldoNamespace {
   JUR_1 = 'JUR_1',
   JUR_2 = 'JUR_2',
+  JUR_3 = 'JUR_3',
   JUR_7 = 'JUR_7'
 }
 
 export interface MonthValue {
   year: number
   month: number
+  schet_id?: number
 }
 
 export interface SaldoControllerStore {

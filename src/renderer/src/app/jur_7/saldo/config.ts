@@ -2,8 +2,9 @@ import { z } from 'zod'
 
 import { useSelectedMonthStore } from '@/common/features/selected-month'
 
-export const ostatokQueryKeys = {
+export const saldoQueryKeys = {
   getAll: 'saldo/all',
+  getMonthlySaldo: 'saldo/monthly',
   check: 'saldo/check',
   create: 'saldo/create',
   delete: 'saldo/delete'

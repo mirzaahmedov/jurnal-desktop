@@ -1,5 +1,3 @@
-import type { MainSchet } from '@/common/models'
-
 import { Fragment } from 'react'
 
 import { CaretRightIcon } from '@radix-ui/react-icons'
@@ -39,8 +37,6 @@ export const Header = () => {
   const handleLogout = () => {
     setUser(null)
   }
-
-  const schet = getCurrentSchet({ main_schet, pathname })
 
   return (
     <header className="px-5 py-4 flex justify-between border-b border-border/50 bg-white z-[51] sticky top-0">
@@ -95,7 +91,7 @@ export const Header = () => {
         </div>
         <Requisites
           data={main_schet}
-          schet={schet}
+          pathname={pathname}
         />
         {user ? <UserProfile user={user} /> : null}
         <Settings />
@@ -109,25 +105,4 @@ export const Header = () => {
       </div>
     </header>
   )
-}
-
-type GetCurrentSchetParams = {
-  main_schet?: MainSchet
-  pathname: string
-}
-const getCurrentSchet = ({ main_schet, pathname }: GetCurrentSchetParams): string => {
-  switch (true) {
-    case !main_schet:
-      return ''
-    case pathname.startsWith('/kassa'):
-      return main_schet.jur1_schet
-    case pathname.startsWith('/bank'):
-      return main_schet.jur2_schet
-    case pathname.startsWith('/organization'):
-      return main_schet.jur3_schet
-    case pathname.startsWith('/accountable'):
-      return main_schet.jur4_schet
-    default:
-      return ''
-  }
 }

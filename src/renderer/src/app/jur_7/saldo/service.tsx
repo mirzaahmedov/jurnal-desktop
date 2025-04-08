@@ -1,3 +1,4 @@
+import type { MonthValue } from '@/common/features/saldo'
 import type { OstatokProduct, Response } from '@/common/models'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 
@@ -72,6 +73,27 @@ export const getOstatokCheck = async (
   const res = await http.get<Response<unknown[]>>(`${ApiEndpoints.jur7_saldo}/check`, {
     params: {
       month,
+      year,
+      budjet_id
+    }
+  })
+  return res.data
+}
+
+export const getMonthlySaldoQuery = async (
+  ctx: QueryFunctionContext<
+    [
+      string,
+      {
+        year: number
+        budjet_id: number
+      }
+    ]
+  >
+) => {
+  const { year, budjet_id } = ctx.queryKey[1] ?? {}
+  const res = await http.get<Response<MonthValue[]>>('/jur_7/monitoring/saldo/date', {
+    params: {
       year,
       budjet_id
     }

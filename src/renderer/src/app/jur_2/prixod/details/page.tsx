@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
-import { createShartnomaSpravochnik } from '@/app/organization/shartnoma'
+import { createShartnomaSpravochnik } from '@/app/jur_3/shartnoma'
 import { mainSchetQueryKeys, mainSchetService } from '@/app/region-spravochnik/main-schet'
 import { createOrganizationSpravochnik } from '@/app/region-spravochnik/organization'
 import { Fieldset } from '@/common/components'

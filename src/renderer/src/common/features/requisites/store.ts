@@ -4,40 +4,32 @@ import { persist } from 'zustand/middleware'
 
 import { withPreprocessor } from '@/common/lib/validation'
 
-const RequisitesSchema = withPreprocessor(
+export const RequisitesFormSchema = withPreprocessor(
   z.object({
     main_schet_id: z.number().optional(),
     budjet_id: z.number().optional(),
+    jur3_schet_id: z.number().optional(),
+    jur4_schet_id: z.number().optional(),
     user_id: z.number().optional()
   })
 )
 
-type Requisites = {
+export interface RequisitesFormValues {
   main_schet_id?: number
   budjet_id?: number
   user_id?: number
+  jur3_schet_id?: number
+  jur4_schet_id?: number
 }
 
-type RequisitesStore = Requisites & {
-  setRequisites: (params: Requisites) => void
+type RequisitesStore = RequisitesFormValues & {
+  setRequisites: (params: RequisitesFormValues) => void
 }
 export const useRequisitesStore = create(
   persist<RequisitesStore>(
     (set) => ({
-      setRequisites: ({ main_schet_id, budjet_id, user_id }) => {
-        const result = RequisitesSchema.safeParse({
-          main_schet_id,
-          budjet_id,
-          user_id
-        })
-        if (result.success) {
-          set({
-            main_schet_id: result.data.main_schet_id,
-            budjet_id: result.data.budjet_id,
-            user_id: result.data.user_id
-          })
-          return
-        }
+      setRequisites: (values) => {
+        set(values)
       }
     }),
     {
@@ -51,4 +43,10 @@ export const getMainschetId = () => {
 }
 export const getBudjetId = () => {
   return useRequisitesStore.getState().budjet_id
+}
+export const getJur3SchetId = () => {
+  return useRequisitesStore.getState().jur3_schet_id
+}
+export const getJur4SchetId = () => {
+  return useRequisitesStore.getState().jur4_schet_id
 }

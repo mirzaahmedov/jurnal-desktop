@@ -1,1 +1,1 @@
-export * from './main-schet'
+export * from './requisites'

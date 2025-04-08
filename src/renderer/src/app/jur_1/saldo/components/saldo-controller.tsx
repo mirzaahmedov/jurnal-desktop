@@ -29,7 +29,7 @@ export const Jur1SaldoController = () => {
 
   const { mutate: createSaldoAuto, isPending } = useMutation({
     mutationKey: [KassaSaldoQueryKeys.auto],
-    mutationFn: KassaSaldoService.createAuto,
+    mutationFn: KassaSaldoService.autoCreate,
     onSuccess(res, values) {
       toast.success(res?.message)
 

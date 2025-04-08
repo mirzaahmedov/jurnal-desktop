@@ -32,6 +32,7 @@ export enum ApiEndpoints {
   reestr = 'organization/monitoring/restr',
   operatsii_filter = 'spravochnik/operatsii/filter',
   podotchet_monitoring = 'podotchet/monitoring',
+  jur7_monitoring = 'jur_7/monitoring',
   jur7_group = 'jur_7/group',
   jur7_pereotsenka = 'jur_7/pereotsenka',
   jur7_podrazdelenie = 'jur_7/podrazdelenie',

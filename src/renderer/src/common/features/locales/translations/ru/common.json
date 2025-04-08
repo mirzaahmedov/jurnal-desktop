@@ -261,6 +261,7 @@
   "refresh_page": "Обновить страницу",
   "unsaved_changes_want_to_exit": "У вас есть несохраненные изменения. Вы уверены, что хотите закрыть?",
   "sure_to_delete": "Вы уверены, что хотите удалить?",
+  "sure_to_delete_all": "Вы уверены, что хотите удалить все данные? Для подтверждения требуется пароль.",
   "date": "Дата",
   "provodka_type": {
     "bank_rasxod": "Банк расход",
@@ -318,5 +319,8 @@
   "please_select_report_title": "Пожалуйста, выберите название отчета перед загрузкой.",
   "monthly_saldo": "Сальдо по месяцам",
   "no_saldo_short": "Нет сальдо",
-  "saldo_exists_short": "Есть сальдо"
+  "saldo_exists_short": "Есть сальдо",
+  "unknown_type": "Неизвестный тип",
+  "delete_all": "Удалить всё",
+  "required_field": "Обязательное поле"
 }

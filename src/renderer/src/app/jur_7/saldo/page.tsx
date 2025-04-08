@@ -3,7 +3,7 @@ import type { OstatokProduct } from '@/common/models'
 import { useEffect, useMemo, useState } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { CalendarDays, CircleArrowDown, CopyCheck, Download, Trash2 } from 'lucide-react'
+import { CalendarDays, CircleArrowDown, CopyCheck, Trash2 } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { Trans, useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
@@ -15,12 +15,6 @@ import { Button } from '@/common/components/ui/button'
 import { ButtonGroup } from '@/common/components/ui/button-group'
 import { Checkbox } from '@/common/components/ui/checkbox'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/common/components/ui/dialog'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger
-} from '@/common/components/ui/dropdown-menu'
 import { FormField } from '@/common/components/ui/form'
 import { useConfirm } from '@/common/features/confirm'
 import { DownloadFile, ImportFile } from '@/common/features/file'
@@ -29,12 +23,13 @@ import {
   type ImportValidationErrorRow,
   handleImportValidationError
 } from '@/common/features/file/utils'
-import { SearchFilterDebounced } from '@/common/features/filters/search/search-filter-debounced'
-import { useSearchFilter } from '@/common/features/filters/search/search-filter-debounced'
+import {
+  SearchFilterDebounced,
+  useSearchFilter
+} from '@/common/features/filters/search/search-filter-debounced'
 import { useRequisitesStore } from '@/common/features/requisites'
 import { SaldoNamespace, useSaldoController } from '@/common/features/saldo'
 import { useSelectedMonthStore } from '@/common/features/selected-month'
-import { useSettingsStore } from '@/common/features/settings'
 import { useSpravochnik } from '@/common/features/spravochnik'
 import { usePagination, useToggle } from '@/common/hooks'
 import { useLayoutStore } from '@/common/layout/store'
@@ -48,7 +43,7 @@ import { ostatokProductColumns } from './columns'
 import { DeleteExistingDocumentsAlert } from './components/delete-existing-document-alert'
 import { DeleteExistingSaldoAlert } from './components/delete-existing-saldo-alert'
 import { MonthlySaldoTrackerDialog } from './components/monthly-saldo-tracker-dialog'
-import { defaultValues, ostatokQueryKeys } from './config'
+import { defaultValues, saldoQueryKeys } from './config'
 import { deleteOstatokBatchQuery, ostatokProductService } from './service'
 import {
   type OstatokDeleteExistingDocument,
@@ -83,13 +78,11 @@ const OstatokPage = () => {
   const [selectedDate, setSelectedDate] = useState<undefined | Date>(startDate)
   const [search] = useSearchFilter()
 
-  const dropdownToggle = useToggle()
   const selectedToggle = useToggle()
-  const saldoMonthlyTrackerDialogToggle = useToggle()
+  const monthlyTrackerToggle = useToggle()
   const queryClient = useQueryClient()
   const pagination = usePagination()
   const budjet_id = useRequisitesStore((store) => store.budjet_id)
-  const report_title_id = useSettingsStore((store) => store.report_title_id)
   const setLayout = useLayoutStore((store) => store.setLayout)
 
   const { confirm } = useConfirm()
@@ -108,7 +101,7 @@ const OstatokPage = () => {
     error: ostatokError
   } = useQuery({
     queryKey: [
-      ostatokQueryKeys.getAll,
+      saldoQueryKeys.getAll,
       {
         page: pagination.page,
         limit: pagination.limit,
@@ -126,17 +119,17 @@ const OstatokPage = () => {
   })
 
   const { mutate: deleteOstatok, isPending: isDeleting } = useMutation({
-    mutationKey: [ostatokQueryKeys.delete],
+    mutationKey: [saldoQueryKeys.delete],
     mutationFn: deleteOstatokBatchQuery,
     onSuccess(res) {
       queryClient.invalidateQueries({
-        queryKey: [ostatokQueryKeys.getAll]
+        queryKey: [saldoQueryKeys.getAll]
       })
       queryClient.invalidateQueries({
         queryKey: [iznosQueryKeys.getAll]
       })
       queryClient.invalidateQueries({
-        queryKey: [ostatokQueryKeys.check]
+        queryKey: [saldoQueryKeys.check]
       })
       setSelectedRows([])
       handleOstatokResponse(res)
@@ -233,86 +226,6 @@ const OstatokPage = () => {
           </div>
           <div>
             <ButtonGroup className="flex gap-5">
-              {selectedDate ? (
-                <DropdownMenu open={dropdownToggle.isOpen}>
-                  <DropdownMenuTrigger
-                    asChild
-                    onClick={dropdownToggle.open}
-                  >
-                    <Button variant="ghost">
-                      <Download className="btn-icon icon-start" />
-                      <span className="titlecase">
-                        {t('download-something', { something: t('reports') })}
-                      </span>
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent
-                    side="bottom"
-                    onInteractOutside={dropdownToggle.close}
-                  >
-                    <DropdownMenuItem>
-                      <DownloadFile
-                        fileName={`оборотка_${formatDate(selectedDate)}.xlsx`}
-                        url="/jur_7/monitoring/obrotka/report"
-                        params={{
-                          to: formatDate(selectedDate),
-                          budjet_id,
-                          excel: true
-                        }}
-                        buttonText="Оборотка"
-                        className="w-full"
-                      />
-                    </DropdownMenuItem>
-
-                    <DropdownMenuItem>
-                      <DownloadFile
-                        fileName={`материальная_${formatDate(selectedDate)}.xlsx`}
-                        url="/jur_7/monitoring/material/report"
-                        params={{
-                          to: formatDate(selectedDate),
-                          year: selectedDate.getFullYear(),
-                          month: selectedDate.getMonth() + 1,
-                          budjet_id,
-                          excel: true
-                        }}
-                        buttonText="Материальная"
-                        className="w-full"
-                      />
-                    </DropdownMenuItem>
-
-                    <DropdownMenuItem>
-                      <DownloadFile
-                        fileName={`шапка_${formatDate(selectedDate)}.xlsx`}
-                        url="/jur_7/monitoring/cap/report"
-                        params={{
-                          month: selectedDate.getMonth() + 1,
-                          year: selectedDate.getFullYear(),
-                          budjet_id,
-                          report_title_id,
-                          excel: true
-                        }}
-                        buttonText="Шапка"
-                        className="w-full"
-                      />
-                    </DropdownMenuItem>
-
-                    <DropdownMenuItem>
-                      <DownloadFile
-                        fileName={`шапка2_${formatDate(selectedDate)}.xlsx`}
-                        url="/jur_7/monitoring/cap/back/report"
-                        params={{
-                          to: formatDate(selectedDate),
-                          budjet_id,
-                          excel: true
-                        }}
-                        buttonText="Шапка (2)"
-                        className="w-full"
-                      />
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              ) : null}
-
               <DownloadFile
                 fileName={`${t('pages.saldo')}-${t('import')}-${t('template')}.xlsx`}
                 url="/jur_7/saldo/temlate"
@@ -323,7 +236,7 @@ const OstatokPage = () => {
               />
               <Button
                 variant="ghost"
-                onClick={saldoMonthlyTrackerDialogToggle.open}
+                onClick={monthlyTrackerToggle.open}
               >
                 <CalendarDays className="btn-icon" />
                 {t('monthly_saldo')}
@@ -335,13 +248,13 @@ const OstatokPage = () => {
                 }}
                 onSuccess={() => {
                   queryClient.invalidateQueries({
-                    queryKey: [ostatokQueryKeys.getAll]
+                    queryKey: [saldoQueryKeys.getAll]
                   })
                   queryClient.invalidateQueries({
                     queryKey: [iznosQueryKeys.getAll]
                   })
                   queryClient.invalidateQueries({
-                    queryKey: [ostatokQueryKeys.check]
+                    queryKey: [saldoQueryKeys.check]
                   })
                 }}
                 onError={(error) => {
@@ -522,7 +435,7 @@ const OstatokPage = () => {
           product={deleteExistingDocumentError.product}
           onRemove={(product) => {
             queryClient.invalidateQueries({
-              queryKey: [ostatokQueryKeys.getAll]
+              queryKey: [saldoQueryKeys.getAll]
             })
             if (product) {
               setSelectedRows((prev) => {
@@ -578,13 +491,13 @@ const OstatokPage = () => {
       </Dialog>
 
       <MonthlySaldoTrackerDialog
-        open={saldoMonthlyTrackerDialogToggle.isOpen}
-        onOpenChange={saldoMonthlyTrackerDialogToggle.setOpen}
+        open={monthlyTrackerToggle.isOpen}
+        onOpenChange={monthlyTrackerToggle.setOpen}
         onSelect={(month) => {
           form.setValue('date', month)
           setSelectedMonth(month)
           setSelectedDate(month)
-          saldoMonthlyTrackerDialogToggle.close()
+          monthlyTrackerToggle.close()
         }}
       />
 

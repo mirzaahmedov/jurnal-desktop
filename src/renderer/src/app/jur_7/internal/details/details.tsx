@@ -9,7 +9,7 @@ import { toast } from 'react-toastify'
 
 import { iznosQueryKeys } from '@/app/jur_7/iznos/config'
 import { createResponsibleSpravochnik } from '@/app/jur_7/responsible/service'
-import { ostatokQueryKeys } from '@/app/jur_7/saldo'
+import { saldoQueryKeys } from '@/app/jur_7/saldo'
 import { handleOstatokResponse } from '@/app/jur_7/saldo/utils'
 import { Form } from '@/common/components/ui/form'
 import { DocumentType } from '@/common/features/doc-num'
@@ -56,10 +56,10 @@ const InternalDetails = ({ id, onSuccess: onSuccess }: InternalDetailsProps) => 
       })
 
       queryClient.invalidateQueries({
-        queryKey: [ostatokQueryKeys.check]
+        queryKey: [saldoQueryKeys.check]
       })
       queryClient.invalidateQueries({
-        queryKey: [ostatokQueryKeys.getAll]
+        queryKey: [saldoQueryKeys.getAll]
       })
       queryClient.invalidateQueries({
         queryKey: [iznosQueryKeys.getAll]
@@ -78,10 +78,10 @@ const InternalDetails = ({ id, onSuccess: onSuccess }: InternalDetailsProps) => 
       })
 
       queryClient.invalidateQueries({
-        queryKey: [ostatokQueryKeys.check]
+        queryKey: [saldoQueryKeys.check]
       })
       queryClient.invalidateQueries({
-        queryKey: [ostatokQueryKeys.getAll]
+        queryKey: [saldoQueryKeys.getAll]
       })
       queryClient.invalidateQueries({
         queryKey: [iznosQueryKeys.getAll]

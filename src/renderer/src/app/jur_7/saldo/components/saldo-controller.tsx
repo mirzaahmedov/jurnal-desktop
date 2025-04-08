@@ -15,7 +15,7 @@ import {
 import { useSelectedMonthStore } from '@/common/features/selected-month'
 
 import { iznosQueryKeys } from '../../iznos/config'
-import { ostatokQueryKeys } from '../config'
+import { saldoQueryKeys } from '../config'
 import { getOstatokCheck, ostatokService } from '../service'
 import { Jur7SaldoUpdateManager } from './saldo-update-manager'
 
@@ -42,7 +42,7 @@ export const Jur7SaldoController = () => {
     isFetched
   } = useQuery({
     queryKey: [
-      ostatokQueryKeys.check,
+      saldoQueryKeys.check,
       {
         year,
         month,
@@ -57,7 +57,7 @@ export const Jur7SaldoController = () => {
   })
 
   const { mutate: createSaldo, isPending } = useMutation({
-    mutationKey: [ostatokQueryKeys.create],
+    mutationKey: [saldoQueryKeys.create],
     mutationFn: ostatokService.create,
     onSuccess(res, values) {
       toast.success(res?.message)
@@ -65,10 +65,10 @@ export const Jur7SaldoController = () => {
       dequeueMonth(values)
 
       queryClient.invalidateQueries({
-        queryKey: [ostatokQueryKeys.getAll]
+        queryKey: [saldoQueryKeys.getAll]
       })
       queryClient.invalidateQueries({
-        queryKey: [ostatokQueryKeys.check]
+        queryKey: [saldoQueryKeys.check]
       })
       queryClient.invalidateQueries({
         queryKey: [iznosQueryKeys.getAll]
@@ -86,7 +86,7 @@ export const Jur7SaldoController = () => {
   const isError = !saldo?.data?.length && !isFetching && isFetched
 
   useEffect(() => {
-    if (!isError) {
+    if (isError) {
       toast.error(t('no_saldo'))
     }
   }, [t, isError])

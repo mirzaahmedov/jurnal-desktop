@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
-import { createShartnomaSpravochnik } from '@/app/organization/shartnoma'
+import { createShartnomaSpravochnik } from '@/app/jur_3/shartnoma'
 import { createOrganizationSpravochnik } from '@/app/region-spravochnik/organization'
 import { createOperatsiiSpravochnik } from '@/app/super-admin/operatsii'
 import { Fieldset } from '@/common/components'
@@ -22,6 +22,11 @@ import {
 import { Form } from '@/common/components/ui/form'
 import { DocumentType } from '@/common/features/doc-num'
 import { useRequisitesStore } from '@/common/features/requisites'
+import {
+  SaldoNamespace,
+  handleSaldoErrorDates,
+  handleSaldoResponseDates
+} from '@/common/features/saldo'
 import { useSnippets } from '@/common/features/snippents/use-snippets'
 import { useSpravochnik } from '@/common/features/spravochnik'
 import { useLayoutStore } from '@/common/layout/store'
@@ -48,7 +53,7 @@ const AktDetailsPage = () => {
     ns: 'akt'
   })
 
-  const main_schet_id = useRequisitesStore((state) => state.main_schet_id)
+  const { main_schet_id, jur3_schet_id } = useRequisitesStore()
   const setLayout = useLayoutStore((store) => store.setLayout)
 
   const id = useParams().id as string
@@ -65,7 +70,8 @@ const AktDetailsPage = () => {
       queryKeys.getById,
       Number(id),
       {
-        main_schet_id
+        main_schet_id,
+        schet_id: jur3_schet_id
       }
     ],
     queryFn: aktService.getById,
@@ -85,6 +91,10 @@ const AktDetailsPage = () => {
       })
 
       navigate(-1)
+      handleSaldoResponseDates(SaldoNamespace.JUR_3, res)
+    },
+    onError(error) {
+      handleSaldoErrorDates(SaldoNamespace.JUR_3, error)
     }
   })
 
@@ -102,10 +112,14 @@ const AktDetailsPage = () => {
       })
 
       navigate(-1)
+      handleSaldoResponseDates(SaldoNamespace.JUR_3, res)
+    },
+    onError(error) {
+      handleSaldoErrorDates(SaldoNamespace.JUR_3, error)
     }
   })
 
-  const onSubmit = form.handleSubmit((payload) => {
+  const onSubmit = form.handleSubmit((values) => {
     const {
       doc_date,
       doc_num,
@@ -117,7 +131,7 @@ const AktDetailsPage = () => {
       organization_by_raschet_schet_gazna_id,
       opisanie,
       summa
-    } = payload
+    } = values
 
     if (id !== 'create') {
       updateAkt({
@@ -200,7 +214,7 @@ const AktDetailsPage = () => {
         form.trigger('spravochnik_operatsii_own_id')
       },
       params: {
-        type_schet: TypeSchetOperatsii.GENERAL
+        type_schet: TypeSchetOperatsii.JUR3
       }
     })
   )

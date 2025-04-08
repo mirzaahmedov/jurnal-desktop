@@ -5,10 +5,11 @@ import { useSelectedMonthStore } from '@/common/features/selected-month'
 export const KassaSaldoQueryKeys = {
   getById: 'kassa-saldo',
   getAll: 'kassa-saldo/all',
+  getMonthlySaldo: 'kassa-saldo/monthly',
   create: 'kassa-saldo/create',
   auto: 'kassa-saldo/auto',
   update: 'kassa-saldo/update',
-  delete: 'kassa-saldo/delete'
+  clean: 'kassa-saldo/clean'
 }
 
 export const defaultValues: KassaSaldoFormValues = {

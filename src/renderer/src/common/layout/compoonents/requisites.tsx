@@ -1,19 +1,21 @@
 import type { MainSchet } from '@/common/models'
+import type { ReactNode } from 'react'
 
 import { RefreshCw } from 'lucide-react'
 import { Trans } from 'react-i18next'
 
 import { Button } from '@/common/components/ui/button'
-import { RequisitesDialog } from '@/common/features/requisites'
+import { RequisitesDialog, useRequisitesStore } from '@/common/features/requisites'
 import { useToggle } from '@/common/hooks'
 
 import { RequisitesInfoDialog } from './requisites-info-dialog'
+import { SchetSelector } from './schet-selector'
 
 export interface RequisitesProps {
   data?: MainSchet
-  schet?: string
+  pathname: string
 }
-export const Requisites = ({ data, schet }: RequisitesProps) => {
+export const Requisites = ({ data, pathname }: RequisitesProps) => {
   const dialogToggle = useToggle()
   const infoToggle = useToggle()
 
@@ -33,9 +35,14 @@ export const Requisites = ({ data, schet }: RequisitesProps) => {
         <p className="text-xs font-medium text-slate-500">
           <Trans>main-schet</Trans>
         </p>
-        <p className="text-base font-semibold">
-          {[data?.account_number, schet].filter((value) => !!value).join(' - ')}
-        </p>
+
+        <div className="flex items-center gap-4">
+          <span className="text-sm font-semibold">{data?.account_number}</span>
+          <CurrentSchet
+            mainSchet={data}
+            pathname={pathname}
+          />
+        </div>
       </div>
 
       {data ? (
@@ -51,4 +58,43 @@ export const Requisites = ({ data, schet }: RequisitesProps) => {
       />
     </div>
   )
+}
+
+type CurrentSchetProps = {
+  mainSchet?: MainSchet
+  pathname: string
+}
+const CurrentSchet = ({ mainSchet, pathname }: CurrentSchetProps): ReactNode => {
+  const { jur3_schet_id, jur4_schet_id, setRequisites } = useRequisitesStore()
+
+  switch (true) {
+    case !mainSchet:
+      return ''
+    case pathname.startsWith('/kassa'):
+      return <span className="text-sm font-semibold">{mainSchet.jur1_schet}</span>
+    case pathname.startsWith('/bank'):
+      return <span className="text-sm font-semibold">{mainSchet.jur2_schet}</span>
+    case pathname.startsWith('/organization'):
+      return (
+        <SchetSelector
+          value={jur3_schet_id!}
+          onValueChange={(value) => {
+            setRequisites({ jur3_schet_id: value })
+          }}
+          schetOptions={mainSchet?.jur3_schets ?? []}
+        />
+      )
+    case pathname.startsWith('/accountable'):
+      return (
+        <SchetSelector
+          value={jur4_schet_id!}
+          onValueChange={(value) => {
+            setRequisites({ jur4_schet_id: value })
+          }}
+          schetOptions={mainSchet?.jur3_schets ?? []}
+        />
+      )
+    default:
+      return ''
+  }
 }

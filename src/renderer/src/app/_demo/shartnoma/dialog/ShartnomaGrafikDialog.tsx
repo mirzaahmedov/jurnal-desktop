@@ -1,4 +1,4 @@
-import type { ShartnomaGrafikFormValues } from '@/app/organization/shartnoma/service'
+import type { ShartnomaGrafikFormValues } from '@/app/jur_3/shartnoma/service'
 
 import { useEffect, useMemo } from 'react'
 

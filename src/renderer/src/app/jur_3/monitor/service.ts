@@ -1,6 +1,7 @@
 import type { OrganizationMonitor, ResponseMeta } from '@/common/models'
 
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
+import { jur3_schet, main_schet } from '@/common/features/crud/middleware'
 
 type SummaObject = {
   summa: number
@@ -27,7 +28,7 @@ interface OrganMonitorMeta
   summa_object: SummaObject
 }
 
-const orgMonitorService = new CRUDService<
+export const OrganMonitoringService = new CRUDService<
   OrganizationMonitor,
   undefined,
   undefined,
@@ -35,5 +36,5 @@ const orgMonitorService = new CRUDService<
 >({
   endpoint: ApiEndpoints.organization_monitoring
 })
-
-export { orgMonitorService as orgMonitoringService }
+  .use(main_schet())
+  .use(jur3_schet())

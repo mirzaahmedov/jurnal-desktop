@@ -13,6 +13,11 @@ import { DownloadFile } from '@/common/features/file'
 import { SearchFilterDebounced } from '@/common/features/filters/search/search-filter-debounced'
 import { useSearchFilter } from '@/common/features/filters/search/search-filter-debounced'
 import { useRequisitesStore } from '@/common/features/requisites'
+import {
+  SaldoNamespace,
+  handleSaldoErrorDates,
+  handleSaldoResponseDates
+} from '@/common/features/saldo'
 import { useDates, usePagination } from '@/common/hooks'
 import { useLayoutStore } from '@/common/layout/store'
 import { formatNumber } from '@/common/lib/format'
@@ -26,11 +31,10 @@ const AktPage = () => {
   const queryClient = useQueryClient()
   const navigate = useNavigate()
   const pagination = usePagination()
-
   const dates = useDates()
-
-  const main_schet_id = useRequisitesStore((state) => state.main_schet_id)
   const setLayout = useLayoutStore((store) => store.setLayout)
+
+  const { main_schet_id, jur3_schet_id } = useRequisitesStore()
 
   const [search] = useSearchFilter()
 
@@ -43,6 +47,7 @@ const AktPage = () => {
       queryKeys.getAll,
       {
         main_schet_id,
+        schet_id: jur3_schet_id,
         search,
         ...sorting,
         ...dates,
@@ -59,6 +64,10 @@ const AktPage = () => {
       queryClient.invalidateQueries({
         queryKey: [queryKeys.getAll]
       })
+      handleSaldoResponseDates(SaldoNamespace.JUR_3, res)
+    },
+    onError(error) {
+      handleSaldoErrorDates(SaldoNamespace.JUR_3, error)
     }
   })
 

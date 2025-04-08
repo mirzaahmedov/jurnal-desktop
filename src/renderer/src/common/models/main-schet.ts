@@ -1,4 +1,5 @@
 export interface Schet {
+  id: number
   schet: string
 }
 

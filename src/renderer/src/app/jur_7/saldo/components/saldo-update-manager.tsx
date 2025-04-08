@@ -10,7 +10,7 @@ import {
 } from '@/common/features/saldo'
 
 import { iznosQueryKeys } from '../../iznos/config'
-import { ostatokQueryKeys } from '../config'
+import { saldoQueryKeys } from '../config'
 import { ostatokService } from '../service'
 
 export const Jur7SaldoUpdateManager = () => {
@@ -27,7 +27,7 @@ export const Jur7SaldoUpdateManager = () => {
     isPending,
     error
   } = useMutation({
-    mutationKey: [ostatokQueryKeys.create],
+    mutationKey: [saldoQueryKeys.create],
     mutationFn: ostatokService.create,
     onSuccess(_, values) {
       const newQueue = dequeueMonth(values)
@@ -38,7 +38,7 @@ export const Jur7SaldoUpdateManager = () => {
       }
 
       queryClient.invalidateQueries({
-        queryKey: [ostatokQueryKeys.getAll]
+        queryKey: [saldoQueryKeys.getAll]
       })
       queryClient.invalidateQueries({
         queryKey: [iznosQueryKeys.getAll]

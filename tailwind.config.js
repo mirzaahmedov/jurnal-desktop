@@ -16,7 +16,8 @@ export default {
         down: '0px 5px 15px 9px rgba(148, 163, 184, 0.1)',
         right: '10px 0px 17px 0px rgba(0,0,0,0.05)',
         left: '-10px 0px 17px 0px rgba(0,0,0,0.05)',
-        'sm-up': '0 -1px 3px 0 rgb(0 0 0 / 0.1), 0 -1px 2px -1px rgb(0 0 0 / 0.1)'
+        'sm-up': '0 -1px 3px 0 rgb(0 0 0 / 0.1), 0 -1px 2px -1px rgb(0 0 0 / 0.1)',
+        'sm-left': '-2px 0 5px 0 rgb(0 0 0 / 0.1), -2px 0 5px -2px rgb(0 0 0 / 0.1)'
       },
       borderRadius: {
         lg: 'var(--radius)',

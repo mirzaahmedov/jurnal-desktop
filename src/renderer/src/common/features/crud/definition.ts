@@ -1,4 +1,4 @@
-import type { ApiEndpoints } from './constants'
+import type { ApiEndpoints } from './config'
 import type { Response } from '@/common/models'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 import type { AxiosInstance, AxiosRequestConfig } from 'axios'

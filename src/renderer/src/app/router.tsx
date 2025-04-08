@@ -10,6 +10,7 @@ import { DuplicateSchetsGuard } from '@/common/features/requisites/duplicate-sch
 
 import DashboardPage from './dashboard/page'
 import HomePage from './home/page'
+import { Jur7MonitorPage } from './jur_7/monitor/page'
 import SigninPage from './sign-in'
 
 const KassaSaldoPage = lazy(() => import('./jur_1/saldo/page'))
@@ -24,8 +25,7 @@ const VideoTutorialsPage = lazy(() => import('./video-tutorials/page'))
 
 const AdminOstatokPage = lazy(() => import('./super-admin/ostatok/page'))
 const ZarplataSpravochnikPage = lazy(() => import('./super-admin/zarplata/spravochnik/page'))
-const OrganOstatokPage = lazy(() => import('./organization/ostatok/page'))
-const OrganOstatokDetailsPage = lazy(() => import('./organization/ostatok/details/page'))
+const OrganOstatokPage = lazy(() => import('./jur_3/saldo/page'))
 const MainLayout = lazy(() => import('../common/layout/main'))
 const BankMonitorPage = lazy(() => import('./jur_2/monitor/page'))
 const BankPrixodDetailsPage = lazy(() => import('./jur_2/prixod/details/page'))
@@ -51,13 +51,13 @@ const MainbookPage = lazy(() => import('./reports/mainbook/page'))
 const MainbookDetailsPage = lazy(() => import('./reports/mainbook/details/page'))
 const PrixodbookPage = lazy(() => import('./reports/prixodbook/page'))
 const PrixodbookDetailsPage = lazy(() => import('./reports/prixodbook/details/page'))
-const AktDetailsPage = lazy(() => import('./organization/akt/details/page'))
-const AktPage = lazy(() => import('./organization/akt/page'))
-const OrganizationMonitorPage = lazy(() => import('./organization/monitor/page'))
-const PokazatUslugiDetailsPage = lazy(() => import('./organization/pokazat-uslugi/details/page'))
-const PokazatUslugiPage = lazy(() => import('./organization/pokazat-uslugi/page'))
-const ShartnomaDetailsPage = lazy(() => import('./organization/shartnoma/details/page'))
-const ShartnomaPage = lazy(() => import('./organization/shartnoma/page'))
+const AktDetailsPage = lazy(() => import('./jur_3/akt/details/page'))
+const AktPage = lazy(() => import('./jur_3/akt/page'))
+const OrganizationMonitorPage = lazy(() => import('./jur_3/monitor/page'))
+const PokazatUslugiDetailsPage = lazy(() => import('./jur_3/pokazat-uslugi/details/page'))
+const PokazatUslugiPage = lazy(() => import('./jur_3/pokazat-uslugi/page'))
+const ShartnomaDetailsPage = lazy(() => import('./jur_3/shartnoma/details/page'))
+const ShartnomaPage = lazy(() => import('./jur_3/shartnoma/page'))
 const OXDetailsPage = lazy(() => import('./ox-report/ox-report/details/page'))
 const OXPage = lazy(() => import('./ox-report/ox-report/page'))
 const OXReportDetailsPage = lazy(() => import('./ox-report/report/details/page'))
@@ -162,10 +162,6 @@ export const routes: RouteObject[] = [
           {
             path: 'ostatok',
             element: <OrganOstatokPage />
-          },
-          {
-            path: 'ostatok/:id',
-            element: <OrganOstatokDetailsPage />
           }
         ]
       },
@@ -424,6 +420,10 @@ export const routes: RouteObject[] = [
         path: 'journal-7',
         element: <MainSchetSelectedGuard />,
         children: [
+          {
+            path: 'monitor',
+            element: <Jur7MonitorPage />
+          },
           {
             path: 'responsible',
             element: <ResponsiblePage />

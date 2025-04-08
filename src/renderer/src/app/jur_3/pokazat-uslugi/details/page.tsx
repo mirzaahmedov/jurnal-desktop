@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
-import { createShartnomaSpravochnik } from '@/app/organization/shartnoma'
+import { createShartnomaSpravochnik } from '@/app/jur_3/shartnoma'
 import { createOrganizationSpravochnik } from '@/app/region-spravochnik/organization'
 import { createOperatsiiSpravochnik } from '@/app/super-admin/operatsii'
 import { Fieldset } from '@/common/components'
@@ -22,6 +22,11 @@ import {
 import { Form } from '@/common/components/ui/form'
 import { DocumentType } from '@/common/features/doc-num'
 import { useRequisitesStore } from '@/common/features/requisites'
+import {
+  SaldoNamespace,
+  handleSaldoErrorDates,
+  handleSaldoResponseDates
+} from '@/common/features/saldo'
 import { useSnippets } from '@/common/features/snippents/use-snippets'
 import { useSpravochnik } from '@/common/features/spravochnik'
 import { useLayoutStore } from '@/common/layout/store'
@@ -52,7 +57,7 @@ const PokazatUslugiDetailsPage = () => {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
 
-  const main_schet_id = useRequisitesStore((state) => state.main_schet_id)
+  const { main_schet_id, jur3_schet_id } = useRequisitesStore()
   const setLayout = useLayoutStore((store) => store.setLayout)
 
   const form = useForm({
@@ -87,7 +92,7 @@ const PokazatUslugiDetailsPage = () => {
         form.trigger('spravochnik_operatsii_own_id')
       },
       params: {
-        type_schet: TypeSchetOperatsii.GENERAL
+        type_schet: TypeSchetOperatsii.JUR3
       }
     })
   )
@@ -107,11 +112,18 @@ const PokazatUslugiDetailsPage = () => {
   )
 
   const { data: pokazatUslugi, isFetching } = useQuery({
-    queryKey: [queryKeys.getById, Number(id), { main_schet_id }],
+    queryKey: [
+      queryKeys.getById,
+      Number(id),
+      {
+        main_schet_id,
+        schet_id: jur3_schet_id
+      }
+    ],
     queryFn: pokazatUslugiService.getById,
     enabled: id !== 'create'
   })
-  const { mutate: create, isPending: isCreating } = useMutation({
+  const { mutate: createPokazatUslugi, isPending: isCreating } = useMutation({
     mutationKey: [queryKeys.create],
     mutationFn: pokazatUslugiService.create,
     onSuccess(res) {
@@ -125,10 +137,14 @@ const PokazatUslugiDetailsPage = () => {
       })
 
       navigate(-1)
+      handleSaldoResponseDates(SaldoNamespace.JUR_3, res)
+    },
+    onError(error) {
+      handleSaldoErrorDates(SaldoNamespace.JUR_3, error)
     }
   })
 
-  const { mutate: update, isPending: isUpdating } = useMutation({
+  const { mutate: updatePokazatUslugi, isPending: isUpdating } = useMutation({
     mutationKey: [queryKeys.update, id],
     mutationFn: pokazatUslugiService.update,
     onSuccess(res) {
@@ -142,6 +158,10 @@ const PokazatUslugiDetailsPage = () => {
       })
 
       navigate(-1)
+      handleSaldoResponseDates(SaldoNamespace.JUR_3, res)
+    },
+    onError(error) {
+      handleSaldoErrorDates(SaldoNamespace.JUR_3, error)
     }
   })
 
@@ -160,7 +180,7 @@ const PokazatUslugiDetailsPage = () => {
     } = payload
 
     if (id !== 'create') {
-      update({
+      updatePokazatUslugi({
         id: Number(id),
         doc_date,
         doc_num,
@@ -176,7 +196,7 @@ const PokazatUslugiDetailsPage = () => {
       })
       return
     }
-    create({
+    createPokazatUslugi({
       doc_date,
       doc_num,
       spravochnik_operatsii_own_id,

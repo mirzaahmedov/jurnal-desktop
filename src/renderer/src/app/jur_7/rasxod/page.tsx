@@ -22,7 +22,7 @@ import { formatDate } from '@/common/lib/date'
 import { ListView } from '@/common/views'
 
 import { iznosQueryKeys } from '../iznos/config'
-import { ostatokQueryKeys } from '../saldo'
+import { saldoQueryKeys } from '../saldo'
 import { rasxodColumns } from './columns'
 import { rasxodQueryKeys } from './config'
 import { rasxodService } from './service'
@@ -60,10 +60,10 @@ const Jurnal7RasxodPage = () => {
           queryKey: [rasxodQueryKeys.getAll]
         })
         queryClient.invalidateQueries({
-          queryKey: [ostatokQueryKeys.check]
+          queryKey: [saldoQueryKeys.check]
         })
         queryClient.invalidateQueries({
-          queryKey: [ostatokQueryKeys.getAll]
+          queryKey: [saldoQueryKeys.getAll]
         })
         queryClient.invalidateQueries({
           queryKey: [iznosQueryKeys.getAll]

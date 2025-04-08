@@ -30,7 +30,7 @@ import { formatDate } from '@/common/lib/date'
 import { ListView } from '@/common/views'
 
 import { iznosQueryKeys } from '../iznos/config'
-import { ostatokQueryKeys } from '../saldo'
+import { saldoQueryKeys } from '../saldo'
 import { prixodColumns } from './columns'
 import { prixodQueryKeys } from './config'
 import { ExistingDocumentsAlert } from './details/existing-document-alert'
@@ -75,10 +75,10 @@ const Jurnal7PrixodPage = () => {
           queryKey: [prixodQueryKeys.getAll]
         })
         queryClient.invalidateQueries({
-          queryKey: [ostatokQueryKeys.check]
+          queryKey: [saldoQueryKeys.check]
         })
         queryClient.invalidateQueries({
-          queryKey: [ostatokQueryKeys.getAll]
+          queryKey: [saldoQueryKeys.getAll]
         })
         queryClient.invalidateQueries({
           queryKey: [iznosQueryKeys.getAll]

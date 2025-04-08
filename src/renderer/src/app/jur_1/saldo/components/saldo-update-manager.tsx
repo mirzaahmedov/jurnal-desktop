@@ -28,7 +28,7 @@ export const Jur1SaldoUpdateManager = () => {
     error
   } = useMutation({
     mutationKey: [KassaSaldoService.create],
-    mutationFn: KassaSaldoService.createAuto,
+    mutationFn: KassaSaldoService.autoCreate,
     onSuccess(_, values) {
       const newQueue = dequeueMonth(values)
       setCompleted((prev) => [...prev, values])

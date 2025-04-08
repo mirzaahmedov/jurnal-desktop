@@ -10,9 +10,9 @@ import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 
+import { createShartnomaSpravochnik } from '@/app/jur_3/shartnoma'
 import { createResponsibleSpravochnik } from '@/app/jur_7/responsible/service'
 import { handleOstatokExistingDocumentError, handleOstatokResponse } from '@/app/jur_7/saldo/utils'
-import { createShartnomaSpravochnik } from '@/app/organization/shartnoma'
 import { createOrganizationSpravochnik } from '@/app/region-spravochnik/organization'
 import { createOperatsiiSpravochnik } from '@/app/super-admin/operatsii'
 import { Form } from '@/common/components/ui/form'
@@ -38,7 +38,7 @@ import {
 } from '@/common/widget/form'
 
 import { iznosQueryKeys } from '../../iznos/config'
-import { ostatokQueryKeys } from '../../saldo'
+import { saldoQueryKeys } from '../../saldo'
 import { PrixodFormSchema, defaultValues, prixodQueryKeys } from '../config'
 import { usePrixodCreate, usePrixodGet, usePrixodUpdate } from '../service'
 import { ExistingDocumentsAlert } from './existing-document-alert'
@@ -77,10 +77,10 @@ const PrixodDetails = ({ id, onSuccess }: PrixodDetailsProps) => {
         queryKey: [prixodQueryKeys.getAll]
       })
       queryClient.invalidateQueries({
-        queryKey: [ostatokQueryKeys.check]
+        queryKey: [saldoQueryKeys.check]
       })
       queryClient.invalidateQueries({
-        queryKey: [ostatokQueryKeys.getAll]
+        queryKey: [saldoQueryKeys.getAll]
       })
       queryClient.invalidateQueries({
         queryKey: [iznosQueryKeys.getAll]
@@ -98,10 +98,10 @@ const PrixodDetails = ({ id, onSuccess }: PrixodDetailsProps) => {
         queryKey: [prixodQueryKeys.getAll]
       })
       queryClient.invalidateQueries({
-        queryKey: [ostatokQueryKeys.check]
+        queryKey: [saldoQueryKeys.check]
       })
       queryClient.invalidateQueries({
-        queryKey: [ostatokQueryKeys.getAll]
+        queryKey: [saldoQueryKeys.getAll]
       })
       queryClient.invalidateQueries({
         queryKey: [iznosQueryKeys.getAll]
