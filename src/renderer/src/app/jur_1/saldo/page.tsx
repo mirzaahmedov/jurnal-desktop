@@ -61,10 +61,14 @@ const KassaSaldoPage = () => {
     mutationFn: KassaSaldoService.cleanSaldo,
     onSuccess(res) {
       toast.success(res?.message)
-      queryClient.invalidateQueries({
-        queryKey: [KassaSaldoQueryKeys.getAll]
-      })
+
       handleSaldoResponseDates(SaldoNamespace.JUR_1, res)
+
+      requestAnimationFrame(() => {
+        queryClient.invalidateQueries({
+          queryKey: [KassaSaldoQueryKeys.getAll]
+        })
+      })
     },
     onError(error) {
       handleSaldoErrorDates(SaldoNamespace.JUR_1, error)

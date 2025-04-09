@@ -73,11 +73,13 @@ const KassaRasxodPage = () => {
     onSuccess(res) {
       toast.success(res?.message)
 
-      queryClient.invalidateQueries({
-        queryKey: [queryKeys.getAll]
-      })
-
       handleSaldoResponseDates(SaldoNamespace.JUR_1, res)
+
+      requestAnimationFrame(() => {
+        queryClient.invalidateQueries({
+          queryKey: [queryKeys.getAll]
+        })
+      })
     },
     onError(error) {
       handleSaldoErrorDates(SaldoNamespace.JUR_1, error)

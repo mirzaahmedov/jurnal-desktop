@@ -77,11 +77,13 @@ const KassaPrixodPage = () => {
     onSuccess(res) {
       toast.success(res?.message)
 
-      queryClient.invalidateQueries({
-        queryKey: [queryKeys.getAll]
-      })
-
       handleSaldoResponseDates(SaldoNamespace.JUR_1, res)
+
+      requestAnimationFrame(() => {
+        queryClient.invalidateQueries({
+          queryKey: [queryKeys.getAll]
+        })
+      })
     },
     onError(error) {
       handleSaldoErrorDates(SaldoNamespace.JUR_1, error)
@@ -135,6 +137,8 @@ const KassaPrixodPage = () => {
             main_schet_id,
             from: dates.from,
             to: dates.to,
+            year: startDate.getFullYear(),
+            month: startDate.getMonth() + 1,
             report_title_id,
             excel: true
           }}
