@@ -111,7 +111,7 @@ const BankSaldoPage = () => {
 
   return (
     <ListView>
-      <ListView.Header>
+      {/* <ListView.Header>
         <ButtonGroup className="w-full flex items-center justify-end gap-2">
           <Button
             variant="ghost"
@@ -121,21 +121,12 @@ const BankSaldoPage = () => {
             {t('monthly_saldo')}
           </Button>
         </ButtonGroup>
-      </ListView.Header>
+      </ListView.Header> */}
       <ListView.Content loading={isFetching || isPending}>
         <GenericTable
           data={saldo?.data ?? []}
           columnDefs={bankSaldoColumns}
           onEdit={handleClickEdit}
-          footer={
-            <FooterRow>
-              <FooterCell
-                title={t('total')}
-                colSpan={4}
-                content={formatNumber(saldo?.meta?.summa ?? 0)}
-              />
-            </FooterRow>
-          }
         />
       </ListView.Content>
       <BankSaldoDialog
@@ -143,13 +134,13 @@ const BankSaldoPage = () => {
         onOpenChange={dialogToggle.setOpen}
         selected={selected}
       />
-      <BankSaldoMonthlyTrackerDialog
+      {/* <BankSaldoMonthlyTrackerDialog
         open={monthlyTrackerToggle.isOpen}
         onOpenChange={monthlyTrackerToggle.setOpen}
         onSelect={(month) => {
           setYear(month.getFullYear())
         }}
-      />
+      /> */}
     </ListView>
   )
 }

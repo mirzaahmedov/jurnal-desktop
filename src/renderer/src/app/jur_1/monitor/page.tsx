@@ -42,7 +42,7 @@ const KassaMonitorPage = () => {
   const month = startDate.getMonth() + 1
 
   const {
-    data: monitorList,
+    data: monitoring,
     isFetching,
     error
   } = useQuery({
@@ -122,13 +122,13 @@ const KassaMonitorPage = () => {
         <SummaTotal className="pt-5">
           <SummaTotal.Value
             name={t('remainder-from')}
-            value={formatNumber(monitorList?.meta?.summa_from ?? 0)}
+            value={formatNumber(monitoring?.meta?.summa_from ?? 0)}
           />
         </SummaTotal>
       </ListView.Header>
       <ListView.Content loading={isFetching}>
         <GenericTable
-          data={monitorList?.data ?? []}
+          data={monitoring?.data ?? []}
           columnDefs={columns}
           getRowKey={(row) => `${row.id}-${row.rasxod_sum ? 'rasxod' : 'prixod'}`}
           getRowId={(row) => row.id}
@@ -138,32 +138,34 @@ const KassaMonitorPage = () => {
             <>
               <FooterRow>
                 <FooterCell
-                  title={t('total')}
+                  title={t('total_page')}
                   colSpan={4}
                 />
                 <FooterCell
-                  content={formatNumber(monitorList?.meta?.page_prixod_sum ?? 0)}
+                  content={formatNumber(monitoring?.meta?.page_prixod_sum ?? 0)}
                   colSpan={1}
                 />
                 <FooterCell
-                  content={formatNumber(monitorList?.meta?.page_rasxod_sum ?? 0)}
-                  colSpan={1}
-                />
-              </FooterRow>
-              <FooterRow>
-                <FooterCell
-                  title={t('total_period')}
-                  colSpan={4}
-                />
-                <FooterCell
-                  content={formatNumber(monitorList?.meta?.prixod_sum ?? 0)}
-                  colSpan={1}
-                />
-                <FooterCell
-                  content={formatNumber(monitorList?.meta?.rasxod_sum ?? 0)}
+                  content={formatNumber(monitoring?.meta?.page_rasxod_sum ?? 0)}
                   colSpan={1}
                 />
               </FooterRow>
+              {(monitoring?.meta?.pageCount ?? 0) > 1 ? (
+                <FooterRow>
+                  <FooterCell
+                    title={t('total_period')}
+                    colSpan={4}
+                  />
+                  <FooterCell
+                    content={formatNumber(monitoring?.meta?.prixod_sum ?? 0)}
+                    colSpan={1}
+                  />
+                  <FooterCell
+                    content={formatNumber(monitoring?.meta?.rasxod_sum ?? 0)}
+                    colSpan={1}
+                  />
+                </FooterRow>
+              ) : null}
             </>
           }
         />
@@ -172,12 +174,12 @@ const KassaMonitorPage = () => {
         <SummaTotal className="pb-5">
           <SummaTotal.Value
             name={t('remainder-to')}
-            value={formatNumber(monitorList?.meta?.summa_to ?? 0)}
+            value={formatNumber(monitoring?.meta?.summa_to ?? 0)}
           />
         </SummaTotal>
         <ListView.Pagination
           {...pagination}
-          pageCount={monitorList?.meta?.pageCount ?? 0}
+          pageCount={monitoring?.meta?.pageCount ?? 0}
         />
       </ListView.Footer>
     </ListView>
