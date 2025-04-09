@@ -1,6 +1,6 @@
 import type { AktProvodkaFormValues } from '../config'
 
-import { useCallback, useEffect } from 'react'
+import { useEffect } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
@@ -11,7 +11,6 @@ import { toast } from 'react-toastify'
 
 import { createShartnomaSpravochnik } from '@/app/jur_3/shartnoma'
 import { createOrganizationSpravochnik } from '@/app/region-spravochnik/organization'
-import { createOperatsiiSpravochnik } from '@/app/super-admin/operatsii'
 import { Fieldset } from '@/common/components'
 import { EditableTable } from '@/common/components/editable-table'
 import {
@@ -35,12 +34,11 @@ import {
 import { useSnippets } from '@/common/features/snippents/use-snippets'
 import { useSpravochnik } from '@/common/features/spravochnik'
 import { useLayoutStore } from '@/common/layout/store'
+import { formatDate } from '@/common/lib/date'
 import { normalizeEmptyFields } from '@/common/lib/validation'
-import { TypeSchetOperatsii } from '@/common/models'
 import { DetailsView } from '@/common/views'
 import {
   DocumentFields,
-  OperatsiiFields,
   OpisanieFields,
   OrganizationFields,
   ShartnomaFields,
@@ -71,7 +69,10 @@ const AktDetailsPage = () => {
 
   const form = useForm({
     resolver: zodResolver(AktFormSchema),
-    defaultValues: defaultValues
+    defaultValues: {
+      ...defaultValues,
+      doc_date: formatDate(startDate)
+    }
   })
 
   const {
@@ -137,7 +138,6 @@ const AktDetailsPage = () => {
       doc_date,
       doc_num,
       id_spravochnik_organization,
-      spravochnik_operatsii_own_id,
       shartnoma_grafik_id,
       shartnomalar_organization_id,
       organization_by_raschet_schet_id,
@@ -154,7 +154,6 @@ const AktDetailsPage = () => {
         shartnomalar_organization_id,
         shartnoma_grafik_id,
         id_spravochnik_organization,
-        spravochnik_operatsii_own_id,
         organization_by_raschet_schet_id,
         organization_by_raschet_schet_gazna_id,
         opisanie,
@@ -168,7 +167,6 @@ const AktDetailsPage = () => {
       doc_num,
       shartnomalar_organization_id,
       id_spravochnik_organization,
-      spravochnik_operatsii_own_id,
       shartnoma_grafik_id,
       organization_by_raschet_schet_id,
       organization_by_raschet_schet_gazna_id,
@@ -179,12 +177,6 @@ const AktDetailsPage = () => {
   })
 
   const podvodki = form.watch('childs')
-  const setPodvodki = useCallback(
-    (payload: AktProvodkaFormValues[]) => {
-      form.setValue('childs', payload)
-    },
-    [form]
-  )
 
   const organSpravochnik = useSpravochnik(
     createOrganizationSpravochnik({
@@ -215,19 +207,6 @@ const AktDetailsPage = () => {
       params: {
         organ_id: form.watch('id_spravochnik_organization'),
         pudratchi_bool: true
-      }
-    })
-  )
-
-  const operatsiiSpravochnik = useSpravochnik(
-    createOperatsiiSpravochnik({
-      value: form.watch('spravochnik_operatsii_own_id'),
-      onChange: (value) => {
-        form.setValue('spravochnik_operatsii_own_id', value ?? 0)
-        form.trigger('spravochnik_operatsii_own_id')
-      },
-      params: {
-        type_schet: TypeSchetOperatsii.JUR3
       }
     })
   )
@@ -263,18 +242,18 @@ const AktDetailsPage = () => {
 
   useEffect(() => {
     if (id === 'create') {
-      form.reset(defaultValues)
-      setPodvodki(defaultValues.childs)
-      return
+      form.reset({
+        ...defaultValues,
+        doc_date: formatDate(startDate)
+      })
     }
 
-    form.reset(akt?.data ?? defaultValues)
-    setPodvodki(akt?.data?.childs ?? defaultValues.childs)
-  }, [setPodvodki, form, akt, id])
+    form.reset(akt?.data)
+  }, [form, akt, id])
 
   return (
     <DetailsView>
-      <DetailsView.Content loading={isFetchingAkt || isCreating || isUpdating}>
+      <DetailsView.Content loading={isFetchingAkt}>
         <Form {...form}>
           <form onSubmit={onSubmit}>
             <div>
@@ -289,11 +268,6 @@ const AktDetailsPage = () => {
                     fromMonth: startDate,
                     toMonth: startDate
                   }}
-                />
-                <OperatsiiFields
-                  tabIndex={2}
-                  spravochnik={operatsiiSpravochnik}
-                  error={form.formState.errors.spravochnik_operatsii_own_id}
                 />
               </div>
 
@@ -332,6 +306,7 @@ const AktDetailsPage = () => {
             <DetailsView.Footer>
               <DetailsView.Create
                 tabIndex={7}
+                loading={isCreating || isUpdating}
                 disabled={isCreating || isUpdating}
               />
             </DetailsView.Footer>

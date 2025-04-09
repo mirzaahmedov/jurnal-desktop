@@ -1,0 +1,21 @@
+import type { ColumnDef } from '@/common/components'
+import type { JUR8Monitor } from '@/common/models'
+
+import { IDCell } from '@/common/components/table/renderers/id'
+import { MonthNameCell } from '@/common/components/table/renderers/month-name'
+
+export const Jur8MonitorColumns: ColumnDef<JUR8Monitor>[] = [
+  {
+    key: 'id',
+    renderCell: IDCell,
+    width: 160,
+    minWidth: 160
+  },
+  {
+    key: 'month',
+    renderCell: (row) => <MonthNameCell monthNumber={row.month} />
+  },
+  {
+    key: 'year'
+  }
+]

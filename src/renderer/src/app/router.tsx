@@ -19,6 +19,8 @@ const PodotchetOstatokPage = lazy(() => import('./jur_4/saldo/page'))
 
 const PrixodSchetsPage = lazy(() => import('./super-admin/prixod-schet/page'))
 
+const Jur8MonitorPage = lazy(() => import('./jur_8/monitor/page'))
+
 const AdminVideoTutorialsPage = lazy(() => import('./super-admin/video-tutorials/page'))
 const VideoTutorialsPage = lazy(() => import('./video-tutorials/page'))
 
@@ -458,6 +460,16 @@ export const routes: RouteObject[] = [
           {
             path: 'iznos',
             element: <IznosPage />
+          }
+        ]
+      },
+      {
+        path: 'jur_8',
+        element: <BudjetSelectedGuard />,
+        children: [
+          {
+            path: 'monitor',
+            element: <Jur8MonitorPage />
           }
         ]
       },

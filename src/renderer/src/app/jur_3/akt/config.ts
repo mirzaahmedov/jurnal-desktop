@@ -28,7 +28,6 @@ export const AktFormSchema = withPreprocessor(
     summa: z.coerce.number().min(1),
     opisanie: z.string().optional(),
     id_spravochnik_organization: z.number(),
-    spravochnik_operatsii_own_id: z.number(),
     shartnomalar_organization_id: z.number().optional(),
     shartnoma_grafik_id: z.number().optional(),
     organization_by_raschet_schet_id: z.number(),
@@ -45,7 +44,6 @@ export const defaultValues: AktFormValues = {
   doc_date: '',
   summa: 0,
   id_spravochnik_organization: 0,
-  spravochnik_operatsii_own_id: 0,
   organization_by_raschet_schet_id: 0,
   childs: [
     {

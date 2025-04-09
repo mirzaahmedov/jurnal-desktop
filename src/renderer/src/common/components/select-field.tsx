@@ -18,6 +18,7 @@ import { Button } from './ui/button'
 import { FormControl } from './ui/form'
 
 export type SelectFieldProps<T extends object> = SelectProps & {
+  readOnly?: boolean
   withFormControl?: boolean
   withReset?: boolean
   placeholder?: string
@@ -31,6 +32,7 @@ export type SelectFieldProps<T extends object> = SelectProps & {
 
 const SelectFieldComponent = <T extends object>(
   {
+    readOnly = false,
     withFormControl = false,
     withReset = false,
     placeholder,
@@ -63,6 +65,7 @@ const SelectFieldComponent = <T extends object>(
           <SelectTrigger
             className={cn('shadow-none focus:ring-2 focus:ring-brand bg-white', triggerClassName)}
             tabIndex={tabIndex}
+            readOnly={readOnly}
           >
             <SelectValue
               placeholder={placeholder}
@@ -88,6 +91,7 @@ const SelectFieldComponent = <T extends object>(
         <SelectTrigger
           className={cn('shadow-none bg-white', triggerClassName)}
           tabIndex={tabIndex}
+          readOnly={readOnly}
         >
           <SelectValue
             placeholder={placeholder}

@@ -161,6 +161,7 @@ export const PodotchetSaldoDialog = ({
                       <FormLabel className="text-right col-span-2">{t('year')}</FormLabel>
                       <FormControl>
                         <YearSelect
+                          readOnly={!!selected}
                           value={field.value}
                           onValueChange={field.onChange}
                           triggerClassName="col-span-4"
@@ -181,6 +182,7 @@ export const PodotchetSaldoDialog = ({
                       <FormLabel className="text-right col-span-2">{t('month')}</FormLabel>
                       <FormControl>
                         <MonthSelect
+                          readOnly={!!selected}
                           value={field.value}
                           onValueChange={field.onChange}
                           triggerClassName="col-span-4"
