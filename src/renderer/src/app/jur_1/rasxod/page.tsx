@@ -17,6 +17,10 @@ import {
   handleSaldoErrorDates,
   handleSaldoResponseDates
 } from '@/common/features/saldo'
+import {
+  useSelectedMonthStore,
+  validateDateWithinSelectedMonth
+} from '@/common/features/selected-month'
 import { useDates, usePagination } from '@/common/hooks'
 import { useLayoutStore } from '@/common/layout/store'
 import { formatNumber } from '@/common/lib/format'
@@ -38,9 +42,14 @@ const KassaRasxodPage = () => {
   const queryClient = useQueryClient()
   const navigate = useNavigate()
   const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
+  const startDate = useSelectedMonthStore((store) => store.startDate)
   const setLayout = useLayoutStore((store) => store.setLayout)
 
-  const { data: rasxodList, isFetching } = useQuery({
+  const {
+    data: rasxodList,
+    isFetching,
+    error
+  } = useQuery({
     queryKey: [
       queryKeys.getAll,
       {
@@ -83,6 +92,9 @@ const KassaRasxodPage = () => {
   }
 
   useEffect(() => {
+    handleSaldoErrorDates(SaldoNamespace.JUR_1, error)
+  }, [error])
+  useEffect(() => {
     setLayout({
       title: t('pages.rasxod-docs'),
       content: SearchFilterDebounced,
@@ -100,7 +112,14 @@ const KassaRasxodPage = () => {
   return (
     <ListView>
       <ListView.Header>
-        <ListView.RangeDatePicker {...dates} />
+        <ListView.RangeDatePicker
+          {...dates}
+          validateDate={validateDateWithinSelectedMonth}
+          calendarProps={{
+            fromMonth: startDate,
+            toMonth: startDate
+          }}
+        />
       </ListView.Header>
       <ListView.Content loading={isFetching || isPending}>
         <GenericTable

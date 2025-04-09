@@ -99,7 +99,11 @@ const KassaPrixodDetailsPage = () => {
     queryFn: MainSchetService.getById,
     enabled: !!main_schet_id
   })
-  const { data: prixod, isFetching } = useQuery({
+  const {
+    data: prixod,
+    isFetching,
+    error
+  } = useQuery({
     queryKey: [
       queryKeys.getById,
       Number(id),
@@ -181,6 +185,9 @@ const KassaPrixodDetailsPage = () => {
   const podvodki = form.watch('childs')
 
   useEffect(() => {
+    handleSaldoErrorDates(SaldoNamespace.JUR_1, error)
+  }, [error])
+  useEffect(() => {
     setLayout({
       title: id === 'create' ? t('create') : t('edit'),
       breadcrumbs: [
@@ -234,6 +241,10 @@ const KassaPrixodDetailsPage = () => {
                   documentType={DocumentType.KASSA_PRIXOD}
                   autoGenerate={id === 'create'}
                   validateDate={id === 'create' ? validateDateWithinSelectedMonth : undefined}
+                  calendarProps={{
+                    fromMonth: startDate,
+                    toMonth: startDate
+                  }}
                 />
               </div>
 

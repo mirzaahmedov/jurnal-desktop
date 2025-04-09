@@ -45,7 +45,11 @@ const KassaSaldoPage = () => {
   const { t } = useTranslation(['app'])
   const { budjet_id, main_schet_id } = useRequisitesStore()
 
-  const { data: saldo, isFetching } = useQuery({
+  const {
+    data: saldo,
+    isFetching,
+    error
+  } = useQuery({
     queryKey: [
       KassaSaldoQueryKeys.getAll,
       {
@@ -87,6 +91,9 @@ const KassaSaldoPage = () => {
     })
   }
 
+  useEffect(() => {
+    handleSaldoErrorDates(SaldoNamespace.JUR_1, error)
+  }, [error])
   useEffect(() => {
     setLayout({
       title: t('pages.saldo'),

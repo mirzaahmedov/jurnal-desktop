@@ -49,7 +49,11 @@ const KassaPrixodPage = () => {
   const { report_title_id } = useSettingsStore()
   const { budjet_id, main_schet_id } = useRequisitesStore()
 
-  const { data: prixodList, isFetching } = useQuery({
+  const {
+    data: prixodList,
+    isFetching,
+    error
+  } = useQuery({
     queryKey: [
       queryKeys.getAll,
       {
@@ -90,6 +94,9 @@ const KassaPrixodPage = () => {
     })
   }
 
+  useEffect(() => {
+    handleSaldoErrorDates(SaldoNamespace.JUR_1, error)
+  }, [error])
   useEffect(() => {
     setLayout({
       title: t('pages.prixod-docs'),

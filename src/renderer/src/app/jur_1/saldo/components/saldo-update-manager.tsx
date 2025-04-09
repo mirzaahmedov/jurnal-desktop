@@ -10,6 +10,7 @@ import {
   useSaldoController
 } from '@/common/features/saldo'
 
+import { KassaSaldoQueryKeys } from '../config'
 import { KassaSaldoService } from '../service'
 
 export const KassaSaldoUpdateManager = () => {
@@ -42,7 +43,7 @@ export const KassaSaldoUpdateManager = () => {
       }
 
       queryClient.invalidateQueries({
-        queryKey: [KassaSaldoService.getAll]
+        queryKey: [KassaSaldoQueryKeys.getAll]
       })
     }
   })
@@ -63,6 +64,9 @@ export const KassaSaldoUpdateManager = () => {
       onClose={() => {
         clearQueue()
         setCompleted([])
+        queryClient.invalidateQueries({
+          queryKey: [KassaSaldoQueryKeys.getAll]
+        })
       }}
     />
   )

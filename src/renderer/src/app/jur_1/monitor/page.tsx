@@ -9,7 +9,11 @@ import { DownloadFile } from '@/common/features/file'
 import { SearchFilterDebounced } from '@/common/features/filters/search/search-filter-debounced'
 import { useSearchFilter } from '@/common/features/filters/search/search-filter-debounced'
 import { useRequisitesStore } from '@/common/features/requisites'
-import { useSelectedMonthStore } from '@/common/features/selected-month'
+import { SaldoNamespace, handleSaldoErrorDates } from '@/common/features/saldo'
+import {
+  useSelectedMonthStore,
+  validateDateWithinSelectedMonth
+} from '@/common/features/selected-month'
 import { useSettingsStore } from '@/common/features/settings'
 import { useDates, usePagination } from '@/common/hooks'
 import { useLayoutStore } from '@/common/layout/store'
@@ -37,7 +41,11 @@ const KassaMonitorPage = () => {
   const year = startDate.getFullYear()
   const month = startDate.getMonth() + 1
 
-  const { data: monitorList, isFetching } = useQuery({
+  const {
+    data: monitorList,
+    isFetching,
+    error
+  } = useQuery({
     queryKey: [
       kassaMonitorQueryKeys.getAll,
       {
@@ -54,6 +62,9 @@ const KassaMonitorPage = () => {
   })
 
   useEffect(() => {
+    handleSaldoErrorDates(SaldoNamespace.JUR_1, error)
+  }, [error])
+  useEffect(() => {
     setLayout({
       title: t('pages.monitoring'),
       breadcrumbs: [
@@ -69,7 +80,14 @@ const KassaMonitorPage = () => {
     <ListView>
       <ListView.Header>
         <div className="w-full flex items-center justify-between">
-          <ListView.RangeDatePicker {...dates} />
+          <ListView.RangeDatePicker
+            {...dates}
+            validateDate={validateDateWithinSelectedMonth}
+            calendarProps={{
+              fromMonth: startDate,
+              toMonth: startDate
+            }}
+          />
           {main_schet_id ? (
             <ButtonGroup borderStyle="dashed">
               <DownloadFile

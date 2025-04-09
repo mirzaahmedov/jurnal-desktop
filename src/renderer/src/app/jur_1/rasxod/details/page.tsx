@@ -33,7 +33,10 @@ import {
   handleSaldoErrorDates,
   handleSaldoResponseDates
 } from '@/common/features/saldo'
-import { useSelectedMonthStore } from '@/common/features/selected-month'
+import {
+  useSelectedMonthStore,
+  validateDateWithinSelectedMonth
+} from '@/common/features/selected-month'
 import { useSnippets } from '@/common/features/snippents/use-snippets'
 import { useSpravochnik } from '@/common/features/spravochnik'
 import { useLayoutStore } from '@/common/layout/store'
@@ -100,7 +103,11 @@ const KassaRasxodDetailtsPage = () => {
     queryFn: MainSchetService.getById,
     enabled: !!main_schet_id
   })
-  const { data: monitor, isFetching: isFetchingMonitor } = useQuery({
+  const {
+    data: monitor,
+    isFetching: isFetchingMonitor,
+    error
+  } = useQuery({
     queryKey: [
       kassaMonitorQueryKeys.getAll,
       {
@@ -209,6 +216,9 @@ const KassaRasxodDetailtsPage = () => {
     : 0
 
   useEffect(() => {
+    handleSaldoErrorDates(SaldoNamespace.JUR_1, error)
+  }, [error])
+  useEffect(() => {
     setLayout({
       title: id === 'create' ? t('create') : t('edit'),
       breadcrumbs: [
@@ -264,6 +274,11 @@ const KassaRasxodDetailtsPage = () => {
                   form={form}
                   documentType={DocumentType.KASSA_RASXOD}
                   autoGenerate={id === 'create'}
+                  validateDate={id === 'create' ? validateDateWithinSelectedMonth : undefined}
+                  calendarProps={{
+                    fromMonth: startDate,
+                    toMonth: startDate
+                  }}
                 />
               </div>
 
