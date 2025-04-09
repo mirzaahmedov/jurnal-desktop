@@ -122,15 +122,7 @@ const KassaMonitorPage = () => {
         <SummaTotal className="pt-5">
           <SummaTotal.Value
             name={t('remainder-from')}
-            value={formatNumber(monitorList?.meta?.summa_from_object?.summa ?? 0)}
-          />
-          <SummaTotal.Value
-            name={t('debet')}
-            value={formatNumber(monitorList?.meta?.summa_from_object?.prixod_summa ?? 0)}
-          />
-          <SummaTotal.Value
-            name={t('kredit')}
-            value={formatNumber(monitorList?.meta?.summa_from_object?.rasxod_summa ?? 0)}
+            value={formatNumber(monitorList?.meta?.summa_from ?? 0)}
           />
         </SummaTotal>
       </ListView.Header>
@@ -158,6 +150,20 @@ const KassaMonitorPage = () => {
                   colSpan={1}
                 />
               </FooterRow>
+              <FooterRow>
+                <FooterCell
+                  title={t('total_period')}
+                  colSpan={4}
+                />
+                <FooterCell
+                  content={formatNumber(monitorList?.meta?.prixod_sum ?? 0)}
+                  colSpan={1}
+                />
+                <FooterCell
+                  content={formatNumber(monitorList?.meta?.rasxod_sum ?? 0)}
+                  colSpan={1}
+                />
+              </FooterRow>
             </>
           }
         />
@@ -166,15 +172,7 @@ const KassaMonitorPage = () => {
         <SummaTotal className="pb-5">
           <SummaTotal.Value
             name={t('remainder-to')}
-            value={formatNumber(monitorList?.meta?.summa_to_object?.summa ?? 0)}
-          />
-          <SummaTotal.Value
-            name={t('debet')}
-            value={formatNumber(monitorList?.meta?.summa_to_object?.prixod_summa ?? 0)}
-          />
-          <SummaTotal.Value
-            name={t('kredit')}
-            value={formatNumber(monitorList?.meta?.summa_to_object?.rasxod_summa ?? 0)}
+            value={formatNumber(monitorList?.meta?.summa_to ?? 0)}
           />
         </SummaTotal>
         <ListView.Pagination
