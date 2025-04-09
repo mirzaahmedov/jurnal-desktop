@@ -9,7 +9,7 @@ import { DownloadFile } from '@/common/features/file'
 import { SearchFilterDebounced } from '@/common/features/filters/search/search-filter-debounced'
 import { useSearchFilter } from '@/common/features/filters/search/search-filter-debounced'
 import { useRequisitesStore } from '@/common/features/requisites'
-import { SaldoNamespace, handleSaldoErrorDates } from '@/common/features/saldo'
+import { SaldoNamespace, handleSaldoErrorDates, useSaldoController } from '@/common/features/saldo'
 import {
   useSelectedMonthStore,
   validateDateWithinSelectedMonth
@@ -35,6 +35,9 @@ const KassaMonitorPage = () => {
   const [search] = useSearchFilter()
 
   const { t } = useTranslation(['app'])
+  const { queuedMonths } = useSaldoController({
+    ns: SaldoNamespace.JUR_1
+  })
   const { sorting, handleSort, getColumnSorted } = useTableSort()
   const { main_schet_id, budjet_id } = useRequisitesStore()
 
@@ -58,7 +61,8 @@ const KassaMonitorPage = () => {
         ...pagination
       }
     ],
-    queryFn: kassaMonitorService.getAll
+    queryFn: kassaMonitorService.getAll,
+    enabled: !queuedMonths.length
   })
 
   useEffect(() => {

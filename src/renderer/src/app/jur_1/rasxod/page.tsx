@@ -15,7 +15,8 @@ import { useRequisitesStore } from '@/common/features/requisites'
 import {
   SaldoNamespace,
   handleSaldoErrorDates,
-  handleSaldoResponseDates
+  handleSaldoResponseDates,
+  useSaldoController
 } from '@/common/features/saldo'
 import {
   useSelectedMonthStore,
@@ -34,6 +35,9 @@ const KassaRasxodPage = () => {
   const { confirm } = useConfirm()
   const { t } = useTranslation(['app'])
   const { sorting, handleSort, getColumnSorted } = useTableSort()
+  const { queuedMonths } = useSaldoController({
+    ns: SaldoNamespace.JUR_1
+  })
 
   const [search] = useSearchFilter()
 
@@ -60,7 +64,8 @@ const KassaRasxodPage = () => {
         ...pagination
       }
     ],
-    queryFn: kassaRasxodService.getAll
+    queryFn: kassaRasxodService.getAll,
+    enabled: !queuedMonths.length
   })
   const { mutate: deleteRasxod, isPending } = useMutation({
     mutationKey: [queryKeys.delete],
