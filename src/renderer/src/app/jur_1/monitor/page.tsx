@@ -100,6 +100,8 @@ const KassaMonitorPage = () => {
                   report_title_id,
                   from: dates.from,
                   to: dates.to,
+                  year: startDate.getFullYear(),
+                  month: startDate.getMonth() + 1,
                   excel: true
                 }}
               />
@@ -113,6 +115,8 @@ const KassaMonitorPage = () => {
                   report_title_id,
                   from: dates.from,
                   to: dates.to,
+                  year: startDate.getFullYear(),
+                  month: startDate.getMonth() + 1,
                   excel: true
                 }}
               />

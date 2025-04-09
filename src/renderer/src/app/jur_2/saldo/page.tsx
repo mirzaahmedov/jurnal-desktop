@@ -3,14 +3,11 @@ import type { BankSaldo } from '@/common/models'
 import { useEffect, useState } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { CalendarDays } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
-import { FooterCell, FooterRow, GenericTable } from '@/common/components'
-import { Button } from '@/common/components/ui/button'
-import { ButtonGroup } from '@/common/components/ui/button-group'
+import { GenericTable } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
 import { useRequisitesStore } from '@/common/features/requisites'
 import {
@@ -20,11 +17,10 @@ import {
 } from '@/common/features/saldo'
 import { useKeyUp, useToggle } from '@/common/hooks'
 import { useLayoutStore } from '@/common/layout/store'
-import { formatNumber } from '@/common/lib/format'
 import { ListView } from '@/common/views'
 
 import { bankSaldoColumns } from './columns'
-import { BankSaldoMonthlyTrackerDialog } from './components/saldo-monthly-tracker-dialog'
+// import { BankSaldoMonthlyTrackerDialog } from './components/saldo-monthly-tracker-dialog'
 import { BankSaldoQueryKeys } from './config'
 import { BankSaldoDialog } from './dialog'
 import { BankSaldoFilters, useYearFilter } from './filters'
@@ -36,9 +32,9 @@ const BankSaldoPage = () => {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const dialogToggle = useToggle()
-  const monthlyTrackerToggle = useToggle()
+  // const monthlyTrackerToggle = useToggle()
 
-  const [year, setYear] = useYearFilter()
+  const [year] = useYearFilter()
   const [selected, setSelected] = useState<BankSaldo | null>(null)
 
   const { confirm } = useConfirm()
@@ -92,7 +88,7 @@ const BankSaldoPage = () => {
       title: t('pages.saldo'),
       breadcrumbs: [
         {
-          title: t('pages.organization')
+          title: t('pages.bank')
         }
       ],
       content: BankSaldoFilters,

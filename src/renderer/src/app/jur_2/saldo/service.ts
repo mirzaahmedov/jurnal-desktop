@@ -56,7 +56,6 @@ class BankSaldoServiceFactory extends CRUDService<
 
   async cleanSaldo(values: { main_schet_id: number; password: string }) {
     const { main_schet_id, password } = values
-    console.log('cleanSaldo', values, this.endpoint)
     const res = await this.client.delete(`${this.endpoint}/clean`, {
       params: {
         main_schet_id,

@@ -10,9 +10,10 @@ import {
   useSaldoController
 } from '@/common/features/saldo'
 
+import { BankSaldoQueryKeys } from '../config'
 import { BankSaldoService } from '../service'
 
-export const Jur2SaldoUpdateManager = () => {
+export const BankSaldoUpdateManager = () => {
   const queryClient = useQueryClient()
   const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
 
@@ -42,7 +43,7 @@ export const Jur2SaldoUpdateManager = () => {
       }
 
       queryClient.invalidateQueries({
-        queryKey: [BankSaldoService.getAll]
+        queryKey: [BankSaldoQueryKeys.getAll]
       })
     }
   })
@@ -63,6 +64,9 @@ export const Jur2SaldoUpdateManager = () => {
       onClose={() => {
         clearQueue()
         setCompleted([])
+        queryClient.invalidateQueries({
+          queryKey: [BankSaldoQueryKeys.getAll]
+        })
       }}
     />
   )

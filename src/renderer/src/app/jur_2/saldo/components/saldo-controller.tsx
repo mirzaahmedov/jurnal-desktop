@@ -12,7 +12,7 @@ import { useSelectedMonthStore } from '@/common/features/selected-month'
 
 import { BankSaldoQueryKeys } from '../config'
 import { BankSaldoService } from '../service'
-import { Jur2SaldoUpdateManager } from './saldo-update-manager'
+import { BankSaldoUpdateManager } from './saldo-update-manager'
 
 export const Jur2SaldoController = () => {
   const queryClient = useQueryClient()
@@ -59,7 +59,7 @@ export const Jur2SaldoController = () => {
         isCreating={isPending}
         onCreate={handleCreate}
       />
-      <Jur2SaldoUpdateManager />
+      <BankSaldoUpdateManager />
     </>
   )
 }
