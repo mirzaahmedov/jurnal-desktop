@@ -7,7 +7,7 @@ import { IDCell } from '@/common/components/table/renderers/id'
 import { SummaCell } from '@/common/components/table/renderers/summa'
 import { getMonthName } from '@/common/lib/date'
 
-export const bankSaldoColumns: ColumnDef<BankSaldo>[] = [
+export const BankSaldoColumns: ColumnDef<BankSaldo>[] = [
   {
     key: 'id',
     renderCell: IDCell,

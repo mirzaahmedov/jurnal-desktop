@@ -1,5 +1,3 @@
-const bankMonitorQueryKeys = {
-  getAll: 'bank-monitoring/all'
+export const BankMonitorQueryKeys = {
+  getAll: 'bank-monitor/all'
 }
-
-export { bankMonitorQueryKeys }

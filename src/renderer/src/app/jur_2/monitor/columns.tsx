@@ -11,7 +11,7 @@ import { SummaCell } from '@/common/components/table/renderers/summa'
 import { UserCell } from '@/common/components/table/renderers/user'
 import { formatLocaleDate } from '@/common/lib/format'
 
-export const columns: ColumnDef<BankMonitoringType>[] = [
+export const BankMonitorColumns: ColumnDef<BankMonitoringType>[] = [
   {
     sort: true,
     key: 'id',

@@ -18,16 +18,21 @@ import { useRequisitesStore } from '@/common/features/requisites'
 import {
   SaldoNamespace,
   handleSaldoErrorDates,
-  handleSaldoResponseDates
+  handleSaldoResponseDates,
+  useSaldoController
 } from '@/common/features/saldo'
+import {
+  useSelectedMonthStore,
+  validateDateWithinSelectedMonth
+} from '@/common/features/selected-month'
 import { useDates, usePagination, useToggle } from '@/common/hooks'
 import { useLayoutStore } from '@/common/layout/store'
 import { formatNumber } from '@/common/lib/format'
 import { ListView } from '@/common/views'
 
-import { rasxodColumns } from './columns'
-import { queryKeys } from './constants'
-import { RasxodService } from './service'
+import { BankRasxodColumns } from './columns'
+import { queryKeys } from './config'
+import { BankRasxodService } from './service'
 import { ImportAliment } from './zarplata/import-aliment'
 
 const BankRasxodPage = () => {
@@ -36,17 +41,24 @@ const BankRasxodPage = () => {
   const pagination = usePagination()
   const queryClient = useQueryClient()
   const importDialogToggle = useToggle()
-
   const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
+  const startDate = useSelectedMonthStore((store) => store.startDate)
   const setLayout = useLayoutStore((store) => store.setLayout)
 
   const [search] = useSearchFilter()
 
   const { sorting, handleSort, getColumnSorted } = useTableSort()
   const { confirm } = useConfirm()
+  const { queuedMonths } = useSaldoController({
+    ns: SaldoNamespace.JUR_2
+  })
   const { t } = useTranslation(['app'])
 
-  const { data: rasxodList, isFetching } = useQuery({
+  const {
+    data: rasxods,
+    isFetching,
+    error
+  } = useQuery({
     queryKey: [
       queryKeys.getAll,
       {
@@ -57,11 +69,12 @@ const BankRasxodPage = () => {
         ...pagination
       }
     ],
-    queryFn: RasxodService.getAll
+    queryFn: BankRasxodService.getAll,
+    enabled: !!main_schet_id && !queuedMonths.length
   })
   const { mutate: deleteRasxod, isPending } = useMutation({
     mutationKey: [queryKeys.delete],
-    mutationFn: RasxodService.delete,
+    mutationFn: BankRasxodService.delete,
     onSuccess(res) {
       toast.success(res?.message)
 
@@ -88,6 +101,9 @@ const BankRasxodPage = () => {
   }
 
   useEffect(() => {
+    handleSaldoErrorDates(SaldoNamespace.JUR_2, error)
+  }, [error])
+  useEffect(() => {
     setLayout({
       title: t('pages.rasxod-docs'),
       breadcrumbs: [
@@ -105,7 +121,14 @@ const BankRasxodPage = () => {
   return (
     <ListView>
       <ListView.Header className="gap-5">
-        <ListView.RangeDatePicker {...dates} />
+        <ListView.RangeDatePicker
+          {...dates}
+          validateDate={validateDateWithinSelectedMonth}
+          calendarProps={{
+            fromMonth: startDate,
+            toMonth: startDate
+          }}
+        />
         <Button
           onClick={() => {
             importDialogToggle.open()
@@ -117,8 +140,8 @@ const BankRasxodPage = () => {
       </ListView.Header>
       <ListView.Content loading={isFetching || isPending}>
         <GenericTable
-          data={rasxodList?.data ?? []}
-          columnDefs={rasxodColumns}
+          data={rasxods?.data ?? []}
+          columnDefs={BankRasxodColumns}
           getRowId={(row) => row.id}
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}
@@ -145,7 +168,7 @@ const BankRasxodPage = () => {
             <FooterRow>
               <FooterCell
                 title={t('total')}
-                content={formatNumber(rasxodList?.meta?.summa ?? 0)}
+                content={formatNumber(rasxods?.meta?.summa ?? 0)}
                 colSpan={5}
               />
             </FooterRow>
@@ -155,7 +178,7 @@ const BankRasxodPage = () => {
       <ListView.Footer>
         <ListView.Pagination
           {...pagination}
-          pageCount={rasxodList?.meta?.pageCount ?? 0}
+          pageCount={rasxods?.meta?.pageCount ?? 0}
         />
       </ListView.Footer>
       <Dialog

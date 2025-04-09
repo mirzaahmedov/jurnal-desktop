@@ -6,16 +6,16 @@ import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 import { main_schet } from '@/common/features/crud/middleware'
 import { withPreprocessor } from '@/common/lib/validation'
 
-export const bankPrixodService = new CRUDService<
+export const BankPrixodService = new CRUDService<
   BankPrixod,
-  PrixodPayloadType,
-  PrixodPayloadType,
+  BankPrixodFormValues,
+  BankPrixodFormValues,
   { summa: number } & ResponseMeta
 >({
   endpoint: ApiEndpoints.bank_prixod
 }).use(main_schet())
 
-export const PrixodPodvodkaPayloadSchema = withPreprocessor(
+export const BankPrixodProvodkaFormSchema = withPreprocessor(
   z.object({
     spravochnik_operatsii_id: z.number(),
     summa: z.number().min(1),
@@ -26,7 +26,7 @@ export const PrixodPodvodkaPayloadSchema = withPreprocessor(
   })
 )
 
-export const PrixodPayloadSchema = withPreprocessor(
+export const BankPrixodFormSchema = withPreprocessor(
   z.object({
     doc_num: z.string(),
     doc_date: z.string(),
@@ -37,9 +37,9 @@ export const PrixodPayloadSchema = withPreprocessor(
     id_shartnomalar_organization: z.number().optional(),
     organization_by_raschet_schet_id: z.number(),
     organization_by_raschet_schet_gazna_id: z.number().optional(),
-    childs: z.array(PrixodPodvodkaPayloadSchema)
+    childs: z.array(BankPrixodProvodkaFormSchema)
   })
 )
 
-export type PrixodPodvodkaPayloadType = z.infer<typeof PrixodPodvodkaPayloadSchema>
-export type PrixodPayloadType = z.infer<typeof PrixodPayloadSchema>
+export type BankPrixodProvodkaFormValues = z.infer<typeof BankPrixodProvodkaFormSchema>
+export type BankPrixodFormValues = z.infer<typeof BankPrixodFormSchema>

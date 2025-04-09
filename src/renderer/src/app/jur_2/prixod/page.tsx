@@ -16,26 +16,30 @@ import { useRequisitesStore } from '@/common/features/requisites'
 import {
   SaldoNamespace,
   handleSaldoErrorDates,
-  handleSaldoResponseDates
+  handleSaldoResponseDates,
+  useSaldoController
 } from '@/common/features/saldo'
-import { validateDateWithinSelectedMonth } from '@/common/features/selected-month'
+import {
+  useSelectedMonthStore,
+  validateDateWithinSelectedMonth
+} from '@/common/features/selected-month'
 import { useSettingsStore } from '@/common/features/settings'
 import { useDates, usePagination } from '@/common/hooks'
 import { useLayoutStore } from '@/common/layout/store'
 import { formatNumber } from '@/common/lib/format'
 import { ListView } from '@/common/views'
 
-import { columns } from './columns'
-import { queryKeys } from './constants'
-import { bankPrixodService } from './service'
+import { BankPrixodColumns } from './columns'
+import { BankPrixodQueryKeys } from './config'
+import { BankPrixodService } from './service'
 
 const BankPrixodPage = () => {
   const dates = useDates()
   const pagination = usePagination()
   const queryClient = useQueryClient()
   const navigate = useNavigate()
-
   const setLayout = useLayoutStore((store) => store.setLayout)
+  const startDate = useSelectedMonthStore((store) => store.startDate)
 
   const [search] = useSearchFilter()
 
@@ -44,10 +48,17 @@ const BankPrixodPage = () => {
   const { t } = useTranslation(['app'])
   const { report_title_id } = useSettingsStore()
   const { budjet_id, main_schet_id } = useRequisitesStore()
+  const { queuedMonths } = useSaldoController({
+    ns: SaldoNamespace.JUR_2
+  })
 
-  const { data: prixodList, isFetching } = useQuery({
+  const {
+    data: prixods,
+    isFetching,
+    error
+  } = useQuery({
     queryKey: [
-      queryKeys.getAll,
+      BankPrixodQueryKeys.getAll,
       {
         main_schet_id,
         search,
@@ -56,19 +67,22 @@ const BankPrixodPage = () => {
         ...dates
       }
     ],
-    queryFn: bankPrixodService.getAll
+    queryFn: BankPrixodService.getAll,
+    enabled: !!main_schet_id && !queuedMonths.length
   })
   const { mutate: deletePrixod, isPending } = useMutation({
-    mutationKey: [queryKeys.delete],
-    mutationFn: bankPrixodService.delete,
+    mutationKey: [BankPrixodQueryKeys.delete],
+    mutationFn: BankPrixodService.delete,
     onSuccess(res) {
       toast.success(res?.message)
 
-      queryClient.invalidateQueries({
-        queryKey: [queryKeys.getAll]
-      })
-
       handleSaldoResponseDates(SaldoNamespace.JUR_2, res)
+
+      requestAnimationFrame(() => {
+        queryClient.invalidateQueries({
+          queryKey: [BankPrixodQueryKeys.getAll]
+        })
+      })
     },
     onError(err) {
       handleSaldoErrorDates(SaldoNamespace.JUR_2, err)
@@ -86,6 +100,9 @@ const BankPrixodPage = () => {
     })
   }
 
+  useEffect(() => {
+    handleSaldoErrorDates(SaldoNamespace.JUR_2, error)
+  }, [error])
   useEffect(() => {
     setLayout({
       title: t('pages.prixod-docs'),
@@ -107,6 +124,10 @@ const BankPrixodPage = () => {
         <ListView.RangeDatePicker
           {...dates}
           validateDate={validateDateWithinSelectedMonth}
+          calendarProps={{
+            fromMonth: startDate,
+            toMonth: startDate
+          }}
         />
         <DownloadFile
           fileName={`${t('pages.bank')}-${t('pages.prixod-docs')}-${dates.from}-${dates.to}.xlsx`}
@@ -116,6 +137,8 @@ const BankPrixodPage = () => {
             main_schet_id,
             from: dates.from,
             to: dates.to,
+            year: startDate.getFullYear(),
+            month: startDate.getMonth() + 1,
             report_title_id,
             excel: true
           }}
@@ -124,8 +147,8 @@ const BankPrixodPage = () => {
       </ListView.Header>
       <ListView.Content loading={isFetching || isPending}>
         <GenericTable
-          data={prixodList?.data ?? []}
-          columnDefs={columns}
+          data={prixods?.data ?? []}
+          columnDefs={BankPrixodColumns}
           getRowId={(row) => row.id}
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}
@@ -135,7 +158,7 @@ const BankPrixodPage = () => {
             <FooterRow>
               <FooterCell
                 title={t('total')}
-                content={formatNumber(prixodList?.meta?.summa ?? 0)}
+                content={formatNumber(prixods?.meta?.summa ?? 0)}
                 colSpan={5}
               />
             </FooterRow>
@@ -145,7 +168,7 @@ const BankPrixodPage = () => {
       <ListView.Footer>
         <ListView.Pagination
           {...pagination}
-          pageCount={prixodList?.meta?.pageCount ?? 0}
+          pageCount={prixods?.meta?.pageCount ?? 0}
         />
       </ListView.Footer>
     </ListView>

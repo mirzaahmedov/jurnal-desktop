@@ -1,4 +1,4 @@
-import type { RasxodFormValues, RasxodPodvodkaFormValues } from '../service'
+import type { BankRasxodFormValues, BankRasxodPodvodkaFormValues } from '../service'
 import type { BankRasxod } from '@/common/models'
 
 import { useEffect } from 'react'
@@ -30,7 +30,8 @@ import { useRequisitesStore } from '@/common/features/requisites'
 import {
   SaldoNamespace,
   handleSaldoErrorDates,
-  handleSaldoResponseDates
+  handleSaldoResponseDates,
+  useSaldoController
 } from '@/common/features/saldo'
 import {
   useSelectedMonthStore,
@@ -54,14 +55,14 @@ import {
   SummaFields
 } from '@/common/widget/form'
 
-import { bankMonitorQueryKeys, bankMonitorService } from '../../monitor'
-import { defaultValues, queryKeys } from '../constants'
-import { RasxodFormSchema, RasxodPodvodkaFormSchema, RasxodService } from '../service'
+import { BankMonitorQueryKeys, BankMonitorService } from '../../monitor'
+import { defaultValues, queryKeys } from '../config'
+import { BankRasxodFormSchema, BankRasxodPodvodkaFormSchema, BankRasxodService } from '../service'
 import { ImportPlastik } from '../zarplata/import-plastik'
 import { podvodkaColumns } from './podvodki'
 import { PorucheniyaDropdown } from './porucheniya-dropdown'
 
-const BankRasxodDetailtsPage = () => {
+const BankRasxodDetailsPage = () => {
   const params = useParams()
   const navigate = useNavigate()
   const queryClient = useQueryClient()
@@ -79,12 +80,15 @@ const BankRasxodDetailtsPage = () => {
   const month = startDate.getMonth() + 1
 
   const { t } = useTranslation(['app'])
+  const { queuedMonths } = useSaldoController({
+    ns: SaldoNamespace.JUR_2
+  })
   const { snippets, addSnippet, removeSnippet } = useSnippets({
     ns: 'bank_rasxod'
   })
 
   const form = useForm({
-    resolver: zodResolver(RasxodFormSchema),
+    resolver: zodResolver(BankRasxodFormSchema),
     defaultValues: {
       ...defaultValues,
       doc_date: original?.doc_date ?? formatDate(startDate) ?? defaultValues.doc_date,
@@ -98,7 +102,7 @@ const BankRasxodDetailtsPage = () => {
     }
   })
 
-  const orgSpravochnik = useSpravochnik(
+  const organSpravochnik = useSpravochnik(
     createOrganizationSpravochnik({
       value: form.watch('id_spravochnik_organization'),
       onChange: (value, organization) => {
@@ -137,7 +141,7 @@ const BankRasxodDetailtsPage = () => {
 
   const { data: monitor, isFetching: isFetchingMonitor } = useQuery({
     queryKey: [
-      bankMonitorQueryKeys.getAll,
+      BankMonitorQueryKeys.getAll,
       {
         main_schet_id,
         limit: 1,
@@ -148,10 +152,15 @@ const BankRasxodDetailtsPage = () => {
         to: formatDate(new Date())
       }
     ],
-    queryFn: bankMonitorService.getAll
+    queryFn: BankMonitorService.getAll,
+    enabled: !!main_schet_id && !queuedMonths.length
   })
 
-  const { data: rasxod, isFetching } = useQuery({
+  const {
+    data: rasxod,
+    isFetching,
+    error
+  } = useQuery({
     queryKey: [
       queryKeys.getById,
       Number(params.id),
@@ -159,11 +168,11 @@ const BankRasxodDetailtsPage = () => {
         main_schet_id
       }
     ],
-    queryFn: RasxodService.getById,
-    enabled: params.id !== 'create'
+    queryFn: BankRasxodService.getById,
+    enabled: params.id !== 'create' && !!main_schet_id && !queuedMonths.length
   })
   const { mutate: createRasxod, isPending: isCreating } = useMutation({
-    mutationFn: RasxodService.create,
+    mutationFn: BankRasxodService.create,
     onSuccess(res) {
       toast.success(res?.message)
 
@@ -183,7 +192,7 @@ const BankRasxodDetailtsPage = () => {
     }
   })
   const { mutate: updateRasxod, isPending: isUpdating } = useMutation({
-    mutationFn: RasxodService.update,
+    mutationFn: BankRasxodService.update,
     onSuccess(res) {
       toast.success(res?.message)
 
@@ -203,7 +212,7 @@ const BankRasxodDetailtsPage = () => {
     }
   })
 
-  const onSubmit = form.handleSubmit((payload: RasxodFormValues) => {
+  const onSubmit = form.handleSubmit((payload: BankRasxodFormValues) => {
     const {
       doc_date,
       doc_num,
@@ -232,7 +241,7 @@ const BankRasxodDetailtsPage = () => {
         shartnoma_grafik_id,
         organization_by_raschet_schet_id,
         organization_by_raschet_schet_gazna_id,
-        childs: podvodki.map(normalizeEmptyFields<RasxodPodvodkaFormValues>)
+        childs: podvodki.map(normalizeEmptyFields<BankRasxodPodvodkaFormValues>)
       })
       return
     }
@@ -248,7 +257,7 @@ const BankRasxodDetailtsPage = () => {
       shartnoma_grafik_id,
       organization_by_raschet_schet_id,
       organization_by_raschet_schet_gazna_id,
-      childs: podvodki.map(normalizeEmptyFields<RasxodPodvodkaFormValues>)
+      childs: podvodki.map(normalizeEmptyFields<BankRasxodPodvodkaFormValues>)
     })
   })
 
@@ -297,6 +306,9 @@ const BankRasxodDetailtsPage = () => {
   }, [form, podpis])
 
   useEffect(() => {
+    handleSaldoErrorDates(SaldoNamespace.JUR_2, error)
+  }, [error])
+  useEffect(() => {
     setLayout({
       title: params.id === 'create' ? t('create') : t('edit'),
       breadcrumbs: [
@@ -314,8 +326,8 @@ const BankRasxodDetailtsPage = () => {
     })
   }, [setLayout, navigate, params.id, t])
   useEffect(() => {
-    form.setValue('organization_porucheniya_name', orgSpravochnik.selected?.name ?? '')
-  }, [form, orgSpravochnik.selected])
+    form.setValue('organization_porucheniya_name', organSpravochnik.selected?.name ?? '')
+  }, [form, organSpravochnik.selected])
 
   return (
     <DetailsView>
@@ -332,6 +344,10 @@ const BankRasxodDetailtsPage = () => {
                   validateDate={
                     params.id === 'create' ? validateDateWithinSelectedMonth : undefined
                   }
+                  calendarProps={{
+                    fromMonth: startDate,
+                    toMonth: startDate
+                  }}
                 />
               </div>
 
@@ -346,7 +362,7 @@ const BankRasxodDetailtsPage = () => {
                   form={form as any}
                   tabIndex={2}
                   error={form.formState.errors.id_spravochnik_organization}
-                  spravochnik={orgSpravochnik}
+                  spravochnik={organSpravochnik}
                   disabled={isFetching}
                   className="bg-slate-50"
                   name={t('receiver-info')}
@@ -402,15 +418,16 @@ const BankRasxodDetailtsPage = () => {
 
               {summa ? <AccountBalance balance={reminder} /> : null}
 
-              {main_schet?.data && orgSpravochnik.selected ? (
+              {main_schet?.data && organSpravochnik.selected ? (
                 <ButtonGroup borderStyle="dashed">
                   <PorucheniyaDropdown
                     rasxod={form.getValues()}
                     main_schet={main_schet.data}
                     organization={{
-                      ...orgSpravochnik.selected,
+                      ...organSpravochnik.selected,
                       name:
-                        form.watch('organization_porucheniya_name') ?? orgSpravochnik.selected.name
+                        form.watch('organization_porucheniya_name') ??
+                        organSpravochnik.selected.name
                     }}
                   />
                 </ButtonGroup>
@@ -429,7 +446,7 @@ const BankRasxodDetailtsPage = () => {
             errors={form.formState.errors.childs}
             onCreate={createEditorCreateHandler({
               form,
-              schema: RasxodPodvodkaFormSchema,
+              schema: BankRasxodPodvodkaFormSchema,
               defaultValues: defaultValues.childs[0]
             })}
             onDelete={createEditorDeleteHandler({
@@ -470,4 +487,4 @@ const BankRasxodDetailtsPage = () => {
   )
 }
 
-export default BankRasxodDetailtsPage
+export default BankRasxodDetailsPage

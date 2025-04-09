@@ -15,7 +15,7 @@ export type BankMonitorMeta = {
   summa_to: number
 }
 
-export const bankMonitorService = new CRUDService<
+export const BankMonitorService = new CRUDService<
   BankMonitoringType,
   undefined,
   undefined,

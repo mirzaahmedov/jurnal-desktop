@@ -1,4 +1,4 @@
-import type { RasxodFormValues } from '../service'
+import type { BankRasxodFormValues } from '../service'
 import type { MainSchet, Organization } from '@/common/models'
 import type { ButtonHTMLAttributes } from 'react'
 
@@ -21,7 +21,7 @@ import { PorucheniyaPDFDocument } from '../report'
 import { PorucheniyaType } from '../report/PaperSheet'
 
 type PorucheniyaDropdownProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'type'> & {
-  rasxod: RasxodFormValues
+  rasxod: BankRasxodFormValues
   main_schet: MainSchet
   organization: Organization
 }

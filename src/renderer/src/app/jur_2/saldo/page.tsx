@@ -13,13 +13,14 @@ import { useRequisitesStore } from '@/common/features/requisites'
 import {
   SaldoNamespace,
   handleSaldoErrorDates,
-  handleSaldoResponseDates
+  handleSaldoResponseDates,
+  useSaldoController
 } from '@/common/features/saldo'
 import { useKeyUp, useToggle } from '@/common/hooks'
 import { useLayoutStore } from '@/common/layout/store'
 import { ListView } from '@/common/views'
 
-import { bankSaldoColumns } from './columns'
+import { BankSaldoColumns } from './columns'
 // import { BankSaldoMonthlyTrackerDialog } from './components/saldo-monthly-tracker-dialog'
 import { BankSaldoQueryKeys } from './config'
 import { BankSaldoDialog } from './dialog'
@@ -39,9 +40,16 @@ const BankSaldoPage = () => {
 
   const { confirm } = useConfirm()
   const { t } = useTranslation(['app'])
+  const { queuedMonths } = useSaldoController({
+    ns: SaldoNamespace.JUR_2
+  })
   const { budjet_id, main_schet_id } = useRequisitesStore()
 
-  const { data: saldo, isFetching } = useQuery({
+  const {
+    data: saldo,
+    isFetching,
+    error
+  } = useQuery({
     queryKey: [
       BankSaldoQueryKeys.getAll,
       {
@@ -50,7 +58,8 @@ const BankSaldoPage = () => {
         year
       }
     ],
-    queryFn: BankSaldoService.getAll
+    queryFn: BankSaldoService.getAll,
+    enabled: !!main_schet_id && !queuedMonths.length
   })
   const { mutate: cleanSaldo, isPending } = useMutation({
     mutationKey: [BankSaldoQueryKeys.clean],
@@ -83,6 +92,9 @@ const BankSaldoPage = () => {
     })
   }
 
+  useEffect(() => {
+    handleSaldoErrorDates(SaldoNamespace.JUR_2, error)
+  }, [error])
   useEffect(() => {
     setLayout({
       title: t('pages.saldo'),
@@ -121,8 +133,9 @@ const BankSaldoPage = () => {
       <ListView.Content loading={isFetching || isPending}>
         <GenericTable
           data={saldo?.data ?? []}
-          columnDefs={bankSaldoColumns}
+          columnDefs={BankSaldoColumns}
           onEdit={handleClickEdit}
+          getRowEditable={(row) => row.updated}
         />
       </ListView.Content>
       <BankSaldoDialog

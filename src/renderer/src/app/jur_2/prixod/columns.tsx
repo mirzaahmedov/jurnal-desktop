@@ -10,7 +10,7 @@ import { ProvodkaCell } from '@/common/components/table/renderers/provodka-opera
 import { SummaCell } from '@/common/components/table/renderers/summa'
 import { formatLocaleDate } from '@/common/lib/format'
 
-export const columns: ColumnDef<BankPrixod>[] = [
+export const BankPrixodColumns: ColumnDef<BankPrixod>[] = [
   {
     sort: true,
     key: 'id',

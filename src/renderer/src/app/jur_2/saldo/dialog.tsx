@@ -67,6 +67,7 @@ export const BankSaldoDialog = ({ open, onOpenChange, selected }: BankSaldoDialo
         queryKey: [BankSaldoQueryKeys.getAll]
       })
       onOpenChange(false)
+
       handleSaldoResponseDates(SaldoNamespace.JUR_2, res)
     },
     onError(error) {
@@ -83,6 +84,7 @@ export const BankSaldoDialog = ({ open, onOpenChange, selected }: BankSaldoDialo
         queryKey: [BankSaldoQueryKeys.getAll]
       })
       onOpenChange(false)
+
       handleSaldoResponseDates(SaldoNamespace.JUR_2, res)
     },
     onError(error) {

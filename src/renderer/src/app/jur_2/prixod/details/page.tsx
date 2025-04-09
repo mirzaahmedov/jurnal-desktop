@@ -1,4 +1,4 @@
-import type { PrixodPodvodkaPayloadType } from '../service'
+import type { BankPrixodProvodkaFormValues } from '../service'
 
 import { useEffect } from 'react'
 
@@ -25,7 +25,8 @@ import { useRequisitesStore } from '@/common/features/requisites'
 import {
   SaldoNamespace,
   handleSaldoErrorDates,
-  handleSaldoResponseDates
+  handleSaldoResponseDates,
+  useSaldoController
 } from '@/common/features/saldo'
 import {
   useSelectedMonthStore,
@@ -46,33 +47,35 @@ import {
   SummaFields
 } from '@/common/widget/form'
 
-import { defaultValues, queryKeys } from '../constants'
-import { PrixodPayloadSchema, PrixodPodvodkaPayloadSchema, bankPrixodService } from '../service'
+import { BankPrixodQueryKeys, defaultValues } from '../config'
+import { BankPrixodFormSchema, BankPrixodProvodkaFormSchema, BankPrixodService } from '../service'
 import { podvodkaColumns } from './podvodki'
 
 const BankPrixodDetailsPage = () => {
   const queryClient = useQueryClient()
   const id = useParams().id as string
   const navigate = useNavigate()
-
   const main_schet_id = useRequisitesStore((state) => state.main_schet_id)
   const setLayout = useLayoutStore((store) => store.setLayout)
   const startDate = useSelectedMonthStore((store) => store.startDate)
 
   const { t } = useTranslation(['app'])
+  const { queuedMonths } = useSaldoController({
+    ns: SaldoNamespace.JUR_2
+  })
   const { snippets, addSnippet, removeSnippet } = useSnippets({
     ns: 'bank_prixod'
   })
 
   const form = useForm({
-    resolver: zodResolver(PrixodPayloadSchema),
+    resolver: zodResolver(BankPrixodFormSchema),
     defaultValues: {
       ...defaultValues,
       doc_date: formatDate(startDate)
     }
   })
 
-  const orgSpravochnik = useSpravochnik(
+  const organSpravochnik = useSpravochnik(
     createOrganizationSpravochnik({
       value: form.watch('id_spravochnik_organization'),
       onChange: (value, organization) => {
@@ -108,31 +111,35 @@ const BankPrixodDetailsPage = () => {
     queryKey: [MainSchetQueryKeys.getAll, main_schet_id],
     queryFn: MainSchetService.getById
   })
-  const { data: prixod, isFetching } = useQuery({
+  const {
+    data: prixod,
+    isFetching,
+    error
+  } = useQuery({
     queryKey: [
-      queryKeys.getById,
+      BankPrixodQueryKeys.getById,
       Number(id),
       {
         main_schet_id
       }
     ],
-    queryFn: bankPrixodService.getById,
-    enabled: id !== 'create'
+    queryFn: BankPrixodService.getById,
+    enabled: id !== 'create' && !queuedMonths.length
   })
   const { mutate: createPrixod, isPending: isCreating } = useMutation({
-    mutationKey: [queryKeys.create],
-    mutationFn: bankPrixodService.create,
+    mutationKey: [BankPrixodQueryKeys.create],
+    mutationFn: BankPrixodService.create,
     onSuccess(res) {
       toast.success(res?.message)
 
-      navigate(-1)
+      queryClient.invalidateQueries({
+        queryKey: [BankPrixodQueryKeys.getAll]
+      })
+      queryClient.invalidateQueries({
+        queryKey: [BankPrixodQueryKeys.getById, id]
+      })
 
-      queryClient.invalidateQueries({
-        queryKey: [queryKeys.getAll]
-      })
-      queryClient.invalidateQueries({
-        queryKey: [queryKeys.getById, id]
-      })
+      navigate(-1)
 
       handleSaldoResponseDates(SaldoNamespace.JUR_2, res)
     },
@@ -142,17 +149,19 @@ const BankPrixodDetailsPage = () => {
   })
 
   const { mutate: updatePrixod, isPending: isUpdating } = useMutation({
-    mutationKey: [queryKeys.update, id],
-    mutationFn: bankPrixodService.update,
+    mutationKey: [BankPrixodQueryKeys.update, id],
+    mutationFn: BankPrixodService.update,
     onSuccess(res) {
       toast.success(res?.message)
 
       queryClient.invalidateQueries({
-        queryKey: [queryKeys.getAll]
+        queryKey: [BankPrixodQueryKeys.getAll]
       })
       queryClient.invalidateQueries({
-        queryKey: [queryKeys.getById, id]
+        queryKey: [BankPrixodQueryKeys.getById, id]
       })
+
+      navigate(-1)
 
       handleSaldoResponseDates(SaldoNamespace.JUR_2, res)
     },
@@ -186,7 +195,7 @@ const BankPrixodDetailsPage = () => {
           organization_by_raschet_schet_gazna_id,
           summa,
           opisanie,
-          childs: podvodki.map(normalizeEmptyFields<PrixodPodvodkaPayloadType>)
+          childs: podvodki.map(normalizeEmptyFields<BankPrixodProvodkaFormValues>)
         })
         return
       }
@@ -200,13 +209,16 @@ const BankPrixodDetailsPage = () => {
         organization_by_raschet_schet_gazna_id,
         summa,
         opisanie,
-        childs: podvodki.map(normalizeEmptyFields<PrixodPodvodkaPayloadType>)
+        childs: podvodki.map(normalizeEmptyFields<BankPrixodProvodkaFormValues>)
       })
     }
   )
 
   const podvodki = form.watch('childs')
 
+  useEffect(() => {
+    handleSaldoErrorDates(SaldoNamespace.JUR_2, error)
+  }, [error])
   useEffect(() => {
     setLayout({
       title: id === 'create' ? t('create') : t('edit'),
@@ -258,6 +270,10 @@ const BankPrixodDetailsPage = () => {
                   documentType={DocumentType.BANK_PRIXOD}
                   autoGenerate={id === 'create'}
                   validateDate={id === 'create' ? validateDateWithinSelectedMonth : undefined}
+                  calendarProps={{
+                    fromMonth: startDate,
+                    toMonth: startDate
+                  }}
                 />
               </div>
 
@@ -269,7 +285,7 @@ const BankPrixodDetailsPage = () => {
                 <OrganizationFields
                   tabIndex={2}
                   error={form.formState.errors.id_spravochnik_organization}
-                  spravochnik={orgSpravochnik}
+                  spravochnik={organSpravochnik}
                   form={form as any}
                   name={t('payer-info')}
                   className="bg-slate-50"
@@ -316,7 +332,7 @@ const BankPrixodDetailsPage = () => {
             errors={form.formState.errors.childs}
             onCreate={createEditorCreateHandler({
               form,
-              schema: PrixodPodvodkaPayloadSchema,
+              schema: BankPrixodProvodkaFormSchema,
               defaultValues: defaultValues.childs[0]
             })}
             onDelete={createEditorDeleteHandler({

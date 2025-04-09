@@ -79,7 +79,7 @@ const KassaPrixodPage = () => {
 
       handleSaldoResponseDates(SaldoNamespace.JUR_1, res)
 
-      requestAnimationFrame(() => {
+      requestIdleCallback(() => {
         queryClient.invalidateQueries({
           queryKey: [queryKeys.getAll]
         })

@@ -12,10 +12,10 @@ import { SummaCell } from '@/common/components/table/renderers/summa'
 import { Switch } from '@/common/components/ui/switch'
 import { formatLocaleDate } from '@/common/lib/format'
 
-import { queryKeys } from './constants'
-import { bankRasxodPaymentService } from './service'
+import { queryKeys } from './config'
+import { BankRasxodPaymentService } from './service'
 
-export const rasxodColumns: ColumnDef<BankRasxod>[] = [
+export const BankRasxodColumns: ColumnDef<BankRasxod>[] = [
   {
     sort: true,
     key: 'id',
@@ -136,7 +136,7 @@ export const rasxodColumns: ColumnDef<BankRasxod>[] = [
 const StatusCell = ({ row }: { row: BankRasxod }) => {
   const queryClient = useQueryClient()
   const { mutate: updateStatus, isPending } = useMutation({
-    mutationFn: bankRasxodPaymentService.update,
+    mutationFn: BankRasxodPaymentService.update,
     onSuccess() {
       queryClient.invalidateQueries({
         queryKey: [queryKeys.getAll]
