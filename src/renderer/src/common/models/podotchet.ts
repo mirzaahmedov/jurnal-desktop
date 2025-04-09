@@ -1,28 +1,5 @@
-import type { ProvodkaType } from './monitoring'
-
-type Podotchet = {
+export interface Podotchet {
   id: number
   name: string
   rayon: string
 }
-
-type PodotchetMonitor = {
-  id: number
-  doc_num: string
-  doc_date: string
-  prixod_sum: number
-  rasxod_sum: number
-  opisanie: string
-  podotchet_id: number
-  podotchet_name: string
-  podotchet_rayon: string
-  user_id: number
-  fio: string
-  login: string
-  type: ProvodkaType
-  operatsii?: string
-  provodki_schet: string
-  provodki_sub_schet: string
-}
-
-export type { Podotchet, PodotchetMonitor }

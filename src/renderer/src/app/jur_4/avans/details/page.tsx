@@ -1,4 +1,4 @@
-import type { AdvanceReportPodvodkaPayloadType } from '../config'
+import type { AvansProvodkaFormValues } from '../config'
 
 import { useEffect } from 'react'
 
@@ -21,6 +21,15 @@ import {
 import { Form } from '@/common/components/ui/form'
 import { DocumentType } from '@/common/features/doc-num'
 import { useRequisitesStore } from '@/common/features/requisites'
+import {
+  SaldoNamespace,
+  handleSaldoErrorDates,
+  handleSaldoResponseDates
+} from '@/common/features/saldo'
+import {
+  useSelectedMonthStore,
+  validateDateWithinSelectedMonth
+} from '@/common/features/selected-month'
 import { useSnippets } from '@/common/features/snippents/use-snippets'
 import { useSpravochnik } from '@/common/features/spravochnik'
 import { useLayoutStore } from '@/common/layout/store'
@@ -35,22 +44,18 @@ import {
   SummaFields
 } from '@/common/widget/form'
 
-import {
-  AdvanceReportPayloadSchema,
-  AdvanceReportPodvodkaPayloadSchema,
-  avansQueryKeys,
-  defaultValues
-} from '../config'
-import { avansService } from '../service'
+import { AvansFormSchema, AvansProvodkaFormSchema, AvansQueryKeys, defaultValues } from '../config'
+import { AvansService } from '../service'
 import { podvodkaColumns } from './podvodki'
 
-const AdvanceReportDetailsPage = () => {
+const AvansDetailsPage = () => {
   const id = useParams().id as string
   const navigate = useNavigate()
   const queryClient = useQueryClient()
-
-  const main_schet_id = useRequisitesStore((state) => state.main_schet_id)
+  const startDate = useSelectedMonthStore((store) => store.startDate)
   const setLayout = useLayoutStore((store) => store.setLayout)
+
+  const { main_schet_id, jur4_schet_id } = useRequisitesStore()
 
   const { t } = useTranslation(['app'])
   const { snippets, addSnippet, removeSnippet } = useSnippets({
@@ -58,7 +63,7 @@ const AdvanceReportDetailsPage = () => {
   })
 
   const form = useForm({
-    resolver: zodResolver(AdvanceReportPayloadSchema),
+    resolver: zodResolver(AvansFormSchema),
     defaultValues: defaultValues
   })
 
@@ -69,7 +74,7 @@ const AdvanceReportDetailsPage = () => {
         form.setValue('spravochnik_operatsii_own_id', value ?? 0, { shouldValidate: true })
       },
       params: {
-        type_schet: TypeSchetOperatsii.GENERAL
+        type_schet: TypeSchetOperatsii.JUR4
       }
     })
   )
@@ -84,84 +89,93 @@ const AdvanceReportDetailsPage = () => {
     })
   )
 
-  const { data: prixod, isFetching } = useQuery({
+  const { data: avans, isFetching } = useQuery({
     queryKey: [
-      avansQueryKeys.getById,
+      AvansQueryKeys.getById,
       Number(id),
       {
-        main_schet_id
+        main_schet_id,
+        schet_id: jur4_schet_id
       }
     ],
-    queryFn: avansService.getById,
+    queryFn: AvansService.getById,
     enabled: id !== 'create'
   })
-  const { mutate: create, isPending: isCreating } = useMutation({
-    mutationKey: [avansQueryKeys.create],
-    mutationFn: avansService.create,
+  const { mutate: createAvans, isPending: isCreating } = useMutation({
+    mutationKey: [AvansQueryKeys.create],
+    mutationFn: AvansService.create,
     onSuccess(res) {
       toast.success(res?.message)
       form.reset(defaultValues)
       queryClient.invalidateQueries({
-        queryKey: [avansQueryKeys.getAll]
+        queryKey: [AvansQueryKeys.getAll]
       })
       queryClient.invalidateQueries({
-        queryKey: [avansQueryKeys.getById, id]
+        queryKey: [AvansQueryKeys.getById, id]
       })
 
       navigate(-1)
+      handleSaldoResponseDates(SaldoNamespace.JUR_4, res)
+    },
+    onError(err) {
+      handleSaldoErrorDates(SaldoNamespace.JUR_4, err)
     }
   })
 
-  const { mutate: update, isPending: isUpdating } = useMutation({
-    mutationKey: [avansQueryKeys.update, id],
-    mutationFn: avansService.update,
+  const { mutate: updateAvans, isPending: isUpdating } = useMutation({
+    mutationKey: [AvansQueryKeys.update, id],
+    mutationFn: AvansService.update,
     onSuccess(res) {
       toast.success(res?.message)
 
       queryClient.invalidateQueries({
-        queryKey: [avansQueryKeys.getAll]
+        queryKey: [AvansQueryKeys.getAll]
       })
       queryClient.invalidateQueries({
-        queryKey: [avansQueryKeys.getById, id]
+        queryKey: [AvansQueryKeys.getById, id]
       })
 
       navigate(-1)
+      handleSaldoResponseDates(SaldoNamespace.JUR_4, res)
+    },
+    onError(err) {
+      handleSaldoErrorDates(SaldoNamespace.JUR_4, err)
     }
   })
 
-  const onSubmit = form.handleSubmit((payload) => {
-    const {
+  const onSubmit = form.handleSubmit(
+    ({
       doc_date,
       doc_num,
       spravochnik_operatsii_own_id,
       spravochnik_podotchet_litso_id,
       id_spravochnik_podotchet_litso,
       opisanie
-    } = payload
-
-    if (id !== 'create') {
-      update({
-        id: Number(id),
+    }) => {
+      if (id !== 'create') {
+        updateAvans({
+          id: Number(id),
+          doc_date,
+          doc_num,
+          spravochnik_operatsii_own_id,
+          spravochnik_podotchet_litso_id,
+          id_spravochnik_podotchet_litso,
+          opisanie,
+          childs: podvodki.map(normalizeEmptyFields<AvansProvodkaFormValues>)
+        })
+        return
+      }
+      createAvans({
         doc_date,
         doc_num,
         spravochnik_operatsii_own_id,
         spravochnik_podotchet_litso_id,
         id_spravochnik_podotchet_litso,
         opisanie,
-        childs: podvodki.map(normalizeEmptyFields<AdvanceReportPodvodkaPayloadType>)
+        childs: podvodki.map(normalizeEmptyFields<AvansProvodkaFormValues>)
       })
-      return
     }
-    create({
-      doc_date,
-      doc_num,
-      spravochnik_operatsii_own_id,
-      spravochnik_podotchet_litso_id,
-      id_spravochnik_podotchet_litso,
-      opisanie,
-      childs: podvodki.map(normalizeEmptyFields<AdvanceReportPodvodkaPayloadType>)
-    })
-  })
+  )
 
   const podvodki = form.watch('childs')
 
@@ -197,17 +211,17 @@ const AdvanceReportDetailsPage = () => {
       return
     }
 
-    if (prixod?.data) {
+    if (avans?.data) {
       form.reset({
-        ...prixod.data,
-        spravochnik_podotchet_litso_id: prixod.data.id_spravochnik_podotchet_litso,
-        id_spravochnik_podotchet_litso: prixod.data.id_spravochnik_podotchet_litso
+        ...avans.data,
+        spravochnik_podotchet_litso_id: avans.data.id_spravochnik_podotchet_litso,
+        id_spravochnik_podotchet_litso: avans.data.id_spravochnik_podotchet_litso
       })
       return
     }
 
     form.reset(defaultValues)
-  }, [form, prixod, id])
+  }, [form, avans, id])
 
   return (
     <DetailsView>
@@ -221,6 +235,11 @@ const AdvanceReportDetailsPage = () => {
                   form={form}
                   documentType={DocumentType.AVANS}
                   autoGenerate={id === 'create'}
+                  validateDate={validateDateWithinSelectedMonth}
+                  calendarProps={{
+                    fromMonth: startDate,
+                    toMonth: startDate
+                  }}
                 />
                 <OperatsiiFields
                   tabIndex={2}
@@ -273,7 +292,7 @@ const AdvanceReportDetailsPage = () => {
             errors={form.formState.errors.childs}
             onCreate={createEditorCreateHandler({
               form,
-              schema: AdvanceReportPodvodkaPayloadSchema,
+              schema: AvansProvodkaFormSchema,
               defaultValues: defaultValues.childs[0]
             })}
             onDelete={createEditorDeleteHandler({
@@ -289,4 +308,4 @@ const AdvanceReportDetailsPage = () => {
   )
 }
 
-export default AdvanceReportDetailsPage
+export default AvansDetailsPage

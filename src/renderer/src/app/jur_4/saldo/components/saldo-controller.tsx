@@ -10,33 +10,33 @@ import {
 } from '@/common/features/saldo'
 import { useSelectedMonthStore } from '@/common/features/selected-month'
 
-import { OrganSaldoQueryKeys } from '../config'
-import { OrganSaldoService } from '../service'
-import { Jur3SaldoUpdateManager } from './saldo-update-manager'
+import { PodotchetSaldoQueryKeys } from '../config'
+import { PodotchetSaldoService } from '../service'
+import { PodotchetSaldoUpdateManager } from './saldo-update-manager'
 
-export const Jur3SaldoController = () => {
+export const PodotchetSaldoController = () => {
   const queryClient = useQueryClient()
   const startDate = useSelectedMonthStore((store) => store.startDate)
 
-  const { budjet_id, main_schet_id, jur3_schet_id } = useRequisitesStore()
+  const { budjet_id, main_schet_id, jur4_schet_id } = useRequisitesStore()
 
   const { dequeueMonth } = useSaldoController({
-    ns: SaldoNamespace.JUR_3
+    ns: SaldoNamespace.JUR_4
   })
 
   const year = startDate.getFullYear()
   const month = startDate.getMonth() + 1
 
   const { mutate: autoCreateSaldo, isPending } = useMutation({
-    mutationKey: [OrganSaldoQueryKeys.auto],
-    mutationFn: OrganSaldoService.autoCreate,
+    mutationKey: [PodotchetSaldoQueryKeys.auto],
+    mutationFn: PodotchetSaldoService.autoCreate,
     onSuccess(res, values) {
       toast.success(res?.message)
 
       dequeueMonth(values)
 
       queryClient.invalidateQueries({
-        queryKey: [OrganSaldoQueryKeys.getAll]
+        queryKey: [PodotchetSaldoQueryKeys.getAll]
       })
     }
   })
@@ -46,7 +46,7 @@ export const Jur3SaldoController = () => {
       month,
       year,
       main_schet_id: main_schet_id!,
-      schet_id: jur3_schet_id!
+      schet_id: jur4_schet_id!
     })
   }
 
@@ -60,7 +60,7 @@ export const Jur3SaldoController = () => {
         isCreating={isPending}
         onCreate={handleCreate}
       />
-      <Jur3SaldoUpdateManager />
+      <PodotchetSaldoUpdateManager />
     </>
   )
 }

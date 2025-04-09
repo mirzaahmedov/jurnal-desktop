@@ -11,16 +11,16 @@ import { useRequisitesStore } from '@/common/features/requisites'
 import { MonthlySaldoTracker } from '@/common/features/saldo'
 import { useSelectedMonthStore } from '@/common/features/selected-month'
 
-import { KassaSaldoQueryKeys } from '../config'
-import { KassaSaldoService } from '../service'
+import { PodotchetSaldoQueryKeys } from '../config'
+import { PodotchetSaldoService } from '../service'
 
-export interface KassaSaldoMonthlyTrackerDialogProps extends DialogProps {
+export interface PodotchetSaldoMonthlyTrackerDialogProps extends DialogProps {
   onSelect: (month: Date) => void
 }
-export const KassaSaldoMonthlyTrackerDialog = ({
+export const PodotchetSaldoMonthlyTrackerDialog = ({
   onSelect,
   ...props
-}: KassaSaldoMonthlyTrackerDialogProps) => {
+}: PodotchetSaldoMonthlyTrackerDialogProps) => {
   const { t } = useTranslation()
 
   const [year, setYear] = useState(useSelectedMonthStore.getState().startDate.getFullYear())
@@ -29,12 +29,12 @@ export const KassaSaldoMonthlyTrackerDialog = ({
 
   const { data: saldoMonths, isFetching } = useQuery({
     queryKey: [
-      KassaSaldoQueryKeys.getMonthlySaldo,
+      PodotchetSaldoQueryKeys.getMonthlySaldo,
       {
         main_schet_id: main_schet_id!
       }
     ],
-    queryFn: KassaSaldoService.getMonthlySaldo,
+    queryFn: PodotchetSaldoService.getMonthlySaldo,
     enabled: props.open
   })
 

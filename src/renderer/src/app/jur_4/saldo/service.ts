@@ -1,5 +1,5 @@
 import type { MonthValue } from '@/common/features/saldo'
-import type { OrganSaldo, Response, ResponseMeta } from '@/common/models'
+import type { PodotchetSaldo, Response, ResponseMeta } from '@/common/models'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 
 import { z } from 'zod'
@@ -9,26 +9,26 @@ import { budjet, main_schet } from '@/common/features/crud/middleware'
 import { getBudjetId } from '@/common/features/requisites'
 import { withPreprocessor } from '@/common/lib/validation'
 
-interface OrganSaldoMeta extends ResponseMeta {
+interface PodotchetSaldoMeta extends ResponseMeta {
   summa: number
 }
 
-interface OrganSaldoCreateAutoArgs {
+interface PodotchetSaldoCreateAutoArgs {
   year: number
   month: number
   main_schet_id: number
   schet_id: number
 }
 
-class OrganSaldoServiceBuilder extends CRUDService<
-  OrganSaldo,
-  OrganSaldoFormValues,
-  OrganSaldoFormValues,
-  OrganSaldoMeta
+class PodotchetSaldoServiceBuilder extends CRUDService<
+  PodotchetSaldo,
+  PodotchetSaldoFormValues,
+  PodotchetSaldoFormValues,
+  PodotchetSaldoMeta
 > {
   constructor() {
     super({
-      endpoint: ApiEndpoints.organ_saldo
+      endpoint: ApiEndpoints.podotchet_saldo
     })
 
     this.autoCreate = this.autoCreate.bind(this)
@@ -36,7 +36,7 @@ class OrganSaldoServiceBuilder extends CRUDService<
     this.cleanSaldo = this.cleanSaldo.bind(this)
   }
 
-  async autoCreate(args: OrganSaldoCreateAutoArgs) {
+  async autoCreate(args: PodotchetSaldoCreateAutoArgs) {
     const res = await this.client.post(`${this.endpoint}/auto`, args, {
       params: {
         budjet_id: getBudjetId()
@@ -56,11 +56,11 @@ class OrganSaldoServiceBuilder extends CRUDService<
   }
 
   async cleanSaldo(values: { schet_id: number; main_schet_id: number; password: string }) {
-    const { schet_id, main_schet_id, password } = values
+    const { main_schet_id, schet_id, password } = values
     const res = await this.client.delete(`${this.endpoint}/clean`, {
       params: {
-        schet_id,
         main_schet_id,
+        schet_id,
         password
       }
     })
@@ -68,9 +68,11 @@ class OrganSaldoServiceBuilder extends CRUDService<
   }
 }
 
-export const OrganSaldoService = new OrganSaldoServiceBuilder().use(budjet()).use(main_schet())
+export const PodotchetSaldoService = new PodotchetSaldoServiceBuilder()
+  .use(budjet())
+  .use(main_schet())
 
-export const OrganSaldoFormSchema = withPreprocessor(
+export const PodotchetSaldoFormSchema = withPreprocessor(
   z.object({
     summa: z.number().optional(),
     year: z.number(),
@@ -80,4 +82,4 @@ export const OrganSaldoFormSchema = withPreprocessor(
   })
 )
 
-export type OrganSaldoFormValues = z.infer<typeof OrganSaldoFormSchema>
+export type PodotchetSaldoFormValues = z.infer<typeof PodotchetSaldoFormSchema>

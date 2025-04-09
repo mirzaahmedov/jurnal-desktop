@@ -17,16 +17,21 @@ import {
   handleSaldoErrorDates,
   handleSaldoResponseDates
 } from '@/common/features/saldo'
+import {
+  useSelectedMonthStore,
+  validateDateWithinSelectedMonth
+} from '@/common/features/selected-month'
 import { useDates, usePagination } from '@/common/hooks'
 import { useLayoutStore } from '@/common/layout/store'
 import { ListView } from '@/common/views'
 
 import { pokazatUslugiColumns } from './columns'
 import { queryKeys } from './config'
-import { pokazatUslugiService } from './service'
+import { PokazatUslugiService } from './service'
 
 const PokazatUslugiPage = () => {
   const setLayout = useLayoutStore((store) => store.setLayout)
+  const startDate = useSelectedMonthStore((store) => store.startDate)
 
   const navigate = useNavigate()
   const queryClient = useQueryClient()
@@ -52,11 +57,11 @@ const PokazatUslugiPage = () => {
         ...pagination
       }
     ],
-    queryFn: pokazatUslugiService.getAll
+    queryFn: PokazatUslugiService.getAll
   })
   const { mutate: deletePokazatUslugi, isPending } = useMutation({
     mutationKey: [queryKeys.delete],
-    mutationFn: pokazatUslugiService.delete,
+    mutationFn: PokazatUslugiService.delete,
     onSuccess(res) {
       toast.success(res?.message)
       queryClient.invalidateQueries({
@@ -98,7 +103,14 @@ const PokazatUslugiPage = () => {
   return (
     <ListView>
       <ListView.Header>
-        <ListView.RangeDatePicker {...dates} />
+        <ListView.RangeDatePicker
+          {...dates}
+          validateDate={validateDateWithinSelectedMonth}
+          calendarProps={{
+            fromMonth: startDate,
+            toMonth: startDate
+          }}
+        />
       </ListView.Header>
       <ListView.Content loading={isFetching || isPending}>
         <GenericTable

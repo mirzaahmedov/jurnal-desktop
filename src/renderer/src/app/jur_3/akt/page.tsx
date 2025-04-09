@@ -18,6 +18,10 @@ import {
   handleSaldoErrorDates,
   handleSaldoResponseDates
 } from '@/common/features/saldo'
+import {
+  useSelectedMonthStore,
+  validateDateWithinSelectedMonth
+} from '@/common/features/selected-month'
 import { useDates, usePagination } from '@/common/hooks'
 import { useLayoutStore } from '@/common/layout/store'
 import { formatNumber } from '@/common/lib/format'
@@ -33,6 +37,7 @@ const AktPage = () => {
   const pagination = usePagination()
   const dates = useDates()
   const setLayout = useLayoutStore((store) => store.setLayout)
+  const startDate = useSelectedMonthStore((store) => store.startDate)
 
   const { main_schet_id, jur3_schet_id } = useRequisitesStore()
 
@@ -100,7 +105,14 @@ const AktPage = () => {
   return (
     <ListView>
       <ListView.Header className="flex flex-row items-center justify-between">
-        <ListView.RangeDatePicker {...dates} />
+        <ListView.RangeDatePicker
+          {...dates}
+          validateDate={validateDateWithinSelectedMonth}
+          calendarProps={{
+            fromMonth: startDate,
+            toMonth: startDate
+          }}
+        />
         <DownloadFile
           fileName={`aкт-приема-пересдач_шапка-${dates.from}&${dates.to}.xlsx`}
           url="/akt/export/cap"

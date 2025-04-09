@@ -3,7 +3,7 @@ import type { KassaSaldo } from '@/common/models'
 import { useEffect, useState } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { CalendarDays, Trash2 } from 'lucide-react'
+import { CalendarDays } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
@@ -18,13 +18,13 @@ import {
   handleSaldoErrorDates,
   handleSaldoResponseDates
 } from '@/common/features/saldo'
-import { useToggle } from '@/common/hooks'
+import { useKeyUp, useToggle } from '@/common/hooks'
 import { useLayoutStore } from '@/common/layout/store'
 import { formatNumber } from '@/common/lib/format'
 import { ListView } from '@/common/views'
 
 import { kassaSaldoColumns } from './columns'
-import { SaldoMonthlyTrackerDialog } from './components/saldo-monthly-tracker-dialog'
+import { KassaSaldoMonthlyTrackerDialog } from './components/saldo-monthly-tracker-dialog'
 import { KassaSaldoQueryKeys } from './config'
 import { KassaSaldoDialog } from './dialog'
 import { KassaSaldoFilters, useYearFilter } from './filters'
@@ -77,7 +77,7 @@ const KassaSaldoPage = () => {
   }
   const handleClickClean = () => {
     confirm({
-      password: true,
+      withPassword: true,
       onConfirm(password) {
         cleanSaldo({
           main_schet_id: main_schet_id!,
@@ -103,6 +103,12 @@ const KassaSaldoPage = () => {
     })
   }, [setLayout, t, navigate, dialogToggle.open])
 
+  useKeyUp({
+    key: 'Delete',
+    ctrlKey: true,
+    onKeyUp: handleClickClean
+  })
+
   return (
     <ListView>
       <ListView.Header>
@@ -113,13 +119,6 @@ const KassaSaldoPage = () => {
           >
             <CalendarDays className="btn-icon" />
             {t('monthly_saldo')}
-          </Button>
-          <Button
-            variant="destructive"
-            onClick={handleClickClean}
-          >
-            <Trash2 className="btn-icon" />
-            {t('delete_all')}
           </Button>
         </ButtonGroup>
       </ListView.Header>
@@ -144,7 +143,7 @@ const KassaSaldoPage = () => {
         onOpenChange={dialogToggle.setOpen}
         selected={selected}
       />
-      <SaldoMonthlyTrackerDialog
+      <KassaSaldoMonthlyTrackerDialog
         open={monthlyTrackerToggle.isOpen}
         onOpenChange={monthlyTrackerToggle.setOpen}
         onSelect={(month) => {

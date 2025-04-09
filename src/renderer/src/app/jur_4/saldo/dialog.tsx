@@ -1,4 +1,4 @@
-import type { OrganSaldo } from '@/common/models'
+import type { PodotchetSaldo } from '@/common/models'
 
 import { useEffect } from 'react'
 
@@ -36,57 +36,61 @@ import {
 import { useSelectedMonthStore } from '@/common/features/selected-month'
 import { capitalize } from '@/common/lib/string'
 
-import { OrganSaldoQueryKeys, defaultValues } from './config'
-import { OrganSaldoFormSchema, OrganSaldoService } from './service'
+import { PodotchetSaldoQueryKeys, defaultValues } from './config'
+import { PodotchetSaldoFormSchema, PodotchetSaldoService } from './service'
 
-interface OrganSaldoDialogProps {
+interface PodotchetSaldoDialogProps {
   open: boolean
   onOpenChange: (value: boolean) => void
-  selected: OrganSaldo | null
+  selected: PodotchetSaldo | null
 }
-export const OrganSaldoDialog = ({ open, onOpenChange, selected }: OrganSaldoDialogProps) => {
+export const PodotchetSaldoDialog = ({
+  open,
+  onOpenChange,
+  selected
+}: PodotchetSaldoDialogProps) => {
   const { t } = useTranslation(['app'])
   const { startDate } = useSelectedMonthStore()
 
-  const { main_schet_id, jur3_schet_id } = useRequisitesStore()
+  const { main_schet_id, jur4_schet_id } = useRequisitesStore()
   const queryClient = useQueryClient()
 
   const form = useForm({
     defaultValues,
-    resolver: zodResolver(OrganSaldoFormSchema)
+    resolver: zodResolver(PodotchetSaldoFormSchema)
   })
 
   const { mutate: createSaldo, isPending: isCreatingSaldo } = useMutation({
-    mutationKey: [OrganSaldoQueryKeys.create],
-    mutationFn: OrganSaldoService.create,
+    mutationKey: [PodotchetSaldoQueryKeys.create],
+    mutationFn: PodotchetSaldoService.create,
     onSuccess(res) {
       toast.success(res?.message)
 
       form.reset(defaultValues)
       queryClient.invalidateQueries({
-        queryKey: [OrganSaldoQueryKeys.getAll]
+        queryKey: [PodotchetSaldoQueryKeys.getAll]
       })
       onOpenChange(false)
-      handleSaldoResponseDates(SaldoNamespace.JUR_3, res)
+      handleSaldoResponseDates(SaldoNamespace.JUR_4, res)
     },
     onError(error) {
-      handleSaldoErrorDates(SaldoNamespace.JUR_3, error)
+      handleSaldoErrorDates(SaldoNamespace.JUR_4, error)
     }
   })
   const { mutate: updateSaldo, isPending: isUpdatingSaldo } = useMutation({
-    mutationKey: [OrganSaldoQueryKeys.update],
-    mutationFn: OrganSaldoService.update,
+    mutationKey: [PodotchetSaldoQueryKeys.update],
+    mutationFn: PodotchetSaldoService.update,
     onSuccess(res) {
       toast?.success(res?.message)
 
       queryClient.invalidateQueries({
-        queryKey: [OrganSaldoQueryKeys.getAll]
+        queryKey: [PodotchetSaldoQueryKeys.getAll]
       })
       onOpenChange(false)
-      handleSaldoResponseDates(SaldoNamespace.JUR_3, res)
+      handleSaldoResponseDates(SaldoNamespace.JUR_4, res)
     },
     onError(error) {
-      handleSaldoErrorDates(SaldoNamespace.JUR_3, error)
+      handleSaldoErrorDates(SaldoNamespace.JUR_4, error)
     }
   })
 
@@ -98,7 +102,7 @@ export const OrganSaldoDialog = ({ open, onOpenChange, selected }: OrganSaldoDia
         month,
         summa,
         main_schet_id,
-        schet_id: jur3_schet_id
+        schet_id: jur4_schet_id
       })
     } else {
       createSaldo({
@@ -106,7 +110,7 @@ export const OrganSaldoDialog = ({ open, onOpenChange, selected }: OrganSaldoDia
         month,
         summa,
         main_schet_id,
-        schet_id: jur3_schet_id
+        schet_id: jur4_schet_id
       })
     }
   })

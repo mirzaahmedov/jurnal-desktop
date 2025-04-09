@@ -11,7 +11,7 @@ import { UserCell } from '@/common/components/table/renderers/user'
 import { formatLocaleDate } from '@/common/lib/format'
 import { type OrganizationMonitor } from '@/common/models'
 
-export const organizationMonitorColumns: ColumnDef<OrganizationMonitor>[] = [
+export const OrganMonitorColumns: ColumnDef<OrganizationMonitor>[] = [
   {
     sort: true,
     key: 'id',

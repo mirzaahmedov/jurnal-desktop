@@ -7,7 +7,7 @@ export const useYearFilter = () => {
   return useLocationState<number | undefined>('year', date.getFullYear())
 }
 
-export const OrganSaldoFilters = () => {
+export const PodotchetSaldoFilters = () => {
   const [year, setYear] = useYearFilter()
 
   return (

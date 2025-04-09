@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next'
 import { mainSchetService } from '@/app/region-spravochnik/main-schet'
 import { BudgetService, budjetQueryKeys } from '@/app/super-admin/budjet'
 import { SelectField } from '@/common/components'
+import { FormElement } from '@/common/components/form'
 import { Button } from '@/common/components/ui/button'
 import {
   Dialog,
@@ -17,6 +18,7 @@ import {
   DialogTitle
 } from '@/common/components/ui/dialog'
 import { Form, FormField, FormItem, FormLabel, FormMessage } from '@/common/components/ui/form'
+import { Input } from '@/common/components/ui/input'
 import { useAuthenticationStore } from '@/common/features/auth'
 import { useConfirm } from '@/common/features/confirm'
 
@@ -202,18 +204,44 @@ export const RequisitesDialog = ({ open, onOpenChange }: RequisitesDialogProps) 
 
             {main_schet ? (
               <>
+                <FormElement
+                  direction="column"
+                  label={
+                    <>
+                      {t('mo-nth', { nth: 1 })} {t('schet').toLowerCase()}
+                    </>
+                  }
+                >
+                  <Input
+                    readOnly
+                    value={main_schet.data?.jur1_schet}
+                  />
+                </FormElement>
+                <FormElement
+                  direction="column"
+                  label={
+                    <>
+                      {t('mo-nth', { nth: 2 })} {t('schet').toLowerCase()}
+                    </>
+                  }
+                >
+                  <Input
+                    readOnly
+                    value={main_schet.data?.jur2_schet}
+                  />
+                </FormElement>
                 <FormField
                   control={form.control}
                   name="jur3_schet_id"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>
-                        {t('mo-nth', { nth: 3 })} {t('schet')}
+                        {t('mo-nth', { nth: 3 })} {t('schet').toLowerCase()}
                       </FormLabel>
                       <SelectField
                         {...field}
                         withFormControl
-                        placeholder={t('choose', { what: t('schet') })}
+                        placeholder={t('choose', { what: t('schet').toLowerCase() })}
                         options={
                           Array.isArray(main_schet.data?.jur3_schets)
                             ? main_schet.data?.jur3_schets
@@ -234,12 +262,12 @@ export const RequisitesDialog = ({ open, onOpenChange }: RequisitesDialogProps) 
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>
-                        {t('mo-nth', { nth: 4 })} {t('schet')}
+                        {t('mo-nth', { nth: 4 })} {t('schet').toLowerCase()}
                       </FormLabel>
                       <SelectField
                         {...field}
                         withFormControl
-                        placeholder={t('choose', { what: t('schet') })}
+                        placeholder={t('choose', { what: t('schet').toLowerCase() })}
                         options={
                           Array.isArray(main_schet.data?.jur4_schets)
                             ? main_schet.data?.jur4_schets

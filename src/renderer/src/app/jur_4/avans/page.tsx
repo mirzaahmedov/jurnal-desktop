@@ -12,50 +12,60 @@ import { useConfirm } from '@/common/features/confirm'
 import { SearchFilterDebounced } from '@/common/features/filters/search/search-filter-debounced'
 import { useSearchFilter } from '@/common/features/filters/search/search-filter-debounced'
 import { useRequisitesStore } from '@/common/features/requisites'
+import { SaldoNamespace, handleSaldoResponseDates } from '@/common/features/saldo'
+import {
+  useSelectedMonthStore,
+  validateDateWithinSelectedMonth
+} from '@/common/features/selected-month'
 import { useDates, usePagination } from '@/common/hooks'
 import { useLayoutStore } from '@/common/layout/store'
 import { ListView } from '@/common/views'
 
 import { avansColumns } from './columns'
-import { avansQueryKeys } from './config'
-import { avansService } from './service'
+import { AvansQueryKeys } from './config'
+import { AvansService } from './service'
 
 const AvansPage = () => {
   const dates = useDates()
   const pagination = usePagination()
   const navigate = useNavigate()
   const queryClient = useQueryClient()
-
-  const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
   const setLayout = useLayoutStore((store) => store.setLayout)
+  const startDate = useSelectedMonthStore((store) => store.startDate)
 
   const [search] = useSearchFilter()
 
+  const { main_schet_id, jur4_schet_id } = useRequisitesStore()
   const { sorting, handleSort, getColumnSorted } = useTableSort()
   const { confirm } = useConfirm()
   const { t } = useTranslation(['app'])
 
-  const { data: avansList, isFetching } = useQuery({
+  const { data: avans, isFetching } = useQuery({
     queryKey: [
-      avansQueryKeys.getAll,
+      AvansQueryKeys.getAll,
       {
         main_schet_id,
+        schet_id: jur4_schet_id,
         search,
         ...sorting,
         ...dates,
         ...pagination
       }
     ],
-    queryFn: avansService.getAll
+    queryFn: AvansService.getAll
   })
-  const { mutate: deleteMutation, isPending } = useMutation({
-    mutationKey: [avansQueryKeys.delete],
-    mutationFn: avansService.delete,
+  const { mutate: deleteAvans, isPending } = useMutation({
+    mutationKey: [AvansQueryKeys.delete],
+    mutationFn: AvansService.delete,
     onSuccess(res) {
       toast.success(res?.message)
       queryClient.invalidateQueries({
-        queryKey: [avansQueryKeys.getAll]
+        queryKey: [AvansQueryKeys.getAll]
       })
+      handleSaldoResponseDates(SaldoNamespace.JUR_4, res)
+    },
+    onError(err) {
+      handleSaldoResponseDates(SaldoNamespace.JUR_4, err)
     }
   })
 
@@ -65,7 +75,7 @@ const AvansPage = () => {
   const handleClickDelete = (row: Avans) => {
     confirm({
       onConfirm() {
-        deleteMutation(row.id)
+        deleteAvans(row.id)
       }
     })
   }
@@ -88,12 +98,19 @@ const AvansPage = () => {
   return (
     <ListView>
       <ListView.Header>
-        <ListView.RangeDatePicker {...dates} />
+        <ListView.RangeDatePicker
+          {...dates}
+          validateDate={validateDateWithinSelectedMonth}
+          calendarProps={{
+            fromMonth: startDate,
+            toMonth: startDate
+          }}
+        />
       </ListView.Header>
       <ListView.Content loading={isFetching || isPending}>
         <GenericTable
           columnDefs={avansColumns}
-          data={avansList?.data ?? []}
+          data={avans?.data ?? []}
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}
           getColumnSorted={getColumnSorted}
@@ -103,7 +120,7 @@ const AvansPage = () => {
       <ListView.Footer>
         <ListView.Pagination
           {...pagination}
-          pageCount={avansList?.meta?.pageCount ?? 0}
+          pageCount={avans?.meta?.pageCount ?? 0}
         />
       </ListView.Footer>
     </ListView>

@@ -2,6 +2,8 @@ import i18next from 'i18next'
 import { initReactI18next } from 'react-i18next'
 import { z } from 'zod'
 
+import { capitalize } from '@/common/lib/string'
+
 import appRU from './translations/ru/app.json'
 import commonRU from './translations/ru/common.json'
 import dashboardRU from './translations/ru/dashboard.json'
@@ -23,6 +25,14 @@ const localeSchema = z.enum(['uz', 'ru']).catch('ru')
 
 i18next.on('languageChanged', (lang) => {
   localStorage.setItem('app-lang', lang)
+})
+
+i18next.use({
+  type: 'postProcessor',
+  name: 'capitalize',
+  process(value: string) {
+    return capitalize(value)
+  }
 })
 
 export const initLocales = () => {

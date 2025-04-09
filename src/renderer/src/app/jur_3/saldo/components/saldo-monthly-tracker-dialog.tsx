@@ -11,16 +11,16 @@ import { useRequisitesStore } from '@/common/features/requisites'
 import { MonthlySaldoTracker } from '@/common/features/saldo'
 import { useSelectedMonthStore } from '@/common/features/selected-month'
 
-import { BankSaldoQueryKeys } from '../config'
+import { OrganSaldoQueryKeys } from '../config'
 import { OrganSaldoService } from '../service'
 
-export interface SaldoMonthlyTrackerDialogProps extends DialogProps {
+export interface OrganSaldoMonthlyTrackerDialogProps extends DialogProps {
   onSelect: (month: Date) => void
 }
-export const SaldoMonthlyTrackerDialog = ({
+export const OrganSaldoMonthlyTrackerDialog = ({
   onSelect,
   ...props
-}: SaldoMonthlyTrackerDialogProps) => {
+}: OrganSaldoMonthlyTrackerDialogProps) => {
   const { t } = useTranslation()
 
   const [year, setYear] = useState(useSelectedMonthStore.getState().startDate.getFullYear())
@@ -29,7 +29,7 @@ export const SaldoMonthlyTrackerDialog = ({
 
   const { data: saldoMonths, isFetching } = useQuery({
     queryKey: [
-      BankSaldoQueryKeys.getMonthlySaldo,
+      OrganSaldoQueryKeys.getMonthlySaldo,
       {
         main_schet_id: main_schet_id!
       }

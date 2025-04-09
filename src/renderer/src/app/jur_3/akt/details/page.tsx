@@ -27,6 +27,10 @@ import {
   handleSaldoErrorDates,
   handleSaldoResponseDates
 } from '@/common/features/saldo'
+import {
+  useSelectedMonthStore,
+  validateDateWithinSelectedMonth
+} from '@/common/features/selected-month'
 import { useSnippets } from '@/common/features/snippents/use-snippets'
 import { useSpravochnik } from '@/common/features/spravochnik'
 import { useLayoutStore } from '@/common/layout/store'
@@ -54,11 +58,12 @@ const AktDetailsPage = () => {
   })
 
   const { main_schet_id, jur3_schet_id } = useRequisitesStore()
-  const setLayout = useLayoutStore((store) => store.setLayout)
 
   const id = useParams().id as string
   const navigate = useNavigate()
   const queryClient = useQueryClient()
+  const setLayout = useLayoutStore((store) => store.setLayout)
+  const startDate = useSelectedMonthStore((store) => store.startDate)
 
   const form = useForm({
     resolver: zodResolver(AktFormSchema),
@@ -173,7 +178,7 @@ const AktDetailsPage = () => {
     [form]
   )
 
-  const orgSpravochnik = useSpravochnik(
+  const organSpravochnik = useSpravochnik(
     createOrganizationSpravochnik({
       value: form.watch('id_spravochnik_organization'),
       onChange: (value, organization) => {
@@ -270,6 +275,11 @@ const AktDetailsPage = () => {
                   form={form}
                   documentType={DocumentType.AKT}
                   autoGenerate={id === 'create'}
+                  validateDate={validateDateWithinSelectedMonth}
+                  calendarProps={{
+                    fromMonth: startDate,
+                    toMonth: startDate
+                  }}
                 />
                 <OperatsiiFields
                   tabIndex={2}
@@ -281,7 +291,7 @@ const AktDetailsPage = () => {
               <div className="grid grid-cols-2 items-start border-y divide-x divide-border/50 border-border/50">
                 <OrganizationFields
                   tabIndex={3}
-                  spravochnik={orgSpravochnik}
+                  spravochnik={organSpravochnik}
                   form={form as any}
                   error={form.formState.errors.id_spravochnik_organization}
                   name={t('supplier')}

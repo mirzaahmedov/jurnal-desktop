@@ -35,7 +35,7 @@ export const ConfirmationDialog = () => {
   const {
     isOpen,
     title = t('sure_to_delete'),
-    password,
+    withPassword: password,
     description,
     close,
     onConfirm,
@@ -55,7 +55,7 @@ export const ConfirmationDialog = () => {
       if (!password || password.trim().length === 0) {
         form.setError('password', {
           type: 'custom',
-          message: 'Обязательное поле'
+          message: t('required_field')
         })
         e.preventDefault()
         return
@@ -88,6 +88,7 @@ export const ConfirmationDialog = () => {
                     label={t('password')}
                   >
                     <Input
+                      autoFocus
                       type={isPasswordVisible ? 'text' : 'password'}
                       {...field}
                     />

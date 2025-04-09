@@ -2,7 +2,7 @@ import { z } from 'zod'
 
 import { withPreprocessor } from '@/common/lib/validation'
 
-export const avansQueryKeys = {
+export const AvansQueryKeys = {
   getAll: 'avans/all',
   getById: 'avans',
   create: 'avans/create',
@@ -10,7 +10,7 @@ export const avansQueryKeys = {
   delete: 'avans/delete'
 }
 
-export const AdvanceReportPodvodkaPayloadSchema = withPreprocessor(
+export const AvansProvodkaFormSchema = withPreprocessor(
   z.object({
     spravochnik_operatsii_id: z.number(),
     summa: z.number().min(1),
@@ -19,9 +19,8 @@ export const AdvanceReportPodvodkaPayloadSchema = withPreprocessor(
     id_spravochnik_type_operatsii: z.number().optional()
   })
 )
-export type AdvanceReportPodvodkaPayloadType = z.infer<typeof AdvanceReportPodvodkaPayloadSchema>
 
-export const AdvanceReportPayloadSchema = withPreprocessor(
+export const AvansFormSchema = withPreprocessor(
   z.object({
     doc_num: z.string(),
     doc_date: z.string(),
@@ -30,12 +29,13 @@ export const AdvanceReportPayloadSchema = withPreprocessor(
     id_spravochnik_podotchet_litso: z.number(),
     spravochnik_operatsii_own_id: z.number(),
     summa: z.number().optional(),
-    childs: z.array(AdvanceReportPodvodkaPayloadSchema)
+    childs: z.array(AvansProvodkaFormSchema)
   })
 )
-export type AdvanceReportPayloadType = z.infer<typeof AdvanceReportPayloadSchema>
+export type AvansProvodkaFormValues = z.infer<typeof AvansProvodkaFormSchema>
+export type AvansFormValues = z.infer<typeof AvansFormSchema>
 
-export const defaultValues: AdvanceReportPayloadType = {
+export const defaultValues: AvansFormValues = {
   doc_num: '',
   doc_date: '',
   opisanie: '',

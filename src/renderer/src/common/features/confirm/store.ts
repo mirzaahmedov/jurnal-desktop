@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 
 export interface ConfirmWithPassword {
-  password: true
+  withPassword: true
   title?: string
   description?: string
   onConfirm?(password: string): void
@@ -9,7 +9,7 @@ export interface ConfirmWithPassword {
 }
 
 export interface ConfirmWithoutPassword {
-  password?: false
+  withPassword?: false
   title?: string
   description?: string
   onConfirm?(): void
@@ -17,7 +17,7 @@ export interface ConfirmWithoutPassword {
 }
 
 export interface ConfirmationState {
-  password?: boolean
+  withPassword?: boolean
   onConfirm?(password?: string): void
   isOpen: boolean
   title?: string
@@ -33,17 +33,17 @@ export interface ConfirmationActions {
 
 export const useConfirm = create<ConfirmationState & ConfirmationActions>((set) => ({
   isOpen: false,
-  password: false,
+  withPassword: false,
   confirm: ({
     title,
-    password = false,
+    withPassword = false,
     description,
     onConfirm,
     onCancel
   }: ConfirmWithPassword | ConfirmWithoutPassword) => {
     set({
       title,
-      password: password as any,
+      withPassword,
       description,
       onConfirm,
       onCancel,
@@ -53,7 +53,7 @@ export const useConfirm = create<ConfirmationState & ConfirmationActions>((set) 
   close: () =>
     set({
       title: undefined,
-      password: false,
+      withPassword: false,
       description: undefined,
       onConfirm: undefined,
       onCancel: undefined,

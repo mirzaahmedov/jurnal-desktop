@@ -27,6 +27,10 @@ import {
   handleSaldoErrorDates,
   handleSaldoResponseDates
 } from '@/common/features/saldo'
+import {
+  useSelectedMonthStore,
+  validateDateWithinSelectedMonth
+} from '@/common/features/selected-month'
 import { useSnippets } from '@/common/features/snippents/use-snippets'
 import { useSpravochnik } from '@/common/features/spravochnik'
 import { useLayoutStore } from '@/common/layout/store'
@@ -44,11 +48,12 @@ import {
 
 import { defaultValues, queryKeys } from '../config'
 import { PokazatUslugiFormSchema, PokazatUslugiProvodkaFormSchema } from '../config'
-import { pokazatUslugiService } from '../service'
+import { PokazatUslugiService } from '../service'
 import { podvodkaColumns } from './podvodki'
 
 const PokazatUslugiDetailsPage = () => {
   const { t } = useTranslation(['app'])
+  const { main_schet_id, jur3_schet_id } = useRequisitesStore()
   const { snippets, addSnippet, removeSnippet } = useSnippets({
     ns: 'pokazat-uslugi'
   })
@@ -56,16 +61,15 @@ const PokazatUslugiDetailsPage = () => {
   const id = useParams().id as string
   const navigate = useNavigate()
   const queryClient = useQueryClient()
-
-  const { main_schet_id, jur3_schet_id } = useRequisitesStore()
   const setLayout = useLayoutStore((store) => store.setLayout)
+  const startDate = useSelectedMonthStore((store) => store.startDate)
 
   const form = useForm({
     resolver: zodResolver(PokazatUslugiFormSchema),
     defaultValues: defaultValues
   })
 
-  const orgSpravochnik = useSpravochnik(
+  const organSpravochnik = useSpravochnik(
     createOrganizationSpravochnik({
       value: form.watch('id_spravochnik_organization'),
       onChange: (value, organization) => {
@@ -120,12 +124,12 @@ const PokazatUslugiDetailsPage = () => {
         schet_id: jur3_schet_id
       }
     ],
-    queryFn: pokazatUslugiService.getById,
+    queryFn: PokazatUslugiService.getById,
     enabled: id !== 'create'
   })
   const { mutate: createPokazatUslugi, isPending: isCreating } = useMutation({
     mutationKey: [queryKeys.create],
-    mutationFn: pokazatUslugiService.create,
+    mutationFn: PokazatUslugiService.create,
     onSuccess(res) {
       toast.success(res?.message)
 
@@ -146,7 +150,7 @@ const PokazatUslugiDetailsPage = () => {
 
   const { mutate: updatePokazatUslugi, isPending: isUpdating } = useMutation({
     mutationKey: [queryKeys.update, id],
-    mutationFn: pokazatUslugiService.update,
+    mutationFn: PokazatUslugiService.update,
     onSuccess(res) {
       toast.success(res?.message)
 
@@ -165,8 +169,8 @@ const PokazatUslugiDetailsPage = () => {
     }
   })
 
-  const onSubmit = form.handleSubmit((payload: PokazatUslugiFormValues) => {
-    const {
+  const onSubmit = form.handleSubmit(
+    ({
       doc_date,
       doc_num,
       id_spravochnik_organization,
@@ -177,11 +181,25 @@ const PokazatUslugiDetailsPage = () => {
       organization_by_raschet_schet_gazna_id,
       opisanie,
       summa
-    } = payload
-
-    if (id !== 'create') {
-      updatePokazatUslugi({
-        id: Number(id),
+    }: PokazatUslugiFormValues) => {
+      if (id !== 'create') {
+        updatePokazatUslugi({
+          id: Number(id),
+          doc_date,
+          doc_num,
+          spravochnik_operatsii_own_id,
+          shartnomalar_organization_id,
+          shartnoma_grafik_id,
+          id_spravochnik_organization,
+          organization_by_raschet_schet_id,
+          organization_by_raschet_schet_gazna_id,
+          opisanie,
+          summa,
+          childs: podvodki.map(normalizeEmptyFields<PokazatUslugiProvodkaFormValues>)
+        })
+        return
+      }
+      createPokazatUslugi({
         doc_date,
         doc_num,
         spravochnik_operatsii_own_id,
@@ -194,22 +212,8 @@ const PokazatUslugiDetailsPage = () => {
         summa,
         childs: podvodki.map(normalizeEmptyFields<PokazatUslugiProvodkaFormValues>)
       })
-      return
     }
-    createPokazatUslugi({
-      doc_date,
-      doc_num,
-      spravochnik_operatsii_own_id,
-      shartnomalar_organization_id,
-      shartnoma_grafik_id,
-      id_spravochnik_organization,
-      organization_by_raschet_schet_id,
-      organization_by_raschet_schet_gazna_id,
-      opisanie,
-      summa,
-      childs: podvodki.map(normalizeEmptyFields<PokazatUslugiProvodkaFormValues>)
-    })
-  })
+  )
 
   const podvodki = form.watch('childs')
   const setPodvodki = useCallback(
@@ -267,6 +271,11 @@ const PokazatUslugiDetailsPage = () => {
                 form={form}
                 documentType={DocumentType.SHOW_SERVICE}
                 autoGenerate={id === 'create'}
+                validateDate={validateDateWithinSelectedMonth}
+                calendarProps={{
+                  fromMonth: startDate,
+                  toMonth: startDate
+                }}
               />
               <OperatsiiFields
                 tabIndex={2}
@@ -278,7 +287,7 @@ const PokazatUslugiDetailsPage = () => {
             <div className="grid grid-cols-2 items-start border-y divide-x divide-border/50 border-border/50">
               <OrganizationFields
                 tabIndex={3}
-                spravochnik={orgSpravochnik}
+                spravochnik={organSpravochnik}
                 form={form as any}
                 error={form.formState.errors.id_spravochnik_organization}
                 name={t('buyer')}

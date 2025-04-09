@@ -14,13 +14,13 @@ import { useSelectedMonthStore } from '@/common/features/selected-month'
 import { BankSaldoQueryKeys } from '../config'
 import { BankSaldoService } from '../service'
 
-export interface SaldoMonthlyTrackerDialogProps extends DialogProps {
+export interface BankSaldoMonthlyTrackerDialogProps extends DialogProps {
   onSelect: (month: Date) => void
 }
-export const SaldoMonthlyTrackerDialog = ({
+export const BankSaldoMonthlyTrackerDialog = ({
   onSelect,
   ...props
-}: SaldoMonthlyTrackerDialogProps) => {
+}: BankSaldoMonthlyTrackerDialogProps) => {
   const { t } = useTranslation()
 
   const [year, setYear] = useState(useSelectedMonthStore.getState().startDate.getFullYear())

@@ -15,8 +15,7 @@ import SigninPage from './sign-in'
 
 const KassaSaldoPage = lazy(() => import('./jur_1/saldo/page'))
 const BankSaldoPage = lazy(() => import('./jur_2/saldo/page'))
-const PodotchetOstatokDetailsPage = lazy(() => import('./podotchet/ostatok/details/page'))
-const PodotchetOstatokPage = lazy(() => import('./podotchet/ostatok/page'))
+const PodotchetOstatokPage = lazy(() => import('./jur_4/saldo/page'))
 
 const PrixodSchetsPage = lazy(() => import('./super-admin/prixod-schet/page'))
 
@@ -62,9 +61,9 @@ const OXDetailsPage = lazy(() => import('./ox-report/ox-report/details/page'))
 const OXPage = lazy(() => import('./ox-report/ox-report/page'))
 const OXReportDetailsPage = lazy(() => import('./ox-report/report/details/page'))
 const OXReportPage = lazy(() => import('./ox-report/report/page'))
-const AdvanceReportDetailsPage = lazy(() => import('./podotchet/avans/details/page'))
-const AvansPage = lazy(() => import('./podotchet/avans/page'))
-const PodotchetMonitoringPage = lazy(() => import('./podotchet/monitor/page'))
+const AdvanceReportDetailsPage = lazy(() => import('./jur_4/avans/details/page'))
+const AvansPage = lazy(() => import('./jur_4/avans/page'))
+const PodotchetMonitoringPage = lazy(() => import('./jur_4/monitor/page'))
 const ExpensesDetailsPage = lazy(() => import('./real-expenses/real-expenses/details/page'))
 const ExpensesPage = lazy(() => import('./real-expenses/real-expenses/page'))
 const ExpensesReportDetailsPage = lazy(() => import('./real-expenses/report/details/page'))
@@ -409,10 +408,6 @@ export const routes: RouteObject[] = [
           {
             path: 'ostatok',
             element: <PodotchetOstatokPage />
-          },
-          {
-            path: 'ostatok/:id',
-            element: <PodotchetOstatokDetailsPage />
           }
         ]
       },

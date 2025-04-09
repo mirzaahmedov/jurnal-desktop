@@ -22,6 +22,10 @@ import {
   useSearchFilter
 } from '@/common/features/filters/search/search-filter-debounced'
 import { useRequisitesStore } from '@/common/features/requisites'
+import {
+  useSelectedMonthStore,
+  validateDateWithinSelectedMonth
+} from '@/common/features/selected-month'
 import { useSettingsStore } from '@/common/features/settings'
 import { useSpravochnik } from '@/common/features/spravochnik'
 import { useDates, usePagination } from '@/common/hooks'
@@ -31,24 +35,24 @@ import { getProvodkaURL } from '@/common/lib/provodka'
 import { type PodotchetMonitor, TypeSchetOperatsii } from '@/common/models'
 import { ListView } from '@/common/views'
 
-import { podotchetMonitoringColumns } from './columns'
-import { podotchetMonitoringQueryKeys } from './config'
+import { PodotchetMonitorColumns } from './columns'
+import { PodotchetMonitorQueryKeys } from './config'
 import { useOperatsiiFilter, usePodotchetFilter } from './filters'
-import { podotchetMonitoringService } from './service'
+import { PodotchetMonitorService } from './service'
 
-const PodotchetMonitoringPage = () => {
+const PodotchetMonitorPage = () => {
   const dates = useDates()
   const navigate = useNavigate()
   const pagination = usePagination()
   const report_title_id = useSettingsStore((store) => store.report_title_id)
-
+  const startDate = useSelectedMonthStore((store) => store.startDate)
   const setLayout = useLayoutStore((store) => store.setLayout)
 
   const [search] = useSearchFilter()
 
   const { t } = useTranslation(['app'])
   const { sorting, handleSort, getColumnSorted } = useTableSort()
-  const { main_schet_id, budjet_id } = useRequisitesStore()
+  const { main_schet_id, budjet_id, jur4_schet_id } = useRequisitesStore()
 
   const [operatsiiId, setOperatsiiId] = useOperatsiiFilter()
   const [podotchetId, setPodotchetId] = usePodotchetFilter()
@@ -63,7 +67,7 @@ const PodotchetMonitoringPage = () => {
         setOperatsiiId(id)
       },
       params: {
-        type_schet: TypeSchetOperatsii.GENERAL
+        type_schet: TypeSchetOperatsii.JUR4
       }
     })
   )
@@ -76,15 +80,18 @@ const PodotchetMonitoringPage = () => {
     })
   )
 
-  const { data: monitorList, isFetching } = useQuery({
-    queryFn: podotchetMonitoringService.getAll,
+  const { data: monitoring, isFetching } = useQuery({
+    queryFn: PodotchetMonitorService.getAll,
     queryKey: [
-      podotchetMonitoringQueryKeys.getAll,
+      PodotchetMonitorQueryKeys.getAll,
       {
         search,
         main_schet_id,
+        schet_id: jur4_schet_id,
         operatsii: operatsiiSpravochnik.selected?.schet,
         podotchet_id: podotchetId,
+        year: startDate.getFullYear(),
+        month: startDate.getMonth() + 1,
         ...sorting,
         ...dates,
         ...pagination
@@ -187,19 +194,26 @@ const PodotchetMonitoringPage = () => {
             />
           </ButtonGroup>
         </div>
-        <ListView.RangeDatePicker {...dates} />
+        <ListView.RangeDatePicker
+          {...dates}
+          validateDate={validateDateWithinSelectedMonth}
+          calendarProps={{
+            fromMonth: startDate,
+            toMonth: startDate
+          }}
+        />
         <SummaTotal>
           <SummaTotal.Value
             name={t('remainder-from')}
-            value={formatNumber(monitorList?.meta?.summa_from_object?.summa ?? 0)}
+            value={formatNumber(monitoring?.meta?.summa_from_object?.summa ?? 0)}
           />
         </SummaTotal>
       </ListView.Header>
       <ListView.Content loading={isFetching}>
         {isFetching ? <LoadingOverlay /> : null}
         <GenericTable
-          columnDefs={podotchetMonitoringColumns}
-          data={monitorList?.data ?? []}
+          columnDefs={PodotchetMonitorColumns}
+          data={monitoring?.data ?? []}
           getRowKey={(row) => `${row.type}-${row.id}`}
           onEdit={handleClickEdit}
           getColumnSorted={getColumnSorted}
@@ -210,17 +224,17 @@ const PodotchetMonitoringPage = () => {
                 <FooterCell
                   title={t('total')}
                   colSpan={5}
-                  content={formatNumber(monitorList?.meta?.page_prixod_sum ?? 0)}
+                  content={formatNumber(monitoring?.meta?.page_prixod_sum ?? 0)}
                 />
-                <FooterCell content={formatNumber(monitorList?.meta?.page_rasxod_sum ?? 0)} />
+                <FooterCell content={formatNumber(monitoring?.meta?.page_rasxod_sum ?? 0)} />
               </FooterRow>
               <FooterRow>
                 <FooterCell
                   title={t('total_period')}
                   colSpan={5}
-                  content={formatNumber(monitorList?.meta?.prixod_sum ?? 0)}
+                  content={formatNumber(monitoring?.meta?.prixod_sum ?? 0)}
                 />
-                <FooterCell content={formatNumber(monitorList?.meta?.rasxod_sum ?? 0)} />
+                <FooterCell content={formatNumber(monitoring?.meta?.rasxod_sum ?? 0)} />
               </FooterRow>
             </>
           }
@@ -230,16 +244,16 @@ const PodotchetMonitoringPage = () => {
         <SummaTotal className="pb-5">
           <SummaTotal.Value
             name={t('remainder-to')}
-            value={formatNumber(monitorList?.meta?.summa_to_object?.summa ?? 0)}
+            value={formatNumber(monitoring?.meta?.summa_to_object?.summa ?? 0)}
           />
         </SummaTotal>
         <ListView.Pagination
           {...pagination}
-          pageCount={monitorList?.meta?.pageCount ?? 0}
+          pageCount={monitoring?.meta?.pageCount ?? 0}
         />
       </ListView.Footer>
     </ListView>
   )
 }
 
-export default PodotchetMonitoringPage
+export default PodotchetMonitorPage

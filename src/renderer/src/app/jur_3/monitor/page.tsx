@@ -27,6 +27,10 @@ import { DownloadFile } from '@/common/features/file'
 import { SearchFilterDebounced } from '@/common/features/filters/search/search-filter-debounced'
 import { useSearchFilter } from '@/common/features/filters/search/search-filter-debounced'
 import { useRequisitesStore } from '@/common/features/requisites'
+import {
+  useSelectedMonthStore,
+  validateDateWithinSelectedMonth
+} from '@/common/features/selected-month'
 import { useSettingsStore } from '@/common/features/settings'
 import { useSpravochnik } from '@/common/features/spravochnik'
 import { useDates, usePagination, useToggle } from '@/common/hooks'
@@ -37,8 +41,8 @@ import { type OrganizationMonitor, TypeSchetOperatsii } from '@/common/models'
 import { ListView } from '@/common/views'
 
 import { AktSverkaDialog } from './akt-sverka'
-import { organizationMonitorColumns } from './columns'
-import { orgMonitoringQueryKeys } from './constants'
+import { OrganMonitorColumns } from './columns'
+import { OrganMonitorQueryKeys } from './config'
 import { useOperatsiiFilter, useOrganFilter } from './filters'
 import { OrganMonitoringService } from './service'
 
@@ -48,7 +52,7 @@ const OrganizationMonitoringPage = () => {
   const dropdownToggle = useToggle()
   const pagination = usePagination()
   const report_title_id = useSettingsStore((store) => store.report_title_id)
-
+  const startDate = useSelectedMonthStore((store) => store.startDate)
   const setLayout = useLayoutStore((store) => store.setLayout)
 
   const [operatsiiId, setOperatsiiId] = useOperatsiiFilter()
@@ -59,7 +63,7 @@ const OrganizationMonitoringPage = () => {
   const { main_schet_id, budjet_id, jur3_schet_id } = useRequisitesStore()
   const { t } = useTranslation(['app'])
 
-  const orgSpravochnik = useSpravochnik(
+  const organSpravochnik = useSpravochnik(
     createOrganizationSpravochnik({
       value: organId,
       onChange: (id) => {
@@ -85,15 +89,17 @@ const OrganizationMonitoringPage = () => {
     })
   )
 
-  const { data: monitorList, isFetching } = useQuery({
+  const { data: monitoring, isFetching } = useQuery({
     queryKey: [
-      orgMonitoringQueryKeys.getByOrgId,
+      OrganMonitorQueryKeys.getByOrgId,
       {
         main_schet_id,
         schet_id: jur3_schet_id,
         organ_id: organId ? organId : undefined,
         operatsii: operatsiiSpravochnik.selected ? operatsiiSpravochnik.selected.schet : undefined,
         search,
+        year: startDate.getFullYear(),
+        month: startDate.getMonth() + 1,
         ...sorting,
         ...dates,
         ...pagination
@@ -144,7 +150,7 @@ const OrganizationMonitoringPage = () => {
                 ]}
               />
               <ChooseSpravochnik
-                spravochnik={orgSpravochnik}
+                spravochnik={organSpravochnik}
                 placeholder={t('choose', {
                   what: t('organization')
                 })}
@@ -281,19 +287,26 @@ const OrganizationMonitoringPage = () => {
               </ButtonGroup>
             ) : null}
           </div>
-          <ListView.RangeDatePicker {...dates} />
+          <ListView.RangeDatePicker
+            {...dates}
+            validateDate={validateDateWithinSelectedMonth}
+            calendarProps={{
+              fromMonth: startDate,
+              toMonth: startDate
+            }}
+          />
           <SummaTotal>
             <SummaTotal.Value
               name={t('remainder-from')}
-              value={formatNumber(monitorList?.meta?.summa_from_object?.summa ?? 0)}
+              value={formatNumber(monitoring?.meta?.summa_from_object?.summa ?? 0)}
             />
           </SummaTotal>
         </div>
       </ListView.Header>
       <ListView.Content loading={isFetching}>
         <GenericTable
-          columnDefs={organizationMonitorColumns}
-          data={monitorList?.data ?? []}
+          columnDefs={OrganMonitorColumns}
+          data={monitoring?.data ?? []}
           onEdit={handleClickEdit}
           getRowKey={(row) => {
             return `${row.id}-${row.type}`
@@ -306,17 +319,17 @@ const OrganizationMonitoringPage = () => {
                 <FooterCell
                   colSpan={6}
                   title={t('total')}
-                  content={formatNumber(monitorList?.meta?.page_prixod_sum ?? 0)}
+                  content={formatNumber(monitoring?.meta?.page_prixod_sum ?? 0)}
                 />
-                <FooterCell content={formatNumber(monitorList?.meta?.page_rasxod_sum ?? 0)} />
+                <FooterCell content={formatNumber(monitoring?.meta?.page_rasxod_sum ?? 0)} />
               </FooterRow>
               <FooterRow>
                 <FooterCell
                   colSpan={6}
                   title={t('total_period')}
-                  content={formatNumber(monitorList?.meta?.prixod_sum ?? 0)}
+                  content={formatNumber(monitoring?.meta?.prixod_sum ?? 0)}
                 />
-                <FooterCell content={formatNumber(monitorList?.meta?.rasxod_sum ?? 0)} />
+                <FooterCell content={formatNumber(monitoring?.meta?.rasxod_sum ?? 0)} />
               </FooterRow>
             </>
           }
@@ -326,12 +339,12 @@ const OrganizationMonitoringPage = () => {
         <SummaTotal className="pb-5">
           <SummaTotal.Value
             name={t('remainder-to')}
-            value={formatNumber(monitorList?.meta?.summa_to_object?.summa ?? 0)}
+            value={formatNumber(monitoring?.meta?.summa_to_object?.summa ?? 0)}
           />
         </SummaTotal>
         <ListView.Pagination
           {...pagination}
-          pageCount={monitorList?.meta?.pageCount ?? 0}
+          pageCount={monitoring?.meta?.pageCount ?? 0}
         />
       </ListView.Footer>
     </ListView>

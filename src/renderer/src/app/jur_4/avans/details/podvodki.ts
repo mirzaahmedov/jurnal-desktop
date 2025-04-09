@@ -1,4 +1,4 @@
-import type { AdvanceReportPodvodkaPayloadType } from '../config'
+import type { AvansProvodkaFormValues } from '../config'
 import type { EditableColumnDef } from '@/common/components/editable-table'
 
 import {
@@ -10,7 +10,7 @@ import {
 } from '@/common/components/editable-table/editors'
 import { TypeSchetOperatsii } from '@/common/models'
 
-export const podvodkaColumns: EditableColumnDef<AdvanceReportPodvodkaPayloadType>[] = [
+export const podvodkaColumns: EditableColumnDef<AvansProvodkaFormValues>[] = [
   {
     key: 'spravochnik_operatsii_id',
     header: 'provodka',

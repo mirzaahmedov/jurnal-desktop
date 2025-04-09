@@ -91,7 +91,7 @@ const CurrentSchet = ({ mainSchet, pathname }: CurrentSchetProps): ReactNode => 
           onValueChange={(value) => {
             setRequisites({ jur4_schet_id: value })
           }}
-          schetOptions={mainSchet?.jur3_schets ?? []}
+          schetOptions={mainSchet?.jur4_schets ?? []}
         />
       )
     default:

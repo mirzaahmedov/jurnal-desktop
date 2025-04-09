@@ -1,14 +1,13 @@
-import type { BankSaldo } from '@/common/models'
+import type { OrganSaldo } from '@/common/models'
 
 import { useEffect, useState } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { CalendarDays, Trash2 } from 'lucide-react'
+import { CalendarDays } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
-import { SaldoMonthlyTrackerDialog } from '@/app/jur_1/saldo/components/saldo-monthly-tracker-dialog'
 import { FooterCell, FooterRow, GenericTable } from '@/common/components'
 import { Button } from '@/common/components/ui/button'
 import { ButtonGroup } from '@/common/components/ui/button-group'
@@ -19,18 +18,19 @@ import {
   handleSaldoErrorDates,
   handleSaldoResponseDates
 } from '@/common/features/saldo'
-import { useToggle } from '@/common/hooks'
+import { useKeyUp, useToggle } from '@/common/hooks'
 import { useLayoutStore } from '@/common/layout/store'
 import { formatNumber } from '@/common/lib/format'
 import { ListView } from '@/common/views'
 
-import { bankSaldoColumns } from './columns'
-import { BankSaldoQueryKeys } from './config'
-import { BankSaldoDialog } from './dialog'
-import { BankSaldoFilters, useYearFilter } from './filters'
+import { OrganSaldoColumns } from './columns'
+import { OrganSaldoMonthlyTrackerDialog } from './components/saldo-monthly-tracker-dialog'
+import { OrganSaldoQueryKeys } from './config'
+import { OrganSaldoDialog } from './dialog'
+import { OrganSaldoFilters, useYearFilter } from './filters'
 import { OrganSaldoService } from './service'
 
-const BankSaldoPage = () => {
+const OrganSaldoPage = () => {
   const setLayout = useLayoutStore((store) => store.setLayout)
 
   const navigate = useNavigate()
@@ -39,15 +39,15 @@ const BankSaldoPage = () => {
   const monthlyTrackerToggle = useToggle()
 
   const [year, setYear] = useYearFilter()
-  const [selected, setSelected] = useState<BankSaldo | null>(null)
+  const [selected, setSelected] = useState<OrganSaldo | null>(null)
 
   const { confirm } = useConfirm()
   const { t } = useTranslation(['app'])
-  const { budjet_id, main_schet_id } = useRequisitesStore()
+  const { budjet_id, main_schet_id, jur3_schet_id } = useRequisitesStore()
 
   const { data: saldo, isFetching } = useQuery({
     queryKey: [
-      BankSaldoQueryKeys.getAll,
+      OrganSaldoQueryKeys.getAll,
       {
         main_schet_id,
         budjet_id,
@@ -57,12 +57,12 @@ const BankSaldoPage = () => {
     queryFn: OrganSaldoService.getAll
   })
   const { mutate: cleanSaldo, isPending } = useMutation({
-    mutationKey: [BankSaldoQueryKeys.clean],
+    mutationKey: [OrganSaldoQueryKeys.clean],
     mutationFn: OrganSaldoService.cleanSaldo,
     onSuccess(res) {
       toast.success(res?.message)
       queryClient.invalidateQueries({
-        queryKey: [BankSaldoQueryKeys.getAll]
+        queryKey: [OrganSaldoQueryKeys.getAll]
       })
       handleSaldoResponseDates(SaldoNamespace.JUR_3, res)
     },
@@ -71,15 +71,16 @@ const BankSaldoPage = () => {
     }
   })
 
-  const handleClickEdit = (row: BankSaldo) => {
+  const handleClickEdit = (row: OrganSaldo) => {
     setSelected(row)
     dialogToggle.open()
   }
   const handleClickClean = () => {
     confirm({
-      password: true,
+      withPassword: true,
       onConfirm(password) {
         cleanSaldo({
+          schet_id: jur3_schet_id!,
           main_schet_id: main_schet_id!,
           password
         })
@@ -95,13 +96,19 @@ const BankSaldoPage = () => {
           title: t('pages.organization')
         }
       ],
-      content: BankSaldoFilters,
+      content: OrganSaldoFilters,
       onCreate: () => {
         setSelected(null)
         dialogToggle.open()
       }
     })
   }, [setLayout, t, navigate, dialogToggle.open])
+
+  useKeyUp({
+    key: 'Delete',
+    ctrlKey: true,
+    onKeyUp: handleClickClean
+  })
 
   return (
     <ListView>
@@ -114,19 +121,12 @@ const BankSaldoPage = () => {
             <CalendarDays className="btn-icon" />
             {t('monthly_saldo')}
           </Button>
-          <Button
-            variant="destructive"
-            onClick={handleClickClean}
-          >
-            <Trash2 className="btn-icon" />
-            {t('delete_all')}
-          </Button>
         </ButtonGroup>
       </ListView.Header>
       <ListView.Content loading={isFetching || isPending}>
         <GenericTable
           data={saldo?.data ?? []}
-          columnDefs={bankSaldoColumns}
+          columnDefs={OrganSaldoColumns}
           onEdit={handleClickEdit}
           footer={
             <FooterRow>
@@ -139,12 +139,12 @@ const BankSaldoPage = () => {
           }
         />
       </ListView.Content>
-      <BankSaldoDialog
+      <OrganSaldoDialog
         open={dialogToggle.isOpen}
         onOpenChange={dialogToggle.setOpen}
         selected={selected}
       />
-      <SaldoMonthlyTrackerDialog
+      <OrganSaldoMonthlyTrackerDialog
         open={monthlyTrackerToggle.isOpen}
         onOpenChange={monthlyTrackerToggle.setOpen}
         onSelect={(month) => {
@@ -155,4 +155,4 @@ const BankSaldoPage = () => {
   )
 }
 
-export default BankSaldoPage
+export default OrganSaldoPage

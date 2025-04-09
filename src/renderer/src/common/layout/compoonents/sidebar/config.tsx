@@ -54,6 +54,7 @@ import {
 import { Jur1SaldoController } from '@/app/jur_1/saldo/components/saldo-controller'
 import { Jur2SaldoController } from '@/app/jur_2/saldo/components/saldo-controller'
 import { Jur3SaldoController } from '@/app/jur_3/saldo/components/saldo-controller'
+import { PodotchetSaldoController } from '@/app/jur_4/saldo/components/saldo-controller'
 import { Jur7SaldoController } from '@/app/jur_7/saldo/components/saldo-controller'
 import { adminRoles } from '@/app/super-admin/role'
 import { useAuthenticationStore } from '@/common/features/auth'
@@ -256,6 +257,12 @@ export const getNavElements = (t: TFunction): NavElement[] => {
               path: 'ostatok',
               title: t('pages.saldo'),
               icon: CircleFadingPlus
+            },
+            {
+              displayOnly: true,
+              path: '',
+              title: <PodotchetSaldoController />,
+              icon: null
             }
           ])
         }

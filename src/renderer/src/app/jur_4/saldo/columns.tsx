@@ -1,5 +1,5 @@
 import type { ColumnDef } from '@/common/components'
-import type { OrganSaldo } from '@/common/models'
+import type { PodotchetSaldo } from '@/common/models'
 
 import { Trans } from 'react-i18next'
 
@@ -7,7 +7,7 @@ import { IDCell } from '@/common/components/table/renderers/id'
 import { SummaCell } from '@/common/components/table/renderers/summa'
 import { getMonthName } from '@/common/lib/date'
 
-export const OrganSaldoColumns: ColumnDef<OrganSaldo>[] = [
+export const podotchetSaldoColumns: ColumnDef<PodotchetSaldo>[] = [
   {
     key: 'id',
     renderCell: IDCell,

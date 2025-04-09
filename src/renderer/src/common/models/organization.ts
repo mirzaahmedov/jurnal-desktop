@@ -1,4 +1,4 @@
-import type { ProvodkaType } from './monitoring'
+import type { ProvodkaType } from './common'
 
 export interface Organization {
   parent_id?: number

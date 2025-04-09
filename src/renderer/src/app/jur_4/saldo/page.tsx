@@ -1,4 +1,4 @@
-import type { BankSaldo } from '@/common/models'
+import type { PodotchetSaldo } from '@/common/models'
 
 import { useEffect, useState } from 'react'
 
@@ -23,14 +23,14 @@ import { useLayoutStore } from '@/common/layout/store'
 import { formatNumber } from '@/common/lib/format'
 import { ListView } from '@/common/views'
 
-import { bankSaldoColumns } from './columns'
-import { BankSaldoMonthlyTrackerDialog } from './components/saldo-monthly-tracker-dialog'
-import { BankSaldoQueryKeys } from './config'
-import { BankSaldoDialog } from './dialog'
-import { BankSaldoFilters, useYearFilter } from './filters'
-import { BankSaldoService } from './service'
+import { podotchetSaldoColumns } from './columns'
+import { PodotchetSaldoMonthlyTrackerDialog } from './components/saldo-monthly-tracker-dialog'
+import { PodotchetSaldoQueryKeys } from './config'
+import { PodotchetSaldoDialog } from './dialog'
+import { PodotchetSaldoFilters, useYearFilter } from './filters'
+import { PodotchetSaldoService } from './service'
 
-const BankSaldoPage = () => {
+const PodotchetSaldoPage = () => {
   const setLayout = useLayoutStore((store) => store.setLayout)
 
   const navigate = useNavigate()
@@ -39,39 +39,39 @@ const BankSaldoPage = () => {
   const monthlyTrackerToggle = useToggle()
 
   const [year, setYear] = useYearFilter()
-  const [selected, setSelected] = useState<BankSaldo | null>(null)
+  const [selected, setSelected] = useState<PodotchetSaldo | null>(null)
 
   const { confirm } = useConfirm()
   const { t } = useTranslation(['app'])
-  const { budjet_id, main_schet_id } = useRequisitesStore()
+  const { budjet_id, main_schet_id, jur4_schet_id } = useRequisitesStore()
 
   const { data: saldo, isFetching } = useQuery({
     queryKey: [
-      BankSaldoQueryKeys.getAll,
+      PodotchetSaldoQueryKeys.getAll,
       {
         main_schet_id,
         budjet_id,
         year
       }
     ],
-    queryFn: BankSaldoService.getAll
+    queryFn: PodotchetSaldoService.getAll
   })
   const { mutate: cleanSaldo, isPending } = useMutation({
-    mutationKey: [BankSaldoQueryKeys.clean],
-    mutationFn: BankSaldoService.cleanSaldo,
+    mutationKey: [PodotchetSaldoQueryKeys.clean],
+    mutationFn: PodotchetSaldoService.cleanSaldo,
     onSuccess(res) {
       toast.success(res?.message)
       queryClient.invalidateQueries({
-        queryKey: [BankSaldoQueryKeys.getAll]
+        queryKey: [PodotchetSaldoQueryKeys.getAll]
       })
-      handleSaldoResponseDates(SaldoNamespace.JUR_2, res)
+      handleSaldoResponseDates(SaldoNamespace.JUR_4, res)
     },
     onError(error) {
-      handleSaldoErrorDates(SaldoNamespace.JUR_2, error)
+      handleSaldoErrorDates(SaldoNamespace.JUR_4, error)
     }
   })
 
-  const handleClickEdit = (row: BankSaldo) => {
+  const handleClickEdit = (row: PodotchetSaldo) => {
     setSelected(row)
     dialogToggle.open()
   }
@@ -80,6 +80,7 @@ const BankSaldoPage = () => {
       withPassword: true,
       onConfirm(password) {
         cleanSaldo({
+          schet_id: jur4_schet_id!,
           main_schet_id: main_schet_id!,
           password
         })
@@ -95,7 +96,7 @@ const BankSaldoPage = () => {
           title: t('pages.organization')
         }
       ],
-      content: BankSaldoFilters,
+      content: PodotchetSaldoFilters,
       onCreate: () => {
         setSelected(null)
         dialogToggle.open()
@@ -125,7 +126,7 @@ const BankSaldoPage = () => {
       <ListView.Content loading={isFetching || isPending}>
         <GenericTable
           data={saldo?.data ?? []}
-          columnDefs={bankSaldoColumns}
+          columnDefs={podotchetSaldoColumns}
           onEdit={handleClickEdit}
           footer={
             <FooterRow>
@@ -138,12 +139,12 @@ const BankSaldoPage = () => {
           }
         />
       </ListView.Content>
-      <BankSaldoDialog
+      <PodotchetSaldoDialog
         open={dialogToggle.isOpen}
         onOpenChange={dialogToggle.setOpen}
         selected={selected}
       />
-      <BankSaldoMonthlyTrackerDialog
+      <PodotchetSaldoMonthlyTrackerDialog
         open={monthlyTrackerToggle.isOpen}
         onOpenChange={monthlyTrackerToggle.setOpen}
         onSelect={(month) => {
@@ -154,4 +155,4 @@ const BankSaldoPage = () => {
   )
 }
 
-export default BankSaldoPage
+export default PodotchetSaldoPage

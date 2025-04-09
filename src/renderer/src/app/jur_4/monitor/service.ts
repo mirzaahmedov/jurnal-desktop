@@ -1,8 +1,9 @@
 import type { PodotchetMonitor, ResponseMeta } from '@/common/models'
 
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
+import { jur4_schet, main_schet } from '@/common/features/crud/middleware'
 
-type SummaObject = {
+interface SummaObject {
   summa: number
   prixod_sum: number
   rasxod_sum: number
@@ -26,7 +27,7 @@ interface PodotchetMonitorMeta
   rasxod_sum: number
   summa_object: SummaObject
 }
-const podotchetMonitoringService = new CRUDService<
+export const PodotchetMonitorService = new CRUDService<
   PodotchetMonitor,
   undefined,
   undefined,
@@ -34,5 +35,5 @@ const podotchetMonitoringService = new CRUDService<
 >({
   endpoint: ApiEndpoints.podotchet_monitoring
 })
-
-export { podotchetMonitoringService }
+  .use(main_schet())
+  .use(jur4_schet())

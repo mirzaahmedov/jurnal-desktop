@@ -8,6 +8,7 @@ export const useSaldoControllerStore = create<SaldoControllerStore>((set, get) =
     [SaldoNamespace.JUR_1]: [],
     [SaldoNamespace.JUR_2]: [],
     [SaldoNamespace.JUR_3]: [],
+    [SaldoNamespace.JUR_4]: [],
     [SaldoNamespace.JUR_7]: []
   },
   enqueueMonth: (ns, ...values) => {
