@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next'
 import { type Location, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
-import { mainSchetQueryKeys, mainSchetService } from '@/app/region-spravochnik/main-schet'
+import { MainSchetQueryKeys, MainSchetService } from '@/app/region-spravochnik/main-schet'
 import { organizationQueryKeys, organizationService } from '@/app/region-spravochnik/organization'
 import { Button } from '@/common/components/ui/button'
 import { useRequisitesStore } from '@/common/features/requisites'
@@ -46,8 +46,8 @@ const ShartnomaDetailsPage = () => {
     enabled: id !== 'create'
   })
   const { data: main_schet } = useQuery({
-    queryKey: [mainSchetQueryKeys.getById, main_schet_id],
-    queryFn: mainSchetService.getById
+    queryKey: [MainSchetQueryKeys.getById, main_schet_id],
+    queryFn: MainSchetService.getById
   })
   const { data: organization } = useQuery({
     queryKey: [organizationQueryKeys.getById, shartnoma?.data?.spravochnik_organization_id],

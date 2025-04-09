@@ -12,7 +12,7 @@ import { useSelectedMonthStore } from '@/common/features/selected-month'
 
 import { KassaSaldoQueryKeys } from '../config'
 import { KassaSaldoService } from '../service'
-import { Jur1SaldoUpdateManager } from './saldo-update-manager'
+import { KassaSaldoUpdateManager } from './saldo-update-manager'
 
 export const Jur1SaldoController = () => {
   const queryClient = useQueryClient()
@@ -59,7 +59,7 @@ export const Jur1SaldoController = () => {
         isCreating={isPending}
         onCreate={handleCreate}
       />
-      <Jur1SaldoUpdateManager />
+      <KassaSaldoUpdateManager />
     </>
   )
 }

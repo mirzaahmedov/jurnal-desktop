@@ -6,9 +6,9 @@ import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 import { SpravochnikSearchField } from '@/common/features/filters/search/search-filter-spravochnik'
 import { extendObject } from '@/common/lib/utils'
 
-import { mainSchetColumns } from './columns'
+import { MainSchetColumns } from './columns'
 
-export const mainSchetService = new CRUDService<MainSchet, MainSchetFormValues>({
+export const MainSchetService = new CRUDService<MainSchet, MainSchetFormValues>({
   endpoint: ApiEndpoints.main_schet
 })
 
@@ -17,8 +17,8 @@ export const createMainSchetSpravochnik = (config: SpravochnikHookOptions<MainSc
     {
       title: 'Выберите основной счет',
       endpoint: ApiEndpoints.main_schet,
-      columnDefs: mainSchetColumns,
-      service: mainSchetService,
+      columnDefs: MainSchetColumns,
+      service: MainSchetService,
       filters: [SpravochnikSearchField]
     } satisfies typeof config,
     config

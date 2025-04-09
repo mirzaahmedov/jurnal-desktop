@@ -7,6 +7,7 @@ export interface KassaSaldo {
   user_id: number
   created_at: string
   updated_at: string
+  updated: boolean
   isdeleted: boolean
   budjet_id: number
   date_saldo: string

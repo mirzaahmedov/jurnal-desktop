@@ -5,7 +5,7 @@ import { useQuery } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
-import { mainSchetService } from '@/app/region-spravochnik/main-schet'
+import { MainSchetService } from '@/app/region-spravochnik/main-schet'
 import { BudgetService, budjetQueryKeys } from '@/app/super-admin/budjet'
 import { SelectField } from '@/common/components'
 import { FormElement } from '@/common/components/form'
@@ -61,7 +61,7 @@ export const RequisitesDialog = ({ open, onOpenChange }: RequisitesDialogProps) 
 
   const { data: main_schet } = useQuery({
     queryKey: [RequisitesQueryKeys.getMainSchetById, form.watch('main_schet_id')],
-    queryFn: mainSchetService.getById,
+    queryFn: MainSchetService.getById,
     enabled: !!form.watch('main_schet_id')
   })
 

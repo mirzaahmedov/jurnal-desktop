@@ -92,7 +92,7 @@ const KassaSaldoPage = () => {
       title: t('pages.saldo'),
       breadcrumbs: [
         {
-          title: t('pages.organization')
+          title: t('pages.kassa')
         }
       ],
       content: KassaSaldoFilters,
@@ -127,6 +127,9 @@ const KassaSaldoPage = () => {
           data={saldo?.data ?? []}
           columnDefs={kassaSaldoColumns}
           onEdit={handleClickEdit}
+          getRowEditable={(row) => {
+            return row.updated
+          }}
           footer={
             <FooterRow>
               <FooterCell

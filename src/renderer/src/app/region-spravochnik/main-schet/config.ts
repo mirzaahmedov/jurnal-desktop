@@ -2,7 +2,7 @@ import { z } from 'zod'
 
 import { withPreprocessor } from '@/common/lib/validation'
 
-export const mainSchetQueryKeys = {
+export const MainSchetQueryKeys = {
   getAll: 'main-schet/all',
   getById: 'main-schet',
   create: 'main-schet/create',

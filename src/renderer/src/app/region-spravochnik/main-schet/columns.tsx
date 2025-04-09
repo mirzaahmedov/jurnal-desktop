@@ -7,7 +7,7 @@ import { DataList } from '@/common/components/data-list'
 import { HoverInfoCell } from '@/common/components/table/renderers'
 import { IDCell } from '@/common/components/table/renderers/id'
 
-export const mainSchetColumns: ColumnDef<MainSchet>[] = [
+export const MainSchetColumns: ColumnDef<MainSchet>[] = [
   {
     key: 'id',
     renderCell: IDCell

@@ -12,7 +12,11 @@ import { useConfirm } from '@/common/features/confirm'
 import { SearchFilterDebounced } from '@/common/features/filters/search/search-filter-debounced'
 import { useSearchFilter } from '@/common/features/filters/search/search-filter-debounced'
 import { useRequisitesStore } from '@/common/features/requisites'
-import { SaldoNamespace, handleSaldoResponseDates } from '@/common/features/saldo'
+import {
+  SaldoNamespace,
+  handleSaldoErrorDates,
+  handleSaldoResponseDates
+} from '@/common/features/saldo'
 import {
   useSelectedMonthStore,
   validateDateWithinSelectedMonth
@@ -65,7 +69,7 @@ const AvansPage = () => {
       handleSaldoResponseDates(SaldoNamespace.JUR_4, res)
     },
     onError(err) {
-      handleSaldoResponseDates(SaldoNamespace.JUR_4, err)
+      handleSaldoErrorDates(SaldoNamespace.JUR_4, err)
     }
   })
 

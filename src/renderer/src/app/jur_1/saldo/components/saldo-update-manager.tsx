@@ -12,7 +12,7 @@ import {
 
 import { KassaSaldoService } from '../service'
 
-export const Jur1SaldoUpdateManager = () => {
+export const KassaSaldoUpdateManager = () => {
   const queryClient = useQueryClient()
   const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
 

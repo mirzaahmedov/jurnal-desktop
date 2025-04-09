@@ -6,7 +6,7 @@ import { ArrowLeft, LogOut, Plus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Link, useLocation } from 'react-router-dom'
 
-import { mainSchetQueryKeys, mainSchetService } from '@/app/region-spravochnik/main-schet'
+import { MainSchetQueryKeys, MainSchetService } from '@/app/region-spravochnik/main-schet'
 import { Button } from '@/common/components/ui/button'
 import { useAuthenticationStore } from '@/common/features/auth'
 import { useRequisitesStore } from '@/common/features/requisites'
@@ -27,8 +27,8 @@ export const Header = () => {
   const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
 
   const { data } = useQuery({
-    queryKey: [mainSchetQueryKeys.getById, main_schet_id],
-    queryFn: mainSchetService.getById,
+    queryKey: [MainSchetQueryKeys.getById, main_schet_id],
+    queryFn: MainSchetService.getById,
     enabled: !!main_schet_id
   })
 

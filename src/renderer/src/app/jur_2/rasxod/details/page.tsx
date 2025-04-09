@@ -11,7 +11,7 @@ import { type Location, useLocation, useNavigate, useParams } from 'react-router
 import { toast } from 'react-toastify'
 
 import { createShartnomaSpravochnik } from '@/app/jur_3/shartnoma'
-import { mainSchetQueryKeys, mainSchetService } from '@/app/region-spravochnik/main-schet'
+import { MainSchetQueryKeys, MainSchetService } from '@/app/region-spravochnik/main-schet'
 import { createOrganizationSpravochnik } from '@/app/region-spravochnik/organization'
 import { AccountBalance, Fieldset } from '@/common/components'
 import { EditableTable } from '@/common/components/editable-table'
@@ -131,8 +131,8 @@ const BankRasxodDetailtsPage = () => {
   )
 
   const { data: main_schet } = useQuery({
-    queryKey: [mainSchetQueryKeys.getAll, main_schet_id],
-    queryFn: mainSchetService.getById
+    queryKey: [MainSchetQueryKeys.getAll, main_schet_id],
+    queryFn: MainSchetService.getById
   })
 
   const { data: monitor, isFetching: isFetchingMonitor } = useQuery({

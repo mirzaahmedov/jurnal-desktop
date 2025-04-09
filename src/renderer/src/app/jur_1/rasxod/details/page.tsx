@@ -11,7 +11,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
 import { kassaMonitorQueryKeys, kassaMonitorService } from '@/app/jur_1/monitor'
-import { mainSchetQueryKeys, mainSchetService } from '@/app/region-spravochnik/main-schet'
+import { MainSchetQueryKeys, MainSchetService } from '@/app/region-spravochnik/main-schet'
 import { createPodotchetSpravochnik } from '@/app/region-spravochnik/podotchet'
 import { AccountBalance, Fieldset } from '@/common/components'
 import { EditableTable } from '@/common/components/editable-table'
@@ -96,8 +96,8 @@ const KassaRasxodDetailtsPage = () => {
   )
 
   const { data: main_schet } = useQuery({
-    queryKey: [mainSchetQueryKeys.getById, main_schet_id],
-    queryFn: mainSchetService.getById,
+    queryKey: [MainSchetQueryKeys.getById, main_schet_id],
+    queryFn: MainSchetService.getById,
     enabled: !!main_schet_id
   })
   const { data: monitor, isFetching: isFetchingMonitor } = useQuery({

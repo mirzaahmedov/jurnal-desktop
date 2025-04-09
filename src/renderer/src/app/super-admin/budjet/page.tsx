@@ -11,7 +11,7 @@ import { useToggle } from '@/common/hooks/use-toggle'
 import { useLayout } from '@/common/layout/store'
 
 import { budgetColumns } from './columns'
-import { budjetQueryKeys } from './constants'
+import { budjetQueryKeys } from './config'
 import BudgetDialog from './dialog'
 import { BudgetService } from './service'
 

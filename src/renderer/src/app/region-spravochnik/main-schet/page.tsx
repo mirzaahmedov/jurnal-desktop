@@ -17,10 +17,10 @@ import { useToggle } from '@/common/hooks/use-toggle'
 import { useLayoutStore } from '@/common/layout/store'
 import { ListView } from '@/common/views'
 
-import { mainSchetColumns } from './columns'
-import { mainSchetQueryKeys } from './config'
+import { MainSchetColumns } from './columns'
+import { MainSchetQueryKeys } from './config'
 import { MainSchetDialog } from './dialog'
-import { mainSchetService } from './service'
+import { MainSchetService } from './service'
 
 const MainSchetPage = () => {
   const [selected, setSelected] = useState<MainSchet | null>(null)
@@ -38,22 +38,22 @@ const MainSchetPage = () => {
 
   const { data: mainSchets, isFetching } = useQuery({
     queryKey: [
-      mainSchetQueryKeys.getAll,
+      MainSchetQueryKeys.getAll,
       {
         ...pagination,
         budjet_id,
         search
       }
     ],
-    queryFn: mainSchetService.getAll
+    queryFn: MainSchetService.getAll
   })
   const { mutate: deleteMainSchet, isPending } = useMutation({
-    mutationKey: [mainSchetQueryKeys.delete],
-    mutationFn: mainSchetService.delete,
+    mutationKey: [MainSchetQueryKeys.delete],
+    mutationFn: MainSchetService.delete,
     onSuccess(res) {
       toast.success(res?.message)
       queryClient.invalidateQueries({
-        queryKey: [mainSchetQueryKeys.getAll]
+        queryKey: [MainSchetQueryKeys.getAll]
       })
       queryClient.invalidateQueries({
         queryKey: [RequisitesQueryKeys.duplicates]
@@ -96,7 +96,7 @@ const MainSchetPage = () => {
       <ListView.Content loading={isFetching || isPending}>
         <GenericTable
           data={mainSchets?.data ?? []}
-          columnDefs={mainSchetColumns}
+          columnDefs={MainSchetColumns}
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}
         />

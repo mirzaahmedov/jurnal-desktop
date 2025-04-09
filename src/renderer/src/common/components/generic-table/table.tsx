@@ -29,6 +29,7 @@ export const GenericTable = <T extends object>(props: GenericTableProps<T>) => {
     placeholder,
     getRowId = defaultGetRowId,
     getRowKey = getRowId,
+    getRowEditable = () => true,
     getColumnSorted,
     disabledIds = [],
     selectedIds = [],
@@ -244,7 +245,7 @@ export const GenericTable = <T extends object>(props: GenericTableProps<T>) => {
                     }}
                   >
                     <div className="flex items-center whitespace-nowrap w-full gap-1">
-                      {onEdit && (
+                      {onEdit && getRowEditable(row) && (
                         <Button
                           variant="ghost"
                           size="icon"

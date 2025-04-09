@@ -12,7 +12,7 @@ import { toast } from 'react-toastify'
 import { bankQueryKeys } from '@/app/super-admin/bank/config'
 import { bankService } from '@/app/super-admin/bank/service'
 import { BudgetService } from '@/app/super-admin/budjet'
-import { budjetQueryKeys } from '@/app/super-admin/budjet/constants'
+import { budjetQueryKeys } from '@/app/super-admin/budjet/config'
 import { AutoComplete, SelectField } from '@/common/components'
 import { FormElement } from '@/common/components/form'
 import { Button } from '@/common/components/ui/button'
@@ -34,8 +34,8 @@ import {
 import { Input } from '@/common/components/ui/input'
 import { RequisitesQueryKeys, useRequisitesStore } from '@/common/features/requisites'
 
-import { MainSchetFormSchema, defaultValues, mainSchetQueryKeys } from './config'
-import { mainSchetService } from './service'
+import { MainSchetFormSchema, MainSchetQueryKeys, defaultValues } from './config'
+import { MainSchetService } from './service'
 
 export interface MainSchetDialogProps {
   open: boolean
@@ -77,13 +77,13 @@ export const MainSchetDialog = ({
   })
 
   const { mutate: createMainSchet, isPending: isCreatingMainSchet } = useMutation({
-    mutationKey: [mainSchetQueryKeys.create],
-    mutationFn: mainSchetService.create,
+    mutationKey: [MainSchetQueryKeys.create],
+    mutationFn: MainSchetService.create,
     onSuccess(res) {
       toast.success(res?.message)
       form.reset(defaultValues)
       queryClient.invalidateQueries({
-        queryKey: [mainSchetQueryKeys.getAll]
+        queryKey: [MainSchetQueryKeys.getAll]
       })
       queryClient.invalidateQueries({
         queryKey: [RequisitesQueryKeys.duplicates]
@@ -92,13 +92,13 @@ export const MainSchetDialog = ({
     }
   })
   const { mutate: updateMainSchet, isPending: isUpdatingMainSchet } = useMutation({
-    mutationKey: [mainSchetQueryKeys.update],
-    mutationFn: mainSchetService.update,
+    mutationKey: [MainSchetQueryKeys.update],
+    mutationFn: MainSchetService.update,
     onSuccess(res) {
       toast.success(res?.message)
       form.reset(defaultValues)
       queryClient.invalidateQueries({
-        queryKey: [mainSchetQueryKeys.getAll]
+        queryKey: [MainSchetQueryKeys.getAll]
       })
       queryClient.invalidateQueries({
         queryKey: [RequisitesQueryKeys.duplicates]

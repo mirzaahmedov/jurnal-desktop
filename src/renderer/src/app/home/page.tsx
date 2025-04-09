@@ -1,7 +1,7 @@
 import logo from '@resources/logo.svg'
 import { useQuery } from '@tanstack/react-query'
 
-import { mainSchetQueryKeys, mainSchetService } from '@/app/region-spravochnik/main-schet'
+import { MainSchetQueryKeys, MainSchetService } from '@/app/region-spravochnik/main-schet'
 import { useRequisitesStore } from '@/common/features/requisites'
 import { useLayout } from '@/common/layout/store'
 
@@ -9,8 +9,8 @@ const HomePage = () => {
   const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
 
   const { data: main_schet, isFetching } = useQuery({
-    queryKey: [mainSchetQueryKeys.getById, main_schet_id],
-    queryFn: mainSchetService.getById,
+    queryKey: [MainSchetQueryKeys.getById, main_schet_id],
+    queryFn: MainSchetService.getById,
     enabled: !!main_schet_id
   })
 

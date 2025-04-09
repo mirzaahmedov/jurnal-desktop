@@ -31,7 +31,7 @@ export const MonthlySaldoTracker = ({
   })
 
   return (
-    <div className="p-3">
+    <div className="p-3 relative">
       <div className="flex flex-col items-center gap-5">
         <div
           className="relative mx-auto grid grid-cols-4 border-t border-l"

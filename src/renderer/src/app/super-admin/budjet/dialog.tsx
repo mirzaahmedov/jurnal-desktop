@@ -26,7 +26,7 @@ import {
 import { Input } from '@/common/components/ui/input'
 import { useToast } from '@/common/hooks/use-toast'
 
-import { budjetQueryKeys } from './constants'
+import { budjetQueryKeys } from './config'
 import { BudgetFormSchema, type BudgetFormValues, BudgetService } from './service'
 
 type BudgetDialogProps = {

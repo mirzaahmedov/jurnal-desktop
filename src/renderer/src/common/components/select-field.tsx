@@ -17,18 +17,19 @@ import { cn } from '@/common/lib/utils'
 import { Button } from './ui/button'
 import { FormControl } from './ui/form'
 
-export type SelectFieldProps<T> = SelectProps & {
+export type SelectFieldProps<T extends object> = SelectProps & {
   withFormControl?: boolean
   withReset?: boolean
   placeholder?: string
   options: T[] | readonly T[]
-  getOptionLabel(data: T): ReactNode
-  getOptionValue(data: T): string | number
+  getOptionLabel: (data: NoInfer<T>) => ReactNode
+  getOptionValue: (data: NoInfer<T>) => string | number
+  onOptionSelect?: (option: NoInfer<T>) => void
   triggerClassName?: string
   tabIndex?: number
 }
 
-const SelectFieldComponent = <T extends Record<string, unknown>>(
+const SelectFieldComponent = <T extends object>(
   {
     withFormControl = false,
     withReset = false,
@@ -41,6 +42,7 @@ const SelectFieldComponent = <T extends Record<string, unknown>>(
     tabIndex,
     value,
     onValueChange,
+    onOptionSelect,
     ...props
   }: SelectFieldProps<T>,
   ref: ForwardedRef<HTMLSpanElement>
@@ -113,6 +115,9 @@ const SelectFieldComponent = <T extends Record<string, unknown>>(
           <SelectItem
             key={getOptionValue(option)}
             value={String(getOptionValue(option))}
+            onSelect={() => {
+              onOptionSelect?.(option)
+            }}
           >
             {getOptionLabel(option)}
           </SelectItem>
@@ -122,6 +127,6 @@ const SelectFieldComponent = <T extends Record<string, unknown>>(
   )
 }
 
-export const SelectField = forwardRef(SelectFieldComponent) as <T>(
+export const SelectField = forwardRef(SelectFieldComponent) as <T extends object>(
   props: SelectFieldProps<T> & { ref?: ForwardedRef<HTMLSpanElement> }
 ) => ReturnType<typeof SelectFieldComponent>

@@ -1,4 +1,4 @@
-import type { Budjet } from '@/common/models'
+import type { MainSchet } from '@/common/models'
 
 import { useMemo } from 'react'
 
@@ -7,43 +7,50 @@ import { useTranslation } from 'react-i18next'
 
 import { SelectField, type SelectFieldProps } from '@/common/components'
 
-import { budjetQueryKeys } from './config'
-import { BudgetService } from './service'
+import { MainSchetQueryKeys } from './config'
+import { MainSchetService } from './service'
 
-export interface BudjetSelectProps
+export interface MainSchetSelectProps
   extends Omit<
-    SelectFieldProps<Budjet>,
+    SelectFieldProps<MainSchet>,
     'options' | 'value' | 'onValueChange' | 'getOptionValue' | 'getOptionLabel'
   > {
+  budjet_id?: number
   value?: number
   onValueChange?: (value: number) => void
   withOptionAll?: boolean
 }
-export const BudjetSelect = ({
+export const MainSchetSelect = ({
+  budjet_id,
   value,
   onValueChange,
   withOptionAll = false,
   ...props
-}: BudjetSelectProps) => {
+}: MainSchetSelectProps) => {
   const { t } = useTranslation()
-  const { data: budjets, isFetching } = useQuery({
-    queryKey: [budjetQueryKeys.getAll],
-    queryFn: BudgetService.getAll
+  const { data: mainSchets, isFetching } = useQuery({
+    queryKey: [
+      MainSchetQueryKeys.getAll,
+      {
+        budjet_id
+      }
+    ],
+    queryFn: MainSchetService.getAll
   })
 
   const options = useMemo(() => {
-    const budjetOptions = budjets?.data ?? []
-    if (withOptionAll && budjetOptions.length > 0) {
+    const mainSchetOptions = mainSchets?.data ?? []
+    if (withOptionAll && mainSchetOptions.length > 0) {
       return [
         {
           id: 0,
-          name: t('all')
-        },
-        ...budjetOptions
+          account_number: t('all')
+        } as MainSchet,
+        ...mainSchetOptions
       ]
     }
-    return budjetOptions
-  }, [budjets, withOptionAll])
+    return mainSchetOptions
+  }, [mainSchets, withOptionAll])
 
   return (
     <SelectField
@@ -53,9 +60,9 @@ export const BudjetSelect = ({
       }}
       disabled={isFetching}
       options={options}
-      getOptionLabel={(option) => option.name}
+      getOptionLabel={(option) => option.account_number}
       getOptionValue={(option) => option.id}
-      placeholder={t('budjet')}
+      placeholder={t('main-schet')}
       {...props}
     />
   )
