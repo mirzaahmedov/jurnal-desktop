@@ -10,9 +10,10 @@ import {
   useSaldoController
 } from '@/common/features/saldo'
 
+import { OrganSaldoQueryKeys } from '../config'
 import { OrganSaldoService } from '../service'
 
-export const Jur3SaldoUpdateManager = () => {
+export const OrganSaldoUpdateManager = () => {
   const queryClient = useQueryClient()
   const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
 
@@ -27,7 +28,7 @@ export const Jur3SaldoUpdateManager = () => {
     isPending,
     error
   } = useMutation({
-    mutationKey: [OrganSaldoService.create],
+    mutationKey: [OrganSaldoQueryKeys.create],
     mutationFn: OrganSaldoService.autoCreate,
     onSuccess(_, values) {
       const newQueue = dequeueMonth(values)
@@ -43,7 +44,7 @@ export const Jur3SaldoUpdateManager = () => {
       }
 
       queryClient.invalidateQueries({
-        queryKey: [OrganSaldoService.getAll]
+        queryKey: [OrganSaldoQueryKeys.getAll]
       })
     }
   })
@@ -65,6 +66,9 @@ export const Jur3SaldoUpdateManager = () => {
       onClose={() => {
         clearQueue()
         setCompleted([])
+        queryClient.invalidateQueries({
+          queryKey: [OrganSaldoQueryKeys.getAll]
+        })
       }}
     />
   )

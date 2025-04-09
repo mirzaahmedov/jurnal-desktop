@@ -53,7 +53,7 @@ import {
 
 import { Jur1SaldoController } from '@/app/jur_1/saldo/components/saldo-controller'
 import { Jur2SaldoController } from '@/app/jur_2/saldo/components/saldo-controller'
-import { Jur3SaldoController } from '@/app/jur_3/saldo/components/saldo-controller'
+import { OrganSaldoController } from '@/app/jur_3/saldo/components/saldo-controller'
 import { PodotchetSaldoController } from '@/app/jur_4/saldo/components/saldo-controller'
 import { Jur7SaldoController } from '@/app/jur_7/saldo/components/saldo-controller'
 import { adminRoles } from '@/app/super-admin/role'
@@ -227,7 +227,7 @@ export const getNavElements = (t: TFunction): NavElement[] => {
             {
               displayOnly: true,
               path: '',
-              title: <Jur3SaldoController />,
+              title: <OrganSaldoController />,
               icon: null
             }
           ])

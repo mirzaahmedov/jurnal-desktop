@@ -12,9 +12,9 @@ import { useSelectedMonthStore } from '@/common/features/selected-month'
 
 import { OrganSaldoQueryKeys } from '../config'
 import { OrganSaldoService } from '../service'
-import { Jur3SaldoUpdateManager } from './saldo-update-manager'
+import { OrganSaldoUpdateManager } from './saldo-update-manager'
 
-export const Jur3SaldoController = () => {
+export const OrganSaldoController = () => {
   const queryClient = useQueryClient()
   const startDate = useSelectedMonthStore((store) => store.startDate)
 
@@ -60,7 +60,7 @@ export const Jur3SaldoController = () => {
         isCreating={isPending}
         onCreate={handleCreate}
       />
-      <Jur3SaldoUpdateManager />
+      <OrganSaldoUpdateManager />
     </>
   )
 }

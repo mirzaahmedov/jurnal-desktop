@@ -25,7 +25,8 @@ import { useRequisitesStore } from '@/common/features/requisites'
 import {
   SaldoNamespace,
   handleSaldoErrorDates,
-  handleSaldoResponseDates
+  handleSaldoResponseDates,
+  useSaldoController
 } from '@/common/features/saldo'
 import {
   useSelectedMonthStore,
@@ -46,7 +47,7 @@ import {
   SummaFields
 } from '@/common/widget/form'
 
-import { defaultValues, queryKeys } from '../config'
+import { AktQueryKeys, defaultValues } from '../config'
 import { AktFormSchema, AktProvodkaFormSchema } from '../config'
 import { aktService } from '../service'
 import { provodkaColumns } from './provodki'
@@ -55,6 +56,9 @@ const AktDetailsPage = () => {
   const { t } = useTranslation(['app'])
   const { snippets, addSnippet, removeSnippet } = useSnippets({
     ns: 'akt'
+  })
+  const { queuedMonths } = useSaldoController({
+    ns: SaldoNamespace.JUR_3
   })
 
   const { main_schet_id, jur3_schet_id } = useRequisitesStore()
@@ -70,9 +74,13 @@ const AktDetailsPage = () => {
     defaultValues: defaultValues
   })
 
-  const { data: akt, isFetching: isFetchingAkt } = useQuery({
+  const {
+    data: akt,
+    isFetching: isFetchingAkt,
+    error
+  } = useQuery({
     queryKey: [
-      queryKeys.getById,
+      AktQueryKeys.getById,
       Number(id),
       {
         main_schet_id,
@@ -80,19 +88,19 @@ const AktDetailsPage = () => {
       }
     ],
     queryFn: aktService.getById,
-    enabled: id !== 'create'
+    enabled: id !== 'create' && !!main_schet_id && !queuedMonths.length
   })
   const { mutate: createAkt, isPending: isCreating } = useMutation({
-    mutationKey: [queryKeys.create],
+    mutationKey: [AktQueryKeys.create],
     mutationFn: aktService.create,
     onSuccess(res) {
       toast.success(res?.message)
       form.reset(defaultValues)
       queryClient.invalidateQueries({
-        queryKey: [queryKeys.getAll]
+        queryKey: [AktQueryKeys.getAll]
       })
       queryClient.invalidateQueries({
-        queryKey: [queryKeys.getById, id]
+        queryKey: [AktQueryKeys.getById, id]
       })
 
       navigate(-1)
@@ -104,16 +112,16 @@ const AktDetailsPage = () => {
   })
 
   const { mutate: updateAkt, isPending: isUpdating } = useMutation({
-    mutationKey: [queryKeys.update, id],
+    mutationKey: [AktQueryKeys.update, id],
     mutationFn: aktService.update,
     onSuccess(res) {
       toast.success(res?.message)
 
       queryClient.invalidateQueries({
-        queryKey: [queryKeys.getAll]
+        queryKey: [AktQueryKeys.getAll]
       })
       queryClient.invalidateQueries({
-        queryKey: [queryKeys.getById, id]
+        queryKey: [AktQueryKeys.getById, id]
       })
 
       navigate(-1)
@@ -241,6 +249,9 @@ const AktDetailsPage = () => {
       }
     })
   }, [setLayout, navigate, id, t])
+  useEffect(() => {
+    handleSaldoErrorDates(SaldoNamespace.JUR_3, error)
+  }, [error])
 
   useEffect(() => {
     const summa =
@@ -260,8 +271,6 @@ const AktDetailsPage = () => {
     form.reset(akt?.data ?? defaultValues)
     setPodvodki(akt?.data?.childs ?? defaultValues.childs)
   }, [setPodvodki, form, akt, id])
-
-  console.log({ errors: form.formState.errors })
 
   return (
     <DetailsView>

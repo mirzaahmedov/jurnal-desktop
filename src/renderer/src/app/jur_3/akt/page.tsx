@@ -16,7 +16,8 @@ import { useRequisitesStore } from '@/common/features/requisites'
 import {
   SaldoNamespace,
   handleSaldoErrorDates,
-  handleSaldoResponseDates
+  handleSaldoResponseDates,
+  useSaldoController
 } from '@/common/features/saldo'
 import {
   useSelectedMonthStore,
@@ -27,8 +28,8 @@ import { useLayoutStore } from '@/common/layout/store'
 import { formatNumber } from '@/common/lib/format'
 import { ListView } from '@/common/views'
 
-import { columns } from './columns'
-import { queryKeys } from './config'
+import { AktColumns } from './columns'
+import { AktQueryKeys } from './config'
 import { aktService } from './service'
 
 const AktPage = () => {
@@ -45,11 +46,18 @@ const AktPage = () => {
 
   const { confirm } = useConfirm()
   const { sorting, handleSort, getColumnSorted } = useTableSort()
+  const { queuedMonths } = useSaldoController({
+    ns: SaldoNamespace.JUR_3
+  })
   const { t } = useTranslation(['app'])
 
-  const { data: aktList, isFetching } = useQuery({
+  const {
+    data: aktList,
+    isFetching,
+    error
+  } = useQuery({
     queryKey: [
-      queryKeys.getAll,
+      AktQueryKeys.getAll,
       {
         main_schet_id,
         schet_id: jur3_schet_id,
@@ -59,17 +67,21 @@ const AktPage = () => {
         ...pagination
       }
     ],
-    queryFn: aktService.getAll
+    queryFn: aktService.getAll,
+    enabled: !!main_schet_id && !queuedMonths.length
   })
   const { mutate: deleteAkt, isPending: isDeletingAkt } = useMutation({
-    mutationKey: [queryKeys.delete],
+    mutationKey: [AktQueryKeys.delete],
     mutationFn: aktService.delete,
     onSuccess(res) {
       toast.success(res?.message)
-      queryClient.invalidateQueries({
-        queryKey: [queryKeys.getAll]
-      })
       handleSaldoResponseDates(SaldoNamespace.JUR_3, res)
+
+      requestAnimationFrame(() => {
+        queryClient.invalidateQueries({
+          queryKey: [AktQueryKeys.getAll]
+        })
+      })
     },
     onError(error) {
       handleSaldoErrorDates(SaldoNamespace.JUR_3, error)
@@ -101,6 +113,9 @@ const AktPage = () => {
       }
     })
   }, [setLayout, t, navigate])
+  useEffect(() => {
+    handleSaldoErrorDates(SaldoNamespace.JUR_3, error)
+  }, [error])
 
   return (
     <ListView>
@@ -119,6 +134,7 @@ const AktPage = () => {
           params={{
             main_schet_id,
             from: dates.from,
+            schet_id: jur3_schet_id,
             to: dates.to,
             excel: true
           }}
@@ -128,7 +144,7 @@ const AktPage = () => {
       <ListView.Content loading={isFetching || isDeletingAkt}>
         <GenericTable
           data={aktList?.data ?? []}
-          columnDefs={columns}
+          columnDefs={AktColumns}
           getRowId={(row) => row.id}
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}

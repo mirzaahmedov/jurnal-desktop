@@ -2,7 +2,7 @@ import { z } from 'zod'
 
 import { withPreprocessor } from '@/common/lib/validation'
 
-export const queryKeys = {
+export const AktQueryKeys = {
   getById: 'akt',
   getAll: 'akt/all',
   create: 'akt/create',

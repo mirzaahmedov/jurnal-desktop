@@ -11,7 +11,7 @@ import { ProvodkaCell } from '@/common/components/table/renderers/provodka-opera
 import { SummaCell } from '@/common/components/table/renderers/summa'
 import { formatLocaleDate } from '@/common/lib/format'
 
-export const columns: ColumnDef<Akt>[] = [
+export const AktColumns: ColumnDef<Akt>[] = [
   {
     sort: true,
     key: 'id',

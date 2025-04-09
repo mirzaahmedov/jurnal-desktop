@@ -3,14 +3,14 @@ import type { OrganSaldo } from '@/common/models'
 import { useEffect, useState } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { CalendarDays } from 'lucide-react'
+// import { CalendarDays } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
-import { FooterCell, FooterRow, GenericTable } from '@/common/components'
-import { Button } from '@/common/components/ui/button'
-import { ButtonGroup } from '@/common/components/ui/button-group'
+import { GenericTable } from '@/common/components'
+// import { Button } from '@/common/components/ui/button'
+// import { ButtonGroup } from '@/common/components/ui/button-group'
 import { useConfirm } from '@/common/features/confirm'
 import { useRequisitesStore } from '@/common/features/requisites'
 import {
@@ -20,11 +20,10 @@ import {
 } from '@/common/features/saldo'
 import { useKeyUp, useToggle } from '@/common/hooks'
 import { useLayoutStore } from '@/common/layout/store'
-import { formatNumber } from '@/common/lib/format'
 import { ListView } from '@/common/views'
 
 import { OrganSaldoColumns } from './columns'
-import { OrganSaldoMonthlyTrackerDialog } from './components/saldo-monthly-tracker-dialog'
+// import { OrganSaldoMonthlyTrackerDialog } from './components/saldo-monthly-tracker-dialog'
 import { OrganSaldoQueryKeys } from './config'
 import { OrganSaldoDialog } from './dialog'
 import { OrganSaldoFilters, useYearFilter } from './filters'
@@ -36,9 +35,9 @@ const OrganSaldoPage = () => {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const dialogToggle = useToggle()
-  const monthlyTrackerToggle = useToggle()
+  // const monthlyTrackerToggle = useToggle()
 
-  const [year, setYear] = useYearFilter()
+  const [year] = useYearFilter()
   const [selected, setSelected] = useState<OrganSaldo | null>(null)
 
   const { confirm } = useConfirm()
@@ -51,6 +50,7 @@ const OrganSaldoPage = () => {
       {
         main_schet_id,
         budjet_id,
+        schet_id: jur3_schet_id,
         year
       }
     ],
@@ -112,7 +112,7 @@ const OrganSaldoPage = () => {
 
   return (
     <ListView>
-      <ListView.Header>
+      {/* <ListView.Header>
         <ButtonGroup className="w-full flex items-center justify-end gap-2">
           <Button
             variant="ghost"
@@ -122,21 +122,13 @@ const OrganSaldoPage = () => {
             {t('monthly_saldo')}
           </Button>
         </ButtonGroup>
-      </ListView.Header>
+      </ListView.Header> */}
       <ListView.Content loading={isFetching || isPending}>
         <GenericTable
           data={saldo?.data ?? []}
           columnDefs={OrganSaldoColumns}
           onEdit={handleClickEdit}
-          footer={
-            <FooterRow>
-              <FooterCell
-                title={t('total')}
-                colSpan={4}
-                content={formatNumber(saldo?.meta?.summa ?? 0)}
-              />
-            </FooterRow>
-          }
+          getRowEditable={(row) => row.updated}
         />
       </ListView.Content>
       <OrganSaldoDialog
@@ -144,13 +136,13 @@ const OrganSaldoPage = () => {
         onOpenChange={dialogToggle.setOpen}
         selected={selected}
       />
-      <OrganSaldoMonthlyTrackerDialog
+      {/* <OrganSaldoMonthlyTrackerDialog
         open={monthlyTrackerToggle.isOpen}
         onOpenChange={monthlyTrackerToggle.setOpen}
         onSelect={(month) => {
           setYear(month.getFullYear())
         }}
-      />
+      /> */}
     </ListView>
   )
 }
