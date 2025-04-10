@@ -25,9 +25,9 @@ import { useLayoutStore } from '@/common/layout/store'
 import { ListView } from '@/common/views'
 
 import { mainbookColumns } from './columns'
-import { mainbookQueryKeys } from './config'
+import { MainbookQueryKeys } from './config'
 import { MainbookFilters, useYearFilter } from './filters'
-import { mainbookService } from './service'
+import { MainbookService } from './service'
 
 const MainbookPage = () => {
   const pagination = usePagination()
@@ -44,7 +44,7 @@ const MainbookPage = () => {
 
   const { data: mainbook, isFetching: isFetchingMainbook } = useQuery({
     queryKey: [
-      mainbookQueryKeys.getAll,
+      MainbookQueryKeys.getAll,
       {
         budjet_id,
         page: pagination.page,
@@ -52,15 +52,15 @@ const MainbookPage = () => {
         year
       }
     ],
-    queryFn: mainbookService.getAll
+    queryFn: MainbookService.getAll
   })
   const { mutate: deleteMainbook, isPending } = useMutation({
-    mutationKey: [mainbookQueryKeys.delete],
-    mutationFn: mainbookService.delete,
+    mutationKey: [MainbookQueryKeys.delete],
+    mutationFn: MainbookService.delete,
     onSuccess: (res) => {
       toast.success(res?.message)
       queryClient.invalidateQueries({
-        queryKey: [mainbookQueryKeys.getAll]
+        queryKey: [MainbookQueryKeys.getAll]
       })
     }
   })

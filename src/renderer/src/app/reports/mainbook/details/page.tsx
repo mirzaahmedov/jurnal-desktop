@@ -1,13 +1,14 @@
 import type { EditableTableMethods } from '@/common/components/editable-table'
 
-import { type KeyboardEvent, useEffect, useMemo, useRef } from 'react'
+import { type KeyboardEvent, useEffect, useMemo, useRef, useState } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { useForm } from 'react-hook-form'
+import { useFieldArray, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
+import { createEditorChangeHandler } from '@/common/components/editable-table/helpers'
 import { MonthPicker } from '@/common/components/month-picker'
 import { SearchInput } from '@/common/components/search-input'
 import { Button } from '@/common/components/ui/button'
@@ -16,12 +17,12 @@ import { useLayoutStore } from '@/common/layout/store'
 import { formatDate } from '@/common/lib/date'
 import { DetailsView } from '@/common/views'
 
-import { mainbookQueryKeys } from '../config'
-import { mainbookService } from '../service'
+import { MainbookQueryKeys } from '../config'
+import { MainbookService } from '../service'
 import { defaultValues } from './config'
+import { type MainbookAutoFillSubChild } from './interfaces'
 import { MainbookTable } from './mainbook-table'
 import { provodkiColumns } from './provodki'
-import { type MainbookAutoFillSubChild, autoFillMainbookData, getMainbookTypes } from './service'
 import { getMainbookColumns, transformGetByIdData, transformMainbookAutoFillData } from './utils'
 
 const MainbookDetailsPage = () => {
@@ -31,6 +32,8 @@ const MainbookDetailsPage = () => {
   const setLayout = useLayoutStore((store) => store.setLayout)
   const budjet_id = useRequisitesStore((store) => store.budjet_id)
 
+  const [isEditable, setEditable] = useState(false)
+
   const { id } = useParams()
   const { t } = useTranslation(['app'])
 
@@ -38,27 +41,73 @@ const MainbookDetailsPage = () => {
     defaultValues
   })
 
+  const { fields } = useFieldArray({
+    control: form.control,
+    name: 'childs'
+  })
+
   const { data: mainbook, isFetching } = useQuery({
-    queryKey: [mainbookQueryKeys.getById, Number(id)],
-    queryFn: mainbookService.getById,
+    queryKey: [MainbookQueryKeys.getById, Number(id)],
+    queryFn: MainbookService.getById,
     enabled: id !== 'create'
   })
   const { data: types, isFetching: isFetchingTypes } = useQuery({
     queryKey: [
-      mainbookQueryKeys.getTypes,
+      MainbookQueryKeys.getTypes,
       {
-        budjet_id
+        budjet_id: budjet_id!
       }
     ],
-    queryFn: getMainbookTypes
+    queryFn: MainbookService.getTypes,
+    enabled: !!budjet_id
   })
-  const { isPending: isAutoFillingMainbook, mutate: autoFillMainbook } = useMutation({
-    mutationKey: [mainbookQueryKeys.autoFill],
-    mutationFn: autoFillMainbookData,
+
+  const { isPending: isFetchingUniqueSchets, mutate: getUniqueSchets } = useMutation({
+    mutationKey: [MainbookQueryKeys.getUniqueSchets],
+    mutationFn: MainbookService.getUniqueSchets,
     onSuccess: (res) => {
-      if (res?.data) {
-        form.setValue('childs', transformMainbookAutoFillData(res.data))
+      const uniqueSchets = res.data?.schets ?? []
+      const childs = uniqueSchets.map((schet) => ({
+        schet: schet.schet,
+        '10_prixod': 0,
+        '10_rasxod': 0
+      }))
+      childs.push({
+        schet: t('total'),
+        '10_prixod': 0,
+        '10_rasxod': 0
+      })
+      form.setValue('childs', childs)
+      setEditable(true)
+    },
+    onError: () => {
+      form.setValue('childs', [])
+    }
+  })
+
+  const { isPending: isCheckingSaldo, mutate: checkSaldo } = useMutation({
+    mutationKey: [MainbookQueryKeys.getCheckSaldo],
+    mutationFn: MainbookService.getSaldoCheck,
+    onSuccess: () => {
+      autoFill({ year, month, budjet_id: budjet_id! })
+    },
+    onError: (error) => {
+      if ('status' in error && error.status === 404) {
+        getUniqueSchets({
+          budjet_id: budjet_id!
+        })
+        return
       }
+      autoFill({ year, month, budjet_id: budjet_id! })
+    }
+  })
+
+  const { isPending: isAutoFilling, mutate: autoFill } = useMutation({
+    mutationKey: [MainbookQueryKeys.getAutofill],
+    mutationFn: MainbookService.getAutofillData,
+    onSuccess: (res) => {
+      form.setValue('childs', transformMainbookAutoFillData(res.data ?? []))
+      setEditable(false)
     },
     onError: () => {
       form.setValue('childs', [])
@@ -66,21 +115,21 @@ const MainbookDetailsPage = () => {
   })
 
   const { mutate: createMainbook, isPending: isCreatingMainbook } = useMutation({
-    mutationFn: mainbookService.create,
+    mutationFn: MainbookService.create,
     onSuccess: (res) => {
       toast.success(res?.message)
       queryClient.invalidateQueries({
-        queryKey: [mainbookQueryKeys.getAll]
+        queryKey: [MainbookQueryKeys.getAll]
       })
       navigate(-1)
     }
   })
   const { mutate: updateMainbook, isPending: isUpdatingMainbook } = useMutation({
-    mutationFn: mainbookService.update,
+    mutationFn: MainbookService.update,
     onSuccess: (res) => {
       toast.success(res?.message)
       queryClient.invalidateQueries({
-        queryKey: [mainbookQueryKeys.getAll]
+        queryKey: [MainbookQueryKeys.getAll]
       })
       navigate(-1)
     }
@@ -122,13 +171,15 @@ const MainbookDetailsPage = () => {
   }, [setLayout, navigate, t, id])
   useEffect(() => {
     if (id === 'create') {
-      autoFillMainbook({ year, month, budjet_id: budjet_id! })
+      checkSaldo({
+        budjet_id: budjet_id!
+      })
     }
   }, [id, year, month, budjet_id])
 
   const columns = useMemo(
-    () => [...provodkiColumns, ...getMainbookColumns(types?.data ?? [])],
-    [types]
+    () => [...provodkiColumns, ...getMainbookColumns(types?.data ?? [], isEditable)],
+    [types, isEditable]
   )
 
   const onSubmit = form.handleSubmit((values) => {
@@ -189,10 +240,50 @@ const MainbookDetailsPage = () => {
     }
   }
 
+  const childs = form.watch('childs')
+  useEffect(() => {
+    if (!isEditable) {
+      return
+    }
+
+    const rows = childs.slice(0, childs.length - 1)
+    if (!rows.length) {
+      return
+    }
+
+    const itogo = {
+      schet: t('total'),
+      '10_prixod': 0,
+      '10_rasxod': 0
+    }
+
+    rows.forEach((child, index) => {
+      if (index !== childs.length - 1) {
+        itogo['10_rasxod'] += child[`10_rasxod`] || 0
+        itogo['10_prixod'] += child[`10_prixod`] || 0
+      }
+    })
+
+    rows.push(itogo)
+
+    if (
+      itogo['10_prixod'] !== childs[childs.length - 1]['10_prixod'] ||
+      itogo['10_rasxod'] !== childs[childs.length - 1]['10_rasxod']
+    ) {
+      form.setValue('childs', rows)
+    }
+  }, [childs, form, isEditable, t])
+
   return (
     <DetailsView className="h-full">
       <DetailsView.Content
-        loading={isFetching || isAutoFillingMainbook || isFetchingTypes}
+        loading={
+          isFetching ||
+          isAutoFilling ||
+          isFetchingTypes ||
+          isFetchingUniqueSchets ||
+          isCheckingSaldo
+        }
         className="overflow-hidden h-full pb-20"
       >
         <form
@@ -211,7 +302,7 @@ const MainbookDetailsPage = () => {
                     form.setValue('year', date.getFullYear())
                     form.setValue('month', date.getMonth() + 1)
                     if (id !== 'create') {
-                      autoFillMainbook({
+                      autoFill({
                         year: date.getFullYear(),
                         month: date.getMonth() + 1,
                         budjet_id: budjet_id!
@@ -222,8 +313,8 @@ const MainbookDetailsPage = () => {
                 {id !== 'create' ? (
                   <Button
                     type="button"
-                    onClick={() => autoFillMainbook({ year, month, budjet_id: budjet_id! })}
-                    loading={isAutoFillingMainbook}
+                    onClick={() => autoFill({ year, month, budjet_id: budjet_id! })}
+                    loading={isAutoFilling}
                   >
                     {t('autofill')}
                   </Button>
@@ -233,8 +324,11 @@ const MainbookDetailsPage = () => {
             <div className="overflow-auto scrollbar flex-1 relative">
               <MainbookTable
                 columns={columns}
-                data={form.watch('childs')}
+                data={fields}
                 methods={tableMethods}
+                onChange={createEditorChangeHandler({
+                  form
+                })}
               />
             </div>
           </div>

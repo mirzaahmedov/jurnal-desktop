@@ -7,7 +7,7 @@ import { useAuthenticationStore } from '@/common/features/auth'
 
 import { notify } from './notify'
 
-type ErrorResponse = {
+interface ErrorResponse {
   success: false
   message: string
   meta?: unknown
@@ -75,6 +75,10 @@ http.interceptors.response.use(
         variant: 'error',
         title: error?.message ?? t('something-went-wrong')
       })
+      throw error
+    }
+
+    if (error.config?.headers['notify-error'] === false) {
       throw error
     }
 

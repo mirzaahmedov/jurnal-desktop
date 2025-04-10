@@ -7,7 +7,6 @@ import {
   BadgeDollarSign,
   Banknote,
   Book,
-  BookDown,
   Building,
   Building2,
   CalendarCheck,
@@ -450,11 +449,6 @@ export const getNavElements = (t: TFunction): NavElement[] => {
               icon: Book
             },
             {
-              path: 'prixodbook',
-              title: t('pages.prixodbook'),
-              icon: BookDown
-            },
-            {
               path: 'prixod-schets',
               title: t('pages.prixod_schets'),
               icon: Percent
@@ -554,13 +548,6 @@ export const getNavElements = (t: TFunction): NavElement[] => {
           path: '/mainbook',
           title: t('pages.mainbook'),
           icon: Book
-        }
-      : null,
-    !is_super_admin
-      ? {
-          path: '/prixodbook',
-          title: t('pages.prixodbook'),
-          icon: BookDown
         }
       : null,
     !is_super_admin

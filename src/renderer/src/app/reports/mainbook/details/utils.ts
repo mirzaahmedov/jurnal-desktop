@@ -1,4 +1,4 @@
-import type { MainbookAutoFill, MainbookAutoFillSubChild, MainbookType } from './service'
+import type { MainbookAutoFill, MainbookAutoFillSubChild, MainbookType } from './interfaces'
 import type { EditableColumnDef } from '@/common/components/editable-table'
 import type { Mainbook } from '@/common/models'
 
@@ -77,10 +77,11 @@ export const transformGetByIdData = (types: Mainbook['childs']) => {
   return rows
 }
 
-export const getMainbookColumns = (types: MainbookType[]) => {
+export const getMainbookColumns = (types: MainbookType[], isEditable = false) => {
   return (
     types?.flatMap((type) => {
       const jurNum = type.name.match(/\d+/)?.[0]
+      const readOnly = isEditable && type.id === 10 ? false : true
       return [
         {
           key: type.id,
@@ -91,31 +92,29 @@ export const getMainbookColumns = (types: MainbookType[]) => {
           columns: [
             {
               key: `${type.id}_prixod`,
-              // width: 120,
-              // minWidth: 120,
               header: t('prixod'),
               headerClassName: 'text-center',
+              minWidth: type.id === 10 && isEditable ? 160 : undefined,
               Editor: createNumberEditor({
                 key: `${type.id}_prixod`,
-                readOnly: true,
+                readOnly,
                 defaultValue: 0,
                 inputProps: {
-                  adjustWidth: true
+                  adjustWidth: readOnly
                 }
               })
             },
             {
               key: `${type.id}_rasxod`,
-              // width: 120,
-              // minWidth: 120,
               header: t('rasxod'),
               headerClassName: 'text-center',
+              minWidth: type.id === 10 && isEditable ? 160 : undefined,
               Editor: createNumberEditor({
                 key: `${type.id}_rasxod`,
-                readOnly: true,
+                readOnly,
                 defaultValue: 0,
                 inputProps: {
-                  adjustWidth: true
+                  adjustWidth: readOnly
                 }
               })
             }

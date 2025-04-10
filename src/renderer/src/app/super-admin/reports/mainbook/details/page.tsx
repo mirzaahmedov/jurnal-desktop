@@ -9,8 +9,8 @@ import { toast } from 'react-toastify'
 
 import { MainbookTable } from '@/app/reports/mainbook/details/mainbook-table'
 import { type ProvodkaRow, provodkiColumns } from '@/app/reports/mainbook/details/provodki'
-import { getMainbookTypes } from '@/app/reports/mainbook/details/service'
 import { getMainbookColumns, transformGetByIdData } from '@/app/reports/mainbook/details/utils'
+import { MainbookService } from '@/app/reports/mainbook/service'
 import { MonthPicker } from '@/common/components/month-picker'
 import { SearchInput } from '@/common/components/search-input'
 import { Button } from '@/common/components/ui/button'
@@ -40,7 +40,7 @@ const AdminMainbookDetailsPage = () => {
   })
   const { data: types, isFetching: isFetchingTypes } = useQuery({
     queryKey: [mainbookQueryKeys.getTypes, {}],
-    queryFn: getMainbookTypes
+    queryFn: MainbookService.getTypes
   })
 
   const { mutate: updateMainbook, isPending: isUpdatingMainbook } = useMutation({

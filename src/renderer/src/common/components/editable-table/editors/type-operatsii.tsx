@@ -1,11 +1,11 @@
-import type { EditorComponentType } from './types'
+import type { EditorComponent } from './types'
 
 import { createTypeOperatsiiSpravochnik } from '@/app/region-spravochnik/type-operatsii'
 import { SpravochnikInput, useSpravochnik } from '@/common/features/spravochnik'
 
 export const createTypeOperatsiiEditor = <
   T extends { id_spravochnik_type_operatsii?: number }
->(): EditorComponentType<T> => {
+>(): EditorComponent<T> => {
   return ({ tabIndex, id, row, errors, onChange }) => {
     const typeOperatsiiSpravochnik = useSpravochnik(
       createTypeOperatsiiSpravochnik({
