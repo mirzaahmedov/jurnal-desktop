@@ -4,7 +4,7 @@ import type { JUR8Monitor } from '@/common/models'
 import { IDCell } from '@/common/components/table/renderers/id'
 import { MonthNameCell } from '@/common/components/table/renderers/month-name'
 
-export const Jur8MonitorColumns: ColumnDef<JUR8Monitor>[] = [
+export const JUR8MonitorColumns: ColumnDef<JUR8Monitor>[] = [
   {
     key: 'id',
     renderCell: IDCell,

@@ -59,6 +59,9 @@ const MainbookDetailsPage = () => {
       if (res?.data) {
         form.setValue('childs', transformMainbookAutoFillData(res.data))
       }
+    },
+    onError: () => {
+      form.setValue('childs', [])
     }
   })
 

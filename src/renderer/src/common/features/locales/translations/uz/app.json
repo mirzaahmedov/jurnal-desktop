@@ -11,7 +11,11 @@
     "rasxod-docs": "Harajatlar kitobi",
     "internal-docs": "Ichki aylanma kitobi",
     "kassa": "Kassa",
+    "kassa_rasxod": "Kassa xarajat",
+    "kassa_prixod": "Kassa kirim",
     "bank": "Bank",
+    "bank_rasxod": "Bank xarajat",
+    "bank_prixod": "Bank kirim",
     "organization": "Tashkilot",
     "organization-monitoring": "Tashkilot haqida",
     "shartnoma": "Shartnoma",
@@ -58,7 +62,12 @@
     "video_module": "Video moduli",
     "video_tutorials": "Video darslar",
     "prixodbook": "Kirim kitobi",
-    "prixod_schets": "Kirim schetlari"
+    "prixod_schets": "Kirim schetlari",
+    "schets": "Schetlar",
+    "jur8": "Moliyaviy tushumlar",
+    "jur7_prixod": "Jurnal 7 kirim",
+    "jur7_rasxod": "Jurnal 7 xarajat",
+    "jur7_internal": "Jurnal 7 ichki"
   },
   "locales": {
     "uz": "Oʻzbekcha",

@@ -322,18 +322,25 @@ export const getNavElements = (t: TFunction): NavElement[] => {
           ]
         }
       : null,
-    {
-      icon: NotepadText,
-      path: '/jur_8',
-      title: '№8 - МО',
-      children: [
-        {
-          icon: SquareActivity,
-          path: 'monitor',
-          title: t('pages.monitoring')
+    !is_super_admin
+      ? {
+          icon: NotepadText,
+          path: '/jur_8',
+          title: `№8 - МО (${t('pages.jur8')})`,
+          children: [
+            {
+              icon: SquareActivity,
+              path: 'monitor',
+              title: t('pages.monitoring')
+            },
+            {
+              icon: Percent,
+              path: 'schets',
+              title: t('pages.schets')
+            }
+          ]
         }
-      ]
-    },
+      : null,
     permissions.spravochnik
       ? {
           path: '/spravochnik',

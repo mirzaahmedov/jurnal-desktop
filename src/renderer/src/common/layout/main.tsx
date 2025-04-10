@@ -1,4 +1,4 @@
-import { Outlet } from 'react-router-dom'
+import { Outlet, useLocation } from 'react-router-dom'
 
 import { AuthGuard } from '@/common/features/auth'
 import { SpravochnikProvider } from '@/common/features/spravochnik'
@@ -7,6 +7,10 @@ import { Header } from './compoonents/header'
 import { Sidebar } from './compoonents/sidebar/sidebar'
 
 const MainLayout = () => {
+  const location = useLocation()
+
+  console.log(location.pathname)
+
   return (
     <div className="h-full flex">
       <Sidebar />

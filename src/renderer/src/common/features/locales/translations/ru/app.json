@@ -11,7 +11,11 @@
     "rasxod-docs": "Расходные документы",
     "internal-docs": "Внутрь. Пере. Документ",
     "kassa": "Касса",
+    "kassa_rasxod": "Касса расход",
+    "kassa_prixod": "Касса приход",
     "bank": "Банк",
+    "bank_rasxod": "Банк расход",
+    "bank_prixod": "Банк приход",
     "organization": "Организация",
     "organization-monitoring": "Об организации",
     "shartnoma": "Договор",
@@ -58,7 +62,12 @@
     "video_module": "Видео модуль",
     "video_tutorials": "Видеоуроки",
     "prixodbook": "Приходная книга",
-    "prixod_schets": "Приходные счета"
+    "prixod_schets": "Приходные счета",
+    "jur8": "Финансовые поступления",
+    "schets": "Счета",
+    "jur7_prixod": "Журнал 7 приход",
+    "jur7_rasxod": "Журнал 7 расход",
+    "jur7_internal": "Журнал 7 внутренний"
   },
   "locales": {
     "uz": "Узбекский",

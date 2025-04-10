@@ -11,6 +11,7 @@ import { DuplicateSchetsGuard } from '@/common/features/requisites/duplicate-sch
 import DashboardPage from './dashboard/page'
 import HomePage from './home/page'
 import { Jur7MonitorPage } from './jur_7/monitor/page'
+import JUR8SchetsPage from './jur_8/schet/page'
 import SigninPage from './sign-in'
 
 const KassaSaldoPage = lazy(() => import('./jur_1/saldo/page'))
@@ -19,7 +20,8 @@ const PodotchetOstatokPage = lazy(() => import('./jur_4/saldo/page'))
 
 const PrixodSchetsPage = lazy(() => import('./super-admin/prixod-schet/page'))
 
-const Jur8MonitorPage = lazy(() => import('./jur_8/monitor/page'))
+const JUR8MonitorPage = lazy(() => import('./jur_8/monitor/page'))
+const JUR8MonitorDetailsPage = lazy(() => import('./jur_8/monitor/details/page'))
 
 const AdminVideoTutorialsPage = lazy(() => import('./super-admin/video-tutorials/page'))
 const VideoTutorialsPage = lazy(() => import('./video-tutorials/page'))
@@ -469,7 +471,15 @@ export const routes: RouteObject[] = [
         children: [
           {
             path: 'monitor',
-            element: <Jur8MonitorPage />
+            element: <JUR8MonitorPage />
+          },
+          {
+            path: 'monitor/:id',
+            element: <JUR8MonitorDetailsPage />
+          },
+          {
+            path: 'schets',
+            element: <JUR8SchetsPage />
           }
         ]
       },
