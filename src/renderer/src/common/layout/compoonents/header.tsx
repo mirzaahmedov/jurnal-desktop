@@ -17,13 +17,22 @@ import { SelectedMonth } from './selected-month'
 import { Settings } from './settings'
 import { UserProfile } from './user-profile'
 
+const getSaldoEnabled = (pathname: string) => {
+  return (
+    pathname.startsWith('/kassa') ||
+    pathname.startsWith('/bank') ||
+    pathname.startsWith('/organization') ||
+    pathname.startsWith('/accountable') ||
+    pathname.startsWith('/journal-7')
+  )
+}
+
 export const Header = () => {
   const { t } = useTranslation()
-
   const { title, content: Content, breadcrumbs, onCreate, onBack } = useLayoutStore()
   const { user, setUser } = useAuthenticationStore()
-  const { pathname } = useLocation()
 
+  const location = useLocation()
   const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
 
   const { data } = useQuery({
@@ -37,6 +46,8 @@ export const Header = () => {
   const handleLogout = () => {
     setUser(null)
   }
+
+  const isSaldoEnabled = getSaldoEnabled(location.pathname)
 
   return (
     <header className="px-5 py-4 flex justify-between border-b border-border/50 bg-white z-[51] sticky top-0">
@@ -75,7 +86,7 @@ export const Header = () => {
         </div>
       </div>
       <div className="flex-1 flex items-center px-5 gap-5">
-        <div className="flex-1">{Content && <Content key={pathname} />}</div>
+        <div className="flex-1">{Content && <Content key={location.pathname} />}</div>
         <div>
           {typeof onCreate === 'function' ? (
             <Button onClick={onCreate}>
@@ -86,12 +97,14 @@ export const Header = () => {
         </div>
       </div>
       <div className="flex items-center gap-2">
-        <div className="pr-2.5">
-          <SelectedMonth />
-        </div>
+        {isSaldoEnabled ? (
+          <div className="pr-2.5">
+            <SelectedMonth />
+          </div>
+        ) : null}
         <Requisites
           data={main_schet}
-          pathname={pathname}
+          pathname={location.pathname}
         />
         {user ? <UserProfile user={user} /> : null}
         <Settings />

@@ -7,11 +7,12 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
-import { GenericTable } from '@/common/components'
+import { FooterCell, FooterRow, GenericTable } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
 import { useRequisitesStore } from '@/common/features/requisites'
 import { usePagination } from '@/common/hooks'
 import { useLayoutStore } from '@/common/layout/store'
+import { formatNumber } from '@/common/lib/format'
 import { ListView } from '@/common/views'
 
 import { JUR8MonitorColumns } from './columns'
@@ -87,6 +88,15 @@ const JUR8MonitorPage = () => {
           data={monitoring?.data ?? []}
           onEdit={handleEdit}
           onDelete={handleDelete}
+          footer={
+            <FooterRow>
+              <FooterCell
+                colSpan={4}
+                title={t('total')}
+                content={formatNumber(monitoring?.meta?.summa ?? 0)}
+              />
+            </FooterRow>
+          }
         />
       </ListView.Content>
       <ListView.Footer>

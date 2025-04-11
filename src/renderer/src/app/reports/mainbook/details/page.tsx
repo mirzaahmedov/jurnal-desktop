@@ -164,7 +164,7 @@ const MainbookDetailsPage = () => {
         setEditable(true)
       }
     }
-  }, [form, mainbook, id])
+  }, [form, mainbook, id, startDate])
   useEffect(() => {
     setLayout({
       title: id === 'create' ? t('create') : t('edit'),

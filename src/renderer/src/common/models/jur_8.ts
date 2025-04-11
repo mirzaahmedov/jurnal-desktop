@@ -3,6 +3,7 @@ export interface JUR8Monitor {
   year: number
   month: number
   budjet_id: number
+  summa: number
   user_id: number
   created_at: string
   updated_at: string

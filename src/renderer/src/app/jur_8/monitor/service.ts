@@ -1,16 +1,23 @@
-import type { JUR8Monitor, JUR8MonitorChild, Response } from '@/common/models'
+import type { JUR8Monitor, JUR8MonitorChild, Response, ResponseMeta } from '@/common/models'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 import { budjet } from '@/common/features/crud/middleware'
 
+interface JUR8MonitorFormValues {
+  year: number
+  month: number
+  childs: any[]
+}
+interface JUR8MonitorMeta extends ResponseMeta {
+  summa: number
+}
+
 class JUR8MonitorServiceBuilder extends CRUDService<
   JUR8Monitor,
-  {
-    year: number
-    month: number
-    childs: any[]
-  }
+  JUR8MonitorFormValues,
+  JUR8MonitorFormValues,
+  JUR8MonitorMeta
 > {
   constructor() {
     super({

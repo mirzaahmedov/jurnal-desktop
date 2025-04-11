@@ -12,6 +12,7 @@ import { MonthPicker } from '@/common/components/month-picker'
 import { SearchInput } from '@/common/components/search-input'
 import { Button } from '@/common/components/ui/button'
 import { useRequisitesStore } from '@/common/features/requisites'
+import { useSelectedMonthStore } from '@/common/features/selected-month'
 import { useLayoutStore } from '@/common/layout/store'
 import { formatDate } from '@/common/lib/date'
 import { DetailsView } from '@/common/views'
@@ -26,6 +27,7 @@ const JUR8MonitorDetailsPage = () => {
   const tableMethods = useRef<EditableTableMethods>(null)
   const navigate = useNavigate()
   const queryClient = useQueryClient()
+  const startDate = useSelectedMonthStore((store) => store.startDate)
   const setLayout = useLayoutStore((store) => store.setLayout)
   const budjet_id = useRequisitesStore((store) => store.budjet_id)
 
@@ -33,7 +35,11 @@ const JUR8MonitorDetailsPage = () => {
   const { t } = useTranslation(['app'])
 
   const form = useForm({
-    defaultValues
+    defaultValues: {
+      ...defaultValues,
+      year: startDate.getFullYear(),
+      month: startDate.getMonth() + 1
+    }
   })
 
   const { data: monitor, isFetching } = useQuery({
@@ -95,8 +101,8 @@ const JUR8MonitorDetailsPage = () => {
   useEffect(() => {
     if (id === 'create') {
       form.reset({
-        month: new Date().getMonth() + 1,
-        year: new Date().getFullYear(),
+        year: startDate.getFullYear(),
+        month: startDate.getMonth() + 1,
         childs: []
       })
       return
@@ -122,7 +128,7 @@ const JUR8MonitorDetailsPage = () => {
         childs: childs
       })
     }
-  }, [form, monitor, id])
+  }, [form, monitor, id, startDate])
   useEffect(() => {
     setLayout({
       title: id === 'create' ? t('create') : t('edit'),
