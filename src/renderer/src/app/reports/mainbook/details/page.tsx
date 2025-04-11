@@ -1,3 +1,4 @@
+import type { MainbookAutoFillSubChild } from './interfaces'
 import type { EditableTableMethods } from '@/common/components/editable-table'
 
 import { type KeyboardEvent, useEffect, useMemo, useRef, useState } from 'react'
@@ -20,7 +21,6 @@ import { DetailsView } from '@/common/views'
 import { MainbookQueryKeys } from '../config'
 import { MainbookService } from '../service'
 import { defaultValues } from './config'
-import { type MainbookAutoFillSubChild } from './interfaces'
 import { MainbookTable } from './mainbook-table'
 import { MainbookProvodkaColumns } from './provodki'
 import { getMainbookColumns, transformGetByIdData, transformMainbookAutoFillData } from './utils'
@@ -158,7 +158,7 @@ const MainbookDetailsPage = () => {
         setEditable(true)
       }
     }
-  }, [form, mainbook, id, startDate])
+  }, [form, mainbook, id])
   useEffect(() => {
     setLayout({
       title: id === 'create' ? t('create') : t('edit'),

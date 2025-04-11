@@ -1,5 +1,5 @@
 import type { MainbookAutoFill, MainbookType, MainbookUniqueSchet } from './details/interfaces'
-import type { Mainbook, MainbookDocs, Response } from '@/common/models'
+import type { Mainbook, MainbookDocumentInfo, Response } from '@/common/models'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
@@ -29,7 +29,7 @@ class MainbookServiceBuilder extends CRUDService<Mainbook, MainbookPayload> {
     this.getSaldoCheck = this.getSaldoCheck.bind(this)
     this.getAutofillData = this.getAutofillData.bind(this)
     this.getUniqueSchets = this.getUniqueSchets.bind(this)
-    this.getMainbookDocs = this.getMainbookDocs.bind(this)
+    this.getMainbookDocuments = this.getMainbookDocuments.bind(this)
   }
 
   async getAutofillData(params: { month: number; year: number; budjet_id: number }) {
@@ -71,16 +71,24 @@ class MainbookServiceBuilder extends CRUDService<Mainbook, MainbookPayload> {
     return res.data
   }
 
-  async getMainbookDocs(params: {
-    budjet_id: number
-    month: number
-    year: number
-    type_id: number
-    schet: string
-    prixod?: boolean
-    rasxod?: boolean
-  }) {
-    const res = await this.client.get<Response<MainbookDocs[]>>(`${this.endpoint}/docs`, {
+  async getMainbookDocuments(
+    ctx: QueryFunctionContext<
+      [
+        string,
+        {
+          budjet_id: number
+          month: number
+          year: number
+          type_id: number
+          schet: string
+          prixod: boolean
+          rasxod: boolean
+        }
+      ]
+    >
+  ) {
+    const params = ctx.queryKey[1]
+    const res = await this.client.get<Response<MainbookDocumentInfo[]>>(`${this.endpoint}/docs`, {
       params
     })
     return res.data

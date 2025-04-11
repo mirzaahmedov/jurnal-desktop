@@ -36,7 +36,7 @@ export interface MainbookProvodka {
   }>
 }
 
-export interface MainbookDocs {
+export interface MainbookDocumentInfo {
   id: number
   doc_num: string
   doc_date: string
