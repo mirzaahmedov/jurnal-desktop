@@ -5,7 +5,7 @@ import { useEffect } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { useForm } from 'react-hook-form'
+import { useForm, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
@@ -15,7 +15,6 @@ import { createPodotchetSpravochnik } from '@/app/region-spravochnik/podotchet'
 import { Fieldset } from '@/common/components'
 import { EditableTable } from '@/common/components/editable-table'
 import {
-  createEditorChangeHandler,
   createEditorCreateHandler,
   createEditorDeleteHandler
 } from '@/common/components/editable-table/helpers'
@@ -182,7 +181,10 @@ const KassaPrixodDetailsPage = () => {
     })
   })
 
-  const podvodki = form.watch('childs')
+  const podvodki = useWatch({
+    control: form.control,
+    name: 'childs'
+  })
 
   useEffect(() => {
     handleSaldoErrorDates(SaldoNamespace.JUR_1, error)
@@ -228,6 +230,8 @@ const KassaPrixodDetailsPage = () => {
     })
   }, [form, prixod, id])
 
+  console.log({ childs: form.watch('childs') })
+
   return (
     <DetailsView>
       <DetailsView.Content loading={isFetching}>
@@ -241,10 +245,14 @@ const KassaPrixodDetailsPage = () => {
                   documentType={DocumentType.KASSA_PRIXOD}
                   autoGenerate={id === 'create'}
                   validateDate={id === 'create' ? validateDateWithinSelectedMonth : undefined}
-                  calendarProps={{
-                    fromMonth: startDate,
-                    toMonth: startDate
-                  }}
+                  calendarProps={
+                    id === 'create'
+                      ? {
+                          fromMonth: startDate,
+                          toMonth: startDate
+                        }
+                      : undefined
+                  }
                 />
               </div>
 
@@ -334,16 +342,14 @@ const KassaPrixodDetailsPage = () => {
         >
           <EditableTable
             tabIndex={4}
+            form={form}
+            name="childs"
             columnDefs={podvodkaColumns}
-            data={form.watch('childs')}
             errors={form.formState.errors.childs}
             onCreate={createEditorCreateHandler({
               form,
               schema: PrixodPodvodkaPayloadSchema,
               defaultValues: defaultValues.childs[0]
-            })}
-            onChange={createEditorChangeHandler({
-              form
             })}
             onDelete={createEditorDeleteHandler({
               form

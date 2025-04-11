@@ -1,16 +1,17 @@
-import type { EditorComponentType } from './types'
+import type { EditorComponent } from './interfaces'
 
 import { useEffect } from 'react'
 
 import { createSmetaSpravochnik } from '@/app/super-admin/smeta'
 import { SpravochnikInput, useSpravochnik } from '@/common/features/spravochnik'
 
-export const createSmetaEditor = <T extends { smeta_id?: number }>(): EditorComponentType<T> => {
-  const Editor: EditorComponentType<T> = ({
+export const createSmetaEditor = <T extends { smeta_id?: number }>(): EditorComponent<T> => {
+  const Editor: EditorComponent<T> = ({
     tabIndex,
     id,
     row,
     errors,
+    value,
     onChange,
     setState,
     validate,
@@ -18,7 +19,7 @@ export const createSmetaEditor = <T extends { smeta_id?: number }>(): EditorComp
   }) => {
     const smetaSpravochnik = useSpravochnik(
       createSmetaSpravochnik({
-        value: row.smeta_id || undefined,
+        value: value as number | undefined,
         onChange: (value) => {
           if (
             validate &&
@@ -27,14 +28,7 @@ export const createSmetaEditor = <T extends { smeta_id?: number }>(): EditorComp
             smetaSpravochnik.clear()
             return
           }
-          onChange?.({
-            id,
-            key: 'smeta_id',
-            payload: {
-              ...row,
-              smeta_id: value
-            }
-          })
+          onChange?.(value)
         }
       })
     )

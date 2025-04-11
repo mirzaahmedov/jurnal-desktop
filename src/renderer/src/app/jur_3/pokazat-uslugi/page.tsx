@@ -15,7 +15,8 @@ import { useRequisitesStore } from '@/common/features/requisites'
 import {
   SaldoNamespace,
   handleSaldoErrorDates,
-  handleSaldoResponseDates
+  handleSaldoResponseDates,
+  useSaldoController
 } from '@/common/features/saldo'
 import {
   useSelectedMonthStore,
@@ -44,8 +45,15 @@ const PokazatUslugiPage = () => {
   const { confirm } = useConfirm()
   const { sorting, handleSort, getColumnSorted } = useTableSort()
   const { t } = useTranslation(['app'])
+  const { queuedMonths } = useSaldoController({
+    ns: SaldoNamespace.JUR_3
+  })
 
-  const { data: pokazatUslugiList, isFetching } = useQuery({
+  const {
+    data: pokazatUslugiList,
+    isFetching,
+    error
+  } = useQuery({
     queryKey: [
       queryKeys.getAll,
       {
@@ -57,7 +65,8 @@ const PokazatUslugiPage = () => {
         ...pagination
       }
     ],
-    queryFn: PokazatUslugiService.getAll
+    queryFn: PokazatUslugiService.getAll,
+    enabled: !!main_schet_id && !!jur3_schet_id && !queuedMonths.length
   })
   const { mutate: deletePokazatUslugi, isPending } = useMutation({
     mutationKey: [queryKeys.delete],
@@ -99,6 +108,12 @@ const PokazatUslugiPage = () => {
       }
     })
   }, [setLayout, t, navigate])
+
+  useEffect(() => {
+    if (error) {
+      handleSaldoErrorDates(SaldoNamespace.JUR_3, error)
+    }
+  }, [error])
 
   return (
     <ListView>

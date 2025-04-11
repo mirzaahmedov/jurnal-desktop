@@ -19,9 +19,16 @@ interface AktSverkaDialogProps {
   from: string
   to: string
   schetId: number
+  mainSchetId: number
   organId: number
 }
-export const AktSverkaDialog = ({ from, to, schetId, organId }: AktSverkaDialogProps) => {
+export const AktSverkaDialog = ({
+  from,
+  to,
+  schetId,
+  mainSchetId,
+  organId
+}: AktSverkaDialogProps) => {
   const shartnomaSpravochnik = useSpravochnik(
     createShartnomaSpravochnik({
       params: {
@@ -56,7 +63,8 @@ export const AktSverkaDialog = ({ from, to, schetId, organId }: AktSverkaDialogP
             fileName={`акт-сверки-${from}&${to}${shartnomaSpravochnik.selected?.doc_num ? `_договор-№${shartnomaSpravochnik.selected.doc_num}` : ''}.xlsx`}
             url="organization/monitoring/akt/sverka"
             params={{
-              main_schet_id: schetId,
+              main_schet_id: mainSchetId,
+              schet_id: schetId,
               organ_id: organId,
               contract_id: shartnomaSpravochnik.selected?.id || undefined,
               from,

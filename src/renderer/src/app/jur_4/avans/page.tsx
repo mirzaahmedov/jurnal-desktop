@@ -15,7 +15,8 @@ import { useRequisitesStore } from '@/common/features/requisites'
 import {
   SaldoNamespace,
   handleSaldoErrorDates,
-  handleSaldoResponseDates
+  handleSaldoResponseDates,
+  useSaldoController
 } from '@/common/features/saldo'
 import {
   useSelectedMonthStore,
@@ -43,8 +44,15 @@ const AvansPage = () => {
   const { sorting, handleSort, getColumnSorted } = useTableSort()
   const { confirm } = useConfirm()
   const { t } = useTranslation(['app'])
+  const { queuedMonths } = useSaldoController({
+    ns: SaldoNamespace.JUR_4
+  })
 
-  const { data: avans, isFetching } = useQuery({
+  const {
+    data: avans,
+    isFetching,
+    error
+  } = useQuery({
     queryKey: [
       AvansQueryKeys.getAll,
       {
@@ -56,7 +64,8 @@ const AvansPage = () => {
         ...pagination
       }
     ],
-    queryFn: AvansService.getAll
+    queryFn: AvansService.getAll,
+    enabled: !!main_schet_id && !!jur4_schet_id && !queuedMonths.length
   })
   const { mutate: deleteAvans, isPending } = useMutation({
     mutationKey: [AvansQueryKeys.delete],
@@ -98,6 +107,11 @@ const AvansPage = () => {
       }
     })
   }, [setLayout, t, navigate])
+  useEffect(() => {
+    if (error) {
+      handleSaldoErrorDates(SaldoNamespace.JUR_4, error)
+    }
+  }, [error])
 
   return (
     <ListView>

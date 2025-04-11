@@ -3,6 +3,7 @@ import type { EditableTableMethods } from '@/common/components/editable-table'
 import { type KeyboardEvent, useEffect, useMemo, useRef } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
@@ -32,6 +33,14 @@ const AdminMainbookDetailsPage = () => {
   const { id } = useParams()
   const { confirm } = useConfirm()
   const { t } = useTranslation(['app'])
+
+  const form = useForm({
+    defaultValues: {
+      year: new Date().getFullYear(),
+      month: new Date().getMonth() + 1,
+      childs: [] as ProvodkaRow[]
+    }
+  })
 
   const { data: mainbook, isFetching } = useQuery({
     queryKey: [mainbookQueryKeys.getById, Number(id)],
@@ -72,7 +81,12 @@ const AdminMainbookDetailsPage = () => {
     () => [...provodkiColumns, ...getMainbookColumns(types?.data ?? [])],
     [types]
   )
-  const data = useMemo(() => transformGetByIdData(mainbook?.data?.childs ?? []), [mainbook])
+  useEffect(() => {
+    const rows = transformGetByIdData(mainbook?.data?.childs ?? [])
+    form.setValue('childs', rows)
+    form.setValue('year', mainbook?.data?.year ?? new Date().getFullYear())
+    form.setValue('month', mainbook?.data?.month ?? new Date().getMonth() + 1)
+  }, [mainbook])
 
   const handleReject = () => {
     confirm({
@@ -104,7 +118,7 @@ const AdminMainbookDetailsPage = () => {
 
       const value = e.currentTarget.value
       if (value.length > 0) {
-        const rows: ProvodkaRow[] = data
+        const rows: ProvodkaRow[] = form.getValues('childs')
         const index = rows.findIndex((row) =>
           row.schet?.toLowerCase()?.includes(value?.toLowerCase())
         )
@@ -137,7 +151,8 @@ const AdminMainbookDetailsPage = () => {
           <div className="relative flex-1 overflow-auto scrollbar">
             <MainbookTable
               columns={columns}
-              data={data}
+              form={form}
+              name="childs"
               methods={tableMethods}
             />
           </div>

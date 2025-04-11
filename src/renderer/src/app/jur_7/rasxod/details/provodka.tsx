@@ -4,7 +4,7 @@ import type { UseFormReturn } from 'react-hook-form'
 import { type ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { Trans } from 'react-i18next'
 
-import { EditableTableHead, EditableTableRow } from '@/common/components/editable-table'
+import { EditableTableHead, EditableTableRowData } from '@/common/components/editable-table'
 import { Table, TableBody, TableHeader } from '@/common/components/ui/table'
 
 type ProvodkaProps = {

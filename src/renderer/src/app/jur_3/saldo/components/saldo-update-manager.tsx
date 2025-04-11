@@ -2,7 +2,7 @@ import { useState } from 'react'
 
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
-import { useRequisitesStore } from '@/common/features/requisites'
+import { getJur3SchetId, useRequisitesStore } from '@/common/features/requisites'
 import {
   type MonthValue,
   SaldoNamespace,
@@ -39,7 +39,7 @@ export const OrganSaldoUpdateManager = () => {
           month: newQueue[0].month,
           year: newQueue[0].year,
           main_schet_id: main_schet_id!,
-          schet_id: newQueue[0].schet_id!
+          schet_id: getJur3SchetId()!
         })
       }
 
@@ -60,7 +60,7 @@ export const OrganSaldoUpdateManager = () => {
           month: values.month,
           year: values.year,
           main_schet_id: main_schet_id!,
-          schet_id: values.schet_id!
+          schet_id: getJur3SchetId()!
         })
       }}
       onClose={() => {

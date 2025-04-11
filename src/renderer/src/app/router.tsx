@@ -52,8 +52,6 @@ const KassaRasxodDetailtsPage = lazy(() => import('./jur_1/rasxod/details/page')
 const KassaRasxodPage = lazy(() => import('./jur_1/rasxod/page'))
 const MainbookPage = lazy(() => import('./reports/mainbook/page'))
 const MainbookDetailsPage = lazy(() => import('./reports/mainbook/details/page'))
-const PrixodbookPage = lazy(() => import('./reports/prixodbook/page'))
-const PrixodbookDetailsPage = lazy(() => import('./reports/prixodbook/details/page'))
 const AktDetailsPage = lazy(() => import('./jur_3/akt/details/page'))
 const AktPage = lazy(() => import('./jur_3/akt/page'))
 const OrganizationMonitorPage = lazy(() => import('./jur_3/monitor/page'))
@@ -90,11 +88,6 @@ const LogsPage = lazy(() => import('./super-admin/logs/page'))
 
 const AdminMainbookDetailsPage = lazy(() => import('./super-admin/reports/mainbook/details/page'))
 const AdminMainbookPage = lazy(() => import('./super-admin/reports/mainbook/page'))
-
-const AdminPrixodbookDetailsPage = lazy(
-  () => import('./super-admin/reports/prixodbook/details/page')
-)
-const AdminPrixodbookPage = lazy(() => import('./super-admin/reports/prixodbook/page'))
 
 const OperatsiiPage = lazy(() => import('./super-admin/operatsii/page'))
 const AdminOXDetailsPage = lazy(() => import('./super-admin/ox-report/details/page'))
@@ -360,14 +353,6 @@ export const routes: RouteObject[] = [
             element: <AdminMainbookDetailsPage />
           },
           {
-            path: 'prixodbook',
-            element: <AdminPrixodbookPage />
-          },
-          {
-            path: 'prixodbook/:id',
-            element: <AdminPrixodbookDetailsPage />
-          },
-          {
             path: 'prixod-schets',
             element: <PrixodSchetsPage />
           },
@@ -498,26 +483,6 @@ export const routes: RouteObject[] = [
               {
                 path: ':id',
                 element: <MainbookDetailsPage />
-              }
-            ]
-          }
-        ]
-      },
-      {
-        path: 'prixodbook',
-        element: <MainSchetSelectedGuard />,
-        children: [
-          {
-            path: '*',
-            element: <DuplicateSchetsGuard />,
-            children: [
-              {
-                index: true,
-                element: <PrixodbookPage />
-              },
-              {
-                path: ':id',
-                element: <PrixodbookDetailsPage />
               }
             ]
           }

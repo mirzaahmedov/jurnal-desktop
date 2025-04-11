@@ -16,7 +16,8 @@ import { useRequisitesStore } from '@/common/features/requisites'
 import {
   SaldoNamespace,
   handleSaldoErrorDates,
-  handleSaldoResponseDates
+  handleSaldoResponseDates,
+  useSaldoController
 } from '@/common/features/saldo'
 import { useKeyUp, useToggle } from '@/common/hooks'
 import { useLayoutStore } from '@/common/layout/store'
@@ -35,16 +36,22 @@ const OrganSaldoPage = () => {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const dialogToggle = useToggle()
-  // const monthlyTrackerToggle = useToggle()
 
   const [year] = useYearFilter()
   const [selected, setSelected] = useState<OrganSaldo | null>(null)
 
   const { confirm } = useConfirm()
+  const { queuedMonths } = useSaldoController({
+    ns: SaldoNamespace.JUR_2
+  })
   const { t } = useTranslation(['app'])
   const { budjet_id, main_schet_id, jur3_schet_id } = useRequisitesStore()
 
-  const { data: saldo, isFetching } = useQuery({
+  const {
+    data: saldo,
+    isFetching,
+    error
+  } = useQuery({
     queryKey: [
       OrganSaldoQueryKeys.getAll,
       {
@@ -54,7 +61,8 @@ const OrganSaldoPage = () => {
         year
       }
     ],
-    queryFn: OrganSaldoService.getAll
+    queryFn: OrganSaldoService.getAll,
+    enabled: !!main_schet_id && !!budjet_id && !!jur3_schet_id && !queuedMonths.length
   })
   const { mutate: cleanSaldo, isPending } = useMutation({
     mutationKey: [OrganSaldoQueryKeys.clean],
@@ -103,6 +111,10 @@ const OrganSaldoPage = () => {
       }
     })
   }, [setLayout, t, navigate, dialogToggle.open])
+
+  useEffect(() => {
+    handleSaldoErrorDates(SaldoNamespace.JUR_3, error)
+  }, [error])
 
   useKeyUp({
     key: 'Delete',

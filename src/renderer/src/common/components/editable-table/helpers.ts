@@ -28,14 +28,6 @@ export const createEditorDeleteHandler =
 export const createEditorChangeHandler =
   ({ form, field = 'childs' }: { form: UseFormReturn<any>; field?: string }) =>
   ({ id, key, payload }: { id: number; key: any; payload: any }) => {
-    form.setValue(
-      field,
-      (form.getValues(field) as []).map((value, index) => {
-        if (index === id) {
-          return payload
-        }
-        return value
-      })
-    )
-    form.trigger(`${field}.${id}.${key as any}` as any)
+    console.log('running')
+    form.setValue(`${field}.${id}.${key}` as any, payload[key])
   }

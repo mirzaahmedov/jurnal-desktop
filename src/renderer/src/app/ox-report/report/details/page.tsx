@@ -9,7 +9,7 @@ import { Fieldset } from '@/common/components'
 import {
   EditableTable,
   EditableTableCell,
-  EditableTableRow
+  EditableTableRowData
 } from '@/common/components/editable-table'
 import {
   createEditorChangeHandler,

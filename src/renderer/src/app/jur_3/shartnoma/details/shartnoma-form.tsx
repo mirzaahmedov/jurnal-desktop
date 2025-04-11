@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { useForm } from 'react-hook-form'
+import { useForm, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 
@@ -65,8 +65,8 @@ export const ShartnomaForm = ({
   const { mutate: create, isPending: isCreating } = useMutation({
     mutationKey: [shartnomaQueryKeys.create],
     mutationFn: shartnomaService.create,
-    onSuccess() {
-      toast.success('Документ успешно создан')
+    onSuccess(res) {
+      toast.success(res?.message)
       form.reset(defaultValues)
       queryClient.invalidateQueries({
         queryKey: [shartnomaQueryKeys.getAll]
@@ -79,15 +79,15 @@ export const ShartnomaForm = ({
     },
     onError(error) {
       console.error(error)
-      toast.error('Не удалось создать документ:' + error.message)
+      toast.error(error?.message)
     }
   })
 
   const { mutate: update, isPending: isUpdating } = useMutation({
     mutationKey: [shartnomaQueryKeys.update, id],
     mutationFn: shartnomaService.update,
-    onSuccess() {
-      toast.success('Документ успешно обновлен')
+    onSuccess(res) {
+      toast.success(res?.message)
 
       queryClient.invalidateQueries({
         queryKey: [shartnomaQueryKeys.getAll]
@@ -100,12 +100,12 @@ export const ShartnomaForm = ({
     },
     onError(error) {
       console.error(error)
-      toast.error('Не удалось обновить документ:' + error.message)
+      toast.error(error?.message)
     }
   })
 
-  const onSubmit = form.handleSubmit((payload) => {
-    const {
+  const onSubmit = form.handleSubmit(
+    ({
       doc_date,
       doc_num,
       spravochnik_organization_id,
@@ -113,32 +113,32 @@ export const ShartnomaForm = ({
       pudratchi_bool,
       grafik_year,
       grafiks
-    } = payload
+    }) => {
+      if (selected) {
+        update({
+          id: Number(id),
+          doc_date,
+          doc_num,
+          spravochnik_organization_id,
+          opisanie,
+          pudratchi_bool,
+          grafik_year,
+          grafiks
+        })
+        return
+      }
 
-    if (selected) {
-      update({
-        id: Number(id),
+      create({
         doc_date,
         doc_num,
         spravochnik_organization_id,
         opisanie,
         pudratchi_bool,
-        grafik_year,
+        grafik_year: parseDate(doc_date).getFullYear(),
         grafiks
       })
-      return
     }
-
-    create({
-      doc_date,
-      doc_num,
-      spravochnik_organization_id,
-      opisanie,
-      pudratchi_bool,
-      grafik_year: parseDate(doc_date).getFullYear(),
-      grafiks
-    })
-  })
+  )
 
   useEffect(() => {
     if (!selected) {
@@ -172,7 +172,10 @@ export const ShartnomaForm = ({
     }
   }, [errors])
 
-  const grafiks = form.watch('grafiks')
+  const grafiks = useWatch({
+    control: form.control,
+    name: 'grafiks'
+  })
   const itogo = useMemo(() => {
     return grafiks?.reduce(
       (result, grafik) =>
@@ -264,6 +267,7 @@ export const ShartnomaForm = ({
               type="submit"
               tabIndex={4}
               disabled={isCreating || isUpdating || loading}
+              loading={isCreating || isUpdating || loading}
             >
               {t('save')}
             </Button>

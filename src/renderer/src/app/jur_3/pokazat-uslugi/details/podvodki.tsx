@@ -32,13 +32,17 @@ export const podvodkaColumns: EditableColumnDef<PokazatUslugiProvodkaFormValues>
   },
   {
     key: 'summa',
-    Editor: ({ row }) => (
-      <Input
-        className={cn(inputVariants({ editor: true, nonfocus: true }), 'text-right')}
-        readOnly
-        value={(row.kol || 0) * (row.sena || 0) || ''}
-      />
-    )
+    Editor: ({ id, form }) => {
+      const kol = form.getValues(`childs.${id}.kol`)
+      const sena = form.getValues(`childs.${id}.sena`)
+      return (
+        <Input
+          className={cn(inputVariants({ editor: true, nonfocus: true }), 'text-right')}
+          readOnly
+          value={(kol || 0) * (sena || 0) || ''}
+        />
+      )
+    }
   },
   {
     key: 'nds_foiz',
@@ -46,26 +50,35 @@ export const podvodkaColumns: EditableColumnDef<PokazatUslugiProvodkaFormValues>
   },
   {
     key: 'nds_summa',
-    Editor: ({ row }) => (
-      <Input
-        className={cn(inputVariants({ editor: true, nonfocus: true }), 'text-right')}
-        readOnly
-        value={((row.kol || 0) * (row.sena || 0) * (row.nds_foiz || 0)) / 100 || ''}
-      />
-    )
+    Editor: ({ id, form }) => {
+      const kol = form.getValues(`childs.${id}.kol`)
+      const sena = form.getValues(`childs.${id}.sena`)
+      const nds_foiz = form.getValues(`childs.${id}.nds_foiz`)
+      return (
+        <Input
+          className={cn(inputVariants({ editor: true, nonfocus: true }), 'text-right')}
+          readOnly
+          value={((kol || 0) * (sena || 0) * (nds_foiz || 0)) / 100 || ''}
+        />
+      )
+    }
   },
   {
     key: 'summa_s_nds',
-    Editor: ({ row }) => (
-      <Input
-        className={cn(inputVariants({ editor: true, nonfocus: true }), 'text-right')}
-        readOnly
-        value={
-          (row.kol || 0) * (row.sena || 0) +
-            ((row.kol || 0) * (row.sena || 0) * (row.nds_foiz || 0)) / 100 || ''
-        }
-      />
-    )
+    Editor: ({ id, form }) => {
+      const kol = form.getValues(`childs.${id}.kol`)
+      const sena = form.getValues(`childs.${id}.sena`)
+      const nds_foiz = form.getValues(`childs.${id}.nds_foiz`)
+      return (
+        <Input
+          className={cn(inputVariants({ editor: true, nonfocus: true }), 'text-right')}
+          readOnly
+          value={
+            (kol || 0) * (sena || 0) + ((kol || 0) * (sena || 0) * (nds_foiz || 0)) / 100 || ''
+          }
+        />
+      )
+    }
   },
   {
     key: 'id_spravochnik_type_operatsii',

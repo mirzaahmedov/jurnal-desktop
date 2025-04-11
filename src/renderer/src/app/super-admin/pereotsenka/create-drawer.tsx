@@ -36,7 +36,7 @@ type PereotsenkaBatchCreateDrawerProps = {
   open: boolean
   onOpenChange: (open: boolean) => void
 }
-const PereotsenkaBatchCreateDrawer = (props: PereotsenkaBatchCreateDrawerProps) => {
+export const PereotsenkaBatchCreateDrawer = (props: PereotsenkaBatchCreateDrawerProps) => {
   const { open, onOpenChange } = props
 
   const { t } = useTranslation()
@@ -168,5 +168,3 @@ const PereotsenkaBatchCreateDrawer = (props: PereotsenkaBatchCreateDrawerProps) 
     </Drawer>
   )
 }
-
-export { PereotsenkaBatchCreateDrawer }

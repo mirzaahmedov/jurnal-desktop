@@ -4,17 +4,15 @@ import { useEffect } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { useForm } from 'react-hook-form'
+import { useForm, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
 import { createPodotchetSpravochnik } from '@/app/region-spravochnik/podotchet'
-import { createOperatsiiSpravochnik } from '@/app/super-admin/operatsii'
 import { Fieldset } from '@/common/components'
 import { EditableTable } from '@/common/components/editable-table'
 import {
-  createEditorChangeHandler,
   createEditorCreateHandler,
   createEditorDeleteHandler
 } from '@/common/components/editable-table/helpers'
@@ -24,7 +22,8 @@ import { useRequisitesStore } from '@/common/features/requisites'
 import {
   SaldoNamespace,
   handleSaldoErrorDates,
-  handleSaldoResponseDates
+  handleSaldoResponseDates,
+  useSaldoController
 } from '@/common/features/saldo'
 import {
   useSelectedMonthStore,
@@ -33,16 +32,10 @@ import {
 import { useSnippets } from '@/common/features/snippents/use-snippets'
 import { useSpravochnik } from '@/common/features/spravochnik'
 import { useLayoutStore } from '@/common/layout/store'
+import { formatDate } from '@/common/lib/date'
 import { normalizeEmptyFields } from '@/common/lib/validation'
-import { TypeSchetOperatsii } from '@/common/models'
 import { DetailsView } from '@/common/views'
-import {
-  DocumentFields,
-  OperatsiiFields,
-  OpisanieFields,
-  PodotchetFields,
-  SummaFields
-} from '@/common/widget/form'
+import { DocumentFields, OpisanieFields, PodotchetFields, SummaFields } from '@/common/widget/form'
 
 import { AvansFormSchema, AvansProvodkaFormSchema, AvansQueryKeys, defaultValues } from '../config'
 import { AvansService } from '../service'
@@ -58,26 +51,20 @@ const AvansDetailsPage = () => {
   const { main_schet_id, jur4_schet_id } = useRequisitesStore()
 
   const { t } = useTranslation(['app'])
+  const { queuedMonths } = useSaldoController({
+    ns: SaldoNamespace.JUR_4
+  })
   const { snippets, addSnippet, removeSnippet } = useSnippets({
     ns: 'avans'
   })
 
   const form = useForm({
     resolver: zodResolver(AvansFormSchema),
-    defaultValues: defaultValues
+    defaultValues: {
+      ...defaultValues,
+      doc_date: formatDate(startDate)
+    }
   })
-
-  const operatsiiSpravochnik = useSpravochnik(
-    createOperatsiiSpravochnik({
-      value: form.watch('spravochnik_operatsii_own_id'),
-      onChange: (value) => {
-        form.setValue('spravochnik_operatsii_own_id', value ?? 0, { shouldValidate: true })
-      },
-      params: {
-        type_schet: TypeSchetOperatsii.JUR4
-      }
-    })
-  )
 
   const podotchetSpravochnik = useSpravochnik(
     createPodotchetSpravochnik({
@@ -99,7 +86,7 @@ const AvansDetailsPage = () => {
       }
     ],
     queryFn: AvansService.getById,
-    enabled: id !== 'create'
+    enabled: id !== 'create' && !!main_schet_id && !!jur4_schet_id && !queuedMonths.length
   })
   const { mutate: createAvans, isPending: isCreating } = useMutation({
     mutationKey: [AvansQueryKeys.create],
@@ -147,7 +134,6 @@ const AvansDetailsPage = () => {
     ({
       doc_date,
       doc_num,
-      spravochnik_operatsii_own_id,
       spravochnik_podotchet_litso_id,
       id_spravochnik_podotchet_litso,
       opisanie
@@ -157,7 +143,6 @@ const AvansDetailsPage = () => {
           id: Number(id),
           doc_date,
           doc_num,
-          spravochnik_operatsii_own_id,
           spravochnik_podotchet_litso_id,
           id_spravochnik_podotchet_litso,
           opisanie,
@@ -168,7 +153,6 @@ const AvansDetailsPage = () => {
       createAvans({
         doc_date,
         doc_num,
-        spravochnik_operatsii_own_id,
         spravochnik_podotchet_litso_id,
         id_spravochnik_podotchet_litso,
         opisanie,
@@ -177,7 +161,10 @@ const AvansDetailsPage = () => {
     }
   )
 
-  const podvodki = form.watch('childs')
+  const podvodki = useWatch({
+    control: form.control,
+    name: 'childs'
+  })
 
   useEffect(() => {
     setLayout({
@@ -207,7 +194,10 @@ const AvansDetailsPage = () => {
 
   useEffect(() => {
     if (id === 'create') {
-      form.reset(defaultValues)
+      form.reset({
+        ...defaultValues,
+        doc_date: formatDate(startDate)
+      })
       return
     }
 
@@ -235,16 +225,15 @@ const AvansDetailsPage = () => {
                   form={form}
                   documentType={DocumentType.AVANS}
                   autoGenerate={id === 'create'}
-                  validateDate={validateDateWithinSelectedMonth}
-                  calendarProps={{
-                    fromMonth: startDate,
-                    toMonth: startDate
-                  }}
-                />
-                <OperatsiiFields
-                  tabIndex={2}
-                  spravochnik={operatsiiSpravochnik}
-                  error={form.formState.errors.spravochnik_operatsii_own_id}
+                  validateDate={id === 'create' ? validateDateWithinSelectedMonth : undefined}
+                  calendarProps={
+                    id === 'create'
+                      ? {
+                          fromMonth: startDate,
+                          toMonth: startDate
+                        }
+                      : undefined
+                  }
                 />
               </div>
 
@@ -277,6 +266,7 @@ const AvansDetailsPage = () => {
               <DetailsView.Create
                 tabIndex={6}
                 disabled={isCreating || isUpdating}
+                loading={isCreating || isUpdating}
               />
             </DetailsView.Footer>
           </form>
@@ -287,8 +277,9 @@ const AvansDetailsPage = () => {
         >
           <EditableTable
             tabIndex={5}
+            form={form}
+            name="childs"
             columnDefs={podvodkaColumns}
-            data={form.watch('childs')}
             errors={form.formState.errors.childs}
             onCreate={createEditorCreateHandler({
               form,
@@ -296,9 +287,6 @@ const AvansDetailsPage = () => {
               defaultValues: defaultValues.childs[0]
             })}
             onDelete={createEditorDeleteHandler({
-              form
-            })}
-            onChange={createEditorChangeHandler({
               form
             })}
           />

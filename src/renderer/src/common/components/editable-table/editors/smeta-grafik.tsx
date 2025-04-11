@@ -1,4 +1,4 @@
-import type { EditorComponentType } from './types'
+import type { EditorComponent } from './interfaces'
 
 import { useEffect } from 'react'
 
@@ -8,12 +8,13 @@ import { formatNumber } from '@/common/lib/format'
 
 export const createSmetaGrafikEditor = <
   T extends { smeta_grafik_id?: number }
->(): EditorComponentType<T> => {
-  const Editor: EditorComponentType<T> = ({
+>(): EditorComponent<T> => {
+  const Editor: EditorComponent<T> = ({
     tabIndex,
+    errors,
     id,
     row,
-    errors,
+    value,
     onChange,
     setState,
     validate,
@@ -21,7 +22,7 @@ export const createSmetaGrafikEditor = <
   }) => {
     const smetaSpravochnik = useSpravochnik(
       createSmetaGrafikSpravochnik({
-        value: row.smeta_grafik_id || undefined,
+        value: value as number | undefined,
         onChange: (value) => {
           if (
             validate &&
@@ -30,14 +31,7 @@ export const createSmetaGrafikEditor = <
             smetaSpravochnik.clear()
             return
           }
-          onChange?.({
-            id,
-            key: 'smeta_grafik_id',
-            payload: {
-              ...row,
-              smeta_grafik_id: value
-            }
-          })
+          onChange?.(value)
         }
       })
     )

@@ -8,6 +8,8 @@ export const defaultValues = {
   childs: [] as JUR8MonitorChild[]
 }
 
+export type JUR8MonitorFormValues = typeof defaultValues
+
 export const JUR8MonitorChildTypeLabels = {
   [JUR8MonitorChildType.bank_prixod_child]: <Trans ns="app">pages.bank_prixod</Trans>,
   [JUR8MonitorChildType.bank_rasxod_child]: <Trans ns="app">pages.bank_rasxod</Trans>,

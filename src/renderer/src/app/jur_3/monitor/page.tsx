@@ -27,6 +27,7 @@ import { DownloadFile } from '@/common/features/file'
 import { SearchFilterDebounced } from '@/common/features/filters/search/search-filter-debounced'
 import { useSearchFilter } from '@/common/features/filters/search/search-filter-debounced'
 import { useRequisitesStore } from '@/common/features/requisites'
+import { SaldoNamespace, useSaldoController } from '@/common/features/saldo'
 import {
   useSelectedMonthStore,
   validateDateWithinSelectedMonth
@@ -62,6 +63,9 @@ const OrganizationMonitoringPage = () => {
   const { sorting, handleSort, getColumnSorted } = useTableSort()
   const { main_schet_id, budjet_id, jur3_schet_id } = useRequisitesStore()
   const { t } = useTranslation(['app'])
+  const { queuedMonths } = useSaldoController({
+    ns: SaldoNamespace.JUR_3
+  })
 
   const organSpravochnik = useSpravochnik(
     createOrganizationSpravochnik({
@@ -106,7 +110,8 @@ const OrganizationMonitoringPage = () => {
       }
     ],
     queryFn: OrganMonitoringService.getAll,
-    enabled: !!main_schet_id && !!operatsiiSpravochnik.selected
+    enabled:
+      !!main_schet_id && !!jur3_schet_id && !!operatsiiSpravochnik.selected && !queuedMonths.length
   })
 
   useEffect(() => {
@@ -192,6 +197,7 @@ const OrganizationMonitoringPage = () => {
                         params={{
                           budjet_id,
                           main_schet_id,
+                          schet_id: jur3_schet_id,
                           from: dates.from,
                           to: dates.to,
                           report_title_id,
@@ -210,6 +216,7 @@ const OrganizationMonitoringPage = () => {
                         params={{
                           main_schet_id,
                           budjet_id,
+                          schet_id: jur3_schet_id,
                           to: dates.to,
                           operatsii: operatsiiSpravochnik.selected?.schet,
                           excel: true
@@ -228,6 +235,7 @@ const OrganizationMonitoringPage = () => {
                             params={{
                               budjet_id,
                               main_schet_id,
+                              schet_id: jur3_schet_id,
                               from: dates.from,
                               to: dates.to,
                               report_title_id,
@@ -244,6 +252,7 @@ const OrganizationMonitoringPage = () => {
                             url="/organization/monitoring/order"
                             params={{
                               main_schet_id,
+                              schet_id: jur3_schet_id,
                               organ_id: organId ? organId : undefined,
                               from: dates.from,
                               to: dates.to,
@@ -262,6 +271,7 @@ const OrganizationMonitoringPage = () => {
                             url="/organization/monitoring/order"
                             params={{
                               main_schet_id,
+                              schet_id: jur3_schet_id,
                               organ_id: organId ? organId : undefined,
                               from: dates.from,
                               to: dates.to,
@@ -279,7 +289,8 @@ const OrganizationMonitoringPage = () => {
                 {organId ? (
                   <AktSverkaDialog
                     organId={organId}
-                    schetId={main_schet_id}
+                    mainSchetId={main_schet_id}
+                    schetId={jur3_schet_id!}
                     from={dates.from}
                     to={dates.to}
                   />
@@ -298,7 +309,7 @@ const OrganizationMonitoringPage = () => {
           <SummaTotal>
             <SummaTotal.Value
               name={t('remainder-from')}
-              value={formatNumber(monitoring?.meta?.summa_from_object?.summa ?? 0)}
+              value={formatNumber(monitoring?.meta?.summa_from ?? 0)}
             />
           </SummaTotal>
         </div>
@@ -318,19 +329,21 @@ const OrganizationMonitoringPage = () => {
               <FooterRow>
                 <FooterCell
                   colSpan={6}
-                  title={t('total')}
+                  title={t('total_page')}
                   content={formatNumber(monitoring?.meta?.page_prixod_sum ?? 0)}
                 />
                 <FooterCell content={formatNumber(monitoring?.meta?.page_rasxod_sum ?? 0)} />
               </FooterRow>
-              <FooterRow>
-                <FooterCell
-                  colSpan={6}
-                  title={t('total_period')}
-                  content={formatNumber(monitoring?.meta?.prixod_sum ?? 0)}
-                />
-                <FooterCell content={formatNumber(monitoring?.meta?.rasxod_sum ?? 0)} />
-              </FooterRow>
+              {(monitoring?.meta?.pageCount ?? 0) > 1 ? (
+                <FooterRow>
+                  <FooterCell
+                    colSpan={6}
+                    title={t('total_period')}
+                    content={formatNumber(monitoring?.meta?.prixod_sum ?? 0)}
+                  />
+                  <FooterCell content={formatNumber(monitoring?.meta?.rasxod_sum ?? 0)} />
+                </FooterRow>
+              ) : null}
             </>
           }
         />
@@ -339,7 +352,7 @@ const OrganizationMonitoringPage = () => {
         <SummaTotal className="pb-5">
           <SummaTotal.Value
             name={t('remainder-to')}
-            value={formatNumber(monitoring?.meta?.summa_to_object?.summa ?? 0)}
+            value={formatNumber(monitoring?.meta?.summa_to ?? 0)}
           />
         </SummaTotal>
         <ListView.Pagination

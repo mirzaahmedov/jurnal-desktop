@@ -4,7 +4,7 @@ import { useEffect } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { useForm } from 'react-hook-form'
+import { useForm, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
@@ -14,7 +14,6 @@ import { createOrganizationSpravochnik } from '@/app/region-spravochnik/organiza
 import { Fieldset } from '@/common/components'
 import { EditableTable } from '@/common/components/editable-table'
 import {
-  createEditorChangeHandler,
   createEditorCreateHandler,
   createEditorDeleteHandler
 } from '@/common/components/editable-table/helpers'
@@ -45,8 +44,7 @@ import {
   SummaFields
 } from '@/common/widget/form'
 
-import { AktQueryKeys, defaultValues } from '../config'
-import { AktFormSchema, AktProvodkaFormSchema } from '../config'
+import { AktFormSchema, AktProvodkaFormSchema, AktQueryKeys, defaultValues } from '../config'
 import { aktService } from '../service'
 import { provodkaColumns } from './provodki'
 
@@ -133,8 +131,8 @@ const AktDetailsPage = () => {
     }
   })
 
-  const onSubmit = form.handleSubmit((values) => {
-    const {
+  const onSubmit = form.handleSubmit(
+    ({
       doc_date,
       doc_num,
       id_spravochnik_organization,
@@ -144,39 +142,42 @@ const AktDetailsPage = () => {
       organization_by_raschet_schet_gazna_id,
       opisanie,
       summa
-    } = values
-
-    if (id !== 'create') {
-      updateAkt({
-        id: Number(id),
+    }) => {
+      if (id !== 'create') {
+        updateAkt({
+          id: Number(id),
+          doc_date,
+          doc_num,
+          shartnomalar_organization_id,
+          shartnoma_grafik_id,
+          id_spravochnik_organization,
+          organization_by_raschet_schet_id,
+          organization_by_raschet_schet_gazna_id,
+          opisanie,
+          summa,
+          childs: provodki.map(normalizeEmptyFields<AktProvodkaFormValues>)
+        })
+        return
+      }
+      createAkt({
         doc_date,
         doc_num,
         shartnomalar_organization_id,
-        shartnoma_grafik_id,
         id_spravochnik_organization,
+        shartnoma_grafik_id,
         organization_by_raschet_schet_id,
         organization_by_raschet_schet_gazna_id,
         opisanie,
         summa,
-        childs: podvodki.map(normalizeEmptyFields<AktProvodkaFormValues>)
+        childs: provodki.map(normalizeEmptyFields<AktProvodkaFormValues>)
       })
-      return
     }
-    createAkt({
-      doc_date,
-      doc_num,
-      shartnomalar_organization_id,
-      id_spravochnik_organization,
-      shartnoma_grafik_id,
-      organization_by_raschet_schet_id,
-      organization_by_raschet_schet_gazna_id,
-      opisanie,
-      summa,
-      childs: podvodki.map(normalizeEmptyFields<AktProvodkaFormValues>)
-    })
-  })
+  )
 
-  const podvodki = form.watch('childs')
+  const provodki = useWatch({
+    control: form.control,
+    name: 'childs'
+  })
 
   const organSpravochnik = useSpravochnik(
     createOrganizationSpravochnik({
@@ -234,11 +235,11 @@ const AktDetailsPage = () => {
 
   useEffect(() => {
     const summa =
-      podvodki
+      provodki
         .filter((podvodka) => !isNaN(Number(podvodka?.kol)) && !isNaN(Number(podvodka?.sena)))
         .reduce((acc, curr) => acc + (curr?.kol || 0) * (curr?.sena || 0), 0) ?? 0
     form.setValue('summa', summa)
-  }, [form, podvodki])
+  }, [form, provodki])
 
   useEffect(() => {
     if (id === 'create') {
@@ -263,11 +264,15 @@ const AktDetailsPage = () => {
                   form={form}
                   documentType={DocumentType.AKT}
                   autoGenerate={id === 'create'}
-                  validateDate={validateDateWithinSelectedMonth}
-                  calendarProps={{
-                    fromMonth: startDate,
-                    toMonth: startDate
-                  }}
+                  validateDate={id === 'create' ? validateDateWithinSelectedMonth : undefined}
+                  calendarProps={
+                    id === 'create'
+                      ? {
+                          fromMonth: startDate,
+                          toMonth: startDate
+                        }
+                      : undefined
+                  }
                 />
               </div>
 
@@ -318,16 +323,14 @@ const AktDetailsPage = () => {
         >
           <EditableTable
             tabIndex={6}
+            form={form}
+            name="childs"
             columnDefs={provodkaColumns}
-            data={form.watch('childs')}
             errors={form.formState.errors.childs}
             onCreate={createEditorCreateHandler({
               form,
               schema: AktProvodkaFormSchema,
               defaultValues: defaultValues.childs[0]
-            })}
-            onChange={createEditorChangeHandler({
-              form
             })}
             onDelete={createEditorDeleteHandler({
               form

@@ -1,21 +1,19 @@
 import type { PokazatUslugiFormValues, PokazatUslugiProvodkaFormValues } from '../config'
 
-import { useCallback, useEffect } from 'react'
+import { useEffect } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { useForm } from 'react-hook-form'
+import { useForm, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
 import { createShartnomaSpravochnik } from '@/app/jur_3/shartnoma'
 import { createOrganizationSpravochnik } from '@/app/region-spravochnik/organization'
-import { createOperatsiiSpravochnik } from '@/app/super-admin/operatsii'
 import { Fieldset } from '@/common/components'
 import { EditableTable } from '@/common/components/editable-table'
 import {
-  createEditorChangeHandler,
   createEditorCreateHandler,
   createEditorDeleteHandler
 } from '@/common/components/editable-table/helpers'
@@ -25,7 +23,8 @@ import { useRequisitesStore } from '@/common/features/requisites'
 import {
   SaldoNamespace,
   handleSaldoErrorDates,
-  handleSaldoResponseDates
+  handleSaldoResponseDates,
+  useSaldoController
 } from '@/common/features/saldo'
 import {
   useSelectedMonthStore,
@@ -34,26 +33,32 @@ import {
 import { useSnippets } from '@/common/features/snippents/use-snippets'
 import { useSpravochnik } from '@/common/features/spravochnik'
 import { useLayoutStore } from '@/common/layout/store'
+import { formatDate } from '@/common/lib/date'
 import { normalizeEmptyFields } from '@/common/lib/validation'
-import { TypeSchetOperatsii } from '@/common/models'
 import { DetailsView } from '@/common/views'
 import {
   DocumentFields,
-  OperatsiiFields,
   OpisanieFields,
   OrganizationFields,
   ShartnomaFields,
   SummaFields
 } from '@/common/widget/form'
 
-import { defaultValues, queryKeys } from '../config'
-import { PokazatUslugiFormSchema, PokazatUslugiProvodkaFormSchema } from '../config'
+import {
+  PokazatUslugiFormSchema,
+  PokazatUslugiProvodkaFormSchema,
+  defaultValues,
+  queryKeys
+} from '../config'
 import { PokazatUslugiService } from '../service'
 import { podvodkaColumns } from './podvodki'
 
 const PokazatUslugiDetailsPage = () => {
   const { t } = useTranslation(['app'])
   const { main_schet_id, jur3_schet_id } = useRequisitesStore()
+  const { queuedMonths } = useSaldoController({
+    ns: SaldoNamespace.JUR_3
+  })
   const { snippets, addSnippet, removeSnippet } = useSnippets({
     ns: 'pokazat-uslugi'
   })
@@ -66,7 +71,10 @@ const PokazatUslugiDetailsPage = () => {
 
   const form = useForm({
     resolver: zodResolver(PokazatUslugiFormSchema),
-    defaultValues: defaultValues
+    defaultValues: {
+      ...defaultValues,
+      doc_date: formatDate(startDate)
+    }
   })
 
   const organSpravochnik = useSpravochnik(
@@ -88,19 +96,6 @@ const PokazatUslugiDetailsPage = () => {
     })
   )
 
-  const operatsiiSpravochnik = useSpravochnik(
-    createOperatsiiSpravochnik({
-      value: form.watch('spravochnik_operatsii_own_id'),
-      onChange: (value) => {
-        form.setValue('spravochnik_operatsii_own_id', value ?? 0)
-        form.trigger('spravochnik_operatsii_own_id')
-      },
-      params: {
-        type_schet: TypeSchetOperatsii.JUR3
-      }
-    })
-  )
-
   const shartnomaSpravochnik = useSpravochnik(
     createShartnomaSpravochnik({
       value: form.watch('shartnomalar_organization_id'),
@@ -115,7 +110,11 @@ const PokazatUslugiDetailsPage = () => {
     })
   )
 
-  const { data: pokazatUslugi, isFetching } = useQuery({
+  const {
+    data: pokazatUslugi,
+    isFetching,
+    error
+  } = useQuery({
     queryKey: [
       queryKeys.getById,
       Number(id),
@@ -125,7 +124,7 @@ const PokazatUslugiDetailsPage = () => {
       }
     ],
     queryFn: PokazatUslugiService.getById,
-    enabled: id !== 'create'
+    enabled: id !== 'create' && !!main_schet_id && !!jur3_schet_id && !queuedMonths.length
   })
   const { mutate: createPokazatUslugi, isPending: isCreating } = useMutation({
     mutationKey: [queryKeys.create],
@@ -174,7 +173,6 @@ const PokazatUslugiDetailsPage = () => {
       doc_date,
       doc_num,
       id_spravochnik_organization,
-      spravochnik_operatsii_own_id,
       shartnoma_grafik_id,
       shartnomalar_organization_id,
       organization_by_raschet_schet_id,
@@ -187,7 +185,6 @@ const PokazatUslugiDetailsPage = () => {
           id: Number(id),
           doc_date,
           doc_num,
-          spravochnik_operatsii_own_id,
           shartnomalar_organization_id,
           shartnoma_grafik_id,
           id_spravochnik_organization,
@@ -202,7 +199,6 @@ const PokazatUslugiDetailsPage = () => {
       createPokazatUslugi({
         doc_date,
         doc_num,
-        spravochnik_operatsii_own_id,
         shartnomalar_organization_id,
         shartnoma_grafik_id,
         id_spravochnik_organization,
@@ -215,13 +211,10 @@ const PokazatUslugiDetailsPage = () => {
     }
   )
 
-  const podvodki = form.watch('childs')
-  const setPodvodki = useCallback(
-    (payload: PokazatUslugiProvodkaFormValues[]) => {
-      form.setValue('childs', payload)
-    },
-    [form]
-  )
+  const podvodki = useWatch({
+    control: form.control,
+    name: 'childs'
+  })
 
   useEffect(() => {
     setLayout({
@@ -251,18 +244,25 @@ const PokazatUslugiDetailsPage = () => {
 
   useEffect(() => {
     if (id === 'create') {
-      form.reset(defaultValues)
-      setPodvodki(defaultValues.childs)
+      form.reset({
+        ...defaultValues,
+        doc_date: formatDate(startDate)
+      })
       return
     }
 
-    form.reset(pokazatUslugi?.data ?? defaultValues)
-    setPodvodki(pokazatUslugi?.data?.childs ?? defaultValues.childs)
-  }, [setPodvodki, form, pokazatUslugi, id])
+    form.reset(pokazatUslugi?.data)
+  }, [form, pokazatUslugi, id])
+
+  useEffect(() => {
+    if (error) {
+      handleSaldoErrorDates(SaldoNamespace.JUR_3, error)
+    }
+  }, [error])
 
   return (
     <DetailsView>
-      <DetailsView.Content loading={isFetching || isCreating || isUpdating}>
+      <DetailsView.Content loading={isFetching}>
         <Form {...form}>
           <form onSubmit={onSubmit}>
             <div className="grid grid-cols-2">
@@ -271,16 +271,15 @@ const PokazatUslugiDetailsPage = () => {
                 form={form}
                 documentType={DocumentType.SHOW_SERVICE}
                 autoGenerate={id === 'create'}
-                validateDate={validateDateWithinSelectedMonth}
-                calendarProps={{
-                  fromMonth: startDate,
-                  toMonth: startDate
-                }}
-              />
-              <OperatsiiFields
-                tabIndex={2}
-                spravochnik={operatsiiSpravochnik}
-                error={form.formState.errors.spravochnik_operatsii_own_id}
+                validateDate={id === 'create' ? validateDateWithinSelectedMonth : undefined}
+                calendarProps={
+                  id === 'create'
+                    ? {
+                        fromMonth: startDate,
+                        toMonth: startDate
+                      }
+                    : undefined
+                }
               />
             </div>
 
@@ -319,6 +318,7 @@ const PokazatUslugiDetailsPage = () => {
               <DetailsView.Create
                 tabIndex={7}
                 disabled={isCreating || isUpdating}
+                loading={isCreating || isUpdating}
               />
             </DetailsView.Footer>
           </form>
@@ -329,16 +329,14 @@ const PokazatUslugiDetailsPage = () => {
         >
           <EditableTable
             tabIndex={6}
+            form={form}
+            name="childs"
             columnDefs={podvodkaColumns}
-            data={form.watch('childs')}
             errors={form.formState.errors.childs}
             onCreate={createEditorCreateHandler({
               form,
               schema: PokazatUslugiProvodkaFormSchema,
               defaultValues: defaultValues.childs[0]
-            })}
-            onChange={createEditorChangeHandler({
-              form
             })}
             onDelete={createEditorDeleteHandler({
               form

@@ -222,7 +222,8 @@ const JUR8MonitorDetailsPage = () => {
             <div className="overflow-auto scrollbar flex-1 relative">
               <MonitorTable
                 columns={JUR8MonitorDetailsColumns}
-                data={form.watch('childs')}
+                form={form}
+                name="childs"
                 methods={tableMethods}
               />
             </div>

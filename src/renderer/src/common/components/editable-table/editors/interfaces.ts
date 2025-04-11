@@ -1,6 +1,6 @@
-import type { EditableColumnDef } from '../interface'
-import type { Dispatch, FC, InputHTMLAttributes, SetStateAction } from 'react'
-import type { FieldErrors } from 'react-hook-form'
+import type { EditableColumnDef, EditableTableRowData } from '../interface'
+import type { Dispatch, FC, InputHTMLAttributes, Ref, SetStateAction } from 'react'
+import type { FieldErrors, UseFormReturn } from 'react-hook-form'
 
 export type ChangeContext<T extends object, K extends keyof T = keyof T> = {
   id: number
@@ -12,15 +12,18 @@ export type DeleteContext = {
   id: number
 }
 
-export type EditorComponentType<T extends object> = FC<{
+export type EditorComponent<T extends object> = FC<{
   tabIndex?: number
+  inputRef: Ref<HTMLElement>
   id: number
-  row: T
-  data: T[]
+  row: EditableTableRowData<T>
+  rows: EditableTableRowData<T>[]
+  form: UseFormReturn<any> // Todo fix this type
   col: EditableColumnDef<T>
   max?: number
   errors?: FieldErrors<T>
-  onChange?(ctx: ChangeContext<T>): void
+  value: unknown
+  onChange?: (value: unknown) => void
   state: Record<string, unknown>
   setState: Dispatch<SetStateAction<Record<string, unknown>>>
   params: Record<string, unknown>

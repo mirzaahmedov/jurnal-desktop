@@ -27,7 +27,6 @@ export const PokazatUslugiFormSchema = withPreprocessor(
     doc_date: z.string(),
     summa: z.coerce.number().min(1),
     opisanie: z.string().optional(),
-    spravochnik_operatsii_own_id: z.number(),
     id_spravochnik_organization: z.number(),
     shartnoma_grafik_id: z.number().optional(),
     shartnomalar_organization_id: z.number().optional(),
@@ -43,7 +42,6 @@ export const defaultValues: PokazatUslugiFormValues = {
   doc_num: '',
   doc_date: '',
   summa: 0,
-  spravochnik_operatsii_own_id: 0,
   id_spravochnik_organization: 0,
   organization_by_raschet_schet_id: 0,
   childs: [

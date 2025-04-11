@@ -1,4 +1,4 @@
-import type { EditorComponentType } from './types'
+import type { EditorComponent } from './interfaces'
 import type { Operatsii, TypeSchetOperatsii } from '@/common/models'
 
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
@@ -21,7 +21,7 @@ type Filter<T extends object> = { [K in keyof T]: T[K] extends number ? K : neve
 export const withEditorProps = <Options extends object>(
   editorConstructor: <T extends object, Field extends keyof Filter<T> & string>(
     options: Options & { field: Field }
-  ) => EditorComponentType<T>
+  ) => EditorComponent<T>
 ) => {
   return editorConstructor
 }
@@ -29,9 +29,8 @@ export const withEditorProps = <Options extends object>(
 export const createOperatsiiEditor = withEditorProps<{
   type_schet?: TypeSchetOperatsii
 }>(({ field, type_schet }) => {
-  return ({ tabIndex, id, row, errors, onChange, params }) => {
+  return ({ tabIndex, value, errors, onChange, params }) => {
     const error = errors?.[field as keyof typeof errors]
-    const value = row[field] as number | undefined
 
     const inputRef = useRef<HTMLInputElement>(null)
     const editorState = useRef<{
@@ -57,16 +56,9 @@ export const createOperatsiiEditor = withEditorProps<{
 
     const operatsiiSpravochnik = useSpravochnik(
       createOperatsiiSpravochnik({
-        value: value || undefined,
+        value: value as number | undefined,
         onChange: (value, selected) => {
-          onChange?.({
-            id,
-            key: field,
-            payload: {
-              ...row,
-              [field]: value
-            }
-          })
+          onChange?.(value)
           paramsRef.current?.onChangeOperatsii?.(selected)
         },
         params: {
@@ -167,14 +159,7 @@ export const createOperatsiiEditor = withEditorProps<{
           getOptionValue={(option) => option.id.toString()}
           onSelect={(option) => {
             if (value !== option.id) {
-              onChange?.({
-                id,
-                key: field,
-                payload: {
-                  ...row,
-                  [field]: option.id
-                }
-              })
+              onChange?.(option.id)
               setSchet(option.schet)
               setSubschet(option.sub_schet)
 

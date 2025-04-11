@@ -1,4 +1,4 @@
-import type { EditorComponentType } from './types'
+import type { EditorComponent } from './interfaces'
 
 import { Input } from '@/common/components/ui/input'
 import { inputVariants } from '@/common/features/spravochnik'
@@ -14,8 +14,8 @@ export const createTextEditor = <T extends object>({
   disabled?: boolean
   key: keyof T
   defaultValue?: string
-}): EditorComponentType<T> => {
-  return ({ tabIndex, id, row, errors, onChange }) => {
+}): EditorComponent<T> => {
+  return ({ tabIndex, value, errors, onChange }) => {
     return (
       <div className="relative">
         <Input
@@ -24,20 +24,9 @@ export const createTextEditor = <T extends object>({
           name={key as string}
           tabIndex={tabIndex}
           value={
-            typeof row[key] === 'string' || typeof row[key] === 'number'
-              ? row[key]
-              : (defaultValue ?? '')
+            typeof value === 'string' || typeof value === 'number' ? value : (defaultValue ?? '')
           }
-          onChange={(e) =>
-            onChange?.({
-              id,
-              key,
-              payload: {
-                ...row,
-                [key]: e.target.value ?? ''
-              }
-            })
-          }
+          onChange={(e) => onChange?.(e.target.value)}
           error={!!errors?.[key as string]}
           className={cn(
             inputVariants({

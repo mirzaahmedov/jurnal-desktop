@@ -1,25 +1,16 @@
-import type { EditorComponentType } from './types'
+import type { EditorComponent } from './interfaces'
 
 import { createPodotchetSpravochnik } from '@/app/region-spravochnik/podotchet'
 import { SpravochnikInput, useSpravochnik } from '@/common/features/spravochnik'
 
 export const createPodotchetEditor = <
   T extends { id_spravochnik_podotchet_litso?: number }
->(): EditorComponentType<T> => {
-  return ({ tabIndex, id, row, errors, onChange }) => {
+>(): EditorComponent<T> => {
+  return ({ tabIndex, errors, value, onChange }) => {
     const podotchetSpravochnik = useSpravochnik(
       createPodotchetSpravochnik({
-        value: row.id_spravochnik_podotchet_litso || undefined,
-        onChange: (value) => {
-          onChange?.({
-            id,
-            key: 'id_spravochnik_podotchet_litso',
-            payload: {
-              ...row,
-              id_spravochnik_podotchet_litso: value
-            }
-          })
-        }
+        value: value as number | undefined,
+        onChange
       })
     )
     return (

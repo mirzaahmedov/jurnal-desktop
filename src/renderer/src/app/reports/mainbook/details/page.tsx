@@ -3,12 +3,11 @@ import type { EditableTableMethods } from '@/common/components/editable-table'
 import { type KeyboardEvent, useEffect, useMemo, useRef, useState } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { useFieldArray, useForm } from 'react-hook-form'
+import { useForm, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
-import { createEditorChangeHandler } from '@/common/components/editable-table/helpers'
 import { MonthPicker } from '@/common/components/month-picker'
 import { SearchInput } from '@/common/components/search-input'
 import { Button } from '@/common/components/ui/button'
@@ -39,11 +38,6 @@ const MainbookDetailsPage = () => {
 
   const form = useForm({
     defaultValues
-  })
-
-  const { fields } = useFieldArray({
-    control: form.control,
-    name: 'childs'
   })
 
   const { data: mainbook, isFetching } = useQuery({
@@ -240,39 +234,33 @@ const MainbookDetailsPage = () => {
     }
   }
 
-  const childs = form.watch('childs')
+  const rows = useWatch({
+    control: form.control,
+    name: 'childs'
+  })
   useEffect(() => {
-    if (!isEditable) {
+    if (!isEditable || rows.length === 0) {
       return
     }
 
-    const rows = childs.slice(0, childs.length - 1)
-    if (!rows.length) {
-      return
-    }
+    let itogoPrixod = 0
+    let itogoRasxod = 0
 
-    const itogo = {
-      schet: t('total'),
-      '10_prixod': 0,
-      '10_rasxod': 0
-    }
-
-    rows.forEach((child, index) => {
-      if (index !== childs.length - 1) {
-        itogo['10_rasxod'] += child[`10_rasxod`] || 0
-        itogo['10_prixod'] += child[`10_prixod`] || 0
+    rows.forEach((row, index) => {
+      if (index !== rows.length - 1) {
+        itogoPrixod += row?.[`10_prixod`] || 0
+        itogoRasxod += row?.[`10_rasxod`] || 0
       }
     })
 
-    rows.push(itogo)
-
-    if (
-      itogo['10_prixod'] !== childs[childs.length - 1]['10_prixod'] ||
-      itogo['10_rasxod'] !== childs[childs.length - 1]['10_rasxod']
-    ) {
-      form.setValue('childs', rows)
+    const itogoRow = rows[rows.length - 1]
+    if (itogoRow?.['10_prixod'] !== itogoPrixod) {
+      form.setValue(`childs.${rows.length - 1}.10_prixod` as any, itogoPrixod)
     }
-  }, [childs, form, isEditable, t])
+    if (itogoRow?.['10_rasxod'] !== itogoRasxod) {
+      form.setValue(`childs.${rows.length - 1}.10_rasxod` as any, itogoRasxod)
+    }
+  }, [rows, form, isEditable, t])
 
   return (
     <DetailsView className="h-full">
@@ -302,9 +290,7 @@ const MainbookDetailsPage = () => {
                     form.setValue('year', date.getFullYear())
                     form.setValue('month', date.getMonth() + 1)
                     if (id !== 'create') {
-                      autoFill({
-                        year: date.getFullYear(),
-                        month: date.getMonth() + 1,
+                      checkSaldo({
                         budjet_id: budjet_id!
                       })
                     }
@@ -313,7 +299,11 @@ const MainbookDetailsPage = () => {
                 {id !== 'create' ? (
                   <Button
                     type="button"
-                    onClick={() => autoFill({ year, month, budjet_id: budjet_id! })}
+                    onClick={() => {
+                      checkSaldo({
+                        budjet_id: budjet_id!
+                      })
+                    }}
                     loading={isAutoFilling}
                   >
                     {t('autofill')}
@@ -324,11 +314,9 @@ const MainbookDetailsPage = () => {
             <div className="overflow-auto scrollbar flex-1 relative">
               <MainbookTable
                 columns={columns}
-                data={fields}
                 methods={tableMethods}
-                onChange={createEditorChangeHandler({
-                  form
-                })}
+                form={form}
+                name="childs"
               />
             </div>
           </div>

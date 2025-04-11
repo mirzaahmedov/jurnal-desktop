@@ -5,7 +5,7 @@ import { useEffect } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { useForm } from 'react-hook-form'
+import { useForm, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
@@ -16,7 +16,6 @@ import { createPodotchetSpravochnik } from '@/app/region-spravochnik/podotchet'
 import { AccountBalance, Fieldset } from '@/common/components'
 import { EditableTable } from '@/common/components/editable-table'
 import {
-  createEditorChangeHandler,
   createEditorCreateHandler,
   createEditorDeleteHandler
 } from '@/common/components/editable-table/helpers'
@@ -208,7 +207,10 @@ const KassaRasxodDetailtsPage = () => {
     }
   )
 
-  const podvodki = form.watch('childs')
+  const podvodki = useWatch({
+    control: form.control,
+    name: 'childs'
+  })
 
   const summa = form.watch('summa')
   const reminder = monitor?.meta
@@ -275,10 +277,14 @@ const KassaRasxodDetailtsPage = () => {
                   documentType={DocumentType.KASSA_RASXOD}
                   autoGenerate={id === 'create'}
                   validateDate={id === 'create' ? validateDateWithinSelectedMonth : undefined}
-                  calendarProps={{
-                    fromMonth: startDate,
-                    toMonth: startDate
-                  }}
+                  calendarProps={
+                    id === 'create'
+                      ? {
+                          fromMonth: startDate,
+                          toMonth: startDate
+                        }
+                      : undefined
+                  }
                 />
               </div>
 
@@ -373,16 +379,14 @@ const KassaRasxodDetailtsPage = () => {
         >
           <EditableTable
             tabIndex={4}
+            form={form}
+            name="childs"
             columnDefs={podvodkaColumns}
-            data={form.watch('childs')}
             errors={form.formState.errors.childs}
             onCreate={createEditorCreateHandler({
               form,
               schema: RasxodPodvodkaPayloadSchema,
               defaultValues: defaultValues.childs[0]
-            })}
-            onChange={createEditorChangeHandler({
-              form
             })}
             onDelete={createEditorDeleteHandler({
               form

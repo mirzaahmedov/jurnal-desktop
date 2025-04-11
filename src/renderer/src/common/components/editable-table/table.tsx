@@ -1,9 +1,10 @@
-import type { EditableTableProps } from './interface'
-import type { FieldErrors } from 'react-hook-form'
+import type { EditableTableProps, EditableTableRowData, InferRow } from './interface'
+import type { ArrayPath, Path } from 'react-hook-form'
 
 import { useImperativeHandle, useMemo, useRef, useState } from 'react'
 
 import { CircleMinus, CirclePlus, SquareMinus } from 'lucide-react'
+import { Controller, type FieldErrors, useFieldArray } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
 import { Button } from '@/common/components/ui/button'
@@ -15,20 +16,23 @@ import { getHeaderGroups } from '../generic-table/utils'
 import { EditableTableCell, EditableTableHead, EditableTableRow } from './components'
 import { getAccessorColumns } from './utils'
 
-export const EditableTable = <T extends object>(props: EditableTableProps<T>) => {
+export const EditableTable = <T extends object, R extends InferRow<T>>(
+  props: EditableTableProps<T, R>
+) => {
   const {
     tableRef,
     tabIndex,
-    data,
+    name,
+    form,
     columnDefs,
     className,
     errors,
     placeholder,
     onCreate,
     onDelete,
-    onChange,
     params = {},
     validate,
+    getEditorProps,
     getRowClassName,
     methods
   } = props
@@ -41,6 +45,11 @@ export const EditableTable = <T extends object>(props: EditableTableProps<T>) =>
   const { t } = useTranslation()
 
   const headerGroups = useMemo(() => getHeaderGroups(columnDefs), [columnDefs])
+
+  const { fields: rows } = useFieldArray({
+    control: form.control,
+    name
+  })
 
   useImperativeHandle(
     methods,
@@ -114,7 +123,7 @@ export const EditableTable = <T extends object>(props: EditableTableProps<T>) =>
                     </EditableTableHead>
                   ) : null}
                   {Array.isArray(headerGroup)
-                    ? headerGroup.map((col) => {
+                    ? headerGroup.map((column) => {
                         const {
                           _colSpan,
                           _rowSpan,
@@ -124,7 +133,7 @@ export const EditableTable = <T extends object>(props: EditableTableProps<T>) =>
                           minWidth,
                           maxWidth,
                           headerClassName
-                        } = col
+                        } = column
                         return (
                           <EditableTableHead
                             key={String(key)}
@@ -154,21 +163,23 @@ export const EditableTable = <T extends object>(props: EditableTableProps<T>) =>
             : null}
         </TableHeader>
         <TableBody>
-          {Array.isArray(data) && data.length ? (
-            data.map((row, index) => {
+          {Array.isArray(rows) && rows.length ? (
+            rows.map((row, index) => {
               return (
                 <EditableTableRowRenderer
                   key={index}
                   index={index}
                   tabIndex={tabIndex}
                   row={row}
-                  data={data}
+                  rows={rows}
+                  name={name}
+                  form={form}
                   columnDefs={columnDefs}
                   errors={errors}
-                  onChange={onChange}
                   onDelete={onDelete}
                   params={params}
                   validate={validate}
+                  getEditorProps={getEditorProps}
                   getRowClassName={getRowClassName}
                   highlightedRows={highlightedRows}
                   onHighlight={(index) => {
@@ -223,39 +234,43 @@ export const EditableTable = <T extends object>(props: EditableTableProps<T>) =>
   )
 }
 
-interface EditableTableRowRendererProps<T extends object>
+interface EditableTableRowRendererProps<T extends object, R extends InferRow<T>>
   extends Pick<
-    EditableTableProps<T>,
-    | 'getRowClassName'
+    EditableTableProps<T, R>,
     | 'validate'
+    | 'name'
+    | 'form'
     | 'params'
     | 'onDelete'
-    | 'onChange'
     | 'errors'
-    | 'data'
     | 'columnDefs'
+    | 'getEditorProps'
+    | 'getRowClassName'
   > {
   tabIndex?: number
   index: number
-  row: T
+  row: EditableTableRowData<R>
+  rows: EditableTableRowData<R>[]
   highlightedRows: number[]
   onHighlight?(index: number): void
 }
-const EditableTableRowRenderer = <T extends object>({
+const EditableTableRowRenderer = <T extends object, R extends T[ArrayPath<NoInfer<T>>]>({
   tabIndex,
   index,
   columnDefs,
   row,
-  data,
+  rows,
+  name,
+  form,
   errors,
   onDelete,
-  onChange,
   params,
   validate,
+  getEditorProps,
   getRowClassName,
   highlightedRows,
   onHighlight
-}: EditableTableRowRendererProps<T>) => {
+}: EditableTableRowRendererProps<T, R>) => {
   const [state, setState] = useState<Record<string, unknown>>({})
 
   const accessorColumns = useMemo(() => getAccessorColumns(columnDefs), [columnDefs])
@@ -264,7 +279,7 @@ const EditableTableRowRenderer = <T extends object>({
     <EditableTableRow
       data-rowId={index}
       data-highlighted={highlightedRows.includes(index)}
-      className={getRowClassName?.({ index, row, data })}
+      className={getRowClassName?.({ index, row, rows })}
     >
       <EditableTableCell
         key="line_number"
@@ -276,32 +291,48 @@ const EditableTableRowRenderer = <T extends object>({
         {index + 1}
       </EditableTableCell>
       {Array.isArray(columnDefs)
-        ? accessorColumns.map((col) => {
-            const { key, Editor, width, minWidth, maxWidth, className } = col
+        ? accessorColumns.map((column) => {
+            const { key, Editor, width, minWidth, maxWidth, className } = column
             return (
-              <EditableTableCell
+              <Controller
                 key={String(key)}
-                style={{ width, minWidth, maxWidth }}
-                className={cn(
-                  'group-data-[highlighted=true]/row:bg-brand/10 group-data-[highlighted=true]/row:border-brand/20',
-                  className
+                control={form.control}
+                name={`${name}.${index}.${String(key)}` as Path<T>}
+                render={({ field }) => (
+                  <EditableTableCell
+                    style={{ width, minWidth, maxWidth }}
+                    className={cn(
+                      'group-data-[highlighted=true]/row:bg-brand/10 group-data-[highlighted=true]/row:border-brand/20',
+                      className
+                    )}
+                  >
+                    <Editor
+                      tabIndex={tabIndex}
+                      inputRef={field.ref}
+                      id={index}
+                      row={row}
+                      rows={rows}
+                      col={column}
+                      form={form}
+                      value={field.value}
+                      onChange={field.onChange}
+                      errors={errors?.[index] as FieldErrors<R>}
+                      state={state}
+                      setState={setState}
+                      params={params!}
+                      validate={validate}
+                      data-editorId={`${index}-${String(key)}`}
+                      {...getEditorProps?.({
+                        index,
+                        row,
+                        rows,
+                        col: column,
+                        errors: errors?.[index] as FieldErrors<R>
+                      })}
+                    />
+                  </EditableTableCell>
                 )}
-              >
-                <Editor
-                  tabIndex={tabIndex}
-                  id={index}
-                  row={row}
-                  data={data}
-                  col={col}
-                  onChange={onChange}
-                  errors={errors?.[index] as FieldErrors<T>}
-                  state={state}
-                  setState={setState}
-                  params={params!}
-                  validate={validate}
-                  data-editorId={`${index}-${String(key)}`}
-                />
-              </EditableTableCell>
+              />
             )
           })
         : null}

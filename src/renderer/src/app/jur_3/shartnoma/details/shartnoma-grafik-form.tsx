@@ -11,7 +11,6 @@ import {
   EditableTableRow
 } from '@/common/components/editable-table'
 import {
-  createEditorChangeHandler,
   createEditorCreateHandler,
   createEditorDeleteHandler
 } from '@/common/components/editable-table/helpers'
@@ -41,7 +40,8 @@ export const ShartnomaGrafikForm: FC<{
       tableRef={tableRef}
       tabIndex={5}
       columnDefs={provodkaColumns}
-      data={form.watch('grafiks')}
+      form={form}
+      name="grafiks"
       errors={form.formState.errors.grafiks}
       onCreate={createEditorCreateHandler({
         form,
@@ -50,10 +50,6 @@ export const ShartnomaGrafikForm: FC<{
         field: 'grafiks'
       })}
       onDelete={createEditorDeleteHandler({
-        form,
-        field: 'grafiks'
-      })}
-      onChange={createEditorChangeHandler({
         form,
         field: 'grafiks'
       })}
@@ -82,7 +78,7 @@ export const ShartnomaGrafikForm: FC<{
       }}
       footerRows={
         <EditableTableRow className="!border">
-          <EditableTableCell colSpan={13}>
+          <EditableTableCell colSpan={14}>
             <div className="flex items-center">
               <h1 className="px-3 font-bold">{t('total')}</h1>
               <Input

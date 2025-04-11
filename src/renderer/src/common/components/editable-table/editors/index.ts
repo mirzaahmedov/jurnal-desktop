@@ -1,4 +1,4 @@
-export type { EditorComponentType } from './types'
+export type { EditorComponent as EditorComponentType } from './interfaces'
 
 export * from './operatsii'
 export * from './summa'

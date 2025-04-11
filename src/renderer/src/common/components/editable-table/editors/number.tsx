@@ -1,4 +1,4 @@
-import type { EditorComponentType, EditorOptions } from './types'
+import type { EditorComponent, EditorOptions } from './interfaces'
 
 import { NumericInput, type NumericInputProps } from '@/common/components'
 import { inputVariants } from '@/common/features/spravochnik'
@@ -13,11 +13,12 @@ export const createNumberEditor = <T extends object>({
   readOnly?: boolean
   max?: number
   defaultValue?: number
-}): EditorComponentType<T> => {
-  const EditorComponent: EditorComponentType<T> = ({ tabIndex, id, row, errors, onChange }) => {
+}): EditorComponent<T> => {
+  const EditorComponent: EditorComponent<T> = ({ tabIndex, inputRef, errors, value, onChange }) => {
     return (
       <div className="relative">
         <NumericInput
+          getInputRef={inputRef}
           readOnly={readOnly}
           name={key as string}
           tabIndex={tabIndex}
@@ -28,22 +29,13 @@ export const createNumberEditor = <T extends object>({
             return true
           }}
           value={
-            typeof row[key] === 'string' || typeof row[key] === 'number'
-              ? Number(row[key]) !== 0
-                ? Number(row[key])
+            typeof value === 'string' || typeof value === 'number'
+              ? Number(value) !== 0
+                ? Number(value)
                 : (defaultValue ?? '')
               : (defaultValue ?? '')
           }
-          onValueChange={(values) =>
-            onChange?.({
-              id,
-              key,
-              payload: {
-                ...row,
-                [key]: values.floatValue ?? 0
-              }
-            })
-          }
+          onValueChange={(values) => onChange?.(values.floatValue ?? 0)}
           error={!!errors?.[key as string]}
           className={inputVariants({
             editor: true,

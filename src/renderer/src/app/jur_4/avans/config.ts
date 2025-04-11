@@ -27,7 +27,6 @@ export const AvansFormSchema = withPreprocessor(
     opisanie: z.string().optional(),
     spravochnik_podotchet_litso_id: z.number(),
     id_spravochnik_podotchet_litso: z.number(),
-    spravochnik_operatsii_own_id: z.number(),
     summa: z.number().optional(),
     childs: z.array(AvansProvodkaFormSchema)
   })
@@ -41,7 +40,6 @@ export const defaultValues: AvansFormValues = {
   opisanie: '',
   spravochnik_podotchet_litso_id: 0,
   id_spravochnik_podotchet_litso: 0,
-  spravochnik_operatsii_own_id: 0,
   summa: 0,
   childs: [
     {

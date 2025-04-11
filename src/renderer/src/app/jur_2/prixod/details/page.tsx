@@ -4,7 +4,7 @@ import { useEffect } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { useForm } from 'react-hook-form'
+import { useForm, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
@@ -15,7 +15,6 @@ import { createOrganizationSpravochnik } from '@/app/region-spravochnik/organiza
 import { Fieldset } from '@/common/components'
 import { EditableTable } from '@/common/components/editable-table'
 import {
-  createEditorChangeHandler,
   createEditorCreateHandler,
   createEditorDeleteHandler
 } from '@/common/components/editable-table/helpers'
@@ -214,7 +213,10 @@ const BankPrixodDetailsPage = () => {
     }
   )
 
-  const podvodki = form.watch('childs')
+  const podvodki = useWatch({
+    control: form.control,
+    name: 'childs'
+  })
 
   useEffect(() => {
     handleSaldoErrorDates(SaldoNamespace.JUR_2, error)
@@ -270,10 +272,14 @@ const BankPrixodDetailsPage = () => {
                   documentType={DocumentType.BANK_PRIXOD}
                   autoGenerate={id === 'create'}
                   validateDate={id === 'create' ? validateDateWithinSelectedMonth : undefined}
-                  calendarProps={{
-                    fromMonth: startDate,
-                    toMonth: startDate
-                  }}
+                  calendarProps={
+                    id === 'create'
+                      ? {
+                          fromMonth: startDate,
+                          toMonth: startDate
+                        }
+                      : undefined
+                  }
                 />
               </div>
 
@@ -327,8 +333,9 @@ const BankPrixodDetailsPage = () => {
         >
           <EditableTable
             tabIndex={5}
+            form={form}
+            name="childs"
             columnDefs={podvodkaColumns}
-            data={form.watch('childs')}
             errors={form.formState.errors.childs}
             onCreate={createEditorCreateHandler({
               form,
@@ -336,9 +343,6 @@ const BankPrixodDetailsPage = () => {
               defaultValues: defaultValues.childs[0]
             })}
             onDelete={createEditorDeleteHandler({
-              form
-            })}
-            onChange={createEditorChangeHandler({
               form
             })}
           />
