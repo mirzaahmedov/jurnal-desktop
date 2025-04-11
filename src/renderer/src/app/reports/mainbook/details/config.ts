@@ -1,5 +1,7 @@
 import { z } from 'zod'
 
+import { useSelectedMonthStore } from '@/common/features/selected-month'
+
 export const MainbookFormSchema = z.object({
   year: z.number(),
   month: z.number(),
@@ -12,7 +14,7 @@ export const MainbookFormSchema = z.object({
 export type MainbookFormValues = z.infer<typeof MainbookFormSchema>
 
 export const defaultValues: MainbookFormValues = {
-  year: new Date().getFullYear(),
-  month: new Date().getMonth() + 1,
+  year: useSelectedMonthStore.getState().startDate.getFullYear(),
+  month: useSelectedMonthStore.getState().startDate.getMonth() + 1,
   childs: []
 }

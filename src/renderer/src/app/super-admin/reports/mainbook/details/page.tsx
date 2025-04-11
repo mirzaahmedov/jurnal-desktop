@@ -9,7 +9,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
 import { MainbookTable } from '@/app/reports/mainbook/details/mainbook-table'
-import { type ProvodkaRow, provodkiColumns } from '@/app/reports/mainbook/details/provodki'
+import { MainbookProvodkaColumns, type ProvodkaRow } from '@/app/reports/mainbook/details/provodki'
 import { getMainbookColumns, transformGetByIdData } from '@/app/reports/mainbook/details/utils'
 import { MainbookService } from '@/app/reports/mainbook/service'
 import { MonthPicker } from '@/common/components/month-picker'
@@ -78,7 +78,7 @@ const AdminMainbookDetailsPage = () => {
   }, [setLayout, navigate, t, id])
 
   const columns = useMemo(
-    () => [...provodkiColumns, ...getMainbookColumns(types?.data ?? [])],
+    () => [...MainbookProvodkaColumns, ...getMainbookColumns(types?.data ?? [])],
     [types]
   )
   useEffect(() => {

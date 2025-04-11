@@ -12,6 +12,7 @@ import { MonthPicker } from '@/common/components/month-picker'
 import { SearchInput } from '@/common/components/search-input'
 import { Button } from '@/common/components/ui/button'
 import { useRequisitesStore } from '@/common/features/requisites'
+import { useSelectedMonthStore } from '@/common/features/selected-month'
 import { useLayoutStore } from '@/common/layout/store'
 import { formatDate } from '@/common/lib/date'
 import { DetailsView } from '@/common/views'
@@ -21,7 +22,7 @@ import { MainbookService } from '../service'
 import { defaultValues } from './config'
 import { type MainbookAutoFillSubChild } from './interfaces'
 import { MainbookTable } from './mainbook-table'
-import { provodkiColumns } from './provodki'
+import { MainbookProvodkaColumns } from './provodki'
 import { getMainbookColumns, transformGetByIdData, transformMainbookAutoFillData } from './utils'
 
 const MainbookDetailsPage = () => {
@@ -30,6 +31,7 @@ const MainbookDetailsPage = () => {
   const queryClient = useQueryClient()
   const setLayout = useLayoutStore((store) => store.setLayout)
   const budjet_id = useRequisitesStore((store) => store.budjet_id)
+  const startDate = useSelectedMonthStore((store) => store.startDate)
 
   const [isEditable, setEditable] = useState(false)
 
@@ -37,7 +39,11 @@ const MainbookDetailsPage = () => {
   const { t } = useTranslation(['app'])
 
   const form = useForm({
-    defaultValues
+    defaultValues: {
+      ...defaultValues,
+      year: startDate.getFullYear(),
+      month: startDate.getMonth() + 1
+    }
   })
 
   const { data: mainbook, isFetching } = useQuery({
@@ -136,8 +142,8 @@ const MainbookDetailsPage = () => {
   useEffect(() => {
     if (id === 'create') {
       form.reset({
-        month: new Date().getMonth() + 1,
-        year: new Date().getFullYear(),
+        year: startDate.getFullYear(),
+        month: startDate.getMonth() + 1,
         childs: []
       })
       return
@@ -152,7 +158,7 @@ const MainbookDetailsPage = () => {
         setEditable(true)
       }
     }
-  }, [form, mainbook, id])
+  }, [form, mainbook, id, startDate])
   useEffect(() => {
     setLayout({
       title: id === 'create' ? t('create') : t('edit'),
@@ -175,7 +181,7 @@ const MainbookDetailsPage = () => {
   }, [id, year, month, budjet_id])
 
   const columns = useMemo(
-    () => [...provodkiColumns, ...getMainbookColumns(types?.data ?? [], isEditable)],
+    () => [...MainbookProvodkaColumns, ...getMainbookColumns(types?.data ?? [], isEditable)],
     [types, isEditable]
   )
 
@@ -287,6 +293,7 @@ const MainbookDetailsPage = () => {
               <SearchInput onKeyDown={handleSearch} />
               <div className="flex items-center gap-5">
                 <MonthPicker
+                  disabled={isEditable}
                   value={date}
                   onChange={(value) => {
                     const date = new Date(value)
@@ -301,7 +308,7 @@ const MainbookDetailsPage = () => {
                     }
                   }}
                 />
-                {id !== 'create' ? (
+                {id !== 'create' && !isEditable ? (
                   <Button
                     type="button"
                     onClick={() => {
@@ -324,6 +331,9 @@ const MainbookDetailsPage = () => {
                 methods={tableMethods}
                 form={form}
                 name="childs"
+                onCellDoubleClick={({ col, row }) => {
+                  console.log('onCellDoubleClick', col, row)
+                }}
               />
             </div>
           </div>

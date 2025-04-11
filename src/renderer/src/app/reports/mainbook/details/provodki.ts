@@ -6,7 +6,7 @@ export interface ProvodkaRow {
   schet: string
 }
 
-export const provodkiColumns: EditableColumnDef<ProvodkaRow>[] = [
+export const MainbookProvodkaColumns: EditableColumnDef<ProvodkaRow>[] = [
   {
     key: 'schet',
     minWidth: 100,

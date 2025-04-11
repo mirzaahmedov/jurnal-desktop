@@ -19,7 +19,7 @@ export const queryClient = new QueryClient({
   },
   queryCache: new QueryCache({
     onError: (_, query) => {
-      queryClient.setQueryData(query.queryKey, undefined)
+      queryClient.removeQueries(query)
     }
   })
 })

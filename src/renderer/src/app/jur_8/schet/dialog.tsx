@@ -137,6 +137,7 @@ export const JUR8SchetsDialog = ({ open, onChangeOpen, selected }: JUR8SchetsDia
                       </FormLabel>
                       <FormControl>
                         <Input
+                          readOnly
                           className="col-span-4"
                           onDoubleClick={prixodSchetSpravochnik.open}
                           {...field}
@@ -160,6 +161,7 @@ export const JUR8SchetsDialog = ({ open, onChangeOpen, selected }: JUR8SchetsDia
                       </FormLabel>
                       <FormControl>
                         <Input
+                          readOnly
                           className="col-span-4"
                           onDoubleClick={prixodSchetSpravochnik.open}
                           {...field}

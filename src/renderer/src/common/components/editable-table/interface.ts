@@ -59,6 +59,11 @@ export interface EditableTableProps<T extends object, R extends InferRow<T> = In
   placeholder?: string
   onDelete?(ctx: DeleteContext): void
   onCreate?(): void
+  onCellDoubleClick?: (ctx: {
+    row: EditableTableRowData<R>
+    col: EditableColumnDef<R>
+    index: number
+  }) => void
   params?: Record<string, unknown>
   footerRows?: ReactNode
   validate?(ctx: ChangeContext<R>): boolean

@@ -30,6 +30,7 @@ export const EditableTable = <T extends object, R extends InferRow<T>>(
     placeholder,
     onCreate,
     onDelete,
+    onCellDoubleClick,
     params = {},
     validate,
     getEditorProps,
@@ -177,6 +178,7 @@ export const EditableTable = <T extends object, R extends InferRow<T>>(
                   columnDefs={columnDefs}
                   errors={errors}
                   onDelete={onDelete}
+                  onCellDoubleClick={onCellDoubleClick}
                   params={params}
                   validate={validate}
                   getEditorProps={getEditorProps}
@@ -242,6 +244,7 @@ interface EditableTableRowRendererProps<T extends object, R extends InferRow<T>>
     | 'form'
     | 'params'
     | 'onDelete'
+    | 'onCellDoubleClick'
     | 'errors'
     | 'columnDefs'
     | 'getEditorProps'
@@ -264,6 +267,7 @@ const EditableTableRowRenderer = <T extends object, R extends T[ArrayPath<NoInfe
   form,
   errors,
   onDelete,
+  onCellDoubleClick,
   params,
   validate,
   getEditorProps,
@@ -305,6 +309,13 @@ const EditableTableRowRenderer = <T extends object, R extends T[ArrayPath<NoInfe
                       'group-data-[highlighted=true]/row:bg-brand/10 group-data-[highlighted=true]/row:border-brand/20',
                       className
                     )}
+                    onDoubleClick={() => {
+                      onCellDoubleClick?.({
+                        col: column,
+                        row,
+                        index
+                      })
+                    }}
                   >
                     <Editor
                       tabIndex={tabIndex}
