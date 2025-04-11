@@ -2,9 +2,12 @@ import type { MainbookDocumentInfo } from '@/common/models'
 import type { DialogProps } from '@radix-ui/react-dialog'
 
 import { useQuery } from '@tanstack/react-query'
+import { Trans } from 'react-i18next'
 
 import { type ColumnDef, GenericTable } from '@/common/components'
+import { ProvodkaBadge } from '@/common/components/provodka-badge'
 import { IDCell } from '@/common/components/table/renderers/id'
+import { SummaCell } from '@/common/components/table/renderers/summa'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/common/components/ui/dialog'
 import { formatLocaleDate } from '@/common/lib/format'
 
@@ -43,17 +46,17 @@ export const MainbookDocumentsTracker = ({
       }
     ],
     queryFn: MainbookService.getMainbookDocuments,
-    enabled: !!budjet_id && !!year && !!month && !!schet
+    enabled: props.open && !!budjet_id && !!year && !!month && !!schet
   })
   return (
     <Dialog {...props}>
-      <DialogContent>
-        <DialogHeader>
+      <DialogContent className="w-full max-w-[1800px] h-full max-h-[900px] flex flex-col p-0 gap-0">
+        <DialogHeader className="p-5">
           <DialogTitle>
-            {prixod ? 'Приход' : 'Расход'} {year} {month} {schet}
+            <Trans>documents</Trans>
           </DialogTitle>
         </DialogHeader>
-        <div>
+        <div className="flex-1">
           <GenericTable
             data={documents?.data ?? []}
             columnDefs={columns}
@@ -72,25 +75,38 @@ const columns: ColumnDef<MainbookDocumentInfo>[] = [
     renderCell: IDCell
   },
   {
+    minWidth: 200,
     key: 'doc_num'
   },
   {
+    minWidth: 200,
     key: 'doc_date',
     renderCell: (row) => formatLocaleDate(row.doc_date)
   },
   {
-    key: 'debet_schet'
+    minWidth: 100,
+    key: 'debet_schet',
+    header: 'debet'
   },
   {
-    key: 'kredit_schet'
+    minWidth: 100,
+    key: 'kredit_schet',
+    header: 'kredit'
   },
   {
-    key: 'summa'
+    minWidth: 200,
+    numeric: true,
+    key: 'summa',
+    renderCell: SummaCell
   },
   {
+    fill: true,
+    minWidth: 350,
     key: 'opisanie'
   },
   {
-    key: 'type'
+    minWidth: 300,
+    key: 'type',
+    renderCell: (row) => <ProvodkaBadge type={row.type} />
   }
 ]

@@ -1,7 +1,7 @@
 import type { MainbookAutoFillSubChild } from './interfaces'
-import type { EditableTableMethods } from '@/common/components/editable-table'
+import type { EditableColumnDef, EditableTableMethods } from '@/common/components/editable-table'
 
-import { type KeyboardEvent, useEffect, useMemo, useRef, useState } from 'react'
+import { type KeyboardEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useForm, useWatch } from 'react-hook-form'
@@ -21,8 +21,9 @@ import { DetailsView } from '@/common/views'
 import { MainbookQueryKeys } from '../config'
 import { MainbookService } from '../service'
 import { defaultValues } from './config'
+import { MainbookDocumentsTracker } from './documents-tracker'
 import { MainbookTable } from './mainbook-table'
-import { MainbookProvodkaColumns } from './provodki'
+import { MainbookProvodkaColumns, type ProvodkaRow } from './provodki'
 import { getMainbookColumns, transformGetByIdData, transformMainbookAutoFillData } from './utils'
 
 const MainbookDetailsPage = () => {
@@ -34,6 +35,11 @@ const MainbookDetailsPage = () => {
   const startDate = useSelectedMonthStore((store) => store.startDate)
 
   const [isEditable, setEditable] = useState(false)
+  const [activeCell, setActiveCell] = useState<{
+    type_id: number
+    schet: string
+    prixod: boolean
+  }>()
 
   const { id } = useParams()
   const { t } = useTranslation(['app'])
@@ -276,6 +282,21 @@ const MainbookDetailsPage = () => {
     }
   }, [rows, form, isEditable, t])
 
+  const handleCellDoubleClick = useCallback(
+    (args: { col: EditableColumnDef<ProvodkaRow>; row: ProvodkaRow }) => {
+      const type_id = Number(args.col.key.split('_')[0])
+      const prixod = args.col.key.endsWith('_prixod')
+      const schet = args.row.schet
+
+      setActiveCell({
+        type_id,
+        schet,
+        prixod
+      })
+    },
+    []
+  )
+
   return (
     <DetailsView className="h-full">
       <DetailsView.Content
@@ -336,6 +357,7 @@ const MainbookDetailsPage = () => {
                 methods={tableMethods}
                 form={form}
                 name="childs"
+                onCellDoubleClick={!isEditable ? (handleCellDoubleClick as any) : undefined}
               />
             </div>
           </div>
@@ -351,6 +373,21 @@ const MainbookDetailsPage = () => {
           </DetailsView.Footer>
         </form>
       </DetailsView.Content>
+
+      <MainbookDocumentsTracker
+        open={!!activeCell}
+        onOpenChange={(open) => {
+          if (!open) {
+            setActiveCell(undefined)
+          }
+        }}
+        budjet_id={budjet_id!}
+        month={month}
+        year={year}
+        type_id={activeCell?.type_id}
+        schet={activeCell?.schet}
+        prixod={activeCell?.prixod}
+      />
     </DetailsView>
   )
 }
