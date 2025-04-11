@@ -413,6 +413,7 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
                       <EditableTableCell>
                         <div className="relative">
                           <Input
+                            readOnly
                             value={row.debet_schet}
                             onChange={(e) => {
                               handleChangeChildField(index, 'debet_schet', e.target.value)
@@ -429,6 +430,7 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
                       <EditableTableCell>
                         <div className="relative">
                           <Input
+                            readOnly
                             value={row.debet_sub_schet}
                             onChange={(e) => {
                               handleChangeChildField(index, 'debet_sub_schet', e.target.value)
@@ -580,7 +582,6 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
               ...form.getValues('childs'),
               {
                 ...defaultValues.childs[0],
-                kredit_schet: form.getValues('j_o_num'),
                 data_pereotsenka: form.getValues('doc_date')
               }
             ]

@@ -329,7 +329,7 @@ const PrixodDetails = ({ id, onSuccess }: PrixodDetailsProps) => {
                     data_pereotsenka: form.watch('doc_date'),
                     debet_schet: r.group.schet,
                     debet_sub_schet: r.group.provodka_subschet,
-                    kredit_schet: form.watch('j_o_num'),
+                    kredit_schet: '',
                     kredit_sub_schet: r.group.provodka_subschet,
                     inventar_num: r.inventar_num,
                     serial_num: r.serial_num,
