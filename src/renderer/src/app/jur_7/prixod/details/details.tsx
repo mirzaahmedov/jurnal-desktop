@@ -14,22 +14,21 @@ import { createShartnomaSpravochnik } from '@/app/jur_3/shartnoma'
 import { createResponsibleSpravochnik } from '@/app/jur_7/responsible/service'
 import { handleOstatokExistingDocumentError, handleOstatokResponse } from '@/app/jur_7/saldo/utils'
 import { createOrganizationSpravochnik } from '@/app/region-spravochnik/organization'
-import { createOperatsiiSpravochnik } from '@/app/super-admin/operatsii'
 import { Form } from '@/common/components/ui/form'
 import { DocumentType } from '@/common/features/doc-num'
 import { DownloadFile, ImportFile } from '@/common/features/file'
-import { useSelectedMonthStore } from '@/common/features/selected-month'
-import { validateDateWithinSelectedMonth } from '@/common/features/selected-month'
+import {
+  useSelectedMonthStore,
+  validateDateWithinSelectedMonth
+} from '@/common/features/selected-month'
 import { useSnippets } from '@/common/features/snippents/use-snippets'
 import { useSpravochnik } from '@/common/features/spravochnik'
 import { formatDate, parseDate, withinMonth } from '@/common/lib/date'
 import { focusInvalidInput } from '@/common/lib/errors'
-import { type Operatsii, TypeSchetOperatsii } from '@/common/models'
 import { DetailsView } from '@/common/views'
 import {
   DocumentFields,
   DoverennostFields,
-  JONumFields,
   OpisanieFields,
   OrganizationFields,
   ResponsibleFields,
@@ -165,25 +164,6 @@ const PrixodDetails = ({ id, onSuccess }: PrixodDetailsProps) => {
       }
     })
   )
-  const operatsiiSpravochnik = useSpravochnik(
-    createOperatsiiSpravochnik({
-      onChange: (_, operatsii) => {
-        form.setValue('j_o_num', operatsii?.schet ?? '')
-        form.trigger('j_o_num')
-        form.setValue(
-          'childs',
-          form.getValues('childs').map((child) => ({
-            ...child,
-            kredit_schet: child.kredit_schet || operatsii?.schet || ''
-          }))
-        )
-        form.trigger('childs')
-      },
-      params: {
-        type_schet: TypeSchetOperatsii.GENERAL
-      }
-    })
-  )
 
   const onSubmit = form.handleSubmit((values) => {
     if (id === 'create') {
@@ -278,16 +258,6 @@ const PrixodDetails = ({ id, onSuccess }: PrixodDetailsProps) => {
                 autoGenerate={id === 'create'}
               />
               <div className="flex items-center gap-5 flex-wrap pb-7 px-5">
-                <JONumFields
-                  tabIndex={2}
-                  error={form.formState.errors.j_o_num}
-                  spravochnik={{
-                    ...operatsiiSpravochnik,
-                    selected: {
-                      schet: form.watch('j_o_num')
-                    } as Operatsii
-                  }}
-                />
                 <DoverennostFields
                   tabIndex={3}
                   form={form}

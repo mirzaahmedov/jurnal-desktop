@@ -1,0 +1,78 @@
+import type { FieldError } from 'react-hook-form'
+
+import { useQuery } from '@tanstack/react-query'
+
+import { operatsiiQueryKeys, operatsiiService } from '@/app/super-admin/operatsii'
+import { AutoComplete } from '@/common/components'
+import { Input } from '@/common/components/ui/input'
+import { inputVariants } from '@/common/features/spravochnik'
+import { TypeSchetOperatsii } from '@/common/models'
+
+export const SubSchetEditor = ({
+  tabIndex,
+  error,
+  schet,
+  value,
+  onChange
+}: {
+  tabIndex: number
+  error?: FieldError
+  schet: string
+  value: string
+  onChange: (value: string) => void
+}) => {
+  const { data: subSchetOptions, isFetching: isFetchingSubSchetOptions } = useQuery({
+    queryKey: [
+      operatsiiQueryKeys.getAll,
+      {
+        type_schet: TypeSchetOperatsii.JUR3,
+        schet
+      }
+    ],
+    queryFn: operatsiiService.getAll,
+    enabled: !!schet
+  })
+  const filteredSubSchetOptions =
+    subSchetOptions?.data?.filter((o) => o.sub_schet?.includes(value ?? '')) ?? []
+
+  return (
+    <AutoComplete
+      autoSelectSingleResult={false}
+      isFetching={isFetchingSubSchetOptions}
+      options={filteredSubSchetOptions}
+      getOptionLabel={(option) => option.sub_schet}
+      getOptionValue={(option) => option.sub_schet}
+      onSelect={(option) => {
+        onChange?.(option.sub_schet)
+      }}
+      className="border-r"
+      popoverProps={{
+        onOpenAutoFocus: (e) => e.preventDefault(),
+        onCloseAutoFocus: (e) => e.preventDefault()
+      }}
+    >
+      {({ open, close }) => (
+        <Input
+          type="text"
+          tabIndex={tabIndex}
+          error={!!error}
+          name="kredit_schet"
+          onFocus={open}
+          onBlur={close}
+          value={value}
+          onChange={(e) => {
+            onChange?.(e.target.value)
+          }}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              e.preventDefault()
+              close()
+            }
+          }}
+          onMouseDown={(e) => e.stopPropagation()}
+          className={inputVariants({ editor: true })}
+        />
+      )}
+    </AutoComplete>
+  )
+}

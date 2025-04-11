@@ -27,10 +27,12 @@ import { calcSena, calcSumma } from '@/common/lib/pricing'
 import { cn } from '@/common/lib/utils'
 
 import { type PrixodFormValues, type PrixodProvodkaFormValues, defaultValues } from '../config'
+import { SchetEditor } from './components/schet-editor'
+import { SubSchetEditor } from './components/sub-schet-editor'
 
 const PAGE_SIZE = 20
 
-type ProvodkaTableProps = {
+interface ProvodkaTableProps {
   tabIndex: number
   form: UseFormReturn<PrixodFormValues>
 }
@@ -442,6 +444,28 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
                       </EditableTableCell>
 
                       <EditableTableCell>
+                        <SchetEditor
+                          tabIndex={tabIndex}
+                          error={errors?.kredit_schet}
+                          value={row.kredit_schet}
+                          onChange={(schet) => {
+                            handleChangeChildField(index, 'kredit_schet', schet)
+                          }}
+                        />
+                      </EditableTableCell>
+                      <EditableTableCell>
+                        <SubSchetEditor
+                          tabIndex={tabIndex}
+                          error={errors?.kredit_sub_schet}
+                          schet={row.kredit_schet}
+                          value={row.kredit_sub_schet}
+                          onChange={(schet) => {
+                            handleChangeChildField(index, 'kredit_sub_schet', schet)
+                          }}
+                        />
+                      </EditableTableCell>
+
+                      {/* <EditableTableCell colSpan={2}>
                         <div className="relative">
                           <Input
                             value={row.kredit_schet}
@@ -472,7 +496,7 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
                             tabIndex={tabIndex}
                           />
                         </div>
-                      </EditableTableCell>
+                      </EditableTableCell> */}
 
                       <EditableTableCell>
                         <div className="relative">
@@ -605,7 +629,6 @@ const NaimenovanieCells = ({
         const iznos = group && group?.iznos_foiz > 0
         onChangeField(index, 'debet_schet', group?.schet ?? '')
         onChangeField(index, 'debet_sub_schet', group?.provodka_subschet ?? '')
-        onChangeField(index, 'kredit_sub_schet', group?.provodka_subschet ?? '')
         onChangeField(index, 'group_jur7_id', id)
         onChangeField(index, 'iznos', iznos)
         onChangeField(index, 'iznos_schet', iznos ? (group?.schet ?? '') : '')
