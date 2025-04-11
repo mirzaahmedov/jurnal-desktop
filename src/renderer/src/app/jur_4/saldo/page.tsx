@@ -3,20 +3,18 @@ import type { PodotchetSaldo } from '@/common/models'
 import { useEffect, useState } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { CalendarDays } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
 import { FooterCell, FooterRow, GenericTable } from '@/common/components'
-import { Button } from '@/common/components/ui/button'
-import { ButtonGroup } from '@/common/components/ui/button-group'
 import { useConfirm } from '@/common/features/confirm'
 import { useRequisitesStore } from '@/common/features/requisites'
 import {
   SaldoNamespace,
   handleSaldoErrorDates,
-  handleSaldoResponseDates
+  handleSaldoResponseDates,
+  useSaldoController
 } from '@/common/features/saldo'
 import { useKeyUp, useToggle } from '@/common/hooks'
 import { useLayoutStore } from '@/common/layout/store'
@@ -24,7 +22,6 @@ import { formatNumber } from '@/common/lib/format'
 import { ListView } from '@/common/views'
 
 import { podotchetSaldoColumns } from './columns'
-import { PodotchetSaldoMonthlyTrackerDialog } from './components/saldo-monthly-tracker-dialog'
 import { PodotchetSaldoQueryKeys } from './config'
 import { PodotchetSaldoDialog } from './dialog'
 import { PodotchetSaldoFilters, useYearFilter } from './filters'
@@ -36,25 +33,34 @@ const PodotchetSaldoPage = () => {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const dialogToggle = useToggle()
-  const monthlyTrackerToggle = useToggle()
+  // const monthlyTrackerToggle = useToggle()
 
-  const [year, setYear] = useYearFilter()
+  const [year] = useYearFilter()
   const [selected, setSelected] = useState<PodotchetSaldo | null>(null)
 
   const { confirm } = useConfirm()
   const { t } = useTranslation(['app'])
   const { budjet_id, main_schet_id, jur4_schet_id } = useRequisitesStore()
+  const { queuedMonths } = useSaldoController({
+    ns: SaldoNamespace.JUR_4
+  })
 
-  const { data: saldo, isFetching } = useQuery({
+  const {
+    data: saldo,
+    isFetching,
+    error
+  } = useQuery({
     queryKey: [
       PodotchetSaldoQueryKeys.getAll,
       {
         main_schet_id,
         budjet_id,
+        schet_id: jur4_schet_id,
         year
       }
     ],
-    queryFn: PodotchetSaldoService.getAll
+    queryFn: PodotchetSaldoService.getAll,
+    enabled: !!main_schet_id && !!jur4_schet_id && !queuedMonths.length
   })
   const { mutate: cleanSaldo, isPending } = useMutation({
     mutationKey: [PodotchetSaldoQueryKeys.clean],
@@ -104,6 +110,12 @@ const PodotchetSaldoPage = () => {
     })
   }, [setLayout, t, navigate, dialogToggle.open])
 
+  useEffect(() => {
+    if (error) {
+      handleSaldoErrorDates(SaldoNamespace.JUR_4, error)
+    }
+  }, [error])
+
   useKeyUp({
     key: 'Delete',
     ctrlKey: true,
@@ -112,7 +124,7 @@ const PodotchetSaldoPage = () => {
 
   return (
     <ListView>
-      <ListView.Header>
+      {/* <ListView.Header>
         <ButtonGroup className="w-full flex items-center justify-end gap-2">
           <Button
             variant="ghost"
@@ -122,12 +134,13 @@ const PodotchetSaldoPage = () => {
             {t('monthly_saldo')}
           </Button>
         </ButtonGroup>
-      </ListView.Header>
+      </ListView.Header> */}
       <ListView.Content loading={isFetching || isPending}>
         <GenericTable
           data={saldo?.data ?? []}
           columnDefs={podotchetSaldoColumns}
           onEdit={handleClickEdit}
+          getRowEditable={(row) => row.updated}
           footer={
             <FooterRow>
               <FooterCell
@@ -144,13 +157,13 @@ const PodotchetSaldoPage = () => {
         onOpenChange={dialogToggle.setOpen}
         selected={selected}
       />
-      <PodotchetSaldoMonthlyTrackerDialog
+      {/* <PodotchetSaldoMonthlyTrackerDialog
         open={monthlyTrackerToggle.isOpen}
         onOpenChange={monthlyTrackerToggle.setOpen}
         onSelect={(month) => {
           setYear(month.getFullYear())
         }}
-      />
+      /> */}
     </ListView>
   )
 }

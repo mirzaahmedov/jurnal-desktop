@@ -22,6 +22,7 @@ import {
   useSearchFilter
 } from '@/common/features/filters/search/search-filter-debounced'
 import { useRequisitesStore } from '@/common/features/requisites'
+import { SaldoNamespace, useSaldoController } from '@/common/features/saldo'
 import {
   useSelectedMonthStore,
   validateDateWithinSelectedMonth
@@ -53,6 +54,9 @@ const PodotchetMonitorPage = () => {
   const { t } = useTranslation(['app'])
   const { sorting, handleSort, getColumnSorted } = useTableSort()
   const { main_schet_id, budjet_id, jur4_schet_id } = useRequisitesStore()
+  const { queuedMonths } = useSaldoController({
+    ns: SaldoNamespace.JUR_4
+  })
 
   const [operatsiiId, setOperatsiiId] = useOperatsiiFilter()
   const [podotchetId, setPodotchetId] = usePodotchetFilter()
@@ -98,7 +102,8 @@ const PodotchetMonitorPage = () => {
       },
       podotchetId
     ],
-    enabled: !!main_schet_id && !!operatsiiSpravochnik.selected
+    enabled:
+      !!main_schet_id && !!operatsiiSpravochnik.selected && !!jur4_schet_id && !queuedMonths.length
   })
 
   useEffect(() => {
@@ -143,7 +148,7 @@ const PodotchetMonitorPage = () => {
             <ChooseSpravochnik
               spravochnik={podotchetSpravochnik}
               placeholder={t('choose', {
-                what: t('podotchet')
+                what: t('podotchet-litso')
               })}
               getName={(selected) => selected.name}
               getElements={(selected) => [
@@ -160,7 +165,10 @@ const PodotchetMonitorPage = () => {
               params={{
                 budjet_id,
                 to: dates.to,
-                excel: true
+                excel: true,
+                year: startDate.getFullYear(),
+                month: startDate.getMonth() + 1,
+                schet_id: jur4_schet_id
               }}
               buttonText={t('debitor_kreditor_report')}
             />
@@ -173,6 +181,9 @@ const PodotchetMonitorPage = () => {
                   from: dates.from,
                   to: dates.to,
                   operatsii: operatsiiSpravochnik.selected?.schet,
+                  schet_id: jur4_schet_id,
+                  year: startDate.getFullYear(),
+                  month: startDate.getMonth() + 1,
                   excel: true
                 }}
                 buttonText={t('personal_account')}
@@ -184,10 +195,13 @@ const PodotchetMonitorPage = () => {
               params={{
                 budjet_id,
                 main_schet_id,
+                schet_id: jur4_schet_id,
                 from: dates.from,
                 to: dates.to,
                 excel: true,
                 operatsii: operatsiiSpravochnik.selected?.schet,
+                year: startDate.getFullYear(),
+                month: startDate.getMonth() + 1,
                 report_title_id
               }}
               buttonText={t('cap-report')}
@@ -205,7 +219,7 @@ const PodotchetMonitorPage = () => {
         <SummaTotal>
           <SummaTotal.Value
             name={t('remainder-from')}
-            value={formatNumber(monitoring?.meta?.summa_from_object?.summa ?? 0)}
+            value={formatNumber(monitoring?.meta?.summa_from ?? 0)}
           />
         </SummaTotal>
       </ListView.Header>
@@ -222,20 +236,22 @@ const PodotchetMonitorPage = () => {
             <>
               <FooterRow>
                 <FooterCell
-                  title={t('total')}
+                  title={t('total_page')}
                   colSpan={5}
                   content={formatNumber(monitoring?.meta?.page_prixod_sum ?? 0)}
                 />
                 <FooterCell content={formatNumber(monitoring?.meta?.page_rasxod_sum ?? 0)} />
               </FooterRow>
-              <FooterRow>
-                <FooterCell
-                  title={t('total_period')}
-                  colSpan={5}
-                  content={formatNumber(monitoring?.meta?.prixod_sum ?? 0)}
-                />
-                <FooterCell content={formatNumber(monitoring?.meta?.rasxod_sum ?? 0)} />
-              </FooterRow>
+              {(monitoring?.meta?.pageCount ?? 0) > 1 ? (
+                <FooterRow>
+                  <FooterCell
+                    title={t('total_period')}
+                    colSpan={5}
+                    content={formatNumber(monitoring?.meta?.prixod_sum ?? 0)}
+                  />
+                  <FooterCell content={formatNumber(monitoring?.meta?.rasxod_sum ?? 0)} />
+                </FooterRow>
+              ) : null}
             </>
           }
         />
@@ -244,7 +260,7 @@ const PodotchetMonitorPage = () => {
         <SummaTotal className="pb-5">
           <SummaTotal.Value
             name={t('remainder-to')}
-            value={formatNumber(monitoring?.meta?.summa_to_object?.summa ?? 0)}
+            value={formatNumber(monitoring?.meta?.summa_to ?? 0)}
           />
         </SummaTotal>
         <ListView.Pagination

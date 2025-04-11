@@ -2,7 +2,7 @@ import { useState } from 'react'
 
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
-import { getJur3SchetId, useRequisitesStore } from '@/common/features/requisites'
+import { useRequisitesStore } from '@/common/features/requisites'
 import {
   type MonthValue,
   SaldoNamespace,
@@ -15,7 +15,7 @@ import { OrganSaldoService } from '../service'
 
 export const OrganSaldoUpdateManager = () => {
   const queryClient = useQueryClient()
-  const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
+  const { main_schet_id, jur3_schet_id } = useRequisitesStore()
 
   const [completed, setCompleted] = useState<MonthValue[]>([])
 
@@ -39,7 +39,7 @@ export const OrganSaldoUpdateManager = () => {
           month: newQueue[0].month,
           year: newQueue[0].year,
           main_schet_id: main_schet_id!,
-          schet_id: getJur3SchetId()!
+          schet_id: jur3_schet_id!
         })
       }
 
@@ -60,7 +60,7 @@ export const OrganSaldoUpdateManager = () => {
           month: values.month,
           year: values.year,
           main_schet_id: main_schet_id!,
-          schet_id: getJur3SchetId()!
+          schet_id: jur3_schet_id!
         })
       }}
       onClose={() => {

@@ -14,7 +14,7 @@ import { PodotchetSaldoService } from '../service'
 
 export const PodotchetSaldoUpdateManager = () => {
   const queryClient = useQueryClient()
-  const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
+  const { main_schet_id, jur4_schet_id } = useRequisitesStore()
 
   const [completed, setCompleted] = useState<MonthValue[]>([])
 
@@ -38,7 +38,7 @@ export const PodotchetSaldoUpdateManager = () => {
           month: newQueue[0].month,
           year: newQueue[0].year,
           main_schet_id: main_schet_id!,
-          schet_id: newQueue[0].schet_id!
+          schet_id: jur4_schet_id!
         })
       }
 
@@ -59,7 +59,7 @@ export const PodotchetSaldoUpdateManager = () => {
           month: values.month,
           year: values.year,
           main_schet_id: main_schet_id!,
-          schet_id: values.schet_id!
+          schet_id: jur4_schet_id!
         })
       }}
       onClose={() => {

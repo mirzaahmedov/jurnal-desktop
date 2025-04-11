@@ -201,6 +201,9 @@ const OrganizationMonitoringPage = () => {
                           from: dates.from,
                           to: dates.to,
                           report_title_id,
+                          year: startDate.getFullYear(),
+                          month: startDate.getMonth() + 1,
+                          schet: operatsiiSpravochnik.selected?.schet,
                           operatsii: operatsiiSpravochnik.selected?.schet,
                           excel: true
                         }}
@@ -218,6 +221,9 @@ const OrganizationMonitoringPage = () => {
                           budjet_id,
                           schet_id: jur3_schet_id,
                           to: dates.to,
+                          year: startDate.getFullYear(),
+                          month: startDate.getMonth() + 1,
+                          schet: operatsiiSpravochnik.selected?.schet,
                           operatsii: operatsiiSpravochnik.selected?.schet,
                           excel: true
                         }}
@@ -238,8 +244,11 @@ const OrganizationMonitoringPage = () => {
                               schet_id: jur3_schet_id,
                               from: dates.from,
                               to: dates.to,
+                              year: startDate.getFullYear(),
+                              month: startDate.getMonth() + 1,
                               report_title_id,
                               operatsii: operatsiiSpravochnik.selected?.schet,
+                              schet: operatsiiSpravochnik.selected?.schet,
                               excel: true
                             }}
                             buttonText={t('pages.prixod-docs')}
@@ -258,6 +267,9 @@ const OrganizationMonitoringPage = () => {
                               to: dates.to,
                               excel: true,
                               operatsii: operatsiiSpravochnik.selected?.schet,
+                              schet: operatsiiSpravochnik.selected?.schet,
+                              year: startDate.getFullYear(),
+                              month: startDate.getMonth() + 1,
                               contract: false
                             }}
                             buttonText={t('summarized_report')}
@@ -271,11 +283,14 @@ const OrganizationMonitoringPage = () => {
                             url="/organization/monitoring/order"
                             params={{
                               main_schet_id,
+                              schet: operatsiiSpravochnik.selected?.schet,
                               schet_id: jur3_schet_id,
                               organ_id: organId ? organId : undefined,
                               from: dates.from,
                               to: dates.to,
                               excel: true,
+                              year: startDate.getFullYear(),
+                              month: startDate.getMonth() + 1,
                               contract: true
                             }}
                             buttonText={t('summarized_report_by_contract')}

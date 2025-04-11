@@ -88,6 +88,10 @@ export const Jur7MonitorPage = () => {
         <ListView.RangeDatePicker
           {...dates}
           validateDate={validateDateWithinSelectedMonth}
+          calendarProps={{
+            fromMonth: startDate,
+            toMonth: startDate
+          }}
         />
 
         <DropdownMenu open={reportsToggle.isOpen}>

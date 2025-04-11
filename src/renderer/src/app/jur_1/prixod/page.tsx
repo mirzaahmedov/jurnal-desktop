@@ -126,7 +126,8 @@ const KassaPrixodPage = () => {
           {...dates}
           validateDate={validateDateWithinSelectedMonth}
           calendarProps={{
-            fromMonth: startDate
+            fromMonth: startDate,
+            toMonth: startDate
           }}
         />
         <DownloadFile
