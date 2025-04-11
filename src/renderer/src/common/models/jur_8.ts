@@ -19,6 +19,7 @@ export interface JUR8MonitorChild {
   type_doc: string
   rasxod_schet: string
   schet_id: number
+  opisanie?: string
 }
 
 export interface JUR8Schet {

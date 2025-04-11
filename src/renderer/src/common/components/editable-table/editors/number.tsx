@@ -18,7 +18,7 @@ export const createNumberEditor = <T extends object>({
     return (
       <div className="relative">
         <NumericInput
-          getInputRef={inputRef}
+          ref={inputRef}
           readOnly={readOnly}
           name={key as string}
           tabIndex={tabIndex}

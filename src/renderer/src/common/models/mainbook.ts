@@ -19,6 +19,7 @@ export interface Mainbook {
   accept_user_id: null | number
   accept_user_fio: null | string
   accept_user_login: null | string
+  first: boolean
   childs: MainbookChild[]
 }
 

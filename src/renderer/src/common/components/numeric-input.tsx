@@ -9,7 +9,7 @@ import { cn } from '@/common/lib/utils'
 
 import { Input } from './ui/input'
 
-export type NumericInputProps = NumericFormatProps<InputProps> & {
+export type NumericInputProps = Omit<NumericFormatProps<InputProps>, 'getInputRef'> & {
   adjustWidth?: boolean
 }
 export const NumericInput = forwardRef<HTMLInputElement, NumericInputProps>(

@@ -148,6 +148,9 @@ const MainbookDetailsPage = () => {
         year: mainbook.data.year,
         childs: transformGetByIdData(mainbook.data.childs)
       })
+      if (mainbook?.data?.first) {
+        setEditable(true)
+      }
     }
   }, [form, mainbook, id])
   useEffect(() => {
@@ -290,7 +293,9 @@ const MainbookDetailsPage = () => {
                     form.setValue('year', date.getFullYear())
                     form.setValue('month', date.getMonth() + 1)
                     if (id !== 'create') {
-                      checkSaldo({
+                      autoFill({
+                        year: date.getFullYear(),
+                        month: date.getMonth() + 1,
                         budjet_id: budjet_id!
                       })
                     }
@@ -300,7 +305,9 @@ const MainbookDetailsPage = () => {
                   <Button
                     type="button"
                     onClick={() => {
-                      checkSaldo({
+                      autoFill({
+                        year,
+                        month,
                         budjet_id: budjet_id!
                       })
                     }}

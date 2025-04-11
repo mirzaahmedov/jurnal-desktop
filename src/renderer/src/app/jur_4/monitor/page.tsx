@@ -1,3 +1,5 @@
+import type { PodotchetMonitor } from '@/common/models'
+
 import { useEffect } from 'react'
 
 import { useQuery } from '@tanstack/react-query'
@@ -5,7 +7,6 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
 import { createPodotchetSpravochnik } from '@/app/region-spravochnik/podotchet'
-import { createOperatsiiSpravochnik } from '@/app/super-admin/operatsii'
 import {
   ChooseSpravochnik,
   FooterCell,
@@ -33,12 +34,11 @@ import { useDates, usePagination } from '@/common/hooks'
 import { useLayoutStore } from '@/common/layout/store'
 import { formatNumber } from '@/common/lib/format'
 import { getProvodkaURL } from '@/common/lib/provodka'
-import { type PodotchetMonitor, TypeSchetOperatsii } from '@/common/models'
 import { ListView } from '@/common/views'
 
 import { PodotchetMonitorColumns } from './columns'
 import { PodotchetMonitorQueryKeys } from './config'
-import { useOperatsiiFilter, usePodotchetFilter } from './filters'
+import { usePodotchetFilter } from './filters'
 import { PodotchetMonitorService } from './service'
 
 const PodotchetMonitorPage = () => {
@@ -58,23 +58,8 @@ const PodotchetMonitorPage = () => {
     ns: SaldoNamespace.JUR_4
   })
 
-  const [operatsiiId, setOperatsiiId] = useOperatsiiFilter()
   const [podotchetId, setPodotchetId] = usePodotchetFilter()
 
-  const operatsiiSpravochnik = useSpravochnik(
-    createOperatsiiSpravochnik({
-      value: operatsiiId,
-      onChange: (id) => {
-        pagination.onChange({
-          page: 1
-        })
-        setOperatsiiId(id)
-      },
-      params: {
-        type_schet: TypeSchetOperatsii.JUR4
-      }
-    })
-  )
   const podotchetSpravochnik = useSpravochnik(
     createPodotchetSpravochnik({
       value: podotchetId,
@@ -92,7 +77,6 @@ const PodotchetMonitorPage = () => {
         search,
         main_schet_id,
         schet_id: jur4_schet_id,
-        operatsii: operatsiiSpravochnik.selected?.schet,
         podotchet_id: podotchetId,
         year: startDate.getFullYear(),
         month: startDate.getMonth() + 1,
@@ -102,8 +86,7 @@ const PodotchetMonitorPage = () => {
       },
       podotchetId
     ],
-    enabled:
-      !!main_schet_id && !!operatsiiSpravochnik.selected && !!jur4_schet_id && !queuedMonths.length
+    enabled: !!main_schet_id && !!jur4_schet_id && !queuedMonths.length
   })
 
   useEffect(() => {
@@ -131,20 +114,6 @@ const PodotchetMonitorPage = () => {
       <ListView.Header className="space-y-5">
         <div className="w-full flex flex-row gap-10 items-center justify-between">
           <div className="flex-1 flex flex-row gap-5 items-center">
-            <ChooseSpravochnik
-              spravochnik={operatsiiSpravochnik}
-              placeholder={t('choose', {
-                what: t('operatsii')
-              })}
-              getName={(selected) =>
-                selected ? `${selected.schet} - ${selected.sub_schet} ${selected.name}` : ''
-              }
-              getElements={(selected) => [
-                { name: t('name'), value: selected.name },
-                { name: t('schet'), value: selected.schet },
-                { name: t('subschet'), value: selected.sub_schet }
-              ]}
-            />
             <ChooseSpravochnik
               spravochnik={podotchetSpravochnik}
               placeholder={t('choose', {
@@ -180,7 +149,6 @@ const PodotchetMonitorPage = () => {
                   main_schet_id,
                   from: dates.from,
                   to: dates.to,
-                  operatsii: operatsiiSpravochnik.selected?.schet,
                   schet_id: jur4_schet_id,
                   year: startDate.getFullYear(),
                   month: startDate.getMonth() + 1,
@@ -199,7 +167,6 @@ const PodotchetMonitorPage = () => {
                 from: dates.from,
                 to: dates.to,
                 excel: true,
-                operatsii: operatsiiSpravochnik.selected?.schet,
                 year: startDate.getFullYear(),
                 month: startDate.getMonth() + 1,
                 report_title_id

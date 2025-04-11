@@ -14,7 +14,7 @@ export type DeleteContext = {
 
 export type EditorComponent<T extends object> = FC<{
   tabIndex?: number
-  inputRef: Ref<HTMLElement>
+  inputRef: Ref<HTMLInputElement>
   id: number
   row: EditableTableRowData<T>
   rows: EditableTableRowData<T>[]

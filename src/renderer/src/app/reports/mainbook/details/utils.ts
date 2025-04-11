@@ -100,7 +100,7 @@ export const getMainbookColumns = (types: MainbookType[], isEditable = false) =>
                 readOnly,
                 defaultValue: 0,
                 inputProps: {
-                  adjustWidth: readOnly
+                  adjustWidth: true
                 }
               })
             },
@@ -114,7 +114,7 @@ export const getMainbookColumns = (types: MainbookType[], isEditable = false) =>
                 readOnly,
                 defaultValue: 0,
                 inputProps: {
-                  adjustWidth: readOnly
+                  adjustWidth: true
                 }
               })
             }

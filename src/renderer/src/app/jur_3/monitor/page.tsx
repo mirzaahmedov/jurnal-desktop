@@ -1,3 +1,5 @@
+import type { OrganizationMonitor } from '@/common/models'
+
 import { useEffect } from 'react'
 
 import { useQuery } from '@tanstack/react-query'
@@ -6,7 +8,6 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
 import { createOrganizationSpravochnik } from '@/app/region-spravochnik/organization'
-import { createOperatsiiSpravochnik } from '@/app/super-admin/operatsii'
 import {
   ChooseSpravochnik,
   FooterCell,
@@ -24,8 +25,10 @@ import {
   DropdownMenuTrigger
 } from '@/common/components/ui/dropdown-menu'
 import { DownloadFile } from '@/common/features/file'
-import { SearchFilterDebounced } from '@/common/features/filters/search/search-filter-debounced'
-import { useSearchFilter } from '@/common/features/filters/search/search-filter-debounced'
+import {
+  SearchFilterDebounced,
+  useSearchFilter
+} from '@/common/features/filters/search/search-filter-debounced'
 import { useRequisitesStore } from '@/common/features/requisites'
 import { SaldoNamespace, useSaldoController } from '@/common/features/saldo'
 import {
@@ -38,13 +41,12 @@ import { useDates, usePagination, useToggle } from '@/common/hooks'
 import { useLayoutStore } from '@/common/layout/store'
 import { formatNumber } from '@/common/lib/format'
 import { getProvodkaURL } from '@/common/lib/provodka'
-import { type OrganizationMonitor, TypeSchetOperatsii } from '@/common/models'
 import { ListView } from '@/common/views'
 
 import { AktSverkaDialog } from './akt-sverka'
 import { OrganMonitorColumns } from './columns'
 import { OrganMonitorQueryKeys } from './config'
-import { useOperatsiiFilter, useOrganFilter } from './filters'
+import { useOrganFilter } from './filters'
 import { OrganMonitoringService } from './service'
 
 const OrganizationMonitoringPage = () => {
@@ -56,7 +58,6 @@ const OrganizationMonitoringPage = () => {
   const startDate = useSelectedMonthStore((store) => store.startDate)
   const setLayout = useLayoutStore((store) => store.setLayout)
 
-  const [operatsiiId, setOperatsiiId] = useOperatsiiFilter()
   const [organId, setOrganId] = useOrganFilter()
   const [search] = useSearchFilter()
 
@@ -78,20 +79,6 @@ const OrganizationMonitoringPage = () => {
       }
     })
   )
-  const operatsiiSpravochnik = useSpravochnik(
-    createOperatsiiSpravochnik({
-      value: operatsiiId,
-      onChange: (id) => {
-        pagination.onChange({
-          page: 1
-        })
-        setOperatsiiId(id)
-      },
-      params: {
-        type_schet: TypeSchetOperatsii.JUR3
-      }
-    })
-  )
 
   const { data: monitoring, isFetching } = useQuery({
     queryKey: [
@@ -100,7 +87,6 @@ const OrganizationMonitoringPage = () => {
         main_schet_id,
         schet_id: jur3_schet_id,
         organ_id: organId ? organId : undefined,
-        operatsii: operatsiiSpravochnik.selected ? operatsiiSpravochnik.selected.schet : undefined,
         search,
         year: startDate.getFullYear(),
         month: startDate.getMonth() + 1,
@@ -110,8 +96,7 @@ const OrganizationMonitoringPage = () => {
       }
     ],
     queryFn: OrganMonitoringService.getAll,
-    enabled:
-      !!main_schet_id && !!jur3_schet_id && !!operatsiiSpravochnik.selected && !queuedMonths.length
+    enabled: !!main_schet_id && !!jur3_schet_id && !queuedMonths.length
   })
 
   useEffect(() => {
@@ -140,20 +125,6 @@ const OrganizationMonitoringPage = () => {
         <div className="w-full space-y-5 flex flex-col items-start">
           <div className="w-full flex flex-row items-center justify-between">
             <div className="flex flex-row items-center gap-5">
-              <ChooseSpravochnik
-                spravochnik={operatsiiSpravochnik}
-                placeholder={t('choose', {
-                  what: t('operatsii')
-                })}
-                getName={(selected) =>
-                  selected ? `${selected.schet} - ${selected.sub_schet} ${selected.name}` : ''
-                }
-                getElements={(selected) => [
-                  { name: t('name'), value: selected.name },
-                  { name: t('schet'), value: selected.schet },
-                  { name: t('subschet'), value: selected.sub_schet }
-                ]}
-              />
               <ChooseSpravochnik
                 spravochnik={organSpravochnik}
                 placeholder={t('choose', {
@@ -203,8 +174,6 @@ const OrganizationMonitoringPage = () => {
                           report_title_id,
                           year: startDate.getFullYear(),
                           month: startDate.getMonth() + 1,
-                          schet: operatsiiSpravochnik.selected?.schet,
-                          operatsii: operatsiiSpravochnik.selected?.schet,
                           excel: true
                         }}
                         buttonText={t('cap')}
@@ -223,8 +192,6 @@ const OrganizationMonitoringPage = () => {
                           to: dates.to,
                           year: startDate.getFullYear(),
                           month: startDate.getMonth() + 1,
-                          schet: operatsiiSpravochnik.selected?.schet,
-                          operatsii: operatsiiSpravochnik.selected?.schet,
                           excel: true
                         }}
                         buttonText={t('debitor_kreditor_report')}
@@ -232,73 +199,64 @@ const OrganizationMonitoringPage = () => {
                       />
                     </DropdownMenuItem>
 
-                    {operatsiiSpravochnik.selected?.schet ? (
-                      <>
-                        <DropdownMenuItem>
-                          <DownloadFile
-                            fileName={`${t('pages.organization')}-${t('pages.prixod-docs')}-${dates.from}-${dates.to}.xlsx`}
-                            url="/organization/monitoring/prixod"
-                            params={{
-                              budjet_id,
-                              main_schet_id,
-                              schet_id: jur3_schet_id,
-                              from: dates.from,
-                              to: dates.to,
-                              year: startDate.getFullYear(),
-                              month: startDate.getMonth() + 1,
-                              report_title_id,
-                              operatsii: operatsiiSpravochnik.selected?.schet,
-                              schet: operatsiiSpravochnik.selected?.schet,
-                              excel: true
-                            }}
-                            buttonText={t('pages.prixod-docs')}
-                          />
-                        </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <DownloadFile
+                        fileName={`${t('pages.organization')}-${t('pages.prixod-docs')}-${dates.from}-${dates.to}.xlsx`}
+                        url="/organization/monitoring/prixod"
+                        params={{
+                          budjet_id,
+                          main_schet_id,
+                          schet_id: jur3_schet_id,
+                          from: dates.from,
+                          to: dates.to,
+                          year: startDate.getFullYear(),
+                          month: startDate.getMonth() + 1,
+                          report_title_id,
+                          excel: true
+                        }}
+                        buttonText={t('pages.prixod-docs')}
+                      />
+                    </DropdownMenuItem>
 
-                        <DropdownMenuItem>
-                          <DownloadFile
-                            fileName={`сводный-отчет-${dates.from}&${dates.to}.xlsx`}
-                            url="/organization/monitoring/order"
-                            params={{
-                              main_schet_id,
-                              schet_id: jur3_schet_id,
-                              organ_id: organId ? organId : undefined,
-                              from: dates.from,
-                              to: dates.to,
-                              excel: true,
-                              operatsii: operatsiiSpravochnik.selected?.schet,
-                              schet: operatsiiSpravochnik.selected?.schet,
-                              year: startDate.getFullYear(),
-                              month: startDate.getMonth() + 1,
-                              contract: false
-                            }}
-                            buttonText={t('summarized_report')}
-                            className="w-full inline-flex items-center justify-start"
-                          />
-                        </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <DownloadFile
+                        fileName={`сводный-отчет-${dates.from}&${dates.to}.xlsx`}
+                        url="/organization/monitoring/order"
+                        params={{
+                          main_schet_id,
+                          schet_id: jur3_schet_id,
+                          organ_id: organId ? organId : undefined,
+                          from: dates.from,
+                          to: dates.to,
+                          excel: true,
+                          year: startDate.getFullYear(),
+                          month: startDate.getMonth() + 1,
+                          contract: false
+                        }}
+                        buttonText={t('summarized_report')}
+                        className="w-full inline-flex items-center justify-start"
+                      />
+                    </DropdownMenuItem>
 
-                        <DropdownMenuItem>
-                          <DownloadFile
-                            fileName={`сводный-отчет-${dates.from}&${dates.to}.xlsx`}
-                            url="/organization/monitoring/order"
-                            params={{
-                              main_schet_id,
-                              schet: operatsiiSpravochnik.selected?.schet,
-                              schet_id: jur3_schet_id,
-                              organ_id: organId ? organId : undefined,
-                              from: dates.from,
-                              to: dates.to,
-                              excel: true,
-                              year: startDate.getFullYear(),
-                              month: startDate.getMonth() + 1,
-                              contract: true
-                            }}
-                            buttonText={t('summarized_report_by_contract')}
-                            className="w-full inline-flex items-center justify-start"
-                          />
-                        </DropdownMenuItem>
-                      </>
-                    ) : null}
+                    <DropdownMenuItem>
+                      <DownloadFile
+                        fileName={`сводный-отчет-${dates.from}&${dates.to}.xlsx`}
+                        url="/organization/monitoring/order"
+                        params={{
+                          main_schet_id,
+                          schet_id: jur3_schet_id,
+                          organ_id: organId ? organId : undefined,
+                          from: dates.from,
+                          to: dates.to,
+                          excel: true,
+                          year: startDate.getFullYear(),
+                          month: startDate.getMonth() + 1,
+                          contract: true
+                        }}
+                        buttonText={t('summarized_report_by_contract')}
+                        className="w-full inline-flex items-center justify-start"
+                      />
+                    </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
                 {organId ? (
