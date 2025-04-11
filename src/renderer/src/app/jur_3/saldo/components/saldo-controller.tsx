@@ -10,9 +10,9 @@ import {
 } from '@/common/features/saldo'
 import { useSelectedMonthStore } from '@/common/features/selected-month'
 
+import { OrganMonitorQueryKeys } from '../../monitor/config'
 import { OrganSaldoQueryKeys } from '../config'
 import { OrganSaldoService } from '../service'
-import { OrganSaldoUpdateManager } from './saldo-update-manager'
 
 export const OrganSaldoController = () => {
   const queryClient = useQueryClient()
@@ -38,6 +38,9 @@ export const OrganSaldoController = () => {
       queryClient.invalidateQueries({
         queryKey: [OrganSaldoQueryKeys.getAll]
       })
+      queryClient.invalidateQueries({
+        queryKey: [OrganMonitorQueryKeys.getAll]
+      })
     }
   })
 
@@ -51,16 +54,13 @@ export const OrganSaldoController = () => {
   }
 
   return (
-    <>
-      <SaldoController
-        year={year}
-        month={month}
-        budjet_id={budjet_id}
-        main_schet_id={main_schet_id}
-        isCreating={isPending}
-        onCreate={handleCreate}
-      />
-      <OrganSaldoUpdateManager />
-    </>
+    <SaldoController
+      year={year}
+      month={month}
+      budjet_id={budjet_id}
+      main_schet_id={main_schet_id}
+      isCreating={isPending}
+      onCreate={handleCreate}
+    />
   )
 }

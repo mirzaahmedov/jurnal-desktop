@@ -10,6 +10,7 @@ import {
   useSaldoController
 } from '@/common/features/saldo'
 
+import { BankMonitorQueryKeys } from '../../monitor'
 import { BankSaldoQueryKeys } from '../config'
 import { BankSaldoService } from '../service'
 
@@ -45,6 +46,9 @@ export const BankSaldoUpdateManager = () => {
       queryClient.invalidateQueries({
         queryKey: [BankSaldoQueryKeys.getAll]
       })
+      queryClient.invalidateQueries({
+        queryKey: [BankMonitorQueryKeys.getAll]
+      })
     }
   })
 
@@ -64,8 +68,12 @@ export const BankSaldoUpdateManager = () => {
       onClose={() => {
         clearQueue()
         setCompleted([])
+
         queryClient.invalidateQueries({
           queryKey: [BankSaldoQueryKeys.getAll]
+        })
+        queryClient.invalidateQueries({
+          queryKey: [BankMonitorQueryKeys.getAll]
         })
       }}
     />

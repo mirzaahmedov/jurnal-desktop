@@ -10,6 +10,8 @@ import {
   useSaldoController
 } from '@/common/features/saldo'
 
+import { PodotchetMonitorQueryKeys } from '../../monitor/config'
+import { PodotchetSaldoQueryKeys } from '../config'
 import { PodotchetSaldoService } from '../service'
 
 export const PodotchetSaldoUpdateManager = () => {
@@ -27,7 +29,7 @@ export const PodotchetSaldoUpdateManager = () => {
     isPending,
     error
   } = useMutation({
-    mutationKey: [PodotchetSaldoService.create],
+    mutationKey: [PodotchetSaldoQueryKeys.create],
     mutationFn: PodotchetSaldoService.autoCreate,
     onSuccess(_, values) {
       const newQueue = dequeueMonth(values)
@@ -43,7 +45,10 @@ export const PodotchetSaldoUpdateManager = () => {
       }
 
       queryClient.invalidateQueries({
-        queryKey: [PodotchetSaldoService.getAll]
+        queryKey: [PodotchetSaldoQueryKeys.getAll]
+      })
+      queryClient.invalidateQueries({
+        queryKey: [PodotchetMonitorQueryKeys.getAll]
       })
     }
   })
@@ -65,6 +70,13 @@ export const PodotchetSaldoUpdateManager = () => {
       onClose={() => {
         clearQueue()
         setCompleted([])
+
+        queryClient.invalidateQueries({
+          queryKey: [PodotchetSaldoQueryKeys.getAll]
+        })
+        queryClient.invalidateQueries({
+          queryKey: [PodotchetMonitorQueryKeys.getAll]
+        })
       }}
     />
   )

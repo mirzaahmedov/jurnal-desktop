@@ -21,7 +21,7 @@ import { formatNumber } from '@/common/lib/format'
 import { ListView } from '@/common/views'
 
 import { columns } from './columns'
-import { kassaMonitorQueryKeys } from './constants'
+import { KassaMonitorQueryKeys } from './config'
 import { kassaMonitorService } from './service'
 
 const KassaMonitorPage = () => {
@@ -50,7 +50,7 @@ const KassaMonitorPage = () => {
     error
   } = useQuery({
     queryKey: [
-      kassaMonitorQueryKeys.getAll,
+      KassaMonitorQueryKeys.getAll,
       {
         main_schet_id,
         search,

@@ -10,6 +10,7 @@ import {
   useSaldoController
 } from '@/common/features/saldo'
 
+import { OrganMonitorQueryKeys } from '../../monitor/config'
 import { OrganSaldoQueryKeys } from '../config'
 import { OrganSaldoService } from '../service'
 
@@ -46,6 +47,9 @@ export const OrganSaldoUpdateManager = () => {
       queryClient.invalidateQueries({
         queryKey: [OrganSaldoQueryKeys.getAll]
       })
+      queryClient.invalidateQueries({
+        queryKey: [OrganMonitorQueryKeys.getAll]
+      })
     }
   })
 
@@ -66,8 +70,12 @@ export const OrganSaldoUpdateManager = () => {
       onClose={() => {
         clearQueue()
         setCompleted([])
+
         queryClient.invalidateQueries({
           queryKey: [OrganSaldoQueryKeys.getAll]
+        })
+        queryClient.invalidateQueries({
+          queryKey: [OrganMonitorQueryKeys.getAll]
         })
       }}
     />

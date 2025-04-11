@@ -10,7 +10,7 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
-import { kassaMonitorQueryKeys, kassaMonitorService } from '@/app/jur_1/monitor'
+import { KassaMonitorQueryKeys, kassaMonitorService } from '@/app/jur_1/monitor'
 import { MainSchetQueryKeys, MainSchetService } from '@/app/region-spravochnik/main-schet'
 import { createPodotchetSpravochnik } from '@/app/region-spravochnik/podotchet'
 import { AccountBalance, Fieldset } from '@/common/components'
@@ -108,7 +108,7 @@ const KassaRasxodDetailtsPage = () => {
     error
   } = useQuery({
     queryKey: [
-      kassaMonitorQueryKeys.getAll,
+      KassaMonitorQueryKeys.getAll,
       {
         main_schet_id,
         limit: 10,

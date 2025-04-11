@@ -10,6 +10,7 @@ import {
   useSaldoController
 } from '@/common/features/saldo'
 
+import { KassaMonitorQueryKeys } from '../../monitor'
 import { KassaSaldoQueryKeys } from '../config'
 import { KassaSaldoService } from '../service'
 
@@ -45,6 +46,9 @@ export const KassaSaldoUpdateManager = () => {
       queryClient.invalidateQueries({
         queryKey: [KassaSaldoQueryKeys.getAll]
       })
+      queryClient.invalidateQueries({
+        queryKey: [KassaMonitorQueryKeys.getAll]
+      })
     }
   })
 
@@ -64,8 +68,12 @@ export const KassaSaldoUpdateManager = () => {
       onClose={() => {
         clearQueue()
         setCompleted([])
+
         queryClient.invalidateQueries({
           queryKey: [KassaSaldoQueryKeys.getAll]
+        })
+        queryClient.invalidateQueries({
+          queryKey: [KassaMonitorQueryKeys.getAll]
         })
       }}
     />

@@ -10,9 +10,9 @@ import {
 } from '@/common/features/saldo'
 import { useSelectedMonthStore } from '@/common/features/selected-month'
 
+import { KassaMonitorQueryKeys } from '../../monitor'
 import { KassaSaldoQueryKeys } from '../config'
 import { KassaSaldoService } from '../service'
-import { KassaSaldoUpdateManager } from './saldo-update-manager'
 
 export const Jur1SaldoController = () => {
   const queryClient = useQueryClient()
@@ -38,6 +38,9 @@ export const Jur1SaldoController = () => {
       queryClient.invalidateQueries({
         queryKey: [KassaSaldoQueryKeys.getAll]
       })
+      queryClient.invalidateQueries({
+        queryKey: [KassaMonitorQueryKeys.getAll]
+      })
     }
   })
 
@@ -50,16 +53,13 @@ export const Jur1SaldoController = () => {
   }
 
   return (
-    <>
-      <SaldoController
-        year={year}
-        month={month}
-        budjet_id={budjet_id}
-        main_schet_id={main_schet_id}
-        isCreating={isPending}
-        onCreate={handleCreate}
-      />
-      <KassaSaldoUpdateManager />
-    </>
+    <SaldoController
+      year={year}
+      month={month}
+      budjet_id={budjet_id}
+      main_schet_id={main_schet_id}
+      isCreating={isPending}
+      onCreate={handleCreate}
+    />
   )
 }

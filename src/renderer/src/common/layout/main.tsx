@@ -1,5 +1,10 @@
-import { Outlet, useLocation } from 'react-router-dom'
+import { Outlet } from 'react-router-dom'
 
+import { KassaSaldoUpdateManager } from '@/app/jur_1/saldo/components/saldo-update-manager'
+import { BankSaldoUpdateManager } from '@/app/jur_2/saldo/components/saldo-update-manager'
+import { OrganSaldoUpdateManager } from '@/app/jur_3/saldo/components/saldo-update-manager'
+import { PodotchetSaldoUpdateManager } from '@/app/jur_4/saldo/components/saldo-update-manager'
+import { Jur7SaldoUpdateManager } from '@/app/jur_7/saldo/components/saldo-update-manager'
 import { AuthGuard } from '@/common/features/auth'
 import { SpravochnikProvider } from '@/common/features/spravochnik'
 
@@ -7,10 +12,6 @@ import { Header } from './compoonents/header'
 import { Sidebar } from './compoonents/sidebar/sidebar'
 
 const MainLayout = () => {
-  const location = useLocation()
-
-  console.log(location.pathname)
-
   return (
     <div className="h-full flex">
       <Sidebar />
@@ -23,6 +24,11 @@ const MainLayout = () => {
         </AuthGuard>
       </div>
       <SpravochnikProvider />
+      <KassaSaldoUpdateManager />
+      <BankSaldoUpdateManager />
+      <OrganSaldoUpdateManager />
+      <PodotchetSaldoUpdateManager />
+      <Jur7SaldoUpdateManager />
     </div>
   )
 }

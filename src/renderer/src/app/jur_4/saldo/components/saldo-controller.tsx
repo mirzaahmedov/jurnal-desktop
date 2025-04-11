@@ -10,9 +10,9 @@ import {
 } from '@/common/features/saldo'
 import { useSelectedMonthStore } from '@/common/features/selected-month'
 
+import { PodotchetMonitorQueryKeys } from '../../monitor/config'
 import { PodotchetSaldoQueryKeys } from '../config'
 import { PodotchetSaldoService } from '../service'
-import { PodotchetSaldoUpdateManager } from './saldo-update-manager'
 
 export const PodotchetSaldoController = () => {
   const queryClient = useQueryClient()
@@ -38,6 +38,9 @@ export const PodotchetSaldoController = () => {
       queryClient.invalidateQueries({
         queryKey: [PodotchetSaldoQueryKeys.getAll]
       })
+      queryClient.invalidateQueries({
+        queryKey: [PodotchetMonitorQueryKeys.getAll]
+      })
     }
   })
 
@@ -51,16 +54,13 @@ export const PodotchetSaldoController = () => {
   }
 
   return (
-    <>
-      <SaldoController
-        year={year}
-        month={month}
-        budjet_id={budjet_id}
-        main_schet_id={main_schet_id}
-        isCreating={isPending}
-        onCreate={handleCreate}
-      />
-      <PodotchetSaldoUpdateManager />
-    </>
+    <SaldoController
+      year={year}
+      month={month}
+      budjet_id={budjet_id}
+      main_schet_id={main_schet_id}
+      isCreating={isPending}
+      onCreate={handleCreate}
+    />
   )
 }

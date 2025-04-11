@@ -10,9 +10,9 @@ import {
 } from '@/common/features/saldo'
 import { useSelectedMonthStore } from '@/common/features/selected-month'
 
+import { BankMonitorQueryKeys } from '../../monitor'
 import { BankSaldoQueryKeys } from '../config'
 import { BankSaldoService } from '../service'
-import { BankSaldoUpdateManager } from './saldo-update-manager'
 
 export const Jur2SaldoController = () => {
   const queryClient = useQueryClient()
@@ -38,6 +38,9 @@ export const Jur2SaldoController = () => {
       queryClient.invalidateQueries({
         queryKey: [BankSaldoQueryKeys.getAll]
       })
+      queryClient.invalidateQueries({
+        queryKey: [BankMonitorQueryKeys.getAll]
+      })
     }
   })
 
@@ -50,16 +53,13 @@ export const Jur2SaldoController = () => {
   }
 
   return (
-    <>
-      <SaldoController
-        year={year}
-        month={month}
-        budjet_id={budjet_id}
-        main_schet_id={main_schet_id}
-        isCreating={isPending}
-        onCreate={handleCreate}
-      />
-      <BankSaldoUpdateManager />
-    </>
+    <SaldoController
+      year={year}
+      month={month}
+      budjet_id={budjet_id}
+      main_schet_id={main_schet_id}
+      isCreating={isPending}
+      onCreate={handleCreate}
+    />
   )
 }

@@ -95,7 +95,7 @@ const OrganizationMonitoringPage = () => {
 
   const { data: monitoring, isFetching } = useQuery({
     queryKey: [
-      OrganMonitorQueryKeys.getByOrgId,
+      OrganMonitorQueryKeys.getAll,
       {
         main_schet_id,
         schet_id: jur3_schet_id,

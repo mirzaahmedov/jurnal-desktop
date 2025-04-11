@@ -21,7 +21,7 @@ import { formatNumber } from '@/common/lib/format'
 import { ListView } from '@/common/views'
 
 import { BankMonitorColumns } from './columns'
-import { BankMonitorQueryKeys } from './constants'
+import { BankMonitorQueryKeys } from './config'
 import { BankMonitorService } from './service'
 
 const BankMonitorPage = () => {

@@ -17,7 +17,6 @@ import { useSelectedMonthStore } from '@/common/features/selected-month'
 import { iznosQueryKeys } from '../../iznos/config'
 import { saldoQueryKeys } from '../config'
 import { getOstatokCheck, ostatokService } from '../service'
-import { Jur7SaldoUpdateManager } from './saldo-update-manager'
 
 export const Jur7SaldoController = () => {
   const queryClient = useQueryClient()
@@ -92,16 +91,13 @@ export const Jur7SaldoController = () => {
   }, [t, isError])
 
   return (
-    <>
-      <SaldoController
-        isError={isError}
-        year={year}
-        month={month}
-        budjet_id={budjet_id}
-        isCreating={isPending}
-        onCreate={handleCreate}
-      />
-      <Jur7SaldoUpdateManager />
-    </>
+    <SaldoController
+      isError={isError}
+      year={year}
+      month={month}
+      budjet_id={budjet_id}
+      isCreating={isPending}
+      onCreate={handleCreate}
+    />
   )
 }
