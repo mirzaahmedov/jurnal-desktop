@@ -190,7 +190,12 @@ const MainbookDetailsPage = () => {
       return
     }
 
-    values.childs.pop()
+    const itogo = values.childs.pop()
+
+    if (isEditable && itogo && itogo?.['10_prixod'] !== itogo?.['10_rasxod']) {
+      toast.error(t('prixod_rasxod_mismatch'))
+      return
+    }
 
     const payload: {
       type_id: number
@@ -331,9 +336,6 @@ const MainbookDetailsPage = () => {
                 methods={tableMethods}
                 form={form}
                 name="childs"
-                onCellDoubleClick={({ col, row }) => {
-                  console.log('onCellDoubleClick', col, row)
-                }}
               />
             </div>
           </div>

@@ -20,10 +20,10 @@ export interface Mainbook {
   accept_user_fio: null | string
   accept_user_login: null | string
   first: boolean
-  childs: MainbookChild[]
+  childs: MainbookProvodka[]
 }
 
-export interface MainbookChild {
+export interface MainbookProvodka {
   type_id: number
   type_name: string
   prixod: number
@@ -34,6 +34,19 @@ export interface MainbookChild {
     prixod: number
     rasxod: number
   }>
+}
+
+export interface MainbookDocs {
+  id: number
+  doc_num: string
+  doc_date: string
+  opisanie: any
+  main_schet_id: number
+  summa: number
+  debet_schet: string
+  kredit_schet: string
+  budjet_id: number
+  type: string
 }
 
 export interface AdminMainbook {
@@ -52,5 +65,5 @@ export interface AdminMainbook {
   accept_user_fio: string
   accept_user_login: string
   region_name: string
-  childs: MainbookChild[]
+  childs: MainbookProvodka[]
 }
