@@ -20,7 +20,7 @@ import { useConfirm } from '@/common/features/confirm'
 import { DownloadFile } from '@/common/features/file'
 import { useRequisitesStore } from '@/common/features/requisites'
 import { useSettingsStore } from '@/common/features/settings'
-import { usePagination } from '@/common/hooks'
+import { useKeyUp, usePagination } from '@/common/hooks'
 import { useLayoutStore } from '@/common/layout/store'
 import { ListView } from '@/common/views'
 
@@ -54,9 +54,19 @@ const MainbookPage = () => {
     ],
     queryFn: MainbookService.getAll
   })
-  const { mutate: deleteMainbook, isPending } = useMutation({
+  const { mutate: deleteMainbook, isPending: isDeleting } = useMutation({
     mutationKey: [MainbookQueryKeys.delete],
     mutationFn: MainbookService.delete,
+    onSuccess: (res) => {
+      toast.success(res?.message)
+      queryClient.invalidateQueries({
+        queryKey: [MainbookQueryKeys.getAll]
+      })
+    }
+  })
+  const { mutate: cleanMainbook, isPending: isCleaning } = useMutation({
+    mutationKey: [MainbookQueryKeys.delete],
+    mutationFn: MainbookService.cleanSaldo,
     onSuccess: (res) => {
       toast.success(res?.message)
       queryClient.invalidateQueries({
@@ -86,9 +96,27 @@ const MainbookPage = () => {
     })
   }
 
+  const handleClean = () => {
+    confirm({
+      withPassword: true,
+      onConfirm(password) {
+        cleanMainbook({
+          budjet_id: budjet_id!,
+          password
+        })
+      }
+    })
+  }
+
+  useKeyUp({
+    key: 'Delete',
+    ctrlKey: true,
+    onKeyUp: handleClean
+  })
+
   return (
     <ListView>
-      <ListView.Content loading={isFetchingMainbook || isPending}>
+      <ListView.Content loading={isFetchingMainbook || isDeleting || isCleaning}>
         <GenericTable
           data={mainbook?.data ?? []}
           columnDefs={mainbookColumns}

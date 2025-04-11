@@ -25,6 +25,7 @@ class MainbookServiceBuilder extends CRUDService<Mainbook, MainbookPayload> {
       endpoint: ApiEndpoints.mainbook
     })
 
+    this.cleanSaldo = this.cleanSaldo.bind(this)
     this.getTypes = this.getTypes.bind(this)
     this.getSaldoCheck = this.getSaldoCheck.bind(this)
     this.getAutofillData = this.getAutofillData.bind(this)
@@ -90,6 +91,17 @@ class MainbookServiceBuilder extends CRUDService<Mainbook, MainbookPayload> {
     const params = ctx.queryKey[1]
     const res = await this.client.get<Response<MainbookDocumentInfo[]>>(`${this.endpoint}/docs`, {
       params
+    })
+    return res.data
+  }
+
+  async cleanSaldo(values: { budjet_id: number; password: string }) {
+    const { budjet_id, password } = values
+    const res = await this.client.delete(`${this.endpoint}/clean`, {
+      params: {
+        budjet_id,
+        password
+      }
     })
     return res.data
   }
