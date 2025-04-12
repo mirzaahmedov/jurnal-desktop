@@ -7,7 +7,6 @@ import { z } from 'zod'
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 import { budjet, main_schet } from '@/common/features/crud/middleware'
 import { getBudjetId } from '@/common/features/requisites'
-import { withPreprocessor } from '@/common/lib/validation'
 
 interface BankSaldoMeta extends ResponseMeta {
   summa: number
@@ -68,13 +67,11 @@ class BankSaldoServiceFactory extends CRUDService<
 
 export const BankSaldoService = new BankSaldoServiceFactory().use(budjet()).use(main_schet())
 
-export const BankSaldoFormSchema = withPreprocessor(
-  z.object({
-    summa: z.number().optional(),
-    year: z.number(),
-    month: z.number(),
-    main_schet_id: z.number().optional()
-  })
-)
+export const BankSaldoFormSchema = z.object({
+  summa: z.number(),
+  year: z.number(),
+  month: z.number(),
+  main_schet_id: z.number().optional()
+})
 
 export type BankSaldoFormValues = z.infer<typeof BankSaldoFormSchema>

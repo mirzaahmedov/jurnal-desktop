@@ -1,18 +1,15 @@
 import { Fragment } from 'react'
 
 import { CaretRightIcon } from '@radix-ui/react-icons'
-import { useQuery } from '@tanstack/react-query'
 import { ArrowLeft, LogOut, Plus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Link, useLocation } from 'react-router-dom'
 
-import { MainSchetQueryKeys, MainSchetService } from '@/app/region-spravochnik/main-schet'
 import { Button } from '@/common/components/ui/button'
 import { useAuthenticationStore } from '@/common/features/auth'
-import { useRequisitesStore } from '@/common/features/requisites'
+import { RequisitesController } from '@/common/features/requisites/controller'
 import { useLayoutStore } from '@/common/layout/store'
 
-import { Requisites } from './requisites'
 import { SelectedMonth } from './selected-month'
 import { Settings } from './settings'
 import { UserProfile } from './user-profile'
@@ -33,15 +30,6 @@ export const Header = () => {
   const { user, setUser } = useAuthenticationStore()
 
   const location = useLocation()
-  const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
-
-  const { data } = useQuery({
-    queryKey: [MainSchetQueryKeys.getById, main_schet_id],
-    queryFn: MainSchetService.getById,
-    enabled: !!main_schet_id
-  })
-
-  const main_schet = data?.data
 
   const handleLogout = () => {
     setUser(null)
@@ -102,10 +90,7 @@ export const Header = () => {
             <SelectedMonth />
           </div>
         ) : null}
-        <Requisites
-          data={main_schet}
-          pathname={location.pathname}
-        />
+        <RequisitesController />
         {user ? <UserProfile user={user} /> : null}
         <Settings />
         <Button

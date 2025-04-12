@@ -6,7 +6,7 @@ import { Navigate, createHashRouter } from 'react-router-dom'
 
 import { useAuthenticationStore } from '@/common/features/auth'
 import { BudjetSelectedGuard, MainSchetSelectedGuard } from '@/common/features/requisites'
-import { DuplicateSchetsGuard } from '@/common/features/requisites/duplicate-schets-guard'
+import { DuplicateSchetsGuard } from '@/common/features/requisites/guards/duplicate-schets-guard'
 
 import DashboardPage from './dashboard/page'
 import HomePage from './home/page'

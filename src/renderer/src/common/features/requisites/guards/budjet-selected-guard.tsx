@@ -2,7 +2,7 @@ import { CircleAlert } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Outlet } from 'react-router-dom'
 
-import { useRequisitesStore } from './store'
+import { useRequisitesStore } from '../store'
 
 export const BudjetSelectedGuard = () => {
   const { t } = useTranslation()

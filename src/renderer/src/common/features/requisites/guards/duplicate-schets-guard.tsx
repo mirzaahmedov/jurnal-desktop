@@ -5,9 +5,9 @@ import { Outlet, useNavigate } from 'react-router-dom'
 
 import { LoadingOverlay } from '@/common/components'
 
-import { RequisitesQueryKeys } from './config'
-import { checkSchetsDuplicateQuery } from './service'
-import { useRequisitesStore } from './store'
+import { RequisitesQueryKeys } from '../config'
+import { checkSchetsDuplicateQuery } from '../service'
+import { useRequisitesStore } from '../store'
 
 export const DuplicateSchetsGuard = () => {
   const navigate = useNavigate()

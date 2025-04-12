@@ -7,7 +7,6 @@ import { z } from 'zod'
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 import { budjet, main_schet } from '@/common/features/crud/middleware'
 import { getBudjetId } from '@/common/features/requisites'
-import { withPreprocessor } from '@/common/lib/validation'
 
 interface PodotchetSaldoMeta extends ResponseMeta {
   summa: number
@@ -72,14 +71,12 @@ export const PodotchetSaldoService = new PodotchetSaldoServiceBuilder()
   .use(budjet())
   .use(main_schet())
 
-export const PodotchetSaldoFormSchema = withPreprocessor(
-  z.object({
-    summa: z.number().optional(),
-    year: z.number(),
-    month: z.number(),
-    main_schet_id: z.number().optional(),
-    schet_id: z.number().optional()
-  })
-)
+export const PodotchetSaldoFormSchema = z.object({
+  summa: z.number(),
+  year: z.number(),
+  month: z.number(),
+  main_schet_id: z.number().optional(),
+  schet_id: z.number().optional()
+})
 
 export type PodotchetSaldoFormValues = z.infer<typeof PodotchetSaldoFormSchema>

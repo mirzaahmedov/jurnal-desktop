@@ -7,7 +7,6 @@ import { z } from 'zod'
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 import { budjet, main_schet } from '@/common/features/crud/middleware'
 import { getBudjetId } from '@/common/features/requisites'
-import { withPreprocessor } from '@/common/lib/validation'
 
 interface OrganSaldoMeta extends ResponseMeta {
   summa: number
@@ -70,14 +69,12 @@ class OrganSaldoServiceBuilder extends CRUDService<
 
 export const OrganSaldoService = new OrganSaldoServiceBuilder().use(budjet()).use(main_schet())
 
-export const OrganSaldoFormSchema = withPreprocessor(
-  z.object({
-    summa: z.number().optional(),
-    year: z.number(),
-    month: z.number(),
-    main_schet_id: z.number().optional(),
-    schet_id: z.number().optional()
-  })
-)
+export const OrganSaldoFormSchema = z.object({
+  summa: z.number(),
+  year: z.number(),
+  month: z.number(),
+  main_schet_id: z.number().optional(),
+  schet_id: z.number().optional()
+})
 
 export type OrganSaldoFormValues = z.infer<typeof OrganSaldoFormSchema>
