@@ -23,7 +23,6 @@ import { useAuthenticationStore } from '@/common/features/auth'
 import { useConfirm } from '@/common/features/confirm'
 
 import { RequisitesQueryKeys } from './config'
-import { getMainSchetsQuery } from './service'
 import { RequisitesFormSchema, type RequisitesFormValues, useRequisitesStore } from './store'
 
 export type RequisitesDialogProps = {
@@ -47,19 +46,18 @@ export const RequisitesDialog = ({ open, onOpenChange }: RequisitesDialogProps) 
     queryFn: BudgetService.getAll,
     enabled: open
   })
-  const { data: main_schets, isLoading: isLoadingSchets } = useQuery({
+  const { data: schets, isLoading: isLoadingSchets } = useQuery({
     queryKey: [
       RequisitesQueryKeys.getAll,
       {
-        budjet_id: form.watch('budjet_id')!,
-        region_id: user?.region_id ?? 0
+        budjet_id: form.watch('budjet_id')!
       }
     ],
-    queryFn: getMainSchetsQuery,
-    enabled: !!form.watch('budjet_id') && !!user?.region_id && open
+    queryFn: MainSchetService.getAll,
+    enabled: !!form.watch('budjet_id') && open
   })
 
-  const { data: main_schet } = useQuery({
+  const { data: mainSchet } = useQuery({
     queryKey: [RequisitesQueryKeys.getMainSchetById, form.watch('main_schet_id')],
     queryFn: MainSchetService.getById,
     enabled: !!form.watch('main_schet_id')
@@ -180,19 +178,23 @@ export const RequisitesDialog = ({ open, onOpenChange }: RequisitesDialogProps) 
                       withFormControl
                       disabled={isLoadingSchets}
                       placeholder={t('choose', { what: t('raschet-schet') })}
-                      options={Array.isArray(main_schets?.data) ? main_schets.data : []}
-                      getOptionValue={(account) => account.main_schet_id.toString()}
+                      options={Array.isArray(schets?.data) ? schets.data : []}
+                      getOptionValue={(account) => account.id.toString()}
                       getOptionLabel={(account) => account.account_number}
+                      onOptionSelect={(option) => {
+                        console.log(option)
+                        form.setValue('jur3_schet_id', option?.jur3_schets?.[0]?.id ?? 0, {
+                          shouldDirty: true,
+                          shouldValidate: true
+                        })
+                        form.setValue('jur4_schet_id', option?.jur4_schets?.[0]?.id ?? 0, {
+                          shouldDirty: true,
+                          shouldValidate: true
+                        })
+                        field.onChange(Number(option.id))
+                      }}
                       value={field.value ? field.value.toString() : ''}
                       onValueChange={(value) => {
-                        form.setValue('jur3_schet_id', 0, {
-                          shouldDirty: true,
-                          shouldValidate: true
-                        })
-                        form.setValue('jur4_schet_id', 0, {
-                          shouldDirty: true,
-                          shouldValidate: true
-                        })
                         field.onChange(Number(value))
                       }}
                     />
@@ -202,7 +204,7 @@ export const RequisitesDialog = ({ open, onOpenChange }: RequisitesDialogProps) 
               />
             ) : null}
 
-            {main_schet ? (
+            {mainSchet ? (
               <>
                 <FormElement
                   direction="column"
@@ -214,7 +216,7 @@ export const RequisitesDialog = ({ open, onOpenChange }: RequisitesDialogProps) 
                 >
                   <Input
                     readOnly
-                    value={main_schet.data?.jur1_schet}
+                    value={mainSchet.data?.jur1_schet}
                   />
                 </FormElement>
                 <FormElement
@@ -227,7 +229,7 @@ export const RequisitesDialog = ({ open, onOpenChange }: RequisitesDialogProps) 
                 >
                   <Input
                     readOnly
-                    value={main_schet.data?.jur2_schet}
+                    value={mainSchet.data?.jur2_schet}
                   />
                 </FormElement>
                 <FormField
@@ -243,8 +245,8 @@ export const RequisitesDialog = ({ open, onOpenChange }: RequisitesDialogProps) 
                         withFormControl
                         placeholder={t('choose', { what: t('schet').toLowerCase() })}
                         options={
-                          Array.isArray(main_schet.data?.jur3_schets)
-                            ? main_schet.data?.jur3_schets
+                          Array.isArray(mainSchet.data?.jur3_schets)
+                            ? mainSchet.data?.jur3_schets
                             : []
                         }
                         getOptionValue={(schet) => schet.id}
@@ -269,8 +271,8 @@ export const RequisitesDialog = ({ open, onOpenChange }: RequisitesDialogProps) 
                         withFormControl
                         placeholder={t('choose', { what: t('schet').toLowerCase() })}
                         options={
-                          Array.isArray(main_schet.data?.jur4_schets)
-                            ? main_schet.data?.jur4_schets
+                          Array.isArray(mainSchet.data?.jur4_schets)
+                            ? mainSchet.data?.jur4_schets
                             : []
                         }
                         getOptionValue={(schet) => schet.id}

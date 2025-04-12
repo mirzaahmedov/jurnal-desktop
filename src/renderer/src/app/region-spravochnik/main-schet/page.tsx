@@ -23,18 +23,18 @@ import { MainSchetDialog } from './dialog'
 import { MainSchetService } from './service'
 
 const MainSchetPage = () => {
-  const [selected, setSelected] = useState<MainSchet | null>(null)
-  const [search] = useSearchFilter()
-
-  const { t } = useTranslation(['app'])
-  const { confirm } = useConfirm()
-
   const dialogToggle = useToggle()
   const pagination = usePagination()
   const queryClient = useQueryClient()
 
   const budjet_id = useRequisitesStore((store) => store.budjet_id)
   const setLayout = useLayoutStore((store) => store.setLayout)
+
+  const [selected, setSelected] = useState<MainSchet | null>(null)
+  const [search] = useSearchFilter()
+
+  const { t } = useTranslation(['app'])
+  const { confirm } = useConfirm()
 
   const { data: mainSchets, isFetching } = useQuery({
     queryKey: [

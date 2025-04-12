@@ -39,12 +39,12 @@ const SelectFieldComponent = <T extends object>(
     options,
     getOptionValue,
     getOptionLabel,
+    onOptionSelect,
     triggerClassName,
     disabled,
     tabIndex,
     value,
     onValueChange,
-    onOptionSelect,
     ...props
   }: SelectFieldProps<T>,
   ref: ForwardedRef<HTMLSpanElement>
@@ -56,6 +56,7 @@ const SelectFieldComponent = <T extends object>(
       onValueChange={(value) => {
         if (options.length !== 0 && value) {
           onValueChange?.(value)
+          onOptionSelect?.(options.find((option) => String(getOptionValue(option)) === value)!)
         }
       }}
       disabled={disabled || options.length === 0}
@@ -119,9 +120,6 @@ const SelectFieldComponent = <T extends object>(
           <SelectItem
             key={getOptionValue(option)}
             value={String(getOptionValue(option))}
-            onSelect={() => {
-              onOptionSelect?.(option)
-            }}
           >
             {getOptionLabel(option)}
           </SelectItem>
