@@ -6,11 +6,7 @@ import { useForm } from 'react-hook-form'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 
 import { Fieldset } from '@/common/components'
-import {
-  EditableTable,
-  EditableTableCell,
-  EditableTableRowData
-} from '@/common/components/editable-table'
+import { EditableTable, EditableTableCell, TableRowField } from '@/common/components/editable-table'
 import {
   createEditorChangeHandler,
   createEditorCreateHandler,

@@ -1,12 +1,10 @@
-import { Suspense, useEffect } from 'react'
+import { useEffect } from 'react'
 
 import { QueryClientProvider } from '@tanstack/react-query'
-import { ErrorBoundary } from 'react-error-boundary'
 import { RouterProvider } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify'
 
 import { router } from './app/router'
-import { LoadingOverlay } from './common/components'
 import { Toaster } from './common/components/ui/toaster'
 import { ConfirmationDialog } from './common/features/confirm'
 import { initLocales } from './common/features/locales'
@@ -32,14 +30,7 @@ function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <Suspense fallback={<LoadingOverlay />}>
-        <ErrorBoundary
-          onError={(err) => console.log(err)}
-          fallback={'error'}
-        >
-          <RouterProvider router={router} />
-        </ErrorBoundary>
-      </Suspense>
+      <RouterProvider router={router} />
       <Toaster />
       <ToastContainer
         position="bottom-right"

@@ -11,6 +11,7 @@ import { Button } from '@/common/components/ui/button'
 import { useToggle } from '@/common/hooks'
 
 import { RequisitesDialog } from './dialog'
+import { RequisitesInfoDialog } from './info-dialog'
 import { useRequisitesStore } from './store'
 
 export const RequisitesController = () => {
@@ -19,6 +20,7 @@ export const RequisitesController = () => {
 
   const location = useLocation()
   const dialogToggle = useToggle()
+  const infoToggle = useToggle()
 
   const { data: mainSchets } = useQuery({
     queryKey: [
@@ -45,7 +47,10 @@ export const RequisitesController = () => {
         >
           <RefreshCw />
         </Button>
-        <div className="flex flex-col gap-0.5 cursor-pointer">
+        <div
+          className="flex flex-col gap-0.5 cursor-pointer"
+          onClick={infoToggle.open}
+        >
           <p className="text-xs font-medium text-slate-500 ml-8">
             <Trans>main-schet</Trans>
           </p>
@@ -99,6 +104,10 @@ export const RequisitesController = () => {
       <RequisitesDialog
         open={dialogToggle.isOpen}
         onOpenChange={dialogToggle.setOpen}
+      />
+      <RequisitesInfoDialog
+        open={infoToggle.isOpen}
+        onOpenChange={infoToggle.setOpen}
       />
     </>
   )

@@ -35,8 +35,10 @@
   </head>
   <body>
     <div id="root"></div>
-    <div id="toasts"></div>
-    <div id="overlays"></div>
+    <div
+      id="overlay"
+      class="invisible data-[state=open]:!visible fixed inset-0 bg-black/50 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:duration-75 data-[state=open]:fade-in-0 z-[100]"
+    ></div>
     <script
       type="module"
       src="/src/main.tsx"

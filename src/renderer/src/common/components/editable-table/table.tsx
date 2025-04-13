@@ -1,4 +1,4 @@
-import type { EditableTableProps, EditableTableRowData, InferRow } from './interface'
+import type { EditableTableProps, InferRow, TableRowField } from './interface'
 import type { ArrayPath, Path } from 'react-hook-form'
 
 import { useImperativeHandle, useMemo, useRef, useState } from 'react'
@@ -16,8 +16,8 @@ import { getHeaderGroups } from '../generic-table/utils'
 import { EditableTableCell, EditableTableHead, EditableTableRow } from './components'
 import { getAccessorColumns } from './utils'
 
-export const EditableTable = <T extends object, R extends InferRow<T>>(
-  props: EditableTableProps<T, R>
+export const EditableTable = <T extends object, F extends ArrayPath<NoInfer<T>>>(
+  props: EditableTableProps<T, F>
 ) => {
   const {
     tableRef,
@@ -39,13 +39,12 @@ export const EditableTable = <T extends object, R extends InferRow<T>>(
   } = props
 
   const innerRef = useRef<HTMLTableElement>(null)
+  const headerGroups = useMemo(() => getHeaderGroups(columnDefs), [columnDefs])
   const ref = tableRef || innerRef
 
   const [highlightedRows, setHighlightedRows] = useState<number[]>([])
 
   const { t } = useTranslation()
-
-  const headerGroups = useMemo(() => getHeaderGroups(columnDefs), [columnDefs])
 
   const { fields: rows } = useFieldArray({
     control: form.control,
@@ -171,8 +170,8 @@ export const EditableTable = <T extends object, R extends InferRow<T>>(
                   key={index}
                   index={index}
                   tabIndex={tabIndex}
-                  row={row}
-                  rows={rows}
+                  row={row as any}
+                  rows={rows as any}
                   name={name}
                   form={form}
                   columnDefs={columnDefs}
@@ -236,9 +235,9 @@ export const EditableTable = <T extends object, R extends InferRow<T>>(
   )
 }
 
-interface EditableTableRowRendererProps<T extends object, R extends InferRow<T>>
+interface EditableTableRowRendererProps<T extends object, F extends ArrayPath<NoInfer<T>>>
   extends Pick<
-    EditableTableProps<T, R>,
+    EditableTableProps<T, F>,
     | 'validate'
     | 'name'
     | 'form'
@@ -252,8 +251,8 @@ interface EditableTableRowRendererProps<T extends object, R extends InferRow<T>>
   > {
   tabIndex?: number
   index: number
-  row: EditableTableRowData<R>
-  rows: EditableTableRowData<R>[]
+  row: TableRowField<InferRow<T, F>>
+  rows: TableRowField<InferRow<T, F>>[]
   highlightedRows: number[]
   onHighlight?(index: number): void
 }
@@ -302,47 +301,49 @@ const EditableTableRowRenderer = <T extends object, R extends T[ArrayPath<NoInfe
                 key={String(key)}
                 control={form.control}
                 name={`${name}.${index}.${String(key)}` as Path<T>}
-                render={({ field }) => (
-                  <EditableTableCell
-                    style={{ width, minWidth, maxWidth }}
-                    className={cn(
-                      'group-data-[highlighted=true]/row:bg-brand/10 group-data-[highlighted=true]/row:border-brand/20',
-                      className
-                    )}
-                    onDoubleClick={() => {
-                      onCellDoubleClick?.({
-                        col: column,
-                        row,
-                        index
-                      })
-                    }}
-                  >
-                    <Editor
-                      tabIndex={tabIndex}
-                      inputRef={field.ref}
-                      id={index}
-                      row={row}
-                      rows={rows}
-                      col={column}
-                      form={form}
-                      value={field.value}
-                      onChange={field.onChange}
-                      errors={errors?.[index] as FieldErrors<R>}
-                      state={state}
-                      setState={setState}
-                      params={params!}
-                      validate={validate}
-                      data-editorId={`${index}-${String(key)}`}
-                      {...getEditorProps?.({
-                        index,
-                        row,
-                        rows,
-                        col: column,
-                        errors: errors?.[index] as FieldErrors<R>
-                      })}
-                    />
-                  </EditableTableCell>
-                )}
+                render={({ field }) => {
+                  return (
+                    <EditableTableCell
+                      style={{ width, minWidth, maxWidth }}
+                      className={cn(
+                        'group-data-[highlighted=true]/row:bg-brand/10 group-data-[highlighted=true]/row:border-brand/20',
+                        className
+                      )}
+                      onDoubleClick={() => {
+                        onCellDoubleClick?.({
+                          col: column,
+                          row,
+                          index
+                        })
+                      }}
+                    >
+                      <Editor
+                        tabIndex={tabIndex}
+                        inputRef={field.ref}
+                        id={index}
+                        row={row}
+                        rows={rows}
+                        col={column}
+                        form={form}
+                        value={field.value}
+                        onChange={field.onChange}
+                        errors={errors?.[index] as FieldErrors<R>}
+                        state={state}
+                        setState={setState}
+                        params={params!}
+                        validate={validate}
+                        data-editorId={`${index}-${String(key)}`}
+                        {...getEditorProps?.({
+                          index,
+                          row,
+                          rows,
+                          col: column,
+                          errors: errors?.[index] as FieldErrors<R>
+                        })}
+                      />
+                    </EditableTableCell>
+                  )
+                }}
               />
             )
           })

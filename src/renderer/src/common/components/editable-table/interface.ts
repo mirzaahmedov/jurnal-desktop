@@ -4,13 +4,8 @@ import type { Autocomplete } from '@/common/lib/types'
 import type { ReactNode, RefObject } from 'react'
 import type { ArrayPath, FieldArrayWithId, FieldErrors, UseFormReturn } from 'react-hook-form'
 
-export type EditableTableRowData<T extends object> = FieldArrayWithId<
-  T,
-  ArrayPath<NoInfer<T>>,
-  'id'
->
-
-export type InferRow<T extends object> = T[ArrayPath<NoInfer<T>>][number]
+export type TableRowField<T extends object> = FieldArrayWithId<T, ArrayPath<T>, 'id'>
+export type InferRow<T extends object, F extends ArrayPath<NoInfer<T>>> = T[F][number]
 
 export interface EditableColumnDef<T extends object> {
   key: Autocomplete<keyof T>
@@ -36,36 +31,36 @@ export interface EditableTableMethods {
   scrollToRow: (rowIndex: number) => void
 }
 
-export interface EditableTableProps<T extends object, R extends InferRow<T> = InferRow<T>> {
+export interface EditableTableProps<T extends object, F extends ArrayPath<NoInfer<T>>> {
   tableRef?: RefObject<HTMLTableElement>
   tabIndex?: number
   form: UseFormReturn<T>
-  name: ArrayPath<NoInfer<T>>
-  columnDefs: EditableColumnDef<NoInfer<R>>[]
+  name: F
+  columnDefs: EditableColumnDef<InferRow<T, F>>[]
   className?: string
-  errors?: FieldErrors<{ childs: NoInfer<R>[] }>['childs']
+  errors?: FieldErrors<{ childs: InferRow<T, F>[] }>['childs']
   getRowClassName?: (args: {
     index: number
-    row: EditableTableRowData<R>
-    rows: EditableTableRowData<R>[]
+    row: TableRowField<InferRow<T, F>>
+    rows: TableRowField<InferRow<T, F>>[]
   }) => string
   getEditorProps?: (args: {
     index: number
-    row: EditableTableRowData<R>
-    rows: EditableTableRowData<R>[]
-    col: EditableColumnDef<R>
-    errors: FieldErrors<R>
+    row: TableRowField<InferRow<T, F>>
+    rows: TableRowField<InferRow<T, F>>[]
+    col: EditableColumnDef<InferRow<T, F>>
+    errors: FieldErrors<InferRow<T, F>>
   }) => Record<string, unknown>
   placeholder?: string
   onDelete?(ctx: DeleteContext): void
   onCreate?(): void
   onCellDoubleClick?: (ctx: {
-    row: EditableTableRowData<R>
-    col: EditableColumnDef<R>
+    row: TableRowField<InferRow<T, F>>
+    col: EditableColumnDef<InferRow<T, F>>
     index: number
   }) => void
   params?: Record<string, unknown>
   footerRows?: ReactNode
-  validate?(ctx: ChangeContext<R>): boolean
+  validate?(ctx: ChangeContext<InferRow<T, F>>): boolean
   methods?: RefObject<EditableTableMethods>
 }

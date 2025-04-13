@@ -1,4 +1,4 @@
-import type { EditableColumnDef, EditableTableRowData } from '../interface'
+import type { EditableColumnDef, TableRowField } from '../interface'
 import type { Dispatch, FC, InputHTMLAttributes, Ref, SetStateAction } from 'react'
 import type { FieldErrors, UseFormReturn } from 'react-hook-form'
 
@@ -16,8 +16,8 @@ export type EditorComponent<T extends object> = FC<{
   tabIndex?: number
   inputRef: Ref<HTMLInputElement>
   id: number
-  row: EditableTableRowData<T>
-  rows: EditableTableRowData<T>[]
+  row: TableRowField<T>
+  rows: TableRowField<T>[]
   form: UseFormReturn<any> // Todo fix this type
   col: EditableColumnDef<T>
   max?: number

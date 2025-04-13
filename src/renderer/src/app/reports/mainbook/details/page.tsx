@@ -297,6 +297,8 @@ const MainbookDetailsPage = () => {
     []
   )
 
+  console.log('details page rendering')
+
   return (
     <DetailsView className="h-full">
       <DetailsView.Content

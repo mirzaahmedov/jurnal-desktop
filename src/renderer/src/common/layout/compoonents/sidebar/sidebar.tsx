@@ -95,7 +95,7 @@ const ApplicationBadge = () => {
     case import.meta.env.DEV:
       return <Badge>{t('development')}</Badge>
     case import.meta.env.VITE_MODE === 'staging':
-      return <Badge className="bg-emerald-400 hover:bg-emerald-500">{t('testing')}</Badge>
+      return <Badge className="bg-rose-500">{t('testing')}</Badge>
     default:
       return null
   }

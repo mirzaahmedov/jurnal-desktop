@@ -99,7 +99,7 @@ export const RequisitesDialog = ({ open, onOpenChange }: RequisitesDialogProps) 
     }
   )
 
-  const handleClose = (open: boolean) => {
+  const handleOpenChange = (open: boolean) => {
     if (!open && form.formState.isDirty) {
       confirm({
         title: t('unsaved_changes_want_to_exit'),
@@ -127,7 +127,7 @@ export const RequisitesDialog = ({ open, onOpenChange }: RequisitesDialogProps) 
   return (
     <Dialog
       open={open}
-      onOpenChange={handleClose}
+      onOpenChange={handleOpenChange}
     >
       <DialogContent>
         <DialogHeader>

@@ -3,6 +3,7 @@ import iconDev from '@resources/icon-dev.png?asset'
 import icon from '@resources/icon.png?asset'
 import dotenv from 'dotenv'
 import { BrowserWindow, app, ipcMain, shell } from 'electron'
+import { REACT_DEVELOPER_TOOLS, installExtension } from 'electron-devtools-installer'
 import { NsisUpdater } from 'electron-updater'
 import fs from 'fs'
 import os from 'os'
@@ -50,7 +51,10 @@ function createWindow(): void {
       : { icon: import.meta.env.VITE_MODE === 'prod' ? icon : iconDev }),
     webPreferences: {
       preload: path.join(__dirname, '../preload/index.js'),
-      sandbox: false
+      sandbox: false,
+      devTools: true,
+      nodeIntegration: true,
+      contextIsolation: false // needed for devtools extension to work
     }
   })
 
@@ -174,7 +178,7 @@ ipcMain.handle('get-zoom-factor', (e) => {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.whenReady().then(() => {
+app.whenReady().then(async () => {
   // Set app user model id for windows
   electronApp.setAppUserModelId('com.electron')
 
@@ -187,6 +191,12 @@ app.whenReady().then(() => {
 
   // IPC test
   ipcMain.on('ping', () => console.log('pong'))
+
+  if (import.meta.env.DEV) {
+    installExtension(REACT_DEVELOPER_TOOLS)
+      .catch((err) => console.log('Error installing React DevTools:', err))
+      .then(() => console.log('React DevTools installed'))
+  }
 
   createWindow()
 

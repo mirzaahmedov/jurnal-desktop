@@ -7,7 +7,7 @@ import { Link, useLocation } from 'react-router-dom'
 
 import { Button } from '@/common/components/ui/button'
 import { useAuthenticationStore } from '@/common/features/auth'
-import { RequisitesController } from '@/common/features/requisites/controller'
+import { RequisitesController } from '@/common/features/requisites'
 import { useLayoutStore } from '@/common/layout/store'
 
 import { SelectedMonth } from './selected-month'
@@ -30,12 +30,11 @@ export const Header = () => {
   const { user, setUser } = useAuthenticationStore()
 
   const location = useLocation()
+  const isSaldoEnabled = getSaldoEnabled(location.pathname)
 
   const handleLogout = () => {
     setUser(null)
   }
-
-  const isSaldoEnabled = getSaldoEnabled(location.pathname)
 
   return (
     <header className="px-5 py-4 flex justify-between border-b border-border/50 bg-white z-[51] sticky top-0">

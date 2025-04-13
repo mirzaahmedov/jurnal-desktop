@@ -1,15 +1,23 @@
-import type { MainSchet } from '@/common/models'
 import type { DialogProps } from '@radix-ui/react-dialog'
 
+import { useQuery } from '@tanstack/react-query'
 import { Trans } from 'react-i18next'
 
+import { MainSchetQueryKeys, MainSchetService } from '@/app/region-spravochnik/main-schet'
 import { DataList } from '@/common/components/data-list'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/common/components/ui/dialog'
 
-export interface RequisitesInfoDialogProps extends DialogProps {
-  data: MainSchet
-}
-export const RequisitesInfoDialog = ({ data, ...props }: RequisitesInfoDialogProps) => {
+import { useRequisitesStore } from './store'
+
+export const RequisitesInfoDialog = (props: DialogProps) => {
+  const { main_schet_id, jur3_schet_id, jur4_schet_id } = useRequisitesStore()
+
+  const { data } = useQuery({
+    queryKey: [MainSchetQueryKeys.getById, main_schet_id],
+    queryFn: MainSchetService.getById,
+    enabled: !!main_schet_id
+  })
+
   return (
     <Dialog {...props}>
       <DialogContent>
@@ -22,35 +30,35 @@ export const RequisitesInfoDialog = ({ data, ...props }: RequisitesInfoDialogPro
           list={[
             {
               name: <Trans>budjet</Trans>,
-              value: data?.budjet_name
+              value: data?.data?.budjet_name
             },
             {
               name: <Trans>name</Trans>,
-              value: data?.account_name
+              value: data?.data?.account_name
             },
             {
               name: <Trans>raschet-schet</Trans>,
-              value: data?.account_number
+              value: data?.data?.account_number
             },
             {
               name: <Trans>raschet-schet-gazna</Trans>,
-              value: data?.gazna_number
+              value: data?.data?.gazna_number
             },
             {
               name: <Trans>organization</Trans>,
-              value: data?.tashkilot_nomi
+              value: data?.data?.tashkilot_nomi
             },
             {
               name: <Trans>inn</Trans>,
-              value: data?.tashkilot_inn
+              value: data?.data?.tashkilot_inn
             },
             {
               name: <Trans>mfo</Trans>,
-              value: data?.tashkilot_mfo
+              value: data?.data?.tashkilot_mfo
             },
             {
               name: <Trans>bank</Trans>,
-              value: data?.tashkilot_bank
+              value: data?.data?.tashkilot_bank
             },
             {
               name: (
@@ -61,7 +69,7 @@ export const RequisitesInfoDialog = ({ data, ...props }: RequisitesInfoDialogPro
                   </span>
                 </>
               ),
-              value: data?.jur1_schet
+              value: data?.data?.jur1_schet
             },
             {
               name: (
@@ -72,7 +80,7 @@ export const RequisitesInfoDialog = ({ data, ...props }: RequisitesInfoDialogPro
                   </span>
                 </>
               ),
-              value: data?.jur2_schet
+              value: data?.data?.jur2_schet
             },
             {
               name: (
@@ -83,7 +91,7 @@ export const RequisitesInfoDialog = ({ data, ...props }: RequisitesInfoDialogPro
                   </span>
                 </>
               ),
-              value: data?.jur3_schet
+              value: data?.data?.jur3_schets?.find((schet) => schet.id === jur3_schet_id)?.schet
             },
             {
               name: (
@@ -94,7 +102,7 @@ export const RequisitesInfoDialog = ({ data, ...props }: RequisitesInfoDialogPro
                   </span>
                 </>
               ),
-              value: data?.jur4_schet
+              value: data?.data?.jur4_schets?.find((schet) => schet.id === jur4_schet_id)?.schet
             }
           ]}
         />
