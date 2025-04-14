@@ -143,12 +143,20 @@ export const MainSchetDialog = ({
   }, [form, selected, original])
 
   const {
-    fields: jur3Schets,
-    append: appendJur3Schets,
-    remove: removeJur3Schets
+    fields: jur152Schets,
+    append: appendJur152Schets,
+    remove: removeJur152Schets
   } = useFieldArray({
     control: form.control,
-    name: 'jur3_schets'
+    name: 'jur3_schets_152'
+  })
+  const {
+    fields: jur159Schets,
+    append: appendJur159Schets,
+    remove: removeJur159Schets
+  } = useFieldArray({
+    control: form.control,
+    name: 'jur3_schets_159'
   })
   const {
     fields: jur4Schets,
@@ -443,15 +451,15 @@ export const MainSchetDialog = ({
 
               <div className="grid grid-cols-6 gap-5 items-center">
                 <FormLabel className="col-span-2 text-end">
-                  {t('mo-nth', { nth: 3 })} {t('schet')}
+                  {t('mo-nth', { nth: 152 })} {t('schet')}
                 </FormLabel>
               </div>
               <ul className="flex flex-col gap-6">
-                {jur3Schets.map((field, index) => (
+                {jur152Schets.map((field, index) => (
                   <FormField
                     key={field.id}
                     control={form.control}
-                    name={`jur3_schets.${index}.schet`}
+                    name={`jur3_schets_152.${index}.schet`}
                     render={({ field }) => (
                       <li key={index}>
                         <FormElement
@@ -465,8 +473,8 @@ export const MainSchetDialog = ({
                               variant="ghost"
                               size="icon"
                               className="btn-icon !mx-0 hover:text-red-500"
-                              disabled={jur3Schets.length === 1}
-                              onClick={() => removeJur3Schets(index)}
+                              disabled={jur152Schets.length === 1}
+                              onClick={() => removeJur152Schets(index)}
                             >
                               <Trash />
                             </Button>
@@ -483,7 +491,59 @@ export const MainSchetDialog = ({
                   type="button"
                   variant="outline"
                   onClick={() =>
-                    appendJur3Schets({
+                    appendJur152Schets({
+                      schet: ''
+                    })
+                  }
+                  className="col-span-4"
+                >
+                  <Plus className="btn-icon icon-start" /> {t('add')}
+                </Button>
+              </div>
+
+              <div className="grid grid-cols-6 gap-5 items-center">
+                <FormLabel className="col-span-2 text-end">
+                  {t('mo-nth', { nth: 159 })} {t('schet')}
+                </FormLabel>
+              </div>
+              <ul className="flex flex-col gap-6">
+                {jur159Schets.map((field, index) => (
+                  <FormField
+                    key={field.id}
+                    control={form.control}
+                    name={`jur3_schets_159.${index}.schet`}
+                    render={({ field }) => (
+                      <li key={index}>
+                        <FormElement
+                          grid="2:4"
+                          label={index + 1}
+                        >
+                          <div className="flex items-center justify-between gap-5">
+                            <Input {...field} />
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="icon"
+                              className="btn-icon !mx-0 hover:text-red-500"
+                              disabled={jur159Schets.length === 1}
+                              onClick={() => removeJur159Schets(index)}
+                            >
+                              <Trash />
+                            </Button>
+                          </div>
+                        </FormElement>
+                      </li>
+                    )}
+                  />
+                ))}
+              </ul>
+              <div className="grid grid-cols-6 mt-1">
+                <div className="col-span-2"></div>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() =>
+                    appendJur159Schets({
                       schet: ''
                     })
                   }

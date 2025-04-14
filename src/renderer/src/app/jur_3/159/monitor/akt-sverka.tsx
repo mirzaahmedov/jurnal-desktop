@@ -13,7 +13,7 @@ import { Label } from '@/common/components/ui/label'
 import { DownloadFile } from '@/common/features/file'
 import { SpravochnikInput, useSpravochnik } from '@/common/features/spravochnik'
 
-import { createShartnomaSpravochnik } from '../shartnoma'
+import { createShartnomaSpravochnik } from '../../shartnoma'
 
 interface AktSverkaDialogProps {
   from: string

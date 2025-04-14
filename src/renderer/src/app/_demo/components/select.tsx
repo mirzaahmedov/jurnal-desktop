@@ -48,6 +48,7 @@ export const Select = () => {
     <Popover
       open={open}
       onOpenChange={setOpen}
+      modal={false}
     >
       <PopoverTrigger asChild>
         <Button

@@ -11,7 +11,7 @@ import {
 import { cn } from '@/common/lib/utils'
 
 export interface MainbookTableProps
-  extends Omit<EditableTableProps<MainbookFormValues>, 'columnDefs'> {
+  extends Omit<EditableTableProps<MainbookFormValues, 'childs'>, 'columnDefs'> {
   columns: EditableColumnDef<ProvodkaRow>[]
 }
 export const MainbookTable = memo(({ columns, ...props }: MainbookTableProps) => {

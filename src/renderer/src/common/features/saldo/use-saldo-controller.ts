@@ -13,20 +13,22 @@ export interface UseSaldoControllerReturn {
 export interface UseSaldoControllerArgs {
   ns: SaldoNamespace
 }
-export const useSaldoController = ({ ns }: UseSaldoControllerArgs) => {
+export const useSaldoController = <T extends MonthValue = MonthValue>({
+  ns
+}: UseSaldoControllerArgs) => {
   const { queuedMonths, clearQueue, enqueueMonth, dequeueMonth } = useSaldoControllerStore()
 
   return {
-    queuedMonths: useMemo(() => queuedMonths[ns], [queuedMonths, ns]),
+    queuedMonths: useMemo(() => queuedMonths[ns] as T[], [queuedMonths, ns]),
     clearQueue: useCallback(() => clearQueue(ns), [ns]),
     enqueueMonth: useCallback(
-      (...values: MonthValue[]) => {
+      (...values: T[]) => {
         enqueueMonth(ns, ...values)
       },
       [ns]
     ),
     dequeueMonth: useCallback(
-      (...values: MonthValue[]) => {
+      (...values: T[]) => {
         return dequeueMonth(ns, ...values)
       },
       [ns]

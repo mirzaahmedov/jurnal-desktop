@@ -52,7 +52,7 @@ import {
 
 import { Jur1SaldoController } from '@/app/jur_1/saldo/components/saldo-controller'
 import { Jur2SaldoController } from '@/app/jur_2/saldo/components/saldo-controller'
-import { OrganSaldoController } from '@/app/jur_3/saldo/components/saldo-controller'
+import { OrganSaldoController } from '@/app/jur_3/159/saldo/components/saldo-controller'
 import { PodotchetSaldoController } from '@/app/jur_4/saldo/components/saldo-controller'
 import { Jur7SaldoController } from '@/app/jur_7/saldo/components/saldo-controller'
 import { adminRoles } from '@/app/super-admin/role'
@@ -190,13 +190,6 @@ export const getNavElements = (t: TFunction): NavElement[] => {
           title: `№3 - МО (${t('pages.organization')})`,
           icon: Building2,
           children: omitEmptyArrayElements([
-            permissions.organization_monitoring
-              ? {
-                  path: 'monitor',
-                  title: t('pages.organization-monitoring'),
-                  icon: SquareActivity
-                }
-              : null,
             permissions.shartnoma
               ? {
                   path: 'shartnoma',
@@ -204,30 +197,83 @@ export const getNavElements = (t: TFunction): NavElement[] => {
                   icon: ReceiptText
                 }
               : null,
-            permissions.jur3
-              ? {
-                  path: 'akt',
-                  title: t('pages.akt'),
-                  icon: FileCheck2
-                }
-              : null,
-            permissions.jur152
-              ? {
-                  path: 'pokazat-uslugi',
-                  title: t('pages.service'),
-                  icon: Truck
-                }
-              : null,
             {
-              path: 'ostatok',
-              title: t('pages.saldo'),
-              icon: CircleFadingPlus
+              path: '159',
+              title: '159',
+              icon: Folder,
+              children: omitEmptyArrayElements([
+                permissions.organization_monitoring
+                  ? {
+                      path: 'monitor',
+                      title: t('pages.organization-monitoring'),
+                      icon: SquareActivity
+                    }
+                  : null,
+                permissions.jur3
+                  ? {
+                      path: 'akt',
+                      title: t('pages.akt'),
+                      icon: FileCheck2
+                    }
+                  : null,
+                {
+                  path: 'saldo',
+                  title: t('pages.saldo'),
+                  icon: CircleFadingPlus
+                },
+                {
+                  displayOnly: true,
+                  path: '',
+                  title: <OrganSaldoController />,
+                  icon: null
+                }
+              ])
             },
             {
-              displayOnly: true,
-              path: '',
-              title: <OrganSaldoController />,
-              icon: null
+              path: '152',
+              title: '152',
+              icon: Folder,
+              children: omitEmptyArrayElements([
+                permissions.organization_monitoring
+                  ? {
+                      path: 'monitor',
+                      title: t('pages.organization-monitoring'),
+                      icon: SquareActivity
+                    }
+                  : null,
+                permissions.shartnoma
+                  ? {
+                      path: 'shartnoma',
+                      title: t('pages.shartnoma'),
+                      icon: ReceiptText
+                    }
+                  : null,
+                permissions.jur3
+                  ? {
+                      path: 'akt',
+                      title: t('pages.akt'),
+                      icon: FileCheck2
+                    }
+                  : null,
+                permissions.jur152
+                  ? {
+                      path: 'pokazat-uslugi',
+                      title: t('pages.service'),
+                      icon: Truck
+                    }
+                  : null,
+                {
+                  path: 'ostatok',
+                  title: t('pages.saldo'),
+                  icon: CircleFadingPlus
+                },
+                {
+                  displayOnly: true,
+                  path: '',
+                  title: <OrganSaldoController />,
+                  icon: null
+                }
+              ])
             }
           ])
         }

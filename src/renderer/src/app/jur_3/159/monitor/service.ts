@@ -20,7 +20,7 @@ export const OrganMonitoringService = new CRUDService<
   undefined,
   OrganMonitorMeta
 >({
-  endpoint: ApiEndpoints.organization_monitoring
+  endpoint: ApiEndpoints.organ159_monitoring
 })
   .use(main_schet())
   .use(jur3_schet())

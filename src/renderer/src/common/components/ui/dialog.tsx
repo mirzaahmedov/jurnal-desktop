@@ -10,7 +10,14 @@ const Dialog = ({
   children,
   ...props
 }: Omit<React.ComponentPropsWithoutRef<typeof DialogPrimitive.Root>, 'modal'>) => {
-  const { hideOverlay } = useOverlay()
+  const { hideOverlay, showOverlay } = useOverlay()
+
+  React.useEffect(() => {
+    if (props.defaultOpen) {
+      showOverlay()
+    }
+  }, [showOverlay, props.defaultOpen])
+
   return (
     <DialogPrimitive.Root
       {...props}

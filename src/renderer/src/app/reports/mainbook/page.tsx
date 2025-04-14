@@ -19,6 +19,7 @@ import {
 import { useConfirm } from '@/common/features/confirm'
 import { DownloadFile } from '@/common/features/file'
 import { useRequisitesStore } from '@/common/features/requisites'
+import { SaldoNamespace, useSaldoController } from '@/common/features/saldo'
 import { useSettingsStore } from '@/common/features/settings'
 import { useKeyUp, usePagination } from '@/common/hooks'
 import { useLayoutStore } from '@/common/layout/store'
@@ -41,6 +42,9 @@ const MainbookPage = () => {
 
   const { t } = useTranslation(['app'])
   const { confirm } = useConfirm()
+  const { queuedMonths } = useSaldoController({
+    ns: SaldoNamespace.MAINBOOK
+  })
 
   const { data: mainbook, isFetching: isFetchingMainbook } = useQuery({
     queryKey: [
@@ -52,7 +56,8 @@ const MainbookPage = () => {
         year
       }
     ],
-    queryFn: MainbookService.getAll
+    queryFn: MainbookService.getAll,
+    enabled: !queuedMonths.length
   })
   const { mutate: deleteMainbook, isPending: isDeleting } = useMutation({
     mutationKey: [MainbookQueryKeys.delete],
@@ -84,6 +89,7 @@ const MainbookPage = () => {
       }
     })
   }, [setLayout, navigate, t])
+  useEffect(() => {}, [])
 
   const handleEdit = (row: Mainbook) => {
     navigate(`${row.id}`)

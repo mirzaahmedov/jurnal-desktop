@@ -121,20 +121,21 @@ export interface MonthPickerProps extends Omit<ButtonProps, 'onChange'> {
   onChange: (value: string) => void
 }
 export const MonthPicker = ({ value, onChange, className, ...props }: MonthPickerProps) => {
-  const popoverToggle = useToggle()
+  const toggle = useToggle()
 
   const { i18n } = useTranslation()
 
   const date = value ? parseDate(value) : new Date()
   const setDate = (newDate: Date) => {
     onChange(formatDate(newDate))
-    popoverToggle.close()
+    toggle.close()
   }
 
   return (
     <Popover
-      open={popoverToggle.isOpen}
-      onOpenChange={popoverToggle.setOpen}
+      open={toggle.isOpen}
+      onOpenChange={toggle.setOpen}
+      modal={false}
     >
       <PopoverTrigger asChild>
         <Button

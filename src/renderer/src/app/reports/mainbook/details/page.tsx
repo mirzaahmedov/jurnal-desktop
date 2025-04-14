@@ -1,5 +1,5 @@
 import type { MainbookAutoFillSubChild } from './interfaces'
-import type { EditableColumnDef, EditableTableMethods } from '@/common/components/editable-table'
+import type { CellEventHandler, EditableTableMethods } from '@/common/components/editable-table'
 
 import { type KeyboardEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
@@ -20,10 +20,10 @@ import { DetailsView } from '@/common/views'
 
 import { MainbookQueryKeys } from '../config'
 import { MainbookService } from '../service'
-import { defaultValues } from './config'
+import { type MainbookFormValues, defaultValues } from './config'
 import { MainbookDocumentsTracker } from './documents-tracker'
 import { MainbookTable } from './mainbook-table'
-import { MainbookProvodkaColumns, type ProvodkaRow } from './provodki'
+import { MainbookProvodkaColumns } from './provodki'
 import { getMainbookColumns, transformGetByIdData, transformMainbookAutoFillData } from './utils'
 
 const MainbookDetailsPage = () => {
@@ -282,11 +282,19 @@ const MainbookDetailsPage = () => {
     }
   }, [rows, form, isEditable, t])
 
-  const handleCellDoubleClick = useCallback(
-    (args: { col: EditableColumnDef<ProvodkaRow>; row: ProvodkaRow }) => {
-      const type_id = Number(args.col.key.split('_')[0])
-      const prixod = args.col.key.endsWith('_prixod')
-      const schet = args.row.schet
+  const handleCellDoubleClick = useCallback<CellEventHandler<MainbookFormValues, 'childs'>>(
+    ({ column, row, rows, value, index }) => {
+      if (index === rows.length - 1 || !value) {
+        return
+      }
+
+      const type_id = Number(column.key.split('_')[0])
+      const prixod = column.key.endsWith('_prixod')
+      const schet = row.schet
+
+      if (type_id < 1 || type_id > 8) {
+        return
+      }
 
       setActiveCell({
         type_id,
@@ -296,8 +304,6 @@ const MainbookDetailsPage = () => {
     },
     []
   )
-
-  console.log('details page rendering')
 
   return (
     <DetailsView className="h-full">
@@ -359,7 +365,7 @@ const MainbookDetailsPage = () => {
                 methods={tableMethods}
                 form={form}
                 name="childs"
-                onCellDoubleClick={!isEditable ? (handleCellDoubleClick as any) : undefined}
+                onCellDoubleClick={!isEditable ? handleCellDoubleClick : undefined}
               />
             </div>
           </div>

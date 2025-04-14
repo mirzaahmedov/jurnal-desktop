@@ -1,11 +1,21 @@
 import type { EditorComponentType } from './editors'
 import type { ChangeContext, DeleteContext } from './editors/interfaces'
 import type { Autocomplete } from '@/common/lib/types'
-import type { ReactNode, RefObject } from 'react'
+import type { ReactNode, RefObject, SyntheticEvent } from 'react'
 import type { ArrayPath, FieldArrayWithId, FieldErrors, UseFormReturn } from 'react-hook-form'
 
-export type TableRowField<T extends object> = FieldArrayWithId<T, ArrayPath<T>, 'id'>
-export type InferRow<T extends object, F extends ArrayPath<NoInfer<T>>> = T[F][number]
+export type TableRowField<T extends object, F extends ArrayPath<T>> = FieldArrayWithId<T, F, 'id'>
+export type InferRow<T extends object, F extends ArrayPath<T>> = T[F][number]
+
+export type CellEventHandler<T extends object, F extends ArrayPath<T>> = (args: {
+  event: SyntheticEvent<HTMLTableCellElement>
+  row: FieldArrayWithId<T, F, 'id'>
+  rows: FieldArrayWithId<T, F, 'id'>[]
+  value: unknown
+  onChange: (value: unknown) => void
+  column: EditableColumnDef<InferRow<T, F>>
+  index: number
+}) => void
 
 export interface EditableColumnDef<T extends object> {
   key: Autocomplete<keyof T>
@@ -41,24 +51,22 @@ export interface EditableTableProps<T extends object, F extends ArrayPath<NoInfe
   errors?: FieldErrors<{ childs: InferRow<T, F>[] }>['childs']
   getRowClassName?: (args: {
     index: number
-    row: TableRowField<InferRow<T, F>>
-    rows: TableRowField<InferRow<T, F>>[]
+    row: FieldArrayWithId<T, F, 'id'>
+    rows: FieldArrayWithId<T, F, 'id'>[]
   }) => string
   getEditorProps?: (args: {
     index: number
-    row: TableRowField<InferRow<T, F>>
-    rows: TableRowField<InferRow<T, F>>[]
+    value: unknown
+    onChange: (value: unknown) => void
+    row: FieldArrayWithId<T, F, 'id'>
+    rows: FieldArrayWithId<T, F, 'id'>[]
     col: EditableColumnDef<InferRow<T, F>>
     errors: FieldErrors<InferRow<T, F>>
   }) => Record<string, unknown>
   placeholder?: string
   onDelete?(ctx: DeleteContext): void
   onCreate?(): void
-  onCellDoubleClick?: (ctx: {
-    row: TableRowField<InferRow<T, F>>
-    col: EditableColumnDef<InferRow<T, F>>
-    index: number
-  }) => void
+  onCellDoubleClick?: CellEventHandler<T, F>
   params?: Record<string, unknown>
   footerRows?: ReactNode
   validate?(ctx: ChangeContext<InferRow<T, F>>): boolean

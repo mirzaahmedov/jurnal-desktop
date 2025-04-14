@@ -26,7 +26,8 @@ export const MainSchetFormSchema = withPreprocessor(
     account_name: z.string(),
     jur1_schet: z.string(),
     jur2_schet: z.string(),
-    jur3_schets: z.array(SchetSchema),
+    jur3_schets_152: z.array(SchetSchema),
+    jur3_schets_159: z.array(SchetSchema),
     jur4_schets: z.array(SchetSchema)
   })
 )
@@ -42,7 +43,12 @@ export const defaultValues: MainSchetFormValues = {
   tashkilot_bank: '',
   jur1_schet: '',
   jur2_schet: '',
-  jur3_schets: [
+  jur3_schets_152: [
+    {
+      schet: ''
+    }
+  ],
+  jur3_schets_159: [
     {
       schet: ''
     }

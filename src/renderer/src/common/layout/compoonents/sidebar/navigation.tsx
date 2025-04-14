@@ -31,7 +31,7 @@ const renderNavElement = (elem: null | NavElement, isCollapsed: boolean, rootPat
   return elem.children?.length ? (
     <li
       key={path}
-      className="px-5 hover:bg-slate-50 transition-colors"
+      className={cn('pl-5 hover:bg-slate-50 transition-colors', !rootPath && 'pr-5')}
     >
       <Accordion type="multiple">
         <AccordionItem value={path}>
@@ -58,7 +58,7 @@ const renderNavElement = (elem: null | NavElement, isCollapsed: boolean, rootPat
   ) : (
     <li
       key={path}
-      className="group px-5 hover:bg-slate-50 transition-colors"
+      className={cn('group pl-5 hover:bg-slate-50 transition-colors', !rootPath && 'pr-5')}
     >
       {elem.displayOnly ? (
         <div

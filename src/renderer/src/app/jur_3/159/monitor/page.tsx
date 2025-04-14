@@ -49,7 +49,7 @@ import { OrganMonitorQueryKeys } from './config'
 import { useOrganFilter } from './filters'
 import { OrganMonitoringService } from './service'
 
-const OrganizationMonitoringPage = () => {
+const OrganMonitoringPage = () => {
   const navigate = useNavigate()
   const dates = useDates()
   const dropdownToggle = useToggle()
@@ -337,4 +337,4 @@ const OrganizationMonitoringPage = () => {
   )
 }
 
-export default OrganizationMonitoringPage
+export default OrganMonitoringPage

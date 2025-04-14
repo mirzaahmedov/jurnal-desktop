@@ -1,5 +1,5 @@
-import type { EditableTableProps, InferRow, TableRowField } from './interface'
-import type { ArrayPath, Path } from 'react-hook-form'
+import type { EditableTableProps } from './interface'
+import type { ArrayPath, FieldArrayWithId, Path } from 'react-hook-form'
 
 import { useImperativeHandle, useMemo, useRef, useState } from 'react'
 
@@ -251,8 +251,8 @@ interface EditableTableRowRendererProps<T extends object, F extends ArrayPath<No
   > {
   tabIndex?: number
   index: number
-  row: TableRowField<InferRow<T, F>>
-  rows: TableRowField<InferRow<T, F>>[]
+  row: FieldArrayWithId<T, F, 'id'>
+  rows: FieldArrayWithId<T, F, 'id'>[]
   highlightedRows: number[]
   onHighlight?(index: number): void
 }
@@ -309,10 +309,14 @@ const EditableTableRowRenderer = <T extends object, R extends T[ArrayPath<NoInfe
                         'group-data-[highlighted=true]/row:bg-brand/10 group-data-[highlighted=true]/row:border-brand/20',
                         className
                       )}
-                      onDoubleClick={() => {
+                      onDoubleClick={(event) => {
                         onCellDoubleClick?.({
-                          col: column,
+                          column,
                           row,
+                          rows,
+                          value: field.value,
+                          onChange: field.onChange,
+                          event,
                           index
                         })
                       }}
@@ -337,6 +341,8 @@ const EditableTableRowRenderer = <T extends object, R extends T[ArrayPath<NoInfe
                           index,
                           row,
                           rows,
+                          value: field.value,
+                          onChange: field.onChange,
                           col: column,
                           errors: errors?.[index] as FieldErrors<R>
                         })}

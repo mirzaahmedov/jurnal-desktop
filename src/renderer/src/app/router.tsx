@@ -28,7 +28,7 @@ const VideoTutorialsPage = lazy(() => import('./video-tutorials/page'))
 
 const AdminOstatokPage = lazy(() => import('./super-admin/ostatok/page'))
 const ZarplataSpravochnikPage = lazy(() => import('./super-admin/zarplata/spravochnik/page'))
-const OrganOstatokPage = lazy(() => import('./jur_3/saldo/page'))
+const OrganOstatokPage = lazy(() => import('./jur_3/159/saldo/page'))
 const MainLayout = lazy(() => import('../common/layout/main'))
 const BankMonitorPage = lazy(() => import('./jur_2/monitor/page'))
 const BankPrixodDetailsPage = lazy(() => import('./jur_2/prixod/details/page'))
@@ -52,9 +52,9 @@ const KassaRasxodDetailtsPage = lazy(() => import('./jur_1/rasxod/details/page')
 const KassaRasxodPage = lazy(() => import('./jur_1/rasxod/page'))
 const MainbookPage = lazy(() => import('./reports/mainbook/page'))
 const MainbookDetailsPage = lazy(() => import('./reports/mainbook/details/page'))
-const AktDetailsPage = lazy(() => import('./jur_3/akt/details/page'))
-const AktPage = lazy(() => import('./jur_3/akt/page'))
-const OrganizationMonitorPage = lazy(() => import('./jur_3/monitor/page'))
+const AktDetailsPage = lazy(() => import('./jur_3/159/akt/details/page'))
+const AktPage = lazy(() => import('./jur_3/159/akt/page'))
+const OrganizationMonitorPage = lazy(() => import('./jur_3/159/monitor/page'))
 const PokazatUslugiDetailsPage = lazy(() => import('./jur_3/pokazat-uslugi/details/page'))
 const PokazatUslugiPage = lazy(() => import('./jur_3/pokazat-uslugi/page'))
 const ShartnomaDetailsPage = lazy(() => import('./jur_3/shartnoma/details/page'))
@@ -128,10 +128,6 @@ export const routes: RouteObject[] = [
         element: <MainSchetSelectedGuard />,
         children: [
           {
-            path: 'monitor',
-            element: <OrganizationMonitorPage />
-          },
-          {
             path: 'shartnoma',
             element: <ShartnomaPage />
           },
@@ -140,12 +136,25 @@ export const routes: RouteObject[] = [
             element: <ShartnomaDetailsPage />
           },
           {
-            path: 'akt',
-            element: <AktPage />
-          },
-          {
-            path: 'akt/:id',
-            element: <AktDetailsPage />
+            path: '159',
+            children: [
+              {
+                path: 'monitor',
+                element: <OrganizationMonitorPage />
+              },
+              {
+                path: 'akt',
+                element: <AktPage />
+              },
+              {
+                path: 'akt/:id',
+                element: <AktDetailsPage />
+              },
+              {
+                path: 'saldo',
+                element: <OrganOstatokPage />
+              }
+            ]
           },
           {
             path: 'pokazat-uslugi',
@@ -154,10 +163,6 @@ export const routes: RouteObject[] = [
           {
             path: 'pokazat-uslugi/:id',
             element: <PokazatUslugiDetailsPage />
-          },
-          {
-            path: 'ostatok',
-            element: <OrganOstatokPage />
           }
         ]
       },
