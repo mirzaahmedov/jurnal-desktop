@@ -23,7 +23,7 @@ import {
   useSearchFilter
 } from '@/common/features/filters/search/search-filter-debounced'
 import { useRequisitesStore } from '@/common/features/requisites'
-import { SaldoNamespace, useSaldoController } from '@/common/features/saldo'
+import { SaldoNamespace, handleSaldoErrorDates, useSaldoController } from '@/common/features/saldo'
 import {
   useSelectedMonthStore,
   validateDateWithinSelectedMonth
@@ -69,7 +69,11 @@ const PodotchetMonitorPage = () => {
     })
   )
 
-  const { data: monitoring, isFetching } = useQuery({
+  const {
+    data: monitoring,
+    isFetching,
+    error
+  } = useQuery({
     queryFn: PodotchetMonitorService.getAll,
     queryKey: [
       PodotchetMonitorQueryKeys.getAll,
@@ -100,6 +104,11 @@ const PodotchetMonitorPage = () => {
       ]
     })
   }, [setLayout, t])
+  useEffect(() => {
+    if (error) {
+      handleSaldoErrorDates(SaldoNamespace.JUR_4, error)
+    }
+  }, [error])
 
   const handleClickEdit = (row: PodotchetMonitor) => {
     const path = getProvodkaURL(row)

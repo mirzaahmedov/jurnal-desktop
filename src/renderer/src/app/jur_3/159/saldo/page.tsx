@@ -1,6 +1,6 @@
 import type { OrganSaldo } from '@/common/models'
 
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
@@ -16,13 +16,12 @@ import {
   handleSaldoResponseDates,
   useSaldoController
 } from '@/common/features/saldo'
-import { useKeyUp, useToggle } from '@/common/hooks'
+import { useKeyUp } from '@/common/hooks'
 import { useLayoutStore } from '@/common/layout/store'
 import { ListView } from '@/common/views'
 
 import { OrganSaldoColumns } from './columns'
 import { OrganSaldoQueryKeys } from './config'
-import { OrganSaldoDialog } from './dialog'
 import { OrganSaldoFilters, useYearFilter } from './filters'
 import { OrganSaldoService } from './service'
 
@@ -31,10 +30,8 @@ const OrganSaldoPage = () => {
 
   const navigate = useNavigate()
   const queryClient = useQueryClient()
-  const dialogToggle = useToggle()
 
   const [year] = useYearFilter()
-  const [selected, setSelected] = useState<OrganSaldo | null>(null)
 
   const { confirm } = useConfirm()
   const { queuedMonths } = useSaldoController({
@@ -76,8 +73,7 @@ const OrganSaldoPage = () => {
   })
 
   const handleClickEdit = (row: OrganSaldo) => {
-    setSelected(row)
-    dialogToggle.open()
+    navigate(`${row.id}`)
   }
   const handleClickClean = () => {
     confirm({
@@ -102,11 +98,10 @@ const OrganSaldoPage = () => {
       ],
       content: OrganSaldoFilters,
       onCreate: () => {
-        setSelected(null)
-        dialogToggle.open()
+        navigate('create')
       }
     })
-  }, [setLayout, t, navigate, dialogToggle.open])
+  }, [setLayout, t, navigate])
 
   useEffect(() => {
     handleSaldoErrorDates(SaldoNamespace.JUR_3, error)
@@ -127,11 +122,6 @@ const OrganSaldoPage = () => {
           onEdit={handleClickEdit}
         />
       </ListView.Content>
-      <OrganSaldoDialog
-        open={dialogToggle.isOpen}
-        onOpenChange={dialogToggle.setOpen}
-        selected={selected}
-      />
     </ListView>
   )
 }
