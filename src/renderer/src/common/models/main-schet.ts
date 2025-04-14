@@ -28,6 +28,7 @@ export interface MainSchet {
   jur5_schet: string
   jur7_schet: string
   budjet_name: string
-  jur3_schets: Schet[]
+  jur3_schets_152: Schet[]
+  jur3_schets_159: Schet[]
   jur4_schets: Schet[]
 }

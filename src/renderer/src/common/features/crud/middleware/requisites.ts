@@ -3,7 +3,7 @@ import type { AxiosRequestConfig } from 'axios'
 
 import {
   getBudjetId,
-  getJur3SchetId,
+  getJur3Schet159Id,
   getJur4SchetId,
   getMainschetId
 } from '@/common/features/requisites'
@@ -30,7 +30,7 @@ export const budjet: () => MiddlewareFunction = () => {
 export const jur3_schet: () => MiddlewareFunction = () => {
   return (config: AxiosRequestConfig) => {
     config.params = extendObject(config.params, {
-      schet_id: getJur3SchetId()
+      schet_id: getJur3Schet159Id()
     })
     return config
   }

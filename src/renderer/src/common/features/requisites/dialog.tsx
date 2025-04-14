@@ -64,9 +64,17 @@ export const RequisitesDialog = ({ open, onOpenChange }: RequisitesDialogProps) 
   })
 
   const onSubmit = form.handleSubmit(
-    ({ main_schet_id, budjet_id, jur3_schet_id, jur4_schet_id }) => {
-      if (main_schet_id && !jur3_schet_id) {
-        form.setError('jur3_schet_id', {
+    ({ main_schet_id, budjet_id, jur3_schet_152_id, jur3_schet_159_id, jur4_schet_id }) => {
+      if (main_schet_id && !jur3_schet_152_id) {
+        form.setError('jur3_schet_152_id', {
+          type: 'required',
+          message: t('required_field')
+        })
+        return
+      }
+
+      if (main_schet_id && !jur3_schet_159_id) {
+        form.setError('jur3_schet_159_id', {
           type: 'required',
           message: t('required_field')
         })
@@ -84,7 +92,8 @@ export const RequisitesDialog = ({ open, onOpenChange }: RequisitesDialogProps) 
       setRequisites({
         main_schet_id,
         budjet_id,
-        jur3_schet_id,
+        jur3_schet_152_id,
+        jur3_schet_159_id,
         jur4_schet_id,
         user_id: user?.id
       })
@@ -92,7 +101,8 @@ export const RequisitesDialog = ({ open, onOpenChange }: RequisitesDialogProps) 
       form.reset({
         budjet_id,
         main_schet_id,
-        jur3_schet_id,
+        jur3_schet_152_id,
+        jur3_schet_159_id,
         jur4_schet_id
       })
       onOpenChange(false)
@@ -118,7 +128,8 @@ export const RequisitesDialog = ({ open, onOpenChange }: RequisitesDialogProps) 
       form.reset({
         budjet_id: useRequisitesStore.getState().budjet_id,
         main_schet_id: useRequisitesStore.getState().main_schet_id,
-        jur3_schet_id: useRequisitesStore.getState().jur3_schet_id,
+        jur3_schet_152_id: useRequisitesStore.getState().jur3_schet_152_id,
+        jur3_schet_159_id: useRequisitesStore.getState().jur3_schet_159_id,
         jur4_schet_id: useRequisitesStore.getState().jur4_schet_id
       })
     }
@@ -182,8 +193,11 @@ export const RequisitesDialog = ({ open, onOpenChange }: RequisitesDialogProps) 
                       getOptionValue={(account) => account.id.toString()}
                       getOptionLabel={(account) => account.account_number}
                       onOptionSelect={(option) => {
-                        console.log(option)
-                        form.setValue('jur3_schet_id', option?.jur3_schets?.[0]?.id ?? 0, {
+                        form.setValue('jur3_schet_152_id', option?.jur3_schets_152?.[0]?.id ?? 0, {
+                          shouldDirty: true,
+                          shouldValidate: true
+                        })
+                        form.setValue('jur3_schet_159_id', option?.jur3_schets_159?.[0]?.id ?? 0, {
                           shouldDirty: true,
                           shouldValidate: true
                         })
@@ -234,19 +248,19 @@ export const RequisitesDialog = ({ open, onOpenChange }: RequisitesDialogProps) 
                 </FormElement>
                 <FormField
                   control={form.control}
-                  name="jur3_schet_id"
+                  name="jur3_schet_152_id"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>
-                        {t('mo-nth', { nth: 3 })} {t('schet').toLowerCase()}
+                        {t('mo-nth', { nth: 152 })} {t('schet').toLowerCase()}
                       </FormLabel>
                       <SelectField
                         {...field}
                         withFormControl
                         placeholder={t('choose', { what: t('schet').toLowerCase() })}
                         options={
-                          Array.isArray(mainSchet.data?.jur3_schets)
-                            ? mainSchet.data?.jur3_schets
+                          Array.isArray(mainSchet.data?.jur3_schets_152)
+                            ? mainSchet.data?.jur3_schets_152
                             : []
                         }
                         getOptionValue={(schet) => schet.id}
@@ -258,6 +272,34 @@ export const RequisitesDialog = ({ open, onOpenChange }: RequisitesDialogProps) 
                     </FormItem>
                   )}
                 />
+
+                <FormField
+                  control={form.control}
+                  name="jur3_schet_159_id"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>
+                        {t('mo-nth', { nth: 159 })} {t('schet').toLowerCase()}
+                      </FormLabel>
+                      <SelectField
+                        {...field}
+                        withFormControl
+                        placeholder={t('choose', { what: t('schet').toLowerCase() })}
+                        options={
+                          Array.isArray(mainSchet.data?.jur3_schets_159)
+                            ? mainSchet.data?.jur3_schets_159
+                            : []
+                        }
+                        getOptionValue={(schet) => schet.id}
+                        getOptionLabel={(schet) => schet.schet}
+                        value={field.value ? field.value.toString() : ''}
+                        onValueChange={(value) => field.onChange(Number(value))}
+                      />
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
                 <FormField
                   control={form.control}
                   name="jur4_schet_id"
@@ -299,6 +341,7 @@ export const RequisitesDialog = ({ open, onOpenChange }: RequisitesDialogProps) 
 const defaultValues: RequisitesFormValues = {
   budjet_id: useRequisitesStore.getState().budjet_id,
   main_schet_id: useRequisitesStore.getState().main_schet_id,
-  jur3_schet_id: useRequisitesStore.getState().jur3_schet_id,
+  jur3_schet_152_id: useRequisitesStore.getState().jur3_schet_152_id,
+  jur3_schet_159_id: useRequisitesStore.getState().jur3_schet_159_id,
   jur4_schet_id: useRequisitesStore.getState().jur4_schet_id
 }
