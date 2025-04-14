@@ -10,6 +10,7 @@ import { DuplicateSchetsGuard } from '@/common/features/requisites/guards/duplic
 
 import DashboardPage from './dashboard/page'
 import HomePage from './home/page'
+import OrganSaldoDetailsPage from './jur_3/159/saldo/details/page'
 import { Jur7MonitorPage } from './jur_7/monitor/page'
 import JUR8SchetsPage from './jur_8/schet/page'
 import SigninPage from './sign-in'
@@ -153,6 +154,10 @@ export const routes: RouteObject[] = [
               {
                 path: 'saldo',
                 element: <OrganOstatokPage />
+              },
+              {
+                path: 'saldo/:id',
+                element: <OrganSaldoDetailsPage />
               }
             ]
           },

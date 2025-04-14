@@ -14,6 +14,7 @@ export interface MainbookTableProps
   extends Omit<EditableTableProps<MainbookFormValues, 'childs'>, 'columnDefs'> {
   columns: EditableColumnDef<ProvodkaRow>[]
 }
+// fix readonly if there is an issue
 export const MainbookTable = memo(({ columns, ...props }: MainbookTableProps) => {
   return (
     <EditableTable

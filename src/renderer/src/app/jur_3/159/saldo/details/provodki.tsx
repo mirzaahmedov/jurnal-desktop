@@ -1,9 +1,9 @@
+import type { OrganSaldoProvodkaFormValues } from '../config'
 import type { EditableColumnDef } from '@/common/components/editable-table'
-import type { OrganSaldoProvodka } from '@/common/models'
 
 import { createNumberEditor, createTextEditor } from '@/common/components/editable-table/editors'
 
-export const MainbookProvodkaColumns: EditableColumnDef<OrganSaldoProvodka>[] = [
+export const OrganSaldoProvodkaColumns: EditableColumnDef<OrganSaldoProvodkaFormValues>[] = [
   {
     key: 'name',
     Editor: createTextEditor({

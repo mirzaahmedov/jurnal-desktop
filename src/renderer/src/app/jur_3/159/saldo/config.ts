@@ -16,6 +16,7 @@ export const OrganSaldoQueryKeys = {
 
 export const OrganSaldoProvodkaFormSchema = z.object({
   organization_id: z.number(),
+  name: z.string().optional(),
   prixod: z.number(),
   rasxod: z.number()
 })
@@ -25,6 +26,7 @@ export const OrganSaldoFormSchema = z.object({
   childs: z.array(OrganSaldoProvodkaFormSchema)
 })
 
+export type OrganSaldoProvodkaFormValues = z.infer<typeof OrganSaldoProvodkaFormSchema>
 export type OrganSaldoFormValues = z.infer<typeof OrganSaldoFormSchema>
 
 export const defaultValues: OrganSaldoFormValues = {

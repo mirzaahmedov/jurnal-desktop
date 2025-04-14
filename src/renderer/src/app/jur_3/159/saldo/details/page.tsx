@@ -17,9 +17,11 @@ import { useLayoutStore } from '@/common/layout/store'
 import { formatDate } from '@/common/lib/date'
 import { DetailsView } from '@/common/views'
 
-import { defaultValues } from '../config'
+import { type OrganSaldoFormValues, defaultValues } from '../config'
 import { OrganSaldoQueryKeys } from '../config'
 import { OrganSaldoService } from '../service'
+import { OrganSaldoTable } from './organ-saldo-table'
+import { OrganSaldoProvodkaColumns } from './provodki'
 
 const OrganSaldoDetailsPage = () => {
   const tableMethods = useRef<EditableTableMethods>(null)
@@ -157,7 +159,7 @@ const OrganSaldoDetailsPage = () => {
       if (value.length > 0) {
         const rows = form.getValues('childs')
         const index = rows.findIndex((row) =>
-          row.schet?.toLowerCase()?.includes(value?.toLowerCase())
+          row.name?.toLowerCase()?.includes(value?.toLowerCase())
         )
         tableMethods.current?.setHighlightedRows([index])
         tableMethods.current?.scrollToRow(index)
@@ -193,25 +195,9 @@ const OrganSaldoDetailsPage = () => {
     }
   }, [rows, form, isEditable, t])
 
-  const handleCellDoubleClick = useCallback<CellEventHandler<MainbookFormValues, 'childs'>>(
-    ({ column, row, rows, value, index }) => {
-      if (index === rows.length - 1 || !value) {
-        return
-      }
-
-      const type_id = Number(column.key.split('_')[0])
-      const prixod = column.key.endsWith('_prixod')
-      const schet = row.schet
-
-      if (type_id < 1 || type_id > 8) {
-        return
-      }
-
-      setActiveCell({
-        type_id,
-        schet,
-        prixod
-      })
+  const handleCellDoubleClick = useCallback<CellEventHandler<OrganSaldoFormValues, 'childs'>>(
+    ({ row }) => {
+      console.log(row)
     },
     []
   )
@@ -219,13 +205,7 @@ const OrganSaldoDetailsPage = () => {
   return (
     <DetailsView className="h-full">
       <DetailsView.Content
-        loading={
-          isFetching ||
-          isAutoFilling ||
-          isFetchingTypes ||
-          isFetchingUniqueSchets ||
-          isCheckingSaldo
-        }
+        loading={isFetching || isAutoFilling || isCheckingSaldo}
         className="overflow-hidden h-full pb-20"
       >
         <form
@@ -271,8 +251,8 @@ const OrganSaldoDetailsPage = () => {
               </div>
             </div>
             <div className="overflow-auto scrollbar flex-1 relative">
-              <MainbookTable
-                columns={columns}
+              <OrganSaldoTable
+                columnDefs={OrganSaldoProvodkaColumns}
                 methods={tableMethods}
                 form={form}
                 name="childs"
