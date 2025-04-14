@@ -8,6 +8,7 @@ export interface OrganSaldoProvodka {
   prixod: number
   rasxod: number
   name: string
+  _total: boolean
 }
 export interface OrganSaldo {
   id: number

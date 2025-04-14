@@ -1,6 +1,7 @@
-import type { CellEventHandler, EditableTableMethods } from '@/common/components/editable-table'
+import type { EditableTableMethods } from '@/common/components/editable-table'
+import type { OrganSaldoProvodka } from '@/common/models'
 
-import { type KeyboardEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { type KeyboardEvent, useEffect, useMemo, useRef, useState } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useForm, useWatch } from 'react-hook-form'
@@ -17,7 +18,7 @@ import { useLayoutStore } from '@/common/layout/store'
 import { formatDate } from '@/common/lib/date'
 import { DetailsView } from '@/common/views'
 
-import { type OrganSaldoFormValues, defaultValues } from '../config'
+import { defaultValues } from '../config'
 import { OrganSaldoQueryKeys } from '../config'
 import { OrganSaldoService } from '../service'
 import { OrganSaldoTable } from './organ-saldo-table'
@@ -28,13 +29,13 @@ const OrganSaldoDetailsPage = () => {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const setLayout = useLayoutStore((store) => store.setLayout)
-  const budjet_id = useRequisitesStore((store) => store.budjet_id)
   const startDate = useSelectedMonthStore((store) => store.startDate)
 
   const [isEditable, setEditable] = useState(false)
 
   const { id } = useParams()
   const { t } = useTranslation(['app'])
+  const { budjet_id, main_schet_id, jur3_schet_159_id } = useRequisitesStore()
 
   const form = useForm({
     defaultValues: {
@@ -54,14 +55,28 @@ const OrganSaldoDetailsPage = () => {
     mutationKey: [OrganSaldoQueryKeys.getCheckSaldo],
     mutationFn: OrganSaldoService.getSaldoCheck,
     onSuccess: () => {
-      autoFill({ year, month, budjet_id: budjet_id! })
+      autoFill({
+        year,
+        month,
+        budjet_id: budjet_id!,
+        main_schet_id: main_schet_id!,
+        schet_id: jur3_schet_159_id!,
+        first: false
+      })
     },
     onError: (error) => {
       if ('status' in error && error.status === 404) {
         setEditable(true)
         return
       }
-      autoFill({ year, month, budjet_id: budjet_id! })
+      autoFill({
+        year,
+        month,
+        budjet_id: budjet_id!,
+        main_schet_id: main_schet_id!,
+        schet_id: jur3_schet_159_id!,
+        first: true
+      })
     }
   })
 
@@ -69,6 +84,24 @@ const OrganSaldoDetailsPage = () => {
     mutationKey: [OrganSaldoQueryKeys.getAutofill],
     mutationFn: OrganSaldoService.getAutofillData,
     onSuccess: (res) => {
+      if (res?.data?.length) {
+        const total = res.data.reduce(
+          (result, row) => {
+            return {
+              prixod: result.prixod + Number(row.prixod),
+              rasxod: result.rasxod + Number(row.rasxod)
+            }
+          },
+          { prixod: 0, rasxod: 0 }
+        )
+        res.data.push({
+          _total: true,
+          organization_id: 0,
+          name: t('total'),
+          prixod: total.prixod,
+          rasxod: total.rasxod
+        } as OrganSaldoProvodka)
+      }
       form.setValue('childs', res?.data ?? [])
       setEditable(false)
     },
@@ -112,6 +145,24 @@ const OrganSaldoDetailsPage = () => {
       return
     }
     if (saldo?.data) {
+      if (saldo.data.childs?.length) {
+        const total = saldo.data.childs.reduce(
+          (result, row) => {
+            return {
+              prixod: result.prixod + Number(row.prixod),
+              rasxod: result.rasxod + Number(row.rasxod)
+            }
+          },
+          { prixod: 0, rasxod: 0 }
+        )
+        saldo.data.childs.push({
+          _total: true,
+          organization_id: 0,
+          name: t('total'),
+          prixod: total.prixod,
+          rasxod: total.rasxod
+        } as OrganSaldoProvodka)
+      }
       form.reset({
         month: saldo.data.month,
         year: saldo.data.year,
@@ -135,10 +186,12 @@ const OrganSaldoDetailsPage = () => {
   useEffect(() => {
     if (id === 'create') {
       checkSaldo({
-        budjet_id: budjet_id!
+        budjet_id: budjet_id!,
+        main_schet_id: main_schet_id!,
+        schet_id: jur3_schet_159_id!
       })
     }
-  }, [id, year, month, budjet_id])
+  }, [id, year, month, budjet_id, main_schet_id, jur3_schet_159_id])
 
   const onSubmit = form.handleSubmit((values) => {
     values.childs.pop()
@@ -195,13 +248,6 @@ const OrganSaldoDetailsPage = () => {
     }
   }, [rows, form, isEditable, t])
 
-  const handleCellDoubleClick = useCallback<CellEventHandler<OrganSaldoFormValues, 'childs'>>(
-    ({ row }) => {
-      console.log(row)
-    },
-    []
-  )
-
   return (
     <DetailsView className="h-full">
       <DetailsView.Content
@@ -228,7 +274,10 @@ const OrganSaldoDetailsPage = () => {
                       autoFill({
                         year: date.getFullYear(),
                         month: date.getMonth() + 1,
-                        budjet_id: budjet_id!
+                        budjet_id: budjet_id!,
+                        main_schet_id: main_schet_id!,
+                        schet_id: jur3_schet_159_id!,
+                        first: false
                       })
                     }
                   }}
@@ -240,7 +289,10 @@ const OrganSaldoDetailsPage = () => {
                       autoFill({
                         year,
                         month,
-                        budjet_id: budjet_id!
+                        budjet_id: budjet_id!,
+                        main_schet_id: main_schet_id!,
+                        schet_id: jur3_schet_159_id!,
+                        first: false
                       })
                     }}
                     loading={isAutoFilling}
@@ -256,7 +308,6 @@ const OrganSaldoDetailsPage = () => {
                 methods={tableMethods}
                 form={form}
                 name="childs"
-                onCellDoubleClick={!isEditable ? handleCellDoubleClick : undefined}
               />
             </div>
           </div>

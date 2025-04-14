@@ -67,15 +67,22 @@ class OrganSaldoServiceBuilder extends CRUDService<
     return res.data
   }
 
-  async getAutofillData(params: { month: number; year: number; budjet_id: number }) {
+  async getAutofillData(params: {
+    month: number
+    year: number
+    first: boolean
+    schet_id: number
+    main_schet_id: number
+    budjet_id: number
+  }) {
     const res = await this.client.get<Response<OrganSaldoProvodka[]>>(`${this.endpoint}/data`, {
       params
     })
     return res.data
   }
 
-  async getSaldoCheck(params: { budjet_id: number }) {
-    const res = await this.client.get<Response<unknown>>(`${this.endpoint}/check`, {
+  async getSaldoCheck(params: { budjet_id: number; main_schet_id: number; schet_id: number }) {
+    const res = await this.client.get<Response<unknown>>(`${this.endpoint}/first`, {
       headers: {
         'notify-error': false
       },

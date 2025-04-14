@@ -7,19 +7,22 @@ export const OrganSaldoProvodkaColumns: EditableColumnDef<OrganSaldoProvodkaForm
   {
     key: 'name',
     Editor: createTextEditor({
-      key: 'name'
+      key: 'name',
+      readOnly: true
     })
   },
   {
     key: 'prixod',
     Editor: createNumberEditor({
-      key: 'prixod'
+      key: 'prixod',
+      defaultValue: 0
     })
   },
   {
     key: 'rasxod',
     Editor: createNumberEditor({
-      key: 'rasxod'
+      key: 'rasxod',
+      defaultValue: 0
     })
   }
 ]

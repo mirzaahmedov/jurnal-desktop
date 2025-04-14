@@ -451,7 +451,7 @@ export const MainSchetDialog = ({
 
               <div className="grid grid-cols-6 gap-5 items-center">
                 <FormLabel className="col-span-2 text-end">
-                  {t('mo-nth', { nth: 152 })} {t('schet')}
+                  {t('mo-nth', { nth: '3-152' })} {t('schet')}
                 </FormLabel>
               </div>
               <ul className="flex flex-col gap-6">
@@ -503,7 +503,7 @@ export const MainSchetDialog = ({
 
               <div className="grid grid-cols-6 gap-5 items-center">
                 <FormLabel className="col-span-2 text-end">
-                  {t('mo-nth', { nth: 159 })} {t('schet')}
+                  {t('mo-nth', { nth: '3-159' })} {t('schet')}
                 </FormLabel>
               </div>
               <ul className="flex flex-col gap-6">

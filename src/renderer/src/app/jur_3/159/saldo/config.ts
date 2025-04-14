@@ -15,6 +15,7 @@ export const OrganSaldoQueryKeys = {
 }
 
 export const OrganSaldoProvodkaFormSchema = z.object({
+  _total: z.boolean().optional(),
   organization_id: z.number(),
   name: z.string().optional(),
   prixod: z.number(),
