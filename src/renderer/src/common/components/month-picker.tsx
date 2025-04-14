@@ -117,30 +117,40 @@ export const MonthCalendar = ({ month, onMonthChange }: MonthCalendarProps) => {
 }
 
 export interface MonthPickerProps extends Omit<ButtonProps, 'onChange'> {
+  readOnly?: boolean
   value: string
   onChange: (value: string) => void
 }
-export const MonthPicker = ({ value, onChange, className, ...props }: MonthPickerProps) => {
-  const toggle = useToggle()
+export const MonthPicker = ({
+  readOnly = false,
+  value,
+  onChange,
+  className,
+  ...props
+}: MonthPickerProps) => {
+  const popperToggle = useToggle()
 
   const { i18n } = useTranslation()
 
   const date = value ? parseDate(value) : new Date()
   const setDate = (newDate: Date) => {
     onChange(formatDate(newDate))
-    toggle.close()
+    popperToggle.close()
   }
 
   return (
     <Popover
-      open={toggle.isOpen}
-      onOpenChange={toggle.setOpen}
+      open={popperToggle.isOpen}
+      onOpenChange={popperToggle.setOpen}
       modal={false}
     >
-      <PopoverTrigger asChild>
+      <PopoverTrigger
+        disabled={readOnly}
+        asChild
+      >
         <Button
           variant="outline"
-          className={cn('flex items-center gap-1', className)}
+          className={cn('flex items-center gap-1', readOnly && 'disabled:opacity-100', className)}
           {...props}
         >
           <CalendarIcon className="size-4 mx-0" />

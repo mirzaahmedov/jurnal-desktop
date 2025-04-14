@@ -5,17 +5,9 @@ import type { QueryFunctionContext } from '@tanstack/react-query'
 
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 import { budjet, jur3_schet_159, main_schet } from '@/common/features/crud/middleware'
-import { getBudjetId } from '@/common/features/requisites'
 
 interface OrganSaldoMeta extends ResponseMeta {
   summa: number
-}
-
-interface OrganSaldoCreateAutoArgs {
-  year: number
-  month: number
-  main_schet_id: number
-  schet_id: number
 }
 
 class OrganSaldoServiceBuilder extends CRUDService<
@@ -30,19 +22,9 @@ class OrganSaldoServiceBuilder extends CRUDService<
     })
 
     this.cleanSaldo = this.cleanSaldo.bind(this)
-    this.autoCreate = this.autoCreate.bind(this)
     this.getAutofillData = this.getAutofillData.bind(this)
     this.getMonthlySaldo = this.getMonthlySaldo.bind(this)
     this.getSaldoCheck = this.getSaldoCheck.bind(this)
-  }
-
-  async autoCreate(args: OrganSaldoCreateAutoArgs) {
-    const res = await this.client.post(`${this.endpoint}/auto`, args, {
-      params: {
-        budjet_id: getBudjetId()
-      }
-    })
-    return res.data
   }
 
   async getMonthlySaldo(ctx: QueryFunctionContext<[string, { main_schet_id: number }]>) {

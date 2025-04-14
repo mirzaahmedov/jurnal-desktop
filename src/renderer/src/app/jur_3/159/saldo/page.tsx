@@ -35,7 +35,7 @@ const OrganSaldoPage = () => {
 
   const { confirm } = useConfirm()
   const { queuedMonths } = useSaldoController({
-    ns: SaldoNamespace.JUR_2
+    ns: SaldoNamespace.JUR_3_159
   })
   const { t } = useTranslation(['app'])
   const { budjet_id, main_schet_id, jur3_schet_159_id } = useRequisitesStore()
@@ -104,7 +104,7 @@ const OrganSaldoPage = () => {
   }, [setLayout, t, navigate])
 
   useEffect(() => {
-    handleSaldoErrorDates(SaldoNamespace.JUR_3, error)
+    handleSaldoErrorDates(SaldoNamespace.JUR_3_159, error)
   }, [error])
 
   useKeyUp({

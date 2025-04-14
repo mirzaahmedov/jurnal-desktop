@@ -27,4 +27,14 @@ export interface OrganSaldo {
   schet: string
   prixod: number
   rasxod: number
+  first: true
+}
+
+export interface OrganSaldoMonthValue {
+  budjet_id: number
+  doc_id: number
+  main_schet_id: number
+  month: number
+  schet_id: number
+  year: number
 }

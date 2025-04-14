@@ -326,5 +326,6 @@
   "delete_all": "Barchasini o'chirish",
   "required_field": "Majburiy maydon",
   "prixod_rasxod_mismatch": "Kirim va chiqim summalari teng emas",
-  "documents": "Hujjatlar"
+  "documents": "Hujjatlar",
+  "next": "Keyingisi"
 }

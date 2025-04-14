@@ -13,6 +13,11 @@ import { MonthPicker } from '@/common/components/month-picker'
 import { SearchInput } from '@/common/components/search-input'
 import { Button } from '@/common/components/ui/button'
 import { useRequisitesStore } from '@/common/features/requisites'
+import {
+  SaldoNamespace,
+  handleSaldoErrorDates,
+  handleSaldoResponseDates
+} from '@/common/features/saldo'
 import { useSelectedMonthStore } from '@/common/features/selected-month'
 import { useLayoutStore } from '@/common/layout/store'
 import { formatDate } from '@/common/lib/date'
@@ -46,7 +51,11 @@ const OrganSaldoDetailsPage = () => {
     }
   })
 
-  const { data: saldo, isFetching } = useQuery({
+  const {
+    data: saldo,
+    isFetching,
+    error
+  } = useQuery({
     queryKey: [OrganSaldoQueryKeys.getById, Number(id)],
     queryFn: OrganSaldoService.getById,
     enabled: id !== 'create'
@@ -110,6 +119,8 @@ const OrganSaldoDetailsPage = () => {
       queryClient.invalidateQueries({
         queryKey: [OrganSaldoQueryKeys.getAll]
       })
+      handleSaldoResponseDates(SaldoNamespace.JUR_3_159, res)
+
       navigate(-1)
     }
   })
@@ -120,6 +131,8 @@ const OrganSaldoDetailsPage = () => {
       queryClient.invalidateQueries({
         queryKey: [OrganSaldoQueryKeys.getAll]
       })
+      handleSaldoResponseDates(SaldoNamespace.JUR_3_159, res)
+
       navigate(-1)
     }
   })
@@ -153,6 +166,7 @@ const OrganSaldoDetailsPage = () => {
         year: saldo.data.year,
         organizations: saldo.data.childs ?? []
       })
+      setEditable(saldo.data.first)
     }
   }, [form, saldo, id, startDate])
   useEffect(() => {
@@ -184,7 +198,10 @@ const OrganSaldoDetailsPage = () => {
     if (id === 'create') {
       createMainbook(values)
     } else {
-      updateMainbook(values)
+      updateMainbook({
+        id: Number(id),
+        ...values
+      })
     }
   })
 
@@ -230,6 +247,12 @@ const OrganSaldoDetailsPage = () => {
   }, [rows, form, isEditable, t])
 
   const columns = useMemo(() => getOrganSaldoProvodkaColumns(isEditable), [isEditable])
+
+  useEffect(() => {
+    if (error) {
+      handleSaldoErrorDates(SaldoNamespace.JUR_3_159, error)
+    }
+  }, [error])
 
   return (
     <DetailsView className="h-full">

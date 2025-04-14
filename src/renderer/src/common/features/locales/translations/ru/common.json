@@ -327,5 +327,6 @@
   "delete_all": "Удалить всё",
   "required_field": "Обязательное поле",
   "prixod_rasxod_mismatch": "Сумма прихода и расхода не совпадает",
-  "documents": "Документы"
+  "documents": "Документы",
+  "next": "Следующий"
 }

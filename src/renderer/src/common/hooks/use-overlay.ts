@@ -9,6 +9,9 @@ export const useOverlay = () => {
   const hideOverlay = useCallback(() => {
     overlayRef.current.dataset.state = 'closed'
   }, [])
+  const isOverlayVisible = useCallback(() => {
+    return overlayRef.current.dataset.state === 'open'
+  }, [])
 
   useEffect(() => {
     return () => {
@@ -18,6 +21,7 @@ export const useOverlay = () => {
 
   return {
     showOverlay,
-    hideOverlay
+    hideOverlay,
+    isOverlayVisible
   }
 }
