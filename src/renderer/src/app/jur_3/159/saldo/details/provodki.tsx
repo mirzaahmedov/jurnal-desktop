@@ -3,26 +3,29 @@ import type { EditableColumnDef } from '@/common/components/editable-table'
 
 import { createNumberEditor, createTextEditor } from '@/common/components/editable-table/editors'
 
-export const OrganSaldoProvodkaColumns: EditableColumnDef<OrganSaldoProvodkaFormValues>[] = [
-  {
-    key: 'name',
-    Editor: createTextEditor({
+export const getOrganSaldoProvodkaColumns = (isEditable: boolean) =>
+  [
+    {
       key: 'name',
-      readOnly: true
-    })
-  },
-  {
-    key: 'prixod',
-    Editor: createNumberEditor({
+      Editor: createTextEditor({
+        key: 'name',
+        readOnly: true
+      })
+    },
+    {
       key: 'prixod',
-      defaultValue: 0
-    })
-  },
-  {
-    key: 'rasxod',
-    Editor: createNumberEditor({
+      Editor: createNumberEditor({
+        key: 'prixod',
+        defaultValue: 0,
+        readOnly: !isEditable
+      })
+    },
+    {
       key: 'rasxod',
-      defaultValue: 0
-    })
-  }
-]
+      Editor: createNumberEditor({
+        key: 'rasxod',
+        defaultValue: 0,
+        readOnly: !isEditable
+      })
+    }
+  ] satisfies EditableColumnDef<OrganSaldoProvodkaFormValues>[]

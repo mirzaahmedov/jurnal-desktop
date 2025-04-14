@@ -22,7 +22,8 @@ import { defaultValues } from '../config'
 import { OrganSaldoQueryKeys } from '../config'
 import { OrganSaldoService } from '../service'
 import { OrganSaldoTable } from './organ-saldo-table'
-import { OrganSaldoProvodkaColumns } from './provodki'
+import { getOrganSaldoProvodkaColumns } from './provodki'
+import { calculateTotal } from './utils'
 
 const OrganSaldoDetailsPage = () => {
   const tableMethods = useRef<EditableTableMethods>(null)
@@ -85,15 +86,7 @@ const OrganSaldoDetailsPage = () => {
     mutationFn: OrganSaldoService.getAutofillData,
     onSuccess: (res) => {
       if (res?.data?.length) {
-        const total = res.data.reduce(
-          (result, row) => {
-            return {
-              prixod: result.prixod + Number(row.prixod),
-              rasxod: result.rasxod + Number(row.rasxod)
-            }
-          },
-          { prixod: 0, rasxod: 0 }
-        )
+        const total = calculateTotal(res.data)
         res.data.push({
           _total: true,
           organization_id: 0,
@@ -146,15 +139,7 @@ const OrganSaldoDetailsPage = () => {
     }
     if (saldo?.data) {
       if (saldo.data.childs?.length) {
-        const total = saldo.data.childs.reduce(
-          (result, row) => {
-            return {
-              prixod: result.prixod + Number(row.prixod),
-              rasxod: result.rasxod + Number(row.rasxod)
-            }
-          },
-          { prixod: 0, rasxod: 0 }
-        )
+        const total = calculateTotal(saldo.data.childs)
         saldo.data.childs.push({
           _total: true,
           organization_id: 0,
@@ -229,24 +214,25 @@ const OrganSaldoDetailsPage = () => {
       return
     }
 
-    let itogoPrixod = 0
-    let itogoRasxod = 0
+    const total = calculateTotal(rows)
+    const name = t('total')
 
-    rows.forEach((row, index) => {
-      if (index !== rows.length - 1) {
-        itogoPrixod += row?.[`10_prixod`] || 0
-        itogoRasxod += row?.[`10_rasxod`] || 0
-      }
-    })
+    const totalRow = rows[rows.length - 1]
 
-    const itogoRow = rows[rows.length - 1]
-    if (itogoRow?.['10_prixod'] !== itogoPrixod) {
-      form.setValue(`childs.${rows.length - 1}.10_prixod` as any, itogoPrixod)
+    if (totalRow?.prixod !== total.prixod) {
+      form.setValue(`childs.${rows.length - 1}.prixod`, total.prixod)
     }
-    if (itogoRow?.['10_rasxod'] !== itogoRasxod) {
-      form.setValue(`childs.${rows.length - 1}.10_rasxod` as any, itogoRasxod)
+    if (totalRow?.rasxod !== total.rasxod) {
+      form.setValue(`childs.${rows.length - 1}.rasxod`, total.rasxod)
+    }
+    if (totalRow?.name !== name) {
+      form.setValue(`childs.${rows.length - 1}.name`, name)
     }
   }, [rows, form, isEditable, t])
+
+  const columns = useMemo(() => {
+    return getOrganSaldoProvodkaColumns(isEditable)
+  }, [isEditable])
 
   return (
     <DetailsView className="h-full">
@@ -277,7 +263,7 @@ const OrganSaldoDetailsPage = () => {
                         budjet_id: budjet_id!,
                         main_schet_id: main_schet_id!,
                         schet_id: jur3_schet_159_id!,
-                        first: false
+                        first: isEditable
                       })
                     }
                   }}
@@ -304,7 +290,7 @@ const OrganSaldoDetailsPage = () => {
             </div>
             <div className="overflow-auto scrollbar flex-1 relative">
               <OrganSaldoTable
-                columnDefs={OrganSaldoProvodkaColumns}
+                columnDefs={columns}
                 methods={tableMethods}
                 form={form}
                 name="childs"
