@@ -29,12 +29,20 @@ export const DownloadFile = ({
 
   const { mutate: downloadFile, isPending: isDownloadingFile } = useMutation({
     mutationFn: async () => {
-      const res = await http.get(url, {
-        responseType: 'arraybuffer',
-        params
-      })
-      const [name, ext] = fileName.split('.')
-      window.downloader.saveFile(res.data, `${name}___${Date.now()}.${ext}`)
+      try {
+        const res = await http.get(url, {
+          responseType: 'arraybuffer',
+          params
+        })
+        const [name, ext] = fileName.split('.')
+        console.log({ client: window.electron })
+        window.downloader.saveFile(res.data, `${name}___${Date.now()}.${ext}`)
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    onError: (error) => {
+      console.log(error)
     }
   })
 

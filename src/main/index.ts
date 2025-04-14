@@ -52,9 +52,7 @@ function createWindow(): void {
     webPreferences: {
       preload: path.join(__dirname, '../preload/index.js'),
       sandbox: false,
-      devTools: true,
-      nodeIntegration: true,
-      contextIsolation: false // needed for devtools extension to work
+      devTools: true // needed for devtools extension to work
     }
   })
 
