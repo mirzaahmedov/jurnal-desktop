@@ -1,8 +1,7 @@
+import type { OrganSaldoFormValues } from './config'
 import type { MonthValue } from '@/common/features/saldo'
-import type { OrganSaldo, Response, ResponseMeta } from '@/common/models'
+import type { OrganSaldo, OrganSaldoProvodka, Response, ResponseMeta } from '@/common/models'
 import type { QueryFunctionContext } from '@tanstack/react-query'
-
-import { z } from 'zod'
 
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 import { budjet, main_schet } from '@/common/features/crud/middleware'
@@ -30,9 +29,11 @@ class OrganSaldoServiceBuilder extends CRUDService<
       endpoint: ApiEndpoints.organ_159_saldo
     })
 
-    this.autoCreate = this.autoCreate.bind(this)
-    this.getMonthlySaldo = this.getMonthlySaldo.bind(this)
     this.cleanSaldo = this.cleanSaldo.bind(this)
+    this.autoCreate = this.autoCreate.bind(this)
+    this.getAutofillData = this.getAutofillData.bind(this)
+    this.getMonthlySaldo = this.getMonthlySaldo.bind(this)
+    this.getSaldoCheck = this.getSaldoCheck.bind(this)
   }
 
   async autoCreate(args: OrganSaldoCreateAutoArgs) {
@@ -65,14 +66,23 @@ class OrganSaldoServiceBuilder extends CRUDService<
     })
     return res.data
   }
+
+  async getAutofillData(params: { month: number; year: number; budjet_id: number }) {
+    const res = await this.client.get<Response<OrganSaldoProvodka[]>>(`${this.endpoint}/data`, {
+      params
+    })
+    return res.data
+  }
+
+  async getSaldoCheck(params: { budjet_id: number }) {
+    const res = await this.client.get<Response<unknown>>(`${this.endpoint}/check`, {
+      headers: {
+        'notify-error': false
+      },
+      params
+    })
+    return res.data
+  }
 }
 
 export const OrganSaldoService = new OrganSaldoServiceBuilder().use(budjet()).use(main_schet())
-
-export const OrganSaldoFormSchema = z.object({
-  organization_id: z.number(),
-  prixod: z.number(),
-  rasxod: z.number()
-})
-
-export type OrganSaldoFormValues = z.infer<typeof OrganSaldoFormSchema>

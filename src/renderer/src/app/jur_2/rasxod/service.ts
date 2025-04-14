@@ -52,4 +52,6 @@ export type BankRasxodFormValues = z.infer<typeof BankRasxodFormSchema>
 
 export const BankRasxodPaymentService = new CRUDService<undefined, { status: boolean }>({
   endpoint: ApiEndpoints.bank_rasxod_payment
-}).use(main_schet())
+})
+  .use(main_schet())
+  .use(budjet())

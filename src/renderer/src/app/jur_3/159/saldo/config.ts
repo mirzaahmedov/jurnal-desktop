@@ -1,10 +1,12 @@
-import type { OrganSaldoFormValues } from './service'
+import { z } from 'zod'
 
 import { useSelectedMonthStore } from '@/common/features/selected-month'
 
 export const OrganSaldoQueryKeys = {
   getById: 'organ-saldo',
   getAll: 'organ-saldo/all',
+  getAutofill: 'organ-saldo/autofill',
+  getCheckSaldo: 'organ-saldo/check',
   getMonthlySaldo: 'organ-saldo/monthly',
   create: 'organ-saldo/create',
   auto: 'organ-saldo/auto',
@@ -12,8 +14,21 @@ export const OrganSaldoQueryKeys = {
   clean: 'organ-saldo/delete'
 }
 
+export const OrganSaldoProvodkaFormSchema = z.object({
+  organization_id: z.number(),
+  prixod: z.number(),
+  rasxod: z.number()
+})
+export const OrganSaldoFormSchema = z.object({
+  year: z.number(),
+  month: z.number(),
+  childs: z.array(OrganSaldoProvodkaFormSchema)
+})
+
+export type OrganSaldoFormValues = z.infer<typeof OrganSaldoFormSchema>
+
 export const defaultValues: OrganSaldoFormValues = {
   year: useSelectedMonthStore.getState().startDate.getFullYear(),
   month: useSelectedMonthStore.getState().startDate.getMonth() + 1,
-  summa: 0
+  childs: []
 }

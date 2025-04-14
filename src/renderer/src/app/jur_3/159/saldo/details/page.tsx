@@ -1,4 +1,3 @@
-import type { MainbookAutoFillSubChild } from './interfaces'
 import type { CellEventHandler, EditableTableMethods } from '@/common/components/editable-table'
 
 import { type KeyboardEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react'
@@ -18,15 +17,11 @@ import { useLayoutStore } from '@/common/layout/store'
 import { formatDate } from '@/common/lib/date'
 import { DetailsView } from '@/common/views'
 
-import { MainbookQueryKeys } from '../config'
-import { MainbookService } from '../service'
-import { type MainbookFormValues, defaultValues } from './config'
-import { MainbookDocumentsTracker } from './documents-tracker'
-import { MainbookTable } from './mainbook-table'
-import { MainbookProvodkaColumns } from './provodki'
-import { getMainbookColumns, transformGetByIdData, transformMainbookAutoFillData } from './utils'
+import { defaultValues } from '../config'
+import { OrganSaldoQueryKeys } from '../config'
+import { OrganSaldoService } from '../service'
 
-const MainbookDetailsPage = () => {
+const OrganSaldoDetailsPage = () => {
   const tableMethods = useRef<EditableTableMethods>(null)
   const navigate = useNavigate()
   const queryClient = useQueryClient()
@@ -35,11 +30,6 @@ const MainbookDetailsPage = () => {
   const startDate = useSelectedMonthStore((store) => store.startDate)
 
   const [isEditable, setEditable] = useState(false)
-  const [activeCell, setActiveCell] = useState<{
-    type_id: number
-    schet: string
-    prixod: boolean
-  }>()
 
   const { id } = useParams()
   const { t } = useTranslation(['app'])
@@ -52,56 +42,21 @@ const MainbookDetailsPage = () => {
     }
   })
 
-  const { data: mainbook, isFetching } = useQuery({
-    queryKey: [MainbookQueryKeys.getById, Number(id)],
-    queryFn: MainbookService.getById,
+  const { data: saldo, isFetching } = useQuery({
+    queryKey: [OrganSaldoQueryKeys.getById, Number(id)],
+    queryFn: OrganSaldoService.getById,
     enabled: id !== 'create'
-  })
-  const { data: types, isFetching: isFetchingTypes } = useQuery({
-    queryKey: [
-      MainbookQueryKeys.getTypes,
-      {
-        budjet_id: budjet_id!
-      }
-    ],
-    queryFn: MainbookService.getTypes,
-    enabled: !!budjet_id
-  })
-
-  const { isPending: isFetchingUniqueSchets, mutate: getUniqueSchets } = useMutation({
-    mutationKey: [MainbookQueryKeys.getUniqueSchets],
-    mutationFn: MainbookService.getUniqueSchets,
-    onSuccess: (res) => {
-      const uniqueSchets = res.data?.schets ?? []
-      const childs = uniqueSchets.map((schet) => ({
-        schet: schet.schet,
-        '10_prixod': 0,
-        '10_rasxod': 0
-      }))
-      childs.push({
-        schet: t('total'),
-        '10_prixod': 0,
-        '10_rasxod': 0
-      })
-      form.setValue('childs', childs)
-      setEditable(true)
-    },
-    onError: () => {
-      form.setValue('childs', [])
-    }
   })
 
   const { isPending: isCheckingSaldo, mutate: checkSaldo } = useMutation({
-    mutationKey: [MainbookQueryKeys.getCheckSaldo],
-    mutationFn: MainbookService.getSaldoCheck,
+    mutationKey: [OrganSaldoQueryKeys.getCheckSaldo],
+    mutationFn: OrganSaldoService.getSaldoCheck,
     onSuccess: () => {
       autoFill({ year, month, budjet_id: budjet_id! })
     },
     onError: (error) => {
       if ('status' in error && error.status === 404) {
-        getUniqueSchets({
-          budjet_id: budjet_id!
-        })
+        setEditable(true)
         return
       }
       autoFill({ year, month, budjet_id: budjet_id! })
@@ -109,10 +64,10 @@ const MainbookDetailsPage = () => {
   })
 
   const { isPending: isAutoFilling, mutate: autoFill } = useMutation({
-    mutationKey: [MainbookQueryKeys.getAutofill],
-    mutationFn: MainbookService.getAutofillData,
+    mutationKey: [OrganSaldoQueryKeys.getAutofill],
+    mutationFn: OrganSaldoService.getAutofillData,
     onSuccess: (res) => {
-      form.setValue('childs', transformMainbookAutoFillData(res.data ?? []))
+      form.setValue('childs', res?.data ?? [])
       setEditable(false)
     },
     onError: () => {
@@ -121,21 +76,21 @@ const MainbookDetailsPage = () => {
   })
 
   const { mutate: createMainbook, isPending: isCreatingMainbook } = useMutation({
-    mutationFn: MainbookService.create,
+    mutationFn: OrganSaldoService.create,
     onSuccess: (res) => {
       toast.success(res?.message)
       queryClient.invalidateQueries({
-        queryKey: [MainbookQueryKeys.getAll]
+        queryKey: [OrganSaldoQueryKeys.getAll]
       })
       navigate(-1)
     }
   })
   const { mutate: updateMainbook, isPending: isUpdatingMainbook } = useMutation({
-    mutationFn: MainbookService.update,
+    mutationFn: OrganSaldoService.update,
     onSuccess: (res) => {
       toast.success(res?.message)
       queryClient.invalidateQueries({
-        queryKey: [MainbookQueryKeys.getAll]
+        queryKey: [OrganSaldoQueryKeys.getAll]
       })
       navigate(-1)
     }
@@ -154,17 +109,14 @@ const MainbookDetailsPage = () => {
       })
       return
     }
-    if (mainbook?.data) {
+    if (saldo?.data) {
       form.reset({
-        month: mainbook.data.month,
-        year: mainbook.data.year,
-        childs: transformGetByIdData(mainbook.data.childs)
+        month: saldo.data.month,
+        year: saldo.data.year,
+        childs: saldo.data.childs ?? []
       })
-      if (mainbook?.data?.first) {
-        setEditable(true)
-      }
     }
-  }, [form, mainbook, id, startDate])
+  }, [form, saldo, id, startDate])
   useEffect(() => {
     setLayout({
       title: id === 'create' ? t('create') : t('edit'),
@@ -186,54 +138,13 @@ const MainbookDetailsPage = () => {
     }
   }, [id, year, month, budjet_id])
 
-  const columns = useMemo(
-    () => [...MainbookProvodkaColumns, ...getMainbookColumns(types?.data ?? [], isEditable)],
-    [types, isEditable]
-  )
-
   const onSubmit = form.handleSubmit((values) => {
-    if (!types?.data) {
-      return
-    }
-
-    const itogo = values.childs.pop()
-
-    if (isEditable && itogo && itogo?.['10_prixod'] !== itogo?.['10_rasxod']) {
-      toast.error(t('prixod_rasxod_mismatch'))
-      return
-    }
-
-    const payload: {
-      type_id: number
-      sub_childs: MainbookAutoFillSubChild[]
-    }[] = []
-
-    types?.data?.forEach((type) => {
-      payload.push({
-        type_id: type.id,
-        sub_childs: values.childs.map((child) => {
-          return {
-            schet: child.schet,
-            prixod: child[`${type.id}_prixod`] || 0,
-            rasxod: child[`${type.id}_rasxod`] || 0
-          } as MainbookAutoFillSubChild
-        })
-      })
-    })
+    values.childs.pop()
 
     if (id === 'create') {
-      createMainbook({
-        month: values.month,
-        year: values.year,
-        childs: payload
-      })
+      createMainbook(values)
     } else {
-      updateMainbook({
-        id: Number(id),
-        month: values.month,
-        year: values.year,
-        childs: payload
-      })
+      updateMainbook(values)
     }
   })
 
@@ -381,23 +292,8 @@ const MainbookDetailsPage = () => {
           </DetailsView.Footer>
         </form>
       </DetailsView.Content>
-
-      <MainbookDocumentsTracker
-        open={!!activeCell}
-        onOpenChange={(open) => {
-          if (!open) {
-            setActiveCell(undefined)
-          }
-        }}
-        budjet_id={budjet_id!}
-        month={month}
-        year={year}
-        type_id={activeCell?.type_id}
-        schet={activeCell?.schet}
-        prixod={activeCell?.prixod}
-      />
     </DetailsView>
   )
 }
 
-export default MainbookDetailsPage
+export default OrganSaldoDetailsPage
