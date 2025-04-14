@@ -130,7 +130,7 @@ export const Jur7MonitorPage = () => {
                 url="/jur_7/monitoring/material/report"
                 params={{
                   to: dates.to,
-                  year: startDate.getFullYear,
+                  year: startDate.getFullYear(),
                   month: startDate.getMonth() + 1,
                   budjet_id,
                   excel: true

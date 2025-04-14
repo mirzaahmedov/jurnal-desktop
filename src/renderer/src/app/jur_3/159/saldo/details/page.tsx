@@ -68,16 +68,17 @@ const OrganSaldoDetailsPage = () => {
     onError: (error) => {
       if ('status' in error && error.status === 404) {
         setEditable(true)
+        autoFill({
+          year,
+          month,
+          budjet_id: budjet_id!,
+          main_schet_id: main_schet_id!,
+          schet_id: jur3_schet_159_id!,
+          first: true
+        })
         return
       }
-      autoFill({
-        year,
-        month,
-        budjet_id: budjet_id!,
-        main_schet_id: main_schet_id!,
-        schet_id: jur3_schet_159_id!,
-        first: true
-      })
+      toast.error(error?.message)
     }
   })
 
@@ -95,11 +96,10 @@ const OrganSaldoDetailsPage = () => {
           rasxod: total.rasxod
         } as OrganSaldoProvodka)
       }
-      form.setValue('childs', res?.data ?? [])
-      setEditable(false)
+      form.setValue('organizations', res?.data ?? [])
     },
     onError: () => {
-      form.setValue('childs', [])
+      form.setValue('organizations', [])
     }
   })
 
@@ -133,7 +133,7 @@ const OrganSaldoDetailsPage = () => {
       form.reset({
         year: startDate.getFullYear(),
         month: startDate.getMonth() + 1,
-        childs: []
+        organizations: []
       })
       return
     }
@@ -151,7 +151,7 @@ const OrganSaldoDetailsPage = () => {
       form.reset({
         month: saldo.data.month,
         year: saldo.data.year,
-        childs: saldo.data.childs ?? []
+        organizations: saldo.data.childs ?? []
       })
     }
   }, [form, saldo, id, startDate])
@@ -179,7 +179,7 @@ const OrganSaldoDetailsPage = () => {
   }, [id, year, month, budjet_id, main_schet_id, jur3_schet_159_id])
 
   const onSubmit = form.handleSubmit((values) => {
-    values.childs.pop()
+    values.organizations.pop()
 
     if (id === 'create') {
       createMainbook(values)
@@ -195,7 +195,7 @@ const OrganSaldoDetailsPage = () => {
 
       const value = e.currentTarget.value
       if (value.length > 0) {
-        const rows = form.getValues('childs')
+        const rows = form.getValues('organizations')
         const index = rows.findIndex((row) =>
           row.name?.toLowerCase()?.includes(value?.toLowerCase())
         )
@@ -207,7 +207,7 @@ const OrganSaldoDetailsPage = () => {
 
   const rows = useWatch({
     control: form.control,
-    name: 'childs'
+    name: 'organizations'
   })
   useEffect(() => {
     if (!isEditable || rows.length === 0) {
@@ -215,24 +215,21 @@ const OrganSaldoDetailsPage = () => {
     }
 
     const total = calculateTotal(rows)
+    const totalRow = rows[rows.length - 1]
     const name = t('total')
 
-    const totalRow = rows[rows.length - 1]
-
-    if (totalRow?.prixod !== total.prixod) {
-      form.setValue(`childs.${rows.length - 1}.prixod`, total.prixod)
+    if (Number(totalRow?.prixod) !== Number(total.prixod)) {
+      form.setValue(`organizations.${rows.length - 1}.prixod`, total.prixod)
     }
-    if (totalRow?.rasxod !== total.rasxod) {
-      form.setValue(`childs.${rows.length - 1}.rasxod`, total.rasxod)
+    if (Number(totalRow?.rasxod) !== Number(total.rasxod)) {
+      form.setValue(`organizations.${rows.length - 1}.rasxod`, total.rasxod)
     }
     if (totalRow?.name !== name) {
-      form.setValue(`childs.${rows.length - 1}.name`, name)
+      form.setValue(`organizations.${rows.length - 1}.name`, name)
     }
   }, [rows, form, isEditable, t])
 
-  const columns = useMemo(() => {
-    return getOrganSaldoProvodkaColumns(isEditable)
-  }, [isEditable])
+  const columns = useMemo(() => getOrganSaldoProvodkaColumns(isEditable), [isEditable])
 
   return (
     <DetailsView className="h-full">
@@ -293,7 +290,7 @@ const OrganSaldoDetailsPage = () => {
                 columnDefs={columns}
                 methods={tableMethods}
                 form={form}
-                name="childs"
+                name="organizations"
               />
             </div>
           </div>

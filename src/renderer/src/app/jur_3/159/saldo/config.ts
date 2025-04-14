@@ -24,7 +24,7 @@ export const OrganSaldoProvodkaFormSchema = z.object({
 export const OrganSaldoFormSchema = z.object({
   year: z.number(),
   month: z.number(),
-  childs: z.array(OrganSaldoProvodkaFormSchema)
+  organizations: z.array(OrganSaldoProvodkaFormSchema)
 })
 
 export type OrganSaldoProvodkaFormValues = z.infer<typeof OrganSaldoProvodkaFormSchema>
@@ -33,5 +33,5 @@ export type OrganSaldoFormValues = z.infer<typeof OrganSaldoFormSchema>
 export const defaultValues: OrganSaldoFormValues = {
   year: useSelectedMonthStore.getState().startDate.getFullYear(),
   month: useSelectedMonthStore.getState().startDate.getMonth() + 1,
-  childs: []
+  organizations: []
 }

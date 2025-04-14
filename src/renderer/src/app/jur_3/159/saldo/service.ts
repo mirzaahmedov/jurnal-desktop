@@ -4,7 +4,7 @@ import type { OrganSaldo, OrganSaldoProvodka, Response, ResponseMeta } from '@/c
 import type { QueryFunctionContext } from '@tanstack/react-query'
 
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
-import { budjet, main_schet } from '@/common/features/crud/middleware'
+import { budjet, jur3_schet_159, main_schet } from '@/common/features/crud/middleware'
 import { getBudjetId } from '@/common/features/requisites'
 
 interface OrganSaldoMeta extends ResponseMeta {
@@ -92,4 +92,7 @@ class OrganSaldoServiceBuilder extends CRUDService<
   }
 }
 
-export const OrganSaldoService = new OrganSaldoServiceBuilder().use(budjet()).use(main_schet())
+export const OrganSaldoService = new OrganSaldoServiceBuilder()
+  .use(budjet())
+  .use(main_schet())
+  .use(jur3_schet_159())
