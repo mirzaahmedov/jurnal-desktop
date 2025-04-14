@@ -32,7 +32,8 @@ export enum ApiEndpoints {
   reestr = 'organization/monitoring/restr',
   operatsii_filter = 'spravochnik/operatsii/filter',
   podotchet_monitoring = 'podotchet/monitoring',
-  organ159_monitoring = '159/monitoring',
+  organ_159_monitoring = '159/monitoring',
+  organ_159_saldo = '159/saldo',
   jur7_monitoring = 'jur_7/monitoring',
   jur7_group = 'jur_7/group',
   jur7_pereotsenka = 'jur_7/pereotsenka',
@@ -73,7 +74,6 @@ export enum ApiEndpoints {
   raschet_schet = 'spravochnik/organization/account_number',
   raschet_schet_gazna = 'spravochnik/organization/gazna',
   report_title = 'admin/spravochnik/report_title',
-  organ_saldo = 'organ/saldo',
   podotchet_saldo = 'podotchet/saldo',
   bank_saldo = 'bank/saldo',
   kassa_saldo = 'kassa/saldo'

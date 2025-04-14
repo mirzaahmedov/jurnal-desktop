@@ -27,7 +27,7 @@ export const budjet: () => MiddlewareFunction = () => {
   }
 }
 
-export const jur3_schet: () => MiddlewareFunction = () => {
+export const jur3_schet_159: () => MiddlewareFunction = () => {
   return (config: AxiosRequestConfig) => {
     config.params = extendObject(config.params, {
       schet_id: getJur3Schet159Id()

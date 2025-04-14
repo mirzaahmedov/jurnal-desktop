@@ -1,7 +1,7 @@
 import type { OrganizationMonitor, ResponseMeta } from '@/common/models'
 
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
-import { jur3_schet, main_schet } from '@/common/features/crud/middleware'
+import { jur3_schet_159, main_schet } from '@/common/features/crud/middleware'
 
 interface OrganMonitorMeta extends ResponseMeta {
   page_prixod_sum: number
@@ -20,7 +20,7 @@ export const OrganMonitoringService = new CRUDService<
   undefined,
   OrganMonitorMeta
 >({
-  endpoint: ApiEndpoints.organ159_monitoring
+  endpoint: ApiEndpoints.organ_159_monitoring
 })
   .use(main_schet())
-  .use(jur3_schet())
+  .use(jur3_schet_159())

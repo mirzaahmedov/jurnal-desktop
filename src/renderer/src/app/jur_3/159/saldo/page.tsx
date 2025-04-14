@@ -3,14 +3,11 @@ import type { OrganSaldo } from '@/common/models'
 import { useEffect, useState } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-// import { CalendarDays } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
 import { GenericTable } from '@/common/components'
-// import { Button } from '@/common/components/ui/button'
-// import { ButtonGroup } from '@/common/components/ui/button-group'
 import { useConfirm } from '@/common/features/confirm'
 import { useRequisitesStore } from '@/common/features/requisites'
 import {
@@ -24,7 +21,6 @@ import { useLayoutStore } from '@/common/layout/store'
 import { ListView } from '@/common/views'
 
 import { OrganSaldoColumns } from './columns'
-// import { OrganSaldoMonthlyTrackerDialog } from './components/saldo-monthly-tracker-dialog'
 import { OrganSaldoQueryKeys } from './config'
 import { OrganSaldoDialog } from './dialog'
 import { OrganSaldoFilters, useYearFilter } from './filters'
@@ -45,7 +41,7 @@ const OrganSaldoPage = () => {
     ns: SaldoNamespace.JUR_2
   })
   const { t } = useTranslation(['app'])
-  const { budjet_id, main_schet_id, jur3_schet_id } = useRequisitesStore()
+  const { budjet_id, main_schet_id, jur3_schet_159_id } = useRequisitesStore()
 
   const {
     data: saldo,
@@ -57,12 +53,12 @@ const OrganSaldoPage = () => {
       {
         main_schet_id,
         budjet_id,
-        schet_id: jur3_schet_id,
+        schet_id: jur3_schet_159_id,
         year
       }
     ],
     queryFn: OrganSaldoService.getAll,
-    enabled: !!main_schet_id && !!budjet_id && !!jur3_schet_id && !queuedMonths.length
+    enabled: !!main_schet_id && !!budjet_id && !!jur3_schet_159_id && !queuedMonths.length
   })
   const { mutate: cleanSaldo, isPending } = useMutation({
     mutationKey: [OrganSaldoQueryKeys.clean],
@@ -88,7 +84,7 @@ const OrganSaldoPage = () => {
       withPassword: true,
       onConfirm(password) {
         cleanSaldo({
-          schet_id: jur3_schet_id!,
+          schet_id: jur3_schet_159_id!,
           main_schet_id: main_schet_id!,
           password
         })
@@ -124,17 +120,6 @@ const OrganSaldoPage = () => {
 
   return (
     <ListView>
-      {/* <ListView.Header>
-        <ButtonGroup className="w-full flex items-center justify-end gap-2">
-          <Button
-            variant="ghost"
-            onClick={monthlyTrackerToggle.open}
-          >
-            <CalendarDays className="btn-icon" />
-            {t('monthly_saldo')}
-          </Button>
-        </ButtonGroup>
-      </ListView.Header> */}
       <ListView.Content loading={isFetching || isPending}>
         <GenericTable
           data={saldo?.data ?? []}
@@ -148,13 +133,6 @@ const OrganSaldoPage = () => {
         onOpenChange={dialogToggle.setOpen}
         selected={selected}
       />
-      {/* <OrganSaldoMonthlyTrackerDialog
-        open={monthlyTrackerToggle.isOpen}
-        onOpenChange={monthlyTrackerToggle.setOpen}
-        onSelect={(month) => {
-          setYear(month.getFullYear())
-        }}
-      /> */}
     </ListView>
   )
 }

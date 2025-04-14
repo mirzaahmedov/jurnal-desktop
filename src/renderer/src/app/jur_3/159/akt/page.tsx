@@ -52,7 +52,7 @@ const AktPage = () => {
   const { t } = useTranslation(['app'])
 
   const {
-    data: aktList,
+    data: akts,
     isFetching,
     error
   } = useQuery({
@@ -143,7 +143,7 @@ const AktPage = () => {
       </ListView.Header>
       <ListView.Content loading={isFetching || isDeletingAkt}>
         <GenericTable
-          data={aktList?.data ?? []}
+          data={akts?.data ?? []}
           columnDefs={AktColumns}
           getRowId={(row) => row.id}
           onEdit={handleClickEdit}
@@ -155,7 +155,7 @@ const AktPage = () => {
               <FooterCell
                 colSpan={6}
                 title={t('total')}
-                content={formatNumber(aktList?.meta?.summa ?? 0)}
+                content={formatNumber(akts?.meta?.summa ?? 0)}
               />
             </FooterRow>
           }
@@ -164,7 +164,7 @@ const AktPage = () => {
       <ListView.Footer>
         <ListView.Pagination
           {...pagination}
-          pageCount={aktList?.meta?.pageCount ?? 0}
+          pageCount={akts?.meta?.pageCount ?? 0}
         />
       </ListView.Footer>
     </ListView>

@@ -27,7 +27,7 @@ class OrganSaldoServiceBuilder extends CRUDService<
 > {
   constructor() {
     super({
-      endpoint: ApiEndpoints.organ_saldo
+      endpoint: ApiEndpoints.organ_159_saldo
     })
 
     this.autoCreate = this.autoCreate.bind(this)
