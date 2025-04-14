@@ -125,7 +125,6 @@ const OrganSaldoPage = () => {
           data={saldo?.data ?? []}
           columnDefs={OrganSaldoColumns}
           onEdit={handleClickEdit}
-          getRowEditable={(row) => row.updated}
         />
       </ListView.Content>
       <OrganSaldoDialog

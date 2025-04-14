@@ -70,11 +70,9 @@ class OrganSaldoServiceBuilder extends CRUDService<
 export const OrganSaldoService = new OrganSaldoServiceBuilder().use(budjet()).use(main_schet())
 
 export const OrganSaldoFormSchema = z.object({
-  summa: z.number(),
-  year: z.number(),
-  month: z.number(),
-  main_schet_id: z.number().optional(),
-  schet_id: z.number().optional()
+  organization_id: z.number(),
+  prixod: z.number(),
+  rasxod: z.number()
 })
 
 export type OrganSaldoFormValues = z.infer<typeof OrganSaldoFormSchema>

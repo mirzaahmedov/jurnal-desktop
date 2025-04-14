@@ -228,7 +228,7 @@ const OstatokPage = () => {
             <ButtonGroup className="flex gap-5">
               <DownloadFile
                 fileName={`${t('pages.saldo')}-${t('import')}-${t('template')}.xlsx`}
-                url="/jur_7/saldo/temlate"
+                url="/jur_7/saldo/template"
                 buttonText={t('download-something', { something: t('template') })}
                 params={{
                   excel: true
