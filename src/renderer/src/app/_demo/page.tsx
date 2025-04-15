@@ -1,30 +1,57 @@
-import { DateField, DateInput, DateSegment, I18nProvider, Label } from 'react-aria-components'
+import { useContext } from 'react'
 
-import { Select } from './components/select'
+import { Cross2Icon } from '@radix-ui/react-icons'
+import {
+  Dialog,
+  DialogContext,
+  DialogTrigger,
+  Heading,
+  Input,
+  Label,
+  Modal,
+  ModalOverlay,
+  OverlayTriggerStateContext,
+  TextField
+} from 'react-aria-components'
 
-const DateInputField = () => {
+import { Button } from '@/common/components/ui/button'
+
+const DialogClose = () => {
+  const state = useContext(OverlayTriggerStateContext)
   return (
-    <DateField>
-      <Label>Birth date</Label>
-      <DateInput>
-        {(segment) => (
-          <DateSegment
-            segment={segment}
-            className="focus:bg-brand focus:text-white focus:outline-none"
-          />
-        )}
-      </DateInput>
-    </DateField>
+    <Button
+      onClick={() => {
+        state?.close()
+      }}
+    >
+      <Cross2Icon />
+    </Button>
   )
 }
 
 const DemoPage = () => {
   return (
     <div className="flex-1 w-full h-full p-10">
-      <I18nProvider locale="ru-RU">
-        <Select />
-        <DateInputField />
-      </I18nProvider>
+      <DialogTrigger>
+        <Button>Sign up…</Button>
+        <Modal className="fixed inset-0 z-[100] bg-black/50 grid place-items-center">
+          <Dialog className="bg-white w-full max-w-[800px] h-full max-h-[400px] p-5">
+            <form>
+              <DialogClose />
+              <Heading slot="title">Sign up</Heading>
+              <TextField autoFocus>
+                <Label>First Name:</Label>
+                <Input />
+              </TextField>
+              <TextField>
+                <Label>Last Name:</Label>
+                <Input />
+              </TextField>
+              <Button slot="close">Submit</Button>
+            </form>
+          </Dialog>
+        </Modal>
+      </DialogTrigger>
     </div>
   )
 }

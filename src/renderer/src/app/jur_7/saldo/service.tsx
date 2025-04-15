@@ -100,3 +100,14 @@ export const getMonthlySaldoQuery = async (
   })
   return res.data
 }
+
+export const cleanSaldo = async (values: { budjet_id: number; password: string }) => {
+  const { budjet_id, password } = values
+  const res = await http.delete<Response<unknown>>(`${ApiEndpoints.jur7_saldo}/clean`, {
+    params: {
+      budjet_id,
+      password
+    }
+  })
+  return res.data
+}

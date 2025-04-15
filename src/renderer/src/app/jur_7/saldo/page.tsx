@@ -31,7 +31,7 @@ import { useRequisitesStore } from '@/common/features/requisites'
 import { SaldoNamespace, useSaldoController } from '@/common/features/saldo'
 import { useSelectedMonthStore } from '@/common/features/selected-month'
 import { useSpravochnik } from '@/common/features/spravochnik'
-import { usePagination, useToggle } from '@/common/hooks'
+import { useKeyUp, usePagination, useToggle } from '@/common/hooks'
 import { useLayoutStore } from '@/common/layout/store'
 import { ISODateRegex, formatDate, parseDate, validateDate } from '@/common/lib/date'
 import { formatLocaleDate } from '@/common/lib/format'
@@ -44,7 +44,7 @@ import { DeleteExistingDocumentsAlert } from './components/delete-existing-docum
 import { DeleteExistingSaldoAlert } from './components/delete-existing-saldo-alert'
 import { MonthlySaldoTrackerDialog } from './components/monthly-saldo-tracker-dialog'
 import { defaultValues, saldoQueryKeys } from './config'
-import { deleteOstatokBatchQuery, ostatokProductService } from './service'
+import { cleanSaldo, deleteOstatokBatchQuery, ostatokProductService } from './service'
 import {
   type OstatokDeleteExistingDocument,
   type OstatokDeleteExistingSaldo,
@@ -149,6 +149,24 @@ const OstatokPage = () => {
     }
   })
 
+  const { mutate: clean } = useMutation({
+    mutationKey: [saldoQueryKeys.clean],
+    mutationFn: cleanSaldo,
+    onSuccess(res) {
+      queryClient.invalidateQueries({
+        queryKey: [saldoQueryKeys.getAll]
+      })
+      queryClient.invalidateQueries({
+        queryKey: [iznosQueryKeys.getAll]
+      })
+      queryClient.invalidateQueries({
+        queryKey: [saldoQueryKeys.check]
+      })
+      setSelectedRows([])
+      toast.success(res?.message)
+    }
+  })
+
   useEffect(() => {
     handleOstatokError(ostatokError)
   }, [ostatokError])
@@ -190,6 +208,18 @@ const OstatokPage = () => {
       }
     })
   }
+  const handleClean = () => {
+    confirm({
+      withPassword: true,
+      onConfirm(password: string) {
+        clean({
+          budjet_id: budjet_id!,
+          password
+        })
+      }
+    })
+  }
+
   const handleDeselectRow = (row: OstatokProduct) => {
     setSelectedRows((prev) => {
       return prev.filter((p) => p.product_id !== row.product_id)
@@ -201,6 +231,12 @@ const OstatokPage = () => {
   })
 
   const selectedIds = useMemo(() => selectedRows.map((row) => row.product_id), [selectedRows])
+
+  useKeyUp({
+    key: 'Delete',
+    ctrlKey: true,
+    onKeyUp: handleClean
+  })
 
   return (
     <ListView>

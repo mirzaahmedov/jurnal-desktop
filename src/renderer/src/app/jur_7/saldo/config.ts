@@ -3,6 +3,7 @@ import { z } from 'zod'
 import { useSelectedMonthStore } from '@/common/features/selected-month'
 
 export const saldoQueryKeys = {
+  clean: 'saldo/clean',
   getAll: 'saldo/all',
   getMonthlySaldo: 'saldo/monthly',
   check: 'saldo/check',
