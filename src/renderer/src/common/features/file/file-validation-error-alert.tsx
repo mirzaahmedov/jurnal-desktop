@@ -45,7 +45,7 @@ export const FileValidationErrorAlert = ({
                 <GenericTableHead>{t('summa')}</GenericTableHead>
                 <GenericTableHead>{t('iznos_summa_old')}</GenericTableHead>
                 <GenericTableHead>{t('doc_num')}</GenericTableHead>
-                <GenericTableHead>{t('doc_num')}</GenericTableHead>
+                <GenericTableHead>{t('doc_date')}</GenericTableHead>
               </TableRow>
             </TableHeader>
             <TableBody>

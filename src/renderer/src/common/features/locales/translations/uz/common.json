@@ -11,7 +11,7 @@
   "remainder-from": "Davr boshiga qoldiq",
   "remainder-to": "Davr oxiriga qoldiq",
   "doc_num": "Hujjat №",
-  "doc_date": "Provodka sanasi",
+  "doc_date": "Hujjat sanasi",
   "opisanie": "Tavsif",
   "prixod": "Kirim",
   "rasxod": "Harajat",
@@ -327,5 +327,7 @@
   "required_field": "Majburiy maydon",
   "prixod_rasxod_mismatch": "Kirim va chiqim summalari teng emas",
   "documents": "Hujjatlar",
-  "next": "Keyingisi"
+  "next": "Keyingisi",
+  "select-podotchet": "Mas’ul shaxsni tanlang.",
+  "select-organization": "Tashkilotni tanlang."
 }

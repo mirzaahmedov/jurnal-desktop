@@ -124,8 +124,7 @@ const BankRasxodDetailsPage = () => {
     createShartnomaSpravochnik({
       value: form.watch('id_shartnomalar_organization'),
       onChange: (value) => {
-        form.setValue('id_shartnomalar_organization', value)
-        form.trigger('id_shartnomalar_organization')
+        form.setValue('id_shartnomalar_organization', value, { shouldValidate: true })
       },
       params: {
         organ_id: form.watch('id_spravochnik_organization')

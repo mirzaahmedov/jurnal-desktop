@@ -1,4 +1,4 @@
-import type { PrixodPodvodkaPayloadType } from '../service'
+import type { PrixodProvodkaFormValues } from '../config'
 import type { Operatsii } from '@/common/models'
 
 import { useEffect } from 'react'
@@ -10,7 +10,9 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
+import { createShartnomaSpravochnik } from '@/app/jur_3/shartnoma'
 import { MainSchetQueryKeys, MainSchetService } from '@/app/region-spravochnik/main-schet'
+import { createOrganizationSpravochnik } from '@/app/region-spravochnik/organization'
 import { createPodotchetSpravochnik } from '@/app/region-spravochnik/podotchet'
 import { Fieldset } from '@/common/components'
 import { EditableTable } from '@/common/components/editable-table'
@@ -19,8 +21,9 @@ import {
   createEditorDeleteHandler
 } from '@/common/components/editable-table/helpers'
 import { ButtonGroup } from '@/common/components/ui/button-group'
-import { Form } from '@/common/components/ui/form'
-import { Switch } from '@/common/components/ui/switch'
+import { Form, FormField } from '@/common/components/ui/form'
+import { Label } from '@/common/components/ui/label'
+import { RadioGroup, RadioGroupItem } from '@/common/components/ui/radio-group'
 import { ApiEndpoints } from '@/common/features/crud'
 import { DocumentType } from '@/common/features/doc-num'
 import { GenerateFile } from '@/common/features/file'
@@ -44,11 +47,24 @@ import { getDataFromCache } from '@/common/lib/query-client'
 import { numberToWords } from '@/common/lib/utils'
 import { normalizeEmptyFields } from '@/common/lib/validation'
 import { DetailsView } from '@/common/views'
-import { DocumentFields, OpisanieFields, PodotchetFields, SummaFields } from '@/common/widget/form'
+import {
+  DocumentFields,
+  OpisanieFields,
+  OrganizationFields,
+  PodotchetFields,
+  ShartnomaFields,
+  SummaFields
+} from '@/common/widget/form'
 import { MainZarplataFields } from '@/common/widget/form/main-zarplata'
 
-import { defaultValues, queryKeys } from '../constants'
-import { PrixodPayloadSchema, PrixodPodvodkaPayloadSchema, kassaPrixodService } from '../service'
+import {
+  PrixodFormSchema,
+  PrixodPodvodkaFormSchema,
+  PrixodQueryKeys,
+  PrixodType,
+  defaultValues
+} from '../config'
+import { KassaPrixodService } from '../service'
 import { KassaPrixodOrderTemplate } from '../templates'
 import { podvodkaColumns } from './podvodki'
 
@@ -66,12 +82,35 @@ const KassaPrixodDetailsPage = () => {
   })
 
   const form = useForm({
-    resolver: zodResolver(PrixodPayloadSchema),
+    resolver: zodResolver(PrixodFormSchema),
     defaultValues: {
       ...defaultValues,
       doc_date: formatDate(startDate)
     }
   })
+
+  const organSpravochnik = useSpravochnik(
+    createOrganizationSpravochnik({
+      value: form.watch('id_spravochnik_organization'),
+      onChange: (value) => {
+        form.setValue('id_spravochnik_organization', value, { shouldValidate: true })
+        form.setValue('main_zarplata_id', 0)
+        form.setValue('id_podotchet_litso', 0)
+      }
+    })
+  )
+
+  const shartnomaSpravochnik = useSpravochnik(
+    createShartnomaSpravochnik({
+      value: form.watch('id_shartnomalar_organization'),
+      onChange: (value) => {
+        form.setValue('id_shartnomalar_organization', value, { shouldValidate: true })
+      },
+      params: {
+        organ_id: form.watch('id_spravochnik_organization')
+      }
+    })
+  )
 
   const podotchetSpravochnik = useSpravochnik(
     createPodotchetSpravochnik({
@@ -79,6 +118,7 @@ const KassaPrixodDetailsPage = () => {
       onChange: (value) => {
         form.setValue('id_podotchet_litso', value, { shouldValidate: true })
         form.setValue('main_zarplata_id', 0)
+        form.setValue('id_spravochnik_organization', 0)
       }
     })
   )
@@ -89,6 +129,7 @@ const KassaPrixodDetailsPage = () => {
       onChange: (id) => {
         form.setValue('main_zarplata_id', id, { shouldValidate: true })
         form.setValue('id_podotchet_litso', 0)
+        form.setValue('id_spravochnik_organization', 0)
       }
     })
   )
@@ -104,26 +145,26 @@ const KassaPrixodDetailsPage = () => {
     error
   } = useQuery({
     queryKey: [
-      queryKeys.getById,
+      PrixodQueryKeys.getById,
       Number(id),
       {
         main_schet_id
       }
     ],
-    queryFn: kassaPrixodService.getById,
+    queryFn: KassaPrixodService.getById,
     enabled: id !== 'create'
   })
 
   const { mutate: createPrixod, isPending: isCreating } = useMutation({
-    mutationFn: kassaPrixodService.create,
+    mutationFn: KassaPrixodService.create,
     onSuccess(res) {
       toast.success(res.message)
 
       queryClient.invalidateQueries({
-        queryKey: [queryKeys.getAll]
+        queryKey: [PrixodQueryKeys.getAll]
       })
       queryClient.invalidateQueries({
-        queryKey: [queryKeys.getById, id]
+        queryKey: [PrixodQueryKeys.getById, id]
       })
 
       navigate(-1)
@@ -135,15 +176,15 @@ const KassaPrixodDetailsPage = () => {
   })
 
   const { mutate: updatePrixod, isPending: isUpdating } = useMutation({
-    mutationFn: kassaPrixodService.update,
+    mutationFn: KassaPrixodService.update,
     onSuccess(res) {
       toast.success(res.message)
 
       queryClient.invalidateQueries({
-        queryKey: [queryKeys.getAll]
+        queryKey: [PrixodQueryKeys.getAll]
       })
       queryClient.invalidateQueries({
-        queryKey: [queryKeys.getById, id]
+        queryKey: [PrixodQueryKeys.getById, id]
       })
 
       navigate(-1)
@@ -154,32 +195,54 @@ const KassaPrixodDetailsPage = () => {
     }
   })
 
-  const onSubmit = form.handleSubmit((payload) => {
-    const { doc_date, doc_num, opisanie, id_podotchet_litso, main_zarplata_id, summa } = payload
-
-    if (id !== 'create') {
-      updatePrixod({
-        id: Number(id),
+  const onSubmit = form.handleSubmit(
+    ({
+      doc_date,
+      doc_num,
+      opisanie,
+      type,
+      id_podotchet_litso,
+      main_zarplata_id,
+      id_spravochnik_organization,
+      id_shartnomalar_organization,
+      organization_by_raschet_schet_gazna_id,
+      organization_by_raschet_schet_id,
+      shartnoma_grafik_id
+    }) => {
+      if (id !== 'create') {
+        updatePrixod({
+          id: Number(id),
+          doc_date,
+          doc_num,
+          id_podotchet_litso,
+          main_zarplata_id,
+          type: type === PrixodType.Organ ? PrixodType.Organ : PrixodType.Podotchet,
+          opisanie,
+          contract_id: id_shartnomalar_organization,
+          contract_grafik_id: shartnoma_grafik_id,
+          organ_id: id_spravochnik_organization,
+          organ_gazna_id: organization_by_raschet_schet_gazna_id,
+          organ_account_id: organization_by_raschet_schet_id,
+          childs: podvodki.map(normalizeEmptyFields<PrixodProvodkaFormValues>)
+        })
+        return
+      }
+      createPrixod({
         doc_date,
         doc_num,
         id_podotchet_litso,
         main_zarplata_id,
-        summa,
+        type: type === PrixodType.Organ ? PrixodType.Organ : PrixodType.Podotchet,
         opisanie,
-        childs: podvodki.map(normalizeEmptyFields<PrixodPodvodkaPayloadType>)
+        contract_id: id_shartnomalar_organization,
+        contract_grafik_id: shartnoma_grafik_id,
+        organ_id: id_spravochnik_organization,
+        organ_gazna_id: organization_by_raschet_schet_gazna_id,
+        organ_account_id: organization_by_raschet_schet_id,
+        childs: podvodki.map(normalizeEmptyFields<PrixodProvodkaFormValues>)
       })
-      return
     }
-    createPrixod({
-      doc_date,
-      doc_num,
-      id_podotchet_litso,
-      main_zarplata_id,
-      summa,
-      opisanie,
-      childs: podvodki.map(normalizeEmptyFields<PrixodPodvodkaPayloadType>)
-    })
-  })
+  )
 
   const podvodki = useWatch({
     control: form.control,
@@ -225,8 +288,21 @@ const KassaPrixodDetailsPage = () => {
     }
 
     form.reset({
-      ...prixod.data,
-      is_zarplata: !!prixod.data.main_zarplata_id
+      doc_num: prixod.data.doc_num,
+      doc_date: prixod.data.doc_date,
+      opisanie: prixod.data.opisanie,
+      id_podotchet_litso: prixod.data.id_podotchet_litso,
+      id_shartnomalar_organization: prixod.data.contract_id,
+      id_spravochnik_organization: prixod.data.organ_id,
+      organization_by_raschet_schet_gazna_id: prixod.data.organ_gazna_id,
+      organization_by_raschet_schet_id: prixod.data.organ_account_id,
+      main_zarplata_id: prixod.data.main_zarplata_id,
+      childs: prixod.data.childs,
+      type: prixod.data.main_zarplata_id
+        ? PrixodType.Zarplata
+        : prixod.data.organ_id
+          ? PrixodType.Organ
+          : PrixodType.Podotchet
     })
   }, [form, prixod, id])
 
@@ -258,27 +334,69 @@ const KassaPrixodDetailsPage = () => {
 
               <div className="grid grid-cols-2 items-start border-y divide-x divide-border/50 border-border/50">
                 <div className="col-span-2 p-5 border-b border-slate-100 flex items-center gap-4">
-                  <label className="text-sm font-medium">{t('other')}</label>
-                  <Switch
-                    checked={form.watch('is_zarplata')}
-                    onCheckedChange={(checked) => form.setValue('is_zarplata', !!checked)}
+                  <FormField
+                    control={form.control}
+                    name="type"
+                    render={({ field }) => (
+                      <RadioGroup
+                        value={field.value}
+                        onValueChange={field.onChange}
+                        className="flex items-center gap-10"
+                      >
+                        <div className="flex items-center space-x-2">
+                          <RadioGroupItem
+                            value={PrixodType.Podotchet}
+                            id={PrixodType.Podotchet}
+                          />
+                          <Label htmlFor={PrixodType.Podotchet}>{t('podotchet-litso')}</Label>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <RadioGroupItem
+                            value={PrixodType.Organ}
+                            id={PrixodType.Organ}
+                          />
+                          <Label htmlFor={PrixodType.Organ}>{t('organization')}</Label>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <RadioGroupItem
+                            value={PrixodType.Zarplata}
+                            id={PrixodType.Zarplata}
+                          />
+                          <Label htmlFor={PrixodType.Zarplata}>{t('zarplata')}</Label>
+                        </div>
+                      </RadioGroup>
+                    )}
                   />
-                  <label className="text-sm font-medium">{t('zarplata')}</label>
                 </div>
-                {form.watch('is_zarplata') ? (
+                {form.watch('type') === PrixodType.Zarplata ? (
                   <MainZarplataFields
                     tabIndex={2}
                     spravochnik={mainZarplataSpravochnik}
                     error={form.formState.errors.main_zarplata_id}
                   />
-                ) : (
+                ) : form.watch('type') === PrixodType.Podotchet ? (
                   <PodotchetFields
                     tabIndex={2}
                     spravochnik={podotchetSpravochnik}
                     error={form.formState.errors.id_podotchet_litso}
                   />
+                ) : (
+                  <OrganizationFields
+                    displayGazna
+                    spravochnik={organSpravochnik}
+                    form={form as any}
+                    error={form.formState.errors.id_spravochnik_organization}
+                  />
                 )}
-                <SummaFields data={{ summa: form.watch('summa') }} />
+                <div className="h-full divide-y">
+                  <SummaFields data={{ summa: form.watch('summa') }} />
+                  {form.watch('type') === PrixodType.Organ ? (
+                    <ShartnomaFields
+                      disabled={!form.watch('id_spravochnik_organization')}
+                      spravochnik={shartnomaSpravochnik}
+                    />
+                  ) : null}
+                </div>
               </div>
 
               <div className="mt-5 px-5">
@@ -348,7 +466,7 @@ const KassaPrixodDetailsPage = () => {
             errors={form.formState.errors.childs}
             onCreate={createEditorCreateHandler({
               form,
-              schema: PrixodPodvodkaPayloadSchema,
+              schema: PrixodPodvodkaFormSchema,
               defaultValues: defaultValues.childs[0]
             })}
             onDelete={createEditorDeleteHandler({

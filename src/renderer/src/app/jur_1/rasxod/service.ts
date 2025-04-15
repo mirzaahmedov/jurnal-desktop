@@ -1,52 +1,35 @@
-import type { KassaRasxodType, ResponseMeta } from '@/common/models'
-
-import { ZodIssueCode, z } from 'zod'
+import type { RasxodType } from './config'
+import type { KassaRasxod, ResponseMeta } from '@/common/models'
 
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 import { main_schet } from '@/common/features/crud/middleware'
-import { withPreprocessor } from '@/common/lib/validation'
 
-export const kassaRasxodService = new CRUDService<
-  KassaRasxodType,
-  RasxodPayloadType,
-  RasxodPayloadType,
+interface KassaRasxodPayloadValues {
+  doc_num: string
+  doc_date: string
+  id_podotchet_litso?: number
+  organ_id?: number
+  contract_id?: number
+  type: RasxodType
+  contract_grafik_id?: number
+  organ_account_id?: number
+  organ_gazna_id?: number
+  main_zarplata_id?: number
+  opisanie?: string
+  childs: {
+    spravochnik_operatsii_id: number
+    id_spravochnik_podrazdelenie?: number
+    id_spravochnik_sostav?: number
+    id_spravochnik_type_operatsii?: number
+    summa: number
+  }[]
+}
+
+export const KassaRasxodService = new CRUDService<
+  KassaRasxod,
+  KassaRasxodPayloadValues,
+  KassaRasxodPayloadValues,
   { summa: number } & ResponseMeta
 >({
   endpoint: ApiEndpoints.kassa_rasxod
 }).use(main_schet())
-
-export const RasxodPodvodkaPayloadSchema = withPreprocessor(
-  z.object({
-    spravochnik_operatsii_id: z.number(),
-    summa: z.number().min(1),
-    id_spravochnik_podrazdelenie: z.number().optional(),
-    id_spravochnik_sostav: z.number().optional(),
-    id_spravochnik_type_operatsii: z.number().optional()
-  })
-)
-
-export const RasxodPayloadSchema = withPreprocessor(
-  z
-    .object({
-      doc_num: z.string(),
-      doc_date: z.string(),
-      id_podotchet_litso: z.number().optional(),
-      main_zarplata_id: z.number().optional(),
-      is_zarplata: z.boolean().optional(),
-      opisanie: z.string().optional(),
-      summa: z.number().optional(),
-      childs: z.array(RasxodPodvodkaPayloadSchema)
-    })
-    .superRefine((values, ctx) => {
-      if (values.is_zarplata && !values.main_zarplata_id) {
-        ctx.addIssue({
-          code: ZodIssueCode.custom,
-          path: ['main_zarplata_id']
-        })
-        return
-      }
-    })
-)
-
-export type RasxodPodvodkaPayloadType = z.infer<typeof RasxodPodvodkaPayloadSchema>
-export type RasxodPayloadType = z.infer<typeof RasxodPayloadSchema>

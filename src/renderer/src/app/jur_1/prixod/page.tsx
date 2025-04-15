@@ -30,8 +30,8 @@ import { formatNumber } from '@/common/lib/format'
 import { ListView } from '@/common/views'
 
 import { columns } from './columns'
-import { queryKeys } from './constants'
-import { kassaPrixodService } from './service'
+import { PrixodQueryKeys } from './config'
+import { KassaPrixodService } from './service'
 
 const KassaPrixodPage = () => {
   const dates = useDates()
@@ -59,7 +59,7 @@ const KassaPrixodPage = () => {
     error
   } = useQuery({
     queryKey: [
-      queryKeys.getAll,
+      PrixodQueryKeys.getAll,
       {
         main_schet_id,
         search,
@@ -68,12 +68,12 @@ const KassaPrixodPage = () => {
         ...pagination
       }
     ],
-    queryFn: kassaPrixodService.getAll,
+    queryFn: KassaPrixodService.getAll,
     enabled: !queuedMonths.length
   })
   const { mutate: deletePrixod, isPending } = useMutation({
-    mutationKey: [queryKeys.delete],
-    mutationFn: kassaPrixodService.delete,
+    mutationKey: [PrixodQueryKeys.delete],
+    mutationFn: KassaPrixodService.delete,
     onSuccess(res) {
       toast.success(res?.message)
 
@@ -81,7 +81,7 @@ const KassaPrixodPage = () => {
 
       requestIdleCallback(() => {
         queryClient.invalidateQueries({
-          queryKey: [queryKeys.getAll]
+          queryKey: [PrixodQueryKeys.getAll]
         })
       })
     },

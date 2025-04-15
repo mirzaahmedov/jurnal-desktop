@@ -35,19 +35,40 @@ export interface KassaPrixod {
   id: number
   doc_num: string
   doc_date: string
-  summa: number
-  opisanie?: string
-  id_podotchet_litso: number
-  spravochnik_podotchet_litso_name: string
-  spravochnik_podotchet_litso_rayon: string
-  main_zarplata_id: number
-  provodki_array: [
-    {
-      provodki_schet: string
-      provodki_sub_schet: string
-    }
-  ]
-  childs?: BankPrixodPodvodka[]
+  opisanie: any
+  summa: string
+  id_podotchet_litso: any
+  user_id: number
+  main_schet_id: number
+  created_at: string
+  updated_at: string
+  isdeleted: boolean
+  main_zarplata_id: any
+  organ_id: number
+  contract_id: number
+  contract_grafik_id: any
+  organ_account_id: number
+  organ_gazna_id: number
+  type: string
+  spravochnik_podotchet_litso_name: any
+  spravochnik_podotchet_litso_rayon: any
+  zarplata_fio: any
+  childs: Array<{
+    id: number
+    user_id: number
+    spravochnik_operatsii_id: number
+    summa: number
+    id_spravochnik_podrazdelenie: any
+    id_spravochnik_sostav: any
+    id_spravochnik_type_operatsii: any
+    kassa_prixod_id: number
+    main_schet_id: number
+    created_at: string
+    updated_at: string
+    isdeleted: boolean
+    schet: string
+  }>
+  podotchet: any
 }
 
 type MO7PrixodChild = {

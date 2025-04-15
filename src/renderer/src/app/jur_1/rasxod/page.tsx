@@ -1,4 +1,4 @@
-import type { KassaRasxodType } from '@/common/models'
+import type { KassaRasxod } from '@/common/models'
 
 import { useEffect } from 'react'
 
@@ -28,8 +28,8 @@ import { formatNumber } from '@/common/lib/format'
 import { ListView } from '@/common/views'
 
 import { columns } from './columns'
-import { queryKeys } from './constants'
-import { kassaRasxodService } from './service'
+import { queryKeys } from './config'
+import { KassaRasxodService } from './service'
 
 const KassaRasxodPage = () => {
   const { confirm } = useConfirm()
@@ -64,12 +64,12 @@ const KassaRasxodPage = () => {
         ...pagination
       }
     ],
-    queryFn: kassaRasxodService.getAll,
+    queryFn: KassaRasxodService.getAll,
     enabled: !queuedMonths.length
   })
   const { mutate: deleteRasxod, isPending } = useMutation({
     mutationKey: [queryKeys.delete],
-    mutationFn: kassaRasxodService.delete,
+    mutationFn: KassaRasxodService.delete,
     onSuccess(res) {
       toast.success(res?.message)
 
@@ -86,11 +86,11 @@ const KassaRasxodPage = () => {
     }
   })
 
-  const handleClickEdit = (row: KassaRasxodType) => {
+  const handleClickEdit = (row: KassaRasxod) => {
     navigate(`${row.id}`)
   }
 
-  const handleClickDelete = (row: KassaRasxodType) => {
+  const handleClickDelete = (row: KassaRasxod) => {
     confirm({
       onConfirm() {
         deleteRasxod(row.id)
