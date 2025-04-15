@@ -14,7 +14,7 @@ import { KassaMonitorQueryKeys } from '../../monitor'
 import { KassaSaldoQueryKeys } from '../config'
 import { KassaSaldoService } from '../service'
 
-export const Jur1SaldoController = () => {
+export const KassaSaldoController = () => {
   const queryClient = useQueryClient()
   const startDate = useSelectedMonthStore((store) => store.startDate)
 

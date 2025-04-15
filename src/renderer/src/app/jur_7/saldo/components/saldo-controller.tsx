@@ -18,7 +18,7 @@ import { iznosQueryKeys } from '../../iznos/config'
 import { saldoQueryKeys } from '../config'
 import { getOstatokCheck, ostatokService } from '../service'
 
-export const Jur7SaldoController = () => {
+export const MaterialWarehouseSaldoController = () => {
   const queryClient = useQueryClient()
   const startDate = useSelectedMonthStore((store) => store.startDate)
   const budjet_id = useRequisitesStore((store) => store.budjet_id)

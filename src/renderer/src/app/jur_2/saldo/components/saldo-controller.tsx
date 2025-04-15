@@ -14,7 +14,7 @@ import { BankMonitorQueryKeys } from '../../monitor'
 import { BankSaldoQueryKeys } from '../config'
 import { BankSaldoService } from '../service'
 
-export const Jur2SaldoController = () => {
+export const BankSaldoController = () => {
   const queryClient = useQueryClient()
   const startDate = useSelectedMonthStore((store) => store.startDate)
 

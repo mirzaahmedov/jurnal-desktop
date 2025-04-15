@@ -3,15 +3,15 @@ import { z } from 'zod'
 import { useSelectedMonthStore } from '@/common/features/selected-month'
 
 export const OrganSaldoQueryKeys = {
-  getById: 'organ-saldo',
-  getAll: 'organ-saldo/all',
-  getAutofill: 'organ-saldo/autofill',
-  getCheckSaldo: 'organ-saldo/check',
-  getMonthlySaldo: 'organ-saldo/monthly',
-  create: 'organ-saldo/create',
-  auto: 'organ-saldo/auto',
-  update: 'organ-saldo/update',
-  clean: 'organ-saldo/delete'
+  getById: 'organ-saldo/159',
+  getAll: 'organ-saldo/159/all',
+  getAutofill: 'organ-saldo/159/autofill',
+  getCheckSaldo: 'organ-saldo/159/check',
+  getMonthlySaldo: 'organ-saldo/159/monthly',
+  create: 'organ-saldo/159/create',
+  auto: 'organ-saldo/159/auto',
+  update: 'organ-saldo/159/update',
+  clean: 'organ-saldo/159/delete'
 }
 
 export const OrganSaldoProvodkaFormSchema = z.object({

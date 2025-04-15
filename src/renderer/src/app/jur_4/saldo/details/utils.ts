@@ -1,6 +1,6 @@
-import type { OrganSaldoProvodkaFormValues } from '../config'
+import type { PodotchetSaldoProvodkaFormValues } from '../config'
 
-export const calculateTotal = (rows: OrganSaldoProvodkaFormValues[], skipTotal = false) => {
+export const calculateTotal = (rows: PodotchetSaldoProvodkaFormValues[], skipTotal = false) => {
   return rows.reduce(
     (result, row, index) => {
       return skipTotal && index === rows.length - 1

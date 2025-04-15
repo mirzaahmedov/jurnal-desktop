@@ -1,9 +1,9 @@
 import type { OrganSaldoProvodkaFormValues } from '../config'
 
-export const calculateTotal = (rows: OrganSaldoProvodkaFormValues[]) => {
+export const calculateTotal = (rows: OrganSaldoProvodkaFormValues[], skipTotal = false) => {
   return rows.reduce(
     (result, row, index) => {
-      return index === rows.length - 1
+      return skipTotal && index === rows.length - 1
         ? result
         : {
             prixod: result.prixod + Number(row.prixod),

@@ -16,7 +16,8 @@ import SigninPage from './sign-in'
 
 const KassaSaldoPage = lazy(() => import('./jur_1/saldo/page'))
 const BankSaldoPage = lazy(() => import('./jur_2/saldo/page'))
-const PodotchetOstatokPage = lazy(() => import('./jur_4/saldo/page'))
+const PodotchetSaldoPage = lazy(() => import('./jur_4/saldo/page'))
+const PodotchetSaldoDetailsPage = lazy(() => import('./jur_4/saldo/details/page'))
 
 const PrixodSchetsPage = lazy(() => import('./super-admin/prixod-schet/page'))
 
@@ -428,8 +429,12 @@ export const routes: RouteObject[] = [
             element: <AdvanceReportDetailsPage />
           },
           {
-            path: 'ostatok',
-            element: <PodotchetOstatokPage />
+            path: 'saldo',
+            element: <PodotchetSaldoPage />
+          },
+          {
+            path: 'saldo/:id',
+            element: <PodotchetSaldoDetailsPage />
           }
         ]
       },

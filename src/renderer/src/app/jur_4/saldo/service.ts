@@ -1,22 +1,18 @@
+import type { PodotchetSaldoFormValues } from './config'
 import type { MonthValue } from '@/common/features/saldo'
-import type { PodotchetSaldo, Response, ResponseMeta } from '@/common/models'
+import type {
+  PodotchetSaldo,
+  PodotchetSaldoProvodka,
+  Response,
+  ResponseMeta
+} from '@/common/models'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 
-import { z } from 'zod'
-
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
-import { budjet, main_schet } from '@/common/features/crud/middleware'
-import { getBudjetId } from '@/common/features/requisites'
+import { budjet, jur4_schet, main_schet } from '@/common/features/crud/middleware'
 
 interface PodotchetSaldoMeta extends ResponseMeta {
   summa: number
-}
-
-interface PodotchetSaldoCreateAutoArgs {
-  year: number
-  month: number
-  main_schet_id: number
-  schet_id: number
 }
 
 class PodotchetSaldoServiceBuilder extends CRUDService<
@@ -30,18 +26,10 @@ class PodotchetSaldoServiceBuilder extends CRUDService<
       endpoint: ApiEndpoints.podotchet_saldo
     })
 
-    this.autoCreate = this.autoCreate.bind(this)
-    this.getMonthlySaldo = this.getMonthlySaldo.bind(this)
     this.cleanSaldo = this.cleanSaldo.bind(this)
-  }
-
-  async autoCreate(args: PodotchetSaldoCreateAutoArgs) {
-    const res = await this.client.post(`${this.endpoint}/auto`, args, {
-      params: {
-        budjet_id: getBudjetId()
-      }
-    })
-    return res.data
+    this.getAutofillData = this.getAutofillData.bind(this)
+    this.getMonthlySaldo = this.getMonthlySaldo.bind(this)
+    this.getSaldoCheck = this.getSaldoCheck.bind(this)
   }
 
   async getMonthlySaldo(ctx: QueryFunctionContext<[string, { main_schet_id: number }]>) {
@@ -55,13 +43,37 @@ class PodotchetSaldoServiceBuilder extends CRUDService<
   }
 
   async cleanSaldo(values: { schet_id: number; main_schet_id: number; password: string }) {
-    const { main_schet_id, schet_id, password } = values
+    const { schet_id, main_schet_id, password } = values
     const res = await this.client.delete(`${this.endpoint}/clean`, {
       params: {
-        main_schet_id,
         schet_id,
+        main_schet_id,
         password
       }
+    })
+    return res.data
+  }
+
+  async getAutofillData(params: {
+    month: number
+    year: number
+    first: boolean
+    schet_id: number
+    main_schet_id: number
+    budjet_id: number
+  }) {
+    const res = await this.client.get<Response<PodotchetSaldoProvodka[]>>(`${this.endpoint}/data`, {
+      params
+    })
+    return res.data
+  }
+
+  async getSaldoCheck(params: { budjet_id: number; main_schet_id: number; schet_id: number }) {
+    const res = await this.client.get<Response<unknown>>(`${this.endpoint}/first`, {
+      headers: {
+        'notify-error': false
+      },
+      params
     })
     return res.data
   }
@@ -70,13 +82,4 @@ class PodotchetSaldoServiceBuilder extends CRUDService<
 export const PodotchetSaldoService = new PodotchetSaldoServiceBuilder()
   .use(budjet())
   .use(main_schet())
-
-export const PodotchetSaldoFormSchema = z.object({
-  summa: z.number(),
-  year: z.number(),
-  month: z.number(),
-  main_schet_id: z.number().optional(),
-  schet_id: z.number().optional()
-})
-
-export type PodotchetSaldoFormValues = z.infer<typeof PodotchetSaldoFormSchema>
+  .use(jur4_schet())

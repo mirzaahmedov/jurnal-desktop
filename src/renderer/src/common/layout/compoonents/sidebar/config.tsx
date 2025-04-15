@@ -50,10 +50,9 @@ import {
   Weight
 } from 'lucide-react'
 
-import { Jur1SaldoController } from '@/app/jur_1/saldo/components/saldo-controller'
-import { Jur2SaldoController } from '@/app/jur_2/saldo/components/saldo-controller'
-import { PodotchetSaldoController } from '@/app/jur_4/saldo/components/saldo-controller'
-import { Jur7SaldoController } from '@/app/jur_7/saldo/components/saldo-controller'
+import { KassaSaldoController } from '@/app/jur_1/saldo/components/saldo-controller'
+import { BankSaldoController } from '@/app/jur_2/saldo/components/saldo-controller'
+import { MaterialWarehouseSaldoController } from '@/app/jur_7/saldo/components/saldo-controller'
 import { adminRoles } from '@/app/super-admin/role'
 import { useAuthenticationStore } from '@/common/features/auth'
 import { omitEmptyArrayElements } from '@/common/lib/validation'
@@ -137,7 +136,7 @@ export const getNavElements = (t: TFunction): NavElement[] => {
             {
               displayOnly: true,
               path: '',
-              title: <Jur1SaldoController />,
+              title: <KassaSaldoController />,
               icon: null
             }
           ]
@@ -172,7 +171,7 @@ export const getNavElements = (t: TFunction): NavElement[] => {
             {
               displayOnly: true,
               path: '',
-              title: <Jur2SaldoController />,
+              title: <BankSaldoController />,
               icon: null
             }
           ]
@@ -272,15 +271,9 @@ export const getNavElements = (t: TFunction): NavElement[] => {
                 }
               : null,
             {
-              path: 'ostatok',
+              path: 'saldo',
               title: t('pages.saldo'),
               icon: CircleFadingPlus
-            },
-            {
-              displayOnly: true,
-              path: '',
-              title: <PodotchetSaldoController />,
-              icon: null
             }
           ])
         }
@@ -334,7 +327,7 @@ export const getNavElements = (t: TFunction): NavElement[] => {
             {
               displayOnly: true,
               path: '',
-              title: <Jur7SaldoController />,
+              title: <MaterialWarehouseSaldoController />,
               icon: null
             }
           ]

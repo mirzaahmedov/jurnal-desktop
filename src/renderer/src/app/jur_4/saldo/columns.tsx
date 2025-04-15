@@ -4,10 +4,9 @@ import type { PodotchetSaldo } from '@/common/models'
 import { Trans } from 'react-i18next'
 
 import { IDCell } from '@/common/components/table/renderers/id'
-import { SummaCell } from '@/common/components/table/renderers/summa'
 import { getMonthName } from '@/common/lib/date'
 
-export const podotchetSaldoColumns: ColumnDef<PodotchetSaldo>[] = [
+export const PodotchetSaldoColumns: ColumnDef<PodotchetSaldo>[] = [
   {
     key: 'id',
     renderCell: IDCell,
@@ -22,9 +21,10 @@ export const podotchetSaldoColumns: ColumnDef<PodotchetSaldo>[] = [
     renderCell: (row) => <Trans>{getMonthName(row.month)}</Trans>
   },
   {
-    numeric: true,
-    minWidth: 400,
-    key: 'summa',
-    renderCell: SummaCell
+    key: 'account_number',
+    header: 'raschet-schet'
+  },
+  {
+    key: 'schet'
   }
 ]

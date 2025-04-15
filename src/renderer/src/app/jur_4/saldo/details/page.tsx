@@ -1,5 +1,4 @@
 import type { EditableTableMethods } from '@/common/components/editable-table'
-import type { OrganSaldoProvodka } from '@/common/models'
 
 import { type KeyboardEvent, useEffect, useMemo, useRef, useState } from 'react'
 
@@ -25,27 +24,27 @@ import { formatDate } from '@/common/lib/date'
 import { DetailsView } from '@/common/views'
 
 import { defaultValues } from '../config'
-import { OrganSaldoQueryKeys } from '../config'
-import { OrganSaldoService } from '../service'
-import { OrganSaldoTable } from './organ-saldo-table'
-import { getOrganSaldoProvodkaColumns } from './provodki'
+import { PodotchetSaldoQueryKeys } from '../config'
+import { PodotchetSaldoService } from '../service'
+import { PodotchetSaldoTable } from './podotchet-saldo-table'
+import { getPodochetSaldoProvodkaColumns } from './provodki'
 import { calculateTotal } from './utils'
 
-const OrganSaldoDetailsPage = () => {
+const PodotchetSaldoDetailsPage = () => {
   const tableMethods = useRef<EditableTableMethods>(null)
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const setLayout = useLayoutStore((store) => store.setLayout)
   const startDate = useSelectedMonthStore((store) => store.startDate)
   const { queuedMonths } = useSaldoController({
-    ns: SaldoNamespace.JUR_3_159
+    ns: SaldoNamespace.JUR_4
   })
 
   const [isEditable, setEditable] = useState(false)
 
   const { id } = useParams()
   const { t } = useTranslation(['app'])
-  const { budjet_id, main_schet_id, jur3_schet_159_id } = useRequisitesStore()
+  const { budjet_id, main_schet_id, jur4_schet_id } = useRequisitesStore()
 
   const form = useForm({
     defaultValues: {
@@ -60,21 +59,21 @@ const OrganSaldoDetailsPage = () => {
     isFetching,
     error
   } = useQuery({
-    queryKey: [OrganSaldoQueryKeys.getById, Number(id)],
-    queryFn: OrganSaldoService.getById,
+    queryKey: [PodotchetSaldoQueryKeys.getById, Number(id)],
+    queryFn: PodotchetSaldoService.getById,
     enabled: id !== 'create' && !queuedMonths.length
   })
 
   const { isPending: isCheckingSaldo, mutate: checkSaldo } = useMutation({
-    mutationKey: [OrganSaldoQueryKeys.getCheckSaldo],
-    mutationFn: OrganSaldoService.getSaldoCheck,
+    mutationKey: [PodotchetSaldoQueryKeys.getCheckSaldo],
+    mutationFn: PodotchetSaldoService.getSaldoCheck,
     onSuccess: () => {
       autoFill({
         year,
         month,
         budjet_id: budjet_id!,
         main_schet_id: main_schet_id!,
-        schet_id: jur3_schet_159_id!,
+        schet_id: jur4_schet_id!,
         first: false
       })
     },
@@ -86,7 +85,7 @@ const OrganSaldoDetailsPage = () => {
           month,
           budjet_id: budjet_id!,
           main_schet_id: main_schet_id!,
-          schet_id: jur3_schet_159_id!,
+          schet_id: jur4_schet_id!,
           first: true
         })
         return
@@ -96,46 +95,47 @@ const OrganSaldoDetailsPage = () => {
   })
 
   const { isPending: isAutoFilling, mutate: autoFill } = useMutation({
-    mutationKey: [OrganSaldoQueryKeys.getAutofill],
-    mutationFn: OrganSaldoService.getAutofillData,
+    mutationKey: [PodotchetSaldoQueryKeys.getAutofill],
+    mutationFn: PodotchetSaldoService.getAutofillData,
     onSuccess: (res) => {
       if (res?.data?.length) {
         const total = calculateTotal(res.data)
         res.data.push({
           _total: true,
-          organization_id: 0,
+          podotchet_id: 0,
           name: t('total'),
           prixod: total.prixod,
           rasxod: total.rasxod
-        } as OrganSaldoProvodka)
+        } as any)
       }
-      form.setValue('organizations', res?.data ?? [])
+      form.setValue('podotchets', res?.data ?? [])
+      setEditable(false)
     },
     onError: () => {
-      form.setValue('organizations', [])
+      form.setValue('podotchets', [])
     }
   })
 
   const { mutate: createMainbook, isPending: isCreatingMainbook } = useMutation({
-    mutationFn: OrganSaldoService.create,
+    mutationFn: PodotchetSaldoService.create,
     onSuccess: (res) => {
       toast.success(res?.message)
       queryClient.invalidateQueries({
-        queryKey: [OrganSaldoQueryKeys.getAll]
+        queryKey: [PodotchetSaldoQueryKeys.getAll]
       })
-      handleSaldoResponseDates(SaldoNamespace.JUR_3_159, res)
+      handleSaldoResponseDates(SaldoNamespace.JUR_4, res)
 
       navigate(-1)
     }
   })
   const { mutate: updateMainbook, isPending: isUpdatingMainbook } = useMutation({
-    mutationFn: OrganSaldoService.update,
+    mutationFn: PodotchetSaldoService.update,
     onSuccess: (res) => {
       toast.success(res?.message)
       queryClient.invalidateQueries({
-        queryKey: [OrganSaldoQueryKeys.getAll]
+        queryKey: [PodotchetSaldoQueryKeys.getAll]
       })
-      handleSaldoResponseDates(SaldoNamespace.JUR_3_159, res)
+      handleSaldoResponseDates(SaldoNamespace.JUR_4, res)
 
       navigate(-1)
     }
@@ -150,7 +150,7 @@ const OrganSaldoDetailsPage = () => {
       form.reset({
         year: startDate.getFullYear(),
         month: startDate.getMonth() + 1,
-        organizations: []
+        podotchets: []
       })
       return
     }
@@ -159,16 +159,16 @@ const OrganSaldoDetailsPage = () => {
         const total = calculateTotal(saldo.data.childs)
         saldo.data.childs.push({
           _total: true,
-          organization_id: 0,
+          podotchet_id: 0,
           name: t('total'),
           prixod: total.prixod,
           rasxod: total.rasxod
-        } as OrganSaldoProvodka)
+        } as any)
       }
       form.reset({
         month: saldo.data.month,
         year: saldo.data.year,
-        organizations: saldo.data.childs ?? []
+        podotchets: saldo.data.childs ?? []
       })
       setEditable(saldo.data.first)
     }
@@ -191,13 +191,13 @@ const OrganSaldoDetailsPage = () => {
       checkSaldo({
         budjet_id: budjet_id!,
         main_schet_id: main_schet_id!,
-        schet_id: jur3_schet_159_id!
+        schet_id: jur4_schet_id!
       })
     }
-  }, [id, year, month, budjet_id, main_schet_id, jur3_schet_159_id])
+  }, [id, year, month, budjet_id, main_schet_id, jur4_schet_id])
 
   const onSubmit = form.handleSubmit((values) => {
-    values.organizations.pop()
+    values.podotchets.pop()
 
     if (id === 'create') {
       createMainbook(values)
@@ -216,7 +216,7 @@ const OrganSaldoDetailsPage = () => {
 
       const value = e.currentTarget.value
       if (value.length > 0) {
-        const rows = form.getValues('organizations')
+        const rows = form.getValues('podotchets')
         const index = rows.findIndex((row) =>
           row.name?.toLowerCase()?.includes(value?.toLowerCase())
         )
@@ -228,7 +228,7 @@ const OrganSaldoDetailsPage = () => {
 
   const rows = useWatch({
     control: form.control,
-    name: 'organizations'
+    name: 'podotchets'
   })
   useEffect(() => {
     if (!isEditable || rows.length === 0) {
@@ -240,21 +240,21 @@ const OrganSaldoDetailsPage = () => {
     const name = t('total')
 
     if (Number(totalRow?.prixod) !== Number(total.prixod)) {
-      form.setValue(`organizations.${rows.length - 1}.prixod`, total.prixod)
+      form.setValue(`podotchets.${rows.length - 1}.prixod`, total.prixod)
     }
     if (Number(totalRow?.rasxod) !== Number(total.rasxod)) {
-      form.setValue(`organizations.${rows.length - 1}.rasxod`, total.rasxod)
+      form.setValue(`podotchets.${rows.length - 1}.rasxod`, total.rasxod)
     }
     if (totalRow?.name !== name) {
-      form.setValue(`organizations.${rows.length - 1}.name`, name)
+      form.setValue(`podotchets.${rows.length - 1}.name`, name)
     }
   }, [rows, form, isEditable, t])
 
-  const columns = useMemo(() => getOrganSaldoProvodkaColumns(isEditable), [isEditable])
+  const columns = useMemo(() => getPodochetSaldoProvodkaColumns(isEditable), [isEditable])
 
   useEffect(() => {
     if (error) {
-      handleSaldoErrorDates(SaldoNamespace.JUR_3_159, error)
+      handleSaldoErrorDates(SaldoNamespace.JUR_4, error)
     }
   }, [error])
 
@@ -286,7 +286,7 @@ const OrganSaldoDetailsPage = () => {
                         month: date.getMonth() + 1,
                         budjet_id: budjet_id!,
                         main_schet_id: main_schet_id!,
-                        schet_id: jur3_schet_159_id!,
+                        schet_id: jur4_schet_id!,
                         first: isEditable
                       })
                     }
@@ -301,7 +301,7 @@ const OrganSaldoDetailsPage = () => {
                         month,
                         budjet_id: budjet_id!,
                         main_schet_id: main_schet_id!,
-                        schet_id: jur3_schet_159_id!,
+                        schet_id: jur4_schet_id!,
                         first: false
                       })
                     }}
@@ -313,11 +313,11 @@ const OrganSaldoDetailsPage = () => {
               </div>
             </div>
             <div className="overflow-auto scrollbar flex-1 relative">
-              <OrganSaldoTable
+              <PodotchetSaldoTable
                 columnDefs={columns}
                 methods={tableMethods}
                 form={form}
-                name="organizations"
+                name="podotchets"
               />
             </div>
           </div>
@@ -337,4 +337,4 @@ const OrganSaldoDetailsPage = () => {
   )
 }
 
-export default OrganSaldoDetailsPage
+export default PodotchetSaldoDetailsPage

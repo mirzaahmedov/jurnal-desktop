@@ -235,7 +235,7 @@ const OrganSaldoDetailsPage = () => {
       return
     }
 
-    const total = calculateTotal(rows)
+    const total = calculateTotal(rows, true)
     const totalRow = rows[rows.length - 1]
     const name = t('total')
 

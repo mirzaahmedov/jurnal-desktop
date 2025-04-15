@@ -1,10 +1,19 @@
-import type { ProvodkaType } from './common'
+export interface PodotchetSaldoProvodka {
+  id: number
+  parent_id: number
+  podotchet_id: number
+  prixod: number
+  rasxod: number
+  created_at: string
+  updated_at: string
+  isdeleted: boolean
+  name: string
+}
 
 export interface PodotchetSaldo {
   id: number
   main_schet_id: number
   schet_id: number
-  summa: number
   month: number
   year: number
   date_saldo: string
@@ -13,24 +22,15 @@ export interface PodotchetSaldo {
   created_at: string
   updated_at: string
   isdeleted: boolean
-  updated: boolean
+  first: boolean
+  childs: PodotchetSaldoProvodka[]
 }
 
-export interface PodotchetMonitor {
-  id: number
-  doc_num: string
-  doc_date: string
-  prixod_sum: number
-  rasxod_sum: number
-  opisanie: string
-  podotchet_id: number
-  podotchet_name: string
-  podotchet_rayon: string
-  user_id: number
-  fio: string
-  login: string
-  type: ProvodkaType
-  operatsii?: string
-  provodki_schet: string
-  provodki_sub_schet: string
+export interface PodotchetnSaldoMonthValue {
+  budjet_id: number
+  doc_id: number
+  main_schet_id: number
+  month: number
+  schet_id: number
+  year: number
 }

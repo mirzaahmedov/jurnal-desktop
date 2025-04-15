@@ -1,13 +1,13 @@
 import type { PodotchetSaldo } from '@/common/models'
 
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
-import { FooterCell, FooterRow, GenericTable } from '@/common/components'
+import { GenericTable } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
 import { useRequisitesStore } from '@/common/features/requisites'
 import {
@@ -16,14 +16,12 @@ import {
   handleSaldoResponseDates,
   useSaldoController
 } from '@/common/features/saldo'
-import { useKeyUp, useToggle } from '@/common/hooks'
+import { useKeyUp } from '@/common/hooks'
 import { useLayoutStore } from '@/common/layout/store'
-import { formatNumber } from '@/common/lib/format'
 import { ListView } from '@/common/views'
 
-import { podotchetSaldoColumns } from './columns'
+import { PodotchetSaldoColumns } from './columns'
 import { PodotchetSaldoQueryKeys } from './config'
-import { PodotchetSaldoDialog } from './dialog'
 import { PodotchetSaldoFilters, useYearFilter } from './filters'
 import { PodotchetSaldoService } from './service'
 
@@ -32,18 +30,15 @@ const PodotchetSaldoPage = () => {
 
   const navigate = useNavigate()
   const queryClient = useQueryClient()
-  const dialogToggle = useToggle()
-  // const monthlyTrackerToggle = useToggle()
 
   const [year] = useYearFilter()
-  const [selected, setSelected] = useState<PodotchetSaldo | null>(null)
 
   const { confirm } = useConfirm()
-  const { t } = useTranslation(['app'])
-  const { budjet_id, main_schet_id, jur4_schet_id } = useRequisitesStore()
   const { queuedMonths } = useSaldoController({
     ns: SaldoNamespace.JUR_4
   })
+  const { t } = useTranslation(['app'])
+  const { budjet_id, main_schet_id, jur4_schet_id } = useRequisitesStore()
 
   const {
     data: saldo,
@@ -60,7 +55,7 @@ const PodotchetSaldoPage = () => {
       }
     ],
     queryFn: PodotchetSaldoService.getAll,
-    enabled: !!main_schet_id && !!jur4_schet_id && !queuedMonths.length
+    enabled: !!main_schet_id && !!budjet_id && !!jur4_schet_id && !queuedMonths.length
   })
   const { mutate: cleanSaldo, isPending } = useMutation({
     mutationKey: [PodotchetSaldoQueryKeys.clean],
@@ -78,8 +73,7 @@ const PodotchetSaldoPage = () => {
   })
 
   const handleClickEdit = (row: PodotchetSaldo) => {
-    setSelected(row)
-    dialogToggle.open()
+    navigate(`${row.id}`)
   }
   const handleClickClean = () => {
     confirm({
@@ -104,11 +98,10 @@ const PodotchetSaldoPage = () => {
       ],
       content: PodotchetSaldoFilters,
       onCreate: () => {
-        setSelected(null)
-        dialogToggle.open()
+        navigate('create')
       }
     })
-  }, [setLayout, t, navigate, dialogToggle.open])
+  }, [setLayout, t, navigate])
 
   useEffect(() => {
     if (error) {
@@ -124,46 +117,13 @@ const PodotchetSaldoPage = () => {
 
   return (
     <ListView>
-      {/* <ListView.Header>
-        <ButtonGroup className="w-full flex items-center justify-end gap-2">
-          <Button
-            variant="ghost"
-            onClick={monthlyTrackerToggle.open}
-          >
-            <CalendarDays className="btn-icon" />
-            {t('monthly_saldo')}
-          </Button>
-        </ButtonGroup>
-      </ListView.Header> */}
       <ListView.Content loading={isFetching || isPending}>
         <GenericTable
           data={saldo?.data ?? []}
-          columnDefs={podotchetSaldoColumns}
+          columnDefs={PodotchetSaldoColumns}
           onEdit={handleClickEdit}
-          getRowEditable={(row) => row.updated}
-          footer={
-            <FooterRow>
-              <FooterCell
-                title={t('total')}
-                colSpan={4}
-                content={formatNumber(saldo?.meta?.summa ?? 0)}
-              />
-            </FooterRow>
-          }
         />
       </ListView.Content>
-      <PodotchetSaldoDialog
-        open={dialogToggle.isOpen}
-        onOpenChange={dialogToggle.setOpen}
-        selected={selected}
-      />
-      {/* <PodotchetSaldoMonthlyTrackerDialog
-        open={monthlyTrackerToggle.isOpen}
-        onOpenChange={monthlyTrackerToggle.setOpen}
-        onSelect={(month) => {
-          setYear(month.getFullYear())
-        }}
-      /> */}
     </ListView>
   )
 }
