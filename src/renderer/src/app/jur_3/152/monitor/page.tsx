@@ -65,7 +65,7 @@ const OrganMonitoringPage = () => {
   const { main_schet_id, budjet_id, jur3_schet_152_id } = useRequisitesStore()
   const { t } = useTranslation(['app'])
   const { queuedMonths } = useSaldoController({
-    ns: SaldoNamespace.JUR_3_159
+    ns: SaldoNamespace.JUR_3_152
   })
 
   const organSpravochnik = useSpravochnik(

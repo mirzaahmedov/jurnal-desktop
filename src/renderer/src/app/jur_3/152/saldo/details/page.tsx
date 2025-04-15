@@ -38,14 +38,14 @@ const OrganSaldoDetailsPage = () => {
   const setLayout = useLayoutStore((store) => store.setLayout)
   const startDate = useSelectedMonthStore((store) => store.startDate)
   const { queuedMonths } = useSaldoController({
-    ns: SaldoNamespace.JUR_3_159
+    ns: SaldoNamespace.JUR_3_152
   })
 
   const [isEditable, setEditable] = useState(false)
 
   const { id } = useParams()
   const { t } = useTranslation(['app'])
-  const { budjet_id, main_schet_id, jur3_schet_159_id } = useRequisitesStore()
+  const { budjet_id, main_schet_id, jur3_schet_152_id } = useRequisitesStore()
 
   const form = useForm({
     defaultValues: {
@@ -74,7 +74,7 @@ const OrganSaldoDetailsPage = () => {
         month,
         budjet_id: budjet_id!,
         main_schet_id: main_schet_id!,
-        schet_id: jur3_schet_159_id!,
+        schet_id: jur3_schet_152_id!,
         first: false
       })
     },
@@ -86,7 +86,7 @@ const OrganSaldoDetailsPage = () => {
           month,
           budjet_id: budjet_id!,
           main_schet_id: main_schet_id!,
-          schet_id: jur3_schet_159_id!,
+          schet_id: jur3_schet_152_id!,
           first: true
         })
         return
@@ -123,7 +123,7 @@ const OrganSaldoDetailsPage = () => {
       queryClient.invalidateQueries({
         queryKey: [OrganSaldoQueryKeys.getAll]
       })
-      handleSaldoResponseDates(SaldoNamespace.JUR_3_159, res)
+      handleSaldoResponseDates(SaldoNamespace.JUR_3_152, res)
 
       navigate(-1)
     }
@@ -135,7 +135,7 @@ const OrganSaldoDetailsPage = () => {
       queryClient.invalidateQueries({
         queryKey: [OrganSaldoQueryKeys.getAll]
       })
-      handleSaldoResponseDates(SaldoNamespace.JUR_3_159, res)
+      handleSaldoResponseDates(SaldoNamespace.JUR_3_152, res)
 
       navigate(-1)
     }
@@ -191,10 +191,10 @@ const OrganSaldoDetailsPage = () => {
       checkSaldo({
         budjet_id: budjet_id!,
         main_schet_id: main_schet_id!,
-        schet_id: jur3_schet_159_id!
+        schet_id: jur3_schet_152_id!
       })
     }
-  }, [id, year, month, budjet_id, main_schet_id, jur3_schet_159_id])
+  }, [id, year, month, budjet_id, main_schet_id, jur3_schet_152_id])
 
   const onSubmit = form.handleSubmit((values) => {
     values.organizations.pop()
@@ -254,7 +254,7 @@ const OrganSaldoDetailsPage = () => {
 
   useEffect(() => {
     if (error) {
-      handleSaldoErrorDates(SaldoNamespace.JUR_3_159, error)
+      handleSaldoErrorDates(SaldoNamespace.JUR_3_152, error)
     }
   }, [error])
 
@@ -286,7 +286,7 @@ const OrganSaldoDetailsPage = () => {
                         month: date.getMonth() + 1,
                         budjet_id: budjet_id!,
                         main_schet_id: main_schet_id!,
-                        schet_id: jur3_schet_159_id!,
+                        schet_id: jur3_schet_152_id!,
                         first: isEditable
                       })
                     }
@@ -301,7 +301,7 @@ const OrganSaldoDetailsPage = () => {
                         month,
                         budjet_id: budjet_id!,
                         main_schet_id: main_schet_id!,
-                        schet_id: jur3_schet_159_id!,
+                        schet_id: jur3_schet_152_id!,
                         first: false
                       })
                     }}

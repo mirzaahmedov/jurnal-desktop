@@ -1,8 +1,9 @@
 import type { EditableTableProps } from './interface'
 import type { ArrayPath, FieldArrayWithId, Path } from 'react-hook-form'
 
-import { useImperativeHandle, useMemo, useRef, useState } from 'react'
+import { type HTMLAttributes, useImperativeHandle, useMemo, useRef, useState } from 'react'
 
+import { useVirtualizer } from '@tanstack/react-virtual'
 import { CircleMinus, CirclePlus, SquareMinus } from 'lucide-react'
 import { Controller, type FieldErrors, useFieldArray } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -20,6 +21,8 @@ export const EditableTable = <T extends object, F extends ArrayPath<NoInfer<T>>>
   props: EditableTableProps<T, F>
 ) => {
   const {
+    withVirtualization,
+    scrollRef,
     tableRef,
     tabIndex,
     name,
@@ -49,6 +52,13 @@ export const EditableTable = <T extends object, F extends ArrayPath<NoInfer<T>>>
   const { fields: rows } = useFieldArray({
     control: form.control,
     name
+  })
+
+  const rowVirtualizer = useVirtualizer({
+    count: rows.length,
+    getScrollElement: () => scrollRef?.current ?? null,
+    estimateSize: () => 44,
+    overscan: 20
   })
 
   useImperativeHandle(
@@ -164,8 +174,42 @@ export const EditableTable = <T extends object, F extends ArrayPath<NoInfer<T>>>
         </TableHeader>
         <TableBody>
           {Array.isArray(rows) && rows.length ? (
-            rows.map((row, index) => {
-              return (
+            withVirtualization ? (
+              rowVirtualizer.getVirtualItems().map((virtual, index) => (
+                <EditableTableRowRenderer
+                  key={virtual.key}
+                  index={virtual.index}
+                  tabIndex={tabIndex}
+                  row={rows[virtual.index] as any}
+                  rows={rows as any}
+                  name={name}
+                  form={form}
+                  columnDefs={columnDefs}
+                  errors={errors}
+                  onDelete={onDelete}
+                  onCellDoubleClick={onCellDoubleClick}
+                  params={params}
+                  validate={validate}
+                  getEditorProps={getEditorProps}
+                  getRowClassName={getRowClassName}
+                  highlightedRows={highlightedRows}
+                  onHighlight={(index) => {
+                    setHighlightedRows((prev) => {
+                      if (prev.includes(index)) {
+                        return prev.filter((i) => i !== index)
+                      } else {
+                        return [...prev, index]
+                      }
+                    })
+                  }}
+                  style={{
+                    height: `${virtual.size}px`,
+                    transform: `translateY(${virtual.start - index * virtual.size}px)`
+                  }}
+                />
+              ))
+            ) : (
+              rows.map((row, index) => (
                 <EditableTableRowRenderer
                   key={index}
                   index={index}
@@ -193,8 +237,8 @@ export const EditableTable = <T extends object, F extends ArrayPath<NoInfer<T>>>
                     })
                   }}
                 />
-              )
-            })
+              ))
+            )
           ) : (
             <EditableTableRow>
               <EditableTableCell
@@ -237,18 +281,19 @@ export const EditableTable = <T extends object, F extends ArrayPath<NoInfer<T>>>
 
 interface EditableTableRowRendererProps<T extends object, F extends ArrayPath<NoInfer<T>>>
   extends Pick<
-    EditableTableProps<T, F>,
-    | 'validate'
-    | 'name'
-    | 'form'
-    | 'params'
-    | 'onDelete'
-    | 'onCellDoubleClick'
-    | 'errors'
-    | 'columnDefs'
-    | 'getEditorProps'
-    | 'getRowClassName'
-  > {
+      EditableTableProps<T, F>,
+      | 'validate'
+      | 'name'
+      | 'form'
+      | 'params'
+      | 'onDelete'
+      | 'onCellDoubleClick'
+      | 'errors'
+      | 'columnDefs'
+      | 'getEditorProps'
+      | 'getRowClassName'
+    >,
+    HTMLAttributes<HTMLTableRowElement> {
   tabIndex?: number
   index: number
   row: FieldArrayWithId<T, F, 'id'>
@@ -272,7 +317,8 @@ const EditableTableRowRenderer = <T extends object, R extends T[ArrayPath<NoInfe
   getEditorProps,
   getRowClassName,
   highlightedRows,
-  onHighlight
+  onHighlight,
+  ...props
 }: EditableTableRowRendererProps<T, R>) => {
   const [state, setState] = useState<Record<string, unknown>>({})
 
@@ -283,6 +329,7 @@ const EditableTableRowRenderer = <T extends object, R extends T[ArrayPath<NoInfe
       data-rowId={index}
       data-highlighted={highlightedRows.includes(index)}
       className={getRowClassName?.({ index, row, rows })}
+      {...props}
     >
       <EditableTableCell
         key="line_number"

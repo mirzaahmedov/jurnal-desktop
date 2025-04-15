@@ -35,10 +35,10 @@ const OrganSaldoPage = () => {
 
   const { confirm } = useConfirm()
   const { queuedMonths } = useSaldoController({
-    ns: SaldoNamespace.JUR_3_159
+    ns: SaldoNamespace.JUR_3_152
   })
   const { t } = useTranslation(['app'])
-  const { budjet_id, main_schet_id, jur3_schet_159_id } = useRequisitesStore()
+  const { budjet_id, main_schet_id, jur3_schet_152_id } = useRequisitesStore()
 
   const {
     data: saldo,
@@ -50,12 +50,12 @@ const OrganSaldoPage = () => {
       {
         main_schet_id,
         budjet_id,
-        schet_id: jur3_schet_159_id,
+        schet_id: jur3_schet_152_id,
         year
       }
     ],
     queryFn: OrganSaldoService.getAll,
-    enabled: !!main_schet_id && !!budjet_id && !!jur3_schet_159_id && !queuedMonths.length
+    enabled: !!main_schet_id && !!budjet_id && !!jur3_schet_152_id && !queuedMonths.length
   })
   const { mutate: cleanSaldo, isPending } = useMutation({
     mutationKey: [OrganSaldoQueryKeys.clean],
@@ -65,10 +65,10 @@ const OrganSaldoPage = () => {
       queryClient.invalidateQueries({
         queryKey: [OrganSaldoQueryKeys.getAll]
       })
-      handleSaldoResponseDates(SaldoNamespace.JUR_3_159, res)
+      handleSaldoResponseDates(SaldoNamespace.JUR_3_152, res)
     },
     onError(error) {
-      handleSaldoErrorDates(SaldoNamespace.JUR_3_159, error)
+      handleSaldoErrorDates(SaldoNamespace.JUR_3_152, error)
     }
   })
 
@@ -80,7 +80,7 @@ const OrganSaldoPage = () => {
       withPassword: true,
       onConfirm(password) {
         cleanSaldo({
-          schet_id: jur3_schet_159_id!,
+          schet_id: jur3_schet_152_id!,
           main_schet_id: main_schet_id!,
           password
         })
@@ -105,7 +105,7 @@ const OrganSaldoPage = () => {
 
   useEffect(() => {
     if (error) {
-      handleSaldoErrorDates(SaldoNamespace.JUR_3_159, error)
+      handleSaldoErrorDates(SaldoNamespace.JUR_3_152, error)
     }
   }, [error])
 

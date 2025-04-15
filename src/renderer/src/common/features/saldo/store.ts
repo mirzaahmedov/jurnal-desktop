@@ -7,7 +7,7 @@ export const useSaldoControllerStore = create<SaldoControllerStore>((set, get) =
   queuedMonths: {
     [SaldoNamespace.JUR_1]: [],
     [SaldoNamespace.JUR_2]: [],
-    [SaldoNamespace.JUR_3]: [],
+    [SaldoNamespace.JUR_3_152]: [],
     [SaldoNamespace.JUR_3_159]: [],
     [SaldoNamespace.JUR_4]: [],
     [SaldoNamespace.JUR_7]: [],

@@ -42,6 +42,8 @@ export interface EditableTableMethods {
 }
 
 export interface EditableTableProps<T extends object, F extends ArrayPath<NoInfer<T>>> {
+  withVirtualization?: boolean
+  scrollRef?: RefObject<HTMLDivElement>
   tableRef?: RefObject<HTMLTableElement>
   tabIndex?: number
   form: UseFormReturn<T>

@@ -34,6 +34,8 @@ export enum ApiEndpoints {
   podotchet_monitoring = 'podotchet/monitoring',
   organ_159_monitoring = '159/monitoring',
   organ_159_saldo = '159/saldo',
+  organ_152_monitoring = '152/monitoring',
+  organ_152_saldo = '152/saldo',
   jur7_monitoring = 'jur_7/monitoring',
   jur7_group = 'jur_7/group',
   jur7_pereotsenka = 'jur_7/pereotsenka',

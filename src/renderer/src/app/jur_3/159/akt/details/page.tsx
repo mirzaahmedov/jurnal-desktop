@@ -54,10 +54,10 @@ const AktDetailsPage = () => {
     ns: 'akt'
   })
   const { queuedMonths } = useSaldoController({
-    ns: SaldoNamespace.JUR_3
+    ns: SaldoNamespace.JUR_3_159
   })
 
-  const { main_schet_id, jur3_schet_id } = useRequisitesStore()
+  const { main_schet_id, jur3_schet_159_id } = useRequisitesStore()
 
   const id = useParams().id as string
   const navigate = useNavigate()
@@ -83,7 +83,7 @@ const AktDetailsPage = () => {
       Number(id),
       {
         main_schet_id,
-        schet_id: jur3_schet_id
+        schet_id: jur3_schet_159_id
       }
     ],
     queryFn: aktService.getById,
@@ -103,10 +103,10 @@ const AktDetailsPage = () => {
       })
 
       navigate(-1)
-      handleSaldoResponseDates(SaldoNamespace.JUR_3, res)
+      handleSaldoResponseDates(SaldoNamespace.JUR_3_159, res)
     },
     onError(error) {
-      handleSaldoErrorDates(SaldoNamespace.JUR_3, error)
+      handleSaldoErrorDates(SaldoNamespace.JUR_3_159, error)
     }
   })
 
@@ -124,10 +124,10 @@ const AktDetailsPage = () => {
       })
 
       navigate(-1)
-      handleSaldoResponseDates(SaldoNamespace.JUR_3, res)
+      handleSaldoResponseDates(SaldoNamespace.JUR_3_159, res)
     },
     onError(error) {
-      handleSaldoErrorDates(SaldoNamespace.JUR_3, error)
+      handleSaldoErrorDates(SaldoNamespace.JUR_3_159, error)
     }
   })
 
@@ -230,7 +230,7 @@ const AktDetailsPage = () => {
     })
   }, [setLayout, navigate, id, t])
   useEffect(() => {
-    handleSaldoErrorDates(SaldoNamespace.JUR_3, error)
+    handleSaldoErrorDates(SaldoNamespace.JUR_3_159, error)
   }, [error])
 
   useEffect(() => {

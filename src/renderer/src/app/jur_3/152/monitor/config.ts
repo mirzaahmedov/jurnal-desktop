@@ -1,3 +1,3 @@
 export const OrganMonitorQueryKeys = {
-  getAll: 'organ-monitoring/159'
+  getAll: 'organ-monitoring/152'
 }

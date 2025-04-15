@@ -52,7 +52,6 @@ import {
 
 import { Jur1SaldoController } from '@/app/jur_1/saldo/components/saldo-controller'
 import { Jur2SaldoController } from '@/app/jur_2/saldo/components/saldo-controller'
-import { OrganSaldoController } from '@/app/jur_3/159/saldo/components/saldo-controller'
 import { PodotchetSaldoController } from '@/app/jur_4/saldo/components/saldo-controller'
 import { Jur7SaldoController } from '@/app/jur_7/saldo/components/saldo-controller'
 import { adminRoles } from '@/app/super-admin/role'
@@ -220,12 +219,6 @@ export const getNavElements = (t: TFunction): NavElement[] => {
                   path: 'saldo',
                   title: t('pages.saldo'),
                   icon: CircleFadingPlus
-                },
-                {
-                  displayOnly: true,
-                  path: '',
-                  title: <OrganSaldoController />,
-                  icon: null
                 }
               ])
             },
@@ -241,20 +234,6 @@ export const getNavElements = (t: TFunction): NavElement[] => {
                       icon: SquareActivity
                     }
                   : null,
-                permissions.shartnoma
-                  ? {
-                      path: 'shartnoma',
-                      title: t('pages.shartnoma'),
-                      icon: ReceiptText
-                    }
-                  : null,
-                permissions.jur3
-                  ? {
-                      path: 'akt',
-                      title: t('pages.akt'),
-                      icon: FileCheck2
-                    }
-                  : null,
                 permissions.jur152
                   ? {
                       path: 'pokazat-uslugi',
@@ -263,15 +242,9 @@ export const getNavElements = (t: TFunction): NavElement[] => {
                     }
                   : null,
                 {
-                  path: 'ostatok',
+                  path: 'saldo',
                   title: t('pages.saldo'),
                   icon: CircleFadingPlus
-                },
-                {
-                  displayOnly: true,
-                  path: '',
-                  title: <OrganSaldoController />,
-                  icon: null
                 }
               ])
             }

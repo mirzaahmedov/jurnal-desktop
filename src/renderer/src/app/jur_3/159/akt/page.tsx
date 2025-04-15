@@ -40,14 +40,14 @@ const AktPage = () => {
   const setLayout = useLayoutStore((store) => store.setLayout)
   const startDate = useSelectedMonthStore((store) => store.startDate)
 
-  const { main_schet_id, jur3_schet_id } = useRequisitesStore()
+  const { main_schet_id, jur3_schet_159_id } = useRequisitesStore()
 
   const [search] = useSearchFilter()
 
   const { confirm } = useConfirm()
   const { sorting, handleSort, getColumnSorted } = useTableSort()
   const { queuedMonths } = useSaldoController({
-    ns: SaldoNamespace.JUR_3
+    ns: SaldoNamespace.JUR_3_159
   })
   const { t } = useTranslation(['app'])
 
@@ -60,7 +60,7 @@ const AktPage = () => {
       AktQueryKeys.getAll,
       {
         main_schet_id,
-        schet_id: jur3_schet_id,
+        schet_id: jur3_schet_159_id,
         search,
         ...sorting,
         ...dates,
@@ -75,7 +75,7 @@ const AktPage = () => {
     mutationFn: aktService.delete,
     onSuccess(res) {
       toast.success(res?.message)
-      handleSaldoResponseDates(SaldoNamespace.JUR_3, res)
+      handleSaldoResponseDates(SaldoNamespace.JUR_3_159, res)
 
       requestAnimationFrame(() => {
         queryClient.invalidateQueries({
@@ -84,7 +84,7 @@ const AktPage = () => {
       })
     },
     onError(error) {
-      handleSaldoErrorDates(SaldoNamespace.JUR_3, error)
+      handleSaldoErrorDates(SaldoNamespace.JUR_3_159, error)
     }
   })
 
@@ -114,7 +114,9 @@ const AktPage = () => {
     })
   }, [setLayout, t, navigate])
   useEffect(() => {
-    handleSaldoErrorDates(SaldoNamespace.JUR_3, error)
+    if (error) {
+      handleSaldoErrorDates(SaldoNamespace.JUR_3_159, error)
+    }
   }, [error])
 
   return (
@@ -134,7 +136,7 @@ const AktPage = () => {
           params={{
             main_schet_id,
             from: dates.from,
-            schet_id: jur3_schet_id,
+            schet_id: jur3_schet_159_id,
             to: dates.to,
             excel: true
           }}

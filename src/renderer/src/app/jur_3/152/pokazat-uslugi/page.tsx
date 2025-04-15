@@ -41,12 +41,12 @@ const PokazatUslugiPage = () => {
 
   const [search] = useSearchFilter()
 
-  const { main_schet_id, jur3_schet_id } = useRequisitesStore()
+  const { main_schet_id, jur3_schet_152_id } = useRequisitesStore()
   const { confirm } = useConfirm()
   const { sorting, handleSort, getColumnSorted } = useTableSort()
   const { t } = useTranslation(['app'])
   const { queuedMonths } = useSaldoController({
-    ns: SaldoNamespace.JUR_3
+    ns: SaldoNamespace.JUR_3_152
   })
 
   const {
@@ -58,7 +58,7 @@ const PokazatUslugiPage = () => {
       queryKeys.getAll,
       {
         main_schet_id,
-        schet_id: jur3_schet_id,
+        schet_id: jur3_schet_152_id,
         search,
         ...sorting,
         ...dates,
@@ -66,7 +66,7 @@ const PokazatUslugiPage = () => {
       }
     ],
     queryFn: PokazatUslugiService.getAll,
-    enabled: !!main_schet_id && !!jur3_schet_id && !queuedMonths.length
+    enabled: !!main_schet_id && !!jur3_schet_152_id && !queuedMonths.length
   })
   const { mutate: deletePokazatUslugi, isPending } = useMutation({
     mutationKey: [queryKeys.delete],
@@ -76,10 +76,10 @@ const PokazatUslugiPage = () => {
       queryClient.invalidateQueries({
         queryKey: [queryKeys.getAll]
       })
-      handleSaldoResponseDates(SaldoNamespace.JUR_3, res)
+      handleSaldoResponseDates(SaldoNamespace.JUR_3_152, res)
     },
     onError(error) {
-      handleSaldoErrorDates(SaldoNamespace.JUR_3, error)
+      handleSaldoErrorDates(SaldoNamespace.JUR_3_152, error)
     }
   })
 
@@ -111,7 +111,7 @@ const PokazatUslugiPage = () => {
 
   useEffect(() => {
     if (error) {
-      handleSaldoErrorDates(SaldoNamespace.JUR_3, error)
+      handleSaldoErrorDates(SaldoNamespace.JUR_3_152, error)
     }
   }, [error])
 

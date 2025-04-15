@@ -10,7 +10,6 @@ import { DuplicateSchetsGuard } from '@/common/features/requisites/guards/duplic
 
 import DashboardPage from './dashboard/page'
 import HomePage from './home/page'
-import OrganSaldoDetailsPage from './jur_3/159/saldo/details/page'
 import { Jur7MonitorPage } from './jur_7/monitor/page'
 import JUR8SchetsPage from './jur_8/schet/page'
 import SigninPage from './sign-in'
@@ -29,7 +28,13 @@ const VideoTutorialsPage = lazy(() => import('./video-tutorials/page'))
 
 const AdminOstatokPage = lazy(() => import('./super-admin/ostatok/page'))
 const ZarplataSpravochnikPage = lazy(() => import('./super-admin/zarplata/spravochnik/page'))
-const OrganOstatokPage = lazy(() => import('./jur_3/159/saldo/page'))
+
+const OrganSaldo159Page = lazy(() => import('./jur_3/159/saldo/page'))
+const OrganSaldo159DetailsPage = lazy(() => import('./jur_3/159/saldo/details/page'))
+
+const OrganSaldo152Page = lazy(() => import('./jur_3/152/saldo/page'))
+const OrganSaldo152DetailsPage = lazy(() => import('./jur_3/152/saldo/details/page'))
+
 const MainLayout = lazy(() => import('../common/layout/main'))
 const BankMonitorPage = lazy(() => import('./jur_2/monitor/page'))
 const BankPrixodDetailsPage = lazy(() => import('./jur_2/prixod/details/page'))
@@ -55,9 +60,10 @@ const MainbookPage = lazy(() => import('./reports/mainbook/page'))
 const MainbookDetailsPage = lazy(() => import('./reports/mainbook/details/page'))
 const AktDetailsPage = lazy(() => import('./jur_3/159/akt/details/page'))
 const AktPage = lazy(() => import('./jur_3/159/akt/page'))
-const OrganizationMonitorPage = lazy(() => import('./jur_3/159/monitor/page'))
-const PokazatUslugiDetailsPage = lazy(() => import('./jur_3/pokazat-uslugi/details/page'))
-const PokazatUslugiPage = lazy(() => import('./jur_3/pokazat-uslugi/page'))
+const OrganMonitorig159Page = lazy(() => import('./jur_3/159/monitor/page'))
+const OrganMonitorig152Page = lazy(() => import('./jur_3/152/monitor/page'))
+const PokazatUslugiDetailsPage = lazy(() => import('./jur_3/152/pokazat-uslugi/details/page'))
+const PokazatUslugiPage = lazy(() => import('./jur_3/152/pokazat-uslugi/page'))
 const ShartnomaDetailsPage = lazy(() => import('./jur_3/shartnoma/details/page'))
 const ShartnomaPage = lazy(() => import('./jur_3/shartnoma/page'))
 const OXDetailsPage = lazy(() => import('./ox-report/ox-report/details/page'))
@@ -141,7 +147,7 @@ export const routes: RouteObject[] = [
             children: [
               {
                 path: 'monitor',
-                element: <OrganizationMonitorPage />
+                element: <OrganMonitorig159Page />
               },
               {
                 path: 'akt',
@@ -153,21 +159,38 @@ export const routes: RouteObject[] = [
               },
               {
                 path: 'saldo',
-                element: <OrganOstatokPage />
+                element: <OrganSaldo159Page />
               },
               {
                 path: 'saldo/:id',
-                element: <OrganSaldoDetailsPage />
+                element: <OrganSaldo159DetailsPage />
               }
             ]
           },
           {
-            path: 'pokazat-uslugi',
-            element: <PokazatUslugiPage />
-          },
-          {
-            path: 'pokazat-uslugi/:id',
-            element: <PokazatUslugiDetailsPage />
+            path: '152',
+            children: [
+              {
+                path: 'monitor',
+                element: <OrganMonitorig152Page />
+              },
+              {
+                path: 'pokazat-uslugi',
+                element: <PokazatUslugiPage />
+              },
+              {
+                path: 'pokazat-uslugi/:id',
+                element: <PokazatUslugiDetailsPage />
+              },
+              {
+                path: 'saldo',
+                element: <OrganSaldo152Page />
+              },
+              {
+                path: 'saldo/:id',
+                element: <OrganSaldo152DetailsPage />
+              }
+            ]
           }
         ]
       },

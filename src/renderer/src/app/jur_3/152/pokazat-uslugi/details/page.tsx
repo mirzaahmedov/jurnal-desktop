@@ -55,9 +55,9 @@ import { podvodkaColumns } from './podvodki'
 
 const PokazatUslugiDetailsPage = () => {
   const { t } = useTranslation(['app'])
-  const { main_schet_id, jur3_schet_id } = useRequisitesStore()
+  const { main_schet_id, jur3_schet_152_id } = useRequisitesStore()
   const { queuedMonths } = useSaldoController({
-    ns: SaldoNamespace.JUR_3
+    ns: SaldoNamespace.JUR_3_152
   })
   const { snippets, addSnippet, removeSnippet } = useSnippets({
     ns: 'pokazat-uslugi'
@@ -120,11 +120,11 @@ const PokazatUslugiDetailsPage = () => {
       Number(id),
       {
         main_schet_id,
-        schet_id: jur3_schet_id
+        schet_id: jur3_schet_152_id
       }
     ],
     queryFn: PokazatUslugiService.getById,
-    enabled: id !== 'create' && !!main_schet_id && !!jur3_schet_id && !queuedMonths.length
+    enabled: id !== 'create' && !!main_schet_id && !!jur3_schet_152_id && !queuedMonths.length
   })
   const { mutate: createPokazatUslugi, isPending: isCreating } = useMutation({
     mutationKey: [queryKeys.create],
@@ -140,10 +140,10 @@ const PokazatUslugiDetailsPage = () => {
       })
 
       navigate(-1)
-      handleSaldoResponseDates(SaldoNamespace.JUR_3, res)
+      handleSaldoResponseDates(SaldoNamespace.JUR_3_152, res)
     },
     onError(error) {
-      handleSaldoErrorDates(SaldoNamespace.JUR_3, error)
+      handleSaldoErrorDates(SaldoNamespace.JUR_3_152, error)
     }
   })
 
@@ -161,10 +161,10 @@ const PokazatUslugiDetailsPage = () => {
       })
 
       navigate(-1)
-      handleSaldoResponseDates(SaldoNamespace.JUR_3, res)
+      handleSaldoResponseDates(SaldoNamespace.JUR_3_152, res)
     },
     onError(error) {
-      handleSaldoErrorDates(SaldoNamespace.JUR_3, error)
+      handleSaldoErrorDates(SaldoNamespace.JUR_3_152, error)
     }
   })
 
@@ -256,7 +256,7 @@ const PokazatUslugiDetailsPage = () => {
 
   useEffect(() => {
     if (error) {
-      handleSaldoErrorDates(SaldoNamespace.JUR_3, error)
+      handleSaldoErrorDates(SaldoNamespace.JUR_3_152, error)
     }
   }, [error])
 

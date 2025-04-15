@@ -13,7 +13,7 @@ import { iznosQueryKeys } from '../../iznos/config'
 import { saldoQueryKeys } from '../config'
 import { ostatokService } from '../service'
 
-export const Jur7SaldoUpdateManager = () => {
+export const MaterialWarehouseSaldoUpdateManager = () => {
   const queryClient = useQueryClient()
 
   const [completed, setCompleted] = useState<MonthValue[]>([])

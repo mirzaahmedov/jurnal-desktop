@@ -31,7 +31,7 @@ import { OrganSaldoService } from '../service'
 
 const columnDefs = getOrganSaldoProvodkaColumns(false)
 
-export const OrganSaldo159UpdateManager = () => {
+export const OrganSaldo152UpdateManager = () => {
   const scrollElementRef = useRef<HTMLDivElement>(null)
 
   const queryClient = useQueryClient()
@@ -40,7 +40,7 @@ export const OrganSaldo159UpdateManager = () => {
   const { t } = useTranslation()
 
   const { queuedMonths, dequeueMonth } = useSaldoController<OrganSaldoMonthValue>({
-    ns: SaldoNamespace.JUR_3_159
+    ns: SaldoNamespace.JUR_3_152
   })
 
   const form = useForm({

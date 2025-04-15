@@ -2,7 +2,7 @@ export enum SaldoNamespace {
   JUR_1 = 'JUR_1',
   JUR_2 = 'JUR_2',
   JUR_3_159 = 'JUR_3_159',
-  JUR_3 = 'JUR_3',
+  JUR_3_152 = 'JUR_3_152',
   JUR_4 = 'JUR_4',
   JUR_7 = 'JUR_7',
   MAINBOOK = 'MAINBOOK'
