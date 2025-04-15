@@ -393,6 +393,7 @@ const KassaPrixodDetailsPage = () => {
                   {form.watch('type') === PrixodType.Organ ? (
                     <ShartnomaFields
                       disabled={!form.watch('id_spravochnik_organization')}
+                      form={form as any}
                       spravochnik={shartnomaSpravochnik}
                     />
                   ) : null}

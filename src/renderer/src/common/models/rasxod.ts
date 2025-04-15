@@ -50,7 +50,7 @@ export interface KassaRasxod {
   doc_num: string
   doc_date: string
   opisanie: any
-  summa: string
+  summa: number
   id_podotchet_litso: any
   user_id: number
   main_schet_id: number

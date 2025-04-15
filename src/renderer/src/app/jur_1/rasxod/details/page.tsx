@@ -25,7 +25,6 @@ import { ButtonGroup } from '@/common/components/ui/button-group'
 import { Form, FormField } from '@/common/components/ui/form'
 import { Label } from '@/common/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/common/components/ui/radio-group'
-import { Switch } from '@/common/components/ui/switch'
 import { ApiEndpoints } from '@/common/features/crud'
 import { DocumentType } from '@/common/features/doc-num'
 import { GenerateFile } from '@/common/features/file'
@@ -265,7 +264,9 @@ const KassaRasxodDetailtsPage = () => {
 
   const summa = form.watch('summa')
   const reminder = monitor?.meta
-    ? (monitor?.meta?.summa_to ?? 0) - (summa ?? 0) + (rasxod?.data?.summa ?? 0)
+    ? (monitor?.meta?.summa_to ?? 0) -
+      (summa ?? 0) +
+      (rasxod?.data?.summa ? Number(rasxod?.data?.summa) : 0)
     : 0
 
   useEffect(() => {
@@ -412,6 +413,7 @@ const KassaRasxodDetailtsPage = () => {
                   {form.watch('type') === RasxodType.Organ ? (
                     <ShartnomaFields
                       disabled={!form.watch('id_spravochnik_organization')}
+                      form={form as any}
                       spravochnik={shartnomaSpravochnik}
                     />
                   ) : null}
@@ -480,7 +482,7 @@ const KassaRasxodDetailtsPage = () => {
         </Form>
         <Fieldset
           name={t('provodka')}
-          className="flex-1 mt-10 bg-slate-50"
+          className="flex-1 mt-10 pb-20 bg-slate-50"
         >
           <EditableTable
             tabIndex={4}
