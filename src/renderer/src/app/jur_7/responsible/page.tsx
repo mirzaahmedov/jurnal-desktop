@@ -4,14 +4,14 @@ import { useEffect, useState } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
+import { toast } from 'react-toastify'
 
 import { GenericTable } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
-import { DownloadFile } from '@/common/features/file'
+import { DownloadFile, ImportFile } from '@/common/features/file'
 import { SearchFilterDebounced } from '@/common/features/filters/search/search-filter-debounced'
 import { useSearchFilter } from '@/common/features/filters/search/search-filter-debounced'
 import { usePagination } from '@/common/hooks'
-import { toast } from '@/common/hooks/use-toast'
 import { useToggle } from '@/common/hooks/use-toggle'
 import { useLayoutStore } from '@/common/layout/store'
 import { ListView } from '@/common/views'
@@ -23,9 +23,9 @@ import { responsibleService } from './service'
 
 const ResponsiblePage = () => {
   const [selected, setSelected] = useState<null | Responsible>(null)
+  const [search] = useSearchFilter()
 
   const { confirm } = useConfirm()
-  const [search] = useSearchFilter()
   const { t } = useTranslation(['app'])
 
   const setLayout = useLayoutStore((store) => store.setLayout)
@@ -44,24 +44,14 @@ const ResponsiblePage = () => {
     ],
     queryFn: responsibleService.getAll
   })
-  const { mutate: deleteMutation, isPending } = useMutation({
+  const { mutate: deleteResponsible, isPending } = useMutation({
     mutationKey: [responsibleQueryKeys.delete],
     mutationFn: responsibleService.delete,
-    onSuccess() {
+    onSuccess(res) {
       queryClient.invalidateQueries({
         queryKey: [responsibleQueryKeys.getAll]
       })
-      toast({
-        title: 'Материально-ответственное лицо успешно удалена'
-      })
-    },
-    onError(error) {
-      console.error(error)
-      toast({
-        variant: 'destructive',
-        title: 'Ошибка при удалении материально-ответственное лицо',
-        description: error.message
-      })
+      toast.success(res?.message)
     }
   })
 
@@ -87,14 +77,21 @@ const ResponsiblePage = () => {
   }
   const handleClickDelete = (row: Responsible) => {
     confirm({
-      title: 'Удалить материально-ответственное лицо?',
-      onConfirm: () => deleteMutation(row.id)
+      onConfirm: () => deleteResponsible(row.id)
     })
   }
 
   return (
     <ListView>
       <ListView.Header className="flex items-center justify-end">
+        <DownloadFile
+          url="/jur_7/responsible/template"
+          params={{
+            excel: true
+          }}
+          fileName={`${t('responsible')}_${t('template')}.xlsx`}
+          buttonText={t('download-something', { something: t('template') })}
+        />
         <DownloadFile
           url="/jur_7/responsible"
           params={{
@@ -104,6 +101,14 @@ const ResponsiblePage = () => {
           }}
           fileName={`${t('responsible')}.xlsx`}
           buttonText={t('export-excel')}
+        />
+        <ImportFile
+          url="/jur_7/responsible/import"
+          onSuccess={() => {
+            queryClient.invalidateQueries({
+              queryKey: [responsibleQueryKeys.getAll]
+            })
+          }}
         />
       </ListView.Header>
       <ListView.Content loading={isFetching || isPending}>
