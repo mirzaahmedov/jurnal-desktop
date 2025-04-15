@@ -37,8 +37,8 @@ const DemoPage = () => {
         <Pressable>
           <Button>Sign up…</Button>
         </Pressable>
-        <Modal className="fixed inset-0 z-[100] bg-black/50 grid place-items-center group">
-          <Dialog className="bg-white w-full max-w-[800px] h-full max-h-[400px] p-5 group-data-[entering]:animate-in group-data-[entering]:fade-in group-data-[entering]:duration-300 group-data-[exiting]:animate-out group-data-[exiting]:fade-out group-data-[exiting]:duration-200">
+        <Modal className="group fixed inset-0 z-[100] bg-black/50 grid place-items-center data-[entering]:animate-in data-[entering]:fade-in data-[entering]:duration-100 data-[exiting]:animate-out data-[exiting]:fade-out data-[exiting]:duration-75">
+          <Dialog className="bg-white w-full max-w-[800px] h-full max-h-[400px] p-5">
             <form>
               <DialogClose />
               <Heading slot="title">Sign up</Heading>

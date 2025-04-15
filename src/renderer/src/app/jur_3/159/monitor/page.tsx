@@ -164,7 +164,7 @@ const OrganMonitoringPage = () => {
                     <DropdownMenuItem>
                       <DownloadFile
                         fileName={`${t('cap')}-${dates.to}.xlsx`}
-                        url="/organization/monitoring/cap"
+                        url="/159/monitoring/cap"
                         params={{
                           budjet_id,
                           main_schet_id,
@@ -184,7 +184,7 @@ const OrganMonitoringPage = () => {
                     <DropdownMenuItem>
                       <DownloadFile
                         fileName={`дебитор-кредитор_отчет-${dates.to}.xlsx`}
-                        url="organization/monitoring/prixod/rasxod"
+                        url="/159/monitoring/prixod/rasxod"
                         params={{
                           main_schet_id,
                           budjet_id,
@@ -202,7 +202,7 @@ const OrganMonitoringPage = () => {
                     <DropdownMenuItem>
                       <DownloadFile
                         fileName={`${t('pages.organization')}-${t('pages.prixod-docs')}-${dates.from}-${dates.to}.xlsx`}
-                        url="/organization/monitoring/prixod"
+                        url="/159/monitoring/prixod"
                         params={{
                           budjet_id,
                           main_schet_id,
@@ -221,7 +221,7 @@ const OrganMonitoringPage = () => {
                     <DropdownMenuItem>
                       <DownloadFile
                         fileName={`сводный-отчет-${dates.from}&${dates.to}.xlsx`}
-                        url="/organization/monitoring/order"
+                        url="/159/monitoring/order"
                         params={{
                           main_schet_id,
                           schet_id: jur3_schet_152_id,
@@ -241,7 +241,7 @@ const OrganMonitoringPage = () => {
                     <DropdownMenuItem>
                       <DownloadFile
                         fileName={`сводный-отчет-${dates.from}&${dates.to}.xlsx`}
-                        url="/organization/monitoring/order"
+                        url="/159/monitoring/order"
                         params={{
                           main_schet_id,
                           schet_id: jur3_schet_152_id,
