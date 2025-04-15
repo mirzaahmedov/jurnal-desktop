@@ -146,12 +146,12 @@ const BankRasxodDetailsPage = () => {
         page: 1,
         year,
         month,
-        from: formatDate(new Date()),
-        to: formatDate(new Date())
+        from: formatDate(startDate),
+        to: form.watch('doc_date')
       }
     ],
     queryFn: BankMonitorService.getAll,
-    enabled: !!main_schet_id && !queuedMonths.length
+    enabled: !!main_schet_id && !queuedMonths.length && !!form.watch('doc_date')
   })
 
   const {
