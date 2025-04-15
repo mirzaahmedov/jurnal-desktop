@@ -9,7 +9,8 @@ export const KassaSaldoQueryKeys = {
   create: 'kassa-saldo/create',
   auto: 'kassa-saldo/auto',
   update: 'kassa-saldo/update',
-  clean: 'kassa-saldo/clean'
+  clean: 'kassa-saldo/clean',
+  delete: 'kassa-saldo/delete'
 }
 
 export const defaultValues: KassaSaldoFormValues = {

@@ -11,7 +11,8 @@ export const OrganSaldoQueryKeys = {
   create: 'organ-saldo/159/create',
   auto: 'organ-saldo/159/auto',
   update: 'organ-saldo/159/update',
-  clean: 'organ-saldo/159/delete'
+  clean: 'organ-saldo/159/clean',
+  delete: 'organ-saldo/159/delete'
 }
 
 export const OrganSaldoProvodkaFormSchema = z.object({

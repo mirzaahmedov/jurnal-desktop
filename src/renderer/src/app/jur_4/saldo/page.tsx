@@ -71,6 +71,20 @@ const PodotchetSaldoPage = () => {
       handleSaldoErrorDates(SaldoNamespace.JUR_4, error)
     }
   })
+  const { mutate: deleteSaldo, isPending: isDeleting } = useMutation({
+    mutationKey: [PodotchetSaldoQueryKeys.delete],
+    mutationFn: PodotchetSaldoService.delete,
+    onSuccess(res) {
+      toast.success(res?.message)
+      queryClient.invalidateQueries({
+        queryKey: [PodotchetSaldoQueryKeys.getAll]
+      })
+      handleSaldoResponseDates(SaldoNamespace.JUR_4, res)
+    },
+    onError(error) {
+      handleSaldoErrorDates(SaldoNamespace.JUR_4, error)
+    }
+  })
 
   const handleClickEdit = (row: PodotchetSaldo) => {
     navigate(`${row.id}`)
@@ -84,6 +98,13 @@ const PodotchetSaldoPage = () => {
           main_schet_id: main_schet_id!,
           password
         })
+      }
+    })
+  }
+  const handleClickDelete = (row: PodotchetSaldo) => {
+    confirm({
+      onConfirm() {
+        deleteSaldo(row.id)
       }
     })
   }
@@ -117,11 +138,13 @@ const PodotchetSaldoPage = () => {
 
   return (
     <ListView>
-      <ListView.Content loading={isFetching || isPending}>
+      <ListView.Content loading={isFetching || isPending || isDeleting}>
         <GenericTable
           data={saldo?.data ?? []}
           columnDefs={PodotchetSaldoColumns}
+          getRowDeletable={(row) => row.isdeleted}
           onEdit={handleClickEdit}
+          onDelete={handleClickDelete}
         />
       </ListView.Content>
     </ListView>

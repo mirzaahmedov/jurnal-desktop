@@ -11,7 +11,8 @@ export const PodotchetSaldoQueryKeys = {
   create: 'podotchet-saldo/create',
   auto: 'podotchet-saldo/auto',
   update: 'podotchet-saldo/update',
-  clean: 'podotchet-saldo/delete'
+  clean: 'podotchet-saldo/clean',
+  delete: 'podotchet-saldo/delete'
 }
 
 export const PodotchetSaldoProvodkaFormSchema = z.object({

@@ -52,6 +52,7 @@ export interface GenericTableProps<T extends object>
   getRowKey?: (row: T) => string | number
   getRowSelected?: GetRowSelectedFn<T>
   getRowEditable?: (row: T) => boolean
+  getRowDeletable?: (row: T) => boolean
   getColumnSorted?: (column: ColumnDef<T>) => TableSortDirection | undefined
   onClickRow?(row: T): void
   onDelete?(row: T): void

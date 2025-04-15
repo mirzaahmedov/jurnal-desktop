@@ -7,6 +7,7 @@ export const BankSaldoQueryKeys = {
   getAll: 'bank-saldo/all',
   getMonthlySaldo: 'bank-saldo/monthly',
   create: 'bank-saldo/create',
+  delete: 'bank-saldo/delete',
   auto: 'bank-saldo/auto',
   update: 'bank-saldo/update',
   clean: 'bank-saldo/delete'

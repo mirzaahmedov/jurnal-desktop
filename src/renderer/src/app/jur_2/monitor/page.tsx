@@ -66,7 +66,9 @@ const BankMonitorPage = () => {
   })
 
   useEffect(() => {
-    handleSaldoErrorDates(SaldoNamespace.JUR_2, error)
+    if (error) {
+      handleSaldoErrorDates(SaldoNamespace.JUR_2, error)
+    }
   }, [error])
   useEffect(() => {
     setLayout({

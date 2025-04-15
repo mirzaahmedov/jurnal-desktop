@@ -57,9 +57,25 @@ const OrganSaldoPage = () => {
     queryFn: OrganSaldoService.getAll,
     enabled: !!main_schet_id && !!budjet_id && !!jur3_schet_152_id && !queuedMonths.length
   })
+
   const { mutate: cleanSaldo, isPending } = useMutation({
     mutationKey: [OrganSaldoQueryKeys.clean],
     mutationFn: OrganSaldoService.cleanSaldo,
+    onSuccess(res) {
+      toast.success(res?.message)
+      queryClient.invalidateQueries({
+        queryKey: [OrganSaldoQueryKeys.getAll]
+      })
+      handleSaldoResponseDates(SaldoNamespace.JUR_3_152, res)
+    },
+    onError(error) {
+      handleSaldoErrorDates(SaldoNamespace.JUR_3_152, error)
+    }
+  })
+
+  const { mutate: deleteSaldo, isPending: isDeleting } = useMutation({
+    mutationKey: [OrganSaldoQueryKeys.delete],
+    mutationFn: OrganSaldoService.delete,
     onSuccess(res) {
       toast.success(res?.message)
       queryClient.invalidateQueries({
@@ -84,6 +100,13 @@ const OrganSaldoPage = () => {
           main_schet_id: main_schet_id!,
           password
         })
+      }
+    })
+  }
+  const handleClickDelete = (row: OrganSaldo) => {
+    confirm({
+      onConfirm() {
+        deleteSaldo(row.id)
       }
     })
   }
@@ -117,11 +140,13 @@ const OrganSaldoPage = () => {
 
   return (
     <ListView>
-      <ListView.Content loading={isFetching || isPending}>
+      <ListView.Content loading={isFetching || isPending || isDeleting}>
         <GenericTable
           data={saldo?.data ?? []}
           columnDefs={OrganSaldoColumns}
           onEdit={handleClickEdit}
+          onDelete={handleClickDelete}
+          getRowDeletable={(row) => row.isdeleted}
         />
       </ListView.Content>
     </ListView>

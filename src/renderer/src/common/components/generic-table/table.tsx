@@ -30,6 +30,7 @@ export const GenericTable = <T extends object>(props: GenericTableProps<T>) => {
     getRowId = defaultGetRowId,
     getRowKey = getRowId,
     getRowEditable = () => true,
+    getRowDeletable = () => true,
     getColumnSorted,
     disabledIds = [],
     selectedIds = [],
@@ -257,7 +258,7 @@ export const GenericTable = <T extends object>(props: GenericTableProps<T>) => {
                           <Pencil className="size-4" />
                         </Button>
                       )}
-                      {onDelete && (
+                      {onDelete && getRowDeletable(row) && (
                         <Button
                           variant="ghost"
                           size="icon"

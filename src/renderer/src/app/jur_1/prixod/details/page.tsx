@@ -250,7 +250,9 @@ const KassaPrixodDetailsPage = () => {
   })
 
   useEffect(() => {
-    handleSaldoErrorDates(SaldoNamespace.JUR_1, error)
+    if (error) {
+      handleSaldoErrorDates(SaldoNamespace.JUR_1, error)
+    }
   }, [error])
   useEffect(() => {
     setLayout({

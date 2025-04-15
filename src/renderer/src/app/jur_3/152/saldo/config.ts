@@ -11,6 +11,7 @@ export const OrganSaldoQueryKeys = {
   create: 'organ-saldo/152/create',
   auto: 'organ-saldo/152/auto',
   update: 'organ-saldo/152/update',
+  delete: 'organ-saldo/152/delete',
   clean: 'organ-saldo/152/delete'
 }
 

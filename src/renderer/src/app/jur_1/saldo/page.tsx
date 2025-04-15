@@ -20,7 +20,6 @@ import { useLayoutStore } from '@/common/layout/store'
 import { ListView } from '@/common/views'
 
 import { kassaSaldoColumns } from './columns'
-// import { KassaSaldoMonthlyTrackerDialog } from './components/saldo-monthly-tracker-dialog'
 import { KassaSaldoQueryKeys } from './config'
 import { KassaSaldoDialog } from './dialog'
 import { KassaSaldoFilters, useYearFilter } from './filters'
@@ -56,6 +55,24 @@ const KassaSaldoPage = () => {
     ],
     queryFn: KassaSaldoService.getAll
   })
+  const { mutate: deleteSaldo, isPending: isDeleting } = useMutation({
+    mutationKey: [KassaSaldoQueryKeys.delete],
+    mutationFn: KassaSaldoService.delete,
+    onSuccess(res) {
+      toast.success(res?.message)
+
+      handleSaldoResponseDates(SaldoNamespace.JUR_1, res)
+
+      requestAnimationFrame(() => {
+        queryClient.invalidateQueries({
+          queryKey: [KassaSaldoQueryKeys.getAll]
+        })
+      })
+    },
+    onError(error) {
+      handleSaldoErrorDates(SaldoNamespace.JUR_1, error)
+    }
+  })
   const { mutate: cleanSaldo, isPending } = useMutation({
     mutationKey: [KassaSaldoQueryKeys.clean],
     mutationFn: KassaSaldoService.cleanSaldo,
@@ -79,6 +96,13 @@ const KassaSaldoPage = () => {
     setSelected(row)
     dialogToggle.open()
   }
+  const handleClickDelete = (row: KassaSaldo) => {
+    confirm({
+      onConfirm() {
+        deleteSaldo(row.id)
+      }
+    })
+  }
   const handleClickClean = () => {
     confirm({
       withPassword: true,
@@ -92,7 +116,9 @@ const KassaSaldoPage = () => {
   }
 
   useEffect(() => {
-    handleSaldoErrorDates(SaldoNamespace.JUR_1, error)
+    if (error) {
+      handleSaldoErrorDates(SaldoNamespace.JUR_1, error)
+    }
   }, [error])
   useEffect(() => {
     setLayout({
@@ -118,22 +144,15 @@ const KassaSaldoPage = () => {
 
   return (
     <ListView>
-      {/* <ListView.Header>
-        <ButtonGroup className="w-full flex items-center justify-end gap-2">
-          <Button
-            variant="ghost"
-            onClick={monthlyTrackerToggle.open}
-          >
-            <CalendarDays className="btn-icon" />
-            {t('monthly_saldo')}
-          </Button>
-        </ButtonGroup>
-      </ListView.Header> */}
-      <ListView.Content loading={isFetching || isPending}>
+      <ListView.Content loading={isFetching || isPending || isDeleting}>
         <GenericTable
           data={saldo?.data ?? []}
           columnDefs={kassaSaldoColumns}
           onEdit={handleClickEdit}
+          onDelete={handleClickDelete}
+          getRowDeletable={(row) => {
+            return row.isdeleted
+          }}
           getRowEditable={(row) => {
             return row.updated
           }}
@@ -144,13 +163,6 @@ const KassaSaldoPage = () => {
         onOpenChange={dialogToggle.setOpen}
         selected={selected}
       />
-      {/* <KassaSaldoMonthlyTrackerDialog
-        open={monthlyTrackerToggle.isOpen}
-        onOpenChange={monthlyTrackerToggle.setOpen}
-        onSelect={(month) => {
-          setYear(month.getFullYear())
-        }}
-      /> */}
     </ListView>
   )
 }

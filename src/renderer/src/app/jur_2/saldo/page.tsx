@@ -21,7 +21,6 @@ import { useLayoutStore } from '@/common/layout/store'
 import { ListView } from '@/common/views'
 
 import { BankSaldoColumns } from './columns'
-// import { BankSaldoMonthlyTrackerDialog } from './components/saldo-monthly-tracker-dialog'
 import { BankSaldoQueryKeys } from './config'
 import { BankSaldoDialog } from './dialog'
 import { BankSaldoFilters, useYearFilter } from './filters'
@@ -33,7 +32,6 @@ const BankSaldoPage = () => {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const dialogToggle = useToggle()
-  // const monthlyTrackerToggle = useToggle()
 
   const [year] = useYearFilter()
   const [selected, setSelected] = useState<BankSaldo | null>(null)
@@ -75,11 +73,26 @@ const BankSaldoPage = () => {
       handleSaldoErrorDates(SaldoNamespace.JUR_2, error)
     }
   })
+  const { mutate: deleteSaldo, isPending: isDeleting } = useMutation({
+    mutationKey: [BankSaldoQueryKeys.delete],
+    mutationFn: BankSaldoService.delete,
+    onSuccess(res) {
+      toast.success(res?.message)
+      queryClient.invalidateQueries({
+        queryKey: [BankSaldoQueryKeys.getAll]
+      })
+      handleSaldoResponseDates(SaldoNamespace.JUR_2, res)
+    },
+    onError(error) {
+      handleSaldoErrorDates(SaldoNamespace.JUR_2, error)
+    }
+  })
 
   const handleClickEdit = (row: BankSaldo) => {
     setSelected(row)
     dialogToggle.open()
   }
+
   const handleClickClean = () => {
     confirm({
       withPassword: true,
@@ -91,9 +104,18 @@ const BankSaldoPage = () => {
       }
     })
   }
+  const handleClickDelete = (row: BankSaldo) => {
+    confirm({
+      onConfirm() {
+        deleteSaldo(row.id)
+      }
+    })
+  }
 
   useEffect(() => {
-    handleSaldoErrorDates(SaldoNamespace.JUR_2, error)
+    if (error) {
+      handleSaldoErrorDates(SaldoNamespace.JUR_2, error)
+    }
   }, [error])
   useEffect(() => {
     setLayout({
@@ -119,22 +141,13 @@ const BankSaldoPage = () => {
 
   return (
     <ListView>
-      {/* <ListView.Header>
-        <ButtonGroup className="w-full flex items-center justify-end gap-2">
-          <Button
-            variant="ghost"
-            onClick={monthlyTrackerToggle.open}
-          >
-            <CalendarDays className="btn-icon" />
-            {t('monthly_saldo')}
-          </Button>
-        </ButtonGroup>
-      </ListView.Header> */}
-      <ListView.Content loading={isFetching || isPending}>
+      <ListView.Content loading={isFetching || isPending || isDeleting}>
         <GenericTable
           data={saldo?.data ?? []}
           columnDefs={BankSaldoColumns}
           onEdit={handleClickEdit}
+          onDelete={handleClickDelete}
+          getRowDeletable={(row) => row.isdeleted}
           getRowEditable={(row) => row.updated}
         />
       </ListView.Content>
@@ -143,13 +156,6 @@ const BankSaldoPage = () => {
         onOpenChange={dialogToggle.setOpen}
         selected={selected}
       />
-      {/* <BankSaldoMonthlyTrackerDialog
-        open={monthlyTrackerToggle.isOpen}
-        onOpenChange={monthlyTrackerToggle.setOpen}
-        onSelect={(month) => {
-          setYear(month.getFullYear())
-        }}
-      /> */}
     </ListView>
   )
 }
