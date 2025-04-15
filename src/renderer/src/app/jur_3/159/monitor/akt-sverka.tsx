@@ -61,7 +61,7 @@ export const AktSverkaDialog = ({
         <DialogFooter>
           <DownloadFile
             fileName={`акт-сверки-${from}&${to}${shartnomaSpravochnik.selected?.doc_num ? `_договор-№${shartnomaSpravochnik.selected.doc_num}` : ''}.xlsx`}
-            url="organization/monitoring/akt/sverka"
+            url="/159/monitoring/akt/sverka"
             params={{
               main_schet_id: mainSchetId,
               schet_id: schetId,
