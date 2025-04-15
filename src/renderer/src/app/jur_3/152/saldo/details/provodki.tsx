@@ -13,6 +13,31 @@ export const getOrganSaldoProvodkaColumns = (isEditable: boolean) =>
       })
     },
     {
+      key: 'bank_klient',
+      header: 'bank',
+      Editor: createTextEditor({
+        key: 'bank_klient',
+        readOnly: true
+      })
+    },
+    {
+      width: 100,
+      key: 'mfo',
+      Editor: createTextEditor({
+        key: 'mfo',
+        readOnly: true
+      })
+    },
+    {
+      width: 160,
+      key: 'inn',
+      Editor: createTextEditor({
+        key: 'inn',
+        readOnly: true
+      })
+    },
+    {
+      width: 250,
       key: 'prixod',
       Editor: createNumberEditor({
         key: 'prixod',
@@ -21,6 +46,7 @@ export const getOrganSaldoProvodkaColumns = (isEditable: boolean) =>
       })
     },
     {
+      width: 250,
       key: 'rasxod',
       Editor: createNumberEditor({
         key: 'rasxod',

@@ -8,6 +8,7 @@ export interface PodotchetSaldoProvodka {
   updated_at: string
   isdeleted: boolean
   name: string
+  rayon: string
 }
 
 export interface PodotchetSaldo {

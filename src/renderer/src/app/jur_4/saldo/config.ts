@@ -18,6 +18,7 @@ export const PodotchetSaldoProvodkaFormSchema = z.object({
   _total: z.boolean().optional(),
   podotchet_id: z.number(),
   name: z.string().optional(),
+  rayon: z.string().optional(),
   prixod: z.number(),
   rasxod: z.number()
 })

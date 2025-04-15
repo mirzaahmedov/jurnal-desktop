@@ -18,6 +18,9 @@ export const OrganSaldoProvodkaFormSchema = z.object({
   _total: z.boolean().optional(),
   organization_id: z.number(),
   name: z.string().optional(),
+  bank_klient: z.string().optional(),
+  mfo: z.string().optional(),
+  inn: z.string().optional(),
   prixod: z.number(),
   rasxod: z.number()
 })

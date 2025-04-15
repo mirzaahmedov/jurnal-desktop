@@ -13,6 +13,14 @@ export const getPodochetSaldoProvodkaColumns = (isEditable: boolean) =>
       })
     },
     {
+      key: 'rayon',
+      Editor: createTextEditor({
+        key: 'rayon',
+        readOnly: true
+      })
+    },
+    {
+      width: 250,
       key: 'prixod',
       Editor: createNumberEditor({
         key: 'prixod',
@@ -21,6 +29,7 @@ export const getPodochetSaldoProvodkaColumns = (isEditable: boolean) =>
       })
     },
     {
+      width: 250,
       key: 'rasxod',
       Editor: createNumberEditor({
         key: 'rasxod',

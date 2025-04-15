@@ -11,6 +11,7 @@ import {
   Modal,
   ModalOverlay,
   OverlayTriggerStateContext,
+  Pressable,
   TextField
 } from 'react-aria-components'
 
@@ -33,9 +34,11 @@ const DemoPage = () => {
   return (
     <div className="flex-1 w-full h-full p-10">
       <DialogTrigger>
-        <Button>Sign up…</Button>
-        <Modal className="fixed inset-0 z-[100] bg-black/50 grid place-items-center">
-          <Dialog className="bg-white w-full max-w-[800px] h-full max-h-[400px] p-5">
+        <Pressable>
+          <Button>Sign up…</Button>
+        </Pressable>
+        <Modal className="fixed inset-0 z-[100] bg-black/50 grid place-items-center group">
+          <Dialog className="bg-white w-full max-w-[800px] h-full max-h-[400px] p-5 group-data-[entering]:animate-in group-data-[entering]:fade-in group-data-[entering]:duration-300 group-data-[exiting]:animate-out group-data-[exiting]:fade-out group-data-[exiting]:duration-200">
             <form>
               <DialogClose />
               <Heading slot="title">Sign up</Heading>
