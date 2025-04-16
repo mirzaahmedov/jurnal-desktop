@@ -69,6 +69,7 @@ export const Sidebar = () => {
         <ApplicationBadge />
         <p className="text-xs text-slate-500 font-medium">
           {!isCollapsed && t('title_short')} v.{version}
+          {import.meta.env.VITE_MODE === 'region' ? t('region') : ''}
         </p>
       </div>
       {isAvailable ? (

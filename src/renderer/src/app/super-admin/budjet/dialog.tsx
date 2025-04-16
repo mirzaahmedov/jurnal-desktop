@@ -26,7 +26,7 @@ import {
 import { Input } from '@/common/components/ui/input'
 import { useToast } from '@/common/hooks/use-toast'
 
-import { budjetQueryKeys } from './config'
+import { BudjetQueryKeys } from './config'
 import { BudgetFormSchema, type BudgetFormValues, BudgetService } from './service'
 
 type BudgetDialogProps = {
@@ -47,7 +47,7 @@ const BudgetDialog = (props: BudgetDialogProps) => {
   })
 
   const { mutate: create, isPending: isCreating } = useMutation({
-    mutationKey: [budjetQueryKeys.create],
+    mutationKey: [BudjetQueryKeys.create],
     mutationFn: BudgetService.create,
     onSuccess() {
       toast({
@@ -55,7 +55,7 @@ const BudgetDialog = (props: BudgetDialogProps) => {
       })
       form.reset(defaultValues)
       queryClient.invalidateQueries({
-        queryKey: [budjetQueryKeys.getAll]
+        queryKey: [BudjetQueryKeys.getAll]
       })
       onChangeOpen(false)
     },
@@ -68,14 +68,14 @@ const BudgetDialog = (props: BudgetDialogProps) => {
     }
   })
   const { mutate: update, isPending: isUpdating } = useMutation({
-    mutationKey: [budjetQueryKeys.update],
+    mutationKey: [BudjetQueryKeys.update],
     mutationFn: BudgetService.update,
     onSuccess() {
       toast({
         title: 'бюджет успешно обновлена'
       })
       queryClient.invalidateQueries({
-        queryKey: [budjetQueryKeys.getAll]
+        queryKey: [BudjetQueryKeys.getAll]
       })
       onChangeOpen(false)
     },

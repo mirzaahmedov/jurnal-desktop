@@ -3,20 +3,23 @@ import type { DialogProps } from '@radix-ui/react-dialog'
 
 import { useEffect, useState } from 'react'
 
+import { parseDate } from '@internationalized/date'
 import { useQuery } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
 import { reportTitleQueryKeys, reportTitleService } from '@/app/super-admin/report-title'
-import { DatePicker, SelectField } from '@/common/components'
-import { Button } from '@/common/components/ui/button'
+import { JollyDatePicker } from '@/common/components/jolly/date-picker'
 import {
-  Dialog,
   DialogContent,
   DialogFooter,
   DialogHeader,
-  DialogTitle
-} from '@/common/components/ui/dialog'
+  DialogOverlay,
+  DialogTitle,
+  DialogTrigger
+} from '@/common/components/jolly/dialog'
+import { JollySelect, SelectItem } from '@/common/components/jolly/select'
+import { Button } from '@/common/components/ui/button'
 import { Form, FormField, FormLabel } from '@/common/components/ui/form'
 import { Slider } from '@/common/components/ui/slider'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/common/components/ui/tabs'
@@ -122,144 +125,155 @@ export const SettingsDialog = ({ open, onOpenChange }: DialogProps) => {
   }, [i18n])
 
   return (
-    <Dialog
-      open={open}
+    <DialogTrigger
+      isOpen={open}
       onOpenChange={handleClose}
     >
-      <DialogContent className="flex flex-col w-full max-w-4xl h-full max-h-[400px]">
-        <DialogHeader>
-          <DialogTitle>{t('configure-programm')}</DialogTitle>
-        </DialogHeader>
-        <Form {...form}>
-          <form
-            onSubmit={onSubmit}
-            className="flex-1 flex flex-col mt-4"
-          >
-            <Tabs
-              value={tabValue}
-              onValueChange={(value) => setTabValue(value as TabOption)}
-              className="flex-1"
-            >
-              <div className="h-full flex flex-row gap-5">
-                <div className="h-full w-48">
-                  <TabsList className="h-full w-full flex-col justify-start p-2 bg-transparent border">
-                    <TabsTrigger
-                      value={TabOption.Fitlers}
-                      className="w-full justify-start px-3 py-1.5 data-[state=active]:bg-brand/5 data-[state=active]:text-brand font-semibold !shadow-none"
-                    >
-                      {t('filters')}
-                    </TabsTrigger>
-                    <TabsTrigger
-                      value={TabOption.UI}
-                      className="w-full justify-start px-3 py-1.5 data-[state=active]:bg-brand/5 data-[state=active]:text-brand font-semibold !shadow-none"
-                    >
-                      {t('interface')}
-                    </TabsTrigger>
-                    <TabsTrigger
-                      value={TabOption.Report}
-                      className="w-full justify-start px-3 py-1.5 data-[state=active]:bg-brand/5 data-[state=active]:text-brand font-semibold !shadow-none"
-                    >
-                      {t('report')}
-                    </TabsTrigger>
-                  </TabsList>
-                </div>
-                <div className="h-full flex-1">
-                  <TabsContent
-                    tabIndex={-1}
-                    value={TabOption.Fitlers}
-                  >
-                    <div className="flex flex-col gap-2">
-                      <FormField
-                        control={form.control}
-                        name="default_start_date"
-                        render={({ field }) => (
-                          <div className="flex items-center justify-between gap-10">
-                            <FormLabel>{t('start_date')}</FormLabel>
-                            <DatePicker {...field} />
-                          </div>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name="default_end_date"
-                        render={({ field }) => (
-                          <div className="flex items-center justify-between gap-10">
-                            <FormLabel>{capitalize(t('end_date'))}</FormLabel>
-                            <DatePicker {...field} />
-                          </div>
-                        )}
-                      />
+      <DialogOverlay>
+        <DialogContent className="w-full max-w-4xl h-full max-h-[400px]">
+          <div className="h-full flex flex-col">
+            <DialogHeader>
+              <DialogTitle>{t('configure-programm')}</DialogTitle>
+            </DialogHeader>
+            <Form {...form}>
+              <form
+                onSubmit={onSubmit}
+                className="mt-4 flex-1 flex flex-col justify-start"
+              >
+                <Tabs
+                  asChild
+                  value={tabValue}
+                  onValueChange={(value) => setTabValue(value as TabOption)}
+                  className="h-full flex flex-row gap-5 flex-1"
+                >
+                  <div>
+                    <div className="h-full w-48">
+                      <TabsList className="h-full w-full flex-col justify-start p-2 bg-transparent border">
+                        <TabsTrigger
+                          value={TabOption.Fitlers}
+                          className="w-full justify-start px-3 py-1.5 data-[state=active]:bg-brand/5 data-[state=active]:text-brand font-semibold !shadow-none"
+                        >
+                          {t('filters')}
+                        </TabsTrigger>
+                        <TabsTrigger
+                          value={TabOption.UI}
+                          className="w-full justify-start px-3 py-1.5 data-[state=active]:bg-brand/5 data-[state=active]:text-brand font-semibold !shadow-none"
+                        >
+                          {t('interface')}
+                        </TabsTrigger>
+                        <TabsTrigger
+                          value={TabOption.Report}
+                          className="w-full justify-start px-3 py-1.5 data-[state=active]:bg-brand/5 data-[state=active]:text-brand font-semibold !shadow-none"
+                        >
+                          {t('report')}
+                        </TabsTrigger>
+                      </TabsList>
                     </div>
-                  </TabsContent>
-                  <TabsContent value={TabOption.UI}>
-                    <div className="flex flex-col gap-2">
-                      <FormField
-                        control={form.control}
-                        name="language"
-                        render={({ field }) => (
-                          <div className="flex items-center justify-between gap-10">
-                            <FormLabel>{t('language')}</FormLabel>
-                            <div>
-                              <LanguageSelect
-                                value={field.value}
-                                onValueChange={(value) => field.onChange(value)}
-                              />
-                            </div>
-                          </div>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name="zoom"
-                        render={({ field }) => (
-                          <div className="flex items-center justify-between gap-10 min-h-10">
-                            <FormLabel>{t('zoom')}</FormLabel>
-                            <div className="w-full flex items-center gap-5">
-                              <Slider
-                                step={0.25}
-                                min={0.5}
-                                max={2}
-                                value={[field.value]}
-                                onValueChange={(value) => field.onChange(value[0])}
-                              />
-                              <span>{field.value * 100}%</span>
-                            </div>
-                          </div>
-                        )}
-                      />
-                    </div>
-                  </TabsContent>
-                  <TabsContent value={TabOption.Report}>
-                    <FormField
-                      control={form.control}
-                      name="report_title_id"
-                      render={({ field }) => (
-                        <div className="flex items-center justify-between gap-10 min-h-10">
-                          <FormLabel>{t('name')}</FormLabel>
-                          <SelectField
-                            {...field}
-                            disabled={isFetching}
-                            value={field.value?.toString()}
-                            onValueChange={(value) => {
-                              field.onChange(value ? Number(value) : undefined)
-                            }}
-                            options={reportTitles?.data ?? []}
-                            getOptionLabel={(o) => o.name}
-                            getOptionValue={(o) => o.id}
+                    <div className="h-full flex-1">
+                      <TabsContent
+                        tabIndex={-1}
+                        value={TabOption.Fitlers}
+                      >
+                        <div className="flex flex-col gap-2">
+                          <FormField
+                            control={form.control}
+                            name="default_start_date"
+                            render={({ field }) => (
+                              <div className="flex items-center justify-between gap-10">
+                                <FormLabel>{capitalize(t('start_date'))}</FormLabel>
+                                <JollyDatePicker
+                                  value={parseDate(field.value)}
+                                  onChange={(value) => field.onChange(value?.toString())}
+                                />
+                              </div>
+                            )}
+                          />
+                          <FormField
+                            control={form.control}
+                            name="default_end_date"
+                            render={({ field }) => (
+                              <div className="flex items-center justify-between gap-10">
+                                <FormLabel>{capitalize(t('end_date'))}</FormLabel>
+                                <JollyDatePicker
+                                  value={parseDate(field.value)}
+                                  onChange={(value) => field.onChange(value?.toString())}
+                                />
+                              </div>
+                            )}
                           />
                         </div>
-                      )}
-                    />
-                  </TabsContent>
-                </div>
-              </div>
-            </Tabs>
-            <DialogFooter className="border-none">
-              <Button>{t('save')}</Button>
-            </DialogFooter>
-          </form>
-        </Form>
-      </DialogContent>
-    </Dialog>
+                      </TabsContent>
+                      <TabsContent value={TabOption.UI}>
+                        <div className="flex flex-col gap-2">
+                          <FormField
+                            control={form.control}
+                            name="language"
+                            render={({ field }) => (
+                              <div className="flex items-center justify-between gap-10">
+                                <FormLabel>{t('language')}</FormLabel>
+                                <div>
+                                  <LanguageSelect
+                                    language={field.value}
+                                    onLanguageChange={field.onChange}
+                                  />
+                                </div>
+                              </div>
+                            )}
+                          />
+                          <FormField
+                            control={form.control}
+                            name="zoom"
+                            render={({ field }) => (
+                              <div className="flex items-center justify-between gap-10 min-h-10">
+                                <FormLabel>{t('zoom')}</FormLabel>
+                                <div className="w-full flex items-center gap-5">
+                                  <Slider
+                                    step={0.25}
+                                    min={0.5}
+                                    max={2}
+                                    value={[field.value]}
+                                    onValueChange={(value) => field.onChange(value[0])}
+                                  />
+                                  <span>{field.value * 100}%</span>
+                                </div>
+                              </div>
+                            )}
+                          />
+                        </div>
+                      </TabsContent>
+                      <TabsContent value={TabOption.Report}>
+                        <FormField
+                          control={form.control}
+                          name="report_title_id"
+                          render={({ field }) => (
+                            <div className="flex items-center justify-between gap-10 min-h-10">
+                              <FormLabel>{t('name')}</FormLabel>
+                              <JollySelect
+                                isDisabled={isFetching}
+                                selectedKey={field.value ?? ''}
+                                onSelectionChange={(value) => {
+                                  field.onChange(value)
+                                }}
+                                items={reportTitles?.data ?? []}
+                                className="w-80"
+                              >
+                                {(item) => <SelectItem id={item.id}>{item.name}</SelectItem>}
+                              </JollySelect>
+                            </div>
+                          )}
+                        />
+                      </TabsContent>
+                    </div>
+                  </div>
+                </Tabs>
+                <DialogFooter>
+                  <Button>{t('save')}</Button>
+                </DialogFooter>
+              </form>
+            </Form>
+          </div>
+        </DialogContent>
+      </DialogOverlay>
+    </DialogTrigger>
   )
 }

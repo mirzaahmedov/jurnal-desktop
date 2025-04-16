@@ -12,6 +12,25 @@ import { DatePicker } from './date-picker'
 import { Button } from './ui/button'
 import { Form, FormField } from './ui/form'
 
+/* 
+<JollyDateRangePicker
+  value={{
+    start: parseDate(from),
+    end: parseDate(to)
+  }}
+  onChange={(value) => {
+    if (!value) {
+      form.setValue('from', '')
+      form.setValue('to', '')
+      return
+    }
+    form.setValue('from', value.start.toString())
+    form.setValue('to', value.end.toString())
+  }}
+  isDateUnavailable={(date) => !(date.year === 2025 && date.month === 4)}
+/> 
+*/
+
 interface RangeDateValues {
   from: string
   to: string

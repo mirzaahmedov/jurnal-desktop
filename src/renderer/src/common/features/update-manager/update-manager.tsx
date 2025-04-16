@@ -30,11 +30,15 @@ export const UpdateManager = () => {
   useEffect(() => {
     ipcRenderer.send('check-for-updates')
     ipcRenderer.on(events.checking_for_update, () => {
-      toast.info('Проверка обновлений', { autoClose: 1000, closeButton: true })
+      if (!status) {
+        toast.info('Проверка обновлений', { autoClose: 1000, closeButton: true })
+      }
     })
 
     ipcRenderer.on(events.update_available, () => {
-      setStatus('available')
+      if (!status) {
+        setStatus('available')
+      }
     })
     ipcRenderer.on(events.download_progress, (_, progress) => {
       setStatus('downloading')

@@ -1,4 +1,4 @@
-export const budjetQueryKeys = {
+export const BudjetQueryKeys = {
   getAll: 'budjet/all',
   getById: 'budjet',
   create: 'budjet/create',

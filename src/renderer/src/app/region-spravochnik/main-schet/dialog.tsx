@@ -12,7 +12,7 @@ import { toast } from 'react-toastify'
 import { bankQueryKeys } from '@/app/super-admin/bank/config'
 import { bankService } from '@/app/super-admin/bank/service'
 import { BudgetService } from '@/app/super-admin/budjet'
-import { budjetQueryKeys } from '@/app/super-admin/budjet/config'
+import { BudjetQueryKeys } from '@/app/super-admin/budjet/config'
 import { AutoComplete, SelectField } from '@/common/components'
 import { FormElement } from '@/common/components/form'
 import { Button } from '@/common/components/ui/button'
@@ -72,7 +72,7 @@ export const MainSchetDialog = ({
   })
 
   const { data: budgets } = useQuery({
-    queryKey: [budjetQueryKeys.getAll],
+    queryKey: [BudjetQueryKeys.getAll],
     queryFn: BudgetService.getAll
   })
 

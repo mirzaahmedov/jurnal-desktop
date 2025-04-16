@@ -9,14 +9,21 @@ import { MainSchetQueryKeys, MainSchetService } from '@/app/region-spravochnik/m
 import { StepperSelector } from '@/common/components/stepper-selector'
 import { Button } from '@/common/components/ui/button'
 import { useToggle } from '@/common/hooks'
+import { cn } from '@/common/lib/utils'
 
 import { RequisitesDialog } from './dialog'
 import { RequisitesInfoDialog } from './info-dialog'
 import { useRequisitesStore } from './store'
 
 export const RequisitesController = () => {
-  const { budjet_id, main_schet_id, jur3_schet_id, jur4_schet_id, setRequisites } =
-    useRequisitesStore()
+  const {
+    budjet_id,
+    main_schet_id,
+    jur3_schet_152_id,
+    jur3_schet_159_id,
+    jur4_schet_id,
+    setRequisites
+  } = useRequisitesStore()
 
   const location = useLocation()
   const dialogToggle = useToggle()
@@ -51,7 +58,7 @@ export const RequisitesController = () => {
           className="flex flex-col gap-0.5 cursor-pointer"
           onClick={infoToggle.open}
         >
-          <p className="text-xs font-medium text-slate-500 ml-8">
+          <p className={cn('text-xs font-medium text-slate-500', mainSchet && 'ml-8')}>
             <Trans>main-schet</Trans>
           </p>
 
@@ -67,7 +74,8 @@ export const RequisitesController = () => {
                 getOptionLabel={(option) => option.account_number}
                 onOptionSelect={(option) => {
                   setRequisites({
-                    jur3_schet_id: option.jur3_schets[0].id ?? undefined,
+                    jur3_schet_152_id: option.jur3_schets_152[0].id ?? undefined,
+                    jur3_schet_159_id: option.jur3_schets_159[0].id ?? undefined,
                     jur4_schet_id: option.jur4_schets[0].id ?? undefined
                   })
                 }}
@@ -76,13 +84,23 @@ export const RequisitesController = () => {
                 <span className="text-sm font-semibold text-center">{mainSchet.jur1_schet}</span>
               ) : location.pathname.startsWith('/bank') ? (
                 <span className="text-sm font-semibold text-center">{mainSchet.jur2_schet}</span>
-              ) : location.pathname.startsWith('/organization') ? (
+              ) : location.pathname.startsWith('/organization/152') ? (
                 <StepperSelector
-                  value={jur3_schet_id}
-                  onValueChange={(jur3_schet_id) => {
-                    setRequisites({ jur3_schet_id })
+                  value={jur3_schet_152_id}
+                  onValueChange={(jur3_schet_152_id) => {
+                    setRequisites({ jur3_schet_152_id })
                   }}
-                  options={mainSchet.jur3_schets ?? []}
+                  options={mainSchet.jur3_schets_152 ?? []}
+                  getOptionValue={(option) => option.id}
+                  getOptionLabel={(option) => option.schet}
+                />
+              ) : location.pathname.startsWith('/organization/159') ? (
+                <StepperSelector
+                  value={jur3_schet_159_id}
+                  onValueChange={(jur3_schet_159_id) => {
+                    setRequisites({ jur3_schet_159_id })
+                  }}
+                  options={mainSchet.jur3_schets_159 ?? []}
                   getOptionValue={(option) => option.id}
                   getOptionLabel={(option) => option.schet}
                 />
@@ -102,11 +120,11 @@ export const RequisitesController = () => {
         </div>
       </div>
       <RequisitesDialog
-        open={dialogToggle.isOpen}
+        isOpen={dialogToggle.isOpen}
         onOpenChange={dialogToggle.setOpen}
       />
       <RequisitesInfoDialog
-        open={infoToggle.isOpen}
+        isOpen={infoToggle.isOpen}
         onOpenChange={infoToggle.setOpen}
       />
     </>

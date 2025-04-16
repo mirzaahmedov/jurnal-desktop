@@ -32,7 +32,9 @@ const CHECK_UPDATES_INTERVAL = 30 * 1000
 const url =
   import.meta.env.VITE_MODE === 'staging'
     ? 'https://nafaqa.fizmasoft.uz'
-    : 'http://10.50.0.140:4005'
+    : import.meta.env.VITE_MODE === 'region'
+      ? 'http://10.50.0.140:4001'
+      : 'http://10.50.0.140:4005'
 
 const autoUpdater = new NsisUpdater({
   provider: 'generic',
@@ -227,14 +229,13 @@ app.whenReady().then(async () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow()
   })
 
-  if (!interval) {
-    interval = setInterval(() => {
-      if (!autoUpdater.isUpdaterActive()) {
-        autoUpdater.checkForUpdates()
-      }
-      // counter += 1
-    }, CHECK_UPDATES_INTERVAL)
+  if (interval) {
+    clearInterval(interval)
   }
+
+  interval = setInterval(() => {
+    autoUpdater.checkForUpdates()
+  }, CHECK_UPDATES_INTERVAL)
 })
 
 // Quit when all windows are closed, except on macOS. There, it's common
@@ -247,7 +248,9 @@ app.on('window-all-closed', () => {
 })
 
 const cleanup = () => {
-  if (interval) clearInterval(interval)
+  if (interval) {
+    clearInterval(interval)
+  }
 }
 
 app.on('before-quit', () => {

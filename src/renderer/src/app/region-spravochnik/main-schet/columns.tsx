@@ -55,7 +55,7 @@ export const MainSchetColumns: ColumnDef<MainSchet>[] = [
             },
             {
               name: <Trans values={{ nth: 4 }}>mo-nth</Trans>,
-              value: row.jur4_schet
+              value: row.jur4_schets.map((o) => o.schet).join(', ')
             }
           ]}
         />

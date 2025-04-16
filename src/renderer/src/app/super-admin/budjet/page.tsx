@@ -11,7 +11,7 @@ import { useToggle } from '@/common/hooks/use-toggle'
 import { useLayout } from '@/common/layout/store'
 
 import { budgetColumns } from './columns'
-import { budjetQueryKeys } from './config'
+import { BudjetQueryKeys } from './config'
 import BudgetDialog from './dialog'
 import { BudgetService } from './service'
 
@@ -25,15 +25,15 @@ const BudgetPage = () => {
   const { confirm } = useConfirm()
 
   const { data: budgets, isFetching } = useQuery({
-    queryKey: [budjetQueryKeys.getAll],
+    queryKey: [BudjetQueryKeys.getAll],
     queryFn: BudgetService.getAll
   })
   const { mutate: deleteMutation, isPending } = useMutation({
-    mutationKey: [budjetQueryKeys.delete],
+    mutationKey: [BudjetQueryKeys.delete],
     mutationFn: BudgetService.delete,
     onSuccess() {
       queryClient.invalidateQueries({
-        queryKey: [budjetQueryKeys.getAll]
+        queryKey: [BudjetQueryKeys.getAll]
       })
     }
   })

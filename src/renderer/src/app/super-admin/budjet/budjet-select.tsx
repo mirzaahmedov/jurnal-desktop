@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next'
 
 import { SelectField, type SelectFieldProps } from '@/common/components'
 
-import { budjetQueryKeys } from './config'
+import { BudjetQueryKeys } from './config'
 import { BudgetService } from './service'
 
 export interface BudjetSelectProps
@@ -27,7 +27,7 @@ export const BudjetSelect = ({
 }: BudjetSelectProps) => {
   const { t } = useTranslation()
   const { data: budjets, isFetching } = useQuery({
-    queryKey: [budjetQueryKeys.getAll],
+    queryKey: [BudjetQueryKeys.getAll],
     queryFn: BudgetService.getAll
   })
 

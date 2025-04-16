@@ -28,7 +28,8 @@ export const useRequisitesStore = create(
       }
     }),
     {
-      name: 'requisites'
+      name: 'requisites',
+      version: 1
     }
   )
 )

@@ -169,8 +169,8 @@ const SigninPage = () => {
         <div className="flex justify-end">
           <div>
             <LanguageSelect
-              value={language}
-              onValueChange={(value) => {
+              language={language}
+              onLanguageChange={(value) => {
                 i18n.changeLanguage(value)
                 setLanguage(value)
               }}

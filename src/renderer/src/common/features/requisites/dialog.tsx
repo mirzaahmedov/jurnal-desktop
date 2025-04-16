@@ -1,3 +1,5 @@
+import type { MainSchet } from '@/common/models'
+
 import { useEffect } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -5,31 +7,31 @@ import { useQuery } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
-import { MainSchetService } from '@/app/region-spravochnik/main-schet'
-import { BudgetService, budjetQueryKeys } from '@/app/super-admin/budjet'
-import { SelectField } from '@/common/components'
+import { MainSchetQueryKeys, MainSchetService } from '@/app/region-spravochnik/main-schet'
+import { BudgetService, BudjetQueryKeys } from '@/app/super-admin/budjet'
 import { FormElement } from '@/common/components/form'
-import { Button } from '@/common/components/ui/button'
 import {
-  Dialog,
   DialogContent,
   DialogFooter,
   DialogHeader,
-  DialogTitle
-} from '@/common/components/ui/dialog'
+  DialogOverlay,
+  DialogTitle,
+  DialogTrigger
+} from '@/common/components/jolly/dialog'
+import { JollySelect, SelectItem } from '@/common/components/jolly/select'
+import { Button } from '@/common/components/ui/button'
 import { Form, FormField, FormItem, FormLabel, FormMessage } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
 import { useAuthenticationStore } from '@/common/features/auth'
 import { useConfirm } from '@/common/features/confirm'
 
-import { RequisitesQueryKeys } from './config'
 import { RequisitesFormSchema, type RequisitesFormValues, useRequisitesStore } from './store'
 
 export type RequisitesDialogProps = {
-  open: boolean
+  isOpen: boolean
   onOpenChange: (value: boolean) => void
 }
-export const RequisitesDialog = ({ open, onOpenChange }: RequisitesDialogProps) => {
+export const RequisitesDialog = ({ isOpen, onOpenChange }: RequisitesDialogProps) => {
   const { t } = useTranslation()
   const { confirm } = useConfirm()
   const { user } = useAuthenticationStore()
@@ -42,23 +44,23 @@ export const RequisitesDialog = ({ open, onOpenChange }: RequisitesDialogProps) 
   })
 
   const { data: budjets, isLoading: isLoadingBudget } = useQuery({
-    queryKey: [budjetQueryKeys.getAll],
+    queryKey: [BudjetQueryKeys.getAll],
     queryFn: BudgetService.getAll,
-    enabled: open
+    enabled: isOpen
   })
   const { data: schets, isLoading: isLoadingSchets } = useQuery({
     queryKey: [
-      RequisitesQueryKeys.getAll,
+      MainSchetQueryKeys.getAll,
       {
         budjet_id: form.watch('budjet_id')!
       }
     ],
     queryFn: MainSchetService.getAll,
-    enabled: !!form.watch('budjet_id') && open
+    enabled: !!form.watch('budjet_id') && isOpen
   })
 
   const { data: mainSchet } = useQuery({
-    queryKey: [RequisitesQueryKeys.getMainSchetById, form.watch('main_schet_id')],
+    queryKey: [MainSchetQueryKeys.getById, form.watch('main_schet_id')],
     queryFn: MainSchetService.getById,
     enabled: !!form.watch('main_schet_id')
   })
@@ -124,7 +126,7 @@ export const RequisitesDialog = ({ open, onOpenChange }: RequisitesDialogProps) 
   }
 
   useEffect(() => {
-    if (open) {
+    if (isOpen) {
       form.reset({
         budjet_id: useRequisitesStore.getState().budjet_id,
         main_schet_id: useRequisitesStore.getState().main_schet_id,
@@ -133,209 +135,226 @@ export const RequisitesDialog = ({ open, onOpenChange }: RequisitesDialogProps) 
         jur4_schet_id: useRequisitesStore.getState().jur4_schet_id
       })
     }
-  }, [open])
+  }, [isOpen])
 
   return (
-    <Dialog
-      open={open}
+    <DialogTrigger
+      isOpen={isOpen}
       onOpenChange={handleOpenChange}
     >
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle className="titlecase">{t('choose', { what: t('requisites') })}</DialogTitle>
-        </DialogHeader>
-        <Form {...form}>
-          <form
-            onSubmit={onSubmit}
-            className="flex flex-col gap-4"
-          >
-            <FormField
-              control={form.control}
-              name="budjet_id"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t('budjet')}</FormLabel>
-                  <SelectField
-                    {...field}
-                    withFormControl
-                    disabled={isLoadingBudget}
-                    placeholder={t('choose', { what: t('budjet') })}
-                    options={Array.isArray(budjets?.data) ? budjets.data : []}
-                    getOptionValue={(budget) => budget.id.toString()}
-                    getOptionLabel={(budget) => budget.name}
-                    value={field.value ? field.value.toString() : ''}
-                    onValueChange={(value) => {
-                      form.setValue('main_schet_id', 0, {
-                        shouldDirty: true,
-                        shouldValidate: true
-                      })
-                      field.onChange(Number(value))
-                    }}
-                  />
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {form.watch('budjet_id') && user?.region_id ? (
+      <DialogOverlay>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="titlecase">
+              {t('choose', { what: t('requisites') })}
+            </DialogTitle>
+          </DialogHeader>
+          <Form {...form}>
+            <form
+              onSubmit={onSubmit}
+              className="flex flex-col gap-4"
+            >
               <FormField
                 control={form.control}
-                name="main_schet_id"
+                name="budjet_id"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{t('raschet-schet')}</FormLabel>
-                    <SelectField
-                      {...field}
-                      withFormControl
-                      disabled={isLoadingSchets}
-                      placeholder={t('choose', { what: t('raschet-schet') })}
-                      options={Array.isArray(schets?.data) ? schets.data : []}
-                      getOptionValue={(account) => account.id.toString()}
-                      getOptionLabel={(account) => account.account_number}
-                      onOptionSelect={(option) => {
-                        form.setValue('jur3_schet_152_id', option?.jur3_schets_152?.[0]?.id ?? 0, {
+                    <FormLabel>{t('budjet')}</FormLabel>
+                    <JollySelect
+                      isDisabled={isLoadingBudget}
+                      placeholder={t('choose', { what: t('budjet') })}
+                      items={Array.isArray(budjets?.data) ? budjets.data : []}
+                      selectedKey={field.value ?? ''}
+                      onSelectionChange={(value) => {
+                        form.setValue('main_schet_id', 0, {
                           shouldDirty: true,
                           shouldValidate: true
                         })
-                        form.setValue('jur3_schet_159_id', option?.jur3_schets_159?.[0]?.id ?? 0, {
+                        form.setValue('jur3_schet_152_id', 0, {
                           shouldDirty: true,
                           shouldValidate: true
                         })
-                        form.setValue('jur4_schet_id', option?.jur4_schets?.[0]?.id ?? 0, {
+                        form.setValue('jur3_schet_159_id', 0, {
                           shouldDirty: true,
                           shouldValidate: true
                         })
-                        field.onChange(Number(option.id))
+                        form.setValue('jur4_schet_id', 0, {
+                          shouldDirty: true,
+                          shouldValidate: true
+                        })
+                        field.onChange(value)
                       }}
-                      value={field.value ? field.value.toString() : ''}
-                      onValueChange={(value) => {
-                        field.onChange(Number(value))
-                      }}
-                    />
+                    >
+                      {(item) => <SelectItem id={item.id}>{item.name}</SelectItem>}
+                    </JollySelect>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-            ) : null}
 
-            {mainSchet ? (
-              <>
-                <FormElement
-                  direction="column"
-                  label={
-                    <>
-                      {t('mo-nth', { nth: 1 })} {t('schet').toLowerCase()}
-                    </>
-                  }
-                >
-                  <Input
-                    readOnly
-                    value={mainSchet.data?.jur1_schet}
+              {form.watch('budjet_id') && user?.region_id ? (
+                <FormField
+                  control={form.control}
+                  name="main_schet_id"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{t('raschet-schet')}</FormLabel>
+                      <JollySelect
+                        isDisabled={isLoadingSchets}
+                        placeholder={t('choose', { what: t('raschet-schet') })}
+                        items={Array.isArray(schets?.data) ? schets.data : []}
+                        selectedKey={field.value ?? ''}
+                        onSelectionChange={(value) => {
+                          field.onChange(value)
+
+                          const option =
+                            schets?.data?.find((item) => item.id === Number(value)) ??
+                            ({} as MainSchet)
+
+                          form.setValue(
+                            'jur3_schet_152_id',
+                            option?.jur3_schets_152?.[0]?.id ?? 0,
+                            {
+                              shouldDirty: true,
+                              shouldValidate: true
+                            }
+                          )
+                          form.setValue(
+                            'jur3_schet_159_id',
+                            option?.jur3_schets_159?.[0]?.id ?? 0,
+                            {
+                              shouldDirty: true,
+                              shouldValidate: true
+                            }
+                          )
+                          form.setValue('jur4_schet_id', option?.jur4_schets?.[0]?.id ?? 0, {
+                            shouldDirty: true,
+                            shouldValidate: true
+                          })
+                        }}
+                      >
+                        {(item) => <SelectItem id={item.id}>{item.account_number}</SelectItem>}
+                      </JollySelect>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              ) : null}
+
+              {mainSchet ? (
+                <>
+                  <FormElement
+                    direction="column"
+                    label={
+                      <>
+                        {t('mo-nth', { nth: 1 })} {t('schet').toLowerCase()}
+                      </>
+                    }
+                  >
+                    <Input
+                      readOnly
+                      value={mainSchet.data?.jur1_schet ?? ''}
+                    />
+                  </FormElement>
+                  <FormElement
+                    direction="column"
+                    label={
+                      <>
+                        {t('mo-nth', { nth: 2 })} {t('schet').toLowerCase()}
+                      </>
+                    }
+                  >
+                    <Input
+                      readOnly
+                      value={mainSchet.data?.jur2_schet ?? ''}
+                    />
+                  </FormElement>
+                  <FormField
+                    control={form.control}
+                    name="jur3_schet_152_id"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>
+                          {t('mo-nth', { nth: 152 })} {t('schet').toLowerCase()}
+                        </FormLabel>
+                        <JollySelect
+                          placeholder={t('choose', { what: t('schet').toLowerCase() })}
+                          items={
+                            Array.isArray(mainSchet.data?.jur3_schets_152)
+                              ? mainSchet.data?.jur3_schets_152
+                              : []
+                          }
+                          selectedKey={field.value ?? ''}
+                          onSelectionChange={(value) => field.onChange(value)}
+                        >
+                          {(item) => <SelectItem id={item.id}>{item.schet}</SelectItem>}
+                        </JollySelect>
+                        <FormMessage />
+                      </FormItem>
+                    )}
                   />
-                </FormElement>
-                <FormElement
-                  direction="column"
-                  label={
-                    <>
-                      {t('mo-nth', { nth: 2 })} {t('schet').toLowerCase()}
-                    </>
-                  }
-                >
-                  <Input
-                    readOnly
-                    value={mainSchet.data?.jur2_schet}
+
+                  <FormField
+                    control={form.control}
+                    name="jur3_schet_159_id"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>
+                          {t('mo-nth', { nth: 159 })} {t('schet').toLowerCase()}
+                        </FormLabel>
+
+                        <JollySelect
+                          placeholder={t('choose', { what: t('schet').toLowerCase() })}
+                          items={
+                            Array.isArray(mainSchet.data?.jur3_schets_159)
+                              ? mainSchet.data?.jur3_schets_159
+                              : []
+                          }
+                          selectedKey={field.value ?? ''}
+                          onSelectionChange={(value) => field.onChange(value)}
+                        >
+                          {(item) => <SelectItem id={item.id}>{item.schet}</SelectItem>}
+                        </JollySelect>
+                        <FormMessage />
+                      </FormItem>
+                    )}
                   />
-                </FormElement>
-                <FormField
-                  control={form.control}
-                  name="jur3_schet_152_id"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>
-                        {t('mo-nth', { nth: 152 })} {t('schet').toLowerCase()}
-                      </FormLabel>
-                      <SelectField
-                        {...field}
-                        withFormControl
-                        placeholder={t('choose', { what: t('schet').toLowerCase() })}
-                        options={
-                          Array.isArray(mainSchet.data?.jur3_schets_152)
-                            ? mainSchet.data?.jur3_schets_152
-                            : []
-                        }
-                        getOptionValue={(schet) => schet.id}
-                        getOptionLabel={(schet) => schet.schet}
-                        value={field.value ? field.value.toString() : ''}
-                        onValueChange={(value) => field.onChange(Number(value))}
-                      />
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
 
-                <FormField
-                  control={form.control}
-                  name="jur3_schet_159_id"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>
-                        {t('mo-nth', { nth: 159 })} {t('schet').toLowerCase()}
-                      </FormLabel>
-                      <SelectField
-                        {...field}
-                        withFormControl
-                        placeholder={t('choose', { what: t('schet').toLowerCase() })}
-                        options={
-                          Array.isArray(mainSchet.data?.jur3_schets_159)
-                            ? mainSchet.data?.jur3_schets_159
-                            : []
-                        }
-                        getOptionValue={(schet) => schet.id}
-                        getOptionLabel={(schet) => schet.schet}
-                        value={field.value ? field.value.toString() : ''}
-                        onValueChange={(value) => field.onChange(Number(value))}
-                      />
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                  <FormField
+                    control={form.control}
+                    name="jur4_schet_id"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>
+                          {t('mo-nth', { nth: 4 })} {t('schet').toLowerCase()}
+                        </FormLabel>
+                        <JollySelect
+                          placeholder={t('choose', { what: t('schet').toLowerCase() })}
+                          items={
+                            Array.isArray(mainSchet.data?.jur4_schets)
+                              ? mainSchet.data?.jur4_schets
+                              : []
+                          }
+                          selectedKey={field.value ?? ''}
+                          onSelectionChange={(value) => field.onChange(value)}
+                        >
+                          {(item) => <SelectItem id={item.id}>{item.schet}</SelectItem>}
+                        </JollySelect>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </>
+              ) : null}
 
-                <FormField
-                  control={form.control}
-                  name="jur4_schet_id"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>
-                        {t('mo-nth', { nth: 4 })} {t('schet').toLowerCase()}
-                      </FormLabel>
-                      <SelectField
-                        {...field}
-                        withFormControl
-                        placeholder={t('choose', { what: t('schet').toLowerCase() })}
-                        options={
-                          Array.isArray(mainSchet.data?.jur4_schets)
-                            ? mainSchet.data?.jur4_schets
-                            : []
-                        }
-                        getOptionValue={(schet) => schet.id}
-                        getOptionLabel={(schet) => schet.schet}
-                        value={field.value ? field.value.toString() : ''}
-                        onValueChange={(value) => field.onChange(Number(value))}
-                      />
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </>
-            ) : null}
-
-            <DialogFooter>
-              <Button>{t('save')}</Button>
-            </DialogFooter>
-          </form>
-        </Form>
-      </DialogContent>
-    </Dialog>
+              <DialogFooter>
+                <Button>{t('save')}</Button>
+              </DialogFooter>
+            </form>
+          </Form>
+        </DialogContent>
+      </DialogOverlay>
+    </DialogTrigger>
   )
 }
 const defaultValues: RequisitesFormValues = {

@@ -1,6 +1,6 @@
 {
   "name": "jurnal.desktop",
-  "version": "1.0.191",
+  "version": "1.0.193",
   "description": "An Electron application with React and TypeScript",
   "main": "./out/main/index.js",
   "author": "example.com",
@@ -20,10 +20,12 @@
     "dev": "electron-vite dev",
     "build": "cross-env VITE_MODE=staging electron-vite build",
     "build-prod": "cross-env VITE_MODE=prod electron-vite build",
+    "build-region": "cross-env VITE_MODE=region electron-vite build",
     "postinstall": "electron-builder install-app-deps",
     "build:unpack": "pnpm run build && electron-builder --dir",
     "build:win": "pnpm run build && cross-env VITE_MODE=staging electron-builder --win",
     "build:win-prod": "pnpm run build-prod && cross-env VITE_MODE=prod electron-builder --win",
+    "build:win-region": "pnpm run build-region && cross-env VITE_MODE=region electron-builder --win",
     "build:mac": "electron-vite build && electron-builder --mac",
     "build:linux": "electron-vite build && electron-builder --linux",
     "clean": "rm -rf out dist"
@@ -32,6 +34,7 @@
     "@electron-toolkit/preload": "^3.0.1",
     "@electron-toolkit/utils": "^3.0.0",
     "@hookform/resolvers": "^3.9.1",
+    "@internationalized/date": "^3.8.0",
     "@radix-ui/react-accordion": "^1.2.2",
     "@radix-ui/react-alert-dialog": "^1.1.3",
     "@radix-ui/react-aspect-ratio": "^1.1.2",

@@ -155,7 +155,11 @@ export const createOperatsiiEditor = withEditorProps<{
           options={filteredOperatsiiOptions ?? []}
           disabled={(!!operatsiiSpravochnik.selected && subschet !== undefined) || !schet}
           value={value?.toString()}
-          getOptionLabel={(option) => option.sub_schet}
+          getOptionLabel={(option) => (
+            <div>
+              {option.sub_schet} - {option.name}
+            </div>
+          )}
           getOptionValue={(option) => option.id.toString()}
           onSelect={(option) => {
             if (value !== option.id) {
@@ -167,6 +171,7 @@ export const createOperatsiiEditor = withEditorProps<{
             }
           }}
           popoverProps={{
+            className: 'w-[600px]',
             onCloseAutoFocus: (e) => {
               if (editorState.current.clickedOutside) {
                 e.preventDefault()

@@ -1,60 +1,48 @@
-import { useContext } from 'react'
-
-import { Cross2Icon } from '@radix-ui/react-icons'
+import { Button } from '@/common/components/jolly/button'
 import {
-  Dialog,
-  DialogContext,
-  DialogTrigger,
-  Heading,
-  Input,
-  Label,
-  Modal,
-  ModalOverlay,
-  OverlayTriggerStateContext,
-  Pressable,
-  TextField
-} from 'react-aria-components'
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogOverlay,
+  DialogTitle,
+  DialogTrigger
+} from '@/common/components/jolly/dialog'
 
-import { Button } from '@/common/components/ui/button'
-
-const DialogClose = () => {
-  const state = useContext(OverlayTriggerStateContext)
+const DemoDialog = () => {
   return (
-    <Button
-      onClick={() => {
-        state?.close()
-      }}
-    >
-      <Cross2Icon />
-    </Button>
+    <DialogTrigger>
+      <Button variant="outline">Sign up...</Button>
+      <DialogOverlay>
+        <DialogContent className="sm:max-w-[425px]">
+          {({ close }) => (
+            <>
+              <DialogHeader>
+                <DialogTitle>Sign up</DialogTitle>
+              </DialogHeader>
+              <div className="grid gap-4 py-4">
+                <h1>Content</h1>
+                <DemoDialog />
+              </div>
+              <DialogFooter>
+                <Button
+                  onPress={close}
+                  type="submit"
+                >
+                  Save changes
+                </Button>
+              </DialogFooter>
+            </>
+          )}
+        </DialogContent>
+      </DialogOverlay>
+    </DialogTrigger>
   )
 }
 
 const DemoPage = () => {
   return (
-    <div className="flex-1 w-full h-full p-10">
-      <DialogTrigger>
-        <Pressable>
-          <Button>Sign up…</Button>
-        </Pressable>
-        <Modal className="group fixed inset-0 z-[100] bg-black/50 grid place-items-center data-[entering]:animate-in data-[entering]:fade-in data-[entering]:duration-100 data-[exiting]:animate-out data-[exiting]:fade-out data-[exiting]:duration-75">
-          <Dialog className="bg-white w-full max-w-[800px] h-full max-h-[400px] p-5">
-            <form>
-              <DialogClose />
-              <Heading slot="title">Sign up</Heading>
-              <TextField autoFocus>
-                <Label>First Name:</Label>
-                <Input />
-              </TextField>
-              <TextField>
-                <Label>Last Name:</Label>
-                <Input />
-              </TextField>
-              <Button slot="close">Submit</Button>
-            </form>
-          </Dialog>
-        </Modal>
-      </DialogTrigger>
+    <div>
+      <DemoDialog />
     </div>
   )
 }
