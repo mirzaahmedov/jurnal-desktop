@@ -13,6 +13,7 @@ import { SaldoQueryKeys } from '@/app/jur_7/saldo'
 import { handleOstatokResponse } from '@/app/jur_7/saldo/utils'
 import { Form } from '@/common/components/ui/form'
 import { DocumentType } from '@/common/features/doc-num'
+import { useRequisitesStore } from '@/common/features/requisites'
 import { useSelectedMonthStore } from '@/common/features/selected-month'
 import { validateDateWithinSelectedMonth } from '@/common/features/selected-month'
 import { useSnippets } from '@/common/features/snippents/use-snippets'
@@ -46,17 +47,28 @@ const RasxodDetails = ({ id, onSuccess }: RasxodDetailsProps) => {
 
   const { t } = useTranslation(['app'])
   const { startDate, endDate } = useSelectedMonthStore()
+  const { budjet_id, main_schet_id } = useRequisitesStore()
   const { snippets, addSnippet, removeSnippet } = useSnippets({
     ns: 'jur7_rasxod'
   })
 
   const form = useForm({
-    defaultValues,
+    defaultValues: {
+      ...defaultValues,
+      doc_date: formatDate(startDate)
+    },
     resolver: zodResolver(RasxodFormSchema)
   })
 
   const { data: rasxod, isFetching } = useQuery({
-    queryKey: [RasxodQueryKeys.get, Number(id)],
+    queryKey: [
+      RasxodQueryKeys.get,
+      Number(id),
+      {
+        budjet_id,
+        main_schet_id
+      }
+    ],
     queryFn: WarehouseRasxodService.getById,
     enabled: !!id
   })
@@ -145,7 +157,6 @@ const RasxodDetails = ({ id, onSuccess }: RasxodDetailsProps) => {
       })
       return
     }
-    form.reset(defaultValues)
   }, [form, rasxod])
 
   const kimdan_id = form.watch('kimdan_id')
