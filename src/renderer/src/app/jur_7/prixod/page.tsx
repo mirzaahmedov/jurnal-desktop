@@ -158,6 +158,7 @@ const Jurnal7PrixodPage = () => {
                 params={{
                   from: dates.from,
                   to: dates.to,
+                  budjet_id,
                   main_schet_id,
                   excel: true
                 }}

@@ -118,6 +118,7 @@ export const Jur7MonitorPage = () => {
                 params={{
                   to: dates.to,
                   budjet_id,
+                  main_schet_id,
                   excel: true
                 }}
                 buttonText="Оборотка"
@@ -134,6 +135,7 @@ export const Jur7MonitorPage = () => {
                   year: startDate.getFullYear(),
                   month: startDate.getMonth() + 1,
                   budjet_id,
+                  main_schet_id,
                   excel: true
                 }}
                 buttonText="Материальная"
@@ -149,6 +151,7 @@ export const Jur7MonitorPage = () => {
                   month: startDate.getMonth() + 1,
                   year: startDate.getFullYear(),
                   budjet_id,
+                  main_schet_id,
                   report_title_id,
                   excel: true
                 }}
@@ -164,6 +167,7 @@ export const Jur7MonitorPage = () => {
                 params={{
                   to: dates.to,
                   budjet_id,
+                  main_schet_id,
                   excel: true
                 }}
                 buttonText="Шапка (2)"
