@@ -9,7 +9,7 @@ import {
 import { cn } from '@/common/lib/utils'
 
 export interface MonitorTableProps
-  extends Omit<EditableTableProps<JUR8MonitorFormValues>, 'columnDefs' | 'data'> {
+  extends Omit<EditableTableProps<JUR8MonitorFormValues, 'childs'>, 'columnDefs' | 'data'> {
   columns: EditableColumnDef<JUR8MonitorChild>[]
 }
 export const MonitorTable = ({ columns, ...props }: MonitorTableProps) => {

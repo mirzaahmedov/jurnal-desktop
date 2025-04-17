@@ -274,7 +274,7 @@ const OrganSaldoDetailsPage = () => {
               <SearchInput onKeyDown={handleSearch} />
               <div className="flex items-center gap-5">
                 <MonthPicker
-                  disabled={isEditable}
+                  isDisabled={isEditable}
                   value={date}
                   onChange={(value) => {
                     const date = new Date(value)
@@ -312,14 +312,12 @@ const OrganSaldoDetailsPage = () => {
                 ) : null}
               </div>
             </div>
-            <div className="overflow-auto scrollbar flex-1 relative">
-              <OrganSaldoTable
-                columnDefs={columns}
-                methods={tableMethods}
-                form={form}
-                name="organizations"
-              />
-            </div>
+            <OrganSaldoTable
+              columnDefs={columns}
+              methods={tableMethods}
+              form={form}
+              name="organizations"
+            />
           </div>
 
           <DetailsView.Footer>

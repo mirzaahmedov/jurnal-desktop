@@ -3,7 +3,6 @@ import type { ArrayPath, FieldArrayWithId, Path } from 'react-hook-form'
 
 import { type HTMLAttributes, useImperativeHandle, useMemo, useRef, useState } from 'react'
 
-import { useVirtualizer } from '@tanstack/react-virtual'
 import { CircleMinus, CirclePlus, SquareMinus } from 'lucide-react'
 import { Controller, type FieldErrors, useFieldArray } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -21,14 +20,13 @@ export const EditableTable = <T extends object, F extends ArrayPath<NoInfer<T>>>
   props: EditableTableProps<T, F>
 ) => {
   const {
-    withVirtualization,
-    scrollRef,
     tableRef,
     tabIndex,
     name,
     form,
     columnDefs,
     className,
+    divProps,
     errors,
     placeholder,
     onCreate,
@@ -41,9 +39,11 @@ export const EditableTable = <T extends object, F extends ArrayPath<NoInfer<T>>>
     methods
   } = props
 
+  const divRef = useRef<HTMLDivElement>(null)
   const innerRef = useRef<HTMLTableElement>(null)
-  const headerGroups = useMemo(() => getHeaderGroups(columnDefs), [columnDefs])
   const ref = tableRef || innerRef
+
+  const headerGroups = useMemo(() => getHeaderGroups(columnDefs), [columnDefs])
 
   const [highlightedRows, setHighlightedRows] = useState<number[]>([])
 
@@ -52,13 +52,6 @@ export const EditableTable = <T extends object, F extends ArrayPath<NoInfer<T>>>
   const { fields: rows } = useFieldArray({
     control: form.control,
     name
-  })
-
-  const rowVirtualizer = useVirtualizer({
-    count: rows.length,
-    getScrollElement: () => scrollRef?.current ?? null,
-    estimateSize: () => 44,
-    overscan: 20
   })
 
   useImperativeHandle(
@@ -86,6 +79,8 @@ export const EditableTable = <T extends object, F extends ArrayPath<NoInfer<T>>>
 
   return (
     <div
+      {...divProps}
+      ref={divRef}
       onSubmit={(e) => {
         e.preventDefault()
         e.stopPropagation()
@@ -96,10 +91,17 @@ export const EditableTable = <T extends object, F extends ArrayPath<NoInfer<T>>>
           block: 'nearest'
         })
       }}
+      className={cn(
+        'relative min-h-[400px] max-h-full overflow-auto scrollbar',
+        divProps?.className
+      )}
     >
       <Table
         ref={ref}
-        className={cn('border border-slate-200', className)}
+        className={cn(
+          'relative min-h-[400px] max-h-full overflow-auto scrollbar border border-slate-200',
+          className
+        )}
       >
         <TableHeader className="sticky top-0 z-50 shadow-sm">
           {Array.isArray(columnDefs)
@@ -174,71 +176,35 @@ export const EditableTable = <T extends object, F extends ArrayPath<NoInfer<T>>>
         </TableHeader>
         <TableBody>
           {Array.isArray(rows) && rows.length ? (
-            withVirtualization ? (
-              rowVirtualizer.getVirtualItems().map((virtual, index) => (
-                <EditableTableRowRenderer
-                  key={virtual.key}
-                  index={virtual.index}
-                  tabIndex={tabIndex}
-                  row={rows[virtual.index] as any}
-                  rows={rows as any}
-                  name={name}
-                  form={form}
-                  columnDefs={columnDefs}
-                  errors={errors}
-                  onDelete={onDelete}
-                  onCellDoubleClick={onCellDoubleClick}
-                  params={params}
-                  validate={validate}
-                  getEditorProps={getEditorProps}
-                  getRowClassName={getRowClassName}
-                  highlightedRows={highlightedRows}
-                  onHighlight={(index) => {
-                    setHighlightedRows((prev) => {
-                      if (prev.includes(index)) {
-                        return prev.filter((i) => i !== index)
-                      } else {
-                        return [...prev, index]
-                      }
-                    })
-                  }}
-                  style={{
-                    height: `${virtual.size}px`,
-                    transform: `translateY(${virtual.start - index * virtual.size}px)`
-                  }}
-                />
-              ))
-            ) : (
-              rows.map((row, index) => (
-                <EditableTableRowRenderer
-                  key={index}
-                  index={index}
-                  tabIndex={tabIndex}
-                  row={row as any}
-                  rows={rows as any}
-                  name={name}
-                  form={form}
-                  columnDefs={columnDefs}
-                  errors={errors}
-                  onDelete={onDelete}
-                  onCellDoubleClick={onCellDoubleClick}
-                  params={params}
-                  validate={validate}
-                  getEditorProps={getEditorProps}
-                  getRowClassName={getRowClassName}
-                  highlightedRows={highlightedRows}
-                  onHighlight={(index) => {
-                    setHighlightedRows((prev) => {
-                      if (prev.includes(index)) {
-                        return prev.filter((i) => i !== index)
-                      } else {
-                        return [...prev, index]
-                      }
-                    })
-                  }}
-                />
-              ))
-            )
+            rows.map((row, index) => (
+              <EditableTableRowRenderer
+                key={index}
+                index={index}
+                tabIndex={tabIndex}
+                row={row as any}
+                rows={rows as any}
+                name={name}
+                form={form}
+                columnDefs={columnDefs}
+                errors={errors}
+                onDelete={onDelete}
+                onCellDoubleClick={onCellDoubleClick}
+                params={params}
+                validate={validate}
+                getEditorProps={getEditorProps}
+                getRowClassName={getRowClassName}
+                highlightedRows={highlightedRows}
+                onHighlight={(index) => {
+                  setHighlightedRows((prev) => {
+                    if (prev.includes(index)) {
+                      return prev.filter((i) => i !== index)
+                    } else {
+                      return [...prev, index]
+                    }
+                  })
+                }}
+              />
+            ))
           ) : (
             <EditableTableRow>
               <EditableTableCell

@@ -6,12 +6,12 @@ import { uz } from 'date-fns/locale/uz'
 import { CalendarIcon, ChevronLeft, ChevronRight } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { Button, type ButtonProps, buttonVariants } from '@/common/components/ui/button'
+import { Button, type ButtonProps } from '@/common/components/jolly/button'
+import { Popover, PopoverDialog, PopoverTrigger } from '@/common/components/jolly/popover'
 import { formatDate, parseDate } from '@/common/lib/date'
 import { cn } from '@/common/lib/utils'
 
 import { useToggle } from '../hooks'
-import { Popover, PopoverContent, PopoverTrigger } from './ui/popover'
 
 export interface MonthCalendarProps {
   month: Date
@@ -30,12 +30,12 @@ export const MonthCalendar = ({ month, onMonthChange }: MonthCalendarProps) => {
     end: endOfYear(firstDayCurrentYear)
   })
 
-  const previousYear = () => {
+  const handlePrevYear = () => {
     const firstDayNextYear = add(firstDayCurrentYear, { years: -1 })
     setCurrentYear(format(firstDayNextYear, 'yyyy'))
   }
 
-  const nextYear = () => {
+  const handleNextYear = () => {
     const firstDayNextYear = add(firstDayCurrentYear, { years: 1 })
     setCurrentYear(format(firstDayNextYear, 'yyyy'))
   }
@@ -54,32 +54,32 @@ export const MonthCalendar = ({ month, onMonthChange }: MonthCalendarProps) => {
               {format(firstDayCurrentYear, 'yyyy')}
             </div>
             <div className="flex items-center space-x-1">
-              <button
+              <Button
+                variant="outline"
                 name="previous-year"
                 aria-label="Go to previous year"
                 className={cn(
-                  buttonVariants({ variant: 'outline' }),
                   'h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100',
                   'absolute left-1'
                 )}
                 type="button"
-                onClick={previousYear}
+                onPress={handlePrevYear}
               >
                 <ChevronLeft className="h-4 w-4" />
-              </button>
-              <button
+              </Button>
+              <Button
+                variant="outline"
                 name="next-year"
                 aria-label="Go to next year"
                 className={cn(
-                  buttonVariants({ variant: 'outline' }),
                   'h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100',
                   'absolute right-1 disabled:bg-slate-100'
                 )}
                 type="button"
-                onClick={nextYear}
+                onPress={handleNextYear}
               >
                 <ChevronRight className="h-4 w-4" />
-              </button>
+              </Button>
             </div>
           </div>
           <div
@@ -87,22 +87,26 @@ export const MonthCalendar = ({ month, onMonthChange }: MonthCalendarProps) => {
             role="grid"
             aria-labelledby="month-picker"
           >
-            {months.map((month) => (
+            {months.map((current) => (
               <div
-                key={month.toString()}
+                key={current.toString()}
                 className="relative p-0 text-center text-sm focus-within:relative focus-within:z-20 [&:has([aria-selected])]:bg-slate-100 first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md dark:[&:has([aria-selected])]:bg-slate-800"
                 role="presentation"
               >
                 <Button
+                  excludeFromTabOrder
                   name="day"
-                  role="gridcell"
-                  variant="ghost"
-                  tabIndex={-1}
+                  variant={
+                    current.getMonth() === month.getMonth() &&
+                    current.getFullYear() === month.getFullYear()
+                      ? 'default'
+                      : 'ghost'
+                  }
                   type="button"
-                  onClick={() => onMonthChange(month)}
+                  onPress={() => onMonthChange(current)}
                 >
-                  <time dateTime={format(month, 'yyyy-MM-dd')}>
-                    {format(month, 'MMM', {
+                  <time dateTime={format(current, 'yyyy-MM-dd')}>
+                    {format(current, 'MMM', {
                       locale: i18n.language === 'ru' ? ru : uz
                     })}
                   </time>
@@ -139,32 +143,28 @@ export const MonthPicker = ({
   }
 
   return (
-    <Popover
-      open={popperToggle.isOpen}
+    <PopoverTrigger
+      isOpen={popperToggle.isOpen}
       onOpenChange={popperToggle.setOpen}
-      modal={false}
     >
-      <PopoverTrigger
-        disabled={readOnly}
-        asChild
+      <Button
+        variant="outline"
+        className={cn('flex items-center gap-1', readOnly && 'disabled:opacity-100', className)}
+        {...props}
       >
-        <Button
-          variant="outline"
-          className={cn('flex items-center gap-1', readOnly && 'disabled:opacity-100', className)}
-          {...props}
-        >
-          <CalendarIcon className="size-4 mx-0" />
-          {format(date, 'yyyy MMMM', {
-            locale: i18n.language === 'ru' ? ru : uz
-          })}
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent>
-        <MonthCalendar
-          month={date}
-          onMonthChange={setDate}
-        />
-      </PopoverContent>
-    </Popover>
+        <CalendarIcon className="size-4 mx-0" />
+        {format(date, 'yyyy MMMM', {
+          locale: i18n.language === 'ru' ? ru : uz
+        })}
+      </Button>
+      <Popover>
+        <PopoverDialog>
+          <MonthCalendar
+            month={date}
+            onMonthChange={setDate}
+          />
+        </PopoverDialog>
+      </Popover>
+    </PopoverTrigger>
   )
 }

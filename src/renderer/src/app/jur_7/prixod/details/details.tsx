@@ -37,7 +37,7 @@ import {
 } from '@/common/widget/form'
 
 import { iznosQueryKeys } from '../../iznos/config'
-import { saldoQueryKeys } from '../../saldo'
+import { SaldoQueryKeys } from '../../saldo'
 import { PrixodFormSchema, defaultValues, prixodQueryKeys } from '../config'
 import { usePrixodCreate, usePrixodGet, usePrixodUpdate } from '../service'
 import { ExistingDocumentsAlert } from './existing-document-alert'
@@ -76,10 +76,10 @@ const PrixodDetails = ({ id, onSuccess }: PrixodDetailsProps) => {
         queryKey: [prixodQueryKeys.getAll]
       })
       queryClient.invalidateQueries({
-        queryKey: [saldoQueryKeys.check]
+        queryKey: [SaldoQueryKeys.check]
       })
       queryClient.invalidateQueries({
-        queryKey: [saldoQueryKeys.getAll]
+        queryKey: [SaldoQueryKeys.getAll]
       })
       queryClient.invalidateQueries({
         queryKey: [iznosQueryKeys.getAll]
@@ -97,10 +97,10 @@ const PrixodDetails = ({ id, onSuccess }: PrixodDetailsProps) => {
         queryKey: [prixodQueryKeys.getAll]
       })
       queryClient.invalidateQueries({
-        queryKey: [saldoQueryKeys.check]
+        queryKey: [SaldoQueryKeys.check]
       })
       queryClient.invalidateQueries({
-        queryKey: [saldoQueryKeys.getAll]
+        queryKey: [SaldoQueryKeys.getAll]
       })
       queryClient.invalidateQueries({
         queryKey: [iznosQueryKeys.getAll]

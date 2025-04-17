@@ -330,5 +330,7 @@
   "documents": "Документы",
   "next": "Следующий",
   "select-podotchet": "Выберите подотчетное лицо.",
-  "select-organization": "Выберите организацию."
+  "select-organization": "Выберите организацию.",
+  "clean_current_month": "Очистить текущий месяц",
+  "delete_for_current_month": "Удалить данные за текущий месяц"
 }

@@ -329,5 +329,7 @@
   "documents": "Hujjatlar",
   "next": "Keyingisi",
   "select-podotchet": "Mas’ul shaxsni tanlang.",
-  "select-organization": "Tashkilotni tanlang."
+  "select-organization": "Tashkilotni tanlang.",
+  "clean_current_month": "Joriy oyni tozalash",
+  "delete_for_current_month": "Joriy oy uchun ma'lumotlarni o‘chirish"
 }

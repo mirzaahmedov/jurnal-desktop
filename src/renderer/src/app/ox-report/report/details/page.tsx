@@ -177,7 +177,7 @@ const OXReportDetailsPage = () => {
             tabIndex={5}
             columnDefs={provodkaColumns}
             data={form.watch('childs')}
-            errors={form.formState.errors.childs}
+            errors={form.formState.errors}
             onCreate={createEditorCreateHandler({
               form,
               schema: OXReportProvodkaSchema,

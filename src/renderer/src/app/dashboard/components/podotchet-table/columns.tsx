@@ -1,5 +1,5 @@
 import type { Dashboard } from '../../model'
-import type { ColumnDef } from '@/common/components/collapsible-table'
+import type { ColumnDef } from '@/common/components'
 
 import { t } from 'i18next'
 

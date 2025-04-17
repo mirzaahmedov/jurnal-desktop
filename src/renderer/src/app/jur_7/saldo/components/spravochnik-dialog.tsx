@@ -23,8 +23,8 @@ import { useRequisitesStore } from '@/common/features/requisites'
 import { usePagination } from '@/common/hooks'
 
 import { ostatokProductColumns } from '../columns'
-import { saldoQueryKeys } from '../config'
-import { ostatokProductService } from '../service'
+import { SaldoQueryKeys } from '../config'
+import { MaterialWarehouseSaldoProductService } from '../service'
 
 enum TabOption {
   ALL = 'ALL',
@@ -56,7 +56,7 @@ export const OstatokSpravochnikDialog = ({
 
   const { data: ostatok, isFetching } = useQuery({
     queryKey: [
-      saldoQueryKeys.getAll,
+      SaldoQueryKeys.getAll,
       {
         to,
         page: pagination.page,
@@ -67,7 +67,7 @@ export const OstatokSpravochnikDialog = ({
         responsible_id
       }
     ],
-    queryFn: ostatokProductService.getAll,
+    queryFn: MaterialWarehouseSaldoProductService.getAll,
     enabled: !!budjet_id && !!responsible_id
   })
 

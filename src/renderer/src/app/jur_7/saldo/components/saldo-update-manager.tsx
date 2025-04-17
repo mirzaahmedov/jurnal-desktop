@@ -10,8 +10,8 @@ import {
 } from '@/common/features/saldo'
 
 import { iznosQueryKeys } from '../../iznos/config'
-import { saldoQueryKeys } from '../config'
-import { ostatokService } from '../service'
+import { SaldoQueryKeys } from '../config'
+import { MaterialWarehouseSaldoService } from '../service'
 
 export const MaterialWarehouseSaldoUpdateManager = () => {
   const queryClient = useQueryClient()
@@ -27,8 +27,8 @@ export const MaterialWarehouseSaldoUpdateManager = () => {
     isPending,
     error
   } = useMutation({
-    mutationKey: [saldoQueryKeys.create],
-    mutationFn: ostatokService.create,
+    mutationKey: [SaldoQueryKeys.create],
+    mutationFn: MaterialWarehouseSaldoService.create,
     onSuccess(_, values) {
       const newQueue = dequeueMonth(values)
       setCompleted((prev) => [...prev, values])
@@ -38,7 +38,7 @@ export const MaterialWarehouseSaldoUpdateManager = () => {
       }
 
       queryClient.invalidateQueries({
-        queryKey: [saldoQueryKeys.getAll]
+        queryKey: [SaldoQueryKeys.getAll]
       })
       queryClient.invalidateQueries({
         queryKey: [iznosQueryKeys.getAll]

@@ -9,7 +9,7 @@ import { toast } from 'react-toastify'
 
 import { iznosQueryKeys } from '@/app/jur_7/iznos/config'
 import { createResponsibleSpravochnik } from '@/app/jur_7/responsible/service'
-import { saldoQueryKeys } from '@/app/jur_7/saldo'
+import { SaldoQueryKeys } from '@/app/jur_7/saldo'
 import { handleOstatokResponse } from '@/app/jur_7/saldo/utils'
 import { Form } from '@/common/components/ui/form'
 import { DocumentType } from '@/common/features/doc-num'
@@ -65,10 +65,10 @@ const RasxodDetails = ({ id, onSuccess }: RasxodDetailsProps) => {
         queryKey: [rasxodQueryKeys.getAll]
       })
       queryClient.invalidateQueries({
-        queryKey: [saldoQueryKeys.check]
+        queryKey: [SaldoQueryKeys.check]
       })
       queryClient.invalidateQueries({
-        queryKey: [saldoQueryKeys.getAll]
+        queryKey: [SaldoQueryKeys.getAll]
       })
       queryClient.invalidateQueries({
         queryKey: [iznosQueryKeys.getAll]
@@ -86,10 +86,10 @@ const RasxodDetails = ({ id, onSuccess }: RasxodDetailsProps) => {
         queryKey: [rasxodQueryKeys.getAll]
       })
       queryClient.invalidateQueries({
-        queryKey: [saldoQueryKeys.check]
+        queryKey: [SaldoQueryKeys.check]
       })
       queryClient.invalidateQueries({
-        queryKey: [saldoQueryKeys.getAll]
+        queryKey: [SaldoQueryKeys.getAll]
       })
       queryClient.invalidateQueries({
         queryKey: [iznosQueryKeys.getAll]

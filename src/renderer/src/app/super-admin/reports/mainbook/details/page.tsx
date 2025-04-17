@@ -138,7 +138,7 @@ const AdminMainbookDetailsPage = () => {
           <div className="flex items-center justify-between gap-5 p-5 border-b">
             <SearchInput onKeyDown={handleSearch} />
             <MonthPicker
-              disabled
+              isDisabled
               value={
                 mainbook?.data
                   ? formatDate(new Date(mainbook.data.year ?? 0, mainbook.data.month - 1))

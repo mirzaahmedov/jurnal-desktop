@@ -36,7 +36,7 @@ export const columns: ColumnDef<KassaPrixod>[] = [
     numeric: true,
     key: 'summa',
     minWidth: 200,
-    renderCell: (row) => (!row.summa ? '-' : <SummaCell summa={row.summa} />)
+    renderCell: (row) => (!row.summa ? '-' : <SummaCell summa={Number(row.summa)} />)
   },
   {
     minWidth: 200,

@@ -130,7 +130,7 @@ const OXDetailsPage = () => {
     <DetailsView>
       <div className="flex gap-10 p-5 border-b">
         <MonthPicker
-          disabled={params.id !== 'create'}
+          isDisabled={params.id !== 'create'}
           value={date}
           onChange={setDate}
           className="disabled:opacity-100"

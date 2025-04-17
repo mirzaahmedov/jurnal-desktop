@@ -1,7 +1,4 @@
-import { useEffect } from 'react'
-
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
@@ -15,15 +12,14 @@ import {
 import { useSelectedMonthStore } from '@/common/features/selected-month'
 
 import { iznosQueryKeys } from '../../iznos/config'
-import { saldoQueryKeys } from '../config'
-import { getOstatokCheck, ostatokService } from '../service'
+import { SaldoQueryKeys } from '../config'
+import { MaterialWarehouseSaldoService } from '../service'
 
 export const MaterialWarehouseSaldoController = () => {
   const queryClient = useQueryClient()
   const startDate = useSelectedMonthStore((store) => store.startDate)
-  const budjet_id = useRequisitesStore((store) => store.budjet_id)
 
-  const { t } = useTranslation()
+  const { budjet_id, main_schet_id } = useRequisitesStore()
   const { dequeueMonth } = useSaldoController({
     ns: SaldoNamespace.JUR_1
   })
@@ -41,33 +37,34 @@ export const MaterialWarehouseSaldoController = () => {
     isFetched
   } = useQuery({
     queryKey: [
-      saldoQueryKeys.check,
+      SaldoQueryKeys.check,
       {
         year,
         month,
-        budjet_id: budjet_id!
+        budjet_id: budjet_id!,
+        main_schet_id: main_schet_id!
       },
       location.pathname
     ],
-    queryFn: getOstatokCheck,
+    queryFn: MaterialWarehouseSaldoService.checkSaldo,
     refetchOnReconnect: false,
     refetchOnWindowFocus: false,
     enabled
   })
 
   const { mutate: createSaldo, isPending } = useMutation({
-    mutationKey: [saldoQueryKeys.create],
-    mutationFn: ostatokService.create,
+    mutationKey: [SaldoQueryKeys.create],
+    mutationFn: MaterialWarehouseSaldoService.create,
     onSuccess(res, values) {
       toast.success(res?.message)
 
       dequeueMonth(values)
 
       queryClient.invalidateQueries({
-        queryKey: [saldoQueryKeys.getAll]
+        queryKey: [SaldoQueryKeys.getAll]
       })
       queryClient.invalidateQueries({
-        queryKey: [saldoQueryKeys.check]
+        queryKey: [SaldoQueryKeys.check]
       })
       queryClient.invalidateQueries({
         queryKey: [iznosQueryKeys.getAll]
@@ -83,12 +80,6 @@ export const MaterialWarehouseSaldoController = () => {
   }
 
   const isError = !saldo?.data?.length && !isFetching && isFetched
-
-  useEffect(() => {
-    if (isError) {
-      toast.error(t('no_saldo'))
-    }
-  }, [t, isError])
 
   return (
     <SaldoController

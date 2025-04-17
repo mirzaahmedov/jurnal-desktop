@@ -2,20 +2,25 @@ import { z } from 'zod'
 
 import { useSelectedMonthStore } from '@/common/features/selected-month'
 
-export const saldoQueryKeys = {
-  clean: 'saldo/clean',
-  getAll: 'saldo/all',
-  getMonthlySaldo: 'saldo/monthly',
-  check: 'saldo/check',
-  create: 'saldo/create',
-  delete: 'saldo/delete'
+export const SaldoQueryKeys = {
+  clean: 'warehouse-saldo/clean',
+  getAll: 'warehouse-saldo/all',
+  getMonthlySaldo: 'warehouse-saldo/monthly',
+  check: 'warehouse-saldo/check',
+  create: 'warehouse-saldo/create',
+  delete: 'warehouse-saldo/delete'
 }
 
-export const OstatokFiltersSchema = z.object({
+export const SaldoFiltersSchema = z.object({
   date: z.date().optional()
 })
-export type OstatokFiltersValues = z.infer<typeof OstatokFiltersSchema>
+export type SaldoFiltersValues = z.infer<typeof SaldoFiltersSchema>
 
-export const defaultValues: OstatokFiltersValues = {
+export const defaultValues: SaldoFiltersValues = {
   date: useSelectedMonthStore.getState().startDate
 }
+export const SaldoFormSchema = z.object({
+  month: z.number(),
+  year: z.number()
+})
+export type SaldoFormValues = z.infer<typeof SaldoFormSchema>

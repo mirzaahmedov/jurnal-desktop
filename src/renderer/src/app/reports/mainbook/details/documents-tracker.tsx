@@ -1,4 +1,4 @@
-import type { MainbookDocumentInfo } from '@/common/models'
+import type { MainbookDocumentInfo, ProvodkaType } from '@/common/models'
 import type { DialogProps } from '@radix-ui/react-dialog'
 
 import { useQuery } from '@tanstack/react-query'
@@ -107,6 +107,6 @@ const columns: ColumnDef<MainbookDocumentInfo>[] = [
   {
     minWidth: 300,
     key: 'type',
-    renderCell: (row) => <ProvodkaBadge type={row.type} />
+    renderCell: (row) => <ProvodkaBadge type={row.type as ProvodkaType} />
   }
 ]

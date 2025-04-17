@@ -1,19 +1,17 @@
 import type { OstatokProduct } from '@/common/models'
 
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { CalendarDays, CircleArrowDown, CopyCheck, Trash2 } from 'lucide-react'
+import { CalendarDays, CircleArrowDown, Trash2 } from 'lucide-react'
 import { useForm } from 'react-hook-form'
-import { Trans, useTranslation } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 
 import { createGroupSpravochnik } from '@/app/super-admin/group/service'
 import { ChooseSpravochnik, DatePicker, GenericTable } from '@/common/components'
-import { Badge } from '@/common/components/ui/badge'
 import { Button } from '@/common/components/ui/button'
 import { ButtonGroup } from '@/common/components/ui/button-group'
-import { Checkbox } from '@/common/components/ui/checkbox'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/common/components/ui/dialog'
 import { FormField } from '@/common/components/ui/form'
 import { useConfirm } from '@/common/features/confirm'
@@ -43,8 +41,8 @@ import { ostatokProductColumns } from './columns'
 import { DeleteExistingDocumentsAlert } from './components/delete-existing-document-alert'
 import { DeleteExistingSaldoAlert } from './components/delete-existing-saldo-alert'
 import { MonthlySaldoTrackerDialog } from './components/monthly-saldo-tracker-dialog'
-import { defaultValues, saldoQueryKeys } from './config'
-import { cleanSaldo, deleteOstatokBatchQuery, ostatokProductService } from './service'
+import { SaldoQueryKeys, defaultValues } from './config'
+import { MaterialWarehouseSaldoProductService, MaterialWarehouseSaldoService } from './service'
 import {
   type OstatokDeleteExistingDocument,
   type OstatokDeleteExistingSaldo,
@@ -54,7 +52,7 @@ import {
   handleOstatokResponse
 } from './utils'
 
-const OstatokPage = () => {
+const MaterialWarehouseSaldoPage = () => {
   const { startDate, endDate, setSelectedMonth } = useSelectedMonthStore()
   const { queuedMonths } = useSaldoController({
     ns: SaldoNamespace.JUR_7
@@ -82,11 +80,11 @@ const OstatokPage = () => {
   const monthlyTrackerToggle = useToggle()
   const queryClient = useQueryClient()
   const pagination = usePagination()
-  const budjet_id = useRequisitesStore((store) => store.budjet_id)
   const setLayout = useLayoutStore((store) => store.setLayout)
 
   const { confirm } = useConfirm()
   const { t } = useTranslation(['app'])
+  const { budjet_id, main_schet_id } = useRequisitesStore()
 
   const form = useForm({
     defaultValues
@@ -101,7 +99,7 @@ const OstatokPage = () => {
     error: ostatokError
   } = useQuery({
     queryKey: [
-      saldoQueryKeys.getAll,
+      SaldoQueryKeys.getAll,
       {
         page: pagination.page,
         limit: pagination.limit,
@@ -112,24 +110,24 @@ const OstatokPage = () => {
         budjet_id: budjet_id!
       }
     ],
-    queryFn: ostatokProductService.getAll,
+    queryFn: MaterialWarehouseSaldoProductService.getAll,
     enabled: !!selectedDate && !!budjet_id && queuedMonths.length === 0,
     select: (data) =>
       !!selectedDate && !!budjet_id && queuedMonths.length === 0 ? data : undefined
   })
 
   const { mutate: deleteOstatok, isPending: isDeleting } = useMutation({
-    mutationKey: [saldoQueryKeys.delete],
-    mutationFn: deleteOstatokBatchQuery,
+    mutationKey: [SaldoQueryKeys.delete],
+    mutationFn: MaterialWarehouseSaldoService.deleteSaldoMonth,
     onSuccess(res) {
       queryClient.invalidateQueries({
-        queryKey: [saldoQueryKeys.getAll]
+        queryKey: [SaldoQueryKeys.getAll]
       })
       queryClient.invalidateQueries({
         queryKey: [iznosQueryKeys.getAll]
       })
       queryClient.invalidateQueries({
-        queryKey: [saldoQueryKeys.check]
+        queryKey: [SaldoQueryKeys.check]
       })
       setSelectedRows([])
       handleOstatokResponse(res)
@@ -150,17 +148,17 @@ const OstatokPage = () => {
   })
 
   const { mutate: clean } = useMutation({
-    mutationKey: [saldoQueryKeys.clean],
-    mutationFn: cleanSaldo,
+    mutationKey: [SaldoQueryKeys.clean],
+    mutationFn: MaterialWarehouseSaldoService.cleanSaldo,
     onSuccess(res) {
       queryClient.invalidateQueries({
-        queryKey: [saldoQueryKeys.getAll]
+        queryKey: [SaldoQueryKeys.getAll]
       })
       queryClient.invalidateQueries({
         queryKey: [iznosQueryKeys.getAll]
       })
       queryClient.invalidateQueries({
-        queryKey: [saldoQueryKeys.check]
+        queryKey: [SaldoQueryKeys.check]
       })
       setSelectedRows([])
       toast.success(res?.message)
@@ -191,18 +189,16 @@ const OstatokPage = () => {
     })
   }, [setLayout, t])
 
-  const handleDelete = (ids: number[]) => {
+  const handleDelete = () => {
     if (!selectedDate) {
       return
     }
     confirm({
       onConfirm() {
         deleteOstatok({
-          ids: ids.map((id) => ({
-            id
-          })),
           year: selectedDate.getFullYear(),
           month: selectedDate.getMonth() + 1,
+          main_schet_id: main_schet_id!,
           budjet_id: budjet_id!
         })
       }
@@ -230,7 +226,7 @@ const OstatokPage = () => {
     setSelectedDate(values.date)
   })
 
-  const selectedIds = useMemo(() => selectedRows.map((row) => row.product_id), [selectedRows])
+  // const selectedIds = useMemo(() => selectedRows.map((row) => row.product_id), [selectedRows])
 
   useKeyUp({
     key: 'Delete',
@@ -277,20 +273,30 @@ const OstatokPage = () => {
                 <CalendarDays className="btn-icon" />
                 {t('monthly_saldo')}
               </Button>
+
+              <Button
+                variant="destructive"
+                onClick={handleDelete}
+              >
+                <Trash2 className="btn-icon" />
+                {t('clean_current_month')}
+              </Button>
+
               <ImportFile
                 url="/jur_7/saldo/import"
                 params={{
-                  budjet_id
+                  budjet_id,
+                  main_schet_id
                 }}
                 onSuccess={() => {
                   queryClient.invalidateQueries({
-                    queryKey: [saldoQueryKeys.getAll]
+                    queryKey: [SaldoQueryKeys.getAll]
                   })
                   queryClient.invalidateQueries({
                     queryKey: [iznosQueryKeys.getAll]
                   })
                   queryClient.invalidateQueries({
-                    queryKey: [saldoQueryKeys.check]
+                    queryKey: [SaldoQueryKeys.check]
                   })
                 }}
                 onError={(error) => {
@@ -367,7 +373,7 @@ const OstatokPage = () => {
         </form>
 
         <div className="flex items-center gap-5">
-          {selectedIds.length > 0 ? (
+          {/* {selectedIds.length > 0 ? (
             <>
               <Button
                 variant="ghost"
@@ -385,77 +391,15 @@ const OstatokPage = () => {
                 <Trash2 className="btn-icon" /> {t('delete_selected')}
               </Button>
             </>
-          ) : null}
+          ) : null} */}
         </div>
       </div>
       <ListView.Content loading={isFetching || isDeleting}>
         <GenericTable
-          columnDefs={ostatokProductColumns.map((column) => {
-            if (column.key === 'id') {
-              return {
-                ...column,
-                renderHeader: () => {
-                  const currentPageProducts = ostatok?.data ?? []
-                  const currentPageProductIds = currentPageProducts.map((p) => p.product_id) ?? []
-                  const currentPageSelectedIds = selectedRows
-                    .map((p) => p.product_id)
-                    .filter((id) => currentPageProductIds.includes(id))
-
-                  const checked =
-                    currentPageProductIds.length === currentPageSelectedIds.length &&
-                    currentPageProducts.length > 0
-                      ? true
-                      : currentPageSelectedIds.length > 0 && currentPageProducts.length > 0
-                        ? 'indeterminate'
-                        : false
-
-                  return (
-                    <div className="flex items-center gap-2">
-                      <Checkbox
-                        checked={checked}
-                        onClick={() => {
-                          if (checked === true) {
-                            setSelectedRows((prev) => {
-                              return prev.filter(
-                                (p) => !currentPageSelectedIds.includes(p.product_id)
-                              )
-                            })
-                            return
-                          }
-
-                          setSelectedRows((prev) => {
-                            return [
-                              ...prev,
-                              ...currentPageProducts.filter(
-                                (p) => !currentPageSelectedIds.includes(p.product_id)
-                              )
-                            ]
-                          })
-                        }}
-                        className="size-5"
-                      />
-                      <Trans>id</Trans>
-                    </div>
-                  )
-                }
-              }
-            }
-            return column
-          })}
+          columnDefs={ostatokProductColumns}
           data={ostatok?.data ?? []}
           getRowId={(row) => row.product_id}
           getRowKey={(row) => row.id}
-          selectedIds={selectedIds}
-          params={{
-            onCheckedChange: (row: OstatokProduct) => {
-              setSelectedRows((prev) => {
-                if (prev.find((p) => p.product_id === row.product_id)) {
-                  return prev.filter((p) => p.product_id !== row.product_id)
-                }
-                return [...prev, row]
-              })
-            }
-          }}
         />
       </ListView.Content>
       {deleteExistingDocumentError ? (
@@ -471,7 +415,7 @@ const OstatokPage = () => {
           product={deleteExistingDocumentError.product}
           onRemove={(product) => {
             queryClient.invalidateQueries({
-              queryKey: [saldoQueryKeys.getAll]
+              queryKey: [SaldoQueryKeys.getAll]
             })
             if (product) {
               setSelectedRows((prev) => {
@@ -547,4 +491,68 @@ const OstatokPage = () => {
   )
 }
 
-export default OstatokPage
+// columnDefs={ostatokProductColumns.map((column) => {
+//   if (column.key === 'id') {
+//     return {
+//       ...column,
+//       renderHeader: () => {
+//         const currentPageProducts = ostatok?.data ?? []
+//         const currentPageProductIds = currentPageProducts.map((p) => p.product_id) ?? []
+//         const currentPageSelectedIds = selectedRows
+//           .map((p) => p.product_id)
+//           .filter((id) => currentPageProductIds.includes(id))
+
+//         const checked =
+//           currentPageProductIds.length === currentPageSelectedIds.length &&
+//           currentPageProducts.length > 0
+//             ? true
+//             : currentPageSelectedIds.length > 0 && currentPageProducts.length > 0
+//               ? 'indeterminate'
+//               : false
+
+//         return (
+//           <div className="flex items-center gap-2">
+//             <Checkbox
+//               checked={checked}
+//               onClick={() => {
+//                 if (checked === true) {
+//                   setSelectedRows((prev) => {
+//                     return prev.filter(
+//                       (p) => !currentPageSelectedIds.includes(p.product_id)
+//                     )
+//                   })
+//                   return
+//                 }
+
+//                 setSelectedRows((prev) => {
+//                   return [
+//                     ...prev,
+//                     ...currentPageProducts.filter(
+//                       (p) => !currentPageSelectedIds.includes(p.product_id)
+//                     )
+//                   ]
+//                 })
+//               }}
+//               className="size-5"
+//             />
+//             <Trans>id</Trans>
+//           </div>
+//         )
+//       }
+//     }
+//   }
+//   return column
+// })}
+
+// params={{
+//   onCheckedChange: (row: OstatokProduct) => {
+//     setSelectedRows((prev) => {
+//       if (prev.find((p) => p.product_id === row.product_id)) {
+//         return prev.filter((p) => p.product_id !== row.product_id)
+//       }
+//       return [...prev, row]
+//     })
+//   }
+// }}
+
+export default MaterialWarehouseSaldoPage

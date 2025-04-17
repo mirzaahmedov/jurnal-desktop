@@ -22,7 +22,7 @@ import { formatDate } from '@/common/lib/date'
 import { ListView } from '@/common/views'
 
 import { iznosQueryKeys } from '../iznos/config'
-import { saldoQueryKeys } from '../saldo'
+import { SaldoQueryKeys } from '../saldo'
 import { internalColumns } from './columns'
 import { internalQueryKeys } from './config'
 import { internalService } from './service'
@@ -60,10 +60,10 @@ const InternalPage = () => {
           queryKey: [internalQueryKeys.getAll]
         })
         queryClient.invalidateQueries({
-          queryKey: [saldoQueryKeys.check]
+          queryKey: [SaldoQueryKeys.check]
         })
         queryClient.invalidateQueries({
-          queryKey: [saldoQueryKeys.getAll]
+          queryKey: [SaldoQueryKeys.getAll]
         })
         queryClient.invalidateQueries({
           queryKey: [iznosQueryKeys.getAll]

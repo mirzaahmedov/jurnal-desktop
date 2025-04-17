@@ -1,7 +1,7 @@
 import type { EditorComponentType } from './editors'
 import type { ChangeContext, DeleteContext } from './editors/interfaces'
 import type { Autocomplete } from '@/common/lib/types'
-import type { ReactNode, RefObject, SyntheticEvent } from 'react'
+import type { HTMLAttributes, ReactNode, RefObject, SyntheticEvent } from 'react'
 import type { ArrayPath, FieldArrayWithId, FieldErrors, UseFormReturn } from 'react-hook-form'
 
 export type TableRowField<T extends object, F extends ArrayPath<T>> = FieldArrayWithId<T, F, 'id'>
@@ -42,14 +42,13 @@ export interface EditableTableMethods {
 }
 
 export interface EditableTableProps<T extends object, F extends ArrayPath<NoInfer<T>>> {
-  withVirtualization?: boolean
-  scrollRef?: RefObject<HTMLDivElement>
   tableRef?: RefObject<HTMLTableElement>
   tabIndex?: number
   form: UseFormReturn<T>
   name: F
   columnDefs: EditableColumnDef<InferRow<T, F>>[]
   className?: string
+  divProps?: HTMLAttributes<HTMLDivElement>
   errors?: FieldErrors<{ childs: InferRow<T, F>[] }>['childs']
   getRowClassName?: (args: {
     index: number
