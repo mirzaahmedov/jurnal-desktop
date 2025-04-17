@@ -9,15 +9,16 @@ import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 
 import { NumericInput } from '@/common/components'
-import { MonthSelect } from '@/common/components/month-select'
-import { Button } from '@/common/components/ui/button'
 import {
-  Dialog,
   DialogContent,
   DialogFooter,
   DialogHeader,
-  DialogTitle
-} from '@/common/components/ui/dialog'
+  DialogOverlay,
+  DialogTitle,
+  DialogTrigger
+} from '@/common/components/jolly/dialog'
+import { MonthSelect } from '@/common/components/month-select'
+import { Button } from '@/common/components/ui/button'
 import {
   Form,
   FormControl,
@@ -40,11 +41,11 @@ import { BankSaldoQueryKeys, defaultValues } from './config'
 import { BankSaldoFormSchema, BankSaldoService } from './service'
 
 interface BankSaldoDialogProps {
-  open: boolean
+  isOpen: boolean
   onOpenChange: (value: boolean) => void
   selected: BankSaldo | null
 }
-export const BankSaldoDialog = ({ open, onOpenChange, selected }: BankSaldoDialogProps) => {
+export const BankSaldoDialog = ({ isOpen, onOpenChange, selected }: BankSaldoDialogProps) => {
   const { t } = useTranslation(['app'])
   const { startDate } = useSelectedMonthStore()
 
@@ -120,7 +121,7 @@ export const BankSaldoDialog = ({ open, onOpenChange, selected }: BankSaldoDialo
     form.reset(selected)
   }, [form, selected])
   useEffect(() => {
-    if (!open && !selected) {
+    if (!isOpen && !selected) {
       form.setValue('year', startDate.getFullYear())
       form.setValue('month', startDate.getMonth() + 1)
       form.reset(
@@ -130,97 +131,99 @@ export const BankSaldoDialog = ({ open, onOpenChange, selected }: BankSaldoDialo
         }
       )
     }
-  }, [open, selected, form, startDate])
+  }, [isOpen, selected, form, startDate])
 
   return (
-    <Dialog
-      open={open}
+    <DialogTrigger
+      isOpen={isOpen}
       onOpenChange={onOpenChange}
     >
-      <DialogContent className="max-w-xl">
-        <DialogHeader>
-          <DialogTitle>
-            {selected
-              ? capitalize(t('update-something', { something: t('pages.saldo') }))
-              : capitalize(t('create-something', { something: t('pages.saldo') }))}
-          </DialogTitle>
-        </DialogHeader>
-        <Form {...form}>
-          <form onSubmit={onSubmit}>
-            <div className="grid gap-4 py-4">
-              <FormField
-                name="year"
-                control={form.control}
-                render={({ field }) => (
-                  <FormItem>
-                    <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
-                      <FormLabel className="text-right col-span-2">{t('year')}</FormLabel>
-                      <FormControl>
-                        <YearSelect
-                          readOnly={!!selected}
-                          value={field.value}
-                          onValueChange={field.onChange}
-                          triggerClassName="col-span-4"
-                        />
-                      </FormControl>
-                      <FormMessage className="text-end col-span-6" />
-                    </div>
-                  </FormItem>
-                )}
-              />
+      <DialogOverlay>
+        <DialogContent className="max-w-xl">
+          <DialogHeader>
+            <DialogTitle>
+              {selected
+                ? capitalize(t('update-something', { something: t('pages.saldo') }))
+                : capitalize(t('create-something', { something: t('pages.saldo') }))}
+            </DialogTitle>
+          </DialogHeader>
+          <Form {...form}>
+            <form onSubmit={onSubmit}>
+              <div className="grid gap-4 py-4">
+                <FormField
+                  name="year"
+                  control={form.control}
+                  render={({ field }) => (
+                    <FormItem>
+                      <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
+                        <FormLabel className="text-right col-span-2">{t('year')}</FormLabel>
+                        <FormControl>
+                          <YearSelect
+                            readOnly={!!selected}
+                            value={field.value}
+                            onValueChange={field.onChange}
+                            className="col-span-4"
+                          />
+                        </FormControl>
+                        <FormMessage className="text-end col-span-6" />
+                      </div>
+                    </FormItem>
+                  )}
+                />
 
-              <FormField
-                name="month"
-                control={form.control}
-                render={({ field }) => (
-                  <FormItem>
-                    <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
-                      <FormLabel className="text-right col-span-2">{t('month')}</FormLabel>
-                      <FormControl>
-                        <MonthSelect
-                          readOnly={!!selected}
-                          value={field.value}
-                          onValueChange={field.onChange}
-                          triggerClassName="col-span-4"
-                        />
-                      </FormControl>
-                      <FormMessage className="text-end col-span-6" />
-                    </div>
-                  </FormItem>
-                )}
-              />
+                <FormField
+                  name="month"
+                  control={form.control}
+                  render={({ field }) => (
+                    <FormItem>
+                      <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
+                        <FormLabel className="text-right col-span-2">{t('month')}</FormLabel>
+                        <FormControl>
+                          <MonthSelect
+                            readOnly={!!selected}
+                            value={field.value}
+                            onValueChange={field.onChange}
+                            className="col-span-4"
+                          />
+                        </FormControl>
+                        <FormMessage className="text-end col-span-6" />
+                      </div>
+                    </FormItem>
+                  )}
+                />
 
-              <FormField
-                name="summa"
-                control={form.control}
-                render={({ field }) => (
-                  <FormItem>
-                    <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
-                      <FormLabel className="text-right col-span-2">{t('summa')}</FormLabel>
-                      <FormControl>
-                        <NumericInput
-                          className="col-span-4"
-                          value={field.value}
-                          onValueChange={(values) => field.onChange(values.floatValue)}
-                        />
-                      </FormControl>
-                      <FormMessage className="text-end col-span-6" />
-                    </div>
-                  </FormItem>
-                )}
-              />
-            </div>
-            <DialogFooter>
-              <Button
-                type="submit"
-                disabled={isCreatingSaldo || isUpdatingSaldo}
-              >
-                {t('save')}
-              </Button>
-            </DialogFooter>
-          </form>
-        </Form>
-      </DialogContent>
-    </Dialog>
+                <FormField
+                  name="summa"
+                  control={form.control}
+                  render={({ field }) => (
+                    <FormItem>
+                      <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
+                        <FormLabel className="text-right col-span-2">{t('summa')}</FormLabel>
+                        <FormControl>
+                          <NumericInput
+                            className="col-span-4"
+                            value={field.value}
+                            onValueChange={(values) => field.onChange(values.floatValue)}
+                          />
+                        </FormControl>
+                        <FormMessage className="text-end col-span-6" />
+                      </div>
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <DialogFooter>
+                <Button
+                  type="submit"
+                  disabled={isCreatingSaldo || isUpdatingSaldo}
+                >
+                  {t('save')}
+                </Button>
+              </DialogFooter>
+            </form>
+          </Form>
+        </DialogContent>
+      </DialogOverlay>
+    </DialogTrigger>
   )
 }

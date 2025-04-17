@@ -1,12 +1,121 @@
-/** @type {import('tailwindcss').Config} */
-export default {
+import type { Config } from 'tailwindcss'
+
+import plugin from 'tailwindcss/plugin'
+
+const ui = plugin(function ({ addUtilities }) {
+  addUtilities({
+    '.btn-icon': {
+      'vertical-align': 'middle',
+      width: '1.125rem',
+      height: '1.125rem'
+    },
+
+    '.noscroll-bar': {
+      'scrollbar-width': 'none'
+    },
+    '.noscroll-bar::-webkit-scrollbar': {
+      width: '0',
+      height: '0'
+    },
+
+    '.scrollbar': {
+      'scrollbar-width': 'thin',
+      'scrollbar-color': 'hsl(var(--scrollbar)) hsl(var(--background))'
+    },
+    '.scrollbar::-webkit-scrollbar': {
+      width: '6px',
+      height: '6px'
+    },
+    '.scrollbar::-webkit-scrollbar-thumb': {
+      'background-color': 'hsl(var(--scrollbar))',
+      'border-radius': '3px'
+    },
+    '.scrollbar::-webkit-scrollbar-track': {
+      'background-color': 'hsl(var(--background))'
+    },
+
+    '.table-xs input': {
+      'font-size': '0.75rem',
+      'font-weight': '600',
+      padding: '0.375rem'
+    },
+    '.table-xs th': {
+      'font-size': '0.75rem',
+      padding: '0.375rem'
+    },
+
+    '.table-generic-xs td': {
+      'font-size': '0.75rem',
+      'padding-left': '0.75rem',
+      'padding-right': '0.75rem',
+      'padding-top': '0.5rem',
+      'padding-bottom': '0.5rem'
+    },
+    '.table-generic-xs th': {
+      'font-size': '0.75rem',
+      'padding-left': '0.75rem',
+      'padding-right': '0.75rem',
+      'padding-top': '0.5rem',
+      'padding-bottom': '0.5rem'
+    },
+
+    '.tree_node': {
+      position: 'relative'
+    },
+    '.tree_node::before, .tree_node::after': {
+      content: '""',
+      display: 'block',
+      position: 'absolute',
+      left: '0',
+      top: '0',
+      width: '0',
+      'padding-left': '20px',
+      'border-left-width': '1px',
+      'border-left-style': 'solid'
+    },
+    '.tree_node::before': {
+      height: '50%',
+      'border-bottom-width': '1px',
+      'border-bottom-style': 'solid',
+      'border-bottom-left-radius': '0.25rem'
+    },
+    '.tree_node::after': {
+      height: '100%'
+    },
+    '.tree_node:last-child::after': {
+      height: '0%'
+    },
+
+    '.titlecase': {
+      'text-transform': 'lowercase'
+    },
+    '.titlecase::first-letter': {
+      'text-transform': 'uppercase'
+    },
+
+    '.loader': {
+      '--d': '22px',
+      width: '4px',
+      height: '4px',
+      'border-radius': '50%',
+      color: 'hsl(var(--brand))',
+      'box-shadow': `calc(1 * var(--d)) calc(0 * var(--d)) 0 0,
+        calc(0.707 * var(--d)) calc(0.707 * var(--d)) 0 1px,
+        calc(0 * var(--d)) calc(1 * var(--d)) 0 2px,
+        calc(-0.707 * var(--d)) calc(0.707 * var(--d)) 0 3px,
+        calc(-1 * var(--d)) calc(0 * var(--d)) 0 4px,
+        calc(-0.707 * var(--d)) calc(-0.707 * var(--d)) 0 5px,
+        calc(0 * var(--d)) calc(-1 * var(--d)) 0 6px;
+      animation: loader 1s infinite steps(8)`
+    }
+  })
+})
+
+const config: Config = {
   darkMode: ['class'],
   content: ['./index.html', './src/**/*.tsx'],
   theme: {
     extend: {
-      fontFamily: {
-        body: "'Montserrat', sans-serif"
-      },
       fontSize: {
         '2xs': '0.625rem',
         '3xs': '0.5rem'
@@ -94,6 +203,9 @@ export default {
           to: {
             height: '0'
           }
+        },
+        loader: {
+          '100%': { transform: 'rotate(1turn)' }
         }
       },
       animation: {
@@ -106,5 +218,7 @@ export default {
       }
     }
   },
-  plugins: [require('tailwindcss-animate')]
+  plugins: [require('tailwindcss-animate'), ui]
 }
+
+export default config

@@ -32,9 +32,9 @@ import { ListView } from '@/common/views'
 import { iznosQueryKeys } from '../iznos/config'
 import { SaldoQueryKeys } from '../saldo'
 import { prixodColumns } from './columns'
-import { prixodQueryKeys } from './config'
+import { WarehousePrixodQueryKeys } from './config'
 import { ExistingDocumentsAlert } from './details/existing-document-alert'
-import { prixodService } from './service'
+import { WarehousePrixodService } from './service'
 
 const Jurnal7PrixodPage = () => {
   const [existingDocsError, setExistingDocsError] = useState<{
@@ -51,6 +51,7 @@ const Jurnal7PrixodPage = () => {
   const { t } = useTranslation(['app'])
   const { confirm } = useConfirm()
   const { startDate, endDate } = useSelectedMonthStore()
+  const { budjet_id, main_schet_id } = useRequisitesStore()
   const { sorting, handleSort, getColumnSorted } = useTableSort()
   const { queuedMonths } = useSaldoController({
     ns: SaldoNamespace.JUR_7
@@ -62,17 +63,16 @@ const Jurnal7PrixodPage = () => {
   })
 
   const setLayout = useLayoutStore((store) => store.setLayout)
-  const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
 
   const { mutate: deletePrixod, isPending: isDeleting } = useMutation({
-    mutationKey: [prixodQueryKeys.delete],
-    mutationFn: prixodService.delete,
+    mutationKey: [WarehousePrixodQueryKeys.delete],
+    mutationFn: WarehousePrixodService.delete,
     onSuccess(res) {
       handleOstatokResponse(res)
       toast.success(res?.message)
       requestAnimationFrame(() => {
         queryClient.invalidateQueries({
-          queryKey: [prixodQueryKeys.getAll]
+          queryKey: [WarehousePrixodQueryKeys.getAll]
         })
         queryClient.invalidateQueries({
           queryKey: [SaldoQueryKeys.check]
@@ -104,16 +104,17 @@ const Jurnal7PrixodPage = () => {
     error: prixodListError
   } = useQuery({
     queryKey: [
-      prixodQueryKeys.getAll,
+      WarehousePrixodQueryKeys.getAll,
       {
         ...sorting,
         ...pagination,
         ...dates,
         search,
+        budjet_id,
         main_schet_id
       }
     ],
-    queryFn: prixodService.getAll,
+    queryFn: WarehousePrixodService.getAll,
     enabled: queuedMonths.length === 0
   })
 

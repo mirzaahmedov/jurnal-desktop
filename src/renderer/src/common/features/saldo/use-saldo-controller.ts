@@ -4,11 +4,11 @@ import { useCallback, useMemo } from 'react'
 
 import { useSaldoControllerStore } from './store'
 
-export interface UseSaldoControllerReturn {
-  queuedMonths: MonthValue[]
+export interface UseSaldoControllerReturn<T> {
+  queuedMonths: T[]
   clearQueue: () => void
-  enqueueMonth: (...values: MonthValue[]) => void
-  dequeueMonth: (...values: MonthValue[]) => boolean
+  enqueueMonth: (...values: T[]) => void
+  dequeueMonth: (...values: T[]) => boolean
 }
 export interface UseSaldoControllerArgs {
   ns: SaldoNamespace

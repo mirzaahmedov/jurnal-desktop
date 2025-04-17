@@ -31,7 +31,6 @@ const KassaSaldoPage = () => {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const dialogToggle = useToggle()
-  // const monthlyTrackerToggle = useToggle()
 
   const [year] = useYearFilter()
   const [selected, setSelected] = useState<KassaSaldo | null>(null)

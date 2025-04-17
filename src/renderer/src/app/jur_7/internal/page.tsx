@@ -31,7 +31,6 @@ const InternalPage = () => {
   const pagination = usePagination()
   const navigate = useNavigate()
   const queryClient = useQueryClient()
-  const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
   const setLayout = useLayoutStore((store) => store.setLayout)
 
   const [search] = useSearchFilter()
@@ -39,6 +38,7 @@ const InternalPage = () => {
   const { t } = useTranslation(['app'])
   const { confirm } = useConfirm()
   const { startDate, endDate } = useSelectedMonthStore()
+  const { budjet_id, main_schet_id } = useRequisitesStore()
   const { sorting, handleSort, getColumnSorted } = useTableSort()
   const { queuedMonths } = useSaldoController({
     ns: SaldoNamespace.JUR_7
@@ -84,6 +84,7 @@ const InternalPage = () => {
         ...dates,
         ...sorting,
         search,
+        budjet_id,
         main_schet_id
       }
     ],

@@ -2,7 +2,7 @@ import { z } from 'zod'
 
 import { withPreprocessor } from '@/common/lib/validation'
 
-export const rasxodQueryKeys = {
+export const RasxodQueryKeys = {
   getAll: 'jur7_rasxod/all',
   get: 'jur7_rasxod/get',
   create: 'jur7_rasxod/create',

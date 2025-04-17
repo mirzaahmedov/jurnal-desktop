@@ -2,26 +2,18 @@
 @tailwind utilities;
 @tailwind components;
 
-html,
-body,
-#root {
-  @apply h-full;
+@font-face {
+  font-family: 'Montserrat';
+  src: url('/fonts/Montserrat/Montserrat-VariableFont_wght.ttf') format('truetype');
+  font-weight: 100 900;
+  font-display: swap;
 }
-
-#overlay {
-  @apply invisible data-[state=open]:!visible fixed inset-0 bg-black/50 data-[state=open]:animate-in data-[state=open]:fade-in-0 z-[100];
-}
-
-input:-webkit-autofill,
-input:-webkit-autofill:hover,
-input:-webkit-autofill:focus,
-textarea:-webkit-autofill,
-textarea:-webkit-autofill:hover,
-textarea:-webkit-autofill:focus,
-select:-webkit-autofill,
-select:-webkit-autofill:hover,
-select:-webkit-autofill:focus {
-  -webkit-box-shadow: 0 0 0px 1000px #ffffff inset !important;
+@font-face {
+  font-family: 'Montserrat';
+  src: url('/fonts/Montserrat/Montserrat-Italic-VariableFont_wght.ttf') format('truetype');
+  font-style: italic;
+  font-weight: 100 900;
+  font-display: swap;
 }
 
 @layer base {
@@ -33,7 +25,6 @@ select:-webkit-autofill:focus {
     --card-foreground: 222.2 84% 4.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
-    /* --brand: 173 80% 40%; */
     --brand: 211 100% 50%;
     --brand-foreground: 210 40% 98%;
     --primary: 222.2 47.4% 11.2%;
@@ -89,136 +80,38 @@ select:-webkit-autofill:focus {
   }
 }
 
-@layer base {
-  * {
-    @apply border-border;
-  }
-
-  .scroll-disabled * {
-    @apply overflow-hidden;
-  }
-
-  body {
-    @apply bg-background text-foreground font-body;
-  }
-
-  b {
-    font-weight: 700;
-  }
-
-  .recharts-surface {
-    overflow: visible;
-  }
+* {
+  border-color: hsl(var(--border));
 }
 
-@layer utilities {
-  .titlecase {
-    @apply lowercase first-letter:uppercase;
-  }
+html,
+body,
+#root {
+  height: 100%;
 }
 
-@layer components {
-  .btn-icon {
-    @apply size-[1.125rem] align-middle;
-  }
-  .btn-icon.icon-start {
-    @apply ml-0 mr-0;
-  }
-
-  .noscroll-bar {
-    scrollbar-width: none;
-  }
-
-  .noscroll-bar::-webkit-scrollbar {
-    width: 0;
-    height: 0;
-  }
-
-  .scrollbar {
-    scrollbar-width: thin;
-    scrollbar-color: hsl(var(--scrollbar)) hsl(var(--background));
-  }
-
-  .scrollbar::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-  }
-
-  .scrollbar::-webkit-scrollbar-thumb {
-    background-color: hsl(var(--scrollbar));
-    border-radius: 3px;
-  }
-
-  .scrollbar::-webkit-scrollbar-track {
-    background-color: hsl(var(--background));
-  }
-
-  .table-xs input {
-    @apply !text-xs font-semibold !p-1.5;
-  }
-  .table-xs th {
-    @apply !text-xs !p-1.5;
-  }
-
-  .table-generic-xs td {
-    @apply !text-xs !px-3 !py-2;
-  }
-  .table-generic-xs th {
-    @apply !text-xs !px-3 !py-2;
-  }
-
-  .artificial-border::before {
-    @apply z-[100] content-[""] block absolute -top-0 -translate-y-px h-0.5 bg-slate-200 left-0 right-0;
-  }
-  .artificial-border::after {
-    @apply z-[100] content-[""] block absolute bottom-0 h-px bg-slate-200 left-0 right-0;
-  }
-
-  .tree_node {
-    position: relative;
-  }
-  .tree_node::before,
-  .tree_node::after {
-    content: '';
-    display: block;
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 0;
-    padding-left: 20px;
-    @apply border-l;
-  }
-
-  .tree_node::before {
-    height: 50%;
-    @apply border-b rounded-bl-lg;
-  }
-  .tree_node::after {
-    height: 100%;
-  }
-  .tree_node:last-child::after {
-    height: 0%;
-  }
+body {
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font-family: 'Montserrat', sans-serif;
 }
 
-.loader {
-  --d: 22px;
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
-  color: hsl(var(--brand));
-  box-shadow:
-    calc(1 * var(--d)) calc(0 * var(--d)) 0 0,
-    calc(0.707 * var(--d)) calc(0.707 * var(--d)) 0 1px,
-    calc(0 * var(--d)) calc(1 * var(--d)) 0 2px,
-    calc(-0.707 * var(--d)) calc(0.707 * var(--d)) 0 3px,
-    calc(-1 * var(--d)) calc(0 * var(--d)) 0 4px,
-    calc(-0.707 * var(--d)) calc(-0.707 * var(--d)) 0 5px,
-    calc(0 * var(--d)) calc(-1 * var(--d)) 0 6px;
-  animation: l27 1s infinite steps(8);
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0px 1000px #ffffff inset !important;
 }
-@keyframes l27 {
-  100% {
-    transform: rotate(1turn);
-  }
+
+b {
+  font-weight: 700;
+}
+
+.recharts-surface {
+  overflow: visible;
 }

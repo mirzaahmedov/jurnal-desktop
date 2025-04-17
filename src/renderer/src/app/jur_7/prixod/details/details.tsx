@@ -4,7 +4,7 @@ import type { Response } from '@/common/models'
 import { useEffect, useMemo, useRef, useState } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useQueryClient } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import isEmpty from 'just-is-empty'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -17,6 +17,7 @@ import { createOrganizationSpravochnik } from '@/app/region-spravochnik/organiza
 import { Form } from '@/common/components/ui/form'
 import { DocumentType } from '@/common/features/doc-num'
 import { DownloadFile, ImportFile } from '@/common/features/file'
+import { useRequisitesStore } from '@/common/features/requisites'
 import {
   useSelectedMonthStore,
   validateDateWithinSelectedMonth
@@ -38,8 +39,8 @@ import {
 
 import { iznosQueryKeys } from '../../iznos/config'
 import { SaldoQueryKeys } from '../../saldo'
-import { PrixodFormSchema, defaultValues, prixodQueryKeys } from '../config'
-import { usePrixodCreate, usePrixodGet, usePrixodUpdate } from '../service'
+import { PrixodFormSchema, WarehousePrixodQueryKeys, defaultValues } from '../config'
+import { WarehousePrixodService, usePrixodCreate, usePrixodUpdate } from '../service'
 import { ExistingDocumentsAlert } from './existing-document-alert'
 import { ProvodkaTable } from './provodka-table'
 
@@ -62,18 +63,30 @@ const PrixodDetails = ({ id, onSuccess }: PrixodDetailsProps) => {
 
   const { t } = useTranslation(['app'])
   const { startDate, endDate } = useSelectedMonthStore()
+  const { budjet_id, main_schet_id } = useRequisitesStore()
   const { snippets, addSnippet, removeSnippet } = useSnippets({
     ns: 'jur7_prixod'
   })
 
-  const { data: prixod, isFetching } = usePrixodGet(Number(id))
+  const { data: prixod, isFetching } = useQuery({
+    queryKey: [
+      WarehousePrixodQueryKeys.get,
+      Number(id),
+      {
+        budjet_id,
+        main_schet_id
+      }
+    ],
+    queryFn: WarehousePrixodService.getById,
+    enabled: !!id
+  })
   const { mutate: createPrixod, isPending: isCreating } = usePrixodCreate({
     onSuccess: (res) => {
       toast.success(res?.message)
       handleOstatokResponse(res)
 
       queryClient.invalidateQueries({
-        queryKey: [prixodQueryKeys.getAll]
+        queryKey: [WarehousePrixodQueryKeys.getAll]
       })
       queryClient.invalidateQueries({
         queryKey: [SaldoQueryKeys.check]
@@ -94,7 +107,7 @@ const PrixodDetails = ({ id, onSuccess }: PrixodDetailsProps) => {
       handleOstatokResponse(res)
 
       queryClient.invalidateQueries({
-        queryKey: [prixodQueryKeys.getAll]
+        queryKey: [WarehousePrixodQueryKeys.getAll]
       })
       queryClient.invalidateQueries({
         queryKey: [SaldoQueryKeys.check]

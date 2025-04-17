@@ -7,9 +7,9 @@ import { useMutation, useQuery } from '@tanstack/react-query'
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 import { budjet, main_schet } from '@/common/features/crud/middleware'
 
-import { prixodQueryKeys } from './config'
+import { WarehousePrixodQueryKeys } from './config'
 
-export const prixodService = new CRUDService<MO7Prixod, PrixodFormValues>({
+export const WarehousePrixodService = new CRUDService<MO7Prixod, PrixodFormValues>({
   endpoint: ApiEndpoints.jur7_prixod
 })
   .use(budjet())
@@ -17,8 +17,8 @@ export const prixodService = new CRUDService<MO7Prixod, PrixodFormValues>({
 
 export const usePrixodGet = (id: number) => {
   return useQuery({
-    queryKey: [prixodQueryKeys.get, id],
-    queryFn: prixodService.getById,
+    queryKey: [WarehousePrixodQueryKeys.get, id],
+    queryFn: WarehousePrixodService.getById,
     enabled: !!id
   })
 }
@@ -26,16 +26,16 @@ export const usePrixodGet = (id: number) => {
 export type UsePrixodParams = Pick<UseMutationOptions<any, Error, any>, 'onSuccess' | 'onError'>
 export const usePrixodCreate = ({ onSuccess, onError }: UsePrixodParams) => {
   return useMutation({
-    mutationKey: [prixodQueryKeys.create],
-    mutationFn: prixodService.create,
+    mutationKey: [WarehousePrixodQueryKeys.create],
+    mutationFn: WarehousePrixodService.create,
     onSuccess,
     onError
   })
 }
 export const usePrixodUpdate = ({ onSuccess, onError }: UsePrixodParams) => {
   return useMutation({
-    mutationKey: [prixodQueryKeys.update],
-    mutationFn: prixodService.update,
+    mutationKey: [WarehousePrixodQueryKeys.update],
+    mutationFn: WarehousePrixodService.update,
     onSuccess,
     onError
   })
@@ -43,8 +43,8 @@ export const usePrixodUpdate = ({ onSuccess, onError }: UsePrixodParams) => {
 
 export const usePrixodDelete = ({ onSuccess, onError }: UsePrixodParams) => {
   return useMutation({
-    mutationKey: [prixodQueryKeys.delete],
-    mutationFn: prixodService.delete,
+    mutationKey: [WarehousePrixodQueryKeys.delete],
+    mutationFn: WarehousePrixodService.delete,
     onSuccess,
     onError
   })

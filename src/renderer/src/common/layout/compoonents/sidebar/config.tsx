@@ -10,8 +10,6 @@ import {
   Building,
   Building2,
   CalendarCheck,
-  CalendarPlus2,
-  CalendarX,
   ChartCandlestick,
   CircleDollarSign,
   CircleFadingPlus,
@@ -35,7 +33,7 @@ import {
   Percent,
   ReceiptText,
   Settings2,
-  Sheet,
+  ShieldBan,
   ShieldCheck,
   Signature,
   SquareActivity,
@@ -466,16 +464,6 @@ export const getNavElements = (t: TFunction): NavElement[] => {
               icon: Percent
             },
             {
-              path: 'expenses',
-              title: t('pages.real-expenses'),
-              icon: Wallet
-            },
-            {
-              path: 'ox-report',
-              title: t('pages.1ox-report'),
-              icon: Sheet
-            },
-            {
               path: 'logs',
               title: t('pages.logs'),
               icon: FileClock
@@ -562,44 +550,6 @@ export const getNavElements = (t: TFunction): NavElement[] => {
           icon: Book
         }
       : null,
-    !is_super_admin
-      ? {
-          icon: Wallet,
-          title: t('pages.real-expenses'),
-          path: '/expenses',
-          children: [
-            {
-              path: 'report',
-              title: t('pages.create-month-report'),
-              icon: CalendarPlus2
-            },
-            {
-              path: '/',
-              title: t('pages.complete-month-report'),
-              icon: CalendarX
-            }
-          ]
-        }
-      : null,
-    !is_super_admin
-      ? {
-          icon: Sheet,
-          title: t('pages.1ox-report'),
-          path: '/ox-report',
-          children: [
-            {
-              path: 'report',
-              title: t('pages.create-month-report'),
-              icon: CalendarPlus2
-            },
-            {
-              path: '/',
-              title: t('pages.complete-month-report'),
-              icon: CalendarX
-            }
-          ]
-        }
-      : null,
     {
       path: '/region-data',
       title: t('pages.region-data'),
@@ -608,8 +558,8 @@ export const getNavElements = (t: TFunction): NavElement[] => {
     import.meta.env.DEV
       ? {
           path: '/demo',
-          title: 'Demo page',
-          icon: Database
+          title: 'Demo',
+          icon: ShieldBan
         }
       : null
   ])

@@ -46,7 +46,12 @@ const SelectValue = <T extends object>({ className, ...props }: AriaSelectValueP
   />
 )
 
-const SelectTrigger = ({ className, children, ...props }: AriaButtonProps) => (
+const SelectTrigger = ({
+  className,
+  children,
+  readOnly,
+  ...props
+}: AriaButtonProps & { readOnly?: boolean }) => (
   <AriaButton
     className={composeRenderProps(className, (className) =>
       cn(
@@ -57,9 +62,12 @@ const SelectTrigger = ({ className, children, ...props }: AriaButtonProps) => (
         'data-[focus-visible]:outline-none data-[focus-visible]:ring-2 data-[focus-visible]:ring-ring data-[focus-visible]:ring-offset-2',
         /* Resets */
         'focus-visible:outline-none',
+        /* Readonly */
+        'data-[readonly]:cursor-not-allowed data-[readonly]:opacity-100 data-[readonly]:pointer-events-none',
         className
       )
     )}
+    data-readonly={readOnly ? '' : undefined}
     {...props}
   >
     {composeRenderProps(children, (children) => (
@@ -85,7 +93,7 @@ const SelectListBox = <T extends object>({ className, ...props }: AriaListBoxPro
   <AriaListBox
     className={composeRenderProps(className, (className) =>
       cn(
-        'max-h-[inherit] overflow-auto p-1 outline-none [clip-path:inset(0_0_0_0_round_calc(var(--radius)-2px))]',
+        'max-h-[inherit] overflow-auto scrollbar p-1 outline-none [clip-path:inset(0_0_0_0_round_calc(var(--radius)-2px))]',
         className
       )
     )}
@@ -138,15 +146,15 @@ function JollySelect<T extends object>({
 }
 
 export {
+  JollySelect,
   Select,
-  SelectValue,
-  SelectTrigger,
-  SelectItem,
-  SelectPopover,
-  SelectHeader,
-  SelectListBox,
-  SelectSection,
   SelectCollection,
-  JollySelect
+  SelectHeader,
+  SelectItem,
+  SelectListBox,
+  SelectPopover,
+  SelectSection,
+  SelectTrigger,
+  SelectValue
 }
 export type { JollySelectProps }

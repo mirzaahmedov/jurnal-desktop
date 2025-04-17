@@ -1,8 +1,8 @@
+import TinosBold from '@public/fonts/Tinos/TinosBold.ttf'
+import TinosBoldItalic from '@public/fonts/Tinos/TinosBoldItalic.ttf'
+import TinosItalic from '@public/fonts/Tinos/TinosItalic.ttf'
+import TinosRegular from '@public/fonts/Tinos/TinosRegular.ttf'
 import { Font } from '@react-pdf/renderer'
-import tinos_bold_italic from '@resources/fonts/tinos/tinos-bold-italic.ttf'
-import tinos_bold from '@resources/fonts/tinos/tinos-bold.ttf'
-import tinos_italic from '@resources/fonts/tinos/tinos-italic.ttf'
-import tinos_regular from '@resources/fonts/tinos/tinos-regular.ttf'
 
 let fontsRegistered = false
 
@@ -14,18 +14,18 @@ export const registerFonts = () => {
     family: 'Tinos',
     fonts: [
       {
-        src: tinos_regular
+        src: TinosRegular
       },
       {
-        src: tinos_italic,
+        src: TinosItalic,
         fontStyle: 'italic'
       },
       {
-        src: tinos_bold,
+        src: TinosBold,
         fontWeight: 'bold'
       },
       {
-        src: tinos_bold_italic,
+        src: TinosBoldItalic,
         fontWeight: 'bold',
         fontStyle: 'italic'
       }

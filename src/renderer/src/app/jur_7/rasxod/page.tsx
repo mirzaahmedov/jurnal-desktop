@@ -24,14 +24,13 @@ import { ListView } from '@/common/views'
 import { iznosQueryKeys } from '../iznos/config'
 import { SaldoQueryKeys } from '../saldo'
 import { rasxodColumns } from './columns'
-import { rasxodQueryKeys } from './config'
-import { rasxodService } from './service'
+import { RasxodQueryKeys } from './config'
+import { WarehouseRasxodService } from './service'
 
 const Jurnal7RasxodPage = () => {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const pagination = usePagination()
-  const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
   const setLayout = useLayoutStore((store) => store.setLayout)
 
   const [search] = useSearchFilter()
@@ -39,6 +38,7 @@ const Jurnal7RasxodPage = () => {
   const { t } = useTranslation(['app'])
   const { confirm } = useConfirm()
   const { startDate, endDate } = useSelectedMonthStore()
+  const { budjet_id, main_schet_id } = useRequisitesStore()
   const { sorting, handleSort, getColumnSorted } = useTableSort()
   const { queuedMonths } = useSaldoController({
     ns: SaldoNamespace.JUR_7
@@ -50,14 +50,14 @@ const Jurnal7RasxodPage = () => {
   })
 
   const { mutate: deleteRasxod, isPending } = useMutation({
-    mutationKey: [rasxodQueryKeys.delete],
-    mutationFn: rasxodService.delete,
+    mutationKey: [RasxodQueryKeys.delete],
+    mutationFn: WarehouseRasxodService.delete,
     onSuccess(res) {
       handleOstatokResponse(res)
       toast.success(res?.message)
       requestAnimationFrame(() => {
         queryClient.invalidateQueries({
-          queryKey: [rasxodQueryKeys.getAll]
+          queryKey: [RasxodQueryKeys.getAll]
         })
         queryClient.invalidateQueries({
           queryKey: [SaldoQueryKeys.check]
@@ -78,16 +78,17 @@ const Jurnal7RasxodPage = () => {
     error: rasxodListError
   } = useQuery({
     queryKey: [
-      rasxodQueryKeys.getAll,
+      RasxodQueryKeys.getAll,
       {
         ...pagination,
         ...dates,
         ...sorting,
         search,
+        budjet_id,
         main_schet_id
       }
     ],
-    queryFn: rasxodService.getAll,
+    queryFn: WarehouseRasxodService.getAll,
     enabled: queuedMonths.length === 0
   })
 

@@ -39,7 +39,6 @@ export const EditableTable = <T extends object, F extends ArrayPath<NoInfer<T>>>
     methods
   } = props
 
-  const divRef = useRef<HTMLDivElement>(null)
   const innerRef = useRef<HTMLTableElement>(null)
   const ref = tableRef || innerRef
 
@@ -80,7 +79,6 @@ export const EditableTable = <T extends object, F extends ArrayPath<NoInfer<T>>>
   return (
     <div
       {...divProps}
-      ref={divRef}
       onSubmit={(e) => {
         e.preventDefault()
         e.stopPropagation()
@@ -91,17 +89,11 @@ export const EditableTable = <T extends object, F extends ArrayPath<NoInfer<T>>>
           block: 'nearest'
         })
       }}
-      className={cn(
-        'relative min-h-[400px] max-h-full overflow-auto scrollbar',
-        divProps?.className
-      )}
+      className={cn('relative', divProps?.className)}
     >
       <Table
         ref={ref}
-        className={cn(
-          'relative min-h-[400px] max-h-full overflow-auto scrollbar border border-slate-200',
-          className
-        )}
+        className={cn('border border-slate-200', className)}
       >
         <TableHeader className="sticky top-0 z-50 shadow-sm">
           {Array.isArray(columnDefs)

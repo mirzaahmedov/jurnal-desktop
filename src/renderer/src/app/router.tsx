@@ -67,17 +67,9 @@ const PokazatUslugiDetailsPage = lazy(() => import('./jur_3/152/pokazat-uslugi/d
 const PokazatUslugiPage = lazy(() => import('./jur_3/152/pokazat-uslugi/page'))
 const ShartnomaDetailsPage = lazy(() => import('./jur_3/shartnoma/details/page'))
 const ShartnomaPage = lazy(() => import('./jur_3/shartnoma/page'))
-const OXDetailsPage = lazy(() => import('./ox-report/ox-report/details/page'))
-const OXPage = lazy(() => import('./ox-report/ox-report/page'))
-const OXReportDetailsPage = lazy(() => import('./ox-report/report/details/page'))
-const OXReportPage = lazy(() => import('./ox-report/report/page'))
 const AdvanceReportDetailsPage = lazy(() => import('./jur_4/avans/details/page'))
 const AvansPage = lazy(() => import('./jur_4/avans/page'))
 const PodotchetMonitoringPage = lazy(() => import('./jur_4/monitor/page'))
-const ExpensesDetailsPage = lazy(() => import('./real-expenses/real-expenses/details/page'))
-const ExpensesPage = lazy(() => import('./real-expenses/real-expenses/page'))
-const ExpensesReportDetailsPage = lazy(() => import('./real-expenses/report/details/page'))
-const RealExpensesReportPage = lazy(() => import('./real-expenses/report/page'))
 const AccessPage = lazy(() => import('./region-admin/access/page'))
 const RegionUserPage = lazy(() => import('./region-admin/region-user'))
 const SmetaGrafikPage = lazy(() => import('./region-spravochnik/smeta-grafik/page'))
@@ -98,11 +90,7 @@ const AdminMainbookDetailsPage = lazy(() => import('./super-admin/reports/mainbo
 const AdminMainbookPage = lazy(() => import('./super-admin/reports/mainbook/page'))
 
 const OperatsiiPage = lazy(() => import('./super-admin/operatsii/page'))
-const AdminOXDetailsPage = lazy(() => import('./super-admin/ox-report/details/page'))
-const AdminOXPage = lazy(() => import('./super-admin/ox-report/page'))
 const PereotsenkaPage = lazy(() => import('./super-admin/pereotsenka/page'))
-const AdminRealExpenseDetailsPage = lazy(() => import('./super-admin/real-expenses/details/page'))
-const AdminRealExpensesPage = lazy(() => import('./super-admin/real-expenses/page'))
 const RegionDataPage = lazy(() => import('./super-admin/region-data/page'))
 const RegionPage = lazy(() => import('./super-admin/region/page'))
 const RolePage = lazy(() => import('./super-admin/role/page'))
@@ -391,22 +379,6 @@ export const routes: RouteObject[] = [
             element: <PrixodSchetsPage />
           },
           {
-            path: 'expenses',
-            element: <AdminRealExpensesPage />
-          },
-          {
-            path: 'expenses/:id',
-            element: <AdminRealExpenseDetailsPage />
-          },
-          {
-            path: 'ox-report',
-            element: <AdminOXPage />
-          },
-          {
-            path: 'ox-report/:id',
-            element: <AdminOXDetailsPage />
-          },
-          {
             path: 'zarplata/spravochnik',
             element: <ZarplataSpravochnikPage />
           }
@@ -523,48 +495,6 @@ export const routes: RouteObject[] = [
                 element: <MainbookDetailsPage />
               }
             ]
-          }
-        ]
-      },
-      {
-        path: 'expenses',
-        children: [
-          {
-            path: 'report',
-            element: <RealExpensesReportPage />
-          },
-          {
-            path: 'report/:id',
-            element: <ExpensesReportDetailsPage />
-          },
-          {
-            index: true,
-            element: <ExpensesPage />
-          },
-          {
-            path: ':id',
-            element: <ExpensesDetailsPage />
-          }
-        ]
-      },
-      {
-        path: 'ox-report',
-        children: [
-          {
-            path: 'report',
-            element: <OXReportPage />
-          },
-          {
-            path: 'report/:id',
-            element: <OXReportDetailsPage />
-          },
-          {
-            index: true,
-            element: <OXPage />
-          },
-          {
-            path: ':id',
-            element: <OXDetailsPage />
           }
         ]
       },

@@ -312,12 +312,14 @@ const OrganSaldoDetailsPage = () => {
                 ) : null}
               </div>
             </div>
-            <OrganSaldoTable
-              columnDefs={columns}
-              methods={tableMethods}
-              form={form}
-              name="organizations"
-            />
+            <div className="flex-1 overflow-auto scrollbar">
+              <OrganSaldoTable
+                columnDefs={columns}
+                methods={tableMethods}
+                form={form}
+                name="organizations"
+              />
+            </div>
           </div>
 
           <DetailsView.Footer>

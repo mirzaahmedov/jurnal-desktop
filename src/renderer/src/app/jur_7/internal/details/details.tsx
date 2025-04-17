@@ -1,7 +1,7 @@
 import { useEffect, useMemo } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useQueryClient } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import isEmpty from 'just-is-empty'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -13,6 +13,7 @@ import { SaldoQueryKeys } from '@/app/jur_7/saldo'
 import { handleOstatokResponse } from '@/app/jur_7/saldo/utils'
 import { Form } from '@/common/components/ui/form'
 import { DocumentType } from '@/common/features/doc-num'
+import { useRequisitesStore } from '@/common/features/requisites'
 import { useSelectedMonthStore } from '@/common/features/selected-month'
 import { validateDateWithinSelectedMonth } from '@/common/features/selected-month'
 import { useSnippets } from '@/common/features/snippents/use-snippets'
@@ -28,7 +29,7 @@ import {
 } from '@/common/widget/form'
 
 import { InternalFormSchema, defaultValues, internalQueryKeys } from '../config'
-import { useInternalCreate, useInternalGet, useInternalUpdate } from '../service'
+import { internalService, useInternalCreate, useInternalUpdate } from '../service'
 import { ProvodkaTable } from './provodka-table'
 
 interface InternalDetailsProps {
@@ -39,13 +40,18 @@ const InternalDetails = ({ id, onSuccess: onSuccess }: InternalDetailsProps) => 
   const queryClient = useQueryClient()
 
   const { t } = useTranslation(['app'])
+  const { budjet_id, main_schet_id } = useRequisitesStore()
   const { startDate, endDate } = useSelectedMonthStore()
 
   const { snippets, addSnippet, removeSnippet } = useSnippets({
     ns: 'jur7_internal'
   })
 
-  const { data: internalTransfer, isFetching } = useInternalGet(Number(id))
+  const { data: internalTransfer, isFetching } = useQuery({
+    queryKey: [internalQueryKeys.get, Number(id), { budjet_id, main_schet_id }],
+    queryFn: internalService.getById,
+    enabled: !!id
+  })
 
   const { mutate: createInternal, isPending: isCreating } = useInternalCreate({
     onSuccess: (res) => {

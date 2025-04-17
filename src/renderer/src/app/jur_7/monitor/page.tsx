@@ -35,11 +35,11 @@ export const Jur7MonitorPage = () => {
   const navigate = useNavigate()
   const reportsToggle = useToggle()
   const startDate = useSelectedMonthStore((store) => store.startDate)
-  const budjet_id = useRequisitesStore((store) => store.budjet_id)
   const report_title_id = useSettingsStore((store) => store.report_title_id)
   const setLayout = useLayoutStore((store) => store.setLayout)
 
   const { t } = useTranslation(['app'])
+  const { budjet_id, main_schet_id } = useRequisitesStore()
   const { sorting, getColumnSorted, handleSort } = useTableSort()
 
   const { data: monitoring, isFetching } = useQuery({
@@ -49,7 +49,8 @@ export const Jur7MonitorPage = () => {
         ...dates,
         ...pagination,
         ...sorting,
-        budjet_id
+        budjet_id,
+        main_schet_id
       }
     ],
     queryFn: Jur7MonitorService.getAll

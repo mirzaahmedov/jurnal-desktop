@@ -19,6 +19,9 @@
       "@main/*": [
         "src/main/*"
       ],
+      "@public/*": [
+        "src/renderer/public/*"
+      ],
       "@/*": [
         "src/renderer/src/*"
       ]

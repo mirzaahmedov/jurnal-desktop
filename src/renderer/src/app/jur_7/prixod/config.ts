@@ -2,12 +2,12 @@ import { z } from 'zod'
 
 import { withPreprocessor } from '@/common/lib/validation'
 
-export const prixodQueryKeys = {
-  getAll: 'jur7_prixod/all',
-  get: 'jur7_prixod/get',
-  create: 'jur7_prixod/create',
-  update: 'jur7_prixod/update',
-  delete: 'jur7_prixod/delete'
+export const WarehousePrixodQueryKeys = {
+  getAll: 'warehouse_prixod/all',
+  get: 'warehouse_prixod/get',
+  create: 'warehouse_prixod/create',
+  update: 'warehouse_prixod/update',
+  delete: 'warehouse_prixod/delete'
 }
 
 export const defaultValues: PrixodFormValues = {

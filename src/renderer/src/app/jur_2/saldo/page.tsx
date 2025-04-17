@@ -152,7 +152,7 @@ const BankSaldoPage = () => {
         />
       </ListView.Content>
       <BankSaldoDialog
-        open={dialogToggle.isOpen}
+        isOpen={dialogToggle.isOpen}
         onOpenChange={dialogToggle.setOpen}
         selected={selected}
       />

@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useQueryClient } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import isEmpty from 'just-is-empty'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -28,8 +28,8 @@ import {
   SummaFields
 } from '@/common/widget/form'
 
-import { RasxodFormSchema, defaultValues, rasxodQueryKeys } from '../config'
-import { useRasxodCreate, useRasxodGet, useRasxodUpdate } from '../service'
+import { RasxodFormSchema, RasxodQueryKeys, defaultValues } from '../config'
+import { WarehouseRasxodService, useRasxodCreate, useRasxodUpdate } from '../service'
 import { ProvodkaTable } from './provodka-table'
 
 interface RasxodDetailsProps {
@@ -55,14 +55,18 @@ const RasxodDetails = ({ id, onSuccess }: RasxodDetailsProps) => {
     resolver: zodResolver(RasxodFormSchema)
   })
 
-  const { data: rasxod, isFetching } = useRasxodGet(Number(id))
+  const { data: rasxod, isFetching } = useQuery({
+    queryKey: [RasxodQueryKeys.get, Number(id)],
+    queryFn: WarehouseRasxodService.getById,
+    enabled: !!id
+  })
   const { mutate: createRasxod, isPending: isCreating } = useRasxodCreate({
     onSuccess: (res) => {
       toast.success(res?.message)
       handleOstatokResponse(res)
 
       queryClient.invalidateQueries({
-        queryKey: [rasxodQueryKeys.getAll]
+        queryKey: [RasxodQueryKeys.getAll]
       })
       queryClient.invalidateQueries({
         queryKey: [SaldoQueryKeys.check]
@@ -83,7 +87,7 @@ const RasxodDetails = ({ id, onSuccess }: RasxodDetailsProps) => {
       handleOstatokResponse(res)
 
       queryClient.invalidateQueries({
-        queryKey: [rasxodQueryKeys.getAll]
+        queryKey: [RasxodQueryKeys.getAll]
       })
       queryClient.invalidateQueries({
         queryKey: [SaldoQueryKeys.check]
