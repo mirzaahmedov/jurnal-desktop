@@ -4,7 +4,7 @@ import { withPreprocessor } from '@/common/lib/validation'
 
 export const internalQueryKeys = {
   getAll: 'jur7_internal/all',
-  get: 'jur7_internal/get',
+  getById: 'jur7_internal/get',
   create: 'jur7_internal/create',
   update: 'jur7_internal/update',
   delete: 'jur7_internal/delete'

@@ -47,8 +47,15 @@ const InternalDetails = ({ id, onSuccess: onSuccess }: InternalDetailsProps) => 
     ns: 'jur7_internal'
   })
 
-  const { data: internalTransfer, isFetching } = useQuery({
-    queryKey: [internalQueryKeys.get, Number(id), { budjet_id, main_schet_id }],
+  const { data: internal, isFetching } = useQuery({
+    queryKey: [
+      internalQueryKeys.getById,
+      Number(id),
+      {
+        budjet_id,
+        main_schet_id
+      }
+    ],
     queryFn: internalService.getById,
     enabled: !!id
   })
@@ -98,7 +105,10 @@ const InternalDetails = ({ id, onSuccess: onSuccess }: InternalDetailsProps) => 
   })
 
   const form = useForm({
-    defaultValues,
+    defaultValues: {
+      ...defaultValues,
+      doc_date: formatDate(startDate)
+    },
     resolver: zodResolver(InternalFormSchema)
   })
 
@@ -140,25 +150,23 @@ const InternalDetails = ({ id, onSuccess: onSuccess }: InternalDetailsProps) => 
   }, [values])
 
   useEffect(() => {
-    if (!internalTransfer?.data) {
-      form.reset(defaultValues)
-      return
+    if (internal?.data) {
+      form.reset({
+        ...internal.data,
+        kimdan_id: internal.data.kimdan.id,
+        kimga_id: internal.data.kimga.id,
+        childs: internal.data.childs.map((child) => ({
+          ...child,
+          group_jur7_id: child.group.id,
+          name: child.product.name,
+          group_number: child.group.group_number,
+          edin: child.product.edin,
+          inventar_num: child.product.inventar_num,
+          serial_num: child.product.serial_num
+        }))
+      })
     }
-    form.reset({
-      ...internalTransfer.data,
-      kimdan_id: internalTransfer.data.kimdan.id,
-      kimga_id: internalTransfer.data.kimga.id,
-      childs: internalTransfer.data.childs.map((child) => ({
-        ...child,
-        group_jur7_id: child.group.id,
-        name: child.product.name,
-        group_number: child.group.group_number,
-        edin: child.product.edin,
-        inventar_num: child.product.inventar_num,
-        serial_num: child.product.serial_num
-      }))
-    })
-  }, [form, internalTransfer])
+  }, [form, internal])
   useEffect(() => {
     if (id !== 'create') {
       return
