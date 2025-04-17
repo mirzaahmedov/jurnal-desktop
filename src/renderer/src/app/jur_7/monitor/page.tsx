@@ -85,7 +85,7 @@ export const Jur7MonitorPage = () => {
 
   return (
     <ListView>
-      <ListView.Header>
+      <ListView.Header className="flex items-center justify-between">
         <ListView.RangeDatePicker
           {...dates}
           validateDate={validateDateWithinSelectedMonth}
