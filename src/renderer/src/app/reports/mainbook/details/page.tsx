@@ -68,7 +68,8 @@ const MainbookDetailsPage = () => {
     queryKey: [
       MainbookQueryKeys.getTypes,
       {
-        budjet_id: budjet_id!
+        budjet_id: budjet_id!,
+        main_schet_id: main_schet_id!
       }
     ],
     queryFn: MainbookService.getTypes,
@@ -102,16 +103,17 @@ const MainbookDetailsPage = () => {
     mutationKey: [MainbookQueryKeys.getCheckSaldo],
     mutationFn: MainbookService.getSaldoCheck,
     onSuccess: () => {
-      autoFill({ year, month, budjet_id: budjet_id! })
+      autoFill({ year, month, budjet_id: budjet_id!, main_schet_id: main_schet_id! })
     },
     onError: (error) => {
       if ('status' in error && error.status === 404) {
         getUniqueSchets({
-          budjet_id: budjet_id!
+          budjet_id: budjet_id!,
+          main_schet_id: main_schet_id!
         })
         return
       }
-      autoFill({ year, month, budjet_id: budjet_id! })
+      autoFill({ year, month, budjet_id: budjet_id!, main_schet_id: main_schet_id! })
     }
   })
 
@@ -188,7 +190,8 @@ const MainbookDetailsPage = () => {
   useEffect(() => {
     if (id === 'create') {
       checkSaldo({
-        budjet_id: budjet_id!
+        budjet_id: budjet_id!,
+        main_schet_id: main_schet_id!
       })
     }
   }, [id, year, month, budjet_id])
@@ -334,7 +337,7 @@ const MainbookDetailsPage = () => {
               <SearchInput onKeyDown={handleSearch} />
               <div className="flex items-center gap-5">
                 <MonthPicker
-                  isDisabled={isEditable}
+                  isDisabled={id !== 'create' && isEditable}
                   value={date}
                   onChange={(value) => {
                     const date = new Date(value)
@@ -344,7 +347,8 @@ const MainbookDetailsPage = () => {
                       autoFill({
                         year: date.getFullYear(),
                         month: date.getMonth() + 1,
-                        budjet_id: budjet_id!
+                        budjet_id: budjet_id!,
+                        main_schet_id: main_schet_id!
                       })
                     }
                   }}
@@ -356,7 +360,8 @@ const MainbookDetailsPage = () => {
                       autoFill({
                         year,
                         month,
-                        budjet_id: budjet_id!
+                        budjet_id: budjet_id!,
+                        main_schet_id: main_schet_id!
                       })
                     }}
                     loading={isAutoFilling}

@@ -33,14 +33,21 @@ class MainbookServiceBuilder extends CRUDService<Mainbook, MainbookPayload> {
     this.getMainbookDocuments = this.getMainbookDocuments.bind(this)
   }
 
-  async getAutofillData(params: { month: number; year: number; budjet_id: number }) {
+  async getAutofillData(params: {
+    month: number
+    year: number
+    budjet_id: number
+    main_schet_id: number
+  }) {
     const res = await this.client.get<Response<MainbookAutoFill[]>>(`${this.endpoint}/data`, {
       params
     })
     return res.data
   }
 
-  async getTypes(ctx: QueryFunctionContext<[string, { budjet_id?: number }]>) {
+  async getTypes(
+    ctx: QueryFunctionContext<[string, { budjet_id?: number; main_schet_id: number }]>
+  ) {
     const params = ctx.queryKey[1]
     const res = await this.client.get<Response<MainbookType[]>>(`${this.endpoint}/type`, {
       params
@@ -48,7 +55,7 @@ class MainbookServiceBuilder extends CRUDService<Mainbook, MainbookPayload> {
     return res.data
   }
 
-  async getSaldoCheck(params: { budjet_id: number }) {
+  async getSaldoCheck(params: { budjet_id: number; main_schet_id: number }) {
     const res = await this.client.get<Response<unknown>>(`${this.endpoint}/check`, {
       headers: {
         'notify-error': false
@@ -58,7 +65,7 @@ class MainbookServiceBuilder extends CRUDService<Mainbook, MainbookPayload> {
     return res.data
   }
 
-  async getUniqueSchets(params: { budjet_id: number }) {
+  async getUniqueSchets(params: { budjet_id: number; main_schet_id: number }) {
     const res = await this.client.get<
       Response<{
         schets: MainbookUniqueSchet[]
@@ -78,6 +85,7 @@ class MainbookServiceBuilder extends CRUDService<Mainbook, MainbookPayload> {
         string,
         {
           budjet_id: number
+          main_schet_id: number
           month: number
           year: number
           type_id: number
@@ -95,7 +103,7 @@ class MainbookServiceBuilder extends CRUDService<Mainbook, MainbookPayload> {
     return res.data
   }
 
-  async cleanSaldo(values: { budjet_id: number; password: string }) {
+  async cleanSaldo(values: { budjet_id: number; main_schet_id: number; password: string }) {
     const { budjet_id, password } = values
     const res = await this.client.delete(`${this.endpoint}/clean`, {
       params: {

@@ -1,6 +1,6 @@
 import type { Key } from 'react-aria-components'
 
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import { useTranslation } from 'react-i18next'
 
@@ -22,11 +22,11 @@ for (let i = 2010; i <= 2030; i++) {
 
 export interface YearSelectProps extends Omit<JollyComboBoxProps<YearOption>, 'children'> {}
 export const YearSelect = ({ selectedKey, onSelectionChange, ...props }: YearSelectProps) => {
-  const { t } = useTranslation()
+  const isFocused = useRef(false)
 
   const [inputValue, setInputValue] = useState(selectedKey ? String(selectedKey) : '')
 
-  console.log({ selectedKey })
+  const { t } = useTranslation()
 
   const handleSelectionChange = (id: Key | null) => {
     const exists = yearOptions.find((item) => item.value === id)
@@ -54,6 +54,18 @@ export const YearSelect = ({ selectedKey, onSelectionChange, ...props }: YearSel
     }
   }
 
+  useEffect(() => {
+    if (isFocused.current) {
+      return
+    }
+
+    if (selectedKey) {
+      setInputValue(String(selectedKey))
+    } else {
+      setInputValue('')
+    }
+  }, [selectedKey])
+
   return (
     <JollyComboBox
       {...props}
@@ -64,10 +76,16 @@ export const YearSelect = ({ selectedKey, onSelectionChange, ...props }: YearSel
       inputValue={inputValue}
       onInputChange={handleInputChange}
       onSelectionChange={handleSelectionChange}
-      onBlur={() => {
-        if (!inputValue) {
-          setInputValue(props.defaultSelectedKey ? String(props.defaultSelectedKey) : '')
+      onOpenChange={(open) => {
+        if (!open && !inputValue) {
+          setInputValue(selectedKey ? String(selectedKey) : '')
         }
+      }}
+      onFocus={() => {
+        isFocused.current = true
+      }}
+      onBlur={() => {
+        isFocused.current = false
       }}
       defaultItems={yearOptions}
       defaultFilter={(optionText, filterText) => {

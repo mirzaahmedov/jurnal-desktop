@@ -22,7 +22,7 @@ export const MainbookFilters = () => {
     <div className="flex items-center gap-5">
       <YearSelect
         selectedKey={year}
-        onSelectionChange={(value) => setYear(value ? Number(value) : new Date().getFullYear())}
+        onSelectionChange={(value) => setYear(value ? Number(value) : undefined)}
         className="w-24"
       />
       <MonthSelect

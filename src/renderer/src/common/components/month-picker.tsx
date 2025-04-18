@@ -1,3 +1,5 @@
+import type { PopoverProps } from 'react-aria-components'
+
 import { useState } from 'react'
 
 import { add, eachMonthOfInterval, endOfYear, format, parse } from 'date-fns'
@@ -124,12 +126,14 @@ export interface MonthPickerProps extends Omit<ButtonProps, 'onChange'> {
   readOnly?: boolean
   value: string
   onChange: (value: string) => void
+  popoverProps?: PopoverProps
 }
 export const MonthPicker = ({
   readOnly = false,
   value,
   onChange,
   className,
+  popoverProps,
   ...props
 }: MonthPickerProps) => {
   const popperToggle = useToggle()
@@ -157,7 +161,7 @@ export const MonthPicker = ({
           locale: i18n.language === 'ru' ? ru : uz
         })}
       </Button>
-      <Popover>
+      <Popover {...popoverProps}>
         <PopoverDialog>
           <MonthCalendar
             month={date}

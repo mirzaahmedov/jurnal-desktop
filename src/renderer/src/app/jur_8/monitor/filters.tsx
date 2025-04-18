@@ -10,7 +10,7 @@ export const JUR8MonitorFilters = () => {
   return (
     <YearSelect
       selectedKey={year}
-      onSelectionChange={(value) => setYear(value ? Number(value) : new Date().getFullYear())}
+      onSelectionChange={(value) => setYear(value ? Number(value) : undefined)}
       className="w-24"
     />
   )

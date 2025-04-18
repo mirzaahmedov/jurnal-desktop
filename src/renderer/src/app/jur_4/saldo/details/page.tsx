@@ -97,7 +97,7 @@ const PodotchetSaldoDetailsPage = () => {
   const { isPending: isAutoFilling, mutate: autoFill } = useMutation({
     mutationKey: [PodotchetSaldoQueryKeys.getAutofill],
     mutationFn: PodotchetSaldoService.getAutofillData,
-    onSuccess: (res) => {
+    onSuccess: (res, values) => {
       if (res?.data?.length) {
         const total = calculateTotal(res.data)
         res.data.push({
@@ -109,7 +109,7 @@ const PodotchetSaldoDetailsPage = () => {
         } as any)
       }
       form.setValue('podotchets', res?.data ?? [])
-      setEditable(false)
+      setEditable(values.first)
     },
     onError: () => {
       form.setValue('podotchets', [])
@@ -146,14 +146,6 @@ const PodotchetSaldoDetailsPage = () => {
   const date = useMemo(() => formatDate(new Date(year, month - 1)), [year, month])
 
   useEffect(() => {
-    if (id === 'create') {
-      form.reset({
-        year: startDate.getFullYear(),
-        month: startDate.getMonth() + 1,
-        podotchets: []
-      })
-      return
-    }
     if (saldo?.data) {
       if (saldo.data.childs?.length) {
         const total = calculateTotal(saldo.data.childs)

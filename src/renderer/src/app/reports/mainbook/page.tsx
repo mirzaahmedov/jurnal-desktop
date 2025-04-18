@@ -109,6 +109,7 @@ const MainbookPage = () => {
       onConfirm(password) {
         cleanMainbook({
           budjet_id: budjet_id!,
+          main_schet_id: main_schet_id!,
           password
         })
       }
