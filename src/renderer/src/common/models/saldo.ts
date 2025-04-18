@@ -1,4 +1,10 @@
-export interface OstatokProduct {
+export enum SaldoType {
+  Import = 'import',
+  Saldo = 'saldo',
+  Prixod = 'prixod'
+}
+
+export interface SaldoProduct {
   id: number
   eski_iznos_summa: number
   region_id: number
@@ -7,6 +13,7 @@ export interface OstatokProduct {
   edin: string
   inventar_num: string
   serial_num: string
+  type: SaldoType
   group_id: number
   group_name: string
   group_number: string

@@ -110,6 +110,7 @@
   "create-something": "Создать {{something}}",
   "update-something": "Обновить {{something}}",
   "edit-resource": "Редактировать {{resource}}",
+  "import": "Импорт",
   "import-excel": "Импорт из Excel",
   "export-excel": "Экспорт в Excel",
   "group": "Группа",

@@ -33,7 +33,6 @@ import { MainbookService } from './service'
 const MainbookPage = () => {
   const pagination = usePagination()
   const queryClient = useQueryClient()
-  const budjet_id = useRequisitesStore((store) => store.budjet_id)
   const report_title_id = useSettingsStore((store) => store.report_title_id)
   const navigate = useNavigate()
   const setLayout = useLayoutStore((store) => store.setLayout)
@@ -42,6 +41,7 @@ const MainbookPage = () => {
 
   const { t } = useTranslation(['app'])
   const { confirm } = useConfirm()
+  const { budjet_id, main_schet_id } = useRequisitesStore()
   const { queuedMonths } = useSaldoController({
     ns: SaldoNamespace.MAINBOOK
   })
@@ -51,6 +51,7 @@ const MainbookPage = () => {
       MainbookQueryKeys.getAll,
       {
         budjet_id,
+        main_schet_id,
         page: pagination.page,
         limit: pagination.limit,
         year
@@ -163,6 +164,7 @@ const MainbookPage = () => {
       <ListView.Footer>
         <ListView.Pagination
           pageCount={mainbook?.meta?.pageCount ?? 0}
+          count={mainbook?.meta?.count ?? 0}
           {...pagination}
         />
       </ListView.Footer>

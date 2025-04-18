@@ -29,10 +29,10 @@ const JUR8MonitorDetailsPage = () => {
   const queryClient = useQueryClient()
   const startDate = useSelectedMonthStore((store) => store.startDate)
   const setLayout = useLayoutStore((store) => store.setLayout)
-  const budjet_id = useRequisitesStore((store) => store.budjet_id)
 
   const { id } = useParams()
   const { t } = useTranslation(['app'])
+  const { budjet_id, main_schet_id } = useRequisitesStore()
 
   const form = useForm({
     defaultValues: {
@@ -43,7 +43,14 @@ const JUR8MonitorDetailsPage = () => {
   })
 
   const { data: monitor, isFetching } = useQuery({
-    queryKey: [JUR8MonitorQueryKeys.getById, Number(id), { budjet_id: budjet_id! }],
+    queryKey: [
+      JUR8MonitorQueryKeys.getById,
+      Number(id),
+      {
+        budjet_id: budjet_id!,
+        main_schet_id: main_schet_id!
+      }
+    ],
     queryFn: JUR8MonitorService.getMonitorById,
     enabled: id !== 'create'
   })
@@ -144,7 +151,12 @@ const JUR8MonitorDetailsPage = () => {
   }, [setLayout, navigate, t, id])
   useEffect(() => {
     if (id === 'create') {
-      autoFill({ year, month, budjet_id: budjet_id! })
+      autoFill({
+        year,
+        month,
+        budjet_id: budjet_id!,
+        main_schet_id: main_schet_id!
+      })
     }
   }, [id, year, month, budjet_id])
 
@@ -209,7 +221,8 @@ const JUR8MonitorDetailsPage = () => {
                       autoFill({
                         year: date.getFullYear(),
                         month: date.getMonth() + 1,
-                        budjet_id: budjet_id!
+                        budjet_id: budjet_id!,
+                        main_schet_id: main_schet_id!
                       })
                     }
                   }}
@@ -217,7 +230,14 @@ const JUR8MonitorDetailsPage = () => {
                 {id !== 'create' ? (
                   <Button
                     type="button"
-                    onClick={() => autoFill({ year, month, budjet_id: budjet_id! })}
+                    onClick={() =>
+                      autoFill({
+                        year,
+                        month,
+                        budjet_id: budjet_id!,
+                        main_schet_id: main_schet_id!
+                      })
+                    }
                     loading={isAutoFilling}
                   >
                     {t('autofill')}

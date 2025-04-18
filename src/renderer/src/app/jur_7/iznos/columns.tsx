@@ -1,4 +1,4 @@
-import type { OstatokProduct } from '@/common/models'
+import type { SaldoProduct } from '@/common/models'
 
 import { Trans } from 'react-i18next'
 
@@ -9,7 +9,7 @@ import { IDCell } from '@/common/components/table/renderers/id'
 import { getMonthName } from '@/common/lib/date'
 import { formatLocaleDate, formatNumber } from '@/common/lib/format'
 
-export const iznosColumns: ColumnDef<OstatokProduct>[] = [
+export const iznosColumns: ColumnDef<SaldoProduct>[] = [
   {
     key: 'id',
     renderCell: IDCell,

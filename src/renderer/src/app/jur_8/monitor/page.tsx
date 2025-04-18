@@ -21,16 +21,16 @@ import { JUR8MonitorFilters, useYearFilter } from './filters'
 import { JUR8MonitorService } from './service'
 
 const JUR8MonitorPage = () => {
-  const { t } = useTranslation(['app'])
-  const { confirm } = useConfirm()
-
-  const [year] = useYearFilter()
-
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const pagination = usePagination()
-  const budjet_id = useRequisitesStore((store) => store.budjet_id)
   const setLayout = useLayoutStore((store) => store.setLayout)
+
+  const [year] = useYearFilter()
+
+  const { t } = useTranslation(['app'])
+  const { confirm } = useConfirm()
+  const { budjet_id, main_schet_id } = useRequisitesStore()
 
   const { data: monitoring, isFetching } = useQuery({
     queryKey: [
@@ -38,7 +38,8 @@ const JUR8MonitorPage = () => {
       {
         ...pagination,
         year,
-        budjet_id
+        budjet_id,
+        main_schet_id
       }
     ],
     queryFn: JUR8MonitorService.getAll

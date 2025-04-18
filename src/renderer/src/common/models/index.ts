@@ -1,5 +1,5 @@
 export * from './access'
-export * from './ostatok'
+export * from './saldo'
 export * from './podotchet'
 export * from './budjet'
 export * from './shartnoma'

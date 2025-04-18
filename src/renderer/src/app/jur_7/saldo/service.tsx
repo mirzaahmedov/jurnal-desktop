@@ -1,6 +1,6 @@
 import type { SaldoFormValues } from './config'
 import type { MonthValue } from '@/common/features/saldo'
-import type { OstatokProduct, Response } from '@/common/models'
+import type { Response, SaldoProduct } from '@/common/models'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
@@ -109,7 +109,7 @@ export const MaterialWarehouseSaldoService = new MaterialWarehouseSaldoServiceBu
     return {}
   })
 
-export const MaterialWarehouseSaldoProductService = new CRUDService<OstatokProduct>({
+export const MaterialWarehouseSaldoProductService = new CRUDService<SaldoProduct>({
   endpoint: ApiEndpoints.saldo_product
 })
   .use(budjet())

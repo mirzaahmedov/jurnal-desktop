@@ -1,4 +1,4 @@
-import type { OstatokProduct } from '@/common/models'
+import type { SaldoProduct } from '@/common/models'
 import type { DialogProps } from '@radix-ui/react-dialog'
 
 import { useEffect } from 'react'
@@ -20,7 +20,7 @@ import { IznosFormSchema, IznosQueryKeys, defaultValues } from './config'
 import { iznosService } from './service'
 
 type EditIznosDialogProps = DialogProps & {
-  selected: OstatokProduct | null
+  selected: SaldoProduct | null
 }
 export const EditIznosDialog = ({ selected, ...props }: EditIznosDialogProps) => {
   const queryClient = useQueryClient()

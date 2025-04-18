@@ -1,4 +1,4 @@
-import type { OstatokProduct } from '@/common/models'
+import type { SaldoProduct } from '@/common/models'
 
 import { useEffect, useState } from 'react'
 
@@ -61,7 +61,7 @@ const MaterialWarehouseSaldoPage = () => {
   const [deleteExistingDocumentError, setDeleteExistingDocumentError] = useState<{
     message: string
     docs: OstatokDeleteExistingDocument[]
-    product?: OstatokProduct
+    product?: SaldoProduct
   }>()
   const [deleteExistingSaldoError, setDeleteExistingSaldoError] = useState<{
     message: string
@@ -72,7 +72,7 @@ const MaterialWarehouseSaldoPage = () => {
     result: ImportValidationErrorRow
   }>()
 
-  const [selectedRows, setSelectedRows] = useState<OstatokProduct[]>([])
+  const [selectedRows, setSelectedRows] = useState<SaldoProduct[]>([])
   const [selectedDate, setSelectedDate] = useState<undefined | Date>(startDate)
   const [search] = useSearchFilter()
 
@@ -166,7 +166,9 @@ const MaterialWarehouseSaldoPage = () => {
   })
 
   useEffect(() => {
-    handleOstatokError(ostatokError)
+    if (ostatokError) {
+      handleOstatokError(ostatokError)
+    }
   }, [ostatokError])
   useEffect(() => {
     const date = form.getValues('date')
@@ -216,7 +218,7 @@ const MaterialWarehouseSaldoPage = () => {
     })
   }
 
-  const handleDeselectRow = (row: OstatokProduct) => {
+  const handleDeselectRow = (row: SaldoProduct) => {
     setSelectedRows((prev) => {
       return prev.filter((p) => p.product_id !== row.product_id)
     })

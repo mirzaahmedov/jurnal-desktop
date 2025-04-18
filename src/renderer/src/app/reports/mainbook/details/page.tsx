@@ -31,7 +31,6 @@ const MainbookDetailsPage = () => {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const setLayout = useLayoutStore((store) => store.setLayout)
-  const budjet_id = useRequisitesStore((store) => store.budjet_id)
   const startDate = useSelectedMonthStore((store) => store.startDate)
 
   const [isEditable, setEditable] = useState(false)
@@ -43,6 +42,7 @@ const MainbookDetailsPage = () => {
 
   const { id } = useParams()
   const { t } = useTranslation(['app'])
+  const { budjet_id, main_schet_id } = useRequisitesStore()
 
   const form = useForm({
     defaultValues: {
@@ -53,7 +53,14 @@ const MainbookDetailsPage = () => {
   })
 
   const { data: mainbook, isFetching } = useQuery({
-    queryKey: [MainbookQueryKeys.getById, Number(id)],
+    queryKey: [
+      MainbookQueryKeys.getById,
+      Number(id),
+      {
+        budjet_id,
+        main_schet_id
+      }
+    ],
     queryFn: MainbookService.getById,
     enabled: id !== 'create'
   })

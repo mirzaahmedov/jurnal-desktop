@@ -1,4 +1,4 @@
-import type { OstatokProduct } from '@/common/models'
+import type { SaldoProduct } from '@/common/models'
 
 import { useEffect, useState } from 'react'
 
@@ -46,7 +46,7 @@ const IznosPage = () => {
   })
 
   const [search] = useSearchFilter()
-  const [selected] = useState<OstatokProduct | null>(null)
+  const [selected] = useState<SaldoProduct | null>(null)
   const [selectedDate, setSelectedDate] = useState<undefined | Date>(startDate)
 
   const form = useForm({

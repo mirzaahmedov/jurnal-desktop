@@ -1,4 +1,4 @@
-import type { OstatokProduct } from '@/common/models/ostatok'
+import type { SaldoProduct } from '@/common/models/saldo'
 
 import { Trans } from 'react-i18next'
 
@@ -6,9 +6,10 @@ import { type ColumnDef, Copyable } from '@/common/components'
 import { DataList } from '@/common/components/data-list'
 import { HoverInfoCell } from '@/common/components/table/renderers'
 import { IDCell } from '@/common/components/table/renderers/id'
+import { Badge } from '@/common/components/ui/badge'
 import { formatLocaleDate, formatNumber } from '@/common/lib/format'
 
-export const ostatokProductColumns: ColumnDef<OstatokProduct>[] = [
+export const ostatokProductColumns: ColumnDef<SaldoProduct>[] = [
   {
     key: 'id',
     renderCell: IDCell,
@@ -100,6 +101,14 @@ export const ostatokProductColumns: ColumnDef<OstatokProduct>[] = [
           />
         }
       />
+    )
+  },
+  {
+    key: 'type',
+    renderCell: (row) => (
+      <Badge>
+        <Trans>{row.type}</Trans>
+      </Badge>
     )
   },
   {

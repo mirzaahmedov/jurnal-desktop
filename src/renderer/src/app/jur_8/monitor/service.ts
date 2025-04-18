@@ -2,7 +2,7 @@ import type { JUR8Monitor, JUR8MonitorChild, Response, ResponseMeta } from '@/co
 import type { QueryFunctionContext } from '@tanstack/react-query'
 
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
-import { budjet } from '@/common/features/crud/middleware'
+import { budjet, main_schet } from '@/common/features/crud/middleware'
 
 interface JUR8MonitorFormValues {
   year: number
@@ -28,8 +28,13 @@ class JUR8MonitorServiceBuilder extends CRUDService<
     this.getMonitorById = this.getMonitorById.bind(this)
   }
 
-  async getAutofillData(values: { budjet_id: number; year: number; month: number }) {
-    const { budjet_id, year, month } = values
+  async getAutofillData(values: {
+    budjet_id: number
+    main_schet_id: number
+    year: number
+    month: number
+  }) {
+    const { budjet_id, main_schet_id, year, month } = values
     const res = await this.client.get<
       Response<{
         childs: JUR8MonitorChild[]
@@ -38,6 +43,7 @@ class JUR8MonitorServiceBuilder extends CRUDService<
     >(`${this.endpoint}/data`, {
       params: {
         budjet_id,
+        main_schet_id,
         year,
         month
       }
@@ -45,7 +51,9 @@ class JUR8MonitorServiceBuilder extends CRUDService<
     return res.data
   }
 
-  async getMonitorById(ctx: QueryFunctionContext<[string, number, { budjet_id: number }]>) {
+  async getMonitorById(
+    ctx: QueryFunctionContext<[string, number, { budjet_id: number; main_schet_id: number }]>
+  ) {
     const id = ctx.queryKey[1]
     const params = ctx.queryKey[2]
     const res = await this.client.get<
@@ -62,4 +70,4 @@ class JUR8MonitorServiceBuilder extends CRUDService<
   }
 }
 
-export const JUR8MonitorService = new JUR8MonitorServiceBuilder().use(budjet())
+export const JUR8MonitorService = new JUR8MonitorServiceBuilder().use(budjet()).use(main_schet())

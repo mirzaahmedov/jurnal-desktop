@@ -3,7 +3,7 @@ import type { Mainbook, MainbookDocumentInfo, Response } from '@/common/models'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
-import { budjet } from '@/common/features/crud/middleware'
+import { budjet, main_schet } from '@/common/features/crud/middleware'
 
 export interface MainbookPayloadChild {
   type_id: number
@@ -107,4 +107,4 @@ class MainbookServiceBuilder extends CRUDService<Mainbook, MainbookPayload> {
   }
 }
 
-export const MainbookService = new MainbookServiceBuilder().use(budjet())
+export const MainbookService = new MainbookServiceBuilder().use(budjet()).use(main_schet())
