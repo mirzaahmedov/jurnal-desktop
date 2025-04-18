@@ -8,6 +8,7 @@ import { type ColumnDef, GenericTable } from '@/common/components'
 import {
   DialogContent,
   DialogHeader,
+  DialogOverlay,
   DialogTitle,
   DialogTrigger
 } from '@/common/components/jolly/dialog'
@@ -58,19 +59,23 @@ export const MainbookDocumentsTracker = ({
   })
   return (
     <DialogTrigger {...props}>
-      <DialogContent className="w-full max-w-[1800px] h-full max-h-[900px] flex flex-col p-0 gap-0">
-        <DialogHeader className="p-5">
-          <DialogTitle>
-            <Trans>documents</Trans>
-          </DialogTitle>
-        </DialogHeader>
-        <div className="flex-1">
-          <GenericTable
-            data={documents?.data ?? []}
-            columnDefs={columns}
-          />
-        </div>
-      </DialogContent>
+      <DialogOverlay>
+        <DialogContent className="w-full max-w-[1800px] h-full max-h-[900px] flex flex-col p-0 gap-0">
+          <div>
+            <DialogHeader className="p-5">
+              <DialogTitle>
+                <Trans>documents</Trans>
+              </DialogTitle>
+            </DialogHeader>
+            <div className="flex-1">
+              <GenericTable
+                data={documents?.data ?? []}
+                columnDefs={columns}
+              />
+            </div>
+          </div>
+        </DialogContent>
+      </DialogOverlay>
     </DialogTrigger>
   )
 }

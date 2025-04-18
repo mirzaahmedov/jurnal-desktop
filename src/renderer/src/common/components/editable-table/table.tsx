@@ -311,7 +311,7 @@ const EditableTableRowRenderer = <T extends object, R extends T[ArrayPath<NoInfe
                     <EditableTableCell
                       style={{ width, minWidth, maxWidth }}
                       className={cn(
-                        'group-data-[highlighted=true]/row:bg-brand/10 group-data-[highlighted=true]/row:border-brand/20',
+                        'group-focus-within/row:bg-brand/10 group-focus-within/row:border-brand/20 group-focus-within/row:group-hover/row:bg-brand/10 group-focus-within/row:group-hover/row:hover:border-brand/20',
                         className
                       )}
                       onDoubleClick={(event) => {
