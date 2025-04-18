@@ -72,14 +72,17 @@ class MaterialWarehouseSaldoServiceBuilder extends CRUDService<never, SaldoFormV
     return res.data
   }
 
-  async getMonthlySaldo(ctx: QueryFunctionContext<[string, { year: number; budjet_id: number }]>) {
-    const { year, budjet_id } = ctx.queryKey[1] ?? {}
+  async getMonthlySaldo(
+    ctx: QueryFunctionContext<[string, { year: number; budjet_id: number; main_schet_id: number }]>
+  ) {
+    const { year, budjet_id, main_schet_id } = ctx.queryKey[1] ?? {}
     const res = await this.client.get<Response<MonthValue[]>>(
       `${ApiEndpoints.jur7_monitoring}/saldo/date`,
       {
         params: {
           year,
-          budjet_id
+          budjet_id,
+          main_schet_id
         }
       }
     )

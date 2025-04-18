@@ -31,14 +31,15 @@ export const MonthlySaldoTrackerDialog = ({
 
   const [year, setYear] = useState(startDate.getFullYear())
 
-  const { budjet_id } = useRequisitesStore()
+  const { budjet_id, main_schet_id } = useRequisitesStore()
   const { t } = useTranslation()
   const { data: saldoMonths, isFetching } = useQuery({
     queryKey: [
       SaldoQueryKeys.getMonthlySaldo,
       {
         year: year,
-        budjet_id: budjet_id!
+        budjet_id: budjet_id!,
+        main_schet_id: main_schet_id!
       }
     ],
     queryFn: MaterialWarehouseSaldoService.getMonthlySaldo,
