@@ -21,7 +21,7 @@ import { useLayoutStore } from '@/common/layout/store'
 import { formatDate } from '@/common/lib/date'
 import { ListView } from '@/common/views'
 
-import { iznosQueryKeys } from '../iznos/config'
+import { IznosQueryKeys } from '../iznos/config'
 import { SaldoQueryKeys } from '../saldo'
 import { internalColumns } from './columns'
 import { internalQueryKeys } from './config'
@@ -66,7 +66,7 @@ const InternalPage = () => {
           queryKey: [SaldoQueryKeys.getAll]
         })
         queryClient.invalidateQueries({
-          queryKey: [iznosQueryKeys.getAll]
+          queryKey: [IznosQueryKeys.getAll]
         })
       })
     }

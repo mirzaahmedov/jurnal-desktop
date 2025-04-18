@@ -107,7 +107,12 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
                 >
                   {t('inventar-num')}
                 </EditableTableHead>
-                <EditableTableHead rowSpan={2}>{t('ei')}</EditableTableHead>
+                <EditableTableHead
+                  rowSpan={2}
+                  style={{ width: 160 }}
+                >
+                  {t('ei')}
+                </EditableTableHead>
                 <EditableTableHead
                   rowSpan={2}
                   className="text-right"
@@ -445,7 +450,7 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
                         </div>
                       </EditableTableCell>
 
-                      <EditableTableCell>
+                      <EditableTableCell className="w-[100px]">
                         <SchetEditor
                           tabIndex={tabIndex}
                           error={errors?.kredit_schet}
@@ -455,7 +460,7 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
                           }}
                         />
                       </EditableTableCell>
-                      <EditableTableCell>
+                      <EditableTableCell className="w-[140px]">
                         <SubSchetEditor
                           tabIndex={tabIndex}
                           error={errors?.kredit_sub_schet}
@@ -639,6 +644,8 @@ const NaimenovanieCells = ({
     })
   )
 
+  console.log({ edin: row.edin })
+
   return (
     <>
       <EditableTableCell>
@@ -698,13 +705,16 @@ const NaimenovanieCells = ({
       <EditableTableCell>
         <div className="relative">
           <EdinSelect
-            tabIndex={tabIndex}
             error={!!errors.edin}
-            value={row.edin}
-            onValueChange={(edin) => {
-              onChangeField(index, 'edin', edin)
+            tabIndex={tabIndex}
+            selectedKey={row.edin}
+            onSelectionChange={(value) => {
+              onChangeField(index, 'edin', value)
             }}
-            triggerClassName={inputVariants({ editor: true, error: !!errors.edin })}
+            inputProps={{
+              tabIndex,
+              className: 'border-0 focus-visible:!ring-0 focus-visible:!border-0'
+            }}
           />
         </div>
       </EditableTableCell>

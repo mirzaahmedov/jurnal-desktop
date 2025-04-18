@@ -138,13 +138,12 @@ const AdminUserDialog = (props: AdminUserDialogProps) => {
                       <FormLabel className="text-right col-span-2">{t('region')}</FormLabel>
                       <SelectField
                         {...field}
-                        withFormControl
                         triggerClassName="col-span-4"
                         placeholder={t('choose', { what: t('region') })}
                         options={region?.data ?? []}
                         getOptionLabel={(option) => option.name}
                         getOptionValue={(option) => option.id}
-                        value={field.value ? String(field.value) : undefined}
+                        value={field.value ? String(field.value) : ''}
                         onValueChange={(value) => field.onChange(Number(value))}
                       />
                       <FormMessage className="text-end col-span-6" />

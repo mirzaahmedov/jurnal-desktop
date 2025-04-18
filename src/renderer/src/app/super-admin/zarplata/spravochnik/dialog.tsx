@@ -206,7 +206,7 @@ export const ZarplataSpravochnikDialog = ({
                         <SpravochnikTypeSelect
                           disabled={!!selected}
                           {...field}
-                          triggerClassName="col-span-4 disabled:opacity-100"
+                          className="col-span-4 disabled:opacity-100"
                         />
                       </FormControl>
                       <FormMessage className="text-end col-span-6" />

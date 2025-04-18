@@ -37,10 +37,12 @@ function ListBox<T extends object>({ className, ...props }: AriaListBoxProps<T>)
 const ListBoxItem = <T extends object>({
   className,
   children,
+  itemRef,
   ...props
-}: AriaListBoxItemProps<T>) => {
+}: AriaListBoxItemProps<T> & { itemRef?: React.Ref<T> }) => {
   return (
     <AriaListBoxItem
+      ref={itemRef}
       textValue={props.textValue || (typeof children === 'string' ? children : undefined)}
       className={composeRenderProps(className, (className) =>
         cn(

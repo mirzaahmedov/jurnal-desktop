@@ -7,7 +7,7 @@ import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 
-import { iznosQueryKeys } from '@/app/jur_7/iznos/config'
+import { IznosQueryKeys } from '@/app/jur_7/iznos/config'
 import { createResponsibleSpravochnik } from '@/app/jur_7/responsible/service'
 import { SaldoQueryKeys } from '@/app/jur_7/saldo'
 import { handleOstatokResponse } from '@/app/jur_7/saldo/utils'
@@ -75,7 +75,7 @@ const InternalDetails = ({ id, onSuccess: onSuccess }: InternalDetailsProps) => 
         queryKey: [SaldoQueryKeys.getAll]
       })
       queryClient.invalidateQueries({
-        queryKey: [iznosQueryKeys.getAll]
+        queryKey: [IznosQueryKeys.getAll]
       })
 
       onSuccess?.()
@@ -97,7 +97,7 @@ const InternalDetails = ({ id, onSuccess: onSuccess }: InternalDetailsProps) => 
         queryKey: [SaldoQueryKeys.getAll]
       })
       queryClient.invalidateQueries({
-        queryKey: [iznosQueryKeys.getAll]
+        queryKey: [IznosQueryKeys.getAll]
       })
 
       onSuccess?.()

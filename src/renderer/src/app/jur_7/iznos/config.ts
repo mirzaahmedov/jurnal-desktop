@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-export const iznosQueryKeys = {
+export const IznosQueryKeys = {
   getAll: 'iznos/all'
 }
 

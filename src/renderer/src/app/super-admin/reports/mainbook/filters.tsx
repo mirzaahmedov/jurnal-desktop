@@ -16,25 +16,25 @@ export const useBudjetFilter = () => {
 export const MainbookFilters = () => {
   const [year, setYear] = useYearFilter()
   const [month, setMonth] = useMonthFilter()
-  const [budjet_id, setBudjetId] = useBudjetFilter()
+  const [budjet, setBudjet] = useBudjetFilter()
 
   return (
     <div className="flex items-center gap-5">
       <YearSelect
-        value={year}
-        onValueChange={setYear}
-        triggerClassName="w-24"
+        selectedKey={year}
+        onSelectionChange={(value) => setYear(value ? Number(value) : new Date().getFullYear())}
+        className="w-24"
       />
       <MonthSelect
-        value={month}
-        onValueChange={setMonth}
-        triggerClassName="w-32"
+        selectedKey={month}
+        onSelectionChange={(value) => setMonth(value ? Number(value) : new Date().getMonth() + 1)}
+        className="w-32"
       />
       <BudjetSelect
         withOptionAll
-        value={budjet_id}
-        onValueChange={(value) => setBudjetId(value ? value : undefined)}
-        triggerClassName="w-96"
+        selectedKey={budjet}
+        onSelectionChange={(value) => setBudjet(value ? (value as number) : undefined)}
+        className="w-96"
       />
     </div>
   )

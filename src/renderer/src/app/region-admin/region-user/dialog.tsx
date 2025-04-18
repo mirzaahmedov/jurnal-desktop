@@ -8,15 +8,16 @@ import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
 import { roleQueryKeys, roleService } from '@/app/super-admin/role'
-import { SelectField } from '@/common/components'
-import { Button } from '@/common/components/ui/button'
 import {
-  Dialog,
   DialogContent,
   DialogFooter,
   DialogHeader,
-  DialogTitle
-} from '@/common/components/ui/dialog'
+  DialogOverlay,
+  DialogTitle,
+  DialogTrigger
+} from '@/common/components/jolly/dialog'
+import { JollySelect, SelectItem } from '@/common/components/jolly/select'
+import { Button } from '@/common/components/ui/button'
 import {
   Form,
   FormControl,
@@ -32,14 +33,14 @@ import { regionUserKeys } from './constants'
 import { RegionUserPayloadSchema, type RegionUserPayloadType, regionUserService } from './service'
 
 type RegionUserDialogProps = {
-  open: boolean
+  isOpen: boolean
   onChangeOpen(value: boolean): void
-  data: User | null
+  selected: User | null
 }
 const RegionUserDialog = (props: RegionUserDialogProps) => {
-  const { open, onChangeOpen, data } = props
+  const { isOpen, onChangeOpen, selected } = props
 
-  const { data: role } = useQuery({
+  const { data: roles, isFetching: isFetchingRoles } = useQuery({
     queryKey: [roleQueryKeys.getAll],
     queryFn: roleService.getAll
   })
@@ -96,125 +97,132 @@ const RegionUserDialog = (props: RegionUserDialogProps) => {
     }
   })
 
-  const onSubmit = (payload: RegionUserPayloadType) => {
-    if (data) {
-      update(Object.assign(payload, { id: data.id }))
+  const onSubmit = form.handleSubmit((values) => {
+    if (selected) {
+      update({
+        ...values,
+        id: selected.id
+      })
     } else {
-      create(payload)
+      create(values)
     }
-  }
+  })
 
   useEffect(() => {
-    if (!data) {
+    if (!selected) {
       form.reset(defaultValues)
       return
     }
 
-    form.reset(data)
-  }, [form, data])
+    form.reset(selected)
+  }, [form, selected])
+
+  console.log(form.watch())
 
   return (
-    <Dialog
-      open={open}
+    <DialogTrigger
+      isOpen={isOpen}
       onOpenChange={onChangeOpen}
     >
-      <DialogContent className="max-w-xl">
-        <DialogHeader>
-          <DialogTitle>{data ? 'Изменить' : 'Добавить'} Пользователь</DialogTitle>
-        </DialogHeader>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)}>
-            <div className="grid gap-4 py-4">
-              <FormField
-                name="fio"
-                control={form.control}
-                render={({ field }) => (
-                  <FormItem>
-                    <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
-                      <FormLabel className="text-right col-span-2">Ф.И.О.</FormLabel>
-                      <FormControl>
-                        <Input
+      <DialogOverlay>
+        <DialogContent className="max-w-xl">
+          <DialogHeader>
+            <DialogTitle>{selected ? 'Изменить' : 'Добавить'} Пользователь</DialogTitle>
+          </DialogHeader>
+          <Form {...form}>
+            <form onSubmit={onSubmit}>
+              <div className="grid gap-4 py-4">
+                <FormField
+                  name="fio"
+                  control={form.control}
+                  render={({ field }) => (
+                    <FormItem>
+                      <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
+                        <FormLabel className="text-right col-span-2">Ф.И.О.</FormLabel>
+                        <FormControl>
+                          <Input
+                            className="col-span-4"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage className="text-end col-span-6" />
+                      </div>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  name="login"
+                  control={form.control}
+                  render={({ field }) => (
+                    <FormItem>
+                      <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
+                        <FormLabel className="text-right col-span-2">Логин</FormLabel>
+                        <FormControl>
+                          <Input
+                            className="col-span-4"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage className="text-end col-span-6" />
+                      </div>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  name="password"
+                  control={form.control}
+                  render={({ field }) => (
+                    <FormItem>
+                      <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
+                        <FormLabel className="text-right col-span-2">Пароль</FormLabel>
+                        <FormControl>
+                          <Input
+                            className="col-span-4"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage className="text-end col-span-6" />
+                      </div>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  name="role_id"
+                  control={form.control}
+                  render={({ field }) => (
+                    <FormItem>
+                      <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
+                        <FormLabel className="text-right col-span-2">Роль</FormLabel>
+                        <JollySelect
+                          isDisabled={isFetchingRoles}
+                          buttonRef={field.ref}
+                          items={roles?.data ?? []}
                           className="col-span-4"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage className="text-end col-span-6" />
-                    </div>
-                  </FormItem>
-                )}
-              />
-              <FormField
-                name="login"
-                control={form.control}
-                render={({ field }) => (
-                  <FormItem>
-                    <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
-                      <FormLabel className="text-right col-span-2">Логин</FormLabel>
-                      <FormControl>
-                        <Input
-                          className="col-span-4"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage className="text-end col-span-6" />
-                    </div>
-                  </FormItem>
-                )}
-              />
-              <FormField
-                name="password"
-                control={form.control}
-                render={({ field }) => (
-                  <FormItem>
-                    <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
-                      <FormLabel className="text-right col-span-2">Пароль</FormLabel>
-                      <FormControl>
-                        <Input
-                          className="col-span-4"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage className="text-end col-span-6" />
-                    </div>
-                  </FormItem>
-                )}
-              />
-              <FormField
-                name="role_id"
-                control={form.control}
-                render={({ field }) => (
-                  <FormItem>
-                    <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
-                      <FormLabel className="text-right col-span-2">Роль</FormLabel>
-                      <SelectField
-                        {...field}
-                        withFormControl
-                        triggerClassName="col-span-4"
-                        placeholder="Выберите роль"
-                        options={role?.data ?? []}
-                        getOptionLabel={(option) => option.name}
-                        getOptionValue={(option) => option.id}
-                        value={field.value ? String(field.value) : undefined}
-                        onValueChange={(value) => field.onChange(Number(value))}
-                      />
-                      <FormMessage className="text-end col-span-6" />
-                    </div>
-                  </FormItem>
-                )}
-              />
-            </div>
-            <DialogFooter>
-              <Button
-                type="submit"
-                disabled={isCreating || isUpdating}
-              >
-                {t('save')}
-              </Button>
-            </DialogFooter>
-          </form>
-        </Form>
-      </DialogContent>
-    </Dialog>
+                          placeholder="Выберите роль"
+                          selectedKey={field.value}
+                          onSelectionChange={field.onChange}
+                        >
+                          {(item) => <SelectItem id={item.id}>{item.name}</SelectItem>}
+                        </JollySelect>
+                        <FormMessage className="text-end col-span-6" />
+                      </div>
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <DialogFooter>
+                <Button
+                  type="submit"
+                  disabled={isCreating || isUpdating}
+                >
+                  {t('save')}
+                </Button>
+              </DialogFooter>
+            </form>
+          </Form>
+        </DialogContent>
+      </DialogOverlay>
+    </DialogTrigger>
   )
 }
 

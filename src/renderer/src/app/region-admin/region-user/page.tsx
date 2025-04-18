@@ -80,8 +80,8 @@ const RegionUserPage = () => {
         />
       </div>
       <RegionUserDialog
-        data={selected}
-        open={toggle.isOpen}
+        selected={selected}
+        isOpen={toggle.isOpen}
         onChangeOpen={toggle.setOpen}
       />
     </>

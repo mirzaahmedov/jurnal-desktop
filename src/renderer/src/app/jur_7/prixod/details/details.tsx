@@ -37,7 +37,7 @@ import {
   SummaFields
 } from '@/common/widget/form'
 
-import { iznosQueryKeys } from '../../iznos/config'
+import { IznosQueryKeys } from '../../iznos/config'
 import { SaldoQueryKeys } from '../../saldo'
 import { PrixodFormSchema, WarehousePrixodQueryKeys, defaultValues } from '../config'
 import { WarehousePrixodService, usePrixodCreate, usePrixodUpdate } from '../service'
@@ -95,7 +95,7 @@ const PrixodDetails = ({ id, onSuccess }: PrixodDetailsProps) => {
         queryKey: [SaldoQueryKeys.getAll]
       })
       queryClient.invalidateQueries({
-        queryKey: [iznosQueryKeys.getAll]
+        queryKey: [IznosQueryKeys.getAll]
       })
 
       onSuccess?.()
@@ -116,7 +116,7 @@ const PrixodDetails = ({ id, onSuccess }: PrixodDetailsProps) => {
         queryKey: [SaldoQueryKeys.getAll]
       })
       queryClient.invalidateQueries({
-        queryKey: [iznosQueryKeys.getAll]
+        queryKey: [IznosQueryKeys.getAll]
       })
 
       onSuccess?.()
@@ -135,7 +135,10 @@ const PrixodDetails = ({ id, onSuccess }: PrixodDetailsProps) => {
   })
 
   const form = useForm({
-    defaultValues,
+    defaultValues: {
+      ...defaultValues,
+      doc_date: formatDate(startDate)
+    },
     resolver: zodResolver(PrixodFormSchema)
   })
 
@@ -195,15 +198,9 @@ const PrixodDetails = ({ id, onSuccess }: PrixodDetailsProps) => {
   }, [values])
 
   useEffect(() => {
-    form.reset(
-      prixod?.data
-        ? {
-            ...defaultValues,
-            ...prixod?.data,
-            childs: prixod?.data?.childs ?? []
-          }
-        : defaultValues
-    )
+    if (prixod?.data) {
+      form.reset(prixod?.data)
+    }
   }, [form, prixod])
 
   const kimdan_id = form.watch('kimdan_id')

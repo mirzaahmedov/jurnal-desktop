@@ -1,5 +1,7 @@
 'use client'
 
+import { forwardRef } from 'react'
+
 import { type VariantProps, cva } from 'class-variance-authority'
 import {
   Button as AriaButton,
@@ -47,22 +49,25 @@ const buttonVariants = cva(
 
 interface ButtonProps extends AriaButtonProps, VariantProps<typeof buttonVariants> {}
 
-const Button = ({ className, variant, size, ...props }: ButtonProps) => {
-  return (
-    <AriaButton
-      className={composeRenderProps(className, (className) =>
-        cn(
-          buttonVariants({
-            variant,
-            size,
-            className
-          })
-        )
-      )}
-      {...props}
-    />
-  )
-}
+const Button = forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ className, variant, size, ...props }, ref) => {
+    return (
+      <AriaButton
+        ref={ref}
+        className={composeRenderProps(className, (className) =>
+          cn(
+            buttonVariants({
+              variant,
+              size,
+              className
+            })
+          )
+        )}
+        {...props}
+      />
+    )
+  }
+)
 
 export { Button, buttonVariants }
 export type { ButtonProps }

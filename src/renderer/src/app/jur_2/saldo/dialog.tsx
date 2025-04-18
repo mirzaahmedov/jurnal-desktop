@@ -38,7 +38,8 @@ import { useSelectedMonthStore } from '@/common/features/selected-month'
 import { capitalize } from '@/common/lib/string'
 
 import { BankSaldoQueryKeys, defaultValues } from './config'
-import { BankSaldoFormSchema, BankSaldoService } from './service'
+import { BankSaldoFormSchema } from './config'
+import { BankSaldoService } from './service'
 
 interface BankSaldoDialogProps {
   isOpen: boolean
@@ -159,9 +160,9 @@ export const BankSaldoDialog = ({ isOpen, onOpenChange, selected }: BankSaldoDia
                         <FormLabel className="text-right col-span-2">{t('year')}</FormLabel>
                         <FormControl>
                           <YearSelect
-                            readOnly={!!selected}
-                            value={field.value}
-                            onValueChange={field.onChange}
+                            isReadOnly={!!selected}
+                            selectedKey={field.value}
+                            onSelectionChange={(value) => field.onChange(value ? Number(value) : 0)}
                             className="col-span-4"
                           />
                         </FormControl>
@@ -178,11 +179,11 @@ export const BankSaldoDialog = ({ isOpen, onOpenChange, selected }: BankSaldoDia
                     <FormItem>
                       <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
                         <FormLabel className="text-right col-span-2">{t('month')}</FormLabel>
-                        <FormControl>
+                        <FormControl className="block">
                           <MonthSelect
-                            readOnly={!!selected}
-                            value={field.value}
-                            onValueChange={field.onChange}
+                            isReadonly={!!selected}
+                            selectedKey={field.value}
+                            onSelectionChange={(value) => field.onChange(value ? Number(value) : 0)}
                             className="col-span-4"
                           />
                         </FormControl>

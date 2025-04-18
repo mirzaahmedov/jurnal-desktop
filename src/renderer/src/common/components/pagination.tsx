@@ -80,7 +80,7 @@ export const Pagination = ({
               options={[5, 10, 15, 20, 25, 50, 100]}
               getOptionValue={String}
               getOptionLabel={String}
-              triggerClassName="min-w-[100px]"
+              className="min-w-[100px]"
             />
           </div>
         </>

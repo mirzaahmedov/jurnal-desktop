@@ -16,7 +16,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/common/compo
 import { Form, FormField } from '@/common/components/ui/form'
 import { capitalize } from '@/common/lib/string'
 
-import { IznosFormSchema, defaultValues, iznosQueryKeys } from './config'
+import { IznosFormSchema, IznosQueryKeys, defaultValues } from './config'
 import { iznosService } from './service'
 
 type EditIznosDialogProps = DialogProps & {
@@ -32,7 +32,7 @@ export const EditIznosDialog = ({ selected, ...props }: EditIznosDialogProps) =>
     onSuccess() {
       toast.success('Износ успешно обновлен')
       queryClient.invalidateQueries({
-        queryKey: [iznosQueryKeys.getAll]
+        queryKey: [IznosQueryKeys.getAll]
       })
       props.onOpenChange?.(false)
     },

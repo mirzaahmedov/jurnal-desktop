@@ -42,6 +42,7 @@ const OrganSaldoDetailsPage = () => {
   })
 
   const [isEditable, setEditable] = useState(false)
+  const [isRendering, setRendering] = useState(false)
 
   const { id } = useParams()
   const { t } = useTranslation(['app'])
@@ -69,7 +70,7 @@ const OrganSaldoDetailsPage = () => {
     mutationKey: [OrganSaldoQueryKeys.getCheckSaldo],
     mutationFn: OrganSaldoService.getSaldoCheck,
     onSuccess: () => {
-      autoFill({
+      handleAutofill({
         year,
         month,
         budjet_id: budjet_id!,
@@ -81,7 +82,7 @@ const OrganSaldoDetailsPage = () => {
     onError: (error) => {
       if ('status' in error && error.status === 404) {
         setEditable(true)
-        autoFill({
+        handleAutofill({
           year,
           month,
           budjet_id: budjet_id!,
@@ -147,13 +148,11 @@ const OrganSaldoDetailsPage = () => {
 
   useEffect(() => {
     if (id === 'create') {
-      form.reset({
-        year: startDate.getFullYear(),
-        month: startDate.getMonth() + 1,
-        organizations: []
-      })
-      return
+      form.setValue('year', startDate.getFullYear())
+      form.setValue('month', startDate.getMonth() + 1)
     }
+  }, [startDate])
+  useEffect(() => {
     if (saldo?.data) {
       if (saldo.data.childs?.length) {
         const total = calculateTotal(saldo.data.childs)
@@ -172,7 +171,7 @@ const OrganSaldoDetailsPage = () => {
       })
       setEditable(saldo.data.first)
     }
-  }, [form, saldo, id, startDate])
+  }, [form, saldo, id])
   useEffect(() => {
     setLayout({
       title: id === 'create' ? t('create') : t('edit'),
@@ -253,15 +252,25 @@ const OrganSaldoDetailsPage = () => {
   const columns = useMemo(() => getOrganSaldoProvodkaColumns(isEditable), [isEditable])
 
   useEffect(() => {
+    requestAnimationFrame(() => {
+      setRendering(false)
+    })
+  }, [rows])
+  useEffect(() => {
     if (error) {
       handleSaldoErrorDates(SaldoNamespace.JUR_3_152, error)
     }
   }, [error])
 
+  const handleAutofill = (values: Parameters<typeof autoFill>[0]) => {
+    setRendering(true)
+    autoFill(values)
+  }
+
   return (
     <DetailsView className="h-full">
       <DetailsView.Content
-        loading={isFetching || isAutoFilling || isCheckingSaldo}
+        loading={isFetching || isRendering || isAutoFilling || isCheckingSaldo}
         className="overflow-hidden h-full pb-20"
       >
         <form
@@ -281,7 +290,7 @@ const OrganSaldoDetailsPage = () => {
                     form.setValue('year', date.getFullYear())
                     form.setValue('month', date.getMonth() + 1)
                     if (id !== 'create') {
-                      autoFill({
+                      handleAutofill({
                         year: date.getFullYear(),
                         month: date.getMonth() + 1,
                         budjet_id: budjet_id!,
@@ -296,7 +305,7 @@ const OrganSaldoDetailsPage = () => {
                   <Button
                     type="button"
                     onClick={() => {
-                      autoFill({
+                      handleAutofill({
                         year,
                         month,
                         budjet_id: budjet_id!,

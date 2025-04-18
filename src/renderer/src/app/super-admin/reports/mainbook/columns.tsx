@@ -28,6 +28,10 @@ export const mainbookColumns: ColumnDef<AdminMainbook>[] = [
     header: 'region'
   },
   {
+    key: 'budjet_name',
+    header: 'budjet'
+  },
+  {
     key: 'status',
     renderCell: (row) => (
       <Badge

@@ -1,8 +1,7 @@
+import type { KassaSaldoFormValues } from './config'
 import type { MonthValue } from '@/common/features/saldo'
 import type { KassaSaldo, Response, ResponseMeta } from '@/common/models'
 import type { QueryFunctionContext } from '@tanstack/react-query'
-
-import { z } from 'zod'
 
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 import { budjet, main_schet } from '@/common/features/crud/middleware'
@@ -66,12 +65,3 @@ class KassaSaldoServiceFactory extends CRUDService<
 }
 
 export const KassaSaldoService = new KassaSaldoServiceFactory().use(budjet()).use(main_schet())
-
-export const KassaSaldoFormSchema = z.object({
-  summa: z.number(),
-  year: z.number(),
-  month: z.number(),
-  main_schet_id: z.number().optional()
-})
-
-export type KassaSaldoFormValues = z.infer<typeof KassaSaldoFormSchema>

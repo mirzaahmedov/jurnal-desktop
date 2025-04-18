@@ -1,3 +1,5 @@
+import { JapaneseCalendar } from '@internationalized/date'
+
 import { Button } from '@/common/components/jolly/button'
 import {
   DialogContent,
@@ -7,6 +9,15 @@ import {
   DialogTitle,
   DialogTrigger
 } from '@/common/components/jolly/dialog'
+import { http } from '@/common/lib/http'
+
+interface Comment {
+  postId: number
+  id: number
+  name: string
+  email: string
+  body: string
+}
 
 const DemoDialog = () => {
   return (

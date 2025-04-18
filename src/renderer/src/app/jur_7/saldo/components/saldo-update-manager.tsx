@@ -9,7 +9,7 @@ import {
   useSaldoController
 } from '@/common/features/saldo'
 
-import { iznosQueryKeys } from '../../iznos/config'
+import { IznosQueryKeys } from '../../iznos/config'
 import { SaldoQueryKeys } from '../config'
 import { MaterialWarehouseSaldoService } from '../service'
 
@@ -41,7 +41,7 @@ export const MaterialWarehouseSaldoUpdateManager = () => {
         queryKey: [SaldoQueryKeys.getAll]
       })
       queryClient.invalidateQueries({
-        queryKey: [iznosQueryKeys.getAll]
+        queryKey: [IznosQueryKeys.getAll]
       })
     }
   })

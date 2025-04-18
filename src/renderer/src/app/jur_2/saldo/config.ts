@@ -1,4 +1,4 @@
-import type { BankSaldoFormValues } from './service'
+import { z } from 'zod'
 
 import { useSelectedMonthStore } from '@/common/features/selected-month'
 
@@ -18,3 +18,11 @@ export const defaultValues: BankSaldoFormValues = {
   month: useSelectedMonthStore.getState().startDate.getMonth() + 1,
   summa: 0
 }
+export const BankSaldoFormSchema = z.object({
+  summa: z.number(),
+  year: z.number().min(1900),
+  month: z.number().min(1),
+  main_schet_id: z.number().optional()
+})
+
+export type BankSaldoFormValues = z.infer<typeof BankSaldoFormSchema>

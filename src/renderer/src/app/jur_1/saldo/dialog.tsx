@@ -38,7 +38,8 @@ import { useSelectedMonthStore } from '@/common/features/selected-month'
 import { capitalize } from '@/common/lib/string'
 
 import { KassaSaldoQueryKeys, defaultValues } from './config'
-import { KassaSaldoFormSchema, KassaSaldoService } from './service'
+import { KassaSaldoFormSchema } from './config'
+import { KassaSaldoService } from './service'
 
 interface KassaSaldoDialogProps {
   open: boolean
@@ -157,9 +158,9 @@ export const KassaSaldoDialog = ({ open, onOpenChange, selected }: KassaSaldoDia
                         <FormLabel className="text-right col-span-2">{t('year')}</FormLabel>
                         <FormControl>
                           <YearSelect
-                            readOnly={!!selected}
-                            value={field.value}
-                            onValueChange={field.onChange}
+                            isReadOnly={!!selected}
+                            selectedKey={field.value}
+                            onSelectionChange={(value) => field.onChange(value ?? 0)}
                             className="col-span-4"
                           />
                         </FormControl>
@@ -174,13 +175,13 @@ export const KassaSaldoDialog = ({ open, onOpenChange, selected }: KassaSaldoDia
                   control={form.control}
                   render={({ field }) => (
                     <FormItem>
-                      <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
+                      <div className="grid grid-cols-6 items-center gap-x-4">
                         <FormLabel className="text-right col-span-2">{t('month')}</FormLabel>
-                        <FormControl>
+                        <FormControl className="block">
                           <MonthSelect
-                            readOnly={!!selected}
-                            value={field.value}
-                            onValueChange={field.onChange}
+                            isReadonly={!!selected}
+                            selectedKey={field.value}
+                            onSelectionChange={(value) => field.onChange(value ?? 0)}
                             className="col-span-4"
                           />
                         </FormControl>

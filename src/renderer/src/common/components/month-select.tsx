@@ -2,35 +2,29 @@ import { useTranslation } from 'react-i18next'
 
 import { getMonthName } from '@/common/lib/date'
 
-import { SelectField, type SelectFieldProps } from './select-field'
+import { JollySelect, type JollySelectProps, SelectItem } from './jolly/select'
 
-const monthOptions: number[] = []
+interface MonthOption {
+  value: number
+}
+const monthOptions: MonthOption[] = []
 
 for (let i = 1; i <= 12; i++) {
-  monthOptions.push(i)
+  monthOptions.push({
+    value: i
+  })
 }
 
-export interface MonthSelectProps
-  extends Omit<
-    SelectFieldProps<number>,
-    'options' | 'value' | 'onValueChange' | 'getOptionValue' | 'getOptionLabel'
-  > {
-  value?: number | undefined
-  onValueChange?: (value: number | undefined) => void
-}
-export const MonthSelect = ({ value, onValueChange, ...props }: MonthSelectProps) => {
+export interface MonthSelectProps extends Omit<JollySelectProps<MonthOption>, 'children'> {}
+export const MonthSelect = (props: MonthSelectProps) => {
   const { t } = useTranslation()
   return (
-    <SelectField
-      value={value ? String(value) : ''}
-      onValueChange={(value) => {
-        onValueChange?.(value ? Number(value) : undefined)
-      }}
-      options={monthOptions}
-      getOptionValue={(option) => option}
-      getOptionLabel={(option) => t(getMonthName(option))}
+    <JollySelect
       placeholder={t('month')}
+      items={monthOptions}
       {...props}
-    />
+    >
+      {(item) => <SelectItem id={item.value}>{t(getMonthName(item.value))}</SelectItem>}
+    </JollySelect>
   )
 }

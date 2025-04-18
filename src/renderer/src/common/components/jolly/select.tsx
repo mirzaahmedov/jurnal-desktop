@@ -46,13 +46,19 @@ const SelectValue = <T extends object>({ className, ...props }: AriaSelectValueP
   />
 )
 
+export interface SelectTriggerProps extends AriaButtonProps {
+  buttonRef?: React.Ref<HTMLButtonElement>
+  readOnly?: boolean
+}
 const SelectTrigger = ({
   className,
   children,
   readOnly,
+  buttonRef,
   ...props
-}: AriaButtonProps & { readOnly?: boolean }) => (
+}: SelectTriggerProps) => (
   <AriaButton
+    ref={buttonRef}
     className={composeRenderProps(className, (className) =>
       cn(
         'flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background',
@@ -93,7 +99,7 @@ const SelectListBox = <T extends object>({ className, ...props }: AriaListBoxPro
   <AriaListBox
     className={composeRenderProps(className, (className) =>
       cn(
-        'max-h-[inherit] overflow-auto scrollbar p-1 outline-none [clip-path:inset(0_0_0_0_round_calc(var(--radius)-2px))]',
+        'max-h-[400px] overflow-auto scrollbar p-1 outline-none [clip-path:inset(0_0_0_0_round_calc(var(--radius)-2px))]',
         className
       )
     )}
@@ -102,6 +108,8 @@ const SelectListBox = <T extends object>({ className, ...props }: AriaListBoxPro
 )
 
 interface JollySelectProps<T extends object> extends Omit<AriaSelectProps<T>, 'children'> {
+  buttonRef?: React.Ref<HTMLButtonElement>
+  isReadonly?: boolean
   label?: string
   description?: string
   errorMessage?: string | ((validation: AriaValidationResult) => string)
@@ -110,6 +118,8 @@ interface JollySelectProps<T extends object> extends Omit<AriaSelectProps<T>, 'c
 }
 
 function JollySelect<T extends object>({
+  buttonRef,
+  isReadonly,
   label,
   description,
   errorMessage,
@@ -126,7 +136,10 @@ function JollySelect<T extends object>({
       {...props}
     >
       <Label>{label}</Label>
-      <SelectTrigger>
+      <SelectTrigger
+        buttonRef={buttonRef}
+        readOnly={isReadonly}
+      >
         <SelectValue />
       </SelectTrigger>
       {description && (

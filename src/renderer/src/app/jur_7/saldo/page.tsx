@@ -35,7 +35,7 @@ import { ISODateRegex, formatDate, parseDate, validateDate } from '@/common/lib/
 import { formatLocaleDate } from '@/common/lib/format'
 import { ListView } from '@/common/views'
 
-import { iznosQueryKeys } from '../iznos/config'
+import { IznosQueryKeys } from '../iznos/config'
 import { createResponsibleSpravochnik } from '../responsible/service'
 import { ostatokProductColumns } from './columns'
 import { DeleteExistingDocumentsAlert } from './components/delete-existing-document-alert'
@@ -124,7 +124,7 @@ const MaterialWarehouseSaldoPage = () => {
         queryKey: [SaldoQueryKeys.getAll]
       })
       queryClient.invalidateQueries({
-        queryKey: [iznosQueryKeys.getAll]
+        queryKey: [IznosQueryKeys.getAll]
       })
       queryClient.invalidateQueries({
         queryKey: [SaldoQueryKeys.check]
@@ -155,7 +155,7 @@ const MaterialWarehouseSaldoPage = () => {
         queryKey: [SaldoQueryKeys.getAll]
       })
       queryClient.invalidateQueries({
-        queryKey: [iznosQueryKeys.getAll]
+        queryKey: [IznosQueryKeys.getAll]
       })
       queryClient.invalidateQueries({
         queryKey: [SaldoQueryKeys.check]
@@ -293,7 +293,7 @@ const MaterialWarehouseSaldoPage = () => {
                     queryKey: [SaldoQueryKeys.getAll]
                   })
                   queryClient.invalidateQueries({
-                    queryKey: [iznosQueryKeys.getAll]
+                    queryKey: [IznosQueryKeys.getAll]
                   })
                   queryClient.invalidateQueries({
                     queryKey: [SaldoQueryKeys.check]
@@ -471,7 +471,7 @@ const MaterialWarehouseSaldoPage = () => {
       </Dialog>
 
       <MonthlySaldoTrackerDialog
-        open={monthlyTrackerToggle.isOpen}
+        isOpen={monthlyTrackerToggle.isOpen}
         onOpenChange={monthlyTrackerToggle.setOpen}
         onSelect={(month) => {
           form.setValue('date', month)

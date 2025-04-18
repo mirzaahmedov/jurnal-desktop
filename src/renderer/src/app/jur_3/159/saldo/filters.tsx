@@ -13,9 +13,11 @@ export const OrganSaldoFilters = () => {
   return (
     <div className="flex items-center gap-5">
       <YearSelect
-        value={year}
-        onValueChange={setYear}
-        triggerClassName="w-24"
+        selectedKey={year}
+        onSelectionChange={(value) =>
+          setYear(value ? Number(value) : useSelectedMonthStore.getState().startDate.getFullYear())
+        }
+        className="w-24"
       />
     </div>
   )

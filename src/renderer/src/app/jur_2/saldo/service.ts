@@ -1,8 +1,7 @@
+import type { BankSaldoFormValues } from './config'
 import type { MonthValue } from '@/common/features/saldo'
 import type { BankSaldo, Response, ResponseMeta } from '@/common/models'
 import type { QueryFunctionContext } from '@tanstack/react-query'
-
-import { z } from 'zod'
 
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 import { budjet, main_schet } from '@/common/features/crud/middleware'
@@ -66,12 +65,3 @@ class BankSaldoServiceFactory extends CRUDService<
 }
 
 export const BankSaldoService = new BankSaldoServiceFactory().use(budjet()).use(main_schet())
-
-export const BankSaldoFormSchema = z.object({
-  summa: z.number(),
-  year: z.number(),
-  month: z.number(),
-  main_schet_id: z.number().optional()
-})
-
-export type BankSaldoFormValues = z.infer<typeof BankSaldoFormSchema>

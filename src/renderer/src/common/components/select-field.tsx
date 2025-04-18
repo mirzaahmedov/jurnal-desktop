@@ -1,5 +1,5 @@
+import type { SelectProps } from '@radix-ui/react-select'
 import type { ForwardedRef, ReactNode } from 'react'
-import type { SelectProps } from 'react-aria-components'
 
 import { forwardRef } from 'react'
 
@@ -7,19 +7,17 @@ import { X } from 'lucide-react'
 
 import {
   Select,
+  SelectContent,
   SelectItem,
-  SelectListBox,
-  SelectPopover,
   SelectTrigger,
   SelectValue
-} from '@/common/components/jolly/select'
+} from '@/common/components/ui/select'
 import { cn } from '@/common/lib/utils'
 
 import { Button } from './ui/button'
 import { FormControl } from './ui/form'
 
-export type SelectFieldProps<T> = SelectProps & {
-  disabled?: boolean
+export type SelectFieldProps<T extends object> = SelectProps & {
   readOnly?: boolean
   withFormControl?: boolean
   withReset?: boolean
@@ -28,13 +26,11 @@ export type SelectFieldProps<T> = SelectProps & {
   getOptionLabel: (data: NoInfer<T>) => ReactNode
   getOptionValue: (data: NoInfer<T>) => string | number
   onOptionSelect?: (option: NoInfer<T>) => void
-  value: string | number
-  onValueChange: (value: string | number) => void
   triggerClassName?: string
   tabIndex?: number
 }
 
-const SelectFieldComponent = <T,>(
+const SelectFieldComponent = <T extends object>(
   {
     readOnly = false,
     withFormControl = false,
@@ -51,29 +47,31 @@ const SelectFieldComponent = <T,>(
     onValueChange,
     ...props
   }: SelectFieldProps<T>,
-  ref: ForwardedRef<HTMLDivElement>
+  ref: ForwardedRef<HTMLSpanElement>
 ) => {
   return (
     <Select
       {...props}
-      ref={ref}
-      selectedKey={value}
-      onSelectionChange={(value) => {
+      value={value}
+      onValueChange={(value) => {
         if (options.length !== 0 && value) {
-          onValueChange?.(value as string)
+          onValueChange?.(value)
           onOptionSelect?.(options.find((option) => String(getOptionValue(option)) === value)!)
         }
       }}
-      isDisabled={disabled || options.length === 0}
-      placeholder={placeholder}
+      disabled={disabled || options.length === 0}
     >
       {withFormControl ? (
         <FormControl>
           <SelectTrigger
             className={cn('shadow-none focus:ring-2 focus:ring-brand bg-white', triggerClassName)}
+            tabIndex={tabIndex}
             readOnly={readOnly}
           >
-            <SelectValue tabIndex={tabIndex} />
+            <SelectValue
+              placeholder={placeholder}
+              ref={ref}
+            />
             {withReset ? (
               <Button
                 type="button"
@@ -93,9 +91,13 @@ const SelectFieldComponent = <T,>(
       ) : (
         <SelectTrigger
           className={cn('shadow-none bg-white', triggerClassName)}
+          tabIndex={tabIndex}
           readOnly={readOnly}
         >
-          <SelectValue />
+          <SelectValue
+            placeholder={placeholder}
+            ref={ref}
+          />
           {withReset ? (
             <Button
               type="button"
@@ -113,22 +115,20 @@ const SelectFieldComponent = <T,>(
         </SelectTrigger>
       )}
 
-      <SelectPopover>
-        <SelectListBox className="max-h-[400px]">
-          {options.map((option) => (
-            <SelectItem
-              key={getOptionValue(option)}
-              id={String(getOptionValue(option))}
-            >
-              {getOptionLabel(option)}
-            </SelectItem>
-          ))}
-        </SelectListBox>
-      </SelectPopover>
+      <SelectContent>
+        {options.map((option) => (
+          <SelectItem
+            key={getOptionValue(option)}
+            value={String(getOptionValue(option))}
+          >
+            {getOptionLabel(option)}
+          </SelectItem>
+        ))}
+      </SelectContent>
     </Select>
   )
 }
 
-export const SelectField = forwardRef(SelectFieldComponent) as <T>(
+export const SelectField = forwardRef(SelectFieldComponent) as <T extends object>(
   props: SelectFieldProps<T> & { ref?: ForwardedRef<HTMLSpanElement> }
 ) => ReturnType<typeof SelectFieldComponent>

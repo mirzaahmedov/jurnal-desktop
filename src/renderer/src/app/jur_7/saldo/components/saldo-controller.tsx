@@ -11,7 +11,7 @@ import {
 } from '@/common/features/saldo'
 import { useSelectedMonthStore } from '@/common/features/selected-month'
 
-import { iznosQueryKeys } from '../../iznos/config'
+import { IznosQueryKeys } from '../../iznos/config'
 import { SaldoQueryKeys } from '../config'
 import { MaterialWarehouseSaldoService } from '../service'
 
@@ -67,7 +67,7 @@ export const MaterialWarehouseSaldoController = () => {
         queryKey: [SaldoQueryKeys.check]
       })
       queryClient.invalidateQueries({
-        queryKey: [iznosQueryKeys.getAll]
+        queryKey: [IznosQueryKeys.getAll]
       })
     }
   })

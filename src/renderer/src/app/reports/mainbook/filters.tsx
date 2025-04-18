@@ -11,9 +11,9 @@ export const MainbookFilters = () => {
   return (
     <div className="flex items-center gap-5">
       <YearSelect
-        value={year}
-        onValueChange={setYear}
-        triggerClassName="w-24"
+        selectedKey={year}
+        onSelectionChange={(value) => setYear(value ? Number(value) : new Date().getFullYear())}
+        className="w-24"
       />
     </div>
   )

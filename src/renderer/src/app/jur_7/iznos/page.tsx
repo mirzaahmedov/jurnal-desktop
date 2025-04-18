@@ -29,7 +29,7 @@ import { createResponsibleSpravochnik } from '../responsible/service'
 import { MaterialWarehouseSaldoProductService, defaultValues } from '../saldo'
 import { handleOstatokError } from '../saldo/utils'
 import { iznosColumns } from './columns'
-import { iznosQueryKeys } from './config'
+import { IznosQueryKeys } from './config'
 import { EditIznosDialog } from './edit-dialog'
 
 const IznosPage = () => {
@@ -62,7 +62,7 @@ const IznosPage = () => {
     error: iznosError
   } = useQuery({
     queryKey: [
-      iznosQueryKeys.getAll,
+      IznosQueryKeys.getAll,
       {
         page: pagination.page,
         limit: pagination.limit,
