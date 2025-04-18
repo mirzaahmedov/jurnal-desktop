@@ -33,7 +33,7 @@ const Subdivision7Page = () => {
 
   const [selected, setSelected] = useState<null | Jur7Podrazdelenie>(null)
 
-  const { data: podrazdelenieList, isFetching } = useQuery({
+  const { data: podrazdelenies, isFetching } = useQuery({
     queryKey: [
       podrazdelenieQueryKeys.getAll,
       {
@@ -98,7 +98,7 @@ const Subdivision7Page = () => {
       <ListView.Content loading={isFetching || isPending}>
         <GenericTable
           columnDefs={podrazdelenieColumns}
-          data={podrazdelenieList?.data ?? []}
+          data={podrazdelenies?.data ?? []}
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}
         />
@@ -106,7 +106,8 @@ const Subdivision7Page = () => {
       <ListView.Footer>
         <ListView.Pagination
           {...pagination}
-          pageCount={podrazdelenieList?.meta?.pageCount ?? 0}
+          count={podrazdelenies?.meta?.count ?? 0}
+          pageCount={podrazdelenies?.meta?.pageCount ?? 0}
         />
       </ListView.Footer>
       <Podrazdelenie7Dialog

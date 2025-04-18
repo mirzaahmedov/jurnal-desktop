@@ -166,6 +166,7 @@ const AktPage = () => {
       <ListView.Footer>
         <ListView.Pagination
           {...pagination}
+          count={akts?.meta?.count ?? 0}
           pageCount={akts?.meta?.pageCount ?? 0}
         />
       </ListView.Footer>

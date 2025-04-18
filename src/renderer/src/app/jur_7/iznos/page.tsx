@@ -177,6 +177,7 @@ const IznosPage = () => {
       </ListView.Content>
       <ListView.Footer>
         <ListView.Pagination
+          count={iznos?.meta?.count ?? 0}
           pageCount={iznos?.meta?.pageCount ?? 0}
           {...pagination}
         />

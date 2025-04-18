@@ -63,6 +63,7 @@ const AdminMainbookPage = () => {
       </ListView.Content>
       <ListView.Footer>
         <ListView.Pagination
+          count={mainbook?.meta?.count ?? 0}
           pageCount={mainbook?.meta?.pageCount ?? 0}
           {...pagination}
         />

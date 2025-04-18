@@ -94,7 +94,7 @@ const MaterialWarehouseSaldoPage = () => {
   const responsibleSpravochnik = useSpravochnik(createResponsibleSpravochnik({}))
 
   const {
-    data: ostatok,
+    data: saldos,
     isFetching,
     error: ostatokError
   } = useQuery({
@@ -397,7 +397,7 @@ const MaterialWarehouseSaldoPage = () => {
       <ListView.Content loading={isFetching || isDeleting}>
         <GenericTable
           columnDefs={ostatokProductColumns}
-          data={ostatok?.data ?? []}
+          data={saldos?.data ?? []}
           getRowId={(row) => row.product_id}
           getRowKey={(row) => row.id}
         />
@@ -483,7 +483,8 @@ const MaterialWarehouseSaldoPage = () => {
 
       <ListView.Footer>
         <ListView.Pagination
-          pageCount={ostatok?.meta?.pageCount ?? 0}
+          pageCount={saldos?.meta?.pageCount ?? 0}
+          count={saldos?.meta?.count ?? 0}
           {...pagination}
         />
       </ListView.Footer>

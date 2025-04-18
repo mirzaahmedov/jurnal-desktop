@@ -50,7 +50,7 @@ const KassaRasxodPage = () => {
   const setLayout = useLayoutStore((store) => store.setLayout)
 
   const {
-    data: rasxodList,
+    data: rasxods,
     isFetching,
     error
   } = useQuery({
@@ -130,7 +130,7 @@ const KassaRasxodPage = () => {
       </ListView.Header>
       <ListView.Content loading={isFetching || isPending}>
         <GenericTable
-          data={rasxodList?.data ?? []}
+          data={rasxods?.data ?? []}
           columnDefs={columns}
           getRowId={(row) => row.id}
           onEdit={handleClickEdit}
@@ -141,7 +141,7 @@ const KassaRasxodPage = () => {
             <FooterRow>
               <FooterCell
                 title={t('total')}
-                content={formatNumber(rasxodList?.meta?.summa ?? 0)}
+                content={formatNumber(rasxods?.meta?.summa ?? 0)}
                 colSpan={5}
               />
             </FooterRow>
@@ -151,7 +151,8 @@ const KassaRasxodPage = () => {
       <ListView.Footer>
         <ListView.Pagination
           {...pagination}
-          pageCount={rasxodList?.meta?.pageCount ?? 0}
+          count={rasxods?.meta?.count ?? 0}
+          pageCount={rasxods?.meta?.pageCount ?? 0}
         />
       </ListView.Footer>
     </ListView>

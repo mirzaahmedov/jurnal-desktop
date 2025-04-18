@@ -187,6 +187,7 @@ const Jurnal7PrixodPage = () => {
       <ListView.Footer>
         <ListView.Pagination
           {...pagination}
+          count={prixods?.meta?.count ?? 0}
           pageCount={prixods?.meta?.pageCount ?? 0}
         />
       </ListView.Footer>

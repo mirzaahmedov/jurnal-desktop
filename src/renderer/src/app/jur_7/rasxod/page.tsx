@@ -73,7 +73,7 @@ const Jurnal7RasxodPage = () => {
   })
 
   const {
-    data: rasxodList,
+    data: rasxods,
     isFetching,
     error: rasxodListError
   } = useQuery({
@@ -126,7 +126,7 @@ const Jurnal7RasxodPage = () => {
       <ListView.Content loading={isFetching || isPending}>
         <GenericTable
           columnDefs={rasxodColumns}
-          data={rasxodList?.data ?? []}
+          data={rasxods?.data ?? []}
           onEdit={(row) => navigate(`${row.id}`)}
           onDelete={(row) => {
             confirm({
@@ -140,7 +140,8 @@ const Jurnal7RasxodPage = () => {
       <ListView.Footer>
         <ListView.Pagination
           {...pagination}
-          pageCount={rasxodList?.meta?.pageCount ?? 0}
+          count={rasxods?.meta?.count ?? 0}
+          pageCount={rasxods?.meta?.pageCount ?? 0}
         />
       </ListView.Footer>
     </ListView>

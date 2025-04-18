@@ -102,6 +102,7 @@ const JUR8MonitorPage = () => {
       <ListView.Footer>
         <ListView.Pagination
           {...pagination}
+          count={monitoring?.meta?.count ?? 0}
           pageCount={monitoring?.meta?.pageCount ?? 0}
         />
       </ListView.Footer>

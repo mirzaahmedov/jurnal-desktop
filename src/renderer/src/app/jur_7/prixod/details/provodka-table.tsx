@@ -605,6 +605,7 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
           page={page}
           limit={PAGE_SIZE}
           onChange={({ page }) => setPage(page ?? 1)}
+          count={childs.length}
           pageCount={pageCount}
         />
       </div>

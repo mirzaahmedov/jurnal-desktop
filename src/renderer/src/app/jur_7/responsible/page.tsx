@@ -34,7 +34,7 @@ const ResponsiblePage = () => {
   const pagination = usePagination()
   const queryClient = useQueryClient()
 
-  const { data: responsibleList, isFetching } = useQuery({
+  const { data: responsibles, isFetching } = useQuery({
     queryKey: [
       responsibleQueryKeys.getAll,
       {
@@ -114,7 +114,7 @@ const ResponsiblePage = () => {
       <ListView.Content loading={isFetching || isPending}>
         <GenericTable
           columnDefs={responsibleColumns}
-          data={responsibleList?.data ?? []}
+          data={responsibles?.data ?? []}
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}
         />
@@ -122,7 +122,8 @@ const ResponsiblePage = () => {
       <ListView.Footer>
         <ListView.Pagination
           {...pagination}
-          pageCount={responsibleList?.meta?.pageCount ?? 0}
+          count={responsibles?.meta?.count ?? 0}
+          pageCount={responsibles?.meta?.pageCount ?? 0}
         />
       </ListView.Footer>
       <ResponsibleDialog

@@ -54,7 +54,7 @@ const KassaPrixodPage = () => {
   })
 
   const {
-    data: prixodList,
+    data: prixods,
     isFetching,
     error
   } = useQuery({
@@ -148,7 +148,7 @@ const KassaPrixodPage = () => {
       </ListView.Header>
       <ListView.Content loading={isFetching || isPending}>
         <GenericTable
-          data={prixodList?.data ?? []}
+          data={prixods?.data ?? []}
           columnDefs={columns}
           getRowId={(row) => row.id}
           onEdit={handleClickEdit}
@@ -159,7 +159,7 @@ const KassaPrixodPage = () => {
             <FooterRow>
               <FooterCell
                 title={t('total')}
-                content={formatNumber(prixodList?.meta?.summa ?? 0)}
+                content={formatNumber(prixods?.meta?.summa ?? 0)}
                 colSpan={5}
               />
             </FooterRow>
@@ -169,7 +169,8 @@ const KassaPrixodPage = () => {
       <ListView.Footer>
         <ListView.Pagination
           {...pagination}
-          pageCount={prixodList?.meta?.pageCount ?? 0}
+          count={prixods?.meta?.count ?? 0}
+          pageCount={prixods?.meta?.pageCount ?? 0}
         />
       </ListView.Footer>
     </ListView>

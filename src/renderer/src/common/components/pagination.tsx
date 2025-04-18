@@ -5,8 +5,18 @@ import { useTranslation } from 'react-i18next'
 import Paginate from 'react-paginate'
 
 import { useEventCallback } from '../hooks'
-import { SelectField } from './select-field'
+import { JollySelect, SelectItem } from './jolly/select'
 import { Button } from './ui/button'
+
+const pageSizeOptions = [
+  { value: 5 },
+  { value: 10 },
+  { value: 15 },
+  { value: 20 },
+  { value: 25 },
+  { value: 50 },
+  { value: 100 }
+]
 
 export interface PaginationValues {
   page: number
@@ -15,12 +25,14 @@ export interface PaginationValues {
 export interface PaginationProps extends PaginationValues {
   displayLimit?: boolean
   pageCount: number
+  count: number
   onChange: (values: Partial<PaginationValues>) => void
 }
 export const Pagination = ({
   displayLimit = true,
   page,
   pageCount,
+  count,
   limit,
   onChange
 }: PaginationProps) => {
@@ -70,20 +82,20 @@ export const Pagination = ({
         renderOnZeroPageCount={null}
       />
       {pageCount > 0 && displayLimit && (
-        <>
-          <span className="whitespace-nowrap text-sm font-medium">{t('elements-per-page')}</span>
-          <div>
-            <SelectField
-              placeholder="Элементов на странице"
-              value={String(limit)}
-              onValueChange={(value) => onChange({ limit: Number(value) })}
-              options={[5, 10, 15, 20, 25, 50, 100]}
-              getOptionValue={String}
-              getOptionLabel={String}
-              className="min-w-[100px]"
-            />
-          </div>
-        </>
+        <div className="flex items-center gap-10">
+          <p className="whitespace-nowrap text-sm font-medium">{t('elements_per_page')}</p>
+          <JollySelect
+            items={pageSizeOptions}
+            selectedKey={limit}
+            onSelectionChange={(value) => onChange({ limit: Number(value) })}
+            className="w-24 gap-0"
+          >
+            {(item) => <SelectItem id={item.value}>{item.value}</SelectItem>}
+          </JollySelect>
+          <p className="whitespace-nowrap text-sm font-medium">
+            {t('elements_total')}: {count}
+          </p>
+        </div>
       )}
     </div>
   )

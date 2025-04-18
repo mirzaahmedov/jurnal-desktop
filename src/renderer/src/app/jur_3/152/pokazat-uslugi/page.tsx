@@ -50,7 +50,7 @@ const PokazatUslugiPage = () => {
   })
 
   const {
-    data: pokazatUslugiList,
+    data: uslugi,
     isFetching,
     error
   } = useQuery({
@@ -129,7 +129,7 @@ const PokazatUslugiPage = () => {
       </ListView.Header>
       <ListView.Content loading={isFetching || isPending}>
         <GenericTable
-          data={pokazatUslugiList?.data ?? []}
+          data={uslugi?.data ?? []}
           columnDefs={pokazatUslugiColumns}
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}
@@ -140,7 +140,8 @@ const PokazatUslugiPage = () => {
       <ListView.Footer>
         <ListView.Pagination
           {...pagination}
-          pageCount={pokazatUslugiList?.meta?.pageCount ?? 0}
+          count={uslugi?.meta?.count ?? 0}
+          pageCount={uslugi?.meta?.pageCount ?? 0}
         />
       </ListView.Footer>
     </ListView>

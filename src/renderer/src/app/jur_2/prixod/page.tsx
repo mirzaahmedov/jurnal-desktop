@@ -43,10 +43,10 @@ const BankPrixodPage = () => {
 
   const [search] = useSearchFilter()
 
-  const { sorting, handleSort, getColumnSorted } = useTableSort()
   const { confirm } = useConfirm()
   const { t } = useTranslation(['app'])
   const { report_title_id } = useSettingsStore()
+  const { sorting, handleSort, getColumnSorted } = useTableSort()
   const { budjet_id, main_schet_id } = useRequisitesStore()
   const { queuedMonths } = useSaldoController({
     ns: SaldoNamespace.JUR_2
@@ -168,6 +168,7 @@ const BankPrixodPage = () => {
       <ListView.Footer>
         <ListView.Pagination
           {...pagination}
+          count={prixods?.meta?.count ?? 0}
           pageCount={prixods?.meta?.pageCount ?? 0}
         />
       </ListView.Footer>

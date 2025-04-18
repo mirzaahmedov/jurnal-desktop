@@ -140,6 +140,7 @@ const InternalPage = () => {
       <ListView.Footer>
         <ListView.Pagination
           {...pagination}
+          count={internals?.meta?.count ?? 0}
           pageCount={internals?.meta?.pageCount ?? 0}
         />
       </ListView.Footer>

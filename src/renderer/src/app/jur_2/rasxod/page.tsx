@@ -178,6 +178,7 @@ const BankRasxodPage = () => {
       <ListView.Footer>
         <ListView.Pagination
           {...pagination}
+          count={rasxods?.meta?.count ?? 0}
           pageCount={rasxods?.meta?.pageCount ?? 0}
         />
       </ListView.Footer>

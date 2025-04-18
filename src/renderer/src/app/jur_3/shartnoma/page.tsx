@@ -53,7 +53,7 @@ const ShartnomaPage = () => {
     })
   )
 
-  const { data: shartnomaList, isFetching } = useQuery({
+  const { data: contracts, isFetching } = useQuery({
     queryKey: [
       shartnomaQueryKeys.getAll,
       {
@@ -135,7 +135,7 @@ const ShartnomaPage = () => {
       </ListView.Header>
       <ListView.Content loading={isFetching || isPending}>
         <GenericTable
-          data={shartnomaList?.data ?? []}
+          data={contracts?.data ?? []}
           columnDefs={shartnomaColumns}
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}
@@ -164,7 +164,8 @@ const ShartnomaPage = () => {
       <ListView.Footer>
         <ListView.Pagination
           {...pagination}
-          pageCount={shartnomaList?.meta?.pageCount ?? 0}
+          count={contracts?.meta?.count ?? 0}
+          pageCount={contracts?.meta?.pageCount ?? 0}
         />
       </ListView.Footer>
     </ListView>
