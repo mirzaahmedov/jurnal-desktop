@@ -395,13 +395,14 @@ const MainbookDetailsPage = () => {
       </DetailsView.Content>
 
       <MainbookDocumentsTracker
-        open={!!activeCell}
+        isOpen={!!activeCell}
         onOpenChange={(open) => {
           if (!open) {
             setActiveCell(undefined)
           }
         }}
         budjet_id={budjet_id!}
+        main_schet_id={main_schet_id!}
         month={month}
         year={year}
         type_id={activeCell?.type_id}

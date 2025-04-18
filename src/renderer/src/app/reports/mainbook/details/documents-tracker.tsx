@@ -1,21 +1,27 @@
 import type { MainbookDocumentInfo, ProvodkaType } from '@/common/models'
-import type { DialogProps } from '@radix-ui/react-dialog'
+import type { DialogTriggerProps } from 'react-aria-components'
 
 import { useQuery } from '@tanstack/react-query'
 import { Trans } from 'react-i18next'
 
 import { type ColumnDef, GenericTable } from '@/common/components'
+import {
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger
+} from '@/common/components/jolly/dialog'
 import { ProvodkaBadge } from '@/common/components/provodka-badge'
 import { IDCell } from '@/common/components/table/renderers/id'
 import { SummaCell } from '@/common/components/table/renderers/summa'
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/common/components/ui/dialog'
 import { formatLocaleDate } from '@/common/lib/format'
 
 import { MainbookQueryKeys } from '../config'
 import { MainbookService } from '../service'
 
-export interface MainbookDocumentsTrackerProps extends DialogProps {
+export interface MainbookDocumentsTrackerProps extends Omit<DialogTriggerProps, 'children'> {
   budjet_id?: number
+  main_schet_id?: number
   year?: number
   month?: number
   schet?: string
@@ -25,6 +31,7 @@ export interface MainbookDocumentsTrackerProps extends DialogProps {
 
 export const MainbookDocumentsTracker = ({
   budjet_id,
+  main_schet_id,
   year,
   month,
   schet,
@@ -37,6 +44,7 @@ export const MainbookDocumentsTracker = ({
       MainbookQueryKeys.getMainbookDocuments,
       {
         budjet_id: budjet_id!,
+        main_schet_id: main_schet_id!,
         year: year!,
         month: month!,
         schet: schet!,
@@ -46,10 +54,10 @@ export const MainbookDocumentsTracker = ({
       }
     ],
     queryFn: MainbookService.getMainbookDocuments,
-    enabled: props.open && !!budjet_id && !!year && !!month && !!schet
+    enabled: props.isOpen && !!budjet_id && !!year && !!month && !!schet
   })
   return (
-    <Dialog {...props}>
+    <DialogTrigger {...props}>
       <DialogContent className="w-full max-w-[1800px] h-full max-h-[900px] flex flex-col p-0 gap-0">
         <DialogHeader className="p-5">
           <DialogTitle>
@@ -63,7 +71,7 @@ export const MainbookDocumentsTracker = ({
           />
         </div>
       </DialogContent>
-    </Dialog>
+    </DialogTrigger>
   )
 }
 
