@@ -39,13 +39,13 @@ import {
   SquareActivity,
   SquareUser,
   SquareUserRound,
-  Truck,
   UserCog,
   UserSquare,
   Users,
   Wallet,
   Warehouse,
-  Weight
+  Weight,
+  Wrench
 } from 'lucide-react'
 
 import { KassaSaldoController } from '@/app/jur_1/saldo/components/saldo-controller'
@@ -195,8 +195,8 @@ export const getNavElements = (t: TFunction): NavElement[] => {
               : null,
             {
               path: '159',
-              title: '159',
-              icon: Folder,
+              title: t('pages.akt'),
+              icon: FileCheck2,
               children: omitEmptyArrayElements([
                 permissions.organization_monitoring
                   ? {
@@ -221,8 +221,8 @@ export const getNavElements = (t: TFunction): NavElement[] => {
             },
             {
               path: '152',
-              title: '152',
-              icon: Folder,
+              title: t('pages.service'),
+              icon: Wrench,
               children: omitEmptyArrayElements([
                 permissions.organization_monitoring
                   ? {
@@ -235,7 +235,7 @@ export const getNavElements = (t: TFunction): NavElement[] => {
                   ? {
                       path: 'pokazat-uslugi',
                       title: t('pages.service'),
-                      icon: Truck
+                      icon: Wrench
                     }
                   : null,
                 {
