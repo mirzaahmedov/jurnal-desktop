@@ -100,10 +100,14 @@ const MainbookPage = () => {
       title: t('pages.mainbook'),
       content: MainbookFilters,
       onCreate: () => {
-        navigate('create')
+        navigate('create', {
+          state: {
+            year
+          }
+        })
       }
     })
-  }, [setLayout, navigate, t])
+  }, [setLayout, navigate, t, year])
   useEffect(() => {
     if (error) {
       handleSaldoErrorDates(SaldoNamespace.MAINBOOK, error)

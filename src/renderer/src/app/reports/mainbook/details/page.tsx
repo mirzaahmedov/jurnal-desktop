@@ -5,7 +5,7 @@ import { type KeyboardEvent, useCallback, useEffect, useMemo, useRef, useState }
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useForm, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
 import { MonthPicker } from '@/common/components/month-picker'
@@ -38,6 +38,7 @@ import {
 
 const MainbookDetailsPage = () => {
   const tableMethods = useRef<EditableTableMethods>(null)
+  const location = useLocation()
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const setLayout = useLayout()
@@ -60,7 +61,7 @@ const MainbookDetailsPage = () => {
   const form = useForm({
     defaultValues: {
       ...defaultValues,
-      year: startDate.getFullYear(),
+      year: location.state?.year ?? startDate.getFullYear(),
       month: startDate.getMonth() + 1
     }
   })
