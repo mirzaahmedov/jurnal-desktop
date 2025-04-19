@@ -19,7 +19,12 @@ import {
 import { useConfirm } from '@/common/features/confirm'
 import { DownloadFile } from '@/common/features/file'
 import { useRequisitesStore } from '@/common/features/requisites'
-import { SaldoNamespace, useSaldoController } from '@/common/features/saldo'
+import {
+  SaldoNamespace,
+  handleSaldoErrorDates,
+  handleSaldoResponseDates,
+  useSaldoController
+} from '@/common/features/saldo'
 import { useSettingsStore } from '@/common/features/settings'
 import { useKeyUp, usePagination } from '@/common/hooks'
 import { useLayoutStore } from '@/common/layout/store'
@@ -42,7 +47,7 @@ const MainbookPage = () => {
   const { t } = useTranslation(['app'])
   const { confirm } = useConfirm()
   const { budjet_id, main_schet_id } = useRequisitesStore()
-  const { queuedMonths } = useSaldoController({
+  const { queuedMonths, clearQueue } = useSaldoController({
     ns: SaldoNamespace.MAINBOOK
   })
 
@@ -68,6 +73,10 @@ const MainbookPage = () => {
       queryClient.invalidateQueries({
         queryKey: [MainbookQueryKeys.getAll]
       })
+      handleSaldoResponseDates(SaldoNamespace.MAINBOOK, res)
+    },
+    onError: (error) => {
+      handleSaldoErrorDates(SaldoNamespace.MAINBOOK, error)
     }
   })
   const { mutate: cleanMainbook, isPending: isCleaning } = useMutation({
@@ -78,6 +87,7 @@ const MainbookPage = () => {
       queryClient.invalidateQueries({
         queryKey: [MainbookQueryKeys.getAll]
       })
+      clearQueue()
     }
   })
 
@@ -90,7 +100,6 @@ const MainbookPage = () => {
       }
     })
   }, [setLayout, navigate, t])
-  useEffect(() => {}, [])
 
   const handleEdit = (row: Mainbook) => {
     navigate(`${row.id}`)

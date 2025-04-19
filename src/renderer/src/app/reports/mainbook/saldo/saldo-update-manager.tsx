@@ -31,8 +31,6 @@ import { getMainbookColumns } from '../details/utils'
 import { MainbookService } from '../service'
 
 export const MainbookSaldoUpdateManager = () => {
-  const scrollElementRef = useRef<HTMLDivElement>(null)
-
   const queryClient = useQueryClient()
   const dialogToggle = useToggle()
 
@@ -52,7 +50,7 @@ export const MainbookSaldoUpdateManager = () => {
   })
 
   const { queuedMonths, dequeueMonth } = useSaldoController<OrganSaldoMonthValue>({
-    ns: SaldoNamespace.JUR_3_152
+    ns: SaldoNamespace.MAINBOOK
   })
 
   const form = useForm({
@@ -169,10 +167,7 @@ export const MainbookSaldoUpdateManager = () => {
           />
         </AlertDialogHeader>
 
-        <div
-          className="flex-1 overflow-auto scrollbar relative"
-          ref={scrollElementRef}
-        >
+        <div className="flex-1 overflow-auto scrollbar relative">
           {isAutofilling || isFetchingTypes ? <LoadingOverlay /> : null}
           {queuedMonths.length === 0 ? (
             <div className="flex h-full flex-col">

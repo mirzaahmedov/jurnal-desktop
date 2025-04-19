@@ -190,7 +190,6 @@ const JUR8MonitorDetailsPage = () => {
         const index = rows.findIndex((row) =>
           row.doc_num?.toLowerCase()?.includes(value?.toLowerCase())
         )
-        tableMethods.current?.setHighlightedRows([index])
         tableMethods.current?.scrollToRow(index)
       }
     }

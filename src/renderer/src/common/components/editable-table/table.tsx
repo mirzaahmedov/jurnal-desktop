@@ -3,7 +3,7 @@ import type { ArrayPath, FieldArrayWithId, Path } from 'react-hook-form'
 
 import { type HTMLAttributes, useImperativeHandle, useMemo, useRef, useState } from 'react'
 
-import { CircleMinus, CirclePlus, SquareMinus } from 'lucide-react'
+import { CircleMinus, CirclePlus } from 'lucide-react'
 import { Controller, type FieldErrors, useFieldArray } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
@@ -42,10 +42,6 @@ export const EditableTable = <T extends object, F extends ArrayPath<NoInfer<T>>>
   const innerRef = useRef<HTMLTableElement>(null)
   const ref = tableRef || innerRef
 
-  const headerGroups = useMemo(() => getHeaderGroups(columnDefs), [columnDefs])
-
-  const [highlightedRows, setHighlightedRows] = useState<number[]>([])
-
   const { t } = useTranslation()
 
   const { fields: rows } = useFieldArray({
@@ -56,25 +52,29 @@ export const EditableTable = <T extends object, F extends ArrayPath<NoInfer<T>>>
   useImperativeHandle(
     methods,
     () => ({
-      highlightRow: (rowIndex) => {
-        setHighlightedRows((prev) => {
-          if (prev.includes(rowIndex)) {
-            return prev.filter((i) => i !== rowIndex)
-          } else {
-            return [...prev, rowIndex]
-          }
-        })
-      },
-      setHighlightedRows: setHighlightedRows,
       scrollToRow: (rowIndex: number) => {
-        ref.current?.querySelector(`[data-rowId="${rowIndex}"]`)?.scrollIntoView({
-          behavior: 'smooth',
-          block: 'nearest'
-        })
+        const rowElement = ref.current?.querySelector(`[data-rowId="${rowIndex}"]`)
+
+        if (rowElement) {
+          rowElement.scrollIntoView({
+            behavior: 'smooth',
+            block: 'nearest'
+          })
+          const inputElement = rowElement.querySelector(
+            'input:not(:disabled), textarea:not(:disabled), select:not(:disabled)'
+          ) as HTMLInputElement
+          inputElement?.focus?.({
+            preventScroll: true
+          })
+        }
       }
     }),
     []
   )
+
+  const headerGroups = useMemo(() => {
+    return getHeaderGroups(columnDefs)
+  }, [columnDefs])
 
   return (
     <div
@@ -102,29 +102,9 @@ export const EditableTable = <T extends object, F extends ArrayPath<NoInfer<T>>>
                   {index === 0 ? (
                     <EditableTableHead
                       key="line_number"
-                      className={cn(
-                        'px-3 whitespace-nowrap w-0 min-w-11',
-                        highlightedRows.length && 'cursor-pointer'
-                      )}
+                      className="px-3 whitespace-nowrap w-0 min-w-11"
                       rowSpan={headerGroups.length}
-                      onClick={
-                        highlightedRows
-                          ? () => {
-                              setHighlightedRows([])
-                            }
-                          : undefined
-                      }
-                    >
-                      {highlightedRows.length ? (
-                        <Button
-                          size="icon"
-                          variant="ghost"
-                          className="w-full"
-                        >
-                          <SquareMinus className="btn-icon" />
-                        </Button>
-                      ) : null}
-                    </EditableTableHead>
+                    ></EditableTableHead>
                   ) : null}
                   {Array.isArray(headerGroup)
                     ? headerGroup.map((column) => {
@@ -185,16 +165,6 @@ export const EditableTable = <T extends object, F extends ArrayPath<NoInfer<T>>>
                 validate={validate}
                 getEditorProps={getEditorProps}
                 getRowClassName={getRowClassName}
-                highlightedRows={highlightedRows}
-                onHighlight={(index) => {
-                  setHighlightedRows((prev) => {
-                    if (prev.includes(index)) {
-                      return prev.filter((i) => i !== index)
-                    } else {
-                      return [...prev, index]
-                    }
-                  })
-                }}
               />
             ))
           ) : (
@@ -256,8 +226,6 @@ interface EditableTableRowRendererProps<T extends object, F extends ArrayPath<No
   index: number
   row: FieldArrayWithId<T, F, 'id'>
   rows: FieldArrayWithId<T, F, 'id'>[]
-  highlightedRows: number[]
-  onHighlight?(index: number): void
 }
 const EditableTableRowRenderer = <T extends object, R extends T[ArrayPath<NoInfer<T>>]>({
   tabIndex,
@@ -274,8 +242,6 @@ const EditableTableRowRenderer = <T extends object, R extends T[ArrayPath<NoInfe
   validate,
   getEditorProps,
   getRowClassName,
-  highlightedRows,
-  onHighlight,
   ...props
 }: EditableTableRowRendererProps<T, R>) => {
   const [state, setState] = useState<Record<string, unknown>>({})
@@ -285,16 +251,12 @@ const EditableTableRowRenderer = <T extends object, R extends T[ArrayPath<NoInfe
   return (
     <EditableTableRow
       data-rowId={index}
-      data-highlighted={highlightedRows.includes(index)}
       className={getRowClassName?.({ index, row, rows })}
       {...props}
     >
       <EditableTableCell
         key="line_number"
-        className="px-3 font-medium cursor-pointer hover:bg-slate-50 group-data-[highlighted=true]/row:bg-brand/10 group-data-[highlighted=true]/row:border-brand/20"
-        onClick={() => {
-          onHighlight?.(index)
-        }}
+        className="px-3 font-medium"
       >
         {index + 1}
       </EditableTableCell>
@@ -310,10 +272,7 @@ const EditableTableRowRenderer = <T extends object, R extends T[ArrayPath<NoInfe
                   return (
                     <EditableTableCell
                       style={{ width, minWidth, maxWidth }}
-                      className={cn(
-                        'group-focus-within/row:bg-brand/10 group-focus-within/row:border-brand/20 group-focus-within/row:group-hover/row:bg-brand/10 group-focus-within/row:group-hover/row:hover:border-brand/20',
-                        className
-                      )}
+                      className={className}
                       onDoubleClick={(event) => {
                         onCellDoubleClick?.({
                           column,

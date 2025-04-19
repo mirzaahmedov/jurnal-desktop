@@ -12,7 +12,7 @@ export const EditableTableCell = ({
     <TableCell
       {...props}
       className={cn(
-        'border-r border-b border-slate-200 group-hover/row:bg-slate-50 p-px pt-0.5',
+        'border-r border-b border-slate-200 group-focus-within/row:border-highlight-divider bg-inherit p-px pt-0.5',
         className
       )}
     >
@@ -47,7 +47,10 @@ export const EditableTableRow = ({
   return (
     <TableRow
       {...props}
-      className={cn('group/row hover:bg-white', className)}
+      className={cn(
+        'group/row hover:bg-highligth-neutral focus-within:bg-highlight hover:focus-within:bg-highlight scroll-my-10',
+        className
+      )}
     >
       {children}
     </TableRow>

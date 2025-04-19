@@ -219,7 +219,6 @@ const OrganSaldoDetailsPage = () => {
         const index = rows.findIndex((row) =>
           row.name?.toLowerCase()?.includes(value?.toLowerCase())
         )
-        tableMethods.current?.setHighlightedRows([index])
         tableMethods.current?.scrollToRow(index)
       }
     }

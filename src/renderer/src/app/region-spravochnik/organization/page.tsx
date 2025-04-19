@@ -120,6 +120,13 @@ const OrganizationPage = () => {
               excel: true
             }}
           />
+          <DownloadFile
+            variant="ghost"
+            params={{}}
+            url="/spravochnik/organization/export"
+            fileName={`${t('organization')}.xlsx`}
+            buttonText={t('export-excel')}
+          />
           <ImportFile url="/spravochnik/organization/import" />
         </ButtonGroup>
       </ListView.Header>
@@ -128,7 +135,7 @@ const OrganizationPage = () => {
           data={organizations?.data ?? []}
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}
-          customActions={(row) => (
+          actions={(row) => (
             <>
               <Button
                 variant="ghost"
@@ -157,6 +164,7 @@ const OrganizationPage = () => {
       <ListView.Footer>
         <ListView.Pagination
           {...pagination}
+          count={organizations?.meta?.count ?? 0}
           pageCount={organizations?.meta?.pageCount ?? 0}
         />
       </ListView.Footer>

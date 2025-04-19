@@ -36,8 +36,6 @@ export type HeaderColumnDef<T> = T & {
 }
 
 export interface EditableTableMethods {
-  highlightRow: (rowIndex: number) => void
-  setHighlightedRows: (values: number[]) => void
   scrollToRow: (rowIndex: number) => void
 }
 

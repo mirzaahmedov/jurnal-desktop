@@ -3,15 +3,17 @@ import type { SaldoProduct } from '@/common/models'
 import { useEffect, useState } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { CalendarDays, Trash2 } from 'lucide-react'
+import { CalendarDays, CircleArrowDown, Trash2 } from 'lucide-react'
+import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 
 import { createGroupSpravochnik } from '@/app/super-admin/group/service'
-import { ChooseSpravochnik, GenericTable } from '@/common/components'
+import { ChooseSpravochnik, DatePicker, GenericTable } from '@/common/components'
 import { Button } from '@/common/components/ui/button'
 import { ButtonGroup } from '@/common/components/ui/button-group'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/common/components/ui/dialog'
+import { FormField } from '@/common/components/ui/form'
 import { useConfirm } from '@/common/features/confirm'
 import { DownloadFile, ImportFile } from '@/common/features/file'
 import { FileValidationErrorAlert } from '@/common/features/file/file-validation-error-alert'
@@ -29,7 +31,8 @@ import { useSelectedMonthStore } from '@/common/features/selected-month'
 import { useSpravochnik } from '@/common/features/spravochnik'
 import { useKeyUp, usePagination, useToggle } from '@/common/hooks'
 import { useLayoutStore } from '@/common/layout/store'
-import { formatDate, getLastDayOfMonth } from '@/common/lib/date'
+import { ISODateRegex, formatDate, parseDate, validateDate } from '@/common/lib/date'
+import { formatLocaleDate } from '@/common/lib/format'
 import { ListView } from '@/common/views'
 
 import { IznosQueryKeys } from '../iznos/config'
@@ -38,7 +41,7 @@ import { ostatokProductColumns } from './columns'
 import { DeleteExistingDocumentsAlert } from './components/delete-existing-document-alert'
 import { DeleteExistingSaldoAlert } from './components/delete-existing-saldo-alert'
 import { MonthlySaldoTrackerDialog } from './components/monthly-saldo-tracker-dialog'
-import { SaldoQueryKeys } from './config'
+import { SaldoQueryKeys, defaultValues } from './config'
 import { MaterialWarehouseSaldoProductService, MaterialWarehouseSaldoService } from './service'
 import {
   type OstatokDeleteExistingDocument,
@@ -50,7 +53,7 @@ import {
 } from './utils'
 
 const MaterialWarehouseSaldoPage = () => {
-  const { startDate, setSelectedMonth } = useSelectedMonthStore()
+  const { startDate, endDate, setSelectedMonth } = useSelectedMonthStore()
   const { queuedMonths } = useSaldoController({
     ns: SaldoNamespace.JUR_7
   })
@@ -70,6 +73,7 @@ const MaterialWarehouseSaldoPage = () => {
   }>()
 
   const [selectedRows, setSelectedRows] = useState<SaldoProduct[]>([])
+  const [selectedDate, setSelectedDate] = useState<undefined | Date>(startDate)
   const [search] = useSearchFilter()
 
   const selectedToggle = useToggle()
@@ -81,6 +85,10 @@ const MaterialWarehouseSaldoPage = () => {
   const { confirm } = useConfirm()
   const { t } = useTranslation(['app'])
   const { budjet_id, main_schet_id } = useRequisitesStore()
+
+  const form = useForm({
+    defaultValues
+  })
 
   const groupSpravochnik = useSpravochnik(createGroupSpravochnik({}))
   const responsibleSpravochnik = useSpravochnik(createResponsibleSpravochnik({}))
@@ -95,7 +103,7 @@ const MaterialWarehouseSaldoPage = () => {
       {
         page: pagination.page,
         limit: pagination.limit,
-        to: formatDate(getLastDayOfMonth(startDate)),
+        to: formatDate(selectedDate!),
         search,
         responsible_id: responsibleSpravochnik.selected?.id,
         group_id: groupSpravochnik.selected?.id,
@@ -103,8 +111,9 @@ const MaterialWarehouseSaldoPage = () => {
       }
     ],
     queryFn: MaterialWarehouseSaldoProductService.getAll,
-    enabled: !!startDate && !!budjet_id && queuedMonths.length === 0,
-    select: (data) => (!!startDate && !!budjet_id && queuedMonths.length === 0 ? data : undefined)
+    enabled: !!selectedDate && !!budjet_id && queuedMonths.length === 0,
+    select: (data) =>
+      !!selectedDate && !!budjet_id && queuedMonths.length === 0 ? data : undefined
   })
 
   const { mutate: deleteOstatok, isPending: isDeleting } = useMutation({
@@ -161,6 +170,14 @@ const MaterialWarehouseSaldoPage = () => {
       handleOstatokError(ostatokError)
     }
   }, [ostatokError])
+  useEffect(() => {
+    const date = form.getValues('date')
+    if (date && startDate < date && date < endDate) {
+      return
+    }
+    form.setValue('date', startDate)
+    setSelectedDate(startDate)
+  }, [form, startDate, endDate])
 
   useEffect(() => {
     setLayout({
@@ -175,14 +192,14 @@ const MaterialWarehouseSaldoPage = () => {
   }, [setLayout, t])
 
   const handleDelete = () => {
-    if (!startDate) {
+    if (!selectedDate) {
       return
     }
     confirm({
       onConfirm() {
         deleteOstatok({
-          year: startDate.getFullYear(),
-          month: startDate.getMonth() + 1,
+          year: selectedDate.getFullYear(),
+          month: selectedDate.getMonth() + 1,
           main_schet_id: main_schet_id!,
           budjet_id: budjet_id!
         })
@@ -206,6 +223,10 @@ const MaterialWarehouseSaldoPage = () => {
       return prev.filter((p) => p.product_id !== row.product_id)
     })
   }
+
+  const onSubmit = form.handleSubmit((values) => {
+    setSelectedDate(values.date)
+  })
 
   // const selectedIds = useMemo(() => selectedRows.map((row) => row.product_id), [selectedRows])
 
@@ -305,6 +326,76 @@ const MaterialWarehouseSaldoPage = () => {
           </div>
         </div>
       </ListView.Header>
+      <div className="p-5 pt-0 w-full flex items-center justify-between gap-5">
+        <form
+          onSubmit={onSubmit}
+          className="flex items-center justify-start gap-5"
+        >
+          <FormField
+            control={form.control}
+            name="date"
+            render={({ field }) => (
+              <DatePicker
+                value={field.value ? formatDate(field.value) : ''}
+                onChange={(value) => {
+                  field.onChange(value ? parseDate(value) : undefined)
+                }}
+                validate={(date) => {
+                  if (!validateDate(date)) {
+                    if (ISODateRegex.test(date)) {
+                      toast.error(t('date_does_not_exist'))
+                    }
+                    return false
+                  }
+                  const isValid = startDate <= parseDate(date) && parseDate(date) <= endDate
+                  if (!isValid && date?.length === 10) {
+                    toast.error(
+                      t('out_of_range', {
+                        startDate: formatLocaleDate(formatDate(startDate)),
+                        endDate: formatLocaleDate(formatDate(endDate))
+                      })
+                    )
+                  }
+                  return isValid
+                }}
+                calendarProps={{
+                  fromMonth: startDate,
+                  toMonth: endDate
+                }}
+              />
+            )}
+          />
+          <Button
+            variant="outline"
+            type="submit"
+          >
+            <CircleArrowDown className="btn-icon icon-start" />
+            {t('load')}
+          </Button>
+        </form>
+
+        <div className="flex items-center gap-5">
+          {/* {selectedIds.length > 0 ? (
+            <>
+              <Button
+                variant="ghost"
+                onClick={selectedToggle.open}
+              >
+                <CopyCheck className="btn-icon" /> {t('selected_elements')}
+                <Badge>{selectedRows.length}</Badge>
+              </Button>
+              <Button
+                variant="destructive"
+                onClick={() => handleDelete(selectedRows.map((row) => row.id))}
+                disabled={isDeleting}
+                loading={isDeleting}
+              >
+                <Trash2 className="btn-icon" /> {t('delete_selected')}
+              </Button>
+            </>
+          ) : null} */}
+        </div>
+      </div>
       <ListView.Content loading={isFetching || isDeleting}>
         <GenericTable
           columnDefs={ostatokProductColumns}
@@ -385,7 +476,9 @@ const MaterialWarehouseSaldoPage = () => {
         isOpen={monthlyTrackerToggle.isOpen}
         onOpenChange={monthlyTrackerToggle.setOpen}
         onSelect={(month) => {
+          form.setValue('date', month)
           setSelectedMonth(month)
+          setSelectedDate(month)
           monthlyTrackerToggle.close()
         }}
       />

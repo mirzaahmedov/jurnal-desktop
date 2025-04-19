@@ -19,6 +19,7 @@ export const createTextEditor = <T extends object>({
     return (
       <div className="relative">
         <Input
+          title={value ? String(value) : undefined}
           readOnly={readOnly}
           disabled={disabled}
           name={key as string}

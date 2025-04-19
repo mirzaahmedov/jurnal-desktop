@@ -149,6 +149,11 @@ const config: Config = {
           DEFAULT: 'hsl(var(--brand))',
           foreground: 'hsl(var(--brand-foreground))'
         },
+        highlight: {
+          DEFAULT: 'hsl(var(--highlight))',
+          divider: 'hsl(var(--highlight-divider))',
+          neutral: 'hsl(var(--highlight-neutral))'
+        },
         primary: {
           DEFAULT: 'hsl(var(--primary))',
           foreground: 'hsl(var(--primary-foreground))'

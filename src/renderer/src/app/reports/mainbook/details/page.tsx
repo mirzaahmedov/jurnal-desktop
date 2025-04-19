@@ -258,7 +258,6 @@ const MainbookDetailsPage = () => {
         const index = rows.findIndex((row) =>
           row.schet?.toLowerCase()?.includes(value?.toLowerCase())
         )
-        tableMethods.current?.setHighlightedRows([index])
         tableMethods.current?.scrollToRow(index)
       }
     }
