@@ -84,7 +84,7 @@ const MainbookPage = () => {
     }
   })
   const { mutate: cleanMainbook, isPending: isCleaning } = useMutation({
-    mutationKey: [MainbookQueryKeys.delete],
+    mutationKey: [MainbookQueryKeys.clean],
     mutationFn: MainbookService.cleanSaldo,
     onSuccess: (res) => {
       toast.success(res?.message)
@@ -148,6 +148,7 @@ const MainbookPage = () => {
           columnDefs={mainbookColumns}
           onEdit={handleEdit}
           onDelete={handleDelete}
+          getRowDeletable={(row) => row.isdeleted}
           actions={(row) => (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
