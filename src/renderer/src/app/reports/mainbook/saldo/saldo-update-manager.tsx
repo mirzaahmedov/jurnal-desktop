@@ -1,4 +1,4 @@
-import type { OrganSaldoMonthValue } from '@/common/models'
+import type { MainbookSaldoMonthValue } from '@/common/models'
 
 import { type SVGAttributes, useEffect, useMemo } from 'react'
 
@@ -53,7 +53,7 @@ export const MainbookSaldoUpdateManager = () => {
     enabled: !!budjet_id
   })
 
-  const { queuedMonths, dequeueMonth } = useSaldoController<OrganSaldoMonthValue>({
+  const { queuedMonths, dequeueMonth } = useSaldoController<MainbookSaldoMonthValue>({
     ns: SaldoNamespace.MAINBOOK
   })
 

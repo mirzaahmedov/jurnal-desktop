@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next'
 import { GenericTable } from '@/common/components'
 import { MonthPicker } from '@/common/components/month-picker'
 import { usePagination } from '@/common/hooks'
-import { useLayout } from '@/common/layout/store'
+import { useLayout } from '@/common/layout'
 import { ListView } from '@/common/views'
 
 import { regionDataColumns } from './columns'
@@ -14,10 +14,11 @@ import { regionDataQueryKeys } from './config'
 import { regionDataService } from './service'
 
 const RegionDataPage = () => {
+  const pagination = usePagination()
+  const setLayout = useLayout()
+
   const [date, setDate] = useState('')
   const [year, month] = date.split('-')
-
-  const pagination = usePagination()
 
   const { t } = useTranslation(['app'])
 
@@ -33,9 +34,11 @@ const RegionDataPage = () => {
     queryFn: regionDataService.getAll
   })
 
-  useLayout({
-    title: t('pages.region-data')
-  })
+  useEffect(() => {
+    setLayout({
+      title: t('pages.region-data')
+    })
+  }, [setLayout, t])
 
   return (
     <ListView>

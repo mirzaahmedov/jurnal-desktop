@@ -19,7 +19,7 @@ import { useRequisitesStore } from '@/common/features/requisites'
 import { useSpravochnik } from '@/common/features/spravochnik'
 import { usePagination } from '@/common/hooks'
 import { useLocationState } from '@/common/hooks/use-location-state'
-import { useLayoutStore } from '@/common/layout/store'
+import { useLayout } from '@/common/layout'
 import { ListView } from '@/common/views'
 
 import { shartnomaColumns } from './columns'
@@ -39,7 +39,7 @@ const ShartnomaPage = () => {
   const pagination = usePagination()
   const queryClient = useQueryClient()
   const budjet_id = useRequisitesStore((store) => store.budjet_id)
-  const setLayout = useLayoutStore((store) => store.setLayout)
+  const setLayout = useLayout()
 
   const organSpravochnik = useSpravochnik(
     createOrganizationSpravochnik({

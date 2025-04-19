@@ -27,7 +27,7 @@ import {
 } from '@/common/features/saldo'
 import { useSettingsStore } from '@/common/features/settings'
 import { useKeyUp, usePagination } from '@/common/hooks'
-import { useLayoutStore } from '@/common/layout/store'
+import { useLayout } from '@/common/layout'
 import { ListView } from '@/common/views'
 
 import { mainbookColumns } from './columns'
@@ -40,7 +40,7 @@ const MainbookPage = () => {
   const queryClient = useQueryClient()
   const report_title_id = useSettingsStore((store) => store.report_title_id)
   const navigate = useNavigate()
-  const setLayout = useLayoutStore((store) => store.setLayout)
+  const setLayout = useLayout()
 
   const [year] = useYearFilter()
 

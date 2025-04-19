@@ -3,13 +3,13 @@ import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
 
-import { useLayoutStore } from '@/common/layout/store'
+import { useLayout } from '@/common/layout'
 
 import InternalDetails from './details'
 
 const InternalDetailsPage = () => {
   const navigate = useNavigate()
-  const setLayout = useLayoutStore((store) => store.setLayout)
+  const setLayout = useLayout()
 
   const { id } = useParams()
   const { t } = useTranslation(['app'])
@@ -26,6 +26,7 @@ const InternalDetailsPage = () => {
           path: '/journal-7/internal-transfer'
         }
       ],
+      isSelectedMonthVisible: true,
       onBack: () => {
         navigate(-1)
       }

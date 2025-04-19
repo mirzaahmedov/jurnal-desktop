@@ -25,7 +25,7 @@ import { useSelectedMonthStore } from '@/common/features/selected-month'
 import { validateDateWithinSelectedMonth } from '@/common/features/selected-month'
 import { useSettingsStore } from '@/common/features/settings'
 import { useDates, usePagination } from '@/common/hooks'
-import { useLayoutStore } from '@/common/layout/store'
+import { useLayout } from '@/common/layout'
 import { formatNumber } from '@/common/lib/format'
 import { ListView } from '@/common/views'
 
@@ -39,7 +39,7 @@ const KassaPrixodPage = () => {
   const queryClient = useQueryClient()
   const navigate = useNavigate()
 
-  const setLayout = useLayoutStore((store) => store.setLayout)
+  const setLayout = useLayout()
   const startDate = useSelectedMonthStore((store) => store.startDate)
 
   const [search] = useSearchFilter()
@@ -102,12 +102,15 @@ const KassaPrixodPage = () => {
   }
 
   useEffect(() => {
-    handleSaldoErrorDates(SaldoNamespace.JUR_1, error)
+    if (error) {
+      handleSaldoErrorDates(SaldoNamespace.JUR_1, error)
+    }
   }, [error])
   useEffect(() => {
     setLayout({
       title: t('pages.prixod-docs'),
       content: SearchFilterDebounced,
+      isSelectedMonthVisible: true,
       breadcrumbs: [
         {
           title: t('pages.kassa')

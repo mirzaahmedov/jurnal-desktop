@@ -25,7 +25,7 @@ import { SaldoNamespace, useSaldoController } from '@/common/features/saldo'
 import { useSelectedMonthStore } from '@/common/features/selected-month'
 import { validateDateWithinSelectedMonth } from '@/common/features/selected-month'
 import { useDates, usePagination } from '@/common/hooks'
-import { useLayoutStore } from '@/common/layout/store'
+import { useLayout } from '@/common/layout'
 import { formatDate } from '@/common/lib/date'
 import { ListView } from '@/common/views'
 
@@ -62,7 +62,7 @@ const Jurnal7PrixodPage = () => {
     defaultTo: formatDate(endDate)
   })
 
-  const setLayout = useLayoutStore((store) => store.setLayout)
+  const setLayout = useLayout()
 
   const { mutate: deletePrixod, isPending: isDeleting } = useMutation({
     mutationKey: [WarehousePrixodQueryKeys.delete],
@@ -101,7 +101,7 @@ const Jurnal7PrixodPage = () => {
   const {
     data: prixods,
     isFetching,
-    error: prixodListError
+    error: prixodsError
   } = useQuery({
     queryKey: [
       WarehousePrixodQueryKeys.getAll,
@@ -119,13 +119,16 @@ const Jurnal7PrixodPage = () => {
   })
 
   useEffect(() => {
-    handleOstatokError(prixodListError)
-  }, [prixodListError])
+    if (prixodsError) {
+      handleOstatokError(prixodsError)
+    }
+  }, [prixodsError])
 
   useEffect(() => {
     setLayout({
       title: t('pages.prixod-docs'),
       content: SearchFilterDebounced,
+      isSelectedMonthVisible: true,
       breadcrumbs: [
         {
           title: t('pages.material-warehouse')

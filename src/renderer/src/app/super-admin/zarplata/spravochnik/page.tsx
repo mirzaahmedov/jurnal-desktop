@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next'
 import { GenericTable } from '@/common/components'
 import { useSearchFilter } from '@/common/features/filters/search/search-filter-debounced'
 import { useToggle } from '@/common/hooks'
-import { useLayoutStore } from '@/common/layout/store'
+import { useLayout } from '@/common/layout'
 import { ListView } from '@/common/views'
 
 import { columnDefs } from './columns'
@@ -26,7 +26,7 @@ const ZarplataSpravochnikPage = () => {
   const [typeCode] = useTypeFilter()
 
   const dialogToggle = useToggle()
-  const setLayout = useLayoutStore((store) => store.setLayout)
+  const setLayout = useLayout()
 
   const { data: spravochniks, isFetching } = useQuery({
     queryKey: [

@@ -16,7 +16,7 @@ import {
 } from '@/common/features/selected-month'
 import { useSettingsStore } from '@/common/features/settings'
 import { useDates, usePagination } from '@/common/hooks'
-import { useLayoutStore } from '@/common/layout/store'
+import { useLayout } from '@/common/layout'
 import { formatNumber } from '@/common/lib/format'
 import { ListView } from '@/common/views'
 
@@ -25,7 +25,7 @@ import { BankMonitorQueryKeys } from './config'
 import { BankMonitorService } from './service'
 
 const BankMonitorPage = () => {
-  const setLayout = useLayoutStore((store) => store.setLayout)
+  const setLayout = useLayout()
 
   const report_title_id = useSettingsStore((store) => store.report_title_id)
   const startDate = useSelectedMonthStore((store) => store.startDate)
@@ -74,6 +74,7 @@ const BankMonitorPage = () => {
     setLayout({
       title: t('pages.monitoring'),
       content: SearchFilterDebounced,
+      isSelectedMonthVisible: true,
       breadcrumbs: [
         {
           title: t('pages.bank')

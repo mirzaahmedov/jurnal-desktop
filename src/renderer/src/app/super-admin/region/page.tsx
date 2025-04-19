@@ -10,7 +10,7 @@ import { useConfirm } from '@/common/features/confirm'
 import { SearchFilterDebounced } from '@/common/features/filters/search/search-filter-debounced'
 import { useSearchFilter } from '@/common/features/filters/search/search-filter-debounced'
 import { useToggle } from '@/common/hooks/use-toggle'
-import { useLayoutStore } from '@/common/layout/store'
+import { useLayout } from '@/common/layout'
 
 import { regionColumns } from './columns'
 import { regionQueryKeys } from './constants'
@@ -20,7 +20,7 @@ import { regionService } from './service'
 const RegionPage = () => {
   const [selected, setSelected] = useState<Region | null>(null)
 
-  const setLayout = useLayoutStore((store) => store.setLayout)
+  const setLayout = useLayout()
 
   const dialogToggle = useToggle()
   const queryClient = useQueryClient()

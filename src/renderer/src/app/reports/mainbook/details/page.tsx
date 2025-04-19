@@ -19,7 +19,7 @@ import {
   useSaldoController
 } from '@/common/features/saldo'
 import { useSelectedMonthStore } from '@/common/features/selected-month'
-import { useLayoutStore } from '@/common/layout/store'
+import { useLayout } from '@/common/layout'
 import { formatDate } from '@/common/lib/date'
 import { DetailsView } from '@/common/views'
 
@@ -40,7 +40,7 @@ const MainbookDetailsPage = () => {
   const tableMethods = useRef<EditableTableMethods>(null)
   const navigate = useNavigate()
   const queryClient = useQueryClient()
-  const setLayout = useLayoutStore((store) => store.setLayout)
+  const setLayout = useLayout()
   const startDate = useSelectedMonthStore((store) => store.startDate)
 
   const [isEditable, setEditable] = useState(false)

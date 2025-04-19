@@ -1,9 +1,11 @@
+import { useEffect } from 'react'
+
 import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 
 import { GenericTable } from '@/common/components'
 import { useDates } from '@/common/hooks'
-import { useLayout } from '@/common/layout/store'
+import { useLayout } from '@/common/layout'
 import { ListView } from '@/common/views'
 
 import { logColumns } from './columns'
@@ -13,8 +15,10 @@ import { useLogType } from './hooks'
 import { logService } from './service'
 
 const Logs = () => {
-  const [type] = useLogType()
   const dates = useDates()
+  const setLayout = useLayout()
+
+  const [type] = useLogType()
 
   const { t } = useTranslation(['app'])
 
@@ -23,10 +27,12 @@ const Logs = () => {
     queryFn: logService.getAll
   })
 
-  useLayout({
-    title: t('pages.logs'),
-    content: LogFilter
-  })
+  useEffect(() => {
+    setLayout({
+      title: t('pages.logs'),
+      content: LogFilter
+    })
+  }, [setLayout, t])
 
   return (
     <ListView>

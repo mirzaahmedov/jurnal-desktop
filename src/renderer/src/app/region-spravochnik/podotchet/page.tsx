@@ -12,7 +12,7 @@ import { SearchFilterDebounced } from '@/common/features/filters/search/search-f
 import { useSearchFilter } from '@/common/features/filters/search/search-filter-debounced'
 import { usePagination } from '@/common/hooks'
 import { useToggle } from '@/common/hooks/use-toggle'
-import { useLayout } from '@/common/layout/store'
+import { useLayout } from '@/common/layout'
 import { ListView } from '@/common/views'
 
 import { podotchetColumns } from './columns'
@@ -23,6 +23,7 @@ import { podotchetService } from './service'
 const PodotchetPage = () => {
   const [selected, setSelected] = useState<Podotchet | null>(null)
 
+  const setLayout = useLayout()
   const dialogToggle = useToggle()
   const queryClient = useQueryClient()
   const pagination = usePagination()
@@ -31,7 +32,7 @@ const PodotchetPage = () => {
   const [search] = useSearchFilter()
   const { t } = useTranslation(['app'])
 
-  const { data: podotchetList, isFetching } = useQuery({
+  const { data: podotchets, isFetching } = useQuery({
     queryKey: [
       podotchetQueryKeys.getAll,
       {
@@ -53,16 +54,17 @@ const PodotchetPage = () => {
   })
 
   useEffect(() => {
+    setLayout({
+      title: t('pages.podotchet'),
+      content: SearchFilterDebounced,
+      onCreate: dialogToggle.open
+    })
+  }, [setLayout, dialogToggle.open, t])
+  useEffect(() => {
     if (!dialogToggle.isOpen) {
       setSelected(null)
     }
   }, [dialogToggle.isOpen])
-
-  useLayout({
-    title: t('pages.podotchet'),
-    content: SearchFilterDebounced,
-    onCreate: dialogToggle.open
-  })
 
   const handleClickEdit = (row: Podotchet) => {
     setSelected(row)
@@ -80,7 +82,7 @@ const PodotchetPage = () => {
     <ListView>
       <ListView.Content loading={isFetching || isPending}>
         <GenericTable
-          data={podotchetList?.data ?? []}
+          data={podotchets?.data ?? []}
           columnDefs={podotchetColumns}
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}
@@ -89,7 +91,8 @@ const PodotchetPage = () => {
       <ListView.Footer>
         <ListView.Pagination
           {...pagination}
-          pageCount={podotchetList?.meta?.pageCount ?? 0}
+          count={podotchets?.meta?.count ?? 0}
+          pageCount={podotchets?.meta?.pageCount ?? 0}
         />
       </ListView.Footer>
       <PodotchetDialog

@@ -16,7 +16,7 @@ import {
 } from '@/common/features/selected-month'
 import { useSettingsStore } from '@/common/features/settings'
 import { useDates, usePagination } from '@/common/hooks'
-import { useLayoutStore } from '@/common/layout/store'
+import { useLayout } from '@/common/layout'
 import { formatNumber } from '@/common/lib/format'
 import { ListView } from '@/common/views'
 
@@ -30,7 +30,7 @@ const KassaMonitorPage = () => {
   const report_title_id = useSettingsStore((store) => store.report_title_id)
   const startDate = useSelectedMonthStore((store) => store.startDate)
 
-  const setLayout = useLayoutStore((store) => store.setLayout)
+  const setLayout = useLayout()
 
   const [search] = useSearchFilter()
 
@@ -66,7 +66,9 @@ const KassaMonitorPage = () => {
   })
 
   useEffect(() => {
-    handleSaldoErrorDates(SaldoNamespace.JUR_1, error)
+    if (error) {
+      handleSaldoErrorDates(SaldoNamespace.JUR_1, error)
+    }
   }, [error])
   useEffect(() => {
     setLayout({
@@ -76,7 +78,8 @@ const KassaMonitorPage = () => {
           title: t('pages.kassa')
         }
       ],
-      content: SearchFilterDebounced
+      content: SearchFilterDebounced,
+      isSelectedMonthVisible: true
     })
   }, [setLayout, t])
 

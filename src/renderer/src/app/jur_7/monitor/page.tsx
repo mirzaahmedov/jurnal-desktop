@@ -16,13 +16,14 @@ import {
 } from '@/common/components/ui/dropdown-menu'
 import { DownloadFile } from '@/common/features/file'
 import { useRequisitesStore } from '@/common/features/requisites'
+import { SaldoNamespace, handleSaldoErrorDates, useSaldoController } from '@/common/features/saldo'
 import {
   useSelectedMonthStore,
   validateDateWithinSelectedMonth
 } from '@/common/features/selected-month'
 import { useSettingsStore } from '@/common/features/settings'
 import { useDates, usePagination, useToggle } from '@/common/hooks'
-import { useLayoutStore } from '@/common/layout/store'
+import { useLayout } from '@/common/layout'
 import { type Jur7Monitoring, Jur7MonitoringType } from '@/common/models'
 import { ListView } from '@/common/views'
 
@@ -36,13 +37,20 @@ export const Jur7MonitorPage = () => {
   const reportsToggle = useToggle()
   const startDate = useSelectedMonthStore((store) => store.startDate)
   const report_title_id = useSettingsStore((store) => store.report_title_id)
-  const setLayout = useLayoutStore((store) => store.setLayout)
+  const setLayout = useLayout()
 
   const { t } = useTranslation(['app'])
   const { budjet_id, main_schet_id } = useRequisitesStore()
   const { sorting, getColumnSorted, handleSort } = useTableSort()
+  const { queuedMonths } = useSaldoController({
+    ns: SaldoNamespace.JUR_7
+  })
 
-  const { data: monitoring, isFetching } = useQuery({
+  const {
+    data: monitoring,
+    isFetching,
+    error
+  } = useQuery({
     queryKey: [
       'jur7_monitoring',
       {
@@ -53,7 +61,8 @@ export const Jur7MonitorPage = () => {
         main_schet_id
       }
     ],
-    queryFn: Jur7MonitorService.getAll
+    queryFn: Jur7MonitorService.getAll,
+    enabled: !!budjet_id && !!main_schet_id && !queuedMonths.length
   })
 
   const handleEdit = (row: Jur7Monitoring) => {
@@ -79,9 +88,15 @@ export const Jur7MonitorPage = () => {
         {
           title: t('pages.material-warehouse')
         }
-      ]
+      ],
+      isSelectedMonthVisible: true
     })
   }, [t, setLayout])
+  useEffect(() => {
+    if (error) {
+      handleSaldoErrorDates(SaldoNamespace.JUR_7, error)
+    }
+  }, [error])
 
   return (
     <ListView>

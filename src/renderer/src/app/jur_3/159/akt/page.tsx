@@ -24,7 +24,7 @@ import {
   validateDateWithinSelectedMonth
 } from '@/common/features/selected-month'
 import { useDates, usePagination } from '@/common/hooks'
-import { useLayoutStore } from '@/common/layout/store'
+import { useLayout } from '@/common/layout'
 import { formatNumber } from '@/common/lib/format'
 import { ListView } from '@/common/views'
 
@@ -37,7 +37,7 @@ const AktPage = () => {
   const navigate = useNavigate()
   const pagination = usePagination()
   const dates = useDates()
-  const setLayout = useLayoutStore((store) => store.setLayout)
+  const setLayout = useLayout()
   const startDate = useSelectedMonthStore((store) => store.startDate)
 
   const { main_schet_id, jur3_schet_159_id } = useRequisitesStore()
@@ -108,6 +108,7 @@ const AktPage = () => {
         }
       ],
       content: SearchFilterDebounced,
+      isSelectedMonthVisible: true,
       onCreate() {
         navigate('create')
       }

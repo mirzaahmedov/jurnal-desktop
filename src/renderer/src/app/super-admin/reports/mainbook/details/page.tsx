@@ -16,7 +16,7 @@ import { MonthPicker } from '@/common/components/month-picker'
 import { SearchInput } from '@/common/components/search-input'
 import { Button } from '@/common/components/ui/button'
 import { useConfirm } from '@/common/features/confirm'
-import { useLayoutStore } from '@/common/layout/store'
+import { useLayout } from '@/common/layout'
 import { formatDate } from '@/common/lib/date'
 import { MainbookStatus } from '@/common/models'
 import { DetailsView } from '@/common/views'
@@ -28,7 +28,7 @@ const AdminMainbookDetailsPage = () => {
   const tableMethods = useRef<EditableTableMethods>(null)
   const navigate = useNavigate()
   const queryClient = useQueryClient()
-  const setLayout = useLayoutStore((store) => store.setLayout)
+  const setLayout = useLayout()
 
   const { id } = useParams()
   const { confirm } = useConfirm()

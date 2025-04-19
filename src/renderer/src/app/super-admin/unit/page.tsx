@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next'
 import { GenericTable } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
 import { useToggle } from '@/common/hooks/use-toggle'
-import { useLayout } from '@/common/layout/store'
+import { useLayout } from '@/common/layout'
 import { ListView } from '@/common/views'
 
 import { unitColumns } from './columns'
@@ -17,13 +17,14 @@ import { UnitDialog } from './dialog'
 import { unitService } from './service'
 
 const UnitPage = () => {
+  const dialogToggle = useToggle()
+  const queryClient = useQueryClient()
+  const setLayout = useLayout()
+
   const [selected, setSelected] = useState<Unit | null>(null)
 
   const { t } = useTranslation(['app'])
   const { confirm } = useConfirm()
-
-  const toggle = useToggle()
-  const queryClient = useQueryClient()
 
   const { data: unit, isFetching } = useQuery({
     queryKey: [unitQueryKeys.getAll],
@@ -41,18 +42,20 @@ const UnitPage = () => {
   })
 
   useEffect(() => {
-    if (!toggle.isOpen) {
+    setLayout({
+      title: t('pages.edin'),
+      onCreate: dialogToggle.open
+    })
+  }, [setLayout, dialogToggle.open, t])
+  useEffect(() => {
+    if (!dialogToggle.isOpen) {
       setSelected(null)
     }
-  }, [toggle.isOpen])
-  useLayout({
-    title: t('pages.edin'),
-    onCreate: toggle.open
-  })
+  }, [dialogToggle.isOpen])
 
   const handleClickEdit = (row: Unit) => {
     setSelected(row)
-    toggle.open()
+    dialogToggle.open()
   }
   const handleClickDelete = (row: Unit) => {
     confirm({
@@ -74,8 +77,8 @@ const UnitPage = () => {
       </ListView.Content>
       <UnitDialog
         data={selected}
-        open={toggle.isOpen}
-        onChangeOpen={toggle.setOpen}
+        open={dialogToggle.isOpen}
+        onChangeOpen={dialogToggle.setOpen}
       />
     </ListView>
   )

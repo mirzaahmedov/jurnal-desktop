@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 
 import { DatePicker } from '@/common/components'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/common/components/ui/tabs'
-import { useLayoutStore } from '@/common/layout/store'
+import { useLayout } from '@/common/layout'
 import { formatDate } from '@/common/lib/date'
 
 import { Bank } from './components/bank'
@@ -20,7 +20,7 @@ const DashboardPage = () => {
     queryFn: getDashboardBudjetOptionsQuery
   })
 
-  const setLayout = useLayoutStore((store) => store.setLayout)
+  const setLayout = useLayout()
 
   const { t } = useTranslation(['app'])
 

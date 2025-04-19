@@ -11,9 +11,10 @@ interface YearOption {
   label: string
 }
 
+const currentYear = new Date().getFullYear()
 const yearOptions: YearOption[] = []
 
-for (let i = 2010; i <= 2030; i++) {
+for (let i = currentYear - 5; i <= currentYear + 5; i++) {
   yearOptions.push({
     value: i,
     label: String(i)

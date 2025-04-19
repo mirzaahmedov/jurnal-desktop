@@ -39,6 +39,7 @@ import { capitalize } from '@/common/lib/string'
 
 import { KassaSaldoQueryKeys, defaultValues } from './config'
 import { KassaSaldoFormSchema } from './config'
+import { useYearFilter } from './filters'
 import { KassaSaldoService } from './service'
 
 interface KassaSaldoDialogProps {
@@ -47,14 +48,19 @@ interface KassaSaldoDialogProps {
   selected: KassaSaldo | null
 }
 export const KassaSaldoDialog = ({ open, onOpenChange, selected }: KassaSaldoDialogProps) => {
-  const { t } = useTranslation(['app'])
-  const { startDate } = useSelectedMonthStore()
-
   const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
   const queryClient = useQueryClient()
 
+  const [year] = useYearFilter()
+
+  const { t } = useTranslation(['app'])
+  const { startDate } = useSelectedMonthStore()
+
   const form = useForm({
-    defaultValues,
+    defaultValues: {
+      ...defaultValues,
+      year: year ?? new Date().getFullYear()
+    },
     resolver: zodResolver(KassaSaldoFormSchema)
   })
 
@@ -113,12 +119,15 @@ export const KassaSaldoDialog = ({ open, onOpenChange, selected }: KassaSaldoDia
 
   useEffect(() => {
     if (!selected) {
-      form.reset(defaultValues)
+      form.reset({
+        ...defaultValues,
+        year: year ?? new Date().getFullYear()
+      })
       return
     }
 
     form.reset(selected)
-  }, [form, selected])
+  }, [form, selected, year])
   useEffect(() => {
     if (!open && !selected) {
       form.setValue('year', startDate.getFullYear())

@@ -14,7 +14,7 @@ import { RequisitesQueryKeys, useRequisitesStore } from '@/common/features/requi
 import { DuplicateSchetsAlert } from '@/common/features/requisites/guards/duplicate-schets-alert'
 import { usePagination } from '@/common/hooks'
 import { useToggle } from '@/common/hooks/use-toggle'
-import { useLayoutStore } from '@/common/layout/store'
+import { useLayout } from '@/common/layout'
 import { ListView } from '@/common/views'
 
 import { MainSchetColumns } from './columns'
@@ -28,7 +28,7 @@ const MainSchetPage = () => {
   const queryClient = useQueryClient()
 
   const budjet_id = useRequisitesStore((store) => store.budjet_id)
-  const setLayout = useLayoutStore((store) => store.setLayout)
+  const setLayout = useLayout()
 
   const [selected, setSelected] = useState<MainSchet | null>(null)
   const [search] = useSearchFilter()

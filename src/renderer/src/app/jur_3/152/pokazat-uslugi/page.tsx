@@ -23,7 +23,7 @@ import {
   validateDateWithinSelectedMonth
 } from '@/common/features/selected-month'
 import { useDates, usePagination } from '@/common/hooks'
-import { useLayoutStore } from '@/common/layout/store'
+import { useLayout } from '@/common/layout'
 import { ListView } from '@/common/views'
 
 import { pokazatUslugiColumns } from './columns'
@@ -31,7 +31,7 @@ import { queryKeys } from './config'
 import { PokazatUslugiService } from './service'
 
 const PokazatUslugiPage = () => {
-  const setLayout = useLayoutStore((store) => store.setLayout)
+  const setLayout = useLayout()
   const startDate = useSelectedMonthStore((store) => store.startDate)
 
   const navigate = useNavigate()
@@ -102,6 +102,7 @@ const PokazatUslugiPage = () => {
           title: t('pages.organization')
         }
       ],
+      isSelectedMonthVisible: true,
       content: SearchFilterDebounced,
       onCreate() {
         navigate('create')

@@ -32,7 +32,7 @@ import {
 } from '@/common/features/selected-month'
 import { useSnippets } from '@/common/features/snippents/use-snippets'
 import { useSpravochnik } from '@/common/features/spravochnik'
-import { useLayoutStore } from '@/common/layout/store'
+import { useLayout } from '@/common/layout'
 import { formatDate } from '@/common/lib/date'
 import { normalizeEmptyFields } from '@/common/lib/validation'
 import { DetailsView } from '@/common/views'
@@ -62,7 +62,7 @@ const AktDetailsPage = () => {
   const id = useParams().id as string
   const navigate = useNavigate()
   const queryClient = useQueryClient()
-  const setLayout = useLayoutStore((store) => store.setLayout)
+  const setLayout = useLayout()
   const startDate = useSelectedMonthStore((store) => store.startDate)
 
   const form = useForm({
@@ -224,13 +224,16 @@ const AktDetailsPage = () => {
           title: t('pages.akt')
         }
       ],
+      isSelectedMonthVisible: true,
       onBack() {
         navigate(-1)
       }
     })
   }, [setLayout, navigate, id, t])
   useEffect(() => {
-    handleSaldoErrorDates(SaldoNamespace.JUR_3_159, error)
+    if (error) {
+      handleSaldoErrorDates(SaldoNamespace.JUR_3_159, error)
+    }
   }, [error])
 
   useEffect(() => {

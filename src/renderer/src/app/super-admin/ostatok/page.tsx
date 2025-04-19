@@ -17,7 +17,7 @@ import { SearchFilterDebounced } from '@/common/features/filters/search/search-f
 import { useSearchFilter } from '@/common/features/filters/search/search-filter-debounced'
 import { useSpravochnik } from '@/common/features/spravochnik'
 import { usePagination } from '@/common/hooks'
-import { useLayoutStore } from '@/common/layout/store'
+import { useLayout } from '@/common/layout'
 import { formatDate, parseDate } from '@/common/lib/date'
 import { ListView } from '@/common/views'
 
@@ -33,7 +33,7 @@ const AdminOstatokPage = () => {
   const [selectedDate, setSelectedDate] = useState<undefined | Date>(defaultValues.date)
 
   const pagination = usePagination()
-  const setLayout = useLayoutStore((store) => store.setLayout)
+  const setLayout = useLayout()
 
   const [search] = useSearchFilter()
   const { t } = useTranslation(['app'])

@@ -6,7 +6,7 @@ import { type KeyboardEvent, useEffect, useMemo, useRef, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useForm, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
 import { MonthPicker } from '@/common/components/month-picker'
@@ -20,7 +20,7 @@ import {
   useSaldoController
 } from '@/common/features/saldo'
 import { useSelectedMonthStore } from '@/common/features/selected-month'
-import { useLayoutStore } from '@/common/layout/store'
+import { useLayout } from '@/common/layout'
 import { formatDate } from '@/common/lib/date'
 import { DetailsView } from '@/common/views'
 
@@ -34,8 +34,9 @@ import { calculateTotal } from './utils'
 const OrganSaldoDetailsPage = () => {
   const tableMethods = useRef<EditableTableMethods>(null)
   const navigate = useNavigate()
+  const location = useLocation()
   const queryClient = useQueryClient()
-  const setLayout = useLayoutStore((store) => store.setLayout)
+  const setLayout = useLayout()
   const startDate = useSelectedMonthStore((store) => store.startDate)
   const { queuedMonths } = useSaldoController({
     ns: SaldoNamespace.JUR_3_152
@@ -51,7 +52,7 @@ const OrganSaldoDetailsPage = () => {
   const form = useForm({
     defaultValues: {
       ...defaultValues,
-      year: startDate.getFullYear(),
+      year: location.state?.year ?? startDate.getFullYear(),
       month: startDate.getMonth() + 1
     }
   })
@@ -146,12 +147,6 @@ const OrganSaldoDetailsPage = () => {
   const month = form.watch('month')
   const date = useMemo(() => formatDate(new Date(year, month - 1)), [year, month])
 
-  useEffect(() => {
-    if (id === 'create') {
-      form.setValue('year', startDate.getFullYear())
-      form.setValue('month', startDate.getMonth() + 1)
-    }
-  }, [startDate])
   useEffect(() => {
     if (saldo?.data) {
       if (saldo.data.childs?.length) {
@@ -282,13 +277,12 @@ const OrganSaldoDetailsPage = () => {
               <SearchInput onKeyDown={handleSearch} />
               <div className="flex items-center gap-5">
                 <MonthPicker
-                  isDisabled={isEditable}
                   value={date}
                   onChange={(value) => {
                     const date = new Date(value)
                     form.setValue('year', date.getFullYear())
                     form.setValue('month', date.getMonth() + 1)
-                    if (id !== 'create') {
+                    if (id !== 'create' && !isEditable) {
                       handleAutofill({
                         year: date.getFullYear(),
                         month: date.getMonth() + 1,

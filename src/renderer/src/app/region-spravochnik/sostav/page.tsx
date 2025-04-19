@@ -11,7 +11,7 @@ import { SearchFilterDebounced } from '@/common/features/filters/search/search-f
 import { useSearchFilter } from '@/common/features/filters/search/search-filter-debounced'
 import { usePagination } from '@/common/hooks'
 import { useToggle } from '@/common/hooks/use-toggle'
-import { useLayoutStore } from '@/common/layout/store'
+import { useLayout } from '@/common/layout'
 import { ListView } from '@/common/views'
 
 import { sostavColumns } from './columns'
@@ -25,7 +25,7 @@ const SostavPage = () => {
   const toggle = useToggle()
   const pagination = usePagination()
   const queryClient = useQueryClient()
-  const setLayout = useLayoutStore((store) => store.setLayout)
+  const setLayout = useLayout()
 
   const { confirm } = useConfirm()
   const [search] = useSearchFilter()

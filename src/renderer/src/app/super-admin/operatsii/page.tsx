@@ -16,7 +16,7 @@ import { useConfirm } from '@/common/features/confirm'
 import { useSearchFilter } from '@/common/features/filters/search/search-filter-debounced'
 import { usePagination } from '@/common/hooks'
 import { useToggle } from '@/common/hooks/use-toggle'
-import { useLayoutStore } from '@/common/layout/store'
+import { useLayout } from '@/common/layout'
 import { type Operatsii } from '@/common/models'
 import { ListView } from '@/common/views'
 
@@ -33,7 +33,7 @@ const OperatsiiPage = () => {
   const dialogToggle = useToggle()
   const queryClient = useQueryClient()
   const pagination = usePagination()
-  const setLayout = useLayoutStore((store) => store.setLayout)
+  const setLayout = useLayout()
 
   const [typeSchet] = useTypeSchetFilter()
 

@@ -9,11 +9,11 @@ import { GroupTable, groupService } from '@/app/super-admin/group/service'
 import { DownloadFile } from '@/common/features/file'
 import { SearchFilterDebounced } from '@/common/features/filters/search/search-filter-debounced'
 import { useSearchFilter } from '@/common/features/filters/search/search-filter-debounced'
-import { useLayoutStore } from '@/common/layout/store'
+import { useLayout } from '@/common/layout'
 import { ListView } from '@/common/views'
 
 const RegionGroupPage = () => {
-  const setLayout = useLayoutStore((store) => store.setLayout)
+  const setLayout = useLayout()
 
   const { t } = useTranslation(['app'])
   const [search] = useSearchFilter()

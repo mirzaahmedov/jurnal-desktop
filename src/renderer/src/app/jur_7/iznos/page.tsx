@@ -21,7 +21,7 @@ import { useSelectedMonthStore } from '@/common/features/selected-month'
 import { validateDateWithinSelectedMonth } from '@/common/features/selected-month'
 import { useSpravochnik } from '@/common/features/spravochnik'
 import { usePagination, useToggle } from '@/common/hooks'
-import { useLayoutStore } from '@/common/layout/store'
+import { useLayout } from '@/common/layout'
 import { formatDate, parseDate } from '@/common/lib/date'
 import { ListView } from '@/common/views'
 
@@ -37,7 +37,7 @@ const IznosPage = () => {
 
   const pagination = usePagination()
   const budjet_id = useRequisitesStore((store) => store.budjet_id)
-  const setLayout = useLayoutStore((store) => store.setLayout)
+  const setLayout = useLayout()
 
   const { t } = useTranslation(['app'])
   const { startDate, endDate } = useSelectedMonthStore()
@@ -81,7 +81,9 @@ const IznosPage = () => {
   })
 
   useEffect(() => {
-    handleOstatokError(iznosError)
+    if (iznosError) {
+      handleOstatokError(iznosError)
+    }
   }, [iznosError])
   useEffect(() => {
     const date = form.getValues('date')
@@ -95,6 +97,7 @@ const IznosPage = () => {
     setLayout({
       title: t('pages.iznos'),
       content: SearchFilterDebounced,
+      isSelectedMonthVisible: true,
       breadcrumbs: [
         {
           title: t('pages.material-warehouse')

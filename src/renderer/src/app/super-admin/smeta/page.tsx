@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next'
 import { useConfirm } from '@/common/features/confirm'
 import { useSearchFilter } from '@/common/features/filters/search/search-filter-debounced'
 import { useToggle } from '@/common/hooks/use-toggle'
-import { useLayoutStore } from '@/common/layout/store'
+import { useLayout } from '@/common/layout'
 import { ListView } from '@/common/views'
 
 import { smetaColumns } from './columns'
@@ -21,7 +21,7 @@ const SmetaPage = () => {
   const toggle = useToggle()
   const queryClient = useQueryClient()
 
-  const setLayout = useLayoutStore((store) => store.setLayout)
+  const setLayout = useLayout()
 
   const [selected, setSelected] = useState<Smeta | null>(null)
   const [groupNumber] = useGroupNumberFilter()

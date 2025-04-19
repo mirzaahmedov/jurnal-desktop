@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next'
 import { GenericTable, LoadingOverlay } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
 import { useToggle } from '@/common/hooks/use-toggle'
-import { useLayoutStore } from '@/common/layout/store'
+import { useLayout } from '@/common/layout'
 
 import { regionUserColumns } from './columns'
 import { regionUserKeys } from './constants'
@@ -18,7 +18,7 @@ import { regionUserService } from './service'
 const RegionUserPage = () => {
   const toggle = useToggle()
   const queryClient = useQueryClient()
-  const setLayout = useLayoutStore((store) => store.setLayout)
+  const setLayout = useLayout()
 
   const [selected, setSelected] = useState<User | null>(null)
 

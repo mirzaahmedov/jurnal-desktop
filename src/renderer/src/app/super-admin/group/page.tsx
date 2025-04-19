@@ -1,6 +1,6 @@
 import type { Group } from '@/common/models'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
@@ -11,7 +11,7 @@ import { SearchFilterDebounced } from '@/common/features/filters/search/search-f
 import { useSearchFilter } from '@/common/features/filters/search/search-filter-debounced'
 import { toast } from '@/common/hooks/use-toast'
 import { useToggle } from '@/common/hooks/use-toggle'
-import { useLayout } from '@/common/layout/store'
+import { useLayout } from '@/common/layout'
 import { ListView } from '@/common/views'
 
 import { groupColumns } from './columns'
@@ -24,6 +24,7 @@ const GroupPage = () => {
 
   const dialogToggle = useToggle()
   const queryClient = useQueryClient()
+  const setLayout = useLayout()
 
   const { t } = useTranslation(['app'])
   const [search] = useSearchFilter()
@@ -59,14 +60,16 @@ const GroupPage = () => {
     }
   })
 
-  useLayout({
-    title: t('pages.group'),
-    content: SearchFilterDebounced,
-    onCreate() {
-      setSelected(null)
-      dialogToggle.open()
-    }
-  })
+  useEffect(() => {
+    setLayout({
+      title: t('pages.group'),
+      content: SearchFilterDebounced,
+      onCreate() {
+        setSelected(null)
+        dialogToggle.open()
+      }
+    })
+  }, [setLayout, dialogToggle.open, t])
 
   const handleClickEdit = (row: Group) => {
     setSelected(row)

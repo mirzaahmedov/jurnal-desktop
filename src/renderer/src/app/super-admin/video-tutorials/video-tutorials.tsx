@@ -8,7 +8,7 @@ import { toast } from 'react-toastify'
 
 import { useConfirm } from '@/common/features/confirm'
 import { useToggle } from '@/common/hooks/use-toggle'
-import { useLayoutStore } from '@/common/layout/store'
+import { useLayout } from '@/common/layout'
 
 import { videoQueryKeys } from './config'
 import { VideoService } from './service'
@@ -28,7 +28,7 @@ export const VideoTutorials = ({ readOnly = false }: VideoTutorialsProps) => {
 
   const dialogToggle = useToggle()
   const queryClient = useQueryClient()
-  const setLayout = useLayoutStore((store) => store.setLayout)
+  const setLayout = useLayout()
 
   const { mutate: deleteVideo, isPending: isDeletingVideo } = useMutation({
     mutationFn: VideoService.delete,

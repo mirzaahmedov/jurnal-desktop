@@ -12,7 +12,7 @@ import { useSearchFilter } from '@/common/features/filters/search/search-filter-
 import { useRequisitesStore } from '@/common/features/requisites'
 import { usePagination } from '@/common/hooks'
 import { useToggle } from '@/common/hooks/use-toggle'
-import { useLayoutStore } from '@/common/layout/store'
+import { useLayout } from '@/common/layout'
 import { ListView } from '@/common/views'
 
 import { SmetaTable } from './components'
@@ -25,7 +25,7 @@ const SmetaGrafikPage = () => {
   const queryClient = useQueryClient()
   const dialogToggle = useToggle()
 
-  const setLayout = useLayoutStore((store) => store.setLayout)
+  const setLayout = useLayout()
 
   const [selected, setSelected] = useState<null | SmetaGrafik>(null)
 

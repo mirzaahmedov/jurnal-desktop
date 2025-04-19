@@ -11,7 +11,7 @@ import { SearchFilterDebounced } from '@/common/features/filters/search/search-f
 import { useSearchFilter } from '@/common/features/filters/search/search-filter-debounced'
 import { usePagination } from '@/common/hooks'
 import { useToggle } from '@/common/hooks/use-toggle'
-import { useLayoutStore } from '@/common/layout/store'
+import { useLayout } from '@/common/layout'
 import { ListView } from '@/common/views'
 
 import { roleColumns } from './columns'
@@ -30,7 +30,7 @@ const RolePage = () => {
   const dialogToggle = useToggle()
   const queryClient = useQueryClient()
 
-  const setLayout = useLayoutStore((store) => store.setLayout)
+  const setLayout = useLayout()
 
   const { data: roles, isFetching } = useQuery({
     queryKey: [

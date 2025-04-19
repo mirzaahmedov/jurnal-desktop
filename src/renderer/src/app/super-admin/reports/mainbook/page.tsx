@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom'
 
 import { GenericTable } from '@/common/components'
 import { usePagination } from '@/common/hooks'
-import { useLayoutStore } from '@/common/layout/store'
+import { useLayout } from '@/common/layout'
 import { ListView } from '@/common/views'
 
 import { mainbookColumns } from './columns'
@@ -19,7 +19,7 @@ import { adminMainbookService } from './service'
 const AdminMainbookPage = () => {
   const pagination = usePagination()
   const navigate = useNavigate()
-  const setLayout = useLayoutStore((store) => store.setLayout)
+  const setLayout = useLayout()
 
   const [year] = useYearFilter()
   const [month] = useMonthFilter()

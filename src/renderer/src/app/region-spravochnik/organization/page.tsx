@@ -14,7 +14,7 @@ import { DownloadFile, ImportFile } from '@/common/features/file'
 import { SearchFilterDebounced } from '@/common/features/filters/search/search-filter-debounced'
 import { useSearchFilter } from '@/common/features/filters/search/search-filter-debounced'
 import { usePagination, useToggle } from '@/common/hooks'
-import { useLayoutStore } from '@/common/layout/store'
+import { useLayout } from '@/common/layout'
 import { ListView } from '@/common/views'
 
 import { defaultValues, organizationQueryKeys } from './config'
@@ -36,7 +36,7 @@ const OrganizationPage = () => {
   const pagination = usePagination()
   const queryClient = useQueryClient()
 
-  const setLayout = useLayoutStore((store) => store.setLayout)
+  const setLayout = useLayout()
 
   const { data: organizations, isFetching } = useQuery({
     queryKey: [

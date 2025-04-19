@@ -4,6 +4,15 @@ export enum MainbookStatus {
   ACCEPT = 3
 }
 
+export interface MainbookSaldoMonthValue {
+  budjet_id: number
+  main_book_id: number
+  main_schet_id: number
+  month: number
+  schet_id: number
+  year: number
+}
+
 export interface Mainbook {
   id: number
   status: number

@@ -30,7 +30,7 @@ import {
   useSearchFilter
 } from '@/common/features/filters/search/search-filter-debounced'
 import { useRequisitesStore } from '@/common/features/requisites'
-import { SaldoNamespace, useSaldoController } from '@/common/features/saldo'
+import { SaldoNamespace, handleSaldoErrorDates, useSaldoController } from '@/common/features/saldo'
 import {
   useSelectedMonthStore,
   validateDateWithinSelectedMonth
@@ -38,7 +38,7 @@ import {
 import { useSettingsStore } from '@/common/features/settings'
 import { useSpravochnik } from '@/common/features/spravochnik'
 import { useDates, usePagination, useToggle } from '@/common/hooks'
-import { useLayoutStore } from '@/common/layout/store'
+import { useLayout } from '@/common/layout'
 import { formatNumber } from '@/common/lib/format'
 import { getProvodkaURL } from '@/common/lib/provodka'
 import { ListView } from '@/common/views'
@@ -56,7 +56,7 @@ const OrganMonitoringPage = () => {
   const pagination = usePagination()
   const report_title_id = useSettingsStore((store) => store.report_title_id)
   const startDate = useSelectedMonthStore((store) => store.startDate)
-  const setLayout = useLayoutStore((store) => store.setLayout)
+  const setLayout = useLayout()
 
   const [organId, setOrganId] = useOrganFilter()
   const [search] = useSearchFilter()
@@ -80,7 +80,11 @@ const OrganMonitoringPage = () => {
     })
   )
 
-  const { data: monitoring, isFetching } = useQuery({
+  const {
+    data: monitoring,
+    isFetching,
+    error
+  } = useQuery({
     queryKey: [
       OrganMonitorQueryKeys.getAll,
       {
@@ -102,14 +106,20 @@ const OrganMonitoringPage = () => {
   useEffect(() => {
     setLayout({
       title: t('pages.organization-monitoring'),
-      content: SearchFilterDebounced,
       breadcrumbs: [
         {
           title: t('pages.organization')
         }
-      ]
+      ],
+      content: SearchFilterDebounced,
+      isSelectedMonthVisible: true
     })
   }, [setLayout, t])
+  useEffect(() => {
+    if (error) {
+      handleSaldoErrorDates(SaldoNamespace.JUR_3_159, error)
+    }
+  }, [error])
 
   const handleClickEdit = (row: OrganizationMonitor) => {
     const path = getProvodkaURL(row)

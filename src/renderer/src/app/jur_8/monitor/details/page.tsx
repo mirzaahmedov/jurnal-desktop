@@ -13,7 +13,7 @@ import { SearchInput } from '@/common/components/search-input'
 import { Button } from '@/common/components/ui/button'
 import { useRequisitesStore } from '@/common/features/requisites'
 import { useSelectedMonthStore } from '@/common/features/selected-month'
-import { useLayoutStore } from '@/common/layout/store'
+import { useLayout } from '@/common/layout'
 import { formatDate } from '@/common/lib/date'
 import { DetailsView } from '@/common/views'
 
@@ -28,7 +28,7 @@ const JUR8MonitorDetailsPage = () => {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const startDate = useSelectedMonthStore((store) => store.startDate)
-  const setLayout = useLayoutStore((store) => store.setLayout)
+  const setLayout = useLayout()
 
   const { id } = useParams()
   const { t } = useTranslation(['app'])

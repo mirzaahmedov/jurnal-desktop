@@ -32,7 +32,8 @@ import { useRequisitesStore } from '@/common/features/requisites'
 import {
   SaldoNamespace,
   handleSaldoErrorDates,
-  handleSaldoResponseDates
+  handleSaldoResponseDates,
+  useSaldoController
 } from '@/common/features/saldo'
 import {
   useSelectedMonthStore,
@@ -40,7 +41,7 @@ import {
 } from '@/common/features/selected-month'
 import { useSnippets } from '@/common/features/snippents/use-snippets'
 import { useSpravochnik } from '@/common/features/spravochnik'
-import { useLayoutStore } from '@/common/layout/store'
+import { useLayout } from '@/common/layout'
 import { formatDate } from '@/common/lib/date'
 import { formatNumber } from '@/common/lib/format'
 import { getDataFromCache } from '@/common/lib/query-client'
@@ -72,11 +73,14 @@ const KassaPrixodDetailsPage = () => {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
-  const setLayout = useLayoutStore((store) => store.setLayout)
+  const setLayout = useLayout()
   const startDate = useSelectedMonthStore((store) => store.startDate)
 
   const { id } = useParams()
   const { t, i18n } = useTranslation(['app'])
+  const { queuedMonths } = useSaldoController({
+    ns: SaldoNamespace.JUR_1
+  })
   const { snippets, addSnippet, removeSnippet } = useSnippets({
     ns: 'kassa_prixod'
   })
@@ -152,7 +156,7 @@ const KassaPrixodDetailsPage = () => {
       }
     ],
     queryFn: KassaPrixodService.getById,
-    enabled: id !== 'create'
+    enabled: id !== 'create' && !queuedMonths.length
   })
 
   const { mutate: createPrixod, isPending: isCreating } = useMutation({
@@ -266,6 +270,7 @@ const KassaPrixodDetailsPage = () => {
           title: t('pages.prixod-docs')
         }
       ],
+      isSelectedMonthVisible: true,
       onBack() {
         navigate(-1)
       }

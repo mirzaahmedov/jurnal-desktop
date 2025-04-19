@@ -23,7 +23,7 @@ import {
   validateDateWithinSelectedMonth
 } from '@/common/features/selected-month'
 import { useDates, usePagination } from '@/common/hooks'
-import { useLayoutStore } from '@/common/layout/store'
+import { useLayout } from '@/common/layout'
 import { formatNumber } from '@/common/lib/format'
 import { ListView } from '@/common/views'
 
@@ -47,7 +47,7 @@ const KassaRasxodPage = () => {
   const navigate = useNavigate()
   const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
   const startDate = useSelectedMonthStore((store) => store.startDate)
-  const setLayout = useLayoutStore((store) => store.setLayout)
+  const setLayout = useLayout()
 
   const {
     data: rasxods,
@@ -99,12 +99,15 @@ const KassaRasxodPage = () => {
   }
 
   useEffect(() => {
-    handleSaldoErrorDates(SaldoNamespace.JUR_1, error)
+    if (error) {
+      handleSaldoErrorDates(SaldoNamespace.JUR_1, error)
+    }
   }, [error])
   useEffect(() => {
     setLayout({
       title: t('pages.rasxod-docs'),
       content: SearchFilterDebounced,
+      isSelectedMonthVisible: true,
       breadcrumbs: [
         {
           title: t('pages.kassa')

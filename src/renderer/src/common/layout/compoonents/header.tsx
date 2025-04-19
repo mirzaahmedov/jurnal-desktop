@@ -8,29 +8,25 @@ import { Link, useLocation } from 'react-router-dom'
 import { Button } from '@/common/components/ui/button'
 import { useAuthenticationStore } from '@/common/features/auth'
 import { RequisitesController } from '@/common/features/requisites'
-import { useLayoutStore } from '@/common/layout/store'
 
+import { useLayoutStore } from '../store'
 import { SelectedMonth } from './selected-month'
 import { Settings } from './settings'
 import { UserProfile } from './user-profile'
 
-const getSaldoEnabled = (pathname: string) => {
-  return (
-    pathname.startsWith('/kassa') ||
-    pathname.startsWith('/bank') ||
-    pathname.startsWith('/organization') ||
-    pathname.startsWith('/accountable') ||
-    pathname.startsWith('/journal-7')
-  )
-}
-
 export const Header = () => {
   const { t } = useTranslation()
-  const { title, content: Content, breadcrumbs, onCreate, onBack } = useLayoutStore()
+  const {
+    title,
+    content: Content,
+    isSelectedMonthVisible,
+    breadcrumbs,
+    onCreate,
+    onBack
+  } = useLayoutStore()
   const { user, setUser } = useAuthenticationStore()
 
   const location = useLocation()
-  const isSaldoEnabled = getSaldoEnabled(location.pathname)
 
   const handleLogout = () => {
     setUser(null)
@@ -84,7 +80,7 @@ export const Header = () => {
         </div>
       </div>
       <div className="flex items-center gap-2">
-        {isSaldoEnabled ? (
+        {isSelectedMonthVisible ? (
           <div className="pr-2.5">
             <SelectedMonth />
           </div>

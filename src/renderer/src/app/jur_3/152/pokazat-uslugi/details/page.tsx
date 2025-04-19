@@ -32,7 +32,7 @@ import {
 } from '@/common/features/selected-month'
 import { useSnippets } from '@/common/features/snippents/use-snippets'
 import { useSpravochnik } from '@/common/features/spravochnik'
-import { useLayoutStore } from '@/common/layout/store'
+import { useLayout } from '@/common/layout'
 import { formatDate } from '@/common/lib/date'
 import { normalizeEmptyFields } from '@/common/lib/validation'
 import { DetailsView } from '@/common/views'
@@ -66,7 +66,7 @@ const PokazatUslugiDetailsPage = () => {
   const id = useParams().id as string
   const navigate = useNavigate()
   const queryClient = useQueryClient()
-  const setLayout = useLayoutStore((store) => store.setLayout)
+  const setLayout = useLayout()
   const startDate = useSelectedMonthStore((store) => store.startDate)
 
   const form = useForm({
@@ -126,7 +126,7 @@ const PokazatUslugiDetailsPage = () => {
     queryFn: PokazatUslugiService.getById,
     enabled: id !== 'create' && !!main_schet_id && !!jur3_schet_152_id && !queuedMonths.length
   })
-  const { mutate: createPokazatUslugi, isPending: isCreating } = useMutation({
+  const { mutate: createUslugi, isPending: isCreating } = useMutation({
     mutationKey: [queryKeys.create],
     mutationFn: PokazatUslugiService.create,
     onSuccess(res) {
@@ -147,7 +147,7 @@ const PokazatUslugiDetailsPage = () => {
     }
   })
 
-  const { mutate: updatePokazatUslugi, isPending: isUpdating } = useMutation({
+  const { mutate: updateUslugi, isPending: isUpdating } = useMutation({
     mutationKey: [queryKeys.update, id],
     mutationFn: PokazatUslugiService.update,
     onSuccess(res) {
@@ -181,7 +181,7 @@ const PokazatUslugiDetailsPage = () => {
       summa
     }: PokazatUslugiFormValues) => {
       if (id !== 'create') {
-        updatePokazatUslugi({
+        updateUslugi({
           id: Number(id),
           doc_date,
           doc_num,
@@ -196,7 +196,7 @@ const PokazatUslugiDetailsPage = () => {
         })
         return
       }
-      createPokazatUslugi({
+      createUslugi({
         doc_date,
         doc_num,
         shartnomalar_organization_id,
@@ -228,6 +228,7 @@ const PokazatUslugiDetailsPage = () => {
           title: t('pages.service')
         }
       ],
+      isSelectedMonthVisible: true,
       onBack() {
         navigate(-1)
       }

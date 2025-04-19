@@ -23,7 +23,7 @@ import {
   validateDateWithinSelectedMonth
 } from '@/common/features/selected-month'
 import { useDates, usePagination } from '@/common/hooks'
-import { useLayoutStore } from '@/common/layout/store'
+import { useLayout } from '@/common/layout'
 import { ListView } from '@/common/views'
 
 import { avansColumns } from './columns'
@@ -35,7 +35,7 @@ const AvansPage = () => {
   const pagination = usePagination()
   const navigate = useNavigate()
   const queryClient = useQueryClient()
-  const setLayout = useLayoutStore((store) => store.setLayout)
+  const setLayout = useLayout()
   const startDate = useSelectedMonthStore((store) => store.startDate)
 
   const [search] = useSearchFilter()
@@ -101,6 +101,7 @@ const AvansPage = () => {
           title: t('pages.podotchet')
         }
       ],
+      isSelectedMonthVisible: true,
       content: SearchFilterDebounced,
       onCreate() {
         navigate('create')

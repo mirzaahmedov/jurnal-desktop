@@ -16,7 +16,7 @@ import {
   handleSaldoResponseDates
 } from '@/common/features/saldo'
 import { useKeyUp, useToggle } from '@/common/hooks'
-import { useLayoutStore } from '@/common/layout/store'
+import { useLayout } from '@/common/layout'
 import { ListView } from '@/common/views'
 
 import { kassaSaldoColumns } from './columns'
@@ -26,7 +26,7 @@ import { KassaSaldoFilters, useYearFilter } from './filters'
 import { KassaSaldoService } from './service'
 
 const KassaSaldoPage = () => {
-  const setLayout = useLayoutStore((store) => store.setLayout)
+  const setLayout = useLayout()
 
   const navigate = useNavigate()
   const queryClient = useQueryClient()

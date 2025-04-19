@@ -17,7 +17,7 @@ import {
   CollapsibleTrigger
 } from '@/common/components/ui/collapsible'
 import { useAuthenticationStore } from '@/common/features/auth'
-import { useLayoutStore } from '@/common/layout/store'
+import { useLayout } from '@/common/layout'
 import { type RelationTreeNode, arrayToTreeByRelations } from '@/common/lib/tree/relation-tree'
 import { cn } from '@/common/lib/utils'
 
@@ -32,7 +32,7 @@ type VacantTreeNode = RelationTreeNode<Vacant, number | null>
 
 const VacantPage = () => {
   const userOwnId = useAuthenticationStore((store) => store.user?.id)
-  const setLayout = useLayoutStore((store) => store.setLayout)
+  const setLayout = useLayout()
 
   const [userId, setUserId] = useState<number>()
   const [selectedIds, setSelectedIds] = useState<number[]>([])

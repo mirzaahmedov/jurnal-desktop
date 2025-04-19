@@ -30,7 +30,7 @@ import { SaldoNamespace, useSaldoController } from '@/common/features/saldo'
 import { useSelectedMonthStore } from '@/common/features/selected-month'
 import { useSpravochnik } from '@/common/features/spravochnik'
 import { useKeyUp, usePagination, useToggle } from '@/common/hooks'
-import { useLayoutStore } from '@/common/layout/store'
+import { useLayout } from '@/common/layout'
 import { ISODateRegex, formatDate, parseDate, validateDate } from '@/common/lib/date'
 import { formatLocaleDate } from '@/common/lib/format'
 import { ListView } from '@/common/views'
@@ -80,7 +80,7 @@ const MaterialWarehouseSaldoPage = () => {
   const monthlyTrackerToggle = useToggle()
   const queryClient = useQueryClient()
   const pagination = usePagination()
-  const setLayout = useLayoutStore((store) => store.setLayout)
+  const setLayout = useLayout()
 
   const { confirm } = useConfirm()
   const { t } = useTranslation(['app'])
@@ -183,6 +183,7 @@ const MaterialWarehouseSaldoPage = () => {
     setLayout({
       title: t('pages.saldo'),
       content: SearchFilterDebounced,
+      isSelectedMonthVisible: true,
       breadcrumbs: [
         {
           title: t('pages.material-warehouse')

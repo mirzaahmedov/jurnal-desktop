@@ -11,7 +11,7 @@ import { FooterCell, FooterRow, GenericTable } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
 import { useRequisitesStore } from '@/common/features/requisites'
 import { usePagination } from '@/common/hooks'
-import { useLayoutStore } from '@/common/layout/store'
+import { useLayout } from '@/common/layout'
 import { formatNumber } from '@/common/lib/format'
 import { ListView } from '@/common/views'
 
@@ -24,7 +24,7 @@ const JUR8MonitorPage = () => {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const pagination = usePagination()
-  const setLayout = useLayoutStore((store) => store.setLayout)
+  const setLayout = useLayout()
 
   const [year] = useYearFilter()
 

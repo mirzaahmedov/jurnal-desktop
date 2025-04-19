@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next'
 import { GenericTable } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
 import { useToggle } from '@/common/hooks/use-toggle'
-import { useLayout } from '@/common/layout/store'
+import { useLayout } from '@/common/layout'
 import { ListView } from '@/common/views'
 
 import { reportTitleColumns } from './columns'
@@ -17,13 +17,14 @@ import { ReportTitleDialog } from './dialog'
 import { reportTitleService } from './service'
 
 const ReportTitlePage = () => {
+  const dialogToggle = useToggle()
+  const queryClient = useQueryClient()
+  const setLayout = useLayout()
+
   const [selected, setSelected] = useState<ReportTitle | null>(null)
 
   const { t } = useTranslation(['app'])
   const { confirm } = useConfirm()
-
-  const dialogToggle = useToggle()
-  const queryClient = useQueryClient()
 
   const { data: reportTitles, isFetching } = useQuery({
     queryKey: [reportTitleQueryKeys.getAll],
@@ -41,14 +42,16 @@ const ReportTitlePage = () => {
   })
 
   useEffect(() => {
+    setLayout({
+      title: t('pages.report-title'),
+      onCreate: dialogToggle.open
+    })
+  }, [setLayout, dialogToggle.open, t])
+  useEffect(() => {
     if (!dialogToggle.isOpen) {
       setSelected(null)
     }
   }, [dialogToggle.isOpen])
-  useLayout({
-    title: t('pages.report-title'),
-    onCreate: dialogToggle.open
-  })
 
   const handleClickEdit = (row: ReportTitle) => {
     setSelected(row)

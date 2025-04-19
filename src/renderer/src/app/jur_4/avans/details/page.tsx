@@ -31,7 +31,7 @@ import {
 } from '@/common/features/selected-month'
 import { useSnippets } from '@/common/features/snippents/use-snippets'
 import { useSpravochnik } from '@/common/features/spravochnik'
-import { useLayoutStore } from '@/common/layout/store'
+import { useLayout } from '@/common/layout'
 import { formatDate } from '@/common/lib/date'
 import { normalizeEmptyFields } from '@/common/lib/validation'
 import { DetailsView } from '@/common/views'
@@ -46,7 +46,7 @@ const AvansDetailsPage = () => {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const startDate = useSelectedMonthStore((store) => store.startDate)
-  const setLayout = useLayoutStore((store) => store.setLayout)
+  const setLayout = useLayout()
 
   const { main_schet_id, jur4_schet_id } = useRequisitesStore()
 
@@ -76,7 +76,11 @@ const AvansDetailsPage = () => {
     })
   )
 
-  const { data: avans, isFetching } = useQuery({
+  const {
+    data: avans,
+    isFetching,
+    error
+  } = useQuery({
     queryKey: [
       AvansQueryKeys.getById,
       Number(id),
@@ -178,11 +182,18 @@ const AvansDetailsPage = () => {
           title: t('pages.avans')
         }
       ],
+      isSelectedMonthVisible: true,
       onBack() {
         navigate(-1)
       }
     })
   }, [setLayout, navigate, id, t])
+
+  useEffect(() => {
+    if (error) {
+      handleSaldoErrorDates(SaldoNamespace.JUR_4, error)
+    }
+  }, [error])
 
   useEffect(() => {
     const summa =
@@ -211,7 +222,7 @@ const AvansDetailsPage = () => {
     }
 
     form.reset(defaultValues)
-  }, [form, avans, id])
+  }, [form, avans, id, startDate])
 
   return (
     <DetailsView>

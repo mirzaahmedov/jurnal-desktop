@@ -17,7 +17,7 @@ import { SaldoNamespace, useSaldoController } from '@/common/features/saldo'
 import { useSelectedMonthStore } from '@/common/features/selected-month'
 import { validateDateWithinSelectedMonth } from '@/common/features/selected-month'
 import { useDates, usePagination } from '@/common/hooks'
-import { useLayoutStore } from '@/common/layout/store'
+import { useLayout } from '@/common/layout'
 import { formatDate } from '@/common/lib/date'
 import { ListView } from '@/common/views'
 
@@ -31,7 +31,7 @@ const Jurnal7RasxodPage = () => {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const pagination = usePagination()
-  const setLayout = useLayoutStore((store) => store.setLayout)
+  const setLayout = useLayout()
 
   const [search] = useSearchFilter()
 
@@ -75,7 +75,7 @@ const Jurnal7RasxodPage = () => {
   const {
     data: rasxods,
     isFetching,
-    error: rasxodListError
+    error: rasxodsError
   } = useQuery({
     queryKey: [
       RasxodQueryKeys.getAll,
@@ -93,13 +93,16 @@ const Jurnal7RasxodPage = () => {
   })
 
   useEffect(() => {
-    handleOstatokError(rasxodListError)
-  }, [rasxodListError])
+    if (rasxodsError) {
+      handleOstatokError(rasxodsError)
+    }
+  }, [rasxodsError])
 
   useEffect(() => {
     setLayout({
       title: t('pages.rasxod-docs'),
       content: SearchFilterDebounced,
+      isSelectedMonthVisible: true,
       breadcrumbs: [
         {
           title: t('pages.material-warehouse')

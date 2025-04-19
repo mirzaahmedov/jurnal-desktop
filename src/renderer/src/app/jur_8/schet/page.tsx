@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next'
 import { GenericTable } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
 import { useToggle } from '@/common/hooks/use-toggle'
-import { useLayout } from '@/common/layout/store'
+import { useLayout } from '@/common/layout'
 import { ListView } from '@/common/views'
 
 import { prixodSchetColumns } from './columns'
@@ -22,6 +22,7 @@ const JUR8SchetsPage = () => {
   const { t } = useTranslation(['app'])
   const { confirm } = useConfirm()
 
+  const setLayout = useLayout()
   const dialogToggle = useToggle()
   const queryClient = useQueryClient()
 
@@ -41,14 +42,16 @@ const JUR8SchetsPage = () => {
   })
 
   useEffect(() => {
+    setLayout({
+      title: t('pages.schets'),
+      onCreate: dialogToggle.open
+    })
+  }, [setLayout, dialogToggle.open, t])
+  useEffect(() => {
     if (!dialogToggle.isOpen) {
       setSelected(null)
     }
   }, [dialogToggle.isOpen])
-  useLayout({
-    title: t('pages.schets'),
-    onCreate: dialogToggle.open
-  })
 
   const handleClickEdit = (row: JUR8Schet) => {
     setSelected(row)

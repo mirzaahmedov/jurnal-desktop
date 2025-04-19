@@ -46,7 +46,7 @@ class MainbookServiceBuilder extends CRUDService<Mainbook, MainbookPayload> {
   }
 
   async getTypes(
-    ctx: QueryFunctionContext<[string, { budjet_id?: number; main_schet_id: number }]>
+    ctx: QueryFunctionContext<[string, { budjet_id?: number; main_schet_id?: number }]>
   ) {
     const params = ctx.queryKey[1]
     const res = await this.client.get<Response<MainbookType[]>>(`${this.endpoint}/type`, {

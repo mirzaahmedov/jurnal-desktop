@@ -33,7 +33,8 @@ import { useRequisitesStore } from '@/common/features/requisites'
 import {
   SaldoNamespace,
   handleSaldoErrorDates,
-  handleSaldoResponseDates
+  handleSaldoResponseDates,
+  useSaldoController
 } from '@/common/features/saldo'
 import {
   useSelectedMonthStore,
@@ -41,7 +42,7 @@ import {
 } from '@/common/features/selected-month'
 import { useSnippets } from '@/common/features/snippents/use-snippets'
 import { useSpravochnik } from '@/common/features/spravochnik'
-import { useLayoutStore } from '@/common/layout/store'
+import { useLayout } from '@/common/layout'
 import { formatDate } from '@/common/lib/date'
 import { formatNumber } from '@/common/lib/format'
 import { getDataFromCache } from '@/common/lib/query-client'
@@ -70,11 +71,14 @@ const KassaRasxodDetailtsPage = () => {
   const { snippets, addSnippet, removeSnippet } = useSnippets({
     ns: 'kassa_rasxod'
   })
+  const { queuedMonths } = useSaldoController({
+    ns: SaldoNamespace.JUR_1
+  })
 
   const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
   const navigate = useNavigate()
   const queryClient = useQueryClient()
-  const setLayout = useLayoutStore((store) => store.setLayout)
+  const setLayout = useLayout()
   const startDate = useSelectedMonthStore((store) => store.startDate)
 
   const year = startDate.getFullYear()
@@ -155,7 +159,7 @@ const KassaRasxodDetailtsPage = () => {
       }
     ],
     queryFn: kassaMonitorService.getAll,
-    enabled: !!form.watch('doc_date')
+    enabled: !!form.watch('doc_date') && !queuedMonths.length
   })
   const { data: rasxod, isFetching } = useQuery({
     queryKey: [
@@ -166,7 +170,7 @@ const KassaRasxodDetailtsPage = () => {
       }
     ],
     queryFn: KassaRasxodService.getById,
-    enabled: id !== 'create'
+    enabled: id !== 'create' && !queuedMonths.length
   })
   const { mutate: createRasxod, isPending: isCreating } = useMutation({
     mutationFn: KassaRasxodService.create,
@@ -270,7 +274,9 @@ const KassaRasxodDetailtsPage = () => {
     : 0
 
   useEffect(() => {
-    handleSaldoErrorDates(SaldoNamespace.JUR_1, error)
+    if (error) {
+      handleSaldoErrorDates(SaldoNamespace.JUR_1, error)
+    }
   }, [error])
   useEffect(() => {
     setLayout({
@@ -284,6 +290,7 @@ const KassaRasxodDetailtsPage = () => {
           title: t('pages.rasxod-docs')
         }
       ],
+      isSelectedMonthVisible: true,
       onBack() {
         navigate(-1)
       }

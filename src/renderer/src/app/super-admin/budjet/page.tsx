@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next'
 import { GenericTable, LoadingOverlay } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
 import { useToggle } from '@/common/hooks/use-toggle'
-import { useLayout } from '@/common/layout/store'
+import { useLayout } from '@/common/layout'
 
 import { budgetColumns } from './columns'
 import { BudjetQueryKeys } from './config'
@@ -18,8 +18,9 @@ import { BudgetService } from './service'
 const BudgetPage = () => {
   const [selected, setSelected] = useState<Budjet | null>(null)
 
-  const toggle = useToggle()
+  const dialogToggle = useToggle()
   const queryClient = useQueryClient()
+  const setLayout = useLayout()
 
   const { t } = useTranslation(['app'])
   const { confirm } = useConfirm()
@@ -39,18 +40,20 @@ const BudgetPage = () => {
   })
 
   useEffect(() => {
-    if (!toggle.isOpen) {
+    if (!dialogToggle.isOpen) {
       setSelected(null)
     }
-  }, [toggle.isOpen])
-  useLayout({
-    title: t('pages.budjet'),
-    onCreate: toggle.open
-  })
+  }, [dialogToggle.isOpen])
+  useEffect(() => {
+    setLayout({
+      title: t('pages.budjet'),
+      onCreate: dialogToggle.open
+    })
+  }, [setLayout, dialogToggle.open, t])
 
   const handleClickEdit = (row: Budjet) => {
     setSelected(row)
-    toggle.open()
+    dialogToggle.open()
   }
   const handleClickDelete = (row: Budjet) => {
     confirm({
@@ -73,8 +76,8 @@ const BudgetPage = () => {
       </div>
       <BudgetDialog
         data={selected}
-        open={toggle.isOpen}
-        onChangeOpen={toggle.setOpen}
+        open={dialogToggle.isOpen}
+        onChangeOpen={dialogToggle.setOpen}
       />
     </>
   )

@@ -39,6 +39,7 @@ import { capitalize } from '@/common/lib/string'
 
 import { BankSaldoQueryKeys, defaultValues } from './config'
 import { BankSaldoFormSchema } from './config'
+import { useYearFilter } from './filters'
 import { BankSaldoService } from './service'
 
 interface BankSaldoDialogProps {
@@ -47,14 +48,19 @@ interface BankSaldoDialogProps {
   selected: BankSaldo | null
 }
 export const BankSaldoDialog = ({ isOpen, onOpenChange, selected }: BankSaldoDialogProps) => {
-  const { t } = useTranslation(['app'])
-  const { startDate } = useSelectedMonthStore()
-
   const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
   const queryClient = useQueryClient()
 
+  const [year] = useYearFilter()
+
+  const { t } = useTranslation(['app'])
+  const { startDate } = useSelectedMonthStore()
+
   const form = useForm({
-    defaultValues,
+    defaultValues: {
+      ...defaultValues,
+      year: year ?? new Date().getFullYear()
+    },
     resolver: zodResolver(BankSaldoFormSchema)
   })
 
@@ -115,12 +121,15 @@ export const BankSaldoDialog = ({ isOpen, onOpenChange, selected }: BankSaldoDia
 
   useEffect(() => {
     if (!selected) {
-      form.reset(defaultValues)
+      form.reset({
+        ...defaultValues,
+        year: year ?? new Date().getFullYear()
+      })
       return
     }
 
     form.reset(selected)
-  }, [form, selected])
+  }, [form, selected, year])
   useEffect(() => {
     if (!isOpen && !selected) {
       form.setValue('year', startDate.getFullYear())

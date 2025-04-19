@@ -3,12 +3,12 @@ import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
 
-import { useLayoutStore } from '@/common/layout/store'
+import { useLayout } from '@/common/layout'
 
 import RasxodDetails from './details'
 
 const RasxodDetailsPage = () => {
-  const setLayout = useLayoutStore((store) => store.setLayout)
+  const setLayout = useLayout()
   const navigate = useNavigate()
 
   const { id } = useParams<{ id: string }>()
@@ -26,6 +26,7 @@ const RasxodDetailsPage = () => {
           path: '/journal-7/rasxod'
         }
       ],
+      isSelectedMonthVisible: true,
       onBack() {
         navigate(-1)
       }

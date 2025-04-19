@@ -17,7 +17,7 @@ import {
   useSaldoController
 } from '@/common/features/saldo'
 import { useKeyUp } from '@/common/hooks'
-import { useLayoutStore } from '@/common/layout/store'
+import { useLayout } from '@/common/layout'
 import { ListView } from '@/common/views'
 
 import { OrganSaldoColumns } from './columns'
@@ -26,7 +26,7 @@ import { OrganSaldoFilters, useYearFilter } from './filters'
 import { OrganSaldoService } from './service'
 
 const OrganSaldoPage = () => {
-  const setLayout = useLayoutStore((store) => store.setLayout)
+  const setLayout = useLayout()
 
   const navigate = useNavigate()
   const queryClient = useQueryClient()
@@ -120,11 +120,16 @@ const OrganSaldoPage = () => {
         }
       ],
       content: OrganSaldoFilters,
+      isSelectedMonthVisible: true,
       onCreate: () => {
-        navigate('create')
+        navigate('create', {
+          state: {
+            year
+          }
+        })
       }
     })
-  }, [setLayout, t, navigate])
+  }, [setLayout, t, navigate, year])
 
   useEffect(() => {
     if (error) {

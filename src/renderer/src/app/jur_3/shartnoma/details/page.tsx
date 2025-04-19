@@ -11,7 +11,7 @@ import { organizationQueryKeys, organizationService } from '@/app/region-spravoc
 import { Button } from '@/common/components/ui/button'
 import { useRequisitesStore } from '@/common/features/requisites'
 import { useToggle } from '@/common/hooks'
-import { useLayoutStore } from '@/common/layout/store'
+import { useLayout } from '@/common/layout'
 import { DetailsView } from '@/common/views'
 
 import { type LocationState, shartnomaQueryKeys } from '../config'
@@ -29,7 +29,7 @@ const ShartnomaDetailsPage = () => {
   const original = location.state?.original
   const orgId = location.state?.orgId
 
-  const setLayout = useLayoutStore((store) => store.setLayout)
+  const setLayout = useLayout()
 
   const { t } = useTranslation(['app'])
   const { budjet_id, main_schet_id } = useRequisitesStore()

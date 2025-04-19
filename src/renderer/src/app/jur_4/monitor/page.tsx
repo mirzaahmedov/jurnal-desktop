@@ -31,7 +31,7 @@ import {
 import { useSettingsStore } from '@/common/features/settings'
 import { useSpravochnik } from '@/common/features/spravochnik'
 import { useDates, usePagination } from '@/common/hooks'
-import { useLayoutStore } from '@/common/layout/store'
+import { useLayout } from '@/common/layout'
 import { formatNumber } from '@/common/lib/format'
 import { getProvodkaURL } from '@/common/lib/provodka'
 import { ListView } from '@/common/views'
@@ -47,7 +47,7 @@ const PodotchetMonitorPage = () => {
   const pagination = usePagination()
   const report_title_id = useSettingsStore((store) => store.report_title_id)
   const startDate = useSelectedMonthStore((store) => store.startDate)
-  const setLayout = useLayoutStore((store) => store.setLayout)
+  const setLayout = useLayout()
 
   const [search] = useSearchFilter()
 
@@ -97,6 +97,7 @@ const PodotchetMonitorPage = () => {
     setLayout({
       title: t('pages.podotchet-monitoring'),
       content: SearchFilterDebounced,
+      isSelectedMonthVisible: true,
       breadcrumbs: [
         {
           title: t('pages.podotchet')

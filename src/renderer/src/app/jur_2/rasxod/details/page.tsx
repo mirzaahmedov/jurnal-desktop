@@ -39,7 +39,7 @@ import {
 import { useSnippets } from '@/common/features/snippents/use-snippets'
 import { useSpravochnik } from '@/common/features/spravochnik'
 import { useToggle } from '@/common/hooks'
-import { useLayoutStore } from '@/common/layout/store'
+import { useLayout } from '@/common/layout'
 import { formatDate } from '@/common/lib/date'
 import { normalizeEmptyFields } from '@/common/lib/validation'
 import { PodpisDoljnost, PodpisTypeDocument } from '@/common/models'
@@ -72,7 +72,7 @@ const BankRasxodDetailsPage = () => {
 
   const main_schet_id = useRequisitesStore((state) => state.main_schet_id)
   const startDate = useSelectedMonthStore((store) => store.startDate)
-  const setLayout = useLayoutStore((store) => store.setLayout)
+  const setLayout = useLayout()
 
   const original = location.state?.original
   const year = startDate.getFullYear()
@@ -307,7 +307,9 @@ const BankRasxodDetailsPage = () => {
   }, [form, podpis])
 
   useEffect(() => {
-    handleSaldoErrorDates(SaldoNamespace.JUR_2, error)
+    if (error) {
+      handleSaldoErrorDates(SaldoNamespace.JUR_2, error)
+    }
   }, [error])
   useEffect(() => {
     setLayout({
@@ -321,6 +323,7 @@ const BankRasxodDetailsPage = () => {
           title: t('pages.rasxod-docs')
         }
       ],
+      isSelectedMonthVisible: true,
       onBack() {
         navigate(-1)
       }

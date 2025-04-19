@@ -17,7 +17,7 @@ import { SaldoNamespace, useSaldoController } from '@/common/features/saldo'
 import { useSelectedMonthStore } from '@/common/features/selected-month'
 import { validateDateWithinSelectedMonth } from '@/common/features/selected-month'
 import { useDates, usePagination } from '@/common/hooks'
-import { useLayoutStore } from '@/common/layout/store'
+import { useLayout } from '@/common/layout'
 import { formatDate } from '@/common/lib/date'
 import { ListView } from '@/common/views'
 
@@ -31,7 +31,7 @@ const InternalPage = () => {
   const pagination = usePagination()
   const navigate = useNavigate()
   const queryClient = useQueryClient()
-  const setLayout = useLayoutStore((store) => store.setLayout)
+  const setLayout = useLayout()
 
   const [search] = useSearchFilter()
 
@@ -93,13 +93,16 @@ const InternalPage = () => {
   })
 
   useEffect(() => {
-    handleOstatokError(internalsError)
+    if (internalsError) {
+      handleOstatokError(internalsError)
+    }
   }, [internalsError])
 
   useEffect(() => {
     setLayout({
       title: t('pages.internal-docs'),
       content: SearchFilterDebounced,
+      isSelectedMonthVisible: true,
       breadcrumbs: [
         {
           title: t('pages.material-warehouse')
