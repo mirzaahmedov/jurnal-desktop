@@ -1,3 +1,4 @@
+import type { MainbookFormValues } from './config'
 import type { MainbookAutoFill, MainbookAutoFillSubChild, MainbookType } from './interfaces'
 import type { EditableColumnDef } from '@/common/components/editable-table'
 import type { Mainbook } from '@/common/models'
@@ -75,6 +76,31 @@ export const transformGetByIdData = (types: Mainbook['childs']) => {
   })
 
   return rows
+}
+
+export const transformMainbookAutoFillDataToSave = (
+  types: MainbookType[],
+  values: MainbookFormValues
+) => {
+  const payload: {
+    type_id: number
+    sub_childs: MainbookAutoFillSubChild[]
+  }[] = []
+
+  types?.forEach((type) => {
+    payload.push({
+      type_id: type.id,
+      sub_childs: values.childs.map((child) => {
+        return {
+          schet: child.schet,
+          prixod: child[`${type.id}_prixod`] || 0,
+          rasxod: child[`${type.id}_rasxod`] || 0
+        } as MainbookAutoFillSubChild
+      })
+    })
+  })
+
+  return payload
 }
 
 export const getMainbookColumns = (types: MainbookType[], isEditable = false) => {

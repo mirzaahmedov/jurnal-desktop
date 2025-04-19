@@ -35,7 +35,7 @@ export interface OrganSaldo {
 
 export interface OrganSaldoMonthValue {
   budjet_id: number
-  doc_id: number
+  main_book_id: number
   main_schet_id: number
   month: number
   schet_id: number

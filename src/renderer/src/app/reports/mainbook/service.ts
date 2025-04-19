@@ -97,17 +97,21 @@ class MainbookServiceBuilder extends CRUDService<Mainbook, MainbookPayload> {
     >
   ) {
     const params = ctx.queryKey[1]
-    const res = await this.client.get<Response<MainbookDocumentInfo[]>>(`${this.endpoint}/docs`, {
-      params
-    })
+    const res = await this.client.get<Response<MainbookDocumentInfo[], { summa: number }>>(
+      `${this.endpoint}/docs`,
+      {
+        params
+      }
+    )
     return res.data
   }
 
   async cleanSaldo(values: { budjet_id: number; main_schet_id: number; password: string }) {
-    const { budjet_id, password } = values
+    const { budjet_id, main_schet_id, password } = values
     const res = await this.client.delete(`${this.endpoint}/clean`, {
       params: {
         budjet_id,
+        main_schet_id,
         password
       }
     })

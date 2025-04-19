@@ -51,7 +51,11 @@ const MainbookPage = () => {
     ns: SaldoNamespace.MAINBOOK
   })
 
-  const { data: mainbook, isFetching: isFetchingMainbook } = useQuery({
+  const {
+    data: mainbook,
+    isFetching: isFetchingMainbook,
+    error
+  } = useQuery({
     queryKey: [
       MainbookQueryKeys.getAll,
       {
@@ -100,6 +104,11 @@ const MainbookPage = () => {
       }
     })
   }, [setLayout, navigate, t])
+  useEffect(() => {
+    if (error) {
+      handleSaldoErrorDates(SaldoNamespace.MAINBOOK, error)
+    }
+  }, [error])
 
   const handleEdit = (row: Mainbook) => {
     navigate(`${row.id}`)

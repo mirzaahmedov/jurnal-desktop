@@ -1,6 +1,6 @@
 import type { OrganSaldoMonthValue } from '@/common/models'
 
-import { type SVGAttributes, useEffect, useMemo, useRef } from 'react'
+import { type SVGAttributes, useEffect, useMemo } from 'react'
 
 import { AlertDialogCancel } from '@radix-ui/react-alert-dialog'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
@@ -27,7 +27,11 @@ import { MainbookQueryKeys } from '../config'
 import { defaultValues } from '../details/config'
 import { MainbookTable } from '../details/mainbook-table'
 import { MainbookProvodkaColumns } from '../details/provodki'
-import { getMainbookColumns } from '../details/utils'
+import {
+  getMainbookColumns,
+  transformMainbookAutoFillData,
+  transformMainbookAutoFillDataToSave
+} from '../details/utils'
 import { MainbookService } from '../service'
 
 export const MainbookSaldoUpdateManager = () => {
@@ -66,7 +70,7 @@ export const MainbookSaldoUpdateManager = () => {
       const month = values?.month
       form.setValue('year', year)
       form.setValue('month', month)
-      form.setValue('childs', childs)
+      form.setValue('childs', transformMainbookAutoFillData(childs))
       return
     },
     onError: () => {
@@ -116,11 +120,13 @@ export const MainbookSaldoUpdateManager = () => {
 
     rows.pop()
 
+    const childs = transformMainbookAutoFillDataToSave(types?.data ?? [], form.getValues())
+
     updateSaldo({
-      id: Number(current.doc_id),
+      id: Number(current.main_book_id),
       month: form.getValues('month'),
       year: form.getValues('year'),
-      childs: rows
+      childs
     })
   }
 

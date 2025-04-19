@@ -1,4 +1,3 @@
-import type { MainbookAutoFillSubChild } from './interfaces'
 import type { CellEventHandler, EditableTableMethods } from '@/common/components/editable-table'
 
 import { type KeyboardEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react'
@@ -13,6 +12,12 @@ import { MonthPicker } from '@/common/components/month-picker'
 import { SearchInput } from '@/common/components/search-input'
 import { Button } from '@/common/components/ui/button'
 import { useRequisitesStore } from '@/common/features/requisites'
+import {
+  SaldoNamespace,
+  handleSaldoErrorDates,
+  handleSaldoResponseDates,
+  useSaldoController
+} from '@/common/features/saldo'
 import { useSelectedMonthStore } from '@/common/features/selected-month'
 import { useLayoutStore } from '@/common/layout/store'
 import { formatDate } from '@/common/lib/date'
@@ -24,7 +29,12 @@ import { type MainbookFormValues, defaultValues } from './config'
 import { MainbookDocumentsTracker } from './documents-tracker'
 import { MainbookTable } from './mainbook-table'
 import { MainbookProvodkaColumns } from './provodki'
-import { getMainbookColumns, transformGetByIdData, transformMainbookAutoFillData } from './utils'
+import {
+  getMainbookColumns,
+  transformGetByIdData,
+  transformMainbookAutoFillData,
+  transformMainbookAutoFillDataToSave
+} from './utils'
 
 const MainbookDetailsPage = () => {
   const tableMethods = useRef<EditableTableMethods>(null)
@@ -42,6 +52,9 @@ const MainbookDetailsPage = () => {
 
   const { id } = useParams()
   const { t } = useTranslation(['app'])
+  const { queuedMonths } = useSaldoController({
+    ns: SaldoNamespace.MAINBOOK
+  })
   const { budjet_id, main_schet_id } = useRequisitesStore()
 
   const form = useForm({
@@ -52,7 +65,11 @@ const MainbookDetailsPage = () => {
     }
   })
 
-  const { data: mainbook, isFetching } = useQuery({
+  const {
+    data: mainbook,
+    isFetching,
+    error
+  } = useQuery({
     queryKey: [
       MainbookQueryKeys.getById,
       Number(id),
@@ -62,7 +79,7 @@ const MainbookDetailsPage = () => {
       }
     ],
     queryFn: MainbookService.getById,
-    enabled: id !== 'create'
+    enabled: id !== 'create' && !!budjet_id && !!main_schet_id && !queuedMonths.length
   })
   const { data: types, isFetching: isFetchingTypes } = useQuery({
     queryKey: [
@@ -137,6 +154,11 @@ const MainbookDetailsPage = () => {
         queryKey: [MainbookQueryKeys.getAll]
       })
       navigate(-1)
+
+      handleSaldoResponseDates(SaldoNamespace.MAINBOOK, res)
+    },
+    onError: (error) => {
+      handleSaldoErrorDates(SaldoNamespace.MAINBOOK, error)
     }
   })
   const { mutate: updateMainbook, isPending: isUpdatingMainbook } = useMutation({
@@ -147,6 +169,11 @@ const MainbookDetailsPage = () => {
         queryKey: [MainbookQueryKeys.getAll]
       })
       navigate(-1)
+
+      handleSaldoResponseDates(SaldoNamespace.MAINBOOK, res)
+    },
+    onError: (error) => {
+      handleSaldoErrorDates(SaldoNamespace.MAINBOOK, error)
     }
   })
 
@@ -156,11 +183,6 @@ const MainbookDetailsPage = () => {
 
   useEffect(() => {
     if (id === 'create') {
-      form.reset({
-        year: startDate.getFullYear(),
-        month: startDate.getMonth() + 1,
-        childs: []
-      })
       return
     }
     if (mainbook?.data) {
@@ -188,13 +210,13 @@ const MainbookDetailsPage = () => {
     })
   }, [setLayout, navigate, t, id])
   useEffect(() => {
-    if (id === 'create') {
+    if (id === 'create' && !queuedMonths.length) {
       checkSaldo({
         budjet_id: budjet_id!,
         main_schet_id: main_schet_id!
       })
     }
-  }, [id, year, month, budjet_id])
+  }, [id, year, month, budjet_id, queuedMonths.length])
 
   const columns = useMemo(
     () => [...MainbookProvodkaColumns, ...getMainbookColumns(types?.data ?? [], isEditable)],
@@ -213,23 +235,7 @@ const MainbookDetailsPage = () => {
       return
     }
 
-    const payload: {
-      type_id: number
-      sub_childs: MainbookAutoFillSubChild[]
-    }[] = []
-
-    types?.data?.forEach((type) => {
-      payload.push({
-        type_id: type.id,
-        sub_childs: values.childs.map((child) => {
-          return {
-            schet: child.schet,
-            prixod: child[`${type.id}_prixod`] || 0,
-            rasxod: child[`${type.id}_rasxod`] || 0
-          } as MainbookAutoFillSubChild
-        })
-      })
-    })
+    const payload = transformMainbookAutoFillDataToSave(types?.data ?? [], values)
 
     if (id === 'create') {
       createMainbook({
@@ -313,6 +319,12 @@ const MainbookDetailsPage = () => {
     },
     []
   )
+
+  useEffect(() => {
+    if (error) {
+      handleSaldoErrorDates(SaldoNamespace.MAINBOOK, error)
+    }
+  }, [error])
 
   return (
     <DetailsView className="h-full">

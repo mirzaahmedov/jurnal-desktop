@@ -7,5 +7,6 @@ export const MainbookQueryKeys = {
   getUniqueSchets: 'mainbook/unique-schets',
   getMainbookDocuments: 'mainbook/docs',
   delete: 'mainbook/delete',
+  clean: 'mainbook/clean',
   update: 'mainbook/update'
 }

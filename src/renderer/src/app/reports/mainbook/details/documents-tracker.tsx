@@ -2,9 +2,10 @@ import type { MainbookDocumentInfo, ProvodkaType } from '@/common/models'
 import type { DialogTriggerProps } from 'react-aria-components'
 
 import { useQuery } from '@tanstack/react-query'
+import { t } from 'i18next'
 import { Trans } from 'react-i18next'
 
-import { type ColumnDef, GenericTable } from '@/common/components'
+import { type ColumnDef, FooterCell, FooterRow, GenericTable } from '@/common/components'
 import {
   DialogContent,
   DialogHeader,
@@ -15,7 +16,7 @@ import {
 import { ProvodkaBadge } from '@/common/components/provodka-badge'
 import { IDCell } from '@/common/components/table/renderers/id'
 import { SummaCell } from '@/common/components/table/renderers/summa'
-import { formatLocaleDate } from '@/common/lib/format'
+import { formatLocaleDate, formatNumber } from '@/common/lib/format'
 
 import { MainbookQueryKeys } from '../config'
 import { MainbookService } from '../service'
@@ -71,6 +72,18 @@ export const MainbookDocumentsTracker = ({
               <GenericTable
                 data={documents?.data ?? []}
                 columnDefs={columns}
+                footer={
+                  <FooterRow>
+                    <FooterCell
+                      title={t('total')}
+                      colSpan={5}
+                    />
+                    <FooterCell
+                      content={formatNumber(documents?.meta?.summa ?? 0)}
+                      colSpan={1}
+                    />
+                  </FooterRow>
+                }
               />
             </div>
           </div>

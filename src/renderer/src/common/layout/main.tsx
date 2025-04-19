@@ -9,6 +9,7 @@ import { OrganSaldo152UpdateManager } from '@/app/jur_3/152/saldo/components/sal
 import { OrganSaldo159UpdateManager } from '@/app/jur_3/159/saldo/components/saldo-update-manager'
 import { PodotchetSaldoUpdateManager } from '@/app/jur_4/saldo/components/saldo-update-manager'
 import { MaterialWarehouseSaldoUpdateManager } from '@/app/jur_7/saldo/components/saldo-update-manager'
+import { MainbookSaldoUpdateManager } from '@/app/reports/mainbook/saldo/saldo-update-manager'
 import { LoadingOverlay } from '@/common/components'
 import { AuthGuard } from '@/common/features/auth'
 import { SpravochnikProvider } from '@/common/features/spravochnik'
@@ -42,6 +43,7 @@ const MainLayout = () => {
       <OrganSaldo152UpdateManager />
       <PodotchetSaldoUpdateManager />
       <MaterialWarehouseSaldoUpdateManager />
+      <MainbookSaldoUpdateManager />
     </div>
   )
 }
