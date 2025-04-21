@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 
 import { GenericTable } from '@/common/components'
+import { ButtonGroup } from '@/common/components/ui/button-group'
 import { useConfirm } from '@/common/features/confirm'
 import { DownloadFile, ImportFile } from '@/common/features/file'
 import { SearchFilterDebounced } from '@/common/features/filters/search/search-filter-debounced'
@@ -16,40 +17,40 @@ import { useToggle } from '@/common/hooks/use-toggle'
 import { useLayout } from '@/common/layout'
 import { ListView } from '@/common/views'
 
-import { responsibleColumns } from './columns'
-import { responsibleQueryKeys } from './constants'
+import { ResponsibleColumns } from './columns'
+import { ResponsibleQueryKeys } from './config'
 import { ResponsibleDialog } from './dialog'
-import { responsibleService } from './service'
+import { ResponsibleService } from './service'
 
 const ResponsiblePage = () => {
-  const [selected, setSelected] = useState<null | Responsible>(null)
-  const [search] = useSearchFilter()
-
-  const { confirm } = useConfirm()
-  const { t } = useTranslation(['app'])
-
   const setLayout = useLayout()
 
   const dialogToggle = useToggle()
   const pagination = usePagination()
   const queryClient = useQueryClient()
 
+  const [selected, setSelected] = useState<null | Responsible>(null)
+  const [search] = useSearchFilter()
+
+  const { confirm } = useConfirm()
+  const { t } = useTranslation(['app'])
+
   const { data: responsibles, isFetching } = useQuery({
     queryKey: [
-      responsibleQueryKeys.getAll,
+      ResponsibleQueryKeys.getAll,
       {
         search,
         ...pagination
       }
     ],
-    queryFn: responsibleService.getAll
+    queryFn: ResponsibleService.getAll
   })
   const { mutate: deleteResponsible, isPending } = useMutation({
-    mutationKey: [responsibleQueryKeys.delete],
-    mutationFn: responsibleService.delete,
+    mutationKey: [ResponsibleQueryKeys.delete],
+    mutationFn: ResponsibleService.delete,
     onSuccess(res) {
       queryClient.invalidateQueries({
-        queryKey: [responsibleQueryKeys.getAll]
+        queryKey: [ResponsibleQueryKeys.getAll]
       })
       toast.success(res?.message)
     }
@@ -84,36 +85,38 @@ const ResponsiblePage = () => {
   return (
     <ListView>
       <ListView.Header className="flex items-center justify-end">
-        <DownloadFile
-          url="/jur_7/responsible/template"
-          params={{
-            excel: true
-          }}
-          fileName={`${t('responsible')}_${t('template')}.xlsx`}
-          buttonText={t('download-something', { something: t('template') })}
-        />
-        <DownloadFile
-          url="/jur_7/responsible"
-          params={{
-            page: 1,
-            limit: 1000000,
-            excel: true
-          }}
-          fileName={`${t('responsible')}.xlsx`}
-          buttonText={t('export-excel')}
-        />
-        <ImportFile
-          url="/jur_7/responsible/import"
-          onSuccess={() => {
-            queryClient.invalidateQueries({
-              queryKey: [responsibleQueryKeys.getAll]
-            })
-          }}
-        />
+        <ButtonGroup className="space-x-2">
+          <DownloadFile
+            url="/jur_7/responsible/template"
+            params={{
+              excel: true
+            }}
+            fileName={`${t('responsible')}_${t('template')}.xlsx`}
+            buttonText={t('download-something', { something: t('template') })}
+          />
+          <DownloadFile
+            url="/jur_7/responsible"
+            params={{
+              page: 1,
+              limit: 1000000,
+              excel: true
+            }}
+            fileName={`${t('responsible')}.xlsx`}
+            buttonText={t('export-excel')}
+          />
+          <ImportFile
+            url="/jur_7/responsible/import"
+            onSuccess={() => {
+              queryClient.invalidateQueries({
+                queryKey: [ResponsibleQueryKeys.getAll]
+              })
+            }}
+          />
+        </ButtonGroup>
       </ListView.Header>
       <ListView.Content loading={isFetching || isPending}>
         <GenericTable
-          columnDefs={responsibleColumns}
+          columnDefs={ResponsibleColumns}
           data={responsibles?.data ?? []}
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}
@@ -127,8 +130,8 @@ const ResponsiblePage = () => {
         />
       </ListView.Footer>
       <ResponsibleDialog
-        open={dialogToggle.isOpen}
-        onClose={dialogToggle.close}
+        isOpen={dialogToggle.isOpen}
+        onOpenChange={dialogToggle.setOpen}
         selected={selected}
       />
     </ListView>

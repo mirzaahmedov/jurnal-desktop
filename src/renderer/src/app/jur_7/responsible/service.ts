@@ -1,28 +1,30 @@
-import type { ResponsibleFormValues } from './constants'
+import type { ResponsibleFormValues } from './config'
 import type { SpravochnikHookOptions } from '@/common/features/spravochnik'
 import type { Responsible } from '@/common/models'
+
+import { t } from 'i18next'
 
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 import { SpravochnikSearchField } from '@/common/features/filters/search/search-filter-spravochnik'
 import { extendObject } from '@/common/lib/utils'
 
-import { responsibleColumns } from './columns'
+import { ResponsibleColumns } from './columns'
 
-export const responsibleService = new CRUDService<Responsible, ResponsibleFormValues>({
+export const ResponsibleService = new CRUDService<Responsible, ResponsibleFormValues>({
   endpoint: ApiEndpoints.jur7_responsible
 })
 
-const createResponsibleSpravochnik = (config: Partial<SpravochnikHookOptions<Responsible>>) => {
+export const createResponsibleSpravochnik = (
+  config: Partial<SpravochnikHookOptions<Responsible>>
+) => {
   return extendObject(
     {
       endpoint: ApiEndpoints.jur7_responsible,
-      columnDefs: responsibleColumns,
-      service: responsibleService,
+      columnDefs: ResponsibleColumns,
+      service: ResponsibleService,
       filters: [SpravochnikSearchField],
-      title: 'Ответственные'
+      title: t('responsible')
     } satisfies typeof config,
     config
   )
 }
-
-export { createResponsibleSpravochnik }

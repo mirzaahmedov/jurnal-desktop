@@ -2,7 +2,7 @@ import { z } from 'zod'
 
 import { withPreprocessor } from '@/common/lib/validation'
 
-export const responsibleQueryKeys = {
+export const ResponsibleQueryKeys = {
   getAll: 'responsible/all',
   getById: 'responsible',
   create: 'responsible/create',

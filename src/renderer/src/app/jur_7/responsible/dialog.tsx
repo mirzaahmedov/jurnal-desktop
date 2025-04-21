@@ -1,4 +1,5 @@
 import type { Responsible } from '@/common/models'
+import type { DialogTriggerProps } from 'react-aria-components'
 
 import { useEffect } from 'react'
 
@@ -20,20 +21,16 @@ import {
 import { Form, FormField } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
 import { SpravochnikInput, useSpravochnik } from '@/common/features/spravochnik'
-import { extendObject } from '@/common/lib/utils'
+import { capitalize } from '@/common/lib/string'
 
 import { createWarehousePodrazdelenieSpravochnik } from '../podrazdelenie/service'
-import { ResponsibleFormSchema, defaultValues, responsibleQueryKeys } from './constants'
-import { responsibleService } from './service'
+import { ResponsibleFormSchema, ResponsibleQueryKeys, defaultValues } from './config'
+import { ResponsibleService } from './service'
 
-export interface ResponsibleDialogProps {
-  open: boolean
-  onClose: () => void
+export interface ResponsibleDialogProps extends Omit<DialogTriggerProps, 'children'> {
   selected: null | Responsible
 }
-export const ResponsibleDialog = (props: ResponsibleDialogProps) => {
-  const { open, onClose, selected } = props
-
+export const ResponsibleDialog = ({ isOpen, onOpenChange, selected }: ResponsibleDialogProps) => {
   const queryClient = useQueryClient()
   const form = useForm({
     defaultValues,
@@ -50,51 +47,40 @@ export const ResponsibleDialog = (props: ResponsibleDialogProps) => {
     })
   )
 
-  const { mutate: create, isPending: isCreating } = useMutation({
-    mutationKey: [responsibleQueryKeys.create],
-    mutationFn: responsibleService.create,
-    onSuccess() {
+  const { mutate: createResponsible, isPending: isCreating } = useMutation({
+    mutationKey: [ResponsibleQueryKeys.create],
+    mutationFn: ResponsibleService.create,
+    onSuccess(res) {
       form.reset(defaultValues)
+      toast.success(res?.message)
       queryClient.invalidateQueries({
-        queryKey: [responsibleQueryKeys.getAll]
+        queryKey: [ResponsibleQueryKeys.getAll]
       })
-      onClose()
-      toast.success('Материально-ответственное лицо успешно создана')
-    },
-    onError(error) {
-      console.error(error)
-      toast.error('Ошибка при создании материально-ответственное лицо: ' + error.message)
+      onOpenChange?.(false)
     }
   })
-  const { mutate: update, isPending: isUpdating } = useMutation({
-    mutationKey: [responsibleQueryKeys.update],
-    mutationFn: responsibleService.update,
-    onSuccess() {
-      onClose()
+  const { mutate: updateResponsible, isPending: isUpdating } = useMutation({
+    mutationKey: [ResponsibleQueryKeys.update],
+    mutationFn: ResponsibleService.update,
+    onSuccess(res) {
+      form.reset(defaultValues)
+      toast.success(res?.message)
+      onOpenChange?.(false)
       queryClient.invalidateQueries({
-        queryKey: [responsibleQueryKeys.getAll]
+        queryKey: [ResponsibleQueryKeys.getAll]
       })
-      toast.success('Материально-ответственное лицо успешно изменена')
-    },
-    onError(error) {
-      console.error(error)
-      toast.error('Ошибка при изменении материально-ответственное лицо' + error.message)
     }
   })
 
-  const onSubmit = form.handleSubmit((payload) => {
+  const onSubmit = form.handleSubmit((values) => {
     if (selected) {
-      update(
-        extendObject(
-          {
-            id: selected.id
-          },
-          payload
-        )
-      )
+      updateResponsible({
+        ...values,
+        id: selected.id
+      })
       return
     }
-    create(payload)
+    createResponsible(values)
   })
 
   useEffect(() => {
@@ -104,17 +90,18 @@ export const ResponsibleDialog = (props: ResponsibleDialogProps) => {
     }
     form.reset(defaultValues)
   }, [form, selected])
+
   return (
     <Dialog
-      open={open}
-      onOpenChange={onClose}
+      open={isOpen}
+      onOpenChange={onOpenChange}
     >
       <DialogContent>
         <DialogHeader>
           <DialogTitle className="titlecase">
             {selected
-              ? t('update-something', { something: t('responsible') })
-              : t('create-something', { something: t('responsible') })}
+              ? t('responsible')
+              : capitalize(t('create-something', { something: t('responsible') }))}
           </DialogTitle>
         </DialogHeader>
         <Form {...form}>
