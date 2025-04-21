@@ -21,9 +21,9 @@ import {
 } from '@/common/components/ui/dialog'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/common/components/ui/tabs'
 
-import { organizationColumns } from './columns'
-import { organizationQueryKeys } from './config'
-import { organizationService, updateChildOrganizationsQuery } from './service'
+import { OrganizationColumns } from './columns'
+import { OrganizationQueryKeys } from './config'
+import { OrganizationService } from './service'
 
 enum TabOption {
   SELECTED = 'SELECTED',
@@ -49,13 +49,13 @@ export const SubordinateOrganizations = ({
   const { t } = useTranslation()
 
   const { data: organization, isFetching } = useQuery({
-    queryKey: [organizationQueryKeys.getById, parentId],
-    queryFn: organizationService.getById,
+    queryKey: [OrganizationQueryKeys.getById, parentId],
+    queryFn: OrganizationService.getById,
     enabled: !!parentId && open
   })
   const { data: organizations, isFetching: isFetchingOrganizations } = useQuery({
     queryKey: [
-      organizationQueryKeys.getAll,
+      OrganizationQueryKeys.getAll,
       {
         page,
         limit,
@@ -64,17 +64,17 @@ export const SubordinateOrganizations = ({
         search: search ? search : undefined
       }
     ],
-    queryFn: organizationService.getAll
+    queryFn: OrganizationService.getAll
   })
 
   const { mutate: updateChildOrganizations, isPending } = useMutation({
-    mutationKey: [organizationQueryKeys.update],
-    mutationFn: updateChildOrganizationsQuery,
+    mutationKey: [OrganizationQueryKeys.update],
+    mutationFn: OrganizationService.updateChild,
     onSuccess(res) {
       onOpenChange?.(false)
       toast.success(res?.message)
       queryClient.invalidateQueries({
-        queryKey: [organizationQueryKeys.getById, parentId]
+        queryKey: [OrganizationQueryKeys.getById, parentId]
       })
     }
   })
@@ -113,7 +113,7 @@ export const SubordinateOrganizations = ({
                 className="flex items-center gap-5"
               >
                 {t('selected_organizations')}
-                {selected.length ? <Badge>{selected.length}</Badge> : null}
+                {selected.length ? <Badge className="-m-2">{selected.length}</Badge> : null}
               </TabsTrigger>
               <TabsTrigger value={TabOption.ALL}>{t('add')}</TabsTrigger>
             </TabsList>
@@ -132,7 +132,7 @@ export const SubordinateOrganizations = ({
             {isFetching || isFetchingOrganizations ? <LoadingOverlay /> : null}
             <div className="flex-1 overflow-auto scrollbar">
               <GenericTable
-                columnDefs={organizationColumns}
+                columnDefs={OrganizationColumns}
                 data={selected ?? []}
                 onDelete={(organization) => {
                   setSelected((prev) => {
@@ -154,7 +154,7 @@ export const SubordinateOrganizations = ({
             <div className="flex-1 overflow-auto scrollbar">
               <GenericTable
                 selectedIds={selectedIds}
-                columnDefs={organizationColumns}
+                columnDefs={OrganizationColumns}
                 data={organizations?.data ?? []}
                 onClickRow={(organization) => {
                   setSelected((prev) => {
@@ -182,6 +182,7 @@ export const SubordinateOrganizations = ({
                     setLimit(limit)
                   }
                 }}
+                count={organizations?.meta?.count ?? 0}
                 pageCount={organizations?.meta?.pageCount ?? 0}
               />
             ) : null}

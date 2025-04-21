@@ -3,7 +3,7 @@ import type { Organization } from '@/common/models'
 
 import { GenericTable } from '@/common/components'
 
-import { organizationColumns } from './columns'
+import { OrganizationColumns } from './columns'
 
 export const OrganizationTable = ({
   data,
@@ -13,7 +13,7 @@ export const OrganizationTable = ({
     <GenericTable
       {...props}
       data={data ?? []}
-      columnDefs={organizationColumns}
+      columnDefs={OrganizationColumns}
       getRowId={(row) => row.id}
     />
   )

@@ -21,7 +21,7 @@ import {
 import { Input } from '@/common/components/ui/input'
 
 import { typeOperatsiiQueryKeys } from './config'
-import { TypeOperatsiiFormSchema, typeOperatsiiService } from './service'
+import { TypeOperatsiiFormSchema, TypeOperatsiiService } from './service'
 
 export interface TypeOperatsiiDialogProps {
   open: boolean
@@ -39,7 +39,7 @@ export const TypeOperatsiiDialog = ({ open, onChangeOpen, selected }: TypeOperat
 
   const { mutate: create, isPending: isCreating } = useMutation({
     mutationKey: [typeOperatsiiQueryKeys.create],
-    mutationFn: typeOperatsiiService.create,
+    mutationFn: TypeOperatsiiService.create,
     onSuccess(res) {
       toast.success(res?.message)
       form.reset(defaultValues)
@@ -51,7 +51,7 @@ export const TypeOperatsiiDialog = ({ open, onChangeOpen, selected }: TypeOperat
   })
   const { mutate: update, isPending: isUpdating } = useMutation({
     mutationKey: [typeOperatsiiQueryKeys.update],
-    mutationFn: typeOperatsiiService.update,
+    mutationFn: TypeOperatsiiService.update,
     onSuccess(res) {
       toast.success(res?.message)
       form.reset(defaultValues)

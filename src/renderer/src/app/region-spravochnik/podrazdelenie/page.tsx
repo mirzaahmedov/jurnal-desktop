@@ -15,41 +15,41 @@ import { useToggle } from '@/common/hooks/use-toggle'
 import { useLayout } from '@/common/layout'
 import { ListView } from '@/common/views'
 
-import { podrazdelenieColumns } from './columns'
-import { podrazdelenieQueryKeys } from './constants'
-import PodrazdelenieDialog from './dialog'
-import { podrazdelenieService } from './service'
+import { PodrazdelenieColumns } from './columns'
+import { PodrazdelenieQueryKeys } from './config'
+import { PodrazdelenieDialog } from './dialog'
+import { PodrazdelenieService } from './service'
 
 const PodrazdeleniePage = () => {
-  const [selected, setSelected] = useState<Podrazdelenie | null>(null)
-
   const dialogToggle = useToggle()
   const pagination = usePagination()
   const queryClient = useQueryClient()
 
   const setLayout = useLayout()
 
-  const { t } = useTranslation(['app'])
-  const { confirm } = useConfirm()
+  const [selected, setSelected] = useState<Podrazdelenie | null>(null)
   const [search] = useSearchFilter()
 
-  const { data: podrazdelenieList, isFetching } = useQuery({
+  const { t } = useTranslation(['app'])
+  const { confirm } = useConfirm()
+
+  const { data: podrazdelenies, isFetching } = useQuery({
     queryKey: [
-      podrazdelenieQueryKeys.getAll,
+      PodrazdelenieQueryKeys.getAll,
       {
         ...pagination,
         search
       }
     ],
-    queryFn: podrazdelenieService.getAll
+    queryFn: PodrazdelenieService.getAll
   })
-  const { mutate: deleteMutation, isPending } = useMutation({
-    mutationKey: [podrazdelenieQueryKeys.delete],
-    mutationFn: podrazdelenieService.delete,
+  const { mutate: deletePodrazdelenie, isPending } = useMutation({
+    mutationKey: [PodrazdelenieQueryKeys.delete],
+    mutationFn: PodrazdelenieService.delete,
     onSuccess(res) {
       toast.success(res?.message)
       queryClient.invalidateQueries({
-        queryKey: [podrazdelenieQueryKeys.getAll]
+        queryKey: [PodrazdelenieQueryKeys.getAll]
       })
     }
   })
@@ -80,7 +80,7 @@ const PodrazdeleniePage = () => {
   const handleClickDelete = (row: Podrazdelenie) => {
     confirm({
       onConfirm() {
-        deleteMutation(row.id)
+        deletePodrazdelenie(row.id)
       }
     })
   }
@@ -89,8 +89,8 @@ const PodrazdeleniePage = () => {
     <ListView>
       <ListView.Content loading={isFetching || isPending}>
         <GenericTable
-          data={podrazdelenieList?.data ?? []}
-          columnDefs={podrazdelenieColumns}
+          data={podrazdelenies?.data ?? []}
+          columnDefs={PodrazdelenieColumns}
           getRowId={(row) => row.id}
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}
@@ -99,13 +99,14 @@ const PodrazdeleniePage = () => {
       <ListView.Footer>
         <ListView.Pagination
           {...pagination}
-          pageCount={podrazdelenieList?.meta?.pageCount ?? 0}
+          count={podrazdelenies?.meta?.count ?? 0}
+          pageCount={podrazdelenies?.meta?.pageCount ?? 0}
         />
       </ListView.Footer>
       <PodrazdelenieDialog
         selected={selected}
-        open={dialogToggle.isOpen}
-        onChangeOpen={dialogToggle.setOpen}
+        isOpen={dialogToggle.isOpen}
+        onOpenChange={dialogToggle.setOpen}
       />
     </ListView>
   )

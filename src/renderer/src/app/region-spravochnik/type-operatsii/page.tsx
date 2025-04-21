@@ -18,7 +18,7 @@ import { ListView } from '@/common/views'
 import { typeOperatsiiColumns } from './columns'
 import { typeOperatsiiQueryKeys } from './config'
 import { TypeOperatsiiDialog } from './dialog'
-import { typeOperatsiiService } from './service'
+import { TypeOperatsiiService } from './service'
 
 const TypeOperatsiiPage = () => {
   const [selected, setSelected] = useState<TypeOperatsii | null>(null)
@@ -41,11 +41,11 @@ const TypeOperatsiiPage = () => {
         search
       }
     ],
-    queryFn: typeOperatsiiService.getAll
+    queryFn: TypeOperatsiiService.getAll
   })
   const { mutate: deleteMutation, isPending } = useMutation({
     mutationKey: [typeOperatsiiQueryKeys.delete],
-    mutationFn: typeOperatsiiService.delete,
+    mutationFn: TypeOperatsiiService.delete,
     onSuccess(res) {
       toast.success(res?.message)
       queryClient.invalidateQueries({

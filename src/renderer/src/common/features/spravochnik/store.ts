@@ -3,7 +3,7 @@ import type { GenericTableProps } from '@/common/components/generic-table/interf
 import type { ApiEndpoints, CRUDService } from '@/common/features/crud'
 import type { useToggle } from '@/common/hooks'
 import type { DialogProps } from '@radix-ui/react-dialog'
-import type { ComponentType, Dispatch, SetStateAction } from 'react'
+import type { ComponentType, Dispatch, ReactNode, SetStateAction } from 'react'
 
 import { create } from 'zustand'
 
@@ -38,7 +38,7 @@ export type SpravochnikTableProps<T extends object> = {
 export type SpravochnikData<T extends object> = {
   id: string
   endpoint: ApiEndpoints
-  title?: string
+  title?: ReactNode
   service: Pick<CRUDService<T>, 'getAll' | 'getById'>
   selectedId?: number
   disabledIds: number[]

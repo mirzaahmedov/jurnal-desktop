@@ -187,7 +187,7 @@ export const EditableTable = <T extends object, F extends ArrayPath<NoInfer<T>>>
         {typeof onCreate === 'function' && (
           <TableFooter>
             {props.footerRows}
-            <EditableTableRow>
+            <EditableTableRow focusable={false}>
               <EditableTableCell colSpan={100}>
                 <Button
                   tabIndex={tabIndex}
@@ -252,6 +252,7 @@ const EditableTableRowRenderer = <T extends object, R extends T[ArrayPath<NoInfe
     <EditableTableRow
       data-rowId={index}
       className={getRowClassName?.({ index, row, rows })}
+      focusable={rows.length > 1}
       {...props}
     >
       <EditableTableCell

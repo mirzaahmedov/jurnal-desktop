@@ -18,7 +18,7 @@ export const TypeOperatsiiFormSchema = withPreprocessor(
 )
 export type TypeOperatsiiFormValues = z.infer<typeof TypeOperatsiiFormSchema>
 
-export const typeOperatsiiService = new CRUDService<TypeOperatsii, TypeOperatsiiFormValues>({
+export const TypeOperatsiiService = new CRUDService<TypeOperatsii, TypeOperatsiiFormValues>({
   endpoint: ApiEndpoints.type_operatsii
 })
 
@@ -30,7 +30,7 @@ export const createTypeOperatsiiSpravochnik = (
       title: 'Выберите тип операции',
       endpoint: ApiEndpoints.type_operatsii,
       columnDefs: typeOperatsiiColumns,
-      service: typeOperatsiiService,
+      service: TypeOperatsiiService,
       filters: [SpravochnikSearchField]
     } satisfies typeof config,
     config

@@ -1,5 +1,7 @@
 import type { HTMLAttributes, TdHTMLAttributes, ThHTMLAttributes } from 'react'
 
+import { type VariantProps, cva } from 'class-variance-authority'
+
 import { TableCell, TableHead, TableRow } from '@/common/components/ui/table'
 import { cn } from '@/common/lib/utils'
 
@@ -39,18 +41,26 @@ export const EditableTableHead = ({
   )
 }
 
+const rowVariants = cva('scroll-my-10', {
+  variants: {
+    focusable: {
+      true: 'group/row hover:bg-highligth-neutral focus-within:bg-highlight hover:focus-within:bg-highlight'
+    }
+  },
+  defaultVariants: {
+    focusable: true
+  }
+})
 export const EditableTableRow = ({
   children,
   className,
+  focusable,
   ...props
-}: HTMLAttributes<HTMLTableRowElement>) => {
+}: HTMLAttributes<HTMLTableRowElement> & VariantProps<typeof rowVariants>) => {
   return (
     <TableRow
       {...props}
-      className={cn(
-        'group/row hover:bg-highligth-neutral focus-within:bg-highlight hover:focus-within:bg-highlight scroll-my-10',
-        className
-      )}
+      className={cn(rowVariants({ className, focusable }), className)}
     >
       {children}
     </TableRow>

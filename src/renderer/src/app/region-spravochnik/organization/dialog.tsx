@@ -20,9 +20,14 @@ import {
 } from '@/common/components/ui/dialog'
 import { capitalize } from '@/common/lib/string'
 
-import { defaultValues, organizationQueryKeys } from './config'
+import {
+  OrganizationFormSchema,
+  type OrganizationFormValues,
+  OrganizationQueryKeys,
+  defaultValues
+} from './config'
 import { OrganizationForm } from './organization-form'
-import { OrganizationFormSchema, type OrganizationFormValues, organizationService } from './service'
+import { OrganizationService } from './service'
 
 export interface OrganizationDialogProps extends DialogProps {
   selected?: Organization
@@ -47,28 +52,28 @@ export const OrganizationDialog = ({
   })
 
   const { mutate: createOrganization, isPending: isCreatingOrganization } = useMutation({
-    mutationKey: [organizationQueryKeys.create],
-    mutationFn: organizationService.create,
+    mutationKey: [OrganizationQueryKeys.create],
+    mutationFn: OrganizationService.create,
     onSuccess(res) {
       toast.success(res?.message)
       form.reset(defaultValues)
       queryClient.invalidateQueries({
-        queryKey: [organizationQueryKeys.getAll]
+        queryKey: [OrganizationQueryKeys.getAll]
       })
       onOpenChange?.(false)
     }
   })
   const { mutate: updateOrganization, isPending: isUpdatingOrganization } = useMutation({
-    mutationKey: [organizationQueryKeys.update],
-    mutationFn: organizationService.update,
+    mutationKey: [OrganizationQueryKeys.update],
+    mutationFn: OrganizationService.update,
     onSuccess(res) {
       toast.success(res?.message)
       form.reset(defaultValues)
       queryClient.invalidateQueries({
-        queryKey: [organizationQueryKeys.getAll]
+        queryKey: [OrganizationQueryKeys.getAll]
       })
       queryClient.invalidateQueries({
-        queryKey: [organizationQueryKeys.getById, selected?.id]
+        queryKey: [OrganizationQueryKeys.getById, selected?.id]
       })
       onOpenChange?.(false)
     }

@@ -7,7 +7,7 @@ import { type Location, useLocation, useNavigate, useParams } from 'react-router
 import { toast } from 'react-toastify'
 
 import { MainSchetQueryKeys, MainSchetService } from '@/app/region-spravochnik/main-schet'
-import { organizationQueryKeys, organizationService } from '@/app/region-spravochnik/organization'
+import { OrganizationQueryKeys, OrganizationService } from '@/app/region-spravochnik/organization'
 import { Button } from '@/common/components/ui/button'
 import { useRequisitesStore } from '@/common/features/requisites'
 import { useToggle } from '@/common/hooks'
@@ -50,8 +50,8 @@ const ShartnomaDetailsPage = () => {
     queryFn: MainSchetService.getById
   })
   const { data: organization } = useQuery({
-    queryKey: [organizationQueryKeys.getById, shartnoma?.data?.spravochnik_organization_id],
-    queryFn: organizationService.getById,
+    queryKey: [OrganizationQueryKeys.getById, shartnoma?.data?.spravochnik_organization_id],
+    queryFn: OrganizationService.getById,
     enabled: !!shartnoma?.data?.spravochnik_organization_id
   })
 

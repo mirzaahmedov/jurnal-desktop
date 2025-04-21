@@ -1,4 +1,4 @@
-import type { OrganizationFormValues } from './service'
+import type { OrganizationFormValues } from './config'
 
 import { type FormEventHandler, type ReactNode, useState } from 'react'
 

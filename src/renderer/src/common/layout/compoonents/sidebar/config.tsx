@@ -84,7 +84,7 @@ export const getNavElements = (t: TFunction): NavElement[] => {
           icon: FileVideo
         }
       : null,
-    !is_super_admin && permissions.kassa
+    !is_super_admin && (permissions.kassa || is_admin)
       ? {
           path: '/kassa',
           title: `№1 - МО (${t('pages.kassa')})`,
@@ -119,7 +119,7 @@ export const getNavElements = (t: TFunction): NavElement[] => {
           ]
         }
       : null,
-    !is_super_admin && permissions.bank
+    !is_super_admin && (permissions.bank || is_admin)
       ? {
           path: '/bank',
           title: `№2 - МО (${t('pages.bank')})`,
@@ -154,7 +154,7 @@ export const getNavElements = (t: TFunction): NavElement[] => {
           ]
         }
       : null,
-    !is_super_admin && permissions.jur3
+    !is_super_admin && (permissions.jur3 || is_admin)
       ? {
           path: '/organization',
           title: `№3 - МО (${t('pages.organization')})`,
@@ -212,7 +212,7 @@ export const getNavElements = (t: TFunction): NavElement[] => {
           ]
         }
       : null,
-    !is_super_admin && permissions.jur4
+    !is_super_admin && (permissions.jur4 || is_admin)
       ? {
           path: '/accountable',
           title: `№4 - МО (${t('pages.podotchet')})`,
@@ -236,7 +236,7 @@ export const getNavElements = (t: TFunction): NavElement[] => {
           ]
         }
       : null,
-    !is_super_admin && permissions.jur7
+    !is_super_admin && (permissions.jur7 || is_admin)
       ? {
           icon: NotepadText,
           path: '/journal-7',
@@ -291,7 +291,7 @@ export const getNavElements = (t: TFunction): NavElement[] => {
           ]
         }
       : null,
-    !is_super_admin && permissions.jur8
+    !is_super_admin && (permissions.jur8 || is_admin)
       ? {
           icon: NotepadText,
           path: '/jur_8',
@@ -310,7 +310,7 @@ export const getNavElements = (t: TFunction): NavElement[] => {
           ]
         }
       : null,
-    !is_super_admin && permissions.spravochnik
+    !is_super_admin && (permissions.spravochnik || is_admin)
       ? {
           path: '/spravochnik',
           title: t('pages.spravochnik'),
@@ -364,7 +364,7 @@ export const getNavElements = (t: TFunction): NavElement[] => {
           ]
         }
       : null,
-    (!is_super_admin && permissions.region) || is_admin
+    !is_super_admin && (permissions.region || is_admin)
       ? {
           path: '/region',
           title: t('pages.region'),
@@ -489,7 +489,7 @@ export const getNavElements = (t: TFunction): NavElement[] => {
           ]
         }
       : null,
-    !is_super_admin && permissions.main_book
+    !is_super_admin && (permissions.main_book || is_admin)
       ? {
           path: '/mainbook',
           title: t('pages.mainbook'),

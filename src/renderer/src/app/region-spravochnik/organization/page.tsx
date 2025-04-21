@@ -17,9 +17,10 @@ import { usePagination, useToggle } from '@/common/hooks'
 import { useLayout } from '@/common/layout'
 import { ListView } from '@/common/views'
 
-import { defaultValues, organizationQueryKeys } from './config'
+import { OrganizationQueryKeys, defaultValues } from './config'
+import { type OrganizationFormValues } from './config'
 import { OrganizationDialog } from './dialog'
-import { type OrganizationFormValues, organizationService } from './service'
+import { OrganizationService } from './service'
 import { SubordinateOrganizations } from './subordinate-organization'
 import { OrganizationTable } from './table'
 
@@ -28,9 +29,10 @@ const OrganizationPage = () => {
   const [original, setOriginal] = useState<OrganizationFormValues>()
   const [parentId, setParentId] = useState<number>()
 
+  const [search] = useSearchFilter()
+
   const { t } = useTranslation(['app'])
   const { confirm } = useConfirm()
-  const [search] = useSearchFilter()
 
   const dialogToggle = useToggle()
   const pagination = usePagination()
@@ -40,21 +42,21 @@ const OrganizationPage = () => {
 
   const { data: organizations, isFetching } = useQuery({
     queryKey: [
-      organizationQueryKeys.getAll,
+      OrganizationQueryKeys.getAll,
       {
         search,
         ...pagination
       }
     ],
-    queryFn: organizationService.getAll
+    queryFn: OrganizationService.getAll
   })
   const { mutate: deleteOrganization, isPending } = useMutation({
-    mutationKey: [organizationQueryKeys.delete],
-    mutationFn: organizationService.delete,
+    mutationKey: [OrganizationQueryKeys.delete],
+    mutationFn: OrganizationService.delete,
     onSuccess(res) {
       toast.success(res?.message)
       queryClient.invalidateQueries({
-        queryKey: [organizationQueryKeys.getAll]
+        queryKey: [OrganizationQueryKeys.getAll]
       })
     }
   })

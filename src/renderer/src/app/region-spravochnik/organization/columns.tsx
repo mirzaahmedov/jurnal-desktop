@@ -5,7 +5,7 @@ import { Copyable } from '@/common/components'
 import { ExpandableList } from '@/common/components/table/renderers/expandable-list'
 import { IDCell } from '@/common/components/table/renderers/id'
 
-export const organizationColumns: ColumnDef<Organization>[] = [
+export const OrganizationColumns: ColumnDef<Organization>[] = [
   {
     key: 'id',
     className: 'pr-1',

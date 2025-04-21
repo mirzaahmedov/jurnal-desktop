@@ -1,62 +1,40 @@
 import type { SpravochnikHookOptions } from '@/common/features/spravochnik'
 import type { Organization, Response } from '@/common/models'
 
-import { z } from 'zod'
-
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 import { SpravochnikSearchField } from '@/common/features/filters/search/search-filter-spravochnik'
-import { http } from '@/common/lib/http'
 import { extendObject } from '@/common/lib/utils'
-import { withPreprocessor } from '@/common/lib/validation'
 
-import { organizationColumns } from './columns'
-import { organizationQueryKeys } from './config'
+import { OrganizationColumns } from './columns'
+import { type OrganizationFormValues, OrganizationQueryKeys } from './config'
 import { OrganizationDialog } from './dialog'
 
-export const OrganizationFormSchema = withPreprocessor(
-  z.object({
-    parent_id: z.preprocess((value) => (!value ? undefined : value), z.number().optional()),
-    name: z.string(),
-    mfo: z.string(),
-    inn: z.string(),
-    bank_klient: z.string(),
-    account_numbers: z.array(
-      z.object({
-        id: z.number().optional(),
-        raschet_schet: z.string().nonempty()
-      })
-    ),
-    gaznas: z.array(
-      z.object({
-        id: z.number().optional(),
-        raschet_schet_gazna: z.string().nonempty()
-      })
-    ),
-    okonx: z.string().optional()
-  })
-)
-export type OrganizationFormValues = z.infer<typeof OrganizationFormSchema>
-
-export const organizationService = new CRUDService<Organization, OrganizationFormValues>({
-  endpoint: ApiEndpoints.organization
-})
-
-export interface UpdateChildOrganizationArgs {
+export interface UpdateChildArgs {
   parentId: number
   childs: {
     id: number
   }[]
 }
-export const updateChildOrganizationsQuery = async ({
-  parentId,
-  childs
-}: UpdateChildOrganizationArgs) => {
-  const res = await http.put<Response<Organization>>(`${ApiEndpoints.organization}/parent`, {
-    parent_id: parentId,
-    organization_ids: childs
-  })
-  return res.data
+
+export class OrganizationServiceBuilder extends CRUDService<Organization, OrganizationFormValues> {
+  constructor() {
+    super({
+      endpoint: ApiEndpoints.organization
+    })
+
+    this.updateChild = this.updateChild.bind(this)
+  }
+
+  async updateChild({ parentId, childs }: UpdateChildArgs) {
+    const res = await this.client.put<Response<Organization>>(`${this.endpoint}/parent`, {
+      parent_id: parentId,
+      organization_ids: childs
+    })
+    return res.data
+  }
 }
+
+export const OrganizationService = new OrganizationServiceBuilder()
 
 export const createOrganizationSpravochnik = (
   config: Partial<SpravochnikHookOptions<Organization>>
@@ -65,11 +43,11 @@ export const createOrganizationSpravochnik = (
     {
       title: 'Выберите организацию',
       endpoint: ApiEndpoints.organization,
-      columnDefs: organizationColumns,
-      service: organizationService,
+      columnDefs: OrganizationColumns,
+      service: OrganizationService,
       filters: [SpravochnikSearchField],
       Dialog: OrganizationDialog,
-      queryKeys: organizationQueryKeys
+      queryKeys: OrganizationQueryKeys
     } satisfies typeof config,
     config
   )

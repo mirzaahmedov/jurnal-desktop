@@ -1,4 +1,4 @@
-export const podrazdelenieQueryKeys = {
+export const PodrazdelenieQueryKeys = {
   getAll: 'podrazdelenie/all',
   getById: 'podrazdelenie',
   create: 'podrazdelenie/create',

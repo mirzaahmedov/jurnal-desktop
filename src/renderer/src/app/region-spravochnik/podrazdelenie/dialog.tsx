@@ -1,4 +1,5 @@
 import type { Podrazdelenie } from '@/common/models'
+import type { DialogTriggerProps } from 'react-aria-components'
 
 import { useEffect } from 'react'
 
@@ -8,14 +9,15 @@ import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 
-import { Button } from '@/common/components/ui/button'
 import {
-  Dialog,
   DialogContent,
   DialogFooter,
   DialogHeader,
-  DialogTitle
-} from '@/common/components/ui/dialog'
+  DialogOverlay,
+  DialogTitle,
+  DialogTrigger
+} from '@/common/components/jolly/dialog'
+import { Button } from '@/common/components/ui/button'
 import {
   Form,
   FormControl,
@@ -25,20 +27,23 @@ import {
   FormMessage
 } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
+import { capitalize } from '@/common/lib/string'
 
-import { podrazdelenieQueryKeys } from './constants'
+import { PodrazdelenieQueryKeys } from './config'
 import {
   PodrazdelenieFormSchema,
   type PodrazdelenieFormValues,
-  podrazdelenieService
+  PodrazdelenieService
 } from './service'
 
-interface PodrazdelenieDialogProps {
-  open: boolean
-  onChangeOpen(value: boolean): void
+interface PodrazdelenieDialogProps extends Omit<DialogTriggerProps, 'children'> {
   selected: Podrazdelenie | null
 }
-export const PodrazdelenieDialog = ({ open, onChangeOpen, selected }: PodrazdelenieDialogProps) => {
+export const PodrazdelenieDialog = ({
+  isOpen,
+  onOpenChange,
+  selected
+}: PodrazdelenieDialogProps) => {
   const { t } = useTranslation()
 
   const queryClient = useQueryClient()
@@ -47,36 +52,40 @@ export const PodrazdelenieDialog = ({ open, onChangeOpen, selected }: Podrazdele
     resolver: zodResolver(PodrazdelenieFormSchema)
   })
 
-  const { mutate: create, isPending: isCreating } = useMutation({
-    mutationKey: [podrazdelenieQueryKeys.create],
-    mutationFn: podrazdelenieService.create,
+  const { mutate: createPodrazdelenie, isPending: isCreating } = useMutation({
+    mutationKey: [PodrazdelenieQueryKeys.create],
+    mutationFn: PodrazdelenieService.create,
     onSuccess(res) {
       toast.success(res?.message)
       queryClient.invalidateQueries({
-        queryKey: [podrazdelenieQueryKeys.getAll]
+        queryKey: [PodrazdelenieQueryKeys.getAll]
       })
-      onChangeOpen(false)
+      onOpenChange?.(false)
+      form.reset(defaultValues)
     }
   })
-  const { mutate: update, isPending: isUpdating } = useMutation({
-    mutationKey: [podrazdelenieQueryKeys.update],
-    mutationFn: podrazdelenieService.update,
+  const { mutate: updatePodrazdelenie, isPending: isUpdating } = useMutation({
+    mutationKey: [PodrazdelenieQueryKeys.update],
+    mutationFn: PodrazdelenieService.update,
     onSuccess(res) {
       toast.success(res?.message)
       queryClient.invalidateQueries({
-        queryKey: [podrazdelenieQueryKeys.getAll]
+        queryKey: [PodrazdelenieQueryKeys.getAll]
       })
-      onChangeOpen(false)
+      onOpenChange?.(false)
     }
   })
 
-  const onSubmit = (payload: PodrazdelenieFormValues) => {
+  const onSubmit = form.handleSubmit((values) => {
     if (selected) {
-      update(Object.assign(payload, { id: selected.id }))
+      updatePodrazdelenie({
+        ...values,
+        id: selected.id
+      })
     } else {
-      create(payload)
+      createPodrazdelenie(values)
     }
-  }
+  })
 
   useEffect(() => {
     if (!selected) {
@@ -88,77 +97,77 @@ export const PodrazdelenieDialog = ({ open, onChangeOpen, selected }: Podrazdele
   }, [form, selected])
 
   return (
-    <Dialog
-      open={open}
-      onOpenChange={onChangeOpen}
+    <DialogTrigger
+      isOpen={isOpen}
+      onOpenChange={onOpenChange}
     >
-      <DialogContent className="max-w-xl">
-        <DialogHeader>
-          <DialogTitle>
-            {selected
-              ? t('update-something', { something: t('podrazdelenie') })
-              : t('create-something', { something: t('podrazdelenie') })}
-          </DialogTitle>
-        </DialogHeader>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)}>
-            <div className="grid gap-4 py-4">
-              <FormField
-                name="name"
-                control={form.control}
-                render={({ field }) => (
-                  <FormItem>
-                    <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
-                      <FormLabel className="text-right col-span-2">{t('name')}</FormLabel>
-                      <FormControl>
-                        <Input
-                          className="col-span-4"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage className="text-end col-span-6" />
-                    </div>
-                  </FormItem>
-                )}
-              />
+      <DialogOverlay>
+        <DialogContent className="max-w-xl">
+          <DialogHeader>
+            <DialogTitle>
+              {selected
+                ? t('podrazdelenie')
+                : capitalize(t('create-something', { something: t('podrazdelenie') }))}
+            </DialogTitle>
+          </DialogHeader>
+          <Form {...form}>
+            <form onSubmit={onSubmit}>
+              <div className="grid gap-4 py-4">
+                <FormField
+                  name="name"
+                  control={form.control}
+                  render={({ field }) => (
+                    <FormItem>
+                      <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
+                        <FormLabel className="text-right col-span-2">{t('name')}</FormLabel>
+                        <FormControl>
+                          <Input
+                            className="col-span-4"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage className="text-end col-span-6" />
+                      </div>
+                    </FormItem>
+                  )}
+                />
 
-              <FormField
-                name="rayon"
-                control={form.control}
-                render={({ field }) => (
-                  <FormItem>
-                    <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
-                      <FormLabel className="text-right col-span-2">{t('rayon')}</FormLabel>
-                      <FormControl>
-                        <Input
-                          className="col-span-4"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage className="text-end col-span-6" />
-                    </div>
-                  </FormItem>
-                )}
-              />
-            </div>
-            <DialogFooter>
-              <Button
-                type="submit"
-                disabled={isCreating || isUpdating}
-              >
-                {t('save')}
-              </Button>
-            </DialogFooter>
-          </form>
-        </Form>
-      </DialogContent>
-    </Dialog>
+                <FormField
+                  name="rayon"
+                  control={form.control}
+                  render={({ field }) => (
+                    <FormItem>
+                      <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
+                        <FormLabel className="text-right col-span-2">{t('rayon')}</FormLabel>
+                        <FormControl>
+                          <Input
+                            className="col-span-4"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage className="text-end col-span-6" />
+                      </div>
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <DialogFooter>
+                <Button
+                  type="submit"
+                  disabled={isCreating || isUpdating}
+                >
+                  {t('save')}
+                </Button>
+              </DialogFooter>
+            </form>
+          </Form>
+        </DialogContent>
+      </DialogOverlay>
+    </DialogTrigger>
   )
 }
 
-const defaultValues = {
+const defaultValues: PodrazdelenieFormValues = {
   name: '',
   rayon: ''
-} satisfies PodrazdelenieFormValues
-
-export default PodrazdelenieDialog
+}

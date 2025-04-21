@@ -1,6 +1,7 @@
 import type { SpravochnikHookOptions } from '@/common/features/spravochnik'
 import type { Podrazdelenie } from '@/common/models'
 
+import { Trans } from 'react-i18next'
 import { z } from 'zod'
 
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
@@ -8,7 +9,7 @@ import { SpravochnikSearchField } from '@/common/features/filters/search/search-
 import { extendObject } from '@/common/lib/utils'
 import { withPreprocessor } from '@/common/lib/validation'
 
-import { podrazdelenieColumns } from './columns'
+import { PodrazdelenieColumns } from './columns'
 
 export const PodrazdelenieFormSchema = withPreprocessor(
   z.object({
@@ -18,7 +19,7 @@ export const PodrazdelenieFormSchema = withPreprocessor(
 )
 export type PodrazdelenieFormValues = z.infer<typeof PodrazdelenieFormSchema>
 
-export const podrazdelenieService = new CRUDService<Podrazdelenie, PodrazdelenieFormValues>({
+export const PodrazdelenieService = new CRUDService<Podrazdelenie, PodrazdelenieFormValues>({
   endpoint: ApiEndpoints.podrazdelenie
 })
 
@@ -27,10 +28,10 @@ export const createPodrazdelenieSpravochnik = (
 ) => {
   return extendObject(
     {
-      title: 'Выберите подразделение',
+      title: <Trans>podrazdelenie</Trans>,
       endpoint: ApiEndpoints.podrazdelenie,
-      columnDefs: podrazdelenieColumns,
-      service: podrazdelenieService,
+      columnDefs: PodrazdelenieColumns,
+      service: PodrazdelenieService,
       filters: [SpravochnikSearchField]
     } satisfies typeof config,
     config
