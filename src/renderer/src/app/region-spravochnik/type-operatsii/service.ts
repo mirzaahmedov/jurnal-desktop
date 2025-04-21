@@ -1,6 +1,7 @@
 import type { SpravochnikHookOptions } from '@/common/features/spravochnik'
 import type { TypeOperatsii } from '@/common/models'
 
+import { t } from 'i18next'
 import { z } from 'zod'
 
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
@@ -8,7 +9,7 @@ import { SpravochnikSearchField } from '@/common/features/filters/search/search-
 import { extendObject } from '@/common/lib/utils'
 import { withPreprocessor } from '@/common/lib/validation'
 
-import { typeOperatsiiColumns } from './columns'
+import { TypeOperatsiiColumns } from './columns'
 
 export const TypeOperatsiiFormSchema = withPreprocessor(
   z.object({
@@ -27,9 +28,9 @@ export const createTypeOperatsiiSpravochnik = (
 ) => {
   return extendObject(
     {
-      title: 'Выберите тип операции',
+      title: t('type_operatsii'),
       endpoint: ApiEndpoints.type_operatsii,
-      columnDefs: typeOperatsiiColumns,
+      columnDefs: TypeOperatsiiColumns,
       service: TypeOperatsiiService,
       filters: [SpravochnikSearchField]
     } satisfies typeof config,

@@ -1,4 +1,5 @@
 import type { Sostav } from '@/common/models'
+import type { DialogTriggerProps } from 'react-aria-components'
 
 import { useEffect } from 'react'
 
@@ -8,14 +9,15 @@ import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 
-import { Button } from '@/common/components/ui/button'
 import {
-  Dialog,
   DialogContent,
   DialogFooter,
   DialogHeader,
-  DialogTitle
-} from '@/common/components/ui/dialog'
+  DialogOverlay,
+  DialogTitle,
+  DialogTrigger
+} from '@/common/components/jolly/dialog'
+import { Button } from '@/common/components/ui/button'
 import {
   Form,
   FormControl,
@@ -25,16 +27,15 @@ import {
   FormMessage
 } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
+import { capitalize } from '@/common/lib/string'
 
-import { defaultValues, sostavQueryKeys } from './constants'
-import { SostavFormSchema, sostavService } from './service'
+import { SostavQueryKeys, defaultValues } from './config'
+import { SostavFormSchema, SostavService } from './service'
 
-interface SostavDialogProps {
-  open: boolean
-  onChangeOpen(value: boolean): void
+interface SostavDialogProps extends Omit<DialogTriggerProps, 'children'> {
   selected: Sostav | null
 }
-const SostavDialog = ({ open, onChangeOpen, selected }: SostavDialogProps) => {
+const SostavDialog = ({ isOpen, onOpenChange, selected }: SostavDialogProps) => {
   const { t } = useTranslation()
 
   const queryClient = useQueryClient()
@@ -43,34 +44,39 @@ const SostavDialog = ({ open, onChangeOpen, selected }: SostavDialogProps) => {
     resolver: zodResolver(SostavFormSchema)
   })
 
-  const { mutate: create, isPending: isCreating } = useMutation({
-    mutationKey: [sostavQueryKeys.create],
-    mutationFn: sostavService.create,
+  const { mutate: createSostav, isPending: isCreating } = useMutation({
+    mutationKey: [SostavQueryKeys.create],
+    mutationFn: SostavService.create,
     onSuccess(res) {
+      form.reset(defaultValues)
       toast.success(res?.message)
       queryClient.invalidateQueries({
-        queryKey: [sostavQueryKeys.getAll]
+        queryKey: [SostavQueryKeys.getAll]
       })
-      onChangeOpen(false)
+      onOpenChange?.(false)
     }
   })
-  const { mutate: update, isPending: isUpdating } = useMutation({
-    mutationKey: [sostavQueryKeys.update],
-    mutationFn: sostavService.update,
+  const { mutate: updateSostav, isPending: isUpdating } = useMutation({
+    mutationKey: [SostavQueryKeys.update],
+    mutationFn: SostavService.update,
     onSuccess(res) {
+      form.reset(defaultValues)
       toast.success(res?.message)
       queryClient.invalidateQueries({
-        queryKey: [sostavQueryKeys.getAll]
+        queryKey: [SostavQueryKeys.getAll]
       })
-      onChangeOpen(false)
+      onOpenChange?.(false)
     }
   })
 
-  const onSubmit = form.handleSubmit((payload) => {
+  const onSubmit = form.handleSubmit((values) => {
     if (selected) {
-      update(Object.assign(payload, { id: selected.id }))
+      updateSostav({
+        ...values,
+        id: selected.id
+      })
     } else {
-      create(payload)
+      createSostav(values)
     }
   })
 
@@ -84,71 +90,73 @@ const SostavDialog = ({ open, onChangeOpen, selected }: SostavDialogProps) => {
   }, [form, selected])
 
   return (
-    <Dialog
-      open={open}
-      onOpenChange={onChangeOpen}
+    <DialogTrigger
+      isOpen={isOpen}
+      onOpenChange={onOpenChange}
     >
-      <DialogContent className="max-w-xl">
-        <DialogHeader>
-          <DialogTitle>
-            {selected
-              ? t('update-something', { something: t('sostav') })
-              : t('create-something', { something: t('sostav') })}
-          </DialogTitle>
-        </DialogHeader>
-        <Form {...form}>
-          <form onSubmit={onSubmit}>
-            <div className="grid gap-4 py-4">
-              <FormField
-                name="name"
-                control={form.control}
-                render={({ field }) => (
-                  <FormItem>
-                    <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
-                      <FormLabel className="text-right col-span-2">{t('name')}</FormLabel>
-                      <FormControl>
-                        <Input
-                          className="col-span-4"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage className="text-end col-span-6" />
-                    </div>
-                  </FormItem>
-                )}
-              />
+      <DialogOverlay>
+        <DialogContent className="max-w-xl">
+          <DialogHeader>
+            <DialogTitle>
+              {selected
+                ? t('sostav')
+                : capitalize(t('create-something', { something: t('sostav') }))}
+            </DialogTitle>
+          </DialogHeader>
+          <Form {...form}>
+            <form onSubmit={onSubmit}>
+              <div className="grid gap-4 py-4">
+                <FormField
+                  name="name"
+                  control={form.control}
+                  render={({ field }) => (
+                    <FormItem>
+                      <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
+                        <FormLabel className="text-right col-span-2">{t('name')}</FormLabel>
+                        <FormControl>
+                          <Input
+                            className="col-span-4"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage className="text-end col-span-6" />
+                      </div>
+                    </FormItem>
+                  )}
+                />
 
-              <FormField
-                name="rayon"
-                control={form.control}
-                render={({ field }) => (
-                  <FormItem>
-                    <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
-                      <FormLabel className="text-right col-span-2">{t('rayon')}</FormLabel>
-                      <FormControl>
-                        <Input
-                          className="col-span-4"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage className="text-end col-span-6" />
-                    </div>
-                  </FormItem>
-                )}
-              />
-            </div>
-            <DialogFooter>
-              <Button
-                type="submit"
-                disabled={isCreating || isUpdating}
-              >
-                {t('save')}
-              </Button>
-            </DialogFooter>
-          </form>
-        </Form>
-      </DialogContent>
-    </Dialog>
+                <FormField
+                  name="rayon"
+                  control={form.control}
+                  render={({ field }) => (
+                    <FormItem>
+                      <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
+                        <FormLabel className="text-right col-span-2">{t('rayon')}</FormLabel>
+                        <FormControl>
+                          <Input
+                            className="col-span-4"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage className="text-end col-span-6" />
+                      </div>
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <DialogFooter>
+                <Button
+                  type="submit"
+                  disabled={isCreating || isUpdating}
+                >
+                  {t('save')}
+                </Button>
+              </DialogFooter>
+            </form>
+          </Form>
+        </DialogContent>
+      </DialogOverlay>
+    </DialogTrigger>
   )
 }
 

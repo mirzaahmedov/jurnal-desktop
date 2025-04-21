@@ -16,22 +16,21 @@ import { useLayout } from '@/common/layout'
 import { ListView } from '@/common/views'
 
 import { SmetaTable } from './components'
-import { smetaGrafikQueryKeys } from './constants'
+import { smetaGrafikQueryKeys } from './config'
 import { SmetaGrafikDialog } from './dialog'
-import { smetaGrafikService } from './service'
+import { SmetaGrafikService } from './service'
 
 const SmetaGrafikPage = () => {
   const pagination = usePagination()
   const queryClient = useQueryClient()
   const dialogToggle = useToggle()
-
   const setLayout = useLayout()
 
+  const [search] = useSearchFilter()
   const [selected, setSelected] = useState<null | SmetaGrafik>(null)
 
   const { main_schet_id, budjet_id } = useRequisitesStore()
   const { confirm } = useConfirm()
-  const [search] = useSearchFilter()
   const { t } = useTranslation(['app'])
 
   const { data: smetaGrafikList, isFetching } = useQuery({
@@ -44,12 +43,12 @@ const SmetaGrafikPage = () => {
         main_schet_id
       }
     ],
-    queryFn: smetaGrafikService.getAll,
+    queryFn: SmetaGrafikService.getAll,
     enabled: !!budjet_id && !!main_schet_id
   })
   const { mutate: deleteSmetaGrafik, isPending } = useMutation({
     mutationKey: [smetaGrafikQueryKeys.delete],
-    mutationFn: smetaGrafikService.delete,
+    mutationFn: SmetaGrafikService.delete,
     onSuccess(res) {
       toast.success(res?.message)
       queryClient.invalidateQueries({
@@ -84,7 +83,7 @@ const SmetaGrafikPage = () => {
         dialogToggle.open()
       }
     })
-  }, [setLayout, t])
+  }, [setLayout, t, dialogToggle.open])
 
   return (
     <ListView>
@@ -102,13 +101,14 @@ const SmetaGrafikPage = () => {
       <ListView.Footer>
         <ListView.Pagination
           {...pagination}
+          count={smetaGrafikList?.meta?.count ?? 0}
           pageCount={smetaGrafikList?.meta?.pageCount ?? 0}
         />
       </ListView.Footer>
       <SmetaGrafikDialog
         selected={selected}
-        open={dialogToggle.isOpen}
-        onClose={dialogToggle.close}
+        isOpen={dialogToggle.isOpen}
+        onOpenChange={dialogToggle.close}
       />
     </ListView>
   )

@@ -7,8 +7,8 @@ import { Plus, Trash } from 'lucide-react'
 import { type UseFormReturn, useFieldArray } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
-import { bankQueryKeys } from '@/app/super-admin/bank/config'
-import { bankService } from '@/app/super-admin/bank/service'
+import { BankQueryKeys } from '@/app/super-admin/bank/config'
+import { BankService } from '@/app/super-admin/bank/service'
 import { AutoComplete } from '@/common/components'
 import { FormElement } from '@/common/components/form'
 import { Button } from '@/common/components/ui/button'
@@ -45,8 +45,8 @@ export const OrganizationForm = ({ form, formActions, onSubmit }: OrganizationFo
   })
 
   const { data: bankList, isFetching } = useQuery({
-    queryKey: [bankQueryKeys.getAll, { search }],
-    queryFn: bankService.getAll,
+    queryKey: [BankQueryKeys.getAll, { search }],
+    queryFn: BankService.getAll,
     enabled: !!search,
     placeholderData: (prev) => prev
   })

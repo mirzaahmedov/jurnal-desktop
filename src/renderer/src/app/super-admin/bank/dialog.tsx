@@ -20,8 +20,8 @@ import { Form, FormField } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
 import { toast } from '@/common/hooks/use-toast'
 
-import { BankFormSchema, bankQueryKeys, defaultValues } from './config'
-import { bankService } from './service'
+import { BankFormSchema, BankQueryKeys, defaultValues } from './config'
+import { BankService } from './service'
 
 type BankDialogProps = {
   data?: Bank
@@ -38,15 +38,15 @@ const BankDialog = ({ data, open, onOpenChange }: BankDialogProps) => {
   })
 
   const { mutate: createBank, isPending: isCreating } = useMutation({
-    mutationKey: [bankQueryKeys.create],
-    mutationFn: bankService.create,
+    mutationKey: [BankQueryKeys.create],
+    mutationFn: BankService.create,
     onSuccess() {
       toast({
         title: 'Банк успешно создан'
       })
       form.reset(defaultValues)
       queryClient.invalidateQueries({
-        queryKey: [bankQueryKeys.getAll]
+        queryKey: [BankQueryKeys.getAll]
       })
       onOpenChange(false)
     },
@@ -59,15 +59,15 @@ const BankDialog = ({ data, open, onOpenChange }: BankDialogProps) => {
     }
   })
   const { mutate: updateBank, isPending: isUpdating } = useMutation({
-    mutationKey: [bankQueryKeys.update],
-    mutationFn: bankService.update,
+    mutationKey: [BankQueryKeys.update],
+    mutationFn: BankService.update,
     onSuccess() {
       toast({
         title: 'Банк успешно обновлен'
       })
       form.reset(defaultValues)
       queryClient.invalidateQueries({
-        queryKey: [bankQueryKeys.getAll]
+        queryKey: [BankQueryKeys.getAll]
       })
       onOpenChange(false)
     },

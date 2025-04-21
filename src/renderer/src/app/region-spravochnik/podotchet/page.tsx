@@ -15,12 +15,13 @@ import { useToggle } from '@/common/hooks/use-toggle'
 import { useLayout } from '@/common/layout'
 import { ListView } from '@/common/views'
 
-import { podotchetColumns } from './columns'
-import { podotchetQueryKeys } from './constants'
-import PodotchetDialog from './dialog'
-import { podotchetService } from './service'
+import { PodotchetColumns } from './columns'
+import { PodotchetQueryKeys } from './config'
+import { PodotchetDialog } from './dialog'
+import { PodotchetService } from './service'
 
 const PodotchetPage = () => {
+  const [search] = useSearchFilter()
   const [selected, setSelected] = useState<Podotchet | null>(null)
 
   const setLayout = useLayout()
@@ -29,26 +30,25 @@ const PodotchetPage = () => {
   const pagination = usePagination()
 
   const { confirm } = useConfirm()
-  const [search] = useSearchFilter()
   const { t } = useTranslation(['app'])
 
   const { data: podotchets, isFetching } = useQuery({
     queryKey: [
-      podotchetQueryKeys.getAll,
+      PodotchetQueryKeys.getAll,
       {
         ...pagination,
         search
       }
     ],
-    queryFn: podotchetService.getAll
+    queryFn: PodotchetService.getAll
   })
-  const { mutate: deleteMutation, isPending } = useMutation({
-    mutationKey: [podotchetQueryKeys.delete],
-    mutationFn: podotchetService.delete,
+  const { mutate: deletePodotchet, isPending } = useMutation({
+    mutationKey: [PodotchetQueryKeys.delete],
+    mutationFn: PodotchetService.delete,
     onSuccess(res) {
       toast.success(res?.message)
       queryClient.invalidateQueries({
-        queryKey: [podotchetQueryKeys.getAll]
+        queryKey: [PodotchetQueryKeys.getAll]
       })
     }
   })
@@ -73,7 +73,7 @@ const PodotchetPage = () => {
   const handleClickDelete = (row: Podotchet) => {
     confirm({
       onConfirm() {
-        deleteMutation(row.id)
+        deletePodotchet(row.id)
       }
     })
   }
@@ -83,7 +83,7 @@ const PodotchetPage = () => {
       <ListView.Content loading={isFetching || isPending}>
         <GenericTable
           data={podotchets?.data ?? []}
-          columnDefs={podotchetColumns}
+          columnDefs={PodotchetColumns}
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}
         />

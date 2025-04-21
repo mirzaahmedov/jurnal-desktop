@@ -3,7 +3,7 @@ import type { Podotchet } from '@/common/models'
 
 import { IDCell } from '@/common/components/table/renderers/id'
 
-export const podotchetColumns: ColumnDef<Podotchet>[] = [
+export const PodotchetColumns: ColumnDef<Podotchet>[] = [
   {
     key: 'id',
     renderCell: IDCell

@@ -15,27 +15,26 @@ import { useToggle } from '@/common/hooks/use-toggle'
 import { useLayout } from '@/common/layout'
 import { ListView } from '@/common/views'
 
-import { typeOperatsiiColumns } from './columns'
-import { typeOperatsiiQueryKeys } from './config'
+import { TypeOperatsiiColumns } from './columns'
+import { TypeOperatsiiQueryKeys } from './config'
 import { TypeOperatsiiDialog } from './dialog'
 import { TypeOperatsiiService } from './service'
 
 const TypeOperatsiiPage = () => {
-  const [selected, setSelected] = useState<TypeOperatsii | null>(null)
-
   const dialogToggle = useToggle()
   const pagination = usePagination()
   const queryClient = useQueryClient()
-
   const setLayout = useLayout()
+
+  const [search] = useSearchFilter()
+  const [selected, setSelected] = useState<TypeOperatsii | null>(null)
 
   const { t } = useTranslation(['app'])
   const { confirm } = useConfirm()
-  const [search] = useSearchFilter()
 
-  const { data: operationTypes, isFetching } = useQuery({
+  const { data: typeOperatsii, isFetching } = useQuery({
     queryKey: [
-      typeOperatsiiQueryKeys.getAll,
+      TypeOperatsiiQueryKeys.getAll,
       {
         ...pagination,
         search
@@ -43,13 +42,13 @@ const TypeOperatsiiPage = () => {
     ],
     queryFn: TypeOperatsiiService.getAll
   })
-  const { mutate: deleteMutation, isPending } = useMutation({
-    mutationKey: [typeOperatsiiQueryKeys.delete],
+  const { mutate: deleteTypeOperatsii, isPending } = useMutation({
+    mutationKey: [TypeOperatsiiQueryKeys.delete],
     mutationFn: TypeOperatsiiService.delete,
     onSuccess(res) {
       toast.success(res?.message)
       queryClient.invalidateQueries({
-        queryKey: [typeOperatsiiQueryKeys.getAll]
+        queryKey: [TypeOperatsiiQueryKeys.getAll]
       })
     }
   })
@@ -79,7 +78,7 @@ const TypeOperatsiiPage = () => {
   const handleClickDelete = (row: TypeOperatsii) => {
     confirm({
       onConfirm() {
-        deleteMutation(row.id)
+        deleteTypeOperatsii(row.id)
       }
     })
   }
@@ -88,8 +87,8 @@ const TypeOperatsiiPage = () => {
     <ListView>
       <ListView.Content loading={isFetching || isPending}>
         <GenericTable
-          data={operationTypes?.data ?? []}
-          columnDefs={typeOperatsiiColumns}
+          data={typeOperatsii?.data ?? []}
+          columnDefs={TypeOperatsiiColumns}
           getRowId={(row) => row.id}
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}
@@ -98,13 +97,14 @@ const TypeOperatsiiPage = () => {
       <ListView.Footer>
         <ListView.Pagination
           {...pagination}
-          pageCount={operationTypes?.meta?.pageCount ?? 0}
+          count={typeOperatsii?.meta?.count ?? 0}
+          pageCount={typeOperatsii?.meta?.pageCount ?? 0}
         />
       </ListView.Footer>
       <TypeOperatsiiDialog
         selected={selected}
-        open={dialogToggle.isOpen}
-        onChangeOpen={dialogToggle.setOpen}
+        isOpen={dialogToggle.isOpen}
+        onOpenChange={dialogToggle.setOpen}
       />
     </ListView>
   )

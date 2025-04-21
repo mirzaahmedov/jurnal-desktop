@@ -8,9 +8,8 @@ import { toast } from 'react-toastify'
 
 import { GenericTable } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
-import { SearchFilterDebounced } from '@/common/features/filters/search/search-filter-debounced'
 import { useSearchFilter } from '@/common/features/filters/search/search-filter-debounced'
-import { RequisitesQueryKeys, useRequisitesStore } from '@/common/features/requisites'
+import { RequisitesQueryKeys } from '@/common/features/requisites'
 import { DuplicateSchetsAlert } from '@/common/features/requisites/guards/duplicate-schets-alert'
 import { usePagination } from '@/common/hooks'
 import { useToggle } from '@/common/hooks/use-toggle'
@@ -20,6 +19,7 @@ import { ListView } from '@/common/views'
 import { MainSchetColumns } from './columns'
 import { MainSchetQueryKeys } from './config'
 import { MainSchetDialog } from './dialog'
+import { MainSchetFilters, useBudjetId } from './filters'
 import { MainSchetService } from './service'
 
 const MainSchetPage = () => {
@@ -27,7 +27,7 @@ const MainSchetPage = () => {
   const pagination = usePagination()
   const queryClient = useQueryClient()
 
-  const budjet_id = useRequisitesStore((store) => store.budjet_id)
+  const [budjetId] = useBudjetId()
   const setLayout = useLayout()
 
   const [selected, setSelected] = useState<MainSchet | null>(null)
@@ -41,11 +41,12 @@ const MainSchetPage = () => {
       MainSchetQueryKeys.getAll,
       {
         ...pagination,
-        budjet_id,
+        budjet_id: budjetId,
         search
       }
     ],
-    queryFn: MainSchetService.getAll
+    queryFn: MainSchetService.getAll,
+    enabled: !!budjetId
   })
   const { mutate: deleteMainSchet, isPending } = useMutation({
     mutationKey: [MainSchetQueryKeys.delete],
@@ -74,7 +75,7 @@ const MainSchetPage = () => {
           title: t('pages.spravochnik')
         }
       ],
-      content: SearchFilterDebounced,
+      content: MainSchetFilters,
       onCreate: dialogToggle.open
     })
   }, [setLayout, t, dialogToggle.open])
@@ -104,13 +105,14 @@ const MainSchetPage = () => {
       <ListView.Footer>
         <ListView.Pagination
           {...pagination}
+          count={mainSchets?.meta?.count ?? 0}
           pageCount={mainSchets?.meta?.pageCount ?? 0}
         />
       </ListView.Footer>
       <MainSchetDialog
         selected={selected}
-        open={dialogToggle.isOpen}
-        onChangeOpen={dialogToggle.setOpen}
+        isOpen={dialogToggle.isOpen}
+        onOpenChange={dialogToggle.setOpen}
         original={mainSchets?.data?.[0] ?? undefined}
       />
       <DuplicateSchetsAlert />

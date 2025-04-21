@@ -1,7 +1,7 @@
 import type { SpravochnikHookOptions } from '@/common/features/spravochnik'
 import type { Podrazdelenie } from '@/common/models'
 
-import { Trans } from 'react-i18next'
+import { t } from 'i18next'
 import { z } from 'zod'
 
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
@@ -28,7 +28,7 @@ export const createPodrazdelenieSpravochnik = (
 ) => {
   return extendObject(
     {
-      title: <Trans>podrazdelenie</Trans>,
+      title: t('podrazdelenie'),
       endpoint: ApiEndpoints.podrazdelenie,
       columnDefs: PodrazdelenieColumns,
       service: PodrazdelenieService,

@@ -1,4 +1,4 @@
-export const typeOperatsiiQueryKeys = {
+export const TypeOperatsiiQueryKeys = {
   getAll: 'type-operatsii/all',
   getById: 'type-operatsii',
   create: 'type-operatsii/create',

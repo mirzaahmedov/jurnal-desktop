@@ -9,14 +9,15 @@ import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 
-import { Button } from '@/common/components/ui/button'
 import {
-  Dialog,
   DialogContent,
   DialogFooter,
   DialogHeader,
-  DialogTitle
-} from '@/common/components/ui/dialog'
+  DialogOverlay,
+  DialogTitle,
+  DialogTrigger
+} from '@/common/components/jolly/dialog'
+import { Button } from '@/common/components/ui/button'
 import {
   Form,
   FormControl,
@@ -26,14 +27,15 @@ import {
   FormMessage
 } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
+import { capitalize } from '@/common/lib/string'
 
-import { podotchetQueryKeys } from './constants'
-import { PodotchetFormSchema, type PodotchetFormValues, podotchetService } from './service'
+import { PodotchetQueryKeys } from './config'
+import { PodotchetFormSchema, type PodotchetFormValues, PodotchetService } from './service'
 
 export interface PodotchetDialogProps extends DialogProps {
   selected?: Podotchet | null
 }
-const PodotchetDialog = ({ open, onOpenChange, selected, ...props }: PodotchetDialogProps) => {
+export const PodotchetDialog = ({ open, onOpenChange, selected }: PodotchetDialogProps) => {
   const { t } = useTranslation()
 
   const queryClient = useQueryClient()
@@ -42,35 +44,39 @@ const PodotchetDialog = ({ open, onOpenChange, selected, ...props }: PodotchetDi
     resolver: zodResolver(PodotchetFormSchema)
   })
 
-  const { mutate: create, isPending: isCreating } = useMutation({
-    mutationKey: [podotchetQueryKeys.create],
-    mutationFn: podotchetService.create,
+  const { mutate: createPodotchet, isPending: isCreating } = useMutation({
+    mutationKey: [PodotchetQueryKeys.create],
+    mutationFn: PodotchetService.create,
     onSuccess(res) {
-      toast.success(res?.message)
       form.reset(defaultValues)
+      toast.success(res?.message)
       queryClient.invalidateQueries({
-        queryKey: [podotchetQueryKeys.getAll]
+        queryKey: [PodotchetQueryKeys.getAll]
       })
       onOpenChange?.(false)
     }
   })
-  const { mutate: update, isPending: isUpdating } = useMutation({
-    mutationKey: [podotchetQueryKeys.update],
-    mutationFn: podotchetService.update,
+  const { mutate: updatePodotchet, isPending: isUpdating } = useMutation({
+    mutationKey: [PodotchetQueryKeys.update],
+    mutationFn: PodotchetService.update,
     onSuccess(res) {
+      form.reset(defaultValues)
       toast.success(res?.message)
       queryClient.invalidateQueries({
-        queryKey: [podotchetQueryKeys.getAll]
+        queryKey: [PodotchetQueryKeys.getAll]
       })
       onOpenChange?.(false)
     }
   })
 
-  const onSubmit = (payload: PodotchetFormValues) => {
+  const onSubmit = (values: PodotchetFormValues) => {
     if (selected) {
-      update(Object.assign(payload, { id: selected.id }))
+      updatePodotchet({
+        ...values,
+        id: selected.id
+      })
     } else {
-      create(payload)
+      createPodotchet(values)
     }
   }
 
@@ -84,72 +90,73 @@ const PodotchetDialog = ({ open, onOpenChange, selected, ...props }: PodotchetDi
   }, [form, selected])
 
   return (
-    <Dialog
-      open={open}
+    <DialogTrigger
+      isOpen={open}
       onOpenChange={onOpenChange}
-      {...props}
     >
-      <DialogContent className="max-w-xl">
-        <DialogHeader>
-          <DialogTitle>
-            {selected
-              ? t('update-something', { something: t('podotchet-litso') })
-              : t('create-something', { something: t('podotchet-litso') })}
-          </DialogTitle>
-        </DialogHeader>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)}>
-            <div className="grid gap-4 py-4">
-              <FormField
-                name="name"
-                control={form.control}
-                render={({ field }) => (
-                  <FormItem>
-                    <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
-                      <FormLabel className="text-right col-span-2">{t('name')}</FormLabel>
-                      <FormControl>
-                        <Input
-                          className="col-span-4"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage className="text-end col-span-6" />
-                    </div>
-                  </FormItem>
-                )}
-              />
+      <DialogOverlay>
+        <DialogContent className="max-w-xl">
+          <DialogHeader>
+            <DialogTitle>
+              {selected
+                ? t('podotchet-litso')
+                : capitalize(t('create-something', { something: t('podotchet-litso') }))}
+            </DialogTitle>
+          </DialogHeader>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)}>
+              <div className="grid gap-4 py-4">
+                <FormField
+                  name="name"
+                  control={form.control}
+                  render={({ field }) => (
+                    <FormItem>
+                      <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
+                        <FormLabel className="text-right col-span-2">{t('name')}</FormLabel>
+                        <FormControl>
+                          <Input
+                            className="col-span-4"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage className="text-end col-span-6" />
+                      </div>
+                    </FormItem>
+                  )}
+                />
 
-              <FormField
-                name="rayon"
-                control={form.control}
-                render={({ field }) => (
-                  <FormItem>
-                    <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
-                      <FormLabel className="text-right col-span-2">{t('rayon')}</FormLabel>
-                      <FormControl>
-                        <Input
-                          className="col-span-4"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage className="text-end col-span-6" />
-                    </div>
-                  </FormItem>
-                )}
-              />
-            </div>
-            <DialogFooter>
-              <Button
-                type="submit"
-                disabled={isCreating || isUpdating}
-              >
-                {t('save')}
-              </Button>
-            </DialogFooter>
-          </form>
-        </Form>
-      </DialogContent>
-    </Dialog>
+                <FormField
+                  name="rayon"
+                  control={form.control}
+                  render={({ field }) => (
+                    <FormItem>
+                      <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
+                        <FormLabel className="text-right col-span-2">{t('rayon')}</FormLabel>
+                        <FormControl>
+                          <Input
+                            className="col-span-4"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage className="text-end col-span-6" />
+                      </div>
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <DialogFooter>
+                <Button
+                  type="submit"
+                  disabled={isCreating || isUpdating}
+                >
+                  {t('save')}
+                </Button>
+              </DialogFooter>
+            </form>
+          </Form>
+        </DialogContent>
+      </DialogOverlay>
+    </DialogTrigger>
   )
 }
 
@@ -157,5 +164,3 @@ const defaultValues = {
   name: '',
   rayon: ''
 } satisfies PodotchetFormValues
-
-export default PodotchetDialog

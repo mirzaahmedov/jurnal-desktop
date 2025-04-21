@@ -56,18 +56,19 @@ export const PodrazdelenieDialog = ({
     mutationKey: [PodrazdelenieQueryKeys.create],
     mutationFn: PodrazdelenieService.create,
     onSuccess(res) {
+      form.reset(defaultValues)
       toast.success(res?.message)
       queryClient.invalidateQueries({
         queryKey: [PodrazdelenieQueryKeys.getAll]
       })
       onOpenChange?.(false)
-      form.reset(defaultValues)
     }
   })
   const { mutate: updatePodrazdelenie, isPending: isUpdating } = useMutation({
     mutationKey: [PodrazdelenieQueryKeys.update],
     mutationFn: PodrazdelenieService.update,
     onSuccess(res) {
+      form.reset(defaultValues)
       toast.success(res?.message)
       queryClient.invalidateQueries({
         queryKey: [PodrazdelenieQueryKeys.getAll]

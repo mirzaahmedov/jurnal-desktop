@@ -55,8 +55,8 @@ export const OrganizationDialog = ({
     mutationKey: [OrganizationQueryKeys.create],
     mutationFn: OrganizationService.create,
     onSuccess(res) {
-      toast.success(res?.message)
       form.reset(defaultValues)
+      toast.success(res?.message)
       queryClient.invalidateQueries({
         queryKey: [OrganizationQueryKeys.getAll]
       })
@@ -67,8 +67,8 @@ export const OrganizationDialog = ({
     mutationKey: [OrganizationQueryKeys.update],
     mutationFn: OrganizationService.update,
     onSuccess(res) {
-      toast.success(res?.message)
       form.reset(defaultValues)
+      toast.success(res?.message)
       queryClient.invalidateQueries({
         queryKey: [OrganizationQueryKeys.getAll]
       })

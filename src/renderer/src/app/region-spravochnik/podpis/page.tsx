@@ -32,7 +32,7 @@ const PodpisPage = () => {
   const [search] = useSearchFilter()
   const { t } = useTranslation(['app'])
 
-  const { data: podpisList, isFetching } = useQuery({
+  const { data: podpisi, isFetching } = useQuery({
     queryKey: [
       PodpisQueryKeys.getAll,
       {
@@ -85,7 +85,7 @@ const PodpisPage = () => {
     <ListView>
       <ListView.Content loading={isFetching || isPending}>
         <GenericTable
-          data={podpisList?.data ?? []}
+          data={podpisi?.data ?? []}
           columnDefs={podpisColumns}
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}
@@ -93,8 +93,8 @@ const PodpisPage = () => {
       </ListView.Content>
       <ListView.Footer>
         <ListView.Pagination
-          count={podpisList?.meta?.count ?? 0}
-          pageCount={podpisList?.meta?.pageCount ?? 0}
+          count={podpisi?.meta?.count ?? 0}
+          pageCount={podpisi?.meta?.pageCount ?? 0}
           {...pagination}
         />
       </ListView.Footer>

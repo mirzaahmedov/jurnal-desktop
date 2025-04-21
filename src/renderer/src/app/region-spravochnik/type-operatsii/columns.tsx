@@ -3,7 +3,7 @@ import type { TypeOperatsii } from '@/common/models'
 
 import { IDCell } from '@/common/components/table/renderers/id'
 
-export const typeOperatsiiColumns: ColumnDef<TypeOperatsii>[] = [
+export const TypeOperatsiiColumns: ColumnDef<TypeOperatsii>[] = [
   {
     key: 'id',
     renderCell: IDCell

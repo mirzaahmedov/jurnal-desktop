@@ -15,10 +15,11 @@ import { ListView } from '@/common/views'
 const RegionGroupPage = () => {
   const setLayout = useLayout()
 
-  const { t } = useTranslation(['app'])
   const [search] = useSearchFilter()
 
-  const { data: groupList, isFetching } = useQuery({
+  const { t } = useTranslation(['app'])
+
+  const { data: groups, isFetching } = useQuery({
     queryKey: [
       groupQueryKeys.getAll,
       {
@@ -40,7 +41,7 @@ const RegionGroupPage = () => {
       ],
       content: SearchFilterDebounced
     })
-  }, [setLayout])
+  }, [setLayout, t])
 
   return (
     <ListView>
@@ -60,7 +61,7 @@ const RegionGroupPage = () => {
       <ListView.Content loading={isFetching}>
         <GroupTable
           columnDefs={groupColumns}
-          data={groupList?.data ?? []}
+          data={groups?.data ?? []}
         />
       </ListView.Content>
     </ListView>

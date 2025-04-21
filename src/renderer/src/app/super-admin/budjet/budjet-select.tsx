@@ -1,6 +1,6 @@
 import type { Budjet } from '@/common/models'
 
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 
 import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
@@ -12,8 +12,13 @@ import { BudgetService } from './service'
 
 export interface BudjetSelectProps extends Omit<JollySelectProps<Budjet>, 'children'> {
   withOptionAll?: boolean
+  withFirstOptionSelected?: boolean
 }
-export const BudjetSelect = ({ withOptionAll = false, ...props }: BudjetSelectProps) => {
+export const BudjetSelect = ({
+  withOptionAll = false,
+  withFirstOptionSelected,
+  ...props
+}: BudjetSelectProps) => {
   const { t } = useTranslation()
   const { data: budjets, isFetching } = useQuery({
     queryKey: [BudjetQueryKeys.getAll],
@@ -33,6 +38,12 @@ export const BudjetSelect = ({ withOptionAll = false, ...props }: BudjetSelectPr
     }
     return budjetOptions
   }, [budjets, withOptionAll])
+
+  useEffect(() => {
+    if (withFirstOptionSelected && options.length > 0) {
+      props.onSelectionChange?.(options[0].id)
+    }
+  }, [withFirstOptionSelected, options])
 
   return (
     <JollySelect

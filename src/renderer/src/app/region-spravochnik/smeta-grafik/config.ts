@@ -2,7 +2,7 @@ import { z } from 'zod'
 
 import { withPreprocessor } from '@/common/lib/validation'
 
-const smetaGrafikQueryKeys = {
+export const smetaGrafikQueryKeys = {
   getAll: 'smeta-grafik/all',
   getById: 'smeta-grafik',
   create: 'smeta-grafik/create',
@@ -10,7 +10,7 @@ const smetaGrafikQueryKeys = {
   delete: 'smeta-grafik/delete'
 }
 
-const SmetaGrafikFormSchema = z.object({
+export const SmetaGrafikFormSchema = z.object({
   year: withPreprocessor(z.number()),
   smeta_id: withPreprocessor(z.number()),
   spravochnik_budjet_name_id: withPreprocessor(z.number()),
@@ -27,9 +27,9 @@ const SmetaGrafikFormSchema = z.object({
   oy_11: z.number(),
   oy_12: z.number()
 })
-type SmetaGrafikForm = z.infer<typeof SmetaGrafikFormSchema>
+export type SmetaGrafikForm = z.infer<typeof SmetaGrafikFormSchema>
 
-const defaultValues: SmetaGrafikForm = {
+export const defaultValues: SmetaGrafikForm = {
   year: 0,
   smeta_id: 0,
   spravochnik_budjet_name_id: 0,
@@ -46,6 +46,3 @@ const defaultValues: SmetaGrafikForm = {
   oy_11: 0,
   oy_12: 0
 }
-
-export { smetaGrafikQueryKeys, SmetaGrafikFormSchema, defaultValues }
-export type { SmetaGrafikForm }

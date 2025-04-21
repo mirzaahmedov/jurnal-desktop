@@ -15,9 +15,9 @@ import { useLayout } from '@/common/layout'
 import { ListView } from '@/common/views'
 
 import { bankColumns } from './columns'
-import { bankQueryKeys } from './config'
+import { BankQueryKeys } from './config'
 import { BankDialog } from './dialog'
-import { bankService } from './service'
+import { BankService } from './service'
 
 const BankPage = () => {
   const [selected, setSelected] = useState<Bank>()
@@ -34,20 +34,20 @@ const BankPage = () => {
 
   const { data: podpisList, isFetching } = useQuery({
     queryKey: [
-      bankQueryKeys.getAll,
+      BankQueryKeys.getAll,
       {
         search,
         ...pagination
       }
     ],
-    queryFn: bankService.getAll
+    queryFn: BankService.getAll
   })
   const { mutate: deletePodpis, isPending } = useMutation({
-    mutationKey: [bankQueryKeys.delete],
-    mutationFn: bankService.delete,
+    mutationKey: [BankQueryKeys.delete],
+    mutationFn: BankService.delete,
     onSuccess() {
       queryClient.invalidateQueries({
-        queryKey: [bankQueryKeys.getAll]
+        queryKey: [BankQueryKeys.getAll]
       })
     }
   })

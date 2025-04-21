@@ -1,6 +1,6 @@
 import type { SostavFormValues } from './service'
 
-export const sostavQueryKeys = {
+export const SostavQueryKeys = {
   getAll: 'sostav/all',
   getById: 'sostav',
   create: 'sostav/create',

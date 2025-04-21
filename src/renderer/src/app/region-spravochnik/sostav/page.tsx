@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
+import { toast } from 'react-toastify'
 
 import { GenericTable, LoadingOverlay } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
@@ -14,47 +15,48 @@ import { useToggle } from '@/common/hooks/use-toggle'
 import { useLayout } from '@/common/layout'
 import { ListView } from '@/common/views'
 
-import { sostavColumns } from './columns'
-import { sostavQueryKeys } from './constants'
+import { SostavColumns } from './columns'
+import { SostavQueryKeys } from './config'
 import SostavDialog from './dialog'
-import { sostavService } from './service'
+import { SostavService } from './service'
 
 const SostavPage = () => {
-  const [selected, setSelected] = useState<Sostav | null>(null)
-
-  const toggle = useToggle()
+  const dialogToggle = useToggle()
   const pagination = usePagination()
   const queryClient = useQueryClient()
   const setLayout = useLayout()
 
-  const { confirm } = useConfirm()
+  const [selected, setSelected] = useState<Sostav | null>(null)
   const [search] = useSearchFilter()
+
+  const { confirm } = useConfirm()
   const { t } = useTranslation(['app'])
 
-  const { data: sostavList, isFetching } = useQuery({
+  const { data: sostavs, isFetching } = useQuery({
     queryKey: [
-      sostavQueryKeys.getAll,
+      SostavQueryKeys.getAll,
       {
         ...pagination,
         search
       }
     ],
-    queryFn: sostavService.getAll
+    queryFn: SostavService.getAll
   })
-  const { mutate: deleteMutation, isPending } = useMutation({
-    mutationFn: sostavService.delete,
-    onSuccess() {
+  const { mutate: deleteSostav, isPending } = useMutation({
+    mutationFn: SostavService.delete,
+    onSuccess(res) {
+      toast.success(res?.message)
       queryClient.invalidateQueries({
-        queryKey: [sostavQueryKeys.getAll]
+        queryKey: [SostavQueryKeys.getAll]
       })
     }
   })
 
   useEffect(() => {
-    if (!toggle.isOpen) {
+    if (!dialogToggle.isOpen) {
       setSelected(null)
     }
-  }, [toggle.isOpen])
+  }, [dialogToggle.isOpen])
 
   useEffect(() => {
     setLayout({
@@ -65,18 +67,18 @@ const SostavPage = () => {
         }
       ],
       content: SearchFilterDebounced,
-      onCreate: toggle.open
+      onCreate: dialogToggle.open
     })
-  }, [setLayout, t, toggle.open])
+  }, [setLayout, t, dialogToggle.open])
 
   const handleClickEdit = (row: Sostav) => {
     setSelected(row)
-    toggle.open()
+    dialogToggle.open()
   }
   const handleClickDelete = (row: Sostav) => {
     confirm({
       onConfirm() {
-        deleteMutation(row.id)
+        deleteSostav(row.id)
       }
     })
   }
@@ -86,8 +88,8 @@ const SostavPage = () => {
       <div className="flex-1 relative">
         {isFetching || isPending ? <LoadingOverlay /> : null}
         <GenericTable
-          data={sostavList?.data ?? []}
-          columnDefs={sostavColumns}
+          data={sostavs?.data ?? []}
+          columnDefs={SostavColumns}
           getRowId={(row) => row.id}
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}
@@ -96,13 +98,14 @@ const SostavPage = () => {
       <ListView.Footer>
         <ListView.Pagination
           {...pagination}
-          pageCount={sostavList?.meta?.pageCount ?? 0}
+          count={sostavs?.meta?.count ?? 0}
+          pageCount={sostavs?.meta?.pageCount ?? 0}
         />
       </ListView.Footer>
       <SostavDialog
         selected={selected}
-        open={toggle.isOpen}
-        onChangeOpen={toggle.setOpen}
+        isOpen={dialogToggle.isOpen}
+        onOpenChange={dialogToggle.setOpen}
       />
     </ListView>
   )

@@ -1,5 +1,6 @@
 import type { TypeOperatsiiFormValues } from './service'
 import type { TypeOperatsii } from '@/common/models'
+import type { DialogTriggerProps } from 'react-aria-components'
 
 import { useEffect } from 'react'
 
@@ -9,9 +10,17 @@ import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 
-import { FormDialog } from '@/common/components/dialog'
+import {
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogOverlay,
+  DialogTitle,
+  DialogTrigger
+} from '@/common/components/jolly/dialog'
 import { Button } from '@/common/components/ui/button'
 import {
+  Form,
   FormControl,
   FormField,
   FormItem,
@@ -19,16 +28,19 @@ import {
   FormMessage
 } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
+import { capitalize } from '@/common/lib/string'
 
-import { typeOperatsiiQueryKeys } from './config'
+import { TypeOperatsiiQueryKeys } from './config'
 import { TypeOperatsiiFormSchema, TypeOperatsiiService } from './service'
 
-export interface TypeOperatsiiDialogProps {
-  open: boolean
-  onChangeOpen(value: boolean): void
+export interface TypeOperatsiiDialogProps extends Omit<DialogTriggerProps, 'children'> {
   selected: TypeOperatsii | null
 }
-export const TypeOperatsiiDialog = ({ open, onChangeOpen, selected }: TypeOperatsiiDialogProps) => {
+export const TypeOperatsiiDialog = ({
+  isOpen,
+  onOpenChange,
+  selected
+}: TypeOperatsiiDialogProps) => {
   const { t } = useTranslation()
 
   const queryClient = useQueryClient()
@@ -37,36 +49,39 @@ export const TypeOperatsiiDialog = ({ open, onChangeOpen, selected }: TypeOperat
     resolver: zodResolver(TypeOperatsiiFormSchema)
   })
 
-  const { mutate: create, isPending: isCreating } = useMutation({
-    mutationKey: [typeOperatsiiQueryKeys.create],
+  const { mutate: createTypeOperatsii, isPending: isCreating } = useMutation({
+    mutationKey: [TypeOperatsiiQueryKeys.create],
     mutationFn: TypeOperatsiiService.create,
     onSuccess(res) {
-      toast.success(res?.message)
       form.reset(defaultValues)
+      toast.success(res?.message)
       queryClient.invalidateQueries({
-        queryKey: [typeOperatsiiQueryKeys.getAll]
+        queryKey: [TypeOperatsiiQueryKeys.getAll]
       })
-      onChangeOpen(false)
+      onOpenChange?.(false)
     }
   })
-  const { mutate: update, isPending: isUpdating } = useMutation({
-    mutationKey: [typeOperatsiiQueryKeys.update],
+  const { mutate: updateTypeOperatsii, isPending: isUpdating } = useMutation({
+    mutationKey: [TypeOperatsiiQueryKeys.update],
     mutationFn: TypeOperatsiiService.update,
     onSuccess(res) {
-      toast.success(res?.message)
       form.reset(defaultValues)
+      toast.success(res?.message)
       queryClient.invalidateQueries({
-        queryKey: [typeOperatsiiQueryKeys.getAll]
+        queryKey: [TypeOperatsiiQueryKeys.getAll]
       })
-      onChangeOpen(false)
+      onOpenChange?.(false)
     }
   })
 
-  const onSubmit = form.handleSubmit((payload) => {
+  const onSubmit = form.handleSubmit((values) => {
     if (selected) {
-      update(Object.assign(payload, { id: selected.id }))
+      updateTypeOperatsii({
+        ...values,
+        id: selected.id
+      })
     } else {
-      create(payload)
+      createTypeOperatsii(values)
     }
   })
 
@@ -80,69 +95,77 @@ export const TypeOperatsiiDialog = ({ open, onChangeOpen, selected }: TypeOperat
   }, [form, selected])
 
   return (
-    <FormDialog
-      open={open}
-      onChangeOpen={onChangeOpen}
-      name={
-        selected
-          ? t('update-something', { something: t('type-operatsii') })
-          : t('create-something', { something: t('type-operatsii') })
-      }
-      form={form}
-      onSubmit={onSubmit}
-      footer={
-        <Button
-          type="submit"
-          disabled={isCreating || isUpdating}
-        >
-          {t('save')}
-        </Button>
-      }
+    <DialogTrigger
+      isOpen={isOpen}
+      onOpenChange={onOpenChange}
     >
-      <div className="grid gap-4 py-4">
-        <FormField
-          name="name"
-          control={form.control}
-          render={({ field }) => (
-            <FormItem>
-              <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
-                <FormLabel className="text-right col-span-2">{t('name')}</FormLabel>
-                <FormControl>
-                  <Input
-                    className="col-span-4"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage className="text-end col-span-6" />
-              </div>
-            </FormItem>
-          )}
-        />
+      <DialogOverlay>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>
+              {selected
+                ? t('type-operatsii')
+                : capitalize(t('create-something', { something: t('type-operatsii') }))}
+            </DialogTitle>
+          </DialogHeader>
+          <Form {...form}>
+            <form onSubmit={onSubmit}>
+              <div className="grid gap-4 py-4">
+                <FormField
+                  name="name"
+                  control={form.control}
+                  render={({ field }) => (
+                    <FormItem>
+                      <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
+                        <FormLabel className="text-right col-span-2">{t('name')}</FormLabel>
+                        <FormControl>
+                          <Input
+                            className="col-span-4"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage className="text-end col-span-6" />
+                      </div>
+                    </FormItem>
+                  )}
+                />
 
-        <FormField
-          name="rayon"
-          control={form.control}
-          render={({ field }) => (
-            <FormItem>
-              <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
-                <FormLabel className="text-right col-span-2">{t('rayon')}</FormLabel>
-                <FormControl>
-                  <Input
-                    className="col-span-4"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage className="text-end col-span-6" />
+                <FormField
+                  name="rayon"
+                  control={form.control}
+                  render={({ field }) => (
+                    <FormItem>
+                      <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
+                        <FormLabel className="text-right col-span-2">{t('rayon')}</FormLabel>
+                        <FormControl>
+                          <Input
+                            className="col-span-4"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage className="text-end col-span-6" />
+                      </div>
+                    </FormItem>
+                  )}
+                />
               </div>
-            </FormItem>
-          )}
-        />
-      </div>
-    </FormDialog>
+              <DialogFooter>
+                <Button
+                  type="submit"
+                  disabled={isCreating || isUpdating}
+                >
+                  {t('save')}
+                </Button>
+              </DialogFooter>
+            </form>
+          </Form>
+        </DialogContent>
+      </DialogOverlay>
+    </DialogTrigger>
   )
 }
 
-const defaultValues = {
+const defaultValues: TypeOperatsiiFormValues = {
   name: '',
   rayon: ''
-} satisfies TypeOperatsiiFormValues
+}

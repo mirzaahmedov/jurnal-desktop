@@ -55,8 +55,8 @@ export const PodpisDialog = ({ selected, isOpen, onOpenChange }: PodpisDialogPro
     mutationKey: [PodpisQueryKeys.create],
     mutationFn: PodpisService.create,
     onSuccess(res) {
-      toast.success(res?.message)
       form.reset(defaultValues)
+      toast.success(res?.message)
       queryClient.invalidateQueries({
         queryKey: [PodpisQueryKeys.getAll]
       })
@@ -67,8 +67,8 @@ export const PodpisDialog = ({ selected, isOpen, onOpenChange }: PodpisDialogPro
     mutationKey: [PodpisQueryKeys.update],
     mutationFn: PodpisService.update,
     onSuccess(res) {
-      toast.success(res?.message)
       form.reset(defaultValues)
+      toast.success(res?.message)
       queryClient.invalidateQueries({
         queryKey: [PodpisQueryKeys.getAll]
       })

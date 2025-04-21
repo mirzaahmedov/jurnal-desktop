@@ -1,12 +1,12 @@
 import { z } from 'zod'
 
-const BankFormSchema = z.object({
+export const BankFormSchema = z.object({
   bank_name: z.string(),
   mfo: z.string()
 })
-type BankPayload = z.infer<typeof BankFormSchema>
+export type BankFormValues = z.infer<typeof BankFormSchema>
 
-const bankQueryKeys = {
+export const BankQueryKeys = {
   getAll: 'bank/all',
   getById: 'bank',
   create: 'bank/create',
@@ -14,10 +14,7 @@ const bankQueryKeys = {
   delete: 'bank/delete'
 }
 
-const defaultValues: BankPayload = {
+export const defaultValues: BankFormValues = {
   bank_name: '',
   mfo: ''
 }
-
-export { BankFormSchema, bankQueryKeys, defaultValues }
-export type { BankPayload }

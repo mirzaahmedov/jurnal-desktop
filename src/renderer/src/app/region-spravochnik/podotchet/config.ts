@@ -1,4 +1,4 @@
-export const podotchetQueryKeys = {
+export const PodotchetQueryKeys = {
   getAll: 'podotchet/all',
   getById: 'podotchet',
   create: 'podotchet/create',
