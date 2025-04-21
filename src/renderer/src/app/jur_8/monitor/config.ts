@@ -1,6 +1,6 @@
-export const JUR8MonitorQueryKeys = {
-  getAll: 'jur8_monitoring/all',
-  getById: 'jur8_monitoring/get-by-id',
-  getAutofillData: 'jur8_monitoring/autofill-data',
-  delete: 'jur8_monitoring/delete'
+export const FinancialReceiptQueryKeys = {
+  getAll: 'financial-receipt/all',
+  getById: 'financial-receipt/get-by-id',
+  getAutofillData: 'financial-receipt/autofill-data',
+  delete: 'financial-receipt/delete'
 }

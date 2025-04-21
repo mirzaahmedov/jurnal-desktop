@@ -1,5 +1,5 @@
 import type { EditableColumnDef } from '@/common/components/editable-table'
-import type { JUR8MonitorChild } from '@/common/models'
+import type { FinancialReceiptProvodka } from '@/common/models'
 
 import { FileX2 } from 'lucide-react'
 
@@ -9,9 +9,9 @@ import { Input } from '@/common/components/ui/input'
 import { inputVariants } from '@/common/features/spravochnik'
 import { formatLocaleDate } from '@/common/lib/format'
 
-import { JUR8MonitorChildTypeLabels } from './config'
+import { FinancialReceiptProvodkaTypeLabels } from './config'
 
-export const JUR8MonitorDetailsColumns: EditableColumnDef<JUR8MonitorChild>[] = [
+export const FinancialReceiptDetailsColumns: EditableColumnDef<FinancialReceiptProvodka>[] = [
   {
     key: 'doc_num',
     width: 140,
@@ -72,7 +72,7 @@ export const JUR8MonitorDetailsColumns: EditableColumnDef<JUR8MonitorChild>[] = 
     Editor: ({ row }) => {
       return row.type_doc !== '' ? (
         <div className="px-2">
-          <Badge>{JUR8MonitorChildTypeLabels[row.type_doc]}</Badge>
+          <Badge>{FinancialReceiptProvodkaTypeLabels[row.type_doc]}</Badge>
           {!row.document_id ? (
             <Badge
               variant="outline"

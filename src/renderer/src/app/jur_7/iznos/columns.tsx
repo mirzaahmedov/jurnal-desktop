@@ -9,7 +9,7 @@ import { IDCell } from '@/common/components/table/renderers/id'
 import { getMonthName } from '@/common/lib/date'
 import { formatLocaleDate, formatNumber } from '@/common/lib/format'
 
-export const iznosColumns: ColumnDef<SaldoProduct>[] = [
+export const IznosColumns: ColumnDef<SaldoProduct>[] = [
   {
     key: 'id',
     renderCell: IDCell,

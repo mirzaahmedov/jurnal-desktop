@@ -1,4 +1,5 @@
-import type { JUR8Schet } from '@/common/models'
+import type { PrixodSchet } from '@/common/models'
+import type { DialogTriggerProps } from 'react-aria-components'
 
 import { useEffect } from 'react'
 
@@ -30,22 +31,20 @@ import { useSpravochnik } from '@/common/features/spravochnik'
 import { capitalize } from '@/common/lib/string'
 import { cn } from '@/common/lib/utils'
 
-import { JUR8SchetsQueryKeys } from './config'
-import { JUR8SchetFormSchema, type JUR8SchetFormValues, JUR8SchetService } from './service'
+import { PrixodSchetQueryKeys } from './config'
+import { PrixodSchetFormSchema, type PrixodSchetFormValues, PrixodSchetService } from './service'
 
-interface JUR8SchetsDialogProps {
-  open: boolean
-  onChangeOpen: (value: boolean) => void
-  selected: JUR8Schet | null
+interface PrixodSchetDialogProps extends Omit<DialogTriggerProps, 'children'> {
+  selected: PrixodSchet | null
 }
-export const JUR8SchetsDialog = ({ open, onChangeOpen, selected }: JUR8SchetsDialogProps) => {
+export const PrixodSchetDialog = ({ isOpen, onOpenChange, selected }: PrixodSchetDialogProps) => {
   const { t } = useTranslation(['app'])
 
   const queryClient = useQueryClient()
 
   const form = useForm({
     defaultValues,
-    resolver: zodResolver(JUR8SchetFormSchema)
+    resolver: zodResolver(PrixodSchetFormSchema)
   })
 
   const prixodSchetSpravochnik = useSpravochnik(
@@ -61,28 +60,27 @@ export const JUR8SchetsDialog = ({ open, onChangeOpen, selected }: JUR8SchetsDia
   )
 
   const { mutate: createSchet, isPending: isCreatingSchet } = useMutation({
-    mutationKey: [JUR8SchetsQueryKeys.create],
-    mutationFn: JUR8SchetService.create,
+    mutationKey: [PrixodSchetQueryKeys.create],
+    mutationFn: PrixodSchetService.create,
     onSuccess(res) {
-      toast.success(res?.message)
-
       form.reset(defaultValues)
+      toast.success(res?.message)
       queryClient.invalidateQueries({
-        queryKey: [JUR8SchetsQueryKeys.getAll]
+        queryKey: [PrixodSchetQueryKeys.getAll]
       })
-      onChangeOpen(false)
+      onOpenChange?.(false)
     }
   })
   const { mutate: updateSchet, isPending: isUpdating } = useMutation({
-    mutationKey: [JUR8SchetsQueryKeys.update],
-    mutationFn: JUR8SchetService.update,
+    mutationKey: [PrixodSchetQueryKeys.update],
+    mutationFn: PrixodSchetService.update,
     onSuccess(res) {
+      form.reset(defaultValues)
       toast.success(res?.message)
-
       queryClient.invalidateQueries({
-        queryKey: [JUR8SchetsQueryKeys.getAll]
+        queryKey: [PrixodSchetQueryKeys.getAll]
       })
-      onChangeOpen(false)
+      onOpenChange?.(false)
     }
   })
 
@@ -110,15 +108,13 @@ export const JUR8SchetsDialog = ({ open, onChangeOpen, selected }: JUR8SchetsDia
 
   return (
     <Dialog
-      open={open}
-      onOpenChange={onChangeOpen}
+      open={isOpen}
+      onOpenChange={onOpenChange}
     >
       <DialogContent className="max-w-xl">
         <DialogHeader>
           <DialogTitle>
-            {selected
-              ? capitalize(t('update-something', { something: t('pages.prixod_schets') }))
-              : capitalize(t('create-something', { something: t('pages.prixod_schets') }))}
+            {selected ? t('schet') : capitalize(t('create-something', { something: t('schet') }))}
           </DialogTitle>
         </DialogHeader>
         <Form {...form}>
@@ -188,7 +184,7 @@ export const JUR8SchetsDialog = ({ open, onChangeOpen, selected }: JUR8SchetsDia
   )
 }
 
-const defaultValues: JUR8SchetFormValues = {
+const defaultValues: PrixodSchetFormValues = {
   name: '',
   schet: '',
   schet_id: 0

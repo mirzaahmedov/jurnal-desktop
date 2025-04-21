@@ -1,9 +1,9 @@
 import type { ColumnDef } from '@/common/components'
-import type { JUR8Schet } from '@/common/models'
+import type { PrixodSchet } from '@/common/models'
 
 import { IDCell } from '@/common/components/table/renderers/id'
 
-export const prixodSchetColumns: ColumnDef<JUR8Schet>[] = [
+export const PrixodSchetColumns: ColumnDef<PrixodSchet>[] = [
   {
     key: 'id',
     renderCell: IDCell,

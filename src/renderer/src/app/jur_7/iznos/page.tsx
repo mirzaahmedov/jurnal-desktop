@@ -1,5 +1,3 @@
-import type { SaldoProduct } from '@/common/models'
-
 import { useEffect, useState } from 'react'
 
 import { useQuery } from '@tanstack/react-query'
@@ -21,7 +19,7 @@ import {
   validateDateWithinSelectedMonth
 } from '@/common/features/selected-month'
 import { useSpravochnik } from '@/common/features/spravochnik'
-import { usePagination, useToggle } from '@/common/hooks'
+import { usePagination } from '@/common/hooks'
 import { useLayout } from '@/common/layout'
 import { formatDate, parseDate } from '@/common/lib/date'
 import { ListView } from '@/common/views'
@@ -30,13 +28,10 @@ import { createResponsibleSpravochnik } from '../responsible/service'
 import { MaterialWarehouseSaldoProductService, defaultValues } from '../saldo'
 import { useWarehouseSaldo } from '../saldo/use-saldo'
 import { handleOstatokError } from '../saldo/utils'
-import { iznosColumns } from './columns'
+import { IznosColumns } from './columns'
 import { IznosQueryKeys } from './config'
-import { EditIznosDialog } from './edit-dialog'
 
 const IznosPage = () => {
-  const dialogToggle = useToggle()
-
   const pagination = usePagination()
   const budjet_id = useRequisitesStore((store) => store.budjet_id)
   const setLayout = useLayout()
@@ -46,7 +41,6 @@ const IznosPage = () => {
   const { queuedMonths } = useWarehouseSaldo()
 
   const [search] = useSearchFilter()
-  const [selected] = useState<SaldoProduct | null>(null)
   const [selectedDate, setSelectedDate] = useState<undefined | Date>(startDate)
 
   const form = useForm({
@@ -117,18 +111,18 @@ const IznosPage = () => {
           <div className="flex items-center justify-between gap-5">
             <ChooseSpravochnik
               spravochnik={groupSpravochnik}
-              placeholder={t('choose', { what: t('group').toLowerCase() })}
+              placeholder={t('group')}
               getName={(selected) => `${selected.group_number ?? ''} / ${selected.name}`}
-              getElements={(selected) => [{ name: 'Наименование', value: selected.name }]}
+              getElements={(selected) => [{ name: t('name'), value: selected.name }]}
             />
 
             <ChooseSpravochnik
               spravochnik={responsibleSpravochnik}
-              placeholder={t('choose', { what: t('responsible').toLowerCase() })}
+              placeholder={t('responsible')}
               getName={(selected) => selected.fio}
               getElements={(selected) => [
-                { name: 'ФИО', value: selected.fio },
-                { name: 'Подразделение', value: selected.spravochnik_podrazdelenie_jur7_name }
+                { name: t('fio'), value: selected.fio },
+                { name: t('podrazdelenie'), value: selected.spravochnik_podrazdelenie_jur7_name }
               ]}
             />
           </div>
@@ -166,16 +160,10 @@ const IznosPage = () => {
       </ListView.Header>
       <ListView.Content loading={isFetching}>
         <GenericTable
-          columnDefs={iznosColumns}
+          columnDefs={IznosColumns}
           data={iznos?.data ?? []}
           getRowId={(row) => row.product_id}
           getRowKey={(row) => row.id}
-        />
-
-        <EditIznosDialog
-          selected={selected}
-          open={dialogToggle.isOpen}
-          onOpenChange={dialogToggle.setOpen}
         />
       </ListView.Content>
       <ListView.Footer>

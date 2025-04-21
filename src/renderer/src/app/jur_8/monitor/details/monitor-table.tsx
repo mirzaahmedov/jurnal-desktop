@@ -1,5 +1,5 @@
-import type { JUR8MonitorFormValues } from './config'
-import type { JUR8MonitorChild } from '@/common/models'
+import type { FinancialReceiptFormValues } from './config'
+import type { FinancialReceiptProvodka } from '@/common/models'
 
 import {
   type EditableColumnDef,
@@ -8,11 +8,14 @@ import {
 } from '@/common/components/editable-table'
 import { cn } from '@/common/lib/utils'
 
-export interface MonitorTableProps
-  extends Omit<EditableTableProps<JUR8MonitorFormValues, 'childs'>, 'columnDefs' | 'data'> {
-  columns: EditableColumnDef<JUR8MonitorChild>[]
+export interface FinancialReceiptMonitorTableProps
+  extends Omit<EditableTableProps<FinancialReceiptFormValues, 'childs'>, 'columnDefs' | 'data'> {
+  columns: EditableColumnDef<FinancialReceiptProvodka>[]
 }
-export const MonitorTable = ({ columns, ...props }: MonitorTableProps) => {
+export const FinancialReceiptMonitorTable = ({
+  columns,
+  ...props
+}: FinancialReceiptMonitorTableProps) => {
   return (
     <EditableTable
       columnDefs={columns}

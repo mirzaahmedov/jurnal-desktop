@@ -1,9 +1,10 @@
 import type { SmetaGrafik } from '@/common/models'
 
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
 import { useConfirm } from '@/common/features/confirm'
@@ -17,17 +18,16 @@ import { ListView } from '@/common/views'
 
 import { SmetaTable } from './components'
 import { smetaGrafikQueryKeys } from './config'
-import { SmetaGrafikDialog } from './dialog'
 import { SmetaGrafikService } from './service'
 
 const SmetaGrafikPage = () => {
   const pagination = usePagination()
   const queryClient = useQueryClient()
   const dialogToggle = useToggle()
+  const navigate = useNavigate()
   const setLayout = useLayout()
 
   const [search] = useSearchFilter()
-  const [selected, setSelected] = useState<null | SmetaGrafik>(null)
 
   const { main_schet_id, budjet_id } = useRequisitesStore()
   const { confirm } = useConfirm()
@@ -58,7 +58,7 @@ const SmetaGrafikPage = () => {
   })
 
   const handleClickEdit = (row: SmetaGrafik) => {
-    setSelected(row)
+    navigate(`${row.id}`)
     dialogToggle.open()
   }
   const handleClickDelete = (row: SmetaGrafik) => {
@@ -79,11 +79,10 @@ const SmetaGrafikPage = () => {
       ],
       content: SearchFilterDebounced,
       onCreate: () => {
-        setSelected(null)
-        dialogToggle.open()
+        navigate('create')
       }
     })
-  }, [setLayout, t, dialogToggle.open])
+  }, [setLayout, t, dialogToggle.open, navigate])
 
   return (
     <ListView>
@@ -105,11 +104,6 @@ const SmetaGrafikPage = () => {
           pageCount={smetaGrafikList?.meta?.pageCount ?? 0}
         />
       </ListView.Footer>
-      <SmetaGrafikDialog
-        selected={selected}
-        isOpen={dialogToggle.isOpen}
-        onOpenChange={dialogToggle.close}
-      />
     </ListView>
   )
 }

@@ -1,12 +1,10 @@
-type Podrazdelenie = {
+export type Podrazdelenie = {
   id: number
   name: string
   rayon: string
 }
 
-type Jur7Podrazdelenie = {
+export type WarehousePodrazdelenie = {
   id: number
   name: string
 }
-
-export type { Podrazdelenie, Jur7Podrazdelenie }

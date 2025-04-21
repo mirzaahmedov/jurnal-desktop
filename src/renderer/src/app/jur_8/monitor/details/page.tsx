@@ -17,13 +17,13 @@ import { useLayout } from '@/common/layout'
 import { formatDate } from '@/common/lib/date'
 import { DetailsView } from '@/common/views'
 
-import { JUR8MonitorQueryKeys } from '../config'
-import { JUR8MonitorService } from '../service'
-import { JUR8MonitorDetailsColumns } from './columns'
+import { FinancialReceiptQueryKeys } from '../config'
+import { FinancialReceiptService } from '../service'
+import { FinancialReceiptDetailsColumns } from './columns'
 import { defaultValues } from './config'
-import { MonitorTable } from './monitor-table'
+import { FinancialReceiptMonitorTable } from './monitor-table'
 
-const JUR8MonitorDetailsPage = () => {
+const FinancialReceiptDetailsPage = () => {
   const tableMethods = useRef<EditableTableMethods>(null)
   const navigate = useNavigate()
   const queryClient = useQueryClient()
@@ -44,20 +44,20 @@ const JUR8MonitorDetailsPage = () => {
 
   const { data: monitor, isFetching } = useQuery({
     queryKey: [
-      JUR8MonitorQueryKeys.getById,
+      FinancialReceiptQueryKeys.getById,
       Number(id),
       {
         budjet_id: budjet_id!,
         main_schet_id: main_schet_id!
       }
     ],
-    queryFn: JUR8MonitorService.getMonitorById,
+    queryFn: FinancialReceiptService.getMonitorById,
     enabled: id !== 'create'
   })
 
   const { isPending: isAutoFilling, mutate: autoFill } = useMutation({
-    mutationKey: [JUR8MonitorQueryKeys.getAutofillData],
-    mutationFn: JUR8MonitorService.getAutofillData,
+    mutationKey: [FinancialReceiptQueryKeys.getAutofillData],
+    mutationFn: FinancialReceiptService.getAutofillData,
     onSuccess: (res) => {
       const childs = res?.data?.childs ?? []
       if (childs.length > 0) {
@@ -81,21 +81,21 @@ const JUR8MonitorDetailsPage = () => {
   })
 
   const { mutate: createMonitor, isPending: isCreatingMonitor } = useMutation({
-    mutationFn: JUR8MonitorService.create,
+    mutationFn: FinancialReceiptService.create,
     onSuccess: (res) => {
       toast.success(res?.message)
       queryClient.invalidateQueries({
-        queryKey: [JUR8MonitorQueryKeys.getAll]
+        queryKey: [FinancialReceiptQueryKeys.getAll]
       })
       navigate(-1)
     }
   })
   const { mutate: updateMonitor, isPending: isUpdatingMonitor } = useMutation({
-    mutationFn: JUR8MonitorService.update,
+    mutationFn: FinancialReceiptService.update,
     onSuccess: (res) => {
       toast.success(res?.message)
       queryClient.invalidateQueries({
-        queryKey: [JUR8MonitorQueryKeys.getAll]
+        queryKey: [FinancialReceiptQueryKeys.getAll]
       })
       navigate(-1)
     }
@@ -245,8 +245,8 @@ const JUR8MonitorDetailsPage = () => {
               </div>
             </div>
             <div className="overflow-auto scrollbar flex-1 relative">
-              <MonitorTable
-                columns={JUR8MonitorDetailsColumns}
+              <FinancialReceiptMonitorTable
+                columns={FinancialReceiptDetailsColumns}
                 form={form}
                 name="childs"
                 methods={tableMethods}
@@ -269,4 +269,4 @@ const JUR8MonitorDetailsPage = () => {
   )
 }
 
-export default JUR8MonitorDetailsPage
+export default FinancialReceiptDetailsPage

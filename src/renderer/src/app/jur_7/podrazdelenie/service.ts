@@ -1,27 +1,32 @@
-import type { Subdivision7PayloadType } from './constants'
+import type { WarehousePodrazdelenieFormValues } from './config'
 import type { SpravochnikHookOptions } from '@/common/features/spravochnik'
-import type { Jur7Podrazdelenie } from '@/common/models'
+import type { WarehousePodrazdelenie } from '@/common/models'
+
+import { t } from 'i18next'
 
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 import { SpravochnikSearchField } from '@/common/features/filters/search/search-filter-spravochnik'
 import { extendObject } from '@/common/lib/utils'
 
-import { podrazdelenieColumns } from './columns'
+import { WarehousePodrazdelenieColumns } from './columns'
 
-export const podrazdelenieService = new CRUDService<Jur7Podrazdelenie, Subdivision7PayloadType>({
+export const WarehousePodrazdelenieService = new CRUDService<
+  WarehousePodrazdelenie,
+  WarehousePodrazdelenieFormValues
+>({
   endpoint: ApiEndpoints.jur7_podrazdelenie
 })
 
-export const createPodrazdelenie7Spravochnik = (
-  config: Partial<SpravochnikHookOptions<Jur7Podrazdelenie>>
+export const createWarehousePodrazdelenieSpravochnik = (
+  config: Partial<SpravochnikHookOptions<WarehousePodrazdelenie>>
 ) => {
   return extendObject(
     {
-      title: 'Выберите подразделение',
+      title: t('podrazdelenie'),
       endpoint: ApiEndpoints.jur7_podrazdelenie,
-      columnDefs: podrazdelenieColumns,
+      columnDefs: WarehousePodrazdelenieColumns,
       filters: [SpravochnikSearchField],
-      service: podrazdelenieService
+      service: WarehousePodrazdelenieService
     } satisfies typeof config,
     config
   )

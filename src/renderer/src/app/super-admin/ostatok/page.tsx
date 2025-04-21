@@ -5,7 +5,7 @@ import { CircleArrowDown } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
-import { createPodrazdelenie7Spravochnik } from '@/app/jur_7/podrazdelenie/service'
+import { createWarehousePodrazdelenieSpravochnik } from '@/app/jur_7/podrazdelenie/service'
 import { createResponsibleSpravochnik } from '@/app/jur_7/responsible/service'
 import { defaultValues, ostatokProductColumns } from '@/app/jur_7/saldo'
 import { ChooseSpravochnik, DatePicker, GenericTable } from '@/common/components'
@@ -43,7 +43,7 @@ const AdminOstatokPage = () => {
   })
 
   const podrazdelenieSpravochnik = useSpravochnik(
-    createPodrazdelenie7Spravochnik({
+    createWarehousePodrazdelenieSpravochnik({
       onChange: () => {
         responsibleSpravochnik.clear()
       }

@@ -1,4 +1,4 @@
-import type { JUR8Monitor } from '@/common/models'
+import type { FinancialReceipt } from '@/common/models'
 
 import { useEffect } from 'react'
 
@@ -15,12 +15,12 @@ import { useLayout } from '@/common/layout'
 import { formatNumber } from '@/common/lib/format'
 import { ListView } from '@/common/views'
 
-import { JUR8MonitorColumns } from './columns'
-import { JUR8MonitorQueryKeys } from './config'
-import { JUR8MonitorFilters, useYearFilter } from './filters'
-import { JUR8MonitorService } from './service'
+import { FinancialReceiptColumns } from './columns'
+import { FinancialReceiptQueryKeys } from './config'
+import { FinancialReceiptFilters, useYearFilter } from './filters'
+import { FinancialReceiptService } from './service'
 
-const JUR8MonitorPage = () => {
+const FinancialReceiptPage = () => {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const pagination = usePagination()
@@ -32,9 +32,9 @@ const JUR8MonitorPage = () => {
   const { confirm } = useConfirm()
   const { budjet_id, main_schet_id } = useRequisitesStore()
 
-  const { data: monitoring, isFetching } = useQuery({
+  const { data: financialReceipts, isFetching } = useQuery({
     queryKey: [
-      JUR8MonitorQueryKeys.getAll,
+      FinancialReceiptQueryKeys.getAll,
       {
         ...pagination,
         year,
@@ -42,15 +42,15 @@ const JUR8MonitorPage = () => {
         main_schet_id
       }
     ],
-    queryFn: JUR8MonitorService.getAll
+    queryFn: FinancialReceiptService.getAll
   })
   const { mutate: deleteMonitor, isPending } = useMutation({
-    mutationKey: [JUR8MonitorQueryKeys.delete],
-    mutationFn: JUR8MonitorService.delete,
+    mutationKey: [FinancialReceiptQueryKeys.delete],
+    mutationFn: FinancialReceiptService.delete,
     onSuccess: (res) => {
       toast.success(res?.message)
       queryClient.invalidateQueries({
-        queryKey: [JUR8MonitorQueryKeys.getAll]
+        queryKey: [FinancialReceiptQueryKeys.getAll]
       })
     }
   })
@@ -63,17 +63,17 @@ const JUR8MonitorPage = () => {
           title: t('pages.jur8')
         }
       ],
-      content: JUR8MonitorFilters,
+      content: FinancialReceiptFilters,
       onCreate: () => {
         navigate('create')
       }
     })
   }, [setLayout, navigate, t])
 
-  const handleEdit = (row: JUR8Monitor) => {
+  const handleEdit = (row: FinancialReceipt) => {
     navigate(`${row.id}`)
   }
-  const handleDelete = (row: JUR8Monitor) => {
+  const handleDelete = (row: FinancialReceipt) => {
     confirm({
       onConfirm: () => {
         deleteMonitor(row.id)
@@ -85,8 +85,8 @@ const JUR8MonitorPage = () => {
     <ListView>
       <ListView.Content loading={isFetching || isPending}>
         <GenericTable
-          columnDefs={JUR8MonitorColumns}
-          data={monitoring?.data ?? []}
+          columnDefs={FinancialReceiptColumns}
+          data={financialReceipts?.data ?? []}
           onEdit={handleEdit}
           onDelete={handleDelete}
           footer={
@@ -94,7 +94,7 @@ const JUR8MonitorPage = () => {
               <FooterCell
                 colSpan={4}
                 title={t('total')}
-                content={formatNumber(monitoring?.meta?.summa ?? 0)}
+                content={formatNumber(financialReceipts?.meta?.summa ?? 0)}
               />
             </FooterRow>
           }
@@ -103,12 +103,12 @@ const JUR8MonitorPage = () => {
       <ListView.Footer>
         <ListView.Pagination
           {...pagination}
-          count={monitoring?.meta?.count ?? 0}
-          pageCount={monitoring?.meta?.pageCount ?? 0}
+          count={financialReceipts?.meta?.count ?? 0}
+          pageCount={financialReceipts?.meta?.pageCount ?? 0}
         />
       </ListView.Footer>
     </ListView>
   )
 }
 
-export default JUR8MonitorPage
+export default FinancialReceiptPage

@@ -5,7 +5,7 @@ export const useYearFilter = () => {
   return useLocationState<number | undefined>('year', new Date().getFullYear())
 }
 
-export const JUR8MonitorFilters = () => {
+export const FinancialReceiptFilters = () => {
   const [year, setYear] = useYearFilter()
   return (
     <YearSelect

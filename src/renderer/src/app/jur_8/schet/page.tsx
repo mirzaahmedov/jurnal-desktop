@@ -1,9 +1,10 @@
-import type { JUR8Schet } from '@/common/models'
+import type { PrixodSchet } from '@/common/models'
 
 import { useEffect, useState } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
+import { toast } from 'react-toastify'
 
 import { GenericTable } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
@@ -11,13 +12,13 @@ import { useToggle } from '@/common/hooks/use-toggle'
 import { useLayout } from '@/common/layout'
 import { ListView } from '@/common/views'
 
-import { prixodSchetColumns } from './columns'
-import { JUR8SchetsQueryKeys } from './config'
-import { JUR8SchetsDialog } from './dialog'
-import { JUR8SchetService } from './service'
+import { PrixodSchetColumns } from './columns'
+import { PrixodSchetQueryKeys } from './config'
+import { PrixodSchetDialog } from './dialog'
+import { PrixodSchetService } from './service'
 
-const JUR8SchetsPage = () => {
-  const [selected, setSelected] = useState<JUR8Schet | null>(null)
+const PrixodSchetPage = () => {
+  const [selected, setSelected] = useState<PrixodSchet | null>(null)
 
   const { t } = useTranslation(['app'])
   const { confirm } = useConfirm()
@@ -27,16 +28,17 @@ const JUR8SchetsPage = () => {
   const queryClient = useQueryClient()
 
   const { data: schets, isFetching } = useQuery({
-    queryKey: [JUR8SchetsQueryKeys.getAll],
-    queryFn: JUR8SchetService.getAll
+    queryKey: [PrixodSchetQueryKeys.getAll],
+    queryFn: PrixodSchetService.getAll
   })
 
-  const { mutate: deleteSchet, isPending: isDeletingPrixodSchets } = useMutation({
-    mutationKey: [JUR8SchetsQueryKeys.delete],
-    mutationFn: JUR8SchetService.delete,
-    onSuccess() {
+  const { mutate: deleteSchet, isPending: isDeleting } = useMutation({
+    mutationKey: [PrixodSchetQueryKeys.delete],
+    mutationFn: PrixodSchetService.delete,
+    onSuccess(res) {
+      toast.success(res?.message)
       queryClient.invalidateQueries({
-        queryKey: [JUR8SchetsQueryKeys.getAll]
+        queryKey: [PrixodSchetQueryKeys.getAll]
       })
     }
   })
@@ -53,11 +55,11 @@ const JUR8SchetsPage = () => {
     }
   }, [dialogToggle.isOpen])
 
-  const handleClickEdit = (row: JUR8Schet) => {
+  const handleClickEdit = (row: PrixodSchet) => {
     setSelected(row)
     dialogToggle.open()
   }
-  const handleClickDelete = (row: JUR8Schet) => {
+  const handleClickDelete = (row: PrixodSchet) => {
     confirm({
       onConfirm() {
         deleteSchet(row.id)
@@ -67,21 +69,21 @@ const JUR8SchetsPage = () => {
 
   return (
     <ListView>
-      <ListView.Content loading={isFetching || isDeletingPrixodSchets}>
+      <ListView.Content loading={isFetching || isDeleting}>
         <GenericTable
           data={schets?.data ?? []}
-          columnDefs={prixodSchetColumns}
+          columnDefs={PrixodSchetColumns}
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}
         />
       </ListView.Content>
-      <JUR8SchetsDialog
+      <PrixodSchetDialog
         selected={selected}
-        open={dialogToggle.isOpen}
-        onChangeOpen={dialogToggle.setOpen}
+        isOpen={dialogToggle.isOpen}
+        onOpenChange={dialogToggle.setOpen}
       />
     </ListView>
   )
 }
 
-export default JUR8SchetsPage
+export default PrixodSchetPage

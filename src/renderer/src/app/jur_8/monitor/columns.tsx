@@ -1,11 +1,11 @@
 import type { ColumnDef } from '@/common/components'
-import type { JUR8Monitor } from '@/common/models'
+import type { FinancialReceipt } from '@/common/models'
 
 import { IDCell } from '@/common/components/table/renderers/id'
 import { MonthNameCell } from '@/common/components/table/renderers/month-name'
 import { SummaCell } from '@/common/components/table/renderers/summa'
 
-export const JUR8MonitorColumns: ColumnDef<JUR8Monitor>[] = [
+export const FinancialReceiptColumns: ColumnDef<FinancialReceipt>[] = [
   {
     key: 'id',
     renderCell: IDCell,

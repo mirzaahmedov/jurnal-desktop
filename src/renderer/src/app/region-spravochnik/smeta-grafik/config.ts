@@ -13,7 +13,8 @@ export const smetaGrafikQueryKeys = {
 export const SmetaGrafikFormSchema = z.object({
   year: withPreprocessor(z.number()),
   smeta_id: withPreprocessor(z.number()),
-  spravochnik_budjet_name_id: withPreprocessor(z.number()),
+  main_schet_id: withPreprocessor(z.number()).optional(),
+  spravochnik_budjet_name_id: withPreprocessor(z.number()).optional(),
   oy_1: z.number(),
   oy_2: z.number(),
   oy_3: z.number(),
@@ -32,6 +33,7 @@ export type SmetaGrafikForm = z.infer<typeof SmetaGrafikFormSchema>
 export const defaultValues: SmetaGrafikForm = {
   year: 0,
   smeta_id: 0,
+  main_schet_id: 0,
   spravochnik_budjet_name_id: 0,
   oy_1: 0,
   oy_2: 0,

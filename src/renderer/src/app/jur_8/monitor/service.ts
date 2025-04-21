@@ -1,23 +1,28 @@
-import type { JUR8Monitor, JUR8MonitorChild, Response, ResponseMeta } from '@/common/models'
+import type {
+  FinancialReceipt,
+  FinancialReceiptProvodka,
+  Response,
+  ResponseMeta
+} from '@/common/models'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 import { budjet, main_schet } from '@/common/features/crud/middleware'
 
-interface JUR8MonitorFormValues {
+interface FinancialReceiptFormValues {
   year: number
   month: number
   childs: any[]
 }
-interface JUR8MonitorMeta extends ResponseMeta {
+interface FinancialReceiptMeta extends ResponseMeta {
   summa: number
 }
 
-class JUR8MonitorServiceBuilder extends CRUDService<
-  JUR8Monitor,
-  JUR8MonitorFormValues,
-  JUR8MonitorFormValues,
-  JUR8MonitorMeta
+class FinancialReceiptServiceBuilder extends CRUDService<
+  FinancialReceipt,
+  FinancialReceiptFormValues,
+  FinancialReceiptFormValues,
+  FinancialReceiptMeta
 > {
   constructor() {
     super({
@@ -37,7 +42,7 @@ class JUR8MonitorServiceBuilder extends CRUDService<
     const { budjet_id, main_schet_id, year, month } = values
     const res = await this.client.get<
       Response<{
-        childs: JUR8MonitorChild[]
+        childs: FinancialReceiptProvodka[]
         summa: number
       }>
     >(`${this.endpoint}/data`, {
@@ -60,7 +65,7 @@ class JUR8MonitorServiceBuilder extends CRUDService<
       Response<{
         year: number
         month: number
-        childs: JUR8MonitorChild[]
+        childs: FinancialReceiptProvodka[]
         summa: number
       }>
     >(`${this.endpoint}/${id}`, {
@@ -70,4 +75,6 @@ class JUR8MonitorServiceBuilder extends CRUDService<
   }
 }
 
-export const JUR8MonitorService = new JUR8MonitorServiceBuilder().use(budjet()).use(main_schet())
+export const FinancialReceiptService = new FinancialReceiptServiceBuilder()
+  .use(budjet())
+  .use(main_schet())

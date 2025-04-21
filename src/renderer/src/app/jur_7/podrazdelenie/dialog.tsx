@@ -1,4 +1,5 @@
-import type { Jur7Podrazdelenie } from '@/common/models'
+import type { WarehousePodrazdelenie } from '@/common/models'
+import type { DialogTriggerProps } from 'react-aria-components'
 
 import { useEffect } from 'react'
 
@@ -9,83 +10,75 @@ import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 
 import { FormElement } from '@/common/components/form'
-import { Button } from '@/common/components/ui/button'
 import {
-  Dialog,
   DialogContent,
   DialogFooter,
   DialogHeader,
-  DialogTitle
-} from '@/common/components/ui/dialog'
+  DialogTitle,
+  DialogTrigger
+} from '@/common/components/jolly/dialog'
+import { Button } from '@/common/components/ui/button'
 import { Form, FormField } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
-import { extendObject } from '@/common/lib/utils'
 
-import { Subdivision7PayloadSchema, defaultValues, podrazdelenieQueryKeys } from './constants'
-import { podrazdelenieService } from './service'
+import {
+  WarehousePodrazdelenieFormSchema,
+  WarehousePodrazdelenieQueryKeys,
+  defaultValues
+} from './config'
+import { WarehousePodrazdelenieService } from './service'
 
-export interface Podrazdelenie7DialogProps {
-  open: boolean
-  onClose: () => void
-  selected: null | Jur7Podrazdelenie
+export interface WarehousePodrazdelenieDialogProps extends Omit<DialogTriggerProps, 'children'> {
+  selected: null | WarehousePodrazdelenie
 }
-export const Podrazdelenie7Dialog = (props: Podrazdelenie7DialogProps) => {
-  const { open, onClose, selected } = props
-
+export const WarehousePodrazdelenieDialog = ({
+  selected,
+  isOpen,
+  onOpenChange
+}: WarehousePodrazdelenieDialogProps) => {
   const queryClient = useQueryClient()
 
   const { t } = useTranslation()
 
   const form = useForm({
     defaultValues,
-    resolver: zodResolver(Subdivision7PayloadSchema)
+    resolver: zodResolver(WarehousePodrazdelenieFormSchema)
   })
 
-  const { mutate: create, isPending: isCreating } = useMutation({
-    mutationKey: [podrazdelenieQueryKeys.create],
-    mutationFn: podrazdelenieService.create,
-    onSuccess() {
+  const { mutate: createPodrazdelenie, isPending: isCreating } = useMutation({
+    mutationKey: [WarehousePodrazdelenieQueryKeys.create],
+    mutationFn: WarehousePodrazdelenieService.create,
+    onSuccess(res) {
       form.reset(defaultValues)
+      toast.success(res?.message)
       queryClient.invalidateQueries({
-        queryKey: [podrazdelenieQueryKeys.getAll]
+        queryKey: [WarehousePodrazdelenieQueryKeys.getAll]
       })
-      onClose()
-      toast.success('Подразделениe успешно создана')
-    },
-    onError(error) {
-      console.error(error)
-      toast.error('Ошибка при создании подразделения: ' + error.message)
+      onOpenChange?.(false)
     }
   })
-  const { mutate: update, isPending: isUpdating } = useMutation({
-    mutationKey: [podrazdelenieQueryKeys.update],
-    mutationFn: podrazdelenieService.update,
-    onSuccess() {
-      onClose()
+  const { mutate: updatePodrazdelenie, isPending: isUpdating } = useMutation({
+    mutationKey: [WarehousePodrazdelenieQueryKeys.update],
+    mutationFn: WarehousePodrazdelenieService.update,
+    onSuccess(res) {
+      form.reset(defaultValues)
+      toast.success(res?.message)
       queryClient.invalidateQueries({
-        queryKey: [podrazdelenieQueryKeys.getAll]
+        queryKey: [WarehousePodrazdelenieQueryKeys.getAll]
       })
-      toast.success('Подразделениe успешно изменена')
-    },
-    onError(error) {
-      console.error(error)
-      toast.error('Ошибка при изменении подразделения' + error.message)
+      onOpenChange?.(false)
     }
   })
 
-  const onSubmit = form.handleSubmit((payload) => {
+  const onSubmit = form.handleSubmit((values) => {
     if (selected) {
-      update(
-        extendObject(
-          {
-            id: selected.id
-          },
-          payload
-        )
-      )
+      updatePodrazdelenie({
+        ...values,
+        id: selected.id
+      })
       return
     }
-    create(payload)
+    createPodrazdelenie(values)
   })
 
   useEffect(() => {
@@ -95,16 +88,17 @@ export const Podrazdelenie7Dialog = (props: Podrazdelenie7DialogProps) => {
     }
     form.reset(defaultValues)
   }, [form, selected])
+
   return (
-    <Dialog
-      open={open}
-      onOpenChange={onClose}
+    <DialogTrigger
+      isOpen={isOpen}
+      onOpenChange={onOpenChange}
     >
       <DialogContent>
         <DialogHeader>
           <DialogTitle>
             {selected
-              ? t('update-something', { something: t('podrazdelenie') })
+              ? t('podrazdelenie')
               : t('create-something', { something: t('podrazdelenie') })}
           </DialogTitle>
         </DialogHeader>
@@ -136,6 +130,6 @@ export const Podrazdelenie7Dialog = (props: Podrazdelenie7DialogProps) => {
           </form>
         </Form>
       </DialogContent>
-    </Dialog>
+    </DialogTrigger>
   )
 }

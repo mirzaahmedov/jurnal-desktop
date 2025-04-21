@@ -1,65 +1,56 @@
-import type { Jur7Podrazdelenie } from '@/common/models'
+import type { WarehousePodrazdelenie } from '@/common/models'
 
 import { useEffect, useState } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
+import { toast } from 'react-toastify'
 
 import { GenericTable } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
 import { SearchFilterDebounced } from '@/common/features/filters/search/search-filter-debounced'
 import { useSearchFilter } from '@/common/features/filters/search/search-filter-debounced'
 import { usePagination } from '@/common/hooks'
-import { toast } from '@/common/hooks/use-toast'
 import { useToggle } from '@/common/hooks/use-toggle'
 import { useLayout } from '@/common/layout'
 import { ListView } from '@/common/views'
 
-import { podrazdelenieColumns } from './columns'
-import { podrazdelenieQueryKeys } from './constants'
-import { Podrazdelenie7Dialog } from './dialog'
-import { podrazdelenieService } from './service'
+import { WarehousePodrazdelenieColumns } from './columns'
+import { WarehousePodrazdelenieQueryKeys } from './config'
+import { WarehousePodrazdelenieDialog } from './dialog'
+import { WarehousePodrazdelenieService } from './service'
 
-const Subdivision7Page = () => {
+const WarehousePodrazdeleniePage = () => {
   const pagination = usePagination()
   const dialogToggle = useToggle()
   const queryClient = useQueryClient()
 
   const setLayout = useLayout()
 
-  const { t } = useTranslation(['app'])
   const [search] = useSearchFilter()
+
+  const { t } = useTranslation(['app'])
   const { confirm } = useConfirm()
 
-  const [selected, setSelected] = useState<null | Jur7Podrazdelenie>(null)
+  const [selected, setSelected] = useState<null | WarehousePodrazdelenie>(null)
 
   const { data: podrazdelenies, isFetching } = useQuery({
     queryKey: [
-      podrazdelenieQueryKeys.getAll,
+      WarehousePodrazdelenieQueryKeys.getAll,
       {
         search,
         ...pagination
       }
     ],
-    queryFn: podrazdelenieService.getAll
+    queryFn: WarehousePodrazdelenieService.getAll
   })
-  const { mutate: deleteMutation, isPending } = useMutation({
-    mutationKey: [podrazdelenieQueryKeys.delete],
-    mutationFn: podrazdelenieService.delete,
-    onSuccess() {
+  const { mutate: deletePodrazdelenie, isPending } = useMutation({
+    mutationKey: [WarehousePodrazdelenieQueryKeys.delete],
+    mutationFn: WarehousePodrazdelenieService.delete,
+    onSuccess(res) {
+      toast.success(res?.message)
       queryClient.invalidateQueries({
-        queryKey: [podrazdelenieQueryKeys.getAll]
-      })
-      toast({
-        title: 'Подразделениe удалено'
-      })
-    },
-    onError(error) {
-      console.error(error)
-      toast({
-        variant: 'destructive',
-        title: 'Ошибка при удалении подразделения',
-        description: error.message
+        queryKey: [WarehousePodrazdelenieQueryKeys.getAll]
       })
     }
   })
@@ -78,17 +69,16 @@ const Subdivision7Page = () => {
         dialogToggle.open()
       }
     })
-  }, [setLayout, t])
+  }, [setLayout, t, dialogToggle.open])
 
-  const handleClickEdit = (row: Jur7Podrazdelenie) => {
+  const handleClickEdit = (row: WarehousePodrazdelenie) => {
     dialogToggle.open()
     setSelected(row)
   }
-  const handleClickDelete = (row: Jur7Podrazdelenie) => {
+  const handleClickDelete = (row: WarehousePodrazdelenie) => {
     confirm({
-      title: 'Удалить подразделениe?',
       onConfirm() {
-        deleteMutation(row.id)
+        deletePodrazdelenie(row.id)
       }
     })
   }
@@ -97,7 +87,7 @@ const Subdivision7Page = () => {
     <ListView>
       <ListView.Content loading={isFetching || isPending}>
         <GenericTable
-          columnDefs={podrazdelenieColumns}
+          columnDefs={WarehousePodrazdelenieColumns}
           data={podrazdelenies?.data ?? []}
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}
@@ -110,13 +100,13 @@ const Subdivision7Page = () => {
           pageCount={podrazdelenies?.meta?.pageCount ?? 0}
         />
       </ListView.Footer>
-      <Podrazdelenie7Dialog
-        open={dialogToggle.isOpen}
-        onClose={dialogToggle.close}
+      <WarehousePodrazdelenieDialog
+        isOpen={dialogToggle.isOpen}
+        onOpenChange={dialogToggle.setOpen}
         selected={selected}
       />
     </ListView>
   )
 }
 
-export default Subdivision7Page
+export default WarehousePodrazdeleniePage

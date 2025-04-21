@@ -1,4 +1,4 @@
-export interface JUR8Monitor {
+export interface FinancialReceipt {
   id: number
   year: number
   month: number
@@ -10,7 +10,7 @@ export interface JUR8Monitor {
   isdeleted: boolean
 }
 
-export interface JUR8MonitorChild {
+export interface FinancialReceiptProvodka {
   doc_num: string
   doc_date: string
   doc_id: number
@@ -23,7 +23,7 @@ export interface JUR8MonitorChild {
   opisanie?: string
 }
 
-export interface JUR8Schet {
+export interface PrixodSchet {
   id: number
   schet_id: number
   user_id: number
@@ -34,7 +34,7 @@ export interface JUR8Schet {
   name: string
 }
 
-export enum JUR8MonitorChildType {
+export enum FinancialReceiptProvodkaType {
   kassa_prixod_child = 'kassa_prixod_child',
   kassa_rasxod_child = 'kassa_rasxod_child',
   bank_prixod_child = 'bank_prixod_child',

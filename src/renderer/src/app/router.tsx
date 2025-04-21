@@ -11,7 +11,7 @@ import { DuplicateSchetsGuard } from '@/common/features/requisites/guards/duplic
 import DashboardPage from './dashboard/page'
 import HomePage from './home/page'
 import { Jur7MonitorPage } from './jur_7/monitor/page'
-import JUR8SchetsPage from './jur_8/schet/page'
+import PrixodSchetPage from './jur_8/schet/page'
 import SigninPage from './sign-in'
 
 const KassaSaldoPage = lazy(() => import('./jur_1/saldo/page'))
@@ -19,7 +19,7 @@ const BankSaldoPage = lazy(() => import('./jur_2/saldo/page'))
 const PodotchetSaldoPage = lazy(() => import('./jur_4/saldo/page'))
 const PodotchetSaldoDetailsPage = lazy(() => import('./jur_4/saldo/details/page'))
 
-const PrixodSchetsPage = lazy(() => import('./super-admin/prixod-schet/page'))
+const AdminPrixodSchetPage = lazy(() => import('./super-admin/prixod-schet/page'))
 
 const JUR8MonitorPage = lazy(() => import('./jur_8/monitor/page'))
 const JUR8MonitorDetailsPage = lazy(() => import('./jur_8/monitor/details/page'))
@@ -73,6 +73,7 @@ const PodotchetMonitoringPage = lazy(() => import('./jur_4/monitor/page'))
 const RoleAccessPage = lazy(() => import('./region-admin/role-access/page'))
 const RegionUserPage = lazy(() => import('./region-admin/region-user'))
 const SmetaGrafikPage = lazy(() => import('./region-spravochnik/smeta-grafik/page'))
+const SmetaGrafikDetailsPage = lazy(() => import('./region-spravochnik/smeta-grafik/details/page'))
 const MainSchetPage = lazy(() => import('./region-spravochnik/main-schet/page'))
 const OrganizationPage = lazy(() => import('./region-spravochnik/organization/page'))
 const AccountablePage = lazy(() => import('./region-spravochnik/podotchet'))
@@ -276,10 +277,7 @@ export const routes: RouteObject[] = [
             path: 'sostav',
             element: <SostavPage />
           },
-          {
-            path: 'smeta-grafik',
-            element: <SmetaGrafikPage />
-          },
+
           {
             path: 'group',
             element: <RegionGroupPage />
@@ -287,6 +285,20 @@ export const routes: RouteObject[] = [
           {
             path: 'podpis',
             element: <PodpisPage />
+          },
+          {
+            path: 'smeta-grafik',
+            element: <MainSchetSelectedGuard />,
+            children: [
+              {
+                index: true,
+                element: <SmetaGrafikPage />
+              },
+              {
+                path: ':id',
+                element: <SmetaGrafikDetailsPage />
+              }
+            ]
           }
         ]
       },
@@ -376,7 +388,7 @@ export const routes: RouteObject[] = [
           },
           {
             path: 'prixod-schets',
-            element: <PrixodSchetsPage />
+            element: <AdminPrixodSchetPage />
           },
           {
             path: 'zarplata/spravochnik',
@@ -474,7 +486,7 @@ export const routes: RouteObject[] = [
           },
           {
             path: 'schets',
-            element: <JUR8SchetsPage />
+            element: <PrixodSchetPage />
           }
         ]
       },
