@@ -24,8 +24,7 @@ import { useRequisitesStore } from '@/common/features/requisites'
 import {
   SaldoNamespace,
   handleSaldoErrorDates,
-  handleSaldoResponseDates,
-  useSaldoController
+  handleSaldoResponseDates
 } from '@/common/features/saldo'
 import {
   useSelectedMonthStore,
@@ -46,6 +45,7 @@ import {
   SummaFields
 } from '@/common/widget/form'
 
+import { useBankSaldo } from '../../saldo/components/use-saldo'
 import { BankPrixodQueryKeys, defaultValues } from '../config'
 import { BankPrixodFormSchema, BankPrixodProvodkaFormSchema, BankPrixodService } from '../service'
 import { podvodkaColumns } from './podvodki'
@@ -59,9 +59,7 @@ const BankPrixodDetailsPage = () => {
   const startDate = useSelectedMonthStore((store) => store.startDate)
 
   const { t } = useTranslation(['app'])
-  const { queuedMonths } = useSaldoController({
-    ns: SaldoNamespace.JUR_2
-  })
+  const { queuedMonths } = useBankSaldo()
   const { snippets, addSnippet, removeSnippet } = useSnippets({
     ns: 'bank_prixod'
   })

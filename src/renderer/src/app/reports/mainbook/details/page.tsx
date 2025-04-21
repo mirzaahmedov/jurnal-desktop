@@ -15,8 +15,7 @@ import { useRequisitesStore } from '@/common/features/requisites'
 import {
   SaldoNamespace,
   handleSaldoErrorDates,
-  handleSaldoResponseDates,
-  useSaldoController
+  handleSaldoResponseDates
 } from '@/common/features/saldo'
 import { useSelectedMonthStore } from '@/common/features/selected-month'
 import { useLayout } from '@/common/layout'
@@ -24,6 +23,7 @@ import { formatDate } from '@/common/lib/date'
 import { DetailsView } from '@/common/views'
 
 import { MainbookQueryKeys } from '../config'
+import { useMainbookSaldo } from '../saldo/use-saldo'
 import { MainbookService } from '../service'
 import { type MainbookFormValues, defaultValues } from './config'
 import { MainbookDocumentsTracker } from './documents-tracker'
@@ -53,9 +53,8 @@ const MainbookDetailsPage = () => {
 
   const { id } = useParams()
   const { t } = useTranslation(['app'])
-  const { queuedMonths } = useSaldoController({
-    ns: SaldoNamespace.MAINBOOK
-  })
+  const { queuedMonths } = useMainbookSaldo()
+
   const { budjet_id, main_schet_id } = useRequisitesStore()
 
   const form = useForm({

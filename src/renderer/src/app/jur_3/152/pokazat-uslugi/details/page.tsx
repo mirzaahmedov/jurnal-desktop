@@ -23,8 +23,7 @@ import { useRequisitesStore } from '@/common/features/requisites'
 import {
   SaldoNamespace,
   handleSaldoErrorDates,
-  handleSaldoResponseDates,
-  useSaldoController
+  handleSaldoResponseDates
 } from '@/common/features/saldo'
 import {
   useSelectedMonthStore,
@@ -44,6 +43,7 @@ import {
   SummaFields
 } from '@/common/widget/form'
 
+import { useUslugiSaldo } from '../../saldo/use-saldo'
 import {
   PokazatUslugiFormSchema,
   PokazatUslugiProvodkaFormSchema,
@@ -56,9 +56,7 @@ import { podvodkaColumns } from './podvodki'
 const PokazatUslugiDetailsPage = () => {
   const { t } = useTranslation(['app'])
   const { main_schet_id, jur3_schet_152_id } = useRequisitesStore()
-  const { queuedMonths } = useSaldoController({
-    ns: SaldoNamespace.JUR_3_152
-  })
+  const { queuedMonths } = useUslugiSaldo()
   const { snippets, addSnippet, removeSnippet } = useSnippets({
     ns: 'pokazat-uslugi'
   })

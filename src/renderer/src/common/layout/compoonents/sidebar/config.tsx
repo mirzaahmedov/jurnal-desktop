@@ -1,4 +1,4 @@
-import type { Access } from '@/common/models'
+import type { RoleAccess } from '@/common/models'
 import type { TFunction } from 'i18next'
 import type { ComponentType, ReactNode } from 'react'
 
@@ -50,8 +50,8 @@ import {
 
 import { KassaSaldoController } from '@/app/jur_1/saldo/components/saldo-controller'
 import { BankSaldoController } from '@/app/jur_2/saldo/components/saldo-controller'
-import { MaterialWarehouseSaldoController } from '@/app/jur_7/saldo/components/saldo-controller'
-import { adminRoles } from '@/app/super-admin/role'
+import { WarehouseSaldoController } from '@/app/jur_7/saldo/components/saldo-controller'
+import { AdminRoles } from '@/app/super-admin/role'
 import { useAuthenticationStore } from '@/common/features/auth'
 import { omitEmptyArrayElements } from '@/common/lib/validation'
 
@@ -66,31 +66,10 @@ export type NavElement = {
 
 export const getNavElements = (t: TFunction): NavElement[] => {
   const user = useAuthenticationStore.getState().user
-  const access = user?.access_object ?? ({} as Access)
+  const permissions = user?.access_object ?? ({} as RoleAccess)
 
-  const is_super_admin = user?.role_name === adminRoles.super_admin
-  const is_admin = user?.role_name === adminRoles.region_admin
-
-  const permissions: Partial<Access> = {
-    kassa: !is_super_admin && access.kassa,
-    bank: !is_super_admin && access.bank,
-    shartnoma: !is_super_admin && access.shartnoma,
-    spravochnik: !is_super_admin && access.spravochnik,
-    organization_monitoring: !is_super_admin && access.organization_monitoring,
-    jur3: !is_super_admin && access.jur3,
-    jur4: !is_super_admin && access.jur4,
-    jur152: !is_super_admin && access.jur152,
-    jur7: !is_super_admin && access.jur7,
-    smeta_grafik: !is_super_admin && access.smeta_grafik,
-    podotchet_monitoring: !is_super_admin && access.podotchet_monitoring,
-    access: is_admin && access.access,
-    region_users: is_admin && access.region_users,
-    budjet: is_super_admin && access.budjet,
-    region: is_super_admin && access.region,
-    smeta: is_super_admin && access.smeta,
-    role: is_super_admin && access.role,
-    users: is_super_admin && access.users
-  }
+  const is_super_admin = user?.role_name === AdminRoles.super_admin
+  const is_admin = user?.role_name === AdminRoles.region_admin
 
   return omitEmptyArrayElements<NavElement>([
     {
@@ -105,7 +84,7 @@ export const getNavElements = (t: TFunction): NavElement[] => {
           icon: FileVideo
         }
       : null,
-    permissions.kassa
+    !is_super_admin && permissions.kassa
       ? {
           path: '/kassa',
           title: `№1 - МО (${t('pages.kassa')})`,
@@ -140,7 +119,7 @@ export const getNavElements = (t: TFunction): NavElement[] => {
           ]
         }
       : null,
-    permissions.bank
+    !is_super_admin && permissions.bank
       ? {
           path: '/bank',
           title: `№2 - МО (${t('pages.bank')})`,
@@ -175,108 +154,89 @@ export const getNavElements = (t: TFunction): NavElement[] => {
           ]
         }
       : null,
-    [
-      permissions.organization_monitoring,
-      permissions.shartnoma,
-      permissions.jur3,
-      permissions.jur152
-    ].includes(true)
+    !is_super_admin && permissions.jur3
       ? {
           path: '/organization',
           title: `№3 - МО (${t('pages.organization')})`,
           icon: Building2,
-          children: omitEmptyArrayElements([
-            permissions.shartnoma
-              ? {
-                  path: 'shartnoma',
-                  title: t('pages.shartnoma'),
-                  icon: ReceiptText
-                }
-              : null,
+          children: [
+            {
+              path: 'shartnoma',
+              title: t('pages.shartnoma'),
+              icon: ReceiptText
+            },
             {
               path: '159',
               title: t('pages.akt'),
               icon: FileCheck2,
-              children: omitEmptyArrayElements([
-                permissions.organization_monitoring
-                  ? {
-                      path: 'monitor',
-                      title: t('pages.organization-monitoring'),
-                      icon: SquareActivity
-                    }
-                  : null,
-                permissions.jur3
-                  ? {
-                      path: 'akt',
-                      title: t('pages.akt'),
-                      icon: FileCheck2
-                    }
-                  : null,
+              children: [
+                {
+                  path: 'monitor',
+                  title: t('pages.organization-monitoring'),
+                  icon: SquareActivity
+                },
+                {
+                  path: 'akt',
+                  title: t('pages.akt'),
+                  icon: FileCheck2
+                },
                 {
                   path: 'saldo',
                   title: t('pages.saldo'),
                   icon: CircleFadingPlus
                 }
-              ])
+              ]
             },
             {
               path: '152',
               title: t('pages.service'),
               icon: Wrench,
-              children: omitEmptyArrayElements([
-                permissions.organization_monitoring
-                  ? {
-                      path: 'monitor',
-                      title: t('pages.organization-monitoring'),
-                      icon: SquareActivity
-                    }
-                  : null,
-                permissions.jur152
-                  ? {
-                      path: 'pokazat-uslugi',
-                      title: t('pages.service'),
-                      icon: Wrench
-                    }
-                  : null,
+              children: [
+                {
+                  path: 'monitor',
+                  title: t('pages.organization-monitoring'),
+                  icon: SquareActivity
+                },
+                {
+                  path: 'pokazat-uslugi',
+                  title: t('pages.service'),
+                  icon: Wrench
+                },
                 {
                   path: 'saldo',
                   title: t('pages.saldo'),
                   icon: CircleFadingPlus
                 }
-              ])
+              ]
             }
-          ])
+          ]
         }
       : null,
-    [permissions.podotchet_monitoring, permissions.jur4].includes(true)
+    !is_super_admin && permissions.jur4
       ? {
           path: '/accountable',
           title: `№4 - МО (${t('pages.podotchet')})`,
           icon: UserSquare,
-          children: omitEmptyArrayElements([
-            permissions.podotchet_monitoring
-              ? {
-                  path: 'monitor',
-                  title: t('pages.podotchet-monitoring'),
-                  icon: SquareActivity
-                }
-              : null,
-            permissions.jur4
-              ? {
-                  path: 'advance-report',
-                  title: t('pages.avans'),
-                  icon: FileCheck
-                }
-              : null,
+          children: [
+            {
+              path: 'monitor',
+              title: t('pages.podotchet-monitoring'),
+              icon: SquareActivity
+            },
+            {
+              path: 'advance-report',
+              title: t('pages.avans'),
+              icon: FileCheck
+            },
             {
               path: 'saldo',
               title: t('pages.saldo'),
               icon: CircleFadingPlus
             }
-          ])
+          ]
         }
       : null,
-    permissions.jur7
+    !is_super_admin && permissions.jur7
       ? {
           icon: NotepadText,
           path: '/journal-7',
@@ -325,13 +285,13 @@ export const getNavElements = (t: TFunction): NavElement[] => {
             {
               displayOnly: true,
               path: '',
-              title: <MaterialWarehouseSaldoController />,
+              title: <WarehouseSaldoController />,
               icon: null
             }
           ]
         }
       : null,
-    !is_super_admin
+    !is_super_admin && permissions.jur8
       ? {
           icon: NotepadText,
           path: '/jur_8',
@@ -350,7 +310,7 @@ export const getNavElements = (t: TFunction): NavElement[] => {
           ]
         }
       : null,
-    permissions.spravochnik
+    !is_super_admin && permissions.spravochnik
       ? {
           path: '/spravochnik',
           title: t('pages.spravochnik'),
@@ -404,32 +364,28 @@ export const getNavElements = (t: TFunction): NavElement[] => {
           ]
         }
       : null,
-    is_admin
+    (!is_super_admin && permissions.region) || is_admin
       ? {
           path: '/region',
           title: t('pages.region'),
           icon: MapPinHouse,
-          children: omitEmptyArrayElements([
-            permissions.region_users
-              ? {
-                  path: 'user',
-                  title: t('pages.user'),
-                  icon: Users
-                }
-              : null,
-            permissions.access
-              ? {
-                  path: 'access',
-                  title: t('pages.access'),
-                  icon: ShieldCheck
-                }
-              : null,
+          children: [
+            {
+              path: 'user',
+              title: t('pages.user'),
+              icon: Users
+            },
+            {
+              path: 'role-access',
+              title: t('pages.access_rights'),
+              icon: ShieldCheck
+            },
             {
               path: 'vacant',
               title: t('pages.vacant'),
               icon: SquareUserRound
             }
-          ])
+          ]
         }
       : null,
     is_super_admin
@@ -437,7 +393,7 @@ export const getNavElements = (t: TFunction): NavElement[] => {
           path: '/admin',
           title: t('pages.admin'),
           icon: UserCog,
-          children: omitEmptyArrayElements<NavElement>([
+          children: [
             {
               path: 'report-title',
               title: t('pages.report-title'),
@@ -483,41 +439,31 @@ export const getNavElements = (t: TFunction): NavElement[] => {
               title: t('pages.bank'),
               icon: Building
             },
-            permissions.region
-              ? {
-                  path: 'region',
-                  title: t('pages.region'),
-                  icon: LayoutGrid
-                }
-              : null,
-            permissions.role
-              ? {
-                  path: 'role',
-                  title: t('pages.role'),
-                  icon: MonitorCog
-                }
-              : null,
-            permissions.users
-              ? {
-                  path: 'user',
-                  title: t('pages.user'),
-                  icon: Users
-                }
-              : null,
-            permissions.smeta
-              ? {
-                  path: 'smeta',
-                  title: t('pages.smeta'),
-                  icon: CircleFadingPlus
-                }
-              : null,
-            permissions.budjet
-              ? {
-                  path: 'budget',
-                  title: t('pages.budjets'),
-                  icon: CircleDollarSign
-                }
-              : null,
+            {
+              path: 'region',
+              title: t('pages.region'),
+              icon: LayoutGrid
+            },
+            {
+              path: 'role',
+              title: t('pages.role'),
+              icon: MonitorCog
+            },
+            {
+              path: 'user',
+              title: t('pages.user'),
+              icon: Users
+            },
+            {
+              path: 'smeta',
+              title: t('pages.smeta'),
+              icon: CircleFadingPlus
+            },
+            {
+              path: 'budget',
+              title: t('pages.budjets'),
+              icon: CircleDollarSign
+            },
             {
               path: 'operation',
               title: t('pages.operatsii'),
@@ -540,10 +486,10 @@ export const getNavElements = (t: TFunction): NavElement[] => {
                 }
               ]
             }
-          ])
+          ]
         }
       : null,
-    !is_super_admin
+    !is_super_admin && permissions.main_book
       ? {
           path: '/mainbook',
           title: t('pages.mainbook'),

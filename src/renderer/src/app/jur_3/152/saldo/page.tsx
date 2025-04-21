@@ -13,8 +13,7 @@ import { useRequisitesStore } from '@/common/features/requisites'
 import {
   SaldoNamespace,
   handleSaldoErrorDates,
-  handleSaldoResponseDates,
-  useSaldoController
+  handleSaldoResponseDates
 } from '@/common/features/saldo'
 import { useKeyUp } from '@/common/hooks'
 import { useLayout } from '@/common/layout'
@@ -24,6 +23,7 @@ import { OrganSaldoColumns } from './columns'
 import { OrganSaldoQueryKeys } from './config'
 import { OrganSaldoFilters, useYearFilter } from './filters'
 import { OrganSaldoService } from './service'
+import { useUslugiSaldo } from './use-saldo'
 
 const OrganSaldoPage = () => {
   const setLayout = useLayout()
@@ -34,9 +34,7 @@ const OrganSaldoPage = () => {
   const [year] = useYearFilter()
 
   const { confirm } = useConfirm()
-  const { queuedMonths } = useSaldoController({
-    ns: SaldoNamespace.JUR_3_152
-  })
+  const { queuedMonths } = useUslugiSaldo()
   const { t } = useTranslation(['app'])
   const { budjet_id, main_schet_id, jur3_schet_152_id } = useRequisitesStore()
 

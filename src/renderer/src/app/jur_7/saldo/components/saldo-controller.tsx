@@ -3,26 +3,20 @@ import { useLocation } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
 import { useRequisitesStore } from '@/common/features/requisites'
-import {
-  SaldoController,
-  type SaldoCreateArgs,
-  SaldoNamespace,
-  useSaldoController
-} from '@/common/features/saldo'
+import { SaldoController, type SaldoCreateArgs } from '@/common/features/saldo'
 import { useSelectedMonthStore } from '@/common/features/selected-month'
 
 import { IznosQueryKeys } from '../../iznos/config'
 import { SaldoQueryKeys } from '../config'
 import { MaterialWarehouseSaldoService } from '../service'
+import { useWarehouseSaldo } from '../use-saldo'
 
-export const MaterialWarehouseSaldoController = () => {
+export const WarehouseSaldoController = () => {
   const queryClient = useQueryClient()
   const startDate = useSelectedMonthStore((store) => store.startDate)
 
   const { budjet_id, main_schet_id } = useRequisitesStore()
-  const { dequeueMonth } = useSaldoController({
-    ns: SaldoNamespace.JUR_1
-  })
+  const { dequeueMonth } = useWarehouseSaldo()
 
   const location = useLocation()
 

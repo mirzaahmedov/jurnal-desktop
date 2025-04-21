@@ -6,10 +6,12 @@ import { useTranslation } from 'react-i18next'
 import { FooterCell, FooterRow, GenericTable, SummaTotal, useTableSort } from '@/common/components'
 import { ButtonGroup } from '@/common/components/ui/button-group'
 import { DownloadFile } from '@/common/features/file'
-import { SearchFilterDebounced } from '@/common/features/filters/search/search-filter-debounced'
-import { useSearchFilter } from '@/common/features/filters/search/search-filter-debounced'
+import {
+  SearchFilterDebounced,
+  useSearchFilter
+} from '@/common/features/filters/search/search-filter-debounced'
 import { useRequisitesStore } from '@/common/features/requisites'
-import { SaldoNamespace, handleSaldoErrorDates, useSaldoController } from '@/common/features/saldo'
+import { SaldoNamespace, handleSaldoErrorDates } from '@/common/features/saldo'
 import {
   useSelectedMonthStore,
   validateDateWithinSelectedMonth
@@ -20,6 +22,7 @@ import { useLayout } from '@/common/layout'
 import { formatNumber } from '@/common/lib/format'
 import { ListView } from '@/common/views'
 
+import { useBankSaldo } from '../saldo/components/use-saldo'
 import { BankMonitorColumns } from './columns'
 import { BankMonitorQueryKeys } from './config'
 import { BankMonitorService } from './service'
@@ -37,9 +40,7 @@ const BankMonitorPage = () => {
   const { t } = useTranslation(['app'])
   const { sorting, handleSort, getColumnSorted } = useTableSort()
   const { main_schet_id, budjet_id } = useRequisitesStore()
-  const { queuedMonths } = useSaldoController({
-    ns: SaldoNamespace.JUR_2
-  })
+  const { queuedMonths } = useBankSaldo()
 
   const year = startDate.getFullYear()
   const month = startDate.getMonth() + 1

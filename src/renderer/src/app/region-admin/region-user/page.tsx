@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
+import { toast } from 'react-toastify'
 
 import { GenericTable, LoadingOverlay } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
@@ -11,12 +12,12 @@ import { useToggle } from '@/common/hooks/use-toggle'
 import { useLayout } from '@/common/layout'
 
 import { regionUserColumns } from './columns'
-import { regionUserKeys } from './constants'
-import RegionUserDialog from './dialog'
-import { regionUserService } from './service'
+import { RegionUserQueryKeys } from './config'
+import { RegionUserDialog } from './dialog'
+import { RegionUserService } from './service'
 
 const RegionUserPage = () => {
-  const toggle = useToggle()
+  const dialogToggle = useToggle()
   const queryClient = useQueryClient()
   const setLayout = useLayout()
 
@@ -26,24 +27,25 @@ const RegionUserPage = () => {
   const { t } = useTranslation(['app'])
 
   const { data: regionUsers, isFetching } = useQuery({
-    queryKey: [regionUserKeys.getAll],
-    queryFn: regionUserService.getAll
+    queryKey: [RegionUserQueryKeys.getAll],
+    queryFn: RegionUserService.getAll
   })
   const { mutate: deleteMutation, isPending } = useMutation({
-    mutationKey: [regionUserKeys.delete],
-    mutationFn: regionUserService.delete,
-    onSuccess() {
+    mutationKey: [RegionUserQueryKeys.delete],
+    mutationFn: RegionUserService.delete,
+    onSuccess(res) {
+      toast.success(res?.message)
       queryClient.invalidateQueries({
-        queryKey: [regionUserKeys.getAll]
+        queryKey: [RegionUserQueryKeys.getAll]
       })
     }
   })
 
   useEffect(() => {
-    if (!toggle.isOpen) {
+    if (!dialogToggle.isOpen) {
       setSelected(null)
     }
-  }, [toggle.isOpen])
+  }, [dialogToggle.isOpen])
   useEffect(() => {
     setLayout({
       title: t('pages.user'),
@@ -52,13 +54,13 @@ const RegionUserPage = () => {
           title: t('pages.admin')
         }
       ],
-      onCreate: toggle.open
+      onCreate: dialogToggle.open
     })
   }, [t, setLayout])
 
   const handleClickEdit = (row: User) => {
     setSelected(row)
-    toggle.open()
+    dialogToggle.open()
   }
   const handleClickDelete = (row: User) => {
     confirm({
@@ -81,8 +83,8 @@ const RegionUserPage = () => {
       </div>
       <RegionUserDialog
         selected={selected}
-        isOpen={toggle.isOpen}
-        onChangeOpen={toggle.setOpen}
+        isOpen={dialogToggle.isOpen}
+        onOpenChange={dialogToggle.setOpen}
       />
     </>
   )

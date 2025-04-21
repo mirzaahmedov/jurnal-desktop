@@ -23,7 +23,7 @@ import {
   useSearchFilter
 } from '@/common/features/filters/search/search-filter-debounced'
 import { useRequisitesStore } from '@/common/features/requisites'
-import { SaldoNamespace, handleSaldoErrorDates, useSaldoController } from '@/common/features/saldo'
+import { SaldoNamespace, handleSaldoErrorDates } from '@/common/features/saldo'
 import {
   useSelectedMonthStore,
   validateDateWithinSelectedMonth
@@ -36,6 +36,7 @@ import { formatNumber } from '@/common/lib/format'
 import { getProvodkaURL } from '@/common/lib/provodka'
 import { ListView } from '@/common/views'
 
+import { usePodotchetSaldo } from '../saldo/use-saldo'
 import { PodotchetMonitorColumns } from './columns'
 import { PodotchetMonitorQueryKeys } from './config'
 import { usePodotchetFilter } from './filters'
@@ -54,9 +55,7 @@ const PodotchetMonitorPage = () => {
   const { t } = useTranslation(['app'])
   const { sorting, handleSort, getColumnSorted } = useTableSort()
   const { main_schet_id, budjet_id, jur4_schet_id } = useRequisitesStore()
-  const { queuedMonths } = useSaldoController({
-    ns: SaldoNamespace.JUR_4
-  })
+  const { queuedMonths } = usePodotchetSaldo()
 
   const [podotchetId, setPodotchetId] = usePodotchetFilter()
 

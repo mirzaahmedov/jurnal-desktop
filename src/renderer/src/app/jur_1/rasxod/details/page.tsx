@@ -33,8 +33,7 @@ import { useRequisitesStore } from '@/common/features/requisites'
 import {
   SaldoNamespace,
   handleSaldoErrorDates,
-  handleSaldoResponseDates,
-  useSaldoController
+  handleSaldoResponseDates
 } from '@/common/features/saldo'
 import {
   useSelectedMonthStore,
@@ -59,6 +58,7 @@ import {
 } from '@/common/widget/form'
 import { MainZarplataFields } from '@/common/widget/form/main-zarplata'
 
+import { useKassaSaldo } from '../../saldo/components/use-saldo'
 import { RasxodType, defaultValues, queryKeys } from '../config'
 import { RasxodFormSchema, RasxodPodvodkaFormSchema } from '../config'
 import { KassaRasxodService } from '../service'
@@ -71,9 +71,7 @@ const KassaRasxodDetailtsPage = () => {
   const { snippets, addSnippet, removeSnippet } = useSnippets({
     ns: 'kassa_rasxod'
   })
-  const { queuedMonths } = useSaldoController({
-    ns: SaldoNamespace.JUR_1
-  })
+  const { queuedMonths } = useKassaSaldo()
 
   const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
   const navigate = useNavigate()

@@ -13,14 +13,14 @@ import { useRequisitesStore } from '@/common/features/requisites'
 import {
   SaldoNamespace,
   handleSaldoErrorDates,
-  handleSaldoResponseDates,
-  useSaldoController
+  handleSaldoResponseDates
 } from '@/common/features/saldo'
 import { useKeyUp, useToggle } from '@/common/hooks'
 import { useLayout } from '@/common/layout'
 import { ListView } from '@/common/views'
 
 import { BankSaldoColumns } from './columns'
+import { useBankSaldo } from './components/use-saldo'
 import { BankSaldoQueryKeys } from './config'
 import { BankSaldoDialog } from './dialog'
 import { BankSaldoFilters, useYearFilter } from './filters'
@@ -38,9 +38,7 @@ const BankSaldoPage = () => {
 
   const { confirm } = useConfirm()
   const { t } = useTranslation(['app'])
-  const { queuedMonths } = useSaldoController({
-    ns: SaldoNamespace.JUR_2
-  })
+  const { queuedMonths } = useBankSaldo()
   const { budjet_id, main_schet_id } = useRequisitesStore()
 
   const {

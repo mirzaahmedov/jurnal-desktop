@@ -16,16 +16,15 @@ import { useRequisitesStore } from '@/common/features/requisites'
 import {
   SaldoNamespace,
   handleSaldoErrorDates,
-  handleSaldoResponseDates,
-  useSaldoController
+  handleSaldoResponseDates
 } from '@/common/features/saldo'
 import { useSelectedMonthStore } from '@/common/features/selected-month'
 import { useLayout } from '@/common/layout'
 import { formatDate } from '@/common/lib/date'
 import { DetailsView } from '@/common/views'
 
-import { defaultValues } from '../config'
-import { OrganSaldoQueryKeys } from '../config'
+import { useAktSaldo } from '../components/use-saldo'
+import { OrganSaldoQueryKeys, defaultValues } from '../config'
 import { OrganSaldoService } from '../service'
 import { OrganSaldoTable } from './organ-saldo-table'
 import { getOrganSaldoProvodkaColumns } from './provodki'
@@ -38,9 +37,7 @@ const OrganSaldoDetailsPage = () => {
   const queryClient = useQueryClient()
   const setLayout = useLayout()
   const startDate = useSelectedMonthStore((store) => store.startDate)
-  const { queuedMonths } = useSaldoController({
-    ns: SaldoNamespace.JUR_3_159
-  })
+  const { queuedMonths } = useAktSaldo()
 
   const [isEditable, setEditable] = useState(false)
 

@@ -26,7 +26,6 @@ import {
   useSearchFilter
 } from '@/common/features/filters/search/search-filter-debounced'
 import { useRequisitesStore } from '@/common/features/requisites'
-import { SaldoNamespace, useSaldoController } from '@/common/features/saldo'
 import { useSelectedMonthStore } from '@/common/features/selected-month'
 import { useSpravochnik } from '@/common/features/spravochnik'
 import { useKeyUp, usePagination, useToggle } from '@/common/hooks'
@@ -43,6 +42,7 @@ import { DeleteExistingSaldoAlert } from './components/delete-existing-saldo-ale
 import { MonthlySaldoTrackerDialog } from './components/monthly-saldo-tracker-dialog'
 import { SaldoQueryKeys, defaultValues } from './config'
 import { MaterialWarehouseSaldoProductService, MaterialWarehouseSaldoService } from './service'
+import { useWarehouseSaldo } from './use-saldo'
 import {
   type OstatokDeleteExistingDocument,
   type OstatokDeleteExistingSaldo,
@@ -54,9 +54,7 @@ import {
 
 const MaterialWarehouseSaldoPage = () => {
   const { startDate, endDate, setSelectedMonth } = useSelectedMonthStore()
-  const { queuedMonths } = useSaldoController({
-    ns: SaldoNamespace.JUR_7
-  })
+  const { queuedMonths } = useWarehouseSaldo()
 
   const [deleteExistingDocumentError, setDeleteExistingDocumentError] = useState<{
     message: string

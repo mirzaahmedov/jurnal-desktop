@@ -10,14 +10,15 @@ import { toast } from 'react-toastify'
 import { FooterCell, FooterRow, GenericTable, useTableSort } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
 import { DownloadFile } from '@/common/features/file'
-import { SearchFilterDebounced } from '@/common/features/filters/search/search-filter-debounced'
-import { useSearchFilter } from '@/common/features/filters/search/search-filter-debounced'
+import {
+  SearchFilterDebounced,
+  useSearchFilter
+} from '@/common/features/filters/search/search-filter-debounced'
 import { useRequisitesStore } from '@/common/features/requisites'
 import {
   SaldoNamespace,
   handleSaldoErrorDates,
-  handleSaldoResponseDates,
-  useSaldoController
+  handleSaldoResponseDates
 } from '@/common/features/saldo'
 import {
   useSelectedMonthStore,
@@ -28,6 +29,7 @@ import { useLayout } from '@/common/layout'
 import { formatNumber } from '@/common/lib/format'
 import { ListView } from '@/common/views'
 
+import { useAktSaldo } from '../saldo/components/use-saldo'
 import { AktColumns } from './columns'
 import { AktQueryKeys } from './config'
 import { aktService } from './service'
@@ -46,9 +48,7 @@ const AktPage = () => {
 
   const { confirm } = useConfirm()
   const { sorting, handleSort, getColumnSorted } = useTableSort()
-  const { queuedMonths } = useSaldoController({
-    ns: SaldoNamespace.JUR_3_159
-  })
+  const { queuedMonths } = useAktSaldo()
   const { t } = useTranslation(['app'])
 
   const {

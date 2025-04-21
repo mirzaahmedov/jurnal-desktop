@@ -32,8 +32,7 @@ import { useRequisitesStore } from '@/common/features/requisites'
 import {
   SaldoNamespace,
   handleSaldoErrorDates,
-  handleSaldoResponseDates,
-  useSaldoController
+  handleSaldoResponseDates
 } from '@/common/features/saldo'
 import {
   useSelectedMonthStore,
@@ -58,6 +57,7 @@ import {
 } from '@/common/widget/form'
 import { MainZarplataFields } from '@/common/widget/form/main-zarplata'
 
+import { useKassaSaldo } from '../../saldo/components/use-saldo'
 import {
   PrixodFormSchema,
   PrixodPodvodkaFormSchema,
@@ -78,9 +78,7 @@ const KassaPrixodDetailsPage = () => {
 
   const { id } = useParams()
   const { t, i18n } = useTranslation(['app'])
-  const { queuedMonths } = useSaldoController({
-    ns: SaldoNamespace.JUR_1
-  })
+  const { queuedMonths } = useKassaSaldo()
   const { snippets, addSnippet, removeSnippet } = useSnippets({
     ns: 'kassa_prixod'
   })

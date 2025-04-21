@@ -2,17 +2,13 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'react-toastify'
 
 import { useRequisitesStore } from '@/common/features/requisites'
-import {
-  SaldoController,
-  type SaldoCreateArgs,
-  SaldoNamespace,
-  useSaldoController
-} from '@/common/features/saldo'
+import { SaldoController, type SaldoCreateArgs } from '@/common/features/saldo'
 import { useSelectedMonthStore } from '@/common/features/selected-month'
 
 import { BankMonitorQueryKeys } from '../../monitor'
 import { BankSaldoQueryKeys } from '../config'
 import { BankSaldoService } from '../service'
+import { useBankSaldo } from './use-saldo'
 
 export const BankSaldoController = () => {
   const queryClient = useQueryClient()
@@ -20,9 +16,7 @@ export const BankSaldoController = () => {
 
   const { budjet_id, main_schet_id } = useRequisitesStore()
 
-  const { dequeueMonth } = useSaldoController({
-    ns: SaldoNamespace.JUR_2
-  })
+  const { dequeueMonth } = useBankSaldo()
 
   const year = startDate.getFullYear()
   const month = startDate.getMonth() + 1

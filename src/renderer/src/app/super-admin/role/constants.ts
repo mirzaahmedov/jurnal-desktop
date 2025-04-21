@@ -1,4 +1,4 @@
-export const roleQueryKeys = {
+export const RoleQueryKeys = {
   getAll: 'role/all',
   getById: 'role',
   create: 'role/create',
@@ -6,7 +6,7 @@ export const roleQueryKeys = {
   delete: 'role/delete'
 }
 
-export enum adminRoles {
+export enum AdminRoles {
   region_admin = 'region-admin',
   super_admin = 'super-admin'
 }

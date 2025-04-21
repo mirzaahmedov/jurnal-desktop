@@ -1,5 +1,3 @@
-import type { OrganSaldoMonthValue } from '@/common/models'
-
 import { type SVGAttributes, useEffect, useRef } from 'react'
 
 import { AlertDialogCancel } from '@radix-ui/react-alert-dialog'
@@ -19,7 +17,6 @@ import {
   AlertDialogTitle
 } from '@/common/components/ui/alert-dialog'
 import { Button } from '@/common/components/ui/button'
-import { SaldoNamespace, useSaldoController } from '@/common/features/saldo'
 import { useToggle } from '@/common/hooks'
 
 import { PodotchetMonitorQueryKeys } from '../../monitor/config'
@@ -28,6 +25,7 @@ import { PodotchetSaldoTable } from '../details/podotchet-saldo-table'
 import { getPodochetSaldoProvodkaColumns } from '../details/provodki'
 import { calculateTotal } from '../details/utils'
 import { PodotchetSaldoService } from '../service'
+import { usePodotchetSaldo } from '../use-saldo'
 
 const columnDefs = getPodochetSaldoProvodkaColumns(false)
 
@@ -39,9 +37,7 @@ export const PodotchetSaldoUpdateManager = () => {
 
   const { t } = useTranslation()
 
-  const { queuedMonths, dequeueMonth } = useSaldoController<OrganSaldoMonthValue>({
-    ns: SaldoNamespace.JUR_4
-  })
+  const { queuedMonths, dequeueMonth } = usePodotchetSaldo()
 
   const form = useForm({
     defaultValues

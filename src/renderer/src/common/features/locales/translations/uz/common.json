@@ -333,5 +333,6 @@
   "select-podotchet": "Mas’ul shaxsni tanlang.",
   "select-organization": "Tashkilotni tanlang.",
   "clean_current_month": "Joriy oyni tozalash",
-  "delete_for_current_month": "Joriy oy uchun ma'lumotlarni o‘chirish"
+  "delete_for_current_month": "Joriy oy uchun ma'lumotlarni o‘chirish",
+  "access_rights_for": "\"{{role}}\" uchun kirish huquqlari"
 }

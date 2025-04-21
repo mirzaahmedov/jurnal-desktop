@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 
-import { roleColumns, roleQueryKeys, roleService } from '@/app/super-admin/role'
+import { RoleColumns, RoleQueryKeys, RoleService } from '@/app/super-admin/role'
 import { GenericTable } from '@/common/components'
 import { SearchFilterDebounced } from '@/common/features/filters/search/search-filter-debounced'
 import { useSearchFilter } from '@/common/features/filters/search/search-filter-debounced'
@@ -12,9 +12,9 @@ import { useToggle } from '@/common/hooks/use-toggle'
 import { useLayout } from '@/common/layout'
 import { ListView } from '@/common/views'
 
-import { AccessDialog } from './dialog'
+import { RoleAccessDialog } from './dialog'
 
-const AccessPage = () => {
+const RoleAccessPage = () => {
   const [roleId, setRoleId] = useState<number | undefined>()
 
   const setLayout = useLayout()
@@ -24,20 +24,20 @@ const AccessPage = () => {
   const [search] = useSearchFilter()
   const { t } = useTranslation(['app'])
 
-  const { data: roleList, isFetching } = useQuery({
+  const { data: roles, isFetching } = useQuery({
     queryKey: [
-      roleQueryKeys.getAll,
+      RoleQueryKeys.getAll,
       {
         ...pagination,
         search
       }
     ],
-    queryFn: roleService.getAll
+    queryFn: RoleService.getAll
   })
 
   useEffect(() => {
     setLayout({
-      title: t('pages.access'),
+      title: t('pages.access_rights'),
       breadcrumbs: [
         {
           title: t('pages.admin')
@@ -45,24 +45,24 @@ const AccessPage = () => {
       ],
       content: SearchFilterDebounced
     })
-  }, [setLayout])
+  }, [setLayout, t])
   useEffect(() => {
     if (!dialogToggle.isOpen) {
       setRoleId(undefined)
     }
-  }, [dialogToggle.isOpen, setRoleId])
+  }, [dialogToggle.isOpen])
 
   return (
     <ListView>
       <ListView.Content loading={isFetching}>
-        <AccessDialog
+        <RoleAccessDialog
           roleId={roleId}
-          open={dialogToggle.isOpen}
+          isOpen={dialogToggle.isOpen}
           onOpenChange={dialogToggle.setOpen}
         />
         <GenericTable
-          columnDefs={roleColumns}
-          data={roleList?.data ?? []}
+          columnDefs={RoleColumns}
+          data={roles?.data ?? []}
           onEdit={(role) => {
             setRoleId(role.id)
             dialogToggle.open()
@@ -71,7 +71,8 @@ const AccessPage = () => {
       </ListView.Content>
       <ListView.Footer>
         <ListView.Pagination
-          pageCount={roleList?.meta?.pageCount ?? 0}
+          count={roles?.meta?.count ?? 0}
+          pageCount={roles?.meta?.pageCount ?? 0}
           {...pagination}
         />
       </ListView.Footer>
@@ -79,4 +80,4 @@ const AccessPage = () => {
   )
 }
 
-export default AccessPage
+export default RoleAccessPage

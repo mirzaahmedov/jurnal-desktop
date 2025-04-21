@@ -22,8 +22,7 @@ import { useRequisitesStore } from '@/common/features/requisites'
 import {
   SaldoNamespace,
   handleSaldoErrorDates,
-  handleSaldoResponseDates,
-  useSaldoController
+  handleSaldoResponseDates
 } from '@/common/features/saldo'
 import {
   useSelectedMonthStore,
@@ -37,6 +36,7 @@ import { normalizeEmptyFields } from '@/common/lib/validation'
 import { DetailsView } from '@/common/views'
 import { DocumentFields, OpisanieFields, PodotchetFields, SummaFields } from '@/common/widget/form'
 
+import { usePodotchetSaldo } from '../../saldo/use-saldo'
 import { AvansFormSchema, AvansProvodkaFormSchema, AvansQueryKeys, defaultValues } from '../config'
 import { AvansService } from '../service'
 import { podvodkaColumns } from './podvodki'
@@ -51,9 +51,7 @@ const AvansDetailsPage = () => {
   const { main_schet_id, jur4_schet_id } = useRequisitesStore()
 
   const { t } = useTranslation(['app'])
-  const { queuedMonths } = useSaldoController({
-    ns: SaldoNamespace.JUR_4
-  })
+  const { queuedMonths } = usePodotchetSaldo()
   const { snippets, addSnippet, removeSnippet } = useSnippets({
     ns: 'avans'
   })

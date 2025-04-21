@@ -16,9 +16,10 @@ import {
   useSearchFilter
 } from '@/common/features/filters/search/search-filter-debounced'
 import { useRequisitesStore } from '@/common/features/requisites'
-import { SaldoNamespace, useSaldoController } from '@/common/features/saldo'
-import { useSelectedMonthStore } from '@/common/features/selected-month'
-import { validateDateWithinSelectedMonth } from '@/common/features/selected-month'
+import {
+  useSelectedMonthStore,
+  validateDateWithinSelectedMonth
+} from '@/common/features/selected-month'
 import { useSpravochnik } from '@/common/features/spravochnik'
 import { usePagination, useToggle } from '@/common/hooks'
 import { useLayout } from '@/common/layout'
@@ -27,6 +28,7 @@ import { ListView } from '@/common/views'
 
 import { createResponsibleSpravochnik } from '../responsible/service'
 import { MaterialWarehouseSaldoProductService, defaultValues } from '../saldo'
+import { useWarehouseSaldo } from '../saldo/use-saldo'
 import { handleOstatokError } from '../saldo/utils'
 import { iznosColumns } from './columns'
 import { IznosQueryKeys } from './config'
@@ -41,9 +43,7 @@ const IznosPage = () => {
 
   const { t } = useTranslation(['app'])
   const { startDate, endDate } = useSelectedMonthStore()
-  const { queuedMonths } = useSaldoController({
-    ns: SaldoNamespace.JUR_7
-  })
+  const { queuedMonths } = useWarehouseSaldo()
 
   const [search] = useSearchFilter()
   const [selected] = useState<SaldoProduct | null>(null)

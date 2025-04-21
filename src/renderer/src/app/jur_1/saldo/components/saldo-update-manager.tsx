@@ -3,16 +3,12 @@ import { useState } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { useRequisitesStore } from '@/common/features/requisites'
-import {
-  type MonthValue,
-  SaldoNamespace,
-  SaldoUpdateManager,
-  useSaldoController
-} from '@/common/features/saldo'
+import { type MonthValue, SaldoUpdateManager } from '@/common/features/saldo'
 
 import { KassaMonitorQueryKeys } from '../../monitor'
 import { KassaSaldoQueryKeys } from '../config'
 import { KassaSaldoService } from '../service'
+import { useKassaSaldo } from './use-saldo'
 
 export const KassaSaldoUpdateManager = () => {
   const queryClient = useQueryClient()
@@ -20,9 +16,7 @@ export const KassaSaldoUpdateManager = () => {
 
   const [completed, setCompleted] = useState<MonthValue[]>([])
 
-  const { queuedMonths, dequeueMonth, clearQueue } = useSaldoController({
-    ns: SaldoNamespace.JUR_1
-  })
+  const { queuedMonths, dequeueMonth, clearQueue } = useKassaSaldo()
 
   const {
     mutate: updateSaldo,

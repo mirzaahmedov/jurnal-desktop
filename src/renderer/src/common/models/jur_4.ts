@@ -27,7 +27,7 @@ export interface PodotchetSaldo {
   childs: PodotchetSaldoProvodka[]
 }
 
-export interface PodotchetnSaldoMonthValue {
+export interface PodotchetSaldoMonthValue {
   budjet_id: number
   doc_id: number
   main_schet_id: number

@@ -1,11 +1,11 @@
-import type { Access, User } from '@/common/models'
+import type { RoleAccess, User } from '@/common/models'
 
 import { create } from 'zustand'
 import { createJSONStorage, persist } from 'zustand/middleware'
 
 export type AuthenticationStore = {
   isAuthenticated: boolean
-  user?: User & { access_object: Access }
+  user?: User & { access_object: RoleAccess }
   token?: string
   setUser(payload: Pick<AuthenticationStore, 'user' | 'token'> | null): void
 }

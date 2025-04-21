@@ -13,7 +13,6 @@ import {
   useSearchFilter
 } from '@/common/features/filters/search/search-filter-debounced'
 import { useRequisitesStore } from '@/common/features/requisites'
-import { SaldoNamespace, useSaldoController } from '@/common/features/saldo'
 import { useSelectedMonthStore } from '@/common/features/selected-month'
 import { validateDateWithinSelectedMonth } from '@/common/features/selected-month'
 import { useDates, usePagination } from '@/common/hooks'
@@ -23,6 +22,7 @@ import { ListView } from '@/common/views'
 
 import { IznosQueryKeys } from '../iznos/config'
 import { SaldoQueryKeys } from '../saldo'
+import { useWarehouseSaldo } from '../saldo/use-saldo'
 import { rasxodColumns } from './columns'
 import { RasxodQueryKeys } from './config'
 import { WarehouseRasxodService } from './service'
@@ -40,9 +40,7 @@ const Jurnal7RasxodPage = () => {
   const { startDate, endDate } = useSelectedMonthStore()
   const { budjet_id, main_schet_id } = useRequisitesStore()
   const { sorting, handleSort, getColumnSorted } = useTableSort()
-  const { queuedMonths } = useSaldoController({
-    ns: SaldoNamespace.JUR_7
-  })
+  const { queuedMonths } = useWarehouseSaldo()
 
   const dates = useDates({
     defaultFrom: formatDate(startDate),

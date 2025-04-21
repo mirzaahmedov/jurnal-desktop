@@ -135,7 +135,8 @@ function JollySelect<T extends object>({
       )}
       {...props}
     >
-      <Label>{label}</Label>
+      {label ? <Label>{label}</Label> : null}
+
       <SelectTrigger
         buttonRef={buttonRef}
         readOnly={isReadonly}

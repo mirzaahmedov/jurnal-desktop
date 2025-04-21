@@ -15,17 +15,16 @@ import { useRequisitesStore } from '@/common/features/requisites'
 import {
   SaldoNamespace,
   handleSaldoErrorDates,
-  handleSaldoResponseDates,
-  useSaldoController
+  handleSaldoResponseDates
 } from '@/common/features/saldo'
 import { useSelectedMonthStore } from '@/common/features/selected-month'
 import { useLayout } from '@/common/layout'
 import { formatDate } from '@/common/lib/date'
 import { DetailsView } from '@/common/views'
 
-import { defaultValues } from '../config'
-import { PodotchetSaldoQueryKeys } from '../config'
+import { PodotchetSaldoQueryKeys, defaultValues } from '../config'
 import { PodotchetSaldoService } from '../service'
+import { usePodotchetSaldo } from '../use-saldo'
 import { PodotchetSaldoTable } from './podotchet-saldo-table'
 import { getPodochetSaldoProvodkaColumns } from './provodki'
 import { calculateTotal } from './utils'
@@ -37,9 +36,7 @@ const PodotchetSaldoDetailsPage = () => {
   const queryClient = useQueryClient()
   const setLayout = useLayout()
   const startDate = useSelectedMonthStore((store) => store.startDate)
-  const { queuedMonths } = useSaldoController({
-    ns: SaldoNamespace.JUR_4
-  })
+  const { queuedMonths } = usePodotchetSaldo()
 
   const [isEditable, setEditable] = useState(false)
 

@@ -13,8 +13,7 @@ import { useRequisitesStore } from '@/common/features/requisites'
 import {
   SaldoNamespace,
   handleSaldoErrorDates,
-  handleSaldoResponseDates,
-  useSaldoController
+  handleSaldoResponseDates
 } from '@/common/features/saldo'
 import { useKeyUp } from '@/common/hooks'
 import { useLayout } from '@/common/layout'
@@ -24,6 +23,7 @@ import { PodotchetSaldoColumns } from './columns'
 import { PodotchetSaldoQueryKeys } from './config'
 import { PodotchetSaldoFilters, useYearFilter } from './filters'
 import { PodotchetSaldoService } from './service'
+import { usePodotchetSaldo } from './use-saldo'
 
 const PodotchetSaldoPage = () => {
   const setLayout = useLayout()
@@ -34,9 +34,7 @@ const PodotchetSaldoPage = () => {
   const [year] = useYearFilter()
 
   const { confirm } = useConfirm()
-  const { queuedMonths } = useSaldoController({
-    ns: SaldoNamespace.JUR_4
-  })
+  const { queuedMonths } = usePodotchetSaldo()
   const { t } = useTranslation(['app'])
   const { budjet_id, main_schet_id, jur4_schet_id } = useRequisitesStore()
 

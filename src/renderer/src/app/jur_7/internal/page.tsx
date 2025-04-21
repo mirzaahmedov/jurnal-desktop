@@ -13,9 +13,10 @@ import {
   useSearchFilter
 } from '@/common/features/filters/search/search-filter-debounced'
 import { useRequisitesStore } from '@/common/features/requisites'
-import { SaldoNamespace, useSaldoController } from '@/common/features/saldo'
-import { useSelectedMonthStore } from '@/common/features/selected-month'
-import { validateDateWithinSelectedMonth } from '@/common/features/selected-month'
+import {
+  useSelectedMonthStore,
+  validateDateWithinSelectedMonth
+} from '@/common/features/selected-month'
 import { useDates, usePagination } from '@/common/hooks'
 import { useLayout } from '@/common/layout'
 import { formatDate } from '@/common/lib/date'
@@ -23,6 +24,7 @@ import { ListView } from '@/common/views'
 
 import { IznosQueryKeys } from '../iznos/config'
 import { SaldoQueryKeys } from '../saldo'
+import { useWarehouseSaldo } from '../saldo/use-saldo'
 import { internalColumns } from './columns'
 import { internalQueryKeys } from './config'
 import { internalService } from './service'
@@ -40,9 +42,7 @@ const InternalPage = () => {
   const { startDate, endDate } = useSelectedMonthStore()
   const { budjet_id, main_schet_id } = useRequisitesStore()
   const { sorting, handleSort, getColumnSorted } = useTableSort()
-  const { queuedMonths } = useSaldoController({
-    ns: SaldoNamespace.JUR_7
-  })
+  const { queuedMonths } = useWarehouseSaldo()
 
   const dates = useDates({
     defaultFrom: formatDate(startDate),

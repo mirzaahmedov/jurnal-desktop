@@ -22,8 +22,7 @@ import { useRequisitesStore } from '@/common/features/requisites'
 import {
   SaldoNamespace,
   handleSaldoErrorDates,
-  handleSaldoResponseDates,
-  useSaldoController
+  handleSaldoResponseDates
 } from '@/common/features/saldo'
 import { useSettingsStore } from '@/common/features/settings'
 import { useKeyUp, usePagination } from '@/common/hooks'
@@ -33,6 +32,7 @@ import { ListView } from '@/common/views'
 import { mainbookColumns } from './columns'
 import { MainbookQueryKeys } from './config'
 import { MainbookFilters, useYearFilter } from './filters'
+import { useMainbookSaldo } from './saldo/use-saldo'
 import { MainbookService } from './service'
 
 const MainbookPage = () => {
@@ -47,9 +47,7 @@ const MainbookPage = () => {
   const { t } = useTranslation(['app'])
   const { confirm } = useConfirm()
   const { budjet_id, main_schet_id } = useRequisitesStore()
-  const { queuedMonths, clearQueue } = useSaldoController({
-    ns: SaldoNamespace.MAINBOOK
-  })
+  const { queuedMonths, clearQueue } = useMainbookSaldo()
 
   const {
     data: mainbook,

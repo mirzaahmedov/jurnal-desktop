@@ -30,7 +30,7 @@ import {
   useSearchFilter
 } from '@/common/features/filters/search/search-filter-debounced'
 import { useRequisitesStore } from '@/common/features/requisites'
-import { SaldoNamespace, handleSaldoErrorDates, useSaldoController } from '@/common/features/saldo'
+import { SaldoNamespace, handleSaldoErrorDates } from '@/common/features/saldo'
 import {
   useSelectedMonthStore,
   validateDateWithinSelectedMonth
@@ -43,6 +43,7 @@ import { formatNumber } from '@/common/lib/format'
 import { getProvodkaURL } from '@/common/lib/provodka'
 import { ListView } from '@/common/views'
 
+import { useAktSaldo } from '../saldo/components/use-saldo'
 import { AktSverkaDialog } from './akt-sverka'
 import { OrganMonitorColumns } from './columns'
 import { OrganMonitorQueryKeys } from './config'
@@ -64,9 +65,7 @@ const OrganMonitoringPage = () => {
   const { sorting, handleSort, getColumnSorted } = useTableSort()
   const { main_schet_id, budjet_id, jur3_schet_152_id } = useRequisitesStore()
   const { t } = useTranslation(['app'])
-  const { queuedMonths } = useSaldoController({
-    ns: SaldoNamespace.JUR_3_159
-  })
+  const { queuedMonths } = useAktSaldo()
 
   const organSpravochnik = useSpravochnik(
     createOrganizationSpravochnik({

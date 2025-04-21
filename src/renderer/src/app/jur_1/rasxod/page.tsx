@@ -9,14 +9,15 @@ import { toast } from 'react-toastify'
 
 import { FooterCell, FooterRow, GenericTable, useTableSort } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
-import { SearchFilterDebounced } from '@/common/features/filters/search/search-filter-debounced'
-import { useSearchFilter } from '@/common/features/filters/search/search-filter-debounced'
+import {
+  SearchFilterDebounced,
+  useSearchFilter
+} from '@/common/features/filters/search/search-filter-debounced'
 import { useRequisitesStore } from '@/common/features/requisites'
 import {
   SaldoNamespace,
   handleSaldoErrorDates,
-  handleSaldoResponseDates,
-  useSaldoController
+  handleSaldoResponseDates
 } from '@/common/features/saldo'
 import {
   useSelectedMonthStore,
@@ -27,6 +28,7 @@ import { useLayout } from '@/common/layout'
 import { formatNumber } from '@/common/lib/format'
 import { ListView } from '@/common/views'
 
+import { useKassaSaldo } from '../saldo/components/use-saldo'
 import { columns } from './columns'
 import { queryKeys } from './config'
 import { KassaRasxodService } from './service'
@@ -35,9 +37,7 @@ const KassaRasxodPage = () => {
   const { confirm } = useConfirm()
   const { t } = useTranslation(['app'])
   const { sorting, handleSort, getColumnSorted } = useTableSort()
-  const { queuedMonths } = useSaldoController({
-    ns: SaldoNamespace.JUR_1
-  })
+  const { queuedMonths } = useKassaSaldo()
 
   const [search] = useSearchFilter()
 

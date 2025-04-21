@@ -70,7 +70,7 @@ const ShartnomaPage = lazy(() => import('./jur_3/shartnoma/page'))
 const AdvanceReportDetailsPage = lazy(() => import('./jur_4/avans/details/page'))
 const AvansPage = lazy(() => import('./jur_4/avans/page'))
 const PodotchetMonitoringPage = lazy(() => import('./jur_4/monitor/page'))
-const AccessPage = lazy(() => import('./region-admin/access/page'))
+const RoleAccessPage = lazy(() => import('./region-admin/role-access/page'))
 const RegionUserPage = lazy(() => import('./region-admin/region-user'))
 const SmetaGrafikPage = lazy(() => import('./region-spravochnik/smeta-grafik/page'))
 const MainSchetPage = lazy(() => import('./region-spravochnik/main-schet/page'))
@@ -294,8 +294,8 @@ export const routes: RouteObject[] = [
         path: 'region',
         children: [
           {
-            path: 'access',
-            element: <AccessPage />
+            path: 'role-access',
+            element: <RoleAccessPage />
           },
           {
             path: 'user',

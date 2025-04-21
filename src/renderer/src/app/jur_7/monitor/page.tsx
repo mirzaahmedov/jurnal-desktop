@@ -16,7 +16,7 @@ import {
 } from '@/common/components/ui/dropdown-menu'
 import { DownloadFile } from '@/common/features/file'
 import { useRequisitesStore } from '@/common/features/requisites'
-import { SaldoNamespace, handleSaldoErrorDates, useSaldoController } from '@/common/features/saldo'
+import { SaldoNamespace, handleSaldoErrorDates } from '@/common/features/saldo'
 import {
   useSelectedMonthStore,
   validateDateWithinSelectedMonth
@@ -27,6 +27,7 @@ import { useLayout } from '@/common/layout'
 import { type Jur7Monitoring, Jur7MonitoringType } from '@/common/models'
 import { ListView } from '@/common/views'
 
+import { useWarehouseSaldo } from '../saldo/use-saldo'
 import { columns } from './columns'
 import { Jur7MonitorService } from './service'
 
@@ -42,9 +43,7 @@ export const Jur7MonitorPage = () => {
   const { t } = useTranslation(['app'])
   const { budjet_id, main_schet_id } = useRequisitesStore()
   const { sorting, getColumnSorted, handleSort } = useTableSort()
-  const { queuedMonths } = useSaldoController({
-    ns: SaldoNamespace.JUR_7
-  })
+  const { queuedMonths } = useWarehouseSaldo()
 
   const {
     data: monitoring,

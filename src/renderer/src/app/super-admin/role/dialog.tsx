@@ -26,8 +26,8 @@ import {
 import { Input } from '@/common/components/ui/input'
 import { useToast } from '@/common/hooks/use-toast'
 
-import { roleQueryKeys } from './constants'
-import { RolePayloadSchema, type RolePayloadType, roleService } from './service'
+import { RoleQueryKeys } from './constants'
+import { RoleFormSchema, type RoleFormValues, RoleService } from './service'
 
 type RoleDialogProps = {
   open: boolean
@@ -42,21 +42,21 @@ const RoleDialog = (props: RoleDialogProps) => {
 
   const queryClient = useQueryClient()
 
-  const form = useForm<RolePayloadType>({
+  const form = useForm<RoleFormValues>({
     defaultValues,
-    resolver: zodResolver(RolePayloadSchema)
+    resolver: zodResolver(RoleFormSchema)
   })
 
   const { mutate: create, isPending: isCreating } = useMutation({
-    mutationKey: [roleQueryKeys.create],
-    mutationFn: roleService.create,
+    mutationKey: [RoleQueryKeys.create],
+    mutationFn: RoleService.create,
     onSuccess() {
       toast({
         title: 'Роль успешно создана'
       })
       form.reset(defaultValues)
       queryClient.invalidateQueries({
-        queryKey: [roleQueryKeys.getAll]
+        queryKey: [RoleQueryKeys.getAll]
       })
       onChangeOpen(false)
     },
@@ -69,14 +69,14 @@ const RoleDialog = (props: RoleDialogProps) => {
     }
   })
   const { mutate: update, isPending: isUpdating } = useMutation({
-    mutationKey: [roleQueryKeys.update],
-    mutationFn: roleService.update,
+    mutationKey: [RoleQueryKeys.update],
+    mutationFn: RoleService.update,
     onSuccess() {
       toast({
         title: 'Роль успешно обновлена'
       })
       queryClient.invalidateQueries({
-        queryKey: [roleQueryKeys.getAll]
+        queryKey: [RoleQueryKeys.getAll]
       })
       onChangeOpen(false)
     },
@@ -89,7 +89,7 @@ const RoleDialog = (props: RoleDialogProps) => {
     }
   })
 
-  const onSubmit = (payload: RolePayloadType) => {
+  const onSubmit = (payload: RoleFormValues) => {
     if (data) {
       update(Object.assign(payload, { id: data.id }))
     } else {
@@ -158,6 +158,6 @@ const RoleDialog = (props: RoleDialogProps) => {
 
 const defaultValues = {
   name: ''
-} satisfies RolePayloadType
+} satisfies RoleFormValues
 
 export default RoleDialog

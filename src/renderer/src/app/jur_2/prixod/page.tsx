@@ -10,14 +10,15 @@ import { toast } from 'react-toastify'
 import { FooterCell, FooterRow, GenericTable, useTableSort } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
 import { DownloadFile } from '@/common/features/file'
-import { SearchFilterDebounced } from '@/common/features/filters/search/search-filter-debounced'
-import { useSearchFilter } from '@/common/features/filters/search/search-filter-debounced'
+import {
+  SearchFilterDebounced,
+  useSearchFilter
+} from '@/common/features/filters/search/search-filter-debounced'
 import { useRequisitesStore } from '@/common/features/requisites'
 import {
   SaldoNamespace,
   handleSaldoErrorDates,
-  handleSaldoResponseDates,
-  useSaldoController
+  handleSaldoResponseDates
 } from '@/common/features/saldo'
 import {
   useSelectedMonthStore,
@@ -29,6 +30,7 @@ import { useLayout } from '@/common/layout'
 import { formatNumber } from '@/common/lib/format'
 import { ListView } from '@/common/views'
 
+import { useBankSaldo } from '../saldo/components/use-saldo'
 import { BankPrixodColumns } from './columns'
 import { BankPrixodQueryKeys } from './config'
 import { BankPrixodService } from './service'
@@ -48,9 +50,7 @@ const BankPrixodPage = () => {
   const { report_title_id } = useSettingsStore()
   const { sorting, handleSort, getColumnSorted } = useTableSort()
   const { budjet_id, main_schet_id } = useRequisitesStore()
-  const { queuedMonths } = useSaldoController({
-    ns: SaldoNamespace.JUR_2
-  })
+  const { queuedMonths } = useBankSaldo()
 
   const {
     data: prixods,

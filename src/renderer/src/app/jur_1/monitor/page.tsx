@@ -6,10 +6,12 @@ import { useTranslation } from 'react-i18next'
 import { FooterCell, FooterRow, GenericTable, SummaTotal, useTableSort } from '@/common/components'
 import { ButtonGroup } from '@/common/components/ui/button-group'
 import { DownloadFile } from '@/common/features/file'
-import { SearchFilterDebounced } from '@/common/features/filters/search/search-filter-debounced'
-import { useSearchFilter } from '@/common/features/filters/search/search-filter-debounced'
+import {
+  SearchFilterDebounced,
+  useSearchFilter
+} from '@/common/features/filters/search/search-filter-debounced'
 import { useRequisitesStore } from '@/common/features/requisites'
-import { SaldoNamespace, handleSaldoErrorDates, useSaldoController } from '@/common/features/saldo'
+import { SaldoNamespace, handleSaldoErrorDates } from '@/common/features/saldo'
 import {
   useSelectedMonthStore,
   validateDateWithinSelectedMonth
@@ -20,6 +22,7 @@ import { useLayout } from '@/common/layout'
 import { formatNumber } from '@/common/lib/format'
 import { ListView } from '@/common/views'
 
+import { useKassaSaldo } from '../saldo/components/use-saldo'
 import { columns } from './columns'
 import { KassaMonitorQueryKeys } from './config'
 import { kassaMonitorService } from './service'
@@ -35,9 +38,7 @@ const KassaMonitorPage = () => {
   const [search] = useSearchFilter()
 
   const { t } = useTranslation(['app'])
-  const { queuedMonths } = useSaldoController({
-    ns: SaldoNamespace.JUR_1
-  })
+  const { queuedMonths } = useKassaSaldo()
   const { sorting, handleSort, getColumnSorted } = useTableSort()
   const { main_schet_id, budjet_id } = useRequisitesStore()
 

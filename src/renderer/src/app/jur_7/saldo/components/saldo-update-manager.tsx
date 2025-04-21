@@ -2,25 +2,19 @@ import { useState } from 'react'
 
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
-import {
-  type MonthValue,
-  SaldoNamespace,
-  SaldoUpdateManager,
-  useSaldoController
-} from '@/common/features/saldo'
+import { type MonthValue, SaldoUpdateManager } from '@/common/features/saldo'
 
 import { IznosQueryKeys } from '../../iznos/config'
 import { SaldoQueryKeys } from '../config'
 import { MaterialWarehouseSaldoService } from '../service'
+import { useWarehouseSaldo } from '../use-saldo'
 
 export const MaterialWarehouseSaldoUpdateManager = () => {
   const queryClient = useQueryClient()
 
   const [completed, setCompleted] = useState<MonthValue[]>([])
 
-  const { queuedMonths, dequeueMonth, clearQueue } = useSaldoController({
-    ns: SaldoNamespace.JUR_7
-  })
+  const { queuedMonths, dequeueMonth, clearQueue } = useWarehouseSaldo()
 
   const {
     mutate: updateSaldo,

@@ -1,4 +1,4 @@
-export * from './access'
+export * from './role-access'
 export * from './saldo'
 export * from './podotchet'
 export * from './budjet'

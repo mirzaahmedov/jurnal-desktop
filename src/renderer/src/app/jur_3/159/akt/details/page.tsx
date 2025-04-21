@@ -23,8 +23,7 @@ import { useRequisitesStore } from '@/common/features/requisites'
 import {
   SaldoNamespace,
   handleSaldoErrorDates,
-  handleSaldoResponseDates,
-  useSaldoController
+  handleSaldoResponseDates
 } from '@/common/features/saldo'
 import {
   useSelectedMonthStore,
@@ -44,6 +43,7 @@ import {
   SummaFields
 } from '@/common/widget/form'
 
+import { useAktSaldo } from '../../saldo/components/use-saldo'
 import { AktFormSchema, AktProvodkaFormSchema, AktQueryKeys, defaultValues } from '../config'
 import { aktService } from '../service'
 import { provodkaColumns } from './provodki'
@@ -53,9 +53,7 @@ const AktDetailsPage = () => {
   const { snippets, addSnippet, removeSnippet } = useSnippets({
     ns: 'akt'
   })
-  const { queuedMonths } = useSaldoController({
-    ns: SaldoNamespace.JUR_3_159
-  })
+  const { queuedMonths } = useAktSaldo()
 
   const { main_schet_id, jur3_schet_159_id } = useRequisitesStore()
 

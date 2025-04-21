@@ -1,4 +1,5 @@
 import type { User } from '@/common/models'
+import type { DialogTriggerProps } from 'react-aria-components'
 
 import { useEffect } from 'react'
 
@@ -6,8 +7,9 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import { toast } from 'react-toastify'
 
-import { roleQueryKeys, roleService } from '@/app/super-admin/role'
+import { RoleQueryKeys, RoleService } from '@/app/super-admin/role'
 import {
   DialogContent,
   DialogFooter,
@@ -27,84 +29,61 @@ import {
   FormMessage
 } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
-import { useToast } from '@/common/hooks/use-toast'
+import { capitalize } from '@/common/lib/string'
 
-import { regionUserKeys } from './constants'
-import { RegionUserPayloadSchema, type RegionUserPayloadType, regionUserService } from './service'
+import { RegionUserQueryKeys } from './config'
+import { RegionUserFormSchema, type RegionUserFormValues, RegionUserService } from './service'
 
-type RegionUserDialogProps = {
-  isOpen: boolean
-  onChangeOpen(value: boolean): void
+export interface RegionUserDialogProps extends Omit<DialogTriggerProps, 'children'> {
   selected: User | null
 }
-const RegionUserDialog = (props: RegionUserDialogProps) => {
-  const { isOpen, onChangeOpen, selected } = props
-
-  const { data: roles, isFetching: isFetchingRoles } = useQuery({
-    queryKey: [roleQueryKeys.getAll],
-    queryFn: roleService.getAll
-  })
-
+export const RegionUserDialog = ({ isOpen, onOpenChange, selected }: RegionUserDialogProps) => {
   const queryClient = useQueryClient()
 
   const { t } = useTranslation()
-  const { toast } = useToast()
 
-  const form = useForm<RegionUserPayloadType>({
-    defaultValues,
-    resolver: zodResolver(RegionUserPayloadSchema)
+  const { data: roles, isFetching: isFetchingRoles } = useQuery({
+    queryKey: [RoleQueryKeys.getAll],
+    queryFn: RoleService.getAll
   })
 
-  const { mutate: create, isPending: isCreating } = useMutation({
-    mutationKey: [regionUserKeys.create],
-    mutationFn: regionUserService.create,
-    onSuccess() {
-      toast({
-        title: 'Пользователь успешно создан'
-      })
+  const form = useForm<RegionUserFormValues>({
+    defaultValues,
+    resolver: zodResolver(RegionUserFormSchema)
+  })
+
+  const { mutate: createUser, isPending: isCreating } = useMutation({
+    mutationKey: [RegionUserQueryKeys.create],
+    mutationFn: RegionUserService.create,
+    onSuccess(res) {
+      toast.success(res?.message)
       form.reset(defaultValues)
       queryClient.invalidateQueries({
-        queryKey: [regionUserKeys.getAll]
+        queryKey: [RegionUserQueryKeys.getAll]
       })
-      onChangeOpen(false)
-    },
-    onError(error) {
-      toast({
-        variant: 'destructive',
-        title: 'Не удалось создать пользователя',
-        description: error.message
-      })
+      onOpenChange?.(false)
     }
   })
-  const { mutate: update, isPending: isUpdating } = useMutation({
-    mutationKey: [regionUserKeys.update],
-    mutationFn: regionUserService.update,
-    onSuccess() {
-      toast({
-        title: 'Пользователь успешно обновлен'
-      })
+  const { mutate: updateUser, isPending: isUpdating } = useMutation({
+    mutationKey: [RegionUserQueryKeys.update],
+    mutationFn: RegionUserService.update,
+    onSuccess(res) {
+      toast.success(res?.message)
       queryClient.invalidateQueries({
-        queryKey: [regionUserKeys.getAll]
+        queryKey: [RegionUserQueryKeys.getAll]
       })
-      onChangeOpen(false)
-    },
-    onError(error) {
-      toast({
-        variant: 'destructive',
-        title: 'Не удалось обновить пользователя',
-        description: error.message
-      })
+      onOpenChange?.(false)
     }
   })
 
   const onSubmit = form.handleSubmit((values) => {
     if (selected) {
-      update({
+      updateUser({
         ...values,
         id: selected.id
       })
     } else {
-      create(values)
+      createUser(values)
     }
   })
 
@@ -117,17 +96,17 @@ const RegionUserDialog = (props: RegionUserDialogProps) => {
     form.reset(selected)
   }, [form, selected])
 
-  console.log(form.watch())
-
   return (
     <DialogTrigger
       isOpen={isOpen}
-      onOpenChange={onChangeOpen}
+      onOpenChange={onOpenChange}
     >
       <DialogOverlay>
         <DialogContent className="max-w-xl">
           <DialogHeader>
-            <DialogTitle>{selected ? 'Изменить' : 'Добавить'} Пользователь</DialogTitle>
+            <DialogTitle>
+              {selected ? t('user') : capitalize(t('create-something', { something: t('user') }))}
+            </DialogTitle>
           </DialogHeader>
           <Form {...form}>
             <form onSubmit={onSubmit}>
@@ -138,7 +117,7 @@ const RegionUserDialog = (props: RegionUserDialogProps) => {
                   render={({ field }) => (
                     <FormItem>
                       <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
-                        <FormLabel className="text-right col-span-2">Ф.И.О.</FormLabel>
+                        <FormLabel className="text-right col-span-2">{t('fio')}</FormLabel>
                         <FormControl>
                           <Input
                             className="col-span-4"
@@ -156,7 +135,7 @@ const RegionUserDialog = (props: RegionUserDialogProps) => {
                   render={({ field }) => (
                     <FormItem>
                       <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
-                        <FormLabel className="text-right col-span-2">Логин</FormLabel>
+                        <FormLabel className="text-right col-span-2">{t('login')}</FormLabel>
                         <FormControl>
                           <Input
                             className="col-span-4"
@@ -174,7 +153,7 @@ const RegionUserDialog = (props: RegionUserDialogProps) => {
                   render={({ field }) => (
                     <FormItem>
                       <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
-                        <FormLabel className="text-right col-span-2">Пароль</FormLabel>
+                        <FormLabel className="text-right col-span-2">{t('password')}</FormLabel>
                         <FormControl>
                           <Input
                             className="col-span-4"
@@ -190,15 +169,15 @@ const RegionUserDialog = (props: RegionUserDialogProps) => {
                   name="role_id"
                   control={form.control}
                   render={({ field }) => (
-                    <FormItem>
-                      <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
-                        <FormLabel className="text-right col-span-2">Роль</FormLabel>
+                    <FormItem className="m-0">
+                      <div className="grid grid-cols-6 items-center gap-x-4">
+                        <FormLabel className="text-right col-span-2">{t('role')}</FormLabel>
                         <JollySelect
                           isDisabled={isFetchingRoles}
                           buttonRef={field.ref}
                           items={roles?.data ?? []}
-                          className="col-span-4"
-                          placeholder="Выберите роль"
+                          className="col-span-4 gap-0"
+                          placeholder={t('role')}
                           selectedKey={field.value}
                           onSelectionChange={field.onChange}
                         >
@@ -231,6 +210,4 @@ const defaultValues = {
   fio: '',
   login: '',
   password: ''
-} satisfies RegionUserPayloadType
-
-export default RegionUserDialog
+} satisfies RegionUserFormValues

@@ -29,8 +29,7 @@ import { useRequisitesStore } from '@/common/features/requisites'
 import {
   SaldoNamespace,
   handleSaldoErrorDates,
-  handleSaldoResponseDates,
-  useSaldoController
+  handleSaldoResponseDates
 } from '@/common/features/saldo'
 import {
   useSelectedMonthStore,
@@ -55,6 +54,7 @@ import {
 } from '@/common/widget/form'
 
 import { BankMonitorQueryKeys, BankMonitorService } from '../../monitor'
+import { useBankSaldo } from '../../saldo/components/use-saldo'
 import { defaultValues, queryKeys } from '../config'
 import { BankRasxodFormSchema, BankRasxodPodvodkaFormSchema, BankRasxodService } from '../service'
 import { ImportPlastik } from '../zarplata/import-plastik'
@@ -79,9 +79,7 @@ const BankRasxodDetailsPage = () => {
   const month = startDate.getMonth() + 1
 
   const { t } = useTranslation(['app'])
-  const { queuedMonths } = useSaldoController({
-    ns: SaldoNamespace.JUR_2
-  })
+  const { queuedMonths } = useBankSaldo()
   const { snippets, addSnippet, removeSnippet } = useSnippets({
     ns: 'bank_rasxod'
   })

@@ -14,10 +14,10 @@ import { useToggle } from '@/common/hooks/use-toggle'
 import { useLayout } from '@/common/layout'
 import { ListView } from '@/common/views'
 
-import { roleColumns } from './columns'
-import { roleQueryKeys } from './constants'
+import { RoleColumns } from './columns'
+import { RoleQueryKeys } from './constants'
 import RoleDialog from './dialog'
-import { roleService } from './service'
+import { RoleService } from './service'
 
 const RolePage = () => {
   const [selected, setSelected] = useState<Role | null>(null)
@@ -34,21 +34,21 @@ const RolePage = () => {
 
   const { data: roles, isFetching } = useQuery({
     queryKey: [
-      roleQueryKeys.getAll,
+      RoleQueryKeys.getAll,
       {
         ...pagination,
         search
       }
     ],
-    queryFn: roleService.getAll
+    queryFn: RoleService.getAll
   })
 
   const { mutate: deleteMutation, isPending } = useMutation({
-    mutationKey: [roleQueryKeys.delete],
-    mutationFn: roleService.delete,
+    mutationKey: [RoleQueryKeys.delete],
+    mutationFn: RoleService.delete,
     onSuccess() {
       queryClient.invalidateQueries({
-        queryKey: [roleQueryKeys.getAll]
+        queryKey: [RoleQueryKeys.getAll]
       })
     }
   })
@@ -83,7 +83,7 @@ const RolePage = () => {
       <ListView.Content loading={isFetching || isPending}>
         <GenericTable
           data={roles?.data ?? []}
-          columnDefs={roleColumns}
+          columnDefs={RoleColumns}
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}
         />

@@ -1,5 +1,3 @@
-import type { OrganSaldoMonthValue } from '@/common/models'
-
 import { type SVGAttributes, useEffect, useRef } from 'react'
 
 import { AlertDialogCancel } from '@radix-ui/react-alert-dialog'
@@ -19,7 +17,6 @@ import {
   AlertDialogTitle
 } from '@/common/components/ui/alert-dialog'
 import { Button } from '@/common/components/ui/button'
-import { SaldoNamespace, useSaldoController } from '@/common/features/saldo'
 import { useToggle } from '@/common/hooks'
 
 import { OrganMonitorQueryKeys } from '../../monitor/config'
@@ -28,6 +25,7 @@ import { OrganSaldoTable } from '../details/organ-saldo-table'
 import { getOrganSaldoProvodkaColumns } from '../details/provodki'
 import { calculateTotal } from '../details/utils'
 import { OrganSaldoService } from '../service'
+import { useAktSaldo } from './use-saldo'
 
 const columnDefs = getOrganSaldoProvodkaColumns(false)
 
@@ -39,9 +37,7 @@ export const OrganSaldo159UpdateManager = () => {
 
   const { t } = useTranslation()
 
-  const { queuedMonths, dequeueMonth } = useSaldoController<OrganSaldoMonthValue>({
-    ns: SaldoNamespace.JUR_3_159
-  })
+  const { queuedMonths, dequeueMonth } = useAktSaldo()
 
   const form = useForm({
     defaultValues

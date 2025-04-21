@@ -5,7 +5,7 @@ import { z } from 'zod'
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 import { withPreprocessor } from '@/common/lib/validation'
 
-export const RegionUserPayloadSchema = withPreprocessor(
+export const RegionUserFormSchema = withPreprocessor(
   z.object({
     role_id: z.number(),
     fio: z.string(),
@@ -13,8 +13,8 @@ export const RegionUserPayloadSchema = withPreprocessor(
     password: z.string()
   })
 )
-export type RegionUserPayloadType = z.infer<typeof RegionUserPayloadSchema>
+export type RegionUserFormValues = z.infer<typeof RegionUserFormSchema>
 
-export const regionUserService = new CRUDService<User, RegionUserPayloadType>({
+export const RegionUserService = new CRUDService<User, RegionUserFormValues>({
   endpoint: ApiEndpoints.region_user
 })

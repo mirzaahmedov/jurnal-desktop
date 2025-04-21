@@ -18,17 +18,19 @@ import { useRequisitesStore } from '@/common/features/requisites'
 import {
   SaldoNamespace,
   handleSaldoErrorDates,
-  handleSaldoResponseDates,
-  useSaldoController
+  handleSaldoResponseDates
 } from '@/common/features/saldo'
-import { useSelectedMonthStore } from '@/common/features/selected-month'
-import { validateDateWithinSelectedMonth } from '@/common/features/selected-month'
+import {
+  useSelectedMonthStore,
+  validateDateWithinSelectedMonth
+} from '@/common/features/selected-month'
 import { useSettingsStore } from '@/common/features/settings'
 import { useDates, usePagination } from '@/common/hooks'
 import { useLayout } from '@/common/layout'
 import { formatNumber } from '@/common/lib/format'
 import { ListView } from '@/common/views'
 
+import { useKassaSaldo } from '../saldo/components/use-saldo'
 import { columns } from './columns'
 import { PrixodQueryKeys } from './config'
 import { KassaPrixodService } from './service'
@@ -49,9 +51,7 @@ const KassaPrixodPage = () => {
   const { t } = useTranslation(['app'])
   const { report_title_id } = useSettingsStore()
   const { budjet_id, main_schet_id } = useRequisitesStore()
-  const { queuedMonths } = useSaldoController({
-    ns: SaldoNamespace.JUR_1
-  })
+  const { queuedMonths } = useKassaSaldo()
 
   const {
     data: prixods,

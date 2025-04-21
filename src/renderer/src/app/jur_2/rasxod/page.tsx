@@ -12,14 +12,15 @@ import { FooterCell, FooterRow, GenericTable, useTableSort } from '@/common/comp
 import { Button } from '@/common/components/ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/common/components/ui/dialog'
 import { useConfirm } from '@/common/features/confirm'
-import { SearchFilterDebounced } from '@/common/features/filters/search/search-filter-debounced'
-import { useSearchFilter } from '@/common/features/filters/search/search-filter-debounced'
+import {
+  SearchFilterDebounced,
+  useSearchFilter
+} from '@/common/features/filters/search/search-filter-debounced'
 import { useRequisitesStore } from '@/common/features/requisites'
 import {
   SaldoNamespace,
   handleSaldoErrorDates,
-  handleSaldoResponseDates,
-  useSaldoController
+  handleSaldoResponseDates
 } from '@/common/features/saldo'
 import {
   useSelectedMonthStore,
@@ -30,6 +31,7 @@ import { useLayout } from '@/common/layout'
 import { formatNumber } from '@/common/lib/format'
 import { ListView } from '@/common/views'
 
+import { useBankSaldo } from '../saldo/components/use-saldo'
 import { BankRasxodColumns } from './columns'
 import { queryKeys } from './config'
 import { BankRasxodService } from './service'
@@ -49,9 +51,7 @@ const BankRasxodPage = () => {
 
   const { sorting, handleSort, getColumnSorted } = useTableSort()
   const { confirm } = useConfirm()
-  const { queuedMonths } = useSaldoController({
-    ns: SaldoNamespace.JUR_2
-  })
+  const { queuedMonths } = useBankSaldo()
   const { t } = useTranslation(['app'])
 
   const {

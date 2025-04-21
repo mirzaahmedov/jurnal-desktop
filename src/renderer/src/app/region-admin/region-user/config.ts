@@ -1,4 +1,4 @@
-export const regionUserKeys = {
+export const RegionUserQueryKeys = {
   getAll: 'region-user/all',
   getById: 'region-user',
   create: 'region-user/create',

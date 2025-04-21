@@ -21,8 +21,8 @@ import { useLayout } from '@/common/layout'
 import { type RelationTreeNode, arrayToTreeByRelations } from '@/common/lib/tree/relation-tree'
 import { cn } from '@/common/lib/utils'
 
-import { regionUserService } from '../region-user'
-import { regionUserKeys } from '../region-user/constants'
+import { RegionUserService } from '../region-user'
+import { RegionUserQueryKeys } from '../region-user/config'
 import { columnDefs } from './columns'
 import { vacantQueryKeys } from './config'
 import { createVacantGrantQuery, getUserVacantIdsQuery, getVacantListQuery } from './service'
@@ -41,18 +41,18 @@ const VacantPage = () => {
 
   const { data: users, isFetching: isFetchingUsers } = useQuery({
     queryKey: [
-      regionUserKeys.getAll,
+      RegionUserQueryKeys.getAll,
       {
         page: 1,
         limit: 100000
       }
     ],
-    queryFn: regionUserService.getAll
+    queryFn: RegionUserService.getAll
   })
 
   const { data: userVacants, isFetching: isFetchingUserVacants } = useQuery({
     queryKey: [
-      regionUserKeys.getAll,
+      RegionUserQueryKeys.getAll,
       {
         userId: userId!
       }

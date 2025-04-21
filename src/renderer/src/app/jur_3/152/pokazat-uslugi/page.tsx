@@ -9,14 +9,15 @@ import { toast } from 'react-toastify'
 
 import { GenericTable, useTableSort } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
-import { SearchFilterDebounced } from '@/common/features/filters/search/search-filter-debounced'
-import { useSearchFilter } from '@/common/features/filters/search/search-filter-debounced'
+import {
+  SearchFilterDebounced,
+  useSearchFilter
+} from '@/common/features/filters/search/search-filter-debounced'
 import { useRequisitesStore } from '@/common/features/requisites'
 import {
   SaldoNamespace,
   handleSaldoErrorDates,
-  handleSaldoResponseDates,
-  useSaldoController
+  handleSaldoResponseDates
 } from '@/common/features/saldo'
 import {
   useSelectedMonthStore,
@@ -26,6 +27,7 @@ import { useDates, usePagination } from '@/common/hooks'
 import { useLayout } from '@/common/layout'
 import { ListView } from '@/common/views'
 
+import { useUslugiSaldo } from '../saldo/use-saldo'
 import { pokazatUslugiColumns } from './columns'
 import { queryKeys } from './config'
 import { PokazatUslugiService } from './service'
@@ -45,9 +47,7 @@ const PokazatUslugiPage = () => {
   const { confirm } = useConfirm()
   const { sorting, handleSort, getColumnSorted } = useTableSort()
   const { t } = useTranslation(['app'])
-  const { queuedMonths } = useSaldoController({
-    ns: SaldoNamespace.JUR_3_152
-  })
+  const { queuedMonths } = useUslugiSaldo()
 
   const {
     data: uslugi,

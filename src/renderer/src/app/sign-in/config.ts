@@ -1,4 +1,4 @@
-import type { Access, MainSchet, User } from '@/common/models'
+import type { MainSchet, RoleAccess, User } from '@/common/models'
 
 import { z } from 'zod'
 
@@ -14,7 +14,7 @@ const SigninFormSchema = z.object({
 type SigninForm = z.infer<typeof SigninFormSchema>
 type SigninResponse = {
   token: string
-  result: User & { access_object: Access }
+  result: User & { access_object: RoleAccess }
   main_schet: MainSchet
 }
 

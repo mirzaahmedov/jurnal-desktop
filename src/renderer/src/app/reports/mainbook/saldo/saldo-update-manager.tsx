@@ -1,5 +1,3 @@
-import type { MainbookSaldoMonthValue } from '@/common/models'
-
 import { type SVGAttributes, useEffect, useMemo } from 'react'
 
 import { AlertDialogCancel } from '@radix-ui/react-alert-dialog'
@@ -20,7 +18,6 @@ import {
 } from '@/common/components/ui/alert-dialog'
 import { Button } from '@/common/components/ui/button'
 import { useRequisitesStore } from '@/common/features/requisites'
-import { SaldoNamespace, useSaldoController } from '@/common/features/saldo'
 import { useToggle } from '@/common/hooks'
 
 import { MainbookQueryKeys } from '../config'
@@ -33,6 +30,7 @@ import {
   transformMainbookAutoFillDataToSave
 } from '../details/utils'
 import { MainbookService } from '../service'
+import { useMainbookSaldo } from './use-saldo'
 
 export const MainbookSaldoUpdateManager = () => {
   const queryClient = useQueryClient()
@@ -53,9 +51,7 @@ export const MainbookSaldoUpdateManager = () => {
     enabled: !!budjet_id
   })
 
-  const { queuedMonths, dequeueMonth } = useSaldoController<MainbookSaldoMonthValue>({
-    ns: SaldoNamespace.MAINBOOK
-  })
+  const { queuedMonths, dequeueMonth } = useMainbookSaldo()
 
   const form = useForm({
     defaultValues

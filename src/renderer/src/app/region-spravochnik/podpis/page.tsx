@@ -93,6 +93,7 @@ const PodpisPage = () => {
       </ListView.Content>
       <ListView.Footer>
         <ListView.Pagination
+          count={podpisList?.meta?.count ?? 0}
           pageCount={podpisList?.meta?.pageCount ?? 0}
           {...pagination}
         />
