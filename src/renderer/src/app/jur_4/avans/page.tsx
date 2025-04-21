@@ -101,7 +101,7 @@ const AvansPage = () => {
           title: t('pages.podotchet')
         }
       ],
-      isSelectedMonthVisible: true,
+      enableSaldo: true,
       content: SearchFilterDebounced,
       onCreate() {
         navigate('create')

@@ -44,7 +44,7 @@ import { getProvodkaURL } from '@/common/lib/provodka'
 import { ListView } from '@/common/views'
 
 import { useUslugiSaldo } from '../saldo/use-saldo'
-import { AktSverkaDialog } from './akt-sverka'
+import { AktSverkiDialog } from './akt-sverka'
 import { OrganMonitorColumns } from './columns'
 import { OrganMonitorQueryKeys } from './config'
 import { useOrganFilter } from './filters'
@@ -106,7 +106,7 @@ const OrganMonitoringPage = () => {
     setLayout({
       title: t('pages.organization-monitoring'),
       content: SearchFilterDebounced,
-      isSelectedMonthVisible: true,
+      enableSaldo: true,
       breadcrumbs: [
         {
           title: t('pages.organization')
@@ -269,7 +269,7 @@ const OrganMonitoringPage = () => {
                   </DropdownMenuContent>
                 </DropdownMenu>
                 {organId ? (
-                  <AktSverkaDialog
+                  <AktSverkiDialog
                     organId={organId}
                     mainSchetId={main_schet_id}
                     schetId={jur3_schet_152_id!}

@@ -102,7 +102,7 @@ const InternalPage = () => {
     setLayout({
       title: t('pages.internal-docs'),
       content: SearchFilterDebounced,
-      isSelectedMonthVisible: true,
+      enableSaldo: true,
       breadcrumbs: [
         {
           title: t('pages.material-warehouse')

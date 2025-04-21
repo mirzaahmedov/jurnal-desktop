@@ -226,7 +226,7 @@ const PokazatUslugiDetailsPage = () => {
           title: t('pages.service')
         }
       ],
-      isSelectedMonthVisible: true,
+      enableSaldo: true,
       onBack() {
         navigate(-1)
       }

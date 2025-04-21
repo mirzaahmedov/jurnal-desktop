@@ -181,7 +181,7 @@ const MaterialWarehouseSaldoPage = () => {
     setLayout({
       title: t('pages.saldo'),
       content: SearchFilterDebounced,
-      isSelectedMonthVisible: true,
+      enableSaldo: true,
       breadcrumbs: [
         {
           title: t('pages.material-warehouse')

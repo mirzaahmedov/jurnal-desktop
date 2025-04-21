@@ -15,16 +15,16 @@ import { useLayout } from '@/common/layout'
 import { ListView } from '@/common/views'
 
 import { RoleColumns } from './columns'
-import { RoleQueryKeys } from './constants'
-import RoleDialog from './dialog'
+import { RoleQueryKeys } from './config'
+import { RoleDialog } from './dialog'
 import { RoleService } from './service'
 
 const RolePage = () => {
-  const [selected, setSelected] = useState<Role | null>(null)
-
   const { confirm } = useConfirm()
-  const [search] = useSearchFilter()
   const { t } = useTranslation(['app'])
+
+  const [selected, setSelected] = useState<Role | null>(null)
+  const [search] = useSearchFilter()
 
   const pagination = usePagination()
   const dialogToggle = useToggle()
@@ -43,7 +43,7 @@ const RolePage = () => {
     queryFn: RoleService.getAll
   })
 
-  const { mutate: deleteMutation, isPending } = useMutation({
+  const { mutate: deleteRole, isPending } = useMutation({
     mutationKey: [RoleQueryKeys.delete],
     mutationFn: RoleService.delete,
     onSuccess() {
@@ -64,7 +64,7 @@ const RolePage = () => {
       content: SearchFilterDebounced,
       onCreate: dialogToggle.open
     })
-  }, [setLayout])
+  }, [setLayout, t])
 
   const handleClickEdit = (row: Role) => {
     setSelected(row)
@@ -73,7 +73,7 @@ const RolePage = () => {
   const handleClickDelete = (row: Role) => {
     confirm({
       onConfirm() {
-        deleteMutation(row.id)
+        deleteRole(row.id)
       }
     })
   }
@@ -90,14 +90,15 @@ const RolePage = () => {
       </ListView.Content>
       <ListView.Footer>
         <ListView.Pagination
+          count={roles?.meta?.count ?? 0}
           pageCount={roles?.meta?.pageCount ?? 0}
           {...pagination}
         />
       </ListView.Footer>
       <RoleDialog
-        data={selected}
-        open={dialogToggle.isOpen}
-        onChangeOpen={dialogToggle.setOpen}
+        selected={selected}
+        isOpen={dialogToggle.isOpen}
+        onOpenChange={dialogToggle.setOpen}
       />
     </ListView>
   )

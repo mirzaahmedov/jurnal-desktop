@@ -100,7 +100,7 @@ const Jurnal7RasxodPage = () => {
     setLayout({
       title: t('pages.rasxod-docs'),
       content: SearchFilterDebounced,
-      isSelectedMonthVisible: true,
+      enableSaldo: true,
       breadcrumbs: [
         {
           title: t('pages.material-warehouse')

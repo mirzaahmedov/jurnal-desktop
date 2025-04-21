@@ -180,7 +180,7 @@ const AvansDetailsPage = () => {
           title: t('pages.avans')
         }
       ],
-      isSelectedMonthVisible: true,
+      enableSaldo: true,
       onBack() {
         navigate(-1)
       }

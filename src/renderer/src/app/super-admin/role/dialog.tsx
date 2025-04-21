@@ -1,4 +1,5 @@
 import type { Role } from '@/common/models'
+import type { DialogTriggerProps } from 'react-aria-components'
 
 import { useEffect } from 'react'
 
@@ -6,15 +7,17 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import { toast } from 'react-toastify'
 
-import { Button } from '@/common/components/ui/button'
 import {
-  Dialog,
   DialogContent,
   DialogFooter,
   DialogHeader,
-  DialogTitle
-} from '@/common/components/ui/dialog'
+  DialogOverlay,
+  DialogTitle,
+  DialogTrigger
+} from '@/common/components/jolly/dialog'
+import { Button } from '@/common/components/ui/button'
 import {
   Form,
   FormControl,
@@ -24,140 +27,118 @@ import {
   FormMessage
 } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
-import { useToast } from '@/common/hooks/use-toast'
+import { capitalize } from '@/common/lib/string'
 
-import { RoleQueryKeys } from './constants'
+import { RoleQueryKeys } from './config'
 import { RoleFormSchema, type RoleFormValues, RoleService } from './service'
 
-type RoleDialogProps = {
-  open: boolean
-  onChangeOpen(value: boolean): void
-  data: Role | null
+export interface RoleDialogProps extends Omit<DialogTriggerProps, 'children'> {
+  selected: Role | null
 }
-const RoleDialog = (props: RoleDialogProps) => {
-  const { open, onChangeOpen, data } = props
-
-  const { toast } = useToast()
+export const RoleDialog = ({ isOpen, onOpenChange, selected }: RoleDialogProps) => {
   const { t } = useTranslation()
 
   const queryClient = useQueryClient()
 
-  const form = useForm<RoleFormValues>({
+  const form = useForm({
     defaultValues,
     resolver: zodResolver(RoleFormSchema)
   })
 
-  const { mutate: create, isPending: isCreating } = useMutation({
+  const { mutate: createRole, isPending: isCreating } = useMutation({
     mutationKey: [RoleQueryKeys.create],
     mutationFn: RoleService.create,
-    onSuccess() {
-      toast({
-        title: 'Роль успешно создана'
-      })
+    onSuccess(res) {
+      toast.success(res?.message)
       form.reset(defaultValues)
       queryClient.invalidateQueries({
         queryKey: [RoleQueryKeys.getAll]
       })
-      onChangeOpen(false)
-    },
-    onError(error) {
-      toast({
-        variant: 'destructive',
-        title: 'Не удалось создать роль',
-        description: error.message
-      })
+      onOpenChange?.(false)
     }
   })
-  const { mutate: update, isPending: isUpdating } = useMutation({
+  const { mutate: updateRole, isPending: isUpdating } = useMutation({
     mutationKey: [RoleQueryKeys.update],
     mutationFn: RoleService.update,
-    onSuccess() {
-      toast({
-        title: 'Роль успешно обновлена'
-      })
+    onSuccess(res) {
+      toast.success(res?.message)
       queryClient.invalidateQueries({
         queryKey: [RoleQueryKeys.getAll]
       })
-      onChangeOpen(false)
-    },
-    onError(error) {
-      toast({
-        variant: 'destructive',
-        title: 'Не удалось обновить роль',
-        description: error.message
-      })
+      onOpenChange?.(false)
     }
   })
 
-  const onSubmit = (payload: RoleFormValues) => {
-    if (data) {
-      update(Object.assign(payload, { id: data.id }))
+  const onSubmit = form.handleSubmit((values) => {
+    if (selected) {
+      updateRole({
+        ...values,
+        id: selected.id
+      })
     } else {
-      create(payload)
+      createRole(values)
     }
-  }
+  })
 
   useEffect(() => {
-    if (!data) {
+    if (!selected) {
       form.reset(defaultValues)
       return
     }
 
-    form.reset(data)
-  }, [form, data])
+    form.reset(selected)
+  }, [form, selected])
 
   return (
-    <Dialog
-      open={open}
-      onOpenChange={onChangeOpen}
+    <DialogTrigger
+      isOpen={isOpen}
+      onOpenChange={onOpenChange}
     >
-      <DialogContent className="max-w-xl">
-        <DialogHeader>
-          <DialogTitle>
-            {data
-              ? t('update-something', { something: t('role') })
-              : t('create-something', { something: t('role') })}
-          </DialogTitle>
-        </DialogHeader>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)}>
-            <div className="grid gap-4 py-4">
-              <FormField
-                name="name"
-                control={form.control}
-                render={({ field }) => (
-                  <FormItem>
-                    <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
-                      <FormLabel className="text-right col-span-2">{t('name')}</FormLabel>
-                      <FormControl>
-                        <Input
-                          className="col-span-4"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage className="text-end col-span-6" />
-                    </div>
-                  </FormItem>
-                )}
-              />
-            </div>
-            <DialogFooter>
-              <Button
-                type="submit"
-                disabled={isCreating || isUpdating}
-              >
-                {t('save')}
-              </Button>
-            </DialogFooter>
-          </form>
-        </Form>
-      </DialogContent>
-    </Dialog>
+      <DialogOverlay>
+        <DialogContent className="max-w-xl">
+          <DialogHeader>
+            <DialogTitle>
+              {selected ? t('role') : capitalize(t('create-something', { something: t('role') }))}
+            </DialogTitle>
+          </DialogHeader>
+          <Form {...form}>
+            <form onSubmit={onSubmit}>
+              <div className="grid gap-4 py-4">
+                <FormField
+                  name="name"
+                  control={form.control}
+                  render={({ field }) => (
+                    <FormItem>
+                      <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
+                        <FormLabel className="text-right col-span-2">{t('name')}</FormLabel>
+                        <FormControl>
+                          <Input
+                            className="col-span-4"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage className="text-end col-span-6" />
+                      </div>
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <DialogFooter>
+                <Button
+                  type="submit"
+                  disabled={isCreating || isUpdating}
+                >
+                  {t('save')}
+                </Button>
+              </DialogFooter>
+            </form>
+          </Form>
+        </DialogContent>
+      </DialogOverlay>
+    </DialogTrigger>
   )
 }
 
-const defaultValues = {
+const defaultValues: RoleFormValues = {
   name: ''
-} satisfies RoleFormValues
-
-export default RoleDialog
+}

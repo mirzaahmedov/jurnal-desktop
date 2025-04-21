@@ -16,9 +16,9 @@ import { useLayout } from '@/common/layout'
 import { ListView } from '@/common/views'
 
 import { podpisColumns } from './columns'
-import { podpisQueryKeys } from './config'
+import { PodpisQueryKeys } from './config'
 import { PodpisDialog } from './dialog'
-import { podpisService } from './service'
+import { PodpisService } from './service'
 
 const PodpisPage = () => {
   const [selected, setSelected] = useState<Podpis>()
@@ -34,21 +34,21 @@ const PodpisPage = () => {
 
   const { data: podpisList, isFetching } = useQuery({
     queryKey: [
-      podpisQueryKeys.getAll,
+      PodpisQueryKeys.getAll,
       {
         search,
         ...pagination
       }
     ],
-    queryFn: podpisService.getAll
+    queryFn: PodpisService.getAll
   })
   const { mutate: deletePodpis, isPending } = useMutation({
-    mutationKey: [podpisQueryKeys.delete],
-    mutationFn: podpisService.delete,
+    mutationKey: [PodpisQueryKeys.delete],
+    mutationFn: PodpisService.delete,
     onSuccess(res) {
       toast.success(res?.message)
       queryClient.invalidateQueries({
-        queryKey: [podpisQueryKeys.getAll]
+        queryKey: [PodpisQueryKeys.getAll]
       })
     }
   })
@@ -100,7 +100,7 @@ const PodpisPage = () => {
       </ListView.Footer>
       <PodpisDialog
         selected={selected}
-        open={dialogToggle.isOpen}
+        isOpen={dialogToggle.isOpen}
         onOpenChange={dialogToggle.setOpen}
       />
     </ListView>

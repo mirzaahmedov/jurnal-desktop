@@ -75,7 +75,7 @@ const BankMonitorPage = () => {
     setLayout({
       title: t('pages.monitoring'),
       content: SearchFilterDebounced,
-      isSelectedMonthVisible: true,
+      enableSaldo: true,
       breadcrumbs: [
         {
           title: t('pages.bank')

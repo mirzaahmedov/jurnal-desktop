@@ -18,7 +18,7 @@ import {
 import { Button } from '@/common/components/ui/button'
 import { Checkbox } from '@/common/components/ui/checkbox'
 import { Form, FormField, FormItem, FormLabel } from '@/common/components/ui/form'
-import { cn, extendObject } from '@/common/lib/utils'
+import { cn } from '@/common/lib/utils'
 
 import { type RoleAccessFormValues, RoleAccessQueryKeys, roleAccessOptions } from './config'
 import { RoleAccessService } from './service'
@@ -38,9 +38,10 @@ export const RoleAccessDialog = ({ roleId, isOpen, onOpenChange }: RoleAccessDia
     }
     if (type === 'update') {
       const config = args.config
-      config.params = extendObject(config.params, {
+      config.params = {
+        ...config.params,
         role_id: roleId
-      })
+      }
       return {
         config
       }
@@ -60,7 +61,7 @@ export const RoleAccessDialog = ({ roleId, isOpen, onOpenChange }: RoleAccessDia
     enabled: isOpen
   })
 
-  const { mutate: update, isPending } = useMutation({
+  const { mutate: updateRoleAccess, isPending } = useMutation({
     mutationKey: [RoleAccessQueryKeys.update],
     mutationFn: RoleAccessService.update,
     onSuccess(res) {
@@ -84,7 +85,7 @@ export const RoleAccessDialog = ({ roleId, isOpen, onOpenChange }: RoleAccessDia
     if (!roleAccess?.data) {
       return
     }
-    update({
+    updateRoleAccess({
       id: roleAccess.data.id,
       kassa: values.kassa,
       bank: values.bank,

@@ -113,7 +113,7 @@ const BankRasxodPage = () => {
           title: t('pages.bank')
         }
       ],
-      isSelectedMonthVisible: true,
+      enableSaldo: true,
       content: SearchFilterDebounced,
       onCreate() {
         navigate('create')

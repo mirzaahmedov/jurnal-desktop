@@ -26,7 +26,7 @@ const InternalDetailsPage = () => {
           path: '/journal-7/internal-transfer'
         }
       ],
-      isSelectedMonthVisible: true,
+      enableSaldo: true,
       onBack: () => {
         navigate(-1)
       }

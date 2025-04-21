@@ -44,7 +44,7 @@ import { getProvodkaURL } from '@/common/lib/provodka'
 import { ListView } from '@/common/views'
 
 import { useAktSaldo } from '../saldo/components/use-saldo'
-import { AktSverkaDialog } from './akt-sverka'
+import { AktSverkiDialog } from './akt-sverka'
 import { OrganMonitorColumns } from './columns'
 import { OrganMonitorQueryKeys } from './config'
 import { useOrganFilter } from './filters'
@@ -63,7 +63,7 @@ const OrganMonitoringPage = () => {
   const [search] = useSearchFilter()
 
   const { sorting, handleSort, getColumnSorted } = useTableSort()
-  const { main_schet_id, budjet_id, jur3_schet_152_id } = useRequisitesStore()
+  const { main_schet_id, budjet_id, jur3_schet_159_id } = useRequisitesStore()
   const { t } = useTranslation(['app'])
   const { queuedMonths } = useAktSaldo()
 
@@ -88,7 +88,7 @@ const OrganMonitoringPage = () => {
       OrganMonitorQueryKeys.getAll,
       {
         main_schet_id,
-        schet_id: jur3_schet_152_id,
+        schet_id: jur3_schet_159_id,
         organ_id: organId ? organId : undefined,
         search,
         year: startDate.getFullYear(),
@@ -99,7 +99,7 @@ const OrganMonitoringPage = () => {
       }
     ],
     queryFn: OrganMonitoringService.getAll,
-    enabled: !!main_schet_id && !!jur3_schet_152_id && !queuedMonths.length
+    enabled: !!main_schet_id && !!jur3_schet_159_id && !queuedMonths.length
   })
 
   useEffect(() => {
@@ -111,7 +111,7 @@ const OrganMonitoringPage = () => {
         }
       ],
       content: SearchFilterDebounced,
-      isSelectedMonthVisible: true
+      enableSaldo: true
     })
   }, [setLayout, t])
   useEffect(() => {
@@ -177,7 +177,7 @@ const OrganMonitoringPage = () => {
                         params={{
                           budjet_id,
                           main_schet_id,
-                          schet_id: jur3_schet_152_id,
+                          schet_id: jur3_schet_159_id,
                           from: dates.from,
                           to: dates.to,
                           report_title_id,
@@ -197,7 +197,7 @@ const OrganMonitoringPage = () => {
                         params={{
                           main_schet_id,
                           budjet_id,
-                          schet_id: jur3_schet_152_id,
+                          schet_id: jur3_schet_159_id,
                           to: dates.to,
                           year: startDate.getFullYear(),
                           month: startDate.getMonth() + 1,
@@ -215,7 +215,7 @@ const OrganMonitoringPage = () => {
                         params={{
                           budjet_id,
                           main_schet_id,
-                          schet_id: jur3_schet_152_id,
+                          schet_id: jur3_schet_159_id,
                           from: dates.from,
                           to: dates.to,
                           year: startDate.getFullYear(),
@@ -233,7 +233,7 @@ const OrganMonitoringPage = () => {
                         url="/159/monitoring/order"
                         params={{
                           main_schet_id,
-                          schet_id: jur3_schet_152_id,
+                          schet_id: jur3_schet_159_id,
                           organ_id: organId ? organId : undefined,
                           from: dates.from,
                           to: dates.to,
@@ -253,7 +253,7 @@ const OrganMonitoringPage = () => {
                         url="/159/monitoring/order"
                         params={{
                           main_schet_id,
-                          schet_id: jur3_schet_152_id,
+                          schet_id: jur3_schet_159_id,
                           organ_id: organId ? organId : undefined,
                           from: dates.from,
                           to: dates.to,
@@ -269,10 +269,11 @@ const OrganMonitoringPage = () => {
                   </DropdownMenuContent>
                 </DropdownMenu>
                 {organId ? (
-                  <AktSverkaDialog
+                  <AktSverkiDialog
                     organId={organId}
+                    budjetId={budjet_id}
                     mainSchetId={main_schet_id}
-                    schetId={jur3_schet_152_id!}
+                    schetId={jur3_schet_159_id!}
                     from={dates.from}
                     to={dates.to}
                   />

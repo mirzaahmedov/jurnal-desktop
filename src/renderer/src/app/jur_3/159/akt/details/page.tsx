@@ -222,7 +222,7 @@ const AktDetailsPage = () => {
           title: t('pages.akt')
         }
       ],
-      isSelectedMonthVisible: true,
+      enableSaldo: true,
       onBack() {
         navigate(-1)
       }

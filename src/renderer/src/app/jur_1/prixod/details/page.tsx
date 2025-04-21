@@ -268,7 +268,7 @@ const KassaPrixodDetailsPage = () => {
           title: t('pages.prixod-docs')
         }
       ],
-      isSelectedMonthVisible: true,
+      enableSaldo: true,
       onBack() {
         navigate(-1)
       }

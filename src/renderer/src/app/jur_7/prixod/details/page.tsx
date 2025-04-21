@@ -26,7 +26,7 @@ const PrixodDetailsPage = () => {
           path: '/journal-7/prixod'
         }
       ],
-      isSelectedMonthVisible: true,
+      enableSaldo: true,
       onBack: () => {
         navigate(-1)
       }

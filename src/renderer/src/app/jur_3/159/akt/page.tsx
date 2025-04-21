@@ -108,7 +108,7 @@ const AktPage = () => {
         }
       ],
       content: SearchFilterDebounced,
-      isSelectedMonthVisible: true,
+      enableSaldo: true,
       onCreate() {
         navigate('create')
       }

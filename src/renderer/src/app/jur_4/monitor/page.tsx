@@ -96,7 +96,7 @@ const PodotchetMonitorPage = () => {
     setLayout({
       title: t('pages.podotchet-monitoring'),
       content: SearchFilterDebounced,
-      isSelectedMonthVisible: true,
+      enableSaldo: true,
       breadcrumbs: [
         {
           title: t('pages.podotchet')

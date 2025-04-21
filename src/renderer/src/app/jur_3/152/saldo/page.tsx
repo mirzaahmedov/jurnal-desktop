@@ -118,7 +118,7 @@ const OrganSaldoPage = () => {
         }
       ],
       content: OrganSaldoFilters,
-      isSelectedMonthVisible: true,
+      enableSaldo: true,
       onCreate: () => {
         navigate('create', {
           state: {

@@ -97,7 +97,7 @@ const IznosPage = () => {
     setLayout({
       title: t('pages.iznos'),
       content: SearchFilterDebounced,
-      isSelectedMonthVisible: true,
+      enableSaldo: true,
       breadcrumbs: [
         {
           title: t('pages.material-warehouse')

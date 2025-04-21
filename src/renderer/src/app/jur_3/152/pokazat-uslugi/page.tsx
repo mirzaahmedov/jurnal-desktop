@@ -102,7 +102,7 @@ const PokazatUslugiPage = () => {
           title: t('pages.organization')
         }
       ],
-      isSelectedMonthVisible: true,
+      enableSaldo: true,
       content: SearchFilterDebounced,
       onCreate() {
         navigate('create')

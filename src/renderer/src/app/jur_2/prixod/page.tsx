@@ -108,7 +108,7 @@ const BankPrixodPage = () => {
   useEffect(() => {
     setLayout({
       title: t('pages.prixod-docs'),
-      isSelectedMonthVisible: true,
+      enableSaldo: true,
       breadcrumbs: [
         {
           title: t('pages.bank')

@@ -106,6 +106,7 @@
   "responsible_short": "Javobgar",
   "template": "Shablon",
   "report": "Hisobot",
+  "download": "Yuklash",
   "download-something": "{{something}}ni yuklash",
   "create-something": "{{something}} yaratish",
   "update-something": "{{something}}ni tahrirlash",
@@ -334,5 +335,7 @@
   "select-organization": "Tashkilotni tanlang.",
   "clean_current_month": "Joriy oyni tozalash",
   "delete_for_current_month": "Joriy oy uchun ma'lumotlarni o‘chirish",
-  "access_rights_for": "\"{{role}}\" uchun kirish huquqlari"
+  "access_rights_for": "\"{{role}}\" uchun kirish huquqlari",
+  "akt_sverki": "Kelishuv akti",
+  "optional": "Ixtiyoriy"
 }

@@ -106,6 +106,7 @@
   "responsible_short": "Мат-отв. лицо",
   "template": "Шаблон",
   "report": "Отчет",
+  "download": "Скачать",
   "download-something": "Скачать {{something}}",
   "create-something": "Создать {{something}}",
   "update-something": "Обновить {{something}}",
@@ -335,5 +336,7 @@
   "select-organization": "Выберите организацию.",
   "clean_current_month": "Очистить текущий месяц",
   "delete_for_current_month": "Удалить данные за текущий месяц",
-  "access_rights_for": "Права доступа для \"{{role}}\""
+  "access_rights_for": "Права доступа для \"{{role}}\"",
+  "akt_sverki": "Акт сверки",
+  "optional": "Необязательный"
 }

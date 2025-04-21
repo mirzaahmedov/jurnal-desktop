@@ -110,7 +110,7 @@ const KassaPrixodPage = () => {
     setLayout({
       title: t('pages.prixod-docs'),
       content: SearchFilterDebounced,
-      isSelectedMonthVisible: true,
+      enableSaldo: true,
       breadcrumbs: [
         {
           title: t('pages.kassa')

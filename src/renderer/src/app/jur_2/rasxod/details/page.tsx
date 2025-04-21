@@ -321,7 +321,7 @@ const BankRasxodDetailsPage = () => {
           title: t('pages.rasxod-docs')
         }
       ],
-      isSelectedMonthVisible: true,
+      enableSaldo: true,
       onBack() {
         navigate(-1)
       }

@@ -80,7 +80,7 @@ const KassaMonitorPage = () => {
         }
       ],
       content: SearchFilterDebounced,
-      isSelectedMonthVisible: true
+      enableSaldo: true
     })
   }, [setLayout, t])
 

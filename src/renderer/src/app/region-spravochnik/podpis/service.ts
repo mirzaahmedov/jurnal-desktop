@@ -3,6 +3,6 @@ import type { Podpis } from '@/common/models'
 
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 
-export const podpisService = new CRUDService<Podpis, PodpisPayloadType>({
+export const PodpisService = new CRUDService<Podpis, PodpisPayloadType>({
   endpoint: ApiEndpoints.podpis
 })

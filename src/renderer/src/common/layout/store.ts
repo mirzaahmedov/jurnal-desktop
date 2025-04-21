@@ -11,7 +11,7 @@ export interface Breadcrumb {
 
 export interface LayoutStore {
   title: string
-  isSelectedMonthVisible?: boolean
+  enableSaldo?: boolean
   breadcrumbs?: Breadcrumb[]
   content?: ComponentType
   onCreate?: () => void
@@ -20,12 +20,12 @@ export interface LayoutStore {
 }
 export const useLayoutStore = create<LayoutStore>((set) => ({
   title: '',
-  setLayout: ({ title, content, onCreate, onBack, breadcrumbs, isSelectedMonthVisible }) =>
+  setLayout: ({ title, content, onCreate, onBack, breadcrumbs, enableSaldo }) =>
     set({
       title,
       breadcrumbs,
       content,
-      isSelectedMonthVisible,
+      enableSaldo,
       onCreate,
       onBack
     })

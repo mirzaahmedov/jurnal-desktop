@@ -107,7 +107,7 @@ const KassaRasxodPage = () => {
     setLayout({
       title: t('pages.rasxod-docs'),
       content: SearchFilterDebounced,
-      isSelectedMonthVisible: true,
+      enableSaldo: true,
       breadcrumbs: [
         {
           title: t('pages.kassa')

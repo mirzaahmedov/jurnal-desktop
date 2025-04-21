@@ -19,7 +19,7 @@ export const Header = () => {
   const {
     title,
     content: Content,
-    isSelectedMonthVisible,
+    enableSaldo: isSelectedMonthVisible,
     breadcrumbs,
     onCreate,
     onBack

@@ -26,7 +26,7 @@ const RasxodDetailsPage = () => {
           path: '/journal-7/rasxod'
         }
       ],
-      isSelectedMonthVisible: true,
+      enableSaldo: true,
       onBack() {
         navigate(-1)
       }

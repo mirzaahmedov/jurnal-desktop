@@ -50,6 +50,10 @@ export const getPodpisTypeDocumentOptions = (t: TFunction) => {
     {
       key: PodpisTypeDocument.DAYS_REPORT,
       name: t('podpis:documents.days_report')
+    },
+    {
+      key: PodpisTypeDocument.AKT_SVERKA,
+      name: t('podpis:documents.akt_sverki')
     }
   ] as const
 }
@@ -69,13 +73,14 @@ export const PodpisPayloadSchema = z.object({
       message: `Doljnost name must be one of: ${Object.values(PodpisDoljnost).join(', ')}`
     }
   ),
-  fio_name: z.string(),
+  fio_name: z.string().nonempty(),
   type_document: z.enum(
     [
       PodpisTypeDocument.BANK_RASXOD_PORUCHENIYA,
       PodpisTypeDocument.SHARTNOMA_GRAFIK_OPLATI,
       PodpisTypeDocument.DAYS_REPORT,
-      PodpisTypeDocument.CAP
+      PodpisTypeDocument.CAP,
+      PodpisTypeDocument.AKT_SVERKA
     ],
     {
       message: `Type document must be one of: ${Object.values(PodpisTypeDocument).join(', ')}`
@@ -84,7 +89,7 @@ export const PodpisPayloadSchema = z.object({
 })
 export type PodpisPayloadType = z.infer<typeof PodpisPayloadSchema>
 
-export const podpisQueryKeys = {
+export const PodpisQueryKeys = {
   getAll: 'podpis/all',
   getById: 'podpis',
   create: 'podpis/create',

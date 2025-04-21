@@ -88,7 +88,7 @@ export const Jur7MonitorPage = () => {
           title: t('pages.material-warehouse')
         }
       ],
-      isSelectedMonthVisible: true
+      enableSaldo: true
     })
   }, [t, setLayout])
   useEffect(() => {
