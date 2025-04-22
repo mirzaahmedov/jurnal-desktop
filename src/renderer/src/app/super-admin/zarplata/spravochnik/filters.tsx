@@ -11,11 +11,11 @@ export const SpravochnikFilters = () => {
   const [typeCode, setTypeCode] = useTypeFilter()
   return (
     <div className="flex items-center justify-start px-10 gap-5">
-      <SearchFilterDebounced />
       <SpravochnikTypeSelect
-        value={typeCode}
-        onChange={setTypeCode}
+        selectedKey={typeCode}
+        onSelectionChange={(value) => setTypeCode(value ? Number(value) : undefined)}
       />
+      <SearchFilterDebounced />
     </div>
   )
 }

@@ -67,8 +67,8 @@ const ZarplataSpravochnikPage = () => {
       </ListView.Content>
       <ZarplataSpravochnikDialog
         selected={selected}
-        open={dialogToggle.isOpen}
-        onChangeOpen={dialogToggle.setOpen}
+        isOpen={dialogToggle.isOpen}
+        onOpenChange={dialogToggle.setOpen}
       />
     </ListView>
   )
