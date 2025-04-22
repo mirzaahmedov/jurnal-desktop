@@ -12,6 +12,6 @@ export const ReportTitleFormSchema = withPreprocessor(
 )
 export type ReportTitleFormValues = z.infer<typeof ReportTitleFormSchema>
 
-export const reportTitleService = new CRUDService<ReportTitle, ReportTitleFormValues>({
+export const ReportTitleService = new CRUDService<ReportTitle, ReportTitleFormValues>({
   endpoint: ApiEndpoints.report_title
 })

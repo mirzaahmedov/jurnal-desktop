@@ -14,40 +14,40 @@ import { useToggle } from '@/common/hooks/use-toggle'
 import { useLayout } from '@/common/layout'
 import { ListView } from '@/common/views'
 
-import { adminUserColumns } from './columns'
-import { adminUserQueryKeys } from './constants'
-import AdminUserDialog from './dialog'
-import { adminUserService } from './service'
+import { AdminUserColumns } from './columns'
+import { AdminUserQueryKeys } from './config'
+import { AdminUserDialog } from './dialog'
+import { AdminUserService } from './service'
 
 const UserPage = () => {
-  const [selected, setSelected] = useState<User | null>(null)
-
   const dialogToggle = useToggle()
   const pagination = usePagination()
   const queryClient = useQueryClient()
 
   const setLayout = useLayout()
 
+  const [selected, setSelected] = useState<User | null>(null)
+  const [search] = useSearchFilter()
+
   const { t } = useTranslation(['app'])
   const { confirm } = useConfirm()
-  const [search] = useSearchFilter()
 
   const { data: users, isFetching } = useQuery({
     queryKey: [
-      adminUserQueryKeys.getAll,
+      AdminUserQueryKeys.getAll,
       {
         ...pagination,
         search
       }
     ],
-    queryFn: adminUserService.getAll
+    queryFn: AdminUserService.getAll
   })
-  const { mutate: deleteMutation, isPending } = useMutation({
-    mutationKey: [adminUserQueryKeys.delete],
-    mutationFn: adminUserService.delete,
+  const { mutate: deleteUser, isPending } = useMutation({
+    mutationKey: [AdminUserQueryKeys.delete],
+    mutationFn: AdminUserService.delete,
     onSuccess() {
       queryClient.invalidateQueries({
-        queryKey: [adminUserQueryKeys.getAll]
+        queryKey: [AdminUserQueryKeys.getAll]
       })
     }
   })
@@ -77,7 +77,7 @@ const UserPage = () => {
   const handleClickDelete = (row: User) => {
     confirm({
       onConfirm() {
-        deleteMutation(row.id)
+        deleteUser(row.id)
       }
     })
   }
@@ -87,18 +87,19 @@ const UserPage = () => {
       <ListView.Content loading={isFetching || isPending}>
         <GenericTable
           data={users?.data ?? []}
-          columnDefs={adminUserColumns}
+          columnDefs={AdminUserColumns}
           onDelete={handleClickDelete}
           onEdit={handleClickEdit}
         />
       </ListView.Content>
       <AdminUserDialog
-        data={selected}
-        open={dialogToggle.isOpen}
-        onChangeOpen={dialogToggle.setOpen}
+        selected={selected}
+        isOpen={dialogToggle.isOpen}
+        onOpenChange={dialogToggle.setOpen}
       />
       <ListView.Footer>
         <ListView.Pagination
+          count={users?.meta?.count ?? 0}
           pageCount={users?.meta?.pageCount ?? 0}
           {...pagination}
         />

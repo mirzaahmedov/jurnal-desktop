@@ -1,32 +1,33 @@
 import type { SpravochnikHookOptions } from '@/common/features/spravochnik'
 import type { Budjet } from '@/common/models'
 
+import { t } from 'i18next'
 import { z } from 'zod'
 
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 import { extendObject } from '@/common/lib/utils'
 import { withPreprocessor } from '@/common/lib/validation'
 
-import { budgetColumns } from './columns'
+import { BudjetColumns } from './columns'
 
-export const BudgetFormSchema = withPreprocessor(
+export const BudjetFormSchema = withPreprocessor(
   z.object({
     name: z.string()
   })
 )
-export type BudgetFormValues = z.infer<typeof BudgetFormSchema>
+export type BudjetFormValues = z.infer<typeof BudjetFormSchema>
 
-export const BudgetService = new CRUDService<Budjet, BudgetFormValues>({
+export const BudjetService = new CRUDService<Budjet, BudjetFormValues>({
   endpoint: ApiEndpoints.budjet_name
 })
 
 export const createBudjetSpravochnik = (config: Partial<SpravochnikHookOptions<Budjet>>) => {
   return extendObject(
     {
-      title: 'Выберите бюджет',
+      title: t('budjet'),
       endpoint: ApiEndpoints.budjet_name,
-      columnDefs: budgetColumns,
-      service: BudgetService
+      columnDefs: BudjetColumns,
+      service: BudjetService
     } satisfies typeof config,
     config
   )

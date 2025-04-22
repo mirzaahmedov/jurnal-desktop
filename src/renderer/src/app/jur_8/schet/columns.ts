@@ -1,9 +1,9 @@
 import type { ColumnDef } from '@/common/components'
-import type { PrixodSchet } from '@/common/models'
+import type { FinancialReceiptPrixodSchet } from '@/common/models'
 
 import { IDCell } from '@/common/components/table/renderers/id'
 
-export const PrixodSchetColumns: ColumnDef<PrixodSchet>[] = [
+export const PrixodSchetColumns: ColumnDef<FinancialReceiptPrixodSchet>[] = [
   {
     key: 'id',
     renderCell: IDCell,

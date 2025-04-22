@@ -1,4 +1,5 @@
 import type { Group } from '@/common/models'
+import type { DialogTriggerProps } from 'react-aria-components'
 
 import { useEffect } from 'react'
 
@@ -6,6 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import { toast } from 'react-toastify'
 
 import { createSmetaSpravochnik } from '@/app/super-admin/smeta'
 import { FormElement } from '@/common/components/form'
@@ -20,120 +22,86 @@ import {
 import { Form, FormField } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
 import { SpravochnikInput, useSpravochnik } from '@/common/features/spravochnik'
-import { toast } from '@/common/hooks/use-toast'
-import { extendObject } from '@/common/lib/utils'
+import { capitalize } from '@/common/lib/string'
 
-import { GroupPayloadSchema, defaultValues, groupQueryKeys } from './constants'
-import { groupService } from './service'
+import { GroupFormSchema, GroupQueryKeys, defaultValues } from './config'
+import { GroupService } from './service'
 
-type GroupDialogProps = {
-  data: null | Group
-  open: boolean
-  onClose: () => void
+export interface GroupDialogProps extends Omit<DialogTriggerProps, 'children'> {
+  selected: null | Group
 }
-const GroupDialog = (props: GroupDialogProps) => {
-  const { data, open, onClose } = props
-
+export const GroupDialog = ({ selected, isOpen, onOpenChange }: GroupDialogProps) => {
   const { t } = useTranslation()
 
   const form = useForm({
     defaultValues,
-    resolver: zodResolver(GroupPayloadSchema)
+    resolver: zodResolver(GroupFormSchema)
   })
 
   const smetaSpravochnik = useSpravochnik(
     createSmetaSpravochnik({
       onChange(_, smeta) {
-        if (!smeta) {
-          toast({
-            title: 'Смета не найдена',
-            variant: 'destructive'
-          })
-          return
-        }
-        form.setValue('provodka_subschet', smeta?.smeta_number)
-        form.setValue('smeta_id', smeta?.id)
-        form.trigger('provodka_subschet')
+        form.setValue('provodka_subschet', smeta?.smeta_number ?? '', { shouldValidate: true })
+        form.setValue('smeta_id', smeta?.id ?? 0)
       }
     })
   )
 
   const queryClient = useQueryClient()
-  const { mutate: create, isPending: isCreating } = useMutation({
-    mutationKey: [groupQueryKeys.create],
-    mutationFn: groupService.create,
-    onSuccess() {
+
+  const { mutate: createGroup, isPending: isCreating } = useMutation({
+    mutationKey: [GroupQueryKeys.create],
+    mutationFn: GroupService.create,
+    onSuccess(res) {
       form.reset(defaultValues)
+      toast.success(res?.message)
       queryClient.invalidateQueries({
-        queryKey: [groupQueryKeys.getAll]
+        queryKey: [GroupQueryKeys.getAll]
       })
-      onClose()
-      toast({
-        title: 'Группа успешно создана'
-      })
-    },
-    onError(error) {
-      console.error(error)
-      toast({
-        variant: 'destructive',
-        title: 'Ошибка при создании группы',
-        description: error.message
-      })
+      onOpenChange?.(false)
     }
   })
-  const { mutate: update, isPending: isUpdating } = useMutation({
-    mutationKey: [groupQueryKeys.update],
-    mutationFn: groupService.update,
-    onSuccess() {
+  const { mutate: updateGroup, isPending: isUpdating } = useMutation({
+    mutationKey: [GroupQueryKeys.update],
+    mutationFn: GroupService.update,
+    onSuccess(res) {
+      form.reset(defaultValues)
+      toast.success(res?.message)
       queryClient.invalidateQueries({
-        queryKey: [groupQueryKeys.getAll]
+        queryKey: [GroupQueryKeys.getAll]
       })
-      onClose()
-      toast({
-        title: 'Группа успешно изменена'
-      })
-    },
-    onError(error) {
-      console.error(error)
-      toast({
-        variant: 'destructive',
-        title: 'Ошибка при изменении группы',
-        description: error.message
-      })
+      onOpenChange?.(false)
     }
   })
 
   useEffect(() => {
-    if (data) {
-      form.reset(data)
+    if (selected) {
+      form.reset(selected)
       return
     }
     form.reset(defaultValues)
-  }, [form, data])
+  }, [form, selected])
 
-  const onSubmit = form.handleSubmit((payload) => {
-    if (data) {
-      update(
-        extendObject(payload, {
-          id: data.id
-        })
-      )
+  const onSubmit = form.handleSubmit((values) => {
+    if (selected) {
+      updateGroup({
+        ...values,
+        id: selected.id
+      })
       return
     }
-    create(payload)
+    createGroup(values)
   })
 
   return (
     <Dialog
-      open={open}
-      onOpenChange={onClose}
+      open={isOpen}
+      onOpenChange={onOpenChange}
     >
       <DialogContent>
         <DialogHeader>
           <DialogTitle>
-            {data
-              ? t('update-something', { something: t('group') })
-              : t('create-something', { something: t('group') })}
+            {selected ? t('group') : capitalize(t('create-something', { something: t('group') }))}
           </DialogTitle>
         </DialogHeader>
         <Form {...form}>
@@ -258,5 +226,3 @@ const GroupDialog = (props: GroupDialogProps) => {
     </Dialog>
   )
 }
-
-export default GroupDialog

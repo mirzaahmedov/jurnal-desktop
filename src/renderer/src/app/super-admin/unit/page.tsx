@@ -11,10 +11,10 @@ import { useToggle } from '@/common/hooks/use-toggle'
 import { useLayout } from '@/common/layout'
 import { ListView } from '@/common/views'
 
-import { unitColumns } from './columns'
-import { unitQueryKeys } from './constants'
+import { UnitColumns } from './columns'
+import { UnitQueryKeys } from './config'
 import { UnitDialog } from './dialog'
-import { unitService } from './service'
+import { UnitService } from './service'
 
 const UnitPage = () => {
   const dialogToggle = useToggle()
@@ -27,16 +27,16 @@ const UnitPage = () => {
   const { confirm } = useConfirm()
 
   const { data: unit, isFetching } = useQuery({
-    queryKey: [unitQueryKeys.getAll],
-    queryFn: unitService.getAll
+    queryKey: [UnitQueryKeys.getAll],
+    queryFn: UnitService.getAll
   })
 
-  const { mutate: deleteMutation, isPending } = useMutation({
-    mutationKey: [unitQueryKeys.delete],
-    mutationFn: unitService.delete,
+  const { mutate: deleteUnit, isPending } = useMutation({
+    mutationKey: [UnitQueryKeys.delete],
+    mutationFn: UnitService.delete,
     onSuccess() {
       queryClient.invalidateQueries({
-        queryKey: [unitQueryKeys.getAll]
+        queryKey: [UnitQueryKeys.getAll]
       })
     }
   })
@@ -60,7 +60,7 @@ const UnitPage = () => {
   const handleClickDelete = (row: Unit) => {
     confirm({
       onConfirm() {
-        deleteMutation(row.id)
+        deleteUnit(row.id)
       }
     })
   }
@@ -70,15 +70,15 @@ const UnitPage = () => {
       <ListView.Content loading={isFetching || isPending}>
         <GenericTable
           data={unit?.data ?? []}
-          columnDefs={unitColumns}
+          columnDefs={UnitColumns}
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}
         />
       </ListView.Content>
       <UnitDialog
-        data={selected}
-        open={dialogToggle.isOpen}
-        onChangeOpen={dialogToggle.setOpen}
+        selected={selected}
+        isOpen={dialogToggle.isOpen}
+        onOpenChange={dialogToggle.setOpen}
       />
     </ListView>
   )

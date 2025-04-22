@@ -1,7 +1,7 @@
 import type { ColumnDef } from '@/common/components'
 import type { Log } from '@/common/models'
 
-export const logColumns: ColumnDef<Log>[] = [
+export const LogColumns: ColumnDef<Log>[] = [
   {
     key: 'id'
   },

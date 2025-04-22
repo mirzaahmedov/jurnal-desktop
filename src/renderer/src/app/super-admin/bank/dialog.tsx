@@ -1,4 +1,5 @@
 import type { Bank } from '@/common/models'
+import type { DialogTriggerProps } from 'react-aria-components'
 
 import { useEffect } from 'react'
 
@@ -6,29 +7,29 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import { toast } from 'react-toastify'
 
 import { FormElement } from '@/common/components/form'
-import { Button } from '@/common/components/ui/button'
 import {
-  Dialog,
   DialogContent,
   DialogFooter,
   DialogHeader,
-  DialogTitle
-} from '@/common/components/ui/dialog'
+  DialogOverlay,
+  DialogTitle,
+  DialogTrigger
+} from '@/common/components/jolly/dialog'
+import { Button } from '@/common/components/ui/button'
 import { Form, FormField } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
-import { toast } from '@/common/hooks/use-toast'
+import { capitalize } from '@/common/lib/string'
 
 import { BankFormSchema, BankQueryKeys, defaultValues } from './config'
 import { BankService } from './service'
 
-type BankDialogProps = {
-  data?: Bank
-  open: boolean
-  onOpenChange: (open: boolean) => void
+interface BankDialogProps extends Omit<DialogTriggerProps, 'children'> {
+  selected?: Bank
 }
-const BankDialog = ({ data, open, onOpenChange }: BankDialogProps) => {
+export const BankDialog = ({ selected, isOpen, onOpenChange }: BankDialogProps) => {
   const { t } = useTranslation()
 
   const queryClient = useQueryClient()
@@ -40,50 +41,32 @@ const BankDialog = ({ data, open, onOpenChange }: BankDialogProps) => {
   const { mutate: createBank, isPending: isCreating } = useMutation({
     mutationKey: [BankQueryKeys.create],
     mutationFn: BankService.create,
-    onSuccess() {
-      toast({
-        title: 'Банк успешно создан'
-      })
+    onSuccess(res) {
+      toast.success(res?.message)
       form.reset(defaultValues)
       queryClient.invalidateQueries({
         queryKey: [BankQueryKeys.getAll]
       })
-      onOpenChange(false)
-    },
-    onError(error) {
-      toast({
-        variant: 'destructive',
-        title: 'Не удалось создать банк',
-        description: error.message
-      })
+      onOpenChange?.(false)
     }
   })
   const { mutate: updateBank, isPending: isUpdating } = useMutation({
     mutationKey: [BankQueryKeys.update],
     mutationFn: BankService.update,
-    onSuccess() {
-      toast({
-        title: 'Банк успешно обновлен'
-      })
+    onSuccess(res) {
+      toast.success(res?.message)
       form.reset(defaultValues)
       queryClient.invalidateQueries({
         queryKey: [BankQueryKeys.getAll]
       })
-      onOpenChange(false)
-    },
-    onError(error) {
-      toast({
-        variant: 'destructive',
-        title: 'Не удалось обновить банк',
-        description: error.message
-      })
+      onOpenChange?.(false)
     }
   })
 
-  const handleSubmit = form.handleSubmit((values) => {
-    if (data) {
+  const onSubmit = form.handleSubmit((values) => {
+    if (selected) {
       updateBank({
-        id: data.id,
+        id: selected.id,
         ...values
       })
       return
@@ -92,66 +75,66 @@ const BankDialog = ({ data, open, onOpenChange }: BankDialogProps) => {
   })
 
   useEffect(() => {
-    if (open) {
-      form.reset(data ?? defaultValues)
+    if (selected) {
+      form.reset(selected)
+      return
     }
-  }, [form, open, data])
+    form.reset(defaultValues)
+  }, [form, selected])
 
   return (
-    <Dialog
-      open={open}
+    <DialogTrigger
+      isOpen={isOpen}
       onOpenChange={onOpenChange}
     >
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle className="titlecase">
-            {data
-              ? t('update-something', { something: t('bank') })
-              : t('create-something', { something: t('bank') })}
-          </DialogTitle>
-        </DialogHeader>
-        <Form {...form}>
-          <form
-            onSubmit={handleSubmit}
-            className="flex flex-col gap-4"
-          >
-            <FormField
-              control={form.control}
-              name="mfo"
-              render={({ field }) => (
-                <FormElement
-                  grid="1:2"
-                  label={t('mfo')}
+      <DialogOverlay>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="titlecase">
+              {selected ? t('bank') : capitalize(t('create-something', { something: t('bank') }))}
+            </DialogTitle>
+          </DialogHeader>
+          <Form {...form}>
+            <form
+              onSubmit={onSubmit}
+              className="flex flex-col gap-4"
+            >
+              <FormField
+                control={form.control}
+                name="mfo"
+                render={({ field }) => (
+                  <FormElement
+                    grid="1:2"
+                    label={t('mfo')}
+                  >
+                    <Input {...field} />
+                  </FormElement>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="bank_name"
+                render={({ field }) => (
+                  <FormElement
+                    grid="1:2"
+                    label={t('name')}
+                  >
+                    <Input {...field} />
+                  </FormElement>
+                )}
+              />
+              <DialogFooter>
+                <Button
+                  type="submit"
+                  disabled={isCreating || isUpdating}
                 >
-                  <Input {...field} />
-                </FormElement>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="bank_name"
-              render={({ field }) => (
-                <FormElement
-                  grid="1:2"
-                  label={t('name')}
-                >
-                  <Input {...field} />
-                </FormElement>
-              )}
-            />
-            <DialogFooter>
-              <Button
-                type="submit"
-                disabled={isCreating || isUpdating}
-              >
-                {t('save')}
-              </Button>
-            </DialogFooter>
-          </form>
-        </Form>
-      </DialogContent>
-    </Dialog>
+                  {t('save')}
+                </Button>
+              </DialogFooter>
+            </form>
+          </Form>
+        </DialogContent>
+      </DialogOverlay>
+    </DialogTrigger>
   )
 }
-
-export { BankDialog }

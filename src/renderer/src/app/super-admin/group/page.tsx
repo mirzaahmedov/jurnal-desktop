@@ -4,58 +4,50 @@ import { useEffect, useState } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
+import { toast } from 'react-toastify'
 
 import { useConfirm } from '@/common/features/confirm'
 import { DownloadFile, ImportFile } from '@/common/features/file'
 import { SearchFilterDebounced } from '@/common/features/filters/search/search-filter-debounced'
 import { useSearchFilter } from '@/common/features/filters/search/search-filter-debounced'
-import { toast } from '@/common/hooks/use-toast'
 import { useToggle } from '@/common/hooks/use-toggle'
 import { useLayout } from '@/common/layout'
 import { ListView } from '@/common/views'
 
-import { groupColumns } from './columns'
-import { groupQueryKeys } from './constants'
-import GroupDialog from './dialog'
-import { GroupTable, groupService } from './service'
+import { GroupColumns } from './columns'
+import { GroupQueryKeys } from './config'
+import { GroupDialog } from './dialog'
+import { GroupService, GroupTable } from './service'
 
 const GroupPage = () => {
-  const [selected, setSelected] = useState<null | Group>(null)
-
   const dialogToggle = useToggle()
   const queryClient = useQueryClient()
   const setLayout = useLayout()
 
-  const { t } = useTranslation(['app'])
+  const [selected, setSelected] = useState<null | Group>(null)
   const [search] = useSearchFilter()
+
+  const { t } = useTranslation(['app'])
   const { confirm } = useConfirm()
 
-  const { data: groupList, isFetching } = useQuery({
+  const { data: groups, isFetching } = useQuery({
     queryKey: [
-      groupQueryKeys.getAll,
+      GroupQueryKeys.getAll,
       {
         search,
         page: 1,
         limit: 10000
       }
     ],
-    queryFn: groupService.getAll
+    queryFn: GroupService.getAll
   })
-  const { mutate: deleteMutation, isPending } = useMutation({
-    mutationKey: [groupQueryKeys.delete],
-    mutationFn: groupService.delete,
-    onSuccess() {
+  const { mutate: deleteGroup, isPending } = useMutation({
+    mutationKey: [GroupQueryKeys.delete],
+    mutationFn: GroupService.delete,
+    onSuccess(res) {
+      toast.success(res?.message)
       queryClient.invalidateQueries({
-        queryKey: [groupQueryKeys.getAll]
-      })
-      toast({
-        title: 'Группа удалена'
-      })
-    },
-    onError() {
-      toast({
-        title: 'Ошибка при удалении группы',
-        variant: 'destructive'
+        queryKey: [GroupQueryKeys.getAll]
       })
     }
   })
@@ -77,9 +69,8 @@ const GroupPage = () => {
   }
   const handleClickDelete = (row: Group) => {
     confirm({
-      title: 'Удалить группу?',
       onConfirm() {
-        deleteMutation(row.id)
+        deleteGroup(row.id)
       }
     })
   }
@@ -103,16 +94,16 @@ const GroupPage = () => {
       </ListView.Header>
       <ListView.Content loading={isFetching || isPending}>
         <GroupTable
-          columnDefs={groupColumns}
-          data={groupList?.data ?? []}
+          columnDefs={GroupColumns}
+          data={groups?.data ?? []}
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}
         />
       </ListView.Content>
       <GroupDialog
-        data={selected}
-        open={dialogToggle.isOpen}
-        onClose={dialogToggle.close}
+        selected={selected}
+        isOpen={dialogToggle.isOpen}
+        onOpenChange={dialogToggle.close}
       />
     </ListView>
   )

@@ -5,7 +5,7 @@ import { IDCell } from '@/common/components/table/renderers/id'
 
 import { operatsiiTypeSchetOptions } from './config'
 
-export const operatsiiColumns: ColumnDef<Operatsii>[] = [
+export const OperatsiiColumns: ColumnDef<Operatsii>[] = [
   {
     key: 'id',
     renderCell: IDCell,

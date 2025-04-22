@@ -1,6 +1,8 @@
 import type { ColumnDef } from '@/common/components'
 import type { RegionData } from '@/common/models'
 
+import { Trans } from 'react-i18next'
+
 import { Badge } from '@/common/components/ui/badge'
 
 const CountCell = ({ count }: { count: number }) => {
@@ -24,32 +26,33 @@ const CountCell = ({ count }: { count: number }) => {
   )
 }
 
-const regionDataColumns: ColumnDef<RegionData>[] = [
+export const RegionDataColumns: ColumnDef<RegionData>[] = [
   {
     key: 'name'
   },
   {
     key: 'kassa',
-    header: 'mo-1',
+    header: <Trans values={{ nth: 1 }}>mo-nth</Trans>,
     renderCell: (row) => <CountCell count={row.counts.kassa_count} />
   },
   {
     key: 'bank',
-    header: 'mo-2',
+    header: <Trans values={{ nth: 2 }}>mo-nth</Trans>,
     renderCell: (row) => <CountCell count={row.counts.bank_count} />
   },
   {
     key: 'organization',
-    header: 'mo-3',
+    header: <Trans values={{ nth: 3 }}>mo-nth</Trans>,
     renderCell: (row) => <CountCell count={row.counts.organ_count} />
   },
   {
     key: 'jur7',
-    header: 'mo-7',
+    header: <Trans values={{ nth: 7 }}>mo-nth</Trans>,
     renderCell: (row) => <CountCell count={row.counts.jur7_count} />
   },
   {
     key: 'spravochnik',
+    header: <Trans ns="app">pages.spravochnik</Trans>,
     renderCell: (row) => <CountCell count={row.counts.storage_count} />
   },
   {
@@ -57,5 +60,3 @@ const regionDataColumns: ColumnDef<RegionData>[] = [
     renderCell: (row) => <CountCell count={row.counts.total_count} />
   }
 ]
-
-export { regionDataColumns }

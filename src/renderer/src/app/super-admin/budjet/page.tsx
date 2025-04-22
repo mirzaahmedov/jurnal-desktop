@@ -10,12 +10,12 @@ import { useConfirm } from '@/common/features/confirm'
 import { useToggle } from '@/common/hooks/use-toggle'
 import { useLayout } from '@/common/layout'
 
-import { budgetColumns } from './columns'
+import { BudjetColumns } from './columns'
 import { BudjetQueryKeys } from './config'
-import BudgetDialog from './dialog'
-import { BudgetService } from './service'
+import BudjetDialog from './dialog'
+import { BudjetService } from './service'
 
-const BudgetPage = () => {
+const BudjetPage = () => {
   const [selected, setSelected] = useState<Budjet | null>(null)
 
   const dialogToggle = useToggle()
@@ -25,13 +25,13 @@ const BudgetPage = () => {
   const { t } = useTranslation(['app'])
   const { confirm } = useConfirm()
 
-  const { data: budgets, isFetching } = useQuery({
+  const { data: budjets, isFetching } = useQuery({
     queryKey: [BudjetQueryKeys.getAll],
-    queryFn: BudgetService.getAll
+    queryFn: BudjetService.getAll
   })
   const { mutate: deleteMutation, isPending } = useMutation({
     mutationKey: [BudjetQueryKeys.delete],
-    mutationFn: BudgetService.delete,
+    mutationFn: BudjetService.delete,
     onSuccess() {
       queryClient.invalidateQueries({
         queryKey: [BudjetQueryKeys.getAll]
@@ -68,19 +68,19 @@ const BudgetPage = () => {
       <div className="relative">
         {isFetching || isPending ? <LoadingOverlay /> : null}
         <GenericTable
-          data={budgets?.data ?? []}
-          columnDefs={budgetColumns}
+          data={budjets?.data ?? []}
+          columnDefs={BudjetColumns}
           onDelete={handleClickDelete}
           onEdit={handleClickEdit}
         />
       </div>
-      <BudgetDialog
-        data={selected}
-        open={dialogToggle.isOpen}
-        onChangeOpen={dialogToggle.setOpen}
+      <BudjetDialog
+        selected={selected}
+        isOpen={dialogToggle.isOpen}
+        onOpenChange={dialogToggle.setOpen}
       />
     </>
   )
 }
 
-export default BudgetPage
+export default BudjetPage

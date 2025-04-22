@@ -8,7 +8,7 @@ import { useQuery } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
-import { reportTitleQueryKeys, reportTitleService } from '@/app/super-admin/report-title'
+import { ReportTitleQueryKeys, ReportTitleService } from '@/app/super-admin/report-title'
 import { JollyDatePicker } from '@/common/components/jolly/date-picker'
 import {
   DialogContent,
@@ -49,8 +49,8 @@ export const SettingsDialog = ({ open, onOpenChange }: DialogProps) => {
   const { default_start_date, default_end_date, report_title_id, setSettings } = useSettingsStore()
 
   const { data: reportTitles, isFetching } = useQuery({
-    queryKey: [reportTitleQueryKeys.getAll, { page: 1, limit: 1000000 }],
-    queryFn: reportTitleService.getAll
+    queryKey: [ReportTitleQueryKeys.getAll, { page: 1, limit: 1000000 }],
+    queryFn: ReportTitleService.getAll
   })
 
   const form = useForm<SettingsFormValues>({

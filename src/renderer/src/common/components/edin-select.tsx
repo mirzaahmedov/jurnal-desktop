@@ -3,7 +3,7 @@ import type { Unit } from '@/common/models'
 import { useQuery } from '@tanstack/react-query'
 import { ChevronsUpDown } from 'lucide-react'
 
-import { unitQueryKeys, unitService } from '@/app/super-admin/unit'
+import { UnitQueryKeys, UnitService } from '@/app/super-admin/unit'
 
 import { Button } from './jolly/button'
 import {
@@ -22,8 +22,8 @@ export interface EdinSelectProps extends Omit<JollyComboBoxProps<Unit>, 'childre
 }
 export const EdinSelect = ({ error, tabIndex, ...props }: EdinSelectProps) => {
   const { data: edins, isFetching } = useQuery({
-    queryKey: [unitQueryKeys.getAll],
-    queryFn: unitService.getAll
+    queryKey: [UnitQueryKeys.getAll],
+    queryFn: UnitService.getAll
   })
 
   return (

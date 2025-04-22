@@ -23,7 +23,7 @@ export interface FinancialReceiptProvodka {
   opisanie?: string
 }
 
-export interface PrixodSchet {
+export interface FinancialReceiptPrixodSchet {
   id: number
   schet_id: number
   user_id: number

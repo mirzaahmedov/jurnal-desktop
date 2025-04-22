@@ -1,8 +1,10 @@
-import type { GroupPayloadType } from './constants'
+import type { GroupFormValues } from './config'
 import type { SpravochnikHookOptions } from '@/common/features/spravochnik'
 import type { Group } from '@/common/models'
 
 import { useMemo } from 'react'
+
+import { t } from 'i18next'
 
 import { CollapsibleTable, type CollapsibleTableProps } from '@/common/components/collapsible-table'
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
@@ -14,9 +16,9 @@ import {
 } from '@/common/lib/tree/path-tree'
 import { extendObject } from '@/common/lib/utils'
 
-import { groupColumns } from './columns'
+import { GroupColumns } from './columns'
 
-export const groupService = new CRUDService<Group, GroupPayloadType>({
+export const GroupService = new CRUDService<Group, GroupFormValues>({
   endpoint: ApiEndpoints.jur7_group
 })
 
@@ -49,12 +51,12 @@ export const GroupTable = ({ data, ...props }: GroupTableProps) => {
 export const createGroupSpravochnik = (config: Partial<SpravochnikHookOptions<Group>>) => {
   return extendObject(
     {
-      title: 'Выберите группу',
+      title: t('group'),
       endpoint: ApiEndpoints.jur7_group,
-      columnDefs: groupColumns,
-      service: groupService,
+      columnDefs: GroupColumns, // Todo: fix this
+      service: GroupService,
       filters: [SpravochnikSearchField],
-      CustomTable: GroupTable,
+      CustomTable: GroupTable, // Todo: fix this
       params: extendObject(
         {
           page: 1,

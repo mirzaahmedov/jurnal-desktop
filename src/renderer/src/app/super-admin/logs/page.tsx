@@ -8,13 +8,13 @@ import { useDates } from '@/common/hooks'
 import { useLayout } from '@/common/layout'
 import { ListView } from '@/common/views'
 
-import { logColumns } from './columns'
-import { logQueryKeys } from './config'
-import { LogFilter } from './filter'
+import { LogColumns } from './columns'
+import { LogQueryKeys } from './config'
+import { LogFilters } from './filter'
 import { useLogType } from './hooks'
-import { logService } from './service'
+import { LogService } from './service'
 
-const Logs = () => {
+const LogPage = () => {
   const dates = useDates()
   const setLayout = useLayout()
 
@@ -22,15 +22,21 @@ const Logs = () => {
 
   const { t } = useTranslation(['app'])
 
-  const { data: logList, isFetching } = useQuery({
-    queryKey: [logQueryKeys.getAll, { ...dates, type }],
-    queryFn: logService.getAll
+  const { data: logs, isFetching } = useQuery({
+    queryKey: [
+      LogQueryKeys.getAll,
+      {
+        ...dates,
+        type
+      }
+    ],
+    queryFn: LogService.getAll
   })
 
   useEffect(() => {
     setLayout({
       title: t('pages.logs'),
-      content: LogFilter
+      content: LogFilters
     })
   }, [setLayout, t])
 
@@ -41,12 +47,12 @@ const Logs = () => {
       </ListView.Header>
       <ListView.Content loading={isFetching}>
         <GenericTable
-          data={logList?.data ?? []}
-          columnDefs={logColumns}
+          data={logs?.data ?? []}
+          columnDefs={LogColumns}
         />
       </ListView.Content>
     </ListView>
   )
 }
 
-export default Logs
+export default LogPage

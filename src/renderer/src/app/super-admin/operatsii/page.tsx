@@ -20,11 +20,12 @@ import { useLayout } from '@/common/layout'
 import { type Operatsii } from '@/common/models'
 import { ListView } from '@/common/views'
 
-import { operatsiiColumns } from './columns'
+import { OperatsiiColumns } from './columns'
 import { operatsiiQueryKeys } from './config'
+import { type OperatsiiFormValues } from './config'
 import { OperatsiiDialog } from './dialog'
 import { OperatsiiFilter, useTypeSchetFilter } from './filter'
-import { type OperatsiiFormValues, operatsiiService } from './service'
+import { OperatsiiService } from './service'
 
 const OperatsiiPage = () => {
   const [selected, setSelected] = useState<Operatsii | null>(null)
@@ -51,12 +52,12 @@ const OperatsiiPage = () => {
       },
       typeSchet
     ],
-    queryFn: operatsiiService.getAll,
+    queryFn: OperatsiiService.getAll,
     placeholderData: (prev) => prev
   })
   const { mutate: deleteOperatsii, isPending } = useMutation({
     mutationKey: [operatsiiQueryKeys.delete],
-    mutationFn: operatsiiService.delete,
+    mutationFn: OperatsiiService.delete,
     onSuccess() {
       queryClient.invalidateQueries({
         queryKey: [operatsiiQueryKeys.getAll]
@@ -111,7 +112,7 @@ const OperatsiiPage = () => {
       <ListView.Content loading={isFetching || isPending}>
         <GenericTable
           data={operations?.data ?? []}
-          columnDefs={operatsiiColumns}
+          columnDefs={OperatsiiColumns}
           getRowId={(row) => row.id}
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}

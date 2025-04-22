@@ -5,13 +5,13 @@ import { z } from 'zod'
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 import { withPreprocessor } from '@/common/lib/validation'
 
-export const RegionPayloadSchema = withPreprocessor(
+export const RegionFormSchema = withPreprocessor(
   z.object({
     name: z.string()
   })
 )
-export type RegionPayloadType = z.infer<typeof RegionPayloadSchema>
+export type RegionFormValues = z.infer<typeof RegionFormSchema>
 
-export const regionService = new CRUDService<Region, RegionPayloadType>({
+export const RegionService = new CRUDService<Region, RegionFormValues>({
   endpoint: ApiEndpoints.region
 })

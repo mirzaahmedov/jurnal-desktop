@@ -1,4 +1,4 @@
-export const unitQueryKeys = {
+export const UnitQueryKeys = {
   getAll: 'unit/all',
   getById: 'unit',
   create: 'unit/create',

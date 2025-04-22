@@ -1,3 +1,6 @@
+import { z } from 'zod'
+
+import { withPreprocessor } from '@/common/lib/validation'
 import { TypeSchetOperatsii } from '@/common/models'
 
 export const operatsiiQueryKeys = {
@@ -54,3 +57,24 @@ export const operatsiiTypeSchetOptions = [
   value: TypeSchetOperatsii
   label: string
 }[]
+
+export const OperatsiiFormSchema = withPreprocessor(
+  z.object({
+    name: z.string(),
+    schet: z.string(),
+    sub_schet: z.string().optional(),
+    type_schet: z.enum([
+      TypeSchetOperatsii.KASSA_PRIXOD,
+      TypeSchetOperatsii.KASSA_RASXOD,
+      TypeSchetOperatsii.BANK_PRIXOD,
+      TypeSchetOperatsii.BANK_RASXOD,
+      TypeSchetOperatsii.AKT,
+      TypeSchetOperatsii.AVANS_OTCHET,
+      TypeSchetOperatsii.POKAZAT_USLUGI,
+      TypeSchetOperatsii.JUR3,
+      TypeSchetOperatsii.JUR4
+    ]),
+    smeta_id: z.number().optional()
+  })
+)
+export type OperatsiiFormValues = z.infer<typeof OperatsiiFormSchema>

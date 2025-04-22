@@ -1,4 +1,5 @@
 import type { PereotsenkaTable } from './config'
+import type { DialogTriggerProps } from 'react-aria-components'
 
 import { useEffect } from 'react'
 
@@ -6,39 +7,39 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import { toast } from 'react-toastify'
 
-import { groupQueryKeys } from '@/app/super-admin/group/constants'
+import { GroupQueryKeys } from '@/app/super-admin/group/config'
 import { LoadingOverlay } from '@/common/components'
 import { EditableTable } from '@/common/components/editable-table'
 import { FormElement } from '@/common/components/form'
-import { Button } from '@/common/components/ui/button'
 import {
-  Drawer,
-  DrawerContent,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle
-} from '@/common/components/ui/drawer'
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogOverlay,
+  DialogTitle,
+  DialogTrigger
+} from '@/common/components/jolly/dialog'
+import { Button } from '@/common/components/ui/button'
 import { Form, FormField } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
-import { toast } from '@/common/hooks/use-toast'
+import { capitalize } from '@/common/lib/string'
 
-import { groupColumns } from './columns'
+import { GroupColumns } from './columns'
 import {
   type PereotsenkaBatchForm,
   PereotsenkaBatchFormSchema,
-  defaultBatchValues,
-  pereotsenkaQueryKeys
+  PereotsenkaQueryKeys,
+  defaultBatchValues
 } from './config'
 import { getLatestPereotsenkaQuery, pereotsenkaCreateBatchQuery } from './service'
 
-type PereotsenkaBatchCreateDrawerProps = {
-  open: boolean
-  onOpenChange: (open: boolean) => void
-}
-export const PereotsenkaBatchCreateDrawer = (props: PereotsenkaBatchCreateDrawerProps) => {
-  const { open, onOpenChange } = props
-
+interface PereotsenkaBatchCreateDrawerProps extends Omit<DialogTriggerProps, 'children'> {}
+export const PereotsenkaBatchCreateDrawer = ({
+  isOpen,
+  onOpenChange
+}: PereotsenkaBatchCreateDrawerProps) => {
   const { t } = useTranslation()
 
   const queryClient = useQueryClient()
@@ -48,13 +49,13 @@ export const PereotsenkaBatchCreateDrawer = (props: PereotsenkaBatchCreateDrawer
   })
 
   const { data: pereotsenkaLatest, isFetching } = useQuery({
-    queryKey: [groupQueryKeys.getLatest],
+    queryKey: [GroupQueryKeys.getLatest],
     queryFn: getLatestPereotsenkaQuery,
-    enabled: open
+    enabled: isOpen
   })
 
   const { mutate: createBatchPereotsenka, isPending } = useMutation({
-    mutationKey: [pereotsenkaQueryKeys.create],
+    mutationKey: [PereotsenkaQueryKeys.create],
     mutationFn: (values: PereotsenkaBatchForm) => {
       const data = values.array.map((item) => ({
         name: values.name,
@@ -63,25 +64,19 @@ export const PereotsenkaBatchCreateDrawer = (props: PereotsenkaBatchCreateDrawer
       }))
       return pereotsenkaCreateBatchQuery({ data })
     },
-    onSuccess() {
+    onSuccess(res) {
+      toast.success(res?.message)
       queryClient.invalidateQueries({
-        queryKey: [pereotsenkaQueryKeys.getAll]
+        queryKey: [PereotsenkaQueryKeys.getAll]
       })
       form.reset(defaultBatchValues)
-      onOpenChange(false)
-    },
-    onError(error) {
-      toast({
-        variant: 'destructive',
-        title: 'Ошибка при добавлении переоценки'
-      })
-      console.error(error)
+      onOpenChange?.(false)
     }
   })
 
   useEffect(() => {
     if (!Array.isArray(pereotsenkaLatest?.data)) {
-      form.reset()
+      form.reset(defaultBatchValues)
       return
     }
     form.setValue(
@@ -97,74 +92,77 @@ export const PereotsenkaBatchCreateDrawer = (props: PereotsenkaBatchCreateDrawer
     createBatchPereotsenka(values)
   })
 
-  console.log({ errors: form.formState.errors, data: form.watch() })
-
   return (
-    <Drawer
-      open={open}
+    <DialogTrigger
+      isOpen={isOpen}
       onOpenChange={onOpenChange}
     >
-      <DrawerContent className="h-[900px] max-h-[90%]">
-        <DrawerHeader>
-          <DrawerTitle className="titlecase">
-            {t('create-something', { something: t('pereotsenka') })}
-          </DrawerTitle>
-        </DrawerHeader>
-        <Form {...form}>
-          <form
-            onSubmit={onSubmit}
-            className="relative h-full flex flex-col overflow-hidden"
-          >
-            {isFetching ? (
-              <LoadingOverlay />
-            ) : (
-              <>
-                <div className="w-full flex flex-row p-5 border-b">
-                  <FormField
-                    name="name"
-                    control={form.control}
-                    render={({ field }) => (
-                      <FormElement
-                        label={t('name')}
-                        className="w-full max-w-md"
-                      >
-                        <Input {...field} />
-                      </FormElement>
-                    )}
-                  />
-                </div>
-                <div className="p-5 overflow-auto scrollbar flex-1">
-                  <EditableTable
-                    columnDefs={groupColumns as any}
-                    data={form.watch('array')}
-                    errors={form.formState.errors.array}
-                    onChange={(ctx) => {
-                      form.setValue(`array.${ctx.id}`, ctx.payload)
-                      form.trigger(`array.${ctx.id}`)
-                    }}
-                  />
-                </div>
-                <DrawerFooter className="flex flex-row justify-start border-t">
-                  <Button
-                    type="submit"
-                    disabled={isPending}
-                  >
-                    {t('add')}
-                  </Button>
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    disabled={isPending}
-                    onClick={() => onOpenChange(false)}
-                  >
-                    {t('close')}
-                  </Button>
-                </DrawerFooter>
-              </>
-            )}
-          </form>
-        </Form>
-      </DrawerContent>
-    </Drawer>
+      <DialogOverlay>
+        <DialogContent
+          side="bottom"
+          className="h-[900px] max-h-[90%]"
+        >
+          <DialogHeader>
+            <DialogTitle className="titlecase">
+              {capitalize(t('create-something', { something: t('pereotsenka') }))}
+            </DialogTitle>
+          </DialogHeader>
+          <Form {...form}>
+            <form
+              onSubmit={onSubmit}
+              className="relative h-full flex flex-col overflow-hidden"
+            >
+              {isFetching ? (
+                <LoadingOverlay />
+              ) : (
+                <>
+                  <div className="w-full flex flex-row p-5 border-b">
+                    <FormField
+                      name="name"
+                      control={form.control}
+                      render={({ field }) => (
+                        <FormElement
+                          label={t('name')}
+                          className="w-full max-w-md"
+                        >
+                          <Input {...field} />
+                        </FormElement>
+                      )}
+                    />
+                  </div>
+                  <div className="m-5 relative overflow-auto scrollbar flex-1">
+                    <EditableTable
+                      columnDefs={
+                        GroupColumns as any /* 
+                      TODO: fix type error 
+                      */
+                      }
+                      form={form}
+                      name="array"
+                    />
+                  </div>
+                  <DialogFooter className="flex flex-row justify-start py-5 border-t">
+                    <Button
+                      type="submit"
+                      disabled={isPending}
+                    >
+                      {t('add')}
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      disabled={isPending}
+                      onClick={() => onOpenChange?.(false)}
+                    >
+                      {t('close')}
+                    </Button>
+                  </DialogFooter>
+                </>
+              )}
+            </form>
+          </Form>
+        </DialogContent>
+      </DialogOverlay>
+    </DialogTrigger>
   )
 }

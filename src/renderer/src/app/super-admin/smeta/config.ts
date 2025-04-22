@@ -12,7 +12,7 @@ export const SmetaFormSchema = withPreprocessor(
 )
 export type SmetaForm = z.infer<typeof SmetaFormSchema>
 
-export const smetaQueryKeys = {
+export const SmetaQueryKeys = {
   getAll: 'smeta/all',
   getById: 'smeta',
   create: 'smeta/create',

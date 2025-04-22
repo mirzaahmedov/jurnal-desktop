@@ -14,25 +14,24 @@ import { useToggle } from '@/common/hooks/use-toggle'
 import { useLayout } from '@/common/layout'
 import { ListView } from '@/common/views'
 
-import { bankColumns } from './columns'
+import { BankColumns } from './columns'
 import { BankQueryKeys } from './config'
 import { BankDialog } from './dialog'
 import { BankService } from './service'
 
 const BankPage = () => {
-  const [selected, setSelected] = useState<Bank>()
-
   const setLayout = useLayout()
-
   const dialogToggle = useToggle()
   const queryClient = useQueryClient()
   const pagination = usePagination()
 
-  const { t } = useTranslation(['app'])
+  const [selected, setSelected] = useState<Bank>()
   const [search] = useSearchFilter()
+
+  const { t } = useTranslation(['app'])
   const { confirm } = useConfirm()
 
-  const { data: podpisList, isFetching } = useQuery({
+  const { data: banks, isFetching } = useQuery({
     queryKey: [
       BankQueryKeys.getAll,
       {
@@ -42,7 +41,7 @@ const BankPage = () => {
     ],
     queryFn: BankService.getAll
   })
-  const { mutate: deletePodpis, isPending } = useMutation({
+  const { mutate: deleteBank, isPending } = useMutation({
     mutationKey: [BankQueryKeys.delete],
     mutationFn: BankService.delete,
     onSuccess() {
@@ -60,7 +59,7 @@ const BankPage = () => {
     confirm({
       title: 'Удаление подписи',
       onConfirm() {
-        deletePodpis(data.id)
+        deleteBank(data.id)
       }
     })
   }
@@ -79,8 +78,8 @@ const BankPage = () => {
     <ListView>
       <ListView.Content loading={isFetching || isPending}>
         <GenericTable
-          data={podpisList?.data ?? []}
-          columnDefs={bankColumns}
+          data={banks?.data ?? []}
+          columnDefs={BankColumns}
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}
         />
@@ -88,12 +87,13 @@ const BankPage = () => {
       <ListView.Footer>
         <ListView.Pagination
           {...pagination}
-          pageCount={podpisList?.meta?.pageCount ?? 0}
+          count={banks?.meta?.count ?? 0}
+          pageCount={banks?.meta?.pageCount ?? 0}
         />
       </ListView.Footer>
       <BankDialog
-        data={selected}
-        open={dialogToggle.isOpen}
+        selected={selected}
+        isOpen={dialogToggle.isOpen}
         onOpenChange={dialogToggle.setOpen}
       />
     </ListView>

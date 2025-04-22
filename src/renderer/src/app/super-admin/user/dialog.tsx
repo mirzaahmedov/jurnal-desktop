@@ -1,4 +1,5 @@
 import type { User } from '@/common/models'
+import type { DialogTriggerProps } from 'react-aria-components'
 
 import { useEffect } from 'react'
 
@@ -6,17 +7,19 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import { toast } from 'react-toastify'
 
-import { regionQueryKeys, regionService } from '@/app/super-admin/region'
-import { SelectField } from '@/common/components'
-import { Button } from '@/common/components/ui/button'
+import { RegionQueryKeys, RegionService } from '@/app/super-admin/region'
 import {
-  Dialog,
   DialogContent,
   DialogFooter,
   DialogHeader,
-  DialogTitle
-} from '@/common/components/ui/dialog'
+  DialogOverlay,
+  DialogTitle,
+  DialogTrigger
+} from '@/common/components/jolly/dialog'
+import { JollySelect, SelectItem } from '@/common/components/jolly/select'
+import { Button } from '@/common/components/ui/button'
 import {
   Form,
   FormControl,
@@ -26,198 +29,179 @@ import {
   FormMessage
 } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
-import { useToast } from '@/common/hooks/use-toast'
+import { capitalize } from '@/common/lib/string'
 
-import { adminUserQueryKeys } from './constants'
-import { AdminUserPayloadSchema, type AdmonUserPayloadType, adminUserService } from './service'
+import { AdminUserQueryKeys } from './config'
+import { AdminUserFormSchema, type AdmonUserFormValues } from './config'
+import { AdminUserService } from './service'
 
-type AdminUserDialogProps = {
-  open: boolean
-  onChangeOpen(value: boolean): void
-  data: User | null
+interface AdminUserDialogProps extends Omit<DialogTriggerProps, 'children'> {
+  selected: User | null
 }
-const AdminUserDialog = (props: AdminUserDialogProps) => {
-  const { open, onChangeOpen, data } = props
-
-  const { data: region } = useQuery({
-    queryKey: [regionQueryKeys.getAll],
-    queryFn: regionService.getAll
+export const AdminUserDialog = ({ isOpen, onOpenChange, selected }: AdminUserDialogProps) => {
+  const { data: regions } = useQuery({
+    queryKey: [RegionQueryKeys.getAll],
+    queryFn: RegionService.getAll
   })
 
-  const { toast } = useToast()
   const { t } = useTranslation(['user'])
 
   const queryClient = useQueryClient()
 
-  const form = useForm<AdmonUserPayloadType>({
+  const form = useForm<AdmonUserFormValues>({
     defaultValues,
-    resolver: zodResolver(AdminUserPayloadSchema)
+    resolver: zodResolver(AdminUserFormSchema)
   })
 
-  const { mutate: create, isPending: isCreating } = useMutation({
-    mutationKey: [adminUserQueryKeys.create],
-    mutationFn: adminUserService.create,
-    onSuccess() {
-      toast({
-        title: 'Пользователь успешно создан'
-      })
+  const { mutate: createUser, isPending: isCreating } = useMutation({
+    mutationKey: [AdminUserQueryKeys.create],
+    mutationFn: AdminUserService.create,
+    onSuccess(res) {
+      toast.success(res?.message)
       form.reset(defaultValues)
       queryClient.invalidateQueries({
-        queryKey: [adminUserQueryKeys.getAll]
+        queryKey: [AdminUserQueryKeys.getAll]
       })
-      onChangeOpen(false)
-    },
-    onError(error) {
-      toast({
-        variant: 'destructive',
-        title: 'Не удалось создать пользователя',
-        description: error.message
-      })
+      onOpenChange?.(false)
     }
   })
-  const { mutate: update, isPending: isUpdating } = useMutation({
-    mutationKey: [adminUserQueryKeys.update],
-    mutationFn: adminUserService.update,
-    onSuccess() {
-      toast({
-        title: 'Пользователь успешно обновлен'
-      })
+  const { mutate: updateUser, isPending: isUpdating } = useMutation({
+    mutationKey: [AdminUserQueryKeys.update],
+    mutationFn: AdminUserService.update,
+    onSuccess(res) {
+      toast.success(res?.message)
+      form.reset(defaultValues)
       queryClient.invalidateQueries({
-        queryKey: [adminUserQueryKeys.getAll]
+        queryKey: [AdminUserQueryKeys.getAll]
       })
-      onChangeOpen(false)
-    },
-    onError(error) {
-      toast({
-        variant: 'destructive',
-        title: 'Не удалось обновить пользователя',
-        description: error.message
-      })
+      onOpenChange?.(false)
     }
   })
 
-  const onSubmit = (payload: AdmonUserPayloadType) => {
-    if (data) {
-      update(Object.assign(payload, { id: data.id }))
+  const onSubmit = form.handleSubmit((values) => {
+    if (selected) {
+      updateUser({
+        ...values,
+        id: selected.id
+      })
     } else {
-      create(payload)
+      createUser(values)
     }
-  }
+  })
 
   useEffect(() => {
-    if (!data) {
+    if (!selected) {
       form.reset(defaultValues)
       return
     }
 
-    form.reset(data)
-  }, [form, data])
+    form.reset(selected)
+  }, [form, selected])
 
   return (
-    <Dialog
-      open={open}
-      onOpenChange={onChangeOpen}
+    <DialogTrigger
+      isOpen={isOpen}
+      onOpenChange={onOpenChange}
     >
-      <DialogContent className="max-w-xl">
-        <DialogHeader>
-          <DialogTitle>
-            {data
-              ? t('update-something', { something: t('user') })
-              : t('create-something', { something: t('user') })}
-          </DialogTitle>
-        </DialogHeader>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)}>
-            <div className="grid gap-4 py-4">
-              <FormField
-                name="region_id"
-                control={form.control}
-                render={({ field }) => (
-                  <FormItem>
-                    <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
-                      <FormLabel className="text-right col-span-2">{t('region')}</FormLabel>
-                      <SelectField
-                        {...field}
-                        triggerClassName="col-span-4"
-                        placeholder={t('choose', { what: t('region') })}
-                        options={region?.data ?? []}
-                        getOptionLabel={(option) => option.name}
-                        getOptionValue={(option) => option.id}
-                        value={field.value ? String(field.value) : ''}
-                        onValueChange={(value) => field.onChange(Number(value))}
-                      />
-                      <FormMessage className="text-end col-span-6" />
-                    </div>
-                  </FormItem>
-                )}
-              />
-              <FormField
-                name="fio"
-                control={form.control}
-                render={({ field }) => (
-                  <FormItem>
-                    <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
-                      <FormLabel className="text-right col-span-2">{t('fio')}</FormLabel>
-                      <FormControl>
-                        <Input
+      <DialogOverlay>
+        <DialogContent className="max-w-xl">
+          <DialogHeader>
+            <DialogTitle>
+              {selected ? t('user') : capitalize(t('create-something', { something: t('user') }))}
+            </DialogTitle>
+          </DialogHeader>
+          <Form {...form}>
+            <form onSubmit={onSubmit}>
+              <div className="grid gap-4 py-4">
+                <FormField
+                  name="region_id"
+                  control={form.control}
+                  render={({ field }) => (
+                    <FormItem>
+                      <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
+                        <FormLabel className="text-right col-span-2">{t('region')}</FormLabel>
+                        <JollySelect
+                          placeholder={t('region')}
+                          items={regions?.data ?? []}
+                          selectedKey={field.value}
+                          onSelectionChange={(value) => field.onChange(value ?? 0)}
                           className="col-span-4"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage className="text-end col-span-6" />
-                    </div>
-                  </FormItem>
-                )}
-              />
-              <FormField
-                name="login"
-                control={form.control}
-                render={({ field }) => (
-                  <FormItem>
-                    <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
-                      <FormLabel className="text-right col-span-2">{t('login')}</FormLabel>
-                      <FormControl>
-                        <Input
-                          className="col-span-4"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage className="text-end col-span-6" />
-                    </div>
-                  </FormItem>
-                )}
-              />
-              <FormField
-                name="password"
-                control={form.control}
-                render={({ field }) => (
-                  <FormItem>
-                    <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
-                      <FormLabel className="text-right col-span-2">{t('password')}</FormLabel>
-                      <FormControl>
-                        <Input
-                          className="col-span-4"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage className="text-end col-span-6" />
-                    </div>
-                  </FormItem>
-                )}
-              />
-            </div>
-            <DialogFooter>
-              <Button
-                type="submit"
-                disabled={isCreating || isUpdating}
-              >
-                {t('save')}
-              </Button>
-            </DialogFooter>
-          </form>
-        </Form>
-      </DialogContent>
-    </Dialog>
+                        >
+                          {(item) => <SelectItem id={item.id}>{item.name}</SelectItem>}
+                        </JollySelect>
+                        <FormMessage className="text-end col-span-6" />
+                      </div>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  name="fio"
+                  control={form.control}
+                  render={({ field }) => (
+                    <FormItem>
+                      <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
+                        <FormLabel className="text-right col-span-2">{t('fio')}</FormLabel>
+                        <FormControl>
+                          <Input
+                            className="col-span-4"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage className="text-end col-span-6" />
+                      </div>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  name="login"
+                  control={form.control}
+                  render={({ field }) => (
+                    <FormItem>
+                      <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
+                        <FormLabel className="text-right col-span-2">{t('login')}</FormLabel>
+                        <FormControl>
+                          <Input
+                            className="col-span-4"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage className="text-end col-span-6" />
+                      </div>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  name="password"
+                  control={form.control}
+                  render={({ field }) => (
+                    <FormItem>
+                      <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
+                        <FormLabel className="text-right col-span-2">{t('password')}</FormLabel>
+                        <FormControl>
+                          <Input
+                            className="col-span-4"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage className="text-end col-span-6" />
+                      </div>
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <DialogFooter>
+                <Button
+                  type="submit"
+                  disabled={isCreating || isUpdating}
+                >
+                  {t('save')}
+                </Button>
+              </DialogFooter>
+            </form>
+          </Form>
+        </DialogContent>
+      </DialogOverlay>
+    </DialogTrigger>
   )
 }
 
@@ -226,6 +210,4 @@ const defaultValues = {
   fio: '',
   login: '',
   password: ''
-} satisfies AdmonUserPayloadType
-
-export default AdminUserDialog
+} satisfies AdmonUserFormValues

@@ -2,16 +2,16 @@ import { z } from 'zod'
 
 import { withPreprocessor } from '@/common/lib/validation'
 
-export const groupQueryKeys = {
-  getAll: 'groups/all',
+export const GroupQueryKeys = {
+  getAll: 'group/all',
   getLatest: 'group/latest',
-  getById: 'groups',
-  create: 'groups/create',
-  update: 'groups/update',
-  delete: 'groups/delete'
+  getById: 'group',
+  create: 'group/create',
+  update: 'group/update',
+  delete: 'group/delete'
 }
 
-export const GroupPayloadSchema = withPreprocessor(
+export const GroupFormSchema = withPreprocessor(
   z.object({
     smeta_id: z.number(),
     name: z.string(),
@@ -25,9 +25,9 @@ export const GroupPayloadSchema = withPreprocessor(
   })
 )
 
-export type GroupPayloadType = z.infer<typeof GroupPayloadSchema>
+export type GroupFormValues = z.infer<typeof GroupFormSchema>
 
-export const defaultValues: GroupPayloadType = {
+export const defaultValues: GroupFormValues = {
   smeta_id: 0,
   name: '',
   schet: '',

@@ -4,7 +4,7 @@ import type { Smeta } from '@/common/models'
 
 import { IDCell } from '@/common/components/table/renderers/id'
 
-export const smetaColumns: ColumnDef<PathTreeNode<Smeta>>[] = [
+export const SmetaColumns: ColumnDef<PathTreeNode<Smeta>>[] = [
   {
     key: 'id',
     renderCell: IDCell,

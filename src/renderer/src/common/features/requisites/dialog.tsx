@@ -8,7 +8,7 @@ import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
 import { MainSchetQueryKeys, MainSchetService } from '@/app/region-spravochnik/main-schet'
-import { BudgetService, BudjetQueryKeys } from '@/app/super-admin/budjet'
+import { BudjetQueryKeys, BudjetService } from '@/app/super-admin/budjet'
 import { FormElement } from '@/common/components/form'
 import {
   DialogContent,
@@ -45,7 +45,7 @@ export const RequisitesDialog = ({ isOpen, onOpenChange }: RequisitesDialogProps
 
   const { data: budjets, isLoading: isLoadingBudget } = useQuery({
     queryKey: [BudjetQueryKeys.getAll],
-    queryFn: BudgetService.getAll,
+    queryFn: BudjetService.getAll,
     enabled: isOpen
   })
   const { data: schets, isLoading: isLoadingSchets } = useQuery({
@@ -62,7 +62,7 @@ export const RequisitesDialog = ({ isOpen, onOpenChange }: RequisitesDialogProps
   const { data: mainSchet } = useQuery({
     queryKey: [MainSchetQueryKeys.getById, form.watch('main_schet_id')],
     queryFn: MainSchetService.getById,
-    enabled: !!form.watch('main_schet_id')
+    enabled: !!form.watch('main_schet_id') && isOpen
   })
 
   const onSubmit = form.handleSubmit(
@@ -136,6 +136,8 @@ export const RequisitesDialog = ({ isOpen, onOpenChange }: RequisitesDialogProps
       })
     }
   }, [isOpen])
+
+  console.log({ form: form.watch() })
 
   return (
     <DialogTrigger

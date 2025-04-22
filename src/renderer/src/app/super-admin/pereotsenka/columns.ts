@@ -6,7 +6,7 @@ import { createTextEditor } from '@/common/components/editable-table/editors'
 import { createNumberEditor } from '@/common/components/editable-table/editors/number'
 import { IDCell } from '@/common/components/table/renderers/id'
 
-export const pereotsenkaColumns: ColumnDef<Pereotsenka>[] = [
+export const PereotsenkaColumns: ColumnDef<Pereotsenka>[] = [
   {
     key: 'id',
     renderCell: IDCell
@@ -24,7 +24,7 @@ export const pereotsenkaColumns: ColumnDef<Pereotsenka>[] = [
   }
 ]
 
-export const groupColumns: EditableColumnDef<
+export const GroupColumns: EditableColumnDef<
   Omit<Group, 'id'> & Pick<Pereotsenka, 'pereotsenka_foiz' | 'group_jur7_id'>
 >[] = [
   {

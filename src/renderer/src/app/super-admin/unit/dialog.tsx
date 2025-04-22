@@ -1,4 +1,5 @@
 import type { Unit } from '@/common/models'
+import type { DialogTriggerProps } from 'react-aria-components'
 
 import { useEffect } from 'react'
 
@@ -6,15 +7,17 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import { toast } from 'react-toastify'
 
-import { Button } from '@/common/components/ui/button'
 import {
-  Dialog,
   DialogContent,
   DialogFooter,
   DialogHeader,
+  DialogOverlay,
   DialogTitle
-} from '@/common/components/ui/dialog'
+} from '@/common/components/jolly/dialog'
+import { DialogTrigger } from '@/common/components/jolly/dialog'
+import { Button } from '@/common/components/ui/button'
 import {
   Form,
   FormControl,
@@ -24,20 +27,15 @@ import {
   FormMessage
 } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
-import { useToast } from '@/common/hooks/use-toast'
+import { capitalize } from '@/common/lib/string'
 
-import { unitQueryKeys } from './constants'
-import { type UnitForm, UnitFormSchema, unitService } from './service'
+import { UnitQueryKeys } from './config'
+import { type UnitForm, UnitFormSchema, UnitService } from './service'
 
-type UnitDialogProps = {
-  open: boolean
-  onChangeOpen(value: boolean): void
-  data: Unit | null
+interface UnitDialogProps extends Omit<DialogTriggerProps, 'children'> {
+  selected: Unit | null
 }
-const UnitDialog = (props: UnitDialogProps) => {
-  const { open, onChangeOpen, data } = props
-
-  const { toast } = useToast()
+export const UnitDialog = ({ isOpen, onOpenChange, selected }: UnitDialogProps) => {
   const { t } = useTranslation(['app'])
 
   const queryClient = useQueryClient()
@@ -47,117 +45,104 @@ const UnitDialog = (props: UnitDialogProps) => {
     resolver: zodResolver(UnitFormSchema)
   })
 
-  const { mutate: create, isPending: isCreating } = useMutation({
-    mutationKey: [unitQueryKeys.create],
-    mutationFn: unitService.create,
-    onSuccess() {
-      toast({
-        title: 'Роль успешно создана'
-      })
+  const { mutate: createUnit, isPending: isCreating } = useMutation({
+    mutationKey: [UnitQueryKeys.create],
+    mutationFn: UnitService.create,
+    onSuccess(res) {
+      toast.success(res?.message)
       form.reset(defaultValues)
       queryClient.invalidateQueries({
-        queryKey: [unitQueryKeys.getAll]
+        queryKey: [UnitQueryKeys.getAll]
       })
-      onChangeOpen(false)
-    },
-    onError(error) {
-      toast({
-        variant: 'destructive',
-        title: 'Не удалось создать роль',
-        description: error.message
-      })
+      onOpenChange?.(false)
     }
   })
-  const { mutate: update, isPending: isUpdating } = useMutation({
-    mutationKey: [unitQueryKeys.update],
-    mutationFn: unitService.update,
-    onSuccess() {
-      toast({
-        title: 'Роль успешно обновлена'
-      })
+  const { mutate: updateUnit, isPending: isUpdating } = useMutation({
+    mutationKey: [UnitQueryKeys.update],
+    mutationFn: UnitService.update,
+    onSuccess(res) {
+      toast.success(res?.message)
+      form.reset(defaultValues)
       queryClient.invalidateQueries({
-        queryKey: [unitQueryKeys.getAll]
+        queryKey: [UnitQueryKeys.getAll]
       })
-      onChangeOpen(false)
-    },
-    onError(error) {
-      toast({
-        variant: 'destructive',
-        title: 'Не удалось обновить роль',
-        description: error.message
-      })
+      onOpenChange?.(false)
     }
   })
 
-  const onSubmit = (payload: UnitForm) => {
-    if (data) {
-      update(Object.assign(payload, { id: data.id }))
+  const onSubmit = form.handleSubmit((values: UnitForm) => {
+    if (selected) {
+      updateUnit({
+        ...values,
+        id: selected.id
+      })
     } else {
-      create(payload)
+      createUnit(values)
     }
-  }
+  })
 
   useEffect(() => {
-    if (!data) {
+    if (!selected) {
       form.reset(defaultValues)
       return
     }
 
-    form.reset(data)
-  }, [form, data])
+    form.reset(selected)
+  }, [form, selected])
 
   return (
-    <Dialog
-      open={open}
-      onOpenChange={onChangeOpen}
+    <DialogTrigger
+      isOpen={isOpen}
+      onOpenChange={onOpenChange}
     >
-      <DialogContent className="max-w-xl">
-        <DialogHeader>
-          <DialogTitle>
-            {data
-              ? t('update-something', { something: t('pages.edin') })
-              : t('create-something', { something: t('pages.edin') })}
-          </DialogTitle>
-        </DialogHeader>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)}>
-            <div className="grid gap-4 py-4">
-              <FormField
-                name="name"
-                control={form.control}
-                render={({ field }) => (
-                  <FormItem>
-                    <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
-                      <FormLabel className="text-right col-span-2">{t('name')}</FormLabel>
-                      <FormControl>
-                        <Input
-                          className="col-span-4"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage className="text-end col-span-6" />
-                    </div>
-                  </FormItem>
-                )}
-              />
-            </div>
-            <DialogFooter>
-              <Button
-                type="submit"
-                disabled={isCreating || isUpdating}
-              >
-                {t('save')}
-              </Button>
-            </DialogFooter>
-          </form>
-        </Form>
-      </DialogContent>
-    </Dialog>
+      <DialogOverlay>
+        <DialogContent className="max-w-xl">
+          <DialogHeader>
+            <DialogTitle>
+              {selected
+                ? t('pages.edin')
+                : capitalize(t('create-something', { something: t('pages.edin') }))}
+            </DialogTitle>
+          </DialogHeader>
+          <Form {...form}>
+            <form onSubmit={onSubmit}>
+              <div className="grid gap-4 py-4">
+                <FormField
+                  name="name"
+                  control={form.control}
+                  render={({ field }) => (
+                    <FormItem>
+                      <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
+                        <FormLabel className="text-right col-span-2">{t('name')}</FormLabel>
+                        <FormControl>
+                          <Input
+                            autoFocus
+                            className="col-span-4"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage className="text-end col-span-6" />
+                      </div>
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <DialogFooter>
+                <Button
+                  type="submit"
+                  disabled={isCreating || isUpdating}
+                >
+                  {t('save')}
+                </Button>
+              </DialogFooter>
+            </form>
+          </Form>
+        </DialogContent>
+      </DialogOverlay>
+    </DialogTrigger>
   )
 }
 
 const defaultValues = {
   name: ''
 } satisfies UnitForm
-
-export { UnitDialog }

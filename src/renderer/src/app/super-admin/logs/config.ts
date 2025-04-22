@@ -1,5 +1,3 @@
-const logQueryKeys = {
+export const LogQueryKeys = {
   getAll: 'log/get'
 }
-
-export { logQueryKeys }

@@ -8,7 +8,7 @@ import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 import { extendObject } from '@/common/lib/utils'
 import { withPreprocessor } from '@/common/lib/validation'
 
-import { prixodSchetColumns } from './columns'
+import { PrixodSchetColumns } from './columns'
 
 export const PrixodSchetFormSchema = withPreprocessor(
   z.object({
@@ -29,7 +29,7 @@ export const createPrixodSchetSpravochnik = (
     {
       title: t('choose', { what: t('schet') }),
       endpoint: ApiEndpoints.admin_prixod_schets,
-      columnDefs: prixodSchetColumns,
+      columnDefs: PrixodSchetColumns,
       service: PrixodSchetService
     } satisfies typeof config,
     config

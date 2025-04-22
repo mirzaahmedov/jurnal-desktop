@@ -2,7 +2,7 @@ import type { Log } from '@/common/models'
 
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 
-const logService = new CRUDService<Log>({
+export const LogService = new CRUDService<Log>({
   endpoint: ApiEndpoints.logs
 }).forRequest((type, args) => {
   if (type === 'getAll') {
@@ -14,5 +14,3 @@ const logService = new CRUDService<Log>({
   }
   return {}
 })
-
-export { logService }

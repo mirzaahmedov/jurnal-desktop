@@ -3,7 +3,7 @@ import type { Bank } from '@/common/models'
 
 import { IDCell } from '@/common/components/table/renderers/id'
 
-export const bankColumns: ColumnDef<Bank>[] = [
+export const BankColumns: ColumnDef<Bank>[] = [
   {
     key: 'id',
     renderCell: IDCell

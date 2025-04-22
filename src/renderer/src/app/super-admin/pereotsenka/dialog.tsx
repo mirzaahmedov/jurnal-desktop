@@ -1,4 +1,5 @@
 import type { Pereotsenka } from '@/common/models'
+import type { DialogTriggerProps } from 'react-aria-components'
 
 import { useEffect } from 'react'
 
@@ -6,36 +7,32 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import { toast } from 'react-toastify'
 
 import { NumericInput } from '@/common/components'
 import { FormElement } from '@/common/components/form'
-import { Button } from '@/common/components/ui/button'
 import {
-  Dialog,
   DialogContent,
   DialogFooter,
   DialogHeader,
-  DialogTitle
-} from '@/common/components/ui/dialog'
+  DialogOverlay,
+  DialogTitle,
+  DialogTrigger
+} from '@/common/components/jolly/dialog'
+import { Button } from '@/common/components/ui/button'
 import { Form, FormField } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
 import { SpravochnikInput } from '@/common/features/spravochnik'
 import { useSpravochnik } from '@/common/features/spravochnik'
-import { toast } from '@/common/hooks/use-toast'
-import { extendObject } from '@/common/lib/utils'
 
 import { createGroupSpravochnik } from '../group/service'
-import { PereotsenkaFormSchema, defaultValues, pereotsenkaQueryKeys } from './config'
-import { pereotsenkaService } from './service'
+import { PereotsenkaFormSchema, PereotsenkaQueryKeys, defaultValues } from './config'
+import { PereotsenkaService } from './service'
 
-type PereotsenkaDialogProps = {
-  data: null | Pereotsenka
-  open: boolean
-  onClose: () => void
+interface PereotsenkaDialogProps extends Omit<DialogTriggerProps, 'children'> {
+  selected: null | Pereotsenka
 }
-const PereotsenkaDialog = (props: PereotsenkaDialogProps) => {
-  const { data, open, onClose } = props
-
+export const PereotsenkaDialog = ({ selected, isOpen, onOpenChange }: PereotsenkaDialogProps) => {
   const { t } = useTranslation()
 
   const form = useForm({
@@ -47,149 +44,128 @@ const PereotsenkaDialog = (props: PereotsenkaDialogProps) => {
     createGroupSpravochnik({
       value: form.watch('group_jur7_id'),
       onChange(value) {
-        form.setValue('group_jur7_id', value)
+        form.setValue('group_jur7_id', value ?? 0)
         form.trigger('group_jur7_id')
       }
     })
   )
 
   const queryClient = useQueryClient()
-  const { mutate: create, isPending: isCreating } = useMutation({
-    mutationKey: [pereotsenkaQueryKeys.create],
-    mutationFn: pereotsenkaService.create,
-    onSuccess() {
+
+  const { mutate: createPereotsenka, isPending: isCreating } = useMutation({
+    mutationKey: [PereotsenkaQueryKeys.create],
+    mutationFn: PereotsenkaService.create,
+    onSuccess(res) {
+      toast.success(res?.message)
       form.reset(defaultValues)
       queryClient.invalidateQueries({
-        queryKey: [pereotsenkaQueryKeys.getAll]
+        queryKey: [PereotsenkaQueryKeys.getAll]
       })
-      onClose()
-      toast({
-        title: 'Группа успешно создана'
-      })
-    },
-    onError(error) {
-      console.error(error)
-      toast({
-        variant: 'destructive',
-        title: 'Ошибка при создании группы',
-        description: error.message
-      })
+      onOpenChange?.(false)
     }
   })
-  const { mutate: update, isPending: isUpdating } = useMutation({
-    mutationKey: [pereotsenkaQueryKeys.update],
-    mutationFn: pereotsenkaService.update,
-    onSuccess() {
+  const { mutate: updatePereotsenka, isPending: isUpdating } = useMutation({
+    mutationKey: [PereotsenkaQueryKeys.update],
+    mutationFn: PereotsenkaService.update,
+    onSuccess(res) {
+      toast.success(res?.message)
+      form.reset(defaultValues)
       queryClient.invalidateQueries({
-        queryKey: [pereotsenkaQueryKeys.getAll]
+        queryKey: [PereotsenkaQueryKeys.getAll]
       })
-      onClose()
-      toast({
-        title: 'Группа успешно изменена'
-      })
-    },
-    onError(error) {
-      console.error(error)
-      toast({
-        variant: 'destructive',
-        title: 'Ошибка при изменении группы',
-        description: error.message
-      })
+      onOpenChange?.(false)
     }
   })
 
   useEffect(() => {
-    if (data) {
+    if (selected) {
       form.reset({
-        ...data,
-        pereotsenka_foiz: Number(data.pereotsenka_foiz)
+        ...selected,
+        pereotsenka_foiz: Number(selected.pereotsenka_foiz)
       })
       return
     }
     form.reset(defaultValues)
-  }, [form, data])
+  }, [form, selected])
 
-  const onSubmit = form.handleSubmit((payload) => {
-    if (data) {
-      update(
-        extendObject(payload, {
-          id: data.id
-        })
-      )
+  const onSubmit = form.handleSubmit((values) => {
+    if (selected) {
+      updatePereotsenka({
+        ...values,
+        id: selected.id
+      })
       return
     }
-    create(payload)
+    createPereotsenka(values)
   })
 
-  console.log(form.formState.errors)
-
   return (
-    <Dialog
-      open={open}
-      onOpenChange={onClose}
+    <DialogTrigger
+      isOpen={isOpen}
+      onOpenChange={onOpenChange}
     >
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>{t('update-something', { something: t('pages.pereotsenka') })}</DialogTitle>
-        </DialogHeader>
-        <Form {...form}>
-          <form onSubmit={onSubmit}>
-            <div className="grid gap-6 py-4">
-              <FormElement
-                label={t('group')}
-                grid="1:2"
-                message={form.formState.errors.group_jur7_id?.message}
-              >
-                <SpravochnikInput
-                  {...groupSpravochnik}
-                  getInputValue={(selected) => selected?.name ?? ''}
+      <DialogOverlay>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{t('pages.pereotsenka')}</DialogTitle>
+          </DialogHeader>
+          <Form {...form}>
+            <form onSubmit={onSubmit}>
+              <div className="grid gap-6 py-4">
+                <FormElement
+                  label={t('group')}
+                  grid="1:2"
+                  message={form.formState.errors.group_jur7_id?.message}
+                >
+                  <SpravochnikInput
+                    {...groupSpravochnik}
+                    getInputValue={(selected) => selected?.name ?? ''}
+                  />
+                </FormElement>
+
+                <FormField
+                  name="name"
+                  control={form.control}
+                  render={({ field }) => (
+                    <FormElement
+                      label={t('name')}
+                      grid="1:2"
+                    >
+                      <Input {...field} />
+                    </FormElement>
+                  )}
                 />
-              </FormElement>
 
-              <FormField
-                name="name"
-                control={form.control}
-                render={({ field }) => (
-                  <FormElement
-                    label={t('name')}
-                    grid="1:2"
-                  >
-                    <Input {...field} />
-                  </FormElement>
-                )}
-              />
-
-              <FormField
-                name="pereotsenka_foiz"
-                control={form.control}
-                render={({ field }) => (
-                  <FormElement
-                    label={t('something_foiz', { something: t('iznos') })}
-                    grid="1:2"
-                  >
-                    <NumericInput
-                      {...field}
-                      value={Number(field.value) === 0 ? '' : (field.value ?? '')}
-                      onChange={undefined}
-                      onValueChange={(values) => field.onChange(String(values.floatValue))}
-                    />
-                  </FormElement>
-                )}
-              />
-            </div>
-            <DialogFooter className="mt-5">
-              <Button
-                type="submit"
-                disabled={isCreating || isUpdating}
-              >
-                {t('save')}
-              </Button>
-            </DialogFooter>
-          </form>
-        </Form>
-      </DialogContent>
-    </Dialog>
+                <FormField
+                  name="pereotsenka_foiz"
+                  control={form.control}
+                  render={({ field }) => (
+                    <FormElement
+                      label={t('something_foiz', { something: t('iznos') })}
+                      grid="1:2"
+                    >
+                      <NumericInput
+                        {...field}
+                        value={Number(field.value) === 0 ? '' : (field.value ?? '')}
+                        onChange={undefined}
+                        onValueChange={(values) => field.onChange(String(values.floatValue))}
+                      />
+                    </FormElement>
+                  )}
+                />
+              </div>
+              <DialogFooter className="mt-5">
+                <Button
+                  type="submit"
+                  disabled={isCreating || isUpdating}
+                >
+                  {t('save')}
+                </Button>
+              </DialogFooter>
+            </form>
+          </Form>
+        </DialogContent>
+      </DialogOverlay>
+    </DialogTrigger>
   )
 }
-
-export { PereotsenkaDialog }

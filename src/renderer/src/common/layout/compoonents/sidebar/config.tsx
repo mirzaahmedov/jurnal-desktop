@@ -39,6 +39,7 @@ import {
   SquareActivity,
   SquareUser,
   SquareUserRound,
+  Table2,
   UserCog,
   UserSquare,
   Users,
@@ -172,12 +173,12 @@ export const getNavElements = (t: TFunction): NavElement[] => {
               children: [
                 {
                   path: 'monitor',
-                  title: t('pages.organization-monitoring'),
+                  title: t('pages.monitoring'),
                   icon: SquareActivity
                 },
                 {
                   path: 'akt',
-                  title: t('pages.akt'),
+                  title: t('pages.schet_faktura'),
                   icon: FileCheck2
                 },
                 {
@@ -194,12 +195,12 @@ export const getNavElements = (t: TFunction): NavElement[] => {
               children: [
                 {
                   path: 'monitor',
-                  title: t('pages.organization-monitoring'),
+                  title: t('pages.monitoring'),
                   icon: SquareActivity
                 },
                 {
                   path: 'pokazat-uslugi',
-                  title: t('pages.service'),
+                  title: t('pages.schet_faktura'),
                   icon: Wrench
                 },
                 {
@@ -220,7 +221,7 @@ export const getNavElements = (t: TFunction): NavElement[] => {
           children: [
             {
               path: 'monitor',
-              title: t('pages.podotchet-monitoring'),
+              title: t('pages.monitoring'),
               icon: SquareActivity
             },
             {
@@ -396,7 +397,7 @@ export const getNavElements = (t: TFunction): NavElement[] => {
           children: [
             {
               path: 'report-title',
-              title: t('pages.report-title'),
+              title: t('pages.report_title'),
               icon: LetterText
             },
             {
@@ -494,6 +495,13 @@ export const getNavElements = (t: TFunction): NavElement[] => {
           path: '/mainbook',
           title: t('pages.mainbook'),
           icon: Book
+        }
+      : null,
+    !is_super_admin
+      ? {
+          path: '/odinox',
+          title: t('pages.odinox'),
+          icon: Table2
         }
       : null,
     {

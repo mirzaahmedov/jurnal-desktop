@@ -1,4 +1,5 @@
 import type { Region } from '@/common/models'
+import type { DialogTriggerProps } from 'react-aria-components'
 
 import { useEffect } from 'react'
 
@@ -6,15 +7,17 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import { toast } from 'react-toastify'
 
-import { Button } from '@/common/components/ui/button'
 import {
-  Dialog,
   DialogContent,
   DialogFooter,
   DialogHeader,
-  DialogTitle
-} from '@/common/components/ui/dialog'
+  DialogOverlay,
+  DialogTitle,
+  DialogTrigger
+} from '@/common/components/jolly/dialog'
+import { Button } from '@/common/components/ui/button'
 import {
   Form,
   FormControl,
@@ -24,139 +27,117 @@ import {
   FormMessage
 } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
-import { useToast } from '@/common/hooks/use-toast'
 
-import { regionQueryKeys } from './constants'
-import { RegionPayloadSchema, type RegionPayloadType, regionService } from './service'
+import { RegionQueryKeys } from './config'
+import { RegionFormSchema, type RegionFormValues, RegionService } from './service'
 
-type RegionsDialogProps = {
-  open: boolean
-  onChangeOpen(value: boolean): void
-  data: Region | null
+interface RegionDialogProps extends Omit<DialogTriggerProps, 'children'> {
+  selected: Region | null
 }
-const RegionsDialog = (props: RegionsDialogProps) => {
-  const { open, onChangeOpen, data } = props
-
-  const { toast } = useToast()
+export const RegionDialog = ({ isOpen, onOpenChange, selected }: RegionDialogProps) => {
   const { t } = useTranslation()
 
   const queryClient = useQueryClient()
-  const form = useForm<RegionPayloadType>({
+  const form = useForm<RegionFormValues>({
     defaultValues,
-    resolver: zodResolver(RegionPayloadSchema)
+    resolver: zodResolver(RegionFormSchema)
   })
 
-  const { mutate: create, isPending: isCreating } = useMutation({
-    mutationKey: [regionQueryKeys.create],
-    mutationFn: regionService.create,
-    onSuccess() {
-      toast({
-        title: 'Регион успешно создана'
-      })
+  const { mutate: createRegion, isPending: isCreating } = useMutation({
+    mutationKey: [RegionQueryKeys.create],
+    mutationFn: RegionService.create,
+    onSuccess(res) {
+      toast.success(res?.message)
       form.reset(defaultValues)
       queryClient.invalidateQueries({
-        queryKey: [regionQueryKeys.getAll]
+        queryKey: [RegionQueryKeys.getAll]
       })
-      onChangeOpen(false)
-    },
-    onError(error) {
-      toast({
-        variant: 'destructive',
-        title: 'Не удалось создать регион',
-        description: error.message
-      })
+      onOpenChange?.(false)
     }
   })
-  const { mutate: update, isPending: isUpdating } = useMutation({
-    mutationKey: [regionQueryKeys.update],
-    mutationFn: regionService.update,
-    onSuccess() {
-      toast({
-        title: 'Регион успешно обновлена'
-      })
+  const { mutate: updateRegion, isPending: isUpdating } = useMutation({
+    mutationKey: [RegionQueryKeys.update],
+    mutationFn: RegionService.update,
+    onSuccess(res) {
+      toast.success(res?.message)
+      form.reset(defaultValues)
       queryClient.invalidateQueries({
-        queryKey: [regionQueryKeys.getAll]
+        queryKey: [RegionQueryKeys.getAll]
       })
-      onChangeOpen(false)
-    },
-    onError(error) {
-      toast({
-        variant: 'destructive',
-        title: 'Не удалось обновить регион',
-        description: error.message
-      })
+      onOpenChange?.(false)
     }
   })
 
-  const onSubmit = (payload: RegionPayloadType) => {
-    if (data) {
-      update(Object.assign(payload, { id: data.id }))
+  const onSubmit = form.handleSubmit((values) => {
+    if (selected) {
+      updateRegion({
+        ...values,
+        id: selected.id
+      })
     } else {
-      create(payload)
+      createRegion(values)
     }
-  }
+  })
 
   useEffect(() => {
-    if (!data) {
+    if (!selected) {
       form.reset(defaultValues)
       return
     }
 
-    form.reset(data)
-  }, [form, data])
+    form.reset(selected)
+  }, [form, selected])
 
   return (
-    <Dialog
-      open={open}
-      onOpenChange={onChangeOpen}
+    <DialogTrigger
+      isOpen={isOpen}
+      onOpenChange={onOpenChange}
     >
-      <DialogContent className="max-w-xl">
-        <DialogHeader>
-          <DialogTitle className="titlecase">
-            {data
-              ? t('update-something', { something: t('region') })
-              : t('create-something', { something: t('region') })}
-          </DialogTitle>
-        </DialogHeader>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)}>
-            <div className="grid gap-4 py-4">
-              <FormField
-                name="name"
-                control={form.control}
-                render={({ field }) => (
-                  <FormItem>
-                    <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
-                      <FormLabel className="text-right col-span-2">{t('name')}</FormLabel>
-                      <FormControl>
-                        <Input
-                          className="col-span-4"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage className="text-end col-span-6" />
-                    </div>
-                  </FormItem>
-                )}
-              />
-            </div>
-            <DialogFooter>
-              <Button
-                type="submit"
-                disabled={isCreating || isUpdating}
-              >
-                {t('save')}
-              </Button>
-            </DialogFooter>
-          </form>
-        </Form>
-      </DialogContent>
-    </Dialog>
+      <DialogOverlay>
+        <DialogContent className="max-w-xl">
+          <DialogHeader>
+            <DialogTitle className="titlecase">
+              {selected ? t('region') : t('create-something', { something: t('region') })}
+            </DialogTitle>
+          </DialogHeader>
+          <Form {...form}>
+            <form onSubmit={onSubmit}>
+              <div className="grid gap-4 py-4">
+                <FormField
+                  name="name"
+                  control={form.control}
+                  render={({ field }) => (
+                    <FormItem>
+                      <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
+                        <FormLabel className="text-right col-span-2">{t('name')}</FormLabel>
+                        <FormControl>
+                          <Input
+                            className="col-span-4"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage className="text-end col-span-6" />
+                      </div>
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <DialogFooter>
+                <Button
+                  type="submit"
+                  disabled={isCreating || isUpdating}
+                >
+                  {t('save')}
+                </Button>
+              </DialogFooter>
+            </form>
+          </Form>
+        </DialogContent>
+      </DialogOverlay>
+    </DialogTrigger>
   )
 }
 
 const defaultValues = {
   name: ''
-} satisfies RegionPayloadType
-
-export default RegionsDialog
+} satisfies RegionFormValues

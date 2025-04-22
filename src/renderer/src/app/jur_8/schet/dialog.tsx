@@ -1,4 +1,4 @@
-import type { PrixodSchet } from '@/common/models'
+import type { FinancialReceiptPrixodSchet } from '@/common/models'
 import type { DialogTriggerProps } from 'react-aria-components'
 
 import { useEffect } from 'react'
@@ -35,7 +35,7 @@ import { PrixodSchetQueryKeys } from './config'
 import { PrixodSchetFormSchema, type PrixodSchetFormValues, PrixodSchetService } from './service'
 
 interface PrixodSchetDialogProps extends Omit<DialogTriggerProps, 'children'> {
-  selected: PrixodSchet | null
+  selected: FinancialReceiptPrixodSchet | null
 }
 export const PrixodSchetDialog = ({ isOpen, onOpenChange, selected }: PrixodSchetDialogProps) => {
   const { t } = useTranslation(['app'])

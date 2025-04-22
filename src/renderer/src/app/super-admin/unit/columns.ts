@@ -3,7 +3,7 @@ import type { Role } from '@/common/models'
 
 import { IDCell } from '@/common/components/table/renderers/id'
 
-export const unitColumns: ColumnDef<Role>[] = [
+export const UnitColumns: ColumnDef<Role>[] = [
   {
     key: 'id',
     renderCell: IDCell

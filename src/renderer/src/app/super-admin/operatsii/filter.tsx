@@ -1,4 +1,6 @@
-import { SelectField } from '@/common/components'
+import { t } from 'i18next'
+
+import { JollySelect, SelectItem } from '@/common/components/jolly/select'
 import { SearchFilterDebounced } from '@/common/features/filters/search/search-filter-debounced'
 import { useLocationState } from '@/common/hooks/use-location-state'
 import { TypeSchetOperatsii } from '@/common/models'
@@ -14,17 +16,16 @@ export const OperatsiiFilter = () => {
 
   return (
     <div className="flex items-center justify-start gap-5">
+      <JollySelect
+        items={operatsiiTypeSchetOptions}
+        placeholder={t('type')}
+        selectedKey={typeSchet}
+        onSelectionChange={(value) => setTypeSchet(value as TypeSchetOperatsii)}
+        className="w-64"
+      >
+        {(item) => <SelectItem id={item.value}>{item.label}</SelectItem>}
+      </JollySelect>
       <SearchFilterDebounced />
-      <div className="w-64">
-        <SelectField
-          value={typeSchet}
-          onValueChange={(value) => setTypeSchet(value as TypeSchetOperatsii)}
-          placeholder="Выберите тип операции"
-          options={operatsiiTypeSchetOptions}
-          getOptionValue={(option) => option.value}
-          getOptionLabel={(option) => option.label}
-        />
-      </div>
     </div>
   )
 }

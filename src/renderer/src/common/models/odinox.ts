@@ -1,0 +1,70 @@
+export enum OdinoxStatus {
+  SEND = 1,
+  REJECT = 2,
+  ACCEPT = 3
+}
+
+export interface Odinox {
+  id: number
+  status: number
+  acsept_time: null | string
+  send_time: OdinoxStatus
+  user_id: number
+  fio: string
+  login: string
+  year: number
+  month: number
+  budjet_id: number
+  budjet_name: string
+  accept_user_id: null | number
+  accept_user_fio: null | string
+  accept_user_login: null | string
+  first: boolean
+  isdeleted: boolean
+  childs: OdinoxProvodka[]
+}
+
+export interface OdinoxProvodka {
+  type_id: number
+  type_name: string
+  prixod: number
+  rasxod: number
+  sub_childs: Array<{
+    id: number
+    schet: string
+    prixod: number
+    rasxod: number
+  }>
+}
+
+export interface OdinoxDocumentInfo {
+  id: number
+  doc_num: string
+  doc_date: string
+  opisanie: any
+  main_schet_id: number
+  summa: number
+  debet_schet: string
+  kredit_schet: string
+  budjet_id: number
+  type: string
+}
+
+export interface AdminOdinox {
+  id: number
+  status: number
+  accept_time: string
+  send_time: string
+  user_id: number
+  fio: string
+  login: string
+  year: number
+  month: number
+  budjet_id: number
+  budjet_name: string
+  accept_user_id: number
+  accept_user_fio: string
+  accept_user_login: string
+  region_name: string
+  childs: OdinoxProvodka[]
+}

@@ -15,48 +15,44 @@ import { useToggle } from '@/common/hooks/use-toggle'
 import { useLayout } from '@/common/layout'
 import { ListView } from '@/common/views'
 
-import { pereotsenkaColumns } from './columns'
-import { pereotsenkaQueryKeys } from './config'
+import { PereotsenkaColumns } from './columns'
+import { PereotsenkaQueryKeys } from './config'
 import { PereotsenkaBatchCreateDrawer } from './create-drawer'
 import { PereotsenkaDialog } from './dialog'
-import { pereotsenkaService } from './service'
+import { PereotsenkaService } from './service'
 
 const PereotsenkaPage = () => {
   const dialogToggle = useToggle()
-  const createDialogToggle = useToggle()
+  const drawerToggle = useToggle()
   const queryClient = useQueryClient()
   const pagination = usePagination()
 
   const setLayout = useLayout()
 
   const [selected, setSelected] = useState<null | Pereotsenka>(null)
+  const [search] = useSearchFilter()
 
   const { t } = useTranslation(['app'])
-  const [search] = useSearchFilter()
   const { confirm } = useConfirm()
 
-  const { data: pereotsenkaList, isFetching } = useQuery({
+  const { data: pereotsenkas, isFetching } = useQuery({
     queryKey: [
-      pereotsenkaQueryKeys.getAll,
+      PereotsenkaQueryKeys.getAll,
       {
         search,
         ...pagination
       }
     ],
-    queryFn: pereotsenkaService.getAll
+    queryFn: PereotsenkaService.getAll
   })
   const { mutate: deletePereotsenka, isPending } = useMutation({
-    mutationKey: [pereotsenkaQueryKeys.delete],
-    mutationFn: pereotsenkaService.delete,
-    onSuccess() {
+    mutationKey: [PereotsenkaQueryKeys.delete],
+    mutationFn: PereotsenkaService.delete,
+    onSuccess(res) {
+      toast.success(res?.message)
       queryClient.invalidateQueries({
-        queryKey: [pereotsenkaQueryKeys.getAll]
+        queryKey: [PereotsenkaQueryKeys.getAll]
       })
-      toast.success('Переоценка успешно удалена')
-    },
-    onError(error) {
-      console.error(error)
-      toast.error('Ошибка при удалении переоценки: ' + error.message)
     }
   })
   useEffect(() => {
@@ -68,9 +64,9 @@ const PereotsenkaPage = () => {
         }
       ],
       content: SearchFilterDebounced,
-      onCreate: createDialogToggle.open
+      onCreate: drawerToggle.open
     })
-  }, [setLayout, t])
+  }, [setLayout, t, drawerToggle.open])
 
   const handleClickEdit = (row: Pereotsenka) => {
     setSelected(row)
@@ -78,7 +74,6 @@ const PereotsenkaPage = () => {
   }
   const handleClickDelete = (row: Pereotsenka) => {
     confirm({
-      title: 'Удалить переоценку?',
       onConfirm() {
         deletePereotsenka(row.id)
       }
@@ -89,8 +84,8 @@ const PereotsenkaPage = () => {
     <ListView>
       <ListView.Content loading={isFetching || isPending}>
         <GenericTable
-          columnDefs={pereotsenkaColumns}
-          data={pereotsenkaList?.data ?? []}
+          columnDefs={PereotsenkaColumns}
+          data={pereotsenkas?.data ?? []}
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}
         />
@@ -98,17 +93,18 @@ const PereotsenkaPage = () => {
       <ListView.Footer>
         <ListView.Pagination
           {...pagination}
-          pageCount={pereotsenkaList?.meta?.pageCount ?? 0}
+          count={pereotsenkas?.meta?.count ?? 0}
+          pageCount={pereotsenkas?.meta?.pageCount ?? 0}
         />
       </ListView.Footer>
       <PereotsenkaDialog
-        data={selected}
-        open={dialogToggle.isOpen}
-        onClose={dialogToggle.close}
+        selected={selected}
+        isOpen={dialogToggle.isOpen}
+        onOpenChange={dialogToggle.close}
       />
       <PereotsenkaBatchCreateDrawer
-        open={createDialogToggle.isOpen}
-        onOpenChange={createDialogToggle.setOpen}
+        isOpen={drawerToggle.isOpen}
+        onOpenChange={drawerToggle.setOpen}
       />
     </ListView>
   )

@@ -11,28 +11,28 @@ import { useToggle } from '@/common/hooks/use-toggle'
 import { useLayout } from '@/common/layout'
 import { ListView } from '@/common/views'
 
-import { smetaColumns } from './columns'
-import { smetaQueryKeys } from './config'
+import { SmetaColumns } from './columns'
+import { SmetaQueryKeys } from './config'
 import { SmetaDialog } from './dialog'
 import { SmetaFilters, useGroupNumberFilter } from './filter'
 import { SmetaTable, smetaService } from './service'
 
 const SmetaPage = () => {
-  const toggle = useToggle()
+  const dialogToggle = useToggle()
   const queryClient = useQueryClient()
 
   const setLayout = useLayout()
 
   const [selected, setSelected] = useState<Smeta | null>(null)
   const [groupNumber] = useGroupNumberFilter()
+  const [search] = useSearchFilter()
 
   const { t } = useTranslation(['app'])
   const { confirm } = useConfirm()
-  const [search] = useSearchFilter()
 
   const { data: mainSchets, isFetching } = useQuery({
     queryKey: [
-      smetaQueryKeys.getAll,
+      SmetaQueryKeys.getAll,
       {
         page: 1,
         limit: 10000,
@@ -43,31 +43,31 @@ const SmetaPage = () => {
     queryFn: smetaService.getAll
   })
   const { mutate: deleteSmeta, isPending } = useMutation({
-    mutationKey: [smetaQueryKeys.delete],
+    mutationKey: [SmetaQueryKeys.delete],
     mutationFn: smetaService.delete,
     onSuccess() {
       queryClient.invalidateQueries({
-        queryKey: [smetaQueryKeys.getAll]
+        queryKey: [SmetaQueryKeys.getAll]
       })
     }
   })
 
   useEffect(() => {
-    if (!toggle.isOpen) {
+    if (!dialogToggle.isOpen) {
       setSelected(null)
     }
-  }, [toggle.isOpen])
+  }, [dialogToggle.isOpen])
   useEffect(() => {
     setLayout({
       title: t('pages.smeta'),
       content: SmetaFilters,
-      onCreate: toggle.open
+      onCreate: dialogToggle.open
     })
-  }, [setLayout])
+  }, [setLayout, t, dialogToggle.open])
 
   const handleClickEdit = (row: Smeta) => {
     setSelected(row)
-    toggle.open()
+    dialogToggle.open()
   }
   const handleClickDelete = (row: Smeta) => {
     confirm({
@@ -83,16 +83,16 @@ const SmetaPage = () => {
         {SmetaTable ? (
           <SmetaTable
             data={mainSchets?.data ?? []}
-            columnDefs={smetaColumns}
+            columnDefs={SmetaColumns}
             onEdit={handleClickEdit}
             onDelete={handleClickDelete}
           />
         ) : null}
       </ListView.Content>
       <SmetaDialog
-        data={selected}
-        open={toggle.isOpen}
-        onChangeOpen={toggle.setOpen}
+        selected={selected}
+        isOpen={dialogToggle.isOpen}
+        onOpenChange={dialogToggle.setOpen}
       />
     </ListView>
   )

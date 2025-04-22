@@ -2,7 +2,7 @@ import { z } from 'zod'
 
 import { withPreprocessor } from '@/common/lib/validation'
 
-const pereotsenkaQueryKeys = {
+export const PereotsenkaQueryKeys = {
   getAll: 'pereotsenka/all',
   getById: 'pereotsenka',
   create: 'pereotsenka/create',
@@ -10,14 +10,14 @@ const pereotsenkaQueryKeys = {
   delete: 'pereotsenka/delete'
 }
 
-const PereotsenkaFormSchema = withPreprocessor(
+export const PereotsenkaFormSchema = withPreprocessor(
   z.object({
     name: z.string(),
     group_jur7_id: z.number(),
     pereotsenka_foiz: z.coerce.number()
   })
 )
-const PereotsenkaBatchFormSchema = withPreprocessor(
+export const PereotsenkaBatchFormSchema = withPreprocessor(
   z.object({
     name: z.string(),
     array: z.array(
@@ -29,8 +29,8 @@ const PereotsenkaBatchFormSchema = withPreprocessor(
   })
 )
 
-type PereotsenkaForm = z.infer<typeof PereotsenkaFormSchema>
-type PereotsenkaTableItem = PereotsenkaForm & {
+export type PereotsenkaFormValues = z.infer<typeof PereotsenkaFormSchema>
+export type PereotsenkaTableItem = PereotsenkaFormValues & {
   name: string
   schet: string
   iznos_foiz: number
@@ -38,27 +38,18 @@ type PereotsenkaTableItem = PereotsenkaForm & {
   group_number: string
   provodka_kredit: string
 }
-type PereotsenkaTable = {
+export type PereotsenkaTable = {
   name: string
   array: PereotsenkaTableItem[]
 }
-type PereotsenkaBatchForm = z.infer<typeof PereotsenkaBatchFormSchema>
+export type PereotsenkaBatchForm = z.infer<typeof PereotsenkaBatchFormSchema>
 
-const defaultValues: PereotsenkaForm = {
+export const defaultValues: PereotsenkaFormValues = {
   name: '',
   group_jur7_id: 0,
   pereotsenka_foiz: 0
 }
-const defaultBatchValues: PereotsenkaTable = {
+export const defaultBatchValues: PereotsenkaTable = {
   name: '',
   array: []
 }
-
-export {
-  pereotsenkaQueryKeys,
-  defaultValues,
-  defaultBatchValues,
-  PereotsenkaFormSchema,
-  PereotsenkaBatchFormSchema
-}
-export type { PereotsenkaForm, PereotsenkaTable, PereotsenkaTableItem, PereotsenkaBatchForm }

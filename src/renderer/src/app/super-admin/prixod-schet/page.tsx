@@ -11,8 +11,8 @@ import { useToggle } from '@/common/hooks/use-toggle'
 import { useLayout } from '@/common/layout'
 import { ListView } from '@/common/views'
 
-import { prixodSchetColumns } from './columns'
-import { prixodSchetQueryKeys } from './config'
+import { PrixodSchetColumns } from './columns'
+import { PrixodSchetQueryKeys } from './config'
 import { PrixodSchetDialog } from './dialog'
 import { PrixodSchetService } from './service'
 
@@ -27,16 +27,16 @@ const PrixodSchetsPage = () => {
   const { confirm } = useConfirm()
 
   const { data: prixodSchets, isFetching } = useQuery({
-    queryKey: [prixodSchetQueryKeys.getAll],
+    queryKey: [PrixodSchetQueryKeys.getAll],
     queryFn: PrixodSchetService.getAll
   })
 
-  const { mutate: deletePrixodSchet, isPending: isDeletingPrixodSchets } = useMutation({
-    mutationKey: [prixodSchetQueryKeys.delete],
+  const { mutate: deleteSchet, isPending: isDeleting } = useMutation({
+    mutationKey: [PrixodSchetQueryKeys.delete],
     mutationFn: PrixodSchetService.delete,
     onSuccess() {
       queryClient.invalidateQueries({
-        queryKey: [prixodSchetQueryKeys.getAll]
+        queryKey: [PrixodSchetQueryKeys.getAll]
       })
     }
   })
@@ -60,25 +60,25 @@ const PrixodSchetsPage = () => {
   const handleClickDelete = (row: PrixodSchet) => {
     confirm({
       onConfirm() {
-        deletePrixodSchet(row.id)
+        deleteSchet(row.id)
       }
     })
   }
 
   return (
     <ListView>
-      <ListView.Content loading={isFetching || isDeletingPrixodSchets}>
+      <ListView.Content loading={isFetching || isDeleting}>
         <GenericTable
           data={prixodSchets?.data ?? []}
-          columnDefs={prixodSchetColumns}
+          columnDefs={PrixodSchetColumns}
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}
         />
       </ListView.Content>
       <PrixodSchetDialog
         selected={selected}
-        open={dialogToggle.isOpen}
-        onChangeOpen={dialogToggle.setOpen}
+        isOpen={dialogToggle.isOpen}
+        onOpenChange={dialogToggle.setOpen}
       />
     </ListView>
   )

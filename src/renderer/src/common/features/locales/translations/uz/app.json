@@ -1,5 +1,5 @@
 {
-  "title": "O‘zbekiston Respublikasi\n FVV 'Е-Moliya'",
+  "title": "O‘zbekiston Respublikasi FVV 'Е-Moliya'",
   "title_short": "E-Moliya",
   "update_and_restart": "Yangilash va qayta ishga tushirish",
   "development": "Dasturchi",
@@ -20,8 +20,8 @@
     "organization-monitoring": "Tashkilot haqida",
     "shartnoma": "Shartnoma",
     "shartnoma-grafik": "Shartnoma grafigi",
-    "akt": "Qabul qilish va qayta topshirish",
-    "service": "Xizmatlar ko'rsatish",
+    "akt": "Yetkazib beruvchi korxonalar bilan debitor-kreditorlik",
+    "service": "Buyurtmachi korxonalar bilan debitor-kreditorlik",
     "podotchet": "Hisobdor shaxs",
     "podotchet-monitoring": "Hisobdor shaxs haqida",
     "avans": "Avanslar hisoboti",
@@ -42,7 +42,7 @@
     "access_rights": "Kirish huquqlari",
     "mainbook": "Asosiy kitob",
     "real-expenses": "Haqiqiy xarajatlar",
-    "1ox-report": "1 OX hisoboti",
+    "odinox": "1-ОХ",
     "region-data": "Ma'lumotlarini tekshirish",
     "create-month-report": "Oylik hisobot yaratish",
     "complete-month-report": "Oylik hisobotni yakunlash",
@@ -57,7 +57,7 @@
     "operatsii": "Operatsiyalar",
     "edin": "O'lchov birligi",
     "zarplata": "Ish haqi",
-    "report-title": "Hisobot sarlavhasi",
+    "report_title": "Hisobot sarlavhasi",
     "vacant": "Vakant",
     "video_module": "Video moduli",
     "video_tutorials": "Video darslar",
@@ -67,7 +67,8 @@
     "jur8": "Moliyaviy tushumlar",
     "jur7_prixod": "Jurnal 7 kirim",
     "jur7_rasxod": "Jurnal 7 xarajat",
-    "jur7_internal": "Jurnal 7 ichki"
+    "jur7_internal": "Jurnal 7 ichki",
+    "schet_faktura": "Xisob faktura yaratish"
   },
   "locales": {
     "uz": "Oʻzbekcha",

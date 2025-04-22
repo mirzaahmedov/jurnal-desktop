@@ -2,7 +2,7 @@ import type { FieldError } from 'react-hook-form'
 
 import { useQuery } from '@tanstack/react-query'
 
-import { operatsiiQueryKeys, operatsiiService } from '@/app/super-admin/operatsii'
+import { OperatsiiService, operatsiiQueryKeys } from '@/app/super-admin/operatsii'
 import { AutoComplete } from '@/common/components'
 import { Input } from '@/common/components/ui/input'
 import { inputVariants } from '@/common/features/spravochnik'
@@ -29,7 +29,7 @@ export const SubSchetEditor = ({
         schet
       }
     ],
-    queryFn: operatsiiService.getAll,
+    queryFn: OperatsiiService.getAll,
     enabled: !!schet
   })
   const filteredSubSchetOptions =

@@ -14,7 +14,7 @@ import {
 } from '@/common/lib/tree/path-tree'
 import { extendObject } from '@/common/lib/utils'
 
-import { smetaColumns } from './columns'
+import { SmetaColumns } from './columns'
 import { SmetaGroupFilter } from './filter'
 
 export const smetaService = new CRUDService<Smeta, SmetaForm>({
@@ -77,7 +77,7 @@ export const createSmetaSpravochnik = (
     {
       title: 'Выберите смету',
       endpoint: ApiEndpoints.smeta,
-      columnDefs: smetaColumns,
+      columnDefs: SmetaColumns,
       // Todo: fix this
       // @ts-expect-error fix this later
       service: smetaService,

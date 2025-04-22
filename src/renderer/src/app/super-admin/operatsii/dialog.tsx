@@ -1,4 +1,4 @@
-import type { OperatsiiFormValues } from './service'
+import type { OperatsiiFormValues } from './config'
 import type { Operatsii } from '@/common/models'
 import type { DialogProps } from '@radix-ui/react-dialog'
 
@@ -34,7 +34,8 @@ import { useLocationState } from '@/common/hooks/use-location-state'
 import { TypeSchetOperatsii } from '@/common/models'
 
 import { operatsiiQueryKeys, operatsiiTypeSchetOptions } from './config'
-import { OperatsiiFormSchema, operatsiiService } from './service'
+import { OperatsiiFormSchema } from './config'
+import { OperatsiiService } from './service'
 
 interface OperatsiiDialogProps extends DialogProps {
   selected: Operatsii | null
@@ -59,7 +60,7 @@ export const OperatsiiDialog = ({
 
   const { mutate: createOperatsii, isPending: isCreating } = useMutation({
     mutationKey: [operatsiiQueryKeys.create],
-    mutationFn: operatsiiService.create,
+    mutationFn: OperatsiiService.create,
     onSuccess(res) {
       toast.success(res?.message)
       form.reset(defaultValues)
@@ -71,7 +72,7 @@ export const OperatsiiDialog = ({
   })
   const { mutate: updateOperatsii, isPending: isUpdating } = useMutation({
     mutationKey: [operatsiiQueryKeys.update],
-    mutationFn: operatsiiService.update,
+    mutationFn: OperatsiiService.update,
     onSuccess(res) {
       toast.success(res?.message)
       queryClient.invalidateQueries({
@@ -91,11 +92,14 @@ export const OperatsiiDialog = ({
     })
   )
 
-  const onSubmit = form.handleSubmit((payload) => {
+  const onSubmit = form.handleSubmit((values) => {
     if (selected) {
-      updateOperatsii(Object.assign(payload, { id: selected.id }))
+      updateOperatsii({
+        ...values,
+        id: selected.id
+      })
     } else {
-      createOperatsii(payload)
+      createOperatsii(values)
     }
   })
 

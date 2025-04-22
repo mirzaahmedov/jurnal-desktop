@@ -1,5 +1,3 @@
-const regionDataQueryKeys = {
+export const RegionDataQueryKeys = {
   getAll: 'region-data/all'
 }
-
-export { regionDataQueryKeys }

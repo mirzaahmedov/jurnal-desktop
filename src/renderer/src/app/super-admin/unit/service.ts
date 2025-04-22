@@ -12,6 +12,6 @@ export const UnitFormSchema = withPreprocessor(
 )
 export type UnitForm = z.infer<typeof UnitFormSchema>
 
-export const unitService = new CRUDService<Unit, UnitForm>({
+export const UnitService = new CRUDService<Unit, UnitForm>({
   endpoint: ApiEndpoints.jur7_unit
 })

@@ -1,4 +1,4 @@
-import type { PrixodSchet } from '@/common/models'
+import type { FinancialReceiptPrixodSchet } from '@/common/models'
 
 import { z } from 'zod'
 
@@ -14,6 +14,9 @@ export const PrixodSchetFormSchema = withPreprocessor(
 )
 export type PrixodSchetFormValues = z.infer<typeof PrixodSchetFormSchema>
 
-export const PrixodSchetService = new CRUDService<PrixodSchet, PrixodSchetFormValues>({
+export const PrixodSchetService = new CRUDService<
+  FinancialReceiptPrixodSchet,
+  PrixodSchetFormValues
+>({
   endpoint: ApiEndpoints.jur8_schets
 })

@@ -7,10 +7,9 @@ import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 
 import {
+  OperatsiiService,
   createOperatsiiSpravochnik,
-  getOperatsiiSchetOptionsQuery,
-  operatsiiQueryKeys,
-  operatsiiService
+  operatsiiQueryKeys
 } from '@/app/super-admin/operatsii'
 import { AutoComplete } from '@/common/components/auto-complete'
 import { SpravochnikInput, useSpravochnik } from '@/common/features/spravochnik'
@@ -74,7 +73,7 @@ export const createOperatsiiEditor = withEditorProps<{
           type_schet
         }
       ],
-      queryFn: getOperatsiiSchetOptionsQuery
+      queryFn: OperatsiiService.getSchetOptions
     })
     const filteredSchetOptions =
       schetOptions?.data?.filter((o) => o.schet?.includes(schet ?? '')) ?? []
@@ -87,7 +86,7 @@ export const createOperatsiiEditor = withEditorProps<{
           schet: debouncedSchet ? debouncedSchet : undefined
         }
       ],
-      queryFn: operatsiiService.getAll,
+      queryFn: OperatsiiService.getAll,
       enabled: !!schet && !operatsiiSpravochnik.selected
     })
     const filteredOperatsiiOptions =

@@ -27,7 +27,7 @@ const JUR8MonitorDetailsPage = lazy(() => import('./jur_8/monitor/details/page')
 const AdminVideoTutorialsPage = lazy(() => import('./super-admin/video-tutorials/page'))
 const VideoTutorialsPage = lazy(() => import('./video-tutorials/page'))
 
-const AdminOstatokPage = lazy(() => import('./super-admin/ostatok/page'))
+const AdminOstatokPage = lazy(() => import('./super-admin/saldo/page'))
 const ZarplataSpravochnikPage = lazy(() => import('./super-admin/zarplata/spravochnik/page'))
 
 const OrganSaldo159Page = lazy(() => import('./jur_3/159/saldo/page'))
@@ -57,8 +57,12 @@ const KassaPrixodDetailsPage = lazy(() => import('./jur_1/prixod/details/page'))
 const KassaPrixodPage = lazy(() => import('./jur_1/prixod/page'))
 const KassaRasxodDetailtsPage = lazy(() => import('./jur_1/rasxod/details/page'))
 const KassaRasxodPage = lazy(() => import('./jur_1/rasxod/page'))
+
 const MainbookPage = lazy(() => import('./reports/mainbook/page'))
 const MainbookDetailsPage = lazy(() => import('./reports/mainbook/details/page'))
+const OdinoxPage = lazy(() => import('./reports/odinox/page'))
+const OdinoxDetailsPage = lazy(() => import('./reports/odinox/details/page'))
+
 const AktDetailsPage = lazy(() => import('./jur_3/159/akt/details/page'))
 const AktPage = lazy(() => import('./jur_3/159/akt/page'))
 const OrganMonitorig159Page = lazy(() => import('./jur_3/159/monitor/page'))
@@ -507,6 +511,20 @@ export const routes: RouteObject[] = [
                 element: <MainbookDetailsPage />
               }
             ]
+          }
+        ]
+      },
+      {
+        path: 'odinox',
+        element: <MainSchetSelectedGuard />,
+        children: [
+          {
+            index: true,
+            element: <OdinoxPage />
+          },
+          {
+            path: ':id',
+            element: <OdinoxDetailsPage />
           }
         ]
       },

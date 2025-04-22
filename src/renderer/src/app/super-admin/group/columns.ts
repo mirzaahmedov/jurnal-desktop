@@ -4,7 +4,7 @@ import type { Group } from '@/common/models'
 
 import { IDCell } from '@/common/components/table/renderers/id'
 
-export const groupColumns: ColumnDef<PathTreeNode<Group>>[] = [
+export const GroupColumns: ColumnDef<PathTreeNode<Group>>[] = [
   {
     key: 'id',
     renderCell: IDCell,

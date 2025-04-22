@@ -32,6 +32,7 @@ import { useKeyUp, usePagination, useToggle } from '@/common/hooks'
 import { useLayout } from '@/common/layout'
 import { ISODateRegex, formatDate, parseDate, validateDate } from '@/common/lib/date'
 import { formatLocaleDate } from '@/common/lib/format'
+import { capitalize } from '@/common/lib/string'
 import { ListView } from '@/common/views'
 
 import { IznosQueryKeys } from '../iznos/config'
@@ -94,7 +95,7 @@ const MaterialWarehouseSaldoPage = () => {
   const {
     data: saldos,
     isFetching,
-    error: ostatokError
+    error: saldoError
   } = useQuery({
     queryKey: [
       SaldoQueryKeys.getAll,
@@ -145,7 +146,7 @@ const MaterialWarehouseSaldoPage = () => {
     }
   })
 
-  const { mutate: clean } = useMutation({
+  const { mutate: cleanSaldo } = useMutation({
     mutationKey: [SaldoQueryKeys.clean],
     mutationFn: MaterialWarehouseSaldoService.cleanSaldo,
     onSuccess(res) {
@@ -164,10 +165,10 @@ const MaterialWarehouseSaldoPage = () => {
   })
 
   useEffect(() => {
-    if (ostatokError) {
-      handleOstatokError(ostatokError)
+    if (saldoError) {
+      handleOstatokError(saldoError)
     }
-  }, [ostatokError])
+  }, [saldoError])
   useEffect(() => {
     const date = form.getValues('date')
     if (date && startDate < date && date < endDate) {
@@ -209,7 +210,7 @@ const MaterialWarehouseSaldoPage = () => {
     confirm({
       withPassword: true,
       onConfirm(password: string) {
-        clean({
+        cleanSaldo({
           budjet_id: budjet_id!,
           password
         })
@@ -242,14 +243,14 @@ const MaterialWarehouseSaldoPage = () => {
           <div className="flex items-center gap-5">
             <ChooseSpravochnik
               spravochnik={groupSpravochnik}
-              placeholder={t('choose', { what: t('group').toLowerCase() })}
+              placeholder={capitalize(t('choose', { what: t('group') }))}
               getName={(selected) => `${selected.group_number ?? ''} - ${selected.name}`}
-              getElements={(selected) => [{ name: 'Наименование', value: selected.name }]}
+              getElements={(selected) => [{ name: t('name'), value: selected.name }]}
             />
 
             <ChooseSpravochnik
               spravochnik={responsibleSpravochnik}
-              placeholder={t('choose', { what: t('responsible').toLowerCase() })}
+              placeholder={capitalize(t('choose', { what: t('responsible') }))}
               getName={(selected) => selected.fio}
               getElements={(selected) => [
                 { name: t('fio'), value: selected.fio },
@@ -262,7 +263,7 @@ const MaterialWarehouseSaldoPage = () => {
               <DownloadFile
                 fileName={`${t('pages.saldo')}-${t('import')}-${t('template')}.xlsx`}
                 url="/jur_7/saldo/template"
-                buttonText={t('download-something', { something: t('template') })}
+                buttonText={capitalize(t('download-something', { something: t('template') }))}
                 params={{
                   excel: true
                 }}
@@ -372,28 +373,6 @@ const MaterialWarehouseSaldoPage = () => {
             {t('load')}
           </Button>
         </form>
-
-        <div className="flex items-center gap-5">
-          {/* {selectedIds.length > 0 ? (
-            <>
-              <Button
-                variant="ghost"
-                onClick={selectedToggle.open}
-              >
-                <CopyCheck className="btn-icon" /> {t('selected_elements')}
-                <Badge>{selectedRows.length}</Badge>
-              </Button>
-              <Button
-                variant="destructive"
-                onClick={() => handleDelete(selectedRows.map((row) => row.id))}
-                disabled={isDeleting}
-                loading={isDeleting}
-              >
-                <Trash2 className="btn-icon" /> {t('delete_selected')}
-              </Button>
-            </>
-          ) : null} */}
-        </div>
       </div>
       <ListView.Content loading={isFetching || isDeleting}>
         <GenericTable
@@ -492,69 +471,5 @@ const MaterialWarehouseSaldoPage = () => {
     </ListView>
   )
 }
-
-// columnDefs={ostatokProductColumns.map((column) => {
-//   if (column.key === 'id') {
-//     return {
-//       ...column,
-//       renderHeader: () => {
-//         const currentPageProducts = ostatok?.data ?? []
-//         const currentPageProductIds = currentPageProducts.map((p) => p.product_id) ?? []
-//         const currentPageSelectedIds = selectedRows
-//           .map((p) => p.product_id)
-//           .filter((id) => currentPageProductIds.includes(id))
-
-//         const checked =
-//           currentPageProductIds.length === currentPageSelectedIds.length &&
-//           currentPageProducts.length > 0
-//             ? true
-//             : currentPageSelectedIds.length > 0 && currentPageProducts.length > 0
-//               ? 'indeterminate'
-//               : false
-
-//         return (
-//           <div className="flex items-center gap-2">
-//             <Checkbox
-//               checked={checked}
-//               onClick={() => {
-//                 if (checked === true) {
-//                   setSelectedRows((prev) => {
-//                     return prev.filter(
-//                       (p) => !currentPageSelectedIds.includes(p.product_id)
-//                     )
-//                   })
-//                   return
-//                 }
-
-//                 setSelectedRows((prev) => {
-//                   return [
-//                     ...prev,
-//                     ...currentPageProducts.filter(
-//                       (p) => !currentPageSelectedIds.includes(p.product_id)
-//                     )
-//                   ]
-//                 })
-//               }}
-//               className="size-5"
-//             />
-//             <Trans>id</Trans>
-//           </div>
-//         )
-//       }
-//     }
-//   }
-//   return column
-// })}
-
-// params={{
-//   onCheckedChange: (row: OstatokProduct) => {
-//     setSelectedRows((prev) => {
-//       if (prev.find((p) => p.product_id === row.product_id)) {
-//         return prev.filter((p) => p.product_id !== row.product_id)
-//       }
-//       return [...prev, row]
-//     })
-//   }
-// }}
 
 export default MaterialWarehouseSaldoPage

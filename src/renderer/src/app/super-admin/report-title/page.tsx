@@ -11,10 +11,10 @@ import { useToggle } from '@/common/hooks/use-toggle'
 import { useLayout } from '@/common/layout'
 import { ListView } from '@/common/views'
 
-import { reportTitleColumns } from './columns'
-import { reportTitleQueryKeys } from './config'
+import { ReportTitleColumns } from './columns'
+import { ReportTitleQueryKeys } from './config'
 import { ReportTitleDialog } from './dialog'
-import { reportTitleService } from './service'
+import { ReportTitleService } from './service'
 
 const ReportTitlePage = () => {
   const dialogToggle = useToggle()
@@ -26,24 +26,24 @@ const ReportTitlePage = () => {
   const { t } = useTranslation(['app'])
   const { confirm } = useConfirm()
 
-  const { data: reportTitles, isFetching } = useQuery({
-    queryKey: [reportTitleQueryKeys.getAll],
-    queryFn: reportTitleService.getAll
+  const { data: titles, isFetching } = useQuery({
+    queryKey: [ReportTitleQueryKeys.getAll],
+    queryFn: ReportTitleService.getAll
   })
 
-  const { mutate: deleteReportTitle, isPending } = useMutation({
-    mutationKey: [reportTitleQueryKeys.delete],
-    mutationFn: reportTitleService.delete,
+  const { mutate: deleteTitle, isPending } = useMutation({
+    mutationKey: [ReportTitleQueryKeys.delete],
+    mutationFn: ReportTitleService.delete,
     onSuccess() {
       queryClient.invalidateQueries({
-        queryKey: [reportTitleQueryKeys.getAll]
+        queryKey: [ReportTitleQueryKeys.getAll]
       })
     }
   })
 
   useEffect(() => {
     setLayout({
-      title: t('pages.report-title'),
+      title: t('pages.report_title'),
       onCreate: dialogToggle.open
     })
   }, [setLayout, dialogToggle.open, t])
@@ -60,7 +60,7 @@ const ReportTitlePage = () => {
   const handleClickDelete = (row: ReportTitle) => {
     confirm({
       onConfirm() {
-        deleteReportTitle(row.id)
+        deleteTitle(row.id)
       }
     })
   }
@@ -69,16 +69,16 @@ const ReportTitlePage = () => {
     <ListView>
       <ListView.Content loading={isFetching || isPending}>
         <GenericTable
-          data={reportTitles?.data ?? []}
-          columnDefs={reportTitleColumns}
+          data={titles?.data ?? []}
+          columnDefs={ReportTitleColumns}
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}
         />
       </ListView.Content>
       <ReportTitleDialog
         selected={selected}
-        open={dialogToggle.isOpen}
-        onChangeOpen={dialogToggle.setOpen}
+        isOpen={dialogToggle.isOpen}
+        onOpenChange={dialogToggle.setOpen}
       />
     </ListView>
   )

@@ -2,7 +2,7 @@ import type { FieldError } from 'react-hook-form'
 
 import { useQuery } from '@tanstack/react-query'
 
-import { getOperatsiiSchetOptionsQuery, operatsiiQueryKeys } from '@/app/super-admin/operatsii'
+import { OperatsiiService, operatsiiQueryKeys } from '@/app/super-admin/operatsii'
 import { AutoComplete } from '@/common/components'
 import { Input } from '@/common/components/ui/input'
 import { inputVariants } from '@/common/features/spravochnik'
@@ -26,7 +26,7 @@ export const SchetEditor = ({
         type_schet: TypeSchetOperatsii.JUR3
       }
     ],
-    queryFn: getOperatsiiSchetOptionsQuery
+    queryFn: OperatsiiService.getSchetOptions
   })
   const filteredSchetOptions =
     schetOptions?.data?.filter((o) => o.schet?.includes((value as string) ?? '')) ?? []

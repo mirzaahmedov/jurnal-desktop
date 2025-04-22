@@ -3,7 +3,7 @@ import type { PrixodSchet } from '@/common/models'
 
 import { IDCell } from '@/common/components/table/renderers/id'
 
-export const prixodSchetColumns: ColumnDef<PrixodSchet>[] = [
+export const PrixodSchetColumns: ColumnDef<PrixodSchet>[] = [
   {
     key: 'id',
     renderCell: IDCell,

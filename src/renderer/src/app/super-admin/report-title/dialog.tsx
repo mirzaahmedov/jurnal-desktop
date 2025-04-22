@@ -1,4 +1,5 @@
 import type { ReportTitle } from '@/common/models'
+import type { DialogTriggerProps } from 'react-aria-components'
 
 import { useEffect } from 'react'
 
@@ -8,14 +9,15 @@ import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 
-import { Button } from '@/common/components/ui/button'
 import {
-  Dialog,
   DialogContent,
   DialogFooter,
   DialogHeader,
-  DialogTitle
-} from '@/common/components/ui/dialog'
+  DialogOverlay,
+  DialogTitle,
+  DialogTrigger
+} from '@/common/components/jolly/dialog'
+import { Button } from '@/common/components/ui/button'
 import {
   Form,
   FormControl,
@@ -25,16 +27,15 @@ import {
   FormMessage
 } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
+import { capitalize } from '@/common/lib/string'
 
-import { reportTitleQueryKeys } from './config'
-import { ReportTitleFormSchema, type ReportTitleFormValues, reportTitleService } from './service'
+import { ReportTitleQueryKeys } from './config'
+import { ReportTitleFormSchema, type ReportTitleFormValues, ReportTitleService } from './service'
 
-interface ReportTitleDialogProps {
-  open: boolean
-  onChangeOpen: (value: boolean) => void
+interface ReportTitleDialogProps extends Omit<DialogTriggerProps, 'children'> {
   selected: ReportTitle | null
 }
-export const ReportTitleDialog = ({ open, onChangeOpen, selected }: ReportTitleDialogProps) => {
+export const ReportTitleDialog = ({ isOpen, onOpenChange, selected }: ReportTitleDialogProps) => {
   const { t } = useTranslation(['app'])
 
   const queryClient = useQueryClient()
@@ -45,34 +46,38 @@ export const ReportTitleDialog = ({ open, onChangeOpen, selected }: ReportTitleD
   })
 
   const { mutate: createReportTitle, isPending: isCreating } = useMutation({
-    mutationKey: [reportTitleQueryKeys.create],
-    mutationFn: reportTitleService.create,
+    mutationKey: [ReportTitleQueryKeys.create],
+    mutationFn: ReportTitleService.create,
     onSuccess(res) {
       toast.success(res?.message)
       form.reset(defaultValues)
       queryClient.invalidateQueries({
-        queryKey: [reportTitleQueryKeys.getAll]
+        queryKey: [ReportTitleQueryKeys.getAll]
       })
-      onChangeOpen(false)
+      onOpenChange?.(false)
     }
   })
   const { mutate: updateReportTitle, isPending: isUpdating } = useMutation({
-    mutationKey: [reportTitleQueryKeys.update],
-    mutationFn: reportTitleService.update,
+    mutationKey: [ReportTitleQueryKeys.update],
+    mutationFn: ReportTitleService.update,
     onSuccess(res) {
-      toast(res?.message)
+      form.reset(defaultValues)
+      toast.success(res?.message)
       queryClient.invalidateQueries({
-        queryKey: [reportTitleQueryKeys.getAll]
+        queryKey: [ReportTitleQueryKeys.getAll]
       })
-      onChangeOpen(false)
+      onOpenChange?.(false)
     }
   })
 
-  const onSubmit = form.handleSubmit((payload: ReportTitleFormValues) => {
+  const onSubmit = form.handleSubmit((values: ReportTitleFormValues) => {
     if (selected) {
-      updateReportTitle(Object.assign(payload, { id: selected.id }))
+      updateReportTitle({
+        ...values,
+        id: selected.id
+      })
     } else {
-      createReportTitle(payload)
+      createReportTitle(values)
     }
   })
 
@@ -86,52 +91,54 @@ export const ReportTitleDialog = ({ open, onChangeOpen, selected }: ReportTitleD
   }, [form, selected])
 
   return (
-    <Dialog
-      open={open}
-      onOpenChange={onChangeOpen}
+    <DialogTrigger
+      isOpen={isOpen}
+      onOpenChange={onOpenChange}
     >
-      <DialogContent className="max-w-xl">
-        <DialogHeader>
-          <DialogTitle>
-            {selected
-              ? t('update-something', { something: t('pages.report_title') })
-              : t('create-something', { something: t('pages.report_title') })}
-          </DialogTitle>
-        </DialogHeader>
-        <Form {...form}>
-          <form onSubmit={onSubmit}>
-            <div className="grid gap-4 py-4">
-              <FormField
-                name="name"
-                control={form.control}
-                render={({ field }) => (
-                  <FormItem>
-                    <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
-                      <FormLabel className="text-right col-span-2">{t('name')}</FormLabel>
-                      <FormControl>
-                        <Input
-                          className="col-span-4"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage className="text-end col-span-6" />
-                    </div>
-                  </FormItem>
-                )}
-              />
-            </div>
-            <DialogFooter>
-              <Button
-                type="submit"
-                disabled={isCreating || isUpdating}
-              >
-                {t('save')}
-              </Button>
-            </DialogFooter>
-          </form>
-        </Form>
-      </DialogContent>
-    </Dialog>
+      <DialogOverlay>
+        <DialogContent className="max-w-xl">
+          <DialogHeader>
+            <DialogTitle>
+              {selected
+                ? t('pages.report_title')
+                : capitalize(t('create-something', { something: t('pages.report_title') }))}
+            </DialogTitle>
+          </DialogHeader>
+          <Form {...form}>
+            <form onSubmit={onSubmit}>
+              <div className="grid gap-4 py-4">
+                <FormField
+                  name="name"
+                  control={form.control}
+                  render={({ field }) => (
+                    <FormItem>
+                      <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
+                        <FormLabel className="text-right col-span-2">{t('name')}</FormLabel>
+                        <FormControl>
+                          <Input
+                            className="col-span-4"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage className="text-end col-span-6" />
+                      </div>
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <DialogFooter>
+                <Button
+                  type="submit"
+                  disabled={isCreating || isUpdating}
+                >
+                  {t('save')}
+                </Button>
+              </DialogFooter>
+            </form>
+          </Form>
+        </DialogContent>
+      </DialogOverlay>
+    </DialogTrigger>
   )
 }
 

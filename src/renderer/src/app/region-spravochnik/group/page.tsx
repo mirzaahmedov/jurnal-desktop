@@ -3,9 +3,9 @@ import { useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 
-import { groupColumns } from '@/app/super-admin/group/columns'
-import { groupQueryKeys } from '@/app/super-admin/group/constants'
-import { GroupTable, groupService } from '@/app/super-admin/group/service'
+import { GroupColumns } from '@/app/super-admin/group/columns'
+import { GroupQueryKeys } from '@/app/super-admin/group/config'
+import { GroupService, GroupTable } from '@/app/super-admin/group/service'
 import { DownloadFile } from '@/common/features/file'
 import { SearchFilterDebounced } from '@/common/features/filters/search/search-filter-debounced'
 import { useSearchFilter } from '@/common/features/filters/search/search-filter-debounced'
@@ -21,14 +21,14 @@ const RegionGroupPage = () => {
 
   const { data: groups, isFetching } = useQuery({
     queryKey: [
-      groupQueryKeys.getAll,
+      GroupQueryKeys.getAll,
       {
         search,
         page: 1,
         limit: 10000000
       }
     ],
-    queryFn: groupService.getAll
+    queryFn: GroupService.getAll
   })
 
   useEffect(() => {
@@ -60,7 +60,7 @@ const RegionGroupPage = () => {
       </ListView.Header>
       <ListView.Content loading={isFetching}>
         <GroupTable
-          columnDefs={groupColumns}
+          columnDefs={GroupColumns}
           data={groups?.data ?? []}
         />
       </ListView.Content>

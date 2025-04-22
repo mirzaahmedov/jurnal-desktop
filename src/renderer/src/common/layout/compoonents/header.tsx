@@ -85,7 +85,7 @@ export const Header = () => {
             <SelectedMonth />
           </div>
         ) : null}
-        <RequisitesController />
+        {user && user?.role_name !== 'super-admin' ? <RequisitesController /> : null}
         {user ? <UserProfile user={user} /> : null}
         <Settings />
         <Button

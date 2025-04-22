@@ -43,7 +43,7 @@ const renderNavElement = (elem: null | NavElement, isCollapsed: boolean, rootPat
               )}
               title={String(elem.title)}
             >
-              {elem.icon && <elem.icon className="size-5" />}
+              {elem.icon && <elem.icon className="size-5 flex-shrink-0" />}
               {!isCollapsed ? (
                 <span className="font-bold text-sm text-start">{elem.title}</span>
               ) : null}
@@ -69,8 +69,8 @@ const renderNavElement = (elem: null | NavElement, isCollapsed: boolean, rootPat
           )}
           title={String(elem.title)}
         >
-          {elem.icon && <elem.icon className="size-5" />}
-          <span className={cn('w-full font-bold text-sm', isCollapsed && 'hidden')}>
+          {elem.icon && <elem.icon className="size-5 flex-shrink-0" />}
+          <span className={cn('w-full font-bold text-sm break-words', isCollapsed && 'hidden')}>
             {elem.title}
           </span>
         </div>
@@ -87,8 +87,10 @@ const renderNavElement = (elem: null | NavElement, isCollapsed: boolean, rootPat
           }
           title={String(elem.title)}
         >
-          {elem.icon && <elem.icon className="size-5" />}
-          <span className={cn('font-bold text-sm', isCollapsed && 'hidden')}>{elem.title}</span>
+          {elem.icon && <elem.icon className="size-5 flex-shrink-0" />}
+          <span className={cn('font-bold text-sm break-words', isCollapsed && 'hidden')}>
+            {elem.title}
+          </span>
         </NavLink>
       )}
     </li>

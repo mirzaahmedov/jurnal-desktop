@@ -1,4 +1,4 @@
-import type { PrixodSchet } from '@/common/models'
+import type { FinancialReceiptPrixodSchet } from '@/common/models'
 
 import { useEffect, useState } from 'react'
 
@@ -18,7 +18,7 @@ import { PrixodSchetDialog } from './dialog'
 import { PrixodSchetService } from './service'
 
 const PrixodSchetPage = () => {
-  const [selected, setSelected] = useState<PrixodSchet | null>(null)
+  const [selected, setSelected] = useState<FinancialReceiptPrixodSchet | null>(null)
 
   const { t } = useTranslation(['app'])
   const { confirm } = useConfirm()
@@ -55,11 +55,11 @@ const PrixodSchetPage = () => {
     }
   }, [dialogToggle.isOpen])
 
-  const handleClickEdit = (row: PrixodSchet) => {
+  const handleClickEdit = (row: FinancialReceiptPrixodSchet) => {
     setSelected(row)
     dialogToggle.open()
   }
-  const handleClickDelete = (row: PrixodSchet) => {
+  const handleClickDelete = (row: FinancialReceiptPrixodSchet) => {
     confirm({
       onConfirm() {
         deleteSchet(row.id)

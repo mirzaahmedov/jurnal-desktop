@@ -9,9 +9,9 @@ import { usePagination } from '@/common/hooks'
 import { useLayout } from '@/common/layout'
 import { ListView } from '@/common/views'
 
-import { regionDataColumns } from './columns'
-import { regionDataQueryKeys } from './config'
-import { regionDataService } from './service'
+import { RegionDataColumns } from './columns'
+import { RegionDataQueryKeys } from './config'
+import { RegionDataService } from './service'
 
 const RegionDataPage = () => {
   const pagination = usePagination()
@@ -24,14 +24,14 @@ const RegionDataPage = () => {
 
   const { data: regionDataList, isFetching } = useQuery({
     queryKey: [
-      regionDataQueryKeys.getAll,
+      RegionDataQueryKeys.getAll,
       {
         year,
         month,
         ...pagination
       }
     ],
-    queryFn: regionDataService.getAll
+    queryFn: RegionDataService.getAll
   })
 
   useEffect(() => {
@@ -52,7 +52,7 @@ const RegionDataPage = () => {
       </ListView.Header>
       <ListView.Content loading={isFetching}>
         <GenericTable
-          columnDefs={regionDataColumns}
+          columnDefs={RegionDataColumns}
           data={(regionDataList?.data ?? [])?.sort(
             (a, b) => b?.counts?.total_count - a?.counts?.total_count
           )}

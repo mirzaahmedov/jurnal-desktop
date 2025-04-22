@@ -3,7 +3,7 @@ import type { ReportTitle } from '@/common/models'
 
 import { IDCell } from '@/common/components/table/renderers/id'
 
-export const reportTitleColumns: ColumnDef<ReportTitle>[] = [
+export const ReportTitleColumns: ColumnDef<ReportTitle>[] = [
   {
     key: 'id',
     renderCell: IDCell,

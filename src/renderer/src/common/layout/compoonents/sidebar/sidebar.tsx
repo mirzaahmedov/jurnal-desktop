@@ -47,7 +47,9 @@ export const Sidebar = () => {
           alt={t('title')}
           className="max-h-16"
         />
-        {!isCollapsed ? <h1 className="flex-1 text-xs font-bold">{t('title')}</h1> : null}
+        {!isCollapsed ? (
+          <h1 className="flex-1 text-xs font-bold break-keep">{t('title')}</h1>
+        ) : null}
         <Button
           variant="ghost"
           size="icon"

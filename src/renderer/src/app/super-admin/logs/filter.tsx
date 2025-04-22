@@ -3,7 +3,7 @@ import { LogType } from '@/common/models'
 
 import { useLogType } from './hooks'
 
-const filterOptions = [
+const FilterOptions = [
   {
     label: 'Получить',
     value: LogType.GET
@@ -22,7 +22,7 @@ const filterOptions = [
   }
 ]
 
-const LogFilter = () => {
+export const LogFilters = () => {
   const [type, setType] = useLogType()
   return (
     <div className="px-10">
@@ -31,7 +31,7 @@ const LogFilter = () => {
           value={type}
           placeholder="Filter by type"
           onValueChange={(option) => setType(option as LogType)}
-          options={filterOptions}
+          options={FilterOptions}
           getOptionValue={(option) => option.value}
           getOptionLabel={(option) => option.label}
         />
@@ -39,5 +39,3 @@ const LogFilter = () => {
     </div>
   )
 }
-
-export { LogFilter }

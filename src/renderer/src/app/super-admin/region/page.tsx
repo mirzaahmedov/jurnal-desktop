@@ -12,33 +12,33 @@ import { useSearchFilter } from '@/common/features/filters/search/search-filter-
 import { useToggle } from '@/common/hooks/use-toggle'
 import { useLayout } from '@/common/layout'
 
-import { regionColumns } from './columns'
-import { regionQueryKeys } from './constants'
-import RegionsDialog from './dialog'
-import { regionService } from './service'
+import { RegionColumns } from './columns'
+import { RegionQueryKeys } from './config'
+import { RegionDialog } from './dialog'
+import { RegionService } from './service'
 
 const RegionPage = () => {
-  const [selected, setSelected] = useState<Region | null>(null)
-
   const setLayout = useLayout()
 
   const dialogToggle = useToggle()
   const queryClient = useQueryClient()
 
-  const { t } = useTranslation(['app'])
+  const [selected, setSelected] = useState<Region | null>(null)
   const [search] = useSearchFilter()
+
+  const { t } = useTranslation(['app'])
   const { confirm } = useConfirm()
 
-  const { data: region, isFetching } = useQuery({
-    queryKey: [regionQueryKeys.getAll, { search }],
-    queryFn: regionService.getAll
+  const { data: regions, isFetching } = useQuery({
+    queryKey: [RegionQueryKeys.getAll, { search }],
+    queryFn: RegionService.getAll
   })
-  const { mutate: deleteMutation, isPending } = useMutation({
-    mutationKey: [regionQueryKeys.delete],
-    mutationFn: regionService.delete,
+  const { mutate: deleteRegion, isPending } = useMutation({
+    mutationKey: [RegionQueryKeys.delete],
+    mutationFn: RegionService.delete,
     onSuccess() {
       queryClient.invalidateQueries({
-        queryKey: [regionQueryKeys.getAll]
+        queryKey: [RegionQueryKeys.getAll]
       })
     }
   })
@@ -54,7 +54,7 @@ const RegionPage = () => {
       content: SearchFilterDebounced,
       onCreate: dialogToggle.open
     })
-  }, [setLayout, t])
+  }, [setLayout, t, dialogToggle.open])
 
   const handleClickEdit = (row: Region) => {
     setSelected(row)
@@ -64,7 +64,7 @@ const RegionPage = () => {
   const handleClickDelete = (row: Region) => {
     confirm({
       onConfirm() {
-        deleteMutation(row.id)
+        deleteRegion(row.id)
       }
     })
   }
@@ -74,17 +74,17 @@ const RegionPage = () => {
       <div className="flex-1 relative">
         {isFetching || isPending ? <LoadingOverlay /> : null}
         <GenericTable
-          data={region?.data ?? []}
-          columnDefs={regionColumns}
+          data={regions?.data ?? []}
+          columnDefs={RegionColumns}
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}
         />
       </div>
 
-      <RegionsDialog
-        data={selected}
-        open={dialogToggle.isOpen}
-        onChangeOpen={dialogToggle.setOpen}
+      <RegionDialog
+        selected={selected}
+        isOpen={dialogToggle.isOpen}
+        onOpenChange={dialogToggle.setOpen}
       />
     </>
   )

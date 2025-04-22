@@ -1,4 +1,4 @@
-export const reportTitleQueryKeys = {
+export const ReportTitleQueryKeys = {
   getAll: 'report-title/all',
   getById: 'report-title',
   create: 'report-title/create',

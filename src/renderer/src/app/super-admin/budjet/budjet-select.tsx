@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next'
 import { JollySelect, type JollySelectProps, SelectItem } from '@/common/components/jolly/select'
 
 import { BudjetQueryKeys } from './config'
-import { BudgetService } from './service'
+import { BudjetService } from './service'
 
 export interface BudjetSelectProps extends Omit<JollySelectProps<Budjet>, 'children'> {
   withOptionAll?: boolean
@@ -22,7 +22,7 @@ export const BudjetSelect = ({
   const { t } = useTranslation()
   const { data: budjets, isFetching } = useQuery({
     queryKey: [BudjetQueryKeys.getAll],
-    queryFn: BudgetService.getAll
+    queryFn: BudjetService.getAll
   })
 
   const options = useMemo(() => {
@@ -55,19 +55,4 @@ export const BudjetSelect = ({
       {(item) => <SelectItem id={item.id}>{item.name}</SelectItem>}
     </JollySelect>
   )
-}
-
-{
-  /* <SelectField
-  value={value ? String(value) : ''}
-  onValueChange={(value) => {
-    onValueChange?.(Number(value))
-  }}
-  disabled={isFetching}
-  options={options}
-  getOptionLabel={(option) => option.name}
-  getOptionValue={(option) => option.id}
-  
-  {...props}
-/> */
 }

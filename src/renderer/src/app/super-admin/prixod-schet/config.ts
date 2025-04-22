@@ -1,4 +1,4 @@
-export const prixodSchetQueryKeys = {
+export const PrixodSchetQueryKeys = {
   getAll: 'prixod-schet/all',
   getById: 'prixod-schet',
   create: 'prixod-schet/create',
