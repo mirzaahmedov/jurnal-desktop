@@ -8,6 +8,10 @@
   "from": "Dan",
   "to": "gacha",
   "load": "Yuklash",
+  "pagination": {
+    "page_size": "Sahifadagi yozuvlar soni",
+    "range": "{{from}} – {{to}} gacha {{total}}"
+  },
   "remainder-from": "Davr boshiga qoldiq",
   "remainder-to": "Davr oxiriga qoldiq",
   "doc_num": "Hujjat №",
@@ -26,8 +30,6 @@
   "daily-report": "Kunlik hisobot",
   "cap": "Shapka",
   "cap-report": "Shapka hisobot",
-  "elements_total": "Jami elementlar",
-  "elements_per_page": "Sahifadagi elementlar soni",
   "no_main_schet": "Ushbu sahifani ishlatish uchun avval asosiy hisobni tanlang.",
   "no_budjet": "Ushbu sahifani ishlatish uchun avval budjetni tanlang.",
   "actions": "Amallar",

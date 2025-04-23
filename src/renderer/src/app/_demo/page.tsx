@@ -1,59 +1,64 @@
-import { JapaneseCalendar } from '@internationalized/date'
+import type { RangeValue } from '@react-types/shared'
+import type { DateValue } from 'react-aria-components'
 
-import { Button } from '@/common/components/jolly/button'
-import {
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogOverlay,
-  DialogTitle,
-  DialogTrigger
-} from '@/common/components/jolly/dialog'
-import { http } from '@/common/lib/http'
+import { useMemo, useRef, useState } from 'react'
 
-interface Comment {
-  postId: number
-  id: number
-  name: string
-  email: string
-  body: string
-}
+import { CalendarDate } from '@internationalized/date'
+import 'react-stately'
 
-const DemoDialog = () => {
-  return (
-    <DialogTrigger>
-      <Button variant="outline">Sign up...</Button>
-      <DialogOverlay>
-        <DialogContent className="sm:max-w-[425px]">
-          {({ close }) => (
-            <>
-              <DialogHeader>
-                <DialogTitle>Sign up</DialogTitle>
-              </DialogHeader>
-              <div className="grid gap-4 py-4">
-                <h1>Content</h1>
-                <DemoDialog />
-              </div>
-              <DialogFooter>
-                <Button
-                  onPress={close}
-                  type="submit"
-                >
-                  Save changes
-                </Button>
-              </DialogFooter>
-            </>
-          )}
-        </DialogContent>
-      </DialogOverlay>
-    </DialogTrigger>
-  )
-}
+import { JollyDateRangePicker } from '@/common/components/jolly/date-picker'
+import { Input } from '@/common/components/ui/input'
 
 const DemoPage = () => {
+  const valid = useRef(true)
+
+  const [selected, setSelected] = useState<RangeValue<DateValue> | null>(null)
+
+  const minValue = useMemo(() => {
+    return new CalendarDate(2023, 1, 1)
+  }, [])
+  const maxValue = useMemo(() => {
+    return new CalendarDate(2023, 1, 31)
+  }, [])
+
   return (
-    <div>
-      <DemoDialog />
+    <div className="p-10">
+      <div className="flex items-center ">
+        <JollyDateRangePicker
+          shouldForceLeadingZeros
+          value={selected}
+          onChange={(value) => {
+            setSelected(value)
+          }}
+          validate={(value) => {
+            const validDate = value.start.compare(minValue) > 0 && value.end.compare(maxValue) < 0
+            if (!validDate) {
+              valid.current = false
+              return null
+            }
+
+            const validRange = value.start.compare(value.end) < 0
+            if (!validRange) {
+              valid.current = false
+              return null
+            }
+
+            valid.current = true
+            return true
+          }}
+          onBlur={() => {
+            if (!valid.current) {
+              setSelected(null)
+            }
+          }}
+          calendarProps={{
+            minValue,
+            maxValue
+          }}
+        />
+
+        <Input value="DD.MM.YYYY" />
+      </div>
     </div>
   )
 }

@@ -134,7 +134,7 @@ const BankSaldoPage = () => {
   useKeyUp({
     key: 'Delete',
     ctrlKey: true,
-    onKeyUp: handleClickClean
+    handler: handleClickClean
   })
 
   return (

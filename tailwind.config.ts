@@ -107,6 +107,21 @@ const ui = plugin(function ({ addUtilities }) {
         calc(-0.707 * var(--d)) calc(-0.707 * var(--d)) 0 5px,
         calc(0 * var(--d)) calc(-1 * var(--d)) 0 6px;
       animation: loader 1s infinite steps(8)`
+    },
+
+    '.before-indicator': {
+      position: 'relative'
+    },
+    '.before-indicator::before': {
+      content: "''",
+      position: 'absolute',
+      left: '-1.1rem',
+      top: '50%',
+      transform: 'translateY(-50%)',
+      width: '0.2rem',
+      height: '2rem',
+      borderRadius: '2rem',
+      backgroundColor: 'currentColor'
     }
   })
 })

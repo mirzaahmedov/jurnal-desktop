@@ -1,5 +1,5 @@
 import type { UseSnippetsReturn } from './use-snippets'
-import type { DialogProps } from '@radix-ui/react-dialog'
+import type { DialogTriggerProps } from 'react-aria-components'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Trash2 } from 'lucide-react'
@@ -8,8 +8,13 @@ import { useTranslation } from 'react-i18next'
 
 import { EmptyList } from '@/common/components/empty-states'
 import { FormElement } from '@/common/components/form'
-import { Button } from '@/common/components/ui/button'
-import { Dialog, DialogContent, DialogFooter, DialogTrigger } from '@/common/components/ui/dialog'
+import { Button } from '@/common/components/jolly/button'
+import {
+  DialogContent,
+  DialogFooter,
+  DialogOverlay,
+  DialogTrigger
+} from '@/common/components/jolly/dialog'
 import { Form, FormField } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
 import { Textarea } from '@/common/components/ui/textarea'
@@ -19,11 +24,11 @@ import { type Snippet, SnippetSchema, defaultValues } from './config'
 
 export interface SelectSnippetDialogProps
   extends Pick<UseSnippetsReturn, 'snippets' | 'addSnippet' | 'removeSnippet'>,
-    Pick<DialogProps, 'open' | 'onOpenChange'> {
+    Omit<DialogTriggerProps, 'children'> {
   onSelect: (selected: Snippet) => void
 }
 export const SelectSnippetDialog = ({
-  open,
+  isOpen,
   onOpenChange,
   snippets,
   addSnippet,
@@ -49,95 +54,97 @@ export const SelectSnippetDialog = ({
   })
 
   return (
-    <Dialog
-      open={open}
+    <DialogTrigger
+      isOpen={isOpen}
       onOpenChange={onOpenChange}
     >
-      <DialogContent className="max-w-4xl">
-        <ul className="divide-y">
-          {Array.isArray(snippets) && snippets.length > 0 ? (
-            snippets.map((snippet, index) => (
-              <li
-                key={index}
-                className="p-5 flex items-start hover:bg-slate-50 cursor-pointer"
-                onClick={() => {
-                  onSelect(snippet)
-                }}
-              >
-                <div className="flex flex-col gap-2 flex-1">
-                  <h4 className="font-bold">{snippet.name}</h4>
-                  <p>{snippet.content}</p>
-                </div>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    removeSnippet(index)
+      <DialogOverlay>
+        <DialogContent className="max-w-4xl">
+          <ul className="divide-y">
+            {Array.isArray(snippets) && snippets.length > 0 ? (
+              snippets.map((snippet, index) => (
+                <li
+                  key={index}
+                  className="p-5 flex items-start hover:bg-slate-50 cursor-pointer"
+                  onClick={() => {
+                    onSelect(snippet)
                   }}
-                  className="text-red-400 hover:text-red-500"
                 >
-                  <Trash2 />
-                </Button>
+                  <div className="flex flex-col gap-2 flex-1">
+                    <h4 className="font-bold">{snippet.name}</h4>
+                    <p>{snippet.content}</p>
+                  </div>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      removeSnippet(index)
+                    }}
+                    className="text-red-400 hover:text-red-500"
+                  >
+                    <Trash2 />
+                  </Button>
+                </li>
+              ))
+            ) : (
+              <li className="grid place-items-center">
+                <EmptyList
+                  iconProps={{
+                    className: 'w-40'
+                  }}
+                />
               </li>
-            ))
-          ) : (
-            <li className="grid place-items-center">
-              <EmptyList
-                iconProps={{
-                  className: 'w-40'
-                }}
-              />
-            </li>
-          )}
-        </ul>
-        <DialogFooter>
-          <Dialog
-            open={createDialogToggle.isOpen}
-            onOpenChange={createDialogToggle.setOpen}
-          >
-            <DialogTrigger asChild>
+            )}
+          </ul>
+          <DialogFooter>
+            <DialogTrigger
+              isOpen={createDialogToggle.isOpen}
+              onOpenChange={createDialogToggle.setOpen}
+            >
               <Button>{t('add')}</Button>
+              <DialogOverlay>
+                <DialogContent>
+                  <Form {...form}>
+                    <form
+                      onSubmit={onSubmit}
+                      className="w-full flex flex-col gap-5"
+                    >
+                      <FormField
+                        control={form.control}
+                        name="name"
+                        render={({ field }) => (
+                          <FormElement
+                            label={t('name')}
+                            direction="column"
+                          >
+                            <Input {...field} />
+                          </FormElement>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="content"
+                        render={({ field }) => (
+                          <FormElement
+                            label={t('content')}
+                            direction="column"
+                          >
+                            <Textarea {...field} />
+                          </FormElement>
+                        )}
+                      />
+                      <DialogFooter>
+                        <Button type="submit">{t('add')}</Button>
+                      </DialogFooter>
+                    </form>
+                  </Form>
+                </DialogContent>
+              </DialogOverlay>
             </DialogTrigger>
-            <DialogContent>
-              <Form {...form}>
-                <form
-                  onSubmit={onSubmit}
-                  className="w-full flex flex-col gap-5"
-                >
-                  <FormField
-                    control={form.control}
-                    name="name"
-                    render={({ field }) => (
-                      <FormElement
-                        label={t('name')}
-                        direction="column"
-                      >
-                        <Input {...field} />
-                      </FormElement>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="content"
-                    render={({ field }) => (
-                      <FormElement
-                        label={t('content')}
-                        direction="column"
-                      >
-                        <Textarea {...field} />
-                      </FormElement>
-                    )}
-                  />
-                  <DialogFooter>
-                    <Button>{t('add')}</Button>
-                  </DialogFooter>
-                </form>
-              </Form>
-            </DialogContent>
-          </Dialog>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+          </DialogFooter>
+        </DialogContent>
+      </DialogOverlay>
+    </DialogTrigger>
   )
 }

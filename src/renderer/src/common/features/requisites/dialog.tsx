@@ -137,8 +137,6 @@ export const RequisitesDialog = ({ isOpen, onOpenChange }: RequisitesDialogProps
     }
   }, [isOpen])
 
-  console.log({ form: form.watch() })
-
   return (
     <DialogTrigger
       isOpen={isOpen}

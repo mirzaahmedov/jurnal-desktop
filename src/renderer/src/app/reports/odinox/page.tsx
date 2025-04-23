@@ -117,7 +117,7 @@ const OdinoxPage = () => {
   useKeyUp({
     key: 'Delete',
     ctrlKey: true,
-    onKeyUp: handleClean
+    handler: handleClean
   })
 
   return (

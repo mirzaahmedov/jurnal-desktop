@@ -92,6 +92,7 @@
     "react-number-format": "^5.4.2",
     "react-paginate": "^8.2.0",
     "react-router-dom": "^7.0.2",
+    "react-stately": "^3.37.0",
     "react-toastify": "^11.0.2",
     "recharts": "^2.15.1",
     "tailwind-merge": "^2.5.5",

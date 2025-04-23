@@ -1,10 +1,12 @@
-import { type HTMLAttributes, type InputHTMLAttributes } from 'react'
+import { type HTMLAttributes, type InputHTMLAttributes, useRef } from 'react'
 
 import { type LucideProps, Search } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { Input } from '@/common/components/ui/input'
 import { cn } from '@/common/lib/utils'
+
+import { useKeyUp } from '../hooks'
 
 export interface SearchInputProps extends InputHTMLAttributes<HTMLInputElement> {
   containerProps?: HTMLAttributes<HTMLDivElement>
@@ -17,7 +19,17 @@ export const SearchInput = ({
   iconProps,
   ...props
 }: SearchInputProps) => {
+  const inputRef = useRef<HTMLInputElement>(null)
+
   const { t } = useTranslation()
+
+  useKeyUp({
+    key: '/',
+    ctrlKey: true,
+    handler: () => {
+      inputRef.current?.focus()
+    }
+  })
 
   return (
     <div
@@ -30,12 +42,13 @@ export const SearchInput = ({
       <Input
         required
         autoFocus
+        ref={inputRef}
         autoComplete="off"
         name="search"
         id="search"
         placeholder={t('search...')}
         className={cn(
-          'rounded-md pl-10 font-medium shadow-none focus:ring-red-400 focus-visible:ring-[3px] valid:focus:bg-slate-50 bg-slate-50 valid:bg-brand/10 valid:border-brand/20',
+          'rounded-md pl-10 pr-24 font-medium shadow-none focus:ring-red-400 focus-visible:ring-[3px] valid:focus:bg-slate-50 bg-slate-50 valid:bg-brand/10 valid:border-brand/20',
           className
         )}
         {...props}
@@ -47,6 +60,15 @@ export const SearchInput = ({
           iconProps?.className
         )}
       />
+
+      <div className="absolute right-2.5 top-1/2 -translate-y-1/2 space-x-1 z-50">
+        <span className="text-slate-400 text-xs font-semibold rounded-md px-1.5 py-0.5 border bg-slate-200">
+          CTRL
+        </span>
+        <span className="text-slate-400 text-xs font-bold rounded-md px-1.5 py-0.5 border bg-slate-200">
+          /
+        </span>
+      </div>
     </div>
   )
 }

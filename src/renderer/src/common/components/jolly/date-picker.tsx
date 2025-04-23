@@ -11,6 +11,8 @@ import {
   type DialogProps as AriaDialogProps,
   type PopoverProps as AriaPopoverProps,
   type ValidationResult as AriaValidationResult,
+  type CalendarProps,
+  type RangeCalendarProps,
   Text,
   composeRenderProps
 } from 'react-aria-components'
@@ -59,6 +61,7 @@ interface JollyDatePickerProps<T extends AriaDateValue> extends AriaDatePickerPr
   label?: string
   description?: string
   errorMessage?: string | ((validation: AriaValidationResult) => string)
+  calendarProps?: CalendarProps<T>
 }
 
 function JollyDatePicker<T extends AriaDateValue>({
@@ -66,6 +69,7 @@ function JollyDatePicker<T extends AriaDateValue>({
   description,
   errorMessage,
   className,
+  calendarProps,
   ...props
 }: JollyDatePickerProps<T>) {
   return (
@@ -103,7 +107,7 @@ function JollyDatePicker<T extends AriaDateValue>({
         )}
         <FieldError>{errorMessage}</FieldError>
         <DatePickerContent>
-          <Calendar>
+          <Calendar {...calendarProps}>
             <CalendarHeading />
             <CalendarGrid>
               <CalendarGridHeader>
@@ -122,6 +126,7 @@ interface JollyDateRangePickerProps<T extends AriaDateValue> extends AriaDateRan
   label?: string
   description?: string
   errorMessage?: string | ((validation: AriaValidationResult) => string)
+  calendarProps?: RangeCalendarProps<T>
 }
 
 function JollyDateRangePicker<T extends AriaDateValue>({
@@ -129,6 +134,7 @@ function JollyDateRangePicker<T extends AriaDateValue>({
   description,
   errorMessage,
   className,
+  calendarProps,
   ...props
 }: JollyDateRangePickerProps<T>) {
   return (
@@ -178,7 +184,7 @@ function JollyDateRangePicker<T extends AriaDateValue>({
         )}
         <FieldError>{errorMessage}</FieldError>
         <DatePickerContent>
-          <RangeCalendar>
+          <RangeCalendar {...calendarProps}>
             <CalendarHeading />
             <CalendarGrid>
               <CalendarGridHeader>

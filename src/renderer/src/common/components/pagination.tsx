@@ -31,7 +31,7 @@ export interface PaginationProps extends PaginationValues {
 export const Pagination = ({
   displayLimit = true,
   page,
-  pageCount,
+  pageCount = 1,
   count,
   limit,
   onChange
@@ -47,7 +47,7 @@ export const Pagination = ({
   }, [pageCount, page, onChangeEvent])
 
   return (
-    <div className="flex items-center justify-start gap-5">
+    <div className="flex items-center justify-start gap-20">
       <Paginate
         className="flex gap-4"
         pageRangeDisplayed={2}
@@ -79,22 +79,29 @@ export const Pagination = ({
           </Button>
         }
         pageCount={pageCount}
-        renderOnZeroPageCount={null}
       />
       {pageCount > 0 && displayLimit && (
         <div className="flex items-center gap-10">
-          <p className="whitespace-nowrap text-sm font-medium">{t('elements_per_page')}</p>
-          <JollySelect
-            items={pageSizeOptions}
-            selectedKey={limit}
-            onSelectionChange={(value) => onChange({ limit: Number(value) })}
-            className="w-24 gap-0"
-          >
-            {(item) => <SelectItem id={item.value}>{item.value}</SelectItem>}
-          </JollySelect>
-          <p className="whitespace-nowrap text-sm font-medium">
-            {t('elements_total')}: {count}
-          </p>
+          <span className="whitespace-nowrap text-sm font-medium text-slate-600">
+            {t('pagination.range', {
+              from: (page - 1) * limit + 1,
+              to: page * limit,
+              total: count
+            })}
+          </span>
+          <div className="flex items-center gap-5">
+            <span className="whitespace-nowrap text-sm font-medium text-slate-600">
+              {t('pagination.page_size')}
+            </span>
+            <JollySelect
+              items={pageSizeOptions}
+              selectedKey={limit}
+              onSelectionChange={(value) => onChange({ limit: Number(value) })}
+              className="w-20 gap-0"
+            >
+              {(item) => <SelectItem id={item.value}>{item.value}</SelectItem>}
+            </JollySelect>
+          </div>
         </div>
       )}
     </div>

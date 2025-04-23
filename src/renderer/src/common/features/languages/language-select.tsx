@@ -18,7 +18,7 @@ export const LanguageSelect = ({ language, onLanguageChange }: LanguageSelectPro
         placeholder={t('locales.choose_language')}
         selectedKey={language}
         onSelectionChange={(value) => onLanguageChange(value as string)}
-        className="w-48"
+        className="w-52"
       >
         {(item) => (
           <SelectItem id={item.value}>

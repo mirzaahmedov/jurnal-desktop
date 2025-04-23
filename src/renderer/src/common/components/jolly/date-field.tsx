@@ -58,7 +58,9 @@ function DateInput({ className, variant, ...props }: Omit<DateInputProps, 'child
       )}
       {...props}
     >
-      {(segment) => <DateSegment segment={segment} />}
+      {(segment) => {
+        return <DateSegment segment={segment} />
+      }}
     </AriaDateInput>
   )
 }

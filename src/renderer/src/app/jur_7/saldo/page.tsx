@@ -12,7 +12,6 @@ import { createGroupSpravochnik } from '@/app/super-admin/group/service'
 import { ChooseSpravochnik, DatePicker, GenericTable } from '@/common/components'
 import { Button } from '@/common/components/ui/button'
 import { ButtonGroup } from '@/common/components/ui/button-group'
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/common/components/ui/dialog'
 import { FormField } from '@/common/components/ui/form'
 import { useConfirm } from '@/common/features/confirm'
 import { DownloadFile, ImportFile } from '@/common/features/file'
@@ -71,11 +70,9 @@ const MaterialWarehouseSaldoPage = () => {
     result: ImportValidationErrorRow
   }>()
 
-  const [selectedRows, setSelectedRows] = useState<SaldoProduct[]>([])
   const [selectedDate, setSelectedDate] = useState<undefined | Date>(startDate)
   const [search] = useSearchFilter()
 
-  const selectedToggle = useToggle()
   const monthlyTrackerToggle = useToggle()
   const queryClient = useQueryClient()
   const pagination = usePagination()
@@ -128,7 +125,6 @@ const MaterialWarehouseSaldoPage = () => {
       queryClient.invalidateQueries({
         queryKey: [SaldoQueryKeys.check]
       })
-      setSelectedRows([])
       handleOstatokResponse(res)
       toast.success(res?.message)
     },
@@ -138,7 +134,7 @@ const MaterialWarehouseSaldoPage = () => {
         setDeleteExistingDocumentError({
           message: error.message,
           docs: result.docs,
-          product: selectedRows.find((r) => r.id === result?.saldo_id?.id)
+          product: undefined
         })
       } else {
         setDeleteExistingDocumentError(undefined)
@@ -159,7 +155,6 @@ const MaterialWarehouseSaldoPage = () => {
       queryClient.invalidateQueries({
         queryKey: [SaldoQueryKeys.check]
       })
-      setSelectedRows([])
       toast.success(res?.message)
     }
   })
@@ -218,22 +213,14 @@ const MaterialWarehouseSaldoPage = () => {
     })
   }
 
-  const handleDeselectRow = (row: SaldoProduct) => {
-    setSelectedRows((prev) => {
-      return prev.filter((p) => p.product_id !== row.product_id)
-    })
-  }
-
   const onSubmit = form.handleSubmit((values) => {
     setSelectedDate(values.date)
   })
 
-  // const selectedIds = useMemo(() => selectedRows.map((row) => row.product_id), [selectedRows])
-
   useKeyUp({
     key: 'Delete',
     ctrlKey: true,
-    onKeyUp: handleClean
+    handler: handleClean
   })
 
   return (
@@ -393,15 +380,10 @@ const MaterialWarehouseSaldoPage = () => {
           message={deleteExistingDocumentError.message}
           docs={deleteExistingDocumentError.docs}
           product={deleteExistingDocumentError.product}
-          onRemove={(product) => {
+          onRemove={() => {
             queryClient.invalidateQueries({
               queryKey: [SaldoQueryKeys.getAll]
             })
-            if (product) {
-              setSelectedRows((prev) => {
-                return prev.filter((p) => p.product_id !== product.product_id)
-              })
-            }
           }}
         />
       ) : null}
@@ -429,26 +411,6 @@ const MaterialWarehouseSaldoPage = () => {
           doc={validationError.result}
         />
       ) : null}
-
-      <Dialog
-        open={selectedToggle.isOpen}
-        onOpenChange={selectedToggle.setOpen}
-      >
-        <DialogContent className="w-full max-w-full h-full max-h-[600px] flex flex-col p-0">
-          <DialogHeader className="p-5 pb-0">
-            <DialogTitle>{t('selected_elements')}</DialogTitle>
-          </DialogHeader>
-          <div className="overflow-auto scrollbar flex-1">
-            <GenericTable
-              data={selectedRows}
-              columnDefs={ostatokProductColumns}
-              getRowId={(row) => row.product_id}
-              getRowKey={(row) => row.id}
-              onDelete={handleDeselectRow}
-            />
-          </div>
-        </DialogContent>
-      </Dialog>
 
       <MonthlySaldoTrackerDialog
         isOpen={monthlyTrackerToggle.isOpen}

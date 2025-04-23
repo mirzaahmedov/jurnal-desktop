@@ -25,7 +25,7 @@ export const OpisanieFields: FormEditableFieldsComponent<
   return (
     <>
       <SelectSnippetDialog
-        open={dialogToggle.isOpen}
+        isOpen={dialogToggle.isOpen}
         onOpenChange={dialogToggle.setOpen}
         snippets={snippets}
         addSnippet={addSnippet}

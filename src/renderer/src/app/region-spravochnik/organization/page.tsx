@@ -1,3 +1,4 @@
+import type { OrganizationFormValues } from './config'
 import type { Organization } from '@/common/models'
 
 import { useEffect, useState } from 'react'
@@ -18,7 +19,6 @@ import { useLayout } from '@/common/layout'
 import { ListView } from '@/common/views'
 
 import { OrganizationQueryKeys, defaultValues } from './config'
-import { type OrganizationFormValues } from './config'
 import { OrganizationDialog } from './dialog'
 import { OrganizationService } from './service'
 import { SubordinateOrganizations } from './subordinate-organization'
@@ -111,7 +111,7 @@ const OrganizationPage = () => {
   }, [dialogToggle.isOpen])
 
   return (
-    <ListView className="relative">
+    <ListView>
       <ListView.Header className="flex justify-end">
         <ButtonGroup className="flex items-center gap-2.5">
           <DownloadFile

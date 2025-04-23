@@ -156,6 +156,20 @@ export const DatePicker = forwardRef<HTMLButtonElement, DatePickerProps>(
             placeholder={placeholder ?? 'дд.мм.гггг'}
             onBlur={handleBlur}
             onKeyUp={handleKeyUp}
+            onMouseUp={(e) => {
+              if (e.currentTarget.selectionStart === null) {
+                return
+              }
+              if (e.currentTarget.selectionStart >= 0 && e.currentTarget.selectionStart <= 2) {
+                e.currentTarget.setSelectionRange(0, 2)
+              }
+              if (e.currentTarget.selectionStart >= 3 && e.currentTarget.selectionStart <= 5) {
+                e.currentTarget.setSelectionRange(3, 5)
+              }
+              if (e.currentTarget.selectionStart >= 6 && e.currentTarget.selectionStart <= 10) {
+                e.currentTarget.setSelectionRange(6, 10)
+              }
+            }}
             className={cn('w-full', className)}
           />
           <PopoverTrigger

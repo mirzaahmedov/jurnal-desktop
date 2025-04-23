@@ -8,17 +8,16 @@ import millify from 'millify'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 
-import { FileDropzone, Spinner } from '@/common/components'
+import { FileDropzone } from '@/common/components'
 import { XlsFile } from '@/common/components/icons/XlsFile'
-import { Button } from '@/common/components/ui/button'
-import { Card } from '@/common/components/ui/card'
+import { Button } from '@/common/components/jolly/button'
 import {
-  Dialog,
-  DialogClose,
   DialogContent,
   DialogFooter,
+  DialogOverlay,
   DialogTrigger
-} from '@/common/components/ui/dialog'
+} from '@/common/components/jolly/dialog'
+import { Card } from '@/common/components/ui/card'
 import { Progress } from '@/common/components/ui/progress'
 import { useToggle } from '@/common/hooks'
 import { http } from '@/common/lib/http'
@@ -84,73 +83,80 @@ export const ImportFile = ({ url, params, onSuccess, onError }: ImportFileDialog
   )
 
   return (
-    <Dialog
-      open={dialogToggle.isOpen}
+    <DialogTrigger
+      isOpen={dialogToggle.isOpen}
       onOpenChange={handleOpenChange}
     >
-      <DialogTrigger>
-        <Button>
-          <UploadCloud className="btn-icon" /> {t('import-excel')}
-        </Button>
-      </DialogTrigger>
-      <DialogContent className="pt-10 w-full max-w-xl">
-        <FileDropzone
-          onSelect={setFile}
-          accept={acceptFiles}
-        />
-        <div>
-          {file ? (
-            <div className="flex flex-col gap-1">
-              <h6 className="text-xs text-slate-400 uppercase font-bold">{t('selected-file')}</h6>
-              <Card className="mt-2 px-5 py-3 flex items-center gap-5">
-                <div className="rounded-full size-12 flex items-center justify-center bg-slate-100">
-                  <XlsFile />
-                </div>
-                <div className="flex-1">
-                  <p className="font-bold text-sm break-all text-slate-700">{file.name}</p>
-                  <p className="text-xs font-bold text-slate-500 mt-1">
-                    {isPending ? (
-                      <div className="flex items-center gap-2.5">
-                        <span>{(progress ?? 0).toFixed()}%</span>
-                        <Progress value={progress} />
+      <Button>
+        <UploadCloud className="btn-icon mr-2" /> {t('import-excel')}
+      </Button>
+      <DialogOverlay>
+        <DialogContent className="pt-10 w-full max-w-xl">
+          {({ close }) => (
+            <>
+              <FileDropzone
+                onSelect={setFile}
+                accept={acceptFiles}
+              />
+              <div>
+                {file ? (
+                  <div className="flex flex-col gap-1">
+                    <h6 className="text-xs text-slate-400 uppercase font-bold">
+                      {t('selected-file')}
+                    </h6>
+                    <Card className="mt-2 px-5 py-3 flex items-center gap-5">
+                      <div className="rounded-full size-12 flex items-center justify-center bg-slate-100">
+                        <XlsFile />
                       </div>
-                    ) : (
-                      millify(file.size, {
-                        space: true,
-                        units: ['', 'KB', 'MB', 'GB']
-                      })
-                    )}
-                  </p>
-                </div>
+                      <div className="flex-1">
+                        <p className="font-bold text-sm break-all text-slate-700">{file.name}</p>
+                        <p className="text-xs font-bold text-slate-500 mt-1">
+                          {isPending ? (
+                            <div className="flex items-center gap-2.5">
+                              <span>{(progress ?? 0).toFixed()}%</span>
+                              <Progress value={progress} />
+                            </div>
+                          ) : (
+                            millify(file.size, {
+                              space: true,
+                              units: ['', 'KB', 'MB', 'GB']
+                            })
+                          )}
+                        </p>
+                      </div>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="text-red-500 hover:text-red-500 hover:bg-red-50"
+                        onClick={() => setFile(undefined)}
+                      >
+                        <CircleX className="btn-icon !mx-0" />
+                      </Button>
+                    </Card>
+                  </div>
+                ) : null}
+              </div>
+              <DialogFooter>
                 <Button
-                  variant="ghost"
-                  size="icon"
-                  className="text-red-500 hover:text-red-500 hover:bg-red-50"
-                  onClick={() => setFile(undefined)}
+                  isDisabled={!file}
+                  isPending={isPending}
+                  onPress={() => {
+                    importFile(file as File)
+                  }}
                 >
-                  <CircleX className="btn-icon !mx-0" />
+                  {t('send')}
                 </Button>
-              </Card>
-            </div>
-          ) : null}
-        </div>
-        <DialogFooter>
-          <Button
-            disabled={!file}
-            onClick={() => {
-              importFile(file!)
-            }}
-          >
-            {isPending ? (
-              <Spinner className="mr-2 inline-block size-4 border-white border-2 border-r-transparent" />
-            ) : null}
-            {t('send')}
-          </Button>
-          <DialogClose asChild>
-            <Button variant="outline">{t('cancel')}</Button>
-          </DialogClose>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+                <Button
+                  onPress={close}
+                  variant="outline"
+                >
+                  {t('cancel')}
+                </Button>
+              </DialogFooter>
+            </>
+          )}
+        </DialogContent>
+      </DialogOverlay>
+    </DialogTrigger>
   )
 }

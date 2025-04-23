@@ -29,13 +29,15 @@ const renderNavElement = (elem: null | NavElement, isCollapsed: boolean, rootPat
 
   const path = rootPath ? `${rootPath}/${elem.path}` : elem.path
   return elem.children?.length ? (
-    <li
-      key={path}
-      className={cn('pl-5 hover:bg-slate-50 transition-colors', !rootPath && 'pr-5')}
-    >
+    <li key={path}>
       <Accordion type="multiple">
         <AccordionItem value={path}>
-          <AccordionTrigger className="py-0 hover:no-underline">
+          <AccordionTrigger
+            className={cn(
+              'py-0 px-5 hover:no-underline hover:bg-brand/5 hover:text-brand transition-colors duration-75',
+              !rootPath && 'rounded-lg'
+            )}
+          >
             <span
               className={cn(
                 'w-full flex items-center py-3 gap-2.5',
@@ -49,7 +51,7 @@ const renderNavElement = (elem: null | NavElement, isCollapsed: boolean, rootPat
               ) : null}
             </span>
           </AccordionTrigger>
-          <AccordionContent>
+          <AccordionContent className="pl-5">
             <ul>{elem.children.map((child) => renderNavElement(child, isCollapsed, path))}</ul>
           </AccordionContent>
         </AccordionItem>
@@ -58,7 +60,10 @@ const renderNavElement = (elem: null | NavElement, isCollapsed: boolean, rootPat
   ) : (
     <li
       key={path}
-      className={cn('group pl-5 hover:bg-slate-50 transition-colors', !rootPath && 'pr-5')}
+      className={cn(
+        'group pl-5 pr-5 hover:bg-brand/5 hover:text-brand transition-colors duration-75',
+        !rootPath && 'pr-5 rounded-lg'
+      )}
     >
       {elem.displayOnly ? (
         <div
@@ -81,7 +86,7 @@ const renderNavElement = (elem: null | NavElement, isCollapsed: boolean, rootPat
             cn(
               'flex items-center py-3 gap-2.5 border-b border-slate-200 group-last:border-none',
               isCollapsed && 'justify-center',
-              isActive && 'text-brand',
+              isActive && 'text-brand before-indicator',
               elem.className
             )
           }

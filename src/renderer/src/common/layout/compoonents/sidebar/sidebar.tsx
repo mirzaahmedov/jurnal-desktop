@@ -8,6 +8,7 @@ import { Spinner } from '@/common/components'
 import { Badge } from '@/common/components/ui/badge'
 import { Button } from '@/common/components/ui/button'
 import { useUpdateManagerStore } from '@/common/features/update-manager'
+import { useKeyUp } from '@/common/hooks'
 import { cn } from '@/common/lib/utils'
 
 import { Navigation } from './navigation'
@@ -29,9 +30,15 @@ export const Sidebar = () => {
     window.electron.ipcRenderer.invoke('get-version').then(setVersion)
   }, [])
 
+  useKeyUp({
+    key: 'b',
+    ctrlKey: true,
+    handler: toggleCollapsed
+  })
+
   return (
     <aside
-      className="w-full max-w-[300px] h-full flex flex-col border-r border-slate-200"
+      className="w-full max-w-[340px] h-full flex flex-col border-r border-slate-200"
       style={{
         maxWidth: isCollapsed ? 112 : undefined
       }}

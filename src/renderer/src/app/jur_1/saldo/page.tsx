@@ -138,7 +138,7 @@ const KassaSaldoPage = () => {
   useKeyUp({
     key: 'Delete',
     ctrlKey: true,
-    onKeyUp: handleClickClean
+    handler: handleClickClean
   })
 
   return (

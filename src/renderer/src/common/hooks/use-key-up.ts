@@ -5,10 +5,10 @@ import { useEventCallback } from './use-event-callback'
 export interface UseKeyUpParams {
   key: string
   ctrlKey?: boolean
-  onKeyUp: (e: KeyboardEvent) => void
+  handler: (e: KeyboardEvent) => void
 }
-export const useKeyUp = ({ key, ctrlKey, onKeyUp }: UseKeyUpParams) => {
-  const onKeyUpCallback = useEventCallback(onKeyUp)
+export const useKeyUp = ({ key, ctrlKey, handler: handler }: UseKeyUpParams) => {
+  const handlerCallback = useEventCallback(handler)
 
   useEffect(() => {
     const handleKeyUp = (e: KeyboardEvent) => {
@@ -17,7 +17,7 @@ export const useKeyUp = ({ key, ctrlKey, onKeyUp }: UseKeyUpParams) => {
       }
 
       if (e.key === key) {
-        onKeyUpCallback(e)
+        handlerCallback(e)
       }
     }
 
@@ -26,5 +26,5 @@ export const useKeyUp = ({ key, ctrlKey, onKeyUp }: UseKeyUpParams) => {
     return () => {
       document.removeEventListener('keyup', handleKeyUp)
     }
-  }, [key, ctrlKey, onKeyUpCallback])
+  }, [key, ctrlKey, handlerCallback])
 }
