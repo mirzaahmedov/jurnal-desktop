@@ -1,0 +1,17 @@
+{
+  "doljnost": {
+    "rukovoditel": "Раҳбар",
+    "glav_buxgalter": "Бош ҳисобчи",
+    "glav_mib": "МИБ Бошлиғи",
+    "nachalnik_otdela": "Бўлим бошлиғи",
+    "buxgalter": "Ҳисобчи",
+    "kassir": "Кассир"
+  },
+  "documents": {
+    "bank_rasxod_porucheniya": "Банк расход поручения",
+    "shartnoma_grafik_oplati": "Шартнома тўлов графиги",
+    "days_report": "Кундалик ҳисобот",
+    "cap": "Шапка",
+    "akt_sverki": "Келишув акти"
+  }
+}

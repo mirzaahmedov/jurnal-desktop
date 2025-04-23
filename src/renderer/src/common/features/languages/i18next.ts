@@ -4,6 +4,14 @@ import { z } from 'zod'
 
 import { capitalize } from '@/common/lib/string'
 
+import appCyrl from './translations/cyrl/app.json'
+import commonCyrl from './translations/cyrl/common.json'
+import dashboardCyrl from './translations/cyrl/dashboard.json'
+import podotchetCyrl from './translations/cyrl/podotchet.json'
+import podpisCyrl from './translations/cyrl/podpis.json'
+import porucheniyaCyrl from './translations/cyrl/porucheniya.json'
+import signInCyrl from './translations/cyrl/sign-in.json'
+import userCyrl from './translations/cyrl/user.json'
 import appRU from './translations/ru/app.json'
 import commonRU from './translations/ru/common.json'
 import dashboardRU from './translations/ru/dashboard.json'
@@ -21,7 +29,7 @@ import porucheniyaUZ from './translations/uz/porucheniya.json'
 import signInUZ from './translations/uz/sign-in.json'
 import userUZ from './translations/uz/user.json'
 
-const localeSchema = z.enum(['uz', 'ru']).catch('ru')
+const localeSchema = z.enum(['uz', 'ru', 'cyrl']).catch('cyrl')
 
 i18next.on('languageChanged', (lang) => {
   localStorage.setItem('app-lang', lang)
@@ -39,7 +47,7 @@ export const initLocales = () => {
   const lang = localeSchema.safeParse(localStorage.getItem('app-lang'))
   return i18next.use(initReactI18next).init({
     lng: lang.data,
-    fallbackLng: 'ru',
+    fallbackLng: 'cyrl',
 
     defaultNS: 'common',
     fallbackNS: ['common'],
@@ -64,6 +72,16 @@ export const initLocales = () => {
         porucheniya: porucheniyaUZ,
         'sign-in': signInUZ,
         user: userUZ
+      },
+      cyrl: {
+        app: appCyrl,
+        common: commonCyrl,
+        dashboard: dashboardCyrl,
+        podotchet: podotchetCyrl,
+        podpis: podpisCyrl,
+        porucheniya: porucheniyaCyrl,
+        'sign-in': signInCyrl,
+        user: userCyrl
       }
     },
 

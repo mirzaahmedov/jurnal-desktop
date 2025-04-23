@@ -72,6 +72,8 @@
   },
   "locales": {
     "uz": "Oʻzbekcha",
-    "ru": "Ruscha"
+    "ru": "Ruscha",
+    "cyrl": "Oʻzbekcha (Kiril)",
+    "choose_language": "Tilni tanlang"
   }
 }

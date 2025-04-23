@@ -83,7 +83,7 @@ export const GenericPieChart = ({ data, config, total }: GenericPieChartProps) =
                           ? millify(total, {
                               space: true,
                               units: ['', 'ming', 'mln', 'mlrd', 'tril'],
-                              locales: i18n.language
+                              locales: i18n.language === 'cyrl' ? 'ru' : i18n.language
                             })
                           : formatNumber(total)}
                       </tspan>

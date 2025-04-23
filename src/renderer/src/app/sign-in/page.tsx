@@ -22,7 +22,7 @@ import {
 } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
 import { useAuthenticationStore } from '@/common/features/auth'
-import { LanguageSelect } from '@/common/features/locales'
+import { LanguageSelect } from '@/common/features/languages'
 import { useRequisitesStore } from '@/common/features/requisites'
 
 import { SigninFormSchema, defaultValues } from './config'

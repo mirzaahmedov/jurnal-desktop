@@ -15,7 +15,7 @@ export const LanguageSelect = ({ language, onLanguageChange }: LanguageSelectPro
     <>
       <JollySelect
         items={languageOptions}
-        placeholder="Choose language"
+        placeholder={t('locales.choose_language')}
         selectedKey={language}
         onSelectionChange={(value) => onLanguageChange(value as string)}
         className="w-48"
@@ -45,5 +45,10 @@ const languageOptions = [
     value: 'ru',
     name: 'ru',
     icon: flagRU
+  },
+  {
+    value: 'cyrl',
+    name: 'cyrl',
+    icon: flagUZ
   }
 ] as const
