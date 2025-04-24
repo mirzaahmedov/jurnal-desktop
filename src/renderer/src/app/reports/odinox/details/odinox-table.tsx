@@ -1,5 +1,5 @@
 import type { OdinoxFormValues } from './config'
-import type { OdinoxRow } from './provodki'
+import type { OdinoxTableRow } from './interfaces'
 
 import { memo } from 'react'
 
@@ -10,12 +10,12 @@ import {
 } from '@/common/components/editable-table'
 import { cn } from '@/common/lib/utils'
 
-export interface MainbookTableProps
+export interface OdinoxTableProps
   extends Omit<EditableTableProps<OdinoxFormValues, 'childs'>, 'columnDefs'> {
-  columns: EditableColumnDef<OdinoxRow>[]
+  columns: EditableColumnDef<OdinoxTableRow>[]
 }
 // fix readonly if there is an issue
-export const MainbookTable = memo(({ columns, ...props }: MainbookTableProps) => {
+export const OdinoxTable = memo(({ columns, ...props }: OdinoxTableProps) => {
   return (
     <EditableTable
       columnDefs={columns}
@@ -26,9 +26,6 @@ export const MainbookTable = memo(({ columns, ...props }: MainbookTableProps) =>
             '[&_input]:font-bold sticky bottom-0 z-50 shadow-sm-up'
         )
       }
-      getEditorProps={({ index, rows }) => {
-        return index === (rows?.length ?? 0) - 1 ? { readOnly: true } : {}
-      }}
       {...props}
     />
   )

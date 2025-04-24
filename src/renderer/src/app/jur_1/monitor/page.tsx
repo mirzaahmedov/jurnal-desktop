@@ -1,9 +1,11 @@
 import { useEffect } from 'react'
 
 import { useQuery } from '@tanstack/react-query'
+import { Download } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { FooterCell, FooterRow, GenericTable, SummaTotal, useTableSort } from '@/common/components'
+import { Button } from '@/common/components/ui/button'
 import { ButtonGroup } from '@/common/components/ui/button-group'
 import { DownloadFile } from '@/common/features/file'
 import {
@@ -17,7 +19,7 @@ import {
   validateDateWithinSelectedMonth
 } from '@/common/features/selected-month'
 import { useSettingsStore } from '@/common/features/settings'
-import { useDates, usePagination } from '@/common/hooks'
+import { useDates, usePagination, useToggle } from '@/common/hooks'
 import { useLayout } from '@/common/layout'
 import { formatNumber } from '@/common/lib/format'
 import { ListView } from '@/common/views'
@@ -25,6 +27,7 @@ import { ListView } from '@/common/views'
 import { useKassaSaldo } from '../saldo/components/use-saldo'
 import { columns } from './columns'
 import { KassaMonitorQueryKeys } from './config'
+import { DailyReportDialog } from './daily-report-dialog'
 import { kassaMonitorService } from './service'
 
 const KassaMonitorPage = () => {
@@ -32,6 +35,7 @@ const KassaMonitorPage = () => {
   const pagination = usePagination()
   const report_title_id = useSettingsStore((store) => store.report_title_id)
   const startDate = useSelectedMonthStore((store) => store.startDate)
+  const dailyReportToggle = useToggle()
 
   const setLayout = useLayout()
 
@@ -98,21 +102,13 @@ const KassaMonitorPage = () => {
           />
           {main_schet_id ? (
             <ButtonGroup borderStyle="dashed">
-              <DownloadFile
-                fileName={`касса-дневной-отчет_${dates.from}&${dates.to}.xlsx`}
-                url="kassa/monitoring/daily"
-                buttonText={t('daily-report')}
-                params={{
-                  main_schet_id,
-                  budjet_id,
-                  report_title_id,
-                  from: dates.from,
-                  to: dates.to,
-                  year: startDate.getFullYear(),
-                  month: startDate.getMonth() + 1,
-                  excel: true
-                }}
-              />
+              <Button
+                variant="ghost"
+                onClick={dailyReportToggle.open}
+              >
+                <Download className="btn-icon !size-4" />
+                {t('daily-report')}
+              </Button>
               <DownloadFile
                 fileName={`касса-шапка-отчет_${dates.from}&${dates.to}.xlsx`}
                 url="kassa/monitoring/cap"
@@ -195,6 +191,14 @@ const KassaMonitorPage = () => {
           pageCount={monitoring?.meta?.pageCount ?? 0}
         />
       </ListView.Footer>
+
+      <DailyReportDialog
+        isOpen={dailyReportToggle.isOpen}
+        onOpenChange={dailyReportToggle.setOpen}
+        budjet_id={budjet_id!}
+        main_schet_id={main_schet_id!}
+        report_title_id={report_title_id!}
+      />
     </ListView>
   )
 }

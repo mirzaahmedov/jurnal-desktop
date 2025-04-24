@@ -20,7 +20,7 @@ import { OdinoxQueryKeys } from '../config'
 import { OdinoxService } from '../service'
 import { defaultValues } from './config'
 // import { MainbookDocumentsTracker } from './documents-tracker'
-import { MainbookTable } from './mainbook-table'
+import { OdinoxTable } from './odinox-table'
 import { OdinoxProvodkaColumns } from './provodki'
 import {
   getOdinoxColumns,
@@ -260,7 +260,7 @@ const OdinoxDetailsPage = () => {
               </div>
             </div>
             <div className="overflow-auto scrollbar flex-1 relative">
-              <MainbookTable
+              <OdinoxTable
                 columns={columns}
                 methods={tableMethods}
                 form={form}

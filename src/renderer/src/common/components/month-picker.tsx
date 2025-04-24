@@ -161,7 +161,10 @@ export const MonthPicker = ({
           locale: i18n.language === 'ru' ? ru : uz
         })}
       </Button>
-      <Popover {...popoverProps}>
+      <Popover
+        isNonModal
+        {...popoverProps}
+      >
         <PopoverDialog>
           <MonthCalendar
             month={date}
