@@ -1,13 +1,15 @@
 import type { KassaPrixod } from '@/common/models'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { Eye } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
 import { FooterCell, FooterRow, GenericTable, useTableSort } from '@/common/components'
+import { Button } from '@/common/components/jolly/button'
 import { useConfirm } from '@/common/features/confirm'
 import { DownloadFile } from '@/common/features/file'
 import {
@@ -34,6 +36,7 @@ import { useKassaSaldo } from '../saldo/components/use-saldo'
 import { columns } from './columns'
 import { PrixodQueryKeys } from './config'
 import { KassaPrixodService } from './service'
+import { KassaPrixodViewDialog } from './view-dialog'
 
 const KassaPrixodPage = () => {
   const dates = useDates()
@@ -45,6 +48,7 @@ const KassaPrixodPage = () => {
   const startDate = useSelectedMonthStore((store) => store.startDate)
 
   const [search] = useSearchFilter()
+  const [selectedId, setSelectedId] = useState<number | null>(null)
 
   const { confirm } = useConfirm()
   const { sorting, handleSort, getColumnSorted } = useTableSort()
@@ -158,6 +162,17 @@ const KassaPrixodPage = () => {
           onDelete={handleClickDelete}
           onSort={handleSort}
           getColumnSorted={getColumnSorted}
+          actions={(row) => (
+            <Button
+              variant="ghost"
+              size="icon"
+              onPress={() => {
+                setSelectedId(row.id)
+              }}
+            >
+              <Eye className="btn-icon" />
+            </Button>
+          )}
           footer={
             <FooterRow>
               <FooterCell
@@ -176,6 +191,11 @@ const KassaPrixodPage = () => {
           pageCount={prixods?.meta?.pageCount ?? 0}
         />
       </ListView.Footer>
+
+      <KassaPrixodViewDialog
+        selectedId={selectedId}
+        onClose={() => setSelectedId(null)}
+      />
     </ListView>
   )
 }

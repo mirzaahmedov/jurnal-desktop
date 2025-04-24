@@ -1,3 +1,8 @@
+import type { Operatsii } from './operatsii'
+import type { Podrazdelenie } from './podrazdelenie'
+import type { Sostav } from './sostav'
+import type { TypeOperatsii } from './type-operatsii'
+
 export interface BankPrixod {
   id: number
   doc_num: string
@@ -31,6 +36,25 @@ export interface BankPrixodPodvodka {
   summa: number
 }
 
+export interface KassaPrixodProvodka {
+  id: number
+  user_id: number
+  spravochnik_operatsii_id: number
+  operatsii: Operatsii
+  summa: number
+  id_spravochnik_podrazdelenie: number | null
+  podrazdelenie: Podrazdelenie | null
+  id_spravochnik_sostav: number | null
+  sostav: Sostav | null
+  id_spravochnik_type_operatsii: number | null
+  type_operatsii: TypeOperatsii | null
+  kassa_prixod_id: number
+  main_schet_id: number
+  created_at: string
+  updated_at: string
+  isdeleted: boolean
+  schet: string
+}
 export interface KassaPrixod {
   id: number
   doc_num: string
@@ -50,24 +74,10 @@ export interface KassaPrixod {
   organ_account_id: number
   organ_gazna_id: number
   type: string
-  spravochnik_podotchet_litso_name: any
-  spravochnik_podotchet_litso_rayon: any
+  spravochnik_podotchet_litso_name: string | null
+  spravochnik_podotchet_litso_rayon: string | null
   zarplata_fio: any
-  childs: Array<{
-    id: number
-    user_id: number
-    spravochnik_operatsii_id: number
-    summa: number
-    id_spravochnik_podrazdelenie: any
-    id_spravochnik_sostav: any
-    id_spravochnik_type_operatsii: any
-    kassa_prixod_id: number
-    main_schet_id: number
-    created_at: string
-    updated_at: string
-    isdeleted: boolean
-    schet: string
-  }>
+  childs: KassaPrixodProvodka[]
   podotchet: any
 }
 
