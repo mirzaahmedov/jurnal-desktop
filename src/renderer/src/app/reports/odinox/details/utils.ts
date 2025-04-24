@@ -6,6 +6,7 @@ import type { OdinoxProvodka } from '@/common/models'
 import { t } from 'i18next'
 
 import { createNumberEditor } from '@/common/components/editable-table/editors'
+import { cn } from '@/common/lib/utils'
 
 import {
   type OdinoxAutoFill,
@@ -149,11 +150,15 @@ export const getOdinoxColumns = (types: OdinoxType[]) => {
         : type.name.startsWith(OdinoxTypeName.BankPrixod)
           ? t('funds_paid_by_ministry')
           : type.name.startsWith(OdinoxTypeName.Jur1_2)
-            ? t('kassa_rasxod')
+            ? `${t('kassa_rasxod')} / ${t('bank_rasxod')}`
             : type.name.startsWith(OdinoxTypeName.Jur3)
               ? t('real_expenses')
               : t('remainder'),
-      headerClassName: 'text-center py-3',
+      headerClassName: cn(
+        'text-center py-3',
+        type.name.endsWith('_year') && '!bg-slate-200 border-slate-300'
+      ),
+      minWidth: 120,
       Editor: createNumberEditor({
         key: type.name,
         readOnly: true,
@@ -162,7 +167,7 @@ export const getOdinoxColumns = (types: OdinoxType[]) => {
           adjustWidth: true
         }
       })
-    }
+    } satisfies EditableColumnDef<any>
   }
 
   return [
@@ -175,7 +180,7 @@ export const getOdinoxColumns = (types: OdinoxType[]) => {
     {
       key: 'year',
       header: t('for_year'),
-      headerClassName: 'text-center',
+      headerClassName: 'text-center !bg-slate-200 border-slate-300',
       columns: types.filter((type) => type.name.endsWith('_year')).map(getColumns) as any
     }
   ] as EditableColumnDef<any>[]

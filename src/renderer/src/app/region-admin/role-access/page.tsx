@@ -16,12 +16,12 @@ import { RoleAccessDialog } from './dialog'
 
 const RoleAccessPage = () => {
   const [roleId, setRoleId] = useState<number | undefined>()
+  const [search] = useSearchFilter()
 
   const setLayout = useLayout()
   const dialogToggle = useToggle()
   const pagination = usePagination()
 
-  const [search] = useSearchFilter()
   const { t } = useTranslation(['app'])
 
   const { data: roles, isFetching } = useQuery({

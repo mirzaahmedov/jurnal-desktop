@@ -71,7 +71,7 @@ const SmetaGrafikPage = () => {
 
   useEffect(() => {
     setLayout({
-      title: t('pages.smeta-grafik'),
+      title: t('pages.smeta_grafik'),
       breadcrumbs: [
         {
           title: t('pages.spravochnik')

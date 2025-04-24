@@ -10,5 +10,7 @@ export interface RoleAccess {
   spravochnik: boolean
   region: boolean
   main_book: boolean
+  smeta_grafik: boolean
+  odinox: boolean
   role_name: string
 }

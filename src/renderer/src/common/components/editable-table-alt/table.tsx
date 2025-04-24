@@ -248,7 +248,7 @@ interface EditableTableRowRendererProps<T extends object, F extends ArrayPath<No
   row: FieldArrayWithId<T, F, 'id'>
   rows: FieldArrayWithId<T, F, 'id'>[]
 }
-const EditableTableRowRenderer = <T extends object, R extends T[ArrayPath<NoInfer<T>>]>({
+export const EditableTableRowRenderer = <T extends object, R extends T[ArrayPath<NoInfer<T>>]>({
   tabIndex,
   index,
   highlightedRow,

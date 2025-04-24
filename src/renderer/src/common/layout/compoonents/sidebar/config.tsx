@@ -348,11 +348,6 @@ export const getNavElements = (t: TFunction): NavElement[] => {
               icon: Users
             },
             {
-              path: 'smeta-grafik',
-              title: t('pages.smeta-grafik'),
-              icon: CalendarCheck
-            },
-            {
               path: 'group',
               title: t('pages.group'),
               icon: Group
@@ -490,6 +485,13 @@ export const getNavElements = (t: TFunction): NavElement[] => {
           ]
         }
       : null,
+    !is_super_admin && (permissions.smeta_grafik || is_admin)
+      ? {
+          path: '/smeta-grafik',
+          title: t('pages.smeta_grafik'),
+          icon: CalendarCheck
+        }
+      : null,
     !is_super_admin && (permissions.main_book || is_admin)
       ? {
           path: '/mainbook',
@@ -497,7 +499,7 @@ export const getNavElements = (t: TFunction): NavElement[] => {
           icon: Book
         }
       : null,
-    !is_super_admin
+    !is_super_admin && (permissions.smeta_grafik || is_admin)
       ? {
           path: '/odinox',
           title: t('pages.odinox'),

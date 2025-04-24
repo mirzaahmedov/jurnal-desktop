@@ -18,11 +18,22 @@ export const RequisitesFormSchema = withPreprocessor(
 export type RequisitesFormValues = z.infer<typeof RequisitesFormSchema>
 
 type RequisitesStore = RequisitesFormValues & {
+  clear: VoidFunction
   setRequisites: (params: RequisitesFormValues) => void
 }
 export const useRequisitesStore = create(
   persist<RequisitesStore>(
     (set) => ({
+      clear: () => {
+        set({
+          main_schet_id: undefined,
+          budjet_id: undefined,
+          jur3_schet_152_id: undefined,
+          jur3_schet_159_id: undefined,
+          jur4_schet_id: undefined,
+          user_id: undefined
+        })
+      },
       setRequisites: (values) => {
         set(values)
       }

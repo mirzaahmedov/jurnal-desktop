@@ -96,6 +96,8 @@ export const RoleAccessDialog = ({ roleId, isOpen, onOpenChange }: RoleAccessDia
       jur8: values.jur8,
       main_book: values.main_book,
       region: values.region,
+      smeta_grafik: values.smeta_grafik,
+      odinox: values.odinox,
       spravochnik: values.spravochnik
     })
   })

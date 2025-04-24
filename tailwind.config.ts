@@ -131,7 +131,7 @@ const ui = plugin(function ({ addUtilities }) {
 
 const config: Config = {
   darkMode: ['class'],
-  content: ['./index.html', './src/**/*.tsx'],
+  content: ['./index.html', './src/**/*.tsx', './src/**/*.ts'],
   theme: {
     extend: {
       fontSize: {

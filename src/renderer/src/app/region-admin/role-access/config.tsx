@@ -20,6 +20,8 @@ export const RoleAccessFormSchema = z.object({
   jur8: z.boolean(),
   spravochnik: z.boolean(),
   region: z.boolean(),
+  smeta_grafik: z.boolean(),
+  odinox: z.boolean(),
   main_book: z.boolean()
 })
 export type RoleAccessFormValues = z.infer<typeof RoleAccessFormSchema>
@@ -67,5 +69,13 @@ export const roleAccessOptions: Array<{
   {
     key: 'spravochnik',
     label: <Trans ns="app">pages.spravochnik</Trans>
+  },
+  {
+    key: 'smeta_grafik',
+    label: <Trans ns="app">pages.smeta_grafik</Trans>
+  },
+  {
+    key: 'odinox',
+    label: <Trans ns="app">pages.odinox</Trans>
   }
 ]

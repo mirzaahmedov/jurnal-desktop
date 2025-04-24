@@ -37,7 +37,7 @@ const SigninPage = () => {
   const queryClient = useQueryClient()
   const navigate = useNavigate()
 
-  const { user_id, setRequisites } = useRequisitesStore()
+  const { user_id, clear } = useRequisitesStore()
   const { setUser } = useAuthenticationStore()
 
   const form = useForm({
@@ -49,10 +49,7 @@ const SigninPage = () => {
     mutationFn: signinQuery,
     onSuccess(res) {
       if (res.data?.result.id !== user_id) {
-        setRequisites({
-          main_schet_id: undefined,
-          budjet_id: undefined
-        })
+        clear()
       }
       setUser({
         token: res.data?.token,

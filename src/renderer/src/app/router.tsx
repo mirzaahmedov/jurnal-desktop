@@ -289,20 +289,6 @@ export const routes: RouteObject[] = [
           {
             path: 'podpis',
             element: <PodpisPage />
-          },
-          {
-            path: 'smeta-grafik',
-            element: <MainSchetSelectedGuard />,
-            children: [
-              {
-                index: true,
-                element: <SmetaGrafikPage />
-              },
-              {
-                path: ':id',
-                element: <SmetaGrafikDetailsPage />
-              }
-            ]
           }
         ]
       },
@@ -491,6 +477,20 @@ export const routes: RouteObject[] = [
           {
             path: 'schets',
             element: <PrixodSchetPage />
+          }
+        ]
+      },
+      {
+        path: 'smeta-grafik',
+        element: <MainSchetSelectedGuard />,
+        children: [
+          {
+            index: true,
+            element: <SmetaGrafikPage />
+          },
+          {
+            path: ':id',
+            element: <SmetaGrafikDetailsPage />
           }
         ]
       },

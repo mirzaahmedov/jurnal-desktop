@@ -7,7 +7,7 @@ export const OdinoxProvodkaColumns: EditableColumnDef<OdinoxTableRow>[] = [
   {
     key: 'smeta_name',
     header: 'name',
-    width: 300,
+    minWidth: 300,
     Editor: createTextEditor({
       key: 'name',
       readOnly: true
