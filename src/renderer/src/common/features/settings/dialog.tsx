@@ -3,13 +3,12 @@ import type { DialogProps } from '@radix-ui/react-dialog'
 
 import { useEffect, useState } from 'react'
 
-import { parseDate } from '@internationalized/date'
 import { useQuery } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
 import { ReportTitleQueryKeys, ReportTitleService } from '@/app/super-admin/report-title'
-import { JollyDatePicker } from '@/common/components/jolly/date-picker'
+import { DatePicker } from '@/common/components'
 import {
   DialogContent,
   DialogFooter,
@@ -181,10 +180,7 @@ export const SettingsDialog = ({ open, onOpenChange }: DialogProps) => {
                             render={({ field }) => (
                               <div className="flex items-center justify-between gap-10">
                                 <FormLabel>{capitalize(t('start_date'))}</FormLabel>
-                                <JollyDatePicker
-                                  value={parseDate(field.value)}
-                                  onChange={(value) => field.onChange(value?.toString())}
-                                />
+                                <DatePicker {...field} />
                               </div>
                             )}
                           />
@@ -194,10 +190,7 @@ export const SettingsDialog = ({ open, onOpenChange }: DialogProps) => {
                             render={({ field }) => (
                               <div className="flex items-center justify-between gap-10">
                                 <FormLabel>{capitalize(t('end_date'))}</FormLabel>
-                                <JollyDatePicker
-                                  value={parseDate(field.value)}
-                                  onChange={(value) => field.onChange(value?.toString())}
-                                />
+                                <DatePicker {...field} />
                               </div>
                             )}
                           />

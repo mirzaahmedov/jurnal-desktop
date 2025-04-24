@@ -1,4 +1,4 @@
-import { type Dispatch, type SetStateAction, useCallback } from 'react'
+import { type Dispatch, type SetStateAction, useCallback, useState } from 'react'
 
 import { useSelectedMonthStore } from '@/common/features/selected-month'
 import { formatDate } from '@/common/lib/date'
@@ -11,6 +11,7 @@ export type DatesParams = {
 }
 
 export interface UseDatesReturn extends DatesParams {
+  _invisibleToggle: boolean
   onChange: Dispatch<SetStateAction<DatesParams>>
 }
 
@@ -21,11 +22,13 @@ export interface UseDatesOptions {
 export const useDates = ({ defaultFrom, defaultTo }: UseDatesOptions = {}) => {
   const { startDate, endDate } = useSelectedMonthStore()
 
+  const [invisibleToggle, setInvisibleToggle] = useState(false)
   const [from, setFrom] = useLocationState('from', defaultFrom ?? formatDate(startDate))
   const [to, setTo] = useLocationState('to', defaultTo ?? formatDate(endDate))
 
   const handleChange = useCallback(
     (values: DatesParams) => {
+      setInvisibleToggle((prev) => !prev)
       if (values.from) {
         setFrom(values.from)
       }
@@ -39,6 +42,7 @@ export const useDates = ({ defaultFrom, defaultTo }: UseDatesOptions = {}) => {
   return {
     from,
     to,
+    _invisibleToggle: invisibleToggle,
     onChange: handleChange
   }
 }

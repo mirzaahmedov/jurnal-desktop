@@ -23,22 +23,17 @@ export interface PaginationValues {
   limit: number
 }
 export interface PaginationProps extends PaginationValues {
-  displayLimit?: boolean
+  displayPageSize?: boolean
   pageCount: number
   count: number
   onChange: (values: Partial<PaginationValues>) => void
 }
-export const Pagination = ({
-  displayLimit = true,
-  page,
-  pageCount = 1,
-  count,
-  limit,
-  onChange
-}: PaginationProps) => {
+export const Pagination = (props: PaginationProps) => {
   const { t } = useTranslation()
 
-  const onChangeEvent = useEventCallback(onChange)
+  const pageCount = Math.max(props.pageCount, 1)
+  const page = Math.max(props.page, 1)
+  const onChangeEvent = useEventCallback(props.onChange)
 
   useEffect(() => {
     if (pageCount && page > pageCount) {
@@ -52,8 +47,8 @@ export const Pagination = ({
         className="flex gap-4"
         pageRangeDisplayed={2}
         breakLabel="..."
-        forcePage={page - 1}
-        onPageChange={({ selected }) => onChange({ page: selected + 1 })}
+        forcePage={page - 1 === 0 ? 1 : page - 1}
+        onPageChange={({ selected }) => props.onChange({ page: selected + 1 })}
         pageLabelBuilder={(pageNumber) => (
           <Button
             variant={pageNumber === page ? 'default' : 'ghost'}
@@ -80,13 +75,13 @@ export const Pagination = ({
         }
         pageCount={pageCount}
       />
-      {pageCount > 0 && displayLimit && (
+      {props.displayPageSize && (
         <div className="flex items-center gap-10">
           <span className="whitespace-nowrap text-sm font-medium text-slate-600">
             {t('pagination.range', {
-              from: (page - 1) * limit + 1,
-              to: page * limit,
-              total: count
+              from: (page - 1) * props.limit + 1,
+              to: page * props.limit,
+              total: props.count
             })}
           </span>
           <div className="flex items-center gap-5">
@@ -95,8 +90,8 @@ export const Pagination = ({
             </span>
             <JollySelect
               items={pageSizeOptions}
-              selectedKey={limit}
-              onSelectionChange={(value) => onChange({ limit: Number(value) })}
+              selectedKey={props.limit}
+              onSelectionChange={(value) => props.onChange({ limit: Number(value) })}
               className="w-20 gap-0"
             >
               {(item) => <SelectItem id={item.value}>{item.value}</SelectItem>}

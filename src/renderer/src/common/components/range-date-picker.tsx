@@ -9,27 +9,8 @@ import { useTranslation } from 'react-i18next'
 import { usePagination } from '@/common/hooks/use-pagination'
 
 import { DatePicker } from './date-picker'
-import { Button } from './ui/button'
+import { Button } from './jolly/button'
 import { Form, FormField } from './ui/form'
-
-/* 
-<JollyDateRangePicker
-  value={{
-    start: parseDate(from),
-    end: parseDate(to)
-  }}
-  onChange={(value) => {
-    if (!value) {
-      form.setValue('from', '')
-      form.setValue('to', '')
-      return
-    }
-    form.setValue('from', value.start.toString())
-    form.setValue('to', value.end.toString())
-  }}
-  isDateUnavailable={(date) => !(date.year === 2025 && date.month === 4)}
-/> 
-*/
 
 interface RangeDateValues {
   from: string
@@ -103,10 +84,7 @@ export const RangeDatePicker = ({
           )}
         />
         <div className="space-x-1">
-          <Button
-            type="submit"
-            variant="outline"
-          >
+          <Button type="submit">
             <CircleArrowDown className="btn-icon icon-start" />
             {t('load')}
           </Button>

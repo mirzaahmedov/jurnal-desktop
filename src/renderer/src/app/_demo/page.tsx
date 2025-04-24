@@ -57,7 +57,10 @@ const DemoPage = () => {
           }}
         />
 
-        <Input value="DD.MM.YYYY" />
+        <Input
+          value="DD.MM.YYYY"
+          className="selection:bg-brand"
+        />
       </div>
     </div>
   )

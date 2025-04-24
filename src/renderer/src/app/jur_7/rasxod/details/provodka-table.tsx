@@ -474,7 +474,7 @@ const Provodka = ({ rowIndex, row, form, tabIndex, onOpenDialog, onRemove }: Pro
               error: !!errors?.data_pereotsenka
             })}
             error={!!errors?.data_pereotsenka}
-            triggerProps={{
+            containerProps={{
               className: 'min-w-32'
             }}
             tabIndex={tabIndex}

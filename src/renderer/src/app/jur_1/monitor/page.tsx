@@ -4,7 +4,6 @@ import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 
 import { FooterCell, FooterRow, GenericTable, SummaTotal, useTableSort } from '@/common/components'
-import { RangeDatePickerAlt } from '@/common/components/range-date-picker-alt'
 import { ButtonGroup } from '@/common/components/ui/button-group'
 import { DownloadFile } from '@/common/features/file'
 import {
@@ -13,7 +12,10 @@ import {
 } from '@/common/features/filters/search/search-filter-debounced'
 import { useRequisitesStore } from '@/common/features/requisites'
 import { SaldoNamespace, handleSaldoErrorDates } from '@/common/features/saldo'
-import { useSelectedMonthStore } from '@/common/features/selected-month'
+import {
+  useSelectedMonthStore,
+  validateDateWithinSelectedMonth
+} from '@/common/features/selected-month'
 import { useSettingsStore } from '@/common/features/settings'
 import { useDates, usePagination } from '@/common/hooks'
 import { useLayout } from '@/common/layout'
@@ -86,9 +88,13 @@ const KassaMonitorPage = () => {
     <ListView>
       <ListView.Header>
         <div className="w-full flex items-center justify-between">
-          <RangeDatePickerAlt
+          <ListView.RangeDatePicker
             {...dates}
-            selectedMonth={startDate}
+            validateDate={validateDateWithinSelectedMonth}
+            calendarProps={{
+              fromMonth: startDate,
+              toMonth: startDate
+            }}
           />
           {main_schet_id ? (
             <ButtonGroup borderStyle="dashed">

@@ -405,7 +405,7 @@ const Provodka = ({ rowIndex, onOpenDialog, onRemove, row, form, tabIndex }: Pro
               error: !!errors?.iznos_start,
               className: 'disabled:opacity-100'
             })}
-            triggerProps={{
+            containerProps={{
               className: 'min-w-32'
             }}
             error={!!errors?.iznos_start}
@@ -495,7 +495,7 @@ const Provodka = ({ rowIndex, onOpenDialog, onRemove, row, form, tabIndex }: Pro
               error: !!errors?.data_pereotsenka
             })}
             error={!!errors?.data_pereotsenka}
-            triggerProps={{
+            containerProps={{
               className: 'min-w-32'
             }}
             tabIndex={tabIndex}

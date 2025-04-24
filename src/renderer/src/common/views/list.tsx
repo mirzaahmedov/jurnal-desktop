@@ -1,7 +1,6 @@
 import { type HTMLAttributes, forwardRef, useState } from 'react'
 
 import { Maximize, Minimize } from 'lucide-react'
-import { useTranslation } from 'react-i18next'
 
 import { LoadingOverlay } from '@/common/components'
 import { Pagination } from '@/common/components/pagination'
@@ -13,33 +12,22 @@ export interface ListViewProps extends HTMLAttributes<HTMLDivElement> {}
 export const ListView = ({ children, className, ...props }: ListViewProps) => {
   const [maximized, setMaximized] = useState(false)
 
-  const { t } = useTranslation()
-
   return (
     <div
       {...props}
       className={cn(
         'flex-1 relative min-h-0 flex flex-col',
-        maximized && 'fixed top-0 left-0 bottom-0 right-0 z-[100] bg-white',
+        maximized && 'fixed top-0 left-0 bottom-0 right-0 z-100 bg-white',
         className
       )}
     >
       <Button
+        size="icon"
         variant="outline"
-        className="absolute bottom-5 right-5 z-50"
+        className="fixed bottom-5 right-16 z-100"
         onClick={() => setMaximized((prev) => !prev)}
       >
-        {maximized ? (
-          <>
-            <Minimize className="btn-icon" />
-            <span>{t('minimize')}</span>
-          </>
-        ) : (
-          <>
-            <Maximize className="btn-icon" />
-            <span>{t('maximize')}</span>
-          </>
-        )}
+        {maximized ? <Minimize className="btn-icon" /> : <Maximize className="btn-icon" />}
       </Button>
       {children}
     </div>

@@ -406,7 +406,7 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
                               editor: true,
                               error: !!errors?.iznos_start
                             })}
-                            triggerProps={{
+                            containerProps={{
                               className: 'min-w-32'
                             }}
                             error={!!errors.iznos_start}
@@ -517,7 +517,7 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
                               editor: true,
                               error: !!errors?.data_pereotsenka
                             })}
-                            triggerProps={{
+                            containerProps={{
                               className: 'min-w-32'
                             }}
                             error={!!errors.data_pereotsenka}
@@ -601,7 +601,7 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
       </div>
       <div className="mt-5 flex items-center justify-center">
         <Pagination
-          displayLimit={false}
+          displayPageSize={false}
           page={page}
           limit={PAGE_SIZE}
           onChange={({ page }) => setPage(page ?? 1)}

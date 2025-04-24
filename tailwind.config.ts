@@ -9,6 +9,9 @@ const ui = plugin(function ({ addUtilities }) {
       width: '1.125rem',
       height: '1.125rem'
     },
+    '.icon-start': {
+      'margin-right': '0.5rem'
+    },
 
     '.noscroll-bar': {
       'scrollbar-width': 'none'
@@ -120,7 +123,7 @@ const ui = plugin(function ({ addUtilities }) {
       transform: 'translateY(-50%)',
       width: '0.2rem',
       height: '2rem',
-      borderRadius: '2rem',
+      borderRadius: '10rem',
       backgroundColor: 'currentColor'
     }
   })
@@ -234,7 +237,8 @@ const config: Config = {
         shake: 'shake 0.4s ease-in-out 2'
       },
       zIndex: {
-        100: '100'
+        100: '100',
+        150: '150'
       }
     }
   },

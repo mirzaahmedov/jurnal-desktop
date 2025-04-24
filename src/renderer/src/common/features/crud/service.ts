@@ -46,6 +46,7 @@ export class CRUDService<T, C = T, U = C, M = undefined> {
 
     if (config.params?.onChange) {
       delete config.params.onChange
+      delete config.params._invisibleToggle
     }
 
     const res = await this.client.get<Response<T[], M>>(url, this.proccessMiddleware(config))

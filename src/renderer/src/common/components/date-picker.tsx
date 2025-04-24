@@ -16,21 +16,21 @@ import { useTranslation } from 'react-i18next'
 import { PatternFormat } from 'react-number-format'
 import { toast } from 'react-toastify'
 
-import { Calendar } from '@/common/components/ui/calendar'
-import { Popover, PopoverContent, PopoverTrigger } from '@/common/components/ui/popover'
 import { useToggle } from '@/common/hooks/use-toggle'
 import { formatDate, localeDateToISO, parseDate, validateDate } from '@/common/lib/date'
 import { formatLocaleDate, unformatLocaleDate } from '@/common/lib/format'
 import { cn } from '@/common/lib/utils'
 
-import { Button } from './ui/button'
+import { Button } from './jolly/button'
+import { Popover, PopoverDialog, PopoverTrigger } from './jolly/popover'
+import { Calendar } from './ui/calendar'
 import { Input } from './ui/input'
 
 export type DatePickerProps = Omit<PatternFormatProps<InputProps>, 'format' | 'onChange'> & {
   value?: string
   onChange?: (value: string) => void
   className?: string
-  triggerProps?: HTMLAttributes<HTMLDivElement>
+  containerProps?: HTMLAttributes<HTMLDivElement>
   placeholder?: string
   formatValue?: (value: string) => string
   unformatValue?: (value: string) => string
@@ -47,15 +47,17 @@ export const DatePicker = forwardRef<HTMLButtonElement, DatePickerProps>(
       formatValue = formatLocaleDate,
       unformatValue = unformatLocaleDate,
       validate = validateDate,
-      triggerProps = {},
+      containerProps = {},
       calendarProps = {},
       ...props
     },
     ref
   ) => {
-    const inputRef = useRef<HTMLInputElement>(null)
+    const inputRef = useRef<HTMLInputElement>()
 
-    const [monthValue, setMonthValue] = useState(value ? parseDate(value) : new Date())
+    const [monthValue, setMonthValue] = useState(
+      value ? parseDate(value) : (calendarProps?.fromMonth ?? new Date())
+    )
     const [internalValue, setInternalValue] = useState(formatValue(value ?? ''))
 
     const calendarToggle = useToggle()
@@ -137,17 +139,24 @@ export const DatePicker = forwardRef<HTMLButtonElement, DatePickerProps>(
     const selected = value ? parseDate(value) : undefined
 
     return (
-      <Popover
-        open={calendarToggle.isOpen}
+      <PopoverTrigger
+        isOpen={calendarToggle.isOpen}
         onOpenChange={handleChangeActive}
       >
         <div
-          {...triggerProps}
-          className={cn('relative min-w-52', triggerProps.className)}
+          {...containerProps}
+          className={cn('relative min-w-52', containerProps.className)}
         >
           <PatternFormat
             {...props}
-            getInputRef={inputRef}
+            getInputRef={(elem) => {
+              inputRef.current = elem
+              if (typeof ref === 'function') {
+                ref(elem)
+              } else if (ref) {
+                ref.current = elem
+              }
+            }}
             customInput={Input}
             format="##.##.####"
             mask={['д', 'д', 'м', 'м', 'г', 'г', 'г', 'г']}
@@ -170,51 +179,45 @@ export const DatePicker = forwardRef<HTMLButtonElement, DatePickerProps>(
                 e.currentTarget.setSelectionRange(6, 10)
               }
             }}
-            className={cn('w-full', className)}
+            className={cn('w-full tracking-wider', className)}
           />
-          <PopoverTrigger
-            asChild
-            ref={ref}
+          <Button
+            variant="ghost"
+            size="icon"
+            className="group absolute top-1/2 right-2 -translate-y-1/2 size-7"
+            excludeFromTabOrder
           >
-            <Button
-              variant="ghost"
-              size="icon"
-              className="group absolute top-1/2 right-2 -translate-y-1/2 size-7"
-              tabIndex={-1}
-            >
-              <CalendarIcon className="h-4 w-4 text-slate-500 group-hover:text-brand" />
-            </Button>
-          </PopoverTrigger>
+            <CalendarIcon className="h-4 w-4 text-slate-500 group-hover:text-brand" />
+          </Button>
         </div>
-        <PopoverContent
-          className="w-auto p-0"
-          onOpenAutoFocus={(e) => e.preventDefault()}
-          onCloseAutoFocus={(e) => e.preventDefault()}
-        >
-          <Calendar
-            {...calendarProps}
-            mode="single"
-            selected={selected}
-            month={monthValue}
-            onMonthChange={setMonthValue}
-            onDayClick={(date) => {
-              if (selected && date?.getTime() === selected.getTime()) {
+        <Popover>
+          <PopoverDialog className="w-auto p-0">
+            <Calendar
+              {...calendarProps}
+              mode="single"
+              initialFocus
+              selected={selected}
+              month={monthValue}
+              onMonthChange={setMonthValue}
+              onDayClick={(date) => {
+                if (selected && date?.getTime() === selected.getTime()) {
+                  calendarToggle.close()
+                  return
+                }
+                if (!date || !validate(formatDate(date))) {
+                  onChange?.('')
+                  setMonthValue(new Date())
+                  calendarToggle.close()
+                  return
+                }
+                onChange?.(formatDate(date))
+                setMonthValue(date)
                 calendarToggle.close()
-                return
-              }
-              if (!date || !validate(formatDate(date))) {
-                onChange?.('')
-                setMonthValue(new Date())
-                calendarToggle.close()
-                return
-              }
-              onChange?.(formatDate(date))
-              setMonthValue(date)
-              calendarToggle.close()
-            }}
-          />
-        </PopoverContent>
-      </Popover>
+              }}
+            />
+          </PopoverDialog>
+        </Popover>
+      </PopoverTrigger>
     )
   }
 )

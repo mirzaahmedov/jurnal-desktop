@@ -1,10 +1,12 @@
 import { useEffect } from 'react'
 
 import { QueryClientProvider } from '@tanstack/react-query'
+import { RotateCw } from 'lucide-react'
 import { RouterProvider } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify'
 
 import { router } from './app/router'
+import { Button } from './common/components/ui/button'
 import { Toaster } from './common/components/ui/toaster'
 import { ConfirmationDialog } from './common/features/confirm'
 import { initLocales } from './common/features/languages'
@@ -46,6 +48,17 @@ function App() {
       />
       <ConfirmationDialog />
       <UpdateManager />
+
+      <Button
+        size="icon"
+        variant="outline"
+        className="absolute bottom-5 right-5 z-100"
+        onClick={() => {
+          window.location.reload()
+        }}
+      >
+        <RotateCw className="btn-icon" />
+      </Button>
     </QueryClientProvider>
   )
 }
