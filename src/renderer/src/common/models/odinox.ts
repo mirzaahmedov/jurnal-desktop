@@ -7,34 +7,36 @@ export enum OdinoxStatus {
 export interface Odinox {
   id: number
   status: number
-  acsept_time: null | string
-  send_time: OdinoxStatus
+  accept_time: any
+  send_time: string
+  main_schet_id: number
+  accept_user_id: any
   user_id: number
-  fio: string
-  login: string
-  year: number
+  user_fio: string
+  user_login: string
   month: number
-  budjet_id: number
-  budjet_name: string
-  accept_user_id: null | number
-  accept_user_fio: null | string
-  accept_user_login: null | string
-  first: boolean
+  year: number
+  created_at: string
+  updated_at: string
   isdeleted: boolean
+  accept_user_fio: string | null
+  accept_user_login: string | null
   childs: OdinoxProvodka[]
 }
 
 export interface OdinoxProvodka {
   type_id: number
   type_name: string
-  prixod: number
-  rasxod: number
+  sort_order: number
   sub_childs: Array<{
     id: number
-    schet: string
-    prixod: number
-    rasxod: number
+    smeta_id: number
+    summa: number
+    smeta_name: string
+    smeta_number: string
+    group_number: string
   }>
+  summa: number
 }
 
 export interface OdinoxDocumentInfo {

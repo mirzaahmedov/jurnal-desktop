@@ -1,8 +1,9 @@
-import TinosBold from '@public/fonts/Tinos/TinosBold.ttf'
-import TinosBoldItalic from '@public/fonts/Tinos/TinosBoldItalic.ttf'
-import TinosItalic from '@public/fonts/Tinos/TinosItalic.ttf'
-import TinosRegular from '@public/fonts/Tinos/TinosRegular.ttf'
 import { Font } from '@react-pdf/renderer'
+
+import TinosBold from '@/common/assets/fonts/Tinos/TinosBold.ttf?url'
+import TinosBoldItalic from '@/common/assets/fonts/Tinos/TinosBoldItalic.ttf?url'
+import TinosItalic from '@/common/assets/fonts/Tinos/TinosItalic.ttf?url'
+import TinosRegular from '@/common/assets/fonts/Tinos/TinosRegular.ttf?url'
 
 let fontsRegistered = false
 

@@ -64,12 +64,12 @@ export const DownloadFile = ({
       >
         {isDownloadingFile ? (
           <>
-            <Spinner className="btn-icon icon-start" />
+            <Spinner className="btn-icon" />
             Загрузка
           </>
         ) : (
           <>
-            <Download className="btn-icon icon-start !size-4" />
+            <Download className="btn-icon !size-4" />
             <span className="titlecase">{buttonText}</span>
           </>
         )}

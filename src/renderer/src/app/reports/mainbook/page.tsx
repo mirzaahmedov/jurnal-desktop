@@ -172,6 +172,7 @@ const MainbookPage = () => {
                     buttonText={t('download-something', { something: t('pages.mainbook') })}
                     params={{
                       report_title_id,
+                      main_schet_id,
                       budjet_id,
                       excel: true
                     }}

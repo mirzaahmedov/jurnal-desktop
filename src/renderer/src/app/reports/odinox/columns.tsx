@@ -7,9 +7,9 @@ import { MonthNameCell } from '@/common/components/table/renderers/month-name'
 import { UserCell } from '@/common/components/table/renderers/user'
 import { Badge } from '@/common/components/ui/badge'
 import { cn } from '@/common/lib/utils'
-import { type Mainbook, MainbookStatus } from '@/common/models'
+import { MainbookStatus, type Odinox } from '@/common/models'
 
-export const OdinoxColumns: ColumnDef<Mainbook>[] = [
+export const OdinoxColumns: ColumnDef<Odinox>[] = [
   {
     key: 'id',
     renderCell: IDCell,
@@ -59,8 +59,8 @@ export const OdinoxColumns: ColumnDef<Mainbook>[] = [
     header: 'created-by-user',
     renderCell: (row) => (
       <UserCell
-        fio={row.fio}
-        login={row.login}
+        fio={row.user_fio}
+        login={row.user_login}
         id={row.user_id}
       />
     )

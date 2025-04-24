@@ -1,9 +1,9 @@
-import type { CellEventHandler, EditableTableMethods } from '@/common/components/editable-table'
+import type { EditableTableMethods } from '@/common/components/editable-table'
 
-import { type KeyboardEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { type KeyboardEvent, useEffect, useMemo, useRef } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { useForm, useWatch } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
@@ -18,8 +18,8 @@ import { DetailsView } from '@/common/views'
 
 import { OdinoxQueryKeys } from '../config'
 import { OdinoxService } from '../service'
-import { type OdinoxFormValues, defaultValues } from './config'
-import { MainbookDocumentsTracker } from './documents-tracker'
+import { defaultValues } from './config'
+// import { MainbookDocumentsTracker } from './documents-tracker'
 import { MainbookTable } from './mainbook-table'
 import { OdinoxProvodkaColumns } from './provodki'
 import {
@@ -36,12 +36,10 @@ const OdinoxDetailsPage = () => {
   const queryClient = useQueryClient()
   const setLayout = useLayout()
 
-  const [isEditable, setEditable] = useState(false)
-  const [activeCell, setActiveCell] = useState<{
-    type_id: number
-    schet: string
-    prixod: boolean
-  }>()
+  // const [activeCell, setActiveCell] = useState<{
+  //   type: string
+  //   smeta_id: number
+  // }>()
 
   const { id } = useParams()
   const { t } = useTranslation(['app'])
@@ -85,7 +83,6 @@ const OdinoxDetailsPage = () => {
     mutationFn: OdinoxService.getAutofillData,
     onSuccess: (res) => {
       form.setValue('childs', transformOdinoxAutoFillData(res.data ?? []))
-      setEditable(false)
     },
     onError: () => {
       form.setValue('childs', [])
@@ -127,9 +124,6 @@ const OdinoxDetailsPage = () => {
         year: odinox.data.year,
         childs: transformGetByIdData(odinox.data.childs)
       })
-      if (odinox?.data?.first) {
-        setEditable(true)
-      }
     }
   }, [form, odinox, id])
   useEffect(() => {
@@ -157,7 +151,7 @@ const OdinoxDetailsPage = () => {
 
   const columns = useMemo(
     () => [...OdinoxProvodkaColumns, ...getOdinoxColumns(types?.data ?? [])],
-    [types, isEditable]
+    [types]
   )
 
   const onSubmit = form.handleSubmit((values) => {
@@ -165,12 +159,7 @@ const OdinoxDetailsPage = () => {
       return
     }
 
-    const itogo = values.childs.pop()
-
-    if (isEditable && itogo && itogo?.['10_prixod'] !== itogo?.['10_rasxod']) {
-      toast.error(t('prixod_rasxod_mismatch'))
-      return
-    }
+    values.childs.pop()
 
     const payload = transformOdinoxAutoFillDataToSave(types?.data ?? [], values)
 
@@ -199,63 +188,26 @@ const OdinoxDetailsPage = () => {
       if (value.length > 0) {
         const rows = form.getValues('childs')
         const index = rows.findIndex((row) =>
-          row.schet?.toLowerCase()?.includes(value?.toLowerCase())
+          row.smeta_number?.toLowerCase()?.includes(value?.toLowerCase())
         )
         tableMethods.current?.scrollToRow(index)
       }
     }
   }
 
-  const rows = useWatch({
-    control: form.control,
-    name: 'childs'
-  })
-  useEffect(() => {
-    if (!isEditable || rows.length === 0) {
-      return
-    }
+  // const handleCellDoubleClick = useCallback<CellEventHandler<OdinoxFormValues, 'childs'>>(
+  //   ({ column, row }) => {
+  //     if (column.key === 'smeta_name' || column.key === 'smeta_number') {
+  //       return
+  //     }
 
-    let itogoPrixod = 0
-    let itogoRasxod = 0
-
-    rows.forEach((row, index) => {
-      if (index !== rows.length - 1) {
-        itogoPrixod += row?.[`10_prixod`] || 0
-        itogoRasxod += row?.[`10_rasxod`] || 0
-      }
-    })
-
-    const itogoRow = rows[rows.length - 1]
-    if (itogoRow?.['10_prixod'] !== itogoPrixod) {
-      form.setValue(`childs.${rows.length - 1}.10_prixod` as any, itogoPrixod)
-    }
-    if (itogoRow?.['10_rasxod'] !== itogoRasxod) {
-      form.setValue(`childs.${rows.length - 1}.10_rasxod` as any, itogoRasxod)
-    }
-  }, [rows, form, isEditable, t])
-
-  const handleCellDoubleClick = useCallback<CellEventHandler<OdinoxFormValues, 'childs'>>(
-    ({ column, row, rows, value, index }) => {
-      if (index === rows.length - 1 || !value) {
-        return
-      }
-
-      const type_id = Number(column.key.split('_')[0])
-      const prixod = column.key.endsWith('_prixod')
-      const schet = row.schet
-
-      if (type_id < 1 || type_id > 8) {
-        return
-      }
-
-      setActiveCell({
-        type_id,
-        schet,
-        prixod
-      })
-    },
-    []
-  )
+  //     setActiveCell({
+  //       type: column.key as string,
+  //       smeta_id: row.smeta_id
+  //     })
+  //   },
+  //   []
+  // )
 
   return (
     <DetailsView className="h-full">
@@ -276,7 +228,6 @@ const OdinoxDetailsPage = () => {
                   popoverProps={{
                     placement: 'bottom end'
                   }}
-                  isDisabled={id !== 'create' && isEditable}
                   value={date}
                   onChange={(value) => {
                     const date = new Date(value)
@@ -291,7 +242,7 @@ const OdinoxDetailsPage = () => {
                     }
                   }}
                 />
-                {id !== 'create' && !isEditable ? (
+                {id !== 'create' ? (
                   <Button
                     type="button"
                     onClick={() => {
@@ -314,7 +265,6 @@ const OdinoxDetailsPage = () => {
                 methods={tableMethods}
                 form={form}
                 name="childs"
-                onCellDoubleClick={!isEditable ? handleCellDoubleClick : undefined}
               />
             </div>
           </div>
@@ -331,7 +281,7 @@ const OdinoxDetailsPage = () => {
         </form>
       </DetailsView.Content>
 
-      <MainbookDocumentsTracker
+      {/* <MainbookDocumentsTracker
         isOpen={!!activeCell}
         onOpenChange={(open) => {
           if (!open) {
@@ -345,7 +295,7 @@ const OdinoxDetailsPage = () => {
         type_id={activeCell?.type_id}
         schet={activeCell?.schet}
         prixod={activeCell?.prixod}
-      />
+      /> */}
     </DetailsView>
   )
 }

@@ -168,7 +168,7 @@ const PodotchetSaldoDetailsPage = () => {
       title: id === 'create' ? t('create') : t('edit'),
       breadcrumbs: [
         {
-          title: t('pages.mainbook')
+          title: t('pages.organization')
         }
       ],
       onBack: () => {

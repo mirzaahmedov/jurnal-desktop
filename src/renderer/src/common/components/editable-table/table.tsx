@@ -53,7 +53,7 @@ export const EditableTable = <T extends object, F extends ArrayPath<NoInfer<T>>>
     methods,
     () => ({
       scrollToRow: (rowIndex: number) => {
-        const rowElement = ref.current?.querySelector(`[data-rowId="${rowIndex}"]`)
+        const rowElement = ref.current?.querySelector(`[data-rowindex="${rowIndex}"]`)
 
         if (rowElement) {
           rowElement.scrollIntoView({
@@ -250,7 +250,7 @@ const EditableTableRowRenderer = <T extends object, R extends T[ArrayPath<NoInfe
 
   return (
     <EditableTableRow
-      data-rowId={index}
+      data-rowindex={index}
       className={getRowClassName?.({ index, row, rows })}
       focusable={rows.length > 1}
       {...props}

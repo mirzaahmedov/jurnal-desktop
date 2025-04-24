@@ -3,7 +3,6 @@ export interface OdinoxAutoFillSubChild {
   smeta_name: string
   smeta_number: string
   group_number: string
-  smeta_grafik: any
   smeta_id: number
   summa: number
 }
@@ -17,6 +16,13 @@ export interface OdinoxAutoFill {
   type_id: number
   sub_childs: OdinoxAutoFillSubChild[]
   summa: number
+}
+
+export interface OdinoxTableRow extends Record<string, number | string> {
+  smeta_name: string
+  smeta_number: string
+  group_number: string
+  smeta_id: number
 }
 
 export enum OdinoxTypeName {

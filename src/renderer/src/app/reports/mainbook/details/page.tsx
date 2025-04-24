@@ -348,7 +348,6 @@ const MainbookDetailsPage = () => {
               <SearchInput onKeyDown={handleSearch} />
               <div className="flex items-center gap-5">
                 <MonthPicker
-                  isDisabled={id !== 'create' && isEditable}
                   value={date}
                   onChange={(value) => {
                     const date = new Date(value)

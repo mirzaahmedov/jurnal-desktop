@@ -7,7 +7,7 @@ import { LoadingOverlay, Spinner } from '@/common/components'
 import { Button } from '@/common/components/ui/button'
 import { cn } from '@/common/lib/utils'
 
-type DetailsViewProps = HTMLAttributes<HTMLElement>
+export type DetailsViewProps = HTMLAttributes<HTMLElement>
 export const DetailsView = ({ children, className, ...props }: DetailsViewProps) => {
   return (
     <div
@@ -19,7 +19,7 @@ export const DetailsView = ({ children, className, ...props }: DetailsViewProps)
   )
 }
 
-type DetailsViewContentProps = HTMLAttributes<HTMLElement> & {
+export type DetailsViewContentProps = HTMLAttributes<HTMLElement> & {
   loading: boolean
 }
 const DetailsViewContent = ({
@@ -35,7 +35,7 @@ const DetailsViewContent = ({
   )
 }
 
-type DetailsViewFooterProps = HTMLAttributes<HTMLElement>
+export type DetailsViewFooterProps = HTMLAttributes<HTMLElement>
 const DetailsViewFooter = ({ children, className, ...props }: DetailsViewFooterProps) => {
   return (
     <div
@@ -63,7 +63,7 @@ const DetailsViewCreate = ({ loading = false, disabled, ...props }: DetailsViewC
       {loading ? (
         <Spinner className="size-4 border-2 border-current border-r-transparent mr-2" />
       ) : (
-        <CircleCheck className="btn-icon icon-start" />
+        <CircleCheck className="btn-icon" />
       )}
       {t('save')}
     </Button>
@@ -73,5 +73,3 @@ const DetailsViewCreate = ({ loading = false, disabled, ...props }: DetailsViewC
 DetailsView.Footer = DetailsViewFooter
 DetailsView.Content = DetailsViewContent
 DetailsView.Create = DetailsViewCreate
-
-export type { DetailsViewProps, DetailsViewContentProps, DetailsViewFooterProps }

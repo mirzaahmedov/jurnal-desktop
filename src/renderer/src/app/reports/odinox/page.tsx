@@ -1,4 +1,4 @@
-import type { Mainbook } from '@/common/models'
+import type { Odinox } from '@/common/models'
 
 import { useEffect } from 'react'
 
@@ -20,7 +20,7 @@ import { useConfirm } from '@/common/features/confirm'
 import { DownloadFile } from '@/common/features/file'
 import { useRequisitesStore } from '@/common/features/requisites'
 import { useSettingsStore } from '@/common/features/settings'
-import { useKeyUp, usePagination } from '@/common/hooks'
+import { usePagination } from '@/common/hooks'
 import { useLayout } from '@/common/layout'
 import { ListView } from '@/common/views'
 
@@ -65,16 +65,6 @@ const OdinoxPage = () => {
       })
     }
   })
-  const { mutate: cleanOdinox, isPending: isCleaning } = useMutation({
-    mutationKey: [OdinoxQueryKeys.clean],
-    mutationFn: OdinoxService.cleanSaldo,
-    onSuccess: (res) => {
-      toast.success(res?.message)
-      queryClient.invalidateQueries({
-        queryKey: [OdinoxQueryKeys.getAll]
-      })
-    }
-  })
 
   useEffect(() => {
     setLayout({
@@ -90,10 +80,10 @@ const OdinoxPage = () => {
     })
   }, [setLayout, navigate, t, year])
 
-  const handleEdit = (row: Mainbook) => {
+  const handleEdit = (row: Odinox) => {
     navigate(`${row.id}`)
   }
-  const handleDelete = (row: Mainbook) => {
+  const handleDelete = (row: Odinox) => {
     confirm({
       onConfirm: () => {
         deleteOdinox(row.id)
@@ -101,28 +91,9 @@ const OdinoxPage = () => {
     })
   }
 
-  const handleClean = () => {
-    confirm({
-      withPassword: true,
-      onConfirm(password) {
-        cleanOdinox({
-          budjet_id: budjet_id!,
-          main_schet_id: main_schet_id!,
-          password
-        })
-      }
-    })
-  }
-
-  useKeyUp({
-    key: 'Delete',
-    ctrlKey: true,
-    handler: handleClean
-  })
-
   return (
     <ListView>
-      <ListView.Content loading={isFetchingOdinox || isDeleting || isCleaning}>
+      <ListView.Content loading={isFetchingOdinox || isDeleting}>
         <GenericTable
           data={odinox?.data ?? []}
           columnDefs={OdinoxColumns}
@@ -145,12 +116,12 @@ const OdinoxPage = () => {
               >
                 <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
                   <DownloadFile
-                    url={`/main/book/${row.id}`}
+                    url={`/odinox/${row.id}`}
                     fileName={`${t('pages.mainbook').toLowerCase()}_${row.month}-${row.year}.xlsx`}
                     buttonText={t('download-something', { something: t('pages.mainbook') })}
                     params={{
                       report_title_id,
-                      budjet_id,
+                      main_schet_id,
                       excel: true
                     }}
                     className="px-2 py-1.5"

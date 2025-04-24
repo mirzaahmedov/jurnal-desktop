@@ -1,19 +1,9 @@
-import { z } from 'zod'
+import type { OdinoxTableRow } from './interfaces'
 
-export const OdinoxFormSchema = z.object({
-  year: z.number(),
-  month: z.number(),
-  childs: z.array(
-    z.object({
-      name: z.string(),
-      number: z.string()
-    })
-  )
-})
-export type OdinoxFormValues = z.infer<typeof OdinoxFormSchema>
-
-export const defaultValues: OdinoxFormValues = {
+export const defaultValues = {
   year: new Date().getFullYear(),
   month: new Date().getMonth() + 1,
-  childs: []
+  childs: [] as OdinoxTableRow[]
 }
+
+export type OdinoxFormValues = typeof defaultValues

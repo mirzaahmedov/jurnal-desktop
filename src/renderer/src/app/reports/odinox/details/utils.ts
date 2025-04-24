@@ -1,6 +1,7 @@
+import type { OdinoxPayloadChild } from '../service'
 import type { OdinoxFormValues } from './config'
 import type { EditableColumnDef } from '@/common/components/editable-table'
-import type { Mainbook } from '@/common/models'
+import type { OdinoxProvodka } from '@/common/models'
 
 import { t } from 'i18next'
 
@@ -9,12 +10,20 @@ import { createNumberEditor } from '@/common/components/editable-table/editors'
 import {
   type OdinoxAutoFill,
   type OdinoxAutoFillSubChild,
+  type OdinoxTableRow,
   type OdinoxType,
   OdinoxTypeName
 } from './interfaces'
 
 export const transformOdinoxAutoFillData = (types: OdinoxAutoFill[]) => {
-  const schetsMap = new Map<number, { id: number; name: string; child: OdinoxAutoFillSubChild }[]>()
+  const smetaMap = new Map<
+    number,
+    {
+      type_id: number
+      type_name: string
+      smeta: OdinoxAutoFillSubChild
+    }[]
+  >()
 
   types.forEach((type) => {
     type.sub_childs.push({
@@ -23,28 +32,30 @@ export const transformOdinoxAutoFillData = (types: OdinoxAutoFill[]) => {
       smeta_name: t('total'),
       smeta_number: '',
       group_number: '',
-      smeta_grafik: '',
       smeta_id: 0
     })
-    type.sub_childs.forEach((subChild) => {
-      if (!schetsMap.has(subChild.smeta_id)) {
-        schetsMap.set(subChild.smeta_id, [])
+    type.sub_childs.forEach((smeta) => {
+      if (!smetaMap.has(smeta.smeta_id)) {
+        smetaMap.set(smeta.smeta_id, [])
       }
-      schetsMap.get(subChild.smeta_id)?.push({
-        id: type.id,
-        name: type.name,
-        child: subChild
+      smetaMap.get(smeta.smeta_id)?.push({
+        type_id: type.id,
+        type_name: type.name,
+        smeta
       })
     })
   })
 
-  const rows: any[] = []
-  schetsMap.forEach((types) => {
-    const row = {}
-    types.forEach(({ name, child }) => {
-      row[name] = child.summa
-      row['name'] = child.smeta_name
-      row['number'] = child.smeta_number
+  const rows: OdinoxTableRow[] = []
+  smetaMap.forEach((types) => {
+    const row = {} as OdinoxTableRow
+    types.forEach(({ type_name, smeta }) => {
+      row[type_name] = smeta.summa
+
+      row.smeta_id = smeta.smeta_id
+      row.smeta_name = smeta.smeta_name
+      row.smeta_number = smeta.smeta_number
+      row.group_number = smeta.group_number
     })
     rows.push(row)
   })
@@ -52,36 +63,47 @@ export const transformOdinoxAutoFillData = (types: OdinoxAutoFill[]) => {
   return rows
 }
 
-export const transformGetByIdData = (types: Mainbook['childs']) => {
-  const schetsMap = new Map<string, { id: number; child: OdinoxAutoFillSubChild }[]>()
+export const transformGetByIdData = (types: OdinoxProvodka[]) => {
+  const smetaMap = new Map<
+    number,
+    {
+      type_id: number
+      type_name: string
+      smeta: OdinoxAutoFillSubChild
+    }[]
+  >()
 
   types.forEach((type) => {
     type.sub_childs.push({
-      id: type.type_id + Math.random(),
-      rasxod: type.rasxod,
-      prixod: type.prixod,
-      name: t('total'),
-      number: ''
+      id: 0,
+      summa: type.summa,
+      smeta_name: t('total'),
+      smeta_number: '',
+      group_number: '',
+      smeta_id: 0
     })
-    type.sub_childs.forEach((subChild) => {
-      if (!schetsMap.has(subChild.number)) {
-        schetsMap.set(subChild.number, [])
+    type.sub_childs.forEach((smeta) => {
+      if (!smetaMap.has(smeta.smeta_id)) {
+        smetaMap.set(smeta.smeta_id, [])
       }
-      schetsMap.get(subChild.number)?.push({
-        id: type.type_id,
-        child: subChild
+      smetaMap.get(smeta.smeta_id)?.push({
+        type_id: type.type_id,
+        type_name: type.type_name,
+        smeta
       })
     })
   })
 
-  const rows: any[] = []
-  schetsMap.forEach((types, schet) => {
-    const row = {
-      schet
-    }
-    types.forEach(({ id, child }) => {
-      row[`${id}_rasxod`] = child.rasxod
-      row[`${id}_prixod`] = child.prixod
+  const rows: OdinoxTableRow[] = []
+  smetaMap.forEach((types) => {
+    const row = {} as OdinoxTableRow
+    types.forEach(({ type_name, smeta }) => {
+      row[type_name] = smeta.summa
+
+      row.smeta_id = smeta.smeta_id
+      row.smeta_name = smeta.smeta_name
+      row.smeta_number = smeta.smeta_number
+      row.group_number = smeta.group_number
     })
     rows.push(row)
   })
@@ -94,20 +116,23 @@ export const transformOdinoxAutoFillDataToSave = (
   values: OdinoxFormValues
 ) => {
   const payload: {
+    name: string
     type_id: number
-    sub_childs: OdinoxAutoFillSubChild[]
+    sub_childs: OdinoxPayloadChild[]
   }[] = []
 
   types?.forEach((type) => {
     payload.push({
       type_id: type.id,
-      sub_childs: values.childs.map((child) => {
+      name: type.name,
+      sub_childs: values.childs.map((row) => {
         return {
-          name: child.name,
-          number: child.number,
-          prixod: child[`${type.id}_prixod`] || 0,
-          rasxod: child[`${type.id}_rasxod`] || 0
-        } as OdinoxAutoFillSubChild
+          smeta_id: row.smeta_id,
+          smeta_name: row.smeta_name,
+          smeta_number: row.smeta_number,
+          group_number: row.group_number,
+          summa: row[type.name] ? Number(row[type.name]) : 0
+        } satisfies OdinoxPayloadChild
       })
     })
   })

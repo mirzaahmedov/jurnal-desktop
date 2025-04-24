@@ -164,8 +164,10 @@ export const RequisitesDialog = ({ isOpen, onOpenChange }: RequisitesDialogProps
                       isDisabled={isLoadingBudget}
                       placeholder={t('choose', { what: t('budjet') })}
                       items={Array.isArray(budjets?.data) ? budjets.data : []}
-                      selectedKey={field.value ?? ''}
+                      selectedKey={field.value ?? null}
                       onSelectionChange={(value) => {
+                        field.onChange(value ?? undefined)
+
                         form.setValue('main_schet_id', 0, {
                           shouldDirty: true,
                           shouldValidate: true
@@ -182,7 +184,6 @@ export const RequisitesDialog = ({ isOpen, onOpenChange }: RequisitesDialogProps
                           shouldDirty: true,
                           shouldValidate: true
                         })
-                        field.onChange(value)
                       }}
                     >
                       {(item) => <SelectItem id={item.id}>{item.name}</SelectItem>}
@@ -203,9 +204,9 @@ export const RequisitesDialog = ({ isOpen, onOpenChange }: RequisitesDialogProps
                         isDisabled={isLoadingSchets}
                         placeholder={t('choose', { what: t('raschet-schet') })}
                         items={Array.isArray(schets?.data) ? schets.data : []}
-                        selectedKey={field.value ?? ''}
+                        selectedKey={field.value ?? null}
                         onSelectionChange={(value) => {
-                          field.onChange(value)
+                          field.onChange(value ?? undefined)
 
                           const option =
                             schets?.data?.find((item) => item.id === Number(value)) ??

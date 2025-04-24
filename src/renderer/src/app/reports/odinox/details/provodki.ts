@@ -1,15 +1,12 @@
+import type { OdinoxTableRow } from './interfaces'
 import type { EditableColumnDef } from '@/common/components/editable-table/interface'
 
 import { createTextEditor } from '@/common/components/editable-table/editors'
 
-export interface OdinoxRow {
-  name: string
-  number: string
-}
-
-export const OdinoxProvodkaColumns: EditableColumnDef<OdinoxRow>[] = [
+export const OdinoxProvodkaColumns: EditableColumnDef<OdinoxTableRow>[] = [
   {
-    key: 'name',
+    key: 'smeta_name',
+    header: 'name',
     width: 300,
     Editor: createTextEditor({
       key: 'name',
@@ -17,7 +14,7 @@ export const OdinoxProvodkaColumns: EditableColumnDef<OdinoxRow>[] = [
     })
   },
   {
-    key: 'number',
+    key: 'smeta_number',
     minWidth: 100,
     headerClassName: 'sticky left-0 z-50',
     className: 'font-bold sticky left-0 z-10',
