@@ -1,19 +1,22 @@
 export interface OdinoxAutoFillSubChild {
-  name: string
-  number: string
-  prixod: number
-  rasxod: number
+  id: number
+  smeta_name: string
+  smeta_number: string
+  group_number: string
+  smeta_grafik: any
+  smeta_id: number
+  summa: number
 }
 export interface OdinoxAutoFill {
   id: number
   name: string
+  sort_order: number
   created_at: string
   updated_at: string
   is_deleted: boolean
-  sort_order: number
-  prixod: number
-  rasxod: number
-  sub_childs: Array<OdinoxAutoFillSubChild>
+  type_id: number
+  sub_childs: OdinoxAutoFillSubChild[]
+  summa: number
 }
 
 export enum OdinoxTypeName {

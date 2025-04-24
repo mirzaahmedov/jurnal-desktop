@@ -33,12 +33,7 @@ class OdinoxServiceBuilder extends CRUDService<Odinox, OdinoxPayload> {
     this.getMainbookDocuments = this.getMainbookDocuments.bind(this)
   }
 
-  async getAutofillData(params: {
-    month: number
-    year: number
-    budjet_id: number
-    main_schet_id: number
-  }) {
+  async getAutofillData(params: { month: number; year: number; main_schet_id: number }) {
     const res = await this.client.get<Response<OdinoxAutoFill[]>>(`${this.endpoint}/data`, {
       params
     })

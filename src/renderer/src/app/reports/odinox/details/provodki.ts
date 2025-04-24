@@ -10,9 +10,7 @@ export interface OdinoxRow {
 export const OdinoxProvodkaColumns: EditableColumnDef<OdinoxRow>[] = [
   {
     key: 'name',
-    minWidth: 100,
-    headerClassName: 'sticky left-0 z-50',
-    className: 'font-bold sticky left-0 z-10',
+    width: 300,
     Editor: createTextEditor({
       key: 'name',
       readOnly: true

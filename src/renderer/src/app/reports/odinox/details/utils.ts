@@ -14,34 +14,37 @@ import {
 } from './interfaces'
 
 export const transformOdinoxAutoFillData = (types: OdinoxAutoFill[]) => {
-  const schetsMap = new Map<string, { id: number; child: OdinoxAutoFillSubChild }[]>()
+  const schetsMap = new Map<number, { id: number; name: string; child: OdinoxAutoFillSubChild }[]>()
 
   types.forEach((type) => {
     type.sub_childs.push({
-      rasxod: type.rasxod,
-      prixod: type.prixod,
-      name: t('total'),
-      number: ''
+      id: 0,
+      summa: type.summa,
+      smeta_name: t('total'),
+      smeta_number: '',
+      group_number: '',
+      smeta_grafik: '',
+      smeta_id: 0
     })
     type.sub_childs.forEach((subChild) => {
-      if (!schetsMap.has(subChild.number)) {
-        schetsMap.set(subChild.number, [])
+      if (!schetsMap.has(subChild.smeta_id)) {
+        schetsMap.set(subChild.smeta_id, [])
       }
-      schetsMap.get(subChild.number)?.push({
+      schetsMap.get(subChild.smeta_id)?.push({
         id: type.id,
+        name: type.name,
         child: subChild
       })
     })
   })
 
   const rows: any[] = []
-  schetsMap.forEach((types, number) => {
-    const row = {
-      number
-    }
-    types.forEach(({ id, child }) => {
-      row[`${id}_rasxod`] = child.rasxod
-      row[`${id}_prixod`] = child.prixod
+  schetsMap.forEach((types) => {
+    const row = {}
+    types.forEach(({ name, child }) => {
+      row[name] = child.summa
+      row['name'] = child.smeta_name
+      row['number'] = child.smeta_number
     })
     rows.push(row)
   })

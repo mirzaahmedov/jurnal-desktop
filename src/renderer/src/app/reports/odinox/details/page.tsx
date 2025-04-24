@@ -80,47 +80,6 @@ const OdinoxDetailsPage = () => {
     enabled: !!budjet_id
   })
 
-  const { isPending: isFetchingUniqueSchets, mutate: getUniqueSchets } = useMutation({
-    mutationKey: [OdinoxQueryKeys.getUniqueSchets],
-    mutationFn: OdinoxService.getUniqueSchets,
-    onSuccess: (res) => {
-      const uniqueSchets = res.data?.schets ?? []
-      const childs = uniqueSchets.map((schet) => ({
-        schet: schet.schet,
-        '10_prixod': 0,
-        '10_rasxod': 0
-      }))
-      childs.push({
-        schet: t('total'),
-        '10_prixod': 0,
-        '10_rasxod': 0
-      })
-      form.setValue('childs', childs)
-      setEditable(true)
-    },
-    onError: () => {
-      form.setValue('childs', [])
-    }
-  })
-
-  const { isPending: isCheckingSaldo, mutate: checkSaldo } = useMutation({
-    mutationKey: [OdinoxQueryKeys.getCheckSaldo],
-    mutationFn: OdinoxService.getSaldoCheck,
-    onSuccess: () => {
-      autoFill({ year, month, budjet_id: budjet_id!, main_schet_id: main_schet_id! })
-    },
-    onError: (error) => {
-      if ('status' in error && error.status === 404) {
-        getUniqueSchets({
-          budjet_id: budjet_id!,
-          main_schet_id: main_schet_id!
-        })
-        return
-      }
-      autoFill({ year, month, budjet_id: budjet_id!, main_schet_id: main_schet_id! })
-    }
-  })
-
   const { isPending: isAutoFilling, mutate: autoFill } = useMutation({
     mutationKey: [OdinoxQueryKeys.getAutofill],
     mutationFn: OdinoxService.getAutofillData,
@@ -188,15 +147,16 @@ const OdinoxDetailsPage = () => {
   }, [setLayout, navigate, t, id])
   useEffect(() => {
     if (id === 'create') {
-      checkSaldo({
-        budjet_id: budjet_id!,
+      autoFill({
+        year: form.getValues('year'),
+        month: form.getValues('month'),
         main_schet_id: main_schet_id!
       })
     }
   }, [id, year, month, budjet_id])
 
   const columns = useMemo(
-    () => [...OdinoxProvodkaColumns, ...getOdinoxColumns(types?.data ?? [], isEditable)],
+    () => [...OdinoxProvodkaColumns, ...getOdinoxColumns(types?.data ?? [])],
     [types, isEditable]
   )
 
@@ -300,13 +260,7 @@ const OdinoxDetailsPage = () => {
   return (
     <DetailsView className="h-full">
       <DetailsView.Content
-        loading={
-          isFetching ||
-          isAutoFilling ||
-          isFetchingTypes ||
-          isFetchingUniqueSchets ||
-          isCheckingSaldo
-        }
+        loading={isFetching || isAutoFilling || isFetchingTypes}
         className="overflow-hidden h-full pb-20"
       >
         <form
@@ -319,6 +273,9 @@ const OdinoxDetailsPage = () => {
               <SearchInput onKeyDown={handleSearch} />
               <div className="flex items-center gap-5">
                 <MonthPicker
+                  popoverProps={{
+                    placement: 'bottom end'
+                  }}
                   isDisabled={id !== 'create' && isEditable}
                   value={date}
                   onChange={(value) => {
@@ -329,7 +286,6 @@ const OdinoxDetailsPage = () => {
                       autoFill({
                         year: date.getFullYear(),
                         month: date.getMonth() + 1,
-                        budjet_id: budjet_id!,
                         main_schet_id: main_schet_id!
                       })
                     }
@@ -342,7 +298,6 @@ const OdinoxDetailsPage = () => {
                       autoFill({
                         year,
                         month,
-                        budjet_id: budjet_id!,
                         main_schet_id: main_schet_id!
                       })
                     }}
