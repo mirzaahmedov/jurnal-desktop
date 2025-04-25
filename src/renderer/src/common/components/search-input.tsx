@@ -61,7 +61,7 @@ export const SearchInput = ({
         )}
       />
 
-      <div className="absolute right-2.5 top-1/2 -translate-y-1/2 space-x-1 z-50">
+      <div className="absolute right-2.5 top-1/2 -translate-y-1/2 space-x-1 z-50 pointer-events-none">
         <span className="text-black/40 text-xs font-semibold rounded-md px-1.5 py-0.5 border bg-black/5 border-black/10">
           CTRL
         </span>

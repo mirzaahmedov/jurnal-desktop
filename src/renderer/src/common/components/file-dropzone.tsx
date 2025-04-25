@@ -4,10 +4,10 @@ import { AspectRatio, type AspectRatioProps } from '@radix-ui/react-aspect-ratio
 import { type Accept, useDropzone } from 'react-dropzone'
 import { useTranslation } from 'react-i18next'
 
+import { UploadCloud } from '@/common/assets/illustrations/upload-cloud'
 import { cn } from '@/common/lib/utils'
 
 import { useEventCallback } from '../hooks'
-import { Upload } from './icons/Upload'
 
 export interface FileDropzoneProps
   extends Omit<HTMLAttributes<HTMLDivElement>, 'onSelect'>,
@@ -16,7 +16,7 @@ export interface FileDropzoneProps
   accept?: Accept
   label?: string
   icon?: ComponentType
-  iconProps?: ComponentProps<typeof Upload>
+  iconProps?: ComponentProps<typeof UploadCloud>
 }
 export const FileDropzone = ({
   onSelect,
@@ -39,14 +39,14 @@ export const FileDropzone = ({
     accept
   })
 
-  const Icon = icon ? icon : Upload
+  const Icon = icon ? icon : UploadCloud
 
   return (
     <AspectRatio
       {...getRootProps()}
       ratio={1}
       className={cn(
-        'group flex flex-col items-center justify-center gap-2.5 px-10 border-4 border-dashed border-slate-300 bg-slate-50 active:text-brand cursor-pointer hover:bg-slate-100 hover:border-slate-400 rounded-lg transition-colors',
+        'group flex flex-col items-center justify-center px-10 border-4 border-dashed border-slate-200 bg-slate-50 active:text-brand cursor-pointer hover:border-slate-300 rounded-lg transition-colors',
         isDragActive && 'border-brand'
       )}
       {...props}
@@ -54,14 +54,14 @@ export const FileDropzone = ({
       <Icon
         {...iconProps}
         className={cn(
-          'size-40 text-slate-300 group-hover:text-slate-400/80 group-hover:scale-105 group-active:text-brand transition-all',
+          'h-72 text-slate-300 group-hover:text-slate-400/80 group-hover:scale-110 group-active:text-brand transition-all duration-300',
           isDragActive && 'text-brand',
           iconProps?.className
         )}
       />
       <h6
         className={cn(
-          'w-full max-w-xs text-xs text-center text-slate-400 font-medium group-active:text-brand group-hover:text-slate-500 transition-colors',
+          'w-full max-w-xs text-sm text-center text-slate-400 font-medium group-active:text-brand transition-colors',
           isDragActive && 'text-brand'
         )}
       >

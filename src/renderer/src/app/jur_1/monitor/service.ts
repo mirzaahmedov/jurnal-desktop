@@ -14,7 +14,7 @@ export type KassaMonitorMetaType = {
   summa_to: number
 }
 
-export const kassaMonitorService = new CRUDService<
+export const KassaMonitorService = new CRUDService<
   KassaMonitoringType,
   undefined,
   undefined,

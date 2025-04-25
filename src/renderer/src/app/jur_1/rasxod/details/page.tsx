@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
-import { KassaMonitorQueryKeys, kassaMonitorService } from '@/app/jur_1/monitor'
+import { KassaMonitorQueryKeys, KassaMonitorService } from '@/app/jur_1/monitor'
 import { createShartnomaSpravochnik } from '@/app/jur_3/shartnoma'
 import { createOrganizationSpravochnik } from '@/app/region-spravochnik/organization'
 import { createPodotchetSpravochnik } from '@/app/region-spravochnik/podotchet'
@@ -25,6 +25,7 @@ import { RadioGroup, RadioGroupItem } from '@/common/components/ui/radio-group'
 import { DocumentType } from '@/common/features/doc-num'
 import { createMainZarplataSpravochnik } from '@/common/features/main-zarplata/service'
 import { useRequisitesStore } from '@/common/features/requisites'
+import { useRequisitesRedirect } from '@/common/features/requisites/use-main-schet-redirect'
 import {
   SaldoNamespace,
   handleSaldoErrorDates,
@@ -63,6 +64,8 @@ import { podvodkaColumns } from './podvodki'
 
 const KassaRasxodDetailtsPage = () => {
   const { id } = useParams()
+  useRequisitesRedirect(-1, id !== 'create')
+
   const { t } = useTranslation(['app'])
   const { snippets, addSnippet, removeSnippet } = useSnippets({
     ns: 'kassa_rasxod'
@@ -147,7 +150,7 @@ const KassaRasxodDetailtsPage = () => {
         to: form.watch('doc_date')
       }
     ],
-    queryFn: kassaMonitorService.getAll,
+    queryFn: KassaMonitorService.getAll,
     enabled: !!form.watch('doc_date') && !queuedMonths.length
   })
   const { data: rasxod, isFetching } = useQuery({

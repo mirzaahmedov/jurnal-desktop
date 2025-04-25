@@ -20,6 +20,7 @@ import {
 import { Form } from '@/common/components/ui/form'
 import { DocumentType } from '@/common/features/doc-num'
 import { useRequisitesStore } from '@/common/features/requisites'
+import { useRequisitesRedirect } from '@/common/features/requisites/use-main-schet-redirect'
 import {
   SaldoNamespace,
   handleSaldoErrorDates,
@@ -54,6 +55,9 @@ import { PokazatUslugiService } from '../service'
 import { podvodkaColumns } from './podvodki'
 
 const PokazatUslugiDetailsPage = () => {
+  const { id } = useParams()
+  useRequisitesRedirect(-1, id !== 'create')
+
   const { t } = useTranslation(['app'])
   const { main_schet_id, jur3_schet_152_id } = useRequisitesStore()
   const { queuedMonths } = useUslugiSaldo()
@@ -61,7 +65,6 @@ const PokazatUslugiDetailsPage = () => {
     ns: 'pokazat-uslugi'
   })
 
-  const id = useParams().id as string
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const setLayout = useLayout()

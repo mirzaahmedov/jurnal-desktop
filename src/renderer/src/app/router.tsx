@@ -464,7 +464,7 @@ export const routes: RouteObject[] = [
       },
       {
         path: 'jur_8',
-        element: <BudjetSelectedGuard />,
+        element: <MainSchetSelectedGuard />,
         children: [
           {
             path: 'monitor',

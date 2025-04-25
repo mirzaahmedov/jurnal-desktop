@@ -20,6 +20,7 @@ import {
 import { Form } from '@/common/components/ui/form'
 import { DocumentType } from '@/common/features/doc-num'
 import { useRequisitesStore } from '@/common/features/requisites'
+import { useRequisitesRedirect } from '@/common/features/requisites/use-main-schet-redirect'
 import {
   SaldoNamespace,
   handleSaldoErrorDates,
@@ -49,6 +50,9 @@ import { aktService } from '../service'
 import { provodkaColumns } from './provodki'
 
 const AktDetailsPage = () => {
+  const { id } = useParams()
+  useRequisitesRedirect(-1, id !== 'create')
+
   const { t } = useTranslation(['app'])
   const { snippets, addSnippet, removeSnippet } = useSnippets({
     ns: 'akt'
@@ -57,7 +61,6 @@ const AktDetailsPage = () => {
 
   const { main_schet_id, jur3_schet_159_id } = useRequisitesStore()
 
-  const id = useParams().id as string
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const setLayout = useLayout()

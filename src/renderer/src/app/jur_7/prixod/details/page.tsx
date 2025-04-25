@@ -3,15 +3,18 @@ import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
 
+import { useRequisitesRedirect } from '@/common/features/requisites/use-main-schet-redirect'
 import { useLayout } from '@/common/layout'
 
 import PrixodDetails from './details'
 
 const PrixodDetailsPage = () => {
+  const { id } = useParams()
+  useRequisitesRedirect(-1, id !== 'create')
+
   const navigate = useNavigate()
   const setLayout = useLayout()
 
-  const { id } = useParams<{ id: string }>()
   const { t } = useTranslation(['app'])
 
   useEffect(() => {

@@ -21,6 +21,7 @@ import {
 import { Form } from '@/common/components/ui/form'
 import { DocumentType } from '@/common/features/doc-num'
 import { useRequisitesStore } from '@/common/features/requisites'
+import { useRequisitesRedirect } from '@/common/features/requisites/use-main-schet-redirect'
 import {
   SaldoNamespace,
   handleSaldoErrorDates,
@@ -51,8 +52,10 @@ import { BankPrixodFormSchema, BankPrixodProvodkaFormSchema, BankPrixodService }
 import { podvodkaColumns } from './podvodki'
 
 const BankPrixodDetailsPage = () => {
+  const { id } = useParams()
+  useRequisitesRedirect(-1, id !== 'create')
+
   const queryClient = useQueryClient()
-  const id = useParams().id as string
   const navigate = useNavigate()
   const main_schet_id = useRequisitesStore((state) => state.main_schet_id)
   const setLayout = useLayout()

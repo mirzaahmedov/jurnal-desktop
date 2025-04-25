@@ -12,6 +12,7 @@ import { MonthPicker } from '@/common/components/month-picker'
 import { SearchInput } from '@/common/components/search-input'
 import { Button } from '@/common/components/ui/button'
 import { useRequisitesStore } from '@/common/features/requisites'
+import { useRequisitesRedirect } from '@/common/features/requisites/use-main-schet-redirect'
 import { useLayout } from '@/common/layout'
 import { formatDate } from '@/common/lib/date'
 import { DetailsView } from '@/common/views'
@@ -19,7 +20,6 @@ import { DetailsView } from '@/common/views'
 import { OdinoxQueryKeys } from '../config'
 import { OdinoxService } from '../service'
 import { defaultValues } from './config'
-// import { MainbookDocumentsTracker } from './documents-tracker'
 import { OdinoxTable } from './odinox-table'
 import { OdinoxProvodkaColumns } from './provodki'
 import {
@@ -30,18 +30,15 @@ import {
 } from './utils'
 
 const OdinoxDetailsPage = () => {
+  const { id } = useParams()
+  useRequisitesRedirect(-1, id !== 'create')
+
   const tableMethods = useRef<EditableTableMethods>(null)
   const location = useLocation()
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const setLayout = useLayout()
 
-  // const [activeCell, setActiveCell] = useState<{
-  //   type: string
-  //   smeta_id: number
-  // }>()
-
-  const { id } = useParams()
   const { t } = useTranslation(['app'])
 
   const { budjet_id, main_schet_id } = useRequisitesStore()

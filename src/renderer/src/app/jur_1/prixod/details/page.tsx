@@ -24,6 +24,7 @@ import { RadioGroup, RadioGroupItem } from '@/common/components/ui/radio-group'
 import { DocumentType } from '@/common/features/doc-num'
 import { createMainZarplataSpravochnik } from '@/common/features/main-zarplata/service'
 import { useRequisitesStore } from '@/common/features/requisites'
+import { useRequisitesRedirect } from '@/common/features/requisites/use-main-schet-redirect'
 import {
   SaldoNamespace,
   handleSaldoErrorDates,
@@ -61,13 +62,15 @@ import { KassaPrixodService } from '../service'
 import { podvodkaColumns } from './podvodki'
 
 const KassaPrixodDetailsPage = () => {
+  const { id } = useParams()
+  useRequisitesRedirect(-1, id !== 'create')
+
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
   const setLayout = useLayout()
   const startDate = useSelectedMonthStore((store) => store.startDate)
 
-  const { id } = useParams()
   const { t } = useTranslation(['app'])
   const { queuedMonths } = useKassaSaldo()
   const { snippets, addSnippet, removeSnippet } = useSnippets({
@@ -296,8 +299,6 @@ const KassaPrixodDetailsPage = () => {
           : PrixodType.Podotchet
     })
   }, [form, prixod, id])
-
-  console.log({ childs: form.watch('childs') })
 
   return (
     <DetailsView>

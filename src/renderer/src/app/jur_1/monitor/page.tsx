@@ -28,16 +28,15 @@ import { useKassaSaldo } from '../saldo/components/use-saldo'
 import { columns } from './columns'
 import { KassaMonitorQueryKeys } from './config'
 import { DailyReportDialog } from './daily-report-dialog'
-import { kassaMonitorService } from './service'
+import { KassaMonitorService } from './service'
 
 const KassaMonitorPage = () => {
   const dates = useDates()
+  const setLayout = useLayout()
   const pagination = usePagination()
   const report_title_id = useSettingsStore((store) => store.report_title_id)
   const startDate = useSelectedMonthStore((store) => store.startDate)
   const dailyReportToggle = useToggle()
-
-  const setLayout = useLayout()
 
   const [search] = useSearchFilter()
 
@@ -66,7 +65,7 @@ const KassaMonitorPage = () => {
         ...pagination
       }
     ],
-    queryFn: kassaMonitorService.getAll,
+    queryFn: KassaMonitorService.getAll,
     enabled: !queuedMonths.length
   })
 
@@ -110,7 +109,7 @@ const KassaMonitorPage = () => {
                 {t('daily-report')}
               </Button>
               <DownloadFile
-                fileName={`касса-шапка-отчет_${dates.from}&${dates.to}.xlsx`}
+                fileName={`${t('pages.kassa')}_${'cap-report'}_${dates.from}&${dates.to}.xlsx`}
                 url="kassa/monitoring/cap"
                 buttonText={t('cap-report')}
                 params={{

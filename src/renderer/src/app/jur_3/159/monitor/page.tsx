@@ -16,14 +16,9 @@ import {
   SummaTotal,
   useTableSort
 } from '@/common/components'
-import { Button } from '@/common/components/ui/button'
+import { Button } from '@/common/components/jolly/button'
+import { Menu, MenuItem, MenuPopover, MenuTrigger } from '@/common/components/jolly/menu'
 import { ButtonGroup } from '@/common/components/ui/button-group'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger
-} from '@/common/components/ui/dropdown-menu'
 import { DownloadFile } from '@/common/features/file'
 import {
   SearchFilterDebounced,
@@ -44,16 +39,16 @@ import { getProvodkaURL } from '@/common/lib/provodka'
 import { ListView } from '@/common/views'
 
 import { useAktSaldo } from '../saldo/components/use-saldo'
-import { AktSverkiDialog } from './akt-sverka'
 import { OrganMonitorColumns } from './columns'
 import { OrganMonitorQueryKeys } from './config'
+import { DailyReportDialog } from './daily-report-dialog'
 import { useOrganFilter } from './filters'
 import { OrganMonitoringService } from './service'
 
 const OrganMonitoringPage = () => {
   const navigate = useNavigate()
   const dates = useDates()
-  const dropdownToggle = useToggle()
+  const dailyReportToggle = useToggle()
   const pagination = usePagination()
   const report_title_id = useSettingsStore((store) => store.report_title_id)
   const startDate = useSelectedMonthStore((store) => store.startDate)
@@ -153,131 +148,66 @@ const OrganMonitoringPage = () => {
             </div>
             {main_schet_id ? (
               <ButtonGroup borderStyle="dashed">
-                <DropdownMenu open={dropdownToggle.isOpen}>
-                  <DropdownMenuTrigger
-                    asChild
-                    onClick={dropdownToggle.open}
-                  >
-                    <Button variant="ghost">
-                      <Download className="btn-icon icon-start" />
-                      <span className="titlecase">
-                        {t('download-something', { something: t('reports') })}
-                      </span>
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent
-                    side="bottom"
-                    align="end"
-                    onInteractOutside={dropdownToggle.close}
-                  >
-                    <DropdownMenuItem>
-                      <DownloadFile
-                        fileName={`${t('cap')}-${dates.to}.xlsx`}
-                        url="/159/monitoring/cap"
-                        params={{
-                          budjet_id,
-                          main_schet_id,
-                          schet_id: jur3_schet_159_id,
-                          from: dates.from,
-                          to: dates.to,
-                          report_title_id,
-                          year: startDate.getFullYear(),
-                          month: startDate.getMonth() + 1,
-                          excel: true
-                        }}
-                        buttonText={t('cap')}
-                        className="w-full inline-flex items-center justify-start"
-                      />
-                    </DropdownMenuItem>
+                <MenuTrigger>
+                  <Button variant="ghost">
+                    <Download className="btn-icon icon-start" />
+                    <span className="titlecase">{t('reports')}</span>
+                  </Button>
+                  <MenuPopover placement="bottom end">
+                    <Menu
+                      selectionMode="none"
+                      selectedKeys={[]}
+                    >
+                      <MenuItem>
+                        <DownloadFile
+                          fileName={`${t('cap')}-${dates.to}.xlsx`}
+                          url="/159/monitoring/cap"
+                          params={{
+                            budjet_id,
+                            main_schet_id,
+                            schet_id: jur3_schet_159_id,
+                            from: dates.from,
+                            to: dates.to,
+                            report_title_id,
+                            year: startDate.getFullYear(),
+                            month: startDate.getMonth() + 1,
+                            excel: true
+                          }}
+                          buttonText={t('cap')}
+                          className="w-full inline-flex items-center justify-start"
+                        />
+                      </MenuItem>
 
-                    <DropdownMenuItem>
-                      <DownloadFile
-                        fileName={`дебитор-кредитор_отчет-${dates.to}.xlsx`}
-                        url="/159/monitoring/prixod/rasxod"
-                        params={{
-                          main_schet_id,
-                          budjet_id,
-                          schet_id: jur3_schet_159_id,
-                          to: dates.to,
-                          year: startDate.getFullYear(),
-                          month: startDate.getMonth() + 1,
-                          excel: true
-                        }}
-                        buttonText={t('debitor_kreditor_report')}
-                        className="w-full inline-flex items-center justify-start"
-                      />
-                    </DropdownMenuItem>
+                      <MenuItem>
+                        <DownloadFile
+                          fileName={`debitor_kreditor_${dates.to}.xlsx`}
+                          url="/159/monitoring/prixod/rasxod"
+                          params={{
+                            main_schet_id,
+                            budjet_id,
+                            schet_id: jur3_schet_159_id,
+                            to: dates.to,
+                            year: startDate.getFullYear(),
+                            month: startDate.getMonth() + 1,
+                            excel: true
+                          }}
+                          buttonText={t('debitor_kreditor_report')}
+                          className="w-full inline-flex items-center justify-start"
+                        />
+                      </MenuItem>
 
-                    <DropdownMenuItem>
-                      <DownloadFile
-                        fileName={`${t('pages.organization')}-${t('pages.prixod-docs')}-${dates.from}-${dates.to}.xlsx`}
-                        url="/159/monitoring/prixod"
-                        params={{
-                          budjet_id,
-                          main_schet_id,
-                          schet_id: jur3_schet_159_id,
-                          from: dates.from,
-                          to: dates.to,
-                          year: startDate.getFullYear(),
-                          month: startDate.getMonth() + 1,
-                          report_title_id,
-                          excel: true
-                        }}
-                        buttonText={t('pages.prixod-docs')}
-                      />
-                    </DropdownMenuItem>
-
-                    <DropdownMenuItem>
-                      <DownloadFile
-                        fileName={`сводный-отчет-${dates.from}&${dates.to}.xlsx`}
-                        url="/159/monitoring/order"
-                        params={{
-                          main_schet_id,
-                          schet_id: jur3_schet_159_id,
-                          organ_id: organId ? organId : undefined,
-                          from: dates.from,
-                          to: dates.to,
-                          excel: true,
-                          year: startDate.getFullYear(),
-                          month: startDate.getMonth() + 1,
-                          contract: false
-                        }}
-                        buttonText={t('summarized_report')}
-                        className="w-full inline-flex items-center justify-start"
-                      />
-                    </DropdownMenuItem>
-
-                    <DropdownMenuItem>
-                      <DownloadFile
-                        fileName={`сводный-отчет-${dates.from}&${dates.to}.xlsx`}
-                        url="/159/monitoring/order"
-                        params={{
-                          main_schet_id,
-                          schet_id: jur3_schet_159_id,
-                          organ_id: organId ? organId : undefined,
-                          from: dates.from,
-                          to: dates.to,
-                          excel: true,
-                          year: startDate.getFullYear(),
-                          month: startDate.getMonth() + 1,
-                          contract: true
-                        }}
-                        buttonText={t('summarized_report_by_contract')}
-                        className="w-full inline-flex items-center justify-start"
-                      />
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-                {organId ? (
-                  <AktSverkiDialog
-                    organId={organId}
-                    budjetId={budjet_id}
-                    mainSchetId={main_schet_id}
-                    schetId={jur3_schet_159_id!}
-                    from={dates.from}
-                    to={dates.to}
-                  />
-                ) : null}
+                      <MenuItem>
+                        <Button
+                          variant="ghost"
+                          onClick={dailyReportToggle.open}
+                        >
+                          <Download className="btn-icon !size-4 icon-start" />
+                          {t('daily-report')}
+                        </Button>
+                      </MenuItem>
+                    </Menu>
+                  </MenuPopover>
+                </MenuTrigger>
               </ButtonGroup>
             ) : null}
           </div>
@@ -344,6 +274,15 @@ const OrganMonitoringPage = () => {
           pageCount={monitoring?.meta?.pageCount ?? 0}
         />
       </ListView.Footer>
+
+      <DailyReportDialog
+        isOpen={dailyReportToggle.isOpen}
+        onOpenChange={dailyReportToggle.setOpen}
+        budjet_id={budjet_id!}
+        main_schet_id={main_schet_id!}
+        schet_id={jur3_schet_159_id!}
+        report_title_id={report_title_id!}
+      />
     </ListView>
   )
 }

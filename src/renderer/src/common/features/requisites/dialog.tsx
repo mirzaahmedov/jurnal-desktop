@@ -126,7 +126,7 @@ export const RequisitesDialog = ({ isOpen, onOpenChange }: RequisitesDialogProps
   }
 
   useEffect(() => {
-    if (isOpen) {
+    if (!isOpen) {
       form.reset({
         budjet_id: useRequisitesStore.getState().budjet_id,
         main_schet_id: useRequisitesStore.getState().main_schet_id,
@@ -242,7 +242,7 @@ export const RequisitesDialog = ({ isOpen, onOpenChange }: RequisitesDialogProps
                 />
               ) : null}
 
-              {mainSchet ? (
+              {form.watch('main_schet_id') ? (
                 <>
                   <FormElement
                     direction="column"
@@ -254,7 +254,7 @@ export const RequisitesDialog = ({ isOpen, onOpenChange }: RequisitesDialogProps
                   >
                     <Input
                       readOnly
-                      value={mainSchet.data?.jur1_schet ?? ''}
+                      value={mainSchet?.data?.jur1_schet ?? ''}
                     />
                   </FormElement>
                   <FormElement
@@ -267,7 +267,7 @@ export const RequisitesDialog = ({ isOpen, onOpenChange }: RequisitesDialogProps
                   >
                     <Input
                       readOnly
-                      value={mainSchet.data?.jur2_schet ?? ''}
+                      value={mainSchet?.data?.jur2_schet ?? ''}
                     />
                   </FormElement>
                   <FormField
@@ -281,8 +281,8 @@ export const RequisitesDialog = ({ isOpen, onOpenChange }: RequisitesDialogProps
                         <JollySelect
                           placeholder={t('choose', { what: t('schet').toLowerCase() })}
                           items={
-                            Array.isArray(mainSchet.data?.jur3_schets_152)
-                              ? mainSchet.data?.jur3_schets_152
+                            Array.isArray(mainSchet?.data?.jur3_schets_152)
+                              ? mainSchet?.data?.jur3_schets_152
                               : []
                           }
                           selectedKey={field.value ?? ''}
@@ -307,8 +307,8 @@ export const RequisitesDialog = ({ isOpen, onOpenChange }: RequisitesDialogProps
                         <JollySelect
                           placeholder={t('choose', { what: t('schet').toLowerCase() })}
                           items={
-                            Array.isArray(mainSchet.data?.jur3_schets_159)
-                              ? mainSchet.data?.jur3_schets_159
+                            Array.isArray(mainSchet?.data?.jur3_schets_159)
+                              ? mainSchet?.data?.jur3_schets_159
                               : []
                           }
                           selectedKey={field.value ?? ''}
@@ -332,8 +332,8 @@ export const RequisitesDialog = ({ isOpen, onOpenChange }: RequisitesDialogProps
                         <JollySelect
                           placeholder={t('choose', { what: t('schet').toLowerCase() })}
                           items={
-                            Array.isArray(mainSchet.data?.jur4_schets)
-                              ? mainSchet.data?.jur4_schets
+                            Array.isArray(mainSchet?.data?.jur4_schets)
+                              ? mainSchet?.data?.jur4_schets
                               : []
                           }
                           selectedKey={field.value ?? ''}

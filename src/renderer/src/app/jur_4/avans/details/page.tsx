@@ -19,6 +19,7 @@ import {
 import { Form } from '@/common/components/ui/form'
 import { DocumentType } from '@/common/features/doc-num'
 import { useRequisitesStore } from '@/common/features/requisites'
+import { useRequisitesRedirect } from '@/common/features/requisites/use-main-schet-redirect'
 import {
   SaldoNamespace,
   handleSaldoErrorDates,
@@ -42,7 +43,9 @@ import { AvansService } from '../service'
 import { podvodkaColumns } from './podvodki'
 
 const AvansDetailsPage = () => {
-  const id = useParams().id as string
+  const { id } = useParams()
+  useRequisitesRedirect(-1, id !== 'create')
+
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const startDate = useSelectedMonthStore((store) => store.startDate)

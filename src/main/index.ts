@@ -150,8 +150,10 @@ ipcMain.on('open-dev-tools', (e) => {
 ipcMain.handle(
   'save-file',
   (_, { fileName, fileData }: { fileName: string; fileData: ArrayBuffer }) => {
+    const normalizedFileName = path.normalize(fileName)
+    console.log(`normalizedFileName: ${normalizedFileName}`)
     const folderPath = path.join(os.homedir(), 'Downloads/E-Moliya')
-    const filePath = path.join(folderPath, fileName)
+    const filePath = path.join(folderPath, normalizedFileName)
 
     if (!fs.existsSync(folderPath)) {
       fs.mkdirSync(folderPath, { recursive: true })

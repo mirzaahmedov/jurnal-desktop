@@ -10,6 +10,7 @@ import { MainSchetQueryKeys, MainSchetService } from '@/app/region-spravochnik/m
 import { OrganizationQueryKeys, OrganizationService } from '@/app/region-spravochnik/organization'
 import { Button } from '@/common/components/ui/button'
 import { useRequisitesStore } from '@/common/features/requisites'
+import { useRequisitesRedirect } from '@/common/features/requisites/use-main-schet-redirect'
 import { useToggle } from '@/common/hooks'
 import { useLayout } from '@/common/layout'
 import { DetailsView } from '@/common/views'
@@ -20,10 +21,12 @@ import { shartnomaService } from '../service'
 import { ShartnomaForm } from './shartnoma-form'
 
 const ShartnomaDetailsPage = () => {
+  const { id } = useParams()
+  useRequisitesRedirect(-1, id !== 'create')
+
   const navigate = useNavigate()
   const reportToggle = useToggle()
 
-  const id = useParams().id as string
   const location = useLocation() as Location<LocationState>
 
   const original = location.state?.original

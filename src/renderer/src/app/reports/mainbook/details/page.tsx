@@ -12,6 +12,7 @@ import { MonthPicker } from '@/common/components/month-picker'
 import { SearchInput } from '@/common/components/search-input'
 import { Button } from '@/common/components/ui/button'
 import { useRequisitesStore } from '@/common/features/requisites'
+import { useRequisitesRedirect } from '@/common/features/requisites/use-main-schet-redirect'
 import {
   SaldoNamespace,
   handleSaldoErrorDates,
@@ -37,6 +38,9 @@ import {
 } from './utils'
 
 const MainbookDetailsPage = () => {
+  const { id } = useParams()
+  useRequisitesRedirect(-1, id !== 'create')
+
   const tableMethods = useRef<EditableTableMethods>(null)
   const location = useLocation()
   const navigate = useNavigate()
@@ -51,7 +55,6 @@ const MainbookDetailsPage = () => {
     prixod: boolean
   }>()
 
-  const { id } = useParams()
   const { t } = useTranslation(['app'])
   const { queuedMonths } = useMainbookSaldo()
 

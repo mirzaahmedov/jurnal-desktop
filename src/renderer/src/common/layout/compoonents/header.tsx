@@ -5,7 +5,7 @@ import { ArrowLeft, LogOut, Plus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Link, useLocation } from 'react-router-dom'
 
-import { Button } from '@/common/components/ui/button'
+import { Button } from '@/common/components/jolly/button'
 import { useAuthenticationStore } from '@/common/features/auth'
 import { RequisitesController } from '@/common/features/requisites'
 
@@ -39,7 +39,7 @@ export const Header = () => {
           <Button
             variant="ghost"
             size="icon"
-            onClick={onBack}
+            onPress={onBack}
           >
             <ArrowLeft className="size-5" />
           </Button>
@@ -72,7 +72,7 @@ export const Header = () => {
         <div className="flex-1">{Content && <Content key={location.pathname} />}</div>
         <div>
           {typeof onCreate === 'function' ? (
-            <Button onClick={onCreate}>
+            <Button onPress={onCreate}>
               {t('add')}
               <Plus className="btn-icon" />
             </Button>
@@ -91,7 +91,7 @@ export const Header = () => {
         <Button
           variant="ghost"
           size="icon"
-          onClick={handleLogout}
+          onPress={handleLogout}
         >
           <LogOut />
         </Button>

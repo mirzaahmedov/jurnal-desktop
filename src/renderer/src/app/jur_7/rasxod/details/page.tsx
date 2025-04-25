@@ -3,15 +3,18 @@ import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
 
+import { useRequisitesRedirect } from '@/common/features/requisites/use-main-schet-redirect'
 import { useLayout } from '@/common/layout'
 
 import RasxodDetails from './details'
 
 const RasxodDetailsPage = () => {
+  const { id } = useParams()
+  useRequisitesRedirect(-1, id !== 'create')
+
   const setLayout = useLayout()
   const navigate = useNavigate()
 
-  const { id } = useParams<{ id: string }>()
   const { t } = useTranslation(['app'])
 
   useEffect(() => {

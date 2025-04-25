@@ -12,6 +12,7 @@ import { MonthPicker } from '@/common/components/month-picker'
 import { SearchInput } from '@/common/components/search-input'
 import { Button } from '@/common/components/ui/button'
 import { useRequisitesStore } from '@/common/features/requisites'
+import { useRequisitesRedirect } from '@/common/features/requisites/use-main-schet-redirect'
 import {
   SaldoNamespace,
   handleSaldoErrorDates,
@@ -30,6 +31,9 @@ import { getPodochetSaldoProvodkaColumns } from './provodki'
 import { calculateTotal } from './utils'
 
 const PodotchetSaldoDetailsPage = () => {
+  const { id } = useParams()
+  useRequisitesRedirect(-1, id !== 'create')
+
   const tableMethods = useRef<EditableTableMethods>(null)
   const navigate = useNavigate()
   const location = useLocation()
@@ -40,7 +44,6 @@ const PodotchetSaldoDetailsPage = () => {
 
   const [isEditable, setEditable] = useState(false)
 
-  const { id } = useParams()
   const { t } = useTranslation(['app'])
   const { budjet_id, main_schet_id, jur4_schet_id } = useRequisitesStore()
 

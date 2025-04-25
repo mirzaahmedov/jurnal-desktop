@@ -21,16 +21,22 @@ interface AktSverkiDialogProps {
   to: string
   budjetId?: number
   mainSchetId: number
+  reportTitleId: number
   schetId: number
   organId: number
+  year: number
+  month: number
 }
 export const AktSverkiDialog = ({
   from,
   to,
   budjetId,
   mainSchetId,
+  reportTitleId,
   schetId,
-  organId
+  organId,
+  year,
+  month
 }: AktSverkiDialogProps) => {
   const { t } = useTranslation()
 
@@ -74,11 +80,14 @@ export const AktSverkiDialog = ({
             params={{
               budjet_id: budjetId,
               main_schet_id: mainSchetId,
+              report_title_id: reportTitleId,
               schet_id: schetId,
               organ_id: organId,
               contract_id: shartnomaSpravochnik.selected?.id || undefined,
               from,
               to,
+              year,
+              month,
               excel: true
             }}
             buttonText={t('download')}

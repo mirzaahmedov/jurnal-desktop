@@ -25,6 +25,7 @@ import { Form } from '@/common/components/ui/form'
 import { DocumentType } from '@/common/features/doc-num'
 import { usePodpis } from '@/common/features/podpis'
 import { useRequisitesStore } from '@/common/features/requisites'
+import { useRequisitesRedirect } from '@/common/features/requisites/use-main-schet-redirect'
 import {
   SaldoNamespace,
   handleSaldoErrorDates,
@@ -60,13 +61,15 @@ import { ImportPlastik } from '../zarplata/import-plastik'
 import { podvodkaColumns } from './podvodki'
 
 const BankRasxodDetailsPage = () => {
-  const params = useParams()
+  const { id } = useParams()
+  useRequisitesRedirect(-1, id !== 'create')
+
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const importDialogToggle = useToggle()
 
   const location = useLocation() as Location<{ original?: BankRasxod }>
-  const podpis = usePodpis(PodpisTypeDocument.BANK_RASXOD_PORUCHENIYA, params.id === 'create')
+  const podpis = usePodpis(PodpisTypeDocument.BANK_RASXOD_PORUCHENIYA, id === 'create')
 
   const main_schet_id = useRequisitesStore((state) => state.main_schet_id)
   const startDate = useSelectedMonthStore((store) => store.startDate)
@@ -157,13 +160,13 @@ const BankRasxodDetailsPage = () => {
   } = useQuery({
     queryKey: [
       BankRasxodQueryKeys.getById,
-      Number(params.id),
+      Number(id),
       {
         main_schet_id
       }
     ],
     queryFn: BankRasxodService.getById,
-    enabled: params.id !== 'create' && !!main_schet_id && !queuedMonths.length
+    enabled: id !== 'create' && !!main_schet_id && !queuedMonths.length
   })
   const { mutate: createRasxod, isPending: isCreating } = useMutation({
     mutationFn: BankRasxodService.create,
@@ -176,7 +179,7 @@ const BankRasxodDetailsPage = () => {
         queryKey: [BankRasxodQueryKeys.getAll]
       })
       queryClient.invalidateQueries({
-        queryKey: [BankRasxodQueryKeys.getById, params.id]
+        queryKey: [BankRasxodQueryKeys.getById, id]
       })
 
       handleSaldoResponseDates(SaldoNamespace.JUR_2, res)
@@ -196,7 +199,7 @@ const BankRasxodDetailsPage = () => {
         queryKey: [BankRasxodQueryKeys.getAll]
       })
       queryClient.invalidateQueries({
-        queryKey: [BankRasxodQueryKeys.getById, params.id]
+        queryKey: [BankRasxodQueryKeys.getById, id]
       })
 
       handleSaldoResponseDates(SaldoNamespace.JUR_2, res)
@@ -221,9 +224,9 @@ const BankRasxodDetailsPage = () => {
       summa
     } = payload
 
-    if (params.id !== 'create') {
+    if (id !== 'create') {
       updateRasxod({
-        id: Number(params.id),
+        id: Number(id),
         doc_date,
         doc_num,
         id_spravochnik_organization,
@@ -274,7 +277,7 @@ const BankRasxodDetailsPage = () => {
   }, [form, podvodki])
 
   useEffect(() => {
-    if (params.id === 'create') {
+    if (id === 'create') {
       return
     }
 
@@ -286,7 +289,7 @@ const BankRasxodDetailsPage = () => {
           summa: (child.tulanmagan_summa || summa) ?? 0
         })) ?? defaultValues.childs
     })
-  }, [form, rasxod, params.id])
+  }, [form, rasxod, id])
 
   useEffect(() => {
     const rukovoditel = podpis.find((item) => item.doljnost_name === PodpisDoljnost.RUKOVODITEL)
@@ -309,7 +312,7 @@ const BankRasxodDetailsPage = () => {
   }, [error])
   useEffect(() => {
     setLayout({
-      title: params.id === 'create' ? t('create') : t('edit'),
+      title: id === 'create' ? t('create') : t('edit'),
       breadcrumbs: [
         {
           title: t('pages.bank')
@@ -324,7 +327,7 @@ const BankRasxodDetailsPage = () => {
         navigate(-1)
       }
     })
-  }, [setLayout, navigate, params.id, t])
+  }, [setLayout, navigate, id, t])
   useEffect(() => {
     form.setValue('organization_porucheniya_name', organSpravochnik.selected?.name ?? '')
   }, [form, organSpravochnik.selected])
@@ -339,13 +342,11 @@ const BankRasxodDetailsPage = () => {
                 <DocumentFields
                   tabIndex={1}
                   form={form}
-                  autoGenerate={params.id === 'create'}
+                  autoGenerate={id === 'create'}
                   documentType={DocumentType.BANK_RASXOD}
-                  validateDate={
-                    params.id === 'create' ? validateDateWithinSelectedMonth : undefined
-                  }
+                  validateDate={id === 'create' ? validateDateWithinSelectedMonth : undefined}
                   calendarProps={
-                    params.id === 'create'
+                    id === 'create'
                       ? {
                           fromMonth: startDate,
                           toMonth: startDate
