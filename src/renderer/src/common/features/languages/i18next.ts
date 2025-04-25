@@ -10,6 +10,7 @@ import dashboardCyrl from './translations/cyrl/dashboard.json'
 import podotchetCyrl from './translations/cyrl/podotchet.json'
 import podpisCyrl from './translations/cyrl/podpis.json'
 import porucheniyaCyrl from './translations/cyrl/porucheniya.json'
+import reportCyrl from './translations/cyrl/report.json'
 import signInCyrl from './translations/cyrl/sign-in.json'
 import userCyrl from './translations/cyrl/user.json'
 import appRU from './translations/ru/app.json'
@@ -18,6 +19,7 @@ import dashboardRU from './translations/ru/dashboard.json'
 import podotchetRU from './translations/ru/podotchet.json'
 import podpisRU from './translations/ru/podpis.json'
 import porucheniyaRU from './translations/ru/porucheniya.json'
+import reportRU from './translations/ru/report.json'
 import signInRU from './translations/ru/sign-in.json'
 import userRU from './translations/ru/user.json'
 import appUZ from './translations/uz/app.json'
@@ -26,6 +28,7 @@ import dashboardUZ from './translations/uz/dashboard.json'
 import podotchetUZ from './translations/uz/podotchet.json'
 import podpisUZ from './translations/uz/podpis.json'
 import porucheniyaUZ from './translations/uz/porucheniya.json'
+import reportUZ from './translations/uz/report.json'
 import signInUZ from './translations/uz/sign-in.json'
 import userUZ from './translations/uz/user.json'
 
@@ -61,7 +64,8 @@ export const initLocales = () => {
         podpis: podpisRU,
         porucheniya: porucheniyaRU,
         'sign-in': signInRU,
-        user: userRU
+        user: userRU,
+        report: reportRU
       },
       uz: {
         app: appUZ,
@@ -71,7 +75,8 @@ export const initLocales = () => {
         podpis: podpisUZ,
         porucheniya: porucheniyaUZ,
         'sign-in': signInUZ,
-        user: userUZ
+        user: userUZ,
+        report: reportUZ
       },
       cyrl: {
         app: appCyrl,
@@ -81,7 +86,8 @@ export const initLocales = () => {
         podpis: podpisCyrl,
         porucheniya: porucheniyaCyrl,
         'sign-in': signInCyrl,
-        user: userCyrl
+        user: userCyrl,
+        report: reportCyrl
       }
     },
 

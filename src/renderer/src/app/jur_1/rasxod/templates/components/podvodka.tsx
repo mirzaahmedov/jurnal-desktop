@@ -2,15 +2,15 @@ import { Blank, Field, Flex, Label, Table } from '@/common/components/pdf'
 
 const columnWidths = [160, 100, 220, 100]
 
-type PodvodkaType = {
-  operation: string
+interface PodvodkaType {
+  operatsii: string
   debet_schet?: string
   debet_card?: string
   credit_schet?: string
   credit_card?: string
   summa: string
 }
-type PodvodkaTableProps = {
+interface PodvodkaTableProps {
   podvodkaList: PodvodkaType[]
 }
 const PodvodkaTable = ({ podvodkaList }: PodvodkaTableProps) => {
@@ -184,7 +184,7 @@ const PodvodkaRow = ({ noBorder, podvodka }: PodvodkaRowProps) => {
             fontSize: 8
           }}
         >
-          {podvodka?.operation}
+          {podvodka?.operatsii}
         </Table.Cell>
       </Table.Column>
 

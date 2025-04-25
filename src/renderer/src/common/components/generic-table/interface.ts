@@ -24,8 +24,8 @@ export interface ColumnDef<T extends object> {
   header?: ReactNode
   className?: string
   width?: number | string
-  minWidth?: number
-  maxWidth?: number
+  minWidth?: number | string
+  maxWidth?: number | string
   headerClassName?: string
   renderHeader?(): ReactNode
   renderCell?: CellRenderer<T>

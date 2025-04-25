@@ -5,22 +5,28 @@ import { inputVariants } from '@/common/features/spravochnik'
 
 export const createNumberEditor = <T extends object>({
   readOnly = false,
-  key,
   max,
   inputProps,
   defaultValue
-}: EditorOptions<T, NumericInputProps> & {
+}: EditorOptions<NumericInputProps> & {
   readOnly?: boolean
   max?: number
   defaultValue?: number
-}): EditorComponent<T> => {
-  const EditorComponent: EditorComponent<T> = ({ tabIndex, inputRef, errors, value, onChange }) => {
+}): EditorComponent<T, any> => {
+  const EditorComponent: EditorComponent<T, any> = ({
+    column,
+    tabIndex,
+    inputRef,
+    error,
+    value,
+    onChange
+  }) => {
     return (
       <div className="relative">
         <NumericInput
           ref={inputRef}
           readOnly={readOnly}
-          name={key as string}
+          name={column.key as string}
           tabIndex={tabIndex}
           isAllowed={(values) => {
             if (max) {
@@ -36,10 +42,10 @@ export const createNumberEditor = <T extends object>({
               : (defaultValue ?? '')
           }
           onValueChange={(values) => onChange?.(values.floatValue ?? 0)}
-          error={!!errors?.[key as string]}
+          error={!!error}
           className={inputVariants({
             editor: true,
-            error: !!errors?.[key as string]
+            error: !!error
           })}
           autoComplete="off"
           {...inputProps}

@@ -1,15 +1,15 @@
 import type { BankRasxod } from '@/common/models'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { CopyPlus } from 'lucide-react'
+import { CopyPlus, Eye } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
 import { FooterCell, FooterRow, GenericTable, useTableSort } from '@/common/components'
-import { Button } from '@/common/components/ui/button'
+import { Button } from '@/common/components/jolly/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/common/components/ui/dialog'
 import { useConfirm } from '@/common/features/confirm'
 import {
@@ -33,8 +33,9 @@ import { ListView } from '@/common/views'
 
 import { useBankSaldo } from '../saldo/components/use-saldo'
 import { BankRasxodColumns } from './columns'
-import { queryKeys } from './config'
+import { BankRasxodQueryKeys } from './config'
 import { BankRasxodService } from './service'
+import { BankRasxodViewDialog } from './view-dialog'
 import { ImportAliment } from './zarplata/import-aliment'
 
 const BankRasxodPage = () => {
@@ -48,6 +49,7 @@ const BankRasxodPage = () => {
   const setLayout = useLayout()
 
   const [search] = useSearchFilter()
+  const [selectedId, setSelectedId] = useState<number | null>(null)
 
   const { sorting, handleSort, getColumnSorted } = useTableSort()
   const { confirm } = useConfirm()
@@ -60,7 +62,7 @@ const BankRasxodPage = () => {
     error
   } = useQuery({
     queryKey: [
-      queryKeys.getAll,
+      BankRasxodQueryKeys.getAll,
       {
         main_schet_id,
         search,
@@ -73,13 +75,13 @@ const BankRasxodPage = () => {
     enabled: !!main_schet_id && !queuedMonths.length
   })
   const { mutate: deleteRasxod, isPending } = useMutation({
-    mutationKey: [queryKeys.delete],
+    mutationKey: [BankRasxodQueryKeys.delete],
     mutationFn: BankRasxodService.delete,
     onSuccess(res) {
       toast.success(res?.message)
 
       queryClient.invalidateQueries({
-        queryKey: [queryKeys.getAll]
+        queryKey: [BankRasxodQueryKeys.getAll]
       })
 
       handleSaldoResponseDates(SaldoNamespace.JUR_2, res)
@@ -151,21 +153,32 @@ const BankRasxodPage = () => {
           getColumnSorted={getColumnSorted}
           onSort={handleSort}
           actions={(row) => (
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={(e) => {
-                e.stopPropagation()
-                row.doc_num = ''
-                navigate(`create`, {
-                  state: {
-                    original: row
-                  }
-                })
-              }}
-            >
-              <CopyPlus className="size-4" />
-            </Button>
+            <>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  row.doc_num = ''
+                  navigate(`create`, {
+                    state: {
+                      original: row
+                    }
+                  })
+                }}
+              >
+                <CopyPlus className="size-4" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                onPress={() => {
+                  setSelectedId(row.id)
+                }}
+              >
+                <Eye className="btn-icon" />
+              </Button>
+            </>
           )}
           footer={
             <FooterRow>
@@ -196,6 +209,11 @@ const BankRasxodPage = () => {
           <ImportAliment />
         </DialogContent>
       </Dialog>
+
+      <BankRasxodViewDialog
+        selectedId={selectedId}
+        onClose={() => setSelectedId(null)}
+      />
     </ListView>
   )
 }

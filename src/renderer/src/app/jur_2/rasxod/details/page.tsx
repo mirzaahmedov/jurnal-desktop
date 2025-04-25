@@ -20,7 +20,6 @@ import {
   createEditorDeleteHandler
 } from '@/common/components/editable-table/helpers'
 import { Button } from '@/common/components/ui/button'
-import { ButtonGroup } from '@/common/components/ui/button-group'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/common/components/ui/dialog'
 import { Form } from '@/common/components/ui/form'
 import { DocumentType } from '@/common/features/doc-num'
@@ -55,11 +54,10 @@ import {
 
 import { BankMonitorQueryKeys, BankMonitorService } from '../../monitor'
 import { useBankSaldo } from '../../saldo/components/use-saldo'
-import { defaultValues, queryKeys } from '../config'
+import { BankRasxodQueryKeys, defaultValues } from '../config'
 import { BankRasxodFormSchema, BankRasxodPodvodkaFormSchema, BankRasxodService } from '../service'
 import { ImportPlastik } from '../zarplata/import-plastik'
 import { podvodkaColumns } from './podvodki'
-import { PorucheniyaDropdown } from './porucheniya-dropdown'
 
 const BankRasxodDetailsPage = () => {
   const params = useParams()
@@ -158,7 +156,7 @@ const BankRasxodDetailsPage = () => {
     error
   } = useQuery({
     queryKey: [
-      queryKeys.getById,
+      BankRasxodQueryKeys.getById,
       Number(params.id),
       {
         main_schet_id
@@ -175,10 +173,10 @@ const BankRasxodDetailsPage = () => {
       navigate(-1)
 
       queryClient.invalidateQueries({
-        queryKey: [queryKeys.getAll]
+        queryKey: [BankRasxodQueryKeys.getAll]
       })
       queryClient.invalidateQueries({
-        queryKey: [queryKeys.getById, params.id]
+        queryKey: [BankRasxodQueryKeys.getById, params.id]
       })
 
       handleSaldoResponseDates(SaldoNamespace.JUR_2, res)
@@ -195,10 +193,10 @@ const BankRasxodDetailsPage = () => {
       navigate(-1)
 
       queryClient.invalidateQueries({
-        queryKey: [queryKeys.getAll]
+        queryKey: [BankRasxodQueryKeys.getAll]
       })
       queryClient.invalidateQueries({
-        queryKey: [queryKeys.getById, params.id]
+        queryKey: [BankRasxodQueryKeys.getById, params.id]
       })
 
       handleSaldoResponseDates(SaldoNamespace.JUR_2, res)
@@ -364,7 +362,6 @@ const BankRasxodDetailsPage = () => {
                 />
                 <OrganizationFields
                   displayGazna
-                  displayPorucheniya
                   form={form as any}
                   tabIndex={2}
                   error={form.formState.errors.id_spravochnik_organization}
@@ -423,21 +420,6 @@ const BankRasxodDetailsPage = () => {
               </Button>
 
               {summa ? <AccountBalance balance={reminder} /> : null}
-
-              {main_schet?.data && organSpravochnik.selected ? (
-                <ButtonGroup borderStyle="dashed">
-                  <PorucheniyaDropdown
-                    rasxod={form.getValues()}
-                    main_schet={main_schet.data}
-                    organization={{
-                      ...organSpravochnik.selected,
-                      name:
-                        form.watch('organization_porucheniya_name') ??
-                        organSpravochnik.selected.name
-                    }}
-                  />
-                </ButtonGroup>
-              ) : null}
             </DetailsView.Footer>
           </form>
         </Form>

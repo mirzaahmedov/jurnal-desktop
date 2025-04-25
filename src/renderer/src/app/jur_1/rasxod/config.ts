@@ -9,7 +9,7 @@ export enum RasxodType {
   Organ = 'organ'
 }
 
-export const queryKeys = {
+export const KassaRasxodQueryKeys = {
   getAll: 'kassa-rasxod/all',
   getById: 'kassa-rasxod',
   update: 'kassa-rasxod/update',
@@ -17,7 +17,7 @@ export const queryKeys = {
   create: 'kassa-rasxod/create'
 }
 
-export const defaultValues: RasxodFormValues = {
+export const defaultValues: KassaRasxodFormValues = {
   doc_num: '',
   doc_date: '',
   id_podotchet_litso: 0,
@@ -38,7 +38,7 @@ export const defaultValues: RasxodFormValues = {
   ]
 }
 
-export const RasxodPodvodkaFormSchema = withPreprocessor(
+export const KassaRasxodPodvodkaFormSchema = withPreprocessor(
   z.object({
     spravochnik_operatsii_id: z.number(),
     summa: z.number().min(1),
@@ -48,7 +48,7 @@ export const RasxodPodvodkaFormSchema = withPreprocessor(
   })
 )
 
-export const RasxodFormSchema = withPreprocessor(
+export const KassaRasxodFormSchema = withPreprocessor(
   z
     .object({
       doc_num: z.string(),
@@ -63,7 +63,7 @@ export const RasxodFormSchema = withPreprocessor(
       type: z.enum([RasxodType.Podotchet, RasxodType.Zarplata, RasxodType.Organ]),
       opisanie: z.string().optional(),
       summa: z.number().optional(),
-      childs: z.array(RasxodPodvodkaFormSchema)
+      childs: z.array(KassaRasxodPodvodkaFormSchema)
     })
     .superRefine((values, ctx) => {
       if (values.type === RasxodType.Zarplata && !values.main_zarplata_id) {
@@ -83,5 +83,5 @@ export const RasxodFormSchema = withPreprocessor(
     })
 )
 
-export type RasxodPodvodkaFormValues = z.infer<typeof RasxodPodvodkaFormSchema>
-export type RasxodFormValues = z.infer<typeof RasxodFormSchema>
+export type KassaRasxodPodvodkaFormValues = z.infer<typeof KassaRasxodPodvodkaFormSchema>
+export type KassaRasxodFormValues = z.infer<typeof KassaRasxodFormSchema>

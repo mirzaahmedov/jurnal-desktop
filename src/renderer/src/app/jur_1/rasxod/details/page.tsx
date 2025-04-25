@@ -1,5 +1,4 @@
-import type { RasxodFormValues, RasxodPodvodkaFormValues } from '../config'
-import type { Operatsii } from '@/common/models'
+import type { KassaRasxodFormValues, KassaRasxodPodvodkaFormValues } from '../config'
 
 import { useEffect } from 'react'
 
@@ -12,7 +11,6 @@ import { toast } from 'react-toastify'
 
 import { KassaMonitorQueryKeys, kassaMonitorService } from '@/app/jur_1/monitor'
 import { createShartnomaSpravochnik } from '@/app/jur_3/shartnoma'
-import { MainSchetQueryKeys, MainSchetService } from '@/app/region-spravochnik/main-schet'
 import { createOrganizationSpravochnik } from '@/app/region-spravochnik/organization'
 import { createPodotchetSpravochnik } from '@/app/region-spravochnik/podotchet'
 import { AccountBalance, Fieldset } from '@/common/components'
@@ -21,13 +19,10 @@ import {
   createEditorCreateHandler,
   createEditorDeleteHandler
 } from '@/common/components/editable-table/helpers'
-import { ButtonGroup } from '@/common/components/ui/button-group'
 import { Form, FormField } from '@/common/components/ui/form'
 import { Label } from '@/common/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/common/components/ui/radio-group'
-import { ApiEndpoints } from '@/common/features/crud'
 import { DocumentType } from '@/common/features/doc-num'
-import { GenerateFile } from '@/common/features/file'
 import { createMainZarplataSpravochnik } from '@/common/features/main-zarplata/service'
 import { useRequisitesStore } from '@/common/features/requisites'
 import {
@@ -43,9 +38,6 @@ import { useSnippets } from '@/common/features/snippents/use-snippets'
 import { useSpravochnik } from '@/common/features/spravochnik'
 import { useLayout } from '@/common/layout'
 import { formatDate } from '@/common/lib/date'
-import { formatNumber } from '@/common/lib/format'
-import { getDataFromCache } from '@/common/lib/query-client'
-import { numberToWords } from '@/common/lib/utils'
 import { normalizeEmptyFields } from '@/common/lib/validation'
 import { DetailsView } from '@/common/views'
 import {
@@ -59,15 +51,19 @@ import {
 import { MainZarplataFields } from '@/common/widget/form/main-zarplata'
 
 import { useKassaSaldo } from '../../saldo/components/use-saldo'
-import { RasxodType, defaultValues, queryKeys } from '../config'
-import { RasxodFormSchema, RasxodPodvodkaFormSchema } from '../config'
+import {
+  KassaRasxodFormSchema,
+  KassaRasxodPodvodkaFormSchema,
+  KassaRasxodQueryKeys,
+  RasxodType,
+  defaultValues
+} from '../config'
 import { KassaRasxodService } from '../service'
-import { KassaRasxodOrderTemplate } from '../templates'
 import { podvodkaColumns } from './podvodki'
 
 const KassaRasxodDetailtsPage = () => {
   const { id } = useParams()
-  const { t, i18n } = useTranslation(['app'])
+  const { t } = useTranslation(['app'])
   const { snippets, addSnippet, removeSnippet } = useSnippets({
     ns: 'kassa_rasxod'
   })
@@ -83,7 +79,7 @@ const KassaRasxodDetailtsPage = () => {
   const month = startDate.getMonth() + 1
 
   const form = useForm({
-    resolver: zodResolver(RasxodFormSchema),
+    resolver: zodResolver(KassaRasxodFormSchema),
     defaultValues: {
       ...defaultValues,
       doc_date: formatDate(startDate)
@@ -134,11 +130,6 @@ const KassaRasxodDetailtsPage = () => {
     })
   )
 
-  const { data: main_schet } = useQuery({
-    queryKey: [MainSchetQueryKeys.getById, main_schet_id],
-    queryFn: MainSchetService.getById,
-    enabled: !!main_schet_id
-  })
   const {
     data: monitor,
     isFetching: isFetchingMonitor,
@@ -161,7 +152,7 @@ const KassaRasxodDetailtsPage = () => {
   })
   const { data: rasxod, isFetching } = useQuery({
     queryKey: [
-      queryKeys.getById,
+      KassaRasxodQueryKeys.getById,
       Number(id),
       {
         main_schet_id: main_schet_id
@@ -177,10 +168,10 @@ const KassaRasxodDetailtsPage = () => {
 
       form.reset(defaultValues)
       queryClient.invalidateQueries({
-        queryKey: [queryKeys.getAll]
+        queryKey: [KassaRasxodQueryKeys.getAll]
       })
       queryClient.invalidateQueries({
-        queryKey: [queryKeys.getById, id]
+        queryKey: [KassaRasxodQueryKeys.getById, id]
       })
 
       navigate(-1)
@@ -196,10 +187,10 @@ const KassaRasxodDetailtsPage = () => {
       toast.success(res?.message)
 
       queryClient.invalidateQueries({
-        queryKey: [queryKeys.getAll]
+        queryKey: [KassaRasxodQueryKeys.getAll]
       })
       queryClient.invalidateQueries({
-        queryKey: [queryKeys.getById, id]
+        queryKey: [KassaRasxodQueryKeys.getById, id]
       })
 
       navigate(-1)
@@ -223,7 +214,7 @@ const KassaRasxodDetailtsPage = () => {
       organization_by_raschet_schet_gazna_id,
       organization_by_raschet_schet_id,
       shartnoma_grafik_id
-    }: RasxodFormValues) => {
+    }: KassaRasxodFormValues) => {
       if (id !== 'create') {
         updateRasxod({
           id: Number(id),
@@ -238,7 +229,7 @@ const KassaRasxodDetailtsPage = () => {
           organ_id: id_spravochnik_organization,
           organ_gazna_id: organization_by_raschet_schet_gazna_id,
           organ_account_id: organization_by_raschet_schet_id,
-          childs: podvodki.map(normalizeEmptyFields<RasxodPodvodkaFormValues>)
+          childs: podvodki.map(normalizeEmptyFields<KassaRasxodPodvodkaFormValues>)
         })
         return
       }
@@ -254,7 +245,7 @@ const KassaRasxodDetailtsPage = () => {
         organ_id: id_spravochnik_organization,
         organ_gazna_id: organization_by_raschet_schet_gazna_id,
         organ_account_id: organization_by_raschet_schet_id,
-        childs: podvodki.map(normalizeEmptyFields<RasxodPodvodkaFormValues>)
+        childs: podvodki.map(normalizeEmptyFields<KassaRasxodPodvodkaFormValues>)
       })
     }
   )
@@ -448,40 +439,6 @@ const KassaRasxodDetailtsPage = () => {
               {!form.watch('doc_date') || isFetchingMonitor ? null : (
                 <AccountBalance balance={reminder} />
               )}
-
-              {main_schet?.data && form.formState.isValid ? (
-                <ButtonGroup borderStyle="dashed">
-                  <GenerateFile
-                    tabIndex={8}
-                    fileName={`расходный-кассовый-ордер-${form.watch('doc_num')}.pdf`}
-                    buttonText="Скачать расходный кассовый ордер"
-                  >
-                    <KassaRasxodOrderTemplate
-                      doc_date={form.watch('doc_date')}
-                      doc_num={form.watch('doc_num')}
-                      fio={podotchetSpravochnik.selected?.name ?? ''}
-                      summa={formatNumber(form.watch('summa') ?? 0)}
-                      summaWords={numberToWords(form.watch('summa') ?? 0, i18n.language)}
-                      podvodkaList={form
-                        .watch('childs')
-                        .map(({ summa, spravochnik_operatsii_id }) => {
-                          const result = getDataFromCache<Operatsii>(queryClient, [
-                            ApiEndpoints.operatsii,
-                            spravochnik_operatsii_id
-                          ])
-                          const operation = result?.data?.name ?? ''
-                          const schet = result?.data?.schet ?? ''
-                          return {
-                            operation,
-                            summa: formatNumber(summa),
-                            debet_schet: schet,
-                            credit_schet: main_schet?.data?.jur1_schet ?? ''
-                          }
-                        })}
-                    />
-                  </GenerateFile>
-                </ButtonGroup>
-              ) : null}
             </DetailsView.Footer>
           </form>
         </Form>
@@ -497,7 +454,7 @@ const KassaRasxodDetailtsPage = () => {
             errors={form.formState.errors.childs}
             onCreate={createEditorCreateHandler({
               form,
-              schema: RasxodPodvodkaFormSchema,
+              schema: KassaRasxodPodvodkaFormSchema,
               defaultValues: defaultValues.childs[0]
             })}
             onDelete={createEditorDeleteHandler({

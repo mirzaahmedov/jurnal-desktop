@@ -1,36 +1,36 @@
 import type { EditableColumnDef, TableRowField } from '../interface'
 import type { Dispatch, FC, InputHTMLAttributes, Ref, SetStateAction } from 'react'
-import type { FieldErrors, UseFormReturn } from 'react-hook-form'
+import type { ArrayPath, FieldError, FieldErrors, UseFormReturn } from 'react-hook-form'
 
-export type ChangeContext<T extends object, K extends keyof T = keyof T> = {
+export type ChangeContext<T extends object, K> = {
   id: number
   key: K
-  payload: T
+  values: T
 }
 
 export type DeleteContext = {
   id: number
 }
 
-export type EditorComponent<T extends object> = FC<{
+export type EditorComponent<T extends object, F extends ArrayPath<NoInfer<T>>> = FC<{
   tabIndex?: number
   inputRef: Ref<HTMLInputElement>
-  id: number
-  row: TableRowField<T>
-  rows: TableRowField<T>[]
-  form: UseFormReturn<any> // Todo fix this type
-  col: EditableColumnDef<T>
+  index: number
+  row: TableRowField<T, F>
+  rows: TableRowField<T, F>[]
+  form: UseFormReturn<T>
+  column: EditableColumnDef<T>
   max?: number
+  error?: FieldError
   errors?: FieldErrors<T>
   value: unknown
   onChange?: (value: unknown) => void
   state: Record<string, unknown>
   setState: Dispatch<SetStateAction<Record<string, unknown>>>
   params: Record<string, unknown>
-  validate?: (ctx: ChangeContext<T>) => boolean
+  validate?: (ctx: ChangeContext<T, F>) => boolean
 }>
 
-export type EditorOptions<T extends object, P = InputHTMLAttributes<HTMLInputElement>> = {
-  key: keyof T
+export type EditorOptions<P = InputHTMLAttributes<HTMLInputElement>> = {
   inputProps?: P
 }

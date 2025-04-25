@@ -11,12 +11,10 @@ import { SelectField } from '@/common/components'
 import { FormElement } from '@/common/components/form'
 import { Button } from '@/common/components/ui/button'
 import { FormField } from '@/common/components/ui/form'
-import { Input } from '@/common/components/ui/input'
 import { SpravochnikField, SpravochnikFields } from '@/common/features/spravochnik'
 
 export interface OrganizationFieldsProps {
   displayGazna?: boolean
-  displayPorucheniya?: boolean
   readOnly?: boolean
   form?: UseFormReturn<{
     organization_porucheniya_name?: string
@@ -25,17 +23,10 @@ export interface OrganizationFieldsProps {
   }>
 }
 
-const OrganizationFields: FormSpravochnikFieldsComponent<Organization, OrganizationFieldsProps> = ({
-  tabIndex,
-  disabled,
-  error,
-  name,
-  spravochnik,
-  displayGazna = false,
-  displayPorucheniya = false,
-  form,
-  ...props
-}) => {
+export const OrganizationFields: FormSpravochnikFieldsComponent<
+  Organization,
+  OrganizationFieldsProps
+> = ({ tabIndex, disabled, error, name, spravochnik, displayGazna = false, form, ...props }) => {
   const { inputRef, ...spravochnikProps } = spravochnik
 
   const { t } = useTranslation()
@@ -67,24 +58,6 @@ const OrganizationFields: FormSpravochnikFieldsComponent<Organization, Organizat
           grid: '2:5'
         }}
       />
-
-      {displayPorucheniya && form ? (
-        <FormField
-          control={form.control}
-          name="organization_porucheniya_name"
-          render={({ field }) => (
-            <FormElement
-              label={`${t('organization')} (${t('porucheniya').toLowerCase()})`}
-              grid="2:5"
-            >
-              <Input
-                tabIndex={tabIndex}
-                {...field}
-              />
-            </FormElement>
-          )}
-        />
-      ) : null}
 
       <SpravochnikField
         {...spravochnikProps}
@@ -238,5 +211,3 @@ const OrganizationFields: FormSpravochnikFieldsComponent<Organization, Organizat
     </SpravochnikFields>
   )
 }
-
-export { OrganizationFields }

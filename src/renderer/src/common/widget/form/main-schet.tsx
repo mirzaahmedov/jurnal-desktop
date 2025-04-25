@@ -11,7 +11,7 @@ type MainSchetFieldsProps = Omit<FieldsetProps, 'name'> & {
   name?: string
   main_schet?: MainSchet
 }
-const MainSchetFields = ({ name, main_schet, ...props }: MainSchetFieldsProps) => {
+export const MainSchetFields = ({ name, main_schet, ...props }: MainSchetFieldsProps) => {
   const { t } = useTranslation()
   return (
     <Fieldset
@@ -86,5 +86,3 @@ const MainSchetFields = ({ name, main_schet, ...props }: MainSchetFieldsProps) =
     </Fieldset>
   )
 }
-
-export { MainSchetFields }

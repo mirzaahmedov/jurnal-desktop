@@ -56,7 +56,7 @@ export const getHeaderGroups = <T extends object>(
   return groups
 }
 
-export const getAccessorColumns = <T extends object>(
+export const getDataColumns = <T extends object>(
   columns: EditableColumnDef<T>[]
 ): EditableColumnDef<T>[] => {
   const accessorColumns = [] as EditableColumnDef<T>[]

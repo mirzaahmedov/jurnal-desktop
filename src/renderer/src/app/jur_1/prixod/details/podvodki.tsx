@@ -1,4 +1,4 @@
-import type { PrixodProvodkaFormValues } from '../config'
+import type { KassaPrixodProvodkaFormValues } from '../config'
 import type { EditableColumnDef } from '@/common/components/editable-table'
 
 import {
@@ -10,7 +10,7 @@ import {
 } from '@/common/components/editable-table/editors'
 import { TypeSchetOperatsii } from '@/common/models'
 
-export const podvodkaColumns: EditableColumnDef<PrixodProvodkaFormValues>[] = [
+export const podvodkaColumns: EditableColumnDef<KassaPrixodProvodkaFormValues>[] = [
   {
     key: 'spravochnik_operatsii_id',
     header: 'provodka',

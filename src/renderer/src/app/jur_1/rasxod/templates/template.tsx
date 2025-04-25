@@ -8,7 +8,7 @@ import { Header, PodvodkaTable, Signatures, Summary } from './components'
 
 registerFonts()
 
-type KassaRasxodOrderTemplateProps = {
+interface KassaRasxodOrderTemplateProps {
   doc_num: string
   doc_date: string
   fio: string
@@ -16,7 +16,7 @@ type KassaRasxodOrderTemplateProps = {
   summaWords: string
   podvodkaList: PodvodkaType[]
 }
-const KassaRasxodOrderTemplate = ({
+export const KassaRasxodOrderTemplate = ({
   doc_num,
   doc_date,
   fio,
@@ -37,7 +37,7 @@ const KassaRasxodOrderTemplate = ({
         <View style={{ marginTop: 15 }}>
           <Summary
             fio={fio}
-            operation={podvodkaList?.[0].operation}
+            operation={podvodkaList?.[0].operatsii}
             summa={summa}
             summaWords={summaWords}
           />
@@ -62,5 +62,3 @@ const styles = StyleSheet.create({
     letterSpacing: 0.3
   }
 })
-
-export { KassaRasxodOrderTemplate }

@@ -1,13 +1,15 @@
 import type { KassaRasxod } from '@/common/models'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { Eye } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
 import { FooterCell, FooterRow, GenericTable, useTableSort } from '@/common/components'
+import { Button } from '@/common/components/jolly/button'
 import { useConfirm } from '@/common/features/confirm'
 import {
   SearchFilterDebounced,
@@ -30,8 +32,9 @@ import { ListView } from '@/common/views'
 
 import { useKassaSaldo } from '../saldo/components/use-saldo'
 import { columns } from './columns'
-import { queryKeys } from './config'
+import { KassaRasxodQueryKeys } from './config'
 import { KassaRasxodService } from './service'
+import { KassaRasxodViewDialog } from './view-dialog'
 
 const KassaRasxodPage = () => {
   const { confirm } = useConfirm()
@@ -40,6 +43,7 @@ const KassaRasxodPage = () => {
   const { queuedMonths } = useKassaSaldo()
 
   const [search] = useSearchFilter()
+  const [selectedId, setSelectedId] = useState<number | null>(null)
 
   const dates = useDates()
   const pagination = usePagination()
@@ -55,7 +59,7 @@ const KassaRasxodPage = () => {
     error
   } = useQuery({
     queryKey: [
-      queryKeys.getAll,
+      KassaRasxodQueryKeys.getAll,
       {
         main_schet_id,
         search,
@@ -68,7 +72,7 @@ const KassaRasxodPage = () => {
     enabled: !queuedMonths.length
   })
   const { mutate: deleteRasxod, isPending } = useMutation({
-    mutationKey: [queryKeys.delete],
+    mutationKey: [KassaRasxodQueryKeys.delete],
     mutationFn: KassaRasxodService.delete,
     onSuccess(res) {
       toast.success(res?.message)
@@ -77,7 +81,7 @@ const KassaRasxodPage = () => {
 
       requestAnimationFrame(() => {
         queryClient.invalidateQueries({
-          queryKey: [queryKeys.getAll]
+          queryKey: [KassaRasxodQueryKeys.getAll]
         })
       })
     },
@@ -140,6 +144,17 @@ const KassaRasxodPage = () => {
           onDelete={handleClickDelete}
           getColumnSorted={getColumnSorted}
           onSort={handleSort}
+          actions={(row) => (
+            <Button
+              variant="ghost"
+              size="icon"
+              onPress={() => {
+                setSelectedId(row.id)
+              }}
+            >
+              <Eye className="btn-icon" />
+            </Button>
+          )}
           footer={
             <FooterRow>
               <FooterCell
@@ -158,6 +173,11 @@ const KassaRasxodPage = () => {
           pageCount={rasxods?.meta?.pageCount ?? 0}
         />
       </ListView.Footer>
+
+      <KassaRasxodViewDialog
+        selectedId={selectedId}
+        onClose={() => setSelectedId(null)}
+      />
     </ListView>
   )
 }

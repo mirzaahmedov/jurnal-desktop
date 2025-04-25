@@ -1,4 +1,4 @@
-import type { KassaPrixodProvodka } from '@/common/models'
+import type { KassaRasxodProvodka } from '@/common/models'
 
 import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
@@ -20,11 +20,11 @@ import { useRequisitesStore } from '@/common/features/requisites'
 import { formatNumber } from '@/common/lib/format'
 import { numberToWords } from '@/common/lib/utils'
 
-import { KassaPrixodQueryKeys } from './config'
-import { KassaPrixodService } from './service'
-import { KassaPrixodOrderTemplate } from './templates'
+import { KassaRasxodQueryKeys } from './config'
+import { KassaRasxodService } from './service'
+import { KassaRasxodOrderTemplate } from './templates'
 
-const provodkaColumns: ColumnDef<KassaPrixodProvodka>[] = [
+const provodkaColumns: ColumnDef<KassaRasxodProvodka>[] = [
   {
     key: 'schet',
     renderCell: (row) => row.operatsii?.schet
@@ -52,11 +52,11 @@ const provodkaColumns: ColumnDef<KassaPrixodProvodka>[] = [
   }
 ]
 
-export interface KassaPrixodViewDialogProps {
+export interface KassaRasxodViewDialogProps {
   selectedId: number | null
   onClose: VoidFunction
 }
-export const KassaPrixodViewDialog = ({ selectedId, onClose }: KassaPrixodViewDialogProps) => {
+export const KassaRasxodViewDialog = ({ selectedId, onClose }: KassaRasxodViewDialogProps) => {
   const { t, i18n } = useTranslation(['app', 'report'])
   const { main_schet_id } = useRequisitesStore()
 
@@ -64,13 +64,13 @@ export const KassaPrixodViewDialog = ({ selectedId, onClose }: KassaPrixodViewDi
     queryKey: [MainSchetQueryKeys.getById, main_schet_id],
     queryFn: MainSchetService.getById
   })
-  const { data: prixod, isFetching } = useQuery({
-    queryKey: [KassaPrixodQueryKeys.getById, selectedId!],
-    queryFn: KassaPrixodService.getById,
+  const { data: rasxod, isFetching } = useQuery({
+    queryKey: [KassaRasxodQueryKeys.getById, selectedId!],
+    queryFn: KassaRasxodService.getById,
     enabled: !!selectedId
   })
 
-  const data = prixod?.data
+  const data = rasxod?.data
 
   return (
     <DialogTrigger
@@ -86,7 +86,7 @@ export const KassaPrixodViewDialog = ({ selectedId, onClose }: KassaPrixodViewDi
           {isFetching || isFetchingMainSchet ? <LoadingOverlay /> : null}
           <div className="h-full flex flex-col overflow-hidden">
             <DialogHeader className="pb-5">
-              <DialogTitle>{t('pages.kassa_prixod')}</DialogTitle>
+              <DialogTitle>{t('pages.kassa_rasxod')}</DialogTitle>
             </DialogHeader>
             {data ? (
               <div className="flex-1 divide-y overflow-y-auto scrollbar">
@@ -159,23 +159,21 @@ export const KassaPrixodViewDialog = ({ selectedId, onClose }: KassaPrixodViewDi
             <DialogFooter>
               {main_schet?.data && data ? (
                 <GenerateFile
-                  fileName={`${t('kassa_prixod_order', { ns: 'report' })}-${data.doc_num}.pdf`}
-                  buttonText={t('kassa_prixod_order', { ns: 'report' })}
+                  fileName={`${t('kassa_rasxod_order', { ns: 'report' })}-${data.doc_date}.pdf`}
+                  buttonText={t('kassa_rasxod_order', { ns: 'report' })}
                 >
-                  <KassaPrixodOrderTemplate
+                  <KassaRasxodOrderTemplate
                     doc_date={data.doc_date}
                     doc_num={data.doc_num}
-                    fio={data.spravochnik_podotchet_litso_name ?? ''}
-                    summa={formatNumber(Number(data.summa))}
-                    summaWords={numberToWords(Number(data.summa), i18n.language)}
-                    workplace=""
-                    opisanie={data.opisanie ?? ''}
+                    fio={data.spravochnik_podotchet_litso_name}
+                    summa={formatNumber(data.summa ?? 0)}
+                    summaWords={numberToWords(data.summa ?? 0, i18n.language)}
                     podvodkaList={data.childs.map(({ summa, operatsii }) => {
                       return {
                         operatsii: operatsii?.name,
                         summa: formatNumber(summa),
-                        debet_schet: main_schet.data.jur1_schet ?? '',
-                        credit_schet: operatsii?.schet ?? ''
+                        debet_schet: operatsii?.schet,
+                        credit_schet: main_schet?.data?.jur1_schet ?? ''
                       }
                     })}
                   />

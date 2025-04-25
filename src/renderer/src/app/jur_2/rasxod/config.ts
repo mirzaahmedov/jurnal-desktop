@@ -1,6 +1,6 @@
 import type { BankRasxodFormValues } from './service'
 
-export const queryKeys = {
+export const BankRasxodQueryKeys = {
   getAll: 'bank-rasxod/all',
   getById: 'bank-rasxod',
   update: 'bank-rasxod/update',

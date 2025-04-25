@@ -2,22 +2,32 @@ import type { EditableTableMethods } from '@/common/components/editable-table'
 
 import { type KeyboardEvent, useRef } from 'react'
 
-import { useForm } from 'react-hook-form'
+import { useForm, useWatch } from 'react-hook-form'
 
-import { type EditableColumnDef, EditableTableAlt } from '@/common/components/editable-table-alt'
+import {
+  type EditableColumnDef,
+  EditableTableAlt,
+  type EditableTableFooterProps,
+  EditableTableRowRenderer
+} from '@/common/components/editable-table-alt'
 import { createTextEditor } from '@/common/components/editable-table-alt/editors'
 import { SearchInput } from '@/common/components/search-input'
 
-const columns: EditableColumnDef<{ name: string }>[] = [
+type FormValues = {
+  childs: Array<{
+    name: number
+  }>
+}
+
+const columns: EditableColumnDef<FormValues, 'childs'>[] = [
   {
     key: 'name',
-    Editor: createTextEditor({
-      key: 'name'
-    })
+    width: '100%',
+    Editor: createTextEditor({})
   }
 ]
 const childs = Array.from({ length: 2000 }, (_, i) => ({
-  name: `name ${i + 1}`
+  name: i + 1
 }))
 
 const DemoPage = () => {
@@ -38,7 +48,7 @@ const DemoPage = () => {
       if (value.length > 0) {
         const rows = form.getValues('childs')
         const index = rows.findIndex((row) =>
-          row.name?.toLowerCase()?.includes(value?.toLowerCase())
+          row.name.toString()?.toLowerCase()?.includes(value?.toLowerCase())
         )
         tableMethods.current?.scrollToRow(index)
       }
@@ -56,9 +66,42 @@ const DemoPage = () => {
           form={form}
           name="childs"
           methods={tableMethods}
+          footer={DemoTableFooter}
         />
       </div>
     </div>
+  )
+}
+
+const DemoTableFooter = ({ form, dataColumns }: EditableTableFooterProps<FormValues, 'childs'>) => {
+  const rows = useWatch({
+    control: form.control,
+    name: 'childs'
+  })
+
+  const total = rows.reduce((acc, row) => {
+    if (row.name) {
+      acc += row.name
+    }
+    return acc
+  }, 0)
+
+  const row = {
+    id: String(rows.length),
+    name: String(total)
+  }
+
+  return (
+    <EditableTableRowRenderer
+      index={rows.length}
+      type="footer"
+      highlightedRow={{ current: null }}
+      columnDefs={columns}
+      row={row}
+      rows={[...rows, row]}
+      dataColumns={dataColumns}
+      className="[&_input]:font-bold"
+    />
   )
 }
 

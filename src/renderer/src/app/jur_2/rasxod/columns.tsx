@@ -12,7 +12,7 @@ import { SummaCell } from '@/common/components/table/renderers/summa'
 import { Switch } from '@/common/components/ui/switch'
 import { formatLocaleDate } from '@/common/lib/format'
 
-import { queryKeys } from './config'
+import { BankRasxodQueryKeys } from './config'
 import { BankRasxodPaymentService } from './service'
 
 export const BankRasxodColumns: ColumnDef<BankRasxod>[] = [
@@ -139,7 +139,7 @@ const StatusCell = ({ row }: { row: BankRasxod }) => {
     mutationFn: BankRasxodPaymentService.update,
     onSuccess() {
       queryClient.invalidateQueries({
-        queryKey: [queryKeys.getAll]
+        queryKey: [BankRasxodQueryKeys.getAll]
       })
     }
   })

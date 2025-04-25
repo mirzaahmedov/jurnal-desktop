@@ -5,17 +5,17 @@ import { useEffect } from 'react'
 import { createSmetaSpravochnik } from '@/app/super-admin/smeta'
 import { SpravochnikInput, useSpravochnik } from '@/common/features/spravochnik'
 
-export const createSmetaEditor = <T extends { smeta_id?: number }>(): EditorComponent<T> => {
-  const Editor: EditorComponent<T> = ({
+export const createSmetaEditor = <T extends object>(): EditorComponent<T, any> => {
+  const Editor: EditorComponent<T, any> = ({
     tabIndex,
-    id,
+    column,
+    index: id,
     row,
-    errors,
+    error,
     value,
     onChange,
     setState,
-    validate,
-    ...props
+    validate
   }) => {
     const smetaSpravochnik = useSpravochnik(
       createSmetaSpravochnik({
@@ -23,7 +23,11 @@ export const createSmetaEditor = <T extends { smeta_id?: number }>(): EditorComp
         onChange: (value) => {
           if (
             validate &&
-            !validate({ id, key: 'smeta_id', payload: { ...row, smeta_id: value } })
+            !validate({
+              id,
+              key: column.key as keyof T,
+              values: { ...row, [column.key as keyof T]: value } as T
+            })
           ) {
             smetaSpravochnik.clear()
             return
@@ -45,10 +49,9 @@ export const createSmetaEditor = <T extends { smeta_id?: number }>(): EditorComp
         editor
         readOnly
         tabIndex={tabIndex}
-        error={!!errors?.smeta_id}
+        error={!!error}
         name="smeta_id"
         getInputValue={(selected) => (selected ? `${selected.smeta_number}` : '-')}
-        {...props}
       />
     )
   }

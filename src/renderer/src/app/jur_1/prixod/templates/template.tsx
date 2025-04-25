@@ -20,7 +20,7 @@ type KassaPrixodOrderTemplateProps = {
   summaWords: string
   podvodkaList: PodvodkaType[]
 }
-const KassaPrixodOrderTemplate = ({
+export const KassaPrixodOrderTemplate = ({
   doc_num,
   doc_date,
   fio,
@@ -76,5 +76,3 @@ const styles = StyleSheet.create({
     letterSpacing: 0.3
   }
 })
-
-export { KassaPrixodOrderTemplate }

@@ -1,11 +1,18 @@
-import type { EditableTableProps } from './interface'
+import type { EditableColumnDef, EditableTableProps } from './interface'
 import type { ArrayPath, FieldArrayWithId, Path } from 'react-hook-form'
 
-import { type HTMLAttributes, useImperativeHandle, useMemo, useRef, useState } from 'react'
+import {
+  type HTMLAttributes,
+  type MutableRefObject,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState
+} from 'react'
 
 import { useVirtualizer } from '@tanstack/react-virtual'
 import { CircleMinus, CirclePlus } from 'lucide-react'
-import { Controller, type FieldErrors, useFieldArray } from 'react-hook-form'
+import { Controller, useFieldArray } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
 import { Button } from '@/common/components/ui/button'
@@ -15,7 +22,7 @@ import { cn } from '@/common/lib/utils'
 import { EmptyList } from '../empty-states'
 import { getHeaderGroups } from '../generic-table/utils'
 import { EditableTableCell, EditableTableHead, EditableTableRow } from './components'
-import { getAccessorColumns } from './utils'
+import { getDataColumns } from './utils'
 
 export const EditableTableAlt = <T extends object, F extends ArrayPath<NoInfer<T>>>(
   props: EditableTableProps<T, F>
@@ -28,7 +35,6 @@ export const EditableTableAlt = <T extends object, F extends ArrayPath<NoInfer<T
     columnDefs,
     className,
     divProps,
-    errors,
     placeholder,
     onCreate,
     onDelete,
@@ -40,12 +46,11 @@ export const EditableTableAlt = <T extends object, F extends ArrayPath<NoInfer<T
     methods
   } = props
 
+  const highlightedRow = useRef<number | null>(null)
   const innerRef = useRef<HTMLTableElement>(null)
   const ref = tableRef || innerRef
 
   const { t } = useTranslation()
-
-  const [highlightedRow, setHighlightedRow] = useState<number | null>(null)
 
   const { fields: rows } = useFieldArray({
     control: form.control,
@@ -67,7 +72,7 @@ export const EditableTableAlt = <T extends object, F extends ArrayPath<NoInfer<T
           align: 'center',
           behavior: 'smooth'
         })
-        setHighlightedRow(rowIndex)
+        highlightedRow.current = rowIndex
       }
     }),
     [rowVirtualizer]
@@ -75,6 +80,9 @@ export const EditableTableAlt = <T extends object, F extends ArrayPath<NoInfer<T
 
   const headerGroups = useMemo(() => {
     return getHeaderGroups(columnDefs)
+  }, [columnDefs])
+  const dataColumns = useMemo(() => {
+    return getDataColumns(columnDefs)
   }, [columnDefs])
 
   return (
@@ -100,7 +108,10 @@ export const EditableTableAlt = <T extends object, F extends ArrayPath<NoInfer<T
                   {index === 0 ? (
                     <EditableTableHead
                       key="line_number"
-                      className="px-3 whitespace-nowrap w-0 min-w-11"
+                      className="px-3 whitespace-nowrap text-sm font-medium"
+                      style={{
+                        width: `${String(rows.length).length + 3}ch`
+                      }}
                       rowSpan={headerGroups.length}
                     ></EditableTableHead>
                   ) : null}
@@ -160,14 +171,13 @@ export const EditableTableAlt = <T extends object, F extends ArrayPath<NoInfer<T
                       key={virtualRow.index}
                       index={virtualRow.index}
                       highlightedRow={highlightedRow}
-                      setHighlightedRow={setHighlightedRow}
                       tabIndex={tabIndex}
                       row={row as any}
                       rows={rows as any}
                       name={name}
                       form={form}
                       columnDefs={columnDefs}
-                      errors={errors}
+                      dataColumns={dataColumns}
                       onDelete={onDelete}
                       onCellDoubleClick={onCellDoubleClick}
                       params={params}
@@ -203,30 +213,35 @@ export const EditableTableAlt = <T extends object, F extends ArrayPath<NoInfer<T
       </div>
 
       <Table className={cn('border border-slate-200 table-fixed', className)}>
-        {typeof onCreate === 'function' && (
+        {onCreate || props.footer ? (
           <TableFooter>
-            {props.renderFooterRows?.(props)}
-            <EditableTableRow focusable={false}>
-              <EditableTableCell colSpan={100}>
-                <Button
-                  tabIndex={tabIndex}
-                  type="button"
-                  variant="ghost"
-                  className="w-full hover:bg-slate-50 text-brand hover:text-brand"
-                  onClick={onCreate}
-                >
-                  <CirclePlus className="btn-icon icon-start" /> {t('add')}
-                </Button>
-              </EditableTableCell>
-            </EditableTableRow>
+            {props.footer?.({
+              ...props,
+              dataColumns
+            })}
+            {onCreate ? (
+              <EditableTableRow focusable={false}>
+                <EditableTableCell colSpan={100}>
+                  <Button
+                    tabIndex={tabIndex}
+                    type="button"
+                    variant="ghost"
+                    className="w-full hover:bg-slate-50 text-brand hover:text-brand"
+                    onClick={onCreate}
+                  >
+                    <CirclePlus className="btn-icon icon-start" /> {t('add')}
+                  </Button>
+                </EditableTableCell>
+              </EditableTableRow>
+            ) : null}
           </TableFooter>
-        )}
+        ) : null}
       </Table>
     </div>
   )
 }
 
-interface EditableTableRowRendererProps<T extends object, F extends ArrayPath<NoInfer<T>>>
+export interface EditableRowProps<T extends object, F extends ArrayPath<NoInfer<T>>>
   extends Pick<
       EditableTableProps<T, F>,
       | 'validate'
@@ -235,30 +250,30 @@ interface EditableTableRowRendererProps<T extends object, F extends ArrayPath<No
       | 'params'
       | 'onDelete'
       | 'onCellDoubleClick'
-      | 'errors'
       | 'columnDefs'
       | 'getEditorProps'
       | 'getRowClassName'
     >,
     HTMLAttributes<HTMLTableRowElement> {
+  type?: 'footer'
+  dataColumns: EditableColumnDef<T, F>[]
   tabIndex?: number
   index: number
-  highlightedRow?: number | null
-  setHighlightedRow?: (row: number | null) => void
+  highlightedRow: MutableRefObject<number | null>
   row: FieldArrayWithId<T, F, 'id'>
   rows: FieldArrayWithId<T, F, 'id'>[]
 }
-export const EditableTableRowRenderer = <T extends object, R extends T[ArrayPath<NoInfer<T>>]>({
+export const EditableTableRowRenderer = <T extends object, F extends ArrayPath<NoInfer<T>>>({
   tabIndex,
+  type,
   index,
   highlightedRow,
-  setHighlightedRow,
   columnDefs,
+  dataColumns,
   row,
   rows,
   name,
   form,
-  errors,
   onDelete,
   onCellDoubleClick,
   params,
@@ -266,16 +281,14 @@ export const EditableTableRowRenderer = <T extends object, R extends T[ArrayPath
   getEditorProps,
   getRowClassName,
   ...props
-}: EditableTableRowRendererProps<T, R>) => {
+}: EditableRowProps<T, F>) => {
   const [state, setState] = useState<Record<string, unknown>>({})
-
-  const accessorColumns = useMemo(() => getAccessorColumns(columnDefs), [columnDefs])
 
   return (
     <EditableTableRow
       rowRef={(element) => {
-        if (index === highlightedRow) {
-          setHighlightedRow?.(null)
+        if (index === highlightedRow?.current) {
+          highlightedRow.current = null
           const input = element?.querySelector(
             `[data-rowindex="${index}"] input`
           ) as HTMLInputElement
@@ -290,18 +303,63 @@ export const EditableTableRowRenderer = <T extends object, R extends T[ArrayPath
       <EditableTableCell
         key="line_number"
         className="px-3 font-medium"
+        style={{
+          width: `${String(rows.length).length + 3}ch`
+        }}
       >
         {index + 1}
       </EditableTableCell>
       {Array.isArray(columnDefs)
-        ? accessorColumns.map((column) => {
+        ? dataColumns.map((column) => {
             const { key, Editor, width, minWidth, maxWidth, className } = column
-            return (
+            return type === 'footer' ? (
+              <EditableTableCell
+                style={{ width, minWidth, maxWidth }}
+                className={className}
+                onDoubleClick={(event) => {
+                  onCellDoubleClick?.({
+                    column,
+                    row,
+                    rows,
+                    value: row[key as any],
+                    onChange: undefined,
+                    event,
+                    index
+                  })
+                }}
+              >
+                <Editor
+                  tabIndex={tabIndex}
+                  inputRef={null as any}
+                  index={index}
+                  row={row}
+                  rows={rows}
+                  column={column}
+                  form={form}
+                  value={row[key as any]}
+                  onChange={undefined}
+                  error={undefined}
+                  state={state}
+                  setState={setState}
+                  params={params!}
+                  validate={validate}
+                  data-editorId={`${index}-${String(key)}`}
+                  {...getEditorProps?.({
+                    index,
+                    row,
+                    rows,
+                    value: row[key as any],
+                    onChange: undefined,
+                    column
+                  })}
+                />
+              </EditableTableCell>
+            ) : (
               <Controller
                 key={String(key)}
                 control={form.control}
                 name={`${name}.${index}.${String(key)}` as Path<T>}
-                render={({ field }) => {
+                render={({ field, fieldState }) => {
                   return (
                     <EditableTableCell
                       style={{ width, minWidth, maxWidth }}
@@ -321,14 +379,14 @@ export const EditableTableRowRenderer = <T extends object, R extends T[ArrayPath
                       <Editor
                         tabIndex={tabIndex}
                         inputRef={field.ref}
-                        id={index}
+                        index={index}
                         row={row}
                         rows={rows}
-                        col={column}
+                        column={column}
                         form={form}
                         value={field.value}
                         onChange={field.onChange}
-                        errors={errors?.[index] as FieldErrors<R>}
+                        error={fieldState.error}
                         state={state}
                         setState={setState}
                         params={params!}
@@ -340,8 +398,7 @@ export const EditableTableRowRenderer = <T extends object, R extends T[ArrayPath
                           rows,
                           value: field.value,
                           onChange: field.onChange,
-                          col: column,
-                          errors: errors?.[index] as FieldErrors<R>
+                          column
                         })}
                       />
                     </EditableTableCell>

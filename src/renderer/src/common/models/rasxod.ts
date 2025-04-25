@@ -1,7 +1,13 @@
-import type { Group } from './group'
-import type { Naimenovanie } from './naimenovanie'
+import type { Operatsii } from './operatsii'
+import type { Organization } from './organization'
+import type { Podotchet } from './podotchet'
+import type { Podrazdelenie } from './podrazdelenie'
+import type { Shartnoma } from './shartnoma'
+import type { ShartnomaGrafik } from './shartnoma-grafik'
+import type { Sostav } from './sostav'
+import type { TypeOperatsii } from './type-operatsii'
 
-export type BankRasxod = {
+export interface BankRasxod {
   id: number
   doc_num: string
   doc_date: string
@@ -20,6 +26,11 @@ export type BankRasxod = {
   rukovoditel: string | null
   tulanmagan_summa: number
   tulangan_tulanmagan: boolean
+  organ: Organization
+  account_number: Organization.RaschetSchet
+  gazna_number: Organization.RaschetSchetGazna
+  contract: Shartnoma
+  contract_grafik: ShartnomaGrafik
   provodki_array: [
     {
       provodki_schet: string
@@ -29,7 +40,7 @@ export type BankRasxod = {
   childs: BankRasxodProvodka[]
 }
 
-export type BankRasxodProvodka = {
+export interface BankRasxodProvodka {
   id: number
   spravochnik_operatsii_id: number
   spravochnik_operatsii_name: string
@@ -43,6 +54,11 @@ export type BankRasxodProvodka = {
   spravochnik_type_operatsii_name: string
   own_schet: string
   own_subschet: string
+  operatsii: Operatsii
+  podrazdelenie: Podrazdelenie
+  type_operatsii: TypeOperatsii
+  sostav: Sostav
+  podotchet: Podotchet
 }
 
 export interface KassaRasxod {
@@ -67,25 +83,11 @@ export interface KassaRasxod {
   spravochnik_podotchet_litso_name: any
   spravochnik_podotchet_litso_rayon: any
   zarplata_fio: any
-  childs: Array<{
-    id: number
-    user_id: number
-    spravochnik_operatsii_id: number
-    summa: number
-    id_spravochnik_podrazdelenie: any
-    id_spravochnik_sostav: any
-    id_spravochnik_type_operatsii: any
-    kassa_prixod_id: number
-    main_schet_id: number
-    created_at: string
-    updated_at: string
-    isdeleted: boolean
-    schet: string
-  }>
+  childs: KassaRasxodProvodka[]
   podotchet: any
 }
 
-export type KassaRasxodProvodkaType = {
+export interface KassaRasxodProvodka {
   id: number
   spravochnik_operatsii_id: number
   summa: number
@@ -93,42 +95,8 @@ export type KassaRasxodProvodkaType = {
   id_spravochnik_sostav: number
   id_spravochnik_type_operatsii: number
   spravochnik_operatsii_own_id: number
-}
-
-export interface Jur7RasxodChild {
-  id: number
-  user_id: number
-  document_rasxod_jur7_id: number
-  naimenovanie_tovarov_jur7_id: number
-  kol: number
-  sena: number
-  nds_foiz: any
-  nds_summa: any
-  summa_s_nds: any
-  summa: number
-  debet_schet: string
-  debet_sub_schet: string
-  kredit_schet: string
-  kredit_sub_schet: string
-  data_pereotsenka: string
-  main_schet_id: number
-  created_at: string
-  updated_at: string
-  isdeleted: boolean
-  iznos_schet: string
-  iznos_sub_schet: string
-  iznos_summa: number
-  iznos: boolean
-  product: Naimenovanie
-  group: Group
-}
-export interface Jur7Rasxod {
-  id: number
-  doc_num: string
-  doc_date: string
-  opisanie?: string
-  summa: number
-  kimdan_name: string
-  kimga_name: string
-  childs: Jur7RasxodChild[]
+  operatsii: Operatsii
+  podrazdelenie: Podrazdelenie | null
+  sostav: Sostav | null
+  type_operatsii: TypeOperatsii | null
 }

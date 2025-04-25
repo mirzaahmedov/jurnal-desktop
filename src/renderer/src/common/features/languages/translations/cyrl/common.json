@@ -63,8 +63,7 @@
   "balance": "Баланс",
   "tax": "Солиқ",
   "porucheniya": "Поручения",
-  "create-porucheniya": "Поручения яратиш",
-  "create-porucheniya-tax": "Поручения яратиш (солиқ)",
+  "porucheniya_tax": "Поручения (солиқ)",
   "debet": "Дебет",
   "kredit": "Кредит",
   "no-display-data": "Кўрсатиш учун ма'лумотлар ёқ",
@@ -345,5 +344,6 @@
   "delete_for_current_month": "Жорий ой учун ма'лумотларни ўчириш",
   "access_rights_for": "\"{{role}}\" учун кириш ҳуқуқлари",
   "akt_sverki": "Келишув акти",
-  "optional": "Ихтиёрий"
+  "optional": "Ихтиёрий",
+  "error_generating_file": "Файл яратишда хатолик юз берди"
 }

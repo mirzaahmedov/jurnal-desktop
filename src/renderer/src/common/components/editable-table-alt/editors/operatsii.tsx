@@ -15,22 +15,16 @@ import { AutoComplete } from '@/common/components/auto-complete'
 import { SpravochnikInput, useSpravochnik } from '@/common/features/spravochnik'
 import { useDebounceValue } from '@/common/hooks'
 
-type Filter<T extends object> = { [K in keyof T]: T[K] extends number ? K : never }
-
 export const withEditorProps = <Options extends object>(
-  editorConstructor: <T extends object, Field extends keyof Filter<T> & string>(
-    options: Options & { field: Field }
-  ) => EditorComponent<T>
+  editorConstructor: <T extends object>(options: Options) => EditorComponent<T, any>
 ) => {
   return editorConstructor
 }
 
 export const createOperatsiiEditor = withEditorProps<{
   type_schet?: TypeSchetOperatsii
-}>(({ field, type_schet }) => {
-  return ({ tabIndex, value, errors, onChange, params }) => {
-    const error = errors?.[field as keyof typeof errors]
-
+}>(({ type_schet }) => {
+  return ({ column, tabIndex, value, error, onChange, params }) => {
     const inputRef = useRef<HTMLInputElement>(null)
     const editorState = useRef<{
       clickedOutside: boolean
@@ -129,7 +123,7 @@ export const createOperatsiiEditor = withEditorProps<{
               type="text"
               tabIndex={tabIndex}
               error={!!error}
-              name={`${field}-schet`}
+              name={`${String(column.key)}-schet`}
               placeholder={t('schet')}
               onChange={(e) => {
                 operatsiiSpravochnik.clear()
@@ -196,7 +190,7 @@ export const createOperatsiiEditor = withEditorProps<{
               tabIndex={tabIndex}
               error={!!error}
               data-error={false}
-              name={`${field}-subschet`}
+              name={`${String(column.key)}-subschet`}
               placeholder={t('subschet')}
               onChange={(e) => {
                 setSubschet(e.target.value)

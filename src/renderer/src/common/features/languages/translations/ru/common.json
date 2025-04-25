@@ -63,8 +63,7 @@
   "balance": "Баланс",
   "tax": "Налог",
   "porucheniya": "Поручения",
-  "create-porucheniya": "Создать поручения",
-  "create-porucheniya-tax": "Создать поручения (налог)",
+  "porucheniya_tax": "Поручения (налог)",
   "debet": "Дебет",
   "kredit": "Кредит",
   "no-display-data": "Нет данных для отображения",
@@ -346,5 +345,6 @@
   "delete_for_current_month": "Удалить данные за текущий месяц",
   "access_rights_for": "Права доступа для \"{{role}}\"",
   "akt_sverki": "Акт сверки",
-  "optional": "Необязательный"
+  "optional": "Необязательный",
+  "error_generating_file": "Ошибка при генерации файла"
 }

@@ -34,7 +34,7 @@ import { ListView } from '@/common/views'
 
 import { useKassaSaldo } from '../saldo/components/use-saldo'
 import { columns } from './columns'
-import { PrixodQueryKeys } from './config'
+import { KassaPrixodQueryKeys } from './config'
 import { KassaPrixodService } from './service'
 import { KassaPrixodViewDialog } from './view-dialog'
 
@@ -63,7 +63,7 @@ const KassaPrixodPage = () => {
     error
   } = useQuery({
     queryKey: [
-      PrixodQueryKeys.getAll,
+      KassaPrixodQueryKeys.getAll,
       {
         main_schet_id,
         search,
@@ -76,7 +76,7 @@ const KassaPrixodPage = () => {
     enabled: !queuedMonths.length
   })
   const { mutate: deletePrixod, isPending } = useMutation({
-    mutationKey: [PrixodQueryKeys.delete],
+    mutationKey: [KassaPrixodQueryKeys.delete],
     mutationFn: KassaPrixodService.delete,
     onSuccess(res) {
       toast.success(res?.message)
@@ -85,7 +85,7 @@ const KassaPrixodPage = () => {
 
       requestIdleCallback(() => {
         queryClient.invalidateQueries({
-          queryKey: [PrixodQueryKeys.getAll]
+          queryKey: [KassaPrixodQueryKeys.getAll]
         })
       })
     },

@@ -1,5 +1,9 @@
 import type { Operatsii } from './operatsii'
+import type { Organization } from './organization'
+import type { Podotchet } from './podotchet'
 import type { Podrazdelenie } from './podrazdelenie'
+import type { Shartnoma } from './shartnoma'
+import type { ShartnomaGrafik } from './shartnoma-grafik'
 import type { Sostav } from './sostav'
 import type { TypeOperatsii } from './type-operatsii'
 
@@ -8,75 +12,85 @@ export interface BankPrixod {
   doc_num: string
   doc_date: string
   summa: number
-  opisanie: string
+  provodki_boolean: any
+  dop_provodki_boolean: any
+  opisanie: any
   id_spravochnik_organization: number
   id_shartnomalar_organization: number
-  spravochnik_operatsii_own_id: number
-  main_schet_id: number
-  spravochnik_organization_name?: string
-  spravochnik_organization_okonx?: string
-  spravochnik_organization_bank_klient?: string
-  spravochnik_organization_raschet_schet?: string
-  spravochnik_organization_raschet_schet_gazna?: string
-  spravochnik_organization_mfo?: string
-  spravochnik_organization_inn: string
-  provodki_array: [
-    {
-      provodki_schet: string
-      provodki_sub_schet: string
-    }
-  ]
-  childs?: BankPrixodPodvodka[]
+  organization_by_raschet_schet_id: number
+  organization_by_raschet_schet_gazna_id: any
+  shartnoma_grafik_id: number
+  organ: Organization
+  account_number: Organization.RaschetSchet
+  gazna_number: Organization.RaschetSchetGazna
+  contract: Shartnoma
+  contract_grafik: ShartnomaGrafik
+  childs: BankPrixodPodvodka[]
 }
 
 export interface BankPrixodPodvodka {
   id: number
-  user_id: number
   spravochnik_operatsii_id: number
+  spravochnik_operatsii_name: string
   summa: number
+  schet: string
+  id_spravochnik_podrazdelenie: any
+  spravochnik_podrazdelenie_name: any
+  id_spravochnik_sostav: number
+  spravochnik_sostav_name: string
+  id_spravochnik_type_operatsii: number
+  spravochnik_type_operatsii_name: string
+  id_spravochnik_podotchet_litso: number
+  spravochnik_podotchet_litso_name: string
+  main_zarplata_id: any
+  operatsii: Operatsii
+  podrazdelenie: Podrazdelenie
+  type_operatsii: TypeOperatsii
+  sostav: Sostav
+  podotchet: Podotchet
 }
 
 export interface KassaPrixodProvodka {
   id: number
   user_id: number
   spravochnik_operatsii_id: number
-  operatsii: Operatsii
   summa: number
   id_spravochnik_podrazdelenie: number | null
-  podrazdelenie: Podrazdelenie | null
   id_spravochnik_sostav: number | null
-  sostav: Sostav | null
   id_spravochnik_type_operatsii: number | null
-  type_operatsii: TypeOperatsii | null
   kassa_prixod_id: number
   main_schet_id: number
   created_at: string
   updated_at: string
   isdeleted: boolean
   schet: string
+  operatsii: Operatsii
+  podrazdelenie: Podrazdelenie | null
+  sostav: Sostav | null
+  type_operatsii: TypeOperatsii | null
 }
 export interface KassaPrixod {
   id: number
   doc_num: string
   doc_date: string
-  opisanie: any
+  opisanie: string | null
   summa: string
-  id_podotchet_litso: any
+  id_podotchet_litso: number | null
   user_id: number
   main_schet_id: number
   created_at: string
   updated_at: string
   isdeleted: boolean
-  main_zarplata_id: any
+  main_zarplata_id: number | null
   organ_id: number
   contract_id: number
-  contract_grafik_id: any
+  contract_grafik_id: number | null
   organ_account_id: number
   organ_gazna_id: number
   type: string
   spravochnik_podotchet_litso_name: string | null
   spravochnik_podotchet_litso_rayon: string | null
-  zarplata_fio: any
+  zarplata_fio: string | null
   childs: KassaPrixodProvodka[]
   podotchet: any
 }

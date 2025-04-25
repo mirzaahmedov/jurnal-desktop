@@ -3,10 +3,8 @@ import type { EditorComponent } from './interfaces'
 import { createTypeOperatsiiSpravochnik } from '@/app/region-spravochnik/type-operatsii'
 import { SpravochnikInput, useSpravochnik } from '@/common/features/spravochnik'
 
-export const createTypeOperatsiiEditor = <
-  T extends { id_spravochnik_type_operatsii?: number }
->(): EditorComponent<T> => {
-  return ({ tabIndex, value, errors, onChange }) => {
+export const createTypeOperatsiiEditor = <T extends object>(): EditorComponent<T, any> => {
+  return ({ column, tabIndex, value, error, onChange }) => {
     const typeOperatsiiSpravochnik = useSpravochnik(
       createTypeOperatsiiSpravochnik({
         value: value as number | undefined,
@@ -19,8 +17,8 @@ export const createTypeOperatsiiEditor = <
         editor
         readOnly
         tabIndex={tabIndex}
-        error={!!errors?.id_spravochnik_type_operatsii}
-        name="id_spravochnik_type_operatsii"
+        error={!!error}
+        name={String(column.key)}
         getInputValue={(selected) => selected?.name ?? ''}
       />
     )

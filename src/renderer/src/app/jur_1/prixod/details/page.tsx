@@ -1,5 +1,4 @@
-import type { PrixodProvodkaFormValues } from '../config'
-import type { Operatsii } from '@/common/models'
+import type { KassaPrixodProvodkaFormValues } from '../config'
 
 import { useEffect } from 'react'
 
@@ -11,7 +10,6 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
 import { createShartnomaSpravochnik } from '@/app/jur_3/shartnoma'
-import { MainSchetQueryKeys, MainSchetService } from '@/app/region-spravochnik/main-schet'
 import { createOrganizationSpravochnik } from '@/app/region-spravochnik/organization'
 import { createPodotchetSpravochnik } from '@/app/region-spravochnik/podotchet'
 import { Fieldset } from '@/common/components'
@@ -20,13 +18,10 @@ import {
   createEditorCreateHandler,
   createEditorDeleteHandler
 } from '@/common/components/editable-table/helpers'
-import { ButtonGroup } from '@/common/components/ui/button-group'
 import { Form, FormField } from '@/common/components/ui/form'
 import { Label } from '@/common/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/common/components/ui/radio-group'
-import { ApiEndpoints } from '@/common/features/crud'
 import { DocumentType } from '@/common/features/doc-num'
-import { GenerateFile } from '@/common/features/file'
 import { createMainZarplataSpravochnik } from '@/common/features/main-zarplata/service'
 import { useRequisitesStore } from '@/common/features/requisites'
 import {
@@ -42,9 +37,6 @@ import { useSnippets } from '@/common/features/snippents/use-snippets'
 import { useSpravochnik } from '@/common/features/spravochnik'
 import { useLayout } from '@/common/layout'
 import { formatDate } from '@/common/lib/date'
-import { formatNumber } from '@/common/lib/format'
-import { getDataFromCache } from '@/common/lib/query-client'
-import { numberToWords } from '@/common/lib/utils'
 import { normalizeEmptyFields } from '@/common/lib/validation'
 import { DetailsView } from '@/common/views'
 import {
@@ -59,14 +51,13 @@ import { MainZarplataFields } from '@/common/widget/form/main-zarplata'
 
 import { useKassaSaldo } from '../../saldo/components/use-saldo'
 import {
-  PrixodFormSchema,
-  PrixodPodvodkaFormSchema,
-  PrixodQueryKeys,
+  KassaPrixodFormSchema,
+  KassaPrixodPodvodkaFormSchema,
+  KassaPrixodQueryKeys,
   PrixodType,
   defaultValues
 } from '../config'
 import { KassaPrixodService } from '../service'
-import { KassaPrixodOrderTemplate } from '../templates'
 import { podvodkaColumns } from './podvodki'
 
 const KassaPrixodDetailsPage = () => {
@@ -77,14 +68,14 @@ const KassaPrixodDetailsPage = () => {
   const startDate = useSelectedMonthStore((store) => store.startDate)
 
   const { id } = useParams()
-  const { t, i18n } = useTranslation(['app'])
+  const { t } = useTranslation(['app'])
   const { queuedMonths } = useKassaSaldo()
   const { snippets, addSnippet, removeSnippet } = useSnippets({
     ns: 'kassa_prixod'
   })
 
   const form = useForm({
-    resolver: zodResolver(PrixodFormSchema),
+    resolver: zodResolver(KassaPrixodFormSchema),
     defaultValues: {
       ...defaultValues,
       doc_date: formatDate(startDate)
@@ -136,18 +127,13 @@ const KassaPrixodDetailsPage = () => {
     })
   )
 
-  const { data: main_schet } = useQuery({
-    queryKey: [MainSchetQueryKeys.getById, main_schet_id],
-    queryFn: MainSchetService.getById,
-    enabled: !!main_schet_id
-  })
   const {
     data: prixod,
     isFetching,
     error
   } = useQuery({
     queryKey: [
-      PrixodQueryKeys.getById,
+      KassaPrixodQueryKeys.getById,
       Number(id),
       {
         main_schet_id
@@ -163,10 +149,10 @@ const KassaPrixodDetailsPage = () => {
       toast.success(res.message)
 
       queryClient.invalidateQueries({
-        queryKey: [PrixodQueryKeys.getAll]
+        queryKey: [KassaPrixodQueryKeys.getAll]
       })
       queryClient.invalidateQueries({
-        queryKey: [PrixodQueryKeys.getById, id]
+        queryKey: [KassaPrixodQueryKeys.getById, id]
       })
 
       navigate(-1)
@@ -183,10 +169,10 @@ const KassaPrixodDetailsPage = () => {
       toast.success(res.message)
 
       queryClient.invalidateQueries({
-        queryKey: [PrixodQueryKeys.getAll]
+        queryKey: [KassaPrixodQueryKeys.getAll]
       })
       queryClient.invalidateQueries({
-        queryKey: [PrixodQueryKeys.getById, id]
+        queryKey: [KassaPrixodQueryKeys.getById, id]
       })
 
       navigate(-1)
@@ -225,7 +211,7 @@ const KassaPrixodDetailsPage = () => {
           organ_id: id_spravochnik_organization,
           organ_gazna_id: organization_by_raschet_schet_gazna_id,
           organ_account_id: organization_by_raschet_schet_id,
-          childs: podvodki.map(normalizeEmptyFields<PrixodProvodkaFormValues>)
+          childs: podvodki.map(normalizeEmptyFields<KassaPrixodProvodkaFormValues>)
         })
         return
       }
@@ -241,7 +227,7 @@ const KassaPrixodDetailsPage = () => {
         organ_id: id_spravochnik_organization,
         organ_gazna_id: organization_by_raschet_schet_gazna_id,
         organ_account_id: organization_by_raschet_schet_id,
-        childs: podvodki.map(normalizeEmptyFields<PrixodProvodkaFormValues>)
+        childs: podvodki.map(normalizeEmptyFields<KassaPrixodProvodkaFormValues>)
       })
     }
   )
@@ -295,13 +281,13 @@ const KassaPrixodDetailsPage = () => {
     form.reset({
       doc_num: prixod.data.doc_num,
       doc_date: prixod.data.doc_date,
-      opisanie: prixod.data.opisanie,
-      id_podotchet_litso: prixod.data.id_podotchet_litso,
+      opisanie: prixod.data.opisanie ?? '',
+      id_podotchet_litso: prixod.data.id_podotchet_litso ?? 0,
       id_shartnomalar_organization: prixod.data.contract_id,
       id_spravochnik_organization: prixod.data.organ_id,
       organization_by_raschet_schet_gazna_id: prixod.data.organ_gazna_id,
       organization_by_raschet_schet_id: prixod.data.organ_account_id,
-      main_zarplata_id: prixod.data.main_zarplata_id,
+      main_zarplata_id: prixod.data.main_zarplata_id ?? 0,
       childs: prixod.data.childs,
       type: prixod.data.main_zarplata_id
         ? PrixodType.Zarplata
@@ -421,42 +407,6 @@ const KassaPrixodDetailsPage = () => {
                 loading={isCreating || isUpdating}
                 tabIndex={5}
               />
-
-              {main_schet?.data && form.formState.isValid ? (
-                <ButtonGroup borderStyle="dashed">
-                  <GenerateFile
-                    tabIndex={6}
-                    fileName={`приходной-кассовый-ордер-${form.watch('doc_num')}.pdf`}
-                    buttonText="Создать приходной кассовый ордер"
-                  >
-                    <KassaPrixodOrderTemplate
-                      doc_date={form.watch('doc_date')}
-                      doc_num={form.watch('doc_num')}
-                      fio={podotchetSpravochnik.selected?.name ?? ''}
-                      summa={formatNumber(form.watch('summa') ?? 0)}
-                      summaWords={numberToWords(form.watch('summa') ?? 0, i18n.language)}
-                      workplace=""
-                      opisanie={form.watch('opisanie') ?? ''}
-                      podvodkaList={form
-                        .watch('childs')
-                        .map(({ summa, spravochnik_operatsii_id }) => {
-                          const result = getDataFromCache<Operatsii>(queryClient, [
-                            ApiEndpoints.operatsii,
-                            spravochnik_operatsii_id
-                          ])
-                          const operation = result?.data?.name ?? ''
-                          const schet = result?.data?.schet ?? ''
-                          return {
-                            operation,
-                            summa: formatNumber(summa),
-                            debet_schet: main_schet?.data?.jur1_schet ?? '',
-                            credit_schet: schet
-                          }
-                        })}
-                    />
-                  </GenerateFile>
-                </ButtonGroup>
-              ) : null}
             </DetailsView.Footer>
           </form>
         </Form>
@@ -472,7 +422,7 @@ const KassaPrixodDetailsPage = () => {
             errors={form.formState.errors.childs}
             onCreate={createEditorCreateHandler({
               form,
-              schema: PrixodPodvodkaFormSchema,
+              schema: KassaPrixodPodvodkaFormSchema,
               defaultValues: defaultValues.childs[0]
             })}
             onDelete={createEditorDeleteHandler({

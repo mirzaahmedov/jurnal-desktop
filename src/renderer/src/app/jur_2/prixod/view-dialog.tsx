@@ -1,4 +1,4 @@
-import type { KassaPrixodProvodka } from '@/common/models'
+import type { BankPrixodPodvodka } from '@/common/models'
 
 import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
@@ -7,7 +7,6 @@ import { MainSchetQueryKeys, MainSchetService } from '@/app/region-spravochnik/m
 import { type ColumnDef, Fieldset, GenericTable, LoadingOverlay } from '@/common/components'
 import {
   DialogContent,
-  DialogFooter,
   DialogHeader,
   DialogOverlay,
   DialogTitle,
@@ -15,16 +14,14 @@ import {
 } from '@/common/components/jolly/dialog'
 import { LabeledValue } from '@/common/components/labeled-value'
 import { Textarea } from '@/common/components/ui/textarea'
-import { GenerateFile } from '@/common/features/file'
 import { useRequisitesStore } from '@/common/features/requisites'
 import { formatNumber } from '@/common/lib/format'
 import { numberToWords } from '@/common/lib/utils'
 
-import { KassaPrixodQueryKeys } from './config'
-import { KassaPrixodService } from './service'
-import { KassaPrixodOrderTemplate } from './templates'
+import { BankPrixodQueryKeys } from './config'
+import { BankPrixodService } from './service'
 
-const provodkaColumns: ColumnDef<KassaPrixodProvodka>[] = [
+const provodkaColumns: ColumnDef<BankPrixodPodvodka>[] = [
   {
     key: 'schet',
     renderCell: (row) => row.operatsii?.schet
@@ -49,14 +46,18 @@ const provodkaColumns: ColumnDef<KassaPrixodProvodka>[] = [
   {
     key: 'podrazdelenie',
     renderCell: (row) => row.podrazdelenie?.name
+  },
+  {
+    key: 'podotchet',
+    renderCell: (row) => row.podotchet?.name
   }
 ]
 
-export interface KassaPrixodViewDialogProps {
+export interface BankPrixodViewDialogProps {
   selectedId: number | null
   onClose: VoidFunction
 }
-export const KassaPrixodViewDialog = ({ selectedId, onClose }: KassaPrixodViewDialogProps) => {
+export const BankPrixodViewDialog = ({ selectedId, onClose }: BankPrixodViewDialogProps) => {
   const { t, i18n } = useTranslation(['app', 'report'])
   const { main_schet_id } = useRequisitesStore()
 
@@ -65,8 +66,8 @@ export const KassaPrixodViewDialog = ({ selectedId, onClose }: KassaPrixodViewDi
     queryFn: MainSchetService.getById
   })
   const { data: prixod, isFetching } = useQuery({
-    queryKey: [KassaPrixodQueryKeys.getById, selectedId!],
-    queryFn: KassaPrixodService.getById,
+    queryKey: [BankPrixodQueryKeys.getById, selectedId!],
+    queryFn: BankPrixodService.getById,
     enabled: !!selectedId
   })
 
@@ -86,7 +87,7 @@ export const KassaPrixodViewDialog = ({ selectedId, onClose }: KassaPrixodViewDi
           {isFetching || isFetchingMainSchet ? <LoadingOverlay /> : null}
           <div className="h-full flex flex-col overflow-hidden">
             <DialogHeader className="pb-5">
-              <DialogTitle>{t('pages.kassa_prixod')}</DialogTitle>
+              <DialogTitle>{t('pages.bank_prixod')}</DialogTitle>
             </DialogHeader>
             {data ? (
               <div className="flex-1 divide-y overflow-y-auto scrollbar">
@@ -102,20 +103,70 @@ export const KassaPrixodViewDialog = ({ selectedId, onClose }: KassaPrixodViewDi
                     />
                   </div>
                 </Fieldset>
-                <div className="grid grid-cols-2">
-                  <Fieldset name={t('podotchet-litso')}>
-                    <div className="grid grid-cols-2 gap-5">
-                      <LabeledValue
-                        label={t('fio')}
-                        value={data.spravochnik_podotchet_litso_name}
-                      />
-                      <LabeledValue
-                        label={t('rayon')}
-                        value={data.spravochnik_podotchet_litso_rayon}
-                      />
-                    </div>
+                <div className="grid grid-cols-2 divide-x">
+                  <Fieldset name={t('receiver-info')}>
+                    {main_schet?.data ? (
+                      <>
+                        <LabeledValue
+                          label={t('receiver')}
+                          value={main_schet.data.tashkilot_nomi}
+                        />
+                        <LabeledValue
+                          label={t('bank')}
+                          value={main_schet.data.tashkilot_bank}
+                        />
+                        <LabeledValue
+                          label={t('mfo')}
+                          value={main_schet.data.tashkilot_mfo}
+                        />
+                        <LabeledValue
+                          label={t('inn')}
+                          value={main_schet.data.tashkilot_inn}
+                        />
+                        <LabeledValue
+                          label={t('raschet-schet')}
+                          value={main_schet.data.account_number ?? '-'}
+                        />
+                        <LabeledValue
+                          label={t('raschet-schet-gazna')}
+                          value={main_schet.data.gazna_number ?? '-'}
+                        />
+                      </>
+                    ) : null}
                   </Fieldset>
 
+                  <Fieldset name={t('payer-info')}>
+                    {main_schet?.data ? (
+                      <>
+                        <LabeledValue
+                          label={t('payer')}
+                          value={data.organ.name}
+                        />
+                        <LabeledValue
+                          label={t('bank')}
+                          value={data.organ.bank_klient}
+                        />
+                        <LabeledValue
+                          label={t('mfo')}
+                          value={data.organ.mfo}
+                        />
+                        <LabeledValue
+                          label={t('inn')}
+                          value={data.organ.inn}
+                        />
+                        <LabeledValue
+                          label={t('raschet-schet')}
+                          value={data.account_number?.raschet_schet ?? '-'}
+                        />
+                        <LabeledValue
+                          label={t('raschet-schet-gazna')}
+                          value={data.gazna_number?.raschet_schet_gazna ?? '-'}
+                        />
+                      </>
+                    ) : null}
+                  </Fieldset>
+                </div>
+                <div className="grid grid-cols-2 divide-x">
                   <Fieldset name={t('summa')}>
                     <div className="grid grid-cols-3 gap-5">
                       <LabeledValue
@@ -127,10 +178,28 @@ export const KassaPrixodViewDialog = ({ selectedId, onClose }: KassaPrixodViewDi
                         label={null}
                         value={
                           <Textarea
+                            readOnly
                             value={numberToWords(Number(data.summa), i18n.language)}
                             className="font-normal"
                           />
                         }
+                      />
+                    </div>
+                  </Fieldset>
+                  <Fieldset name={t('shartnoma')}>
+                    <div className="grid grid-cols-3 gap-5">
+                      <LabeledValue
+                        label={t('shartnoma-number')}
+                        value={data.contract?.doc_num ?? '-'}
+                      />
+                      <LabeledValue
+                        label={t('shartnoma-date')}
+                        value={data.contract?.doc_date ?? '-'}
+                      />
+                      <LabeledValue
+                        label={t('shartnoma-date')}
+                        value={data.contract_grafik?.smeta_number ?? '-'}
+                        className="col-span-2"
                       />
                     </div>
                   </Fieldset>
@@ -140,8 +209,7 @@ export const KassaPrixodViewDialog = ({ selectedId, onClose }: KassaPrixodViewDi
                     label={t('opisanie')}
                     value={
                       <Textarea
-                        readOnly
-                        value={data.opisanie ?? ''}
+                        value={data.opisanie ?? '-'}
                         className="font-normal"
                       />
                     }
@@ -156,32 +224,6 @@ export const KassaPrixodViewDialog = ({ selectedId, onClose }: KassaPrixodViewDi
                 </div>
               </div>
             ) : null}
-            <DialogFooter>
-              {main_schet?.data && data ? (
-                <GenerateFile
-                  fileName={`${t('kassa_prixod_order', { ns: 'report' })}-${data.doc_num}.pdf`}
-                  buttonText={t('kassa_prixod_order', { ns: 'report' })}
-                >
-                  <KassaPrixodOrderTemplate
-                    doc_date={data.doc_date}
-                    doc_num={data.doc_num}
-                    fio={data.spravochnik_podotchet_litso_name ?? ''}
-                    summa={formatNumber(Number(data.summa))}
-                    summaWords={numberToWords(Number(data.summa), i18n.language)}
-                    workplace=""
-                    opisanie={data.opisanie ?? ''}
-                    podvodkaList={data.childs.map(({ summa, operatsii }) => {
-                      return {
-                        operatsii: operatsii?.name,
-                        summa: formatNumber(summa),
-                        debet_schet: main_schet.data.jur1_schet ?? '',
-                        credit_schet: operatsii?.schet ?? ''
-                      }
-                    })}
-                  />
-                </GenerateFile>
-              ) : null}
-            </DialogFooter>
           </div>
         </DialogContent>
       </DialogOverlay>
