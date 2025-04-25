@@ -20,7 +20,7 @@ import { formatNumber } from '@/common/lib/format'
 import { numberToWords } from '@/common/lib/utils'
 
 import { BankRasxodQueryKeys } from './config'
-import { PorucheniyaDialog } from './porucheniya-dropdown'
+import { PorucheniyaDialog } from './porucheniya-dialog'
 import { BankRasxodService } from './service'
 
 const provodkaColumns: ColumnDef<BankRasxodProvodka>[] = [
