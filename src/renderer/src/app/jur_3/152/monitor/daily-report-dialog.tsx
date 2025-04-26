@@ -76,7 +76,7 @@ export const DailyReportDialog = ({
           </div>
           <DialogFooter>
             <DownloadFile
-              disabled={!dates.from || !dates.to}
+              isDisabled={!dates.from || !dates.to}
               fileName={`152${t('daily-report')}_${dates.from}&${dates.to}.xlsx`}
               url="152/monitoring/daily"
               buttonText={t('daily-report')}

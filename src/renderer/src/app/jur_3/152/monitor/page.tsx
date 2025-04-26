@@ -17,7 +17,7 @@ import {
   useTableSort
 } from '@/common/components'
 import { Button } from '@/common/components/jolly/button'
-import { Menu, MenuItem, MenuPopover, MenuTrigger } from '@/common/components/jolly/menu'
+import { Popover, PopoverDialog, PopoverTrigger } from '@/common/components/jolly/popover'
 import { ButtonGroup } from '@/common/components/ui/button-group'
 import { DownloadFile } from '@/common/features/file'
 import {
@@ -149,66 +149,70 @@ const OrganMonitoringPage = () => {
             </div>
             {main_schet_id ? (
               <ButtonGroup borderStyle="dashed">
-                <MenuTrigger>
+                <PopoverTrigger>
                   <Button variant="ghost">
                     <Download className="btn-icon icon-start" />
                     {t('reports')}
                   </Button>
-                  <MenuPopover placement="bottom end">
-                    <Menu
-                      selectionMode="multiple"
-                      selectedKeys={[]}
-                    >
-                      <MenuItem>
-                        <DownloadFile
-                          fileName={`${t('cap')}-${dates.to}.xlsx`}
-                          url="/159/monitoring/cap"
-                          params={{
-                            budjet_id,
-                            main_schet_id,
-                            schet_id: jur3_schet_152_id,
-                            from: dates.from,
-                            to: dates.to,
-                            report_title_id,
-                            year: startDate.getFullYear(),
-                            month: startDate.getMonth() + 1,
-                            excel: true
-                          }}
-                          buttonText={t('cap')}
-                          className="w-full inline-flex items-center justify-start"
-                        />
-                      </MenuItem>
+                  <Popover
+                    placement="bottom end"
+                    style={{
+                      width: 'max-content',
+                      maxWidth: '300px'
+                    }}
+                  >
+                    <PopoverDialog>
+                      {({ close }) => (
+                        <>
+                          <DownloadFile
+                            fileName={`${t('cap')}-${dates.to}.xlsx`}
+                            url="/159/monitoring/cap"
+                            params={{
+                              budjet_id,
+                              main_schet_id,
+                              schet_id: jur3_schet_152_id,
+                              from: dates.from,
+                              to: dates.to,
+                              report_title_id,
+                              year: startDate.getFullYear(),
+                              month: startDate.getMonth() + 1,
+                              excel: true
+                            }}
+                            buttonText={t('cap')}
+                            className="w-full inline-flex items-center justify-start"
+                          />
 
-                      <MenuItem>
-                        <DownloadFile
-                          fileName={`debitor_kreditor_${dates.to}.xlsx`}
-                          url="/152/monitoring/prixod/rasxod"
-                          params={{
-                            main_schet_id,
-                            budjet_id,
-                            schet_id: jur3_schet_152_id,
-                            to: dates.to,
-                            year: startDate.getFullYear(),
-                            month: startDate.getMonth() + 1,
-                            excel: true
-                          }}
-                          buttonText={t('debitor_kreditor_report')}
-                          className="w-full inline-flex items-center justify-start"
-                        />
-                      </MenuItem>
-
-                      <MenuItem>
-                        <Button
-                          variant="ghost"
-                          onClick={dailyReportToggle.open}
-                        >
-                          <Download className="btn-icon !size-4 icon-start" />
-                          {t('daily-report')}
-                        </Button>
-                      </MenuItem>
-                    </Menu>
-                  </MenuPopover>
-                </MenuTrigger>
+                          <DownloadFile
+                            fileName={`debitor_kreditor_${dates.to}.xlsx`}
+                            url="/152/monitoring/prixod/rasxod"
+                            params={{
+                              main_schet_id,
+                              budjet_id,
+                              schet_id: jur3_schet_152_id,
+                              to: dates.to,
+                              year: startDate.getFullYear(),
+                              month: startDate.getMonth() + 1,
+                              excel: true
+                            }}
+                            buttonText={t('debitor_kreditor_report')}
+                            className="w-full inline-flex items-center justify-start"
+                          />
+                          <Button
+                            variant="ghost"
+                            onClick={() => {
+                              dailyReportToggle.open()
+                              close()
+                            }}
+                            className="w-full inline-flex items-center justify-start"
+                          >
+                            <Download className="btn-icon !size-4 icon-start" />
+                            {t('daily-report')}
+                          </Button>
+                        </>
+                      )}
+                    </PopoverDialog>
+                  </Popover>
+                </PopoverTrigger>
                 {organId ? (
                   <AktSverkiDialog
                     organId={organId}

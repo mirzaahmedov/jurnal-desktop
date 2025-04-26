@@ -5,16 +5,19 @@ import type {
 } from '@/common/features/spravochnik'
 import type { Shartnoma } from '@/common/models'
 
+import { t } from 'i18next'
 import { CopyPlus } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { ZodIssueCode, z } from 'zod'
 
 import { GenericTable } from '@/common/components'
 import { Button } from '@/common/components/ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/common/components/ui/dialog'
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
-import { budjet } from '@/common/features/crud/middleware'
+import { budjet, main_schet } from '@/common/features/crud/middleware'
 import { SpravochnikSearchField } from '@/common/features/filters/search/search-filter-spravochnik'
 import { formatDate } from '@/common/lib/date'
+import { capitalize } from '@/common/lib/string'
 import { extendObject } from '@/common/lib/utils'
 import { withPreprocessor } from '@/common/lib/validation'
 
@@ -24,7 +27,9 @@ import { ShartnomaForm } from './details/shartnoma-form'
 
 export const shartnomaService = new CRUDService<Shartnoma, ShartnomaFormValues>({
   endpoint: ApiEndpoints.shartnoma
-}).use(budjet())
+})
+  .use(budjet())
+  .use(main_schet())
 
 export const ShartnomaGrafikFormSchema = z
   .object({
@@ -88,8 +93,9 @@ const ShartnomaSpravochnikDialog = ({
   params,
   state
 }: SpravochnikDialogProps) => {
-  const organization = params?.organ_id ? Number(params.organ_id) : 0
+  const { t } = useTranslation()
 
+  const organization = params?.organ_id ? Number(params.organ_id) : 0
   const original = state?.original as Shartnoma
 
   return (
@@ -99,7 +105,9 @@ const ShartnomaSpravochnikDialog = ({
     >
       <DialogContent className="max-w-7xl">
         <DialogHeader>
-          <DialogTitle>Добавить договор</DialogTitle>
+          <DialogTitle>
+            {capitalize(t('create-something', { something: t('shartnoma') }))}
+          </DialogTitle>
         </DialogHeader>
         <div className="px-1 w-full overflow-hidden">
           <ShartnomaForm
@@ -144,7 +152,7 @@ const ShartnomaSpravochnikTable = ({
 export const createShartnomaSpravochnik = (config: Partial<SpravochnikHookOptions<Shartnoma>>) => {
   return extendObject(
     {
-      title: 'Выберите договор',
+      title: t('shartnoma'),
       endpoint: ApiEndpoints.shartnoma,
       columnDefs: shartnomaColumns,
       service: shartnomaService,

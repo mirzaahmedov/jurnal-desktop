@@ -12,6 +12,10 @@ const ui = plugin(function ({ addUtilities }) {
     '.icon-start': {
       'margin-right': '0.5rem'
     },
+    '.icon-sm': {
+      width: '1rem',
+      height: '1rem'
+    },
 
     '.noscroll-bar': {
       'scrollbar-width': 'none'

@@ -42,7 +42,8 @@ const ShartnomaDetailsPage = () => {
       shartnomaQueryKeys.getById,
       Number(id),
       {
-        budjet_id
+        budjet_id,
+        main_schet_id
       }
     ],
     queryFn: shartnomaService.getById,

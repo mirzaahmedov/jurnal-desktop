@@ -31,6 +31,7 @@ const ShartnomaPage = () => {
 
   const { confirm } = useConfirm()
   const { sorting, handleSort, getColumnSorted } = useTableSort()
+  const { budjet_id, main_schet_id } = useRequisitesStore()
   const { t } = useTranslation(['app'])
 
   const [search] = useSearchFilter()
@@ -38,7 +39,6 @@ const ShartnomaPage = () => {
   const navigate = useNavigate()
   const pagination = usePagination()
   const queryClient = useQueryClient()
-  const budjet_id = useRequisitesStore((store) => store.budjet_id)
   const setLayout = useLayout()
 
   const organSpravochnik = useSpravochnik(
@@ -59,6 +59,7 @@ const ShartnomaPage = () => {
       {
         search,
         budjet_id,
+        main_schet_id,
         organ_id: organId,
         ...sorting,
         ...pagination
@@ -66,7 +67,7 @@ const ShartnomaPage = () => {
     ],
     queryFn: shartnomaService.getAll
   })
-  const { mutate: deleteMutation, isPending } = useMutation({
+  const { mutate: deleteShartnoma, isPending } = useMutation({
     mutationKey: [shartnomaQueryKeys.delete],
     mutationFn: shartnomaService.delete,
     onSuccess(res) {
@@ -87,7 +88,7 @@ const ShartnomaPage = () => {
   const handleClickDelete = (row: Shartnoma) => {
     confirm({
       onConfirm() {
-        deleteMutation(row.id)
+        deleteShartnoma(row.id)
       }
     })
   }
@@ -139,7 +140,7 @@ const ShartnomaPage = () => {
           columnDefs={shartnomaColumns}
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}
-          placeholder={!organSpravochnik.selected ? 'Выберите организацию' : undefined}
+          placeholder={!organSpravochnik.selected ? t('organization') : undefined}
           getColumnSorted={getColumnSorted}
           onSort={handleSort}
           actions={(row) => (

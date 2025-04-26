@@ -1,10 +1,9 @@
-import type { ButtonProps } from '@/common/components/ui/button'
+import type { ButtonProps } from '@/common/components/jolly/button'
 
 import { useMutation } from '@tanstack/react-query'
-import { Download } from 'lucide-react'
+import { Download, Loader2 } from 'lucide-react'
 
-import { Spinner } from '@/common/components/loading'
-import { Button } from '@/common/components/ui/button'
+import { Button } from '@/common/components/jolly/button'
 import { useSettingsStore } from '@/common/features/settings'
 import { useToggle } from '@/common/hooks'
 import { http } from '@/common/lib/http'
@@ -58,21 +57,16 @@ export const DownloadFile = ({
     <>
       <Button
         variant="ghost"
-        disabled={isDownloadingFile}
+        isPending={isDownloadingFile}
         onClick={handleDownloadFile}
         {...props}
       >
         {isDownloadingFile ? (
-          <>
-            <Spinner className="btn-icon" />
-            Загрузка
-          </>
+          <Loader2 className="btn-icon icon-sm icon-start animate-spin" />
         ) : (
-          <>
-            <Download className="btn-icon !size-4" />
-            <span className="titlecase">{buttonText}</span>
-          </>
+          <Download className="btn-icon icon-sm icon-start" />
         )}
+        {buttonText}
       </Button>
       <SelectReportTitleAlert
         open={alertToggle.isOpen}

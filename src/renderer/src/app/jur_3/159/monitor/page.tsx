@@ -17,8 +17,7 @@ import {
   useTableSort
 } from '@/common/components'
 import { Button } from '@/common/components/jolly/button'
-import { Menu, MenuItem, MenuPopover, MenuTrigger } from '@/common/components/jolly/menu'
-import { ButtonGroup } from '@/common/components/ui/button-group'
+import { Popover, PopoverDialog, PopoverTrigger } from '@/common/components/jolly/popover'
 import { DownloadFile } from '@/common/features/file'
 import {
   SearchFilterDebounced,
@@ -147,18 +146,21 @@ const OrganMonitoringPage = () => {
               />
             </div>
             {main_schet_id ? (
-              <ButtonGroup borderStyle="dashed">
-                <MenuTrigger>
-                  <Button variant="ghost">
-                    <Download className="btn-icon icon-start" />
-                    <span className="titlecase">{t('reports')}</span>
-                  </Button>
-                  <MenuPopover placement="bottom end">
-                    <Menu
-                      selectionMode="none"
-                      selectedKeys={[]}
-                    >
-                      <MenuItem>
+              <PopoverTrigger>
+                <Button variant="ghost">
+                  <Download className="btn-icon icon-start" />
+                  <span className="titlecase">{t('reports')}</span>
+                </Button>
+                <Popover
+                  placement="bottom end"
+                  style={{
+                    width: 'max-content',
+                    maxWidth: '300px'
+                  }}
+                >
+                  <PopoverDialog>
+                    {({ close }) => (
+                      <>
                         <DownloadFile
                           fileName={`${t('cap')}-${dates.to}.xlsx`}
                           url="/159/monitoring/cap"
@@ -176,9 +178,7 @@ const OrganMonitoringPage = () => {
                           buttonText={t('cap')}
                           className="w-full inline-flex items-center justify-start"
                         />
-                      </MenuItem>
 
-                      <MenuItem>
                         <DownloadFile
                           fileName={`debitor_kreditor_${dates.to}.xlsx`}
                           url="/159/monitoring/prixod/rasxod"
@@ -194,21 +194,23 @@ const OrganMonitoringPage = () => {
                           buttonText={t('debitor_kreditor_report')}
                           className="w-full inline-flex items-center justify-start"
                         />
-                      </MenuItem>
 
-                      <MenuItem>
                         <Button
                           variant="ghost"
-                          onClick={dailyReportToggle.open}
+                          onClick={() => {
+                            close()
+                            dailyReportToggle.open()
+                          }}
+                          className="w-full inline-flex items-center justify-start"
                         >
-                          <Download className="btn-icon !size-4 icon-start" />
+                          <Download className="btn-icon icon-sm icon-start" />
                           {t('daily-report')}
                         </Button>
-                      </MenuItem>
-                    </Menu>
-                  </MenuPopover>
-                </MenuTrigger>
-              </ButtonGroup>
+                      </>
+                    )}
+                  </PopoverDialog>
+                </Popover>
+              </PopoverTrigger>
             ) : null}
           </div>
           <ListView.RangeDatePicker
