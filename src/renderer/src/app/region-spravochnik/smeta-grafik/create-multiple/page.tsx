@@ -5,7 +5,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 
 import { useLayout } from '@/common/layout'
 
-import { SmetaGrafikBatchCreate } from './batch-create'
+import { SmetaGrafikBatchCreate } from './create-multiple'
 
 export const SmetaGrafikBatchCreatePage = () => {
   const navigate = useNavigate()
@@ -22,7 +22,7 @@ export const SmetaGrafikBatchCreatePage = () => {
           title: t('pages.spravochnik')
         },
         {
-          title: t('pages.prixod-docs'),
+          title: t('pages.smeta_grafik'),
           path: '/smeta-grafik'
         }
       ],

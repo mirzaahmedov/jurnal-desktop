@@ -345,5 +345,6 @@
   "access_rights_for": "\"{{role}}\" uchun kirish huquqlari",
   "akt_sverki": "Kelishuv akti",
   "optional": "Ixtiyoriy",
-  "error_generating_file": "Fayl yaratishda xatolik yuz berdi"
+  "error_generating_file": "Fayl yaratishda xatolik yuz berdi",
+  "old_smeta_grafiks": "Eski smeta grafiklar"
 }

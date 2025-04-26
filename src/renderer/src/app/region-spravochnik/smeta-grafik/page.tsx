@@ -3,12 +3,13 @@ import type { SmetaGrafik } from '@/common/models'
 import { useEffect } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { SquareActivity } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
+import { Button } from '@/common/components/jolly/button'
 import { useConfirm } from '@/common/features/confirm'
-import { SearchFilterDebounced } from '@/common/features/filters/search/search-filter-debounced'
 import { useSearchFilter } from '@/common/features/filters/search/search-filter-debounced'
 import { useRequisitesStore } from '@/common/features/requisites'
 import { usePagination } from '@/common/hooks'
@@ -18,6 +19,7 @@ import { ListView } from '@/common/views'
 
 import { SmetaTable } from './components'
 import { SmetaGrafikQueryKeys } from './config'
+import { SmetaGrafikFilters, useYearFilter } from './filters'
 import { SmetaGrafikService } from './service'
 
 const SmetaGrafikPage = () => {
@@ -28,17 +30,19 @@ const SmetaGrafikPage = () => {
   const setLayout = useLayout()
 
   const [search] = useSearchFilter()
+  const [year] = useYearFilter()
 
   const { main_schet_id, budjet_id } = useRequisitesStore()
   const { confirm } = useConfirm()
   const { t } = useTranslation(['app'])
 
-  const { data: smetaGrafikList, isFetching } = useQuery({
+  const { data: grafiks, isFetching } = useQuery({
     queryKey: [
       SmetaGrafikQueryKeys.getAll,
       {
         ...pagination,
         search,
+        year,
         budjet_id,
         main_schet_id
       }
@@ -46,7 +50,7 @@ const SmetaGrafikPage = () => {
     queryFn: SmetaGrafikService.getAll,
     enabled: !!budjet_id && !!main_schet_id
   })
-  const { mutate: deleteSmetaGrafik, isPending } = useMutation({
+  const { mutate: deleteGrafik, isPending } = useMutation({
     mutationKey: [SmetaGrafikQueryKeys.delete],
     mutationFn: SmetaGrafikService.delete,
     onSuccess(res) {
@@ -64,7 +68,7 @@ const SmetaGrafikPage = () => {
   const handleClickDelete = (row: SmetaGrafik) => {
     confirm({
       onConfirm() {
-        deleteSmetaGrafik(row.id)
+        deleteGrafik(row.id)
       }
     })
   }
@@ -77,7 +81,7 @@ const SmetaGrafikPage = () => {
           title: t('pages.spravochnik')
         }
       ],
-      content: SearchFilterDebounced,
+      content: SmetaGrafikFilters,
       onCreate: () => {
         navigate('create')
       }
@@ -86,22 +90,33 @@ const SmetaGrafikPage = () => {
 
   return (
     <ListView>
+      <ListView.Header className="flex items-center justify-end">
+        <Button
+          variant="ghost"
+          onPress={() => {
+            navigate('monitor/old')
+          }}
+        >
+          <SquareActivity className="btn-icon icon-start" />
+          {t('old_smeta_grafiks')}
+        </Button>
+      </ListView.Header>
       <ListView.Content
         loading={false}
         className="relative w-full flex-1"
       >
         <SmetaTable
           isLoading={isFetching || isPending}
-          data={smetaGrafikList?.data ?? []}
+          data={grafiks?.data ?? []}
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}
         />
       </ListView.Content>
-      <ListView.Footer>
+      <ListView.Footer className="flex items-center justify-between">
         <ListView.Pagination
           {...pagination}
-          count={smetaGrafikList?.meta?.count ?? 0}
-          pageCount={smetaGrafikList?.meta?.pageCount ?? 0}
+          count={grafiks?.meta?.count ?? 0}
+          pageCount={grafiks?.meta?.pageCount ?? 0}
         />
       </ListView.Footer>
     </ListView>

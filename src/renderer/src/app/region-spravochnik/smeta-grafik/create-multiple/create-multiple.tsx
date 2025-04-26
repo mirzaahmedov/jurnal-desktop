@@ -17,7 +17,7 @@ import { Form, FormField } from '@/common/components/ui/form'
 import { YearSelect } from '@/common/components/year-select'
 import { DetailsView } from '@/common/views'
 
-import { SmetaGrafikBatchFormSchema, defaultBatchValues } from '../config'
+import { SmetaGrafikFormSchema, defaultValues } from '../config'
 import { SmetaGrafikService } from '../service'
 import { provodki } from './provodki'
 
@@ -26,8 +26,8 @@ export const SmetaGrafikBatchCreate = () => {
   const tableRef = useRef<HTMLTableElement>(null)
 
   const form = useForm({
-    resolver: zodResolver(SmetaGrafikBatchFormSchema),
-    defaultValues: defaultBatchValues
+    resolver: zodResolver(SmetaGrafikFormSchema),
+    defaultValues: defaultValues
   })
 
   const { t } = useTranslation()
@@ -71,11 +71,14 @@ export const SmetaGrafikBatchCreate = () => {
       if (form.getValues(`smetas.${index}.total`) !== total) {
         form.setValue(`smetas.${index}.total`, total)
         if (total !== 0) {
-          form.trigger(`smetas.${index}`)
+          const fields = Array.from({ length: 12 }, (_, i) => `smetas.${index}.oy_${i + 1}`)
+          form.trigger(fields as any)
         }
       }
     })
   }, [smetas, form])
+
+  console.log({ errors: form.formState.errors, values: form.watch() })
 
   return (
     <DetailsView>
@@ -109,8 +112,8 @@ export const SmetaGrafikBatchCreate = () => {
               errors={form.formState.errors.smetas}
               onCreate={createEditorCreateHandler({
                 form,
-                schema: SmetaGrafikBatchFormSchema,
-                defaultValues: defaultBatchValues.smetas[0],
+                schema: SmetaGrafikFormSchema,
+                defaultValues: defaultValues.smetas[0],
                 field: 'smetas'
               })}
               onDelete={createEditorDeleteHandler({
@@ -123,7 +126,7 @@ export const SmetaGrafikBatchCreate = () => {
                 }
 
                 return !form.getValues('smetas').some((smeta, index) => {
-                  if (id !== index && smeta.smeta_id && payload.smeta_id === smeta.smeta_id) {
+                  if (smeta.smeta_id && payload.smeta_id === smeta.smeta_id && id !== index) {
                     toast.error('Проводка с этой сметой уже существует')
 
                     const input = tableRef?.current?.querySelector(

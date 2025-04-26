@@ -58,8 +58,8 @@ export const ShartnomaGrafikForm: FC<{
           return true
         }
 
-        return !form.getValues('grafiks').some((child, index) => {
-          if (id !== index && payload.smeta_id === child.smeta_id) {
+        return !form.getValues('grafiks').some((grafik, index) => {
+          if (grafik?.smeta_id && payload.smeta_id === grafik.smeta_id && id !== index) {
             toast.error('Проводка с этой сметой уже существует')
 
             const input = tableRef?.current?.querySelector(

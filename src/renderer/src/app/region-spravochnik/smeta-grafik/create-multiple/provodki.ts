@@ -1,9 +1,9 @@
-import type { SmetaGrafikBatchFormValues } from '../config'
+import type { SmetaGrafikFormValues } from '../config'
 import type { EditableColumnDef } from '@/common/components/editable-table'
 
 import { createNumberEditor, createSmetaEditor } from '@/common/components/editable-table/editors'
 
-export const provodki: EditableColumnDef<SmetaGrafikBatchFormValues['smetas'][number]>[] = [
+export const provodki: EditableColumnDef<SmetaGrafikFormValues['smetas'][number]>[] = [
   {
     key: 'smeta_id',
     header: 'smeta',
@@ -85,6 +85,12 @@ export const provodki: EditableColumnDef<SmetaGrafikBatchFormValues['smetas'][nu
     key: 'total',
     header: 'total',
     headerClassName: 'text-end',
-    Editor: createNumberEditor({ key: 'total', inputProps: { adjustWidth: true } })
+    Editor: createNumberEditor({
+      key: 'total',
+      inputProps: {
+        adjustWidth: true,
+        readOnly: true
+      }
+    })
   }
 ]

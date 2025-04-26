@@ -28,7 +28,7 @@ export const PodotchetService = new CRUDService<Podotchet, PodotchetFormValues>(
 export const createPodotchetSpravochnik = (config: Partial<SpravochnikHookOptions<Podotchet>>) => {
   return extendObject(
     {
-      title: t('podotchet'),
+      title: t('podotchet-litso'),
       endpoint: ApiEndpoints.podotchet_litso,
       columnDefs: PodotchetColumns,
       service: PodotchetService,

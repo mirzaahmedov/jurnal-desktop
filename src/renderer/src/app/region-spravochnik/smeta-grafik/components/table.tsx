@@ -22,8 +22,8 @@ const SCROLL_AREA_WIDTH = 400
 type SmetaTableProps = {
   isLoading: boolean
   data: SmetaGrafik[]
-  onEdit: (row: SmetaGrafik) => void
-  onDelete: (row: SmetaGrafik) => void
+  onEdit?: (row: SmetaGrafik) => void
+  onDelete?: (row: SmetaGrafik) => void
 }
 const SmetaTable = ({ isLoading, data, onEdit, onDelete }: SmetaTableProps) => {
   const ref = useRef<HTMLDivElement>(null)

@@ -345,5 +345,6 @@
   "access_rights_for": "\"{{role}}\" учун кириш ҳуқуқлари",
   "akt_sverki": "Келишув акти",
   "optional": "Ихтиёрий",
-  "error_generating_file": "Файл яратишда хатолик юз берди"
+  "error_generating_file": "Файл яратишда хатолик юз берди",
+  "old_smeta_grafiks": "Эски смета графиклари"
 }

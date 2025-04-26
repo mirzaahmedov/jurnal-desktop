@@ -1,61 +1,124 @@
 import { useEffect, useRef } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useForm, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
 import { EditableTable } from '@/common/components/editable-table'
-import {
-  createEditorCreateHandler,
-  createEditorDeleteHandler
-} from '@/common/components/editable-table/helpers'
 import { FormElement } from '@/common/components/form'
 import { Form, FormField } from '@/common/components/ui/form'
 import { YearSelect } from '@/common/components/year-select'
+import { useRequisitesStore } from '@/common/features/requisites'
 import { DetailsView } from '@/common/views'
 
-import { SmetaGrafikBatchFormSchema, defaultBatchValues } from '../config'
+import { SmetaGrafikFormSchema, SmetaGrafikQueryKeys, defaultValues } from '../config'
 import { SmetaGrafikService } from '../service'
 import { provodki } from './provodki'
 
-export const SmetaGrafikDetails = () => {
+export interface SmetaGrafikDetailsProps {
+  id: number
+}
+export const SmetaGrafikDetails = ({ id }: SmetaGrafikDetailsProps) => {
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
   const tableRef = useRef<HTMLTableElement>(null)
 
   const form = useForm({
-    resolver: zodResolver(SmetaGrafikBatchFormSchema),
-    defaultValues: defaultBatchValues
+    resolver: zodResolver(SmetaGrafikFormSchema),
+    defaultValues: defaultValues
   })
 
   const { t } = useTranslation()
+  const { main_schet_id, budjet_id } = useRequisitesStore()
 
-  const { mutate: batchCreateSnetaGrafik } = useMutation({
-    mutationFn: SmetaGrafikService.batchCreate,
-    onSuccess: (res) => {
+  const { data: smetaGrafik, isFetching } = useQuery({
+    queryKey: [
+      SmetaGrafikQueryKeys.getById,
+      Number(id),
+      {
+        main_schet_id
+      }
+    ],
+    queryFn: SmetaGrafikService.getById
+  })
+
+  const { mutate: updateGrafik, isPending } = useMutation({
+    mutationKey: [SmetaGrafikQueryKeys.update],
+    mutationFn: SmetaGrafikService.update,
+    onSuccess(res) {
       toast.success(res?.message)
+      queryClient.invalidateQueries({
+        queryKey: [SmetaGrafikQueryKeys.getAll]
+      })
       navigate(-1)
     }
   })
 
   const onSubmit = form.handleSubmit((values) => {
-    batchCreateSnetaGrafik(values)
+    if (!budjet_id || !main_schet_id) {
+      toast.error('Выберите бюджет и главный счет')
+      return
+    }
+    updateGrafik({
+      ...values.smetas[0],
+      year: values.year,
+      id: Number(id),
+      spravochnik_budjet_name_id: budjet_id,
+      main_schet_id
+    })
   })
 
-  const values = useWatch({
+  useEffect(() => {
+    if (smetaGrafik?.data) {
+      form.reset({
+        year: smetaGrafik.data.year,
+        smetas: [smetaGrafik.data]
+      })
+      return
+    }
+    form.reset(defaultValues)
+  }, [form, smetaGrafik])
+
+  const smetas = useWatch({
     control: form.control,
     name: 'smetas'
   })
 
   useEffect(() => {
-    form.trigger('smetas')
-  }, [values, form])
+    const totals = smetas.map((smeta) => {
+      return (
+        smeta.oy_1 +
+        smeta.oy_2 +
+        smeta.oy_3 +
+        smeta.oy_4 +
+        smeta.oy_5 +
+        smeta.oy_6 +
+        smeta.oy_7 +
+        smeta.oy_8 +
+        smeta.oy_9 +
+        smeta.oy_10 +
+        smeta.oy_11 +
+        smeta.oy_12
+      )
+    })
+
+    totals.forEach((total, index) => {
+      if (form.getValues(`smetas.${index}.total`) !== total) {
+        form.setValue(`smetas.${index}.total`, total)
+        if (total !== 0) {
+          const fields = Array.from({ length: 12 }, (_, i) => `smetas.${index}.oy_${i + 1}`)
+          form.trigger(fields as any)
+        }
+      }
+    })
+  }, [smetas, form])
 
   return (
     <DetailsView>
-      <DetailsView.Content>
+      <DetailsView.Content loading={isFetching || isPending}>
         <Form {...form}>
           <form onSubmit={onSubmit}>
             <div className="p-5 flex items-center">
@@ -83,42 +146,14 @@ export const SmetaGrafikDetails = () => {
               form={form}
               name="smetas"
               errors={form.formState.errors.smetas}
-              onCreate={createEditorCreateHandler({
-                form,
-                schema: SmetaGrafikBatchFormSchema,
-                defaultValues: defaultBatchValues.smetas[0],
-                field: 'smetas'
-              })}
-              onDelete={createEditorDeleteHandler({
-                form,
-                field: 'smetas'
-              })}
-              validate={({ id, key, payload }) => {
-                if (key !== 'smeta_id') {
-                  return true
-                }
-
-                return !form.getValues('smetas').some((child, index) => {
-                  if (id !== index && payload.smeta_id === child.smeta_id) {
-                    toast.error('Проводка с этой сметой уже существует')
-
-                    const input = tableRef?.current?.querySelector(
-                      `[data-editorid="${index}-smeta_id"]`
-                    ) as HTMLInputElement
-                    if (input) {
-                      setTimeout(() => {
-                        input.focus()
-                      }, 100)
-                    }
-
-                    return true
-                  }
-                  return false
-                })
-              }}
             />
             <DetailsView.Footer>
-              <DetailsView.Create type="submit">{t('create')}</DetailsView.Create>
+              <DetailsView.Create
+                isPending={isPending}
+                type="submit"
+              >
+                {t('create')}
+              </DetailsView.Create>
             </DetailsView.Footer>
           </form>
         </Form>

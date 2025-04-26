@@ -12,7 +12,7 @@ import DashboardPage from './dashboard/page'
 import HomePage from './home/page'
 import { Jur7MonitorPage } from './jur_7/monitor/page'
 import PrixodSchetPage from './jur_8/schet/page'
-import { SmetaGrafikBatchCreatePage } from './region-spravochnik/smeta-grafik/batch-create/page'
+import { SmetaGrafikBatchCreatePage } from './region-spravochnik/smeta-grafik/create-multiple/page'
 import SigninPage from './sign-in'
 
 const KassaSaldoPage = lazy(() => import('./jur_1/saldo/page'))
@@ -78,6 +78,7 @@ const PodotchetMonitoringPage = lazy(() => import('./jur_4/monitor/page'))
 const RoleAccessPage = lazy(() => import('./region-admin/role-access/page'))
 const RegionUserPage = lazy(() => import('./region-admin/region-user'))
 const SmetaGrafikPage = lazy(() => import('./region-spravochnik/smeta-grafik/page'))
+const SmetaGrafikOldPage = lazy(() => import('./region-spravochnik/smeta-grafik/old-grafiks'))
 const SmetaGrafikDetailsPage = lazy(() => import('./region-spravochnik/smeta-grafik/details/page'))
 const MainSchetPage = lazy(() => import('./region-spravochnik/main-schet/page'))
 const OrganizationPage = lazy(() => import('./region-spravochnik/organization/page'))
@@ -496,6 +497,10 @@ export const routes: RouteObject[] = [
           {
             path: ':id',
             element: <SmetaGrafikDetailsPage />
+          },
+          {
+            path: 'monitor/old',
+            element: <SmetaGrafikOldPage />
           }
         ]
       },

@@ -346,5 +346,6 @@
   "access_rights_for": "Права доступа для \"{{role}}\"",
   "akt_sverki": "Акт сверки",
   "optional": "Необязательный",
-  "error_generating_file": "Ошибка при генерации файла"
+  "error_generating_file": "Ошибка при генерации файла",
+  "old_smeta_grafiks": "Старые смета графики"
 }
