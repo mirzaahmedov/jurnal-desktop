@@ -60,8 +60,9 @@ const DetailsViewCreate = ({ isPending = false, ...props }: DetailsViewCreatePro
   return (
     <Focusable>
       <Button
-        {...props}
         isPending={isPending}
+        type="submit"
+        {...props}
       >
         {isPending ? (
           <Loader2 className="btn-icon icon-start icon-sm" />

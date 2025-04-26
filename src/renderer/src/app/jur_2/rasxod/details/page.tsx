@@ -209,8 +209,8 @@ const BankRasxodDetailsPage = () => {
     }
   })
 
-  const onSubmit = form.handleSubmit((payload: BankRasxodFormValues) => {
-    const {
+  const onSubmit = form.handleSubmit(
+    ({
       doc_date,
       doc_num,
       id_spravochnik_organization,
@@ -222,16 +222,31 @@ const BankRasxodDetailsPage = () => {
       organization_by_raschet_schet_id,
       organization_by_raschet_schet_gazna_id,
       summa
-    } = payload
-
-    if (id !== 'create') {
-      updateRasxod({
-        id: Number(id),
+    }: BankRasxodFormValues) => {
+      if (id !== 'create') {
+        updateRasxod({
+          id: Number(id),
+          doc_date,
+          doc_num,
+          id_spravochnik_organization,
+          id_shartnomalar_organization,
+          summa: summa,
+          opisanie,
+          rukovoditel,
+          glav_buxgalter,
+          shartnoma_grafik_id,
+          organization_by_raschet_schet_id,
+          organization_by_raschet_schet_gazna_id,
+          childs: podvodki.map(normalizeEmptyFields<BankRasxodPodvodkaFormValues>)
+        })
+        return
+      }
+      createRasxod({
         doc_date,
         doc_num,
         id_spravochnik_organization,
         id_shartnomalar_organization,
-        summa: summa,
+        summa,
         opisanie,
         rukovoditel,
         glav_buxgalter,
@@ -240,23 +255,8 @@ const BankRasxodDetailsPage = () => {
         organization_by_raschet_schet_gazna_id,
         childs: podvodki.map(normalizeEmptyFields<BankRasxodPodvodkaFormValues>)
       })
-      return
     }
-    createRasxod({
-      doc_date,
-      doc_num,
-      id_spravochnik_organization,
-      id_shartnomalar_organization,
-      summa,
-      opisanie,
-      rukovoditel,
-      glav_buxgalter,
-      shartnoma_grafik_id,
-      organization_by_raschet_schet_id,
-      organization_by_raschet_schet_gazna_id,
-      childs: podvodki.map(normalizeEmptyFields<BankRasxodPodvodkaFormValues>)
-    })
-  })
+  )
 
   const podvodki = useWatch({
     control: form.control,
@@ -332,6 +332,8 @@ const BankRasxodDetailsPage = () => {
     form.setValue('organization_porucheniya_name', organSpravochnik.selected?.name ?? '')
   }, [form, organSpravochnik.selected])
 
+  console.log({ errors: form.formState.errors })
+
   return (
     <DetailsView>
       <DetailsView.Content loading={isFetching}>
@@ -404,9 +406,7 @@ const BankRasxodDetailsPage = () => {
 
             <DetailsView.Footer className="flex flex-row gap-5">
               <DetailsView.Create
-                isDisabled={
-                  reminder < 0 || isFetchingMonitor || isFetching || isUpdating || isCreating
-                }
+                isDisabled={reminder < 0 || isFetchingMonitor || isFetching}
                 isPending={isCreating || isUpdating}
                 tabIndex={7}
               />

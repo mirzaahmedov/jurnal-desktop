@@ -27,14 +27,15 @@ export const SmetaGrafikBatchFormSchema = z
         oy_9: z.number(),
         oy_10: z.number(),
         oy_11: z.number(),
-        oy_12: z.number()
+        oy_12: z.number(),
+        total: z.number().optional().nullable()
       })
     )
   })
   .superRefine((values, ctx) => {
     const smetas = values.smetas
     smetas.forEach((smeta, index) => {
-      if (smetas.find((s) => s.smeta_id === smeta.smeta_id && s !== smeta)) {
+      if (smeta && smetas.find((s) => s.smeta_id === smeta.smeta_id && s !== smeta)) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           message: 'Проводка с этой сметой уже существует',
@@ -81,7 +82,8 @@ export const defaultBatchValues: SmetaGrafikBatchFormValues = {
       oy_9: 0,
       oy_10: 0,
       oy_11: 0,
-      oy_12: 0
+      oy_12: 0,
+      total: 0
     }
   ]
 }
@@ -102,7 +104,8 @@ export const SmetaGrafikFormSchema = z.object({
   oy_9: z.number(),
   oy_10: z.number(),
   oy_11: z.number(),
-  oy_12: z.number()
+  oy_12: z.number(),
+  total: z.number()
 })
 export type SmetaGrafikFormValues = z.infer<typeof SmetaGrafikFormSchema>
 
@@ -122,5 +125,6 @@ export const defaultValues: SmetaGrafikFormValues = {
   oy_9: 0,
   oy_10: 0,
   oy_11: 0,
-  oy_12: 0
+  oy_12: 0,
+  total: 0
 }

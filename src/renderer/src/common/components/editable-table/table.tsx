@@ -257,7 +257,7 @@ const EditableTableRowRenderer = <T extends object, R extends T[ArrayPath<NoInfe
     >
       <EditableTableCell
         key="line_number"
-        className="px-3 font-medium"
+        className="px-3 font-medium text-slate-500"
       >
         {index + 1}
       </EditableTableCell>

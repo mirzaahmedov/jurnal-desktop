@@ -21,7 +21,7 @@ import { SmetaGrafikBatchFormSchema, defaultBatchValues } from '../config'
 import { SmetaGrafikService } from '../service'
 import { provodki } from './provodki'
 
-export const SmetaGrafikBatchCreate = () => {
+export const SmetaGrafikDetails = () => {
   const navigate = useNavigate()
   const tableRef = useRef<HTMLTableElement>(null)
 
@@ -44,38 +44,14 @@ export const SmetaGrafikBatchCreate = () => {
     batchCreateSnetaGrafik(values)
   })
 
-  const smetas = useWatch({
+  const values = useWatch({
     control: form.control,
     name: 'smetas'
   })
 
   useEffect(() => {
-    const totals = smetas.map((smeta) => {
-      return (
-        smeta.oy_1 +
-        smeta.oy_2 +
-        smeta.oy_3 +
-        smeta.oy_4 +
-        smeta.oy_5 +
-        smeta.oy_6 +
-        smeta.oy_7 +
-        smeta.oy_8 +
-        smeta.oy_9 +
-        smeta.oy_10 +
-        smeta.oy_11 +
-        smeta.oy_12
-      )
-    })
-
-    totals.forEach((total, index) => {
-      if (form.getValues(`smetas.${index}.total`) !== total) {
-        form.setValue(`smetas.${index}.total`, total)
-        if (total !== 0) {
-          form.trigger(`smetas.${index}`)
-        }
-      }
-    })
-  }, [smetas, form])
+    form.trigger('smetas')
+  }, [values, form])
 
   return (
     <DetailsView>
@@ -122,8 +98,8 @@ export const SmetaGrafikBatchCreate = () => {
                   return true
                 }
 
-                return !form.getValues('smetas').some((smeta, index) => {
-                  if (id !== index && smeta.smeta_id && payload.smeta_id === smeta.smeta_id) {
+                return !form.getValues('smetas').some((child, index) => {
+                  if (id !== index && payload.smeta_id === child.smeta_id) {
                     toast.error('Проводка с этой сметой уже существует')
 
                     const input = tableRef?.current?.querySelector(

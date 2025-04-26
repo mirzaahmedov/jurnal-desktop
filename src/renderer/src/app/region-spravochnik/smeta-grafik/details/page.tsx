@@ -25,7 +25,7 @@ import { SmetaGrafikFormSchema, SmetaGrafikQueryKeys, defaultValues } from '../c
 import { SmetaGrafikService } from '../service'
 
 const SmetaGrafikDetailsPage = () => {
-  const params = useParams()
+  const { id } = useParams()
   const navigate = useNavigate()
   const setLayout = useLayout()
 
@@ -54,26 +54,16 @@ const SmetaGrafikDetailsPage = () => {
   const { data: smetaGrafik, isFetching } = useQuery({
     queryKey: [
       SmetaGrafikQueryKeys.getById,
-      Number(params.id),
+      Number(id),
       {
         main_schet_id
       }
     ],
     queryFn: SmetaGrafikService.getById,
-    enabled: params.id !== 'create'
+    enabled: id !== 'create'
   })
-  const { mutate: createSmetaGrafik, isPending: isCreating } = useMutation({
-    mutationKey: [SmetaGrafikQueryKeys.create],
-    mutationFn: SmetaGrafikService.create,
-    onSuccess(res) {
-      toast.success(res?.message)
-      queryClient.invalidateQueries({
-        queryKey: [SmetaGrafikQueryKeys.getAll]
-      })
-      navigate(-1)
-    }
-  })
-  const { mutate: updateSmetaGrafik, isPending: isUpdating } = useMutation({
+
+  const { mutate: updateSmetaGrafik, isPending } = useMutation({
     mutationKey: [SmetaGrafikQueryKeys.update],
     mutationFn: SmetaGrafikService.update,
     onSuccess(res) {
@@ -90,18 +80,10 @@ const SmetaGrafikDetailsPage = () => {
       toast.error('Выберите бюджет и главный счет')
       return
     }
-    if (params.id !== 'create') {
-      updateSmetaGrafik({
-        ...values,
-        id: Number(params.id),
-        spravochnik_budjet_name_id: budjet_id,
-        main_schet_id
-      })
-      return
-    }
-    createSmetaGrafik({
+    updateSmetaGrafik({
       ...values,
-      spravochnik_budjet_name_id: budjet_id!,
+      id: Number(id),
+      spravochnik_budjet_name_id: budjet_id,
       main_schet_id
     })
   })
@@ -123,7 +105,7 @@ const SmetaGrafikDetailsPage = () => {
 
   useEffect(() => {
     setLayout({
-      title: params.id === 'create' ? t('create') : t('edit'),
+      title: id === 'create' ? t('create') : t('edit'),
       breadcrumbs: [
         {
           title: t('pages.spravochnik')
@@ -137,7 +119,7 @@ const SmetaGrafikDetailsPage = () => {
         navigate(-1)
       }
     })
-  }, [setLayout, navigate, params.id, t])
+  }, [setLayout, navigate, id, t])
 
   console.log({ errors: form.formState.errors })
 
@@ -212,8 +194,8 @@ const SmetaGrafikDetailsPage = () => {
             <DetailsView.Footer className="flex items-center gap-5">
               <DetailsView.Create
                 type="submit"
-                isDisabled={isCreating || isUpdating}
-                isPending={isCreating || isUpdating}
+                isDisabled={isPending}
+                isPending={isPending}
               >
                 {t('save')}
               </DetailsView.Create>
