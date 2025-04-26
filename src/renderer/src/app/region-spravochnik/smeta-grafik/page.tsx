@@ -17,7 +17,7 @@ import { useLayout } from '@/common/layout'
 import { ListView } from '@/common/views'
 
 import { SmetaTable } from './components'
-import { smetaGrafikQueryKeys } from './config'
+import { SmetaGrafikQueryKeys } from './config'
 import { SmetaGrafikService } from './service'
 
 const SmetaGrafikPage = () => {
@@ -35,7 +35,7 @@ const SmetaGrafikPage = () => {
 
   const { data: smetaGrafikList, isFetching } = useQuery({
     queryKey: [
-      smetaGrafikQueryKeys.getAll,
+      SmetaGrafikQueryKeys.getAll,
       {
         ...pagination,
         search,
@@ -47,12 +47,12 @@ const SmetaGrafikPage = () => {
     enabled: !!budjet_id && !!main_schet_id
   })
   const { mutate: deleteSmetaGrafik, isPending } = useMutation({
-    mutationKey: [smetaGrafikQueryKeys.delete],
+    mutationKey: [SmetaGrafikQueryKeys.delete],
     mutationFn: SmetaGrafikService.delete,
     onSuccess(res) {
       toast.success(res?.message)
       queryClient.invalidateQueries({
-        queryKey: [smetaGrafikQueryKeys.getAll]
+        queryKey: [SmetaGrafikQueryKeys.getAll]
       })
     }
   })

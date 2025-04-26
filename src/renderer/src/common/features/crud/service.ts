@@ -147,7 +147,7 @@ export class CRUDService<T, C = T, U = C, M = undefined> {
     return this
   }
 
-  private proccessMiddleware(config: AxiosRequestConfig) {
+  proccessMiddleware(config: AxiosRequestConfig) {
     return this.middleware.reduce((result, transformer) => transformer(result), config)
   }
 }

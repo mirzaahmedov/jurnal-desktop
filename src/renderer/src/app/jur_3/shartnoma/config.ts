@@ -1,7 +1,7 @@
 import type { ShartnomaFormValues } from './service'
 import type { Shartnoma } from '@/common/models'
 
-export const shartnomaQueryKeys = {
+export const ShartnomaQueryKeys = {
   getById: 'shartnoma',
   getAll: 'shartnoma/all',
   create: 'shartnoma/create',
@@ -14,7 +14,6 @@ export const defaultValues: ShartnomaFormValues = {
   doc_num: '',
   doc_date: '',
   pudratchi_bool: false,
-  yillik_oylik: false,
   grafik_year: new Date().getFullYear(),
   grafiks: [
     {

@@ -49,6 +49,7 @@ export const SmetaGroupFilter = ({ getValue, setValue }: SmetaSpravochnikFilterP
       getOptionLabel={(option) => option.name}
       getOptionValue={(option) => option.value}
       placeholder="Guruhni tanlang"
+      triggerClassName="w-96 text-start"
     />
   )
 }

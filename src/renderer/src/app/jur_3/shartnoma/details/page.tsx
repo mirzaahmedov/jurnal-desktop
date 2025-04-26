@@ -15,7 +15,7 @@ import { useToggle } from '@/common/hooks'
 import { useLayout } from '@/common/layout'
 import { DetailsView } from '@/common/views'
 
-import { type LocationState, shartnomaQueryKeys } from '../config'
+import { type LocationState, ShartnomaQueryKeys } from '../config'
 import { ShartnomaSmetaGrafikGeneratePDFDocumentDialog } from '../report/dialog/ShartnomaGrafikDialog'
 import { shartnomaService } from '../service'
 import { ShartnomaForm } from './shartnoma-form'
@@ -39,7 +39,7 @@ const ShartnomaDetailsPage = () => {
 
   const { data: shartnoma, isFetching } = useQuery({
     queryKey: [
-      shartnomaQueryKeys.getById,
+      ShartnomaQueryKeys.getById,
       Number(id),
       {
         budjet_id,

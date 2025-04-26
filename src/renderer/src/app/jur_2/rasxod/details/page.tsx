@@ -404,10 +404,10 @@ const BankRasxodDetailsPage = () => {
 
             <DetailsView.Footer className="flex flex-row gap-5">
               <DetailsView.Create
-                disabled={
+                isDisabled={
                   reminder < 0 || isFetchingMonitor || isFetching || isUpdating || isCreating
                 }
-                loading={isCreating || isUpdating}
+                isPending={isCreating || isUpdating}
                 tabIndex={7}
               />
               <Button

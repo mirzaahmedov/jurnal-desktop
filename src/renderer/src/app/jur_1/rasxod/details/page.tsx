@@ -432,10 +432,10 @@ const KassaRasxodDetailtsPage = () => {
 
             <DetailsView.Footer className="flex flex-row items-center gap-10">
               <DetailsView.Create
-                disabled={
+                isDisabled={
                   reminder < 0 || isFetchingMonitor || isFetching || isUpdating || isCreating
                 }
-                loading={isCreating || isUpdating}
+                isPending={isCreating || isUpdating}
                 tabIndex={5}
               />
 

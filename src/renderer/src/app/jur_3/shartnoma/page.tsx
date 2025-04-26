@@ -23,7 +23,7 @@ import { useLayout } from '@/common/layout'
 import { ListView } from '@/common/views'
 
 import { shartnomaColumns } from './columns'
-import { shartnomaQueryKeys } from './config'
+import { ShartnomaQueryKeys } from './config'
 import { shartnomaService } from './service'
 
 const ShartnomaPage = () => {
@@ -55,7 +55,7 @@ const ShartnomaPage = () => {
 
   const { data: contracts, isFetching } = useQuery({
     queryKey: [
-      shartnomaQueryKeys.getAll,
+      ShartnomaQueryKeys.getAll,
       {
         search,
         budjet_id,
@@ -68,12 +68,12 @@ const ShartnomaPage = () => {
     queryFn: shartnomaService.getAll
   })
   const { mutate: deleteShartnoma, isPending } = useMutation({
-    mutationKey: [shartnomaQueryKeys.delete],
+    mutationKey: [ShartnomaQueryKeys.delete],
     mutationFn: shartnomaService.delete,
     onSuccess(res) {
       toast.success(res?.message)
       queryClient.invalidateQueries({
-        queryKey: [shartnomaQueryKeys.getAll]
+        queryKey: [ShartnomaQueryKeys.getAll]
       })
     }
   })

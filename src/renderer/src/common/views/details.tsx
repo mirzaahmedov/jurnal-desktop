@@ -1,10 +1,11 @@
-import type { ButtonHTMLAttributes, HTMLAttributes } from 'react'
+import { type HTMLAttributes } from 'react'
 
-import { CircleCheck } from 'lucide-react'
+import { CircleCheck, Loader2 } from 'lucide-react'
+import { Focusable } from 'react-aria-components'
 import { useTranslation } from 'react-i18next'
 
-import { LoadingOverlay, Spinner } from '@/common/components'
-import { Button } from '@/common/components/ui/button'
+import { LoadingOverlay } from '@/common/components'
+import { Button, type ButtonProps } from '@/common/components/jolly/button'
 import { cn } from '@/common/lib/utils'
 
 export type DetailsViewProps = HTMLAttributes<HTMLElement>
@@ -20,7 +21,7 @@ export const DetailsView = ({ children, className, ...props }: DetailsViewProps)
 }
 
 export type DetailsViewContentProps = HTMLAttributes<HTMLElement> & {
-  loading: boolean
+  loading?: boolean
 }
 const DetailsViewContent = ({
   children,
@@ -50,23 +51,26 @@ const DetailsViewFooter = ({ children, className, ...props }: DetailsViewFooterP
   )
 }
 
-export interface DetailsViewCreateProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  loading?: boolean
+export interface DetailsViewCreateProps extends ButtonProps {
+  isPending?: boolean
 }
-const DetailsViewCreate = ({ loading = false, disabled, ...props }: DetailsViewCreateProps) => {
+const DetailsViewCreate = ({ isPending = false, ...props }: DetailsViewCreateProps) => {
   const { t } = useTranslation()
+
   return (
-    <Button
-      {...props}
-      disabled={loading || disabled}
-    >
-      {loading ? (
-        <Spinner className="size-4 border-2 border-current border-r-transparent mr-2" />
-      ) : (
-        <CircleCheck className="btn-icon" />
-      )}
-      {t('save')}
-    </Button>
+    <Focusable>
+      <Button
+        {...props}
+        isPending={isPending}
+      >
+        {isPending ? (
+          <Loader2 className="btn-icon icon-start icon-sm" />
+        ) : (
+          <CircleCheck className="btn-icon icon-start" />
+        )}
+        {t('save')}
+      </Button>
+    </Focusable>
   )
 }
 

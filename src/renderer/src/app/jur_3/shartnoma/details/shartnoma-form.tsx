@@ -17,7 +17,7 @@ import { parseDate } from '@/common/lib/date'
 import { cn } from '@/common/lib/utils'
 import { DocumentFields, OpisanieFields, SummaFields } from '@/common/widget/form'
 
-import { defaultValues, shartnomaQueryKeys } from '../config'
+import { ShartnomaQueryKeys, defaultValues } from '../config'
 import { ShartnomaFormSchema, shartnomaService } from '../service'
 import { PudratchiFields } from './pudratchi'
 import { ShartnomaGrafikForm } from './shartnoma-grafik-form'
@@ -27,7 +27,7 @@ enum TabOption {
   GRAFIK = 'GRAFIK'
 }
 
-type ShartnomaFormProps = {
+interface ShartnomaFormProps {
   loading?: boolean
   dialog?: boolean
   organization: number
@@ -62,45 +62,37 @@ export const ShartnomaForm = ({
     }
   })
 
-  const { mutate: create, isPending: isCreating } = useMutation({
-    mutationKey: [shartnomaQueryKeys.create],
+  const { mutate: createShartnoma, isPending: isCreating } = useMutation({
+    mutationKey: [ShartnomaQueryKeys.create],
     mutationFn: shartnomaService.create,
     onSuccess(res) {
       toast.success(res?.message)
       form.reset(defaultValues)
       queryClient.invalidateQueries({
-        queryKey: [shartnomaQueryKeys.getAll]
+        queryKey: [ShartnomaQueryKeys.getAll]
       })
       queryClient.invalidateQueries({
-        queryKey: [shartnomaQueryKeys.getById, id]
+        queryKey: [ShartnomaQueryKeys.getById, id]
       })
 
       onSuccess?.()
-    },
-    onError(error) {
-      console.error(error)
-      toast.error(error?.message)
     }
   })
 
-  const { mutate: update, isPending: isUpdating } = useMutation({
-    mutationKey: [shartnomaQueryKeys.update, id],
+  const { mutate: updateShartnoma, isPending: isUpdating } = useMutation({
+    mutationKey: [ShartnomaQueryKeys.update, id],
     mutationFn: shartnomaService.update,
     onSuccess(res) {
       toast.success(res?.message)
 
       queryClient.invalidateQueries({
-        queryKey: [shartnomaQueryKeys.getAll]
+        queryKey: [ShartnomaQueryKeys.getAll]
       })
       queryClient.invalidateQueries({
-        queryKey: [shartnomaQueryKeys.getById, id]
+        queryKey: [ShartnomaQueryKeys.getById, id]
       })
 
       onSuccess?.()
-    },
-    onError(error) {
-      console.error(error)
-      toast.error(error?.message)
     }
   })
 
@@ -115,7 +107,7 @@ export const ShartnomaForm = ({
       grafiks
     }) => {
       if (selected) {
-        update({
+        updateShartnoma({
           id: Number(id),
           doc_date,
           doc_num,
@@ -128,7 +120,7 @@ export const ShartnomaForm = ({
         return
       }
 
-      create({
+      createShartnoma({
         doc_date,
         doc_num,
         spravochnik_organization_id,

@@ -319,8 +319,8 @@ const PokazatUslugiDetailsPage = () => {
             <DetailsView.Footer>
               <DetailsView.Create
                 tabIndex={7}
-                disabled={isCreating || isUpdating}
-                loading={isCreating || isUpdating}
+                isDisabled={isCreating || isUpdating}
+                isPending={isCreating || isUpdating}
               />
             </DetailsView.Footer>
           </form>

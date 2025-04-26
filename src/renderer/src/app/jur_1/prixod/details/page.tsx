@@ -405,7 +405,7 @@ const KassaPrixodDetailsPage = () => {
 
             <DetailsView.Footer className="flex flex-row items-center gap-10">
               <DetailsView.Create
-                loading={isCreating || isUpdating}
+                isPending={isCreating || isUpdating}
                 tabIndex={5}
               />
             </DetailsView.Footer>

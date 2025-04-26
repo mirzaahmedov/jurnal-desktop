@@ -21,7 +21,7 @@ import { formatNumber } from '@/common/lib/format'
 import { roundNumberToTwoDecimalPlaces } from '@/common/lib/utils'
 import { DetailsView } from '@/common/views'
 
-import { SmetaGrafikFormSchema, defaultValues, smetaGrafikQueryKeys } from '../config'
+import { SmetaGrafikFormSchema, SmetaGrafikQueryKeys, defaultValues } from '../config'
 import { SmetaGrafikService } from '../service'
 
 const SmetaGrafikDetailsPage = () => {
@@ -53,7 +53,7 @@ const SmetaGrafikDetailsPage = () => {
 
   const { data: smetaGrafik, isFetching } = useQuery({
     queryKey: [
-      smetaGrafikQueryKeys.getById,
+      SmetaGrafikQueryKeys.getById,
       Number(params.id),
       {
         main_schet_id
@@ -63,23 +63,23 @@ const SmetaGrafikDetailsPage = () => {
     enabled: params.id !== 'create'
   })
   const { mutate: createSmetaGrafik, isPending: isCreating } = useMutation({
-    mutationKey: [smetaGrafikQueryKeys.create],
+    mutationKey: [SmetaGrafikQueryKeys.create],
     mutationFn: SmetaGrafikService.create,
     onSuccess(res) {
       toast.success(res?.message)
       queryClient.invalidateQueries({
-        queryKey: [smetaGrafikQueryKeys.getAll]
+        queryKey: [SmetaGrafikQueryKeys.getAll]
       })
       navigate(-1)
     }
   })
   const { mutate: updateSmetaGrafik, isPending: isUpdating } = useMutation({
-    mutationKey: [smetaGrafikQueryKeys.update],
+    mutationKey: [SmetaGrafikQueryKeys.update],
     mutationFn: SmetaGrafikService.update,
     onSuccess(res) {
       toast.success(res?.message)
       queryClient.invalidateQueries({
-        queryKey: [smetaGrafikQueryKeys.getAll]
+        queryKey: [SmetaGrafikQueryKeys.getAll]
       })
       navigate(-1)
     }
@@ -87,6 +87,7 @@ const SmetaGrafikDetailsPage = () => {
 
   const onSubmit = form.handleSubmit((values) => {
     if (!budjet_id || !main_schet_id) {
+      toast.error('Выберите бюджет и главный счет')
       return
     }
     if (params.id !== 'create') {
@@ -137,6 +138,8 @@ const SmetaGrafikDetailsPage = () => {
       }
     })
   }, [setLayout, navigate, params.id, t])
+
+  console.log({ errors: form.formState.errors })
 
   return (
     <DetailsView>
@@ -209,8 +212,8 @@ const SmetaGrafikDetailsPage = () => {
             <DetailsView.Footer className="flex items-center gap-5">
               <DetailsView.Create
                 type="submit"
-                disabled={isCreating || isUpdating}
-                loading={isCreating || isUpdating}
+                isDisabled={isCreating || isUpdating}
+                isPending={isCreating || isUpdating}
               >
                 {t('save')}
               </DetailsView.Create>

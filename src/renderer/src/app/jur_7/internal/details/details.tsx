@@ -239,7 +239,7 @@ const InternalDetails = ({ id, onSuccess: onSuccess }: InternalDetailsProps) => 
             <DetailsView.Footer>
               <DetailsView.Create
                 tabIndex={6}
-                disabled={isCreating || isUpdating}
+                isDisabled={isCreating || isUpdating}
               />
             </DetailsView.Footer>
           </form>

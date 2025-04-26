@@ -315,7 +315,7 @@ const PrixodDetails = ({ id, onSuccess }: PrixodDetailsProps) => {
             <DetailsView.Footer>
               <DetailsView.Create
                 tabIndex={9}
-                disabled={isCreating || isUpdating}
+                isDisabled={isCreating || isUpdating}
               />
             </DetailsView.Footer>
           </form>

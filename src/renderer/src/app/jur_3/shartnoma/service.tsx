@@ -22,7 +22,7 @@ import { extendObject } from '@/common/lib/utils'
 import { withPreprocessor } from '@/common/lib/validation'
 
 import { shartnomaColumns } from './columns'
-import { shartnomaQueryKeys } from './config'
+import { ShartnomaQueryKeys } from './config'
 import { ShartnomaForm } from './details/shartnoma-form'
 
 export const shartnomaService = new CRUDService<Shartnoma, ShartnomaFormValues>({
@@ -156,7 +156,7 @@ export const createShartnomaSpravochnik = (config: Partial<SpravochnikHookOption
       endpoint: ApiEndpoints.shartnoma,
       columnDefs: shartnomaColumns,
       service: shartnomaService,
-      queryKeys: shartnomaQueryKeys,
+      queryKeys: ShartnomaQueryKeys,
       Dialog: ShartnomaSpravochnikDialog,
       CustomTable: ShartnomaSpravochnikTable,
       filters: [SpravochnikSearchField]

@@ -315,8 +315,8 @@ const AktDetailsPage = () => {
             <DetailsView.Footer>
               <DetailsView.Create
                 tabIndex={7}
-                loading={isCreating || isUpdating}
-                disabled={isCreating || isUpdating}
+                isPending={isCreating || isUpdating}
+                isDisabled={isCreating || isUpdating}
               />
             </DetailsView.Footer>
           </form>

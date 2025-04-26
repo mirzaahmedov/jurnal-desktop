@@ -12,6 +12,7 @@ import DashboardPage from './dashboard/page'
 import HomePage from './home/page'
 import { Jur7MonitorPage } from './jur_7/monitor/page'
 import PrixodSchetPage from './jur_8/schet/page'
+import { SmetaGrafikBatchCreatePage } from './region-spravochnik/smeta-grafik/batch-create/page'
 import SigninPage from './sign-in'
 
 const KassaSaldoPage = lazy(() => import('./jur_1/saldo/page'))
@@ -487,6 +488,10 @@ export const routes: RouteObject[] = [
           {
             index: true,
             element: <SmetaGrafikPage />
+          },
+          {
+            path: 'create',
+            element: <SmetaGrafikBatchCreatePage />
           },
           {
             path: ':id',

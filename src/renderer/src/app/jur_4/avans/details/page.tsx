@@ -277,8 +277,8 @@ const AvansDetailsPage = () => {
             <DetailsView.Footer>
               <DetailsView.Create
                 tabIndex={6}
-                disabled={isCreating || isUpdating}
-                loading={isCreating || isUpdating}
+                isDisabled={isCreating || isUpdating}
+                isPending={isCreating || isUpdating}
               />
             </DetailsView.Footer>
           </form>
