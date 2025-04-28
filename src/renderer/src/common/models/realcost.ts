@@ -27,11 +27,11 @@ export interface RealCostProvodka {
   smeta_id: number
   month_summa: number
   year_summa: number
-  by_month: RealCostShartnomaGrafik[]
-  by_year: RealCostShartnomaGrafik[]
+  by_month: RealCostGrafik[]
+  by_year: RealCostGrafik[]
 }
 
-export interface RealCostShartnomaGrafik {
+export interface RealCostGrafik {
   id: number
   id_shartnomalar_organization: number
   user_id: number

@@ -2,7 +2,7 @@ import type { HTMLAttributes, TdHTMLAttributes, ThHTMLAttributes } from 'react'
 
 import { type VariantProps, cva } from 'class-variance-authority'
 
-import * as Table from '@/common/components/ui/table'
+import * as Generic from '@/common/components/ui/table'
 import { cn } from '@/common/lib/utils'
 
 export const TableCell = ({
@@ -11,7 +11,7 @@ export const TableCell = ({
   ...props
 }: TdHTMLAttributes<HTMLTableCellElement>) => {
   return (
-    <Table.TableCell
+    <Generic.TableCell
       {...props}
       className={cn(
         'border-r border-b border-slate-200 group-focus-within/row:border-highlight-divider bg-inherit p-px pt-0.5',
@@ -19,7 +19,7 @@ export const TableCell = ({
       )}
     >
       {children}
-    </Table.TableCell>
+    </Generic.TableCell>
   )
 }
 
@@ -29,7 +29,7 @@ export const TableHead = ({
   ...props
 }: ThHTMLAttributes<HTMLTableCellElement>) => {
   return (
-    <Table.TableHead
+    <Generic.TableHead
       {...props}
       className={cn(
         'px-3 border-r border-b border-slate-200 !bg-slate-100 text-foreground text-xs font-bold',
@@ -37,7 +37,7 @@ export const TableHead = ({
       )}
     >
       {children}
-    </Table.TableHead>
+    </Generic.TableHead>
   )
 }
 
@@ -59,12 +59,12 @@ export interface TableRowProps
 }
 export const TableRow = ({ children, className, focusable, rowRef, ...props }: TableRowProps) => {
   return (
-    <Table.TableRow
+    <Generic.TableRow
       {...props}
       ref={rowRef}
       className={cn(rowVariants({ className, focusable }), className)}
     >
       {children}
-    </Table.TableRow>
+    </Generic.TableRow>
   )
 }

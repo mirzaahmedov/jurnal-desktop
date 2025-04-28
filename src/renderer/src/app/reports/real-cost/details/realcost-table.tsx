@@ -1,7 +1,8 @@
-import type { RealCostProvodka } from '@/common/models'
+import type { RealCostTableRow } from './interfaces'
 
-import { type RefObject, memo, useImperativeHandle, useRef } from 'react'
+import { type MutableRefObject, type RefObject, memo, useImperativeHandle, useRef } from 'react'
 
+import { useVirtualizer } from '@tanstack/react-virtual'
 import { useTranslation } from 'react-i18next'
 
 import { NumericInput, type NumericInputProps } from '@/common/components'
@@ -58,35 +59,31 @@ const NumberEditor = ({ value, defaultValue, className, ...props }: NumericInput
 }
 
 export interface RealCostTableProps {
-  rows: RealCostProvodka[]
+  rows: RealCostTableRow[]
   methods?: RefObject<EditableTableMethods>
 }
 export const RealCostTable = memo(({ rows, methods }: RealCostTableProps) => {
   const ref = useRef<HTMLTableElement>(null)
+  const highlightedRow = useRef<number | null>(null)
 
   const { t } = useTranslation(['app'])
+
+  const rowVirtualizer = useVirtualizer({
+    count: rows.length,
+    getScrollElement: () => ref.current,
+    estimateSize: () => 44,
+    overscan: 5
+  })
 
   useImperativeHandle(
     methods,
     () => ({
       scrollToRow: (rowIndex: number) => {
-        const rowElement = ref.current?.querySelector(
-          `[data-rowindex="${rowIndex}"]`
-        ) as HTMLTableRowElement | null
-
-        if (rowElement) {
-          rowElement.scrollIntoView({
-            behavior: 'smooth',
-            block: 'nearest'
-          })
-
-          const inputElement = rowElement.querySelector(
-            'input:not(:disabled), textarea:not(:disabled), select:not(:disabled)'
-          ) as HTMLInputElement
-          inputElement?.focus?.({
-            preventScroll: true
-          })
-        }
+        rowVirtualizer.scrollToIndex(rowIndex, {
+          align: 'center',
+          behavior: 'smooth'
+        })
+        highlightedRow.current = rowIndex
       }
     }),
     []
@@ -214,9 +211,10 @@ export const RealCostTable = memo(({ rows, methods }: RealCostTableProps) => {
         className="w-min overflow-x-hidden overflow-y-auto flex-1 scrollbar"
         ref={ref}
       >
-        <Table className="border border-slate-200 table-fixed">
-          {/* <TableHeader className="shadow-sm sticky top-0 z-100 bg-white"> */}
-          {/* <TableRow style={{ height: 44 }}>
+        <div style={{ height: `${rowVirtualizer.getTotalSize()}px` }}>
+          <Table className="border border-slate-200 table-fixed">
+            {/* <TableHeader className="shadow-sm sticky top-0 z-100 bg-white"> */}
+            {/* <TableRow style={{ height: 44 }}>
             <TableHead
               className="px-3 whitespace-nowrap text-sm font-medium"
               style={{
@@ -310,36 +308,43 @@ export const RealCostTable = memo(({ rows, methods }: RealCostTableProps) => {
               {t('remainder')}
             </TableHead>
           </TableRow> */}
-          {/* </TableHeader> */}
+            {/* </TableHeader> */}
 
-          <TableBody>
-            {Array.isArray(rows) && rows.length ? (
-              rows.map((row, index) => {
-                return (
-                  <Row
-                    key={index}
-                    index={index}
-                    row={row}
-                    rows={rows}
-                  />
-                )
-              })
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={100}
-                  className="text-center py-5"
-                >
-                  <EmptyList
-                    iconProps={{
-                      className: 'w-40'
-                    }}
-                  ></EmptyList>
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
+            <TableBody>
+              {Array.isArray(rows) && rows.length ? (
+                rowVirtualizer.getVirtualItems().map((virtualRow, index) => {
+                  const row = rows[virtualRow.index]
+                  return (
+                    <Row
+                      key={virtualRow.index}
+                      index={virtualRow.index}
+                      row={row}
+                      rows={rows}
+                      highlightedRow={highlightedRow}
+                      style={{
+                        height: `${virtualRow.size}px`,
+                        transform: `translateY(${virtualRow.start - index * virtualRow.size}px)`
+                      }}
+                    />
+                  )
+                })
+              ) : (
+                <TableRow>
+                  <TableCell
+                    colSpan={100}
+                    className="text-center py-5"
+                  >
+                    <EmptyList
+                      iconProps={{
+                        className: 'w-40'
+                      }}
+                    ></EmptyList>
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </div>
       </div>
     </div>
   )
@@ -347,159 +352,162 @@ export const RealCostTable = memo(({ rows, methods }: RealCostTableProps) => {
 
 interface RowProps extends TableRowProps {
   index: number
-  row: RealCostProvodka
-  rows: RealCostProvodka[]
+  row: RealCostTableRow
+  rows: RealCostTableRow[]
+  highlightedRow: MutableRefObject<number | null>
 }
-const Row = ({ index: rowIndex, row, rows, ...props }: RowProps) => {
-  const maxLength = Math.max(row.by_month?.length, row.by_year?.length, 1)
-
-  return Array.from({ length: maxLength }).map((_, index) => {
-    const month = row.by_month?.[index]
-    const year = row.by_year?.[index]
-
-    return (
-      <TableRow
-        key={rowIndex + index}
-        data-rowindex={rowIndex}
-        {...props}
-      >
-        {index === 0 && (
-          <>
-            <TableCell
-              key="line_number"
-              className="px-3 font-medium"
-              style={{
-                width: `${String(rows.length + 1).length + 3}ch`
-              }}
-              rowSpan={maxLength}
-            >
-              {rowIndex + 1}
-            </TableCell>
-            <TableCell
-              rowSpan={maxLength}
-              style={{ width: 300 }}
-            >
-              <TextEditor
-                value={row.smeta_name}
-                style={{
-                  height: maxLength * 44
-                }}
-                readOnly
-              />
-            </TableCell>
-            <TableCell
-              rowSpan={maxLength}
-              style={{ width: 100 }}
-              className="sticky left-0 z-50"
-            >
-              <TextEditor
-                value={row.smeta_number}
-                className="font-bold"
-                style={{
-                  height: maxLength * 44
-                }}
-                readOnly
-              />
-            </TableCell>
-            <TableCell
-              rowSpan={maxLength}
-              style={{ width: 140 }}
-            >
-              <NumberEditor
-                value={row.month_summa}
-                defaultValue={0}
-                style={{
-                  height: maxLength * 44
-                }}
-                readOnly
-              />
-            </TableCell>
-          </>
-        )}
-
-        <TableCell style={{ width: 140 }}>
-          <TextEditor
-            value={month ? `${month?.doc_num} / ${formatLocaleDate(month?.doc_date)}` : ''}
-            readOnly
-          />
-        </TableCell>
-        <TableCell style={{ width: 300 }}>
-          <TextEditor
-            value={month?.name ?? ''}
-            readOnly
-          />
-        </TableCell>
-        <TableCell style={{ width: 140 }}>
-          <NumberEditor
-            value={month?.itogo ?? ''}
-            defaultValue={0}
-            readOnly
-          />
-        </TableCell>
-        <TableCell style={{ width: 140 }}>
-          <NumberEditor
-            value={month?.rasxod_summa ?? ''}
-            defaultValue={0}
-            readOnly
-          />
-        </TableCell>
-        <TableCell style={{ width: 140 }}>
-          <NumberEditor
-            value={month?.remaining_summa ?? ''}
-            defaultValue={0}
-            readOnly
-          />
-        </TableCell>
-
-        {index === 0 && (
+const Row = ({ index, row, rows, highlightedRow, ...props }: RowProps) => {
+  return (
+    <TableRow
+      key={index}
+      rowRef={(element) => {
+        if (index === highlightedRow?.current) {
+          highlightedRow.current = null
+          const input = element?.querySelector(`input`) as HTMLInputElement
+          input?.focus()
+        }
+      }}
+      data-rowindex={index}
+      {...props}
+    >
+      {row.first && (
+        <>
           <TableCell
-            rowSpan={maxLength}
-            style={{ width: 140 }}
+            key="line_number"
+            className="px-3 font-medium"
+            style={{
+              width: `${String(rows.length + 1).length + 3}ch`
+            }}
+            rowSpan={row.size}
           >
-            <NumberEditor
-              value={row.year_summa}
-              defaultValue={0}
+            {index + 1}
+          </TableCell>
+          <TableCell
+            rowSpan={row.size}
+            style={{ width: 300 }}
+          >
+            <TextEditor
+              value={row.smeta_name}
               style={{
-                height: maxLength * 44
+                height: row.size * 44
               }}
               readOnly
             />
           </TableCell>
-        )}
-        <TableCell style={{ width: 140 }}>
-          <TextEditor
-            value={year ? `${year?.doc_num} / ${formatLocaleDate(year?.doc_date)}` : ''}
-            readOnly
-          />
-        </TableCell>
-        <TableCell style={{ width: 300 }}>
-          <TextEditor
-            value={year?.name ?? ''}
-            readOnly
-          />
-        </TableCell>
-        <TableCell style={{ width: 140 }}>
+          <TableCell
+            rowSpan={row.size}
+            style={{ width: 100 }}
+            className="sticky left-0 z-50"
+          >
+            <TextEditor
+              value={row.smeta_number}
+              className="font-bold"
+              style={{
+                height: row.size * 44
+              }}
+              readOnly
+            />
+          </TableCell>
+          <TableCell
+            rowSpan={row.size}
+            style={{ width: 140 }}
+          >
+            <NumberEditor
+              value={row.month_summa}
+              defaultValue={0}
+              style={{
+                height: row.size * 44
+              }}
+              readOnly
+            />
+          </TableCell>
+        </>
+      )}
+
+      <TableCell style={{ width: 140 }}>
+        <TextEditor
+          value={row.doc_num ? `${row?.doc_num} / ${formatLocaleDate(row?.doc_date)}` : ''}
+          readOnly
+        />
+      </TableCell>
+      <TableCell style={{ width: 300 }}>
+        <TextEditor
+          value={row?.name ?? ''}
+          readOnly
+        />
+      </TableCell>
+      <TableCell style={{ width: 140 }}>
+        <NumberEditor
+          value={row?.itogo ?? ''}
+          defaultValue={0}
+          readOnly
+        />
+      </TableCell>
+      <TableCell style={{ width: 140 }}>
+        <NumberEditor
+          value={row?.rasxod_summa ?? ''}
+          defaultValue={0}
+          readOnly
+        />
+      </TableCell>
+      <TableCell style={{ width: 140 }}>
+        <NumberEditor
+          value={row?.remaining_summa ?? ''}
+          defaultValue={0}
+          readOnly
+        />
+      </TableCell>
+
+      {row.first && (
+        <TableCell
+          rowSpan={row.size}
+          style={{ width: 140 }}
+        >
           <NumberEditor
-            value={year?.itogo ?? ''}
+            value={row.year_summa}
             defaultValue={0}
+            style={{
+              height: row.size * 44
+            }}
             readOnly
           />
         </TableCell>
-        <TableCell style={{ width: 140 }}>
-          <NumberEditor
-            value={year?.rasxod_summa ?? ''}
-            defaultValue={0}
-            readOnly
-          />
-        </TableCell>
-        <TableCell style={{ width: 140 }}>
-          <NumberEditor
-            value={year?.remaining_summa ?? ''}
-            defaultValue={0}
-            readOnly
-          />
-        </TableCell>
-      </TableRow>
-    )
-  })
+      )}
+      <TableCell style={{ width: 140 }}>
+        <TextEditor
+          value={
+            row.doc_num_year ? `${row?.doc_num_year} / ${formatLocaleDate(row?.doc_date_year)}` : ''
+          }
+          readOnly
+        />
+      </TableCell>
+      <TableCell style={{ width: 300 }}>
+        <TextEditor
+          value={row?.name_year ?? ''}
+          readOnly
+        />
+      </TableCell>
+      <TableCell style={{ width: 140 }}>
+        <NumberEditor
+          value={row?.itogo_year ?? ''}
+          defaultValue={0}
+          readOnly
+        />
+      </TableCell>
+      <TableCell style={{ width: 140 }}>
+        <NumberEditor
+          value={row?.rasxod_summa_year ?? ''}
+          defaultValue={0}
+          readOnly
+        />
+      </TableCell>
+      <TableCell style={{ width: 140 }}>
+        <NumberEditor
+          value={row?.remaining_summa_year ?? ''}
+          defaultValue={0}
+          readOnly
+        />
+      </TableCell>
+    </TableRow>
+  )
 }

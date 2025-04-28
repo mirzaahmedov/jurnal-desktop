@@ -11,9 +11,9 @@ import { cn } from '@/common/lib/utils'
 import {
   type OdinoxAutoFill,
   type OdinoxAutoFillSubChild,
-  type OdinoxTableRow,
   type OdinoxType,
-  OdinoxTypeName
+  OdinoxTypeName,
+  type RealCostTableRow
 } from './interfaces'
 
 export const transformOdinoxAutoFillData = (types: OdinoxAutoFill[]) => {
@@ -47,9 +47,9 @@ export const transformOdinoxAutoFillData = (types: OdinoxAutoFill[]) => {
     })
   })
 
-  const rows: OdinoxTableRow[] = []
+  const rows: RealCostTableRow[] = []
   smetaMap.forEach((types) => {
-    const row = {} as OdinoxTableRow
+    const row = {} as RealCostTableRow
     types.forEach(({ type_name, smeta }) => {
       row[type_name] = smeta.summa
 
@@ -95,9 +95,9 @@ export const transformGetByIdData = (types: OdinoxProvodka[]) => {
     })
   })
 
-  const rows: OdinoxTableRow[] = []
+  const rows: RealCostTableRow[] = []
   smetaMap.forEach((types) => {
-    const row = {} as OdinoxTableRow
+    const row = {} as RealCostTableRow
     types.forEach(({ type_name, smeta }) => {
       row[type_name] = smeta.summa
 

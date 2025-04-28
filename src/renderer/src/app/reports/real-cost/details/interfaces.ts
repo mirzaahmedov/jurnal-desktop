@@ -1,3 +1,5 @@
+import type { RealCostGrafik, RealCostProvodka } from '@/common/models'
+
 export interface OdinoxAutoFillSubChild {
   id: number
   smeta_name: string
@@ -18,11 +20,23 @@ export interface OdinoxAutoFill {
   summa: number
 }
 
-export interface OdinoxTableRow extends Record<string, number | string> {
-  smeta_name: string
-  smeta_number: string
-  group_number: string
-  smeta_id: number
+type RealCostMonthGrafik = Pick<
+  RealCostGrafik,
+  'doc_num' | 'doc_date' | 'name' | 'itogo' | 'rasxod_summa' | 'remaining_summa'
+>
+type RealCostYearGrafik = {
+  [key in keyof RealCostMonthGrafik as `${key}_year`]: RealCostMonthGrafik[key]
+}
+
+export interface RealCostTableRow
+  extends Pick<
+      RealCostProvodka,
+      'id' | 'smeta_name' | 'smeta_number' | 'month_summa' | 'year_summa' | 'smeta_id'
+    >,
+    RealCostMonthGrafik,
+    RealCostYearGrafik {
+  first: boolean
+  size: number
 }
 
 export enum OdinoxTypeName {

@@ -1,3 +1,4 @@
+import type { RealCostTableRow } from './interfaces'
 import type { EditableTableMethods } from '@/common/components/editable-table'
 
 import { type KeyboardEvent, useEffect, useMemo, useRef } from 'react'
@@ -163,6 +164,40 @@ const RealCostDetailsPage = () => {
     }
   }
 
+  const childs = form.watch('childs') ?? []
+  const rows = useMemo(() => {
+    const rows: RealCostTableRow[] = []
+    childs.map((row) => {
+      const size = Math.max(row.by_month.length, row.by_year.length, 1)
+
+      for (let i = 0; i < size; i++) {
+        rows.push({
+          first: i === 0,
+          size: size,
+          smeta_id: row.smeta_id,
+          id: row.id,
+          smeta_name: row.smeta_name,
+          smeta_number: row.smeta_number,
+          month_summa: row.month_summa ?? 0,
+          year_summa: row.year_summa ?? 0,
+          doc_num: row.by_month[i]?.doc_num ?? '',
+          doc_date: row.by_month[i]?.doc_date ?? '',
+          name: row.by_month[i]?.name ?? '',
+          itogo: row.by_month[i]?.itogo ?? 0,
+          rasxod_summa: row.by_month[i]?.rasxod_summa ?? 0,
+          remaining_summa: row.by_month[i]?.remaining_summa ?? 0,
+          doc_num_year: row.by_year[i]?.doc_num ?? '',
+          doc_date_year: row.by_year[i]?.doc_date ?? '',
+          name_year: row.by_year[i]?.name ?? '',
+          itogo_year: row.by_year[i]?.itogo ?? 0,
+          rasxod_summa_year: row.by_year[i]?.rasxod_summa ?? 0,
+          remaining_summa_year: row.by_year[i]?.remaining_summa ?? 0
+        })
+      }
+    })
+    return rows
+  }, [form, childs])
+
   return (
     <DetailsView className="h-full">
       <DetailsView.Content
@@ -215,7 +250,7 @@ const RealCostDetailsPage = () => {
             </div>
             <div className="overflow-auto scrollbar flex-1 relative">
               <RealCostTable
-                rows={form.watch('childs') ?? []}
+                rows={rows}
                 methods={tableMethods}
               />
             </div>
