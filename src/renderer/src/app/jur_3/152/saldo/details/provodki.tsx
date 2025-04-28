@@ -6,6 +6,15 @@ import { createNumberEditor, createTextEditor } from '@/common/components/editab
 export const getOrganSaldoProvodkaColumns = (isEditable: boolean) =>
   [
     {
+      key: 'organization_id',
+      header: 'id',
+      width: 100,
+      Editor: createTextEditor({
+        key: 'organization_id',
+        readOnly: true
+      })
+    },
+    {
       key: 'name',
       Editor: createTextEditor({
         key: 'name',

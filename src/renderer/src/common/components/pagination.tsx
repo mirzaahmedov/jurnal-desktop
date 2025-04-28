@@ -38,8 +38,8 @@ export const Pagination = ({
 }: PaginationProps) => {
   const { t } = useTranslation()
 
-  const pageCountValue = Math.max(pageCount, 1)
-  const pageValue = Math.max(page, 1)
+  const pageCountValue = pageCount
+  const pageValue = page
   const onChangeEvent = useEventCallback(onChange)
 
   useEffect(() => {
@@ -55,7 +55,10 @@ export const Pagination = ({
         pageRangeDisplayed={2}
         breakLabel="..."
         forcePage={pageValue - 1 === 0 ? 1 : pageValue - 1}
-        onPageChange={({ selected }) => onChange({ page: selected + 1 })}
+        onPageChange={({ selected }) => {
+          console.log('selected', selected)
+          onChange({ page: selected + 1 })
+        }}
         pageLabelBuilder={(pageNumber) => (
           <Button
             variant={pageNumber === pageValue ? 'default' : 'ghost'}
@@ -82,7 +85,7 @@ export const Pagination = ({
         }
         pageCount={pageCountValue}
       />
-      {!disablePageSize && (
+      {!disablePageSize && count ? (
         <div className="flex items-center gap-10">
           <span className="whitespace-nowrap text-sm font-medium text-slate-600">
             {t('pagination.range', {
@@ -105,7 +108,7 @@ export const Pagination = ({
             </JollySelect>
           </div>
         </div>
-      )}
+      ) : null}
     </div>
   )
 }
