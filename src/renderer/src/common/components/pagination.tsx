@@ -54,9 +54,8 @@ export const Pagination = ({
         className="flex gap-4"
         pageRangeDisplayed={2}
         breakLabel="..."
-        forcePage={pageValue - 1 === 0 ? 1 : pageValue - 1}
+        forcePage={pageValue - 1}
         onPageChange={({ selected }) => {
-          console.log('selected', selected)
           onChange({ page: selected + 1 })
         }}
         pageLabelBuilder={(pageNumber) => (
