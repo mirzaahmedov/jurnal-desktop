@@ -20,7 +20,6 @@ import { DetailsView } from '@/common/views'
 import { RealCostQueryKeys } from '../config'
 import { RealCostService } from '../service'
 import { defaultValues } from './config'
-import { RealCostProvodkaColumns } from './provodki'
 import { RealCostTable } from './realcost-table'
 
 const RealCostDetailsPage = () => {
@@ -215,7 +214,10 @@ const RealCostDetailsPage = () => {
               </div>
             </div>
             <div className="overflow-auto scrollbar flex-1 relative">
-              <RealCostTable rows={form.watch('childs') ?? []} />
+              <RealCostTable
+                rows={form.watch('childs') ?? []}
+                methods={tableMethods}
+              />
             </div>
           </div>
 

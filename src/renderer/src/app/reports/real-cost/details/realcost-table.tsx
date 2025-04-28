@@ -1,8 +1,7 @@
 import type { RealCostProvodka } from '@/common/models'
 
-import { type MutableRefObject, type RefObject, memo, useImperativeHandle, useRef } from 'react'
+import { type RefObject, memo, useImperativeHandle, useRef } from 'react'
 
-import { useVirtualizer } from '@tanstack/react-virtual'
 import { useTranslation } from 'react-i18next'
 
 import { NumericInput, type NumericInputProps } from '@/common/components'
@@ -63,24 +62,35 @@ export interface RealCostTableProps {
   methods?: RefObject<EditableTableMethods>
 }
 export const RealCostTable = memo(({ rows, methods }: RealCostTableProps) => {
-  const highlightedRow = useRef<number | null>(null)
   const ref = useRef<HTMLTableElement>(null)
 
   const { t } = useTranslation(['app'])
 
-  // useImperativeHandle(
-  //   methods,
-  //   () => ({
-  //     scrollToRow: (rowIndex: number) => {
-  //       rowVirtualizer.scrollToIndex(rowIndex, {
-  //         align: 'center',
-  //         behavior: 'smooth'
-  //       })
-  //       highlightedRow.current = rowIndex
-  //     }
-  //   }),
-  //   [rowVirtualizer]
-  // )
+  useImperativeHandle(
+    methods,
+    () => ({
+      scrollToRow: (rowIndex: number) => {
+        const rowElement = ref.current?.querySelector(
+          `[data-rowindex="${rowIndex}"]`
+        ) as HTMLTableRowElement | null
+
+        if (rowElement) {
+          rowElement.scrollIntoView({
+            behavior: 'smooth',
+            block: 'nearest'
+          })
+
+          const inputElement = rowElement.querySelector(
+            'input:not(:disabled), textarea:not(:disabled), select:not(:disabled)'
+          ) as HTMLInputElement
+          inputElement?.focus?.({
+            preventScroll: true
+          })
+        }
+      }
+    }),
+    []
+  )
 
   return (
     <div
@@ -94,9 +104,10 @@ export const RealCostTable = memo(({ rows, methods }: RealCostTableProps) => {
           block: 'nearest'
         })
       }}
-      className="relative h-full flex flex-col w-full overflow-auto scrollbar"
+      className="relative h-full flex flex-col w-full overflow-auto scrollbar scroll-p-32"
     >
       <Table
+        ref={ref}
         className="border border-slate-200 table-fixed"
         style={{ width: 2250 }}
       >
@@ -136,18 +147,31 @@ export const RealCostTable = memo(({ rows, methods }: RealCostTableProps) => {
             </TableHead>
           </TableRow>
           <TableRow style={{ height: 50 }}>
-            <TableHead style={{ width: 140 }}>{t('pages.smeta_grafik')}</TableHead>
+            <TableHead
+              style={{ width: 140 }}
+              className="text-end"
+            >
+              {t('pages.smeta_grafik')}
+            </TableHead>
             <TableHead style={{ width: 140 }}>№ / {t('date')}</TableHead>
             <TableHead style={{ width: 300 }}>{t('organization')}</TableHead>
-            <TableHead>{t('summa')}</TableHead>
-            <TableHead style={{ width: 140 }}>
+            <TableHead className="text-end">{t('summa')}</TableHead>
+            <TableHead
+              style={{ width: 140 }}
+              className="text-end"
+            >
               {t('pages.kassa')}/{t('bank').toLowerCase()} {t('rasxod').toLowerCase()}
             </TableHead>
-            <TableHead style={{ width: 140 }}>{t('remainder')}</TableHead>
+            <TableHead
+              style={{ width: 140 }}
+              className="text-end"
+            >
+              {t('remainder')}
+            </TableHead>
 
             <TableHead
               style={{ width: 140 }}
-              className="!bg-slate-200 border-slate-300"
+              className="!bg-slate-200 border-slate-300 text-end"
             >
               {t('pages.smeta_grafik')}
             </TableHead>
@@ -165,19 +189,19 @@ export const RealCostTable = memo(({ rows, methods }: RealCostTableProps) => {
             </TableHead>
             <TableHead
               style={{ width: 140 }}
-              className="!bg-slate-200 border-slate-300"
+              className="!bg-slate-200 border-slate-300 text-end"
             >
               {t('summa')}
             </TableHead>
             <TableHead
               style={{ width: 140 }}
-              className="!bg-slate-200 border-slate-300"
+              className="!bg-slate-200 border-slate-300 text-end"
             >
               {t('pages.kassa')}/{t('bank').toLowerCase()} {t('rasxod').toLowerCase()}
             </TableHead>
             <TableHead
               style={{ width: 140 }}
-              className="!bg-slate-200 border-slate-300"
+              className="!bg-slate-200 border-slate-300 text-end"
             >
               {t('remainder')}
             </TableHead>
@@ -190,7 +214,6 @@ export const RealCostTable = memo(({ rows, methods }: RealCostTableProps) => {
                 <Row
                   key={index}
                   index={index}
-                  highlightedRow={highlightedRow}
                   row={row}
                   rows={rows}
                 />
@@ -220,9 +243,8 @@ interface RowProps extends TableRowProps {
   index: number
   row: RealCostProvodka
   rows: RealCostProvodka[]
-  highlightedRow: MutableRefObject<number | null>
 }
-const Row = ({ index: rowIndex, row, rows, highlightedRow, ...props }: RowProps) => {
+const Row = ({ index: rowIndex, row, rows, ...props }: RowProps) => {
   const maxLength = Math.max(row.by_month?.length, row.by_year?.length, 1)
 
   return Array.from({ length: maxLength }).map((_, index) => {
@@ -232,13 +254,6 @@ const Row = ({ index: rowIndex, row, rows, highlightedRow, ...props }: RowProps)
     return (
       <TableRow
         key={rowIndex + index}
-        rowRef={(element) => {
-          if (index === highlightedRow?.current) {
-            highlightedRow.current = null
-            const input = element?.querySelector(`input`) as HTMLInputElement
-            input?.focus()
-          }
-        }}
         data-rowindex={rowIndex}
         {...props}
       >
@@ -260,6 +275,9 @@ const Row = ({ index: rowIndex, row, rows, highlightedRow, ...props }: RowProps)
             >
               <TextEditor
                 value={row.smeta_name}
+                style={{
+                  height: maxLength * 44
+                }}
                 readOnly
               />
             </TableCell>
@@ -271,6 +289,9 @@ const Row = ({ index: rowIndex, row, rows, highlightedRow, ...props }: RowProps)
               <TextEditor
                 value={row.smeta_number}
                 className="font-bold"
+                style={{
+                  height: maxLength * 44
+                }}
                 readOnly
               />
             </TableCell>
@@ -280,6 +301,10 @@ const Row = ({ index: rowIndex, row, rows, highlightedRow, ...props }: RowProps)
             >
               <NumberEditor
                 value={row.month_summa}
+                defaultValue={0}
+                style={{
+                  height: maxLength * 44
+                }}
                 readOnly
               />
             </TableCell>
@@ -301,18 +326,21 @@ const Row = ({ index: rowIndex, row, rows, highlightedRow, ...props }: RowProps)
         <TableCell style={{ width: 140 }}>
           <NumberEditor
             value={month?.itogo ?? ''}
+            defaultValue={0}
             readOnly
           />
         </TableCell>
         <TableCell style={{ width: 140 }}>
           <NumberEditor
             value={month?.rasxod_summa ?? ''}
+            defaultValue={0}
             readOnly
           />
         </TableCell>
         <TableCell style={{ width: 140 }}>
           <NumberEditor
             value={month?.remaining_summa ?? ''}
+            defaultValue={0}
             readOnly
           />
         </TableCell>
@@ -322,8 +350,12 @@ const Row = ({ index: rowIndex, row, rows, highlightedRow, ...props }: RowProps)
             rowSpan={maxLength}
             style={{ width: 140 }}
           >
-            <TextEditor
+            <NumberEditor
               value={row.year_summa}
+              defaultValue={0}
+              style={{
+                height: maxLength * 44
+              }}
               readOnly
             />
           </TableCell>
@@ -343,18 +375,21 @@ const Row = ({ index: rowIndex, row, rows, highlightedRow, ...props }: RowProps)
         <TableCell style={{ width: 140 }}>
           <NumberEditor
             value={year?.itogo ?? ''}
+            defaultValue={0}
             readOnly
           />
         </TableCell>
         <TableCell style={{ width: 140 }}>
           <NumberEditor
             value={year?.rasxod_summa ?? ''}
+            defaultValue={0}
             readOnly
           />
         </TableCell>
         <TableCell style={{ width: 140 }}>
           <NumberEditor
             value={year?.remaining_summa ?? ''}
+            defaultValue={0}
             readOnly
           />
         </TableCell>
