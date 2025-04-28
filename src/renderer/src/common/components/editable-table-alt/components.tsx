@@ -1,4 +1,4 @@
-import type { HTMLAttributes, TdHTMLAttributes, ThHTMLAttributes } from 'react'
+import type { HTMLAttributes, Ref, TdHTMLAttributes, ThHTMLAttributes } from 'react'
 
 import { type VariantProps, cva } from 'class-variance-authority'
 
@@ -26,11 +26,13 @@ export const TableCell = ({
 export const TableHead = ({
   children,
   className,
+  elementRef,
   ...props
-}: ThHTMLAttributes<HTMLTableCellElement>) => {
+}: ThHTMLAttributes<HTMLTableCellElement> & { elementRef?: Ref<HTMLTableCellElement> }) => {
   return (
     <Generic.TableHead
       {...props}
+      ref={elementRef}
       className={cn(
         'px-3 border-r border-b border-slate-200 !bg-slate-100 text-foreground text-xs font-bold',
         className

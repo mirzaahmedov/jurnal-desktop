@@ -15,8 +15,9 @@ import {
 } from '@/common/components/editable-table-alt'
 import { EmptyList } from '@/common/components/empty-states'
 import { Input, type InputProps } from '@/common/components/ui/input'
-import { Table, TableBody, TableHeader } from '@/common/components/ui/table'
+import { Table, TableBody, TableFooter, TableHeader } from '@/common/components/ui/table'
 import { inputVariants } from '@/common/features/spravochnik'
+import { useElementWidth } from '@/common/hooks'
 import { formatLocaleDate } from '@/common/lib/format'
 import { cn } from '@/common/lib/utils'
 
@@ -60,11 +61,14 @@ const NumberEditor = ({ value, defaultValue, className, ...props }: NumericInput
 
 export interface RealCostTableProps {
   rows: RealCostTableRow[]
+  itogo: RealCostTableRow
   methods?: RefObject<EditableTableMethods>
 }
-export const RealCostTable = memo(({ rows, methods }: RealCostTableProps) => {
+export const RealCostTable = memo(({ rows, itogo, methods }: RealCostTableProps) => {
   const ref = useRef<HTMLTableElement>(null)
   const highlightedRow = useRef<number | null>(null)
+
+  const { width, setElementRef } = useElementWidth()
 
   const { t } = useTranslation(['app'])
 
@@ -91,6 +95,7 @@ export const RealCostTable = memo(({ rows, methods }: RealCostTableProps) => {
 
   return (
     <div
+      ref={setElementRef}
       onSubmit={(e) => {
         e.preventDefault()
         e.stopPropagation()
@@ -102,6 +107,11 @@ export const RealCostTable = memo(({ rows, methods }: RealCostTableProps) => {
         })
       }}
       className="relative h-full flex flex-col overflow-y-hidden overflow-x-auto scrollbar"
+      onScroll={(e) => {
+        if (!ref.current) return
+        const target = e.target as HTMLDivElement
+        ref.current.scrollLeft = target.scrollLeft
+      }}
     >
       <Table className="w-max border border-slate-200 table-fixed">
         <TableHeader className="shadow-sm">
@@ -208,108 +218,15 @@ export const RealCostTable = memo(({ rows, methods }: RealCostTableProps) => {
       </Table>
 
       <div
-        className="w-min overflow-x-hidden overflow-y-auto flex-1 scrollbar"
+        style={{ width }}
+        className="sticky left-0 w-min overflow-x-hidden overflow-y-auto flex-1 scrollbar"
         ref={ref}
       >
-        <div style={{ height: `${rowVirtualizer.getTotalSize()}px` }}>
-          <Table className="border border-slate-200 table-fixed">
-            {/* <TableHeader className="shadow-sm sticky top-0 z-100 bg-white"> */}
-            {/* <TableRow style={{ height: 44 }}>
-            <TableHead
-              className="px-3 whitespace-nowrap text-sm font-medium"
-              style={{
-                width: `${String(rows.length + 0).length + 3}ch`
-              }}
-              rowSpan={2}
-            ></TableHead>
-            <TableHead
-              rowSpan={2}
-              style={{ width: 300 }}
-            >
-              {t('name')}
-            </TableHead>
-            <TableHead
-              rowSpan={2}
-              style={{ width: 100 }}
-              className="sticky left-0 z-50"
-            >
-              {t('number')}
-            </TableHead>
-            <TableHead
-              colSpan={6}
-              className="text-center"
-            >
-              {t('for_month')}
-            </TableHead>
-            <TableHead
-              colSpan={6}
-              className="text-center !bg-slate-200 border-slate-300"
-            >
-              {t('for_year')}
-            </TableHead>
-          </TableRow>
-          <TableRow style={{ height: 50 }}>
-            <TableHead
-              style={{ width: 140 }}
-              className="text-end"
-            >
-              {t('pages.smeta_grafik')}
-            </TableHead>
-            <TableHead style={{ width: 140 }}>№ / {t('date')}</TableHead>
-            <TableHead style={{ width: 300 }}>{t('organization')}</TableHead>
-            <TableHead className="text-end">{t('summa')}</TableHead>
-            <TableHead
-              style={{ width: 140 }}
-              className="text-end"
-            >
-              {t('pages.kassa')}/{t('bank').toLowerCase()} {t('rasxod').toLowerCase()}
-            </TableHead>
-            <TableHead
-              style={{ width: 140 }}
-              className="text-end"
-            >
-              {t('remainder')}
-            </TableHead>
-
-            <TableHead
-              style={{ width: 140 }}
-              className="!bg-slate-200 border-slate-300 text-end"
-            >
-              {t('pages.smeta_grafik')}
-            </TableHead>
-            <TableHead
-              style={{ width: 140 }}
-              className="!bg-slate-200 border-slate-300"
-            >
-              № / {t('date')}
-            </TableHead>
-            <TableHead
-              style={{ width: 300 }}
-              className="!bg-slate-200 border-slate-300"
-            >
-              {t('organization')}
-            </TableHead>
-            <TableHead
-              style={{ width: 140 }}
-              className="!bg-slate-200 border-slate-300 text-end"
-            >
-              {t('summa')}
-            </TableHead>
-            <TableHead
-              style={{ width: 140 }}
-              className="!bg-slate-200 border-slate-300 text-end"
-            >
-              {t('pages.kassa')}/{t('bank').toLowerCase()} {t('rasxod').toLowerCase()}
-            </TableHead>
-            <TableHead
-              style={{ width: 140 }}
-              className="!bg-slate-200 border-slate-300 text-end"
-            >
-              {t('remainder')}
-            </TableHead>
-          </TableRow> */}
-            {/* </TableHeader> */}
-
+        <div
+          className="static"
+          style={{ height: `${rowVirtualizer.getTotalSize()}px` }}
+        >
+          <Table className="static border border-slate-200 table-fixed">
             <TableBody>
               {Array.isArray(rows) && rows.length ? (
                 rowVirtualizer.getVirtualItems().map((virtualRow, index) => {
@@ -346,6 +263,18 @@ export const RealCostTable = memo(({ rows, methods }: RealCostTableProps) => {
           </Table>
         </div>
       </div>
+
+      <Table className="w-max border border-slate-200 table-fixed">
+        <TableFooter className="shadow-sm">
+          <Row
+            focusable={false}
+            index={rows.length}
+            row={itogo}
+            rows={rows}
+            highlightedRow={highlightedRow}
+          />
+        </TableFooter>
+      </Table>
     </div>
   )
 })

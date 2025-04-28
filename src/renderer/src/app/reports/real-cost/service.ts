@@ -6,13 +6,32 @@ import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 import { main_schet } from '@/common/features/crud/middleware'
 
 export type OdinoxPayloadChild = Omit<OdinoxAutoFillSubChild, 'id' | 'smeta_grafik'>
+export interface RealCostMeta {
+  month_summa: number
+  year_summa: number
+  by_month: {
+    rasxod_summa: number
+    contract_grafik_summa: number
+    remaining_summa: number
+  }
+  by_year: {
+    rasxod_summa: number
+    contract_grafik_summa: number
+    remaining_summa: number
+  }
+}
 export interface RealCostPayload {
   month: number
   year: number
   childs: RealCostProvodka[]
 }
 
-class RealCostServiceBuilder extends CRUDService<RealCost, RealCostPayload> {
+class RealCostServiceBuilder extends CRUDService<
+  RealCost,
+  RealCostPayload,
+  RealCostPayload,
+  RealCostMeta
+> {
   constructor() {
     super({
       endpoint: ApiEndpoints.realcost
@@ -25,9 +44,10 @@ class RealCostServiceBuilder extends CRUDService<RealCost, RealCostPayload> {
   }
 
   async getAutofillData(params: { month: number; year: number; main_schet_id: number }) {
-    const res = await this.client.get<Response<RealCostProvodka[]>>(`${this.endpoint}/data`, {
-      params
-    })
+    const res = await this.client.get<Response<RealCostProvodka[], RealCostMeta>>(
+      `${this.endpoint}/data`,
+      { params }
+    )
     return res.data
   }
 

@@ -41,7 +41,8 @@ const RealCostDetailsPage = () => {
     defaultValues: {
       ...defaultValues,
       year: location.state?.year ?? new Date().getFullYear(),
-      month: new Date().getMonth() + 1
+      month: new Date().getMonth() + 1,
+      itogo: {} as RealCostTableRow
     }
   })
 
@@ -62,7 +63,18 @@ const RealCostDetailsPage = () => {
     mutationKey: [RealCostQueryKeys.getAutofill],
     mutationFn: RealCostService.getAutofillData,
     onSuccess: (res) => {
+      const itogo = {} as RealCostTableRow
+      if (res?.meta) {
+        itogo.first = true
+        itogo.rasxod_summa = res.meta.by_month.rasxod_summa
+        itogo.remaining_summa = res.meta.by_month.remaining_summa
+        itogo.itogo = String(res.meta.by_month.contract_grafik_summa)
+        itogo.rasxod_summa_year = res.meta.by_year.rasxod_summa
+        itogo.remaining_summa_year = res.meta.by_year.remaining_summa
+        itogo.itogo_year = String(res.meta.by_year.contract_grafik_summa)
+      }
       form.setValue('childs', res?.data ?? [])
+      form.setValue('itogo', itogo ?? {})
     },
     onError: () => {
       form.setValue('childs', [])
@@ -99,10 +111,24 @@ const RealCostDetailsPage = () => {
       return
     }
     if (realCost?.data) {
+      const data = realCost.data
+      const meta = realCost.meta
+      const itogo = {} as RealCostTableRow
+      if (meta) {
+        itogo.first = true
+        itogo.rasxod_summa = meta.by_month.rasxod_summa
+        itogo.remaining_summa = meta.by_month.remaining_summa
+        itogo.itogo = String(meta.by_month.contract_grafik_summa)
+        itogo.rasxod_summa_year = meta.by_year.rasxod_summa
+        itogo.remaining_summa_year = meta.by_year.remaining_summa
+        itogo.itogo_year = String(meta.by_year.contract_grafik_summa)
+      }
+
       form.reset({
-        month: realCost.data.month,
-        year: realCost.data.year,
-        childs: realCost.data.childs ?? []
+        month: data.month,
+        year: data.year,
+        childs: data.childs ?? [],
+        itogo
       })
     }
   }, [form, realCost, id])
@@ -164,6 +190,7 @@ const RealCostDetailsPage = () => {
     }
   }
 
+  const itogo = form.watch('itogo') ?? {}
   const childs = form.watch('childs') ?? []
   const rows = useMemo(() => {
     const rows: RealCostTableRow[] = []
@@ -252,6 +279,7 @@ const RealCostDetailsPage = () => {
               <RealCostTable
                 rows={rows}
                 methods={tableMethods}
+                itogo={itogo}
               />
             </div>
           </div>
