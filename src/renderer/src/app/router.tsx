@@ -63,6 +63,8 @@ const MainbookPage = lazy(() => import('./reports/mainbook/page'))
 const MainbookDetailsPage = lazy(() => import('./reports/mainbook/details/page'))
 const OdinoxPage = lazy(() => import('./reports/odinox/page'))
 const OdinoxDetailsPage = lazy(() => import('./reports/odinox/details/page'))
+const RealCostPage = lazy(() => import('./reports/real-cost/page'))
+const RealCostDetailsPage = lazy(() => import('./reports/real-cost/details/page'))
 
 const AktDetailsPage = lazy(() => import('./jur_3/159/akt/details/page'))
 const AktPage = lazy(() => import('./jur_3/159/akt/page'))
@@ -535,6 +537,20 @@ export const routes: RouteObject[] = [
           {
             path: ':id',
             element: <OdinoxDetailsPage />
+          }
+        ]
+      },
+      {
+        path: 'realcost',
+        element: <MainSchetSelectedGuard />,
+        children: [
+          {
+            index: true,
+            element: <RealCostPage />
+          },
+          {
+            path: ':id',
+            element: <RealCostDetailsPage />
           }
         ]
       },

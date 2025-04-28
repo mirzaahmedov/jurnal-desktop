@@ -51,23 +51,24 @@ export const PodotchetTable = ({ date, budjet_id }: PodotchetTableProps) => {
         {isFetching ? <LoadingOverlay /> : null}
         <CollapsibleTable
           columnDefs={podotchetColumns}
-          getChildRows={(row) => row.children}
-          renderChildRows={(rows) => (
+          getRowId={(row) => row.id}
+          data={podotchetData}
+        >
+          {({ row }) => (
             <CollapsibleTable
               displayHeader={false}
               getRowId={(row) => row.id}
-              getChildRows={() => undefined}
-              data={rows}
+              getChildRows={() => []}
+              data={row.children ?? []}
               columnDefs={podotchetChildColumns}
             />
           )}
-          getRowId={(row) => row.id}
-          data={podotchetData}
-        />
+        </CollapsibleTable>
         <div className="p-5">
           <Pagination
             pageCount={podotchets?.meta?.pageCount ?? 0}
             page={pagination.page}
+            count={podotchets?.meta?.count ?? 0}
             limit={pagination.limit}
             onChange={(values) =>
               setPagination((prev) => ({

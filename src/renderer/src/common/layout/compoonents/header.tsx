@@ -74,7 +74,7 @@ export const Header = () => {
           {typeof onCreate === 'function' ? (
             <Button onPress={onCreate}>
               {t('add')}
-              <Plus className="btn-icon" />
+              <Plus className="btn-icon icon-end" />
             </Button>
           ) : null}
         </div>

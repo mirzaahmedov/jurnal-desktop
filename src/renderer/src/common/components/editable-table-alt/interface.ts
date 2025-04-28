@@ -1,7 +1,14 @@
 import type { EditorComponentType } from './editors'
 import type { ChangeContext, DeleteContext } from './editors/interfaces'
 import type { Autocomplete } from '@/common/lib/types'
-import type { ComponentProps, HTMLAttributes, ReactNode, RefObject, SyntheticEvent } from 'react'
+import type {
+  ComponentProps,
+  HTMLAttributes,
+  MutableRefObject,
+  ReactNode,
+  RefObject,
+  SyntheticEvent
+} from 'react'
 import type { ArrayPath, FieldArrayWithId, UseFormReturn } from 'react-hook-form'
 
 export type TableRowField<T extends object, F extends ArrayPath<T>> = FieldArrayWithId<T, F, 'id'>
@@ -38,6 +45,9 @@ export interface EditableTableMethods {
 }
 
 export interface EditableTableProps<T extends object, F extends ArrayPath<NoInfer<T>>> {
+  readOnly?: boolean
+  disableHeader?: boolean
+  startRowNumber?: number
   tableRef?: RefObject<HTMLTableElement>
   tabIndex?: number
   form: UseFormReturn<T>
@@ -61,14 +71,31 @@ export interface EditableTableProps<T extends object, F extends ArrayPath<NoInfe
   onCreate?(): void
   onCellDoubleClick?: CellEventHandler<T, F>
   params?: Record<string, unknown>
-  footer?: (props: EditableTableFooterProps<T, F>) => ReactNode
+  footer?: (props: EditableTableProps<T, F>) => ReactNode
   validate?(ctx: ChangeContext<T, F>): boolean
   methods?: RefObject<EditableTableMethods>
 }
 
-export type EditableTableFooterProps<
-  T extends object,
-  F extends ArrayPath<NoInfer<T>>
-> = EditableTableProps<T, F> & {
+export interface EditableRowProps<T extends object, F extends ArrayPath<NoInfer<T>>>
+  extends Pick<
+      EditableTableProps<T, F>,
+      | 'readOnly'
+      | 'startRowNumber'
+      | 'validate'
+      | 'name'
+      | 'form'
+      | 'params'
+      | 'onDelete'
+      | 'onCellDoubleClick'
+      | 'columnDefs'
+      | 'getEditorProps'
+      | 'getRowClassName'
+    >,
+    HTMLAttributes<HTMLTableRowElement> {
   dataColumns: EditableColumnDef<T, F>[]
+  tabIndex?: number
+  index: number
+  highlightedRow: MutableRefObject<number | null>
+  row: FieldArrayWithId<T, F, 'id'>
+  rows: FieldArrayWithId<T, F, 'id'>[]
 }

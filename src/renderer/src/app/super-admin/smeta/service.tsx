@@ -38,13 +38,14 @@ export const smetaService = new CRUDService<Smeta, SmetaForm>({
   return {}
 })
 
-type SmetaTableProps = Omit<
-  CollapsibleTableProps<PathTreeNode<Smeta>, PathTreeNode<Smeta>>,
-  'data' | 'getChildRows' | 'getRowId'
-> & {
+interface SmetaTableProps
+  extends Omit<
+    CollapsibleTableProps<PathTreeNode<Smeta>, PathTreeNode<Smeta>>,
+    'data' | 'getChildRows' | 'getRowId'
+  > {
   data: Smeta[]
 }
-export const SmetaTable = ({ data, columnDefs: columns, ...props }: SmetaTableProps) => {
+export const SmetaTable = ({ data, ...props }: SmetaTableProps) => {
   const treeData = useMemo(
     () =>
       arrayToTreeByPathKey({
@@ -58,9 +59,8 @@ export const SmetaTable = ({ data, columnDefs: columns, ...props }: SmetaTablePr
   return (
     <CollapsibleTable
       getRowId={(row) => row.id}
-      getChildRows={(row) => row.children}
+      getChildRows={(row) => row.children ?? []}
       data={treeData}
-      columnDefs={columns}
       {...props}
     />
   )

@@ -6,7 +6,7 @@ import { inputVariants } from '@/common/features/spravochnik'
 import { cn } from '@/common/lib/utils'
 
 export const createTextEditor = <T extends object, F extends ArrayPath<T>>({
-  readOnly = false,
+  readOnly: readOnlyColumn = false,
   disabled = false,
   defaultValue
 }: {
@@ -14,7 +14,8 @@ export const createTextEditor = <T extends object, F extends ArrayPath<T>>({
   disabled?: boolean
   defaultValue?: string
 }): EditorComponent<T, F> => {
-  return ({ column, tabIndex, value, error, onChange }) => {
+  return ({ column, tabIndex, value, error, onChange, readOnly: readOnlyTable }) => {
+    const readOnly = readOnlyTable || readOnlyColumn
     return (
       <div className="relative">
         <Input

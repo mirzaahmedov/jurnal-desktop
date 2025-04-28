@@ -4,7 +4,7 @@ import { NumericInput, type NumericInputProps } from '@/common/components'
 import { inputVariants } from '@/common/features/spravochnik'
 
 export const createNumberEditor = <T extends object>({
-  readOnly = false,
+  readOnly: readOnlyColumn = false,
   max,
   inputProps,
   defaultValue
@@ -14,6 +14,7 @@ export const createNumberEditor = <T extends object>({
   defaultValue?: number
 }): EditorComponent<T, any> => {
   const EditorComponent: EditorComponent<T, any> = ({
+    readOnly: readOnlyTable,
     column,
     tabIndex,
     inputRef,
@@ -21,6 +22,7 @@ export const createNumberEditor = <T extends object>({
     value,
     onChange
   }) => {
+    const readOnly = readOnlyTable || readOnlyColumn
     return (
       <div className="relative">
         <NumericInput

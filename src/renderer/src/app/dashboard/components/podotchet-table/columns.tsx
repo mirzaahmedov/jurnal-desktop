@@ -1,5 +1,5 @@
-import type { Dashboard } from '../../model'
-import type { ColumnDef } from '@/common/components'
+import type { Dashboard } from '@/app/dashboard/model'
+import type { CollapsibleColumnDef } from '@/common/components/collapsible-table'
 
 import { t } from 'i18next'
 
@@ -17,7 +17,7 @@ export const normalizePodotchetData = (podotchets?: Dashboard.Podotchet[]) =>
 
 export type PodochetTableRow = ReturnType<typeof normalizePodotchetData>[number]
 
-export const podotchetColumns: ColumnDef<PodochetTableRow>[] = [
+export const podotchetColumns: CollapsibleColumnDef<PodochetTableRow>[] = [
   {
     key: 'name'
   },
@@ -50,7 +50,7 @@ export const podotchetColumns: ColumnDef<PodochetTableRow>[] = [
   }
 ]
 
-export const podotchetChildColumns: ColumnDef<PodochetTableRow['children'][number]>[] = [
+export const podotchetChildColumns: CollapsibleColumnDef<PodochetTableRow['children'][number]>[] = [
   {
     key: 'account_number',
     renderCell(row) {

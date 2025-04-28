@@ -2,16 +2,16 @@ import type { HTMLAttributes, TdHTMLAttributes, ThHTMLAttributes } from 'react'
 
 import { type VariantProps, cva } from 'class-variance-authority'
 
-import { TableCell, TableHead, TableRow } from '@/common/components/ui/table'
+import * as Table from '@/common/components/ui/table'
 import { cn } from '@/common/lib/utils'
 
-export const EditableTableCell = ({
+export const TableCell = ({
   children,
   className,
   ...props
 }: TdHTMLAttributes<HTMLTableCellElement>) => {
   return (
-    <TableCell
+    <Table.TableCell
       {...props}
       className={cn(
         'border-r border-b border-slate-200 group-focus-within/row:border-highlight-divider bg-inherit p-px pt-0.5',
@@ -19,17 +19,17 @@ export const EditableTableCell = ({
       )}
     >
       {children}
-    </TableCell>
+    </Table.TableCell>
   )
 }
 
-export const EditableTableHead = ({
+export const TableHead = ({
   children,
   className,
   ...props
 }: ThHTMLAttributes<HTMLTableCellElement>) => {
   return (
-    <TableHead
+    <Table.TableHead
       {...props}
       className={cn(
         'px-3 border-r border-b border-slate-200 !bg-slate-100 text-foreground text-xs font-bold',
@@ -37,7 +37,7 @@ export const EditableTableHead = ({
       )}
     >
       {children}
-    </TableHead>
+    </Table.TableHead>
   )
 }
 
@@ -52,25 +52,19 @@ const rowVariants = cva('', {
   }
 })
 
-export interface EditableTableRowProps
+export interface TableRowProps
   extends HTMLAttributes<HTMLTableRowElement>,
     VariantProps<typeof rowVariants> {
   rowRef?: React.Ref<HTMLTableRowElement>
 }
-export const EditableTableRow = ({
-  children,
-  className,
-  focusable,
-  rowRef,
-  ...props
-}: EditableTableRowProps) => {
+export const TableRow = ({ children, className, focusable, rowRef, ...props }: TableRowProps) => {
   return (
-    <TableRow
+    <Table.TableRow
       {...props}
       ref={rowRef}
       className={cn(rowVariants({ className, focusable }), className)}
     >
       {children}
-    </TableRow>
+    </Table.TableRow>
   )
 }

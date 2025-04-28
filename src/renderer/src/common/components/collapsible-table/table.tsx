@@ -1,5 +1,4 @@
-import type { ColumnDef, GetRowSelectedFn } from '@/common/components'
-import type { ReactNode } from 'react'
+import type { CollapsibleTableProps } from './interfaces'
 
 import { CaretDownIcon } from '@radix-ui/react-icons'
 import { Pencil, Trash2 } from 'lucide-react'
@@ -21,24 +20,6 @@ import { cn } from '@/common/lib/utils'
 
 import { EmptyList } from '../empty-states'
 
-export type CollapsibleTableProps<T extends object, C extends object> = {
-  displayHeader?: boolean
-  data: T[]
-  columnDefs: ColumnDef<NoInfer<T>>[]
-  width?: number
-  disabledIds?: number[]
-  selectedIds?: number[]
-  className?: string
-  params?: Record<string, unknown>
-  getRowId: (row: T) => number | string
-  getRowKey?: (row: T, rowIndex: number) => string | number
-  getChildRows: (row: T) => C[] | undefined
-  getRowSelected?: GetRowSelectedFn<T>
-  renderChildRows?: (rows: NoInfer<C>[], row: T) => ReactNode
-  onClickRow?: (row: T) => void
-  onEdit?: (row: T) => void
-  onDelete?: (row: T) => void
-}
 export const CollapsibleTable = <T extends object, C extends object = T>({
   displayHeader = true,
   data,
@@ -51,8 +32,8 @@ export const CollapsibleTable = <T extends object, C extends object = T>({
   getRowId,
   getRowKey,
   getRowSelected,
+  children,
   getChildRows,
-  renderChildRows,
   onClickRow,
   onEdit,
   onDelete
@@ -115,8 +96,8 @@ export const CollapsibleTable = <T extends object, C extends object = T>({
                 getRowId,
                 getRowKey,
                 getRowSelected,
+                children,
                 getChildRows,
-                renderChildRows,
                 onClickRow,
                 onEdit,
                 onDelete
@@ -142,7 +123,7 @@ export const CollapsibleTable = <T extends object, C extends object = T>({
   )
 }
 
-type CollapsibleItemProps<T extends object, C extends object> = {
+interface CollapsibleItemProps<T extends object, C extends object> {
   row: T
   tableProps: CollapsibleTableProps<T, C>
   level?: number
@@ -156,7 +137,7 @@ const CollapsibleItem = <T extends object, C extends object>({
     columnDefs,
     getRowId,
     getChildRows,
-    renderChildRows,
+    children,
     onClickRow,
     onEdit,
     onDelete,
@@ -165,7 +146,7 @@ const CollapsibleItem = <T extends object, C extends object>({
     width
   } = tableProps
 
-  if (!Array.isArray(getChildRows(row))) {
+  if (!children && !getChildRows(row)?.length) {
     return (
       <GenericTableRow
         key={getRowId(row)}
@@ -309,36 +290,41 @@ const CollapsibleItem = <T extends object, C extends object>({
             </GenericTableCell>
           ) : null}
         </GenericTableRow>
-        <CollapsibleContent asChild>
-          <GenericTableRow>
-            <GenericTableCell
-              colSpan={100}
-              className="p-0 bg-white"
-            >
-              {typeof renderChildRows === 'function' ? (
-                renderChildRows(getChildRows(row)!, row)
-              ) : (
-                <div
-                  className="pl-14"
-                  style={{ width }}
-                >
-                  <Table className="overflow-hidden">
-                    <TableBody>
-                      {getChildRows(row)!.map((child) => (
-                        <CollapsibleItem
-                          key={getRowId(row)}
-                          row={child}
-                          tableProps={tableProps as unknown as CollapsibleTableProps<C, C>}
-                          level={level + 1}
-                        />
-                      ))}
-                    </TableBody>
-                  </Table>
-                </div>
-              )}
-            </GenericTableCell>
-          </GenericTableRow>
-        </CollapsibleContent>
+        {children || getChildRows ? (
+          <CollapsibleContent asChild>
+            <GenericTableRow>
+              <GenericTableCell
+                colSpan={100}
+                className="p-0 bg-white"
+              >
+                {children ? (
+                  children({
+                    row,
+                    tableProps
+                  })
+                ) : (
+                  <div
+                    className="pl-14"
+                    style={{ width }}
+                  >
+                    <Table className="overflow-hidden">
+                      <TableBody>
+                        {getChildRows(row)!.map((child) => (
+                          <CollapsibleItem
+                            key={getRowId(row)}
+                            row={child}
+                            tableProps={tableProps as unknown as CollapsibleTableProps<C, C>}
+                            level={level + 1}
+                          />
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </div>
+                )}
+              </GenericTableCell>
+            </GenericTableRow>
+          </CollapsibleContent>
+        ) : null}
       </>
     </Collapsible>
   )

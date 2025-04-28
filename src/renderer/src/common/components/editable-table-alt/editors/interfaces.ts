@@ -13,6 +13,7 @@ export type DeleteContext = {
 }
 
 export type EditorComponent<T extends object, F extends ArrayPath<NoInfer<T>>> = FC<{
+  readOnly?: boolean
   tabIndex?: number
   inputRef: Ref<HTMLInputElement>
   index: number

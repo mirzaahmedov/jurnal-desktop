@@ -44,6 +44,7 @@ import {
   UserSquare,
   Users,
   Wallet,
+  WalletCards,
   Warehouse,
   Weight,
   Wrench
@@ -504,6 +505,13 @@ export const getNavElements = (t: TFunction): NavElement[] => {
           path: '/odinox',
           title: t('pages.odinox'),
           icon: Table2
+        }
+      : null,
+    !is_super_admin
+      ? {
+          path: '/realcost',
+          title: t('pages.realcost'),
+          icon: WalletCards
         }
       : null,
     {

@@ -7,12 +7,15 @@ const ui = plugin(function ({ addUtilities }) {
     '.btn-icon': {
       'vertical-align': 'middle',
       width: '1.125rem',
-      height: '1.125rem',
-      'margin-left': '0.5rem'
+      height: '1.125rem'
     },
     '.icon-start': {
       'margin-left': '0rem !important',
       'margin-right': '0.5rem'
+    },
+    '.icon-end': {
+      'margin-left': '0.5rem !important',
+      'margin-right': '0rem'
     },
     '.icon-sm': {
       width: '1rem',
