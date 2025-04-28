@@ -23,23 +23,30 @@ export interface PaginationValues {
   limit: number
 }
 export interface PaginationProps extends PaginationValues {
-  displayPageSize?: boolean
+  disablePageSize?: boolean
   pageCount: number
   count: number
   onChange: (values: Partial<PaginationValues>) => void
 }
-export const Pagination = (props: PaginationProps) => {
+export const Pagination = ({
+  disablePageSize = false,
+  page,
+  limit,
+  count,
+  pageCount,
+  onChange
+}: PaginationProps) => {
   const { t } = useTranslation()
 
-  const pageCount = Math.max(props.pageCount, 1)
-  const page = Math.max(props.page, 1)
-  const onChangeEvent = useEventCallback(props.onChange)
+  const pageCountValue = Math.max(pageCount, 1)
+  const pageValue = Math.max(page, 1)
+  const onChangeEvent = useEventCallback(onChange)
 
   useEffect(() => {
-    if (pageCount && page > pageCount) {
-      onChangeEvent({ page: page > 1 ? page - 1 : 1 })
+    if (pageCountValue && pageValue > pageCountValue) {
+      onChangeEvent({ page: pageValue > 1 ? pageValue - 1 : 1 })
     }
-  }, [pageCount, page, onChangeEvent])
+  }, [pageCountValue, pageValue, onChangeEvent])
 
   return (
     <div className="flex items-center justify-start gap-20">
@@ -47,11 +54,11 @@ export const Pagination = (props: PaginationProps) => {
         className="flex gap-4"
         pageRangeDisplayed={2}
         breakLabel="..."
-        forcePage={page - 1 === 0 ? 1 : page - 1}
-        onPageChange={({ selected }) => props.onChange({ page: selected + 1 })}
+        forcePage={pageValue - 1 === 0 ? 1 : pageValue - 1}
+        onPageChange={({ selected }) => onChange({ page: selected + 1 })}
         pageLabelBuilder={(pageNumber) => (
           <Button
-            variant={pageNumber === page ? 'default' : 'ghost'}
+            variant={pageNumber === pageValue ? 'default' : 'ghost'}
             size="icon"
           >
             {pageNumber}
@@ -73,15 +80,15 @@ export const Pagination = (props: PaginationProps) => {
             <ArrowLeft className="btn-icon !ml-0" />
           </Button>
         }
-        pageCount={pageCount}
+        pageCount={pageCountValue}
       />
-      {props.displayPageSize && (
+      {!disablePageSize && (
         <div className="flex items-center gap-10">
           <span className="whitespace-nowrap text-sm font-medium text-slate-600">
             {t('pagination.range', {
-              from: (page - 1) * props.limit + 1,
-              to: page * props.limit,
-              total: props.count
+              from: (pageValue - 1) * limit + 1,
+              to: pageValue * limit,
+              total: count
             })}
           </span>
           <div className="flex items-center gap-5">
@@ -90,8 +97,8 @@ export const Pagination = (props: PaginationProps) => {
             </span>
             <JollySelect
               items={pageSizeOptions}
-              selectedKey={props.limit}
-              onSelectionChange={(value) => props.onChange({ limit: Number(value) })}
+              selectedKey={limit}
+              onSelectionChange={(value) => onChange({ limit: Number(value) })}
               className="w-20 gap-0"
             >
               {(item) => <SelectItem id={item.value}>{item.value}</SelectItem>}

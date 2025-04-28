@@ -601,7 +601,7 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
       </div>
       <div className="mt-5 flex items-center justify-center">
         <Pagination
-          displayPageSize={false}
+          disablePageSize={false}
           page={page}
           limit={PAGE_SIZE}
           onChange={({ page }) => setPage(page ?? 1)}

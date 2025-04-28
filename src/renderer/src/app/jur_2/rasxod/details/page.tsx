@@ -59,6 +59,7 @@ import { BankRasxodQueryKeys, defaultValues } from '../config'
 import { BankRasxodFormSchema, BankRasxodPodvodkaFormSchema, BankRasxodService } from '../service'
 import { ImportPlastik } from '../zarplata/import-plastik'
 import { podvodkaColumns } from './podvodki'
+import { changeOpisanieContract, changeOpisanieOperatsii } from './utils'
 
 const BankRasxodDetailsPage = () => {
   const { id } = useParams()
@@ -97,7 +98,7 @@ const BankRasxodDetailsPage = () => {
       opisanie: original?.opisanie ?? defaultValues.opisanie,
       rukovoditel: original?.rukovoditel ?? defaultValues.rukovoditel,
       glav_buxgalter: original?.glav_buxgalter ?? defaultValues.glav_buxgalter
-    }
+    } satisfies BankRasxodFormValues as BankRasxodFormValues
   })
 
   const organSpravochnik = useSpravochnik(
@@ -122,8 +123,12 @@ const BankRasxodDetailsPage = () => {
   const shartnomaSpravochnik = useSpravochnik(
     createShartnomaSpravochnik({
       value: form.watch('id_shartnomalar_organization'),
-      onChange: (value) => {
+      onChange: (value, contract) => {
         form.setValue('id_shartnomalar_organization', value, { shouldValidate: true })
+        changeOpisanieContract({
+          form,
+          contract
+        })
       },
       params: {
         organ_id: form.watch('id_spravochnik_organization')
@@ -262,6 +267,10 @@ const BankRasxodDetailsPage = () => {
     control: form.control,
     name: 'childs'
   })
+  const operatsii = podvodki.map((row) => ({
+    schet: row.schet,
+    sub_schet: row.sub_schet
+  }))
 
   const summa = form.watch('summa')
   const reminder = monitor?.meta
@@ -275,6 +284,12 @@ const BankRasxodDetailsPage = () => {
         .reduce((acc, curr) => acc + curr.summa, 0) ?? 0
     form.setValue('summa', summa)
   }, [form, podvodki])
+  useEffect(() => {
+    changeOpisanieOperatsii({
+      form,
+      operatsii
+    })
+  }, [form, JSON.stringify(operatsii)])
 
   useEffect(() => {
     if (id === 'create') {
@@ -332,7 +347,7 @@ const BankRasxodDetailsPage = () => {
     form.setValue('organization_porucheniya_name', organSpravochnik.selected?.name ?? '')
   }, [form, organSpravochnik.selected])
 
-  console.log({ errors: form.formState.errors })
+  useEffect(() => {}, [shartnomaSpravochnik.selected])
 
   return (
     <DetailsView>
@@ -408,7 +423,6 @@ const BankRasxodDetailsPage = () => {
               <DetailsView.Create
                 isDisabled={reminder < 0 || isFetchingMonitor || isFetching}
                 isPending={isCreating || isUpdating}
-                tabIndex={7}
               />
               <Button
                 variant="outline"

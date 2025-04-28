@@ -24,7 +24,9 @@ export const BankRasxodPodvodkaFormSchema = withPreprocessor(
     id_spravochnik_podrazdelenie: z.number().optional(),
     id_spravochnik_sostav: z.number().optional(),
     id_spravochnik_podotchet_litso: z.number().optional(),
-    id_spravochnik_type_operatsii: z.number().optional()
+    id_spravochnik_type_operatsii: z.number().optional(),
+    schet: z.any(),
+    sub_schet: z.any()
   })
 )
 

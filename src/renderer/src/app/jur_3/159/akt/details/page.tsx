@@ -48,6 +48,7 @@ import { useAktSaldo } from '../../saldo/components/use-saldo'
 import { AktFormSchema, AktProvodkaFormSchema, AktQueryKeys, defaultValues } from '../config'
 import { aktService } from '../service'
 import { provodkaColumns } from './provodki'
+import { changeOpisanieContract, changeOpisanieSchetFaktura } from './utils'
 
 const AktDetailsPage = () => {
   const { id } = useParams()
@@ -202,9 +203,12 @@ const AktDetailsPage = () => {
   const shartnomaSpravochnik = useSpravochnik(
     createShartnomaSpravochnik({
       value: form.watch('shartnomalar_organization_id'),
-      onChange: (value) => {
-        form.setValue('shartnomalar_organization_id', value)
-        form.trigger('shartnomalar_organization_id')
+      onChange: (value, contract) => {
+        form.setValue('shartnomalar_organization_id', value, { shouldValidate: true })
+        changeOpisanieContract({
+          form,
+          contract
+        })
       },
       params: {
         organ_id: form.watch('id_spravochnik_organization'),
@@ -255,6 +259,14 @@ const AktDetailsPage = () => {
 
     form.reset(akt?.data)
   }, [form, akt, id])
+
+  useEffect(() => {
+    changeOpisanieSchetFaktura({
+      form,
+      doc_num: form.watch('doc_num'),
+      doc_date: form.watch('doc_date')
+    })
+  }, [form, form.watch('doc_num'), form.watch('doc_date')])
 
   return (
     <DetailsView>

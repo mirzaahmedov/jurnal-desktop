@@ -104,15 +104,119 @@ export const RealCostTable = memo(({ rows, methods }: RealCostTableProps) => {
           block: 'nearest'
         })
       }}
-      className="relative h-full flex flex-col w-full overflow-auto scrollbar scroll-p-32"
+      className="relative h-full flex flex-col overflow-y-hidden overflow-x-auto scrollbar"
     >
-      <Table
-        ref={ref}
-        className="border border-slate-200 table-fixed"
-        style={{ width: 2250 }}
-      >
-        <TableHeader className="shadow-sm sticky top-0 z-100 bg-white">
+      <Table className="w-max border border-slate-200 table-fixed">
+        <TableHeader className="shadow-sm">
           <TableRow style={{ height: 44 }}>
+            <TableHead
+              className="px-3 whitespace-nowrap text-sm font-medium"
+              style={{
+                width: `${String(rows.length + 0).length + 3}ch`
+              }}
+              rowSpan={2}
+            ></TableHead>
+            <TableHead
+              rowSpan={2}
+              style={{ width: 300 }}
+            >
+              {t('name')}
+            </TableHead>
+            <TableHead
+              rowSpan={2}
+              style={{ width: 100 }}
+              className="sticky left-0 z-50"
+            >
+              {t('number')}
+            </TableHead>
+            <TableHead
+              colSpan={6}
+              className="text-center"
+            >
+              {t('for_month')}
+            </TableHead>
+            <TableHead
+              colSpan={6}
+              className="text-center !bg-slate-200 border-slate-300"
+            >
+              {t('for_year')}
+            </TableHead>
+          </TableRow>
+          <TableRow style={{ height: 50 }}>
+            <TableHead
+              style={{ width: 140 }}
+              className="text-end"
+            >
+              {t('pages.smeta_grafik')}
+            </TableHead>
+            <TableHead style={{ width: 140 }}>№ / {t('date')}</TableHead>
+            <TableHead style={{ width: 300 }}>{t('organization')}</TableHead>
+            <TableHead
+              style={{ width: 140 }}
+              className="text-end"
+            >
+              {t('summa')}
+            </TableHead>
+            <TableHead
+              style={{ width: 140 }}
+              className="text-end"
+            >
+              {t('pages.kassa')}/{t('bank').toLowerCase()} {t('rasxod').toLowerCase()}
+            </TableHead>
+            <TableHead
+              style={{ width: 140 }}
+              className="text-end"
+            >
+              {t('remainder')}
+            </TableHead>
+
+            <TableHead
+              style={{ width: 140 }}
+              className="!bg-slate-200 border-slate-300 text-end"
+            >
+              {t('pages.smeta_grafik')}
+            </TableHead>
+            <TableHead
+              style={{ width: 140 }}
+              className="!bg-slate-200 border-slate-300"
+            >
+              № / {t('date')}
+            </TableHead>
+            <TableHead
+              style={{ width: 300 }}
+              className="!bg-slate-200 border-slate-300"
+            >
+              {t('organization')}
+            </TableHead>
+            <TableHead
+              style={{ width: 140 }}
+              className="!bg-slate-200 border-slate-300 text-end"
+            >
+              {t('summa')}
+            </TableHead>
+            <TableHead
+              style={{ width: 140 }}
+              className="!bg-slate-200 border-slate-300 text-end"
+            >
+              {t('pages.kassa')}/{t('bank').toLowerCase()} {t('rasxod').toLowerCase()}
+            </TableHead>
+            <TableHead
+              style={{ width: 140 }}
+              className="!bg-slate-200 border-slate-300 text-end"
+            >
+              {t('remainder')}
+            </TableHead>
+          </TableRow>
+        </TableHeader>
+      </Table>
+
+      <div
+        className="w-min overflow-x-hidden overflow-y-auto flex-1 scrollbar"
+        ref={ref}
+      >
+        <Table className="border border-slate-200 table-fixed">
+          {/* <TableHeader className="shadow-sm sticky top-0 z-100 bg-white"> */}
+          {/* <TableRow style={{ height: 44 }}>
             <TableHead
               className="px-3 whitespace-nowrap text-sm font-medium"
               style={{
@@ -205,36 +309,38 @@ export const RealCostTable = memo(({ rows, methods }: RealCostTableProps) => {
             >
               {t('remainder')}
             </TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {Array.isArray(rows) && rows.length ? (
-            rows.map((row, index) => {
-              return (
-                <Row
-                  key={index}
-                  index={index}
-                  row={row}
-                  rows={rows}
-                />
-              )
-            })
-          ) : (
-            <TableRow>
-              <TableCell
-                colSpan={100}
-                className="text-center py-5"
-              >
-                <EmptyList
-                  iconProps={{
-                    className: 'w-40'
-                  }}
-                ></EmptyList>
-              </TableCell>
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
+          </TableRow> */}
+          {/* </TableHeader> */}
+
+          <TableBody>
+            {Array.isArray(rows) && rows.length ? (
+              rows.map((row, index) => {
+                return (
+                  <Row
+                    key={index}
+                    index={index}
+                    row={row}
+                    rows={rows}
+                  />
+                )
+              })
+            ) : (
+              <TableRow>
+                <TableCell
+                  colSpan={100}
+                  className="text-center py-5"
+                >
+                  <EmptyList
+                    iconProps={{
+                      className: 'w-40'
+                    }}
+                  ></EmptyList>
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </div>
     </div>
   )
 })

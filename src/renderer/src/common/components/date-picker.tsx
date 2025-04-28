@@ -22,9 +22,9 @@ import { formatLocaleDate, unformatLocaleDate } from '@/common/lib/format'
 import { cn } from '@/common/lib/utils'
 
 import { Button } from './jolly/button'
-import { Popover, PopoverDialog, PopoverTrigger } from './jolly/popover'
 import { Calendar } from './ui/calendar'
 import { Input } from './ui/input'
+import { Popover, PopoverContent, PopoverTrigger } from './ui/popover'
 
 export type DatePickerProps = Omit<PatternFormatProps<InputProps>, 'format' | 'onChange'> & {
   value?: string
@@ -139,8 +139,8 @@ export const DatePicker = forwardRef<HTMLButtonElement, DatePickerProps>(
     const selected = value ? parseDate(value) : undefined
 
     return (
-      <PopoverTrigger
-        isOpen={calendarToggle.isOpen}
+      <Popover
+        open={calendarToggle.isOpen}
         onOpenChange={handleChangeActive}
       >
         <div
@@ -181,43 +181,43 @@ export const DatePicker = forwardRef<HTMLButtonElement, DatePickerProps>(
             }}
             className={cn('w-full tracking-wider', className)}
           />
-          <Button
-            variant="ghost"
-            size="icon"
-            className="group absolute top-1/2 right-2 -translate-y-1/2 size-7"
-            excludeFromTabOrder
-          >
-            <CalendarIcon className="h-4 w-4 text-slate-500 group-hover:text-brand" />
-          </Button>
+          <PopoverTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="group absolute top-1/2 right-2 -translate-y-1/2 size-7"
+              excludeFromTabOrder
+            >
+              <CalendarIcon className="h-4 w-4 text-slate-500 group-hover:text-brand" />
+            </Button>
+          </PopoverTrigger>
         </div>
-        <Popover>
-          <PopoverDialog className="w-auto p-0">
-            <Calendar
-              {...calendarProps}
-              mode="single"
-              initialFocus
-              selected={selected}
-              month={monthValue}
-              onMonthChange={setMonthValue}
-              onDayClick={(date) => {
-                if (selected && date?.getTime() === selected.getTime()) {
-                  calendarToggle.close()
-                  return
-                }
-                if (!date || !validate(formatDate(date))) {
-                  onChange?.('')
-                  setMonthValue(new Date())
-                  calendarToggle.close()
-                  return
-                }
-                onChange?.(formatDate(date))
-                setMonthValue(date)
+        <PopoverContent>
+          <Calendar
+            {...calendarProps}
+            mode="single"
+            initialFocus
+            selected={selected}
+            month={monthValue}
+            onMonthChange={setMonthValue}
+            onDayClick={(date) => {
+              if (selected && date?.getTime() === selected.getTime()) {
                 calendarToggle.close()
-              }}
-            />
-          </PopoverDialog>
-        </Popover>
-      </PopoverTrigger>
+                return
+              }
+              if (!date || !validate(formatDate(date))) {
+                onChange?.('')
+                setMonthValue(new Date())
+                calendarToggle.close()
+                return
+              }
+              onChange?.(formatDate(date))
+              setMonthValue(date)
+              calendarToggle.close()
+            }}
+          />
+        </PopoverContent>
+      </Popover>
     )
   }
 )

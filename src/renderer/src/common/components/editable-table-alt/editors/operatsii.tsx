@@ -1,7 +1,7 @@
 import type { EditorComponent } from './interfaces'
-import type { Operatsii, TypeSchetOperatsii } from '@/common/models'
+import type { TypeSchetOperatsii } from '@/common/models'
 
-import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
@@ -24,7 +24,7 @@ export const withEditorProps = <Options extends object>(
 export const createOperatsiiEditor = withEditorProps<{
   type_schet?: TypeSchetOperatsii
 }>(({ type_schet }) => {
-  return ({ column, tabIndex, value, error, onChange, params }) => {
+  return ({ column, tabIndex, value, error, onChange }) => {
     const inputRef = useRef<HTMLInputElement>(null)
     const editorState = useRef<{
       clickedOutside: boolean
@@ -39,20 +39,11 @@ export const createOperatsiiEditor = withEditorProps<{
 
     const { t } = useTranslation()
 
-    const paramsRef = useRef<{ onChangeOperatsii: (selected: Operatsii | undefined) => void }>(
-      params as any
-    )
-
-    useLayoutEffect(() => {
-      paramsRef.current = params as any
-    })
-
     const operatsiiSpravochnik = useSpravochnik(
       createOperatsiiSpravochnik({
         value: value as number | undefined,
-        onChange: (value, selected) => {
+        onChange: (value) => {
           onChange?.(value)
-          paramsRef.current?.onChangeOperatsii?.(selected)
         },
         params: {
           type_schet
@@ -159,8 +150,6 @@ export const createOperatsiiEditor = withEditorProps<{
               onChange?.(option.id)
               setSchet(option.schet)
               setSubschet(option.sub_schet)
-
-              paramsRef.current?.onChangeOperatsii?.(option)
             }
           }}
           popoverProps={{
