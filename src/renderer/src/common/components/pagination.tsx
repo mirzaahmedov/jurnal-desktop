@@ -89,7 +89,7 @@ export const Pagination = ({
           <span className="whitespace-nowrap text-sm font-medium text-slate-600">
             {t('pagination.range', {
               from: (pageValue - 1) * limit + 1,
-              to: (pageValue - 1) * limit + (count % limit),
+              to: (pageValue - 1) * limit + (pageValue * limit > count ? count % limit : limit),
               total: count
             })}
           </span>
