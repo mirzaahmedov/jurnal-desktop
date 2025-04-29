@@ -17,7 +17,6 @@ import { EmptyList } from '@/common/components/empty-states'
 import { Input, type InputProps } from '@/common/components/ui/input'
 import { Table, TableBody, TableFooter, TableHeader } from '@/common/components/ui/table'
 import { inputVariants } from '@/common/features/spravochnik'
-import { useElementWidth } from '@/common/hooks'
 import { formatLocaleDate } from '@/common/lib/format'
 import { cn } from '@/common/lib/utils'
 
@@ -77,8 +76,6 @@ export const RealCostTable = memo(
     const ref = useRef<HTMLTableElement>(null)
     const highlightedRow = useRef<number | null>(null)
 
-    const { width, setElementRef } = useElementWidth()
-
     const { t } = useTranslation(['app'])
 
     const rowVirtualizer = useVirtualizer({
@@ -116,10 +113,7 @@ export const RealCostTable = memo(
         }}
         className="relative h-full flex flex-col overflow-y-hidden overflow-x-auto scrollbar"
       >
-        <Table
-          ref={setElementRef}
-          className="w-max border border-slate-200 table-fixed"
-        >
+        <Table className="w-max border border-slate-200 table-fixed">
           <TableHeader className="shadow-sm">
             <TableRow style={{ height: 44 }}>
               <TableHead
@@ -229,7 +223,7 @@ export const RealCostTable = memo(
         >
           <div
             className="static"
-            style={{ width, height: `${rowVirtualizer.getTotalSize()}px` }}
+            style={{ height: `${rowVirtualizer.getTotalSize()}px` }}
           >
             <Table className="static border border-slate-200 table-fixed">
               <TableBody>
