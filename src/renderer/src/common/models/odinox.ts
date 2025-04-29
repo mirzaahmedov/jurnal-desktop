@@ -50,19 +50,19 @@ export interface OdinoxDocumentInfo {
 
 export interface AdminOdinox {
   id: number
-  status: ReportStatus
-  accept_time: string
+  status: number
+  accept_time: null | number
   send_time: string
   user_id: number
   fio: string
   login: string
   year: number
   month: number
-  budjet_id: number
-  budjet_name: string
-  accept_user_id: number
-  accept_user_fio: string
-  accept_user_login: string
+  main_schet_id: number
+  account_number: string
+  accept_user_id: null | number
+  accept_user_fio: null | string
+  accept_user_login: null | string
   region_name: string
   childs: OdinoxProvodka[]
 }

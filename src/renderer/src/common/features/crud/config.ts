@@ -70,6 +70,7 @@ export enum ApiEndpoints {
   realcost = 'real/cost',
   admin_realcost = 'admin/real/cost',
   odinox = 'odinox',
+  admin_odinox = 'admin/odinox',
   raschet_schet = 'spravochnik/organization/account_number',
   raschet_schet_gazna = 'spravochnik/organization/gazna',
   report_title = 'admin/spravochnik/report_title',

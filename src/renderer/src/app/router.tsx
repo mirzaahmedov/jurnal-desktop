@@ -63,6 +63,8 @@ const MainbookPage = lazy(() => import('./reports/mainbook/page'))
 const MainbookDetailsPage = lazy(() => import('./reports/mainbook/details/page'))
 const OdinoxPage = lazy(() => import('./reports/odinox/page'))
 const OdinoxDetailsPage = lazy(() => import('./reports/odinox/details/page'))
+const AdminOdinoxPage = lazy(() => import('./super-admin/reports/odinox/page'))
+const AdminOdinoxDetailsPage = lazy(() => import('./super-admin/reports/odinox/details/page'))
 const RealCostPage = lazy(() => import('./reports/real-cost/page'))
 const RealCostDetailsPage = lazy(() => import('./reports/real-cost/details/page'))
 const AdminRealCostPage = lazy(() => import('./super-admin/reports/realcost/page'))
@@ -381,6 +383,14 @@ export const routes: RouteObject[] = [
           {
             path: 'mainbook/:id',
             element: <AdminMainbookDetailsPage />
+          },
+          {
+            path: 'odinox',
+            element: <AdminOdinoxPage />
+          },
+          {
+            path: 'odinox/:id',
+            element: <AdminOdinoxDetailsPage />
           },
           {
             path: 'realcost',

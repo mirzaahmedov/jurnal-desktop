@@ -1,4 +1,4 @@
-import type { AdminRealCost } from '@/common/models'
+import type { AdminOdinox } from '@/common/models'
 
 import { useEffect } from 'react'
 
@@ -11,12 +11,12 @@ import { usePagination } from '@/common/hooks'
 import { useLayout } from '@/common/layout'
 import { ListView } from '@/common/views'
 
-import { AdminRealCostColumns } from './columns'
-import { AdminRealCostQueryKeys } from './config'
-import { AdminRealCostFilters, useYearFilter } from './filters'
-import { AdminRealCostService } from './service'
+import { AdminOdinoxColumns } from './columns'
+import { AdminOdinoxQueryKeys } from './config'
+import { AdminOdinoxFilters, useYearFilter } from './filters'
+import { AdminOdinoxService } from './service'
 
-const AdminRealCostPage = () => {
+const AdminOdinoxPage = () => {
   const pagination = usePagination()
   const navigate = useNavigate()
   const setLayout = useLayout()
@@ -25,42 +25,42 @@ const AdminRealCostPage = () => {
 
   const { t } = useTranslation(['app'])
 
-  const { data: realCosts, isFetching: isFetchingRealCosts } = useQuery({
+  const { data: odinox, isFetching: isFetchingOdinox } = useQuery({
     queryKey: [
-      AdminRealCostQueryKeys.getAll,
+      AdminOdinoxQueryKeys.getAll,
       {
         page: pagination.page,
         limit: pagination.limit,
         year
       }
     ],
-    queryFn: AdminRealCostService.getAll
+    queryFn: AdminOdinoxService.getAll
   })
 
   useEffect(() => {
     setLayout({
-      title: t('pages.realcost'),
-      content: AdminRealCostFilters
+      title: t('pages.odinox'),
+      content: AdminOdinoxFilters
     })
   }, [setLayout, navigate, t, year])
 
-  const handleEdit = (row: AdminRealCost) => {
+  const handleEdit = (row: AdminOdinox) => {
     navigate(`${row.id}`)
   }
 
   return (
     <ListView>
-      <ListView.Content loading={isFetchingRealCosts}>
+      <ListView.Content loading={isFetchingOdinox}>
         <GenericTable
-          data={realCosts?.data ?? []}
-          columnDefs={AdminRealCostColumns}
+          data={odinox?.data ?? []}
+          columnDefs={AdminOdinoxColumns}
           onEdit={handleEdit}
         />
       </ListView.Content>
       <ListView.Footer>
         <ListView.Pagination
-          pageCount={realCosts?.meta?.pageCount ?? 0}
-          count={realCosts?.meta?.count ?? 0}
+          pageCount={odinox?.meta?.pageCount ?? 0}
+          count={odinox?.meta?.count ?? 0}
           {...pagination}
         />
       </ListView.Footer>
@@ -68,4 +68,4 @@ const AdminRealCostPage = () => {
   )
 }
 
-export default AdminRealCostPage
+export default AdminOdinoxPage
