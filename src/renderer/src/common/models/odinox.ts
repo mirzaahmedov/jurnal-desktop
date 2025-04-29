@@ -1,12 +1,8 @@
-export enum OdinoxStatus {
-  SEND = 1,
-  REJECT = 2,
-  ACCEPT = 3
-}
+import type { ReportStatus } from './reports'
 
 export interface Odinox {
   id: number
-  status: number
+  status: ReportStatus
   accept_time: any
   send_time: string
   main_schet_id: number
@@ -54,7 +50,7 @@ export interface OdinoxDocumentInfo {
 
 export interface AdminOdinox {
   id: number
-  status: number
+  status: ReportStatus
   accept_time: string
   send_time: string
   user_id: number

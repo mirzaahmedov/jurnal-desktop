@@ -1,13 +1,13 @@
 import { useTranslation } from 'react-i18next'
 
 import { Badge } from '@/common/components/ui/badge'
-import { MainbookStatus } from '@/common/models'
+import { ReportStatus as ReportStatusType } from '@/common/models'
 
-export type ReportStatusProps = { status: MainbookStatus }
+export type ReportStatusProps = { status: ReportStatusType }
 export const ReportStatus = ({ status }: ReportStatusProps) => {
   const { t } = useTranslation()
   switch (status) {
-    case MainbookStatus.SEND:
+    case ReportStatusType.SEND:
       return (
         <Badge
           variant="secondary"
@@ -16,7 +16,7 @@ export const ReportStatus = ({ status }: ReportStatusProps) => {
           {t('sent')}
         </Badge>
       )
-    case MainbookStatus.ACCEPT:
+    case ReportStatusType.ACCEPT:
       return (
         <Badge
           variant="secondary"
@@ -25,7 +25,7 @@ export const ReportStatus = ({ status }: ReportStatusProps) => {
           {t('recieved')}
         </Badge>
       )
-    case MainbookStatus.REJECT:
+    case ReportStatusType.REJECT:
       return (
         <Badge
           variant="secondary"

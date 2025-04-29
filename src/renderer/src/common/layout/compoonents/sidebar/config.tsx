@@ -412,6 +412,11 @@ export const getNavElements = (t: TFunction): NavElement[] => {
               icon: Book
             },
             {
+              path: 'realcost',
+              title: t('pages.realcost'),
+              icon: WalletCards
+            },
+            {
               path: 'prixod-schets',
               title: t('pages.prixod_schets'),
               icon: Percent

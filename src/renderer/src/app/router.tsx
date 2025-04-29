@@ -65,6 +65,8 @@ const OdinoxPage = lazy(() => import('./reports/odinox/page'))
 const OdinoxDetailsPage = lazy(() => import('./reports/odinox/details/page'))
 const RealCostPage = lazy(() => import('./reports/real-cost/page'))
 const RealCostDetailsPage = lazy(() => import('./reports/real-cost/details/page'))
+const AdminRealCostPage = lazy(() => import('./super-admin/reports/realcost/page'))
+const AdminRealCostDetailsPage = lazy(() => import('./super-admin/reports/realcost/details/page'))
 
 const AktDetailsPage = lazy(() => import('./jur_3/159/akt/details/page'))
 const AktPage = lazy(() => import('./jur_3/159/akt/page'))
@@ -379,6 +381,14 @@ export const routes: RouteObject[] = [
           {
             path: 'mainbook/:id',
             element: <AdminMainbookDetailsPage />
+          },
+          {
+            path: 'realcost',
+            element: <AdminRealCostPage />
+          },
+          {
+            path: 'realcost/:id',
+            element: <AdminRealCostDetailsPage />
           },
           {
             path: 'prixod-schets',

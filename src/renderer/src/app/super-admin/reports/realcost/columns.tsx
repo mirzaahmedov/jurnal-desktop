@@ -2,14 +2,15 @@ import type { ColumnDef } from '@/common/components'
 
 import { Trans } from 'react-i18next'
 
+import { HoverInfoCell } from '@/common/components/table/renderers'
 import { IDCell } from '@/common/components/table/renderers/id'
 import { MonthNameCell } from '@/common/components/table/renderers/month-name'
 import { UserCell } from '@/common/components/table/renderers/user'
 import { Badge } from '@/common/components/ui/badge'
 import { cn } from '@/common/lib/utils'
-import { type RealCost, ReportStatus } from '@/common/models'
+import { type AdminRealCost, ReportStatus } from '@/common/models'
 
-export const RealCostColumns: ColumnDef<RealCost>[] = [
+export const AdminRealCostColumns: ColumnDef<AdminRealCost>[] = [
   {
     key: 'id',
     renderCell: IDCell,
@@ -40,6 +41,20 @@ export const RealCostColumns: ColumnDef<RealCost>[] = [
           <Trans>reports_common.accept</Trans>
         )}
       </Badge>
+    )
+  },
+  {
+    key: 'region_name',
+    header: 'region',
+    renderCell: (row) => (
+      <HoverInfoCell
+        title={row.region_name}
+        secondaryText={
+          <>
+            <Trans>raschet-schet</Trans>: {row.account_number}
+          </>
+        }
+      />
     )
   },
   {

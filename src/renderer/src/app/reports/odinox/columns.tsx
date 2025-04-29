@@ -7,7 +7,7 @@ import { MonthNameCell } from '@/common/components/table/renderers/month-name'
 import { UserCell } from '@/common/components/table/renderers/user'
 import { Badge } from '@/common/components/ui/badge'
 import { cn } from '@/common/lib/utils'
-import { MainbookStatus, type Odinox } from '@/common/models'
+import { type Odinox, ReportStatus } from '@/common/models'
 
 export const OdinoxColumns: ColumnDef<Odinox>[] = [
   {
@@ -28,13 +28,13 @@ export const OdinoxColumns: ColumnDef<Odinox>[] = [
     renderCell: (row) => (
       <Badge
         className={cn(
-          row.status === MainbookStatus.REJECT && 'bg-red-500',
-          row.status === MainbookStatus.ACCEPT && 'bg-green-500'
+          row.status === ReportStatus.REJECT && 'bg-red-500',
+          row.status === ReportStatus.ACCEPT && 'bg-green-500'
         )}
       >
-        {row.status === MainbookStatus.SEND ? (
+        {row.status === ReportStatus.SEND ? (
           <Trans>reports_common.send</Trans>
-        ) : row.status === MainbookStatus.REJECT ? (
+        ) : row.status === ReportStatus.REJECT ? (
           <Trans>reports_common.reject</Trans>
         ) : (
           <Trans>reports_common.accept</Trans>

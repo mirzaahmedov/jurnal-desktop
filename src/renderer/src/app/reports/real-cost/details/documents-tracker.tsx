@@ -1,4 +1,4 @@
-import type { MainbookDocumentInfo, ProvodkaType, RealCostDoc } from '@/common/models'
+import type { RealCostDocument } from '@/common/models'
 import type { DialogTriggerProps } from 'react-aria-components'
 
 import { t } from 'i18next'
@@ -12,13 +12,12 @@ import {
   DialogTitle,
   DialogTrigger
 } from '@/common/components/jolly/dialog'
-import { ProvodkaBadge } from '@/common/components/provodka-badge'
 import { IDCell } from '@/common/components/table/renderers/id'
 import { SummaCell } from '@/common/components/table/renderers/summa'
 import { formatLocaleDate, formatNumber } from '@/common/lib/format'
 
 export interface RealCostDocumentsTrackerProps extends Omit<DialogTriggerProps, 'children'> {
-  docs: RealCostDoc[]
+  docs: RealCostDocument[]
   onClose: VoidFunction
 }
 
@@ -47,7 +46,7 @@ export const RealCostDocumentsTracker = ({ docs, onClose }: RealCostDocumentsTra
                       colSpan={5}
                     />
                     <FooterCell
-                      content={formatNumber(10 ?? 0)}
+                      content={formatNumber(100 ?? 0)}
                       colSpan={1}
                     />
                   </FooterRow>
@@ -61,7 +60,7 @@ export const RealCostDocumentsTracker = ({ docs, onClose }: RealCostDocumentsTra
   )
 }
 
-const columns: ColumnDef<RealCostDoc>[] = [
+const columns: ColumnDef<RealCostDocument>[] = [
   {
     key: 'id',
     width: 160,

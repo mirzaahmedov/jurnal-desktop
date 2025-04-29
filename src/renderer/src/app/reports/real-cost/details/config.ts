@@ -6,4 +6,4 @@ export const defaultValues = {
   childs: [] as RealCostProvodka[]
 }
 
-export type OdinoxFormValues = typeof defaultValues
+export type RealCostFormValues = typeof defaultValues

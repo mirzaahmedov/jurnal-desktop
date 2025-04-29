@@ -1,6 +1,8 @@
+import type { ReportStatus } from './reports'
+
 export interface RealCost {
   id: number
-  status: number
+  status: ReportStatus
   accept_time: any
   send_time: string
   main_schet_id: number
@@ -65,7 +67,7 @@ export interface RealCostGrafik {
   remaining_summa: number
 }
 
-export interface RealCostDoc {
+export interface RealCostDocument {
   id: number
   id_shartnomalar_organization: number
   user_id: number
@@ -100,4 +102,23 @@ export interface RealCostDoc {
   contract_grafik_summa: number
   remaining_summa: number
   summa: number
+}
+
+export interface AdminRealCost {
+  id: number
+  status: ReportStatus
+  accept_time: null | number
+  send_time: string
+  user_id: number
+  fio: string
+  login: string
+  year: number
+  month: number
+  main_schet_id: number
+  account_number: string
+  accept_user_id: null | number
+  accept_user_fio: null | string
+  accept_user_login: null | string
+  region_name: string
+  childs: RealCostProvodka[]
 }

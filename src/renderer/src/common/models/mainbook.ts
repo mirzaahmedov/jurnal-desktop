@@ -1,8 +1,4 @@
-export enum MainbookStatus {
-  SEND = 1,
-  REJECT = 2,
-  ACCEPT = 3
-}
+import type { ReportStatus } from './reports'
 
 export interface MainbookSaldoMonthValue {
   budjet_id: number
@@ -17,7 +13,7 @@ export interface Mainbook {
   id: number
   status: number
   acsept_time: null | string
-  send_time: MainbookStatus
+  send_time: ReportStatus
   user_id: number
   fio: string
   login: string

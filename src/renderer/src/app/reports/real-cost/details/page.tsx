@@ -1,6 +1,6 @@
 import type { RealCostTableRow } from './interfaces'
 import type { EditableTableMethods } from '@/common/components/editable-table'
-import type { RealCostDoc } from '@/common/models'
+import type { RealCostDocument } from '@/common/models'
 
 import { type KeyboardEvent, useEffect, useMemo, useRef, useState } from 'react'
 
@@ -20,7 +20,7 @@ import { formatDate } from '@/common/lib/date'
 import { DetailsView } from '@/common/views'
 
 import { RealCostQueryKeys } from '../config'
-import { RealCostService } from '../service'
+import { DocType, RealCostService } from '../service'
 import { defaultValues } from './config'
 import { RealCostDocumentsTracker } from './documents-tracker'
 import { RealCostTable } from './realcost-table'
@@ -35,7 +35,7 @@ const RealCostDetailsPage = () => {
   const queryClient = useQueryClient()
   const setLayout = useLayout()
 
-  const [docs, setDocs] = useState<RealCostDoc[]>([])
+  const [docs, setDocs] = useState<RealCostDocument[]>([])
 
   const { t } = useTranslation(['app'])
 
@@ -171,8 +171,6 @@ const RealCostDetailsPage = () => {
   }, [id, year, month, budjet_id])
 
   const onSubmit = form.handleSubmit((values) => {
-    values.childs.pop()
-
     if (id === 'create') {
       createRealCost({
         month: values.month,
@@ -299,6 +297,23 @@ const RealCostDetailsPage = () => {
                 itogo={itogo}
                 onCellDoubleClick={({ row, type }) => {
                   if (row.smeta_id) {
+                    if (type === DocType.MonthSumma || type === DocType.YearSumma) {
+                      getDocs({
+                        month: form.getValues('month'),
+                        year: form.getValues('year'),
+                        need_data: form.getValues('childs'),
+                        smeta_id: row.smeta_id,
+                        main_schet_id: main_schet_id!,
+                        type
+                      })
+                      return
+                    }
+                    if (
+                      (type.endsWith('year') && !row.grafik_id_year) ||
+                      (!type.endsWith('year') && !row.grafik_id)
+                    ) {
+                      return
+                    }
                     getDocs({
                       month: form.getValues('month'),
                       year: form.getValues('year'),

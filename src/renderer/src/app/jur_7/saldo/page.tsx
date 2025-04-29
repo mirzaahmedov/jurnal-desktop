@@ -245,72 +245,6 @@ const MaterialWarehouseSaldoPage = () => {
               ]}
             />
           </div>
-          <div>
-            <ButtonGroup className="flex gap-5">
-              <DownloadFile
-                fileName={`${t('pages.saldo')}-${t('import')}-${t('template')}.xlsx`}
-                url="/jur_7/saldo/template"
-                buttonText={capitalize(t('download-something', { something: t('template') }))}
-                params={{
-                  excel: true
-                }}
-              />
-              <Button
-                variant="ghost"
-                onClick={monthlyTrackerToggle.open}
-              >
-                <CalendarDays className="btn-icon" />
-                {t('monthly_saldo')}
-              </Button>
-
-              <Button
-                variant="destructive"
-                onClick={handleDelete}
-              >
-                <Trash2 className="btn-icon" />
-                {t('clean_current_month')}
-              </Button>
-
-              <ImportFile
-                url="/jur_7/saldo/import"
-                params={{
-                  budjet_id,
-                  main_schet_id
-                }}
-                onSuccess={() => {
-                  queryClient.invalidateQueries({
-                    queryKey: [SaldoQueryKeys.getAll]
-                  })
-                  queryClient.invalidateQueries({
-                    queryKey: [IznosQueryKeys.getAll]
-                  })
-                  queryClient.invalidateQueries({
-                    queryKey: [SaldoQueryKeys.check]
-                  })
-                }}
-                onError={(error) => {
-                  const result = handleImportValidationError(error)
-                  if (result) {
-                    setValidationError({
-                      result,
-                      message: error?.message
-                    })
-                  } else {
-                    setValidationError(undefined)
-                  }
-                  const existingDocument = handleOstatokDeleteExistingSaldoError(error)
-                  if (existingDocument) {
-                    setDeleteExistingSaldoError({
-                      message: error.message,
-                      data: existingDocument.docs
-                    })
-                  } else {
-                    setDeleteExistingDocumentError(undefined)
-                  }
-                }}
-              />
-            </ButtonGroup>
-          </div>
         </div>
       </ListView.Header>
       <div className="p-5 pt-0 w-full flex items-center justify-between gap-5">
@@ -360,6 +294,71 @@ const MaterialWarehouseSaldoPage = () => {
             {t('load')}
           </Button>
         </form>
+
+        <ButtonGroup className="flex gap-5">
+          <DownloadFile
+            fileName={`${t('pages.saldo')}-${t('import')}-${t('template')}.xlsx`}
+            url="/jur_7/saldo/template"
+            buttonText={capitalize(t('download-something', { something: t('template') }))}
+            params={{
+              excel: true
+            }}
+          />
+          <Button
+            variant="ghost"
+            onClick={monthlyTrackerToggle.open}
+          >
+            <CalendarDays className="btn-icon" />
+            {t('monthly_saldo')}
+          </Button>
+
+          <Button
+            variant="destructive"
+            onClick={handleDelete}
+          >
+            <Trash2 className="btn-icon" />
+            {t('clean_current_month')}
+          </Button>
+
+          <ImportFile
+            url="/jur_7/saldo/import"
+            params={{
+              budjet_id,
+              main_schet_id
+            }}
+            onSuccess={() => {
+              queryClient.invalidateQueries({
+                queryKey: [SaldoQueryKeys.getAll]
+              })
+              queryClient.invalidateQueries({
+                queryKey: [IznosQueryKeys.getAll]
+              })
+              queryClient.invalidateQueries({
+                queryKey: [SaldoQueryKeys.check]
+              })
+            }}
+            onError={(error) => {
+              const result = handleImportValidationError(error)
+              if (result) {
+                setValidationError({
+                  result,
+                  message: error?.message
+                })
+              } else {
+                setValidationError(undefined)
+              }
+              const existingDocument = handleOstatokDeleteExistingSaldoError(error)
+              if (existingDocument) {
+                setDeleteExistingSaldoError({
+                  message: error.message,
+                  data: existingDocument.docs
+                })
+              } else {
+                setDeleteExistingDocumentError(undefined)
+              }
+            }}
+          />
+        </ButtonGroup>
       </div>
       <ListView.Content loading={isFetching || isDeleting}>
         <GenericTable

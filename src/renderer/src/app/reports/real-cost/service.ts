@@ -1,4 +1,4 @@
-import type { RealCost, RealCostDoc, RealCostProvodka, Response } from '@/common/models'
+import type { RealCost, RealCostDocument, RealCostProvodka, Response } from '@/common/models'
 
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 import { main_schet } from '@/common/features/crud/middleware'
@@ -67,7 +67,7 @@ class RealCostServiceBuilder extends CRUDService<
     type: DocType
   }) {
     const { need_data, ...params } = values
-    const res = await this.client.post<Response<RealCostDoc[], { summa: number }>>(
+    const res = await this.client.post<Response<RealCostDocument[], { summa: number }>>(
       `${this.endpoint}/docs`,
       {
         need_data

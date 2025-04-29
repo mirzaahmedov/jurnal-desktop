@@ -18,7 +18,7 @@ import { Button } from '@/common/components/ui/button'
 import { useConfirm } from '@/common/features/confirm'
 import { useLayout } from '@/common/layout'
 import { formatDate } from '@/common/lib/date'
-import { MainbookStatus } from '@/common/models'
+import { ReportStatus } from '@/common/models'
 import { DetailsView } from '@/common/views'
 
 import { mainbookQueryKeys } from '../config'
@@ -94,7 +94,7 @@ const AdminMainbookDetailsPage = () => {
       onConfirm: () => {
         updateMainbook({
           id: Number(id),
-          status: MainbookStatus.REJECT
+          status: ReportStatus.REJECT
         })
       }
     })
@@ -105,7 +105,7 @@ const AdminMainbookDetailsPage = () => {
       onConfirm: () => {
         updateMainbook({
           id: Number(id),
-          status: MainbookStatus.ACCEPT
+          status: ReportStatus.ACCEPT
         })
       }
     })
