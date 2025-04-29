@@ -347,5 +347,6 @@
   "akt_sverki": "Акт сверки",
   "optional": "Необязательный",
   "error_generating_file": "Ошибка при генерации файла",
-  "old_smeta_grafiks": "Старые смета графики"
+  "old_smeta_grafiks": "Старые смета графики",
+  "no_smeta_grafiks_for_this_smeta": "Для этой сметы не были созданы графики"
 }

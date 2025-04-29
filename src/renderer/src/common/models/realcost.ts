@@ -1,4 +1,6 @@
+import type { ProvodkaType } from './common'
 import type { ReportStatus } from './reports'
+import type { SmetaGrafik } from './smeta-grafik'
 
 export interface RealCost {
   id: number
@@ -25,15 +27,15 @@ export interface RealCostProvodka {
   smeta_name: string
   smeta_number: string
   group_number: string
-  smeta_grafik: any
+  smeta_grafik: SmetaGrafik | null
   smeta_id: number
   month_summa: number
   year_summa: number
-  by_month: RealCostGrafik[]
-  by_year: RealCostGrafik[]
+  by_month: RealCostShartnomaGrafik[]
+  by_year: RealCostShartnomaGrafik[]
 }
 
-export interface RealCostGrafik {
+export interface RealCostShartnomaGrafik {
   id: number
   id_shartnomalar_organization: number
   user_id: number
@@ -67,42 +69,17 @@ export interface RealCostGrafik {
   remaining_summa: number
 }
 
-export interface RealCostDocument {
+export interface RealCostRasxod {
   id: number
-  id_shartnomalar_organization: number
-  user_id: number
-  oy_1: string
-  oy_2: string
-  oy_3: string
-  oy_4: string
-  oy_5: string
-  oy_6: string
-  oy_7: string
-  oy_8: string
-  oy_9: string
-  oy_10: string
-  oy_11: string
-  oy_12: string
-  year: number
-  created_at: string
-  updated_at: string
-  isdeleted: boolean
-  yillik_oylik: any
-  budjet_id: any
-  smeta_id: string
-  itogo: string
-  main_schet_id: number
-  contract_grafik_id: number
   doc_num: string
   doc_date: string
-  spravochnik_organization_id: number
-  name: string
-  inn: string
-  rasxod_summa: number
-  contract_grafik_summa: number
-  remaining_summa: number
+  schet: string
+  sub_schet: string
   summa: number
+  type: ProvodkaType
 }
+
+export type RealCostDocument = RealCostProvodka | RealCostShartnomaGrafik | RealCostRasxod
 
 export interface AdminRealCost {
   id: number

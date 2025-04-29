@@ -282,11 +282,11 @@ export const GenericTable = <T extends object>(props: GenericTableProps<T>) => {
           <GenericTableRow className="pointer-events-none">
             <GenericTableCell
               colSpan={100}
-              className="w-full text-center py-20 text-slate-400"
+              className="w-full text-center py-14 text-slate-400"
             >
               <EmptyList
                 iconProps={{
-                  className: 'w-40'
+                  className: 'w-64'
                 }}
               >
                 {placeholder}

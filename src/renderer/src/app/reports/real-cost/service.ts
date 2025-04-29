@@ -14,6 +14,16 @@ export enum DocType {
   RemainingYear = 'remaining_year'
 }
 
+export interface GetDocsArgs {
+  need_data: RealCostProvodka[]
+  smeta_id: number
+  main_schet_id: number
+  month: number
+  year: number
+  grafik_id?: number
+  type: DocType
+}
+
 export interface RealCostMeta {
   month_summa: number
   year_summa: number
@@ -57,15 +67,7 @@ class RealCostServiceBuilder extends CRUDService<
     return res.data
   }
 
-  async getDocs(values: {
-    need_data: RealCostProvodka[]
-    smeta_id: number
-    main_schet_id: number
-    month: number
-    year: number
-    grafik_id?: number
-    type: DocType
-  }) {
+  async getDocs(values: GetDocsArgs) {
     const { need_data, ...params } = values
     const res = await this.client.post<Response<RealCostDocument[], { summa: number }>>(
       `${this.endpoint}/docs`,

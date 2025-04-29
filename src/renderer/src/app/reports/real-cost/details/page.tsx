@@ -20,7 +20,7 @@ import { formatDate } from '@/common/lib/date'
 import { DetailsView } from '@/common/views'
 
 import { RealCostQueryKeys } from '../config'
-import { DocType, RealCostService } from '../service'
+import { DocType, type GetDocsArgs, RealCostService } from '../service'
 import { defaultValues } from './config'
 import { RealCostDocumentsTracker } from './documents-tracker'
 import { RealCostTable } from './realcost-table'
@@ -35,7 +35,10 @@ const RealCostDetailsPage = () => {
   const queryClient = useQueryClient()
   const setLayout = useLayout()
 
-  const [docs, setDocs] = useState<RealCostDocument[]>([])
+  const [selected, setSelected] = useState<{
+    docs: RealCostDocument[]
+    args: GetDocsArgs
+  }>()
 
   const { t } = useTranslation(['app'])
 
@@ -88,11 +91,14 @@ const RealCostDetailsPage = () => {
   const { mutate: getDocs } = useMutation({
     mutationKey: [RealCostQueryKeys.getDocs],
     mutationFn: RealCostService.getDocs,
-    onSuccess: (res) => {
-      setDocs(Array.isArray(res.data) ? res.data : [])
+    onSuccess: (res, args) => {
+      setSelected({
+        docs: Array.isArray(res.data) ? res.data : [],
+        args
+      })
     },
     onError: () => {
-      setDocs([])
+      setSelected(undefined)
     }
   })
 
@@ -296,6 +302,7 @@ const RealCostDetailsPage = () => {
                 methods={tableMethods}
                 itogo={itogo}
                 onCellDoubleClick={({ row, type }) => {
+                  console.log(row, type)
                   if (row.smeta_id) {
                     if (type === DocType.MonthSumma || type === DocType.YearSumma) {
                       getDocs({
@@ -314,6 +321,7 @@ const RealCostDetailsPage = () => {
                     ) {
                       return
                     }
+                    console.log('running')
                     getDocs({
                       month: form.getValues('month'),
                       year: form.getValues('year'),
@@ -342,8 +350,9 @@ const RealCostDetailsPage = () => {
       </DetailsView.Content>
 
       <RealCostDocumentsTracker
-        docs={docs}
-        onClose={() => setDocs([])}
+        docs={selected?.docs ?? []}
+        args={selected?.args}
+        onClose={() => setSelected(undefined)}
       />
     </DetailsView>
   )

@@ -1,7 +1,7 @@
-import type { RealCostGrafik, RealCostProvodka } from '@/common/models'
+import type { RealCostProvodka, RealCostShartnomaGrafik } from '@/common/models'
 
 type RealCostMonthGrafik = Pick<
-  RealCostGrafik,
+  RealCostShartnomaGrafik,
   'doc_num' | 'doc_date' | 'name' | 'rasxod_summa' | 'remaining_summa' | 'contract_grafik_summa'
 > & {
   grafik_id?: number

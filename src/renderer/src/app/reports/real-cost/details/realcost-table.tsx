@@ -104,7 +104,6 @@ export const RealCostTable = memo(
 
     return (
       <div
-        ref={setElementRef}
         onSubmit={(e) => {
           e.preventDefault()
           e.stopPropagation()
@@ -116,13 +115,11 @@ export const RealCostTable = memo(
           })
         }}
         className="relative h-full flex flex-col overflow-y-hidden overflow-x-auto scrollbar"
-        onScroll={(e) => {
-          if (!ref.current) return
-          const target = e.target as HTMLDivElement
-          ref.current.scrollLeft = target.scrollLeft
-        }}
       >
-        <Table className="w-max border border-slate-200 table-fixed">
+        <Table
+          ref={setElementRef}
+          className="w-max border border-slate-200 table-fixed"
+        >
           <TableHeader className="shadow-sm">
             <TableRow style={{ height: 44 }}>
               <TableHead
@@ -227,13 +224,12 @@ export const RealCostTable = memo(
         </Table>
 
         <div
-          style={{ width }}
-          className="sticky left-0 w-min overflow-x-hidden overflow-y-auto flex-1 scrollbar"
+          className="min-w-min overflow-x-hidden overflow-y-auto flex-1 scrollbar"
           ref={ref}
         >
           <div
             className="static"
-            style={{ height: `${rowVirtualizer.getTotalSize()}px` }}
+            style={{ width, height: `${rowVirtualizer.getTotalSize()}px` }}
           >
             <Table className="static border border-slate-200 table-fixed">
               <TableBody>
@@ -340,7 +336,7 @@ const Row = ({ index, row, rows, highlightedRow, onCellDoubleClick, ...props }: 
           >
             <TextEditor
               value={row.smeta_number}
-              className="font-bold"
+              className="relative font-bold z-50"
               style={{
                 height: row.size * 44
               }}
