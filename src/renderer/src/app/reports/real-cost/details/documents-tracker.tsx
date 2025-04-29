@@ -1,7 +1,6 @@
-import type { MainbookDocumentInfo, ProvodkaType } from '@/common/models'
+import type { MainbookDocumentInfo, ProvodkaType, RealCostDoc } from '@/common/models'
 import type { DialogTriggerProps } from 'react-aria-components'
 
-import { useQuery } from '@tanstack/react-query'
 import { t } from 'i18next'
 import { Trans } from 'react-i18next'
 
@@ -18,48 +17,17 @@ import { IDCell } from '@/common/components/table/renderers/id'
 import { SummaCell } from '@/common/components/table/renderers/summa'
 import { formatLocaleDate, formatNumber } from '@/common/lib/format'
 
-import { RealCostQueryKeys } from '../config'
-import { RealCostService } from '../service'
-
-export interface MainbookDocumentsTrackerProps extends Omit<DialogTriggerProps, 'children'> {
-  budjet_id?: number
-  main_schet_id?: number
-  year?: number
-  month?: number
-  schet?: string
-  type_id?: number
-  prixod?: boolean
+export interface RealCostDocumentsTrackerProps extends Omit<DialogTriggerProps, 'children'> {
+  docs: RealCostDoc[]
+  onClose: VoidFunction
 }
 
-export const MainbookDocumentsTracker = ({
-  budjet_id,
-  main_schet_id,
-  year,
-  month,
-  schet,
-  type_id,
-  prixod,
-  ...props
-}: MainbookDocumentsTrackerProps) => {
-  const { data: documents } = useQuery({
-    queryKey: [
-      RealCostQueryKeys.getMainbookDocuments,
-      {
-        budjet_id: budjet_id!,
-        main_schet_id: main_schet_id!,
-        year: year!,
-        month: month!,
-        schet: schet!,
-        type_id: type_id!,
-        prixod: !!prixod,
-        rasxod: !prixod
-      }
-    ],
-    queryFn: RealCostService.getMainbookDocuments,
-    enabled: props.isOpen && !!budjet_id && !!year && !!month && !!schet
-  })
+export const RealCostDocumentsTracker = ({ docs, onClose }: RealCostDocumentsTrackerProps) => {
   return (
-    <DialogTrigger {...props}>
+    <DialogTrigger
+      isOpen={docs.length > 0}
+      onOpenChange={onClose}
+    >
       <DialogOverlay>
         <DialogContent className="w-full max-w-[1800px] h-full max-h-[900px] flex flex-col p-0 gap-0">
           <div>
@@ -70,7 +38,7 @@ export const MainbookDocumentsTracker = ({
             </DialogHeader>
             <div className="flex-1">
               <GenericTable
-                data={documents?.data ?? []}
+                data={docs ?? []}
                 columnDefs={columns}
                 footer={
                   <FooterRow>
@@ -79,7 +47,7 @@ export const MainbookDocumentsTracker = ({
                       colSpan={5}
                     />
                     <FooterCell
-                      content={formatNumber(documents?.meta?.summa ?? 0)}
+                      content={formatNumber(10 ?? 0)}
                       colSpan={1}
                     />
                   </FooterRow>
@@ -93,7 +61,7 @@ export const MainbookDocumentsTracker = ({
   )
 }
 
-const columns: ColumnDef<MainbookDocumentInfo>[] = [
+const columns: ColumnDef<RealCostDoc>[] = [
   {
     key: 'id',
     width: 160,
@@ -111,28 +79,20 @@ const columns: ColumnDef<MainbookDocumentInfo>[] = [
   },
   {
     minWidth: 100,
-    key: 'debet_schet',
-    header: 'debet'
+    key: 'year'
   },
   {
     minWidth: 100,
-    key: 'kredit_schet',
-    header: 'kredit'
+    key: 'name'
+  },
+  {
+    minWidth: 100,
+    key: 'inn'
   },
   {
     minWidth: 200,
     numeric: true,
     key: 'summa',
     renderCell: SummaCell
-  },
-  {
-    fill: true,
-    minWidth: 350,
-    key: 'opisanie'
-  },
-  {
-    minWidth: 300,
-    key: 'type',
-    renderCell: (row) => <ProvodkaBadge type={row.type as ProvodkaType} />
   }
 ]

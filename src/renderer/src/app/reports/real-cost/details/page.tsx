@@ -1,7 +1,8 @@
 import type { RealCostTableRow } from './interfaces'
 import type { EditableTableMethods } from '@/common/components/editable-table'
+import type { RealCostDoc } from '@/common/models'
 
-import { type KeyboardEvent, useEffect, useMemo, useRef } from 'react'
+import { type KeyboardEvent, useEffect, useMemo, useRef, useState } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
@@ -21,6 +22,7 @@ import { DetailsView } from '@/common/views'
 import { RealCostQueryKeys } from '../config'
 import { RealCostService } from '../service'
 import { defaultValues } from './config'
+import { RealCostDocumentsTracker } from './documents-tracker'
 import { RealCostTable } from './realcost-table'
 
 const RealCostDetailsPage = () => {
@@ -32,6 +34,8 @@ const RealCostDetailsPage = () => {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const setLayout = useLayout()
+
+  const [docs, setDocs] = useState<RealCostDoc[]>([])
 
   const { t } = useTranslation(['app'])
 
@@ -60,7 +64,7 @@ const RealCostDetailsPage = () => {
   })
 
   const { isPending: isAutoFilling, mutate: autoFill } = useMutation({
-    mutationKey: [RealCostQueryKeys.getAutofill],
+    mutationKey: [RealCostQueryKeys.autofill],
     mutationFn: RealCostService.getAutofillData,
     onSuccess: (res) => {
       const itogo = {} as RealCostTableRow
@@ -68,16 +72,27 @@ const RealCostDetailsPage = () => {
         itogo.first = true
         itogo.rasxod_summa = res.meta.by_month.rasxod_summa
         itogo.remaining_summa = res.meta.by_month.remaining_summa
-        itogo.itogo = String(res.meta.by_month.contract_grafik_summa)
+        itogo.contract_grafik_summa = res.meta.by_month.contract_grafik_summa
         itogo.rasxod_summa_year = res.meta.by_year.rasxod_summa
         itogo.remaining_summa_year = res.meta.by_year.remaining_summa
-        itogo.itogo_year = String(res.meta.by_year.contract_grafik_summa)
+        itogo.contract_grafik_summa_year = res.meta.by_year.contract_grafik_summa
       }
       form.setValue('childs', res?.data ?? [])
       form.setValue('itogo', itogo ?? {})
     },
     onError: () => {
       form.setValue('childs', [])
+    }
+  })
+
+  const { mutate: getDocs } = useMutation({
+    mutationKey: [RealCostQueryKeys.getDocs],
+    mutationFn: RealCostService.getDocs,
+    onSuccess: (res) => {
+      setDocs(Array.isArray(res.data) ? res.data : [])
+    },
+    onError: () => {
+      setDocs([])
     }
   })
 
@@ -118,10 +133,10 @@ const RealCostDetailsPage = () => {
         itogo.first = true
         itogo.rasxod_summa = meta.by_month.rasxod_summa
         itogo.remaining_summa = meta.by_month.remaining_summa
-        itogo.itogo = String(meta.by_month.contract_grafik_summa)
+        itogo.contract_grafik_summa = meta.by_month.contract_grafik_summa
         itogo.rasxod_summa_year = meta.by_year.rasxod_summa
         itogo.remaining_summa_year = meta.by_year.remaining_summa
-        itogo.itogo_year = String(meta.by_year.contract_grafik_summa)
+        itogo.contract_grafik_summa_year = meta.by_year.contract_grafik_summa
       }
 
       form.reset({
@@ -210,15 +225,17 @@ const RealCostDetailsPage = () => {
           doc_num: row.by_month[i]?.doc_num ?? '',
           doc_date: row.by_month[i]?.doc_date ?? '',
           name: row.by_month[i]?.name ?? '',
-          itogo: row.by_month[i]?.itogo ?? 0,
+          contract_grafik_summa: row.by_month[i]?.contract_grafik_summa ?? 0,
           rasxod_summa: row.by_month[i]?.rasxod_summa ?? 0,
           remaining_summa: row.by_month[i]?.remaining_summa ?? 0,
           doc_num_year: row.by_year[i]?.doc_num ?? '',
           doc_date_year: row.by_year[i]?.doc_date ?? '',
           name_year: row.by_year[i]?.name ?? '',
-          itogo_year: row.by_year[i]?.itogo ?? 0,
+          contract_grafik_summa_year: row.by_year[i]?.contract_grafik_summa ?? 0,
           rasxod_summa_year: row.by_year[i]?.rasxod_summa ?? 0,
-          remaining_summa_year: row.by_year[i]?.remaining_summa ?? 0
+          remaining_summa_year: row.by_year[i]?.remaining_summa ?? 0,
+          grafik_id: row.by_month[i]?.id,
+          grafik_id_year: row.by_year[i]?.id
         })
       }
     })
@@ -280,6 +297,19 @@ const RealCostDetailsPage = () => {
                 rows={rows}
                 methods={tableMethods}
                 itogo={itogo}
+                onCellDoubleClick={({ row, type }) => {
+                  if (row.smeta_id) {
+                    getDocs({
+                      month: form.getValues('month'),
+                      year: form.getValues('year'),
+                      need_data: form.getValues('childs'),
+                      smeta_id: row.smeta_id,
+                      main_schet_id: main_schet_id!,
+                      type,
+                      grafik_id: type.endsWith('year') ? row.grafik_id_year : row.grafik_id
+                    })
+                  }
+                }}
               />
             </div>
           </div>
@@ -295,6 +325,11 @@ const RealCostDetailsPage = () => {
           </DetailsView.Footer>
         </form>
       </DetailsView.Content>
+
+      <RealCostDocumentsTracker
+        docs={docs}
+        onClose={() => setDocs([])}
+      />
     </DetailsView>
   )
 }

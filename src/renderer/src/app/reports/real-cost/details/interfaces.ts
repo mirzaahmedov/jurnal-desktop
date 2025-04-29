@@ -22,8 +22,10 @@ export interface OdinoxAutoFill {
 
 type RealCostMonthGrafik = Pick<
   RealCostGrafik,
-  'doc_num' | 'doc_date' | 'name' | 'itogo' | 'rasxod_summa' | 'remaining_summa'
->
+  'doc_num' | 'doc_date' | 'name' | 'rasxod_summa' | 'remaining_summa' | 'contract_grafik_summa'
+> & {
+  grafik_id?: number
+}
 type RealCostYearGrafik = {
   [key in keyof RealCostMonthGrafik as `${key}_year`]: RealCostMonthGrafik[key]
 }

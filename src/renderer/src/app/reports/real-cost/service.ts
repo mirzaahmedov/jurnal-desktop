@@ -1,11 +1,19 @@
-import type { OdinoxAutoFillSubChild, OdinoxUniqueSchet } from './details/interfaces'
-import type { OdinoxDocumentInfo, RealCost, RealCostProvodka, Response } from '@/common/models'
-import type { QueryFunctionContext } from '@tanstack/react-query'
+import type { RealCost, RealCostDoc, RealCostProvodka, Response } from '@/common/models'
 
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 import { main_schet } from '@/common/features/crud/middleware'
 
-export type OdinoxPayloadChild = Omit<OdinoxAutoFillSubChild, 'id' | 'smeta_grafik'>
+export enum DocType {
+  MonthSumma = 'month_summa',
+  YearSumma = 'year_summa',
+  ContractGrafikMonth = 'contract_grafik_month',
+  ContractGrafikYear = 'contract_grafik_year',
+  RasxodMonth = 'rasxod_month',
+  RasxodYear = 'rasxod_year',
+  RemainingMonth = 'remaining_month',
+  RemainingYear = 'remaining_year'
+}
+
 export interface RealCostMeta {
   month_summa: number
   year_summa: number
@@ -37,10 +45,8 @@ class RealCostServiceBuilder extends CRUDService<
       endpoint: ApiEndpoints.realcost
     })
 
-    this.getSaldoCheck = this.getSaldoCheck.bind(this)
     this.getAutofillData = this.getAutofillData.bind(this)
-    this.getUniqueSchets = this.getUniqueSchets.bind(this)
-    this.getMainbookDocuments = this.getMainbookDocuments.bind(this)
+    this.getDocs = this.getDocs.bind(this)
   }
 
   async getAutofillData(params: { month: number; year: number; main_schet_id: number }) {
@@ -51,50 +57,21 @@ class RealCostServiceBuilder extends CRUDService<
     return res.data
   }
 
-  async getSaldoCheck(params: { budjet_id: number; main_schet_id: number }) {
-    const res = await this.client.get<Response<unknown>>(`${this.endpoint}/check`, {
-      headers: {
-        'notify-error': false
-      },
-      params
-    })
-    return res.data
-  }
-
-  async getUniqueSchets(params: { budjet_id: number; main_schet_id: number }) {
-    const res = await this.client.get<
-      Response<{
-        schets: OdinoxUniqueSchet[]
-      }>
-    >(`${this.endpoint}/unique`, {
-      headers: {
-        'notify-error': false
-      },
-      params
-    })
-    return res.data
-  }
-
-  async getMainbookDocuments(
-    ctx: QueryFunctionContext<
-      [
-        string,
-        {
-          budjet_id: number
-          main_schet_id: number
-          month: number
-          year: number
-          type_id: number
-          schet: string
-          prixod: boolean
-          rasxod: boolean
-        }
-      ]
-    >
-  ) {
-    const params = ctx.queryKey[1]
-    const res = await this.client.get<Response<OdinoxDocumentInfo[], { summa: number }>>(
+  async getDocs(values: {
+    need_data: RealCostProvodka[]
+    smeta_id: number
+    main_schet_id: number
+    month: number
+    year: number
+    grafik_id?: number
+    type: DocType
+  }) {
+    const { need_data, ...params } = values
+    const res = await this.client.post<Response<RealCostDoc[], { summa: number }>>(
       `${this.endpoint}/docs`,
+      {
+        need_data
+      },
       {
         params
       }

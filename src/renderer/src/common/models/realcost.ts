@@ -64,3 +64,40 @@ export interface RealCostGrafik {
   contract_grafik_summa: number
   remaining_summa: number
 }
+
+export interface RealCostDoc {
+  id: number
+  id_shartnomalar_organization: number
+  user_id: number
+  oy_1: string
+  oy_2: string
+  oy_3: string
+  oy_4: string
+  oy_5: string
+  oy_6: string
+  oy_7: string
+  oy_8: string
+  oy_9: string
+  oy_10: string
+  oy_11: string
+  oy_12: string
+  year: number
+  created_at: string
+  updated_at: string
+  isdeleted: boolean
+  yillik_oylik: any
+  budjet_id: any
+  smeta_id: string
+  itogo: string
+  main_schet_id: number
+  contract_grafik_id: number
+  doc_num: string
+  doc_date: string
+  spravochnik_organization_id: number
+  name: string
+  inn: string
+  rasxod_summa: number
+  contract_grafik_summa: number
+  remaining_summa: number
+  summa: number
+}

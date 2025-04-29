@@ -21,6 +21,8 @@ import { useElementWidth } from '@/common/hooks'
 import { formatLocaleDate } from '@/common/lib/format'
 import { cn } from '@/common/lib/utils'
 
+import { DocType } from '../service'
+
 const TextEditor = ({ value, defaultValue, className, ...props }: InputProps) => {
   return (
     <Input
@@ -59,233 +61,241 @@ const NumberEditor = ({ value, defaultValue, className, ...props }: NumericInput
   )
 }
 
+export interface CellDoubleClickArgs {
+  row: RealCostTableRow
+  rowIndex: number
+  type: DocType
+}
 export interface RealCostTableProps {
   rows: RealCostTableRow[]
   itogo: RealCostTableRow
   methods?: RefObject<EditableTableMethods>
+  onCellDoubleClick?: (args: CellDoubleClickArgs) => void
 }
-export const RealCostTable = memo(({ rows, itogo, methods }: RealCostTableProps) => {
-  const ref = useRef<HTMLTableElement>(null)
-  const highlightedRow = useRef<number | null>(null)
+export const RealCostTable = memo(
+  ({ rows, itogo, methods, onCellDoubleClick }: RealCostTableProps) => {
+    const ref = useRef<HTMLTableElement>(null)
+    const highlightedRow = useRef<number | null>(null)
 
-  const { width, setElementRef } = useElementWidth()
+    const { width, setElementRef } = useElementWidth()
 
-  const { t } = useTranslation(['app'])
+    const { t } = useTranslation(['app'])
 
-  const rowVirtualizer = useVirtualizer({
-    count: rows.length,
-    getScrollElement: () => ref.current,
-    estimateSize: () => 44,
-    overscan: 5
-  })
+    const rowVirtualizer = useVirtualizer({
+      count: rows.length,
+      getScrollElement: () => ref.current,
+      estimateSize: () => 44,
+      overscan: 5
+    })
 
-  useImperativeHandle(
-    methods,
-    () => ({
-      scrollToRow: (rowIndex: number) => {
-        rowVirtualizer.scrollToIndex(rowIndex, {
-          align: 'center',
-          behavior: 'smooth'
-        })
-        highlightedRow.current = rowIndex
-      }
-    }),
-    []
-  )
+    useImperativeHandle(
+      methods,
+      () => ({
+        scrollToRow: (rowIndex: number) => {
+          rowVirtualizer.scrollToIndex(rowIndex, {
+            align: 'center',
+            behavior: 'smooth'
+          })
+          highlightedRow.current = rowIndex
+        }
+      }),
+      []
+    )
 
-  return (
-    <div
-      ref={setElementRef}
-      onSubmit={(e) => {
-        e.preventDefault()
-        e.stopPropagation()
-      }}
-      onFocus={(e) => {
-        e.target.scrollIntoView({
-          behavior: 'smooth',
-          block: 'nearest'
-        })
-      }}
-      className="relative h-full flex flex-col overflow-y-hidden overflow-x-auto scrollbar"
-      onScroll={(e) => {
-        if (!ref.current) return
-        const target = e.target as HTMLDivElement
-        ref.current.scrollLeft = target.scrollLeft
-      }}
-    >
-      <Table className="w-max border border-slate-200 table-fixed">
-        <TableHeader className="shadow-sm">
-          <TableRow style={{ height: 44 }}>
-            <TableHead
-              className="px-3 whitespace-nowrap text-sm font-medium"
-              style={{
-                width: `${String(rows.length + 0).length + 3}ch`
-              }}
-              rowSpan={2}
-            ></TableHead>
-            <TableHead
-              rowSpan={2}
-              style={{ width: 300 }}
-            >
-              {t('name')}
-            </TableHead>
-            <TableHead
-              rowSpan={2}
-              style={{ width: 100 }}
-              className="sticky left-0 z-50"
-            >
-              {t('number')}
-            </TableHead>
-            <TableHead
-              colSpan={6}
-              className="text-center"
-            >
-              {t('for_month')}
-            </TableHead>
-            <TableHead
-              colSpan={6}
-              className="text-center !bg-slate-200 border-slate-300"
-            >
-              {t('for_year')}
-            </TableHead>
-          </TableRow>
-          <TableRow style={{ height: 50 }}>
-            <TableHead
-              style={{ width: 140 }}
-              className="text-end"
-            >
-              {t('pages.smeta_grafik')}
-            </TableHead>
-            <TableHead style={{ width: 140 }}>№ / {t('date')}</TableHead>
-            <TableHead style={{ width: 300 }}>{t('organization')}</TableHead>
-            <TableHead
-              style={{ width: 140 }}
-              className="text-end"
-            >
-              {t('summa')}
-            </TableHead>
-            <TableHead
-              style={{ width: 140 }}
-              className="text-end"
-            >
-              {t('pages.kassa')}/{t('bank').toLowerCase()} {t('rasxod').toLowerCase()}
-            </TableHead>
-            <TableHead
-              style={{ width: 140 }}
-              className="text-end"
-            >
-              {t('remainder')}
-            </TableHead>
-
-            <TableHead
-              style={{ width: 140 }}
-              className="!bg-slate-200 border-slate-300 text-end"
-            >
-              {t('pages.smeta_grafik')}
-            </TableHead>
-            <TableHead
-              style={{ width: 140 }}
-              className="!bg-slate-200 border-slate-300"
-            >
-              № / {t('date')}
-            </TableHead>
-            <TableHead
-              style={{ width: 300 }}
-              className="!bg-slate-200 border-slate-300"
-            >
-              {t('organization')}
-            </TableHead>
-            <TableHead
-              style={{ width: 140 }}
-              className="!bg-slate-200 border-slate-300 text-end"
-            >
-              {t('summa')}
-            </TableHead>
-            <TableHead
-              style={{ width: 140 }}
-              className="!bg-slate-200 border-slate-300 text-end"
-            >
-              {t('pages.kassa')}/{t('bank').toLowerCase()} {t('rasxod').toLowerCase()}
-            </TableHead>
-            <TableHead
-              style={{ width: 140 }}
-              className="!bg-slate-200 border-slate-300 text-end"
-            >
-              {t('remainder')}
-            </TableHead>
-          </TableRow>
-        </TableHeader>
-      </Table>
-
+    return (
       <div
-        style={{ width }}
-        className="sticky left-0 w-min overflow-x-hidden overflow-y-auto flex-1 scrollbar"
-        ref={ref}
+        ref={setElementRef}
+        onSubmit={(e) => {
+          e.preventDefault()
+          e.stopPropagation()
+        }}
+        onFocus={(e) => {
+          e.target.scrollIntoView({
+            behavior: 'smooth',
+            block: 'nearest'
+          })
+        }}
+        className="relative h-full flex flex-col overflow-y-hidden overflow-x-auto scrollbar"
+        onScroll={(e) => {
+          if (!ref.current) return
+          const target = e.target as HTMLDivElement
+          ref.current.scrollLeft = target.scrollLeft
+        }}
       >
+        <Table className="w-max border border-slate-200 table-fixed">
+          <TableHeader className="shadow-sm">
+            <TableRow style={{ height: 44 }}>
+              <TableHead
+                className="px-3 whitespace-nowrap text-sm font-medium"
+                style={{
+                  width: `${String(rows.length + 0).length + 3}ch`
+                }}
+                rowSpan={2}
+              ></TableHead>
+              <TableHead
+                rowSpan={2}
+                style={{ width: 300 }}
+              >
+                {t('name')}
+              </TableHead>
+              <TableHead
+                rowSpan={2}
+                style={{ width: 100 }}
+                className="sticky left-0 z-50"
+              >
+                {t('number')}
+              </TableHead>
+              <TableHead
+                colSpan={6}
+                className="text-center"
+              >
+                {t('for_month')}
+              </TableHead>
+              <TableHead
+                colSpan={6}
+                className="text-center !bg-slate-200 border-slate-300"
+              >
+                {t('for_year')}
+              </TableHead>
+            </TableRow>
+            <TableRow style={{ height: 50 }}>
+              <TableHead
+                style={{ width: 140 }}
+                className="text-end"
+              >
+                {t('pages.smeta_grafik')}
+              </TableHead>
+              <TableHead style={{ width: 140 }}>№ / {t('date')}</TableHead>
+              <TableHead style={{ width: 300 }}>{t('organization')}</TableHead>
+              <TableHead
+                style={{ width: 140 }}
+                className="text-end"
+              >
+                {t('summa')}
+              </TableHead>
+              <TableHead
+                style={{ width: 140 }}
+                className="text-end"
+              >
+                {t('pages.kassa')}/{t('bank').toLowerCase()} {t('rasxod').toLowerCase()}
+              </TableHead>
+              <TableHead
+                style={{ width: 140 }}
+                className="text-end"
+              >
+                {t('remainder')}
+              </TableHead>
+
+              <TableHead
+                style={{ width: 140 }}
+                className="!bg-slate-200 border-slate-300 text-end"
+              >
+                {t('pages.smeta_grafik')}
+              </TableHead>
+              <TableHead
+                style={{ width: 140 }}
+                className="!bg-slate-200 border-slate-300"
+              >
+                № / {t('date')}
+              </TableHead>
+              <TableHead
+                style={{ width: 300 }}
+                className="!bg-slate-200 border-slate-300"
+              >
+                {t('organization')}
+              </TableHead>
+              <TableHead
+                style={{ width: 140 }}
+                className="!bg-slate-200 border-slate-300 text-end"
+              >
+                {t('summa')}
+              </TableHead>
+              <TableHead
+                style={{ width: 140 }}
+                className="!bg-slate-200 border-slate-300 text-end"
+              >
+                {t('pages.kassa')}/{t('bank').toLowerCase()} {t('rasxod').toLowerCase()}
+              </TableHead>
+              <TableHead
+                style={{ width: 140 }}
+                className="!bg-slate-200 border-slate-300 text-end"
+              >
+                {t('remainder')}
+              </TableHead>
+            </TableRow>
+          </TableHeader>
+        </Table>
+
         <div
-          className="static"
-          style={{ height: `${rowVirtualizer.getTotalSize()}px` }}
+          style={{ width }}
+          className="sticky left-0 w-min overflow-x-hidden overflow-y-auto flex-1 scrollbar"
+          ref={ref}
         >
-          <Table className="static border border-slate-200 table-fixed">
-            <TableBody>
-              {Array.isArray(rows) && rows.length ? (
-                rowVirtualizer.getVirtualItems().map((virtualRow, index) => {
-                  const row = rows[virtualRow.index]
-                  return (
-                    <Row
-                      key={virtualRow.index}
-                      index={virtualRow.index}
-                      row={row}
-                      rows={rows}
-                      highlightedRow={highlightedRow}
-                      style={{
-                        height: `${virtualRow.size}px`,
-                        transform: `translateY(${virtualRow.start - index * virtualRow.size}px)`
-                      }}
-                    />
-                  )
-                })
-              ) : (
-                <TableRow>
-                  <TableCell
-                    colSpan={100}
-                    className="text-center py-5"
-                  >
-                    <EmptyList
-                      iconProps={{
-                        className: 'w-40'
-                      }}
-                    ></EmptyList>
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
+          <div
+            className="static"
+            style={{ height: `${rowVirtualizer.getTotalSize()}px` }}
+          >
+            <Table className="static border border-slate-200 table-fixed">
+              <TableBody>
+                {Array.isArray(rows) && rows.length ? (
+                  rowVirtualizer.getVirtualItems().map((virtualRow, index) => {
+                    const row = rows[virtualRow.index]
+                    return (
+                      <Row
+                        key={virtualRow.index}
+                        index={virtualRow.index}
+                        row={row}
+                        rows={rows}
+                        highlightedRow={highlightedRow}
+                        onCellDoubleClick={onCellDoubleClick}
+                        style={{
+                          height: `${virtualRow.size}px`,
+                          transform: `translateY(${virtualRow.start - index * virtualRow.size}px)`
+                        }}
+                      />
+                    )
+                  })
+                ) : (
+                  <TableRow>
+                    <TableCell
+                      colSpan={100}
+                      className="text-center py-5"
+                    >
+                      <EmptyList
+                        iconProps={{
+                          className: 'w-40'
+                        }}
+                      ></EmptyList>
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </div>
         </div>
+
+        <Table className="w-max border border-slate-200 table-fixed">
+          <TableFooter className="shadow-sm">
+            <Row
+              focusable={false}
+              index={rows.length}
+              row={itogo}
+              rows={rows}
+              highlightedRow={highlightedRow}
+            />
+          </TableFooter>
+        </Table>
       </div>
+    )
+  }
+)
 
-      <Table className="w-max border border-slate-200 table-fixed">
-        <TableFooter className="shadow-sm">
-          <Row
-            focusable={false}
-            index={rows.length}
-            row={itogo}
-            rows={rows}
-            highlightedRow={highlightedRow}
-          />
-        </TableFooter>
-      </Table>
-    </div>
-  )
-})
-
-interface RowProps extends TableRowProps {
+interface RowProps extends TableRowProps, Pick<RealCostTableProps, 'rows' | 'onCellDoubleClick'> {
   index: number
   row: RealCostTableRow
-  rows: RealCostTableRow[]
   highlightedRow: MutableRefObject<number | null>
 }
-const Row = ({ index, row, rows, highlightedRow, ...props }: RowProps) => {
+const Row = ({ index, row, rows, highlightedRow, onCellDoubleClick, ...props }: RowProps) => {
   return (
     <TableRow
       key={index}
@@ -347,6 +357,13 @@ const Row = ({ index, row, rows, highlightedRow, ...props }: RowProps) => {
               style={{
                 height: row.size * 44
               }}
+              onDoubleClick={() => {
+                onCellDoubleClick?.({
+                  row,
+                  rowIndex: index,
+                  type: DocType.MonthSumma
+                })
+              }}
               readOnly
             />
           </TableCell>
@@ -367,8 +384,15 @@ const Row = ({ index, row, rows, highlightedRow, ...props }: RowProps) => {
       </TableCell>
       <TableCell style={{ width: 140 }}>
         <NumberEditor
-          value={row?.itogo ?? ''}
+          value={row?.contract_grafik_summa ?? ''}
           defaultValue={0}
+          onDoubleClick={() => {
+            onCellDoubleClick?.({
+              row,
+              rowIndex: index,
+              type: DocType.ContractGrafikMonth
+            })
+          }}
           readOnly
         />
       </TableCell>
@@ -376,6 +400,13 @@ const Row = ({ index, row, rows, highlightedRow, ...props }: RowProps) => {
         <NumberEditor
           value={row?.rasxod_summa ?? ''}
           defaultValue={0}
+          onDoubleClick={() => {
+            onCellDoubleClick?.({
+              row,
+              rowIndex: index,
+              type: DocType.RasxodMonth
+            })
+          }}
           readOnly
         />
       </TableCell>
@@ -383,6 +414,13 @@ const Row = ({ index, row, rows, highlightedRow, ...props }: RowProps) => {
         <NumberEditor
           value={row?.remaining_summa ?? ''}
           defaultValue={0}
+          onDoubleClick={() => {
+            onCellDoubleClick?.({
+              row,
+              rowIndex: index,
+              type: DocType.RemainingMonth
+            })
+          }}
           readOnly
         />
       </TableCell>
@@ -397,6 +435,13 @@ const Row = ({ index, row, rows, highlightedRow, ...props }: RowProps) => {
             defaultValue={0}
             style={{
               height: row.size * 44
+            }}
+            onDoubleClick={() => {
+              onCellDoubleClick?.({
+                row,
+                rowIndex: index,
+                type: DocType.YearSumma
+              })
             }}
             readOnly
           />
@@ -418,7 +463,14 @@ const Row = ({ index, row, rows, highlightedRow, ...props }: RowProps) => {
       </TableCell>
       <TableCell style={{ width: 140 }}>
         <NumberEditor
-          value={row?.itogo_year ?? ''}
+          value={row?.contract_grafik_summa_year ?? ''}
+          onDoubleClick={() => {
+            onCellDoubleClick?.({
+              row,
+              rowIndex: index,
+              type: DocType.ContractGrafikYear
+            })
+          }}
           defaultValue={0}
           readOnly
         />
@@ -427,6 +479,13 @@ const Row = ({ index, row, rows, highlightedRow, ...props }: RowProps) => {
         <NumberEditor
           value={row?.rasxod_summa_year ?? ''}
           defaultValue={0}
+          onDoubleClick={() => {
+            onCellDoubleClick?.({
+              row,
+              rowIndex: index,
+              type: DocType.RasxodYear
+            })
+          }}
           readOnly
         />
       </TableCell>
@@ -434,6 +493,13 @@ const Row = ({ index, row, rows, highlightedRow, ...props }: RowProps) => {
         <NumberEditor
           value={row?.remaining_summa_year ?? ''}
           defaultValue={0}
+          onDoubleClick={() => {
+            onCellDoubleClick?.({
+              row,
+              rowIndex: index,
+              type: DocType.RemainingYear
+            })
+          }}
           readOnly
         />
       </TableCell>

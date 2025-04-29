@@ -1,11 +1,8 @@
 export const RealCostQueryKeys = {
   getAll: 'realcost/all',
-  getAutofill: 'realcost/autofill',
-  getTypes: 'realcost/types',
+  autofill: 'realcost/autofill',
   getById: 'realcost/id',
-  getCheckSaldo: 'realcost/check-saldo',
-  getUniqueSchets: 'realcost/unique-schets',
-  getMainbookDocuments: 'realcost/docs',
+  getDocs: 'realcost/docs',
   delete: 'realcost/delete',
   clean: 'realcost/clean',
   update: 'realcost/update'

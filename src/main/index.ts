@@ -16,6 +16,13 @@ let interval: NodeJS.Timeout | null = null
 let initialCheckForUpdate = true
 let windows: BrowserWindow[] = []
 
+const normalizeFileName = (fileName: string): string => {
+  return fileName
+    .replace(/\s+/g, '_')
+    .replace(/[^a-zA-Zа-яА-ЯёЁ0-9._-]/g, '')
+    .replace(/^[-_.]+|[-_.]+$/g, '')
+}
+
 // const folderPath = path.join(os.homedir(), 'Downloads/E-Moliya')
 
 // const logMessage = (message: any) => {
@@ -150,10 +157,8 @@ ipcMain.on('open-dev-tools', (e) => {
 ipcMain.handle(
   'save-file',
   (_, { fileName, fileData }: { fileName: string; fileData: ArrayBuffer }) => {
-    const normalizedFileName = path.normalize(fileName)
-    console.log(`normalizedFileName: ${normalizedFileName}`)
     const folderPath = path.join(os.homedir(), 'Downloads/E-Moliya')
-    const filePath = path.join(folderPath, normalizedFileName)
+    const filePath = path.join(folderPath, normalizeFileName(fileName))
 
     if (!fs.existsSync(folderPath)) {
       fs.mkdirSync(folderPath, { recursive: true })
