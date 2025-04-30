@@ -105,7 +105,7 @@ const KassaMonitorPage = () => {
                 variant="ghost"
                 onClick={dailyReportToggle.open}
               >
-                <Download className="btn-icon !size-4" />
+                <Download className="btn-icon icon-sm icon-start" />
                 {t('daily-report')}
               </Button>
               <DownloadFile

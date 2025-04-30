@@ -348,5 +348,6 @@
   "error_generating_file": "Fayl yaratishda xatolik yuz berdi",
   "old_smeta_grafiks": "Eski smeta grafiklar",
   "no_smeta_grafiks_for_this_smeta": "Ushbu smeta uchun grafiklar yaratilmagan",
-  "material": "Material"
+  "material": "Material",
+  "zarplata_not_installed": "Zarplata ilovasi o'rnatilmagan"
 }

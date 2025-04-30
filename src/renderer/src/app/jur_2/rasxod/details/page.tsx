@@ -105,9 +105,8 @@ const BankRasxodDetailsPage = () => {
     createOrganizationSpravochnik({
       value: form.watch('id_spravochnik_organization'),
       onChange: (value, organization) => {
-        form.setValue('id_spravochnik_organization', value ?? 0)
+        form.setValue('id_spravochnik_organization', value ?? 0, { shouldValidate: true })
         form.setValue('id_shartnomalar_organization', 0)
-        form.trigger('id_spravochnik_organization')
 
         if (organization?.account_numbers?.length === 1) {
           form.setValue('organization_by_raschet_schet_id', organization.account_numbers[0].id)

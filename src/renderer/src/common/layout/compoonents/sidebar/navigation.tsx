@@ -67,6 +67,7 @@ const renderNavElement = (elem: null | NavElement, isCollapsed: boolean, rootPat
     >
       {elem.displayOnly ? (
         <div
+          {...elem?.props}
           className={cn(
             'w-full flex items-center py-3 gap-2.5 border-b border-slate-200 group-last:border-none',
             isCollapsed && 'justify-center',

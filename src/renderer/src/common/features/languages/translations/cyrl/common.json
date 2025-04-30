@@ -348,5 +348,6 @@
   "error_generating_file": "Файл яратишда хатолик юз берди",
   "old_smeta_grafiks": "Эски смета графиклари",
   "no_smeta_grafiks_for_this_smeta": "Ушбу смета учун графиклар яратилмаган",
-  "material": "Материал"
+  "material": "Материал",
+  "zarplata_not_installed": "Зарплата иловаси ўрнатилмаган"
 }

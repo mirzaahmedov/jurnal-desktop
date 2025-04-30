@@ -1,6 +1,6 @@
 import type { RoleAccess } from '@/common/models'
 import type { TFunction } from 'i18next'
-import type { ComponentType, ReactNode } from 'react'
+import type { ComponentType, HTMLAttributes, ReactNode } from 'react'
 
 import {
   AppWindow,
@@ -50,6 +50,7 @@ import {
   Weight,
   Wrench
 } from 'lucide-react'
+import { toast } from 'react-toastify'
 
 import { KassaSaldoController } from '@/app/jur_1/saldo/components/saldo-controller'
 import { BankSaldoController } from '@/app/jur_2/saldo/components/saldo-controller'
@@ -59,6 +60,7 @@ import { useAuthenticationStore } from '@/common/features/auth'
 import { omitEmptyArrayElements } from '@/common/lib/validation'
 
 export type NavElement = {
+  props?: HTMLAttributes<HTMLDivElement>
   displayOnly?: boolean
   title: ReactNode
   className?: string
@@ -85,7 +87,15 @@ export const getNavElements = (t: TFunction): NavElement[] => {
       path: 'zarplata',
       icon: AppWindow,
       className: 'cursor-pointer',
-      title: t('pages.zarplata')
+      title: t('pages.zarplata'),
+      props: {
+        onClick: async () => {
+          const error = await window.api.openZarplata()
+          if (error) {
+            toast.error(t('zarplata_not_installed'))
+          }
+        }
+      }
     },
     !is_super_admin
       ? {
