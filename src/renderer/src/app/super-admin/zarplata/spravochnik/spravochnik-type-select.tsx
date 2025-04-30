@@ -36,7 +36,7 @@ export const SpravochnikTypeSelect = ({ className, ...props }: SpravochnikTypeSe
     <JollySelect
       isDisabled={isFetching}
       items={Array.isArray(options?.data) ? options?.data : []}
-      className={cn('max-w-sm', className)}
+      className={cn('w-80', className)}
       {...props}
     >
       {(item) => <SelectItem id={item.id}>{item.name}</SelectItem>}

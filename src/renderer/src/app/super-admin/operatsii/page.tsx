@@ -37,12 +37,12 @@ const OperatsiiPage = () => {
   const setLayout = useLayout()
 
   const [typeSchet] = useTypeSchetFilter()
+  const [search] = useSearchFilter()
 
   const { t } = useTranslation(['app'])
   const { confirm } = useConfirm()
-  const [search] = useSearchFilter()
 
-  const { data: operations, isFetching } = useQuery({
+  const { data: operatsii, isFetching } = useQuery({
     queryKey: [
       operatsiiQueryKeys.getAll,
       {
@@ -111,7 +111,7 @@ const OperatsiiPage = () => {
     <ListView>
       <ListView.Content loading={isFetching || isPending}>
         <GenericTable
-          data={operations?.data ?? []}
+          data={operatsii?.data ?? []}
           columnDefs={OperatsiiColumns}
           getRowId={(row) => row.id}
           onEdit={handleClickEdit}
@@ -146,7 +146,8 @@ const OperatsiiPage = () => {
       <ListView.Footer>
         <ListView.Pagination
           {...pagination}
-          pageCount={operations?.meta?.pageCount ?? 0}
+          count={operatsii?.meta?.count ?? 0}
+          pageCount={operatsii?.meta?.pageCount ?? 0}
         />
       </ListView.Footer>
       <OperatsiiDialog

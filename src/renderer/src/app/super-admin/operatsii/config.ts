@@ -50,6 +50,10 @@ export const operatsiiTypeSchetOptions = [
     label: 'Журнал 4'
   },
   {
+    value: TypeSchetOperatsii.JUR7,
+    label: 'Журнал 7'
+  },
+  {
     value: TypeSchetOperatsii.ALL,
     label: 'Все'
   }
@@ -72,7 +76,8 @@ export const OperatsiiFormSchema = withPreprocessor(
       TypeSchetOperatsii.AVANS_OTCHET,
       TypeSchetOperatsii.POKAZAT_USLUGI,
       TypeSchetOperatsii.JUR3,
-      TypeSchetOperatsii.JUR4
+      TypeSchetOperatsii.JUR4,
+      TypeSchetOperatsii.JUR7
     ]),
     smeta_id: z.number().optional()
   })
