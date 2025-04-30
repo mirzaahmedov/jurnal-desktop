@@ -1,11 +1,12 @@
 import { useLocation } from 'react-router-dom'
 
-import { MonthPicker } from '@/common/components/month-picker'
+import { MonthPicker, type MonthPickerProps } from '@/common/components/month-picker'
 import { useSelectedMonthStore } from '@/common/features/selected-month'
 import { useLocationStore } from '@/common/hooks'
 import { formatDate, parseDate } from '@/common/lib/date'
 
-export const SelectedMonth = () => {
+export interface SelectedMonthProps extends Omit<MonthPickerProps, 'value' | 'onChange'> {}
+export const SelectedMonth = (props: SelectedMonthProps) => {
   const location = useLocation()
 
   const { startDate, setSelectedMonth } = useSelectedMonthStore()
@@ -36,6 +37,7 @@ export const SelectedMonth = () => {
             }
           })
       }}
+      {...props}
     />
   )
 }

@@ -4,6 +4,7 @@ import { toast } from 'react-toastify'
 import { useRequisitesStore } from '@/common/features/requisites'
 import { SaldoController, type SaldoCreateArgs } from '@/common/features/saldo'
 import { useSelectedMonthStore } from '@/common/features/selected-month'
+import { SelectedMonth } from '@/common/layout/compoonents/selected-month'
 
 import { KassaMonitorQueryKeys } from '../../monitor'
 import { KassaSaldoQueryKeys } from '../config'
@@ -47,13 +48,16 @@ export const KassaSaldoController = () => {
   }
 
   return (
-    <SaldoController
-      year={year}
-      month={month}
-      budjet_id={budjet_id}
-      main_schet_id={main_schet_id}
-      isCreating={isPending}
-      onCreate={handleCreate}
-    />
+    <>
+      <SelectedMonth />
+      <SaldoController
+        year={year}
+        month={month}
+        budjet_id={budjet_id}
+        main_schet_id={main_schet_id}
+        isCreating={isPending}
+        onCreate={handleCreate}
+      />
+    </>
   )
 }

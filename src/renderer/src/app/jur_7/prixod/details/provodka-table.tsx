@@ -13,7 +13,7 @@ import {
   EditableTableHead,
   EditableTableRow
 } from '@/common/components/editable-table'
-import { SchetEditor, SubSchetEditor } from '@/common/components/editable-table-alt/editors'
+import { SchetEditor, SubSchetEditor } from '@/common/components/editable-table/editors'
 import { EmptyList } from '@/common/components/empty-states'
 import { Pagination } from '@/common/components/pagination'
 import { Button } from '@/common/components/ui/button'

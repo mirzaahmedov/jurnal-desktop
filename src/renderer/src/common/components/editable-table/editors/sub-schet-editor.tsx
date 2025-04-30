@@ -1,5 +1,6 @@
-import type { InputHTMLAttributes } from 'react'
 import type { FieldError } from 'react-hook-form'
+
+import { type InputHTMLAttributes, useRef } from 'react'
 
 import { useQuery } from '@tanstack/react-query'
 
@@ -26,6 +27,8 @@ export const SubSchetEditor = ({
   onChange: (value: string) => void
   inputProps?: InputHTMLAttributes<HTMLInputElement>
 }) => {
+  const selected = useRef(false)
+
   const { data: subSchetOptions, isFetching: isFetchingSubSchetOptions } = useQuery({
     queryKey: [
       operatsiiQueryKeys.getAll,
@@ -37,17 +40,19 @@ export const SubSchetEditor = ({
     queryFn: OperatsiiService.getAll,
     enabled: !!schet
   })
-  const filteredSubSchetOptions =
-    subSchetOptions?.data?.filter((o) => o.sub_schet?.includes(value ?? '')) ?? []
+
+  const options = subSchetOptions?.data ?? []
+  const filteredOptions = options.filter((o) => o.sub_schet?.includes(value ?? '')) ?? []
 
   return (
     <AutoComplete
       autoSelectSingleResult={false}
       isFetching={isFetchingSubSchetOptions}
-      options={filteredSubSchetOptions}
+      options={filteredOptions}
       getOptionLabel={(option) => option.sub_schet}
       getOptionValue={(option) => option.sub_schet}
       onSelect={(option) => {
+        selected.current = true
         onChange?.(option.sub_schet)
       }}
       className="border-r"
@@ -64,7 +69,13 @@ export const SubSchetEditor = ({
           error={!!error}
           name="kredit_schet"
           onFocus={open}
-          onBlur={close}
+          onBlur={() => {
+            const exists = filteredOptions.find((o) => o.sub_schet === value)
+            if (!exists && selected.current) {
+              onChange?.('')
+            }
+            close()
+          }}
           value={value}
           onChange={(e) => {
             onChange?.(e.target.value)

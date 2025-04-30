@@ -1,5 +1,6 @@
-import type { InputHTMLAttributes } from 'react'
 import type { FieldError } from 'react-hook-form'
+
+import { type InputHTMLAttributes, useRef } from 'react'
 
 import { useQuery } from '@tanstack/react-query'
 
@@ -24,6 +25,8 @@ export const SchetEditor = ({
   onChange: (value: string) => void
   inputProps?: InputHTMLAttributes<HTMLInputElement>
 }) => {
+  const selected = useRef(false)
+
   const { data: schetOptions, isFetching: isFetchingSchetOptions } = useQuery({
     queryKey: [
       operatsiiQueryKeys.getSchetOptions,
@@ -33,17 +36,19 @@ export const SchetEditor = ({
     ],
     queryFn: OperatsiiService.getSchetOptions
   })
-  const filteredSchetOptions =
-    schetOptions?.data?.filter((o) => o.schet?.includes((value as string) ?? '')) ?? []
+
+  const options = schetOptions?.data ?? []
+  const filteredOptions = options.filter((o) => o.schet?.includes((value as string) ?? '')) ?? []
 
   return (
     <AutoComplete
       autoSelectSingleResult={false}
       isFetching={isFetchingSchetOptions}
-      options={filteredSchetOptions}
+      options={filteredOptions}
       getOptionLabel={(option) => option.schet}
       getOptionValue={(option) => option.schet}
       onSelect={(option) => {
+        selected.current = true
         onChange?.(option.schet)
       }}
       className="border-r"
@@ -60,7 +65,13 @@ export const SchetEditor = ({
           error={!!error}
           name="kredit_schet"
           onFocus={open}
-          onBlur={close}
+          onBlur={() => {
+            const exists = options.find((o) => o.schet === value)
+            if (!exists && selected.current) {
+              onChange?.('')
+            }
+            close()
+          }}
           value={value}
           onChange={(e) => {
             onChange?.(e.target.value)
