@@ -32,9 +32,8 @@ export const transformOdinoxAutoFillData = (types: OdinoxAutoFill[]) => {
       summa: type.summa,
       smeta_name: t('total'),
       smeta_number: '',
-      group_number: '',
-      smeta_id: 0
-    })
+      group_number: ''
+    } as OdinoxAutoFillSubChild)
     type.sub_childs.forEach((smeta) => {
       if (!smetaMap.has(smeta.smeta_id)) {
         smetaMap.set(smeta.smeta_id, [])
@@ -80,9 +79,8 @@ export const transformGetByIdData = (types: OdinoxProvodka[]) => {
       summa: type.summa,
       smeta_name: t('total'),
       smeta_number: '',
-      group_number: '',
-      smeta_id: 0
-    })
+      group_number: ''
+    } as OdinoxAutoFillSubChild)
     type.sub_childs.forEach((smeta) => {
       if (!smetaMap.has(smeta.smeta_id)) {
         smetaMap.set(smeta.smeta_id, [])

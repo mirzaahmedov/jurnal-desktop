@@ -22,7 +22,7 @@ import { useLocationState } from '@/common/hooks/use-location-state'
 import { useLayout } from '@/common/layout'
 import { ListView } from '@/common/views'
 
-import { shartnomaColumns } from './columns'
+import { ShartnomaColumns } from './columns'
 import { ShartnomaQueryKeys } from './config'
 import { shartnomaService } from './service'
 
@@ -137,7 +137,7 @@ const ShartnomaPage = () => {
       <ListView.Content loading={isFetching || isPending}>
         <GenericTable
           data={contracts?.data ?? []}
-          columnDefs={shartnomaColumns}
+          columnDefs={ShartnomaColumns}
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}
           placeholder={!organSpravochnik.selected ? t('organization') : undefined}

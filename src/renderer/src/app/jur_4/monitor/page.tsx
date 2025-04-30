@@ -3,6 +3,7 @@ import type { PodotchetMonitor } from '@/common/models'
 import { useEffect } from 'react'
 
 import { useQuery } from '@tanstack/react-query'
+import { Download } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
@@ -16,6 +17,7 @@ import {
   SummaTotal,
   useTableSort
 } from '@/common/components'
+import { Button } from '@/common/components/jolly/button'
 import { ButtonGroup } from '@/common/components/ui/button-group'
 import { DownloadFile } from '@/common/features/file'
 import {
@@ -30,7 +32,7 @@ import {
 } from '@/common/features/selected-month'
 import { useSettingsStore } from '@/common/features/settings'
 import { useSpravochnik } from '@/common/features/spravochnik'
-import { useDates, usePagination } from '@/common/hooks'
+import { useDates, usePagination, useToggle } from '@/common/hooks'
 import { useLayout } from '@/common/layout'
 import { formatNumber } from '@/common/lib/format'
 import { getProvodkaURL } from '@/common/lib/provodka'
@@ -39,6 +41,7 @@ import { ListView } from '@/common/views'
 import { usePodotchetSaldo } from '../saldo/use-saldo'
 import { PodotchetMonitorColumns } from './columns'
 import { PodotchetMonitorQueryKeys } from './config'
+import { DailyReportDialog } from './daily-report-dialog'
 import { usePodotchetFilter } from './filters'
 import { PodotchetMonitorService } from './service'
 
@@ -48,6 +51,7 @@ const PodotchetMonitorPage = () => {
   const pagination = usePagination()
   const report_title_id = useSettingsStore((store) => store.report_title_id)
   const startDate = useSelectedMonthStore((store) => store.startDate)
+  const dailyReportToggle = useToggle()
   const setLayout = useLayout()
 
   const [search] = useSearchFilter()
@@ -141,31 +145,26 @@ const PodotchetMonitorPage = () => {
               fileName={`дебитор-кредитор_отчет-${dates.to}.xlsx`}
               url="podotchet/monitoring/prixod/rasxod/"
               params={{
-                budjet_id,
-                to: dates.to,
                 excel: true,
+                to: dates.to,
                 year: startDate.getFullYear(),
                 month: startDate.getMonth() + 1,
+                budjet_id,
+                main_schet_id,
                 schet_id: jur4_schet_id
               }}
               buttonText={t('debitor_kreditor_report')}
             />
-            {podotchetId ? (
-              <DownloadFile
-                fileName={`лицевой-счет_${podotchetSpravochnik.selected?.name}-${dates.from}&${dates.to}.xlsx`}
-                url={`podotchet/monitoring/export/${podotchetId}`}
-                params={{
-                  main_schet_id,
-                  from: dates.from,
-                  to: dates.to,
-                  schet_id: jur4_schet_id,
-                  year: startDate.getFullYear(),
-                  month: startDate.getMonth() + 1,
-                  excel: true
-                }}
-                buttonText={t('personal_account')}
-              />
-            ) : null}
+            <Button
+              variant="ghost"
+              onPress={() => {
+                dailyReportToggle.open()
+              }}
+              className="inline-flex items-center justify-start"
+            >
+              <Download className="btn-icon !size-4 icon-start" />
+              {t('daily-report')}
+            </Button>
             <DownloadFile
               fileName={`${t('cap')}-${dates.from}&${dates.to}.xlsx`}
               url={`/podotchet/monitoring/cap`}
@@ -245,6 +244,14 @@ const PodotchetMonitorPage = () => {
           pageCount={monitoring?.meta?.pageCount ?? 0}
         />
       </ListView.Footer>
+      <DailyReportDialog
+        isOpen={dailyReportToggle.isOpen}
+        onOpenChange={dailyReportToggle.setOpen}
+        budjet_id={budjet_id!}
+        main_schet_id={main_schet_id!}
+        schet_id={jur4_schet_id!}
+        report_title_id={report_title_id!}
+      />
     </ListView>
   )
 }

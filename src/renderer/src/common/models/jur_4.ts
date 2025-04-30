@@ -24,6 +24,9 @@ export interface PodotchetSaldo {
   updated_at: string
   isdeleted: boolean
   first: boolean
+  prixod: number
+  rasxod: number
+  summa: number
   childs: PodotchetSaldoProvodka[]
 }
 

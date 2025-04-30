@@ -30,6 +30,7 @@ export interface OrganSaldo {
   schet: string
   prixod: number
   rasxod: number
+  summa: number
   first: true
 }
 

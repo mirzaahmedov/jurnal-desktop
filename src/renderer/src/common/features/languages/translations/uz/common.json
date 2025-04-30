@@ -347,5 +347,6 @@
   "optional": "Ixtiyoriy",
   "error_generating_file": "Fayl yaratishda xatolik yuz berdi",
   "old_smeta_grafiks": "Eski smeta grafiklar",
-  "no_smeta_grafiks_for_this_smeta": "Ushbu smeta uchun grafiklar yaratilmagan"
+  "no_smeta_grafiks_for_this_smeta": "Ushbu smeta uchun grafiklar yaratilmagan",
+  "material": "Material"
 }

@@ -169,7 +169,7 @@ const MainbookPage = () => {
                   <DownloadFile
                     url={`/main/book/${row.id}`}
                     fileName={`${t('pages.mainbook').toLowerCase()}_${row.month}-${row.year}.xlsx`}
-                    buttonText={t('download-something', { something: t('pages.mainbook') })}
+                    buttonText={t('download')}
                     params={{
                       report_title_id,
                       main_schet_id,

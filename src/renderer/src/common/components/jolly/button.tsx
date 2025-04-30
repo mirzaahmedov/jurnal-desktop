@@ -3,6 +3,7 @@
 import { forwardRef } from 'react'
 
 import { type VariantProps, cva } from 'class-variance-authority'
+import { Loader2 } from 'lucide-react'
 import {
   Button as AriaButton,
   type ButtonProps as AriaButtonProps,
@@ -46,10 +47,12 @@ const buttonVariants = cva(
   }
 )
 
-interface ButtonProps extends AriaButtonProps, VariantProps<typeof buttonVariants> {}
+interface ButtonProps extends AriaButtonProps, VariantProps<typeof buttonVariants> {
+  IconStart?: React.ElementType
+}
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, ...props }, ref) => {
+  ({ className, variant, size, children, IconStart, ...props }, ref) => {
     return (
       <AriaButton
         ref={ref}
@@ -63,7 +66,18 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
           )
         )}
         {...props}
-      />
+      >
+        {(props) => (
+          <>
+            {props.isPending ? (
+              <Loader2 className="btn-icon icon-sm icon-start animate-spin" />
+            ) : IconStart ? (
+              <IconStart className="btn-icon icon-sm icon-start" />
+            ) : null}
+            {typeof children === 'function' ? children(props) : children}
+          </>
+        )}
+      </AriaButton>
     )
   }
 )

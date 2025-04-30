@@ -1,4 +1,10 @@
-import type { RealCost, RealCostDocument, RealCostProvodka, Response } from '@/common/models'
+import type {
+  RealCost,
+  RealCostDocument,
+  RealCostProvodka,
+  Response,
+  ResponseMeta
+} from '@/common/models'
 
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 import { main_schet } from '@/common/features/crud/middleware'
@@ -24,7 +30,7 @@ export interface GetDocsArgs {
   type: DocType
 }
 
-export interface RealCostMeta {
+export interface RealCostMeta extends ResponseMeta {
   month_summa: number
   year_summa: number
   by_month: {

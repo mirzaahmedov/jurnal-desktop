@@ -308,7 +308,7 @@ const MaterialWarehouseSaldoPage = () => {
             variant="ghost"
             onClick={monthlyTrackerToggle.open}
           >
-            <CalendarDays className="btn-icon" />
+            <CalendarDays className="btn-icon icon-start" />
             {t('monthly_saldo')}
           </Button>
 
@@ -316,7 +316,7 @@ const MaterialWarehouseSaldoPage = () => {
             variant="destructive"
             onClick={handleDelete}
           >
-            <Trash2 className="btn-icon" />
+            <Trash2 className="btn-icon icon-start" />
             {t('clean_current_month')}
           </Button>
 

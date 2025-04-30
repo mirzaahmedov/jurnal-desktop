@@ -2,7 +2,6 @@ import type { RealCostTableRow } from './interfaces'
 
 import { type MutableRefObject, type RefObject, memo, useImperativeHandle, useRef } from 'react'
 
-import { useVirtualizer } from '@tanstack/react-virtual'
 import { useTranslation } from 'react-i18next'
 
 import { NumericInput, type NumericInputProps } from '@/common/components'
@@ -78,21 +77,17 @@ export const RealCostTable = memo(
 
     const { t } = useTranslation(['app'])
 
-    const rowVirtualizer = useVirtualizer({
-      count: rows.length,
-      getScrollElement: () => ref.current,
-      estimateSize: () => 44,
-      overscan: 5
-    })
-
     useImperativeHandle(
       methods,
       () => ({
         scrollToRow: (rowIndex: number) => {
-          rowVirtualizer.scrollToIndex(rowIndex, {
-            align: 'center',
-            behavior: 'smooth'
-          })
+          const element = ref.current?.querySelector(`[data-rowindex="${rowIndex}"]`)
+          if (element) {
+            element.scrollIntoView({
+              behavior: 'smooth',
+              block: 'nearest'
+            })
+          }
           highlightedRow.current = rowIndex
         }
       }),
@@ -111,9 +106,9 @@ export const RealCostTable = memo(
             block: 'nearest'
           })
         }}
-        className="relative h-full flex flex-col overflow-y-hidden overflow-x-auto scrollbar"
+        className="relative h-full flex flex-col overflow-auto scrollbar"
       >
-        <Table className="w-max border border-slate-200 table-fixed">
+        <Table className="w-max border border-slate-200 table-fixed sticky top-0 z-100">
           <TableHeader className="shadow-sm">
             <TableRow style={{ height: 44 }}>
               <TableHead
@@ -218,53 +213,43 @@ export const RealCostTable = memo(
         </Table>
 
         <div
-          className="min-w-min overflow-x-hidden overflow-y-auto flex-1 scrollbar"
+          className="min-w-min flex-1"
           ref={ref}
         >
-          <div
-            className="static"
-            style={{ height: `${rowVirtualizer.getTotalSize()}px` }}
-          >
-            <Table className="static border border-slate-200 table-fixed">
-              <TableBody>
-                {Array.isArray(rows) && rows.length ? (
-                  rowVirtualizer.getVirtualItems().map((virtualRow, index) => {
-                    const row = rows[virtualRow.index]
-                    return (
-                      <Row
-                        key={virtualRow.index}
-                        index={virtualRow.index}
-                        row={row}
-                        rows={rows}
-                        highlightedRow={highlightedRow}
-                        onCellDoubleClick={onCellDoubleClick}
-                        style={{
-                          height: `${virtualRow.size}px`,
-                          transform: `translateY(${virtualRow.start - index * virtualRow.size}px)`
-                        }}
-                      />
-                    )
-                  })
-                ) : (
-                  <TableRow>
-                    <TableCell
-                      colSpan={100}
-                      className="text-center py-5"
-                    >
-                      <EmptyList
-                        iconProps={{
-                          className: 'w-40'
-                        }}
-                      ></EmptyList>
-                    </TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
-          </div>
+          <Table className="static border border-slate-200 table-fixed">
+            <TableBody>
+              {Array.isArray(rows) && rows.length ? (
+                rows.map((row, index) => {
+                  return (
+                    <Row
+                      key={index}
+                      index={index}
+                      row={row}
+                      rows={rows}
+                      highlightedRow={highlightedRow}
+                      onCellDoubleClick={onCellDoubleClick}
+                    />
+                  )
+                })
+              ) : (
+                <TableRow>
+                  <TableCell
+                    colSpan={100}
+                    className="text-center py-5"
+                  >
+                    <EmptyList
+                      iconProps={{
+                        className: 'w-40'
+                      }}
+                    ></EmptyList>
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
         </div>
 
-        <Table className="w-max border border-slate-200 table-fixed">
+        <Table className="w-max border border-slate-200 table-fixed sticky bottom-0 z-100">
           <TableFooter className="shadow-sm">
             <Row
               focusable={false}

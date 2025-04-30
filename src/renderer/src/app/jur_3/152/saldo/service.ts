@@ -7,6 +7,8 @@ import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 import { budjet, jur3_schet_152, main_schet } from '@/common/features/crud/middleware'
 
 interface OrganSaldoMeta extends ResponseMeta {
+  prixod: number
+  rasxod: number
   summa: number
 }
 

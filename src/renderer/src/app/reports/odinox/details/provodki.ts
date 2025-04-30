@@ -5,6 +5,16 @@ import { createTextEditor } from '@/common/components/editable-table/editors'
 
 export const OdinoxProvodkaColumns: EditableColumnDef<OdinoxTableRow>[] = [
   {
+    key: 'smeta_id',
+    header: 'id',
+    minWidth: 60,
+    className: 'font-bold',
+    Editor: createTextEditor({
+      key: 'id',
+      readOnly: true
+    })
+  },
+  {
     key: 'smeta_name',
     header: 'name',
     minWidth: 300,

@@ -152,22 +152,20 @@ const Jurnal7PrixodPage = () => {
               toMonth: endDate
             }}
           />
-          {main_schet_id ? (
-            <ButtonGroup>
-              <DownloadFile
-                url="jur_7/doc_prixod/report"
-                fileName={`jur7_prixod_report-${dates.from}&${dates.to}.xlsx`}
-                buttonText={t('download-something', { something: t('report') })}
-                params={{
-                  from: dates.from,
-                  to: dates.to,
-                  budjet_id,
-                  main_schet_id,
-                  excel: true
-                }}
-              />
-            </ButtonGroup>
-          ) : null}
+          <ButtonGroup>
+            <DownloadFile
+              url="jur_7/doc_prixod/report"
+              fileName={`${t('pages.material-warehouse')}_${t('prixod')}-${dates.from}&${dates.to}.xlsx`}
+              buttonText={t('report')}
+              params={{
+                from: dates.from,
+                to: dates.to,
+                budjet_id,
+                main_schet_id,
+                excel: true
+              }}
+            />
+          </ButtonGroup>
         </div>
       </ListView.Header>
       <ListView.Content

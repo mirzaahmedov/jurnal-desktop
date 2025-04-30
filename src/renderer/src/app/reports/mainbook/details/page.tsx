@@ -8,9 +8,9 @@ import { useTranslation } from 'react-i18next'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
+import { Button } from '@/common/components/jolly/button'
 import { MonthPicker } from '@/common/components/month-picker'
 import { SearchInput } from '@/common/components/search-input'
-import { Button } from '@/common/components/ui/button'
 import { useRequisitesStore } from '@/common/features/requisites'
 import { useRequisitesRedirect } from '@/common/features/requisites/use-main-schet-redirect'
 import {
@@ -377,7 +377,7 @@ const MainbookDetailsPage = () => {
                         main_schet_id: main_schet_id!
                       })
                     }}
-                    loading={isAutoFilling}
+                    isPending={isAutoFilling}
                   >
                     {t('autofill')}
                   </Button>
@@ -398,8 +398,7 @@ const MainbookDetailsPage = () => {
           <DetailsView.Footer>
             <Button
               type="submit"
-              disabled={isCreatingMainbook || isUpdatingMainbook}
-              loading={isCreatingMainbook || isUpdatingMainbook}
+              isPending={isCreatingMainbook || isUpdatingMainbook}
             >
               {t('save')}
             </Button>

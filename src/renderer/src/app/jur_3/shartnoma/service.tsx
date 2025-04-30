@@ -21,7 +21,7 @@ import { capitalize } from '@/common/lib/string'
 import { extendObject } from '@/common/lib/utils'
 import { withPreprocessor } from '@/common/lib/validation'
 
-import { shartnomaColumns } from './columns'
+import { ShartnomaColumns } from './columns'
 import { ShartnomaQueryKeys } from './config'
 import { ShartnomaForm } from './details/shartnoma-form'
 
@@ -154,7 +154,7 @@ export const createShartnomaSpravochnik = (config: Partial<SpravochnikHookOption
     {
       title: t('shartnoma'),
       endpoint: ApiEndpoints.shartnoma,
-      columnDefs: shartnomaColumns,
+      columnDefs: ShartnomaColumns,
       service: shartnomaService,
       queryKeys: ShartnomaQueryKeys,
       Dialog: ShartnomaSpravochnikDialog,

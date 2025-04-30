@@ -170,8 +170,8 @@ export const Spravochnik = ({ close, spravochnik }: SpravochnikProps) => {
                   onClick={dialogToggle.open}
                   className="ml-auto"
                 >
+                  <Plus className="btn-icon icon-start" />
                   {t('add')}
-                  <Plus />
                 </Button>
               ) : null}
             </div>

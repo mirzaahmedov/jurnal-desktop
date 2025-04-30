@@ -1,6 +1,10 @@
 import type { Shartnoma } from '@/common/models'
 
-import { type ColumnDef } from '@/common/components'
+import { Trans } from 'react-i18next'
+
+import { type ColumnDef, Copyable } from '@/common/components'
+import { DataList } from '@/common/components/data-list'
+import { HoverInfoCell } from '@/common/components/table/renderers'
 import { IDCell } from '@/common/components/table/renderers/id'
 import { formatLocaleDate, formatNumber } from '@/common/lib/format'
 
@@ -13,7 +17,7 @@ const ShartnomaSmetaCell = (row: Shartnoma) => {
   ))
 }
 
-export const shartnomaColumns: ColumnDef<Shartnoma>[] = [
+export const ShartnomaColumns: ColumnDef<Shartnoma>[] = [
   {
     sort: true,
     width: 160,
@@ -34,7 +38,51 @@ export const shartnomaColumns: ColumnDef<Shartnoma>[] = [
     key: 'doc_date',
     renderCell: (row) => formatLocaleDate(row.doc_date)
   },
-
+  {
+    fill: true,
+    minWidth: 350,
+    key: 'id_spravochnik_organization',
+    header: 'about-counteragent',
+    renderCell: (row) => (
+      <HoverInfoCell
+        title={row.organization?.name}
+        secondaryText={<Copyable value={row.organization?.inn}>#{row.organization?.inn}</Copyable>}
+        hoverContent={
+          <DataList
+            list={[
+              {
+                name: <Trans>id</Trans>,
+                value: (
+                  <Copyable
+                    side="start"
+                    value={row.organization?.id}
+                  >
+                    #{row.organization?.id}
+                  </Copyable>
+                )
+              },
+              {
+                name: <Trans>name</Trans>,
+                value: row.organization?.name
+              },
+              {
+                name: <Trans>bank</Trans>,
+                value: row.organization?.bank_klient
+              },
+              {
+                name: <Trans>okonx</Trans>,
+                value: row.organization?.okonx
+              },
+              {
+                name: <Trans>inn</Trans>,
+                value: row.organization?.inn
+              }
+            ]}
+          />
+        }
+      />
+    )
+  },
   {
     fill: true,
     minWidth: 350,

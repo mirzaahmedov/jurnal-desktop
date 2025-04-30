@@ -58,7 +58,10 @@ export const HoverInfoCell = ({
               align="center"
               onClick={(e) => e.stopPropagation()}
               {...hoverContentProps}
-              className={cn('bg-white shadow-xl p-5 min-w-96', hoverContentProps.className)}
+              className={cn(
+                'bg-white shadow-xl p-5 min-w-96 max-w-2xl',
+                hoverContentProps.className
+              )}
             >
               {hoverContent}
             </TooltipContent>

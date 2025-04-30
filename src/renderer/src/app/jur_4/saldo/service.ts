@@ -12,6 +12,8 @@ import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 import { budjet, jur4_schet, main_schet } from '@/common/features/crud/middleware'
 
 interface PodotchetSaldoMeta extends ResponseMeta {
+  prixod: number
+  rasxod: number
   summa: number
 }
 

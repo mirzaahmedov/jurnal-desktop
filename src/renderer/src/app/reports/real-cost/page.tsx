@@ -118,7 +118,7 @@ const RealCostPage = () => {
                   <DownloadFile
                     url={`/real/cost/${row.id}`}
                     fileName={`${t('pages.realcost').toLowerCase()}_${row.month}-${row.year}.xlsx`}
-                    buttonText={t('download-something', { something: t('pages.realcost') })}
+                    buttonText={t('download')}
                     params={{
                       report_title_id,
                       main_schet_id,

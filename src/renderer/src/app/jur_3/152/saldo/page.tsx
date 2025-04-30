@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
-import { GenericTable } from '@/common/components'
+import { FooterCell, FooterRow, GenericTable } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
 import { useRequisitesStore } from '@/common/features/requisites'
 import {
@@ -17,6 +17,7 @@ import {
 } from '@/common/features/saldo'
 import { useKeyUp } from '@/common/hooks'
 import { useLayout } from '@/common/layout'
+import { formatNumber } from '@/common/lib/format'
 import { ListView } from '@/common/views'
 
 import { OrganSaldoColumns } from './columns'
@@ -150,6 +151,17 @@ const OrganSaldoPage = () => {
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}
           getRowDeletable={(row) => row.isdeleted}
+          footer={
+            <FooterRow>
+              <FooterCell
+                colSpan={4}
+                title={t('total')}
+                content={formatNumber(saldo?.meta?.prixod ?? 0)}
+              />
+              <FooterCell content={formatNumber(saldo?.meta?.rasxod ?? 0)} />
+              <FooterCell content={formatNumber(saldo?.meta?.summa ?? 0)} />
+            </FooterRow>
+          }
         />
       </ListView.Content>
     </ListView>

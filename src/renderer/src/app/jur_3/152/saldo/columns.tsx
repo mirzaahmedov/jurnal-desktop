@@ -23,15 +23,18 @@ export const OrganSaldoColumns: ColumnDef<OrganSaldo>[] = [
   },
   {
     numeric: true,
-    minWidth: 300,
     key: 'prixod',
-    renderCell: ({ prixod }) => <SummaCell summa={prixod ?? 0} />
+    renderCell: (row) => <SummaCell summa={row.prixod} />
   },
   {
     numeric: true,
-    minWidth: 300,
     key: 'rasxod',
-    renderCell: ({ rasxod }) => <SummaCell summa={rasxod ?? 0} />
+    renderCell: (row) => <SummaCell summa={row.rasxod} />
+  },
+  {
+    numeric: true,
+    key: 'summa',
+    renderCell: (row) => <SummaCell summa={row.summa} />
   },
   {
     key: 'account_number',

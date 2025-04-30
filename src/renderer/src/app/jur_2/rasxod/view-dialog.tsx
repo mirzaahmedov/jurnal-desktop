@@ -174,7 +174,11 @@ export const BankRasxodViewDialog = ({ selectedId, onClose }: BankRasxodViewDial
                     <div className="grid grid-cols-3 gap-5">
                       <LabeledValue
                         label={t('summa')}
-                        value={formatNumber(Number(data.summa))}
+                        value={
+                          data?.summa
+                            ? formatNumber(Number(data.summa))
+                            : formatNumber(Number(data.tulanmagan_summa))
+                        }
                       />
                       <LabeledValue
                         className="col-span-2"

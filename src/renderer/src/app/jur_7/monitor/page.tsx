@@ -116,9 +116,7 @@ export const Jur7MonitorPage = () => {
           >
             <Button variant="ghost">
               <Download className="btn-icon icon-start" />
-              <span className="titlecase">
-                {t('download-something', { something: t('reports') })}
-              </span>
+              {t('reports')}
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent
@@ -127,39 +125,7 @@ export const Jur7MonitorPage = () => {
           >
             <DropdownMenuItem>
               <DownloadFile
-                fileName={`оборотка_${dates.to}.xlsx`}
-                url="/jur_7/monitoring/obrotka/report"
-                params={{
-                  to: dates.to,
-                  budjet_id,
-                  main_schet_id,
-                  excel: true
-                }}
-                buttonText="Оборотка"
-                className="w-full"
-              />
-            </DropdownMenuItem>
-
-            <DropdownMenuItem>
-              <DownloadFile
-                fileName={`материальная_${dates.to}.xlsx`}
-                url="/jur_7/monitoring/material/report"
-                params={{
-                  to: dates.to,
-                  year: startDate.getFullYear(),
-                  month: startDate.getMonth() + 1,
-                  budjet_id,
-                  main_schet_id,
-                  excel: true
-                }}
-                buttonText="Материальная"
-                className="w-full"
-              />
-            </DropdownMenuItem>
-
-            <DropdownMenuItem>
-              <DownloadFile
-                fileName={`шапка_${startDate.getMonth() + 1}-${startDate.getFullYear()}.xlsx`}
+                fileName={`${t('cap')}_${startDate.getMonth() + 1}-${startDate.getFullYear()}.xlsx`}
                 url="/jur_7/monitoring/cap/report"
                 params={{
                   month: startDate.getMonth() + 1,
@@ -169,23 +135,25 @@ export const Jur7MonitorPage = () => {
                   report_title_id,
                   excel: true
                 }}
-                buttonText="Шапка"
-                className="w-full"
+                buttonText={t('cap')}
+                className="w-full justify-start"
               />
             </DropdownMenuItem>
 
             <DropdownMenuItem>
               <DownloadFile
-                fileName={`шапка2_${dates.to}.xlsx`}
-                url="/jur_7/monitoring/cap/back/report"
+                fileName={`${t('material')}_${dates.to}.xlsx`}
+                url="/jur_7/monitoring/material/report"
                 params={{
                   to: dates.to,
+                  year: startDate.getFullYear(),
+                  month: startDate.getMonth() + 1,
                   budjet_id,
                   main_schet_id,
                   excel: true
                 }}
-                buttonText="Шапка (2)"
-                className="w-full"
+                buttonText={t('material')}
+                className="w-full justify-start"
               />
             </DropdownMenuItem>
           </DropdownMenuContent>

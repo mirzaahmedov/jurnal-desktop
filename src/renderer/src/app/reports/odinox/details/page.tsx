@@ -8,9 +8,9 @@ import { useTranslation } from 'react-i18next'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
+import { Button } from '@/common/components/jolly/button'
 import { MonthPicker } from '@/common/components/month-picker'
 import { SearchInput } from '@/common/components/search-input'
-import { Button } from '@/common/components/ui/button'
 import { useRequisitesStore } from '@/common/features/requisites'
 import { useRequisitesRedirect } from '@/common/features/requisites/use-main-schet-redirect'
 import { useLayout } from '@/common/layout'
@@ -249,7 +249,7 @@ const OdinoxDetailsPage = () => {
                         main_schet_id: main_schet_id!
                       })
                     }}
-                    loading={isAutoFilling}
+                    isPending={isAutoFilling}
                   >
                     {t('autofill')}
                   </Button>
@@ -269,8 +269,7 @@ const OdinoxDetailsPage = () => {
           <DetailsView.Footer>
             <Button
               type="submit"
-              disabled={isCreatingOdinox || isUpdatingOdinox}
-              loading={isCreatingOdinox || isUpdatingOdinox}
+              isPending={isCreatingOdinox || isUpdatingOdinox}
             >
               {t('save')}
             </Button>
