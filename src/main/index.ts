@@ -171,9 +171,20 @@ ipcMain.handle(
     fs.writeFileSync(filePath, Buffer.from(fileData))
     console.log(`file saved to ${filePath}`)
 
-    shell.openPath(filePath).catch((err) => {
-      console.error('Failed to open file:', err)
-    })
+    shell
+      .openPath(filePath)
+      .catch((err) => {
+        console.error('Failed to open file:', err)
+        shell.showItemInFolder(filePath)
+      })
+      .then((errorMessage) => {
+        if (errorMessage) {
+          console.error('Failed to open file:', errorMessage)
+          shell.showItemInFolder(filePath)
+        } else {
+          console.log('File opened sucessfully', filePath)
+        }
+      })
   }
 )
 ipcMain.handle('open-zarplata', () => {

@@ -1,3 +1,4 @@
+import type { InputHTMLAttributes } from 'react'
 import type { FieldError } from 'react-hook-form'
 
 import { useQuery } from '@tanstack/react-query'
@@ -11,15 +12,19 @@ import { TypeSchetOperatsii } from '@/common/models'
 export const SubSchetEditor = ({
   tabIndex,
   error,
+  editor = true,
   schet,
   value,
-  onChange
+  onChange,
+  inputProps
 }: {
   tabIndex: number
   error?: FieldError
+  editor?: boolean
   schet: string
   value: string
   onChange: (value: string) => void
+  inputProps?: InputHTMLAttributes<HTMLInputElement>
 }) => {
   const { data: subSchetOptions, isFetching: isFetchingSubSchetOptions } = useQuery({
     queryKey: [
@@ -70,7 +75,8 @@ export const SubSchetEditor = ({
             }
           }}
           onMouseDown={(e) => e.stopPropagation()}
-          className={inputVariants({ editor: true })}
+          className={inputVariants({ editor })}
+          {...inputProps}
         />
       )}
     </AutoComplete>

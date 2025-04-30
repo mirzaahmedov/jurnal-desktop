@@ -41,6 +41,7 @@ import { IznosQueryKeys } from '../../iznos/config'
 import { SaldoQueryKeys } from '../../saldo'
 import { PrixodFormSchema, WarehousePrixodQueryKeys, defaultValues } from '../config'
 import { WarehousePrixodService, usePrixodCreate, usePrixodUpdate } from '../service'
+import { ApplyAllInputs } from './apply-all-inputs'
 import { ExistingDocumentsAlert } from './existing-document-alert'
 import { ProvodkaTable } from './provodka-table'
 
@@ -313,48 +314,55 @@ const PrixodDetails = ({ id, onSuccess }: PrixodDetailsProps) => {
               />
             </div>
             <DetailsView.Footer>
-              <DetailsView.Create
-                tabIndex={9}
-                isDisabled={isCreating || isUpdating}
-              />
+              <DetailsView.Create isDisabled={isCreating || isUpdating} />
             </DetailsView.Footer>
           </form>
         </Form>
 
         <div className="p-5 pb-32 w-full overflow-hidden flex flex-col gap-5">
-          <div className="flex items-center justify-end gap-2">
-            <ImportFile
-              url="/jur_7/doc_prixod/read"
-              onSuccess={(res) => {
-                const rows = (res as Response<PrixodImportResult[]>)?.data ?? []
-                form.setValue(
-                  'childs',
-                  rows.map((r) => ({
-                    name: r.name,
-                    group_jur7_id: r.group_jur7_id,
-                    edin: r.edin,
-                    sena: r.sena,
-                    kol: r.kol,
-                    summa: r.summa,
-                    data_pereotsenka: form.watch('doc_date'),
-                    debet_schet: r.group.schet,
-                    debet_sub_schet: r.group.provodka_subschet,
-                    kredit_schet: '',
-                    kredit_sub_schet: r.group.provodka_subschet,
-                    inventar_num: r.inventar_num,
-                    serial_num: r.serial_num,
-                    iznos: r.group?.iznos_foiz > 0,
-                    eski_iznos_summa: r.eski_iznos_summa,
-                    nds_foiz: r.nds_foiz
-                  }))
-                )
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2.5">
+              <ImportFile
+                url="/jur_7/doc_prixod/read"
+                onSuccess={(res) => {
+                  const rows = (res as Response<PrixodImportResult[]>)?.data ?? []
+                  form.setValue(
+                    'childs',
+                    rows.map((r) => ({
+                      name: r.name,
+                      group_jur7_id: r.group_jur7_id,
+                      edin: r.edin,
+                      sena: r.sena,
+                      kol: r.kol,
+                      summa: r.summa,
+                      data_pereotsenka: form.watch('doc_date'),
+                      debet_schet: r.group.schet,
+                      debet_sub_schet: r.group.provodka_subschet,
+                      kredit_schet: '',
+                      kredit_sub_schet: r.group.provodka_subschet,
+                      inventar_num: r.inventar_num,
+                      serial_num: r.serial_num,
+                      iznos: r.group?.iznos_foiz > 0,
+                      eski_iznos_summa: r.eski_iznos_summa,
+                      nds_foiz: r.nds_foiz
+                    }))
+                  )
+                }}
+              />
+              <DownloadFile
+                url="/jur_7/doc_prixod/template"
+                fileName={`${t('pages.material-warehouse')}_${t('pages.prixod-docs')}__${t('template')}.xlsx`}
+                params={{}}
+                buttonText={`${t('template')}`}
+              />
+            </div>
+            <ApplyAllInputs
+              onApply={({ schet, sub_schet }) => {
+                form.getValues('childs').forEach((_, index) => {
+                  form.setValue(`childs.${index}.kredit_schet`, schet)
+                  form.setValue(`childs.${index}.kredit_sub_schet`, sub_schet)
+                })
               }}
-            />
-            <DownloadFile
-              url="/jur_7/doc_prixod/template"
-              fileName={`${t('pages.material-warehouse')}_${t('pages.prixod-docs')}__${t('template')}.xlsx`}
-              params={{}}
-              buttonText={`${t('template')}`}
             />
           </div>
           <ProvodkaTable

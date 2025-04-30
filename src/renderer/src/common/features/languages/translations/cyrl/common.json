@@ -124,6 +124,7 @@
   "ei": "Ў.Б",
   "iznos": "Износ",
   "iznos-eski": "Эски износ",
+  "prixod-data": "Кирим санаси",
   "data-prixod": "Кирим санаси",
   "jo_num": "Ж \\ О",
   "dovernost": "Ваколатнома",
@@ -349,5 +350,6 @@
   "old_smeta_grafiks": "Эски смета графиклари",
   "no_smeta_grafiks_for_this_smeta": "Ушбу смета учун графиклар яратилмаган",
   "material": "Материал",
-  "zarplata_not_installed": "Зарплата иловаси ўрнатилмаган"
+  "zarplata_not_installed": "Зарплата иловаси ўрнатилмаган",
+  "apply_to_all_inputs": "Ҳамма майдонларга қўллаш"
 }

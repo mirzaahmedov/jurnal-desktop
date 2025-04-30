@@ -1,3 +1,4 @@
+import type { InputHTMLAttributes } from 'react'
 import type { FieldError } from 'react-hook-form'
 
 import { useQuery } from '@tanstack/react-query'
@@ -12,12 +13,16 @@ export const SchetEditor = ({
   tabIndex,
   error,
   value,
-  onChange
+  editor = true,
+  onChange,
+  inputProps
 }: {
   tabIndex: number
   error?: FieldError
   value: string
+  editor?: boolean
   onChange: (value: string) => void
+  inputProps?: InputHTMLAttributes<HTMLInputElement>
 }) => {
   const { data: schetOptions, isFetching: isFetchingSchetOptions } = useQuery({
     queryKey: [
@@ -66,7 +71,8 @@ export const SchetEditor = ({
             }
           }}
           onMouseDown={(e) => e.stopPropagation()}
-          className={inputVariants({ editor: true })}
+          className={inputVariants({ editor })}
+          {...inputProps}
         />
       )}
     </AutoComplete>

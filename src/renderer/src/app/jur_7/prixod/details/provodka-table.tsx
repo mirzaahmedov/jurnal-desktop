@@ -457,6 +457,7 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
                           value={row.kredit_schet}
                           onChange={(schet) => {
                             handleChangeChildField(index, 'kredit_schet', schet)
+                            handleChangeChildField(index, 'kredit_sub_schet', '')
                           }}
                         />
                       </EditableTableCell>

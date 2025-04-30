@@ -48,6 +48,8 @@ export const PorucheniyaDialog = ({
     setValue(organization?.name ?? '')
   }, [organization])
 
+  const summa = rasxod?.summa ? rasxod?.summa : rasxod?.tulanmagan_summa
+
   return (
     <DialogTrigger
       isOpen={dropdownToggle.isOpen}
@@ -92,8 +94,8 @@ export const PorucheniyaDialog = ({
                 creditor_inn={organization.inn}
                 creditor_bank={organization.bank_klient}
                 creditor_mfo={organization.mfo}
-                summa={rasxod.summa ? rasxod.summa : rasxod.tulanmagan_summa}
-                summaWords={numberToWords(rasxod.summa!, i18n.language)}
+                summa={summa}
+                summaWords={numberToWords(summa, i18n.language)}
                 opisanie={rasxod.opisanie ?? ' '}
                 rukovoditel={rasxod.rukovoditel ?? ' '}
                 glav_buxgalter={rasxod.glav_buxgalter ?? ' '}
@@ -118,8 +120,8 @@ export const PorucheniyaDialog = ({
                 creditor_inn={organization.inn}
                 creditor_bank={organization.bank_klient}
                 creditor_mfo={organization.mfo}
-                summa={rasxod.summa ? rasxod.summa : rasxod.tulanmagan_summa}
-                summaWords={numberToWords(rasxod.summa!, i18n.language)}
+                summa={summa}
+                summaWords={numberToWords(summa, i18n.language)}
                 opisanie={rasxod.opisanie ?? ' '}
                 rukovoditel={rasxod.rukovoditel ?? ' '}
                 glav_buxgalter={rasxod.glav_buxgalter ?? ' '}

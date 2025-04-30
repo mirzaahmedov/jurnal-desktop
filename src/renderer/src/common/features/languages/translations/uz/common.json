@@ -124,6 +124,7 @@
   "ei": "O'.B",
   "iznos": "Iznos",
   "iznos-eski": "Eski iznos",
+  "prixod-date": "Kirim sanasi",
   "data-prixod": "Kirim sanasi",
   "jo_num": "J \\ O",
   "dovernost": "Vakolatnoma",
@@ -349,5 +350,6 @@
   "old_smeta_grafiks": "Eski smeta grafiklar",
   "no_smeta_grafiks_for_this_smeta": "Ushbu smeta uchun grafiklar yaratilmagan",
   "material": "Material",
-  "zarplata_not_installed": "Zarplata ilovasi o'rnatilmagan"
+  "zarplata_not_installed": "Zarplata ilovasi o'rnatilmagan",
+  "apply_to_all_inputs": "Hamma maydonlarga qo‘llash"
 }
