@@ -23,7 +23,7 @@ import { BankRasxodQueryKeys } from './config'
 import { PorucheniyaDialog } from './porucheniya-dialog'
 import { BankRasxodService } from './service'
 
-const provodkaColumns: ColumnDef<BankRasxodProvodka>[] = [
+const columns: ColumnDef<BankRasxodProvodka>[] = [
   {
     key: 'schet',
     renderCell: (row) => row.operatsii?.schet
@@ -34,7 +34,13 @@ const provodkaColumns: ColumnDef<BankRasxodProvodka>[] = [
   },
   {
     numeric: true,
-    key: 'summa'
+    key: 'summa',
+    renderCell: (row) =>
+      row.summa
+        ? formatNumber(row.summa)
+        : row.tulanmagan_summa
+          ? formatNumber(row.tulanmagan_summa)
+          : '0'
   },
   {
     key: 'type_operatsii',
@@ -75,6 +81,7 @@ export const BankRasxodViewDialog = ({ selectedId, onClose }: BankRasxodViewDial
   })
 
   const data = rasxod?.data
+  const summa = data?.summa ? data?.summa : data?.tulanmagan_summa
 
   return (
     <DialogTrigger
@@ -174,18 +181,14 @@ export const BankRasxodViewDialog = ({ selectedId, onClose }: BankRasxodViewDial
                     <div className="grid grid-cols-3 gap-5">
                       <LabeledValue
                         label={t('summa')}
-                        value={
-                          data?.summa
-                            ? formatNumber(Number(data.summa))
-                            : formatNumber(Number(data.tulanmagan_summa))
-                        }
+                        value={summa ? formatNumber(summa) : '0'}
                       />
                       <LabeledValue
                         className="col-span-2"
                         label={null}
                         value={
                           <Textarea
-                            value={numberToWords(Number(data.summa), i18n.language)}
+                            value={summa ? numberToWords(summa, i18n.language) : ''}
                             className="font-normal"
                           />
                         }
@@ -224,7 +227,7 @@ export const BankRasxodViewDialog = ({ selectedId, onClose }: BankRasxodViewDial
                 </div>
                 <div className="p-5">
                   <GenericTable
-                    columnDefs={provodkaColumns}
+                    columnDefs={columns}
                     data={data.childs}
                     className="table-generic-xs"
                   />
