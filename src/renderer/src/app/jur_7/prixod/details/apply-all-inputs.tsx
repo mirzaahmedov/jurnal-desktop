@@ -1,10 +1,8 @@
 import { Controller, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
+import { SchetEditor, SubSchetEditor } from '@/common/components/editable-table/editors'
 import { Button } from '@/common/components/jolly/button'
-
-import { SchetEditor } from './components/schet-editor'
-import { SubSchetEditor } from './components/sub-schet-editor'
 
 const defaultValues = {
   schet: '',
@@ -20,12 +18,11 @@ export const ApplyAllInputs = ({ onApply }: ApplyAllInputsProps) => {
   const form = useForm({
     defaultValues
   })
-  const onSubmit = form.handleSubmit(onApply)
 
   return (
     <div>
       <form
-        onSubmit={onSubmit}
+        onSubmit={form.handleSubmit(onApply)}
         className="flex items-center gap-2"
       >
         <Controller

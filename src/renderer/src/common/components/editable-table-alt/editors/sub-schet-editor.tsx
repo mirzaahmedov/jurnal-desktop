@@ -9,45 +9,50 @@ import { Input } from '@/common/components/ui/input'
 import { inputVariants } from '@/common/features/spravochnik'
 import { TypeSchetOperatsii } from '@/common/models'
 
-export const SchetEditor = ({
+export const SubSchetEditor = ({
   tabIndex,
   error,
-  value,
   editor = true,
+  schet,
+  value,
   onChange,
   inputProps
 }: {
   tabIndex: number
   error?: FieldError
-  value: string
   editor?: boolean
+  schet: string
+  value: string
   onChange: (value: string) => void
   inputProps?: InputHTMLAttributes<HTMLInputElement>
 }) => {
-  const { data: schetOptions, isFetching: isFetchingSchetOptions } = useQuery({
+  const { data: subSchetOptions, isFetching: isFetchingSubSchetOptions } = useQuery({
     queryKey: [
-      operatsiiQueryKeys.getSchetOptions,
+      operatsiiQueryKeys.getAll,
       {
-        type_schet: TypeSchetOperatsii.JUR3
+        type_schet: TypeSchetOperatsii.JUR7,
+        schet
       }
     ],
-    queryFn: OperatsiiService.getSchetOptions
+    queryFn: OperatsiiService.getAll,
+    enabled: !!schet
   })
-  const filteredSchetOptions =
-    schetOptions?.data?.filter((o) => o.schet?.includes((value as string) ?? '')) ?? []
+  const filteredSubSchetOptions =
+    subSchetOptions?.data?.filter((o) => o.sub_schet?.includes(value ?? '')) ?? []
 
   return (
     <AutoComplete
       autoSelectSingleResult={false}
-      isFetching={isFetchingSchetOptions}
-      options={filteredSchetOptions}
-      getOptionLabel={(option) => option.schet}
-      getOptionValue={(option) => option.schet}
+      isFetching={isFetchingSubSchetOptions}
+      options={filteredSubSchetOptions}
+      getOptionLabel={(option) => option.sub_schet}
+      getOptionValue={(option) => option.sub_schet}
       onSelect={(option) => {
-        onChange?.(option.schet)
+        onChange?.(option.sub_schet)
       }}
       className="border-r"
       popoverProps={{
+        className: 'w-64',
         onOpenAutoFocus: (e) => e.preventDefault(),
         onCloseAutoFocus: (e) => e.preventDefault()
       }}
@@ -71,7 +76,7 @@ export const SchetEditor = ({
             }
           }}
           onMouseDown={(e) => e.stopPropagation()}
-          className={inputVariants({ editor })}
+          className={inputVariants({ editor, error: !!error })}
           {...inputProps}
         />
       )}

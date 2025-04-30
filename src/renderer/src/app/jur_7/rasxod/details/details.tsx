@@ -253,10 +253,7 @@ const RasxodDetails = ({ id, onSuccess }: RasxodDetailsProps) => {
               />
             </div>
             <DetailsView.Footer>
-              <DetailsView.Create
-                tabIndex={6}
-                isDisabled={isCreating || isUpdating}
-              />
+              <DetailsView.Create isDisabled={isCreating || isUpdating} />
             </DetailsView.Footer>
           </form>
         </Form>

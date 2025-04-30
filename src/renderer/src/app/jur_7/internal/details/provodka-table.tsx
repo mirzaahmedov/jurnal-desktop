@@ -10,6 +10,7 @@ import {
   EditableTableHead,
   EditableTableRow
 } from '@/common/components/editable-table'
+import { SchetEditor, SubSchetEditor } from '@/common/components/editable-table/editors'
 import { EmptyList } from '@/common/components/empty-states'
 import { Button } from '@/common/components/ui/button'
 import { Checkbox } from '@/common/components/ui/checkbox'
@@ -76,9 +77,9 @@ export const ProvodkaTable = ({ form, tabIndex }: ProvodkaTableProps) => {
               max_kol: p.to.kol,
               sena: p.to.sena,
               summa: calcSumma(p.to.kol, p.to.sena),
-              debet_schet: p.kredit_schet ?? '',
+              debet_schet: p.debet_schet ?? '',
               kredit_schet: p?.debet_schet ?? '',
-              debet_sub_schet: p?.kredit_sub_schet ?? '',
+              debet_sub_schet: p?.debet_sub_schet ?? '',
               kredit_sub_schet: p?.debet_sub_schet ?? '',
               data_pereotsenka: formatDate(p.prixodData?.docDate),
               iznos: p.iznos,
@@ -416,32 +417,26 @@ const Provodka = ({ rowIndex, onOpenDialog, onRemove, row, form, tabIndex }: Pro
 
       <EditableTableCell>
         <div className="relative">
-          <Input
+          <SchetEditor
             value={row.debet_schet}
-            onChange={(e) => {
-              handleChangeChildField(rowIndex, 'debet_schet', e.target.value)
+            onChange={(value) => {
+              handleChangeChildField(rowIndex, 'debet_schet', value)
+              handleChangeChildField(rowIndex, 'debet_sub_schet', '')
             }}
-            className={inputVariants({
-              editor: true,
-              error: !!errors?.debet_schet
-            })}
-            error={!!errors?.debet_schet}
+            error={errors?.debet_schet}
             tabIndex={tabIndex}
           />
         </div>
       </EditableTableCell>
       <EditableTableCell>
         <div className="relative">
-          <Input
+          <SubSchetEditor
+            schet={row.debet_schet}
             value={row.debet_sub_schet}
-            onChange={(e) => {
-              handleChangeChildField(rowIndex, 'debet_sub_schet', e.target.value)
+            onChange={(value) => {
+              handleChangeChildField(rowIndex, 'debet_sub_schet', value)
             }}
-            className={inputVariants({
-              editor: true,
-              error: !!errors?.debet_sub_schet
-            })}
-            error={!!errors?.debet_sub_schet}
+            error={errors?.debet_sub_schet}
             tabIndex={tabIndex}
           />
         </div>
@@ -449,34 +444,26 @@ const Provodka = ({ rowIndex, onOpenDialog, onRemove, row, form, tabIndex }: Pro
 
       <EditableTableCell>
         <div className="relative">
-          <Input
-            readOnly
+          <SchetEditor
             value={row.kredit_schet}
-            onChange={(e) => {
-              handleChangeChildField(rowIndex, 'kredit_schet', e.target.value)
+            onChange={(value) => {
+              handleChangeChildField(rowIndex, 'kredit_schet', value)
+              handleChangeChildField(rowIndex, 'kredit_sub_schet', '')
             }}
-            className={inputVariants({
-              editor: true,
-              error: !!errors?.kredit_schet
-            })}
-            error={!!errors?.kredit_schet}
+            error={errors?.kredit_schet}
             tabIndex={tabIndex}
           />
         </div>
       </EditableTableCell>
       <EditableTableCell>
         <div className="relative">
-          <Input
-            readOnly
+          <SubSchetEditor
+            schet={row.kredit_schet}
             value={row.kredit_sub_schet}
-            onChange={(e) => {
-              handleChangeChildField(rowIndex, 'kredit_sub_schet', e.target.value)
+            onChange={(value) => {
+              handleChangeChildField(rowIndex, 'kredit_sub_schet', value)
             }}
-            className={inputVariants({
-              editor: true,
-              error: !!errors?.kredit_sub_schet
-            })}
-            error={!!errors?.kredit_sub_schet}
+            error={errors?.kredit_sub_schet}
             tabIndex={tabIndex}
           />
         </div>

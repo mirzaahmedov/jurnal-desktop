@@ -1,3 +1,6 @@
+import type { Group } from './group'
+import type { SaldoProduct } from './saldo'
+
 export interface Jur7Child {
   naimenovanie_tovarov_jur7_id: number
   kol: number
@@ -9,6 +12,8 @@ export interface Jur7Child {
   kredit_schet: string
   kredit_sub_schet: string
   data_pereotsenka: string
+  product: SaldoProduct
+  group: Group
 }
 export interface Jur7Rasxod {
   id: number

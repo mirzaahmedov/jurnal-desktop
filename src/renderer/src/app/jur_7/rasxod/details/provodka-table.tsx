@@ -10,6 +10,7 @@ import {
   EditableTableHead,
   EditableTableRow
 } from '@/common/components/editable-table'
+import { SchetEditor, SubSchetEditor } from '@/common/components/editable-table/editors'
 import { EmptyList } from '@/common/components/empty-states'
 import { Button } from '@/common/components/ui/button'
 import { Checkbox } from '@/common/components/ui/checkbox'
@@ -395,32 +396,26 @@ const Provodka = ({ rowIndex, row, form, tabIndex, onOpenDialog, onRemove }: Pro
 
       <EditableTableCell>
         <div className="relative">
-          <Input
+          <SchetEditor
             value={row.debet_schet}
-            onChange={(e) => {
-              handleChangeChildField(rowIndex, 'debet_schet', e.target.value)
+            onChange={(value) => {
+              handleChangeChildField(rowIndex, 'debet_schet', value)
+              handleChangeChildField(rowIndex, 'debet_sub_schet', '')
             }}
-            className={inputVariants({
-              editor: true,
-              error: !!errors?.debet_schet
-            })}
-            error={!!errors?.debet_schet}
+            error={errors?.debet_schet}
             tabIndex={tabIndex}
           />
         </div>
       </EditableTableCell>
       <EditableTableCell>
         <div className="relative">
-          <Input
+          <SubSchetEditor
+            schet={row.debet_schet}
             value={row.debet_sub_schet}
-            onChange={(e) => {
-              handleChangeChildField(rowIndex, 'debet_sub_schet', e.target.value)
+            onChange={(value) => {
+              handleChangeChildField(rowIndex, 'debet_sub_schet', value)
             }}
-            className={inputVariants({
-              editor: true,
-              error: !!errors?.debet_sub_schet
-            })}
-            error={!!errors?.debet_sub_schet}
+            error={errors?.debet_sub_schet}
             tabIndex={tabIndex}
           />
         </div>

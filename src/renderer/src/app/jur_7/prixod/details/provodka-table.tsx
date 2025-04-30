@@ -13,6 +13,7 @@ import {
   EditableTableHead,
   EditableTableRow
 } from '@/common/components/editable-table'
+import { SchetEditor, SubSchetEditor } from '@/common/components/editable-table-alt/editors'
 import { EmptyList } from '@/common/components/empty-states'
 import { Pagination } from '@/common/components/pagination'
 import { Button } from '@/common/components/ui/button'
@@ -27,8 +28,6 @@ import { calcSena, calcSumma } from '@/common/lib/pricing'
 import { cn } from '@/common/lib/utils'
 
 import { type PrixodFormValues, type PrixodProvodkaFormValues, defaultValues } from '../config'
-import { SchetEditor } from './components/schet-editor'
-import { SubSchetEditor } from './components/sub-schet-editor'
 
 const PAGE_SIZE = 20
 

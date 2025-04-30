@@ -30,7 +30,7 @@ export const SubSchetEditor = ({
     queryKey: [
       operatsiiQueryKeys.getAll,
       {
-        type_schet: TypeSchetOperatsii.JUR3,
+        type_schet: TypeSchetOperatsii.JUR7,
         schet
       }
     ],
@@ -52,6 +52,7 @@ export const SubSchetEditor = ({
       }}
       className="border-r"
       popoverProps={{
+        className: 'w-64',
         onOpenAutoFocus: (e) => e.preventDefault(),
         onCloseAutoFocus: (e) => e.preventDefault()
       }}
@@ -75,7 +76,7 @@ export const SubSchetEditor = ({
             }
           }}
           onMouseDown={(e) => e.stopPropagation()}
-          className={inputVariants({ editor })}
+          className={inputVariants({ editor, error: !!error })}
           {...inputProps}
         />
       )}
