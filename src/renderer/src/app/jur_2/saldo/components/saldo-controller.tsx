@@ -48,8 +48,8 @@ export const BankSaldoController = () => {
   }
 
   return (
-    <div>
-      <SelectedMonth />
+    <div className="space-y-2">
+      <SelectedMonth className="w-full" />
       <SaldoController
         year={year}
         month={month}

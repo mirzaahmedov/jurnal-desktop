@@ -48,8 +48,8 @@ export const KassaSaldoController = () => {
   }
 
   return (
-    <>
-      <SelectedMonth />
+    <div className="space-y-2">
+      <SelectedMonth className="w-full" />
       <SaldoController
         year={year}
         month={month}
@@ -58,6 +58,6 @@ export const KassaSaldoController = () => {
         isCreating={isPending}
         onCreate={handleCreate}
       />
-    </>
+    </div>
   )
 }
