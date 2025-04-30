@@ -212,7 +212,7 @@ const PodotchetMonitorPage = () => {
               <FooterRow>
                 <FooterCell
                   title={t('total_page')}
-                  colSpan={5}
+                  colSpan={6}
                   content={formatNumber(monitoring?.meta?.page_prixod_sum ?? 0)}
                 />
                 <FooterCell content={formatNumber(monitoring?.meta?.page_rasxod_sum ?? 0)} />
@@ -221,7 +221,7 @@ const PodotchetMonitorPage = () => {
                 <FooterRow>
                   <FooterCell
                     title={t('total_period')}
-                    colSpan={5}
+                    colSpan={6}
                     content={formatNumber(monitoring?.meta?.prixod_sum ?? 0)}
                   />
                   <FooterCell content={formatNumber(monitoring?.meta?.rasxod_sum ?? 0)} />

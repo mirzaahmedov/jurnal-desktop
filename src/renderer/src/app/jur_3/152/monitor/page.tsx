@@ -166,7 +166,7 @@ const OrganMonitoringPage = () => {
                         <>
                           <DownloadFile
                             fileName={`${t('cap')}-${dates.to}.xlsx`}
-                            url="/159/monitoring/cap"
+                            url="/152/monitoring/cap"
                             params={{
                               budjet_id,
                               main_schet_id,
@@ -259,7 +259,7 @@ const OrganMonitoringPage = () => {
             <>
               <FooterRow>
                 <FooterCell
-                  colSpan={6}
+                  colSpan={7}
                   title={t('total_page')}
                   content={formatNumber(monitoring?.meta?.page_prixod_sum ?? 0)}
                 />
@@ -268,7 +268,7 @@ const OrganMonitoringPage = () => {
               {(monitoring?.meta?.pageCount ?? 0) > 1 ? (
                 <FooterRow>
                   <FooterCell
-                    colSpan={6}
+                    colSpan={7}
                     title={t('total_period')}
                     content={formatNumber(monitoring?.meta?.prixod_sum ?? 0)}
                   />

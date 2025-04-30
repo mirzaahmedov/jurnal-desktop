@@ -76,7 +76,7 @@ export const MainbookDocumentsTracker = ({
                   <FooterRow>
                     <FooterCell
                       title={t('total')}
-                      colSpan={5}
+                      colSpan={6}
                     />
                     <FooterCell
                       content={formatNumber(documents?.meta?.summa ?? 0)}

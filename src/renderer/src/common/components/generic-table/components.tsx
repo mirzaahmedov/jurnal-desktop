@@ -105,7 +105,9 @@ export const GenericTableHead = ({
   )
 }
 
-const rowVariants = cva('cursor-pointer even:bg-slate-50 hover:bg-white even:hover:bg-slate-50')
+const rowVariants = cva(
+  'cursor-pointer bg-white even:bg-slate-50 hover:bg-white even:hover:bg-slate-50'
+)
 
 export const GenericTableRow = forwardRef<HTMLTableRowElement, HTMLAttributes<HTMLTableRowElement>>(
   ({ children, ...props }, ref) => {

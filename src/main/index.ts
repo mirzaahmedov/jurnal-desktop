@@ -36,6 +36,9 @@ if (import.meta.env.DEV) {
 
 const CHECK_UPDATES_INTERVAL = 30 * 1000
 
+const programFilesPath =
+  os.arch() === 'x64' ? process.env['ProgramFiles'] : process.env['ProgramFiles(x86)']
+const zarplataPath = path.join(programFilesPath || 'C:\\Program Files', 'ISH_HAQQI\\ISH_HAQQI')
 const url =
   import.meta.env.VITE_MODE === 'staging'
     ? 'https://nafaqa.fizmasoft.uz'
@@ -173,6 +176,9 @@ ipcMain.handle(
     })
   }
 )
+ipcMain.handle('open-zarplata', () => {
+  return shell.openPath(zarplataPath)
+})
 
 ipcMain.handle('get-version', () => app.getVersion())
 ipcMain.handle('set-zoom-factor', (e, factor) => {

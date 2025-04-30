@@ -4,7 +4,7 @@ import type {
   OdinoxType,
   OdinoxUniqueSchet
 } from './details/interfaces'
-import type { Odinox, OdinoxDocumentInfo, Response } from '@/common/models'
+import type { Odinox, OdinoxDocumentInfo, OdinoxProvodka, Response } from '@/common/models'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
@@ -18,6 +18,14 @@ export interface OdinoxPayload {
     type_id: number
     sub_childs: Array<OdinoxPayloadChild>
   }>
+}
+export interface GetDocsArgs {
+  need_data: OdinoxProvodka[]
+  smeta_id: number
+  main_schet_id: number
+  month: number
+  year: number
+  sort_order: number
 }
 
 class OdinoxServiceBuilder extends CRUDService<Odinox, OdinoxPayload> {
@@ -33,6 +41,19 @@ class OdinoxServiceBuilder extends CRUDService<Odinox, OdinoxPayload> {
     this.getMainbookDocuments = this.getMainbookDocuments.bind(this)
   }
 
+  async getDocs(values: GetDocsArgs) {
+    const { need_data, ...params } = values
+    const res = await this.client.post<Response<unknown[], { summa: number }>>(
+      `${this.endpoint}/docs`,
+      {
+        need_data
+      },
+      {
+        params
+      }
+    )
+    return res.data
+  }
   async getAutofillData(params: { month: number; year: number; main_schet_id: number }) {
     const res = await this.client.get<Response<OdinoxAutoFill[]>>(`${this.endpoint}/data`, {
       params

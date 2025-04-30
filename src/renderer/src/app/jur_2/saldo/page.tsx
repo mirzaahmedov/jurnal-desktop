@@ -151,7 +151,7 @@ const BankSaldoPage = () => {
           footer={
             <FooterRow>
               <FooterCell
-                colSpan={4}
+                colSpan={5}
                 title={t('total')}
                 content={formatNumber(saldo?.meta?.summa ?? 0)}
               />

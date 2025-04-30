@@ -95,11 +95,17 @@ export const GenericTable = <T extends object>(props: GenericTableProps<T>) => {
         className={cn('sticky top-0 z-50 shadow-sm', headerProps?.className)}
       >
         {Array.isArray(columnDefs)
-          ? headerGroups.map((headerGroup, index) => (
+          ? headerGroups.map((headerGroup, rowIndex) => (
               <GenericTableRow
-                key={index}
+                key={rowIndex}
                 className="hover:bg-slate-100 border-t border-slate-200 bg-slate-100 even:bg-slate-100 even:hover:bg-slate-100"
               >
+                {rowIndex === 0 ? (
+                  <GenericTableHead
+                    rowSpan={headerGroups.length}
+                    style={{ width: `${String(data.length).length + 1}ch` }}
+                  ></GenericTableHead>
+                ) : null}
                 {Array.isArray(headerGroup)
                   ? headerGroup.map((column) => {
                       const {
@@ -177,7 +183,7 @@ export const GenericTable = <T extends object>(props: GenericTableProps<T>) => {
       </TableHeader>
       <TableBody>
         {Array.isArray(data) && data.length ? (
-          data.map((row) => {
+          data.map((row, rowIndex) => {
             return (
               <GenericTableRow
                 key={getRowKey(row)}
@@ -197,6 +203,9 @@ export const GenericTable = <T extends object>(props: GenericTableProps<T>) => {
                 )}
                 data-selected={selectedIds.includes(Number(getRowId(row)))}
               >
+                <GenericTableCell style={{ width: `${String(data.length).length + 1}ch` }}>
+                  {rowIndex + 1}
+                </GenericTableCell>
                 {Array.isArray(columnDefs)
                   ? accessorColumns.map((col) => {
                       const {

@@ -154,7 +154,7 @@ const OrganSaldoPage = () => {
           footer={
             <FooterRow>
               <FooterCell
-                colSpan={4}
+                colSpan={5}
                 title={t('total')}
                 content={formatNumber(saldo?.meta?.prixod ?? 0)}
               />

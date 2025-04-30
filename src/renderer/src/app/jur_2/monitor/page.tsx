@@ -147,7 +147,7 @@ const BankMonitorPage = () => {
               <FooterRow>
                 <FooterCell
                   title={t('total_page')}
-                  colSpan={4}
+                  colSpan={5}
                 />
                 <FooterCell
                   content={formatNumber(monitoring?.meta?.page_prixod_sum ?? 0)}
@@ -162,7 +162,7 @@ const BankMonitorPage = () => {
                 <FooterRow>
                   <FooterCell
                     title={t('total_period')}
-                    colSpan={4}
+                    colSpan={5}
                   />
                   <FooterCell
                     content={formatNumber(monitoring?.meta?.prixod_sum ?? 0)}

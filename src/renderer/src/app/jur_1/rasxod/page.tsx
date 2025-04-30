@@ -160,7 +160,7 @@ const KassaRasxodPage = () => {
               <FooterCell
                 title={t('total')}
                 content={formatNumber(rasxods?.meta?.summa ?? 0)}
-                colSpan={5}
+                colSpan={6}
               />
             </FooterRow>
           }

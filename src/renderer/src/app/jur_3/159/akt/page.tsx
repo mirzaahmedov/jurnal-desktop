@@ -156,7 +156,7 @@ const AktPage = () => {
           footer={
             <FooterRow>
               <FooterCell
-                colSpan={6}
+                colSpan={7}
                 title={t('total')}
                 content={formatNumber(akts?.meta?.summa ?? 0)}
               />

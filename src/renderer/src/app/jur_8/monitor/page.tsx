@@ -92,7 +92,7 @@ const FinancialReceiptPage = () => {
           footer={
             <FooterRow>
               <FooterCell
-                colSpan={4}
+                colSpan={5}
                 title={t('total')}
                 content={formatNumber(financialReceipts?.meta?.summa ?? 0)}
               />

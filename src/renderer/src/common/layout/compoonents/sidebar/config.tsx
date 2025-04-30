@@ -3,6 +3,7 @@ import type { TFunction } from 'i18next'
 import type { ComponentType, ReactNode } from 'react'
 
 import {
+  AppWindow,
   ArrowLeftRight,
   BadgeDollarSign,
   Banknote,
@@ -78,6 +79,13 @@ export const getNavElements = (t: TFunction): NavElement[] => {
       path: is_super_admin ? '/admin/dashboard' : '/region/dashboard',
       title: t('pages.main'),
       icon: LayoutDashboard
+    },
+    {
+      displayOnly: true,
+      path: 'zarplata',
+      icon: AppWindow,
+      className: 'cursor-pointer',
+      title: t('pages.zarplata')
     },
     !is_super_admin
       ? {

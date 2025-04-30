@@ -10,6 +10,7 @@ declare global {
       quitAndInstall(): void
       getZoomFactor(): Promise<number>
       setZoomFactor(factor: number): void
+      openZarplata(): Promise<string>
     }
     downloader: Downloader
   }

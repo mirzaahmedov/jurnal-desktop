@@ -11,6 +11,9 @@ const api = {
   },
   getZoomFactor() {
     return ipcRenderer.invoke('get-zoom-factor')
+  },
+  openZarplata() {
+    return ipcRenderer.invoke('open-zarplata')
   }
 }
 

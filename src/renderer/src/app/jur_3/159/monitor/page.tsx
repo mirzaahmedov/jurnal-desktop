@@ -243,7 +243,7 @@ const OrganMonitoringPage = () => {
             <>
               <FooterRow>
                 <FooterCell
-                  colSpan={6}
+                  colSpan={7}
                   title={t('total_page')}
                   content={formatNumber(monitoring?.meta?.page_prixod_sum ?? 0)}
                 />
@@ -252,7 +252,7 @@ const OrganMonitoringPage = () => {
               {(monitoring?.meta?.pageCount ?? 0) > 1 ? (
                 <FooterRow>
                   <FooterCell
-                    colSpan={6}
+                    colSpan={7}
                     title={t('total_period')}
                     content={formatNumber(monitoring?.meta?.prixod_sum ?? 0)}
                   />
