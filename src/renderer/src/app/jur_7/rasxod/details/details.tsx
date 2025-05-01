@@ -31,6 +31,7 @@ import {
 
 import { RasxodFormSchema, RasxodQueryKeys, defaultValues } from '../config'
 import { WarehouseRasxodService, useRasxodCreate, useRasxodUpdate } from '../service'
+import { ApplyAllInputs } from './apply-all-inputs'
 import { ProvodkaTable } from './provodka-table'
 
 interface RasxodDetailsProps {
@@ -258,6 +259,15 @@ const RasxodDetails = ({ id, onSuccess }: RasxodDetailsProps) => {
           </form>
         </Form>
 
+        <div className="px-5 flex justify-end">
+          <ApplyAllInputs
+            onApply={({ schet }) => {
+              form.getValues('childs').forEach((_, index) => {
+                form.setValue(`childs.${index}.debet_schet`, schet)
+              })
+            }}
+          />
+        </div>
         <div className="p-5 mb-28 overflow-x-auto scrollbar">
           <ProvodkaTable
             tabIndex={5}

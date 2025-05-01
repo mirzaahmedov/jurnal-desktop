@@ -10,7 +10,7 @@ import {
   EditableTableHead,
   EditableTableRow
 } from '@/common/components/editable-table'
-import { SchetEditor, SubSchetEditor } from '@/common/components/editable-table/editors'
+import { SchetEditor } from '@/common/components/editable-table/editors'
 import { EmptyList } from '@/common/components/empty-states'
 import { Button } from '@/common/components/ui/button'
 import { Checkbox } from '@/common/components/ui/checkbox'
@@ -84,7 +84,7 @@ export const ProvodkaTable = ({ form, tabIndex }: ProvodkaTableProps) => {
               summa: calcSumma(p.to.kol, p.to.sena),
               debet_schet: '',
               kredit_schet: p.debet_schet ?? '',
-              debet_sub_schet: '',
+              debet_sub_schet: p?.debet_sub_schet ?? '',
               kredit_sub_schet: p?.debet_sub_schet ?? '',
               data_pereotsenka: formatDate(p.prixodData?.docDate),
               iznos: p.iznos,
@@ -409,13 +409,14 @@ const Provodka = ({ rowIndex, row, form, tabIndex, onOpenDialog, onRemove }: Pro
       </EditableTableCell>
       <EditableTableCell>
         <div className="relative">
-          <SubSchetEditor
-            schet={row.debet_schet}
+          <Input
+            readOnly
             value={row.debet_sub_schet}
-            onChange={(value) => {
-              handleChangeChildField(rowIndex, 'debet_sub_schet', value)
-            }}
-            error={errors?.debet_sub_schet}
+            error={!!errors?.debet_sub_schet}
+            className={inputVariants({
+              editor: true,
+              error: !!errors?.debet_sub_schet
+            })}
             tabIndex={tabIndex}
           />
         </div>

@@ -7,6 +7,7 @@ import { Input } from '@/common/components/ui/input'
 import { cn } from '@/common/lib/utils'
 
 import { useKeyUp } from '../hooks'
+import { HotKey } from './hot-key'
 
 export interface SearchInputProps extends InputHTMLAttributes<HTMLInputElement> {
   containerProps?: HTMLAttributes<HTMLDivElement>
@@ -62,12 +63,8 @@ export const SearchInput = ({
       />
 
       <div className="absolute right-2.5 top-1/2 -translate-y-1/2 space-x-1 z-50 pointer-events-none">
-        <span className="text-black/40 text-xs font-semibold rounded-md px-1.5 py-0.5 border bg-black/5 border-black/10">
-          CTRL
-        </span>
-        <span className="text-black/40 text-xs font-bold rounded-md px-1.5 py-0.5 border bg-black/5 border-black/10">
-          /
-        </span>
+        <HotKey>CTRL</HotKey>
+        <HotKey>/</HotKey>
       </div>
     </div>
   )
