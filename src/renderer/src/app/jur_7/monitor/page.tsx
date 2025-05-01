@@ -15,6 +15,10 @@ import {
   DropdownMenuTrigger
 } from '@/common/components/ui/dropdown-menu'
 import { DownloadFile } from '@/common/features/file'
+import {
+  SearchFilterDebounced,
+  useSearchFilter
+} from '@/common/features/filters/search/search-filter-debounced'
 import { useRequisitesStore } from '@/common/features/requisites'
 import { SaldoNamespace, handleSaldoErrorDates } from '@/common/features/saldo'
 import {
@@ -30,6 +34,7 @@ import { ListView } from '@/common/views'
 
 import { useWarehouseSaldo } from '../saldo/use-saldo'
 import { columns } from './columns'
+import { WarehouseMonitorQueryKeys } from './config'
 import { WarehouseMonitorService } from './service'
 
 export const WarehouseMonitorPage = () => {
@@ -40,6 +45,8 @@ export const WarehouseMonitorPage = () => {
   const startDate = useSelectedMonthStore((store) => store.startDate)
   const report_title_id = useSettingsStore((store) => store.report_title_id)
   const setLayout = useLayout()
+
+  const [search] = useSearchFilter()
 
   const { t } = useTranslation(['app'])
   const { budjet_id, main_schet_id } = useRequisitesStore()
@@ -52,11 +59,12 @@ export const WarehouseMonitorPage = () => {
     error
   } = useQuery({
     queryKey: [
-      'jur7_monitoring',
+      WarehouseMonitorQueryKeys.getAll,
       {
         ...dates,
         ...pagination,
         ...sorting,
+        search,
         budjet_id,
         main_schet_id
       }
@@ -84,6 +92,7 @@ export const WarehouseMonitorPage = () => {
   useEffect(() => {
     setLayout({
       title: t('pages.monitoring'),
+      content: SearchFilterDebounced,
       breadcrumbs: [
         {
           title: t('pages.material-warehouse')
@@ -172,7 +181,7 @@ export const WarehouseMonitorPage = () => {
               <FooterRow>
                 <FooterCell
                   title={t('total_page')}
-                  colSpan={4}
+                  colSpan={5}
                 />
                 <FooterCell
                   content={formatNumber(monitoring?.meta?.page_prixod_sum ?? 0)}

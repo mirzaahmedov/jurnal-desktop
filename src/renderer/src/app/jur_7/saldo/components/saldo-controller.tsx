@@ -5,6 +5,7 @@ import { toast } from 'react-toastify'
 import { useRequisitesStore } from '@/common/features/requisites'
 import { SaldoController, type SaldoCreateArgs } from '@/common/features/saldo'
 import { useSelectedMonthStore } from '@/common/features/selected-month'
+import { SelectedMonth } from '@/common/layout/compoonents/selected-month'
 
 import { IznosQueryKeys } from '../../iznos/config'
 import { SaldoQueryKeys } from '../config'
@@ -76,13 +77,16 @@ export const WarehouseSaldoController = () => {
   const isError = !saldo?.data?.length && !isFetching && isFetched
 
   return (
-    <SaldoController
-      isError={isError}
-      year={year}
-      month={month}
-      budjet_id={budjet_id}
-      isCreating={isPending}
-      onCreate={handleCreate}
-    />
+    <div className="space-y-2">
+      <SelectedMonth className="w-full" />
+      <SaldoController
+        isError={isError}
+        year={year}
+        month={month}
+        budjet_id={budjet_id}
+        isCreating={isPending}
+        onCreate={handleCreate}
+      />
+    </div>
   )
 }

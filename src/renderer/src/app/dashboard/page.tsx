@@ -34,7 +34,7 @@ const DashboardPage = () => {
   }, [setLayout, t])
 
   return (
-    <div className="p-10 space-y-10">
+    <div className="p-10 space-y-5">
       <div className="flex items-center gap-5 justify-between">
         <DatePicker
           value={date ?? ''}

@@ -81,7 +81,7 @@ export const Bank = ({ budjetId, date, mainSchets }: BankProps) => {
         <ul className="text-slate-700">
           <li className="mb-4 flex justify-between">
             <b className="text-sm">
-              {t('raschet-schet')} / {t('schet')}
+              {t('raschet-schet')} - {t('schet')}
             </b>
             <b className="text-sm">{t('summa')}</b>
           </li>
@@ -98,7 +98,7 @@ export const Bank = ({ budjetId, date, mainSchets }: BankProps) => {
                   }}
                 ></span>
                 <span>
-                  {schet.account_number} / {schet.jur2_schet}
+                  {schet.account_number} - {schet.jur2_schet}
                 </span>
               </div>
               <b className="text-lg">{formatNumber(schet.bank?.summa)}</b>

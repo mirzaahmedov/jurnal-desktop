@@ -76,6 +76,12 @@ export interface WarehouseMonitoring {
   combined_doc_date: string
   combined_id: number
   combined_doc_num: string
+  schets: Array<{
+    kredit_schet: string
+    kredit_sub_schet: string
+    debet_schet: string
+    debet_sub_schet: string
+  }>
 }
 
 export enum WarehouseMonitoringType {

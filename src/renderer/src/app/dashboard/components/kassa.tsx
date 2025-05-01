@@ -81,7 +81,7 @@ export const Kassa = ({ budjetId, date, mainSchets }: KassaProps) => {
         <ul className="text-slate-700">
           <li className="mb-4 flex justify-between">
             <b className="text-sm">
-              {t('raschet-schet')} / {t('schet')}
+              {t('raschet-schet')} - {t('schet')}
             </b>
             <b className="text-sm">{t('summa')}</b>
           </li>
@@ -98,7 +98,7 @@ export const Kassa = ({ budjetId, date, mainSchets }: KassaProps) => {
                   }}
                 ></span>
                 <span>
-                  {schet.account_number} / {schet.jur1_schet}
+                  {schet.account_number} - {schet.jur1_schet}
                 </span>
               </div>
               <b className="text-lg">{formatNumber(schet.kassa?.summa)}</b>
