@@ -48,7 +48,11 @@ export const VideoGrid = ({
             ))
           ) : (
             <div className="col-span-full grid place-items-center">
-              <EmptyList />
+              <EmptyList
+                iconProps={{
+                  className: 'h-64'
+                }}
+              />
             </div>
           )
         ) : null}

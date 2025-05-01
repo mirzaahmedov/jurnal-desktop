@@ -62,7 +62,8 @@ const renderNavElement = (elem: null | NavElement, isCollapsed: boolean, rootPat
       key={path}
       className={cn(
         'group pl-5 pr-5 hover:bg-brand/5 hover:text-brand transition-colors duration-75',
-        !rootPath && 'pr-5 rounded-lg'
+        !rootPath && 'pr-5 rounded-lg',
+        elem.displayOnly && 'cursor-default hover:bg-transparent'
       )}
     >
       {elem.displayOnly ? (
