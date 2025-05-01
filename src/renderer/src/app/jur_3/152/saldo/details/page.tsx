@@ -42,12 +42,11 @@ const OrganSaldoDetailsPage = () => {
   const setLayout = useLayout()
   const startDate = useSelectedMonthStore((store) => store.startDate)
 
-  const { queuedMonths } = useUslugiSaldo()
-
   const [isEditable, setEditable] = useState(false)
   const [isRendering, setRendering] = useState(false)
 
   const { t } = useTranslation(['app'])
+  const { queuedMonths } = useUslugiSaldo()
   const { budjet_id, main_schet_id, jur3_schet_152_id } = useRequisitesStore()
 
   const form = useForm({
@@ -102,17 +101,34 @@ const OrganSaldoDetailsPage = () => {
     mutationKey: [OrganSaldoQueryKeys.getAutofill],
     mutationFn: OrganSaldoService.getAutofillData,
     onSuccess: (res) => {
-      if (res?.data?.length) {
-        const total = calculateTotal(res.data)
-        res.data.push({
+      let data: OrganSaldoProvodka[] = []
+
+      if (!isEditable) {
+        data = res?.data ?? []
+      } else {
+        const prevData = form.getValues('organizations')
+        const newData = res?.data ?? []
+
+        data = newData.map((item) => {
+          const prev = prevData.find((prev) => prev.organization_id === item.organization_id)
+          return {
+            ...item,
+            prixod: prev?.prixod ?? 0,
+            rasxod: prev?.rasxod ?? 0
+          } satisfies OrganSaldoProvodka
+        })
+      }
+
+      if (data.length) {
+        const total = calculateTotal(data)
+        data.push({
           _total: true,
-          organization_id: 0,
           name: t('total'),
           prixod: total.prixod,
           rasxod: total.rasxod
         } as OrganSaldoProvodka)
       }
-      form.setValue('organizations', res?.data ?? [])
+      form.setValue('organizations', data)
     },
     onError: () => {
       form.setValue('organizations', [])
@@ -154,7 +170,6 @@ const OrganSaldoDetailsPage = () => {
         const total = calculateTotal(saldo.data.childs)
         saldo.data.childs.push({
           _total: true,
-          organization_id: 0,
           name: t('total'),
           prixod: total.prixod,
           rasxod: total.rasxod
@@ -295,24 +310,42 @@ const OrganSaldoDetailsPage = () => {
                     }
                   }}
                 />
-                {id !== 'create' && !isEditable ? (
-                  <Button
-                    type="button"
-                    onClick={() => {
-                      handleAutofill({
-                        year,
-                        month,
-                        budjet_id: budjet_id!,
-                        main_schet_id: main_schet_id!,
-                        schet_id: jur3_schet_152_id!,
-                        first: false
-                      })
-                    }}
-                    loading={isAutoFilling}
-                  >
-                    {t('autofill')}
-                  </Button>
-                ) : null}
+                {id !== 'create' &&
+                  (isEditable ? (
+                    <Button
+                      type="button"
+                      onClick={() => {
+                        handleAutofill({
+                          year,
+                          month,
+                          budjet_id: budjet_id!,
+                          main_schet_id: main_schet_id!,
+                          schet_id: jur3_schet_152_id!,
+                          first: true
+                        })
+                      }}
+                      loading={isAutoFilling}
+                    >
+                      {t('update_data')}
+                    </Button>
+                  ) : (
+                    <Button
+                      type="button"
+                      onClick={() => {
+                        handleAutofill({
+                          year,
+                          month,
+                          budjet_id: budjet_id!,
+                          main_schet_id: main_schet_id!,
+                          schet_id: jur3_schet_152_id!,
+                          first: false
+                        })
+                      }}
+                      loading={isAutoFilling}
+                    >
+                      {t('autofill')}
+                    </Button>
+                  ))}
               </div>
             </div>
             <div className="flex-1 overflow-auto scrollbar">

@@ -29,7 +29,7 @@ import { useLayout } from '@/common/layout'
 import { formatNumber } from '@/common/lib/format'
 import { ListView } from '@/common/views'
 
-import { useAktSaldo } from '../saldo/components/use-saldo'
+import { useAktSaldo } from '../saldo/use-saldo'
 import { AktColumns } from './columns'
 import { AktQueryKeys } from './config'
 import { aktService } from './service'

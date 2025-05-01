@@ -37,7 +37,7 @@ import { formatNumber } from '@/common/lib/format'
 import { getProvodkaURL } from '@/common/lib/provodka'
 import { ListView } from '@/common/views'
 
-import { useAktSaldo } from '../saldo/components/use-saldo'
+import { useAktSaldo } from '../saldo/use-saldo'
 import { OrganMonitorColumns } from './columns'
 import { OrganMonitorQueryKeys } from './config'
 import { DailyReportDialog } from './daily-report-dialog'

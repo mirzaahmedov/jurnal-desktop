@@ -351,5 +351,6 @@
   "no_smeta_grafiks_for_this_smeta": "Ushbu smeta uchun grafiklar yaratilmagan",
   "material": "Material",
   "zarplata_not_installed": "Zarplata ilovasi o'rnatilmagan",
-  "apply_to_all_inputs": "Hamma maydonlarga qo‘llash"
+  "apply_to_all_inputs": "Hamma maydonlarga qo‘llash",
+  "update_data": "Ma'lumotlarni yangilash"
 }

@@ -24,9 +24,9 @@ import { useLayout } from '@/common/layout'
 import { formatDate } from '@/common/lib/date'
 import { DetailsView } from '@/common/views'
 
-import { useAktSaldo } from '../components/use-saldo'
 import { OrganSaldoQueryKeys, defaultValues } from '../config'
 import { OrganSaldoService } from '../service'
+import { useAktSaldo } from '../use-saldo'
 import { OrganSaldoTable } from './organ-saldo-table'
 import { getOrganSaldoProvodkaColumns } from './provodki'
 import { calculateTotal } from './utils'
@@ -41,11 +41,11 @@ const OrganSaldoDetailsPage = () => {
   const queryClient = useQueryClient()
   const setLayout = useLayout()
   const startDate = useSelectedMonthStore((store) => store.startDate)
-  const { queuedMonths } = useAktSaldo()
 
   const [isEditable, setEditable] = useState(false)
 
   const { t } = useTranslation(['app'])
+  const { queuedMonths } = useAktSaldo()
   const { budjet_id, main_schet_id, jur3_schet_159_id } = useRequisitesStore()
 
   const form = useForm({
@@ -100,17 +100,34 @@ const OrganSaldoDetailsPage = () => {
     mutationKey: [OrganSaldoQueryKeys.getAutofill],
     mutationFn: OrganSaldoService.getAutofillData,
     onSuccess: (res) => {
-      if (res?.data?.length) {
-        const total = calculateTotal(res.data)
-        res.data.push({
+      let data: OrganSaldoProvodka[] = []
+
+      if (!isEditable) {
+        data = res?.data ?? []
+      } else {
+        const prevData = form.getValues('organizations')
+        const newData = res?.data ?? []
+
+        data = newData.map((item) => {
+          const prev = prevData.find((prev) => prev.organization_id === item.organization_id)
+          return {
+            ...item,
+            prixod: prev?.prixod ?? 0,
+            rasxod: prev?.rasxod ?? 0
+          } satisfies OrganSaldoProvodka
+        })
+      }
+
+      if (data.length) {
+        const total = calculateTotal(data)
+        data.push({
           _total: true,
-          organization_id: 0,
           name: t('total'),
           prixod: total.prixod,
           rasxod: total.rasxod
         } as OrganSaldoProvodka)
       }
-      form.setValue('organizations', res?.data ?? [])
+      form.setValue('organizations', data)
     },
     onError: () => {
       form.setValue('organizations', [])
@@ -152,7 +169,6 @@ const OrganSaldoDetailsPage = () => {
         const total = calculateTotal(saldo.data.childs)
         saldo.data.childs.push({
           _total: true,
-          organization_id: 0,
           name: t('total'),
           prixod: total.prixod,
           rasxod: total.rasxod
@@ -283,24 +299,42 @@ const OrganSaldoDetailsPage = () => {
                     }
                   }}
                 />
-                {id !== 'create' && !isEditable ? (
-                  <Button
-                    type="button"
-                    onClick={() => {
-                      autoFill({
-                        year,
-                        month,
-                        budjet_id: budjet_id!,
-                        main_schet_id: main_schet_id!,
-                        schet_id: jur3_schet_159_id!,
-                        first: false
-                      })
-                    }}
-                    loading={isAutoFilling}
-                  >
-                    {t('autofill')}
-                  </Button>
-                ) : null}
+                {id !== 'create' &&
+                  (isEditable ? (
+                    <Button
+                      type="button"
+                      onClick={() => {
+                        autoFill({
+                          year,
+                          month,
+                          budjet_id: budjet_id!,
+                          main_schet_id: main_schet_id!,
+                          schet_id: jur3_schet_159_id!,
+                          first: true
+                        })
+                      }}
+                      loading={isAutoFilling}
+                    >
+                      {t('update_data')}
+                    </Button>
+                  ) : (
+                    <Button
+                      type="button"
+                      onClick={() => {
+                        autoFill({
+                          year,
+                          month,
+                          budjet_id: budjet_id!,
+                          main_schet_id: main_schet_id!,
+                          schet_id: jur3_schet_159_id!,
+                          first: false
+                        })
+                      }}
+                      loading={isAutoFilling}
+                    >
+                      {t('autofill')}
+                    </Button>
+                  ))}
               </div>
             </div>
             <div className="overflow-auto scrollbar flex-1 relative">

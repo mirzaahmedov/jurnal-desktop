@@ -25,11 +25,11 @@ import { OrganSaldoTable } from '../details/organ-saldo-table'
 import { getOrganSaldoProvodkaColumns } from '../details/provodki'
 import { calculateTotal } from '../details/utils'
 import { OrganSaldoService } from '../service'
-import { useAktSaldo } from './use-saldo'
+import { useAktSaldo } from '../use-saldo'
 
 const columnDefs = getOrganSaldoProvodkaColumns(false)
 
-export const OrganSaldo159UpdateManager = () => {
+export const OrganAktSaldoUpdateManager = () => {
   const scrollElementRef = useRef<HTMLDivElement>(null)
 
   const queryClient = useQueryClient()

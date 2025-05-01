@@ -351,5 +351,6 @@
   "no_smeta_grafiks_for_this_smeta": "Ушбу смета учун графиклар яратилмаган",
   "material": "Материал",
   "zarplata_not_installed": "Зарплата иловаси ўрнатилмаган",
-  "apply_to_all_inputs": "Ҳамма майдонларга қўллаш"
+  "apply_to_all_inputs": "Ҳамма майдонларга қўллаш",
+  "update_data": "Маълумотларни янгилаш"
 }

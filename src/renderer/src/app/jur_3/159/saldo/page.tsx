@@ -21,10 +21,10 @@ import { formatNumber } from '@/common/lib/format'
 import { ListView } from '@/common/views'
 
 import { OrganSaldoColumns } from './columns'
-import { useAktSaldo } from './components/use-saldo'
 import { OrganSaldoQueryKeys } from './config'
 import { OrganSaldoFilters, useYearFilter } from './filters'
 import { OrganSaldoService } from './service'
+import { useAktSaldo } from './use-saldo'
 
 const OrganSaldoPage = () => {
   const setLayout = useLayout()

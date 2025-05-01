@@ -41,7 +41,7 @@ export const EditableTableHead = ({
   )
 }
 
-const rowVariants = cva('scroll-my-10', {
+const rowVariants = cva('scroll-my-32', {
   variants: {
     focusable: {
       true: 'group/row hover:bg-highligth-neutral focus-within:bg-highlight hover:focus-within:bg-highlight'

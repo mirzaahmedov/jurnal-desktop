@@ -44,7 +44,7 @@ import {
   SummaFields
 } from '@/common/widget/form'
 
-import { useAktSaldo } from '../../saldo/components/use-saldo'
+import { useAktSaldo } from '../../saldo/use-saldo'
 import { AktFormSchema, AktProvodkaFormSchema, AktQueryKeys, defaultValues } from '../config'
 import { aktService } from '../service'
 import { provodkaColumns } from './provodki'

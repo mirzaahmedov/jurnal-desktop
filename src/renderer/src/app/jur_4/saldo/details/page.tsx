@@ -1,4 +1,5 @@
 import type { EditableTableMethods } from '@/common/components/editable-table'
+import type { PodotchetSaldoProvodka } from '@/common/models'
 
 import { type KeyboardEvent, useEffect, useMemo, useRef, useState } from 'react'
 
@@ -99,17 +100,39 @@ const PodotchetSaldoDetailsPage = () => {
     mutationKey: [PodotchetSaldoQueryKeys.getAutofill],
     mutationFn: PodotchetSaldoService.getAutofillData,
     onSuccess: (res, values) => {
-      if (res?.data?.length) {
-        const total = calculateTotal(res.data)
-        res.data.push({
+      let data: PodotchetSaldoProvodka[] = []
+
+      if (!isEditable) {
+        data = res?.data ?? []
+      } else {
+        const prevData = form.getValues('podotchets')
+        const newData = res?.data ?? []
+
+        data = newData.map((item) => {
+          const prev = prevData.find((prev) => prev.podotchet_id === item.podotchet_id)
+          return {
+            ...item,
+            prixod: prev?.prixod ?? 0,
+            rasxod: prev?.rasxod ?? 0
+          } satisfies PodotchetSaldoProvodka
+        })
+      }
+
+      if (data.length) {
+        const total = calculateTotal(data)
+        data.push({
+          id: 0,
           _total: true,
           podotchet_id: 0,
           name: t('total'),
+          rayon: '',
+          isdeleted: false,
           prixod: total.prixod,
           rasxod: total.rasxod
-        } as any)
+        } as PodotchetSaldoProvodka)
       }
-      form.setValue('podotchets', res?.data ?? [])
+
+      form.setValue('podotchets', data)
       setEditable(values.first)
     },
     onError: () => {
@@ -283,24 +306,42 @@ const PodotchetSaldoDetailsPage = () => {
                     }
                   }}
                 />
-                {id !== 'create' && !isEditable ? (
-                  <Button
-                    type="button"
-                    onClick={() => {
-                      autoFill({
-                        year,
-                        month,
-                        budjet_id: budjet_id!,
-                        main_schet_id: main_schet_id!,
-                        schet_id: jur4_schet_id!,
-                        first: false
-                      })
-                    }}
-                    loading={isAutoFilling}
-                  >
-                    {t('autofill')}
-                  </Button>
-                ) : null}
+                {id !== 'create' &&
+                  (isEditable ? (
+                    <Button
+                      type="button"
+                      onClick={() => {
+                        autoFill({
+                          year,
+                          month,
+                          budjet_id: budjet_id!,
+                          main_schet_id: main_schet_id!,
+                          schet_id: jur4_schet_id!,
+                          first: true
+                        })
+                      }}
+                      loading={isAutoFilling}
+                    >
+                      {t('update_data')}
+                    </Button>
+                  ) : (
+                    <Button
+                      type="button"
+                      onClick={() => {
+                        autoFill({
+                          year,
+                          month,
+                          budjet_id: budjet_id!,
+                          main_schet_id: main_schet_id!,
+                          schet_id: jur4_schet_id!,
+                          first: false
+                        })
+                      }}
+                      loading={isAutoFilling}
+                    >
+                      {t('autofill')}
+                    </Button>
+                  ))}
               </div>
             </div>
             <div className="overflow-auto scrollbar flex-1 relative">

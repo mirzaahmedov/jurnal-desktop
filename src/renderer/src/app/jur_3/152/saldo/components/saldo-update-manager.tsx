@@ -29,7 +29,7 @@ import { useUslugiSaldo } from '../use-saldo'
 
 const columnDefs = getOrganSaldoProvodkaColumns(false)
 
-export const OrganSaldo152UpdateManager = () => {
+export const OrganUslugiSaldopdateManager = () => {
   const scrollElementRef = useRef<HTMLDivElement>(null)
 
   const queryClient = useQueryClient()

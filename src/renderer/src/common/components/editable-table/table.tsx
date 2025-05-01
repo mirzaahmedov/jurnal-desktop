@@ -60,12 +60,29 @@ export const EditableTable = <T extends object, F extends ArrayPath<NoInfer<T>>>
             behavior: 'smooth',
             block: 'nearest'
           })
-          const inputElement = rowElement.querySelector(
-            'input:not(:disabled), textarea:not(:disabled), select:not(:disabled)'
-          ) as HTMLInputElement
-          inputElement?.focus?.({
-            preventScroll: true
-          })
+
+          const observer = new IntersectionObserver(
+            ([entry], obs) => {
+              if (entry.isIntersecting) {
+                const inputElement = rowElement.querySelector(
+                  'input:not(:disabled), textarea:not(:disabled), select:not(:disabled)'
+                ) as HTMLInputElement
+
+                setTimeout(() => {
+                  inputElement?.focus?.({
+                    preventScroll: true
+                  })
+                }, 200)
+
+                obs.disconnect()
+              }
+            },
+            {
+              threshold: 1.0
+            }
+          )
+
+          observer.observe(rowElement)
         }
       }
     }),

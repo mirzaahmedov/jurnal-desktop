@@ -1,11 +1,8 @@
 export interface PodotchetSaldoProvodka {
   id: number
-  parent_id: number
   podotchet_id: number
   prixod: number
   rasxod: number
-  created_at: string
-  updated_at: string
   isdeleted: boolean
   name: string
   rayon: string

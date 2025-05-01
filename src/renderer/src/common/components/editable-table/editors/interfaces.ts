@@ -28,6 +28,7 @@ export type EditorComponent<T extends object> = FC<{
   setState: Dispatch<SetStateAction<Record<string, unknown>>>
   params: Record<string, unknown>
   validate?: (ctx: ChangeContext<T>) => boolean
+  readOnly?: boolean
 }>
 
 export type EditorOptions<T extends object, P = InputHTMLAttributes<HTMLInputElement>> = {
