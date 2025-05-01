@@ -8,15 +8,15 @@ import { CollapsibleTable } from '@/common/components/collapsible-table'
 import { Pagination } from '@/common/components/pagination'
 import { Card, CardContent, CardHeader, CardTitle } from '@/common/components/ui/card'
 
-import { queryKeys } from '../../config'
+import { DashboardQueryKeys } from '../../config'
 import { getDashboardPodotchetQuery } from '../../service'
 import { normalizePodotchetData, podotchetChildColumns, podotchetColumns } from './columns'
 
-export interface PodotchetTableProps {
+export interface DashboardPodotchetTableProps {
   date?: string
   budjet_id?: number
 }
-export const PodotchetTable = ({ date, budjet_id }: PodotchetTableProps) => {
+export const DashboardPodotchetTable = ({ date, budjet_id }: DashboardPodotchetTableProps) => {
   const [pagination, setPagination] = useState({
     page: 1,
     limit: 5
@@ -26,7 +26,7 @@ export const PodotchetTable = ({ date, budjet_id }: PodotchetTableProps) => {
 
   const { data: podotchets, isFetching } = useQuery({
     queryKey: [
-      queryKeys.getPodotchetList,
+      DashboardQueryKeys.getPodotchetList,
       {
         ...pagination,
         to: date!,

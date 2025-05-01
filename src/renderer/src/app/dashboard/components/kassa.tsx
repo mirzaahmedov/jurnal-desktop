@@ -16,40 +16,40 @@ import {
 import { getColors } from '@/common/lib/color'
 import { formatNumber } from '@/common/lib/format'
 
-import { queryKeys } from '../config'
+import { DashboardQueryKeys } from '../config'
 import { getDashboardKassaQuery } from '../service'
 import { GenericPieChart } from './generic-pie-chart'
 
 export interface KassaProps {
   date?: string
-  budjet_id?: number
-  main_schets?: Dashboard.Budjet['main_schets']
+  budjetId?: number
+  mainSchets?: Dashboard.Budjet['main_schets']
 }
-export const Kassa = ({ budjet_id, date, main_schets }: KassaProps) => {
+export const Kassa = ({ budjetId, date, mainSchets }: KassaProps) => {
   const { t } = useTranslation(['dashboard'])
 
   const { data } = useQuery({
     queryKey: [
-      queryKeys.getKassaFunds,
+      DashboardQueryKeys.getKassaFunds,
       {
         to: date!,
-        budjet_id: Number(budjet_id)!
+        budjet_id: Number(budjetId)!
       }
     ],
     queryFn: getDashboardKassaQuery,
-    enabled: !!date && !!budjet_id
+    enabled: !!date && !!budjetId
   })
 
   const chartConfig = useMemo(() => {
-    if (!Array.isArray(main_schets)) return {}
+    if (!Array.isArray(mainSchets)) return {}
 
-    return main_schets.reduce((config, schet) => {
+    return mainSchets.reduce((config, schet) => {
       config[schet.id] = {
         label: `${schet.account_number} / ${schet.jur1_schet}`
       }
       return config
     }, {} as ChartConfig)
-  }, [main_schets])
+  }, [mainSchets])
 
   const chartData = useMemo(() => {
     if (!Array.isArray(data)) return []
