@@ -10,7 +10,7 @@ import { cn } from '@/common/lib/utils'
 import { EmptyList } from './empty-states'
 import { Spinner } from './loading'
 
-type AutoCompleteProps<T> = {
+interface AutoCompleteProps<T> {
   isFetching: boolean
   disabled?: boolean
   autoSelectSingleResult?: boolean

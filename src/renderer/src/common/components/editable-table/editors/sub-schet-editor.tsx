@@ -27,7 +27,7 @@ export const SubSchetEditor = ({
   onChange: (value: string) => void
   inputProps?: InputHTMLAttributes<HTMLInputElement>
 }) => {
-  const selected = useRef(false)
+  const changed = useRef(false)
 
   const { data: subSchetOptions, isFetching: isFetchingSubSchetOptions } = useQuery({
     queryKey: [
@@ -52,7 +52,7 @@ export const SubSchetEditor = ({
       getOptionLabel={(option) => option.sub_schet}
       getOptionValue={(option) => option.sub_schet}
       onSelect={(option) => {
-        selected.current = true
+        changed.current = true
         onChange?.(option.sub_schet)
       }}
       className="border-r"
@@ -68,16 +68,20 @@ export const SubSchetEditor = ({
           tabIndex={tabIndex}
           error={!!error}
           name="kredit_schet"
-          onFocus={open}
+          onFocus={() => {
+            changed.current = false
+            open()
+          }}
           onBlur={() => {
             const exists = filteredOptions.find((o) => o.sub_schet === value)
-            if (!exists && selected.current) {
+            if (!exists && changed.current) {
               onChange?.('')
             }
             close()
           }}
           value={value}
           onChange={(e) => {
+            changed.current = true
             onChange?.(e.target.value)
           }}
           onKeyDown={(e) => {

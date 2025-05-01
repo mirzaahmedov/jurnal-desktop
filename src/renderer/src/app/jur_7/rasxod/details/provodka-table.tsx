@@ -400,7 +400,6 @@ const Provodka = ({ rowIndex, row, form, tabIndex, onOpenDialog, onRemove }: Pro
             value={row.debet_schet}
             onChange={(value) => {
               handleChangeChildField(rowIndex, 'debet_schet', value)
-              handleChangeChildField(rowIndex, 'debet_sub_schet', '')
             }}
             error={errors?.debet_schet}
             tabIndex={tabIndex}

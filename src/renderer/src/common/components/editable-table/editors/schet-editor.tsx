@@ -25,7 +25,7 @@ export const SchetEditor = ({
   onChange: (value: string) => void
   inputProps?: InputHTMLAttributes<HTMLInputElement>
 }) => {
-  const selected = useRef(false)
+  const changed = useRef(false)
 
   const { data: schetOptions, isFetching: isFetchingSchetOptions } = useQuery({
     queryKey: [
@@ -48,7 +48,7 @@ export const SchetEditor = ({
       getOptionLabel={(option) => option.schet}
       getOptionValue={(option) => option.schet}
       onSelect={(option) => {
-        selected.current = true
+        changed.current = true
         onChange?.(option.schet)
       }}
       className="border-r"
@@ -64,16 +64,20 @@ export const SchetEditor = ({
           tabIndex={tabIndex}
           error={!!error}
           name="kredit_schet"
-          onFocus={open}
+          onFocus={() => {
+            changed.current = false
+            open()
+          }}
           onBlur={() => {
             const exists = options.find((o) => o.schet === value)
-            if (!exists && selected.current) {
+            if (!exists && changed.current) {
               onChange?.('')
             }
             close()
           }}
           value={value}
           onChange={(e) => {
+            changed.current = true
             onChange?.(e.target.value)
           }}
           onKeyDown={(e) => {
