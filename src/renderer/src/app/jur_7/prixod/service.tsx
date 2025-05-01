@@ -1,27 +1,28 @@
 import type { PrixodFormValues } from './config'
-import type { MO7Prixod } from '@/common/models'
+import type { MO7Prixod, ResponseMeta } from '@/common/models'
 import type { UseMutationOptions } from '@tanstack/react-query'
 
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation } from '@tanstack/react-query'
 
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 import { budjet, main_schet } from '@/common/features/crud/middleware'
 
 import { WarehousePrixodQueryKeys } from './config'
 
-export const WarehousePrixodService = new CRUDService<MO7Prixod, PrixodFormValues>({
+interface PrixodMeta extends ResponseMeta {
+  summa: number
+}
+
+export const WarehousePrixodService = new CRUDService<
+  MO7Prixod,
+  PrixodFormValues,
+  PrixodFormValues,
+  PrixodMeta
+>({
   endpoint: ApiEndpoints.jur7_prixod
 })
   .use(budjet())
   .use(main_schet())
-
-export const usePrixodGet = (id: number) => {
-  return useQuery({
-    queryKey: [WarehousePrixodQueryKeys.get, id],
-    queryFn: WarehousePrixodService.getById,
-    enabled: !!id
-  })
-}
 
 export type UsePrixodParams = Pick<UseMutationOptions<any, Error, any>, 'onSuccess' | 'onError'>
 export const usePrixodCreate = ({ onSuccess, onError }: UsePrixodParams) => {

@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
 import { handleOstatokError, handleOstatokResponse } from '@/app/jur_7/saldo/utils'
-import { GenericTable, useTableSort } from '@/common/components'
+import { FooterCell, FooterRow, GenericTable, useTableSort } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
 import {
   SearchFilterDebounced,
@@ -20,6 +20,7 @@ import {
 import { useDates, usePagination } from '@/common/hooks'
 import { useLayout } from '@/common/layout'
 import { formatDate } from '@/common/lib/date'
+import { formatNumber } from '@/common/lib/format'
 import { ListView } from '@/common/views'
 
 import { IznosQueryKeys } from '../iznos/config'
@@ -138,6 +139,15 @@ const InternalPage = () => {
           }}
           getColumnSorted={getColumnSorted}
           onSort={handleSort}
+          footer={
+            <FooterRow>
+              <FooterCell
+                title={t('total')}
+                content={formatNumber(internals?.meta?.summa ?? 0)}
+                colSpan={7}
+              />
+            </FooterRow>
+          }
         />
       </ListView.Content>
       <ListView.Footer>

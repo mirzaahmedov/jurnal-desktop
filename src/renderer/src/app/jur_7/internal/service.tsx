@@ -1,26 +1,27 @@
 import type { InternalFormValues } from './config'
-import type { Internal } from '@/common/models'
+import type { Internal, ResponseMeta } from '@/common/models'
 
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation } from '@tanstack/react-query'
 
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 import { budjet, main_schet } from '@/common/features/crud/middleware'
 
 import { internalQueryKeys } from './config'
 
-export const internalService = new CRUDService<Internal, InternalFormValues>({
+interface InternalMeta extends ResponseMeta {
+  summa: number
+}
+
+export const internalService = new CRUDService<
+  Internal,
+  InternalFormValues,
+  InternalFormValues,
+  InternalMeta
+>({
   endpoint: ApiEndpoints.jur7_internal
 })
   .use(budjet())
   .use(main_schet())
-
-export const useInternalGet = (id: number) => {
-  return useQuery({
-    queryKey: [internalQueryKeys.get, id],
-    queryFn: internalService.getById,
-    enabled: !!id
-  })
-}
 
 type UseInternalCreateParams = {
   onSuccess?: (res: any) => void

@@ -1,5 +1,5 @@
 import type { RasxodFormValues } from './config'
-import type { Jur7Rasxod } from '@/common/models'
+import type { Jur7Rasxod, ResponseMeta } from '@/common/models'
 
 import { useMutation, useQuery } from '@tanstack/react-query'
 
@@ -8,7 +8,16 @@ import { budjet, main_schet } from '@/common/features/crud/middleware'
 
 import { RasxodQueryKeys } from './config'
 
-export const WarehouseRasxodService = new CRUDService<Jur7Rasxod, RasxodFormValues>({
+interface RasxodMeta extends ResponseMeta {
+  summa: number
+}
+
+export const WarehouseRasxodService = new CRUDService<
+  Jur7Rasxod,
+  RasxodFormValues,
+  RasxodFormValues,
+  RasxodMeta
+>({
   endpoint: ApiEndpoints.jur7_rasxod
 })
   .use(budjet())

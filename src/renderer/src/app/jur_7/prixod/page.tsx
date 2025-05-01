@@ -12,7 +12,7 @@ import {
   handleOstatokExistingDocumentError,
   handleOstatokResponse
 } from '@/app/jur_7/saldo/utils'
-import { GenericTable, useTableSort } from '@/common/components'
+import { FooterCell, FooterRow, GenericTable, useTableSort } from '@/common/components'
 import { ButtonGroup } from '@/common/components/ui/button-group'
 import { useConfirm } from '@/common/features/confirm'
 import { DownloadFile } from '@/common/features/file'
@@ -28,6 +28,7 @@ import {
 import { useDates, usePagination } from '@/common/hooks'
 import { useLayout } from '@/common/layout'
 import { formatDate } from '@/common/lib/date'
+import { formatNumber } from '@/common/lib/format'
 import { ListView } from '@/common/views'
 
 import { IznosQueryKeys } from '../iznos/config'
@@ -183,6 +184,15 @@ const Jurnal7PrixodPage = () => {
           }}
           getColumnSorted={getColumnSorted}
           onSort={handleSort}
+          footer={
+            <FooterRow>
+              <FooterCell
+                title={t('total')}
+                content={formatNumber(prixods?.meta?.summa ?? 0)}
+                colSpan={7}
+              />
+            </FooterRow>
+          }
         />
       </ListView.Content>
       <ListView.Footer>
