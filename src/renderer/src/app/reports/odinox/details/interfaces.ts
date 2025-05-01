@@ -14,6 +14,7 @@ export interface OdinoxAutoFill {
   updated_at: string
   is_deleted: boolean
   type_id: number
+  type_name: string
   sub_childs: OdinoxAutoFillSubChild[]
   summa: number
 }
@@ -23,6 +24,7 @@ export interface OdinoxTableRow extends Record<string, number | string> {
   smeta_number: string
   group_number: string
   smeta_id: number
+  sort_order: number
 }
 
 export enum OdinoxTypeName {

@@ -4,11 +4,30 @@ import type {
   OdinoxType,
   OdinoxUniqueSchet
 } from './details/interfaces'
-import type { Odinox, OdinoxDocumentInfo, OdinoxProvodka, Response } from '@/common/models'
+import type {
+  Odinox,
+  OdinoxDocument,
+  OdinoxDocumentInfo,
+  OdinoxProvodka,
+  Response
+} from '@/common/models'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 import { main_schet } from '@/common/features/crud/middleware'
+
+export enum DocType {
+  Grafik = 0,
+  BankPrixod = 1,
+  Jur1Jur2Rasxod = 2,
+  Jur3aAktAvans = 3,
+  Remaining = 4,
+  GrafikYear = 5,
+  BankPrixodYear = 6,
+  Jur1Jur2RasxodYear = 7,
+  Jur3aAktAvansYear = 8,
+  RemainingYear = 9
+}
 
 export type OdinoxPayloadChild = Omit<OdinoxAutoFillSubChild, 'id' | 'smeta_grafik'>
 export interface OdinoxPayload {
@@ -34,6 +53,7 @@ class OdinoxServiceBuilder extends CRUDService<Odinox, OdinoxPayload> {
       endpoint: ApiEndpoints.odinox
     })
 
+    this.getDocs = this.getDocs.bind(this)
     this.getTypes = this.getTypes.bind(this)
     this.getSaldoCheck = this.getSaldoCheck.bind(this)
     this.getAutofillData = this.getAutofillData.bind(this)
@@ -43,7 +63,7 @@ class OdinoxServiceBuilder extends CRUDService<Odinox, OdinoxPayload> {
 
   async getDocs(values: GetDocsArgs) {
     const { need_data, ...params } = values
-    const res = await this.client.post<Response<unknown[], { summa: number }>>(
+    const res = await this.client.post<Response<OdinoxDocument[], { summa: number }>>(
       `${this.endpoint}/docs`,
       {
         need_data

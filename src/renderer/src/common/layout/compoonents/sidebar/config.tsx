@@ -278,7 +278,7 @@ export const getNavElements = (t: TFunction): NavElement[] => {
             },
             {
               icon: ArrowLeftRight,
-              path: 'internal-transfer',
+              path: 'internal',
               title: t('pages.internal-docs')
             },
             {

@@ -1,11 +1,11 @@
-import type { MainbookDocumentInfo, ProvodkaType } from '@/common/models'
+import type { GetDocsArgs } from '../service'
+import type { ColumnDef } from '@/common/components'
+import type { OdinoxDocument, OdinoxRasxod } from '@/common/models'
 import type { DialogTriggerProps } from 'react-aria-components'
 
-import { useQuery } from '@tanstack/react-query'
-import { t } from 'i18next'
 import { Trans } from 'react-i18next'
 
-import { type ColumnDef, FooterCell, FooterRow, GenericTable } from '@/common/components'
+import { GenericTable } from '@/common/components'
 import {
   DialogContent,
   DialogHeader,
@@ -16,74 +16,33 @@ import {
 import { ProvodkaBadge } from '@/common/components/provodka-badge'
 import { IDCell } from '@/common/components/table/renderers/id'
 import { SummaCell } from '@/common/components/table/renderers/summa'
-import { formatLocaleDate, formatNumber } from '@/common/lib/format'
+import { formatLocaleDate } from '@/common/lib/format'
 
-import { OdinoxQueryKeys } from '../config'
-import { OdinoxService } from '../service'
-
-export interface MainbookDocumentsTrackerProps extends Omit<DialogTriggerProps, 'children'> {
-  budjet_id?: number
-  main_schet_id?: number
-  year?: number
-  month?: number
-  schet?: string
-  type_id?: number
-  prixod?: boolean
+export interface OdinoxDocumentsTrackerProps extends Omit<DialogTriggerProps, 'children'> {
+  args?: GetDocsArgs
+  docs: OdinoxDocument[]
+  onClose: VoidFunction
 }
 
-export const MainbookDocumentsTracker = ({
-  budjet_id,
-  main_schet_id,
-  year,
-  month,
-  schet,
-  type_id,
-  prixod,
-  ...props
-}: MainbookDocumentsTrackerProps) => {
-  const { data: documents } = useQuery({
-    queryKey: [
-      OdinoxQueryKeys.getMainbookDocuments,
-      {
-        budjet_id: budjet_id!,
-        main_schet_id: main_schet_id!,
-        year: year!,
-        month: month!,
-        schet: schet!,
-        type_id: type_id!,
-        prixod: !!prixod,
-        rasxod: !prixod
-      }
-    ],
-    queryFn: OdinoxService.getMainbookDocuments,
-    enabled: props.isOpen && !!budjet_id && !!year && !!month && !!schet
-  })
+export const OdinoxDocumentsTracker = ({ args, docs, onClose }: OdinoxDocumentsTrackerProps) => {
   return (
-    <DialogTrigger {...props}>
+    <DialogTrigger
+      isOpen={!!args}
+      onOpenChange={onClose}
+    >
       <DialogOverlay>
-        <DialogContent className="w-full max-w-[1800px] h-full max-h-[900px] flex flex-col p-0 gap-0">
-          <div>
+        <DialogContent className="w-full max-w-[1800px] h-full max-h-[900px] flex flex-col p-0 gap-0 overflow-hidden">
+          <div className="w-full flex flex-col">
             <DialogHeader className="p-5">
               <DialogTitle>
-                <Trans>documents</Trans>
+                <Trans ns="app">documents</Trans>
               </DialogTitle>
             </DialogHeader>
-            <div className="flex-1">
+            <div className="w-full max-w-[1800px] flex-1 overflow-x-auto scrollbar">
               <GenericTable
-                data={documents?.data ?? []}
-                columnDefs={columns}
-                footer={
-                  <FooterRow>
-                    <FooterCell
-                      title={t('total')}
-                      colSpan={6}
-                    />
-                    <FooterCell
-                      content={formatNumber(documents?.meta?.summa ?? 0)}
-                      colSpan={1}
-                    />
-                  </FooterRow>
-                }
+                data={docs ?? []}
+                columnDefs={RasxodDocumentColumns}
+                style={{ width: 2000 }}
               />
             </div>
           </div>
@@ -93,46 +52,45 @@ export const MainbookDocumentsTracker = ({
   )
 }
 
-const columns: ColumnDef<MainbookDocumentInfo>[] = [
+export const RasxodDocumentColumns: ColumnDef<OdinoxRasxod>[] = [
   {
     key: 'id',
+    renderCell: IDCell,
     width: 160,
-    minWidth: 160,
-    renderCell: IDCell
+    minWidth: 160
   },
   {
+    fit: true,
     minWidth: 200,
     key: 'doc_num'
   },
   {
+    fit: true,
     minWidth: 200,
     key: 'doc_date',
     renderCell: (row) => formatLocaleDate(row.doc_date)
   },
   {
-    minWidth: 100,
-    key: 'debet_schet',
-    header: 'debet'
-  },
-  {
-    minWidth: 100,
-    key: 'kredit_schet',
-    header: 'kredit'
-  },
-  {
-    minWidth: 200,
+    minWidth: 400,
     numeric: true,
     key: 'summa',
-    renderCell: SummaCell
+    renderCell: (row) => (
+      <div className="font-bold">
+        <SummaCell summa={row.summa} />
+      </div>
+    )
   },
   {
-    fill: true,
-    minWidth: 350,
-    key: 'opisanie'
+    width: 200,
+    key: 'schet'
   },
   {
-    minWidth: 300,
+    width: 300,
+    key: 'sub_schet',
+    header: 'subschet'
+  },
+  {
     key: 'type',
-    renderCell: (row) => <ProvodkaBadge type={row.type as ProvodkaType} />
+    renderCell: (row) => <ProvodkaBadge type={row.type} />
   }
 ]

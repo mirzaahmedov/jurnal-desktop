@@ -5,7 +5,7 @@ export const OdinoxQueryKeys = {
   getById: 'odinox/id',
   getCheckSaldo: 'odinox/check-saldo',
   getUniqueSchets: 'odinox/unique-schets',
-  getMainbookDocuments: 'odinox/docs',
+  getDocs: 'odinox/docs',
   delete: 'odinox/delete',
   clean: 'odinox/clean',
   update: 'odinox/update'

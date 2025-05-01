@@ -11,7 +11,7 @@ import {
 import { cn } from '@/common/lib/utils'
 
 export interface OdinoxTableProps
-  extends Omit<EditableTableProps<OdinoxFormValues, 'childs'>, 'columnDefs'> {
+  extends Omit<EditableTableProps<OdinoxFormValues, 'rows'>, 'columnDefs'> {
   columns: EditableColumnDef<OdinoxTableRow>[]
 }
 // fix readonly if there is an issue

@@ -302,7 +302,6 @@ const RealCostDetailsPage = () => {
                 methods={tableMethods}
                 itogo={itogo}
                 onCellDoubleClick={({ row, type }) => {
-                  console.log(row, type)
                   if (row.smeta_id) {
                     if (type === DocType.MonthSumma || type === DocType.YearSumma) {
                       getDocs({

@@ -1,6 +1,7 @@
 import type { EditableTableMethods } from '@/common/components/editable-table'
+import type { OdinoxDocument } from '@/common/models'
 
-import { type KeyboardEvent, useEffect, useMemo, useRef } from 'react'
+import { type KeyboardEvent, useEffect, useMemo, useRef, useState } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
@@ -18,16 +19,12 @@ import { formatDate } from '@/common/lib/date'
 import { DetailsView } from '@/common/views'
 
 import { OdinoxQueryKeys } from '../config'
-import { OdinoxService } from '../service'
+import { type GetDocsArgs, OdinoxService } from '../service'
 import { defaultValues } from './config'
+import { OdinoxDocumentsTracker } from './documents-tracker'
 import { OdinoxTable } from './odinox-table'
 import { OdinoxProvodkaColumns } from './provodki'
-import {
-  getOdinoxColumns,
-  transformGetByIdData,
-  transformOdinoxAutoFillData,
-  transformOdinoxAutoFillDataToSave
-} from './utils'
+import { getOdinoxColumns, transformGetByIdData, transformOdinoxAutoFillData } from './utils'
 
 const OdinoxDetailsPage = () => {
   const { id } = useParams()
@@ -39,8 +36,12 @@ const OdinoxDetailsPage = () => {
   const queryClient = useQueryClient()
   const setLayout = useLayout()
 
-  const { t } = useTranslation(['app'])
+  const [selected, setSelected] = useState<{
+    docs: OdinoxDocument[]
+    args: GetDocsArgs
+  }>()
 
+  const { t } = useTranslation(['app'])
   const { budjet_id, main_schet_id } = useRequisitesStore()
 
   const form = useForm({
@@ -79,10 +80,25 @@ const OdinoxDetailsPage = () => {
     mutationKey: [OdinoxQueryKeys.getAutofill],
     mutationFn: OdinoxService.getAutofillData,
     onSuccess: (res) => {
-      form.setValue('childs', transformOdinoxAutoFillData(res.data ?? []))
+      form.setValue('childs', res.data ?? [])
+      form.setValue('rows', transformOdinoxAutoFillData(res.data ?? []))
     },
     onError: () => {
       form.setValue('childs', [])
+      form.setValue('rows', [])
+    }
+  })
+  const { mutate: getDocs } = useMutation({
+    mutationKey: [OdinoxQueryKeys.getDocs],
+    mutationFn: OdinoxService.getDocs,
+    onSuccess: (res, args) => {
+      setSelected({
+        docs: Array.isArray(res.data) ? res.data : [],
+        args
+      })
+    },
+    onError: () => {
+      setSelected(undefined)
     }
   })
 
@@ -119,7 +135,8 @@ const OdinoxDetailsPage = () => {
       form.reset({
         month: odinox.data.month,
         year: odinox.data.year,
-        childs: transformGetByIdData(odinox.data.childs)
+        rows: transformGetByIdData(odinox.data.childs),
+        childs: odinox.data.childs
       })
     }
   }, [form, odinox, id])
@@ -152,26 +169,18 @@ const OdinoxDetailsPage = () => {
   )
 
   const onSubmit = form.handleSubmit((values) => {
-    if (!types?.data) {
-      return
-    }
-
-    values.childs.pop()
-
-    const payload = transformOdinoxAutoFillDataToSave(types?.data ?? [], values)
-
     if (id === 'create') {
       createOdinox({
         month: values.month,
         year: values.year,
-        childs: payload
+        childs: values.childs
       })
     } else {
       updateOdinox({
         id: Number(id),
         month: values.month,
         year: values.year,
-        childs: payload
+        childs: values.childs
       })
     }
   })
@@ -183,7 +192,7 @@ const OdinoxDetailsPage = () => {
 
       const value = e.currentTarget.value
       if (value.length > 0) {
-        const rows = form.getValues('childs')
+        const rows = form.getValues('rows')
         const index = rows.findIndex((row) =>
           row.smeta_number?.toLowerCase()?.includes(value?.toLowerCase())
         )
@@ -191,20 +200,6 @@ const OdinoxDetailsPage = () => {
       }
     }
   }
-
-  // const handleCellDoubleClick = useCallback<CellEventHandler<OdinoxFormValues, 'childs'>>(
-  //   ({ column, row }) => {
-  //     if (column.key === 'smeta_name' || column.key === 'smeta_number') {
-  //       return
-  //     }
-
-  //     setActiveCell({
-  //       type: column.key as string,
-  //       smeta_id: row.smeta_id
-  //     })
-  //   },
-  //   []
-  // )
 
   return (
     <DetailsView className="h-full">
@@ -261,7 +256,18 @@ const OdinoxDetailsPage = () => {
                 columns={columns}
                 methods={tableMethods}
                 form={form}
-                name="childs"
+                name="rows"
+                onCellDoubleClick={({ row }) => {
+                  console.log(row)
+                  getDocs({
+                    month: form.getValues('month'),
+                    year: form.getValues('year'),
+                    need_data: form.getValues('childs'),
+                    smeta_id: row.smeta_id,
+                    main_schet_id: main_schet_id!,
+                    sort_order: row.sort_order
+                  })
+                }}
               />
             </div>
           </div>
@@ -276,22 +282,11 @@ const OdinoxDetailsPage = () => {
           </DetailsView.Footer>
         </form>
       </DetailsView.Content>
-
-      {/* <MainbookDocumentsTracker
-        isOpen={!!activeCell}
-        onOpenChange={(open) => {
-          if (!open) {
-            setActiveCell(undefined)
-          }
-        }}
-        budjet_id={budjet_id!}
-        main_schet_id={main_schet_id!}
-        month={month}
-        year={year}
-        type_id={activeCell?.type_id}
-        schet={activeCell?.schet}
-        prixod={activeCell?.prixod}
-      /> */}
+      <OdinoxDocumentsTracker
+        docs={selected?.docs ?? []}
+        args={selected?.args}
+        onClose={() => setSelected(undefined)}
+      />
     </DetailsView>
   )
 }

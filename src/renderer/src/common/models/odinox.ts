@@ -1,3 +1,4 @@
+import type { ProvodkaType } from './common'
 import type { ReportStatus } from './reports'
 
 export interface Odinox {
@@ -47,6 +48,17 @@ export interface OdinoxDocumentInfo {
   budjet_id: number
   type: string
 }
+
+export interface OdinoxRasxod {
+  id: number
+  doc_num: string
+  doc_date: string
+  sub_schet: string
+  summa: number
+  type: ProvodkaType
+}
+
+export type OdinoxDocument = OdinoxRasxod
 
 export interface AdminOdinox {
   id: number

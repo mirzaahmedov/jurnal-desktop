@@ -124,7 +124,7 @@ export const transformOdinoxAutoFillDataToSave = (
     payload.push({
       type_id: type.id,
       name: type.name,
-      sub_childs: values.childs.map((row) => {
+      sub_childs: values.rows.map((row) => {
         return {
           smeta_id: row.smeta_id,
           smeta_name: row.smeta_name,
