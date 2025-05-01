@@ -469,11 +469,11 @@ export const routes: RouteObject[] = [
             element: <Jurnal7RasxodDetailsPage />
           },
           {
-            path: 'internal-transfer',
+            path: 'internal',
             element: <Jurnal7InternalTransferPage />
           },
           {
-            path: 'internal-transfer/:id',
+            path: 'internal/:id',
             element: <Jurnal7InternalTransferDetailsPage />
           },
           {

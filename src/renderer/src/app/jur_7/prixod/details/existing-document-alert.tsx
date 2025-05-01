@@ -122,7 +122,7 @@ export const getDocumentUrl = (type: 'prixod' | 'internal' | 'rasxod', id: numbe
     case 'rasxod':
       return `/journal-7/rasxod/${id}`
     case 'internal':
-      return `/journal-7/internal-transfer/${id}`
+      return `/journal-7/internal/${id}`
     default:
       return undefined
   }

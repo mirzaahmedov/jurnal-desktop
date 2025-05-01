@@ -26,7 +26,7 @@ const InternalDetailsPage = () => {
         },
         {
           title: t('pages.internal-docs'),
-          path: '/journal-7/internal-transfer'
+          path: '/journal-7/internal'
         }
       ],
       enableSaldo: true,

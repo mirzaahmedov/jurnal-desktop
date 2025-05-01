@@ -69,7 +69,7 @@ export const ErrorAlert = ({ error, ...props }: ErrorAlertProps) => {
               if (error.document?.type === 'rasxod') {
                 navigate(`/journal-7/rasxod/${error.document.id}`)
               } else {
-                navigate(`/journal-7/internal-transfer/${error.document.id}`)
+                navigate(`/journal-7/internal/${error.document.id}`)
               }
             }}
           >
