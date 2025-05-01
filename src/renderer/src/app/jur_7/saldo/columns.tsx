@@ -9,7 +9,7 @@ import { IDCell } from '@/common/components/table/renderers/id'
 import { Badge } from '@/common/components/ui/badge'
 import { formatLocaleDate, formatNumber } from '@/common/lib/format'
 
-export const ostatokProductColumns: ColumnDef<SaldoProduct>[] = [
+export const WarehouseSaldoProductColumns: ColumnDef<SaldoProduct>[] = [
   {
     key: 'id',
     renderCell: IDCell,
@@ -131,25 +131,25 @@ export const ostatokProductColumns: ColumnDef<SaldoProduct>[] = [
     numeric: true,
     key: 'internal.prixod.kol',
     header: 'Приход Кол.',
-    renderCell: (row) => row.internal?.kol_prixod
+    renderCell: (row) => row.internal?.prixod_kol
   },
   {
     numeric: true,
     key: 'internal.prixod.summa',
     header: 'Приход Сумма',
-    renderCell: (row) => formatNumber(row.internal?.summa_prixod)
+    renderCell: (row) => formatNumber(row.internal?.prixod_summa)
   },
   {
     numeric: true,
     key: 'internal.rasxod.kol',
     header: 'Расход Кол.',
-    renderCell: (row) => row.internal?.kol_rasxod
+    renderCell: (row) => row.internal?.rasxod_kol
   },
   {
     numeric: true,
     key: 'internal.rasxod.summa',
     header: 'Расход Сумма',
-    renderCell: (row) => formatNumber(row.internal?.summa_rasxod)
+    renderCell: (row) => formatNumber(row.internal?.rasxod_summa)
   },
   {
     numeric: true,

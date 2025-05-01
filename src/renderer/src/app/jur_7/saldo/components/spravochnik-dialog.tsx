@@ -22,7 +22,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/common/components/ui
 import { useRequisitesStore } from '@/common/features/requisites'
 import { usePagination } from '@/common/hooks'
 
-import { ostatokProductColumns } from '../columns'
+import { WarehouseSaldoProductColumns } from '../columns'
 import { SaldoQueryKeys } from '../config'
 import { MaterialWarehouseSaldoProductService } from '../service'
 
@@ -31,20 +31,20 @@ enum TabOption {
   SELECTED = 'SELECTED'
 }
 
-export interface OstatokSpravochnikDialogProps extends DialogProps {
+export interface SaldoProductSpravochnikDialogProps extends DialogProps {
   responsible_id: number
   to: string
   disabledIds: number[]
   onSelect: (selected: SaldoProduct[]) => void
 }
-export const OstatokSpravochnikDialog = ({
+export const SaldoProductSpravochnikDialog = ({
   open,
   onOpenChange,
   to,
   responsible_id,
   disabledIds,
   onSelect
-}: OstatokSpravochnikDialogProps) => {
+}: SaldoProductSpravochnikDialogProps) => {
   const pagination = usePagination()
   const budjet_id = useRequisitesStore((store) => store.budjet_id)
 
@@ -54,7 +54,7 @@ export const OstatokSpravochnikDialog = ({
 
   const { t } = useTranslation()
 
-  const { data: ostatok, isFetching } = useQuery({
+  const { data: products, isFetching } = useQuery({
     queryKey: [
       SaldoQueryKeys.getAll,
       {
@@ -118,7 +118,7 @@ export const OstatokSpravochnikDialog = ({
             {isFetching ? <LoadingOverlay /> : null}
             <div className="flex-1 overflow-auto scrollbar">
               <GenericTable
-                columnDefs={ostatokProductColumns}
+                columnDefs={WarehouseSaldoProductColumns}
                 data={selectedRows ?? []}
                 getRowId={(row) => row.product_id}
                 onDelete={(organization) => {
@@ -141,8 +141,8 @@ export const OstatokSpravochnikDialog = ({
             <GenericTable
               selectedIds={selectedIds}
               disabledIds={disabledIds}
-              data={ostatok?.data ?? []}
-              columnDefs={ostatokProductColumns}
+              data={products?.data ?? []}
+              columnDefs={WarehouseSaldoProductColumns}
               getRowId={(row) => row.product_id}
               className="w-full"
               onClickRow={(organization) => {
@@ -159,7 +159,8 @@ export const OstatokSpravochnikDialog = ({
         <DialogFooter className="p-0 m-0">
           <div className="w-full p-5 flex items-center justify-between">
             <Pagination
-              pageCount={ostatok?.meta?.pageCount ?? 0}
+              count={products?.meta?.count ?? 0}
+              pageCount={products?.meta?.pageCount ?? 0}
               {...pagination}
             />
 

@@ -21,7 +21,7 @@ import { useToggle } from '@/common/hooks'
 import { formatDate } from '@/common/lib/date'
 import { calcSena, calcSumma } from '@/common/lib/pricing'
 
-import { OstatokSpravochnikDialog } from '../../saldo/components/spravochnik-dialog'
+import { SaldoProductSpravochnikDialog } from '../../saldo/components/spravochnik-dialog'
 import { type InternalFormValues, type InternalProvodkaFormValues, defaultValues } from '../config'
 
 type ProvodkaTableProps = {
@@ -53,7 +53,7 @@ export const ProvodkaTable = ({ form, tabIndex }: ProvodkaTableProps) => {
       }}
       className="w-[2000px]"
     >
-      <OstatokSpravochnikDialog
+      <SaldoProductSpravochnikDialog
         responsible_id={form.watch('kimdan_id')}
         to={form.watch('doc_date')}
         open={spravochnikToggle.isOpen}

@@ -36,7 +36,7 @@ import { ListView } from '@/common/views'
 
 import { IznosQueryKeys } from '../iznos/config'
 import { createResponsibleSpravochnik } from '../responsible/service'
-import { ostatokProductColumns } from './columns'
+import { WarehouseSaldoProductColumns } from './columns'
 import { DeleteExistingDocumentsAlert } from './components/delete-existing-document-alert'
 import { DeleteExistingSaldoAlert } from './components/delete-existing-saldo-alert'
 import { MonthlySaldoTrackerDialog } from './components/monthly-saldo-tracker-dialog'
@@ -362,7 +362,7 @@ const MaterialWarehouseSaldoPage = () => {
       </div>
       <ListView.Content loading={isFetching || isDeleting}>
         <GenericTable
-          columnDefs={ostatokProductColumns}
+          columnDefs={WarehouseSaldoProductColumns}
           data={saldos?.data ?? []}
           getRowId={(row) => row.product_id}
           getRowKey={(row) => row.id}

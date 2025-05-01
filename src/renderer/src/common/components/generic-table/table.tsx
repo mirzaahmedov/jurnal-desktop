@@ -95,19 +95,19 @@ export const GenericTable = <T extends object>(props: GenericTableProps<T>) => {
         className={cn('sticky top-0 z-50 shadow-sm', headerProps?.className)}
       >
         {Array.isArray(columnDefs)
-          ? headerGroups.map((headerGroup, rowIndex) => (
+          ? headerGroups.map((group, groupIndex) => (
               <GenericTableRow
-                key={rowIndex}
+                key={groupIndex}
                 className="hover:bg-slate-100 border-t border-slate-200 bg-slate-100 even:bg-slate-100 even:hover:bg-slate-100"
               >
-                {rowIndex === 0 ? (
+                {groupIndex === 0 ? (
                   <GenericTableHead
                     rowSpan={headerGroups.length}
                     style={{ width: `${String(data.length).length + 1}ch` }}
                   ></GenericTableHead>
                 ) : null}
-                {Array.isArray(headerGroup)
-                  ? headerGroup.map((column) => {
+                {Array.isArray(group)
+                  ? group.map((column) => {
                       const {
                         _colSpan,
                         _rowSpan,
@@ -165,7 +165,7 @@ export const GenericTable = <T extends object>(props: GenericTableProps<T>) => {
                       )
                     })
                   : null}
-                {onDelete || onEdit || actions ? (
+                {(onDelete || onEdit || actions) && groupIndex === 0 ? (
                   <GenericTableHead
                     fit
                     className="text-center sticky right-0 z-10 !bg-inherit border-l"
@@ -175,6 +175,7 @@ export const GenericTable = <T extends object>(props: GenericTableProps<T>) => {
                       minWidth: actionsWidth,
                       maxWidth: actionsWidth
                     }}
+                    rowSpan={headerGroups.length}
                   ></GenericTableHead>
                 ) : null}
               </GenericTableRow>

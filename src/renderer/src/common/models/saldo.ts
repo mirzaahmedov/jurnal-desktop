@@ -13,10 +13,10 @@ export interface SaldoProduct {
   edin: string
   inventar_num: string
   serial_num: string
-  type: SaldoType
   group_id: number
   group_name: string
   group_number: string
+  provodka_debet: string
   responsible_id: number
   fio: string
   iznos: boolean
@@ -30,6 +30,8 @@ export interface SaldoProduct {
   kredit_sub_schet: string
   year: number
   month: number
+  isdeleted: boolean
+  type: string
   prixodData: {
     docNum: string
     docDate: string
@@ -43,19 +45,21 @@ export interface SaldoProduct {
   }
   internal: {
     kol: number
-    kol_rasxod: number
-    kol_prixod: number
     summa: number
-    summa_prixod: number
-    summa_rasxod: number
-    iznos_rasxod: number
-    iznos_prixod: number
     iznos_summa: number
+    sena: number
+    prixod_kol: number
+    rasxod_kol: number
+    prixod_summa: number
+    rasxod_summa: number
+    prixod_iznos_summa: number
+    rasxod_iznos_summa: number
   }
   to: {
     kol: number
     summa: number
     iznos_summa: number
     sena: number
+    month_iznos: number
   }
 }
