@@ -25,7 +25,7 @@ import { ShartnomaColumns } from './columns'
 import { ShartnomaQueryKeys } from './config'
 import { ShartnomaForm } from './details/shartnoma-form'
 
-export const shartnomaService = new CRUDService<Shartnoma, ShartnomaFormValues>({
+export const ContractService = new CRUDService<Shartnoma, ShartnomaFormValues>({
   endpoint: ApiEndpoints.shartnoma
 })
   .use(budjet())
@@ -103,16 +103,16 @@ const ShartnomaSpravochnikDialog = ({
       open={open}
       onOpenChange={onOpenChange}
     >
-      <DialogContent className="max-w-7xl">
+      <DialogContent className="max-w-8xl">
         <DialogHeader>
           <DialogTitle>
             {capitalize(t('create-something', { something: t('shartnoma') }))}
           </DialogTitle>
         </DialogHeader>
-        <div className="px-1 w-full overflow-hidden">
+        <div className="px-1 w-full overflow-hidden overflow-y-auto scrollbar">
           <ShartnomaForm
             dialog={false}
-            organization={organization}
+            organId={organization}
             original={original}
             onSuccess={() => onOpenChange?.(false)}
           />
@@ -155,7 +155,7 @@ export const createShartnomaSpravochnik = (config: Partial<SpravochnikHookOption
       title: t('shartnoma'),
       endpoint: ApiEndpoints.shartnoma,
       columnDefs: ShartnomaColumns,
-      service: shartnomaService,
+      service: ContractService,
       queryKeys: ShartnomaQueryKeys,
       Dialog: ShartnomaSpravochnikDialog,
       CustomTable: ShartnomaSpravochnikTable,

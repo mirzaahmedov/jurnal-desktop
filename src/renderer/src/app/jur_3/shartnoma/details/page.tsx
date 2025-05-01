@@ -4,7 +4,6 @@ import { useQuery } from '@tanstack/react-query'
 import { DownloadIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { type Location, useLocation, useNavigate, useParams } from 'react-router-dom'
-import { toast } from 'react-toastify'
 
 import { MainSchetQueryKeys, MainSchetService } from '@/app/region-spravochnik/main-schet'
 import { OrganizationQueryKeys, OrganizationService } from '@/app/region-spravochnik/organization'
@@ -17,7 +16,7 @@ import { DetailsView } from '@/common/views'
 
 import { type LocationState, ShartnomaQueryKeys } from '../config'
 import { ShartnomaSmetaGrafikGeneratePDFDocumentDialog } from '../report/dialog/ShartnomaGrafikDialog'
-import { shartnomaService } from '../service'
+import { ContractService } from '../service'
 import { ShartnomaForm } from './shartnoma-form'
 
 const ShartnomaDetailsPage = () => {
@@ -30,7 +29,7 @@ const ShartnomaDetailsPage = () => {
   const location = useLocation() as Location<LocationState>
 
   const original = location.state?.original
-  const orgId = location.state?.orgId
+  const organId = location.state?.organId
 
   const setLayout = useLayout()
 
@@ -46,7 +45,7 @@ const ShartnomaDetailsPage = () => {
         main_schet_id
       }
     ],
-    queryFn: shartnomaService.getById,
+    queryFn: ContractService.getById,
     enabled: id !== 'create'
   })
   const { data: main_schet } = useQuery({
@@ -58,13 +57,6 @@ const ShartnomaDetailsPage = () => {
     queryFn: OrganizationService.getById,
     enabled: !!shartnoma?.data?.spravochnik_organization_id
   })
-
-  useEffect(() => {
-    if (!orgId) {
-      toast.error('Выберите организацию')
-      navigate(`/organization/shartnoma`)
-    }
-  }, [orgId])
 
   useEffect(() => {
     setLayout({
@@ -89,7 +81,7 @@ const ShartnomaDetailsPage = () => {
       <DetailsView.Content loading={isFetching}>
         <ShartnomaForm
           dialog={false}
-          organization={orgId}
+          organId={organId}
           selected={shartnoma?.data}
           original={original}
           onSuccess={() => {

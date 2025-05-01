@@ -24,17 +24,16 @@ import { ListView } from '@/common/views'
 
 import { ShartnomaColumns } from './columns'
 import { ShartnomaQueryKeys } from './config'
-import { shartnomaService } from './service'
+import { ContractService } from './service'
 
 const ShartnomaPage = () => {
-  const [organId, setOrganId] = useLocationState<undefined | number>('org_id')
-
   const { confirm } = useConfirm()
   const { sorting, handleSort, getColumnSorted } = useTableSort()
   const { budjet_id, main_schet_id } = useRequisitesStore()
   const { t } = useTranslation(['app'])
 
   const [search] = useSearchFilter()
+  const [organId, setOrganId] = useLocationState<undefined | number>('org_id')
 
   const navigate = useNavigate()
   const pagination = usePagination()
@@ -65,11 +64,11 @@ const ShartnomaPage = () => {
         ...pagination
       }
     ],
-    queryFn: shartnomaService.getAll
+    queryFn: ContractService.getAll
   })
-  const { mutate: deleteShartnoma, isPending } = useMutation({
+  const { mutate: deleteContract, isPending } = useMutation({
     mutationKey: [ShartnomaQueryKeys.delete],
-    mutationFn: shartnomaService.delete,
+    mutationFn: ContractService.delete,
     onSuccess(res) {
       toast.success(res?.message)
       queryClient.invalidateQueries({
@@ -81,14 +80,14 @@ const ShartnomaPage = () => {
   const handleClickEdit = (row: Shartnoma) => {
     navigate(`${row.id}`, {
       state: {
-        orgId: row.spravochnik_organization_id
+        organId: row.spravochnik_organization_id
       } satisfies LocationState
     })
   }
   const handleClickDelete = (row: Shartnoma) => {
     confirm({
       onConfirm() {
-        deleteShartnoma(row.id)
+        deleteContract(row.id)
       }
     })
   }
@@ -97,15 +96,13 @@ const ShartnomaPage = () => {
     setLayout({
       title: t('pages.shartnoma'),
       content: SearchFilterDebounced,
-      onCreate: organId
-        ? () => {
-            navigate('create', {
-              state: {
-                orgId: organId
-              } satisfies LocationState
-            })
-          }
-        : undefined,
+      onCreate: () => {
+        navigate('create', {
+          state: {
+            organId: organId
+          } satisfies LocationState
+        })
+      },
       breadcrumbs: [
         {
           title: t('pages.organization')
@@ -152,7 +149,7 @@ const ShartnomaPage = () => {
                 navigate('create', {
                   state: {
                     original: row,
-                    orgId: row.spravochnik_organization_id
+                    organId: row.spravochnik_organization_id
                   } satisfies LocationState
                 })
               }}

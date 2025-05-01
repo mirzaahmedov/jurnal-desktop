@@ -1,11 +1,11 @@
 import type { ColumnDef } from '@/common/components'
-import type { Jur7Monitoring } from '@/common/models'
+import type { WarehouseMonitoring } from '@/common/models'
 
 import { IDCell } from '@/common/components/table/renderers/id'
 import { SummaCell } from '@/common/components/table/renderers/summa'
 import { formatLocaleDate } from '@/common/lib/format'
 
-export const columns: ColumnDef<Jur7Monitoring>[] = [
+export const columns: ColumnDef<WarehouseMonitoring>[] = [
   {
     sort: true,
     key: 'id',

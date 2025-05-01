@@ -230,14 +230,14 @@ const MaterialWarehouseSaldoPage = () => {
           <div className="flex items-center gap-5">
             <ChooseSpravochnik
               spravochnik={groupSpravochnik}
-              placeholder={capitalize(t('choose', { what: t('group') }))}
+              placeholder={t('group')}
               getName={(selected) => `${selected.group_number ?? ''} - ${selected.name}`}
               getElements={(selected) => [{ name: t('name'), value: selected.name }]}
             />
 
             <ChooseSpravochnik
               spravochnik={responsibleSpravochnik}
-              placeholder={capitalize(t('choose', { what: t('responsible') }))}
+              placeholder={t('responsible')}
               getName={(selected) => selected.fio}
               getElements={(selected) => [
                 { name: t('fio'), value: selected.fio },

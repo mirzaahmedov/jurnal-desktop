@@ -1,7 +1,19 @@
-import type { Jur7Monitoring } from '@/common/models'
+import type { ResponseMeta, WarehouseMonitoring } from '@/common/models'
 
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 
-export const Jur7MonitorService = new CRUDService<Jur7Monitoring>({
+interface MonitoringMeta extends ResponseMeta {
+  page_prixod_sum: number
+  page_rasxod_sum: number
+  prixod_sum: number
+  rasxod_sum: number
+}
+
+export const WarehouseMonitorService = new CRUDService<
+  WarehouseMonitoring,
+  never,
+  never,
+  MonitoringMeta
+>({
   endpoint: ApiEndpoints.jur7_monitoring
 })

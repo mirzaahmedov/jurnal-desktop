@@ -35,6 +35,6 @@ export const defaultValues: ShartnomaFormValues = {
 }
 
 export interface LocationState {
-  orgId: number
+  organId?: number
   original?: Shartnoma
 }

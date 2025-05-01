@@ -88,10 +88,16 @@ export interface KassaPrixod {
   organ_account_id: number
   organ_gazna_id: number
   type: string
+  organization_name: string | null
+  organization_inn: string | null
   spravochnik_podotchet_litso_name: string | null
   spravochnik_podotchet_litso_rayon: string | null
   zarplata_fio: string | null
   childs: KassaPrixodProvodka[]
+  provodki_array: Array<{
+    provodki_schet: string
+    provodki_sub_schet: string
+  }>
   podotchet: any
 }
 

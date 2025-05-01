@@ -1,6 +1,7 @@
 import type { ColumnDef } from '@/common/components'
 import type { KassaPrixod } from '@/common/models'
 
+import { HoverInfoCell } from '@/common/components/table/renderers'
 import { IDCell } from '@/common/components/table/renderers/id'
 import { ProvodkaCell } from '@/common/components/table/renderers/provodka-operatsii'
 import { SummaCell } from '@/common/components/table/renderers/summa'
@@ -28,11 +29,6 @@ export const columns: ColumnDef<KassaPrixod>[] = [
     renderCell: (row) => formatLocaleDate(row.doc_date)
   },
   {
-    fill: true,
-    key: 'opisanie',
-    minWidth: 350
-  },
-  {
     numeric: true,
     key: 'summa',
     minWidth: 200,
@@ -48,5 +44,22 @@ export const columns: ColumnDef<KassaPrixod>[] = [
     minWidth: 350,
     key: 'spravochnik_podotchet_litso_name',
     header: 'podotchet-litso'
+  },
+  {
+    fill: true,
+    minWidth: 350,
+    key: 'organization_name',
+    header: 'organization',
+    renderCell: (row) => (
+      <HoverInfoCell
+        title={row.organization_name}
+        secondaryText={row.organization_inn}
+      />
+    )
+  },
+  {
+    fill: true,
+    key: 'opisanie',
+    minWidth: 350
   }
 ]

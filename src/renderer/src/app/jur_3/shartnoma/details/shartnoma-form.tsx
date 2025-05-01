@@ -8,17 +8,24 @@ import { useForm, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 
+import { createOrganizationSpravochnik } from '@/app/region-spravochnik/organization'
 import { Button } from '@/common/components/ui/button'
 import { Form } from '@/common/components/ui/form'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/common/components/ui/tabs'
 import { DocumentType } from '@/common/features/doc-num'
 import { useSnippets } from '@/common/features/snippents/use-snippets'
+import { useSpravochnik } from '@/common/features/spravochnik'
 import { parseDate } from '@/common/lib/date'
 import { cn } from '@/common/lib/utils'
-import { DocumentFields, OpisanieFields, SummaFields } from '@/common/widget/form'
+import {
+  DocumentFields,
+  OpisanieFields,
+  OrganizationFields,
+  SummaFields
+} from '@/common/widget/form'
 
 import { ShartnomaQueryKeys, defaultValues } from '../config'
-import { ShartnomaFormSchema, shartnomaService } from '../service'
+import { ContractService, ShartnomaFormSchema } from '../service'
 import { PudratchiFields } from './pudratchi'
 import { ShartnomaGrafikForm } from './shartnoma-grafik-form'
 
@@ -30,7 +37,7 @@ enum TabOption {
 interface ShartnomaFormProps {
   loading?: boolean
   dialog?: boolean
-  organization: number
+  organId?: number
   original?: Shartnoma
   selected?: Shartnoma | undefined
   onSuccess?: () => void
@@ -38,7 +45,7 @@ interface ShartnomaFormProps {
 export const ShartnomaForm = ({
   loading = false,
   dialog = true,
-  organization,
+  organId,
   original,
   selected,
   onSuccess
@@ -62,9 +69,18 @@ export const ShartnomaForm = ({
     }
   })
 
-  const { mutate: createShartnoma, isPending: isCreating } = useMutation({
+  const organSpravochnik = useSpravochnik(
+    createOrganizationSpravochnik({
+      value: form.watch('spravochnik_organization_id'),
+      onChange: (id) => {
+        form.setValue('spravochnik_organization_id', id ?? 0, { shouldValidate: true })
+      }
+    })
+  )
+
+  const { mutate: createContract, isPending: isCreating } = useMutation({
     mutationKey: [ShartnomaQueryKeys.create],
-    mutationFn: shartnomaService.create,
+    mutationFn: ContractService.create,
     onSuccess(res) {
       toast.success(res?.message)
       form.reset(defaultValues)
@@ -79,9 +95,9 @@ export const ShartnomaForm = ({
     }
   })
 
-  const { mutate: updateShartnoma, isPending: isUpdating } = useMutation({
+  const { mutate: updateContract, isPending: isUpdating } = useMutation({
     mutationKey: [ShartnomaQueryKeys.update, id],
-    mutationFn: shartnomaService.update,
+    mutationFn: ContractService.update,
     onSuccess(res) {
       toast.success(res?.message)
 
@@ -107,7 +123,7 @@ export const ShartnomaForm = ({
       grafiks
     }) => {
       if (selected) {
-        updateShartnoma({
+        updateContract({
           id: Number(id),
           doc_date,
           doc_num,
@@ -120,7 +136,7 @@ export const ShartnomaForm = ({
         return
       }
 
-      createShartnoma({
+      createContract({
         doc_date,
         doc_num,
         spravochnik_organization_id,
@@ -147,14 +163,6 @@ export const ShartnomaForm = ({
     form.reset(selected)
   }, [form, original, selected, id])
 
-  useEffect(() => {
-    if (organization) {
-      form.setValue('spravochnik_organization_id', organization)
-    } else {
-      form.setValue('spravochnik_organization_id', 0)
-    }
-  }, [form, organization])
-
   const errors = form.formState.errors
   useEffect(() => {
     if (errors?.grafiks) {
@@ -163,6 +171,11 @@ export const ShartnomaForm = ({
       setTabValue(TabOption.DETAILS)
     }
   }, [errors])
+  useEffect(() => {
+    if (organId) {
+      form.setValue('spravochnik_organization_id', organId, { shouldValidate: true })
+    }
+  }, [organId])
 
   const grafiks = useWatch({
     control: form.control,
@@ -188,14 +201,13 @@ export const ShartnomaForm = ({
     )
   }, [grafiks])
 
-  console.log({ errors: form.formState.errors })
-
   return (
     <Form {...form}>
       <form onSubmit={onSubmit}>
         <Tabs
           value={tabValue}
           onValueChange={(value) => setTabValue(value as TabOption)}
+          className="divide-y"
         >
           <div className={cn('p-5', dialog && 'px-0')}>
             <TabsList>
@@ -204,24 +216,31 @@ export const ShartnomaForm = ({
             </TabsList>
           </div>
           <TabsContent value={TabOption.DETAILS}>
-            <div>
-              <div className="flex">
-                <DocumentFields
-                  tabIndex={1}
-                  dialog={dialog}
-                  form={form}
-                  documentType={DocumentType.CONTRACT}
-                  autoGenerate={!selected}
-                />
-              </div>
+            <div className="divide-y">
+              <div className={cn('grid grid-cols-2 gap-10 divide-x', dialog && 'grid-cols-1')}>
+                <div>
+                  <div className="flex">
+                    <DocumentFields
+                      tabIndex={1}
+                      dialog={dialog}
+                      form={form}
+                      documentType={DocumentType.CONTRACT}
+                      autoGenerate={!selected}
+                    />
+                  </div>
 
-              <div className={cn('grid grid-cols-2 gap-10', dialog && 'grid-cols-1 gap-1')}>
-                <SummaFields
-                  dialog={dialog}
-                  data={{
-                    summa: itogo
-                  }}
-                />
+                  <div>
+                    <SummaFields
+                      dialog={dialog}
+                      data={{
+                        summa: itogo
+                      }}
+                    />
+                  </div>
+                </div>
+                <div>
+                  <OrganizationFields spravochnik={organSpravochnik} />
+                </div>
               </div>
 
               <div className={cn('p-5', dialog && 'p-0 pt-5')}>
@@ -234,7 +253,7 @@ export const ShartnomaForm = ({
                 />
               </div>
 
-              <div className={cn('grid grid-cols-2 gap-10', dialog && 'gap-20')}>
+              <div className={cn('grid grid-cols-2 gap-10 border-b-0', dialog && 'gap-20')}>
                 <PudratchiFields
                   form={form}
                   tabIndex={3}

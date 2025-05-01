@@ -85,7 +85,7 @@ export const ShartnomaColumns: ColumnDef<Shartnoma>[] = [
   },
   {
     fill: true,
-    minWidth: 350,
+    minWidth: 200,
     key: 'grafiks',
     header: 'smeta',
     renderCell: ShartnomaSmetaCell

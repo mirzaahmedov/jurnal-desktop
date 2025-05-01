@@ -10,7 +10,7 @@ import { DuplicateSchetsGuard } from '@/common/features/requisites/guards/duplic
 
 import DashboardPage from './dashboard/page'
 import HomePage from './home/page'
-import { Jur7MonitorPage } from './jur_7/monitor/page'
+import { WarehouseMonitorPage } from './jur_7/monitor/page'
 import PrixodSchetPage from './jur_8/schet/page'
 import { SmetaGrafikBatchCreatePage } from './region-spravochnik/smeta-grafik/create-multiple/page'
 import SigninPage from './sign-in'
@@ -442,7 +442,7 @@ export const routes: RouteObject[] = [
         children: [
           {
             path: 'monitor',
-            element: <Jur7MonitorPage />
+            element: <WarehouseMonitorPage />
           },
           {
             path: 'responsible',

@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
-import { GenericTable, useTableSort } from '@/common/components'
+import { FooterCell, FooterRow, GenericTable, useTableSort } from '@/common/components'
 import { Button } from '@/common/components/ui/button'
 import {
   DropdownMenu,
@@ -24,14 +24,15 @@ import {
 import { useSettingsStore } from '@/common/features/settings'
 import { useDates, usePagination, useToggle } from '@/common/hooks'
 import { useLayout } from '@/common/layout'
-import { type Jur7Monitoring, Jur7MonitoringType } from '@/common/models'
+import { formatNumber } from '@/common/lib/format'
+import { type WarehouseMonitoring, WarehouseMonitoringType } from '@/common/models'
 import { ListView } from '@/common/views'
 
 import { useWarehouseSaldo } from '../saldo/use-saldo'
 import { columns } from './columns'
-import { Jur7MonitorService } from './service'
+import { WarehouseMonitorService } from './service'
 
-export const Jur7MonitorPage = () => {
+export const WarehouseMonitorPage = () => {
   const dates = useDates()
   const pagination = usePagination()
   const navigate = useNavigate()
@@ -60,19 +61,19 @@ export const Jur7MonitorPage = () => {
         main_schet_id
       }
     ],
-    queryFn: Jur7MonitorService.getAll,
+    queryFn: WarehouseMonitorService.getAll,
     enabled: !!budjet_id && !!main_schet_id && !queuedMonths.length
   })
 
-  const handleEdit = (row: Jur7Monitoring) => {
+  const handleEdit = (row: WarehouseMonitoring) => {
     switch (row.type) {
-      case Jur7MonitoringType.prixod:
+      case WarehouseMonitoringType.prixod:
         navigate(`/journal-7/prixod/${row.id}`)
         break
-      case Jur7MonitoringType.rasxod:
+      case WarehouseMonitoringType.rasxod:
         navigate(`/journal-7/rasxod/${row.id}`)
         break
-      case Jur7MonitoringType.internal:
+      case WarehouseMonitoringType.internal:
         navigate(`/journal-7/internal/${row.id}`)
         break
       default:
@@ -166,6 +167,40 @@ export const Jur7MonitorPage = () => {
           getColumnSorted={getColumnSorted}
           onSort={handleSort}
           onEdit={handleEdit}
+          footer={
+            <>
+              <FooterRow>
+                <FooterCell
+                  title={t('total_page')}
+                  colSpan={4}
+                />
+                <FooterCell
+                  content={formatNumber(monitoring?.meta?.page_prixod_sum ?? 0)}
+                  colSpan={1}
+                />
+                <FooterCell
+                  content={formatNumber(monitoring?.meta?.page_rasxod_sum ?? 0)}
+                  colSpan={1}
+                />
+              </FooterRow>
+              {(monitoring?.meta?.pageCount ?? 0) > 1 ? (
+                <FooterRow>
+                  <FooterCell
+                    title={t('total_period')}
+                    colSpan={4}
+                  />
+                  <FooterCell
+                    content={formatNumber(monitoring?.meta?.prixod_sum ?? 0)}
+                    colSpan={1}
+                  />
+                  <FooterCell
+                    content={formatNumber(monitoring?.meta?.rasxod_sum ?? 0)}
+                    colSpan={1}
+                  />
+                </FooterRow>
+              ) : null}
+            </>
+          }
         />
       </ListView.Content>
       <ListView.Footer>

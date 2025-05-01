@@ -54,7 +54,7 @@ export interface Jur7InternalTransfer {
   childs: Jur7Child[]
 }
 
-export interface Jur7Monitoring {
+export interface WarehouseMonitoring {
   id: number
   doc_num: string
   doc_date: string
@@ -72,13 +72,13 @@ export interface Jur7Monitoring {
   kredit_sub_schet: string
   debet_schet: string
   debet_sub_schet: string
-  type: Jur7MonitoringType
+  type: WarehouseMonitoringType
   combined_doc_date: string
   combined_id: number
   combined_doc_num: string
 }
 
-export enum Jur7MonitoringType {
+export enum WarehouseMonitoringType {
   prixod = 'prixod',
   rasxod = 'rasxod',
   internal = 'internal'
