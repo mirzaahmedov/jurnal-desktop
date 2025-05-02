@@ -26,8 +26,6 @@ import { SummaCell } from '@/common/components/table/renderers/summa'
 import { getMonthName } from '@/common/lib/date'
 import { formatLocaleDate, formatNumber } from '@/common/lib/format'
 
-import { OdinoxTableRow } from './interfaces'
-
 export interface OdinoxDocumentsTrackerProps extends Omit<DialogTriggerProps, 'children'> {
   args?: GetDocsArgs
   docs: OdinoxDocument[]
