@@ -34,7 +34,7 @@ const DashboardPage = () => {
   }, [setLayout, t])
 
   return (
-    <div className="p-10 space-y-5">
+    <div className="p-5">
       <div className="flex items-center gap-5 justify-between">
         <DatePicker
           value={date ?? ''}
@@ -55,7 +55,7 @@ const DashboardPage = () => {
             hidden={elem.id !== budjetId}
           >
             <div className="flex flex-col gap-5 py-5">
-              <div className="grid grid-cols-2 gap-10">
+              <div className="grid grid-cols-1 min-[1200px]:grid-cols-2 gap-10">
                 <Kassa
                   mainSchets={mainSchets}
                   date={date}

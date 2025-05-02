@@ -45,7 +45,7 @@ export const Kassa = ({ budjetId, date, mainSchets }: KassaProps) => {
 
     return mainSchets.reduce((config, schet) => {
       config[schet.id] = {
-        label: `${schet.account_number} / ${schet.jur1_schet}`
+        label: `${schet?.main_schet?.account_number} - ${schet?.main_schet?.jur1_schet}`
       }
       return config
     }, {} as ChartConfig)
@@ -98,7 +98,7 @@ export const Kassa = ({ budjetId, date, mainSchets }: KassaProps) => {
                   }}
                 ></span>
                 <span>
-                  {schet.account_number} - {schet.jur1_schet}
+                  {schet.main_schet?.account_number} - {schet.main_schet?.jur1_schet}
                 </span>
               </div>
               <b className="text-lg">{formatNumber(schet.kassa?.summa)}</b>

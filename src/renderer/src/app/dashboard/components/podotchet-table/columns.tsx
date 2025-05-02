@@ -5,19 +5,7 @@ import { t } from 'i18next'
 
 import { formatNumber } from '@/common/lib/format'
 
-export const normalizePodotchetData = (podotchets?: Dashboard.Podotchet[]) =>
-  podotchets?.map((podotchet) => {
-    return {
-      id: podotchet.id,
-      name: podotchet.name,
-      rayon: podotchet.rayon,
-      children: podotchet.budjets[0].main_schets
-    }
-  }) ?? []
-
-export type PodochetTableRow = ReturnType<typeof normalizePodotchetData>[number]
-
-export const podotchetColumns: CollapsibleColumnDef<PodochetTableRow>[] = [
+export const podotchetColumns: CollapsibleColumnDef<Dashboard.Podotchet>[] = [
   {
     key: 'name'
   },
@@ -26,38 +14,32 @@ export const podotchetColumns: CollapsibleColumnDef<PodochetTableRow>[] = [
   },
   {
     numeric: true,
-    key: 'prixod',
+    key: 'summa',
     className: 'w-72',
     renderCell(row) {
       return formatNumber(
-        row?.children?.reduce((total, schet) => {
-          return total + (schet?.podotchet?.prixod_sum ?? 0)
-        }, 0)
-      )
-    }
-  },
-  {
-    numeric: true,
-    key: 'rasxod',
-    className: 'w-72',
-    renderCell(row) {
-      return formatNumber(
-        row?.children?.reduce((total, schet) => {
-          return total + (schet?.podotchet?.rasxod_sum ?? 0)
+        row?.budjets?.[0]?.main_schets.reduce((total, main_schet) => {
+          const summa =
+            main_schet?.jur4_schets?.reduce((total, schet) => {
+              return total + (schet?.podotchet?.summa ?? 0)
+            }, 0) ?? 0
+          return total + summa
         }, 0)
       )
     }
   }
 ]
 
-export const podotchetChildColumns: CollapsibleColumnDef<PodochetTableRow['children'][number]>[] = [
+export const podotchetChildColumns: CollapsibleColumnDef<
+  Dashboard.Podotchet['budjets'][number]['main_schets'][number]
+>[] = [
   {
     key: 'account_number',
     renderCell(row) {
       return (
         <div className="flex flex-col">
           <span className="text-xs">{t('raschet-schet')}</span>
-          <h6 className="font-bold">{row.account_number}</h6>
+          <h6 className="font-bold">{row?.main_schet?.account_number}</h6>
         </div>
       )
     }
@@ -68,16 +50,9 @@ export const podotchetChildColumns: CollapsibleColumnDef<PodochetTableRow['child
     header: 'prixod',
     className: 'w-72',
     renderCell(row) {
-      return formatNumber(row.podotchet.prixod_sum)
-    }
-  },
-  {
-    numeric: true,
-    key: 'podotchet.rasxod',
-    header: 'rasxod',
-    className: 'w-72',
-    renderCell(row) {
-      return formatNumber(row.podotchet.rasxod_sum)
+      return formatNumber(
+        row.jur4_schets.reduce((total, schet) => total + (schet?.podotchet?.summa ?? 0), 0)
+      )
     }
   }
 ]

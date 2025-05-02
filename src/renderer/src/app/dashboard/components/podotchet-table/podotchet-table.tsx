@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 
 import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
@@ -10,7 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/common/components/ui
 
 import { DashboardQueryKeys } from '../../config'
 import { getDashboardPodotchetQuery } from '../../service'
-import { normalizePodotchetData, podotchetChildColumns, podotchetColumns } from './columns'
+import { podotchetChildColumns, podotchetColumns } from './columns'
 
 export interface DashboardPodotchetTableProps {
   date?: string
@@ -37,11 +37,6 @@ export const DashboardPodotchetTable = ({ date, budjet_id }: DashboardPodotchetT
     enabled: !!date && !!budjet_id
   })
 
-  const podotchetData = useMemo(
-    () => normalizePodotchetData(podotchets?.data ?? undefined),
-    [podotchets]
-  )
-
   return (
     <Card>
       <CardHeader>
@@ -52,14 +47,14 @@ export const DashboardPodotchetTable = ({ date, budjet_id }: DashboardPodotchetT
         <CollapsibleTable
           columnDefs={podotchetColumns}
           getRowId={(row) => row.id}
-          data={podotchetData}
+          data={podotchets?.data ?? []}
         >
           {({ row }) => (
             <CollapsibleTable
               displayHeader={false}
               getRowId={(row) => row.id}
               getChildRows={() => []}
-              data={row.children ?? []}
+              data={row.budjets?.[0]?.main_schets ?? []}
               columnDefs={podotchetChildColumns}
             />
           )}
