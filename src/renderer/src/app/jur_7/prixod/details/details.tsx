@@ -359,8 +359,10 @@ const PrixodDetails = ({ id, onSuccess }: PrixodDetailsProps) => {
             <ApplyAllInputs
               onApply={({ schet, sub_schet }) => {
                 form.getValues('childs').forEach((_, index) => {
-                  form.setValue(`childs.${index}.kredit_schet`, schet)
-                  form.setValue(`childs.${index}.kredit_sub_schet`, sub_schet)
+                  form.setValue(`childs.${index}.kredit_schet`, schet, { shouldValidate: true })
+                  form.setValue(`childs.${index}.kredit_sub_schet`, sub_schet, {
+                    shouldValidate: true
+                  })
                 })
               }}
             />

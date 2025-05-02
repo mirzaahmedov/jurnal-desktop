@@ -352,5 +352,10 @@
   "material": "Материальная",
   "zarplata_not_installed": "Зарплата не установлена",
   "apply_to_all_inputs": "Применить ко всем полям",
-  "update_data": "Обновить данные"
+  "update_data": "Обновить данные",
+  "downloads": "Загрузки",
+  "downloaded_files": "Загруженные файлы",
+  "no_downloaded_files": "Нет загруженных файлов",
+  "clear_all": "Очистить всё",
+  "reload": "Перезагрузить"
 }

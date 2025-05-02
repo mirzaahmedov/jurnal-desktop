@@ -1,3 +1,5 @@
+import type { SaveFileArgs, SaveFileResponse } from '@preload/interfaces'
+
 import { electronApp, is, optimizer } from '@electron-toolkit/utils'
 import iconDev from '@resources/icon-dev.png?asset'
 import icon from '@resources/icon.png?asset'
@@ -159,7 +161,7 @@ ipcMain.on('open-dev-tools', (e) => {
 
 ipcMain.handle(
   'save-file',
-  (_, { fileName, fileData }: { fileName: string; fileData: ArrayBuffer }) => {
+  async (_event, { fileName, fileData }: SaveFileArgs): Promise<SaveFileResponse> => {
     const folderPath = path.join(os.homedir(), 'Downloads/E-Moliya')
     const filePath = path.join(folderPath, normalizeFileName(fileName))
 
@@ -171,22 +173,54 @@ ipcMain.handle(
     fs.writeFileSync(filePath, Buffer.from(fileData))
     console.log(`file saved to ${filePath}`)
 
-    shell
-      .openPath(filePath)
-      .catch((err) => {
-        console.error('Failed to open file:', err)
+    try {
+      const result = await shell.openPath(filePath)
+
+      if (result) {
+        console.error('Failed to open file:', result)
         shell.showItemInFolder(filePath)
-      })
-      .then((errorMessage) => {
-        if (errorMessage) {
-          console.error('Failed to open file:', errorMessage)
-          shell.showItemInFolder(filePath)
-        } else {
-          console.log('File opened sucessfully', filePath)
-        }
-      })
+        throw new Error(`Failed to open file: ${result}`)
+      }
+
+      console.log('File opened sucessfully', filePath)
+    } catch (err) {
+      console.error('Failed to open file:', err)
+      shell.showItemInFolder(filePath)
+      throw new Error(`Failed to open file: ${err}`)
+    }
+
+    const stats = fs.statSync(filePath)
+    return {
+      filePath,
+      fileName: path.basename(filePath),
+      fileSize: stats.size,
+      downloadedAt: stats.birthtime
+    }
   }
 )
+
+ipcMain.handle('open-file', async (_event, filePath: string) => {
+  try {
+    const result = await shell.openPath(filePath)
+
+    if (result) {
+      console.error('Failed to open file:', result)
+      shell.showItemInFolder(filePath)
+      throw new Error(`Failed to open file: ${result}`)
+    }
+
+    console.log('File opened sucessfully', filePath)
+  } catch (err) {
+    console.error('Failed to open file:', err)
+    shell.showItemInFolder(filePath)
+    throw new Error(`Failed to open file: ${err}`)
+  }
+})
+
+ipcMain.handle('open-file-in-folder', async (_event, filePath: string) => {
+  shell.showItemInFolder(filePath)
+})
+
 ipcMain.handle('open-zarplata', () => {
   return shell.openPath(zarplataPath)
 })

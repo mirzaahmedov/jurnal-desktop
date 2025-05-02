@@ -19,6 +19,9 @@
       "@main/*": [
         "src/main/*"
       ],
+      "@preload/*": [
+        "src/preload/*"
+      ],
       "@public/*": [
         "src/renderer/public/*"
       ],

@@ -6,7 +6,15 @@
     "types": ["electron-vite/node"],
     "baseUrl": ".",
     "paths": {
-      "@resources/*": ["resources/*"],
+      "@resources/*": [
+        "resources/*"
+      ],
+      "@preload/*": [
+        "src/preload/*"
+      ],
+      "@renderer/*": [
+        "src/renderer/*"
+      ],
     }
   }
 }

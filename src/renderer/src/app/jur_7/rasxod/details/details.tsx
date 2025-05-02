@@ -263,7 +263,7 @@ const RasxodDetails = ({ id, onSuccess }: RasxodDetailsProps) => {
           <ApplyAllInputs
             onApply={({ schet }) => {
               form.getValues('childs').forEach((_, index) => {
-                form.setValue(`childs.${index}.debet_schet`, schet)
+                form.setValue(`childs.${index}.debet_schet`, schet, { shouldValidate: true })
               })
             }}
           />

@@ -1,7 +1,10 @@
+import type { SaveFileArgs, SaveFileResponse } from './interfaces'
 import type { ElectronAPI } from '@electron-toolkit/preload'
 
 interface Downloader {
-  saveFile(fileData: ArrayBuffer, fileName: string): string
+  saveFile(args: SaveFileArgs): Promise<SaveFileResponse>
+  openFile(filePath: string): Promise<void>
+  openFileInFolder(filePath: string): Promise<void>
 }
 declare global {
   interface Window {

@@ -8,6 +8,7 @@ import { useSettingsStore } from '@/common/features/settings'
 import { useToggle } from '@/common/hooks'
 import { http } from '@/common/lib/http'
 
+import { useDownloadsManagerStore } from '../downloads-manager/store'
 import { SelectReportTitleAlert } from './select-report-title-alert'
 
 export type DownloadFileProps = ButtonProps & {
@@ -26,6 +27,8 @@ export const DownloadFile = ({
   const alertToggle = useToggle()
   const report_title_id = useSettingsStore((store) => store.report_title_id)
 
+  const addFile = useDownloadsManagerStore((store) => store.addFile)
+
   const { mutate: downloadFile, isPending: isDownloadingFile } = useMutation({
     mutationFn: async () => {
       try {
@@ -34,8 +37,18 @@ export const DownloadFile = ({
           params
         })
         const [name, ext] = fileName.split('.')
-        console.log({ client: window.electron })
-        window.downloader.saveFile(res.data, `${name}___${Date.now()}.${ext}`)
+
+        const file = await window.downloader.saveFile({
+          fileName: `${name}___${Date.now()}.${ext}`,
+          fileData: res.data
+        })
+        console.log({ file })
+        addFile({
+          name: file.fileName,
+          path: file.filePath,
+          size: file.fileSize,
+          downloadedAt: file.downloadedAt
+        })
       } catch (error) {
         console.log(error)
       }

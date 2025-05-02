@@ -352,5 +352,10 @@
   "material": "Материал",
   "zarplata_not_installed": "Зарплата иловаси ўрнатилмаган",
   "apply_to_all_inputs": "Ҳамма майдонларга қўллаш",
-  "update_data": "Маълумотларни янгилаш"
+  "update_data": "Маълумотларни янгилаш",
+  "downloads": "Юкламалар",
+  "downloaded_files": "Юклаб олинган файллар",
+  "no_downloaded_files": "Юклаб олинган файллар йўқ",
+  "clear_all": "Ҳаммасини тозалаш",
+  "reload": "Қайта юклаш"
 }

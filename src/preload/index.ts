@@ -1,3 +1,5 @@
+import type { SaveFileArgs } from './interfaces'
+
 import { electronAPI } from '@electron-toolkit/preload'
 import { contextBridge, ipcRenderer } from 'electron'
 
@@ -25,9 +27,10 @@ if (process.contextIsolated) {
     contextBridge.exposeInMainWorld('electron', electronAPI)
     contextBridge.exposeInMainWorld('api', api)
     contextBridge.exposeInMainWorld('downloader', {
-      saveFile(fileData: ArrayBuffer, fileName: string) {
-        ipcRenderer.invoke('save-file', { fileName, fileData })
-      }
+      saveFile: ({ fileName, fileData }: SaveFileArgs) =>
+        ipcRenderer.invoke('save-file', { fileName, fileData }),
+      openFile: (filePath: string) => ipcRenderer.invoke('open-file', filePath),
+      openFileInFolder: (filePath: string) => ipcRenderer.invoke('open-file-in-folder', filePath)
     })
   } catch (error) {
     console.error(error)
