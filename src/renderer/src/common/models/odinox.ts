@@ -59,17 +59,23 @@ export interface OdinoxRasxod {
   type: ProvodkaType
 }
 
-export interface OdinoxSmeta {
+export interface OdinoxGrafik {
   id: number
   smeta_name: string
   smeta_number: string
   group_number: string
-  smeta_grafik: SmetaGrafik[]
+  smeta_grafik: SmetaGrafik
   smeta_id: number
   summa: number
 }
 
-export type OdinoxDocument = OdinoxRasxod | OdinoxSmeta
+export type OdinoxRemaining = {
+  grafik_data: OdinoxGrafik
+  jur1_jur2_rasxod_data: OdinoxGrafik
+  summa: number
+}
+
+export type OdinoxDocument = OdinoxRasxod | OdinoxGrafik
 
 export interface AdminOdinox {
   id: number
