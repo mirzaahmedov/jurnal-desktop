@@ -26,11 +26,14 @@ export const VideoCard = ({ readOnly = false, video, onEdit, onDelete }: VideoCa
 
   return (
     <div className="p-2 space-y-2">
-      <VideoPlayer src={getVideoURL({ id: video.id })} />
+      <VideoPlayer
+        src={getVideoURL({ id: video.id })}
+        title={video.name}
+      />
       <div className="flex items-start gap-4">
         <h4 className="font-bold text-2xl text-brand h-full align-middle">{video.sort_order}.</h4>
         <div className="spacey-y-1 flex-1">
-          <h6 className="font-bold text-sm">{video.name}</h6>
+          <h6 className="font-bold text-sm line-clamp-2">{video.name}</h6>
           <p className="mt-0.5 text-sm text-slate-500">{formatLocaleDateTime(video.created_at)}</p>
         </div>
         {readOnly ? null : (

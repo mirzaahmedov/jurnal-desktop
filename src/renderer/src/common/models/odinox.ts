@@ -1,5 +1,6 @@
 import type { ProvodkaType } from './common'
 import type { ReportStatus } from './reports'
+import type { SmetaGrafik } from './smeta-grafik'
 
 export interface Odinox {
   id: number
@@ -58,7 +59,17 @@ export interface OdinoxRasxod {
   type: ProvodkaType
 }
 
-export type OdinoxDocument = OdinoxRasxod
+export interface OdinoxSmeta {
+  id: number
+  smeta_name: string
+  smeta_number: string
+  group_number: string
+  smeta_grafik: SmetaGrafik[]
+  smeta_id: number
+  summa: number
+}
+
+export type OdinoxDocument = OdinoxRasxod | OdinoxSmeta
 
 export interface AdminOdinox {
   id: number

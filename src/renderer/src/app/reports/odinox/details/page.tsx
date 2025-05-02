@@ -1,7 +1,7 @@
 import type { EditableTableMethods } from '@/common/components/editable-table'
 import type { OdinoxDocument } from '@/common/models'
 
-import { type KeyboardEvent, useEffect, useMemo, useRef, useState } from 'react'
+import { type KeyboardEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
@@ -201,6 +201,24 @@ const OdinoxDetailsPage = () => {
     }
   }
 
+  const handleCellDoubleClick = useCallback(
+    ({ row, column }) => {
+      const type = types?.data?.find((type) => type.name === column.key)
+      if (!type) {
+        return
+      }
+      getDocs({
+        month: form.getValues('month'),
+        year: form.getValues('year'),
+        need_data: form.getValues('childs'),
+        smeta_id: row.smeta_id,
+        main_schet_id: main_schet_id!,
+        sort_order: type.sort_order
+      })
+    },
+    [form, types, main_schet_id]
+  )
+
   return (
     <DetailsView className="h-full">
       <DetailsView.Content
@@ -257,17 +275,7 @@ const OdinoxDetailsPage = () => {
                 methods={tableMethods}
                 form={form}
                 name="rows"
-                onCellDoubleClick={({ row }) => {
-                  console.log(row)
-                  getDocs({
-                    month: form.getValues('month'),
-                    year: form.getValues('year'),
-                    need_data: form.getValues('childs'),
-                    smeta_id: row.smeta_id,
-                    main_schet_id: main_schet_id!,
-                    sort_order: row.sort_order
-                  })
-                }}
+                onCellDoubleClick={handleCellDoubleClick}
               />
             </div>
           </div>

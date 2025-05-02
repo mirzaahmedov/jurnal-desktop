@@ -32,7 +32,7 @@ export const VideoGrid = ({
 
   return (
     <div className="relative h-full">
-      <ul className="grid grid-cols-3 p-5">
+      <ul className="grid grid-cols-1 p-5 xl:grid-cols-2 2xl:grid-cols-3">
         {loading || isFetching ? <LoadingOverlay /> : null}
         {Array.isArray(videos?.data) ? (
           videos.data.length > 0 ? (

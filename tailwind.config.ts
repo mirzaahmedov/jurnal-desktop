@@ -161,7 +161,8 @@ const config: Config = {
         sm: 'calc(var(--radius) - 4px)'
       },
       maxWidth: {
-        '8xl': '90rem'
+        '8xl': '90rem',
+        '9xl': '100rem'
       },
       colors: {
         background: 'hsl(var(--background))',

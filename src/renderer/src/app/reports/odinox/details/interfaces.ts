@@ -24,7 +24,6 @@ export interface OdinoxTableRow extends Record<string, number | string> {
   smeta_number: string
   group_number: string
   smeta_id: number
-  sort_order: number
 }
 
 export enum OdinoxTypeName {

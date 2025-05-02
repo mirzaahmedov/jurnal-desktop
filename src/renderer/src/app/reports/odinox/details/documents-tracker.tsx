@@ -81,10 +81,6 @@ export const RasxodDocumentColumns: ColumnDef<OdinoxRasxod>[] = [
     )
   },
   {
-    width: 200,
-    key: 'schet'
-  },
-  {
     width: 300,
     key: 'sub_schet',
     header: 'subschet'

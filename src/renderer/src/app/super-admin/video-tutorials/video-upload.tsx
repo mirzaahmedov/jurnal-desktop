@@ -22,6 +22,7 @@ export const VideoUpload = ({ file, onSelect }: VideoUploadProps) => {
             <VideoPlayer
               className="w-40"
               src={filePreview}
+              title={file.name}
             />
           ) : null}
           <div className="flex flex-col gap-1 flex-1">
@@ -47,7 +48,7 @@ export const VideoUpload = ({ file, onSelect }: VideoUploadProps) => {
           onSelect={onSelect}
           icon={FileVideo}
           iconProps={{
-            className: 'size-20'
+            className: 'size-20 mb-5'
           }}
           ratio={2 / 1}
         />

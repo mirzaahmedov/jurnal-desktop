@@ -204,7 +204,10 @@ export const VideoDialog = ({ open, onOpenChange, selected, moduleId }: VideoDia
                     onSelect={setFile}
                   />
                 ) : (
-                  <VideoPlayer src={getVideoURL({ id: selected.id })} />
+                  <VideoPlayer
+                    src={getVideoURL({ id: selected.id })}
+                    title={selected.name}
+                  />
                 )}
               </div>
             </div>
