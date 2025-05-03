@@ -22,7 +22,7 @@ const MainLayout = () => {
   return (
     <div className="h-full flex">
       <Sidebar />
-      <div className="flex-1 overflow-auto scrollbar">
+      <div className="flex-1 overflow-hidden">
         <AuthGuard>
           <main className="h-full flex flex-col bg-white">
             <Header />

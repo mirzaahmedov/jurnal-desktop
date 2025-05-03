@@ -147,8 +147,7 @@ const PrixodDetails = ({ id, onSuccess }: PrixodDetailsProps) => {
     createOrganizationSpravochnik({
       value: form.watch('kimdan_id'),
       onChange: (value, organization) => {
-        form.setValue('kimdan_id', value ?? 0)
-        form.trigger('kimdan_id')
+        form.setValue('kimdan_id', value ?? 0, { shouldValidate: true })
 
         if (organization?.account_numbers?.length === 1) {
           form.setValue('organization_by_raschet_schet_id', organization.account_numbers[0].id)
@@ -164,8 +163,7 @@ const PrixodDetails = ({ id, onSuccess }: PrixodDetailsProps) => {
     createResponsibleSpravochnik({
       value: form.watch('kimga_id'),
       onChange: (value) => {
-        form.setValue('kimga_id', value ?? 0)
-        form.trigger('kimga_id')
+        form.setValue('kimga_id', value ?? 0, { shouldValidate: true })
       }
     })
   )
@@ -173,8 +171,7 @@ const PrixodDetails = ({ id, onSuccess }: PrixodDetailsProps) => {
     createShartnomaSpravochnik({
       value: form.watch('id_shartnomalar_organization'),
       onChange: (value) => {
-        form.setValue('id_shartnomalar_organization', value)
-        form.trigger('id_shartnomalar_organization')
+        form.setValue('id_shartnomalar_organization', value, { shouldValidate: true })
       },
       params: {
         organ_id: form.watch('kimdan_id')
@@ -208,7 +205,7 @@ const PrixodDetails = ({ id, onSuccess }: PrixodDetailsProps) => {
   useEffect(() => {
     if (kimdan_id !== prevData.current.kimdan_id && prevData.current.kimdan_id) {
       if (kimdan_id) {
-        form.setValue('id_shartnomalar_organization', 0)
+        form.setValue('id_shartnomalar_organization', 0, { shouldValidate: true })
         prevData.current.kimdan_id = kimdan_id
       }
       prevData.current.kimdan_id = kimdan_id
@@ -319,7 +316,7 @@ const PrixodDetails = ({ id, onSuccess }: PrixodDetailsProps) => {
           </form>
         </Form>
 
-        <div className="p-5 pb-32 w-full overflow-hidden flex flex-col gap-5">
+        <div className="p-5 pb-10 w-full overflow-hidden flex flex-col gap-5">
           <div className="flex items-center justify-between gap-2">
             <div className="flex items-center gap-2.5">
               <ImportFile

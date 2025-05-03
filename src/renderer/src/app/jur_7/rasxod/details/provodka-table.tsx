@@ -162,7 +162,7 @@ export const ProvodkaTable = ({ form, tabIndex }: ProvodkaTableProps) => {
             >
               {t('kredit')}
             </EditableTableHead>
-            <EditableTableHead rowSpan={2}>{t('prixod-date')}</EditableTableHead>
+            <EditableTableHead rowSpan={2}>{t('prixod_date')}</EditableTableHead>
             <EditableTableHead rowSpan={2}></EditableTableHead>
           </EditableTableRow>
           <EditableTableRow>

@@ -6,12 +6,13 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 
-import { GenericTable, LoadingOverlay } from '@/common/components'
+import { GenericTable } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
 import { useToggle } from '@/common/hooks/use-toggle'
 import { useLayout } from '@/common/layout'
+import { ListView } from '@/common/views'
 
-import { regionUserColumns } from './columns'
+import { RegionUserColumns } from './columns'
 import { RegionUserQueryKeys } from './config'
 import { RegionUserDialog } from './dialog'
 import { RegionUserService } from './service'
@@ -71,22 +72,21 @@ const RegionUserPage = () => {
   }
 
   return (
-    <>
-      <div className="relative">
-        {isFetching || isPending ? <LoadingOverlay /> : null}
+    <ListView>
+      <ListView.Content loading={isFetching || isPending}>
         <GenericTable
           data={regionUsers?.data ?? []}
-          columnDefs={regionUserColumns}
+          columnDefs={RegionUserColumns}
           onDelete={handleClickDelete}
           onEdit={handleClickEdit}
         />
-      </div>
-      <RegionUserDialog
-        selected={selected}
-        isOpen={dialogToggle.isOpen}
-        onOpenChange={dialogToggle.setOpen}
-      />
-    </>
+        <RegionUserDialog
+          selected={selected}
+          isOpen={dialogToggle.isOpen}
+          onOpenChange={dialogToggle.setOpen}
+        />
+      </ListView.Content>
+    </ListView>
   )
 }
 

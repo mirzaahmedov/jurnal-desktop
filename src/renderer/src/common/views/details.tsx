@@ -42,7 +42,7 @@ const DetailsViewFooter = ({ children, className, ...props }: DetailsViewFooterP
     <div
       {...props}
       className={cn(
-        'w-full fixed bottom-0 p-5 z-[100] border-t border-slate-200 bg-white',
+        'w-full fixed bottom-[41px] p-5 z-[100] border-t border-slate-200 bg-white',
         className
       )}
     >

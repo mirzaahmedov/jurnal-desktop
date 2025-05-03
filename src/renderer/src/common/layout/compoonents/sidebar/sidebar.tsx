@@ -38,7 +38,7 @@ export const Sidebar = () => {
 
   return (
     <aside
-      className="w-full max-w-[340px] h-full flex flex-col border-r border-slate-200"
+      className="w-full max-w-[350px] h-full flex flex-col border-r border-slate-200"
       style={{
         maxWidth: isCollapsed ? 112 : undefined
       }}

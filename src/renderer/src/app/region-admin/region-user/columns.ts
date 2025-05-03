@@ -3,7 +3,7 @@ import type { User } from '@/common/models'
 
 import { IDCell } from '@/common/components/table/renderers/id'
 
-export const regionUserColumns: ColumnDef<User>[] = [
+export const RegionUserColumns: ColumnDef<User>[] = [
   {
     key: 'id',
     renderCell: IDCell

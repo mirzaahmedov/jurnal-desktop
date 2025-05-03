@@ -149,7 +149,7 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
                   {t('nds_summa')}
                 </EditableTableHead>
                 <EditableTableHead
-                  colSpan={5}
+                  colSpan={3}
                   className="text-center"
                 >
                   {t('iznos')}
@@ -167,7 +167,7 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
                   {t('kredit')}
                 </EditableTableHead>
 
-                <EditableTableHead rowSpan={2}>{t('prixod-date')}</EditableTableHead>
+                <EditableTableHead rowSpan={2}>{t('prixod_date')}</EditableTableHead>
                 <EditableTableHead
                   rowSpan={2}
                   className="px-3"
@@ -185,8 +185,8 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
                 >
                   {t('iznos_summa_old')}
                 </EditableTableHead>
-                <EditableTableHead>{t('schet')}</EditableTableHead>
-                <EditableTableHead>{t('subschet')}</EditableTableHead>
+                {/* <EditableTableHead>{t('schet')}</EditableTableHead>
+                <EditableTableHead>{t('subschet')}</EditableTableHead> */}
                 <EditableTableHead>{t('iznos_start_date')}</EditableTableHead>
 
                 <EditableTableHead>{t('schet')}</EditableTableHead>
@@ -359,7 +359,7 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
                         </div>
                       </EditableTableCell>
 
-                      <EditableTableCell>
+                      {/* <EditableTableCell>
                         <div className="relative">
                           <Input
                             value={row.iznos_schet}
@@ -390,7 +390,7 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
                             tabIndex={tabIndex}
                           />
                         </div>
-                      </EditableTableCell>
+                      </EditableTableCell> */}
 
                       <EditableTableCell>
                         <div className="relative">
