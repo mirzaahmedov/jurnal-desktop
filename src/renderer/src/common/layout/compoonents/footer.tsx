@@ -1,11 +1,12 @@
 import { Reload } from '@/common/components/reload'
 import { Downloads } from '@/common/features/downloads-manager'
-import { InternetStatus } from '@/common/features/internet-status'
+import { InternetStatus, VPNStatus } from '@/common/features/network'
 
 export const Footer = () => {
   return (
     <footer className="flex items-center justify-end  border-t [&>*]:border-l">
       <InternetStatus />
+      <VPNStatus />
       <Downloads />
       <Reload />
     </footer>

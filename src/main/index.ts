@@ -262,6 +262,17 @@ app.whenReady().then(async () => {
       })
     )
   })
+  ipcMain.handle('ping-vpn', () => {
+    return new Promise<boolean>((resolve) =>
+      exec('ping http://10.50.0.140:3006', (error, _, stderr) => {
+        if (error || stderr) {
+          resolve(false)
+          return
+        }
+        resolve(true)
+      })
+    )
+  })
 
   if (import.meta.env.DEV) {
     installExtension(REACT_DEVELOPER_TOOLS)

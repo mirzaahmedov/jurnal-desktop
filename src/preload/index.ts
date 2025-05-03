@@ -9,7 +9,8 @@ const api = {
   setZoomFactor: (factor: number) => ipcRenderer.invoke('set-zoom-factor', factor),
   getZoomFactor: () => ipcRenderer.invoke('get-zoom-factor'),
   openZarplata: () => ipcRenderer.invoke('open-zarplata'),
-  pingInternet: () => ipcRenderer.invoke('ping-internet')
+  pingInternet: () => ipcRenderer.invoke('ping-internet'),
+  pingVPN: () => ipcRenderer.invoke('ping-vpn')
 }
 
 // Use `contextBridge` APIs to expose Electron APIs to

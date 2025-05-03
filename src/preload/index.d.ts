@@ -15,6 +15,7 @@ declare global {
       setZoomFactor(factor: number): void
       openZarplata(): Promise<string>
       pingInternet(): Promise<boolean>
+      pingVPN(): Promise<boolean>
     }
     downloader: Downloader
   }

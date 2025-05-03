@@ -358,5 +358,7 @@
   "clear_all": "Hammasini tozalash",
   "reload": "Qayta yuklash",
   "turn_off_internet": "Internetni o‘chiring",
-  "no_internet": "Internetga ulanish yo‘q"
+  "no_internet": "Internetga ulanish yo‘q",
+  "vpn_disconnected": "VPN ulanmagan",
+  "vpn_connected": "VPN ulangan"
 }

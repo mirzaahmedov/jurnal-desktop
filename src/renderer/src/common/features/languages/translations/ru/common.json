@@ -359,5 +359,7 @@
   "clear_all": "Очистить всё",
   "reload": "Перезагрузить",
   "turn_off_internet": "Отключите интернет",
-  "no_internet": "Нет доступа к интернету"
+  "no_internet": "Нет доступа к интернету",
+  "vpn_disconnected": "Нет подключения к VPN",
+  "vpn_connected": "VPN подключён"
 }

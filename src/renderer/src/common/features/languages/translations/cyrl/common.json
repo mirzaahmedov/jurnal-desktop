@@ -358,5 +358,7 @@
   "clear_all": "Ҳаммасини тозалаш",
   "reload": "Қайта юклаш",
   "turn_off_internet": "Интернетни ўчиринг",
-  "no_internet": "Интернетга уланиш йўқ"
+  "no_internet": "Интернетга уланиш йўқ",
+  "vpn_disconnected": "VPN уланмаган",
+  "vpn_connected": "VPN уланган"
 }
