@@ -35,6 +35,7 @@ import { ListView } from '@/common/views'
 import { useWarehouseSaldo } from '../saldo/use-saldo'
 import { columns } from './columns'
 import { WarehouseMonitorQueryKeys } from './config'
+import { MaterialReportDialog } from './material-report-dialog'
 import { WarehouseMonitorService } from './service'
 
 export const WarehouseMonitorPage = () => {
@@ -42,6 +43,7 @@ export const WarehouseMonitorPage = () => {
   const pagination = usePagination()
   const navigate = useNavigate()
   const reportsToggle = useToggle()
+  const materialToggle = useToggle()
   const startDate = useSelectedMonthStore((store) => store.startDate)
   const report_title_id = useSettingsStore((store) => store.report_title_id)
   const setLayout = useLayout()
@@ -151,20 +153,12 @@ export const WarehouseMonitorPage = () => {
             </DropdownMenuItem>
 
             <DropdownMenuItem>
-              <DownloadFile
-                fileName={`${t('material')}_${dates.to}.xlsx`}
-                url="/jur_7/monitoring/material/report"
-                params={{
-                  to: dates.to,
-                  year: startDate.getFullYear(),
-                  month: startDate.getMonth() + 1,
-                  budjet_id,
-                  main_schet_id,
-                  excel: true
-                }}
-                buttonText={t('material')}
-                className="w-full justify-start"
-              />
+              <Button
+                variant="ghost"
+                onClick={materialToggle.open}
+              >
+                <Download className="btn-icon icon-start icon-sm" /> {t('material')}
+              </Button>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -219,6 +213,16 @@ export const WarehouseMonitorPage = () => {
           pageCount={monitoring?.meta?.pageCount ?? 0}
         />
       </ListView.Footer>
+
+      <MaterialReportDialog
+        isOpen={materialToggle.isOpen}
+        onOpenChange={materialToggle.setOpen}
+        budjet_id={budjet_id!}
+        main_schet_id={main_schet_id!}
+        to={dates.to}
+        year={startDate.getFullYear()}
+        month={startDate.getMonth() + 1}
+      />
     </ListView>
   )
 }

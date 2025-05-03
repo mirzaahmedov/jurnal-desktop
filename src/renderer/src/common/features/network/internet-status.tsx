@@ -5,7 +5,7 @@ import { Trans } from 'react-i18next'
 import { Button } from '@/common/components/jolly/button'
 
 export const InternetStatus = () => {
-  const [isOnline, setIsOnline] = useState(true)
+  const [isOnline, setIsOnline] = useState(false)
 
   useEffect(() => {
     const ping = async () => {

@@ -70,7 +70,7 @@ export const DownloadFile = ({
     <>
       <Button
         variant="ghost"
-        isPending={isDownloadingFile}
+        isDisabled={isDownloadingFile}
         onClick={handleDownloadFile}
         {...props}
       >

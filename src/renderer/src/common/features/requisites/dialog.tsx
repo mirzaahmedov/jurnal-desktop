@@ -162,7 +162,7 @@ export const RequisitesDialog = ({ isOpen, onOpenChange }: RequisitesDialogProps
                     <FormLabel>{t('budjet')}</FormLabel>
                     <JollySelect
                       isDisabled={isLoadingBudget}
-                      placeholder={t('choose', { what: t('budjet') })}
+                      placeholder={t('budjet')}
                       items={Array.isArray(budjets?.data) ? budjets.data : []}
                       selectedKey={field.value ?? null}
                       onSelectionChange={(value) => {
