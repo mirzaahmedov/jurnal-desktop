@@ -3,6 +3,7 @@ import type { SaveFileArgs, SaveFileResponse } from '@preload/interfaces'
 import { electronApp, is, optimizer } from '@electron-toolkit/utils'
 import iconDev from '@resources/icon-dev.png?asset'
 import icon from '@resources/icon.png?asset'
+import { exec } from 'child_process'
 import dotenv from 'dotenv'
 import { BrowserWindow, app, ipcMain, shell } from 'electron'
 import { REACT_DEVELOPER_TOOLS, installExtension } from 'electron-devtools-installer'
@@ -249,6 +250,18 @@ app.whenReady().then(async () => {
 
   // IPC test
   ipcMain.on('ping', () => console.log('pong'))
+
+  ipcMain.handle('ping-internet', () => {
+    return new Promise<boolean>((resolve) =>
+      exec('ping google.com', (error, _, stderr) => {
+        if (error || stderr) {
+          resolve(false)
+          return
+        }
+        resolve(true)
+      })
+    )
+  })
 
   if (import.meta.env.DEV) {
     installExtension(REACT_DEVELOPER_TOOLS)

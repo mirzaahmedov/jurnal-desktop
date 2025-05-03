@@ -5,18 +5,11 @@ import { contextBridge, ipcRenderer } from 'electron'
 
 // Custom APIs for renderer
 const api = {
-  quitAndInstall() {
-    ipcRenderer.send('restart')
-  },
-  setZoomFactor(factor: number) {
-    ipcRenderer.invoke('set-zoom-factor', factor)
-  },
-  getZoomFactor() {
-    return ipcRenderer.invoke('get-zoom-factor')
-  },
-  openZarplata() {
-    return ipcRenderer.invoke('open-zarplata')
-  }
+  quitAndInstall: () => ipcRenderer.send('restart'),
+  setZoomFactor: (factor: number) => ipcRenderer.invoke('set-zoom-factor', factor),
+  getZoomFactor: () => ipcRenderer.invoke('get-zoom-factor'),
+  openZarplata: () => ipcRenderer.invoke('open-zarplata'),
+  pingInternet: () => ipcRenderer.invoke('ping-internet')
 }
 
 // Use `contextBridge` APIs to expose Electron APIs to

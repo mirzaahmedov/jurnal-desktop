@@ -113,12 +113,21 @@ const OperatsiiPage = () => {
 
   return (
     <ListView>
-      <ListView.Header>
+      <ListView.Header className="justify-end">
         <DownloadFile
           url="/spravochnik/operatsii/template"
           params={{}}
           buttonText={t('template')}
           fileName={`${t('operatsii')}_${t('template')}.xlsx`}
+        />
+        <DownloadFile
+          url="/spravochnik/operatsii/export"
+          params={{
+            excel: true,
+            type_schet: typeSchet === 'all' ? undefined : typeSchet
+          }}
+          buttonText={t('export-excel')}
+          fileName={`${t('operatsii')}.xlsx`}
         />
       </ListView.Header>
       <ListView.Content loading={isFetching || isPending}>

@@ -357,5 +357,7 @@
   "downloaded_files": "Загруженные файлы",
   "no_downloaded_files": "Нет загруженных файлов",
   "clear_all": "Очистить всё",
-  "reload": "Перезагрузить"
+  "reload": "Перезагрузить",
+  "turn_off_internet": "Отключите интернет",
+  "no_internet": "Нет доступа к интернету"
 }

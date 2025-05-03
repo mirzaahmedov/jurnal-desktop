@@ -356,5 +356,7 @@
   "downloaded_files": "Yuklab olingan fayllar",
   "no_downloaded_files": "Yuklab olingan fayllar yo‘q",
   "clear_all": "Hammasini tozalash",
-  "reload": "Qayta yuklash"
+  "reload": "Qayta yuklash",
+  "turn_off_internet": "Internetni o‘chiring",
+  "no_internet": "Internetga ulanish yo‘q"
 }

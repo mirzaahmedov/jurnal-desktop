@@ -34,7 +34,7 @@ const DashboardPage = () => {
   }, [setLayout, t])
 
   return (
-    <div className="p-5">
+    <div className="p-5 h-full overflow-y-auto scrollbar">
       <div className="flex items-center gap-5 justify-between">
         <DatePicker
           value={date ?? ''}
