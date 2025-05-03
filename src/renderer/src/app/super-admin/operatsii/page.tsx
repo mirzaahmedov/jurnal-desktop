@@ -1,8 +1,12 @@
+import type { OperatsiiFormValues } from './config'
+import type { Operatsii } from '@/common/models'
+
 import { useEffect, useState } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { CopyPlus, Ellipsis } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+import { toast } from 'react-toastify'
 
 import { GenericTable } from '@/common/components'
 import { Button } from '@/common/components/ui/button'
@@ -13,16 +17,15 @@ import {
   DropdownMenuTrigger
 } from '@/common/components/ui/dropdown-menu'
 import { useConfirm } from '@/common/features/confirm'
+import { DownloadFile } from '@/common/features/file'
 import { useSearchFilter } from '@/common/features/filters/search/search-filter-debounced'
 import { usePagination } from '@/common/hooks'
 import { useToggle } from '@/common/hooks/use-toggle'
 import { useLayout } from '@/common/layout'
-import { type Operatsii } from '@/common/models'
 import { ListView } from '@/common/views'
 
 import { OperatsiiColumns } from './columns'
 import { operatsiiQueryKeys } from './config'
-import { type OperatsiiFormValues } from './config'
 import { OperatsiiDialog } from './dialog'
 import { OperatsiiFilter, useTypeSchetFilter } from './filter'
 import { OperatsiiService } from './service'
@@ -58,7 +61,8 @@ const OperatsiiPage = () => {
   const { mutate: deleteOperatsii, isPending } = useMutation({
     mutationKey: [operatsiiQueryKeys.delete],
     mutationFn: OperatsiiService.delete,
-    onSuccess() {
+    onSuccess(res) {
+      toast.success(res?.message)
       queryClient.invalidateQueries({
         queryKey: [operatsiiQueryKeys.getAll]
       })
@@ -109,6 +113,14 @@ const OperatsiiPage = () => {
 
   return (
     <ListView>
+      <ListView.Header>
+        <DownloadFile
+          url="/spravochnik/operatsii/template"
+          params={{}}
+          buttonText={t('template')}
+          fileName={`${t('operatsii')}_${t('template')}.xlsx`}
+        />
+      </ListView.Header>
       <ListView.Content loading={isFetching || isPending}>
         <GenericTable
           data={operatsii?.data ?? []}
