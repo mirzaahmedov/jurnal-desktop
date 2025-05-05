@@ -1,4 +1,4 @@
-import type { SaveFileArgs, SaveFileResponse } from '@preload/interfaces'
+import type { OpenRouteNewWindowArgs, SaveFileArgs, SaveFileResponse } from '@preload/interfaces'
 
 import { electronApp, is, optimizer } from '@electron-toolkit/utils'
 import iconDev from '@resources/icon-dev.png?asset'
@@ -54,7 +54,7 @@ const autoUpdater = new NsisUpdater({
   url
 })
 
-function createWindow(): void {
+function createWindow(route: string = ''): BrowserWindow {
   // Create the browser window.
   const win = new BrowserWindow({
     show: false,
@@ -84,7 +84,7 @@ function createWindow(): void {
   // HMR for renderer base on electron-vite cli.
   // Load the remote URL for development or the local html file for production.
   if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
-    win.loadURL(process.env['ELECTRON_RENDERER_URL'])
+    win.loadURL(process.env['ELECTRON_RENDERER_URL'] + (route ? `/${route}` : ''))
   } else {
     win.loadFile(path.join(__dirname, '../renderer/index.html'))
   }
@@ -94,6 +94,8 @@ function createWindow(): void {
   win.on('closed', () => {
     windows = windows.filter((w) => w !== win)
   })
+
+  return win
 }
 
 // Update manager
@@ -222,6 +224,11 @@ ipcMain.handle('open-file-in-folder', async (_event, filePath: string) => {
   shell.showItemInFolder(filePath)
 })
 
+ipcMain.handle('open-route-new-window', async (_event, { route }: OpenRouteNewWindowArgs) => {
+  const win = createWindow(route)
+  console.log('open-route-new-window', { route, win })
+})
+
 ipcMain.handle('open-zarplata', () => {
   return shell.openPath(zarplataPath)
 })
@@ -232,6 +239,29 @@ ipcMain.handle('set-zoom-factor', (e, factor) => {
 })
 ipcMain.handle('get-zoom-factor', (e) => {
   return e.sender.getZoomFactor()
+})
+
+ipcMain.handle('ping-internet', () => {
+  return new Promise<boolean>((resolve) =>
+    exec('ping google.com', (error, _, stderr) => {
+      if (error || stderr) {
+        resolve(false)
+        return
+      }
+      resolve(true)
+    })
+  )
+})
+ipcMain.handle('ping-vpn', () => {
+  return new Promise<boolean>((resolve) =>
+    exec('ping 10.50.0.140', (error, _, stderr) => {
+      if (error || stderr) {
+        resolve(false)
+        return
+      }
+      resolve(true)
+    })
+  )
 })
 
 // This method will be called when Electron has finished
@@ -250,29 +280,6 @@ app.whenReady().then(async () => {
 
   // IPC test
   ipcMain.on('ping', () => console.log('pong'))
-
-  ipcMain.handle('ping-internet', () => {
-    return new Promise<boolean>((resolve) =>
-      exec('ping google.com', (error, _, stderr) => {
-        if (error || stderr) {
-          resolve(false)
-          return
-        }
-        resolve(true)
-      })
-    )
-  })
-  ipcMain.handle('ping-vpn', () => {
-    return new Promise<boolean>((resolve) =>
-      exec('ping 10.50.0.140', (error, _, stderr) => {
-        if (error || stderr) {
-          resolve(false)
-          return
-        }
-        resolve(true)
-      })
-    )
-  })
 
   if (import.meta.env.DEV) {
     installExtension(REACT_DEVELOPER_TOOLS)

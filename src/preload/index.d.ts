@@ -1,4 +1,4 @@
-import type { SaveFileArgs, SaveFileResponse } from './interfaces'
+import type { OpenRouteNewWindowArgs, SaveFileArgs, SaveFileResponse } from './interfaces'
 import type { ElectronAPI } from '@electron-toolkit/preload'
 
 interface Downloader {
@@ -6,6 +6,7 @@ interface Downloader {
   openFile(filePath: string): Promise<void>
   openFileInFolder(filePath: string): Promise<void>
 }
+
 declare global {
   interface Window {
     electron: ElectronAPI
@@ -16,6 +17,7 @@ declare global {
       openZarplata(): Promise<string>
       pingInternet(): Promise<boolean>
       pingVPN(): Promise<boolean>
+      openRouteNewWindow(args: OpenRouteNewWindowArgs): Promise<void>
     }
     downloader: Downloader
   }

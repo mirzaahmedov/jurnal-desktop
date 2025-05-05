@@ -18,6 +18,64 @@ import { getHeaderGroups } from '../generic-table/utils'
 import { TableCell, TableHead, TableRow } from './components'
 import { getDataColumns } from './utils'
 
+const handleStickyColumns = (container?: HTMLDivElement) => {
+  if (!container) return
+
+  const body = container.querySelector('tbody')!
+
+  const stickyCells = body.querySelectorAll('[data-sticky]') as NodeListOf<HTMLElement>
+  stickyCells.forEach((cell) => {
+    const left = !isNaN(Number(cell.dataset.left)) ? Number(cell.dataset.left) : undefined
+    const right = cell.dataset.right ? Number(cell.dataset.right) : null
+    const containerRect = container.getBoundingClientRect()
+    const cellRect = cell.getBoundingClientRect()
+
+    if (left !== undefined) {
+      const deltaX = cellRect.left - containerRect.left - left
+      const translateX =
+        parseFloat(cell.style.transform.match(/translateX\(([^)]+)\)/)?.[1] ?? '0') || 0
+      const originalLeft = cellRect.left - translateX
+
+      if (originalLeft >= containerRect.left + left) {
+        cell.style.transform = `translateX(0px)`
+        cell.style.zIndex = '0'
+      } else if (deltaX < 0) {
+        cell.style.transform = `translateX(${Math.abs(deltaX) + translateX}px)`
+        cell.style.zIndex = '100'
+      } else if (deltaX > 0) {
+        cell.style.transform = `translateX(${translateX - Math.abs(deltaX)}px)`
+        cell.style.zIndex = '100'
+      }
+    }
+
+    if (right !== null) {
+      const deltaX = cellRect.right - (containerRect.right - right)
+      const translateX =
+        parseFloat(cell.style.transform.match(/translateX\(([^)]+)\)/)?.[1] ?? '0') || 0
+      const originalRight = cellRect.right - translateX
+
+      if (originalRight <= containerRect.right - right) {
+        cell.style.transform = `translateX(0px)`
+        cell.style.zIndex = '0'
+        cell.style.borderLeftWidth = '0px'
+      } else if (deltaX > 0) {
+        cell.style.transform = `translateX(${translateX - Math.abs(deltaX)}px)`
+        cell.style.zIndex = '100'
+        cell.style.borderLeftWidth = '1px'
+      } else if (deltaX < 0) {
+        cell.style.transform = `translateX(${Math.abs(deltaX) + translateX}px)`
+        cell.style.zIndex = '100'
+        cell.style.borderLeftWidth = '1px'
+      }
+    }
+  })
+}
+
+const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+  const container = e.currentTarget
+  handleStickyColumns(container)
+}
+
 export const EditableTableAlt = <T extends object, F extends ArrayPath<NoInfer<T>>>(
   props: EditableTableProps<T, F>
 ) => {
@@ -95,7 +153,9 @@ export const EditableTableAlt = <T extends object, F extends ArrayPath<NoInfer<T
           block: 'nearest'
         })
       }}
-      className={cn('relative h-full flex flex-col overflow-hidden', divProps?.className)}
+      ref={(ref) => handleStickyColumns(ref ?? undefined)}
+      onScroll={handleScroll}
+      className={cn('relative h-full flex flex-col overflow-x-auto', divProps?.className)}
     >
       {!disableHeader ? (
         <Table className={cn('border border-slate-200 table-fixed', className)}>
@@ -157,7 +217,7 @@ export const EditableTableAlt = <T extends object, F extends ArrayPath<NoInfer<T
       ) : null}
 
       <div
-        className="overflow-auto flex-1 scrollbar"
+        className="w-min overflow-y-auto overflow-x-hidden flex-1 scrollbar"
         ref={ref}
       >
         <div style={{ height: `${rowVirtualizer.getTotalSize()}px` }}>
@@ -217,10 +277,12 @@ export const EditableTableAlt = <T extends object, F extends ArrayPath<NoInfer<T
       <Table className={cn('border border-slate-200 table-fixed', className)}>
         {onCreate || props.footer ? (
           <TableFooter>
-            {props.footer?.(props)}
+            <TableRow>
+              <TableCell colSpan={100}>{props.footer?.(props)}</TableCell>
+            </TableRow>
             {onCreate ? (
               <TableRow focusable={false}>
-                <TableCell colSpan={dataColumns.length}>
+                <TableCell colSpan={100}>
                   <Button
                     tabIndex={tabIndex}
                     type="button"
@@ -289,7 +351,8 @@ const Row = <T extends object, F extends ArrayPath<NoInfer<T>>>({
       </TableCell>
       {Array.isArray(columnDefs)
         ? dataColumns.map((column) => {
-            const { key, Editor, width, minWidth, maxWidth, className } = column
+            const { key, Editor, width, minWidth, maxWidth, className, sticky, left, right } =
+              column
             return (
               <Controller
                 key={String(key)}
@@ -300,6 +363,9 @@ const Row = <T extends object, F extends ArrayPath<NoInfer<T>>>({
                     <TableCell
                       style={{ width, minWidth, maxWidth }}
                       className={className}
+                      data-sticky={sticky ? true : undefined}
+                      data-left={left !== undefined ? left : undefined}
+                      data-right={right !== undefined ? right : undefined}
                       onDoubleClick={(event) => {
                         onCellDoubleClick?.({
                           column,

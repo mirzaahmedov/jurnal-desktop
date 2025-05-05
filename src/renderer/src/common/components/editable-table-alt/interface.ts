@@ -32,6 +32,9 @@ export interface EditableColumnDef<T extends object, F extends ArrayPath<T> = Ar
   className?: string
   headerClassName?: string
   columns?: EditableColumnDef<T>[]
+  sticky?: boolean
+  left?: number
+  right?: number
 }
 
 export type HeaderColumnDef<T> = T & {

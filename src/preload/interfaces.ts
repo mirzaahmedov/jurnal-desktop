@@ -8,3 +8,7 @@ export interface SaveFileResponse {
   fileSize: number
   downloadedAt: Date
 }
+
+export interface OpenRouteNewWindowArgs {
+  route: string
+}

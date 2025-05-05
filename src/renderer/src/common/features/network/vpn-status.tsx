@@ -9,8 +9,7 @@ export const VPNStatus = () => {
 
   useEffect(() => {
     const ping = async () => {
-      const online = await window.api.pingVPN()
-      setIsOnline(online)
+      setIsOnline(await window.api.pingVPN())
     }
 
     const interval = setInterval(ping, 5000)

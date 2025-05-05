@@ -1,9 +1,3 @@
-// import { useRef } from 'react'
-// import { Button } from '@/common/components/jolly/button'
-// import { Dialog } from '@/common/components/jolly/dialog'
-// import { Menu, MenuItem, MenuPopover, MenuTrigger } from '@/common/components/jolly/menu'
-// import { Popover, PopoverTrigger } from '@/common/components/jolly/popover'
-// import { useToggle } from '@/common/hooks'
 import type { EditableTableMethods, EditableTableProps } from '@/common/components/editable-table'
 
 import { type KeyboardEvent, useEffect, useRef } from 'react'
@@ -12,6 +6,7 @@ import { useForm, useWatch } from 'react-hook-form'
 
 import { type EditableColumnDef, EditableTableAlt } from '@/common/components/editable-table-alt'
 import { createTextEditor } from '@/common/components/editable-table-alt/editors'
+import { Button } from '@/common/components/jolly/button'
 import { SearchInput } from '@/common/components/search-input'
 
 type FormValues = {
@@ -22,8 +17,31 @@ type FormValues = {
 
 const columns: EditableColumnDef<FormValues, 'childs'>[] = [
   {
-    key: 'name',
-    width: '100%',
+    key: 'one',
+    width: 500,
+    sticky: true,
+    left: 0,
+    className: 'bg-red-500',
+    Editor: createTextEditor({})
+  },
+  {
+    key: 'two',
+    width: 1000,
+    className: 'bg-green-500',
+    Editor: createTextEditor({})
+  },
+  {
+    key: 'three',
+    width: 500,
+    sticky: true,
+    right: 0,
+    className: 'bg-blue-500',
+    Editor: createTextEditor({})
+  },
+  {
+    key: 'four',
+    width: 400,
+    className: 'bg-yellow-500',
     Editor: createTextEditor({})
   }
 ]
@@ -60,6 +78,17 @@ const DemoPage = () => {
     <div className="flex-1 flex flex-col overflow-hidden">
       <div className="p-5">
         <SearchInput onKeyDown={handleSearch} />
+      </div>
+      <div className="p-5">
+        <Button
+          onPress={() => {
+            window.api.openRouteNewWindow({
+              route: 'demo'
+            })
+          }}
+        >
+          Open new window
+        </Button>
       </div>
       <div className="flex-1 overflow-hidden">
         <EditableTableAlt
@@ -109,6 +138,7 @@ const DemoTableFooter = ({ form }: EditableTableProps<FormValues, 'childs'>) => 
       form={footerForm}
       name="childs"
       className="!border-none"
+      divProps={{ className: 'w-min', style: { overflow: 'visible' } }}
     />
   )
 }

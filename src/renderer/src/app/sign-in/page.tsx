@@ -73,6 +73,12 @@ const SigninPage = () => {
     }
   }, [i18n])
 
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    const route = params.get('route')
+    console.log('route', route)
+  }, [])
+
   const onSubmit = form.handleSubmit((values) => {
     signin(values)
   })

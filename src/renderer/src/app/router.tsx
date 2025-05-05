@@ -129,6 +129,10 @@ export const routes: RouteObject[] = [
     element: <SigninPage />
   },
   {
+    path: 'demo',
+    element: import.meta.env.DEV ? <DemoPage /> : null
+  },
+  {
     path: '*',
     element: <MainLayout />,
     children: [

@@ -1,4 +1,4 @@
-import type { SaveFileArgs } from './interfaces'
+import type { OpenRouteNewWindowArgs, SaveFileArgs } from './interfaces'
 
 import { electronAPI } from '@electron-toolkit/preload'
 import { contextBridge, ipcRenderer } from 'electron'
@@ -10,7 +10,9 @@ const api = {
   getZoomFactor: () => ipcRenderer.invoke('get-zoom-factor'),
   openZarplata: () => ipcRenderer.invoke('open-zarplata'),
   pingInternet: () => ipcRenderer.invoke('ping-internet'),
-  pingVPN: () => ipcRenderer.invoke('ping-vpn')
+  pingVPN: () => ipcRenderer.invoke('ping-vpn'),
+  openRouteNewWindow: (args: OpenRouteNewWindowArgs) =>
+    ipcRenderer.invoke('open-route-new-window', args)
 }
 
 // Use `contextBridge` APIs to expose Electron APIs to

@@ -9,9 +9,7 @@ export const InternetStatus = () => {
 
   useEffect(() => {
     const ping = async () => {
-      const online = await window.api.pingInternet()
-      console.log({ online })
-      setIsOnline(online)
+      setIsOnline(await window.api.pingInternet())
     }
 
     const interval = setInterval(ping, 5000)
