@@ -2,7 +2,7 @@ import type { HTMLAttributes } from 'react'
 
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 
-import { Button } from '@/common/components/ui/button'
+import { Button } from '@/common/components/jolly/button'
 import { cn } from '@/common/lib/utils'
 
 export interface StepperSelectorProps<T extends object> extends HTMLAttributes<HTMLDivElement> {
@@ -35,9 +35,9 @@ export const StepperSelector = <T extends object>({
       {options.length > 1 ? (
         <Button
           size="icon"
-          variant="outline"
+          variant="ghost"
           className="size-6"
-          disabled={options?.length < 2}
+          isDisabled={options?.length < 2}
           onClick={(e) => {
             e.stopPropagation()
             onValueChange(getOptionValue(options?.[prevIndex]))
@@ -47,15 +47,15 @@ export const StepperSelector = <T extends object>({
           <ChevronLeft className="btn-icon" />
         </Button>
       ) : null}
-      <span className="flex-1 text-sm font-semibold text-center">
+      <span className="flex-1 text-xs font-semibold text-center">
         {options?.[currentIndex] ? getOptionLabel(options?.[currentIndex]) : undefined}
       </span>
       {options.length > 1 ? (
         <Button
           size="icon"
-          variant="outline"
+          variant="ghost"
           className="size-6"
-          disabled={options?.length < 2}
+          isDisabled={options?.length < 2}
           onClick={(e) => {
             e.stopPropagation()
             onValueChange(getOptionValue(options?.[nextIndex]))

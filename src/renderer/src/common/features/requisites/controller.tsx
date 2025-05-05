@@ -46,7 +46,7 @@ export const RequisitesController = () => {
 
   return (
     <>
-      <div className="flex items-center gap-2 pl-2 pr-4 border-x">
+      <div className="flex items-center gap-0 mr-1">
         <Button
           variant="ghost"
           size="icon"
@@ -63,7 +63,7 @@ export const RequisitesController = () => {
           </p>
 
           {mainSchet ? (
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-0">
               <StepperSelector
                 value={main_schet_id}
                 onValueChange={(main_schet_id) => {

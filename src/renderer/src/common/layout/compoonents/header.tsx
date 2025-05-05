@@ -1,15 +1,17 @@
 import { Fragment } from 'react'
 
 import { CaretRightIcon } from '@radix-ui/react-icons'
-import { ArrowLeft, LogOut, Plus } from 'lucide-react'
+import { ArrowLeft, LogOut, Menu, Plus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Link, useLocation } from 'react-router-dom'
 
 import { Button } from '@/common/components/jolly/button'
+import { Popover, PopoverDialog, PopoverTrigger } from '@/common/components/jolly/popover'
 import { NewWindowLauncher } from '@/common/components/new-window-launcher'
 import { Reload } from '@/common/components/reload'
 import { useAuthenticationStore } from '@/common/features/auth'
 import { RequisitesController } from '@/common/features/requisites'
+import { useElementWidth } from '@/common/hooks'
 
 import { useLayoutStore } from '../store'
 import { SelectedMonth } from './selected-month'
@@ -27,6 +29,7 @@ export const Header = () => {
     onBack
   } = useLayoutStore()
   const { user, setUser } = useAuthenticationStore()
+  const { setElementRef, width } = useElementWidth()
 
   const location = useLocation()
 
@@ -35,7 +38,10 @@ export const Header = () => {
   }
 
   return (
-    <header className="px-5 py-4 flex flex-wrap justify-between border-b border-border/50 bg-white z-[51] sticky top-0">
+    <header
+      ref={setElementRef}
+      className="px-5 py-4 flex flex-wrap justify-between border-b border-border/50 bg-white z-[51] sticky top-0"
+    >
       <div className="flex items-center gap-2.5">
         {typeof onBack === 'function' ? (
           <Button
@@ -91,11 +97,34 @@ export const Header = () => {
         ) : null}
         {user && user?.role_name !== 'super-admin' ? <RequisitesController /> : null}
         <div className="flex items-center gap-0.5">
-          <div className="flex items-center">
-            <Settings />
-            <Reload />
-            <NewWindowLauncher />
-          </div>
+          {width && width > 1600 ? (
+            <div className="flex items-center">
+              <Settings />
+              <Reload />
+              <NewWindowLauncher />
+            </div>
+          ) : null}
+
+          {width && width < 1600 ? (
+            <PopoverTrigger>
+              <Button
+                variant="ghost"
+                size="icon"
+              >
+                <Menu className="btn-icon icon-md" />
+              </Button>
+              <Popover>
+                <PopoverDialog>
+                  <div className="flex items-center">
+                    <Settings />
+                    <Reload />
+                    <NewWindowLauncher />
+                  </div>
+                </PopoverDialog>
+              </Popover>
+            </PopoverTrigger>
+          ) : null}
+
           {user ? <UserProfile user={user} /> : null}
           <Button
             variant="ghost"

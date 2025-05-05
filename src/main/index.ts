@@ -62,6 +62,8 @@ function createWindow(route: string = '', floating: boolean = false): BrowserWin
   const win = new BrowserWindow({
     show: false,
     autoHideMenuBar: true,
+    minWidth: 1600,
+    minHeight: 900,
     ...(process.platform === 'linux'
       ? { icon: import.meta.env.VITE_MODE === 'prod' ? icon : iconDev }
       : { icon: import.meta.env.VITE_MODE === 'prod' ? icon : iconDev }),
