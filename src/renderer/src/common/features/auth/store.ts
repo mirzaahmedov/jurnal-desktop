@@ -8,6 +8,7 @@ export type AuthenticationStore = {
   user?: User & { access_object: RoleAccess }
   token?: string
   setUser(payload: Pick<AuthenticationStore, 'user' | 'token'> | null): void
+  setAuthenticated(isAuthenticated: boolean): void
 }
 
 export const useAuthenticationStore = create<AuthenticationStore>()(
@@ -27,6 +28,9 @@ export const useAuthenticationStore = create<AuthenticationStore>()(
           token: payload.token,
           isAuthenticated: true
         })
+      },
+      setAuthenticated: (isAuthenticated) => {
+        set({ isAuthenticated })
       }
     }),
     {

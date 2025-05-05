@@ -1,4 +1,3 @@
-import { Reload } from '@/common/components/reload'
 import { Downloads } from '@/common/features/downloads-manager'
 import { InternetStatus, VPNStatus } from '@/common/features/network'
 
@@ -8,7 +7,6 @@ export const Footer = () => {
       <InternetStatus />
       <VPNStatus />
       <Downloads />
-      <Reload />
     </footer>
   )
 }

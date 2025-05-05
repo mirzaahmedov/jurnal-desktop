@@ -225,8 +225,11 @@ const AktDetailsPage = () => {
           title: t('pages.organization')
         },
         {
-          path: '/organization/akt',
           title: t('pages.akt')
+        },
+        {
+          path: '/organization/159/akt',
+          title: t('pages.schet_faktura')
         }
       ],
       enableSaldo: true,

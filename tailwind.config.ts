@@ -21,6 +21,10 @@ const ui = plugin(function ({ addUtilities }) {
       width: '1rem',
       height: '1rem'
     },
+    '.icon-md': {
+      width: '1.25rem',
+      height: '1.25rem'
+    },
 
     '.noscroll-bar': {
       'scrollbar-width': 'none'

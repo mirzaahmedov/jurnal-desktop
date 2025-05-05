@@ -9,15 +9,14 @@ import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 
+import { Button } from '@/common/components/ui/button'
 import {
+  Dialog,
   DialogContent,
   DialogFooter,
   DialogHeader,
-  DialogOverlay,
-  DialogTitle,
-  DialogTrigger
-} from '@/common/components/jolly/dialog'
-import { Button } from '@/common/components/ui/button'
+  DialogTitle
+} from '@/common/components/ui/dialog'
 import {
   Form,
   FormControl,
@@ -90,73 +89,71 @@ export const PodotchetDialog = ({ open, onOpenChange, selected }: PodotchetDialo
   }, [form, selected])
 
   return (
-    <DialogTrigger
-      isOpen={open}
+    <Dialog
+      open={open}
       onOpenChange={onOpenChange}
     >
-      <DialogOverlay>
-        <DialogContent className="max-w-xl">
-          <DialogHeader>
-            <DialogTitle>
-              {selected
-                ? t('podotchet-litso')
-                : capitalize(t('create-something', { something: t('podotchet-litso') }))}
-            </DialogTitle>
-          </DialogHeader>
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)}>
-              <div className="grid gap-4 py-4">
-                <FormField
-                  name="name"
-                  control={form.control}
-                  render={({ field }) => (
-                    <FormItem>
-                      <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
-                        <FormLabel className="text-right col-span-2">{t('name')}</FormLabel>
-                        <FormControl>
-                          <Input
-                            className="col-span-4"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage className="text-end col-span-6" />
-                      </div>
-                    </FormItem>
-                  )}
-                />
+      <DialogContent className="max-w-xl">
+        <DialogHeader>
+          <DialogTitle>
+            {selected
+              ? t('podotchet-litso')
+              : capitalize(t('create-something', { something: t('podotchet-litso') }))}
+          </DialogTitle>
+        </DialogHeader>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)}>
+            <div className="grid gap-4 py-4">
+              <FormField
+                name="name"
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
+                      <FormLabel className="text-right col-span-2">{t('name')}</FormLabel>
+                      <FormControl>
+                        <Input
+                          className="col-span-4"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage className="text-end col-span-6" />
+                    </div>
+                  </FormItem>
+                )}
+              />
 
-                <FormField
-                  name="rayon"
-                  control={form.control}
-                  render={({ field }) => (
-                    <FormItem>
-                      <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
-                        <FormLabel className="text-right col-span-2">{t('rayon')}</FormLabel>
-                        <FormControl>
-                          <Input
-                            className="col-span-4"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage className="text-end col-span-6" />
-                      </div>
-                    </FormItem>
-                  )}
-                />
-              </div>
-              <DialogFooter>
-                <Button
-                  type="submit"
-                  disabled={isCreating || isUpdating}
-                >
-                  {t('save')}
-                </Button>
-              </DialogFooter>
-            </form>
-          </Form>
-        </DialogContent>
-      </DialogOverlay>
-    </DialogTrigger>
+              <FormField
+                name="rayon"
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
+                      <FormLabel className="text-right col-span-2">{t('rayon')}</FormLabel>
+                      <FormControl>
+                        <Input
+                          className="col-span-4"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage className="text-end col-span-6" />
+                    </div>
+                  </FormItem>
+                )}
+              />
+            </div>
+            <DialogFooter>
+              <Button
+                type="submit"
+                disabled={isCreating || isUpdating}
+              >
+                {t('save')}
+              </Button>
+            </DialogFooter>
+          </form>
+        </Form>
+      </DialogContent>
+    </Dialog>
   )
 }
 

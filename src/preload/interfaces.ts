@@ -11,4 +11,6 @@ export interface SaveFileResponse {
 
 export interface OpenRouteNewWindowArgs {
   route: string
+  localStorage: Record<string, string>
+  sessionStorage: Record<string, string>
 }

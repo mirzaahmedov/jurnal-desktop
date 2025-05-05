@@ -42,10 +42,9 @@ const AktPage = () => {
   const setLayout = useLayout()
   const startDate = useSelectedMonthStore((store) => store.startDate)
 
-  const { main_schet_id, jur3_schet_159_id } = useRequisitesStore()
-
   const [search] = useSearchFilter()
 
+  const { main_schet_id, jur3_schet_159_id } = useRequisitesStore()
   const { confirm } = useConfirm()
   const { sorting, handleSort, getColumnSorted } = useTableSort()
   const { queuedMonths } = useAktSaldo()
@@ -101,10 +100,13 @@ const AktPage = () => {
 
   useEffect(() => {
     setLayout({
-      title: t('pages.akt'),
+      title: t('pages.schet_faktura'),
       breadcrumbs: [
         {
           title: t('pages.organization')
+        },
+        {
+          title: t('pages.akt')
         }
       ],
       content: SearchFilterDebounced,

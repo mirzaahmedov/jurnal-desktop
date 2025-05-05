@@ -67,7 +67,6 @@ export const MainbookSaldoUpdateManager = () => {
       form.setValue('year', year)
       form.setValue('month', month)
       form.setValue('childs', transformMainbookAutoFillData(childs))
-      return
     },
     onError: () => {
       form.setValue('childs', [])

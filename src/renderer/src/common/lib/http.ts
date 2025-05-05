@@ -43,21 +43,26 @@ export const http = axios.create({
   baseURL
 })
 
-http.interceptors.request.use((config: InternalAxiosRequestConfig) => {
-  config.headers['x-app-lang'] = i18next.language
+http.interceptors.request.use(
+  (config: InternalAxiosRequestConfig) => {
+    config.headers['x-app-lang'] = i18next.language
 
-  if (config.withCredentials === false) {
+    if (config.withCredentials === false) {
+      return config
+    }
+
+    const { token } = useAuthenticationStore.getState()
+    if (!token) {
+      throw new axios.Cancel('No token')
+    }
+
+    config.headers.Authorization = `Bearer ${token}`
     return config
+  },
+  (error) => {
+    return Promise.reject(error)
   }
-
-  const { token } = useAuthenticationStore.getState()
-  if (!token) {
-    throw new Error('No access token')
-  }
-
-  config.headers.Authorization = `Bearer ${token}`
-  return config
-})
+)
 
 http.interceptors.response.use(
   (response) => {

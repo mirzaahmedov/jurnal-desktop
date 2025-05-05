@@ -38,7 +38,7 @@ const SigninPage = () => {
   const navigate = useNavigate()
 
   const { user_id, clear } = useRequisitesStore()
-  const { setUser } = useAuthenticationStore()
+  const { setUser, setAuthenticated } = useAuthenticationStore()
 
   const form = useForm({
     resolver: zodResolver(SigninFormSchema),
@@ -76,8 +76,26 @@ const SigninPage = () => {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
     const route = params.get('route')
-    console.log('route', route)
-  }, [])
+
+    const handleRehydrate = () => {
+      useAuthenticationStore.persist.rehydrate()
+      setAuthenticated(true)
+      navigate(route!)
+    }
+    if (route) {
+      window.electron.ipcRenderer.on('rehydrate', handleRehydrate)
+      return
+    }
+    setTimeout(() => {
+      document.getElementById('splash-screen')?.classList.add('hidden')
+    }, 100)
+
+    return () => {
+      if (route) {
+        window.electron.ipcRenderer.removeAllListeners('rehydrate')
+      }
+    }
+  }, [navigate])
 
   const onSubmit = form.handleSubmit((values) => {
     signin(values)

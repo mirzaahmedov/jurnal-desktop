@@ -6,7 +6,7 @@ import { useForm, useWatch } from 'react-hook-form'
 
 import { type EditableColumnDef, EditableTableAlt } from '@/common/components/editable-table-alt'
 import { createTextEditor } from '@/common/components/editable-table-alt/editors'
-import { Button } from '@/common/components/jolly/button'
+import { NewWindowLauncher } from '@/common/components/new-window-launcher'
 import { SearchInput } from '@/common/components/search-input'
 
 type FormValues = {
@@ -75,20 +75,9 @@ const DemoPage = () => {
   }
 
   return (
-    <div className="flex-1 flex flex-col overflow-hidden">
+    <NewWindowLauncher className="flex-1 flex flex-col overflow-hidden">
       <div className="p-5">
         <SearchInput onKeyDown={handleSearch} />
-      </div>
-      <div className="p-5">
-        <Button
-          onPress={() => {
-            window.api.openRouteNewWindow({
-              route: 'demo'
-            })
-          }}
-        >
-          Open new window
-        </Button>
       </div>
       <div className="flex-1 overflow-hidden">
         <EditableTableAlt
@@ -100,7 +89,7 @@ const DemoPage = () => {
           onCreate={() => {}}
         />
       </div>
-    </div>
+    </NewWindowLauncher>
   )
 }
 

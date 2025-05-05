@@ -96,10 +96,13 @@ const PokazatUslugiPage = () => {
 
   useEffect(() => {
     setLayout({
-      title: t('pages.service'),
+      title: t('pages.schet_faktura'),
       breadcrumbs: [
         {
           title: t('pages.organization')
+        },
+        {
+          title: t('pages.service')
         }
       ],
       enableSaldo: true,

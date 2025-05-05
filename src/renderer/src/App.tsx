@@ -15,11 +15,6 @@ initLocales()
 
 function App() {
   useEffect(() => {
-    requestAnimationFrame(() => {
-      document.getElementById('splash-screen')?.classList.add('hidden')
-    })
-  }, [])
-  useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
       if (e.key === 'I' && e.shiftKey && e.ctrlKey) {
         window.electron.ipcRenderer.send('open-dev-tools')

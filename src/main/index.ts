@@ -5,7 +5,7 @@ import iconDev from '@resources/icon-dev.png?asset'
 import icon from '@resources/icon.png?asset'
 import { exec } from 'child_process'
 import dotenv from 'dotenv'
-import { BrowserWindow, app, ipcMain, shell } from 'electron'
+import { BrowserWindow, app, ipcMain, screen, shell } from 'electron'
 import { REACT_DEVELOPER_TOOLS, installExtension } from 'electron-devtools-installer'
 import { NsisUpdater } from 'electron-updater'
 import fs from 'fs'
@@ -54,12 +54,13 @@ const autoUpdater = new NsisUpdater({
   url
 })
 
-function createWindow(route: string = ''): BrowserWindow {
+function createWindow(route: string = '', floating: boolean = false): BrowserWindow {
   // Create the browser window.
+  // width and height of the window
+  const { width, height } = screen.getPrimaryDisplay().workAreaSize
+
   const win = new BrowserWindow({
     show: false,
-    minWidth: 1920,
-    minHeight: 1080,
     autoHideMenuBar: true,
     ...(process.platform === 'linux'
       ? { icon: import.meta.env.VITE_MODE === 'prod' ? icon : iconDev }
@@ -70,10 +71,15 @@ function createWindow(route: string = ''): BrowserWindow {
       devTools: true // needed for devtools extension to work
     }
   })
+  if (floating) {
+    win.setSize(width - 100, height - 100)
+    win.center()
+  } else {
+    win.maximize()
+  }
 
   win.on('ready-to-show', async () => {
     win.show()
-    win.maximize()
   })
 
   win.webContents.setWindowOpenHandler((details) => {
@@ -83,10 +89,16 @@ function createWindow(route: string = ''): BrowserWindow {
 
   // HMR for renderer base on electron-vite cli.
   // Load the remote URL for development or the local html file for production.
+
+  const params = new URLSearchParams()
+  params.set('route', route)
+
   if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
-    win.loadURL(process.env['ELECTRON_RENDERER_URL'] + (route ? `/${route}` : ''))
+    win.loadURL(process.env['ELECTRON_RENDERER_URL'] + `?${params.toString()}`)
   } else {
-    win.loadFile(path.join(__dirname, '../renderer/index.html'))
+    win.loadFile(path.join(__dirname, '../renderer/index.html'), {
+      search: params.toString()
+    })
   }
 
   windows.push(win)
@@ -224,10 +236,24 @@ ipcMain.handle('open-file-in-folder', async (_event, filePath: string) => {
   shell.showItemInFolder(filePath)
 })
 
-ipcMain.handle('open-route-new-window', async (_event, { route }: OpenRouteNewWindowArgs) => {
-  const win = createWindow(route)
-  console.log('open-route-new-window', { route, win })
-})
+ipcMain.handle(
+  'open-route-new-window',
+  async (_event, { route, localStorage, sessionStorage }: OpenRouteNewWindowArgs) => {
+    const win = createWindow(route, true)
+    win.webContents.on('did-finish-load', () => {
+      Promise.all([
+        win.webContents.executeJavaScript(
+          `Object.entries(${JSON.stringify(localStorage)}).forEach(([key, value]) => localStorage.setItem(key, value));`
+        ),
+        win.webContents.executeJavaScript(
+          `Object.entries(${JSON.stringify(sessionStorage)}).forEach(([key, value]) => sessionStorage.setItem(key, value));`
+        )
+      ]).then(() => {
+        win.webContents.send('rehydrate')
+      })
+    })
+  }
+)
 
 ipcMain.handle('open-zarplata', () => {
   return shell.openPath(zarplataPath)

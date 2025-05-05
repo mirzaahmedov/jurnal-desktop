@@ -229,8 +229,11 @@ const PokazatUslugiDetailsPage = () => {
           title: t('pages.organization')
         },
         {
-          path: '/organization/pokazat-uslugi',
           title: t('pages.service')
+        },
+        {
+          path: '/organization/pokazat-uslugi',
+          title: t('pages.schet_faktura')
         }
       ],
       enableSaldo: true,

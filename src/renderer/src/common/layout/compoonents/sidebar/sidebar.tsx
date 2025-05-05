@@ -5,8 +5,8 @@ import { ChevronsLeft, ChevronsRight, RefreshCcw } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { Spinner } from '@/common/components'
+import { Button } from '@/common/components/jolly/button'
 import { Badge } from '@/common/components/ui/badge'
-import { Button } from '@/common/components/ui/button'
 import { useUpdateManagerStore } from '@/common/features/update-manager'
 import { useKeyUp } from '@/common/hooks'
 import { cn } from '@/common/lib/utils'
@@ -60,7 +60,7 @@ export const Sidebar = () => {
         <Button
           variant="ghost"
           size="icon"
-          onClick={toggleCollapsed}
+          onPress={toggleCollapsed}
           className="text-slate-500"
         >
           {isCollapsed ? <ChevronsRight className="size-5" /> : <ChevronsLeft className="size-5" />}
@@ -85,7 +85,7 @@ export const Sidebar = () => {
         <Button
           className="h-12 w-full rounded-none flex items-center gap-2"
           onClick={handleRestart}
-          disabled={isRestarting}
+          isDisabled={isRestarting}
         >
           {isRestarting ? (
             <Spinner className="mr-2 inline-block size-4 border-white border-2 border-r-transparent" />
