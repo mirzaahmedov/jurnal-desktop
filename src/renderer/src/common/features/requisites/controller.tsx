@@ -63,7 +63,7 @@ export const RequisitesController = () => {
           </p>
 
           {mainSchet ? (
-            <div className="flex items-center gap-0">
+            <div className="flex items-center gap-1">
               <StepperSelector
                 value={main_schet_id}
                 onValueChange={(main_schet_id) => {

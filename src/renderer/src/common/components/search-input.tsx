@@ -35,10 +35,7 @@ export const SearchInput = ({
   return (
     <div
       {...containerProps}
-      className={cn(
-        'relative w-80 focus-within:w-96 transition-[width] duration-75',
-        containerProps?.className
-      )}
+      className={cn('relative w-80', containerProps?.className)}
     >
       <Input
         required

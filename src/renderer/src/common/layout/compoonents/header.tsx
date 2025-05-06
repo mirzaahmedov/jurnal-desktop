@@ -12,6 +12,7 @@ import { Reload } from '@/common/components/reload'
 import { useAuthenticationStore } from '@/common/features/auth'
 import { RequisitesController } from '@/common/features/requisites'
 import { useElementWidth } from '@/common/hooks'
+import { cn } from '@/common/lib/utils'
 
 import { useLayoutStore } from '../store'
 import { SelectedMonth } from './selected-month'
@@ -40,9 +41,9 @@ export const Header = () => {
   return (
     <header
       ref={setElementRef}
-      className="px-5 py-4 flex flex-wrap justify-between border-b border-border/50 bg-white z-[51] sticky top-0"
+      className="px-5 py-4 flex flex-wrap justify-between gap-y-5 border-b border-border/50 bg-white z-[51] sticky top-0"
     >
-      <div className="flex items-center gap-2.5">
+      <div className="flex items-center flex-wrap gap-2.5">
         {typeof onBack === 'function' ? (
           <Button
             variant="ghost"
@@ -78,26 +79,29 @@ export const Header = () => {
           <h1 className="text-base font-semibold">{title}</h1>
         </div>
       </div>
-      <div className="flex-1 flex items-center px-2 gap-2">
+      <div className="flex-1 flex flex-wrap items-center px-2 gap-2">
         <div className="flex-1">{Content && <Content key={location.pathname} />}</div>
         <div>
           {typeof onCreate === 'function' ? (
-            <Button onPress={onCreate}>
-              {t('add')}
-              <Plus className="btn-icon icon-end" />
+            <Button
+              onPress={onCreate}
+              size={width && width < 1305 ? 'icon' : 'default'}
+            >
+              {width && width < 1305 ? null : t('add')}
+              <Plus className={cn('btn-icon', width && width > 1305 && 'icon-end')} />
             </Button>
           ) : null}
         </div>
       </div>
-      <div className="flex items-center gap-1">
+      <div className="flex items-center flex-wrap gap-1">
         {isSelectedMonthVisible ? (
           <div className="pr-1">
             <SelectedMonth />
           </div>
         ) : null}
         {user && user?.role_name !== 'super-admin' ? <RequisitesController /> : null}
-        <div className="flex items-center gap-0.5">
-          {width && width > 1600 ? (
+        <div className="flex items-center flex-wrap gap-0.5">
+          {width && width > 1400 ? (
             <div className="flex items-center">
               <Settings />
               <Reload />
@@ -105,7 +109,7 @@ export const Header = () => {
             </div>
           ) : null}
 
-          {width && width < 1600 ? (
+          {width && width < 1400 ? (
             <PopoverTrigger>
               <Button
                 variant="ghost"
