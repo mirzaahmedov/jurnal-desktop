@@ -3,15 +3,8 @@
 @tailwind components;
 
 @font-face {
-  font-family: 'Montserrat';
-  src: url('/fonts/Montserrat/Montserrat-VariableFont_wght.ttf') format('truetype');
-  font-weight: 100 900;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Montserrat';
-  src: url('/fonts/Montserrat/Montserrat-Italic-VariableFont_wght.ttf') format('truetype');
-  font-style: italic;
+  font-family: 'Geist';
+  src: url('/fonts/Geist/Geist-VariableFont_wght.ttf') format('truetype');
   font-weight: 100 900;
   font-display: swap;
 }
@@ -100,7 +93,8 @@ body,
 body {
   background-color: hsl(var(--background));
   color: hsl(var(--foreground));
-  font-family: 'Montserrat', sans-serif;
+  /* font-family: 'Montserrat', sans-serif; */
+  font-family: 'Geist', sans-serif;
 }
 
 input:-webkit-autofill,

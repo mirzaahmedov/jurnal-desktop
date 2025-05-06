@@ -49,7 +49,7 @@ export const Pagination = ({
   }, [pageCountValue, pageValue, onChangeEvent])
 
   return (
-    <div className="flex items-center justify-start gap-20">
+    <div className="flex items-center justify-start flex-wrap gap-x-20 gap-y-5">
       <Paginate
         className="flex gap-4"
         pageRangeDisplayed={2}

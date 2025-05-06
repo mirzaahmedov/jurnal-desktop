@@ -16,10 +16,15 @@ export const Downloads = () => {
     <PopoverTrigger>
       <Button
         variant="ghost"
-        className="rounded-none"
+        size="icon"
+        className="relative"
       >
-        <CircleArrowDown className="icon icon-start size-[1.125rem]" /> <Trans>downloads</Trans>
-        {files.length ? <Badge className="ml-2 -my-5">{files.length}</Badge> : null}
+        <CircleArrowDown className="icon icon-md" />
+        {files.length ? (
+          <Badge className="absolute top-0 right-0 text-2xs px-1.5 min-w-5 h-5">
+            {files.length}
+          </Badge>
+        ) : null}
       </Button>
       <Popover
         placement="top end"

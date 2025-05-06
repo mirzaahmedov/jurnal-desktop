@@ -141,7 +141,7 @@ function JollySelect<T extends object>({
         buttonRef={buttonRef}
         readOnly={isReadonly}
       >
-        <SelectValue />
+        <SelectValue className="text-start" />
       </SelectTrigger>
       {description && (
         <Text
