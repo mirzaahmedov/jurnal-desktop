@@ -23,12 +23,20 @@
         bottom: 0;
         background-color: #fff;
         display: flex;
+        flex-direction: column;
+        gap: 40px;
         justify-content: center;
         align-items: center;
         z-index: 100;
       }
       #splash-screen.hidden {
         display: none;
+      }
+
+      #splash-screen-logo {
+        width: 200px;
+        height: 200px;
+        margin-bottom: 20px;
       }
 
       #loader {
@@ -58,6 +66,11 @@
   <body>
     <div id="root"></div>
     <div id="splash-screen">
+      <img
+        src="/images/logo.svg"
+        alt="MCHS logo"
+        id="splash-screen-logo"
+      />
       <div id="loader"></div>
     </div>
     <script
