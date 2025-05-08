@@ -1,10 +1,14 @@
-import type { EditableColumnDef, HeaderColumnDef } from './interface'
+import type {
+  HeaderColumnDef,
+  VirtualEditableColumnDef,
+  VirtualLeafEditableColumnDef
+} from './interface'
 
 import { getTreeBreadth, getTreeDepth } from '@/common/lib/tree/utils'
 
 export const getHeaderGroups = <T extends object>(
-  columns: EditableColumnDef<T>[]
-): HeaderColumnDef<EditableColumnDef<T>>[][] => {
+  columns: VirtualEditableColumnDef<T>[]
+): HeaderColumnDef<VirtualEditableColumnDef<T>>[][] => {
   let maxDepth = 0
   columns.forEach((column) => {
     const depth = getTreeDepth({
@@ -18,11 +22,11 @@ export const getHeaderGroups = <T extends object>(
 
   const groups = Array.from(
     { length: maxDepth },
-    () => [] as HeaderColumnDef<EditableColumnDef<T>>[]
+    () => [] as HeaderColumnDef<VirtualEditableColumnDef<T>>[]
   )
 
-  const processColumns = (columns: EditableColumnDef<T>[], rowIndex: number) => {
-    const children = [] as EditableColumnDef<T>[]
+  const processColumns = (columns: VirtualEditableColumnDef<T>[], rowIndex: number) => {
+    const children = [] as VirtualEditableColumnDef<T>[]
 
     columns.forEach((column) => {
       const leafDepth = getTreeDepth({
@@ -56,12 +60,12 @@ export const getHeaderGroups = <T extends object>(
   return groups
 }
 
-export const getDataColumns = <T extends object>(
-  columns: EditableColumnDef<T>[]
-): EditableColumnDef<T>[] => {
-  const accessorColumns = [] as EditableColumnDef<T>[]
+export const getLeafColumns = <T extends object>(
+  columns: VirtualEditableColumnDef<T>[]
+): VirtualLeafEditableColumnDef<T>[] => {
+  const accessorColumns = [] as VirtualEditableColumnDef<T>[]
 
-  const processColumns = (columns: EditableColumnDef<T>[]) => {
+  const processColumns = (columns: VirtualEditableColumnDef<T>[]) => {
     columns.forEach((column) => {
       if (column.columns?.length) {
         processColumns(column.columns)
@@ -73,5 +77,5 @@ export const getDataColumns = <T extends object>(
 
   processColumns(columns)
 
-  return accessorColumns
+  return accessorColumns as VirtualLeafEditableColumnDef<T>[]
 }

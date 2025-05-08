@@ -5,16 +5,16 @@ import { type MutableRefObject, type RefObject, memo, useImperativeHandle, useRe
 import { useTranslation } from 'react-i18next'
 
 import { NumericInput, type NumericInputProps } from '@/common/components'
+import { EmptyList } from '@/common/components/empty-states'
+import { Input, type InputProps } from '@/common/components/ui/input'
+import { Table, TableBody, TableFooter, TableHeader } from '@/common/components/ui/table'
 import {
   type EditableTableMethods,
   TableCell,
   TableHead,
   TableRow,
   type TableRowProps
-} from '@/common/components/editable-table-alt'
-import { EmptyList } from '@/common/components/empty-states'
-import { Input, type InputProps } from '@/common/components/ui/input'
-import { Table, TableBody, TableFooter, TableHeader } from '@/common/components/ui/table'
+} from '@/common/components/virtual-editable-table'
 import { inputVariants } from '@/common/features/spravochnik'
 import { formatLocaleDate } from '@/common/lib/format'
 import { cn } from '@/common/lib/utils'

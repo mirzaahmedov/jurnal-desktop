@@ -116,3 +116,8 @@ b {
 .recharts-surface {
   overflow: visible;
 }
+
+.sticky-cell {
+  z-index: 100;
+  position: relative;
+}

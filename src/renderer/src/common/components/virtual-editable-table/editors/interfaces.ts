@@ -1,4 +1,4 @@
-import type { EditableColumnDef, TableRowField } from '../interface'
+import type { TableRowField, VirtualEditableColumnDef } from '../interface'
 import type { Dispatch, FC, InputHTMLAttributes, Ref, SetStateAction } from 'react'
 import type { ArrayPath, FieldError, FieldErrors, UseFormReturn } from 'react-hook-form'
 
@@ -20,7 +20,7 @@ export type EditorComponent<T extends object, F extends ArrayPath<NoInfer<T>>> =
   row: TableRowField<T, F>
   rows: TableRowField<T, F>[]
   form: UseFormReturn<T>
-  column: EditableColumnDef<T>
+  column: VirtualEditableColumnDef<T>
   max?: number
   error?: FieldError
   errors?: FieldErrors<T>

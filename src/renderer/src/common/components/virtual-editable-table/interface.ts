@@ -1,14 +1,7 @@
 import type { EditorComponentType } from './editors'
 import type { ChangeContext, DeleteContext } from './editors/interfaces'
 import type { Autocomplete } from '@/common/lib/types'
-import type {
-  ComponentProps,
-  HTMLAttributes,
-  MutableRefObject,
-  ReactNode,
-  RefObject,
-  SyntheticEvent
-} from 'react'
+import type { ComponentProps, HTMLAttributes, ReactNode, RefObject, SyntheticEvent } from 'react'
 import type { ArrayPath, FieldArrayWithId, UseFormReturn } from 'react-hook-form'
 
 export type TableRowField<T extends object, F extends ArrayPath<T>> = FieldArrayWithId<T, F, 'id'>
@@ -22,20 +15,40 @@ export type CellEventHandler<T extends object, F extends ArrayPath<T>> = (
   >
 ) => void
 
-export interface EditableColumnDef<T extends object, F extends ArrayPath<T> = ArrayPath<T>> {
+export interface BaseVirtualEditableColumnDef<
+  T extends object,
+  F extends ArrayPath<T> = ArrayPath<T>
+> {
   key: Autocomplete<keyof T[F][number]>
   header?: ReactNode
-  Editor: EditorComponentType<T, F>
   width?: number | string
   minWidth?: number | string
   maxWidth?: number | string
   className?: string
   headerClassName?: string
-  columns?: EditableColumnDef<T>[]
   sticky?: boolean
   left?: number
   right?: number
 }
+
+export interface VirtualGroupEditableColumnDef<
+  T extends object,
+  F extends ArrayPath<T> = ArrayPath<T>
+> extends BaseVirtualEditableColumnDef<T, F> {
+  Editor?: never
+  columns: VirtualEditableColumnDef<T>[]
+}
+export interface VirtualLeafEditableColumnDef<
+  T extends object,
+  F extends ArrayPath<T> = ArrayPath<T>
+> extends BaseVirtualEditableColumnDef<T, F> {
+  Editor: EditorComponentType<T, F>
+  columns?: never
+}
+
+export type VirtualEditableColumnDef<T extends object, F extends ArrayPath<T> = ArrayPath<T>> =
+  | VirtualGroupEditableColumnDef<T, F>
+  | VirtualLeafEditableColumnDef<T, F>
 
 export type HeaderColumnDef<T> = T & {
   _depth: number
@@ -47,15 +60,14 @@ export interface EditableTableMethods {
   scrollToRow: (rowIndex: number) => void
 }
 
-export interface EditableTableProps<T extends object, F extends ArrayPath<NoInfer<T>>> {
+export interface VirtualEditableTableProps<T extends object, F extends ArrayPath<NoInfer<T>>> {
   readOnly?: boolean
   disableHeader?: boolean
-  startRowNumber?: number
   tableRef?: RefObject<HTMLTableElement>
   tabIndex?: number
   form: UseFormReturn<T>
   name: F
-  columnDefs: EditableColumnDef<T, F>[]
+  columnDefs: VirtualEditableColumnDef<T, F>[]
   className?: string
   divProps?: HTMLAttributes<HTMLDivElement>
   getRowClassName?: (args: {
@@ -71,34 +83,31 @@ export interface EditableTableProps<T extends object, F extends ArrayPath<NoInfe
   ) => Record<string, unknown>
   placeholder?: string
   onDelete?(ctx: DeleteContext): void
-  onCreate?(): void
+  onRowCreate?(): void
   onCellDoubleClick?: CellEventHandler<T, F>
   params?: Record<string, unknown>
-  footer?: (props: EditableTableProps<T, F>) => ReactNode
+  getFooterRows?: (props: VirtualEditableTableProps<T, F>) => FieldArrayWithId<T, F, 'id'>[]
   validate?(ctx: ChangeContext<T, F>): boolean
   methods?: RefObject<EditableTableMethods>
 }
 
-export interface EditableRowProps<T extends object, F extends ArrayPath<NoInfer<T>>>
+export interface VirtualEditableRowProps<T extends object, F extends ArrayPath<NoInfer<T>>>
   extends Pick<
-      EditableTableProps<T, F>,
-      | 'readOnly'
-      | 'startRowNumber'
-      | 'validate'
-      | 'name'
-      | 'form'
-      | 'params'
-      | 'onDelete'
-      | 'onCellDoubleClick'
-      | 'columnDefs'
-      | 'getEditorProps'
-      | 'getRowClassName'
-    >,
-    HTMLAttributes<HTMLTableRowElement> {
-  dataColumns: EditableColumnDef<T, F>[]
+    VirtualEditableTableProps<T, F>,
+    | 'readOnly'
+    | 'validate'
+    | 'name'
+    | 'form'
+    | 'params'
+    | 'onDelete'
+    | 'onCellDoubleClick'
+    | 'columnDefs'
+    | 'getEditorProps'
+  > {
+  leafColumns: VirtualLeafEditableColumnDef<T, F>[]
   tabIndex?: number
+  startRowNumber: number
   index: number
-  highlightedRow: MutableRefObject<number | null>
   row: FieldArrayWithId<T, F, 'id'>
   rows: FieldArrayWithId<T, F, 'id'>[]
 }

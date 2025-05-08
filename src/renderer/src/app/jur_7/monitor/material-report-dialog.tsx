@@ -49,7 +49,7 @@ export const MaterialReportDialog = ({
     >
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{t('daily-report')}</DialogTitle>
+          <DialogTitle>{t('material')}</DialogTitle>
         </DialogHeader>
         <div className="flex flex-col gap-2">
           <Label className="font-medium">{t('responsible')}</Label>
