@@ -45,7 +45,7 @@ export const createSmetaEditor = <T extends { smeta_id?: number }>({
     return (
       <SpravochnikInput
         {...smetaSpravochnik}
-        onDoubleClick={readOnly ? undefined : smetaSpravochnik.open}
+        open={readOnly ? undefined : smetaSpravochnik.open}
         clear={readOnly ? undefined : smetaSpravochnik.clear}
         editor
         readOnly

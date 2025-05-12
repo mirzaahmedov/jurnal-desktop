@@ -71,7 +71,7 @@ export const SmetaGrafikDetails = ({ id }: SmetaGrafikDetailsProps) => {
     oy_12: 0
   } as SmetaGrafikProvodka)
 
-  const isEditable = searchParams.get('editable') === 'true'
+  const isEditable = searchParams.get('editable') === 'true' || id === 'create'
 
   const { data: smetaGrafik, isFetching } = useQuery({
     queryKey: [
