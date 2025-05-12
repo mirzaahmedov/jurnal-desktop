@@ -224,12 +224,13 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
                                 handleChangeChildField(index, 'summa', summa ?? 0)
                               }
                               handleChangeChildField(index, 'kol', values.floatValue ?? 0)
+
                               if (values.floatValue === undefined) {
                                 const input = src.event?.currentTarget as HTMLInputElement
                                 if (input) {
                                   setTimeout(() => {
-                                    src.event?.currentTarget.setSelectionRange(0, 1)
-                                  }, 100)
+                                    input.setSelectionRange(0, 1)
+                                  }, 0)
                                 }
                               }
                             }}
@@ -253,10 +254,14 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
                                 handleChangeChildField(index, 'summa', summa ?? 0)
                               }
                               handleChangeChildField(index, 'sena', values.floatValue ?? 0)
+
                               if (values.floatValue === undefined) {
-                                setTimeout(() => {
-                                  src.event?.currentTarget.setSelectionRange(0, 1)
-                                })
+                                const input = src.event?.currentTarget as HTMLInputElement
+                                if (input) {
+                                  setTimeout(() => {
+                                    input.setSelectionRange(0, 1)
+                                  }, 0)
+                                }
                               }
                             }}
                             className={inputVariants({
@@ -283,12 +288,15 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
                               ) {
                                 handleChangeChildField(index, 'sena', sena ?? 0)
                               }
-
                               handleChangeChildField(index, 'summa', values.floatValue ?? 0)
+
                               if (values.floatValue === undefined) {
-                                setTimeout(() => {
-                                  src.event?.currentTarget.setSelectionRange(0, 1)
-                                })
+                                const input = src.event?.currentTarget as HTMLInputElement
+                                if (input) {
+                                  setTimeout(() => {
+                                    input.setSelectionRange(0, 1)
+                                  }, 0)
+                                }
                               }
                             }}
                             className={inputVariants({

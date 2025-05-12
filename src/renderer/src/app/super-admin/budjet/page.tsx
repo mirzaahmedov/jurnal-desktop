@@ -5,10 +5,11 @@ import { useEffect, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 
-import { GenericTable, LoadingOverlay } from '@/common/components'
+import { GenericTable } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
 import { useToggle } from '@/common/hooks/use-toggle'
 import { useLayout } from '@/common/layout'
+import { ListView } from '@/common/views'
 
 import { BudjetColumns } from './columns'
 import { BudjetQueryKeys } from './config'
@@ -29,7 +30,7 @@ const BudjetPage = () => {
     queryKey: [BudjetQueryKeys.getAll],
     queryFn: BudjetService.getAll
   })
-  const { mutate: deleteMutation, isPending } = useMutation({
+  const { mutate: deleteBudjet } = useMutation({
     mutationKey: [BudjetQueryKeys.delete],
     mutationFn: BudjetService.delete,
     onSuccess() {
@@ -58,28 +59,27 @@ const BudjetPage = () => {
   const handleClickDelete = (row: Budjet) => {
     confirm({
       onConfirm() {
-        deleteMutation(row.id)
+        deleteBudjet(row.id)
       }
     })
   }
 
   return (
-    <>
-      <div className="relative">
-        {isFetching || isPending ? <LoadingOverlay /> : null}
+    <ListView>
+      <ListView.Content loading={isFetching}>
         <GenericTable
           data={budjets?.data ?? []}
           columnDefs={BudjetColumns}
           onDelete={handleClickDelete}
           onEdit={handleClickEdit}
         />
-      </div>
+      </ListView.Content>
       <BudjetDialog
         selected={selected}
         isOpen={dialogToggle.isOpen}
         onOpenChange={dialogToggle.setOpen}
       />
-    </>
+    </ListView>
   )
 }
 
