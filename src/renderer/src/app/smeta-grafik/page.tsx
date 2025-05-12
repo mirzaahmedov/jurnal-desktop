@@ -61,7 +61,7 @@ const SmetaGrafikPage = () => {
   })
 
   const handleClickEdit = (row: SmetaGrafik) => {
-    navigate(`${row.id}?editable=true`)
+    navigate(`${row.id}?year=${row.year}&editable=true`)
   }
   const handleClickDelete = (row: SmetaGrafik) => {
     confirm({
@@ -105,7 +105,7 @@ const SmetaGrafikPage = () => {
                 variant="ghost"
                 size="icon"
                 onPress={() => {
-                  navigate(`${row.id}?editable=false`)
+                  navigate(`${row.id}?year=${row.year}&editable=false`)
                 }}
               >
                 <Eye className="btn-icon" />

@@ -4,7 +4,7 @@ import type { ReactElement } from 'react'
 import { pdf } from '@react-pdf/renderer'
 import { useMutation } from '@tanstack/react-query'
 import { t } from 'i18next'
-import { Loader2, Printer } from 'lucide-react'
+import { Printer } from 'lucide-react'
 import { toast } from 'react-toastify'
 
 import { Button, type ButtonProps } from '@/common/components/jolly/button'
@@ -42,14 +42,10 @@ export const GenerateFile = ({
       type="button"
       variant="ghost"
       onPress={() => generate()}
+      IconStart={Printer}
       isPending={isPending || isGeneratingDocument}
       {...props}
     >
-      {isPending || isGeneratingDocument ? (
-        <Loader2 className="btn-icon icon-start animate-spin" />
-      ) : (
-        <Printer className="btn-icon icon-start" />
-      )}
       {buttonText}
     </Button>
   )

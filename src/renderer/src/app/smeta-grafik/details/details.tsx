@@ -72,12 +72,14 @@ export const SmetaGrafikDetails = ({ id }: SmetaGrafikDetailsProps) => {
   } as SmetaGrafikProvodka)
 
   const isEditable = searchParams.get('editable') === 'true' || id === 'create'
+  const year = searchParams.get('year')
 
   const { data: smetaGrafik, isFetching } = useQuery({
     queryKey: [
       SmetaGrafikQueryKeys.getById,
       Number(id),
       {
+        year,
         main_schet_id
       }
     ],
