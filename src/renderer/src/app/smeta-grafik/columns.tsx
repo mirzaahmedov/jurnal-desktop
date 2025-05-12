@@ -23,6 +23,11 @@ export const SmetaGrafikColumns: ColumnDef<SmetaGrafik>[] = [
     renderCell: (row) => <SummaCell summa={row.summa} />
   },
   {
+    width: 350,
+    key: 'command',
+    header: 'decree'
+  },
+  {
     key: 'order_number',
     header: 'numeric-order',
     renderCell: (row) =>
