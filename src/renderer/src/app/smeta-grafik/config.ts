@@ -57,7 +57,7 @@ export const SmetaGrafikProvodkaFormSchema = z
 export const SmetaGrafikFormSchema = withPreprocessor(
   z.object({
     year: z.number().min(1),
-    command: z.string().optional(),
+    command: z.string(),
     smetas: z.array(SmetaGrafikProvodkaFormSchema)
   })
 )

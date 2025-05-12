@@ -217,13 +217,21 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
                         <div className="relative">
                           <NumericInput
                             adjustWidth
-                            value={row.kol || ''}
+                            value={row.kol || 0}
                             onValueChange={(values, src) => {
                               const summa = calcSumma(values.floatValue ?? 0, row.sena)
                               if (src.source === 'event' && summa !== row.summa) {
-                                handleChangeChildField(index, 'summa', summa)
+                                handleChangeChildField(index, 'summa', summa ?? 0)
                               }
-                              handleChangeChildField(index, 'kol', values.floatValue)
+                              handleChangeChildField(index, 'kol', values.floatValue ?? 0)
+                              if (values.floatValue === undefined) {
+                                const input = src.event?.currentTarget as HTMLInputElement
+                                if (input) {
+                                  setTimeout(() => {
+                                    src.event?.currentTarget.setSelectionRange(0, 1)
+                                  }, 100)
+                                }
+                              }
                             }}
                             error={!!errors.kol}
                             className={inputVariants({
@@ -238,13 +246,18 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
                         <div className="relative">
                           <NumericInput
                             adjustWidth
-                            value={row.sena || ''}
+                            value={row.sena || 0}
                             onValueChange={(values, src) => {
                               const summa = calcSumma(row.kol, values.floatValue ?? 0)
                               if (src.source === 'event' && summa !== row.summa) {
-                                handleChangeChildField(index, 'summa', summa)
+                                handleChangeChildField(index, 'summa', summa ?? 0)
                               }
-                              handleChangeChildField(index, 'sena', values.floatValue)
+                              handleChangeChildField(index, 'sena', values.floatValue ?? 0)
+                              if (values.floatValue === undefined) {
+                                setTimeout(() => {
+                                  src.event?.currentTarget.setSelectionRange(0, 1)
+                                })
+                              }
                             }}
                             className={inputVariants({
                               editor: true,
@@ -259,7 +272,8 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
                         <div className="relative">
                           <NumericInput
                             adjustWidth
-                            value={row.summa || ''}
+                            value={row.summa || 0}
+                            defaultValue={0}
                             onValueChange={(values, src) => {
                               const sena = calcSena(values.floatValue ?? 0, row.kol)
                               if (
@@ -267,9 +281,15 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
                                 sena !== row.sena &&
                                 (values.floatValue ?? 0) !== 0
                               ) {
-                                handleChangeChildField(index, 'sena', sena)
+                                handleChangeChildField(index, 'sena', sena ?? 0)
                               }
-                              handleChangeChildField(index, 'summa', values.floatValue)
+
+                              handleChangeChildField(index, 'summa', values.floatValue ?? 0)
+                              if (values.floatValue === undefined) {
+                                setTimeout(() => {
+                                  src.event?.currentTarget.setSelectionRange(0, 1)
+                                })
+                              }
                             }}
                             className={inputVariants({
                               editor: true,

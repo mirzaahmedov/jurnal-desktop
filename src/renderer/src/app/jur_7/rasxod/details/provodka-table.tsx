@@ -272,11 +272,11 @@ const Provodka = ({ rowIndex, row, form, tabIndex, onOpenDialog, onRemove }: Pro
             adjustWidth
             allowNegative={false}
             isAllowed={(values) => (values.floatValue ?? 0) <= (row.max_kol || Infinity)}
-            value={row.kol || ''}
+            value={row.kol || 0}
             onValueChange={(values, src) => {
               const summa = calcSumma(values.floatValue ?? 0, row.sena)
               if (src.source === 'event' && summa !== row.summa) {
-                handleChangeChildField(rowIndex, 'summa', summa)
+                handleChangeChildField(rowIndex, 'summa', summa ?? 0)
               }
               handleChangeChildField(rowIndex, 'kol', values.floatValue ?? 0)
             }}
@@ -294,13 +294,13 @@ const Provodka = ({ rowIndex, row, form, tabIndex, onOpenDialog, onRemove }: Pro
           <NumericInput
             adjustWidth
             allowNegative={false}
-            value={row.sena || ''}
+            value={row.sena || 0}
             onValueChange={(values, src) => {
               const summa = calcSumma(row.kol, values.floatValue ?? 0)
               if (src.source === 'event' && summa !== row.summa) {
-                handleChangeChildField(rowIndex, 'summa', summa)
+                handleChangeChildField(rowIndex, 'summa', summa ?? 0)
               }
-              handleChangeChildField(rowIndex, 'sena', values.floatValue)
+              handleChangeChildField(rowIndex, 'sena', values.floatValue ?? 0)
             }}
             className={inputVariants({
               editor: true,
@@ -316,13 +316,13 @@ const Provodka = ({ rowIndex, row, form, tabIndex, onOpenDialog, onRemove }: Pro
           <NumericInput
             adjustWidth
             allowNegative={false}
-            value={row.summa || ''}
+            value={row.summa || 0}
             onValueChange={(values, src) => {
               const sena = calcSena(values.floatValue ?? 0, row.kol)
               if (src.source === 'event' && (values.floatValue ?? 0) !== 0 && row.sena !== sena) {
-                handleChangeChildField(rowIndex, 'sena', sena)
+                handleChangeChildField(rowIndex, 'sena', sena ?? 0)
               }
-              handleChangeChildField(rowIndex, 'summa', values.floatValue)
+              handleChangeChildField(rowIndex, 'summa', values.floatValue ?? 0)
             }}
             className={inputVariants({
               editor: true,
