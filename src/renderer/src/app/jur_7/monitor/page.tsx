@@ -160,6 +160,22 @@ export const WarehouseMonitorPage = () => {
                 <Download className="btn-icon icon-start icon-sm" /> {t('material')}
               </Button>
             </DropdownMenuItem>
+
+            <DropdownMenuItem>
+              <DownloadFile
+                fileName={`${t('report')}_${startDate.getMonth() + 1}-${startDate.getFullYear()}.xlsx`}
+                url="/jur_7/monitoring/schet"
+                params={{
+                  month: startDate.getMonth() + 1,
+                  year: startDate.getFullYear(),
+                  is_year: true,
+                  main_schet_id,
+                  excel: true
+                }}
+                buttonText={t('cap')}
+                className="w-full justify-start"
+              />
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </ListView.Header>

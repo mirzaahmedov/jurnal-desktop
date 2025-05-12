@@ -444,13 +444,14 @@ const Provodka = ({ rowIndex, onOpenDialog, onRemove, row, form, tabIndex }: Pro
 
       <EditableTableCell>
         <div className="relative">
-          <SchetEditor
+          <Input
+            readOnly
             value={row.kredit_schet}
-            onChange={(value) => {
-              handleChangeChildField(rowIndex, 'kredit_schet', value)
-              handleChangeChildField(rowIndex, 'kredit_sub_schet', '')
-            }}
-            error={errors?.kredit_schet}
+            className={inputVariants({
+              editor: true,
+              error: !!errors?.kredit_schet
+            })}
+            error={!!errors?.kredit_schet}
             tabIndex={tabIndex}
           />
         </div>

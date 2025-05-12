@@ -27,7 +27,10 @@ export const GenerateFile = ({
       const buf = await blob.arrayBuffer()
 
       const [name, ext] = fileName.split('.')
-      window.downloader.saveFile(buf, `${name}___${Date.now()}.${ext}`)
+      window.downloader.saveFile({
+        fileData: buf,
+        fileName: `${name}___${Date.now()}.${ext}`
+      })
     },
     onError(error) {
       toast.error(`${t('error_generating_file')}: ${error.message}`)

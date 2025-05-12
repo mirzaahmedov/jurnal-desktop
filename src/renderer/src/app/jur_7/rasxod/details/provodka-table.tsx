@@ -426,9 +426,6 @@ const Provodka = ({ rowIndex, row, form, tabIndex, onOpenDialog, onRemove }: Pro
           <Input
             readOnly
             value={row.kredit_schet}
-            onChange={(e) => {
-              handleChangeChildField(rowIndex, 'kredit_schet', e.target.value)
-            }}
             className={inputVariants({
               editor: true,
               error: !!errors?.kredit_schet
