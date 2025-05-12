@@ -133,6 +133,7 @@ export const AvansViewDialog = ({ selectedId, onClose }: AvansViewDialogProps) =
                             label={null}
                             value={
                               <Textarea
+                                readOnly
                                 value={numberToWords(Number(data.summa), i18n.language)}
                                 className="font-normal"
                               />

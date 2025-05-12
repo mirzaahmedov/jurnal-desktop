@@ -248,6 +248,7 @@ export const WarehousePrixodViewDialog = ({
                         label={t('opisanie')}
                         value={
                           <Textarea
+                            readOnly
                             value={data.opisanie ?? ''}
                             className="font-normal"
                           />

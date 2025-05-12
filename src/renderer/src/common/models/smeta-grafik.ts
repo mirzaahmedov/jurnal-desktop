@@ -28,5 +28,6 @@ export interface SmetaGrafik {
   created_at: string
   updated_at: boolean
   account_number: string
+  summa: number
   smetas: SmetaGrafikProvodka[]
 }

@@ -135,6 +135,7 @@ export const KassaPrixodViewDialog = ({ selectedId, onClose }: KassaPrixodViewDi
                             label={null}
                             value={
                               <Textarea
+                                readOnly
                                 value={numberToWords(Number(data.summa), i18n.language)}
                                 className="font-normal"
                               />

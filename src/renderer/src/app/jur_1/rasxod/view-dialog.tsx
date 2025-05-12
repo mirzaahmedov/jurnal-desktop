@@ -135,6 +135,7 @@ export const KassaRasxodViewDialog = ({ selectedId, onClose }: KassaRasxodViewDi
                             label={null}
                             value={
                               <Textarea
+                                readOnly
                                 value={numberToWords(Number(data.summa), i18n.language)}
                                 className="font-normal"
                               />

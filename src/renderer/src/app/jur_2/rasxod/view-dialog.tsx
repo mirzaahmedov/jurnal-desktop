@@ -196,6 +196,7 @@ export const BankRasxodViewDialog = ({ selectedId, onClose }: BankRasxodViewDial
                             label={null}
                             value={
                               <Textarea
+                                readOnly
                                 value={summa ? numberToWords(summa, i18n.language) : ''}
                                 className="font-normal"
                               />

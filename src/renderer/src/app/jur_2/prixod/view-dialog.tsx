@@ -218,6 +218,7 @@ export const BankPrixodViewDialog = ({ selectedId, onClose }: BankPrixodViewDial
                         label={t('opisanie')}
                         value={
                           <Textarea
+                            readOnly
                             value={data.opisanie ?? ''}
                             className="font-normal"
                           />

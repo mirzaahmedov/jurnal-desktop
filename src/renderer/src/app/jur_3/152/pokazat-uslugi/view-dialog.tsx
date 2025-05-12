@@ -200,6 +200,7 @@ export const PokazatUslugiViewDialog = ({ selectedId, onClose }: PokazatUslugiVi
                         label={t('opisanie')}
                         value={
                           <Textarea
+                            readOnly
                             value={data.opisanie ?? ''}
                             className="font-normal"
                           />

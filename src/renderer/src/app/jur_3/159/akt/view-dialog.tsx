@@ -200,6 +200,7 @@ export const AktViewDialog = ({ selectedId, onClose }: AktViewDialogProps) => {
                         label={t('opisanie')}
                         value={
                           <Textarea
+                            readOnly
                             value={data.opisanie ?? ''}
                             className="font-normal"
                           />
