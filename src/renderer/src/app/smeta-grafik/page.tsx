@@ -14,7 +14,6 @@ import { useConfirm } from '@/common/features/confirm'
 import { useSearchFilter } from '@/common/features/filters/search/search-filter-debounced'
 import { useRequisitesStore } from '@/common/features/requisites'
 import { usePagination } from '@/common/hooks'
-import { useToggle } from '@/common/hooks/use-toggle'
 import { useLayout } from '@/common/layout'
 import { ListView } from '@/common/views'
 
@@ -26,7 +25,6 @@ import { SmetaGrafikService } from './service'
 const SmetaGrafikPage = () => {
   const pagination = usePagination()
   const queryClient = useQueryClient()
-  const dialogToggle = useToggle()
   const navigate = useNavigate()
   const setLayout = useLayout()
 
@@ -63,8 +61,7 @@ const SmetaGrafikPage = () => {
   })
 
   const handleClickEdit = (row: SmetaGrafik) => {
-    navigate(`${row.id}`)
-    dialogToggle.open()
+    navigate(`${row.id}?editable=true`)
   }
   const handleClickDelete = (row: SmetaGrafik) => {
     confirm({
@@ -87,7 +84,7 @@ const SmetaGrafikPage = () => {
         navigate('create')
       }
     })
-  }, [setLayout, t, dialogToggle.open, navigate])
+  }, [setLayout, t, navigate])
 
   return (
     <ListView>
@@ -102,17 +99,19 @@ const SmetaGrafikPage = () => {
           onDelete={handleClickDelete}
           getRowDeletable={(row) => row.isdeleted}
           getRowEditable={(row) => row.isdeleted}
-          actions={(row) => (
-            <Button
-              variant="ghost"
-              size="icon"
-              onPress={() => {
-                navigate(`${row.id}`)
-              }}
-            >
-              <Eye className="btn-icon" />
-            </Button>
-          )}
+          actions={(row) =>
+            !row.isdeleted ? (
+              <Button
+                variant="ghost"
+                size="icon"
+                onPress={() => {
+                  navigate(`${row.id}?editable=false`)
+                }}
+              >
+                <Eye className="btn-icon" />
+              </Button>
+            ) : null
+          }
         />
       </ListView.Content>
       <ListView.Footer className="flex items-center justify-between">

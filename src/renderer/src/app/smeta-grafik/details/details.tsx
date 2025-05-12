@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useForm, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
 import {
@@ -52,7 +52,7 @@ export const SmetaGrafikDetails = ({ id }: SmetaGrafikDetailsProps) => {
   const { t } = useTranslation()
   const { main_schet_id, budjet_id } = useRequisitesStore()
 
-  const [isEditable, setEditable] = useState(id === 'create')
+  const [searchParams] = useSearchParams()
   const [total, setTotal] = useState<SmetaGrafikProvodka>({
     smeta_id: 0,
     smeta_number: t('total'),
@@ -70,6 +70,8 @@ export const SmetaGrafikDetails = ({ id }: SmetaGrafikDetailsProps) => {
     oy_11: 0,
     oy_12: 0
   } as SmetaGrafikProvodka)
+
+  const isEditable = searchParams.get('editable') === 'true'
 
   const { data: smetaGrafik, isFetching } = useQuery({
     queryKey: [
@@ -123,13 +125,11 @@ export const SmetaGrafikDetails = ({ id }: SmetaGrafikDetailsProps) => {
 
   useEffect(() => {
     if (id === 'create') {
-      setEditable(true)
       form.reset(defaultValues)
       return
     }
 
     if (smetaGrafik?.data) {
-      setEditable(smetaGrafik.data.isdeleted)
       form.reset({
         year: smetaGrafik.data.year,
         smetas: smetaGrafik.data.smetas
@@ -164,7 +164,7 @@ export const SmetaGrafikDetails = ({ id }: SmetaGrafikDetailsProps) => {
 
   return (
     <DetailsView>
-      <DetailsView.Content loading={isFetching || isCreating || isUpdating}>
+      <DetailsView.Content loading={isFetching}>
         <Form {...form}>
           <form onSubmit={onSubmit}>
             <div className="p-5 flex items-center">
