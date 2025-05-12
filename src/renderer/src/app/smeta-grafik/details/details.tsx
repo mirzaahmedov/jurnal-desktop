@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useForm, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
 import {
@@ -21,6 +21,7 @@ import {
 import { FormElement } from '@/common/components/form'
 import { Form, FormField } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
+import { Textarea } from '@/common/components/ui/textarea'
 import { YearSelect } from '@/common/components/year-select'
 import { useRequisitesStore } from '@/common/features/requisites'
 import { formatNumber } from '@/common/lib/format'
@@ -38,8 +39,10 @@ import { calculateColumnTotals, calculateRowTotals } from './utils'
 
 export interface SmetaGrafikDetailsProps {
   id: string
+  isEditable?: boolean
+  year?: string
 }
-export const SmetaGrafikDetails = ({ id }: SmetaGrafikDetailsProps) => {
+export const SmetaGrafikDetails = ({ id, year, isEditable }: SmetaGrafikDetailsProps) => {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const tableRef = useRef<HTMLTableElement>(null)
@@ -52,7 +55,6 @@ export const SmetaGrafikDetails = ({ id }: SmetaGrafikDetailsProps) => {
   const { t } = useTranslation()
   const { main_schet_id, budjet_id } = useRequisitesStore()
 
-  const [searchParams] = useSearchParams()
   const [total, setTotal] = useState<SmetaGrafikProvodka>({
     smeta_id: 0,
     smeta_number: t('total'),
@@ -70,9 +72,6 @@ export const SmetaGrafikDetails = ({ id }: SmetaGrafikDetailsProps) => {
     oy_11: 0,
     oy_12: 0
   } as SmetaGrafikProvodka)
-
-  const isEditable = searchParams.get('editable') === 'true' || id === 'create'
-  const year = searchParams.get('year')
 
   const { data: smetaGrafik, isFetching } = useQuery({
     queryKey: [
@@ -120,6 +119,7 @@ export const SmetaGrafikDetails = ({ id }: SmetaGrafikDetailsProps) => {
       updateGrafik({
         id: Number(id),
         smetas: values.smetas,
+        command: values.command,
         year: undefined as any
       })
     }
@@ -133,6 +133,7 @@ export const SmetaGrafikDetails = ({ id }: SmetaGrafikDetailsProps) => {
 
     if (smetaGrafik?.data) {
       form.reset({
+        command: smetaGrafik.data.command,
         year: smetaGrafik.data.year,
         smetas: smetaGrafik.data.smetas
       })
@@ -169,7 +170,7 @@ export const SmetaGrafikDetails = ({ id }: SmetaGrafikDetailsProps) => {
       <DetailsView.Content loading={isFetching}>
         <Form {...form}>
           <form onSubmit={onSubmit}>
-            <div className="p-5 flex items-center">
+            <div className="p-5 flex items-start gap-5">
               <FormField
                 control={form.control}
                 name="year"
@@ -182,7 +183,26 @@ export const SmetaGrafikDetails = ({ id }: SmetaGrafikDetailsProps) => {
                       isReadOnly={id !== 'create'}
                       selectedKey={field.value}
                       onSelectionChange={field.onChange}
-                      className="w-24"
+                      className="w-24 gap-0 mt-2"
+                    />
+                  </FormElement>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="command"
+                render={({ field }) => (
+                  <FormElement
+                    label={t('decree')}
+                    direction="column"
+                  >
+                    <Textarea
+                      rows={4}
+                      cols={60}
+                      value={field.value}
+                      onChange={field.onChange}
+                      className="mt-2"
                     />
                   </FormElement>
                 )}

@@ -23,6 +23,7 @@ export interface WarehouseProvodka {
   kredit_sub_schet: string
   data_pereotsenka: string
   product: SaldoProduct
+  group_number: string
   group: Group
 }
 export interface WarehouseRasxod {

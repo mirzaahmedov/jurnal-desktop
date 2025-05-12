@@ -1,6 +1,6 @@
 import { type HTMLAttributes, useEffect, useRef } from 'react'
 
-import { CircleCheck, Loader2 } from 'lucide-react'
+import { CircleCheck } from 'lucide-react'
 import { Focusable } from 'react-aria-components'
 import { useTranslation } from 'react-i18next'
 
@@ -69,14 +69,10 @@ const DetailsViewCreate = ({ isPending = false, tabIndex, ...props }: DetailsVie
       <Button
         isPending={isPending}
         type="submit"
+        IconStart={CircleCheck}
         {...props}
         ref={buttonRef}
       >
-        {isPending ? (
-          <Loader2 className="btn-icon icon-start icon-sm" />
-        ) : (
-          <CircleCheck className="btn-icon icon-start" />
-        )}
         {t('save')}
       </Button>
     </Focusable>

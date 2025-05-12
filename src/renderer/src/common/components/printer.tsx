@@ -12,13 +12,37 @@ export const Printer = ({ filename, children, orientation = 'landscape' }: Print
 
   const print = async () => {
     if (ref.current) {
+      const ext = filename.split('.').pop()
+      const basename = filename.split('.').slice(0, -1).join('.')
+
+      filename = `${basename}-${new Date().toLocaleTimeString('ru-RU').replace(/\./g, '-')}.${ext}`
+
       const blob = await html2pdf()
         .from(ref.current)
         .set({
           margin: 0,
           filename,
-          html2canvas: { scale: 1 },
-          jsPDF: { unit: 'pt', format: 'a4', orientation }
+          html2canvas: {
+            scale: 1,
+            scrollY: 0,
+            onclone: (clonedDoc: Document) => {
+              const clonedElement = clonedDoc.getElementById('capture')
+              clonedElement?.querySelectorAll<HTMLElement>('*').forEach((el) => {
+                const style = window.getComputedStyle(el)
+                if (style.position === 'absolute' || style.position === 'fixed') {
+                  el.style.position = 'static'
+                }
+                if (style.overflow === 'hidden') {
+                  el.style.overflow = 'visible'
+                }
+                if (el.scrollHeight > el.clientHeight) {
+                  el.style.height = el.scrollHeight + 'px'
+                  el.style.overflow = 'visible'
+                }
+              })
+            }
+          },
+          jsPDF: { unit: 'pt', format: 'letter', orientation }
         })
         .outputPdf('blob')
 

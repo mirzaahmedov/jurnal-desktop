@@ -28,8 +28,7 @@ import { WarehousePrixodService } from './service'
 
 const provodkaColumns: ColumnDef<WarehouseProvodka>[] = [
   {
-    key: 'group',
-    renderCell: (row) => row.group?.group_number ?? row.group?.name
+    key: 'group_number'
   },
   {
     key: 'name'

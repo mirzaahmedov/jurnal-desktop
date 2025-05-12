@@ -57,6 +57,7 @@ export const SmetaGrafikProvodkaFormSchema = z
 export const SmetaGrafikFormSchema = withPreprocessor(
   z.object({
     year: z.number().min(1),
+    command: z.string().optional(),
     smetas: z.array(SmetaGrafikProvodkaFormSchema)
   })
 )
@@ -65,6 +66,7 @@ export type SmetaGrafikFormValues = z.infer<typeof SmetaGrafikFormSchema>
 
 export const defaultValues: SmetaGrafikFormValues = {
   year: new Date().getFullYear(),
+  command: '',
   smetas: [
     {
       smeta_id: 0,

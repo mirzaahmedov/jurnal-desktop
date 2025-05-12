@@ -29,5 +29,6 @@ export interface SmetaGrafik {
   updated_at: boolean
   account_number: string
   summa: number
+  command: string
   smetas: SmetaGrafikProvodka[]
 }

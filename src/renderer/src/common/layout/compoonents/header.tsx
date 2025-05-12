@@ -50,7 +50,7 @@ export const Header = () => {
         {Array.isArray(breadcrumbs) ? (
           <ul className="flex items-center gap-1">
             {breadcrumbs?.map((item) => (
-              <Fragment key={item.title}>
+              <Fragment key={item.title.toString()}>
                 {item.path ? (
                   <Link
                     className="max-w-48 text-xs font-medium text-slate-500 hover:text-brand overflow-ellipsis whitespace-nowrap overflow-hidden"

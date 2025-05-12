@@ -362,5 +362,6 @@
   "no_internet": "Интернетга уланиш йўқ",
   "vpn_disconnected": "VPN уланмаган",
   "vpn_connected": "VPN уланган",
-  "main": "Асосий"
+  "main": "Асосий",
+  "decree": "Буйруқ"
 }

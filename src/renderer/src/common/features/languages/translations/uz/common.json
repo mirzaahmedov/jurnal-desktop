@@ -362,5 +362,6 @@
   "no_internet": "Internetga ulanish yo‘q",
   "vpn_disconnected": "VPN ulanmagan",
   "vpn_connected": "VPN ulangan",
-  "main": "Asosiy"
+  "main": "Asosiy",
+  "decree": "Buyruq"
 }

@@ -1,4 +1,4 @@
-import { type ComponentType, useEffect } from 'react'
+import { type ComponentType, type ReactNode, useEffect } from 'react'
 
 import { create } from 'zustand'
 
@@ -10,7 +10,7 @@ export interface Breadcrumb {
 }
 
 export interface LayoutStore {
-  title: string
+  title: ReactNode
   enableSaldo?: boolean
   breadcrumbs?: Breadcrumb[]
   content?: ComponentType

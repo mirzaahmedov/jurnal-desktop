@@ -17,7 +17,8 @@ export class SmetaGrafiCRUDkService extends CRUDService<SmetaGrafik, SmetaGrafik
     const res = await this.client.post<Response<string, undefined>>(
       this.endpoint,
       {
-        smetas: values.smetas
+        smetas: values.smetas,
+        command: values.command
       },
       this.proccessMiddleware({
         params: {
