@@ -9,6 +9,8 @@ import { toast } from 'react-toastify'
 
 import { Button, type ButtonProps } from '@/common/components/jolly/button'
 
+import { useDownloadsManagerStore } from '../downloads-manager'
+
 export type GenerateFileProps = ButtonProps & {
   children: ReactElement<DocumentProps>
   fileName: string
@@ -21,15 +23,24 @@ export const GenerateFile = ({
   isPending,
   ...props
 }: GenerateFileProps) => {
+  const addFile = useDownloadsManagerStore((store) => store.addFile)
+
   const { mutate: generate, isPending: isGeneratingDocument } = useMutation({
     mutationFn: async () => {
       const blob = await pdf(children).toBlob()
       const buf = await blob.arrayBuffer()
 
       const [name, ext] = fileName.split('.')
-      window.downloader.saveFile({
+      const file = await window.downloader.saveFile({
         fileData: buf,
         fileName: `${name}___${Date.now()}.${ext}`
+      })
+
+      addFile({
+        name: file.fileName,
+        path: file.filePath,
+        size: file.fileSize,
+        downloadedAt: file.downloadedAt
       })
     },
     onError(error) {

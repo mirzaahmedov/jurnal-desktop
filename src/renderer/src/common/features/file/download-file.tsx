@@ -42,7 +42,7 @@ export const DownloadFile = ({
           fileName: `${name}___${Date.now()}.${ext}`,
           fileData: res.data
         })
-        console.log({ file })
+
         addFile({
           name: file.fileName,
           path: file.filePath,

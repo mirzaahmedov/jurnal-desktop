@@ -163,7 +163,7 @@ export const WarehouseMonitorPage = () => {
 
             <DropdownMenuItem>
               <DownloadFile
-                fileName={`${t('report')}_${startDate.getMonth() + 1}-${startDate.getFullYear()}.xlsx`}
+                fileName={`${t('summarized_circulation')}(${t('year')})_${startDate.getMonth() + 1}-${startDate.getFullYear()}.xlsx`}
                 url="/jur_7/monitoring/schet"
                 params={{
                   month: startDate.getMonth() + 1,
@@ -172,7 +172,23 @@ export const WarehouseMonitorPage = () => {
                   main_schet_id,
                   excel: true
                 }}
-                buttonText={t('cap')}
+                buttonText={`${t('summarized_circulation')} (${t('year')})`}
+                className="w-full justify-start"
+              />
+            </DropdownMenuItem>
+
+            <DropdownMenuItem>
+              <DownloadFile
+                fileName={`${t('summarized_circulation')}(${t('month')})_${startDate.getMonth() + 1}-${startDate.getFullYear()}.xlsx`}
+                url="/jur_7/monitoring/schet"
+                params={{
+                  month: startDate.getMonth() + 1,
+                  year: startDate.getFullYear(),
+                  is_year: false,
+                  main_schet_id,
+                  excel: true
+                }}
+                buttonText={`${t('summarized_circulation')} (${t('month')})`}
                 className="w-full justify-start"
               />
             </DropdownMenuItem>
