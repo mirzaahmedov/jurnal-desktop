@@ -12,7 +12,8 @@ export enum PodpisTypeDocument {
   SHARTNOMA_GRAFIK_OPLATI = 'SHARTNOMA_GRAFIK_OPLATI',
   AKT_SVERKA = 'akt_sverka',
   DAYS_REPORT = 'daysReport',
-  CAP = 'cap'
+  CAP = 'cap',
+  JUR7_MATERIAL = 'jur7_material'
 }
 
 export interface Podpis {

@@ -54,6 +54,10 @@ export const getPodpisTypeDocumentOptions = (t: TFunction) => {
     {
       key: PodpisTypeDocument.AKT_SVERKA,
       name: t('podpis:documents.akt_sverki')
+    },
+    {
+      key: PodpisTypeDocument.JUR7_MATERIAL,
+      name: t('podpis:documents.jur7_material')
     }
   ] as const
 }
@@ -80,7 +84,8 @@ export const PodpisPayloadSchema = z.object({
       PodpisTypeDocument.SHARTNOMA_GRAFIK_OPLATI,
       PodpisTypeDocument.DAYS_REPORT,
       PodpisTypeDocument.CAP,
-      PodpisTypeDocument.AKT_SVERKA
+      PodpisTypeDocument.AKT_SVERKA,
+      PodpisTypeDocument.JUR7_MATERIAL
     ],
     {
       message: `Type document must be one of: ${Object.values(PodpisTypeDocument).join(', ')}`
