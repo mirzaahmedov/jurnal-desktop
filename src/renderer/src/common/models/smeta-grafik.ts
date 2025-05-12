@@ -1,10 +1,8 @@
-type SmetaGrafik = {
+export interface SmetaGrafikProvodka {
   id: number
   smeta_id: number
   smeta_name: string
-  smeta_number: number
-  spravochnik_budjet_name_id: number
-  budjet_name: string
+  smeta_number: string
   itogo: number
   oy_1: number
   oy_2: number
@@ -18,7 +16,17 @@ type SmetaGrafik = {
   oy_10: number
   oy_11: number
   oy_12: number
-  year: number
 }
 
-export type { SmetaGrafik }
+export interface SmetaGrafik {
+  id: number
+  year: number
+  order_number: number
+  user_id: number
+  main_schet_id: number
+  isdeleted: boolean
+  created_at: string
+  updated_at: boolean
+  account_number: string
+  smetas: SmetaGrafikProvodka[]
+}

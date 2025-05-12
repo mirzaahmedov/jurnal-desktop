@@ -1,5 +1,4 @@
-import type { PrixodFormValues } from './config'
-import type { MO7Prixod, ResponseMeta } from '@/common/models'
+import type { ResponseMeta, WarehousePrixod } from '@/common/models'
 import type { UseMutationOptions } from '@tanstack/react-query'
 
 import { useMutation } from '@tanstack/react-query'
@@ -7,14 +6,14 @@ import { useMutation } from '@tanstack/react-query'
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 import { budjet, main_schet } from '@/common/features/crud/middleware'
 
-import { WarehousePrixodQueryKeys } from './config'
+import { type PrixodFormValues, WarehousePrixodQueryKeys } from './config'
 
 interface PrixodMeta extends ResponseMeta {
   summa: number
 }
 
 export const WarehousePrixodService = new CRUDService<
-  MO7Prixod,
+  WarehousePrixod,
   PrixodFormValues,
   PrixodFormValues,
   PrixodMeta

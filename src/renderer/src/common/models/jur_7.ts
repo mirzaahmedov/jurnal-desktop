@@ -1,12 +1,22 @@
 import type { Group } from './group'
+import type { Organization } from './organization'
+import type { Responsible } from './responsible'
 import type { SaldoProduct } from './saldo'
+import type { Shartnoma } from './shartnoma'
+import type { ShartnomaGrafik } from './shartnoma-grafik'
 
-export interface Jur7Child {
+export interface WarehouseProvodka {
   naimenovanie_tovarov_jur7_id: number
+  serial_num: string
+  inventar_num: string
+  edin: string
   kol: number
   sena: number
   nds_foiz: number
   summa: number
+  iznos: boolean
+  iznos_start: string
+  eski_iznos_summa: number
   debet_schet: string
   debet_sub_schet: string
   kredit_schet: string
@@ -15,7 +25,7 @@ export interface Jur7Child {
   product: SaldoProduct
   group: Group
 }
-export interface Jur7Rasxod {
+export interface WarehouseRasxod {
   id: number
   doc_num: string
   doc_date: string
@@ -23,9 +33,9 @@ export interface Jur7Rasxod {
   summa: number
   kimdan_name: string
   kimga_name: string
-  childs: Jur7Child[]
+  childs: WarehouseProvodka[]
 }
-export interface Jur7Prixod {
+export interface WarehousePrixod {
   id: number
   doc_num: string
   doc_date: string
@@ -33,9 +43,14 @@ export interface Jur7Prixod {
   summa: number
   kimdan_name: string
   kimga_name: string
-  childs: Jur7Child[]
+  organ: Organization
+  account_number: Organization.RaschetSchet
+  contract: Shartnoma
+  contract_grafik: ShartnomaGrafik
+  responsible: Responsible
+  childs: WarehouseProvodka[]
 }
-export interface Jur7InternalTransfer {
+export interface WarehouseInternal {
   id: number
   doc_num: string
   doc_date: string
@@ -51,7 +66,7 @@ export interface Jur7InternalTransfer {
     updated_at: string
     isdeleted: boolean
   }
-  childs: Jur7Child[]
+  childs: WarehouseProvodka[]
 }
 
 export interface WarehouseMonitoring {

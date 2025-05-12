@@ -12,7 +12,6 @@ import DashboardPage from './dashboard/page'
 import HomePage from './home/page'
 import { WarehouseMonitorPage } from './jur_7/monitor/page'
 import PrixodSchetPage from './jur_8/schet/page'
-import { SmetaGrafikBatchCreatePage } from './region-spravochnik/smeta-grafik/create-multiple/page'
 import SigninPage from './sign-in'
 
 const KassaSaldoPage = lazy(() => import('./jur_1/saldo/page'))
@@ -83,9 +82,8 @@ const AvansPage = lazy(() => import('./jur_4/avans/page'))
 const PodotchetMonitoringPage = lazy(() => import('./jur_4/monitor/page'))
 const RoleAccessPage = lazy(() => import('./region-admin/role-access/page'))
 const RegionUserPage = lazy(() => import('./region-admin/region-user'))
-const SmetaGrafikPage = lazy(() => import('./region-spravochnik/smeta-grafik/page'))
-const SmetaGrafikOldPage = lazy(() => import('./region-spravochnik/smeta-grafik/old-grafiks'))
-const SmetaGrafikDetailsPage = lazy(() => import('./region-spravochnik/smeta-grafik/details/page'))
+const SmetaGrafikPage = lazy(() => import('./smeta-grafik/page'))
+const SmetaGrafikDetailsPage = lazy(() => import('./smeta-grafik/details/page'))
 const MainSchetPage = lazy(() => import('./region-spravochnik/main-schet/page'))
 const OrganizationPage = lazy(() => import('./region-spravochnik/organization/page'))
 const AccountablePage = lazy(() => import('./region-spravochnik/podotchet'))
@@ -514,16 +512,8 @@ export const routes: RouteObject[] = [
             element: <SmetaGrafikPage />
           },
           {
-            path: 'create',
-            element: <SmetaGrafikBatchCreatePage />
-          },
-          {
             path: ':id',
             element: <SmetaGrafikDetailsPage />
-          },
-          {
-            path: 'monitor/old',
-            element: <SmetaGrafikOldPage />
           }
         ]
       },

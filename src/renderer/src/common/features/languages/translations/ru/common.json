@@ -361,5 +361,6 @@
   "turn_off_internet": "Отключите интернет",
   "no_internet": "Нет доступа к интернету",
   "vpn_disconnected": "Нет подключения к VPN",
-  "vpn_connected": "VPN подключён"
+  "vpn_connected": "VPN подключён",
+  "main": "Главный"
 }

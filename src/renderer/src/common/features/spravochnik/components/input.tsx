@@ -77,7 +77,7 @@ export const SpravochnikInput = <T extends object>({
         <div className="flex items-center absolute right-2 top-0 bottom-0">
           <Spinner className="size-5 border-brand/40 border-r-transparent border-[3px]" />
         </div>
-      ) : (
+      ) : clear ? (
         <div className="flex items-center invisible absolute right-0 top-0 bottom-0 text-foreground/50 [input:focus+&]:text-brand group-focus-within:[input:not(:disabled)+&]:visible group-hover:[input:not(:disabled)+&]:visible px-1">
           <Button
             type="button"
@@ -89,7 +89,7 @@ export const SpravochnikInput = <T extends object>({
             <CircleX className="size-5" />
           </Button>
         </div>
-      )}
+      ) : null}
     </div>
   )
 }

@@ -4,7 +4,7 @@ import { withPreprocessor } from '@/common/lib/validation'
 
 export const WarehousePrixodQueryKeys = {
   getAll: 'warehouse_prixod/all',
-  get: 'warehouse_prixod/get',
+  getById: 'warehouse_prixod/get',
   create: 'warehouse_prixod/create',
   update: 'warehouse_prixod/update',
   delete: 'warehouse_prixod/delete'

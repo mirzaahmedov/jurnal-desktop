@@ -22,7 +22,7 @@ export const NumericInput = forwardRef<HTMLInputElement, NumericInputProps>(
         if (input) {
           const size = input.value.length - 1
           requestAnimationFrame(() => {
-            input.style.minWidth = `${size + 1}ch`
+            input.style.minWidth = `${size + 2}ch`
           })
         }
       }

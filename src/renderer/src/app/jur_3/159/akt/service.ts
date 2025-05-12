@@ -5,7 +5,7 @@ import type { Akt } from '@/common/models/akt'
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 import { budjet, jur3_schet_159, main_schet } from '@/common/features/crud/middleware'
 
-export const aktService = new CRUDService<
+export const AktService = new CRUDService<
   Akt,
   AktFormValues,
   AktFormValues,

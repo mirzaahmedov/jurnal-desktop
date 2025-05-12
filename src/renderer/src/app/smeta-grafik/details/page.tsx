@@ -21,9 +21,6 @@ const SmetaGrafikDetailsPage = () => {
       title: id === 'create' ? t('create') : t('edit'),
       breadcrumbs: [
         {
-          title: t('pages.spravochnik')
-        },
-        {
           title: t('pages.smeta_grafik'),
           path: '/smeta-grafik'
         }
@@ -34,7 +31,7 @@ const SmetaGrafikDetailsPage = () => {
     })
   }, [setLayout, navigate, id, t])
 
-  return <SmetaGrafikDetails id={Number(id)} />
+  return <SmetaGrafikDetails id={id!} />
 }
 
 export default SmetaGrafikDetailsPage

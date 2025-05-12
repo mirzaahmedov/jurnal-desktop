@@ -1,13 +1,15 @@
 import type { Avans } from '@/common/models'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { Eye } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
-import { GenericTable, useTableSort } from '@/common/components'
+import { FooterCell, FooterRow, GenericTable, useTableSort } from '@/common/components'
+import { Button } from '@/common/components/jolly/button'
 import { useConfirm } from '@/common/features/confirm'
 import {
   SearchFilterDebounced,
@@ -25,12 +27,14 @@ import {
 } from '@/common/features/selected-month'
 import { useDates, usePagination } from '@/common/hooks'
 import { useLayout } from '@/common/layout'
+import { formatNumber } from '@/common/lib/format'
 import { ListView } from '@/common/views'
 
 import { usePodotchetSaldo } from '../saldo/use-saldo'
 import { avansColumns } from './columns'
 import { AvansQueryKeys } from './config'
 import { AvansService } from './service'
+import { AvansViewDialog } from './view-dialog'
 
 const AvansPage = () => {
   const dates = useDates()
@@ -41,6 +45,7 @@ const AvansPage = () => {
   const startDate = useSelectedMonthStore((store) => store.startDate)
 
   const [search] = useSearchFilter()
+  const [selectedId, setSelectedId] = useState<number | null>(null)
 
   const { main_schet_id, jur4_schet_id } = useRequisitesStore()
   const { sorting, handleSort, getColumnSorted } = useTableSort()
@@ -134,6 +139,26 @@ const AvansPage = () => {
           onDelete={handleClickDelete}
           getColumnSorted={getColumnSorted}
           onSort={handleSort}
+          actions={(row) => (
+            <Button
+              variant="ghost"
+              size="icon"
+              onPress={() => {
+                setSelectedId(row.id)
+              }}
+            >
+              <Eye className="btn-icon" />
+            </Button>
+          )}
+          footer={
+            <FooterRow>
+              <FooterCell
+                colSpan={7}
+                title={t('total')}
+                content={formatNumber(avans?.meta?.summa ?? 0)}
+              />
+            </FooterRow>
+          }
         />
       </ListView.Content>
       <ListView.Footer>
@@ -143,6 +168,11 @@ const AvansPage = () => {
           pageCount={avans?.meta?.pageCount ?? 0}
         />
       </ListView.Footer>
+
+      <AvansViewDialog
+        selectedId={selectedId}
+        onClose={() => setSelectedId(null)}
+      />
     </ListView>
   )
 }

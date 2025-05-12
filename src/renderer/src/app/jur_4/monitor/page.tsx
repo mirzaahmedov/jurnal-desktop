@@ -55,13 +55,12 @@ const PodotchetMonitorPage = () => {
   const setLayout = useLayout()
 
   const [search] = useSearchFilter()
+  const [podotchetId, setPodotchetId] = usePodotchetFilter()
 
   const { t } = useTranslation(['app'])
   const { sorting, handleSort, getColumnSorted } = useTableSort()
   const { main_schet_id, budjet_id, jur4_schet_id } = useRequisitesStore()
   const { queuedMonths } = usePodotchetSaldo()
-
-  const [podotchetId, setPodotchetId] = usePodotchetFilter()
 
   const podotchetSpravochnik = useSpravochnik(
     createPodotchetSpravochnik({
@@ -129,9 +128,7 @@ const PodotchetMonitorPage = () => {
           <div className="flex-1 flex flex-row gap-5 items-center">
             <ChooseSpravochnik
               spravochnik={podotchetSpravochnik}
-              placeholder={t('choose', {
-                what: t('podotchet-litso')
-              })}
+              placeholder={t('podotchet-litso')}
               getName={(selected) => selected.name}
               getElements={(selected) => [
                 { name: t('name'), value: selected.name },

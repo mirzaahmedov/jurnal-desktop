@@ -1,13 +1,15 @@
 import type { PokazatUslugi } from '@/common/models'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { Eye } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
-import { GenericTable, useTableSort } from '@/common/components'
+import { FooterCell, FooterRow, GenericTable, useTableSort } from '@/common/components'
+import { Button } from '@/common/components/jolly/button'
 import { useConfirm } from '@/common/features/confirm'
 import {
   SearchFilterDebounced,
@@ -25,12 +27,14 @@ import {
 } from '@/common/features/selected-month'
 import { useDates, usePagination } from '@/common/hooks'
 import { useLayout } from '@/common/layout'
+import { formatNumber } from '@/common/lib/format'
 import { ListView } from '@/common/views'
 
 import { useUslugiSaldo } from '../saldo/use-saldo'
 import { pokazatUslugiColumns } from './columns'
-import { queryKeys } from './config'
+import { PokazatUslugiQueryKeys } from './config'
 import { PokazatUslugiService } from './service'
+import { PokazatUslugiViewDialog } from './view-dialog'
 
 const PokazatUslugiPage = () => {
   const setLayout = useLayout()
@@ -42,6 +46,7 @@ const PokazatUslugiPage = () => {
   const dates = useDates()
 
   const [search] = useSearchFilter()
+  const [selectedId, setSelectedId] = useState<number | null>(null)
 
   const { main_schet_id, jur3_schet_152_id } = useRequisitesStore()
   const { confirm } = useConfirm()
@@ -55,7 +60,7 @@ const PokazatUslugiPage = () => {
     error
   } = useQuery({
     queryKey: [
-      queryKeys.getAll,
+      PokazatUslugiQueryKeys.getAll,
       {
         main_schet_id,
         schet_id: jur3_schet_152_id,
@@ -69,12 +74,12 @@ const PokazatUslugiPage = () => {
     enabled: !!main_schet_id && !!jur3_schet_152_id && !queuedMonths.length
   })
   const { mutate: deletePokazatUslugi, isPending } = useMutation({
-    mutationKey: [queryKeys.delete],
+    mutationKey: [PokazatUslugiQueryKeys.delete],
     mutationFn: PokazatUslugiService.delete,
     onSuccess(res) {
       toast.success(res?.message)
       queryClient.invalidateQueries({
-        queryKey: [queryKeys.getAll]
+        queryKey: [PokazatUslugiQueryKeys.getAll]
       })
       handleSaldoResponseDates(SaldoNamespace.JUR_3_152, res)
     },
@@ -139,6 +144,26 @@ const PokazatUslugiPage = () => {
           onDelete={handleClickDelete}
           getColumnSorted={getColumnSorted}
           onSort={handleSort}
+          actions={(row) => (
+            <Button
+              variant="ghost"
+              size="icon"
+              onPress={() => {
+                setSelectedId(row.id)
+              }}
+            >
+              <Eye className="btn-icon" />
+            </Button>
+          )}
+          footer={
+            <FooterRow>
+              <FooterCell
+                colSpan={7}
+                title={t('total')}
+                content={formatNumber(uslugi?.meta?.summa ?? 0)}
+              />
+            </FooterRow>
+          }
         />
       </ListView.Content>
       <ListView.Footer>
@@ -148,6 +173,13 @@ const PokazatUslugiPage = () => {
           pageCount={uslugi?.meta?.pageCount ?? 0}
         />
       </ListView.Footer>
+
+      <PokazatUslugiViewDialog
+        selectedId={selectedId}
+        onClose={() => {
+          setSelectedId(null)
+        }}
+      />
     </ListView>
   )
 }

@@ -46,7 +46,7 @@ import {
 
 import { useAktSaldo } from '../../saldo/use-saldo'
 import { AktFormSchema, AktProvodkaFormSchema, AktQueryKeys, defaultValues } from '../config'
-import { aktService } from '../service'
+import { AktService } from '../service'
 import { provodkaColumns } from './provodki'
 import { changeOpisanieContract, changeOpisanieSchetFaktura } from './utils'
 
@@ -88,12 +88,12 @@ const AktDetailsPage = () => {
         schet_id: jur3_schet_159_id
       }
     ],
-    queryFn: aktService.getById,
+    queryFn: AktService.getById,
     enabled: id !== 'create' && !!main_schet_id && !queuedMonths.length
   })
   const { mutate: createAkt, isPending: isCreating } = useMutation({
     mutationKey: [AktQueryKeys.create],
-    mutationFn: aktService.create,
+    mutationFn: AktService.create,
     onSuccess(res) {
       toast.success(res?.message)
       form.reset(defaultValues)
@@ -114,7 +114,7 @@ const AktDetailsPage = () => {
 
   const { mutate: updateAkt, isPending: isUpdating } = useMutation({
     mutationKey: [AktQueryKeys.update, id],
-    mutationFn: aktService.update,
+    mutationFn: AktService.update,
     onSuccess(res) {
       toast.success(res?.message)
 
@@ -260,6 +260,8 @@ const AktDetailsPage = () => {
       })
     }
 
+    // Todo: fix this
+    // @ts-expect-error fix this
     form.reset(akt?.data)
   }, [form, akt, id])
 

@@ -1,3 +1,26 @@
+import type { ProvodkaType } from './common'
+
+export interface PodotchetMonitor {
+  id: number
+  doc_num: string
+  doc_date: string
+  prixod_sum: number
+  rasxod_sum: number
+  opisanie: any
+  podotchet_id: number
+  podotchet_name: string
+  podotchet_rayon: string
+  login: string
+  fio: string
+  user_id: number
+  provodki_schet: string
+  provodki_sub_schet: string
+  type: ProvodkaType
+  combined_doc_date: string
+  combined_id: number
+  combined_doc_num: string
+}
+
 export interface PodotchetSaldoProvodka {
   id: number
   podotchet_id: number

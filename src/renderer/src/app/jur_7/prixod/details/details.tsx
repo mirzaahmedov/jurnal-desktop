@@ -71,7 +71,7 @@ const PrixodDetails = ({ id, onSuccess }: PrixodDetailsProps) => {
 
   const { data: prixod, isFetching } = useQuery({
     queryKey: [
-      WarehousePrixodQueryKeys.get,
+      WarehousePrixodQueryKeys.getById,
       Number(id),
       {
         budjet_id,

@@ -62,7 +62,6 @@ export const EditableTable = <T extends object, F extends ArrayPath<NoInfer<T>>>
           })
 
           const observer = new IntersectionObserver(([entry], obs) => {
-            console.log({}, 'entry')
             if (entry.isIntersecting) {
               const inputElement = rowElement.querySelector(
                 'input:not(:disabled), textarea:not(:disabled), select:not(:disabled)'
@@ -197,24 +196,26 @@ export const EditableTable = <T extends object, F extends ArrayPath<NoInfer<T>>>
             </EditableTableRow>
           )}
         </TableBody>
-        {typeof onCreate === 'function' && (
+        {typeof onCreate === 'function' || props.footerRows ? (
           <TableFooter>
             {props.footerRows}
-            <EditableTableRow focusable={false}>
-              <EditableTableCell colSpan={100}>
-                <Button
-                  tabIndex={tabIndex}
-                  type="button"
-                  variant="ghost"
-                  className="w-full hover:bg-slate-50 text-brand hover:text-brand"
-                  onClick={onCreate}
-                >
-                  <CirclePlus className="btn-icon icon-start" /> {t('add')}
-                </Button>
-              </EditableTableCell>
-            </EditableTableRow>
+            {typeof onCreate === 'function' ? (
+              <EditableTableRow focusable={false}>
+                <EditableTableCell colSpan={100}>
+                  <Button
+                    tabIndex={tabIndex}
+                    type="button"
+                    variant="ghost"
+                    className="w-full hover:bg-slate-50 text-brand hover:text-brand"
+                    onClick={onCreate}
+                  >
+                    <CirclePlus className="btn-icon icon-start" /> {t('add')}
+                  </Button>
+                </EditableTableCell>
+              </EditableTableRow>
+            ) : null}
           </TableFooter>
-        )}
+        ) : null}
       </Table>
     </div>
   )

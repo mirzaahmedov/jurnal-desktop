@@ -2,7 +2,7 @@ import { z } from 'zod'
 
 import { withPreprocessor } from '@/common/lib/validation'
 
-export const queryKeys = {
+export const PokazatUslugiQueryKeys = {
   getById: 'pokazat-uslugi',
   getAll: 'pokazat-uslugi/all',
   create: 'pokazat-uslugi/create',

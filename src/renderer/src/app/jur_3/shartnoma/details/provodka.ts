@@ -7,7 +7,7 @@ export const provodkaColumns: EditableColumnDef<ShartnomaGrafikFormValues>[] = [
   {
     key: 'smeta_id',
     header: 'smeta',
-    Editor: createSmetaEditor()
+    Editor: createSmetaEditor({})
   },
   {
     key: 'oy_1',

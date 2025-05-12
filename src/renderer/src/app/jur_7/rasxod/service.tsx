@@ -1,5 +1,5 @@
 import type { RasxodFormValues } from './config'
-import type { Jur7Rasxod, ResponseMeta } from '@/common/models'
+import type { ResponseMeta, WarehouseRasxod } from '@/common/models'
 
 import { useMutation, useQuery } from '@tanstack/react-query'
 
@@ -13,7 +13,7 @@ interface RasxodMeta extends ResponseMeta {
 }
 
 export const WarehouseRasxodService = new CRUDService<
-  Jur7Rasxod,
+  WarehouseRasxod,
   RasxodFormValues,
   RasxodFormValues,
   RasxodMeta

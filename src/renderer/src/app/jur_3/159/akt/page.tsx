@@ -1,13 +1,15 @@
 import type { Akt } from '@/common/models'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { Eye } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
 import { FooterCell, FooterRow, GenericTable, useTableSort } from '@/common/components'
+import { Button } from '@/common/components/jolly/button'
 import { useConfirm } from '@/common/features/confirm'
 import { DownloadFile } from '@/common/features/file'
 import {
@@ -32,7 +34,8 @@ import { ListView } from '@/common/views'
 import { useAktSaldo } from '../saldo/use-saldo'
 import { AktColumns } from './columns'
 import { AktQueryKeys } from './config'
-import { aktService } from './service'
+import { AktService } from './service'
+import { AktViewDialog } from './view-dialog'
 
 const AktPage = () => {
   const queryClient = useQueryClient()
@@ -43,6 +46,7 @@ const AktPage = () => {
   const startDate = useSelectedMonthStore((store) => store.startDate)
 
   const [search] = useSearchFilter()
+  const [selectedId, setSelectedId] = useState<number | null>(null)
 
   const { main_schet_id, jur3_schet_159_id } = useRequisitesStore()
   const { confirm } = useConfirm()
@@ -66,12 +70,12 @@ const AktPage = () => {
         ...pagination
       }
     ],
-    queryFn: aktService.getAll,
+    queryFn: AktService.getAll,
     enabled: !!main_schet_id && !queuedMonths.length
   })
   const { mutate: deleteAkt, isPending: isDeletingAkt } = useMutation({
     mutationKey: [AktQueryKeys.delete],
-    mutationFn: aktService.delete,
+    mutationFn: AktService.delete,
     onSuccess(res) {
       toast.success(res?.message)
       handleSaldoResponseDates(SaldoNamespace.JUR_3_159, res)
@@ -155,6 +159,17 @@ const AktPage = () => {
           onDelete={handleClickDelete}
           getColumnSorted={getColumnSorted}
           onSort={handleSort}
+          actions={(row) => (
+            <Button
+              variant="ghost"
+              size="icon"
+              onPress={() => {
+                setSelectedId(row.id)
+              }}
+            >
+              <Eye className="btn-icon" />
+            </Button>
+          )}
           footer={
             <FooterRow>
               <FooterCell
@@ -173,6 +188,11 @@ const AktPage = () => {
           pageCount={akts?.meta?.pageCount ?? 0}
         />
       </ListView.Footer>
+
+      <AktViewDialog
+        selectedId={selectedId}
+        onClose={() => setSelectedId(null)}
+      />
     </ListView>
   )
 }

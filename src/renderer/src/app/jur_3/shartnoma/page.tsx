@@ -117,7 +117,7 @@ const ShartnomaPage = () => {
         <div className="flex items-center">
           <ChooseSpravochnik
             spravochnik={organSpravochnik}
-            placeholder={t('choose', { what: t('organization') })}
+            placeholder={t('organization')}
             getName={(selected) => selected.name}
             getElements={(selected) => [
               { name: t('inn'), value: selected?.inn },

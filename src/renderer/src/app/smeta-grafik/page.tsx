@@ -3,11 +3,12 @@ import type { SmetaGrafik } from '@/common/models'
 import { useEffect } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { SquareActivity } from 'lucide-react'
+import { Eye } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
+import { GenericTable } from '@/common/components'
 import { Button } from '@/common/components/jolly/button'
 import { useConfirm } from '@/common/features/confirm'
 import { useSearchFilter } from '@/common/features/filters/search/search-filter-debounced'
@@ -17,7 +18,7 @@ import { useToggle } from '@/common/hooks/use-toggle'
 import { useLayout } from '@/common/layout'
 import { ListView } from '@/common/views'
 
-import { SmetaTable } from './components'
+import { SmetaGrafikColumns } from './columns'
 import { SmetaGrafikQueryKeys } from './config'
 import { SmetaGrafikFilters, useYearFilter } from './filters'
 import { SmetaGrafikService } from './service'
@@ -90,26 +91,28 @@ const SmetaGrafikPage = () => {
 
   return (
     <ListView>
-      <ListView.Header className="flex items-center justify-end">
-        <Button
-          variant="ghost"
-          onPress={() => {
-            navigate('monitor/old')
-          }}
-        >
-          <SquareActivity className="btn-icon icon-start" />
-          {t('old_smeta_grafiks')}
-        </Button>
-      </ListView.Header>
       <ListView.Content
-        loading={false}
+        loading={isFetching || isPending}
         className="relative w-full flex-1"
       >
-        <SmetaTable
-          isLoading={isFetching || isPending}
+        <GenericTable
           data={grafiks?.data ?? []}
+          columnDefs={SmetaGrafikColumns}
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}
+          getRowDeletable={(row) => row.isdeleted}
+          getRowEditable={(row) => row.isdeleted}
+          actions={(row) => (
+            <Button
+              variant="ghost"
+              size="icon"
+              onPress={() => {
+                navigate(`${row.id}`)
+              }}
+            >
+              <Eye className="btn-icon" />
+            </Button>
+          )}
         />
       </ListView.Content>
       <ListView.Footer className="flex items-center justify-between">

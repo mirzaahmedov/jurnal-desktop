@@ -3,6 +3,7 @@ import type { ExistingDocument } from './details/interfaces'
 import { useEffect, useState } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { Eye } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
@@ -13,6 +14,7 @@ import {
   handleOstatokResponse
 } from '@/app/jur_7/saldo/utils'
 import { FooterCell, FooterRow, GenericTable, useTableSort } from '@/common/components'
+import { Button } from '@/common/components/jolly/button'
 import { ButtonGroup } from '@/common/components/ui/button-group'
 import { useConfirm } from '@/common/features/confirm'
 import { DownloadFile } from '@/common/features/file'
@@ -38,8 +40,9 @@ import { prixodColumns } from './columns'
 import { WarehousePrixodQueryKeys } from './config'
 import { ExistingDocumentsAlert } from './details/existing-document-alert'
 import { WarehousePrixodService } from './service'
+import { WarehousePrixodViewDialog } from './view-dialog'
 
-const Jurnal7PrixodPage = () => {
+const WarehousePrixodPage = () => {
   const [existingDocsError, setExistingDocsError] = useState<{
     message: string
     docs: ExistingDocument[]
@@ -50,6 +53,7 @@ const Jurnal7PrixodPage = () => {
   const queryClient = useQueryClient()
 
   const [search] = useSearchFilter()
+  const [selectedId, setSelectedId] = useState<number | null>(null)
 
   const { t } = useTranslation(['app'])
   const { confirm } = useConfirm()
@@ -184,6 +188,17 @@ const Jurnal7PrixodPage = () => {
           }}
           getColumnSorted={getColumnSorted}
           onSort={handleSort}
+          actions={(row) => (
+            <Button
+              variant="ghost"
+              size="icon"
+              onPress={() => {
+                setSelectedId(row.id)
+              }}
+            >
+              <Eye className="btn-icon" />
+            </Button>
+          )}
           footer={
             <FooterRow>
               <FooterCell
@@ -214,8 +229,13 @@ const Jurnal7PrixodPage = () => {
           message={existingDocsError.message}
         />
       ) : null}
+
+      <WarehousePrixodViewDialog
+        selectedId={selectedId}
+        onClose={() => setSelectedId(null)}
+      />
     </ListView>
   )
 }
 
-export default Jurnal7PrixodPage
+export default WarehousePrixodPage

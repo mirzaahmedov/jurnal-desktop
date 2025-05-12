@@ -48,8 +48,8 @@ import { useUslugiSaldo } from '../../saldo/use-saldo'
 import {
   PokazatUslugiFormSchema,
   PokazatUslugiProvodkaFormSchema,
-  defaultValues,
-  queryKeys
+  PokazatUslugiQueryKeys,
+  defaultValues
 } from '../config'
 import { PokazatUslugiService } from '../service'
 import { podvodkaColumns } from './podvodki'
@@ -116,12 +116,12 @@ const PokazatUslugiDetailsPage = () => {
   )
 
   const {
-    data: pokazatUslugi,
+    data: usluga,
     isFetching,
     error
   } = useQuery({
     queryKey: [
-      queryKeys.getById,
+      PokazatUslugiQueryKeys.getById,
       Number(id),
       {
         main_schet_id,
@@ -132,16 +132,16 @@ const PokazatUslugiDetailsPage = () => {
     enabled: id !== 'create' && !!main_schet_id && !!jur3_schet_152_id && !queuedMonths.length
   })
   const { mutate: createUslugi, isPending: isCreating } = useMutation({
-    mutationKey: [queryKeys.create],
+    mutationKey: [PokazatUslugiQueryKeys.create],
     mutationFn: PokazatUslugiService.create,
     onSuccess(res) {
       toast.success(res?.message)
 
       queryClient.invalidateQueries({
-        queryKey: [queryKeys.getAll]
+        queryKey: [PokazatUslugiQueryKeys.getAll]
       })
       queryClient.invalidateQueries({
-        queryKey: [queryKeys.getById, id]
+        queryKey: [PokazatUslugiQueryKeys.getById, id]
       })
 
       navigate(-1)
@@ -153,16 +153,16 @@ const PokazatUslugiDetailsPage = () => {
   })
 
   const { mutate: updateUslugi, isPending: isUpdating } = useMutation({
-    mutationKey: [queryKeys.update, id],
+    mutationKey: [PokazatUslugiQueryKeys.update, id],
     mutationFn: PokazatUslugiService.update,
     onSuccess(res) {
       toast.success(res?.message)
 
       queryClient.invalidateQueries({
-        queryKey: [queryKeys.getAll]
+        queryKey: [PokazatUslugiQueryKeys.getAll]
       })
       queryClient.invalidateQueries({
-        queryKey: [queryKeys.getById, id]
+        queryKey: [PokazatUslugiQueryKeys.getById, id]
       })
 
       navigate(-1)
@@ -260,8 +260,8 @@ const PokazatUslugiDetailsPage = () => {
       return
     }
 
-    form.reset(pokazatUslugi?.data)
-  }, [form, pokazatUslugi, id])
+    form.reset(usluga?.data)
+  }, [form, usluga, id])
 
   useEffect(() => {
     if (error) {

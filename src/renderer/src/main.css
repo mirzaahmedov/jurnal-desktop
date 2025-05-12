@@ -121,3 +121,9 @@ b {
   z-index: 100;
   position: relative;
 }
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+}

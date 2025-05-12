@@ -1,4 +1,4 @@
-import type { BankPrixodPodvodka } from '@/common/models'
+import type { AvansProvodka } from '@/common/models'
 
 import { useQuery } from '@tanstack/react-query'
 import { Download } from 'lucide-react'
@@ -22,10 +22,10 @@ import { useRequisitesStore } from '@/common/features/requisites'
 import { formatNumber } from '@/common/lib/format'
 import { numberToWords } from '@/common/lib/utils'
 
-import { BankPrixodQueryKeys } from './config'
-import { BankPrixodService } from './service'
+import { AvansQueryKeys } from './config'
+import { AvansService } from './service'
 
-const provodkaColumns: ColumnDef<BankPrixodPodvodka>[] = [
+const provodkaColumns: ColumnDef<AvansProvodka>[] = [
   {
     key: 'schet',
     renderCell: (row) => row.operatsii?.schet
@@ -50,18 +50,14 @@ const provodkaColumns: ColumnDef<BankPrixodPodvodka>[] = [
   {
     key: 'podrazdelenie',
     renderCell: (row) => row.podrazdelenie?.name
-  },
-  {
-    key: 'podotchet',
-    renderCell: (row) => row.podotchet?.name
   }
 ]
 
-export interface BankPrixodViewDialogProps {
+export interface AvansViewDialogProps {
   selectedId: number | null
   onClose: VoidFunction
 }
-export const BankPrixodViewDialog = ({ selectedId, onClose }: BankPrixodViewDialogProps) => {
+export const AvansViewDialog = ({ selectedId, onClose }: AvansViewDialogProps) => {
   const { t, i18n } = useTranslation(['app', 'report'])
   const { main_schet_id } = useRequisitesStore()
 
@@ -69,13 +65,13 @@ export const BankPrixodViewDialog = ({ selectedId, onClose }: BankPrixodViewDial
     queryKey: [MainSchetQueryKeys.getById, main_schet_id],
     queryFn: MainSchetService.getById
   })
-  const { data: prixod, isFetching } = useQuery({
-    queryKey: [BankPrixodQueryKeys.getById, selectedId!],
-    queryFn: BankPrixodService.getById,
+  const { data: avans, isFetching } = useQuery({
+    queryKey: [AvansQueryKeys.getById, selectedId!],
+    queryFn: AvansService.getById,
     enabled: !!selectedId
   })
 
-  const data = prixod?.data
+  const data = avans?.data
 
   return (
     <DialogTrigger
@@ -89,11 +85,11 @@ export const BankPrixodViewDialog = ({ selectedId, onClose }: BankPrixodViewDial
       <DialogOverlay>
         <DialogContent className="relative w-full max-w-8xl h-full max-h-[900px] overflow-hidden">
           {isFetching || isFetchingMainSchet ? <LoadingOverlay /> : null}
-          <Printer filename={`${t('pages.bank_prixod')}.pdf`}>
+          <Printer filename={`${t('pages.avans')}.pdf`}>
             {({ ref, print }) => (
               <div className="h-full flex flex-col overflow-hidden">
                 <DialogHeader className="pb-5">
-                  <DialogTitle>{t('pages.bank_prixod')}</DialogTitle>
+                  <DialogTitle>{t('pages.avans')}</DialogTitle>
                 </DialogHeader>
                 {data ? (
                   <div
@@ -112,70 +108,20 @@ export const BankPrixodViewDialog = ({ selectedId, onClose }: BankPrixodViewDial
                         />
                       </div>
                     </Fieldset>
-                    <div className="grid grid-cols-2 divide-x">
-                      <Fieldset name={t('receiver-info')}>
-                        {main_schet?.data ? (
-                          <>
-                            <LabeledValue
-                              label={t('receiver')}
-                              value={main_schet.data.tashkilot_nomi}
-                            />
-                            <LabeledValue
-                              label={t('bank')}
-                              value={main_schet.data.tashkilot_bank}
-                            />
-                            <LabeledValue
-                              label={t('mfo')}
-                              value={main_schet.data.tashkilot_mfo}
-                            />
-                            <LabeledValue
-                              label={t('inn')}
-                              value={main_schet.data.tashkilot_inn}
-                            />
-                            <LabeledValue
-                              label={t('raschet-schet')}
-                              value={main_schet.data.account_number ?? '-'}
-                            />
-                            <LabeledValue
-                              label={t('raschet-schet-gazna')}
-                              value={main_schet.data.gazna_number ?? '-'}
-                            />
-                          </>
-                        ) : null}
+                    <div className="grid grid-cols-2">
+                      <Fieldset name={t('podotchet-litso')}>
+                        <div className="grid grid-cols-2 gap-5">
+                          <LabeledValue
+                            label={t('fio')}
+                            value={data.spravochnik_podotchet_litso_name}
+                          />
+                          <LabeledValue
+                            label={t('rayon')}
+                            value={data.spravochnik_podotchet_litso_rayon}
+                          />
+                        </div>
                       </Fieldset>
 
-                      <Fieldset name={t('payer-info')}>
-                        {main_schet?.data ? (
-                          <>
-                            <LabeledValue
-                              label={t('payer')}
-                              value={data.organ.name}
-                            />
-                            <LabeledValue
-                              label={t('bank')}
-                              value={data.organ.bank_klient}
-                            />
-                            <LabeledValue
-                              label={t('mfo')}
-                              value={data.organ.mfo}
-                            />
-                            <LabeledValue
-                              label={t('inn')}
-                              value={data.organ.inn}
-                            />
-                            <LabeledValue
-                              label={t('raschet-schet')}
-                              value={data.account_number?.raschet_schet ?? '-'}
-                            />
-                            <LabeledValue
-                              label={t('raschet-schet-gazna')}
-                              value={data.gazna_number?.raschet_schet_gazna ?? '-'}
-                            />
-                          </>
-                        ) : null}
-                      </Fieldset>
-                    </div>
-                    <div className="grid grid-cols-2 divide-x">
                       <Fieldset name={t('summa')}>
                         <div className="grid grid-cols-3 gap-5">
                           <LabeledValue
@@ -187,28 +133,10 @@ export const BankPrixodViewDialog = ({ selectedId, onClose }: BankPrixodViewDial
                             label={null}
                             value={
                               <Textarea
-                                readOnly
                                 value={numberToWords(Number(data.summa), i18n.language)}
                                 className="font-normal"
                               />
                             }
-                          />
-                        </div>
-                      </Fieldset>
-                      <Fieldset name={t('shartnoma')}>
-                        <div className="grid grid-cols-3 gap-5">
-                          <LabeledValue
-                            label={t('shartnoma-number')}
-                            value={data.contract?.doc_num ?? '-'}
-                          />
-                          <LabeledValue
-                            label={t('shartnoma-date')}
-                            value={data.contract?.doc_date ?? '-'}
-                          />
-                          <LabeledValue
-                            label={t('shartnoma-grafik')}
-                            value={data.contract_grafik?.smeta_number ?? '-'}
-                            className="col-span-2"
                           />
                         </div>
                       </Fieldset>
@@ -218,6 +146,7 @@ export const BankPrixodViewDialog = ({ selectedId, onClose }: BankPrixodViewDial
                         label={t('opisanie')}
                         value={
                           <Textarea
+                            readOnly
                             value={data.opisanie ?? ''}
                             className="font-normal"
                           />
@@ -234,13 +163,15 @@ export const BankPrixodViewDialog = ({ selectedId, onClose }: BankPrixodViewDial
                   </div>
                 ) : null}
                 <DialogFooter>
-                  <Button
-                    variant="ghost"
-                    IconStart={Download}
-                    onPress={print}
-                  >
-                    {t('download')}
-                  </Button>
+                  {main_schet?.data && data ? (
+                    <Button
+                      variant="ghost"
+                      IconStart={Download}
+                      onPress={print}
+                    >
+                      {t('download')}
+                    </Button>
+                  ) : null}
                 </DialogFooter>
               </div>
             )}

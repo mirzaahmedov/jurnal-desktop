@@ -1,4 +1,4 @@
-import { type HTMLAttributes } from 'react'
+import { type HTMLAttributes, useEffect, useRef } from 'react'
 
 import { CircleCheck, Loader2 } from 'lucide-react'
 import { Focusable } from 'react-aria-components'
@@ -53,9 +53,16 @@ const DetailsViewFooter = ({ children, className, ...props }: DetailsViewFooterP
 
 export interface DetailsViewCreateProps extends ButtonProps {
   isPending?: boolean
+  tabIndex?: number
 }
-const DetailsViewCreate = ({ isPending = false, ...props }: DetailsViewCreateProps) => {
+const DetailsViewCreate = ({ isPending = false, tabIndex, ...props }: DetailsViewCreateProps) => {
+  const buttonRef = useRef<HTMLButtonElement>(null)
+
   const { t } = useTranslation()
+
+  useEffect(() => {
+    buttonRef.current?.setAttribute('tabindex', String(tabIndex))
+  }, [tabIndex])
 
   return (
     <Focusable>
@@ -63,6 +70,7 @@ const DetailsViewCreate = ({ isPending = false, ...props }: DetailsViewCreatePro
         isPending={isPending}
         type="submit"
         {...props}
+        ref={buttonRef}
       >
         {isPending ? (
           <Loader2 className="btn-icon icon-start icon-sm" />
