@@ -3,14 +3,21 @@ import type { SmetaGrafik } from '@/common/models'
 import { useEffect } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { Eye } from 'lucide-react'
+import { Ellipsis, Eye } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
 import { GenericTable } from '@/common/components'
-import { Button } from '@/common/components/jolly/button'
+import { Button } from '@/common/components/ui/button'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger
+} from '@/common/components/ui/dropdown-menu'
 import { useConfirm } from '@/common/features/confirm'
+import { DownloadFile } from '@/common/features/file'
 import { useSearchFilter } from '@/common/features/filters/search/search-filter-debounced'
 import { useRequisitesStore } from '@/common/features/requisites'
 import { usePagination } from '@/common/hooks'
@@ -101,15 +108,44 @@ const SmetaGrafikPage = () => {
           getRowEditable={(row) => row.isdeleted}
           actions={(row) =>
             !row.isdeleted ? (
-              <Button
-                variant="ghost"
-                size="icon"
-                onPress={() => {
-                  navigate(`${row.id}?year=${row.year}&editable=false`)
-                }}
-              >
-                <Eye className="btn-icon" />
-              </Button>
+              <>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => {
+                    navigate(`${row.id}?year=${row.year}&editable=false`)
+                  }}
+                >
+                  <Eye className="btn-icon" />
+                </Button>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                    >
+                      <Ellipsis className="size-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent
+                    side="left"
+                    onCloseAutoFocus={(e) => e.preventDefault()}
+                  >
+                    <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                      <DownloadFile
+                        url={`/smeta/grafik/${row.id}`}
+                        fileName={`График_${row.year}.xlsx`}
+                        buttonText={t('download')}
+                        params={{
+                          main_schet_id,
+                          year: row.year,
+                          excel: true
+                        }}
+                      />
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </>
             ) : null
           }
         />
