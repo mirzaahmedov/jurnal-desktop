@@ -9,8 +9,16 @@ import { useTranslation } from 'react-i18next'
 import Paginate from 'react-paginate'
 
 import { GenericTable, LoadingOverlay } from '@/common/components'
+import { pageSizeOptions } from '@/common/components/pagination'
 import { Button } from '@/common/components/ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/common/components/ui/dialog'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from '@/common/components/ui/select'
 import { useToggle } from '@/common/hooks'
 import { extendObject } from '@/common/lib/utils'
 import { normalizeEmptyFields } from '@/common/lib/validation'
@@ -23,6 +31,7 @@ export const Spravochnik = ({ close, spravochnik }: SpravochnikProps) => {
   const timer = useRef<NodeJS.Timeout | null>(null)
 
   const [page, setPage] = useState<number>(1)
+  const [pageSize, setPageSize] = useState<number>(10)
   const [values, setValues] = useState<Record<string, unknown>>({})
   const [state, setState] = useState<Record<string, unknown>>({})
   const [queryParams, setQueryParams] = useState<Record<string, unknown>>({})
@@ -40,6 +49,7 @@ export const Spravochnik = ({ close, spravochnik }: SpravochnikProps) => {
       extendObject(
         {
           page,
+          limit: pageSize,
           ...(spravochnik?.defaultFilters || {}),
           ...queryParams
         },
@@ -219,41 +229,83 @@ export const Spravochnik = ({ close, spravochnik }: SpravochnikProps) => {
                   />
                 )}
               </div>
-              <div className="flex-0 p-5">
+              <div className="flex-0 p-5 flex items-center gap-10">
                 {data?.meta?.pageCount ? (
-                  <Paginate
-                    className="flex gap-4"
-                    pageRangeDisplayed={2}
-                    breakLabel="..."
-                    forcePage={page - 1}
-                    onPageChange={({ selected }) => setPage(selected + 1)}
-                    pageLabelBuilder={(item) => (
-                      <Button
-                        variant={page === item ? 'outline' : 'ghost'}
-                        size="icon"
-                      >
-                        {item}
-                      </Button>
-                    )}
-                    nextLabel={
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                      >
-                        <ArrowRight className="btn-icon !ml-0" />
-                      </Button>
-                    }
-                    previousLabel={
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                      >
-                        <ArrowLeft className="btn-icon !ml-0" />
-                      </Button>
-                    }
-                    pageCount={data?.meta?.pageCount ?? 0}
-                    renderOnZeroPageCount={null}
-                  />
+                  <>
+                    <Paginate
+                      className="flex gap-4"
+                      pageRangeDisplayed={2}
+                      breakLabel="..."
+                      forcePage={page - 1}
+                      onPageChange={({ selected }) => setPage(selected + 1)}
+                      pageLabelBuilder={(item) => (
+                        <Button
+                          variant={page === item ? 'outline' : 'ghost'}
+                          size="icon"
+                        >
+                          {item}
+                        </Button>
+                      )}
+                      nextLabel={
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                        >
+                          <ArrowRight className="btn-icon !ml-0" />
+                        </Button>
+                      }
+                      previousLabel={
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                        >
+                          <ArrowLeft className="btn-icon !ml-0" />
+                        </Button>
+                      }
+                      pageCount={data?.meta?.pageCount ?? 0}
+                      renderOnZeroPageCount={null}
+                    />
+                    {data?.meta?.count ? (
+                      <div className="flex items-center gap-10">
+                        <span className="whitespace-nowrap text-sm font-medium text-slate-600">
+                          {t('pagination.range', {
+                            from: (page - 1) * pageSize + 1,
+                            to:
+                              (page - 1) * pageSize +
+                              (page * pageSize > data?.meta?.count
+                                ? data?.meta?.count % pageSize
+                                : pageSize),
+                            total: data?.meta?.count
+                          })}
+                        </span>
+                        <div className="flex items-center gap-5">
+                          <span className="whitespace-nowrap text-sm font-medium text-slate-600">
+                            {t('pagination.page_size')}
+                          </span>
+                          <div className="w-20">
+                            <Select
+                              value={String(pageSize)}
+                              onValueChange={(value) => setPageSize(Number(value))}
+                            >
+                              <SelectTrigger>
+                                <SelectValue placeholder={String(pageSize)} />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {pageSizeOptions.map((item) => (
+                                  <SelectItem
+                                    key={item.value}
+                                    value={String(item.value)}
+                                  >
+                                    {item.value}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </div>
+                        </div>
+                      </div>
+                    ) : null}
+                  </>
                 ) : null}
               </div>
             </>

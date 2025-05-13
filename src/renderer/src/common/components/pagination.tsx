@@ -8,7 +8,7 @@ import { useEventCallback } from '../hooks'
 import { JollySelect, SelectItem } from './jolly/select'
 import { Button } from './ui/button'
 
-const pageSizeOptions = [
+export const pageSizeOptions = [
   { value: 5 },
   { value: 10 },
   { value: 15 },
