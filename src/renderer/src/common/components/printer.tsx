@@ -28,13 +28,6 @@ export const Printer = ({ filename, children, orientation = 'landscape' }: Print
             onclone: (clonedDoc: Document) => {
               const clonedElement = clonedDoc.getElementById('capture')
               clonedElement?.querySelectorAll<HTMLElement>('*').forEach((el) => {
-                const style = window.getComputedStyle(el)
-                if (style.position === 'absolute' || style.position === 'fixed') {
-                  el.style.position = 'static'
-                }
-                if (style.overflow === 'hidden') {
-                  el.style.overflow = 'visible'
-                }
                 if (el.scrollHeight > el.clientHeight) {
                   el.style.height = el.scrollHeight + 'px'
                   el.style.overflow = 'visible'

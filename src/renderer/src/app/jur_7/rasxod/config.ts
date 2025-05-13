@@ -2,9 +2,9 @@ import { z } from 'zod'
 
 import { withPreprocessor } from '@/common/lib/validation'
 
-export const RasxodQueryKeys = {
+export const WarehouseRasxodQueryKeys = {
   getAll: 'jur7_rasxod/all',
-  get: 'jur7_rasxod/get',
+  getById: 'jur7_rasxod/get',
   create: 'jur7_rasxod/create',
   update: 'jur7_rasxod/update',
   delete: 'jur7_rasxod/delete'

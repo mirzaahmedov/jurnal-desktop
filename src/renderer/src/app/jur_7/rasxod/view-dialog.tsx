@@ -1,4 +1,4 @@
-import type { WarehousePrixodProvodka } from '@/common/models'
+import type { WarehouseRasxodProvodka } from '@/common/models'
 
 import { useQuery } from '@tanstack/react-query'
 import { Download } from 'lucide-react'
@@ -21,27 +21,36 @@ import { Textarea } from '@/common/components/ui/textarea'
 import { formatLocaleDate, formatNumber } from '@/common/lib/format'
 import { numberToWords } from '@/common/lib/utils'
 
-import { WarehousePrixodQueryKeys } from './config'
-import { WarehousePrixodService } from './service'
+import { WarehouseRasxodQueryKeys } from './config'
+import { WarehouseRasxodService } from './service'
 
-const provodkaColumns: ColumnDef<WarehousePrixodProvodka>[] = [
+const provodkaColumns: ColumnDef<WarehouseRasxodProvodka>[] = [
   {
-    key: 'group_number'
+    key: 'code',
+    renderCell: (row) => row.product?.id
   },
   {
-    key: 'name'
+    key: 'group_number',
+    renderCell: (row) => row.group?.group_number
+  },
+  {
+    key: 'name',
+    renderCell: (row) => row.product?.name
   },
   {
     key: 'serial_num',
-    header: 'serial-num'
+    header: 'serial-num',
+    renderCell: (row) => row.product?.serial_num
   },
   {
     key: 'inventar_num',
-    header: 'inventar-num'
+    header: 'inventar-num',
+    renderCell: (row) => row.product?.inventar_num
   },
   {
     key: 'edin',
-    header: 'ei'
+    header: 'ei',
+    renderCell: (row) => row.product?.edin
   },
   {
     className: 'text-end',
@@ -57,26 +66,26 @@ const provodkaColumns: ColumnDef<WarehousePrixodProvodka>[] = [
     key: 'summa'
   },
   {
-    numeric: true,
-    key: 'nds_foiz'
-  },
-  {
-    numeric: true,
-    key: 'nds_summa'
-  },
-  {
     key: 'iznos',
-    renderCell: (row) => <Checkbox checked={row.iznos} />
-  },
-  {
-    key: 'iznos_start',
-    header: 'iznos_start_date',
-    renderCell: (row) => formatLocaleDate(row.iznos_start)
-  },
-  {
-    numeric: true,
-    key: 'eski_iznos_summa',
-    header: 'iznos_summa_old'
+    columns: [
+      {
+        key: 'iznos',
+        renderCell: (row) => <Checkbox checked={row.iznos} />
+      },
+      {
+        numeric: true,
+        key: 'iznos_summa',
+        header: 'summa'
+      },
+      {
+        key: 'iznos_schet',
+        header: 'schet'
+      },
+      {
+        key: 'iznos_sub_schet',
+        header: 'subschet'
+      }
+    ]
   },
   {
     key: 'debet',
@@ -113,23 +122,23 @@ const provodkaColumns: ColumnDef<WarehousePrixodProvodka>[] = [
   }
 ]
 
-export interface WarehousePrixodViewDialogProps {
+export interface WarehouseRasxodViewDialogProps {
   selectedId: number | null
   onClose: VoidFunction
 }
-export const WarehousePrixodViewDialog = ({
+export const WarehouseRasxodViewDialog = ({
   selectedId,
   onClose
-}: WarehousePrixodViewDialogProps) => {
+}: WarehouseRasxodViewDialogProps) => {
   const { t, i18n } = useTranslation(['app', 'report'])
 
-  const { data: prixod, isFetching } = useQuery({
-    queryKey: [WarehousePrixodQueryKeys.getById, selectedId!],
-    queryFn: WarehousePrixodService.getById,
+  const { data: rasxod, isFetching } = useQuery({
+    queryKey: [WarehouseRasxodQueryKeys.getById, selectedId!],
+    queryFn: WarehouseRasxodService.getById,
     enabled: !!selectedId
   })
 
-  const data = prixod?.data
+  const data = rasxod?.data
 
   return (
     <DialogTrigger
@@ -143,12 +152,12 @@ export const WarehousePrixodViewDialog = ({
       <DialogOverlay>
         <DialogContent className="relative w-full max-w-full h-full max-h-[900px] overflow-hidden">
           {isFetching ? <LoadingOverlay /> : null}
-          <Printer filename={`${t('pages.material-warehouse')}_${t('prixod')}.pdf`}>
+          <Printer filename={`${t('pages.material-warehouse')}_${t('rasxod')}.pdf`}>
             {({ ref, print }) => (
               <div className="h-full flex flex-col overflow-hidden">
                 <DialogHeader className="pb-5">
                   <DialogTitle>
-                    {t('pages.material-warehouse')} {t('prixod').toLowerCase()}
+                    {t('pages.material-warehouse')} {t('rasxod').toLowerCase()}
                   </DialogTitle>
                 </DialogHeader>
                 {data ? (
@@ -174,63 +183,15 @@ export const WarehousePrixodViewDialog = ({
                       </div>
                     </Fieldset>
                     <div className="grid grid-cols-2 divide-x">
-                      <Fieldset name={t('receiver-info')}>
-                        {data.organ ? (
-                          <>
-                            <LabeledValue
-                              label={t('receiver')}
-                              value={data.organ.name}
-                            />
-                            <LabeledValue
-                              label={t('bank')}
-                              value={data.organ.bank_klient}
-                            />
-                            <LabeledValue
-                              label={t('mfo')}
-                              value={data.organ.mfo}
-                            />
-                            <LabeledValue
-                              label={t('inn')}
-                              value={data.organ.inn}
-                            />
-                            <LabeledValue
-                              label={t('raschet-schet')}
-                              value={data.account_number?.raschet_schet ?? '-'}
-                            />
-                          </>
-                        ) : null}
-                      </Fieldset>
-                      <div className="grid grid-cols-1 divide-y">
-                        <Fieldset name={t('podotchet-litso')}>
-                          <div className="grid grid-cols-2 gap-5">
-                            <LabeledValue
-                              label={t('fio')}
-                              value={data.responsible?.fio}
-                            />
-                            <LabeledValue
-                              label={t('podrazdelenie')}
-                              value={data.responsible?.spravochnik_podrazdelenie_jur7_name}
-                            />
-                          </div>
-                        </Fieldset>
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-2 divide-x">
-                      <Fieldset name={t('shartnoma')}>
-                        <div className="grid grid-cols-3 gap-5">
+                      <Fieldset name={t('podotchet-litso')}>
+                        <div className="grid grid-cols-2 gap-5">
                           <LabeledValue
-                            label={t('shartnoma-number')}
-                            value={data.contract?.doc_num ?? '-'}
+                            label={t('fio')}
+                            value={data.responsible?.fio}
                           />
                           <LabeledValue
-                            label={t('shartnoma-date')}
-                            value={data.contract?.doc_date ?? '-'}
-                          />
-                          <LabeledValue
-                            label={t('shartnoma-grafik')}
-                            value={data.contract_grafik?.smeta_number ?? '-'}
-                            className="col-span-2"
+                            label={t('podrazdelenie')}
+                            value={data.responsible?.spravochnik_podrazdelenie_jur7_name}
                           />
                         </div>
                       </Fieldset>
@@ -254,6 +215,7 @@ export const WarehousePrixodViewDialog = ({
                         </div>
                       </Fieldset>
                     </div>
+
                     <div className="p-5">
                       <LabeledValue
                         label={t('opisanie')}

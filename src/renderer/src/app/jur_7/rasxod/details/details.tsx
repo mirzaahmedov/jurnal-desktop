@@ -29,7 +29,7 @@ import {
   SummaFields
 } from '@/common/widget/form'
 
-import { RasxodFormSchema, RasxodQueryKeys, defaultValues } from '../config'
+import { RasxodFormSchema, WarehouseRasxodQueryKeys, defaultValues } from '../config'
 import { WarehouseRasxodService, useRasxodCreate, useRasxodUpdate } from '../service'
 import { ApplyAllInputs } from './apply-all-inputs'
 import { ProvodkaTable } from './provodka-table'
@@ -63,7 +63,7 @@ const RasxodDetails = ({ id, onSuccess }: RasxodDetailsProps) => {
 
   const { data: rasxod, isFetching } = useQuery({
     queryKey: [
-      RasxodQueryKeys.get,
+      WarehouseRasxodQueryKeys.getById,
       Number(id),
       {
         budjet_id,
@@ -79,7 +79,7 @@ const RasxodDetails = ({ id, onSuccess }: RasxodDetailsProps) => {
       handleOstatokResponse(res)
 
       queryClient.invalidateQueries({
-        queryKey: [RasxodQueryKeys.getAll]
+        queryKey: [WarehouseRasxodQueryKeys.getAll]
       })
       queryClient.invalidateQueries({
         queryKey: [SaldoQueryKeys.check]
@@ -100,7 +100,7 @@ const RasxodDetails = ({ id, onSuccess }: RasxodDetailsProps) => {
       handleOstatokResponse(res)
 
       queryClient.invalidateQueries({
-        queryKey: [RasxodQueryKeys.getAll]
+        queryKey: [WarehouseRasxodQueryKeys.getAll]
       })
       queryClient.invalidateQueries({
         queryKey: [SaldoQueryKeys.check]

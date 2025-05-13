@@ -1,12 +1,14 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { Eye } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
 import { handleOstatokError, handleOstatokResponse } from '@/app/jur_7/saldo/utils'
 import { FooterCell, FooterRow, GenericTable, useTableSort } from '@/common/components'
+import { Button } from '@/common/components/jolly/button'
 import { useConfirm } from '@/common/features/confirm'
 import {
   SearchFilterDebounced,
@@ -27,8 +29,9 @@ import { IznosQueryKeys } from '../iznos/config'
 import { SaldoQueryKeys } from '../saldo'
 import { useWarehouseSaldo } from '../saldo/use-saldo'
 import { internalColumns } from './columns'
-import { internalQueryKeys } from './config'
-import { internalService } from './service'
+import { WarehouseInternalQueryKeys } from './config'
+import { WarehouseInternalService } from './service'
+import { WarehouseInternalViewDialog } from './view-dialog'
 
 const InternalPage = () => {
   const pagination = usePagination()
@@ -37,6 +40,7 @@ const InternalPage = () => {
   const setLayout = useLayout()
 
   const [search] = useSearchFilter()
+  const [selectedId, setSelectedId] = useState<number | null>(null)
 
   const { t } = useTranslation(['app'])
   const { confirm } = useConfirm()
@@ -51,14 +55,14 @@ const InternalPage = () => {
   })
 
   const { mutate: deleteInternal, isPending } = useMutation({
-    mutationKey: [internalQueryKeys.delete],
-    mutationFn: internalService.delete,
+    mutationKey: [WarehouseInternalQueryKeys.delete],
+    mutationFn: WarehouseInternalService.delete,
     onSuccess(res) {
       handleOstatokResponse(res)
       toast.success(res?.message)
       requestAnimationFrame(() => {
         queryClient.invalidateQueries({
-          queryKey: [internalQueryKeys.getAll]
+          queryKey: [WarehouseInternalQueryKeys.getAll]
         })
         queryClient.invalidateQueries({
           queryKey: [SaldoQueryKeys.check]
@@ -79,7 +83,7 @@ const InternalPage = () => {
     error: internalsError
   } = useQuery({
     queryKey: [
-      internalQueryKeys.getAll,
+      WarehouseInternalQueryKeys.getAll,
       {
         ...pagination,
         ...dates,
@@ -89,7 +93,7 @@ const InternalPage = () => {
         main_schet_id
       }
     ],
-    queryFn: internalService.getAll,
+    queryFn: WarehouseInternalService.getAll,
     enabled: queuedMonths.length === 0
   })
 
@@ -139,6 +143,17 @@ const InternalPage = () => {
           }}
           getColumnSorted={getColumnSorted}
           onSort={handleSort}
+          actions={(row) => (
+            <Button
+              variant="ghost"
+              size="icon"
+              onPress={() => {
+                setSelectedId(row.id)
+              }}
+            >
+              <Eye className="btn-icon" />
+            </Button>
+          )}
           footer={
             <FooterRow>
               <FooterCell
@@ -157,6 +172,11 @@ const InternalPage = () => {
           pageCount={internals?.meta?.pageCount ?? 0}
         />
       </ListView.Footer>
+
+      <WarehouseInternalViewDialog
+        selectedId={selectedId}
+        onClose={() => setSelectedId(null)}
+      />
     </ListView>
   )
 }

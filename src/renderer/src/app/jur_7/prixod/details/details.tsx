@@ -239,7 +239,7 @@ const PrixodDetails = ({ id, onSuccess }: PrixodDetailsProps) => {
   }, [errors])
 
   return (
-    <DetailsView>
+    <DetailsView className="h-full">
       <DetailsView.Content
         loading={isFetching}
         className="w-full overflow-x-hidden"
@@ -316,7 +316,7 @@ const PrixodDetails = ({ id, onSuccess }: PrixodDetailsProps) => {
           </form>
         </Form>
 
-        <div className="p-5 pb-10 w-full overflow-hidden flex flex-col gap-5">
+        <div className="p-5 mb-20 w-full overflow-hidden flex flex-col gap-5">
           <div className="flex items-center justify-between gap-2">
             <div className="flex items-center gap-2.5">
               <ImportFile

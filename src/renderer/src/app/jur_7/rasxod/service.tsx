@@ -6,7 +6,7 @@ import { useMutation, useQuery } from '@tanstack/react-query'
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 import { budjet, main_schet } from '@/common/features/crud/middleware'
 
-import { RasxodQueryKeys } from './config'
+import { WarehouseRasxodQueryKeys } from './config'
 
 interface RasxodMeta extends ResponseMeta {
   summa: number
@@ -25,7 +25,7 @@ export const WarehouseRasxodService = new CRUDService<
 
 export const useRasxodGet = (id: number) => {
   return useQuery({
-    queryKey: [RasxodQueryKeys.get, id],
+    queryKey: [WarehouseRasxodQueryKeys.getById, id],
     queryFn: WarehouseRasxodService.getById,
     enabled: !!id
   })
@@ -37,7 +37,7 @@ type UseRasxodCreateParams = {
 }
 export const useRasxodCreate = ({ onSuccess, onError }: UseRasxodCreateParams) => {
   return useMutation({
-    mutationKey: [RasxodQueryKeys.create],
+    mutationKey: [WarehouseRasxodQueryKeys.create],
     mutationFn: WarehouseRasxodService.create,
     onSuccess,
     onError
@@ -45,7 +45,7 @@ export const useRasxodCreate = ({ onSuccess, onError }: UseRasxodCreateParams) =
 }
 export const useRasxodUpdate = ({ onSuccess, onError }: UseRasxodCreateParams) => {
   return useMutation({
-    mutationKey: [RasxodQueryKeys.update],
+    mutationKey: [WarehouseRasxodQueryKeys.update],
     mutationFn: WarehouseRasxodService.update,
     onSuccess,
     onError
@@ -53,7 +53,7 @@ export const useRasxodUpdate = ({ onSuccess, onError }: UseRasxodCreateParams) =
 }
 export const useRasxodDelete = ({ onSuccess, onError }: UseRasxodCreateParams) => {
   return useMutation({
-    mutationKey: [RasxodQueryKeys.delete],
+    mutationKey: [WarehouseRasxodQueryKeys.delete],
     mutationFn: WarehouseRasxodService.delete,
     onSuccess,
     onError

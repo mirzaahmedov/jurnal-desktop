@@ -1,12 +1,14 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { Eye } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
 import { handleOstatokError, handleOstatokResponse } from '@/app/jur_7/saldo/utils'
 import { FooterCell, FooterRow, GenericTable, useTableSort } from '@/common/components'
+import { Button } from '@/common/components/jolly/button'
 import { useConfirm } from '@/common/features/confirm'
 import {
   SearchFilterDebounced,
@@ -25,8 +27,9 @@ import { IznosQueryKeys } from '../iznos/config'
 import { SaldoQueryKeys } from '../saldo'
 import { useWarehouseSaldo } from '../saldo/use-saldo'
 import { rasxodColumns } from './columns'
-import { RasxodQueryKeys } from './config'
+import { WarehouseRasxodQueryKeys } from './config'
 import { WarehouseRasxodService } from './service'
+import { WarehouseRasxodViewDialog } from './view-dialog'
 
 const Jurnal7RasxodPage = () => {
   const navigate = useNavigate()
@@ -35,6 +38,7 @@ const Jurnal7RasxodPage = () => {
   const setLayout = useLayout()
 
   const [search] = useSearchFilter()
+  const [selectedId, setSelectedId] = useState<number | null>(null)
 
   const { t } = useTranslation(['app'])
   const { confirm } = useConfirm()
@@ -49,14 +53,14 @@ const Jurnal7RasxodPage = () => {
   })
 
   const { mutate: deleteRasxod, isPending } = useMutation({
-    mutationKey: [RasxodQueryKeys.delete],
+    mutationKey: [WarehouseRasxodQueryKeys.delete],
     mutationFn: WarehouseRasxodService.delete,
     onSuccess(res) {
       handleOstatokResponse(res)
       toast.success(res?.message)
       requestAnimationFrame(() => {
         queryClient.invalidateQueries({
-          queryKey: [RasxodQueryKeys.getAll]
+          queryKey: [WarehouseRasxodQueryKeys.getAll]
         })
         queryClient.invalidateQueries({
           queryKey: [SaldoQueryKeys.check]
@@ -77,7 +81,7 @@ const Jurnal7RasxodPage = () => {
     error: rasxodsError
   } = useQuery({
     queryKey: [
-      RasxodQueryKeys.getAll,
+      WarehouseRasxodQueryKeys.getAll,
       {
         ...pagination,
         ...dates,
@@ -137,6 +141,17 @@ const Jurnal7RasxodPage = () => {
           }}
           getColumnSorted={getColumnSorted}
           onSort={handleSort}
+          actions={(row) => (
+            <Button
+              variant="ghost"
+              size="icon"
+              onPress={() => {
+                setSelectedId(row.id)
+              }}
+            >
+              <Eye className="btn-icon" />
+            </Button>
+          )}
           footer={
             <FooterRow>
               <FooterCell
@@ -155,6 +170,11 @@ const Jurnal7RasxodPage = () => {
           pageCount={rasxods?.meta?.pageCount ?? 0}
         />
       </ListView.Footer>
+
+      <WarehouseRasxodViewDialog
+        selectedId={selectedId}
+        onClose={() => setSelectedId(null)}
+      />
     </ListView>
   )
 }

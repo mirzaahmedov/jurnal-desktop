@@ -13,7 +13,7 @@ export const LabeledValue = ({ label, value, className, ...props }: LabeledValue
       {...props}
     >
       <p className="text-xs font-medium text-slate-500">{label}</p>
-      <p className="text-sm font-semibold">{value}</p>
+      <p className="text-sm font-semibold">{value ?? '-'}</p>
     </div>
   )
 }

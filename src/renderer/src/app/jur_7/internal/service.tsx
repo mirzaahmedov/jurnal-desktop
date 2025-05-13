@@ -1,19 +1,19 @@
 import type { InternalFormValues } from './config'
-import type { Internal, ResponseMeta } from '@/common/models'
+import type { ResponseMeta, WarehouseInternal } from '@/common/models'
 
 import { useMutation } from '@tanstack/react-query'
 
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 import { budjet, main_schet } from '@/common/features/crud/middleware'
 
-import { internalQueryKeys } from './config'
+import { WarehouseInternalQueryKeys } from './config'
 
 interface InternalMeta extends ResponseMeta {
   summa: number
 }
 
-export const internalService = new CRUDService<
-  Internal,
+export const WarehouseInternalService = new CRUDService<
+  WarehouseInternal,
   InternalFormValues,
   InternalFormValues,
   InternalMeta
@@ -29,8 +29,8 @@ type UseInternalCreateParams = {
 }
 export const useInternalCreate = ({ onSuccess, onError }: UseInternalCreateParams) => {
   return useMutation({
-    mutationKey: [internalQueryKeys.create],
-    mutationFn: internalService.create,
+    mutationKey: [WarehouseInternalQueryKeys.create],
+    mutationFn: WarehouseInternalService.create,
     onSuccess,
     onError
   })
@@ -38,16 +38,16 @@ export const useInternalCreate = ({ onSuccess, onError }: UseInternalCreateParam
 
 export const useInternalUpdate = ({ onSuccess, onError }: UseInternalCreateParams) => {
   return useMutation({
-    mutationKey: [internalQueryKeys.update],
-    mutationFn: internalService.update,
+    mutationKey: [WarehouseInternalQueryKeys.update],
+    mutationFn: WarehouseInternalService.update,
     onSuccess,
     onError
   })
 }
 export const useInternalDelete = ({ onSuccess, onError }: UseInternalCreateParams) => {
   return useMutation({
-    mutationKey: [internalQueryKeys.delete],
-    mutationFn: internalService.delete,
+    mutationKey: [WarehouseInternalQueryKeys.delete],
+    mutationFn: WarehouseInternalService.delete,
     onSuccess,
     onError
   })

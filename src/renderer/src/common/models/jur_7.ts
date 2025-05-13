@@ -5,7 +5,7 @@ import type { SaldoProduct } from './saldo'
 import type { Shartnoma } from './shartnoma'
 import type { ShartnomaGrafik } from './shartnoma-grafik'
 
-export interface WarehouseProvodka {
+export interface WarehousePrixodProvodka {
   naimenovanie_tovarov_jur7_id: number
   serial_num: string
   inventar_num: string
@@ -22,19 +22,7 @@ export interface WarehouseProvodka {
   kredit_schet: string
   kredit_sub_schet: string
   data_pereotsenka: string
-  product: SaldoProduct
   group_number: string
-  group: Group
-}
-export interface WarehouseRasxod {
-  id: number
-  doc_num: string
-  doc_date: string
-  opisanie?: string
-  summa: number
-  kimdan_name: string
-  kimga_name: string
-  childs: WarehouseProvodka[]
 }
 export interface WarehousePrixod {
   id: number
@@ -44,12 +32,73 @@ export interface WarehousePrixod {
   summa: number
   kimdan_name: string
   kimga_name: string
+  doverennost?: string
   organ: Organization
   account_number: Organization.RaschetSchet
   contract: Shartnoma
   contract_grafik: ShartnomaGrafik
   responsible: Responsible
-  childs: WarehouseProvodka[]
+  childs: WarehousePrixodProvodka[]
+}
+
+export interface WarehouseRasxodProvodka {
+  id: number
+  user_id: number
+  document_rasxod_jur7_id: number
+  naimenovanie_tovarov_jur7_id: number
+  kol: number
+  sena: number
+  nds_foiz: any
+  nds_summa: any
+  summa_s_nds: any
+  summa: number
+  debet_schet: string
+  debet_sub_schet: string
+  kredit_schet: string
+  kredit_sub_schet: string
+  data_pereotsenka: string
+  main_schet_id: number
+  created_at: string
+  updated_at: string
+  isdeleted: boolean
+  iznos_schet: string
+  iznos_sub_schet: string
+  iznos_summa: number
+  iznos: boolean
+  budjet_id: any
+  product: SaldoProduct
+  group: Group
+}
+
+export interface WarehouseRasxod {
+  id: number
+  doc_num: string
+  doc_date: string
+  opisanie?: string
+  summa: number
+  kimdan_name: string
+  kimga_name: string
+  doverennost?: string
+  responsible: Responsible
+  childs: WarehouseRasxodProvodka[]
+}
+
+export interface WarehouseInternalProvodka {
+  naimenovanie_tovarov_jur7_id: number
+  kol: number
+  sena: number
+  summa: number
+  iznos?: boolean
+  iznos_summa?: number
+  iznos_schet?: string
+  iznos_sub_schet?: string
+  debet_schet: string
+  debet_sub_schet: string
+  kredit_schet: string
+  kredit_sub_schet: string
+  data_pereotsenka: string
+  product: SaldoProduct
+  group: Group
 }
 export interface WarehouseInternal {
   id: number
@@ -57,17 +106,14 @@ export interface WarehouseInternal {
   doc_date: string
   opisanie?: string
   summa: number
+  kimdan_id: number
   kimdan_name: string
-  kimga: {
-    id: number
-    spravochnik_podrazdelenie_jur7_id: number
-    fio: string
-    user_id: number
-    created_at: string
-    updated_at: string
-    isdeleted: boolean
-  }
-  childs: WarehouseProvodka[]
+  kimga_name: string
+  kimga_id: number
+  kimdan: Responsible
+  kimga: Responsible
+  doverennost?: string
+  childs: WarehouseInternalProvodka[]
 }
 
 export interface WarehouseMonitoring {

@@ -28,8 +28,8 @@ import {
   SummaFields
 } from '@/common/widget/form'
 
-import { InternalFormSchema, defaultValues, internalQueryKeys } from '../config'
-import { internalService, useInternalCreate, useInternalUpdate } from '../service'
+import { InternalFormSchema, WarehouseInternalQueryKeys, defaultValues } from '../config'
+import { WarehouseInternalService, useInternalCreate, useInternalUpdate } from '../service'
 import { ProvodkaTable } from './provodka-table'
 
 interface InternalDetailsProps {
@@ -49,14 +49,14 @@ const InternalDetails = ({ id, onSuccess: onSuccess }: InternalDetailsProps) => 
 
   const { data: internal, isFetching } = useQuery({
     queryKey: [
-      internalQueryKeys.getById,
+      WarehouseInternalQueryKeys.getById,
       Number(id),
       {
         budjet_id,
         main_schet_id
       }
     ],
-    queryFn: internalService.getById,
+    queryFn: WarehouseInternalService.getById,
     enabled: !!id
   })
 
@@ -65,7 +65,7 @@ const InternalDetails = ({ id, onSuccess: onSuccess }: InternalDetailsProps) => 
       toast.success(res?.message)
       handleOstatokResponse(res)
       queryClient.invalidateQueries({
-        queryKey: [internalQueryKeys.getAll]
+        queryKey: [WarehouseInternalQueryKeys.getAll]
       })
 
       queryClient.invalidateQueries({
@@ -87,7 +87,7 @@ const InternalDetails = ({ id, onSuccess: onSuccess }: InternalDetailsProps) => 
       toast.success(res?.message)
       handleOstatokResponse(res)
       queryClient.invalidateQueries({
-        queryKey: [internalQueryKeys.getAll]
+        queryKey: [WarehouseInternalQueryKeys.getAll]
       })
 
       queryClient.invalidateQueries({

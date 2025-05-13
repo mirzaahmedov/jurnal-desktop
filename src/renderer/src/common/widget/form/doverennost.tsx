@@ -11,7 +11,7 @@ type RequiredDoverennostFields = {
   doverennost?: string
 }
 
-const DoverennostFields: FormEditableFieldsComponent<RequiredDoverennostFields> = ({
+export const DoverennostFields: FormEditableFieldsComponent<RequiredDoverennostFields> = ({
   tabIndex,
   form,
   disabled
@@ -37,5 +37,3 @@ const DoverennostFields: FormEditableFieldsComponent<RequiredDoverennostFields> 
     />
   )
 }
-
-export { DoverennostFields }

@@ -2,7 +2,7 @@ import { z } from 'zod'
 
 import { withPreprocessor } from '@/common/lib/validation'
 
-export const internalQueryKeys = {
+export const WarehouseInternalQueryKeys = {
   getAll: 'jur7_internal/all',
   getById: 'jur7_internal/get',
   create: 'jur7_internal/create',
