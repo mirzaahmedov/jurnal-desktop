@@ -19,7 +19,7 @@ import { LabeledValue } from '@/common/components/labeled-value'
 import { Printer } from '@/common/components/printer'
 import { Textarea } from '@/common/components/ui/textarea'
 import { useRequisitesStore } from '@/common/features/requisites'
-import { formatNumber } from '@/common/lib/format'
+import { formatLocaleDate, formatNumber } from '@/common/lib/format'
 import { numberToWords } from '@/common/lib/utils'
 
 import { BankRasxodQueryKeys } from './config'
@@ -117,7 +117,7 @@ export const BankRasxodViewDialog = ({ selectedId, onClose }: BankRasxodViewDial
                         />
                         <LabeledValue
                           label={t('doc_date')}
-                          value={data.doc_date}
+                          value={data.doc_date ? formatLocaleDate(data.doc_date) : ''}
                         />
                       </div>
                     </Fieldset>
@@ -212,11 +212,17 @@ export const BankRasxodViewDialog = ({ selectedId, onClose }: BankRasxodViewDial
                           />
                           <LabeledValue
                             label={t('shartnoma-date')}
-                            value={data.contract?.doc_date ?? '-'}
+                            value={
+                              data.contract?.doc_date
+                                ? formatLocaleDate(data.contract?.doc_date)
+                                : '-'
+                            }
                           />
                           <LabeledValue
                             label={t('shartnoma-grafik')}
-                            value={data.contract_grafik?.smeta_number ?? '-'}
+                            value={
+                              data.smeta_number ? `${data.smeta_number} (${data.smeta_name})` : '-'
+                            }
                             className="col-span-2"
                           />
                         </div>

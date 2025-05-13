@@ -19,7 +19,7 @@ import { LabeledValue } from '@/common/components/labeled-value'
 import { Printer } from '@/common/components/printer'
 import { Textarea } from '@/common/components/ui/textarea'
 import { useRequisitesStore } from '@/common/features/requisites'
-import { formatNumber } from '@/common/lib/format'
+import { formatLocaleDate, formatNumber } from '@/common/lib/format'
 import { numberToWords } from '@/common/lib/utils'
 
 import { AvansQueryKeys } from './config'
@@ -104,7 +104,7 @@ export const AvansViewDialog = ({ selectedId, onClose }: AvansViewDialogProps) =
                         />
                         <LabeledValue
                           label={t('doc_date')}
-                          value={data.doc_date}
+                          value={data.doc_date ? formatLocaleDate(data.doc_date) : ''}
                         />
                       </div>
                     </Fieldset>

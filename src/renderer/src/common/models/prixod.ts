@@ -21,6 +21,8 @@ export interface BankPrixod {
   organization_by_raschet_schet_gazna_id: any
   shartnoma_grafik_id: number
   organ: Organization
+  smeta_name: string
+  smeta_number: string
   account_number: Organization.RaschetSchet
   gazna_number: Organization.RaschetSchetGazna
   contract: Shartnoma

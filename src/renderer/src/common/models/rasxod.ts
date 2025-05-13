@@ -27,6 +27,8 @@ export interface BankRasxod {
   tulanmagan_summa: number
   tulangan_tulanmagan: boolean
   organ: Organization
+  smeta_name: string
+  smeta_number: string
   account_number: Organization.RaschetSchet
   gazna_number: Organization.RaschetSchetGazna
   contract: Shartnoma

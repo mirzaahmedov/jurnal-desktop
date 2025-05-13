@@ -164,7 +164,7 @@ export const WarehousePrixodViewDialog = ({
                         />
                         <LabeledValue
                           label={t('doc_date')}
-                          value={data.doc_date}
+                          value={data.doc_date ? formatLocaleDate(data.doc_date) : ''}
                         />
                         <LabeledValue
                           label={t('dovernost')}
@@ -205,11 +205,11 @@ export const WarehousePrixodViewDialog = ({
                           <div className="grid grid-cols-2 gap-5">
                             <LabeledValue
                               label={t('fio')}
-                              value={data.responsible?.fio}
+                              value={data.responsible}
                             />
                             <LabeledValue
                               label={t('podrazdelenie')}
-                              value={data.responsible?.spravochnik_podrazdelenie_jur7_name}
+                              value={data.podraz_name}
                             />
                           </div>
                         </Fieldset>
@@ -225,11 +225,17 @@ export const WarehousePrixodViewDialog = ({
                           />
                           <LabeledValue
                             label={t('shartnoma-date')}
-                            value={data.contract?.doc_date ?? '-'}
+                            value={
+                              data.contract?.doc_date
+                                ? formatLocaleDate(data.contract?.doc_date)
+                                : '-'
+                            }
                           />
                           <LabeledValue
                             label={t('shartnoma-grafik')}
-                            value={data.contract_grafik?.smeta_number ?? '-'}
+                            value={
+                              data.smeta_number ? `${data.smeta_number} (${data.smeta_name})` : '-'
+                            }
                             className="col-span-2"
                           />
                         </div>

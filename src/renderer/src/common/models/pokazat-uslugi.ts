@@ -13,6 +13,8 @@ export interface PokazatUslugi {
   opisanie: string
   summa: number
   organ: Organization
+  smeta_name: string
+  smeta_number: string
   contract: Shartnoma
   contract_grafik: ShartnomaGrafik
   account_number: Organization.RaschetSchet

@@ -173,7 +173,7 @@ export const WarehouseInternalViewDialog = ({
                         />
                         <LabeledValue
                           label={t('doc_date')}
-                          value={data.doc_date}
+                          value={data.doc_date ? formatLocaleDate(data.doc_date) : ''}
                         />
                         <LabeledValue
                           label={t('dovernost')}
@@ -187,11 +187,11 @@ export const WarehouseInternalViewDialog = ({
                         <div className="grid grid-cols-2 gap-5">
                           <LabeledValue
                             label={t('fio')}
-                            value={data.kimdan?.fio}
+                            value={data.kimdan}
                           />
                           <LabeledValue
                             label={t('podrazdelenie')}
-                            value={data.kimdan?.spravochnik_podrazdelenie_jur7_name}
+                            value={data.kimdan_podraz_name}
                           />
                         </div>
                       </Fieldset>
@@ -199,11 +199,11 @@ export const WarehouseInternalViewDialog = ({
                         <div className="grid grid-cols-2 gap-5">
                           <LabeledValue
                             label={t('fio')}
-                            value={data.kimga?.fio}
+                            value={data.kimga}
                           />
                           <LabeledValue
                             label={t('podrazdelenie')}
-                            value={data.kimga?.spravochnik_podrazdelenie_jur7_name}
+                            value={data.kimga_podraz_name}
                           />
                         </div>
                       </Fieldset>

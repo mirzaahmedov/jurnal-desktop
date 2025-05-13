@@ -1,6 +1,5 @@
 import type { Group } from './group'
 import type { Organization } from './organization'
-import type { Responsible } from './responsible'
 import type { SaldoProduct } from './saldo'
 import type { Shartnoma } from './shartnoma'
 import type { ShartnomaGrafik } from './shartnoma-grafik'
@@ -37,7 +36,10 @@ export interface WarehousePrixod {
   account_number: Organization.RaschetSchet
   contract: Shartnoma
   contract_grafik: ShartnomaGrafik
-  responsible: Responsible
+  smeta_name: string
+  smeta_number: string
+  podraz_name: string
+  responsible: string
   childs: WarehousePrixodProvodka[]
 }
 
@@ -79,7 +81,8 @@ export interface WarehouseRasxod {
   kimdan_name: string
   kimga_name: string
   doverennost?: string
-  responsible: Responsible
+  podraz_name: string
+  responsible: string
   childs: WarehouseRasxodProvodka[]
 }
 
@@ -110,8 +113,12 @@ export interface WarehouseInternal {
   kimdan_name: string
   kimga_name: string
   kimga_id: number
-  kimdan: Responsible
-  kimga: Responsible
+
+  kimdan: string
+  kimdan_podraz_name: string
+  kimga: string
+  kimga_podraz_name: string
+
   doverennost?: string
   childs: WarehouseInternalProvodka[]
 }

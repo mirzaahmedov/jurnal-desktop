@@ -20,7 +20,7 @@ import { Printer } from '@/common/components/printer'
 import { Textarea } from '@/common/components/ui/textarea'
 import { GenerateFile } from '@/common/features/file'
 import { useRequisitesStore } from '@/common/features/requisites'
-import { formatNumber } from '@/common/lib/format'
+import { formatLocaleDate, formatNumber } from '@/common/lib/format'
 import { numberToWords } from '@/common/lib/utils'
 
 import { KassaRasxodQueryKeys } from './config'
@@ -106,7 +106,7 @@ export const KassaRasxodViewDialog = ({ selectedId, onClose }: KassaRasxodViewDi
                         />
                         <LabeledValue
                           label={t('doc_date')}
-                          value={data.doc_date}
+                          value={data.doc_date ? formatLocaleDate(data.doc_date) : ''}
                         />
                       </div>
                     </Fieldset>

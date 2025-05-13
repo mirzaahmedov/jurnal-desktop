@@ -173,7 +173,7 @@ export const WarehouseRasxodViewDialog = ({
                         />
                         <LabeledValue
                           label={t('doc_date')}
-                          value={data.doc_date}
+                          value={data.doc_date ? formatLocaleDate(data.doc_date) : ''}
                         />
                         <LabeledValue
                           label={t('dovernost')}
@@ -187,11 +187,11 @@ export const WarehouseRasxodViewDialog = ({
                         <div className="grid grid-cols-2 gap-5">
                           <LabeledValue
                             label={t('fio')}
-                            value={data.responsible?.fio}
+                            value={data.responsible}
                           />
                           <LabeledValue
                             label={t('podrazdelenie')}
-                            value={data.responsible?.spravochnik_podrazdelenie_jur7_name}
+                            value={data.podraz_name}
                           />
                         </div>
                       </Fieldset>
