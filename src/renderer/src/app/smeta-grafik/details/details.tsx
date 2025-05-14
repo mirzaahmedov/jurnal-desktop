@@ -85,6 +85,21 @@ export const SmetaGrafikDetails = ({ id, year, isEditable }: SmetaGrafikDetailsP
     queryFn: SmetaGrafikService.getById
   })
 
+  const { mutate: getByOrderNumber, isPending: isLoadingByOrderNumber } = useMutation({
+    mutationFn: SmetaGrafikService.getByOrderNumber,
+    onSuccess: (res) => {
+      if (res?.data) {
+        form.setValue('command', '')
+        form.setValue('smetas', res.data.smetas)
+        form.setValue('year', res.data.year)
+      } else {
+        form.reset(defaultValues)
+      }
+    },
+    onError: () => {
+      form.reset(defaultValues)
+    }
+  })
   const { mutate: createGrafik, isPending: isCreating } = useMutation({
     mutationKey: [SmetaGrafikQueryKeys.create],
     mutationFn: SmetaGrafikService.create,
@@ -114,7 +129,11 @@ export const SmetaGrafikDetails = ({ id, year, isEditable }: SmetaGrafikDetailsP
       return
     }
     if (id === 'create') {
-      createGrafik(values)
+      createGrafik({
+        command: values.command,
+        smetas: values.smetas,
+        year: values.year
+      })
     } else {
       updateGrafik({
         id: Number(id),
@@ -127,7 +146,6 @@ export const SmetaGrafikDetails = ({ id, year, isEditable }: SmetaGrafikDetailsP
 
   useEffect(() => {
     if (id === 'create') {
-      form.reset(defaultValues)
       return
     }
 
@@ -141,6 +159,16 @@ export const SmetaGrafikDetails = ({ id, year, isEditable }: SmetaGrafikDetailsP
       form.reset(defaultValues)
     }
   }, [form, smetaGrafik, id])
+
+  const selectedYear = form.watch('year')
+  useEffect(() => {
+    if (id === 'create') {
+      getByOrderNumber({
+        order_number: 0,
+        year: selectedYear
+      })
+    }
+  }, [id, selectedYear])
 
   const smetas = useWatch({
     control: form.control,
@@ -167,7 +195,7 @@ export const SmetaGrafikDetails = ({ id, year, isEditable }: SmetaGrafikDetailsP
 
   return (
     <DetailsView>
-      <DetailsView.Content loading={isFetching}>
+      <DetailsView.Content loading={isFetching || isLoadingByOrderNumber}>
         <Form {...form}>
           <form onSubmit={onSubmit}>
             <div className="p-5 flex items-start gap-5">

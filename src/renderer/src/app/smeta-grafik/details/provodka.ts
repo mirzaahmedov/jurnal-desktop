@@ -100,7 +100,11 @@ export const getProvodkaColumns = ({ readOnly }: { readOnly: boolean }) =>
     {
       key: 'total',
       minWidth: 80,
-      Editor: createNumberEditor({ key: 'total', inputProps: { adjustWidth: true }, readOnly }),
+      Editor: createNumberEditor({
+        key: 'total',
+        inputProps: { adjustWidth: true },
+        readOnly: true
+      }),
       className: 'sticky right-0 border-l z-50 font-bold',
       headerClassName: 'sticky right-0 border-l z-50 text-end'
     }

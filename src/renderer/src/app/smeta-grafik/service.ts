@@ -11,6 +11,7 @@ export class SmetaGrafiCRUDkService extends CRUDService<SmetaGrafik, SmetaGrafik
     })
 
     this.create = this.create.bind(this)
+    this.getByOrderNumber = this.getByOrderNumber.bind(this)
   }
 
   async create(values: SmetaGrafikFormValues) {
@@ -23,6 +24,19 @@ export class SmetaGrafiCRUDkService extends CRUDService<SmetaGrafik, SmetaGrafik
       this.proccessMiddleware({
         params: {
           year: values.year
+        }
+      })
+    )
+    return res.data
+  }
+
+  async getByOrderNumber({ order_number, year }: { order_number: number; year: number }) {
+    const res = await this.client.get<Response<SmetaGrafik>>(
+      'smeta/grafik/order-number',
+      this.proccessMiddleware({
+        params: {
+          year,
+          order_number
         }
       })
     )
