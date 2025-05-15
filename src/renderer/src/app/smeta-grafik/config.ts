@@ -27,6 +27,7 @@ export const SmetaGrafikProvodkaFormSchema = z
     oy_11: z.number(),
     oy_12: z.number(),
     smeta_id: z.number().min(1),
+    smeta_number: z.string().optional(),
     total: z.number().optional(),
     sub_schet: z.string().optional()
   })

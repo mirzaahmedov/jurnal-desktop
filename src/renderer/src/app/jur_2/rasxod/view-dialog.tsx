@@ -16,7 +16,7 @@ import {
   DialogTrigger
 } from '@/common/components/jolly/dialog'
 import { LabeledValue } from '@/common/components/labeled-value'
-import { Printer } from '@/common/components/printer'
+import { PDFSaver } from '@/common/components/pdf-saver'
 import { Textarea } from '@/common/components/ui/textarea'
 import { useRequisitesStore } from '@/common/features/requisites'
 import { formatLocaleDate, formatNumber } from '@/common/lib/format'
@@ -98,17 +98,17 @@ export const BankRasxodViewDialog = ({ selectedId, onClose }: BankRasxodViewDial
       <DialogOverlay>
         <DialogContent className="relative w-full max-w-8xl h-full max-h-[900px] overflow-hidden">
           {isFetching || isFetchingMainSchet ? <LoadingOverlay /> : null}
-          <Printer filename={`${t('pages.bank_rasxod')}.pdf`}>
-            {({ ref, print }) => (
-              <div className="h-full flex flex-col overflow-hidden">
-                <DialogHeader className="pb-5">
+          <PDFSaver filename={`${t('pages.bank_rasxod')}_№${data?.doc_num}.pdf`}>
+            {({ ref, savePDF, isPending }) => (
+              <div
+                ref={ref}
+                className="h-full flex flex-col overflow-hidden"
+              >
+                <DialogHeader className="p-5">
                   <DialogTitle>{t('pages.bank_rasxod')}</DialogTitle>
                 </DialogHeader>
                 {data ? (
-                  <div
-                    ref={ref}
-                    className="flex-1 divide-y overflow-y-auto scrollbar"
-                  >
+                  <div className="flex-1 divide-y overflow-y-auto scrollbar">
                     <Fieldset name={t('document')}>
                       <div className="grid grid-cols-4 gap-5">
                         <LabeledValue
@@ -250,7 +250,7 @@ export const BankRasxodViewDialog = ({ selectedId, onClose }: BankRasxodViewDial
                   </div>
                 ) : null}
 
-                <DialogFooter>
+                <DialogFooter className="pdf-hidden">
                   {main_schet?.data && data ? (
                     <>
                       <PorucheniyaDialog
@@ -263,7 +263,8 @@ export const BankRasxodViewDialog = ({ selectedId, onClose }: BankRasxodViewDial
                       <Button
                         variant="ghost"
                         IconStart={Download}
-                        onPress={print}
+                        isPending={isPending}
+                        onPress={savePDF}
                       >
                         {t('download')}
                       </Button>
@@ -272,7 +273,7 @@ export const BankRasxodViewDialog = ({ selectedId, onClose }: BankRasxodViewDial
                 </DialogFooter>
               </div>
             )}
-          </Printer>
+          </PDFSaver>
         </DialogContent>
       </DialogOverlay>
     </DialogTrigger>

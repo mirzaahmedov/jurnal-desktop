@@ -1,6 +1,6 @@
-import type { SmetaGrafikProvodka } from '@/common/models'
+import type { Smeta, SmetaGrafikProvodka } from '@/common/models'
 
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { type KeyboardEvent, useEffect, useMemo, useRef, useState } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
@@ -12,6 +12,7 @@ import { toast } from 'react-toastify'
 import {
   EditableTable,
   EditableTableCell,
+  type EditableTableMethods,
   EditableTableRow
 } from '@/common/components/editable-table'
 import {
@@ -19,6 +20,7 @@ import {
   createEditorDeleteHandler
 } from '@/common/components/editable-table/helpers'
 import { FormElement } from '@/common/components/form'
+import { SearchInput } from '@/common/components/search-input'
 import { Form, FormField } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
 import { Textarea } from '@/common/components/ui/textarea'
@@ -46,10 +48,11 @@ export const SmetaGrafikDetails = ({ id, year, isEditable }: SmetaGrafikDetailsP
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const tableRef = useRef<HTMLTableElement>(null)
+  const tableMethods = useRef<EditableTableMethods>(null)
 
   const form = useForm({
     resolver: zodResolver(SmetaGrafikFormSchema),
-    defaultValues: defaultValues
+    defaultValues
   })
 
   const { t } = useTranslation()
@@ -193,6 +196,22 @@ export const SmetaGrafikDetails = ({ id, year, isEditable }: SmetaGrafikDetailsP
     [isEditable]
   )
 
+  const handleSearch = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      e.stopPropagation()
+      e.preventDefault()
+
+      const value = e.currentTarget.value
+      if (value.length > 0) {
+        const rows = form.getValues('smetas')
+        const index = rows.findIndex((row) =>
+          row.smeta_number?.toLowerCase()?.includes(value?.toLowerCase())
+        )
+        tableMethods.current?.scrollToRow(index)
+      }
+    }
+  }
+
   return (
     <DetailsView>
       <DetailsView.Content loading={isFetching || isLoadingByOrderNumber}>
@@ -237,6 +256,9 @@ export const SmetaGrafikDetails = ({ id, year, isEditable }: SmetaGrafikDetailsP
               />
             </div>
 
+            <div className="p-5">
+              <SearchInput onKeyDown={handleSearch} />
+            </div>
             <div className="w-full overflow-x-auto scrollbar">
               <EditableTable
                 tableRef={tableRef}
@@ -245,6 +267,7 @@ export const SmetaGrafikDetails = ({ id, year, isEditable }: SmetaGrafikDetailsP
                 form={form}
                 name="smetas"
                 errors={form.formState.errors.smetas}
+                methods={tableMethods}
                 onCreate={
                   isEditable
                     ? createEditorCreateHandler({
@@ -263,6 +286,11 @@ export const SmetaGrafikDetails = ({ id, year, isEditable }: SmetaGrafikDetailsP
                       })
                     : undefined
                 }
+                params={{
+                  onSmetaChange: (rowIndex: number, smeta: Smeta) => {
+                    form.setValue(`smetas.${rowIndex}.smeta_number`, smeta?.smeta_number)
+                  }
+                }}
                 validate={({ id, key, payload }) => {
                   if (key !== 'smeta_id') {
                     return true

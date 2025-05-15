@@ -2,6 +2,10 @@
 @tailwind utilities;
 @tailwind components;
 
+html {
+  font-size: 16px;
+}
+
 @font-face {
   font-family: 'Geist';
   src: url('/fonts/Geist/Geist-VariableFont_wght.ttf') format('truetype');
@@ -93,8 +97,11 @@ body,
 body {
   background-color: hsl(var(--background));
   color: hsl(var(--foreground));
-  /* font-family: 'Montserrat', sans-serif; */
   font-family: 'Geist', sans-serif;
+}
+
+img {
+  display: inline-block;
 }
 
 input:-webkit-autofill,

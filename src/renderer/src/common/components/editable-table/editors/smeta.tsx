@@ -1,4 +1,5 @@
 import type { EditorComponent } from './interfaces'
+import type { Smeta } from '@/common/models'
 
 import { useEffect } from 'react'
 
@@ -22,6 +23,7 @@ export const createSmetaEditor = <T extends { smeta_id?: number }>({
     row,
     errors,
     value,
+    params,
     onChange,
     setState,
     validate
@@ -29,7 +31,7 @@ export const createSmetaEditor = <T extends { smeta_id?: number }>({
     const smetaSpravochnik = useSpravochnik(
       createSmetaSpravochnik({
         value: value as number | undefined,
-        onChange: (value) => {
+        onChange: (value, smeta) => {
           if (
             validate &&
             !validate({ id, key: 'smeta_id', payload: { ...row, smeta_id: value } })
@@ -37,7 +39,12 @@ export const createSmetaEditor = <T extends { smeta_id?: number }>({
             smetaSpravochnik.clear()
             return
           }
+
           onChange?.(value)
+          ;(params as { onSmetaChange: (rowIndex: number, meta?: Smeta) => void })?.onSmetaChange?.(
+            id,
+            smeta
+          )
         }
       })
     )

@@ -9,7 +9,6 @@ import { Badge } from '@/common/components/ui/badge'
 
 export const SmetaGrafikColumns: ColumnDef<SmetaGrafik>[] = [
   {
-    sort: true,
     width: 160,
     minWidth: 160,
     key: 'id',

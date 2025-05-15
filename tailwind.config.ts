@@ -138,7 +138,8 @@ const ui = plugin(function ({ addUtilities }) {
       height: '2rem',
       borderRadius: '10rem',
       backgroundColor: 'currentColor'
-    }
+    },
+    '.pdf-hidden': {}
   })
 })
 

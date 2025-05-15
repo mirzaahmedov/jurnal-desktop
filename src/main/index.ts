@@ -22,7 +22,7 @@ let windows: BrowserWindow[] = []
 const normalizeFileName = (fileName: string): string => {
   return fileName
     .replace(/\s+/g, '_')
-    .replace(/[^a-zA-Zа-яА-ЯёЁ0-9._-]/g, '')
+    .replace(/[^a-zA-Zа-яА-ЯёЁҳқҲҚ0-9№._-]/g, '')
     .replace(/^[-_.]+|[-_.]+$/g, '')
 }
 

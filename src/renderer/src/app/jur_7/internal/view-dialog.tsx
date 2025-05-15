@@ -15,7 +15,7 @@ import {
   DialogTrigger
 } from '@/common/components/jolly/dialog'
 import { LabeledValue } from '@/common/components/labeled-value'
-import { Printer } from '@/common/components/printer'
+import { PDFSaver } from '@/common/components/pdf-saver'
 import { Checkbox } from '@/common/components/ui/checkbox'
 import { Textarea } from '@/common/components/ui/textarea'
 import { formatLocaleDate, formatNumber } from '@/common/lib/format'
@@ -152,19 +152,23 @@ export const WarehouseInternalViewDialog = ({
       <DialogOverlay>
         <DialogContent className="relative w-full max-w-full h-full max-h-[900px] overflow-hidden">
           {isFetching ? <LoadingOverlay /> : null}
-          <Printer filename={`${t('pages.material-warehouse')}_${t('rasxod')}.pdf`}>
-            {({ ref, print }) => (
-              <div className="h-full flex flex-col overflow-hidden">
-                <DialogHeader className="pb-5">
+          <PDFSaver
+            filename={`${t('pages.material-warehouse')}_${t('internal')}_№${data?.doc_num}.pdf`}
+            orientation="landscape"
+            format={[350, 260]}
+          >
+            {({ ref, savePDF, isPending }) => (
+              <div
+                ref={ref}
+                className="h-full flex flex-col overflow-hidden"
+              >
+                <DialogHeader className="p-5">
                   <DialogTitle>
-                    {t('pages.material-warehouse')} {t('rasxod').toLowerCase()}
+                    {t('pages.material-warehouse')} {t('internal').toLowerCase()}
                   </DialogTitle>
                 </DialogHeader>
                 {data ? (
-                  <div
-                    ref={ref}
-                    className="flex-1 divide-y overflow-y-auto scrollbar"
-                  >
+                  <div className="flex-1 divide-y overflow-y-auto scrollbar">
                     <Fieldset name={t('document')}>
                       <div className="grid grid-cols-4 gap-5">
                         <LabeledValue
@@ -251,18 +255,19 @@ export const WarehouseInternalViewDialog = ({
                     </div>
                   </div>
                 ) : null}
-                <DialogFooter>
+                <DialogFooter className="pdf-hidden">
                   <Button
                     variant="ghost"
                     IconStart={Download}
-                    onPress={print}
+                    isPending={isPending}
+                    onPress={savePDF}
                   >
                     {t('download')}
                   </Button>
                 </DialogFooter>
               </div>
             )}
-          </Printer>
+          </PDFSaver>
         </DialogContent>
       </DialogOverlay>
     </DialogTrigger>

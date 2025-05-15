@@ -1,10 +1,10 @@
 // import OrganSaldoPage from './saldo/page'
-import { Printer } from '../../common/components/printer'
+import { PDFSaver } from '../../common/components/pdf-saver'
 
 const DemoPage = () => {
   return (
-    <Printer filename="demo.pdf">
-      {({ ref, print }) => (
+    <PDFSaver filename="demo.pdf">
+      {({ ref, savePDF: print }) => (
         <div
           ref={ref}
           className="p-4"
@@ -19,7 +19,7 @@ const DemoPage = () => {
           </button>
         </div>
       )}
-    </Printer>
+    </PDFSaver>
   )
 }
 
