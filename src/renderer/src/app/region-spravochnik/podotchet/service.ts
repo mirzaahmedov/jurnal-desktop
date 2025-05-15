@@ -16,7 +16,8 @@ import { PodotchetDialog } from './dialog'
 export const PodotchetFormSchema = withPreprocessor(
   z.object({
     name: z.string(),
-    rayon: z.string()
+    rayon: z.string(),
+    position: z.string()
   })
 )
 export type PodotchetFormValues = z.infer<typeof PodotchetFormSchema>

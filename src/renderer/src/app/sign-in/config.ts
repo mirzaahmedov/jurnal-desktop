@@ -2,27 +2,22 @@ import type { MainSchet, RoleAccess, User } from '@/common/models'
 
 import { z } from 'zod'
 
-const queryKeys = {
+export const SigninQueryKeys = {
   signin: 'auth/signin'
 }
 
-const SigninFormSchema = z.object({
+export const SigninFormSchema = z.object({
   login: z.string(),
-  password: z.string(),
-  main_schet_id: z.number().optional()
+  password: z.string()
 })
-type SigninForm = z.infer<typeof SigninFormSchema>
-type SigninResponse = {
+export type SigninFormValues = z.infer<typeof SigninFormSchema>
+export type SigninResponse = {
   token: string
   result: User & { access_object: RoleAccess }
   main_schet: MainSchet
 }
 
-const defaultValues: SigninForm = {
-  login: '',
-  password: '',
-  main_schet_id: 0
+export const defaultValues: SigninFormValues = {
+  login: import.meta.env.DEV ? '456' : '',
+  password: import.meta.env.DEV ? '123' : ''
 }
-
-export { queryKeys, SigninFormSchema, defaultValues }
-export type { SigninForm, SigninResponse }

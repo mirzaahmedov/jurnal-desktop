@@ -14,5 +14,9 @@ export const PodotchetColumns: ColumnDef<Podotchet>[] = [
   },
   {
     key: 'rayon'
+  },
+  {
+    key: 'position',
+    header: 'doljnost'
   }
 ]

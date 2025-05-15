@@ -108,7 +108,7 @@ const SigninPage = () => {
           <div className="flex items-center flex-col gap-5">
             <img
               src={logoImage}
-              alt="МЧС Республики Узбекистан"
+              alt={t('title', { ns: 'app' })}
               className="h-48"
             />
             <h1 className="max-w-md text-center text-2xl leading-tight font-bold">
