@@ -102,7 +102,7 @@ const RealCostDetailsPage = () => {
     }
   })
 
-  const { mutate: createRealCost, isPending: isCreatingOdinox } = useMutation({
+  const { mutate: createRealCost, isPending: isCreatingRealCost } = useMutation({
     mutationFn: RealCostService.create,
     onSuccess: (res) => {
       toast.success(res?.message)
@@ -112,7 +112,7 @@ const RealCostDetailsPage = () => {
       navigate(-1)
     }
   })
-  const { mutate: updateRealCost, isPending: isUpdatingOdinox } = useMutation({
+  const { mutate: updateRealCost, isPending: isUpdatingRealCost } = useMutation({
     mutationFn: RealCostService.update,
     onSuccess: (res) => {
       toast.success(res?.message)
@@ -338,7 +338,7 @@ const RealCostDetailsPage = () => {
           <DetailsView.Footer>
             <Button
               type="submit"
-              isPending={isCreatingOdinox || isUpdatingOdinox || true}
+              isPending={isCreatingRealCost || isUpdatingRealCost}
             >
               {t('save')}
             </Button>
