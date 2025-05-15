@@ -1,5 +1,5 @@
 import type { PrixodType } from './config'
-import type { KassaPrixod, ResponseMeta } from '@/common/models'
+import type { ApiResponseMeta, KassaPrixod } from '@/common/models'
 
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 import { main_schet } from '@/common/features/crud/middleware'
@@ -29,7 +29,7 @@ export const KassaPrixodService = new CRUDService<
   KassaPrixod,
   KassaPrixodPayloadValues,
   KassaPrixodPayloadValues,
-  { summa: number } & ResponseMeta
+  { summa: number } & ApiResponseMeta
 >({
   endpoint: ApiEndpoints.kassa_prixod
 }).use(main_schet())

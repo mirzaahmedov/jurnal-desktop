@@ -1,4 +1,4 @@
-import type { Response } from '@/common/models'
+import type { ApiResponse } from '@/common/models'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 
 import { http } from '@/common/lib/http'
@@ -18,7 +18,7 @@ export type QueryKeyType = [
 export const getMainSchetsQuery = async (ctx: QueryFunctionContext<QueryKeyType>) => {
   const { budjet_id, region_id } = ctx.queryKey[1]
 
-  const res = await http.get<Response<MainSchetOptionType[]>>(
+  const res = await http.get<ApiResponse<MainSchetOptionType[]>>(
     `/spravochnik/main-schet/budjet/region`,
     {
       params: {
@@ -39,7 +39,7 @@ export const checkSchetsDuplicateQuery = async (
   ctx: QueryFunctionContext<[string, { budjet_id: number }]>
 ) => {
   const { budjet_id } = ctx.queryKey[1]
-  const res = await http.get<Response<DuplicateSchet[]>>('/features/check/schets', {
+  const res = await http.get<ApiResponse<DuplicateSchet[]>>('/features/check/schets', {
     params: {
       budjet_id
     }

@@ -1,13 +1,13 @@
 import type { BankSaldoFormValues } from './config'
 import type { MonthValue } from '@/common/features/saldo'
-import type { BankSaldo, Response, ResponseMeta } from '@/common/models'
+import type { ApiResponse, ApiResponseMeta, BankSaldo } from '@/common/models'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 import { budjet, main_schet } from '@/common/features/crud/middleware'
 import { getBudjetId } from '@/common/features/requisites'
 
-interface BankSaldoMeta extends ResponseMeta {
+interface BankSaldoMeta extends ApiResponseMeta {
   summa: number
 }
 
@@ -44,7 +44,7 @@ class BankSaldoServiceFactory extends CRUDService<
 
   async getMonthlySaldo(ctx: QueryFunctionContext<[string, { main_schet_id: number }]>) {
     const { main_schet_id } = ctx.queryKey[1] ?? {}
-    const res = await this.client.get<Response<MonthValue[]>>(`${this.endpoint}/date`, {
+    const res = await this.client.get<ApiResponse<MonthValue[]>>(`${this.endpoint}/date`, {
       params: {
         main_schet_id
       }

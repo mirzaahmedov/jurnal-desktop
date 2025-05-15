@@ -3,7 +3,7 @@ import type { Podpis } from '@/common/models'
 import { StyleSheet, Text, View } from '@react-pdf/renderer'
 import { useTranslation } from 'react-i18next'
 
-import { getPodpisDoljnostOptions } from '@/app/region-spravochnik/podpis/config'
+import { PodpisDoljnostOptions } from '@/app/region-spravochnik/podpis/config'
 import { Blank, Field, Flex, Label } from '@/common/components/pdf'
 import { splitArrayToChunks } from '@/common/lib/array'
 
@@ -33,7 +33,7 @@ export const Podpises = ({ year, podpises }: PodpisProps) => {
                 style={styles.podpis_row}
               >
                 {row.map((podpis) => {
-                  const { name } = getPodpisDoljnostOptions(t).find(
+                  const { name } = PodpisDoljnostOptions(t).find(
                     (d) => d.key === podpis.doljnost_name
                   )!
                   return (

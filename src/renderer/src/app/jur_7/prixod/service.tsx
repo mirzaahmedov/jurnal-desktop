@@ -1,4 +1,4 @@
-import type { ResponseMeta, WarehousePrixod } from '@/common/models'
+import type { ApiResponseMeta, WarehousePrixod } from '@/common/models'
 import type { UseMutationOptions } from '@tanstack/react-query'
 
 import { useMutation } from '@tanstack/react-query'
@@ -8,7 +8,7 @@ import { budjet, main_schet } from '@/common/features/crud/middleware'
 
 import { type PrixodFormValues, WarehousePrixodQueryKeys } from './config'
 
-interface PrixodMeta extends ResponseMeta {
+interface PrixodMeta extends ApiResponseMeta {
   summa: number
 }
 

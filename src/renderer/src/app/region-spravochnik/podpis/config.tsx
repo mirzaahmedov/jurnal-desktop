@@ -1,37 +1,36 @@
 import type { TFunction } from 'i18next'
 
+import { Trans } from 'react-i18next'
 import { z } from 'zod'
 
 import { PodpisDoljnost, PodpisTypeDocument } from '@/common/models'
 
-export const getPodpisDoljnostOptions = (t: TFunction) => {
-  return [
-    {
-      key: PodpisDoljnost.RUKOVODITEL,
-      name: t('podpis:doljnost.rukovoditel')
-    },
-    {
-      key: PodpisDoljnost.GLAV_BUXGALTER,
-      name: t('podpis:doljnost.glav_buxgalter')
-    },
-    {
-      key: PodpisDoljnost.GLAV_MIB,
-      name: t('podpis:doljnost.glav_mib')
-    },
-    {
-      key: PodpisDoljnost.NACHALNIK_OTDELA,
-      name: t('podpis:doljnost.nachalnik_otdela')
-    },
-    {
-      key: PodpisDoljnost.BUXGALTER,
-      name: t('podpis:doljnost.buxgalter')
-    },
-    {
-      key: PodpisDoljnost.KASSIR,
-      name: t('podpis:doljnost.kassir')
-    }
-  ] as const
-}
+export const PodpisDoljnostOptions = [
+  {
+    key: PodpisDoljnost.RUKOVODITEL,
+    name: <Trans>podpis:doljnost.rukovoditel</Trans>
+  },
+  {
+    key: PodpisDoljnost.GLAV_BUXGALTER,
+    name: <Trans>podpis:doljnost.glav_buxgalter</Trans>
+  },
+  {
+    key: PodpisDoljnost.GLAV_MIB,
+    name: <Trans>podpis:doljnost.glav_mib</Trans>
+  },
+  {
+    key: PodpisDoljnost.NACHALNIK_OTDELA,
+    name: <Trans>podpis:doljnost.nachalnik_otdela</Trans>
+  },
+  {
+    key: PodpisDoljnost.BUXGALTER,
+    name: <Trans>podpis:doljnost.buxgalter</Trans>
+  },
+  {
+    key: PodpisDoljnost.KASSIR,
+    name: <Trans>podpis:doljnost.kassir</Trans>
+  }
+] as const
 
 export const getPodpisTypeDocumentOptions = (t: TFunction) => {
   return [
@@ -97,6 +96,7 @@ export type PodpisPayloadType = z.infer<typeof PodpisPayloadSchema>
 export const PodpisQueryKeys = {
   getAll: 'podpis/all',
   getById: 'podpis',
+  getPodpisTypes: 'podpis/types',
   create: 'podpis/create',
   update: 'podpis/update',
   delete: 'podpis/delete'

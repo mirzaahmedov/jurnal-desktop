@@ -1,12 +1,13 @@
 import type { ColumnDef } from '@/common/components'
 import type { Podpis } from '@/common/models'
 
-import { useTranslation } from 'react-i18next'
+import { Trans } from 'react-i18next'
 
 import { IDCell } from '@/common/components/table/renderers/id'
 import { Badge } from '@/common/components/ui/badge'
+import { useConstantsStore } from '@/common/features/constants/store'
 
-import { getPodpisDoljnostOptions, getPodpisTypeDocumentOptions } from './config'
+import { PodpisDoljnostOptions } from './config'
 
 export const podpisColumns: ColumnDef<Podpis>[] = [
   {
@@ -38,19 +39,23 @@ export const podpisColumns: ColumnDef<Podpis>[] = [
 ]
 
 const DoljnostCell = ({ value }: { value: string }) => {
-  const { t } = useTranslation()
-  const doljnost = getPodpisDoljnostOptions(t).find((item) => item.key === value)
+  const doljnost = PodpisDoljnostOptions.find((item) => item.key === value)
   if (doljnost) {
-    return <Badge>{doljnost.name}</Badge>
+    return (
+      <Badge>
+        <Trans>{doljnost.name}</Trans>
+      </Badge>
+    )
   }
   return value
 }
 
 const TypeDocumentCell = ({ value }: { value: string }) => {
-  const { t } = useTranslation()
-  const typeDocument = getPodpisTypeDocumentOptions(t).find((item) => item.key === value)
-  if (typeDocument) {
-    return <Badge variant="secondary">{typeDocument.name}</Badge>
+  const podpisTypes = useConstantsStore((store) => store.podpisTypes)
+  const podpisType = podpisTypes.find((item) => item.key === value)
+
+  if (podpisType) {
+    return <Badge variant="secondary">{podpisType.name}</Badge>
   }
   return value
 }

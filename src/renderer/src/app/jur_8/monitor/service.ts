@@ -1,8 +1,8 @@
 import type {
+  ApiResponse,
+  ApiResponseMeta,
   FinancialReceipt,
-  FinancialReceiptProvodka,
-  Response,
-  ResponseMeta
+  FinancialReceiptProvodka
 } from '@/common/models'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 
@@ -14,7 +14,7 @@ interface FinancialReceiptFormValues {
   month: number
   childs: any[]
 }
-interface FinancialReceiptMeta extends ResponseMeta {
+interface FinancialReceiptMeta extends ApiResponseMeta {
   summa: number
 }
 
@@ -41,7 +41,7 @@ class FinancialReceiptServiceBuilder extends CRUDService<
   }) {
     const { budjet_id, main_schet_id, year, month } = values
     const res = await this.client.get<
-      Response<{
+      ApiResponse<{
         childs: FinancialReceiptProvodka[]
         summa: number
       }>
@@ -62,7 +62,7 @@ class FinancialReceiptServiceBuilder extends CRUDService<
     const id = ctx.queryKey[1]
     const params = ctx.queryKey[2]
     const res = await this.client.get<
-      Response<{
+      ApiResponse<{
         year: number
         month: number
         childs: FinancialReceiptProvodka[]

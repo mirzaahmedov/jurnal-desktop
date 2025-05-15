@@ -1,6 +1,6 @@
 import type { SaldoFormValues } from './config'
 import type { MonthValue } from '@/common/features/saldo'
-import type { Response, SaldoProduct } from '@/common/models'
+import type { ApiResponse, SaldoProduct } from '@/common/models'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
@@ -46,7 +46,7 @@ class MaterialWarehouseSaldoServiceBuilder extends CRUDService<never, SaldoFormV
 
   async cleanSaldo(values: { budjet_id: number; password: string }) {
     const { budjet_id, password } = values
-    const res = await this.client.delete<Response<unknown>>(`${this.endpoint}/clean`, {
+    const res = await this.client.delete<ApiResponse<unknown>>(`${this.endpoint}/clean`, {
       params: {
         budjet_id,
         password
@@ -61,7 +61,7 @@ class MaterialWarehouseSaldoServiceBuilder extends CRUDService<never, SaldoFormV
     >
   ) {
     const { month, year, budjet_id, main_schet_id } = ctx.queryKey[1] ?? {}
-    const res = await this.client.get<Response<unknown[]>>(`${this.endpoint}/check`, {
+    const res = await this.client.get<ApiResponse<unknown[]>>(`${this.endpoint}/check`, {
       params: {
         month,
         year,
@@ -76,7 +76,7 @@ class MaterialWarehouseSaldoServiceBuilder extends CRUDService<never, SaldoFormV
     ctx: QueryFunctionContext<[string, { year: number; budjet_id: number; main_schet_id: number }]>
   ) {
     const { year, budjet_id, main_schet_id } = ctx.queryKey[1] ?? {}
-    const res = await this.client.get<Response<MonthValue[]>>(
+    const res = await this.client.get<ApiResponse<MonthValue[]>>(
       `${ApiEndpoints.jur7_monitoring}/saldo/date`,
       {
         params: {

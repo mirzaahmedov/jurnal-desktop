@@ -1,5 +1,5 @@
 import type { ExistingDocument, PrixodImportResult } from './interfaces'
-import type { Response } from '@/common/models'
+import type { ApiResponse } from '@/common/models'
 
 import { useEffect, useMemo, useRef, useState } from 'react'
 
@@ -322,7 +322,7 @@ const PrixodDetails = ({ id, onSuccess }: PrixodDetailsProps) => {
               <ImportFile
                 url="/jur_7/doc_prixod/read"
                 onSuccess={(res) => {
-                  const rows = (res as Response<PrixodImportResult[]>)?.data ?? []
+                  const rows = (res as ApiResponse<PrixodImportResult[]>)?.data ?? []
                   form.setValue(
                     'childs',
                     rows.map((r) => ({

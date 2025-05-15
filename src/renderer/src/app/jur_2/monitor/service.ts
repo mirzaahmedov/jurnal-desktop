@@ -1,4 +1,4 @@
-import type { BankMonitoringType, ResponseMeta } from '@/common/models'
+import type { ApiResponseMeta, BankMonitoringType } from '@/common/models'
 
 import { ApiEndpoints } from '@/common/features/crud'
 import { CRUDService } from '@/common/features/crud'
@@ -20,7 +20,7 @@ export const BankMonitorService = new CRUDService<
   BankMonitoringType,
   undefined,
   undefined,
-  BankMonitorMeta & ResponseMeta
+  BankMonitorMeta & ApiResponseMeta
 >({
   endpoint: ApiEndpoints.bank_monitoring
 }).use(budjet())

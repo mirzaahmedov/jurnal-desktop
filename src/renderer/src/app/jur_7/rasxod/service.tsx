@@ -1,5 +1,5 @@
 import type { RasxodFormValues } from './config'
-import type { ResponseMeta, WarehouseRasxod } from '@/common/models'
+import type { ApiResponseMeta, WarehouseRasxod } from '@/common/models'
 
 import { useMutation, useQuery } from '@tanstack/react-query'
 
@@ -8,7 +8,7 @@ import { budjet, main_schet } from '@/common/features/crud/middleware'
 
 import { WarehouseRasxodQueryKeys } from './config'
 
-interface RasxodMeta extends ResponseMeta {
+interface RasxodMeta extends ApiResponseMeta {
   summa: number
 }
 

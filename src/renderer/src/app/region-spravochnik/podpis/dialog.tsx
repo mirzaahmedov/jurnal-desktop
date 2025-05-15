@@ -1,7 +1,7 @@
 import type { Podpis } from '@/common/models'
 import type { DialogTriggerProps } from 'react-aria-components'
 
-import { useEffect, useMemo } from 'react'
+import { useEffect } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
@@ -28,14 +28,14 @@ import { JollySelect, SelectItem } from '@/common/components/jolly/select'
 import { Button } from '@/common/components/ui/button'
 import { Form, FormField } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
+import { useConstantsStore } from '@/common/features/constants/store'
 import { capitalize } from '@/common/lib/string'
 
 import {
+  PodpisDoljnostOptions,
   PodpisPayloadSchema,
   PodpisQueryKeys,
-  defaultValues,
-  getPodpisDoljnostOptions,
-  getPodpisTypeDocumentOptions
+  defaultValues
 } from './config'
 import { PodpisService } from './service'
 
@@ -45,6 +45,7 @@ interface PodpisDialogProps extends Omit<DialogTriggerProps, 'children'> {
 export const PodpisDialog = ({ selected, isOpen, onOpenChange }: PodpisDialogProps) => {
   const { t } = useTranslation(['app', 'podpis'])
 
+  const podpisTypes = useConstantsStore((store) => store.podpisTypes)
   const queryClient = useQueryClient()
   const form = useForm({
     defaultValues,
@@ -93,9 +94,6 @@ export const PodpisDialog = ({ selected, isOpen, onOpenChange }: PodpisDialogPro
     }
   }, [form, isOpen, selected])
 
-  const podpisTypeOptions = useMemo(() => getPodpisTypeDocumentOptions(t), [t])
-  const podpisDoljnostOptions = useMemo(() => getPodpisDoljnostOptions(t), [t])
-
   return (
     <DialogTrigger
       isOpen={isOpen}
@@ -124,7 +122,7 @@ export const PodpisDialog = ({ selected, isOpen, onOpenChange }: PodpisDialogPro
                     label={t('doljnost')}
                   >
                     <JollySelect
-                      items={podpisDoljnostOptions}
+                      items={PodpisDoljnostOptions}
                       placeholder={t('doljnost')}
                       selectedKey={field.value}
                       onSelectionChange={(value) => field.onChange(value)}
@@ -155,7 +153,7 @@ export const PodpisDialog = ({ selected, isOpen, onOpenChange }: PodpisDialogPro
                     label={t('type-document')}
                   >
                     <JollySelect
-                      items={podpisTypeOptions}
+                      items={podpisTypes}
                       placeholder={t('type-document')}
                       onSelectionChange={(value) => field.onChange(value)}
                       selectedKey={field.value}

@@ -1,4 +1,4 @@
-import type { KassaMonitoringType, ResponseMeta } from '@/common/models'
+import type { ApiResponseMeta, KassaMonitoringType } from '@/common/models'
 
 import { ApiEndpoints } from '@/common/features/crud'
 import { CRUDService } from '@/common/features/crud'
@@ -18,7 +18,7 @@ export const KassaMonitorService = new CRUDService<
   KassaMonitoringType,
   undefined,
   undefined,
-  KassaMonitorMetaType & ResponseMeta
+  KassaMonitorMetaType & ApiResponseMeta
 >({
   endpoint: ApiEndpoints.kassa_monitoring
 })

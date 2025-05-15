@@ -5,11 +5,11 @@ import type {
   OdinoxUniqueSchet
 } from './details/interfaces'
 import type {
+  ApiResponse,
   Odinox,
   OdinoxDocument,
   OdinoxDocumentInfo,
-  OdinoxProvodka,
-  Response
+  OdinoxProvodka
 } from '@/common/models'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 
@@ -63,7 +63,7 @@ class OdinoxServiceBuilder extends CRUDService<Odinox, OdinoxPayload> {
 
   async getDocs(values: GetDocsArgs) {
     const { need_data, ...params } = values
-    const res = await this.client.post<Response<OdinoxDocument[], { summa: number }>>(
+    const res = await this.client.post<ApiResponse<OdinoxDocument[], { summa: number }>>(
       `${this.endpoint}/docs`,
       {
         need_data
@@ -75,7 +75,7 @@ class OdinoxServiceBuilder extends CRUDService<Odinox, OdinoxPayload> {
     return res.data
   }
   async getAutofillData(params: { month: number; year: number; main_schet_id: number }) {
-    const res = await this.client.get<Response<OdinoxAutoFill[]>>(`${this.endpoint}/data`, {
+    const res = await this.client.get<ApiResponse<OdinoxAutoFill[]>>(`${this.endpoint}/data`, {
       params
     })
     return res.data
@@ -85,14 +85,14 @@ class OdinoxServiceBuilder extends CRUDService<Odinox, OdinoxPayload> {
     ctx: QueryFunctionContext<[string, { budjet_id?: number; main_schet_id?: number }]>
   ) {
     const params = ctx.queryKey[1]
-    const res = await this.client.get<Response<OdinoxType[]>>(`${this.endpoint}/type`, {
+    const res = await this.client.get<ApiResponse<OdinoxType[]>>(`${this.endpoint}/type`, {
       params
     })
     return res.data
   }
 
   async getSaldoCheck(params: { budjet_id: number; main_schet_id: number }) {
-    const res = await this.client.get<Response<unknown>>(`${this.endpoint}/check`, {
+    const res = await this.client.get<ApiResponse<unknown>>(`${this.endpoint}/check`, {
       headers: {
         'notify-error': false
       },
@@ -103,7 +103,7 @@ class OdinoxServiceBuilder extends CRUDService<Odinox, OdinoxPayload> {
 
   async getUniqueSchets(params: { budjet_id: number; main_schet_id: number }) {
     const res = await this.client.get<
-      Response<{
+      ApiResponse<{
         schets: OdinoxUniqueSchet[]
       }>
     >(`${this.endpoint}/unique`, {
@@ -133,7 +133,7 @@ class OdinoxServiceBuilder extends CRUDService<Odinox, OdinoxPayload> {
     >
   ) {
     const params = ctx.queryKey[1]
-    const res = await this.client.get<Response<OdinoxDocumentInfo[], { summa: number }>>(
+    const res = await this.client.get<ApiResponse<OdinoxDocumentInfo[], { summa: number }>>(
       `${this.endpoint}/docs`,
       {
         params

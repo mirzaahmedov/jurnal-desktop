@@ -1,12 +1,12 @@
 import type { OrganSaldoFormValues } from './config'
 import type { MonthValue } from '@/common/features/saldo'
-import type { OrganSaldo, OrganSaldoProvodka, Response, ResponseMeta } from '@/common/models'
+import type { ApiResponse, ApiResponseMeta, OrganSaldo, OrganSaldoProvodka } from '@/common/models'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 import { budjet, jur3_schet_159, main_schet } from '@/common/features/crud/middleware'
 
-interface OrganSaldoMeta extends ResponseMeta {
+interface OrganSaldoMeta extends ApiResponseMeta {
   prixod: number
   rasxod: number
   summa: number
@@ -31,7 +31,7 @@ class OrganSaldoServiceBuilder extends CRUDService<
 
   async getMonthlySaldo(ctx: QueryFunctionContext<[string, { main_schet_id: number }]>) {
     const { main_schet_id } = ctx.queryKey[1] ?? {}
-    const res = await this.client.get<Response<MonthValue[]>>(`${this.endpoint}/date`, {
+    const res = await this.client.get<ApiResponse<MonthValue[]>>(`${this.endpoint}/date`, {
       params: {
         main_schet_id
       }
@@ -59,14 +59,14 @@ class OrganSaldoServiceBuilder extends CRUDService<
     main_schet_id: number
     budjet_id: number
   }) {
-    const res = await this.client.get<Response<OrganSaldoProvodka[]>>(`${this.endpoint}/data`, {
+    const res = await this.client.get<ApiResponse<OrganSaldoProvodka[]>>(`${this.endpoint}/data`, {
       params
     })
     return res.data
   }
 
   async getSaldoCheck(params: { budjet_id: number; main_schet_id: number; schet_id: number }) {
-    const res = await this.client.get<Response<unknown>>(`${this.endpoint}/first`, {
+    const res = await this.client.get<ApiResponse<unknown>>(`${this.endpoint}/first`, {
       headers: {
         'notify-error': false
       },

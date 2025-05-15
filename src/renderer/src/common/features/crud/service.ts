@@ -6,7 +6,7 @@ import type {
   RequestBuilderFunction
 } from './definition'
 import type { ApiEndpoints } from '@/common/features/crud'
-import type { Response } from '@/common/models'
+import type { ApiResponse } from '@/common/models'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 import type { AxiosInstance, AxiosRequestConfig } from 'axios'
 
@@ -49,10 +49,10 @@ export class CRUDService<T, C = T, U = C, M = undefined> {
       delete config.params._invisibleToggle
     }
 
-    const res = await this.client.get<Response<T[], M>>(url, this.proccessMiddleware(config))
+    const res = await this.client.get<ApiResponse<T[], M>>(url, this.proccessMiddleware(config))
 
     return this.options.getRequestData?.getAll
-      ? this.options.getRequestData?.getAll(res.data as Response<any>)
+      ? this.options.getRequestData?.getAll(res.data as ApiResponse<any>)
       : res.data
   }
 
@@ -73,7 +73,7 @@ export class CRUDService<T, C = T, U = C, M = undefined> {
     const config = this.requestBuilder?.('getById', buildArgs)?.config ?? defaultConfig
     const url = this.requestBuilder?.('getById', buildArgs)?.url ?? `/${this.endpoint}/${id}`
 
-    const res = await this.client.get<Response<T, M>>(url, this.proccessMiddleware(config))
+    const res = await this.client.get<ApiResponse<T, M>>(url, this.proccessMiddleware(config))
 
     return res.data
   }
@@ -89,7 +89,7 @@ export class CRUDService<T, C = T, U = C, M = undefined> {
     const config = this.requestBuilder?.('create', buildArgs)?.config ?? defaultConfig
     const url = this.requestBuilder?.('create', buildArgs)?.url ?? `/${this.endpoint}`
 
-    const res = await this.client.post<Response<string, M>>(
+    const res = await this.client.post<ApiResponse<string, M>>(
       url,
       payload,
       this.proccessMiddleware(config)
@@ -112,7 +112,7 @@ export class CRUDService<T, C = T, U = C, M = undefined> {
     const config = this.requestBuilder?.('update', buildArgs)?.config ?? defaultConfig
     const url = this.requestBuilder?.('update', buildArgs)?.url ?? `/${this.endpoint}/${id}`
 
-    const res = await this.client.put<Response<string, M>>(
+    const res = await this.client.put<ApiResponse<string, M>>(
       url,
       payload,
       this.proccessMiddleware(config)
@@ -132,7 +132,10 @@ export class CRUDService<T, C = T, U = C, M = undefined> {
     const config = this.requestBuilder?.('delete', buildArgs)?.config ?? defaultConfig
     const url = this.requestBuilder?.('delete', buildArgs)?.url ?? `/${this.endpoint}/${id}`
 
-    const res = await this.client.delete<Response<string, M>>(url, this.proccessMiddleware(config))
+    const res = await this.client.delete<ApiResponse<string, M>>(
+      url,
+      this.proccessMiddleware(config)
+    )
 
     return res.data
   }

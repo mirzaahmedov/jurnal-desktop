@@ -1,5 +1,5 @@
 import type { SpravochnikHookOptions } from '@/common/features/spravochnik'
-import type { Organization, Response } from '@/common/models'
+import type { ApiResponse, Organization } from '@/common/models'
 
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 import { SpravochnikSearchField } from '@/common/features/filters/search/search-filter-spravochnik'
@@ -26,7 +26,7 @@ export class OrganizationServiceBuilder extends CRUDService<Organization, Organi
   }
 
   async updateChild({ parentId, childs }: UpdateChildArgs) {
-    const res = await this.client.put<Response<Organization>>(`${this.endpoint}/parent`, {
+    const res = await this.client.put<ApiResponse<Organization>>(`${this.endpoint}/parent`, {
       parent_id: parentId,
       organization_ids: childs
     })

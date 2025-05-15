@@ -1,6 +1,6 @@
 import type {
+  ApiResponse,
   Nachislenie,
-  Response,
   Uderjanie,
   UderjanieAliment,
   UderjaniePlastik
@@ -72,7 +72,7 @@ export class UderjanieService {
 export class BankRasxodImportService {
   static async importZarplata(args: { data: UderjanieAliment[]; main_schet_id: number }) {
     const { data, main_schet_id } = args
-    const res = await http.post<Response<unknown>>(
+    const res = await http.post<ApiResponse<unknown>>(
       `${ApiEndpoints.bank_rasxod}/import`,
       { docs: data },
       {

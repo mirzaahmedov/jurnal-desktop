@@ -1,5 +1,5 @@
 import type { SpravochnikHookOptions } from '../spravochnik'
-import type { MainZarplata, Response } from '@/common/models'
+import type { ApiResponse, MainZarplata } from '@/common/models'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 
 import { t } from 'i18next'
@@ -21,7 +21,7 @@ export const mainZarplataService = {
         }
       ]
     >
-  ): Promise<Response<MainZarplata[], { pageCount: number }>> {
+  ): Promise<ApiResponse<MainZarplata[], { pageCount: number }>> {
     const { page } = ctx.queryKey[1]
     const res = await zarplataApi.get<{
       totalCount: number
@@ -44,7 +44,7 @@ export const mainZarplataService = {
 
   async getById(
     ctx: QueryFunctionContext<[string, number]>
-  ): Promise<Response<MainZarplata, null>> {
+  ): Promise<ApiResponse<MainZarplata, null>> {
     const id = ctx.queryKey[1]
     const res = await zarplataApi.get<MainZarplata>(`MainZarplata/${id}`)
     return {

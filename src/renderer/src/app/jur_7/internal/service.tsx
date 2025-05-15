@@ -1,5 +1,5 @@
 import type { InternalFormValues } from './config'
-import type { ResponseMeta, WarehouseInternal } from '@/common/models'
+import type { ApiResponseMeta, WarehouseInternal } from '@/common/models'
 
 import { useMutation } from '@tanstack/react-query'
 
@@ -8,7 +8,7 @@ import { budjet, main_schet } from '@/common/features/crud/middleware'
 
 import { WarehouseInternalQueryKeys } from './config'
 
-interface InternalMeta extends ResponseMeta {
+interface InternalMeta extends ApiResponseMeta {
   summa: number
 }
 

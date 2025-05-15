@@ -1,9 +1,9 @@
-import type { Response } from '@/common/models'
+import type { ApiResponse } from '@/common/models'
 
 import { QueryClient, type QueryKey } from '@tanstack/react-query'
 
 export const getDataFromCache = <T>(queryClient: QueryClient, queryKey: QueryKey) => {
-  return queryClient.getQueryData(queryKey) as Response<T> | undefined
+  return queryClient.getQueryData(queryKey) as ApiResponse<T> | undefined
 }
 
 export const queryClient = new QueryClient({

@@ -1,9 +1,9 @@
 import type {
+  ApiResponse,
+  ApiResponseMeta,
   RealCost,
   RealCostDocument,
-  RealCostProvodka,
-  Response,
-  ResponseMeta
+  RealCostProvodka
 } from '@/common/models'
 
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
@@ -30,7 +30,7 @@ export interface GetDocsArgs {
   type: DocType
 }
 
-export interface RealCostMeta extends ResponseMeta {
+export interface RealCostMeta extends ApiResponseMeta {
   month_summa: number
   year_summa: number
   by_month: {
@@ -66,7 +66,7 @@ class RealCostServiceBuilder extends CRUDService<
   }
 
   async getAutofillData(params: { month: number; year: number; main_schet_id: number }) {
-    const res = await this.client.get<Response<RealCostProvodka[], RealCostMeta>>(
+    const res = await this.client.get<ApiResponse<RealCostProvodka[], RealCostMeta>>(
       `${this.endpoint}/data`,
       { params }
     )
@@ -75,7 +75,7 @@ class RealCostServiceBuilder extends CRUDService<
 
   async getDocs(values: GetDocsArgs) {
     const { need_data, ...params } = values
-    const res = await this.client.post<Response<RealCostDocument[], { summa: number }>>(
+    const res = await this.client.post<ApiResponse<RealCostDocument[], { summa: number }>>(
       `${this.endpoint}/docs`,
       {
         need_data

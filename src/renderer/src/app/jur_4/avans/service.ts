@@ -1,10 +1,10 @@
 import type { AvansFormValues } from './config'
-import type { Avans, ResponseMeta } from '@/common/models'
+import type { ApiResponseMeta, Avans } from '@/common/models'
 
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 import { jur4_schet, main_schet } from '@/common/features/crud/middleware'
 
-export interface AvansMeta extends ResponseMeta {
+export interface AvansMeta extends ApiResponseMeta {
   summa: number
 }
 

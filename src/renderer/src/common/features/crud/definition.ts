@@ -1,5 +1,5 @@
 import type { ApiEndpoints } from './config'
-import type { Response } from '@/common/models'
+import type { ApiResponse } from '@/common/models'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 import type { AxiosInstance, AxiosRequestConfig } from 'axios'
 
@@ -48,6 +48,6 @@ export type CRUDServiceOptions<T, M> = {
   endpoint: ApiEndpoints
   client?: AxiosInstance
   getRequestData?: {
-    getAll: (res: Response<any>) => Response<T[], M>
+    getAll: (res: ApiResponse<any>) => ApiResponse<T[], M>
   }
 }

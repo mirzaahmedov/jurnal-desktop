@@ -1,5 +1,5 @@
 import type { SmetaGrafikFormValues } from './config'
-import type { Response, SmetaGrafik } from '@/common/models'
+import type { ApiResponse, SmetaGrafik } from '@/common/models'
 
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 import { main_schet } from '@/common/features/crud/middleware'
@@ -15,7 +15,7 @@ export class SmetaGrafiCRUDkService extends CRUDService<SmetaGrafik, SmetaGrafik
   }
 
   async create(values: SmetaGrafikFormValues) {
-    const res = await this.client.post<Response<string, undefined>>(
+    const res = await this.client.post<ApiResponse<string, undefined>>(
       this.endpoint,
       {
         smetas: values.smetas,
@@ -31,7 +31,7 @@ export class SmetaGrafiCRUDkService extends CRUDService<SmetaGrafik, SmetaGrafik
   }
 
   async getByOrderNumber({ order_number, year }: { order_number: number; year: number }) {
-    const res = await this.client.get<Response<SmetaGrafik>>(
+    const res = await this.client.get<ApiResponse<SmetaGrafik>>(
       'smeta/grafik/order-number',
       this.proccessMiddleware({
         params: {

@@ -1,5 +1,5 @@
 import type { DocumentType, queryKeys } from './config'
-import type { Response } from '@/common/models'
+import type { ApiResponse } from '@/common/models'
 
 import { type QueryFunctionContext } from '@tanstack/react-query'
 
@@ -18,7 +18,7 @@ export const getDocumentNumberQuery = async (
   ctx: QueryFunctionContext<GetDocumentNumberQueryKey>
 ) => {
   const { documentType } = ctx.queryKey[1]
-  const res = await http.get<Response<GetDocumentNumberResponse>>(
+  const res = await http.get<ApiResponse<GetDocumentNumberResponse>>(
     `/features/doc/num/${documentType}`,
     {
       params: {

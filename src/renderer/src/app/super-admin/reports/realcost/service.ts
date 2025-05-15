@@ -1,9 +1,9 @@
-import type { AdminRealCost, ResponseMeta } from '@/common/models'
+import type { AdminRealCost, ApiResponseMeta } from '@/common/models'
 import type { ReportStatus } from '@/common/models'
 
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 
-export interface AdminRealCostMeta extends ResponseMeta {
+export interface AdminRealCostMeta extends ApiResponseMeta {
   month_summa: number
   year_summa: number
   by_month: {

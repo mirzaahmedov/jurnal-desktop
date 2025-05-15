@@ -1,4 +1,4 @@
-import type { BankPrixod, ResponseMeta } from '@/common/models'
+import type { ApiResponseMeta, BankPrixod } from '@/common/models'
 
 import { z } from 'zod'
 
@@ -10,7 +10,7 @@ export const BankPrixodService = new CRUDService<
   BankPrixod,
   BankPrixodFormValues,
   BankPrixodFormValues,
-  { summa: number } & ResponseMeta
+  { summa: number } & ApiResponseMeta
 >({
   endpoint: ApiEndpoints.bank_prixod
 })

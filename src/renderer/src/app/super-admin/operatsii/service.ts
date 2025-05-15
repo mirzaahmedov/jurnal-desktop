@@ -1,6 +1,6 @@
 import type { OperatsiiFormValues } from './config'
 import type { SpravochnikHookOptions } from '@/common/features/spravochnik'
-import type { Operatsii, Response } from '@/common/models'
+import type { ApiResponse, Operatsii } from '@/common/models'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 
 import { t } from 'i18next'
@@ -26,11 +26,14 @@ export class OperatsiiServiceBuilder extends CRUDService<Operatsii, OperatsiiFor
 
   async getSchetOptions(ctx: QueryFunctionContext<[string, { type_schet: string | undefined }]>) {
     const type_schet = ctx.queryKey[1].type_schet
-    const res = await this.client.get<Response<OperatsiiSchetOption[]>>(`${this.endpoint}/unique`, {
-      params: {
-        type_schet
+    const res = await this.client.get<ApiResponse<OperatsiiSchetOption[]>>(
+      `${this.endpoint}/unique`,
+      {
+        params: {
+          type_schet
+        }
       }
-    })
+    )
     return res.data
   }
 }

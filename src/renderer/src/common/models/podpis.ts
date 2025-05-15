@@ -23,3 +23,9 @@ export interface Podpis {
   fio_name: string
   type_document: PodpisTypeDocument
 }
+
+export interface PodpisType {
+  id: number
+  name: string
+  key: string
+}

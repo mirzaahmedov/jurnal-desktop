@@ -12,6 +12,7 @@ import { MaterialWarehouseSaldoUpdateManager } from '@/app/jur_7/saldo/component
 import { MainbookSaldoUpdateManager } from '@/app/reports/mainbook/saldo/saldo-update-manager'
 import { LoadingOverlay } from '@/common/components'
 import { AuthGuard } from '@/common/features/auth'
+import { ConstantsProvider } from '@/common/features/constants/provider'
 import { SpravochnikProvider } from '@/common/features/spravochnik'
 
 import { Footer } from './compoonents/footer'
@@ -46,6 +47,7 @@ const MainLayout = () => {
       <PodotchetSaldoUpdateManager />
       <MaterialWarehouseSaldoUpdateManager />
       <MainbookSaldoUpdateManager />
+      <ConstantsProvider />
     </div>
   )
 }

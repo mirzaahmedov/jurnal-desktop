@@ -1,9 +1,9 @@
-import type { OrganizationMonitor, ResponseMeta } from '@/common/models'
+import type { ApiResponseMeta, OrganizationMonitor } from '@/common/models'
 
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 import { jur3_schet_159, main_schet } from '@/common/features/crud/middleware'
 
-interface OrganMonitorMeta extends ResponseMeta {
+interface OrganMonitorMeta extends ApiResponseMeta {
   page_prixod_sum: number
   page_rasxod_sum: number
   page_total_sum: number

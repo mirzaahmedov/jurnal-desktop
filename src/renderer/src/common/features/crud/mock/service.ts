@@ -1,4 +1,4 @@
-import type { Response } from '@/common/models'
+import type { ApiResponse } from '@/common/models'
 
 class MockCRUDService<T extends { id: number }> {
   constructor(private data: T[]) {}
@@ -31,7 +31,7 @@ class MockCRUDService<T extends { id: number }> {
 }
 
 export const mockApiRequest = <T>(data: T, timeout: number = 1000) => {
-  return new Promise<Response<T, null>>((resolve) => {
+  return new Promise<ApiResponse<T, null>>((resolve) => {
     setTimeout(() => {
       resolve({
         success: true,

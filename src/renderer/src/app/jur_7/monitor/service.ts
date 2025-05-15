@@ -1,8 +1,8 @@
-import type { ResponseMeta, WarehouseMonitoring } from '@/common/models'
+import type { ApiResponseMeta, WarehouseMonitoring } from '@/common/models'
 
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 
-interface MonitoringMeta extends ResponseMeta {
+interface MonitoringMeta extends ApiResponseMeta {
   page_prixod_sum: number
   page_rasxod_sum: number
   prixod_sum: number

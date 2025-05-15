@@ -76,7 +76,8 @@ export enum ApiEndpoints {
   report_title = 'admin/spravochnik/report_title',
   podotchet_saldo = 'podotchet/saldo',
   bank_saldo = 'bank/saldo',
-  kassa_saldo = 'kassa/saldo'
+  kassa_saldo = 'kassa/saldo',
+  constants = 'constants'
 }
 
 export enum ApiStatusCodes {

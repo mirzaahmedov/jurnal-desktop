@@ -4,7 +4,7 @@ export interface SummaObject {
   summa: number
 }
 
-export interface ResponseMeta {
+export interface ApiResponseMeta {
   backPage: number | null
   count: number
   currentPage: number
@@ -12,11 +12,11 @@ export interface ResponseMeta {
   pageCount: number
 }
 
-export type Response<T, M = ResponseMeta> =
+export type ApiResponse<T, M = ApiResponseMeta> =
   | {
       success: true
       data: T
-      meta: M extends undefined ? ResponseMeta : M
+      meta: M extends undefined ? ApiResponseMeta : M
       message?: string
     }
   | {

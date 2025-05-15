@@ -1,5 +1,5 @@
 import type { MainbookAutoFill, MainbookType, MainbookUniqueSchet } from './details/interfaces'
-import type { Mainbook, MainbookDocumentInfo, Response } from '@/common/models'
+import type { ApiResponse, Mainbook, MainbookDocumentInfo } from '@/common/models'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
@@ -39,7 +39,7 @@ class MainbookServiceBuilder extends CRUDService<Mainbook, MainbookPayload> {
     budjet_id: number
     main_schet_id: number
   }) {
-    const res = await this.client.get<Response<MainbookAutoFill[]>>(`${this.endpoint}/data`, {
+    const res = await this.client.get<ApiResponse<MainbookAutoFill[]>>(`${this.endpoint}/data`, {
       params
     })
     return res.data
@@ -49,14 +49,14 @@ class MainbookServiceBuilder extends CRUDService<Mainbook, MainbookPayload> {
     ctx: QueryFunctionContext<[string, { budjet_id?: number; main_schet_id?: number }]>
   ) {
     const params = ctx.queryKey[1]
-    const res = await this.client.get<Response<MainbookType[]>>(`${this.endpoint}/type`, {
+    const res = await this.client.get<ApiResponse<MainbookType[]>>(`${this.endpoint}/type`, {
       params
     })
     return res.data
   }
 
   async getSaldoCheck(params: { budjet_id: number; main_schet_id: number }) {
-    const res = await this.client.get<Response<unknown>>(`${this.endpoint}/check`, {
+    const res = await this.client.get<ApiResponse<unknown>>(`${this.endpoint}/check`, {
       headers: {
         'notify-error': false
       },
@@ -67,7 +67,7 @@ class MainbookServiceBuilder extends CRUDService<Mainbook, MainbookPayload> {
 
   async getUniqueSchets(params: { budjet_id: number; main_schet_id: number }) {
     const res = await this.client.get<
-      Response<{
+      ApiResponse<{
         schets: MainbookUniqueSchet[]
       }>
     >(`${this.endpoint}/unique`, {
@@ -97,7 +97,7 @@ class MainbookServiceBuilder extends CRUDService<Mainbook, MainbookPayload> {
     >
   ) {
     const params = ctx.queryKey[1]
-    const res = await this.client.get<Response<MainbookDocumentInfo[], { summa: number }>>(
+    const res = await this.client.get<ApiResponse<MainbookDocumentInfo[], { summa: number }>>(
       `${this.endpoint}/docs`,
       {
         params

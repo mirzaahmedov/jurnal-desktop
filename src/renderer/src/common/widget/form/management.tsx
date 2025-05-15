@@ -1,5 +1,5 @@
 import type { FormEditableFieldsComponent } from './types'
-import type { Response } from '@/common/models'
+import type { ApiResponse } from '@/common/models'
 import type { Control } from 'react-hook-form'
 
 import { useQuery } from '@tanstack/react-query'
@@ -35,7 +35,7 @@ export const ManagementFields: FormEditableFieldsComponent<RequiredManagementFie
     queryKey: ['management/fio', main_schet_id],
     queryFn: async () => {
       const response = await http.get<
-        Response<{
+        ApiResponse<{
           glav_buxgalter: string[]
           rukovoditel: string[]
         }>

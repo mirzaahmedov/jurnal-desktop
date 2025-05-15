@@ -1,5 +1,5 @@
 import type { AktFormValues } from './config'
-import type { ResponseMeta } from '@/common/models'
+import type { ApiResponseMeta } from '@/common/models'
 import type { Akt } from '@/common/models/akt'
 
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
@@ -9,7 +9,7 @@ export const AktService = new CRUDService<
   Akt,
   AktFormValues,
   AktFormValues,
-  ResponseMeta & { summa: number }
+  ApiResponseMeta & { summa: number }
 >({
   endpoint: ApiEndpoints.akt_priyom
 })

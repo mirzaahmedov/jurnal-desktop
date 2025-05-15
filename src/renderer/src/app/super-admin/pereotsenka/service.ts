@@ -1,6 +1,6 @@
 import type { PereotsenkaFormValues } from './config'
 import type { SpravochnikHookOptions } from '@/common/features/spravochnik'
-import type { Group, Pereotsenka, Response } from '@/common/models'
+import type { ApiResponse, Group, Pereotsenka } from '@/common/models'
 
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 import { http } from '@/common/lib/http'
@@ -38,6 +38,8 @@ export const createPereotsenkaSpravochnik = (
 
 export const getLatestPereotsenkaQuery = async () => {
   const res =
-    await http.get<Response<Group & Pick<Pereotsenka, 'pereotsenka_foiz'>>>('/jur_7/group/percent')
+    await http.get<ApiResponse<Group & Pick<Pereotsenka, 'pereotsenka_foiz'>>>(
+      '/jur_7/group/percent'
+    )
   return res.data
 }
