@@ -160,7 +160,7 @@ export const VideoModuleDialog = ({ open, onOpenChange, selected }: VideoModuleD
               <Button
                 type="submit"
                 disabled={isCreating || isUpdating}
-                loading={isCreating || isUpdating}
+                isPending={isCreating || isUpdating}
               >
                 {t('save')}
               </Button>

@@ -39,7 +39,7 @@ export const SaldoController = ({
       {isCreating ? <LoadingOverlay /> : null}
       <Button
         disabled={isCreating}
-        loading={isCreating}
+        isPending={isCreating}
         variant={isError ? 'destructive' : undefined}
         className="w-full"
         onClick={handleCreate}

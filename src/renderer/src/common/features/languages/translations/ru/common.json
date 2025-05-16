@@ -364,5 +364,8 @@
   "vpn_disconnected": "Нет подключения к VPN",
   "vpn_connected": "VPN подключён",
   "main": "Главный",
-  "decree": "Указ"
+  "decree": "Указ",
+  "akt": "Акт",
+  "title": "Заголовок",
+  "comment": "Комментарий"
 }

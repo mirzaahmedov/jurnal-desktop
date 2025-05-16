@@ -214,7 +214,7 @@ export const VideoDialog = ({ open, onOpenChange, selected, moduleId }: VideoDia
             <DialogFooter>
               <Button
                 type="submit"
-                loading={isCreating || isUpdating}
+                isPending={isCreating || isUpdating}
                 disabled={isCreating || isUpdating}
               >
                 {t('save')}

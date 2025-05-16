@@ -363,5 +363,8 @@
   "vpn_disconnected": "VPN уланмаган",
   "vpn_connected": "VPN уланган",
   "main": "Асосий",
-  "decree": "Буйруқ"
+  "decree": "Буйруқ",
+  "akt": "Акт",
+  "title": "Сарлавҳа",
+  "comment": "Изоҳ"
 }

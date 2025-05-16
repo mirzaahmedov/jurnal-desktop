@@ -188,7 +188,7 @@ export const SubordinateOrganizations = ({
             ) : null}
             <Button
               disabled={!parentId}
-              loading={isPending}
+              isPending={isPending}
               onClick={() => {
                 if (!parentId) {
                   return

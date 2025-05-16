@@ -240,7 +240,7 @@ const FinancialReceiptDetailsPage = () => {
                         main_schet_id: main_schet_id!
                       })
                     }
-                    loading={isAutoFilling}
+                    isPending={isAutoFilling}
                   >
                     {t('autofill')}
                   </Button>
@@ -261,7 +261,7 @@ const FinancialReceiptDetailsPage = () => {
             <Button
               type="submit"
               disabled={isCreatingMonitor || isUpdatingMonitor}
-              loading={isCreatingMonitor || isUpdatingMonitor}
+              isPending={isCreatingMonitor || isUpdatingMonitor}
             >
               {t('save')}
             </Button>

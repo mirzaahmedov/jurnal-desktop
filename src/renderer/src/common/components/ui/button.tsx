@@ -39,11 +39,15 @@ export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
   asChild?: boolean
-  loading?: boolean
+  isPending?: boolean
+  IconStart?: React.ElementType
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ children, className, variant, size, asChild = false, loading = false, ...props }, ref) => {
+  (
+    { children, className, variant, size, asChild = false, isPending = false, IconStart, ...props },
+    ref
+  ) => {
     const Comp = asChild ? Slot : 'button'
     return (
       <Comp
@@ -51,7 +55,11 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         {...props}
       >
-        {loading ? <Loader2 className="icon icon-start icon-sm animate-spin" /> : null}
+        {isPending ? (
+          <Loader2 className="btn-icon icon-sm icon-start animate-spin" />
+        ) : IconStart ? (
+          <IconStart className="btn-icon icon-sm icon-start" />
+        ) : null}
         {children}
       </Comp>
     )

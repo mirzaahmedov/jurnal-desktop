@@ -1,81 +1,76 @@
-import type {
-  HeaderColumnDef,
-  VirtualEditableColumnDef,
-  VirtualLeafEditableColumnDef
-} from './interface'
+import type { ColumnDef, LeafColumnDef, NestedKeys } from './interfaces'
 
-import { getTreeBreadth, getTreeDepth } from '@/common/lib/tree/utils'
-
-export const getHeaderGroups = <T extends object>(
-  columns: VirtualEditableColumnDef<T>[]
-): HeaderColumnDef<VirtualEditableColumnDef<T>>[][] => {
-  let maxDepth = 0
-  columns.forEach((column) => {
-    const depth = getTreeDepth({
-      node: column,
-      getChildren: (node) => node.columns
-    })
-    if (depth > maxDepth) {
-      maxDepth = depth
+export const getMaxDepth = <T extends object>(columns: ColumnDef<T>[], depth = 1): number => {
+  return columns.reduce((max, col) => {
+    if (col.columns) {
+      return Math.max(max, getMaxDepth(col.columns, depth + 1))
     }
-  })
+    return max
+  }, depth)
+}
 
-  const groups = Array.from(
-    { length: maxDepth },
-    () => [] as HeaderColumnDef<VirtualEditableColumnDef<T>>[]
-  )
+export const getLeafColumns = <T extends object>(columns: ColumnDef<T>[]): LeafColumnDef<T>[] => {
+  return columns.flatMap((col) => (col.columns ? getLeafColumns(col.columns) : [col]))
+}
 
-  const processColumns = (columns: VirtualEditableColumnDef<T>[], rowIndex: number) => {
-    const children = [] as VirtualEditableColumnDef<T>[]
+export const getValueByAccessor = <T extends object>(obj: T, accessor: NestedKeys<T>): any => {
+  return (accessor as string).split('.').reduce((val: any, key: any) => val?.[key], obj)
+}
 
-    columns.forEach((column) => {
-      const leafDepth = getTreeDepth({
-        node: column,
-        getChildren: (node) => node.columns
-      })
-      const leafBreadth = getTreeBreadth({
-        node: column,
-        getChildren: (node) => node.columns
-      })
+export const handleStickyColumns = (container?: HTMLDivElement) => {
+  if (!container) return
 
-      groups[rowIndex].push({
-        ...column,
-        _depth: leafDepth,
-        _colSpan: leafBreadth,
-        _rowSpan: maxDepth / leafDepth
-      })
+  const stickyCells = container.querySelectorAll('[data-sticky]') as NodeListOf<HTMLElement>
+  stickyCells.forEach((cell) => {
+    const left = !isNaN(Number(cell.dataset.left)) ? Number(cell.dataset.left) : undefined
+    const right = cell.dataset.right ? Number(cell.dataset.right) : null
+    const containerRect = container.getBoundingClientRect()
+    const cellRect = cell.getBoundingClientRect()
 
-      children.push(...(column.columns ?? []))
-    })
-
-    if (!children.length) {
+    if (cellRect.width > containerRect.width) {
+      cell.style.transform = `translateX(0px)`
+      cell.style.zIndex = '0'
+      cell.style.borderLeftWidth = '0px'
       return
     }
 
-    processColumns(children, rowIndex + 1)
-  }
+    if (left !== undefined) {
+      const deltaX = cellRect.left - containerRect.left - left
+      const translateX =
+        parseFloat(cell.style.transform.match(/translateX\(([^)]+)\)/)?.[1] ?? '0') || 0
+      const originalLeft = cellRect.left - translateX
 
-  processColumns(columns, 0)
-
-  return groups
-}
-
-export const getLeafColumns = <T extends object>(
-  columns: VirtualEditableColumnDef<T>[]
-): VirtualLeafEditableColumnDef<T>[] => {
-  const accessorColumns = [] as VirtualEditableColumnDef<T>[]
-
-  const processColumns = (columns: VirtualEditableColumnDef<T>[]) => {
-    columns.forEach((column) => {
-      if (column.columns?.length) {
-        processColumns(column.columns)
-      } else {
-        accessorColumns.push(column)
+      if (originalLeft >= containerRect.left + left) {
+        cell.style.transform = `translateX(0px)`
+        cell.classList.remove('sticky-cell')
+      } else if (deltaX < 0) {
+        cell.style.transform = `translateX(${Math.abs(deltaX) + translateX}px)`
+        cell.classList.add('sticky-cell')
+      } else if (deltaX > 0) {
+        cell.style.transform = `translateX(${translateX - Math.abs(deltaX)}px)`
+        cell.classList.add('sticky-cell')
       }
-    })
-  }
+    }
 
-  processColumns(columns)
+    if (right !== null) {
+      const deltaX = cellRect.right - (containerRect.right - right)
+      const translateX =
+        parseFloat(cell.style.transform.match(/translateX\(([^)]+)\)/)?.[1] ?? '0') || 0
+      const originalRight = cellRect.right - translateX
 
-  return accessorColumns as VirtualLeafEditableColumnDef<T>[]
+      if (originalRight <= containerRect.right - right) {
+        cell.style.transform = `translateX(0px)`
+        cell.classList.remove('sticky-cell')
+        cell.style.borderLeftWidth = '0px'
+      } else if (deltaX > 0) {
+        cell.style.transform = `translateX(${translateX - Math.abs(deltaX)}px)`
+        cell.classList.add('sticky-cell')
+        cell.style.borderLeftWidth = '1px'
+      } else if (deltaX < 0) {
+        cell.style.transform = `translateX(${Math.abs(deltaX) + translateX}px)`
+        cell.classList.add('sticky-cell')
+        cell.style.borderLeftWidth = '1px'
+      }
+    }
+  })
 }

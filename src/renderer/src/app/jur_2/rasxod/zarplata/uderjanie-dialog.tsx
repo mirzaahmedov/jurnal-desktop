@@ -189,7 +189,7 @@ export const UderjanieDialog = ({
             <div>
               <Button
                 type="button"
-                loading={pending}
+                isPending={pending}
                 disabled={
                   pending || !main_schet_id || !(type === UderjanieType.Aliment ? aliment : plastik)
                 }

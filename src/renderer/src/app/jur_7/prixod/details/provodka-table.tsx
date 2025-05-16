@@ -13,7 +13,7 @@ import {
   EditableTableHead,
   EditableTableRow
 } from '@/common/components/editable-table'
-import { SchetEditor, SubSchetEditor } from '@/common/components/editable-table/editors'
+import { SchetEditor } from '@/common/components/editable-table/editors'
 import { EmptyList } from '@/common/components/empty-states'
 import { Pagination } from '@/common/components/pagination'
 import { Button } from '@/common/components/ui/button'
@@ -484,19 +484,21 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
                           value={row.kredit_schet}
                           onChange={(schet) => {
                             handleChangeChildField(index, 'kredit_schet', schet)
-                            handleChangeChildField(index, 'kredit_sub_schet', '')
                           }}
                         />
                       </EditableTableCell>
                       <EditableTableCell className="w-[140px]">
-                        <SubSchetEditor
-                          tabIndex={tabIndex}
-                          error={errors?.kredit_sub_schet}
-                          schet={row.kredit_schet}
+                        <Input
                           value={row.kredit_sub_schet}
-                          onChange={(schet) => {
-                            handleChangeChildField(index, 'kredit_sub_schet', schet)
+                          onChange={(e) => {
+                            handleChangeChildField(index, 'kredit_sub_schet', e.target.value)
                           }}
+                          className={inputVariants({
+                            editor: true,
+                            error: !!errors?.kredit_sub_schet
+                          })}
+                          error={!!errors.kredit_sub_schet}
+                          tabIndex={tabIndex}
                         />
                       </EditableTableCell>
 
@@ -664,6 +666,7 @@ const NaimenovanieCells = ({
         const iznos = group && group?.iznos_foiz > 0
         onChangeField(index, 'debet_schet', group?.schet ?? '')
         onChangeField(index, 'debet_sub_schet', group?.provodka_subschet ?? '')
+        onChangeField(index, 'kredit_sub_schet', group?.provodka_subschet ?? '')
         onChangeField(index, 'group_jur7_id', id)
         onChangeField(index, 'iznos', iznos)
         onChangeField(index, 'iznos_schet', iznos ? (group?.schet ?? '') : '')

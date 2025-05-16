@@ -196,7 +196,7 @@ const VacantPage = () => {
           {userId ? (
             <Button
               disabled={isPendingGrant}
-              loading={isPendingGrant}
+              isPending={isPendingGrant}
               onClick={() => {
                 vacantGrant({
                   userId: userId!,

@@ -166,7 +166,7 @@ export const SaldoProductSpravochnikDialog = ({
 
             <Button
               disabled={isFetching}
-              loading={isFetching}
+              isPending={isFetching}
               onClick={() => {
                 onSelect?.(selectedRows)
                 onOpenChange?.(false)

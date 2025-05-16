@@ -6,6 +6,27 @@ import type { ArrayPath, FieldArrayWithId, UseFormReturn } from 'react-hook-form
 
 export type TableRowField<T extends object, F extends ArrayPath<T>> = FieldArrayWithId<T, F, 'id'>
 
+type Prev = [never, 0, 1, 2, 3, 4, 5]
+
+type Join<K, P> = K extends string | number
+  ? P extends string | number
+    ? `${K}.${P}`
+    : never
+  : never
+
+// Limit recursion to 5 levels deep
+export type NestedKeys<T, D extends number = 5> = [D] extends [never]
+  ? never
+  : T extends object
+    ? {
+        [K in keyof T & (string | number)]: T[K] extends object
+          ? T[K] extends Array<any>
+            ? K
+            : K | Join<K, NestedKeys<T[K], Prev[D]>>
+          : K
+      }[keyof T & (string | number)]
+    : ''
+
 export type CellEventHandler<T extends object, F extends ArrayPath<T>> = (
   args: {
     event: SyntheticEvent<HTMLTableCellElement>

@@ -320,7 +320,7 @@ const PodotchetSaldoDetailsPage = () => {
                           first: true
                         })
                       }}
-                      loading={isAutoFilling}
+                      isPending={isAutoFilling}
                     >
                       {t('update_data')}
                     </Button>
@@ -337,7 +337,7 @@ const PodotchetSaldoDetailsPage = () => {
                           first: false
                         })
                       }}
-                      loading={isAutoFilling}
+                      isPending={isAutoFilling}
                     >
                       {t('autofill')}
                     </Button>
@@ -358,7 +358,7 @@ const PodotchetSaldoDetailsPage = () => {
             <Button
               type="submit"
               disabled={isCreatingMainbook || isUpdatingMainbook}
-              loading={isCreatingMainbook || isUpdatingMainbook}
+              isPending={isCreatingMainbook || isUpdatingMainbook}
             >
               {t('save')}
             </Button>

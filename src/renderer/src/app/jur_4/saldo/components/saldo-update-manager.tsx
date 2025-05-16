@@ -187,7 +187,7 @@ export const PodotchetSaldoUpdateManager = () => {
             </AlertDialogCancel>
           ) : (
             <Button
-              loading={isUpdating}
+              isPending={isUpdating}
               disabled={isUpdating}
               onClick={handleUpdate}
             >

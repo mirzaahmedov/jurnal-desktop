@@ -18,6 +18,8 @@ import { LabeledValue } from '@/common/components/labeled-value'
 import { PDFSaver } from '@/common/components/pdf-saver'
 import { Checkbox } from '@/common/components/ui/checkbox'
 import { Textarea } from '@/common/components/ui/textarea'
+import { DownloadFile } from '@/common/features/file'
+import { useRequisitesStore } from '@/common/features/requisites'
 import { formatLocaleDate, formatNumber } from '@/common/lib/format'
 import { numberToWords } from '@/common/lib/utils'
 
@@ -122,6 +124,7 @@ export const WarehousePrixodViewDialog = ({
   onClose
 }: WarehousePrixodViewDialogProps) => {
   const { t, i18n } = useTranslation(['app', 'report'])
+  const { budjet_id, main_schet_id } = useRequisitesStore()
 
   const { data: prixod, isFetching } = useQuery({
     queryKey: [WarehousePrixodQueryKeys.getById, selectedId!],
@@ -286,6 +289,16 @@ export const WarehousePrixodViewDialog = ({
                   </div>
                 ) : null}
                 <DialogFooter className="pdf-hidden">
+                  <DownloadFile
+                    url={`jur_7/doc_prixod/${data?.id}`}
+                    fileName={`${t('pages.material-warehouse')}_${t('prixod')}_№${data?.doc_num}.xlsx`}
+                    buttonText={t('report')}
+                    params={{
+                      budjet_id,
+                      main_schet_id,
+                      akt: true
+                    }}
+                  />
                   <Button
                     variant="ghost"
                     IconStart={Download}

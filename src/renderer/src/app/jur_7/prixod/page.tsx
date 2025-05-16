@@ -170,16 +170,6 @@ const WarehousePrixodPage = () => {
                 excel: true
               }}
             />
-            <DownloadFile
-              url="jur_7/doc_prixod/163"
-              fileName={`${t('report')}_${t('prixod')}.xlsx`}
-              buttonText={t('report')}
-              params={{
-                budjet_id,
-                main_schet_id,
-                akt: true
-              }}
-            />
           </ButtonGroup>
         </div>
       </ListView.Header>

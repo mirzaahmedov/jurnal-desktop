@@ -363,5 +363,8 @@
   "vpn_disconnected": "VPN ulanmagan",
   "vpn_connected": "VPN ulangan",
   "main": "Asosiy",
-  "decree": "Buyruq"
+  "decree": "Buyruq",
+  "akt": "Akt",
+  "title": "Sarlavha",
+  "comment": "Izoh"
 }

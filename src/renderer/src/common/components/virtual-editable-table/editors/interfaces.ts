@@ -1,4 +1,4 @@
-import type { TableRowField, VirtualEditableColumnDef } from '../interface'
+import type { TableRowField, VirtualEditableColumnDef } from '../interfaces'
 import type { Dispatch, FC, InputHTMLAttributes, Ref, SetStateAction } from 'react'
 import type { ArrayPath, FieldError, FieldErrors, UseFormReturn } from 'react-hook-form'
 

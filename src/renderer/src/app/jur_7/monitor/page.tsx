@@ -33,6 +33,7 @@ import { type WarehouseMonitoring, WarehouseMonitoringType } from '@/common/mode
 import { ListView } from '@/common/views'
 
 import { useWarehouseSaldo } from '../saldo/use-saldo'
+import { AktReportDialog } from './akt-report-dialog'
 import { columns } from './columns'
 import { WarehouseMonitorQueryKeys } from './config'
 import { MaterialReportDialog } from './material-report-dialog'
@@ -42,8 +43,11 @@ export const WarehouseMonitorPage = () => {
   const dates = useDates()
   const pagination = usePagination()
   const navigate = useNavigate()
+
   const reportsToggle = useToggle()
   const materialToggle = useToggle()
+  const aktToggle = useToggle()
+
   const startDate = useSelectedMonthStore((store) => store.startDate)
   const report_title_id = useSettingsStore((store) => store.report_title_id)
   const setLayout = useLayout()
@@ -192,6 +196,18 @@ export const WarehouseMonitorPage = () => {
                 className="w-full justify-start"
               />
             </DropdownMenuItem>
+
+            <DropdownMenuItem>
+              <Button
+                IconStart={Download}
+                variant="ghost"
+                onClick={() => {
+                  aktToggle.open()
+                }}
+              >
+                {t('akt')} {t('report').toLowerCase()}
+              </Button>
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </ListView.Header>
@@ -249,6 +265,16 @@ export const WarehouseMonitorPage = () => {
       <MaterialReportDialog
         isOpen={materialToggle.isOpen}
         onOpenChange={materialToggle.setOpen}
+        budjet_id={budjet_id!}
+        main_schet_id={main_schet_id!}
+        to={dates.to}
+        year={startDate.getFullYear()}
+        month={startDate.getMonth() + 1}
+      />
+
+      <AktReportDialog
+        open={aktToggle.isOpen}
+        onOpenChange={aktToggle.setOpen}
         budjet_id={budjet_id!}
         main_schet_id={main_schet_id!}
         to={dates.to}

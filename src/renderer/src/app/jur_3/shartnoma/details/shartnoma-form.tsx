@@ -278,7 +278,7 @@ export const ShartnomaForm = ({
               type="submit"
               tabIndex={4}
               disabled={isCreating || isUpdating || loading}
-              loading={isCreating || isUpdating || loading}
+              isPending={isCreating || isUpdating || loading}
             >
               {t('save')}
             </Button>

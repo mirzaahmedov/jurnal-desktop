@@ -194,7 +194,7 @@ export const MainbookSaldoUpdateManager = () => {
             </AlertDialogCancel>
           ) : (
             <Button
-              loading={isUpdating}
+              isPending={isUpdating}
               disabled={isUpdating}
               onClick={handleUpdate}
             >
