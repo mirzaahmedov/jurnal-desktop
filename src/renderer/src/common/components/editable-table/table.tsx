@@ -162,7 +162,7 @@ export const EditableTable = <T extends object, F extends ArrayPath<NoInfer<T>>>
           {Array.isArray(rows) && rows.length ? (
             rows.map((row, index) => (
               <EditableTableRowRenderer
-                key={index}
+                key={row.id}
                 index={index}
                 tabIndex={tabIndex}
                 row={row as any}

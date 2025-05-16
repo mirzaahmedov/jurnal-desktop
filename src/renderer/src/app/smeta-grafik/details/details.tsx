@@ -15,10 +15,7 @@ import {
   type EditableTableMethods,
   EditableTableRow
 } from '@/common/components/editable-table'
-import {
-  createEditorCreateHandler,
-  createEditorDeleteHandler
-} from '@/common/components/editable-table/helpers'
+import { createEditorCreateHandler } from '@/common/components/editable-table/helpers'
 import { FormElement } from '@/common/components/form'
 import { SearchInput } from '@/common/components/search-input'
 import { Form, FormField } from '@/common/components/ui/form'
@@ -171,7 +168,7 @@ export const SmetaGrafikDetails = ({ id, year, isEditable }: SmetaGrafikDetailsP
         year: selectedYear
       })
     }
-  }, [id, selectedYear])
+  }, [id, selectedYear, getByOrderNumber])
 
   const smetas = useWatch({
     control: form.control,
@@ -216,7 +213,10 @@ export const SmetaGrafikDetails = ({ id, year, isEditable }: SmetaGrafikDetailsP
     <DetailsView>
       <DetailsView.Content loading={isFetching || isLoadingByOrderNumber}>
         <Form {...form}>
-          <form onSubmit={onSubmit}>
+          <form
+            onSubmit={onSubmit}
+            noValidate
+          >
             <div className="p-5 flex items-start gap-5">
               <FormField
                 control={form.control}
@@ -280,10 +280,13 @@ export const SmetaGrafikDetails = ({ id, year, isEditable }: SmetaGrafikDetailsP
                 }
                 onDelete={
                   isEditable
-                    ? createEditorDeleteHandler({
-                        form,
-                        field: 'smetas'
-                      })
+                    ? ({ id }) => {
+                        const newSmetas = form
+                          .getValues('smetas')
+                          .filter((_, index) => index !== id)
+                        console.log({ newSmetas })
+                        form.setValue('smetas', newSmetas)
+                      }
                     : undefined
                 }
                 params={{

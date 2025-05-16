@@ -1,6 +1,13 @@
-import type { ColumnDef, LeafColumnDef, NestedKeys } from './interfaces'
+import type {
+  NestedKeys,
+  VirtualEditableColumnDef,
+  VirtualLeafEditableColumnDef
+} from './interfaces'
 
-export const getMaxDepth = <T extends object>(columns: ColumnDef<T>[], depth = 1): number => {
+export const getMaxDepth = <T extends object>(
+  columns: VirtualEditableColumnDef<T>[],
+  depth = 1
+): number => {
   return columns.reduce((max, col) => {
     if (col.columns) {
       return Math.max(max, getMaxDepth(col.columns, depth + 1))
@@ -9,7 +16,9 @@ export const getMaxDepth = <T extends object>(columns: ColumnDef<T>[], depth = 1
   }, depth)
 }
 
-export const getLeafColumns = <T extends object>(columns: ColumnDef<T>[]): LeafColumnDef<T>[] => {
+export const getLeafColumns = <T extends object>(
+  columns: VirtualEditableColumnDef<T>[]
+): VirtualLeafEditableColumnDef<T>[] => {
   return columns.flatMap((col) => (col.columns ? getLeafColumns(col.columns) : [col]))
 }
 

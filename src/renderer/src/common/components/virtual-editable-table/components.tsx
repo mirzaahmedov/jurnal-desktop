@@ -2,8 +2,9 @@ import type { HTMLAttributes, Ref, TdHTMLAttributes, ThHTMLAttributes } from 're
 
 import { type VariantProps, cva } from 'class-variance-authority'
 
-import * as Generic from '@/common/components/ui/table'
 import { cn } from '@/common/lib/utils'
+
+import { headVariants } from '../generic-table'
 
 export const TableCell = ({
   children,
@@ -11,7 +12,7 @@ export const TableCell = ({
   ...props
 }: TdHTMLAttributes<HTMLTableCellElement>) => {
   return (
-    <Generic.TableCell
+    <div
       {...props}
       className={cn(
         'border-r border-b border-slate-200 group-focus-within/row:border-highlight-divider bg-inherit p-px pt-0.5',
@@ -19,7 +20,7 @@ export const TableCell = ({
       )}
     >
       {children}
-    </Generic.TableCell>
+    </div>
   )
 }
 
@@ -30,23 +31,24 @@ export const TableHead = ({
   ...props
 }: ThHTMLAttributes<HTMLTableCellElement> & { elementRef?: Ref<HTMLTableCellElement> }) => {
   return (
-    <Generic.TableHead
+    <div
       {...props}
       ref={elementRef}
       className={cn(
+        headVariants(),
         'px-3 border-r border-b border-slate-200 !bg-slate-100 text-foreground text-xs font-bold',
         className
       )}
     >
       {children}
-    </Generic.TableHead>
+    </div>
   )
 }
 
 const rowVariants = cva('', {
   variants: {
     focusable: {
-      true: 'group/row hover:bg-highligth-neutral focus-within:bg-highlight hover:focus-within:bg-highlight'
+      true: 'grid divide-x text-center bg-white border-t group/row hover:bg-highligth-neutral focus-within:bg-highlight hover:focus-within:bg-highlight'
     }
   },
   defaultVariants: {
@@ -61,12 +63,12 @@ export interface TableRowProps
 }
 export const TableRow = ({ children, className, focusable, rowRef, ...props }: TableRowProps) => {
   return (
-    <Generic.TableRow
+    <div
       {...props}
       ref={rowRef}
       className={cn(rowVariants({ className, focusable }), className)}
     >
       {children}
-    </Generic.TableRow>
+    </div>
   )
 }

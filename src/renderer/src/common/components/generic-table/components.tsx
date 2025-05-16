@@ -8,7 +8,7 @@ import { cva } from 'class-variance-authority'
 import { TableCell, TableHead, TableRow } from '@/common/components/ui/table'
 import { cn } from '@/common/lib/utils'
 
-const cellVariants = cva(
+export const cellVariants = cva(
   'px-6 py-4 border-r border-b font-medium text-slate-600 border-slate-200',
   {
     variants: {
@@ -54,7 +54,7 @@ export const GenericTableCell = ({
   )
 }
 
-const headVariants = cva(
+export const headVariants = cva(
   'select-none relative px-6 py-4 text-xs font-extrabold border-r border-b !bg-transparent text-foreground border-slate-200',
   {
     variants: {
@@ -105,7 +105,7 @@ export const GenericTableHead = ({
   )
 }
 
-const rowVariants = cva(
+export const rowVariants = cva(
   'cursor-pointer bg-white even:bg-slate-50 hover:bg-white even:hover:bg-slate-50'
 )
 

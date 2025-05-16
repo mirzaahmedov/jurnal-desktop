@@ -1,6 +1,6 @@
 {
   "name": "jurnal.desktop",
-  "version": "1.0.232",
+  "version": "1.0.233",
   "description": "An Electron application with React and TypeScript",
   "main": "./out/main/index.js",
   "author": "example.com",
@@ -96,6 +96,7 @@
     "react-router-dom": "^7.0.2",
     "react-stately": "^3.37.0",
     "react-toastify": "^11.0.2",
+    "react-window": "^1.8.11",
     "recharts": "^2.15.1",
     "tailwind-merge": "^2.5.5",
     "tailwindcss-animate": "^1.0.7",
@@ -114,6 +115,7 @@
     "@types/node": "^20.17.10",
     "@types/react": "^18.3.16",
     "@types/react-dom": "^18.3.5",
+    "@types/react-window": "^1.8.8",
     "@types/video-react": "^0.15.8",
     "@vitejs/plugin-react": "^4.3.4",
     "autoprefixer": "^10.4.20",

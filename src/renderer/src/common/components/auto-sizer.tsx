@@ -1,4 +1,4 @@
-import type { RefObject } from 'react'
+import type { MutableRefObject } from 'react'
 
 import { useEffect, useRef, useState } from 'react'
 
@@ -6,7 +6,7 @@ export interface AutoSizerProps {
   children: (size: {
     width: number
     height: number
-    ref: RefObject<HTMLDivElement | null>
+    ref: MutableRefObject<HTMLDivElement | null>
   }) => React.ReactNode
 }
 export const AutoSizer = ({ children }: AutoSizerProps) => {
