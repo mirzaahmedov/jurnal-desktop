@@ -69,7 +69,7 @@ export const MaterialReportDialog = ({
               month,
               budjet_id,
               main_schet_id,
-              responsible_id: responsibleSpravochnik.selected?.id,
+              responsible_id: responsibleSpravochnik.selected?.id || undefined,
               excel: true
             }}
             buttonText={t('material')}
