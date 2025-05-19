@@ -11,6 +11,7 @@ const api = {
   openZarplata: () => ipcRenderer.invoke('open-zarplata'),
   pingInternet: () => ipcRenderer.invoke('ping-internet'),
   pingVPN: () => ipcRenderer.invoke('ping-vpn'),
+  getVPNLocalIP: () => ipcRenderer.invoke('get-vpn-local-ip'),
   openRouteNewWindow: (args: OpenRouteNewWindowArgs) =>
     ipcRenderer.invoke('open-route-new-window', args)
 }

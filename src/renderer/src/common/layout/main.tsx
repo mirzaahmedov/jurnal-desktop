@@ -27,7 +27,13 @@ const MainLayout = () => {
         <AuthGuard>
           <main className="h-full flex flex-col bg-white">
             <Header />
-            <Suspense fallback={<LoadingOverlay />}>
+            <Suspense
+              fallback={
+                <div className="flex-1">
+                  <LoadingOverlay />
+                </div>
+              }
+            >
               <ErrorBoundary
                 onError={(err) => console.log(err)}
                 fallback={'error'}

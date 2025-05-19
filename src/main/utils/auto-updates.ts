@@ -1,4 +1,4 @@
-const events = {
+export const events = {
   checking_for_update: 'checking-for-update',
   update_available: 'update-available',
   download_progress: 'download-progress',
@@ -9,5 +9,3 @@ const events = {
   login: 'login',
   error: 'error'
 } as const
-
-export { events }

@@ -12,7 +12,8 @@ import fs from 'fs'
 import os from 'os'
 import path from 'path'
 
-import { events } from './auto-updater'
+import { events } from './utils/auto-updates'
+import { getVPNLocalIP } from './utils/network'
 
 // let counter = 0
 let interval: NodeJS.Timeout | null = null
@@ -25,13 +26,6 @@ const normalizeFileName = (fileName: string): string => {
     .replace(/[^a-zA-Zа-яА-ЯёЁҳқҲҚ0-9№._-]/g, '')
     .replace(/^[-_.]+|[-_.]+$/g, '')
 }
-
-// const folderPath = path.join(os.homedir(), 'Downloads/E-Moliya')
-
-// const logMessage = (message: any) => {
-//   const filePath = path.join(folderPath, 'log.txt')
-//   fs.appendFileSync(filePath, `${new Date().toISOString()} - ${message}\n`)
-// }
 
 if (import.meta.env.DEV) {
   dotenv.config()
@@ -54,7 +48,7 @@ const autoUpdater = new NsisUpdater({
   url
 })
 
-function createWindow(route: string = '', floating: boolean = false): BrowserWindow {
+const createWindow = (route: string = '', floating: boolean = false): BrowserWindow => {
   // Create the browser window.
   // width and height of the window
   const { width, height } = screen.getPrimaryDisplay().workAreaSize
@@ -159,22 +153,9 @@ autoUpdater.on(events.error, (error) => {
   initialCheckForUpdate = false
 })
 
-// IPC Communication
-// -----------------------------
-// -----------------------------
-// -----------------------------
-// -----------------------------
-ipcMain.on('check-for-updates', () => {
-  autoUpdater.checkForUpdates()
-})
-
-ipcMain.on('restart', () => {
-  autoUpdater.quitAndInstall()
-})
-
-ipcMain.on('open-dev-tools', (e) => {
-  e.sender.openDevTools()
-})
+ipcMain.on('check-for-updates', () => autoUpdater.checkForUpdates())
+ipcMain.on('restart', () => autoUpdater.quitAndInstall())
+ipcMain.on('open-dev-tools', (e) => e.sender.openDevTools())
 
 ipcMain.handle(
   'save-file',
@@ -234,9 +215,9 @@ ipcMain.handle('open-file', async (_event, filePath: string) => {
   }
 })
 
-ipcMain.handle('open-file-in-folder', async (_event, filePath: string) => {
+ipcMain.handle('open-file-in-folder', async (_, filePath: string) =>
   shell.showItemInFolder(filePath)
-})
+)
 
 ipcMain.handle(
   'open-route-new-window',
@@ -257,17 +238,11 @@ ipcMain.handle(
   }
 )
 
-ipcMain.handle('open-zarplata', () => {
-  return shell.openPath(zarplataPath)
-})
-
+ipcMain.handle('open-zarplata', () => shell.openPath(zarplataPath))
 ipcMain.handle('get-version', () => app.getVersion())
-ipcMain.handle('set-zoom-factor', (e, factor) => {
-  e.sender.setZoomFactor(factor)
-})
-ipcMain.handle('get-zoom-factor', (e) => {
-  return e.sender.getZoomFactor()
-})
+ipcMain.handle('get-vpn-local-ip', () => getVPNLocalIP())
+ipcMain.handle('set-zoom-factor', (e, factor) => e.sender.setZoomFactor(factor))
+ipcMain.handle('get-zoom-factor', (e) => e.sender.getZoomFactor())
 
 ipcMain.handle('ping-internet', () => {
   return new Promise<boolean>((resolve) =>
@@ -370,18 +345,12 @@ const cleanup = () => {
   }
 }
 
-app.on('before-quit', () => {
-  cleanup()
-})
-app.on('quit', () => {
-  cleanup()
-})
+app.on('before-quit', () => cleanup())
+app.on('quit', () => cleanup())
 
 const locked = app.requestSingleInstanceLock()
 if (locked) {
-  app.on('second-instance', () => {
-    createWindow()
-  })
+  app.on('second-instance', () => createWindow())
 } else {
   app.exit(0)
 }

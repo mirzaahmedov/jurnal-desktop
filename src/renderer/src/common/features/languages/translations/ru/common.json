@@ -335,6 +335,7 @@
   "no_saldo_short": "Нет сальдо",
   "saldo_exists_short": "Есть сальдо",
   "unknown_type": "Неизвестный тип",
+  "unknown": "Неизвестно",
   "delete_all": "Удалить всё",
   "required_field": "Обязательное поле",
   "prixod_rasxod_mismatch": "Сумма прихода и расхода не совпадает",

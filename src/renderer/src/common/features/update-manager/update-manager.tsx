@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 
-import { events } from '@main/auto-updater'
+import { events } from '@main/utils/auto-updates'
 import { Check, CircleFadingArrowUp, CircleX, Download } from 'lucide-react'
 import { toast } from 'react-toastify'
 
