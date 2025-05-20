@@ -238,6 +238,8 @@ const PrixodDetails = ({ id, onSuccess }: PrixodDetailsProps) => {
     if (!isEmpty(errors)) focusInvalidInput()
   }, [errors])
 
+  console.log({ errors })
+
   return (
     <DetailsView className="h-full">
       <DetailsView.Content
@@ -354,12 +356,12 @@ const PrixodDetails = ({ id, onSuccess }: PrixodDetailsProps) => {
               />
             </div>
             <ApplyAllInputs
-              onApply={({ schet, sub_schet }) => {
+              onApply={({ schet }) => {
                 form.getValues('childs').forEach((_, index) => {
                   form.setValue(`childs.${index}.kredit_schet`, schet, { shouldValidate: true })
-                  form.setValue(`childs.${index}.kredit_sub_schet`, sub_schet, {
-                    shouldValidate: true
-                  })
+                  // form.setValue(`childs.${index}.kredit_sub_schet`, sub_schet, {
+                  //   shouldValidate: true
+                  // })
                 })
               }}
             />

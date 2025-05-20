@@ -1,10 +1,19 @@
 import type { SaldoFormValues } from './config'
 import type { MonthValue } from '@/common/features/saldo'
-import type { ApiResponse, SaldoProduct } from '@/common/models'
+import type { ApiResponse, ApiResponseMeta, SaldoProduct } from '@/common/models'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 import { budjet, main_schet } from '@/common/features/crud/middleware'
+
+export interface MaterialWarehouseMeta extends ApiResponseMeta {
+  summa: number
+  kol: number
+  iznos_summa: number
+  page_summa: number
+  page_kol: number
+  page_iznos_summa: number
+}
 
 export enum OstatokViewOption {
   PRODUCT = 'product',
@@ -109,7 +118,12 @@ export const MaterialWarehouseSaldoService = new MaterialWarehouseSaldoServiceBu
     return {}
   })
 
-export const MaterialWarehouseSaldoProductService = new CRUDService<SaldoProduct>({
+export const MaterialWarehouseSaldoProductService = new CRUDService<
+  SaldoProduct,
+  null,
+  null,
+  MaterialWarehouseMeta
+>({
   endpoint: ApiEndpoints.saldo_product
 })
   .use(budjet())

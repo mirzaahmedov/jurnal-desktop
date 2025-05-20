@@ -489,6 +489,7 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
                       </EditableTableCell>
                       <EditableTableCell className="w-[140px]">
                         <Input
+                          readOnly
                           value={row.kredit_sub_schet}
                           onChange={(e) => {
                             handleChangeChildField(index, 'kredit_sub_schet', e.target.value)

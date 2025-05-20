@@ -9,7 +9,13 @@ import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 
 import { createGroupSpravochnik } from '@/app/super-admin/group/service'
-import { ChooseSpravochnik, DatePicker, GenericTable } from '@/common/components'
+import {
+  ChooseSpravochnik,
+  DatePicker,
+  FooterCell,
+  FooterRow,
+  GenericTable
+} from '@/common/components'
 import { Button } from '@/common/components/ui/button'
 import { ButtonGroup } from '@/common/components/ui/button-group'
 import { FormField } from '@/common/components/ui/form'
@@ -30,7 +36,7 @@ import { useSpravochnik } from '@/common/features/spravochnik'
 import { useKeyUp, usePagination, useToggle } from '@/common/hooks'
 import { useLayout } from '@/common/layout'
 import { ISODateRegex, formatDate, parseDate, validateDate } from '@/common/lib/date'
-import { formatLocaleDate } from '@/common/lib/format'
+import { formatLocaleDate, formatNumber } from '@/common/lib/format'
 import { capitalize } from '@/common/lib/string'
 import { ListView } from '@/common/views'
 
@@ -366,6 +372,26 @@ const MaterialWarehouseSaldoPage = () => {
           data={saldos?.data ?? []}
           getRowId={(row) => row.product_id}
           getRowKey={(row) => row.id}
+          footer={
+            <>
+              <FooterRow>
+                <FooterCell
+                  colSpan={15}
+                  title={t('total_page')}
+                  content={String(saldos?.meta?.page_kol ?? 0)}
+                />
+                <FooterCell content={formatNumber(saldos?.meta?.page_summa ?? 0)} />
+              </FooterRow>
+              <FooterRow>
+                <FooterCell
+                  colSpan={15}
+                  title={t('total_period')}
+                  content={String(saldos?.meta?.kol ?? 0)}
+                />
+                <FooterCell content={formatNumber(saldos?.meta?.summa ?? 0)} />
+              </FooterRow>
+            </>
+          }
         />
       </ListView.Content>
       {deleteExistingDocumentError ? (

@@ -1,12 +1,12 @@
 import { Controller, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
-import { SchetEditor, SubSchetEditor } from '@/common/components/editable-table/editors'
+import { SchetEditor } from '@/common/components/editable-table/editors'
 import { Button } from '@/common/components/jolly/button'
 
 const defaultValues = {
-  schet: '',
-  sub_schet: ''
+  schet: ''
+  // sub_schet: ''
 }
 
 export interface ApplyAllInputsProps {
@@ -34,7 +34,7 @@ export const ApplyAllInputs = ({ onApply }: ApplyAllInputsProps) => {
               value={field.value}
               onChange={(value) => {
                 field.onChange(value)
-                form.setValue('sub_schet', '')
+                // form.setValue('sub_schet', '')
               }}
               tabIndex={-1}
               inputProps={{
@@ -43,7 +43,7 @@ export const ApplyAllInputs = ({ onApply }: ApplyAllInputsProps) => {
             />
           )}
         />
-        <Controller
+        {/* <Controller
           control={form.control}
           name="sub_schet"
           render={({ field }) => (
@@ -58,7 +58,7 @@ export const ApplyAllInputs = ({ onApply }: ApplyAllInputsProps) => {
               }}
             />
           )}
-        />
+        /> */}
         <Button type="submit">{t('apply_to_all_inputs')}</Button>
       </form>
     </div>
