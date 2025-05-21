@@ -7,12 +7,24 @@ import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 import { budjet, main_schet } from '@/common/features/crud/middleware'
 
 export interface MaterialWarehouseMeta extends ApiResponseMeta {
-  summa: number
-  kol: number
-  iznos_summa: number
-  page_summa: number
-  page_kol: number
-  page_iznos_summa: number
+  from_summa: number
+  from_kol: number
+  internal_rasxod_summa: number
+  internal_rasxod_kol: number
+  internal_prixod_summa: number
+  internal_prixod_kol: number
+  to_summa: number
+  to_iznos_summa: number
+  to_kol: number
+  page_from_summa: number
+  page_from_kol: number
+  page_internal_rasxod_summa: number
+  page_internal_rasxod_kol: number
+  page_internal_prixod_summa: number
+  page_internal_prixod_kol: number
+  page_to_summa: number
+  page_to_iznos_summa: number
+  page_to_kol: number
 }
 
 export enum OstatokViewOption {

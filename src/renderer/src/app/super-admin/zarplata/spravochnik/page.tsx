@@ -56,6 +56,8 @@ const ZarplataSpravochnikPage = () => {
     setSelected(row)
   }
 
+  console.log('spravochniks', spravochniks)
+
   return (
     <ListView>
       <ListView.Content loading={isFetching}>

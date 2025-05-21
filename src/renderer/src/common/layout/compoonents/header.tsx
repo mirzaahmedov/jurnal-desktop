@@ -53,13 +53,17 @@ export const Header = () => {
               <Fragment key={item.title.toString()}>
                 {item.path ? (
                   <Link
-                    className="max-w-48 text-xs font-medium text-slate-500 hover:text-brand overflow-ellipsis whitespace-nowrap overflow-hidden"
+                    className="max-w-32 text-xs font-medium text-slate-500 hover:text-brand overflow-ellipsis whitespace-nowrap overflow-hidden"
+                    title={item.title}
                     to={item.path}
                   >
                     {item.title}
                   </Link>
                 ) : (
-                  <li className="max-w-48 text-xs font-medium text-slate-500 overflow-ellipsis whitespace-nowrap overflow-hidden">
+                  <li
+                    title={item.title}
+                    className="max-w-32 text-xs font-medium text-slate-500 overflow-ellipsis whitespace-nowrap overflow-hidden"
+                  >
                     {item.title}
                   </li>
                 )}

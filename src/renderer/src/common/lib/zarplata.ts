@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-export const baseURL = 'http://147.45.107.174:5001/api'
+export const baseURL = 'https://nafaqa.fizmasoft.uz/zarplata/api'
 
 export interface PaginationParams {
   PageIndex: number

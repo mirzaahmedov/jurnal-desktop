@@ -1,9 +1,9 @@
 import type { ZarplataSpravochnikFormValues } from './config'
-import type { Response } from '@/app/super-admin/zarplata/common/api'
+import type { Response } from '@/common/lib/zarplata'
 import type { Zarplata } from '@/common/models'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 
-import { zarplataApi } from '@/app/super-admin/zarplata/common/api'
+import { zarplataApi } from '@/common/lib/zarplata'
 
 export class ZarplataSpravochnikService {
   static endpoint = '/SpravochnikZarplatum'

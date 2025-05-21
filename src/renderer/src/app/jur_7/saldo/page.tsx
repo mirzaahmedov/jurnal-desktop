@@ -376,19 +376,31 @@ const MaterialWarehouseSaldoPage = () => {
             <>
               <FooterRow>
                 <FooterCell
-                  colSpan={15}
+                  colSpan={9}
                   title={t('total_page')}
-                  content={String(saldos?.meta?.page_kol ?? 0)}
+                  content={String(saldos?.meta?.page_from_kol ?? 0)}
                 />
-                <FooterCell content={formatNumber(saldos?.meta?.page_summa ?? 0)} />
+                <FooterCell content={formatNumber(saldos?.meta?.page_from_summa ?? 0)} />
+                <FooterCell content={String(saldos?.meta?.page_internal_prixod_kol ?? 0)} />
+                <FooterCell content={formatNumber(saldos?.meta?.page_internal_prixod_summa ?? 0)} />
+                <FooterCell content={String(saldos?.meta?.page_internal_rasxod_kol ?? 0)} />
+                <FooterCell content={formatNumber(saldos?.meta?.page_internal_rasxod_summa ?? 0)} />
+                <FooterCell content={String(saldos?.meta?.page_to_kol ?? 0)} />
+                <FooterCell content={formatNumber(saldos?.meta?.page_to_summa ?? 0)} />
               </FooterRow>
               <FooterRow>
                 <FooterCell
-                  colSpan={15}
-                  title={t('total_period')}
-                  content={String(saldos?.meta?.kol ?? 0)}
+                  colSpan={9}
+                  title={t('total_page')}
+                  content={String(saldos?.meta?.from_kol ?? 0)}
                 />
-                <FooterCell content={formatNumber(saldos?.meta?.summa ?? 0)} />
+                <FooterCell content={formatNumber(saldos?.meta?.from_summa ?? 0)} />
+                <FooterCell content={String(saldos?.meta?.internal_prixod_kol ?? 0)} />
+                <FooterCell content={formatNumber(saldos?.meta?.internal_prixod_summa ?? 0)} />
+                <FooterCell content={String(saldos?.meta?.internal_rasxod_kol ?? 0)} />
+                <FooterCell content={formatNumber(saldos?.meta?.internal_rasxod_summa ?? 0)} />
+                <FooterCell content={String(saldos?.meta?.to_kol ?? 0)} />
+                <FooterCell content={formatNumber(saldos?.meta?.to_summa ?? 0)} />
               </FooterRow>
             </>
           }
