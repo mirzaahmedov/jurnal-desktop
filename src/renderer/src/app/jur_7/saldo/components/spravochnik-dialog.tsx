@@ -9,6 +9,7 @@ import { useTranslation } from 'react-i18next'
 import { GenericTable, LoadingOverlay } from '@/common/components'
 import { Pagination } from '@/common/components/pagination'
 import { SearchInputDebounced } from '@/common/components/search-input-debounced'
+import { IDCell } from '@/common/components/table/renderers/id'
 import { Badge } from '@/common/components/ui/badge'
 import { Button } from '@/common/components/ui/button'
 import {
@@ -22,9 +23,18 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/common/components/ui
 import { useRequisitesStore } from '@/common/features/requisites'
 import { usePagination } from '@/common/hooks'
 
-import { WarehouseSaldoProductColumns } from '../columns'
+import { CommonWarehouseSaldoProductColumns } from '../columns'
 import { SaldoQueryKeys } from '../config'
 import { MaterialWarehouseSaldoProductService } from '../service'
+
+const columns = [
+  {
+    key: 'id',
+    renderCell: IDCell,
+    width: 160
+  },
+  ...CommonWarehouseSaldoProductColumns
+] satisfies typeof CommonWarehouseSaldoProductColumns
 
 enum TabOption {
   ALL = 'ALL',
@@ -118,7 +128,7 @@ export const SaldoProductSpravochnikDialog = ({
             {isFetching ? <LoadingOverlay /> : null}
             <div className="flex-1 overflow-auto scrollbar">
               <GenericTable
-                columnDefs={WarehouseSaldoProductColumns}
+                columnDefs={CommonWarehouseSaldoProductColumns}
                 data={selectedRows ?? []}
                 getRowId={(row) => row.product_id}
                 onDelete={(organization) => {
@@ -142,7 +152,7 @@ export const SaldoProductSpravochnikDialog = ({
               selectedIds={selectedIds}
               disabledIds={disabledIds}
               data={products?.data ?? []}
-              columnDefs={WarehouseSaldoProductColumns}
+              columnDefs={columns}
               getRowId={(row) => row.product_id}
               className="w-full"
               onClickRow={(organization) => {

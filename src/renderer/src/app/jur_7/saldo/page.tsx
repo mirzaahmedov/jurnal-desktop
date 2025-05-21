@@ -18,6 +18,7 @@ import {
 } from '@/common/components'
 import { Button } from '@/common/components/ui/button'
 import { ButtonGroup } from '@/common/components/ui/button-group'
+import { Checkbox } from '@/common/components/ui/checkbox'
 import { FormField } from '@/common/components/ui/form'
 import { useConfirm } from '@/common/features/confirm'
 import { DownloadFile, ImportFile } from '@/common/features/file'
@@ -42,7 +43,7 @@ import { ListView } from '@/common/views'
 
 import { IznosQueryKeys } from '../iznos/config'
 import { createResponsibleSpravochnik } from '../responsible/service'
-import { WarehouseSaldoProductColumns } from './columns'
+import { CommonWarehouseSaldoProductColumns } from './columns'
 import { DeleteExistingDocumentsAlert } from './components/delete-existing-document-alert'
 import { DeleteExistingSaldoAlert } from './components/delete-existing-saldo-alert'
 import { MonthlySaldoTrackerDialog } from './components/monthly-saldo-tracker-dialog'
@@ -57,6 +58,15 @@ import {
   handleOstatokExistingDocumentError,
   handleOstatokResponse
 } from './utils'
+
+const columns = [
+  {
+    key: 'iznos',
+    width: 160,
+    renderCell: (row) => <Checkbox checked={row.iznos} />
+  },
+  ...CommonWarehouseSaldoProductColumns
+] satisfies typeof CommonWarehouseSaldoProductColumns
 
 const MaterialWarehouseSaldoPage = () => {
   const { startDate, endDate, setSelectedMonth } = useSelectedMonthStore()
@@ -368,7 +378,7 @@ const MaterialWarehouseSaldoPage = () => {
       </div>
       <ListView.Content loading={isFetching || isDeleting}>
         <GenericTable
-          columnDefs={WarehouseSaldoProductColumns}
+          columnDefs={columns}
           data={saldos?.data ?? []}
           getRowId={(row) => row.product_id}
           getRowKey={(row) => row.id}
@@ -391,7 +401,7 @@ const MaterialWarehouseSaldoPage = () => {
               <FooterRow>
                 <FooterCell
                   colSpan={9}
-                  title={t('total_page')}
+                  title={t('total_period')}
                   content={String(saldos?.meta?.from_kol ?? 0)}
                 />
                 <FooterCell content={formatNumber(saldos?.meta?.from_summa ?? 0)} />

@@ -5,16 +5,10 @@ import { Trans } from 'react-i18next'
 import { type ColumnDef, Copyable } from '@/common/components'
 import { DataList } from '@/common/components/data-list'
 import { HoverInfoCell } from '@/common/components/table/renderers'
-import { IDCell } from '@/common/components/table/renderers/id'
 import { Badge } from '@/common/components/ui/badge'
 import { formatLocaleDate, formatNumber } from '@/common/lib/format'
 
-export const WarehouseSaldoProductColumns: ColumnDef<SaldoProduct>[] = [
-  {
-    key: 'id',
-    renderCell: IDCell,
-    minWidth: 160
-  },
+export const CommonWarehouseSaldoProductColumns: ColumnDef<SaldoProduct>[] = [
   {
     key: 'name',
     minWidth: 400,

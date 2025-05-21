@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
 import { createResponsibleSpravochnik } from '@/app/jur_7/responsible/service'
-import { WarehouseSaldoProductColumns } from '@/app/jur_7/saldo/columns'
+import { CommonWarehouseSaldoProductColumns } from '@/app/jur_7/saldo/columns'
 import { SaldoQueryKeys, defaultValues } from '@/app/jur_7/saldo/config'
 import { createGroupSpravochnik } from '@/app/super-admin/group/service'
 import { ChooseSpravochnik, DatePicker, GenericTable } from '@/common/components'
@@ -120,7 +120,7 @@ const MaterialWarehouseSaldoPage = () => {
       </div>
       <ListView.Content loading={isFetching}>
         <GenericTable
-          columnDefs={WarehouseSaldoProductColumns}
+          columnDefs={CommonWarehouseSaldoProductColumns}
           data={saldos?.data ?? []}
           getRowId={(row) => row.product_id}
           getRowKey={(row) => row.id}
