@@ -31,7 +31,8 @@ if (import.meta.env.DEV) {
   dotenv.config()
 }
 
-const CHECK_UPDATES_INTERVAL = 30 * 60 * 1000
+const CHECK_UPDATES_INTERVAL =
+  import.meta.env.VITE_MODE === 'region' ? 50 * 60 * 60 * 1000 : 30 * 60 * 1000
 
 const programFilesPath =
   os.arch() === 'x64' ? process.env['ProgramFiles'] : process.env['ProgramFiles(x86)']

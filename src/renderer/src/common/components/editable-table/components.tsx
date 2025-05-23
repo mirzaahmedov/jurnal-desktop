@@ -55,11 +55,16 @@ export const EditableTableRow = ({
   children,
   className,
   focusable,
+  rowRef,
   ...props
-}: HTMLAttributes<HTMLTableRowElement> & VariantProps<typeof rowVariants>) => {
+}: HTMLAttributes<HTMLTableRowElement> &
+  VariantProps<typeof rowVariants> & {
+    rowRef?: React.Ref<HTMLTableRowElement>
+  }) => {
   return (
     <TableRow
       {...props}
+      ref={rowRef}
       className={cn(rowVariants({ className, focusable }), className)}
     >
       {children}

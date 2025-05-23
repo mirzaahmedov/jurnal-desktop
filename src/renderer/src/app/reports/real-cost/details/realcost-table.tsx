@@ -1,20 +1,26 @@
 import type { RealCostTableRow } from './interfaces'
+import type { EditableTableMethods } from '@/common/components/editable-table/interface'
 
-import { type MutableRefObject, type RefObject, memo, useImperativeHandle, useRef } from 'react'
+import {
+  type ComponentProps,
+  type MutableRefObject,
+  type RefObject,
+  memo,
+  useImperativeHandle,
+  useRef
+} from 'react'
 
 import { useTranslation } from 'react-i18next'
 
 import { NumericInput, type NumericInputProps } from '@/common/components'
+import {
+  EditableTableCell,
+  EditableTableHead,
+  EditableTableRow
+} from '@/common/components/editable-table/components'
 import { EmptyList } from '@/common/components/empty-states'
 import { Input, type InputProps } from '@/common/components/ui/input'
 import { Table, TableBody, TableFooter, TableHeader } from '@/common/components/ui/table'
-import {
-  type EditableTableMethods,
-  TableCell,
-  TableHead,
-  TableRow,
-  type TableRowProps
-} from '@/common/components/virtual-editable-table'
 import { inputVariants } from '@/common/features/spravochnik'
 import { formatLocaleDate } from '@/common/lib/format'
 import { cn } from '@/common/lib/utils'
@@ -87,6 +93,7 @@ export const RealCostTable = memo(
               behavior: 'smooth',
               block: 'nearest'
             })
+            element?.querySelector('input')?.focus()
           }
           highlightedRow.current = rowIndex
         }
@@ -110,105 +117,105 @@ export const RealCostTable = memo(
       >
         <Table className="w-max border border-slate-200 table-fixed sticky top-0 z-100">
           <TableHeader className="shadow-sm">
-            <TableRow style={{ height: 44 }}>
-              <TableHead
+            <EditableTableRow style={{ height: 44 }}>
+              <EditableTableHead
                 className="px-3 whitespace-nowrap text-sm font-medium"
                 style={{
                   width: `${String(rows.length + 0).length + 3}ch`
                 }}
                 rowSpan={2}
-              ></TableHead>
-              <TableHead
+              ></EditableTableHead>
+              <EditableTableHead
                 rowSpan={2}
                 style={{ width: 300 }}
               >
                 {t('name')}
-              </TableHead>
-              <TableHead
+              </EditableTableHead>
+              <EditableTableHead
                 rowSpan={2}
                 style={{ width: 100 }}
                 className="sticky left-0 z-50"
               >
                 {t('number')}
-              </TableHead>
-              <TableHead
+              </EditableTableHead>
+              <EditableTableHead
                 colSpan={6}
                 className="text-center"
               >
                 {t('for_month')}
-              </TableHead>
-              <TableHead
+              </EditableTableHead>
+              <EditableTableHead
                 colSpan={6}
                 className="text-center !bg-slate-200 border-slate-300"
               >
                 {t('for_year')}
-              </TableHead>
-            </TableRow>
-            <TableRow style={{ height: 50 }}>
-              <TableHead
+              </EditableTableHead>
+            </EditableTableRow>
+            <EditableTableRow style={{ height: 50 }}>
+              <EditableTableHead
                 style={{ width: 140 }}
                 className="text-end"
               >
                 {t('pages.smeta_grafik')}
-              </TableHead>
-              <TableHead style={{ width: 140 }}>№ / {t('date')}</TableHead>
-              <TableHead style={{ width: 300 }}>{t('organization')}</TableHead>
-              <TableHead
+              </EditableTableHead>
+              <EditableTableHead style={{ width: 140 }}>№ / {t('date')}</EditableTableHead>
+              <EditableTableHead style={{ width: 300 }}>{t('organization')}</EditableTableHead>
+              <EditableTableHead
                 style={{ width: 140 }}
                 className="text-end"
               >
                 {t('summa')}
-              </TableHead>
-              <TableHead
+              </EditableTableHead>
+              <EditableTableHead
                 style={{ width: 140 }}
                 className="text-end"
               >
                 {t('pages.kassa')}/{t('bank').toLowerCase()} {t('rasxod').toLowerCase()}
-              </TableHead>
-              <TableHead
+              </EditableTableHead>
+              <EditableTableHead
                 style={{ width: 140 }}
                 className="text-end"
               >
                 {t('remainder')}
-              </TableHead>
+              </EditableTableHead>
 
-              <TableHead
+              <EditableTableHead
                 style={{ width: 140 }}
                 className="!bg-slate-200 border-slate-300 text-end"
               >
                 {t('pages.smeta_grafik')}
-              </TableHead>
-              <TableHead
+              </EditableTableHead>
+              <EditableTableHead
                 style={{ width: 140 }}
                 className="!bg-slate-200 border-slate-300"
               >
                 № / {t('date')}
-              </TableHead>
-              <TableHead
+              </EditableTableHead>
+              <EditableTableHead
                 style={{ width: 300 }}
                 className="!bg-slate-200 border-slate-300"
               >
                 {t('organization')}
-              </TableHead>
-              <TableHead
+              </EditableTableHead>
+              <EditableTableHead
                 style={{ width: 140 }}
                 className="!bg-slate-200 border-slate-300 text-end"
               >
                 {t('summa')}
-              </TableHead>
-              <TableHead
+              </EditableTableHead>
+              <EditableTableHead
                 style={{ width: 140 }}
                 className="!bg-slate-200 border-slate-300 text-end"
               >
                 {t('pages.kassa')}/{t('bank').toLowerCase()} {t('rasxod').toLowerCase()}
-              </TableHead>
-              <TableHead
+              </EditableTableHead>
+              <EditableTableHead
                 style={{ width: 140 }}
                 className="!bg-slate-200 border-slate-300 text-end"
               >
                 {t('remainder')}
-              </TableHead>
-            </TableRow>
+              </EditableTableHead>
+            </EditableTableRow>
           </TableHeader>
         </Table>
 
@@ -232,8 +239,8 @@ export const RealCostTable = memo(
                   )
                 })
               ) : (
-                <TableRow>
-                  <TableCell
+                <EditableTableRow>
+                  <EditableTableCell
                     colSpan={100}
                     className="text-center py-5"
                   >
@@ -242,8 +249,8 @@ export const RealCostTable = memo(
                         className: 'w-40'
                       }}
                     ></EmptyList>
-                  </TableCell>
-                </TableRow>
+                  </EditableTableCell>
+                </EditableTableRow>
               )}
             </TableBody>
           </Table>
@@ -265,14 +272,16 @@ export const RealCostTable = memo(
   }
 )
 
-interface RowProps extends TableRowProps, Pick<RealCostTableProps, 'rows' | 'onCellDoubleClick'> {
+interface RowProps
+  extends ComponentProps<typeof EditableTableRow>,
+    Pick<RealCostTableProps, 'rows' | 'onCellDoubleClick'> {
   index: number
   row: RealCostTableRow
   highlightedRow: MutableRefObject<number | null>
 }
 const Row = ({ index, row, rows, highlightedRow, onCellDoubleClick, ...props }: RowProps) => {
   return (
-    <TableRow
+    <EditableTableRow
       key={index}
       rowRef={(element) => {
         if (index === highlightedRow?.current) {
@@ -286,7 +295,7 @@ const Row = ({ index, row, rows, highlightedRow, onCellDoubleClick, ...props }: 
     >
       {row.first && (
         <>
-          <TableCell
+          <EditableTableCell
             key="line_number"
             className="px-3 font-medium"
             style={{
@@ -295,8 +304,8 @@ const Row = ({ index, row, rows, highlightedRow, onCellDoubleClick, ...props }: 
             rowSpan={row.size}
           >
             {index + 1}
-          </TableCell>
-          <TableCell
+          </EditableTableCell>
+          <EditableTableCell
             rowSpan={row.size}
             style={{ width: 300 }}
           >
@@ -307,8 +316,8 @@ const Row = ({ index, row, rows, highlightedRow, onCellDoubleClick, ...props }: 
               }}
               readOnly
             />
-          </TableCell>
-          <TableCell
+          </EditableTableCell>
+          <EditableTableCell
             rowSpan={row.size}
             style={{ width: 100 }}
             className="sticky left-0 z-50"
@@ -321,8 +330,8 @@ const Row = ({ index, row, rows, highlightedRow, onCellDoubleClick, ...props }: 
               }}
               readOnly
             />
-          </TableCell>
-          <TableCell
+          </EditableTableCell>
+          <EditableTableCell
             rowSpan={row.size}
             style={{ width: 140 }}
           >
@@ -341,23 +350,23 @@ const Row = ({ index, row, rows, highlightedRow, onCellDoubleClick, ...props }: 
               }}
               readOnly
             />
-          </TableCell>
+          </EditableTableCell>
         </>
       )}
 
-      <TableCell style={{ width: 140 }}>
+      <EditableTableCell style={{ width: 140 }}>
         <TextEditor
           value={row.doc_num ? `${row?.doc_num} / ${formatLocaleDate(row?.doc_date)}` : ''}
           readOnly
         />
-      </TableCell>
-      <TableCell style={{ width: 300 }}>
+      </EditableTableCell>
+      <EditableTableCell style={{ width: 300 }}>
         <TextEditor
           value={row?.name ?? ''}
           readOnly
         />
-      </TableCell>
-      <TableCell style={{ width: 140 }}>
+      </EditableTableCell>
+      <EditableTableCell style={{ width: 140 }}>
         <NumberEditor
           value={row?.contract_grafik_summa ?? ''}
           defaultValue={0}
@@ -370,8 +379,8 @@ const Row = ({ index, row, rows, highlightedRow, onCellDoubleClick, ...props }: 
           }}
           readOnly
         />
-      </TableCell>
-      <TableCell style={{ width: 140 }}>
+      </EditableTableCell>
+      <EditableTableCell style={{ width: 140 }}>
         <NumberEditor
           value={row?.rasxod_summa ?? ''}
           defaultValue={0}
@@ -384,8 +393,8 @@ const Row = ({ index, row, rows, highlightedRow, onCellDoubleClick, ...props }: 
           }}
           readOnly
         />
-      </TableCell>
-      <TableCell style={{ width: 140 }}>
+      </EditableTableCell>
+      <EditableTableCell style={{ width: 140 }}>
         <NumberEditor
           value={row?.remaining_summa ?? ''}
           defaultValue={0}
@@ -398,10 +407,10 @@ const Row = ({ index, row, rows, highlightedRow, onCellDoubleClick, ...props }: 
           }}
           readOnly
         />
-      </TableCell>
+      </EditableTableCell>
 
       {row.first && (
-        <TableCell
+        <EditableTableCell
           rowSpan={row.size}
           style={{ width: 140 }}
         >
@@ -420,23 +429,23 @@ const Row = ({ index, row, rows, highlightedRow, onCellDoubleClick, ...props }: 
             }}
             readOnly
           />
-        </TableCell>
+        </EditableTableCell>
       )}
-      <TableCell style={{ width: 140 }}>
+      <EditableTableCell style={{ width: 140 }}>
         <TextEditor
           value={
             row.doc_num_year ? `${row?.doc_num_year} / ${formatLocaleDate(row?.doc_date_year)}` : ''
           }
           readOnly
         />
-      </TableCell>
-      <TableCell style={{ width: 300 }}>
+      </EditableTableCell>
+      <EditableTableCell style={{ width: 300 }}>
         <TextEditor
           value={row?.name_year ?? ''}
           readOnly
         />
-      </TableCell>
-      <TableCell style={{ width: 140 }}>
+      </EditableTableCell>
+      <EditableTableCell style={{ width: 140 }}>
         <NumberEditor
           value={row?.contract_grafik_summa_year ?? ''}
           onDoubleClick={() => {
@@ -449,8 +458,8 @@ const Row = ({ index, row, rows, highlightedRow, onCellDoubleClick, ...props }: 
           defaultValue={0}
           readOnly
         />
-      </TableCell>
-      <TableCell style={{ width: 140 }}>
+      </EditableTableCell>
+      <EditableTableCell style={{ width: 140 }}>
         <NumberEditor
           value={row?.rasxod_summa_year ?? ''}
           defaultValue={0}
@@ -463,8 +472,8 @@ const Row = ({ index, row, rows, highlightedRow, onCellDoubleClick, ...props }: 
           }}
           readOnly
         />
-      </TableCell>
-      <TableCell style={{ width: 140 }}>
+      </EditableTableCell>
+      <EditableTableCell style={{ width: 140 }}>
         <NumberEditor
           value={row?.remaining_summa_year ?? ''}
           defaultValue={0}
@@ -477,7 +486,7 @@ const Row = ({ index, row, rows, highlightedRow, onCellDoubleClick, ...props }: 
           }}
           readOnly
         />
-      </TableCell>
-    </TableRow>
+      </EditableTableCell>
+    </EditableTableRow>
   )
 }
