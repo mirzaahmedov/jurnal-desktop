@@ -37,6 +37,9 @@ export class SmetaGrafiCRUDkService extends CRUDService<SmetaGrafik, SmetaGrafik
         params: {
           year,
           order_number
+        },
+        headers: {
+          'notify-error': false
         }
       })
     )

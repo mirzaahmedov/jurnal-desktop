@@ -1,7 +1,7 @@
 import type { ColumnDef } from '@/common/components'
 import type { Podpis } from '@/common/models'
 
-import { Trans } from 'react-i18next'
+import { Trans, useTranslation } from 'react-i18next'
 
 import { IDCell } from '@/common/components/table/renderers/id'
 import { Badge } from '@/common/components/ui/badge'
@@ -39,7 +39,8 @@ export const podpisColumns: ColumnDef<Podpis>[] = [
 ]
 
 const DoljnostCell = ({ value }: { value: string }) => {
-  const doljnost = PodpisDoljnostOptions.find((item) => item.key === value)
+  const { t } = useTranslation('podpis')
+  const doljnost = PodpisDoljnostOptions(t).find((item) => item.key === value)
   if (doljnost) {
     return (
       <Badge>

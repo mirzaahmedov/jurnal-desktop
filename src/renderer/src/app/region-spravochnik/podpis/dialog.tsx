@@ -122,7 +122,7 @@ export const PodpisDialog = ({ selected, isOpen, onOpenChange }: PodpisDialogPro
                     label={t('doljnost')}
                   >
                     <JollySelect
-                      items={PodpisDoljnostOptions}
+                      items={PodpisDoljnostOptions(t)}
                       placeholder={t('doljnost')}
                       selectedKey={field.value}
                       onSelectionChange={(value) => field.onChange(value)}

@@ -7,8 +7,11 @@ export const VPNLocalIPAddress = () => {
 
   useEffect(() => {
     const handleUpdateIpAddress = async () => {
-      setIpAddress(window.api.getVPNLocalIP())
+      const ipAddress = await window.api.getVPNLocalIP()
+      setIpAddress(ipAddress)
     }
+
+    handleUpdateIpAddress()
 
     window.addEventListener('online', handleUpdateIpAddress)
     window.addEventListener('offline', handleUpdateIpAddress)

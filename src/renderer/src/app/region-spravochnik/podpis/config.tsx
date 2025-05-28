@@ -5,32 +5,33 @@ import { z } from 'zod'
 
 import { PodpisDoljnost, PodpisTypeDocument } from '@/common/models'
 
-export const PodpisDoljnostOptions = [
-  {
-    key: PodpisDoljnost.RUKOVODITEL,
-    name: <Trans>podpis:doljnost.rukovoditel</Trans>
-  },
-  {
-    key: PodpisDoljnost.GLAV_BUXGALTER,
-    name: <Trans>podpis:doljnost.glav_buxgalter</Trans>
-  },
-  {
-    key: PodpisDoljnost.GLAV_MIB,
-    name: <Trans>podpis:doljnost.glav_mib</Trans>
-  },
-  {
-    key: PodpisDoljnost.NACHALNIK_OTDELA,
-    name: <Trans>podpis:doljnost.nachalnik_otdela</Trans>
-  },
-  {
-    key: PodpisDoljnost.BUXGALTER,
-    name: <Trans>podpis:doljnost.buxgalter</Trans>
-  },
-  {
-    key: PodpisDoljnost.KASSIR,
-    name: <Trans>podpis:doljnost.kassir</Trans>
-  }
-] as const
+export const PodpisDoljnostOptions = (t: TFunction) =>
+  [
+    {
+      key: PodpisDoljnost.RUKOVODITEL,
+      name: <Trans t={t}>podpis:doljnost.rukovoditel</Trans>
+    },
+    {
+      key: PodpisDoljnost.GLAV_BUXGALTER,
+      name: <Trans t={t}>podpis:doljnost.glav_buxgalter</Trans>
+    },
+    {
+      key: PodpisDoljnost.GLAV_MIB,
+      name: <Trans t={t}>podpis:doljnost.glav_mib</Trans>
+    },
+    {
+      key: PodpisDoljnost.NACHALNIK_OTDELA,
+      name: <Trans t={t}>podpis:doljnost.nachalnik_otdela</Trans>
+    },
+    {
+      key: PodpisDoljnost.BUXGALTER,
+      name: <Trans t={t}>podpis:doljnost.buxgalter</Trans>
+    },
+    {
+      key: PodpisDoljnost.KASSIR,
+      name: <Trans t={t}>podpis:doljnost.kassir</Trans>
+    }
+  ] as const
 
 export const getPodpisTypeDocumentOptions = (t: TFunction) => {
   return [
@@ -77,19 +78,7 @@ export const PodpisPayloadSchema = z.object({
     }
   ),
   fio_name: z.string().nonempty(),
-  type_document: z.enum(
-    [
-      PodpisTypeDocument.BANK_RASXOD_PORUCHENIYA,
-      PodpisTypeDocument.SHARTNOMA_GRAFIK_OPLATI,
-      PodpisTypeDocument.DAYS_REPORT,
-      PodpisTypeDocument.CAP,
-      PodpisTypeDocument.AKT_SVERKA,
-      PodpisTypeDocument.JUR7_MATERIAL
-    ],
-    {
-      message: `Type document must be one of: ${Object.values(PodpisTypeDocument).join(', ')}`
-    }
-  )
+  type_document: z.string()
 })
 export type PodpisPayloadType = z.infer<typeof PodpisPayloadSchema>
 

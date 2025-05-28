@@ -1,8 +1,8 @@
-import { Blank, Field, Flex, Label, Table } from '@/common/components/pdf'
+import { Table } from '@/common/components/pdf'
 
-const columnWidths = [160, 100, 220, 100]
+const columnWidths = [30, 80, 180, 60, 50, 50, 50, 100, 120, 80]
 
-interface PodvodkaType {
+export interface ProvodkaType {
   operatsii: string
   debet_schet?: string
   debet_card?: string
@@ -10,13 +10,13 @@ interface PodvodkaType {
   credit_card?: string
   summa: string
 }
-interface PodvodkaTableProps {
-  podvodkaList: PodvodkaType[]
+export interface PodvodkaTableProps {
+  podvodkaList: ProvodkaType[]
 }
-const PodvodkaTable = ({ podvodkaList }: PodvodkaTableProps) => {
+export const ProvodkaTable = ({ podvodkaList }: PodvodkaTableProps) => {
   return (
-    <Table>
-      <Table.Row>
+    <Table style={{ marginTop: 20, fontSize: 8, lineHeight: 1.2 }}>
+      <Table.Row style={{ fontWeight: 'bold' }}>
         <Table.Column
           style={{
             width: columnWidths[0],
@@ -26,119 +26,106 @@ const PodvodkaTable = ({ podvodkaList }: PodvodkaTableProps) => {
           <Table.Cell
             style={{
               textTransform: 'uppercase',
-              fontSize: 12,
               letterSpacing: 2
             }}
           >
-            Приложение
+            №
           </Table.Cell>
         </Table.Column>
-
         <Table.Column
           style={{
             width: columnWidths[1],
             justifyContent: 'center'
           }}
         >
-          <Table.Cell>За что</Table.Cell>
+          <Table.Cell>Маҳсулот номи (хизматлар)</Table.Cell>
+        </Table.Column>
+        <Table.Column
+          style={{
+            width: columnWidths[2],
+            justifyContent: 'center'
+          }}
+        >
+          <Table.Cell>
+            Товар (хизмат) лар Ягона электрон миллий каталоги бўйича идентификация коди ва номи
+          </Table.Cell>
+        </Table.Column>
+        <Table.Column
+          style={{
+            width: columnWidths[3],
+            justifyContent: 'center'
+          }}
+        >
+          <Table.Cell>Улчов бирлиги</Table.Cell>
         </Table.Column>
 
-        <Table.Column style={{ flex: 1 }}>
-          <Table.Row>
+        <Table.Column
+          style={{
+            width: columnWidths[4],
+            justifyContent: 'center'
+          }}
+        >
+          <Table.Cell>Микдор</Table.Cell>
+        </Table.Column>
+
+        <Table.Column
+          style={{
+            width: columnWidths[5],
+            justifyContent: 'center'
+          }}
+        >
+          <Table.Cell>Hapx</Table.Cell>
+        </Table.Column>
+
+        <Table.Column
+          style={{
+            width: columnWidths[6],
+            justifyContent: 'center'
+          }}
+        >
+          <Table.Cell>Етказиб бериш қиймати</Table.Cell>
+        </Table.Column>
+
+        <Table.Column style={{ width: columnWidths[7] }}>
+          <Table.Row style={{ flex: 1 }}>
             <Table.Column style={{ flex: 1, border: 0 }}>
-              <Table.CellView>
-                <Flex>
-                  <Field>
-                    <Label>Проводка №</Label>
-                    <Blank style={{ width: 40 }} />
-                  </Field>
-                  <Field>
-                    <Blank style={{ width: 80 }} />
-                    <Label>20</Label>
-                    <Blank style={{ width: 20 }} />
-                    <Label>г.</Label>
-                  </Field>
-                </Flex>
-              </Table.CellView>
+              <Table.Cell>ҚҚС</Table.Cell>
             </Table.Column>
           </Table.Row>
 
-          <Table.Row style={{ border: 0 }}>
-            <Table.Column style={{ flex: 1 }}>
-              <Table.Row>
-                <Table.Column style={{ flex: 1 }}>
-                  <Table.Cell style={{ paddingVertical: 1 }}>Дебет</Table.Cell>
+          <Table.Row style={{ flex: 1, borderWidth: 0 }}>
+            <Table.Column style={{ height: '100%', flex: 1, borderWidth: 0 }}>
+              <Table.Row style={{ height: '100%', borderWidth: 0 }}>
+                <Table.Column style={{ flex: 1, height: '100%' }}>
+                  <Table.Cell style={{ paddingVertical: 1 }}>Ставка</Table.Cell>
                 </Table.Column>
-                <Table.Column style={{ flex: 1, border: 0 }}>
-                  <Table.Cell style={{ paddingVertical: 1 }}>Кредит</Table.Cell>
-                </Table.Column>
-              </Table.Row>
-
-              <Table.Row style={{ border: 0 }}>
-                <Table.Column style={{ flex: 1 }}>
-                  <Table.Cell style={{ paddingVertical: 1 }}>счет</Table.Cell>
-                </Table.Column>
-                <Table.Column style={{ flex: 1 }}>
-                  <Table.Cell style={{ paddingVertical: 1 }}>карт.</Table.Cell>
-                </Table.Column>
-                <Table.Column style={{ flex: 1 }}>
-                  <Table.Cell style={{ paddingVertical: 1 }}>счет</Table.Cell>
-                </Table.Column>
-                <Table.Column style={{ flex: 1, border: 0 }}>
-                  <Table.Cell style={{ paddingVertical: 1 }}>карт.</Table.Cell>
+                <Table.Column style={{ flex: 1, height: '100%', border: 0 }}>
+                  <Table.Cell style={{ paddingVertical: 1, border: 0 }}>Сумма</Table.Cell>
                 </Table.Column>
               </Table.Row>
-            </Table.Column>
-            <Table.Column
-              style={{
-                border: 0,
-                width: columnWidths[3],
-                justifyContent: 'center'
-              }}
-            >
-              <Table.Cell>Сумма</Table.Cell>
             </Table.Column>
           </Table.Row>
+        </Table.Column>
+
+        <Table.Column
+          style={{
+            width: columnWidths[8],
+            justifyContent: 'center'
+          }}
+        >
+          <Table.Cell>Етказиб беришнинг ҚҚСни ҳисобга олган ҳолда қиймати</Table.Cell>
+        </Table.Column>
+        <Table.Column
+          style={{
+            width: columnWidths[9],
+            justifyContent: 'center'
+          }}
+        >
+          <Table.Cell>Товарни келиб чиқиши</Table.Cell>
         </Table.Column>
       </Table.Row>
 
       <Table.Row>
-        <Table.Column
-          wrap
-          style={{ width: columnWidths[0], padding: 4 }}
-        >
-          <Table.CellView
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: 4
-            }}
-          >
-            <Field>
-              <Label>Доверенность №</Label>
-              <Blank fullWidth />
-            </Field>
-            <Field>
-              <Label>от</Label>
-              <Blank fullWidth />
-              <Label>20</Label>
-              <Blank style={{ width: 25 }} />
-            </Field>
-            <Field>
-              <Label>Паспорт серии</Label>
-              <Blank fullWidth />
-            </Field>
-            <Field>
-              <Label>№</Label>
-              <Blank fullWidth />
-            </Field>
-            <Field>
-              <Label>выдан</Label>
-              <Blank fullWidth />
-            </Field>
-          </Table.CellView>
-        </Table.Column>
-
         <Table.Column style={{ flex: 1 }}>
           {podvodkaList.map((podvodka, index) => (
             <PodvodkaRow
@@ -163,7 +150,7 @@ const PodvodkaTable = ({ podvodkaList }: PodvodkaTableProps) => {
 
 interface PodvodkaRowProps {
   noBorder?: boolean
-  podvodka?: PodvodkaType
+  podvodka?: ProvodkaType
 }
 const PodvodkaRow = ({ noBorder, podvodka }: PodvodkaRowProps) => {
   return (
@@ -230,6 +217,3 @@ const PodvodkaRow = ({ noBorder, podvodka }: PodvodkaRowProps) => {
     </Table.Row>
   )
 }
-
-export { PodvodkaTable }
-export type { PodvodkaTableProps, PodvodkaType }

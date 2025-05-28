@@ -17,7 +17,7 @@ declare global {
       openZarplata(): Promise<string>
       pingInternet(): Promise<boolean>
       pingVPN(): Promise<boolean>
-      getVPNLocalIP(): string | null
+      getVPNLocalIP(): Promise<string | null>
       openRouteNewWindow(args: OpenRouteNewWindowArgs): Promise<void>
     }
     downloader: Downloader
