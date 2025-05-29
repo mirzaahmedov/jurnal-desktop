@@ -88,14 +88,12 @@ export const Header = () => {
       </div>
       {enableSaldo ? <SelectedMonth className="mr-2" /> : null}
       {user && user?.role_name !== 'super-admin' ? <RequisitesController /> : null}
-      {width && width > 1400 ? (
-        <div className="flex items-center">
-          <Settings />
-          <Downloads />
-          <Reload />
-          <NewWindowLauncher />
-        </div>
-      ) : null}
+      <div className={cn('flex items-center', !width || (width < 1400 && 'hidden'))}>
+        <Settings />
+        <Downloads />
+        <Reload />
+        <NewWindowLauncher />
+      </div>
 
       {width && width < 1400 ? (
         <PopoverTrigger>
