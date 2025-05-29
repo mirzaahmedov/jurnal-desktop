@@ -13,7 +13,7 @@ import os from 'os'
 import path from 'path'
 
 import { events } from './utils/auto-updates'
-import { getVPNLocalIP } from './utils/network'
+import { getVPNLocalIP, isPingError } from './utils/network'
 
 // let counter = 0
 let interval: NodeJS.Timeout | null = null
@@ -247,25 +247,37 @@ ipcMain.handle('get-zoom-factor', (e) => e.sender.getZoomFactor())
 
 ipcMain.handle('ping-internet', () => {
   return new Promise<boolean>((resolve) =>
-    exec('ping google.com', (error, _, stderr) => {
+    exec('ping -n 1 google.com', (error, stdout, stderr) => {
       if (error || stderr) {
         resolve(false)
         return
       }
+
+      if (isPingError(stdout)) {
+        resolve(false)
+        return
+      }
+
       resolve(true)
     })
   )
 })
 ipcMain.handle('ping-vpn', () => {
-  return new Promise<boolean>((resolve) =>
-    exec('ping 10.50.0.140', (error, _, stderr) => {
+  return new Promise<boolean>((resolve) => {
+    exec('ping -n 1 10.50.0.140', (error, stdout, stderr) => {
       if (error || stderr) {
         resolve(false)
         return
       }
+
+      if (isPingError(stdout)) {
+        resolve(false)
+        return
+      }
+
       resolve(true)
     })
-  )
+  })
 })
 
 // This method will be called when Electron has finished

@@ -1,5 +1,7 @@
 {
   "show-password": "Паролни кўрсатиш",
+  "old-password": "Эски парол",
+  "new-password": "Янги парол",
   "enter": "Кириш",
   "enter-usb": "USB калит орқали кириш"
 }

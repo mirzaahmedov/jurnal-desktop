@@ -10,7 +10,7 @@ export const VPNStatus = () => {
       setIsOnline(await window.api.pingVPN())
     }
 
-    const interval = setInterval(ping, 5000)
+    const interval = setInterval(ping, 2000)
 
     ping()
 

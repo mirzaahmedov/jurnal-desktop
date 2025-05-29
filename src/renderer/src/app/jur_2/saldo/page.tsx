@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
-import { FooterCell, FooterRow, GenericTable } from '@/common/components'
+import { GenericTable } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
 import { useRequisitesStore } from '@/common/features/requisites'
 import {
@@ -17,7 +17,6 @@ import {
 } from '@/common/features/saldo'
 import { useKeyUp, useToggle } from '@/common/hooks'
 import { useLayout } from '@/common/layout'
-import { formatNumber } from '@/common/lib/format'
 import { ListView } from '@/common/views'
 
 import { BankSaldoColumns } from './columns'
@@ -148,15 +147,7 @@ const BankSaldoPage = () => {
           onDelete={handleClickDelete}
           getRowDeletable={(row) => row.isdeleted}
           getRowEditable={(row) => row.updated}
-          footer={
-            <FooterRow>
-              <FooterCell
-                colSpan={5}
-                title={t('total')}
-                content={formatNumber(saldo?.meta?.summa ?? 0)}
-              />
-            </FooterRow>
-          }
+          getRowClassName={() => 'final-row'}
         />
       </ListView.Content>
       <BankSaldoDialog

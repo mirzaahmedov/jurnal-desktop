@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react'
 
 import { Trans } from 'react-i18next'
 
+import { Copyable } from '@/common/components'
+
 export const VPNLocalIPAddress = () => {
   const [ipAddress, setIpAddress] = useState<string | null>(null)
 
@@ -24,8 +26,9 @@ export const VPNLocalIPAddress = () => {
 
   return (
     <div className="flex items-center gap-2 px-5 py-2">
-      <span className="text-sm font-medium text-slate-500">
-        <b>IP</b>: {ipAddress ? ipAddress : <Trans>unknown</Trans>}
+      <span className="text-sm font-bold text-brand">
+        <b>IP</b>:{' '}
+        {ipAddress ? <Copyable value={ipAddress}>{ipAddress}</Copyable> : <Trans>unknown</Trans>}
       </span>
     </div>
   )

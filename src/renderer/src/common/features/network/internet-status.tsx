@@ -10,7 +10,7 @@ export const InternetStatus = () => {
       setIsOnline(await window.api.pingInternet())
     }
 
-    const interval = setInterval(ping, 5000)
+    const interval = setInterval(ping, 2000)
 
     ping()
 

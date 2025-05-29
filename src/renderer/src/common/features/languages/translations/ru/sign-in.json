@@ -1,5 +1,7 @@
 {
   "show-password": "Показать пароль",
+  "old-password": "Старый пароль",
+  "new-password": "Новый пароль",
   "enter": "Вход",
   "enter-usb": "Вход через USB-ключ"
 }

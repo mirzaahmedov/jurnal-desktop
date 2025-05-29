@@ -19,7 +19,7 @@ export const SchetFakturaPDF = () => {
       >
         <Header />
         <Parties />
-        <ProvodkaTable podvodkaList={[]} />
+        <ProvodkaTable />
       </Page>
     </Document>
   )

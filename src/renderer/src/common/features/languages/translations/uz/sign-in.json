@@ -1,5 +1,7 @@
 {
   "show-password": "Parolni ko‘rsatish",
+  "old-password": "Eski parol",
+  "new-password": "Yangi parol",
   "enter": "Kirish",
   "enter-usb": "USB kalit orqali kirish"
 }

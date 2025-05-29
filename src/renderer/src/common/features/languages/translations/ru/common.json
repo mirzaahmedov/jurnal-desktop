@@ -369,5 +369,6 @@
   "akt": "Акт",
   "title": "Заголовок",
   "comment": "Комментарий",
-  "schet_faktura": "Счет-фактура"
+  "schet_faktura": "Счет-фактура",
+  "update_profile": "Обновить профиль"
 }
