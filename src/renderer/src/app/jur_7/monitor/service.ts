@@ -3,10 +3,12 @@ import type { ApiResponseMeta, WarehouseMonitoring } from '@/common/models'
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 
 interface MonitoringMeta extends ApiResponseMeta {
-  page_prixod_sum: number
-  page_rasxod_sum: number
   prixod_sum: number
   rasxod_sum: number
+  page_prixod_sum: number
+  page_rasxod_sum: number
+  from_summa: number
+  to_summa: number
 }
 
 export const WarehouseMonitorService = new CRUDService<

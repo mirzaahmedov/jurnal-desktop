@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
-import { FooterCell, FooterRow, GenericTable, useTableSort } from '@/common/components'
+import { FooterCell, FooterRow, GenericTable, SummaTotal, useTableSort } from '@/common/components'
 import { Button } from '@/common/components/ui/button'
 import {
   DropdownMenu,
@@ -212,6 +212,13 @@ export const WarehouseMonitorPage = () => {
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
+
+        <SummaTotal className="pt-5">
+          <SummaTotal.Value
+            name={t('remainder-from')}
+            value={formatNumber(monitoring?.meta?.from_summa ?? 0)}
+          />
+        </SummaTotal>
       </ListView.Header>
       <ListView.Content loading={isFetching}>
         <GenericTable
@@ -256,7 +263,14 @@ export const WarehouseMonitorPage = () => {
           }
         />
       </ListView.Content>
-      <ListView.Footer>
+      <ListView.Footer className="space-y-5">
+        <SummaTotal>
+          <SummaTotal.Value
+            name={t('remainder-to')}
+            value={formatNumber(monitoring?.meta?.to_summa ?? 0)}
+          />
+        </SummaTotal>
+
         <ListView.Pagination
           {...pagination}
           count={monitoring?.meta?.count ?? 0}
