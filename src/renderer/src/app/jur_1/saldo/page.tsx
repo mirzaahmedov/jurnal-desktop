@@ -155,9 +155,9 @@ const KassaSaldoPage = () => {
         />
       </ListView.Content>
       <KassaSaldoDialog
+        selected={selected}
         open={dialogToggle.isOpen}
         onOpenChange={dialogToggle.setOpen}
-        selected={selected}
       />
     </ListView>
   )

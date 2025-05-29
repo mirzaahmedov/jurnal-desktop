@@ -146,6 +146,8 @@ export const WarehouseMonitorPage = () => {
                 params={{
                   month: startDate.getMonth() + 1,
                   year: startDate.getFullYear(),
+                  from: dates.from,
+                  to: dates.to,
                   budjet_id,
                   main_schet_id,
                   report_title_id,
