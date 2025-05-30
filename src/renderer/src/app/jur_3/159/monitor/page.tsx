@@ -180,6 +180,23 @@ const OrganMonitoringPage = () => {
                         />
 
                         <DownloadFile
+                          fileName={`159_${t('cap_prixod_rasxod')}_${dates.from}&${dates.to}.xlsx`}
+                          url="159/monitoring/by-schets"
+                          buttonText={t('cap_prixod_rasxod')}
+                          params={{
+                            budjet_id,
+                            main_schet_id,
+                            schet_id: jur3_schet_159_id,
+                            from: dates.from,
+                            to: dates.to,
+                            report_title_id,
+                            year: startDate.getFullYear(),
+                            month: startDate.getMonth() + 1,
+                            excel: true
+                          }}
+                        />
+
+                        <DownloadFile
                           fileName={`debitor_kreditor_${dates.to}.xlsx`}
                           url="/159/monitoring/prixod/rasxod"
                           params={{

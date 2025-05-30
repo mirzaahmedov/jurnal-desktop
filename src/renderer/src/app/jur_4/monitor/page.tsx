@@ -162,6 +162,7 @@ const PodotchetMonitorPage = () => {
               <Download className="btn-icon !size-4 icon-start" />
               {t('daily-report')}
             </Button>
+
             <DownloadFile
               fileName={`${t('cap')}-${dates.from}&${dates.to}.xlsx`}
               url={`/podotchet/monitoring/cap`}
@@ -177,6 +178,23 @@ const PodotchetMonitorPage = () => {
                 report_title_id
               }}
               buttonText={t('cap-report')}
+            />
+
+            <DownloadFile
+              fileName={`${t('podotchet-litso')}_${t('cap_prixod_rasxod')}_${dates.from}&${dates.to}.xlsx`}
+              url="podotchet/monitoring/by-schets"
+              buttonText={t('cap_prixod_rasxod')}
+              params={{
+                budjet_id,
+                main_schet_id,
+                schet_id: jur4_schet_id,
+                from: dates.from,
+                to: dates.to,
+                excel: true,
+                year: startDate.getFullYear(),
+                month: startDate.getMonth() + 1,
+                report_title_id
+              }}
             />
           </ButtonGroup>
         </div>

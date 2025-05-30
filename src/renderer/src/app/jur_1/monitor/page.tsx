@@ -109,9 +109,25 @@ const KassaMonitorPage = () => {
                 {t('daily-report')}
               </Button>
               <DownloadFile
-                fileName={`${t('pages.kassa')}_${'cap-report'}_${dates.from}&${dates.to}.xlsx`}
+                fileName={`${t('pages.kassa')}_${'cap'}_${dates.from}&${dates.to}.xlsx`}
                 url="kassa/monitoring/cap"
-                buttonText={t('cap-report')}
+                buttonText={t('cap')}
+                params={{
+                  main_schet_id,
+                  budjet_id,
+                  report_title_id,
+                  from: dates.from,
+                  to: dates.to,
+                  year: startDate.getFullYear(),
+                  month: startDate.getMonth() + 1,
+                  excel: true
+                }}
+              />
+
+              <DownloadFile
+                fileName={`${t('pages.kassa')}_${t('cap_prixod_rasxod')}_${dates.from}&${dates.to}.xlsx`}
+                url="kassa/monitoring/by-schet"
+                buttonText={t('cap_prixod_rasxod')}
                 params={{
                   main_schet_id,
                   budjet_id,

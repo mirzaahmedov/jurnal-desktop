@@ -109,10 +109,27 @@ const BankMonitorPage = () => {
                 <Download className="btn-icon icon-sm icon-start" />
                 {t('daily-report')}
               </Button>
+
               <DownloadFile
                 fileName={`банк-шапка-отчет_${dates.from}&${dates.to}.xlsx`}
                 url="bank/monitoring/cap"
                 buttonText={t('cap-report')}
+                params={{
+                  main_schet_id,
+                  budjet_id,
+                  report_title_id,
+                  from: dates.from,
+                  to: dates.to,
+                  year: startDate.getFullYear(),
+                  month: startDate.getMonth() + 1,
+                  excel: true
+                }}
+              />
+
+              <DownloadFile
+                fileName={`${t('pages.bank')}_${t('cap_prixod_rasxod')}_${dates.from}&${dates.to}.xlsx`}
+                url="bank/monitoring/by-schet"
+                buttonText={t('cap_prixod_rasxod')}
                 params={{
                   main_schet_id,
                   budjet_id,

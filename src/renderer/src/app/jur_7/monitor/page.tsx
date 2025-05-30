@@ -141,7 +141,7 @@ export const WarehouseMonitorPage = () => {
           >
             <DropdownMenuItem>
               <DownloadFile
-                fileName={`${t('cap')}_${startDate.getMonth() + 1}-${startDate.getFullYear()}.xlsx`}
+                fileName={`material_${t('cap')}_${startDate.getMonth() + 1}-${startDate.getFullYear()}.xlsx`}
                 url="/jur_7/monitoring/cap/report"
                 params={{
                   month: startDate.getMonth() + 1,
@@ -155,6 +155,24 @@ export const WarehouseMonitorPage = () => {
                 }}
                 buttonText={t('cap')}
                 className="w-full justify-start"
+              />
+            </DropdownMenuItem>
+
+            <DropdownMenuItem>
+              <DownloadFile
+                fileName={`material_${t('cap_prixod_rasxod')}_${dates.from}&${dates.to}.xlsx`}
+                url="jur_7/monitoring/schet"
+                buttonText={t('cap_prixod_rasxod')}
+                params={{
+                  month: startDate.getMonth() + 1,
+                  year: startDate.getFullYear(),
+                  from: dates.from,
+                  to: dates.to,
+                  budjet_id,
+                  main_schet_id,
+                  report_title_id,
+                  excel: true
+                }}
               />
             </DropdownMenuItem>
 
