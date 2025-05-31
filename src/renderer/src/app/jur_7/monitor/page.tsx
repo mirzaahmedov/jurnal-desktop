@@ -161,7 +161,7 @@ export const WarehouseMonitorPage = () => {
             <DropdownMenuItem>
               <DownloadFile
                 fileName={`material_${t('cap_prixod_rasxod')}_${dates.from}&${dates.to}.xlsx`}
-                url="jur_7/monitoring/schet"
+                url="jur_7/monitoring/by-schets"
                 buttonText={t('cap_prixod_rasxod')}
                 params={{
                   month: startDate.getMonth() + 1,
