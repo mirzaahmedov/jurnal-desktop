@@ -146,6 +146,12 @@ dependencies:
   file-saver:
     specifier: ^2.0.5
     version: 2.0.5
+  highcharts:
+    specifier: ^12.2.0
+    version: 12.2.0
+  highcharts-react-official:
+    specifier: ^3.2.2
+    version: 3.2.2(highcharts@12.2.0)(react@18.3.1)
   html2pdf.js:
     specifier: ^0.10.3
     version: 0.10.3
@@ -7044,6 +7050,20 @@ packages:
     engines: {node: '>= 0.4'}
     dependencies:
       function-bind: 1.1.2
+
+  /highcharts-react-official@3.2.2(highcharts@12.2.0)(react@18.3.1):
+    resolution: {integrity: sha512-2kkWOB6RpdR26fmAJkrtJFG9xWFUDGKWyat88tW3fa/3l/Jc7D5ZfwTng2MZsdiKIH32AFy0Pr75udUe7uN6LA==}
+    peerDependencies:
+      highcharts: '>=6.0.0'
+      react: '>=16.8.0'
+    dependencies:
+      highcharts: 12.2.0
+      react: 18.3.1
+    dev: false
+
+  /highcharts@12.2.0:
+    resolution: {integrity: sha512-UUN+osTP3aeGc4KmoMuWAjzpKif8GYHFozzYI4O8h1ILGof25M/ZGBpXLvgqf1z0LVh7N9eG7i0HnzMfjcR4nA==}
+    dev: false
 
   /hosted-git-info@4.1.0:
     resolution: {integrity: sha512-kyCuEOWjJqZuDbRHzL8V93NzQhwIB71oFWSyzVo+KPZI+pnQPPxucdkrOZvkLRnrf5URsQM+IJ09Dw29cRALIA==}

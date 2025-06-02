@@ -9,10 +9,16 @@ import { BudjetSelectedGuard, MainSchetSelectedGuard } from '@/common/features/r
 import { DuplicateSchetsGuard } from '@/common/features/requisites/guards/duplicate-schets-guard'
 
 import DashboardPage from './dashboard/page'
-import HomePage from './home/page'
 import { WarehouseMonitorPage } from './jur_7/monitor/page'
 import PrixodSchetPage from './jur_8/schet/page'
 import SigninPage from './sign-in'
+import AdminDashboardPage from './super-admin/dashboard/page'
+import { AdminKassaPage } from './super-admin/jur_1/page'
+import { AdminBankPage } from './super-admin/jur_2/page'
+import { AdminOrgan152Page } from './super-admin/jur_3/152/page'
+import { AdminOrgan159Page } from './super-admin/jur_3/159/page'
+import { AdminPodotchetPage } from './super-admin/jur_4/page'
+import { AdminMaterialPage } from './super-admin/jur_7/page'
 
 const KassaSaldoPage = lazy(() => import('./jur_1/saldo/page'))
 const BankSaldoPage = lazy(() => import('./jur_2/saldo/page'))
@@ -328,7 +334,7 @@ export const routes: RouteObject[] = [
             element: <AdminVideoTutorialsPage />
           },
           {
-            path: 'ostatok',
+            path: 'journal-7',
             element: <AdminOstatokPage />
           },
           {
@@ -406,6 +412,30 @@ export const routes: RouteObject[] = [
           {
             path: 'zarplata/spravochnik',
             element: <ZarplataSpravochnikPage />
+          },
+          {
+            path: 'jur_1',
+            element: <AdminKassaPage />
+          },
+          {
+            path: 'jur_2',
+            element: <AdminBankPage />
+          },
+          {
+            path: 'jur_3/152',
+            element: <AdminOrgan152Page />
+          },
+          {
+            path: 'jur_3/159',
+            element: <AdminOrgan159Page />
+          },
+          {
+            path: 'jur_4',
+            element: <AdminPodotchetPage />
+          },
+          {
+            path: 'jur_7',
+            element: <AdminMaterialPage />
           }
         ]
       },
@@ -571,7 +601,7 @@ export const routes: RouteObject[] = [
       },
       {
         path: 'admin/dashboard',
-        element: <HomePage />
+        element: <AdminDashboardPage />
       },
       {
         path: 'region/dashboard',

@@ -77,7 +77,8 @@ export enum ApiEndpoints {
   podotchet_saldo = 'podotchet/saldo',
   bank_saldo = 'bank/saldo',
   kassa_saldo = 'kassa/saldo',
-  constants = 'constants'
+  constants = 'constants',
+  admin_dashboard = 'admin/dashboard'
 }
 
 export enum ApiStatusCodes {

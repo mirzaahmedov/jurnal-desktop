@@ -7,7 +7,7 @@ import { MainSchetQueryKeys, MainSchetService } from '@/app/region-spravochnik/m
 import { useRequisitesStore } from '@/common/features/requisites'
 import { useLayout } from '@/common/layout'
 
-const HomePage = () => {
+const AdminDashboardPage = () => {
   const setLayout = useLayout()
 
   const { main_schet_id } = useRequisitesStore()
@@ -66,4 +66,4 @@ const HomePage = () => {
   )
 }
 
-export default HomePage
+export default AdminDashboardPage

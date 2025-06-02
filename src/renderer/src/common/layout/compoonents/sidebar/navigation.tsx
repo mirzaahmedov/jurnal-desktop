@@ -10,6 +10,10 @@ import {
 import { type NavElement, getNavElements } from '@/common/layout/compoonents/sidebar/config'
 import { cn } from '@/common/lib/utils'
 
+const normalizePath = (path: string) => {
+  return path.replace(/\/\//g, '/')
+}
+
 export interface NavigationStore {
   isCollapsed: boolean
 }
@@ -27,7 +31,7 @@ const renderNavElement = (elem: null | NavElement, isCollapsed: boolean, rootPat
     return null
   }
 
-  const path = rootPath ? `${rootPath}/${elem.path}` : elem.path
+  const path = normalizePath(rootPath ? `${rootPath}/${elem.path}` : elem.path)
   return elem.children?.length ? (
     <li key={path}>
       <Accordion type="multiple">

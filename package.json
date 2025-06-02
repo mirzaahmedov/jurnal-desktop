@@ -77,6 +77,8 @@
     "electron-updater": "^6.3.9",
     "exceljs": "^4.4.0",
     "file-saver": "^2.0.5",
+    "highcharts": "^12.2.0",
+    "highcharts-react-official": "^3.2.2",
     "html2pdf.js": "^0.10.3",
     "i18next": "^24.2.2",
     "i18next-http-backend": "^3.0.2",

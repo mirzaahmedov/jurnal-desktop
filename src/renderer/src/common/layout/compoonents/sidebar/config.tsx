@@ -32,7 +32,6 @@ import {
   NotepadText,
   Percent,
   ReceiptText,
-  Settings2,
   ShieldBan,
   ShieldCheck,
   Signature,
@@ -411,20 +410,53 @@ export const getNavElements = (t: TFunction): NavElement[] => {
           icon: UserCog,
           children: [
             {
-              path: 'report-title',
-              title: t('pages.report_title'),
-              icon: LetterText
-            },
-            {
               path: 'video-tutorials',
               title: t('pages.video_tutorials'),
               icon: FileVideo
             },
             {
-              path: 'ostatok',
-              title: t('pages.saldo'),
-              icon: Warehouse
+              path: 'user',
+              title: t('pages.user'),
+              icon: Users
             },
+            {
+              path: 'jur_1',
+              title: `№1 - МО (${t('pages.kassa')})`,
+              icon: BadgeDollarSign
+            },
+            {
+              path: 'jur_2',
+              title: `№2 - МО (${t('pages.bank')})`,
+              icon: Landmark
+            },
+            {
+              path: '/jur_3',
+              title: `№3 - МО (${t('pages.organization')})`,
+              icon: Building2,
+              children: [
+                {
+                  path: '159',
+                  title: t('pages.akt'),
+                  icon: FileCheck2
+                },
+                {
+                  path: '152',
+                  title: t('pages.service'),
+                  icon: Wrench
+                }
+              ]
+            },
+            {
+              path: '/jur_4',
+              title: `№4 - МО (${t('pages.podotchet')})`,
+              icon: UserSquare
+            },
+            {
+              icon: NotepadText,
+              path: '/jur_7',
+              title: `№7 - МО (${t('pages.material-warehouse')})`
+            },
+
             {
               path: 'mainbook',
               title: t('pages.mainbook'),
@@ -440,75 +472,76 @@ export const getNavElements = (t: TFunction): NavElement[] => {
               title: t('pages.realcost'),
               icon: WalletCards
             },
-            {
-              path: 'prixod-schets',
-              title: t('pages.prixod_schets'),
-              icon: Percent
-            },
+
             {
               path: 'logs',
               title: t('pages.logs'),
               icon: FileClock
             },
             {
-              path: 'pereotsenka',
-              title: t('pages.pereotsenka'),
-              icon: ChartCandlestick
-            },
-            {
-              path: 'group',
-              title: t('pages.group'),
-              icon: Group
-            },
-            {
-              path: 'bank',
-              title: t('pages.bank'),
-              icon: Building
-            },
-            {
-              path: 'region',
-              title: t('pages.region'),
-              icon: LayoutGrid
-            },
-            {
-              path: 'role',
-              title: t('pages.role'),
-              icon: MonitorCog
-            },
-            {
-              path: 'user',
-              title: t('pages.user'),
-              icon: Users
-            },
-            {
-              path: 'smeta',
-              title: t('pages.smeta'),
-              icon: CircleFadingPlus
-            },
-            {
-              path: 'budget',
-              title: t('pages.budjets'),
-              icon: CircleDollarSign
-            },
-            {
-              path: 'operation',
-              title: t('pages.operatsii'),
-              icon: Percent
-            },
-            {
-              path: 'unit',
-              title: t('pages.edin'),
-              icon: Weight
-            },
-            {
-              path: 'zarplata',
-              title: t('pages.zarplata'),
-              icon: AppWindow,
+              path: '',
+              title: t('pages.spravochnik'),
+              icon: NotebookTabs,
               children: [
                 {
-                  path: 'spravochnik',
-                  title: t('pages.spravochnik'),
-                  icon: Settings2
+                  path: 'report-title',
+                  title: t('pages.report_title'),
+                  icon: LetterText
+                },
+                {
+                  path: 'prixod-schets',
+                  title: t('pages.prixod_schets'),
+                  icon: Percent
+                },
+                {
+                  path: 'pereotsenka',
+                  title: t('pages.pereotsenka'),
+                  icon: ChartCandlestick
+                },
+                {
+                  path: 'group',
+                  title: t('pages.group'),
+                  icon: Group
+                },
+                {
+                  path: 'bank',
+                  title: t('pages.bank'),
+                  icon: Building
+                },
+                {
+                  path: 'region',
+                  title: t('pages.region'),
+                  icon: LayoutGrid
+                },
+                {
+                  path: 'role',
+                  title: t('pages.role'),
+                  icon: MonitorCog
+                },
+                {
+                  path: 'smeta',
+                  title: t('pages.smeta'),
+                  icon: CircleFadingPlus
+                },
+                {
+                  path: 'budget',
+                  title: t('pages.budjets'),
+                  icon: CircleDollarSign
+                },
+                {
+                  path: 'operation',
+                  title: t('pages.operatsii'),
+                  icon: Percent
+                },
+                {
+                  path: 'unit',
+                  title: t('pages.edin'),
+                  icon: Weight
+                },
+                {
+                  path: 'zarplata/spravochnik',
+                  title: t('pages.zarplata'),
+                  icon: AppWindow
                 }
               ]
             }
