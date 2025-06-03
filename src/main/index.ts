@@ -13,6 +13,7 @@ import os from 'os'
 import path from 'path'
 
 import { events } from './utils/auto-updates'
+// import { logger } from './utils/logger'
 import { getVPNLocalIP, isPingError } from './utils/network'
 
 // let counter = 0
@@ -31,8 +32,7 @@ if (import.meta.env.DEV) {
   dotenv.config()
 }
 
-const CHECK_UPDATES_INTERVAL =
-  import.meta.env.VITE_MODE === 'region' ? 50 * 60 * 60 * 1000 : 30 * 60 * 1000
+const CHECK_UPDATES_INTERVAL = 5 * 1000
 
 const programFilesPath =
   os.arch() === 'x64' ? process.env['ProgramFiles'] : process.env['ProgramFiles(x86)']
@@ -333,6 +333,11 @@ app.whenReady().then(async () => {
     // dock icon is clicked and there are no other windows open.
     if (BrowserWindow.getAllWindows().length === 0) createWindow()
   })
+
+  // console.log('Checking for updates', CHECK_UPDATES_INTERVAL)
+  // logger.info('Checking for updates', CHECK_UPDATES_INTERVAL)
+
+  // console.log({ interval })
 
   if (interval) {
     clearInterval(interval)
