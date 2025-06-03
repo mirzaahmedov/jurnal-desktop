@@ -165,6 +165,7 @@ const BankMonitorPage = () => {
                 <FooterCell
                   title={t('total_page')}
                   colSpan={5}
+                  rowSpan={2}
                 />
                 <FooterCell
                   content={formatNumber(monitoring?.meta?.page_prixod_sum ?? 0)}
@@ -175,21 +176,40 @@ const BankMonitorPage = () => {
                   colSpan={1}
                 />
               </FooterRow>
+              <FooterRow>
+                <FooterCell
+                  content={formatNumber(monitoring?.meta?.page_total_sum ?? 0)}
+                  colSpan={2}
+                  contentClassName="mx-auto"
+                />
+              </FooterRow>
               {(monitoring?.meta?.pageCount ?? 0) > 1 ? (
-                <FooterRow>
-                  <FooterCell
-                    title={t('total_period')}
-                    colSpan={5}
-                  />
-                  <FooterCell
-                    content={formatNumber(monitoring?.meta?.prixod_sum ?? 0)}
-                    colSpan={1}
-                  />
-                  <FooterCell
-                    content={formatNumber(monitoring?.meta?.rasxod_sum ?? 0)}
-                    colSpan={1}
-                  />
-                </FooterRow>
+                <>
+                  <FooterRow>
+                    <FooterCell
+                      title={t('total_period')}
+                      colSpan={5}
+                      rowSpan={2}
+                    />
+                    <FooterCell
+                      content={formatNumber(monitoring?.meta?.prixod_sum ?? 0)}
+                      colSpan={1}
+                    />
+                    <FooterCell
+                      content={formatNumber(monitoring?.meta?.rasxod_sum ?? 0)}
+                      colSpan={1}
+                    />
+                  </FooterRow>
+                  <FooterRow>
+                    <FooterCell
+                      content={formatNumber(
+                        (monitoring?.meta?.prixod_sum ?? 0) - (monitoring?.meta?.rasxod_sum ?? 0)
+                      )}
+                      colSpan={2}
+                      contentClassName="mx-auto"
+                    />
+                  </FooterRow>
+                </>
               ) : null}
             </>
           }

@@ -1,6 +1,6 @@
 import type { AdminBank, AdminBankMainSchet } from './interfaces'
-import type { ColumnDef } from '@/common/components'
 
+import type { ColumnDef } from '@/common/components'
 import { SummaCell } from '@/common/components/table/renderers/summa'
 
 export const AdminBankRegionColumnDefs: ColumnDef<AdminBank>[] = [
@@ -37,7 +37,7 @@ export const AdminBankMainSchetColumnDefs: ColumnDef<AdminBankMainSchet>[] = [
     header: 'raschet-schet'
   },
   {
-    key: 'jur1_schet',
+    key: 'jur2_schet',
     header: 'schet'
   },
   {

@@ -250,6 +250,7 @@ export const WarehouseMonitorPage = () => {
               <FooterRow>
                 <FooterCell
                   title={t('total_page')}
+                  rowSpan={2}
                   colSpan={5}
                 />
                 <FooterCell
@@ -261,21 +262,43 @@ export const WarehouseMonitorPage = () => {
                   colSpan={1}
                 />
               </FooterRow>
+              <FooterRow>
+                <FooterCell
+                  content={formatNumber(
+                    (monitoring?.meta?.page_prixod_sum ?? 0) -
+                      (monitoring?.meta?.page_rasxod_sum ?? 0)
+                  )}
+                  contentClassName="mx-auto"
+                  colSpan={2}
+                />
+              </FooterRow>
               {(monitoring?.meta?.pageCount ?? 0) > 1 ? (
-                <FooterRow>
-                  <FooterCell
-                    title={t('total_period')}
-                    colSpan={4}
-                  />
-                  <FooterCell
-                    content={formatNumber(monitoring?.meta?.prixod_sum ?? 0)}
-                    colSpan={1}
-                  />
-                  <FooterCell
-                    content={formatNumber(monitoring?.meta?.rasxod_sum ?? 0)}
-                    colSpan={1}
-                  />
-                </FooterRow>
+                <>
+                  <FooterRow>
+                    <FooterCell
+                      title={t('total_period')}
+                      rowSpan={2}
+                      colSpan={5}
+                    />
+                    <FooterCell
+                      content={formatNumber(monitoring?.meta?.prixod_sum ?? 0)}
+                      colSpan={1}
+                    />
+                    <FooterCell
+                      content={formatNumber(monitoring?.meta?.rasxod_sum ?? 0)}
+                      colSpan={1}
+                    />
+                  </FooterRow>
+                  <FooterRow>
+                    <FooterCell
+                      content={formatNumber(
+                        (monitoring?.meta?.prixod_sum ?? 0) - (monitoring?.meta?.rasxod_sum ?? 0)
+                      )}
+                      contentClassName="mx-auto"
+                      colSpan={2}
+                    />
+                  </FooterRow>
+                </>
               ) : null}
             </>
           }

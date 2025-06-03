@@ -1,7 +1,7 @@
 import type { AdminOrgan152, AdminOrgan152MainSchet, AdminOrgan152Schet } from './interfaces'
-import type { ColumnDef } from '@/common/components'
-import type { CollapsibleColumnDef } from '@/common/components/collapsible-table'
 
+import type { CollapsibleColumnDef } from '@/common/components/collapsible-table'
+import type { ColumnDef } from '@/common/components'
 import { SummaCell } from '@/common/components/table/renderers/summa'
 
 export const AdminOrgan152RegionColumnDefs: ColumnDef<AdminOrgan152>[] = [
@@ -36,10 +36,6 @@ export const AdminOrgan152MainSchetColumnDefs: CollapsibleColumnDef<AdminOrgan15
   {
     key: 'account_number',
     header: 'raschet-schet'
-  },
-  {
-    key: 'jur1_schet',
-    header: 'schet'
   },
   {
     key: 'budjet_name',

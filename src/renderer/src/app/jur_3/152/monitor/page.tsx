@@ -276,21 +276,39 @@ const OrganMonitoringPage = () => {
             <>
               <FooterRow>
                 <FooterCell
-                  colSpan={7}
+                  colSpan={6}
+                  rowSpan={2}
                   title={t('total_page')}
-                  content={formatNumber(monitoring?.meta?.page_prixod_sum ?? 0)}
                 />
+                <FooterCell content={formatNumber(monitoring?.meta?.page_prixod_sum ?? 0)} />
                 <FooterCell content={formatNumber(monitoring?.meta?.page_rasxod_sum ?? 0)} />
               </FooterRow>
+              <FooterRow>
+                <FooterCell
+                  colSpan={2}
+                  content={formatNumber(monitoring?.meta?.page_total_sum ?? 0)}
+                  contentClassName="mx-auto"
+                />
+              </FooterRow>
               {(monitoring?.meta?.pageCount ?? 0) > 1 ? (
-                <FooterRow>
-                  <FooterCell
-                    colSpan={7}
-                    title={t('total_period')}
-                    content={formatNumber(monitoring?.meta?.prixod_sum ?? 0)}
-                  />
-                  <FooterCell content={formatNumber(monitoring?.meta?.rasxod_sum ?? 0)} />
-                </FooterRow>
+                <>
+                  <FooterRow>
+                    <FooterCell
+                      colSpan={6}
+                      rowSpan={2}
+                      title={t('total_period')}
+                    />
+                    <FooterCell content={formatNumber(monitoring?.meta?.prixod_sum ?? 0)} />
+                    <FooterCell content={formatNumber(monitoring?.meta?.rasxod_sum ?? 0)} />
+                  </FooterRow>
+                  <FooterRow>
+                    <FooterCell
+                      colSpan={2}
+                      content={formatNumber(monitoring?.meta?.total_sum ?? 0)}
+                      contentClassName="mx-auto"
+                    />
+                  </FooterRow>
+                </>
               ) : null}
             </>
           }

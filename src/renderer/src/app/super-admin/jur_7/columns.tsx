@@ -1,6 +1,6 @@
 import type { AdminMaterial, AdminMaterialMainSchet } from './interfaces'
-import type { ColumnDef } from '@/common/components'
 
+import type { ColumnDef } from '@/common/components'
 import { SummaCell } from '@/common/components/table/renderers/summa'
 
 export const AdminMaterialRegionColumnDefs: ColumnDef<AdminMaterial>[] = [
@@ -35,10 +35,6 @@ export const AdminMaterialMainSchetColumnDefs: ColumnDef<AdminMaterialMainSchet>
   {
     key: 'account_number',
     header: 'raschet-schet'
-  },
-  {
-    key: 'jur1_schet',
-    header: 'schet'
   },
   {
     key: 'budjet_name',

@@ -1,14 +1,3 @@
-import type { SettingsFormValues } from './config'
-import type { DialogProps } from '@radix-ui/react-dialog'
-
-import { useEffect, useState } from 'react'
-
-import { useQuery } from '@tanstack/react-query'
-import { useForm } from 'react-hook-form'
-import { useTranslation } from 'react-i18next'
-
-import { ReportTitleQueryKeys, ReportTitleService } from '@/app/super-admin/report-title'
-import { DatePicker } from '@/common/components'
 import {
   DialogContent,
   DialogFooter,
@@ -17,18 +6,26 @@ import {
   DialogTitle,
   DialogTrigger
 } from '@/common/components/jolly/dialog'
-import { JollySelect, SelectItem } from '@/common/components/jolly/select'
-import { Button } from '@/common/components/ui/button'
 import { Form, FormField, FormLabel } from '@/common/components/ui/form'
-import { Slider } from '@/common/components/ui/slider'
+import { JollySelect, SelectItem } from '@/common/components/jolly/select'
+import { ReportTitleQueryKeys, ReportTitleService } from '@/app/super-admin/report-title'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/common/components/ui/tabs'
-import { useConfirm } from '@/common/features/confirm'
-import { LanguageSelect } from '@/common/features/languages'
-import { useDates } from '@/common/hooks/use-dates'
-import { usePagination } from '@/common/hooks/use-pagination'
-import { capitalize } from '@/common/lib/string'
+import { useEffect, useState } from 'react'
 
+import { Button } from '@/common/components/ui/button'
+import type { DialogProps } from '@radix-ui/react-dialog'
+import { JollyDatePicker } from '@/common/components/jolly-date-picker'
+import { LanguageSelect } from '@/common/features/languages'
+import type { SettingsFormValues } from './config'
+import { Slider } from '@/common/components/ui/slider'
+import { capitalize } from '@/common/lib/string'
+import { useConfirm } from '@/common/features/confirm'
+import { useDates } from '@/common/hooks/use-dates'
+import { useForm } from 'react-hook-form'
+import { usePagination } from '@/common/hooks/use-pagination'
+import { useQuery } from '@tanstack/react-query'
 import { useSettingsStore } from './store'
+import { useTranslation } from 'react-i18next'
 
 enum TabOption {
   Fitlers = 'Filters',
@@ -180,7 +177,10 @@ export const SettingsDialog = ({ open, onOpenChange }: DialogProps) => {
                             render={({ field }) => (
                               <div className="flex items-center justify-between gap-10">
                                 <FormLabel>{capitalize(t('start_date'))}</FormLabel>
-                                <DatePicker {...field} />
+                                <JollyDatePicker
+                                  value={field.value}
+                                  onChange={field.onChange}
+                                />
                               </div>
                             )}
                           />
@@ -190,7 +190,10 @@ export const SettingsDialog = ({ open, onOpenChange }: DialogProps) => {
                             render={({ field }) => (
                               <div className="flex items-center justify-between gap-10">
                                 <FormLabel>{capitalize(t('end_date'))}</FormLabel>
-                                <DatePicker {...field} />
+                                <JollyDatePicker
+                                  value={field.value}
+                                  onChange={field.onChange}
+                                />
                               </div>
                             )}
                           />

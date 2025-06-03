@@ -1,4 +1,3 @@
-import { DatePicker, GenericTable } from '@/common/components'
 import {
   SearchFilterDebounced,
   useSearchFilter
@@ -8,26 +7,32 @@ import { useEffect, useState } from 'react'
 import type { AdminOrgan159 } from './interfaces'
 import { AdminOrgan159RegionColumnDefs } from './columns'
 import { AdminOrgan159Service } from './service'
+import { EndDatePicker } from '../../components/range-date-picker'
+import { GenericTable } from '@/common/components'
 import { ListView } from '@/common/views'
 import { ViewModal } from './view-modal'
-import { formatDate } from '@/common/lib/date'
 import { useLayout } from '@/common/layout'
-import { useLocationState } from '@/common/hooks'
 import { useQuery } from '@tanstack/react-query'
+import { useSettingsStore } from '@/common/features/settings'
 import { useToggle } from '@/common/hooks/use-toggle'
 import { useTranslation } from 'react-i18next'
 
 export const AdminOrgan159Page = () => {
   const viewToggle = useToggle()
   const setLayout = useLayout()
+  const defaultDate = useSettingsStore((state) => state.default_end_date)
 
   const [search] = useSearchFilter()
   const [selected, setSelected] = useState<AdminOrgan159 | null>(null)
-  const [to, setTo] = useLocationState<string>('to', formatDate(new Date()))
+  const [to, setTo] = useState(defaultDate)
 
   const { t } = useTranslation(['app'])
 
-  const { data: regions, isFetching } = useQuery({
+  const {
+    data: regions,
+    isFetching,
+    refetch
+  } = useQuery({
     queryKey: [AdminOrgan159Service.QueryKeys.GetAll, { to, search }],
     queryFn: AdminOrgan159Service.getAll
   })
@@ -37,6 +42,9 @@ export const AdminOrgan159Page = () => {
     viewToggle.open()
   }
 
+  useEffect(() => {
+    refetch()
+  }, [refetch])
   useEffect(() => {
     setLayout({
       title: t('pages.organization'),
@@ -52,9 +60,10 @@ export const AdminOrgan159Page = () => {
   return (
     <ListView>
       <ListView.Header>
-        <DatePicker
+        <EndDatePicker
           value={to}
           onChange={setTo}
+          refetch={refetch}
         />
       </ListView.Header>
       <ListView.Content loading={isFetching}>

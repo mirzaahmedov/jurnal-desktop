@@ -1,34 +1,32 @@
-import { useEffect } from 'react'
-
-import { useQuery } from '@tanstack/react-query'
-import { Download } from 'lucide-react'
-import { useTranslation } from 'react-i18next'
-
 import { FooterCell, FooterRow, GenericTable, SummaTotal, useTableSort } from '@/common/components'
-import { Button } from '@/common/components/ui/button'
-import { ButtonGroup } from '@/common/components/ui/button-group'
-import { DownloadFile } from '@/common/features/file'
+import { SaldoNamespace, handleSaldoErrorDates } from '@/common/features/saldo'
 import {
   SearchFilterDebounced,
   useSearchFilter
 } from '@/common/features/filters/search/search-filter-debounced'
-import { useRequisitesStore } from '@/common/features/requisites'
-import { SaldoNamespace, handleSaldoErrorDates } from '@/common/features/saldo'
+import { useDates, usePagination, useToggle } from '@/common/hooks'
 import {
   useSelectedMonthStore,
   validateDateWithinSelectedMonth
 } from '@/common/features/selected-month'
-import { useSettingsStore } from '@/common/features/settings'
-import { useDates, usePagination, useToggle } from '@/common/hooks'
-import { useLayout } from '@/common/layout'
-import { formatNumber } from '@/common/lib/format'
-import { ListView } from '@/common/views'
 
-import { useKassaSaldo } from '../saldo/components/use-saldo'
-import { columns } from './columns'
-import { KassaMonitorQueryKeys } from './config'
+import { Button } from '@/common/components/ui/button'
+import { ButtonGroup } from '@/common/components/ui/button-group'
 import { DailyReportDialog } from './daily-report-dialog'
+import { Download } from 'lucide-react'
+import { DownloadFile } from '@/common/features/file'
+import { KassaMonitorQueryKeys } from './config'
 import { KassaMonitorService } from './service'
+import { ListView } from '@/common/views'
+import { columns } from './columns'
+import { formatNumber } from '@/common/lib/format'
+import { useEffect } from 'react'
+import { useKassaSaldo } from '../saldo/components/use-saldo'
+import { useLayout } from '@/common/layout'
+import { useQuery } from '@tanstack/react-query'
+import { useRequisitesStore } from '@/common/features/requisites'
+import { useSettingsStore } from '@/common/features/settings'
+import { useTranslation } from 'react-i18next'
 
 const KassaMonitorPage = () => {
   const dates = useDates()
@@ -163,6 +161,7 @@ const KassaMonitorPage = () => {
                 <FooterCell
                   title={t('total_page')}
                   colSpan={5}
+                  rowSpan={2}
                 />
                 <FooterCell
                   content={formatNumber(monitoring?.meta?.page_prixod_sum ?? 0)}
@@ -173,21 +172,40 @@ const KassaMonitorPage = () => {
                   colSpan={1}
                 />
               </FooterRow>
+              <FooterRow>
+                <FooterCell
+                  content={formatNumber(monitoring?.meta?.page_total_sum ?? 0)}
+                  colSpan={2}
+                  contentClassName="mx-auto"
+                />
+              </FooterRow>
               {(monitoring?.meta?.pageCount ?? 0) > 1 ? (
-                <FooterRow>
-                  <FooterCell
-                    title={t('total_period')}
-                    colSpan={5}
-                  />
-                  <FooterCell
-                    content={formatNumber(monitoring?.meta?.prixod_sum ?? 0)}
-                    colSpan={1}
-                  />
-                  <FooterCell
-                    content={formatNumber(monitoring?.meta?.rasxod_sum ?? 0)}
-                    colSpan={1}
-                  />
-                </FooterRow>
+                <>
+                  <FooterRow>
+                    <FooterCell
+                      title={t('total_period')}
+                      colSpan={5}
+                      rowSpan={2}
+                    />
+                    <FooterCell
+                      content={formatNumber(monitoring?.meta?.prixod_sum ?? 0)}
+                      colSpan={1}
+                    />
+                    <FooterCell
+                      content={formatNumber(monitoring?.meta?.rasxod_sum ?? 0)}
+                      colSpan={1}
+                    />
+                  </FooterRow>
+                  <FooterRow>
+                    <FooterCell
+                      content={formatNumber(
+                        (monitoring?.meta?.prixod_sum ?? 0) - (monitoring?.meta?.rasxod_sum ?? 0)
+                      )}
+                      colSpan={2}
+                      contentClassName="mx-auto"
+                    />
+                  </FooterRow>
+                </>
               ) : null}
             </>
           }

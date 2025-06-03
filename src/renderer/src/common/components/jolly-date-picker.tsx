@@ -22,11 +22,11 @@ import { formatLocaleDate, unformatLocaleDate } from '@/common/lib/format'
 import { cn } from '@/common/lib/utils'
 
 import { Button } from './jolly/button'
+import { Popover, PopoverDialog, PopoverTrigger } from './jolly/popover'
 import { Calendar } from './ui/calendar'
 import { Input } from './ui/input'
-import { Popover, PopoverContent, PopoverTrigger } from './ui/popover'
 
-export type DatePickerProps = Omit<PatternFormatProps<InputProps>, 'format' | 'onChange'> & {
+export type JollyDatePickerProps = Omit<PatternFormatProps<InputProps>, 'format' | 'onChange'> & {
   value?: string
   onChange?: (value: string) => void
   className?: string
@@ -37,7 +37,7 @@ export type DatePickerProps = Omit<PatternFormatProps<InputProps>, 'format' | 'o
   validate?: (value: string) => boolean
   calendarProps?: Omit<DayPickerSingleProps, 'mode'>
 }
-export const DatePicker = forwardRef<HTMLButtonElement, DatePickerProps>(
+export const JollyDatePicker = forwardRef<HTMLButtonElement, JollyDatePickerProps>(
   (
     {
       value,
@@ -139,8 +139,8 @@ export const DatePicker = forwardRef<HTMLButtonElement, DatePickerProps>(
     const selected = value ? parseDate(value) : undefined
 
     return (
-      <Popover
-        open={calendarToggle.isOpen && !props.readOnly && !props.disabled}
+      <PopoverTrigger
+        isOpen={calendarToggle.isOpen && !props.readOnly && !props.disabled}
         onOpenChange={handleChangeActive}
       >
         <div
@@ -181,46 +181,47 @@ export const DatePicker = forwardRef<HTMLButtonElement, DatePickerProps>(
             }}
             className={cn('w-full tracking-wider', className)}
           />
-          <PopoverTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="group absolute top-1/2 right-2 -translate-y-1/2 size-7"
-              excludeFromTabOrder
-              isDisabled={props.readOnly || props.disabled}
-            >
-              <CalendarIcon className="h-4 w-4 text-slate-500 group-hover:text-brand" />
-            </Button>
-          </PopoverTrigger>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="group absolute top-1/2 right-2 -translate-y-1/2 size-7"
+            excludeFromTabOrder
+            isDisabled={props.readOnly || props.disabled}
+            onClick={calendarToggle.open}
+          >
+            <CalendarIcon className="h-4 w-4 text-slate-500 group-hover:text-brand" />
+          </Button>
         </div>
-        <PopoverContent>
-          <Calendar
-            {...calendarProps}
-            mode="single"
-            initialFocus
-            selected={selected}
-            month={monthValue}
-            onMonthChange={setMonthValue}
-            onDayClick={(date) => {
-              if (selected && date?.getTime() === selected.getTime()) {
+        <Popover>
+          <PopoverDialog>
+            <Calendar
+              {...calendarProps}
+              mode="single"
+              initialFocus
+              selected={selected}
+              month={monthValue}
+              onMonthChange={setMonthValue}
+              onDayClick={(date) => {
+                if (selected && date?.getTime() === selected.getTime()) {
+                  calendarToggle.close()
+                  return
+                }
+                if (!date || !validate(formatDate(date))) {
+                  onChange?.('')
+                  setMonthValue(new Date())
+                  calendarToggle.close()
+                  return
+                }
+                onChange?.(formatDate(date))
+                setMonthValue(date)
                 calendarToggle.close()
-                return
-              }
-              if (!date || !validate(formatDate(date))) {
-                onChange?.('')
-                setMonthValue(new Date())
-                calendarToggle.close()
-                return
-              }
-              onChange?.(formatDate(date))
-              setMonthValue(date)
-              calendarToggle.close()
-            }}
-          />
-        </PopoverContent>
-      </Popover>
+              }}
+            />
+          </PopoverDialog>
+        </Popover>
+      </PopoverTrigger>
     )
   }
 )
 
-DatePicker.displayName = 'DatePicker'
+JollyDatePicker.displayName = 'JollyDatePicker'

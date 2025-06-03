@@ -1,6 +1,6 @@
+import { GenericTableCell, GenericTableRow } from '@/common/components/generic-table'
 import type { HTMLAttributes, ReactNode, TdHTMLAttributes } from 'react'
 
-import { GenericTableCell, GenericTableRow } from '@/common/components/generic-table'
 import { cn } from '@/common/lib/utils'
 
 export type FooterRowProps = HTMLAttributes<HTMLTableRowElement> & {
@@ -31,7 +31,7 @@ export const FooterCell = ({
 }: FooterCellProps) => {
   return (
     <GenericTableCell
-      className={cn('last:border-solid', className)}
+      className={cn('last:border-solid py-3.5', className)}
       {...props}
     >
       <div className="flex items-center justify-between">

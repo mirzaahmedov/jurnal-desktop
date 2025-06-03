@@ -1,36 +1,38 @@
-import type { AdminKassa } from './interfaces'
-
-import { useEffect, useState } from 'react'
-
-import { useQuery } from '@tanstack/react-query'
-import { useTranslation } from 'react-i18next'
-
-import { DatePicker, GenericTable } from '@/common/components'
 import {
   SearchFilterDebounced,
   useSearchFilter
 } from '@/common/features/filters/search/search-filter-debounced'
-import { useLocationState } from '@/common/hooks'
-import { useToggle } from '@/common/hooks/use-toggle'
-import { useLayout } from '@/common/layout'
-import { formatDate } from '@/common/lib/date'
-import { ListView } from '@/common/views'
+import { useEffect, useState } from 'react'
 
+import type { AdminKassa } from './interfaces'
 import { AdminKassaRegionColumnDefs } from './columns'
 import { AdminKassaService } from './service'
+import { EndDatePicker } from '../components/range-date-picker'
+import { GenericTable } from '@/common/components'
+import { ListView } from '@/common/views'
 import { ViewModal } from './view-modal'
+import { useLayout } from '@/common/layout'
+import { useQuery } from '@tanstack/react-query'
+import { useSettingsStore } from '@/common/features/settings'
+import { useToggle } from '@/common/hooks/use-toggle'
+import { useTranslation } from 'react-i18next'
 
 export const AdminKassaPage = () => {
   const viewToggle = useToggle()
   const setLayout = useLayout()
+  const defaultDate = useSettingsStore((state) => state.default_end_date)
 
   const [search] = useSearchFilter()
   const [selected, setSelected] = useState<AdminKassa | null>(null)
-  const [to, setTo] = useLocationState<string>('to', formatDate(new Date()))
+  const [to, setTo] = useState(defaultDate)
 
   const { t } = useTranslation(['app'])
 
-  const { data: regions, isFetching } = useQuery({
+  const {
+    data: regions,
+    isFetching,
+    refetch
+  } = useQuery({
     queryKey: [AdminKassaService.QueryKeys.GetAll, { to, search }],
     queryFn: AdminKassaService.getAll
   })
@@ -40,6 +42,9 @@ export const AdminKassaPage = () => {
     viewToggle.open()
   }
 
+  useEffect(() => {
+    refetch()
+  }, [refetch])
   useEffect(() => {
     setLayout({
       title: t('pages.kassa'),
@@ -55,9 +60,10 @@ export const AdminKassaPage = () => {
   return (
     <ListView>
       <ListView.Header>
-        <DatePicker
+        <EndDatePicker
           value={to}
           onChange={setTo}
+          refetch={refetch}
         />
       </ListView.Header>
       <ListView.Content loading={isFetching}>

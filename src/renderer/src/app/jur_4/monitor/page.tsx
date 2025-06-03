@@ -227,20 +227,38 @@ const PodotchetMonitorPage = () => {
               <FooterRow>
                 <FooterCell
                   title={t('total_page')}
-                  colSpan={6}
-                  content={formatNumber(monitoring?.meta?.page_prixod_sum ?? 0)}
+                  colSpan={5}
+                  rowSpan={2}
                 />
+                <FooterCell content={formatNumber(monitoring?.meta?.page_prixod_sum ?? 0)} />
                 <FooterCell content={formatNumber(monitoring?.meta?.page_rasxod_sum ?? 0)} />
               </FooterRow>
+              <FooterRow>
+                <FooterCell
+                  colSpan={2}
+                  content={formatNumber(monitoring?.meta?.page_total_sum ?? 0)}
+                  contentClassName="mx-auto"
+                />
+              </FooterRow>
               {(monitoring?.meta?.pageCount ?? 0) > 1 ? (
-                <FooterRow>
-                  <FooterCell
-                    title={t('total_period')}
-                    colSpan={6}
-                    content={formatNumber(monitoring?.meta?.prixod_sum ?? 0)}
-                  />
-                  <FooterCell content={formatNumber(monitoring?.meta?.rasxod_sum ?? 0)} />
-                </FooterRow>
+                <>
+                  <FooterRow>
+                    <FooterCell
+                      title={t('total_period')}
+                      rowSpan={2}
+                      colSpan={5}
+                    />
+                    <FooterCell content={formatNumber(monitoring?.meta?.prixod_sum ?? 0)} />
+                    <FooterCell content={formatNumber(monitoring?.meta?.rasxod_sum ?? 0)} />
+                  </FooterRow>
+                  <FooterRow>
+                    <FooterCell
+                      colSpan={2}
+                      content={formatNumber(monitoring?.meta?.total_sum ?? 0)}
+                      contentClassName="mx-auto"
+                    />
+                  </FooterRow>
+                </>
               ) : null}
             </>
           }

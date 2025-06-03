@@ -55,7 +55,7 @@ const DashboardPage = () => {
             hidden={elem.id !== budjetId}
           >
             <div className="flex flex-col gap-5 py-5">
-              <div className="grid grid-cols-1 min-[1200px]:grid-cols-2 gap-10">
+              <div className="grid grid-cols-1 min-[1200px]:grid-cols-2 gap-5">
                 <Kassa
                   mainSchets={mainSchets}
                   date={date}
