@@ -9,8 +9,10 @@ import { GenericTable, LoadingOverlay } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
 import { SearchFilterDebounced } from '@/common/features/filters/search/search-filter-debounced'
 import { useSearchFilter } from '@/common/features/filters/search/search-filter-debounced'
+import { usePagination } from '@/common/hooks'
 import { useToggle } from '@/common/hooks/use-toggle'
 import { useLayout } from '@/common/layout'
+import { ListView } from '@/common/views'
 
 import { RegionColumns } from './columns'
 import { RegionQueryKeys } from './config'
@@ -21,6 +23,7 @@ const RegionPage = () => {
   const setLayout = useLayout()
 
   const dialogToggle = useToggle()
+  const pagination = usePagination()
   const queryClient = useQueryClient()
 
   const [selected, setSelected] = useState<Region | null>(null)
@@ -30,7 +33,13 @@ const RegionPage = () => {
   const { confirm } = useConfirm()
 
   const { data: regions, isFetching } = useQuery({
-    queryKey: [RegionQueryKeys.getAll, { search }],
+    queryKey: [
+      RegionQueryKeys.getAll,
+      {
+        search,
+        ...pagination
+      }
+    ],
     queryFn: RegionService.getAll
   })
   const { mutate: deleteRegion, isPending } = useMutation({
@@ -70,23 +79,32 @@ const RegionPage = () => {
   }
 
   return (
-    <>
-      <div className="flex-1 relative">
-        {isFetching || isPending ? <LoadingOverlay /> : null}
-        <GenericTable
-          data={regions?.data ?? []}
-          columnDefs={RegionColumns}
-          onEdit={handleClickEdit}
-          onDelete={handleClickDelete}
+    <ListView>
+      <ListView.Content loading={isFetching}>
+        <div className="flex-1 relative">
+          {isFetching || isPending ? <LoadingOverlay /> : null}
+          <GenericTable
+            data={regions?.data ?? []}
+            columnDefs={RegionColumns}
+            onEdit={handleClickEdit}
+            onDelete={handleClickDelete}
+          />
+        </div>
+      </ListView.Content>
+      <ListView.Footer>
+        <ListView.Pagination
+          {...pagination}
+          count={regions?.meta?.count ?? 0}
+          pageCount={regions?.meta?.pageCount ?? 0}
         />
-      </div>
+      </ListView.Footer>
 
       <RegionDialog
         selected={selected}
         isOpen={dialogToggle.isOpen}
         onOpenChange={dialogToggle.setOpen}
       />
-    </>
+    </ListView>
   )
 }
 

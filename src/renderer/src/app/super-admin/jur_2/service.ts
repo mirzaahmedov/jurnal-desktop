@@ -10,7 +10,9 @@ export class AdminBankService {
   } as const
 
   static async getAll(
-    ctx: QueryFunctionContext<[typeof AdminBankService.QueryKeys.GetAll, { to: string }]>
+    ctx: QueryFunctionContext<
+      [typeof AdminBankService.QueryKeys.GetAll, { to: string; search?: string }]
+    >
   ) {
     const params = ctx.queryKey[1]
     const res = await http.get<ApiResponse<AdminBank[]>>('/admin/jur2', {

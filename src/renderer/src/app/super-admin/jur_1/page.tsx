@@ -6,6 +6,10 @@ import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 
 import { DatePicker, GenericTable } from '@/common/components'
+import {
+  SearchFilterDebounced,
+  useSearchFilter
+} from '@/common/features/filters/search/search-filter-debounced'
 import { useLocationState } from '@/common/hooks'
 import { useToggle } from '@/common/hooks/use-toggle'
 import { useLayout } from '@/common/layout'
@@ -20,13 +24,14 @@ export const AdminKassaPage = () => {
   const viewToggle = useToggle()
   const setLayout = useLayout()
 
+  const [search] = useSearchFilter()
   const [selected, setSelected] = useState<AdminKassa | null>(null)
   const [to, setTo] = useLocationState<string>('to', formatDate(new Date()))
 
   const { t } = useTranslation(['app'])
 
   const { data: regions, isFetching } = useQuery({
-    queryKey: [AdminKassaService.QueryKeys.GetAll, { to }],
+    queryKey: [AdminKassaService.QueryKeys.GetAll, { to, search }],
     queryFn: AdminKassaService.getAll
   })
 
@@ -38,6 +43,7 @@ export const AdminKassaPage = () => {
   useEffect(() => {
     setLayout({
       title: t('pages.kassa'),
+      content: SearchFilterDebounced,
       breadcrumbs: [
         {
           title: t('pages.admin')

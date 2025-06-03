@@ -1,32 +1,34 @@
-import type { AdminOrgan159 } from './interfaces'
-
+import { DatePicker, GenericTable } from '@/common/components'
+import {
+  SearchFilterDebounced,
+  useSearchFilter
+} from '@/common/features/filters/search/search-filter-debounced'
 import { useEffect, useState } from 'react'
 
-import { useQuery } from '@tanstack/react-query'
-import { useTranslation } from 'react-i18next'
-
-import { DatePicker, GenericTable } from '@/common/components'
-import { useLocationState } from '@/common/hooks'
-import { useToggle } from '@/common/hooks/use-toggle'
-import { useLayout } from '@/common/layout'
-import { formatDate } from '@/common/lib/date'
-import { ListView } from '@/common/views'
-
+import type { AdminOrgan159 } from './interfaces'
 import { AdminOrgan159RegionColumnDefs } from './columns'
 import { AdminOrgan159Service } from './service'
+import { ListView } from '@/common/views'
 import { ViewModal } from './view-modal'
+import { formatDate } from '@/common/lib/date'
+import { useLayout } from '@/common/layout'
+import { useLocationState } from '@/common/hooks'
+import { useQuery } from '@tanstack/react-query'
+import { useToggle } from '@/common/hooks/use-toggle'
+import { useTranslation } from 'react-i18next'
 
 export const AdminOrgan159Page = () => {
   const viewToggle = useToggle()
   const setLayout = useLayout()
 
+  const [search] = useSearchFilter()
   const [selected, setSelected] = useState<AdminOrgan159 | null>(null)
   const [to, setTo] = useLocationState<string>('to', formatDate(new Date()))
 
   const { t } = useTranslation(['app'])
 
   const { data: regions, isFetching } = useQuery({
-    queryKey: [AdminOrgan159Service.QueryKeys.GetAll, { to }],
+    queryKey: [AdminOrgan159Service.QueryKeys.GetAll, { to, search }],
     queryFn: AdminOrgan159Service.getAll
   })
 
@@ -38,6 +40,7 @@ export const AdminOrgan159Page = () => {
   useEffect(() => {
     setLayout({
       title: t('pages.organization'),
+      content: SearchFilterDebounced,
       breadcrumbs: [
         {
           title: t('pages.admin')
