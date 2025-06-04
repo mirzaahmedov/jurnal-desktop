@@ -1,4 +1,5 @@
 import type { SaldoFormValues } from './config'
+import type { MaterialCreateProvodkaFormValues } from './create/config'
 import type { MonthValue } from '@/common/features/saldo'
 import type { ApiResponse, ApiResponseMeta, SaldoProduct } from '@/common/models'
 import type { QueryFunctionContext } from '@tanstack/react-query'
@@ -33,21 +34,82 @@ export enum OstatokViewOption {
   GROUP = 'group'
 }
 
-class MaterialWarehouseSaldoServiceBuilder extends CRUDService<never, SaldoFormValues> {
+class MaterialSaldoServiceBuilder extends CRUDService<never, SaldoFormValues> {
   constructor() {
     super({
       endpoint: ApiEndpoints.jur7_saldo
     })
 
-    this.deleteSaldoMonth = this.deleteSaldoMonth.bind(this)
+    this.deleteMonth = this.deleteMonth.bind(this)
+    this.deleteOne = this.deleteOne.bind(this)
+    this.createMany = this.createMany.bind(this)
     this.cleanSaldo = this.cleanSaldo.bind(this)
     this.checkSaldo = this.checkSaldo.bind(this)
+    this.checkCreate = this.checkCreate.bind(this)
     this.getMonthlySaldo = this.getMonthlySaldo.bind(this)
   }
 
-  async deleteSaldoMonth(values: {
+  async checkCreate(values: { main_schet_id: number; year: number; month: number }) {
+    const { main_schet_id, year, month } = values
+    const res = await this.client.get<ApiResponse<boolean>>(`${this.endpoint}/check-create`, {
+      params: {
+        main_schet_id,
+        year,
+        month
+      }
+    })
+    return res.data
+  }
+
+  async createMany(values: {
+    data: MaterialCreateProvodkaFormValues[]
+    main_schet_id: number
+    budjet_id: number
     year: number
     month: number
+  }) {
+    const res = await this.client.post(
+      this.endpoint + '/by-group',
+      {
+        data: values.data
+      },
+      {
+        params: {
+          main_schet_id: values.main_schet_id,
+          budjet_id: values.budjet_id,
+          year: values.year,
+          month: values.month
+        }
+      }
+    )
+    return res.data
+  }
+
+  async deleteOne(values: {
+    year: number
+    month: number
+    budjet_id: number
+    main_schet_id: number
+    group_id: number
+    name: string
+  }) {
+    const { budjet_id, main_schet_id, year, month, group_id, name } = values
+    const res = await this.client.delete(this.endpoint + '/by-group', {
+      params: {
+        budjet_id,
+        main_schet_id,
+        year,
+        month,
+        group_id,
+        name
+      }
+    })
+    return res.data
+  }
+
+  async deleteMonth(values: {
+    month: number
+    year: number
     budjet_id: number
     main_schet_id: number
   }) {
@@ -111,8 +173,7 @@ class MaterialWarehouseSaldoServiceBuilder extends CRUDService<never, SaldoFormV
   }
 }
 
-// Todo: remove this service
-export const MaterialWarehouseSaldoService = new MaterialWarehouseSaldoServiceBuilder()
+export const MaterialSaldoService = new MaterialSaldoServiceBuilder()
   .use(budjet())
   .use(main_schet())
   .forRequest((type, args) => {
@@ -130,7 +191,7 @@ export const MaterialWarehouseSaldoService = new MaterialWarehouseSaldoServiceBu
     return {}
   })
 
-export const MaterialWarehouseSaldoProductService = new CRUDService<
+export const MaterialSaldoProductService = new CRUDService<
   SaldoProduct,
   null,
   null,

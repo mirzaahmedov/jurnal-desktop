@@ -57,6 +57,8 @@ export const SpravochnikInput = <T extends object>({
   divProps = {},
   ...props
 }: SpravochnikInputProps<T>) => {
+  delete (props as any).isOpen
+
   return (
     <div
       {...divProps}

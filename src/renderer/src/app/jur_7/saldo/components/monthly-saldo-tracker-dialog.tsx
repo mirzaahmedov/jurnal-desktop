@@ -18,7 +18,7 @@ import { MonthlySaldoTracker } from '@/common/features/saldo'
 import { useSelectedMonthStore } from '@/common/features/selected-month'
 
 import { SaldoQueryKeys } from '../config'
-import { MaterialWarehouseSaldoService } from '../service'
+import { MaterialSaldoService } from '../service'
 
 export interface MonthlySaldoTrackerDialogProps extends Omit<DialogTriggerProps, 'children'> {
   onSelect: (month: Date) => void
@@ -42,7 +42,7 @@ export const MonthlySaldoTrackerDialog = ({
         main_schet_id: main_schet_id!
       }
     ],
-    queryFn: MaterialWarehouseSaldoService.getMonthlySaldo,
+    queryFn: MaterialSaldoService.getMonthlySaldo,
     enabled: props.isOpen
   })
 

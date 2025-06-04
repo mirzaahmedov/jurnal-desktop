@@ -25,7 +25,7 @@ import { formatDate, parseDate } from '@/common/lib/date'
 import { ListView } from '@/common/views'
 
 import { createResponsibleSpravochnik } from '../responsible/service'
-import { MaterialWarehouseSaldoProductService, defaultValues } from '../saldo'
+import { MaterialSaldoProductService, defaultValues } from '../saldo'
 import { useWarehouseSaldo } from '../saldo/use-saldo'
 import { handleOstatokError } from '../saldo/utils'
 import { IznosColumns } from './columns'
@@ -68,7 +68,7 @@ const IznosPage = () => {
         iznos: true
       }
     ],
-    queryFn: MaterialWarehouseSaldoProductService.getAll,
+    queryFn: MaterialSaldoProductService.getAll,
     enabled: !!selectedDate && !!budjet_id && queuedMonths.length === 0,
     select: (data) =>
       !!selectedDate && !!budjet_id && queuedMonths.length === 0 ? data : undefined

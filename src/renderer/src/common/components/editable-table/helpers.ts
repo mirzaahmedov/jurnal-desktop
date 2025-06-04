@@ -13,6 +13,7 @@ export const createEditorCreateHandler =
     field?: string
   }) =>
   () => {
+    console.log({ defaultValues, field })
     form.setValue(field, [...form.getValues(field), defaultValues])
   }
 
@@ -28,6 +29,12 @@ export const createEditorDeleteHandler =
 export const createEditorChangeHandler =
   ({ form, field = 'childs' }: { form: UseFormReturn<any>; field?: string }) =>
   ({ id, key, payload }: { id: number; key: any; payload: any }) => {
-    console.log('running')
     form.setValue(`${field}.${id}.${key}` as any, payload[key])
+  }
+
+export const createEditorDuplicateHandler =
+  ({ form, field = 'childs' }: { form: UseFormReturn<any>; field?: string }) =>
+  ({ index, row, rows }: { index: number; row: any; rows: any[] }) => {
+    console.log({ rows, row, index })
+    form.setValue(field, [...rows.slice(0, index + 1), { ...row }, ...rows.slice(index + 1)])
   }

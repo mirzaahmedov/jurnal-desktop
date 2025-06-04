@@ -10,6 +10,7 @@ import { DuplicateSchetsGuard } from '@/common/features/requisites/guards/duplic
 
 import DashboardPage from './dashboard/page'
 import { WarehouseMonitorPage } from './jur_7/monitor/page'
+import MaterialCreatePage from './jur_7/saldo/create/page'
 import PrixodSchetPage from './jur_8/schet/page'
 import SigninPage from './sign-in'
 import AdminDashboardPage from './super-admin/dashboard/page'
@@ -508,6 +509,10 @@ export const routes: RouteObject[] = [
           {
             path: 'ostatok',
             element: <OstatokPage />
+          },
+          {
+            path: 'ostatok/create',
+            element: <MaterialCreatePage />
           },
           {
             path: 'iznos',

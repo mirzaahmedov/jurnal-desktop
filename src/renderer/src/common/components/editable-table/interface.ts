@@ -1,5 +1,5 @@
 import type { EditorComponentType } from './editors'
-import type { ChangeContext, DeleteContext } from './editors/interfaces'
+import type { ChangeContext, DeleteContext, DuplicateArgs } from './editors/interfaces'
 import type { Autocomplete } from '@/common/lib/types'
 import type { HTMLAttributes, ReactNode, RefObject, SyntheticEvent } from 'react'
 import type { ArrayPath, FieldArrayWithId, FieldErrors, UseFormReturn } from 'react-hook-form'
@@ -64,6 +64,7 @@ export interface EditableTableProps<T extends object, F extends ArrayPath<NoInfe
   }) => Record<string, unknown>
   placeholder?: string
   onDelete?(ctx: DeleteContext): void
+  onDuplicate?(ctx: DuplicateArgs<T, F>): void
   onCreate?(): void
   onCellDoubleClick?: CellEventHandler<T, F>
   params?: Record<string, unknown>

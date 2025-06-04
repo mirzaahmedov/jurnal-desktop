@@ -6,7 +6,7 @@ import { type MonthValue, SaldoUpdateManager } from '@/common/features/saldo'
 
 import { IznosQueryKeys } from '../../iznos/config'
 import { SaldoQueryKeys } from '../config'
-import { MaterialWarehouseSaldoService } from '../service'
+import { MaterialSaldoService } from '../service'
 import { useWarehouseSaldo } from '../use-saldo'
 
 export const MaterialWarehouseSaldoUpdateManager = () => {
@@ -22,7 +22,7 @@ export const MaterialWarehouseSaldoUpdateManager = () => {
     error
   } = useMutation({
     mutationKey: [SaldoQueryKeys.create],
-    mutationFn: MaterialWarehouseSaldoService.create,
+    mutationFn: MaterialSaldoService.create,
     onSuccess(_, values) {
       const newQueue = dequeueMonth(values)
       setCompleted((prev) => [...prev, values])

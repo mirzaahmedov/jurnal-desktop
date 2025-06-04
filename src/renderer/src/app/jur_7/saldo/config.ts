@@ -3,13 +3,14 @@ import { z } from 'zod'
 import { useSelectedMonthStore } from '@/common/features/selected-month'
 
 export const SaldoQueryKeys = {
-  clean: 'warehouse-saldo/clean',
-  getAll: 'warehouse-saldo/all',
-  getMonthlySaldo: 'warehouse-saldo/monthly',
-  check: 'warehouse-saldo/check',
-  create: 'warehouse-saldo/create',
-  delete: 'warehouse-saldo/delete'
-}
+  clean: 'material-saldo/clean',
+  getAll: 'material-saldo/all',
+  getMonthlySaldo: 'material-saldo/monthly',
+  check: 'material-saldo/check',
+  create: 'material-saldo/create',
+  deleteMonth: 'material-saldo/delete-month',
+  deleteOne: 'material-saldo/delete'
+} as const
 
 export const SaldoFiltersSchema = z.object({
   date: z.date().optional()

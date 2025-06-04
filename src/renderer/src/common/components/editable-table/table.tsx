@@ -1,9 +1,16 @@
 import type { EditableTableProps } from './interface'
 import type { ArrayPath, FieldArrayWithId, Path } from 'react-hook-form'
 
-import { type HTMLAttributes, useImperativeHandle, useMemo, useRef, useState } from 'react'
+import {
+  type HTMLAttributes,
+  type ReactNode,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState
+} from 'react'
 
-import { CircleMinus, CirclePlus } from 'lucide-react'
+import { CircleMinus, CirclePlus, CopyPlus } from 'lucide-react'
 import { Controller, type FieldErrors, useFieldArray } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
@@ -15,6 +22,12 @@ import { EmptyList } from '../empty-states'
 import { getHeaderGroups } from '../generic-table/utils'
 import { EditableTableCell, EditableTableHead, EditableTableRow } from './components'
 import { getAccessorColumns } from './utils'
+
+interface TableAction {
+  key: string
+  onPress: Function
+  render: (args: { rowIndex: number; row: any; rows: any[] }) => ReactNode
+}
 
 export const EditableTable = <T extends object, F extends ArrayPath<NoInfer<T>>>(
   props: EditableTableProps<T, F>
@@ -31,6 +44,7 @@ export const EditableTable = <T extends object, F extends ArrayPath<NoInfer<T>>>
     placeholder,
     onCreate,
     onDelete,
+    onDuplicate,
     onCellDoubleClick,
     params = {},
     validate,
@@ -84,9 +98,40 @@ export const EditableTable = <T extends object, F extends ArrayPath<NoInfer<T>>>
     []
   )
 
-  const headerGroups = useMemo(() => {
-    return getHeaderGroups(columnDefs)
-  }, [columnDefs])
+  const headerGroups = useMemo(() => getHeaderGroups(columnDefs), [columnDefs])
+
+  const actions: TableAction[] = [
+    {
+      key: 'delete',
+      onPress: onDelete,
+      render: ({ rowIndex }) => (
+        <Button
+          tabIndex={tabIndex}
+          type="button"
+          variant="ghost"
+          className="hover:bg-slate-50 hover:text-red-500 text-red-400"
+          onClick={() => onDelete?.({ id: rowIndex })}
+        >
+          <CircleMinus className="btn-icon !mx-0" />
+        </Button>
+      )
+    },
+    {
+      key: 'duplicate',
+      onPress: onDuplicate,
+      render: ({ rowIndex, rows, row }) => (
+        <Button
+          tabIndex={tabIndex}
+          type="button"
+          variant="ghost"
+          className="hover:bg-slate-50 text-brand"
+          onClick={() => onDuplicate?.({ index: rowIndex, row, rows })}
+        >
+          <CopyPlus className="btn-icon !mx-0" />
+        </Button>
+      )
+    }
+  ].filter((action) => Boolean(action.onPress)) as TableAction[]
 
   return (
     <div
@@ -151,9 +196,18 @@ export const EditableTable = <T extends object, F extends ArrayPath<NoInfer<T>>>
                         )
                       })
                     : null}
-                  {typeof onDelete === 'function' && index === 0 ? (
-                    <EditableTableHead key="delete"></EditableTableHead>
-                  ) : null}
+
+                  {index === 0
+                    ? actions.map((action, actionIndex) => (
+                        <EditableTableHead
+                          key={action.key}
+                          className={cn('sticky z-50', actionIndex === 0 && 'border-l')}
+                          style={{
+                            right: (actions.length - actionIndex - 1) * 53
+                          }}
+                        ></EditableTableHead>
+                      ))
+                    : null}
                 </EditableTableRow>
               ))
             : null}
@@ -171,12 +225,12 @@ export const EditableTable = <T extends object, F extends ArrayPath<NoInfer<T>>>
                 form={form}
                 columnDefs={columnDefs}
                 errors={errors}
-                onDelete={onDelete}
                 onCellDoubleClick={onCellDoubleClick}
                 params={params}
                 validate={validate}
                 getEditorProps={getEditorProps}
                 getRowClassName={getRowClassName}
+                actions={actions}
               />
             ))
           ) : (
@@ -228,7 +282,6 @@ interface EditableTableRowRendererProps<T extends object, F extends ArrayPath<No
       | 'name'
       | 'form'
       | 'params'
-      | 'onDelete'
       | 'onCellDoubleClick'
       | 'errors'
       | 'columnDefs'
@@ -240,6 +293,7 @@ interface EditableTableRowRendererProps<T extends object, F extends ArrayPath<No
   index: number
   row: FieldArrayWithId<T, F, 'id'>
   rows: FieldArrayWithId<T, F, 'id'>[]
+  actions: TableAction[]
 }
 const EditableTableRowRenderer = <T extends object, R extends T[ArrayPath<NoInfer<T>>]>({
   tabIndex,
@@ -250,12 +304,12 @@ const EditableTableRowRenderer = <T extends object, R extends T[ArrayPath<NoInfe
   name,
   form,
   errors,
-  onDelete,
   onCellDoubleClick,
   params,
   validate,
   getEditorProps,
   getRowClassName,
+  actions,
   ...props
 }: EditableTableRowRendererProps<T, R>) => {
   const [state, setState] = useState<Record<string, unknown>>({})
@@ -333,19 +387,18 @@ const EditableTableRowRenderer = <T extends object, R extends T[ArrayPath<NoInfe
             )
           })
         : null}
-      {typeof onDelete === 'function' && (
-        <EditableTableCell className="whitespace-nowrap w-0">
-          <Button
-            tabIndex={tabIndex}
-            type="button"
-            variant="ghost"
-            className="hover:bg-slate-50 hover:text-red-500 text-red-400"
-            onClick={() => onDelete?.({ id: index })}
-          >
-            <CircleMinus className="btn-icon !mx-0" />
-          </Button>
+
+      {actions.map((action, actionIndex) => (
+        <EditableTableCell
+          key={action.key}
+          className={cn('sticky z-50', actionIndex === 0 && 'border-l')}
+          style={{
+            right: (actions.length - actionIndex - 1) * 53
+          }}
+        >
+          {action.render({ rowIndex: index, row, rows })}
         </EditableTableCell>
-      )}
+      ))}
     </EditableTableRow>
   )
 }

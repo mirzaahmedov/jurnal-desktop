@@ -23,7 +23,7 @@ export const defaultValues: PrixodFormValues = {
   childs: [
     {
       name: '',
-      edin: '',
+      unit_id: 0,
       group_jur7_id: 0,
       inventar_num: '',
       serial_num: '',
@@ -45,7 +45,7 @@ export const defaultValues: PrixodFormValues = {
 export const PrixodProvodkaFormSchema = withPreprocessor(
   z.object({
     name: z.string(),
-    edin: z.string(),
+    unit_id: z.number(),
     group_jur7_id: z.number(),
     group_number: z.string().optional().nullable(),
     inventar_num: z.string().optional(),

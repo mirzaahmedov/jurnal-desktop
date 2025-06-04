@@ -677,8 +677,6 @@ const NaimenovanieCells = ({
     })
   )
 
-  console.log({ edin: row.edin })
-
   return (
     <>
       <EditableTableCell>
@@ -738,15 +736,11 @@ const NaimenovanieCells = ({
       <EditableTableCell>
         <div className="relative">
           <EdinSelect
-            error={!!errors.edin}
+            error={!!errors.unit_id}
             tabIndex={tabIndex}
-            selectedKey={row.edin}
+            selectedKey={row.unit_id ?? null}
             onSelectionChange={(value) => {
-              onChangeField(index, 'edin', value)
-            }}
-            inputProps={{
-              tabIndex,
-              className: 'border-0 focus-visible:!ring-0 focus-visible:!border-0'
+              onChangeField(index, 'unit_id', value ? Number(value) : undefined)
             }}
           />
         </div>

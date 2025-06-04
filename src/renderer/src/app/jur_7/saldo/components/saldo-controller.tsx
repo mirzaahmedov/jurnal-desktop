@@ -9,7 +9,7 @@ import { SelectedMonth } from '@/common/layout/compoonents/selected-month'
 
 import { IznosQueryKeys } from '../../iznos/config'
 import { SaldoQueryKeys } from '../config'
-import { MaterialWarehouseSaldoService } from '../service'
+import { MaterialSaldoService } from '../service'
 import { useWarehouseSaldo } from '../use-saldo'
 
 export const WarehouseSaldoController = () => {
@@ -41,7 +41,7 @@ export const WarehouseSaldoController = () => {
       },
       location.pathname
     ],
-    queryFn: MaterialWarehouseSaldoService.checkSaldo,
+    queryFn: MaterialSaldoService.checkSaldo,
     refetchOnReconnect: false,
     refetchOnWindowFocus: false,
     enabled
@@ -49,7 +49,7 @@ export const WarehouseSaldoController = () => {
 
   const { mutate: createSaldo, isPending } = useMutation({
     mutationKey: [SaldoQueryKeys.create],
-    mutationFn: MaterialWarehouseSaldoService.create,
+    mutationFn: MaterialSaldoService.create,
     onSuccess(res, values) {
       toast.success(res?.message)
 

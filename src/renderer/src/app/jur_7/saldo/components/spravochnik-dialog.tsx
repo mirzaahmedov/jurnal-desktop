@@ -25,7 +25,7 @@ import { usePagination } from '@/common/hooks'
 
 import { CommonWarehouseSaldoProductColumns } from '../columns'
 import { SaldoQueryKeys } from '../config'
-import { MaterialWarehouseSaldoProductService } from '../service'
+import { MaterialSaldoProductService } from '../service'
 
 const columns = [
   {
@@ -77,7 +77,7 @@ export const SaldoProductSpravochnikDialog = ({
         responsible_id
       }
     ],
-    queryFn: MaterialWarehouseSaldoProductService.getAll,
+    queryFn: MaterialSaldoProductService.getAll,
     enabled: !!budjet_id && !!responsible_id
   })
 

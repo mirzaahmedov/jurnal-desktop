@@ -6,6 +6,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { CalendarDays, CircleArrowDown, Trash2 } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
 import { createGroupSpravochnik } from '@/app/super-admin/group/service'
@@ -16,7 +17,7 @@ import {
   FooterRow,
   GenericTable
 } from '@/common/components'
-import { Button } from '@/common/components/ui/button'
+import { Button } from '@/common/components/jolly/button'
 import { ButtonGroup } from '@/common/components/ui/button-group'
 import { Checkbox } from '@/common/components/ui/checkbox'
 import { FormField } from '@/common/components/ui/form'
@@ -48,7 +49,7 @@ import { DeleteExistingDocumentsAlert } from './components/delete-existing-docum
 import { DeleteExistingSaldoAlert } from './components/delete-existing-saldo-alert'
 import { MonthlySaldoTrackerDialog } from './components/monthly-saldo-tracker-dialog'
 import { SaldoQueryKeys, defaultValues } from './config'
-import { MaterialWarehouseSaldoProductService, MaterialWarehouseSaldoService } from './service'
+import { MaterialSaldoProductService, MaterialSaldoService } from './service'
 import { useWarehouseSaldo } from './use-saldo'
 import {
   type OstatokDeleteExistingDocument,
@@ -87,11 +88,13 @@ const MaterialWarehouseSaldoPage = () => {
   }>()
 
   const [selectedDate, setSelectedDate] = useState<undefined | Date>(startDate)
+  const [isModifiable, setModifiable] = useState(false)
   const [search] = useSearchFilter()
 
-  const monthlyTrackerToggle = useToggle()
+  const trackerToggle = useToggle()
   const queryClient = useQueryClient()
   const pagination = usePagination()
+  const navigate = useNavigate()
   const setLayout = useLayout()
 
   const { confirm } = useConfirm()
@@ -104,6 +107,16 @@ const MaterialWarehouseSaldoPage = () => {
 
   const groupSpravochnik = useSpravochnik(createGroupSpravochnik({}))
   const responsibleSpravochnik = useSpravochnik(createResponsibleSpravochnik({}))
+
+  const { mutate: checkCreate, isPending: isCheckingCreate } = useMutation({
+    mutationFn: MaterialSaldoService.checkCreate,
+    onSuccess(res) {
+      setModifiable(!!res?.data)
+    },
+    onError() {
+      setModifiable(false)
+    }
+  })
 
   const {
     data: saldos,
@@ -122,15 +135,44 @@ const MaterialWarehouseSaldoPage = () => {
         budjet_id: budjet_id!
       }
     ],
-    queryFn: MaterialWarehouseSaldoProductService.getAll,
+    queryFn: MaterialSaldoProductService.getAll,
     enabled: !!selectedDate && !!budjet_id && queuedMonths.length === 0,
     select: (data) =>
       !!selectedDate && !!budjet_id && queuedMonths.length === 0 ? data : undefined
   })
 
-  const { mutate: deleteOstatok, isPending: isDeleting } = useMutation({
-    mutationKey: [SaldoQueryKeys.delete],
-    mutationFn: MaterialWarehouseSaldoService.deleteSaldoMonth,
+  const { mutate: deleteMonth, isPending: isDeletingMonth } = useMutation({
+    mutationKey: [SaldoQueryKeys.deleteMonth],
+    mutationFn: MaterialSaldoService.deleteMonth,
+    onSuccess(res) {
+      queryClient.invalidateQueries({
+        queryKey: [SaldoQueryKeys.getAll]
+      })
+      queryClient.invalidateQueries({
+        queryKey: [IznosQueryKeys.getAll]
+      })
+      queryClient.invalidateQueries({
+        queryKey: [SaldoQueryKeys.check]
+      })
+      handleOstatokResponse(res)
+      toast.success(res?.message)
+    },
+    onError(error) {
+      const result = handleOstatokExistingDocumentError<OstatokDeleteExistingDocument>(error)
+      if (result) {
+        setDeleteExistingDocumentError({
+          message: error.message,
+          docs: result.docs,
+          product: undefined
+        })
+      } else {
+        setDeleteExistingDocumentError(undefined)
+      }
+    }
+  })
+  const { mutate: deleteOne, isPending: isDeleting } = useMutation({
+    mutationKey: [SaldoQueryKeys.deleteOne],
+    mutationFn: MaterialSaldoService.deleteOne,
     onSuccess(res) {
       queryClient.invalidateQueries({
         queryKey: [SaldoQueryKeys.getAll]
@@ -160,7 +202,7 @@ const MaterialWarehouseSaldoPage = () => {
 
   const { mutate: cleanSaldo } = useMutation({
     mutationKey: [SaldoQueryKeys.clean],
-    mutationFn: MaterialWarehouseSaldoService.cleanSaldo,
+    mutationFn: MaterialSaldoService.cleanSaldo,
     onSuccess(res) {
       queryClient.invalidateQueries({
         queryKey: [SaldoQueryKeys.getAll]
@@ -193,6 +235,14 @@ const MaterialWarehouseSaldoPage = () => {
     setLayout({
       title: t('pages.saldo'),
       content: SearchFilterDebounced,
+      onCreate:
+        isModifiable && selectedDate
+          ? () => {
+              navigate(
+                `create?year=${selectedDate.getFullYear()}&month=${selectedDate.getMonth() + 1}`
+              )
+            }
+          : undefined,
       enableSaldo: true,
       breadcrumbs: [
         {
@@ -200,7 +250,16 @@ const MaterialWarehouseSaldoPage = () => {
         }
       ]
     })
-  }, [setLayout, t])
+  }, [setLayout, navigate, t, isModifiable, selectedDate])
+  useEffect(() => {
+    if (selectedDate && main_schet_id) {
+      checkCreate({
+        main_schet_id,
+        year: selectedDate?.getFullYear(),
+        month: selectedDate?.getMonth() + 1
+      })
+    }
+  }, [checkCreate, selectedDate, main_schet_id])
 
   const handleDelete = () => {
     if (!selectedDate) {
@@ -208,11 +267,25 @@ const MaterialWarehouseSaldoPage = () => {
     }
     confirm({
       onConfirm() {
-        deleteOstatok({
+        deleteMonth({
           year: selectedDate.getFullYear(),
           month: selectedDate.getMonth() + 1,
           main_schet_id: main_schet_id!,
           budjet_id: budjet_id!
+        })
+      }
+    })
+  }
+  const handleDeleteOne = (row: SaldoProduct) => {
+    confirm({
+      onConfirm() {
+        deleteOne({
+          year: row.year,
+          month: row.month,
+          main_schet_id: main_schet_id!,
+          budjet_id: budjet_id!,
+          group_id: row.group_id,
+          name: row.name
         })
       }
     })
@@ -322,7 +395,7 @@ const MaterialWarehouseSaldoPage = () => {
           />
           <Button
             variant="ghost"
-            onClick={monthlyTrackerToggle.open}
+            onPress={trackerToggle.open}
           >
             <CalendarDays className="btn-icon icon-start" />
             {t('monthly_saldo')}
@@ -330,7 +403,7 @@ const MaterialWarehouseSaldoPage = () => {
 
           <Button
             variant="destructive"
-            onClick={handleDelete}
+            onPress={handleDelete}
           >
             <Trash2 className="btn-icon icon-start" />
             {t('clean_current_month')}
@@ -376,12 +449,13 @@ const MaterialWarehouseSaldoPage = () => {
           />
         </ButtonGroup>
       </div>
-      <ListView.Content loading={isFetching || isDeleting}>
+      <ListView.Content loading={isFetching || isDeletingMonth || isDeleting || isCheckingCreate}>
         <GenericTable
           columnDefs={columns}
           data={saldos?.data ?? []}
           getRowId={(row) => row.product_id}
           getRowKey={(row) => row.id}
+          onDelete={isModifiable ? handleDeleteOne : undefined}
           footer={
             <>
               <FooterRow>
@@ -460,13 +534,13 @@ const MaterialWarehouseSaldoPage = () => {
       ) : null}
 
       <MonthlySaldoTrackerDialog
-        isOpen={monthlyTrackerToggle.isOpen}
-        onOpenChange={monthlyTrackerToggle.setOpen}
+        isOpen={trackerToggle.isOpen}
+        onOpenChange={trackerToggle.setOpen}
         onSelect={(month) => {
           form.setValue('date', month)
           setSelectedMonth(month)
           setSelectedDate(month)
-          monthlyTrackerToggle.close()
+          trackerToggle.close()
         }}
       />
 

@@ -1,6 +1,6 @@
 import type { EditableColumnDef, TableRowField } from '../interface'
 import type { Dispatch, FC, InputHTMLAttributes, Ref, SetStateAction } from 'react'
-import type { FieldErrors, UseFormReturn } from 'react-hook-form'
+import type { ArrayPath, FieldErrors, UseFormReturn } from 'react-hook-form'
 
 export type ChangeContext<T extends object, K extends keyof T = keyof T> = {
   id: number
@@ -10,6 +10,12 @@ export type ChangeContext<T extends object, K extends keyof T = keyof T> = {
 
 export type DeleteContext = {
   id: number
+}
+
+export type DuplicateArgs<T extends object, F extends ArrayPath<T>> = {
+  index: number
+  row: TableRowField<T, F>
+  rows: TableRowField<T, F>[]
 }
 
 export type EditorComponent<T extends object> = FC<{
