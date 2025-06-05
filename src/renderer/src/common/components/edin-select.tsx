@@ -4,10 +4,9 @@ import { useQuery } from '@tanstack/react-query'
 
 import { UnitQueryKeys, UnitService } from '@/app/super-admin/unit'
 
-import { JollySelect, type JollySelectProps, SelectItem } from './jolly/select'
+import { ComboboxItem, JollyComboBox, type JollyComboBoxProps } from './jolly/combobox'
 
-export interface EdinSelectProps extends Omit<JollySelectProps<Unit>, 'children'> {
-  tabIndex?: number
+export interface EdinSelectProps extends Omit<JollyComboBoxProps<Unit>, 'children'> {
   error: boolean
 }
 export const EdinSelect = ({ error, ...props }: EdinSelectProps) => {
@@ -16,15 +15,19 @@ export const EdinSelect = ({ error, ...props }: EdinSelectProps) => {
     queryFn: UnitService.getAll
   })
 
+  const options = edins?.data ?? []
+
   return (
-    <JollySelect
+    <JollyComboBox
       {...props}
+      allowsEmptyCollection
       isDisabled={isFetching}
       isInvalid={error}
-      items={edins?.data ?? []}
-      className="[&>button]:border-none [&>button]:bg-transparent"
+      defaultItems={options}
+      className="m-0.5 gap-0 [&>div]:border-none [&>div]:bg-transparent [&>div]:rounded-none [&_input]:bg-transparent"
+      menuTrigger="focus"
     >
-      {(unit: Unit) => <SelectItem id={unit.id}>{unit.name}</SelectItem>}
-    </JollySelect>
+      {(option: Unit) => <ComboboxItem id={option.id}>{option.name}</ComboboxItem>}
+    </JollyComboBox>
   )
 }

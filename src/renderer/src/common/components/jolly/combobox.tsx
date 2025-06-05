@@ -16,6 +16,7 @@ import {
 
 import { cn } from '@/common/lib/utils'
 
+import { EmptyList } from '../empty-states'
 import { Button } from './button'
 import { FieldError, FieldGroup, Label } from './field'
 import { ListBoxCollection, ListBoxHeader, ListBoxItem, ListBoxSection } from './list-box'
@@ -31,7 +32,11 @@ const ComboboxSection = ListBoxSection
 
 const ComboboxCollection = ListBoxCollection
 
-const ComboboxInput = ({ className, ...props }: AriaInputProps) => (
+const ComboboxInput = ({
+  className,
+  inputRef,
+  ...props
+}: AriaInputProps & { inputRef?: React.Ref<HTMLInputElement> }) => (
   <AriaInput
     className={composeRenderProps(className, (className) =>
       cn(
@@ -41,6 +46,7 @@ const ComboboxInput = ({ className, ...props }: AriaInputProps) => (
         className
       )
     )}
+    ref={inputRef}
     {...props}
   />
 )
@@ -72,6 +78,7 @@ interface JollyComboBoxProps<T extends object> extends Omit<AriaComboBoxProps<T>
   description?: string | null
   errorMessage?: string | ((validation: AriaValidationResult) => string)
   inputProps?: Omit<AriaInputProps, 'children'>
+  tabIndex?: number
   children: React.ReactNode | ((item: T) => React.ReactNode)
 }
 
@@ -83,6 +90,7 @@ function JollyComboBox<T extends object>({
   className,
   inputProps,
   children,
+  tabIndex,
   ...props
 }: JollyComboBoxProps<T>) {
   return (
@@ -96,6 +104,7 @@ function JollyComboBox<T extends object>({
       <FieldGroup className="p-0">
         <ComboboxInput
           placeholder={placeholder}
+          tabIndex={tabIndex}
           {...inputProps}
         />
         <Button
@@ -119,7 +128,15 @@ function JollyComboBox<T extends object>({
       )}
       <FieldError>{errorMessage}</FieldError>
       <ComboboxPopover>
-        <ComboboxListBox>{children}</ComboboxListBox>
+        <ComboboxListBox
+          renderEmptyState={() => (
+            <div className="text-center text-sm px-5 py-2">
+              <EmptyList />
+            </div>
+          )}
+        >
+          {children}
+        </ComboboxListBox>
       </ComboboxPopover>
     </Combobox>
   )

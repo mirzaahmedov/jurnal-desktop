@@ -77,7 +77,7 @@ export const IznosColumns: ColumnDef<SaldoProduct>[] = [
     minWidth: 260,
     renderCell: (row) => (
       <HoverInfoCell
-        title={<span className="text-xs">{row.group_name}</span>}
+        title={<span className="text-xs line-clamp-3">{row.group_name}</span>}
         hoverContent={
           <DataList
             list={[
@@ -156,12 +156,12 @@ export const IznosColumns: ColumnDef<SaldoProduct>[] = [
     numeric: true,
     key: 'iznos_summa_bir_oylik',
     header: 'iznos_summa_month',
-    renderCell: (row) => formatNumber(row.month_iznos_summa ?? 0)
+    renderCell: (row) => formatNumber(row.to.month_iznos ?? 0)
   },
   {
     numeric: true,
     key: 'eski_iznos_summa',
     header: 'iznos_summa_old',
-    renderCell: (row) => formatNumber(row.eski_iznos_summa)
+    renderCell: (row) => formatNumber(row.from.iznos_summa)
   }
 ]

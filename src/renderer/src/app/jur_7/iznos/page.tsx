@@ -6,7 +6,13 @@ import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
 import { createGroupSpravochnik } from '@/app/super-admin/group/service'
-import { ChooseSpravochnik, DatePicker, GenericTable } from '@/common/components'
+import {
+  ChooseSpravochnik,
+  DatePicker,
+  FooterCell,
+  FooterRow,
+  GenericTable
+} from '@/common/components'
 import { Button } from '@/common/components/ui/button'
 import { FormField } from '@/common/components/ui/form'
 import {
@@ -22,6 +28,7 @@ import { useSpravochnik } from '@/common/features/spravochnik'
 import { usePagination } from '@/common/hooks'
 import { useLayout } from '@/common/layout'
 import { formatDate, parseDate } from '@/common/lib/date'
+import { formatNumber } from '@/common/lib/format'
 import { ListView } from '@/common/views'
 
 import { createResponsibleSpravochnik } from '../responsible/service'
@@ -164,6 +171,34 @@ const IznosPage = () => {
           data={iznos?.data ?? []}
           getRowId={(row) => row.product_id}
           getRowKey={(row) => row.id}
+          footer={
+            <>
+              <FooterRow>
+                <FooterCell
+                  title={t('total_page')}
+                  colSpan={7}
+                />
+                <FooterCell content={formatNumber(iznos?.meta?.page_to_kol ?? 0)} />
+                <FooterCell content={formatNumber(iznos?.meta?.page_to_summa ?? 0)} />
+                <FooterCell
+                  colSpan={6}
+                  content={formatNumber(iznos?.meta?.page_to_iznos_summa ?? 0)}
+                />
+              </FooterRow>
+              <FooterRow>
+                <FooterCell
+                  title={t('total_period')}
+                  colSpan={7}
+                />
+                <FooterCell content={formatNumber(iznos?.meta?.to_kol ?? 0)} />
+                <FooterCell content={formatNumber(iznos?.meta?.to_summa ?? 0)} />
+                <FooterCell
+                  colSpan={6}
+                  content={formatNumber(iznos?.meta?.to_iznos_summa ?? 0)}
+                />
+              </FooterRow>
+            </>
+          }
         />
       </ListView.Content>
       <ListView.Footer>

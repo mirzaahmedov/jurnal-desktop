@@ -75,7 +75,7 @@ export const CommonWarehouseSaldoProductColumns: ColumnDef<SaldoProduct>[] = [
     minWidth: 260,
     renderCell: (row) => (
       <HoverInfoCell
-        title={<span className="text-xs">{row.group_name}</span>}
+        title={<span className="text-xs line-clamp-3">{row.group_name}</span>}
         hoverContent={
           <DataList
             list={[

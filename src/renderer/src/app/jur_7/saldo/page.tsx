@@ -284,8 +284,7 @@ const MaterialWarehouseSaldoPage = () => {
           month: row.month,
           main_schet_id: main_schet_id!,
           budjet_id: budjet_id!,
-          group_id: row.group_id,
-          name: row.name
+          id: row.id
         })
       }
     })

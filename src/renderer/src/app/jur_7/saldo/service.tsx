@@ -7,7 +7,7 @@ import type { QueryFunctionContext } from '@tanstack/react-query'
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 import { budjet, main_schet } from '@/common/features/crud/middleware'
 
-export interface MaterialWarehouseMeta extends ApiResponseMeta {
+export interface MaterialMeta extends ApiResponseMeta {
   from_summa: number
   from_kol: number
   internal_rasxod_summa: number
@@ -28,7 +28,7 @@ export interface MaterialWarehouseMeta extends ApiResponseMeta {
   page_to_kol: number
 }
 
-export enum OstatokViewOption {
+export enum MaterialSaldoViewOptions {
   PRODUCT = 'product',
   RESPONSIBLE = 'responsible',
   GROUP = 'group'
@@ -90,18 +90,15 @@ class MaterialSaldoServiceBuilder extends CRUDService<never, SaldoFormValues> {
     month: number
     budjet_id: number
     main_schet_id: number
-    group_id: number
-    name: string
+    id: number
   }) {
-    const { budjet_id, main_schet_id, year, month, group_id, name } = values
-    const res = await this.client.delete(this.endpoint + '/by-group', {
+    const { budjet_id, main_schet_id, year, month, id } = values
+    const res = await this.client.delete(this.endpoint + '/' + id, {
       params: {
         budjet_id,
         main_schet_id,
         year,
-        month,
-        group_id,
-        name
+        month
       }
     })
     return res.data
@@ -191,12 +188,7 @@ export const MaterialSaldoService = new MaterialSaldoServiceBuilder()
     return {}
   })
 
-export const MaterialSaldoProductService = new CRUDService<
-  SaldoProduct,
-  null,
-  null,
-  MaterialWarehouseMeta
->({
+export const MaterialSaldoProductService = new CRUDService<SaldoProduct, null, null, MaterialMeta>({
   endpoint: ApiEndpoints.saldo_product
 })
   .use(budjet())
