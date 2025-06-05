@@ -148,9 +148,9 @@ export const IznosColumns: ColumnDef<SaldoProduct>[] = [
   },
   {
     numeric: true,
-    key: 'iznos_summa',
-    header: 'iznos_summa_total',
-    renderCell: (row) => formatNumber(row.to.iznos_summa ?? 0)
+    key: 'eski_iznos_summa',
+    header: 'iznos_summa_old',
+    renderCell: (row) => formatNumber(row.from.iznos_summa)
   },
   {
     numeric: true,
@@ -160,8 +160,8 @@ export const IznosColumns: ColumnDef<SaldoProduct>[] = [
   },
   {
     numeric: true,
-    key: 'eski_iznos_summa',
-    header: 'iznos_summa_old',
-    renderCell: (row) => formatNumber(row.from.iznos_summa)
+    key: 'iznos_summa',
+    header: 'iznos_summa_total',
+    renderCell: (row) => formatNumber(row.to.iznos_summa ?? 0)
   }
 ]

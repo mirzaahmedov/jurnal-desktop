@@ -74,6 +74,21 @@ export const MaterialReportDialog = ({
             }}
             buttonText={t('material')}
           />
+          <DownloadFile
+            fileName={`${t('material')}_${t('iznos')}_${to}.xlsx`}
+            url="/jur_7/monitoring/material/report"
+            params={{
+              to,
+              year,
+              month,
+              budjet_id,
+              main_schet_id,
+              responsible_id: responsibleSpravochnik.selected?.id || undefined,
+              excel: true,
+              iznos: true
+            }}
+            buttonText={`${t('material')} (${t('iznos')})`}
+          />
         </DialogFooter>
       </DialogContent>
     </Dialog>

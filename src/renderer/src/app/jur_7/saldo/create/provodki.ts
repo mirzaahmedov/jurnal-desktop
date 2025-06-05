@@ -31,11 +31,11 @@ export const provodkiColumns: EditableColumnDef<MaterialCreateProvodkaFormValues
     minWidth: 300
   },
   {
-    key: 'edin',
+    key: 'unit_id',
     header: 'ei',
     minWidth: 160,
     Editor: createEdinEditor({
-      key: 'edin'
+      key: 'unit_id'
     })
   },
   {

@@ -180,6 +180,7 @@ export const WarehouseMonitorPage = () => {
               <Button
                 variant="ghost"
                 onClick={materialToggle.open}
+                className="w-full justify-start"
               >
                 <Download className="btn-icon icon-start icon-sm" /> {t('material')}
               </Button>
