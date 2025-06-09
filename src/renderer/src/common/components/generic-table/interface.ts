@@ -58,6 +58,7 @@ export interface GenericTableProps<T extends object>
   onClickRow?(row: T): void
   onDelete?(row: T): void
   onEdit?(row: T): void
+  onView?(row: T): void
   onSort?(column: ColumnDef<T>, direction: TableSortDirection | undefined): void
   actions?: (row: T) => ReactNode
   activeRowId?: string | number

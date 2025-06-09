@@ -1,10 +1,8 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 import { useQuery } from '@tanstack/react-query'
 import { Download } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router-dom'
-import { toast } from 'react-toastify'
 
 import { FooterCell, FooterRow, GenericTable, SummaTotal, useTableSort } from '@/common/components'
 import { Button } from '@/common/components/ui/button'
@@ -29,7 +27,7 @@ import { useSettingsStore } from '@/common/features/settings'
 import { useDates, usePagination, useToggle } from '@/common/hooks'
 import { useLayout } from '@/common/layout'
 import { formatNumber } from '@/common/lib/format'
-import { type WarehouseMonitoring, WarehouseMonitoringType } from '@/common/models'
+import { type WarehouseMonitoring } from '@/common/models'
 import { ListView } from '@/common/views'
 
 import { MaterialReportModal } from '../__components__/material-report-modal'
@@ -38,11 +36,11 @@ import { AktReportDialog } from './akt-report-dialog'
 import { columns } from './columns'
 import { WarehouseMonitorQueryKeys } from './config'
 import { WarehouseMonitorService } from './service'
+import { ViewModal } from './view-modal'
 
 export const MaterialMonitorPage = () => {
   const dates = useDates()
   const pagination = usePagination()
-  const navigate = useNavigate()
 
   const reportsToggle = useToggle()
   const materialToggle = useToggle()
@@ -53,6 +51,7 @@ export const MaterialMonitorPage = () => {
   const setLayout = useLayout()
 
   const [search] = useSearchFilter()
+  const [selected, setSelected] = useState<WarehouseMonitoring | null>(null)
 
   const { t } = useTranslation(['app'])
   const { budjet_id, main_schet_id } = useRequisitesStore()
@@ -78,22 +77,6 @@ export const MaterialMonitorPage = () => {
     queryFn: WarehouseMonitorService.getAll,
     enabled: !!budjet_id && !!main_schet_id && !queuedMonths.length
   })
-
-  const handleEdit = (row: WarehouseMonitoring) => {
-    switch (row.type) {
-      case WarehouseMonitoringType.prixod:
-        navigate(`/journal-7/prixod/${row.id}`)
-        break
-      case WarehouseMonitoringType.rasxod:
-        navigate(`/journal-7/rasxod/${row.id}`)
-        break
-      case WarehouseMonitoringType.internal:
-        navigate(`/journal-7/internal/${row.id}`)
-        break
-      default:
-        toast.error(t('unknown_type'))
-    }
-  }
 
   useEffect(() => {
     setLayout({
@@ -245,7 +228,7 @@ export const MaterialMonitorPage = () => {
           data={monitoring?.data ?? []}
           getColumnSorted={getColumnSorted}
           onSort={handleSort}
-          onEdit={handleEdit}
+          onView={setSelected}
           footer={
             <>
               <FooterRow>
@@ -339,6 +322,11 @@ export const MaterialMonitorPage = () => {
         to={dates.to}
         year={startDate.getFullYear()}
         month={startDate.getMonth() + 1}
+      />
+
+      <ViewModal
+        selected={selected}
+        onClose={() => setSelected(null)}
       />
     </ListView>
   )

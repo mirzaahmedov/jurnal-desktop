@@ -1,11 +1,10 @@
 import type { OrganizationMonitor } from '@/common/models'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 import { useQuery } from '@tanstack/react-query'
 import { Download } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router-dom'
 
 import { createOrganizationSpravochnik } from '@/app/region-spravochnik/organization'
 import {
@@ -35,7 +34,6 @@ import { useSpravochnik } from '@/common/features/spravochnik'
 import { useDates, usePagination, useToggle } from '@/common/hooks'
 import { useLayout } from '@/common/layout'
 import { formatNumber } from '@/common/lib/format'
-import { getProvodkaURL } from '@/common/lib/provodka'
 import { ListView } from '@/common/views'
 
 import { useUslugiSaldo } from '../saldo/use-saldo'
@@ -45,10 +43,10 @@ import { OrganMonitorQueryKeys } from './config'
 import { DailyReportDialog } from './daily-report-dialog'
 import { useOrganFilter } from './filters'
 import { OrganMonitoringService } from './service'
+import { ViewModal } from './view-modal'
 
 const OrganMonitoringPage = () => {
   const dailyReportToggle = useToggle()
-  const navigate = useNavigate()
   const dates = useDates()
   const pagination = usePagination()
   const report_title_id = useSettingsStore((store) => store.report_title_id)
@@ -56,6 +54,7 @@ const OrganMonitoringPage = () => {
   const setLayout = useLayout()
 
   const [organId, setOrganId] = useOrganFilter()
+  const [selected, setSelected] = useState<OrganizationMonitor | null>(null)
   const [search] = useSearchFilter()
 
   const { sorting, handleSort, getColumnSorted } = useTableSort()
@@ -115,14 +114,6 @@ const OrganMonitoringPage = () => {
       handleSaldoErrorDates(SaldoNamespace.JUR_3_152, error)
     }
   }, [error])
-
-  const handleClickEdit = (row: OrganizationMonitor) => {
-    const path = getProvodkaURL(row)
-    if (!path) {
-      return
-    }
-    navigate(path)
-  }
 
   return (
     <ListView>
@@ -266,12 +257,12 @@ const OrganMonitoringPage = () => {
         <GenericTable
           columnDefs={OrganMonitorColumns}
           data={monitoring?.data ?? []}
-          onEdit={handleClickEdit}
           getRowKey={(row) => {
             return `${row.id}-${row.type}`
           }}
           getColumnSorted={getColumnSorted}
           onSort={handleSort}
+          onView={(row) => setSelected(row)}
           footer={
             <>
               <FooterRow>
@@ -335,6 +326,13 @@ const OrganMonitoringPage = () => {
         main_schet_id={main_schet_id!}
         schet_id={jur3_schet_152_id!}
         report_title_id={report_title_id!}
+      />
+
+      <ViewModal
+        selected={selected}
+        onClose={() => {
+          setSelected(null)
+        }}
       />
     </ListView>
   )

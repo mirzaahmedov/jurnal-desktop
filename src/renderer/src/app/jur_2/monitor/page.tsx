@@ -1,4 +1,6 @@
-import { useEffect } from 'react'
+import type { BankMonitoring } from '@/common/models'
+
+import { useEffect, useState } from 'react'
 
 import { useQuery } from '@tanstack/react-query'
 import { Download } from 'lucide-react'
@@ -29,6 +31,7 @@ import { BankMonitorColumns } from './columns'
 import { BankMonitorQueryKeys } from './config'
 import { DailyReportDialog } from './daily-report-dialog'
 import { BankMonitorService } from './service'
+import { ViewModal } from './view-modal'
 
 const BankMonitorPage = () => {
   const setLayout = useLayout()
@@ -40,6 +43,7 @@ const BankMonitorPage = () => {
   const pagination = usePagination()
 
   const [search] = useSearchFilter()
+  const [selected, setSelected] = useState<BankMonitoring | null>(null)
 
   const { t } = useTranslation(['app'])
   const { sorting, handleSort, getColumnSorted } = useTableSort()
@@ -157,6 +161,7 @@ const BankMonitorPage = () => {
           columnDefs={BankMonitorColumns}
           getRowKey={(row) => `${row.id}-${row.rasxod_sum ? 'rasxod' : 'prixod'}`}
           getRowId={(row) => row.id}
+          onView={(row) => setSelected(row)}
           getColumnSorted={getColumnSorted}
           onSort={handleSort}
           footer={
@@ -234,6 +239,13 @@ const BankMonitorPage = () => {
         budjet_id={budjet_id!}
         main_schet_id={main_schet_id!}
         report_title_id={report_title_id!}
+      />
+
+      <ViewModal
+        selected={selected}
+        onClose={() => {
+          setSelected(null)
+        }}
       />
     </ListView>
   )

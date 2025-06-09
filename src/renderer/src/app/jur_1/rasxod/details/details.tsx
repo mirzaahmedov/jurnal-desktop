@@ -1,4 +1,4 @@
-import type { KassaPrixodProvodkaFormValues } from '../config'
+import type { KassaRasxodFormValues, KassaRasxodPodvodkaFormValues } from '../config'
 
 import { useEffect } from 'react'
 
@@ -8,10 +8,11 @@ import { useForm, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 
+import { KassaMonitorQueryKeys, KassaMonitorService } from '@/app/jur_1/monitor'
 import { createShartnomaSpravochnik } from '@/app/jur_3/shartnoma'
 import { createOrganizationSpravochnik } from '@/app/region-spravochnik/organization'
 import { createPodotchetSpravochnik } from '@/app/region-spravochnik/podotchet'
-import { Fieldset } from '@/common/components'
+import { AccountBalance, Fieldset } from '@/common/components'
 import { EditableTable } from '@/common/components/editable-table'
 import {
   createEditorCreateHandler,
@@ -49,33 +50,35 @@ import { MainZarplataFields } from '@/common/widget/form/main-zarplata'
 
 import { useKassaSaldo } from '../../saldo/components/use-saldo'
 import {
-  KassaPrixodFormSchema,
-  KassaPrixodPodvodkaFormSchema,
-  KassaPrixodQueryKeys,
-  PrixodType,
+  KassaRasxodFormSchema,
+  KassaRasxodPodvodkaFormSchema,
+  KassaRasxodQueryKeys,
+  RasxodType,
   defaultValues
 } from '../config'
-import { KassaPrixodService } from '../service'
+import { KassaRasxodService } from '../service'
 import { podvodkaColumns } from './podvodki'
 
-export interface KassaPrixodDetailsProps {
+export interface KassaRasxodDetailsProps {
   id: string | undefined
   onSuccess?: VoidFunction
 }
+export const KassaRasxodDetails = ({ id, onSuccess }: KassaRasxodDetailsProps) => {
+  const { t } = useTranslation(['app'])
+  const { snippets, addSnippet, removeSnippet } = useSnippets({
+    ns: 'kassa_rasxod'
+  })
+  const { queuedMonths } = useKassaSaldo()
 
-export const KassaPrixodDetails = ({ id, onSuccess }: KassaPrixodDetailsProps) => {
-  const queryClient = useQueryClient()
   const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
+  const queryClient = useQueryClient()
   const startDate = useSelectedMonthStore((store) => store.startDate)
 
-  const { t } = useTranslation(['app'])
-  const { queuedMonths } = useKassaSaldo()
-  const { snippets, addSnippet, removeSnippet } = useSnippets({
-    ns: 'kassa_prixod'
-  })
+  const year = startDate.getFullYear()
+  const month = startDate.getMonth() + 1
 
   const form = useForm({
-    resolver: zodResolver(KassaPrixodFormSchema),
+    resolver: zodResolver(KassaRasxodFormSchema),
     defaultValues: {
       ...defaultValues,
       doc_date: formatDate(startDate)
@@ -122,37 +125,52 @@ export const KassaPrixodDetails = ({ id, onSuccess }: KassaPrixodDetailsProps) =
       onChange: (id) => {
         form.setValue('main_zarplata_id', id, { shouldValidate: true })
         form.setValue('id_podotchet_litso', 0)
-        form.setValue('id_spravochnik_organization', 0)
       }
     })
   )
 
   const {
-    data: prixod,
-    isFetching,
+    data: monitor,
+    isFetching: isFetchingMonitor,
     error
   } = useQuery({
     queryKey: [
-      KassaPrixodQueryKeys.getById,
-      Number(id),
+      KassaMonitorQueryKeys.getAll,
       {
-        main_schet_id
+        main_schet_id,
+        limit: 10,
+        page: 1,
+        year,
+        month,
+        from: form.watch('doc_date'),
+        to: form.watch('doc_date')
       }
     ],
-    queryFn: KassaPrixodService.getById,
+    queryFn: KassaMonitorService.getAll,
+    enabled: !!form.watch('doc_date') && !queuedMonths.length
+  })
+  const { data: rasxod, isFetching } = useQuery({
+    queryKey: [
+      KassaRasxodQueryKeys.getById,
+      Number(id),
+      {
+        main_schet_id: main_schet_id
+      }
+    ],
+    queryFn: KassaRasxodService.getById,
     enabled: id !== 'create' && !queuedMonths.length
   })
-
-  const { mutate: createPrixod, isPending: isCreating } = useMutation({
-    mutationFn: KassaPrixodService.create,
+  const { mutate: createRasxod, isPending: isCreating } = useMutation({
+    mutationFn: KassaRasxodService.create,
     onSuccess(res) {
-      toast.success(res.message)
+      toast.success(res?.message)
 
+      form.reset(defaultValues)
       queryClient.invalidateQueries({
-        queryKey: [KassaPrixodQueryKeys.getAll]
+        queryKey: [KassaRasxodQueryKeys.getAll]
       })
       queryClient.invalidateQueries({
-        queryKey: [KassaPrixodQueryKeys.getById, id]
+        queryKey: [KassaRasxodQueryKeys.getById, id]
       })
 
       onSuccess?.()
@@ -162,17 +180,16 @@ export const KassaPrixodDetails = ({ id, onSuccess }: KassaPrixodDetailsProps) =
       handleSaldoErrorDates(SaldoNamespace.JUR_1, error)
     }
   })
-
-  const { mutate: updatePrixod, isPending: isUpdating } = useMutation({
-    mutationFn: KassaPrixodService.update,
+  const { mutate: updateRasxod, isPending: isUpdating } = useMutation({
+    mutationFn: KassaRasxodService.update,
     onSuccess(res) {
-      toast.success(res.message)
+      toast.success(res?.message)
 
       queryClient.invalidateQueries({
-        queryKey: [KassaPrixodQueryKeys.getAll]
+        queryKey: [KassaRasxodQueryKeys.getAll]
       })
       queryClient.invalidateQueries({
-        queryKey: [KassaPrixodQueryKeys.getById, id]
+        queryKey: [KassaRasxodQueryKeys.getById, id]
       })
 
       onSuccess?.()
@@ -196,38 +213,38 @@ export const KassaPrixodDetails = ({ id, onSuccess }: KassaPrixodDetailsProps) =
       organization_by_raschet_schet_gazna_id,
       organization_by_raschet_schet_id,
       shartnoma_grafik_id
-    }) => {
+    }: KassaRasxodFormValues) => {
       if (id !== 'create') {
-        updatePrixod({
+        updateRasxod({
           id: Number(id),
           doc_date,
           doc_num,
           id_podotchet_litso,
           main_zarplata_id,
-          type: type === PrixodType.Organ ? PrixodType.Organ : PrixodType.Podotchet,
+          type: type === RasxodType.Organ ? RasxodType.Organ : RasxodType.Podotchet,
           opisanie,
           contract_id: id_shartnomalar_organization,
           contract_grafik_id: shartnoma_grafik_id,
           organ_id: id_spravochnik_organization,
           organ_gazna_id: organization_by_raschet_schet_gazna_id,
           organ_account_id: organization_by_raschet_schet_id,
-          childs: podvodki.map(normalizeEmptyFields<KassaPrixodProvodkaFormValues>)
+          childs: podvodki.map(normalizeEmptyFields<KassaRasxodPodvodkaFormValues>)
         })
         return
       }
-      createPrixod({
+      createRasxod({
         doc_date,
         doc_num,
         id_podotchet_litso,
         main_zarplata_id,
-        type: type === PrixodType.Organ ? PrixodType.Organ : PrixodType.Podotchet,
+        type: type === RasxodType.Organ ? RasxodType.Organ : RasxodType.Podotchet,
         opisanie,
         contract_id: id_shartnomalar_organization,
         contract_grafik_id: shartnoma_grafik_id,
         organ_id: id_spravochnik_organization,
         organ_gazna_id: organization_by_raschet_schet_gazna_id,
         organ_account_id: organization_by_raschet_schet_id,
-        childs: podvodki.map(normalizeEmptyFields<KassaPrixodProvodkaFormValues>)
+        childs: podvodki.map(normalizeEmptyFields<KassaRasxodPodvodkaFormValues>)
       })
     }
   )
@@ -236,6 +253,13 @@ export const KassaPrixodDetails = ({ id, onSuccess }: KassaPrixodDetailsProps) =
     control: form.control,
     name: 'childs'
   })
+
+  const summa = form.watch('summa')
+  const reminder = monitor?.meta
+    ? (monitor?.meta?.summa_to ?? 0) -
+      (summa ?? 0) +
+      (rasxod?.data?.summa ? Number(rasxod?.data?.summa) : 0)
+    : 0
 
   useEffect(() => {
     if (error) {
@@ -252,7 +276,7 @@ export const KassaPrixodDetails = ({ id, onSuccess }: KassaPrixodDetailsProps) =
   }, [form, podvodki])
 
   useEffect(() => {
-    if (id === 'create' || !prixod?.data) {
+    if (id === 'create' || !rasxod?.data) {
       form.reset({
         ...defaultValues,
         doc_date: formatDate(startDate)
@@ -261,23 +285,23 @@ export const KassaPrixodDetails = ({ id, onSuccess }: KassaPrixodDetailsProps) =
     }
 
     form.reset({
-      doc_num: prixod.data.doc_num,
-      doc_date: prixod.data.doc_date,
-      opisanie: prixod.data.opisanie ?? '',
-      id_podotchet_litso: prixod.data.id_podotchet_litso ?? 0,
-      id_shartnomalar_organization: prixod.data.contract_id,
-      id_spravochnik_organization: prixod.data.organ_id,
-      organization_by_raschet_schet_gazna_id: prixod.data.organ_gazna_id,
-      organization_by_raschet_schet_id: prixod.data.organ_account_id,
-      main_zarplata_id: prixod.data.main_zarplata_id ?? 0,
-      childs: prixod.data.childs,
-      type: prixod.data.main_zarplata_id
-        ? PrixodType.Zarplata
-        : prixod.data.organ_id
-          ? PrixodType.Organ
-          : PrixodType.Podotchet
+      doc_num: rasxod.data.doc_num,
+      doc_date: rasxod.data.doc_date,
+      opisanie: rasxod.data.opisanie,
+      id_podotchet_litso: rasxod.data.id_podotchet_litso,
+      id_shartnomalar_organization: rasxod.data.contract_id,
+      id_spravochnik_organization: rasxod.data.organ_id,
+      organization_by_raschet_schet_gazna_id: rasxod.data.organ_gazna_id,
+      organization_by_raschet_schet_id: rasxod.data.organ_account_id,
+      main_zarplata_id: rasxod.data.main_zarplata_id,
+      childs: rasxod.data.childs,
+      type: rasxod.data.main_zarplata_id
+        ? RasxodType.Zarplata
+        : rasxod.data.organ_id
+          ? RasxodType.Organ
+          : RasxodType.Podotchet
     })
-  }, [form, prixod, id])
+  }, [form, rasxod, id])
 
   return (
     <DetailsView>
@@ -289,7 +313,7 @@ export const KassaPrixodDetails = ({ id, onSuccess }: KassaPrixodDetailsProps) =
                 <DocumentFields
                   tabIndex={1}
                   form={form}
-                  documentType={DocumentType.KASSA_PRIXOD}
+                  documentType={DocumentType.KASSA_RASXOD}
                   autoGenerate={id === 'create'}
                   validateDate={id === 'create' ? validateDateWithinSelectedMonth : undefined}
                   calendarProps={
@@ -316,36 +340,36 @@ export const KassaPrixodDetails = ({ id, onSuccess }: KassaPrixodDetailsProps) =
                       >
                         <div className="flex items-center space-x-2">
                           <RadioGroupItem
-                            value={PrixodType.Podotchet}
-                            id={PrixodType.Podotchet}
+                            value={RasxodType.Podotchet}
+                            id={RasxodType.Podotchet}
                           />
-                          <Label htmlFor={PrixodType.Podotchet}>{t('podotchet-litso')}</Label>
+                          <Label htmlFor={RasxodType.Podotchet}>{t('podotchet-litso')}</Label>
                         </div>
                         <div className="flex items-center space-x-2">
                           <RadioGroupItem
-                            value={PrixodType.Organ}
-                            id={PrixodType.Organ}
+                            value={RasxodType.Organ}
+                            id={RasxodType.Organ}
                           />
-                          <Label htmlFor={PrixodType.Organ}>{t('organization')}</Label>
+                          <Label htmlFor={RasxodType.Organ}>{t('organization')}</Label>
                         </div>
                         <div className="flex items-center space-x-2">
                           <RadioGroupItem
-                            value={PrixodType.Zarplata}
-                            id={PrixodType.Zarplata}
+                            value={RasxodType.Zarplata}
+                            id={RasxodType.Zarplata}
                           />
-                          <Label htmlFor={PrixodType.Zarplata}>{t('zarplata')}</Label>
+                          <Label htmlFor={RasxodType.Zarplata}>{t('zarplata')}</Label>
                         </div>
                       </RadioGroup>
                     )}
                   />
                 </div>
-                {form.watch('type') === PrixodType.Zarplata ? (
+                {form.watch('type') === RasxodType.Zarplata ? (
                   <MainZarplataFields
                     tabIndex={2}
                     spravochnik={mainZarplataSpravochnik}
                     error={form.formState.errors.main_zarplata_id}
                   />
-                ) : form.watch('type') === PrixodType.Podotchet ? (
+                ) : form.watch('type') === RasxodType.Podotchet ? (
                   <PodotchetFields
                     tabIndex={2}
                     spravochnik={podotchetSpravochnik}
@@ -361,7 +385,7 @@ export const KassaPrixodDetails = ({ id, onSuccess }: KassaPrixodDetailsProps) =
                 )}
                 <div className="h-full divide-y">
                   <SummaFields data={{ summa: form.watch('summa') }} />
-                  {form.watch('type') === PrixodType.Organ ? (
+                  {form.watch('type') === RasxodType.Organ ? (
                     <ShartnomaFields
                       disabled={!form.watch('id_spravochnik_organization')}
                       form={form as any}
@@ -371,7 +395,7 @@ export const KassaPrixodDetails = ({ id, onSuccess }: KassaPrixodDetailsProps) =
                 </div>
               </div>
 
-              <div className="mt-5 px-5">
+              <div className="mt-3 p-5">
                 <OpisanieFields
                   tabIndex={3}
                   form={form}
@@ -384,15 +408,22 @@ export const KassaPrixodDetails = ({ id, onSuccess }: KassaPrixodDetailsProps) =
 
             <DetailsView.Footer className="flex flex-row items-center gap-10">
               <DetailsView.Create
+                isDisabled={
+                  reminder < 0 || isFetchingMonitor || isFetching || isUpdating || isCreating
+                }
                 isPending={isCreating || isUpdating}
                 tabIndex={5}
               />
+
+              {!form.watch('doc_date') || isFetchingMonitor ? null : (
+                <AccountBalance balance={reminder} />
+              )}
             </DetailsView.Footer>
           </form>
         </Form>
         <Fieldset
           name={t('provodka')}
-          className="flex-1 mt-5 pb-24 bg-slate-50"
+          className="flex-1 mt-10 pb-20 bg-slate-50"
         >
           <EditableTable
             tabIndex={4}
@@ -402,7 +433,7 @@ export const KassaPrixodDetails = ({ id, onSuccess }: KassaPrixodDetailsProps) =
             errors={form.formState.errors.childs}
             onCreate={createEditorCreateHandler({
               form,
-              schema: KassaPrixodPodvodkaFormSchema,
+              schema: KassaRasxodPodvodkaFormSchema,
               defaultValues: defaultValues.childs[0]
             })}
             onDelete={createEditorDeleteHandler({

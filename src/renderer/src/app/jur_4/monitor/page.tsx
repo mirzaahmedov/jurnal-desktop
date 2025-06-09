@@ -1,11 +1,10 @@
 import type { PodotchetMonitor } from '@/common/models'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 import { useQuery } from '@tanstack/react-query'
 import { Download } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router-dom'
 
 import { createPodotchetSpravochnik } from '@/app/region-spravochnik/podotchet'
 import {
@@ -35,7 +34,6 @@ import { useSpravochnik } from '@/common/features/spravochnik'
 import { useDates, usePagination, useToggle } from '@/common/hooks'
 import { useLayout } from '@/common/layout'
 import { formatNumber } from '@/common/lib/format'
-import { getProvodkaURL } from '@/common/lib/provodka'
 import { ListView } from '@/common/views'
 
 import { usePodotchetSaldo } from '../saldo/use-saldo'
@@ -44,10 +42,10 @@ import { PodotchetMonitorQueryKeys } from './config'
 import { DailyReportDialog } from './daily-report-dialog'
 import { usePodotchetFilter } from './filters'
 import { PodotchetMonitorService } from './service'
+import { ViewModal } from './view-modal'
 
 const PodotchetMonitorPage = () => {
   const dates = useDates()
-  const navigate = useNavigate()
   const pagination = usePagination()
   const report_title_id = useSettingsStore((store) => store.report_title_id)
   const startDate = useSelectedMonthStore((store) => store.startDate)
@@ -55,6 +53,7 @@ const PodotchetMonitorPage = () => {
   const setLayout = useLayout()
 
   const [search] = useSearchFilter()
+  const [selected, setSelected] = useState<PodotchetMonitor | null>(null)
   const [podotchetId, setPodotchetId] = usePodotchetFilter()
 
   const { t } = useTranslation(['app'])
@@ -112,14 +111,6 @@ const PodotchetMonitorPage = () => {
       handleSaldoErrorDates(SaldoNamespace.JUR_4, error)
     }
   }, [error])
-
-  const handleClickEdit = (row: PodotchetMonitor) => {
-    const path = getProvodkaURL(row)
-    if (!path) {
-      return
-    }
-    navigate(path)
-  }
 
   return (
     <ListView>
@@ -219,9 +210,9 @@ const PodotchetMonitorPage = () => {
           columnDefs={PodotchetMonitorColumns}
           data={monitoring?.data ?? []}
           getRowKey={(row) => `${row.type}-${row.id}`}
-          onEdit={handleClickEdit}
           getColumnSorted={getColumnSorted}
           onSort={handleSort}
+          onView={(row) => setSelected(row)}
           footer={
             <>
               <FooterRow>
@@ -284,6 +275,10 @@ const PodotchetMonitorPage = () => {
         main_schet_id={main_schet_id!}
         schet_id={jur4_schet_id!}
         report_title_id={report_title_id!}
+      />
+      <ViewModal
+        selected={selected}
+        onClose={() => setSelected(null)}
       />
     </ListView>
   )

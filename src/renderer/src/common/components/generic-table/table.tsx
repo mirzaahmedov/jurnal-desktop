@@ -1,6 +1,6 @@
 import { type ReactNode, useEffect, useMemo, useState } from 'react'
 
-import { ArrowDown10, ArrowUp01, Pencil, Trash2 } from 'lucide-react'
+import { ArrowDown10, ArrowUp01, Eye, Pencil, Trash2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { twMerge } from 'tailwind-merge'
 
@@ -38,6 +38,7 @@ export const GenericTable = <T extends object>(props: GenericTableProps<T>) => {
     onClickRow,
     onDelete,
     onEdit,
+    onView,
     onSort,
     activeRowId,
     footer,
@@ -82,7 +83,7 @@ export const GenericTable = <T extends object>(props: GenericTableProps<T>) => {
     }
   }
 
-  const actionsCount = [onEdit, onDelete, actions].filter(Boolean).length
+  const actionsCount = [onEdit, onDelete, onView, actions].filter(Boolean).length
   const actionsWidth = actionsCount * 36 + (actionsCount - 1) * 4 + 48
 
   return (
@@ -168,7 +169,7 @@ export const GenericTable = <T extends object>(props: GenericTableProps<T>) => {
                       )
                     })
                   : null}
-                {(onDelete || onEdit || actions) && groupIndex === 0 ? (
+                {(onDelete || onEdit || onView || actions) && groupIndex === 0 ? (
                   <GenericTableHead
                     fit
                     className="text-center sticky right-0 z-10 !bg-inherit border-l"
@@ -250,7 +251,7 @@ export const GenericTable = <T extends object>(props: GenericTableProps<T>) => {
                     })
                   : null}
 
-                {onDelete || onEdit || actions ? (
+                {onDelete || onEdit || onView || actions ? (
                   <GenericTableCell
                     className="py-1 sticky right-0 bg-inherit shadow-sm border-l"
                     style={{
@@ -260,6 +261,18 @@ export const GenericTable = <T extends object>(props: GenericTableProps<T>) => {
                     }}
                   >
                     <div className="flex items-center whitespace-nowrap w-full gap-1">
+                      {onView && (
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            onView(row)
+                          }}
+                        >
+                          <Eye className="size-4" />
+                        </Button>
+                      )}
                       {onEdit && getRowEditable(row) && (
                         <Button
                           variant="ghost"

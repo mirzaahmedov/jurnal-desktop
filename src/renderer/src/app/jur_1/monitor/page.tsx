@@ -1,32 +1,37 @@
+import type { KassaMonitoringType } from '@/common/models'
+
+import { useEffect, useState } from 'react'
+
+import { useQuery } from '@tanstack/react-query'
+import { Download } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
+
 import { FooterCell, FooterRow, GenericTable, SummaTotal, useTableSort } from '@/common/components'
-import { SaldoNamespace, handleSaldoErrorDates } from '@/common/features/saldo'
+import { Button } from '@/common/components/ui/button'
+import { ButtonGroup } from '@/common/components/ui/button-group'
+import { DownloadFile } from '@/common/features/file'
 import {
   SearchFilterDebounced,
   useSearchFilter
 } from '@/common/features/filters/search/search-filter-debounced'
-import { useDates, usePagination, useToggle } from '@/common/hooks'
+import { useRequisitesStore } from '@/common/features/requisites'
+import { SaldoNamespace, handleSaldoErrorDates } from '@/common/features/saldo'
 import {
   useSelectedMonthStore,
   validateDateWithinSelectedMonth
 } from '@/common/features/selected-month'
-
-import { Button } from '@/common/components/ui/button'
-import { ButtonGroup } from '@/common/components/ui/button-group'
-import { DailyReportDialog } from './daily-report-dialog'
-import { Download } from 'lucide-react'
-import { DownloadFile } from '@/common/features/file'
-import { KassaMonitorQueryKeys } from './config'
-import { KassaMonitorService } from './service'
-import { ListView } from '@/common/views'
-import { columns } from './columns'
-import { formatNumber } from '@/common/lib/format'
-import { useEffect } from 'react'
-import { useKassaSaldo } from '../saldo/components/use-saldo'
-import { useLayout } from '@/common/layout'
-import { useQuery } from '@tanstack/react-query'
-import { useRequisitesStore } from '@/common/features/requisites'
 import { useSettingsStore } from '@/common/features/settings'
-import { useTranslation } from 'react-i18next'
+import { useDates, usePagination, useToggle } from '@/common/hooks'
+import { useLayout } from '@/common/layout'
+import { formatNumber } from '@/common/lib/format'
+import { ListView } from '@/common/views'
+
+import { useKassaSaldo } from '../saldo/components/use-saldo'
+import { columns } from './columns'
+import { KassaMonitorQueryKeys } from './config'
+import { DailyReportDialog } from './daily-report-dialog'
+import { KassaMonitorService } from './service'
+import { ViewModal } from './view-modal'
 
 const KassaMonitorPage = () => {
   const dates = useDates()
@@ -37,6 +42,7 @@ const KassaMonitorPage = () => {
   const dailyReportToggle = useToggle()
 
   const [search] = useSearchFilter()
+  const [selected, setSelected] = useState<KassaMonitoringType | null>(null)
 
   const { t } = useTranslation(['app'])
   const { queuedMonths } = useKassaSaldo()
@@ -153,6 +159,9 @@ const KassaMonitorPage = () => {
           columnDefs={columns}
           getRowKey={(row) => `${row.id}-${row.rasxod_sum ? 'rasxod' : 'prixod'}`}
           getRowId={(row) => row.id}
+          onView={(row) => {
+            setSelected(row)
+          }}
           getColumnSorted={getColumnSorted}
           onSort={handleSort}
           footer={
@@ -231,6 +240,13 @@ const KassaMonitorPage = () => {
         budjet_id={budjet_id!}
         main_schet_id={main_schet_id!}
         report_title_id={report_title_id!}
+      />
+
+      <ViewModal
+        selected={selected}
+        onClose={() => {
+          setSelected(null)
+        }}
       />
     </ListView>
   )
