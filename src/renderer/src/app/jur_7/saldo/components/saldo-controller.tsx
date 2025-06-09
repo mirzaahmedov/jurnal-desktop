@@ -10,14 +10,14 @@ import { SelectedMonth } from '@/common/layout/compoonents/selected-month'
 import { IznosQueryKeys } from '../../iznos/config'
 import { SaldoQueryKeys } from '../config'
 import { MaterialSaldoService } from '../service'
-import { useWarehouseSaldo } from '../use-saldo'
+import { useMaterialSaldo } from '../use-saldo'
 
 export const WarehouseSaldoController = () => {
   const queryClient = useQueryClient()
   const startDate = useSelectedMonthStore((store) => store.startDate)
 
   const { budjet_id, main_schet_id } = useRequisitesStore()
-  const { dequeueMonth } = useWarehouseSaldo()
+  const { dequeueMonth } = useMaterialSaldo()
 
   const location = useLocation()
 

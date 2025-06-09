@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 
 import { useQuery } from '@tanstack/react-query'
-import { CircleArrowDown } from 'lucide-react'
+import { CircleArrowDown, Download } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
@@ -25,27 +25,29 @@ import {
   validateDateWithinSelectedMonth
 } from '@/common/features/selected-month'
 import { useSpravochnik } from '@/common/features/spravochnik'
-import { usePagination } from '@/common/hooks'
+import { usePagination, useToggle } from '@/common/hooks'
 import { useLayout } from '@/common/layout'
 import { formatDate, parseDate } from '@/common/lib/date'
 import { formatNumber } from '@/common/lib/format'
 import { ListView } from '@/common/views'
 
+import { MaterialReportModal } from '../__components__/material-report-modal'
 import { createResponsibleSpravochnik } from '../responsible/service'
 import { MaterialSaldoProductService, defaultValues } from '../saldo'
-import { useWarehouseSaldo } from '../saldo/use-saldo'
+import { useMaterialSaldo } from '../saldo/use-saldo'
 import { handleOstatokError } from '../saldo/utils'
 import { IznosColumns } from './columns'
 import { IznosQueryKeys } from './config'
 
-const IznosPage = () => {
+const MaterialIznosPage = () => {
   const pagination = usePagination()
-  const budjet_id = useRequisitesStore((store) => store.budjet_id)
   const setLayout = useLayout()
+  const materialToggle = useToggle()
 
   const { t } = useTranslation(['app'])
+  const { budjet_id, main_schet_id } = useRequisitesStore()
   const { startDate, endDate } = useSelectedMonthStore()
-  const { queuedMonths } = useWarehouseSaldo()
+  const { queuedMonths } = useMaterialSaldo()
 
   const [search] = useSearchFilter()
   const [selectedDate, setSelectedDate] = useState<undefined | Date>(startDate)
@@ -133,6 +135,14 @@ const IznosPage = () => {
               ]}
             />
           </div>
+          <div className="flex-1"></div>
+
+          <Button
+            variant="ghost"
+            onClick={materialToggle.open}
+          >
+            <Download className="btn-icon icon-start icon-sm" /> {t('material')}
+          </Button>
 
           <form
             onSubmit={onSubmit}
@@ -179,9 +189,12 @@ const IznosPage = () => {
                   colSpan={7}
                 />
                 <FooterCell content={formatNumber(iznos?.meta?.page_to_kol ?? 0)} />
-                <FooterCell content={formatNumber(iznos?.meta?.page_to_summa ?? 0)} />
                 <FooterCell
-                  colSpan={6}
+                  colSpan={2}
+                  content={formatNumber(iznos?.meta?.page_to_summa ?? 0)}
+                />
+                <FooterCell
+                  colSpan={8}
                   content={formatNumber(iznos?.meta?.page_to_iznos_summa ?? 0)}
                 />
               </FooterRow>
@@ -191,9 +204,12 @@ const IznosPage = () => {
                   colSpan={7}
                 />
                 <FooterCell content={formatNumber(iznos?.meta?.to_kol ?? 0)} />
-                <FooterCell content={formatNumber(iznos?.meta?.to_summa ?? 0)} />
                 <FooterCell
-                  colSpan={6}
+                  colSpan={2}
+                  content={formatNumber(iznos?.meta?.to_summa ?? 0)}
+                />
+                <FooterCell
+                  colSpan={8}
                   content={formatNumber(iznos?.meta?.to_iznos_summa ?? 0)}
                 />
               </FooterRow>
@@ -208,8 +224,20 @@ const IznosPage = () => {
           {...pagination}
         />
       </ListView.Footer>
+
+      <MaterialReportModal
+        withDefault={false}
+        withIznos
+        isOpen={materialToggle.isOpen}
+        onOpenChange={materialToggle.setOpen}
+        budjet_id={budjet_id!}
+        main_schet_id={main_schet_id!}
+        to={formatDate(selectedDate!)}
+        year={startDate.getFullYear()}
+        month={startDate.getMonth() + 1}
+      />
     </ListView>
   )
 }
 
-export default IznosPage
+export default MaterialIznosPage

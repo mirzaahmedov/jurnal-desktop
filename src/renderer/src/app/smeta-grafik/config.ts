@@ -28,7 +28,7 @@ export const SmetaGrafikProvodkaFormSchema = z
     oy_12: z.number(),
     smeta_id: z.number().min(1),
     smeta_number: z.string().optional(),
-    total: z.number().optional(),
+    itogo: z.number().optional(),
     sub_schet: z.string().optional()
   })
   .superRefine((values, ctx) => {

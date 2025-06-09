@@ -9,7 +9,7 @@ import { BudjetSelectedGuard, MainSchetSelectedGuard } from '@/common/features/r
 import { DuplicateSchetsGuard } from '@/common/features/requisites/guards/duplicate-schets-guard'
 
 import DashboardPage from './dashboard/page'
-import { WarehouseMonitorPage } from './jur_7/monitor/page'
+import { MaterialMonitorPage } from './jur_7/monitor/page'
 import MaterialCreatePage from './jur_7/saldo/create/page'
 import PrixodSchetPage from './jur_8/schet/page'
 import SigninPage from './sign-in'
@@ -472,7 +472,7 @@ export const routes: RouteObject[] = [
         children: [
           {
             path: 'monitor',
-            element: <WarehouseMonitorPage />
+            element: <MaterialMonitorPage />
           },
           {
             path: 'responsible',

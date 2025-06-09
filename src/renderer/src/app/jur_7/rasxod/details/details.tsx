@@ -3,7 +3,7 @@ import { useEffect, useMemo, useRef } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import isEmpty from 'just-is-empty'
-import { useForm } from 'react-hook-form'
+import { useForm, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 
@@ -29,6 +29,7 @@ import {
   SummaFields
 } from '@/common/widget/form'
 
+import { SchetSumma } from '../../__components__/schet-summa'
 import { RasxodFormSchema, WarehouseRasxodQueryKeys, defaultValues } from '../config'
 import { WarehouseRasxodService, useRasxodCreate, useRasxodUpdate } from '../service'
 import { ApplyAllInputs } from './apply-all-inputs'
@@ -60,6 +61,43 @@ const RasxodDetails = ({ id, onSuccess }: RasxodDetailsProps) => {
     },
     resolver: zodResolver(RasxodFormSchema)
   })
+
+  const childs = useWatch({
+    control: form.control,
+    name: 'childs'
+  })
+  const debetSums = useMemo(() => {
+    const uniqueSchets = new Set(childs.map((child) => child.debet_schet).filter(Boolean))
+    const sums = Array.from(uniqueSchets).map((schet) => {
+      return {
+        schet,
+        summa: childs
+          .filter((child) => child.debet_schet === schet)
+          .reduce((acc, child) => acc + child.summa, 0)
+      }
+    })
+    sums.unshift({
+      schet: t('debet'),
+      summa: sums.reduce((acc, { summa }) => acc + summa, 0)
+    })
+    return sums
+  }, [childs, t])
+  const kreditSums = useMemo(() => {
+    const uniqueSchets = new Set(childs.map((child) => child.kredit_schet).filter(Boolean))
+    const sums = Array.from(uniqueSchets).map((schet) => {
+      return {
+        schet,
+        summa: childs
+          .filter((child) => child.kredit_schet === schet)
+          .reduce((acc, child) => acc + child.summa, 0)
+      }
+    })
+    sums.unshift({
+      schet: t('kredit'),
+      summa: sums.reduce((acc, { summa }) => acc + summa, 0)
+    })
+    return sums
+  }, [childs, t])
 
   const { data: rasxod, isFetching } = useQuery({
     queryKey: [
@@ -134,7 +172,6 @@ const RasxodDetails = ({ id, onSuccess }: RasxodDetailsProps) => {
     updateRasxod({ id: Number(id), ...values })
   })
 
-  const childs = form.watch('childs')
   const summa = useMemo(() => {
     if (!Array.isArray(childs)) {
       return
@@ -268,11 +305,41 @@ const RasxodDetails = ({ id, onSuccess }: RasxodDetailsProps) => {
             }}
           />
         </div>
-        <div className="p-5 mb-28 overflow-x-auto scrollbar">
+        <div className="p-5 overflow-x-auto scrollbar">
           <ProvodkaTable
             tabIndex={5}
             form={form}
           />
+        </div>
+        <div className="px-5 mt-5 mb-28 ">
+          <div
+            className="grid gap-2"
+            style={{
+              gridTemplateColumns: `repeat(7, minmax(120px, 1fr))`
+            }}
+          >
+            {debetSums.map(({ schet, summa }) => (
+              <SchetSumma
+                key={schet}
+                schet={schet}
+                summa={summa}
+              />
+            ))}
+          </div>
+          <div
+            className="grid gap-2 mt-1"
+            style={{
+              gridTemplateColumns: `repeat(7,minmax(120px, 1fr))`
+            }}
+          >
+            {kreditSums.map(({ schet, summa }) => (
+              <SchetSumma
+                key={schet}
+                schet={schet}
+                summa={summa}
+              />
+            ))}
+          </div>
         </div>
       </DetailsView.Content>
     </DetailsView>

@@ -3,7 +3,7 @@ import type { SaldoProduct } from '@/common/models'
 import { useEffect, useState } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { CalendarDays, CircleArrowDown, Trash2 } from 'lucide-react'
+import { CalendarDays, CircleArrowDown, Download, Trash2 } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
@@ -42,6 +42,7 @@ import { formatLocaleDate, formatNumber } from '@/common/lib/format'
 import { capitalize } from '@/common/lib/string'
 import { ListView } from '@/common/views'
 
+import { MaterialReportModal } from '../__components__/material-report-modal'
 import { IznosQueryKeys } from '../iznos/config'
 import { createResponsibleSpravochnik } from '../responsible/service'
 import { CommonWarehouseSaldoProductColumns } from './columns'
@@ -50,7 +51,7 @@ import { DeleteExistingSaldoAlert } from './components/delete-existing-saldo-ale
 import { MonthlySaldoTrackerDialog } from './components/monthly-saldo-tracker-dialog'
 import { SaldoQueryKeys, defaultValues } from './config'
 import { MaterialSaldoProductService, MaterialSaldoService } from './service'
-import { useWarehouseSaldo } from './use-saldo'
+import { useMaterialSaldo } from './use-saldo'
 import {
   type OstatokDeleteExistingDocument,
   type OstatokDeleteExistingSaldo,
@@ -71,7 +72,7 @@ const columns = [
 
 const MaterialWarehouseSaldoPage = () => {
   const { startDate, endDate, setSelectedMonth } = useSelectedMonthStore()
-  const { queuedMonths } = useWarehouseSaldo()
+  const { queuedMonths } = useMaterialSaldo()
 
   const [deleteExistingDocumentError, setDeleteExistingDocumentError] = useState<{
     message: string
@@ -92,6 +93,7 @@ const MaterialWarehouseSaldoPage = () => {
   const [search] = useSearchFilter()
 
   const trackerToggle = useToggle()
+  const materialToggle = useToggle()
   const queryClient = useQueryClient()
   const pagination = usePagination()
   const navigate = useNavigate()
@@ -119,7 +121,7 @@ const MaterialWarehouseSaldoPage = () => {
   })
 
   const {
-    data: saldos,
+    data: saldo,
     isFetching,
     error: saldoError
   } = useQuery({
@@ -394,6 +396,13 @@ const MaterialWarehouseSaldoPage = () => {
           />
           <Button
             variant="ghost"
+            onClick={materialToggle.open}
+          >
+            <Download className="btn-icon icon-start icon-sm" /> {t('material')}
+          </Button>
+
+          <Button
+            variant="ghost"
             onPress={trackerToggle.open}
           >
             <CalendarDays className="btn-icon icon-start" />
@@ -451,7 +460,7 @@ const MaterialWarehouseSaldoPage = () => {
       <ListView.Content loading={isFetching || isDeletingMonth || isDeleting || isCheckingCreate}>
         <GenericTable
           columnDefs={columns}
-          data={saldos?.data ?? []}
+          data={saldo?.data ?? []}
           getRowId={(row) => row.product_id}
           getRowKey={(row) => row.id}
           onDelete={isModifiable ? handleDeleteOne : undefined}
@@ -461,29 +470,37 @@ const MaterialWarehouseSaldoPage = () => {
                 <FooterCell
                   colSpan={9}
                   title={t('total_page')}
-                  content={String(saldos?.meta?.page_from_kol ?? 0)}
+                  content={String(saldo?.meta?.page_from_kol ?? 0)}
                 />
-                <FooterCell content={formatNumber(saldos?.meta?.page_from_summa ?? 0)} />
-                <FooterCell content={String(saldos?.meta?.page_internal_prixod_kol ?? 0)} />
-                <FooterCell content={formatNumber(saldos?.meta?.page_internal_prixod_summa ?? 0)} />
-                <FooterCell content={String(saldos?.meta?.page_internal_rasxod_kol ?? 0)} />
-                <FooterCell content={formatNumber(saldos?.meta?.page_internal_rasxod_summa ?? 0)} />
-                <FooterCell content={String(saldos?.meta?.page_to_kol ?? 0)} />
-                <FooterCell content={formatNumber(saldos?.meta?.page_to_summa ?? 0)} />
+                <FooterCell content={formatNumber(saldo?.meta?.page_from_summa ?? 0)} />
+                <FooterCell content={String(saldo?.meta?.page_internal_prixod_kol ?? 0)} />
+                <FooterCell content={formatNumber(saldo?.meta?.page_internal_prixod_summa ?? 0)} />
+                <FooterCell content={String(saldo?.meta?.page_internal_rasxod_kol ?? 0)} />
+                <FooterCell content={formatNumber(saldo?.meta?.page_internal_rasxod_summa ?? 0)} />
+                <FooterCell content={String(saldo?.meta?.page_to_kol ?? 0)} />
+                <FooterCell content={formatNumber(saldo?.meta?.page_to_summa ?? 0)} />
+                <FooterCell
+                  colSpan={7}
+                  content={formatNumber(saldo?.meta?.page_to_iznos_summa ?? 0)}
+                />
               </FooterRow>
               <FooterRow>
                 <FooterCell
                   colSpan={9}
                   title={t('total_period')}
-                  content={String(saldos?.meta?.from_kol ?? 0)}
+                  content={String(saldo?.meta?.from_kol ?? 0)}
                 />
-                <FooterCell content={formatNumber(saldos?.meta?.from_summa ?? 0)} />
-                <FooterCell content={String(saldos?.meta?.internal_prixod_kol ?? 0)} />
-                <FooterCell content={formatNumber(saldos?.meta?.internal_prixod_summa ?? 0)} />
-                <FooterCell content={String(saldos?.meta?.internal_rasxod_kol ?? 0)} />
-                <FooterCell content={formatNumber(saldos?.meta?.internal_rasxod_summa ?? 0)} />
-                <FooterCell content={String(saldos?.meta?.to_kol ?? 0)} />
-                <FooterCell content={formatNumber(saldos?.meta?.to_summa ?? 0)} />
+                <FooterCell content={formatNumber(saldo?.meta?.from_summa ?? 0)} />
+                <FooterCell content={String(saldo?.meta?.internal_prixod_kol ?? 0)} />
+                <FooterCell content={formatNumber(saldo?.meta?.internal_prixod_summa ?? 0)} />
+                <FooterCell content={String(saldo?.meta?.internal_rasxod_kol ?? 0)} />
+                <FooterCell content={formatNumber(saldo?.meta?.internal_rasxod_summa ?? 0)} />
+                <FooterCell content={String(saldo?.meta?.to_kol ?? 0)} />
+                <FooterCell content={formatNumber(saldo?.meta?.to_summa ?? 0)} />
+                <FooterCell
+                  colSpan={7}
+                  content={formatNumber(saldo?.meta?.to_iznos_summa ?? 0)}
+                />
               </FooterRow>
             </>
           }
@@ -543,10 +560,21 @@ const MaterialWarehouseSaldoPage = () => {
         }}
       />
 
+      <MaterialReportModal
+        withIznos
+        isOpen={materialToggle.isOpen}
+        onOpenChange={materialToggle.setOpen}
+        budjet_id={budjet_id!}
+        main_schet_id={main_schet_id!}
+        to={formatDate(selectedDate!)}
+        year={startDate.getFullYear()}
+        month={startDate.getMonth() + 1}
+      />
+
       <ListView.Footer>
         <ListView.Pagination
-          pageCount={saldos?.meta?.pageCount ?? 0}
-          count={saldos?.meta?.count ?? 0}
+          pageCount={saldo?.meta?.pageCount ?? 0}
+          count={saldo?.meta?.count ?? 0}
           {...pagination}
         />
       </ListView.Footer>

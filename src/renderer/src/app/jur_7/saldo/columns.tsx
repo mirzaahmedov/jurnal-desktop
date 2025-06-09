@@ -161,5 +161,39 @@ export const CommonWarehouseSaldoProductColumns: ColumnDef<SaldoProduct>[] = [
     key: 'prixod_data.doc_date',
     header: 'Дата',
     renderCell: (row) => formatLocaleDate(row.prixodData?.docDate)
+  },
+  {
+    fit: true,
+    key: 'iznos_schet',
+    header: 'schet'
+  },
+  {
+    fit: true,
+    key: 'iznos_sub_schet',
+    header: 'subschet'
+  },
+  {
+    fit: true,
+    key: 'iznos_start_date',
+    header: 'iznos_start_date',
+    renderCell: (row) => formatLocaleDate(row.iznos_start)
+  },
+  {
+    numeric: true,
+    key: 'eski_iznos_summa',
+    header: 'iznos_summa_old',
+    renderCell: (row) => formatNumber(row.from.iznos_summa)
+  },
+  {
+    numeric: true,
+    key: 'iznos_summa_bir_oylik',
+    header: 'iznos_summa_month',
+    renderCell: (row) => formatNumber(row.to.month_iznos ?? 0)
+  },
+  {
+    numeric: true,
+    key: 'iznos_summa',
+    header: 'iznos_summa_total',
+    renderCell: (row) => formatNumber(row.to.iznos_summa ?? 0)
   }
 ]

@@ -6,6 +6,7 @@ import { type ColumnDef, Copyable } from '@/common/components'
 import { DataList } from '@/common/components/data-list'
 import { HoverInfoCell } from '@/common/components/table/renderers'
 import { IDCell } from '@/common/components/table/renderers/id'
+import { SummaCell } from '@/common/components/table/renderers/summa'
 import { getMonthName } from '@/common/lib/date'
 import { formatLocaleDate, formatNumber } from '@/common/lib/format'
 
@@ -120,6 +121,11 @@ export const IznosColumns: ColumnDef<SaldoProduct>[] = [
     numeric: true,
     key: 'sena',
     renderCell: (row) => formatNumber(row.to?.sena)
+  },
+  {
+    numeric: true,
+    key: 'summa',
+    renderCell: (row) => <SummaCell summa={row.to?.summa} />
   },
   {
     fit: true,

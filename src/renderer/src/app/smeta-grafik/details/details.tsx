@@ -70,7 +70,8 @@ export const SmetaGrafikDetails = ({ id, year, isEditable }: SmetaGrafikDetailsP
     oy_9: 0,
     oy_10: 0,
     oy_11: 0,
-    oy_12: 0
+    oy_12: 0,
+    itogo: 0
   } as SmetaGrafikProvodka)
 
   const { data: smetaGrafik, isFetching } = useQuery({
@@ -178,9 +179,9 @@ export const SmetaGrafikDetails = ({ id, year, isEditable }: SmetaGrafikDetailsP
   useEffect(() => {
     setTotal(calculateColumnTotals(smetas))
     smetas.forEach((smeta, index) => {
-      const total = calculateRowTotals(smeta)
-      if (total !== form.getValues(`smetas.${index}.total`)) {
-        form.setValue(`smetas.${index}.total`, total)
+      const itogo = calculateRowTotals(smeta)
+      if (itogo !== form.getValues(`smetas.${index}.itogo`)) {
+        form.setValue(`smetas.${index}.itogo`, itogo)
       }
     })
   }, [form, smetas])
@@ -340,7 +341,8 @@ export const SmetaGrafikDetails = ({ id, year, isEditable }: SmetaGrafikDetailsP
                       'oy_9',
                       'oy_10',
                       'oy_11',
-                      'oy_12'
+                      'oy_12',
+                      'itogo'
                     ].map((key) => (
                       <EditableTableCell key={key}>
                         <Input

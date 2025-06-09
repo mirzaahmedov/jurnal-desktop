@@ -24,7 +24,7 @@ export const calculateRowTotals = (
 }
 
 export const calculateColumnTotals = (
-  rows: Omit<SmetaGrafikProvodka, 'id' | 'smeta_id' | 'smeta_number' | 'smeta_name' | 'itogo'>[]
+  rows: Omit<SmetaGrafikProvodka, 'id' | 'smeta_id' | 'smeta_number' | 'smeta_name'>[]
 ) => {
   const totals = {
     smeta_id: 0,
@@ -41,8 +41,9 @@ export const calculateColumnTotals = (
     oy_9: 0,
     oy_10: 0,
     oy_11: 0,
-    oy_12: 0
-  } as SmetaGrafikProvodka
+    oy_12: 0,
+    itogo: 0
+  } as any
 
   rows.forEach((row) => {
     totals.oy_1 += row.oy_1 || 0
@@ -57,6 +58,7 @@ export const calculateColumnTotals = (
     totals.oy_10 += row.oy_10 || 0
     totals.oy_11 += row.oy_11 || 0
     totals.oy_12 += row.oy_12 || 0
+    totals.itogo += row.itogo || 0
   })
 
   return totals

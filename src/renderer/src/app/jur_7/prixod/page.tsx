@@ -35,7 +35,7 @@ import { ListView } from '@/common/views'
 
 import { IznosQueryKeys } from '../iznos/config'
 import { SaldoQueryKeys } from '../saldo'
-import { useWarehouseSaldo } from '../saldo/use-saldo'
+import { useMaterialSaldo } from '../saldo/use-saldo'
 import { prixodColumns } from './columns'
 import { WarehousePrixodQueryKeys } from './config'
 import { ExistingDocumentsAlert } from './details/existing-document-alert'
@@ -60,7 +60,7 @@ const WarehousePrixodPage = () => {
   const { startDate, endDate } = useSelectedMonthStore()
   const { budjet_id, main_schet_id } = useRequisitesStore()
   const { sorting, handleSort, getColumnSorted } = useTableSort()
-  const { queuedMonths } = useWarehouseSaldo()
+  const { queuedMonths } = useMaterialSaldo()
 
   const dates = useDates({
     defaultFrom: formatDate(startDate),

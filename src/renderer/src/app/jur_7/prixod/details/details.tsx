@@ -6,7 +6,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import isEmpty from 'just-is-empty'
-import { useForm } from 'react-hook-form'
+import { useForm, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 
@@ -37,6 +37,7 @@ import {
   SummaFields
 } from '@/common/widget/form'
 
+import { SchetSumma } from '../../__components__/schet-summa'
 import { IznosQueryKeys } from '../../iznos/config'
 import { SaldoQueryKeys } from '../../saldo'
 import { PrixodFormSchema, WarehousePrixodQueryKeys, defaultValues } from '../config'
@@ -142,6 +143,43 @@ const PrixodDetails = ({ id, onSuccess }: PrixodDetailsProps) => {
     },
     resolver: zodResolver(PrixodFormSchema)
   })
+
+  const childs = useWatch({
+    control: form.control,
+    name: 'childs'
+  })
+  const debetSums = useMemo(() => {
+    const uniqueSchets = new Set(childs.map((child) => child.debet_schet).filter(Boolean))
+    const sums = Array.from(uniqueSchets).map((schet) => {
+      return {
+        schet,
+        summa: childs
+          .filter((child) => child.debet_schet === schet)
+          .reduce((acc, child) => acc + child.summa, 0)
+      }
+    })
+    sums.unshift({
+      schet: t('debet'),
+      summa: sums.reduce((acc, { summa }) => acc + summa, 0)
+    })
+    return sums
+  }, [childs, t])
+  const kreditSums = useMemo(() => {
+    const uniqueSchets = new Set(childs.map((child) => child.kredit_schet).filter(Boolean))
+    const sums = Array.from(uniqueSchets).map((schet) => {
+      return {
+        schet,
+        summa: childs
+          .filter((child) => child.kredit_schet === schet)
+          .reduce((acc, child) => acc + child.summa, 0)
+      }
+    })
+    sums.unshift({
+      schet: t('kredit'),
+      summa: sums.reduce((acc, { summa }) => acc + summa, 0)
+    })
+    return sums
+  }, [childs, t])
 
   const orgSpravochnik = useSpravochnik(
     createOrganizationSpravochnik({
@@ -330,7 +368,6 @@ const PrixodDetails = ({ id, onSuccess }: PrixodDetailsProps) => {
                     rows.map((r) => ({
                       name: r.name,
                       group_jur7_id: r.group_jur7_id,
-                      edin: r.edin,
                       sena: r.sena,
                       kol: r.kol,
                       summa: r.summa,
@@ -343,7 +380,8 @@ const PrixodDetails = ({ id, onSuccess }: PrixodDetailsProps) => {
                       serial_num: r.serial_num,
                       iznos: r.group?.iznos_foiz > 0,
                       eski_iznos_summa: r.eski_iznos_summa,
-                      nds_foiz: r.nds_foiz
+                      nds_foiz: r.nds_foiz,
+                      unit_id: r.unit_id
                     }))
                   )
                 }}
@@ -359,9 +397,6 @@ const PrixodDetails = ({ id, onSuccess }: PrixodDetailsProps) => {
               onApply={({ schet }) => {
                 form.getValues('childs').forEach((_, index) => {
                   form.setValue(`childs.${index}.kredit_schet`, schet, { shouldValidate: true })
-                  // form.setValue(`childs.${index}.kredit_sub_schet`, sub_schet, {
-                  //   shouldValidate: true
-                  // })
                 })
               }}
             />
@@ -370,6 +405,36 @@ const PrixodDetails = ({ id, onSuccess }: PrixodDetailsProps) => {
             form={form}
             tabIndex={8}
           />
+          <div>
+            <div
+              className="grid gap-2"
+              style={{
+                gridTemplateColumns: `repeat(7, minmax(120px, 1fr))`
+              }}
+            >
+              {debetSums.map(({ schet, summa }) => (
+                <SchetSumma
+                  key={schet}
+                  schet={schet}
+                  summa={summa}
+                />
+              ))}
+            </div>
+            <div
+              className="grid gap-2 mt-1"
+              style={{
+                gridTemplateColumns: `repeat(7,minmax(120px, 1fr))`
+              }}
+            >
+              {kreditSums.map(({ schet, summa }) => (
+                <SchetSumma
+                  key={schet}
+                  schet={schet}
+                  summa={summa}
+                />
+              ))}
+            </div>
+          </div>
         </div>
       </DetailsView.Content>
 

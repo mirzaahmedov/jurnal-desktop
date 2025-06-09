@@ -1,6 +1,6 @@
 import { SaldoNamespace, useSaldoController } from '@/common/features/saldo'
 
-export const useWarehouseSaldo = () => {
+export const useMaterialSaldo = () => {
   return useSaldoController({
     ns: SaldoNamespace.JUR_7
   })

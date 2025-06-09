@@ -98,10 +98,10 @@ export const getProvodkaColumns = ({ readOnly }: { readOnly: boolean }) =>
       Editor: createNumberEditor({ key: 'oy_12', inputProps: { adjustWidth: true }, readOnly })
     },
     {
-      key: 'total',
+      key: 'itogo',
       minWidth: 80,
       Editor: createNumberEditor({
-        key: 'total',
+        key: 'itogo',
         inputProps: { adjustWidth: true },
         readOnly: true
       }),

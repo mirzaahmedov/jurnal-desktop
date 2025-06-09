@@ -7,14 +7,14 @@ import { type MonthValue, SaldoUpdateManager } from '@/common/features/saldo'
 import { IznosQueryKeys } from '../../iznos/config'
 import { SaldoQueryKeys } from '../config'
 import { MaterialSaldoService } from '../service'
-import { useWarehouseSaldo } from '../use-saldo'
+import { useMaterialSaldo } from '../use-saldo'
 
 export const MaterialWarehouseSaldoUpdateManager = () => {
   const queryClient = useQueryClient()
 
   const [completed, setCompleted] = useState<MonthValue[]>([])
 
-  const { queuedMonths, dequeueMonth, clearQueue } = useWarehouseSaldo()
+  const { queuedMonths, dequeueMonth, clearQueue } = useMaterialSaldo()
 
   const {
     mutate: updateSaldo,

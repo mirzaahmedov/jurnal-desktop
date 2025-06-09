@@ -3,7 +3,7 @@ export interface SmetaGrafikProvodka {
   smeta_id: number
   smeta_name: string
   smeta_number: string
-  itogo: number
+  itogo?: number
   oy_1: number
   oy_2: number
   oy_3: number

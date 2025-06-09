@@ -32,14 +32,14 @@ import { formatNumber } from '@/common/lib/format'
 import { type WarehouseMonitoring, WarehouseMonitoringType } from '@/common/models'
 import { ListView } from '@/common/views'
 
-import { useWarehouseSaldo } from '../saldo/use-saldo'
+import { MaterialReportModal } from '../__components__/material-report-modal'
+import { useMaterialSaldo } from '../saldo/use-saldo'
 import { AktReportDialog } from './akt-report-dialog'
 import { columns } from './columns'
 import { WarehouseMonitorQueryKeys } from './config'
-import { MaterialReportDialog } from './material-report-dialog'
 import { WarehouseMonitorService } from './service'
 
-export const WarehouseMonitorPage = () => {
+export const MaterialMonitorPage = () => {
   const dates = useDates()
   const pagination = usePagination()
   const navigate = useNavigate()
@@ -57,7 +57,7 @@ export const WarehouseMonitorPage = () => {
   const { t } = useTranslation(['app'])
   const { budjet_id, main_schet_id } = useRequisitesStore()
   const { sorting, getColumnSorted, handleSort } = useTableSort()
-  const { queuedMonths } = useWarehouseSaldo()
+  const { queuedMonths } = useMaterialSaldo()
 
   const {
     data: monitoring,
@@ -320,7 +320,8 @@ export const WarehouseMonitorPage = () => {
         />
       </ListView.Footer>
 
-      <MaterialReportDialog
+      <MaterialReportModal
+        withIznos
         isOpen={materialToggle.isOpen}
         onOpenChange={materialToggle.setOpen}
         budjet_id={budjet_id!}

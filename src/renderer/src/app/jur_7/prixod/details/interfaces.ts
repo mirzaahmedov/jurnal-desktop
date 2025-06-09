@@ -20,7 +20,7 @@ export interface PrixodImportResult {
   group_jur7_id: number
   inventar_num: string
   serial_num: string
-  edin: string
+  unit_id: number
   kol: number
   summa: number
   eski_iznos_summa: number
