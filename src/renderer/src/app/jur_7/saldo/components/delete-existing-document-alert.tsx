@@ -1,18 +1,3 @@
-import type { OstatokDeleteExistingDocument } from '../utils'
-import type { SaldoProduct } from '@/common/models'
-import type { DialogProps } from '@radix-ui/react-dialog'
-import type { TFunction } from 'i18next'
-
-import { useState } from 'react'
-
-import { Pencil } from 'lucide-react'
-import { useTranslation } from 'react-i18next'
-
-import InternalDetails from '@/app/jur_7/internal/details/details'
-import PrixodDetails from '@/app/jur_7/prixod/details/details'
-import RasxodDetails from '@/app/jur_7/rasxod/details/details'
-import { Copyable } from '@/common/components'
-import { DataList } from '@/common/components/data-list'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -22,10 +7,23 @@ import {
   AlertDialogHeader,
   AlertDialogTitle
 } from '@/common/components/ui/alert-dialog'
-import { Badge } from '@/common/components/ui/badge'
-import { Button } from '@/common/components/ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/common/components/ui/dialog'
 import { formatLocaleDate, formatNumber } from '@/common/lib/format'
+
+import { Badge } from '@/common/components/ui/badge'
+import { Button } from '@/common/components/ui/button'
+import { Copyable } from '@/common/components'
+import { DataList } from '@/common/components/data-list'
+import type { DialogProps } from '@radix-ui/react-dialog'
+import InternalDetails from '@/app/jur_7/internal/details/details'
+import type { OstatokDeleteExistingDocument } from '../utils'
+import { Pencil } from 'lucide-react'
+import PrixodDetails from '@/app/jur_7/prixod/details/details'
+import RasxodDetails from '@/app/jur_7/rasxod/details/details'
+import type { SaldoProduct } from '@/common/models'
+import type { TFunction } from 'i18next'
+import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 export interface DeleteExistingDocumentsAlertProps extends DialogProps {
   message: string
@@ -192,17 +190,22 @@ const getProductFields = (t: TFunction, product: SaldoProduct = {} as any) => {
     },
     {
       name: t('doc_date'),
-      value: formatLocaleDate(product.prixodData.docDate)
+      value: product.prixodData.map((prixod) => formatLocaleDate(prixod.docDate)).join(', ')
     },
     {
       name: t('doc_num'),
       value: (
-        <Copyable
-          side="start"
-          value={product.prixodData.docNum}
-        >
-          {product.prixodData.docNum}
-        </Copyable>
+        <>
+          {product.prixodData.map((prixod) => (
+            <Copyable
+              key={prixod.docId}
+              side="start"
+              value={prixod.docNum}
+            >
+              {prixod.docNum}
+            </Copyable>
+          ))}
+        </>
       )
     },
     {

@@ -81,7 +81,7 @@ export const ProvodkaTable = ({ form, tabIndex }: ProvodkaTableProps) => {
               kredit_schet: p?.debet_schet ?? '',
               debet_sub_schet: p?.debet_sub_schet ?? '',
               kredit_sub_schet: p?.debet_sub_schet ?? '',
-              data_pereotsenka: formatDate(p.prixodData?.docDate),
+              data_pereotsenka: formatDate(p.prixodData?.[0]?.docDate),
               iznos: p.iznos,
               iznos_summa: p.to.iznos_summa,
               iznos_schet: p.iznos_schet,

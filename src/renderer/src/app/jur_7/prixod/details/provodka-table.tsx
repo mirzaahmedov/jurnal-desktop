@@ -2,7 +2,14 @@ import type { FieldError, FieldErrorsImpl, Merge, UseFormReturn } from 'react-ho
 
 import { useEffect, useState } from 'react'
 
-import { CircleMinus, CirclePlus, LayoutList, TableOfContents, XCircle } from 'lucide-react'
+import {
+  CircleMinus,
+  CirclePlus,
+  LayoutList,
+  TableOfContents,
+  Warehouse,
+  XCircle
+} from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
@@ -793,7 +800,8 @@ const NaimenovanieCells = ({
 
           <Button
             variant="ghost"
-            className="absolute right-0 top-0"
+            size="icon"
+            className="absolute right-0.5 top-0.5 group"
             onClick={() => {
               if (!kimga_id) {
                 toast.error(t('please_select_responsible'))
@@ -807,7 +815,14 @@ const NaimenovanieCells = ({
               }
             }}
           >
-            {isExisting ? <XCircle className="btn-icon" /> : <LayoutList className="btn-icon" />}
+            {isExisting ? (
+              <>
+                <XCircle className="btn-icon hidden group-hover:block text-red-500" />
+                <Warehouse className="btn-icon text-brand group-hover:hidden" />
+              </>
+            ) : (
+              <LayoutList className="btn-icon" />
+            )}
           </Button>
         </div>
       </EditableTableCell>

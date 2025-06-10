@@ -33,11 +33,11 @@ export interface SaldoProduct {
   month: number
   isdeleted: boolean
   type: string
-  prixodData: {
+  prixodData: Array<{
     docNum: string
     docDate: string
     docId: any
-  }
+  }>
   from: {
     sena: number
     summa: number

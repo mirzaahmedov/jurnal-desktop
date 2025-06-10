@@ -160,7 +160,8 @@ export const CommonWarehouseSaldoProductColumns: ColumnDef<SaldoProduct>[] = [
   {
     key: 'prixod_data.doc_date',
     header: 'Дата',
-    renderCell: (row) => formatLocaleDate(row.prixodData?.docDate)
+    renderCell: (row) =>
+      row.prixodData?.map((prixod) => formatLocaleDate(prixod.docDate)).join(', ')
   },
   {
     fit: true,
