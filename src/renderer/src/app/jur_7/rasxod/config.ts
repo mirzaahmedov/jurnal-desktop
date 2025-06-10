@@ -1,6 +1,5 @@
-import { z } from 'zod'
-
 import { withPreprocessor } from '@/common/lib/validation'
+import { z } from 'zod'
 
 export const WarehouseRasxodQueryKeys = {
   getAll: 'jur7_rasxod/all',
@@ -53,7 +52,8 @@ export const RasxodProvodkaFormSchema = withPreprocessor(
     iznos_summa: z.number().optional(),
     iznos_schet: z.string().optional(),
     iznos_sub_schet: z.string().optional(),
-    data_pereotsenka: z.string()
+    data_pereotsenka: z.string(),
+    prixod_dates: z.array(z.object({ date: z.string() })).optional()
   })
 )
 export const RasxodFormSchema = withPreprocessor(

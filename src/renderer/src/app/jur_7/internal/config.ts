@@ -1,6 +1,5 @@
-import { z } from 'zod'
-
 import { withPreprocessor } from '@/common/lib/validation'
+import { z } from 'zod'
 
 export const WarehouseInternalQueryKeys = {
   getAll: 'jur7_internal/all',
@@ -28,7 +27,8 @@ export const defaultValues: InternalFormValues = {
       debet_sub_schet: '',
       kredit_schet: '',
       kredit_sub_schet: '',
-      data_pereotsenka: ''
+      data_pereotsenka: '',
+      prixod_dates: []
     }
   ]
 }
@@ -55,7 +55,8 @@ export const InternalProvodkaFormSchema = withPreprocessor(
     debet_sub_schet: z.string(),
     kredit_schet: z.string(),
     kredit_sub_schet: z.string(),
-    data_pereotsenka: z.string()
+    data_pereotsenka: z.string(),
+    prixod_dates: z.array(z.object({ date: z.string() })).optional()
   })
 )
 export const InternalFormSchema = withPreprocessor(

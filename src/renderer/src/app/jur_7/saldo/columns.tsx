@@ -5,6 +5,7 @@ import { Trans } from 'react-i18next'
 import { type ColumnDef, Copyable } from '@/common/components'
 import { DataList } from '@/common/components/data-list'
 import { HoverInfoCell } from '@/common/components/table/renderers'
+import { ExpandableList } from '@/common/components/table/renderers/expandable-list'
 import { Badge } from '@/common/components/ui/badge'
 import { formatLocaleDate, formatNumber } from '@/common/lib/format'
 
@@ -158,12 +159,6 @@ export const CommonWarehouseSaldoProductColumns: ColumnDef<SaldoProduct>[] = [
     renderCell: (row) => formatNumber(row.to?.summa)
   },
   {
-    key: 'prixod_data.doc_date',
-    header: 'Дата',
-    renderCell: (row) =>
-      row.prixodData?.map((prixod) => formatLocaleDate(prixod.docDate)).join(', ')
-  },
-  {
     fit: true,
     key: 'iznos_schet',
     header: 'schet'
@@ -196,5 +191,20 @@ export const CommonWarehouseSaldoProductColumns: ColumnDef<SaldoProduct>[] = [
     key: 'iznos_summa',
     header: 'iznos_summa_total',
     renderCell: (row) => formatNumber(row.to.iznos_summa ?? 0)
+  },
+  {
+    key: 'prixodData',
+    header: 'prixod',
+    renderCell: (row) => (
+      <ExpandableList
+        items={row.prixodData}
+        renderItem={(prixod) => (
+          <div className="flex items-center">
+            <Copyable value={prixod.docNum}>№{prixod.docNum}</Copyable>
+            <Copyable value={prixod.docDate}>{formatLocaleDate(prixod.docDate)}</Copyable>
+          </div>
+        )}
+      />
+    )
   }
 ]

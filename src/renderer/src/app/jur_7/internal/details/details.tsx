@@ -1,37 +1,37 @@
-import { useEffect, useMemo } from 'react'
-
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useQuery, useQueryClient } from '@tanstack/react-query'
-import isEmpty from 'just-is-empty'
-import { useForm, useWatch } from 'react-hook-form'
-import { useTranslation } from 'react-i18next'
-import { toast } from 'react-toastify'
-
-import { IznosQueryKeys } from '@/app/jur_7/iznos/config'
-import { createResponsibleSpravochnik } from '@/app/jur_7/responsible/service'
-import { SaldoQueryKeys } from '@/app/jur_7/saldo'
-import { handleOstatokResponse } from '@/app/jur_7/saldo/utils'
-import { Form } from '@/common/components/ui/form'
-import { DocumentType } from '@/common/features/doc-num'
-import { useRequisitesStore } from '@/common/features/requisites'
-import { useSelectedMonthStore } from '@/common/features/selected-month'
-import { validateDateWithinSelectedMonth } from '@/common/features/selected-month'
-import { useSnippets } from '@/common/features/snippents/use-snippets'
-import { useSpravochnik } from '@/common/features/spravochnik'
-import { formatDate, parseDate, withinMonth } from '@/common/lib/date'
-import { focusInvalidInput } from '@/common/lib/errors'
-import { DetailsView } from '@/common/views'
 import {
   DocumentFields,
   OpisanieFields,
   ResponsibleFields,
   SummaFields
 } from '@/common/widget/form'
-
-import { SchetSumma } from '../../__components__/schet-summa'
 import { InternalFormSchema, WarehouseInternalQueryKeys, defaultValues } from '../config'
+import { ItogoBySchets, getItogoBySchets } from '../../__components__/itogo-by-schets'
 import { WarehouseInternalService, useInternalCreate, useInternalUpdate } from '../service'
+import { formatDate, parseDate, withinMonth } from '@/common/lib/date'
+import { useEffect, useMemo } from 'react'
+import { useForm, useWatch } from 'react-hook-form'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
+import {
+  useSelectedMonthStore,
+  validateDateWithinSelectedMonth
+} from '@/common/features/selected-month'
+
+import { DetailsView } from '@/common/views'
+import { DocumentType } from '@/common/features/doc-num'
+import { Form } from '@/common/components/ui/form'
+import { IznosQueryKeys } from '@/app/jur_7/iznos/config'
 import { ProvodkaTable } from './provodka-table'
+import { SaldoQueryKeys } from '@/app/jur_7/saldo'
+import { createResponsibleSpravochnik } from '@/app/jur_7/responsible/service'
+import { focusInvalidInput } from '@/common/lib/errors'
+import { handleOstatokResponse } from '@/app/jur_7/saldo/utils'
+import isEmpty from 'just-is-empty'
+import { toast } from 'react-toastify'
+import { useRequisitesStore } from '@/common/features/requisites'
+import { useSnippets } from '@/common/features/snippents/use-snippets'
+import { useSpravochnik } from '@/common/features/spravochnik'
+import { useTranslation } from 'react-i18next'
+import { zodResolver } from '@hookform/resolvers/zod'
 
 interface InternalDetailsProps {
   id: string | undefined
@@ -146,37 +146,8 @@ const InternalDetails = ({ id, onSuccess: onSuccess }: InternalDetailsProps) => 
     control: form.control,
     name: 'childs'
   })
-  const debetSums = useMemo(() => {
-    const uniqueSchets = new Set(childs.map((child) => child.debet_schet).filter(Boolean))
-    const sums = Array.from(uniqueSchets).map((schet) => {
-      return {
-        schet,
-        summa: childs
-          .filter((child) => child.debet_schet === schet)
-          .reduce((acc, child) => acc + child.summa, 0)
-      }
-    })
-    sums.unshift({
-      schet: t('debet'),
-      summa: sums.reduce((acc, { summa }) => acc + summa, 0)
-    })
-    return sums
-  }, [childs, t])
-  const kreditSums = useMemo(() => {
-    const uniqueSchets = new Set(childs.map((child) => child.kredit_schet).filter(Boolean))
-    const sums = Array.from(uniqueSchets).map((schet) => {
-      return {
-        schet,
-        summa: childs
-          .filter((child) => child.kredit_schet === schet)
-          .reduce((acc, child) => acc + child.summa, 0)
-      }
-    })
-    sums.unshift({
-      schet: t('kredit'),
-      summa: sums.reduce((acc, { summa }) => acc + summa, 0)
-    })
-    return sums
+  const itogoBySchets = useMemo(() => {
+    return getItogoBySchets(childs, t)
   }, [childs, t])
 
   const values = form.watch()
@@ -289,35 +260,8 @@ const InternalDetails = ({ id, onSuccess: onSuccess }: InternalDetailsProps) => 
             form={form}
           />
         </div>
-        <div className="px-5 mt-5 mb-28 ">
-          <div
-            className="grid gap-2"
-            style={{
-              gridTemplateColumns: `repeat(7, minmax(120px, 1fr))`
-            }}
-          >
-            {debetSums.map(({ schet, summa }) => (
-              <SchetSumma
-                key={schet}
-                schet={schet}
-                summa={summa}
-              />
-            ))}
-          </div>
-          <div
-            className="grid gap-2 mt-1"
-            style={{
-              gridTemplateColumns: `repeat(7,minmax(120px, 1fr))`
-            }}
-          >
-            {kreditSums.map(({ schet, summa }) => (
-              <SchetSumma
-                key={schet}
-                schet={schet}
-                summa={summa}
-              />
-            ))}
-          </div>
+        <div className="mb-20 p-5">
+          <ItogoBySchets rows={itogoBySchets} />
         </div>
       </DetailsView.Content>
     </DetailsView>

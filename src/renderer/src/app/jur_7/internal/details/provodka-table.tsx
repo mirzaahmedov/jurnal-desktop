@@ -12,13 +12,14 @@ import {
 } from '@/common/components/editable-table'
 import { SchetEditor, SubSchetEditor } from '@/common/components/editable-table/editors'
 import { EmptyList } from '@/common/components/empty-states'
+import { JollySelect, SelectItem } from '@/common/components/jolly/select'
 import { Button } from '@/common/components/ui/button'
 import { Checkbox } from '@/common/components/ui/checkbox'
 import { Input } from '@/common/components/ui/input'
 import { Table, TableBody, TableFooter, TableHeader } from '@/common/components/ui/table'
 import { inputVariants } from '@/common/features/spravochnik'
 import { useToggle } from '@/common/hooks'
-import { formatDate } from '@/common/lib/date'
+import { formatLocaleDate } from '@/common/lib/format'
 import { calcSena, calcSumma } from '@/common/lib/pricing'
 
 import { SaldoProductSpravochnikDialog } from '../../saldo/components/spravochnik-dialog'
@@ -51,7 +52,7 @@ export const ProvodkaTable = ({ form, tabIndex }: ProvodkaTableProps) => {
           block: 'nearest'
         })
       }}
-      className="w-[2000px]"
+      className="w-[2200px]"
     >
       <SaldoProductSpravochnikDialog
         responsible_id={form.watch('kimdan_id')}
@@ -81,7 +82,10 @@ export const ProvodkaTable = ({ form, tabIndex }: ProvodkaTableProps) => {
               kredit_schet: p?.debet_schet ?? '',
               debet_sub_schet: p?.debet_sub_schet ?? '',
               kredit_sub_schet: p?.debet_sub_schet ?? '',
-              data_pereotsenka: formatDate(p.prixodData?.[0]?.docDate),
+              prixod_dates: p?.prixodData.map((prixod) => ({
+                date: prixod.docDate
+              })),
+              data_pereotsenka: p?.prixodData?.[0]?.docDate ?? '',
               iznos: p.iznos,
               iznos_summa: p.to.iznos_summa,
               iznos_schet: p.iznos_schet,
@@ -157,7 +161,12 @@ export const ProvodkaTable = ({ form, tabIndex }: ProvodkaTableProps) => {
             >
               {t('kredit')}
             </EditableTableHead>
-            <EditableTableHead rowSpan={2}>{t('prixod_date')}</EditableTableHead>
+            <EditableTableHead
+              rowSpan={2}
+              className="min-w-48"
+            >
+              {t('prixod_date')}
+            </EditableTableHead>
             <EditableTableHead rowSpan={2}></EditableTableHead>
           </EditableTableRow>
           <EditableTableRow>
@@ -215,10 +224,7 @@ export const ProvodkaTable = ({ form, tabIndex }: ProvodkaTableProps) => {
                 className="w-full hover:bg-slate-50 text-brand hover:text-brand"
                 tabIndex={tabIndex}
                 onClick={() => {
-                  append({
-                    ...defaultValues.childs[0],
-                    data_pereotsenka: form.getValues('doc_date')
-                  })
+                  append(defaultValues.childs[0])
                 }}
               >
                 <CirclePlus className="btn-icon icon-start" /> {t('add')}
@@ -472,22 +478,19 @@ const Provodka = ({ rowIndex, onOpenDialog, onRemove, row, form, tabIndex }: Pro
 
       <EditableTableCell>
         <div className="relative">
-          <DatePicker
-            value={row.data_pereotsenka}
-            onChange={(date) => {
-              handleChangeChildField(rowIndex, 'data_pereotsenka', date)
-            }}
-            placeholder="дд.мм.гггг"
-            className={inputVariants({
+          <JollySelect
+            triggerClassName={inputVariants({
               editor: true,
               error: !!errors?.data_pereotsenka
             })}
-            error={!!errors?.data_pereotsenka}
-            containerProps={{
-              className: 'min-w-32'
+            selectedKey={row.data_pereotsenka}
+            onSelectionChange={(value) => {
+              handleChangeChildField(rowIndex, 'data_pereotsenka', value)
             }}
-            tabIndex={tabIndex}
-          />
+            items={row.prixod_dates ?? []}
+          >
+            {(item) => <SelectItem id={item.date}>{formatLocaleDate(item.date)}</SelectItem>}
+          </JollySelect>
         </div>
       </EditableTableCell>
 

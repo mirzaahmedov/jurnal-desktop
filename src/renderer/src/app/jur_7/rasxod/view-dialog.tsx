@@ -1,5 +1,7 @@
 import type { WarehouseRasxodProvodka } from '@/common/models'
 
+import { useMemo } from 'react'
+
 import { useQuery } from '@tanstack/react-query'
 import { Download } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
@@ -21,6 +23,7 @@ import { Textarea } from '@/common/components/ui/textarea'
 import { formatLocaleDate, formatNumber } from '@/common/lib/format'
 import { numberToWords } from '@/common/lib/utils'
 
+import { ItogoBySchets, getItogoBySchets } from '../__components__/itogo-by-schets'
 import { WarehouseRasxodQueryKeys } from './config'
 import { WarehouseRasxodService } from './service'
 
@@ -139,6 +142,9 @@ export const WarehouseRasxodViewDialog = ({
   })
 
   const data = rasxod?.data
+  const itogoBySchets = useMemo(() => {
+    return getItogoBySchets(data?.childs ?? [], t)
+  }, [data?.childs, t])
 
   return (
     <DialogTrigger
@@ -238,6 +244,9 @@ export const WarehouseRasxodViewDialog = ({
                         data={data.childs}
                         className="table-generic-xs"
                       />
+                    </div>
+                    <div className="p-5">
+                      <ItogoBySchets rows={itogoBySchets} />
                     </div>
                   </div>
                 ) : null}

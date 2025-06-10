@@ -1,5 +1,7 @@
 import type { WarehousePrixodProvodka } from '@/common/models'
 
+import { useMemo } from 'react'
+
 import { useQuery } from '@tanstack/react-query'
 import { Download } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
@@ -23,6 +25,7 @@ import { useRequisitesStore } from '@/common/features/requisites'
 import { formatLocaleDate, formatNumber } from '@/common/lib/format'
 import { numberToWords } from '@/common/lib/utils'
 
+import { ItogoBySchets, getItogoBySchets } from '../__components__/itogo-by-schets'
 import { WarehousePrixodQueryKeys } from './config'
 import { WarehousePrixodService } from './service'
 
@@ -133,6 +136,10 @@ export const WarehousePrixodViewDialog = ({
   })
 
   const data = prixod?.data
+
+  const itogoBySchets = useMemo(() => {
+    return getItogoBySchets(data?.childs ?? [], t)
+  }, [data?.childs, t])
 
   return (
     <DialogTrigger
@@ -285,6 +292,9 @@ export const WarehousePrixodViewDialog = ({
                         data={data.childs}
                         className="table-generic-xs"
                       />
+                    </div>
+                    <div className="p-5">
+                      <ItogoBySchets rows={itogoBySchets} />
                     </div>
                   </div>
                 ) : null}

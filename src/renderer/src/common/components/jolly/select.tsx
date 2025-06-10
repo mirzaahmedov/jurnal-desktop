@@ -114,6 +114,7 @@ interface JollySelectProps<T extends object> extends Omit<AriaSelectProps<T>, 'c
   description?: string
   errorMessage?: string | ((validation: AriaValidationResult) => string)
   items?: Iterable<T>
+  triggerClassName?: string
   children: React.ReactNode | ((item: T) => React.ReactNode)
 }
 
@@ -125,6 +126,7 @@ function JollySelect<T extends object>({
   errorMessage,
   children,
   className,
+  triggerClassName,
   items,
   ...props
 }: JollySelectProps<T>) {
@@ -140,6 +142,7 @@ function JollySelect<T extends object>({
       <SelectTrigger
         buttonRef={buttonRef}
         readOnly={isReadonly}
+        className={triggerClassName}
       >
         <SelectValue className="text-start" />
       </SelectTrigger>

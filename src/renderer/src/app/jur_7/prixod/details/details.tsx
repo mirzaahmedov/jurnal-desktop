@@ -1,32 +1,3 @@
-import type { ExistingDocument, PrixodImportResult } from './interfaces'
-import type { ApiResponse } from '@/common/models'
-
-import { useEffect, useMemo, useRef, useState } from 'react'
-
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useQuery, useQueryClient } from '@tanstack/react-query'
-import isEmpty from 'just-is-empty'
-import { useForm, useWatch } from 'react-hook-form'
-import { useTranslation } from 'react-i18next'
-import { toast } from 'react-toastify'
-
-import { createShartnomaSpravochnik } from '@/app/jur_3/shartnoma'
-import { createResponsibleSpravochnik } from '@/app/jur_7/responsible/service'
-import { handleOstatokExistingDocumentError, handleOstatokResponse } from '@/app/jur_7/saldo/utils'
-import { createOrganizationSpravochnik } from '@/app/region-spravochnik/organization'
-import { Form } from '@/common/components/ui/form'
-import { DocumentType } from '@/common/features/doc-num'
-import { DownloadFile, ImportFile } from '@/common/features/file'
-import { useRequisitesStore } from '@/common/features/requisites'
-import {
-  useSelectedMonthStore,
-  validateDateWithinSelectedMonth
-} from '@/common/features/selected-month'
-import { useSnippets } from '@/common/features/snippents/use-snippets'
-import { useSpravochnik } from '@/common/features/spravochnik'
-import { formatDate, parseDate, withinMonth } from '@/common/lib/date'
-import { focusInvalidInput } from '@/common/lib/errors'
-import { DetailsView } from '@/common/views'
 import {
   DocumentFields,
   DoverennostFields,
@@ -36,15 +7,41 @@ import {
   ShartnomaFields,
   SummaFields
 } from '@/common/widget/form'
-
-import { SchetSumma } from '../../__components__/schet-summa'
-import { IznosQueryKeys } from '../../iznos/config'
-import { SaldoQueryKeys } from '../../saldo'
+import { DownloadFile, ImportFile } from '@/common/features/file'
+import type { ExistingDocument, PrixodImportResult } from './interfaces'
+import { ItogoBySchets, getItogoBySchets } from '../../__components__/itogo-by-schets'
 import { PrixodFormSchema, WarehousePrixodQueryKeys, defaultValues } from '../config'
 import { WarehousePrixodService, usePrixodCreate, usePrixodUpdate } from '../service'
+import { formatDate, parseDate, withinMonth } from '@/common/lib/date'
+import { handleOstatokExistingDocumentError, handleOstatokResponse } from '@/app/jur_7/saldo/utils'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import { useForm, useWatch } from 'react-hook-form'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
+import {
+  useSelectedMonthStore,
+  validateDateWithinSelectedMonth
+} from '@/common/features/selected-month'
+
+import type { ApiResponse } from '@/common/models'
 import { ApplyAllInputs } from './apply-all-inputs'
+import { DetailsView } from '@/common/views'
+import { DocumentType } from '@/common/features/doc-num'
 import { ExistingDocumentsAlert } from './existing-document-alert'
+import { Form } from '@/common/components/ui/form'
+import { IznosQueryKeys } from '../../iznos/config'
 import { ProvodkaTable } from './provodka-table'
+import { SaldoQueryKeys } from '../../saldo'
+import { createOrganizationSpravochnik } from '@/app/region-spravochnik/organization'
+import { createResponsibleSpravochnik } from '@/app/jur_7/responsible/service'
+import { createShartnomaSpravochnik } from '@/app/jur_3/shartnoma'
+import { focusInvalidInput } from '@/common/lib/errors'
+import isEmpty from 'just-is-empty'
+import { toast } from 'react-toastify'
+import { useRequisitesStore } from '@/common/features/requisites'
+import { useSnippets } from '@/common/features/snippents/use-snippets'
+import { useSpravochnik } from '@/common/features/spravochnik'
+import { useTranslation } from 'react-i18next'
+import { zodResolver } from '@hookform/resolvers/zod'
 
 interface PrixodDetailsProps {
   id: string | undefined
@@ -148,38 +145,7 @@ const PrixodDetails = ({ id, onSuccess }: PrixodDetailsProps) => {
     control: form.control,
     name: 'childs'
   })
-  const debetSums = useMemo(() => {
-    const uniqueSchets = new Set(childs.map((child) => child.debet_schet).filter(Boolean))
-    const sums = Array.from(uniqueSchets).map((schet) => {
-      return {
-        schet,
-        summa: childs
-          .filter((child) => child.debet_schet === schet)
-          .reduce((acc, child) => acc + child.summa, 0)
-      }
-    })
-    sums.unshift({
-      schet: t('debet'),
-      summa: sums.reduce((acc, { summa }) => acc + summa, 0)
-    })
-    return sums
-  }, [childs, t])
-  const kreditSums = useMemo(() => {
-    const uniqueSchets = new Set(childs.map((child) => child.kredit_schet).filter(Boolean))
-    const sums = Array.from(uniqueSchets).map((schet) => {
-      return {
-        schet,
-        summa: childs
-          .filter((child) => child.kredit_schet === schet)
-          .reduce((acc, child) => acc + child.summa, 0)
-      }
-    })
-    sums.unshift({
-      schet: t('kredit'),
-      summa: sums.reduce((acc, { summa }) => acc + summa, 0)
-    })
-    return sums
-  }, [childs, t])
+  const itogoBySchets = useMemo(() => getItogoBySchets(childs, t), [childs, t])
 
   const orgSpravochnik = useSpravochnik(
     createOrganizationSpravochnik({
@@ -405,36 +371,7 @@ const PrixodDetails = ({ id, onSuccess }: PrixodDetailsProps) => {
             form={form}
             tabIndex={8}
           />
-          <div>
-            <div
-              className="grid gap-2"
-              style={{
-                gridTemplateColumns: `repeat(7, minmax(120px, 1fr))`
-              }}
-            >
-              {debetSums.map(({ schet, summa }) => (
-                <SchetSumma
-                  key={schet}
-                  schet={schet}
-                  summa={summa}
-                />
-              ))}
-            </div>
-            <div
-              className="grid gap-2 mt-1"
-              style={{
-                gridTemplateColumns: `repeat(7,minmax(120px, 1fr))`
-              }}
-            >
-              {kreditSums.map(({ schet, summa }) => (
-                <SchetSumma
-                  key={schet}
-                  schet={schet}
-                  summa={summa}
-                />
-              ))}
-            </div>
-          </div>
+          <ItogoBySchets rows={itogoBySchets} />
         </div>
       </DetailsView.Content>
 
