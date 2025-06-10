@@ -11,6 +11,7 @@ export interface SaldoProduct {
   product_id: number
   name: string
   edin: string
+  unit_id: number
   inventar_num: string
   serial_num: string
   group_id: number

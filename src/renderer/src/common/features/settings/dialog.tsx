@@ -224,13 +224,13 @@ export const SettingsDialog = ({ open, onOpenChange }: DialogProps) => {
                                 <FormLabel>{t('zoom')}</FormLabel>
                                 <div className="w-full flex items-center gap-5">
                                   <Slider
-                                    step={0.25}
+                                    step={0.05}
                                     min={0.5}
                                     max={2}
                                     value={[field.value]}
                                     onValueChange={(value) => field.onChange(value[0])}
                                   />
-                                  <span>{field.value * 100}%</span>
+                                  <span>{Math.round(field.value * 100)}%</span>
                                 </div>
                               </div>
                             )}

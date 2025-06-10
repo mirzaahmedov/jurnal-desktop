@@ -1,6 +1,5 @@
-import { z } from 'zod'
-
 import { withPreprocessor } from '@/common/lib/validation'
+import { z } from 'zod'
 
 export const WarehousePrixodQueryKeys = {
   getAll: 'warehouse_prixod/all',
@@ -63,7 +62,10 @@ export const PrixodProvodkaFormSchema = withPreprocessor(
     debet_sub_schet: z.string(),
     kredit_schet: z.string(),
     kredit_sub_schet: z.string(),
-    data_pereotsenka: z.string()
+    data_pereotsenka: z.string(),
+    // when adding to existing product
+    product_id: z.number().optional(),
+    saldo_id: z.number().optional()
   })
 ).superRefine((values, ctx) => {
   if (values.iznos) {

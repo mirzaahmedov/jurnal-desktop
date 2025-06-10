@@ -2,9 +2,10 @@ import type { FieldError, FieldErrorsImpl, Merge, UseFormReturn } from 'react-ho
 
 import { useEffect, useState } from 'react'
 
-import { CircleMinus, CirclePlus, TableOfContents } from 'lucide-react'
+import { CircleMinus, CirclePlus, LayoutList, TableOfContents, XCircle } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
+import { toast } from 'react-toastify'
 
 import { createGroupSpravochnik } from '@/app/super-admin/group/service'
 import { DatePicker, EdinSelect, NumericInput } from '@/common/components'
@@ -23,10 +24,11 @@ import { Table, TableBody, TableHeader } from '@/common/components/ui/table'
 import { useSelectedMonthStore } from '@/common/features/selected-month'
 import { validateDateWithinSelectedMonth } from '@/common/features/selected-month'
 import { SpravochnikInput, inputVariants, useSpravochnik } from '@/common/features/spravochnik'
-import { useEventCallback } from '@/common/hooks'
+import { useEventCallback, useToggle } from '@/common/hooks'
 import { calcSena, calcSumma } from '@/common/lib/pricing'
 import { cn } from '@/common/lib/utils'
 
+import { SaldoProductSpravochnikDialog } from '../../saldo/components/spravochnik-dialog'
 import { type PrixodFormValues, type PrixodProvodkaFormValues, defaultValues } from '../config'
 
 const PAGE_SIZE = 20
@@ -39,10 +41,12 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
   const params = useParams()
 
   const [page, setPage] = useState(1)
+  const [rowIndex, setRowIndex] = useState(0)
 
   const { t } = useTranslation()
   const { startDate, endDate } = useSelectedMonthStore()
 
+  const spravochnikToggle = useToggle()
   const childs = form.watch('childs')
   const pageCount = Math.ceil(childs.length / PAGE_SIZE)
 
@@ -72,6 +76,61 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
           }}
           className="w-[2500px]"
         >
+          <SaldoProductSpravochnikDialog
+            responsible_id={form.watch('kimga_id')}
+            to={form.watch('doc_date')}
+            open={spravochnikToggle.isOpen}
+            disabledIds={form
+              .watch('childs')
+              .map((child) => child.product_id!)
+              .filter(Boolean)}
+            onOpenChange={(open) => {
+              if (!open) {
+                setRowIndex(0)
+              }
+              spravochnikToggle.setOpen(open)
+            }}
+            onSelect={(products) => {
+              const prevChilds = form.getValues('childs').slice(0, rowIndex)
+              const nextChilds = form.getValues('childs').slice(rowIndex + 1)
+              form.setValue(
+                'childs',
+                [
+                  ...prevChilds,
+                  ...products.map(
+                    (p) =>
+                      ({
+                        product_id: p.product_id,
+                        group_jur7_id: p.group_id,
+                        saldo_id: p.id,
+                        name: p.name,
+                        group_number: p.group_number,
+                        unit_id: p.unit_id,
+                        inventar_num: p.inventar_num,
+                        serial_num: p.serial_num,
+                        kol: 0,
+                        sena: 0,
+                        summa: 0,
+                        iznos: p.iznos,
+                        debet_schet: p.debet_schet,
+                        debet_sub_schet: p.debet_sub_schet,
+                        kredit_schet: p.kredit_schet,
+                        kredit_sub_schet: p.kredit_sub_schet,
+                        data_pereotsenka: form.getValues('doc_date'),
+                        eski_iznos_summa: 0,
+                        iznos_schet: p.iznos_schet,
+                        iznos_sub_schet: p.iznos_sub_schet,
+                        iznos_start: p.iznos ? form.getValues('doc_date') : ''
+                      }) satisfies PrixodProvodkaFormValues
+                  ),
+                  ...nextChilds
+                ],
+                {
+                  shouldValidate: true
+                }
+              )
+            }}
+          />
           <Table
             className="relative border border-slate-200 table-xs"
             {...props}
@@ -200,6 +259,7 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
                 childs.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE).map((row, rowIndex) => {
                   const index = (page - 1) * PAGE_SIZE + rowIndex
                   const errors = form.formState.errors.childs?.[index] || {}
+                  const isExisting = !!row.saldo_id
                   return (
                     <EditableTableRow key={index}>
                       <EditableTableCell className="px-3 font-medium">
@@ -211,6 +271,12 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
                         form={form}
                         errors={errors}
                         tabIndex={tabIndex}
+                        isExisting={isExisting}
+                        kimga_id={form.watch('kimga_id')}
+                        onOpenModal={() => {
+                          spravochnikToggle.open()
+                          setRowIndex(index)
+                        }}
                         onChangeField={handleChangeChildField}
                       />
                       <EditableTableCell>
@@ -478,14 +544,22 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
                       </EditableTableCell>
 
                       <EditableTableCell className="w-[100px]">
-                        <SchetEditor
-                          tabIndex={tabIndex}
-                          error={errors?.kredit_schet}
-                          value={row.kredit_schet}
-                          onChange={(schet) => {
-                            handleChangeChildField(index, 'kredit_schet', schet)
-                          }}
-                        />
+                        {isExisting ? (
+                          <Input
+                            readOnly
+                            editor
+                            value={row.kredit_schet}
+                          />
+                        ) : (
+                          <SchetEditor
+                            tabIndex={tabIndex}
+                            error={errors?.kredit_schet}
+                            value={row.kredit_schet}
+                            onChange={(schet) => {
+                              handleChangeChildField(index, 'kredit_schet', schet)
+                            }}
+                          />
+                        )}
                       </EditableTableCell>
                       <EditableTableCell className="w-[140px]">
                         <Input
@@ -648,18 +722,26 @@ type NaimenovanieCellsProps = {
   index: number
   row: PrixodProvodkaFormValues
   form: UseFormReturn<PrixodFormValues>
+  kimga_id: number
   tabIndex: number
+  isExisting: boolean
   errors: Merge<FieldError, FieldErrorsImpl<PrixodProvodkaFormValues>>
+  onOpenModal: VoidFunction
   onChangeField: (index: number, key: keyof PrixodProvodkaFormValues, value: unknown) => void
 }
 const NaimenovanieCells = ({
   index,
   row,
   form,
+  kimga_id,
   errors,
   tabIndex,
+  isExisting,
+  onOpenModal,
   onChangeField
 }: NaimenovanieCellsProps) => {
+  const { t } = useTranslation()
+
   const groupSpravochnik = useSpravochnik(
     createGroupSpravochnik({
       value: row.group_jur7_id,
@@ -691,6 +773,7 @@ const NaimenovanieCells = ({
             )}
             getInputValue={(selected) => (selected?.group_number || selected?.name) ?? ''}
             {...groupSpravochnik}
+            disabled={isExisting}
           />
         </div>
       </EditableTableCell>
@@ -704,7 +787,28 @@ const NaimenovanieCells = ({
               onChangeField(index, 'name', e.target.value)
             }}
             className={inputVariants({ editor: true, error: !!errors.name })}
+            onDoubleClick={onOpenModal}
+            readOnly={isExisting}
           />
+
+          <Button
+            variant="ghost"
+            className="absolute right-0 top-0"
+            onClick={() => {
+              if (!kimga_id) {
+                toast.error(t('please_select_responsible'))
+                return
+              }
+              if (isExisting) {
+                onChangeField(index, 'product_id', 0)
+                onChangeField(index, 'saldo_id', 0)
+              } else {
+                onOpenModal()
+              }
+            }}
+          >
+            {isExisting ? <XCircle className="btn-icon" /> : <LayoutList className="btn-icon" />}
+          </Button>
         </div>
       </EditableTableCell>
       <EditableTableCell>
@@ -717,6 +821,7 @@ const NaimenovanieCells = ({
               onChangeField(index, 'serial_num', e.target.value)
             }}
             className={inputVariants({ editor: true, error: !!errors.serial_num })}
+            readOnly={isExisting}
           />
         </div>
       </EditableTableCell>
@@ -730,6 +835,7 @@ const NaimenovanieCells = ({
               onChangeField(index, 'inventar_num', e.target.value)
             }}
             className={inputVariants({ editor: true, error: !!errors.inventar_num })}
+            readOnly={isExisting}
           />
         </div>
       </EditableTableCell>
@@ -742,6 +848,7 @@ const NaimenovanieCells = ({
             onSelectionChange={(value) => {
               onChangeField(index, 'unit_id', value ? Number(value) : undefined)
             }}
+            isDisabled={isExisting}
           />
         </div>
       </EditableTableCell>
