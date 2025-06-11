@@ -20,6 +20,9 @@ import { LabeledValue } from '@/common/components/labeled-value'
 import { PDFSaver } from '@/common/components/pdf-saver'
 import { Checkbox } from '@/common/components/ui/checkbox'
 import { Textarea } from '@/common/components/ui/textarea'
+// import { ApiEndpoints } from '@/common/features/crud'
+// import { DownloadFile } from '@/common/features/file'
+// import { useRequisitesStore } from '@/common/features/requisites'
 import { formatLocaleDate, formatNumber } from '@/common/lib/format'
 import { numberToWords } from '@/common/lib/utils'
 
@@ -134,6 +137,7 @@ export const WarehouseInternalViewDialog = ({
   onClose
 }: WarehouseInternalViewDialogProps) => {
   const { t, i18n } = useTranslation(['app', 'report'])
+  // const { budjet_id, main_schet_id } = useRequisitesStore()
 
   const { data: rasxod, isFetching } = useQuery({
     queryKey: [WarehouseInternalQueryKeys.getById, selectedId!],
@@ -266,13 +270,23 @@ export const WarehouseInternalViewDialog = ({
                   </div>
                 ) : null}
                 <DialogFooter className="pdf-hidden">
+                  {/* <DownloadFile
+                    url={`${ApiEndpoints.jur7_internal}/${data?.id}`}
+                    fileName={`${t('pages.material-warehouse')}_${t('internal')}_№${data?.doc_num}.xlsx`}
+                    buttonText={t('excel_report')}
+                    params={{
+                      budjet_id,
+                      main_schet_id,
+                      akt: true
+                    }}
+                  /> */}
                   <Button
                     variant="ghost"
                     IconStart={Download}
                     isPending={isPending}
                     onPress={savePDF}
                   >
-                    {t('download')}
+                    {t('pdf_report')}
                   </Button>
                 </DialogFooter>
               </div>

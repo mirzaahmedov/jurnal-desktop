@@ -373,5 +373,7 @@
   "comment": "Изоҳ",
   "schet_faktura": "Счет-фактура",
   "update_profile": "Профильни янгилаш",
-  "please_select_responsible": "Илтимос, жавобгар шахсни танланг."
+  "please_select_responsible": "Илтимос, жавобгар шахсни танланг.",
+  "pdf_report": "PDF ҳисобот",
+  "excel_report": "Excel ҳисобот"
 }

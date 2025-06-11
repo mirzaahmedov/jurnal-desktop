@@ -374,5 +374,7 @@
   "comment": "Комментарий",
   "schet_faktura": "Счет-фактура",
   "update_profile": "Обновить профиль",
-  "please_select_responsible": "Пожалуйста, выберите ответственное лицо."
+  "please_select_responsible": "Пожалуйста, выберите ответственное лицо.",
+  "pdf_report": "PDF отчет",
+  "excel_report": "Excel отчет"
 }

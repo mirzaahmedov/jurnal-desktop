@@ -20,6 +20,7 @@ import { LabeledValue } from '@/common/components/labeled-value'
 import { PDFSaver } from '@/common/components/pdf-saver'
 import { Checkbox } from '@/common/components/ui/checkbox'
 import { Textarea } from '@/common/components/ui/textarea'
+import { ApiEndpoints } from '@/common/features/crud'
 import { DownloadFile } from '@/common/features/file'
 import { useRequisitesStore } from '@/common/features/requisites'
 import { formatLocaleDate, formatNumber } from '@/common/lib/format'
@@ -300,9 +301,9 @@ export const WarehousePrixodViewDialog = ({
                 ) : null}
                 <DialogFooter className="pdf-hidden">
                   <DownloadFile
-                    url={`jur_7/doc_prixod/${data?.id}`}
+                    url={`${ApiEndpoints.jur7_prixod}/${data?.id}`}
                     fileName={`${t('pages.material-warehouse')}_${t('prixod')}_№${data?.doc_num}.xlsx`}
-                    buttonText={t('report')}
+                    buttonText={t('excel_report')}
                     params={{
                       budjet_id,
                       main_schet_id,
@@ -315,7 +316,7 @@ export const WarehousePrixodViewDialog = ({
                     isPending={isPending}
                     onPress={savePDF}
                   >
-                    {t('download')}
+                    {t('pdf_report')}
                   </Button>
                 </DialogFooter>
               </div>

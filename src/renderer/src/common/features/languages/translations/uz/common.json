@@ -373,5 +373,7 @@
   "comment": "Izoh",
   "schet_faktura": "Schet-faktura",
   "update_profile": "Profilni yangilash",
-  "please_select_responsible": "Iltimos, javobgar shaxsni tanlang."
+  "please_select_responsible": "Iltimos, javobgar shaxsni tanlang.",
+  "pdf_report": "PDF hisobot",
+  "excel_report": "Excel hisobot"
 }

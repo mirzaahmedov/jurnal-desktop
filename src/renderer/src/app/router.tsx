@@ -1,25 +1,22 @@
-import type { RouteObject } from 'react-router-dom'
-
-import { lazy } from 'react'
-
+import { BudjetSelectedGuard, MainSchetSelectedGuard } from '@/common/features/requisites'
 import { Navigate, createHashRouter } from 'react-router-dom'
 
-import { useAuthenticationStore } from '@/common/features/auth'
-import { BudjetSelectedGuard, MainSchetSelectedGuard } from '@/common/features/requisites'
-import { DuplicateSchetsGuard } from '@/common/features/requisites/guards/duplicate-schets-guard'
-
-import DashboardPage from './dashboard/page'
-import { MaterialMonitorPage } from './jur_7/monitor/page'
-import MaterialCreatePage from './jur_7/saldo/create/page'
-import PrixodSchetPage from './jur_8/schet/page'
-import SigninPage from './sign-in'
+import { AdminBankPage } from './super-admin/jur_2/page'
 import AdminDashboardPage from './super-admin/dashboard/page'
 import { AdminKassaPage } from './super-admin/jur_1/page'
-import { AdminBankPage } from './super-admin/jur_2/page'
+import { AdminMaterialPage } from './super-admin/jur_7/page'
 import { AdminOrgan152Page } from './super-admin/jur_3/152/page'
 import { AdminOrgan159Page } from './super-admin/jur_3/159/page'
 import { AdminPodotchetPage } from './super-admin/jur_4/page'
-import { AdminMaterialPage } from './super-admin/jur_7/page'
+import DashboardPage from './dashboard/page'
+import { DuplicateSchetsGuard } from '@/common/features/requisites/guards/duplicate-schets-guard'
+import MaterialCreatePage from './jur_7/saldo/create/page'
+import { MaterialMonitorPage } from './jur_7/monitor/page'
+import PrixodSchetPage from './jur_8/schet/page'
+import type { RouteObject } from 'react-router-dom'
+import SigninPage from './sign-in'
+import { lazy } from 'react'
+import { useAuthenticationStore } from '@/common/features/auth'
 
 const KassaSaldoPage = lazy(() => import('./jur_1/saldo/page'))
 const BankSaldoPage = lazy(() => import('./jur_2/saldo/page'))
@@ -119,6 +116,8 @@ const DemoPage = lazy(() => import('./_demo/page'))
 const DemoDetailsPage = lazy(() => import('./_demo/details'))
 const ReportTitlePage = lazy(() => import('./super-admin/report-title'))
 const VacantPage = lazy(() => import('./region-admin/vacant/page'))
+
+const MinimumWagePage = lazy(() => import('./super-admin/spravochnik/minimum-wage/page'))
 
 const FallbackRoute = () => {
   const user = useAuthenticationStore((store) => store.user)
@@ -437,6 +436,15 @@ export const routes: RouteObject[] = [
           {
             path: 'jur_7',
             element: <AdminMaterialPage />
+          },
+          {
+            path: 'spravochnik',
+            children: [
+              {
+                path: 'minimum-wage',
+                element: <MinimumWagePage />
+              }
+            ]
           }
         ]
       },
