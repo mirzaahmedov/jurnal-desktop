@@ -1,17 +1,3 @@
-import type { Zarplata } from '@/common/models'
-import type { DialogTriggerProps } from 'react-aria-components'
-
-import { useEffect } from 'react'
-
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { t } from 'i18next'
-import { useForm } from 'react-hook-form'
-import { toast } from 'react-toastify'
-
-import { createOperatsiiSpravochnik } from '@/app/super-admin/operatsii'
-import { createSmetaSpravochnik } from '@/app/super-admin/smeta'
-import { NumericInput } from '@/common/components'
 import {
   DialogContent,
   DialogFooter,
@@ -20,7 +6,6 @@ import {
   DialogTitle,
   DialogTrigger
 } from '@/common/components/jolly/dialog'
-import { Button } from '@/common/components/ui/button'
 import {
   Form,
   FormControl,
@@ -29,13 +14,25 @@ import {
   FormLabel,
   FormMessage
 } from '@/common/components/ui/form'
-import { Input } from '@/common/components/ui/input'
 import { SpravochnikInput, useSpravochnik } from '@/common/features/spravochnik'
-import { capitalize } from '@/common/lib/string'
-
 import { ZarplataSpravochnikFormSchema, defaultValues } from './config'
-import { ZarplataSpravochnikService } from './service'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+
+import { Button } from '@/common/components/ui/button'
+import type { DialogTriggerProps } from 'react-aria-components'
+import { Input } from '@/common/components/ui/input'
+import { NumericInput } from '@/common/components'
 import { SpravochnikTypeSelect } from './spravochnik-type-select'
+import type { Zarplata } from '@/common/models'
+import { ZarplataSpravochnikService } from './service'
+import { capitalize } from '@/common/lib/string'
+import { createOperatsiiSpravochnik } from '@/app/super-admin/operatsii'
+import { createSmetaSpravochnik } from '@/app/super-admin/smeta'
+import { t } from 'i18next'
+import { toast } from 'react-toastify'
+import { useEffect } from 'react'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
 
 const { queryKeys } = ZarplataSpravochnikService
 
@@ -207,7 +204,7 @@ export const ZarplataSpravochnikDialog = ({
                         <FormLabel className="text-right col-span-2">{t('type')}</FormLabel>
                         <FormControl>
                           <SpravochnikTypeSelect
-                            isReadonly={!!selected}
+                            isReadOnly={!!selected}
                             selectedKey={field.value}
                             onSelectionChange={(value) => {
                               field.onChange(value)

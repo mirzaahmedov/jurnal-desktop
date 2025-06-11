@@ -109,7 +109,7 @@ const SelectListBox = <T extends object>({ className, ...props }: AriaListBoxPro
 
 interface JollySelectProps<T extends object> extends Omit<AriaSelectProps<T>, 'children'> {
   buttonRef?: React.Ref<HTMLButtonElement>
-  isReadonly?: boolean
+  isReadOnly?: boolean
   label?: string
   description?: string
   errorMessage?: string | ((validation: AriaValidationResult) => string)
@@ -120,7 +120,7 @@ interface JollySelectProps<T extends object> extends Omit<AriaSelectProps<T>, 'c
 
 function JollySelect<T extends object>({
   buttonRef,
-  isReadonly,
+  isReadOnly,
   label,
   description,
   errorMessage,
@@ -141,7 +141,7 @@ function JollySelect<T extends object>({
 
       <SelectTrigger
         buttonRef={buttonRef}
-        readOnly={isReadonly}
+        readOnly={isReadOnly}
         className={triggerClassName}
       >
         <SelectValue className="text-start" />

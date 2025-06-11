@@ -9,6 +9,7 @@ import { AdminOrgan152Page } from './super-admin/jur_3/152/page'
 import { AdminOrgan159Page } from './super-admin/jur_3/159/page'
 import { AdminPodotchetPage } from './super-admin/jur_4/page'
 import DashboardPage from './dashboard/page'
+import DistancePage from './super-admin/spravochnik/distance/page'
 import { DuplicateSchetsGuard } from '@/common/features/requisites/guards/duplicate-schets-guard'
 import MaterialCreatePage from './jur_7/saldo/create/page'
 import { MaterialMonitorPage } from './jur_7/monitor/page'
@@ -443,6 +444,10 @@ export const routes: RouteObject[] = [
               {
                 path: 'minimum-wage',
                 element: <MinimumWagePage />
+              },
+              {
+                path: 'distance',
+                element: <DistancePage />
               }
             ]
           }

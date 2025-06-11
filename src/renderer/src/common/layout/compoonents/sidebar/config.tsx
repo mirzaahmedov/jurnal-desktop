@@ -29,6 +29,7 @@ import {
   NotepadText,
   Percent,
   ReceiptText,
+  Ruler,
   ShieldBan,
   ShieldCheck,
   Signature,
@@ -547,6 +548,11 @@ export const getNavElements = (t: TFunction): NavElement[] => {
                   path: 'spravochnik/minimum-wage',
                   title: t('pages.minimum-wage'),
                   icon: DollarSign
+                },
+                {
+                  path: 'spravochnik/distance',
+                  title: t('pages.distance'),
+                  icon: Ruler
                 }
               ]
             }

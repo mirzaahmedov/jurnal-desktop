@@ -79,7 +79,8 @@ export enum ApiEndpoints {
   kassa_saldo = 'kassa/saldo',
   constants = 'constants',
   admin_dashboard = 'admin/dashboard',
-  admin_minimum_wage = 'admin/spravochnik/minimum-wage'
+  admin_minimum_wage = 'admin/spravochnik/minimum-wage',
+  admin_distance = 'admin/spravochnik/distances'
 }
 
 export enum ApiStatusCodes {

@@ -1,20 +1,3 @@
-import type { MainSchet } from '@/common/models'
-import type { DialogTriggerProps } from 'react-aria-components'
-
-import { useEffect, useState } from 'react'
-
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { Plus, Trash } from 'lucide-react'
-import { useFieldArray, useForm } from 'react-hook-form'
-import { useTranslation } from 'react-i18next'
-import { toast } from 'react-toastify'
-
-import { BankQueryKeys } from '@/app/super-admin/bank/config'
-import { BankService } from '@/app/super-admin/bank/service'
-import { BudjetSelect } from '@/app/super-admin/budjet/budjet-select'
-import { AutoComplete } from '@/common/components'
-import { FormElement } from '@/common/components/form'
 import {
   DialogContent,
   DialogFooter,
@@ -23,7 +6,6 @@ import {
   DialogTitle,
   DialogTrigger
 } from '@/common/components/jolly/dialog'
-import { Button } from '@/common/components/ui/button'
 import {
   Form,
   FormControl,
@@ -32,13 +14,28 @@ import {
   FormLabel,
   FormMessage
 } from '@/common/components/ui/form'
+import { MainSchetFormSchema, MainSchetQueryKeys, defaultValues } from './config'
+import { Plus, Trash } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { useFieldArray, useForm } from 'react-hook-form'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+
+import { AutoComplete } from '@/common/components'
+import { BankQueryKeys } from '@/app/super-admin/bank/config'
+import { BankService } from '@/app/super-admin/bank/service'
+import { BudjetSelect } from '@/app/super-admin/budjet/budjet-select'
+import { Button } from '@/common/components/ui/button'
+import type { DialogTriggerProps } from 'react-aria-components'
+import { FormElement } from '@/common/components/form'
 import { Input } from '@/common/components/ui/input'
+import type { MainSchet } from '@/common/models'
+import { MainSchetService } from './service'
 import { RequisitesQueryKeys } from '@/common/features/requisites'
 import { capitalize } from '@/common/lib/string'
-
-import { MainSchetFormSchema, MainSchetQueryKeys, defaultValues } from './config'
+import { toast } from 'react-toastify'
 import { useBudjetId } from './filters'
-import { MainSchetService } from './service'
+import { useTranslation } from 'react-i18next'
+import { zodResolver } from '@hookform/resolvers/zod'
 
 export interface MainSchetDialogProps extends Omit<DialogTriggerProps, 'children'> {
   selected: MainSchet | null
@@ -195,7 +192,7 @@ export const MainSchetDialog = ({
                       <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
                         <FormLabel className="text-right col-span-2">{t('budjet')}</FormLabel>
                         <BudjetSelect
-                          isReadonly
+                          isReadOnly
                           selectedKey={field.value}
                           onSelectionChange={field.onChange}
                           className="col-span-4"

@@ -1,9 +1,11 @@
-import type { PodpisType } from '@/common/models'
+import type { Constant, PodpisType } from '@/common/models'
 
 import { create } from 'zustand'
 
 export interface ConstantsState {
   podpisTypes: PodpisType[]
+  regions: Constant.Region[]
+  districts: Constant.District[]
 }
 
 export interface ConstantsStore extends ConstantsState {
@@ -12,5 +14,7 @@ export interface ConstantsStore extends ConstantsState {
 
 export const useConstantsStore = create<ConstantsStore>((set) => ({
   podpisTypes: [],
+  regions: [],
+  districts: [],
   setConstants: (constants) => set(constants)
 }))
