@@ -2,7 +2,7 @@ import { z } from 'zod'
 
 export const WorkTripProvodkaFormSchema = z.object({
   schet_id: z.number().min(1),
-  summa: z.number(),
+  summa: z.coerce.number(),
   type: z.enum(['day', 'hostel', 'road'])
 })
 
@@ -11,14 +11,14 @@ export const WorkTripFormSchema = z.object({
   doc_date: z.string().nonempty(),
   from_date: z.string().nonempty(),
   to_date: z.string().nonempty(),
-  day_summa: z.number(),
+  day_summa: z.coerce.number(),
   hostel_ticket_number: z.string(),
-  hostel_summa: z.number(),
+  hostel_summa: z.coerce.number(),
   from_district_id: z.number(),
   to_district_id: z.number(),
   road_ticket_number: z.string(),
-  road_summa: z.number(),
-  summa: z.number(),
+  road_summa: z.coerce.number(),
+  summa: z.coerce.number(),
   comment: z.string(),
   worker_id: z.number(),
   childs: z.array(WorkTripProvodkaFormSchema)

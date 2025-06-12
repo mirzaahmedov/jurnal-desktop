@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom'
 
 import { GenericTable } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
+import { useRequisitesStore } from '@/common/features/requisites'
 import { useDates, usePagination } from '@/common/hooks'
 import { useLayout } from '@/common/layout'
 import { ListView } from '@/common/views'
@@ -24,6 +25,7 @@ const WorkTripPage = () => {
   const queryClient = useQueryClient()
 
   const { t } = useTranslation(['app'])
+  const { main_schet_id, jur4_schet_id } = useRequisitesStore()
   const { confirm } = useConfirm()
 
   const { data: workTrips, isFetching: isFetchingWorkTrips } = useQuery({
@@ -31,7 +33,9 @@ const WorkTripPage = () => {
       WorkTripQueryKeys.GetAll,
       {
         ...pages,
-        ...dates
+        ...dates,
+        main_schet_id,
+        schet_id: jur4_schet_id
       }
     ],
     queryFn: WorkTripService.getAll

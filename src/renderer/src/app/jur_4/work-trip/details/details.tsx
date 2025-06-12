@@ -4,10 +4,14 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useForm, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
 import { createPodotchetSpravochnik } from '@/app/region-spravochnik/podotchet'
-import { DatePicker, Fieldset, NumericInput } from '@/common/components'
+import { DistanceQueryKeys } from '@/app/super-admin/spravochnik/distance/config'
+import { DistanceService } from '@/app/super-admin/spravochnik/distance/service'
+import { MinimumWageService } from '@/app/super-admin/spravochnik/minimum-wage/service'
+import { DatePicker, Fieldset, NumericInput, Spinner } from '@/common/components'
 import { EditableTable } from '@/common/components/editable-table'
 import { FormElement } from '@/common/components/form'
 import { ComboboxItem, JollyComboBox } from '@/common/components/jolly/combobox'
@@ -15,6 +19,7 @@ import { Form, FormField } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
 import { Textarea } from '@/common/components/ui/textarea'
 import { useConstantsStore } from '@/common/features/constants/store'
+import { useRequisitesStore } from '@/common/features/requisites'
 import {
   useSelectedMonthStore,
   validateDateWithinSelectedMonth
@@ -33,10 +38,12 @@ export interface WorkTripDetailsProps {
 }
 export const WorkTripDetails = ({ id }: WorkTripDetailsProps) => {
   const queryClient = useQueryClient()
+  const navigate = useNavigate()
 
   const { startDate } = useSelectedMonthStore()
   const { t } = useTranslation(['app'])
   const { districts } = useConstantsStore()
+  const { main_schet_id, jur4_schet_id } = useRequisitesStore()
 
   const form = useForm({
     defaultValues: {
@@ -57,6 +64,8 @@ export const WorkTripDetails = ({ id }: WorkTripDetailsProps) => {
       queryClient.invalidateQueries({
         queryKey: [WorkTripQueryKeys.GetById, id]
       })
+
+      navigate(-1)
     }
   })
   const { mutate: updateWorkTrip, isPending: isUpdatingWorkTrip } = useMutation({
@@ -70,13 +79,42 @@ export const WorkTripDetails = ({ id }: WorkTripDetailsProps) => {
       queryClient.invalidateQueries({
         queryKey: [WorkTripQueryKeys.GetById, id]
       })
+
+      navigate(-1)
     }
   })
 
   const { data: workTrip, isFetching } = useQuery({
-    queryKey: [WorkTripQueryKeys.GetById, Number(id)],
+    queryKey: [
+      WorkTripQueryKeys.GetById,
+      Number(id),
+      {
+        main_schet_id,
+        schet_id: jur4_schet_id
+      }
+    ],
     queryFn: WorkTripService.getById,
     enabled: id !== 'create'
+  })
+  const { data: minimumWage, isFetching: isFetchingMinimumWage } = useQuery({
+    queryKey: [MinimumWageService.QueryKeys.GetWage],
+    queryFn: MinimumWageService.getWage
+  })
+  const { data: distance, isFetching: isFetchingDistance } = useQuery({
+    queryKey: [
+      DistanceQueryKeys.GetAll,
+      {
+        from_district_id: form.watch('from_district_id'),
+        to_district_id: form.watch('to_district_id'),
+        page: 1,
+        limit: 1
+      }
+    ],
+    queryFn: DistanceService.getAll,
+    enabled:
+      !!form.watch('from_district_id') &&
+      !!form.watch('to_district_id') &&
+      !form.watch('road_ticket_number')
   })
 
   const podotchetSpravochnik = useSpravochnik(
@@ -102,10 +140,7 @@ export const WorkTripDetails = ({ id }: WorkTripDetailsProps) => {
     name: 'childs'
   })
   useEffect(() => {
-    form.setValue(
-      'summa',
-      childs.reduce((acc, child) => acc + (child.summa ?? 0), 0)
-    )
+    form.setValue('summa', childs.reduce((acc, child) => acc + (child.summa ?? 0), 0) as number)
   }, [childs, form])
   useEffect(() => {
     if (workTrip?.data) {
@@ -126,9 +161,17 @@ export const WorkTripDetails = ({ id }: WorkTripDetailsProps) => {
     }
   }, [form, startDate])
 
+  const distanceKm = distance?.data?.[0]?.distance_km ?? 0
+  const minimumWageSumma = minimumWage?.data?.summa ?? 0
+  useEffect(() => {
+    form.setValue('road_summa', distanceKm * (minimumWageSumma * 0.001))
+  }, [form, distanceKm, minimumWage])
+
+  console.log({ values: form.watch() })
+
   return (
     <DetailsView>
-      <DetailsView.Content loading={isFetching}>
+      <DetailsView.Content loading={isFetching || isFetchingMinimumWage}>
         <Form {...form}>
           <form onSubmit={handleSubmit}>
             <div className="divide-y">
@@ -252,24 +295,28 @@ export const WorkTripDetails = ({ id }: WorkTripDetailsProps) => {
                               className: 'gap-3'
                             }}
                           >
-                            <NumericInput
-                              readOnly={!form.watch('road_ticket_number')}
-                              value={field.value}
-                              onValueChange={(values) => {
-                                field.onChange(values.floatValue)
-                                form.setValue(
-                                  'childs',
-                                  form.getValues('childs').map((child) =>
-                                    child.type === 'road'
-                                      ? {
-                                          ...child,
-                                          summa: values.floatValue ?? 0
-                                        }
-                                      : child
+                            <div>
+                              <NumericInput
+                                disabled={isFetchingDistance || isFetchingMinimumWage}
+                                readOnly={!form.watch('road_ticket_number')}
+                                value={field.value}
+                                onValueChange={(values) => {
+                                  field.onChange(values.floatValue)
+                                  form.setValue(
+                                    'childs',
+                                    form.getValues('childs').map((child) =>
+                                      child.type === 'road'
+                                        ? {
+                                            ...child,
+                                            summa: values.floatValue ?? 0
+                                          }
+                                        : child
+                                    )
                                   )
-                                )
-                              }}
-                            />
+                                }}
+                              />
+                              {isFetchingDistance || (isFetchingMinimumWage && <Spinner />)}
+                            </div>
                           </FormElement>
                         )}
                       />
