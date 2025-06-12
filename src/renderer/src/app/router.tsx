@@ -1,23 +1,29 @@
-import { BudjetSelectedGuard, MainSchetSelectedGuard } from '@/common/features/requisites'
+import type { RouteObject } from 'react-router-dom'
+
+import { lazy } from 'react'
+
 import { Navigate, createHashRouter } from 'react-router-dom'
 
-import { AdminBankPage } from './super-admin/jur_2/page'
+import { useAuthenticationStore } from '@/common/features/auth'
+import { BudjetSelectedGuard, MainSchetSelectedGuard } from '@/common/features/requisites'
+import { DuplicateSchetsGuard } from '@/common/features/requisites/guards/duplicate-schets-guard'
+
+import DashboardPage from './dashboard/page'
+import { MaterialMonitorPage } from './jur_7/monitor/page'
+import MaterialCreatePage from './jur_7/saldo/create/page'
+import PrixodSchetPage from './jur_8/schet/page'
+import SigninPage from './sign-in'
 import AdminDashboardPage from './super-admin/dashboard/page'
 import { AdminKassaPage } from './super-admin/jur_1/page'
-import { AdminMaterialPage } from './super-admin/jur_7/page'
+import { AdminBankPage } from './super-admin/jur_2/page'
 import { AdminOrgan152Page } from './super-admin/jur_3/152/page'
 import { AdminOrgan159Page } from './super-admin/jur_3/159/page'
 import { AdminPodotchetPage } from './super-admin/jur_4/page'
-import DashboardPage from './dashboard/page'
+import { AdminMaterialPage } from './super-admin/jur_7/page'
 import DistancePage from './super-admin/spravochnik/distance/page'
-import { DuplicateSchetsGuard } from '@/common/features/requisites/guards/duplicate-schets-guard'
-import MaterialCreatePage from './jur_7/saldo/create/page'
-import { MaterialMonitorPage } from './jur_7/monitor/page'
-import PrixodSchetPage from './jur_8/schet/page'
-import type { RouteObject } from 'react-router-dom'
-import SigninPage from './sign-in'
-import { lazy } from 'react'
-import { useAuthenticationStore } from '@/common/features/auth'
+
+const WorkTripDetailsPage = lazy(() => import('./jur_4/work-trip/details/page'))
+const WorkTripPage = lazy(() => import('./jur_4/work-trip/page'))
 
 const KassaSaldoPage = lazy(() => import('./jur_1/saldo/page'))
 const BankSaldoPage = lazy(() => import('./jur_2/saldo/page'))
@@ -468,6 +474,14 @@ export const routes: RouteObject[] = [
           {
             path: 'advance-report/:id',
             element: <AdvanceReportDetailsPage />
+          },
+          {
+            path: 'work-trip',
+            element: <WorkTripPage />
+          },
+          {
+            path: 'work-trip/:id',
+            element: <WorkTripDetailsPage />
           },
           {
             path: 'saldo',

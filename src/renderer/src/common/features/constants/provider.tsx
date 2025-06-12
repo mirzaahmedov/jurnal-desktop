@@ -1,9 +1,12 @@
-import { ConstantService } from './service'
+import { useEffect } from 'react'
+
+import { useQuery } from '@tanstack/react-query'
+
 import { PodpisQueryKeys } from '@/app/region-spravochnik/podpis/config'
 import { PodpisService } from '@/app/region-spravochnik/podpis/service'
+
+import { ConstantService } from './service'
 import { useConstantsStore } from './store'
-import { useEffect } from 'react'
-import { useQuery } from '@tanstack/react-query'
 
 export const ConstantsProvider = () => {
   const setConstants = useConstantsStore((store) => store.setConstants)

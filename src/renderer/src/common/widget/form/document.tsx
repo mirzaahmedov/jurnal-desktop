@@ -95,18 +95,20 @@ export const DocumentFields: FormEditableFieldsComponent<
                   disabled={disabled}
                   {...field}
                 />
-                <Button
-                  type="button"
-                  size="icon"
-                  className="size-10 flex-shrink-0"
-                  variant="outline"
-                  disabled={isFetching}
-                  onClick={() => {
-                    refetch()
-                  }}
-                >
-                  {isFetching ? <Spinner className="size-5 border-2" /> : <RefreshCw />}
-                </Button>
+                {documentType ? (
+                  <Button
+                    type="button"
+                    size="icon"
+                    className="size-10 flex-shrink-0"
+                    variant="outline"
+                    disabled={isFetching}
+                    onClick={() => {
+                      refetch()
+                    }}
+                  >
+                    {isFetching ? <Spinner className="size-5 border-2" /> : <RefreshCw />}
+                  </Button>
+                ) : null}
               </div>
             </FormElement>
           )}

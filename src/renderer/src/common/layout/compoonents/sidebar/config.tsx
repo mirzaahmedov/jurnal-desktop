@@ -1,3 +1,7 @@
+import type { RoleAccess } from '@/common/models'
+import type { TFunction } from 'i18next'
+import type { ComponentType, HTMLAttributes, ReactNode } from 'react'
+
 import {
   AppWindow,
   ArrowLeftRight,
@@ -24,6 +28,7 @@ import {
   LayoutGrid,
   LetterText,
   MapPinHouse,
+  MapPinned,
   MonitorCog,
   NotebookTabs,
   NotepadText,
@@ -46,17 +51,14 @@ import {
   Weight,
   Wrench
 } from 'lucide-react'
-import type { ComponentType, HTMLAttributes, ReactNode } from 'react'
-
-import { AdminRoles } from '@/app/super-admin/role'
-import { BankSaldoController } from '@/app/jur_2/saldo/components/saldo-controller'
-import { KassaSaldoController } from '@/app/jur_1/saldo/components/saldo-controller'
-import type { RoleAccess } from '@/common/models'
-import type { TFunction } from 'i18next'
-import { WarehouseSaldoController } from '@/app/jur_7/saldo/components/saldo-controller'
-import { omitEmptyArrayElements } from '@/common/lib/validation'
 import { toast } from 'react-toastify'
+
+import { KassaSaldoController } from '@/app/jur_1/saldo/components/saldo-controller'
+import { BankSaldoController } from '@/app/jur_2/saldo/components/saldo-controller'
+import { WarehouseSaldoController } from '@/app/jur_7/saldo/components/saldo-controller'
+import { AdminRoles } from '@/app/super-admin/role'
 import { useAuthenticationStore } from '@/common/features/auth'
+import { omitEmptyArrayElements } from '@/common/lib/validation'
 
 export type NavElement = {
   props?: HTMLAttributes<HTMLDivElement>
@@ -248,6 +250,11 @@ export const getNavElements = (t: TFunction): NavElement[] => {
               path: 'advance-report',
               title: t('pages.avans'),
               icon: FileCheck
+            },
+            {
+              path: 'work-trip',
+              title: t('pages.work_trip'),
+              icon: MapPinned
             },
             {
               path: 'saldo',

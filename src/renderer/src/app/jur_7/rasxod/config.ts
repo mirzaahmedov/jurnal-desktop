@@ -1,5 +1,6 @@
-import { withPreprocessor } from '@/common/lib/validation'
 import { z } from 'zod'
+
+import { withPreprocessor } from '@/common/lib/validation'
 
 export const WarehouseRasxodQueryKeys = {
   getAll: 'jur7_rasxod/all',
@@ -39,7 +40,7 @@ export const RasxodProvodkaFormSchema = withPreprocessor(
     edin: z.string().optional().nullable(),
     inventar_num: z.string().optional().nullable(),
     serial_num: z.string().optional().nullable(),
-    kol: z.number().min(1),
+    kol: z.number().catch(0),
     group_jur7_id: z.number(),
     max_kol: z.number().optional(),
     sena: z.number().catch(0),

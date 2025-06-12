@@ -292,6 +292,7 @@ const Provodka = ({ rowIndex, row, form, tabIndex, onOpenDialog, onRemove }: Pro
             })}
             error={!!errors?.kol}
             tabIndex={tabIndex}
+            decimalScale={100}
           />
         </div>
       </EditableTableCell>
