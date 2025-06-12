@@ -8,7 +8,15 @@ import { useNavigate } from 'react-router-dom'
 
 import { GenericTable } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
+import {
+  SearchFilterDebounced,
+  useSearchFilter
+} from '@/common/features/filters/search/search-filter-debounced'
 import { useRequisitesStore } from '@/common/features/requisites'
+import {
+  useSelectedMonthStore,
+  validateDateWithinSelectedMonth
+} from '@/common/features/selected-month'
 import { useDates, usePagination } from '@/common/hooks'
 import { useLayout } from '@/common/layout'
 import { ListView } from '@/common/views'
@@ -24,8 +32,11 @@ const WorkTripPage = () => {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
 
+  const [search] = useSearchFilter()
+
   const { t } = useTranslation(['app'])
   const { main_schet_id, jur4_schet_id } = useRequisitesStore()
+  const { startDate } = useSelectedMonthStore()
   const { confirm } = useConfirm()
 
   const { data: workTrips, isFetching: isFetchingWorkTrips } = useQuery({
@@ -34,6 +45,7 @@ const WorkTripPage = () => {
       {
         ...pages,
         ...dates,
+        search,
         main_schet_id,
         schet_id: jur4_schet_id
       }
@@ -55,6 +67,7 @@ const WorkTripPage = () => {
       title: t('pages.work_trip'),
       enableSaldo: true,
       onCreate: () => navigate('create'),
+      content: SearchFilterDebounced,
       breadcrumbs: [
         {
           title: t('pages.podotchet')
@@ -77,7 +90,14 @@ const WorkTripPage = () => {
   return (
     <ListView>
       <ListView.Header>
-        <ListView.RangeDatePicker {...dates} />
+        <ListView.RangeDatePicker
+          {...dates}
+          validateDate={validateDateWithinSelectedMonth}
+          calendarProps={{
+            fromMonth: startDate,
+            toMonth: startDate
+          }}
+        />
       </ListView.Header>
       <ListView.Content loading={isFetchingWorkTrips}>
         <GenericTable
