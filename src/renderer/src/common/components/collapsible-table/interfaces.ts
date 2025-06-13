@@ -26,6 +26,8 @@ interface CommonCollapsibleTableProps<T extends object> {
   onClickRow?: (row: T) => void
   onEdit?: (row: T) => void
   onDelete?: (row: T) => void
+  openRows?: (string | number)[]
+  onOpenRowsChange?: (openRows: (string | number)[]) => void
   classNames?: {
     header?: string
   }

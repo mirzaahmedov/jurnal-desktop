@@ -37,7 +37,9 @@ export const CollapsibleTable = <T extends object, C extends object = T>({
   onClickRow,
   onEdit,
   onDelete,
-  classNames
+  classNames,
+  openRows,
+  onOpenRowsChange
 }: CollapsibleTableProps<T, C>) => {
   const { t } = useTranslation()
   return (
@@ -101,7 +103,9 @@ export const CollapsibleTable = <T extends object, C extends object = T>({
                 getChildRows,
                 onClickRow,
                 onEdit,
-                onDelete
+                onDelete,
+                openRows,
+                onOpenRowsChange
               }}
             />
           ))
@@ -144,7 +148,9 @@ const CollapsibleItem = <T extends object, C extends object>({
     onDelete,
     disabledIds,
     selectedIds,
-    width
+    width,
+    openRows,
+    onOpenRowsChange
   } = tableProps
 
   if (!children && !getChildRows(row)?.length) {
@@ -214,6 +220,15 @@ const CollapsibleItem = <T extends object, C extends object>({
   return (
     <Collapsible
       key={getRowId(row)}
+      open={openRows?.includes(getRowId(row))}
+      onOpenChange={(open) => {
+        if (!openRows) return
+        if (open) {
+          onOpenRowsChange?.(openRows?.concat(getRowId(row)))
+        } else {
+          onOpenRowsChange?.(openRows?.filter((id) => id !== getRowId(row)))
+        }
+      }}
       asChild
     >
       <>

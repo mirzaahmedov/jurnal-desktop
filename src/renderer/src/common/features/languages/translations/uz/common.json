@@ -276,6 +276,7 @@
   "row": "Qator",
   "search": "Qidirish",
   "search...": "Qidirish...",
+  "search_by...": "{{field}} bo'yicha qidirish...",
   "view_all": "Barchasini ko'rish",
   "form": "Forma",
   "interface": "Interfeys",

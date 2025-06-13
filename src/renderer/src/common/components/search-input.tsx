@@ -13,11 +13,13 @@ export interface SearchInputProps extends InputHTMLAttributes<HTMLInputElement> 
   containerProps?: HTMLAttributes<HTMLDivElement>
   iconProps?: LucideProps
   debounceMS?: number
+  hotKey?: string
 }
 export const SearchInput = ({
   className,
   containerProps,
   iconProps,
+  hotKey = '/',
   ...props
 }: SearchInputProps) => {
   const inputRef = useRef<HTMLInputElement>(null)
@@ -25,7 +27,7 @@ export const SearchInput = ({
   const { t } = useTranslation()
 
   useKeyUp({
-    key: '/',
+    key: hotKey,
     ctrlKey: true,
     handler: () => {
       inputRef.current?.focus()
@@ -61,7 +63,7 @@ export const SearchInput = ({
 
       <div className="absolute right-2.5 top-1/2 -translate-y-1/2 space-x-1 z-50 pointer-events-none">
         <HotKey>CTRL</HotKey>
-        <HotKey>/</HotKey>
+        <HotKey>{hotKey}</HotKey>
       </div>
     </div>
   )

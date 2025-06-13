@@ -1,6 +1,6 @@
 import { type HTMLAttributes, useEffect, useRef } from 'react'
 
-import { CircleCheck } from 'lucide-react'
+import { Save } from 'lucide-react'
 import { Focusable } from 'react-aria-components'
 import { useTranslation } from 'react-i18next'
 
@@ -42,7 +42,7 @@ const DetailsViewFooter = ({ children, className, ...props }: DetailsViewFooterP
     <div
       {...props}
       className={cn(
-        'w-full fixed bottom-[41px] p-5 z-[100] border-t border-slate-200 bg-white',
+        'w-full fixed bottom-[37px] p-5 z-[100] border-t border-slate-200 bg-white',
         className
       )}
     >
@@ -69,7 +69,7 @@ const DetailsViewCreate = ({ isPending = false, tabIndex, ...props }: DetailsVie
       <Button
         isPending={isPending}
         type="submit"
-        IconStart={CircleCheck}
+        IconStart={Save}
         {...props}
         ref={buttonRef}
       >
