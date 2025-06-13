@@ -266,7 +266,7 @@ export const BankRasxodViewDialog = ({ selectedId, onClose }: BankRasxodViewDial
                         isPending={isPending}
                         onPress={savePDF}
                       >
-                        {t('download')}
+                        {t('download_as_pdf')}
                       </Button>
                     </>
                   ) : null}

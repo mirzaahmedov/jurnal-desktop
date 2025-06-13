@@ -194,7 +194,7 @@ export const KassaRasxodViewDialog = ({ selectedId, onClose }: KassaRasxodViewDi
                         isPending={isPending}
                         onPress={savePDF}
                       >
-                        {t('download')}
+                        {t('download_as_pdf')}
                       </Button>
                     </>
                   ) : null}

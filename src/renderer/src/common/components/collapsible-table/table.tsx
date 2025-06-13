@@ -36,7 +36,8 @@ export const CollapsibleTable = <T extends object, C extends object = T>({
   getChildRows,
   onClickRow,
   onEdit,
-  onDelete
+  onDelete,
+  classNames
 }: CollapsibleTableProps<T, C>) => {
   const { t } = useTranslation()
   return (
@@ -45,7 +46,7 @@ export const CollapsibleTable = <T extends object, C extends object = T>({
       className={className}
     >
       {displayHeader ? (
-        <TableHeader className="sticky top-0 z-50 shadow-sm">
+        <TableHeader className={cn('sticky top-0 z-50 shadow-sm', classNames?.header)}>
           <GenericTableRow className="bg-slate-100 hover:bg-slate-100 border-t border-slate-200">
             {columnDefs.map((col) => {
               const { key, header, fit, stretch, numeric, headerClassName, width, renderHeader } =

@@ -175,10 +175,10 @@
   "district": "Tuman",
   "from_where": "Qayerdan",
   "to_where": "Qayerga",
-  "distance": "Masofa",
+  "distance": "Masofa (km)",
   "day_summa": "Kunlik summa",
   "hotel_summa": "Mehmonxona summa",
-  "hotel_number": "Mehmonxona raqami",
+  "hotel_number": "Mehmonxona chek raqami",
   "road_summa": "Yo'l summa",
   "road_ticket_number": "Yo'l chipta raqami",
   "from_date": "Boshlanish sanasi",
@@ -392,5 +392,13 @@
   "update_profile": "Profilni yangilash",
   "please_select_responsible": "Iltimos, javobgar shaxsni tanlang.",
   "pdf_report": "PDF hisobot",
-  "excel_report": "Excel hisobot"
+  "excel_report": "Excel hisobot",
+  "writeoff_akt": "Hisobdan chiqarish akti",
+  "notice": "Eslatma",
+  "request_release": "Materiallarni chiqarish uchun so'rov",
+  "recieve_akt": "Qabul qilish akti",
+  "download_as_pdf": "PDF-ga yuklash",
+  "errors": {
+    "no_distance": "Masofa topilmadi"
+  }
 }

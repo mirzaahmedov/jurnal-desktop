@@ -4,10 +4,12 @@ import type { DialogProps } from '@radix-ui/react-dialog'
 import { useEffect, useMemo, useState } from 'react'
 
 import { useQuery } from '@tanstack/react-query'
+import { ArrowLeft, ArrowRight } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+import ReactPaginate from 'react-paginate'
 
 import { GenericTable, LoadingOverlay } from '@/common/components'
-import { Pagination } from '@/common/components/pagination'
+import { pageSizeOptions } from '@/common/components/pagination'
 import { SearchInputDebounced } from '@/common/components/search-input-debounced'
 import { IDCell } from '@/common/components/table/renderers/id'
 import { Badge } from '@/common/components/ui/badge'
@@ -19,6 +21,13 @@ import {
   DialogHeader,
   DialogTitle
 } from '@/common/components/ui/dialog'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from '@/common/components/ui/select'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/common/components/ui/tabs'
 import { useRequisitesStore } from '@/common/features/requisites'
 import { usePagination } from '@/common/hooks'
@@ -168,11 +177,85 @@ export const SaldoProductSpravochnikDialog = ({
         </Tabs>
         <DialogFooter className="p-0 m-0">
           <div className="w-full p-5 flex items-center justify-between">
-            <Pagination
-              count={products?.meta?.count ?? 0}
-              pageCount={products?.meta?.pageCount ?? 0}
-              {...pagination}
-            />
+            <div className="flex-0 p-5 flex items-center gap-10">
+              {products?.meta?.pageCount ? (
+                <>
+                  <ReactPaginate
+                    className="flex gap-4"
+                    pageRangeDisplayed={2}
+                    breakLabel="..."
+                    forcePage={pagination.page - 1}
+                    onPageChange={({ selected }) => pagination.onChange({ page: selected + 1 })}
+                    pageLabelBuilder={(item) => (
+                      <Button
+                        variant={pagination.page === item ? 'outline' : 'ghost'}
+                        size="icon"
+                      >
+                        {item}
+                      </Button>
+                    )}
+                    nextLabel={
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                      >
+                        <ArrowRight className="btn-icon !ml-0" />
+                      </Button>
+                    }
+                    previousLabel={
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                      >
+                        <ArrowLeft className="btn-icon !ml-0" />
+                      </Button>
+                    }
+                    pageCount={products?.meta?.pageCount ?? 0}
+                    renderOnZeroPageCount={null}
+                  />
+                  {products?.meta?.count ? (
+                    <div className="flex items-center gap-10">
+                      <span className="whitespace-nowrap text-sm font-medium text-slate-600">
+                        {t('pagination.range', {
+                          from: (pagination.page - 1) * pagination.limit + 1,
+                          to:
+                            (pagination.page - 1) * pagination.limit +
+                            (pagination.page * pagination.limit > products?.meta?.count
+                              ? products?.meta?.count % pagination.limit
+                              : pagination.limit),
+                          total: products?.meta?.count
+                        })}
+                      </span>
+                      <div className="flex items-center gap-5">
+                        <span className="whitespace-nowrap text-sm font-medium text-slate-600">
+                          {t('pagination.page_size')}
+                        </span>
+                        <div className="w-20">
+                          <Select
+                            value={String(pagination.limit)}
+                            onValueChange={(value) => pagination.onChange({ limit: Number(value) })}
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder={String(pagination.limit)} />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {pageSizeOptions.map((item) => (
+                                <SelectItem
+                                  key={item.value}
+                                  value={String(item.value)}
+                                >
+                                  {item.value}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+                    </div>
+                  ) : null}
+                </>
+              ) : null}
+            </div>
 
             <Button
               disabled={isFetching}

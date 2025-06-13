@@ -196,7 +196,7 @@ export const KassaPrixodViewDialog = ({ selectedId, onClose }: KassaPrixodViewDi
                         IconStart={Download}
                         onPress={savePDF}
                       >
-                        {t('download')}
+                        {t('download_as_pdf')}
                       </Button>
                     </>
                   ) : null}

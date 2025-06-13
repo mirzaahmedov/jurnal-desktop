@@ -257,12 +257,32 @@ export const WarehouseRasxodViewDialog = ({
                 <DialogFooter className="pdf-hidden">
                   <DownloadFile
                     url={`${ApiEndpoints.jur7_rasxod}/${data?.id}`}
-                    fileName={`${t('pages.material-warehouse')}_${t('rasxod')}_№${data?.doc_num}.xlsx`}
-                    buttonText={t('excel_report')}
+                    fileName={`${t('pages.material-warehouse')}_${t('rasxod')}_${t('writeoff_akt')}_№${data?.doc_num}.xlsx`}
+                    buttonText={t('writeoff_akt')}
                     params={{
                       budjet_id,
                       main_schet_id,
                       akt: true
+                    }}
+                  />
+                  <DownloadFile
+                    url={`${ApiEndpoints.jur7_rasxod}/${data?.id}`}
+                    fileName={`${t('pages.material-warehouse')}_${t('rasxod')}_${t('notice')}_№${data?.doc_num}.xlsx`}
+                    buttonText={t('notice')}
+                    params={{
+                      budjet_id,
+                      main_schet_id,
+                      notice: true
+                    }}
+                  />
+                  <DownloadFile
+                    url={`${ApiEndpoints.jur7_rasxod}/${data?.id}`}
+                    fileName={`${t('pages.material-warehouse')}_${t('rasxod')}_${t('schet_faktura')}_№${data?.doc_num}.xlsx`}
+                    buttonText={t('schet_faktura')}
+                    params={{
+                      budjet_id,
+                      main_schet_id,
+                      sales_nvoice: true
                     }}
                   />
                   <Button
@@ -271,7 +291,7 @@ export const WarehouseRasxodViewDialog = ({
                     isPending={isPending}
                     onPress={savePDF}
                   >
-                    {t('pdf_report')}
+                    {t('download_as_pdf')}
                   </Button>
                 </DialogFooter>
               </div>

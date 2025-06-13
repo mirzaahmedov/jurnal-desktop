@@ -247,7 +247,7 @@ export const BankPrixodViewDialog = ({ selectedId, onClose }: BankPrixodViewDial
                     isPending={isPending}
                     onPress={savePDF}
                   >
-                    {t('download')}
+                    {t('download_as_pdf')}
                   </Button>
                 </DialogFooter>
               </div>

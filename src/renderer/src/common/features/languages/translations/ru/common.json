@@ -175,10 +175,10 @@
   "from_where": "Откуда",
   "to_where": "Куда",
   "district": "Район",
-  "distance": "Расстояние",
+  "distance": "Расстояние (км)",
   "day_summa": "Сумма за день",
   "hotel_summa": "Сумма за отель",
-  "hotel_number": "Номер отеля",
+  "hotel_number": "Номер чека отеля",
   "road_summa": "Сумма за дорогу",
   "road_ticket_number": "Номер билета",
   "from_date": "Дата начала",
@@ -393,5 +393,13 @@
   "update_profile": "Обновить профиль",
   "please_select_responsible": "Пожалуйста, выберите ответственное лицо.",
   "pdf_report": "PDF отчет",
-  "excel_report": "Excel отчет"
+  "excel_report": "Excel отчет",
+  "writeoff_akt": "Акт списания",
+  "notice": "Извещение",
+  "request_release": "Требование на отпуск материалов",
+  "recieve_akt": "Приемный акт",
+  "download_as_pdf": "Загрузить как PDF",
+  "errors": {
+    "no_distance": "Расстояние не было найдено"
+  }
 }

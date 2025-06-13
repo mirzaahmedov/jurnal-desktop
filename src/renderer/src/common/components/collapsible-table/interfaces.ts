@@ -26,16 +26,19 @@ interface CommonCollapsibleTableProps<T extends object> {
   onClickRow?: (row: T) => void
   onEdit?: (row: T) => void
   onDelete?: (row: T) => void
+  classNames?: {
+    header?: string
+  }
 }
 
 export interface CollapsibleTableCustomProps<T extends object, C extends object>
   extends CommonCollapsibleTableProps<T> {
   children: (props: { row: T; tableProps: CollapsibleTableProps<T, C> }) => ReactNode
-  getChildRows: never
+  getChildRows?: never
 }
 export interface CollapsibleTableDefaulteProps<T extends object, C extends object>
   extends CommonCollapsibleTableProps<T> {
-  children: never
+  children?: never
   getChildRows: (row: T) => C[]
 }
 

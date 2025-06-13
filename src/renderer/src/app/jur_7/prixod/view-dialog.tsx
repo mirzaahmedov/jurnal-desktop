@@ -302,8 +302,8 @@ export const WarehousePrixodViewDialog = ({
                 <DialogFooter className="pdf-hidden">
                   <DownloadFile
                     url={`${ApiEndpoints.jur7_prixod}/${data?.id}`}
-                    fileName={`${t('pages.material-warehouse')}_${t('prixod')}_№${data?.doc_num}.xlsx`}
-                    buttonText={t('excel_report')}
+                    fileName={`${t('pages.material-warehouse')}_${t('prixod')}_${t('recieve_akt')}_№${data?.doc_num}.xlsx`}
+                    buttonText={t('recieve_akt')}
                     params={{
                       budjet_id,
                       main_schet_id,
@@ -316,7 +316,7 @@ export const WarehousePrixodViewDialog = ({
                     isPending={isPending}
                     onPress={savePDF}
                   >
-                    {t('pdf_report')}
+                    {t('download_as_pdf')}
                   </Button>
                 </DialogFooter>
               </div>

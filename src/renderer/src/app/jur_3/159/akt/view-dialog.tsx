@@ -231,7 +231,7 @@ export const AktViewDialog = ({ selectedId, onClose }: AktViewDialogProps) => {
                     isPending={isPending}
                     onPress={savePDF}
                   >
-                    {t('download')}
+                    {t('download_as_pdf')}
                   </Button>
                 </DialogFooter>
               </div>

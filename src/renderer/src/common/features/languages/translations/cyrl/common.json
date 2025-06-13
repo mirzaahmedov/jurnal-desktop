@@ -175,10 +175,10 @@
   "district": "Туман",
   "from_where": "Қаердан",
   "to_where": "Қаерга",
-  "distance": "Масофа",
+  "distance": "Масофа (км)",
   "day_summa": "Кунлик сумма",
   "hotel_summa": "Меҳмонхона суммаси",
-  "hotel_number": "Меҳмонхона рақами",
+  "hotel_number": "Меҳмонхона чек рақами",
   "road_summa": "Йўл суммаси",
   "road_ticket_number": "Йўл билети рақами",
   "from_date": "Бошланиш санаси",
@@ -392,5 +392,13 @@
   "update_profile": "Профильни янгилаш",
   "please_select_responsible": "Илтимос, жавобгар шахсни танланг.",
   "pdf_report": "PDF ҳисобот",
-  "excel_report": "Excel ҳисобот"
+  "excel_report": "Excel ҳисобот",
+  "writeoff_akt": "Ҳисобдан чиқариш акти",
+  "notice": "Эслатма",
+  "request_release": "Материалларни чиқариш учун сўров",
+  "recieve_akt": "Қабул қилиш акти",
+  "download_as_pdf": "PDF-га юклаш",
+  "errors": {
+    "no_distance": "Масофа топилмади"
+  }
 }

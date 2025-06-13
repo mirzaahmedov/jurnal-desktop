@@ -171,7 +171,7 @@ export const AvansViewDialog = ({ selectedId, onClose }: AvansViewDialogProps) =
                       isPending={isPending}
                       onPress={savePDF}
                     >
-                      {t('download')}
+                      {t('download_as_pdf')}
                     </Button>
                   ) : null}
                 </DialogFooter>

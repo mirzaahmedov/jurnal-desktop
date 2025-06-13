@@ -14,23 +14,23 @@ import { MinimumWageService } from '@/app/super-admin/spravochnik/minimum-wage/s
 import { DatePicker, Fieldset, NumericInput, Spinner } from '@/common/components'
 import { EditableTable } from '@/common/components/editable-table'
 import { FormElement } from '@/common/components/form'
-import { ComboboxItem, JollyComboBox } from '@/common/components/jolly/combobox'
 import { Form, FormField } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
 import { Textarea } from '@/common/components/ui/textarea'
-import { useConstantsStore } from '@/common/features/constants/store'
 import { useRequisitesStore } from '@/common/features/requisites'
 import {
   useSelectedMonthStore,
   validateDateWithinSelectedMonth
 } from '@/common/features/selected-month'
 import { useSpravochnik } from '@/common/features/spravochnik'
+import { useToggle } from '@/common/hooks'
 import { formatDate, parseDate, withinMonth } from '@/common/lib/date'
 import { DetailsView } from '@/common/views'
 import { DocumentFields, PodotchetFields, SummaFields } from '@/common/widget/form'
 
 import { WorkTripFormSchema, WorkTripQueryKeys, defaultValues } from '../config'
 import { WorkTripService } from '../service'
+import { DistrictsModal } from './districts-modal'
 import { WorkTripProvodkaColumns } from './provodki'
 
 export interface WorkTripDetailsProps {
@@ -39,10 +39,11 @@ export interface WorkTripDetailsProps {
 export const WorkTripDetails = ({ id }: WorkTripDetailsProps) => {
   const queryClient = useQueryClient()
   const navigate = useNavigate()
+  const fromToggle = useToggle()
+  const toToggle = useToggle()
 
   const { startDate } = useSelectedMonthStore()
   const { t } = useTranslation(['app'])
-  const { districts } = useConstantsStore()
   const { main_schet_id, jur4_schet_id } = useRequisitesStore()
 
   const form = useForm({
@@ -166,8 +167,11 @@ export const WorkTripDetails = ({ id }: WorkTripDetailsProps) => {
   useEffect(() => {
     form.setValue('road_summa', distanceKm * (minimumWageSumma * 0.001))
   }, [form, distanceKm, minimumWage])
-
-  console.log({ values: form.watch() })
+  useEffect(() => {
+    if (Array.isArray(distance?.data) && distance?.data?.length === 0) {
+      toast.error(t('errors.no_distance'))
+    }
+  }, [distance?.data])
 
   return (
     <DetailsView>
@@ -271,6 +275,46 @@ export const WorkTripDetails = ({ id }: WorkTripDetailsProps) => {
                     <div className="grid grid-cols-2 gap-5">
                       <FormField
                         control={form.control}
+                        name="from_district_id"
+                        render={({ field }) => (
+                          <FormElement
+                            label={t('from_where')}
+                            direction="column"
+                          >
+                            <Input
+                              readOnly
+                              ref={field.ref}
+                              name={field.name}
+                              onBlur={field.onBlur}
+                              value={form.watch('from_district_name')}
+                              onDoubleClick={fromToggle.open}
+                            />
+                          </FormElement>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="to_district_id"
+                        render={({ field }) => (
+                          <FormElement
+                            label={t('to_where')}
+                            direction="column"
+                          >
+                            <Input
+                              readOnly
+                              ref={field.ref}
+                              name={field.name}
+                              onBlur={field.onBlur}
+                              value={form.watch('to_district_name')}
+                              onDoubleClick={toToggle.open}
+                            />
+                          </FormElement>
+                        )}
+                      />
+                    </div>
+                    <div className="grid grid-cols-2 gap-5">
+                      <FormField
+                        control={form.control}
                         name="road_ticket_number"
                         render={({ field }) => (
                           <FormElement
@@ -317,46 +361,6 @@ export const WorkTripDetails = ({ id }: WorkTripDetailsProps) => {
                               />
                               {isFetchingDistance || (isFetchingMinimumWage && <Spinner />)}
                             </div>
-                          </FormElement>
-                        )}
-                      />
-                    </div>
-                    <div className="grid grid-cols-2 gap-5">
-                      <FormField
-                        control={form.control}
-                        name="from_district_id"
-                        render={({ field }) => (
-                          <FormElement
-                            label={t('from_where')}
-                            direction="column"
-                          >
-                            <JollyComboBox
-                              defaultItems={districts}
-                              selectedKey={field.value}
-                              onSelectionChange={(value) => field.onChange(value as number)}
-                              menuTrigger="focus"
-                            >
-                              {(item) => <ComboboxItem id={item.id}>{item.name}</ComboboxItem>}
-                            </JollyComboBox>
-                          </FormElement>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name="to_district_id"
-                        render={({ field }) => (
-                          <FormElement
-                            label={t('to_where')}
-                            direction="column"
-                          >
-                            <JollyComboBox
-                              defaultItems={districts}
-                              selectedKey={field.value}
-                              onSelectionChange={(value) => field.onChange(value as number)}
-                              menuTrigger="focus"
-                            >
-                              {(item) => <ComboboxItem id={item.id}>{item.name}</ComboboxItem>}
-                            </JollyComboBox>
                           </FormElement>
                         )}
                       />
@@ -457,6 +461,25 @@ export const WorkTripDetails = ({ id }: WorkTripDetailsProps) => {
           </form>
         </Form>
       </DetailsView.Content>
+
+      <DistrictsModal
+        isOpen={fromToggle.isOpen}
+        onOpenChange={fromToggle.setOpen}
+        onSelect={(district) => {
+          form.setValue('from_district_id', district.id, { shouldValidate: true })
+          form.setValue('from_district_name', district.name, { shouldValidate: true })
+          fromToggle.close()
+        }}
+      />
+      <DistrictsModal
+        isOpen={toToggle.isOpen}
+        onOpenChange={toToggle.setOpen}
+        onSelect={(district) => {
+          form.setValue('to_district_id', district.id, { shouldValidate: true })
+          form.setValue('to_district_name', district.name, { shouldValidate: true })
+          toToggle.close()
+        }}
+      />
     </DetailsView>
   )
 }

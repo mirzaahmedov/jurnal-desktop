@@ -146,6 +146,8 @@ export const MonthPicker = ({
     popperToggle.close()
   }
 
+  console.log({ isOpen: popperToggle.isOpen })
+
   return (
     <PopoverTrigger
       isOpen={popperToggle.isOpen}

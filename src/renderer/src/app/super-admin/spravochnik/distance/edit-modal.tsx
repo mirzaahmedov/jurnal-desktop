@@ -101,7 +101,7 @@ export const DistanceEditModal = ({ selected, ...props }: MinimumWageEditModalPr
       <DialogOverlay>
         <DialogContent className="w-full max-w-4xl">
           <DialogHeader>
-            <DialogTitle>{t('pages.minimum-wage')}</DialogTitle>
+            <DialogTitle>{t('pages.distance')}</DialogTitle>
           </DialogHeader>
           <Form {...form}>
             <form

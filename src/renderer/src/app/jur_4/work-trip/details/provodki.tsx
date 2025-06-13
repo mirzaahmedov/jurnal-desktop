@@ -15,7 +15,7 @@ export const WorkTripProvodkaColumns: EditableColumnDef<WorkTripProvodkaFormValu
     key: 'schet_id',
     header: 'operatsii',
     Editor: createOperatsiiEditor({
-      type_schet: TypeSchetOperatsii.AVANS_OTCHET,
+      type_schet: TypeSchetOperatsii.WORK_TRIP,
       field: 'schet_id'
     })
   },
