@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
 import { createPodotchetSpravochnik } from '@/app/region-spravochnik/podotchet'
+import { OperatsiiService, operatsiiQueryKeys } from '@/app/super-admin/operatsii'
 import { DistanceQueryKeys } from '@/app/super-admin/spravochnik/distance/config'
 import { DistanceService } from '@/app/super-admin/spravochnik/distance/service'
 import { MinimumWageService } from '@/app/super-admin/spravochnik/minimum-wage/service'
@@ -25,6 +26,7 @@ import {
 import { useSpravochnik } from '@/common/features/spravochnik'
 import { useToggle } from '@/common/hooks'
 import { formatDate, parseDate, withinMonth } from '@/common/lib/date'
+import { TypeSchetOperatsii } from '@/common/models'
 import { DetailsView } from '@/common/views'
 import { DocumentFields, PodotchetFields, SummaFields } from '@/common/widget/form'
 
@@ -117,6 +119,17 @@ export const WorkTripDetails = ({ id }: WorkTripDetailsProps) => {
       !!form.watch('to_district_id') &&
       !form.watch('road_ticket_number')
   })
+  const { data: operatsii } = useQuery({
+    queryKey: [
+      operatsiiQueryKeys.getAll,
+      {
+        type_schet: TypeSchetOperatsii.WORK_TRIP,
+        page: 1,
+        limit: 1
+      }
+    ],
+    queryFn: OperatsiiService.getAll
+  })
 
   const podotchetSpravochnik = useSpravochnik(
     createPodotchetSpravochnik({
@@ -172,6 +185,18 @@ export const WorkTripDetails = ({ id }: WorkTripDetailsProps) => {
       toast.error(t('errors.no_distance'))
     }
   }, [distance?.data])
+  useEffect(() => {
+    const firstOperatsii = operatsii?.data?.[0]
+    if (firstOperatsii) {
+      form.setValue(
+        'childs',
+        form.getValues('childs').map((child) => ({
+          ...child,
+          schet_id: child.schet_id ? child.schet_id : firstOperatsii.id
+        }))
+      )
+    }
+  }, [form, operatsii?.data])
 
   return (
     <DetailsView>
