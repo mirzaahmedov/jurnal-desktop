@@ -177,13 +177,18 @@ export const WorkTripDetails = ({ id }: WorkTripDetailsProps) => {
 
   const distanceKM = distance?.data?.[0]?.distance_km ?? 0
   const minimumWageSumma = minimumWage?.data?.summa ?? 0
-  const daysCount = getWeekdaysBetween(
-    new Date(form.watch('from_date')),
-    new Date(form.watch('to_date'))
-  )
+  const workDaysCount = getWeekdaysBetween({
+    startDate: new Date(form.watch('from_date')),
+    endDate: new Date(form.watch('to_date'))
+  })
+  const allDaysCount = getWeekdaysBetween({
+    startDate: new Date(form.watch('from_date')),
+    endDate: new Date(form.watch('to_date')),
+    includeWeekends: true
+  })
   useEffect(() => {
     if (!form.getValues('road_ticket_number')) {
-      form.setValue('road_summa', distanceKM * (minimumWageSumma * 0.001))
+      form.setValue('road_summa', distanceKM * (minimumWageSumma * 0.01))
     }
   }, [form, distanceKM, minimumWage])
   useEffect(() => {
@@ -204,8 +209,8 @@ export const WorkTripDetails = ({ id }: WorkTripDetailsProps) => {
     }
   }, [form, operatsii?.data])
   useEffect(() => {
-    form.setValue('day_summa', minimumWageSumma * 0.1 * daysCount)
-  }, [minimumWageSumma, daysCount])
+    form.setValue('day_summa', minimumWageSumma * 0.1 * workDaysCount)
+  }, [minimumWageSumma, workDaysCount])
 
   return (
     <DetailsView>
@@ -279,6 +284,7 @@ export const WorkTripDetails = ({ id }: WorkTripDetailsProps) => {
                       <FormElement
                         label={t('summa')}
                         direction="row"
+                        description={`[${t('pages.minimum-wage').toLowerCase()}] * 0.1 * [${t('workdays').toLowerCase()}]`}
                       >
                         <NumericInput
                           readOnly
@@ -301,7 +307,26 @@ export const WorkTripDetails = ({ id }: WorkTripDetailsProps) => {
                       </FormElement>
                     )}
                   />
-                  <p className="text-sm text-gray-500">{t('days', { count: daysCount })}</p>
+                  <div className="grid grid-cols-2 gap-5">
+                    <FormElement
+                      label={t('days')}
+                      direction="column"
+                    >
+                      <Input
+                        readOnly
+                        value={allDaysCount}
+                      />
+                    </FormElement>
+                    <FormElement
+                      label={t('workdays')}
+                      direction="column"
+                    >
+                      <Input
+                        readOnly
+                        value={workDaysCount}
+                      />
+                    </FormElement>
+                  </div>
                 </Fieldset>
                 <Fieldset
                   name={t('road_expense')}
@@ -348,12 +373,19 @@ export const WorkTripDetails = ({ id }: WorkTripDetailsProps) => {
                         )}
                       />
                     </div>
-                    <div>
-                      <p className="text-sm text-gray-500">
-                        {t('distance')}: {distanceKM} km
-                      </p>
-                    </div>
                     <div className="grid grid-cols-2 gap-5">
+                      <FormElement
+                        label={t('distance')}
+                        direction="column"
+                        divProps={{
+                          className: 'gap-3'
+                        }}
+                      >
+                        <Input
+                          readOnly
+                          value={distanceKM}
+                        />
+                      </FormElement>
                       <FormField
                         control={form.control}
                         name="road_ticket_number"
@@ -369,6 +401,8 @@ export const WorkTripDetails = ({ id }: WorkTripDetailsProps) => {
                           </FormElement>
                         )}
                       />
+                    </div>
+                    <div>
                       <FormField
                         control={form.control}
                         name="road_summa"
@@ -379,6 +413,11 @@ export const WorkTripDetails = ({ id }: WorkTripDetailsProps) => {
                             divProps={{
                               className: 'gap-3'
                             }}
+                            description={
+                              form.watch('road_ticket_number')
+                                ? ''
+                                : `[${t('pages.minimum-wage').toLowerCase()}] * 0.01 * [${t('distance').toLowerCase()}]`
+                            }
                           >
                             <div className="flex items-center gap-1">
                               <NumericInput

@@ -1,8 +1,7 @@
+import { FormControl, FormDescription, FormItem, FormLabel, FormMessage } from '../ui/form'
 import type { HTMLAttributes, PropsWithChildren, ReactNode } from 'react'
 
 import { cn } from '@/common/lib/utils'
-
-import { FormControl, FormItem, FormLabel, FormMessage } from '../ui/form'
 
 export type FormElementProps = PropsWithChildren<{
   controlled?: boolean
@@ -10,6 +9,7 @@ export type FormElementProps = PropsWithChildren<{
   label: ReactNode
   grid?: `${number}:${number}`
   message?: string
+  description?: string
   direction?: 'row' | 'column'
   className?: string
   divProps?: HTMLAttributes<HTMLDivElement>
@@ -26,7 +26,8 @@ export const FormElement = (props: FormElementProps) => {
     grid,
     className,
     divProps,
-    innerProps
+    innerProps,
+    description
   } = props
 
   const cols = (grid?.split(':') ?? []).map(Number)
@@ -63,15 +64,10 @@ export const FormElement = (props: FormElementProps) => {
         >
           {controlled ? <FormControl>{children}</FormControl> : children}
 
-          {message ? (
-            <FormMessage className="absolute left-0 top-full translate-y-0.5">
-              {message}
-            </FormMessage>
-          ) : (
-            <FormMessage className="absolute left-0 top-full translate-y-0.5" />
-          )}
+          {message ? <FormMessage>{message}</FormMessage> : <FormMessage />}
         </div>
       </div>
+      {description ? <FormDescription>{description}</FormDescription> : <FormDescription />}
     </FormItem>
   )
 }

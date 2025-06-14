@@ -94,14 +94,25 @@ export const localeDateToISO = (localeDateString: string) => {
   return localeDateString.split('.').reverse().join('-')
 }
 
-export const getWeekdaysBetween = (startDate: Date, endDate: Date) => {
+export interface WeekdaysBetweenArgs {
+  startDate: Date
+  endDate: Date
+  includeWeekends?: boolean
+}
+export const getWeekdaysBetween = ({
+  startDate,
+  endDate,
+  includeWeekends = false
+}: WeekdaysBetweenArgs) => {
   let count = 0
 
   const current = new Date(startDate)
 
   while (current <= endDate) {
     const day = current.getDay()
-    if (day !== 0) {
+    if (includeWeekends) {
+      count++
+    } else if (day !== 0) {
       count++
     }
     current.setDate(current.getDate() + 1)

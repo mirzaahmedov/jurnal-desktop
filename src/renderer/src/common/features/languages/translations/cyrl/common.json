@@ -402,5 +402,6 @@
   "errors": {
     "no_distance": "Масофа топилмади"
   },
-  "days": "{{ count }} кун"
+  "days": "Кунлар",
+  "workdays": "Иш кунлари"
 }

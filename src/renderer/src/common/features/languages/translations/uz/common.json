@@ -402,5 +402,6 @@
   "errors": {
     "no_distance": "Masofa topilmadi"
   },
-  "days": "{{ count }} kun"
+  "days": "Kunlar",
+  "workdays": "Ish kunlari"
 }
