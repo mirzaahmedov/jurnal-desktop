@@ -401,5 +401,6 @@
   "download_as_pdf": "PDF-ga yuklash",
   "errors": {
     "no_distance": "Masofa topilmadi"
-  }
+  },
+  "days": "{{ count }} kun"
 }

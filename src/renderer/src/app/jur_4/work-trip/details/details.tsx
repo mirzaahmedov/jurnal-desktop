@@ -1,39 +1,39 @@
-import { useEffect } from 'react'
-
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { useForm, useWatch } from 'react-hook-form'
-import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router-dom'
-import { toast } from 'react-toastify'
-
-import { createPodotchetSpravochnik } from '@/app/region-spravochnik/podotchet'
-import { OperatsiiService, operatsiiQueryKeys } from '@/app/super-admin/operatsii'
-import { DistanceQueryKeys } from '@/app/super-admin/spravochnik/distance/config'
-import { DistanceService } from '@/app/super-admin/spravochnik/distance/service'
-import { MinimumWageService } from '@/app/super-admin/spravochnik/minimum-wage/service'
 import { DatePicker, Fieldset, NumericInput, Spinner } from '@/common/components'
-import { EditableTable } from '@/common/components/editable-table'
-import { FormElement } from '@/common/components/form'
+import { DocumentFields, PodotchetFields, SummaFields } from '@/common/widget/form'
 import { Form, FormField } from '@/common/components/ui/form'
-import { Input } from '@/common/components/ui/input'
-import { Textarea } from '@/common/components/ui/textarea'
-import { useRequisitesStore } from '@/common/features/requisites'
+import { OperatsiiService, operatsiiQueryKeys } from '@/app/super-admin/operatsii'
+import { WorkTripFormSchema, WorkTripQueryKeys, defaultValues } from '../config'
+import { formatDate, getWeekdaysBetween, parseDate, withinMonth } from '@/common/lib/date'
+import { useForm, useWatch } from 'react-hook-form'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import {
   useSelectedMonthStore,
   validateDateWithinSelectedMonth
 } from '@/common/features/selected-month'
+
+import { Button } from '@/common/components/jolly/button'
+import { Calculator } from 'lucide-react'
+import { DetailsView } from '@/common/views'
+import { DistanceQueryKeys } from '@/app/super-admin/spravochnik/distance/config'
+import { DistanceService } from '@/app/super-admin/spravochnik/distance/service'
+import { DistrictsModal } from './districts-modal'
+import { EditableTable } from '@/common/components/editable-table'
+import { FormElement } from '@/common/components/form'
+import { Input } from '@/common/components/ui/input'
+import { MinimumWageService } from '@/app/super-admin/spravochnik/minimum-wage/service'
+import { Textarea } from '@/common/components/ui/textarea'
+import { TypeSchetOperatsii } from '@/common/models'
+import { WorkTripProvodkaColumns } from './provodki'
+import { WorkTripService } from '../service'
+import { createPodotchetSpravochnik } from '@/app/region-spravochnik/podotchet'
+import { toast } from 'react-toastify'
+import { useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { useRequisitesStore } from '@/common/features/requisites'
 import { useSpravochnik } from '@/common/features/spravochnik'
 import { useToggle } from '@/common/hooks'
-import { formatDate, parseDate, withinMonth } from '@/common/lib/date'
-import { TypeSchetOperatsii } from '@/common/models'
-import { DetailsView } from '@/common/views'
-import { DocumentFields, PodotchetFields, SummaFields } from '@/common/widget/form'
-
-import { WorkTripFormSchema, WorkTripQueryKeys, defaultValues } from '../config'
-import { WorkTripService } from '../service'
-import { DistrictsModal } from './districts-modal'
-import { WorkTripProvodkaColumns } from './provodki'
+import { useTranslation } from 'react-i18next'
+import { zodResolver } from '@hookform/resolvers/zod'
 
 export interface WorkTripDetailsProps {
   id: string
@@ -175,11 +175,17 @@ export const WorkTripDetails = ({ id }: WorkTripDetailsProps) => {
     }
   }, [form, startDate])
 
-  const distanceKm = distance?.data?.[0]?.distance_km ?? 0
+  const distanceKM = distance?.data?.[0]?.distance_km ?? 0
   const minimumWageSumma = minimumWage?.data?.summa ?? 0
+  const daysCount = getWeekdaysBetween(
+    new Date(form.watch('from_date')),
+    new Date(form.watch('to_date'))
+  )
   useEffect(() => {
-    form.setValue('road_summa', distanceKm * (minimumWageSumma * 0.001))
-  }, [form, distanceKm, minimumWage])
+    if (!form.getValues('road_ticket_number')) {
+      form.setValue('road_summa', distanceKM * (minimumWageSumma * 0.001))
+    }
+  }, [form, distanceKM, minimumWage])
   useEffect(() => {
     if (Array.isArray(distance?.data) && distance?.data?.length === 0) {
       toast.error(t('errors.no_distance'))
@@ -197,6 +203,9 @@ export const WorkTripDetails = ({ id }: WorkTripDetailsProps) => {
       )
     }
   }, [form, operatsii?.data])
+  useEffect(() => {
+    form.setValue('day_summa', minimumWageSumma * 0.1 * daysCount)
+  }, [minimumWageSumma, daysCount])
 
   return (
     <DetailsView>
@@ -204,7 +213,7 @@ export const WorkTripDetails = ({ id }: WorkTripDetailsProps) => {
         <Form {...form}>
           <form onSubmit={handleSubmit}>
             <div className="divide-y">
-              <div className="grid grid-cols-2">
+              <div>
                 <DocumentFields
                   tabIndex={1}
                   form={form}
@@ -272,6 +281,7 @@ export const WorkTripDetails = ({ id }: WorkTripDetailsProps) => {
                         direction="row"
                       >
                         <NumericInput
+                          readOnly
                           value={field.value}
                           onValueChange={(values) => {
                             field.onChange(values.floatValue)
@@ -291,6 +301,7 @@ export const WorkTripDetails = ({ id }: WorkTripDetailsProps) => {
                       </FormElement>
                     )}
                   />
+                  <p className="text-sm text-gray-500">{t('days', { count: daysCount })}</p>
                 </Fieldset>
                 <Fieldset
                   name={t('road_expense')}
@@ -337,6 +348,11 @@ export const WorkTripDetails = ({ id }: WorkTripDetailsProps) => {
                         )}
                       />
                     </div>
+                    <div>
+                      <p className="text-sm text-gray-500">
+                        {t('distance')}: {distanceKM} km
+                      </p>
+                    </div>
                     <div className="grid grid-cols-2 gap-5">
                       <FormField
                         control={form.control}
@@ -364,7 +380,7 @@ export const WorkTripDetails = ({ id }: WorkTripDetailsProps) => {
                               className: 'gap-3'
                             }}
                           >
-                            <div>
+                            <div className="flex items-center gap-1">
                               <NumericInput
                                 disabled={isFetchingDistance || isFetchingMinimumWage}
                                 readOnly={!form.watch('road_ticket_number')}
@@ -384,7 +400,16 @@ export const WorkTripDetails = ({ id }: WorkTripDetailsProps) => {
                                   )
                                 }}
                               />
-                              {isFetchingDistance || (isFetchingMinimumWage && <Spinner />)}
+                              {isFetchingDistance || isFetchingMinimumWage ? (
+                                <Spinner />
+                              ) : !form.watch('road_ticket_number') ? (
+                                <Button
+                                  size="icon"
+                                  className="shrink-0"
+                                >
+                                  <Calculator />
+                                </Button>
+                              ) : null}
                             </div>
                           </FormElement>
                         )}

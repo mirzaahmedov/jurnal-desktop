@@ -24,6 +24,7 @@ import { Form, FormField } from '@/common/components/ui/form'
 import { useConstantsStore } from '@/common/features/constants/store'
 
 import { DistanceFormSchema, DistanceQueryKeys, defaultValues } from './config'
+import { useFromDistrictFilter, useToDistrictFilter } from './filters'
 import { type Distance, DistanceService } from './service'
 
 export interface MinimumWageEditModalProps extends Omit<DialogTriggerProps, 'children'> {
@@ -36,6 +37,8 @@ export const DistanceEditModal = ({ selected, ...props }: MinimumWageEditModalPr
   const [fromRegionId, setFromRegionId] = useState<number | null>(null)
   const [toRegionId, setToRegionId] = useState<number | null>(null)
 
+  const defaultFromDistrictId = useFromDistrictFilter()[0] ?? defaultValues.from_district_id
+  const defaultToDistrictId = useToDistrictFilter()[0] ?? defaultValues.to_district_id
   const queryClient = useQueryClient()
 
   const { mutate: createDistance, isPending: isCreatingDistance } = useMutation({
@@ -58,7 +61,11 @@ export const DistanceEditModal = ({ selected, ...props }: MinimumWageEditModalPr
   })
 
   const form = useForm({
-    defaultValues,
+    defaultValues: {
+      ...defaultValues,
+      from_district_id: defaultFromDistrictId,
+      to_district_id: defaultToDistrictId
+    },
     resolver: zodResolver(DistanceFormSchema)
   })
 
@@ -85,9 +92,13 @@ export const DistanceEditModal = ({ selected, ...props }: MinimumWageEditModalPr
         distance_km: selected.distance_km
       })
     } else {
-      form.reset(defaultValues)
+      form.reset({
+        ...defaultValues,
+        from_district_id: defaultFromDistrictId,
+        to_district_id: defaultToDistrictId
+      })
     }
-  }, [form, selected])
+  }, [form, selected, defaultFromDistrictId, defaultToDistrictId])
 
   useEffect(() => {
     if (props.isOpen) {

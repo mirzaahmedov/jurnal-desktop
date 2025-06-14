@@ -401,5 +401,6 @@
   "download_as_pdf": "PDF-га юклаш",
   "errors": {
     "no_distance": "Масофа топилмади"
-  }
+  },
+  "days": "{{ count }} кун"
 }

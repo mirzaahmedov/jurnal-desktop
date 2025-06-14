@@ -402,5 +402,6 @@
   "download_as_pdf": "Загрузить как PDF",
   "errors": {
     "no_distance": "Расстояние не было найдено"
-  }
+  },
+  "days": "{{ count }} дней"
 }
