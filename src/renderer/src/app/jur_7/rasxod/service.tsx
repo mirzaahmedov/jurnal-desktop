@@ -1,11 +1,9 @@
-import type { RasxodFormValues } from './config'
-import type { ApiResponseMeta, WarehouseRasxod } from '@/common/models'
-
+import { ApiEndpoints, CRUDService } from '@/common/features/crud'
+import type { ApiResponseMeta, MaterialRasxod } from '@/common/models'
+import { budjet, main_schet } from '@/common/features/crud/middleware'
 import { useMutation, useQuery } from '@tanstack/react-query'
 
-import { ApiEndpoints, CRUDService } from '@/common/features/crud'
-import { budjet, main_schet } from '@/common/features/crud/middleware'
-
+import type { RasxodFormValues } from './config'
 import { WarehouseRasxodQueryKeys } from './config'
 
 interface RasxodMeta extends ApiResponseMeta {
@@ -13,7 +11,7 @@ interface RasxodMeta extends ApiResponseMeta {
 }
 
 export const WarehouseRasxodService = new CRUDService<
-  WarehouseRasxod,
+  MaterialRasxod,
   RasxodFormValues,
   RasxodFormValues,
   RasxodMeta

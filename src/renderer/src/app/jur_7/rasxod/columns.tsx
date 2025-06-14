@@ -1,10 +1,10 @@
-import type { ColumnDef } from '@/common/components'
-import type { WarehouseRasxod } from '@/common/models'
-
-import { IDCell } from '@/common/components/table/renderers/id'
 import { formatLocaleDate, formatNumber } from '@/common/lib/format'
 
-export const rasxodColumns: ColumnDef<WarehouseRasxod>[] = [
+import type { ColumnDef } from '@/common/components'
+import { IDCell } from '@/common/components/table/renderers/id'
+import type { MaterialRasxod } from '@/common/models'
+
+export const rasxodColumns: ColumnDef<MaterialRasxod>[] = [
   {
     sort: true,
     key: 'id',

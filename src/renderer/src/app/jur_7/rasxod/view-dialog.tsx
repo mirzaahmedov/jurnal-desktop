@@ -6,6 +6,7 @@ import { useQuery } from '@tanstack/react-query'
 import { Download } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
+import { MainSchetQueryKeys, MainSchetService } from '@/app/region-spravochnik/main-schet'
 import { type ColumnDef, Fieldset, GenericTable, LoadingOverlay } from '@/common/components'
 import { Button } from '@/common/components/jolly/button'
 import {
@@ -21,7 +22,7 @@ import { PDFSaver } from '@/common/components/pdf-saver'
 import { Checkbox } from '@/common/components/ui/checkbox'
 import { Textarea } from '@/common/components/ui/textarea'
 import { ApiEndpoints } from '@/common/features/crud'
-import { DownloadFile } from '@/common/features/file'
+import { DownloadFile, GenerateFile } from '@/common/features/file'
 import { useRequisitesStore } from '@/common/features/requisites'
 import { formatLocaleDate, formatNumber } from '@/common/lib/format'
 import { numberToWords } from '@/common/lib/utils'
@@ -29,6 +30,7 @@ import { numberToWords } from '@/common/lib/utils'
 import { ItogoBySchets, getItogoBySchets } from '../__components__/itogo-by-schets'
 import { WarehouseRasxodQueryKeys } from './config'
 import { WarehouseRasxodService } from './service'
+import { MaterialSpisaniePDFDocument } from './templates/material-spisanie/document'
 
 const provodkaColumns: ColumnDef<WarehouseRasxodProvodka>[] = [
   {
@@ -150,6 +152,12 @@ export const WarehouseRasxodViewDialog = ({
     return getItogoBySchets(data?.childs ?? [], t)
   }, [data?.childs, t])
 
+  const { data: mainSchet } = useQuery({
+    queryKey: [MainSchetQueryKeys.getById, main_schet_id],
+    queryFn: MainSchetService.getById,
+    enabled: !!main_schet_id
+  })
+
   return (
     <DialogTrigger
       isOpen={!!selectedId}
@@ -268,13 +276,25 @@ export const WarehouseRasxodViewDialog = ({
                   <DownloadFile
                     url={`${ApiEndpoints.jur7_rasxod}/${data?.id}`}
                     fileName={`${t('pages.material-warehouse')}_${t('rasxod')}_${t('notice')}_№${data?.doc_num}.xlsx`}
-                    buttonText={t('notice')}
+                    buttonText={`${t('notice')} (Excel)`}
                     params={{
                       budjet_id,
                       main_schet_id,
                       notice: true
                     }}
                   />
+                  {mainSchet?.data ? (
+                    <GenerateFile
+                      buttonText={`${t('notice')} (PDF)`}
+                      fileName={`${t('pages.material-warehouse')}_${t('rasxod')}_${t('notice')}_№${data?.doc_num}.pdf`}
+                      IconStart={Download}
+                    >
+                      <MaterialSpisaniePDFDocument
+                        rasxod={data!}
+                        mainSchet={mainSchet.data}
+                      />
+                    </GenerateFile>
+                  ) : null}
                   <DownloadFile
                     url={`${ApiEndpoints.jur7_rasxod}/${data?.id}`}
                     fileName={`${t('pages.material-warehouse')}_${t('rasxod')}_${t('schet_faktura')}_№${data?.doc_num}.xlsx`}

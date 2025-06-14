@@ -26,7 +26,7 @@ export const VPNLocalIPAddress = () => {
 
   return (
     <div className="flex items-center gap-2 px-5 py-2">
-      <span className="text-sm font-bold text-brand">
+      <span className="text-sm font-bold text-brand font-mono">
         <b>IP</b>:{' '}
         {ipAddress ? <Copyable value={ipAddress}>{ipAddress}</Copyable> : <Trans>unknown</Trans>}
       </span>

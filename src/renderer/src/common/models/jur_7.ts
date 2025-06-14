@@ -72,7 +72,7 @@ export interface WarehouseRasxodProvodka {
   group: Group
 }
 
-export interface WarehouseRasxod {
+export interface MaterialRasxod {
   id: number
   doc_num: string
   doc_date: string
