@@ -12,7 +12,7 @@ export const WorkTripFormSchema = z.object({
   from_date: z.string().nonempty(),
   to_date: z.string().nonempty(),
   day_summa: z.coerce.number(),
-  hostel_ticket_number: z.string(),
+  hostel_ticket_number: z.string().nonempty(),
   hostel_summa: z.coerce.number(),
   from_district_id: z.number(),
   from_district_name: z.string().optional(),
