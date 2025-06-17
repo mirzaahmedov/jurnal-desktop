@@ -1,10 +1,10 @@
 import type { DialogTriggerProps } from 'react-aria-components'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { useTranslation } from 'react-i18next'
 
-import { DatePicker } from '@/common/components'
+import { JollyDatePicker } from '@/common/components/jolly-date-picker'
 import {
   DialogContent,
   DialogFooter,
@@ -14,8 +14,8 @@ import {
   DialogTrigger
 } from '@/common/components/jolly/dialog'
 import { DownloadFile } from '@/common/features/file'
-import { useSelectedMonthStore } from '@/common/features/selected-month'
-import { formatDate, getFirstDayOfMonth, getLastDayOfMonth, parseDate } from '@/common/lib/date'
+import { useDates } from '@/common/hooks'
+import { parseDate } from '@/common/lib/date'
 
 export interface DailyReportDialogProps extends Omit<DialogTriggerProps, 'children'> {
   main_schet_id: number
@@ -29,17 +29,27 @@ export const DailyReportDialog = ({
   main_schet_id,
   report_title_id
 }: DailyReportDialogProps) => {
-  const { startDate } = useSelectedMonthStore()
+  const defaultDates = useDates()
+
   const { t } = useTranslation(['app'])
 
   const [dates, setDates] = useState({
-    from: formatDate(getFirstDayOfMonth(startDate)),
-    to: formatDate(getLastDayOfMonth(startDate))
+    from: defaultDates.from,
+    to: defaultDates.to
   })
 
   const date = parseDate(dates.from)
   const year = date.getFullYear()
   const month = date.getMonth() + 1
+
+  useEffect(() => {
+    if (isOpen) {
+      setDates({
+        from: defaultDates.from,
+        to: defaultDates.to
+      })
+    }
+  }, [isOpen])
 
   return (
     <DialogTrigger
@@ -52,7 +62,7 @@ export const DailyReportDialog = ({
             <DialogTitle>{t('daily-report')}</DialogTitle>
           </DialogHeader>
           <div className="flex items-center gap-5 pb-5">
-            <DatePicker
+            <JollyDatePicker
               value={dates.from}
               onChange={(value) => {
                 setDates((prev) => ({
@@ -62,7 +72,7 @@ export const DailyReportDialog = ({
               }}
             />
             -
-            <DatePicker
+            <JollyDatePicker
               value={dates.to}
               onChange={(value) => {
                 setDates((prev) => ({

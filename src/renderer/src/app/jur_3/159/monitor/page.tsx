@@ -16,7 +16,7 @@ import {
   useTableSort
 } from '@/common/components'
 import { Button } from '@/common/components/jolly/button'
-import { Popover, PopoverDialog, PopoverTrigger } from '@/common/components/jolly/popover'
+import { ButtonGroup } from '@/common/components/ui/button-group'
 import { DownloadFile } from '@/common/features/file'
 import {
   SearchFilterDebounced,
@@ -137,88 +137,64 @@ const OrganMonitoringPage = () => {
               />
             </div>
             {main_schet_id ? (
-              <PopoverTrigger>
-                <Button variant="ghost">
-                  <Download className="btn-icon icon-start" />
-                  <span className="titlecase">{t('reports')}</span>
-                </Button>
-                <Popover
-                  placement="bottom end"
-                  style={{
-                    width: 'max-content',
-                    maxWidth: '300px'
+              <ButtonGroup borderStyle="dashed">
+                <DownloadFile
+                  fileName={`${t('cap')}-${dates.to}.xlsx`}
+                  url="/159/monitoring/cap"
+                  params={{
+                    budjet_id,
+                    main_schet_id,
+                    schet_id: jur3_schet_159_id,
+                    from: dates.from,
+                    to: dates.to,
+                    report_title_id,
+                    year: startDate.getFullYear(),
+                    month: startDate.getMonth() + 1,
+                    excel: true
                   }}
+                  buttonText={t('cap')}
+                />
+
+                <DownloadFile
+                  fileName={`159_${t('cap_prixod_rasxod')}_${dates.from}&${dates.to}.xlsx`}
+                  url="159/monitoring/by-schets"
+                  buttonText={t('cap_prixod_rasxod')}
+                  params={{
+                    budjet_id,
+                    main_schet_id,
+                    schet_id: jur3_schet_159_id,
+                    from: dates.from,
+                    to: dates.to,
+                    report_title_id,
+                    year: startDate.getFullYear(),
+                    month: startDate.getMonth() + 1,
+                    excel: true
+                  }}
+                />
+
+                <DownloadFile
+                  fileName={`debitor_kreditor_${dates.to}.xlsx`}
+                  url="/159/monitoring/prixod/rasxod"
+                  params={{
+                    main_schet_id,
+                    budjet_id,
+                    schet_id: jur3_schet_159_id,
+                    to: dates.to,
+                    year: startDate.getFullYear(),
+                    month: startDate.getMonth() + 1,
+                    excel: true
+                  }}
+                  buttonText={t('debitor_kreditor_report')}
+                />
+
+                <Button
+                  variant="ghost"
+                  onClick={dailyReportToggle.open}
+                  IconStart={Download}
                 >
-                  <PopoverDialog>
-                    {({ close }) => (
-                      <>
-                        <DownloadFile
-                          fileName={`${t('cap')}-${dates.to}.xlsx`}
-                          url="/159/monitoring/cap"
-                          params={{
-                            budjet_id,
-                            main_schet_id,
-                            schet_id: jur3_schet_159_id,
-                            from: dates.from,
-                            to: dates.to,
-                            report_title_id,
-                            year: startDate.getFullYear(),
-                            month: startDate.getMonth() + 1,
-                            excel: true
-                          }}
-                          buttonText={t('cap')}
-                          className="w-full inline-flex items-center justify-start"
-                        />
-
-                        <DownloadFile
-                          fileName={`159_${t('cap_prixod_rasxod')}_${dates.from}&${dates.to}.xlsx`}
-                          url="159/monitoring/by-schets"
-                          buttonText={t('cap_prixod_rasxod')}
-                          params={{
-                            budjet_id,
-                            main_schet_id,
-                            schet_id: jur3_schet_159_id,
-                            from: dates.from,
-                            to: dates.to,
-                            report_title_id,
-                            year: startDate.getFullYear(),
-                            month: startDate.getMonth() + 1,
-                            excel: true
-                          }}
-                        />
-
-                        <DownloadFile
-                          fileName={`debitor_kreditor_${dates.to}.xlsx`}
-                          url="/159/monitoring/prixod/rasxod"
-                          params={{
-                            main_schet_id,
-                            budjet_id,
-                            schet_id: jur3_schet_159_id,
-                            to: dates.to,
-                            year: startDate.getFullYear(),
-                            month: startDate.getMonth() + 1,
-                            excel: true
-                          }}
-                          buttonText={t('debitor_kreditor_report')}
-                          className="w-full inline-flex items-center justify-start"
-                        />
-
-                        <Button
-                          variant="ghost"
-                          onClick={() => {
-                            close()
-                            dailyReportToggle.open()
-                          }}
-                          className="w-full inline-flex items-center justify-start"
-                        >
-                          <Download className="btn-icon icon-sm icon-start" />
-                          {t('daily-report')}
-                        </Button>
-                      </>
-                    )}
-                  </PopoverDialog>
-                </Popover>
-              </PopoverTrigger>
+                  {t('daily-report')}
+                </Button>
+              </ButtonGroup>
             ) : null}
           </div>
           <ListView.RangeDatePicker

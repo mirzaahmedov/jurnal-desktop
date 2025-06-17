@@ -51,8 +51,10 @@ export const AktSverkiDialog = ({
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="ghost">
-          <Download className="btn-icon" />
+        <Button
+          variant="ghost"
+          IconStart={Download}
+        >
           {t('akt_sverki')}
         </Button>
       </DialogTrigger>
