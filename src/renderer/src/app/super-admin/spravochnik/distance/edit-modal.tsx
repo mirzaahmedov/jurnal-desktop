@@ -1,6 +1,6 @@
 import type { DialogTriggerProps } from 'react-aria-components'
 
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
@@ -19,12 +19,10 @@ import {
   DialogTitle,
   DialogTrigger
 } from '@/common/components/jolly/dialog'
-import { SelectItem } from '@/common/components/jolly/select'
 import { Form, FormField } from '@/common/components/ui/form'
 import { useConstantsStore } from '@/common/features/constants/store'
 
 import { DistanceFormSchema, DistanceQueryKeys, defaultValues } from './config'
-import { useFromDistrictFilter, useToDistrictFilter } from './filters'
 import { type Distance, DistanceService } from './service'
 
 export interface MinimumWageEditModalProps extends Omit<DialogTriggerProps, 'children'> {
@@ -32,13 +30,8 @@ export interface MinimumWageEditModalProps extends Omit<DialogTriggerProps, 'chi
 }
 export const DistanceEditModal = ({ selected, ...props }: MinimumWageEditModalProps) => {
   const { t } = useTranslation(['app'])
-  const { regions, districts } = useConstantsStore()
+  const { regions } = useConstantsStore()
 
-  const [fromRegionId, setFromRegionId] = useState<number | null>(null)
-  const [toRegionId, setToRegionId] = useState<number | null>(null)
-
-  const defaultFromDistrictId = useFromDistrictFilter()[0] ?? defaultValues.from_district_id
-  const defaultToDistrictId = useToDistrictFilter()[0] ?? defaultValues.to_district_id
   const queryClient = useQueryClient()
 
   const { mutate: createDistance, isPending: isCreatingDistance } = useMutation({
@@ -61,15 +54,21 @@ export const DistanceEditModal = ({ selected, ...props }: MinimumWageEditModalPr
   })
 
   const form = useForm({
-    defaultValues: {
-      ...defaultValues,
-      from_district_id: defaultFromDistrictId,
-      to_district_id: defaultToDistrictId
-    },
+    defaultValues,
     resolver: zodResolver(DistanceFormSchema)
   })
 
   const handleSubmit = form.handleSubmit((values) => {
+    if (!selected) {
+      if (!values.from_region_id) {
+        form.setError('from_region_id', { type: 'required', message: t('required_field') })
+        return
+      }
+      if (!values.to_region_id) {
+        form.setError('to_region_id', { type: 'required', message: t('required_field') })
+        return
+      }
+    }
     if (selected) {
       updateDistance({
         id: selected.id,
@@ -77,8 +76,8 @@ export const DistanceEditModal = ({ selected, ...props }: MinimumWageEditModalPr
       })
     } else {
       createDistance({
-        from_district_id: values.from_district_id,
-        to_district_id: values.to_district_id,
+        from_region_id: values.from_region_id,
+        to_region_id: values.to_region_id,
         distance_km: values.distance_km
       })
     }
@@ -87,25 +86,14 @@ export const DistanceEditModal = ({ selected, ...props }: MinimumWageEditModalPr
   useEffect(() => {
     if (selected) {
       form.reset({
-        from_district_id: selected.from_district_id,
-        to_district_id: selected.to_district_id,
+        from_region_id: selected.from_region_id,
+        to_region_id: selected.to_region_id,
         distance_km: selected.distance_km
       })
     } else {
-      form.reset({
-        ...defaultValues,
-        from_district_id: defaultFromDistrictId,
-        to_district_id: defaultToDistrictId
-      })
+      form.reset(defaultValues)
     }
-  }, [form, selected, defaultFromDistrictId, defaultToDistrictId])
-
-  useEffect(() => {
-    if (props.isOpen) {
-      setFromRegionId(null)
-      setToRegionId(null)
-    }
-  }, [props.isOpen])
+  }, [form, selected])
 
   return (
     <DialogTrigger {...props}>
@@ -122,37 +110,22 @@ export const DistanceEditModal = ({ selected, ...props }: MinimumWageEditModalPr
               <div className="flex items-center gap-5">
                 <div className="flex-1 space-y-5">
                   <div className="p-2 border rounded-xl">
-                    <div className="grid grid-cols-3 gap-5 py-2.5 px-5 items-center">
+                    <div className="grid grid-cols-2 gap-5 py-2.5 px-5 items-center">
                       <h5 className="text-sm font-bold">{t('from_where')}</h5>
-                      <JollyComboBox
-                        isReadOnly={!!selected}
-                        defaultItems={regions}
-                        label={t('region')}
-                        selectedKey={fromRegionId}
-                        onSelectionChange={(value) => setFromRegionId(value as number)}
-                        menuTrigger="focus"
-                        placeholder={t('region')}
-                      >
-                        {(item) => <SelectItem id={item.id}>{item.name}</SelectItem>}
-                      </JollyComboBox>
                       <FormField
                         control={form.control}
-                        name="from_district_id"
-                        render={({ field }) => (
+                        name="from_region_id"
+                        render={({ field, fieldState }) => (
                           <JollyComboBox
                             isReadOnly={!!selected}
-                            defaultItems={
-                              fromRegionId
-                                ? districts.filter(
-                                    (district) => district.region_id === fromRegionId
-                                  )
-                                : districts
-                            }
-                            label={t('district')}
+                            defaultItems={regions}
+                            label={t('region')}
                             selectedKey={field.value}
                             onSelectionChange={(value) => field.onChange(value as number)}
                             menuTrigger="focus"
-                            placeholder={t('district')}
+                            placeholder={t('region')}
+                            errorMessage={fieldState.error?.message}
+                            isInvalid={!!fieldState.error}
                           >
                             {(item) => <ComboboxItem id={item.id}>{item.name}</ComboboxItem>}
                           </JollyComboBox>
@@ -162,35 +135,22 @@ export const DistanceEditModal = ({ selected, ...props }: MinimumWageEditModalPr
                   </div>
 
                   <div className="p-2 border rounded-xl">
-                    <div className="grid grid-cols-3 gap-5 py-2.5 px-5 items-center">
+                    <div className="grid grid-cols-2 gap-5 py-2.5 px-5 items-center">
                       <h5 className="text-sm font-bold">{t('to_where')}</h5>
-                      <JollyComboBox
-                        isReadOnly={!!selected}
-                        defaultItems={regions}
-                        label={t('region')}
-                        selectedKey={toRegionId}
-                        onSelectionChange={(value) => setToRegionId(value as number)}
-                        menuTrigger="focus"
-                        placeholder={t('region')}
-                      >
-                        {(item) => <ComboboxItem id={item.id}>{item.name}</ComboboxItem>}
-                      </JollyComboBox>
                       <FormField
                         control={form.control}
-                        name="to_district_id"
-                        render={({ field }) => (
+                        name="to_region_id"
+                        render={({ field, fieldState }) => (
                           <JollyComboBox
                             isReadOnly={!!selected}
-                            defaultItems={
-                              toRegionId
-                                ? districts.filter((district) => district.region_id === toRegionId)
-                                : districts
-                            }
-                            label={t('district')}
+                            defaultItems={regions}
+                            label={t('region')}
                             selectedKey={field.value}
                             onSelectionChange={(value) => field.onChange(value as number)}
                             menuTrigger="focus"
-                            placeholder={t('district')}
+                            placeholder={t('region')}
+                            errorMessage={fieldState.error?.message}
+                            isInvalid={!!fieldState.error}
                           >
                             {(item) => <ComboboxItem id={item.id}>{item.name}</ComboboxItem>}
                           </JollyComboBox>

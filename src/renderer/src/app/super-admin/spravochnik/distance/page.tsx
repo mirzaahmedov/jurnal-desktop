@@ -16,7 +16,6 @@ import { ListView } from '@/common/views'
 import { columnDefs } from './column-defs'
 import { DistanceQueryKeys } from './config'
 import { DistanceEditModal } from './edit-modal'
-import { DistrictFilter, useFromDistrictFilter, useToDistrictFilter } from './filters'
 import { type Distance, DistanceService } from './service'
 
 const DistancePage = () => {
@@ -25,8 +24,6 @@ const DistancePage = () => {
   const pagination = usePagination()
   const queryClient = useQueryClient()
 
-  const [fromDistrictId] = useFromDistrictFilter()
-  const [toDistrictId] = useToDistrictFilter()
   const [search] = useSearchFilter()
   const [selected, setSelected] = useState<Distance | null>(null)
 
@@ -38,9 +35,7 @@ const DistancePage = () => {
       DistanceQueryKeys.GetAll,
       {
         ...pagination,
-        search,
-        from_district_id: fromDistrictId,
-        to_district_id: toDistrictId
+        search
       }
     ],
     queryFn: DistanceService.getAll
@@ -82,9 +77,6 @@ const DistancePage = () => {
 
   return (
     <ListView>
-      <ListView.Header>
-        <DistrictFilter />
-      </ListView.Header>
       <ListView.Content loading={isFetching}>
         <GenericTable
           data={distances?.data ?? []}

@@ -5,14 +5,14 @@ export const DistanceQueryKeys = {
 }
 
 export const DistanceFormSchema = z.object({
-  from_district_id: z.number().optional(),
-  to_district_id: z.number().optional(),
+  from_region_id: z.number(),
+  to_region_id: z.number(),
   distance_km: z.number()
 })
 export type DistanceFormValues = z.infer<typeof DistanceFormSchema>
 
 export const defaultValues: DistanceFormValues = {
-  from_district_id: 0,
-  to_district_id: 0,
+  from_region_id: 0,
+  to_region_id: 0,
   distance_km: 0
 }

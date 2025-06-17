@@ -7,9 +7,9 @@ import { useQuery } from '@tanstack/react-query'
 
 import { useSpravochnikStore } from './store'
 
-type SpravochnikHookCallbacks<T> = {
+interface SpravochnikHookCallbacks<T> {
   onChange?: (id: number | undefined, data?: T) => void
-  onClose?: () => void
+  onClose?: VoidFunction
 }
 
 export type SpravochnikHookOptions<T extends { id: number }> = SpravochnikHookCallbacks<T> &
@@ -24,8 +24,8 @@ export type UseSpravochnikReturn<T> = {
   selected: T | undefined
   loading: boolean
   isOpen: boolean
-  open: () => void
-  clear: () => void
+  open: VoidFunction
+  clear: VoidFunction
   inputRef: RefObject<HTMLInputElement>
 }
 

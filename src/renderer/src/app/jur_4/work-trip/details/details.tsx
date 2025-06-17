@@ -1,39 +1,41 @@
-import { DatePicker, Fieldset, NumericInput, Spinner } from '@/common/components'
-import { DocumentFields, PodotchetFields, SummaFields } from '@/common/widget/form'
-import { Form, FormField } from '@/common/components/ui/form'
-import { OperatsiiService, operatsiiQueryKeys } from '@/app/super-admin/operatsii'
-import { WorkTripFormSchema, WorkTripQueryKeys, defaultValues } from '../config'
-import { formatDate, getWeekdaysBetween, parseDate, withinMonth } from '@/common/lib/date'
-import { useForm, useWatch } from 'react-hook-form'
+import { useEffect } from 'react'
+
+import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { Calculator } from 'lucide-react'
+import { useForm, useWatch } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
+
+import { createPodotchetSpravochnik } from '@/app/region-spravochnik/podotchet'
+import { OperatsiiService, operatsiiQueryKeys } from '@/app/super-admin/operatsii'
+import { DistanceQueryKeys } from '@/app/super-admin/spravochnik/distance/config'
+import { DistanceService } from '@/app/super-admin/spravochnik/distance/service'
+import { MinimumWageService } from '@/app/super-admin/spravochnik/minimum-wage/service'
+import { DatePicker, Fieldset, NumericInput, Spinner } from '@/common/components'
+import { EditableTable } from '@/common/components/editable-table'
+import { FormElement } from '@/common/components/form'
+import { Button } from '@/common/components/jolly/button'
+import { ComboboxItem, JollyComboBox } from '@/common/components/jolly/combobox'
+import { Form, FormField } from '@/common/components/ui/form'
+import { Input } from '@/common/components/ui/input'
+import { Textarea } from '@/common/components/ui/textarea'
+import { useConstantsStore } from '@/common/features/constants/store'
+import { useRequisitesStore } from '@/common/features/requisites'
 import {
   useSelectedMonthStore,
   validateDateWithinSelectedMonth
 } from '@/common/features/selected-month'
-
-import { Button } from '@/common/components/jolly/button'
-import { Calculator } from 'lucide-react'
-import { DetailsView } from '@/common/views'
-import { DistanceQueryKeys } from '@/app/super-admin/spravochnik/distance/config'
-import { DistanceService } from '@/app/super-admin/spravochnik/distance/service'
-import { DistrictsModal } from './districts-modal'
-import { EditableTable } from '@/common/components/editable-table'
-import { FormElement } from '@/common/components/form'
-import { Input } from '@/common/components/ui/input'
-import { MinimumWageService } from '@/app/super-admin/spravochnik/minimum-wage/service'
-import { Textarea } from '@/common/components/ui/textarea'
-import { TypeSchetOperatsii } from '@/common/models'
-import { WorkTripProvodkaColumns } from './provodki'
-import { WorkTripService } from '../service'
-import { createPodotchetSpravochnik } from '@/app/region-spravochnik/podotchet'
-import { toast } from 'react-toastify'
-import { useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { useRequisitesStore } from '@/common/features/requisites'
 import { useSpravochnik } from '@/common/features/spravochnik'
-import { useToggle } from '@/common/hooks'
-import { useTranslation } from 'react-i18next'
-import { zodResolver } from '@hookform/resolvers/zod'
+import { formatDate, getWeekdaysBetween, parseDate, withinMonth } from '@/common/lib/date'
+import { TypeSchetOperatsii } from '@/common/models'
+import { DetailsView } from '@/common/views'
+import { DocumentFields, PodotchetFields, SummaFields } from '@/common/widget/form'
+
+import { WorkTripFormSchema, WorkTripQueryKeys, defaultValues } from '../config'
+import { WorkTripService } from '../service'
+import { WorkTripProvodkaColumns } from './provodki'
 
 export interface WorkTripDetailsProps {
   id: string
@@ -41,10 +43,10 @@ export interface WorkTripDetailsProps {
 export const WorkTripDetails = ({ id }: WorkTripDetailsProps) => {
   const queryClient = useQueryClient()
   const navigate = useNavigate()
-  const fromToggle = useToggle()
-  const toToggle = useToggle()
 
   const { startDate } = useSelectedMonthStore()
+  const { regions } = useConstantsStore()
+
   const { t } = useTranslation(['app'])
   const { main_schet_id, jur4_schet_id } = useRequisitesStore()
 
@@ -107,16 +109,16 @@ export const WorkTripDetails = ({ id }: WorkTripDetailsProps) => {
     queryKey: [
       DistanceQueryKeys.GetAll,
       {
-        from_district_id: form.watch('from_district_id'),
-        to_district_id: form.watch('to_district_id'),
+        from_region_id: form.watch('from_region_id'),
+        to_region_id: form.watch('to_region_id'),
         page: 1,
         limit: 1
       }
     ],
     queryFn: DistanceService.getAll,
     enabled:
-      !!form.watch('from_district_id') &&
-      !!form.watch('to_district_id') &&
+      !!form.watch('from_region_id') &&
+      !!form.watch('to_region_id') &&
       !form.watch('road_ticket_number')
   })
   const { data: operatsii } = useQuery({
@@ -336,39 +338,45 @@ export const WorkTripDetails = ({ id }: WorkTripDetailsProps) => {
                     <div className="grid grid-cols-2 gap-5">
                       <FormField
                         control={form.control}
-                        name="from_district_id"
-                        render={({ field }) => (
+                        name="from_region_id"
+                        render={({ field, fieldState }) => (
                           <FormElement
                             label={t('from_where')}
                             direction="column"
                           >
-                            <Input
-                              readOnly
-                              ref={field.ref}
-                              name={field.name}
-                              onBlur={field.onBlur}
-                              value={form.watch('from_district_name')}
-                              onDoubleClick={fromToggle.open}
-                            />
+                            <JollyComboBox
+                              defaultItems={regions}
+                              selectedKey={field.value}
+                              onSelectionChange={field.onChange}
+                              menuTrigger="focus"
+                              placeholder={t('region')}
+                              errorMessage={fieldState.error?.message}
+                              isInvalid={!!fieldState.error}
+                            >
+                              {(item) => <ComboboxItem id={item.id}>{item.name}</ComboboxItem>}
+                            </JollyComboBox>
                           </FormElement>
                         )}
                       />
                       <FormField
                         control={form.control}
-                        name="to_district_id"
-                        render={({ field }) => (
+                        name="to_region_id"
+                        render={({ field, fieldState }) => (
                           <FormElement
                             label={t('to_where')}
                             direction="column"
                           >
-                            <Input
-                              readOnly
-                              ref={field.ref}
-                              name={field.name}
-                              onBlur={field.onBlur}
-                              value={form.watch('to_district_name')}
-                              onDoubleClick={toToggle.open}
-                            />
+                            <JollyComboBox
+                              defaultItems={regions}
+                              selectedKey={field.value}
+                              onSelectionChange={field.onChange}
+                              menuTrigger="focus"
+                              placeholder={t('region')}
+                              errorMessage={fieldState.error?.message}
+                              isInvalid={!!fieldState.error}
+                            >
+                              {(item) => <ComboboxItem id={item.id}>{item.name}</ComboboxItem>}
+                            </JollyComboBox>
                           </FormElement>
                         )}
                       />
@@ -550,25 +558,6 @@ export const WorkTripDetails = ({ id }: WorkTripDetailsProps) => {
           </form>
         </Form>
       </DetailsView.Content>
-
-      <DistrictsModal
-        isOpen={fromToggle.isOpen}
-        onOpenChange={fromToggle.setOpen}
-        onSelect={(district) => {
-          form.setValue('from_district_id', district.id, { shouldValidate: true })
-          form.setValue('from_district_name', district.name, { shouldValidate: true })
-          fromToggle.close()
-        }}
-      />
-      <DistrictsModal
-        isOpen={toToggle.isOpen}
-        onOpenChange={toToggle.setOpen}
-        onSelect={(district) => {
-          form.setValue('to_district_id', district.id, { shouldValidate: true })
-          form.setValue('to_district_name', district.name, { shouldValidate: true })
-          toToggle.close()
-        }}
-      />
     </DetailsView>
   )
 }
