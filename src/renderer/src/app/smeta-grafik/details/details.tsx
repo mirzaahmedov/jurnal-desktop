@@ -260,7 +260,7 @@ export const SmetaGrafikDetails = ({ id, year, isEditable }: SmetaGrafikDetailsP
             <div className="p-5">
               <SearchInput onKeyDown={handleSearch} />
             </div>
-            <div className="w-full overflow-x-auto scrollbar">
+            <div className="w-full overflow-x-auto scrollbar pb-24">
               <EditableTable
                 tableRef={tableRef}
                 tabIndex={5}
