@@ -30,6 +30,7 @@ import { useMaterialSaldo } from '../saldo/use-saldo'
 import { AktReportDialog } from './akt-report-dialog'
 import { columns } from './columns'
 import { WarehouseMonitorQueryKeys } from './config'
+import { DailyReportDialog } from './daily-report-dialog'
 import { WarehouseMonitorService } from './service'
 import { ViewModal } from './view-modal'
 
@@ -38,6 +39,7 @@ export const MaterialMonitorPage = () => {
   const pagination = usePagination()
 
   const materialToggle = useToggle()
+  const dailyReportToggle = useToggle()
   const aktToggle = useToggle()
 
   const startDate = useSelectedMonthStore((store) => store.startDate)
@@ -106,6 +108,17 @@ export const MaterialMonitorPage = () => {
           borderStyle="dashed"
           className="max-w-4xl text-end"
         >
+          <Button
+            variant="ghost"
+            onClick={() => {
+              dailyReportToggle.open()
+            }}
+            className="inline-flex items-center justify-start"
+          >
+            <Download className="btn-icon !size-4 icon-start" />
+            {t('daily-report')}
+          </Button>
+
           <DownloadFile
             fileName={`material_${t('cap')}_${startDate.getMonth() + 1}-${startDate.getFullYear()}.xlsx`}
             url="/jur_7/monitoring/cap/report"
@@ -289,6 +302,13 @@ export const MaterialMonitorPage = () => {
         to={dates.to}
         year={startDate.getFullYear()}
         month={startDate.getMonth() + 1}
+      />
+
+      <DailyReportDialog
+        isOpen={dailyReportToggle.isOpen}
+        onOpenChange={dailyReportToggle.setOpen}
+        budjet_id={budjet_id!}
+        main_schet_id={main_schet_id!}
       />
 
       <ViewModal
