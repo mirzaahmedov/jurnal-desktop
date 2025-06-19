@@ -12,6 +12,7 @@ import { useConfirm } from '@/common/features/confirm'
 import { DownloadFile, ImportFile } from '@/common/features/file'
 import { SearchFilterDebounced } from '@/common/features/filters/search/search-filter-debounced'
 import { useSearchFilter } from '@/common/features/filters/search/search-filter-debounced'
+import { useRequisitesStore } from '@/common/features/requisites'
 import { usePagination } from '@/common/hooks'
 import { useToggle } from '@/common/hooks/use-toggle'
 import { useLayout } from '@/common/layout'
@@ -34,12 +35,14 @@ const ResponsiblePage = () => {
 
   const { confirm } = useConfirm()
   const { t } = useTranslation(['app'])
+  const { budjet_id } = useRequisitesStore()
 
   const { data: responsibles, isFetching } = useQuery({
     queryKey: [
       ResponsibleQueryKeys.getAll,
       {
         search,
+        budjet_id,
         ...pagination
       }
     ],
