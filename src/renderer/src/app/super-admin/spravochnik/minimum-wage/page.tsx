@@ -27,7 +27,7 @@ const MinimumWagePage = () => {
 
   useEffect(() => {
     setLayout({
-      title: t('pages.minimum-wage'),
+      title: t('pages.bhm'),
       breadcrumbs: [
         {
           title: t('pages.admin')

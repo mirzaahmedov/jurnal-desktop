@@ -71,7 +71,10 @@
     "schet_faktura": "Хисоб фактура яратиш",
     "minimum-wage": "Энг кам иш ҳақи",
     "distance": "Масофа",
-    "work_trip": "Хизмат сафари"
+    "work_trip": "Хизмат сафари",
+    "akt_priyom": "Акт",
+    "pokazat_uslugi": "Хизматлар кўрсатиш",
+    "bhm": "БҲМ"
   },
   "locales": {
     "uz": "Ўзбекча",

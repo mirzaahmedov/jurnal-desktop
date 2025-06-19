@@ -1,6 +1,8 @@
 import type { ColumnDef } from '@/common/components'
 import type { Operatsii } from '@/common/models'
 
+import { Trans } from 'react-i18next'
+
 import { IDCell } from '@/common/components/table/renderers/id'
 
 import { operatsiiTypeSchetOptions } from './config'
@@ -25,8 +27,12 @@ export const OperatsiiColumns: ColumnDef<Operatsii>[] = [
     key: 'type_schet',
     width: 260,
     minWidth: 260,
-    renderCell: (row) =>
-      operatsiiTypeSchetOptions.find((o) => o.value === row.type_schet)?.label ?? '-'
+    renderCell: (row) => (
+      <Trans
+        ns="app"
+        i18nKey={operatsiiTypeSchetOptions.find((o) => o.value === row.type_schet)?.transKey ?? '-'}
+      />
+    )
   },
   {
     key: 'sub_schet',

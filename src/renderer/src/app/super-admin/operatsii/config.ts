@@ -1,3 +1,5 @@
+import type { ReactNode } from 'react'
+
 import { z } from 'zod'
 
 import { withPreprocessor } from '@/common/lib/validation'
@@ -15,55 +17,55 @@ export const operatsiiQueryKeys = {
 export const operatsiiTypeSchetOptions = [
   {
     value: TypeSchetOperatsii.KASSA_PRIXOD,
-    label: 'Касса приход'
+    transKey: 'pages.kassa_prixod'
   },
   {
     value: TypeSchetOperatsii.KASSA_RASXOD,
-    label: 'Касса расход'
+    transKey: 'pages.kassa_rasxod'
   },
   {
     value: TypeSchetOperatsii.BANK_PRIXOD,
-    label: 'Банк приход'
+    transKey: 'pages.bank_prixod'
   },
   {
     value: TypeSchetOperatsii.BANK_RASXOD,
-    label: 'Банк расход'
+    transKey: 'pages.bank_rasxod'
   },
   {
     value: TypeSchetOperatsii.AKT,
-    label: 'Акт прием-передача'
+    transKey: 'pages.akt_priyom'
   },
   {
     value: TypeSchetOperatsii.POKAZAT_USLUGI,
-    label: 'Показать услуги'
+    transKey: 'pages.pokazat_uslugi'
   },
   {
     value: TypeSchetOperatsii.AVANS_OTCHET,
-    label: 'Аванс Отчёт'
+    transKey: 'pages.avans'
   },
   {
     value: TypeSchetOperatsii.JUR3,
-    label: 'Журнал 3'
+    transKey: '№3 - МО'
   },
   {
     value: TypeSchetOperatsii.JUR4,
-    label: 'Журнал 4'
+    transKey: '№4 - МО'
   },
   {
     value: TypeSchetOperatsii.JUR7,
-    label: 'Журнал 7'
+    transKey: '№7 - МО'
   },
   {
     value: TypeSchetOperatsii.WORK_TRIP,
-    label: 'Деловая поездка'
+    transKey: 'pages.work_trip'
   },
   {
     value: TypeSchetOperatsii.ALL,
-    label: 'Все'
+    transKey: 'all'
   }
 ] as const satisfies {
   value: TypeSchetOperatsii
-  label: string
+  transKey: ReactNode
 }[]
 
 export const OperatsiiFormSchema = withPreprocessor(

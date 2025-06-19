@@ -1,4 +1,5 @@
 import { t } from 'i18next'
+import { Trans } from 'react-i18next'
 
 import { JollySelect, SelectItem } from '@/common/components/jolly/select'
 import { SearchFilterDebounced } from '@/common/features/filters/search/search-filter-debounced'
@@ -23,7 +24,14 @@ export const OperatsiiFilter = () => {
         onSelectionChange={(value) => setTypeSchet(value as TypeSchetOperatsii)}
         className="w-64"
       >
-        {(item) => <SelectItem id={item.value}>{item.label}</SelectItem>}
+        {(item) => (
+          <SelectItem id={item.value}>
+            <Trans
+              ns="app"
+              i18nKey={item.transKey}
+            />
+          </SelectItem>
+        )}
       </JollySelect>
       <SearchFilterDebounced />
     </div>

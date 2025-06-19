@@ -71,7 +71,10 @@
     "schet_faktura": "Xisob faktura yaratish",
     "minimum-wage": "Eng kam ish haqi",
     "distance": "Masofa",
-    "work_trip": "Xizmat safari"
+    "work_trip": "Xizmat safari",
+    "akt_priyom": "Akt",
+    "pokazat_uslugi": "Xizmatlar ko'rsatish",
+    "bhm": "BHM"
   },
   "locales": {
     "uz": "Oʻzbekcha",

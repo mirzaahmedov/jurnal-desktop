@@ -8,6 +8,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { t } from 'i18next'
 import { useForm } from 'react-hook-form'
+import { Trans } from 'react-i18next'
 import { toast } from 'react-toastify'
 
 import { createSmetaSpravochnik } from '@/app/super-admin/smeta'
@@ -31,6 +32,7 @@ import {
 import { Input } from '@/common/components/ui/input'
 import { useSpravochnik } from '@/common/features/spravochnik'
 import { useLocationState } from '@/common/hooks/use-location-state'
+import { capitalize } from '@/common/lib/string'
 import { TypeSchetOperatsii } from '@/common/models'
 
 import { operatsiiQueryKeys, operatsiiTypeSchetOptions } from './config'
@@ -137,8 +139,8 @@ export const OperatsiiDialog = ({
         <DialogHeader>
           <DialogTitle>
             {selected
-              ? t('update-something', { something: t('operatsii') })
-              : t('create-something', { something: t('operatsii') })}
+              ? t('operatsii')
+              : capitalize(t('create-something', { something: t('operatsii') }))}
           </DialogTitle>
         </DialogHeader>
         <Form {...form}>
@@ -214,8 +216,13 @@ export const OperatsiiDialog = ({
                         options={operatsiiTypeSchetOptions.filter(
                           (o) => o.value !== TypeSchetOperatsii.ALL
                         )}
-                        placeholder="Выберите тип операции"
-                        getOptionLabel={(option) => option.label}
+                        placeholder={t('type')}
+                        getOptionLabel={(option) => (
+                          <Trans
+                            ns="app"
+                            i18nKey={option.transKey}
+                          />
+                        )}
                         getOptionValue={(option) => option.value}
                         triggerClassName="col-span-4"
                         onValueChange={(value) => field.onChange(value)}

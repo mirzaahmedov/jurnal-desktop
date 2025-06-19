@@ -69,7 +69,7 @@ export const MinimumWageEditModal = ({ selected, ...props }: MinimumWageEditModa
       <DialogOverlay>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>{t('pages.minimum-wage')}</DialogTitle>
+            <DialogTitle>{t('pages.bhm')}</DialogTitle>
           </DialogHeader>
           <Form {...form}>
             <form

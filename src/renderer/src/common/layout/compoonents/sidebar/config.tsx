@@ -553,7 +553,7 @@ export const getNavElements = (t: TFunction): NavElement[] => {
                 },
                 {
                   path: 'spravochnik/minimum-wage',
-                  title: t('pages.minimum-wage'),
+                  title: t('pages.bhm'),
                   icon: DollarSign
                 },
                 {

@@ -29,6 +29,7 @@ import {
 } from '@/common/features/selected-month'
 import { useSpravochnik } from '@/common/features/spravochnik'
 import { formatDate, getWeekdaysBetween, parseDate, withinMonth } from '@/common/lib/date'
+import { formatNumber } from '@/common/lib/format'
 import { TypeSchetOperatsii } from '@/common/models'
 import { DetailsView } from '@/common/views'
 import { DocumentFields, PodotchetFields, SummaFields } from '@/common/widget/form'
@@ -220,7 +221,7 @@ export const WorkTripDetails = ({ id }: WorkTripDetailsProps) => {
         <Form {...form}>
           <form onSubmit={handleSubmit}>
             <div className="divide-y">
-              <div>
+              <div className="flex items-end flex-wrap">
                 <DocumentFields
                   tabIndex={1}
                   form={form}
@@ -234,6 +235,14 @@ export const WorkTripDetails = ({ id }: WorkTripDetailsProps) => {
                       : undefined
                   }
                 />
+                <Fieldset name="">
+                  <FormElement label={t('pages.bhm')}>
+                    <Input
+                      readOnly
+                      value={formatNumber(minimumWageSumma)}
+                    />
+                  </FormElement>
+                </Fieldset>
               </div>
               <div className="grid grid-cols-2 divide-x">
                 <Fieldset name={t('pages.work_trip')}>
@@ -277,7 +286,7 @@ export const WorkTripDetails = ({ id }: WorkTripDetailsProps) => {
                   spravochnik={podotchetSpravochnik}
                 />
               </div>
-              <div className="grid grid-cols-4 divide-x">
+              <div className="grid grid-cols-4 divide-x ">
                 <Fieldset name={t('daily_expense')}>
                   <FormField
                     control={form.control}
@@ -286,7 +295,7 @@ export const WorkTripDetails = ({ id }: WorkTripDetailsProps) => {
                       <FormElement
                         label={t('summa')}
                         direction="row"
-                        description={`[${t('pages.minimum-wage').toLowerCase()}] * 0.1 * [${t('workdays').toLowerCase()}]`}
+                        description={`[${t('pages.bhm').toLowerCase()}] * 0.1 * [${t('workdays').toLowerCase()}]`}
                       >
                         <NumericInput
                           readOnly
@@ -424,7 +433,7 @@ export const WorkTripDetails = ({ id }: WorkTripDetailsProps) => {
                             description={
                               form.watch('road_ticket_number')
                                 ? ''
-                                : `[${t('pages.minimum-wage').toLowerCase()}] * 0.01 * [${t('distance').toLowerCase()}]`
+                                : `[${t('pages.bhm').toLowerCase()}] * 0.01 * [${t('distance').toLowerCase()}]`
                             }
                           >
                             <div className="flex items-center gap-1">
