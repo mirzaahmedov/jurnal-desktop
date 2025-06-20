@@ -74,7 +74,8 @@
     "work_trip": "Деловая поездка",
     "akt_priyom": "Акт",
     "pokazat_uslugi": "Показать услуги",
-    "bhm": "БҲМ"
+    "bhm": "БҲМ",
+    "position": "Должность"
   },
   "locales": {
     "uz": "Узбекский",

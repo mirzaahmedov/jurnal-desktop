@@ -10,6 +10,7 @@ import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 
 import { FormElement } from '@/common/components/form'
+import { ComboboxItem, JollyComboBox } from '@/common/components/jolly/combobox'
 import {
   DialogContent,
   DialogFooter,
@@ -31,12 +32,7 @@ import { Input } from '@/common/components/ui/input'
 import { useConstantsStore } from '@/common/features/constants/store'
 import { capitalize } from '@/common/lib/string'
 
-import {
-  PodpisDoljnostOptions,
-  PodpisPayloadSchema,
-  PodpisQueryKeys,
-  defaultValues
-} from './config'
+import { PodpisPayloadSchema, PodpisQueryKeys, defaultValues } from './config'
 import { PodpisService } from './service'
 
 interface PodpisDialogProps extends Omit<DialogTriggerProps, 'children'> {
@@ -45,6 +41,7 @@ interface PodpisDialogProps extends Omit<DialogTriggerProps, 'children'> {
 export const PodpisDialog = ({ selected, isOpen, onOpenChange }: PodpisDialogProps) => {
   const { t } = useTranslation(['app', 'podpis'])
 
+  const positions = useConstantsStore((store) => store.positions)
   const podpisTypes = useConstantsStore((store) => store.podpisTypes)
   const queryClient = useQueryClient()
   const form = useForm({
@@ -121,14 +118,14 @@ export const PodpisDialog = ({ selected, isOpen, onOpenChange }: PodpisDialogPro
                     grid="1:2"
                     label={t('doljnost')}
                   >
-                    <JollySelect
-                      items={PodpisDoljnostOptions(t)}
+                    <JollyComboBox
+                      defaultItems={positions}
                       placeholder={t('doljnost')}
                       selectedKey={field.value}
                       onSelectionChange={(value) => field.onChange(value)}
                     >
-                      {(item) => <SelectItem id={item.key}>{item.name}</SelectItem>}
-                    </JollySelect>
+                      {(item) => <ComboboxItem id={item.name}>{item.name}</ComboboxItem>}
+                    </JollyComboBox>
                   </FormElement>
                 )}
               />

@@ -64,19 +64,7 @@ export const getPodpisTypeDocumentOptions = (t: TFunction) => {
 
 export const PodpisPayloadSchema = z.object({
   numeric_poryadok: z.number().min(1),
-  doljnost_name: z.enum(
-    [
-      PodpisDoljnost.RUKOVODITEL,
-      PodpisDoljnost.NACHALNIK_OTDELA,
-      PodpisDoljnost.GLAV_BUXGALTER,
-      PodpisDoljnost.GLAV_MIB,
-      PodpisDoljnost.BUXGALTER,
-      PodpisDoljnost.KASSIR
-    ],
-    {
-      message: `Doljnost name must be one of: ${Object.values(PodpisDoljnost).join(', ')}`
-    }
-  ),
+  doljnost_name: z.string().nonempty(),
   fio_name: z.string().nonempty(),
   type_document: z.string()
 })

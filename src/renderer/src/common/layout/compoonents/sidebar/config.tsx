@@ -7,6 +7,7 @@ import {
   ArrowLeftRight,
   BadgeDollarSign,
   Book,
+  BriefcaseBusiness,
   Building,
   Building2,
   CalendarCheck,
@@ -560,6 +561,11 @@ export const getNavElements = (t: TFunction): NavElement[] => {
                   path: 'spravochnik/distance',
                   title: t('pages.distance'),
                   icon: Ruler
+                },
+                {
+                  path: 'spravochnik/position',
+                  title: t('pages.position'),
+                  icon: BriefcaseBusiness
                 }
               ]
             }

@@ -58,6 +58,7 @@ export enum ApiEndpoints {
   admin_video_module = 'admin/spravochnik/video_module',
   admin_video = 'admin/video',
   admin_prixod_schets = 'admin/spravochnik/prixod/schets',
+  admin_position = 'admin/spravochnik/position',
   tables_count = 'admin/control/tables/count',
   logs = 'log/get',
   mainbook = 'main/book',

@@ -24,6 +24,7 @@ import DistancePage from './super-admin/spravochnik/distance/page'
 
 const WorkTripDetailsPage = lazy(() => import('./jur_4/work-trip/details/page'))
 const WorkTripPage = lazy(() => import('./jur_4/work-trip/page'))
+const PositionPage = lazy(() => import('./super-admin/spravochnik/position/page'))
 
 const KassaSaldoPage = lazy(() => import('./jur_1/saldo/page'))
 const BankSaldoPage = lazy(() => import('./jur_2/saldo/page'))
@@ -454,6 +455,10 @@ export const routes: RouteObject[] = [
               {
                 path: 'distance',
                 element: <DistancePage />
+              },
+              {
+                path: 'position',
+                element: <PositionPage />
               }
             ]
           }
