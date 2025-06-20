@@ -55,7 +55,7 @@ const Input = ({ inputRef, value, onChange, error }: InputProps) => {
 const columnDefs: ColumnDef<User>[] = [
   {
     key: 'name',
-    header: () => <Trans>name</Trans>,
+    header: () => <Trans name="name" />,
     minSize: 200,
     render: ({ value, error, onChange }) => (
       <Input

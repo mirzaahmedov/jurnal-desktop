@@ -95,7 +95,7 @@ export const TurnoverReportDialog = ({
                   month,
                   budjet_id,
                   main_schet_id,
-                  responsible_id: form.watch('responsible_id'),
+                  responsible_id: form.watch('responsible_id') || undefined,
                   excel: true,
                   iznos: true
                 }}
