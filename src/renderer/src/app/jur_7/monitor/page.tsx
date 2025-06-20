@@ -32,6 +32,7 @@ import { columns } from './columns'
 import { WarehouseMonitorQueryKeys } from './config'
 import { DailyReportDialog } from './daily-report-dialog'
 import { WarehouseMonitorService } from './service'
+import { TurnoverReportDialog } from './turnover-report-dialog'
 import { ViewModal } from './view-modal'
 
 export const MaterialMonitorPage = () => {
@@ -40,6 +41,7 @@ export const MaterialMonitorPage = () => {
 
   const materialToggle = useToggle()
   const dailyReportToggle = useToggle()
+  const turnoverToggle = useToggle()
   const aktToggle = useToggle()
 
   const startDate = useSelectedMonthStore((store) => store.startDate)
@@ -188,6 +190,16 @@ export const MaterialMonitorPage = () => {
             IconStart={Download}
             variant="ghost"
             onClick={() => {
+              turnoverToggle.open()
+            }}
+          >
+            {t('summarized_circulation')}
+          </Button>
+
+          <Button
+            IconStart={Download}
+            variant="ghost"
+            onClick={() => {
               aktToggle.open()
             }}
           >
@@ -297,6 +309,16 @@ export const MaterialMonitorPage = () => {
       <AktReportDialog
         open={aktToggle.isOpen}
         onOpenChange={aktToggle.setOpen}
+        budjet_id={budjet_id!}
+        main_schet_id={main_schet_id!}
+        to={dates.to}
+        year={startDate.getFullYear()}
+        month={startDate.getMonth() + 1}
+      />
+
+      <TurnoverReportDialog
+        open={turnoverToggle.isOpen}
+        onOpenChange={turnoverToggle.setOpen}
         budjet_id={budjet_id!}
         main_schet_id={main_schet_id!}
         to={dates.to}
