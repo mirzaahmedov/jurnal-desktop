@@ -23,7 +23,6 @@ import { Button } from '@/common/components/ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/common/components/ui/dialog'
 import { Form } from '@/common/components/ui/form'
 import { DocumentType } from '@/common/features/doc-num'
-import { usePodpis } from '@/common/features/podpis'
 import { useRequisitesStore } from '@/common/features/requisites'
 import { useRequisitesRedirect } from '@/common/features/requisites/use-main-schet-redirect'
 import {
@@ -41,12 +40,10 @@ import { useToggle } from '@/common/hooks'
 import { useLayout } from '@/common/layout'
 import { formatDate } from '@/common/lib/date'
 import { normalizeEmptyFields } from '@/common/lib/validation'
-import { PodpisDoljnost, PodpisTypeDocument } from '@/common/models'
 import { DetailsView } from '@/common/views'
 import {
   DocumentFields,
   MainSchetFields,
-  ManagementFields,
   OpisanieFields,
   OrganizationFields,
   ShartnomaFields,
@@ -70,7 +67,6 @@ const BankRasxodDetailsPage = () => {
   const importDialogToggle = useToggle()
 
   const location = useLocation() as Location<{ original?: BankRasxod }>
-  const podpis = usePodpis(PodpisTypeDocument.BANK_RASXOD_PORUCHENIYA, id === 'create')
 
   const main_schet_id = useRequisitesStore((state) => state.main_schet_id)
   const startDate = useSelectedMonthStore((store) => store.startDate)
@@ -307,20 +303,6 @@ const BankRasxodDetailsPage = () => {
   }, [form, rasxod, id])
 
   useEffect(() => {
-    const rukovoditel = podpis.find((item) => item.doljnost_name === PodpisDoljnost.RUKOVODITEL)
-    const glav_buxgalter = podpis.find(
-      (item) => item.doljnost_name === PodpisDoljnost.GLAV_BUXGALTER
-    )
-
-    if (rukovoditel && !form.getValues('rukovoditel')) {
-      form.setValue('rukovoditel', rukovoditel.fio_name)
-    }
-    if (glav_buxgalter && !form.getValues('glav_buxgalter')) {
-      form.setValue('glav_buxgalter', glav_buxgalter.fio_name)
-    }
-  }, [form, podpis])
-
-  useEffect(() => {
     if (error) {
       handleSaldoErrorDates(SaldoNamespace.JUR_2, error)
     }
@@ -408,13 +390,6 @@ const BankRasxodDetailsPage = () => {
                   snippets={snippets}
                   addSnippet={addSnippet}
                   removeSnippet={removeSnippet}
-                />
-              </div>
-              <div className="grid grid-cols-3">
-                <ManagementFields
-                  tabIndex={5}
-                  form={form}
-                  className="pt-0 col-span-2"
                 />
               </div>
             </div>

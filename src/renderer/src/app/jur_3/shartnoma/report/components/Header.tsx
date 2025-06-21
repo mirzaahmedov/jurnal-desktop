@@ -6,8 +6,8 @@ const Header = () => {
   return (
     <>
       <Flex direction="column">
-        <Text style={styles.doc_info}>{`Низомга\n I илова`}</Text>
-        <Text style={styles.name}>Тўлов жадвали</Text>
+        <Text style={styles.doc_info}>{`Nizomga\n I ilova`}</Text>
+        <Text style={styles.name}>Toʻlov jadvali</Text>
       </Flex>
     </>
   )

@@ -1,7 +1,7 @@
 import { PDFViewer } from '@react-pdf/renderer'
 
-import { PorucheniyaPDFDocument } from './Porucheniya'
 import { data } from './data'
+import { PorucheniyaPDFDocument } from './porucheniya'
 
 const DemoPorucheniya = () => {
   return (

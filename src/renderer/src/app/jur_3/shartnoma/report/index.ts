@@ -1,1 +1,1 @@
-export * from './ShartnomaGrafik'
+export * from './shartnoma-grafik'

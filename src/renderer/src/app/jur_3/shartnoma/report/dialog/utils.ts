@@ -1,7 +1,5 @@
 import type { MainSchet, Organization } from '@/common/models'
 
-import i18next from 'i18next'
-
 import { validateDate } from '@/common/lib/date'
 import { formatLocaleDate } from '@/common/lib/format'
 import { numberToWords, roundNumberToTwoDecimalPlaces } from '@/common/lib/utils'
@@ -32,7 +30,7 @@ export const buildContractPaymentDetailsText = ({
   const percentage =
     percentageValue === 'custom' ? (summaValue / summaTotal) * 100 : percentageValue
 
-  return `Умумий сумма ${summaTotal} ${numberToWords(summaTotal, i18next.language)}. юкорида курсатилган суммадан ${summa} сўми ёки шартноманинг умумий суммасининг ${roundNumberToTwoDecimalPlaces(Number(percentage))}%ни ${year} йил ${month} ойида олдиндан туланиши лозим`
+  return `Umumiy summa ${summaTotal} ${numberToWords(summaTotal, 'uz')}. yuqorida koʻrsatilgan summadan ${summa} soʻmi yoki shartnomaning umumiy summasining ${roundNumberToTwoDecimalPlaces(Number(percentage))}%ni ${year} yil ${month} oyida oldindan toʻlanishi lozim.`
 }
 
 type BuildContractDetailsTextParams = {
@@ -49,5 +47,5 @@ export const buildContractDetailsText = ({
   organization,
   summa
 }: BuildContractDetailsTextParams) => {
-  return `${main_schet.tashkilot_nomi} ва ${organization.name} билан умумий суммадаги ${summa} ${numberToWords(summa, i18next.language)}. ${formatLocaleDate(doc_date)} йилдаги ${doc_num}-сонли шартномага`
+  return `${main_schet.tashkilot_nomi} va ${organization.name} bilan umumiy summadagi ${summa} ${numberToWords(summa, 'uz')}. ${formatLocaleDate(doc_date)} yildagi ${doc_num}-sonli shartnomaga`
 }

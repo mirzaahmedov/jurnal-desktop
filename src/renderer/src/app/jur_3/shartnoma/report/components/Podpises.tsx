@@ -1,9 +1,7 @@
 import type { Podpis } from '@/common/models'
 
 import { StyleSheet, Text, View } from '@react-pdf/renderer'
-import { useTranslation } from 'react-i18next'
 
-import { PodpisDoljnostOptions } from '@/app/region-spravochnik/podpis/config'
 import { Blank, Field, Flex, Label } from '@/common/components/pdf'
 import { splitArrayToChunks } from '@/common/lib/array'
 
@@ -12,8 +10,6 @@ interface PodpisProps {
   podpises: Podpis[]
 }
 export const Podpises = ({ year, podpises }: PodpisProps) => {
-  const { t } = useTranslation([], { lng: 'cyrl' })
-
   return (
     <Flex
       direction="column"
@@ -21,7 +17,7 @@ export const Podpises = ({ year, podpises }: PodpisProps) => {
       style={{ marginTop: 30 }}
     >
       <Flex alignItems="flex-start">
-        <Text>М.У.</Text>
+        <Text>M.U.</Text>
         <View style={styles.podpis_container}>
           {splitArrayToChunks(
             podpises.sort((a, b) => a.numeric_poryadok - b.numeric_poryadok),
@@ -33,15 +29,12 @@ export const Podpises = ({ year, podpises }: PodpisProps) => {
                 style={styles.podpis_row}
               >
                 {row.map((podpis) => {
-                  const { name } = PodpisDoljnostOptions(t).find(
-                    (d) => d.key === podpis.doljnost_name
-                  )!
                   return (
                     <View
                       key={podpis.numeric_poryadok}
                       style={styles.podpis}
                     >
-                      <Text>{name}</Text>
+                      <Text>{podpis.doljnost_name}</Text>
                       <Text style={{ fontWeight: 'bold' }}>{podpis.fio_name}</Text>
                     </View>
                   )
@@ -54,13 +47,13 @@ export const Podpises = ({ year, podpises }: PodpisProps) => {
       <Flex>
         <Flex.Item>
           <Field style={{ alignItems: 'flex-end' }}>
-            <Label>Ғазначилик бўлими{'\n'}ходими қабул қилди</Label>
+            <Label>Gʻaznachilik boʻlimi {'\n'}xodimi qabul qildi</Label>
             <Blank />
           </Field>
         </Flex.Item>
         <Flex.Item>
           <Field style={{ alignItems: 'flex-end' }}>
-            <Label>Бюджетдан маблағ олувчи{'\n'}ходими қабул қилди</Label>
+            <Label>Byudjetdan mablagʻ oluvchi {'\n'}xodimi qabul qildi</Label>
             <Blank />
           </Field>
         </Flex.Item>
@@ -78,7 +71,7 @@ export const Podpises = ({ year, podpises }: PodpisProps) => {
               <Blank style={{ width: 30 }} />
               <Text>&quot;</Text>
               <Blank style={{ width: 80 }} />
-              <Text>{year}г.</Text>
+              <Text>{year}y.</Text>
             </Flex>
           </Flex.Item>
         ))}

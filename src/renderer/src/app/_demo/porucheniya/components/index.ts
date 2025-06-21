@@ -1,6 +1,0 @@
-export * from './header'
-export * from './signatures'
-export * from './doc-info'
-export * from './transaction-party'
-export * from './additional-info'
-export * from './summa'

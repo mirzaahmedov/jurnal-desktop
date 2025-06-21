@@ -1,3 +1,5 @@
+import type { Podpis } from '@/common/models'
+
 import { Flex } from '@/common/components/pdf'
 import { formatNumber } from '@/common/lib/format'
 
@@ -29,8 +31,7 @@ export interface PaperSheetProps {
   summa: number
   summaWords: string
   opisanie?: string
-  rukovoditel: null | string
-  glav_buxgalter: null | string
+  podpis: Podpis[]
 }
 
 export const PaperSheet = ({
@@ -54,8 +55,7 @@ export const PaperSheet = ({
   summa,
   summaWords,
   opisanie,
-  rukovoditel,
-  glav_buxgalter
+  podpis
 }: PaperSheetProps) => {
   return (
     <Flex
@@ -100,10 +100,7 @@ export const PaperSheet = ({
           opisanie={opisanie ?? ' '}
         />
 
-        <Signatures
-          rukovoditel={rukovoditel}
-          glav_buxgalter={glav_buxgalter}
-        />
+        <Signatures podpis={podpis} />
       </Flex>
     </Flex>
   )

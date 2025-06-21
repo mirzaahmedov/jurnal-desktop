@@ -403,5 +403,10 @@
     "no_distance": "Масофа топилмади"
   },
   "days": "Кунлар",
-  "workdays": "Иш кунлари"
+  "workdays": "Иш кунлари",
+  "section": "Бўлим",
+  "subchapter": "Кичик бўлим",
+  "chapter": "Боб",
+  "payment_date": "Тўлов санаси",
+  "payment_percent": "Тўлов фоизи"
 }

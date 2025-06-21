@@ -3,7 +3,7 @@ import { Document, Page, StyleSheet } from '@react-pdf/renderer'
 import { Flex, Seperator } from '@/common/components/pdf'
 import { registerFonts } from '@/common/lib/pdf'
 
-import { PaperSheet, type PaperSheetProps } from './PaperSheet'
+import { PaperSheet, type PaperSheetProps } from './paper-sheet'
 
 registerFonts()
 

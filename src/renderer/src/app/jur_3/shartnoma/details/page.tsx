@@ -15,7 +15,7 @@ import { useLayout } from '@/common/layout'
 import { DetailsView } from '@/common/views'
 
 import { type LocationState, ShartnomaQueryKeys } from '../config'
-import { ShartnomaSmetaGrafikGeneratePDFDocumentDialog } from '../report/dialog/ShartnomaGrafikDialog'
+import { ShartnomaSmetaGrafikGeneratePDFDocumentDialog } from '../report/dialog/shartnoma-grafik-dialog'
 import { ContractService } from '../service'
 import { ShartnomaForm } from './shartnoma-form'
 

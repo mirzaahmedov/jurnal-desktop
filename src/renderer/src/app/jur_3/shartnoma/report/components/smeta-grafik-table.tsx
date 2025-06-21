@@ -49,7 +49,7 @@ export const ShartnomaSmetaGrafiksTable = ({
       <Table>
         <Table.Row>
           <Table.Column style={{ width: percentage(widths[0]) }}>
-            <ScheduleCell>{year} йил ойлар номи</ScheduleCell>
+            <ScheduleCell>{year} yil oylar nomi</ScheduleCell>
           </Table.Column>
           <Table.Column
             style={{
@@ -63,7 +63,7 @@ export const ShartnomaSmetaGrafiksTable = ({
                   textAlign: 'center'
                 }}
               >
-                Харажат турлари
+                Xarajat turlari
               </ScheduleCell>
             </Table.Row>
             <Table.Row style={{ borderBottom: 'none', height: 12 }}>
@@ -76,7 +76,7 @@ export const ShartnomaSmetaGrafiksTable = ({
                   }}
                 >
                   <ScheduleCell style={{ height: '100%' }}>
-                    СТ: {grafik?.smeta?.smeta_number}
+                    ST: {grafik?.smeta?.smeta_number}
                   </ScheduleCell>
                 </Table.Column>
               ))}
@@ -101,13 +101,13 @@ export const ShartnomaSmetaGrafiksTable = ({
               width: percentage(widths[2])
             }}
           >
-            Жами
+            Jami
           </ScheduleCell>
         </Table.Row>
         {monthNames.map(({ name, label }) => (
           <ScheduleRow
             key={name}
-            name={t(label, { lng: 'ru' })}
+            name={t(label, { lng: 'uz' })}
             field={name}
             grafiks={grafiks}
             widths={widths}
@@ -115,7 +115,7 @@ export const ShartnomaSmetaGrafiksTable = ({
           />
         ))}
         <ScheduleRow
-          name="Жами"
+          name="Jami"
           field="itogo"
           grafiks={grafiks}
           widths={widths}

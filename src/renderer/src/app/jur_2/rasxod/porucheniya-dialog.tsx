@@ -1,4 +1,4 @@
-import type { BankRasxod, MainSchet, Organization } from '@/common/models'
+import type { BankRasxod, MainSchet, Organization, Podpis } from '@/common/models'
 
 import { type ButtonHTMLAttributes, useEffect, useState } from 'react'
 
@@ -22,7 +22,7 @@ import { formatLocaleDate } from '@/common/lib/format'
 import { numberToWords } from '@/common/lib/utils'
 
 import { PorucheniyaPDFDocument } from './report'
-import { PorucheniyaType } from './report/PaperSheet'
+import { PorucheniyaType } from './report/paper-sheet'
 
 interface PorucheniyaDialogProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'type'> {
   rasxod: BankRasxod
@@ -30,13 +30,15 @@ interface PorucheniyaDialogProps extends Omit<ButtonHTMLAttributes<HTMLButtonEle
   organization: Organization
   account_number?: string
   account_number_gazna?: string
+  podpis: Podpis[]
 }
 export const PorucheniyaDialog = ({
   rasxod,
   main_schet,
   organization,
   account_number,
-  account_number_gazna
+  account_number_gazna,
+  podpis
 }: PorucheniyaDialogProps) => {
   const dropdownToggle = useToggle()
 
@@ -97,8 +99,7 @@ export const PorucheniyaDialog = ({
                 summa={summa}
                 summaWords={numberToWords(summa, i18n.language)}
                 opisanie={rasxod.opisanie ?? ' '}
-                rukovoditel={rasxod.rukovoditel ?? ' '}
-                glav_buxgalter={rasxod.glav_buxgalter ?? ' '}
+                podpis={podpis}
               />
             </GenerateFile>
             <GenerateFile
@@ -123,8 +124,7 @@ export const PorucheniyaDialog = ({
                 summa={summa}
                 summaWords={numberToWords(summa, i18n.language)}
                 opisanie={rasxod.opisanie ?? ' '}
-                rukovoditel={rasxod.rukovoditel ?? ' '}
-                glav_buxgalter={rasxod.glav_buxgalter ?? ' '}
+                podpis={podpis}
               />
             </GenerateFile>
           </DialogFooter>

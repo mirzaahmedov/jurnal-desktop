@@ -404,5 +404,10 @@
     "no_distance": "Расстояние не было найдено"
   },
   "days": "Дней",
-  "workdays": "Рабочие дни"
+  "workdays": "Рабочие дни",
+  "section": "Раздел",
+  "subchapter": "Подглава",
+  "chapter": "Глава",
+  "payment_date": "Дата оплаты",
+  "payment_percent": "Процент оплаты"
 }

@@ -1,5 +1,3 @@
-import type { BankRasxodProvodka } from '@/common/models'
-
 import { useQuery } from '@tanstack/react-query'
 import { Download } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
@@ -18,9 +16,11 @@ import {
 import { LabeledValue } from '@/common/components/labeled-value'
 import { PDFSaver } from '@/common/components/pdf-saver'
 import { Textarea } from '@/common/components/ui/textarea'
+import { usePodpis } from '@/common/features/podpis'
 import { useRequisitesStore } from '@/common/features/requisites'
 import { formatLocaleDate, formatNumber } from '@/common/lib/format'
 import { numberToWords } from '@/common/lib/utils'
+import { type BankRasxodProvodka, PodpisTypeDocument } from '@/common/models'
 
 import { BankRasxodQueryKeys } from './config'
 import { PorucheniyaDialog } from './porucheniya-dialog'
@@ -82,6 +82,8 @@ export const BankRasxodViewDialog = ({ selectedId, onClose }: BankRasxodViewDial
     queryFn: BankRasxodService.getById,
     enabled: !!selectedId
   })
+
+  const podpis = usePodpis(PodpisTypeDocument.BANK_RASXOD_PORUCHENIYA)
 
   const data = rasxod?.data
   const summa = data?.summa ? data?.summa : data?.tulanmagan_summa
@@ -259,6 +261,7 @@ export const BankRasxodViewDialog = ({ selectedId, onClose }: BankRasxodViewDial
                         organization={data.organ}
                         account_number={data.account_number?.raschet_schet}
                         account_number_gazna={data.gazna_number?.raschet_schet_gazna}
+                        podpis={podpis}
                       />
                       <Button
                         variant="ghost"

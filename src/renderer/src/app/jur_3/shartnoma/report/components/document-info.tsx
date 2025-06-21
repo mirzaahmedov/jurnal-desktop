@@ -9,7 +9,7 @@ type DocumentInfoProps = {
   subchapter: string
   chapter: string
 }
-const DocumentInfo = ({
+export const DocumentInfo = ({
   contractDetails,
   createdDate,
   section,
@@ -28,15 +28,15 @@ const DocumentInfo = ({
             style={{ maxWidth: 250, gap: 2 }}
           >
             <Flex>
-              <Text style={{ flex: 1 }}>Бўлим</Text>
+              <Text style={{ flex: 1 }}>Boʻlim</Text>
               <Text style={{ flex: 1 }}>{section}</Text>
             </Flex>
             <Flex>
-              <Text style={{ flex: 1 }}>Кичик бўлим</Text>
+              <Text style={{ flex: 1 }}>Kichik boʻlim</Text>
               <Text style={{ flex: 1 }}>{subchapter}</Text>
             </Flex>
             <Flex>
-              <Text style={{ flex: 1 }}>Боб</Text>
+              <Text style={{ flex: 1 }}>Bob</Text>
               <Text style={{ flex: 1 }}>{chapter}</Text>
             </Flex>
           </Flex>
@@ -48,7 +48,7 @@ const DocumentInfo = ({
               textAlign: 'center'
             }}
           >
-            дс1 от {createdDate}г.
+            ds1 {createdDate}y.
           </Text>
         </Flex.Item>
       </Flex>
@@ -64,5 +64,3 @@ const styles = StyleSheet.create({
     fontWeight: 'bold'
   }
 })
-
-export { DocumentInfo }

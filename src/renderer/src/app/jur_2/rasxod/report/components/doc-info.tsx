@@ -7,7 +7,7 @@ type DocInfoProps = {
   doc_date: string
 }
 export const DocInfo = ({ doc_date }: DocInfoProps) => {
-  const { t } = useTranslation(['porucheniya'])
+  const { t } = useTranslation(['porucheniya'], { lng: 'uz' })
   return (
     <Flex
       justifyContent="space-between"

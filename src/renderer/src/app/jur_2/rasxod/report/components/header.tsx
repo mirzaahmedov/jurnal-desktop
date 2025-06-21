@@ -7,7 +7,7 @@ export type HeaderProps = {
   doc_num: string
 }
 const Header = ({ doc_num }: HeaderProps) => {
-  const { t } = useTranslation(['porucheniya'])
+  const { t } = useTranslation(['porucheniya'], { lng: 'uz' })
   return (
     <Flex>
       <Text style={styles.name}>{t('doc_num')}</Text>

@@ -121,7 +121,6 @@ const SmetaPage = lazy(() => import('./super-admin/smeta/page'))
 const UnitPage = lazy(() => import('./super-admin/unit/page'))
 const UserPage = lazy(() => import('./super-admin/user/page'))
 const DemoPage = lazy(() => import('./_demo/page'))
-const DemoDetailsPage = lazy(() => import('./_demo/details'))
 const ReportTitlePage = lazy(() => import('./super-admin/report-title'))
 const VacantPage = lazy(() => import('./region-admin/vacant/page'))
 
@@ -651,10 +650,6 @@ export const routes: RouteObject[] = [
       {
         path: 'demo',
         element: import.meta.env.DEV ? <DemoPage /> : null
-      },
-      {
-        path: 'demo/:id',
-        element: import.meta.env.DEV ? <DemoDetailsPage /> : null
       },
       {
         path: '*',

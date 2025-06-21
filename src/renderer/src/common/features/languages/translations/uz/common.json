@@ -403,5 +403,10 @@
     "no_distance": "Masofa topilmadi"
   },
   "days": "Kunlar",
-  "workdays": "Ish kunlari"
+  "workdays": "Ish kunlari",
+  "section": "Bo'lim",
+  "subchapter": "Kichik bo'lim",
+  "chapter": "Bob",
+  "payment_date": "To'lov sanasi",
+  "payment_percent": "To'lov foizi"
 }

@@ -1,13 +1,9 @@
 import type { ColumnDef } from '@/common/components'
 import type { Podpis } from '@/common/models'
 
-import { Trans, useTranslation } from 'react-i18next'
-
 import { IDCell } from '@/common/components/table/renderers/id'
 import { Badge } from '@/common/components/ui/badge'
 import { useConstantsStore } from '@/common/features/constants/store'
-
-import { PodpisDoljnostOptions } from './config'
 
 export const podpisColumns: ColumnDef<Podpis>[] = [
   {
@@ -20,10 +16,7 @@ export const podpisColumns: ColumnDef<Podpis>[] = [
   },
   {
     header: 'doljnost',
-    key: 'doljnost_name',
-    renderCell(row) {
-      return <DoljnostCell value={row.doljnost_name} />
-    }
+    key: 'doljnost_name'
   },
   {
     header: 'fio',
@@ -37,19 +30,6 @@ export const podpisColumns: ColumnDef<Podpis>[] = [
     }
   }
 ]
-
-const DoljnostCell = ({ value }: { value: string }) => {
-  const { t } = useTranslation('podpis')
-  const doljnost = PodpisDoljnostOptions(t).find((item) => item.key === value)
-  if (doljnost) {
-    return (
-      <Badge>
-        <Trans>{doljnost.name}</Trans>
-      </Badge>
-    )
-  }
-  return value
-}
 
 const TypeDocumentCell = ({ value }: { value: string }) => {
   const podpisTypes = useConstantsStore((store) => store.podpisTypes)

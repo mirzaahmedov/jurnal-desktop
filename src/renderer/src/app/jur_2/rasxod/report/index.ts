@@ -1,1 +1,1 @@
-export * from './Porucheniya'
+export * from './porucheniya'

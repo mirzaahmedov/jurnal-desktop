@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Flex, Label, TextBox } from '@/common/components/pdf'
 import { splitStringByLength } from '@/common/lib/utils'
 
-import { PorucheniyaType } from '../PaperSheet'
+import { PorucheniyaType } from '../paper-sheet'
 
 type AdditionalInfoProps = {
   type: PorucheniyaType
@@ -18,7 +18,7 @@ export const AdditionalInfo = ({
   creditor_raschet_gazna,
   opisanie
 }: AdditionalInfoProps) => {
-  const { t } = useTranslation(['porucheniya'])
+  const { t } = useTranslation(['porucheniya'], { lng: 'uz' })
 
   return (
     <Flex

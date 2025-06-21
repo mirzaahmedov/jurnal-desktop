@@ -1,5 +1,3 @@
-import type { ShartnomaGrafikFormValues } from '@/app/jur_3/shartnoma/service'
-
 import { useEffect, useMemo } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -31,17 +29,17 @@ import { calculateAnnualTotalSum, roundNumberToTwoDecimalPlaces } from '@/common
 import {
   type MainSchet,
   type Organization,
-  PodpisDoljnost,
-  PodpisTypeDocument
+  PodpisTypeDocument,
+  type ShartnomaGrafik
 } from '@/common/models'
 import { DocumentOrientation, DocumentPaddingFields } from '@/common/widget/form'
 
-import { ShartnomaGrafikPDFDocument } from '../ShartnomaGrafik'
-import { ReportDialogFormSchema, defaultValues } from './constants'
+import { ShartnomaGrafikPDFDocument } from '../shartnoma-grafik'
+import { ReportDialogFormSchema, defaultValues } from './config'
 import { buildContractDetailsText, buildContractPaymentDetailsText } from './utils'
 
 export interface ShartnomaSmetaGrafikGeneratePDFDocumentDialogProps {
-  grafiks: ShartnomaGrafikFormValues[]
+  grafiks: ShartnomaGrafik[]
   doc_date: string
   doc_num: string
   open: boolean
@@ -106,20 +104,17 @@ export const ShartnomaSmetaGrafikGeneratePDFDocumentDialog = ({
   }, [form, main_schet, organization, doc_date, doc_num, summaTotal])
 
   useEffect(() => {
-    const rukovoditel = podpis.find((item) => item.doljnost_name === PodpisDoljnost.RUKOVODITEL)
-    const glav_mib = podpis.find((item) => item.doljnost_name === PodpisDoljnost.GLAV_MIB)
-
-    if (rukovoditel && !form.getValues('rukovoditel')) {
-      form.setValue('rukovoditel', rukovoditel.fio_name)
-    }
-    if (glav_mib && !form.getValues('glav_mib')) {
-      form.setValue('glav_mib', glav_mib.fio_name)
-    }
-  }, [form, podpis])
-
-  useEffect(() => {
     form.setValue('singlePage', grafiks.length <= 3)
   }, [form, grafiks])
+
+  const grafiksData = useMemo(
+    () =>
+      grafiks.map((grafik) => ({
+        ...grafik,
+        itogo: calculateAnnualTotalSum(grafik)
+      })) ?? [],
+    [grafiks]
+  )
 
   return (
     <Dialog
@@ -143,7 +138,7 @@ export const ShartnomaSmetaGrafikGeneratePDFDocumentDialog = ({
                   render={({ field }) => (
                     <FormElement
                       direction="column"
-                      label="Бўлим"
+                      label={t('section')}
                     >
                       <Input
                         type="number"
@@ -158,7 +153,7 @@ export const ShartnomaSmetaGrafikGeneratePDFDocumentDialog = ({
                   render={({ field }) => (
                     <FormElement
                       direction="column"
-                      label="Кичик бўлим"
+                      label={t('subchapter')}
                     >
                       <Input
                         type="number"
@@ -173,7 +168,7 @@ export const ShartnomaSmetaGrafikGeneratePDFDocumentDialog = ({
                   render={({ field }) => (
                     <FormElement
                       direction="column"
-                      label="Боб"
+                      label={t('chapter')}
                     >
                       <Input
                         type="number"
@@ -187,7 +182,7 @@ export const ShartnomaSmetaGrafikGeneratePDFDocumentDialog = ({
                   name="payment_date"
                   render={({ field }) => (
                     <FormElement
-                      label="Дата оплаты"
+                      label={t('payment_date')}
                       direction="column"
                     >
                       <DatePicker {...field} />
@@ -201,7 +196,7 @@ export const ShartnomaSmetaGrafikGeneratePDFDocumentDialog = ({
                   control={form.control}
                   name="summa_value"
                   render={({ field }) => (
-                    <FormElement label="Сумма">
+                    <FormElement label={t('summa')}>
                       <NumericInput
                         {...field}
                         allowNegative={false}
@@ -218,7 +213,7 @@ export const ShartnomaSmetaGrafikGeneratePDFDocumentDialog = ({
                 name="percentage"
                 render={({ field }) => (
                   <FormItem className="space-y-4">
-                    <FormLabel>Процент оплаты</FormLabel>
+                    <FormLabel></FormLabel>
                     <FormControl>
                       <RadioGroup
                         {...field}
@@ -243,7 +238,7 @@ export const ShartnomaSmetaGrafikGeneratePDFDocumentDialog = ({
                           <FormControl>
                             <RadioGroupItem value="custom" />
                           </FormControl>
-                          <FormLabel className="!my-0 cursor-pointer">Другой</FormLabel>
+                          <FormLabel className="!my-0 cursor-pointer">{t('other')}</FormLabel>
                         </FormItem>
                       </RadioGroup>
                     </FormControl>
@@ -276,30 +271,6 @@ export const ShartnomaSmetaGrafikGeneratePDFDocumentDialog = ({
                 )}
               />
               <div className="pt-2.5 grid grid-cols-2 gap-5">
-                <FormField
-                  control={form.control}
-                  name="rukovoditel"
-                  render={({ field }) => (
-                    <FormElement
-                      direction="column"
-                      label={t('podpis:doljnost.rukovoditel')}
-                    >
-                      <Input {...field} />
-                    </FormElement>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="glav_mib"
-                  render={({ field }) => (
-                    <FormElement
-                      direction="column"
-                      label={t('podpis:doljnost.glav_mib')}
-                    >
-                      <Input {...field} />
-                    </FormElement>
-                  )}
-                />
                 <FormField
                   control={form.control}
                   name="singlePage"
@@ -341,13 +312,13 @@ export const ShartnomaSmetaGrafikGeneratePDFDocumentDialog = ({
         </Form>
         <div className="grid place-content-center border-t border-slate-200 pt-5">
           <GenerateFile
-            disabled={
+            isDisabled={
               form.watch('section') === 0 ||
               form.watch('subchapter') === 0 ||
               form.watch('chapter') === 0
             }
-            fileName={`график_договора.pdf`}
-            buttonText="График договора"
+            fileName={`${t('payment-schedule')}_${doc_num}.pdf`}
+            buttonText={t('payment-schedule')}
           >
             <ShartnomaGrafikPDFDocument
               singlePage={form.watch('singlePage')}
@@ -355,15 +326,10 @@ export const ShartnomaSmetaGrafikGeneratePDFDocumentDialog = ({
               subchapter={form.watch('subchapter').toString()}
               chapter={form.watch('chapter').toString()}
               createdDate={formatDate(new Date())}
-              grafiks={grafiks.map((grafik) => ({
-                ...grafik,
-                smeta_number: '4110000',
-                itogo: calculateAnnualTotalSum(grafik)
-              }))}
+              grafiks={grafiksData}
               paymentDetails={form.watch('payment_details')}
               shartnomaDetails={form.watch('contract_details')}
-              rukovoditel={form.watch('rukovoditel')}
-              glav_mib={form.watch('glav_mib')}
+              podpis={podpis}
               paddingLeft={form.watch('paddingLeft')}
               paddingTop={form.watch('paddingTop')}
               paddingRight={form.watch('paddingRight')}

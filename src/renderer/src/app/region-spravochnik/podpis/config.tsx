@@ -1,37 +1,8 @@
 import type { TFunction } from 'i18next'
 
-import { Trans } from 'react-i18next'
 import { z } from 'zod'
 
-import { PodpisDoljnost, PodpisTypeDocument } from '@/common/models'
-
-export const PodpisDoljnostOptions = (t: TFunction) =>
-  [
-    {
-      key: PodpisDoljnost.RUKOVODITEL,
-      name: <Trans t={t}>podpis:doljnost.rukovoditel</Trans>
-    },
-    {
-      key: PodpisDoljnost.GLAV_BUXGALTER,
-      name: <Trans t={t}>podpis:doljnost.glav_buxgalter</Trans>
-    },
-    {
-      key: PodpisDoljnost.GLAV_MIB,
-      name: <Trans t={t}>podpis:doljnost.glav_mib</Trans>
-    },
-    {
-      key: PodpisDoljnost.NACHALNIK_OTDELA,
-      name: <Trans t={t}>podpis:doljnost.nachalnik_otdela</Trans>
-    },
-    {
-      key: PodpisDoljnost.BUXGALTER,
-      name: <Trans t={t}>podpis:doljnost.buxgalter</Trans>
-    },
-    {
-      key: PodpisDoljnost.KASSIR,
-      name: <Trans t={t}>podpis:doljnost.kassir</Trans>
-    }
-  ] as const
+import { PodpisTypeDocument } from '@/common/models'
 
 export const getPodpisTypeDocumentOptions = (t: TFunction) => {
   return [
@@ -81,7 +52,7 @@ export const PodpisQueryKeys = {
 
 export const defaultValues: PodpisPayloadType = {
   numeric_poryadok: 1,
-  doljnost_name: PodpisDoljnost.NACHALNIK_OTDELA,
+  doljnost_name: '',
   fio_name: '',
   type_document: PodpisTypeDocument.BANK_RASXOD_PORUCHENIYA
 }
