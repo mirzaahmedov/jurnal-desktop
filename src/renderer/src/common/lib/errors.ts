@@ -34,6 +34,6 @@ export const focusInvalidInput = () => {
   const inputElement = document.querySelector('input[data-error=true]') as HTMLInputElement
   if (inputElement) {
     inputElement.focus()
-    inputElement.scrollIntoView({ behavior: 'smooth' })
+    inputElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
   }
 }

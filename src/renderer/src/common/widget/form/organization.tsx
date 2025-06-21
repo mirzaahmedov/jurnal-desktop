@@ -35,7 +35,8 @@ export const OrganizationFields: FormSpravochnikFieldsComponent<
     if (spravochnikProps.selected) {
       form?.setValue(
         'organization_by_raschet_schet_id',
-        spravochnikProps.selected.account_numbers[0]?.id ?? 0
+        spravochnikProps.selected.account_numbers[0]?.id ?? 0,
+        { shouldValidate: true }
       )
     }
   }, [spravochnikProps.selected])

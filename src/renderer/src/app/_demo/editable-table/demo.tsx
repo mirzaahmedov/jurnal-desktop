@@ -4,7 +4,7 @@ import { type Ref, useRef } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { type FieldError, useForm } from 'react-hook-form'
-import { Trans } from 'react-i18next'
+import { Trans, useTranslation } from 'react-i18next'
 import { z } from 'zod'
 
 import {
@@ -13,6 +13,16 @@ import {
 } from '@/common/components/editable-table-v2/EditableTable'
 import { useKeyUp } from '@/common/hooks'
 import { cn } from '@/common/lib/utils'
+
+const NameCell = () => {
+  const { t } = useTranslation([])
+  return (
+    <Trans
+      i18nKey="name"
+      t={t}
+    />
+  )
+}
 
 const UserSchema = z.object({
   name: z.string().nonempty(),
@@ -55,7 +65,7 @@ const Input = ({ inputRef, value, onChange, error }: InputProps) => {
 const columnDefs: ColumnDef<User>[] = [
   {
     key: 'name',
-    header: () => <Trans name="name" />,
+    header: () => <NameCell />,
     minSize: 200,
     render: ({ value, error, onChange }) => (
       <Input

@@ -13,7 +13,7 @@ export const DetailsView = ({ children, className, ...props }: DetailsViewProps)
   return (
     <div
       {...props}
-      className={cn('flex-1 min-h-0 relative flex flex-col', className)}
+      className={cn('flex-1 min-h-0 flex flex-col', className)}
     >
       {children}
     </div>
@@ -32,7 +32,7 @@ const DetailsViewContent = ({
   return loading ? (
     <LoadingOverlay {...props} />
   ) : (
-    <div className={cn('flex-1 overflow-y-auto scrollbar', className)}>{children}</div>
+    <div className={cn('flex-1 relative overflow-y-auto scrollbar', className)}>{children}</div>
   )
 }
 

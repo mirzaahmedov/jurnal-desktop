@@ -1,3 +1,32 @@
+import type { ExistingDocument, PrixodImportResult } from './interfaces'
+import type { ApiResponse } from '@/common/models'
+
+import { useEffect, useMemo, useRef, useState } from 'react'
+
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
+import isEmpty from 'just-is-empty'
+import { useForm, useWatch } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
+import { toast } from 'react-toastify'
+
+import { createShartnomaSpravochnik } from '@/app/jur_3/shartnoma'
+import { createResponsibleSpravochnik } from '@/app/jur_7/responsible/service'
+import { handleOstatokExistingDocumentError, handleOstatokResponse } from '@/app/jur_7/saldo/utils'
+import { createOrganizationSpravochnik } from '@/app/region-spravochnik/organization'
+import { Form } from '@/common/components/ui/form'
+import { DocumentType } from '@/common/features/doc-num'
+import { DownloadFile, ImportFile } from '@/common/features/file'
+import { useRequisitesStore } from '@/common/features/requisites'
+import {
+  useSelectedMonthStore,
+  validateDateWithinSelectedMonth
+} from '@/common/features/selected-month'
+import { useSnippets } from '@/common/features/snippents/use-snippets'
+import { useSpravochnik } from '@/common/features/spravochnik'
+import { formatDate, parseDate, withinMonth } from '@/common/lib/date'
+import { focusInvalidInput } from '@/common/lib/errors'
+import { DetailsView } from '@/common/views'
 import {
   DocumentFields,
   DoverennostFields,
@@ -7,41 +36,15 @@ import {
   ShartnomaFields,
   SummaFields
 } from '@/common/widget/form'
-import { DownloadFile, ImportFile } from '@/common/features/file'
-import type { ExistingDocument, PrixodImportResult } from './interfaces'
+
 import { ItogoBySchets, getItogoBySchets } from '../../__components__/itogo-by-schets'
+import { IznosQueryKeys } from '../../iznos/config'
+import { SaldoQueryKeys } from '../../saldo'
 import { PrixodFormSchema, WarehousePrixodQueryKeys, defaultValues } from '../config'
 import { WarehousePrixodService, usePrixodCreate, usePrixodUpdate } from '../service'
-import { formatDate, parseDate, withinMonth } from '@/common/lib/date'
-import { handleOstatokExistingDocumentError, handleOstatokResponse } from '@/app/jur_7/saldo/utils'
-import { useEffect, useMemo, useRef, useState } from 'react'
-import { useForm, useWatch } from 'react-hook-form'
-import { useQuery, useQueryClient } from '@tanstack/react-query'
-import {
-  useSelectedMonthStore,
-  validateDateWithinSelectedMonth
-} from '@/common/features/selected-month'
-
-import type { ApiResponse } from '@/common/models'
 import { ApplyAllInputs } from './apply-all-inputs'
-import { DetailsView } from '@/common/views'
-import { DocumentType } from '@/common/features/doc-num'
 import { ExistingDocumentsAlert } from './existing-document-alert'
-import { Form } from '@/common/components/ui/form'
-import { IznosQueryKeys } from '../../iznos/config'
 import { ProvodkaTable } from './provodka-table'
-import { SaldoQueryKeys } from '../../saldo'
-import { createOrganizationSpravochnik } from '@/app/region-spravochnik/organization'
-import { createResponsibleSpravochnik } from '@/app/jur_7/responsible/service'
-import { createShartnomaSpravochnik } from '@/app/jur_3/shartnoma'
-import { focusInvalidInput } from '@/common/lib/errors'
-import isEmpty from 'just-is-empty'
-import { toast } from 'react-toastify'
-import { useRequisitesStore } from '@/common/features/requisites'
-import { useSnippets } from '@/common/features/snippents/use-snippets'
-import { useSpravochnik } from '@/common/features/spravochnik'
-import { useTranslation } from 'react-i18next'
-import { zodResolver } from '@hookform/resolvers/zod'
 
 interface PrixodDetailsProps {
   id: string | undefined
@@ -245,10 +248,10 @@ const PrixodDetails = ({ id, onSuccess }: PrixodDetailsProps) => {
   console.log({ errors })
 
   return (
-    <DetailsView className="h-full">
+    <DetailsView>
       <DetailsView.Content
         loading={isFetching}
-        className="w-full overflow-x-hidden"
+        className="w-full overflow-x-hidden pb-20"
       >
         <Form {...form}>
           <form
@@ -322,7 +325,7 @@ const PrixodDetails = ({ id, onSuccess }: PrixodDetailsProps) => {
           </form>
         </Form>
 
-        <div className="p-5 mb-20 w-full overflow-hidden flex flex-col gap-5">
+        <div className="p-5 w-full overflow-hidden flex flex-col gap-5">
           <div className="flex items-center justify-between gap-2">
             <div className="flex items-center gap-2.5">
               <ImportFile
@@ -346,9 +349,11 @@ const PrixodDetails = ({ id, onSuccess }: PrixodDetailsProps) => {
                       serial_num: r.serial_num,
                       iznos: r.group?.iznos_foiz > 0,
                       eski_iznos_summa: r.eski_iznos_summa,
+                      iznos_start: r.iznos ? form.getValues('doc_date') : '',
                       nds_foiz: r.nds_foiz,
                       unit_id: r.unit_id
-                    }))
+                    })),
+                    { shouldValidate: true }
                   )
                 }}
               />

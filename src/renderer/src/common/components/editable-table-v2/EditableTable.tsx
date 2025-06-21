@@ -22,6 +22,7 @@ import {
   type UseFormReturn,
   useFieldArray
 } from 'react-hook-form'
+import { Trans } from 'react-i18next'
 import { FixedSizeList } from 'react-window'
 
 import { AutoSizer } from '@/common/components/auto-sizer'
@@ -487,7 +488,7 @@ const HeaderCell = <T extends object>({
         }}
       >
         <div className="flex flex-row items-center justify-between">
-          {typeof column.header === 'function' ? <column.header /> : column.header}
+          {typeof column.header === 'function' ? column.header() : <Trans>{column.header}</Trans>}
           {column.sort ? <div>Sort content</div> : null}
         </div>
         {column.filter ? (

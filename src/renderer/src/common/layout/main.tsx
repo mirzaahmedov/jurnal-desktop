@@ -23,28 +23,26 @@ const MainLayout = () => {
   return (
     <div className="h-full flex">
       <Sidebar />
-      <div className="flex-1 overflow-hidden">
+      <main className="flex-1 h-full flex flex-col bg-white overflow-x-hidden">
         <AuthGuard>
-          <main className="h-full flex flex-col bg-white">
-            <Header />
-            <Suspense
-              fallback={
-                <div className="flex-1">
-                  <LoadingOverlay />
-                </div>
-              }
+          <Header />
+          <Suspense
+            fallback={
+              <div className="flex-1">
+                <LoadingOverlay />
+              </div>
+            }
+          >
+            <ErrorBoundary
+              onError={(err) => console.log(err)}
+              fallback={'error'}
             >
-              <ErrorBoundary
-                onError={(err) => console.log(err)}
-                fallback={'error'}
-              >
-                <Outlet />
-              </ErrorBoundary>
-            </Suspense>
-            <Footer />
-          </main>
+              <Outlet />
+            </ErrorBoundary>
+          </Suspense>
+          <Footer />
         </AuthGuard>
-      </div>
+      </main>
       <SpravochnikProvider />
       <KassaSaldoUpdateManager />
       <BankSaldoUpdateManager />

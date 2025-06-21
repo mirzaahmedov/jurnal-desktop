@@ -78,6 +78,7 @@ interface JollyComboBoxProps<T extends object> extends Omit<AriaComboBoxProps<T>
   description?: string | null
   errorMessage?: string | ((validation: AriaValidationResult) => string)
   inputProps?: Omit<AriaInputProps, 'children'>
+  popoverProps?: Omit<AriaPopoverProps, 'children'>
   tabIndex?: number
   children: React.ReactNode | ((item: T) => React.ReactNode)
 }
@@ -89,6 +90,7 @@ function JollyComboBox<T extends object>({
   errorMessage,
   className,
   inputProps,
+  popoverProps,
   children,
   tabIndex,
   ...props
@@ -127,7 +129,7 @@ function JollyComboBox<T extends object>({
         </Text>
       )}
       <FieldError>{errorMessage}</FieldError>
-      <ComboboxPopover>
+      <ComboboxPopover {...popoverProps}>
         <ComboboxListBox
           renderEmptyState={() => (
             <div className="text-center text-sm px-5 py-2">

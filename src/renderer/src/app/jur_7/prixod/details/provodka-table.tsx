@@ -801,7 +801,7 @@ const NaimenovanieCells = ({
           <Button
             variant="ghost"
             size="icon"
-            className="absolute right-0.5 top-0.5 group"
+            className="absolute right-0.5 top-0.5 group bg-white"
             onClick={() => {
               if (!kimga_id) {
                 toast.error(t('please_select_responsible'))
