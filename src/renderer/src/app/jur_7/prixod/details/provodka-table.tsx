@@ -343,6 +343,7 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
                             })}
                             error={!!errors.sena}
                             tabIndex={tabIndex}
+                            decimalScale={100}
                           />
                         </div>
                       </EditableTableCell>

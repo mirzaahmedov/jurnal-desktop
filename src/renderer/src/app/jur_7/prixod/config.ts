@@ -50,7 +50,7 @@ export const PrixodProvodkaFormSchema = withPreprocessor(
     group_number: z.string().optional().nullable(),
     inventar_num: z.string().optional(),
     serial_num: z.string().optional(),
-    kol: z.number(),
+    kol: z.number().min(0),
     sena: z.number().default(0),
     summa: z.number().default(0),
     nds_foiz: z.number().optional(),

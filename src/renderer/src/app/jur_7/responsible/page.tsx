@@ -109,6 +109,9 @@ const ResponsiblePage = () => {
           />
           <ImportFile
             url="/jur_7/responsible/import"
+            params={{
+              budjet_id
+            }}
             onSuccess={() => {
               queryClient.invalidateQueries({
                 queryKey: [ResponsibleQueryKeys.getAll]

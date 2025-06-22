@@ -273,6 +273,7 @@ const Provodka = ({ rowIndex, onOpenDialog, onRemove, row, form, tabIndex }: Pro
           <NumericInput
             adjustWidth
             allowNegative={false}
+            decimalScale={100}
             isAllowed={(values) => (values.floatValue ?? 0) <= (row.max_kol || Infinity)}
             value={row.kol || 0}
             onValueChange={(values, src) => {
