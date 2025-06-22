@@ -26,6 +26,8 @@ export interface PrixodImportResult {
   eski_iznos_summa: number
   nds_foiz: number
   iznos: boolean
+  iznos_schet: string
+  iznos_sub_schet: string
   nds_summa: number
   summa_s_nds: number
   group: {

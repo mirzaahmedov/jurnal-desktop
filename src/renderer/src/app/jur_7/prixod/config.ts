@@ -1,5 +1,6 @@
-import { withPreprocessor } from '@/common/lib/validation'
 import { z } from 'zod'
+
+import { withPreprocessor } from '@/common/lib/validation'
 
 export const WarehousePrixodQueryKeys = {
   getAll: 'warehouse_prixod/all',
@@ -73,18 +74,6 @@ export const PrixodProvodkaFormSchema = withPreprocessor(
       ctx.addIssue({
         code: 'custom',
         path: ['iznos_start']
-      })
-    }
-    if (!values.iznos_schet) {
-      ctx.addIssue({
-        code: 'custom',
-        path: ['iznos_schet']
-      })
-    }
-    if (!values.iznos_sub_schet) {
-      ctx.addIssue({
-        code: 'custom',
-        path: ['iznos_sub_schet']
       })
     }
   }

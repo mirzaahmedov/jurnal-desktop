@@ -350,6 +350,8 @@ const PrixodDetails = ({ id, onSuccess }: PrixodDetailsProps) => {
                       iznos: r.group?.iznos_foiz > 0,
                       eski_iznos_summa: r.eski_iznos_summa,
                       iznos_start: r.iznos ? form.getValues('doc_date') : '',
+                      iznos_schet: r.iznos ? r.iznos_schet : '',
+                      iznos_sub_schet: r.iznos ? r.iznos_sub_schet : '',
                       nds_foiz: r.nds_foiz,
                       unit_id: r.unit_id
                     })),
