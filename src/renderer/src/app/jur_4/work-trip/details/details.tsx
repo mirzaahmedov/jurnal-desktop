@@ -433,7 +433,7 @@ export const WorkTripDetails = ({ id }: WorkTripDetailsProps) => {
                             description={
                               form.watch('road_ticket_number')
                                 ? ''
-                                : `[${t('pages.bhm').toLowerCase()}] * 0.01 * [${t('distance').toLowerCase()}]`
+                                : `[${t('pages.bhm').toLowerCase()}] * 0.001 * [${t('distance').toLowerCase()}]`
                             }
                           >
                             <div className="flex items-center gap-1">
