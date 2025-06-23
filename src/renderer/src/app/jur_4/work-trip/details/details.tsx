@@ -191,7 +191,7 @@ export const WorkTripDetails = ({ id }: WorkTripDetailsProps) => {
   })
   useEffect(() => {
     if (!form.getValues('road_ticket_number')) {
-      form.setValue('road_summa', distanceKM * (minimumWageSumma * 0.01))
+      form.setValue('road_summa', distanceKM * (minimumWageSumma * 0.001))
     }
   }, [form, distanceKM, minimumWage])
   useEffect(() => {
@@ -212,8 +212,8 @@ export const WorkTripDetails = ({ id }: WorkTripDetailsProps) => {
     }
   }, [form, operatsii?.data])
   useEffect(() => {
-    form.setValue('day_summa', minimumWageSumma * 0.1 * workDaysCount)
-  }, [minimumWageSumma, workDaysCount])
+    form.setValue('day_summa', minimumWageSumma * 0.1 * allDaysCount)
+  }, [minimumWageSumma, allDaysCount])
 
   return (
     <DetailsView>

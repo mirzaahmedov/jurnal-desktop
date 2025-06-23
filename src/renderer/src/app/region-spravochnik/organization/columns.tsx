@@ -4,6 +4,7 @@ import type { Organization } from '@/common/models'
 import { Copyable } from '@/common/components'
 import { ExpandableList } from '@/common/components/table/renderers/expandable-list'
 import { IDCell } from '@/common/components/table/renderers/id'
+import { UserCell } from '@/common/components/table/renderers/user'
 
 export const OrganizationColumns: ColumnDef<Organization>[] = [
   {
@@ -85,6 +86,19 @@ export const OrganizationColumns: ColumnDef<Organization>[] = [
             {gazna.raschet_schet_gazna}
           </Copyable>
         )}
+      />
+    )
+  },
+  {
+    fit: true,
+    key: 'user_id',
+    minWidth: 200,
+    header: 'created-by-user',
+    renderCell: (row) => (
+      <UserCell
+        id={row.user_id}
+        fio={row.fio}
+        login={row.login}
       />
     )
   }

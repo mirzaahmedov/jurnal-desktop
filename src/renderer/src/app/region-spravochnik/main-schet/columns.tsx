@@ -6,6 +6,7 @@ import { Trans } from 'react-i18next'
 import { DataList } from '@/common/components/data-list'
 import { HoverInfoCell } from '@/common/components/table/renderers'
 import { IDCell } from '@/common/components/table/renderers/id'
+import { UserCell } from '@/common/components/table/renderers/user'
 
 export const MainSchetColumns: ColumnDef<MainSchet>[] = [
   {
@@ -101,5 +102,18 @@ export const MainSchetColumns: ColumnDef<MainSchet>[] = [
     minWidth: 200,
     key: 'budjet_name',
     header: 'budjet'
+  },
+  {
+    fit: true,
+    key: 'user_id',
+    minWidth: 200,
+    header: 'created-by-user',
+    renderCell: (row) => (
+      <UserCell
+        id={row.user_id}
+        fio={row.fio}
+        login={row.login}
+      />
+    )
   }
 ]

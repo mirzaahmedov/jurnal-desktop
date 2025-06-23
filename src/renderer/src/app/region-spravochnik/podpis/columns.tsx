@@ -2,6 +2,7 @@ import type { ColumnDef } from '@/common/components'
 import type { Podpis } from '@/common/models'
 
 import { IDCell } from '@/common/components/table/renderers/id'
+import { UserCell } from '@/common/components/table/renderers/user'
 import { Badge } from '@/common/components/ui/badge'
 import { useConstantsStore } from '@/common/features/constants/store'
 
@@ -28,6 +29,19 @@ export const podpisColumns: ColumnDef<Podpis>[] = [
     renderCell(row) {
       return <TypeDocumentCell value={row.type_document} />
     }
+  },
+  {
+    fit: true,
+    key: 'user_id',
+    minWidth: 200,
+    header: 'created-by-user',
+    renderCell: (row) => (
+      <UserCell
+        id={row.user_id}
+        fio={row.fio}
+        login={row.login}
+      />
+    )
   }
 ]
 

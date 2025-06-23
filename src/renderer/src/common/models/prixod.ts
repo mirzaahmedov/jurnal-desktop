@@ -103,7 +103,7 @@ export interface KassaPrixod {
   podotchet: any
 }
 
-type MO7PrixodChild = {
+interface MaterialPrixodProvodka {
   naimenovanie_tovarov_jur7_id: number
   kol: number
   sena: number
@@ -115,7 +115,7 @@ type MO7PrixodChild = {
   data_pereotsenka: string
   iznos_foiz?: number
 }
-export type MO7Prixod = {
+export interface MaterialPrixod {
   id: number
   doc_num: string
   doc_date: string
@@ -123,5 +123,11 @@ export type MO7Prixod = {
   summa: number
   kimdan_name: string
   kimga_name: string
-  childs: MO7PrixodChild[]
+  provodki_array: Array<{
+    debet_schet: string
+    debet_sub_schet: string
+    kredit_schet: string
+    kredit_sub_schet: string
+  }>
+  childs: MaterialPrixodProvodka[]
 }

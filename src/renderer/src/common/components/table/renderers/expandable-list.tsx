@@ -9,9 +9,10 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/common/components/ui/
 
 export interface ExpandableListProps<T> {
   items: T[]
+  renderHeader?: () => ReactNode
   renderItem: (item: T) => ReactNode
 }
-export const ExpandableList = <T,>({ items, renderItem }: ExpandableListProps<T>) => {
+export const ExpandableList = <T,>({ items, renderHeader, renderItem }: ExpandableListProps<T>) => {
   if (!Array.isArray(items) || items.length === 0) {
     return null
   }
@@ -20,6 +21,7 @@ export const ExpandableList = <T,>({ items, renderItem }: ExpandableListProps<T>
       <div className="w-full">
         <DataList
           className="text-sm"
+          renderHeader={renderHeader}
           list={items.slice(0, 2).map((item, index) => ({
             name: index + 1,
             value: renderItem(item)
@@ -42,9 +44,9 @@ export const ExpandableList = <T,>({ items, renderItem }: ExpandableListProps<T>
           </div>
           <PopoverContent align="end">
             <DataList
+              renderHeader={renderHeader}
               list={items.map((item, index) => ({
                 name: index + 1,
-                // Use the renderItem function to render the item
                 value: renderItem(item)
               }))}
             />

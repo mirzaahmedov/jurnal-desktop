@@ -1,11 +1,14 @@
 import type { ColumnDef } from '@/common/components'
-import type { MO7Prixod } from '@/common/models'
+import type { MaterialPrixod } from '@/common/models'
 
+// import { useTranslation } from 'react-i18next'
+
+// import { ExpandableList } from '@/common/components/table/renderers/expandable-list'
 import { IDCell } from '@/common/components/table/renderers/id'
 import { UserCell } from '@/common/components/table/renderers/user'
 import { formatLocaleDate, formatNumber } from '@/common/lib/format'
 
-export const prixodColumns: ColumnDef<MO7Prixod>[] = [
+export const prixodColumns: ColumnDef<MaterialPrixod>[] = [
   {
     sort: true,
     key: 'id',
@@ -44,6 +47,14 @@ export const prixodColumns: ColumnDef<MO7Prixod>[] = [
     key: 'summa',
     renderCell: (row) => <b className="font-black">{formatNumber(row.summa)}</b>
   },
+  // {
+  //   key: 'childs',
+  //   header: 'provodka',
+  //   minWidth: 560,
+  //   renderCell: (row) => {
+  //     return <ProvodkaCell row={row} />
+  //   }
+  // },
   {
     fill: true,
     minWidth: 350,
@@ -63,3 +74,39 @@ export const prixodColumns: ColumnDef<MO7Prixod>[] = [
     )
   }
 ]
+
+// interface ProvodkaCellProps {
+//   row: MaterialPrixod
+// }
+// const ProvodkaCell = ({ row }: ProvodkaCellProps) => {
+//   const { t } = useTranslation()
+//   return (
+//     <ExpandableList
+//       items={row.provodki_array}
+//       renderHeader={() => (
+//         <div className="w-full grid grid-cols-[repeat(4,1fr)] gap-2">
+//           <b className="text-xs">
+//             {t('debet')} {t('schet')}
+//           </b>
+//           <b className="text-xs">
+//             {t('debet')} {t('subschet')}
+//           </b>
+//           <b className="text-xs">
+//             {t('kredit')} {t('schet')}
+//           </b>
+//           <b className="text-xs">
+//             {t('kredit')} {t('subschet')}
+//           </b>
+//         </div>
+//       )}
+//       renderItem={(item) => (
+//         <div className="w-full grid grid-cols-[repeat(4,1fr)] gap-2">
+//           <span className="text-xs">{item.debet_schet}</span>
+//           <span className="text-xs">{item.debet_sub_schet}</span>
+//           <span className="text-xs">{item.kredit_schet}</span>
+//           <span className="text-xs">{item.kredit_sub_schet}</span>
+//         </div>
+//       )}
+//     />
+//   )
+// }
