@@ -84,6 +84,12 @@ export interface MaterialRasxod {
   podraz_name: string
   responsible: string
   childs: WarehouseRasxodProvodka[]
+  provodki_array: Array<{
+    debet_schet: string
+    debet_sub_schet: string
+    kredit_schet: string
+    kredit_sub_schet: string
+  }>
 }
 
 export interface WarehouseInternalProvodka {

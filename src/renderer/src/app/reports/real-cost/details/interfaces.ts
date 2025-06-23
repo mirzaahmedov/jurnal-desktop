@@ -2,7 +2,14 @@ import type { RealCostProvodka, RealCostShartnomaGrafik } from '@/common/models'
 
 type RealCostMonthGrafik = Pick<
   RealCostShartnomaGrafik,
-  'doc_num' | 'doc_date' | 'name' | 'rasxod_summa' | 'remaining_summa' | 'contract_grafik_summa'
+  | 'doc_num'
+  | 'doc_date'
+  | 'name'
+  | 'rasxod_summa'
+  | 'remaining_summa'
+  | 'contract_grafik_summa'
+  | 'organ_inn'
+  | 'organ_name'
 > & {
   grafik_id?: number
 }

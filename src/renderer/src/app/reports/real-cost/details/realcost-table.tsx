@@ -10,9 +10,10 @@ import {
   useRef
 } from 'react'
 
-import { useTranslation } from 'react-i18next'
+import { Trans, useTranslation } from 'react-i18next'
 
 import { NumericInput, type NumericInputProps } from '@/common/components'
+import { DataList } from '@/common/components/data-list'
 import {
   EditableTableCell,
   EditableTableHead,
@@ -21,6 +22,12 @@ import {
 import { EmptyList } from '@/common/components/empty-states'
 import { Input, type InputProps } from '@/common/components/ui/input'
 import { Table, TableBody, TableFooter, TableHeader } from '@/common/components/ui/table'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger
+} from '@/common/components/ui/tooltip'
 import { inputVariants } from '@/common/features/spravochnik'
 import { formatLocaleDate } from '@/common/lib/format'
 import { cn } from '@/common/lib/utils'
@@ -355,10 +362,37 @@ const Row = ({ index, row, rows, highlightedRow, onCellDoubleClick, ...props }: 
       )}
 
       <EditableTableCell style={{ width: 140 }}>
-        <TextEditor
-          value={row.doc_num ? `${row?.doc_num} / ${formatLocaleDate(row?.doc_date)}` : ''}
-          readOnly
-        />
+        {row.organ_inn ? (
+          <TooltipProvider>
+            <Tooltip delayDuration={200}>
+              <TooltipTrigger>
+                <TextEditor
+                  value={row.doc_num ? `${row?.doc_num} / ${formatLocaleDate(row?.doc_date)}` : ''}
+                  readOnly
+                />
+              </TooltipTrigger>
+              <TooltipContent className="bg-white text-slate-600 shadow-xl p-5">
+                <DataList
+                  list={[
+                    {
+                      name: <Trans>name</Trans>,
+                      value: row.organ_name
+                    },
+                    {
+                      name: <Trans>inn</Trans>,
+                      value: row.organ_inn
+                    }
+                  ]}
+                />
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        ) : (
+          <TextEditor
+            value={row.doc_num ? `${row?.doc_num} / ${formatLocaleDate(row?.doc_date)}` : ''}
+            readOnly
+          />
+        )}
       </EditableTableCell>
       <EditableTableCell style={{ width: 300 }}>
         <TextEditor
@@ -432,12 +466,45 @@ const Row = ({ index, row, rows, highlightedRow, onCellDoubleClick, ...props }: 
         </EditableTableCell>
       )}
       <EditableTableCell style={{ width: 140 }}>
-        <TextEditor
-          value={
-            row.doc_num_year ? `${row?.doc_num_year} / ${formatLocaleDate(row?.doc_date_year)}` : ''
-          }
-          readOnly
-        />
+        {row.organ_inn_year ? (
+          <TooltipProvider>
+            <Tooltip delayDuration={200}>
+              <TooltipTrigger>
+                <TextEditor
+                  value={
+                    row.doc_num_year
+                      ? `${row?.doc_num_year} / ${formatLocaleDate(row?.doc_date_year)}`
+                      : ''
+                  }
+                  readOnly
+                />
+              </TooltipTrigger>
+              <TooltipContent className="bg-white text-slate-600 shadow-xl p-5">
+                <DataList
+                  list={[
+                    {
+                      name: <Trans>name</Trans>,
+                      value: row.organ_name_year
+                    },
+                    {
+                      name: <Trans>inn</Trans>,
+                      value: row.organ_inn_year
+                    }
+                  ]}
+                />
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        ) : (
+          <TextEditor
+            value={
+              row.doc_num_year
+                ? `${row?.doc_num_year} / ${formatLocaleDate(row?.doc_date_year)}`
+                : ''
+            }
+            readOnly
+          />
+        )}
       </EditableTableCell>
       <EditableTableCell style={{ width: 300 }}>
         <TextEditor

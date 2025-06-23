@@ -52,6 +52,8 @@ export interface RealCostShartnomaGrafik {
   oy_11: string
   oy_12: string
   year: number
+  organ_inn: string
+  organ_name: string
   created_at: string
   updated_at: string
   isdeleted: boolean

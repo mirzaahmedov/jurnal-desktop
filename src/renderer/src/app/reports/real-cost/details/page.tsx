@@ -238,6 +238,10 @@ const RealCostDetailsPage = () => {
           contract_grafik_summa_year: row.by_year[i]?.contract_grafik_summa ?? 0,
           rasxod_summa_year: row.by_year[i]?.rasxod_summa ?? 0,
           remaining_summa_year: row.by_year[i]?.remaining_summa ?? 0,
+          organ_inn: row.by_month[i]?.organ_inn ?? '',
+          organ_name: row.by_month[i]?.organ_name ?? '',
+          organ_inn_year: row.by_year[i]?.organ_inn ?? '',
+          organ_name_year: row.by_year[i]?.organ_name ?? '',
           grafik_id: row.by_month[i]?.id,
           grafik_id_year: row.by_year[i]?.id
         })

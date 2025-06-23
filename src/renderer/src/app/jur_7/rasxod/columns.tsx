@@ -5,6 +5,8 @@ import { IDCell } from '@/common/components/table/renderers/id'
 import { UserCell } from '@/common/components/table/renderers/user'
 import { formatLocaleDate, formatNumber } from '@/common/lib/format'
 
+import { ExpandableProvodka } from '../__components__/expandable-provodka'
+
 export const rasxodColumns: ColumnDef<MaterialRasxod>[] = [
   {
     sort: true,
@@ -37,6 +39,14 @@ export const rasxodColumns: ColumnDef<MaterialRasxod>[] = [
     minWidth: 200,
     key: 'summa',
     renderCell: (row) => <b className="font-black">{formatNumber(row.summa)}</b>
+  },
+  {
+    key: 'childs',
+    header: 'provodka',
+    minWidth: 350,
+    renderCell: (row) => {
+      return <ExpandableProvodka row={row} />
+    }
   },
   {
     fill: true,
