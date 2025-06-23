@@ -6,6 +6,7 @@ import { type ColumnDef, Copyable } from '@/common/components'
 import { DataList } from '@/common/components/data-list'
 import { HoverInfoCell } from '@/common/components/table/renderers'
 import { ExpandableList } from '@/common/components/table/renderers/expandable-list'
+import { UserCell } from '@/common/components/table/renderers/user'
 import { Badge } from '@/common/components/ui/badge'
 import { formatLocaleDate, formatNumber } from '@/common/lib/format'
 
@@ -154,6 +155,12 @@ export const CommonWarehouseSaldoProductColumns: ColumnDef<SaldoProduct>[] = [
   },
   {
     numeric: true,
+    key: 'to.sena',
+    header: 'Конец Цена',
+    renderCell: (row) => formatNumber(row.to?.sena)
+  },
+  {
+    numeric: true,
     key: 'to.summa',
     header: 'Конец Сумма',
     renderCell: (row) => formatNumber(row.to?.summa)
@@ -204,6 +211,19 @@ export const CommonWarehouseSaldoProductColumns: ColumnDef<SaldoProduct>[] = [
             <Copyable value={prixod.docDate}>{formatLocaleDate(prixod.docDate)}</Copyable>
           </div>
         )}
+      />
+    )
+  },
+  {
+    fit: true,
+    key: 'user_id',
+    minWidth: 200,
+    header: 'created-by-user',
+    renderCell: (row) => (
+      <UserCell
+        id={row.user_id}
+        fio={row.fio}
+        login={row.login}
       />
     )
   }

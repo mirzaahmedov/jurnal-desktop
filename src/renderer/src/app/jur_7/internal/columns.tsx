@@ -2,6 +2,7 @@ import type { ColumnDef } from '@/common/components'
 import type { Internal } from '@/common/models'
 
 import { IDCell } from '@/common/components/table/renderers/id'
+import { UserCell } from '@/common/components/table/renderers/user'
 import { formatLocaleDate, formatNumber } from '@/common/lib/format'
 
 export const internalColumns: ColumnDef<Internal>[] = [
@@ -48,5 +49,18 @@ export const internalColumns: ColumnDef<Internal>[] = [
     fill: true,
     minWidth: 350,
     key: 'opisanie'
+  },
+  {
+    fit: true,
+    key: 'user_id',
+    minWidth: 200,
+    header: 'created-by-user',
+    renderCell: (row) => (
+      <UserCell
+        id={row.user_id}
+        fio={row.fio}
+        login={row.login}
+      />
+    )
   }
 ]

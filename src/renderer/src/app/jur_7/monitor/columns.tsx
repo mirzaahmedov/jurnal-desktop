@@ -4,6 +4,7 @@ import { Trans } from 'react-i18next'
 
 import { IDCell } from '@/common/components/table/renderers/id'
 import { SummaCell } from '@/common/components/table/renderers/summa'
+import { UserCell } from '@/common/components/table/renderers/user'
 import { Badge } from '@/common/components/ui/badge'
 import { formatLocaleDate } from '@/common/lib/format'
 import { cn } from '@/common/lib/utils'
@@ -117,5 +118,18 @@ export const columns: ColumnDef<WarehouseMonitoring>[] = [
     fill: true,
     minWidth: 350,
     key: 'opisanie'
+  },
+  {
+    fit: true,
+    key: 'user_id',
+    minWidth: 200,
+    header: 'created-by-user',
+    renderCell: (row) => (
+      <UserCell
+        id={row.user_id}
+        fio={row.fio}
+        login={row.login}
+      />
+    )
   }
 ]

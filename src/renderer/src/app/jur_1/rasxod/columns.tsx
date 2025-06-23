@@ -4,6 +4,7 @@ import type { KassaRasxod } from '@/common/models'
 import { IDCell } from '@/common/components/table/renderers/id'
 import { ProvodkaCell } from '@/common/components/table/renderers/provodka-operatsii'
 import { SummaCell } from '@/common/components/table/renderers/summa'
+import { UserCell } from '@/common/components/table/renderers/user'
 import { formatLocaleDate } from '@/common/lib/format'
 
 export const columns: ColumnDef<KassaRasxod>[] = [
@@ -48,5 +49,18 @@ export const columns: ColumnDef<KassaRasxod>[] = [
     minWidth: 350,
     key: 'spravochnik_podotchet_litso_name',
     header: 'podotchet-litso'
+  },
+  {
+    fit: true,
+    key: 'user_id',
+    minWidth: 200,
+    header: 'created-by-user',
+    renderCell: (row) => (
+      <UserCell
+        id={row.user_id}
+        fio={row.fio}
+        login={row.login}
+      />
+    )
   }
 ]

@@ -21,7 +21,7 @@ import { useDates, usePagination } from '@/common/hooks'
 import { useLayout } from '@/common/layout'
 import { ListView } from '@/common/views'
 
-import { WorkTripColumnDefs } from './column-defs'
+import { WorkTripColumnDefs } from './columns'
 import { WorkTripQueryKeys } from './config'
 import { WorkTripService } from './service'
 

@@ -1,8 +1,9 @@
-import { formatLocaleDate, formatNumber } from '@/common/lib/format'
-
 import type { ColumnDef } from '@/common/components'
-import { IDCell } from '@/common/components/table/renderers/id'
 import type { MaterialRasxod } from '@/common/models'
+
+import { IDCell } from '@/common/components/table/renderers/id'
+import { UserCell } from '@/common/components/table/renderers/user'
+import { formatLocaleDate, formatNumber } from '@/common/lib/format'
 
 export const rasxodColumns: ColumnDef<MaterialRasxod>[] = [
   {
@@ -41,5 +42,18 @@ export const rasxodColumns: ColumnDef<MaterialRasxod>[] = [
     fill: true,
     minWidth: 350,
     key: 'opisanie'
+  },
+  {
+    fit: true,
+    key: 'user_id',
+    minWidth: 200,
+    header: 'created-by-user',
+    renderCell: (row) => (
+      <UserCell
+        id={row.user_id}
+        fio={row.fio}
+        login={row.login}
+      />
+    )
   }
 ]

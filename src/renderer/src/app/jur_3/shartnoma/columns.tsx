@@ -6,6 +6,7 @@ import { type ColumnDef, Copyable } from '@/common/components'
 import { DataList } from '@/common/components/data-list'
 import { HoverInfoCell } from '@/common/components/table/renderers'
 import { IDCell } from '@/common/components/table/renderers/id'
+import { UserCell } from '@/common/components/table/renderers/user'
 import { formatLocaleDate, formatNumber } from '@/common/lib/format'
 
 const ShartnomaSmetaCell = (row: Shartnoma) => {
@@ -100,5 +101,18 @@ export const ShartnomaColumns: ColumnDef<Shartnoma>[] = [
     fill: true,
     minWidth: 350,
     key: 'opisanie'
+  },
+  {
+    fit: true,
+    key: 'user_id',
+    minWidth: 200,
+    header: 'created-by-user',
+    renderCell: (row) => (
+      <UserCell
+        id={row.user_id}
+        fio={row.fio}
+        login={row.login}
+      />
+    )
   }
 ]

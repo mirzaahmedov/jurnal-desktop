@@ -8,6 +8,7 @@ import { HoverInfoCell } from '@/common/components/table/renderers'
 import { IDCell } from '@/common/components/table/renderers/id'
 import { ProvodkaCell } from '@/common/components/table/renderers/provodka-operatsii'
 import { SummaCell } from '@/common/components/table/renderers/summa'
+import { UserCell } from '@/common/components/table/renderers/user'
 import { formatLocaleDate } from '@/common/lib/format'
 
 export const avansColumns: ColumnDef<Avans>[] = [
@@ -83,5 +84,18 @@ export const avansColumns: ColumnDef<Avans>[] = [
     fill: true,
     minWidth: 350,
     key: 'opisanie'
+  },
+  {
+    fit: true,
+    key: 'user_id',
+    minWidth: 200,
+    header: 'created-by-user',
+    renderCell: (row) => (
+      <UserCell
+        id={row.user_id}
+        fio={row.fio}
+        login={row.login}
+      />
+    )
   }
 ]

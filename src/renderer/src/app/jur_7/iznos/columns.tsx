@@ -8,6 +8,7 @@ import { HoverInfoCell } from '@/common/components/table/renderers'
 import { ExpandableList } from '@/common/components/table/renderers/expandable-list'
 import { IDCell } from '@/common/components/table/renderers/id'
 import { SummaCell } from '@/common/components/table/renderers/summa'
+import { UserCell } from '@/common/components/table/renderers/user'
 import { getMonthName } from '@/common/lib/date'
 import { formatLocaleDate, formatNumber } from '@/common/lib/format'
 
@@ -183,6 +184,19 @@ export const IznosColumns: ColumnDef<SaldoProduct>[] = [
             <Copyable value={prixod.docDate}>{formatLocaleDate(prixod.docDate)}</Copyable>
           </div>
         )}
+      />
+    )
+  },
+  {
+    fit: true,
+    key: 'user_id',
+    minWidth: 200,
+    header: 'created-by-user',
+    renderCell: (row) => (
+      <UserCell
+        id={row.user_id}
+        fio={row.fio}
+        login={row.login}
       />
     )
   }
