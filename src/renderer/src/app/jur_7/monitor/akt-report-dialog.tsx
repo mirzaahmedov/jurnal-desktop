@@ -13,8 +13,7 @@ import {
   DialogHeader,
   DialogTitle
 } from '@/common/components/ui/dialog'
-import { Form, FormField } from '@/common/components/ui/form'
-import { Textarea } from '@/common/components/ui/textarea'
+import { Form } from '@/common/components/ui/form'
 import { DownloadFile } from '@/common/features/file'
 import { SpravochnikInput, useSpravochnik } from '@/common/features/spravochnik'
 
@@ -74,45 +73,6 @@ export const AktReportDialog = ({
             onSubmit={form.handleSubmit(() => {})}
             className="space-y-4"
           >
-            <FormField
-              control={form.control}
-              name="title"
-              render={({ field }) => (
-                <FormElement
-                  direction="column"
-                  label={t('title')}
-                >
-                  <Textarea
-                    ref={field.ref}
-                    onBlur={field.onBlur}
-                    value={field.value}
-                    onChange={field.onChange}
-                    rows={10}
-                    className="scrollbar"
-                  />
-                </FormElement>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="comment"
-              render={({ field }) => (
-                <FormElement
-                  direction="column"
-                  label={t('comment')}
-                >
-                  <Textarea
-                    ref={field.ref}
-                    onBlur={field.onBlur}
-                    value={field.value}
-                    onChange={field.onChange}
-                    rows={5}
-                    className="scrollbar"
-                  />
-                </FormElement>
-              )}
-            />
-
             <FormElement
               direction="column"
               label={t('responsible')}
@@ -131,6 +91,7 @@ export const AktReportDialog = ({
                 url={`/jur_7/monitoring/act/report`}
                 fileName={`${t('akt')} ${t('report').toLowerCase()}.xlsx`}
                 buttonText={`${t('akt')} ${t('report').toLowerCase()}`}
+                isDisabled={!form.watch('responsible_id')}
                 params={{
                   to,
                   year,
@@ -138,11 +99,8 @@ export const AktReportDialog = ({
                   budjet_id,
                   main_schet_id,
                   excel: true,
-                  responsible_id: form.watch('responsible_id'),
-                  title: form.watch('title'),
-                  comment: form.watch('comment')
+                  responsible_id: form.watch('responsible_id')
                 }}
-                isDisabled={!form.watch('title').trim() || !form.watch('comment').trim()}
                 variant="default"
               />
             </DialogFooter>
@@ -154,13 +112,9 @@ export const AktReportDialog = ({
 }
 
 const AktReportFormSchema = z.object({
-  title: z.string().nonempty(),
-  comment: z.string().nonempty(),
   responsible_id: z.number().min(0)
 })
 
 const defaultValues = {
-  title: '',
-  comment: '',
   responsible_id: 0
 }

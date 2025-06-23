@@ -108,7 +108,7 @@ export const MaterialMonitorPage = () => {
 
         <ButtonGroup
           borderStyle="dashed"
-          className="max-w-4xl text-end"
+          className="max-w-3xl text-end"
         >
           <Button
             variant="ghost"
