@@ -180,10 +180,6 @@ export const WorkTripDetails = ({ id }: WorkTripDetailsProps) => {
 
   const distanceKM = distance?.data?.[0]?.distance_km ?? 0
   const minimumWageSumma = minimumWage?.data?.summa ?? 0
-  const workDaysCount = getWeekdaysBetween({
-    startDate: new Date(form.watch('from_date')),
-    endDate: new Date(form.watch('to_date'))
-  })
   const allDaysCount = getWeekdaysBetween({
     startDate: new Date(form.watch('from_date')),
     endDate: new Date(form.watch('to_date')),
@@ -295,30 +291,42 @@ export const WorkTripDetails = ({ id }: WorkTripDetailsProps) => {
                       <FormElement
                         label={t('summa')}
                         direction="row"
-                        description={`[${t('pages.bhm').toLowerCase()}] * 0.1 * [${t('workdays').toLowerCase()}]`}
+                        divProps={{
+                          className: 'items-start'
+                        }}
                       >
-                        <NumericInput
-                          readOnly
-                          value={field.value}
-                          onValueChange={(values) => {
-                            field.onChange(values.floatValue)
-                            form.setValue(
-                              'childs',
-                              form.getValues('childs').map((child) =>
-                                child.type === 'day'
-                                  ? {
-                                      ...child,
-                                      summa: values.floatValue ?? 0
-                                    }
-                                  : child
+                        <div>
+                          <NumericInput
+                            readOnly
+                            value={field.value}
+                            onValueChange={(values) => {
+                              field.onChange(values.floatValue)
+                              form.setValue(
+                                'childs',
+                                form.getValues('childs').map((child) =>
+                                  child.type === 'day'
+                                    ? {
+                                        ...child,
+                                        summa: values.floatValue ?? 0
+                                      }
+                                    : child
+                                )
                               )
-                            )
-                          }}
-                        />
+                            }}
+                          />
+                          <div className="text-xs font-semibold text-slate-500 mt-2 flex flex-col items-end gap-1">
+                            <p>
+                              [{t('pages.bhm').toLowerCase()}] * 0.1 * [{t('days').toLowerCase()}]
+                            </p>
+                            <p>
+                              {formatNumber(minimumWageSumma)} * 0.1 * {allDaysCount}
+                            </p>
+                          </div>
+                        </div>
                       </FormElement>
                     )}
                   />
-                  <div className="grid grid-cols-2 gap-5">
+                  <div>
                     <FormElement
                       label={t('days')}
                       direction="column"
@@ -326,15 +334,6 @@ export const WorkTripDetails = ({ id }: WorkTripDetailsProps) => {
                       <Input
                         readOnly
                         value={allDaysCount}
-                      />
-                    </FormElement>
-                    <FormElement
-                      label={t('workdays')}
-                      direction="column"
-                    >
-                      <Input
-                        readOnly
-                        value={workDaysCount}
                       />
                     </FormElement>
                   </div>
@@ -430,32 +429,41 @@ export const WorkTripDetails = ({ id }: WorkTripDetailsProps) => {
                             divProps={{
                               className: 'gap-3'
                             }}
-                            description={
-                              form.watch('road_ticket_number')
-                                ? ''
-                                : `[${t('pages.bhm').toLowerCase()}] * 0.001 * [${t('distance').toLowerCase()}]`
-                            }
                           >
-                            <div className="flex items-center gap-1">
-                              <NumericInput
-                                disabled={isFetchingDistance || isFetchingMinimumWage}
-                                readOnly={!form.watch('road_ticket_number')}
-                                value={field.value}
-                                onValueChange={(values) => {
-                                  field.onChange(values.floatValue)
-                                  form.setValue(
-                                    'childs',
-                                    form.getValues('childs').map((child) =>
-                                      child.type === 'road'
-                                        ? {
-                                            ...child,
-                                            summa: values.floatValue ?? 0
-                                          }
-                                        : child
+                            <div className="flex items-start gap-5">
+                              <div className="flex-1 max-w-md">
+                                <NumericInput
+                                  disabled={isFetchingDistance || isFetchingMinimumWage}
+                                  readOnly={!form.watch('road_ticket_number')}
+                                  value={field.value}
+                                  onValueChange={(values) => {
+                                    field.onChange(values.floatValue)
+                                    form.setValue(
+                                      'childs',
+                                      form.getValues('childs').map((child) =>
+                                        child.type === 'road'
+                                          ? {
+                                              ...child,
+                                              summa: values.floatValue ?? 0
+                                            }
+                                          : child
+                                      )
                                     )
-                                  )
-                                }}
-                              />
+                                  }}
+                                />
+                                {!form.watch('road_ticket_number') ? (
+                                  <div className="text-xs font-semibold text-slate-500 mt-2 flex flex-col items-end gap-1">
+                                    <p>
+                                      [{t('pages.bhm').toLowerCase()}] * 0.001 * [
+                                      {t('distance').toLowerCase()}]
+                                    </p>
+                                    <p>
+                                      {formatNumber(minimumWageSumma)} * 0.001 * {distanceKM}
+                                    </p>
+                                  </div>
+                                ) : null}
+                              </div>
+
                               {isFetchingDistance || isFetchingMinimumWage ? (
                                 <Spinner />
                               ) : !form.watch('road_ticket_number') ? (
