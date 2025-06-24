@@ -408,5 +408,7 @@
   "subchapter": "Kichik bo'lim",
   "chapter": "Bob",
   "payment_date": "To'lov sanasi",
-  "payment_percent": "To'lov foizi"
+  "payment_percent": "To'lov foizi",
+  "sort_asc": "Saralash O'sish bo'yicha",
+  "sort_desc": "Saralash Kamayish bo'yicha"
 }

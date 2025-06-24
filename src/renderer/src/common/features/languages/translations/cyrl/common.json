@@ -408,5 +408,7 @@
   "subchapter": "Кичик бўлим",
   "chapter": "Боб",
   "payment_date": "Тўлов санаси",
-  "payment_percent": "Тўлов фоизи"
+  "payment_percent": "Тўлов фоизи",
+  "sort_asc": "Саралаш Ўсиш бўйича",
+  "sort_desc": "Саралаш Камайиш бўйича"
 }

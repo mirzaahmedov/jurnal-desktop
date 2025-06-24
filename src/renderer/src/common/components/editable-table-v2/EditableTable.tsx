@@ -13,7 +13,8 @@ import {
   useState
 } from 'react'
 
-import { Copy, Trash } from 'lucide-react'
+import { t } from 'i18next'
+import { ArrowDown01, ArrowDown10, Copy, Ellipsis, Filter, Plus, Trash2 } from 'lucide-react'
 import {
   Controller,
   type FieldErrors,
@@ -22,12 +23,14 @@ import {
   type UseFormReturn,
   useFieldArray
 } from 'react-hook-form'
-import { Trans } from 'react-i18next'
+import { Trans, useTranslation } from 'react-i18next'
 import { FixedSizeList } from 'react-window'
 
 import { AutoSizer } from '@/common/components/auto-sizer'
+import { Menu, MenuItem, MenuPopover, MenuTrigger } from '@/common/components/jolly/menu'
 import { cn } from '@/common/lib/utils'
 
+import { Button } from '../jolly/button'
 import { getLeafColumns, getMaximumColumnDepth, handleStickyColumns } from './utils'
 
 export type ArrayPath<T extends object> = {
@@ -72,6 +75,7 @@ export const EditableTable = memo(
     const [filtering, setFiltering] = useState<
       Partial<Record<keyof GetFieldType<TForm, TName>, string>>
     >({})
+    const [isFilterVisible, setFilterVisible] = useState(false)
 
     const {
       fields: rows,
@@ -103,7 +107,7 @@ export const EditableTable = memo(
       }
     }))
 
-    const triggerSort = (
+    const handleTriggerSort = (
       column: ColumnDef<GetFieldType<TForm, TName>>,
       direction: SortDirection
     ) => {
@@ -133,11 +137,26 @@ export const EditableTable = memo(
       }
     }
 
+    const handleToggleFilter = () => {
+      setFilterVisible((prev) => {
+        const newValue = !prev
+        if (!newValue) {
+          setFiltering({})
+        }
+        return newValue
+      })
+    }
+
     const handleFilter = (column: string, value: string) => {
       setFiltering((prev) => ({
         ...prev,
         [column]: value
       }))
+    }
+
+    const handleAppendRow = () => {
+      appendRow(defaultValues)
+      listRef.current?.scrollToItem(rows.length, 'smart')
     }
 
     const getRowValuesByIndex = (index: number) => {
@@ -215,7 +234,7 @@ export const EditableTable = memo(
     return (
       <div
         ref={ref}
-        className="divide-y w-full h-full flex flex-col text-sm"
+        className="divide-y border-y w-full h-full overflow-hidden flex flex-col text-sm"
       >
         <div
           onScroll={(e) => {
@@ -227,12 +246,12 @@ export const EditableTable = memo(
               handleStickyColumns(ref)
             }
           }}
-          className="flex-1 w-full overflow-x-auto scrollbar whitespace-nowrap"
+          className="flex-1 min-h-0 w-full overflow-x-auto overflow-y-hidden scrollbar whitespace-nowrap"
         >
           <div className="h-full w-full min-w-min flex flex-col">
             <div
               className="grid bg-gray-100 text-gray-700 border-b border-gray-300 shadow-sm"
-              style={{ gridTemplateColumns }}
+              style={{ gridTemplateColumns, paddingRight: 11 }}
             >
               <Header
                 style={{
@@ -254,8 +273,9 @@ export const EditableTable = memo(
                       .slice(0, index)
                       .reduce((acc, c) => acc + getLeafColumns([c]).length, 1) + 1
                   }
+                  isFilterVisible={isFilterVisible}
                   onFilter={handleFilter}
-                  onSort={triggerSort}
+                  onSort={handleTriggerSort}
                   filtering={filtering}
                 />
               ))}
@@ -269,13 +289,33 @@ export const EditableTable = memo(
                 data-sticky={true}
                 data-right={0}
                 className="z-50"
-              />
+              >
+                <div className="h-full py-2 mx-auto">
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    onClick={handleToggleFilter}
+                    className={cn(
+                      'mx-auto group transition-colors',
+                      isFilterVisible ? 'bg-brand/5 hover:!bg-brand/5' : ''
+                    )}
+                  >
+                    <Filter
+                      className={cn(
+                        'size-5 font-bold group-hover:text-brand transition-colors',
+                        isFilterVisible ? 'text-brand' : ''
+                      )}
+                    />
+                  </Button>
+                </div>
+              </Header>
             </div>
             <AutoSizer>
               {({ height, ref: bodyRef }) => (
                 <div
                   ref={bodyRef}
-                  className="flex-1 w-full"
+                  id="et-body"
+                  className="flex-1 w-full overflow-hidden"
                 >
                   <FixedSizeList
                     ref={listRef}
@@ -286,6 +326,7 @@ export const EditableTable = memo(
                     height={height}
                     style={{
                       overflowX: 'hidden',
+                      overflowY: 'scroll',
                       width: 'auto'
                     }}
                     className="scrollbar"
@@ -404,17 +445,12 @@ export const EditableTable = memo(
                             data-right={0}
                             className="z-50"
                           >
-                            <div className="px-2 flex items-center gap-2">
-                              <button
+                            <div className="px-2 h-full flex items-center gap-0.5">
+                              <Button
                                 type="button"
-                                onClick={() => {
-                                  removeRow(rowIndex)
-                                }}
-                              >
-                                <Trash className="btn-icon text-red-500" />
-                              </button>
-                              <button
-                                type="button"
+                                size="icon"
+                                variant="ghost"
+                                className="size-7"
                                 onClick={() => {
                                   insertRow(
                                     rowIndex,
@@ -422,8 +458,19 @@ export const EditableTable = memo(
                                   )
                                 }}
                               >
-                                <Copy className="btn-icon" />
-                              </button>
+                                <Copy className="btn-icon text-gray-700" />
+                              </Button>
+                              <Button
+                                type="button"
+                                size="icon"
+                                variant="ghost"
+                                className="size-7"
+                                onClick={() => {
+                                  removeRow(rowIndex)
+                                }}
+                              >
+                                <Trash2 className="btn-icon text-red-500" />
+                              </Button>
                             </div>
                           </Cell>
                         </Row>
@@ -436,13 +483,14 @@ export const EditableTable = memo(
           </div>
         </div>
         <div>
-          <button
+          <Button
             type="button"
-            onClick={() => appendRow(defaultValues)}
-            className="w-full"
+            variant="ghost"
+            onClick={handleAppendRow}
+            className="w-full rounded-none font-semibold"
           >
-            add +
-          </button>
+            <Plus className="btn-icon icon-start" /> {t('add')}
+          </Button>
         </div>
       </div>
     )
@@ -457,6 +505,7 @@ interface HeaderCellProps<T extends object> {
   minSize?: number
   maxDepth: number
   startCol: number
+  isFilterVisible: boolean
   filtering: Partial<Record<keyof T, string>>
   onSort: (column: ColumnDef<T>, direction: SortDirection) => void
   onFilter: (column: keyof T & string, value: string) => void
@@ -466,10 +515,13 @@ const HeaderCell = <T extends object>({
   maxDepth,
   depth,
   startCol,
+  isFilterVisible,
   filtering,
   onSort,
   onFilter
 }: HeaderCellProps<T>) => {
+  const { t } = useTranslation()
+
   const leafCount = column.columns ? getLeafColumns(column.columns).length : 1
   const colSpan = leafCount
   const rowSpan = column.columns ? 1 : maxDepth - depth + 1
@@ -487,19 +539,55 @@ const HeaderCell = <T extends object>({
           minWidth: column.minSize
         }}
       >
-        <div className="flex flex-row items-center justify-between">
-          {typeof column.header === 'function' ? column.header() : <Trans>{column.header}</Trans>}
-          {column.sort ? <div>Sort content</div> : null}
-        </div>
-        {column.filter ? (
-          <div>
-            <input
-              type="text"
-              value={filtering[column.key] ?? ''}
-              onChange={(e) => onFilter(column.key, e.target.value)}
-            />
+        <div className="w-full">
+          <div className="w-full flex flex-row items-center justify-between gap-2">
+            <div className="flex-1">
+              {typeof column.header === 'function' ? (
+                column.header()
+              ) : (
+                <Trans>{column.header}</Trans>
+              )}
+            </div>
+            {column.sort ? (
+              <MenuTrigger>
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  className="p-1"
+                >
+                  <Ellipsis className="btn-icon" />
+                </Button>
+                <MenuPopover>
+                  <Menu>
+                    <MenuItem
+                      onAction={() => onSort(column, 'asc')}
+                      className="cursor-pointer"
+                    >
+                      <ArrowDown01 className="btn-icon text-gray-700" /> {t('sort_asc')}
+                    </MenuItem>
+                    <MenuItem
+                      onAction={() => onSort(column, 'desc')}
+                      className="cursor-pointer"
+                    >
+                      <ArrowDown10 className="btn-icon text-gray-700" />
+                      {t('sort_desc')}
+                    </MenuItem>
+                  </Menu>
+                </MenuPopover>
+              </MenuTrigger>
+            ) : null}
           </div>
-        ) : null}
+          {column.filter && isFilterVisible ? (
+            <div className="w-full">
+              <input
+                type="text"
+                value={filtering[column.key] ?? ''}
+                onChange={(e) => onFilter(column.key, e.target.value)}
+                className="p-1 w-full text-base outline-brand font-normal"
+              />
+            </div>
+          ) : null}
+        </div>
       </Header>
       {
         column.columns?.reduce(
@@ -512,6 +600,7 @@ const HeaderCell = <T extends object>({
                 depth={depth + 1}
                 maxDepth={maxDepth}
                 startCol={childStart}
+                isFilterVisible={isFilterVisible}
                 filtering={filtering}
                 onSort={onSort}
                 onFilter={onFilter}

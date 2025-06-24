@@ -66,6 +66,8 @@ const columnDefs: ColumnDef<User>[] = [
   {
     key: 'name',
     header: () => <NameCell />,
+    sort: true,
+    filter: true,
     minSize: 200,
     render: ({ value, error, onChange }) => (
       <Input
@@ -79,6 +81,8 @@ const columnDefs: ColumnDef<User>[] = [
     key: 'age',
     header: 'Age',
     minSize: 200,
+    sort: true,
+    filter: true,
     render: ({ value, error, onChange }) => (
       <Input
         value={value}
@@ -142,13 +146,12 @@ const EditableTableDemo = () => {
   })
 
   return (
-    <form
-      onSubmit={form.handleSubmit((values) => console.log('submitted', values))}
-      className="flex-1 w-full flex flex-col"
-    >
-      <div className="flex-1 flex">
-        {/* <Sidebar /> */}
-        <div className="flex-1 overflow-hidden">
+    <div className="flex-1 w-full min-h-0 ">
+      <form
+        onSubmit={form.handleSubmit((values) => console.log('submitted', values))}
+        className="h-full flex flex-col"
+      >
+        <div className="h-full overflow-hidden">
           <EditableTable
             form={form}
             name="users"
@@ -158,11 +161,11 @@ const EditableTableDemo = () => {
             defaultValues={defaultValues}
           />
         </div>
-      </div>
-      <div>
-        <button type="submit">Submit</button>
-      </div>
-    </form>
+        <div>
+          <button type="submit">Submit</button>
+        </div>
+      </form>
+    </div>
   )
 }
 

@@ -409,5 +409,7 @@
   "subchapter": "Подглава",
   "chapter": "Глава",
   "payment_date": "Дата оплаты",
-  "payment_percent": "Процент оплаты"
+  "payment_percent": "Процент оплаты",
+  "sort_asc": "Сортировать по возрастанию",
+  "sort_desc": "Сортировать по убыванию"
 }
