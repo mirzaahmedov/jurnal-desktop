@@ -106,9 +106,7 @@ export const transformMainbookAutoFillDataToSave = (
 export const getMainbookColumns = (types: MainbookType[], isEditable = false) => {
   return (
     types?.flatMap((type) => {
-      const jurNum = type.name.startsWith('jur')
-        ? (type.name.match(/\d+/)?.[0] ?? undefined)
-        : undefined
+      const jurNum = type.name.startsWith('jur') ? type.name.replace('jur', '') : undefined
       const readOnly = isEditable && type.id === 10 ? false : true
       return [
         {
