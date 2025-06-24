@@ -24,21 +24,22 @@ export interface BaseColumnDef<TRow extends object> {
   maxSize?: number
 }
 
+export interface RenderProps<TRow extends object> {
+  inputRef: Ref<HTMLInputElement>
+  rowIndex: number
+  value: unknown
+  error?: FieldError
+  rowErrors: FieldErrors<TRow>
+  form: UseFormReturn<any>
+  column: ColumnDef<TRow>
+  onChange: (value: unknown) => void
+  rowValues: TRow
+  setRowValues: (values: TRow, options?: SetValueConfig) => void
+  setRowFieldValue: (fieldName: keyof TRow & string, value: any, options?: SetValueConfig) => void
+}
 export interface LeafColumnDef<TRow extends object> extends BaseColumnDef<TRow> {
   columns?: never
-  render: (props: {
-    inputRef: Ref<HTMLInputElement>
-    rowIndex: number
-    value: unknown
-    error?: FieldError
-    rowErrors: FieldErrors<TRow>
-    form: UseFormReturn<any>
-    column: ColumnDef<TRow>
-    onChange: (value: unknown) => void
-    getRowValues: () => TRow
-    setRowValues: (values: TRow, options?: SetValueConfig) => void
-    setRowFieldValue: (fieldName: keyof TRow & string, value: any, options?: SetValueConfig) => void
-  }) => ReactNode
+  render: (props: RenderProps<TRow>) => ReactNode
 }
 
 export interface GroupColumnDef<TRow extends object> extends BaseColumnDef<TRow> {

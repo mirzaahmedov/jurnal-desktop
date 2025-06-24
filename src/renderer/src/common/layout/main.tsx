@@ -1,7 +1,7 @@
 import { Suspense } from 'react'
 
 import { ErrorBoundary } from 'react-error-boundary'
-import { Outlet } from 'react-router-dom'
+import { Outlet, useNavigate } from 'react-router-dom'
 
 import { KassaSaldoUpdateManager } from '@/app/jur_1/saldo/components/saldo-update-manager'
 import { BankSaldoUpdateManager } from '@/app/jur_2/saldo/components/saldo-update-manager'
@@ -15,11 +15,23 @@ import { AuthGuard } from '@/common/features/auth'
 import { ConstantsProvider } from '@/common/features/constants/provider'
 import { SpravochnikProvider } from '@/common/features/spravochnik'
 
+import { useKeyUp } from '../hooks'
 import { Footer } from './compoonents/footer'
 import { Header } from './compoonents/header'
 import { Sidebar } from './compoonents/sidebar/sidebar'
 
 const MainLayout = () => {
+  const navigate = useNavigate()
+
+  useKeyUp({
+    key: 'D',
+    ctrlKey: true,
+    shiftKey: true,
+    handler: () => {
+      navigate('/demo')
+    }
+  })
+
   return (
     <div className="h-full flex">
       <Sidebar />

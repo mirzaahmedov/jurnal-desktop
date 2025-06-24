@@ -10,6 +10,7 @@ import {
   type ListBoxProps as AriaListBoxProps,
   type PopoverProps as AriaPopoverProps,
   type ValidationResult as AriaValidationResult,
+  type GroupProps,
   Text,
   composeRenderProps
 } from 'react-aria-components'
@@ -78,6 +79,7 @@ interface JollyComboBoxProps<T extends object> extends Omit<AriaComboBoxProps<T>
   description?: string | null
   errorMessage?: string | ((validation: AriaValidationResult) => string)
   inputProps?: Omit<AriaInputProps, 'children'>
+  groupProps?: GroupProps
   popoverProps?: Omit<AriaPopoverProps, 'children'>
   tabIndex?: number
   children: React.ReactNode | ((item: T) => React.ReactNode)
@@ -89,6 +91,7 @@ function JollyComboBox<T extends object>({
   placeholder,
   errorMessage,
   className,
+  groupProps,
   inputProps,
   popoverProps,
   children,
@@ -103,7 +106,10 @@ function JollyComboBox<T extends object>({
       {...props}
     >
       <Label>{label}</Label>
-      <FieldGroup className="p-0">
+      <FieldGroup
+        {...groupProps}
+        className={cn('p-0', groupProps?.className)}
+      >
         <ComboboxInput
           placeholder={placeholder}
           tabIndex={tabIndex}
@@ -136,6 +142,7 @@ function JollyComboBox<T extends object>({
               <EmptyList />
             </div>
           )}
+          className="h-full"
         >
           {children}
         </ComboboxListBox>

@@ -649,7 +649,7 @@ export const routes: RouteObject[] = [
       },
       {
         path: 'demo',
-        element: import.meta.env.DEV ? <DemoPage /> : null
+        element: <DemoPage />
       },
       {
         path: '*',

@@ -605,7 +605,7 @@ export const getNavElements = (t: TFunction): NavElement[] => {
       title: t('pages.region-data'),
       icon: Database
     },
-    import.meta.env.DEV
+    import.meta.env.DEV || import.meta.env.DEMO
       ? {
           path: '/demo',
           title: 'Demo',

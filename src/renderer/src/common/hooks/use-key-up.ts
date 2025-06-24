@@ -5,18 +5,30 @@ import { useEventCallback } from './use-event-callback'
 export interface UseKeyUpParams {
   key: string
   ctrlKey?: boolean
+  altKey?: boolean
+  shiftKey?: boolean
+  metaKey?: boolean
   handler: (e: KeyboardEvent) => void
 }
-export const useKeyUp = ({ key, ctrlKey, handler: handler }: UseKeyUpParams) => {
+export const useKeyUp = ({
+  key,
+  ctrlKey,
+  altKey,
+  shiftKey,
+  metaKey,
+  handler: handler
+}: UseKeyUpParams) => {
   const handlerCallback = useEventCallback(handler)
 
   useEffect(() => {
     const handleKeyUp = (e: KeyboardEvent) => {
-      if (typeof ctrlKey === 'boolean' && e.ctrlKey !== ctrlKey) {
-        return
-      }
-
-      if (e.key === key) {
+      if (
+        e.key === key &&
+        (ctrlKey === undefined || e.ctrlKey === ctrlKey) &&
+        (altKey === undefined || e.altKey === altKey) &&
+        (shiftKey === undefined || e.shiftKey === shiftKey) &&
+        (metaKey === undefined || e.metaKey === metaKey)
+      ) {
         handlerCallback(e)
       }
     }
@@ -26,5 +38,5 @@ export const useKeyUp = ({ key, ctrlKey, handler: handler }: UseKeyUpParams) => 
     return () => {
       document.removeEventListener('keyup', handleKeyUp)
     }
-  }, [key, ctrlKey, handlerCallback])
+  }, [key, ctrlKey, altKey, shiftKey, metaKey, handlerCallback])
 }

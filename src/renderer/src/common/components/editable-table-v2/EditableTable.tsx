@@ -1,6 +1,7 @@
-import type { ColumnDef, SortDirection } from './types'
+import type { ColumnDef, LeafColumnDef, SortDirection } from './types'
 
 import {
+  CSSProperties,
   type InputHTMLAttributes,
   type ReactNode,
   type Ref,
@@ -21,7 +22,8 @@ import {
   type FieldValues,
   type SetValueConfig,
   type UseFormReturn,
-  useFieldArray
+  useFieldArray,
+  useWatch
 } from 'react-hook-form'
 import { Trans, useTranslation } from 'react-i18next'
 import { FixedSizeList } from 'react-window'
@@ -30,6 +32,7 @@ import { AutoSizer } from '@/common/components/auto-sizer'
 import { Menu, MenuItem, MenuPopover, MenuTrigger } from '@/common/components/jolly/menu'
 import { cn } from '@/common/lib/utils'
 
+import { Debouncer } from '../debouncer'
 import { Button } from '../jolly/button'
 import { getLeafColumns, getMaximumColumnDepth, handleStickyColumns } from './utils'
 
@@ -160,7 +163,7 @@ export const EditableTable = memo(
     }
 
     const getRowValuesByIndex = (index: number) => {
-      return form.getValues(`${String(name)}.${index}` as any) as GetFieldType<TForm, TName>
+      return form.watch(`${String(name)}.${index}` as any) as GetFieldType<TForm, TName>
     }
     const setRowValuesByIndex = (
       index: number,
@@ -250,8 +253,8 @@ export const EditableTable = memo(
         >
           <div className="h-full w-full min-w-min flex flex-col">
             <div
-              className="grid bg-gray-100 text-gray-700 border-b border-gray-300 shadow-sm"
-              style={{ gridTemplateColumns, paddingRight: 11 }}
+              className="grid bg-gray-100 text-gray-700 border-b border-gray-300 shadow-sm overflow-y-scroll scrollbar"
+              style={{ gridTemplateColumns }}
             >
               <Header
                 style={{
@@ -353,127 +356,20 @@ export const EditableTable = memo(
                     }}
                   >
                     {({ index, style }) => {
-                      const rowIndex = filteredIndexes[index]
-                      const rowField = rows[rowIndex]
                       return (
-                        <Row
-                          key={rowField.id}
-                          data-rowindex={rowIndex}
-                          className="grid focus-visible:bg-blue-200 focus-within:bg-gray-100"
-                          style={{
-                            ...style,
-                            width: '100%',
-                            gridTemplateColumns
-                          }}
-                        >
-                          <Cell
-                            data-sticky={true}
-                            data-left={0}
-                            className="z-50 px-1.5 flex items-center justify-center"
-                          >
-                            {rowIndex + 1}
-                          </Cell>
-                          {leafColumnDefs.map((column) => (
-                            <Cell
-                              key={column.key}
-                              data-colkey={column.key}
-                              data-sticky={column.sticky ? true : undefined}
-                              data-left={column.left !== undefined ? column.left : undefined}
-                              data-right={column.right !== undefined ? column.right : undefined}
-                            >
-                              <Controller
-                                name={`${String(name)}.${rowIndex}.${column.key}` as any}
-                                control={form.control}
-                                render={({ field, fieldState, formState }) => {
-                                  const rowErrors = formState.errors[
-                                    `${String(name)}.${rowIndex}` as any
-                                  ] as FieldErrors<GetFieldType<TForm, TName>>
-
-                                  const getRowValues = () => {
-                                    return form.watch(
-                                      `${String(name)}.${rowIndex}` as any
-                                    ) as GetFieldType<TForm, TName>
-                                  }
-                                  const setRowValues = (
-                                    values: GetFieldType<TForm, TName>,
-                                    options?: SetValueConfig
-                                  ) => {
-                                    setRowValuesByIndex(rowIndex, values, options)
-                                  }
-                                  const setRowFieldValue = (
-                                    fieldName: keyof GetFieldType<TForm, TName> & string,
-                                    value: any,
-                                    options?: SetValueConfig
-                                  ) => {
-                                    form.setValue(
-                                      `${String(name)}.${rowIndex}.${fieldName}` as any,
-                                      value,
-                                      Object.assign(
-                                        {
-                                          shouldDirty: true,
-                                          shouldTouch: true,
-                                          shouldValidate: true
-                                        },
-                                        options
-                                      )
-                                    )
-                                  }
-
-                                  return (
-                                    <div style={{ height: 30 }}>
-                                      {column.render({
-                                        rowIndex,
-                                        inputRef: field.ref,
-                                        form,
-                                        value: field.value,
-                                        error: fieldState.error,
-                                        rowErrors,
-                                        column,
-                                        getRowValues,
-                                        setRowValues,
-                                        setRowFieldValue,
-                                        onChange: field.onChange
-                                      })}
-                                    </div>
-                                  )
-                                }}
-                              />
-                            </Cell>
-                          ))}
-                          <Cell
-                            data-sticky={true}
-                            data-right={0}
-                            className="z-50"
-                          >
-                            <div className="px-2 h-full flex items-center gap-0.5">
-                              <Button
-                                type="button"
-                                size="icon"
-                                variant="ghost"
-                                className="size-7"
-                                onClick={() => {
-                                  insertRow(
-                                    rowIndex,
-                                    form.getValues(`${String(name)}.${rowIndex}` as any)
-                                  )
-                                }}
-                              >
-                                <Copy className="btn-icon text-gray-700" />
-                              </Button>
-                              <Button
-                                type="button"
-                                size="icon"
-                                variant="ghost"
-                                className="size-7"
-                                onClick={() => {
-                                  removeRow(rowIndex)
-                                }}
-                              >
-                                <Trash2 className="btn-icon text-red-500" />
-                              </Button>
-                            </div>
-                          </Cell>
-                        </Row>
+                        <RowRenderer
+                          index={index}
+                          style={style}
+                          filteredIndexes={filteredIndexes}
+                          rows={rows}
+                          gridTemplateColumns={gridTemplateColumns}
+                          leafColumnDefs={leafColumnDefs}
+                          form={form}
+                          name={name}
+                          setRowValuesByIndex={setRowValuesByIndex}
+                          insertRow={insertRow}
+                          removeRow={removeRow}
+                        />
                       )
                     }}
                   </FixedSizeList>
@@ -579,12 +475,19 @@ const HeaderCell = <T extends object>({
           </div>
           {column.filter && isFilterVisible ? (
             <div className="w-full">
-              <input
-                type="text"
+              <Debouncer
                 value={filtering[column.key] ?? ''}
-                onChange={(e) => onFilter(column.key, e.target.value)}
-                className="p-1 w-full text-base outline-brand font-normal"
-              />
+                onChange={(value) => onFilter(column.key, value)}
+              >
+                {({ value, onChange }) => (
+                  <input
+                    type="text"
+                    value={value}
+                    onChange={(e) => onChange(e.target.value)}
+                    className="p-1 w-full text-base outline-brand font-normal"
+                  />
+                )}
+              </Debouncer>
             </div>
           ) : null}
         </div>
@@ -641,6 +544,7 @@ const Cell = ({ children, className, ...props }: InputHTMLAttributes<HTMLDivElem
     </div>
   )
 }
+
 const Row = forwardRef<HTMLDivElement, InputHTMLAttributes<HTMLDivElement>>(
   ({ children, className, ...props }, ref) => {
     return (
@@ -654,3 +558,162 @@ const Row = forwardRef<HTMLDivElement, InputHTMLAttributes<HTMLDivElement>>(
     )
   }
 )
+
+interface RowRendererProps<
+  TForm extends FieldValues,
+  TName extends ArrayPath<TForm> = ArrayPath<TForm> & string
+> {
+  index: number
+  style: CSSProperties
+  filteredIndexes: number[]
+  rows: GetFieldType<TForm, TName>[]
+  gridTemplateColumns: string
+  leafColumnDefs: LeafColumnDef<GetFieldType<TForm, TName>>[]
+  form: UseFormReturn<TForm>
+  name: TName
+  setRowValuesByIndex: (
+    index: number,
+    values: GetFieldType<TForm, TName>,
+    options?: SetValueConfig
+  ) => void
+  insertRow: (index: number, values: GetFieldType<TForm, TName>) => void
+  removeRow: (index: number) => void
+}
+const RowRenderer = memo(
+  <TForm extends FieldValues, TName extends ArrayPath<TForm> = ArrayPath<TForm> & string>({
+    index,
+    style,
+    filteredIndexes,
+    rows,
+    gridTemplateColumns,
+    leafColumnDefs,
+    form,
+    name,
+    setRowValuesByIndex,
+    insertRow,
+    removeRow
+  }: RowRendererProps<TForm, TName>) => {
+    const rowIndex = filteredIndexes[index]
+    const rowField = rows[rowIndex]
+
+    const rowValues = useWatch({
+      control: form.control,
+      name: `${String(name)}.${rowIndex}` as any
+    })
+
+    return (
+      <Row
+        key={rowField.id}
+        data-rowindex={rowIndex}
+        className="grid focus-visible:bg-blue-200 focus-within:bg-gray-100"
+        style={{
+          ...style,
+          width: '100%',
+          gridTemplateColumns
+        }}
+      >
+        <Cell
+          data-sticky={true}
+          data-left={0}
+          className="z-50 px-1.5 flex items-center justify-center"
+        >
+          {rowIndex + 1}
+        </Cell>
+        {leafColumnDefs.map((column) => (
+          <Cell
+            key={column.key}
+            data-colkey={column.key}
+            data-sticky={column.sticky ? true : undefined}
+            data-left={column.left !== undefined ? column.left : undefined}
+            data-right={column.right !== undefined ? column.right : undefined}
+          >
+            <Controller
+              name={`${String(name)}.${rowIndex}.${column.key}` as any}
+              control={form.control}
+              render={({ field, fieldState, formState }) => {
+                const rowErrors = formState.errors[
+                  `${String(name)}.${rowIndex}` as any
+                ] as FieldErrors<GetFieldType<TForm, TName>>
+
+                const setRowValues = (
+                  values: GetFieldType<TForm, TName>,
+                  options?: SetValueConfig
+                ) => {
+                  setRowValuesByIndex(rowIndex, values, options)
+                }
+                const setRowFieldValue = (
+                  fieldName: keyof GetFieldType<TForm, TName> & string,
+                  value: any,
+                  options?: SetValueConfig
+                ) => {
+                  form.setValue(
+                    `${String(name)}.${rowIndex}.${fieldName}` as any,
+                    value,
+                    Object.assign(
+                      {
+                        shouldDirty: true,
+                        shouldTouch: true,
+                        shouldValidate: true
+                      },
+                      options
+                    )
+                  )
+                }
+
+                return (
+                  <div style={{ height: 30 }}>
+                    {column.render({
+                      rowIndex,
+                      inputRef: field.ref,
+                      form,
+                      value: field.value,
+                      error: fieldState.error,
+                      rowErrors,
+                      column,
+                      rowValues,
+                      setRowValues,
+                      setRowFieldValue,
+                      onChange: field.onChange
+                    })}
+                  </div>
+                )
+              }}
+            />
+          </Cell>
+        ))}
+        <Cell
+          data-sticky={true}
+          data-right={0}
+          className="z-50"
+        >
+          <div className="px-2 h-full flex items-center gap-0.5">
+            <Button
+              type="button"
+              size="icon"
+              variant="ghost"
+              className="size-7"
+              onClick={() => {
+                insertRow(rowIndex, form.getValues(`${String(name)}.${rowIndex}` as any))
+              }}
+            >
+              <Copy className="btn-icon text-gray-700" />
+            </Button>
+            <Button
+              type="button"
+              size="icon"
+              variant="ghost"
+              className="size-7"
+              onClick={() => {
+                removeRow(rowIndex)
+              }}
+            >
+              <Trash2 className="btn-icon text-red-500" />
+            </Button>
+          </div>
+        </Cell>
+      </Row>
+    )
+  }
+) as <TForm extends FieldValues, TName extends ArrayPath<TForm>>(
+  props: RowRendererProps<TForm, TName> & { ref?: Ref<HTMLDivElement> }
+) => ReactNode
