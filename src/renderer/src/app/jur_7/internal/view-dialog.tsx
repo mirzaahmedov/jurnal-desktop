@@ -1,7 +1,5 @@
 import type { WarehouseInternalProvodka } from '@/common/models'
 
-import { useMemo } from 'react'
-
 import { useQuery } from '@tanstack/react-query'
 import { Download } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
@@ -26,7 +24,7 @@ import { useRequisitesStore } from '@/common/features/requisites'
 import { formatLocaleDate, formatNumber } from '@/common/lib/format'
 import { numberToWords } from '@/common/lib/utils'
 
-import { ItogoBySchets, getItogoBySchets } from '../__components__/itogo-by-schets'
+import { TotalsOverview } from '../__components__/totals-overview'
 import { WarehouseInternalQueryKeys } from './config'
 import { WarehouseInternalService } from './service'
 
@@ -146,9 +144,24 @@ export const WarehouseInternalViewDialog = ({
   })
 
   const data = rasxod?.data
-  const itogoBySchets = useMemo(() => {
-    return getItogoBySchets(data?.childs ?? [], t)
-  }, [data?.childs, t])
+  const totals = {
+    total: 0,
+    _01: 0,
+    _06: 0,
+    _07: 0,
+    iznos: 0
+  }
+  data?.childs?.forEach((child) => {
+    totals.total += child.summa || 0
+    if (child.kredit_schet.startsWith('01')) {
+      totals._01 += child.summa || 0
+    } else if (child.kredit_schet.startsWith('06')) {
+      totals._06 += child.summa || 0
+    } else if (child.kredit_schet.startsWith('07')) {
+      totals._07 += child.summa || 0
+    }
+    totals.iznos += child.iznos_summa || 0
+  })
 
   return (
     <DialogTrigger
@@ -265,7 +278,13 @@ export const WarehouseInternalViewDialog = ({
                     </div>
 
                     <div className="p-5">
-                      <ItogoBySchets rows={itogoBySchets} />
+                      <TotalsOverview
+                        total={totals.total}
+                        _01={totals._01}
+                        _06={totals._06}
+                        _07={totals._07}
+                        iznos={totals.iznos}
+                      />
                     </div>
                   </div>
                 ) : null}

@@ -1,37 +1,39 @@
+import { useEffect, useMemo } from 'react'
+
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
+import isEmpty from 'just-is-empty'
+import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
+import { toast } from 'react-toastify'
+
+import { IznosQueryKeys } from '@/app/jur_7/iznos/config'
+import { createResponsibleSpravochnik } from '@/app/jur_7/responsible/service'
+import { SaldoQueryKeys } from '@/app/jur_7/saldo'
+import { handleOstatokResponse } from '@/app/jur_7/saldo/utils'
+import { Form } from '@/common/components/ui/form'
+import { DocumentType } from '@/common/features/doc-num'
+import { useRequisitesStore } from '@/common/features/requisites'
+import {
+  useSelectedMonthStore,
+  validateDateWithinSelectedMonth
+} from '@/common/features/selected-month'
+import { useSnippets } from '@/common/features/snippents/use-snippets'
+import { useSpravochnik } from '@/common/features/spravochnik'
+import { formatDate, parseDate, withinMonth } from '@/common/lib/date'
+import { focusInvalidInput } from '@/common/lib/errors'
+import { DetailsView } from '@/common/views'
 import {
   DocumentFields,
   OpisanieFields,
   ResponsibleFields,
   SummaFields
 } from '@/common/widget/form'
-import { InternalFormSchema, WarehouseInternalQueryKeys, defaultValues } from '../config'
-import { ItogoBySchets, getItogoBySchets } from '../../__components__/itogo-by-schets'
-import { WarehouseInternalService, useInternalCreate, useInternalUpdate } from '../service'
-import { formatDate, parseDate, withinMonth } from '@/common/lib/date'
-import { useEffect, useMemo } from 'react'
-import { useForm, useWatch } from 'react-hook-form'
-import { useQuery, useQueryClient } from '@tanstack/react-query'
-import {
-  useSelectedMonthStore,
-  validateDateWithinSelectedMonth
-} from '@/common/features/selected-month'
 
-import { DetailsView } from '@/common/views'
-import { DocumentType } from '@/common/features/doc-num'
-import { Form } from '@/common/components/ui/form'
-import { IznosQueryKeys } from '@/app/jur_7/iznos/config'
+import { TotalsOverview } from '../../__components__/totals-overview'
+import { InternalFormSchema, WarehouseInternalQueryKeys, defaultValues } from '../config'
+import { WarehouseInternalService, useInternalCreate, useInternalUpdate } from '../service'
 import { ProvodkaTable } from './provodka-table'
-import { SaldoQueryKeys } from '@/app/jur_7/saldo'
-import { createResponsibleSpravochnik } from '@/app/jur_7/responsible/service'
-import { focusInvalidInput } from '@/common/lib/errors'
-import { handleOstatokResponse } from '@/app/jur_7/saldo/utils'
-import isEmpty from 'just-is-empty'
-import { toast } from 'react-toastify'
-import { useRequisitesStore } from '@/common/features/requisites'
-import { useSnippets } from '@/common/features/snippents/use-snippets'
-import { useSpravochnik } from '@/common/features/spravochnik'
-import { useTranslation } from 'react-i18next'
-import { zodResolver } from '@hookform/resolvers/zod'
 
 interface InternalDetailsProps {
   id: string | undefined
@@ -142,14 +144,6 @@ const InternalDetails = ({ id, onSuccess: onSuccess }: InternalDetailsProps) => 
     updateInternal({ id: Number(id), ...values })
   })
 
-  const childs = useWatch({
-    control: form.control,
-    name: 'childs'
-  })
-  const itogoBySchets = useMemo(() => {
-    return getItogoBySchets(childs, t)
-  }, [childs, t])
-
   const values = form.watch()
   const summa = useMemo(() => {
     if (!Array.isArray(values.childs)) {
@@ -192,6 +186,28 @@ const InternalDetails = ({ id, onSuccess: onSuccess }: InternalDetailsProps) => 
   useEffect(() => {
     if (!isEmpty(errors)) focusInvalidInput()
   }, [errors])
+
+  const totals = useMemo(() => {
+    const results = {
+      total: 0,
+      _01: 0,
+      _06: 0,
+      _07: 0,
+      iznos: 0
+    }
+    values.childs?.forEach((child) => {
+      results.total += child.summa || 0
+      if (child.kredit_schet.startsWith('01')) {
+        results._01 += child.summa || 0
+      } else if (child.kredit_schet.startsWith('06')) {
+        results._06 += child.summa || 0
+      } else if (child.kredit_schet.startsWith('07')) {
+        results._07 += child.summa || 0
+      }
+      results.iznos += child.iznos_summa || 0
+    })
+    return results
+  }, [values.childs])
 
   return (
     <DetailsView>
@@ -261,7 +277,13 @@ const InternalDetails = ({ id, onSuccess: onSuccess }: InternalDetailsProps) => 
           />
         </div>
         <div className="mb-20 p-5">
-          <ItogoBySchets rows={itogoBySchets} />
+          <TotalsOverview
+            total={totals.total}
+            _01={totals._01}
+            _06={totals._06}
+            _07={totals._07}
+            iznos={totals.iznos}
+          />
         </div>
       </DetailsView.Content>
     </DetailsView>

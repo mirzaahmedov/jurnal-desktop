@@ -11,7 +11,7 @@ export interface ExpandableProvodkaProps {
 }
 export const ExpandableProvodka = ({ row }: ExpandableProvodkaProps) => {
   const { t } = useTranslation()
-  return (
+  return Array.isArray(row.provodki_array) ? (
     <div className="flex flex-col items-end">
       <div className="w-full">
         <ul>
@@ -30,7 +30,7 @@ export const ExpandableProvodka = ({ row }: ExpandableProvodkaProps) => {
               {t('kredit')} {t('subschet').toLowerCase()}
             </span>
           </li>
-          {row.provodki_array.slice(0, 2).map((item, index) => (
+          {row.provodki_array?.slice(0, 2).map((item, index) => (
             <li
               key={index}
               className="grid grid-cols-[30px_1fr_1fr_1fr_1fr] gap-2 text-sm"
@@ -90,5 +90,5 @@ export const ExpandableProvodka = ({ row }: ExpandableProvodkaProps) => {
         </Popover>
       ) : null}
     </div>
-  )
+  ) : null
 }

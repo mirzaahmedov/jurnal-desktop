@@ -11,7 +11,9 @@ import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 
 import { createShartnomaSpravochnik } from '@/app/jur_3/shartnoma'
+import { IznosQueryKeys } from '@/app/jur_7/iznos/config'
 import { createResponsibleSpravochnik } from '@/app/jur_7/responsible/service'
+import { SaldoQueryKeys } from '@/app/jur_7/saldo'
 import { handleOstatokExistingDocumentError, handleOstatokResponse } from '@/app/jur_7/saldo/utils'
 import { createOrganizationSpravochnik } from '@/app/region-spravochnik/organization'
 import { Form } from '@/common/components/ui/form'
@@ -37,9 +39,7 @@ import {
   SummaFields
 } from '@/common/widget/form'
 
-import { ItogoBySchets, getItogoBySchets } from '../../__components__/itogo-by-schets'
-import { IznosQueryKeys } from '../../iznos/config'
-import { SaldoQueryKeys } from '../../saldo'
+import { TotalsOverview } from '../../__components__/totals-overview'
 import { PrixodFormSchema, WarehousePrixodQueryKeys, defaultValues } from '../config'
 import { WarehousePrixodService, usePrixodCreate, usePrixodUpdate } from '../service'
 import { ApplyAllInputs } from './apply-all-inputs'
@@ -144,12 +144,6 @@ const PrixodDetails = ({ id, onSuccess }: PrixodDetailsProps) => {
     resolver: zodResolver(PrixodFormSchema)
   })
 
-  const childs = useWatch({
-    control: form.control,
-    name: 'childs'
-  })
-  const itogoBySchets = useMemo(() => getItogoBySchets(childs, t), [childs, t])
-
   const orgSpravochnik = useSpravochnik(
     createOrganizationSpravochnik({
       value: form.watch('kimdan_id'),
@@ -245,6 +239,32 @@ const PrixodDetails = ({ id, onSuccess }: PrixodDetailsProps) => {
     if (!isEmpty(errors)) focusInvalidInput()
   }, [errors])
 
+  const childs = useWatch({
+    control: form.control,
+    name: 'childs'
+  })
+  const totals = useMemo(() => {
+    const results = {
+      total: 0,
+      _01: 0,
+      _06: 0,
+      _07: 0,
+      iznos: 0
+    }
+    childs.forEach((child) => {
+      results.total += child.summa || 0
+      if (child.debet_schet.startsWith('01')) {
+        results._01 += child.summa || 0
+      } else if (child.debet_schet.startsWith('06')) {
+        results._06 += child.summa || 0
+      } else if (child.debet_schet.startsWith('07')) {
+        results._07 += child.summa || 0
+      }
+      results.iznos += child.eski_iznos_summa || 0
+    })
+    return results
+  }, [childs])
+
   console.log({ errors })
 
   return (
@@ -288,6 +308,7 @@ const PrixodDetails = ({ id, onSuccess }: PrixodDetailsProps) => {
                 spravochnik={orgSpravochnik}
                 form={form as any}
                 error={form.formState.errors.kimdan_id}
+                className="bg-gray-100"
               />
               <ResponsibleFields
                 tabIndex={5}
@@ -378,7 +399,13 @@ const PrixodDetails = ({ id, onSuccess }: PrixodDetailsProps) => {
             form={form}
             tabIndex={8}
           />
-          <ItogoBySchets rows={itogoBySchets} />
+          <TotalsOverview
+            total={totals.total}
+            _01={totals._01}
+            _06={totals._06}
+            _07={totals._07}
+            iznos={totals.iznos}
+          />
         </div>
       </DetailsView.Content>
 

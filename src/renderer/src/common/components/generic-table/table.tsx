@@ -100,7 +100,7 @@ export const GenericTable = <T extends object>(props: GenericTableProps<T>) => {
           ? headerGroups.map((group, groupIndex) => (
               <GenericTableRow
                 key={groupIndex}
-                className="hover:bg-slate-100 border-t border-slate-200 bg-slate-100 even:bg-slate-100 even:hover:bg-slate-100"
+                className="hover:bg-gray-100 border-t border-gray-200 bg-gray-100 even:bg-gray-100 even:hover:bg-gray-100"
               >
                 {groupIndex === 0 ? (
                   <GenericTableHead
