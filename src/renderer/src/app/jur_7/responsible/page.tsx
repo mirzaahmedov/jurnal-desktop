@@ -102,6 +102,7 @@ const ResponsiblePage = () => {
             params={{
               page: 1,
               limit: 1000000,
+              budjet_id,
               excel: true
             }}
             fileName={`${t('responsible')}.xlsx`}
