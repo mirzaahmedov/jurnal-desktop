@@ -2,10 +2,12 @@ import type { Zarplata } from '@/common/models'
 
 import { useEffect, useState } from 'react'
 
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
+import { toast } from 'react-toastify'
 
 import { GenericTable } from '@/common/components'
+import { useConfirm } from '@/common/features/confirm'
 import { useSearchFilter } from '@/common/features/filters/search/search-filter-debounced'
 import { usePagination, useToggle } from '@/common/hooks'
 import { useLayout } from '@/common/layout'
@@ -16,7 +18,7 @@ import { ZarplataSpravochnikDialog } from './dialog'
 import { SpravochnikFilters, useTypeFilter } from './filters'
 import { ZarplataSpravochnikService } from './service'
 
-const { queryKeys } = ZarplataSpravochnikService
+const { QueryKeys } = ZarplataSpravochnikService
 
 const ZarplataSpravochnikPage = () => {
   const { t } = useTranslation(['app'])
@@ -29,9 +31,10 @@ const ZarplataSpravochnikPage = () => {
   const dialogToggle = useToggle()
   const setLayout = useLayout()
 
+  const { confirm } = useConfirm()
   const { data: spravochniks, isFetching } = useQuery({
     queryKey: [
-      queryKeys.getAll,
+      QueryKeys.GetAll,
       {
         types_type_code: typeCode!,
         name: search
@@ -39,6 +42,19 @@ const ZarplataSpravochnikPage = () => {
     ],
     queryFn: ZarplataSpravochnikService.getAll,
     enabled: !!typeCode
+  })
+
+  const { mutate: deleteSpravochnik, isPending } = useMutation({
+    mutationKey: [QueryKeys.Delete],
+    mutationFn: ZarplataSpravochnikService.delete,
+    onSuccess: () => {
+      dialogToggle.close()
+      setSelected(undefined)
+      toast.success(t('delete_success'))
+    },
+    onError: () => {
+      toast.error(t('delete_failed'))
+    }
   })
 
   useEffect(() => {
@@ -56,17 +72,25 @@ const ZarplataSpravochnikPage = () => {
     dialogToggle.open()
     setSelected(row)
   }
+  const handleDelete = (row: Zarplata.Spravochnik) => {
+    confirm({
+      onConfirm: () => {
+        deleteSpravochnik(row.id)
+      }
+    })
+  }
 
   const count = spravochniks?.totalCount ?? 0
   const pageCount = Math.ceil(count / pagination.limit)
 
   return (
     <ListView>
-      <ListView.Content loading={isFetching}>
+      <ListView.Content loading={isFetching || isPending}>
         <GenericTable
           data={spravochniks?.data ?? []}
           columnDefs={columnDefs}
           onEdit={handleEdit}
+          onDelete={handleDelete}
         />
       </ListView.Content>
       <ListView.Footer>

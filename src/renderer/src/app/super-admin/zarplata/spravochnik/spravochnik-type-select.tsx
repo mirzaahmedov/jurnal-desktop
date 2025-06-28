@@ -10,13 +10,13 @@ import { cn } from '@/common/lib/utils'
 
 import { ZarplataSpravochnikService } from './service'
 
-const { queryKeys } = ZarplataSpravochnikService
+const { QueryKeys: queryKeys } = ZarplataSpravochnikService
 
 interface SpravochnikTypeSelectProps
   extends Omit<JollySelectProps<Zarplata.SpravochnikType>, 'children'> {}
 export const SpravochnikTypeSelect = ({ className, ...props }: SpravochnikTypeSelectProps) => {
   const { data: options, isFetching } = useQuery({
-    queryKey: [queryKeys.getTypes],
+    queryKey: [queryKeys.GetTypes],
     queryFn: ZarplataSpravochnikService.getTypes,
     refetchOnMount: false,
     refetchOnReconnect: false,

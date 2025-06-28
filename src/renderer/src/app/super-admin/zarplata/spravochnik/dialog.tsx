@@ -9,7 +9,6 @@ import { t } from 'i18next'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 
-import { createOperatsiiSpravochnik } from '@/app/super-admin/operatsii'
 import { createSmetaSpravochnik } from '@/app/super-admin/smeta'
 import { NumericInput } from '@/common/components'
 import {
@@ -30,7 +29,7 @@ import {
   FormMessage
 } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
-import { SpravochnikInput, useSpravochnik } from '@/common/features/spravochnik'
+import { useSpravochnik } from '@/common/features/spravochnik'
 import { capitalize } from '@/common/lib/string'
 
 import { ZarplataSpravochnikFormSchema, defaultValues } from './config'
@@ -38,7 +37,7 @@ import { useTypeFilter } from './filters'
 import { ZarplataSpravochnikService } from './service'
 import { SpravochnikTypeSelect } from './spravochnik-type-select'
 
-const { queryKeys } = ZarplataSpravochnikService
+const { QueryKeys: queryKeys } = ZarplataSpravochnikService
 
 interface ZarplataSpravochnikDialogProps extends Omit<DialogTriggerProps, 'children'> {
   selected: Zarplata.Spravochnik | undefined
@@ -61,13 +60,13 @@ export const ZarplataSpravochnikDialog = ({
   })
 
   const { mutate: createSpravochnik, isPending: isCreating } = useMutation({
-    mutationKey: [queryKeys.create],
+    mutationKey: [queryKeys.Create],
     mutationFn: ZarplataSpravochnikService.create,
     onSuccess() {
       toast.success('Справочник создано успешно')
       form.reset(defaultValues)
       queryClient.invalidateQueries({
-        queryKey: [queryKeys.getAll]
+        queryKey: [queryKeys.GetAll]
       })
       onOpenChange?.(false)
     },
@@ -77,13 +76,13 @@ export const ZarplataSpravochnikDialog = ({
     }
   })
   const { mutate: updateSpravochnik, isPending: isUpdating } = useMutation({
-    mutationKey: [queryKeys.update],
+    mutationKey: [queryKeys.Update],
     mutationFn: ZarplataSpravochnikService.update,
     onSuccess() {
       toast.success('Справочник успешно обновлена')
       form.reset(defaultValues)
       queryClient.invalidateQueries({
-        queryKey: [queryKeys.getAll]
+        queryKey: [queryKeys.GetAll]
       })
       onOpenChange?.(false)
     },
@@ -93,14 +92,6 @@ export const ZarplataSpravochnikDialog = ({
     }
   })
 
-  const operatsiiSpravochnik = useSpravochnik(
-    createOperatsiiSpravochnik({
-      value: form.watch('spravochnikOperatsiiId'),
-      onChange: (id) => {
-        form.setValue('spravochnikOperatsiiId', id ?? 0, { shouldValidate: true })
-      }
-    })
-  )
   const smetaSpravochnik = useSpravochnik(
     createSmetaSpravochnik({
       onChange: (_, smeta) => {
@@ -222,33 +213,6 @@ export const ZarplataSpravochnikDialog = ({
                               field.onChange(value)
                             }}
                             className="col-span-4 w-full"
-                          />
-                        </FormControl>
-                        <FormMessage className="text-end col-span-6" />
-                      </div>
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  name="spravochnikOperatsiiId"
-                  control={form.control}
-                  render={() => (
-                    <FormItem>
-                      <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
-                        <FormLabel className="text-right col-span-2">{t('operatsii')}</FormLabel>
-                        <FormControl>
-                          <SpravochnikInput
-                            readOnly
-                            disabled={!!selected}
-                            {...operatsiiSpravochnik}
-                            getInputValue={(o) =>
-                              o ? `${o.schet}/${o.sub_schet} - ${o.name}` : ''
-                            }
-                            className="disabled:opacity-100"
-                            divProps={{
-                              className: 'col-span-4'
-                            }}
                           />
                         </FormControl>
                         <FormMessage className="text-end col-span-6" />
