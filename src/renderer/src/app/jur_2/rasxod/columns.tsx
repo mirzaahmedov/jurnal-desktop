@@ -52,7 +52,7 @@ export const BankRasxodColumns: ColumnDef<BankRasxod>[] = [
         }
         hoverContent={
           <DataList
-            list={[
+            items={[
               {
                 name: <Trans>id</Trans>,
                 value: (

@@ -10,14 +10,15 @@ import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 
 import { FormElement } from '@/common/components/form'
-import { Button } from '@/common/components/ui/button'
+import { Button } from '@/common/components/jolly/button'
 import {
-  Dialog,
   DialogContent,
   DialogFooter,
   DialogHeader,
-  DialogTitle
-} from '@/common/components/ui/dialog'
+  DialogOverlay,
+  DialogTitle,
+  DialogTrigger
+} from '@/common/components/jolly/dialog'
 import { Form, FormField } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
 import { SpravochnikInput, useSpravochnik } from '@/common/features/spravochnik'
@@ -92,59 +93,61 @@ export const ResponsibleDialog = ({ isOpen, onOpenChange, selected }: Responsibl
   }, [form, selected])
 
   return (
-    <Dialog
-      open={isOpen}
+    <DialogTrigger
+      isOpen={isOpen}
       onOpenChange={onOpenChange}
     >
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle className="titlecase">
-            {selected
-              ? t('responsible')
-              : capitalize(t('create-something', { something: t('responsible') }))}
-          </DialogTitle>
-        </DialogHeader>
-        <Form {...form}>
-          <form
-            onSubmit={onSubmit}
-            className="mt-5"
-          >
-            <div className="flex flex-col gap-6">
-              <FormElement
-                label={t('podrazdelenie')}
-                grid="1:2"
-                message={form.formState.errors.spravochnik_podrazdelenie_jur7_id?.message}
-              >
-                <SpravochnikInput
-                  {...podrazdelenieSpravochnik}
-                  readOnly
-                  getInputValue={(selected) => selected?.name || '-'}
+      <DialogOverlay>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="titlecase">
+              {selected
+                ? t('responsible')
+                : capitalize(t('create-something', { something: t('responsible') }))}
+            </DialogTitle>
+          </DialogHeader>
+          <Form {...form}>
+            <form
+              onSubmit={onSubmit}
+              className="mt-5"
+            >
+              <div className="flex flex-col gap-2.5">
+                <FormElement
+                  label={t('podrazdelenie')}
+                  grid="1:2"
+                  message={form.formState.errors.spravochnik_podrazdelenie_jur7_id?.message}
+                >
+                  <SpravochnikInput
+                    {...podrazdelenieSpravochnik}
+                    readOnly
+                    getInputValue={(selected) => selected?.name || '-'}
+                  />
+                </FormElement>
+                <FormField
+                  name="fio"
+                  control={form.control}
+                  render={({ field }) => (
+                    <FormElement
+                      grid="1:2"
+                      label={t('fio')}
+                    >
+                      <Input {...field} />
+                    </FormElement>
+                  )}
                 />
-              </FormElement>
-              <FormField
-                name="fio"
-                control={form.control}
-                render={({ field }) => (
-                  <FormElement
-                    grid="1:2"
-                    label={t('fio')}
-                  >
-                    <Input {...field} />
-                  </FormElement>
-                )}
-              />
-            </div>
-            <DialogFooter className="mt-5">
-              <Button
-                type="submit"
-                disabled={isCreating || isUpdating}
-              >
-                {t('save')}
-              </Button>
-            </DialogFooter>
-          </form>
-        </Form>
-      </DialogContent>
-    </Dialog>
+              </div>
+              <DialogFooter className="mt-5">
+                <Button
+                  type="submit"
+                  isDisabled={isCreating || isUpdating}
+                >
+                  {t('save')}
+                </Button>
+              </DialogFooter>
+            </form>
+          </Form>
+        </DialogContent>
+      </DialogOverlay>
+    </DialogTrigger>
   )
 }

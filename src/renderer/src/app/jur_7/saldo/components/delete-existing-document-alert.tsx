@@ -1,3 +1,25 @@
+import type { OstatokDeleteExistingDocument } from '../utils'
+import type { SaldoProduct } from '@/common/models'
+import type { DialogProps } from '@radix-ui/react-dialog'
+import type { TFunction } from 'i18next'
+
+import { useState } from 'react'
+
+import { Pencil } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
+
+import InternalDetails from '@/app/jur_7/internal/details/details'
+import PrixodDetails from '@/app/jur_7/prixod/details/details'
+import RasxodDetails from '@/app/jur_7/rasxod/details/details'
+import { Copyable } from '@/common/components'
+import { DataList } from '@/common/components/data-list'
+import {
+  DialogContent,
+  DialogHeader,
+  DialogOverlay,
+  DialogTitle,
+  DialogTrigger
+} from '@/common/components/jolly/dialog'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -7,23 +29,9 @@ import {
   AlertDialogHeader,
   AlertDialogTitle
 } from '@/common/components/ui/alert-dialog'
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/common/components/ui/dialog'
-import { formatLocaleDate, formatNumber } from '@/common/lib/format'
-
 import { Badge } from '@/common/components/ui/badge'
 import { Button } from '@/common/components/ui/button'
-import { Copyable } from '@/common/components'
-import { DataList } from '@/common/components/data-list'
-import type { DialogProps } from '@radix-ui/react-dialog'
-import InternalDetails from '@/app/jur_7/internal/details/details'
-import type { OstatokDeleteExistingDocument } from '../utils'
-import { Pencil } from 'lucide-react'
-import PrixodDetails from '@/app/jur_7/prixod/details/details'
-import RasxodDetails from '@/app/jur_7/rasxod/details/details'
-import type { SaldoProduct } from '@/common/models'
-import type { TFunction } from 'i18next'
-import { useState } from 'react'
-import { useTranslation } from 'react-i18next'
+import { formatLocaleDate, formatNumber } from '@/common/lib/format'
 
 export interface DeleteExistingDocumentsAlertProps extends DialogProps {
   message: string
@@ -51,7 +59,7 @@ export const DeleteExistingDocumentsAlert = ({
         <div className="flex flex-col gap-10">
           {product ? (
             <div>
-              <DataList list={getProductFields(t, product)} />
+              <DataList items={getProductFields(t, product)} />
             </div>
           ) : null}
           <ul className="divide-y">
@@ -109,48 +117,50 @@ export const DeleteExistingDocumentsAlert = ({
           </ul>
         </div>
 
-        <Dialog
-          open={!!selected}
+        <DialogTrigger
+          isOpen={!!selected}
           onOpenChange={() => setSelected(undefined)}
         >
-          <DialogContent className="p-0 w-full max-w-screen-2xl h-full max-h-[80%] gap-0">
-            <DialogHeader className="p-5 border-b">
-              <DialogTitle>
-                {selected?.type === 'prixod'
-                  ? t('prixod')
-                  : selected?.type === 'rasxod'
-                    ? t('rasxod')
-                    : selected?.type === 'internal'
-                      ? t('internal')
-                      : null}
-              </DialogTitle>
-            </DialogHeader>
-            <div className="overflow-auto scrollbar">
-              {selected?.type === 'prixod' ? (
-                <PrixodDetails
-                  id={String(selected?.id)}
-                  onSuccess={() => {
-                    setSelected(undefined)
-                  }}
-                />
-              ) : selected?.type === 'rasxod' ? (
-                <RasxodDetails
-                  id={String(selected?.id)}
-                  onSuccess={() => {
-                    setSelected(undefined)
-                  }}
-                />
-              ) : selected?.type === 'internal' ? (
-                <InternalDetails
-                  id={String(selected?.id)}
-                  onSuccess={() => {
-                    setSelected(undefined)
-                  }}
-                />
-              ) : null}
-            </div>
-          </DialogContent>
-        </Dialog>
+          <DialogOverlay>
+            <DialogContent className="p-0 w-full max-w-screen-2xl h-full max-h-[80%] gap-0">
+              <DialogHeader className="p-5 border-b">
+                <DialogTitle>
+                  {selected?.type === 'prixod'
+                    ? t('prixod')
+                    : selected?.type === 'rasxod'
+                      ? t('rasxod')
+                      : selected?.type === 'internal'
+                        ? t('internal')
+                        : null}
+                </DialogTitle>
+              </DialogHeader>
+              <div className="overflow-auto scrollbar">
+                {selected?.type === 'prixod' ? (
+                  <PrixodDetails
+                    id={String(selected?.id)}
+                    onSuccess={() => {
+                      setSelected(undefined)
+                    }}
+                  />
+                ) : selected?.type === 'rasxod' ? (
+                  <RasxodDetails
+                    id={String(selected?.id)}
+                    onSuccess={() => {
+                      setSelected(undefined)
+                    }}
+                  />
+                ) : selected?.type === 'internal' ? (
+                  <InternalDetails
+                    id={String(selected?.id)}
+                    onSuccess={() => {
+                      setSelected(undefined)
+                    }}
+                  />
+                ) : null}
+              </div>
+            </DialogContent>
+          </DialogOverlay>
+        </DialogTrigger>
 
         <AlertDialogFooter className="items-end">
           <AlertDialogCancel>{t('close')}</AlertDialogCancel>

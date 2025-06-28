@@ -373,7 +373,7 @@ const Row = ({ index, row, rows, highlightedRow, onCellDoubleClick, ...props }: 
               </TooltipTrigger>
               <TooltipContent className="bg-white text-slate-600 shadow-xl p-5">
                 <DataList
-                  list={[
+                  items={[
                     {
                       name: <Trans>name</Trans>,
                       value: row.organ_name
@@ -481,7 +481,7 @@ const Row = ({ index, row, rows, highlightedRow, onCellDoubleClick, ...props }: 
               </TooltipTrigger>
               <TooltipContent className="bg-white text-slate-600 shadow-xl p-5">
                 <DataList
-                  list={[
+                  items={[
                     {
                       name: <Trans>name</Trans>,
                       value: row.organ_name_year

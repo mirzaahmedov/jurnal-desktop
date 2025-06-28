@@ -48,7 +48,7 @@ export const AktColumns: ColumnDef<Akt>[] = [
         }
         hoverContent={
           <DataList
-            list={[
+            items={[
               {
                 name: <Trans>id</Trans>,
                 value: (
@@ -89,7 +89,7 @@ export const AktColumns: ColumnDef<Akt>[] = [
           secondaryText={formatLocaleDate(row.shartnomalar_organization_doc_date)}
           hoverContent={
             <DataList
-              list={[
+              items={[
                 {
                   name: <Trans>id</Trans>,
                   value: (

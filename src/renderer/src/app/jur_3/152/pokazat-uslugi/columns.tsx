@@ -47,7 +47,7 @@ export const pokazatUslugiColumns: ColumnDef<PokazatUslugi>[] = [
         }
         hoverContent={
           <DataList
-            list={[
+            items={[
               {
                 name: <Trans>id</Trans>,
                 value: (
@@ -88,7 +88,7 @@ export const pokazatUslugiColumns: ColumnDef<PokazatUslugi>[] = [
           secondaryText={formatLocaleDate(row.shartnomalar_organization_doc_date)}
           hoverContent={
             <DataList
-              list={[
+              items={[
                 {
                   name: <Trans>id</Trans>,
                   value: (

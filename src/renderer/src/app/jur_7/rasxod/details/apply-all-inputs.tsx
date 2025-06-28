@@ -30,12 +30,12 @@ export const ApplyAllInputs = ({ onApply }: ApplyAllInputsProps) => {
           render={({ field }) => (
             <SchetEditor
               editor={false}
+              error={undefined}
               value={field.value}
               onChange={field.onChange}
               tabIndex={-1}
-              inputProps={{
-                placeholder: t('schet')
-              }}
+              placeholder={t('schet')}
+              className="w-24"
             />
           )}
         />

@@ -17,7 +17,7 @@ export const UserCell = ({ id, fio, login }: UserCellProps) => {
       secondaryText={`@${login}`}
       hoverContent={
         <DataList
-          list={[
+          items={[
             {
               name: <Trans>id</Trans>,
               value: (

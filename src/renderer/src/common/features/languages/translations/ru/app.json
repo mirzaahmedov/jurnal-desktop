@@ -75,7 +75,12 @@
     "akt_priyom": "Акт",
     "pokazat_uslugi": "Показать услуги",
     "bhm": "БҲМ",
-    "position": "Должность"
+    "position": "Должность",
+    "control_card": "Контрольная карта",
+    "calc_parameters": "Параметры расчета",
+    "passport_info": "Паспортные данные",
+    "salary_accrual": "Начисление зарплаты",
+    "payment_type": "Тип платежа"
   },
   "locales": {
     "uz": "Узбекский",

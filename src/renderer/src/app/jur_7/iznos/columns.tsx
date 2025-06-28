@@ -28,7 +28,7 @@ export const IznosColumns: ColumnDef<SaldoProduct>[] = [
         hoverContent={
           <DataList
             className="min-w-52"
-            list={[
+            items={[
               {
                 name: <Trans>id</Trans>,
                 value: (
@@ -83,7 +83,7 @@ export const IznosColumns: ColumnDef<SaldoProduct>[] = [
         title={<span className="text-xs line-clamp-3">{row.group_name}</span>}
         hoverContent={
           <DataList
-            list={[
+            items={[
               {
                 name: <Trans>id</Trans>,
                 value: <Copyable value={row.group_id}>#{row.group_id}</Copyable>

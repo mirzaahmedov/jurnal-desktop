@@ -76,7 +76,7 @@ export const VideoTutorials = ({ readOnly = false }: VideoTutorialsProps) => {
   }, [dialogToggle.isOpen])
 
   return (
-    <div className="flex w-full h-full">
+    <div className="flex-1 min-h-0 flex w-full">
       <aside className="w-full max-w-sm border-r border-slate-200">
         <VideoModuleList
           readOnly={readOnly}

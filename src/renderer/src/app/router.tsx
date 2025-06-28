@@ -22,6 +22,9 @@ import { AdminPodotchetPage } from './super-admin/jur_4/page'
 import { AdminMaterialPage } from './super-admin/jur_7/page'
 import DistancePage from './super-admin/spravochnik/distance/page'
 
+const CalculateParamsPage = lazy(() => import('./jur_5/calculate-params/page'))
+const PassportInfoPage = lazy(() => import('./jur_5/passport-info/page'))
+const ControlCardPage = lazy(() => import('./jur_5/control-card/page'))
 const WorkTripDetailsPage = lazy(() => import('./jur_4/work-trip/details/page'))
 const WorkTripPage = lazy(() => import('./jur_4/work-trip/page'))
 const PositionPage = lazy(() => import('./super-admin/spravochnik/position/page'))
@@ -646,6 +649,23 @@ export const routes: RouteObject[] = [
       {
         path: 'video-tutorials',
         element: <VideoTutorialsPage />
+      },
+      {
+        path: 'jur-5',
+        children: [
+          {
+            path: 'calculate-params',
+            element: <CalculateParamsPage />
+          },
+          {
+            path: 'control-card',
+            element: <ControlCardPage />
+          },
+          {
+            path: 'passport-info',
+            element: <PassportInfoPage />
+          }
+        ]
       },
       {
         path: 'demo',

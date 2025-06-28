@@ -8,17 +8,18 @@ import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 
 import { GenericTable, LoadingOverlay } from '@/common/components'
+import {
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogOverlay,
+  DialogTitle,
+  DialogTrigger
+} from '@/common/components/jolly/dialog'
 import { Pagination } from '@/common/components/pagination'
 import { SearchInputDebounced } from '@/common/components/search-input-debounced'
 import { Badge } from '@/common/components/ui/badge'
 import { Button } from '@/common/components/ui/button'
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle
-} from '@/common/components/ui/dialog'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/common/components/ui/tabs'
 
 import { OrganizationColumns } from './columns'
@@ -95,118 +96,124 @@ export const SubordinateOrganizations = ({
   const selectedIds = useMemo(() => selected.map((o) => o.id), [selected])
 
   return (
-    <Dialog
-      open={open}
+    <DialogTrigger
+      isOpen={open}
       onOpenChange={onOpenChange}
     >
-      <DialogContent className="max-w-screen-2xl w-full p-0 h-3/5 overflow-hidden gap-0 flex flex-col">
-        <Tabs
-          value={tabValue}
-          onValueChange={(value) => setTabValue(value as TabOption)}
-          className="flex flex-col h-full overflow-hidden"
-        >
-          <DialogHeader className="flex-0 px-5 py-1 flex gap-10 items-center flex-row">
-            <DialogTitle>{t('subordinate_organizations')}</DialogTitle>
-            <TabsList>
-              <TabsTrigger
-                value={TabOption.SELECTED}
-                className="flex items-center gap-5"
+      <DialogOverlay>
+        <DialogContent className="max-w-screen-2xl w-full p-0 h-3/5 overflow-hidden">
+          <div className="w-full h-full min-h-0 gap-0 flex flex-col overflow-hidden">
+            <div className="flex-1 w-full h-full min-h-0">
+              <Tabs
+                value={tabValue}
+                onValueChange={(value) => setTabValue(value as TabOption)}
+                className="flex flex-col w-full h-full"
               >
-                {t('selected_organizations')}
-                {selected.length ? <Badge className="-m-2">{selected.length}</Badge> : null}
-              </TabsTrigger>
-              <TabsTrigger value={TabOption.ALL}>{t('add')}</TabsTrigger>
-            </TabsList>
+                <DialogHeader className="flex-0 px-5 py-1 flex gap-10 items-center flex-row">
+                  <DialogTitle>{t('subordinate_organizations')}</DialogTitle>
+                  <TabsList>
+                    <TabsTrigger
+                      value={TabOption.SELECTED}
+                      className="flex items-center gap-5"
+                    >
+                      {t('selected_organizations')}
+                      {selected.length ? <Badge className="-m-2">{selected.length}</Badge> : null}
+                    </TabsTrigger>
+                    <TabsTrigger value={TabOption.ALL}>{t('add')}</TabsTrigger>
+                  </TabsList>
 
-            {tabValue === TabOption.ALL ? (
-              <SearchInputDebounced
-                value={search}
-                onValueChange={setSearch}
-              />
-            ) : null}
-          </DialogHeader>
-          <TabsContent
-            value={TabOption.SELECTED}
-            className="data-[state=active]:flex-1 flex flex-col overflow-hidden relative"
-          >
-            {isFetching || isFetchingOrganizations ? <LoadingOverlay /> : null}
-            <div className="flex-1 overflow-auto scrollbar">
-              <GenericTable
-                columnDefs={OrganizationColumns}
-                data={selected ?? []}
-                onDelete={(organization) => {
-                  setSelected((prev) => {
-                    if (prev.find((o) => o.id === organization.id)) {
-                      return prev.filter((o) => o.id !== organization.id)
-                    }
-                    return prev
-                  })
-                }}
-              />
-            </div>
-          </TabsContent>
+                  {tabValue === TabOption.ALL ? (
+                    <SearchInputDebounced
+                      value={search}
+                      onValueChange={setSearch}
+                    />
+                  ) : null}
+                </DialogHeader>
+                <TabsContent
+                  value={TabOption.SELECTED}
+                  className="data-[state=active]:flex-1 flex flex-col overflow-hidden relative"
+                >
+                  {isFetching || isFetchingOrganizations ? <LoadingOverlay /> : null}
+                  <div className="flex-1 overflow-auto scrollbar">
+                    <GenericTable
+                      columnDefs={OrganizationColumns}
+                      data={selected ?? []}
+                      onDelete={(organization) => {
+                        setSelected((prev) => {
+                          if (prev.find((o) => o.id === organization.id)) {
+                            return prev.filter((o) => o.id !== organization.id)
+                          }
+                          return prev
+                        })
+                      }}
+                    />
+                  </div>
+                </TabsContent>
 
-          <TabsContent
-            value={TabOption.ALL}
-            className="data-[state=active]:flex-1 data-[state=active]:flex flex-col overflow-hidden relative"
-          >
-            {isFetching || isFetchingOrganizations ? <LoadingOverlay /> : null}
-            <div className="flex-1 overflow-auto scrollbar">
-              <GenericTable
-                selectedIds={selectedIds}
-                columnDefs={OrganizationColumns}
-                data={organizations?.data ?? []}
-                onClickRow={(organization) => {
-                  setSelected((prev) => {
-                    if (prev.find((o) => o.id === organization.id)) {
-                      return prev.filter((o) => o.id !== organization.id)
-                    }
-                    return [...prev, organization]
-                  })
-                }}
-              />
+                <TabsContent
+                  value={TabOption.ALL}
+                  className="data-[state=active]:flex-1 data-[state=active]:flex flex-col overflow-hidden relative"
+                >
+                  {isFetching || isFetchingOrganizations ? <LoadingOverlay /> : null}
+                  <div className="flex-1 overflow-auto scrollbar">
+                    <GenericTable
+                      selectedIds={selectedIds}
+                      columnDefs={OrganizationColumns}
+                      data={organizations?.data ?? []}
+                      onClickRow={(organization) => {
+                        setSelected((prev) => {
+                          if (prev.find((o) => o.id === organization.id)) {
+                            return prev.filter((o) => o.id !== organization.id)
+                          }
+                          return [...prev, organization]
+                        })
+                      }}
+                    />
+                  </div>
+                </TabsContent>
+              </Tabs>
             </div>
-          </TabsContent>
-        </Tabs>
-        <DialogFooter className="p-0 m-0">
-          <div className="w-full p-5 flex items-center">
-            {tabValue === TabOption.ALL ? (
-              <Pagination
-                page={page}
-                limit={limit}
-                onChange={({ page, limit }) => {
-                  if (page) {
-                    setPage(page)
-                  }
-                  if (limit) {
-                    setLimit(limit)
-                  }
-                }}
-                count={organizations?.meta?.count ?? 0}
-                pageCount={organizations?.meta?.pageCount ?? 0}
-              />
-            ) : null}
-            <Button
-              disabled={!parentId}
-              isPending={isPending}
-              onClick={() => {
-                if (!parentId) {
-                  return
-                }
-                updateChildOrganizations({
-                  parentId,
-                  childs: selectedIds.map((id) => ({
-                    id
-                  }))
-                })
-              }}
-              className="ml-auto"
-            >
-              {t('save')}
-            </Button>
+            <DialogFooter className="p-0 m-0">
+              <div className="w-full p-5 flex items-center">
+                {tabValue === TabOption.ALL ? (
+                  <Pagination
+                    page={page}
+                    limit={limit}
+                    onChange={({ page, limit }) => {
+                      if (page) {
+                        setPage(page)
+                      }
+                      if (limit) {
+                        setLimit(limit)
+                      }
+                    }}
+                    count={organizations?.meta?.count ?? 0}
+                    pageCount={organizations?.meta?.pageCount ?? 0}
+                  />
+                ) : null}
+                <Button
+                  disabled={!parentId}
+                  isPending={isPending}
+                  onClick={() => {
+                    if (!parentId) {
+                      return
+                    }
+                    updateChildOrganizations({
+                      parentId,
+                      childs: selectedIds.map((id) => ({
+                        id
+                      }))
+                    })
+                  }}
+                  className="ml-auto"
+                >
+                  {t('save')}
+                </Button>
+              </div>
+            </DialogFooter>
           </div>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+        </DialogContent>
+      </DialogOverlay>
+    </DialogTrigger>
   )
 }

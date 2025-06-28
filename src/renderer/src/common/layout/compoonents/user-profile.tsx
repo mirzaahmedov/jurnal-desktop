@@ -67,7 +67,7 @@ export const UserProfile = ({ user }: UserProfileProps) => {
               </div>
               <DataList
                 className="mt-4 w-full"
-                list={[
+                items={[
                   {
                     name: <Trans>login</Trans>,
                     value: user.login

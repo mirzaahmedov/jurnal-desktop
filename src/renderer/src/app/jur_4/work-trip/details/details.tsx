@@ -28,7 +28,7 @@ import {
   validateDateWithinSelectedMonth
 } from '@/common/features/selected-month'
 import { useSpravochnik } from '@/common/features/spravochnik'
-import { formatDate, getWeekdaysBetween, parseDate, withinMonth } from '@/common/lib/date'
+import { formatDate, getDaysCount, parseDate, withinMonth } from '@/common/lib/date'
 import { formatNumber } from '@/common/lib/format'
 import { TypeSchetOperatsii } from '@/common/models'
 import { DetailsView } from '@/common/views'
@@ -180,10 +180,9 @@ export const WorkTripDetails = ({ id }: WorkTripDetailsProps) => {
 
   const distanceKM = distance?.data?.[0]?.distance_km ?? 0
   const minimumWageSumma = minimumWage?.data?.summa ?? 0
-  const allDaysCount = getWeekdaysBetween({
-    startDate: new Date(form.watch('from_date')),
-    endDate: new Date(form.watch('to_date')),
-    includeWeekends: true
+  const daysCount = getDaysCount({
+    startDate: parseDate(form.watch('from_date')),
+    endDate: parseDate(form.watch('to_date'))
   })
   useEffect(() => {
     if (!form.getValues('road_ticket_number')) {
@@ -208,8 +207,8 @@ export const WorkTripDetails = ({ id }: WorkTripDetailsProps) => {
     }
   }, [form, operatsii?.data])
   useEffect(() => {
-    form.setValue('day_summa', minimumWageSumma * 0.1 * allDaysCount)
-  }, [minimumWageSumma, allDaysCount])
+    form.setValue('day_summa', minimumWageSumma * 0.1 * daysCount)
+  }, [minimumWageSumma, daysCount])
 
   return (
     <DetailsView>
@@ -319,7 +318,7 @@ export const WorkTripDetails = ({ id }: WorkTripDetailsProps) => {
                               [{t('pages.bhm').toLowerCase()}] * 0.1 * [{t('days').toLowerCase()}]
                             </p>
                             <p>
-                              {formatNumber(minimumWageSumma)} * 0.1 * {allDaysCount}
+                              {formatNumber(minimumWageSumma)} * 0.1 * {daysCount}
                             </p>
                           </div>
                         </div>
@@ -333,7 +332,7 @@ export const WorkTripDetails = ({ id }: WorkTripDetailsProps) => {
                     >
                       <Input
                         readOnly
-                        value={allDaysCount}
+                        value={daysCount}
                       />
                     </FormElement>
                   </div>

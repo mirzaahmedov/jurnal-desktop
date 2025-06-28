@@ -32,7 +32,7 @@ export const DeleteExistingSaldoAlert = ({
           <AlertDialogTitle className="font-bold text-2xl">{message}</AlertDialogTitle>
         </AlertDialogHeader>
         <DataList
-          list={[
+          items={[
             {
               name: <Trans>month</Trans>,
               value: data.month

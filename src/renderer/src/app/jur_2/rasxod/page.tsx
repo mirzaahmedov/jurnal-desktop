@@ -10,7 +10,13 @@ import { toast } from 'react-toastify'
 
 import { FooterCell, FooterRow, GenericTable, useTableSort } from '@/common/components'
 import { Button } from '@/common/components/jolly/button'
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/common/components/ui/dialog'
+import {
+  DialogContent,
+  DialogHeader,
+  DialogOverlay,
+  DialogTitle,
+  DialogTrigger
+} from '@/common/components/jolly/dialog'
 import { useConfirm } from '@/common/features/confirm'
 import {
   SearchFilterDebounced,
@@ -198,17 +204,19 @@ const BankRasxodPage = () => {
           pageCount={rasxods?.meta?.pageCount ?? 0}
         />
       </ListView.Footer>
-      <Dialog
-        open={importDialogToggle.isOpen}
+      <DialogTrigger
+        isOpen={importDialogToggle.isOpen}
         onOpenChange={importDialogToggle.setOpen}
       >
-        <DialogContent className="w-full max-w-[1820px] h-full max-h-[980px] flex flex-col">
-          <DialogHeader>
-            <DialogTitle>{t('import_zarplata')}</DialogTitle>
-          </DialogHeader>
-          <ImportAliment />
-        </DialogContent>
-      </Dialog>
+        <DialogOverlay>
+          <DialogContent className="w-full max-w-[1820px] h-full max-h-[980px] flex flex-col">
+            <DialogHeader>
+              <DialogTitle>{t('import_zarplata')}</DialogTitle>
+            </DialogHeader>
+            <ImportAliment />
+          </DialogContent>
+        </DialogOverlay>
+      </DialogTrigger>
 
       <BankRasxodViewDialog
         selectedId={selectedId}

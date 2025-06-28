@@ -10,14 +10,15 @@ import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 
 import { createPrixodSchetSpravochnik } from '@/app/super-admin/prixod-schet/service'
-import { Button } from '@/common/components/ui/button'
+import { Button } from '@/common/components/jolly/button'
 import {
-  Dialog,
   DialogContent,
   DialogFooter,
   DialogHeader,
-  DialogTitle
-} from '@/common/components/ui/dialog'
+  DialogOverlay,
+  DialogTitle,
+  DialogTrigger
+} from '@/common/components/jolly/dialog'
 import {
   Form,
   FormControl,
@@ -107,80 +108,82 @@ export const PrixodSchetDialog = ({ isOpen, onOpenChange, selected }: PrixodSche
   const error = form.formState.errors.schet_id?.message
 
   return (
-    <Dialog
-      open={isOpen}
+    <DialogTrigger
+      isOpen={isOpen}
       onOpenChange={onOpenChange}
     >
-      <DialogContent className="max-w-xl">
-        <DialogHeader>
-          <DialogTitle>
-            {selected ? t('schet') : capitalize(t('create-something', { something: t('schet') }))}
-          </DialogTitle>
-        </DialogHeader>
-        <Form {...form}>
-          <form onSubmit={onSubmit}>
-            <div className="grid gap-4 py-4">
-              <FormField
-                name="name"
-                control={form.control}
-                render={({ field }) => (
-                  <FormItem>
-                    <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
-                      <FormLabel
-                        className={cn('text-right col-span-2', error && 'text-destructive')}
-                      >
-                        {t('name')}
-                      </FormLabel>
-                      <FormControl>
-                        <Input
-                          readOnly
-                          className="col-span-4"
-                          onDoubleClick={prixodSchetSpravochnik.open}
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage className="text-end col-span-6">{error}</FormMessage>
-                    </div>
-                  </FormItem>
-                )}
-              />
-              <FormField
-                name="schet"
-                control={form.control}
-                render={({ field }) => (
-                  <FormItem>
-                    <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
-                      <FormLabel
-                        className={cn('text-right col-span-2', error && 'text-destructive')}
-                      >
-                        {t('schet')}
-                      </FormLabel>
-                      <FormControl>
-                        <Input
-                          readOnly
-                          className="col-span-4"
-                          onDoubleClick={prixodSchetSpravochnik.open}
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage className="text-end col-span-6">{error}</FormMessage>
-                    </div>
-                  </FormItem>
-                )}
-              />
-            </div>
-            <DialogFooter>
-              <Button
-                type="submit"
-                disabled={isCreatingSchet || isUpdating}
-              >
-                {t('save')}
-              </Button>
-            </DialogFooter>
-          </form>
-        </Form>
-      </DialogContent>
-    </Dialog>
+      <DialogOverlay>
+        <DialogContent className="max-w-xl">
+          <DialogHeader>
+            <DialogTitle>
+              {selected ? t('schet') : capitalize(t('create-something', { something: t('schet') }))}
+            </DialogTitle>
+          </DialogHeader>
+          <Form {...form}>
+            <form onSubmit={onSubmit}>
+              <div className="grid gap-4 py-4">
+                <FormField
+                  name="name"
+                  control={form.control}
+                  render={({ field }) => (
+                    <FormItem>
+                      <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
+                        <FormLabel
+                          className={cn('text-right col-span-2', error && 'text-destructive')}
+                        >
+                          {t('name')}
+                        </FormLabel>
+                        <FormControl>
+                          <Input
+                            readOnly
+                            className="col-span-4"
+                            onDoubleClick={prixodSchetSpravochnik.open}
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage className="text-end col-span-6">{error}</FormMessage>
+                      </div>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  name="schet"
+                  control={form.control}
+                  render={({ field }) => (
+                    <FormItem>
+                      <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
+                        <FormLabel
+                          className={cn('text-right col-span-2', error && 'text-destructive')}
+                        >
+                          {t('schet')}
+                        </FormLabel>
+                        <FormControl>
+                          <Input
+                            readOnly
+                            className="col-span-4"
+                            onDoubleClick={prixodSchetSpravochnik.open}
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage className="text-end col-span-6">{error}</FormMessage>
+                      </div>
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <DialogFooter>
+                <Button
+                  type="submit"
+                  isDisabled={isCreatingSchet || isUpdating}
+                >
+                  {t('save')}
+                </Button>
+              </DialogFooter>
+            </form>
+          </Form>
+        </DialogContent>
+      </DialogOverlay>
+    </DialogTrigger>
   )
 }
 

@@ -6,11 +6,18 @@ import { Settings2 } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
-import { DatePicker, NumericInput } from '@/common/components'
+import { NumericInput } from '@/common/components'
 import { FormElement } from '@/common/components/form'
+import { JollyDatePicker } from '@/common/components/jolly-date-picker'
+import {
+  DialogContent,
+  DialogHeader,
+  DialogOverlay,
+  DialogTitle,
+  DialogTrigger
+} from '@/common/components/jolly/dialog'
 import { Button } from '@/common/components/ui/button'
 import { Checkbox } from '@/common/components/ui/checkbox'
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/common/components/ui/dialog'
 import {
   Form,
   FormControl,
@@ -117,228 +124,230 @@ export const ShartnomaSmetaGrafikGeneratePDFDocumentDialog = ({
   )
 
   return (
-    <Dialog
-      open={open}
+    <DialogTrigger
+      isOpen={open}
       onOpenChange={onChange}
     >
-      <DialogContent className="max-h-full flex flex-col">
-        <DialogHeader className="pb-5 border-b border-slate-200">
-          <DialogTitle>{t('payment-schedule')}</DialogTitle>
-        </DialogHeader>
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(() => {})}
-            className="-mx-5 px-5 flex-1 overflow-y-auto scrollbar"
-          >
-            <div className="flex flex-col gap-5">
-              <div className="grid grid-cols-2 gap-4">
-                <FormField
-                  control={form.control}
-                  name="section"
-                  render={({ field }) => (
-                    <FormElement
-                      direction="column"
-                      label={t('section')}
-                    >
-                      <Input
-                        type="number"
-                        {...field}
-                      />
-                    </FormElement>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="subchapter"
-                  render={({ field }) => (
-                    <FormElement
-                      direction="column"
-                      label={t('subchapter')}
-                    >
-                      <Input
-                        type="number"
-                        {...field}
-                      />
-                    </FormElement>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="chapter"
-                  render={({ field }) => (
-                    <FormElement
-                      direction="column"
-                      label={t('chapter')}
-                    >
-                      <Input
-                        type="number"
-                        {...field}
-                      />
-                    </FormElement>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="payment_date"
-                  render={({ field }) => (
-                    <FormElement
-                      label={t('payment_date')}
-                      direction="column"
-                    >
-                      <DatePicker {...field} />
-                    </FormElement>
-                  )}
-                />
-              </div>
-
-              {percentageValue === 'custom' ? (
-                <FormField
-                  control={form.control}
-                  name="summa_value"
-                  render={({ field }) => (
-                    <FormElement label={t('summa')}>
-                      <NumericInput
-                        {...field}
-                        allowNegative={false}
-                        value={field.value}
-                        onValueChange={(value) => field.onChange(value.floatValue)}
-                      />
-                    </FormElement>
-                  )}
-                />
-              ) : null}
-
-              <FormField
-                control={form.control}
-                name="percentage"
-                render={({ field }) => (
-                  <FormItem className="space-y-4">
-                    <FormLabel></FormLabel>
-                    <FormControl>
-                      <RadioGroup
-                        {...field}
-                        value={field.value}
-                        onValueChange={field.onChange}
+      <DialogOverlay>
+        <DialogContent className="max-h-full flex flex-col">
+          <DialogHeader className="pb-5 border-b border-slate-200">
+            <DialogTitle>{t('payment-schedule')}</DialogTitle>
+          </DialogHeader>
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(() => {})}
+              className="-mx-5 px-5 flex-1 overflow-y-auto scrollbar"
+            >
+              <div className="flex flex-col gap-5">
+                <div className="grid grid-cols-2 gap-4">
+                  <FormField
+                    control={form.control}
+                    name="section"
+                    render={({ field }) => (
+                      <FormElement
+                        direction="column"
+                        label={t('section')}
                       >
-                        {['30', '70', '100'].map((value) => (
+                        <Input
+                          type="number"
+                          {...field}
+                        />
+                      </FormElement>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="subchapter"
+                    render={({ field }) => (
+                      <FormElement
+                        direction="column"
+                        label={t('subchapter')}
+                      >
+                        <Input
+                          type="number"
+                          {...field}
+                        />
+                      </FormElement>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="chapter"
+                    render={({ field }) => (
+                      <FormElement
+                        direction="column"
+                        label={t('chapter')}
+                      >
+                        <Input
+                          type="number"
+                          {...field}
+                        />
+                      </FormElement>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="payment_date"
+                    render={({ field }) => (
+                      <FormElement
+                        label={t('payment_date')}
+                        direction="column"
+                      >
+                        <JollyDatePicker {...field} />
+                      </FormElement>
+                    )}
+                  />
+                </div>
+
+                {percentageValue === 'custom' ? (
+                  <FormField
+                    control={form.control}
+                    name="summa_value"
+                    render={({ field }) => (
+                      <FormElement label={t('summa')}>
+                        <NumericInput
+                          {...field}
+                          allowNegative={false}
+                          value={field.value}
+                          onValueChange={(value) => field.onChange(value.floatValue)}
+                        />
+                      </FormElement>
+                    )}
+                  />
+                ) : null}
+
+                <FormField
+                  control={form.control}
+                  name="percentage"
+                  render={({ field }) => (
+                    <FormItem className="space-y-4">
+                      <FormLabel></FormLabel>
+                      <FormControl>
+                        <RadioGroup
+                          {...field}
+                          value={field.value}
+                          onValueChange={field.onChange}
+                        >
+                          {['30', '70', '100'].map((value) => (
+                            <FormItem
+                              key={value}
+                              className="flex flex-row items-center space-x-4"
+                            >
+                              <FormControl>
+                                <RadioGroupItem value={value} />
+                              </FormControl>
+                              <FormLabel className="!my-0 cursor-pointer">{value}%</FormLabel>
+                            </FormItem>
+                          ))}
                           <FormItem
-                            key={value}
+                            key="custom"
                             className="flex flex-row items-center space-x-4"
                           >
                             <FormControl>
-                              <RadioGroupItem value={value} />
+                              <RadioGroupItem value="custom" />
                             </FormControl>
-                            <FormLabel className="!my-0 cursor-pointer">{value}%</FormLabel>
+                            <FormLabel className="!my-0 cursor-pointer">{t('other')}</FormLabel>
                           </FormItem>
-                        ))}
-                        <FormItem
-                          key="custom"
-                          className="flex flex-row items-center space-x-4"
-                        >
-                          <FormControl>
-                            <RadioGroupItem value="custom" />
-                          </FormControl>
-                          <FormLabel className="!my-0 cursor-pointer">{t('other')}</FormLabel>
-                        </FormItem>
-                      </RadioGroup>
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            <div className="pt-4 space-y-2">
-              <FormField
-                control={form.control}
-                name="payment_details"
-                render={({ field }) => (
-                  <Textarea
-                    spellCheck={false}
-                    rows={5}
-                    {...field}
-                  />
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="contract_details"
-                render={({ field }) => (
-                  <Textarea
-                    spellCheck={false}
-                    rows={5}
-                    {...field}
-                  />
-                )}
-              />
-              <div className="pt-2.5 grid grid-cols-2 gap-5">
-                <FormField
-                  control={form.control}
-                  name="singlePage"
-                  render={({ field }) => (
-                    <FormItem className="col-span-2 flex items-center gap-2">
-                      <FormControl>
-                        <Checkbox
-                          ref={field.ref}
-                          onBlur={field.onBlur}
-                          checked={field.value}
-                          onCheckedChange={(checked) => field.onChange(!!checked)}
-                        />
+                        </RadioGroup>
                       </FormControl>
-                      <FormLabel className="!mt-0">{t('print-2-in-single-page')}</FormLabel>
-                      <FormMessage />
                     </FormItem>
                   )}
                 />
-                <div className="col-span-2">
-                  <Collapsible>
-                    <CollapsibleTrigger asChild>
-                      <Button variant="ghost">
-                        <Settings2 className="btn-icon icon-start" /> {t('additional-options')}
-                      </Button>
-                    </CollapsibleTrigger>
-                    <CollapsibleContent>
-                      <div className="bg-slate-50 p-5 flex flex-col gap-5">
-                        <DocumentPaddingFields
-                          form={form}
-                          landscape={form.watch('orientation') === DocumentOrientation.LANDSCAPE}
-                        />
-                      </div>
-                    </CollapsibleContent>
-                  </Collapsible>
+              </div>
+
+              <div className="pt-4 space-y-2">
+                <FormField
+                  control={form.control}
+                  name="payment_details"
+                  render={({ field }) => (
+                    <Textarea
+                      spellCheck={false}
+                      rows={5}
+                      {...field}
+                    />
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="contract_details"
+                  render={({ field }) => (
+                    <Textarea
+                      spellCheck={false}
+                      rows={5}
+                      {...field}
+                    />
+                  )}
+                />
+                <div className="pt-2.5 grid grid-cols-2 gap-5">
+                  <FormField
+                    control={form.control}
+                    name="singlePage"
+                    render={({ field }) => (
+                      <FormItem className="col-span-2 flex items-center gap-2">
+                        <FormControl>
+                          <Checkbox
+                            ref={field.ref}
+                            onBlur={field.onBlur}
+                            checked={field.value}
+                            onCheckedChange={(checked) => field.onChange(!!checked)}
+                          />
+                        </FormControl>
+                        <FormLabel className="!mt-0">{t('print-2-in-single-page')}</FormLabel>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <div className="col-span-2">
+                    <Collapsible>
+                      <CollapsibleTrigger asChild>
+                        <Button variant="ghost">
+                          <Settings2 className="btn-icon icon-start" /> {t('additional-options')}
+                        </Button>
+                      </CollapsibleTrigger>
+                      <CollapsibleContent>
+                        <div className="bg-slate-50 p-5 flex flex-col gap-5">
+                          <DocumentPaddingFields
+                            form={form}
+                            landscape={form.watch('orientation') === DocumentOrientation.LANDSCAPE}
+                          />
+                        </div>
+                      </CollapsibleContent>
+                    </Collapsible>
+                  </div>
                 </div>
               </div>
-            </div>
-          </form>
-        </Form>
-        <div className="grid place-content-center border-t border-slate-200 pt-5">
-          <GenerateFile
-            isDisabled={
-              form.watch('section') === 0 ||
-              form.watch('subchapter') === 0 ||
-              form.watch('chapter') === 0
-            }
-            fileName={`${t('payment-schedule')}_${doc_num}.pdf`}
-            buttonText={t('payment-schedule')}
-          >
-            <ShartnomaGrafikPDFDocument
-              singlePage={form.watch('singlePage')}
-              section={form.watch('section').toString()}
-              subchapter={form.watch('subchapter').toString()}
-              chapter={form.watch('chapter').toString()}
-              createdDate={formatDate(new Date())}
-              grafiks={grafiksData}
-              paymentDetails={form.watch('payment_details')}
-              shartnomaDetails={form.watch('contract_details')}
-              podpis={podpis}
-              paddingLeft={form.watch('paddingLeft')}
-              paddingTop={form.watch('paddingTop')}
-              paddingRight={form.watch('paddingRight')}
-              paddingBottom={form.watch('paddingBottom')}
-              orientation={form.watch('orientation')}
-            />
-          </GenerateFile>
-        </div>
-      </DialogContent>
-    </Dialog>
+            </form>
+          </Form>
+          <div className="grid place-content-center border-t border-slate-200 pt-5">
+            <GenerateFile
+              isDisabled={
+                form.watch('section') === 0 ||
+                form.watch('subchapter') === 0 ||
+                form.watch('chapter') === 0
+              }
+              fileName={`${t('payment-schedule')}_${doc_num}.pdf`}
+              buttonText={t('payment-schedule')}
+            >
+              <ShartnomaGrafikPDFDocument
+                singlePage={form.watch('singlePage')}
+                section={form.watch('section').toString()}
+                subchapter={form.watch('subchapter').toString()}
+                chapter={form.watch('chapter').toString()}
+                createdDate={formatDate(new Date())}
+                grafiks={grafiksData}
+                paymentDetails={form.watch('payment_details')}
+                shartnomaDetails={form.watch('contract_details')}
+                podpis={podpis}
+                paddingLeft={form.watch('paddingLeft')}
+                paddingTop={form.watch('paddingTop')}
+                paddingRight={form.watch('paddingRight')}
+                paddingBottom={form.watch('paddingBottom')}
+                orientation={form.watch('orientation')}
+              />
+            </GenerateFile>
+          </div>
+        </DialogContent>
+      </DialogOverlay>
+    </DialogTrigger>
   )
 }

@@ -50,7 +50,7 @@ export const ShartnomaColumns: ColumnDef<Shartnoma>[] = [
         secondaryText={<Copyable value={row.organization?.inn}>#{row.organization?.inn}</Copyable>}
         hoverContent={
           <DataList
-            list={[
+            items={[
               {
                 name: <Trans>id</Trans>,
                 value: (

@@ -11,8 +11,14 @@ import { useTranslation } from 'react-i18next'
 import { ZodIssueCode, z } from 'zod'
 
 import { GenericTable } from '@/common/components'
+import {
+  DialogContent,
+  DialogHeader,
+  DialogOverlay,
+  DialogTitle,
+  DialogTrigger
+} from '@/common/components/jolly/dialog'
 import { Button } from '@/common/components/ui/button'
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/common/components/ui/dialog'
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 import { budjet, main_schet } from '@/common/features/crud/middleware'
 import { SpravochnikSearchField } from '@/common/features/filters/search/search-filter-spravochnik'
@@ -99,26 +105,28 @@ const ShartnomaSpravochnikDialog = ({
   const original = state?.original as Shartnoma
 
   return (
-    <Dialog
-      open={open}
+    <DialogTrigger
+      isOpen={open}
       onOpenChange={onOpenChange}
     >
-      <DialogContent className="max-w-8xl">
-        <DialogHeader>
-          <DialogTitle>
-            {capitalize(t('create-something', { something: t('shartnoma') }))}
-          </DialogTitle>
-        </DialogHeader>
-        <div className="px-1 w-full overflow-hidden overflow-y-auto scrollbar">
-          <ShartnomaForm
-            dialog={false}
-            organId={organization}
-            original={original}
-            onSuccess={() => onOpenChange?.(false)}
-          />
-        </div>
-      </DialogContent>
-    </Dialog>
+      <DialogOverlay>
+        <DialogContent className="max-w-8xl">
+          <DialogHeader>
+            <DialogTitle>
+              {capitalize(t('create-something', { something: t('shartnoma') }))}
+            </DialogTitle>
+          </DialogHeader>
+          <div className="px-1 w-full overflow-hidden overflow-y-auto scrollbar">
+            <ShartnomaForm
+              dialog={false}
+              organId={organization}
+              original={original}
+              onSuccess={() => onOpenChange?.(false)}
+            />
+          </div>
+        </DialogContent>
+      </DialogOverlay>
+    </DialogTrigger>
   )
 }
 

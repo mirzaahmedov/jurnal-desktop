@@ -94,25 +94,29 @@ export const localeDateToISO = (localeDateString: string) => {
   return localeDateString.split('.').reverse().join('-')
 }
 
-export interface WeekdaysBetweenArgs {
+export enum Weekday {
+  Sunday = 0,
+  Monday = 1,
+  Tuesday = 2,
+  Wednesday = 3,
+  Thursday = 4,
+  Friday = 5,
+  Saturday = 6
+}
+
+export interface GetDaysCountArgs {
   startDate: Date
   endDate: Date
-  includeWeekends?: boolean
+  excludedDays?: Weekday[]
 }
-export const getWeekdaysBetween = ({
-  startDate,
-  endDate,
-  includeWeekends = false
-}: WeekdaysBetweenArgs) => {
+export const getDaysCount = ({ startDate, endDate, excludedDays = [] }: GetDaysCountArgs) => {
   let count = 0
 
   const current = new Date(startDate)
 
   while (current <= endDate) {
     const day = current.getDay()
-    if (includeWeekends) {
-      count++
-    } else if (day !== 0) {
+    if (!excludedDays.includes(day)) {
       count++
     }
     current.setDate(current.getDate() + 1)

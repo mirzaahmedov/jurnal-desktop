@@ -1,3 +1,17 @@
+import type { Zarplata } from '@/common/models'
+import type { DialogTriggerProps } from 'react-aria-components'
+
+import { useEffect } from 'react'
+
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { t } from 'i18next'
+import { useForm } from 'react-hook-form'
+import { toast } from 'react-toastify'
+
+import { createOperatsiiSpravochnik } from '@/app/super-admin/operatsii'
+import { createSmetaSpravochnik } from '@/app/super-admin/smeta'
+import { NumericInput } from '@/common/components'
 import {
   DialogContent,
   DialogFooter,
@@ -6,6 +20,7 @@ import {
   DialogTitle,
   DialogTrigger
 } from '@/common/components/jolly/dialog'
+import { Button } from '@/common/components/ui/button'
 import {
   Form,
   FormControl,
@@ -14,25 +29,14 @@ import {
   FormLabel,
   FormMessage
 } from '@/common/components/ui/form'
-import { SpravochnikInput, useSpravochnik } from '@/common/features/spravochnik'
-import { ZarplataSpravochnikFormSchema, defaultValues } from './config'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-
-import { Button } from '@/common/components/ui/button'
-import type { DialogTriggerProps } from 'react-aria-components'
 import { Input } from '@/common/components/ui/input'
-import { NumericInput } from '@/common/components'
-import { SpravochnikTypeSelect } from './spravochnik-type-select'
-import type { Zarplata } from '@/common/models'
-import { ZarplataSpravochnikService } from './service'
+import { SpravochnikInput, useSpravochnik } from '@/common/features/spravochnik'
 import { capitalize } from '@/common/lib/string'
-import { createOperatsiiSpravochnik } from '@/app/super-admin/operatsii'
-import { createSmetaSpravochnik } from '@/app/super-admin/smeta'
-import { t } from 'i18next'
-import { toast } from 'react-toastify'
-import { useEffect } from 'react'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
+
+import { ZarplataSpravochnikFormSchema, defaultValues } from './config'
+import { useTypeFilter } from './filters'
+import { ZarplataSpravochnikService } from './service'
+import { SpravochnikTypeSelect } from './spravochnik-type-select'
 
 const { queryKeys } = ZarplataSpravochnikService
 
@@ -46,8 +50,13 @@ export const ZarplataSpravochnikDialog = ({
 }: ZarplataSpravochnikDialogProps) => {
   const queryClient = useQueryClient()
 
+  const [typeCode] = useTypeFilter()
+
   const form = useForm({
-    defaultValues,
+    defaultValues: {
+      ...defaultValues,
+      typesTypeCode: typeCode ?? defaultValues.typesTypeCode
+    },
     resolver: zodResolver(ZarplataSpravochnikFormSchema)
   })
 
@@ -113,12 +122,15 @@ export const ZarplataSpravochnikDialog = ({
 
   useEffect(() => {
     if (!selected || !open) {
-      form.reset(defaultValues)
+      form.reset({
+        ...defaultValues,
+        typesTypeCode: typeCode ?? defaultValues.typesTypeCode
+      })
       return
     }
 
     form.reset(selected)
-  }, [form, selected, open])
+  }, [form, selected, open, typeCode])
 
   return (
     <DialogTrigger
@@ -209,7 +221,7 @@ export const ZarplataSpravochnikDialog = ({
                             onSelectionChange={(value) => {
                               field.onChange(value)
                             }}
-                            className="col-span-4"
+                            className="col-span-4 w-full"
                           />
                         </FormControl>
                         <FormMessage className="text-end col-span-6" />

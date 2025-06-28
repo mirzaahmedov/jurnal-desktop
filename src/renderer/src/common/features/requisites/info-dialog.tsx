@@ -37,7 +37,7 @@ export const RequisitesInfoDialog = (props: RequisitesInfoDialogProps) => {
             </DialogTitle>
           </DialogHeader>
           <DataList
-            list={[
+            items={[
               {
                 name: <Trans>budjet</Trans>,
                 value: data?.data?.budjet_name

@@ -13,7 +13,7 @@ import {
 import { type RelationTreeNode } from '@/common/lib/tree/relation-tree'
 import { cn } from '@/common/lib/utils'
 
-type VacantTreeNode = RelationTreeNode<Vacant, number | null>
+export type VacantTreeNode = RelationTreeNode<Vacant, number | null>
 
 export interface VacantTreeProps {
   data: VacantTreeNode[]

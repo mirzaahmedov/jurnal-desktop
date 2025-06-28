@@ -47,7 +47,7 @@ export const BankMonitorColumns: ColumnDef<BankMonitoringType>[] = [
         }
         hoverContent={
           <DataList
-            list={[
+            items={[
               {
                 name: <Trans>id</Trans>,
                 value: (

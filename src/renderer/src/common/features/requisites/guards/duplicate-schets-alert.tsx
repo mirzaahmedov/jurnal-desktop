@@ -60,7 +60,7 @@ export const DuplicateSchetsAlert = () => {
           {duplicates ? (
             <div>
               <DataList
-                list={
+                items={
                   duplicates?.data?.map((schet) => {
                     const { name, value } = getSchetValues(schet)
                     return {

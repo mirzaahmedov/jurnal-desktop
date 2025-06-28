@@ -94,6 +94,8 @@ export const MaterialMonitorPage = () => {
     }
   }, [error])
 
+  console.log('isOpen: ', aktToggle.isOpen)
+
   return (
     <ListView>
       <ListView.Header className="flex items-center justify-between">
@@ -307,7 +309,7 @@ export const MaterialMonitorPage = () => {
       />
 
       <AktReportDialog
-        open={aktToggle.isOpen}
+        isOpen={aktToggle.isOpen}
         onOpenChange={aktToggle.setOpen}
         budjet_id={budjet_id!}
         main_schet_id={main_schet_id!}
@@ -317,7 +319,7 @@ export const MaterialMonitorPage = () => {
       />
 
       <TurnoverReportDialog
-        open={turnoverToggle.isOpen}
+        isOpen={turnoverToggle.isOpen}
         onOpenChange={turnoverToggle.setOpen}
         budjet_id={budjet_id!}
         main_schet_id={main_schet_id!}

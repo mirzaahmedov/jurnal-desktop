@@ -308,7 +308,7 @@ const PrixodDetails = ({ id, onSuccess }: PrixodDetailsProps) => {
                 spravochnik={orgSpravochnik}
                 form={form as any}
                 error={form.formState.errors.kimdan_id}
-                className="bg-gray-100"
+                className="bg-gray-50"
               />
               <ResponsibleFields
                 tabIndex={5}

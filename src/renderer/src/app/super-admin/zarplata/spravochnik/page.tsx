@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next'
 
 import { GenericTable } from '@/common/components'
 import { useSearchFilter } from '@/common/features/filters/search/search-filter-debounced'
-import { useToggle } from '@/common/hooks'
+import { usePagination, useToggle } from '@/common/hooks'
 import { useLayout } from '@/common/layout'
 import { ListView } from '@/common/views'
 
@@ -25,6 +25,7 @@ const ZarplataSpravochnikPage = () => {
   const [search] = useSearchFilter()
   const [typeCode] = useTypeFilter()
 
+  const pagination = usePagination()
   const dialogToggle = useToggle()
   const setLayout = useLayout()
 
@@ -56,17 +57,25 @@ const ZarplataSpravochnikPage = () => {
     setSelected(row)
   }
 
-  console.log('spravochniks', spravochniks)
+  const count = spravochniks?.totalCount ?? 0
+  const pageCount = Math.ceil(count / pagination.limit)
 
   return (
     <ListView>
       <ListView.Content loading={isFetching}>
         <GenericTable
-          data={spravochniks ?? []}
+          data={spravochniks?.data ?? []}
           columnDefs={columnDefs}
           onEdit={handleEdit}
         />
       </ListView.Content>
+      <ListView.Footer>
+        <ListView.Pagination
+          {...pagination}
+          pageCount={pageCount}
+          count={count}
+        />
+      </ListView.Footer>
       <ZarplataSpravochnikDialog
         selected={selected}
         isOpen={dialogToggle.isOpen}

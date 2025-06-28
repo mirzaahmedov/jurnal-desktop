@@ -10,6 +10,7 @@ import {
   BriefcaseBusiness,
   Building,
   Building2,
+  Calculator,
   CalendarCheck,
   ChartCandlestick,
   CircleDollarSign,
@@ -24,6 +25,7 @@ import {
   FileVideo,
   Folder,
   Group,
+  IdCard,
   Landmark,
   LayoutDashboard,
   LayoutGrid,
@@ -34,12 +36,15 @@ import {
   NotebookTabs,
   NotepadText,
   Percent,
+  Receipt,
   ReceiptText,
   Ruler,
+  Settings,
   ShieldBan,
   ShieldCheck,
   Signature,
   SquareActivity,
+  SquareCheck,
   SquareUser,
   SquareUserRound,
   Table2,
@@ -59,6 +64,7 @@ import { BankSaldoController } from '@/app/jur_2/saldo/components/saldo-controll
 import { WarehouseSaldoController } from '@/app/jur_7/saldo/components/saldo-controller'
 import { AdminRoles } from '@/app/super-admin/role'
 import { useAuthenticationStore } from '@/common/features/auth'
+import { CalculateParamsDialog } from '@/common/features/zarplata/calculate-params-dialog'
 import { omitEmptyArrayElements } from '@/common/lib/validation'
 
 export type NavElement = {
@@ -261,6 +267,46 @@ export const getNavElements = (t: TFunction): NavElement[] => {
               path: 'saldo',
               title: t('pages.saldo'),
               icon: CircleFadingPlus
+            }
+          ]
+        }
+      : null,
+    !is_super_admin
+      ? {
+          path: '/jur-5',
+          title: `№5 - МО (${t('pages.zarplata')})`,
+          icon: Receipt,
+          children: [
+            {
+              path: 'control-card',
+              title: t('pages.control_card'),
+              icon: SquareCheck
+            },
+            {
+              path: 'calculate-params',
+              title: t('pages.calc_parameters'),
+              icon: Settings
+            },
+            {
+              path: 'passport-info',
+              title: t('pages.passport_info'),
+              icon: IdCard
+            },
+            {
+              path: 'salary',
+              title: t('pages.salary_accrual'),
+              icon: Calculator
+            },
+            {
+              path: 'payment-type',
+              title: t('pages.payment_type'),
+              icon: Folder
+            },
+            {
+              displayOnly: true,
+              path: '',
+              title: <CalculateParamsDialog />,
+              icon: null
             }
           ]
         }

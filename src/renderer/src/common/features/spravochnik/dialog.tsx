@@ -4,21 +4,19 @@ import type { KeyboardEvent } from 'react'
 import { useEffect, useRef, useState } from 'react'
 
 import { useQuery } from '@tanstack/react-query'
-import { ArrowLeft, ArrowRight, Plus } from 'lucide-react'
+import { Plus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
-import Paginate from 'react-paginate'
 
 import { GenericTable, LoadingOverlay } from '@/common/components'
-import { pageSizeOptions } from '@/common/components/pagination'
-import { Button } from '@/common/components/ui/button'
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/common/components/ui/dialog'
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue
-} from '@/common/components/ui/select'
+  DialogContent,
+  DialogHeader,
+  DialogOverlay,
+  DialogTitle,
+  DialogTrigger
+} from '@/common/components/jolly/dialog'
+import { Pagination } from '@/common/components/pagination'
+import { Button } from '@/common/components/ui/button'
 import { useToggle } from '@/common/hooks'
 import { extendObject } from '@/common/lib/utils'
 import { normalizeEmptyFields } from '@/common/lib/validation'
@@ -151,7 +149,7 @@ export const Spravochnik = ({ close, spravochnik }: SpravochnikProps) => {
           setState={setState}
         />
       ) : null}
-      <Dialog
+      <DialogTrigger
         defaultOpen
         onOpenChange={(open) => {
           if (!open) {
@@ -160,158 +158,102 @@ export const Spravochnik = ({ close, spravochnik }: SpravochnikProps) => {
           }
         }}
       >
-        <DialogContent
-          className="max-w-screen-2xl w-full p-0 gap-0 h-3/5 overflow-auto flex flex-col"
-          onKeyDown={handleKeyDown}
-        >
-          <DialogHeader className="flex-0 p-5 flex items-center flex-row">
-            <DialogTitle>{spravochnik?.title}</DialogTitle>
+        <DialogOverlay>
+          <DialogContent className="max-w-screen-2xl w-full h-3/5 p-0">
+            <div
+              ref={(elem) => elem?.focus()}
+              onKeyDown={handleKeyDown}
+              className="flex flex-col gap-0 h-full overflow-auto"
+            >
+              <DialogHeader className="flex-0 p-5 flex items-center flex-row">
+                <DialogTitle>{spravochnik?.title}</DialogTitle>
 
-            <div className="flex-1 flex items-center gap-5 pl-10 pr-5">
-              {spravochnik?.filters?.map((FilterComponent, id) => (
-                <FilterComponent
-                  key={id}
-                  getValue={getValue}
-                  setValue={setValue}
-                />
-              ))}
-              {CustomDialog ? (
-                <Button
-                  onClick={dialogToggle.open}
-                  className="ml-auto"
-                >
-                  <Plus className="btn-icon icon-start" />
-                  {t('add')}
-                </Button>
+                <div className="flex-1 flex items-center gap-5 pl-10 pr-5">
+                  {spravochnik?.filters?.map((FilterComponent, id) => (
+                    <FilterComponent
+                      key={id}
+                      getValue={getValue}
+                      setValue={setValue}
+                    />
+                  ))}
+                  {CustomDialog ? (
+                    <Button
+                      onClick={dialogToggle.open}
+                      className="ml-auto"
+                    >
+                      <Plus className="btn-icon icon-start" />
+                      {t('add')}
+                    </Button>
+                  ) : null}
+                </div>
+              </DialogHeader>
+              {error ? (
+                <div className="w-full h-full flex flex-col items-center justify-center gap-1">
+                  <h3 className="text-xl">Не удалось получить данные :(</h3>
+                  <p className="text-sm text-slate-500">{error?.message}</p>
+                </div>
+              ) : Array.isArray(spravochnik?.columnDefs) ? (
+                <>
+                  <div className="flex-1 relative overflow-auto scrollbar scroll-pt-16">
+                    {isFetching ? <LoadingOverlay /> : null}
+                    {CustomTable ? (
+                      <CustomTable
+                        data={data?.data ?? []}
+                        columnDefs={spravochnik.columnDefs}
+                        activeRowId={String(selected?.id)}
+                        disabledIds={spravochnik.disabledIds}
+                        selectedIds={spravochnik.selectedId ? [spravochnik.selectedId] : []}
+                        onClickRow={(row) => {
+                          spravochnik.selectId?.(row.id, row)
+                          close(spravochnik.id)
+                          spravochnik.onClose?.()
+                        }}
+                        getRowId={spravochnik.getRowId ?? ((row) => row.id)}
+                        state={state}
+                        setState={setState}
+                        dialogToggle={dialogToggle}
+                      />
+                    ) : (
+                      <GenericTable
+                        data={data?.data ?? []}
+                        columnDefs={spravochnik?.columnDefs}
+                        getRowId={spravochnik.getRowId ?? ((row) => String(row.id))}
+                        activeRowId={String(selected?.id)}
+                        onClickRow={(row) => {
+                          spravochnik.selectId?.(row.id, row)
+                          close(spravochnik.id)
+                          spravochnik.onClose?.()
+                        }}
+                        disabledIds={spravochnik.disabledIds}
+                        selectedIds={spravochnik.selectedId ? [spravochnik.selectedId] : []}
+                        {...spravochnik.tableProps}
+                      />
+                    )}
+                  </div>
+                  <div className="flex-0 p-5 flex items-center gap-10">
+                    {data?.meta?.pageCount ? (
+                      <Pagination
+                        count={data.meta.count ?? 0}
+                        pageCount={data.meta.pageCount ?? 0}
+                        page={page}
+                        limit={pageSize}
+                        onChange={({ page, limit }) => {
+                          if (page) {
+                            setPage(page)
+                          }
+                          if (limit) {
+                            setPageSize(limit)
+                          }
+                        }}
+                      />
+                    ) : null}
+                  </div>
+                </>
               ) : null}
             </div>
-          </DialogHeader>
-          {error ? (
-            <div className="w-full h-full flex flex-col items-center justify-center gap-1">
-              <h3 className="text-xl">Не удалось получить данные :(</h3>
-              <p className="text-sm text-slate-500">{error?.message}</p>
-            </div>
-          ) : Array.isArray(spravochnik?.columnDefs) ? (
-            <>
-              <div className="flex-1 relative overflow-auto scrollbar scroll-pt-16">
-                {isFetching ? <LoadingOverlay /> : null}
-                {CustomTable ? (
-                  <CustomTable
-                    data={data?.data ?? []}
-                    columnDefs={spravochnik.columnDefs}
-                    activeRowId={String(selected?.id)}
-                    disabledIds={spravochnik.disabledIds}
-                    selectedIds={spravochnik.selectedId ? [spravochnik.selectedId] : []}
-                    onClickRow={(row) => {
-                      spravochnik.selectId?.(row.id, row)
-                      close(spravochnik.id)
-                      spravochnik.onClose?.()
-                    }}
-                    getRowId={spravochnik.getRowId ?? ((row) => row.id)}
-                    state={state}
-                    setState={setState}
-                    dialogToggle={dialogToggle}
-                  />
-                ) : (
-                  <GenericTable
-                    data={data?.data ?? []}
-                    columnDefs={spravochnik?.columnDefs}
-                    getRowId={spravochnik.getRowId ?? ((row) => String(row.id))}
-                    activeRowId={String(selected?.id)}
-                    onClickRow={(row) => {
-                      spravochnik.selectId?.(row.id, row)
-                      close(spravochnik.id)
-                      spravochnik.onClose?.()
-                    }}
-                    disabledIds={spravochnik.disabledIds}
-                    selectedIds={spravochnik.selectedId ? [spravochnik.selectedId] : []}
-                    {...spravochnik.tableProps}
-                  />
-                )}
-              </div>
-              <div className="flex-0 p-5 flex items-center gap-10">
-                {data?.meta?.pageCount ? (
-                  <>
-                    <Paginate
-                      className="flex gap-4"
-                      pageRangeDisplayed={2}
-                      breakLabel="..."
-                      forcePage={page - 1}
-                      onPageChange={({ selected }) => setPage(selected + 1)}
-                      pageLabelBuilder={(item) => (
-                        <Button
-                          variant={page === item ? 'outline' : 'ghost'}
-                          size="icon"
-                        >
-                          {item}
-                        </Button>
-                      )}
-                      nextLabel={
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                        >
-                          <ArrowRight className="btn-icon !ml-0" />
-                        </Button>
-                      }
-                      previousLabel={
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                        >
-                          <ArrowLeft className="btn-icon !ml-0" />
-                        </Button>
-                      }
-                      pageCount={data?.meta?.pageCount ?? 0}
-                      renderOnZeroPageCount={null}
-                    />
-                    {data?.meta?.count ? (
-                      <div className="flex items-center gap-10">
-                        <span className="whitespace-nowrap text-sm font-medium text-slate-600">
-                          {t('pagination.range', {
-                            from: (page - 1) * pageSize + 1,
-                            to:
-                              (page - 1) * pageSize +
-                              (page * pageSize > data?.meta?.count
-                                ? data?.meta?.count % pageSize
-                                : pageSize),
-                            total: data?.meta?.count
-                          })}
-                        </span>
-                        <div className="flex items-center gap-5">
-                          <span className="whitespace-nowrap text-sm font-medium text-slate-600">
-                            {t('pagination.page_size')}
-                          </span>
-                          <div className="w-20">
-                            <Select
-                              value={String(pageSize)}
-                              onValueChange={(value) => setPageSize(Number(value))}
-                            >
-                              <SelectTrigger>
-                                <SelectValue placeholder={String(pageSize)} />
-                              </SelectTrigger>
-                              <SelectContent>
-                                {pageSizeOptions.map((item) => (
-                                  <SelectItem
-                                    key={item.value}
-                                    value={String(item.value)}
-                                  >
-                                    {item.value}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                          </div>
-                        </div>
-                      </div>
-                    ) : null}
-                  </>
-                ) : null}
-              </div>
-            </>
-          ) : null}
-        </DialogContent>
-      </Dialog>
+          </DialogContent>
+        </DialogOverlay>
+      </DialogTrigger>
     </>
   )
 }

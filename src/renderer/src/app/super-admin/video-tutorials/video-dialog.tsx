@@ -9,14 +9,15 @@ import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 
-import { Button } from '@/common/components/ui/button'
 import {
-  Dialog,
   DialogContent,
   DialogFooter,
   DialogHeader,
-  DialogTitle
-} from '@/common/components/ui/dialog'
+  DialogOverlay,
+  DialogTitle,
+  DialogTrigger
+} from '@/common/components/jolly/dialog'
+import { Button } from '@/common/components/ui/button'
 import {
   Form,
   FormControl,
@@ -124,106 +125,112 @@ export const VideoDialog = ({ open, onOpenChange, selected, moduleId }: VideoDia
   }, [open, onOpenChange, form])
 
   return (
-    <Dialog
-      open={open}
+    <DialogTrigger
+      isOpen={open}
       onOpenChange={onOpenChange}
     >
-      <DialogContent className="max-w-xl">
-        <DialogHeader>
-          <DialogTitle>
-            {selected
-              ? capitalize(t('update-something', { something: t('video') }))
-              : capitalize(t('create-something', { something: t('video') }))}
-          </DialogTitle>
-        </DialogHeader>
-        <Form {...form}>
-          <form onSubmit={onSubmit}>
-            <div className="grid gap-4 py-4">
-              <FormField
-                name="name"
-                control={form.control}
-                render={({ field }) => (
-                  <FormItem>
-                    <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
-                      <FormLabel className="text-right col-span-2">{t('name')}</FormLabel>
-                      <FormControl>
-                        <Input
-                          className="col-span-4"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage className="text-end col-span-6" />
+      <DialogOverlay>
+        <DialogContent className="max-w-xl">
+          <DialogHeader>
+            <DialogTitle>
+              {selected
+                ? capitalize(t('update-something', { something: t('video') }))
+                : capitalize(t('create-something', { something: t('video') }))}
+            </DialogTitle>
+          </DialogHeader>
+          <Form {...form}>
+            <form onSubmit={onSubmit}>
+              <div className="grid gap-4 py-4">
+                <FormField
+                  name="name"
+                  control={form.control}
+                  render={({ field }) => (
+                    <FormItem>
+                      <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
+                        <FormLabel className="text-right col-span-2">{t('name')}</FormLabel>
+                        <FormControl>
+                          <Input
+                            className="col-span-4"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage className="text-end col-span-6" />
+                      </div>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  name="sort_order"
+                  control={form.control}
+                  render={({ field }) => (
+                    <FormItem>
+                      <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
+                        <FormLabel className="text-right col-span-2">{t('sort_order')}</FormLabel>
+                        <FormControl>
+                          <Input
+                            className="col-span-4"
+                            type="number"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage className="text-end col-span-6" />
+                      </div>
+                    </FormItem>
+                  )}
+                />
+                <div className="space-y-2">
+                  {selected ? (
+                    <div className="text-end">
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        onClick={() =>
+                          setEditingFile((prev) => {
+                            if (prev) {
+                              setFile(null)
+                            }
+                            return !prev
+                          })
+                        }
+                        className={cn(isEditingFile && 'gap-1 text-red-500 hover:text-red-500')}
+                      >
+                        {isEditingFile ? (
+                          <X className="btn-icon icon-start" />
+                        ) : (
+                          <SquarePen className="btn-icon icon-start" />
+                        )}
+                        {isEditingFile ? t('cancel') : t('edit')}
+                      </Button>
                     </div>
-                  </FormItem>
-                )}
-              />
-              <FormField
-                name="sort_order"
-                control={form.control}
-                render={({ field }) => (
-                  <FormItem>
-                    <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
-                      <FormLabel className="text-right col-span-2">{t('sort_order')}</FormLabel>
-                      <FormControl>
-                        <Input
-                          className="col-span-4"
-                          type="number"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage className="text-end col-span-6" />
-                    </div>
-                  </FormItem>
-                )}
-              />
-              <div className="space-y-2">
-                {selected ? (
-                  <div className="text-end">
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      onClick={() =>
-                        setEditingFile((prev) => {
-                          if (prev) {
-                            setFile(null)
-                          }
-                          return !prev
-                        })
-                      }
-                      className={cn(isEditingFile && 'gap-1 text-red-500 hover:text-red-500')}
-                    >
-                      {isEditingFile ? <X className="size-4" /> : <SquarePen className="size-4" />}
-                      {isEditingFile ? t('cancel') : t('edit')}
-                    </Button>
-                  </div>
-                ) : null}
+                  ) : null}
 
-                {isEditingFile || !selected ? (
-                  <VideoUpload
-                    file={file}
-                    onSelect={setFile}
-                  />
-                ) : (
-                  <VideoPlayer
-                    src={getVideoURL({ id: selected.id })}
-                    title={selected.name}
-                  />
-                )}
+                  {isEditingFile || !selected ? (
+                    <VideoUpload
+                      file={file}
+                      onSelect={setFile}
+                    />
+                  ) : (
+                    <VideoPlayer
+                      src={getVideoURL({ id: selected.id })}
+                      title={selected.name}
+                    />
+                  )}
+                </div>
               </div>
-            </div>
-            <DialogFooter>
-              <Button
-                type="submit"
-                isPending={isCreating || isUpdating}
-                disabled={isCreating || isUpdating}
-              >
-                {t('save')}
-              </Button>
-            </DialogFooter>
-          </form>
-        </Form>
-      </DialogContent>
-    </Dialog>
+              <DialogFooter>
+                <Button
+                  type="submit"
+                  isPending={isCreating || isUpdating}
+                  disabled={isCreating || isUpdating}
+                >
+                  {t('save')}
+                </Button>
+              </DialogFooter>
+            </form>
+          </Form>
+        </DialogContent>
+      </DialogOverlay>
+    </DialogTrigger>
   )
 }
 

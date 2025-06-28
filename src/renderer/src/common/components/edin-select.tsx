@@ -3,8 +3,8 @@ import type { Unit } from '@/common/models'
 import { useQuery } from '@tanstack/react-query'
 
 import { UnitQueryKeys, UnitService } from '@/app/super-admin/unit'
+import { cn } from '@/common/lib/utils'
 
-import { cn } from '../lib/utils'
 import { ComboboxItem, JollyComboBox, type JollyComboBoxProps } from './jolly/combobox'
 
 export interface EdinSelectProps extends Omit<JollyComboBoxProps<Unit>, 'children'> {

@@ -43,7 +43,7 @@ export const avansColumns: ColumnDef<Avans>[] = [
         secondaryText={row.spravochnik_podotchet_litso_rayon}
         hoverContent={
           <DataList
-            list={[
+            items={[
               {
                 name: <Trans>id</Trans>,
                 value: (

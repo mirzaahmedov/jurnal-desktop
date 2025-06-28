@@ -13,7 +13,7 @@ export interface TotalsOverviewProps {
 export const TotalsOverview = ({ total, _01, _06, _07, iznos }: TotalsOverviewProps) => {
   const { t } = useTranslation()
   return (
-    <div className="flex items-center justify-between flex-wrap bg-gray-100 border-brand p-10 rounded-lg">
+    <div className="flex items-center justify-between flex-wrap bg-gray-50 border border-gray-200 p-10 rounded-lg">
       <div className="flex items-center gap-5">
         <Label className="font-bold text-sm text-gray-500">{t('total')}</Label>
         <NumericInput

@@ -75,7 +75,12 @@
     "akt_priyom": "Akt",
     "pokazat_uslugi": "Xizmatlar ko'rsatish",
     "bhm": "BHM",
-    "position": "Lavozim"
+    "position": "Lavozim",
+    "control_card": "Nazorat kartasi",
+    "calc_parameters": "Hisoblash parametrlar",
+    "passport_info": "Pasport ma'lumotlari",
+    "salary_accrual": "Ish haqini hisoblash",
+    "payment_type": "To'lov turi"
   },
   "locales": {
     "uz": "Oʻzbekcha",

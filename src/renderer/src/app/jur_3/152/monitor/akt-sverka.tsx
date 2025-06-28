@@ -1,18 +1,19 @@
 import { Download } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { Button } from '@/common/components/ui/button'
+import { Button } from '@/common/components/jolly/button'
 import {
-  Dialog,
   DialogContent,
   DialogFooter,
   DialogHeader,
+  DialogOverlay,
   DialogTitle,
   DialogTrigger
-} from '@/common/components/ui/dialog'
+} from '@/common/components/jolly/dialog'
 import { Label } from '@/common/components/ui/label'
 import { DownloadFile } from '@/common/features/file'
 import { SpravochnikInput, useSpravochnik } from '@/common/features/spravochnik'
+import { formatLocaleDate } from '@/common/lib/format'
 
 import { createShartnomaSpravochnik } from '../../shartnoma'
 
@@ -49,8 +50,8 @@ export const AktSverkiDialog = ({
   )
 
   return (
-    <Dialog>
-      <DialogTrigger asChild>
+    <DialogTrigger>
+      <DialogTrigger>
         <Button
           variant="ghost"
           IconStart={Download}
@@ -58,44 +59,46 @@ export const AktSverkiDialog = ({
           {t('akt_sverki')}
         </Button>
       </DialogTrigger>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>{t('akt_sverki')}</DialogTitle>
-        </DialogHeader>
+      <DialogOverlay>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{t('akt_sverki')}</DialogTitle>
+          </DialogHeader>
 
-        <div className="mt-4 flex flex-col gap-2">
-          <Label htmlFor="shartnoma">
-            {t('shartnoma')} ({t('optional')})
-          </Label>
-          <SpravochnikInput
-            {...shartnomaSpravochnik}
-            getInputValue={(selected) =>
-              `№${selected?.doc_num ?? ''} - ${selected?.doc_date ?? ''}`
-            }
-          />
-        </div>
+          <div className="mt-4 flex flex-col gap-2">
+            <Label htmlFor="shartnoma">
+              {t('shartnoma')} ({t('optional')})
+            </Label>
+            <SpravochnikInput
+              {...shartnomaSpravochnik}
+              getInputValue={(selected) =>
+                `№${selected?.doc_num ?? ''} - ${formatLocaleDate(selected?.doc_date ?? '')}`
+              }
+            />
+          </div>
 
-        <DialogFooter>
-          <DownloadFile
-            fileName={`акт-сверки-${from}&${to}${shartnomaSpravochnik.selected?.doc_num ? `_договор-№${shartnomaSpravochnik.selected.doc_num}` : ''}.xlsx`}
-            url="/152/monitoring/akt/sverka"
-            params={{
-              budjet_id: budjetId,
-              main_schet_id: mainSchetId,
-              report_title_id: reportTitleId,
-              schet_id: schetId,
-              organ_id: organId,
-              contract_id: shartnomaSpravochnik.selected?.id || undefined,
-              from,
-              to,
-              year,
-              month,
-              excel: true
-            }}
-            buttonText={t('download')}
-          />
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+          <DialogFooter>
+            <DownloadFile
+              fileName={`акт-сверки-${from}&${to}${shartnomaSpravochnik.selected?.doc_num ? `_договор-№${shartnomaSpravochnik.selected.doc_num}` : ''}.xlsx`}
+              url="/152/monitoring/akt/sverka"
+              params={{
+                budjet_id: budjetId,
+                main_schet_id: mainSchetId,
+                report_title_id: reportTitleId,
+                schet_id: schetId,
+                organ_id: organId,
+                contract_id: shartnomaSpravochnik.selected?.id || undefined,
+                from,
+                to,
+                year,
+                month,
+                excel: true
+              }}
+              buttonText={t('download')}
+            />
+          </DialogFooter>
+        </DialogContent>
+      </DialogOverlay>
+    </DialogTrigger>
   )
 }

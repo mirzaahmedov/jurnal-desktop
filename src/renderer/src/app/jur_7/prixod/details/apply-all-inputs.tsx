@@ -31,15 +31,14 @@ export const ApplyAllInputs = ({ onApply }: ApplyAllInputsProps) => {
           render={({ field }) => (
             <SchetEditor
               editor={false}
+              error={undefined}
               value={field.value}
               onChange={(value) => {
                 field.onChange(value)
-                // form.setValue('sub_schet', '')
               }}
               tabIndex={-1}
-              inputProps={{
-                placeholder: t('schet')
-              }}
+              placeholder={t('schet')}
+              className="w-24"
             />
           )}
         />

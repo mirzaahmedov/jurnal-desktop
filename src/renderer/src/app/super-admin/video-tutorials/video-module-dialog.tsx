@@ -8,14 +8,15 @@ import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 
-import { Button } from '@/common/components/ui/button'
 import {
-  Dialog,
   DialogContent,
   DialogFooter,
   DialogHeader,
-  DialogTitle
-} from '@/common/components/ui/dialog'
+  DialogOverlay,
+  DialogTitle,
+  DialogTrigger
+} from '@/common/components/jolly/dialog'
+import { Button } from '@/common/components/ui/button'
 import {
   Form,
   FormControl,
@@ -89,86 +90,90 @@ export const VideoModuleDialog = ({ open, onOpenChange, selected }: VideoModuleD
   }, [form, selected])
 
   return (
-    <Dialog
-      open={open}
+    <DialogTrigger
+      isOpen={open}
       onOpenChange={onOpenChange}
     >
-      <DialogContent className="max-w-xl">
-        <DialogHeader>
-          <DialogTitle>
-            {selected
-              ? capitalize(t('update-something', { something: t('pages.video_module') }))
-              : capitalize(t('create-something', { something: t('pages.video_module') }))}
-          </DialogTitle>
-        </DialogHeader>
-        <Form {...form}>
-          <form onSubmit={onSubmit}>
-            <div className="grid gap-4 py-4">
-              <FormField
-                name="name"
-                control={form.control}
-                render={({ field }) => (
-                  <FormItem>
-                    <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
-                      <FormLabel className="text-right col-span-2">{t('name')}</FormLabel>
-                      <FormControl>
-                        <Input
-                          className="col-span-4"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage className="text-end col-span-6" />
-                    </div>
-                  </FormItem>
-                )}
-              />
-              <FormField
-                name="status"
-                control={form.control}
-                render={({ field }) => (
-                  <FormItem>
-                    <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
-                      <div className="col-span-2"></div>
-                      <FormControl className="col-span-4">
-                        <RadioGroup
-                          value={String(field.value)}
-                          onValueChange={(value) => field.onChange(value === 'true' ? true : false)}
-                        >
-                          <div className="flex items-center space-x-2">
-                            <RadioGroupItem
-                              value="true"
-                              id="super-admin"
-                            />
-                            <Label htmlFor="super-admin">{t('super-admin')}</Label>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <RadioGroupItem
-                              value="false"
-                              id="region"
-                            />
-                            <Label htmlFor="region">{t('region')}</Label>
-                          </div>
-                        </RadioGroup>
-                      </FormControl>
-                      <FormMessage className="text-end col-span-6" />
-                    </div>
-                  </FormItem>
-                )}
-              />
-            </div>
-            <DialogFooter>
-              <Button
-                type="submit"
-                disabled={isCreating || isUpdating}
-                isPending={isCreating || isUpdating}
-              >
-                {t('save')}
-              </Button>
-            </DialogFooter>
-          </form>
-        </Form>
-      </DialogContent>
-    </Dialog>
+      <DialogOverlay>
+        <DialogContent className="max-w-xl">
+          <DialogHeader>
+            <DialogTitle>
+              {selected
+                ? capitalize(t('update-something', { something: t('pages.video_module') }))
+                : capitalize(t('create-something', { something: t('pages.video_module') }))}
+            </DialogTitle>
+          </DialogHeader>
+          <Form {...form}>
+            <form onSubmit={onSubmit}>
+              <div className="grid gap-4 py-4">
+                <FormField
+                  name="name"
+                  control={form.control}
+                  render={({ field }) => (
+                    <FormItem>
+                      <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
+                        <FormLabel className="text-right col-span-2">{t('name')}</FormLabel>
+                        <FormControl>
+                          <Input
+                            className="col-span-4"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage className="text-end col-span-6" />
+                      </div>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  name="status"
+                  control={form.control}
+                  render={({ field }) => (
+                    <FormItem>
+                      <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
+                        <div className="col-span-2"></div>
+                        <FormControl className="col-span-4">
+                          <RadioGroup
+                            value={String(field.value)}
+                            onValueChange={(value) =>
+                              field.onChange(value === 'true' ? true : false)
+                            }
+                          >
+                            <div className="flex items-center space-x-2">
+                              <RadioGroupItem
+                                value="true"
+                                id="super-admin"
+                              />
+                              <Label htmlFor="super-admin">{t('super-admin')}</Label>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                              <RadioGroupItem
+                                value="false"
+                                id="region"
+                              />
+                              <Label htmlFor="region">{t('region')}</Label>
+                            </div>
+                          </RadioGroup>
+                        </FormControl>
+                        <FormMessage className="text-end col-span-6" />
+                      </div>
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <DialogFooter>
+                <Button
+                  type="submit"
+                  disabled={isCreating || isUpdating}
+                  isPending={isCreating || isUpdating}
+                >
+                  {t('save')}
+                </Button>
+              </DialogFooter>
+            </form>
+          </Form>
+        </DialogContent>
+      </DialogOverlay>
+    </DialogTrigger>
   )
 }
 

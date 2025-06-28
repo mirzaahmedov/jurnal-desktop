@@ -1,6 +1,6 @@
 import type { OperatsiiFormValues } from './config'
 import type { Operatsii } from '@/common/models'
-import type { DialogProps } from '@radix-ui/react-dialog'
+import type { DialogTriggerProps } from 'react-aria-components'
 
 import { useEffect } from 'react'
 
@@ -13,14 +13,15 @@ import { toast } from 'react-toastify'
 
 import { createSmetaSpravochnik } from '@/app/super-admin/smeta'
 import { SelectField } from '@/common/components'
-import { Button } from '@/common/components/ui/button'
 import {
-  Dialog,
   DialogContent,
   DialogFooter,
   DialogHeader,
-  DialogTitle
-} from '@/common/components/ui/dialog'
+  DialogOverlay,
+  DialogTitle,
+  DialogTrigger
+} from '@/common/components/jolly/dialog'
+import { Button } from '@/common/components/ui/button'
 import {
   Form,
   FormControl,
@@ -39,16 +40,15 @@ import { operatsiiQueryKeys, operatsiiTypeSchetOptions } from './config'
 import { OperatsiiFormSchema } from './config'
 import { OperatsiiService } from './service'
 
-interface OperatsiiDialogProps extends DialogProps {
+interface OperatsiiDialogProps extends Omit<DialogTriggerProps, 'children'> {
   selected: Operatsii | null
   original: Partial<OperatsiiFormValues> | null
 }
 export const OperatsiiDialog = ({
-  open,
+  isOpen,
   onOpenChange,
   selected,
-  original,
-  ...props
+  original
 }: OperatsiiDialogProps) => {
   const queryClient = useQueryClient()
 
@@ -122,151 +122,152 @@ export const OperatsiiDialog = ({
     form.reset(defaultValues)
   }, [form, selected, original])
   useEffect(() => {
-    if (open) {
+    if (isOpen) {
       if (typeSchet !== TypeSchetOperatsii.ALL) {
         form.setValue('type_schet', typeSchet)
       }
     }
-  }, [form, open, typeSchet, budjet])
+  }, [form, isOpen, typeSchet, budjet])
 
   return (
-    <Dialog
-      open={open}
+    <DialogTrigger
+      isOpen={isOpen}
       onOpenChange={onOpenChange}
-      {...props}
     >
-      <DialogContent className="max-w-xl">
-        <DialogHeader>
-          <DialogTitle>
-            {selected
-              ? t('operatsii')
-              : capitalize(t('create-something', { something: t('operatsii') }))}
-          </DialogTitle>
-        </DialogHeader>
-        <Form {...form}>
-          <form onSubmit={onSubmit}>
-            <div className="grid gap-4 py-4">
-              <FormField
-                name="name"
-                control={form.control}
-                render={({ field }) => (
-                  <FormItem>
-                    <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
-                      <FormLabel className="text-right col-span-2">{t('name')}</FormLabel>
-                      <FormControl>
-                        <Input
-                          className="col-span-4"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage className="text-end col-span-6" />
-                    </div>
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                name="schet"
-                control={form.control}
-                render={({ field }) => (
-                  <FormItem>
-                    <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
-                      <FormLabel className="text-right col-span-2">{t('schet')}</FormLabel>
-                      <FormControl>
-                        <Input
-                          className="col-span-4"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage className="text-end col-span-6" />
-                    </div>
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                name="sub_schet"
-                control={form.control}
-                render={({ field }) => (
-                  <FormItem>
-                    <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
-                      <FormLabel className="text-right col-span-2">{t('subschet')}</FormLabel>
-                      <FormControl>
-                        <Input
-                          className="col-span-4"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage className="text-end col-span-6" />
-                    </div>
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                name="type_schet"
-                control={form.control}
-                render={({ field }) => (
-                  <FormItem>
-                    <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
-                      <FormLabel className="text-right col-span-2">{t('type_schet')}</FormLabel>
-                      <SelectField
-                        {...field}
-                        withFormControl
-                        options={operatsiiTypeSchetOptions.filter(
-                          (o) => o.value !== TypeSchetOperatsii.ALL
-                        )}
-                        placeholder={t('type')}
-                        getOptionLabel={(option) => (
-                          <Trans
-                            ns="app"
-                            i18nKey={option.transKey}
+      <DialogOverlay>
+        <DialogContent className="max-w-xl">
+          <DialogHeader>
+            <DialogTitle>
+              {selected
+                ? t('operatsii')
+                : capitalize(t('create-something', { something: t('operatsii') }))}
+            </DialogTitle>
+          </DialogHeader>
+          <Form {...form}>
+            <form onSubmit={onSubmit}>
+              <div className="grid gap-4 py-4">
+                <FormField
+                  name="name"
+                  control={form.control}
+                  render={({ field }) => (
+                    <FormItem>
+                      <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
+                        <FormLabel className="text-right col-span-2">{t('name')}</FormLabel>
+                        <FormControl>
+                          <Input
+                            className="col-span-4"
+                            {...field}
                           />
-                        )}
-                        getOptionValue={(option) => option.value}
-                        triggerClassName="col-span-4"
-                        onValueChange={(value) => field.onChange(value)}
-                      />
-                      <FormMessage className="text-end col-span-6" />
-                    </div>
-                  </FormItem>
-                )}
-              />
-              <FormField
-                name="smeta_id"
-                control={form.control}
-                render={({ field }) => (
-                  <FormItem>
-                    <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
-                      <FormLabel className="text-right col-span-2">{t('smeta')}</FormLabel>
-                      <Input
-                        {...field}
-                        readOnly
-                        className="col-span-4"
-                        value={`${
-                          smetaSpravochnik.selected?.smeta_number ?? ''
-                        } - ${smetaSpravochnik.selected?.smeta_name ?? ''}`}
-                        onChange={undefined}
-                        onDoubleClick={smetaSpravochnik.open}
-                      />
-                      <FormMessage className="text-end col-span-6" />
-                    </div>
-                  </FormItem>
-                )}
-              />
-            </div>
-            <DialogFooter>
-              <Button
-                type="submit"
-                disabled={isCreating || isUpdating}
-              >
-                {t('save')}
-              </Button>
-            </DialogFooter>
-          </form>
-        </Form>
-      </DialogContent>
-    </Dialog>
+                        </FormControl>
+                        <FormMessage className="text-end col-span-6" />
+                      </div>
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  name="schet"
+                  control={form.control}
+                  render={({ field }) => (
+                    <FormItem>
+                      <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
+                        <FormLabel className="text-right col-span-2">{t('schet')}</FormLabel>
+                        <FormControl>
+                          <Input
+                            className="col-span-4"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage className="text-end col-span-6" />
+                      </div>
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  name="sub_schet"
+                  control={form.control}
+                  render={({ field }) => (
+                    <FormItem>
+                      <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
+                        <FormLabel className="text-right col-span-2">{t('subschet')}</FormLabel>
+                        <FormControl>
+                          <Input
+                            className="col-span-4"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage className="text-end col-span-6" />
+                      </div>
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  name="type_schet"
+                  control={form.control}
+                  render={({ field }) => (
+                    <FormItem>
+                      <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
+                        <FormLabel className="text-right col-span-2">{t('type_schet')}</FormLabel>
+                        <SelectField
+                          {...field}
+                          withFormControl
+                          options={operatsiiTypeSchetOptions.filter(
+                            (o) => o.value !== TypeSchetOperatsii.ALL
+                          )}
+                          placeholder={t('type')}
+                          getOptionLabel={(option) => (
+                            <Trans
+                              ns="app"
+                              i18nKey={option.transKey}
+                            />
+                          )}
+                          getOptionValue={(option) => option.value}
+                          triggerClassName="col-span-4"
+                          onValueChange={(value) => field.onChange(value)}
+                        />
+                        <FormMessage className="text-end col-span-6" />
+                      </div>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  name="smeta_id"
+                  control={form.control}
+                  render={({ field }) => (
+                    <FormItem>
+                      <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
+                        <FormLabel className="text-right col-span-2">{t('smeta')}</FormLabel>
+                        <Input
+                          {...field}
+                          readOnly
+                          className="col-span-4"
+                          value={`${
+                            smetaSpravochnik.selected?.smeta_number ?? ''
+                          } - ${smetaSpravochnik.selected?.smeta_name ?? ''}`}
+                          onChange={undefined}
+                          onDoubleClick={smetaSpravochnik.open}
+                        />
+                        <FormMessage className="text-end col-span-6" />
+                      </div>
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <DialogFooter>
+                <Button
+                  type="submit"
+                  disabled={isCreating || isUpdating}
+                >
+                  {t('save')}
+                </Button>
+              </DialogFooter>
+            </form>
+          </Form>
+        </DialogContent>
+      </DialogOverlay>
+    </DialogTrigger>
   )
 }
 

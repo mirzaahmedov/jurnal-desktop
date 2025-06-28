@@ -43,7 +43,7 @@ export const OrganMonitorColumns: ColumnDef<OrganizationMonitor>[] = [
         secondaryText={<Copyable value={row.organ_inn}>#{row.organ_inn}</Copyable>}
         hoverContent={
           <DataList
-            list={[
+            items={[
               {
                 name: <Trans>id</Trans>,
                 value: (
@@ -83,7 +83,7 @@ export const OrganMonitorColumns: ColumnDef<OrganizationMonitor>[] = [
         secondaryText={formatLocaleDate(row.shartnoma_doc_date)}
         hoverContent={
           <DataList
-            list={[
+            items={[
               {
                 name: <Trans>id</Trans>,
                 value: (

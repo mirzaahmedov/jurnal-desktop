@@ -5,6 +5,7 @@ import { useEffect } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { AppWindow } from 'lucide-react'
 import { useForm, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { type Location, useLocation, useNavigate, useParams } from 'react-router-dom'
@@ -19,8 +20,14 @@ import {
   createEditorCreateHandler,
   createEditorDeleteHandler
 } from '@/common/components/editable-table/helpers'
-import { Button } from '@/common/components/ui/button'
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/common/components/ui/dialog'
+import { Button } from '@/common/components/jolly/button'
+import {
+  DialogContent,
+  DialogHeader,
+  DialogOverlay,
+  DialogTitle,
+  DialogTrigger
+} from '@/common/components/jolly/dialog'
 import { Form } from '@/common/components/ui/form'
 import { DocumentType } from '@/common/features/doc-num'
 import { useRequisitesStore } from '@/common/features/requisites'
@@ -406,7 +413,7 @@ const BankRasxodDetailsPage = () => {
                   importDialogToggle.open()
                 }}
               >
-                {t('choose_zarplata')}
+                <AppWindow className="btn-icon icon-start" /> {t('choose_zarplata')}
               </Button>
 
               {summa ? <AccountBalance balance={reminder} /> : null}
@@ -435,30 +442,32 @@ const BankRasxodDetailsPage = () => {
         </Fieldset>
       </DetailsView.Content>
 
-      <Dialog
-        open={importDialogToggle.isOpen}
+      <DialogTrigger
+        isOpen={importDialogToggle.isOpen}
         onOpenChange={importDialogToggle.setOpen}
       >
-        <DialogContent className="w-full max-w-[1820px] h-full max-h-[980px] flex flex-col">
-          <DialogHeader>
-            <DialogTitle>{t('import_zarplata')}</DialogTitle>
-          </DialogHeader>
-          <ImportPlastik
-            onSelect={({ opisanie, childs }) => {
-              form.setValue('opisanie', opisanie, { shouldValidate: true })
-              form.setValue(
-                'childs',
-                childs.map(({ summa }) => ({
-                  spravochnik_operatsii_id: 0,
-                  summa
-                })),
-                { shouldValidate: true }
-              )
-              importDialogToggle.close()
-            }}
-          />
-        </DialogContent>
-      </Dialog>
+        <DialogOverlay>
+          <DialogContent className="w-full max-w-[1820px] h-full max-h-[980px] flex flex-col">
+            <DialogHeader>
+              <DialogTitle>{t('import_zarplata')}</DialogTitle>
+            </DialogHeader>
+            <ImportPlastik
+              onSelect={({ opisanie, childs }) => {
+                form.setValue('opisanie', opisanie, { shouldValidate: true })
+                form.setValue(
+                  'childs',
+                  childs.map(({ summa }) => ({
+                    spravochnik_operatsii_id: 0,
+                    summa
+                  })),
+                  { shouldValidate: true }
+                )
+                importDialogToggle.close()
+              }}
+            />
+          </DialogContent>
+        </DialogOverlay>
+      </DialogTrigger>
     </DetailsView>
   )
 }

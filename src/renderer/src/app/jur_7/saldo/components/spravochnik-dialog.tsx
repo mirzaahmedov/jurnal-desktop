@@ -9,18 +9,19 @@ import { useTranslation } from 'react-i18next'
 import ReactPaginate from 'react-paginate'
 
 import { GenericTable, LoadingOverlay } from '@/common/components'
+import {
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogOverlay,
+  DialogTitle,
+  DialogTrigger
+} from '@/common/components/jolly/dialog'
 import { pageSizeOptions } from '@/common/components/pagination'
 import { SearchInputDebounced } from '@/common/components/search-input-debounced'
 import { IDCell } from '@/common/components/table/renderers/id'
 import { Badge } from '@/common/components/ui/badge'
 import { Button } from '@/common/components/ui/button'
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle
-} from '@/common/components/ui/dialog'
 import {
   Select,
   SelectContent,
@@ -101,176 +102,180 @@ export const SaldoProductSpravochnikDialog = ({
   const selectedIds = useMemo(() => selectedRows.map((e) => e.product_id), [selectedRows])
 
   return (
-    <Dialog
-      open={open}
+    <DialogTrigger
+      isOpen={open}
       onOpenChange={onOpenChange}
     >
-      <DialogContent className="max-w-full w-full p-0 h-0 min-h-[70%] overflow-hidden gap-0 flex flex-col">
-        <Tabs
-          value={tabValue}
-          onValueChange={(value) => setTabValue(value as TabOption)}
-          className="flex flex-col h-full overflow-hidden"
-        >
-          <DialogHeader className="flex-0 px-5 py-1 flex gap-10 items-center flex-row">
-            <DialogTitle>{t('products')}</DialogTitle>
-            <TabsList>
-              <TabsTrigger value={TabOption.ALL}>{t('add')}</TabsTrigger>
-              <TabsTrigger
-                value={TabOption.SELECTED}
-                className="flex items-center gap-5"
-              >
-                {t('selected_products')}
-                {selectedRows.length ? <Badge>{selectedRows.length}</Badge> : null}
-              </TabsTrigger>
-            </TabsList>
-            {tabValue === TabOption.ALL ? (
-              <SearchInputDebounced
-                value={search}
-                onValueChange={setSearch}
-              />
-            ) : null}
-          </DialogHeader>
-          <TabsContent
-            value={TabOption.SELECTED}
-            className="hidden data-[state=active]:flex flex-1 flex-col overflow-hidden relative"
+      <DialogOverlay>
+        <DialogContent className="max-w-full w-full p-0 h-0 min-h-[70%] overflow-hidden gap-0 flex flex-col">
+          <Tabs
+            value={tabValue}
+            onValueChange={(value) => setTabValue(value as TabOption)}
+            className="flex flex-col h-full overflow-hidden"
           >
-            {isFetching ? <LoadingOverlay /> : null}
-            <div className="flex-1 overflow-auto scrollbar">
+            <DialogHeader className="flex-0 px-5 py-1 flex gap-10 items-center flex-row">
+              <DialogTitle>{t('products')}</DialogTitle>
+              <TabsList>
+                <TabsTrigger value={TabOption.ALL}>{t('add')}</TabsTrigger>
+                <TabsTrigger
+                  value={TabOption.SELECTED}
+                  className="flex items-center gap-5"
+                >
+                  {t('selected_products')}
+                  {selectedRows.length ? <Badge>{selectedRows.length}</Badge> : null}
+                </TabsTrigger>
+              </TabsList>
+              {tabValue === TabOption.ALL ? (
+                <SearchInputDebounced
+                  value={search}
+                  onValueChange={setSearch}
+                />
+              ) : null}
+            </DialogHeader>
+            <TabsContent
+              value={TabOption.SELECTED}
+              className="hidden data-[state=active]:flex flex-1 flex-col overflow-hidden relative"
+            >
+              {isFetching ? <LoadingOverlay /> : null}
+              <div className="flex-1 overflow-auto scrollbar">
+                <GenericTable
+                  columnDefs={CommonWarehouseSaldoProductColumns}
+                  data={selectedRows ?? []}
+                  getRowId={(row) => row.product_id}
+                  onDelete={(organization) => {
+                    setSelectedRows((prev) => {
+                      if (prev.find((o) => o.id === organization.id)) {
+                        return prev.filter((o) => o.id !== organization.id)
+                      }
+                      return prev
+                    })
+                  }}
+                />
+              </div>
+            </TabsContent>
+
+            <TabsContent
+              value={TabOption.ALL}
+              className="hidden data-[state=active]:block w-full flex-1 relative overflow-auto scrollbar"
+            >
+              {isFetching ? <LoadingOverlay /> : null}
               <GenericTable
-                columnDefs={CommonWarehouseSaldoProductColumns}
-                data={selectedRows ?? []}
+                selectedIds={selectedIds}
+                disabledIds={disabledIds}
+                data={products?.data ?? []}
+                columnDefs={columns}
                 getRowId={(row) => row.product_id}
-                onDelete={(organization) => {
+                className="w-full"
+                onClickRow={(organization) => {
                   setSelectedRows((prev) => {
                     if (prev.find((o) => o.id === organization.id)) {
                       return prev.filter((o) => o.id !== organization.id)
                     }
-                    return prev
+                    return [...prev, organization]
                   })
                 }}
               />
-            </div>
-          </TabsContent>
-
-          <TabsContent
-            value={TabOption.ALL}
-            className="hidden data-[state=active]:block w-full flex-1 relative overflow-auto scrollbar"
-          >
-            {isFetching ? <LoadingOverlay /> : null}
-            <GenericTable
-              selectedIds={selectedIds}
-              disabledIds={disabledIds}
-              data={products?.data ?? []}
-              columnDefs={columns}
-              getRowId={(row) => row.product_id}
-              className="w-full"
-              onClickRow={(organization) => {
-                setSelectedRows((prev) => {
-                  if (prev.find((o) => o.id === organization.id)) {
-                    return prev.filter((o) => o.id !== organization.id)
-                  }
-                  return [...prev, organization]
-                })
-              }}
-            />
-          </TabsContent>
-        </Tabs>
-        <DialogFooter className="p-0 m-0">
-          <div className="w-full p-5 flex items-center justify-between">
-            <div className="flex-0 p-5 flex items-center gap-10">
-              {products?.meta?.pageCount ? (
-                <>
-                  <ReactPaginate
-                    className="flex gap-4"
-                    pageRangeDisplayed={2}
-                    breakLabel="..."
-                    forcePage={pagination.page - 1}
-                    onPageChange={({ selected }) => pagination.onChange({ page: selected + 1 })}
-                    pageLabelBuilder={(item) => (
-                      <Button
-                        variant={pagination.page === item ? 'outline' : 'ghost'}
-                        size="icon"
-                      >
-                        {item}
-                      </Button>
-                    )}
-                    nextLabel={
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                      >
-                        <ArrowRight className="btn-icon !ml-0" />
-                      </Button>
-                    }
-                    previousLabel={
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                      >
-                        <ArrowLeft className="btn-icon !ml-0" />
-                      </Button>
-                    }
-                    pageCount={products?.meta?.pageCount ?? 0}
-                    renderOnZeroPageCount={null}
-                  />
-                  {products?.meta?.count ? (
-                    <div className="flex items-center gap-10">
-                      <span className="whitespace-nowrap text-sm font-medium text-slate-600">
-                        {t('pagination.range', {
-                          from: (pagination.page - 1) * pagination.limit + 1,
-                          to:
-                            (pagination.page - 1) * pagination.limit +
-                            (pagination.page * pagination.limit > products?.meta?.count
-                              ? products?.meta?.count % pagination.limit
-                              : pagination.limit),
-                          total: products?.meta?.count
-                        })}
-                      </span>
-                      <div className="flex items-center gap-5">
+            </TabsContent>
+          </Tabs>
+          <DialogFooter className="p-0 m-0">
+            <div className="w-full p-5 flex items-center justify-between">
+              <div className="flex-0 p-5 flex items-center gap-10">
+                {products?.meta?.pageCount ? (
+                  <>
+                    <ReactPaginate
+                      className="flex gap-4"
+                      pageRangeDisplayed={2}
+                      breakLabel="..."
+                      forcePage={pagination.page - 1}
+                      onPageChange={({ selected }) => pagination.onChange({ page: selected + 1 })}
+                      pageLabelBuilder={(item) => (
+                        <Button
+                          variant={pagination.page === item ? 'outline' : 'ghost'}
+                          size="icon"
+                        >
+                          {item}
+                        </Button>
+                      )}
+                      nextLabel={
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                        >
+                          <ArrowRight className="btn-icon !ml-0" />
+                        </Button>
+                      }
+                      previousLabel={
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                        >
+                          <ArrowLeft className="btn-icon !ml-0" />
+                        </Button>
+                      }
+                      pageCount={products?.meta?.pageCount ?? 0}
+                      renderOnZeroPageCount={null}
+                    />
+                    {products?.meta?.count ? (
+                      <div className="flex items-center gap-10">
                         <span className="whitespace-nowrap text-sm font-medium text-slate-600">
-                          {t('pagination.page_size')}
+                          {t('pagination.range', {
+                            from: (pagination.page - 1) * pagination.limit + 1,
+                            to:
+                              (pagination.page - 1) * pagination.limit +
+                              (pagination.page * pagination.limit > products?.meta?.count
+                                ? products?.meta?.count % pagination.limit
+                                : pagination.limit),
+                            total: products?.meta?.count
+                          })}
                         </span>
-                        <div className="w-20">
-                          <Select
-                            value={String(pagination.limit)}
-                            onValueChange={(value) => pagination.onChange({ limit: Number(value) })}
-                          >
-                            <SelectTrigger>
-                              <SelectValue placeholder={String(pagination.limit)} />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {pageSizeOptions.map((item) => (
-                                <SelectItem
-                                  key={item.value}
-                                  value={String(item.value)}
-                                >
-                                  {item.value}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
+                        <div className="flex items-center gap-5">
+                          <span className="whitespace-nowrap text-sm font-medium text-slate-600">
+                            {t('pagination.page_size')}
+                          </span>
+                          <div className="w-20">
+                            <Select
+                              value={String(pagination.limit)}
+                              onValueChange={(value) =>
+                                pagination.onChange({ limit: Number(value) })
+                              }
+                            >
+                              <SelectTrigger>
+                                <SelectValue placeholder={String(pagination.limit)} />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {pageSizeOptions.map((item) => (
+                                  <SelectItem
+                                    key={item.value}
+                                    value={String(item.value)}
+                                  >
+                                    {item.value}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ) : null}
-                </>
-              ) : null}
-            </div>
+                    ) : null}
+                  </>
+                ) : null}
+              </div>
 
-            <Button
-              disabled={isFetching}
-              isPending={isFetching}
-              onClick={() => {
-                onSelect?.(selectedRows)
-                onOpenChange?.(false)
-              }}
-              className="ml-auto"
-            >
-              {t('add')}
-            </Button>
-          </div>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+              <Button
+                disabled={isFetching}
+                isPending={isFetching}
+                onClick={() => {
+                  onSelect?.(selectedRows)
+                  onOpenChange?.(false)
+                }}
+                className="ml-auto"
+              >
+                {t('add')}
+              </Button>
+            </div>
+          </DialogFooter>
+        </DialogContent>
+      </DialogOverlay>
+    </DialogTrigger>
   )
 }

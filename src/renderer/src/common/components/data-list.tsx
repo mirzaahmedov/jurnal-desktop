@@ -8,10 +8,10 @@ export interface DataListItem {
 }
 
 export interface DataListProps extends HTMLAttributes<HTMLUListElement> {
-  list: DataListItem[]
+  items: DataListItem[]
   renderHeader?: () => ReactNode
 }
-export const DataList = ({ renderHeader, list, className, ...props }: DataListProps) => {
+export const DataList = ({ renderHeader, items, className, ...props }: DataListProps) => {
   return (
     <ul
       className={cn('flex flex-col gap-2 text-foreground', className)}
@@ -27,7 +27,7 @@ export const DataList = ({ renderHeader, list, className, ...props }: DataListPr
         />
       ) : null}
 
-      {list.map((item, index) => (
+      {items.map((item, index) => (
         <DataListItem
           key={index}
           item={item}

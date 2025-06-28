@@ -22,7 +22,7 @@ export const ExpandableList = <T,>({ items, renderHeader, renderItem }: Expandab
         <DataList
           className="text-sm"
           renderHeader={renderHeader}
-          list={items.slice(0, 2).map((item, index) => ({
+          items={items.slice(0, 2).map((item, index) => ({
             name: index + 1,
             value: renderItem(item)
           }))}
@@ -45,7 +45,7 @@ export const ExpandableList = <T,>({ items, renderHeader, renderItem }: Expandab
           <PopoverContent align="end">
             <DataList
               renderHeader={renderHeader}
-              list={items.map((item, index) => ({
+              items={items.map((item, index) => ({
                 name: index + 1,
                 value: renderItem(item)
               }))}

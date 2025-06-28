@@ -47,7 +47,7 @@ export const BankPrixodColumns: ColumnDef<BankPrixod>[] = [
         }
         hoverContent={
           <DataList
-            list={[
+            items={[
               {
                 name: <Trans>id</Trans>,
                 value: (

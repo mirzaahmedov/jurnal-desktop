@@ -1,5 +1,6 @@
 'use client'
 
+import { type VariantProps, cva } from 'class-variance-authority'
 import { ChevronsUpDown } from 'lucide-react'
 import {
   ComboBox as AriaComboBox,
@@ -72,7 +73,27 @@ const ComboboxListBox = <T extends object>({ className, ...props }: AriaListBoxP
   />
 )
 
-interface JollyComboBoxProps<T extends object> extends Omit<AriaComboBoxProps<T>, 'children'> {
+const comboboxVariants = cva('group flex flex-col gap-2', {
+  variants: {
+    error: {
+      true: ''
+    },
+    editor: {
+      true: 'm-0.5 gap-0 [&>div]:border-none [&>div]:bg-transparent [&>div]:rounded-none [&_input]:bg-transparent'
+    }
+  },
+  compoundVariants: [
+    {
+      editor: true,
+      error: true,
+      className: 'bg-red-50 ring-2 ring-red-500'
+    }
+  ]
+})
+
+interface JollyComboBoxProps<T extends object>
+  extends Omit<AriaComboBoxProps<T>, 'children'>,
+    VariantProps<typeof comboboxVariants> {
   label?: string
   placeholder?: string
   description?: string | null
@@ -80,9 +101,9 @@ interface JollyComboBoxProps<T extends object> extends Omit<AriaComboBoxProps<T>
   inputProps?: Omit<AriaInputProps, 'children'>
   popoverProps?: Omit<AriaPopoverProps, 'children'>
   tabIndex?: number
+  editor?: boolean
   children: React.ReactNode | ((item: T) => React.ReactNode)
 }
-
 function JollyComboBox<T extends object>({
   label,
   description,
@@ -93,12 +114,14 @@ function JollyComboBox<T extends object>({
   popoverProps,
   children,
   tabIndex,
+  error,
+  editor = false,
   ...props
 }: JollyComboBoxProps<T>) {
   return (
     <Combobox
       className={composeRenderProps(className, (className) =>
-        cn('group flex flex-col gap-2', className)
+        cn(comboboxVariants({ editor, error }), className)
       )}
       {...props}
     >

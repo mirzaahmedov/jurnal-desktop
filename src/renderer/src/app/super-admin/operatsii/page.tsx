@@ -174,7 +174,7 @@ const OperatsiiPage = () => {
       <OperatsiiDialog
         selected={selected}
         original={original}
-        open={dialogToggle.isOpen}
+        isOpen={dialogToggle.isOpen}
         onOpenChange={dialogToggle.setOpen}
       />
     </ListView>

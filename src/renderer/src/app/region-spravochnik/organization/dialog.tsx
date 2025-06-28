@@ -10,14 +10,15 @@ import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 
-import { Button } from '@/common/components/ui/button'
 import {
-  Dialog,
   DialogContent,
   DialogFooter,
   DialogHeader,
-  DialogTitle
-} from '@/common/components/ui/dialog'
+  DialogOverlay,
+  DialogTitle,
+  DialogTrigger
+} from '@/common/components/jolly/dialog'
+import { Button } from '@/common/components/ui/button'
 import { capitalize } from '@/common/lib/string'
 
 import {
@@ -102,38 +103,40 @@ export const OrganizationDialog = ({
   }, [form, original, selected, open])
 
   return (
-    <Dialog
-      open={open}
+    <DialogTrigger
+      isOpen={open}
       onOpenChange={onOpenChange}
     >
-      <DialogContent className="max-w-2xl max-h-[80%] flex flex-col">
-        <DialogHeader>
-          <DialogTitle>
-            {selected
-              ? t('organization')
-              : capitalize(t('create-something', { something: t('organization') }))}
-          </DialogTitle>
-        </DialogHeader>
-        <ErrorBoundary
-          fallback="error"
-          onError={(err) => console.log(err)}
-        >
-          <OrganizationForm
-            form={form}
-            onSubmit={onSubmit}
-            formActions={
-              <DialogFooter>
-                <Button
-                  disabled={isCreatingOrganization || isUpdatingOrganization}
-                  type="submit"
-                >
-                  {t('save')}
-                </Button>
-              </DialogFooter>
-            }
-          />
-        </ErrorBoundary>
-      </DialogContent>
-    </Dialog>
+      <DialogOverlay>
+        <DialogContent className="max-w-2xl max-h-[80%] flex flex-col">
+          <DialogHeader>
+            <DialogTitle>
+              {selected
+                ? t('organization')
+                : capitalize(t('create-something', { something: t('organization') }))}
+            </DialogTitle>
+          </DialogHeader>
+          <ErrorBoundary
+            fallback="error"
+            onError={(err) => console.log(err)}
+          >
+            <OrganizationForm
+              form={form}
+              onSubmit={onSubmit}
+              formActions={
+                <DialogFooter>
+                  <Button
+                    disabled={isCreatingOrganization || isUpdatingOrganization}
+                    type="submit"
+                  >
+                    {t('save')}
+                  </Button>
+                </DialogFooter>
+              }
+            />
+          </ErrorBoundary>
+        </DialogContent>
+      </DialogOverlay>
+    </DialogTrigger>
   )
 }

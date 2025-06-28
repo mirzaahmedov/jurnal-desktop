@@ -3,12 +3,13 @@ import type { DialogTriggerProps } from 'react-aria-components'
 import { useTranslation } from 'react-i18next'
 
 import {
-  Dialog,
   DialogContent,
   DialogFooter,
   DialogHeader,
-  DialogTitle
-} from '@/common/components/ui/dialog'
+  DialogOverlay,
+  DialogTitle,
+  DialogTrigger
+} from '@/common/components/jolly/dialog'
 import { Label } from '@/common/components/ui/label'
 import { DownloadFile } from '@/common/features/file'
 import { SpravochnikInput, useSpravochnik } from '@/common/features/spravochnik'
@@ -40,8 +41,8 @@ export const MaterialReportModal = ({
   const responsibleSpravochnik = useSpravochnik(createResponsibleSpravochnik({}))
 
   return (
-    <Dialog
-      open={isOpen}
+    <DialogTrigger
+      isOpen={isOpen}
       onOpenChange={(open) => {
         if (!open) {
           setTimeout(() => {
@@ -51,54 +52,56 @@ export const MaterialReportModal = ({
         onOpenChange?.(open)
       }}
     >
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>{t('material')}</DialogTitle>
-        </DialogHeader>
-        <div className="flex flex-col gap-2">
-          <Label className="font-medium">{t('responsible')}</Label>
-          <SpravochnikInput
-            {...responsibleSpravochnik}
-            placeholder={t('responsible')}
-            getInputValue={(selected) => selected?.fio ?? ''}
-          />
-        </div>
-        <DialogFooter>
-          {withDefault && (
-            <DownloadFile
-              fileName={`${t('material')}_${to}.xlsx`}
-              url="/jur_7/monitoring/material/report"
-              params={{
-                to,
-                year,
-                month,
-                budjet_id,
-                main_schet_id,
-                responsible_id: responsibleSpravochnik.selected?.id || undefined,
-                excel: true
-              }}
-              buttonText={t('material')}
+      <DialogOverlay>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{t('material')}</DialogTitle>
+          </DialogHeader>
+          <div className="flex flex-col gap-2 mt-2.5">
+            <Label className="font-medium">{t('responsible')}</Label>
+            <SpravochnikInput
+              {...responsibleSpravochnik}
+              placeholder={t('responsible')}
+              getInputValue={(selected) => selected?.fio ?? ''}
             />
-          )}
-          {withIznos && (
-            <DownloadFile
-              fileName={`${t('material')}_${t('iznos')}_${to}.xlsx`}
-              url="/jur_7/monitoring/material/report"
-              params={{
-                to,
-                year,
-                month,
-                budjet_id,
-                main_schet_id,
-                responsible_id: responsibleSpravochnik.selected?.id || undefined,
-                excel: true,
-                iznos: true
-              }}
-              buttonText={`${t('material')} (${t('iznos')})`}
-            />
-          )}
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+          </div>
+          <DialogFooter>
+            {withDefault && (
+              <DownloadFile
+                fileName={`${t('material')}_${to}.xlsx`}
+                url="/jur_7/monitoring/material/report"
+                params={{
+                  to,
+                  year,
+                  month,
+                  budjet_id,
+                  main_schet_id,
+                  responsible_id: responsibleSpravochnik.selected?.id || undefined,
+                  excel: true
+                }}
+                buttonText={t('material')}
+              />
+            )}
+            {withIznos && (
+              <DownloadFile
+                fileName={`${t('material')}_${t('iznos')}_${to}.xlsx`}
+                url="/jur_7/monitoring/material/report"
+                params={{
+                  to,
+                  year,
+                  month,
+                  budjet_id,
+                  main_schet_id,
+                  responsible_id: responsibleSpravochnik.selected?.id || undefined,
+                  excel: true,
+                  iznos: true
+                }}
+                buttonText={`${t('material')} (${t('iznos')})`}
+              />
+            )}
+          </DialogFooter>
+        </DialogContent>
+      </DialogOverlay>
+    </DialogTrigger>
   )
 }

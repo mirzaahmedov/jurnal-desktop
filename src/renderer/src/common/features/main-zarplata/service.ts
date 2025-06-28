@@ -11,25 +11,26 @@ import { zarplataApi } from '@/common/lib/zarplata'
 import { getUserId } from '../auth'
 import { mainZarplataColumns } from './columns'
 
-export const mainZarplataService = {
+export const MainZarplataService = {
   async getAll(
     ctx: QueryFunctionContext<
       [
         string,
         {
           page: number
+          limit?: number
         }
       ]
     >
   ): Promise<ApiResponse<MainZarplata[], { pageCount: number }>> {
-    const { page } = ctx.queryKey[1]
+    const { page, limit } = ctx.queryKey[1]
     const res = await zarplataApi.get<{
       totalCount: number
       data: MainZarplata[]
     }>('MainZarplata', {
       params: {
         PageIndex: page,
-        PageSize: 10,
+        PageSize: limit || 10,
         userId: getUserId()
       }
     })
@@ -64,7 +65,7 @@ export const createMainZarplataSpravochnik = (
       columnDefs: mainZarplataColumns,
       endpoint: 'main-zarplata' as any,
       // Todo fix this
-      service: mainZarplataService as any,
+      service: MainZarplataService as any,
       filters: []
     } satisfies typeof config,
     config

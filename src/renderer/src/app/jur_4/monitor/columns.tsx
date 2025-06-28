@@ -44,7 +44,7 @@ export const PodotchetMonitorColumns: ColumnDef<PodotchetMonitor>[] = [
         secondaryText={row.podotchet_rayon}
         hoverContent={
           <DataList
-            list={[
+            items={[
               {
                 name: <Trans>id</Trans>,
                 value: (

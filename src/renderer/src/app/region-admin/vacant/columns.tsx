@@ -20,7 +20,7 @@ export const columnDefs: ColumnDef<User>[] = [
         secondaryText={`@${row.login}`}
         hoverContent={
           <DataList
-            list={[
+            items={[
               {
                 name: <Trans>id</Trans>,
                 value: (

@@ -44,7 +44,7 @@ export interface GenericTableProps<T extends object>
   caption?: string
   data: T[]
   headerProps?: HTMLAttributes<HTMLTableSectionElement>
-  columnDefs: ColumnDef<T>[]
+  columnDefs: ColumnDef<NoInfer<T>>[]
   placeholder?: string
   selectedIds?: number[]
   disabledIds?: number[]
@@ -56,6 +56,7 @@ export interface GenericTableProps<T extends object>
   getRowClassName?: (row: T) => string
   getColumnSorted?: (column: ColumnDef<T>) => TableSortDirection | undefined
   onClickRow?(row: T): void
+  onDoubleClickRow?(row: T): void
   onDelete?(row: T): void
   onEdit?(row: T): void
   onView?(row: T): void

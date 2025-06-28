@@ -1,9 +1,8 @@
 import type { ZarplataSpravochnikFormValues } from './config'
-import type { Response } from '@/common/lib/zarplata'
 import type { Zarplata } from '@/common/models'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 
-import { zarplataApi } from '@/common/lib/zarplata'
+import { type Response, zarplataApiNew } from '@/common/lib/zarplata_new'
 
 export class ZarplataSpravochnikService {
   static endpoint = '/SpravochnikZarplatum'
@@ -17,16 +16,19 @@ export class ZarplataSpravochnikService {
   }
 
   static async getAll(
-    ctx: QueryFunctionContext<[string, { types_type_code: number; name?: string }]>
-  ): Promise<Zarplata.Spravochnik[]> {
-    const { types_type_code, name } = ctx.queryKey[1]
+    ctx: QueryFunctionContext<
+      [string, { types_type_code: number; name?: string; page?: number; limit?: number }]
+    >
+  ): Promise<Response<Zarplata.Spravochnik[]>> {
+    const { types_type_code, name, page, limit } = ctx.queryKey[1]
 
-    const res = await zarplataApi.get<Zarplata.Spravochnik[]>(
-      `${ZarplataSpravochnikService.endpoint}/get-by-query`,
+    const res = await zarplataApiNew.get<Response<Zarplata.Spravochnik[]>>(
+      `${ZarplataSpravochnikService.endpoint}/get-sp/${types_type_code}`,
       {
         params: {
-          types_type_code,
-          name
+          PageIndex: page,
+          PageSize: limit,
+          search: name
         }
       }
     )
@@ -34,14 +36,14 @@ export class ZarplataSpravochnikService {
   }
 
   static async getTypes() {
-    const res = await zarplataApi.get<Response<Zarplata.SpravochnikType[]>>(
+    const res = await zarplataApiNew.get<Response<Zarplata.SpravochnikType[]>>(
       `${ZarplataSpravochnikService.endpoint}/get-types`
     )
     return res.data
   }
 
   static async create(values: ZarplataSpravochnikFormValues) {
-    const res = await zarplataApi.post<Zarplata.Spravochnik>(
+    const res = await zarplataApiNew.post<Zarplata.Spravochnik>(
       `${ZarplataSpravochnikService.endpoint}`,
       values
     )
@@ -49,7 +51,7 @@ export class ZarplataSpravochnikService {
   }
 
   static async update({ id, values }: { id: number; values: ZarplataSpravochnikFormValues }) {
-    const res = await zarplataApi.put<Zarplata.Spravochnik>(
+    const res = await zarplataApiNew.put<Zarplata.Spravochnik>(
       `${ZarplataSpravochnikService.endpoint}/${id}`,
       values
     )

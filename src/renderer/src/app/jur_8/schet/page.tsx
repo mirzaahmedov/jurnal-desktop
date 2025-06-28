@@ -8,6 +8,7 @@ import { toast } from 'react-toastify'
 
 import { GenericTable } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
+import { useRequisitesStore } from '@/common/features/requisites'
 import { useToggle } from '@/common/hooks/use-toggle'
 import { useLayout } from '@/common/layout'
 import { ListView } from '@/common/views'
@@ -26,9 +27,15 @@ const PrixodSchetPage = () => {
   const setLayout = useLayout()
   const dialogToggle = useToggle()
   const queryClient = useQueryClient()
+  const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
 
   const { data: schets, isFetching } = useQuery({
-    queryKey: [PrixodSchetQueryKeys.getAll],
+    queryKey: [
+      PrixodSchetQueryKeys.getAll,
+      {
+        main_schet_id
+      }
+    ],
     queryFn: PrixodSchetService.getAll
   })
 

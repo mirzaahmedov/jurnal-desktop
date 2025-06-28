@@ -131,7 +131,7 @@ export const VideoModuleList = ({
             </TabsList>
           </div>
         )}
-        <ul className="flex-1 relative">
+        <ul className="flex-1 min-h-0 relative overflow-auto scrollbar">
           {isDeletingVideoModule || isFetchingVideoModules ? (
             <div className="absolute inset-0 flex items-center justify-center">
               <LoadingOverlay />

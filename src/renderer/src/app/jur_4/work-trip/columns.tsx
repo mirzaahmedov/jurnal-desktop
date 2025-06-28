@@ -35,7 +35,7 @@ export const WorkTripColumnDefs: ColumnDef<WorkTrip>[] = [
         title={<SummaCell summa={row.summa} />}
         hoverContent={
           <DataList
-            list={[
+            items={[
               {
                 name: <Trans>day_summa</Trans>,
                 value: row.day_summa
@@ -81,7 +81,7 @@ export const WorkTripColumnDefs: ColumnDef<WorkTrip>[] = [
         secondaryText={row.worker_rayon}
         hoverContent={
           <DataList
-            list={[
+            items={[
               {
                 name: <Trans>id</Trans>,
                 value: row.worker_id

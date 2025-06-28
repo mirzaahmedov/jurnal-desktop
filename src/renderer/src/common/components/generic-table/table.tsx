@@ -36,6 +36,7 @@ export const GenericTable = <T extends object>(props: GenericTableProps<T>) => {
     disabledIds = [],
     selectedIds = [],
     onClickRow,
+    onDoubleClickRow,
     onDelete,
     onEdit,
     onView,
@@ -193,6 +194,7 @@ export const GenericTable = <T extends object>(props: GenericTableProps<T>) => {
               <GenericTableRow
                 key={getRowKey(row)}
                 onClick={() => onClickRow?.(row)}
+                onDoubleClick={() => onDoubleClickRow?.(row)}
                 ref={(el) => {
                   if (activeRowId === getRowId(row)) {
                     setSelectedRowRef(el)

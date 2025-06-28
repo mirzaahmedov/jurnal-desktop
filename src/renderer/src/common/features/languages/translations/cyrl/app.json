@@ -75,7 +75,12 @@
     "akt_priyom": "Акт",
     "pokazat_uslugi": "Хизматлар кўрсатиш",
     "bhm": "БҲМ",
-    "position": "Лавозим"
+    "position": "Лавозим",
+    "control_card": "Назорат картаси",
+    "calc_parameters": "Ҳисоблаш параметрлар",
+    "passport_info": "Паспорт маълумотлари",
+    "salary_accrual": "Иш ҳақини ҳисоблаш",
+    "payment_type": "Тўлов тури"
   },
   "locales": {
     "uz": "Ўзбекча",

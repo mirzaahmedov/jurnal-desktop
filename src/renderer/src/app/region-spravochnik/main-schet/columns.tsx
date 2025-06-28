@@ -37,7 +37,7 @@ export const MainSchetColumns: ColumnDef<MainSchet>[] = [
     renderCell: (row) => {
       return (
         <DataList
-          list={[
+          items={[
             {
               name: <Trans values={{ nth: 1 }}>mo-nth</Trans>,
               value: row.jur1_schet
@@ -74,7 +74,7 @@ export const MainSchetColumns: ColumnDef<MainSchet>[] = [
           secondaryText={row.tashkilot_inn}
           hoverContent={
             <DataList
-              list={[
+              items={[
                 {
                   name: <Trans>name</Trans>,
                   value: row.tashkilot_nomi
