@@ -55,6 +55,7 @@
   "bank": "Bank",
   "mfo": "MFO",
   "inn": "INN",
+  "inps": "INPS",
   "shartnoma": "Shartnoma",
   "shartnoma-number": "№ shartnoma",
   "shartnoma-date": "Shartnoma sanasi",
@@ -294,6 +295,7 @@
   "sure_to_delete": "O'chirishni tasdiqlaysizmi?",
   "sure_to_delete_all": "Barcha ma'lumotlarni o‘chirmoqchimisiz? Tasdiqlash uchun parol kerak.",
   "date": "Sana",
+  "date_of_birth": "Tug'ilgan sana",
   "provodka_type": {
     "bank_rasxod": "Bank xarajat",
     "bank_prixod": "Bank kirim",
@@ -441,5 +443,8 @@
   "additional_payment": "Qo'shimcha to'lov",
   "separate_calculation": "Alohida hisoblash",
   "payroll": "Ish haqi",
-  "raschet-stop": "Raschet stop"
+  "raschet-stop": "Raschet stop",
+  "no_calculate_params_selected": "Hisoblash parametrlari tanlanmagan",
+  "stop_calculation": "Hisoblashni to'xtatish",
+  "start_of_service": "Xizmat boshlanishi"
 }

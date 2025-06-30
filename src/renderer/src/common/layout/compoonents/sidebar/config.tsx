@@ -300,7 +300,19 @@ export const getNavElements = (t: TFunction): NavElement[] => {
             {
               path: 'payment-type',
               title: t('pages.payment_type'),
-              icon: Folder
+              icon: Folder,
+              children: [
+                {
+                  path: 'payments',
+                  title: t('pages.payments'),
+                  icon: Folder
+                },
+                {
+                  path: 'deductions',
+                  title: t('pages.deductions'),
+                  icon: Folder
+                }
+              ]
             },
             {
               displayOnly: true,

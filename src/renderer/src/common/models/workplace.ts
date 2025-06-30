@@ -10,7 +10,10 @@ export interface Workplace {
   stavkaPrikaz: string
   okladPrikaz: number
   spravochnikSostavId: number
+  spravochnikSostavName: string
   spravochnikZarpaltaDoljnostId: number
+  spravochnikZarpaltaDoljnostName: string
   spravochnikZarplataIstochnikFinanceId: number
+  spravochnikZarplataIstochnikFinanceName: string
   setka: number
 }

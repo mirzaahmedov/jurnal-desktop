@@ -55,6 +55,7 @@
   "bank": "Банк",
   "mfo": "МФО",
   "inn": "ИНН",
+  "inps": "ИНПС",
   "shartnoma": "Шартнома",
   "shartnoma-number": "№ шартнома",
   "shartnoma-date": "Шартнома санаси",
@@ -294,6 +295,7 @@
   "sure_to_delete": "Ўчиришни тасдиқлайсизми?",
   "sure_to_delete_all": "Барча ма'лумотларни ўчирмоқчимисиз? Тасдиқлаш учун парол керак.",
   "date": "Сана",
+  "date_of_birth": "Туғилган сана",
   "provodka_type": {
     "bank_rasxod": "Банк харажат",
     "bank_prixod": "Банк кирим",
@@ -441,5 +443,8 @@
   "labor": "Меҳнат",
   "deduction": "Ушланма",
   "home": "Асосий",
-  "raschet_stop": "Расчет стоп"
+  "raschet_stop": "Расчет стоп",
+  "no_calculate_params_selected": "Ҳисоблаш параметрлари танланмаган",
+  "stop_calculation": "Ҳисоблашни тўхтатиш",
+  "start_of_service": "Хизмат бошланиши"
 }

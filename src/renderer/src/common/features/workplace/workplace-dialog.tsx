@@ -7,6 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
+import { getVacantRayon } from '@/app/jur_2/rasxod/zarplata/utils'
 import { ZarplataSpravochnikType } from '@/app/super-admin/zarplata/spravochnik/config'
 import { createZarplataSpravochnik } from '@/app/super-admin/zarplata/spravochnik/service'
 import { NumericInput } from '@/common/components'
@@ -100,13 +101,8 @@ export const WorkplaceDialog = ({
   })
 
   useEffect(() => {
-    if (!selected) {
-      let rayon = ''
-      vacant?.parents.forEach((parent) => {
-        rayon += parent.name + ' '
-      })
-      rayon += vacant?.name ?? ''
-      form.setValue('rayon', rayon.trim())
+    if (!selected && vacant) {
+      form.setValue('rayon', getVacantRayon(vacant))
     }
   }, [vacant, selected])
 

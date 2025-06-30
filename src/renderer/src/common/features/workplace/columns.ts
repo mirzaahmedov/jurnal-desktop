@@ -7,39 +7,58 @@ export const WorkplaceColumns: ColumnDef<Workplace>[] = [
   {
     key: 'id',
     renderCell: IDCell,
-    width: 160,
-    minWidth: 160
+    minWidth: 90
   },
   {
+    minWidth: 80,
     key: 'poryadNum',
     header: 'numeric-order'
   },
   {
-    key: 'rayon'
+    minWidth: 300,
+    key: 'spravochnikZarpaltaDoljnostName',
+    header: 'doljnost'
   },
   {
     numeric: true,
+    minWidth: 130,
     key: 'setka',
     header: 'net'
   },
   {
-    key: 'prOk',
-    header: 'pr_ok'
+    numeric: true,
+    minWidth: 130,
+    key: 'koef',
+    header: 'razryad'
   },
   {
     numeric: true,
+    minWidth: 130,
     key: 'oklad'
   },
   {
+    key: 'prOk',
+    header: 'pr_ok',
+    className: 'text-center'
+  },
+  {
+    key: 'stavka',
+    className: 'text-center'
+  },
+  {
     numeric: true,
+    minWidth: 130,
     key: 'okladPrikaz',
     header: 'prikaz_oklad'
   },
   {
-    key: 'stavka'
+    minWidth: 200,
+    key: 'spravochnikZarplataIstochnikFinanceName',
+    header: 'source_of_finance'
   },
   {
-    key: 'stavkaPrikaz',
-    header: 'prikaz_stavka'
+    minWidth: 200,
+    key: 'spravochnikSostavName',
+    header: 'sostav'
   }
 ]

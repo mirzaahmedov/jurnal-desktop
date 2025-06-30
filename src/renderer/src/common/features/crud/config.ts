@@ -83,7 +83,8 @@ export enum ApiEndpoints {
   admin_minimum_wage = 'admin/spravochnik/minimum-wage',
   admin_distance = 'admin/spravochnik/distances',
   work_trip = 'work-trip',
-  zarplata_spravochnik = 'SpravochnikZarplatum'
+  zarplata_spravochnik = 'SpravochnikZarplatum',
+  main_zarplata = 'MainZarplata'
 }
 
 export enum ApiStatusCodes {

@@ -101,6 +101,9 @@ const ui = plugin(function ({ addUtilities }) {
     '.tree_node:last-child::after': {
       height: '0%'
     },
+    '.tree_node.last_node::after': {
+      height: '0%'
+    },
 
     '.titlecase': {
       'text-transform': 'lowercase'

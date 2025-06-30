@@ -25,6 +25,8 @@ import DistancePage from './super-admin/spravochnik/distance/page'
 const CalculateParamsPage = lazy(() => import('./jur_5/calculate-params/page'))
 const PassportInfoPage = lazy(() => import('./jur_5/passport-info/page'))
 const ControlCardPage = lazy(() => import('./jur_5/control-card/page'))
+const PaymentsPage = lazy(() => import('./jur_5/payment-types/payments/page'))
+const DeductionsPage = lazy(() => import('./jur_5/payment-types/deductions/page'))
 const WorkTripDetailsPage = lazy(() => import('./jur_4/work-trip/details/page'))
 const WorkTripPage = lazy(() => import('./jur_4/work-trip/page'))
 const PositionPage = lazy(() => import('./super-admin/spravochnik/position/page'))
@@ -664,6 +666,19 @@ export const routes: RouteObject[] = [
           {
             path: 'passport-info',
             element: <PassportInfoPage />
+          },
+          {
+            path: 'payment-types',
+            children: [
+              {
+                path: 'payments',
+                element: <PaymentsPage />
+              },
+              {
+                path: 'payments',
+                element: <DeductionsPage />
+              }
+            ]
           }
         ]
       },

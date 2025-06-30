@@ -1,7 +1,7 @@
 import type { ColumnDef } from '@/common/components'
 import type { MainZarplata } from '@/common/models'
 
-export const columnDefs: ColumnDef<MainZarplata>[] = [
+export const MainZarplataColumnDefs: ColumnDef<MainZarplata>[] = [
   {
     key: 'kartochka',
     header: 'card_num'
@@ -16,5 +16,8 @@ export const columnDefs: ColumnDef<MainZarplata>[] = [
   {
     key: 'xarbiy',
     header: 'military_rank'
+  },
+  {
+    key: 'status'
   }
 ]

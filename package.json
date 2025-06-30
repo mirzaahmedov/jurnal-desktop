@@ -1,6 +1,6 @@
 {
   "name": "jurnal.desktop",
-  "version": "1.0.277",
+  "version": "1.0.279",
   "description": "An Electron application with React and TypeScript",
   "main": "./out/main/index.js",
   "author": "example.com",
@@ -65,6 +65,7 @@
     "@tanstack/react-query-devtools": "^5.62.7",
     "@tanstack/react-table": "^8.21.2",
     "@tanstack/react-virtual": "^3.13.2",
+    "allotment": "^1.20.4",
     "app-builder-lib": "^25.1.8",
     "axios": "^1.7.9",
     "builder-util": "^25.1.7",

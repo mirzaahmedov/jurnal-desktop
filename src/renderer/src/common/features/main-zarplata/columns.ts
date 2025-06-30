@@ -3,7 +3,7 @@ import type { MainZarplata } from '@/common/models'
 
 import { IDCell } from '@/common/components/table/renderers/id'
 
-export const mainZarplataColumns: ColumnDef<MainZarplata>[] = [
+export const MainZarplataColumns: ColumnDef<MainZarplata>[] = [
   {
     key: 'id',
     renderCell: IDCell

@@ -45,6 +45,11 @@ export const VacantDialog = ({ vacant, onSubmit, ...props }: VacantDialogProps) 
     }
   }, [vacant])
 
+  const handleSubmit = form.handleSubmit((values) => {
+    onSubmit(values)
+    form.reset(defaultValues)
+  })
+
   return (
     <DialogTrigger {...props}>
       <DialogOverlay>
@@ -57,13 +62,18 @@ export const VacantDialog = ({ vacant, onSubmit, ...props }: VacantDialogProps) 
 
           <Form {...form}>
             <form
-              onSubmit={form.handleSubmit(onSubmit)}
+              onSubmit={handleSubmit}
               className="flex flex-col gap-4"
             >
               <FormField
                 control={form.control}
                 name="name"
-                render={({ field }) => <Input {...field} />}
+                render={({ field }) => (
+                  <Input
+                    autoFocus
+                    {...field}
+                  />
+                )}
               />
               <DialogFooter>
                 <Button type="submit">{t('save')}</Button>

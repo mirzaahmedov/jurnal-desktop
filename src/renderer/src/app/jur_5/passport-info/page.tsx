@@ -1,15 +1,20 @@
-import { useEffect } from 'react'
+import type { MainZarplata } from '@/common/models'
+
+import { useEffect, useMemo, useState } from 'react'
 
 import { useQuery } from '@tanstack/react-query'
+import { Allotment } from 'allotment'
 import { useTranslation } from 'react-i18next'
 
-import { GenericTable } from '@/common/components'
+import { VacantTree, type VacantTreeNode } from '@/app/region-admin/vacant/vacant-tree'
+import { GenericTable, LoadingOverlay } from '@/common/components'
 import { MainZarplataService } from '@/common/features/main-zarplata/service'
+import { VacantService } from '@/common/features/vacant/service'
 import { usePagination, useToggle } from '@/common/hooks'
 import { useLayout } from '@/common/layout'
-import { ListView } from '@/common/views'
+import { arrayToTreeByRelations } from '@/common/lib/tree/relation-tree'
 
-import { columnDefs } from './columns'
+import { MainZarplataColumnDefs } from './columns'
 import { PassportInfoDialog } from './dialog'
 
 const PassportInfoPage = () => {
@@ -17,11 +22,18 @@ const PassportInfoPage = () => {
   const setLayout = useLayout()
   const dialogToggle = useToggle()
 
+  const [selectedVacant, setSelectedVacant] = useState<VacantTreeNode | null>(null)
+  const [selectedUser, setSelectedUser] = useState<MainZarplata | undefined>()
+
   const { t } = useTranslation(['app'])
 
-  const { data: users, isFetching } = useQuery({
+  const { data: vacants, isFetching: isFetchingVacants } = useQuery({
+    queryKey: [VacantService.QueryKeys.GetAll, { page: 1, limit: 100000000000000 }],
+    queryFn: VacantService.getAll
+  })
+  const { data: users, isFetching: isFetchingUsers } = useQuery({
     queryKey: [
-      'zarplata/users',
+      MainZarplataService.QueryKeys.GetAll,
       {
         page: pagination.page,
         limit: pagination.limit
@@ -42,27 +54,56 @@ const PassportInfoPage = () => {
     })
   }, [t, setLayout])
 
-  return (
-    <ListView>
-      <ListView.Content loading={isFetching}>
-        <GenericTable
-          columnDefs={columnDefs}
-          data={users?.data ?? []}
-        />
-      </ListView.Content>
-      <ListView.Footer>
-        <ListView.Pagination
-          {...pagination}
-          pageCount={1}
-          count={10}
-        />
-      </ListView.Footer>
+  const treeNodes = useMemo(
+    () =>
+      arrayToTreeByRelations({
+        array: vacants?.data ?? [],
+        getId: (node) => node.id,
+        getParentId: (node) => node.parentId
+      }),
+    [vacants]
+  )
 
-      <PassportInfoDialog
-        isOpen={dialogToggle.isOpen}
-        onOpenChange={dialogToggle.setOpen}
-      />
-    </ListView>
+  return (
+    <>
+      <Allotment className="h-full">
+        <Allotment.Pane
+          preferredSize={300}
+          maxSize={600}
+          minSize={200}
+          className="w-full"
+        >
+          <div className="relative overflow-auto scrollbar h-full">
+            {isFetchingVacants ? <LoadingOverlay /> : null}
+            <VacantTree
+              data={treeNodes}
+              selectedIds={selectedVacant ? [selectedVacant.id] : []}
+              onSelectNode={(vacant) => {
+                setSelectedVacant(vacant)
+              }}
+            />
+          </div>
+        </Allotment.Pane>
+        <Allotment.Pane>
+          <div className="relative w-full overflow-auto scrollbar">
+            {isFetchingUsers ? <LoadingOverlay /> : null}
+            <GenericTable
+              data={users?.data ?? []}
+              columnDefs={MainZarplataColumnDefs}
+            />
+          </div>
+        </Allotment.Pane>
+      </Allotment>
+
+      {selectedVacant ? (
+        <PassportInfoDialog
+          isOpen={dialogToggle.isOpen}
+          onOpenChange={dialogToggle.setOpen}
+          selectedUser={selectedUser}
+          vacant={selectedVacant}
+        />
+      ) : null}
+    </>
   )
 }
 

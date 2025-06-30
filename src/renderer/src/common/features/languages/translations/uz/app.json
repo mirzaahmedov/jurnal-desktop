@@ -80,7 +80,9 @@
     "calc_parameters": "Hisoblash parametrlar",
     "passport_info": "Pasport ma'lumotlari",
     "salary_accrual": "Ish haqini hisoblash",
-    "payment_type": "To'lov turi"
+    "payment_type": "To'lov turi",
+    "payments": "To'lovlar",
+    "deductions": "Ushlanmalar"
   },
   "locales": {
     "uz": "Oʻzbekcha",

@@ -1,58 +1,71 @@
 import type { SpravochnikHookOptions } from '../spravochnik'
+import type { MainZarplataFormValues } from '@/app/jur_5/passport-info/config'
 import type { ApiResponse, MainZarplata } from '@/common/models'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 
 import { t } from 'i18next'
 
+import { getUserId } from '@/common/features/auth'
+import { ApiEndpoints } from '@/common/features/crud'
 import { capitalize } from '@/common/lib/string'
 import { extendObject } from '@/common/lib/utils'
-import { zarplataApi } from '@/common/lib/zarplata'
+import { getMultiApiResponse, getSingleApiResponse, zarplataApi } from '@/common/lib/zarplata'
+import { zarplataApiNew } from '@/common/lib/zarplata_new'
 
-import { getUserId } from '../auth'
-import { mainZarplataColumns } from './columns'
+import { MainZarplataColumns } from './columns'
 
-export const MainZarplataService = {
-  async getAll(
+export class MainZarplataService {
+  static endpoint = ApiEndpoints.main_zarplata
+
+  static QueryKeys = {
+    GetAll: 'main_zarplata/getAll',
+    GetById: 'main_zarplata/getById'
+  }
+
+  static async getAll(
     ctx: QueryFunctionContext<
       [
         string,
         {
           page: number
-          limit?: number
+          limit: number
         }
       ]
     >
-  ): Promise<ApiResponse<MainZarplata[], { pageCount: number }>> {
+  ): Promise<ApiResponse<MainZarplata[]>> {
     const { page, limit } = ctx.queryKey[1]
     const res = await zarplataApi.get<{
       totalCount: number
       data: MainZarplata[]
-    }>('MainZarplata', {
+    }>(MainZarplataService.endpoint, {
       params: {
         PageIndex: page,
         PageSize: limit || 10,
         userId: getUserId()
       }
     })
-    return {
-      success: true,
-      data: res.data?.data,
-      meta: {
-        pageCount: Math.ceil(res?.data?.totalCount / 10)
-      }
-    }
-  },
+    return getMultiApiResponse({
+      response: res.data,
+      page,
+      limit
+    })
+  }
 
-  async getById(
+  static async getById(
     ctx: QueryFunctionContext<[string, number]>
-  ): Promise<ApiResponse<MainZarplata, null>> {
+  ): Promise<ApiResponse<MainZarplata>> {
     const id = ctx.queryKey[1]
-    const res = await zarplataApi.get<MainZarplata>(`MainZarplata/${id}`)
-    return {
-      success: true,
-      data: res?.data,
-      meta: null
-    }
+    const res = await zarplataApi.get<MainZarplata>(`${MainZarplataService.endpoint}/${id}`)
+    return getSingleApiResponse({
+      response: res.data
+    })
+  }
+
+  static async create(values: MainZarplataFormValues): Promise<unknown> {
+    const res = await zarplataApiNew.post<MainZarplata>(MainZarplataService.endpoint, values)
+    return getSingleApiResponse({
+      response: res.data
+    })
   }
 }
 
@@ -62,10 +75,9 @@ export const createMainZarplataSpravochnik = (
   return extendObject(
     {
       title: capitalize(t('choose', { what: t('podotchet-litso') })),
-      columnDefs: mainZarplataColumns,
-      endpoint: 'main-zarplata' as any,
-      // Todo fix this
-      service: MainZarplataService as any,
+      columnDefs: MainZarplataColumns,
+      endpoint: ApiEndpoints.main_zarplata,
+      service: MainZarplataService,
       filters: []
     } satisfies typeof config,
     config

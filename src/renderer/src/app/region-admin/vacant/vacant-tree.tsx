@@ -25,12 +25,14 @@ export const VacantTree = ({ data, selectedIds, onSelectNode }: VacantTreeProps)
   return (
     <ul className="divide-y text-sm">
       {data?.length ? (
-        data.map((node) => (
+        data.map((node, index) => (
           <TreeNode
             key={node.id}
             vacant={node}
             selectedIds={selectedIds}
             onSelect={onSelectNode}
+            data={data}
+            index={index}
           />
         ))
       ) : (
@@ -47,18 +49,21 @@ const hasSelectedChildNode = (node: VacantTreeNode, selectedIds: number[]) => {
 }
 
 interface TreeNodeProps {
+  index: number
+  data: VacantTreeNode[]
   vacant: VacantTreeNode
   selectedIds: number[]
   onSelect: (node: VacantTreeNode) => void
   level?: number
 }
-const TreeNode = ({ vacant, selectedIds, onSelect, level = 1 }: TreeNodeProps) => {
+const TreeNode = ({ vacant, data, index, selectedIds, onSelect, level = 1 }: TreeNodeProps) => {
   if (!vacant.children.length) {
     return (
       <li
         className={cn(
           'flex items-center gap-5 py-2.5 px-5 cursor-pointer hover:bg-slate-50',
-          level > 1 && 'tree_node'
+          level > 1 && 'tree_node',
+          index === data.length - 1 && 'last_node'
         )}
         onClick={(e) => {
           e.stopPropagation()
@@ -85,7 +90,8 @@ const TreeNode = ({ vacant, selectedIds, onSelect, level = 1 }: TreeNodeProps) =
       <li
         className={cn(
           'flex items-center gap-5 py-2.5 px-5 cursor-pointer hover:bg-slate-50',
-          level > 1 && 'tree_node'
+          level > 1 && 'tree_node',
+          index === data.length - 1 && 'last_node'
         )}
         onClick={(e) => {
           e.preventDefault()
@@ -115,14 +121,16 @@ const TreeNode = ({ vacant, selectedIds, onSelect, level = 1 }: TreeNodeProps) =
         </CollapsibleTrigger>
       </li>
       <CollapsibleContent>
-        <ul className="divide-y pl-10">
-          {vacant.children.map((child) => (
+        <ul className="divide-y pl-5">
+          {vacant.children.map((child, index) => (
             <TreeNode
               key={child.id}
               vacant={child}
               level={level + 1}
               selectedIds={selectedIds}
               onSelect={onSelect}
+              data={vacant.children}
+              index={index}
             />
           ))}
         </ul>

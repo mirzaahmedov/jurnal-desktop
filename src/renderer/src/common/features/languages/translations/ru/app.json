@@ -80,7 +80,9 @@
     "calc_parameters": "Параметры расчета",
     "passport_info": "Паспортные данные",
     "salary_accrual": "Начисление зарплаты",
-    "payment_type": "Тип платежа"
+    "payment_type": "Тип платежа",
+    "payments": "Платежи",
+    "deductions": "Удержания"
   },
   "locales": {
     "uz": "Узбекский",

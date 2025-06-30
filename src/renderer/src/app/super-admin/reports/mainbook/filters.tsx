@@ -32,7 +32,7 @@ export const MainbookFilters = () => {
       />
       <BudjetSelect
         withOptionAll={!!budjet}
-        selectedKey={budjet}
+        selectedKey={budjet ?? null}
         onSelectionChange={(value) => setBudjet(value ? (value as number) : undefined)}
         className="w-96"
       />

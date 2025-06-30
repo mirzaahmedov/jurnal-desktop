@@ -55,6 +55,7 @@
   "bank": "Банк",
   "mfo": "МФО",
   "inn": "ИНН",
+  "inps": "ИНПС",
   "shartnoma": "Договор",
   "shartnoma-number": "№ договора",
   "shartnoma-date": "Дата договора",
@@ -295,6 +296,7 @@
   "sure_to_delete": "Вы уверены, что хотите удалить?",
   "sure_to_delete_all": "Вы уверены, что хотите удалить все данные? Для подтверждения требуется пароль.",
   "date": "Дата",
+  "date_of_birth": "Дата рождения",
   "provodka_type": {
     "bank_rasxod": "Банк расход",
     "bank_prixod": "Банк приход",
@@ -443,5 +445,8 @@
   "additional_payment": "Дополнительная выплата",
   "separate_calculation": "Отдельный расчет",
   "payroll": "Зарплатная ведомость",
-  "raschet-stop": "Расчет стоп"
+  "raschet-stop": "Расчет стоп",
+  "no_calculate_params_selected": "Параметры расчета не выбраны",
+  "stop_calculation": "Остановить расчёт",
+  "start_of_service": "Начало службы"
 }

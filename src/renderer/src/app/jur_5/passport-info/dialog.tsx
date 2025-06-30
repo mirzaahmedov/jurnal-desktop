@@ -1,3 +1,5 @@
+import type { VacantTreeNode } from '@/app/region-admin/vacant/vacant-tree'
+import type { MainZarplata } from '@/common/models'
 import type { DialogTriggerProps } from 'react-aria-components'
 
 import { useState } from 'react'
@@ -13,7 +15,7 @@ import {
 } from '@/common/components/jolly/dialog'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/common/components/ui/tabs'
 
-import { Main } from './components/main'
+import { MainZarplataForm } from './user-form'
 
 export enum PassportInfoTabs {
   Main = 'main',
@@ -35,8 +37,11 @@ const tabOptions = [
   PassportInfoTabs.Payroll
 ]
 
-export interface PassportInfoDialogProps extends Omit<DialogTriggerProps, 'children'> {}
-export const PassportInfoDialog = ({ ...props }: PassportInfoDialogProps) => {
+export interface PassportInfoDialogProps extends Omit<DialogTriggerProps, 'children'> {
+  vacant: VacantTreeNode
+  selectedUser: MainZarplata | undefined
+}
+export const PassportInfoDialog = ({ vacant, selectedUser, ...props }: PassportInfoDialogProps) => {
   const { t } = useTranslation(['app'])
 
   const [tabValue, setTabValue] = useState<PassportInfoTabs.Main>(PassportInfoTabs.Main)
@@ -72,7 +77,7 @@ export const PassportInfoDialog = ({ ...props }: PassportInfoDialogProps) => {
                   value={PassportInfoTabs.Main}
                   className="h-full"
                 >
-                  <Main />
+                  <MainZarplataForm vacant={vacant} />
                 </TabsContent>
                 <TabsContent value={PassportInfoTabs.Labor}>Labor</TabsContent>
               </div>

@@ -5,6 +5,7 @@ import type { Workplace } from '@/common/models/workplace'
 import { useEffect, useMemo, useState } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { Allotment } from 'allotment'
 import { Edit, Plus, Trash2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
@@ -24,8 +25,11 @@ import { useLayout } from '@/common/layout'
 import { arrayToTreeByRelations } from '@/common/lib/tree/relation-tree'
 
 import { CalculateParamsService } from '../calculate-params/service'
+import { useCalculateParamsGuard } from '../common/hooks/use-calculate-params-guard'
 
 const ControlCardPage = () => {
+  useCalculateParamsGuard()
+
   const [selectedVacant, setSelectedVacant] = useState<VacantTreeNode>()
   const [vacantData, setVacantData] = useState<VacantTreeNode>()
   const [vacantParent, setVacantParent] = useState<VacantTreeNode>()
@@ -48,11 +52,12 @@ const ControlCardPage = () => {
     enabled: !!calculateParamsId
   })
 
-  const { data: vacants } = useQuery({
+  const { data: vacants, isFetching: isFetchingVacants } = useQuery({
     queryKey: [VacantService.QueryKeys.GetAll, { page: 1, limit: 100000000000000 }],
     queryFn: VacantService.getAll
   })
-  const { mutate: createVacant, isPending: isCreating } = useMutation({
+
+  const { mutate: createVacant, isPending: isCreatingVacant } = useMutation({
     mutationFn: VacantService.create,
     onSuccess: () => {
       vacantDialogToggle.setOpen(false)
@@ -66,7 +71,7 @@ const ControlCardPage = () => {
       toast.error(t('create_failed'))
     }
   })
-  const { mutate: updateVacant, isPending: isUpdating } = useMutation({
+  const { mutate: updateVacant, isPending: isUpdatingVacant } = useMutation({
     mutationFn: VacantService.update,
     onSuccess: () => {
       vacantDialogToggle.setOpen(false)
@@ -80,7 +85,7 @@ const ControlCardPage = () => {
       toast.error(t('update_failed'))
     }
   })
-  const { mutate: deleteVacant, isPending: isDeleting } = useMutation({
+  const { mutate: deleteVacant, isPending: isDeletingVacant } = useMutation({
     mutationFn: VacantService.delete,
     onSuccess: () => {
       vacantDialogToggle.setOpen(false)
@@ -95,7 +100,7 @@ const ControlCardPage = () => {
     }
   })
 
-  const { data: workspaces } = useQuery({
+  const { data: workspaces, isFetching: isFetchingWorkplaces } = useQuery({
     queryKey: [
       WorkplaceService.QueryKeys.GetAll,
       { page: 1, limit: 100000000000000, vacantId: selectedVacant?.id ?? 0 }
@@ -105,7 +110,7 @@ const ControlCardPage = () => {
     enabled: !!selectedVacant
   })
 
-  const { mutate: createWorkplace } = useMutation({
+  const { mutate: createWorkplace, isPending: isCreatingWorkplace } = useMutation({
     mutationFn: WorkplaceService.createWorkplace,
     onSuccess: () => {
       workplaceDialogToggle.setOpen(false)
@@ -119,7 +124,7 @@ const ControlCardPage = () => {
       toast.error(t('create_failed'))
     }
   })
-  const { mutate: updateWorkplace } = useMutation({
+  const { mutate: updateWorkplace, isPending: isUpdatingWorkplace } = useMutation({
     mutationFn: WorkplaceService.updateWorkplace,
     onSuccess: () => {
       workplaceDialogToggle.setOpen(false)
@@ -133,7 +138,7 @@ const ControlCardPage = () => {
       toast.error(t('update_failed'))
     }
   })
-  const { mutate: deleteWorkplace } = useMutation({
+  const { mutate: deleteWorkplace, isPending: isDeletingWorkplace } = useMutation({
     mutationFn: WorkplaceService.deleteWorkplace,
     onSuccess: () => {
       workplaceDialogToggle.setOpen(false)
@@ -240,69 +245,86 @@ const ControlCardPage = () => {
   }, [setLayout, t, workplaceDialogToggle.open, selectedVacant, calculateParams])
 
   return (
-    <div className="flex h-full divide-x">
-      <div className="w-full max-w-md divide-y flex flex-col">
-        <div className="relative flex-1">
-          {isCreating || isUpdating || isDeleting ? <LoadingOverlay /> : null}
-          <VacantTree
-            data={treeNodes}
-            selectedIds={selectedVacant ? [selectedVacant.id] : []}
-            onSelectNode={(vacant) => {
-              setSelectedVacant(vacant)
-            }}
-          />
-        </div>
-        <div className="text-center p-5 flex items-center justify-center flex-wrap gap-2">
-          <Button
-            size="sm"
-            onClick={() => {
-              if (selectedVacant) {
-                setVacantParent(selectedVacant)
-                setVacantData(undefined)
-                vacantDialogToggle.open()
-              } else {
+    <>
+      <Allotment className="h-full">
+        <Allotment.Pane
+          preferredSize={300}
+          maxSize={600}
+          minSize={200}
+          className="w-full divide-y flex flex-col"
+        >
+          <div className="relative flex-1 overflow-auto scrollbar">
+            {isCreatingVacant || isUpdatingVacant || isDeletingVacant || isFetchingVacants ? (
+              <LoadingOverlay />
+            ) : null}
+            <VacantTree
+              data={treeNodes}
+              selectedIds={selectedVacant ? [selectedVacant.id] : []}
+              onSelectNode={(vacant) => {
+                setSelectedVacant(vacant)
+              }}
+            />
+          </div>
+          <div className="text-center p-5 flex items-center justify-center flex-wrap gap-2">
+            <Button
+              size="sm"
+              onClick={() => {
+                if (selectedVacant) {
+                  setVacantParent(selectedVacant)
+                  setVacantData(undefined)
+                  vacantDialogToggle.open()
+                } else {
+                  setVacantParent(undefined)
+                  setVacantData(undefined)
+                  vacantDialogToggle.open()
+                }
+              }}
+            >
+              <Plus className="btn-icon icon-start" /> {t('add')}
+            </Button>
+
+            <Button
+              variant="outline"
+              size="sm"
+              isDisabled={!selectedVacant}
+              onClick={() => {
+                setVacantData(selectedVacant)
                 setVacantParent(undefined)
-                setVacantData(undefined)
                 vacantDialogToggle.open()
-              }
-            }}
-          >
-            <Plus className="btn-icon icon-start" /> {t('add')}
-          </Button>
+              }}
+            >
+              <Edit className="btn-icon icon-start" /> {t('edit')}
+            </Button>
 
-          <Button
-            variant="outline"
-            size="sm"
-            isDisabled={!selectedVacant}
-            onClick={() => {
-              setVacantData(selectedVacant)
-              setVacantParent(undefined)
-              vacantDialogToggle.open()
-            }}
-          >
-            <Edit className="btn-icon icon-start" /> {t('edit')}
-          </Button>
-
-          <Button
-            variant="outline"
-            isDisabled={!selectedVacant}
-            size="sm"
-            className="text-destructive"
-            onClick={handleDeleteVacant}
-          >
-            <Trash2 className="btn-icon icon-start" /> {t('delete')}
-          </Button>
-        </div>
-      </div>
-      <div className="flex-1">
-        <GenericTable
-          data={workspaces?.data ?? []}
-          columnDefs={WorkplaceColumns}
-          onEdit={handleEditWorkplace}
-          onDelete={handleDeleteWorkplace}
-        />
-      </div>
-
+            <Button
+              variant="outline"
+              isDisabled={!selectedVacant}
+              size="sm"
+              className="text-destructive"
+              onClick={handleDeleteVacant}
+            >
+              <Trash2 className="btn-icon icon-start" /> {t('delete')}
+            </Button>
+          </div>
+        </Allotment.Pane>
+        <Allotment.Pane>
+          <div className="relative w-full overflow-auto scrollbar">
+            {isFetchingWorkplaces ||
+            isCreatingWorkplace ||
+            isUpdatingWorkplace ||
+            isDeletingWorkplace ? (
+              <LoadingOverlay />
+            ) : null}
+            <GenericTable
+              data={workspaces?.data ?? []}
+              columnDefs={WorkplaceColumns}
+              onEdit={handleEditWorkplace}
+              onDelete={handleDeleteWorkplace}
+              className="table-generic-xs"
+            />
+          </div>
+        </Allotment.Pane>
+      </Allotment>
       <VacantDialog
         isOpen={vacantDialogToggle.isOpen}
         onOpenChange={vacantDialogToggle.setOpen}
@@ -318,7 +340,7 @@ const ControlCardPage = () => {
         minimumWage={calculateParams?.minZar ?? 0}
         onSubmit={handleSubmitWorkplace}
       />
-    </div>
+    </>
   )
 }
 export default ControlCardPage
