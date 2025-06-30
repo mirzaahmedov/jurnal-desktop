@@ -80,8 +80,8 @@ const ZarplataSpravochnikPage = () => {
     })
   }
 
-  const count = spravochniks?.totalCount ?? 0
-  const pageCount = Math.ceil(count / pagination.limit)
+  const count = spravochniks?.meta?.count ?? 0
+  const pageCount = spravochniks?.meta?.pageCount ?? 0
 
   return (
     <ListView>

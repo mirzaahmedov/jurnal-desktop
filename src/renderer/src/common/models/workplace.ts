@@ -12,4 +12,5 @@ export interface Workplace {
   spravochnikSostavId: number
   spravochnikZarpaltaDoljnostId: number
   spravochnikZarplataIstochnikFinanceId: number
+  setka: number
 }

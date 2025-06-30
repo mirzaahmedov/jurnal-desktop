@@ -15,7 +15,9 @@ export class WorkplaceService {
   }
 
   static async getWorkplaces(
-    ctx: QueryFunctionContext<[typeof WorkplaceService.QueryKeys.GetAll, PaginationParams]>
+    ctx: QueryFunctionContext<
+      [typeof WorkplaceService.QueryKeys.GetAll, PaginationParams & { vacantId: number }]
+    >
   ): Promise<Response<Workplace[]>> {
     const params = ctx.queryKey[1] ?? {}
     const res = await zarplataApiNew.get<Response<Workplace[]>>(`${WorkplaceService.endpoint}`, {

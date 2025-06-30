@@ -336,8 +336,6 @@ const BankRasxodDetailsPage = () => {
     form.setValue('organization_porucheniya_name', organSpravochnik.selected?.name ?? '')
   }, [form, organSpravochnik.selected])
 
-  useEffect(() => {}, [shartnomaSpravochnik.selected])
-
   return (
     <DetailsView>
       <DetailsView.Content loading={isFetching}>

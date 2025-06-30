@@ -20,3 +20,18 @@ export const defaultValues: ZarplataSpravochnikFormValues = {
   schet: '',
   subSchet: ''
 }
+
+export enum ZarplataSpravochnikType {
+  Doljnost = 1,
+  VidOplaty = 2,
+  VidUderzhanie = 3,
+  Zvanie = 5,
+  GrafikRaboty = 4,
+  IstochnikFinans = 6,
+  Nachislenie = 7,
+  OsnovnoyUderzhanie = 8,
+  Sostav = 9,
+  TipOtpuska = 10,
+  TipBolnichny = 11,
+  TipVedomosti = 12
+}

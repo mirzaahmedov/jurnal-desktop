@@ -72,6 +72,7 @@ export const SpravochnikInput = <T extends object>({
         value={getInputValue(selected) ?? ''}
         onDoubleClick={open}
         data-error={error}
+        readOnly
         {...registerKeyBindings({ open, clear })}
         {...props}
       />

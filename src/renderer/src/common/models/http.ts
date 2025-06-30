@@ -16,7 +16,7 @@ export type ApiResponse<T, M = ApiResponseMeta> =
   | {
       success: true
       data: T
-      meta: M extends undefined ? ApiResponseMeta : M
+      meta?: M extends undefined ? ApiResponseMeta : M
       message?: string
     }
   | {

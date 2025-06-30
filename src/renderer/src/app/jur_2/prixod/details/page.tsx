@@ -326,7 +326,7 @@ const BankPrixodDetailsPage = () => {
             <DetailsView.Footer>
               <DetailsView.Create
                 tabIndex={6}
-                disabled={isFetching || isUpdating || isCreating}
+                isDisabled={isFetching || isUpdating || isCreating}
               />
             </DetailsView.Footer>
           </form>

@@ -112,7 +112,7 @@ export const ZarplataSpravochnikDialog = ({
   })
 
   useEffect(() => {
-    if (!selected || !open) {
+    if (!selected || !isOpen) {
       form.reset({
         ...defaultValues,
         typesTypeCode: typeCode ?? defaultValues.typesTypeCode
@@ -121,7 +121,7 @@ export const ZarplataSpravochnikDialog = ({
     }
 
     form.reset(selected)
-  }, [form, selected, open, typeCode])
+  }, [form, selected, isOpen, typeCode])
 
   return (
     <DialogTrigger

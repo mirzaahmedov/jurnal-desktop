@@ -1,4 +1,6 @@
 import type { VacantFormValues } from '@/common/features/vacant/config'
+import type { WorkplaceFormValues } from '@/common/features/workplace/config'
+import type { Workplace } from '@/common/models/workplace'
 
 import { useEffect, useMemo, useState } from 'react'
 
@@ -8,20 +10,29 @@ import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 
 import { VacantTree, type VacantTreeNode } from '@/app/region-admin/vacant/vacant-tree'
-import { LoadingOverlay } from '@/common/components'
+import { GenericTable, LoadingOverlay } from '@/common/components'
 import { Button } from '@/common/components/jolly/button'
 import { useConfirm } from '@/common/features/confirm'
 import { VacantService } from '@/common/features/vacant/service'
 import { VacantDialog } from '@/common/features/vacant/vacant-dialog'
+import { WorkplaceColumns } from '@/common/features/workplace/columns'
+import { WorkplaceService } from '@/common/features/workplace/service'
 import { WorkplaceDialog } from '@/common/features/workplace/workplace-dialog'
+import { useZarplataStore } from '@/common/features/zarplata/store'
 import { useToggle } from '@/common/hooks'
 import { useLayout } from '@/common/layout'
 import { arrayToTreeByRelations } from '@/common/lib/tree/relation-tree'
 
+import { CalculateParamsService } from '../calculate-params/service'
+
 const ControlCardPage = () => {
-  const [selected, setSelected] = useState<VacantTreeNode>()
-  const [vacant, setVacant] = useState<VacantTreeNode>()
-  const [parent, setParent] = useState<VacantTreeNode>()
+  const [selectedVacant, setSelectedVacant] = useState<VacantTreeNode>()
+  const [vacantData, setVacantData] = useState<VacantTreeNode>()
+  const [vacantParent, setVacantParent] = useState<VacantTreeNode>()
+
+  const [selectedWorkplace, setSelectedWorkplace] = useState<Workplace>()
+
+  const calculateParamsId = useZarplataStore((store) => store.calculateParamsId)
 
   const vacantDialogToggle = useToggle()
   const workplaceDialogToggle = useToggle()
@@ -30,6 +41,12 @@ const ControlCardPage = () => {
 
   const { t } = useTranslation(['app'])
   const { confirm } = useConfirm()
+
+  const { data: calculateParams } = useQuery({
+    queryKey: [CalculateParamsService.QueryKeys.GetById, calculateParamsId],
+    queryFn: CalculateParamsService.getCalcParametersById,
+    enabled: !!calculateParamsId
+  })
 
   const { data: vacants } = useQuery({
     queryKey: [VacantService.QueryKeys.GetAll, { page: 1, limit: 100000000000000 }],
@@ -78,22 +95,75 @@ const ControlCardPage = () => {
     }
   })
 
-  const handleSubmit = (values: VacantFormValues) => {
-    if (vacant) {
+  const { data: workspaces } = useQuery({
+    queryKey: [
+      WorkplaceService.QueryKeys.GetAll,
+      { page: 1, limit: 100000000000000, vacantId: selectedVacant?.id ?? 0 }
+    ],
+    queryFn: WorkplaceService.getWorkplaces,
+    placeholderData: undefined,
+    enabled: !!selectedVacant
+  })
+
+  const { mutate: createWorkplace } = useMutation({
+    mutationFn: WorkplaceService.createWorkplace,
+    onSuccess: () => {
+      workplaceDialogToggle.setOpen(false)
+
+      toast.success(t('create_success'))
+      queryClient.invalidateQueries({
+        queryKey: [WorkplaceService.QueryKeys.GetAll]
+      })
+    },
+    onError: () => {
+      toast.error(t('create_failed'))
+    }
+  })
+  const { mutate: updateWorkplace } = useMutation({
+    mutationFn: WorkplaceService.updateWorkplace,
+    onSuccess: () => {
+      workplaceDialogToggle.setOpen(false)
+
+      toast.success(t('update_success'))
+      queryClient.invalidateQueries({
+        queryKey: [WorkplaceService.QueryKeys.GetAll]
+      })
+    },
+    onError: () => {
+      toast.error(t('update_failed'))
+    }
+  })
+  const { mutate: deleteWorkplace } = useMutation({
+    mutationFn: WorkplaceService.deleteWorkplace,
+    onSuccess: () => {
+      workplaceDialogToggle.setOpen(false)
+
+      toast.success(t('delete_success'))
+      queryClient.invalidateQueries({
+        queryKey: [WorkplaceService.QueryKeys.GetAll]
+      })
+    },
+    onError: () => {
+      toast.error(t('delete_failed'))
+    }
+  })
+
+  const handleSubmitVacant = (values: VacantFormValues) => {
+    if (vacantData) {
       updateVacant({
-        id: vacant.id,
+        id: vacantData.id,
         values: {
           name: values.name,
           parentId: values.parentId ?? null
         }
       })
-      setVacant(undefined)
-    } else if (parent) {
+      setVacantData(undefined)
+    } else if (vacantParent) {
       createVacant({
         name: values.name,
-        parentId: parent.id
+        parentId: vacantParent.id
       })
-      setParent(undefined)
+      setVacantParent(undefined)
     } else {
       createVacant({
         name: values.name,
@@ -101,15 +171,44 @@ const ControlCardPage = () => {
       })
     }
   }
-  const handleDelete = () => {
-    if (selected) {
+  const handleSubmitWorkplace = (values: WorkplaceFormValues) => {
+    if (selectedWorkplace) {
+      updateWorkplace({
+        id: selectedWorkplace.id,
+        values: {
+          ...values,
+          vacantId: selectedVacant?.id ?? 0
+        }
+      })
+      setSelectedWorkplace(undefined)
+    } else {
+      createWorkplace({
+        ...values,
+        vacantId: selectedVacant?.id ?? 0
+      })
+    }
+  }
+  const handleDeleteVacant = () => {
+    if (selectedVacant) {
       confirm({
         onConfirm: () => {
-          deleteVacant(selected.id)
-          setSelected(undefined)
+          deleteVacant(selectedVacant.id)
+          setSelectedVacant(undefined)
         }
       })
     }
+  }
+  const handleEditWorkplace = (workplace: Workplace) => {
+    setSelectedWorkplace(workplace)
+    workplaceDialogToggle.open()
+  }
+  const handleDeleteWorkplace = (workplace: Workplace) => {
+    confirm({
+      onConfirm: () => {
+        deleteWorkplace(workplace.id)
+        setSelectedWorkplace(undefined)
+      }
+    })
   }
 
   const treeNodes = useMemo(
@@ -130,9 +229,15 @@ const ControlCardPage = () => {
           title: t('pages.zarplata')
         }
       ],
-      onCreate: workplaceDialogToggle.open
+      onCreate:
+        selectedVacant && calculateParams
+          ? () => {
+              workplaceDialogToggle.open()
+              setSelectedWorkplace(undefined)
+            }
+          : undefined
     })
-  }, [setLayout, t, workplaceDialogToggle.open])
+  }, [setLayout, t, workplaceDialogToggle.open, selectedVacant, calculateParams])
 
   return (
     <div className="flex h-full divide-x">
@@ -141,9 +246,9 @@ const ControlCardPage = () => {
           {isCreating || isUpdating || isDeleting ? <LoadingOverlay /> : null}
           <VacantTree
             data={treeNodes}
-            selectedIds={selected ? [selected.id] : []}
+            selectedIds={selectedVacant ? [selectedVacant.id] : []}
             onSelectNode={(vacant) => {
-              setSelected(vacant)
+              setSelectedVacant(vacant)
             }}
           />
         </div>
@@ -151,13 +256,13 @@ const ControlCardPage = () => {
           <Button
             size="sm"
             onClick={() => {
-              if (selected) {
-                setParent(selected)
-                setVacant(undefined)
+              if (selectedVacant) {
+                setVacantParent(selectedVacant)
+                setVacantData(undefined)
                 vacantDialogToggle.open()
               } else {
-                setParent(undefined)
-                setVacant(undefined)
+                setVacantParent(undefined)
+                setVacantData(undefined)
                 vacantDialogToggle.open()
               }
             }}
@@ -168,10 +273,10 @@ const ControlCardPage = () => {
           <Button
             variant="outline"
             size="sm"
-            isDisabled={!selected}
+            isDisabled={!selectedVacant}
             onClick={() => {
-              setVacant(selected)
-              setParent(undefined)
+              setVacantData(selectedVacant)
+              setVacantParent(undefined)
               vacantDialogToggle.open()
             }}
           >
@@ -180,31 +285,38 @@ const ControlCardPage = () => {
 
           <Button
             variant="outline"
-            isDisabled={!selected}
+            isDisabled={!selectedVacant}
             size="sm"
             className="text-destructive"
-            onClick={handleDelete}
+            onClick={handleDeleteVacant}
           >
             <Trash2 className="btn-icon icon-start" /> {t('delete')}
           </Button>
         </div>
       </div>
-      <div className="flex-1"></div>
+      <div className="flex-1">
+        <GenericTable
+          data={workspaces?.data ?? []}
+          columnDefs={WorkplaceColumns}
+          onEdit={handleEditWorkplace}
+          onDelete={handleDeleteWorkplace}
+        />
+      </div>
 
       <VacantDialog
         isOpen={vacantDialogToggle.isOpen}
         onOpenChange={vacantDialogToggle.setOpen}
-        vacant={vacant}
-        onSubmit={handleSubmit}
+        vacant={vacantData}
+        onSubmit={handleSubmitVacant}
       />
 
       <WorkplaceDialog
+        vacant={selectedVacant}
         isOpen={workplaceDialogToggle.isOpen}
         onOpenChange={workplaceDialogToggle.setOpen}
-        selected={undefined}
-        onSubmit={(values) => {
-          console.log(values)
-        }}
+        selected={selectedWorkplace}
+        minimumWage={calculateParams?.minZar ?? 0}
+        onSubmit={handleSubmitWorkplace}
       />
     </div>
   )

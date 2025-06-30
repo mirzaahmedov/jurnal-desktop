@@ -1,11 +1,18 @@
 import type { ZarplataSpravochnikFormValues } from './config'
-import type { Zarplata } from '@/common/models'
+import type { SpravochnikHookOptions } from '@/common/features/spravochnik'
+import type { ApiResponse, Zarplata } from '@/common/models'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 
+import { ApiEndpoints } from '@/common/features/crud'
+import { SpravochnikSearchField } from '@/common/features/filters/search/search-filter-spravochnik'
+import { extendObject } from '@/common/lib/utils'
+import { getMultiApiResponse, getSingleApiResponse } from '@/common/lib/zarplata'
 import { type Response, zarplataApiNew } from '@/common/lib/zarplata_new'
 
+import { columnDefs } from './columns'
+
 export class ZarplataSpravochnikService {
-  static Endpoint = '/SpravochnikZarplatum'
+  static Endpoint = ApiEndpoints.zarplata_spravochnik
 
   static QueryKeys = {
     Create: 'zarplata-spravochnik/create',
@@ -19,7 +26,7 @@ export class ZarplataSpravochnikService {
     ctx: QueryFunctionContext<
       [string, { types_type_code: number; name?: string; page?: number; limit?: number }]
     >
-  ): Promise<Response<Zarplata.Spravochnik[]>> {
+  ): Promise<ApiResponse<Zarplata.Spravochnik[]>> {
     const { types_type_code, name, page, limit } = ctx.queryKey[1]
 
     const res = await zarplataApiNew.get<Response<Zarplata.Spravochnik[]>>(
@@ -32,7 +39,22 @@ export class ZarplataSpravochnikService {
         }
       }
     )
-    return res.data
+    return getMultiApiResponse({
+      response: res.data,
+      page: page ?? 1,
+      limit: limit ?? 10
+    })
+  }
+  static async getById(
+    ctx: QueryFunctionContext<[string, number]>
+  ): Promise<ApiResponse<Zarplata.Spravochnik>> {
+    const id = ctx.queryKey[1]
+    const res = await zarplataApiNew.get<Zarplata.Spravochnik>(
+      `${ZarplataSpravochnikService.Endpoint}/${id}`
+    )
+    return getSingleApiResponse({
+      response: res.data
+    })
   }
 
   static async getTypes() {
@@ -64,4 +86,18 @@ export class ZarplataSpravochnikService {
     )
     return res.data
   }
+}
+
+export const createZarplataSpravochnik = (
+  config: Partial<SpravochnikHookOptions<Zarplata.Spravochnik>>
+) => {
+  return extendObject(
+    {
+      endpoint: ApiEndpoints.zarplata_spravochnik,
+      columnDefs: columnDefs,
+      service: ZarplataSpravochnikService,
+      filters: [SpravochnikSearchField]
+    } satisfies typeof config,
+    config
+  )
 }
