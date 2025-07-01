@@ -7,13 +7,13 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import { toast } from 'react-toastify'
 
 import { ZarplataSpravochnikType } from '@/app/super-admin/zarplata/spravochnik/config'
 import {
   ZarplataSpravochnikService,
   createZarplataSpravochnik
 } from '@/app/super-admin/zarplata/spravochnik/service'
-import { Fieldset } from '@/common/components'
 import { FormElement } from '@/common/components/form'
 import { JollyDatePicker } from '@/common/components/jolly-date-picker'
 import { Button } from '@/common/components/jolly/button'
@@ -24,7 +24,7 @@ import { Input } from '@/common/components/ui/input'
 import { Textarea } from '@/common/components/ui/textarea'
 import { MainZarplataService } from '@/common/features/main-zarplata/service'
 import { SpravochnikInput, useSpravochnik } from '@/common/features/spravochnik'
-import { formatDate, parseDate } from '@/common/lib/date'
+import { formatDate, parseDate, parseLocaleDate } from '@/common/lib/date'
 import { formatLocaleDate } from '@/common/lib/format'
 
 import { getVacantRayon } from '../common/utils/vacant'
@@ -33,8 +33,15 @@ import { MainZarplataFormSchema, defaultValues } from './config'
 export interface MainZarplataFormProps {
   vacant: VacantTreeNode
   selectedUser?: MainZarplata | undefined
+  onCreate?: (user: MainZarplata) => void
+  onClose?: VoidFunction
 }
-export const MainZarplataForm = ({ vacant, selectedUser }: MainZarplataFormProps) => {
+export const MainZarplataForm = ({
+  vacant,
+  selectedUser,
+  onCreate,
+  onClose
+}: MainZarplataFormProps) => {
   const { t } = useTranslation()
 
   const queryClient = useQueryClient()
@@ -56,18 +63,31 @@ export const MainZarplataForm = ({ vacant, selectedUser }: MainZarplataFormProps
   })
   const { mutate: createUser, isPending: isCreating } = useMutation({
     mutationFn: MainZarplataService.create,
-    onSuccess: () => {
+    onSuccess: (res) => {
+      toast.success(t('create_success'))
       queryClient.invalidateQueries({
         queryKey: [MainZarplataService.QueryKeys.GetAll]
       })
+      onClose?.()
+      if (res?.data) {
+        onCreate?.(res.data)
+      }
+    },
+    onError: () => {
+      toast.error(t('create_failed'))
     }
   })
   const { mutate: updateUser, isPending: isUpdating } = useMutation({
     mutationFn: MainZarplataService.update,
     onSuccess: () => {
+      toast.success(t('update_success'))
       queryClient.invalidateQueries({
         queryKey: [MainZarplataService.QueryKeys.GetAll]
       })
+      onClose?.()
+    },
+    onError: () => {
+      toast.error(t('update_failed'))
     }
   })
 
@@ -106,14 +126,11 @@ export const MainZarplataForm = ({ vacant, selectedUser }: MainZarplataFormProps
     if (selectedUser) {
       form.reset({
         ...selectedUser,
-        dateBirth: formatDate(parseDate(selectedUser.dateBirth)),
-        nachaloSlujbi: formatDate(parseDate(selectedUser.nachaloSlujbi)),
-        rayon: getVacantRayon(vacant)
+        dateBirth: formatDate(parseLocaleDate(selectedUser.dateBirth)),
+        nachaloSlujbi: formatDate(parseLocaleDate(selectedUser.nachaloSlujbi))
       })
     } else {
-      form.reset({
-        rayon: getVacantRayon(vacant)
-      })
+      form.reset(defaultValues)
     }
   }, [selectedUser, vacant, form])
   useEffect(() => {
@@ -124,56 +141,58 @@ export const MainZarplataForm = ({ vacant, selectedUser }: MainZarplataFormProps
     <Form {...form}>
       <form
         onSubmit={handleSubmit}
-        className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-5 p-5"
+        className="flex gap-2.5 p-5"
       >
-        <div className="p-2.5 grid grid-cols-[repeat(2,minmax(200px,1fr))] content-center gap-5">
-          <FormField
-            control={form.control}
-            name="kartochka"
-            render={({ field }) => (
-              <FormElement
-                direction="column"
-                label={t('card_num')}
-              >
-                <Input {...field} />
-              </FormElement>
-            )}
-          />
+        <div className="flex-1 p-2.5 grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] content-center gap-5">
           <div>
             <FormField
               control={form.control}
-              name="xarbiy"
+              name="kartochka"
               render={({ field }) => (
                 <FormElement
-                  label={t('military')}
-                  divProps={{ className: 'flex-row-reverse justify-end' }}
-                  innerProps={{ className: 'flex-none w-auto' }}
+                  direction="column"
+                  label={t('card_num')}
                 >
-                  <Checkbox
-                    ref={field.ref}
-                    checked={field.value}
-                    onCheckedChange={(checked) => field.onChange(checked)}
-                  />
+                  <Input {...field} />
                 </FormElement>
               )}
             />
-            <FormField
-              control={form.control}
-              name="ostanovitRaschet"
-              render={({ field }) => (
-                <FormElement
-                  label={t('stop_calculation')}
-                  divProps={{ className: 'flex-row-reverse justify-end' }}
-                  innerProps={{ className: 'flex-none w-auto' }}
-                >
-                  <Checkbox
-                    ref={field.ref}
-                    checked={field.value}
-                    onCheckedChange={(checked) => field.onChange(checked)}
-                  />
-                </FormElement>
-              )}
-            />
+            <div>
+              <FormField
+                control={form.control}
+                name="xarbiy"
+                render={({ field }) => (
+                  <FormElement
+                    label={t('military')}
+                    divProps={{ className: 'flex-row-reverse justify-end' }}
+                    innerProps={{ className: 'flex-none w-auto' }}
+                  >
+                    <Checkbox
+                      ref={field.ref}
+                      checked={field.value}
+                      onCheckedChange={(checked) => field.onChange(checked)}
+                    />
+                  </FormElement>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="ostanovitRaschet"
+                render={({ field }) => (
+                  <FormElement
+                    label={t('stop_calculation')}
+                    divProps={{ className: 'flex-row-reverse justify-end' }}
+                    innerProps={{ className: 'flex-none w-auto' }}
+                  >
+                    <Checkbox
+                      ref={field.ref}
+                      checked={field.value}
+                      onCheckedChange={(checked) => field.onChange(checked)}
+                    />
+                  </FormElement>
+                )}
+              />
+            </div>
           </div>
           <FormField
             control={form.control}
@@ -261,7 +280,6 @@ export const MainZarplataForm = ({ vacant, selectedUser }: MainZarplataFormProps
             )}
           />
 
-          <div></div>
           <FormField
             control={form.control}
             name="inps"
@@ -293,12 +311,10 @@ export const MainZarplataForm = ({ vacant, selectedUser }: MainZarplataFormProps
             />
           </div>
 
-          <Fieldset name={t('shtatka')}></Fieldset>
-
-          <div className="col-span-2">
+          <div className="col-span-full">
             <Button
               type="submit"
-              isPending={isPending}
+              isPending={isCreating || isUpdating}
             >
               {t('save')}
             </Button>

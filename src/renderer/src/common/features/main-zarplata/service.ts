@@ -84,7 +84,7 @@ export class MainZarplataService {
     })
   }
 
-  static async create(values: MainZarplataFormValues): Promise<unknown> {
+  static async create(values: MainZarplataFormValues): Promise<ApiResponse<MainZarplata>> {
     const res = await zarplataApiNew.post<MainZarplata>(MainZarplataService.endpoint, values)
     return getSingleApiResponse({
       response: res.data

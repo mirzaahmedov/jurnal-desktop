@@ -15,7 +15,7 @@ import {
 } from '@/common/components/jolly/dialog'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/common/components/ui/tabs'
 
-import { MainZarplataForm } from './user-form'
+import { MainZarplataForm } from './main-zarplata-form'
 
 export enum PassportInfoTabs {
   Main = 'main',
@@ -80,6 +80,7 @@ export const PassportInfoDialog = ({ vacant, selectedUser, ...props }: PassportI
                   <MainZarplataForm
                     vacant={vacant}
                     selectedUser={selectedUser}
+                    onClose={() => props?.onOpenChange?.(false)}
                   />
                 </TabsContent>
                 <TabsContent value={PassportInfoTabs.Labor}>Labor</TabsContent>

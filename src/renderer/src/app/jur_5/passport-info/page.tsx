@@ -10,17 +10,19 @@ import { VacantTree, type VacantTreeNode } from '@/app/region-admin/vacant/vacan
 import { GenericTable, LoadingOverlay } from '@/common/components'
 import { MainZarplataService } from '@/common/features/main-zarplata/service'
 import { VacantService } from '@/common/features/vacant/service'
-import { usePagination, useToggle } from '@/common/hooks'
+import { useToggle } from '@/common/hooks'
 import { useLayout } from '@/common/layout'
 import { arrayToTreeByRelations } from '@/common/lib/tree/relation-tree'
 
 import { MainZarplataColumnDefs } from './columns'
-import { PassportInfoDialog } from './dialog'
+import { PassportInfoCreateDialog } from './create-dialog'
+import { PassportInfoDialog } from './info-dialog'
 
 const PassportInfoPage = () => {
-  const pagination = usePagination()
   const setLayout = useLayout()
-  const dialogToggle = useToggle()
+
+  const createDialogToggle = useToggle()
+  const editDialogToggle = useToggle()
 
   const [selectedVacant, setSelectedVacant] = useState<VacantTreeNode | null>(null)
   const [selectedUser, setSelectedUser] = useState<MainZarplata | undefined>()
@@ -50,9 +52,9 @@ const PassportInfoPage = () => {
           title: t('pages.zarplata')
         }
       ],
-      onCreate: dialogToggle.open
+      onCreate: selectedVacant ? createDialogToggle.open : undefined
     })
-  }, [t, setLayout])
+  }, [t, setLayout, selectedVacant])
 
   const treeNodes = useMemo(
     () =>
@@ -66,7 +68,7 @@ const PassportInfoPage = () => {
 
   const handleRowEdit = (row: MainZarplata) => {
     setSelectedUser(row)
-    dialogToggle.open()
+    editDialogToggle.open()
   }
 
   return (
@@ -101,10 +103,24 @@ const PassportInfoPage = () => {
 
       {selectedVacant ? (
         <PassportInfoDialog
-          isOpen={dialogToggle.isOpen}
-          onOpenChange={dialogToggle.setOpen}
+          isOpen={editDialogToggle.isOpen}
+          onOpenChange={editDialogToggle.setOpen}
           selectedUser={selectedUser}
           vacant={selectedVacant}
+        />
+      ) : null}
+
+      {selectedVacant ? (
+        <PassportInfoCreateDialog
+          isOpen={createDialogToggle.isOpen}
+          onOpenChange={createDialogToggle.setOpen}
+          selectedUser={undefined}
+          vacant={selectedVacant}
+          onCreate={(user) => {
+            setSelectedUser(user)
+            editDialogToggle.open()
+            createDialogToggle.close()
+          }}
         />
       ) : null}
     </>
