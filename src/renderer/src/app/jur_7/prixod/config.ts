@@ -2,15 +2,16 @@ import { z } from 'zod'
 
 import { withPreprocessor } from '@/common/lib/validation'
 
-export const WarehousePrixodQueryKeys = {
-  getAll: 'warehouse_prixod/all',
-  getById: 'warehouse_prixod/get',
-  create: 'warehouse_prixod/create',
-  update: 'warehouse_prixod/update',
-  delete: 'warehouse_prixod/delete'
+export const MaterialPrixodQueryKeys = {
+  getAll: 'material_prixod/all',
+  getProducts: 'material_prixod/products',
+  getById: 'material_prixod/get',
+  create: 'material_prixod/create',
+  update: 'material_prixod/update',
+  delete: 'material_prixod/delete'
 }
 
-export const defaultValues: PrixodFormValues = {
+export const defaultValues: MaterialPrixodFormValues = {
   type_document: 1,
   doc_num: '',
   doc_date: '',
@@ -42,7 +43,7 @@ export const defaultValues: PrixodFormValues = {
   ]
 }
 
-export const PrixodProvodkaFormSchema = withPreprocessor(
+export const MaterialPrixodProvodkaFormSchema = withPreprocessor(
   z.object({
     name: z.string(),
     unit_id: z.number(),
@@ -65,7 +66,7 @@ export const PrixodProvodkaFormSchema = withPreprocessor(
     kredit_sub_schet: z.string(),
     data_pereotsenka: z.string(),
     // when adding to existing product
-    product_id: z.number().optional(),
+    product_id: z.string().optional(),
     saldo_id: z.number().optional()
   })
 ).superRefine((values, ctx) => {
@@ -78,7 +79,7 @@ export const PrixodProvodkaFormSchema = withPreprocessor(
     }
   }
 })
-export const PrixodFormSchema = withPreprocessor(
+export const MaterialPrixodFormSchema = withPreprocessor(
   z.object({
     type_document: z.number().optional(),
     doc_num: z.string(),
@@ -91,8 +92,8 @@ export const PrixodFormSchema = withPreprocessor(
     organization_by_raschet_schet_id: z.number(),
     organization_by_raschet_schet_gazna_id: z.number().optional(),
     shartnoma_grafik_id: z.number().optional(),
-    childs: z.array(PrixodProvodkaFormSchema)
+    childs: z.array(MaterialPrixodProvodkaFormSchema)
   })
 )
-export type PrixodFormValues = z.infer<typeof PrixodFormSchema>
-export type PrixodProvodkaFormValues = z.infer<typeof PrixodProvodkaFormSchema>
+export type MaterialPrixodFormValues = z.infer<typeof MaterialPrixodFormSchema>
+export type MaterialPrixodProvodkaFormValues = z.infer<typeof MaterialPrixodProvodkaFormSchema>

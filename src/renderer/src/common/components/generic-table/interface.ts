@@ -46,8 +46,8 @@ export interface GenericTableProps<T extends object>
   headerProps?: HTMLAttributes<HTMLTableSectionElement>
   columnDefs: ColumnDef<NoInfer<T>>[]
   placeholder?: string
-  selectedIds?: number[]
-  disabledIds?: number[]
+  selectedIds?: (number | string)[]
+  disabledIds?: (number | string)[]
   getRowId?: (row: T) => string | number
   getRowKey?: (row: T) => string | number
   getRowSelected?: GetRowSelectedFn<T>
@@ -69,6 +69,6 @@ export interface GenericTableProps<T extends object>
 
 export type GetRowSelectedFn<T> = (args: {
   row: T
-  selectedIds: number[]
+  selectedIds: (number | string)[]
   getRowId: (row: T) => number | string
 }) => CheckedState

@@ -1,50 +1,75 @@
-import type { ApiResponseMeta, WarehousePrixod } from '@/common/models'
-import type { UseMutationOptions } from '@tanstack/react-query'
+import type {
+  ApiResponse,
+  ApiResponseMeta,
+  MaterialPrixod,
+  MaterialPrixodProduct
+} from '@/common/models'
+import type { QueryFunctionContext, UseMutationOptions } from '@tanstack/react-query'
 
 import { useMutation } from '@tanstack/react-query'
 
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 import { budjet, main_schet } from '@/common/features/crud/middleware'
 
-import { type PrixodFormValues, WarehousePrixodQueryKeys } from './config'
+import { type MaterialPrixodFormValues, MaterialPrixodQueryKeys } from './config'
 
-interface PrixodMeta extends ApiResponseMeta {
+interface MaterialPrixodMeta extends ApiResponseMeta {
   summa: number
 }
 
-export const WarehousePrixodService = new CRUDService<
-  WarehousePrixod,
-  PrixodFormValues,
-  PrixodFormValues,
-  PrixodMeta
->({
-  endpoint: ApiEndpoints.jur7_prixod
-})
+export class MaterialPrixodServiceFactory extends CRUDService<
+  MaterialPrixod,
+  MaterialPrixodFormValues,
+  MaterialPrixodFormValues,
+  MaterialPrixodMeta
+> {
+  constructor() {
+    super({
+      endpoint: ApiEndpoints.jur7_prixod
+    })
+
+    this.getProducts = this.getProducts.bind(this)
+  }
+
+  async getProducts(
+    ctx: QueryFunctionContext<
+      [
+        string,
+        {
+          page: number
+          limit: number
+          main_schet_id: number
+        }
+      ]
+    >
+  ) {
+    const res = await this.client.get<ApiResponse<MaterialPrixodProduct[]>>(
+      `${this.endpoint}/products`,
+      {
+        params: ctx.queryKey[1]
+      }
+    )
+    return res.data
+  }
+}
+
+export const MaterialPrixodService = new MaterialPrixodServiceFactory()
   .use(budjet())
   .use(main_schet())
 
 export type UsePrixodParams = Pick<UseMutationOptions<any, Error, any>, 'onSuccess' | 'onError'>
 export const usePrixodCreate = ({ onSuccess, onError }: UsePrixodParams) => {
   return useMutation({
-    mutationKey: [WarehousePrixodQueryKeys.create],
-    mutationFn: WarehousePrixodService.create,
+    mutationKey: [MaterialPrixodQueryKeys.create],
+    mutationFn: MaterialPrixodService.create,
     onSuccess,
     onError
   })
 }
 export const usePrixodUpdate = ({ onSuccess, onError }: UsePrixodParams) => {
   return useMutation({
-    mutationKey: [WarehousePrixodQueryKeys.update],
-    mutationFn: WarehousePrixodService.update,
-    onSuccess,
-    onError
-  })
-}
-
-export const usePrixodDelete = ({ onSuccess, onError }: UsePrixodParams) => {
-  return useMutation({
-    mutationKey: [WarehousePrixodQueryKeys.delete],
-    mutationFn: WarehousePrixodService.delete,
+    mutationKey: [MaterialPrixodQueryKeys.update],
+    mutationFn: MaterialPrixodService.update,
     onSuccess,
     onError
   })

@@ -40,8 +40,8 @@ import {
 } from '@/common/widget/form'
 
 import { TotalsOverview } from '../../__components__/totals-overview'
-import { PrixodFormSchema, WarehousePrixodQueryKeys, defaultValues } from '../config'
-import { WarehousePrixodService, usePrixodCreate, usePrixodUpdate } from '../service'
+import { MaterialPrixodFormSchema, MaterialPrixodQueryKeys, defaultValues } from '../config'
+import { MaterialPrixodService, usePrixodCreate, usePrixodUpdate } from '../service'
 import { ApplyAllInputs } from './apply-all-inputs'
 import { ExistingDocumentsAlert } from './existing-document-alert'
 import { ProvodkaTable } from './provodka-table'
@@ -72,14 +72,14 @@ const PrixodDetails = ({ id, onSuccess }: PrixodDetailsProps) => {
 
   const { data: prixod, isFetching } = useQuery({
     queryKey: [
-      WarehousePrixodQueryKeys.getById,
+      MaterialPrixodQueryKeys.getById,
       Number(id),
       {
         budjet_id,
         main_schet_id
       }
     ],
-    queryFn: WarehousePrixodService.getById,
+    queryFn: MaterialPrixodService.getById,
     enabled: !!id
   })
   const { mutate: createPrixod, isPending: isCreating } = usePrixodCreate({
@@ -88,7 +88,7 @@ const PrixodDetails = ({ id, onSuccess }: PrixodDetailsProps) => {
       handleOstatokResponse(res)
 
       queryClient.invalidateQueries({
-        queryKey: [WarehousePrixodQueryKeys.getAll]
+        queryKey: [MaterialPrixodQueryKeys.getAll]
       })
       queryClient.invalidateQueries({
         queryKey: [SaldoQueryKeys.check]
@@ -109,7 +109,7 @@ const PrixodDetails = ({ id, onSuccess }: PrixodDetailsProps) => {
       handleOstatokResponse(res)
 
       queryClient.invalidateQueries({
-        queryKey: [WarehousePrixodQueryKeys.getAll]
+        queryKey: [MaterialPrixodQueryKeys.getAll]
       })
       queryClient.invalidateQueries({
         queryKey: [SaldoQueryKeys.check]
@@ -141,7 +141,7 @@ const PrixodDetails = ({ id, onSuccess }: PrixodDetailsProps) => {
       ...defaultValues,
       doc_date: formatDate(startDate)
     },
-    resolver: zodResolver(PrixodFormSchema)
+    resolver: zodResolver(MaterialPrixodFormSchema)
   })
 
   const orgSpravochnik = useSpravochnik(

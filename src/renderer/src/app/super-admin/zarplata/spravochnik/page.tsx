@@ -13,7 +13,7 @@ import { usePagination, useToggle } from '@/common/hooks'
 import { useLayout } from '@/common/layout'
 import { ListView } from '@/common/views'
 
-import { columnDefs } from './columns'
+import { ZarplataSpravochnikColumnDefs } from './columns'
 import { ZarplataSpravochnikDialog } from './dialog'
 import { SpravochnikFilters, useTypeFilter } from './filters'
 import { ZarplataSpravochnikService } from './service'
@@ -88,7 +88,7 @@ const ZarplataSpravochnikPage = () => {
       <ListView.Content isLoading={isFetching || isPending}>
         <GenericTable
           data={spravochniks?.data ?? []}
-          columnDefs={columnDefs}
+          columnDefs={ZarplataSpravochnikColumnDefs}
           onEdit={handleEdit}
           onDelete={handleDelete}
         />

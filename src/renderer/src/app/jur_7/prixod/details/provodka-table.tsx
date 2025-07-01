@@ -12,7 +12,6 @@ import {
 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
-import { toast } from 'react-toastify'
 
 import { createGroupSpravochnik } from '@/app/super-admin/group/service'
 import { DatePicker, EdinSelect, NumericInput } from '@/common/components'
@@ -28,21 +27,27 @@ import { Button } from '@/common/components/ui/button'
 import { Checkbox } from '@/common/components/ui/checkbox'
 import { Input } from '@/common/components/ui/input'
 import { Table, TableBody, TableHeader } from '@/common/components/ui/table'
-import { useSelectedMonthStore } from '@/common/features/selected-month'
-import { validateDateWithinSelectedMonth } from '@/common/features/selected-month'
+import {
+  useSelectedMonthStore,
+  validateDateWithinSelectedMonth
+} from '@/common/features/selected-month'
 import { SpravochnikInput, inputVariants, useSpravochnik } from '@/common/features/spravochnik'
 import { useEventCallback, useToggle } from '@/common/hooks'
 import { calcSena, calcSumma } from '@/common/lib/pricing'
 import { cn } from '@/common/lib/utils'
 
-import { SaldoProductSpravochnikDialog } from '../../saldo/components/spravochnik-dialog'
-import { type PrixodFormValues, type PrixodProvodkaFormValues, defaultValues } from '../config'
+import { AddExistingProductDialog } from '../../saldo/components/add-existing-product-dialog'
+import {
+  type MaterialPrixodFormValues,
+  type MaterialPrixodProvodkaFormValues,
+  defaultValues
+} from '../config'
 
 const PAGE_SIZE = 20
 
 interface ProvodkaTableProps {
   tabIndex: number
-  form: UseFormReturn<PrixodFormValues>
+  form: UseFormReturn<MaterialPrixodFormValues>
 }
 export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) => {
   const params = useParams()
@@ -58,7 +63,7 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
   const pageCount = Math.ceil(childs.length / PAGE_SIZE)
 
   const handleChangeChildField = useEventCallback(
-    (index: number, key: keyof PrixodProvodkaFormValues, value: unknown) => {
+    (index: number, key: keyof MaterialPrixodProvodkaFormValues, value: unknown) => {
       form.setValue(`childs.${index}.${key}`, value as string | number, {
         shouldValidate: true
       })
@@ -83,7 +88,7 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
           }}
           className="w-[2500px]"
         >
-          <SaldoProductSpravochnikDialog
+          <AddExistingProductDialog
             responsible_id={form.watch('kimga_id')}
             to={form.watch('doc_date')}
             open={spravochnikToggle.isOpen}
@@ -104,32 +109,32 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
                 'childs',
                 [
                   ...prevChilds,
-                  ...products.map(
-                    (p) =>
-                      ({
-                        product_id: p.product_id,
-                        group_jur7_id: p.group_id,
-                        saldo_id: p.id,
-                        name: p.name,
-                        group_number: p.group_number,
-                        unit_id: p.unit_id,
-                        inventar_num: p.inventar_num,
-                        serial_num: p.serial_num,
-                        kol: 0,
-                        sena: 0,
-                        summa: 0,
-                        iznos: p.iznos,
-                        debet_schet: p.debet_schet,
-                        debet_sub_schet: p.debet_sub_schet,
-                        kredit_schet: p.kredit_schet,
-                        kredit_sub_schet: p.kredit_sub_schet,
-                        data_pereotsenka: form.getValues('doc_date'),
-                        eski_iznos_summa: 0,
-                        iznos_schet: p.iznos_schet,
-                        iznos_sub_schet: p.iznos_sub_schet,
-                        iznos_start: p.iznos ? form.getValues('doc_date') : ''
-                      }) satisfies PrixodProvodkaFormValues
-                  ),
+                  ...products.map((p) => {
+                    const group = p.group
+                    const iznos = group && group?.iznos_foiz > 0
+                    return {
+                      product_id: p.id,
+                      group_jur7_id: p.group_jur7_id,
+                      name: p.name,
+                      group_number: group.group_number ?? group?.name ?? '',
+                      unit_id: p.unit_id,
+                      inventar_num: p.inventar_num,
+                      serial_num: p.serial_num,
+                      kol: 0,
+                      sena: 0,
+                      summa: 0,
+                      iznos: iznos,
+                      debet_schet: group?.schet ?? '',
+                      debet_sub_schet: group?.provodka_subschet ?? '',
+                      kredit_schet: '',
+                      kredit_sub_schet: group?.provodka_subschet ?? '',
+                      data_pereotsenka: form.getValues('doc_date'),
+                      eski_iznos_summa: 0,
+                      iznos_schet: iznos ? (group?.schet ?? '') : '',
+                      iznos_sub_schet: iznos ? (group?.provodka_subschet ?? '') : '',
+                      iznos_start: iznos ? form.getValues('doc_date') : ''
+                    } satisfies MaterialPrixodProvodkaFormValues
+                  }),
                   ...nextChilds
                 ],
                 {
@@ -266,7 +271,7 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
                 childs.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE).map((row, rowIndex) => {
                   const index = (page - 1) * PAGE_SIZE + rowIndex
                   const errors = form.formState.errors.childs?.[index] || {}
-                  const isExisting = !!row.saldo_id
+                  const isExisting = !!row.product_id
                   return (
                     <EditableTableRow key={index}>
                       <EditableTableCell className="px-3 font-medium">
@@ -279,7 +284,6 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
                         errors={errors}
                         tabIndex={tabIndex}
                         isExisting={isExisting}
-                        kimga_id={form.watch('kimga_id')}
                         onOpenModal={() => {
                           spravochnikToggle.open()
                           setRowIndex(index)
@@ -552,26 +556,17 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
                       </EditableTableCell>
 
                       <EditableTableCell className="w-[100px]">
-                        {isExisting ? (
-                          <Input
-                            readOnly
-                            editor
-                            value={row.kredit_schet}
-                          />
-                        ) : (
-                          <SchetEditor
-                            tabIndex={tabIndex}
-                            error={errors?.kredit_schet}
-                            value={row.kredit_schet}
-                            onChange={(schet) => {
-                              handleChangeChildField(index, 'kredit_schet', schet)
-                            }}
-                          />
-                        )}
+                        <SchetEditor
+                          tabIndex={tabIndex}
+                          error={errors?.kredit_schet}
+                          value={row.kredit_schet}
+                          onChange={(schet) => {
+                            handleChangeChildField(index, 'kredit_schet', schet)
+                          }}
+                        />
                       </EditableTableCell>
                       <EditableTableCell className="w-[140px]">
                         <Input
-                          readOnly
                           value={row.kredit_sub_schet}
                           onChange={(e) => {
                             handleChangeChildField(index, 'kredit_sub_schet', e.target.value)
@@ -728,28 +723,28 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
 
 type NaimenovanieCellsProps = {
   index: number
-  row: PrixodProvodkaFormValues
-  form: UseFormReturn<PrixodFormValues>
-  kimga_id: number
+  row: MaterialPrixodProvodkaFormValues
+  form: UseFormReturn<MaterialPrixodFormValues>
   tabIndex: number
   isExisting: boolean
-  errors: Merge<FieldError, FieldErrorsImpl<PrixodProvodkaFormValues>>
+  errors: Merge<FieldError, FieldErrorsImpl<MaterialPrixodProvodkaFormValues>>
   onOpenModal: VoidFunction
-  onChangeField: (index: number, key: keyof PrixodProvodkaFormValues, value: unknown) => void
+  onChangeField: (
+    index: number,
+    key: keyof MaterialPrixodProvodkaFormValues,
+    value: unknown
+  ) => void
 }
 const NaimenovanieCells = ({
   index,
   row,
   form,
-  kimga_id,
   errors,
   tabIndex,
   isExisting,
   onOpenModal,
   onChangeField
 }: NaimenovanieCellsProps) => {
-  const { t } = useTranslation()
-
   const groupSpravochnik = useSpravochnik(
     createGroupSpravochnik({
       value: row.group_jur7_id,
@@ -766,6 +761,14 @@ const NaimenovanieCells = ({
       }
     })
   )
+
+  const handleOpenModal = () => {
+    if (isExisting) {
+      onChangeField(index, 'product_id', 0)
+    } else {
+      onOpenModal()
+    }
+  }
 
   return (
     <>
@@ -795,7 +798,7 @@ const NaimenovanieCells = ({
               onChangeField(index, 'name', e.target.value)
             }}
             className={inputVariants({ editor: true, error: !!errors.name })}
-            onDoubleClick={onOpenModal}
+            onDoubleClick={handleOpenModal}
             readOnly={isExisting}
           />
 
@@ -803,18 +806,7 @@ const NaimenovanieCells = ({
             variant="ghost"
             size="icon"
             className="absolute right-0.5 top-0.5 group bg-white"
-            onClick={() => {
-              if (!kimga_id) {
-                toast.error(t('please_select_responsible'))
-                return
-              }
-              if (isExisting) {
-                onChangeField(index, 'product_id', 0)
-                onChangeField(index, 'saldo_id', 0)
-              } else {
-                onOpenModal()
-              }
-            }}
+            onClick={handleOpenModal}
           >
             {isExisting ? (
               <>

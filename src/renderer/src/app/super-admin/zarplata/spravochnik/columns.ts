@@ -3,17 +3,13 @@ import type { Zarplata } from '@/common/models'
 
 import { IDCell } from '@/common/components/table/renderers/id'
 
-export const columnDefs: ColumnDef<Zarplata.Spravochnik>[] = [
+export const ZarplataSpravochnikColumnDefs: ColumnDef<Zarplata.Spravochnik>[] = [
   {
     key: 'id',
     renderCell: IDCell
   },
   {
     key: 'name'
-  },
-  {
-    key: 'spravochnikOperatsiiName',
-    header: 'operatsii'
   },
   {
     key: 'typeName',
@@ -35,5 +31,43 @@ export const columnDefs: ColumnDef<Zarplata.Spravochnik>[] = [
     numeric: true,
     key: 'sena2',
     header: 'sena_2'
+  }
+]
+
+export const ZarplataSpravochnikZvanieColumnDefs: ColumnDef<Zarplata.Spravochnik>[] = [
+  {
+    key: 'id',
+    renderCell: IDCell
+  },
+  {
+    key: 'name'
+  },
+  {
+    key: 'typeName',
+    header: 'type'
+  },
+  {
+    numeric: true,
+    key: 'sena1',
+    header: 'sena_1'
+  },
+  {
+    numeric: true,
+    key: 'sena2',
+    header: 'sena_2'
+  }
+]
+
+export const ZarplataSpravochnikDialogColumnDefs: ColumnDef<Zarplata.Spravochnik>[] = [
+  {
+    key: 'id',
+    renderCell: IDCell
+  },
+  {
+    key: 'name'
+  },
+  {
+    key: 'typeName',
+    header: 'type'
   }
 ]

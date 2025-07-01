@@ -1,4 +1,4 @@
-import type { WarehousePrixodProvodka } from '@/common/models'
+import type { MaterialPrixodProvodka } from '@/common/models'
 
 import { useQuery } from '@tanstack/react-query'
 import { Download } from 'lucide-react'
@@ -25,10 +25,10 @@ import { formatLocaleDate, formatNumber } from '@/common/lib/format'
 import { numberToWords } from '@/common/lib/utils'
 
 import { TotalsOverview } from '../__components__/totals-overview'
-import { WarehousePrixodQueryKeys } from './config'
-import { WarehousePrixodService } from './service'
+import { MaterialPrixodQueryKeys } from './config'
+import { MaterialPrixodService } from './service'
 
-const provodkaColumns: ColumnDef<WarehousePrixodProvodka>[] = [
+const provodkaColumns: ColumnDef<MaterialPrixodProvodka>[] = [
   {
     key: 'group_number'
   },
@@ -129,8 +129,8 @@ export const WarehousePrixodViewDialog = ({
   const { budjet_id, main_schet_id } = useRequisitesStore()
 
   const { data: prixod, isFetching } = useQuery({
-    queryKey: [WarehousePrixodQueryKeys.getById, selectedId!],
-    queryFn: WarehousePrixodService.getById,
+    queryKey: [MaterialPrixodQueryKeys.getById, selectedId!],
+    queryFn: MaterialPrixodService.getById,
     enabled: !!selectedId
   })
 

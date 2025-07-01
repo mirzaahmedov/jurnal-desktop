@@ -204,12 +204,12 @@ export const GenericTable = <T extends object>(props: GenericTableProps<T>) => {
                   'group',
                   activeRowId === getRowId(row) &&
                     'bg-slate-100 even:bg-slate-100 hover:bg-slate-100 hover:even:bg-slate-100 !border-t !font-bold transition-none',
-                  disabledIds.includes(Number(getRowId(row))) && 'opacity-50 pointer-events-none',
-                  selectedIds.includes(Number(getRowId(row))) &&
+                  disabledIds.includes(getRowId(row)) && 'opacity-50 pointer-events-none',
+                  selectedIds.includes(getRowId(row)) &&
                     'bg-brand/5 even:bg-brand/5 hover:bg-brand/5 hover:even:bg-brand/5 border-brand/20 [&>td]:border-brand/20',
                   getRowClassName?.(row)
                 )}
-                data-selected={selectedIds.includes(Number(getRowId(row)))}
+                data-selected={selectedIds.includes(getRowId(row))}
               >
                 <GenericTableCell style={{ width: `${(String(data.length).length ?? 1) + 1}ch` }}>
                   {rowIndex + 1}
@@ -335,9 +335,9 @@ export const defaultCellRenderer = <T extends object>(row: T, col: ColumnDef<T>)
   }
   return row[col.key as keyof T] ? String(row[col.key as keyof T]) : '-'
 }
-export const defaultGetRowId = <T,>(row: T): string => {
+export const defaultGetRowId = <T,>(row: T): string | number => {
   if (row !== null && typeof row === 'object' && 'id' in row) {
-    return String(row['id'])
+    return row['id'] as string | number
   }
   return ''
 }

@@ -19,7 +19,7 @@ export const IDCell: CellRenderer<any> = (row, _, props) => {
                   selectedIds,
                   getRowId: getRowId ?? defaultGetRowId
                 })
-              : selectedIds.includes(Number(id))
+              : selectedIds.includes(id)
           }
           onCheckedChange={(checked) => {
             if (typeof onCheckedChange === 'function') {

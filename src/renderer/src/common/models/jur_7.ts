@@ -4,7 +4,24 @@ import type { SaldoProduct } from './saldo'
 import type { Shartnoma } from './shartnoma'
 import type { ShartnomaGrafik } from './shartnoma-grafik'
 
-export interface WarehousePrixodProvodka {
+export interface MaterialPrixodProduct {
+  id: string
+  user_id: number
+  spravochnik_budjet_name_id: number
+  name: string
+  edin: null
+  group_jur7_id: number
+  group: Group
+  created_at: string
+  updated_at: string
+  isdeleted: boolean
+  inventar_num: string
+  serial_num: string
+  iznos: boolean
+  unit_id: number
+}
+
+export interface MaterialPrixodProvodka {
   naimenovanie_tovarov_jur7_id: number
   serial_num: string
   inventar_num: string
@@ -23,7 +40,7 @@ export interface WarehousePrixodProvodka {
   data_pereotsenka: string
   group_number: string
 }
-export interface WarehousePrixod {
+export interface MaterialPrixod {
   id: number
   doc_num: string
   doc_date: string
@@ -40,10 +57,10 @@ export interface WarehousePrixod {
   smeta_number: string
   podraz_name: string
   responsible: string
-  childs: WarehousePrixodProvodka[]
+  childs: MaterialPrixodProvodka[]
 }
 
-export interface WarehouseRasxodProvodka {
+export interface MaterialRasxodProvodka {
   id: number
   user_id: number
   document_rasxod_jur7_id: number
@@ -83,7 +100,7 @@ export interface MaterialRasxod {
   doverennost?: string
   podraz_name: string
   responsible: string
-  childs: WarehouseRasxodProvodka[]
+  childs: MaterialRasxodProvodka[]
   provodki_array: Array<{
     debet_schet: string
     debet_sub_schet: string

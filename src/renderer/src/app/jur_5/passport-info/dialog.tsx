@@ -77,7 +77,10 @@ export const PassportInfoDialog = ({ vacant, selectedUser, ...props }: PassportI
                   value={PassportInfoTabs.Main}
                   className="h-full"
                 >
-                  <MainZarplataForm vacant={vacant} />
+                  <MainZarplataForm
+                    vacant={vacant}
+                    selectedUser={selectedUser}
+                  />
                 </TabsContent>
                 <TabsContent value={PassportInfoTabs.Labor}>Labor</TabsContent>
               </div>

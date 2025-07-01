@@ -37,9 +37,9 @@ import { IznosQueryKeys } from '../iznos/config'
 import { SaldoQueryKeys } from '../saldo'
 import { useMaterialSaldo } from '../saldo/use-saldo'
 import { prixodColumns } from './columns'
-import { WarehousePrixodQueryKeys } from './config'
+import { MaterialPrixodQueryKeys } from './config'
 import { ExistingDocumentsAlert } from './details/existing-document-alert'
-import { WarehousePrixodService } from './service'
+import { MaterialPrixodService } from './service'
 import { WarehousePrixodViewDialog } from './view-dialog'
 
 const WarehousePrixodPage = () => {
@@ -70,14 +70,14 @@ const WarehousePrixodPage = () => {
   const setLayout = useLayout()
 
   const { mutate: deletePrixod, isPending: isDeleting } = useMutation({
-    mutationKey: [WarehousePrixodQueryKeys.delete],
-    mutationFn: WarehousePrixodService.delete,
+    mutationKey: [MaterialPrixodQueryKeys.delete],
+    mutationFn: MaterialPrixodService.delete,
     onSuccess(res) {
       handleOstatokResponse(res)
       toast.success(res?.message)
       requestAnimationFrame(() => {
         queryClient.invalidateQueries({
-          queryKey: [WarehousePrixodQueryKeys.getAll]
+          queryKey: [MaterialPrixodQueryKeys.getAll]
         })
         queryClient.invalidateQueries({
           queryKey: [SaldoQueryKeys.check]
@@ -109,7 +109,7 @@ const WarehousePrixodPage = () => {
     error: prixodsError
   } = useQuery({
     queryKey: [
-      WarehousePrixodQueryKeys.getAll,
+      MaterialPrixodQueryKeys.getAll,
       {
         ...sorting,
         ...pagination,
@@ -119,7 +119,7 @@ const WarehousePrixodPage = () => {
         main_schet_id
       }
     ],
-    queryFn: WarehousePrixodService.getAll,
+    queryFn: MaterialPrixodService.getAll,
     enabled: queuedMonths.length === 0
   })
 

@@ -10,7 +10,7 @@ import { ComboboxItem, JollyComboBox, type JollyComboBoxProps } from './jolly/co
 export interface EdinSelectProps extends Omit<JollyComboBoxProps<Unit>, 'children'> {
   error: boolean
 }
-export const EdinSelect = ({ error, ...props }: EdinSelectProps) => {
+export const EdinSelect = ({ error, isDisabled, ...props }: EdinSelectProps) => {
   const { data: edins, isFetching } = useQuery({
     queryKey: [UnitQueryKeys.getAll],
     queryFn: UnitService.getAll
@@ -23,6 +23,7 @@ export const EdinSelect = ({ error, ...props }: EdinSelectProps) => {
       {...props}
       allowsEmptyCollection
       isDisabled={isFetching}
+      isReadOnly={isDisabled}
       isInvalid={error}
       defaultItems={options}
       className={cn(

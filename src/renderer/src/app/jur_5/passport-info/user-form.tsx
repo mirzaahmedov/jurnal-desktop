@@ -1,4 +1,5 @@
 import type { VacantTreeNode } from '@/app/region-admin/vacant/vacant-tree'
+import type { MainZarplata } from '@/common/models'
 
 import { useEffect } from 'react'
 
@@ -23,15 +24,17 @@ import { Input } from '@/common/components/ui/input'
 import { Textarea } from '@/common/components/ui/textarea'
 import { MainZarplataService } from '@/common/features/main-zarplata/service'
 import { SpravochnikInput, useSpravochnik } from '@/common/features/spravochnik'
-import { parseDate } from '@/common/lib/date'
+import { formatDate, parseDate } from '@/common/lib/date'
+import { formatLocaleDate } from '@/common/lib/format'
 
 import { getVacantRayon } from '../common/utils/vacant'
 import { MainZarplataFormSchema, defaultValues } from './config'
 
 export interface MainZarplataFormProps {
   vacant: VacantTreeNode
+  selectedUser?: MainZarplata | undefined
 }
-export const MainZarplataForm = ({ vacant }: MainZarplataFormProps) => {
+export const MainZarplataForm = ({ vacant, selectedUser }: MainZarplataFormProps) => {
   const { t } = useTranslation()
 
   const queryClient = useQueryClient()
@@ -51,8 +54,16 @@ export const MainZarplataForm = ({ vacant }: MainZarplataFormProps) => {
     ],
     queryFn: ZarplataSpravochnikService.getAll
   })
-  const { mutate: createUser, isPending } = useMutation({
+  const { mutate: createUser, isPending: isCreating } = useMutation({
     mutationFn: MainZarplataService.create,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [MainZarplataService.QueryKeys.GetAll]
+      })
+    }
+  })
+  const { mutate: updateUser, isPending: isUpdating } = useMutation({
+    mutationFn: MainZarplataService.update,
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: [MainZarplataService.QueryKeys.GetAll]
@@ -71,12 +82,40 @@ export const MainZarplataForm = ({ vacant }: MainZarplataFormProps) => {
   )
 
   const handleSubmit = form.handleSubmit((values) => {
-    createUser({
-      ...values,
-      vacantId: vacant.id
-    })
+    if (selectedUser) {
+      updateUser({
+        id: selectedUser.id,
+        values: {
+          ...values,
+          dateBirth: formatLocaleDate(values.dateBirth),
+          nachaloSlujbi: formatLocaleDate(values.nachaloSlujbi),
+          vacantId: vacant.id
+        }
+      })
+    } else {
+      createUser({
+        ...values,
+        dateBirth: formatLocaleDate(values.dateBirth),
+        nachaloSlujbi: formatLocaleDate(values.nachaloSlujbi),
+        vacantId: vacant.id
+      })
+    }
   })
 
+  useEffect(() => {
+    if (selectedUser) {
+      form.reset({
+        ...selectedUser,
+        dateBirth: formatDate(parseDate(selectedUser.dateBirth)),
+        nachaloSlujbi: formatDate(parseDate(selectedUser.nachaloSlujbi)),
+        rayon: getVacantRayon(vacant)
+      })
+    } else {
+      form.reset({
+        rayon: getVacantRayon(vacant)
+      })
+    }
+  }, [selectedUser, vacant, form])
   useEffect(() => {
     form.setValue('rayon', getVacantRayon(vacant))
   }, [vacant])

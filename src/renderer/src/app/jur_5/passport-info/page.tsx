@@ -35,11 +35,11 @@ const PassportInfoPage = () => {
     queryKey: [
       MainZarplataService.QueryKeys.GetAll,
       {
-        page: pagination.page,
-        limit: pagination.limit
+        vacantId: selectedVacant?.id ?? 0
       }
     ],
-    queryFn: MainZarplataService.getAll
+    queryFn: MainZarplataService.getByVacantId,
+    enabled: !!selectedVacant
   })
 
   useEffect(() => {
@@ -64,6 +64,11 @@ const PassportInfoPage = () => {
     [vacants]
   )
 
+  const handleRowEdit = (row: MainZarplata) => {
+    setSelectedUser(row)
+    dialogToggle.open()
+  }
+
   return (
     <>
       <Allotment className="h-full">
@@ -78,9 +83,7 @@ const PassportInfoPage = () => {
             <VacantTree
               data={treeNodes}
               selectedIds={selectedVacant ? [selectedVacant.id] : []}
-              onSelectNode={(vacant) => {
-                setSelectedVacant(vacant)
-              }}
+              onSelectNode={setSelectedVacant}
             />
           </div>
         </Allotment.Pane>
@@ -88,8 +91,9 @@ const PassportInfoPage = () => {
           <div className="relative w-full overflow-auto scrollbar">
             {isFetchingUsers ? <LoadingOverlay /> : null}
             <GenericTable
-              data={users?.data ?? []}
+              data={users ?? []}
               columnDefs={MainZarplataColumnDefs}
+              onEdit={handleRowEdit}
             />
           </div>
         </Allotment.Pane>

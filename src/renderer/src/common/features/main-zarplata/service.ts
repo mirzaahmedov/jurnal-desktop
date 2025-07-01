@@ -19,6 +19,7 @@ export class MainZarplataService {
 
   static QueryKeys = {
     GetAll: 'main_zarplata/getAll',
+    GetByVacantId: 'main_zarplata/getByVacantId',
     GetById: 'main_zarplata/getById'
   }
 
@@ -51,6 +52,28 @@ export class MainZarplataService {
     })
   }
 
+  static async getByVacantId(
+    ctx: QueryFunctionContext<
+      [
+        typeof MainZarplataService.QueryKeys.GetByVacantId,
+        {
+          vacantId: number
+        }
+      ]
+    >
+  ) {
+    const { vacantId } = ctx.queryKey[1]
+    const res = await zarplataApiNew.get<MainZarplata[]>(
+      `${MainZarplataService.endpoint}/get-by-vacantId`,
+      {
+        params: {
+          vacantId
+        }
+      }
+    )
+    return res.data
+  }
+
   static async getById(
     ctx: QueryFunctionContext<[string, number]>
   ): Promise<ApiResponse<MainZarplata>> {
@@ -63,6 +86,22 @@ export class MainZarplataService {
 
   static async create(values: MainZarplataFormValues): Promise<unknown> {
     const res = await zarplataApiNew.post<MainZarplata>(MainZarplataService.endpoint, values)
+    return getSingleApiResponse({
+      response: res.data
+    })
+  }
+
+  static async update({
+    id,
+    values
+  }: {
+    id: number
+    values: MainZarplataFormValues
+  }): Promise<unknown> {
+    const res = await zarplataApiNew.put<MainZarplata>(
+      `${MainZarplataService.endpoint}/${id}`,
+      values
+    )
     return getSingleApiResponse({
       response: res.data
     })

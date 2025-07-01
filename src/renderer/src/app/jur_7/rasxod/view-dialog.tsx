@@ -1,4 +1,4 @@
-import type { WarehouseRasxodProvodka } from '@/common/models'
+import type { MaterialRasxodProvodka } from '@/common/models'
 
 import { useQuery } from '@tanstack/react-query'
 import { Download } from 'lucide-react'
@@ -30,7 +30,7 @@ import { WarehouseRasxodQueryKeys } from './config'
 import { WarehouseRasxodService } from './service'
 import { MaterialSpisaniePDFDocument } from './templates/material-spisanie/document'
 
-const provodkaColumns: ColumnDef<WarehouseRasxodProvodka>[] = [
+const provodkaColumns: ColumnDef<MaterialRasxodProvodka>[] = [
   {
     key: 'code',
     renderCell: (row) => row.product?.id

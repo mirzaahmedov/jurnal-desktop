@@ -24,6 +24,9 @@ export const formatDate = (date: Date | string) => {
 }
 
 export const parseDate = (date: string) => {
+  if (!date?.trim()) {
+    return ''
+  }
   const [year, month, day] = date.split('-').map(Number)
   return new Date(year, month - 1, day)
 }
