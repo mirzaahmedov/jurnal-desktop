@@ -96,7 +96,7 @@ const SmetaGrafikPage = () => {
   return (
     <ListView>
       <ListView.Content
-        loading={isFetching || isPending}
+        isLoading={isFetching || isPending}
         className="relative w-full flex-1"
       >
         <GenericTable

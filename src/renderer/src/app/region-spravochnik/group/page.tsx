@@ -58,7 +58,7 @@ const RegionGroupPage = () => {
           buttonText={t('export-excel')}
         />
       </ListView.Header>
-      <ListView.Content loading={isFetching}>
+      <ListView.Content isLoading={isFetching}>
         <GroupTable
           columnDefs={GroupColumns}
           data={groups?.data ?? []}

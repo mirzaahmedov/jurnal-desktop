@@ -84,7 +84,9 @@ export enum ApiEndpoints {
   admin_distance = 'admin/spravochnik/distances',
   work_trip = 'work-trip',
   zarplata_spravochnik = 'SpravochnikZarplatum',
-  main_zarplata = 'MainZarplata'
+  main_zarplata = 'MainZarplata',
+  zarplata_payments = 'Payments',
+  zarplata_deductions = 'Deductions'
 }
 
 export enum ApiStatusCodes {

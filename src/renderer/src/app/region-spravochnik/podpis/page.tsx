@@ -83,7 +83,7 @@ const PodpisPage = () => {
 
   return (
     <ListView>
-      <ListView.Content loading={isFetching || isPending}>
+      <ListView.Content isLoading={isFetching || isPending}>
         <GenericTable
           data={podpisi?.data ?? []}
           columnDefs={podpisColumns}

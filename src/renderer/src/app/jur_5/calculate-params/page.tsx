@@ -82,7 +82,7 @@ const CalculateParamsPage = () => {
 
   return (
     <ListView>
-      <ListView.Content loading={isFetching || isDeleting}>
+      <ListView.Content isLoading={isFetching || isDeleting}>
         <GenericTable
           data={calcParameters?.data ?? []}
           columnDefs={columnDefs}

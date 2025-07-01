@@ -149,7 +149,7 @@ const BankRasxodPage = () => {
           {t('import_zarplata')}
         </Button>
       </ListView.Header>
-      <ListView.Content loading={isFetching || isPending}>
+      <ListView.Content isLoading={isFetching || isPending}>
         <GenericTable
           data={rasxods?.data ?? []}
           columnDefs={BankRasxodColumns}

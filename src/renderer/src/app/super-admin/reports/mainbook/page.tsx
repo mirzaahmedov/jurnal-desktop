@@ -54,7 +54,7 @@ const AdminMainbookPage = () => {
 
   return (
     <ListView>
-      <ListView.Content loading={isFetchingMainbook}>
+      <ListView.Content isLoading={isFetchingMainbook}>
         <GenericTable
           data={mainbook?.data ?? []}
           columnDefs={mainbookColumns}

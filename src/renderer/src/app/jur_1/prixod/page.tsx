@@ -153,7 +153,7 @@ const KassaPrixodPage = () => {
           buttonText={t('report')}
         />
       </ListView.Header>
-      <ListView.Content loading={isFetching || isPending}>
+      <ListView.Content isLoading={isFetching || isPending}>
         <GenericTable
           data={prixods?.data ?? []}
           columnDefs={columns}

@@ -150,7 +150,7 @@ const AktPage = () => {
           buttonText={t('cap-report')}
         />
       </ListView.Header>
-      <ListView.Content loading={isFetching || isDeletingAkt}>
+      <ListView.Content isLoading={isFetching || isDeletingAkt}>
         <GenericTable
           data={akts?.data ?? []}
           columnDefs={AktColumns}

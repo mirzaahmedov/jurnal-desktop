@@ -92,7 +92,7 @@ const GroupPage = () => {
           />
         </div>
       </ListView.Header>
-      <ListView.Content loading={isFetching || isPending}>
+      <ListView.Content isLoading={isFetching || isPending}>
         <GroupTable
           columnDefs={GroupColumns}
           data={groups?.data ?? []}

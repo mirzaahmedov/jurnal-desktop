@@ -73,6 +73,8 @@
   "no-display-data": "Кўрсатиш учун ма'лумотлар ёқ",
   "smeta": "Смета",
   "name": "Номи",
+  "name_uz": "Номи (Ўзбек)",
+  "name_short": "Қисқа номи",
   "number": "Рақами",
   "buyer": "Харидор",
   "supplier": "Пудратчи",
@@ -446,5 +448,15 @@
   "raschet_stop": "Расчет стоп",
   "no_calculate_params_selected": "Ҳисоблаш параметрлари танланмаган",
   "stop_calculation": "Ҳисоблашни тўхтатиш",
-  "start_of_service": "Хизмат бошланиши"
+  "start_of_service": "Хизмат бошланиши",
+  "payment_code": "Тўлов коди",
+  "inps_taxable": "1 % INPS solig‘i ga tortiladi",
+  "labor_union_fee": "Профвзнос - касаба уюшмасига ушланма",
+  "alimony_deductable": "Алиментга ушланма",
+  "income_tax": "Падаход - Даромад солиғи ушланади",
+  "esp_tax": "ЕСП- Ягона ихтимоий солиқ ущланади",
+  "expense_schet": "Харажатлар счети - дебет счет",
+  "credit_schet": "Кредит счет",
+  "main_fund": "Асосий иш хаки фондидан яъни бюджетдан (АИХ) / Ички маблаглар фондидан (СпецФ)",
+  "calc_formula": "Ҳисоблаш формуласи"
 }

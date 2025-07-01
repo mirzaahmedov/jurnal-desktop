@@ -7,7 +7,7 @@ import { ApiEndpoints } from '@/common/features/crud'
 import { SpravochnikSearchField } from '@/common/features/filters/search/search-filter-spravochnik'
 import { extendObject } from '@/common/lib/utils'
 import { getMultiApiResponse, getSingleApiResponse } from '@/common/lib/zarplata'
-import { type Response, zarplataApiNew } from '@/common/lib/zarplata_new'
+import { type ZarplataApiResponse, zarplataApiNew } from '@/common/lib/zarplata_new'
 
 import { columnDefs } from './columns'
 
@@ -29,7 +29,7 @@ export class ZarplataSpravochnikService {
   ): Promise<ApiResponse<Zarplata.Spravochnik[]>> {
     const { types_type_code, name, page, limit } = ctx.queryKey[1]
 
-    const res = await zarplataApiNew.get<Response<Zarplata.Spravochnik[]>>(
+    const res = await zarplataApiNew.get<ZarplataApiResponse<Zarplata.Spravochnik[]>>(
       `${ZarplataSpravochnikService.Endpoint}/get-sp/${types_type_code}`,
       {
         params: {
@@ -58,7 +58,7 @@ export class ZarplataSpravochnikService {
   }
 
   static async getTypes() {
-    const res = await zarplataApiNew.get<Response<Zarplata.SpravochnikType[]>>(
+    const res = await zarplataApiNew.get<ZarplataApiResponse<Zarplata.SpravochnikType[]>>(
       `${ZarplataSpravochnikService.Endpoint}/get-types`
     )
     return res.data

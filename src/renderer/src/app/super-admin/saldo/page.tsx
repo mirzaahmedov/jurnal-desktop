@@ -118,7 +118,7 @@ const MaterialWarehouseSaldoPage = () => {
           </Button>
         </form>
       </div>
-      <ListView.Content loading={isFetching}>
+      <ListView.Content isLoading={isFetching}>
         <GenericTable
           columnDefs={CommonWarehouseSaldoProductColumns}
           data={saldos?.data ?? []}

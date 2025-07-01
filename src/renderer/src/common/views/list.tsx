@@ -29,17 +29,17 @@ const ListViewHeader = ({ children, className, ...props }: HTMLAttributes<HTMLDi
 }
 
 export interface ListViewContentProps extends HTMLAttributes<HTMLDivElement> {
-  loading: boolean
+  isLoading: boolean
 }
 const ListViewContent = forwardRef<HTMLDivElement, ListViewContentProps>(
-  ({ loading, children, className, ...props }, ref) => {
+  ({ isLoading, children, className, ...props }, ref) => {
     return (
       <div
         ref={ref}
         className={cn('flex-1 relative overflow-auto scrollbar', className)}
         {...props}
       >
-        {loading ? <LoadingOverlay /> : null}
+        {isLoading ? <LoadingOverlay /> : null}
         {children}
       </div>
     )

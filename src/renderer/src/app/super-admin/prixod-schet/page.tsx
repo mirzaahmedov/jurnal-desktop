@@ -67,7 +67,7 @@ const PrixodSchetsPage = () => {
 
   return (
     <ListView>
-      <ListView.Content loading={isFetching || isDeleting}>
+      <ListView.Content isLoading={isFetching || isDeleting}>
         <GenericTable
           data={prixodSchets?.data ?? []}
           columnDefs={PrixodSchetColumns}

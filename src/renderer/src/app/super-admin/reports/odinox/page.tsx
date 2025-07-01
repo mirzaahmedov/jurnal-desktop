@@ -50,7 +50,7 @@ const AdminOdinoxPage = () => {
 
   return (
     <ListView>
-      <ListView.Content loading={isFetchingOdinox}>
+      <ListView.Content isLoading={isFetchingOdinox}>
         <GenericTable
           data={odinox?.data ?? []}
           columnDefs={AdminOdinoxColumns}

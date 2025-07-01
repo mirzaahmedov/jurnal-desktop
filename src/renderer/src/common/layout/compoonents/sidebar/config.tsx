@@ -6,6 +6,7 @@ import {
   AppWindow,
   ArrowLeftRight,
   BadgeDollarSign,
+  Banknote,
   Book,
   BriefcaseBusiness,
   Building,
@@ -305,12 +306,12 @@ export const getNavElements = (t: TFunction): NavElement[] => {
                 {
                   path: 'payments',
                   title: t('pages.payments'),
-                  icon: Folder
+                  icon: Banknote
                 },
                 {
                   path: 'deductions',
                   title: t('pages.deductions'),
-                  icon: Folder
+                  icon: Banknote
                 }
               ]
             },

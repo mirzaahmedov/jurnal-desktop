@@ -67,7 +67,7 @@ const ReportTitlePage = () => {
 
   return (
     <ListView>
-      <ListView.Content loading={isFetching || isPending}>
+      <ListView.Content isLoading={isFetching || isPending}>
         <GenericTable
           data={titles?.data ?? []}
           columnDefs={ReportTitleColumns}

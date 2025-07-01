@@ -94,7 +94,7 @@ const MainSchetPage = () => {
 
   return (
     <ListView>
-      <ListView.Content loading={isFetching || isPending}>
+      <ListView.Content isLoading={isFetching || isPending}>
         <GenericTable
           data={mainSchets?.data ?? []}
           columnDefs={MainSchetColumns}

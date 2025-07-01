@@ -3,7 +3,7 @@ import type { PaginationParams } from '@/common/hooks'
 import type { Workplace } from '@/common/models/workplace'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 
-import { type Response, zarplataApiNew } from '@/common/lib/zarplata_new'
+import { type ZarplataApiResponse, zarplataApiNew } from '@/common/lib/zarplata_new'
 
 export class WorkplaceService {
   static endpoint = 'Workplace'
@@ -18,11 +18,14 @@ export class WorkplaceService {
     ctx: QueryFunctionContext<
       [typeof WorkplaceService.QueryKeys.GetAll, PaginationParams & { vacantId: number }]
     >
-  ): Promise<Response<Workplace[]>> {
+  ): Promise<ZarplataApiResponse<Workplace[]>> {
     const params = ctx.queryKey[1] ?? {}
-    const res = await zarplataApiNew.get<Response<Workplace[]>>(`${WorkplaceService.endpoint}`, {
-      params
-    })
+    const res = await zarplataApiNew.get<ZarplataApiResponse<Workplace[]>>(
+      `${WorkplaceService.endpoint}`,
+      {
+        params
+      }
+    )
     return res.data
   }
 

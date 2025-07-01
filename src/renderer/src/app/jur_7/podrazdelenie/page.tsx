@@ -85,7 +85,7 @@ const WarehousePodrazdeleniePage = () => {
 
   return (
     <ListView>
-      <ListView.Content loading={isFetching || isPending}>
+      <ListView.Content isLoading={isFetching || isPending}>
         <GenericTable
           columnDefs={WarehousePodrazdelenieColumns}
           data={podrazdelenies?.data ?? []}

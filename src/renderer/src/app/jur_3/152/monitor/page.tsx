@@ -226,7 +226,7 @@ const OrganMonitoringPage = () => {
           </SummaTotal>
         </div>
       </ListView.Header>
-      <ListView.Content loading={isFetching}>
+      <ListView.Content isLoading={isFetching}>
         <GenericTable
           columnDefs={OrganMonitorColumns}
           data={monitoring?.data ?? []}

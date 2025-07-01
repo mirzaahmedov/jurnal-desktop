@@ -144,7 +144,7 @@ const MainbookPage = () => {
 
   return (
     <ListView>
-      <ListView.Content loading={isFetchingMainbook || isDeleting || isCleaning}>
+      <ListView.Content isLoading={isFetchingMainbook || isDeleting || isCleaning}>
         <GenericTable
           data={mainbook?.data ?? []}
           columnDefs={mainbookColumns}

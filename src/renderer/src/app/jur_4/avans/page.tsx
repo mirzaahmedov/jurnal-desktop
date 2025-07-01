@@ -131,7 +131,7 @@ const AvansPage = () => {
           }}
         />
       </ListView.Header>
-      <ListView.Content loading={isFetching || isPending}>
+      <ListView.Content isLoading={isFetching || isPending}>
         <GenericTable
           columnDefs={avansColumns}
           data={avans?.data ?? []}

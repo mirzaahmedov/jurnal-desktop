@@ -87,7 +87,7 @@ const PodrazdeleniePage = () => {
 
   return (
     <ListView>
-      <ListView.Content loading={isFetching || isPending}>
+      <ListView.Content isLoading={isFetching || isPending}>
         <GenericTable
           data={podrazdelenies?.data ?? []}
           columnDefs={PodrazdelenieColumns}

@@ -83,7 +83,7 @@ const FinancialReceiptPage = () => {
 
   return (
     <ListView>
-      <ListView.Content loading={isFetching || isPending}>
+      <ListView.Content isLoading={isFetching || isPending}>
         <GenericTable
           columnDefs={FinancialReceiptColumns}
           data={financialReceipts?.data ?? []}

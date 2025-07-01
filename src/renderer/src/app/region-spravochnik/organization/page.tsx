@@ -132,7 +132,7 @@ const OrganizationPage = () => {
           <ImportFile url="/spravochnik/organization/import" />
         </ButtonGroup>
       </ListView.Header>
-      <ListView.Content loading={isFetching || isPending}>
+      <ListView.Content isLoading={isFetching || isPending}>
         <OrganizationTable
           data={organizations?.data ?? []}
           onEdit={handleClickEdit}

@@ -85,7 +85,7 @@ const TypeOperatsiiPage = () => {
 
   return (
     <ListView>
-      <ListView.Content loading={isFetching || isPending}>
+      <ListView.Content isLoading={isFetching || isPending}>
         <GenericTable
           data={typeOperatsii?.data ?? []}
           columnDefs={TypeOperatsiiColumns}

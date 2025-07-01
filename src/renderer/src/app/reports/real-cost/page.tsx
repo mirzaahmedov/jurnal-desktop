@@ -93,7 +93,7 @@ const RealCostPage = () => {
 
   return (
     <ListView>
-      <ListView.Content loading={isFetchingRealCosts || isDeleting}>
+      <ListView.Content isLoading={isFetchingRealCosts || isDeleting}>
         <GenericTable
           data={realcosts?.data ?? []}
           columnDefs={RealCostColumns}

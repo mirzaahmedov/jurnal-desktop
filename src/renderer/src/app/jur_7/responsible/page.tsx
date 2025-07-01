@@ -121,7 +121,7 @@ const ResponsiblePage = () => {
           />
         </ButtonGroup>
       </ListView.Header>
-      <ListView.Content loading={isFetching || isPending}>
+      <ListView.Content isLoading={isFetching || isPending}>
         <GenericTable
           columnDefs={ResponsibleColumns}
           data={responsibles?.data ?? []}

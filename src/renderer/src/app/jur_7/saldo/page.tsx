@@ -457,7 +457,7 @@ const MaterialWarehouseSaldoPage = () => {
           />
         </ButtonGroup>
       </div>
-      <ListView.Content loading={isFetching || isDeletingMonth || isDeleting || isCheckingCreate}>
+      <ListView.Content isLoading={isFetching || isDeletingMonth || isDeleting || isCheckingCreate}>
         <GenericTable
           columnDefs={columns}
           data={saldo?.data ?? []}

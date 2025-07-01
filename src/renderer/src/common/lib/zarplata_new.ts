@@ -4,11 +4,11 @@ import { useAuthenticationStore } from '@/common/features/auth'
 
 export const baseURL = 'http://192.168.5.10:8089/api'
 
-export interface PaginationParams {
+export interface ZarplataPaginationParams {
   PageIndex: number
   PageSize: number
 }
-export interface Response<T> {
+export interface ZarplataApiResponse<T> {
   totalCount: number
   data: T
 }

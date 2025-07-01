@@ -84,7 +84,7 @@ const UserPage = () => {
 
   return (
     <ListView>
-      <ListView.Content loading={isFetching || isPending}>
+      <ListView.Content isLoading={isFetching || isPending}>
         <GenericTable
           data={users?.data ?? []}
           columnDefs={AdminUserColumns}

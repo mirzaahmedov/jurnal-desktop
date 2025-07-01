@@ -80,7 +80,7 @@ const PodotchetPage = () => {
 
   return (
     <ListView>
-      <ListView.Content loading={isFetching || isPending}>
+      <ListView.Content isLoading={isFetching || isPending}>
         <GenericTable
           data={podotchets?.data ?? []}
           columnDefs={PodotchetColumns}

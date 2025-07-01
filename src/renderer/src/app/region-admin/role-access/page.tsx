@@ -54,7 +54,7 @@ const RoleAccessPage = () => {
 
   return (
     <ListView>
-      <ListView.Content loading={isFetching}>
+      <ListView.Content isLoading={isFetching}>
         <RoleAccessDialog
           roleId={roleId}
           isOpen={dialogToggle.isOpen}

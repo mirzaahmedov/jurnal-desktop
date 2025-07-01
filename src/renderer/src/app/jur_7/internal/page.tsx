@@ -131,7 +131,7 @@ const InternalPage = () => {
           }}
         />
       </ListView.Header>
-      <ListView.Content loading={isFetching || isPending}>
+      <ListView.Content isLoading={isFetching || isPending}>
         <GenericTable
           columnDefs={internalColumns}
           data={internals?.data ?? []}

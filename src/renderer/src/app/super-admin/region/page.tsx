@@ -80,7 +80,7 @@ const RegionPage = () => {
 
   return (
     <ListView>
-      <ListView.Content loading={isFetching}>
+      <ListView.Content isLoading={isFetching}>
         <div className="flex-1 relative">
           {isFetching || isPending ? <LoadingOverlay /> : null}
           <GenericTable

@@ -41,7 +41,7 @@ const MinimumWagePage = () => {
 
   return (
     <ListView>
-      <ListView.Content loading={isFetching}>
+      <ListView.Content isLoading={isFetching}>
         <GenericTable
           data={minimumWage?.data ? [minimumWage?.data] : []}
           columnDefs={columnDefs}

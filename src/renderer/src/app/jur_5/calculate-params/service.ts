@@ -2,7 +2,11 @@ import type { CalculateParamsFormValues } from './config'
 import type { CalculateParams } from '@/common/models/calculate-params'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 
-import { type PaginationParams, type Response, zarplataApiNew } from '@/common/lib/zarplata_new'
+import {
+  type ZarplataApiResponse,
+  type ZarplataPaginationParams,
+  zarplataApiNew
+} from '@/common/lib/zarplata_new'
 
 export class CalculateParamsService {
   static endpoint = 'RegisterMonth'
@@ -13,10 +17,12 @@ export class CalculateParamsService {
   }
 
   static async getCalcParameters(
-    ctx: QueryFunctionContext<[typeof CalculateParamsService.QueryKeys.GetAll, PaginationParams]>
-  ): Promise<Response<CalculateParams[]>> {
+    ctx: QueryFunctionContext<
+      [typeof CalculateParamsService.QueryKeys.GetAll, ZarplataPaginationParams]
+    >
+  ): Promise<ZarplataApiResponse<CalculateParams[]>> {
     const params = ctx.queryKey[1] ?? {}
-    const res = await zarplataApiNew.get<Response<CalculateParams[]>>(
+    const res = await zarplataApiNew.get<ZarplataApiResponse<CalculateParams[]>>(
       `${CalculateParamsService.endpoint}`,
       { params }
     )

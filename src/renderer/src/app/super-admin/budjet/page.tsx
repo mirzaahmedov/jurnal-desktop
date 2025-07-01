@@ -66,7 +66,7 @@ const BudjetPage = () => {
 
   return (
     <ListView>
-      <ListView.Content loading={isFetching}>
+      <ListView.Content isLoading={isFetching}>
         <GenericTable
           data={budjets?.data ?? []}
           columnDefs={BudjetColumns}

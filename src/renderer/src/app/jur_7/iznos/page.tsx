@@ -175,7 +175,7 @@ const MaterialIznosPage = () => {
           </form>
         </div>
       </ListView.Header>
-      <ListView.Content loading={isFetching}>
+      <ListView.Content isLoading={isFetching}>
         <GenericTable
           columnDefs={IznosColumns}
           data={iznos?.data ?? []}

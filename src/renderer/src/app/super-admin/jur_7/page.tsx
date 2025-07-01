@@ -1,21 +1,24 @@
+import type { AdminMaterial } from './interfaces'
+
+import { useEffect, useState } from 'react'
+
+import { useQuery } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
+
+import { GenericTable } from '@/common/components'
 import {
   SearchFilterDebounced,
   useSearchFilter
 } from '@/common/features/filters/search/search-filter-debounced'
-import { useEffect, useState } from 'react'
-
-import type { AdminMaterial } from './interfaces'
-import { AdminMaterialRegionColumnDefs } from './columns'
-import { AdminMaterialService } from './service'
-import { EndDatePicker } from '../components/range-date-picker'
-import { GenericTable } from '@/common/components'
-import { ListView } from '@/common/views'
-import { ViewModal } from './view-modal'
-import { useLayout } from '@/common/layout'
-import { useQuery } from '@tanstack/react-query'
 import { useSettingsStore } from '@/common/features/settings'
 import { useToggle } from '@/common/hooks/use-toggle'
-import { useTranslation } from 'react-i18next'
+import { useLayout } from '@/common/layout'
+import { ListView } from '@/common/views'
+
+import { EndDatePicker } from '../components/range-date-picker'
+import { AdminMaterialRegionColumnDefs } from './columns'
+import { AdminMaterialService } from './service'
+import { ViewModal } from './view-modal'
 
 export const AdminMaterialPage = () => {
   const viewToggle = useToggle()
@@ -62,7 +65,7 @@ export const AdminMaterialPage = () => {
           refetch={refetch}
         />
       </ListView.Header>
-      <ListView.Content loading={isFetching}>
+      <ListView.Content isLoading={isFetching}>
         <GenericTable
           data={regions?.data ?? []}
           columnDefs={AdminMaterialRegionColumnDefs}

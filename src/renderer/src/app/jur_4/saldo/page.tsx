@@ -136,7 +136,7 @@ const PodotchetSaldoPage = () => {
 
   return (
     <ListView>
-      <ListView.Content loading={isFetching || isPending || isDeleting}>
+      <ListView.Content isLoading={isFetching || isPending || isDeleting}>
         <GenericTable
           data={saldo?.data ?? []}
           columnDefs={PodotchetSaldoColumns}

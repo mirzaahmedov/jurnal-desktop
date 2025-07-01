@@ -93,7 +93,7 @@ const OdinoxPage = () => {
 
   return (
     <ListView>
-      <ListView.Content loading={isFetchingOdinox || isDeleting}>
+      <ListView.Content isLoading={isFetchingOdinox || isDeleting}>
         <GenericTable
           data={odinox?.data ?? []}
           columnDefs={OdinoxColumns}

@@ -130,7 +130,7 @@ const OperatsiiPage = () => {
           fileName={`${t('operatsii')}.xlsx`}
         />
       </ListView.Header>
-      <ListView.Content loading={isFetching || isPending}>
+      <ListView.Content isLoading={isFetching || isPending}>
         <GenericTable
           data={operatsii?.data ?? []}
           columnDefs={OperatsiiColumns}

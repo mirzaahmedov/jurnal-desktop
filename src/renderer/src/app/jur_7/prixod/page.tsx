@@ -174,7 +174,7 @@ const WarehousePrixodPage = () => {
         </div>
       </ListView.Header>
       <ListView.Content
-        loading={isFetching || isDeleting}
+        isLoading={isFetching || isDeleting}
         className="flex-1 relative"
       >
         <GenericTable

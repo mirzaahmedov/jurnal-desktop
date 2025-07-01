@@ -77,7 +77,7 @@ const DistancePage = () => {
 
   return (
     <ListView>
-      <ListView.Content loading={isFetching}>
+      <ListView.Content isLoading={isFetching}>
         <GenericTable
           data={distances?.data ?? []}
           columnDefs={columnDefs}

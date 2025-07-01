@@ -135,7 +135,7 @@ const KassaRasxodPage = () => {
           }}
         />
       </ListView.Header>
-      <ListView.Content loading={isFetching || isPending}>
+      <ListView.Content isLoading={isFetching || isPending}>
         <GenericTable
           data={rasxods?.data ?? []}
           columnDefs={columns}

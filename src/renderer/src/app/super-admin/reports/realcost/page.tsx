@@ -50,7 +50,7 @@ const AdminRealCostPage = () => {
 
   return (
     <ListView>
-      <ListView.Content loading={isFetchingRealCosts}>
+      <ListView.Content isLoading={isFetchingRealCosts}>
         <GenericTable
           data={realCosts?.data ?? []}
           columnDefs={AdminRealCostColumns}

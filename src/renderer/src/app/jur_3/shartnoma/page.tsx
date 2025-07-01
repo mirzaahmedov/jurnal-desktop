@@ -131,7 +131,7 @@ const ShartnomaPage = () => {
           />
         </div>
       </ListView.Header>
-      <ListView.Content loading={isFetching || isPending}>
+      <ListView.Content isLoading={isFetching || isPending}>
         <GenericTable
           data={contracts?.data ?? []}
           columnDefs={ShartnomaColumns}

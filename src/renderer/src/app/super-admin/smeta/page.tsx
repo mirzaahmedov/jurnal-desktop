@@ -79,7 +79,7 @@ const SmetaPage = () => {
 
   return (
     <ListView>
-      <ListView.Content loading={isFetching || isPending}>
+      <ListView.Content isLoading={isFetching || isPending}>
         {SmetaTable ? (
           <SmetaTable
             data={mainSchets?.data ?? []}

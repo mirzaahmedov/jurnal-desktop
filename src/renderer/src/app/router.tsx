@@ -668,14 +668,14 @@ export const routes: RouteObject[] = [
             element: <PassportInfoPage />
           },
           {
-            path: 'payment-types',
+            path: 'payment-type',
             children: [
               {
                 path: 'payments',
                 element: <PaymentsPage />
               },
               {
-                path: 'payments',
+                path: 'deductions',
                 element: <DeductionsPage />
               }
             ]

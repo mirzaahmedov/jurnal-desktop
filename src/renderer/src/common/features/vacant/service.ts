@@ -2,7 +2,7 @@ import type { VacantFormValues } from './config'
 import type { Vacant } from '@/common/models/vacant'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 
-import { type Response, zarplataApiNew } from '@/common/lib/zarplata_new'
+import { type ZarplataApiResponse, zarplataApiNew } from '@/common/lib/zarplata_new'
 
 export class VacantService {
   static endpoint = 'Vacant'
@@ -17,9 +17,12 @@ export class VacantService {
       [typeof VacantService.QueryKeys.GetAll, { page?: number; limit?: number }]
     >
   ) {
-    const res = await zarplataApiNew.get<Response<Vacant[]>>(`${VacantService.endpoint}`, {
-      params: ctx.queryKey[1]
-    })
+    const res = await zarplataApiNew.get<ZarplataApiResponse<Vacant[]>>(
+      `${VacantService.endpoint}`,
+      {
+        params: ctx.queryKey[1]
+      }
+    )
     return res.data
   }
   static async create(values: VacantFormValues): Promise<VacantFormValues> {

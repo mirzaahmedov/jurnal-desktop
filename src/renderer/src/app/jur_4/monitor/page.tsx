@@ -204,7 +204,7 @@ const PodotchetMonitorPage = () => {
           />
         </SummaTotal>
       </ListView.Header>
-      <ListView.Content loading={isFetching}>
+      <ListView.Content isLoading={isFetching}>
         {isFetching ? <LoadingOverlay /> : null}
         <GenericTable
           columnDefs={PodotchetMonitorColumns}

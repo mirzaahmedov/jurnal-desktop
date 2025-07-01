@@ -99,7 +99,7 @@ const WorkTripPage = () => {
           }}
         />
       </ListView.Header>
-      <ListView.Content loading={isFetchingWorkTrips}>
+      <ListView.Content isLoading={isFetchingWorkTrips}>
         <GenericTable
           columnDefs={WorkTripColumnDefs}
           data={workTrips?.data ?? []}

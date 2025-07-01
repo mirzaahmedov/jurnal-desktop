@@ -69,7 +69,7 @@ const PositionPage = () => {
 
   return (
     <ListView>
-      <ListView.Content loading={isFetching || isDeleting}>
+      <ListView.Content isLoading={isFetching || isDeleting}>
         <GenericTable
           data={positions?.data ?? []}
           columnDefs={PositionColumns}

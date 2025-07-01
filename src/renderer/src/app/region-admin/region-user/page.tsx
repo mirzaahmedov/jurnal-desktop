@@ -73,7 +73,7 @@ const RegionUserPage = () => {
 
   return (
     <ListView>
-      <ListView.Content loading={isFetching || isPending}>
+      <ListView.Content isLoading={isFetching || isPending}>
         <GenericTable
           data={regionUsers?.data ?? []}
           columnDefs={RegionUserColumns}

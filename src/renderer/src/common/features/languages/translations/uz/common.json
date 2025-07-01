@@ -73,6 +73,8 @@
   "no-display-data": "Ko'rsatish uchun ma'lumotlar yo'q",
   "smeta": "Smeta",
   "name": "Nomi",
+  "name_uz": "Nomi (O'zbek)",
+  "name_short": "Qisqa nomi",
   "number": "Raqami",
   "buyer": "Xaridor",
   "supplier": "Pudratchi",
@@ -446,5 +448,15 @@
   "raschet-stop": "Raschet stop",
   "no_calculate_params_selected": "Hisoblash parametrlari tanlanmagan",
   "stop_calculation": "Hisoblashni to'xtatish",
-  "start_of_service": "Xizmat boshlanishi"
+  "start_of_service": "Xizmat boshlanishi",
+  "payment_code": "To'lov kodi",
+  "inps_taxable": "1 % INPS solig‘i ga tortiladi",
+  "labor_union_fee": "Profvznos - kasaba uyushmasiga ushlanma",
+  "alimony_deductable": "Alimentga ushlanma",
+  "income_tax": "Padaxod - Daromad solig‘i ushlanadi",
+  "esp_tax": "YESP - Yagona ijtimoiy soliq ushlanadi",
+  "expense_schet": "Xarajatlar scheti - debet schet",
+  "credit_schet": "Kredit schet",
+  "main_fund": "Asosiy ish xaqi fondidan yaʼni byudjetdan (AIX) / Ichki mablag'lar fondidan (SpetsF)",
+  "calc_formula": "Hisoblash formulasi"
 }

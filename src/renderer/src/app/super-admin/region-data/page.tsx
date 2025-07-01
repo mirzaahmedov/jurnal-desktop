@@ -50,7 +50,7 @@ const RegionDataPage = () => {
           name="month"
         />
       </ListView.Header>
-      <ListView.Content loading={isFetching}>
+      <ListView.Content isLoading={isFetching}>
         <GenericTable
           columnDefs={RegionDataColumns}
           data={(regionDataList?.data ?? [])?.sort(

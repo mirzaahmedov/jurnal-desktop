@@ -45,7 +45,7 @@ const LogPage = () => {
       <ListView.Header>
         <ListView.RangeDatePicker {...dates} />
       </ListView.Header>
-      <ListView.Content loading={isFetching}>
+      <ListView.Content isLoading={isFetching}>
         <GenericTable
           data={logs?.data ?? []}
           columnDefs={LogColumns}

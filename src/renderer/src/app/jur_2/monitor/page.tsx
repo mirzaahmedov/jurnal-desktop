@@ -155,7 +155,7 @@ const BankMonitorPage = () => {
           />
         </SummaTotal>
       </ListView.Header>
-      <ListView.Content loading={isFetching}>
+      <ListView.Content isLoading={isFetching}>
         <GenericTable
           data={monitoring?.data ?? []}
           columnDefs={BankMonitorColumns}
