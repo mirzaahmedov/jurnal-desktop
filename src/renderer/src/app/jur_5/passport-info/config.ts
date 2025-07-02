@@ -30,6 +30,19 @@ export const MainZarplataFormSchema = z.object({
 })
 export type MainZarplataFormValues = z.infer<typeof MainZarplataFormSchema>
 
+export const AssignPositionFormSchema = z.object({
+  doljnostPrikazNum: z.string().nonempty(),
+  doljnostPrikazDate: z.string().nonempty(),
+  workplaceId: z.number()
+})
+export type AssignPositionFormValues = z.infer<typeof AssignPositionFormSchema>
+
+export const defaultAssignPositionValues: AssignPositionFormValues = {
+  doljnostPrikazNum: '',
+  doljnostPrikazDate: '',
+  workplaceId: 0
+}
+
 export const defaultValues: MainZarplataFormValues = {
   kartochka: '',
   rayon: '',

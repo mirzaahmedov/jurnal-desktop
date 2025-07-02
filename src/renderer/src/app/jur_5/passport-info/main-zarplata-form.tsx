@@ -1,10 +1,11 @@
 import type { VacantTreeNode } from '@/app/region-admin/vacant/vacant-tree'
 import type { MainZarplata } from '@/common/models'
 
-import { useEffect } from 'react'
+import { type ReactNode, useEffect } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { Calculator } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
@@ -31,14 +32,20 @@ import { getVacantRayon } from '../common/utils/vacant'
 import { MainZarplataFormSchema, defaultValues } from './config'
 
 export interface MainZarplataFormProps {
+  isCalculating?: boolean
   vacant: VacantTreeNode
-  selectedUser?: MainZarplata | undefined
+  selectedMainZarplata?: MainZarplata | undefined
+  content?: ReactNode
+  onCalculate?: (id: number) => void
   onCreate?: (user: MainZarplata) => void
   onClose?: VoidFunction
 }
 export const MainZarplataForm = ({
+  isCalculating = false,
   vacant,
-  selectedUser,
+  selectedMainZarplata,
+  content,
+  onCalculate,
   onCreate,
   onClose
 }: MainZarplataFormProps) => {
@@ -61,7 +68,7 @@ export const MainZarplataForm = ({
     ],
     queryFn: ZarplataSpravochnikService.getAll
   })
-  const { mutate: createUser, isPending: isCreating } = useMutation({
+  const { mutate: createMainZarplata, isPending: isCreating } = useMutation({
     mutationFn: MainZarplataService.create,
     onSuccess: (res) => {
       toast.success(t('create_success'))
@@ -77,7 +84,7 @@ export const MainZarplataForm = ({
       toast.error(t('create_failed'))
     }
   })
-  const { mutate: updateUser, isPending: isUpdating } = useMutation({
+  const { mutate: updateMainZarplata, isPending: isUpdating } = useMutation({
     mutationFn: MainZarplataService.update,
     onSuccess: () => {
       toast.success(t('update_success'))
@@ -102,9 +109,9 @@ export const MainZarplataForm = ({
   )
 
   const handleSubmit = form.handleSubmit((values) => {
-    if (selectedUser) {
-      updateUser({
-        id: selectedUser.id,
+    if (selectedMainZarplata) {
+      updateMainZarplata({
+        id: selectedMainZarplata.id,
         values: {
           ...values,
           dateBirth: formatLocaleDate(values.dateBirth),
@@ -113,7 +120,7 @@ export const MainZarplataForm = ({
         }
       })
     } else {
-      createUser({
+      createMainZarplata({
         ...values,
         dateBirth: formatLocaleDate(values.dateBirth),
         nachaloSlujbi: formatLocaleDate(values.nachaloSlujbi),
@@ -123,16 +130,16 @@ export const MainZarplataForm = ({
   })
 
   useEffect(() => {
-    if (selectedUser) {
+    if (selectedMainZarplata) {
       form.reset({
-        ...selectedUser,
-        dateBirth: formatDate(parseLocaleDate(selectedUser.dateBirth)),
-        nachaloSlujbi: formatDate(parseLocaleDate(selectedUser.nachaloSlujbi))
+        ...selectedMainZarplata,
+        dateBirth: formatDate(parseLocaleDate(selectedMainZarplata.dateBirth)),
+        nachaloSlujbi: formatDate(parseLocaleDate(selectedMainZarplata.nachaloSlujbi))
       })
     } else {
       form.reset(defaultValues)
     }
-  }, [selectedUser, vacant, form])
+  }, [selectedMainZarplata, vacant, form])
   useEffect(() => {
     form.setValue('rayon', getVacantRayon(vacant))
   }, [vacant])
@@ -311,6 +318,8 @@ export const MainZarplataForm = ({
             />
           </div>
 
+          <div className="col-span-full">{content}</div>
+
           <div className="col-span-full">
             <Button
               type="submit"
@@ -330,6 +339,16 @@ export const MainZarplataForm = ({
               />
             </div>
             <TimeElapsed start={form.watch('nachaloSlujbi')} />
+            {onCalculate ? (
+              <Button
+                variant="outline"
+                onClick={() => onCalculate?.(selectedMainZarplata?.id ?? 0)}
+                isDisabled={!selectedMainZarplata || isCalculating || isUpdating || isCreating}
+                className="mb-2"
+              >
+                <Calculator className="btn-icon icon-start" /> {t('calculate_salary')}
+              </Button>
+            ) : null}
           </div>
         </div>
       </form>

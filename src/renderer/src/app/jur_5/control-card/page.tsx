@@ -13,6 +13,7 @@ import { toast } from 'react-toastify'
 import { VacantTree, type VacantTreeNode } from '@/app/region-admin/vacant/vacant-tree'
 import { GenericTable, LoadingOverlay } from '@/common/components'
 import { Button } from '@/common/components/jolly/button'
+import { Pagination } from '@/common/components/pagination'
 import { useConfirm } from '@/common/features/confirm'
 import { VacantService } from '@/common/features/vacant/service'
 import { VacantDialog } from '@/common/features/vacant/vacant-dialog'
@@ -20,7 +21,7 @@ import { WorkplaceColumns } from '@/common/features/workplace/columns'
 import { WorkplaceService } from '@/common/features/workplace/service'
 import { WorkplaceDialog } from '@/common/features/workplace/workplace-dialog'
 import { useZarplataStore } from '@/common/features/zarplata/store'
-import { useToggle } from '@/common/hooks'
+import { usePagination, useToggle } from '@/common/hooks'
 import { useLayout } from '@/common/layout'
 import { arrayToTreeByRelations } from '@/common/lib/tree/relation-tree'
 
@@ -38,6 +39,7 @@ const ControlCardPage = () => {
 
   const calculateParamsId = useZarplataStore((store) => store.calculateParamsId)
 
+  const pagination = usePagination()
   const vacantDialogToggle = useToggle()
   const workplaceDialogToggle = useToggle()
   const queryClient = useQueryClient()
@@ -100,10 +102,14 @@ const ControlCardPage = () => {
     }
   })
 
-  const { data: workspaces, isFetching: isFetchingWorkplaces } = useQuery({
+  const { data: workplaces, isFetching: isFetchingWorkplaces } = useQuery({
     queryKey: [
       WorkplaceService.QueryKeys.GetAll,
-      { page: 1, limit: 100000000000000, vacantId: selectedVacant?.id ?? 0 }
+      {
+        vacantId: selectedVacant?.id ?? 0,
+        page: pagination.page,
+        limit: pagination.limit
+      }
     ],
     queryFn: WorkplaceService.getWorkplaces,
     placeholderData: undefined,
@@ -258,7 +264,7 @@ const ControlCardPage = () => {
               <LoadingOverlay />
             ) : null}
             <VacantTree
-              data={treeNodes}
+              nodes={treeNodes}
               selectedIds={selectedVacant ? [selectedVacant.id] : []}
               onSelectNode={(vacant) => {
                 setSelectedVacant(vacant)
@@ -308,20 +314,29 @@ const ControlCardPage = () => {
           </div>
         </Allotment.Pane>
         <Allotment.Pane>
-          <div className="relative w-full overflow-auto scrollbar">
-            {isFetchingWorkplaces ||
-            isCreatingWorkplace ||
-            isUpdatingWorkplace ||
-            isDeletingWorkplace ? (
-              <LoadingOverlay />
-            ) : null}
-            <GenericTable
-              data={workspaces?.data ?? []}
-              columnDefs={WorkplaceColumns}
-              onEdit={handleEditWorkplace}
-              onDelete={handleDeleteWorkplace}
-              className="table-generic-xs"
-            />
+          <div className="h-full flex flex-col">
+            <div className="relative flex-1 w-full overflow-auto scrollbar">
+              {isFetchingWorkplaces ||
+              isCreatingWorkplace ||
+              isUpdatingWorkplace ||
+              isDeletingWorkplace ? (
+                <LoadingOverlay />
+              ) : null}
+              <GenericTable
+                data={workplaces?.data ?? []}
+                columnDefs={WorkplaceColumns}
+                onEdit={handleEditWorkplace}
+                onDelete={handleDeleteWorkplace}
+                className="table-generic-xs"
+              />
+            </div>
+            <div className="p-5">
+              <Pagination
+                {...pagination}
+                count={workplaces?.meta?.count ?? 0}
+                pageCount={workplaces?.meta?.pageCount ?? 0}
+              />
+            </div>
           </div>
         </Allotment.Pane>
       </Allotment>

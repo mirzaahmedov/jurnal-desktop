@@ -1,8 +1,10 @@
 import type { WorkplaceFormValues } from './config'
 import type { PaginationParams } from '@/common/hooks'
+import type { ApiResponse } from '@/common/models'
 import type { Workplace } from '@/common/models/workplace'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 
+import { getMultiApiResponse, getSingleApiResponse } from '@/common/lib/zarplata'
 import { type ZarplataApiResponse, zarplataApiNew } from '@/common/lib/zarplata_new'
 
 export class WorkplaceService {
@@ -18,7 +20,7 @@ export class WorkplaceService {
     ctx: QueryFunctionContext<
       [typeof WorkplaceService.QueryKeys.GetAll, PaginationParams & { vacantId: number }]
     >
-  ): Promise<ZarplataApiResponse<Workplace[]>> {
+  ): Promise<ApiResponse<Workplace[]>> {
     const params = ctx.queryKey[1] ?? {}
     const res = await zarplataApiNew.get<ZarplataApiResponse<Workplace[]>>(
       `${WorkplaceService.endpoint}`,
@@ -26,7 +28,23 @@ export class WorkplaceService {
         params
       }
     )
-    return res.data
+    return getMultiApiResponse({
+      response: res.data,
+      page: params?.page,
+      limit: params?.limit
+    })
+  }
+
+  static async getWorkplaceById(
+    ctx: QueryFunctionContext<[typeof WorkplaceService.QueryKeys.GetById, number]>
+  ): Promise<ApiResponse<Workplace>> {
+    const id = ctx.queryKey[1]
+    const res = await zarplataApiNew.get<ZarplataApiResponse<Workplace>>(
+      `${WorkplaceService.endpoint}/${id}`
+    )
+    return getSingleApiResponse({
+      response: res.data
+    })
   }
 
   static async createWorkplace(values: WorkplaceFormValues) {

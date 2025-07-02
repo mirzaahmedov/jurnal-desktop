@@ -83,7 +83,7 @@ const PassportInfoPage = () => {
           <div className="relative overflow-auto scrollbar h-full">
             {isFetchingVacants ? <LoadingOverlay /> : null}
             <VacantTree
-              data={treeNodes}
+              nodes={treeNodes}
               selectedIds={selectedVacant ? [selectedVacant.id] : []}
               onSelectNode={setSelectedVacant}
             />
@@ -105,7 +105,7 @@ const PassportInfoPage = () => {
         <PassportInfoDialog
           isOpen={editDialogToggle.isOpen}
           onOpenChange={editDialogToggle.setOpen}
-          selectedUser={selectedUser}
+          selectedMainZarplata={selectedUser}
           vacant={selectedVacant}
         />
       ) : null}

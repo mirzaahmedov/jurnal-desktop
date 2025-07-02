@@ -16,22 +16,22 @@ import { cn } from '@/common/lib/utils'
 export type VacantTreeNode = RelationTreeNode<Vacant, number | null>
 
 export interface VacantTreeProps {
-  data: VacantTreeNode[]
+  nodes: VacantTreeNode[]
   selectedIds: number[]
   onSelectNode: (node: VacantTreeNode) => void
 }
 
-export const VacantTree = ({ data, selectedIds, onSelectNode }: VacantTreeProps) => {
+export const VacantTree = ({ nodes, selectedIds, onSelectNode }: VacantTreeProps) => {
   return (
     <ul className="divide-y text-sm">
-      {data?.length ? (
-        data.map((node, index) => (
+      {nodes?.length ? (
+        nodes.map((node, index) => (
           <TreeNode
             key={node.id}
-            vacant={node}
+            node={node}
             selectedIds={selectedIds}
             onSelect={onSelectNode}
-            data={data}
+            nodes={nodes}
             index={index}
           />
         ))
@@ -50,37 +50,37 @@ const hasSelectedChildNode = (node: VacantTreeNode, selectedIds: number[]) => {
 
 interface TreeNodeProps {
   index: number
-  data: VacantTreeNode[]
-  vacant: VacantTreeNode
+  nodes: VacantTreeNode[]
+  node: VacantTreeNode
   selectedIds: number[]
   onSelect: (node: VacantTreeNode) => void
   level?: number
 }
-const TreeNode = ({ vacant, data, index, selectedIds, onSelect, level = 1 }: TreeNodeProps) => {
-  if (!vacant.children.length) {
+const TreeNode = ({ node, nodes, index, selectedIds, onSelect, level = 1 }: TreeNodeProps) => {
+  if (!node.children.length) {
     return (
       <li
         className={cn(
           'flex items-center gap-5 py-2.5 px-5 cursor-pointer hover:bg-slate-50',
           level > 1 && 'tree_node',
-          index === data.length - 1 && 'last_node'
+          index === nodes.length - 1 && 'last_node'
         )}
         onClick={(e) => {
           e.stopPropagation()
-          onSelect(vacant)
+          onSelect(node)
         }}
       >
         <Checkbox
           className="size-5"
           checked={
-            selectedIds.includes(vacant.id)
+            selectedIds.includes(node.id)
               ? true
-              : hasSelectedChildNode(vacant, selectedIds)
+              : hasSelectedChildNode(node, selectedIds)
                 ? 'indeterminate'
                 : false
           }
         />
-        {vacant.name}
+        {node.name}
       </li>
     )
   }
@@ -91,24 +91,24 @@ const TreeNode = ({ vacant, data, index, selectedIds, onSelect, level = 1 }: Tre
         className={cn(
           'flex items-center gap-5 py-2.5 px-5 cursor-pointer hover:bg-slate-50',
           level > 1 && 'tree_node',
-          index === data.length - 1 && 'last_node'
+          index === nodes.length - 1 && 'last_node'
         )}
         onClick={(e) => {
           e.preventDefault()
-          onSelect(vacant)
+          onSelect(node)
         }}
       >
         <Checkbox
           className="size-5"
           checked={
-            selectedIds.includes(vacant.id)
+            selectedIds.includes(node.id)
               ? true
-              : hasSelectedChildNode(vacant, selectedIds)
+              : hasSelectedChildNode(node, selectedIds)
                 ? 'indeterminate'
                 : false
           }
         />
-        <h4 className="flex-1">{vacant.name}</h4>
+        <h4 className="flex-1">{node.name}</h4>
         <CollapsibleTrigger asChild>
           <Button
             size="icon"
@@ -122,14 +122,14 @@ const TreeNode = ({ vacant, data, index, selectedIds, onSelect, level = 1 }: Tre
       </li>
       <CollapsibleContent>
         <ul className="divide-y pl-5">
-          {vacant.children.map((child, index) => (
+          {node.children.map((child, index) => (
             <TreeNode
               key={child.id}
-              vacant={child}
+              node={child}
               level={level + 1}
               selectedIds={selectedIds}
               onSelect={onSelect}
-              data={vacant.children}
+              nodes={node.children}
               index={index}
             />
           ))}

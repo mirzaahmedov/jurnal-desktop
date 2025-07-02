@@ -8,6 +8,7 @@ import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
 import { getVacantRayon } from '@/app/jur_2/rasxod/zarplata/utils'
+import { ZarplataStavkaOptions } from '@/app/jur_5/common/data'
 import { ZarplataSpravochnikType } from '@/app/super-admin/zarplata/spravochnik/config'
 import { createZarplataSpravochnik } from '@/app/super-admin/zarplata/spravochnik/service'
 import { NumericInput } from '@/common/components'
@@ -244,7 +245,7 @@ export const WorkplaceDialog = ({
                       label={t('stavka')}
                     >
                       <JollySelect
-                        items={[{ value: '1' }, { value: '0.5' }, { value: '1.5' }]}
+                        items={ZarplataStavkaOptions}
                         selectedKey={field.value}
                         onSelectionChange={field.onChange}
                       >

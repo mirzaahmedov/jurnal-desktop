@@ -41,7 +41,7 @@ export const PassportInfoCreateDialog = ({
 
             <MainZarplataForm
               vacant={vacant}
-              selectedUser={selectedUser}
+              selectedMainZarplata={selectedUser}
               onCreate={onCreate}
               onClose={() => props?.onOpenChange?.(false)}
             />

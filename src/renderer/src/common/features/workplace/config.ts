@@ -13,7 +13,8 @@ export const WorkplaceFormSchema = z.object({
   okladPrikaz: z.number(),
   spravochnikSostavId: z.number(),
   spravochnikZarpaltaDoljnostId: z.number(),
-  spravochnikZarplataIstochnikFinanceId: z.number()
+  spravochnikZarplataIstochnikFinanceId: z.number(),
+  mainZarplataId: z.number().optional().nullable()
 })
 export type WorkplaceFormValues = z.infer<typeof WorkplaceFormSchema>
 

@@ -24,7 +24,7 @@ export const Vacants = ({ selected, onSelect: setSelected }: VacantsProps) => {
     enabled: !!userOwnId
   })
 
-  const treeData = useMemo(
+  const treeNodes = useMemo(
     () =>
       arrayToTreeByRelations({
         array: vacants?.data ?? [],
@@ -38,7 +38,7 @@ export const Vacants = ({ selected, onSelect: setSelected }: VacantsProps) => {
     <>
       {isFetchingVacants ? <LoadingOverlay /> : null}
       <VacantTree
-        data={treeData}
+        nodes={treeNodes}
         selectedIds={selected ? [selected.id] : []}
         onSelectNode={(vacant) => {
           setSelected(vacant)

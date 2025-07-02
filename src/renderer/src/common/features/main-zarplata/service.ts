@@ -9,8 +9,8 @@ import { getUserId } from '@/common/features/auth'
 import { ApiEndpoints } from '@/common/features/crud'
 import { capitalize } from '@/common/lib/string'
 import { extendObject } from '@/common/lib/utils'
-import { getMultiApiResponse, getSingleApiResponse, zarplataApi } from '@/common/lib/zarplata'
-import { zarplataApiNew } from '@/common/lib/zarplata_new'
+import { getMultiApiResponse, getSingleApiResponse } from '@/common/lib/zarplata'
+import { type ZarplataApiResponse, zarplataApiNew } from '@/common/lib/zarplata_new'
 
 import { MainZarplataColumns } from './columns'
 
@@ -35,7 +35,7 @@ export class MainZarplataService {
     >
   ): Promise<ApiResponse<MainZarplata[]>> {
     const { page, limit } = ctx.queryKey[1]
-    const res = await zarplataApi.get<{
+    const res = await zarplataApiNew.get<{
       totalCount: number
       data: MainZarplata[]
     }>(MainZarplataService.endpoint, {
@@ -78,10 +78,25 @@ export class MainZarplataService {
     ctx: QueryFunctionContext<[string, number]>
   ): Promise<ApiResponse<MainZarplata>> {
     const id = ctx.queryKey[1]
-    const res = await zarplataApi.get<MainZarplata>(`${MainZarplataService.endpoint}/${id}`)
+    const res = await zarplataApiNew.get<MainZarplata>(`${MainZarplataService.endpoint}/${id}`)
     return getSingleApiResponse({
       response: res.data
     })
+  }
+
+  static async calculateSalary(id: number) {
+    const res = await zarplataApiNew.put<
+      ZarplataApiResponse<{
+        id: number
+        mainZarplataId: number
+        percentage: number
+        summa: number
+        paymentId: number
+        code: number
+        name: string
+      }>
+    >(`${MainZarplataService.endpoint}/position-salary/${id}`)
+    return res.data
   }
 
   static async create(values: MainZarplataFormValues): Promise<ApiResponse<MainZarplata>> {
@@ -97,14 +112,12 @@ export class MainZarplataService {
   }: {
     id: number
     values: MainZarplataFormValues
-  }): Promise<unknown> {
+  }): Promise<MainZarplata> {
     const res = await zarplataApiNew.put<MainZarplata>(
       `${MainZarplataService.endpoint}/${id}`,
       values
     )
-    return getSingleApiResponse({
-      response: res.data
-    })
+    return res.data
   }
 }
 

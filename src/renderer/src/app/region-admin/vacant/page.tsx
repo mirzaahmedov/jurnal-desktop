@@ -92,7 +92,7 @@ const VacantPage = () => {
     setSelectedIds(Array.isArray(userVacants) ? userVacants : [])
   }, [userVacants])
 
-  const treeData = useMemo(
+  const treeNodes = useMemo(
     () =>
       arrayToTreeByRelations({
         array: vacants?.data ?? [],
@@ -178,7 +178,7 @@ const VacantPage = () => {
             </div>
             <div className="mt-2">
               <VacantTree
-                data={treeData}
+                nodes={treeNodes}
                 onSelectNode={handleSelectNode}
                 selectedIds={selectedIds}
               />
