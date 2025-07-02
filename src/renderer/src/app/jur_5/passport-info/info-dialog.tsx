@@ -1,16 +1,15 @@
 import type { VacantTreeNode } from '@/app/region-admin/vacant/vacant-tree'
-import type { MainZarplata } from '@/common/models'
+import type { ZarplataApiResponse } from '@/common/lib/zarplata_new'
+import type { MainZarplata, MainZarplataCalculation } from '@/common/models'
 import type { DialogTriggerProps } from 'react-aria-components'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 
-import { ZarplataSpravochnikType } from '@/app/super-admin/zarplata/spravochnik/config'
-import { createZarplataSpravochnik } from '@/app/super-admin/zarplata/spravochnik/service'
-import { Fieldset, LoadingOverlay } from '@/common/components'
+import { Fieldset, FooterCell, FooterRow, GenericTable, LoadingOverlay } from '@/common/components'
 import { FormElement } from '@/common/components/form'
 import { JollyDatePicker } from '@/common/components/jolly-date-picker'
 import { Button } from '@/common/components/jolly/button'
@@ -22,13 +21,14 @@ import {
   DialogTrigger
 } from '@/common/components/jolly/dialog'
 import { JollySelect, SelectItem } from '@/common/components/jolly/select'
+import { SummaCell } from '@/common/components/table/renderers/summa'
 import { Input } from '@/common/components/ui/input'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/common/components/ui/tabs'
 import { Textarea } from '@/common/components/ui/textarea'
 import { MainZarplataService } from '@/common/features/main-zarplata/service'
-import { SpravochnikInput, useSpravochnik } from '@/common/features/spravochnik'
 import { WorkplaceService } from '@/common/features/workplace/service'
 import { useToggle } from '@/common/hooks'
+import { formatNumber } from '@/common/lib/format'
 
 import { ZarplataStavkaOptions } from '../common/data'
 import { AssignPositionDialog } from './assign-position-dialog'
@@ -66,6 +66,9 @@ export const PassportInfoDialog = ({
   const { t } = useTranslation(['app'])
 
   const [tabValue, setTabValue] = useState<PassportInfoTabs.Main>(PassportInfoTabs.Main)
+  const [calculations, setCalculations] = useState<ZarplataApiResponse<
+    MainZarplataCalculation[]
+  > | null>(null)
 
   const queryClient = useQueryClient()
   const assignDialogToggle = useToggle()
@@ -74,11 +77,6 @@ export const PassportInfoDialog = ({
     queryKey: [MainZarplataService.QueryKeys.GetById, selectedMainZarplata?.id ?? 0],
     queryFn: MainZarplataService.getById,
     enabled: !!selectedMainZarplata?.id
-  })
-  const { data: workplace, isFetching: isFetchingWorkplace } = useQuery({
-    queryKey: [WorkplaceService.QueryKeys.GetById, selectedMainZarplata?.workplaceId ?? 0],
-    queryFn: WorkplaceService.getWorkplaceById,
-    enabled: !!selectedMainZarplata?.workplaceId
   })
   const { mutate: updateMainZarplata, isPending: isUpdating } = useMutation({
     mutationFn: MainZarplataService.update,
@@ -95,33 +93,16 @@ export const PassportInfoDialog = ({
       toast.error(t('update_failed'))
     }
   })
-  const { mutate: calculateSalary, isPending: isCalculating } = useMutation({
-    mutationFn: MainZarplataService.calculateSalary,
+  const { mutate: getPositionSalary, isPending: isCalculating } = useMutation({
+    mutationFn: MainZarplataService.getPositionSalary,
     onSuccess: (values) => {
-      toast.success(t('calculate_salary_success'))
-      console.log('Calculated salary:', values)
+      setCalculations(values)
     }
   })
 
-  const zarplataSostavSpravochnik = useSpravochnik(
-    createZarplataSpravochnik({
-      params: {
-        types_type_code: ZarplataSpravochnikType.Sostav
-      }
-    })
-  )
-
-  const workplaceValues = workplace?.data ?? {
-    id: 0,
-    name: '',
-    mainZarplataId: 0,
-    rayon: '',
-    doljnost: '',
-    orderNumber: '',
-    orderDate: '',
-    sourceOfFinance: '',
-    stavka: ''
-  }
+  useEffect(() => {
+    getPositionSalary(selectedMainZarplata?.id ?? 0)
+  }, [mainZarplata, getPositionSalary])
 
   return (
     <>
@@ -154,7 +135,7 @@ export const PassportInfoDialog = ({
                 <div className="border rounded-lg flex-1 h-full overflow-hidden">
                   <TabsContent
                     value={PassportInfoTabs.Main}
-                    className="h-full overflow-auto scrollbar"
+                    className="h-full overflow-hidden scrollbar"
                   >
                     {mainZarplata?.data ? (
                       <MainZarplataForm
@@ -162,19 +143,21 @@ export const PassportInfoDialog = ({
                         selectedMainZarplata={mainZarplata?.data}
                         onClose={() => props?.onOpenChange?.(false)}
                         content={
-                          <div className="grid grid-cols-2 gap-0">
+                          <div className="grid grid-cols-2 gap-5">
                             <Fieldset
                               name={t('shtatka')}
                               className="bg-gray-100 rounded-lg gap-2 relative"
                             >
-                              {isFetchingWorkplace ? <LoadingOverlay /> : null}
                               <Textarea
                                 className="bg-white"
                                 readOnly
-                                value={workplaceValues?.rayon}
+                                value={mainZarplata?.data?.rayon ?? ''}
                               />
                               <FormElement label={t('doljnost')}>
-                                <Input readOnly />
+                                <Input
+                                  readOnly
+                                  value={mainZarplata?.data?.doljnostName ?? ''}
+                                />
                               </FormElement>
                               <Button
                                 className="my-2"
@@ -190,13 +173,19 @@ export const PassportInfoDialog = ({
                                   direction="column"
                                   label={t('order_number')}
                                 >
-                                  <Input />
+                                  <Input
+                                    readOnly
+                                    value={mainZarplata?.data?.doljnostPrikazNum ?? ''}
+                                  />
                                 </FormElement>
                                 <FormElement
                                   direction="column"
                                   label={t('order_date')}
                                 >
-                                  <JollyDatePicker />
+                                  <JollyDatePicker
+                                    readOnly
+                                    value={mainZarplata?.data?.doljnostPrikazDate ?? ''}
+                                  />
                                 </FormElement>
                               </div>
                               <div className="flex items-center gap-2">
@@ -205,7 +194,13 @@ export const PassportInfoDialog = ({
                                     direction="column"
                                     label={t('source_of_finance')}
                                   >
-                                    <Input />
+                                    <Input
+                                      readOnly
+                                      value={
+                                        mainZarplata.data
+                                          ?.spravochnikZarplataIstochnikFinanceName ?? ''
+                                      }
+                                    />
                                   </FormElement>
                                 </div>
                                 <FormElement
@@ -213,8 +208,10 @@ export const PassportInfoDialog = ({
                                   label={t('stavka')}
                                 >
                                   <JollySelect
+                                    isReadOnly
                                     items={ZarplataStavkaOptions}
                                     placeholder={t('stavka')}
+                                    selectedKey={mainZarplata.data?.stavka ?? ''}
                                     className="w-24"
                                   >
                                     {(item) => (
@@ -228,16 +225,47 @@ export const PassportInfoDialog = ({
                                   direction="column"
                                   label={t('sostav')}
                                 >
-                                  <SpravochnikInput
-                                    {...zarplataSostavSpravochnik}
-                                    getInputValue={(selected) => (selected ? selected.name : '')}
+                                  <Input
+                                    readOnly
+                                    value={mainZarplata.data?.spravochnikSostavName ?? ''}
                                   />
                                 </FormElement>
                               </div>
                             </Fieldset>
+                            <div className="h-full overflow-auto scrollbar">
+                              <GenericTable
+                                data={calculations?.data ?? []}
+                                columnDefs={[
+                                  {
+                                    key: 'name'
+                                  },
+                                  {
+                                    key: 'percentage',
+                                    header: 'foiz'
+                                  },
+                                  {
+                                    key: 'summa',
+                                    renderCell: (row) => <SummaCell summa={row.summa} />,
+                                    numeric: true
+                                  }
+                                ]}
+                                className="table-generic-xs border-t border-l"
+                                footer={
+                                  <FooterRow>
+                                    <FooterCell
+                                      title={t('total')}
+                                      colSpan={3}
+                                    />
+                                    <FooterCell
+                                      content={formatNumber(calculations?.totalCount ?? 0)}
+                                    />
+                                  </FooterRow>
+                                }
+                              />
+                            </div>
                           </div>
                         }
-                        onCalculate={calculateSalary}
+                        onCalculate={getPositionSalary}
                         isCalculating={isCalculating}
                       />
                     ) : null}

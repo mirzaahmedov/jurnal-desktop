@@ -31,6 +31,7 @@ import { VacantService } from '@/common/features/vacant/service'
 import { WorkplaceColumns } from '@/common/features/workplace/columns'
 import { WorkplaceService } from '@/common/features/workplace/service'
 import { usePagination } from '@/common/hooks'
+import { formatLocaleDate } from '@/common/lib/format'
 import { arrayToTreeByRelations } from '@/common/lib/tree/relation-tree'
 
 import {
@@ -93,7 +94,7 @@ export const AssignPositionDialog = ({
 
     onAssign?.({
       doljnostPrikazNum: values.doljnostPrikazNum,
-      doljnostPrikazDate: values.doljnostPrikazDate,
+      doljnostPrikazDate: formatLocaleDate(values.doljnostPrikazDate),
       workplaceId: selectedWorkplace.id
     })
   })
@@ -196,7 +197,12 @@ export const AssignPositionDialog = ({
                               <FormField
                                 control={form.control}
                                 name="doljnostPrikazNum"
-                                render={({ field }) => <Input {...field} />}
+                                render={({ field }) => (
+                                  <Input
+                                    {...field}
+                                    error={!!form.formState.errors.doljnostPrikazNum?.message}
+                                  />
+                                )}
                               />
                               <FormField
                                 control={form.control}
@@ -205,6 +211,7 @@ export const AssignPositionDialog = ({
                                   <JollyDatePicker
                                     {...field}
                                     containerProps={{ className: 'min-w-0' }}
+                                    error={!!form.formState.errors.doljnostPrikazDate?.message}
                                   />
                                 )}
                               />

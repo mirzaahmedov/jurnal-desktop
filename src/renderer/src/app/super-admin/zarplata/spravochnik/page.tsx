@@ -11,6 +11,7 @@ import { useConfirm } from '@/common/features/confirm'
 import { useSearchFilter } from '@/common/features/filters/search/search-filter-debounced'
 import { usePagination, useToggle } from '@/common/hooks'
 import { useLayout } from '@/common/layout'
+import { queryClient } from '@/common/lib/query-client'
 import { ListView } from '@/common/views'
 
 import { ZarplataSpravochnikColumnDefs } from './columns'
@@ -50,6 +51,9 @@ const ZarplataSpravochnikPage = () => {
     onSuccess: () => {
       dialogToggle.close()
       setSelected(undefined)
+      queryClient.invalidateQueries({
+        queryKey: [QueryKeys.GetAll]
+      })
       toast.success(t('delete_success'))
     },
     onError: () => {

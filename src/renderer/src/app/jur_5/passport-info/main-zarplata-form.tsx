@@ -148,208 +148,208 @@ export const MainZarplataForm = ({
     <Form {...form}>
       <form
         onSubmit={handleSubmit}
-        className="flex gap-2.5 p-5"
+        className="h-full p-5 pr-0 flex flex-col"
       >
-        <div className="flex-1 p-2.5 grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] content-center gap-5">
-          <div>
+        <div className="flex flex-wrap gap-2.5 flex-1 overflow-auto scrollbar pr-5">
+          <div className="flex-1 p-2.5 grid grid-cols-[repeat(auto-fit,minmax(400px,1fr))] content-center gap-5">
+            <div>
+              <FormField
+                control={form.control}
+                name="kartochka"
+                render={({ field }) => (
+                  <FormElement
+                    direction="column"
+                    label={t('card_num')}
+                  >
+                    <Input {...field} />
+                  </FormElement>
+                )}
+              />
+              <div>
+                <FormField
+                  control={form.control}
+                  name="xarbiy"
+                  render={({ field }) => (
+                    <FormElement
+                      label={t('military')}
+                      divProps={{ className: 'flex-row-reverse justify-end' }}
+                      innerProps={{ className: 'flex-none w-auto' }}
+                    >
+                      <Checkbox
+                        ref={field.ref}
+                        checked={field.value}
+                        onCheckedChange={(checked) => field.onChange(checked)}
+                      />
+                    </FormElement>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="ostanovitRaschet"
+                  render={({ field }) => (
+                    <FormElement
+                      label={t('stop_calculation')}
+                      divProps={{ className: 'flex-row-reverse justify-end' }}
+                      innerProps={{ className: 'flex-none w-auto' }}
+                    >
+                      <Checkbox
+                        ref={field.ref}
+                        checked={field.value}
+                        onCheckedChange={(checked) => field.onChange(checked)}
+                      />
+                    </FormElement>
+                  )}
+                />
+              </div>
+            </div>
             <FormField
               control={form.control}
-              name="kartochka"
+              name="fio"
               render={({ field }) => (
                 <FormElement
                   direction="column"
-                  label={t('card_num')}
+                  label={t('fio')}
                 >
                   <Input {...field} />
                 </FormElement>
               )}
             />
-            <div>
-              <FormField
-                control={form.control}
-                name="xarbiy"
-                render={({ field }) => (
-                  <FormElement
-                    label={t('military')}
-                    divProps={{ className: 'flex-row-reverse justify-end' }}
-                    innerProps={{ className: 'flex-none w-auto' }}
-                  >
-                    <Checkbox
-                      ref={field.ref}
-                      checked={field.value}
-                      onCheckedChange={(checked) => field.onChange(checked)}
-                    />
-                  </FormElement>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="ostanovitRaschet"
-                render={({ field }) => (
-                  <FormElement
-                    label={t('stop_calculation')}
-                    divProps={{ className: 'flex-row-reverse justify-end' }}
-                    innerProps={{ className: 'flex-none w-auto' }}
-                  >
-                    <Checkbox
-                      ref={field.ref}
-                      checked={field.value}
-                      onCheckedChange={(checked) => field.onChange(checked)}
-                    />
-                  </FormElement>
-                )}
-              />
-            </div>
-          </div>
-          <FormField
-            control={form.control}
-            name="fio"
-            render={({ field }) => (
-              <FormElement
-                direction="column"
-                label={t('fio')}
-              >
-                <Input {...field} />
-              </FormElement>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="dateBirth"
-            render={({ field }) => (
-              <FormElement
-                direction="column"
-                label={t('date_of_birth')}
-              >
-                <JollyDatePicker {...field} />
-              </FormElement>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="spravochnikZarplataGrafikRabotiId"
-            render={({ field }) => (
-              <FormElement
-                direction="column"
-                label={t('grafik')}
-              >
-                <JollySelect
-                  buttonRef={field.ref}
-                  items={grafiks?.data || []}
-                  selectedKey={field.value}
-                  onSelectionChange={field.onChange}
-                >
-                  {(item) => <SelectItem>{item.name}</SelectItem>}
-                </JollySelect>
-              </FormElement>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="nachaloSlujbi"
-            render={({ field }) => (
-              <FormElement
-                direction="column"
-                label={t('start_of_service')}
-              >
-                <JollyDatePicker {...field} />
-              </FormElement>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="spravochikZarplataZvanieId"
-            render={({ field }) => (
-              <FormElement
-                direction="column"
-                label={t('military_rank')}
-              >
-                <SpravochnikInput
-                  {...zarplataZvanieSpravochnik}
-                  inputRef={field.ref}
-                  getInputValue={(selected) => selected?.name || ''}
-                />
-              </FormElement>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="inn"
-            render={({ field }) => (
-              <FormElement
-                direction="column"
-                label={t('inn')}
-              >
-                <Input {...field} />
-              </FormElement>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="inps"
-            render={({ field }) => (
-              <FormElement
-                direction="column"
-                label={t('inps')}
-              >
-                <Input {...field} />
-              </FormElement>
-            )}
-          />
-
-          <div>
             <FormField
               control={form.control}
-              name="rayon"
+              name="dateBirth"
               render={({ field }) => (
                 <FormElement
                   direction="column"
-                  label={t('rayon')}
+                  label={t('date_of_birth')}
                 >
-                  <Textarea
-                    {...field}
-                    readOnly
+                  <JollyDatePicker {...field} />
+                </FormElement>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="spravochnikZarplataGrafikRabotiId"
+              render={({ field }) => (
+                <FormElement
+                  direction="column"
+                  label={t('grafik')}
+                >
+                  <JollySelect
+                    buttonRef={field.ref}
+                    items={grafiks?.data || []}
+                    selectedKey={field.value}
+                    onSelectionChange={field.onChange}
+                  >
+                    {(item) => <SelectItem>{item.name}</SelectItem>}
+                  </JollySelect>
+                </FormElement>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="nachaloSlujbi"
+              render={({ field }) => (
+                <FormElement
+                  direction="column"
+                  label={t('start_of_service')}
+                >
+                  <JollyDatePicker {...field} />
+                </FormElement>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="spravochikZarplataZvanieId"
+              render={({ field }) => (
+                <FormElement
+                  direction="column"
+                  label={t('military_rank')}
+                >
+                  <SpravochnikInput
+                    {...zarplataZvanieSpravochnik}
+                    inputRef={field.ref}
+                    getInputValue={(selected) => selected?.name || ''}
                   />
                 </FormElement>
               )}
             />
-          </div>
+            <FormField
+              control={form.control}
+              name="inn"
+              render={({ field }) => (
+                <FormElement
+                  direction="column"
+                  label={t('inn')}
+                >
+                  <Input {...field} />
+                </FormElement>
+              )}
+            />
 
-          <div className="col-span-full">{content}</div>
+            <FormField
+              control={form.control}
+              name="inps"
+              render={({ field }) => (
+                <FormElement
+                  direction="column"
+                  label={t('inps')}
+                >
+                  <Input {...field} />
+                </FormElement>
+              )}
+            />
 
-          <div className="col-span-full">
-            <Button
-              type="submit"
-              isPending={isCreating || isUpdating}
-            >
-              {t('save')}
-            </Button>
-          </div>
-        </div>
-        <div className="p-10">
-          <div className="flex flex-col items-center gap-10">
-            <div className="border w-[200px] h-[calc(200px/3*4)] bg-gray-100 rounded-lg">
-              <img
-                src="/images/profile_placeholder.png"
-                alt="Profile placeholder"
-                className="w-full h-full object-cover object-center"
+            <div>
+              <FormField
+                control={form.control}
+                name="rayon"
+                render={({ field }) => (
+                  <FormElement
+                    direction="column"
+                    label={t('rayon')}
+                  >
+                    <Textarea
+                      {...field}
+                      readOnly
+                    />
+                  </FormElement>
+                )}
               />
             </div>
-            <TimeElapsed start={form.watch('nachaloSlujbi')} />
-            {onCalculate ? (
-              <Button
-                variant="outline"
-                onClick={() => onCalculate?.(selectedMainZarplata?.id ?? 0)}
-                isDisabled={!selectedMainZarplata || isCalculating || isUpdating || isCreating}
-                className="mb-2"
-              >
-                <Calculator className="btn-icon icon-start" /> {t('calculate_salary')}
-              </Button>
-            ) : null}
           </div>
+          <div className="p-10">
+            <div className="flex flex-col items-center gap-10">
+              <div className="border w-[200px] h-[calc(200px/3*4)] bg-gray-100 rounded-lg">
+                <img
+                  src="/images/profile_placeholder.png"
+                  alt="Profile placeholder"
+                  className="w-full h-full object-cover object-center"
+                />
+              </div>
+              <TimeElapsed start={form.watch('nachaloSlujbi')} />
+              {onCalculate ? (
+                <Button
+                  onClick={() => onCalculate?.(selectedMainZarplata?.id ?? 0)}
+                  isDisabled={!selectedMainZarplata || isCalculating || isUpdating || isCreating}
+                  className="mb-2"
+                >
+                  <Calculator className="btn-icon icon-start" /> {t('calculate_salary')}
+                </Button>
+              ) : null}
+            </div>
+          </div>
+          <div className="w-full">{content}</div>
+        </div>
+
+        <div className="w-full pt-5">
+          <Button
+            type="submit"
+            isPending={isCreating || isUpdating}
+          >
+            {t('save')}
+          </Button>
         </div>
       </form>
     </Form>

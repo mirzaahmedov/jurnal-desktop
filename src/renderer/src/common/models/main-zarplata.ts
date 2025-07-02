@@ -33,3 +33,13 @@ export interface MainZarplata {
   spravochnikZarplataIstochnikFinanceId: number
   spravochnikZarplataIstochnikFinanceName: string
 }
+
+export interface MainZarplataCalculation {
+  id: number
+  mainZarplataId: number
+  percentage: number
+  summa: number
+  paymentId: number
+  code: number
+  name: string
+}

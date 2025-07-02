@@ -1,6 +1,6 @@
 import type { SpravochnikHookOptions } from '../spravochnik'
 import type { MainZarplataFormValues } from '@/app/jur_5/passport-info/config'
-import type { ApiResponse, MainZarplata } from '@/common/models'
+import type { ApiResponse, MainZarplata, MainZarplataCalculation } from '@/common/models'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 
 import { t } from 'i18next'
@@ -84,18 +84,10 @@ export class MainZarplataService {
     })
   }
 
-  static async calculateSalary(id: number) {
-    const res = await zarplataApiNew.put<
-      ZarplataApiResponse<{
-        id: number
-        mainZarplataId: number
-        percentage: number
-        summa: number
-        paymentId: number
-        code: number
-        name: string
-      }>
-    >(`${MainZarplataService.endpoint}/position-salary/${id}`)
+  static async getPositionSalary(id: number) {
+    const res = await zarplataApiNew.put<ZarplataApiResponse<MainZarplataCalculation[]>>(
+      `${MainZarplataService.endpoint}/position-salary/${id}`
+    )
     return res.data
   }
 

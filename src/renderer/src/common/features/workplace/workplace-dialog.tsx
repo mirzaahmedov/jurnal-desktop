@@ -97,6 +97,7 @@ export const WorkplaceDialog = ({
   )
 
   const handleSubmit = form.handleSubmit((values) => {
+    console.log('submitted', values)
     onSubmit(values)
     form.reset()
   })
@@ -106,6 +107,8 @@ export const WorkplaceDialog = ({
       form.setValue('rayon', getVacantRayon(vacant))
     }
   }, [vacant, selected])
+
+  console.log({ watch: form.watch() })
 
   return (
     <DialogTrigger {...props}>
@@ -173,6 +176,7 @@ export const WorkplaceDialog = ({
                         ref={field.ref}
                         value={field.value}
                         onValueChange={(values) => {
+                          console.log('running setka onValueChange', values)
                           const value = values.floatValue ?? 0
                           field.onChange(value)
                           form.setValue('oklad', value * minimumWage)

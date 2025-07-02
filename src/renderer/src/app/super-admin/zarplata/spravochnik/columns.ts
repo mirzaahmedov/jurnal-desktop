@@ -6,7 +6,9 @@ import { IDCell } from '@/common/components/table/renderers/id'
 export const ZarplataSpravochnikColumnDefs: ColumnDef<Zarplata.Spravochnik>[] = [
   {
     key: 'id',
-    renderCell: IDCell
+    renderCell: IDCell,
+    width: 160,
+    minWidth: 160
   },
   {
     key: 'name'
@@ -37,7 +39,9 @@ export const ZarplataSpravochnikColumnDefs: ColumnDef<Zarplata.Spravochnik>[] = 
 export const ZarplataSpravochnikZvanieColumnDefs: ColumnDef<Zarplata.Spravochnik>[] = [
   {
     key: 'id',
-    renderCell: IDCell
+    renderCell: IDCell,
+    width: 160,
+    minWidth: 160
   },
   {
     key: 'name'
@@ -61,7 +65,9 @@ export const ZarplataSpravochnikZvanieColumnDefs: ColumnDef<Zarplata.Spravochnik
 export const ZarplataSpravochnikDialogColumnDefs: ColumnDef<Zarplata.Spravochnik>[] = [
   {
     key: 'id',
-    renderCell: IDCell
+    renderCell: IDCell,
+    width: 160,
+    minWidth: 160
   },
   {
     key: 'name'
