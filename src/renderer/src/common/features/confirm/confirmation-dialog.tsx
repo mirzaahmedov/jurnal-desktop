@@ -1,19 +1,19 @@
-import { type MouseEvent, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
 import { FormElement } from '@/common/components/form'
+import { Button } from '@/common/components/jolly/button'
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle
-} from '@/common/components/ui/alert-dialog'
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogOverlay,
+  DialogTitle,
+  DialogTrigger
+} from '@/common/components/jolly/dialog'
 import { Checkbox } from '@/common/components/ui/checkbox'
 import { Form, FormField } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
@@ -49,7 +49,7 @@ export const ConfirmationDialog = () => {
     }
   }, [isOpen])
 
-  const handleConfirm = (e: MouseEvent<HTMLButtonElement>) => {
+  const handleConfirm = () => {
     if (password) {
       const password = form.getValues('password')
       if (!password || password.trim().length === 0) {
@@ -57,70 +57,82 @@ export const ConfirmationDialog = () => {
           type: 'custom',
           message: t('required_field')
         })
-        e.preventDefault()
         return
       }
       onConfirm?.(password)
     } else {
       onConfirm?.()
     }
+    close()
   }
 
   return (
-    <AlertDialog
-      open={isOpen}
-      onOpenChange={close}
+    <DialogTrigger
+      isOpen={isOpen}
+      onOpenChange={(isOpen) => {
+        if (!isOpen) {
+          close()
+          onCancel?.()
+        }
+      }}
     >
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle className="text-base">{title}</AlertDialogTitle>
-          <AlertDialogDescription>{description}</AlertDialogDescription>
-        </AlertDialogHeader>
-        {password ? (
-          <Form {...form}>
-            <form>
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                  <FormElement
-                    direction="column"
-                    label={t('password')}
-                  >
-                    <Input
-                      autoFocus
-                      type={isPasswordVisible ? 'text' : 'password'}
-                      {...field}
-                    />
-                  </FormElement>
-                )}
-              />
-            </form>
-            <div className="flex items-center gap-2 mt-3">
-              <Checkbox
-                checked={isPasswordVisible}
-                onCheckedChange={(state) => setPasswordVisible(!!state)}
-                className="size-5"
-              />
-              <Label className="mt-0">{t('show-password')}</Label>
-            </div>
-          </Form>
-        ) : null}
-        <AlertDialogFooter>
-          <AlertDialogCancel
-            onClick={onCancel}
-            className="text-xs"
-          >
-            {t('cancel')}
-          </AlertDialogCancel>
-          <AlertDialogAction
-            onClick={handleConfirm}
-            className="text-xs"
-          >
-            {t('confirm')}
-          </AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
+      <DialogOverlay isDismissable={false}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="text-base">{title}</DialogTitle>
+            <DialogDescription>{description}</DialogDescription>
+          </DialogHeader>
+          {password ? (
+            <Form {...form}>
+              <form>
+                <FormField
+                  control={form.control}
+                  name="password"
+                  render={({ field }) => (
+                    <FormElement
+                      direction="column"
+                      label={t('password')}
+                    >
+                      <Input
+                        autoFocus
+                        type={isPasswordVisible ? 'text' : 'password'}
+                        {...field}
+                      />
+                    </FormElement>
+                  )}
+                />
+              </form>
+              <div className="flex items-center gap-2 mt-3">
+                <Checkbox
+                  checked={isPasswordVisible}
+                  onCheckedChange={(state) => setPasswordVisible(!!state)}
+                  className="size-5"
+                />
+                <Label className="mt-0">{t('show-password')}</Label>
+              </div>
+            </Form>
+          ) : null}
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onPress={() => {
+                close()
+                onCancel?.()
+              }}
+              className="text-xs"
+            >
+              {t('cancel')}
+            </Button>
+            <Button
+              variant="destructive"
+              onPress={handleConfirm}
+              className="text-xs"
+            >
+              {t('confirm')}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </DialogOverlay>
+    </DialogTrigger>
   )
 }

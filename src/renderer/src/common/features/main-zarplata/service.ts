@@ -111,6 +111,10 @@ export class MainZarplataService {
     )
     return res.data
   }
+
+  static async delete(id: number): Promise<void> {
+    await zarplataApiNew.delete(`${MainZarplataService.endpoint}/${id}`)
+  }
 }
 
 export const createMainZarplataSpravochnik = (

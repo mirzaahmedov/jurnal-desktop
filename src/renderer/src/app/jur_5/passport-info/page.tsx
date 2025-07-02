@@ -2,16 +2,19 @@ import type { MainZarplata } from '@/common/models'
 
 import { useEffect, useMemo, useState } from 'react'
 
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { Allotment } from 'allotment'
 import { useTranslation } from 'react-i18next'
+import { toast } from 'react-toastify'
 
 import { VacantTree, type VacantTreeNode } from '@/app/region-admin/vacant/vacant-tree'
 import { GenericTable, LoadingOverlay } from '@/common/components'
+import { useConfirm } from '@/common/features/confirm'
 import { MainZarplataService } from '@/common/features/main-zarplata/service'
 import { VacantService } from '@/common/features/vacant/service'
 import { useToggle } from '@/common/hooks'
 import { useLayout } from '@/common/layout'
+import { queryClient } from '@/common/lib/query-client'
 import { arrayToTreeByRelations } from '@/common/lib/tree/relation-tree'
 
 import { MainZarplataColumnDefs } from './columns'
@@ -28,20 +31,33 @@ const PassportInfoPage = () => {
   const [selectedUser, setSelectedUser] = useState<MainZarplata | undefined>()
 
   const { t } = useTranslation(['app'])
+  const { confirm } = useConfirm()
 
   const { data: vacants, isFetching: isFetchingVacants } = useQuery({
     queryKey: [VacantService.QueryKeys.GetAll, { page: 1, limit: 100000000000000 }],
     queryFn: VacantService.getAll
   })
-  const { data: users, isFetching: isFetchingUsers } = useQuery({
+  const { data: mainZarplata, isFetching: isFetchingMainZarplata } = useQuery({
     queryKey: [
-      MainZarplataService.QueryKeys.GetAll,
+      MainZarplataService.QueryKeys.GetByVacantId,
       {
         vacantId: selectedVacant?.id ?? 0
       }
     ],
     queryFn: MainZarplataService.getByVacantId,
     enabled: !!selectedVacant
+  })
+  const { mutate: deleteMainZarplata } = useMutation({
+    mutationFn: MainZarplataService.delete,
+    onSuccess: () => {
+      toast.success(t('delete_success'))
+      queryClient.invalidateQueries({
+        queryKey: [MainZarplataService.QueryKeys.GetByVacantId]
+      })
+    },
+    onError: () => {
+      toast.error(t('delete_failed'))
+    }
   })
 
   useEffect(() => {
@@ -70,6 +86,13 @@ const PassportInfoPage = () => {
     setSelectedUser(row)
     editDialogToggle.open()
   }
+  const handleRowDelete = (row: MainZarplata) => {
+    confirm({
+      onConfirm: () => {
+        deleteMainZarplata(row.id)
+      }
+    })
+  }
 
   return (
     <>
@@ -91,11 +114,12 @@ const PassportInfoPage = () => {
         </Allotment.Pane>
         <Allotment.Pane>
           <div className="relative w-full overflow-auto scrollbar">
-            {isFetchingUsers ? <LoadingOverlay /> : null}
+            {isFetchingMainZarplata ? <LoadingOverlay /> : null}
             <GenericTable
-              data={users ?? []}
+              data={mainZarplata ?? []}
               columnDefs={MainZarplataColumnDefs}
               onEdit={handleRowEdit}
+              onDelete={handleRowDelete}
             />
           </div>
         </Allotment.Pane>

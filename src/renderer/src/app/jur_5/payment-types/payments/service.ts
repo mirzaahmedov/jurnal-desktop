@@ -1,10 +1,14 @@
 import type { PaymentFormValues } from './config'
+import type { SpravochnikHookOptions } from '@/common/features/spravochnik'
 import type { Payment } from '@/common/models/payments'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 
 import { ApiEndpoints } from '@/common/features/crud'
+import { extendObject } from '@/common/lib/utils'
 import { getMultiApiResponse, getSingleApiResponse } from '@/common/lib/zarplata'
 import { type ZarplataApiResponse, zarplataApiNew } from '@/common/lib/zarplata_new'
+
+import { PaymentColumnDefs } from './columns'
 
 export class PaymentsService {
   static endpoint = ApiEndpoints.zarplata_payments
@@ -64,4 +68,15 @@ export class PaymentsService {
     const res = await PaymentsService.client.delete<Payment>(`${PaymentsService.endpoint}/${id}`)
     return res.data
   }
+}
+
+export const createPaymentSpravochnik = (config: Partial<SpravochnikHookOptions<Payment>>) => {
+  return extendObject(
+    {
+      endpoint: ApiEndpoints.zarplata_spravochnik,
+      columnDefs: PaymentColumnDefs,
+      service: PaymentsService
+    } satisfies typeof config,
+    config
+  )
 }

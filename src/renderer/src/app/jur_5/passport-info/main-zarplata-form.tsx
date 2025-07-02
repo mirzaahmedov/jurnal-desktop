@@ -5,7 +5,7 @@ import { type ReactNode, useEffect } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { Calculator } from 'lucide-react'
+import { Calculator, UserX } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
@@ -37,6 +37,7 @@ export interface MainZarplataFormProps {
   selectedMainZarplata?: MainZarplata | undefined
   content?: ReactNode
   onCalculate?: (id: number) => void
+  onRemovePosition?: (id: number) => void
   onCreate?: (user: MainZarplata) => void
   onClose?: VoidFunction
 }
@@ -45,6 +46,7 @@ export const MainZarplataForm = ({
   vacant,
   selectedMainZarplata,
   content,
+  onRemovePosition,
   onCalculate,
   onCreate,
   onClose
@@ -329,15 +331,26 @@ export const MainZarplataForm = ({
                 />
               </div>
               <TimeElapsed start={form.watch('nachaloSlujbi')} />
-              {onCalculate ? (
-                <Button
-                  onClick={() => onCalculate?.(selectedMainZarplata?.id ?? 0)}
-                  isDisabled={!selectedMainZarplata || isCalculating || isUpdating || isCreating}
-                  className="mb-2"
-                >
-                  <Calculator className="btn-icon icon-start" /> {t('calculate_salary')}
-                </Button>
-              ) : null}
+              <div className="flex flex-col gap-2">
+                {onCalculate ? (
+                  <Button
+                    onClick={() => onCalculate?.(selectedMainZarplata?.id ?? 0)}
+                    isDisabled={!selectedMainZarplata || isCalculating || isUpdating || isCreating}
+                    className="mb-2"
+                  >
+                    <Calculator className="btn-icon icon-start" /> {t('calculate_salary')}
+                  </Button>
+                ) : null}
+                {onRemovePosition ? (
+                  <Button
+                    variant="destructive"
+                    isDisabled={!selectedMainZarplata || isCalculating || isUpdating || isCreating}
+                    onClick={() => onRemovePosition?.(selectedMainZarplata?.id ?? 0)}
+                  >
+                    <UserX className="btn-icon icon-start" /> {t('remove_from_position')}
+                  </Button>
+                ) : null}
+              </div>
             </div>
           </div>
           <div className="w-full">{content}</div>

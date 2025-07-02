@@ -4,7 +4,7 @@ import { ArrowDown10, ArrowUp01, Eye, Pencil, Trash2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { twMerge } from 'tailwind-merge'
 
-import { Button } from '@/common/components/ui/button'
+import { Button } from '@/common/components/jolly/button'
 import {
   Table,
   TableBody,
@@ -265,6 +265,7 @@ export const GenericTable = <T extends object>(props: GenericTableProps<T>) => {
                     <div className="flex items-center whitespace-nowrap w-full gap-1">
                       {onView && (
                         <Button
+                          type="button"
                           variant="ghost"
                           size="icon"
                           onClick={(e) => {
@@ -277,6 +278,7 @@ export const GenericTable = <T extends object>(props: GenericTableProps<T>) => {
                       )}
                       {onEdit && getRowEditable(row) && (
                         <Button
+                          type="button"
                           variant="ghost"
                           size="icon"
                           onClick={(e) => {
@@ -289,13 +291,14 @@ export const GenericTable = <T extends object>(props: GenericTableProps<T>) => {
                       )}
                       {onDelete && getRowDeletable(row) && (
                         <Button
+                          type="button"
                           variant="ghost"
                           size="icon"
                           onClick={(e) => {
                             e.stopPropagation()
                             onDelete(row)
                           }}
-                          className="text-destructive hover:text-destructive"
+                          className="text-destructive hover:!text-destructive"
                         >
                           <Trash2 className="size-4" />
                         </Button>
