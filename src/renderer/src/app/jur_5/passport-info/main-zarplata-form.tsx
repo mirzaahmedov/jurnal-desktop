@@ -5,7 +5,7 @@ import { type ReactNode, useEffect } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { Calculator, UserX } from 'lucide-react'
+import { Calculator } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
@@ -23,6 +23,7 @@ import { Checkbox } from '@/common/components/ui/checkbox'
 import { Form, FormField } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
 import { Textarea } from '@/common/components/ui/textarea'
+import { DissmisEmployee } from '@/common/features/main-zarplata/dismiss-main-zarplata-dialog'
 import { MainZarplataService } from '@/common/features/main-zarplata/service'
 import { SpravochnikInput, useSpravochnik } from '@/common/features/spravochnik'
 import { formatDate, parseDate, parseLocaleDate } from '@/common/lib/date'
@@ -46,7 +47,6 @@ export const MainZarplataForm = ({
   vacant,
   selectedMainZarplata,
   content,
-  onRemovePosition,
   onCalculate,
   onCreate,
   onClose
@@ -256,7 +256,13 @@ export const MainZarplataForm = ({
                   direction="column"
                   label={t('start_of_service')}
                 >
-                  <JollyDatePicker {...field} />
+                  <JollyDatePicker {...field} onChange={dateString => {
+                    field.onChange(dateString)
+                    const { years, months, days } = calculateDateDifference(parseDate(dateString), new Date())
+                    form.setValue('visNa1Year', years)
+                    form.setValue('month1', months)
+                    form.setValue('day1', days)
+                  }} />
                 </FormElement>
               )}
             />
@@ -341,14 +347,8 @@ export const MainZarplataForm = ({
                     <Calculator className="btn-icon icon-start" /> {t('calculate_salary')}
                   </Button>
                 ) : null}
-                {onRemovePosition ? (
-                  <Button
-                    variant="destructive"
-                    isDisabled={!selectedMainZarplata || isCalculating || isUpdating || isCreating}
-                    onClick={() => onRemovePosition?.(selectedMainZarplata?.id ?? 0)}
-                  >
-                    <UserX className="btn-icon icon-start" /> {t('remove_from_position')}
-                  </Button>
+                {selectedMainZarplata ? (
+                  <DissmisEmployee mainZarplataId={selectedMainZarplata.id} />
                 ) : null}
               </div>
             </div>
@@ -395,7 +395,7 @@ const TimeElapsed = ({ start }: { start: string }) => {
   if (!start) return null
 
   const { t } = useTranslation()
-  const { years, months, days } = calculateDateDifference(parseDate(start), new Date())
+  const { years, months, days } = 
 
   const FlipCard = ({ value, label }: { value: number; label: string }) => (
     <div className="flex flex-col items-center mx-2">

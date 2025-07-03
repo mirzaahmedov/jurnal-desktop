@@ -1,17 +1,33 @@
 import type { PayrollPaymentFormValues } from './config'
 import type { PayrollPayment } from '@/common/models/payroll-payment'
+import type { QueryFunctionContext } from '@tanstack/react-query'
 
-import { zarplataApiNew } from '@/common/lib/zarplata_new'
+import { type ZarplataApiResponse, zarplataApiNew } from '@/common/lib/zarplata_new'
 
 export class PayrollPaymentService {
   static endpoint = 'PayrollPayment'
 
   static QueryKeys = {
-    GetAll: 'PayrollPayment.GetAll',
-    GetById: 'PayrollPayment.GetById',
-    Create: 'PayrollPayment.Create',
-    Update: 'PayrollPayment.Update',
-    Delete: 'PayrollPayment.Delete'
+    GetByMainZarplataId: 'PayrollPayment/GetByMainZarplataId',
+    GetById: 'PayrollPayment/GetById',
+    Create: 'PayrollPayment/Create',
+    Update: 'PayrollPayment/Update',
+    Delete: 'PayrollPayment/Delete'
+  }
+
+  static async getByMainZarplataId(
+    ctx: QueryFunctionContext<[typeof PayrollPaymentService.QueryKeys.GetByMainZarplataId, number]>
+  ) {
+    const mainZarplataId = ctx.queryKey[1]
+    const res = await zarplataApiNew.get<ZarplataApiResponse<PayrollPayment[]>>(
+      PayrollPaymentService.endpoint,
+      {
+        params: {
+          mainZarplataId
+        }
+      }
+    )
+    return res.data
   }
 
   static async create(values: PayrollPaymentFormValues) {

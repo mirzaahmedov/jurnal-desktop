@@ -40,15 +40,15 @@ import {
   defaultAssignPositionValues
 } from './config'
 
-export interface AssignPositionDialogProps extends Omit<DialogTriggerProps, 'children'> {
-  selectedMainZarplata?: MainZarplata
-  onAssign?: (values: AssignPositionFormValues) => void
+export interface AssignEmployeePositionDialogProps extends Omit<DialogTriggerProps, 'children'> {
+  mainZarplata?: MainZarplata
+  onSubmit?: (values: AssignPositionFormValues) => void
 }
-export const AssignPositionDialog = ({
-  selectedMainZarplata,
-  onAssign,
+export const AssignEmployeePositionDialog = ({
+  mainZarplata,
+  onSubmit,
   ...props
-}: AssignPositionDialogProps) => {
+}: AssignEmployeePositionDialogProps) => {
   const { t } = useTranslation(['app'])
 
   const [selectedVacant, setSelectedVacant] = useState<VacantTreeNode | null>(null)
@@ -92,7 +92,7 @@ export const AssignPositionDialog = ({
   const handleSubmitAssign = form.handleSubmit((values) => {
     if (!selectedWorkplace) return
 
-    onAssign?.({
+    onSubmit?.({
       doljnostPrikazNum: values.doljnostPrikazNum,
       doljnostPrikazDate: formatLocaleDate(values.doljnostPrikazDate),
       workplaceId: selectedWorkplace.id
@@ -159,7 +159,7 @@ export const AssignPositionDialog = ({
                         <div className="space-y-2 w-full max-w-md">
                           <Textarea
                             readOnly
-                            value={selectedMainZarplata?.rayon ?? ''}
+                            value={mainZarplata?.rayon ?? ''}
                             className="bg-white w-full"
                             rows={4}
                           />
@@ -183,7 +183,7 @@ export const AssignPositionDialog = ({
                             grid="1:4"
                           >
                             <Input
-                              value={selectedMainZarplata?.fio ?? ''}
+                              value={mainZarplata?.fio ?? ''}
                               readOnly
                             />
                           </FormElement>

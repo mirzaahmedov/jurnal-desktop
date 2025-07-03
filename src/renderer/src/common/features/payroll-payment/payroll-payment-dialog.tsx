@@ -4,7 +4,7 @@ import type { DialogTriggerProps } from 'react-aria-components'
 import { useEffect } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
+import { type UseFormReturn, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
 import { createPaymentSpravochnik } from '@/app/jur_5/payment-types/payments/service'
@@ -27,7 +27,10 @@ import { PayrollPaymentFormSchema, type PayrollPaymentFormValues, defaultValues 
 
 export interface PayrollPaymentDialogProps extends Omit<DialogTriggerProps, 'children'> {
   selected: PayrollPayment | undefined
-  onSubmit: (values: PayrollPaymentFormValues) => void
+  onSubmit: (
+    values: PayrollPaymentFormValues,
+    form: UseFormReturn<PayrollPaymentFormValues>
+  ) => void
 }
 export const PayrollPaymentDialog = ({
   selected,
@@ -50,14 +53,15 @@ export const PayrollPaymentDialog = ({
   }, [selected])
 
   const handleSubmit = form.handleSubmit((values) => {
-    onSubmit(values)
-    form.reset()
+    onSubmit(values, form)
   })
 
   const paymentSpravochnik = useSpravochnik(
     createPaymentSpravochnik({
       value: form.watch('paymentId'),
-      onChange: (value) => form.setValue('paymentId', value ?? 0)
+      onChange: (value) => {
+        form.setValue('paymentId', value ?? 0)
+      }
     })
   )
 
@@ -74,7 +78,7 @@ export const PayrollPaymentDialog = ({
           </DialogHeader>
           <Form {...form}>
             <form
-              onSubmit={handleSubmit}
+              onSubmit={(e) => e.preventDefault()}
               className="flex flex-col gap-4 mt-10"
             >
               <div className="grid grid-cols-[repeat(auto-fit,minmax(400px,1fr))] gap-5">
@@ -128,7 +132,12 @@ export const PayrollPaymentDialog = ({
                 />
               </div>
               <DialogFooter>
-                <Button type="submit">{t('save')}</Button>
+                <Button
+                  type="button"
+                  onClick={handleSubmit}
+                >
+                  {t('save')}
+                </Button>
               </DialogFooter>
             </form>
           </Form>

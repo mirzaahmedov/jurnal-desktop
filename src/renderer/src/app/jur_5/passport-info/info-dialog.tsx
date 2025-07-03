@@ -1,18 +1,15 @@
 import type { VacantTreeNode } from '@/app/region-admin/vacant/vacant-tree'
-import type { PayrollPaymentFormValues } from '@/common/features/payroll-payment/config'
-import type { ZarplataApiResponse } from '@/common/lib/zarplata_new'
-import type { MainZarplata, MainZarplataCalculation } from '@/common/models'
-import type { PayrollPayment } from '@/common/models/payroll-payment'
+import type { MainZarplata } from '@/common/models'
 import type { DialogTriggerProps } from 'react-aria-components'
 
 import { useEffect, useState } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { Plus, UserCheck } from 'lucide-react'
+import { UserCheck } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 
-import { Fieldset, FooterCell, FooterRow, GenericTable, LoadingOverlay } from '@/common/components'
+import { Fieldset, LoadingOverlay } from '@/common/components'
 import { FormElement } from '@/common/components/form'
 import { JollyDatePicker } from '@/common/components/jolly-date-picker'
 import { Button } from '@/common/components/jolly/button'
@@ -24,20 +21,16 @@ import {
   DialogTrigger
 } from '@/common/components/jolly/dialog'
 import { JollySelect, SelectItem } from '@/common/components/jolly/select'
-import { SummaCell } from '@/common/components/table/renderers/summa'
 import { Input } from '@/common/components/ui/input'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/common/components/ui/tabs'
 import { Textarea } from '@/common/components/ui/textarea'
-import { useConfirm } from '@/common/features/confirm'
 import { MainZarplataService } from '@/common/features/main-zarplata/service'
-import { PayrollPaymentDialog } from '@/common/features/payroll-payment/payroll-payment-dialog'
-import { PayrollPaymentService } from '@/common/features/payroll-payment/service'
+import { PayrollPayments } from '@/common/features/payroll-payment/payroll-payments'
 import { WorkplaceService } from '@/common/features/workplace/service'
 import { useToggle } from '@/common/hooks'
-import { formatNumber } from '@/common/lib/format'
 
 import { ZarplataStavkaOptions } from '../common/data'
-import { AssignPositionDialog } from './assign-position-dialog'
+import { AssignEmployeePositionDialog } from './assign-employee-position-dialog'
 import { MainZarplataForm } from './main-zarplata-form'
 
 export enum PassportInfoTabs {
@@ -70,17 +63,11 @@ export const PassportInfoDialog = ({
   ...props
 }: PassportInfoDialogProps) => {
   const { t } = useTranslation(['app'])
-  const { confirm } = useConfirm()
 
   const [tabValue, setTabValue] = useState<PassportInfoTabs.Main>(PassportInfoTabs.Main)
-  const [selectedPayrollPayment, setSelectedPayrollPayment] = useState<PayrollPayment | undefined>()
-  const [calculations, setCalculations] = useState<ZarplataApiResponse<
-    MainZarplataCalculation[]
-  > | null>(null)
 
   const queryClient = useQueryClient()
   const assignDialogToggle = useToggle()
-  const paymentDialogToggle = useToggle()
 
   const { data: mainZarplata, isFetching: isFetchingMainZarplata } = useQuery({
     queryKey: [MainZarplataService.QueryKeys.GetById, selectedMainZarplata?.id ?? 0],
@@ -104,94 +91,16 @@ export const PassportInfoDialog = ({
   })
   const { mutate: getPositionSalary, isPending: isCalculating } = useMutation({
     mutationFn: MainZarplataService.getPositionSalary,
-    onSuccess: (values) => {
-      setCalculations(values)
-    }
-  })
-
-  const { mutate: createPayroll, isPending: isCreatingPayroll } = useMutation({
-    mutationFn: PayrollPaymentService.create,
     onSuccess: () => {
-      toast.success(t('create_success'))
       queryClient.invalidateQueries({
-        queryKey: [PayrollPaymentService.QueryKeys.GetAll]
+        queryKey: [MainZarplataService.QueryKeys.GetById, selectedMainZarplata?.id ?? 0]
       })
-      paymentDialogToggle.close()
-      getPositionSalary(selectedMainZarplata?.id ?? 0)
-    },
-    onError: () => {
-      toast.error(t('create_failed'))
-    }
-  })
-  const { mutate: updatePayroll, isPending: isUpdatingPayroll } = useMutation({
-    mutationFn: PayrollPaymentService.update,
-    onSuccess: () => {
-      toast.success(t('update_success'))
-      queryClient.invalidateQueries({
-        queryKey: [PayrollPaymentService.QueryKeys.GetAll]
-      })
-      paymentDialogToggle.close()
-      getPositionSalary(selectedMainZarplata?.id ?? 0)
-    },
-    onError: () => {
-      toast.error(t('update_failed'))
-    }
-  })
-  const { mutate: deletePayroll, isPending: isDeletingPayroll } = useMutation({
-    mutationFn: PayrollPaymentService.delete,
-    onSuccess: () => {
-      toast.success(t('delete_success'))
-      queryClient.invalidateQueries({
-        queryKey: [PayrollPaymentService.QueryKeys.GetAll]
-      })
-      paymentDialogToggle.close()
-      getPositionSalary(selectedMainZarplata?.id ?? 0)
-    },
-    onError: () => {
-      toast.error(t('delete_failed'))
     }
   })
 
   useEffect(() => {
     getPositionSalary(selectedMainZarplata?.id ?? 0)
   }, [mainZarplata, getPositionSalary])
-
-  const handlePayrollDelete = (payment: PayrollPayment) => {
-    confirm({
-      onConfirm: () => {
-        deletePayroll(payment.id)
-      }
-    })
-  }
-  const handlePayrollCreate = () => {
-    setSelectedPayrollPayment(undefined)
-    paymentDialogToggle.open()
-  }
-  const handlePayrollEdit = (payment: PayrollPayment) => {
-    setSelectedPayrollPayment(payment)
-    paymentDialogToggle.open()
-  }
-  const handlePayrollSubmit = (values: PayrollPaymentFormValues) => {
-    if (!selectedMainZarplata) {
-      toast.error(t('select_employee'))
-      return
-    }
-    if (selectedPayrollPayment) {
-      updatePayroll({
-        id: selectedPayrollPayment.id,
-        values: {
-          ...values,
-          mainZarplataId: selectedMainZarplata.id,
-          paymentId: selectedPayrollPayment.paymentId
-        }
-      })
-    } else {
-      createPayroll({
-        ...values,
-        mainZarplataId: selectedMainZarplata.id
-      })
-    }
-  }
 
   return (
     <>
@@ -322,48 +231,10 @@ export const PassportInfoDialog = ({
                                 </FormElement>
                               </div>
                             </Fieldset>
-                            <div className="relative h-full overflow-auto scrollbar">
-                              {isUpdatingPayroll || isDeletingPayroll ? <LoadingOverlay /> : null}
-                              <GenericTable
-                                data={calculations?.data ?? []}
-                                columnDefs={[
-                                  {
-                                    key: 'name'
-                                  },
-                                  {
-                                    key: 'percentage',
-                                    header: 'foiz'
-                                  },
-                                  {
-                                    key: 'summa',
-                                    renderCell: (row) => <SummaCell summa={row.summa} />,
-                                    numeric: true
-                                  }
-                                ]}
-                                className="table-generic-xs border-t border-l"
-                                onEdit={handlePayrollEdit}
-                                onDelete={handlePayrollDelete}
-                                footer={
-                                  <FooterRow>
-                                    <FooterCell
-                                      title={t('total')}
-                                      colSpan={3}
-                                    />
-                                    <FooterCell
-                                      content={formatNumber(calculations?.totalCount ?? 0)}
-                                    />
-                                  </FooterRow>
-                                }
-                              />
-                              <div className="text-end">
-                                <Button
-                                  className="mt-2"
-                                  isPending={isCreatingPayroll}
-                                  onClick={handlePayrollCreate}
-                                >
-                                  <Plus className="btn-icon icon-start" /> {t('add')}
-                                </Button>
-                              </div>
+                            <div>
+                              {selectedMainZarplata ? (
+                                <PayrollPayments mainZarplataId={selectedMainZarplata.id} />
+                              ) : null}
                             </div>
                           </div>
                         }
@@ -380,35 +251,6 @@ export const PassportInfoDialog = ({
           </DialogContent>
         </DialogOverlay>
       </DialogTrigger>
-
-      <AssignPositionDialog
-        isOpen={assignDialogToggle.isOpen}
-        onOpenChange={assignDialogToggle.setOpen}
-        selectedMainZarplata={selectedMainZarplata}
-        onAssign={({ workplaceId, doljnostPrikazNum, doljnostPrikazDate }) => {
-          if (!selectedMainZarplata) {
-            toast.error('Xodimni tanlang!')
-            return
-          }
-          updateMainZarplata({
-            id: selectedMainZarplata.id,
-            values: {
-              ...selectedMainZarplata,
-              doljnostPrikazNum,
-              doljnostPrikazDate,
-              workplaceId
-            }
-          })
-          assignDialogToggle.close()
-        }}
-      />
-
-      <PayrollPaymentDialog
-        isOpen={paymentDialogToggle.isOpen}
-        onOpenChange={paymentDialogToggle.setOpen}
-        selected={selectedPayrollPayment}
-        onSubmit={handlePayrollSubmit}
-      />
     </>
   )
 }
