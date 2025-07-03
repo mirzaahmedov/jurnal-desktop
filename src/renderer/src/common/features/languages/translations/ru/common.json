@@ -465,8 +465,11 @@
   "order": "Приказ",
   "order_number": "Номер приказа",
   "order_date": "Дата приказа",
+  "order_start_number": "Номер приказа начала",
+  "order_finish_number": "Номер приказа окончания",
   "calculate_salary": "Рассчитать зарплату",
   "employee": "Сотрудник",
   "employment": "Трудовая книжка",
-  "payment": "Платеж"
+  "payment": "Платеж",
+  "untill_now": "До настоящего времени"
 }

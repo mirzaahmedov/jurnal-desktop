@@ -97,7 +97,6 @@ export const WorkplaceDialog = ({
   )
 
   const handleSubmit = form.handleSubmit((values) => {
-    console.log('submitted', values)
     onSubmit(values)
     form.reset()
   })

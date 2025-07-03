@@ -21,7 +21,7 @@ import { PayrollPayments } from '@/common/features/payroll-payment/payroll-payme
 import { PayrollPaymentService } from '@/common/features/payroll-payment/service'
 
 import { EmployeeWorkplace } from './employee-workplace'
-import { Employment } from './employment/employment'
+import { Employments } from './employment/employment'
 import { MainZarplataForm } from './main-zarplata-form'
 
 export enum PassportInfoTabs {
@@ -155,8 +155,11 @@ export const PassportInfoDialog = ({
                       />
                     ) : null}
                   </TabsContent>
-                  <TabsContent value={PassportInfoTabs.Employment}>
-                    <Employment mainZarplataId={selectedMainZarplata?.id ?? 0} />
+                  <TabsContent
+                    value={PassportInfoTabs.Employment}
+                    className="mt-0"
+                  >
+                    <Employments mainZarplataId={selectedMainZarplata?.id ?? 0} />
                   </TabsContent>
                 </div>
               </Tabs>
