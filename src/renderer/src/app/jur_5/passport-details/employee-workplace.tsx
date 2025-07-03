@@ -20,9 +20,19 @@ import { ZarplataStavkaOptions } from '../common/data'
 import { AssignEmployeePositionDialog } from './assign-employee-position-dialog'
 
 export interface EmployeeWorkplaceProps {
+  workplace: Pick<
+    MainZarplata,
+    | 'rayon'
+    | 'doljnostName'
+    | 'doljnostPrikazNum'
+    | 'doljnostPrikazDate'
+    | 'spravochnikZarplataIstochnikFinanceName'
+    | 'stavka'
+    | 'spravochnikSostavName'
+  > | null
   mainZarplata: MainZarplata
 }
-export const EmployeeWorkplace = ({ mainZarplata }: EmployeeWorkplaceProps) => {
+export const EmployeeWorkplace = ({ workplace, mainZarplata }: EmployeeWorkplaceProps) => {
   const dialogToggle = useToggle()
   const queryClient = useQueryClient()
 
@@ -32,10 +42,16 @@ export const EmployeeWorkplace = ({ mainZarplata }: EmployeeWorkplaceProps) => {
     onSuccess: (values) => {
       toast.success(t('update_success'))
       queryClient.invalidateQueries({
+        queryKey: [MainZarplataService.QueryKeys.GetAll]
+      })
+      queryClient.invalidateQueries({
         queryKey: [MainZarplataService.QueryKeys.GetById, values.id]
       })
       queryClient.invalidateQueries({
         queryKey: [WorkplaceService.QueryKeys.GetAll]
+      })
+      queryClient.invalidateQueries({
+        queryKey: [WorkplaceService.QueryKeys.GetById, values.workplaceId]
       })
     },
     onError: () => {
@@ -52,12 +68,12 @@ export const EmployeeWorkplace = ({ mainZarplata }: EmployeeWorkplaceProps) => {
         <Textarea
           className="bg-white"
           readOnly
-          value={mainZarplata?.rayon ?? ''}
+          value={workplace?.rayon ?? ''}
         />
         <FormElement label={t('doljnost')}>
           <Input
             readOnly
-            value={mainZarplata?.doljnostName ?? ''}
+            value={workplace?.doljnostName ?? ''}
           />
         </FormElement>
         <Button
@@ -77,7 +93,7 @@ export const EmployeeWorkplace = ({ mainZarplata }: EmployeeWorkplaceProps) => {
           >
             <Input
               readOnly
-              value={mainZarplata?.doljnostPrikazNum ?? ''}
+              value={workplace?.doljnostPrikazNum ?? ''}
             />
           </FormElement>
           <FormElement
@@ -86,7 +102,7 @@ export const EmployeeWorkplace = ({ mainZarplata }: EmployeeWorkplaceProps) => {
           >
             <JollyDatePicker
               readOnly
-              value={mainZarplata?.doljnostPrikazDate ?? ''}
+              value={workplace?.doljnostPrikazDate ?? ''}
             />
           </FormElement>
         </div>
@@ -98,7 +114,7 @@ export const EmployeeWorkplace = ({ mainZarplata }: EmployeeWorkplaceProps) => {
             >
               <Input
                 readOnly
-                value={mainZarplata?.spravochnikZarplataIstochnikFinanceName ?? ''}
+                value={workplace?.spravochnikZarplataIstochnikFinanceName ?? ''}
               />
             </FormElement>
           </div>
@@ -110,7 +126,7 @@ export const EmployeeWorkplace = ({ mainZarplata }: EmployeeWorkplaceProps) => {
               isReadOnly
               items={ZarplataStavkaOptions}
               placeholder={t('stavka')}
-              selectedKey={mainZarplata?.stavka ?? ''}
+              selectedKey={workplace?.stavka ?? ''}
               className="w-24"
             >
               {(item) => <SelectItem id={item.value}>{item.value}</SelectItem>}
@@ -124,7 +140,7 @@ export const EmployeeWorkplace = ({ mainZarplata }: EmployeeWorkplaceProps) => {
           >
             <Input
               readOnly
-              value={mainZarplata?.spravochnikSostavName ?? ''}
+              value={workplace?.spravochnikSostavName ?? ''}
             />
           </FormElement>
         </div>
@@ -135,7 +151,7 @@ export const EmployeeWorkplace = ({ mainZarplata }: EmployeeWorkplaceProps) => {
         mainZarplata={mainZarplata}
         onSubmit={({ workplaceId, doljnostPrikazNum, doljnostPrikazDate }) => {
           updateMainZarplata({
-            id: mainZarplata.id,
+            id: mainZarplata.id ?? 0,
             values: {
               ...mainZarplata,
               doljnostPrikazNum,

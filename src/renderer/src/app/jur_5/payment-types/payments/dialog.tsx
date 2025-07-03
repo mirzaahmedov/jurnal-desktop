@@ -274,6 +274,7 @@ export const PaymentsDialog = ({ selectedPayment, ...props }: PaymentsDialogProp
                             ref={field.ref}
                             value={field.value}
                             onChange={(e) => field.onChange(e.target.value)}
+                            rows={5}
                           />
                         </FormElement>
                       )}

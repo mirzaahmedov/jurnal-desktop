@@ -10,6 +10,9 @@ export const PaymentColumnDefs: ColumnDef<Deduction>[] = [
     renderCell: IDCell
   },
   {
+    key: 'code'
+  },
+  {
     minWidth: 200,
     key: 'name'
   },

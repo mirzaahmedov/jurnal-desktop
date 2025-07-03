@@ -1,5 +1,5 @@
 import type { SpravochnikHookOptions } from '../spravochnik'
-import type { MainZarplataFormValues } from '@/app/jur_5/passport-info/config'
+import type { MainZarplataFormValues } from '@/app/jur_5/passport-details/config'
 import type { ApiResponse, MainZarplata, MainZarplataCalculation } from '@/common/models'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 

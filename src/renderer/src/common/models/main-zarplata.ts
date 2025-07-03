@@ -28,6 +28,7 @@ export interface MainZarplata {
   itogo: number
   workplaceId: number
   doljnostName: string
+  doljnostOklad: number
   doljnostPrikazNum: string
   doljnostPrikazDate: string
   spravochnikZarplataIstochnikFinanceId: number

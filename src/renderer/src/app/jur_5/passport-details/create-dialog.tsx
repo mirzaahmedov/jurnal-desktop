@@ -35,7 +35,7 @@ export const PassportInfoCreateDialog = ({
           <div className="h-full flex flex-col space-y-5">
             <DialogHeader>
               <DialogTitle>
-                {capitalize(t('create-something', { something: t('pages.passport_info') }))}
+                {capitalize(t('create-something', { something: t('pages.passport_details') }))}
               </DialogTitle>
             </DialogHeader>
 

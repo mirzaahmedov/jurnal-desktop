@@ -19,9 +19,9 @@ import { arrayToTreeByRelations } from '@/common/lib/tree/relation-tree'
 
 import { MainZarplataColumnDefs } from './columns'
 import { PassportInfoCreateDialog } from './create-dialog'
-import { PassportInfoDialog } from './info-dialog'
+import { PassportInfoDialog } from './edit-dialog'
 
-const PassportInfoPage = () => {
+const PassportDetailsPage = () => {
   const setLayout = useLayout()
 
   const createDialogToggle = useToggle()
@@ -62,7 +62,7 @@ const PassportInfoPage = () => {
 
   useEffect(() => {
     setLayout({
-      title: t('pages.passport_info'),
+      title: t('pages.passport_details'),
       breadcrumbs: [
         {
           title: t('pages.zarplata')
@@ -151,4 +151,4 @@ const PassportInfoPage = () => {
   )
 }
 
-export default PassportInfoPage
+export default PassportDetailsPage

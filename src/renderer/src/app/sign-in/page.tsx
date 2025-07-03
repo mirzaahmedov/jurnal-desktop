@@ -103,8 +103,9 @@ const SigninPage = () => {
 
   return (
     <main className="h-full flex items-center justify-center">
-      <div className="w-full max-w-xl h-full space-y-5 bg-slate-100 py-10 px-16">
-        <div className="h-full flex flex-col justify-center gap-5">
+      <div className="w-full max-w-xl h-full space-y-5 bg-slate-100 py-10 px-16 flex flex-col justify-between">
+        <div></div>
+        <div className="flex flex-col justify-center gap-5">
           <div className="flex items-center flex-col gap-5">
             <img
               src={logoImage}

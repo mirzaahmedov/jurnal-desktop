@@ -441,7 +441,6 @@
   "military": "Военный",
   "military_rank": "Звание",
   "home": "Главная",
-  "labor": "Труд",
   "deduction": "Удержание",
   "bank_card": "Банковская карта",
   "additional_payment": "Дополнительная выплата",
@@ -468,5 +467,6 @@
   "order_date": "Дата приказа",
   "calculate_salary": "Рассчитать зарплату",
   "employee": "Сотрудник",
+  "employment": "Трудовая книжка",
   "payment": "Платеж"
 }

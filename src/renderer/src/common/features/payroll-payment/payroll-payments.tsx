@@ -1,4 +1,5 @@
 import type { PayrollPaymentFormValues } from './config'
+import type { MainZarplata } from '@/common/models'
 import type { PayrollPayment } from '@/common/models/payroll-payment'
 import type { UseFormReturn } from 'react-hook-form'
 
@@ -20,9 +21,9 @@ import { PayrollPaymentDialog } from './payroll-payment-dialog'
 import { PayrollPaymentService } from './service'
 
 export interface PayrollPaymentsProps {
-  mainZarplataId: number
+  mainZarplata: MainZarplata
 }
-export const PayrollPayments = ({ mainZarplataId }: PayrollPaymentsProps) => {
+export const PayrollPayments = ({ mainZarplata }: PayrollPaymentsProps) => {
   const { t } = useTranslation()
   const { confirm } = useConfirm()
 
@@ -32,7 +33,7 @@ export const PayrollPayments = ({ mainZarplataId }: PayrollPaymentsProps) => {
   const queryClient = useQueryClient()
 
   const { data: payments, isFetching: isFetchingPayments } = useQuery({
-    queryKey: [PayrollPaymentService.QueryKeys.GetByMainZarplataId, mainZarplataId],
+    queryKey: [PayrollPaymentService.QueryKeys.GetByMainZarplataId, mainZarplata.id],
     queryFn: PayrollPaymentService.getByMainZarplataId
   })
 
@@ -100,13 +101,13 @@ export const PayrollPayments = ({ mainZarplataId }: PayrollPaymentsProps) => {
         id: selectedPayment.id,
         values: {
           ...values,
-          mainZarplataId
+          mainZarplataId: mainZarplata.id
         }
       }).then(() => form.reset())
     } else {
       createPayment({
         ...values,
-        mainZarplataId
+        mainZarplataId: mainZarplata.id
       }).then(() => form.reset())
     }
   }
@@ -131,7 +132,7 @@ export const PayrollPayments = ({ mainZarplataId }: PayrollPaymentsProps) => {
               numeric: true
             }
           ]}
-          className="table-generic-xs border-t border-l"
+          className="table-generic-xs border-t border-l max-h-[400px] overflow-auto scrollbar"
           onEdit={handlePaymentEdit}
           onDelete={handlePaymentDelete}
           footer={
@@ -160,6 +161,7 @@ export const PayrollPayments = ({ mainZarplataId }: PayrollPaymentsProps) => {
         onOpenChange={dialogToggle.setOpen}
         selected={selectedPayment}
         onSubmit={handlePaymentSubmit}
+        doljnostOklad={mainZarplata.doljnostOklad ?? 0}
       />
     </>
   )

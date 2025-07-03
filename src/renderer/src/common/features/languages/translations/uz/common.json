@@ -439,7 +439,6 @@
   "military": "Harbiy",
   "military_rank": "Harbiy unvon",
   "home": "Asosiy",
-  "labor": "Mehnat",
   "deduction": "Ushlab qoldirish",
   "bank_card": "Bank kartasi",
   "additional_payment": "Qo'shimcha to'lov",
@@ -466,5 +465,6 @@
   "order_date": "Buyruq sanasi",
   "calculate_salary": "Ish haqini hisoblash",
   "employee": "Xodim",
+  "employment": "Mehnat daftarchasi",
   "payment": "To'lov"
 }

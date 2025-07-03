@@ -27,6 +27,7 @@ import { PayrollPaymentFormSchema, type PayrollPaymentFormValues, defaultValues 
 
 export interface PayrollPaymentDialogProps extends Omit<DialogTriggerProps, 'children'> {
   selected: PayrollPayment | undefined
+  doljnostOklad: number
   onSubmit: (
     values: PayrollPaymentFormValues,
     form: UseFormReturn<PayrollPaymentFormValues>
@@ -34,6 +35,7 @@ export interface PayrollPaymentDialogProps extends Omit<DialogTriggerProps, 'chi
 }
 export const PayrollPaymentDialog = ({
   selected,
+  doljnostOklad,
   onSubmit,
   ...props
 }: PayrollPaymentDialogProps) => {
@@ -100,27 +102,35 @@ export const PayrollPaymentDialog = ({
                 />
                 <FormField
                   control={form.control}
-                  name="summa"
+                  name="percentage"
                   render={({ field }) => (
                     <FormElement
                       grid="1:2"
-                      label={t('summa')}
+                      label={t('foiz')}
                     >
                       <NumericInput
                         ref={field.ref}
                         value={field.value}
-                        onValueChange={(values) => field.onChange(values.floatValue)}
+                        isAllowed={(value) => {
+                          const floatValue = value.floatValue ?? 0
+                          return floatValue >= 0 && floatValue <= 100
+                        }}
+                        onValueChange={(values) => {
+                          const percentageValue = values.floatValue ?? 0
+                          field.onChange(percentageValue)
+                          form.setValue('summa', (doljnostOklad * percentageValue) / 100)
+                        }}
                       />
                     </FormElement>
                   )}
                 />
                 <FormField
                   control={form.control}
-                  name="percentage"
+                  name="summa"
                   render={({ field }) => (
                     <FormElement
                       grid="1:2"
-                      label={t('foiz')}
+                      label={t('summa')}
                     >
                       <NumericInput
                         ref={field.ref}

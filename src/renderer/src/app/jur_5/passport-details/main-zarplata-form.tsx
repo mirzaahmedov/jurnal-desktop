@@ -38,7 +38,6 @@ export interface MainZarplataFormProps {
   selectedMainZarplata?: MainZarplata | undefined
   content?: ReactNode
   onCalculate?: (id: number) => void
-  onRemovePosition?: (id: number) => void
   onCreate?: (user: MainZarplata) => void
   onClose?: VoidFunction
 }
@@ -77,6 +76,9 @@ export const MainZarplataForm = ({
       queryClient.invalidateQueries({
         queryKey: [MainZarplataService.QueryKeys.GetAll]
       })
+      queryClient.invalidateQueries({
+        queryKey: [MainZarplataService.QueryKeys.GetById, selectedMainZarplata?.id ?? 0]
+      })
       onClose?.()
       if (res?.data) {
         onCreate?.(res.data)
@@ -92,6 +94,9 @@ export const MainZarplataForm = ({
       toast.success(t('update_success'))
       queryClient.invalidateQueries({
         queryKey: [MainZarplataService.QueryKeys.GetAll]
+      })
+      queryClient.invalidateQueries({
+        queryKey: [MainZarplataService.QueryKeys.GetById, selectedMainZarplata?.id ?? 0]
       })
       onClose?.()
     },
@@ -333,8 +338,8 @@ export const MainZarplataForm = ({
               />
             </div>
           </div>
-          <div className="p-10">
-            <div className="flex flex-col items-center gap-10">
+          <div className="px-10">
+            <div className="flex flex-col items-center gap-5">
               <div className="border w-[200px] h-[calc(200px/3*4)] bg-gray-100 rounded-lg">
                 <img
                   src="/images/profile_placeholder.png"
@@ -347,7 +352,7 @@ export const MainZarplataForm = ({
                 months={form.watch('month1') ?? 0}
                 days={form.watch('day1') ?? 0}
               />
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-2 py-1">
                 {onCalculate ? (
                   <Button
                     onClick={() => onCalculate?.(selectedMainZarplata?.id ?? 0)}

@@ -2,7 +2,7 @@ import type { VacantTreeNode } from '@/app/region-admin/vacant/vacant-tree'
 import type { MainZarplata } from '@/common/models'
 import type { DialogTriggerProps } from 'react-aria-components'
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
@@ -18,13 +18,15 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/common/components/ui/tabs'
 import { MainZarplataService } from '@/common/features/main-zarplata/service'
 import { PayrollPayments } from '@/common/features/payroll-payment/payroll-payments'
+import { PayrollPaymentService } from '@/common/features/payroll-payment/service'
 
 import { EmployeeWorkplace } from './employee-workplace'
+import { Employment } from './employment/employment'
 import { MainZarplataForm } from './main-zarplata-form'
 
 export enum PassportInfoTabs {
   Main = 'main',
-  Labor = 'labor',
+  Employment = 'employment',
   Deduction = 'deduction',
   BankCard = 'bank_card',
   AdditionalPayment = 'additional_payment',
@@ -34,7 +36,7 @@ export enum PassportInfoTabs {
 
 const tabOptions = [
   PassportInfoTabs.Main,
-  PassportInfoTabs.Labor,
+  PassportInfoTabs.Employment,
   PassportInfoTabs.Deduction,
   PassportInfoTabs.BankCard,
   PassportInfoTabs.AdditionalPayment,
@@ -60,21 +62,20 @@ export const PassportInfoDialog = ({
   const { data: mainZarplata, isFetching: isFetchingMainZarplata } = useQuery({
     queryKey: [MainZarplataService.QueryKeys.GetById, selectedMainZarplata?.id ?? 0],
     queryFn: MainZarplataService.getById,
-    enabled: !!selectedMainZarplata?.id
+    enabled: props?.isOpen || !!selectedMainZarplata?.id
   })
 
   const { mutate: getPositionSalary, isPending: isCalculating } = useMutation({
     mutationFn: MainZarplataService.getPositionSalary,
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [MainZarplataService.QueryKeys.GetById, selectedMainZarplata?.id ?? 0]
+        queryKey: [
+          PayrollPaymentService.QueryKeys.GetByMainZarplataId,
+          selectedMainZarplata?.id ?? 0
+        ]
       })
     }
   })
-
-  useEffect(() => {
-    getPositionSalary(selectedMainZarplata?.id ?? 0)
-  }, [mainZarplata, getPositionSalary])
 
   return (
     <>
@@ -84,7 +85,7 @@ export const PassportInfoDialog = ({
             <div className="h-full flex flex-col space-y-5 overflow-hidden relative">
               {isFetchingMainZarplata ? <LoadingOverlay /> : null}
               <DialogHeader>
-                <DialogTitle>{t('pages.passport_info')}</DialogTitle>
+                <DialogTitle>{t('pages.passport_details')}</DialogTitle>
               </DialogHeader>
               <Tabs
                 value={tabValue}
@@ -116,25 +117,47 @@ export const PassportInfoDialog = ({
                         onClose={() => props?.onOpenChange?.(false)}
                         content={
                           <div className="grid grid-cols-2 gap-5">
-                            <div>
-                              {mainZarplata?.data && mainZarplata?.data?.workplaceId ? (
-                                <EmployeeWorkplace mainZarplata={mainZarplata.data} />
-                              ) : null}
+                            <div className="h-full">
+                              <EmployeeWorkplace
+                                mainZarplata={mainZarplata.data}
+                                workplace={
+                                  mainZarplata.data.workplaceId
+                                    ? {
+                                        rayon: mainZarplata.data.rayon,
+                                        doljnostName: mainZarplata.data.doljnostName,
+                                        doljnostPrikazNum: mainZarplata.data.doljnostPrikazNum,
+                                        doljnostPrikazDate: mainZarplata.data.doljnostPrikazDate,
+                                        spravochnikSostavName:
+                                          mainZarplata.data.spravochnikSostavName,
+                                        spravochnikZarplataIstochnikFinanceName:
+                                          mainZarplata.data.spravochnikZarplataIstochnikFinanceName,
+                                        stavka: mainZarplata.data.stavka
+                                      }
+                                    : {
+                                        doljnostName: '',
+                                        doljnostPrikazNum: '',
+                                        doljnostPrikazDate: '',
+                                        rayon: '',
+                                        spravochnikSostavName: '',
+                                        spravochnikZarplataIstochnikFinanceName: '',
+                                        stavka: 1
+                                      }
+                                }
+                              />
                             </div>
                             <div>
-                              {selectedMainZarplata ? (
-                                <PayrollPayments mainZarplataId={selectedMainZarplata.id} />
-                              ) : null}
+                              <PayrollPayments mainZarplata={mainZarplata?.data} />
                             </div>
                           </div>
                         }
                         onCalculate={getPositionSalary}
                         isCalculating={isCalculating}
-                        onRemovePosition={() => {}}
                       />
                     ) : null}
                   </TabsContent>
-                  <TabsContent value={PassportInfoTabs.Labor}>Labor</TabsContent>
+                  <TabsContent value={PassportInfoTabs.Employment}>
+                    <Employment mainZarplataId={selectedMainZarplata?.id ?? 0} />
+                  </TabsContent>
                 </div>
               </Tabs>
             </div>

@@ -1,5 +1,6 @@
 import type { MainZarplata } from '@/common/models'
 import type { Workplace } from '@/common/models/workplace'
+import type { DialogTriggerProps } from 'react-aria-components'
 
 import { useMemo, useState } from 'react'
 
@@ -7,7 +8,6 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useQuery } from '@tanstack/react-query'
 import { Allotment } from 'allotment'
 import { CheckCircle } from 'lucide-react'
-import { type DialogTriggerProps } from 'react-aria-components'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
@@ -89,7 +89,7 @@ export const AssignEmployeePositionDialog = ({
     [vacants]
   )
 
-  const handleSubmitAssign = form.handleSubmit((values) => {
+  const handleSubmit = form.handleSubmit((values) => {
     if (!selectedWorkplace) return
 
     onSubmit?.({
@@ -102,13 +102,13 @@ export const AssignEmployeePositionDialog = ({
   return (
     <DialogTrigger {...props}>
       <DialogOverlay>
-        <DialogContent className="max-w-full h-full max-h-[1000px]">
-          <div className="h-full flex flex-col space-y-5">
-            <DialogHeader>
+        <DialogContent className="max-w-full h-full max-h-[1000px] p-0">
+          <div className="h-full flex flex-col divide-y">
+            <DialogHeader className="p-5">
               <DialogTitle>{t('assign_to_position')}</DialogTitle>
             </DialogHeader>
 
-            <Allotment className="h-full">
+            <Allotment className="h-full divide-x">
               <Allotment.Pane
                 preferredSize={300}
                 maxSize={600}
@@ -137,7 +137,7 @@ export const AssignEmployeePositionDialog = ({
                       className="table-generic-xs"
                       getRowClassName={(row) =>
                         !row.mainZarplataId
-                          ? 'bg-emerald-100 hover:bg-emerald-100 even:bg-emerald-100 even:hover:bg-emerald-100 [&>*]:text-emerald-700'
+                          ? 'bg-emerald-100 hover:bg-emerald-100 even:bg-emerald-100 even:hover:bg-emerald-100 [&>*]:text-emerald-700 [&>td]:border-r-emerald-200 [&>td]:border-b-emerald-200'
                           : 'pointer-events-none'
                       }
                       onClickRow={(workplace) => setSelectedWorkplace(workplace)}
@@ -150,12 +150,9 @@ export const AssignEmployeePositionDialog = ({
                       pageCount={workplaces?.meta?.pageCount ?? 0}
                     />
                   </div>
-                  <div className="mx-5 bg-gray-100 rounded-lg border">
+                  <div className="border-t p-5">
                     <Form {...form}>
-                      <form
-                        onSubmit={handleSubmitAssign}
-                        className="grid grid-cols-3 items-start gap-5 p-5"
-                      >
+                      <form className="grid grid-cols-3 items-start gap-5">
                         <div className="space-y-2 w-full max-w-md">
                           <Textarea
                             readOnly
@@ -219,7 +216,10 @@ export const AssignEmployeePositionDialog = ({
                           </FormElement>
 
                           <div className="text-end">
-                            <Button type="submit">
+                            <Button
+                              type="button"
+                              onClick={handleSubmit}
+                            >
                               <CheckCircle className="btn-icon icon-start" />
                               {t('assign_to_position')}
                             </Button>

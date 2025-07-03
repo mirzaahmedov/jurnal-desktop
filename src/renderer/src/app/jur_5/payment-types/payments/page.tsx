@@ -21,6 +21,7 @@ const PaymentsPage = () => {
   const pagination = usePagination()
   const dialogToggle = useToggle()
   const queryClient = useQueryClient()
+
   const { confirm } = useConfirm()
   const { t } = useTranslation(['app'])
 

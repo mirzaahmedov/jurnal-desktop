@@ -290,7 +290,7 @@ export const getNavElements = (t: TFunction): NavElement[] => {
             },
             {
               path: 'passport-info',
-              title: t('pages.passport_info'),
+              title: t('pages.passport_details'),
               icon: IdCard
             },
             {
