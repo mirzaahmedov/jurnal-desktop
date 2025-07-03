@@ -28,7 +28,7 @@ import { arrayToTreeByRelations } from '@/common/lib/tree/relation-tree'
 import { CalculateParamsService } from '../calculate-params/service'
 import { useCalculateParamsGuard } from '../common/hooks/use-calculate-params-guard'
 
-const ControlCardPage = () => {
+const StaffingTable = () => {
   useCalculateParamsGuard()
 
   const [selectedVacant, setSelectedVacant] = useState<VacantTreeNode>()
@@ -234,7 +234,7 @@ const ControlCardPage = () => {
 
   useEffect(() => {
     setLayout({
-      title: t('pages.control_card'),
+      title: t('pages.staffing_table'),
       breadcrumbs: [
         {
           title: t('pages.zarplata')
@@ -358,4 +358,4 @@ const ControlCardPage = () => {
     </>
   )
 }
-export default ControlCardPage
+export default StaffingTable

@@ -5,14 +5,9 @@ import type { DialogTriggerProps } from 'react-aria-components'
 import { useEffect, useState } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { UserCheck } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
-import { toast } from 'react-toastify'
 
-import { Fieldset, LoadingOverlay } from '@/common/components'
-import { FormElement } from '@/common/components/form'
-import { JollyDatePicker } from '@/common/components/jolly-date-picker'
-import { Button } from '@/common/components/jolly/button'
+import { LoadingOverlay } from '@/common/components'
 import {
   DialogContent,
   DialogHeader,
@@ -20,17 +15,11 @@ import {
   DialogTitle,
   DialogTrigger
 } from '@/common/components/jolly/dialog'
-import { JollySelect, SelectItem } from '@/common/components/jolly/select'
-import { Input } from '@/common/components/ui/input'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/common/components/ui/tabs'
-import { Textarea } from '@/common/components/ui/textarea'
 import { MainZarplataService } from '@/common/features/main-zarplata/service'
 import { PayrollPayments } from '@/common/features/payroll-payment/payroll-payments'
-import { WorkplaceService } from '@/common/features/workplace/service'
-import { useToggle } from '@/common/hooks'
 
-import { ZarplataStavkaOptions } from '../common/data'
-import { AssignEmployeePositionDialog } from './assign-employee-position-dialog'
+import { EmployeeWorkplace } from './employee-workplace'
 import { MainZarplataForm } from './main-zarplata-form'
 
 export enum PassportInfoTabs {
@@ -67,28 +56,13 @@ export const PassportInfoDialog = ({
   const [tabValue, setTabValue] = useState<PassportInfoTabs.Main>(PassportInfoTabs.Main)
 
   const queryClient = useQueryClient()
-  const assignDialogToggle = useToggle()
 
   const { data: mainZarplata, isFetching: isFetchingMainZarplata } = useQuery({
     queryKey: [MainZarplataService.QueryKeys.GetById, selectedMainZarplata?.id ?? 0],
     queryFn: MainZarplataService.getById,
     enabled: !!selectedMainZarplata?.id
   })
-  const { mutate: updateMainZarplata, isPending: isUpdating } = useMutation({
-    mutationFn: MainZarplataService.update,
-    onSuccess: (values) => {
-      toast.success(t('update_success'))
-      queryClient.invalidateQueries({
-        queryKey: [MainZarplataService.QueryKeys.GetById, values.id]
-      })
-      queryClient.invalidateQueries({
-        queryKey: [WorkplaceService.QueryKeys.GetAll]
-      })
-    },
-    onError: () => {
-      toast.error(t('update_failed'))
-    }
-  })
+
   const { mutate: getPositionSalary, isPending: isCalculating } = useMutation({
     mutationFn: MainZarplataService.getPositionSalary,
     onSuccess: () => {
@@ -142,95 +116,11 @@ export const PassportInfoDialog = ({
                         onClose={() => props?.onOpenChange?.(false)}
                         content={
                           <div className="grid grid-cols-2 gap-5">
-                            <Fieldset
-                              name={t('shtatka')}
-                              className="bg-gray-100 rounded-lg gap-2 relative"
-                            >
-                              <Textarea
-                                className="bg-white"
-                                readOnly
-                                value={mainZarplata?.data?.rayon ?? ''}
-                              />
-                              <FormElement label={t('doljnost')}>
-                                <Input
-                                  readOnly
-                                  value={mainZarplata?.data?.doljnostName ?? ''}
-                                />
-                              </FormElement>
-                              <Button
-                                className="my-2"
-                                isPending={isUpdating}
-                                onClick={() => {
-                                  assignDialogToggle.open()
-                                }}
-                              >
-                                <UserCheck className="btn-icon icon-start" />
-                                {t('assign_to_position')}
-                              </Button>
-                              <div className="flex items-center gap-2">
-                                <FormElement
-                                  direction="column"
-                                  label={t('order_number')}
-                                >
-                                  <Input
-                                    readOnly
-                                    value={mainZarplata?.data?.doljnostPrikazNum ?? ''}
-                                  />
-                                </FormElement>
-                                <FormElement
-                                  direction="column"
-                                  label={t('order_date')}
-                                >
-                                  <JollyDatePicker
-                                    readOnly
-                                    value={mainZarplata?.data?.doljnostPrikazDate ?? ''}
-                                  />
-                                </FormElement>
-                              </div>
-                              <div className="flex items-center gap-2">
-                                <div className="flex-1">
-                                  <FormElement
-                                    direction="column"
-                                    label={t('source_of_finance')}
-                                  >
-                                    <Input
-                                      readOnly
-                                      value={
-                                        mainZarplata.data
-                                          ?.spravochnikZarplataIstochnikFinanceName ?? ''
-                                      }
-                                    />
-                                  </FormElement>
-                                </div>
-                                <FormElement
-                                  direction="column"
-                                  label={t('stavka')}
-                                >
-                                  <JollySelect
-                                    isReadOnly
-                                    items={ZarplataStavkaOptions}
-                                    placeholder={t('stavka')}
-                                    selectedKey={mainZarplata.data?.stavka ?? ''}
-                                    className="w-24"
-                                  >
-                                    {(item) => (
-                                      <SelectItem id={item.value}>{item.value}</SelectItem>
-                                    )}
-                                  </JollySelect>
-                                </FormElement>
-                              </div>
-                              <div className="col-span-full">
-                                <FormElement
-                                  direction="column"
-                                  label={t('sostav')}
-                                >
-                                  <Input
-                                    readOnly
-                                    value={mainZarplata.data?.spravochnikSostavName ?? ''}
-                                  />
-                                </FormElement>
-                              </div>
-                            </Fieldset>
+                            <div>
+                              {mainZarplata?.data && mainZarplata?.data?.workplaceId ? (
+                                <EmployeeWorkplace mainZarplata={mainZarplata.data} />
+                              ) : null}
+                            </div>
                             <div>
                               {selectedMainZarplata ? (
                                 <PayrollPayments mainZarplataId={selectedMainZarplata.id} />

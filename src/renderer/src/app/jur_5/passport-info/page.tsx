@@ -47,7 +47,7 @@ const PassportInfoPage = () => {
     queryFn: MainZarplataService.getByVacantId,
     enabled: !!selectedVacant
   })
-  const { mutate: deleteMainZarplata } = useMutation({
+  const { mutate: deleteMainZarplata, isPending: isDeleting } = useMutation({
     mutationFn: MainZarplataService.delete,
     onSuccess: () => {
       toast.success(t('delete_success'))
@@ -55,8 +55,8 @@ const PassportInfoPage = () => {
         queryKey: [MainZarplataService.QueryKeys.GetByVacantId]
       })
     },
-    onError: () => {
-      toast.error(t('delete_failed'))
+    onError: (res: { message: string }) => {
+      toast.error(res.message ?? t('delete_failed'))
     }
   })
 
@@ -114,7 +114,7 @@ const PassportInfoPage = () => {
         </Allotment.Pane>
         <Allotment.Pane>
           <div className="relative w-full overflow-auto scrollbar">
-            {isFetchingMainZarplata ? <LoadingOverlay /> : null}
+            {isFetchingMainZarplata || isDeleting ? <LoadingOverlay /> : null}
             <GenericTable
               data={mainZarplata ?? []}
               columnDefs={MainZarplataColumnDefs}

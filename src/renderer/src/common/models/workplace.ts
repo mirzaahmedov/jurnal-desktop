@@ -6,7 +6,7 @@ export interface Workplace {
   koef: number
   oklad: number
   poryadNum: number
-  stavka: string
+  stavka: number
   stavkaPrikaz: string
   okladPrikaz: number
   kartochkaNum: string | null

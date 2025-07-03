@@ -82,7 +82,8 @@
     "salary_accrual": "Иш ҳақини ҳисоблаш",
     "payment_type": "Тўлов тури",
     "payments": "Тўловлар",
-    "deductions": "Ушланмалар"
+    "deductions": "Ушланмалар",
+    "staffing_table": "Штат жадвали"
   },
   "locales": {
     "uz": "Ўзбекча",

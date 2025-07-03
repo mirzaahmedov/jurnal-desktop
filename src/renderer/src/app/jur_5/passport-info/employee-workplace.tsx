@@ -1,7 +1,9 @@
 import type { MainZarplata } from '@/common/models'
 
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { UserCheck } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+import { toast } from 'react-toastify'
 
 import { Fieldset } from '@/common/components'
 import { FormElement } from '@/common/components/form'
@@ -10,6 +12,8 @@ import { Button } from '@/common/components/jolly/button'
 import { JollySelect, SelectItem } from '@/common/components/jolly/select'
 import { Input } from '@/common/components/ui/input'
 import { Textarea } from '@/common/components/ui/textarea'
+import { MainZarplataService } from '@/common/features/main-zarplata/service'
+import { WorkplaceService } from '@/common/features/workplace/service'
 import { useToggle } from '@/common/hooks'
 
 import { ZarplataStavkaOptions } from '../common/data'
@@ -19,9 +23,25 @@ export interface EmployeeWorkplaceProps {
   mainZarplata: MainZarplata
 }
 export const EmployeeWorkplace = ({ mainZarplata }: EmployeeWorkplaceProps) => {
-  const { t } = useTranslation()
-
   const dialogToggle = useToggle()
+  const queryClient = useQueryClient()
+
+  const { t } = useTranslation()
+  const { mutate: updateMainZarplata, isPending: isUpdating } = useMutation({
+    mutationFn: MainZarplataService.update,
+    onSuccess: (values) => {
+      toast.success(t('update_success'))
+      queryClient.invalidateQueries({
+        queryKey: [MainZarplataService.QueryKeys.GetById, values.id]
+      })
+      queryClient.invalidateQueries({
+        queryKey: [WorkplaceService.QueryKeys.GetAll]
+      })
+    },
+    onError: () => {
+      toast.error(t('update_failed'))
+    }
+  })
 
   return (
     <>
@@ -32,19 +52,19 @@ export const EmployeeWorkplace = ({ mainZarplata }: EmployeeWorkplaceProps) => {
         <Textarea
           className="bg-white"
           readOnly
-          value={mainZarplata?.data?.rayon ?? ''}
+          value={mainZarplata?.rayon ?? ''}
         />
         <FormElement label={t('doljnost')}>
           <Input
             readOnly
-            value={mainZarplata?.data?.doljnostName ?? ''}
+            value={mainZarplata?.doljnostName ?? ''}
           />
         </FormElement>
         <Button
           className="my-2"
           isPending={isUpdating}
           onClick={() => {
-            assignDialogToggle.open()
+            dialogToggle.open()
           }}
         >
           <UserCheck className="btn-icon icon-start" />
@@ -57,7 +77,7 @@ export const EmployeeWorkplace = ({ mainZarplata }: EmployeeWorkplaceProps) => {
           >
             <Input
               readOnly
-              value={mainZarplata?.data?.doljnostPrikazNum ?? ''}
+              value={mainZarplata?.doljnostPrikazNum ?? ''}
             />
           </FormElement>
           <FormElement
@@ -66,7 +86,7 @@ export const EmployeeWorkplace = ({ mainZarplata }: EmployeeWorkplaceProps) => {
           >
             <JollyDatePicker
               readOnly
-              value={mainZarplata?.data?.doljnostPrikazDate ?? ''}
+              value={mainZarplata?.doljnostPrikazDate ?? ''}
             />
           </FormElement>
         </div>
@@ -78,7 +98,7 @@ export const EmployeeWorkplace = ({ mainZarplata }: EmployeeWorkplaceProps) => {
             >
               <Input
                 readOnly
-                value={mainZarplata.data?.spravochnikZarplataIstochnikFinanceName ?? ''}
+                value={mainZarplata?.spravochnikZarplataIstochnikFinanceName ?? ''}
               />
             </FormElement>
           </div>
@@ -90,7 +110,7 @@ export const EmployeeWorkplace = ({ mainZarplata }: EmployeeWorkplaceProps) => {
               isReadOnly
               items={ZarplataStavkaOptions}
               placeholder={t('stavka')}
-              selectedKey={mainZarplata.data?.stavka ?? ''}
+              selectedKey={mainZarplata?.stavka ?? ''}
               className="w-24"
             >
               {(item) => <SelectItem id={item.value}>{item.value}</SelectItem>}
@@ -104,7 +124,7 @@ export const EmployeeWorkplace = ({ mainZarplata }: EmployeeWorkplaceProps) => {
           >
             <Input
               readOnly
-              value={mainZarplata.data?.spravochnikSostavName ?? ''}
+              value={mainZarplata?.spravochnikSostavName ?? ''}
             />
           </FormElement>
         </div>
@@ -112,16 +132,12 @@ export const EmployeeWorkplace = ({ mainZarplata }: EmployeeWorkplaceProps) => {
       <AssignEmployeePositionDialog
         isOpen={dialogToggle.isOpen}
         onOpenChange={dialogToggle.setOpen}
-        mainZarplata={selectedMainZarplata}
+        mainZarplata={mainZarplata}
         onSubmit={({ workplaceId, doljnostPrikazNum, doljnostPrikazDate }) => {
-          if (!selectedMainZarplata) {
-            toast.error('Xodimni tanlang!')
-            return
-          }
           updateMainZarplata({
-            id: selectedMainZarplata.id,
+            id: mainZarplata.id,
             values: {
-              ...selectedMainZarplata,
+              ...mainZarplata,
               doljnostPrikazNum,
               doljnostPrikazDate,
               workplaceId

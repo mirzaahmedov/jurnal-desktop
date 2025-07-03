@@ -20,7 +20,7 @@ export interface MainZarplata {
   spravochnikZarplataGrafikRabotiTypeCode: number
   spravochnikSostavId: number
   spravochnikSostavName: string
-  stavka: string
+  stavka: number
   nachaloSlujbi: string
   visNa1Year: number
   month1: number

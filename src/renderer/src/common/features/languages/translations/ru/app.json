@@ -82,7 +82,8 @@
     "salary_accrual": "Начисление зарплаты",
     "payment_type": "Тип платежа",
     "payments": "Платежи",
-    "deductions": "Удержания"
+    "deductions": "Удержания",
+    "staffing_table": "Штатное расписание"
   },
   "locales": {
     "uz": "Узбекский",

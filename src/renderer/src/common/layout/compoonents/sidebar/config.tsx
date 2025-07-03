@@ -279,8 +279,8 @@ export const getNavElements = (t: TFunction): NavElement[] => {
           icon: Receipt,
           children: [
             {
-              path: 'control-card',
-              title: t('pages.control_card'),
+              path: 'staffing_table',
+              title: t('pages.staffing_table'),
               icon: SquareCheck
             },
             {

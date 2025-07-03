@@ -82,7 +82,8 @@
     "salary_accrual": "Ish haqini hisoblash",
     "payment_type": "To'lov turi",
     "payments": "To'lovlar",
-    "deductions": "Ushlanmalar"
+    "deductions": "Ushlanmalar",
+    "staffing_table": "Shtat jadvali"
   },
   "locales": {
     "uz": "Oʻzbekcha",

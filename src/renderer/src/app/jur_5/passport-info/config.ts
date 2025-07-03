@@ -16,7 +16,7 @@ export const MainZarplataFormSchema = z.object({
   inps: z.string(),
   spravochnikZarplataGrafikRabotiId: z.number(),
   spravochnikSostavId: z.number().optional().nullable(),
-  stavka: z.string().optional().nullable(),
+  stavka: z.number().optional().nullable(),
   nachaloSlujbi: z.string(),
   visNa1Year: z.number().optional().nullable(),
   month1: z.number().optional().nullable(),

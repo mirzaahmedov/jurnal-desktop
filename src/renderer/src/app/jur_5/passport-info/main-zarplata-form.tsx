@@ -26,7 +26,7 @@ import { Textarea } from '@/common/components/ui/textarea'
 import { DissmisEmployee } from '@/common/features/main-zarplata/dismiss-main-zarplata-dialog'
 import { MainZarplataService } from '@/common/features/main-zarplata/service'
 import { SpravochnikInput, useSpravochnik } from '@/common/features/spravochnik'
-import { formatDate, parseDate, parseLocaleDate } from '@/common/lib/date'
+import { calculateDateDifference, formatDate, parseDate, parseLocaleDate } from '@/common/lib/date'
 import { formatLocaleDate } from '@/common/lib/format'
 
 import { getVacantRayon } from '../common/utils/vacant'
@@ -256,13 +256,19 @@ export const MainZarplataForm = ({
                   direction="column"
                   label={t('start_of_service')}
                 >
-                  <JollyDatePicker {...field} onChange={dateString => {
-                    field.onChange(dateString)
-                    const { years, months, days } = calculateDateDifference(parseDate(dateString), new Date())
-                    form.setValue('visNa1Year', years)
-                    form.setValue('month1', months)
-                    form.setValue('day1', days)
-                  }} />
+                  <JollyDatePicker
+                    {...field}
+                    onChange={(dateString) => {
+                      field.onChange(dateString)
+                      const { years, months, days } = calculateDateDifference(
+                        parseDate(dateString),
+                        new Date()
+                      )
+                      form.setValue('visNa1Year', years)
+                      form.setValue('month1', months)
+                      form.setValue('day1', days)
+                    }}
+                  />
                 </FormElement>
               )}
             />
@@ -336,7 +342,11 @@ export const MainZarplataForm = ({
                   className="w-full h-full object-cover object-center"
                 />
               </div>
-              <TimeElapsed start={form.watch('nachaloSlujbi')} />
+              <TimeElapsed
+                years={form.watch('visNa1Year') ?? 0}
+                months={form.watch('month1') ?? 0}
+                days={form.watch('day1') ?? 0}
+              />
               <div className="flex flex-col gap-2">
                 {onCalculate ? (
                   <Button
@@ -369,34 +379,13 @@ export const MainZarplataForm = ({
   )
 }
 
-const calculateDateDifference = (startDate: Date, endDate: Date) => {
-  if (!(startDate instanceof Date)) startDate = new Date(startDate)
-  if (!(endDate instanceof Date)) endDate = new Date(endDate)
-
-  let years = endDate.getFullYear() - startDate.getFullYear()
-  let months = endDate.getMonth() - startDate.getMonth()
-  let days = endDate.getDate() - startDate.getDate()
-
-  if (days < 0) {
-    months -= 1
-    const prevMonth = new Date(endDate.getFullYear(), endDate.getMonth(), 0)
-    days += prevMonth.getDate()
-  }
-
-  if (months < 0) {
-    years -= 1
-    months += 12
-  }
-
-  return { years, months, days }
+interface TimeElapsedProps {
+  years: number
+  months: number
+  days: number
 }
-
-const TimeElapsed = ({ start }: { start: string }) => {
-  if (!start) return null
-
+const TimeElapsed = ({ years, months, days }: TimeElapsedProps) => {
   const { t } = useTranslation()
-  const { years, months, days } = 
-
   const FlipCard = ({ value, label }: { value: number; label: string }) => (
     <div className="flex flex-col items-center mx-2">
       <div className="bg-black text-white text-3xl font-mono rounded-md px-4 py-2 shadow-inner border-2 border-gray-700 min-w-[60px] text-center select-none flex flex-col items-center justify-center">
@@ -407,7 +396,7 @@ const TimeElapsed = ({ start }: { start: string }) => {
   )
 
   return (
-    <div className="flex items-end gap-2">
+    <div className="flex items-end gap-1">
       <FlipCard
         value={years}
         label={t('year')}

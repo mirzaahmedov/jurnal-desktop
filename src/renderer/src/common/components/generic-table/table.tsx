@@ -206,7 +206,7 @@ export const GenericTable = <T extends object>(props: GenericTableProps<T>) => {
                     'bg-slate-100 even:bg-slate-100 hover:bg-slate-100 hover:even:bg-slate-100 !border-t !font-bold transition-none',
                   disabledIds.includes(getRowId(row)) && 'opacity-50 pointer-events-none',
                   selectedIds.includes(getRowId(row)) &&
-                    'bg-brand/5 even:bg-brand/5 hover:bg-brand/5 hover:even:bg-brand/5 border-brand/20 [&>td]:border-brand/20',
+                    'bg-blue-50 even:bg-blue-50 hover:bg-blue-50 hover:even:bg-blue-50 border-brand/20 [&>td]:border-brand/20',
                   getRowClassName?.(row)
                 )}
                 data-selected={selectedIds.includes(getRowId(row))}
