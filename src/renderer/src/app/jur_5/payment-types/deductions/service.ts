@@ -1,10 +1,14 @@
 import type { DeductionFormValues } from './config'
+import type { SpravochnikHookOptions } from '@/common/features/spravochnik'
 import type { Deduction } from '@/common/models/deduction'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 
 import { ApiEndpoints } from '@/common/features/crud'
+import { extendObject } from '@/common/lib/utils'
 import { getMultiApiResponse, getSingleApiResponse } from '@/common/lib/zarplata'
 import { type ZarplataApiResponse, zarplataApiNew } from '@/common/lib/zarplata_new'
+
+import { DeductionColumnDefs } from './columns'
 
 export class DeductionsService {
   static endpoint = ApiEndpoints.zarplata_deductions
@@ -66,4 +70,15 @@ export class DeductionsService {
     )
     return res.data
   }
+}
+
+export const createDeductionSpravochnik = (config: Partial<SpravochnikHookOptions<Deduction>>) => {
+  return extendObject(
+    {
+      endpoint: ApiEndpoints.zarplata_spravochnik,
+      columnDefs: DeductionColumnDefs,
+      service: DeductionsService
+    } satisfies typeof config,
+    config
+  )
 }

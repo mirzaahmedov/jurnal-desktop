@@ -1,6 +1,6 @@
-import type { PayrollPaymentFormValues } from './config'
+import type { PayrollDeductionFormValues } from './config'
 import type { MainZarplata } from '@/common/models'
-import type { PayrollPayment } from '@/common/models/payroll-payment'
+import type { PayrollDeduction } from '@/common/models/payroll-deduction'
 import type { UseFormReturn } from 'react-hook-form'
 
 import { useState } from 'react'
@@ -17,32 +17,32 @@ import { useToggle } from '@/common/hooks'
 import { formatNumber } from '@/common/lib/format'
 
 import { useConfirm } from '../confirm'
-import { PayrollPaymentDialog } from './payroll-payment-dialog'
-import { PayrollPaymentService } from './service'
+import { PayrollDeductionDialog } from './payroll-deduction-dialog'
+import { PayrollDeductionService } from './service'
 
-export interface PayrollPaymentsProps {
+export interface PayrollDeductionsProps {
   mainZarplata: MainZarplata
 }
-export const PayrollPayments = ({ mainZarplata }: PayrollPaymentsProps) => {
+export const PayrollDeductions = ({ mainZarplata }: PayrollDeductionsProps) => {
   const { t } = useTranslation()
   const { confirm } = useConfirm()
 
-  const [selectedPayment, setSelectedPayment] = useState<PayrollPayment | undefined>()
+  const [selectedPayment, setSelectedPayment] = useState<PayrollDeduction | undefined>()
 
   const dialogToggle = useToggle()
   const queryClient = useQueryClient()
 
   const { data: payments, isFetching: isFetchingPayments } = useQuery({
-    queryKey: [PayrollPaymentService.QueryKeys.GetByMainZarplataId, mainZarplata.id],
-    queryFn: PayrollPaymentService.getByMainZarplataId
+    queryKey: [PayrollDeductionService.QueryKeys.GetByMainZarplataId, mainZarplata.id],
+    queryFn: PayrollDeductionService.getByMainZarplataId
   })
 
   const { mutateAsync: createPayment, isPending: isCreatingPayment } = useMutation({
-    mutationFn: PayrollPaymentService.create,
+    mutationFn: PayrollDeductionService.create,
     onSuccess: () => {
       toast.success(t('create_success'))
       queryClient.invalidateQueries({
-        queryKey: [PayrollPaymentService.QueryKeys.GetByMainZarplataId]
+        queryKey: [PayrollDeductionService.QueryKeys.GetByMainZarplataId]
       })
       dialogToggle.close()
     },
@@ -51,11 +51,11 @@ export const PayrollPayments = ({ mainZarplata }: PayrollPaymentsProps) => {
     }
   })
   const { mutateAsync: updatePayment, isPending: isUpdatingPayment } = useMutation({
-    mutationFn: PayrollPaymentService.update,
+    mutationFn: PayrollDeductionService.update,
     onSuccess: () => {
       toast.success(t('update_success'))
       queryClient.invalidateQueries({
-        queryKey: [PayrollPaymentService.QueryKeys.GetByMainZarplataId]
+        queryKey: [PayrollDeductionService.QueryKeys.GetByMainZarplataId]
       })
       dialogToggle.close()
     },
@@ -64,11 +64,11 @@ export const PayrollPayments = ({ mainZarplata }: PayrollPaymentsProps) => {
     }
   })
   const { mutate: deletePayment, isPending: isDeletingPayment } = useMutation({
-    mutationFn: PayrollPaymentService.delete,
+    mutationFn: PayrollDeductionService.delete,
     onSuccess: () => {
       toast.success(t('delete_success'))
       queryClient.invalidateQueries({
-        queryKey: [PayrollPaymentService.QueryKeys.GetByMainZarplataId]
+        queryKey: [PayrollDeductionService.QueryKeys.GetByMainZarplataId]
       })
     },
     onError: () => {
@@ -80,11 +80,11 @@ export const PayrollPayments = ({ mainZarplata }: PayrollPaymentsProps) => {
     setSelectedPayment(undefined)
     dialogToggle.open()
   }
-  const handlePaymentEdit = (payment: PayrollPayment) => {
+  const handlePaymentEdit = (payment: PayrollDeduction) => {
     setSelectedPayment(payment)
     dialogToggle.open()
   }
-  const handlePaymentDelete = (payment: PayrollPayment) => {
+  const handlePaymentDelete = (payment: PayrollDeduction) => {
     confirm({
       onConfirm: () => {
         deletePayment(payment.id)
@@ -93,8 +93,8 @@ export const PayrollPayments = ({ mainZarplata }: PayrollPaymentsProps) => {
   }
 
   const handlePaymentSubmit = (
-    values: PayrollPaymentFormValues,
-    form: UseFormReturn<PayrollPaymentFormValues>
+    values: PayrollDeductionFormValues,
+    form: UseFormReturn<PayrollDeductionFormValues>
   ) => {
     if (selectedPayment) {
       updatePayment({
@@ -115,10 +115,10 @@ export const PayrollPayments = ({ mainZarplata }: PayrollPaymentsProps) => {
   return (
     <>
       <div className="relative h-full max-h-[500px] flex flex-col bg-gray-50 border">
-        {isFetchingPayments || isUpdatingPayment || isDeletingPayment ? <LoadingOverlay /> : null}
         <div className="p-2.5 text-xs uppercase font-bold text-gray-600">
-          {t('payroll_payments')}
+          {t('payroll_deductions')}
         </div>
+        {isFetchingPayments || isUpdatingPayment || isDeletingPayment ? <LoadingOverlay /> : null}
         <div className="flex-1 overflow-auto scrollbar">
           <GenericTable
             data={payments?.data ?? []}
@@ -136,7 +136,7 @@ export const PayrollPayments = ({ mainZarplata }: PayrollPaymentsProps) => {
                 numeric: true
               }
             ]}
-            className="table-generic-xs border-t border-l"
+            className="table-generic-xs border-t border-l max-h-[400px] overflow-auto scrollbar"
             onEdit={handlePaymentEdit}
             onDelete={handlePaymentDelete}
             footer={
@@ -161,12 +161,11 @@ export const PayrollPayments = ({ mainZarplata }: PayrollPaymentsProps) => {
         </div>
       </div>
 
-      <PayrollPaymentDialog
+      <PayrollDeductionDialog
         isOpen={dialogToggle.isOpen}
         onOpenChange={dialogToggle.setOpen}
         selected={selectedPayment}
         onSubmit={handlePaymentSubmit}
-        doljnostOklad={mainZarplata.doljnostOklad ?? 0}
       />
     </>
   )

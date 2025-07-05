@@ -462,12 +462,14 @@
   "remove_from_position": "Lavozimdan olib tashlash",
   "order": "Buyruq",
   "order_number": "Buyruq raqami",
-  "order_start_number": "Buyruq boshlanish raqami",
-  "order_finish_number": "Buyruq yakuniy raqami",
+  "order_start": "Lavozimga tayinlash to'g'risida buyruq",
+  "order_finish": "Lavozimdan olib tashlash to'g'risida buyruq",
   "order_date": "Buyruq sanasi",
   "calculate_salary": "Ish haqini hisoblash",
   "employee": "Xodim",
   "employment": "Mehnat daftarchasi",
   "payment": "To'lov",
-  "untill_now": "Hozirgacha"
+  "untill_now": "Hozirgacha",
+  "payroll_payments": "Ish haqi to'lovlari",
+  "payroll_deductions": "Ish haqi ushlanmalari"
 }

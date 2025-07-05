@@ -27,10 +27,10 @@ import { Textarea } from '@/common/components/ui/textarea'
 import { DeductionFormSchema, defaultValues } from './config'
 import { DeductionsService } from './service'
 
-export interface PaymentsDialogProps extends Omit<DialogTriggerProps, 'children'> {
+export interface DeductionsDialogProps extends Omit<DialogTriggerProps, 'children'> {
   selectedPayment?: Deduction
 }
-export const PaymentsDialog = ({ selectedPayment, ...props }: PaymentsDialogProps) => {
+export const DeductionsDialog = ({ selectedPayment, ...props }: DeductionsDialogProps) => {
   const queryClient = useQueryClient()
 
   const { t } = useTranslation(['app'])
@@ -40,7 +40,7 @@ export const PaymentsDialog = ({ selectedPayment, ...props }: PaymentsDialogProp
     resolver: zodResolver(DeductionFormSchema)
   })
 
-  const { mutate: createPayment, isPending: isCreatingPayment } = useMutation({
+  const { mutate: createDeduction, isPending: isCreating } = useMutation({
     mutationFn: DeductionsService.create,
     onSuccess: () => {
       toast.success(t('create_success'))
@@ -54,7 +54,7 @@ export const PaymentsDialog = ({ selectedPayment, ...props }: PaymentsDialogProp
       toast.success(t('create_failed'))
     }
   })
-  const { mutate: updatePayment, isPending: isUpdatingPayment } = useMutation({
+  const { mutate: updateDeduction, isPending: isUpdating } = useMutation({
     mutationFn: DeductionsService.update,
     onSuccess: () => {
       toast.success(t('update_success'))
@@ -71,9 +71,9 @@ export const PaymentsDialog = ({ selectedPayment, ...props }: PaymentsDialogProp
 
   const handleSubmit = form.handleSubmit((values) => {
     if (selectedPayment) {
-      updatePayment(values)
+      updateDeduction(values)
     } else {
-      createPayment(values)
+      createDeduction(values)
     }
   })
 
@@ -225,7 +225,7 @@ export const PaymentsDialog = ({ selectedPayment, ...props }: PaymentsDialogProp
                   <DialogFooter className="col-span-full">
                     <Button
                       type="submit"
-                      isPending={isCreatingPayment || isUpdatingPayment}
+                      isPending={isCreating || isUpdating}
                     >
                       {t('save')}
                     </Button>

@@ -32,19 +32,21 @@ export const PassportInfoCreateDialog = ({
     <DialogTrigger {...props}>
       <DialogOverlay>
         <DialogContent className="max-w-9xl h-full max-h-[800px]">
-          <div className="h-full flex flex-col space-y-5">
+          <div className="h-full flex flex-col space-y-5 overflow-hidden flex flex-col">
             <DialogHeader>
               <DialogTitle>
                 {capitalize(t('create-something', { something: t('pages.passport_details') }))}
               </DialogTitle>
             </DialogHeader>
 
-            <MainZarplataForm
-              vacant={vacant}
-              selectedMainZarplata={selectedUser}
-              onCreate={onCreate}
-              onClose={() => props?.onOpenChange?.(false)}
-            />
+            <div className="min-h-0 flex-1 overflow-hidden">
+              <MainZarplataForm
+                vacant={vacant}
+                selectedMainZarplata={selectedUser}
+                onCreate={onCreate}
+                onClose={() => props?.onOpenChange?.(false)}
+              />
+            </div>
           </div>
         </DialogContent>
       </DialogOverlay>

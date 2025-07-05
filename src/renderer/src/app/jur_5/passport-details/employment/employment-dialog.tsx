@@ -1,3 +1,4 @@
+import type { MainZarplata } from '@/common/models'
 import type { Employment } from '@/common/models/employment'
 import type { DialogTriggerProps } from 'react-aria-components'
 
@@ -11,35 +12,36 @@ import { toast } from 'react-toastify'
 
 import { ZarplataSpravochnikType } from '@/app/super-admin/zarplata/spravochnik/config'
 import { createZarplataSpravochnik } from '@/app/super-admin/zarplata/spravochnik/service'
-import { NumericInput } from '@/common/components'
+import { Fieldset, NumericInput } from '@/common/components'
 import { FormElement } from '@/common/components/form'
+import { JollyDatePicker } from '@/common/components/jolly-date-picker'
 import { Button } from '@/common/components/jolly/button'
 import {
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogOverlay,
   DialogTitle,
   DialogTrigger
 } from '@/common/components/jolly/dialog'
+import { JollySelect, SelectItem } from '@/common/components/jolly/select'
 import { Form, FormField } from '@/common/components/ui/form'
+import { Input } from '@/common/components/ui/input'
+import { Textarea } from '@/common/components/ui/textarea'
 import { SpravochnikInput, useSpravochnik } from '@/common/features/spravochnik'
 import { capitalize } from '@/common/lib/string'
+import { numberToWords } from '@/common/lib/utils'
 
+import { ZarplataStavkaOptions } from '../../common/data'
 import { EmploymentFormSchema, defaultValues } from './config'
 import { EmploymentService } from './service'
 
 export interface EmploymentDialogProps extends Omit<DialogTriggerProps, 'children'> {
   employment?: Employment
-  mainZarplataId: number
+  mainZarplata: MainZarplata
 }
-export const EmploymentDialog = ({
-  employment,
-  mainZarplataId,
-  ...props
-}: EmploymentDialogProps) => {
-  const { t } = useTranslation()
+export const EmploymentDialog = ({ employment, mainZarplata, ...props }: EmploymentDialogProps) => {
+  const { t, i18n } = useTranslation()
 
   const queryClient = useQueryClient()
 
@@ -53,7 +55,7 @@ export const EmploymentDialog = ({
     onSuccess: () => {
       toast.success(t('create_success'))
       queryClient.invalidateQueries({
-        queryKey: [EmploymentService.QueryKeys.getByMainZarplataId, mainZarplataId]
+        queryKey: [EmploymentService.QueryKeys.getByMainZarplataId, mainZarplata.id]
       })
       form.reset()
     }
@@ -63,7 +65,7 @@ export const EmploymentDialog = ({
     onSuccess: () => {
       toast.success(t('create_success'))
       queryClient.invalidateQueries({
-        queryKey: [EmploymentService.QueryKeys.getByMainZarplataId, mainZarplataId]
+        queryKey: [EmploymentService.QueryKeys.getByMainZarplataId, mainZarplata.id]
       })
       form.reset()
     }
@@ -97,107 +99,205 @@ export const EmploymentDialog = ({
         values
       })
     } else {
-      createEmployment(values)
+      createEmployment({
+        ...values,
+        mainZarplataId: mainZarplata.id,
+        vacantId: mainZarplata.vacantId
+      })
     }
   })
+
+  useEffect(() => {
+    if (props.isOpen) {
+      form.setValue('rayon', mainZarplata.rayon)
+    }
+  }, [form, mainZarplata, props.isOpen])
 
   return (
     <DialogTrigger {...props}>
       <DialogOverlay>
         <DialogContent className="max-w-4xl">
-          <DialogHeader>
-            <DialogTitle>
-              {employment
-                ? t('employment')
-                : capitalize(t('create-something', { something: t('employment') }))}
-            </DialogTitle>
-            <DialogDescription className="text-sm">
-              {t('rayon')}: {form.watch('rayon')}
-            </DialogDescription>
-          </DialogHeader>
-          <Form {...form}>
-            <form
-              onSubmit={handleSubmit}
-              className="flex flex-col gap-4 mt-10"
-            >
-              <div className="grid grid-cols-[repeat(auto-fit,minmax(400px,1fr))] gap-5">
-                <FormField
-                  control={form.control}
-                  name="rayon"
-                  render={({ field }) => (
-                    <FormElement
-                      grid="1:2"
-                      label={t('rayon')}
-                    >
-                      <NumericInput
-                        ref={field.ref}
-                        value={field.value}
-                        onValueChange={(values) => field.onChange(values.floatValue)}
-                      />
-                    </FormElement>
-                  )}
-                />
+          <div>
+            <DialogHeader>
+              <DialogTitle>
+                {employment
+                  ? t('employment')
+                  : capitalize(t('create-something', { something: t('employment') }))}
+              </DialogTitle>
+            </DialogHeader>
+            <Form {...form}>
+              <form
+                onSubmit={handleSubmit}
+                className="flex flex-col gap-4 mt-10"
+              >
+                <div className="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-5">
+                  <FormField
+                    control={form.control}
+                    name="rayon"
+                    render={({ field }) => (
+                      <FormElement
+                        label={t('rayon')}
+                        direction="column"
+                      >
+                        <Textarea
+                          ref={field.ref}
+                          value={field.value}
+                          readOnly
+                        />
+                      </FormElement>
+                    )}
+                  />
 
-                <FormField
-                  control={form.control}
-                  name="spravochnikZarplataDoljnostId"
-                  render={({ field }) => (
-                    <FormElement
-                      grid="1:2"
-                      label={t('doljnost')}
-                    >
-                      <SpravochnikInput
-                        {...zarplataDoljnostSpravochnik}
-                        inputRef={field.ref}
-                        getInputValue={(selected) => selected?.name ?? ''}
-                      />
-                    </FormElement>
-                  )}
-                />
+                  <FormField
+                    control={form.control}
+                    name="spravochnikZarplataDoljnostId"
+                    render={({ field }) => (
+                      <FormElement
+                        label={t('doljnost')}
+                        direction="column"
+                      >
+                        <SpravochnikInput
+                          {...zarplataDoljnostSpravochnik}
+                          inputRef={field.ref}
+                          getInputValue={(selected) => selected?.name ?? ''}
+                        />
+                      </FormElement>
+                    )}
+                  />
 
-                <FormField
-                  control={form.control}
-                  name="prikazStart"
-                  render={({ field }) => (
-                    <FormElement
-                      grid="1:2"
-                      label={t('order_start_number')}
-                    >
-                      <NumericInput
-                        ref={field.ref}
-                        value={field.value}
-                        onValueChange={(values) => field.onChange(values.floatValue)}
-                      />
-                    </FormElement>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="prikazFinish"
-                  render={({ field }) => (
-                    <FormElement
-                      grid="1:2"
-                      label={t('order_finish_number')}
-                    >
-                      <NumericInput
-                        ref={field.ref}
-                        value={field.value}
-                        onValueChange={(values) => field.onChange(values.floatValue)}
-                      />
-                    </FormElement>
-                  )}
-                />
-              </div>
-              <DialogFooter>
-                <Button
-                  type="submit"
-                  isPending={isCreating || isUpdating}
-                >
-                  {t('save')}
-                </Button>
-              </DialogFooter>
-            </form>
-          </Form>
+                  <div className="col-span-full flex gap-5">
+                    <FormField
+                      control={form.control}
+                      name="stavka"
+                      render={({ field }) => (
+                        <FormElement
+                          label={t('stavka')}
+                          direction="column"
+                          className="w-32"
+                        >
+                          <JollySelect
+                            items={ZarplataStavkaOptions}
+                            selectedKey={field.value}
+                            onSelectionChange={field.onChange}
+                          >
+                            {(item) => <SelectItem id={item.value}>{item.value}</SelectItem>}
+                          </JollySelect>
+                        </FormElement>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="summa"
+                      render={({ field }) => (
+                        <FormElement
+                          label={t('summa')}
+                          direction="column"
+                          className="w-full max-w-xs"
+                        >
+                          <NumericInput
+                            ref={field.ref}
+                            value={field.value}
+                            onValueChange={(values) => field.onChange(values.floatValue)}
+                          />
+                        </FormElement>
+                      )}
+                    />
+                  </div>
+
+                  <FormElement
+                    label={null}
+                    className="col-span-full"
+                    divProps={{
+                      className: 'gap-0'
+                    }}
+                  >
+                    <Textarea
+                      readOnly
+                      rows={3}
+                      value={numberToWords(form.watch('summa'), i18n.language)}
+                    />
+                  </FormElement>
+
+                  <Fieldset
+                    name={t('order_start')}
+                    className="bg-gray-50 rounded-lg border-lg border border-gray-100"
+                  >
+                    <FormField
+                      control={form.control}
+                      name="dateStart"
+                      render={({ field }) => (
+                        <FormElement
+                          label={t('date')}
+                          direction="column"
+                        >
+                          <JollyDatePicker
+                            ref={field.ref}
+                            value={field.value}
+                            onChange={field.onChange}
+                          />
+                        </FormElement>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="prikazStart"
+                      render={({ field }) => (
+                        <FormElement
+                          label={t('number')}
+                          direction="column"
+                        >
+                          <Input {...field} />
+                        </FormElement>
+                      )}
+                    />
+                  </Fieldset>
+                  <Fieldset
+                    name={t('order_finish')}
+                    className="bg-gray-50 rounded-lg border-lg border border-gray-100"
+                  >
+                    <FormField
+                      control={form.control}
+                      name="dateFinish"
+                      render={({ field }) => (
+                        <FormElement
+                          label={t('date')}
+                          direction="column"
+                        >
+                          <JollyDatePicker
+                            ref={field.ref}
+                            value={field.value}
+                            onChange={field.onChange}
+                          />
+                        </FormElement>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="prikazFinish"
+                      render={({ field }) => (
+                        <FormElement
+                          label={t('number')}
+                          direction="column"
+                        >
+                          <Input {...field} />
+                        </FormElement>
+                      )}
+                    />
+                  </Fieldset>
+                </div>
+
+                <DialogFooter>
+                  <Button
+                    type="submit"
+                    isPending={isCreating || isUpdating}
+                  >
+                    {t('save')}
+                  </Button>
+                </DialogFooter>
+              </form>
+            </Form>
+          </div>
         </DialogContent>
       </DialogOverlay>
     </DialogTrigger>

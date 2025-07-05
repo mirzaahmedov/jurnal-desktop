@@ -465,11 +465,13 @@
   "order": "Приказ",
   "order_number": "Номер приказа",
   "order_date": "Дата приказа",
-  "order_start_number": "Номер приказа начала",
-  "order_finish_number": "Номер приказа окончания",
+  "order_start": "Приказ о назначении на должность",
+  "order_finish": "Приказ об отстранении от должности",
   "calculate_salary": "Рассчитать зарплату",
   "employee": "Сотрудник",
   "employment": "Трудовая книжка",
   "payment": "Платеж",
-  "untill_now": "До настоящего времени"
+  "untill_now": "До настоящего времени",
+  "payroll_payments": "Выплаты заработной платы",
+  "payroll_deductions": "Удержания из заработной платы"
 }

@@ -2,7 +2,7 @@ import type { VacantTreeNode } from '@/app/region-admin/vacant/vacant-tree'
 import type { MainZarplata } from '@/common/models'
 import type { DialogTriggerProps } from 'react-aria-components'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
@@ -17,6 +17,7 @@ import {
 } from '@/common/components/jolly/dialog'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/common/components/ui/tabs'
 import { MainZarplataService } from '@/common/features/main-zarplata/service'
+import { PayrollDeductions } from '@/common/features/payroll-deduction/payroll-deductions'
 import { PayrollPayments } from '@/common/features/payroll-payment/payroll-payments'
 import { PayrollPaymentService } from '@/common/features/payroll-payment/service'
 
@@ -77,11 +78,17 @@ export const PassportInfoDialog = ({
     }
   })
 
+  useEffect(() => {
+    if (!props.isOpen) {
+      setTabValue(PassportInfoTabs.Main)
+    }
+  }, [props.isOpen])
+
   return (
     <>
       <DialogTrigger {...props}>
         <DialogOverlay>
-          <DialogContent className="max-w-9xl h-full max-h-[1000px]">
+          <DialogContent className="max-w-full h-full max-h-[1000px]">
             <div className="h-full flex flex-col space-y-5 overflow-hidden relative">
               {isFetchingMainZarplata ? <LoadingOverlay /> : null}
               <DialogHeader>
@@ -115,39 +122,37 @@ export const PassportInfoDialog = ({
                         vacant={vacant}
                         selectedMainZarplata={mainZarplata?.data}
                         onClose={() => props?.onOpenChange?.(false)}
+                        workplace={
+                          <EmployeeWorkplace
+                            mainZarplata={mainZarplata.data}
+                            workplace={
+                              mainZarplata.data.workplaceId
+                                ? {
+                                    rayon: mainZarplata.data.rayon,
+                                    doljnostName: mainZarplata.data.doljnostName,
+                                    doljnostPrikazNum: mainZarplata.data.doljnostPrikazNum,
+                                    doljnostPrikazDate: mainZarplata.data.doljnostPrikazDate,
+                                    spravochnikSostavName: mainZarplata.data.spravochnikSostavName,
+                                    spravochnikZarplataIstochnikFinanceName:
+                                      mainZarplata.data.spravochnikZarplataIstochnikFinanceName,
+                                    stavka: mainZarplata.data.stavka
+                                  }
+                                : {
+                                    doljnostName: '',
+                                    doljnostPrikazNum: '',
+                                    doljnostPrikazDate: '',
+                                    rayon: '',
+                                    spravochnikSostavName: '',
+                                    spravochnikZarplataIstochnikFinanceName: '',
+                                    stavka: 1
+                                  }
+                            }
+                          />
+                        }
                         content={
-                          <div className="grid grid-cols-2 gap-5">
-                            <div className="h-full">
-                              <EmployeeWorkplace
-                                mainZarplata={mainZarplata.data}
-                                workplace={
-                                  mainZarplata.data.workplaceId
-                                    ? {
-                                        rayon: mainZarplata.data.rayon,
-                                        doljnostName: mainZarplata.data.doljnostName,
-                                        doljnostPrikazNum: mainZarplata.data.doljnostPrikazNum,
-                                        doljnostPrikazDate: mainZarplata.data.doljnostPrikazDate,
-                                        spravochnikSostavName:
-                                          mainZarplata.data.spravochnikSostavName,
-                                        spravochnikZarplataIstochnikFinanceName:
-                                          mainZarplata.data.spravochnikZarplataIstochnikFinanceName,
-                                        stavka: mainZarplata.data.stavka
-                                      }
-                                    : {
-                                        doljnostName: '',
-                                        doljnostPrikazNum: '',
-                                        doljnostPrikazDate: '',
-                                        rayon: '',
-                                        spravochnikSostavName: '',
-                                        spravochnikZarplataIstochnikFinanceName: '',
-                                        stavka: 1
-                                      }
-                                }
-                              />
-                            </div>
-                            <div>
-                              <PayrollPayments mainZarplata={mainZarplata?.data} />
-                            </div>
+                          <div className="col-span-full grid grid-cols-[repeat(auto-fit,minmax(600px,1fr))] gap-5">
+                            <PayrollPayments mainZarplata={mainZarplata?.data} />
+                            <PayrollDeductions mainZarplata={mainZarplata?.data} />
                           </div>
                         }
                         onCalculate={getPositionSalary}
@@ -159,7 +164,7 @@ export const PassportInfoDialog = ({
                     value={PassportInfoTabs.Employment}
                     className="mt-0"
                   >
-                    <Employments mainZarplataId={selectedMainZarplata?.id ?? 0} />
+                    {mainZarplata?.data ? <Employments mainZarplata={mainZarplata?.data} /> : null}
                   </TabsContent>
                 </div>
               </Tabs>

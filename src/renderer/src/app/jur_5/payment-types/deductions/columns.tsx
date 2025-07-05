@@ -3,7 +3,7 @@ import type { Deduction } from '@/common/models/deduction'
 
 import { IDCell } from '@/common/components/table/renderers/id'
 
-export const PaymentColumnDefs: ColumnDef<Deduction>[] = [
+export const DeductionColumnDefs: ColumnDef<Deduction>[] = [
   {
     key: 'id',
     minWidth: 120,

@@ -9,7 +9,7 @@ export const EmploymentFormSchema = z.object({
   spravochnikZarplataDoljnostId: z.number(),
   prikazStart: z.string(),
   dateStart: z.string(),
-  stavka: z.string(),
+  stavka: z.number(),
   prikazFinish: z.string(),
   dateFinish: z.string(),
   summa: z.number()
@@ -25,7 +25,7 @@ export const defaultValues: EmploymentFormValues = {
   spravochnikZarplataDoljnostId: 0,
   prikazStart: '',
   dateStart: '',
-  stavka: '',
+  stavka: 0,
   prikazFinish: '',
   dateFinish: '',
   summa: 0

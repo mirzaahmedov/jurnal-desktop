@@ -37,6 +37,7 @@ export interface MainZarplataFormProps {
   vacant: VacantTreeNode
   selectedMainZarplata?: MainZarplata | undefined
   content?: ReactNode
+  workplace?: ReactNode
   onCalculate?: (id: number) => void
   onCreate?: (user: MainZarplata) => void
   onClose?: VoidFunction
@@ -46,6 +47,7 @@ export const MainZarplataForm = ({
   vacant,
   selectedMainZarplata,
   content,
+  workplace,
   onCalculate,
   onCreate,
   onClose
@@ -155,10 +157,40 @@ export const MainZarplataForm = ({
     <Form {...form}>
       <form
         onSubmit={handleSubmit}
-        className="h-full p-5 pr-0 flex flex-col"
+        className="h-full py-5 px-0 flex flex-col"
       >
-        <div className="flex flex-wrap gap-2.5 flex-1 overflow-auto scrollbar pr-5">
-          <div className="flex-1 p-2.5 grid grid-cols-[repeat(auto-fit,minmax(400px,1fr))] content-center gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2.5 justify-center flex-1 overflow-auto scrollbar px-5 pb-5">
+          <div className="px-10 max-[1000px]:col-span-full">
+            <div className="flex flex-col items-center gap-5">
+              <div className="border w-[200px] h-[calc(200px/3*4)] bg-gray-100 rounded-lg">
+                <img
+                  src="/images/profile_placeholder.png"
+                  alt="Profile placeholder"
+                  className="w-full h-full object-cover object-center"
+                />
+              </div>
+              <TimeElapsed
+                years={form.watch('visNa1Year') ?? 0}
+                months={form.watch('month1') ?? 0}
+                days={form.watch('day1') ?? 0}
+              />
+              <div className="flex flex-col gap-2 py-1">
+                {onCalculate ? (
+                  <Button
+                    onClick={() => onCalculate?.(selectedMainZarplata?.id ?? 0)}
+                    isDisabled={!selectedMainZarplata || isCalculating || isUpdating || isCreating}
+                    className="mb-2"
+                  >
+                    <Calculator className="btn-icon icon-start" /> {t('calculate_salary')}
+                  </Button>
+                ) : null}
+                {selectedMainZarplata ? (
+                  <DissmisEmployee mainZarplataId={selectedMainZarplata.id} />
+                ) : null}
+              </div>
+            </div>
+          </div>
+          <div className="col-span-2 flex-1 p-2.5 grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] content-center gap-2">
             <div>
               <FormField
                 control={form.control}
@@ -338,40 +370,14 @@ export const MainZarplataForm = ({
               />
             </div>
           </div>
-          <div className="px-10">
-            <div className="flex flex-col items-center gap-5">
-              <div className="border w-[200px] h-[calc(200px/3*4)] bg-gray-100 rounded-lg">
-                <img
-                  src="/images/profile_placeholder.png"
-                  alt="Profile placeholder"
-                  className="w-full h-full object-cover object-center"
-                />
-              </div>
-              <TimeElapsed
-                years={form.watch('visNa1Year') ?? 0}
-                months={form.watch('month1') ?? 0}
-                days={form.watch('day1') ?? 0}
-              />
-              <div className="flex flex-col gap-2 py-1">
-                {onCalculate ? (
-                  <Button
-                    onClick={() => onCalculate?.(selectedMainZarplata?.id ?? 0)}
-                    isDisabled={!selectedMainZarplata || isCalculating || isUpdating || isCreating}
-                    className="mb-2"
-                  >
-                    <Calculator className="btn-icon icon-start" /> {t('calculate_salary')}
-                  </Button>
-                ) : null}
-                {selectedMainZarplata ? (
-                  <DissmisEmployee mainZarplataId={selectedMainZarplata.id} />
-                ) : null}
-              </div>
-            </div>
+          <div className="max-[1400px]:col-span-full max-[1400px]:grid place-items-center">
+            {workplace}
           </div>
-          <div className="w-full">{content}</div>
+
+          <div className="col-span-full">{content}</div>
         </div>
 
-        <div className="w-full pt-5">
+        <div className="w-full px-5 pt-5 border-t">
           <Button
             type="submit"
             isPending={isCreating || isUpdating}

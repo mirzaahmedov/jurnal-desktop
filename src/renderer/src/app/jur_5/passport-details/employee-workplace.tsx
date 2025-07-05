@@ -103,6 +103,10 @@ export const EmployeeWorkplace = ({ workplace, mainZarplata }: EmployeeWorkplace
             <JollyDatePicker
               readOnly
               value={workplace?.doljnostPrikazDate ?? ''}
+              className=""
+              containerProps={{
+                className: 'min-w-36'
+              }}
             />
           </FormElement>
         </div>

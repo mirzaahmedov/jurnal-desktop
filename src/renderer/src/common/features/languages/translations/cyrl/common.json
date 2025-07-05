@@ -463,12 +463,14 @@
   "remove_from_position": "Лавозимдан олиб ташлаш",
   "order": "Буйруқ",
   "order_number": "Буйруқ рақами",
-  "order_start_number": "Буйруқ бошланиш рақами",
-  "order_finish_number": "Буйруқ якуний рақами",
+  "order_start": "Лавозимга тайинлаш тўғрисида буйруқ",
+  "order_finish": "Лавозимдан олиб ташлаш тўғрисида буйруқ",
   "order_date": "Буйруқ санаси",
   "calculate_salary": "Иш ҳақини ҳисоблаш",
   "employee": "Ходим",
   "employment": "Меҳнат дафтарчаси",
   "payment": "Тўлов",
-  "untill_now": "Ҳозиргача"
+  "untill_now": "Ҳозиргача",
+  "payroll_payments": "Иш ҳақи тўловлари",
+  "payroll_deductions": "Иш ҳақи ушланмалари"
 }

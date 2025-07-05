@@ -12,8 +12,8 @@ import { usePagination, useToggle } from '@/common/hooks'
 import { useLayout } from '@/common/layout'
 import { ListView } from '@/common/views'
 
-import { PaymentColumnDefs } from './columns'
-import { PaymentsDialog } from './dialog'
+import { DeductionColumnDefs } from './columns'
+import { DeductionsDialog } from './dialog'
 import { DeductionsService } from './service'
 
 const DeductionsPage = () => {
@@ -26,7 +26,7 @@ const DeductionsPage = () => {
 
   const [selectedPayment, setSelectedPayment] = useState<Deduction>()
 
-  const { data: payments, isFetching } = useQuery({
+  const { data: deductions, isFetching } = useQuery({
     queryKey: [
       DeductionsService.QueryKeys.GetAll,
       {
@@ -37,7 +37,7 @@ const DeductionsPage = () => {
     queryFn: DeductionsService.getAll
   })
 
-  const { mutate: deletePayment, isPending: isDeleting } = useMutation({
+  const { mutate: deleteDeduction, isPending: isDeleting } = useMutation({
     mutationFn: DeductionsService.delete,
     onSuccess: () => {
       toast.success(t('delete_success'))
@@ -78,7 +78,7 @@ const DeductionsPage = () => {
   const handleRowDelete = (row: Deduction) => {
     confirm({
       onConfirm: () => {
-        deletePayment(row.id)
+        deleteDeduction(row.id)
       }
     })
   }
@@ -87,8 +87,8 @@ const DeductionsPage = () => {
     <ListView>
       <ListView.Content isLoading={isFetching || isDeleting}>
         <GenericTable
-          data={payments?.data ?? []}
-          columnDefs={PaymentColumnDefs}
+          data={deductions?.data ?? []}
+          columnDefs={DeductionColumnDefs}
           className="table-generic-xs"
           onEdit={handleRowEdit}
           onDelete={handleRowDelete}
@@ -97,12 +97,12 @@ const DeductionsPage = () => {
       <ListView.Footer>
         <ListView.Pagination
           {...pagination}
-          count={payments?.meta?.count ?? 0}
-          pageCount={payments?.meta?.pageCount ?? 0}
+          count={deductions?.meta?.count ?? 0}
+          pageCount={deductions?.meta?.pageCount ?? 0}
         />
       </ListView.Footer>
 
-      <PaymentsDialog
+      <DeductionsDialog
         isOpen={dialogToggle.isOpen}
         onOpenChange={dialogToggle.setOpen}
         selectedPayment={selectedPayment}
