@@ -113,6 +113,7 @@ export const createOperatsiiEditor = withEditorProps<{
           {({ open, close }) => (
             <SpravochnikInput
               {...operatsiiSpravochnik}
+              readOnly={false}
               clear={() => {
                 operatsiiSpravochnik.clear()
                 setSchet('')
@@ -182,6 +183,7 @@ export const createOperatsiiEditor = withEditorProps<{
                 setSubschet('')
               }}
               editor
+              readOnly={false}
               type="text"
               inputRef={inputRef}
               tabIndex={tabIndex}

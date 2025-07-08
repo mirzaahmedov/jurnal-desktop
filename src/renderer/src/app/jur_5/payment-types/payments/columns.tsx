@@ -150,10 +150,10 @@ export const PaymentColumnDefs: ColumnDef<Payment>[] = [
   {
     key: 'sourceFund',
     header: 'main_fund'
-  },
-  {
-    minWidth: 300,
-    key: 'calculationFormula',
-    header: 'calc_formula'
   }
+  // {
+  //   minWidth: 300,
+  //   key: 'calculationFormula',
+  //   header: 'calc_formula'
+  // }
 ]

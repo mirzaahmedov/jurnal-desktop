@@ -28,7 +28,7 @@ export const createTypeOperatsiiSpravochnik = (
 ) => {
   return extendObject(
     {
-      title: t('type_operatsii'),
+      title: t('pages.type-operatsii', { ns: 'app' }),
       endpoint: ApiEndpoints.type_operatsii,
       columnDefs: TypeOperatsiiColumns,
       service: TypeOperatsiiService,

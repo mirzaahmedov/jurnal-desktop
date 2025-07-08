@@ -202,7 +202,7 @@ export const DeductionsDialog = ({ selectedPayment, ...props }: DeductionsDialog
                     />
                   </div>
 
-                  <div className="col-span-full">
+                  {/* <div className="col-span-full">
                     <FormField
                       control={form.control}
                       name="calculationFormula"
@@ -220,7 +220,7 @@ export const DeductionsDialog = ({ selectedPayment, ...props }: DeductionsDialog
                         </FormElement>
                       )}
                     />
-                  </div>
+                  </div> */}
 
                   <DialogFooter className="col-span-full">
                     <Button

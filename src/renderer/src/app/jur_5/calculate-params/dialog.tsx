@@ -176,7 +176,11 @@ export const CalculateParamsDialog = ({ selected, ...props }: CalculateParamsDia
                       <NumericInput
                         ref={field.ref}
                         value={field.value}
-                        onValueChange={(values) => field.onChange(values.floatValue)}
+                        onValueChange={(values) => {
+                          const value = values.floatValue ?? 0
+                          field.onChange(value)
+                          form.setValue('poek', value * 3.23)
+                        }}
                       />
                     </FormElement>
                   )}

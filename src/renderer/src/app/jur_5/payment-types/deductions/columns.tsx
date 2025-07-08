@@ -38,10 +38,10 @@ export const DeductionColumnDefs: ColumnDef<Deduction>[] = [
     minWidth: 80,
     key: 'subAccount',
     header: 'subschet'
-  },
-  {
-    minWidth: 300,
-    key: 'calculationFormula',
-    header: 'calc_formula'
   }
+  // {
+  //   minWidth: 300,
+  //   key: 'calculationFormula',
+  //   header: 'calc_formula'
+  // }
 ]

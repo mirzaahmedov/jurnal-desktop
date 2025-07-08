@@ -261,7 +261,7 @@ export const PaymentsDialog = ({ selectedPayment, ...props }: PaymentsDialogProp
                     )}
                   />
 
-                  <div className="col-span-full">
+                  {/* <div className="col-span-full">
                     <FormField
                       control={form.control}
                       name="calculationFormula"
@@ -279,7 +279,7 @@ export const PaymentsDialog = ({ selectedPayment, ...props }: PaymentsDialogProp
                         </FormElement>
                       )}
                     />
-                  </div>
+                  </div> */}
 
                   <DialogFooter className="col-span-full">
                     <Button

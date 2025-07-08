@@ -37,7 +37,7 @@ import { useTypeFilter } from './filters'
 import { ZarplataSpravochnikService } from './service'
 import { SpravochnikTypeSelect } from './spravochnik-type-select'
 
-const { QueryKeys: queryKeys } = ZarplataSpravochnikService
+const { QueryKeys } = ZarplataSpravochnikService
 
 interface ZarplataSpravochnikDialogProps extends Omit<DialogTriggerProps, 'children'> {
   selected: Zarplata.Spravochnik | undefined
@@ -60,13 +60,13 @@ export const ZarplataSpravochnikDialog = ({
   })
 
   const { mutate: createSpravochnik, isPending: isCreating } = useMutation({
-    mutationKey: [queryKeys.Create],
+    mutationKey: [QueryKeys.Create],
     mutationFn: ZarplataSpravochnikService.create,
     onSuccess() {
       toast.success('Справочник создано успешно')
       form.reset(defaultValues)
       queryClient.invalidateQueries({
-        queryKey: [queryKeys.GetAll]
+        queryKey: [QueryKeys.GetAll]
       })
       onOpenChange?.(false)
     },
@@ -76,13 +76,13 @@ export const ZarplataSpravochnikDialog = ({
     }
   })
   const { mutate: updateSpravochnik, isPending: isUpdating } = useMutation({
-    mutationKey: [queryKeys.Update],
+    mutationKey: [QueryKeys.Update],
     mutationFn: ZarplataSpravochnikService.update,
     onSuccess() {
       toast.success('Справочник успешно обновлена')
       form.reset(defaultValues)
       queryClient.invalidateQueries({
-        queryKey: [queryKeys.GetAll]
+        queryKey: [QueryKeys.GetAll]
       })
       onOpenChange?.(false)
     },
@@ -233,6 +233,7 @@ export const ZarplataSpravochnikDialog = ({
                             {...field}
                             className="col-span-4"
                             value={field.value ? field.value : ''}
+                            decimalScale={5}
                             onChange={undefined}
                             onValueChange={(values) => {
                               field.onChange(values.floatValue ?? 0)
