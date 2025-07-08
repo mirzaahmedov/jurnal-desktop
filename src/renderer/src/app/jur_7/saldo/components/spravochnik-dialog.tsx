@@ -54,7 +54,7 @@ enum TabOption {
 export interface SaldoProductSpravochnikDialogProps extends DialogProps {
   responsible_id: number
   to: string
-  disabledIds: number[]
+  disabledIds: (number | string)[]
   onSelect: (selected: SaldoProduct[]) => void
 }
 export const SaldoProductSpravochnikDialog = ({

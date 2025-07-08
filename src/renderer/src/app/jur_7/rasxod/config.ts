@@ -34,7 +34,7 @@ export const defaultValues: RasxodFormValues = {
 
 export const RasxodProvodkaFormSchema = withPreprocessor(
   z.object({
-    naimenovanie_tovarov_jur7_id: z.number(),
+    naimenovanie_tovarov_jur7_id: z.union([z.number(), z.string()]),
     name: z.string().optional().nullable(),
     group_number: z.string().optional().nullable(),
     edin: z.string().optional().nullable(),
