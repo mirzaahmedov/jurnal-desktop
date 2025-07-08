@@ -29,6 +29,8 @@ import { Form, FormField } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
 import { Textarea } from '@/common/components/ui/textarea'
 import { SpravochnikInput, useSpravochnik } from '@/common/features/spravochnik'
+import { formatDate, parseLocaleDate } from '@/common/lib/date'
+import { formatLocaleDate } from '@/common/lib/format'
 import { capitalize } from '@/common/lib/string'
 import { numberToWords } from '@/common/lib/utils'
 
@@ -58,6 +60,7 @@ export const EmploymentDialog = ({ employment, mainZarplata, ...props }: Employm
         queryKey: [EmploymentService.QueryKeys.getByMainZarplataId, mainZarplata.id]
       })
       form.reset()
+      props?.onOpenChange?.(false)
     }
   })
   const { mutate: updateEmployment, isPending: isUpdating } = useMutation({
@@ -68,6 +71,7 @@ export const EmploymentDialog = ({ employment, mainZarplata, ...props }: Employm
         queryKey: [EmploymentService.QueryKeys.getByMainZarplataId, mainZarplata.id]
       })
       form.reset()
+      props?.onOpenChange?.(false)
     }
   })
 
@@ -86,7 +90,18 @@ export const EmploymentDialog = ({ employment, mainZarplata, ...props }: Employm
 
   useEffect(() => {
     if (employment) {
-      form.reset(employment)
+      form.reset({
+        dateStart: employment.dateStart ? formatDate(parseLocaleDate(employment.dateStart)) : '',
+        dateFinish: employment.dateFinish ? formatDate(parseLocaleDate(employment.dateFinish)) : '',
+        prikazStart: employment.prikazStart,
+        prikazFinish: employment.prikazFinish ?? '',
+        rayon: employment.rayon,
+        stavka: employment.stavka ?? 0,
+        summa: employment.summa,
+        spravochnikZarplataDoljnostId: employment.spravochnikZarplataDoljnostId ?? 0,
+        mainZarplataId: employment.mainZarplataId,
+        vacantId: employment.vacantId
+      })
     } else {
       form.reset(defaultValues)
     }
@@ -96,13 +111,19 @@ export const EmploymentDialog = ({ employment, mainZarplata, ...props }: Employm
     if (employment) {
       updateEmployment({
         id: employment.id,
-        values
+        values: {
+          ...values,
+          dateStart: formatLocaleDate(values.dateStart),
+          dateFinish: formatLocaleDate(values.dateFinish),
+          mainZarplataId: mainZarplata.id,
+          vacantId: mainZarplata.vacantId
+        }
       })
     } else {
       createEmployment({
         ...values,
-        mainZarplataId: mainZarplata.id,
-        vacantId: mainZarplata.vacantId
+        dateStart: formatLocaleDate(values.dateStart),
+        dateFinish: formatLocaleDate(values.dateFinish)
       })
     }
   })
@@ -112,6 +133,8 @@ export const EmploymentDialog = ({ employment, mainZarplata, ...props }: Employm
       form.setValue('rayon', mainZarplata.rayon)
     }
   }, [form, mainZarplata, props.isOpen])
+
+  console.log({ values: form.formState.errors })
 
   return (
     <DialogTrigger {...props}>

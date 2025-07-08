@@ -471,5 +471,8 @@
   "payment": "To'lov",
   "untill_now": "Hozirgacha",
   "payroll_payments": "Ish haqi to'lovlari",
-  "payroll_deductions": "Ish haqi ushlanmalari"
+  "payroll_deductions": "Ish haqi ushlanmalari",
+  "size": "O'lcham",
+  "deadline": "Muddat",
+  "stop": "To'xtatish"
 }

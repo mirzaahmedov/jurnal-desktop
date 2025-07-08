@@ -1,8 +1,8 @@
 import { z } from 'zod'
 
 export const EmploymentFormSchema = z.object({
-  id: z.number(),
-  mainZarplataId: z.number(),
+  id: z.number().optional(),
+  mainZarplataId: z.number().optional(),
   rayon: z.string(),
   vacantId: z.number().optional().nullable(),
   // doljnostName: z.string(),
@@ -17,10 +17,7 @@ export const EmploymentFormSchema = z.object({
 export type EmploymentFormValues = z.infer<typeof EmploymentFormSchema>
 
 export const defaultValues: EmploymentFormValues = {
-  id: 0,
-  mainZarplataId: 0,
   rayon: '',
-  vacantId: 0,
   // doljnostName: '',
   spravochnikZarplataDoljnostId: 0,
   prikazStart: '',

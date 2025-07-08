@@ -74,10 +74,11 @@ export const AddExistingProductDialog = ({
   open,
   onOpenChange,
   disabledIds,
-  onSelect
+  onSelect,
+  responsible_id
 }: AddExistingProductDialogProps) => {
   const pagination = usePagination()
-  const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
+  const { budjet_id, main_schet_id } = useRequisitesStore()
 
   const [search, setSearch] = useState('')
   const [tabValue, setTabValue] = useState(TabOption.ALL)
@@ -91,11 +92,13 @@ export const AddExistingProductDialog = ({
       {
         page: pagination.page,
         limit: pagination.limit,
-        main_schet_id: main_schet_id!
+        budjet_id: budjet_id!,
+        main_schet_id: main_schet_id!,
+        responsible_id
       }
     ],
     queryFn: MaterialPrixodService.getProducts,
-    enabled: !!main_schet_id
+    enabled: !!main_schet_id && !!budjet_id && !!responsible_id
   })
 
   useEffect(() => {

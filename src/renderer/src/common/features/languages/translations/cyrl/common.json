@@ -472,5 +472,8 @@
   "payment": "Тўлов",
   "untill_now": "Ҳозиргача",
   "payroll_payments": "Иш ҳақи тўловлари",
-  "payroll_deductions": "Иш ҳақи ушланмалари"
+  "payroll_deductions": "Иш ҳақи ушланмалари",
+  "size": "Ўлчам",
+  "deadline": "Муддат",
+  "stop": "Тўхтатиш"
 }

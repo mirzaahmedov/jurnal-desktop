@@ -32,7 +32,7 @@ import { Input } from '@/common/components/ui/input'
 import { useSpravochnik } from '@/common/features/spravochnik'
 import { capitalize } from '@/common/lib/string'
 
-import { ZarplataSpravochnikFormSchema, defaultValues } from './config'
+import { ZarplataSpravochnikFormSchema, ZarplataSpravochnikType, defaultValues } from './config'
 import { useTypeFilter } from './filters'
 import { ZarplataSpravochnikService } from './service'
 import { SpravochnikTypeSelect } from './spravochnik-type-select'
@@ -104,7 +104,7 @@ export const ZarplataSpravochnikDialog = ({
     if (selected) {
       updateSpravochnik({
         id: selected.id,
-        values: values
+        values
       })
     } else {
       createSpravochnik(values)
@@ -221,32 +221,34 @@ export const ZarplataSpravochnikDialog = ({
                   )}
                 />
 
-                <FormField
-                  name="sena1"
-                  control={form.control}
-                  render={({ field }) => (
-                    <FormItem>
-                      <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
-                        <FormLabel className="text-right col-span-2">{t('sena_1')}</FormLabel>
-                        <FormControl>
-                          <NumericInput
-                            {...field}
-                            className="col-span-4"
-                            value={field.value ? field.value : ''}
-                            decimalScale={5}
-                            onChange={undefined}
-                            onValueChange={(values) => {
-                              field.onChange(values.floatValue ?? 0)
-                            }}
-                          />
-                        </FormControl>
-                        <FormMessage className="text-end col-span-6" />
-                      </div>
-                    </FormItem>
-                  )}
-                />
+                {typeCode === ZarplataSpravochnikType.Zvanie ? (
+                  <FormField
+                    name="sena1"
+                    control={form.control}
+                    render={({ field }) => (
+                      <FormItem>
+                        <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
+                          <FormLabel className="text-right col-span-2">{t('sena_1')}</FormLabel>
+                          <FormControl>
+                            <NumericInput
+                              {...field}
+                              className="col-span-4"
+                              value={field.value ? field.value : ''}
+                              decimalScale={5}
+                              onChange={undefined}
+                              onValueChange={(values) => {
+                                field.onChange(values.floatValue ?? 0)
+                              }}
+                            />
+                          </FormControl>
+                          <FormMessage className="text-end col-span-6" />
+                        </div>
+                      </FormItem>
+                    )}
+                  />
+                ) : null}
 
-                <FormField
+                {/* <FormField
                   name="sena2"
                   control={form.control}
                   render={({ field }) => (
@@ -268,7 +270,7 @@ export const ZarplataSpravochnikDialog = ({
                       </div>
                     </FormItem>
                   )}
-                />
+                /> */}
               </div>
               <DialogFooter>
                 <Button

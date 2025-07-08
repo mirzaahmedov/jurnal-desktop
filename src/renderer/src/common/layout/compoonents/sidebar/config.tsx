@@ -57,6 +57,7 @@ import {
   Weight,
   Wrench
 } from 'lucide-react'
+import { toast } from 'react-toastify'
 
 import { KassaSaldoController } from '@/app/jur_1/saldo/components/saldo-controller'
 import { BankSaldoController } from '@/app/jur_2/saldo/components/saldo-controller'
@@ -89,23 +90,23 @@ export const getNavElements = (t: TFunction): NavElement[] => {
       title: t('pages.main'),
       icon: LayoutDashboard
     },
-    // !is_super_admin
-    //   ? {
-    //       displayOnly: true,
-    //       path: 'zarplata',
-    //       icon: AppWindow,
-    //       className: 'cursor-pointer',
-    //       title: t('pages.zarplata'),
-    //       props: {
-    //         onClick: async () => {
-    //           const error = await window.api.openZarplata()
-    //           if (error) {
-    //             toast.error(t('zarplata_not_installed'))
-    //           }
-    //         }
-    //       }
-    //     }
-    //   : null,
+    !is_super_admin
+      ? {
+          displayOnly: true,
+          path: 'zarplata',
+          icon: AppWindow,
+          className: 'cursor-pointer',
+          title: t('pages.zarplata'),
+          props: {
+            onClick: async () => {
+              const error = await window.api.openZarplata()
+              if (error) {
+                toast.error(t('zarplata_not_installed'))
+              }
+            }
+          }
+        }
+      : null,
     !is_super_admin
       ? {
           path: '/video-tutorials',

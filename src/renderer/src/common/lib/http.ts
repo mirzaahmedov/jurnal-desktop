@@ -77,6 +77,10 @@ http.interceptors.response.use(
       throw new Error(t('something-went-wrong'))
     }
 
+    if (axios.isCancel(error)) {
+      return Promise.reject(error)
+    }
+
     if (!axios.isAxiosError(error)) {
       notify({
         variant: 'error',

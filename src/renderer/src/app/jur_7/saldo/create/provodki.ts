@@ -59,7 +59,8 @@ export const provodkiColumns: EditableColumnDef<MaterialCreateProvodkaFormValues
     Editor: createNumberEditor({
       key: 'kol',
       inputProps: {
-        adjustWidth: true
+        adjustWidth: true,
+        decimalScale: 5
       }
     })
   },

@@ -38,7 +38,9 @@ export class MaterialPrixodServiceFactory extends CRUDService<
         {
           page: number
           limit: number
+          budjet_id: number
           main_schet_id: number
+          responsible_id?: number
         }
       ]
     >

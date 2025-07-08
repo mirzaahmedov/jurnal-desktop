@@ -38,7 +38,9 @@ const ZarplataSpravochnikPage = () => {
       QueryKeys.GetAll,
       {
         types_type_code: typeCode!,
-        name: search
+        name: search,
+        page: pagination.page,
+        limit: pagination.limit
       }
     ],
     queryFn: ZarplataSpravochnikService.getAll,

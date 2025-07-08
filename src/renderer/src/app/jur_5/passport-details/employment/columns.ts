@@ -6,7 +6,7 @@ import { t } from 'i18next'
 import { IDCell } from '@/common/components/table/renderers/id'
 import { SummaCell } from '@/common/components/table/renderers/summa'
 
-export const columnDefs: ColumnDef<Employment>[] = [
+export const EmploymentColumnDefs: ColumnDef<Employment>[] = [
   {
     key: 'id',
     renderCell: IDCell,

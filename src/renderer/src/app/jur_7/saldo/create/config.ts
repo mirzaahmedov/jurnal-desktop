@@ -8,8 +8,8 @@ export const MaterialCreateProvodkaFormSchema = z.object({
   doc_num: z.string().nonempty(),
   name: z.string().nonempty(),
   unit_id: z.number().min(1),
-  kol: z.number().gt(0),
-  summa: z.number().gt(0),
+  kol: z.number(),
+  summa: z.number(),
   inventar_num: z.string().optional(),
   serial_num: z.string().optional(),
   eski_iznos_summa: z.number().optional()

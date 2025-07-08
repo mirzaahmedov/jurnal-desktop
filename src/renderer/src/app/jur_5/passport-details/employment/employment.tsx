@@ -14,7 +14,7 @@ import { useConfirm } from '@/common/features/confirm'
 import { useToggle } from '@/common/hooks'
 import { ListView } from '@/common/views'
 
-import { columnDefs } from './columns'
+import { EmploymentColumnDefs } from './columns'
 import { EmploymentDialog } from './employment-dialog'
 import { EmploymentService } from './service'
 
@@ -73,7 +73,7 @@ export const Employments = ({ mainZarplata }: EmploymentProps) => {
       </ListView.Header>
       <ListView.Content isLoading={isFetching || isPending}>
         <GenericTable
-          columnDefs={columnDefs}
+          columnDefs={EmploymentColumnDefs}
           data={employment ?? []}
           onEdit={handleEmploymentEdit}
           onDelete={handleEmploymentDelete}
