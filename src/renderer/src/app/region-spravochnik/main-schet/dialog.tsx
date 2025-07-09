@@ -1,3 +1,20 @@
+import type { MainSchet } from '@/common/models'
+import type { DialogTriggerProps } from 'react-aria-components'
+
+import { useEffect } from 'react'
+
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { Plus, Trash } from 'lucide-react'
+import { useFieldArray, useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
+import { toast } from 'react-toastify'
+
+import { useAsyncListBank } from '@/app/super-admin/bank/service'
+import { BudjetSelect } from '@/app/super-admin/budjet/budjet-select'
+import { AutoComplete } from '@/common/components/auto-complete-new'
+import { FormElement } from '@/common/components/form'
+import { ComboboxItem } from '@/common/components/jolly/combobox'
 import {
   DialogContent,
   DialogFooter,
@@ -6,6 +23,7 @@ import {
   DialogTitle,
   DialogTrigger
 } from '@/common/components/jolly/dialog'
+import { Button } from '@/common/components/ui/button'
 import {
   Form,
   FormControl,
@@ -14,28 +32,14 @@ import {
   FormLabel,
   FormMessage
 } from '@/common/components/ui/form'
-import { MainSchetFormSchema, MainSchetQueryKeys, defaultValues } from './config'
-import { Plus, Trash } from 'lucide-react'
-import { useEffect, useState } from 'react'
-import { useFieldArray, useForm } from 'react-hook-form'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-
-import { AutoComplete } from '@/common/components'
-import { BankQueryKeys } from '@/app/super-admin/bank/config'
-import { BankService } from '@/app/super-admin/bank/service'
-import { BudjetSelect } from '@/app/super-admin/budjet/budjet-select'
-import { Button } from '@/common/components/ui/button'
-import type { DialogTriggerProps } from 'react-aria-components'
-import { FormElement } from '@/common/components/form'
 import { Input } from '@/common/components/ui/input'
-import type { MainSchet } from '@/common/models'
-import { MainSchetService } from './service'
 import { RequisitesQueryKeys } from '@/common/features/requisites'
 import { capitalize } from '@/common/lib/string'
-import { toast } from 'react-toastify'
+import { normalizeSpaces } from '@/common/lib/text'
+
+import { MainSchetFormSchema, MainSchetQueryKeys, defaultValues } from './config'
 import { useBudjetId } from './filters'
-import { useTranslation } from 'react-i18next'
-import { zodResolver } from '@hookform/resolvers/zod'
+import { MainSchetService } from './service'
 
 export interface MainSchetDialogProps extends Omit<DialogTriggerProps, 'children'> {
   selected: MainSchet | null
@@ -50,7 +54,8 @@ export const MainSchetDialog = ({
   const queryClient = useQueryClient()
   const [budjetId] = useBudjetId()
 
-  const [search, setSearch] = useState('')
+  const mfoBankList = useAsyncListBank()
+  const nameBankList = useAsyncListBank()
 
   const { t } = useTranslation()
 
@@ -60,13 +65,6 @@ export const MainSchetDialog = ({
       spravochnik_budjet_name_id: budjetId!
     },
     resolver: zodResolver(MainSchetFormSchema)
-  })
-
-  const { data: banks, isFetching } = useQuery({
-    queryKey: [BankQueryKeys.getAll, { search }],
-    queryFn: BankService.getAll,
-    enabled: !!search,
-    placeholderData: (prev) => prev
   })
 
   const { mutate: createMainSchet, isPending: isCreatingMainSchet } = useMutation({
@@ -311,38 +309,22 @@ export const MainSchetDialog = ({
                       label={t('mfo')}
                     >
                       <AutoComplete
-                        isFetching={isFetching}
-                        disabled={search === ''}
-                        options={banks?.data ?? []}
-                        className="col-span-4"
-                        getOptionLabel={(option) => `${option.mfo} ${option.bank_name}`}
-                        getOptionValue={(option) => option.mfo}
-                        onSelect={(option) => {
-                          form.setValue('tashkilot_mfo', option.mfo)
-                          form.setValue('tashkilot_bank', option.bank_name)
-                          setSearch('')
+                        items={mfoBankList.items}
+                        inputValue={mfoBankList.filterText}
+                        onInputChange={mfoBankList.setFilterText}
+                        selectedKey={field.value}
+                        onSelectionChange={(key) => {
+                          field.onChange(key)
+                          const selectedBank = mfoBankList.items.find((item) => item.mfo === key)
+                          if (selectedBank) {
+                            form.setValue('tashkilot_bank', selectedBank.bank_name)
+                          }
                         }}
                       >
-                        {({ open, close }) => (
-                          <Input
-                            {...field}
-                            onChange={(e) => {
-                              field.onChange(e)
-                              console.log('e.target.value', e.target.value)
-                              setSearch(e.target.value)
-                            }}
-                            onFocus={open}
-                            onBlur={() => {
-                              setSearch('')
-                              close()
-                              field.onBlur()
-                            }}
-                            onKeyDown={(e) => {
-                              if (e.key === 'Enter') {
-                                e.preventDefault()
-                              }
-                            }}
-                          />
+                        {(item) => (
+                          <ComboboxItem id={item.mfo}>
+                            {item.mfo} - {normalizeSpaces(item.bank_name)}
+                          </ComboboxItem>
                         )}
                       </AutoComplete>
                     </FormElement>
@@ -359,37 +341,24 @@ export const MainSchetDialog = ({
                     >
                       <FormControl>
                         <AutoComplete
-                          isFetching={isFetching}
-                          disabled={search === ''}
-                          options={banks?.data ?? []}
-                          className="col-span-4"
-                          getOptionLabel={(option) => `${option.mfo} ${option.bank_name}`}
-                          getOptionValue={(option) => option.mfo}
-                          onSelect={(option) => {
-                            form.setValue('tashkilot_mfo', option.mfo)
-                            form.setValue('tashkilot_bank', option.bank_name)
-                            setSearch('')
+                          items={nameBankList.items}
+                          inputValue={nameBankList.filterText}
+                          onInputChange={nameBankList.setFilterText}
+                          selectedKey={field.value}
+                          onSelectionChange={(key) => {
+                            field.onChange(key)
+                            const selectedBank = nameBankList.items.find(
+                              (item) => item.bank_name === key
+                            )
+                            if (selectedBank) {
+                              form.setValue('tashkilot_mfo', selectedBank.mfo)
+                            }
                           }}
                         >
-                          {({ open, close }) => (
-                            <Input
-                              {...field}
-                              onChange={(e) => {
-                                field.onChange(e)
-                                setSearch(e.target.value)
-                              }}
-                              onFocus={open}
-                              onBlur={() => {
-                                setSearch('')
-                                close()
-                                field.onBlur()
-                              }}
-                              onKeyDown={(e) => {
-                                if (e.key === 'Enter') {
-                                  e.preventDefault()
-                                }
-                              }}
-                            />
+                          {(item) => (
+                            <ComboboxItem id={item.bank_name}>
+                              {item.mfo} - {normalizeSpaces(item.bank_name)}
+                            </ComboboxItem>
                           )}
                         </AutoComplete>
                       </FormControl>

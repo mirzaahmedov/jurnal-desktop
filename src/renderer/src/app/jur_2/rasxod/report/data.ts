@@ -1,4 +1,4 @@
-import { type PaperSheetProps, PorucheniyaType } from './paper-sheet'
+import { type PaperSheetProps, PorucheniyaType } from './PaperSheet'
 
 export const data: PaperSheetProps = {
   type: PorucheniyaType.TAX,

@@ -40,7 +40,7 @@ export const ExistingDocumentsAlert = ({
         </AlertDialogHeader>
         <div className="flex-1 flex flex-col gap-10 overflow-y-auto scrollbar">
           <GenericTable
-            data={Array.from({ length: 30 }, () => docs[0])}
+            data={docs}
             columnDefs={[
               {
                 key: 'id',

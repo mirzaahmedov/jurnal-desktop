@@ -21,6 +21,7 @@ import { PayrollDeductions } from '@/common/features/payroll-deduction/payroll-d
 import { PayrollPayments } from '@/common/features/payroll-payment/payroll-payments'
 import { PayrollPaymentService } from '@/common/features/payroll-payment/service'
 
+import { AdditionalDocuments } from './additional-documents/additional-documents'
 import { EmployeeWorkplace } from './employee-workplace'
 import { Employments } from './employment/employment'
 import { MainZarplataForm } from './main-zarplata-form'
@@ -30,7 +31,7 @@ export enum PassportInfoTabs {
   Employment = 'employment',
   Deduction = 'deduction',
   BankCard = 'bank_card',
-  AdditionalPayment = 'additional_payment',
+  AdditionalDocument = 'additional_document',
   SeperateCalculation = 'separate_calculation',
   Payroll = 'payroll'
 }
@@ -40,7 +41,7 @@ const tabOptions = [
   PassportInfoTabs.Employment,
   PassportInfoTabs.Deduction,
   PassportInfoTabs.BankCard,
-  PassportInfoTabs.AdditionalPayment,
+  PassportInfoTabs.AdditionalDocument,
   PassportInfoTabs.SeperateCalculation,
   PassportInfoTabs.Payroll
 ]
@@ -160,11 +161,21 @@ export const PassportInfoDialog = ({
                       />
                     ) : null}
                   </TabsContent>
+
                   <TabsContent
                     value={PassportInfoTabs.Employment}
                     className="mt-0"
                   >
                     {mainZarplata?.data ? <Employments mainZarplata={mainZarplata?.data} /> : null}
+                  </TabsContent>
+
+                  <TabsContent
+                    value={PassportInfoTabs.AdditionalDocument}
+                    className="mt-0"
+                  >
+                    {mainZarplata?.data ? (
+                      <AdditionalDocuments mainZarplata={mainZarplata?.data} />
+                    ) : null}
                   </TabsContent>
                 </div>
               </Tabs>

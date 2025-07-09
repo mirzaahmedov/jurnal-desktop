@@ -32,7 +32,7 @@ export const PassportInfoCreateDialog = ({
     <DialogTrigger {...props}>
       <DialogOverlay>
         <DialogContent className="max-w-9xl h-full max-h-[800px]">
-          <div className="h-full flex flex-col space-y-5 overflow-hidden flex flex-col">
+          <div className="h-full flex flex-col space-y-5 overflow-hidden">
             <DialogHeader>
               <DialogTitle>
                 {capitalize(t('create-something', { something: t('pages.passport_details') }))}

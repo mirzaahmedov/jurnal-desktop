@@ -22,7 +22,7 @@ import { formatLocaleDate } from '@/common/lib/format'
 import { numberToWords } from '@/common/lib/utils'
 
 import { PorucheniyaPDFDocument } from './report'
-import { PorucheniyaType } from './report/paper-sheet'
+import { PorucheniyaType } from './report/PaperSheet'
 
 interface PorucheniyaDialogProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'type'> {
   rasxod: BankRasxod

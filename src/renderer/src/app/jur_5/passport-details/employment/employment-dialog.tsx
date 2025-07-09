@@ -97,7 +97,7 @@ export const EmploymentDialog = ({ employment, mainZarplata, ...props }: Employm
         prikazFinish: employment.prikazFinish ?? '',
         rayon: employment.rayon,
         stavka: employment.stavka ?? 0,
-        summa: employment.summa,
+        summa: employment.summa ?? 0,
         spravochnikZarplataDoljnostId: employment.spravochnikZarplataDoljnostId ?? 0,
         mainZarplataId: employment.mainZarplataId,
         vacantId: employment.vacantId
@@ -123,7 +123,9 @@ export const EmploymentDialog = ({ employment, mainZarplata, ...props }: Employm
       createEmployment({
         ...values,
         dateStart: formatLocaleDate(values.dateStart),
-        dateFinish: formatLocaleDate(values.dateFinish)
+        dateFinish: formatLocaleDate(values.dateFinish),
+        mainZarplataId: mainZarplata.id,
+        vacantId: mainZarplata.vacantId
       })
     }
   })

@@ -443,7 +443,7 @@
   "home": "Главная",
   "deduction": "Удержание",
   "bank_card": "Банковская карта",
-  "additional_payment": "Дополнительная выплата",
+  "additional_document": "Дополнительная выплата",
   "separate_calculation": "Отдельный расчет",
   "payroll": "Зарплатная ведомость",
   "raschet-stop": "Расчет стоп",
@@ -476,5 +476,8 @@
   "payroll_deductions": "Удержания из заработной платы",
   "size": "Размер",
   "deadline": "Срок",
-  "stop": "Остановить"
+  "stop": "Остановить",
+  "listed_accruals": "Перечисленных начислений",
+  "sick_leave": "Больничный",
+  "annual_leave": "Отпуск"
 }

@@ -1,19 +1,19 @@
 import type { OrganizationFormValues } from './config'
 
-import { type FormEventHandler, type ReactNode, useState } from 'react'
+import { type FormEventHandler, type ReactNode } from 'react'
 
-import { useQuery } from '@tanstack/react-query'
 import { Plus, Trash } from 'lucide-react'
 import { type UseFormReturn, useFieldArray } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
-import { BankQueryKeys } from '@/app/super-admin/bank/config'
-import { BankService } from '@/app/super-admin/bank/service'
-import { AutoComplete } from '@/common/components'
+import { useAsyncListBank } from '@/app/super-admin/bank/service'
+import { AutoComplete } from '@/common/components/auto-complete-new'
 import { FormElement } from '@/common/components/form'
+import { ComboboxItem } from '@/common/components/jolly/combobox'
 import { Button } from '@/common/components/ui/button'
 import { Form, FormControl, FormField, FormLabel } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
+import { normalizeSpaces } from '@/common/lib/text'
 
 interface OrganizationFormProps {
   form: UseFormReturn<OrganizationFormValues>
@@ -21,7 +21,8 @@ interface OrganizationFormProps {
   formActions: ReactNode
 }
 export const OrganizationForm = ({ form, formActions, onSubmit }: OrganizationFormProps) => {
-  const [search, setSearch] = useState('')
+  const mfoBankList = useAsyncListBank()
+  const nameBankList = useAsyncListBank()
 
   const { t } = useTranslation()
   const {
@@ -42,13 +43,6 @@ export const OrganizationForm = ({ form, formActions, onSubmit }: OrganizationFo
   } = useFieldArray({
     control: form.control,
     name: 'gaznas'
-  })
-
-  const { data: bankList, isFetching } = useQuery({
-    queryKey: [BankQueryKeys.getAll, { search }],
-    queryFn: BankService.getAll,
-    enabled: !!search,
-    placeholderData: (prev) => prev
   })
 
   return (
@@ -93,37 +87,22 @@ export const OrganizationForm = ({ form, formActions, onSubmit }: OrganizationFo
                 label={t('mfo')}
               >
                 <AutoComplete
-                  isFetching={isFetching}
-                  disabled={search === ''}
-                  options={bankList?.data ?? []}
-                  className="col-span-4"
-                  getOptionLabel={(option) => `${option.mfo} ${option.bank_name}`}
-                  getOptionValue={(option) => option.mfo}
-                  onSelect={(option) => {
-                    form.setValue('mfo', option.mfo)
-                    form.setValue('bank_klient', option.bank_name)
-                    setSearch('')
+                  items={mfoBankList.items}
+                  inputValue={mfoBankList.filterText}
+                  onInputChange={mfoBankList.setFilterText}
+                  selectedKey={field.value}
+                  onSelectionChange={(key) => {
+                    field.onChange(key)
+                    const selectedBank = mfoBankList.items.find((item) => item.mfo === key)
+                    if (selectedBank) {
+                      form.setValue('bank_klient', selectedBank.bank_name)
+                    }
                   }}
                 >
-                  {({ open, close }) => (
-                    <Input
-                      {...field}
-                      onChange={(e) => {
-                        field.onChange(e)
-                        setSearch(e.target.value)
-                      }}
-                      onFocus={open}
-                      onBlur={() => {
-                        setSearch('')
-                        close()
-                        field.onBlur()
-                      }}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter') {
-                          e.preventDefault()
-                        }
-                      }}
-                    />
+                  {(item) => (
+                    <ComboboxItem id={item.mfo}>
+                      {item.mfo} - {normalizeSpaces(item.bank_name)}
+                    </ComboboxItem>
                   )}
                 </AutoComplete>
               </FormElement>
@@ -140,37 +119,22 @@ export const OrganizationForm = ({ form, formActions, onSubmit }: OrganizationFo
               >
                 <FormControl>
                   <AutoComplete
-                    isFetching={isFetching}
-                    disabled={search === ''}
-                    options={bankList?.data ?? []}
-                    className="col-span-4"
-                    getOptionLabel={(option) => `${option.mfo} ${option.bank_name}`}
-                    getOptionValue={(option) => option.mfo}
-                    onSelect={(option) => {
-                      form.setValue('mfo', option.mfo)
-                      form.setValue('bank_klient', option.bank_name)
-                      setSearch('')
+                    items={nameBankList.items}
+                    inputValue={nameBankList.filterText}
+                    onInputChange={nameBankList.setFilterText}
+                    selectedKey={field.value}
+                    onSelectionChange={(key) => {
+                      field.onChange(key)
+                      const selectedBank = nameBankList.items.find((item) => item.bank_name === key)
+                      if (selectedBank) {
+                        form.setValue('mfo', selectedBank.mfo)
+                      }
                     }}
                   >
-                    {({ open, close }) => (
-                      <Input
-                        {...field}
-                        onChange={(e) => {
-                          field.onChange(e)
-                          setSearch(e.target.value)
-                        }}
-                        onFocus={open}
-                        onBlur={() => {
-                          setSearch('')
-                          close()
-                          field.onBlur()
-                        }}
-                        onKeyDown={(e) => {
-                          if (e.key === 'Enter') {
-                            e.preventDefault()
-                          }
-                        }}
-                      />
+                    {(item) => (
+                      <ComboboxItem id={item.bank_name}>
+                        {item.mfo} - {normalizeSpaces(item.bank_name)}
+                      </ComboboxItem>
                     )}
                   </AutoComplete>
                 </FormControl>

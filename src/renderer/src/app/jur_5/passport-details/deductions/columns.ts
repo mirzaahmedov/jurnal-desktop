@@ -31,5 +31,9 @@ export const DeductionsColumnDefs: ColumnDef<UderjanieNew>[] = [
   },
   {
     key: 'typesTypeCode'
+  },
+  {
+    key: 'elements',
+    header: 'listed_accruals'
   }
 ]

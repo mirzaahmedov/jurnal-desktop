@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Flex, Label, TextBox } from '@/common/components/pdf'
 import { splitStringByLength } from '@/common/lib/utils'
 
-import { PorucheniyaType } from '../paper-sheet'
+import { PorucheniyaType } from '../PaperSheet'
 
 type AdditionalInfoProps = {
   type: PorucheniyaType

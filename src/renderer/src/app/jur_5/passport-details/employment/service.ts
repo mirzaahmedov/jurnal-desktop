@@ -35,7 +35,7 @@ export class EmploymentService {
   }
 
   static async delete(id: number) {
-    const res = await zarplataApiNew.delete(`${EmploymentService.endpoint}/delete/${id}`)
+    const res = await zarplataApiNew.delete(`${EmploymentService.endpoint}/${id}`)
     return res.data
   }
 }
