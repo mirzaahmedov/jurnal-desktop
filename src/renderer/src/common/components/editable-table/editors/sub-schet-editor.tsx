@@ -1,14 +1,12 @@
 import type { FieldError } from 'react-hook-form'
 
-import { type InputHTMLAttributes, useRef } from 'react'
-
 import { useQuery } from '@tanstack/react-query'
 
 import { OperatsiiService, operatsiiQueryKeys } from '@/app/super-admin/operatsii'
-import { AutoComplete } from '@/common/components'
-import { Input } from '@/common/components/ui/input'
-import { inputVariants } from '@/common/features/spravochnik'
-import { TypeSchetOperatsii } from '@/common/models'
+import { cn } from '@/common/lib/utils'
+import { type Operatsii, TypeSchetOperatsii } from '@/common/models'
+
+import { ComboboxItem, JollyComboBox, type JollyComboBoxProps } from '../../jolly/combobox'
 
 export const SubSchetEditor = ({
   tabIndex,
@@ -17,7 +15,8 @@ export const SubSchetEditor = ({
   schet,
   value,
   onChange,
-  inputProps
+  className,
+  ...props
 }: {
   tabIndex: number
   error?: FieldError
@@ -25,11 +24,8 @@ export const SubSchetEditor = ({
   schet: string
   value: string
   onChange: (value: string) => void
-  inputProps?: InputHTMLAttributes<HTMLInputElement>
-}) => {
-  const changed = useRef(false)
-
-  const { data: subSchetOptions, isFetching: isFetchingSubSchetOptions } = useQuery({
+} & Omit<JollyComboBoxProps<Operatsii>, 'children' | 'error'>) => {
+  const { data: schetOptions, isFetching } = useQuery({
     queryKey: [
       operatsiiQueryKeys.getAll,
       {
@@ -41,60 +37,22 @@ export const SubSchetEditor = ({
     enabled: !!schet
   })
 
-  const options = subSchetOptions?.data ?? []
-  const filteredOptions = options.filter((o) => o.sub_schet?.includes(value ?? '')) ?? []
+  const options = schetOptions?.data ?? []
 
   return (
-    <AutoComplete
-      autoSelectSingleResult={false}
-      isFetching={isFetchingSubSchetOptions}
-      options={filteredOptions}
-      getOptionLabel={(option) => option.sub_schet}
-      getOptionValue={(option) => option.sub_schet}
-      onSelect={(option) => {
-        changed.current = true
-        onChange?.(option.sub_schet)
-      }}
-      className="border-r"
-      popoverProps={{
-        className: 'w-64',
-        onOpenAutoFocus: (e) => e.preventDefault(),
-        onCloseAutoFocus: (e) => e.preventDefault()
-      }}
+    <JollyComboBox
+      defaultItems={options}
+      isDisabled={isFetching}
+      menuTrigger="focus"
+      className={cn('gap-0', className)}
+      tabIndex={tabIndex}
+      selectedKey={value}
+      onSelectionChange={(key) => onChange((key as string) || '')}
+      editor={editor}
+      error={!!error?.message}
+      {...props}
     >
-      {({ open, close }) => (
-        <Input
-          type="text"
-          tabIndex={tabIndex}
-          error={!!error}
-          name="kredit_schet"
-          onFocus={() => {
-            changed.current = false
-            open()
-          }}
-          onBlur={() => {
-            const exists = filteredOptions.find((o) => o.sub_schet === value)
-            if (!exists && changed.current) {
-              onChange?.('')
-            }
-            close()
-          }}
-          value={value}
-          onChange={(e) => {
-            changed.current = true
-            onChange?.(e.target.value)
-          }}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter') {
-              e.preventDefault()
-              close()
-            }
-          }}
-          onMouseDown={(e) => e.stopPropagation()}
-          className={inputVariants({ editor, error: !!error })}
-          {...inputProps}
-        />
-      )}
-    </AutoComplete>
+      {(item) => <ComboboxItem id={item.sub_schet}>{item.sub_schet}</ComboboxItem>}
+    </JollyComboBox>
   )
 }

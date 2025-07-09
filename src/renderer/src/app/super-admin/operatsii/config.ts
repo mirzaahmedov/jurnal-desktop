@@ -72,6 +72,7 @@ export const OperatsiiFormSchema = withPreprocessor(
   z.object({
     name: z.string(),
     schet: z.string(),
+    schet6: z.string().optional(),
     sub_schet: z.string().optional(),
     type_schet: z.enum([
       TypeSchetOperatsii.KASSA_PRIXOD,

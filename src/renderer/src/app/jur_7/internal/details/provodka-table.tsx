@@ -432,6 +432,7 @@ const Provodka = ({ rowIndex, onOpenDialog, onRemove, row, form, tabIndex }: Pro
             }}
             error={errors?.debet_schet}
             tabIndex={tabIndex}
+            className="w-24"
           />
         </div>
       </EditableTableCell>

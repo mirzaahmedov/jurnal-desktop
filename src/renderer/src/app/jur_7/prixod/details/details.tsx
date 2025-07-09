@@ -144,6 +144,8 @@ const PrixodDetails = ({ id, onSuccess }: PrixodDetailsProps) => {
     resolver: zodResolver(MaterialPrixodFormSchema)
   })
 
+  console.log({ errors: form.formState.errors, values: form.watch() })
+
   const orgSpravochnik = useSpravochnik(
     createOrganizationSpravochnik({
       value: form.watch('kimdan_id'),

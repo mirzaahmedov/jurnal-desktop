@@ -66,7 +66,7 @@ export const MaterialPrixodProvodkaFormSchema = withPreprocessor(
     kredit_sub_schet: z.string(),
     data_pereotsenka: z.string(),
     // when adding to existing product
-    product_id: z.string().optional(),
+    product_id: z.union([z.string(), z.number()]).optional(),
     saldo_id: z.number().optional()
   })
 ).superRefine((values, ctx) => {

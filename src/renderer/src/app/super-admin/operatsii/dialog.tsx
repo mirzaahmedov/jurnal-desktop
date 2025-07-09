@@ -274,6 +274,7 @@ export const OperatsiiDialog = ({
 const defaultValues = {
   name: '',
   schet: '',
+  schet6: '',
   sub_schet: '',
   type_schet: TypeSchetOperatsii.KASSA_PRIXOD,
   smeta_id: 0
