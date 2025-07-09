@@ -60,8 +60,22 @@ const fieldGroupVariants = cva('', {
         'data-[disabled]:opacity-50'
       ],
       ghost: ''
+    },
+    error: {
+      true: ''
+    },
+    editor: {
+      true: ''
     }
   },
+  compoundVariants: [
+    {
+      error: true,
+      editor: true,
+      className:
+        '!bg-red-50 ring-2 ring-red-500 data-[focus-within]:!outline-auto data-[focus-within]:!ring-2 data-[focus-within]:!ring-red-500 data-[focus-within]:!ring-offset-0'
+    }
+  ],
   defaultVariants: {
     variant: 'default'
   }
@@ -69,11 +83,11 @@ const fieldGroupVariants = cva('', {
 
 interface GroupProps extends AriaGroupProps, VariantProps<typeof fieldGroupVariants> {}
 
-function FieldGroup({ className, variant, ...props }: GroupProps) {
+function FieldGroup({ className, variant, error, editor, ...props }: GroupProps) {
   return (
     <AriaGroup
       className={composeRenderProps(className, (className) =>
-        cn(fieldGroupVariants({ variant }), className)
+        cn(fieldGroupVariants({ variant, error, editor }), className)
       )}
       {...props}
     />

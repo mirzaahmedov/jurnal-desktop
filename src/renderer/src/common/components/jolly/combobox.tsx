@@ -81,14 +81,7 @@ const comboboxVariants = cva('group flex flex-col gap-2', {
     editor: {
       true: 'm-0.5 gap-0 [&>div]:border-none [&>div]:bg-transparent [&>div]:rounded-none [&_input]:bg-transparent'
     }
-  },
-  compoundVariants: [
-    {
-      editor: true,
-      error: true,
-      className: 'bg-red-50 ring-2 ring-red-500'
-    }
-  ]
+  }
 })
 
 interface JollyComboBoxProps<T extends object>
@@ -126,7 +119,11 @@ function JollyComboBox<T extends object>({
       {...props}
     >
       <Label>{label}</Label>
-      <FieldGroup className="p-0">
+      <FieldGroup
+        className="p-0"
+        error={error}
+        editor={editor}
+      >
         <ComboboxInput
           placeholder={placeholder}
           tabIndex={tabIndex}
