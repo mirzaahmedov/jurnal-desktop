@@ -156,8 +156,8 @@ const InternalDetails = ({ id, onSuccess: onSuccess }: InternalDetailsProps) => 
     if (internal?.data) {
       form.reset({
         ...internal.data,
-        kimdan_id: internal.data.kimdan.id,
-        kimga_id: internal.data.kimga.id,
+        kimdan_id: internal.data.kimdan_id,
+        kimga_id: internal.data.kimga_id,
         childs: internal.data.childs.map((child) => ({
           ...child,
           group_jur7_id: child.group.id,

@@ -130,6 +130,7 @@ function JollyComboBox<T extends object>({
         <ComboboxInput
           placeholder={placeholder}
           tabIndex={tabIndex}
+          data-error={error ? 'true' : undefined}
           {...inputProps}
         />
         <Button

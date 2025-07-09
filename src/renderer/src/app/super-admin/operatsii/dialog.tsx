@@ -122,12 +122,12 @@ export const OperatsiiDialog = ({
     form.reset(defaultValues)
   }, [form, selected, original])
   useEffect(() => {
-    if (isOpen) {
+    if (isOpen && !selected) {
       if (typeSchet !== TypeSchetOperatsii.ALL) {
         form.setValue('type_schet', typeSchet)
       }
     }
-  }, [form, isOpen, typeSchet, budjet])
+  }, [form, isOpen, typeSchet, budjet, selected])
 
   return (
     <DialogTrigger

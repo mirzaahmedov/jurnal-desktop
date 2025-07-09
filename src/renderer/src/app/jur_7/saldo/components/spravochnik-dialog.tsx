@@ -88,7 +88,7 @@ export const SaldoProductSpravochnikDialog = ({
       }
     ],
     queryFn: MaterialSaldoProductService.getAll,
-    enabled: !!budjet_id && !!responsible_id
+    enabled: !!budjet_id && !!responsible_id && open
   })
 
   useEffect(() => {

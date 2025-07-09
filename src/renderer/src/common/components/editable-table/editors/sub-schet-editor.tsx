@@ -44,7 +44,7 @@ export const SubSchetEditor = ({
       defaultItems={options}
       isDisabled={isFetching}
       menuTrigger="focus"
-      className={cn('gap-0', className)}
+      className={cn('gap-0 w-32', className)}
       tabIndex={tabIndex}
       selectedKey={value}
       onSelectionChange={(key) => onChange((key as string) || '')}

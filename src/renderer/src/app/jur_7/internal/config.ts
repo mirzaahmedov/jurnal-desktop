@@ -36,7 +36,7 @@ export const defaultValues: InternalFormValues = {
 
 export const InternalProvodkaFormSchema = withPreprocessor(
   z.object({
-    naimenovanie_tovarov_jur7_id: z.number(),
+    naimenovanie_tovarov_jur7_id: z.union([z.string(), z.number()]),
     name: z.string().optional().nullable(),
     group_number: z.string().optional().nullable(),
     edin: z.string().optional().nullable(),

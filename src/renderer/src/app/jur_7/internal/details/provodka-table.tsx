@@ -538,7 +538,8 @@ const NaimenovanieCells = ({
             value={row.naimenovanie_tovarov_jur7_id || ''}
             className={inputVariants({
               editor: true,
-              error: !!errorMessage
+              error: !!errorMessage,
+              className: 'w-28'
             })}
             error={!!errorMessage}
             onDoubleClick={openDialog}

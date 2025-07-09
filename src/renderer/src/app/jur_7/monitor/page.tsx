@@ -98,116 +98,118 @@ export const MaterialMonitorPage = () => {
 
   return (
     <ListView>
-      <ListView.Header className="flex items-center justify-between">
-        <ListView.RangeDatePicker
-          {...dates}
-          validateDate={validateDateWithinSelectedMonth}
-          calendarProps={{
-            fromMonth: startDate,
-            toMonth: startDate
-          }}
-        />
-
-        <ButtonGroup
-          borderStyle="dashed"
-          className="max-w-3xl text-end"
-        >
-          <Button
-            variant="ghost"
-            onClick={() => {
-              dailyReportToggle.open()
-            }}
-            className="inline-flex items-center justify-start"
-          >
-            <Download className="btn-icon !size-4 icon-start" />
-            {t('daily-report')}
-          </Button>
-
-          <DownloadFile
-            fileName={`material_${t('cap')}_${startDate.getMonth() + 1}-${startDate.getFullYear()}.xlsx`}
-            url="/jur_7/monitoring/cap/report"
-            params={{
-              month: startDate.getMonth() + 1,
-              year: startDate.getFullYear(),
-              from: dates.from,
-              to: dates.to,
-              budjet_id,
-              main_schet_id,
-              report_title_id,
-              excel: true
-            }}
-            buttonText={t('cap')}
-          />
-
-          <DownloadFile
-            fileName={`material_${t('cap_prixod_rasxod')}_${dates.from}&${dates.to}.xlsx`}
-            url="jur_7/monitoring/by-schets"
-            buttonText={t('cap_prixod_rasxod')}
-            params={{
-              month: startDate.getMonth() + 1,
-              year: startDate.getFullYear(),
-              from: dates.from,
-              to: dates.to,
-              budjet_id,
-              main_schet_id,
-              report_title_id,
-              excel: true
+      <ListView.Header>
+        <div className="w-full grid grid-cols-[repeat(auto-fit,minmax(400px,1fr))] gap-5">
+          <ListView.RangeDatePicker
+            {...dates}
+            validateDate={validateDateWithinSelectedMonth}
+            calendarProps={{
+              fromMonth: startDate,
+              toMonth: startDate
             }}
           />
 
-          <Button
-            variant="ghost"
-            onClick={materialToggle.open}
+          <ButtonGroup
+            borderStyle="dashed"
+            className="text-end"
           >
-            <Download className="btn-icon icon-start icon-sm" /> {t('material')}
-          </Button>
+            <Button
+              variant="ghost"
+              onClick={() => {
+                dailyReportToggle.open()
+              }}
+              className="inline-flex items-center justify-start"
+            >
+              <Download className="btn-icon !size-4 icon-start" />
+              {t('daily-report')}
+            </Button>
 
-          <DownloadFile
-            fileName={`${t('summarized_circulation')}(${t('year')})_${startDate.getMonth() + 1}-${startDate.getFullYear()}.xlsx`}
-            url="/jur_7/monitoring/schet"
-            params={{
-              month: startDate.getMonth() + 1,
-              year: startDate.getFullYear(),
-              is_year: true,
-              main_schet_id,
-              excel: true
-            }}
-            buttonText={`${t('summarized_circulation')} (${t('year')})`}
-          />
+            <DownloadFile
+              fileName={`material_${t('cap')}_${startDate.getMonth() + 1}-${startDate.getFullYear()}.xlsx`}
+              url="/jur_7/monitoring/cap/report"
+              params={{
+                month: startDate.getMonth() + 1,
+                year: startDate.getFullYear(),
+                from: dates.from,
+                to: dates.to,
+                budjet_id,
+                main_schet_id,
+                report_title_id,
+                excel: true
+              }}
+              buttonText={t('cap')}
+            />
 
-          <DownloadFile
-            fileName={`${t('summarized_circulation')}(${t('month')})_${startDate.getMonth() + 1}-${startDate.getFullYear()}.xlsx`}
-            url="/jur_7/monitoring/schet"
-            params={{
-              month: startDate.getMonth() + 1,
-              year: startDate.getFullYear(),
-              is_year: false,
-              main_schet_id,
-              excel: true
-            }}
-            buttonText={`${t('summarized_circulation')} (${t('month')})`}
-          />
+            <DownloadFile
+              fileName={`material_${t('cap_prixod_rasxod')}_${dates.from}&${dates.to}.xlsx`}
+              url="jur_7/monitoring/by-schets"
+              buttonText={t('cap_prixod_rasxod')}
+              params={{
+                month: startDate.getMonth() + 1,
+                year: startDate.getFullYear(),
+                from: dates.from,
+                to: dates.to,
+                budjet_id,
+                main_schet_id,
+                report_title_id,
+                excel: true
+              }}
+            />
 
-          <Button
-            IconStart={Download}
-            variant="ghost"
-            onClick={() => {
-              turnoverToggle.open()
-            }}
-          >
-            {t('summarized_circulation')}
-          </Button>
+            <Button
+              variant="ghost"
+              onClick={materialToggle.open}
+            >
+              <Download className="btn-icon icon-start icon-sm" /> {t('material')}
+            </Button>
 
-          <Button
-            IconStart={Download}
-            variant="ghost"
-            onClick={() => {
-              aktToggle.open()
-            }}
-          >
-            {t('akt')} {t('report').toLowerCase()}
-          </Button>
-        </ButtonGroup>
+            <DownloadFile
+              fileName={`${t('summarized_circulation')}(${t('year')})_${startDate.getMonth() + 1}-${startDate.getFullYear()}.xlsx`}
+              url="/jur_7/monitoring/schet"
+              params={{
+                month: startDate.getMonth() + 1,
+                year: startDate.getFullYear(),
+                is_year: true,
+                main_schet_id,
+                excel: true
+              }}
+              buttonText={`${t('summarized_circulation')} (${t('year')})`}
+            />
+
+            <DownloadFile
+              fileName={`${t('summarized_circulation')}(${t('month')})_${startDate.getMonth() + 1}-${startDate.getFullYear()}.xlsx`}
+              url="/jur_7/monitoring/schet"
+              params={{
+                month: startDate.getMonth() + 1,
+                year: startDate.getFullYear(),
+                is_year: false,
+                main_schet_id,
+                excel: true
+              }}
+              buttonText={`${t('summarized_circulation')} (${t('month')})`}
+            />
+
+            <Button
+              IconStart={Download}
+              variant="ghost"
+              onClick={() => {
+                turnoverToggle.open()
+              }}
+            >
+              {t('summarized_circulation')}
+            </Button>
+
+            <Button
+              IconStart={Download}
+              variant="ghost"
+              onClick={() => {
+                aktToggle.open()
+              }}
+            >
+              {t('akt')} {t('report').toLowerCase()}
+            </Button>
+          </ButtonGroup>
+        </div>
 
         <SummaTotal className="pt-5">
           <SummaTotal.Value

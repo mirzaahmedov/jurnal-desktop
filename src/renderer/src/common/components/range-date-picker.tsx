@@ -56,7 +56,7 @@ export const RangeDatePicker = ({
   return (
     <Form {...form}>
       <form
-        className="flex items-center gap-5"
+        className="flex items-center flex-wrap gap-5 gap-y-0"
         onSubmit={onSubmit}
       >
         <FormField
