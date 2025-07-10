@@ -2,7 +2,6 @@ import { useEffect } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { Calculator } from 'lucide-react'
 import { useForm, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
@@ -10,18 +9,13 @@ import { toast } from 'react-toastify'
 
 import { createPodotchetSpravochnik } from '@/app/region-spravochnik/podotchet'
 import { OperatsiiService, operatsiiQueryKeys } from '@/app/super-admin/operatsii'
-import { DistanceQueryKeys } from '@/app/super-admin/spravochnik/distance/config'
-import { DistanceService } from '@/app/super-admin/spravochnik/distance/service'
 import { MinimumWageService } from '@/app/super-admin/spravochnik/minimum-wage/service'
-import { DatePicker, Fieldset, NumericInput, Spinner } from '@/common/components'
+import { DatePicker, Fieldset, NumericInput } from '@/common/components'
 import { EditableTable } from '@/common/components/editable-table'
 import { FormElement } from '@/common/components/form'
-import { Button } from '@/common/components/jolly/button'
-import { ComboboxItem, JollyComboBox } from '@/common/components/jolly/combobox'
 import { Form, FormField } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
 import { Textarea } from '@/common/components/ui/textarea'
-import { useConstantsStore } from '@/common/features/constants/store'
 import { useRequisitesStore } from '@/common/features/requisites'
 import {
   useSelectedMonthStore,
@@ -37,6 +31,9 @@ import { DocumentFields, PodotchetFields, SummaFields } from '@/common/widget/fo
 import { WorkTripFormSchema, WorkTripQueryKeys, defaultValues } from '../config'
 import { WorkTripService } from '../service'
 import { WorkTripProvodkaColumns } from './provodki'
+import { calcDailySumma } from './utils'
+import { WorkTripHotels } from './work-trip-hotels'
+import { WorkTripRoads } from './work-trip-roads'
 
 export interface WorkTripDetailsProps {
   id: string
@@ -46,7 +43,6 @@ export const WorkTripDetails = ({ id }: WorkTripDetailsProps) => {
   const navigate = useNavigate()
 
   const { startDate } = useSelectedMonthStore()
-  const { regions } = useConstantsStore()
 
   const { t } = useTranslation(['app'])
   const { main_schet_id, jur4_schet_id } = useRequisitesStore()
@@ -106,22 +102,7 @@ export const WorkTripDetails = ({ id }: WorkTripDetailsProps) => {
     queryKey: [MinimumWageService.QueryKeys.GetWage],
     queryFn: MinimumWageService.getWage
   })
-  const { data: distance, isFetching: isFetchingDistance } = useQuery({
-    queryKey: [
-      DistanceQueryKeys.GetAll,
-      {
-        from_region_id: form.watch('from_region_id'),
-        to_region_id: form.watch('to_region_id'),
-        page: 1,
-        limit: 1
-      }
-    ],
-    queryFn: DistanceService.getAll,
-    enabled:
-      !!form.watch('from_region_id') &&
-      !!form.watch('to_region_id') &&
-      !form.watch('road_ticket_number')
-  })
+
   const { data: operatsii } = useQuery({
     queryKey: [
       operatsiiQueryKeys.getAll,
@@ -178,22 +159,15 @@ export const WorkTripDetails = ({ id }: WorkTripDetailsProps) => {
     }
   }, [form, startDate])
 
-  const distanceKM = distance?.data?.[0]?.distance_km ?? 0
   const minimumWageSumma = minimumWage?.data?.summa ?? 0
-  const daysCount = getDaysCount({
-    startDate: parseDate(form.watch('from_date')),
-    endDate: parseDate(form.watch('to_date'))
-  })
-  useEffect(() => {
-    if (!form.getValues('road_ticket_number')) {
-      form.setValue('road_summa', distanceKM * (minimumWageSumma * 0.001))
-    }
-  }, [form, distanceKM, minimumWage])
-  useEffect(() => {
-    if (Array.isArray(distance?.data) && distance?.data?.length === 0) {
-      toast.error(t('errors.no_distance'))
-    }
-  }, [distance?.data])
+  const daysCount =
+    form.watch('from_date') && form.watch('to_date')
+      ? getDaysCount({
+          startDate: parseDate(form.watch('from_date')),
+          endDate: parseDate(form.watch('to_date'))
+        })
+      : 0
+
   useEffect(() => {
     const firstOperatsii = operatsii?.data?.[0]
     if (firstOperatsii) {
@@ -207,8 +181,63 @@ export const WorkTripDetails = ({ id }: WorkTripDetailsProps) => {
     }
   }, [form, operatsii?.data])
   useEffect(() => {
-    form.setValue('day_summa', minimumWageSumma * 0.1 * daysCount)
+    const daySumma = calcDailySumma({
+      minimumWageSumma,
+      daysCount
+    })
+    form.setValue('day_summa', daySumma)
+    form.setValue(
+      'childs',
+      form.getValues('childs').map((child) =>
+        child.type === 'day'
+          ? {
+              ...child,
+              summa: daySumma
+            }
+          : child
+      )
+    )
   }, [minimumWageSumma, daysCount])
+
+  const roads = useWatch({
+    control: form.control,
+    name: 'road'
+  })
+  useEffect(() => {
+    if (!Array.isArray(roads)) {
+      return
+    }
+    const roadsSumma = roads.reduce((acc, road) => acc + (road.road_summa ?? 0), 0)
+    const childIndex = form.getValues('childs').findIndex((child) => child.type === 'road')
+    if (childIndex !== -1 && roadsSumma !== form.getValues(`childs.${childIndex}.summa`)) {
+      form.setValue(`childs.${childIndex}.summa`, roadsSumma)
+    }
+    if (roadsSumma !== form.getValues('road_summa')) {
+      form.setValue('road_summa', roadsSumma)
+    }
+  }, [roads])
+
+  const hotels = useWatch({
+    control: form.control,
+    name: 'hotel'
+  })
+  useEffect(() => {
+    if (!Array.isArray(hotels)) {
+      return
+    }
+    const hotelsSumma = hotels.reduce((acc, hotel) => acc + (hotel.hostel_summa ?? 0), 0)
+    const childIndex = form.getValues('childs').findIndex((child) => child.type === 'hostel')
+    if (childIndex !== -1 && hotelsSumma !== form.getValues(`childs.${childIndex}.summa`)) {
+      form.setValue(`childs.${childIndex}.summa`, hotelsSumma)
+    }
+    if (hotelsSumma !== form.getValues('hostel_summa')) {
+      form.setValue('hostel_summa', hotelsSumma)
+    }
+  }, [hotels])
+
+  console.log({ hotels })
+  console.log({ errors: form.formState.errors })
+  console.log({ values: form.watch() })
 
   return (
     <DetailsView>
@@ -230,18 +259,20 @@ export const WorkTripDetails = ({ id }: WorkTripDetailsProps) => {
                       : undefined
                   }
                 />
-                <Fieldset name="">
-                  <FormElement label={t('pages.bhm')}>
-                    <Input
-                      readOnly
-                      value={formatNumber(minimumWageSumma)}
-                    />
-                  </FormElement>
-                </Fieldset>
+
+                <FormElement
+                  label={t('pages.bhm')}
+                  className="mb-7 mx-5"
+                >
+                  <Input
+                    readOnly
+                    value={formatNumber(minimumWageSumma)}
+                  />
+                </FormElement>
               </div>
               <div className="grid grid-cols-2 divide-x">
                 <Fieldset name={t('pages.work_trip')}>
-                  <div className="grid grid-cols-2 gap-5">
+                  <div className="grid grid-cols-[repeat(auto-fit,minmax(250px,1fr))] gap-5">
                     <FormField
                       control={form.control}
                       name="from_date"
@@ -281,8 +312,11 @@ export const WorkTripDetails = ({ id }: WorkTripDetailsProps) => {
                   spravochnik={podotchetSpravochnik}
                 />
               </div>
-              <div className="grid grid-cols-4 divide-x ">
-                <Fieldset name={t('daily_expense')}>
+              <div className="grid grid-cols-12 divide-x">
+                <Fieldset
+                  name={t('daily_expense')}
+                  className="col-span-12 gap-2 md:col-span-6 2xl:col-span-2"
+                >
                   <FormField
                     control={form.control}
                     name="day_summa"
@@ -300,20 +334,9 @@ export const WorkTripDetails = ({ id }: WorkTripDetailsProps) => {
                             value={field.value}
                             onValueChange={(values) => {
                               field.onChange(values.floatValue)
-                              form.setValue(
-                                'childs',
-                                form.getValues('childs').map((child) =>
-                                  child.type === 'day'
-                                    ? {
-                                        ...child,
-                                        summa: values.floatValue ?? 0
-                                      }
-                                    : child
-                                )
-                              )
                             }}
                           />
-                          <div className="text-xs font-semibold text-slate-500 mt-2 flex flex-col items-end gap-1">
+                          <div className="text-xs font-semibold text-slate-500 mt-2 flex flex-col justify-between items-end gap-1">
                             <p>
                               [{t('pages.bhm').toLowerCase()}] * 0.1 * [{t('days').toLowerCase()}]
                             </p>
@@ -325,210 +348,30 @@ export const WorkTripDetails = ({ id }: WorkTripDetailsProps) => {
                       </FormElement>
                     )}
                   />
-                  <div>
-                    <FormElement
-                      label={t('days')}
-                      direction="column"
-                    >
-                      <Input
-                        readOnly
-                        value={daysCount}
-                      />
-                    </FormElement>
-                  </div>
+                  <FormElement
+                    label={t('days')}
+                    direction="column"
+                  >
+                    <Input
+                      readOnly
+                      value={daysCount}
+                    />
+                  </FormElement>
                 </Fieldset>
                 <Fieldset
                   name={t('road_expense')}
-                  className="col-span-2"
+                  className="col-span-12 md:order-1 2xl:order-none md:col-span-12 2xl:col-span-6"
                 >
-                  <div className="flex flex-col gap-5">
-                    <div className="grid grid-cols-2 gap-5">
-                      <FormField
-                        control={form.control}
-                        name="from_region_id"
-                        render={({ field, fieldState }) => (
-                          <FormElement
-                            label={t('from_where')}
-                            direction="column"
-                          >
-                            <JollyComboBox
-                              defaultItems={regions}
-                              selectedKey={field.value}
-                              onSelectionChange={field.onChange}
-                              menuTrigger="focus"
-                              placeholder={t('region')}
-                              errorMessage={fieldState.error?.message}
-                              isInvalid={!!fieldState.error}
-                            >
-                              {(item) => <ComboboxItem id={item.id}>{item.name}</ComboboxItem>}
-                            </JollyComboBox>
-                          </FormElement>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name="to_region_id"
-                        render={({ field, fieldState }) => (
-                          <FormElement
-                            label={t('to_where')}
-                            direction="column"
-                          >
-                            <JollyComboBox
-                              defaultItems={regions}
-                              selectedKey={field.value}
-                              onSelectionChange={field.onChange}
-                              menuTrigger="focus"
-                              placeholder={t('region')}
-                              errorMessage={fieldState.error?.message}
-                              isInvalid={!!fieldState.error}
-                            >
-                              {(item) => <ComboboxItem id={item.id}>{item.name}</ComboboxItem>}
-                            </JollyComboBox>
-                          </FormElement>
-                        )}
-                      />
-                    </div>
-                    <div className="grid grid-cols-2 gap-5">
-                      <FormElement
-                        label={t('distance')}
-                        direction="column"
-                        divProps={{
-                          className: 'gap-3'
-                        }}
-                      >
-                        <Input
-                          readOnly
-                          value={distanceKM}
-                        />
-                      </FormElement>
-                      <FormField
-                        control={form.control}
-                        name="road_ticket_number"
-                        render={({ field }) => (
-                          <FormElement
-                            label={t('road_ticket_number')}
-                            direction="column"
-                            divProps={{
-                              className: 'gap-3'
-                            }}
-                          >
-                            <Input {...field} />
-                          </FormElement>
-                        )}
-                      />
-                    </div>
-                    <div>
-                      <FormField
-                        control={form.control}
-                        name="road_summa"
-                        render={({ field }) => (
-                          <FormElement
-                            label={t('summa')}
-                            direction="column"
-                            divProps={{
-                              className: 'gap-3'
-                            }}
-                          >
-                            <div className="flex items-start gap-5">
-                              <div className="flex-1 max-w-md">
-                                <NumericInput
-                                  disabled={isFetchingDistance || isFetchingMinimumWage}
-                                  readOnly={!form.watch('road_ticket_number')}
-                                  value={field.value}
-                                  onValueChange={(values) => {
-                                    field.onChange(values.floatValue)
-                                    form.setValue(
-                                      'childs',
-                                      form.getValues('childs').map((child) =>
-                                        child.type === 'road'
-                                          ? {
-                                              ...child,
-                                              summa: values.floatValue ?? 0
-                                            }
-                                          : child
-                                      )
-                                    )
-                                  }}
-                                />
-                                {!form.watch('road_ticket_number') ? (
-                                  <div className="text-xs font-semibold text-slate-500 mt-2 flex flex-col items-end gap-1">
-                                    <p>
-                                      [{t('pages.bhm').toLowerCase()}] * 0.001 * [
-                                      {t('distance').toLowerCase()}]
-                                    </p>
-                                    <p>
-                                      {formatNumber(minimumWageSumma)} * 0.001 * {distanceKM}
-                                    </p>
-                                  </div>
-                                ) : null}
-                              </div>
-
-                              {isFetchingDistance || isFetchingMinimumWage ? (
-                                <Spinner />
-                              ) : !form.watch('road_ticket_number') ? (
-                                <Button
-                                  size="icon"
-                                  className="shrink-0"
-                                >
-                                  <Calculator />
-                                </Button>
-                              ) : null}
-                            </div>
-                          </FormElement>
-                        )}
-                      />
-                    </div>
-                  </div>
+                  <WorkTripRoads
+                    form={form}
+                    minimumWageSumma={minimumWageSumma}
+                  />
                 </Fieldset>
-                <Fieldset name={t('hotel_expense')}>
-                  <FormField
-                    control={form.control}
-                    name="hostel_ticket_number"
-                    render={({ field }) => (
-                      <FormElement
-                        label={t('hotel_number')}
-                        direction="column"
-                        className="w-full max-w-sm"
-                        divProps={{
-                          className: 'gap-3'
-                        }}
-                      >
-                        <Input {...field} />
-                      </FormElement>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="hostel_summa"
-                    render={({ field }) => (
-                      <FormElement
-                        label={t('summa')}
-                        direction="column"
-                        className="w-full max-w-sm"
-                        divProps={{
-                          className: 'gap-3'
-                        }}
-                      >
-                        <NumericInput
-                          value={field.value}
-                          onValueChange={(values) => {
-                            field.onChange(values.floatValue)
-                            form.setValue(
-                              'childs',
-                              form.getValues('childs').map((child) =>
-                                child.type === 'hostel'
-                                  ? {
-                                      ...child,
-                                      summa: values.floatValue ?? 0
-                                    }
-                                  : child
-                              )
-                            )
-                          }}
-                        />
-                      </FormElement>
-                    )}
-                  />
+                <Fieldset
+                  name={t('hotel_expense')}
+                  className="col-span-12 md:col-span-6 2xl:col-span-4"
+                >
+                  <WorkTripHotels form={form} />
                 </Fieldset>
               </div>
               <div className="grid grid-cols-2 divide-x">
@@ -558,8 +401,8 @@ export const WorkTripDetails = ({ id }: WorkTripDetailsProps) => {
               <div className="p-5 pb-28">
                 <EditableTable
                   name="childs"
-                  columnDefs={WorkTripProvodkaColumns}
-                  errors={form.formState.errors.childs}
+                  columnDefs={WorkTripProvodkaColumns as any}
+                  errors={form.formState.errors.childs as any}
                   form={form}
                 />
               </div>

@@ -1,4 +1,4 @@
-import type { WorkTripProvodkaFormValues } from '../config'
+import type { WorkTripChildValues } from '../config'
 import type { EditableColumnDef } from '@/common/components/editable-table'
 
 import { useTranslation } from 'react-i18next'
@@ -10,7 +10,7 @@ import {
 import { Input } from '@/common/components/ui/input'
 import { TypeSchetOperatsii } from '@/common/models'
 
-export const WorkTripProvodkaColumns: EditableColumnDef<WorkTripProvodkaFormValues>[] = [
+export const WorkTripProvodkaColumns: EditableColumnDef<WorkTripChildValues>[] = [
   {
     key: 'schet_id',
     header: 'operatsii',

@@ -85,7 +85,7 @@ export const DocumentFields: FormEditableFieldsComponent<
           render={({ field }) => (
             <FormElement
               label={t('doc_num')}
-              className="flex-1 max-w-sm"
+              className="flex-1 max-w-sm min-w-48"
               direction={dialog ? 'column' : 'row'}
             >
               <div className="flex items-center gap-1">

@@ -22,7 +22,7 @@ const PodotchetFields: FormSpravochnikFieldsComponent<Podotchet> = ({
       {...props}
       name={name ?? t('podotchet-litso')}
     >
-      <div className="grid grid-cols-2 gap-5">
+      <div className="grid grid-cols-[repeat(auto-fit,minmax(250px,1fr))] gap-5">
         <SpravochnikField
           {...spravochnikProps}
           readOnly
