@@ -1,9 +1,9 @@
-import type { AdditionalDocument } from '@/common/models/additional-documents'
+import type { DopOplata } from '@/common/models/dop-oplata'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 
 import { type ZarplataApiResponse, zarplataApiNew } from '@/common/lib/zarplata_new'
 
-export class AdditionalDocumentService {
+export class DopOplataService {
   static endpoint = 'DopOplata'
 
   static QueryKeys = {
@@ -11,12 +11,10 @@ export class AdditionalDocumentService {
   }
 
   static async getByMainZarplataId(
-    ctx: QueryFunctionContext<
-      [typeof AdditionalDocumentService.QueryKeys.GetByMainZarplataId, number]
-    >
+    ctx: QueryFunctionContext<[typeof DopOplataService.QueryKeys.GetByMainZarplataId, number]>
   ) {
     const mainZarplataId = ctx.queryKey[1]
-    const res = await zarplataApiNew.get<ZarplataApiResponse<AdditionalDocument[]>>(
+    const res = await zarplataApiNew.get<ZarplataApiResponse<DopOplata[]>>(
       `${this.endpoint}/get-by-mainId/${mainZarplataId}`
     )
     return res.data

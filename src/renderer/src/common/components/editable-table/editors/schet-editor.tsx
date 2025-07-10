@@ -56,7 +56,11 @@ export const SchetEditor = ({
       error={!!error?.message}
       {...props}
     >
-      {(item) => <ComboboxItem id={item.schet}>{item.schet}</ComboboxItem>}
+      {(item) => (
+        <ComboboxItem id={item.schet}>
+          {item.schet} ({item.schet6})
+        </ComboboxItem>
+      )}
     </JollyComboBox>
   )
 }

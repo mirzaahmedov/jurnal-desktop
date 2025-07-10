@@ -24,6 +24,18 @@ export const OperatsiiColumns: ColumnDef<Operatsii>[] = [
     minWidth: 140
   },
   {
+    key: 'schet6',
+    header: 'schet_6_digit',
+    width: 200,
+    minWidth: 200
+  },
+  {
+    key: 'sub_schet',
+    width: 140,
+    minWidth: 140,
+    header: 'subschet'
+  },
+  {
     key: 'type_schet',
     width: 260,
     minWidth: 260,
@@ -33,11 +45,5 @@ export const OperatsiiColumns: ColumnDef<Operatsii>[] = [
         i18nKey={operatsiiTypeSchetOptions.find((o) => o.value === row.type_schet)?.transKey ?? '-'}
       />
     )
-  },
-  {
-    key: 'sub_schet',
-    width: 140,
-    minWidth: 140,
-    header: 'subschet'
   }
 ]

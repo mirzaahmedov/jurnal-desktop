@@ -6,36 +6,46 @@ import { useTranslation } from 'react-i18next'
 
 import { GenericTable } from '@/common/components'
 import { Button } from '@/common/components/jolly/button'
+import { useToggle } from '@/common/hooks'
 import { ListView } from '@/common/views'
 
-import { AdditionalDocumentColumnDefs } from './columns'
-import { AdditionalDocumentService } from './service'
+import { DopOplataColumnDefs } from './columns'
+import { DopOplataDialog } from './dialog'
+import { DopOplataService } from './service'
 
-interface AdditionalDocumentsProps {
+interface DopOplataDocumentProps {
   mainZarplata: MainZarplata
 }
-export const AdditionalDocuments = ({ mainZarplata }: AdditionalDocumentsProps) => {
+export const DopOplataDocuments = ({ mainZarplata }: DopOplataDocumentProps) => {
   const { t } = useTranslation()
 
+  const dialogToggle = useToggle()
+
   const { data: documents, isFetching: isFetchingDocuments } = useQuery({
-    queryKey: [AdditionalDocumentService.QueryKeys.GetByMainZarplataId, mainZarplata.id],
-    queryFn: AdditionalDocumentService.getByMainZarplataId
+    queryKey: [DopOplataService.QueryKeys.GetByMainZarplataId, mainZarplata.id],
+    queryFn: DopOplataService.getByMainZarplataId
   })
 
   return (
     <ListView>
       <ListView.Header className="justify-end">
-        <Button>
+        <Button onClick={dialogToggle.open}>
           <Plus className="btn-icon icon-start" /> {t('add')}
         </Button>
       </ListView.Header>
       <ListView.Content isLoading={isFetchingDocuments}>
         <GenericTable
-          columnDefs={AdditionalDocumentColumnDefs}
+          columnDefs={DopOplataColumnDefs}
           data={documents?.data ?? []}
           className="table-generic-xs"
         />
       </ListView.Content>
+
+      <DopOplataDialog
+        isOpen={dialogToggle.isOpen}
+        onOpenChange={dialogToggle.setOpen}
+        mainZarplata={mainZarplata}
+      />
     </ListView>
   )
 }

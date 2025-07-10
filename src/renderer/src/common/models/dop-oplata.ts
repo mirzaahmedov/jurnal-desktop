@@ -1,4 +1,4 @@
-export interface AdditionalDocument {
+export interface DopOplata {
   id: number
   docNum: string
   docDate: string
@@ -15,4 +15,12 @@ export interface AdditionalDocument {
   typesName: string
   typeName: string
   typeCode: number
+  childs: DopOplataChild[]
+}
+
+export interface DopOplataChild {
+  id: number
+  name: string
+  period: number
+  summa: number
 }

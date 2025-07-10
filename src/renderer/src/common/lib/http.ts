@@ -37,8 +37,8 @@ const baseURL = import.meta.env.DEV
     ? 'https://nafaqa.fizmasoft.uz/api'
     : import.meta.env.VITE_MODE === 'region'
       ? 'http://192.168.137.251:3006'
-      : // : 'http://10.50.0.140:3006'
-        'http://10.50.0.140/backend'
+      : 'http://10.50.0.140:3006'
+// 'http://10.50.0.140/backend'
 
 export const http = axios.create({
   baseURL

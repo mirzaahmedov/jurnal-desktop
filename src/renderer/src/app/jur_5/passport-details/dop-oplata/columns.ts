@@ -1,7 +1,7 @@
 import type { ColumnDef } from '@/common/components'
-import type { AdditionalDocument } from '@/common/models/additional-documents'
+import type { DopOplata } from '@/common/models/dop-oplata'
 
-export const AdditionalDocumentColumnDefs: ColumnDef<AdditionalDocument>[] = [
+export const DopOplataColumnDefs: ColumnDef<DopOplata>[] = [
   {
     key: 'docNum',
     header: 'doc_num'

@@ -443,7 +443,7 @@
   "home": "Главная",
   "deduction": "Удержание",
   "bank_card": "Банковская карта",
-  "additional_document": "Дополнительная выплата",
+  "dop-oplata": "Дополнительная выплата",
   "separate_calculation": "Отдельный расчет",
   "payroll": "Зарплатная ведомость",
   "raschet-stop": "Расчет стоп",
@@ -479,5 +479,7 @@
   "stop": "Остановить",
   "listed_accruals": "Перечисленных начислений",
   "sick_leave": "Больничный",
-  "annual_leave": "Отпуск"
+  "annual_leave": "Отпуск",
+  "period": "Период",
+  "schet_6_digit": "Счет (6 цифр)"
 }

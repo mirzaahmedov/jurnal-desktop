@@ -441,7 +441,7 @@
   "home": "Asosiy",
   "deduction": "Ushlab qoldirish",
   "bank_card": "Bank kartasi",
-  "additional_document": "Qo'shimcha to'lov",
+  "dop-oplata": "Qo'shimcha to'lov",
   "separate_calculation": "Alohida hisoblash",
   "payroll": "Ish haqi",
   "raschet-stop": "Raschet stop",
@@ -477,5 +477,7 @@
   "stop": "To'xtatish",
   "listed_accruals": "Ro'yxatga olingan hisob-kitoblar",
   "sick_leave": "Kasallik varaqasi",
-  "annual_leave": "Yillik ta'til"
+  "annual_leave": "Yillik ta'til",
+  "period": "Davr",
+  "schet_6_digit": "Schet (6 raqamli)"
 }

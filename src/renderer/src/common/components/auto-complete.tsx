@@ -125,9 +125,9 @@ const AutoComplete = <T extends object>({
                 <Spinner />
               </CommandItem>
             ) : Array.isArray(options) ? (
-              options.map((item) => (
+              options.map((item, index) => (
                 <CommandItem
-                  key={getOptionValue(item)}
+                  key={index}
                   onSelect={() => {
                     onSelect(item)
                     popoverToggle.close()

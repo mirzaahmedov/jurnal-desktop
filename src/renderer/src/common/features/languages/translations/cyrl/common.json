@@ -439,7 +439,7 @@
   "military": "Ҳарбий",
   "military_rank": "Ҳарбий унвон",
   "bank_card": "Банк карточкаси",
-  "additional_document": "Қўшимча тўлов",
+  "dop-oplata": "Қўшимча тўлов",
   "separate_calculation": "Алоҳида ҳисоб-китоб",
   "payroll": "Иш ҳақи рўйхати",
   "labor": "Меҳнат",
@@ -478,5 +478,7 @@
   "stop": "Тўхтатиш",
   "listed_accruals": "Рўйхатга олинган ҳисоб-китоблар",
   "sick_leave": "Касаллик варақаси",
-  "annual_leave": "Йиллик таътил"
+  "annual_leave": "Йиллик таътил",
+  "period": "Давр",
+  "schet_6_digit": "Счeт (6 рақамли)"
 }

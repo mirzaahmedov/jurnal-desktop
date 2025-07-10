@@ -14,6 +14,7 @@ import { OperatsiiColumns } from './columns'
 
 export type OperatsiiSchetOption = {
   schet: string
+  schet6: string
 }
 export class OperatsiiServiceBuilder extends CRUDService<Operatsii, OperatsiiFormValues> {
   constructor() {

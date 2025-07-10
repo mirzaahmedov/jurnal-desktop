@@ -12,7 +12,6 @@ import { Trans } from 'react-i18next'
 import { toast } from 'react-toastify'
 
 import { createSmetaSpravochnik } from '@/app/super-admin/smeta'
-import { SelectField } from '@/common/components'
 import {
   DialogContent,
   DialogFooter,
@@ -21,6 +20,7 @@ import {
   DialogTitle,
   DialogTrigger
 } from '@/common/components/jolly/dialog'
+import { JollySelect, SelectItem } from '@/common/components/jolly/select'
 import { Button } from '@/common/components/ui/button'
 import {
   Form,
@@ -185,6 +185,27 @@ export const OperatsiiDialog = ({
                 />
 
                 <FormField
+                  name="schet6"
+                  control={form.control}
+                  render={({ field }) => (
+                    <FormItem>
+                      <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
+                        <FormLabel className="text-right col-span-2">
+                          {t('schet_6_digit')}
+                        </FormLabel>
+                        <FormControl>
+                          <Input
+                            className="col-span-4"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage className="text-end col-span-6" />
+                      </div>
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
                   name="sub_schet"
                   control={form.control}
                   render={({ field }) => (
@@ -210,23 +231,25 @@ export const OperatsiiDialog = ({
                     <FormItem>
                       <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
                         <FormLabel className="text-right col-span-2">{t('type_schet')}</FormLabel>
-                        <SelectField
-                          {...field}
-                          withFormControl
-                          options={operatsiiTypeSchetOptions.filter(
+                        <JollySelect
+                          items={operatsiiTypeSchetOptions.filter(
                             (o) => o.value !== TypeSchetOperatsii.ALL
                           )}
+                          selectedKey={field.value}
+                          onSelectionChange={field.onChange}
+                          onBlur={field.onBlur}
                           placeholder={t('type')}
-                          getOptionLabel={(option) => (
-                            <Trans
-                              ns="app"
-                              i18nKey={option.transKey}
-                            />
+                          className="col-span-4"
+                        >
+                          {(item) => (
+                            <SelectItem id={item.value}>
+                              <Trans
+                                ns="app"
+                                i18nKey={item.transKey}
+                              />
+                            </SelectItem>
                           )}
-                          getOptionValue={(option) => option.value}
-                          triggerClassName="col-span-4"
-                          onValueChange={(value) => field.onChange(value)}
-                        />
+                        </JollySelect>
                         <FormMessage className="text-end col-span-6" />
                       </div>
                     </FormItem>

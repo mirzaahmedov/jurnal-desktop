@@ -42,8 +42,8 @@ const url =
     ? 'https://nafaqa.fizmasoft.uz'
     : import.meta.env.VITE_MODE === 'region'
       ? 'http://10.50.0.140:4001'
-      : // : 'http://10.50.0.140:4005'
-        'http://10.50.0.140/update'
+      : 'http://10.50.0.140:4005'
+// 'http://10.50.0.140/update'
 
 const autoUpdater = new NsisUpdater({
   provider: 'generic',

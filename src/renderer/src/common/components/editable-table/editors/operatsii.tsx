@@ -39,6 +39,7 @@ export const createOperatsiiEditor = withEditorProps<{
     })
 
     const [schet, setSchet] = useState<string>()
+    const [schet6, setSchet6] = useState<string>()
     const [subschet, setSubschet] = useState<string>()
 
     const [debouncedSchet] = useDebounceValue(schet)
@@ -87,10 +88,16 @@ export const createOperatsiiEditor = withEditorProps<{
       if (operatsiiSpravochnik.selected) {
         setSchet(operatsiiSpravochnik.selected?.schet)
         setSubschet(operatsiiSpravochnik.selected?.sub_schet)
+        setSchet6(operatsiiSpravochnik.selected?.schet6)
         form.setValue(`childs.${id}.schet`, operatsiiSpravochnik.selected?.schet)
         form.setValue(`childs.${id}.sub_schet`, operatsiiSpravochnik.selected?.sub_schet)
       }
     }, [operatsiiSpravochnik.selected])
+
+    console.log({
+      schet6,
+      filteredSchetOptions
+    })
 
     return (
       <div className="w-full grid grid-cols-2">
@@ -99,10 +106,11 @@ export const createOperatsiiEditor = withEditorProps<{
           isFetching={isFetchingSchetOptions}
           options={filteredSchetOptions}
           disabled={!!operatsiiSpravochnik.selected || !schet}
-          getOptionLabel={(option) => option.schet}
+          getOptionLabel={(option) => `${option.schet} (${option.schet6 ?? ''})`}
           getOptionValue={(option) => option.schet}
           onSelect={(option) => {
             setSchet(option.schet)
+            setSchet6(option.schet6)
             inputRef.current?.focus()
           }}
           className="border-r"
@@ -111,35 +119,50 @@ export const createOperatsiiEditor = withEditorProps<{
           }}
         >
           {({ open, close }) => (
-            <SpravochnikInput
-              {...operatsiiSpravochnik}
-              readOnly={false}
-              clear={() => {
-                operatsiiSpravochnik.clear()
-                setSchet('')
-                setSubschet('')
-              }}
-              editor
-              type="text"
-              tabIndex={tabIndex}
-              error={!!error}
-              name={`${field}-schet`}
-              placeholder={t('schet')}
-              onChange={(e) => {
-                operatsiiSpravochnik.clear()
-                setSchet(e.target.value)
-                setSubschet(undefined)
-              }}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  e.preventDefault()
-                }
-              }}
-              onFocus={open}
-              onBlur={close}
-              getInputValue={() => schet ?? ''}
-              onMouseDown={(e) => e.stopPropagation()}
-            />
+            <div className="relative">
+              <SpravochnikInput
+                {...operatsiiSpravochnik}
+                readOnly={false}
+                clear={() => {
+                  operatsiiSpravochnik.clear()
+                  setSchet('')
+                  setSchet6('')
+                  setSubschet('')
+                }}
+                editor
+                type="text"
+                tabIndex={tabIndex}
+                error={!!error}
+                name={`${field}-schet`}
+                placeholder={t('schet')}
+                onChange={(e) => {
+                  operatsiiSpravochnik.clear()
+                  setSchet(e.target.value)
+                  setSubschet(undefined)
+
+                  const selectedOption = schetOptions?.data?.find((o) => o.schet === e.target.value)
+                  if (selectedOption) {
+                    setSchet6(selectedOption.schet6)
+                  } else {
+                    setSchet6('')
+                  }
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault()
+                  }
+                }}
+                onFocus={open}
+                onBlur={close}
+                getInputValue={() => schet ?? ''}
+                onMouseDown={(e) => e.stopPropagation()}
+              />
+              {schet ? (
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">
+                  <span className="opacity-0">{schet}</span> ({schet6})
+                </span>
+              ) : null}
+            </div>
           )}
         </AutoComplete>
         <AutoComplete
