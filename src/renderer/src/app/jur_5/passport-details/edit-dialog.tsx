@@ -21,10 +21,12 @@ import { PayrollDeductions } from '@/common/features/payroll-deduction/payroll-d
 import { PayrollPayments } from '@/common/features/payroll-payment/payroll-payments'
 import { PayrollPaymentService } from '@/common/features/payroll-payment/service'
 
+import { BankCard } from './bank_card/bank-card'
 import { DopOplataDocuments } from './dop-oplata/dop-oplata-documents'
 import { EmployeeWorkplace } from './employee-workplace'
 import { Employments } from './employment/employment'
 import { MainZarplataForm } from './main-zarplata-form'
+import { OtdelniyRaschets } from './otdelniy-raschet/page'
 
 export enum PassportInfoTabs {
   Main = 'main',
@@ -32,7 +34,7 @@ export enum PassportInfoTabs {
   Deduction = 'deduction',
   BankCard = 'bank_card',
   AdditionalDocument = 'dop-oplata',
-  SeperateCalculation = 'separate_calculation',
+  OtdelniyRaschet = 'otdelniy_raschet',
   Payroll = 'payroll'
 }
 
@@ -42,7 +44,7 @@ const tabOptions = [
   PassportInfoTabs.Deduction,
   PassportInfoTabs.BankCard,
   PassportInfoTabs.AdditionalDocument,
-  PassportInfoTabs.SeperateCalculation,
+  PassportInfoTabs.OtdelniyRaschet,
   PassportInfoTabs.Payroll
 ]
 
@@ -176,6 +178,20 @@ export const PassportInfoDialog = ({
                     {mainZarplata?.data ? (
                       <DopOplataDocuments mainZarplata={mainZarplata?.data} />
                     ) : null}
+                  </TabsContent>
+                  <TabsContent
+                    value={PassportInfoTabs.OtdelniyRaschet}
+                    className="mt-0"
+                  >
+                    {mainZarplata?.data ? (
+                      <OtdelniyRaschets mainZarplata={mainZarplata.data} />
+                    ) : null}
+                  </TabsContent>
+                  <TabsContent
+                    value={PassportInfoTabs.BankCard}
+                    className="mt-0"
+                  >
+                    {mainZarplata?.data ? <BankCard /> : null}
                   </TabsContent>
                 </div>
               </Tabs>

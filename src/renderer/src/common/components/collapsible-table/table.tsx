@@ -311,7 +311,7 @@ const CollapsibleItem = <T extends object, C extends object>({
             <GenericTableRow>
               <GenericTableCell
                 colSpan={100}
-                className="p-0 bg-white"
+                className="!p-0 last:border-r-0 bg-white"
               >
                 {children ? (
                   children({

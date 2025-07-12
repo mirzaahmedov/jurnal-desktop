@@ -337,7 +337,7 @@
   "video": "Видео",
   "maximize": "Катталаштириш",
   "minimize": "Кичиклаштириш",
-  "nachislenie": "Ҳисобланган",
+  "nachislenie": "Иш ҳақини ҳисоблаш",
   "uderjanie": "Ушланма",
   "doplata": "Қўшимча тўлов",
   "aliment": "Алимент",
@@ -440,7 +440,7 @@
   "military_rank": "Ҳарбий унвон",
   "bank_card": "Банк карточкаси",
   "dop-oplata": "Қўшимча тўлов",
-  "separate_calculation": "Алоҳида ҳисоб-китоб",
+  "otdelniy_raschet": "Алоҳида ҳисоб-китоб",
   "payroll": "Иш ҳақи рўйхати",
   "labor": "Меҳнат",
   "deduction": "Ушланма",
@@ -480,5 +480,8 @@
   "sick_leave": "Касаллик варақаси",
   "annual_leave": "Йиллик таътил",
   "period": "Давр",
-  "schet_6_digit": "Счeт (6 рақамли)"
+  "schet_6_digit": "Счeт (6 рақамли)",
+  "tabel": "Табель",
+  "vedemost": "Ведомость",
+  "card_number": "Карта рақами"
 }

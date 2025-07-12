@@ -293,8 +293,8 @@ export const getNavElements = (t: TFunction): NavElement[] => {
               icon: IdCard
             },
             {
-              path: 'salary',
-              title: t('pages.salary_accrual'),
+              path: 'nachislenie',
+              title: t('pages.nachislenie'),
               icon: Calculator
             },
             {

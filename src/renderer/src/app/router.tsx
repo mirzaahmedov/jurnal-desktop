@@ -128,6 +128,7 @@ const UserPage = lazy(() => import('./super-admin/user/page'))
 const DemoPage = lazy(() => import('./_demo/page'))
 const ReportTitlePage = lazy(() => import('./super-admin/report-title'))
 const VacantPage = lazy(() => import('./region-admin/vacant/page'))
+const NachisleniePage = lazy(() => import('./jur_5/nachislenie/page'))
 
 const MinimumWagePage = lazy(() => import('./super-admin/spravochnik/minimum-wage/page'))
 
@@ -679,6 +680,10 @@ export const routes: RouteObject[] = [
                 element: <DeductionsPage />
               }
             ]
+          },
+          {
+            path: 'nachislenie',
+            element: <NachisleniePage />
           }
         ]
       },

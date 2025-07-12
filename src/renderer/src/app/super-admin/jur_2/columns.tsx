@@ -1,6 +1,6 @@
 import type { AdminBank, AdminBankMainSchet } from './interfaces'
-
 import type { ColumnDef } from '@/common/components'
+
 import { SummaCell } from '@/common/components/table/renderers/summa'
 
 export const AdminBankRegionColumnDefs: ColumnDef<AdminBank>[] = [

@@ -337,7 +337,7 @@
   "video": "Video",
   "maximize": "Kattalashtirish",
   "minimize": "Kichiklashtirish",
-  "nachislenie": "Hisoblangan",
+  "nachislenie": "Ish haqini hisoblash",
   "uderjanie": "Ushlanma",
   "doplata": "Qo'shimcha to'lov",
   "aliment": "Aliment",
@@ -442,7 +442,7 @@
   "deduction": "Ushlab qoldirish",
   "bank_card": "Bank kartasi",
   "dop-oplata": "Qo'shimcha to'lov",
-  "separate_calculation": "Alohida hisoblash",
+  "otdelniy_raschet": "Alohida hisoblash",
   "payroll": "Ish haqi",
   "raschet-stop": "Raschet stop",
   "no_calculate_params_selected": "Hisoblash parametrlari tanlanmagan",
@@ -479,5 +479,8 @@
   "sick_leave": "Kasallik varaqasi",
   "annual_leave": "Yillik ta'til",
   "period": "Davr",
-  "schet_6_digit": "Schet (6 raqamli)"
+  "schet_6_digit": "Schet (6 raqamli)",
+  "tabel": "Tabel",
+  "vedemost": "Vedomost",
+  "card_number": "Karta raqami"
 }

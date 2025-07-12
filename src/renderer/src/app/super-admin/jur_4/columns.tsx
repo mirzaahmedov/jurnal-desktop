@@ -1,7 +1,7 @@
 import type { AdminPodotchet, AdminPodotchetMainSchet, AdminPodotchetSchet } from './interfaces'
-
-import type { CollapsibleColumnDef } from '@/common/components/collapsible-table'
 import type { ColumnDef } from '@/common/components'
+import type { CollapsibleColumnDef } from '@/common/components/collapsible-table'
+
 import { SummaCell } from '@/common/components/table/renderers/summa'
 
 export const AdminPodotchetRegionColumnDefs: ColumnDef<AdminPodotchet>[] = [

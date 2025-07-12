@@ -1,6 +1,6 @@
 import type { AdminMaterial, AdminMaterialMainSchet } from './interfaces'
-
 import type { ColumnDef } from '@/common/components'
+
 import { SummaCell } from '@/common/components/table/renderers/summa'
 
 export const AdminMaterialRegionColumnDefs: ColumnDef<AdminMaterial>[] = [

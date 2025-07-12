@@ -1,11 +1,13 @@
-import { Document, Page, StyleSheet } from '@react-pdf/renderer'
 import type { MainSchet, MaterialRasxod } from '@/common/models'
+
+import { Document, Page, StyleSheet } from '@react-pdf/renderer'
+
+import { registerFonts } from '@/common/lib/pdf'
 
 import { Header } from './header'
 import { ProvodkaTable } from './provodka-table'
 import { Signatures } from './signatures'
 import { TransactionParties } from './transaction-parties'
-import { registerFonts } from '@/common/lib/pdf'
 
 registerFonts()
 

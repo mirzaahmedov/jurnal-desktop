@@ -1,5 +1,6 @@
+import type { SpravochnikStore } from './store'
+
 import { Spravochnik } from './dialog'
-import type { SpravochnikStore} from './store';
 import { useSpravochnikStore } from './store'
 
 export const SpravochnikProvider = () => {

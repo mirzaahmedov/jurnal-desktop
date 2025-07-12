@@ -1,6 +1,7 @@
-import type { ColumnDef } from '@/common/components'
-import { IDCell } from '@/common/components/table/renderers/id'
 import type { MinimumWage } from './service'
+import type { ColumnDef } from '@/common/components'
+
+import { IDCell } from '@/common/components/table/renderers/id'
 import { SummaCell } from '@/common/components/table/renderers/summa'
 
 export const columnDefs: ColumnDef<MinimumWage>[] = [

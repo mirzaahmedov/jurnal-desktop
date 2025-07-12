@@ -1,6 +1,6 @@
-import { GenericTableCell, GenericTableRow } from '@/common/components/generic-table'
 import type { HTMLAttributes, ReactNode, TdHTMLAttributes } from 'react'
 
+import { GenericTableCell, GenericTableRow } from '@/common/components/generic-table'
 import { cn } from '@/common/lib/utils'
 
 export type FooterRowProps = HTMLAttributes<HTMLTableRowElement> & {

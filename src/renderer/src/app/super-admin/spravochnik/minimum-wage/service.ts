@@ -1,6 +1,6 @@
-import { ApiEndpoints, CRUDService } from '@/common/features/crud'
-
 import type { ApiResponse } from '@/common/models'
+
+import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 
 export interface MinimumWage {
   id: number

@@ -1,6 +1,7 @@
 import type { AdminOrgan159 } from './interfaces'
 import type { ApiResponse } from '@/common/models'
 import type { QueryFunctionContext } from '@tanstack/react-query'
+
 import { http } from '@/common/lib/http'
 
 export class AdminOrgan159Service {

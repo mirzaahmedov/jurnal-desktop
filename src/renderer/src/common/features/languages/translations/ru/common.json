@@ -338,7 +338,7 @@
   "video": "Видео",
   "maximize": "Развернуть",
   "minimize": "Свернуть",
-  "nachislenie": "Начисления",
+  "nachislenie": "Начисление зарплаты",
   "uderjanie": "Удержания",
   "doplata": "Доплата",
   "aliment": "Алимент",
@@ -444,7 +444,7 @@
   "deduction": "Удержание",
   "bank_card": "Банковская карта",
   "dop-oplata": "Дополнительная выплата",
-  "separate_calculation": "Отдельный расчет",
+  "otdelniy_raschet": "Отдельный расчет",
   "payroll": "Зарплатная ведомость",
   "raschet-stop": "Расчет стоп",
   "no_calculate_params_selected": "Параметры расчета не выбраны",
@@ -481,5 +481,8 @@
   "sick_leave": "Больничный",
   "annual_leave": "Отпуск",
   "period": "Период",
-  "schet_6_digit": "Счет (6 цифр)"
+  "schet_6_digit": "Счет (6 цифр)",
+  "tabel": "Табель",
+  "vedemost": "Ведомость",
+  "card_number": "Номер карты"
 }

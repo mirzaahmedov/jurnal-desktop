@@ -1,5 +1,6 @@
-import type { ColumnDef } from '@/common/components'
 import type { Distance } from './service'
+import type { ColumnDef } from '@/common/components'
+
 import { IDCell } from '@/common/components/table/renderers/id'
 import { SummaCell } from '@/common/components/table/renderers/summa'
 

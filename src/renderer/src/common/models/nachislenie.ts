@@ -24,7 +24,18 @@ export interface Nachislenie {
   dopOplataSum: number
   uderjanieSum: number
   naRuki: number
+  spravochnikBudjetName: string;
   spravochnikBudjetNameId: number
   mainSchetId: number
   description: string | null
+}
+
+export interface NachislenieSostav {
+  id: number;
+  mainZarplataId: number;
+  foiz: number;
+  summa: number;
+  nachislenieName: string;
+  nachislenieTypeCode: number;
+  spravochnikZarpaltaNachislenieId: number;
 }

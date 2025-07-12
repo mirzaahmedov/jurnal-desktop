@@ -1,7 +1,7 @@
 import type { AdminOrgan159, AdminOrgan159MainSchet, AdminOrgan159Schet } from './interfaces'
-
-import type { CollapsibleColumnDef } from '@/common/components/collapsible-table'
 import type { ColumnDef } from '@/common/components'
+import type { CollapsibleColumnDef } from '@/common/components/collapsible-table'
+
 import { SummaCell } from '@/common/components/table/renderers/summa'
 
 export const AdminOrgan159RegionColumnDefs: ColumnDef<AdminOrgan159>[] = [

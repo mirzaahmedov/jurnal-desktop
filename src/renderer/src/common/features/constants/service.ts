@@ -1,5 +1,6 @@
-import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 import type { ApiResponse, Constant } from '@/common/models'
+
+import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 
 export class ConstantServiceBuilder extends CRUDService<unknown, unknown> {
   QueryKeys = {

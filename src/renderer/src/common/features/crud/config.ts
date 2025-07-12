@@ -86,7 +86,8 @@ export enum ApiEndpoints {
   zarplata_spravochnik = 'SpravochnikZarplatum',
   main_zarplata = 'MainZarplata',
   zarplata_payments = 'Payments',
-  zarplata_deductions = 'Deductions'
+  zarplata_deductions = 'Deductions',
+  zarplata_otdelniy_raschet = 'OtdelniyRaschet'
 }
 
 export enum ApiStatusCodes {
