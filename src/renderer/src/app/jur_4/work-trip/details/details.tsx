@@ -16,6 +16,7 @@ import { FormElement } from '@/common/components/form'
 import { Form, FormField } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
 import { Textarea } from '@/common/components/ui/textarea'
+import { DocumentType } from '@/common/features/doc-num'
 import { useRequisitesStore } from '@/common/features/requisites'
 import {
   useSelectedMonthStore,
@@ -247,6 +248,8 @@ export const WorkTripDetails = ({ id }: WorkTripDetailsProps) => {
             <div className="divide-y">
               <div className="flex items-end flex-wrap">
                 <DocumentFields
+                  autoGenerate={id === 'create'}
+                  documentType={DocumentType.WORK_TRIP}
                   tabIndex={1}
                   form={form}
                   validateDate={id === 'create' ? validateDateWithinSelectedMonth : undefined}

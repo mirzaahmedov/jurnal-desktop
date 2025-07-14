@@ -11,7 +11,8 @@ export enum DocumentType {
   SHOW_SERVICE = 'show_service',
   CONTRACT = 'contract',
   ORGAN_SALDO = 'organ_saldo',
-  PODOTCHET_SALDO = 'podotchet_saldo'
+  PODOTCHET_SALDO = 'podotchet_saldo',
+  WORK_TRIP = "work_trip"
 }
 
 export const queryKeys = {

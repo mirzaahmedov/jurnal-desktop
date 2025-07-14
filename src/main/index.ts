@@ -8,6 +8,7 @@ import dotenv from 'dotenv'
 import { BrowserWindow, app, ipcMain, screen, shell } from 'electron'
 import { REACT_DEVELOPER_TOOLS, installExtension } from 'electron-devtools-installer'
 import { NsisUpdater } from 'electron-updater'
+import { Conf } from 'electron-conf/main'
 import fs from 'fs'
 import os from 'os'
 import path from 'path'
@@ -45,6 +46,10 @@ const url =
       : 'http://10.50.0.140:4005'
 // 'http://10.50.0.140/update'
 
+const conf = new Conf<{
+  zoomFactor: number;
+}>()
+
 const autoUpdater = new NsisUpdater({
   provider: 'generic',
   url
@@ -78,6 +83,10 @@ const createWindow = (route: string = '', floating: boolean = false): BrowserWin
 
   win.on('ready-to-show', async () => {
     win.show()
+  })
+
+  win.webContents.on('did-finish-load', () => {
+    win.webContents.setZoomFactor(conf.get('zoomFactor', 1))
   })
 
   win.webContents.setWindowOpenHandler((details) => {
@@ -243,7 +252,10 @@ ipcMain.handle(
 ipcMain.handle('open-zarplata', () => shell.openPath(zarplataPath))
 ipcMain.handle('get-version', () => app.getVersion())
 ipcMain.handle('get-vpn-local-ip', () => getVPNLocalIP())
-ipcMain.handle('set-zoom-factor', (e, factor) => e.sender.setZoomFactor(factor))
+ipcMain.handle('set-zoom-factor', (e, factor) => {
+  e.sender.setZoomFactor(factor)
+  conf.set('zoomFactor', factor)
+})
 ipcMain.handle('get-zoom-factor', (e) => e.sender.getZoomFactor())
 
 ipcMain.handle('ping-internet', () => {
