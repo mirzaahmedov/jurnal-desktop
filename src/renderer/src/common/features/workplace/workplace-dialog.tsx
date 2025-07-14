@@ -107,8 +107,6 @@ export const WorkplaceDialog = ({
     }
   }, [vacant, selected])
 
-  console.log({ watch: form.watch() })
-
   return (
     <DialogTrigger {...props}>
       <DialogOverlay>

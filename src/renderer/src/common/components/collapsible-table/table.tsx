@@ -18,6 +18,7 @@ import {
 import { Table, TableBody, TableHeader } from '@/common/components/ui/table'
 import { cn } from '@/common/lib/utils'
 
+import { useToggle } from '../../hooks'
 import { EmptyList } from '../empty-states'
 
 export const CollapsibleTable = <T extends object, C extends object = T>({
@@ -153,6 +154,8 @@ const CollapsibleItem = <T extends object, C extends object>({
     onOpenRowsChange
   } = tableProps
 
+  const collapsibleToggle = useToggle()
+
   if (!children && !getChildRows(row)?.length) {
     return (
       <GenericTableRow
@@ -217,18 +220,25 @@ const CollapsibleItem = <T extends object, C extends object>({
     )
   }
 
+  const isOpen = openRows?.includes(getRowId(row)) ?? collapsibleToggle.isOpen
+  const handleOpenChange = (open: boolean) => {
+    collapsibleToggle.setOpen(open)
+
+    if (!openRows) {
+      return
+    }
+    if (open) {
+      onOpenRowsChange?.(openRows?.concat(getRowId(row)))
+    } else {
+      onOpenRowsChange?.(openRows?.filter((id) => id !== getRowId(row)))
+    }
+  }
+
   return (
     <Collapsible
       key={getRowId(row)}
-      open={openRows?.includes(getRowId(row))}
-      onOpenChange={(open) => {
-        if (!openRows) return
-        if (open) {
-          onOpenRowsChange?.(openRows?.concat(getRowId(row)))
-        } else {
-          onOpenRowsChange?.(openRows?.filter((id) => id !== getRowId(row)))
-        }
-      }}
+      open={isOpen}
+      onOpenChange={handleOpenChange}
       asChild
     >
       <>
@@ -255,9 +265,11 @@ const CollapsibleItem = <T extends object, C extends object>({
                       <Button
                         size="icon"
                         variant="outline"
-                        className="flex-shrink-0 size-6 align-middle mr-4"
+                        className="flex-shrink-0 size-5 align-middle mr-2"
                       >
-                        <CaretDownIcon className="btn-icon !size-3.5 !ml-0" />
+                        <CaretDownIcon
+                          className={cn('btn-icon transition-transform', isOpen && 'rotate-180')}
+                        />
                       </Button>
                     </CollapsibleTrigger>
                     {typeof renderCell === 'function'
@@ -320,7 +332,7 @@ const CollapsibleItem = <T extends object, C extends object>({
                   })
                 ) : (
                   <div
-                    className="pl-14"
+                    className="pl-8 pb-2.5"
                     style={{ width }}
                   >
                     <Table className="overflow-hidden">

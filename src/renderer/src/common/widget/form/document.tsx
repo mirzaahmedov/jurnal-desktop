@@ -43,16 +43,13 @@ export const DocumentFields: FormEditableFieldsComponent<
 }) => {
   const { t } = useTranslation()
 
-  const { refetch, isFetching } = useGenerateDocumentNumber({
+  const { refetch, isPending } = useGenerateDocumentNumber({
     documentType: documentType!,
     onChange: (doc_num) => {
-      // Todo: fix this
-      if (!(form as unknown as UseFormReturn<RequiredDocumentFields>).getValues('doc_num').trim()) {
-        ;(form as unknown as UseFormReturn<RequiredDocumentFields>).setValue(
-          'doc_num',
-          doc_num ? doc_num.toString() : ''
-        )
-      }
+      ;(form as unknown as UseFormReturn<RequiredDocumentFields>).setValue(
+        'doc_num',
+        doc_num ? doc_num.toString() : ''
+      )
     },
     enabled: autoGenerate && !!documentType
   })
@@ -95,18 +92,18 @@ export const DocumentFields: FormEditableFieldsComponent<
                   disabled={disabled}
                   {...field}
                 />
-                {documentType ? (
+                {documentType && autoGenerate ? (
                   <Button
                     type="button"
                     size="icon"
                     className="size-10 flex-shrink-0"
                     variant="outline"
-                    disabled={isFetching}
+                    disabled={isPending}
                     onClick={() => {
                       refetch()
                     }}
                   >
-                    {isFetching ? <Spinner className="size-5 border-2" /> : <RefreshCw />}
+                    {isPending ? <Spinner className="size-5 border-2" /> : <RefreshCw />}
                   </Button>
                 ) : null}
               </div>

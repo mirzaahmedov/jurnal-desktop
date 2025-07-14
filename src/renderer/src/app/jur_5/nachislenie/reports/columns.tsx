@@ -3,6 +3,7 @@ import type { CollapsibleColumnDef } from '@/common/components/collapsible-table
 
 import { IDCell } from '@/common/components/table/renderers/id'
 import { MonthNameCell } from '@/common/components/table/renderers/month-name'
+import { Checkbox } from '@/common/components/ui/checkbox'
 
 export const ReportColumnDefs: CollapsibleColumnDef<ReportItem>[] = [
   {
@@ -12,31 +13,38 @@ export const ReportColumnDefs: CollapsibleColumnDef<ReportItem>[] = [
   },
   {
     key: 'year',
-    width: 100
+    width: 60
   },
   {
     key: 'month',
     width: 100,
+    minWidth: 100,
     renderCell: (row) => <MonthNameCell monthNumber={row.month} />
   },
   {
     key: 'name',
-    width: 300
+    width: 300,
+    minWidth: 300
   },
   {
     key: 'type',
-    width: 200
+    width: 160,
+    minWidth: 160
   },
   {
     key: 'budjet',
-    width: 200
+    width: 200,
+    minWidth: 200
   },
   {
     key: 'kol',
-    width: 100
+    width: 100,
+    minWidth: 100
   },
   {
     key: 'enabled',
-    width: 100
+    width: 100,
+    minWidth: 100,
+    renderCell: (row) => <Checkbox checked={Boolean(row.enabled)} />
   }
 ]

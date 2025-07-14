@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next'
 
 import { GenericTable } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
+import { usePagination } from '@/common/hooks'
 import { useToggle } from '@/common/hooks/use-toggle'
 import { useLayout } from '@/common/layout'
 import { ListView } from '@/common/views'
@@ -20,6 +21,7 @@ const ReportTitlePage = () => {
   const dialogToggle = useToggle()
   const queryClient = useQueryClient()
   const setLayout = useLayout()
+  const pagination = usePagination()
 
   const [selected, setSelected] = useState<ReportTitle | null>(null)
 
@@ -27,7 +29,13 @@ const ReportTitlePage = () => {
   const { confirm } = useConfirm()
 
   const { data: titles, isFetching } = useQuery({
-    queryKey: [ReportTitleQueryKeys.getAll],
+    queryKey: [
+      ReportTitleQueryKeys.getAll,
+      {
+        page: pagination.page,
+        limit: pagination.limit
+      }
+    ],
     queryFn: ReportTitleService.getAll
   })
 
@@ -80,6 +88,13 @@ const ReportTitlePage = () => {
         isOpen={dialogToggle.isOpen}
         onOpenChange={dialogToggle.setOpen}
       />
+      <ListView.Footer>
+        <ListView.Pagination
+          {...pagination}
+          pageCount={titles?.meta?.pageCount ?? 0}
+          count={titles?.meta?.count ?? 0}
+        />
+      </ListView.Footer>
     </ListView>
   )
 }

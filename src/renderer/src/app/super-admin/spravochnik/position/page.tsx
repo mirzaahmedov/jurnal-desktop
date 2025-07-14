@@ -8,6 +8,7 @@ import { toast } from 'react-toastify'
 
 import { GenericTable } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
+import { usePagination } from '@/common/hooks'
 import { useToggle } from '@/common/hooks/use-toggle'
 import { useLayout } from '@/common/layout'
 import { ListView } from '@/common/views'
@@ -21,6 +22,7 @@ const PositionPage = () => {
   const setLayout = useLayout()
   const dialogToggle = useToggle()
   const queryClient = useQueryClient()
+  const pagination = usePagination()
 
   const [selected, setSelected] = useState<Position | null>(null)
 
@@ -28,7 +30,13 @@ const PositionPage = () => {
   const { confirm } = useConfirm()
 
   const { data: positions, isFetching } = useQuery({
-    queryKey: [PositionQueryKeys.getAll],
+    queryKey: [
+      PositionQueryKeys.getAll,
+      {
+        page: pagination.page,
+        limit: pagination.limit
+      }
+    ],
     queryFn: PositionService.getAll
   })
 
@@ -82,6 +90,13 @@ const PositionPage = () => {
         isOpen={dialogToggle.isOpen}
         onOpenChange={dialogToggle.setOpen}
       />
+      <ListView.Footer>
+        <ListView.Pagination
+          {...pagination}
+          pageCount={positions?.meta?.pageCount ?? 0}
+          count={positions?.meta?.count ?? 0}
+        />
+      </ListView.Footer>
     </ListView>
   )
 }

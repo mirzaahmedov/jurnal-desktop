@@ -1,11 +1,12 @@
-import { useEffect } from 'react'
+import { useCallback, useEffect } from 'react'
 
-import { useQuery } from '@tanstack/react-query'
+import { useMutation } from '@tanstack/react-query'
 
 import { useEventCallback } from '@/common/hooks'
 
-import { type DocumentType, queryKeys } from './config'
-import { getDocumentNumberQuery } from './service'
+import { useRequisitesStore } from '../requisites'
+import { type DocumentType } from './config'
+import { DocumentNumberService } from './service'
 
 export interface UseGenerateDocumentNumberParams {
   documentType: DocumentType
@@ -18,21 +19,28 @@ export const useGenerateDocumentNumber = ({
   onChange,
   enabled
 }: UseGenerateDocumentNumberParams) => {
+  const main_schet_id = useRequisitesStore(store => store.main_schet_id)
   const onChangeEvent = useEventCallback(onChange)
 
-  const query = useQuery({
-    queryKey: [queryKeys.getDocumentNumber, { documentType }],
-    queryFn: getDocumentNumberQuery,
-    placeholderData: () => undefined,
-    gcTime: 0,
-    enabled
+  const { mutate: getDocumentNumber, isPending } = useMutation({
+    mutationFn: DocumentNumberService.getDocumentNumber,
+    onSuccess: (doc_num) => {
+      onChangeEvent(doc_num)
+    }
   })
 
-  useEffect(() => {
-    if (query.isFetchedAfterMount) {
-      onChangeEvent(query.data)
+  const refetch = useCallback(() => {
+    if (documentType && enabled) {
+      getDocumentNumber({ type: documentType, main_schet_id })
     }
-  }, [query.data, query.isFetchedAfterMount])
+  }, [getDocumentNumber, documentType, main_schet_id, enabled])
 
-  return query
+  useEffect(() => {
+    refetch()
+  }, [refetch])
+
+  return {
+    isPending,
+    refetch,
+  }
 }

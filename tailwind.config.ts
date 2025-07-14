@@ -84,8 +84,7 @@ const ui = plugin(function ({ addUtilities }) {
       position: 'absolute',
       left: '0',
       top: '0',
-      width: '0',
-      'padding-left': '20px',
+      'padding-left': '0.5rem',
       'border-left-width': '1px',
       'border-left-style': 'solid'
     },
@@ -98,7 +97,7 @@ const ui = plugin(function ({ addUtilities }) {
     '.tree_node::after': {
       height: '100%'
     },
-    '.tree_node:last-child::after': {
+    '.tree_node:last_node::after': {
       height: '0%'
     },
     '.tree_node.last_node::after': {

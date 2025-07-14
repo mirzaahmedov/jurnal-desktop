@@ -75,7 +75,7 @@ export const BankCard = () => {
                   }}
                   onBlur={field.onBlur}
                   placeholder="0000 0000 0000 0000"
-                  className="font-mono"
+                  className="font-mono text-base"
                 />
               </FormElement>
             )}

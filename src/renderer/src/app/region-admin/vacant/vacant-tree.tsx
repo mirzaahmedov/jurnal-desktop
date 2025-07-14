@@ -1,6 +1,10 @@
 import type { Vacant } from '@/common/models/vacant'
+import type { CheckedState } from '@radix-ui/react-checkbox'
+import type { HTMLAttributes, PropsWithChildren } from 'react'
 
 import { CaretDownIcon } from '@radix-ui/react-icons'
+import { create } from 'zustand'
+import { persist } from 'zustand/middleware'
 
 import { EmptyList } from '@/common/components/empty-states'
 import { Button } from '@/common/components/ui/button'
@@ -15,6 +19,37 @@ import { cn } from '@/common/lib/utils'
 
 export type VacantTreeNode = RelationTreeNode<Vacant, number | null>
 
+const useTreeStateStore = create(
+  persist<{
+    nodesState: Record<number, boolean>
+    toggleNodeState: (id: number) => void
+    setNodeState: (id: number, state: boolean) => void
+    resetNodeStates: VoidFunction
+  }>(
+    (set) => ({
+      nodesState: {} as Record<number, boolean>,
+      toggleNodeState: (id: number) =>
+        set((state) => ({
+          nodesState: {
+            ...state.nodesState,
+            [id]: !state.nodesState[id]
+          }
+        })),
+      setNodeState: (id: number, state: boolean) =>
+        set((prev) => ({
+          nodesState: {
+            ...prev.nodesState,
+            [id]: state
+          }
+        })),
+      resetNodeStates: () => set({ nodesState: {} })
+    }),
+    {
+      name: 'vacant-tree-state'
+    }
+  )
+)
+
 export interface VacantTreeProps {
   nodes: VacantTreeNode[]
   selectedIds: number[]
@@ -23,7 +58,7 @@ export interface VacantTreeProps {
 
 export const VacantTree = ({ nodes, selectedIds, onSelectNode }: VacantTreeProps) => {
   return (
-    <ul className="divide-y text-sm">
+    <ul className="text-xs font-semibold">
       {nodes?.length ? (
         nodes.map((node, index) => (
           <TreeNode
@@ -57,71 +92,82 @@ interface TreeNodeProps {
   level?: number
 }
 const TreeNode = ({ node, nodes, index, selectedIds, onSelect, level = 1 }: TreeNodeProps) => {
+  const { nodesState, setNodeState } = useTreeStateStore()
+
   if (!node.children.length) {
     return (
       <li
-        className={cn(
-          'flex items-center gap-5 py-2.5 px-5 cursor-pointer hover:bg-slate-50',
-          level > 1 && 'tree_node',
-          index === nodes.length - 1 && 'last_node'
-        )}
         onClick={(e) => {
           e.stopPropagation()
           onSelect(node)
         }}
+        title={node.name}
       >
-        <Checkbox
-          className="size-5"
-          checked={
+        <DisplayNode
+          node={node}
+          selected={
             selectedIds.includes(node.id)
               ? true
               : hasSelectedChildNode(node, selectedIds)
                 ? 'indeterminate'
                 : false
           }
-        />
-        {node.name}
+          className={cn(
+            level > 1 && 'tree_node pl-3 ml-2',
+            index === nodes.length - 1 && 'last_node border-b-0'
+          )}
+        ></DisplayNode>
       </li>
     )
   }
 
+  const isOpen = nodesState[node.id] ?? false
+  const handleOpenChange = (open: boolean) => {
+    setNodeState(node.id, open)
+  }
+
   return (
-    <Collapsible>
+    <Collapsible
+      open={isOpen}
+      onOpenChange={handleOpenChange}
+    >
       <li
-        className={cn(
-          'flex items-center gap-5 py-2.5 px-5 cursor-pointer hover:bg-slate-50',
-          level > 1 && 'tree_node',
-          index === nodes.length - 1 && 'last_node'
-        )}
         onClick={(e) => {
           e.preventDefault()
           onSelect(node)
         }}
+        title={node.name}
       >
-        <Checkbox
-          className="size-5"
-          checked={
+        <DisplayNode
+          node={node}
+          selected={
             selectedIds.includes(node.id)
               ? true
               : hasSelectedChildNode(node, selectedIds)
                 ? 'indeterminate'
                 : false
           }
-        />
-        <h4 className="flex-1">{node.name}</h4>
-        <CollapsibleTrigger asChild>
-          <Button
-            size="icon"
-            variant="outline"
-            onClick={(e) => e.stopPropagation()}
-            className="size-6"
-          >
-            <CaretDownIcon className="btn-icon" />
-          </Button>
-        </CollapsibleTrigger>
+          className={cn(
+            level > 1 && 'tree_node pl-2.5 ml-2.5',
+            index === nodes.length - 1 && 'last_node'
+          )}
+        >
+          <CollapsibleTrigger asChild>
+            <Button
+              size="icon"
+              variant="outline"
+              onClick={(e) => e.stopPropagation()}
+              className="size-5"
+            >
+              <CaretDownIcon
+                className={cn('btn-icon transition-transform', isOpen && 'rotate-180')}
+              />
+            </Button>
+          </CollapsibleTrigger>
+        </DisplayNode>
       </li>
       <CollapsibleContent>
-        <ul className="divide-y pl-5">
+        <ul className="ml-4">
           {node.children.map((child, index) => (
             <TreeNode
               key={child.id}
@@ -136,5 +182,35 @@ const TreeNode = ({ node, nodes, index, selectedIds, onSelect, level = 1 }: Tree
         </ul>
       </CollapsibleContent>
     </Collapsible>
+  )
+}
+
+const DisplayNode = ({
+  node,
+  selected,
+  children,
+  className,
+  ...props
+}: PropsWithChildren<
+  {
+    node: VacantTreeNode
+    selected: CheckedState
+  } & HTMLAttributes<HTMLDivElement>
+>) => {
+  return (
+    <div
+      className={cn(
+        'flex items-center gap-2.5 py-2.5 px-4 cursor-pointer hover:bg-slate-50 border-b',
+        className
+      )}
+      {...props}
+    >
+      <Checkbox
+        className="size-4"
+        checked={selected}
+      />
+      <h4 className="flex-1 line-clamp-3">{node.name}</h4>
+      {children}
+    </div>
   )
 }

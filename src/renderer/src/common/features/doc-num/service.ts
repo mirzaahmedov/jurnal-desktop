@@ -28,3 +28,20 @@ export const getDocumentNumberQuery = async (
   )
   return res.data?.data?.doc_num
 }
+
+
+export class DocumentNumberService {
+  static endpoint = '/features/doc/num'
+
+  static async getDocumentNumber(args: { type: DocumentType, main_schet_id?: number; }) {
+    const res = await http.get<ApiResponse<GetDocumentNumberResponse>>(
+      `${DocumentNumberService.endpoint}/${args.type}`,
+      {
+        params: {
+          main_schet_id: args.main_schet_id
+        }
+      }
+    )
+    return res.data?.data?.doc_num
+  }
+}

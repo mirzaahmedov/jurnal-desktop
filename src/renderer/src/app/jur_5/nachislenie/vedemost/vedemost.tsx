@@ -45,7 +45,7 @@ export const Vedemosts = () => {
         preferredSize={300}
         maxSize={600}
         minSize={200}
-        className="w-full"
+        className="w-full bg-gray-50"
       >
         <div className="relative overflow-auto scrollbar h-full">
           {isFetchingVacants ? <LoadingOverlay /> : null}
@@ -57,7 +57,7 @@ export const Vedemosts = () => {
         </div>
       </Allotment.Pane>
       <Allotment.Pane>
-        <div className="relative w-full overflow-auto scrollbar">
+        <div className="relative w-full overflow-auto scrollbar pl-px">
           {isFetchingVedemost ? <LoadingOverlay /> : null}
           <GenericTable
             data={vedemost?.data ?? []}

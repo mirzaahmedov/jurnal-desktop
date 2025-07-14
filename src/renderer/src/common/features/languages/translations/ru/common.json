@@ -484,5 +484,6 @@
   "schet_6_digit": "Счет (6 цифр)",
   "tabel": "Табель",
   "vedemost": "Ведомость",
-  "card_number": "Номер карты"
+  "card_number": "Номер карты",
+  "enabled": "Включено"
 }

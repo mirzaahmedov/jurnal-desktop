@@ -27,3 +27,15 @@ zarplataApiNew.interceptors.request.use(
     return Promise.reject(error)
   }
 )
+
+zarplataApiNew.interceptors.response.use(
+  (config) => config,
+  (error) => {
+    const message = error?.response?.data?.message
+    console.log('API Error:', message || error.message, "Response", error?.response)
+    if (message) {
+      return Promise.reject(new Error(message))
+    }
+    return Promise.reject(error)
+  }
+)

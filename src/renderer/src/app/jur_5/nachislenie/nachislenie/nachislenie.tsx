@@ -94,7 +94,7 @@ export const Nachislenies = () => {
         preferredSize={300}
         maxSize={600}
         minSize={200}
-        className="w-full"
+        className="w-full bg-gray-50"
       >
         <div className="relative overflow-auto scrollbar h-full">
           {isFetchingVacants ? <LoadingOverlay /> : null}
@@ -106,7 +106,7 @@ export const Nachislenies = () => {
         </div>
       </Allotment.Pane>
       <Allotment.Pane>
-        <div className="h-full flex flex-col overflow-hidden pl-1">
+        <div className="h-full flex flex-col overflow-hidden pl-px">
           <div className="flex-1 relative w-full overflow-auto scrollbar">
             {isFetchingSostav || isDeleting ? <LoadingOverlay /> : null}
             <GenericTable

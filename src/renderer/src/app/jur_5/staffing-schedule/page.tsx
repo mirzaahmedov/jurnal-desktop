@@ -97,8 +97,8 @@ const StaffingTable = () => {
         queryKey: [VacantService.QueryKeys.GetAll]
       })
     },
-    onError: () => {
-      toast.error(t('delete_failed'))
+    onError: (error) => {
+      toast.error(error?.message || t('delete_success'))
     }
   })
 
@@ -257,7 +257,7 @@ const StaffingTable = () => {
           preferredSize={300}
           maxSize={600}
           minSize={200}
-          className="w-full divide-y flex flex-col"
+          className="w-full divide-y flex flex-col bg-gray-50"
         >
           <div className="relative flex-1 overflow-auto scrollbar">
             {isCreatingVacant || isUpdatingVacant || isDeletingVacant || isFetchingVacants ? (
@@ -273,7 +273,6 @@ const StaffingTable = () => {
           </div>
           <div className="text-center p-5 flex items-center justify-center flex-wrap gap-2">
             <Button
-              size="sm"
               onClick={() => {
                 if (selectedVacant) {
                   setVacantParent(selectedVacant)
@@ -291,7 +290,7 @@ const StaffingTable = () => {
 
             <Button
               variant="outline"
-              size="sm"
+              size="icon"
               isDisabled={!selectedVacant}
               onClick={() => {
                 setVacantData(selectedVacant)
@@ -299,22 +298,21 @@ const StaffingTable = () => {
                 vacantDialogToggle.open()
               }}
             >
-              <Edit className="btn-icon icon-start" /> {t('edit')}
+              <Edit className="btn-icon" />
             </Button>
 
             <Button
-              variant="outline"
+              variant="destructive"
               isDisabled={!selectedVacant}
-              size="sm"
-              className="text-destructive"
+              size="icon"
               onClick={handleDeleteVacant}
             >
-              <Trash2 className="btn-icon icon-start" /> {t('delete')}
+              <Trash2 className="btn-icon" />
             </Button>
           </div>
         </Allotment.Pane>
         <Allotment.Pane>
-          <div className="h-full flex flex-col">
+          <div className="ml-px h-full flex flex-col">
             <div className="relative flex-1 w-full overflow-auto scrollbar">
               {isFetchingWorkplaces ||
               isCreatingWorkplace ||

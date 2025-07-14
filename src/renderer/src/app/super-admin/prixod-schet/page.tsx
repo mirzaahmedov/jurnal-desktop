@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next'
 
 import { GenericTable } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
+import { usePagination } from '@/common/hooks'
 import { useToggle } from '@/common/hooks/use-toggle'
 import { useLayout } from '@/common/layout'
 import { ListView } from '@/common/views'
@@ -20,6 +21,7 @@ const PrixodSchetsPage = () => {
   const setLayout = useLayout()
   const dialogToggle = useToggle()
   const queryClient = useQueryClient()
+  const pagination = usePagination()
 
   const [selected, setSelected] = useState<PrixodSchet | null>(null)
 
@@ -27,7 +29,13 @@ const PrixodSchetsPage = () => {
   const { confirm } = useConfirm()
 
   const { data: prixodSchets, isFetching } = useQuery({
-    queryKey: [PrixodSchetQueryKeys.getAll],
+    queryKey: [
+      PrixodSchetQueryKeys.getAll,
+      {
+        page: pagination.page,
+        limit: pagination.limit
+      }
+    ],
     queryFn: PrixodSchetService.getAll
   })
 
@@ -80,6 +88,13 @@ const PrixodSchetsPage = () => {
         isOpen={dialogToggle.isOpen}
         onOpenChange={dialogToggle.setOpen}
       />
+      <ListView.Footer>
+        <ListView.Pagination
+          {...pagination}
+          pageCount={prixodSchets?.meta?.pageCount ?? 0}
+          count={prixodSchets?.meta?.count ?? 0}
+        />
+      </ListView.Footer>
     </ListView>
   )
 }
