@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import { CircleArrowDown } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { DatePicker } from '@/common/components'
+import { JollyDatePicker } from '@/common/components/jolly-date-picker'
 import { Button } from '@/common/components/jolly/button'
 import { formatDate, getFirstDayOfMonth, parseDate } from '@/common/lib/date'
 
@@ -23,12 +23,12 @@ export const EndDatePicker = ({ value, onChange, refetch }: EndDatePickerProps) 
 
   return (
     <div className="flex items-center gap-5">
-      <DatePicker
+      <JollyDatePicker
         readOnly
         value={formatDate(getFirstDayOfMonth(parseDate(innerValue)))}
       />
       -
-      <DatePicker
+      <JollyDatePicker
         value={innerValue}
         onChange={setInnerValue}
       />

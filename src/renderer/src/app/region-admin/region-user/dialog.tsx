@@ -174,7 +174,7 @@ export const RegionUserDialog = ({ isOpen, onOpenChange, selected }: RegionUserD
                         <FormLabel className="text-right col-span-2">{t('role')}</FormLabel>
                         <JollySelect
                           isDisabled={isFetchingRoles}
-                          buttonRef={field.ref}
+                          inputRef={field.ref}
                           items={roles?.data ?? []}
                           className="col-span-4 gap-0"
                           placeholder={t('role')}

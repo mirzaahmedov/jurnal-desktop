@@ -275,7 +275,7 @@ export const MainZarplataForm = ({
                   label={t('grafik')}
                 >
                   <JollySelect
-                    buttonRef={field.ref}
+                    inputRef={field.ref}
                     items={grafiks?.data || []}
                     selectedKey={field.value}
                     onSelectionChange={field.onChange}

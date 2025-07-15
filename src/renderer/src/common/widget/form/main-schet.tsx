@@ -20,7 +20,7 @@ export const MainSchetFields = ({ name, main_schet, ...props }: MainSchetFieldsP
     >
       <FormElement
         label={t('receiver')}
-        grid="2:6"
+        grid="2:5"
       >
         <Input
           readOnly
@@ -31,7 +31,7 @@ export const MainSchetFields = ({ name, main_schet, ...props }: MainSchetFieldsP
 
       <FormElement
         label={t('bank')}
-        grid="2:6"
+        grid="2:5"
       >
         <Input
           readOnly
@@ -42,7 +42,7 @@ export const MainSchetFields = ({ name, main_schet, ...props }: MainSchetFieldsP
 
       <FormElement
         label={t('mfo')}
-        grid="2:6"
+        grid="2:5"
       >
         <Input
           readOnly
@@ -53,7 +53,7 @@ export const MainSchetFields = ({ name, main_schet, ...props }: MainSchetFieldsP
 
       <FormElement
         label={t('inn')}
-        grid="2:6"
+        grid="2:5"
       >
         <Input
           readOnly
@@ -64,7 +64,7 @@ export const MainSchetFields = ({ name, main_schet, ...props }: MainSchetFieldsP
 
       <FormElement
         label={t('raschet-schet')}
-        grid="2:6"
+        grid="2:5"
       >
         <Input
           readOnly
@@ -75,7 +75,7 @@ export const MainSchetFields = ({ name, main_schet, ...props }: MainSchetFieldsP
 
       <FormElement
         label={t('raschet-schet-gazna')}
-        grid="2:6"
+        grid="2:5"
       >
         <Input
           readOnly

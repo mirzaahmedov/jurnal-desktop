@@ -4,9 +4,10 @@ import type { OnValueChange, PatternFormatProps } from 'react-number-format'
 
 import {
   type HTMLAttributes,
-  type KeyboardEvent,
+  type KeyboardEvent as ReactKeyboardEvent,
   forwardRef,
   useEffect,
+  useId,
   useRef,
   useState
 } from 'react'
@@ -53,6 +54,7 @@ export const JollyDatePicker = forwardRef<HTMLButtonElement, JollyDatePickerProp
     },
     ref
   ) => {
+    const id = useId()
     const inputRef = useRef<HTMLInputElement>()
 
     const [monthValue, setMonthValue] = useState(
@@ -111,7 +113,7 @@ export const JollyDatePicker = forwardRef<HTMLButtonElement, JollyDatePickerProp
       }
     }
 
-    const handleKeyUp = (e: KeyboardEvent<HTMLInputElement>) => {
+    const handleKeyUp = (e: ReactKeyboardEvent<HTMLInputElement>) => {
       const value = e.currentTarget.value
       if (e.key.match(/[0-9]/) || e.key === 'Backspace' || e.key === 'Delete') {
         const isValid = validate(localeDateToISO(value))
@@ -137,6 +139,31 @@ export const JollyDatePicker = forwardRef<HTMLButtonElement, JollyDatePickerProp
     }
 
     const selected = value ? parseDate(value) : undefined
+
+    useEffect(() => {
+      const containerElement = document.getElementById(id) as HTMLDivElement
+
+      const handleKeyDown = (e: KeyboardEvent) => {
+        if (e.key === 'Tab' && calendarToggle.isOpen) {
+          e.preventDefault()
+          e.stopPropagation()
+          calendarToggle.close()
+          setTimeout(() => {
+            inputRef.current?.focus()
+          })
+        }
+      }
+
+      if (containerElement) {
+        containerElement.addEventListener('keydown', handleKeyDown)
+      }
+
+      return () => {
+        if (containerElement) {
+          containerElement.removeEventListener('keydown', handleKeyDown)
+        }
+      }
+    }, [id, calendarToggle])
 
     return (
       <PopoverTrigger
@@ -193,7 +220,7 @@ export const JollyDatePicker = forwardRef<HTMLButtonElement, JollyDatePickerProp
           </Button>
         </div>
         <Popover>
-          <PopoverDialog>
+          <PopoverDialog id={id}>
             <Calendar
               {...calendarProps}
               mode="single"

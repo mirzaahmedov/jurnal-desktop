@@ -7,8 +7,8 @@ import { useEffect } from 'react'
 import { CircleX } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { SelectField } from '@/common/components'
 import { FormElement } from '@/common/components/form'
+import { JollySelect, SelectItem } from '@/common/components/jolly/select'
 import { Button } from '@/common/components/ui/button'
 import { FormField } from '@/common/components/ui/form'
 import { SpravochnikField, SpravochnikFields } from '@/common/features/spravochnik'
@@ -40,6 +40,8 @@ export const OrganizationFields: FormSpravochnikFieldsComponent<
       )
     }
   }, [spravochnikProps.selected])
+
+  console.log({ tabIndex })
 
   return (
     <SpravochnikFields
@@ -110,19 +112,28 @@ export const OrganizationFields: FormSpravochnikFieldsComponent<
                 grid="2:5"
               >
                 <div className="flex items-center gap-2">
-                  <SelectField
-                    {...field}
-                    withFormControl
+                  <JollySelect
                     tabIndex={tabIndex}
-                    disabled={disabled || spravochnikProps.loading}
-                    options={spravochnikProps.selected?.account_numbers ?? []}
-                    getOptionLabel={(o) => o.raschet_schet}
-                    getOptionValue={(o) => o.id}
-                    value={field.value ? String(field.value) : ''}
-                    onValueChange={(value) => {
-                      field.onChange(Number(value))
+                    inputRef={field.ref}
+                    onBlur={field.onBlur}
+                    isDisabled={disabled || spravochnikProps.loading}
+                    items={spravochnikProps.selected?.account_numbers ?? []}
+                    selectedKey={field.value || null}
+                    onSelectionChange={(value) => {
+                      field.onChange(value ?? 0)
                     }}
-                  />
+                    className="flex-1"
+                    placeholder=""
+                  >
+                    {(item) => (
+                      <SelectItem
+                        id={item.id}
+                        key={item.id}
+                      >
+                        {item.raschet_schet}
+                      </SelectItem>
+                    )}
+                  </JollySelect>
                   <Button
                     type="button"
                     size="icon"
@@ -148,19 +159,28 @@ export const OrganizationFields: FormSpravochnikFieldsComponent<
                   grid="2:5"
                 >
                   <div className="flex items-center gap-2">
-                    <SelectField
-                      {...field}
-                      withFormControl
+                    <JollySelect
                       tabIndex={tabIndex}
-                      disabled={disabled || spravochnikProps.loading || !spravochnikProps.selected}
-                      options={spravochnikProps.selected?.gaznas ?? []}
-                      getOptionLabel={(o) => o.raschet_schet_gazna}
-                      getOptionValue={(o) => o.id}
-                      value={field.value ? String(field.value) : ''}
-                      onValueChange={(value) => {
-                        field.onChange(Number(value))
+                      inputRef={field.ref}
+                      onBlur={field.onBlur}
+                      isDisabled={disabled || spravochnikProps.loading}
+                      items={spravochnikProps.selected?.gaznas ?? []}
+                      selectedKey={field.value || null}
+                      onSelectionChange={(value) => {
+                        field.onChange(value ?? 0)
                       }}
-                    />
+                      className="flex-1"
+                      placeholder=""
+                    >
+                      {(item) => (
+                        <SelectItem
+                          id={item.id}
+                          key={item.id}
+                        >
+                          {item.raschet_schet_gazna}
+                        </SelectItem>
+                      )}
+                    </JollySelect>
                     <Button
                       type="button"
                       size="icon"

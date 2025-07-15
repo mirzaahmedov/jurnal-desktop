@@ -10,9 +10,10 @@ import { toast } from 'react-toastify'
 import { createPodotchetSpravochnik } from '@/app/region-spravochnik/podotchet'
 import { OperatsiiService, operatsiiQueryKeys } from '@/app/super-admin/operatsii'
 import { MinimumWageService } from '@/app/super-admin/spravochnik/minimum-wage/service'
-import { DatePicker, Fieldset, NumericInput } from '@/common/components'
+import { Fieldset, NumericInput } from '@/common/components'
 import { EditableTable } from '@/common/components/editable-table'
 import { FormElement } from '@/common/components/form'
+import { JollyDatePicker } from '@/common/components/jolly-date-picker'
 import { Form, FormField } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
 import { Textarea } from '@/common/components/ui/textarea'
@@ -284,7 +285,7 @@ export const WorkTripDetails = ({ id }: WorkTripDetailsProps) => {
                           label={t('from_date')}
                           direction="column"
                         >
-                          <DatePicker
+                          <JollyDatePicker
                             value={field.value}
                             onChange={field.onChange}
                             containerProps={{ className: 'w-56' }}
@@ -300,7 +301,7 @@ export const WorkTripDetails = ({ id }: WorkTripDetailsProps) => {
                           label={t('to_date')}
                           direction="column"
                         >
-                          <DatePicker
+                          <JollyDatePicker
                             value={field.value}
                             onChange={field.onChange}
                             containerProps={{ className: 'w-56' }}

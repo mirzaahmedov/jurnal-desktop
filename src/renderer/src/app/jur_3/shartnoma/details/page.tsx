@@ -89,8 +89,8 @@ const ShartnomaDetailsPage = () => {
           }}
         />
       </DetailsView.Content>
-      <DetailsView.Footer>
-        {id !== 'create' ? (
+      {id !== 'create' ? (
+        <DetailsView.Footer>
           <Button
             type="button"
             variant="ghost"
@@ -100,8 +100,8 @@ const ShartnomaDetailsPage = () => {
             <DownloadIcon className="btn-icon icon-start" />
             {t('payment-schedule')}
           </Button>
-        ) : null}
-      </DetailsView.Footer>
+        </DetailsView.Footer>
+      ) : null}
       {id !== 'create' && main_schet?.data && organization?.data && shartnoma?.data ? (
         <ShartnomaSmetaGrafikGeneratePDFDocumentDialog
           open={reportToggle.isOpen}

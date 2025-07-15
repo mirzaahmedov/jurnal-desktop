@@ -129,7 +129,7 @@ export const ShartnomaSmetaGrafikGeneratePDFDocumentDialog = ({
       onOpenChange={onChange}
     >
       <DialogOverlay>
-        <DialogContent className="max-h-full flex flex-col">
+        <DialogContent className="h-full max-h-[800px] flex flex-col">
           <DialogHeader className="pb-5 border-b border-slate-200">
             <DialogTitle>{t('payment-schedule')}</DialogTitle>
           </DialogHeader>

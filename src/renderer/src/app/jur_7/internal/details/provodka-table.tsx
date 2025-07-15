@@ -4,7 +4,7 @@ import { CircleMinus, CirclePlus } from 'lucide-react'
 import { type UseFormReturn, useFieldArray } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
-import { DatePicker, NumericInput } from '@/common/components'
+import { NumericInput } from '@/common/components'
 import {
   EditableTableCell,
   EditableTableHead,
@@ -12,6 +12,7 @@ import {
 } from '@/common/components/editable-table'
 import { SchetEditor, SubSchetEditor } from '@/common/components/editable-table/editors'
 import { EmptyList } from '@/common/components/empty-states'
+import { JollyDatePicker } from '@/common/components/jolly-date-picker'
 import { JollySelect, SelectItem } from '@/common/components/jolly/select'
 import { Button } from '@/common/components/ui/button'
 import { Checkbox } from '@/common/components/ui/checkbox'
@@ -401,7 +402,7 @@ const Provodka = ({ rowIndex, onOpenDialog, onRemove, row, form, tabIndex }: Pro
 
       <EditableTableCell>
         <div className="relative">
-          <DatePicker
+          <JollyDatePicker
             disabled
             value={row.iznos_start ?? ''}
             onChange={(date) => {

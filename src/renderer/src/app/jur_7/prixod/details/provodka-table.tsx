@@ -14,7 +14,7 @@ import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 
 import { createGroupSpravochnik } from '@/app/super-admin/group/service'
-import { DatePicker, EdinSelect, NumericInput } from '@/common/components'
+import { EdinSelect, NumericInput } from '@/common/components'
 import {
   EditableTableCell,
   EditableTableHead,
@@ -22,6 +22,7 @@ import {
 } from '@/common/components/editable-table'
 import { SchetEditor } from '@/common/components/editable-table/editors'
 import { EmptyList } from '@/common/components/empty-states'
+import { JollyDatePicker } from '@/common/components/jolly-date-picker'
 import { Pagination } from '@/common/components/pagination'
 import { Button } from '@/common/components/ui/button'
 import { Checkbox } from '@/common/components/ui/checkbox'
@@ -500,7 +501,7 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
 
                       <EditableTableCell>
                         <div className="relative">
-                          <DatePicker
+                          <JollyDatePicker
                             readOnly={!row.iznos}
                             value={row.iznos_start ?? ''}
                             onChange={(date) => {
@@ -615,7 +616,7 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
 
                       <EditableTableCell>
                         <div className="relative">
-                          <DatePicker
+                          <JollyDatePicker
                             value={row.data_pereotsenka}
                             onChange={(date) => {
                               handleChangeChildField(index, 'data_pereotsenka', date)

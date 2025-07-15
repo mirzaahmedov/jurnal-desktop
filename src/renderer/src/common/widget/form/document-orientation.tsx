@@ -1,7 +1,7 @@
 import { RectangleHorizontal, RectangleVertical } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { SelectField } from '@/common/components'
+import { JollySelect, SelectItem } from '@/common/components/jolly/select'
 import { FormField } from '@/common/components/ui/form'
 import { withForm } from '@/common/hoc'
 
@@ -19,12 +19,10 @@ export const DocumentOrientationFields = withForm<{
       control={form.control}
       name="orientation"
       render={({ field }) => (
-        <SelectField
-          {...field}
-          onValueChange={field.onChange}
-          getOptionValue={(o) => o.value}
-          getOptionLabel={(o) => o.label}
-          options={[
+        <JollySelect
+          selectedKey={field.value}
+          onSelectionChange={field.onChange}
+          items={[
             {
               value: DocumentOrientation.LANDSCAPE,
               label: (
@@ -44,8 +42,10 @@ export const DocumentOrientationFields = withForm<{
               )
             }
           ]}
-          triggerClassName="w-40"
-        />
+          className="w-40"
+        >
+          {(item) => <SelectItem id={item.value}>{item.label}</SelectItem>}
+        </JollySelect>
       )}
     />
   )

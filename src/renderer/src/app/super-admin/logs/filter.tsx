@@ -1,4 +1,4 @@
-import { SelectField } from '@/common/components'
+import { JollySelect, SelectItem } from '@/common/components/jolly/select'
 import { LogType } from '@/common/models'
 
 import { useLogType } from './hooks'
@@ -27,14 +27,14 @@ export const LogFilters = () => {
   return (
     <div className="px-10">
       <div className="max-w-md">
-        <SelectField
-          value={type}
+        <JollySelect
+          selectedKey={type}
+          onSelectionChange={(value) => setType(value as LogType)}
+          items={FilterOptions}
           placeholder="Filter by type"
-          onValueChange={(option) => setType(option as LogType)}
-          options={FilterOptions}
-          getOptionValue={(option) => option.value}
-          getOptionLabel={(option) => option.label}
-        />
+        >
+          {(item) => <SelectItem id={item.value}>{item.label}</SelectItem>}
+        </JollySelect>
       </div>
     </div>
   )

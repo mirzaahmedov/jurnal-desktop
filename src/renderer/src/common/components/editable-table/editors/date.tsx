@@ -1,13 +1,13 @@
 import type { EditorComponent } from './interfaces'
 
-import { DatePicker } from '@/common/components'
+import { JollyDatePicker } from '@/common/components/jolly-date-picker'
 
 export const createDateEditor = <T extends { responsible_id?: number }>(params: {
   key: string
 }): EditorComponent<T> => {
   return ({ tabIndex, errors, value, onChange }) => {
     return (
-      <DatePicker
+      <JollyDatePicker
         editor
         tabIndex={tabIndex}
         value={value as any}

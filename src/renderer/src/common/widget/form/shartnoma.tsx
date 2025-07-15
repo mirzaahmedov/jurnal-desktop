@@ -6,8 +6,8 @@ import { useEffect } from 'react'
 
 import { useTranslation } from 'react-i18next'
 
-import { SelectField } from '@/common/components'
 import { FormElement } from '@/common/components/form'
+import { JollySelect, SelectItem } from '@/common/components/jolly/select'
 import { SpravochnikField, SpravochnikFields } from '@/common/features/spravochnik'
 import { formatLocaleDate } from '@/common/lib/format'
 
@@ -59,19 +59,25 @@ export const ShartnomaFields: FormSpravochnikFieldsComponent<
         />
 
         {form ? (
-          <FormElement label={t('smeta')}>
-            <SelectField
+          <FormElement
+            label={t('smeta')}
+            className="col-span-2"
+          >
+            <JollySelect
               tabIndex={tabIndex}
-              withFormControl
-              disabled={spravochnikProps.loading}
-              options={spravochnikProps.selected?.grafiks ?? []}
-              getOptionValue={(o) => o.id}
-              getOptionLabel={(o) => `${o.smeta?.smeta_number} - ${o.smeta?.smeta_name}`}
-              value={shartnoma_grafik_id ? String(shartnoma_grafik_id) : ''}
-              onValueChange={(value) => {
+              isDisabled={spravochnikProps.loading}
+              items={spravochnikProps.selected?.grafiks ?? []}
+              selectedKey={shartnoma_grafik_id || null}
+              onSelectionChange={(value) => {
                 form?.setValue('shartnoma_grafik_id', value ? Number(value) : 0)
               }}
-            />
+            >
+              {(item) => (
+                <SelectItem id={item.id}>
+                  {item.smeta?.smeta_number} - {item.smeta?.smeta_name}
+                </SelectItem>
+              )}
+            </JollySelect>
           </FormElement>
         ) : null}
       </div>

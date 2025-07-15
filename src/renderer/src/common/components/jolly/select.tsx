@@ -1,5 +1,7 @@
 'use client'
 
+import { useEffect, useImperativeHandle, useRef } from 'react'
+
 import { ChevronDown } from 'lucide-react'
 import {
   Button as AriaButton,
@@ -47,46 +49,66 @@ const SelectValue = <T extends object>({ className, ...props }: AriaSelectValueP
 )
 
 export interface SelectTriggerProps extends AriaButtonProps {
-  buttonRef?: React.Ref<HTMLButtonElement>
+  inputRef?: React.Ref<HTMLButtonElement>
   readOnly?: boolean
+  tabIndex?: number
 }
 const SelectTrigger = ({
   className,
   children,
   readOnly,
-  buttonRef,
+  inputRef,
+  tabIndex,
   ...props
-}: SelectTriggerProps) => (
-  <AriaButton
-    ref={buttonRef}
-    className={composeRenderProps(className, (className) =>
-      cn(
-        'flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background',
-        /* Disabled */
-        'data-[disabled]:cursor-not-allowed data-[disabled]:opacity-50',
-        /* Focused */
-        'data-[focus-visible]:outline-none data-[focus-visible]:ring-2 data-[focus-visible]:ring-ring data-[focus-visible]:ring-offset-2',
-        /* Resets */
-        'focus-visible:outline-none',
-        /* Readonly */
-        'data-[readonly]:cursor-not-allowed data-[readonly]:opacity-100 data-[readonly]:pointer-events-none',
-        className
-      )
-    )}
-    data-readonly={readOnly ? '' : undefined}
-    {...props}
-  >
-    {composeRenderProps(children, (children) => (
-      <>
-        {children}
-        <ChevronDown
-          aria-hidden="true"
-          className="size-4 opacity-50"
-        />
-      </>
-    ))}
-  </AriaButton>
-)
+}: SelectTriggerProps) => {
+  const innerRef = useRef<HTMLButtonElement>(null)
+
+  useImperativeHandle(inputRef, () => innerRef.current!)
+
+  useEffect(() => {
+    const input = innerRef.current
+    if (!input) {
+      return
+    }
+    if (tabIndex !== undefined) {
+      input.tabIndex = tabIndex
+    } else {
+      input.tabIndex = 0
+    }
+  }, [tabIndex])
+
+  return (
+    <AriaButton
+      ref={innerRef}
+      className={composeRenderProps(className, (className) =>
+        cn(
+          'flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background',
+          /* Disabled */
+          'data-[disabled]:cursor-not-allowed data-[disabled]:opacity-50',
+          /* Focused */
+          'data-[focus-visible]:outline-none data-[focus-visible]:ring-2 data-[focus-visible]:ring-brand',
+          /* Resets */
+          'focus-visible:outline-none',
+          /* Readonly */
+          'data-[readonly]:cursor-not-allowed data-[readonly]:opacity-100 data-[readonly]:pointer-events-none',
+          className
+        )
+      )}
+      data-readonly={readOnly ? '' : undefined}
+      {...props}
+    >
+      {composeRenderProps(children, (children) => (
+        <>
+          {children}
+          <ChevronDown
+            aria-hidden="true"
+            className="size-4 opacity-50 flex-shrink-0"
+          />
+        </>
+      ))}
+    </AriaButton>
+  )
+}
 
 const SelectPopover = ({ className, ...props }: AriaPopoverProps) => (
   <Popover
@@ -108,7 +130,8 @@ const SelectListBox = <T extends object>({ className, ...props }: AriaListBoxPro
 )
 
 interface JollySelectProps<T extends object> extends Omit<AriaSelectProps<T>, 'children'> {
-  buttonRef?: React.Ref<HTMLButtonElement>
+  inputRef?: React.Ref<HTMLButtonElement>
+  tabIndex?: number
   isReadOnly?: boolean
   label?: string
   description?: string
@@ -119,7 +142,8 @@ interface JollySelectProps<T extends object> extends Omit<AriaSelectProps<T>, 'c
 }
 
 function JollySelect<T extends object>({
-  buttonRef,
+  inputRef,
+  tabIndex,
   isReadOnly,
   label,
   description,
@@ -140,8 +164,9 @@ function JollySelect<T extends object>({
       {label ? <Label>{label}</Label> : null}
 
       <SelectTrigger
-        buttonRef={buttonRef}
+        inputRef={inputRef}
         readOnly={isReadOnly}
+        tabIndex={tabIndex}
         className={triggerClassName}
       >
         <SelectValue className="text-start" />

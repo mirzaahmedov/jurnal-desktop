@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next'
 
 import { usePagination } from '@/common/hooks/use-pagination'
 
-import { DatePicker } from './date-picker'
+import { JollyDatePicker } from './jolly-date-picker'
 import { Button } from './jolly/button'
 import { Form, FormField } from './ui/form'
 
@@ -63,7 +63,7 @@ export const RangeDatePicker = ({
           control={form.control}
           name="from"
           render={({ field }) => (
-            <DatePicker
+            <JollyDatePicker
               autoFocus
               validate={validateDate}
               calendarProps={calendarProps}
@@ -76,7 +76,7 @@ export const RangeDatePicker = ({
           control={form.control}
           name="to"
           render={({ field }) => (
-            <DatePicker
+            <JollyDatePicker
               validate={validateDate}
               calendarProps={calendarProps}
               {...field}

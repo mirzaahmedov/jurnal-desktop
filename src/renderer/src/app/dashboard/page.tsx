@@ -3,11 +3,11 @@ import { useEffect, useState } from 'react'
 import { useSuspenseQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 
-import { DatePicker } from '@/common/components'
+import { BudjetSelect } from '@/app/super-admin/budjet/budjet-select'
+import { JollyDatePicker } from '@/common/components/jolly-date-picker'
 import { useLayout } from '@/common/layout'
 import { formatDate } from '@/common/lib/date'
 
-import { BudjetSelect } from '../super-admin/budjet/budjet-select'
 import { Bank } from './components/bank'
 import { Kassa } from './components/kassa'
 import { DashboardPodotchetTable } from './components/podotchet-table/podotchet-table'
@@ -36,7 +36,7 @@ const DashboardPage = () => {
   return (
     <div className="p-5 h-full overflow-y-auto scrollbar">
       <div className="flex items-center gap-5 justify-between">
-        <DatePicker
+        <JollyDatePicker
           value={date ?? ''}
           onChange={setDate}
         />

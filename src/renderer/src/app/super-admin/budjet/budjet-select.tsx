@@ -50,6 +50,7 @@ export const BudjetSelect = ({
       placeholder={t('budjet')}
       items={options}
       isDisabled={isFetching}
+      className="w-96"
       {...props}
     >
       {(item) => <SelectItem id={item.id}>{item.name}</SelectItem>}

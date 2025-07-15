@@ -10,13 +10,8 @@ import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
 import { createGroupSpravochnik } from '@/app/super-admin/group/service'
-import {
-  ChooseSpravochnik,
-  DatePicker,
-  FooterCell,
-  FooterRow,
-  GenericTable
-} from '@/common/components'
+import { ChooseSpravochnik, FooterCell, FooterRow, GenericTable } from '@/common/components'
+import { JollyDatePicker } from '@/common/components/jolly-date-picker'
 import { Button } from '@/common/components/jolly/button'
 import { ButtonGroup } from '@/common/components/ui/button-group'
 import { Checkbox } from '@/common/components/ui/checkbox'
@@ -346,7 +341,7 @@ const MaterialWarehouseSaldoPage = () => {
             control={form.control}
             name="date"
             render={({ field }) => (
-              <DatePicker
+              <JollyDatePicker
                 value={field.value ? formatDate(field.value) : ''}
                 onChange={(value) => {
                   field.onChange(value ? parseDate(value) : undefined)

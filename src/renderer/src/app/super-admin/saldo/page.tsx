@@ -9,7 +9,8 @@ import { createResponsibleSpravochnik } from '@/app/jur_7/responsible/service'
 import { CommonWarehouseSaldoProductColumns } from '@/app/jur_7/saldo/columns'
 import { SaldoQueryKeys, defaultValues } from '@/app/jur_7/saldo/config'
 import { createGroupSpravochnik } from '@/app/super-admin/group/service'
-import { ChooseSpravochnik, DatePicker, GenericTable } from '@/common/components'
+import { ChooseSpravochnik, GenericTable } from '@/common/components'
+import { JollyDatePicker } from '@/common/components/jolly-date-picker'
 import { Button } from '@/common/components/ui/button'
 import { FormField } from '@/common/components/ui/form'
 import {
@@ -101,7 +102,7 @@ const MaterialWarehouseSaldoPage = () => {
             control={form.control}
             name="date"
             render={({ field }) => (
-              <DatePicker
+              <JollyDatePicker
                 value={field.value ? formatDate(field.value) : ''}
                 onChange={(value) => {
                   field.onChange(value ? parseDate(value) : undefined)

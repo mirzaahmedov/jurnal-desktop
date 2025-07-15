@@ -203,7 +203,10 @@ export const ShartnomaForm = ({
 
   return (
     <Form {...form}>
-      <form onSubmit={onSubmit}>
+      <form
+        onSubmit={onSubmit}
+        className="pb-20"
+      >
         <Tabs
           value={tabValue}
           onValueChange={(value) => setTabValue(value as TabOption)}

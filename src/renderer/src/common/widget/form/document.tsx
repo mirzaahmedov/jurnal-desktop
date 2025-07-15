@@ -7,7 +7,7 @@ import { useEffect } from 'react'
 import { RefreshCw } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { DatePicker, Fieldset, Spinner } from '@/common/components'
+import { Fieldset, Spinner } from '@/common/components'
 import { FormElement } from '@/common/components/form'
 import { Button } from '@/common/components/ui/button'
 import { FormField } from '@/common/components/ui/form'
@@ -15,6 +15,8 @@ import { Input } from '@/common/components/ui/input'
 import { type DocumentType, useGenerateDocumentNumber } from '@/common/features/doc-num'
 import { formatDate, parseDate } from '@/common/lib/date'
 import { cn } from '@/common/lib/utils'
+
+import { JollyDatePicker } from '../../components/jolly-date-picker'
 
 interface RequiredDocumentFields {
   doc_num: string
@@ -119,7 +121,7 @@ export const DocumentFields: FormEditableFieldsComponent<
               label={t('doc_date')}
               direction={dialog ? 'column' : 'row'}
             >
-              <DatePicker
+              <JollyDatePicker
                 tabIndex={tabIndex}
                 disabled={disabled}
                 validate={validateDate}
