@@ -332,7 +332,7 @@ const MaterialWarehouseSaldoPage = () => {
           </div>
         </div>
       </ListView.Header>
-      <div className="p-5 pt-0 w-full flex items-center justify-between gap-5">
+      <div className="p-5 pt-0 w-full flex flex-wrap items-center justify-between gap-5">
         <form
           onSubmit={onSubmit}
           className="flex items-center justify-start gap-5"

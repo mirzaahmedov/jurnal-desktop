@@ -58,10 +58,11 @@ export const EditableTable = <T extends object, F extends ArrayPath<NoInfer<T>>>
 
   const { t } = useTranslation()
 
-  const { fields: rows } = useFieldArray({
+  const fieldArray = useFieldArray({
     control: form.control,
     name
   })
+  const fields = fieldArray.fields
 
   useImperativeHandle(
     methods,
@@ -110,7 +111,7 @@ export const EditableTable = <T extends object, F extends ArrayPath<NoInfer<T>>>
           type="button"
           variant="ghost"
           className="hover:bg-slate-50 hover:text-red-500 text-red-400"
-          onClick={() => onDelete?.({ id: rowIndex })}
+          onClick={() => onDelete?.({ id: rowIndex, fieldArray })}
         >
           <CircleMinus className="btn-icon !mx-0" />
         </Button>
@@ -119,13 +120,13 @@ export const EditableTable = <T extends object, F extends ArrayPath<NoInfer<T>>>
     {
       key: 'duplicate',
       onPress: onDuplicate,
-      render: ({ rowIndex, rows, row }) => (
+      render: ({ rowIndex, row }) => (
         <Button
           tabIndex={tabIndex}
           type="button"
           variant="ghost"
           className="hover:bg-slate-50 text-brand"
-          onClick={() => onDuplicate?.({ index: rowIndex, row, rows })}
+          onClick={() => onDuplicate?.({ index: rowIndex, row, fieldArray })}
         >
           <CopyPlus className="btn-icon !mx-0" />
         </Button>
@@ -213,14 +214,14 @@ export const EditableTable = <T extends object, F extends ArrayPath<NoInfer<T>>>
             : null}
         </TableHeader>
         <TableBody>
-          {Array.isArray(rows) && rows.length ? (
-            rows.map((row, index) => (
+          {Array.isArray(fields) && fields.length ? (
+            fields.map((field, index) => (
               <EditableTableRowRenderer
-                key={row.id}
+                key={field.id}
                 index={index}
                 tabIndex={tabIndex}
-                row={row as any}
-                rows={rows as any}
+                row={field as any}
+                rows={fields as any}
                 name={name}
                 form={form}
                 columnDefs={columnDefs}
@@ -261,7 +262,7 @@ export const EditableTable = <T extends object, F extends ArrayPath<NoInfer<T>>>
                     type="button"
                     variant="ghost"
                     className="w-full hover:bg-slate-50 text-brand hover:text-brand"
-                    onClick={onCreate}
+                    onClick={() => onCreate({ fieldArray })}
                   >
                     <CirclePlus className="btn-icon icon-start" /> {t('add')}
                   </Button>
@@ -291,8 +292,8 @@ interface EditableTableRowRendererProps<T extends object, F extends ArrayPath<No
     HTMLAttributes<HTMLTableRowElement> {
   tabIndex?: number
   index: number
-  row: FieldArrayWithId<T, F, 'id'>
-  rows: FieldArrayWithId<T, F, 'id'>[]
+  row: FieldArrayWithId<T, F>
+  rows: FieldArrayWithId<T, F>[]
   actions: TableAction[]
 }
 const EditableTableRowRenderer = <T extends object, R extends T[ArrayPath<NoInfer<T>>]>({

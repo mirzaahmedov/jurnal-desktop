@@ -1,8 +1,8 @@
 import type { EditorComponentType } from './editors'
-import type { ChangeContext, DeleteContext, DuplicateArgs } from './editors/interfaces'
+import type { ChangeContext } from './editors/interfaces'
 import type { Autocomplete } from '@/common/lib/types'
 import type { HTMLAttributes, ReactNode, RefObject, SyntheticEvent } from 'react'
-import type { ArrayPath, FieldArrayWithId, FieldErrors, UseFormReturn } from 'react-hook-form'
+import type { ArrayPath, FieldArrayWithId, FieldErrors, UseFieldArrayReturn, UseFormReturn } from 'react-hook-form'
 
 export type TableRowField<T extends object, F extends ArrayPath<T>> = FieldArrayWithId<T, F, 'id'>
 export type InferRow<T extends object, F extends ArrayPath<T>> = T[F][number]
@@ -17,16 +17,16 @@ export type CellEventHandler<T extends object, F extends ArrayPath<T>> = (args: 
   index: number
 }) => void
 
-export interface EditableColumnDef<T extends object> {
+export interface EditableColumnDef<T extends object, F extends ArrayPath<T> = ArrayPath<T>> {
   key: Autocomplete<keyof T>
   header?: ReactNode
-  Editor: EditorComponentType<T>
+  Editor: EditorComponentType<T, F>
   width?: number
   minWidth?: number
   maxWidth?: number
   className?: string
   headerClassName?: string
-  columns?: EditableColumnDef<T>[]
+  columns?: EditableColumnDef<T, F>[]
 }
 
 export type HeaderColumnDef<T> = T & {
@@ -37,6 +37,19 @@ export type HeaderColumnDef<T> = T & {
 
 export interface EditableTableMethods {
   scrollToRow: (rowIndex: number) => void
+}
+
+export interface CreateHandlerArgs<T extends object, F extends ArrayPath<T>> {
+  fieldArray: UseFieldArrayReturn<T, F, "id">,
+}
+export interface DeleteHandlerArgs<T extends object, F extends ArrayPath<T>> {
+  id: number
+  fieldArray: UseFieldArrayReturn<T, F, "id">
+}
+export interface DuplicateHandlerArgs<T extends object, F extends ArrayPath<T>> {
+  index: number
+  row: TableRowField<T, F>
+  fieldArray: UseFieldArrayReturn<T, F, "id">
 }
 
 export interface EditableTableProps<T extends object, F extends ArrayPath<NoInfer<T>>> {
@@ -63,9 +76,9 @@ export interface EditableTableProps<T extends object, F extends ArrayPath<NoInfe
     errors: FieldErrors<InferRow<T, F>>
   }) => Record<string, unknown>
   placeholder?: string
-  onDelete?(ctx: DeleteContext): void
-  onDuplicate?(ctx: DuplicateArgs<T, F>): void
-  onCreate?(): void
+  onDelete?(ctx: DeleteHandlerArgs<T, F>): void
+  onDuplicate?(ctx: DuplicateHandlerArgs<T, F>): void
+  onCreate?(args: CreateHandlerArgs<T, F>): void
   onCellDoubleClick?: CellEventHandler<T, F>
   params?: Record<string, unknown>
   footerRows?: ReactNode

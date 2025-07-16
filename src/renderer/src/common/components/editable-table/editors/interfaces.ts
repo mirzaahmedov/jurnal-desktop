@@ -8,23 +8,13 @@ export type ChangeContext<T extends object, K extends keyof T = keyof T> = {
   payload: T
 }
 
-export type DeleteContext = {
-  id: number
-}
-
-export type DuplicateArgs<T extends object, F extends ArrayPath<T>> = {
-  index: number
-  row: TableRowField<T, F>
-  rows: TableRowField<T, F>[]
-}
-
-export type EditorComponent<T extends object> = FC<{
+export type EditorComponent<T extends object, F extends ArrayPath<T>> = FC<{
   tabIndex?: number
   inputRef: Ref<HTMLInputElement>
   id: number
-  row: TableRowField<T>
-  rows: TableRowField<T>[]
-  form: UseFormReturn<any> // Todo fix this type
+  row: TableRowField<T, F>
+  rows: TableRowField<T, F>[]
+  form: UseFormReturn<T>
   col: EditableColumnDef<T>
   max?: number
   errors?: FieldErrors<T>
