@@ -485,5 +485,10 @@
   "tabel": "Табель",
   "vedemost": "Ведомость",
   "card_number": "Номер карты",
-  "enabled": "Включено"
+  "enabled": "Включено",
+  "holiday": "Праздник",
+  "kazarma": "Казарма",
+  "night_shift": "Ночная смена",
+  "worked_days": "Отработанные дни",
+  "overtime": "Переработка"
 }

@@ -27,5 +27,5 @@ export const createEditorDuplicateHandler =
   (args: { form: UseFormReturn<any>; field?: string }) =>
     ({ index, row, fieldArray }: DuplicateHandlerArgs<any, any>) => {
       console.log({ args })
-      fieldArray.insert(index + 1, { ...row })
+      fieldArray.insert(index + 1, row)
     }

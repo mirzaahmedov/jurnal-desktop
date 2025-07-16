@@ -1,51 +1,54 @@
-import type { MainZarplata } from '@/common/models'
+import type { Tabel } from '@/common/models/tabel'
 
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { Allotment } from 'allotment'
+import { PlusIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 
-import { MainZarplataColumnDefs } from '@/app/jur_5/common/features/main-zarplata/columns'
-import { VacantTree, type VacantTreeNode } from '@/app/region-admin/vacant/vacant-tree'
+import { TabelService } from '@/app/jur_5/nachislenie/tabel/service'
 import { GenericTable, LoadingOverlay } from '@/common/components'
+import { Button } from '@/common/components/jolly/button'
 import { useConfirm } from '@/common/features/confirm'
-import { MainZarplataService } from '@/common/features/main-zarplata/service'
-import { VacantService } from '@/common/features/vacant/service'
-import { useToggle } from '@/common/hooks'
+import { useRequisitesStore } from '@/common/features/requisites'
+import { useRequisitesRedirect } from '@/common/features/requisites/use-main-schet-redirect'
+import { usePagination, useToggle } from '@/common/hooks'
 import { queryClient } from '@/common/lib/query-client'
-import { arrayToTreeByRelations } from '@/common/lib/tree/relation-tree'
+
+import { TabelColumnDefs } from './columns'
+import { TabelCreateDialog } from './create-dialog'
+import { TabelEditDialog } from './edit-dialog'
 
 export const Tabels = () => {
+  useRequisitesRedirect(-1)
+
   const { t } = useTranslation(['app'])
   const { confirm } = useConfirm()
+  const { budjet_id, main_schet_id } = useRequisitesStore()
 
-  const [selectedVacant, setSelectedVacant] = useState<VacantTreeNode | null>(null)
-  const [selectedUser, setSelectedUser] = useState<MainZarplata | undefined>()
+  const [selectedTabelId, setSelectedTabelId] = useState<number>()
 
   const editDialogToggle = useToggle()
+  const createDialogToggle = useToggle()
+  const pagination = usePagination()
 
-  const { data: vacants, isFetching: isFetchingVacants } = useQuery({
-    queryKey: [VacantService.QueryKeys.GetAll, { page: 1, limit: 100000000000000 }],
-    queryFn: VacantService.getAll
-  })
-  const { data: mainZarplata, isFetching: isFetchingMainZarplata } = useQuery({
+  const { data: tabels, isFetching: isFetchingTabels } = useQuery({
     queryKey: [
-      MainZarplataService.QueryKeys.GetByVacantId,
+      TabelService.QueryKeys.GetAll,
       {
-        vacantId: selectedVacant?.id ?? 0
+        page: pagination.page,
+        limit: pagination.limit
       }
     ],
-    queryFn: MainZarplataService.getByVacantId,
-    enabled: !!selectedVacant
+    queryFn: TabelService.getAll
   })
-  const { mutate: deleteMainZarplata, isPending: isDeleting } = useMutation({
-    mutationFn: MainZarplataService.delete,
+  const { mutate: deleteTabel, isPending: isDeleting } = useMutation({
+    mutationFn: TabelService.delete,
     onSuccess: () => {
       toast.success(t('delete_success'))
       queryClient.invalidateQueries({
-        queryKey: [MainZarplataService.QueryKeys.GetByVacantId]
+        queryKey: [TabelService.QueryKeys.GetAll]
       })
     },
     onError: (res: { message: string }) => {
@@ -53,57 +56,54 @@ export const Tabels = () => {
     }
   })
 
-  const treeNodes = useMemo(
-    () =>
-      arrayToTreeByRelations({
-        array: vacants?.data ?? [],
-        getId: (node) => node.id,
-        getParentId: (node) => node.parentId
-      }),
-    [vacants]
-  )
-
-  const handleRowEdit = (row: MainZarplata) => {
-    setSelectedUser(row)
+  const handleRowEdit = (row: Tabel) => {
+    setSelectedTabelId(row.id)
     editDialogToggle.open()
   }
-  const handleRowDelete = (row: MainZarplata) => {
+  const handleRowDelete = (row: Tabel) => {
     confirm({
       onConfirm: () => {
-        deleteMainZarplata(row.id)
+        deleteTabel(row.id)
       }
     })
   }
 
   return (
-    <Allotment className="h-full">
-      <Allotment.Pane
-        preferredSize={300}
-        maxSize={600}
-        minSize={200}
-        className="w-full bg-gray-50"
-      >
-        <div className="relative overflow-auto scrollbar h-full">
-          {isFetchingVacants ? <LoadingOverlay /> : null}
-          <VacantTree
-            nodes={treeNodes}
-            selectedIds={selectedVacant ? [selectedVacant.id] : []}
-            onSelectNode={setSelectedVacant}
+    <div className="relative w-full overflow-auto scrollbar pl-px">
+      <div className="p-5 border-b text-end">
+        <Button
+          IconStart={PlusIcon}
+          onClick={createDialogToggle.open}
+        >
+          {t('add')}
+        </Button>
+      </div>
+      {isFetchingTabels || isDeleting ? <LoadingOverlay /> : null}
+      <GenericTable
+        data={tabels?.data ?? []}
+        columnDefs={TabelColumnDefs}
+        onEdit={handleRowEdit}
+        onDelete={handleRowDelete}
+        className="table-generic-xs"
+      />
+
+      {budjet_id && main_schet_id ? (
+        <>
+          <TabelCreateDialog
+            isOpen={createDialogToggle.isOpen}
+            onOpenChange={createDialogToggle.setOpen}
+            budjetId={budjet_id}
+            mainSchetId={main_schet_id}
           />
-        </div>
-      </Allotment.Pane>
-      <Allotment.Pane>
-        <div className="relative w-full overflow-auto scrollbar pl-px">
-          {isFetchingMainZarplata || isDeleting ? <LoadingOverlay /> : null}
-          <GenericTable
-            data={mainZarplata ?? []}
-            columnDefs={MainZarplataColumnDefs}
-            onEdit={handleRowEdit}
-            onDelete={handleRowDelete}
-            className="table-generic-xs"
+          <TabelEditDialog
+            isOpen={editDialogToggle.isOpen}
+            onOpenChange={editDialogToggle.setOpen}
+            budjetId={budjet_id}
+            mainSchetId={main_schet_id}
+            selectedTabelId={selectedTabelId}
           />
-        </div>
-      </Allotment.Pane>
-    </Allotment>
+        </>
+      ) : null}
+    </div>
   )
 }

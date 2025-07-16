@@ -5,7 +5,7 @@ import { SpravochnikInput, useSpravochnik } from '@/common/features/spravochnik'
 
 export const createPodotchetEditor = <
   T extends { id_spravochnik_podotchet_litso?: number }
->(): EditorComponent<T> => {
+>(): EditorComponent<T, any> => {
   return ({ tabIndex, errors, value, onChange }) => {
     const podotchetSpravochnik = useSpravochnik(
       createPodotchetSpravochnik({

@@ -80,6 +80,8 @@ export const YearSelect = ({ selectedKey, onSelectionChange, ...props }: YearSel
       onOpenChange={(open) => {
         if (!open && !inputValue) {
           setInputValue(selectedKey ? String(selectedKey) : '')
+        } else if (!open) {
+          onSelectionChange?.(inputValue)
         }
       }}
       onFocus={() => {
@@ -92,6 +94,7 @@ export const YearSelect = ({ selectedKey, onSelectionChange, ...props }: YearSel
       defaultFilter={(optionText, filterText) => {
         return optionText.toLowerCase().startsWith(filterText.toLowerCase())
       }}
+      className="gap-0"
     >
       {(item) => <ComboboxItem id={item.value}>{item.label}</ComboboxItem>}
     </JollyComboBox>

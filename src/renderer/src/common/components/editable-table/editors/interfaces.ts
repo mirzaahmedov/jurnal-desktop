@@ -12,6 +12,7 @@ export type EditorComponent<T extends object, F extends ArrayPath<T>> = FC<{
   tabIndex?: number
   inputRef: Ref<HTMLInputElement>
   id: number
+  fieldId: string;
   row: TableRowField<T, F>
   rows: TableRowField<T, F>[]
   form: UseFormReturn<T>

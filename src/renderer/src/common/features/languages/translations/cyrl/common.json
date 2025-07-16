@@ -484,5 +484,10 @@
   "tabel": "Табель",
   "vedemost": "Ведомость",
   "card_number": "Карта рақами",
-  "enabled": "Фаол"
+  "enabled": "Фаол",
+  "holiday": "Байрам",
+  "kazarma": "Казарма",
+  "night_shift": "Тунги смена",
+  "worked_days": "Ишланган кунлар",
+  "overtime": "Қўшимча иш"
 }

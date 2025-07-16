@@ -483,5 +483,10 @@
   "tabel": "Tabel",
   "vedemost": "Vedomost",
   "card_number": "Karta raqami",
-  "enabled": "Faol"
+  "enabled": "Faol",
+  "holiday": "Bayram",
+  "kazarma": "Kazarma",
+  "night_shift": "Tungi smena",
+  "worked_days": "Ishlangan kunlar",
+  "overtime": "Qo'shimcha ish"
 }

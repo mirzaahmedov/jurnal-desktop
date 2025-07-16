@@ -14,6 +14,7 @@ interface SpravochnikHookCallbacks<T> {
 
 export type SpravochnikHookOptions<T extends { id: number }> = SpravochnikHookCallbacks<T> &
   Omit<SpravochnikData<T>, 'id' | 'disabledIds'> & {
+    uniqueId?: string;
     value?: number
     enabled?: boolean
     includeParamsInGetById?: boolean
@@ -32,7 +33,7 @@ export type UseSpravochnikReturn<T> = {
 export const useSpravochnik = <T extends { id: number }>(
   options: SpravochnikHookOptions<T>
 ): UseSpravochnikReturn<T> => {
-  const id = useId()
+  const id = options.uniqueId ?? useId()
 
   const inputRef = useRef<HTMLInputElement>(null)
   const callbacksRef = useRef<SpravochnikHookCallbacks<T>>({

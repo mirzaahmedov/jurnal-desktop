@@ -120,13 +120,19 @@ export const EditableTable = <T extends object, F extends ArrayPath<NoInfer<T>>>
     {
       key: 'duplicate',
       onPress: onDuplicate,
-      render: ({ rowIndex, row }) => (
+      render: ({ rowIndex }) => (
         <Button
           tabIndex={tabIndex}
           type="button"
           variant="ghost"
           className="hover:bg-slate-50 text-brand"
-          onClick={() => onDuplicate?.({ index: rowIndex, row, fieldArray })}
+          onClick={() =>
+            onDuplicate?.({
+              index: rowIndex,
+              row: form.getValues(`${name}.${rowIndex}`),
+              fieldArray
+            })
+          }
         >
           <CopyPlus className="btn-icon !mx-0" />
         </Button>
@@ -153,7 +159,7 @@ export const EditableTable = <T extends object, F extends ArrayPath<NoInfer<T>>>
         ref={ref}
         className={cn('border border-slate-200', className)}
       >
-        <TableHeader className="sticky top-0 z-50 shadow-sm">
+        <TableHeader className="sticky top-0 z-100 shadow-sm">
           {Array.isArray(columnDefs)
             ? headerGroups.map((headerGroup, index) => (
                 <EditableTableRow key={index}>
@@ -202,7 +208,7 @@ export const EditableTable = <T extends object, F extends ArrayPath<NoInfer<T>>>
                     ? actions.map((action, actionIndex) => (
                         <EditableTableHead
                           key={action.key}
-                          className={cn('sticky z-50', actionIndex === 0 && 'border-l')}
+                          className={cn('sticky z-100', actionIndex === 0 && 'border-l')}
                           style={{
                             right: (actions.length - actionIndex - 1) * 53
                           }}
@@ -218,6 +224,7 @@ export const EditableTable = <T extends object, F extends ArrayPath<NoInfer<T>>>
             fields.map((field, index) => (
               <EditableTableRowRenderer
                 key={field.id}
+                fieldId={field.id}
                 index={index}
                 tabIndex={tabIndex}
                 row={field as any}
@@ -290,6 +297,7 @@ interface EditableTableRowRendererProps<T extends object, F extends ArrayPath<No
       | 'getRowClassName'
     >,
     HTMLAttributes<HTMLTableRowElement> {
+  fieldId: string
   tabIndex?: number
   index: number
   row: FieldArrayWithId<T, F>
@@ -298,6 +306,7 @@ interface EditableTableRowRendererProps<T extends object, F extends ArrayPath<No
 }
 const EditableTableRowRenderer = <T extends object, R extends T[ArrayPath<NoInfer<T>>]>({
   tabIndex,
+  fieldId,
   index,
   columnDefs,
   row,
@@ -359,10 +368,11 @@ const EditableTableRowRenderer = <T extends object, R extends T[ArrayPath<NoInfe
                         tabIndex={tabIndex}
                         inputRef={field.ref}
                         id={index}
-                        row={row}
-                        rows={rows}
+                        fieldId={fieldId}
+                        row={row as any}
+                        rows={rows as any}
                         col={column}
-                        form={form}
+                        form={form as any}
                         value={field.value}
                         onChange={field.onChange}
                         errors={errors?.[index] as FieldErrors<R>}
