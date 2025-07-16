@@ -1,5 +1,3 @@
-import type { FieldError, FieldErrorsImpl, Merge, UseFormReturn } from 'react-hook-form'
-
 import { useEffect, useState } from 'react'
 
 import {
@@ -10,6 +8,15 @@ import {
   Warehouse,
   XCircle
 } from 'lucide-react'
+import {
+  Controller,
+  type FieldError,
+  type FieldErrorsImpl,
+  type Merge,
+  type UseFormReturn,
+  useFieldArray,
+  useWatch
+} from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 
@@ -60,10 +67,20 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
   const { startDate, endDate } = useSelectedMonthStore()
 
   const spravochnikToggle = useToggle()
-  const childs = form.watch('childs')
-  const pageCount = Math.ceil(childs.length / PAGE_SIZE)
 
-  const handleChangeChildField = useEventCallback(
+  const { fields, append, remove } = useFieldArray({
+    control: form.control,
+    name: 'childs'
+  })
+  const pageCount = Math.ceil(fields.length / PAGE_SIZE)
+
+  const values = useWatch({
+    control: form.control
+  })
+
+  console.log({ values })
+
+  const updateFormField = useEventCallback(
     (index: number, key: keyof MaterialPrixodProvodkaFormValues, value: unknown) => {
       form.setValue(`childs.${index}.${key}`, value as string | number, {
         shouldValidate: true
@@ -79,7 +96,7 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
 
   return (
     <div>
-      <div className="overflow-x-auto scrollbar">
+      <div className="overflow-x-auto scrollbar relative">
         <div
           onFocus={(e) => {
             e.currentTarget.scrollIntoView({
@@ -242,7 +259,7 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
                 <EditableTableHead rowSpan={2}>{t('prixod_date')}</EditableTableHead>
                 <EditableTableHead
                   rowSpan={2}
-                  className="px-3"
+                  className="px-3 sticky right-0 border-l"
                 >
                   <div className="flex justify-center">
                     <TableOfContents className="size-5 text-slate-500" />
@@ -268,8 +285,8 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
               </EditableTableRow>
             </TableHeader>
             <TableBody>
-              {Array.isArray(childs) && childs.length ? (
-                childs.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE).map((row, rowIndex) => {
+              {Array.isArray(fields) && fields.length ? (
+                fields.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE).map((row, rowIndex) => {
                   const index = (page - 1) * PAGE_SIZE + rowIndex
                   const errors = form.formState.errors.childs?.[index] || {}
                   const isExisting = !!row.product_id
@@ -280,7 +297,6 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
                       </EditableTableCell>
                       <NaimenovanieCells
                         index={index}
-                        row={row}
                         form={form}
                         errors={errors}
                         tabIndex={tabIndex}
@@ -289,153 +305,194 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
                           spravochnikToggle.open()
                           setRowIndex(index)
                         }}
-                        onChangeField={handleChangeChildField}
+                        onChangeField={updateFormField}
                       />
                       <EditableTableCell>
                         <div className="relative">
-                          <NumericInput
-                            adjustWidth
-                            value={row.kol || 0}
-                            onValueChange={(values, src) => {
-                              const summa = calcSumma(values.floatValue ?? 0, row.sena)
-                              if (src.source === 'event' && summa !== row.summa) {
-                                handleChangeChildField(index, 'summa', summa ?? 0)
-                              }
-                              handleChangeChildField(index, 'kol', values.floatValue ?? 0)
+                          <Controller
+                            control={form.control}
+                            name={`childs.${index}.kol`}
+                            render={({ field, fieldState }) => (
+                              <NumericInput
+                                adjustWidth
+                                value={field.value || 0}
+                                onValueChange={(values, src) => {
+                                  const row = form.getValues(`childs.${index}`)
+                                  const summa = calcSumma(values.floatValue ?? 0, row.sena)
 
-                              if (values.floatValue === undefined) {
-                                const input = src.event?.currentTarget as HTMLInputElement
-                                if (input) {
-                                  setTimeout(() => {
-                                    input.setSelectionRange(0, 1)
-                                  }, 0)
-                                }
-                              }
+                                  if (src.source === 'event' && summa !== row.summa) {
+                                    updateFormField(index, 'summa', summa ?? 0)
+                                  }
+                                  field.onChange(values.floatValue ?? 0)
+
+                                  if (values.floatValue === undefined) {
+                                    const input = src.event?.currentTarget as HTMLInputElement
+                                    if (input) {
+                                      setTimeout(() => {
+                                        input.setSelectionRange(0, 1)
+                                      }, 0)
+                                    }
+                                  }
+                                }}
+                                editor
+                                error={!!fieldState.error}
+                                tabIndex={tabIndex}
+                              />
+                            )}
+                          />
+                        </div>
+                      </EditableTableCell>
+                      <EditableTableCell>
+                        <div className="relative">
+                          <Controller
+                            control={form.control}
+                            name={`childs.${index}.sena`}
+                            render={({ field, fieldState }) => (
+                              <NumericInput
+                                adjustWidth
+                                value={field.value || 0}
+                                onValueChange={(values, src) => {
+                                  const row = form.getValues(`childs.${index}`)
+                                  const summa = calcSumma(row.kol, values.floatValue ?? 0)
+                                  if (src.source === 'event' && summa !== row.summa) {
+                                    updateFormField(index, 'summa', summa ?? 0)
+                                  }
+                                  field.onChange(values.floatValue ?? 0)
+
+                                  if (values.floatValue === undefined) {
+                                    const input = src.event?.currentTarget as HTMLInputElement
+                                    if (input) {
+                                      setTimeout(() => {
+                                        input.setSelectionRange(0, 1)
+                                      }, 0)
+                                    }
+                                  }
+                                }}
+                                editor
+                                error={!!fieldState.error}
+                                tabIndex={tabIndex}
+                                decimalScale={100}
+                              />
+                            )}
+                          />
+                        </div>
+                      </EditableTableCell>
+                      <EditableTableCell>
+                        <div className="relative">
+                          <Controller
+                            control={form.control}
+                            name={`childs.${index}.summa`}
+                            render={({ field, fieldState }) => (
+                              <NumericInput
+                                adjustWidth
+                                value={field.value || 0}
+                                defaultValue={0}
+                                onValueChange={(values, src) => {
+                                  const row = form.getValues(`childs.${index}`)
+                                  const sena = calcSena(values.floatValue ?? 0, row.kol)
+                                  if (
+                                    src.source === 'event' &&
+                                    sena !== row.sena &&
+                                    (values.floatValue ?? 0) !== 0
+                                  ) {
+                                    updateFormField(index, 'sena', sena ?? 0)
+                                  }
+                                  field.onChange(values.floatValue ?? 0)
+
+                                  if (values.floatValue === undefined) {
+                                    const input = src.event?.currentTarget as HTMLInputElement
+                                    if (input) {
+                                      setTimeout(() => {
+                                        input.setSelectionRange(0, 1)
+                                      }, 0)
+                                    }
+                                  }
+                                }}
+                                editor
+                                error={!!fieldState.error}
+                                tabIndex={tabIndex}
+                              />
+                            )}
+                          />
+                        </div>
+                      </EditableTableCell>
+
+                      <EditableTableCell>
+                        <div className="relative">
+                          <Controller
+                            control={form.control}
+                            name={`childs.${index}.nds_foiz`}
+                            render={({ field, fieldState }) => (
+                              <NumericInput
+                                adjustWidth
+                                isAllowed={(values) => (values.floatValue ?? 0) <= 99}
+                                value={field.value || ''}
+                                onValueChange={(values) => {
+                                  field.onChange(values.floatValue ?? 0)
+                                }}
+                                editor
+                                error={!!fieldState.error}
+                                tabIndex={tabIndex}
+                              />
+                            )}
+                          />
+                        </div>
+                      </EditableTableCell>
+
+                      <EditableTableCell>
+                        <div className="relative">
+                          <Controller
+                            control={form.control}
+                            name={`childs.${index}.nds_foiz`}
+                            render={({ field }) => {
+                              const kol = form.watch(`childs.${index}.kol`) || 0
+                              const sena = form.watch(`childs.${index}.sena`) || 0
+                              return (
+                                <NumericInput
+                                  readOnly
+                                  adjustWidth
+                                  value={
+                                    field.value
+                                      ? ((kol || 0) * (sena || 0) * (field.value || 0)) / 100 || 0
+                                      : 0
+                                  }
+                                  editor
+                                  className={inputVariants({
+                                    editor: true,
+                                    nonfocus: true
+                                  })}
+                                />
+                              )
                             }}
-                            error={!!errors.kol}
-                            className={inputVariants({
-                              editor: true,
-                              error: !!errors?.kol
-                            })}
-                            tabIndex={tabIndex}
                           />
                         </div>
                       </EditableTableCell>
+
                       <EditableTableCell>
                         <div className="relative">
-                          <NumericInput
-                            adjustWidth
-                            value={row.sena || 0}
-                            onValueChange={(values, src) => {
-                              const summa = calcSumma(row.kol, values.floatValue ?? 0)
-                              if (src.source === 'event' && summa !== row.summa) {
-                                handleChangeChildField(index, 'summa', summa ?? 0)
-                              }
-                              handleChangeChildField(index, 'sena', values.floatValue ?? 0)
-
-                              if (values.floatValue === undefined) {
-                                const input = src.event?.currentTarget as HTMLInputElement
-                                if (input) {
-                                  setTimeout(() => {
-                                    input.setSelectionRange(0, 1)
-                                  }, 0)
-                                }
-                              }
+                          <Controller
+                            control={form.control}
+                            name={`childs.${index}.nds_foiz`}
+                            render={({ field }) => {
+                              const kol = form.watch(`childs.${index}.kol`) || 0
+                              const sena = form.watch(`childs.${index}.sena`) || 0
+                              return (
+                                <NumericInput
+                                  readOnly
+                                  adjustWidth
+                                  value={
+                                    field.value
+                                      ? (kol || 0) * (sena || 0) +
+                                          ((kol || 0) * (sena || 0) * (field.value || 0)) / 100 || 0
+                                      : 0
+                                  }
+                                  className={inputVariants({
+                                    editor: true,
+                                    nonfocus: true
+                                  })}
+                                />
+                              )
                             }}
-                            className={inputVariants({
-                              editor: true,
-                              error: !!errors?.sena
-                            })}
-                            error={!!errors.sena}
-                            tabIndex={tabIndex}
-                            decimalScale={100}
-                          />
-                        </div>
-                      </EditableTableCell>
-                      <EditableTableCell>
-                        <div className="relative">
-                          <NumericInput
-                            adjustWidth
-                            value={row.summa || 0}
-                            defaultValue={0}
-                            onValueChange={(values, src) => {
-                              const sena = calcSena(values.floatValue ?? 0, row.kol)
-                              if (
-                                src.source === 'event' &&
-                                sena !== row.sena &&
-                                (values.floatValue ?? 0) !== 0
-                              ) {
-                                handleChangeChildField(index, 'sena', sena ?? 0)
-                              }
-                              handleChangeChildField(index, 'summa', values.floatValue ?? 0)
-
-                              if (values.floatValue === undefined) {
-                                const input = src.event?.currentTarget as HTMLInputElement
-                                if (input) {
-                                  setTimeout(() => {
-                                    input.setSelectionRange(0, 1)
-                                  }, 0)
-                                }
-                              }
-                            }}
-                            className={inputVariants({
-                              editor: true,
-                              error: !!errors?.summa
-                            })}
-                            error={!!errors.summa}
-                            tabIndex={tabIndex}
-                          />
-                        </div>
-                      </EditableTableCell>
-
-                      <EditableTableCell>
-                        <div className="relative">
-                          <NumericInput
-                            adjustWidth
-                            isAllowed={(values) => (values.floatValue ?? 0) <= 99}
-                            value={row.nds_foiz || ''}
-                            onValueChange={(values) => {
-                              handleChangeChildField(index, 'nds_foiz', values.floatValue)
-                            }}
-                            className={inputVariants({
-                              editor: true,
-                              error: !!errors?.nds_foiz
-                            })}
-                            error={!!errors.nds_foiz}
-                            tabIndex={tabIndex}
-                          />
-                        </div>
-                      </EditableTableCell>
-
-                      <EditableTableCell>
-                        <div className="relative">
-                          <NumericInput
-                            readOnly
-                            adjustWidth
-                            value={
-                              ((row.kol || 0) * (row.sena || 0) * (row.nds_foiz || 0)) / 100 || ''
-                            }
-                            className={inputVariants({
-                              editor: true,
-                              nonfocus: true
-                            })}
-                          />
-                        </div>
-                      </EditableTableCell>
-
-                      <EditableTableCell>
-                        <div className="relative">
-                          <NumericInput
-                            readOnly
-                            adjustWidth
-                            value={
-                              (row.kol || 0) * (row.sena || 0) +
-                                ((row.kol || 0) * (row.sena || 0) * (row.nds_foiz || 0)) / 100 || ''
-                            }
-                            className={inputVariants({
-                              editor: true,
-                              nonfocus: true
-                            })}
                           />
                         </div>
                       </EditableTableCell>
@@ -450,18 +507,21 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
                       </EditableTableCell>
                       <EditableTableCell>
                         <div className="relative flex items-center justify-center">
-                          <NumericInput
-                            adjustWidth
-                            value={row.eski_iznos_summa || ''}
-                            onValueChange={(values) => {
-                              handleChangeChildField(index, 'eski_iznos_summa', values.floatValue)
-                            }}
-                            className={inputVariants({
-                              editor: true,
-                              error: !!errors?.eski_iznos_summa
-                            })}
-                            error={!!errors.eski_iznos_summa}
-                            tabIndex={tabIndex}
+                          <Controller
+                            control={form.control}
+                            name={`childs.${index}.eski_iznos_summa`}
+                            render={({ field, fieldState }) => (
+                              <NumericInput
+                                adjustWidth
+                                value={field.value || ''}
+                                onValueChange={(values) => {
+                                  field.onChange(values.floatValue)
+                                }}
+                                editor
+                                error={!!fieldState.error}
+                                tabIndex={tabIndex}
+                              />
+                            )}
                           />
                         </div>
                       </EditableTableCell>
@@ -501,83 +561,96 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
 
                       <EditableTableCell>
                         <div className="relative">
-                          <JollyDatePicker
-                            readOnly={!row.iznos}
-                            value={row.iznos_start ?? ''}
-                            onChange={(date) => {
-                              handleChangeChildField(index, 'iznos_start', date)
+                          <Controller
+                            control={form.control}
+                            name={`childs.${index}.iznos_start`}
+                            render={({ field, fieldState }) => {
+                              const row = form.getValues(`childs.${index}`)
+                              return (
+                                <JollyDatePicker
+                                  readOnly={!row.iznos}
+                                  value={field.value ?? ''}
+                                  onChange={field.onChange}
+                                  placeholder="дд.мм.гггг"
+                                  containerProps={{
+                                    className: 'min-w-32'
+                                  }}
+                                  editor
+                                  error={!!fieldState.error}
+                                  tabIndex={tabIndex}
+                                />
+                              )
                             }}
-                            placeholder="дд.мм.гггг"
-                            className={inputVariants({
-                              editor: true,
-                              error: !!errors?.iznos_start
-                            })}
-                            containerProps={{
-                              className: 'min-w-32'
-                            }}
-                            error={!!errors.iznos_start}
-                            tabIndex={tabIndex}
                           />
                         </div>
                       </EditableTableCell>
 
                       <EditableTableCell>
                         <div className="relative">
-                          <Input
-                            readOnly
-                            value={row.debet_schet}
-                            onChange={(e) => {
-                              handleChangeChildField(index, 'debet_schet', e.target.value)
-                            }}
-                            className={inputVariants({
-                              editor: true,
-                              error: !!errors?.debet_schet
-                            })}
-                            error={!!errors.debet_schet}
-                            tabIndex={tabIndex}
+                          <Controller
+                            control={form.control}
+                            name={`childs.${index}.debet_schet`}
+                            render={({ field, fieldState }) => (
+                              <Input
+                                readOnly
+                                value={field.value}
+                                editor
+                                error={!!fieldState.error}
+                                tabIndex={tabIndex}
+                              />
+                            )}
                           />
                         </div>
                       </EditableTableCell>
                       <EditableTableCell>
                         <div className="relative">
-                          <Input
-                            readOnly
-                            value={row.debet_sub_schet}
-                            onChange={(e) => {
-                              handleChangeChildField(index, 'debet_sub_schet', e.target.value)
-                            }}
-                            className={inputVariants({
-                              editor: true,
-                              error: !!errors?.debet_sub_schet
-                            })}
-                            error={!!errors.debet_sub_schet}
-                            tabIndex={tabIndex}
+                          <Controller
+                            control={form.control}
+                            name={`childs.${index}.debet_sub_schet`}
+                            render={({ field, fieldState }) => (
+                              <Input
+                                readOnly
+                                value={field.value}
+                                editor
+                                error={!!fieldState.error}
+                                tabIndex={tabIndex}
+                              />
+                            )}
                           />
                         </div>
                       </EditableTableCell>
 
-                      <EditableTableCell className="w-[100px]">
-                        <SchetEditor
-                          tabIndex={tabIndex}
-                          error={errors?.kredit_schet}
-                          value={row.kredit_schet}
-                          onChange={(schet) => {
-                            handleChangeChildField(index, 'kredit_schet', schet)
-                          }}
+                      <EditableTableCell>
+                        <Controller
+                          control={form.control}
+                          name={`childs.${index}.kredit_schet`}
+                          render={({ field, fieldState }) => (
+                            <SchetEditor
+                              tabIndex={tabIndex}
+                              error={fieldState.error}
+                              value={field.value}
+                              onChange={(schet) => {
+                                field.onChange(schet)
+                              }}
+                            />
+                          )}
                         />
                       </EditableTableCell>
                       <EditableTableCell className="w-[140px]">
-                        <Input
-                          value={row.kredit_sub_schet}
-                          onChange={(e) => {
-                            handleChangeChildField(index, 'kredit_sub_schet', e.target.value)
-                          }}
-                          className={inputVariants({
-                            editor: true,
-                            error: !!errors?.kredit_sub_schet
-                          })}
-                          error={!!errors.kredit_sub_schet}
-                          tabIndex={tabIndex}
+                        <Controller
+                          control={form.control}
+                          name={`childs.${index}.kredit_sub_schet`}
+                          render={({ field, fieldState }) => (
+                            <Input
+                              value={field.value}
+                              onChange={(e) => {
+                                field.onChange(e.target.value)
+                              }}
+                              editor
+                              error={!!fieldState.error}
+                              tabIndex={tabIndex}
+                            />
+                          )}
                         />
                       </EditableTableCell>
 
@@ -616,47 +689,48 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
 
                       <EditableTableCell>
                         <div className="relative">
-                          <JollyDatePicker
-                            value={row.data_pereotsenka}
-                            onChange={(date) => {
-                              handleChangeChildField(index, 'data_pereotsenka', date)
-                            }}
-                            placeholder="дд.мм.гггг"
-                            className={inputVariants({
-                              editor: true,
-                              error: !!errors?.data_pereotsenka
-                            })}
-                            containerProps={{
-                              className: 'min-w-32'
-                            }}
-                            error={!!errors.data_pereotsenka}
-                            tabIndex={tabIndex}
-                            validate={
-                              params.id === 'create' ? validateDateWithinSelectedMonth : undefined
-                            }
-                            calendarProps={
-                              params.id === 'create'
-                                ? {
-                                    fromMonth: startDate,
-                                    toMonth: endDate
-                                  }
-                                : undefined
-                            }
+                          <Controller
+                            control={form.control}
+                            name={`childs.${index}.data_pereotsenka`}
+                            render={({ field, fieldState }) => (
+                              <JollyDatePicker
+                                value={field.value}
+                                onChange={field.onChange}
+                                placeholder="дд.мм.гггг"
+                                className={inputVariants({
+                                  editor: true,
+                                  error: !!fieldState.error
+                                })}
+                                containerProps={{
+                                  className: 'min-w-32'
+                                }}
+                                error={!!fieldState.error}
+                                tabIndex={tabIndex}
+                                validate={
+                                  params.id === 'create'
+                                    ? validateDateWithinSelectedMonth
+                                    : undefined
+                                }
+                                calendarProps={
+                                  params.id === 'create'
+                                    ? {
+                                        fromMonth: startDate,
+                                        toMonth: endDate
+                                      }
+                                    : undefined
+                                }
+                              />
+                            )}
                           />
                         </div>
                       </EditableTableCell>
 
-                      <EditableTableCell className="whitespace-nowrap w-0">
+                      <EditableTableCell className="whitespace-nowrap w-0 sticky right-0 border-l">
                         <Button
                           type="button"
                           variant="ghost"
                           className="hover:bg-slate-50 hover:text-brand text-red-500"
-                          onClick={() => {
-                            form.setValue(
-                              'childs',
-                              childs.filter((_, i) => i !== index)
-                            )
-                          }}
+                          onClick={() => remove(index)}
                           tabIndex={tabIndex}
                         >
                           <CircleMinus className="btn-icon !mx-0" />
@@ -692,16 +766,9 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
           className="w-full hover:bg-slate-50 text-brand hover:text-brand border"
           tabIndex={tabIndex}
           onClick={() => {
-            const newChilds = [
-              ...form.getValues('childs'),
-              {
-                ...defaultValues.childs[0],
-                data_pereotsenka: form.getValues('doc_date')
-              }
-            ]
-            form.setValue('childs', newChilds)
+            append(defaultValues.childs[0])
             setTimeout(() => {
-              setPage(Math.ceil(newChilds.length / PAGE_SIZE))
+              setPage(Math.ceil(fields.length + 1 / PAGE_SIZE))
             })
           }}
         >
@@ -714,7 +781,7 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
           page={page}
           limit={PAGE_SIZE}
           onChange={({ page }) => setPage(page ?? 1)}
-          count={childs.length}
+          count={fields.length}
           pageCount={pageCount}
         />
       </div>
@@ -724,7 +791,6 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
 
 type NaimenovanieCellsProps = {
   index: number
-  row: MaterialPrixodProvodkaFormValues
   form: UseFormReturn<MaterialPrixodFormValues>
   tabIndex: number
   isExisting: boolean
@@ -738,7 +804,6 @@ type NaimenovanieCellsProps = {
 }
 const NaimenovanieCells = ({
   index,
-  row,
   form,
   errors,
   tabIndex,
@@ -748,7 +813,7 @@ const NaimenovanieCells = ({
 }: NaimenovanieCellsProps) => {
   const groupSpravochnik = useSpravochnik(
     createGroupSpravochnik({
-      value: row.group_jur7_id,
+      value: form.watch(`childs.${index}.group_jur7_id`),
       onChange: (id, group) => {
         const iznos = group && group?.iznos_foiz > 0
         onChangeField(index, 'debet_schet', group?.schet ?? '')
@@ -791,16 +856,22 @@ const NaimenovanieCells = ({
       </EditableTableCell>
       <EditableTableCell>
         <div className="relative">
-          <Input
-            tabIndex={tabIndex}
-            error={!!errors.name}
-            value={row.name}
-            onChange={(e) => {
-              onChangeField(index, 'name', e.target.value)
-            }}
-            className={inputVariants({ editor: true, error: !!errors.name })}
-            onDoubleClick={handleOpenModal}
-            readOnly={isExisting}
+          <Controller
+            control={form.control}
+            name={`childs.${index}.name`}
+            render={({ field, fieldState }) => (
+              <Input
+                tabIndex={tabIndex}
+                error={!!fieldState.error}
+                value={field.value || ''}
+                onChange={(e) => {
+                  field.onChange(e.target.value)
+                }}
+                editor
+                onDoubleClick={handleOpenModal}
+                readOnly={isExisting}
+              />
+            )}
           />
 
           <Button
@@ -822,42 +893,60 @@ const NaimenovanieCells = ({
       </EditableTableCell>
       <EditableTableCell>
         <div className="relative">
-          <Input
-            tabIndex={tabIndex}
-            error={!!errors.serial_num}
-            value={row.serial_num}
-            onChange={(e) => {
-              onChangeField(index, 'serial_num', e.target.value)
-            }}
-            className={inputVariants({ editor: true, error: !!errors.serial_num })}
-            readOnly={isExisting}
+          <Controller
+            control={form.control}
+            name={`childs.${index}.serial_num`}
+            render={({ field, fieldState }) => (
+              <Input
+                tabIndex={tabIndex}
+                editor
+                error={!!fieldState.error}
+                value={field.value || ''}
+                onChange={(e) => {
+                  field.onChange(e.target.value)
+                }}
+                readOnly={isExisting}
+              />
+            )}
           />
         </div>
       </EditableTableCell>
       <EditableTableCell>
         <div className="relative">
-          <Input
-            tabIndex={tabIndex}
-            error={!!errors.inventar_num}
-            value={row.inventar_num}
-            onChange={(e) => {
-              onChangeField(index, 'inventar_num', e.target.value)
-            }}
-            className={inputVariants({ editor: true, error: !!errors.inventar_num })}
-            readOnly={isExisting}
+          <Controller
+            control={form.control}
+            name={`childs.${index}.inventar_num`}
+            render={({ field, fieldState }) => (
+              <Input
+                tabIndex={tabIndex}
+                editor
+                error={!!fieldState.error}
+                value={field.value || ''}
+                onChange={(e) => {
+                  field.onChange(e.target.value)
+                }}
+                readOnly={isExisting}
+              />
+            )}
           />
         </div>
       </EditableTableCell>
       <EditableTableCell>
         <div className="relative">
-          <EdinSelect
-            error={!!errors.unit_id}
-            tabIndex={tabIndex}
-            selectedKey={row.unit_id ?? null}
-            onSelectionChange={(value) => {
-              onChangeField(index, 'unit_id', value ? Number(value) : undefined)
-            }}
-            isDisabled={isExisting}
+          <Controller
+            control={form.control}
+            name={`childs.${index}.unit_id`}
+            render={({ field, fieldState }) => (
+              <EdinSelect
+                error={!!fieldState.error}
+                tabIndex={tabIndex}
+                selectedKey={field.value ?? null}
+                onSelectionChange={(value) => {
+                  field.onChange(value ? Number(value) : undefined)
+                }}
+                isDisabled={isExisting}
+              />
+            )}
           />
         </div>
       </EditableTableCell>

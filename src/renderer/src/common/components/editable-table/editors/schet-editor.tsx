@@ -1,6 +1,9 @@
 import type { FieldError } from 'react-hook-form'
 
+import { useEffect, useMemo, useState } from 'react'
+
 import { useQuery } from '@tanstack/react-query'
+import { useFilter } from 'react-aria-components'
 
 import {
   type OperatsiiSchetOption,
@@ -31,6 +34,12 @@ export const SchetEditor = ({
   onChange,
   ...props
 }: SchetEditorProps) => {
+  const [inputValue, setInputValue] = useState(value)
+
+  const { startsWith } = useFilter({
+    sensitivity: 'base'
+  })
+
   const { data: schetOptions, isFetching } = useQuery({
     queryKey: [
       operatsiiQueryKeys.getSchetOptions,
@@ -43,15 +52,27 @@ export const SchetEditor = ({
 
   const options = schetOptions?.data ?? []
 
+  const filteredOptions = useMemo(() => {
+    return options.filter((option) => startsWith(option.schet, inputValue))
+  }, [options, inputValue, startsWith])
+
+  useEffect(() => {
+    setInputValue(value)
+  }, [value])
+
   return (
     <JollyComboBox
-      defaultItems={options}
+      items={filteredOptions}
       isDisabled={isFetching}
-      menuTrigger="focus"
-      className={cn('gap-0', className)}
+      className={cn('gap-0 w-32', className)}
       tabIndex={tabIndex}
       selectedKey={value}
-      onSelectionChange={(key) => onChange((key as string) || '')}
+      inputValue={inputValue}
+      onInputChange={setInputValue}
+      onSelectionChange={(key) => {
+        onChange((key as string) || '')
+        setInputValue((key as string) || '')
+      }}
       editor={editor}
       error={!!error?.message}
       {...props}
