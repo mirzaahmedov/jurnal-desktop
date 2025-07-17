@@ -45,6 +45,7 @@ import { MaterialPrixodService, usePrixodCreate, usePrixodUpdate } from '../serv
 import { ApplyAllInputs } from './apply-all-inputs'
 import { ExistingDocumentsAlert } from './existing-document-alert'
 import { ProvodkaTable } from './provodka-table'
+import { changeOpisanieContract, changeOpisanieSchetFaktura } from './utils'
 
 interface PrixodDetailsProps {
   id: string | undefined
@@ -144,8 +145,6 @@ const PrixodDetails = ({ id, onSuccess }: PrixodDetailsProps) => {
     resolver: zodResolver(MaterialPrixodFormSchema)
   })
 
-  console.log({ errors: form.formState.errors, values: form.watch() })
-
   const orgSpravochnik = useSpravochnik(
     createOrganizationSpravochnik({
       value: form.watch('kimdan_id'),
@@ -173,8 +172,12 @@ const PrixodDetails = ({ id, onSuccess }: PrixodDetailsProps) => {
   const shartnomaSpravochnik = useSpravochnik(
     createShartnomaSpravochnik({
       value: form.watch('id_shartnomalar_organization'),
-      onChange: (value) => {
+      onChange: (value, contract) => {
         form.setValue('id_shartnomalar_organization', value, { shouldValidate: true })
+        changeOpisanieContract({
+          form,
+          contract
+        })
       },
       params: {
         organ_id: form.watch('kimdan_id')
@@ -267,7 +270,13 @@ const PrixodDetails = ({ id, onSuccess }: PrixodDetailsProps) => {
     return results
   }, [childs])
 
-  console.log({ errors })
+  useEffect(() => {
+    changeOpisanieSchetFaktura({
+      form,
+      doc_num: form.watch('doc_num'),
+      doc_date: form.watch('doc_date')
+    })
+  }, [form, form.watch('doc_num'), form.watch('doc_date')])
 
   return (
     <DetailsView>

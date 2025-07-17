@@ -67,6 +67,7 @@ export const ShartnomaFields: FormSpravochnikFieldsComponent<
               tabIndex={tabIndex}
               isDisabled={spravochnikProps.loading}
               items={spravochnikProps.selected?.grafiks ?? []}
+              placeholder=""
               selectedKey={shartnoma_grafik_id || null}
               onSelectionChange={(value) => {
                 form?.setValue('shartnoma_grafik_id', value ? Number(value) : 0)

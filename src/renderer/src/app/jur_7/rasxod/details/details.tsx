@@ -36,6 +36,7 @@ import { RasxodFormSchema, WarehouseRasxodQueryKeys, defaultValues } from '../co
 import { WarehouseRasxodService, useRasxodCreate, useRasxodUpdate } from '../service'
 import { ApplyAllInputs } from './apply-all-inputs'
 import { ProvodkaTable } from './provodka-table'
+import { changeOpisaniePowerOfAttorney, changeOpisanieSchetFaktura } from './utils'
 
 interface RasxodDetailsProps {
   id: string | undefined
@@ -220,6 +221,20 @@ const RasxodDetails = ({ id, onSuccess }: RasxodDetailsProps) => {
     })
     return results
   }, [childs])
+
+  useEffect(() => {
+    changeOpisanieSchetFaktura({
+      form,
+      doc_num: form.watch('doc_num'),
+      doc_date: form.watch('doc_date')
+    })
+  }, [form, form.watch('doc_num'), form.watch('doc_date')])
+  useEffect(() => {
+    changeOpisaniePowerOfAttorney({
+      form,
+      attorney: form.watch('doverennost') ?? ''
+    })
+  }, [form, form.watch('doverennost')])
 
   return (
     <DetailsView>

@@ -34,6 +34,7 @@ import { TotalsOverview } from '../../__components__/totals-overview'
 import { InternalFormSchema, WarehouseInternalQueryKeys, defaultValues } from '../config'
 import { WarehouseInternalService, useInternalCreate, useInternalUpdate } from '../service'
 import { ProvodkaTable } from './provodka-table'
+import { changeOpisanieSchetFaktura } from './utils'
 
 interface InternalDetailsProps {
   id: string | undefined
@@ -208,6 +209,14 @@ const InternalDetails = ({ id, onSuccess: onSuccess }: InternalDetailsProps) => 
     })
     return results
   }, [values.childs])
+
+  useEffect(() => {
+    changeOpisanieSchetFaktura({
+      form,
+      doc_num: form.watch('doc_num') ?? '',
+      doc_date: form.watch('doc_date') ?? ''
+    })
+  }, [form, form.watch('doc_num'), form.watch('doc_date')])
 
   return (
     <DetailsView>
