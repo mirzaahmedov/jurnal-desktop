@@ -94,7 +94,7 @@ export const YearSelect = ({ selectedKey, onSelectionChange, ...props }: YearSel
       defaultFilter={(optionText, filterText) => {
         return optionText.toLowerCase().startsWith(filterText.toLowerCase())
       }}
-      className="gap-0"
+      className="gap-0 w-24"
     >
       {(item) => <ComboboxItem id={item.value}>{item.label}</ComboboxItem>}
     </JollyComboBox>

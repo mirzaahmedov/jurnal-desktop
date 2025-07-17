@@ -145,6 +145,18 @@ const BankMonitorPage = () => {
                   excel: true
                 }}
               />
+
+              <DownloadFile
+                fileName={`${t('pages.bank')}_2169_${t('report')}_${startDate.getFullYear()}&${startDate.getMonth() + 1}.xlsx`}
+                url="/bank/monitoring/2169"
+                buttonText={`2169 ${t('report')}`}
+                params={{
+                  main_schet_id,
+                  year: startDate.getFullYear(),
+                  month: startDate.getMonth() + 1,
+                  excel: true
+                }}
+              />
             </ButtonGroup>
           ) : null}
         </div>

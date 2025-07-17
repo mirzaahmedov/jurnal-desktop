@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import {
   CircleMinus,
   CirclePlus,
+  CopyPlus,
   LayoutList,
   TableOfContents,
   Warehouse,
@@ -14,8 +15,7 @@ import {
   type FieldErrorsImpl,
   type Merge,
   type UseFormReturn,
-  useFieldArray,
-  useWatch
+  useFieldArray
 } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
@@ -68,17 +68,11 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
 
   const spravochnikToggle = useToggle()
 
-  const { fields, append, remove } = useFieldArray({
+  const { fields, append, insert, remove } = useFieldArray({
     control: form.control,
     name: 'childs'
   })
   const pageCount = Math.ceil(fields.length / PAGE_SIZE)
-
-  const values = useWatch({
-    control: form.control
-  })
-
-  console.log({ values })
 
   const updateFormField = useEventCallback(
     (index: number, key: keyof MaterialPrixodProvodkaFormValues, value: unknown) => {
@@ -725,9 +719,20 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
                         </div>
                       </EditableTableCell>
 
-                      <EditableTableCell className="whitespace-nowrap w-0 sticky right-0 border-l">
+                      <EditableTableCell className="whitespace-nowrap w-0 sticky right-0 border-l px-1 divide-x">
                         <Button
                           type="button"
+                          size="icon"
+                          variant="ghost"
+                          className="hover:bg-slate-50 hover:text-brand"
+                          onClick={() => insert(index + 1, form.getValues('childs')[index])}
+                          tabIndex={tabIndex}
+                        >
+                          <CopyPlus className="btn-icon !mx-0" />
+                        </Button>
+                        <Button
+                          type="button"
+                          size="icon"
                           variant="ghost"
                           className="hover:bg-slate-50 hover:text-brand text-red-500"
                           onClick={() => remove(index)}

@@ -143,6 +143,18 @@ const KassaMonitorPage = () => {
                   excel: true
                 }}
               />
+
+              <DownloadFile
+                fileName={`${t('pages.kassa')}_2169_${t('report')}_${startDate.getFullYear()}&${startDate.getMonth() + 1}.xlsx`}
+                url="/kassa/monitoring/2169"
+                buttonText={`2169 ${t('report')}`}
+                params={{
+                  main_schet_id,
+                  year: startDate.getFullYear(),
+                  month: startDate.getMonth() + 1,
+                  excel: true
+                }}
+              />
             </ButtonGroup>
           ) : null}
         </div>
