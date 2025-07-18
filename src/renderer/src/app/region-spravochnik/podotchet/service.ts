@@ -17,7 +17,8 @@ export const PodotchetFormSchema = withPreprocessor(
   z.object({
     name: z.string(),
     rayon: z.string(),
-    position: z.string()
+    position: z.string(),
+    rank: z.string()
   })
 )
 export type PodotchetFormValues = z.infer<typeof PodotchetFormSchema>

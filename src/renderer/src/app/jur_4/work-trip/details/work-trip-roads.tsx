@@ -101,7 +101,7 @@ export const WorkTripRoads = ({ form, minimumWageSumma }: WorkTripRoadsProps) =>
                       field.onChange(from_region_id)
                     }}
                     menuTrigger="focus"
-                    placeholder={t('region')}
+                    placeholder={t('region_alt')}
                     errorMessage={fieldState.error?.message}
                     isInvalid={!!fieldState.error}
                     className="w-48 gap-0"
@@ -136,7 +136,7 @@ export const WorkTripRoads = ({ form, minimumWageSumma }: WorkTripRoadsProps) =>
                       field.onChange(to_region_id)
                     }}
                     menuTrigger="focus"
-                    placeholder={t('region')}
+                    placeholder={t('region_alt')}
                     errorMessage={fieldState.error?.message}
                     isInvalid={!!fieldState.error}
                     className="w-48 gap-0"

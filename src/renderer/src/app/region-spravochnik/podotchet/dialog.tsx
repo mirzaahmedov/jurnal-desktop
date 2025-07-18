@@ -162,6 +162,27 @@ export const PodotchetDialog = ({ open, onOpenChange, selected }: PodotchetDialo
                     </FormItem>
                   )}
                 />
+
+                <FormField
+                  name="rank"
+                  control={form.control}
+                  render={({ field }) => (
+                    <FormItem>
+                      <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
+                        <FormLabel className="text-right col-span-2">
+                          {t('military_rank')}
+                        </FormLabel>
+                        <FormControl>
+                          <Input
+                            className="col-span-4"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage className="text-end col-span-6" />
+                      </div>
+                    </FormItem>
+                  )}
+                />
               </div>
               <DialogFooter>
                 <Button
@@ -182,5 +203,6 @@ export const PodotchetDialog = ({ open, onOpenChange, selected }: PodotchetDialo
 const defaultValues = {
   name: '',
   rayon: '',
-  position: ''
+  position: '',
+  rank: ''
 } satisfies PodotchetFormValues

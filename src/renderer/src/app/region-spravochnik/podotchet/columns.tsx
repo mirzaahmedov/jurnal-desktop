@@ -21,6 +21,10 @@ export const PodotchetColumns: ColumnDef<Podotchet>[] = [
     header: 'doljnost'
   },
   {
+    key: 'rank',
+    header: 'military_rank'
+  },
+  {
     fit: true,
     key: 'user_id',
     minWidth: 200,
