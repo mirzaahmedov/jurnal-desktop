@@ -1,13 +1,13 @@
+import type { RelationTreeNode } from '@/common/lib/tree/relation-tree'
 import type { Nachislenie, UderjaniePlastik } from '@/common/models'
 import type { Vacant } from '@/common/models/vacant'
 
 import { useState } from 'react'
 
-import { type RelationTreeNode } from '@/common/lib/tree/relation-tree'
+import { getVacantRayon } from '@/common/utils/zarplata'
 
 import { NachislenieTable } from './nachislenie-table'
 import { UderjanieDialog, UderjanieType } from './uderjanie-dialog'
-import { getVacantRayon } from './utils'
 import { Vacants } from './vacants'
 
 export interface ImportPlastikProps {

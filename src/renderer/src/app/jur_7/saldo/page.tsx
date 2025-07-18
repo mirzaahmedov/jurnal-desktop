@@ -371,16 +371,13 @@ const MaterialWarehouseSaldoPage = () => {
               />
             )}
           />
-          <Button
-            variant="outline"
-            type="submit"
-          >
+          <Button type="submit">
             <CircleArrowDown className="btn-icon icon-start" />
             {t('load')}
           </Button>
         </form>
 
-        <ButtonGroup className="flex gap-5">
+        <ButtonGroup className="flex flex-wrap gap-5">
           <DownloadFile
             fileName={`${t('pages.saldo')}-${t('import')}-${t('template')}.xlsx`}
             url="/jur_7/saldo/template"

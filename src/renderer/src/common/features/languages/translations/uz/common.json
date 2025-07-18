@@ -489,5 +489,7 @@
   "kazarma": "Kazarma",
   "night_shift": "Tungi smena",
   "worked_days": "Ishlangan kunlar",
-  "overtime": "Qo'shimcha ish"
+  "overtime": "Qo'shimcha ish",
+  "select": "Tanlash",
+  "selected": "Tanlangan"
 }

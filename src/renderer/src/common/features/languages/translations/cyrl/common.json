@@ -490,5 +490,7 @@
   "kazarma": "Казарма",
   "night_shift": "Тунги смена",
   "worked_days": "Ишланган кунлар",
-  "overtime": "Қўшимча иш"
+  "overtime": "Қўшимча иш",
+  "select": "Танлаш",
+  "selected": "Танланган"
 }

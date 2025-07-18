@@ -7,11 +7,11 @@ import { useMutation } from '@tanstack/react-query'
 import { toast } from 'react-toastify'
 
 import { type RelationTreeNode } from '@/common/lib/tree/relation-tree'
+import { getVacantRayon } from '@/common/utils/zarplata'
 
 import { NachislenieTable } from './nachislenie-table'
 import { BankRasxodImportService } from './service'
 import { UderjanieDialog, UderjanieType } from './uderjanie-dialog'
-import { getVacantRayon } from './utils'
 import { Vacants } from './vacants'
 
 export const ImportAliment = () => {

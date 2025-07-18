@@ -14,6 +14,9 @@ export const formatDate = (date: Date | string) => {
     return ''
   }
   if (typeof date === 'string') {
+    if (/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+      return date
+    }
     date = new Date(date)
   }
 

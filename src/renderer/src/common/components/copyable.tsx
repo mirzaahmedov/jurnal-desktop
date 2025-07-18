@@ -32,6 +32,7 @@ export const Copyable = ({
     >
       {children}
       <Button
+        type="button"
         variant="ghost"
         size="icon"
         onClick={(e) => {

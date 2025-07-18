@@ -153,8 +153,8 @@ function JollyComboBox<T extends object>({
       <ComboboxPopover {...popoverProps}>
         <ComboboxListBox
           renderEmptyState={() => (
-            <div className="text-center text-sm px-5 py-2 grid place-content-center">
-              <EmptyList className="max-w-32" />
+            <div className="text-center text-xs px-5 py-5 grid place-content-center">
+              <EmptyList className="w-full max-w-32" />
             </div>
           )}
         >

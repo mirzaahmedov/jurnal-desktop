@@ -1,6 +1,5 @@
 import { type HTMLAttributes, useEffect, useRef } from 'react'
 
-import { Save } from 'lucide-react'
 import { Focusable } from 'react-aria-components'
 import { useTranslation } from 'react-i18next'
 
@@ -69,7 +68,6 @@ const DetailsViewCreate = ({ isPending = false, tabIndex, ...props }: DetailsVie
       <Button
         isPending={isPending}
         type="submit"
-        IconStart={Save}
         {...props}
         ref={buttonRef}
       >

@@ -193,7 +193,9 @@ export const GenericTable = <T extends object>(props: GenericTableProps<T>) => {
             return (
               <GenericTableRow
                 key={getRowKey(row)}
-                onClick={() => onClickRow?.(row)}
+                onClick={() => {
+                  onClickRow?.(row)
+                }}
                 onDoubleClick={() => onDoubleClickRow?.(row)}
                 ref={(el) => {
                   if (activeRowId === getRowId(row)) {

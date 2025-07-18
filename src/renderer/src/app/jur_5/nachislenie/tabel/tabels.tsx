@@ -21,7 +21,7 @@ import { TabelCreateDialog } from './create-dialog'
 import { TabelEditDialog } from './edit-dialog'
 
 export const Tabels = () => {
-  useRequisitesRedirect(-1)
+  useRequisitesRedirect('/' as any)
 
   const { t } = useTranslation(['app'])
   const { confirm } = useConfirm()
@@ -70,13 +70,15 @@ export const Tabels = () => {
 
   return (
     <div className="relative w-full overflow-auto scrollbar pl-px">
-      <div className="p-5 border-b text-end">
-        <Button
-          IconStart={PlusIcon}
-          onClick={createDialogToggle.open}
-        >
-          {t('add')}
-        </Button>
+      <div className="px-5 py-2.5 border-b text-end">
+        {budjet_id && main_schet_id ? (
+          <Button
+            IconStart={PlusIcon}
+            onClick={createDialogToggle.open}
+          >
+            {t('add')}
+          </Button>
+        ) : null}
       </div>
       {isFetchingTabels || isDeleting ? <LoadingOverlay /> : null}
       <GenericTable

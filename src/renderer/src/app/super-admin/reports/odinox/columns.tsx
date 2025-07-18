@@ -30,11 +30,7 @@ export const AdminOdinoxColumns: ColumnDef<AdminOdinox>[] = [
     renderCell: (row) => (
       <HoverInfoCell
         title={row.region_name}
-        secondaryText={
-          <>
-            <Trans>raschet-schet</Trans>: {row.account_number}
-          </>
-        }
+        secondaryText={<span className="text-xs">{row.account_number}</span>}
       />
     )
   },

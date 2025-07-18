@@ -15,6 +15,7 @@ import {
   JollyComboBox,
   type JollyComboBoxProps
 } from '@/common/components/jolly/combobox'
+import { useEventCallback } from '@/common/hooks'
 import { cn } from '@/common/lib/utils'
 import { TypeSchetOperatsii } from '@/common/models'
 
@@ -52,18 +53,28 @@ export const SchetEditor = ({
 
   const options = schetOptions?.data ?? []
 
+  const onChangeEvent = useEventCallback(onChange)
   const filteredOptions = useMemo(() => {
     return options.filter((option) => startsWith(option.schet, inputValue))
   }, [options, inputValue, startsWith])
 
   useEffect(() => {
-    setInputValue(value)
-  }, [value])
+    if (isFetching) {
+      return
+    }
+    if (options.find((option) => option.schet === value)) {
+      setInputValue(value)
+    } else {
+      setInputValue('')
+      onChangeEvent('')
+    }
+  }, [value, isFetching, options])
 
   return (
     <JollyComboBox
       items={filteredOptions}
       isDisabled={isFetching}
+      allowsEmptyCollection
       className={cn('gap-0 w-32', className)}
       tabIndex={tabIndex}
       selectedKey={value}

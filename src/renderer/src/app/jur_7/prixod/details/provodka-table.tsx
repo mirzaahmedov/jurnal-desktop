@@ -1,14 +1,6 @@
 import { useEffect, useState } from 'react'
 
-import {
-  CircleMinus,
-  CirclePlus,
-  CopyPlus,
-  LayoutList,
-  TableOfContents,
-  Warehouse,
-  XCircle
-} from 'lucide-react'
+import { CircleMinus, CirclePlus, CopyPlus, LayoutList, Warehouse, XCircle } from 'lucide-react'
 import {
   Controller,
   type FieldError,
@@ -254,11 +246,7 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
                 <EditableTableHead
                   rowSpan={2}
                   className="px-3 sticky right-0 border-l"
-                >
-                  <div className="flex justify-center">
-                    <TableOfContents className="size-5 text-slate-500" />
-                  </div>
-                </EditableTableHead>
+                ></EditableTableHead>
               </EditableTableRow>
               <EditableTableRow>
                 <EditableTableHead>{t('iznos')}</EditableTableHead>
@@ -720,26 +708,30 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
                       </EditableTableCell>
 
                       <EditableTableCell className="whitespace-nowrap w-0 sticky right-0 border-l px-1 divide-x">
-                        <Button
-                          type="button"
-                          size="icon"
-                          variant="ghost"
-                          className="hover:bg-slate-50 hover:text-brand"
-                          onClick={() => insert(index + 1, form.getValues('childs')[index])}
-                          tabIndex={tabIndex}
-                        >
-                          <CopyPlus className="btn-icon !mx-0" />
-                        </Button>
-                        <Button
-                          type="button"
-                          size="icon"
-                          variant="ghost"
-                          className="hover:bg-slate-50 hover:text-brand text-red-500"
-                          onClick={() => remove(index)}
-                          tabIndex={tabIndex}
-                        >
-                          <CircleMinus className="btn-icon !mx-0" />
-                        </Button>
+                        <div className="inline-block">
+                          <Button
+                            type="button"
+                            size="icon"
+                            variant="ghost"
+                            className="hover:bg-slate-50 hover:text-brand"
+                            onClick={() => insert(index + 1, form.getValues('childs')[index])}
+                            tabIndex={tabIndex}
+                          >
+                            <CopyPlus className="btn-icon !mx-0" />
+                          </Button>
+                        </div>
+                        <div className="inline-block">
+                          <Button
+                            type="button"
+                            size="icon"
+                            variant="ghost"
+                            className="hover:bg-slate-50 hover:text-brand text-red-500"
+                            onClick={() => remove(index)}
+                            tabIndex={tabIndex}
+                          >
+                            <CircleMinus className="btn-icon !mx-0" />
+                          </Button>
+                        </div>
                       </EditableTableCell>
                     </EditableTableRow>
                   )

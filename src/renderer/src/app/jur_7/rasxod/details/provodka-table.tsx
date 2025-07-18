@@ -16,7 +16,7 @@ import { JollySelect, SelectItem } from '@/common/components/jolly/select'
 import { Button } from '@/common/components/ui/button'
 import { Checkbox } from '@/common/components/ui/checkbox'
 import { Input } from '@/common/components/ui/input'
-import { Table, TableBody, TableFooter, TableHeader } from '@/common/components/ui/table'
+import { Table, TableBody, TableHeader } from '@/common/components/ui/table'
 import { inputVariants } from '@/common/features/spravochnik'
 import { useToggle } from '@/common/hooks'
 import { formatLocaleDate } from '@/common/lib/format'
@@ -42,201 +42,204 @@ export const ProvodkaTable = ({ form, tabIndex }: ProvodkaTableProps) => {
   })
 
   return (
-    <div
-      onSubmit={(e) => {
-        e.preventDefault()
-      }}
-      onFocus={(e) => {
-        e.currentTarget.scrollIntoView({
-          behavior: 'smooth',
-          block: 'nearest'
-        })
-      }}
-      className="w-[2200px]"
-    >
-      <SaldoProductSpravochnikDialog
-        responsible_id={form.watch('kimdan_id')}
-        to={form.watch('doc_date')}
-        open={spravochnikToggle.isOpen}
-        disabledIds={form
-          .watch('childs')
-          .map((child) => child.naimenovanie_tovarov_jur7_id)
-          .filter(Boolean)}
-        onOpenChange={(open) => {
-          if (!open) {
-            setRowIndex(0)
-          }
-          spravochnikToggle.setOpen(open)
-        }}
-        onSelect={(products) => {
-          remove(rowIndex)
-          insert(
-            rowIndex,
-            products.map((p) => ({
-              naimenovanie_tovarov_jur7_id: p.product_id,
-              name: p.name,
-              group_number: p.group_number,
-              edin: p.edin,
-              inventar_num: p.inventar_num,
-              serial_num: p.serial_num,
-              kol: p.to.kol,
-              max_kol: p.to.kol,
-              sena: p.to.sena,
-              summa: calcSumma(p.to.kol, p.to.sena),
-              debet_schet: '',
-              kredit_schet: p.debet_schet ?? '',
-              debet_sub_schet: p?.debet_sub_schet ?? '',
-              kredit_sub_schet: p?.debet_sub_schet ?? '',
-              prixod_dates: p?.prixodData.map((prixod) => ({
-                date: prixod.docDate
-              })),
-              data_pereotsenka: p?.prixodData?.[0]?.docDate ?? '',
-              iznos: p.iznos,
-              iznos_summa: p.to.iznos_summa,
-              iznos_schet: p.iznos_schet,
-              iznos_sub_schet: p.iznos_sub_schet,
-              iznos_start: p.iznos_start ?? undefined,
-              group_jur7_id: p.group_id
-            }))
-          )
-        }}
-      />
-      <Table className="border border-slate-200 table-xs">
-        <TableHeader>
-          <EditableTableRow>
-            <EditableTableHead rowSpan={2}>{t('code')}</EditableTableHead>
-            <EditableTableHead
-              rowSpan={2}
-              className="min-w-72"
-            >
-              {t('product-name')}
-            </EditableTableHead>
-            <EditableTableHead
-              rowSpan={2}
-              className="w-20"
-            >
-              {t('group')}
-            </EditableTableHead>
-            <EditableTableHead rowSpan={2}>{t('ei')}</EditableTableHead>
-            <EditableTableHead
-              rowSpan={2}
-              className="min-w-28"
-            >
-              {t('serial-num')}
-            </EditableTableHead>
-            <EditableTableHead
-              rowSpan={2}
-              className="min-w-28"
-            >
-              {t('inventar-num')}
-            </EditableTableHead>
-            <EditableTableHead
-              rowSpan={2}
-              className="text-right"
-            >
-              {t('kol')}
-            </EditableTableHead>
-            <EditableTableHead
-              rowSpan={2}
-              className="text-right"
-            >
-              {t('sena')}
-            </EditableTableHead>
-            <EditableTableHead
-              rowSpan={2}
-              className="text-right"
-            >
-              {t('summa')}
-            </EditableTableHead>
-            <EditableTableHead
-              colSpan={4}
-              className="text-center"
-            >
-              {t('iznos')}
-            </EditableTableHead>
-            <EditableTableHead
-              colSpan={2}
-              className="text-center"
-            >
-              {t('debet')}
-            </EditableTableHead>
-            <EditableTableHead
-              colSpan={2}
-              className="text-center"
-            >
-              {t('kredit')}
-            </EditableTableHead>
-            <EditableTableHead
-              rowSpan={2}
-              className="min-w-48"
-            >
-              {t('prixod_date')}
-            </EditableTableHead>
-            <EditableTableHead rowSpan={2}></EditableTableHead>
-          </EditableTableRow>
-          <EditableTableRow>
-            <EditableTableHead>{t('iznos')}</EditableTableHead>
-            <EditableTableHead
-              className="text-right"
-              style={{ width: 150 }}
-            >
-              {t('summa')}
-            </EditableTableHead>
-            <EditableTableHead>{t('schet')}</EditableTableHead>
-            <EditableTableHead>{t('subschet')}</EditableTableHead>
-
-            <EditableTableHead>{t('schet')}</EditableTableHead>
-            <EditableTableHead>{t('subschet')}</EditableTableHead>
-            <EditableTableHead>{t('schet')}</EditableTableHead>
-            <EditableTableHead>{t('subschet')}</EditableTableHead>
-          </EditableTableRow>
-        </TableHeader>
-        <TableBody>
-          {Array.isArray(form.watch('childs')) && form.watch('childs').length ? (
-            form.watch('childs').map((row, index) => {
-              return (
-                <Provodka
-                  tabIndex={tabIndex}
-                  key={index}
-                  rowIndex={index}
-                  row={row}
-                  form={form}
-                  onRemove={remove}
-                  onOpenDialog={(index) => {
-                    spravochnikToggle.open()
-                    setRowIndex(index)
-                  }}
-                />
-              )
+    <div className="m-5">
+      <div className="w-full overflow-x-auto scrollbar relative">
+        <div
+          onSubmit={(e) => {
+            e.preventDefault()
+          }}
+          onFocus={(e) => {
+            e.currentTarget.scrollIntoView({
+              behavior: 'smooth',
+              block: 'nearest'
             })
-          ) : (
-            <EditableTableRow>
-              <EditableTableCell colSpan={100}>
-                <div className="grid place-items-center text-center p-5">
-                  <EmptyList className="size-36" />
-                </div>
-              </EditableTableCell>
-            </EditableTableRow>
-          )}
-        </TableBody>
-        <TableFooter>
-          <EditableTableRow>
-            <EditableTableCell colSpan={100}>
-              <Button
-                type="button"
-                variant="ghost"
-                className="w-full hover:bg-slate-50 text-brand hover:text-brand"
-                tabIndex={tabIndex}
-                onClick={() => {
-                  append(defaultValues.childs[0])
-                }}
-              >
-                <CirclePlus className="btn-icon icon-start" /> {t('add')}
-              </Button>
-            </EditableTableCell>
-          </EditableTableRow>
-        </TableFooter>
-      </Table>
+          }}
+          className="w-[2200px]"
+        >
+          <SaldoProductSpravochnikDialog
+            responsible_id={form.watch('kimdan_id')}
+            to={form.watch('doc_date')}
+            open={spravochnikToggle.isOpen}
+            disabledIds={form
+              .watch('childs')
+              .map((child) => child.naimenovanie_tovarov_jur7_id)
+              .filter(Boolean)}
+            onOpenChange={(open) => {
+              if (!open) {
+                setRowIndex(0)
+              }
+              spravochnikToggle.setOpen(open)
+            }}
+            onSelect={(products) => {
+              remove(rowIndex)
+              insert(
+                rowIndex,
+                products.map((p) => ({
+                  naimenovanie_tovarov_jur7_id: p.product_id,
+                  name: p.name,
+                  group_number: p.group_number,
+                  edin: p.edin,
+                  inventar_num: p.inventar_num,
+                  serial_num: p.serial_num,
+                  kol: p.to.kol,
+                  max_kol: p.to.kol,
+                  sena: p.to.sena,
+                  summa: calcSumma(p.to.kol, p.to.sena),
+                  debet_schet: '',
+                  kredit_schet: p.debet_schet ?? '',
+                  debet_sub_schet: p?.debet_sub_schet ?? '',
+                  kredit_sub_schet: p?.debet_sub_schet ?? '',
+                  prixod_dates: p?.prixodData.map((prixod) => ({
+                    date: prixod.docDate
+                  })),
+                  data_pereotsenka: p?.prixodData?.[0]?.docDate ?? '',
+                  iznos: p.iznos,
+                  iznos_summa: p.to.iznos_summa,
+                  iznos_schet: p.iznos_schet,
+                  iznos_sub_schet: p.iznos_sub_schet,
+                  iznos_start: p.iznos_start ?? undefined,
+                  group_jur7_id: p.group_id
+                }))
+              )
+            }}
+          />
+          <Table className="border border-slate-200 table-xs">
+            <TableHeader>
+              <EditableTableRow>
+                <EditableTableHead rowSpan={2}>{t('code')}</EditableTableHead>
+                <EditableTableHead
+                  rowSpan={2}
+                  className="min-w-72"
+                >
+                  {t('product-name')}
+                </EditableTableHead>
+                <EditableTableHead
+                  rowSpan={2}
+                  className="w-20"
+                >
+                  {t('group')}
+                </EditableTableHead>
+                <EditableTableHead rowSpan={2}>{t('ei')}</EditableTableHead>
+                <EditableTableHead
+                  rowSpan={2}
+                  className="min-w-28"
+                >
+                  {t('serial-num')}
+                </EditableTableHead>
+                <EditableTableHead
+                  rowSpan={2}
+                  className="min-w-28"
+                >
+                  {t('inventar-num')}
+                </EditableTableHead>
+                <EditableTableHead
+                  rowSpan={2}
+                  className="text-right"
+                >
+                  {t('kol')}
+                </EditableTableHead>
+                <EditableTableHead
+                  rowSpan={2}
+                  className="text-right"
+                >
+                  {t('sena')}
+                </EditableTableHead>
+                <EditableTableHead
+                  rowSpan={2}
+                  className="text-right"
+                >
+                  {t('summa')}
+                </EditableTableHead>
+                <EditableTableHead
+                  colSpan={4}
+                  className="text-center"
+                >
+                  {t('iznos')}
+                </EditableTableHead>
+                <EditableTableHead
+                  colSpan={2}
+                  className="text-center"
+                >
+                  {t('debet')}
+                </EditableTableHead>
+                <EditableTableHead
+                  colSpan={2}
+                  className="text-center"
+                >
+                  {t('kredit')}
+                </EditableTableHead>
+                <EditableTableHead
+                  rowSpan={2}
+                  className="min-w-48"
+                >
+                  {t('prixod_date')}
+                </EditableTableHead>
+                <EditableTableHead
+                  rowSpan={2}
+                  className="sticky right-0 z-50 border-l"
+                ></EditableTableHead>
+              </EditableTableRow>
+              <EditableTableRow>
+                <EditableTableHead>{t('iznos')}</EditableTableHead>
+                <EditableTableHead
+                  className="text-right"
+                  style={{ width: 150 }}
+                >
+                  {t('summa')}
+                </EditableTableHead>
+                <EditableTableHead>{t('schet')}</EditableTableHead>
+                <EditableTableHead>{t('subschet')}</EditableTableHead>
+
+                <EditableTableHead>{t('schet')}</EditableTableHead>
+                <EditableTableHead>{t('subschet')}</EditableTableHead>
+                <EditableTableHead>{t('schet')}</EditableTableHead>
+                <EditableTableHead>{t('subschet')}</EditableTableHead>
+              </EditableTableRow>
+            </TableHeader>
+            <TableBody>
+              {Array.isArray(form.watch('childs')) && form.watch('childs').length ? (
+                form.watch('childs').map((row, index) => {
+                  return (
+                    <Provodka
+                      tabIndex={tabIndex}
+                      key={index}
+                      rowIndex={index}
+                      row={row}
+                      form={form}
+                      onRemove={remove}
+                      onOpenDialog={(index) => {
+                        spravochnikToggle.open()
+                        setRowIndex(index)
+                      }}
+                    />
+                  )
+                })
+              ) : (
+                <EditableTableRow>
+                  <EditableTableCell colSpan={100}>
+                    <div className="grid place-items-center text-center p-5">
+                      <EmptyList className="size-36" />
+                    </div>
+                  </EditableTableCell>
+                </EditableTableRow>
+              )}
+            </TableBody>
+          </Table>
+        </div>
+      </div>
+      <div className="w-full">
+        <Button
+          type="button"
+          variant="ghost"
+          className="w-full hover:bg-slate-50 text-brand hover:text-brand border"
+          tabIndex={tabIndex}
+          onClick={() => {
+            append(defaultValues.childs[0])
+          }}
+        >
+          <CirclePlus className="btn-icon icon-start" /> {t('add')}
+        </Button>
+      </div>
     </div>
   )
 }
@@ -472,23 +475,25 @@ const Provodka = ({ rowIndex, row, form, tabIndex, onOpenDialog, onRemove }: Pro
               handleChangeChildField(rowIndex, 'data_pereotsenka', value)
             }}
             items={row.prixod_dates ?? []}
+            placeholder=""
           >
             {(item) => <SelectItem id={item.date}>{formatLocaleDate(item.date)}</SelectItem>}
           </JollySelect>
         </div>
       </EditableTableCell>
 
-      <EditableTableCell className="whitespace-nowrap w-0">
+      <EditableTableCell className="whitespace-nowrap w-0 px-1 sticky right-0 z-50 border-l">
         <Button
           type="button"
           variant="ghost"
+          size="icon"
           className="hover:bg-slate-50 hover:text-brand text-red-500"
           onClick={() => {
             onRemove(rowIndex)
           }}
           tabIndex={tabIndex}
         >
-          <CircleMinus className="btn-icon !mx-0" />
+          <CircleMinus className="btn-icon" />
         </Button>
       </EditableTableCell>
     </EditableTableRow>

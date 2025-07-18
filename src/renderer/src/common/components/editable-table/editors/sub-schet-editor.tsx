@@ -6,6 +6,7 @@ import { useQuery } from '@tanstack/react-query'
 import { useFilter } from 'react-aria-components'
 
 import { OperatsiiService, operatsiiQueryKeys } from '@/app/super-admin/operatsii'
+import { useEventCallback } from '@/common/hooks'
 import { cn } from '@/common/lib/utils'
 import { type Operatsii, TypeSchetOperatsii } from '@/common/models'
 
@@ -47,18 +48,29 @@ export const SubSchetEditor = ({
   })
 
   const options = schetOptions?.data ?? []
+  const onChangeEvent = useEventCallback(onChange)
   const filteredOptions = useMemo(() => {
     return options.filter((option) => startsWith(option.schet, inputValue))
   }, [options, inputValue, startsWith])
 
   useEffect(() => {
-    setInputValue(value)
-  }, [value])
+    if (isFetching) {
+      return
+    }
+
+    if (options.find((option) => option.sub_schet === value)) {
+      setInputValue(value)
+    } else {
+      setInputValue('')
+      onChangeEvent('')
+    }
+  }, [value, isFetching, options])
 
   return (
     <JollyComboBox
       items={filteredOptions}
       isDisabled={isFetching}
+      allowsEmptyCollection
       className={cn('gap-0 w-32', className)}
       tabIndex={tabIndex}
       selectedKey={value}

@@ -7,7 +7,6 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
-import { getVacantRayon } from '@/app/jur_2/rasxod/zarplata/utils'
 import { ZarplataStavkaOptions } from '@/app/jur_5/common/data'
 import { ZarplataSpravochnikType } from '@/app/super-admin/zarplata/spravochnik/config'
 import { createZarplataSpravochnik } from '@/app/super-admin/zarplata/spravochnik/service'
@@ -26,6 +25,7 @@ import {
 import { JollySelect, SelectItem } from '@/common/components/jolly/select'
 import { Form, FormField } from '@/common/components/ui/form'
 import { capitalize } from '@/common/lib/string'
+import { getVacantRayon } from '@/common/utils/zarplata'
 
 import { SpravochnikInput, useSpravochnik } from '../spravochnik'
 import { WorkplaceFormSchema, type WorkplaceFormValues, defaultValues } from './config'

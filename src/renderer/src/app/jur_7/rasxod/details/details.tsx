@@ -301,12 +301,10 @@ const RasxodDetails = ({ id, onSuccess }: RasxodDetailsProps) => {
             }}
           />
         </div>
-        <div className="p-5 overflow-x-auto scrollbar">
-          <ProvodkaTable
-            tabIndex={5}
-            form={form}
-          />
-        </div>
+        <ProvodkaTable
+          tabIndex={5}
+          form={form}
+        />
         <div className="mb-20 p-5">
           <TotalsOverview
             total={totals.total}
