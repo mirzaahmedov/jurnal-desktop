@@ -3,11 +3,13 @@ import type { MainZarplata } from '@/common/models'
 
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
+import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery } from '@tanstack/react-query'
+import { RefreshCw } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
-import { GenericTable, LoadingOverlay } from '@/common/components'
+import { GenericTable, LoadingOverlay, Spinner } from '@/common/components'
 import { FormElement } from '@/common/components/form'
 import { JollyDatePicker } from '@/common/components/jolly-date-picker'
 import { Button } from '@/common/components/jolly/button'
@@ -24,7 +26,7 @@ import { cn } from '@/common/lib/utils'
 import { getVacantRayon } from '@/common/utils/zarplata'
 
 import { MainZarplataColumnDefs } from '../columns'
-import { type TabelFormValues, defaultValues } from './config'
+import { TabelFormSchema, type TabelFormValues, defaultValues } from './config'
 import { TabelService } from './service'
 
 enum TabelFormTabs {
@@ -51,7 +53,8 @@ export const TabelForm = ({
   const { t } = useTranslation(['app'])
 
   const form = useForm({
-    defaultValues
+    defaultValues,
+    resolver: zodResolver(TabelFormSchema)
   })
 
   const [activeTab, setActiveTab] = useState<TabelFormTabs>(TabelFormTabs.SELECT)
@@ -81,12 +84,15 @@ export const TabelForm = ({
       docDate: formatLocaleDate(values.docDate),
       spravochnikBudjetNameId: budjetId,
       mainSchetId,
-      tabelChildren: selectedMainZarplata.map(
-        (mainZarplata) =>
-          ({
-            mainZarplataId: mainZarplata.id
-          }) as any
-      )
+      tabelChildren: selectedMainZarplata.map((mainZarplata) => ({
+        mainZarplataId: mainZarplata.id,
+        rabDni: 0,
+        otrabDni: 0,
+        noch: 0,
+        prazdnik: 0,
+        pererabodka: 0,
+        kazarma: 0
+      }))
     })
   })
 
@@ -151,10 +157,24 @@ export const TabelForm = ({
                   direction="column"
                   label={t('doc_num')}
                 >
-                  <Input
-                    readOnly
-                    {...field}
-                  />
+                  <div className="flex items-center gap-1">
+                    <Input
+                      readOnly
+                      {...field}
+                    />
+                    <Button
+                      type="button"
+                      size="icon"
+                      className="size-10 flex-shrink-0"
+                      variant="outline"
+                      isDisabled={isPending}
+                      onClick={() => {
+                        getMaxDocNum()
+                      }}
+                    >
+                      {isPending ? <Spinner className="size-5 border-2" /> : <RefreshCw />}
+                    </Button>
+                  </div>
                 </FormElement>
               )}
             />
@@ -218,7 +238,7 @@ export const TabelForm = ({
             </div>
           </div>
 
-          <div className="flex items-center justify-between flex-wrap gap-10 py-2.5">
+          <div className="flex items-center justify-between flex-wrap gap-5 py-2.5">
             <Tabs
               value={activeTab}
               onValueChange={(value) => setActiveTab(value as TabelFormTabs)}

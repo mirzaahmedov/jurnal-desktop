@@ -491,5 +491,6 @@
   "worked_days": "Ishlangan kunlar",
   "overtime": "Qo'shimcha ish",
   "select": "Tanlash",
-  "selected": "Tanlangan"
+  "selected": "Tanlangan",
+  "update_failed_some": "Yangilashda xato: ba'zi ma'lumotlar yangilanmadi"
 }

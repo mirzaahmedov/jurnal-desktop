@@ -100,8 +100,6 @@ export const Tabels = () => {
           <TabelEditDialog
             isOpen={editDialogToggle.isOpen}
             onOpenChange={editDialogToggle.setOpen}
-            budjetId={budjet_id}
-            mainSchetId={main_schet_id}
             selectedTabelId={selectedTabelId}
           />
         </>

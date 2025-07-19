@@ -4,12 +4,12 @@ import { formatDate } from '@/common/lib/date'
 
 export const TabelProvodkaFormSchema = z.object({
   mainZarplataId: z.number(),
-  rabDni: z.number(),
-  otrabDni: z.number(),
-  noch: z.number(),
-  prazdnik: z.number(),
-  pererabodka: z.number(),
-  kazarma: z.number()
+  rabDni: z.number().optional(),
+  otrabDni: z.number().optional(),
+  noch: z.number().optional(),
+  prazdnik: z.number().optional(),
+  pererabodka: z.number().optional(),
+  kazarma: z.number().optional()
 })
 export const TabelFormSchema = z.object({
   spravochnikBudjetNameId: z.number(),
@@ -17,7 +17,7 @@ export const TabelFormSchema = z.object({
   tabelYear: z.number(),
   tabelMonth: z.number(),
   docNum: z.number(),
-  docDate: z.string(),
+  docDate: z.string().nonempty(),
   tabelChildren: z.array(TabelProvodkaFormSchema)
 })
 export type TabelFormValues = z.infer<typeof TabelFormSchema>
