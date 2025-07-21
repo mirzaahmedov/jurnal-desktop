@@ -1,6 +1,5 @@
 'use client'
 
-import { Minus } from 'lucide-react'
 import {
   Checkbox as AriaCheckbox,
   CheckboxGroup as AriaCheckboxGroup,
@@ -39,7 +38,7 @@ const Checkbox = ({ className, children, ...props }: AriaCheckboxProps) => (
             /* Focus Visible */
             'group-data-[focus-visible]/checkbox:outline-none group-data-[focus-visible]/checkbox:ring-2 group-data-[focus-visible]/checkbox:ring-ring group-data-[focus-visible]/checkbox:ring-offset-2',
             /* Selected */
-            'group-data-[indeterminate]/checkbox:bg-brand group-data-[selected]/checkbox:bg-brand group-data-[selected]/checkbox:border-brand group-data-[indeterminate]/checkbox:text-primary-foreground  group-data-[selected]/checkbox:text-primary-foreground',
+            'group-data-[indeterminate]/checkbox:bg-brand group-data-[indeterminate]/checkbox:border-brand group-data-[selected]/checkbox:bg-brand group-data-[selected]/checkbox:border-brand group-data-[indeterminate]/checkbox:text-primary-foreground  group-data-[selected]/checkbox:text-primary-foreground',
             /* Disabled */
             'group-data-[disabled]/checkbox:cursor-not-allowed group-data-[disabled]/checkbox:opacity-50',
             /* Invalid */
@@ -49,7 +48,7 @@ const Checkbox = ({ className, children, ...props }: AriaCheckboxProps) => (
           )}
         >
           {renderProps.isIndeterminate ? (
-            <Minus className="size-4" />
+            <span className="h-[3px] w-3/5 rounded bg-current" />
           ) : renderProps.isSelected ? (
             <CheckIcon className="size-2.5" />
           ) : null}

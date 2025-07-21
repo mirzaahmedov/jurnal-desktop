@@ -17,10 +17,10 @@ import { usePagination, useToggle } from '@/common/hooks'
 import { queryClient } from '@/common/lib/query-client'
 
 import { TabelColumnDefs } from './columns'
-import { TabelCreateDialog } from './create-dialog'
-import { TabelEditDialog } from './edit-dialog'
+import { TabelCreateDialog } from './components/tabel-create-dialog'
+import { TabelEditDialog } from './components/tabel-edit-dialog'
 
-export const Tabels = () => {
+export const TabelsView = () => {
   useRequisitesRedirect('/' as any)
 
   const { t } = useTranslation(['app'])

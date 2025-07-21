@@ -3,13 +3,12 @@ import type { DialogTriggerProps } from 'react-aria-components'
 
 import { useEffect, useState } from 'react'
 
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 
 import { LoadingOverlay } from '@/common/components'
-import { EditableTable } from '@/common/components/editable-table'
 import { Button } from '@/common/components/jolly/button'
 import {
   DialogContent,
@@ -20,8 +19,8 @@ import {
 } from '@/common/components/jolly/dialog'
 import { useConfirm } from '@/common/features/confirm'
 
-import { provodkaColumns } from './provodka-columns'
-import { TabelService } from './service'
+import { TabelService } from '../service'
+import { TabelProvodkaEditableTable } from './tabel-provodka-editable-table'
 
 export interface TabelEditDialogProps extends Omit<DialogTriggerProps, 'children'> {
   selectedTabelId?: number
@@ -34,8 +33,9 @@ export const TabelEditDialog = ({
   const { t } = useTranslation(['app'])
   const { confirm } = useConfirm()
 
-  const [loading, setLoading] = useState(false)
+  const [isLoading, setLoading] = useState(false)
 
+  const queryClient = useQueryClient()
   const form = useForm({
     defaultValues: {
       children: [] as TabelProvodka[]
@@ -49,6 +49,7 @@ export const TabelEditDialog = ({
   })
   const { mutateAsync: updateTabelProvodka, isPending } = useMutation({
     mutationFn: TabelService.updateChild,
+    onSuccess: () => {},
     onError: () => {
       toast.error(t('update_failed'))
     }
@@ -79,15 +80,20 @@ export const TabelEditDialog = ({
       toast.error(t('update_failed'))
     } else {
       toast.success(t('update_success'))
+      queryClient.invalidateQueries({
+        queryKey: [TabelService.QueryKeys.GetById, selectedTabelId!]
+      })
       onOpenChange?.(false)
     }
   }
+
+  console.log({ isDirty: form.formState.isDirty })
 
   return (
     <DialogTrigger
       isOpen={isOpen}
       onOpenChange={(isOpen) => {
-        if (loading) {
+        if (isLoading) {
           return
         }
         if (!isOpen && form.formState.isDirty) {
@@ -111,16 +117,12 @@ export const TabelEditDialog = ({
               <DialogTitle>{t('tabel')}</DialogTitle>
             </DialogHeader>
             <div className="col-span-2 mt-10">
-              <EditableTable
-                columnDefs={provodkaColumns}
-                form={form}
-                name="children"
-              />
+              <TabelProvodkaEditableTable form={form} />
             </div>
             <div className="flex items-center justify-end px-5">
               <Button
                 type="button"
-                isPending={loading}
+                isPending={isLoading}
                 onClick={handleSubmit}
               >
                 {t('save')}

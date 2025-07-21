@@ -16,7 +16,7 @@ import { Button } from '@/common/components/jolly/button'
 import { Pagination } from '@/common/components/pagination'
 import { useConfirm } from '@/common/features/confirm'
 import { VacantService } from '@/common/features/vacant/service'
-import { VacantDialog } from '@/common/features/vacant/vacant-dialog'
+import { VacantDialog } from '@/common/features/vacant/ui/vacant-dialog'
 import { WorkplaceColumns } from '@/common/features/workplace/columns'
 import { WorkplaceService } from '@/common/features/workplace/service'
 import { WorkplaceDialog } from '@/common/features/workplace/workplace-dialog'
@@ -27,6 +27,7 @@ import { arrayToTreeByRelations } from '@/common/lib/tree/relation-tree'
 
 import { CalculateParamsService } from '../calculate-params/service'
 import { useCalculateParamsGuard } from '../common/hooks/use-calculate-params-guard'
+import { WorkplaceDuplicate } from './workplace-duplicate'
 
 const StaffingTable = () => {
   useCalculateParamsGuard()
@@ -325,6 +326,7 @@ const StaffingTable = () => {
                 columnDefs={WorkplaceColumns}
                 onEdit={handleEditWorkplace}
                 onDelete={handleDeleteWorkplace}
+                actions={(row) => <WorkplaceDuplicate values={row} />}
                 className="table-generic-xs"
               />
             </div>

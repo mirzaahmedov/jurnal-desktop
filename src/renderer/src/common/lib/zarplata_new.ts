@@ -2,7 +2,7 @@ import axios from 'axios'
 
 import { useAuthenticationStore } from '@/common/features/auth'
 
-export const baseURL = 'http://192.168.77.8:8089/api'
+export const baseURL = 'http://192.168.77.9:8089/api'
 
 export interface ZarplataPaginationParams {
   PageIndex: number
@@ -32,7 +32,7 @@ zarplataApiNew.interceptors.response.use(
   (config) => config,
   (error) => {
     const message = error?.response?.data?.message
-    console.log('API Error:', message || error.message, "Response", error?.response)
+    console.log('API Error:', message || error.message, 'Response', error?.response)
     if (message) {
       return Promise.reject(new Error(message))
     }

@@ -1,4 +1,4 @@
-import { memo } from 'react'
+import { memo, useEffect, useRef } from 'react'
 
 import { Copyable } from '@/common/components/copyable'
 import {
@@ -7,11 +7,14 @@ import {
   defaultGetRowId
 } from '@/common/components/generic-table'
 import { Checkbox } from '@/common/components/jolly/checkbox'
+import { cn } from '@/common/lib/utils'
 
 const IDCellComponent = memo(
   ({ row, tableProps }: { row: any; tableProps: GenericTableProps<any> }) => {
     const { getRowId, getRowSelected, selectedIds, params } = tableProps ?? {}
     const { onCheckedChange } = params ?? {}
+
+    const inputRef = useRef<HTMLInputElement>(null)
 
     const id = getRowId ? getRowId(row) : defaultGetRowId(row)
     const checked = getRowSelected
@@ -22,10 +25,22 @@ const IDCellComponent = memo(
         })
       : selectedIds?.includes(id)
 
+    useEffect(() => {
+      if (!inputRef.current) return
+      const handleClick = (e: MouseEvent) => {
+        e.stopPropagation()
+      }
+      inputRef.current.addEventListener('click', handleClick, true)
+      return () => {
+        inputRef.current?.removeEventListener('click', handleClick, true)
+      }
+    }, [])
+
     return (
       <div className="flex items-center gap-2">
         {Array.isArray(selectedIds) ? (
           <Checkbox
+            inputRef={inputRef}
             isIndeterminate={checked === 'indeterminate'}
             isSelected={typeof checked === 'boolean' ? checked : false}
             onChange={(isSelected) => {
@@ -33,7 +48,7 @@ const IDCellComponent = memo(
                 onCheckedChange(row, !!isSelected)
               }
             }}
-            className="size-4"
+            className={cn('size-4', !onCheckedChange && 'pointer-events-none')}
           />
         ) : null}
         <Copyable value={id}>

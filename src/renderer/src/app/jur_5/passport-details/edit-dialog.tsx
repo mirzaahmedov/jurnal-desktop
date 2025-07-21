@@ -18,6 +18,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/common/components/ui/tabs'
 import { MainZarplataService } from '@/common/features/main-zarplata/service'
 import { PayrollDeductions } from '@/common/features/payroll-deduction/payroll-deductions'
+import { PayrollDeductionService } from '@/common/features/payroll-deduction/service'
 import { PayrollPayments } from '@/common/features/payroll-payment/payroll-payments'
 import { PayrollPaymentService } from '@/common/features/payroll-payment/service'
 
@@ -75,6 +76,12 @@ export const PassportInfoDialog = ({
       queryClient.invalidateQueries({
         queryKey: [
           PayrollPaymentService.QueryKeys.GetByMainZarplataId,
+          selectedMainZarplata?.id ?? 0
+        ]
+      })
+      queryClient.invalidateQueries({
+        queryKey: [
+          PayrollDeductionService.QueryKeys.GetByMainZarplataId,
           selectedMainZarplata?.id ?? 0
         ]
       })

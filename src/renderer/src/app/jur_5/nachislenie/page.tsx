@@ -1,15 +1,14 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 
 import { useTranslation } from 'react-i18next'
 
-import { type VacantTreeNode } from '@/app/region-admin/vacant/vacant-tree'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/common/components/ui/tabs'
-import { useToggle } from '@/common/hooks'
+import { useLocationState, useToggle } from '@/common/hooks'
 import { useLayout } from '@/common/layout'
 
-import { Nachislenies } from './nachislenie/nachislenie'
+import { Nachislenies } from './nachislenie'
 import { Reports } from './reports/reports'
-import { Tabels } from './tabel/tabels'
+import { TabelsView } from './tabel'
 import { Vedemosts } from './vedemost/vedemost'
 
 enum NachislenieTabOptions {
@@ -29,10 +28,9 @@ const tabOptions = [
 const NachisleniePage = () => {
   const setLayout = useLayout()
 
-  const createDialogToggle = useToggle()
+  const dialogToggle = useToggle()
 
-  const [tabValue, setTabValue] = useState<NachislenieTabOptions>(NachislenieTabOptions.Tabel)
-  const [selectedVacant] = useState<VacantTreeNode | null>(null)
+  const [tabValue, setTabValue] = useLocationState('tabValue', NachislenieTabOptions.Tabel)
 
   const { t } = useTranslation(['app'])
 
@@ -44,9 +42,9 @@ const NachisleniePage = () => {
           title: t('pages.zarplata')
         }
       ],
-      onCreate: selectedVacant ? createDialogToggle.open : undefined
+      onCreate: dialogToggle.open
     })
-  }, [t, setLayout, selectedVacant])
+  }, [t, setLayout, dialogToggle.open])
 
   return (
     <div className="flex-1 min-h-0 p-5">
@@ -73,7 +71,7 @@ const NachisleniePage = () => {
             value={NachislenieTabOptions.Tabel}
             className="h-full mt-0"
           >
-            <Tabels />
+            <TabelsView />
           </TabsContent>
           <TabsContent
             value={NachislenieTabOptions.Nachislenie}

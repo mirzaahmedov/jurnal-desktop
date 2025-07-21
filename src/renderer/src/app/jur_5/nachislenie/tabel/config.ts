@@ -33,7 +33,7 @@ export const defaultValues: TabelFormValues = {
   tabelChildren: []
 }
 
-export const defaultChildValues = {
+export const defaultProvodkaValues = {
   mainZarplataId: 0,
   rabDni: 0,
   otrabDni: 0,

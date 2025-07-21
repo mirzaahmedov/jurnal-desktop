@@ -20,7 +20,7 @@ import { Form, FormField } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
 import { capitalize } from '@/common/lib/string'
 
-import { VacantFormSchema, type VacantFormValues, defaultValues } from './config'
+import { VacantFormSchema, type VacantFormValues, defaultValues } from '../config'
 
 export interface VacantDialogProps extends Omit<DialogTriggerProps, 'children'> {
   vacant: undefined | VacantTreeNode

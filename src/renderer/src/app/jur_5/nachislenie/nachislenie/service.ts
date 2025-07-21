@@ -1,10 +1,10 @@
+import type { NachislenieFormValues } from './config'
 import type { Nachislenie, NachislenieSostav } from '@/common/models'
+import type { QueryFunctionContext } from '@tanstack/react-query'
 
-import { QueryFunctionContext } from '@tanstack/react-query'
+import { type ZarplataApiResponse, zarplataApiNew } from '@/common/lib/zarplata_new'
 
-import { zarplataApiNew } from '@/common/lib/zarplata_new'
-
-import { getMockingNachislenie, getMockingNachislenieSostav } from './mocking'
+import { getMockingNachislenieSostav } from './mocking'
 
 export class NachislenieService {
   static endpoint = 'Nachislenie'
@@ -19,7 +19,6 @@ export class NachislenieService {
       [
         typeof NachislenieService.QueryKeys.GetByVacantId,
         {
-          vacantId: number
           page: number
           limit: number
         }
@@ -27,17 +26,36 @@ export class NachislenieService {
     >
   ) {
     const params = ctx.queryKey[1]
-    const res = await zarplataApiNew.get(`${this.endpoint}`, { params })
+    const res = await zarplataApiNew.get<ZarplataApiResponse<Nachislenie[]>>(
+      `${NachislenieService.endpoint}`,
+      {
+        params
+      }
+    )
+    return res.data
+  }
+
+  static async create(values: NachislenieFormValues) {
+    const res = await zarplataApiNew.post<ZarplataApiResponse<Nachislenie[]>>(
+      `${NachislenieService.endpoint}`,
+      values
+    )
+    return res.data
+  }
+
+  static async update(args: { id: number; values: NachislenieFormValues }) {
+    const res = await zarplataApiNew.put<ZarplataApiResponse<Nachislenie[]>>(
+      `${NachislenieService.endpoint}/${args.id}`,
+      args.values
+    )
     return res.data
   }
 
   static async delete(id: number) {
-    console.log(`Deleting Nachislenie with id: ${id}`)
-    return new Promise<void>((resolve) => {
-      setTimeout(() => {
-        resolve()
-      }, 1000)
-    })
+    const res = await zarplataApiNew.delete<ZarplataApiResponse<Nachislenie[]>>(
+      `${NachislenieService.endpoint}/${id}`
+    )
+    return res.data
   }
 }
 

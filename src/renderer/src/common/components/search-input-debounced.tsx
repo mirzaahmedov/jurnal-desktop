@@ -46,6 +46,7 @@ export const SearchInputDebounced = ({
         onChange?.(e)
         setInternalValue(e.target.value)
       }}
+      formNoValidate
       {...props}
     />
   )

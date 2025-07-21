@@ -1,13 +1,12 @@
 import type { DialogTriggerProps } from 'react-aria-components'
 
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { Allotment } from 'allotment'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 
-import { VacantTree, type VacantTreeNode } from '@/app/region-admin/vacant/vacant-tree'
 import { LoadingOverlay } from '@/common/components'
 import {
   DialogContent,
@@ -16,11 +15,11 @@ import {
   DialogTitle,
   DialogTrigger
 } from '@/common/components/jolly/dialog'
-import { VacantService } from '@/common/features/vacant/service'
-import { arrayToTreeByRelations } from '@/common/lib/tree/relation-tree'
+import { useVacantTreeNodes } from '@/common/features/vacant/hooks/use-vacant-tree-nodes'
+import { VacantTree, type VacantTreeNode } from '@/common/features/vacant/ui/vacant-tree'
 
-import { TabelService } from './service'
-import { TabelForm } from './tabel-form'
+import { TabelService } from '../service'
+import { TabelCreateForm } from './tabel-create-form'
 
 export interface TabelCreateDialogProps extends Omit<DialogTriggerProps, 'children'> {
   budjetId: number
@@ -28,15 +27,12 @@ export interface TabelCreateDialogProps extends Omit<DialogTriggerProps, 'childr
 }
 export const TabelCreateDialog = ({ budjetId, mainSchetId, ...props }: TabelCreateDialogProps) => {
   const { t } = useTranslation(['app'])
+  const { treeNodes, vacantsQuery } = useVacantTreeNodes()
 
   const [selectedVacant, setSelectedVacant] = useState<VacantTreeNode | null>(null)
 
   const queryClient = useQueryClient()
 
-  const { data: vacants, isFetching: isFetchingVacants } = useQuery({
-    queryKey: [VacantService.QueryKeys.GetAll, { page: 1, limit: 100000000000000 }],
-    queryFn: VacantService.getAll
-  })
   const { mutate: createTabel, isPending: isCreating } = useMutation({
     mutationFn: TabelService.create,
     onSuccess: () => {
@@ -50,16 +46,6 @@ export const TabelCreateDialog = ({ budjetId, mainSchetId, ...props }: TabelCrea
       toast.error(t('create_failed'))
     }
   })
-
-  const treeNodes = useMemo(
-    () =>
-      arrayToTreeByRelations({
-        array: vacants?.data ?? [],
-        getId: (node) => node.id,
-        getParentId: (node) => node.parentId
-      }),
-    [vacants]
-  )
 
   return (
     <DialogTrigger {...props}>
@@ -78,7 +64,7 @@ export const TabelCreateDialog = ({ budjetId, mainSchetId, ...props }: TabelCrea
                 className="w-full bg-gray-50"
               >
                 <div className="relative overflow-auto scrollbar h-full">
-                  {isFetchingVacants ? <LoadingOverlay /> : null}
+                  {vacantsQuery.isFetching ? <LoadingOverlay /> : null}
                   <VacantTree
                     nodes={treeNodes}
                     selectedIds={selectedVacant ? [selectedVacant.id] : []}
@@ -87,7 +73,7 @@ export const TabelCreateDialog = ({ budjetId, mainSchetId, ...props }: TabelCrea
                 </div>
               </Allotment.Pane>
               <Allotment.Pane>
-                <TabelForm
+                <TabelCreateForm
                   budjetId={budjetId}
                   mainSchetId={mainSchetId}
                   onSubmit={createTabel}

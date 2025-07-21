@@ -1,10 +1,11 @@
 import type { EditableColumnDef } from '@/common/components/editable-table'
 import type { TabelProvodka } from '@/common/models/tabel'
 
+import { EditableTable, type EditableTableProps } from '@/common/components/editable-table'
 import { createNumberEditor } from '@/common/components/editable-table/editors'
 import { createMainZarplataEditor } from '@/common/components/editable-table/editors/main-zarplata'
 
-export const provodkaColumns: EditableColumnDef<TabelProvodka>[] = [
+export const columnDefs: EditableColumnDef<TabelProvodka>[] = [
   {
     key: 'mainZarplataId',
     header: 'employee',
@@ -54,3 +55,23 @@ export const provodkaColumns: EditableColumnDef<TabelProvodka>[] = [
     })
   }
 ]
+
+export const TabelProvodkaEditableTable = (
+  props: Omit<
+    EditableTableProps<
+      {
+        children: TabelProvodka[]
+      },
+      'children'
+    >,
+    'columnDefs' | 'name'
+  >
+) => {
+  return (
+    <EditableTable
+      columnDefs={columnDefs}
+      name="children"
+      {...props}
+    />
+  )
+}

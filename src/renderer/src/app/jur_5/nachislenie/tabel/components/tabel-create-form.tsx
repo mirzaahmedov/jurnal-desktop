@@ -4,37 +4,37 @@ import type { MainZarplata } from '@/common/models'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation } from '@tanstack/react-query'
 import { RefreshCw } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
-import { GenericTable, LoadingOverlay, Spinner } from '@/common/components'
+import { MainZarplataTable } from '@/app/jur_5/common/features/main-zarplata/main-zarplata-table'
+import { useMainZarplataList } from '@/app/jur_5/common/features/main-zarplata/use-fetchers'
+import { LoadingOverlay, Spinner } from '@/common/components'
 import { FormElement } from '@/common/components/form'
 import { JollyDatePicker } from '@/common/components/jolly-date-picker'
 import { Button } from '@/common/components/jolly/button'
+import { Checkbox } from '@/common/components/jolly/checkbox'
 import { MonthSelect } from '@/common/components/month-select'
 import { Badge } from '@/common/components/ui/badge'
 import { Form, FormField } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
 import { Tabs, TabsList, TabsTrigger } from '@/common/components/ui/tabs'
 import { YearSelect } from '@/common/components/year-select'
-import { MainZarplataService } from '@/common/features/main-zarplata/service'
 import { parseDate } from '@/common/lib/date'
 import { formatLocaleDate } from '@/common/lib/format'
-import { cn } from '@/common/lib/utils'
-import { getVacantRayon } from '@/common/utils/zarplata'
 
-import { MainZarplataColumnDefs } from '../columns'
-import { TabelFormSchema, type TabelFormValues, defaultValues } from './config'
-import { TabelService } from './service'
+import { TabelFormSchema, type TabelFormValues, defaultValues } from '../config'
+import { TabelService } from '../service'
+import { TabelVacantsFilter } from './tabel-vacants-filter'
 
 enum TabelFormTabs {
   SELECT = 'select',
   SELECTED = 'selected'
 }
 
-export interface TabelFormProps {
+export interface TabelCreateFormProps {
   budjetId: number
   mainSchetId: number
   vacants: VacantTreeNode[]
@@ -42,14 +42,14 @@ export interface TabelFormProps {
   isPending?: boolean
   onSubmit: (values: TabelFormValues) => void
 }
-export const TabelForm = ({
+export const TabelCreateForm = ({
   budjetId,
   mainSchetId,
   vacants,
   vacantId,
   isPending,
   onSubmit
-}: TabelFormProps) => {
+}: TabelCreateFormProps) => {
   const { t } = useTranslation(['app'])
 
   const form = useForm({
@@ -61,15 +61,8 @@ export const TabelForm = ({
   const [selectedMainZarplata, setSelectedMainZarplata] = useState<MainZarplata[]>([])
   const [visibleVacant, setVisibleVacant] = useState<number | null>(null)
 
-  const { data: mainZarplata, isFetching: isFetchingMainZarplata } = useQuery({
-    queryKey: [
-      MainZarplataService.QueryKeys.GetByVacantId,
-      {
-        vacantId: vacantId ?? 0
-      }
-    ],
-    queryFn: MainZarplataService.getByVacantId,
-    enabled: !!vacantId
+  const mainZarplataQuery = useMainZarplataList({
+    vacantId
   })
   const { mutate: getMaxDocNum } = useMutation({
     mutationFn: TabelService.getMaxDocNum,
@@ -119,7 +112,7 @@ export const TabelForm = ({
 
   const selectedVacants = useMemo(() => {
     const vacantIds = new Map<number, number>()
-    const vacantNodes: (VacantTreeNode & { _count: number })[] = []
+    const vacantNodes: (VacantTreeNode & { _selectedCount: number })[] = []
     selectedMainZarplata.forEach((item) => {
       if (!vacantIds.has(item.vacantId)) {
         vacantIds.set(item.vacantId, 0)
@@ -130,7 +123,7 @@ export const TabelForm = ({
       if (vacantIds.has(node.id)) {
         vacantNodes.push({
           ...node,
-          _count: vacantIds.get(node.id) ?? 0
+          _selectedCount: vacantIds.get(node.id) ?? 0
         })
       }
       node.children.forEach(walk)
@@ -140,6 +133,18 @@ export const TabelForm = ({
     })
     return vacantNodes
   }, [selectedMainZarplata, vacants])
+
+  const isAllSelected = useMemo(() => {
+    if (!mainZarplataQuery.data?.length) return false
+    return mainZarplataQuery?.data?.every((item) => selectedIds.includes(item.id)) ?? false
+  }, [mainZarplataQuery?.data, selectedIds])
+  const handleSelectAll = useCallback(() => {
+    if (isAllSelected) {
+      setSelectedMainZarplata([])
+    } else {
+      setSelectedMainZarplata(mainZarplataQuery.data ?? [])
+    }
+  }, [isAllSelected, mainZarplataQuery.data])
 
   return (
     <Form {...form}>
@@ -247,77 +252,60 @@ export const TabelForm = ({
                 <TabsTrigger value={TabelFormTabs.SELECT}>{t('select')}</TabsTrigger>
                 <TabsTrigger value={TabelFormTabs.SELECTED}>
                   {t('selected')}
-                  {selectedMainZarplata.length ? (
-                    <Badge className="-m-2 ml-2">{selectedMainZarplata.length}</Badge>
-                  ) : null}
+                  <Badge className="-m-2 ml-2">{selectedMainZarplata.length}</Badge>
                 </TabsTrigger>
               </TabsList>
             </Tabs>
 
-            {activeTab === TabelFormTabs.SELECT ? (
+            {activeTab === TabelFormTabs.SELECT && (
+              <div className="w-full">
+                <Button
+                  variant="ghost"
+                  className="flex items-center gap-2 hover:!bg-transparent"
+                  onClick={handleSelectAll}
+                >
+                  <Checkbox isSelected={isAllSelected} />
+                  <span className="text-xs">
+                    {isAllSelected ? t('deselect_all') : t('select_all')}
+                  </span>
+                </Button>
+              </div>
+            )}
+            {activeTab === TabelFormTabs.SELECTED && (
+              <TabelVacantsFilter
+                selectedVacants={selectedVacants}
+                selectedMainZarplata={selectedMainZarplata}
+                visibleVacant={visibleVacant}
+                setVisibleVacant={setVisibleVacant}
+              />
+            )}
+
+            {activeTab === TabelFormTabs.SELECT && (
               <div className="relative w-full overflow-auto scrollbar pl-px">
-                {isFetchingMainZarplata && <LoadingOverlay />}
-                <GenericTable
-                  data={mainZarplata ?? []}
-                  columnDefs={MainZarplataColumnDefs}
+                {mainZarplataQuery.isFetching && <LoadingOverlay />}
+                <MainZarplataTable
+                  data={mainZarplataQuery.data ?? []}
                   selectedIds={selectedIds}
                   onClickRow={handleClickRow}
-                  className="table-generic-xs"
                 />
               </div>
-            ) : null}
-            {activeTab === TabelFormTabs.SELECTED ? (
-              <>
-                <div>
-                  <ul className="flex items-center flex-wrap gap-5">
-                    <li
-                      className={cn(
-                        'flex items-center gap-2 font-semibold text-gray-500 hover:text-gray-700 cursor-pointer',
-                        !visibleVacant && 'font-semibold hover:text-blue-500 text-blue-500'
-                      )}
-                      onClick={() => {
-                        setVisibleVacant(null)
-                      }}
-                    >
-                      <span className="text-xs">{t('all')}</span>
-                      <span className="text-xs">({selectedMainZarplata.length})</span>
-                    </li>
-                    {selectedVacants.map((vacant) => (
-                      <li
-                        key={vacant.id}
-                        className={cn(
-                          'flex items-center gap-2 font-semibold text-gray-500 hover:text-gray-700 cursor-pointer',
-                          visibleVacant === vacant.id &&
-                            'font-semibold hover:text-blue-500 text-blue-500'
-                        )}
-                        onClick={() => {
-                          setVisibleVacant(vacant.id)
-                        }}
-                      >
-                        <span className="text-xs">{getVacantRayon(vacant)}</span>
-                        <span className="text-xs">({vacant._count})</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                <div className="relative w-full overflow-auto scrollbar pl-px">
-                  {isFetchingMainZarplata && <LoadingOverlay />}
-                  <GenericTable
-                    data={
-                      visibleVacant
-                        ? (selectedMainZarplata.filter(
-                            (mainZarplata) => mainZarplata.vacantId === visibleVacant
-                          ) ?? [])
-                        : selectedMainZarplata
-                    }
-                    columnDefs={MainZarplataColumnDefs}
-                    selectedIds={selectedIds}
-                    onClickRow={handleClickRow}
-                    className="table-generic-xs"
-                  />
-                </div>
-              </>
-            ) : null}
+            )}
+            {activeTab === TabelFormTabs.SELECTED && (
+              <div className="relative w-full overflow-auto scrollbar pl-px">
+                {mainZarplataQuery.isFetching && <LoadingOverlay />}
+                <MainZarplataTable
+                  data={
+                    visibleVacant
+                      ? (selectedMainZarplata.filter(
+                          (mainZarplata) => mainZarplata.vacantId === visibleVacant
+                        ) ?? [])
+                      : selectedMainZarplata
+                  }
+                  selectedIds={selectedIds}
+                  onClickRow={handleClickRow}
+                />
+              </div>
+            )}
           </div>
         </div>
 
