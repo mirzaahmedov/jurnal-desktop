@@ -35,7 +35,11 @@ interface CommonCollapsibleTableProps<T extends object> {
 
 export interface CollapsibleTableCustomProps<T extends object, C extends object>
   extends CommonCollapsibleTableProps<T> {
-  children: (props: { row: T; tableProps: CollapsibleTableProps<T, C> }) => ReactNode
+  children: (props: {
+    row: T
+    tableProps: CollapsibleTableProps<T, C>
+    rowIndex: number
+  }) => ReactNode
   getChildRows?: never
 }
 export interface CollapsibleTableDefaulteProps<T extends object, C extends object>

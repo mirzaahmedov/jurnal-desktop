@@ -3,14 +3,14 @@ import type { DialogTriggerProps } from 'react-aria-components'
 
 import { useEffect } from 'react'
 
-import { useMutation } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import { toast } from 'react-toastify'
 
+import { FooterCell, FooterRow, GenericTable, LoadingOverlay } from '@/common/components'
+import { CollapsibleTable } from '@/common/components/collapsible-table'
 import { FormElement } from '@/common/components/form'
 import { JollyDatePicker } from '@/common/components/jolly-date-picker'
-import { Button } from '@/common/components/jolly/button'
 import {
   DialogContent,
   DialogHeader,
@@ -19,54 +19,36 @@ import {
   DialogTrigger
 } from '@/common/components/jolly/dialog'
 import { MonthSelect } from '@/common/components/month-select'
+import { SummaCell } from '@/common/components/table/renderers/summa'
 import { Form, FormField } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
 import { YearSelect } from '@/common/components/year-select'
 import { formatDate, parseDate, parseLocaleDate } from '@/common/lib/date'
-import { formatLocaleDate } from '@/common/lib/format'
+import { formatNumber } from '@/common/lib/format'
 
 import { defaultValues } from '../config'
 import { NachislenieService } from '../service'
 
 export interface NachislenieEditDialogProps extends Omit<DialogTriggerProps, 'children'> {
-  mainSchetId: number
-  spravochnikBudjetNameId: number
   selectedNachislenie: Nachislenie
 }
 export const NachislenieEditDialog = ({
-  mainSchetId,
-  spravochnikBudjetNameId,
   selectedNachislenie,
   ...props
 }: NachislenieEditDialogProps) => {
   const { t } = useTranslation(['app'])
 
-  const { mutate: updateNachislenie, isPending } = useMutation({
-    mutationFn: NachislenieService.update,
-    onSuccess: () => {
-      toast.success(t('update_success'))
-      props?.onOpenChange?.(false)
-    },
-    onError: () => {
-      toast.error(t('update_failed'))
-    }
+  const { data: nachislenie, isFetching } = useQuery({
+    queryKey: [NachislenieService.QueryKeys.GetById, selectedNachislenie.id],
+    queryFn: NachislenieService.getById,
+    enabled: !!selectedNachislenie.id
   })
 
   const form = useForm({
     defaultValues
   })
 
-  const handleSubmit = form.handleSubmit((values) => {
-    updateNachislenie({
-      id: selectedNachislenie.id,
-      values: {
-        ...values,
-        docDate: formatLocaleDate(values.docDate),
-        mainSchetId,
-        spravochnikBudjetNameId
-      }
-    })
-  })
+  const handleSubmit = form.handleSubmit(console.log)
 
   useEffect(() => {
     if (selectedNachislenie) {
@@ -80,56 +62,58 @@ export const NachislenieEditDialog = ({
   return (
     <DialogTrigger {...props}>
       <DialogOverlay>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>{t('nachislenie')}</DialogTitle>
-          </DialogHeader>
-          <Form {...form}>
-            <form
-              noValidate
-              onSubmit={handleSubmit}
-              className="mt-5 h-full flex flex-col gap-5"
-            >
-              <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-5">
-                <FormField
-                  control={form.control}
-                  name="docNum"
-                  render={({ field }) => (
-                    <FormElement
-                      direction="column"
-                      label={t('doc_num')}
-                    >
-                      <Input
-                        type="number"
-                        {...field}
-                      />
-                    </FormElement>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="docDate"
-                  render={({ field }) => (
-                    <FormElement
-                      direction="column"
-                      label={t('doc_date')}
-                    >
-                      <JollyDatePicker
-                        {...field}
-                        onChange={(value) => {
-                          field.onChange(value)
-                          if (value) {
-                            const date = parseDate(value)
-                            form.setValue('nachislenieYear', date.getFullYear())
-                            form.setValue('nachislenieMonth', date.getMonth() + 1)
-                          }
-                        }}
-                      />
-                    </FormElement>
-                  )}
-                />
-
+        <DialogContent className="relative w-full max-w-8xl h-full max-h-[600px]">
+          {isFetching ? <LoadingOverlay /> : null}
+          <div className="h-full flex flex-col overflow-hidden">
+            <DialogHeader>
+              <DialogTitle>{t('nachislenie')}</DialogTitle>
+            </DialogHeader>
+            <Form {...form}>
+              <form
+                noValidate
+                onSubmit={handleSubmit}
+                className="mt-5 flex-1 h-full flex flex-col gap-5 overflow-y-auto scrollbar"
+              >
                 <div className="flex items-center gap-5">
+                  <FormField
+                    control={form.control}
+                    name="docNum"
+                    render={({ field }) => (
+                      <FormElement
+                        direction="column"
+                        label={t('doc_num')}
+                      >
+                        <Input
+                          readOnly
+                          type="number"
+                          {...field}
+                        />
+                      </FormElement>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="docDate"
+                    render={({ field }) => (
+                      <FormElement
+                        direction="column"
+                        label={t('doc_date')}
+                      >
+                        <JollyDatePicker
+                          {...field}
+                          readOnly
+                          onChange={(value) => {
+                            field.onChange(value)
+                            if (value) {
+                              const date = parseDate(value)
+                              form.setValue('nachislenieYear', date.getFullYear())
+                              form.setValue('nachislenieMonth', date.getMonth() + 1)
+                            }
+                          }}
+                        />
+                      </FormElement>
+                    )}
+                  />
                   <FormField
                     control={form.control}
                     name="nachislenieYear"
@@ -164,18 +148,132 @@ export const NachislenieEditDialog = ({
                     )}
                   />
                 </div>
-              </div>
 
-              <div className="text-end">
-                <Button
-                  type="submit"
-                  isPending={isPending}
+                <CollapsibleTable
+                  data={nachislenie ?? []}
+                  columnDefs={[
+                    {
+                      key: 'vacantId',
+                      header: 'id',
+                      width: 160,
+                      minWidth: 160
+                    },
+                    {
+                      key: 'vacantName',
+                      header: 'vacant'
+                    }
+                  ]}
+                  classNames={{
+                    header: 'z-100'
+                  }}
+                  getRowId={(row) => row.vacantId}
+                  className="table-generic-xs"
                 >
-                  {t('save')}
-                </Button>
-              </div>
-            </form>
-          </Form>
+                  {({ row }) => (
+                    <div className="relative overflow-hidden py-5 flex flex-col gap-2.5">
+                      {row.nachislenieChildren?.map((item, index) => (
+                        <div
+                          key={index}
+                          className="p-5 rounded-lg border"
+                        >
+                          <div className="p-1 flex items-center gap-5">
+                            <FormElement
+                              label={t('fio')}
+                              direction="column"
+                            >
+                              <Input value={item.fio} />
+                            </FormElement>
+                            <FormElement
+                              label={t('doljnost')}
+                              direction="column"
+                            >
+                              <Input value={item.doljnostName} />
+                            </FormElement>
+                            <FormElement
+                              label={t('card_num')}
+                              direction="column"
+                            >
+                              <Input value={item.kartochka} />
+                            </FormElement>
+                          </div>
+                          <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-5">
+                            <GenericTable
+                              data={item?.nachisleniePayrollPayments ?? []}
+                              columnDefs={[
+                                {
+                                  key: 'name'
+                                },
+                                {
+                                  key: 'percentage',
+                                  header: 'foiz'
+                                },
+                                {
+                                  key: 'summa',
+                                  renderCell: (row) => <SummaCell summa={row.summa} />,
+                                  numeric: true
+                                }
+                              ]}
+                              className="table-generic-xs border-t border-l"
+                              footer={
+                                <FooterRow>
+                                  <FooterCell
+                                    title={t('total')}
+                                    colSpan={3}
+                                  />
+                                  <FooterCell
+                                    content={formatNumber(
+                                      item?.nachisleniePayrollPayments?.reduce(
+                                        (result, { summa }) => result + (summa ?? 0),
+                                        0
+                                      )
+                                    )}
+                                  />
+                                </FooterRow>
+                              }
+                            />
+                            <GenericTable
+                              data={item?.nachisleniePayrollDeductions ?? []}
+                              columnDefs={[
+                                {
+                                  key: 'name'
+                                },
+                                {
+                                  key: 'percentage',
+                                  header: 'foiz'
+                                },
+                                {
+                                  key: 'summa',
+                                  renderCell: (row) => <SummaCell summa={row.summa} />,
+                                  numeric: true
+                                }
+                              ]}
+                              className="table-generic-xs border-t border-l"
+                              footer={
+                                <FooterRow>
+                                  <FooterCell
+                                    title={t('total')}
+                                    colSpan={3}
+                                  />
+                                  <FooterCell
+                                    content={formatNumber(
+                                      item?.nachisleniePayrollDeductions?.reduce(
+                                        (result, { summa }) => result + (summa ?? 0),
+                                        0
+                                      )
+                                    )}
+                                  />
+                                </FooterRow>
+                              }
+                            />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </CollapsibleTable>
+              </form>
+            </Form>
+          </div>
         </DialogContent>
       </DialogOverlay>
     </DialogTrigger>

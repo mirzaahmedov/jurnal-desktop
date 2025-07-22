@@ -1,3 +1,4 @@
+import type { TabelDetailsFormValues } from '../interfaces'
 import type { TabelProvodka } from '@/common/models/tabel'
 import type { DialogTriggerProps } from 'react-aria-components'
 
@@ -9,6 +10,7 @@ import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 
 import { LoadingOverlay } from '@/common/components'
+import { CollapsibleTable } from '@/common/components/collapsible-table'
 import { Button } from '@/common/components/jolly/button'
 import {
   DialogContent,
@@ -37,9 +39,7 @@ export const TabelEditDialog = ({
 
   const queryClient = useQueryClient()
   const form = useForm({
-    defaultValues: {
-      children: [] as TabelProvodka[]
-    }
+    defaultValues: { values: [] } as TabelDetailsFormValues
   })
 
   const { data: selectedTabel, isFetching } = useQuery({
@@ -58,36 +58,58 @@ export const TabelEditDialog = ({
   useEffect(() => {
     if (selectedTabel) {
       form.reset({
-        children: selectedTabel.children
+        values: selectedTabel
       })
     }
   }, [selectedTabel])
 
   const handleSubmit = async () => {
-    setLoading(true)
-    const values = form.getValues('children')
-    const results = await Promise.allSettled(
-      values.map((child) =>
-        updateTabelProvodka({
-          id: child.id,
-          values: child
+    try {
+      setLoading(true)
+      const values = form.getValues('values')
+
+      const updatedRows: TabelProvodka[] = []
+      values.forEach((vacant, rowIndex) => {
+        if (!form.formState.dirtyFields.values?.[rowIndex]) {
+          return
+        }
+        vacant.children.forEach((child, childIndex) => {
+          if (!form.formState.dirtyFields.values?.[rowIndex]?.children?.[childIndex]) {
+            return
+          }
+          updatedRows.push({
+            ...child,
+            vacantId: vacant.vacantId,
+            vacantName: vacant.vacantName
+          } as TabelProvodka)
         })
-      )
-    )
-    setLoading(false)
-    const errors = results.filter((result) => result.status === 'rejected')
-    if (errors.length > 0) {
-      toast.error(t('update_failed'))
-    } else {
-      toast.success(t('update_success'))
-      queryClient.invalidateQueries({
-        queryKey: [TabelService.QueryKeys.GetById, selectedTabelId!]
       })
-      onOpenChange?.(false)
+
+      const results = await Promise.allSettled(
+        updatedRows.map((row) =>
+          updateTabelProvodka({
+            id: row.id,
+            values: row
+          })
+        )
+      )
+      const errors = results.filter((result) => result.status === 'rejected')
+      if (errors.length > 0) {
+        toast.error(t('update_failed'))
+      } else {
+        toast.success(t('update_success'))
+        queryClient.invalidateQueries({
+          queryKey: [TabelService.QueryKeys.GetById, selectedTabelId!]
+        })
+        onOpenChange?.(false)
+      }
+    } catch (error) {
+      console.error('Error updating tabel provodka:', error)
+      toast.error(t('update_failed'))
+    } finally {
+      setLoading(false)
     }
   }
-
-  console.log({ isDirty: form.formState.isDirty })
 
   return (
     <DialogTrigger
@@ -110,14 +132,38 @@ export const TabelEditDialog = ({
       }}
     >
       <DialogOverlay>
-        <DialogContent className="w-full max-w-6xl h-full max-h-[600px] px-0">
+        <DialogContent className="w-full max-w-8xl h-full max-h-[800px] px-0">
           <div className="flex flex-col h-full overflow-hidden gap-5 relative">
             {isFetching || isPending ? <LoadingOverlay /> : null}
             <DialogHeader className="px-5">
               <DialogTitle>{t('tabel')}</DialogTitle>
             </DialogHeader>
-            <div className="col-span-2 mt-10">
-              <TabelProvodkaEditableTable form={form} />
+            <div className="col-span-2 overflow-y-auto scrollbar">
+              <CollapsibleTable
+                data={form.watch('values')}
+                columnDefs={[
+                  {
+                    key: 'vacantId',
+                    header: 'id',
+                    width: 160,
+                    minWidth: 160
+                  },
+                  {
+                    key: 'vacantName',
+                    header: 'vacant'
+                  }
+                ]}
+                getRowId={(row) => row.vacantId}
+              >
+                {({ rowIndex }) => (
+                  <div className="pl-10">
+                    <TabelProvodkaEditableTable
+                      form={form}
+                      rowIndex={rowIndex}
+                    />
+                  </div>
+                )}
+              </CollapsibleTable>
             </div>
             <div className="flex items-center justify-end px-5">
               <Button

@@ -50,7 +50,7 @@ export const CollapsibleTable = <T extends object, C extends object = T>({
     >
       {displayHeader ? (
         <TableHeader className={cn('sticky top-0 z-50 shadow-sm', classNames?.header)}>
-          <GenericTableRow className="bg-slate-100 hover:bg-slate-100 border-t border-slate-200">
+          <GenericTableRow className="bg-gray-100 hover:bg-gray-100 border-t border-gray-200">
             {columnDefs.map((col) => {
               const { key, header, fit, stretch, numeric, headerClassName, width, renderHeader } =
                 col
@@ -91,23 +91,26 @@ export const CollapsibleTable = <T extends object, C extends object = T>({
             <CollapsibleItem
               key={getRowKey ? getRowKey(row, rowIndex) : getRowId(row)}
               row={row}
-              tableProps={{
-                columnDefs,
-                disabledIds,
-                selectedIds,
-                data,
-                params,
-                getRowId,
-                getRowKey,
-                getRowSelected,
-                children,
-                getChildRows,
-                onClickRow,
-                onEdit,
-                onDelete,
-                openRows,
-                onOpenRowsChange
-              }}
+              rowIndex={rowIndex}
+              tableProps={
+                {
+                  columnDefs,
+                  disabledIds,
+                  selectedIds,
+                  data,
+                  params,
+                  getRowId,
+                  getRowKey,
+                  getRowSelected,
+                  children,
+                  getChildRows,
+                  onClickRow,
+                  onEdit,
+                  onDelete,
+                  openRows,
+                  onOpenRowsChange
+                } as any
+              }
             />
           ))
         ) : (
@@ -131,11 +134,13 @@ export const CollapsibleTable = <T extends object, C extends object = T>({
 
 interface CollapsibleItemProps<T extends object, C extends object> {
   row: T
+  rowIndex: number
   tableProps: CollapsibleTableProps<T, C>
   level?: number
 }
 const CollapsibleItem = <T extends object, C extends object>({
   row,
+  rowIndex,
   tableProps,
   level = 1
 }: CollapsibleItemProps<T, C>) => {
@@ -327,6 +332,7 @@ const CollapsibleItem = <T extends object, C extends object>({
               >
                 {children ? (
                   children({
+                    rowIndex,
                     row,
                     tableProps
                   })
@@ -341,7 +347,8 @@ const CollapsibleItem = <T extends object, C extends object>({
                           <CollapsibleItem
                             key={getRowId(row)}
                             row={child}
-                            tableProps={tableProps as unknown as CollapsibleTableProps<C, C>}
+                            rowIndex={rowIndex}
+                            tableProps={tableProps as any}
                             level={level + 1}
                           />
                         ))}

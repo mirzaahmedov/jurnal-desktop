@@ -1,6 +1,6 @@
-import type { TabelFormValues, TabelProvodkaFormValues } from './config'
+import type { TabelFormValues } from './config'
 import type { ZarplataApiResponse } from '@/common/lib/zarplata_new'
-import type { Tabel } from '@/common/models/tabel'
+import type { Tabel, TabelProvodka } from '@/common/models/tabel'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 
 import { zarplataApiNew } from '@/common/lib/zarplata_new'
@@ -46,8 +46,15 @@ export class TabelService {
 
   static async getById(ctx: QueryFunctionContext<[typeof TabelService.QueryKeys.GetById, number]>) {
     const id = ctx.queryKey[1]
-    const res = await zarplataApiNew.get<[Tabel]>(`${TabelService.endpoint}/${id}`)
-    return res.data?.[0]
+    const res = await zarplataApiNew.get<
+      Array<{
+        id: number
+        vacantId: number
+        vacantName: string
+        children: TabelProvodka[]
+      }>
+    >(`${TabelService.endpoint}/${id}`)
+    return res.data
   }
 
   static async getMaxDocNum() {
@@ -63,7 +70,7 @@ export class TabelService {
     return res.data
   }
 
-  static async updateChild(args: { id: number; values: TabelProvodkaFormValues }) {
+  static async updateChild(args: { id: number; values: TabelProvodka }) {
     const res = await zarplataApiNew.put<ZarplataApiResponse<Tabel>>(
       `${TabelService.endpoint}/tabel-child/${args.id}`,
       args.values

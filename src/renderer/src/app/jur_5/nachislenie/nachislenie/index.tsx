@@ -97,8 +97,6 @@ export const Nachislenies = () => {
             <NachislenieEditDialog
               isOpen={editDialogToggle.isOpen}
               onOpenChange={editDialogToggle.setOpen}
-              mainSchetId={main_schet_id}
-              spravochnikBudjetNameId={budjet_id}
               selectedNachislenie={selectedNachislenie!}
             />
           ) : null}

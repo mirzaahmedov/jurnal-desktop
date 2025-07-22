@@ -1,5 +1,5 @@
 import type { NachislenieFormValues } from './config'
-import type { Nachislenie, NachislenieSostav } from '@/common/models'
+import type { Nachislenie, NachislenieDetails, NachislenieSostav } from '@/common/models'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 
 import { type ZarplataApiResponse, zarplataApiNew } from '@/common/lib/zarplata_new'
@@ -11,7 +11,18 @@ export class NachislenieService {
 
   static QueryKeys = {
     GetAll: 'nachislenie/all',
+    GetById: 'nachislenie/:id',
     GetByVacantId: 'nachislenie/vacantId'
+  }
+
+  static async getById(
+    ctx: QueryFunctionContext<[typeof NachislenieService.QueryKeys.GetById, number]>
+  ) {
+    const id = ctx.queryKey[1]
+    const res = await zarplataApiNew.get<NachislenieDetails[]>(
+      `${NachislenieService.endpoint}/${id}`
+    )
+    return res.data
   }
 
   static async getByVacantId(
