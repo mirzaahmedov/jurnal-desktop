@@ -81,7 +81,15 @@ const AdminOdinoxDetailsPage = () => {
       form.reset({
         month: odinox.data.month,
         year: odinox.data.year,
-        childs: transformGetByIdData(odinox.data.childs)
+        childs: transformGetByIdData(
+          odinox.data.childs,
+          odinox.meta ?? {
+            title: '',
+            summa: 0,
+            summa_from: 0,
+            summa_to: 0
+          }
+        )
       })
     }
   }, [form, odinox, id])

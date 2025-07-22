@@ -2,6 +2,7 @@ import type { OdinoxTableRow } from './interfaces'
 import type { EditableColumnDef } from '@/common/components/editable-table/interface'
 
 import { createTextEditor } from '@/common/components/editable-table/editors'
+import { Input } from '@/common/components/ui/input'
 
 export const OdinoxProvodkaColumns: EditableColumnDef<OdinoxTableRow>[] = [
   {
@@ -9,15 +10,20 @@ export const OdinoxProvodkaColumns: EditableColumnDef<OdinoxTableRow>[] = [
     header: 'id',
     minWidth: 60,
     className: 'font-bold',
-    Editor: createTextEditor({
-      key: 'id',
-      readOnly: true
-    })
+    Editor: ({ value }) => {
+      return (
+        <Input
+          readOnly
+          editor
+          value={typeof value === 'number' && value > 0 ? value : ''}
+        />
+      )
+    }
   },
   {
     key: 'smeta_name',
     header: 'name',
-    minWidth: 300,
+    minWidth: 320,
     Editor: createTextEditor({
       key: 'name',
       readOnly: true

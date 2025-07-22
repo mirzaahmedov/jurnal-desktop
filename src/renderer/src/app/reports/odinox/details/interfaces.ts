@@ -27,6 +27,7 @@ export interface OdinoxTableRow extends Record<string, number | string> {
 }
 
 export enum OdinoxTypeName {
+  Saldo = 'saldo',
   Grafik = 'grafik',
   BankPrixod = 'bank_prixod',
   Jur1_2 = 'jur1_jur2_rasxod',

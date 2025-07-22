@@ -30,7 +30,8 @@ export enum OdinoxTypeName {
   BankPrixod = 'bank_prixod',
   Jur1_2 = 'jur1_jur2_rasxod',
   Jur3 = 'jur3a_akt_avans',
-  Remaining = 'remaining'
+  Remaining = 'remaining',
+  Saldo = 'saldo'
 }
 
 export interface OdinoxType {

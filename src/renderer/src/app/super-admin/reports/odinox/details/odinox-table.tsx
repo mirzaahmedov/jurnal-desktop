@@ -22,6 +22,7 @@ export const OdinoxTable = memo(({ columns, ...props }: OdinoxTableProps) => {
       getRowClassName={({ index, rows }) =>
         cn(
           '[&_input]:p-1 scroll-my-32',
+          index === 0 && '[&_input]:font-bold sticky top-[145px] z-50 shadow-sm',
           index === (rows?.length ?? 0) - 1 &&
             '[&_input]:font-bold sticky bottom-0 z-50 shadow-sm-up'
         )

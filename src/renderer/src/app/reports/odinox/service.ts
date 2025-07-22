@@ -4,6 +4,7 @@ import type {
   OdinoxType,
   OdinoxUniqueSchet
 } from './details/interfaces'
+import type { OdinoxMeta } from './details/utils'
 import type {
   ApiResponse,
   Odinox,
@@ -47,7 +48,7 @@ export interface GetDocsArgs {
   sort_order: number
 }
 
-class OdinoxServiceBuilder extends CRUDService<Odinox, OdinoxPayload> {
+class OdinoxServiceBuilder extends CRUDService<Odinox, OdinoxPayload, OdinoxPayload, OdinoxMeta> {
   constructor() {
     super({
       endpoint: ApiEndpoints.odinox
@@ -75,9 +76,12 @@ class OdinoxServiceBuilder extends CRUDService<Odinox, OdinoxPayload> {
     return res.data
   }
   async getAutofillData(params: { month: number; year: number; main_schet_id: number }) {
-    const res = await this.client.get<ApiResponse<OdinoxAutoFill[]>>(`${this.endpoint}/data`, {
-      params
-    })
+    const res = await this.client.get<ApiResponse<OdinoxAutoFill[], OdinoxMeta>>(
+      `${this.endpoint}/data`,
+      {
+        params
+      }
+    )
     return res.data
   }
 

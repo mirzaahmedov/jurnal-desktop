@@ -9,62 +9,20 @@ import { createNumberEditor } from '@/common/components/editable-table/editors'
 import { cn } from '@/common/lib/utils'
 
 import {
-  type OdinoxAutoFill,
   type OdinoxAutoFillSubChild,
   type OdinoxTableRow,
   type OdinoxType,
   OdinoxTypeName
 } from './interfaces'
 
-export const transformOdinoxAutoFillData = (types: OdinoxAutoFill[]) => {
-  const smetaMap = new Map<
-    number,
-    {
-      type_id: number
-      type_name: string
-      smeta: OdinoxAutoFillSubChild
-    }[]
-  >()
-
-  types.forEach((type) => {
-    type.sub_childs.push({
-      id: 0,
-      summa: type.summa,
-      smeta_name: t('total'),
-      smeta_number: '',
-      group_number: '',
-      smeta_id: 0
-    })
-    type.sub_childs.forEach((smeta) => {
-      if (!smetaMap.has(smeta.smeta_id)) {
-        smetaMap.set(smeta.smeta_id, [])
-      }
-      smetaMap.get(smeta.smeta_id)?.push({
-        type_id: type.id,
-        type_name: type.name,
-        smeta
-      })
-    })
-  })
-
-  const rows: OdinoxTableRow[] = []
-  smetaMap.forEach((types) => {
-    const row = {} as OdinoxTableRow
-    types.forEach(({ type_name, smeta }) => {
-      row[type_name] = smeta.summa
-
-      row.smeta_id = smeta.smeta_id
-      row.smeta_name = smeta.smeta_name
-      row.smeta_number = smeta.smeta_number
-      row.group_number = smeta.group_number
-    })
-    rows.push(row)
-  })
-
-  return rows
+export interface OdinoxMeta {
+  title: string
+  summa: number
+  summa_from: number
+  summa_to: number
 }
 
-export const transformGetByIdData = (types: OdinoxProvodka[]) => {
+export const transformGetByIdData = (types: OdinoxProvodka[], meta: OdinoxMeta) => {
   const smetaMap = new Map<
     number,
     {
@@ -75,9 +33,22 @@ export const transformGetByIdData = (types: OdinoxProvodka[]) => {
   >()
 
   types.forEach((type) => {
+    type.sub_childs.unshift({
+      id: -1,
+      summa:
+        type.type_name === OdinoxTypeName.BankPrixod
+          ? meta.summa
+          : type.type_name === OdinoxTypeName.Saldo
+            ? meta.summa_from
+            : 0,
+      smeta_id: -1,
+      smeta_name: meta.title,
+      smeta_number: '',
+      group_number: ''
+    } as OdinoxAutoFillSubChild)
     type.sub_childs.push({
       id: 0,
-      summa: type.summa,
+      summa: type.type_name === OdinoxTypeName.Saldo ? meta.summa_to : type.summa,
       smeta_name: t('total'),
       smeta_number: '',
       group_number: '',
@@ -150,10 +121,14 @@ export const getOdinoxColumns = (types: OdinoxType[]) => {
         : type.name.startsWith(OdinoxTypeName.BankPrixod)
           ? t('funds_paid_by_ministry')
           : type.name.startsWith(OdinoxTypeName.Jur1_2)
-            ? `${t('kassa_rasxod')} / ${t('bank_rasxod')}`
+            ? `${t('provodka_type.bank_rasxod')}, ${t('provodka_type.bank_prixod')}, ${t('provodka_type.kassa_prixod')}`
             : type.name.startsWith(OdinoxTypeName.Jur3)
               ? t('real_expenses')
-              : t('remainder'),
+              : type.name.startsWith('remaining')
+                ? t('remainder')
+                : type.name === 'saldo'
+                  ? t('saldo_for_month')
+                  : type.name,
       headerClassName: cn(
         'text-center py-3',
         type.name.endsWith('_year') && '!bg-slate-200 border-slate-300'

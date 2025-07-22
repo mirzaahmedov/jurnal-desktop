@@ -81,7 +81,19 @@ const OdinoxDetailsPage = () => {
     mutationFn: OdinoxService.getAutofillData,
     onSuccess: (res) => {
       form.setValue('childs', res.data ?? [])
-      form.setValue('rows', transformOdinoxAutoFillData(res.data ?? []))
+      form.setValue(
+        'rows',
+        transformOdinoxAutoFillData(
+          res.data ?? [],
+          res?.meta ??
+            ({
+              summa: 0,
+              title: '',
+              summa_from: 0,
+              summa_to: 0
+            } as any)
+        )
+      )
     },
     onError: () => {
       form.setValue('childs', [])
@@ -135,7 +147,15 @@ const OdinoxDetailsPage = () => {
       form.reset({
         month: odinox.data.month,
         year: odinox.data.year,
-        rows: transformGetByIdData(odinox.data.childs),
+        rows: transformGetByIdData(
+          odinox.data.childs,
+          odinox?.meta ?? {
+            summa: 0,
+            title: '',
+            summa_from: 0,
+            summa_to: 0
+          }
+        ),
         childs: odinox.data.childs
       })
     }

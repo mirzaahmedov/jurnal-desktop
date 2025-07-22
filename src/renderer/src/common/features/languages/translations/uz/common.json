@@ -494,5 +494,6 @@
   "selected": "Tanlangan",
   "update_failed_some": "Yangilashda xato: ba'zi ma'lumotlar yangilanmadi",
   "select_all": "Barchasini tanlash",
-  "deselect_all": "Barchasini bekor qilish"
+  "deselect_all": "Barchasini bekor qilish",
+  "saldo_for_month": "Oy boshiga qoldiq"
 }
