@@ -44,6 +44,20 @@ export class PayrollPaymentService {
     return res.data
   }
 
+  static async changePayment(args: { isXarbiy: boolean; values: PayrollPaymentFormValues }) {
+    const { isXarbiy, values } = args
+    const res = await zarplataApiNew.put(
+      `${PayrollPaymentService.endpoint}/change-payments`,
+      values,
+      {
+        params: {
+          isXarbiy
+        }
+      }
+    )
+    return res.data
+  }
+
   static async delete(id: number) {
     const res = await zarplataApiNew.delete<PayrollPayment>(
       `${PayrollPaymentService.endpoint}/${id}`

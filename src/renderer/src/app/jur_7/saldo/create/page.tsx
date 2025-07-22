@@ -84,7 +84,7 @@ const MaterialCreatePage = () => {
 
   return (
     <DetailsView>
-      <DetailsView.Content loading={isPending}>
+      <DetailsView.Content isLoading={isPending}>
         <Form {...form}>
           <form onSubmit={handleSubmit}>
             <div className="w-full overflow-x-auto scrollbar">

@@ -280,7 +280,7 @@ const OrganSaldoDetailsPage = () => {
   return (
     <DetailsView className="h-full">
       <DetailsView.Content
-        loading={isFetching || isRendering || isAutoFilling || isCheckingSaldo}
+        isLoading={isFetching || isRendering || isAutoFilling || isCheckingSaldo}
         className="overflow-hidden h-full pb-20"
       >
         <form

@@ -78,7 +78,7 @@ const ShartnomaDetailsPage = () => {
 
   return (
     <DetailsView>
-      <DetailsView.Content loading={isFetching}>
+      <DetailsView.Content isLoading={isFetching}>
         <ShartnomaForm
           dialog={false}
           organId={organId}

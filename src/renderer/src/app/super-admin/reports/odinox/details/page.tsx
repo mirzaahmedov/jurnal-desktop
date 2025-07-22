@@ -154,7 +154,7 @@ const AdminOdinoxDetailsPage = () => {
   return (
     <DetailsView className="h-full">
       <DetailsView.Content
-        loading={isFetching || isFetchingTypes}
+        isLoading={isFetching || isFetchingTypes}
         className="overflow-hidden h-full pb-20"
       >
         <div className="relative h-full flex flex-col">

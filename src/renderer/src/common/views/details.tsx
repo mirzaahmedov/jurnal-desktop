@@ -20,15 +20,15 @@ export const DetailsView = ({ children, className, ...props }: DetailsViewProps)
 }
 
 export type DetailsViewContentProps = HTMLAttributes<HTMLElement> & {
-  loading?: boolean
+  isLoading?: boolean
 }
 const DetailsViewContent = ({
   children,
-  loading,
+  isLoading,
   className,
   ...props
 }: DetailsViewContentProps) => {
-  return loading ? (
+  return isLoading ? (
     <LoadingOverlay {...props} />
   ) : (
     <div className={cn('flex-1 relative overflow-y-auto scrollbar', className)}>{children}</div>

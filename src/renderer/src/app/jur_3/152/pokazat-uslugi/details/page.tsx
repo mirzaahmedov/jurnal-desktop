@@ -278,7 +278,7 @@ const PokazatUslugiDetailsPage = () => {
 
   return (
     <DetailsView>
-      <DetailsView.Content loading={isFetching}>
+      <DetailsView.Content isLoading={isFetching}>
         <Form {...form}>
           <form onSubmit={onSubmit}>
             <div className="grid grid-cols-2">

@@ -332,7 +332,7 @@ const MainbookDetailsPage = () => {
   return (
     <DetailsView className="h-full">
       <DetailsView.Content
-        loading={
+        isLoading={
           isFetching ||
           isAutoFilling ||
           isFetchingTypes ||

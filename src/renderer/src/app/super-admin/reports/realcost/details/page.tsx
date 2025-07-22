@@ -185,7 +185,7 @@ const AdminRealCostDetailsPage = () => {
   return (
     <DetailsView className="h-full">
       <DetailsView.Content
-        loading={isFetching}
+        isLoading={isFetching}
         className="overflow-hidden h-full pb-20"
       >
         <div className="relative h-full flex flex-col">

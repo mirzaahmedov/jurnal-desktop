@@ -281,7 +281,7 @@ const PrixodDetails = ({ id, onSuccess }: PrixodDetailsProps) => {
   return (
     <DetailsView>
       <DetailsView.Content
-        loading={isFetching}
+        isLoading={isFetching}
         className="w-full overflow-x-hidden pb-20"
       >
         <Form {...form}>

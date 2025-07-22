@@ -243,7 +243,7 @@ export const WorkTripDetails = ({ id }: WorkTripDetailsProps) => {
 
   return (
     <DetailsView>
-      <DetailsView.Content loading={isFetching || isFetchingMinimumWage}>
+      <DetailsView.Content isLoading={isFetching || isFetchingMinimumWage}>
         <Form {...form}>
           <form onSubmit={handleSubmit}>
             <div className="divide-y">

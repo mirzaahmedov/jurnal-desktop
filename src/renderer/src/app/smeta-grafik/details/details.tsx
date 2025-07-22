@@ -212,7 +212,7 @@ export const SmetaGrafikDetails = ({ id, year, isEditable }: SmetaGrafikDetailsP
 
   return (
     <DetailsView>
-      <DetailsView.Content loading={isFetching || isLoadingByOrderNumber}>
+      <DetailsView.Content isLoading={isFetching || isLoadingByOrderNumber}>
         <Form {...form}>
           <form
             onSubmit={onSubmit}

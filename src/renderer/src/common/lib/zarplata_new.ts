@@ -2,7 +2,7 @@ import axios from 'axios'
 
 import { useAuthenticationStore } from '@/common/features/auth'
 
-export const baseURL = 'http://192.168.77.9:8089/api'
+export const baseURL = 'https://nafaqa.fizmasoft.uz/zarplata/api'
 
 export interface ZarplataPaginationParams {
   PageIndex: number

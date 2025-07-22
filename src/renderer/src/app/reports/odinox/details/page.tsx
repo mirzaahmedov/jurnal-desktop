@@ -242,7 +242,7 @@ const OdinoxDetailsPage = () => {
   return (
     <DetailsView className="h-full">
       <DetailsView.Content
-        loading={isFetching || isAutoFilling || isFetchingTypes}
+        isLoading={isFetching || isAutoFilling || isFetchingTypes}
         className="overflow-hidden h-full pb-20"
       >
         <form

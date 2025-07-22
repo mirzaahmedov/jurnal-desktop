@@ -8,12 +8,14 @@ import { toast } from 'react-toastify'
 
 import { GenericTable } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
-import { usePagination, useToggle } from '@/common/hooks'
+import { useLocationState, usePagination, useToggle } from '@/common/hooks'
 import { useLayout } from '@/common/layout'
-import { ListView } from '@/common/views'
+import { DetailsView, ListView } from '@/common/views'
 
 import { PaymentColumnDefs } from './columns'
+import { ChangePayment } from './components/change-payment'
 import { PaymentsDialog } from './dialog'
+import { PaymentFilter, PaymentFilterTabOption } from './filters'
 import { PaymentsService } from './service'
 
 const PaymentsPage = () => {
@@ -25,6 +27,7 @@ const PaymentsPage = () => {
   const { confirm } = useConfirm()
   const { t } = useTranslation(['app'])
 
+  const [tabValue] = useLocationState('tab', PaymentFilterTabOption.All)
   const [selectedPayment, setSelectedPayment] = useState<Payment>()
 
   const { data: payments, isFetching } = useQuery({
@@ -64,6 +67,7 @@ const PaymentsPage = () => {
           title: t('pages.payment_type')
         }
       ],
+      content: PaymentFilter,
       onCreate: () => {
         setSelectedPayment(undefined)
         dialogToggle.open()
@@ -84,7 +88,13 @@ const PaymentsPage = () => {
     })
   }
 
-  return (
+  return tabValue === PaymentFilterTabOption.ChangePayment ? (
+    <DetailsView>
+      <DetailsView.Content>
+        <ChangePayment />
+      </DetailsView.Content>
+    </DetailsView>
+  ) : (
     <ListView>
       <ListView.Content isLoading={isFetching || isDeleting}>
         <GenericTable

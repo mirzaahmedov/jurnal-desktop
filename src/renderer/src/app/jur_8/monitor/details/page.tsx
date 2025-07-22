@@ -201,7 +201,7 @@ const FinancialReceiptDetailsPage = () => {
   return (
     <DetailsView className="h-full">
       <DetailsView.Content
-        loading={isFetching || isAutoFilling}
+        isLoading={isFetching || isAutoFilling}
         className="overflow-hidden h-full pb-20"
       >
         <form

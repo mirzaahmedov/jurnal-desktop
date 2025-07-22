@@ -275,7 +275,7 @@ const AktDetailsPage = () => {
 
   return (
     <DetailsView>
-      <DetailsView.Content loading={isFetchingAkt}>
+      <DetailsView.Content isLoading={isFetchingAkt}>
         <Form {...form}>
           <form onSubmit={onSubmit}>
             <div>

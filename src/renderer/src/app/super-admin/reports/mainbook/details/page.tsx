@@ -130,7 +130,7 @@ const AdminMainbookDetailsPage = () => {
   return (
     <DetailsView className="h-full">
       <DetailsView.Content
-        loading={isFetching || isFetchingTypes || isUpdatingMainbook}
+        isLoading={isFetching || isFetchingTypes || isUpdatingMainbook}
         className="h-full pb-20 overflow-hidden"
       >
         <div className="h-full flex flex-col">
