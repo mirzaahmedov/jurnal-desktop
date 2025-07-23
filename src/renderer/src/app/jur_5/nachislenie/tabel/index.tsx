@@ -134,6 +134,7 @@ export const TabelsView = () => {
                 onOpenChange={createToggle.setOpen}
                 budjetId={budjet_id}
                 mainSchetId={main_schet_id}
+                defaultVacant={selectedVacant}
               />
               <TabelEditDialog
                 isOpen={editToggle.isOpen}

@@ -1,6 +1,6 @@
 import type { DialogTriggerProps } from 'react-aria-components'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { Allotment } from 'allotment'
@@ -24,12 +24,18 @@ import { TabelCreateForm } from './tabel-create-form'
 export interface TabelCreateDialogProps extends Omit<DialogTriggerProps, 'children'> {
   budjetId: number
   mainSchetId: number
+  defaultVacant: VacantTreeNode | undefined
 }
-export const TabelCreateDialog = ({ budjetId, mainSchetId, ...props }: TabelCreateDialogProps) => {
+export const TabelCreateDialog = ({
+  budjetId,
+  mainSchetId,
+  defaultVacant,
+  ...props
+}: TabelCreateDialogProps) => {
   const { t } = useTranslation(['app'])
   const { treeNodes, vacantsQuery } = useVacantTreeNodes()
 
-  const [selectedVacant, setSelectedVacant] = useState<VacantTreeNode | null>(null)
+  const [selectedVacant, setSelectedVacant] = useState<VacantTreeNode | undefined>(defaultVacant)
 
   const queryClient = useQueryClient()
 
@@ -46,6 +52,10 @@ export const TabelCreateDialog = ({ budjetId, mainSchetId, ...props }: TabelCrea
       toast.error(t('create_failed'))
     }
   })
+
+  useEffect(() => {
+    setSelectedVacant(defaultVacant)
+  }, [defaultVacant])
 
   return (
     <DialogTrigger {...props}>
