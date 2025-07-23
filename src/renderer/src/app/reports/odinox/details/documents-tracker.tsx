@@ -48,7 +48,7 @@ export const OdinoxDocumentsTracker = ({ args, docs, onClose }: OdinoxDocumentsT
     >
       <DialogOverlay>
         <DialogContent className="w-full max-w-[1800px] h-full max-h-[900px] flex flex-col p-0 gap-0 overflow-hidden">
-          <div className="w-full flex flex-col">
+          <div className="w-full h-full flex flex-col">
             <DialogHeader className="p-5">
               <DialogTitle>
                 <Trans ns="app">
@@ -58,12 +58,12 @@ export const OdinoxDocumentsTracker = ({ args, docs, onClose }: OdinoxDocumentsT
                       ? 'pages.smeta_grafik'
                       : (args?.sort_order > 0 && args?.sort_order < 4) ||
                           (args?.sort_order > 6 && args?.sort_order < 10)
-                        ? 'pages.documents'
+                        ? 'documents'
                         : 'remainder'}
                 </Trans>
               </DialogTitle>
             </DialogHeader>
-            <div className="w-full max-w-[1800px] flex-1 overflow-x-auto scrollbar">
+            <div className="w-full max-w-[1800px] flex-1 overflow-auto scrollbar">
               {!args ? null : isSmetaGrafik(docs, args?.sort_order) ? (
                 (docs.map((row) => row.smeta_grafik).filter((v) => !!v) ?? []).length === 0 ? (
                   <div className="flex flex-col items-center justify-center py-10 px-10">

@@ -1,6 +1,6 @@
 import type { OdinoxAutoFillSubChild } from './details/interfaces'
 import type { OdinoxMeta } from './details/utils'
-import type { AdminOdinox, ReportStatus } from '@/common/models'
+import type { AdminOdinox, ApiResponseMeta, ReportStatus } from '@/common/models'
 
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 
@@ -13,7 +13,7 @@ class AdminOdinoxServiceBuilder extends CRUDService<
   AdminOdinox,
   OdinoxPayload,
   OdinoxPayload,
-  OdinoxMeta
+  OdinoxMeta & ApiResponseMeta
 > {
   constructor() {
     super({
