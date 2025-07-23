@@ -12,6 +12,8 @@ import { useTranslation } from 'react-i18next'
 import { MainZarplataTable } from '@/app/jur_5/common/features/main-zarplata/main-zarplata-table'
 import { useMainZarplataList } from '@/app/jur_5/common/features/main-zarplata/use-fetchers'
 import { LoadingOverlay, Spinner } from '@/common/components'
+import { EditableTable } from '@/common/components/editable-table'
+import { createEditorDeleteHandler } from '@/common/components/editable-table/helpers'
 import { FormElement } from '@/common/components/form'
 import { JollyDatePicker } from '@/common/components/jolly-date-picker'
 import { Button } from '@/common/components/jolly/button'
@@ -24,9 +26,11 @@ import { Tabs, TabsList, TabsTrigger } from '@/common/components/ui/tabs'
 import { YearSelect } from '@/common/components/year-select'
 import { parseDate } from '@/common/lib/date'
 import { formatLocaleDate } from '@/common/lib/format'
+import { getWorkdaysInMonth } from '@/common/utils/zarplata'
 
 import { TabelFormSchema, type TabelFormValues, defaultValues } from '../config'
 import { TabelService } from '../service'
+import { TabelEditableColumnDefs } from './tabel-provodka-editable-table'
 import { TabelVacantsFilter } from './tabel-vacants-filter'
 
 enum TabelFormTabs {
@@ -58,7 +62,6 @@ export const TabelCreateForm = ({
   })
 
   const [activeTab, setActiveTab] = useState<TabelFormTabs>(TabelFormTabs.SELECT)
-  const [selectedMainZarplata, setSelectedMainZarplata] = useState<MainZarplata[]>([])
   const [visibleVacant, setVisibleVacant] = useState<number | null>(null)
 
   const mainZarplataQuery = useMainZarplataList({
@@ -76,16 +79,7 @@ export const TabelCreateForm = ({
       ...values,
       docDate: formatLocaleDate(values.docDate),
       spravochnikBudjetNameId: budjetId,
-      mainSchetId,
-      tabelChildren: selectedMainZarplata.map((mainZarplata) => ({
-        mainZarplataId: mainZarplata.id,
-        rabDni: 0,
-        otrabDni: 0,
-        noch: 0,
-        prazdnik: 0,
-        pererabodka: 0,
-        kazarma: 0
-      }))
+      mainSchetId
     })
   })
 
@@ -93,31 +87,51 @@ export const TabelCreateForm = ({
     getMaxDocNum()
   }, [getMaxDocNum])
 
-  const selectedIds = useMemo(
-    () => selectedMainZarplata.map((item) => item.id),
-    [selectedMainZarplata]
-  )
-  const handleClickRow = useCallback((row: MainZarplata) => {
-    setSelectedMainZarplata((prev) => {
-      const prevCopied = [...prev]
-      const existing = prevCopied.find((item) => item.id === row.id)
-      if (existing) {
-        return prevCopied.filter((item) => item.id !== row.id)
+  const tabelChildren = form.watch('tabelChildren')
+  const selectedIds = useMemo(() => {
+    return tabelChildren.map((item) => item.mainZarplataId)
+  }, [tabelChildren])
+  const handleClickRow = useCallback(
+    (row: MainZarplata) => {
+      const prev = form.getValues('tabelChildren')
+
+      if (prev.find((item) => item.mainZarplataId === row.id)) {
+        prev.splice(
+          prev.findIndex((item) => item.mainZarplataId === row.id),
+          1
+        )
       } else {
-        prevCopied.push(row)
-        return prevCopied
+        prev.push({
+          mainZarplataId: row.id,
+          mainZarplataName: row.fio,
+          dojlnostName: row.doljnostName,
+          vacantId: row.vacantId,
+          rabDni: getWorkdaysInMonth(
+            form.getValues('tabelYear'),
+            form.getValues('tabelMonth'),
+            parseInt(row.spravochnikZarplataGrafikRabotiName || '0')
+          ).workdays,
+          otrabDni: 0,
+          noch: 0,
+          prazdnik: 0,
+          pererabodka: 0,
+          kazarma: 0
+        })
       }
-    })
-  }, [])
+
+      form.setValue('tabelChildren', [...prev])
+    },
+    [form]
+  )
 
   const selectedVacants = useMemo(() => {
     const vacantIds = new Map<number, number>()
     const vacantNodes: (VacantTreeNode & { _selectedCount: number })[] = []
-    selectedMainZarplata.forEach((item) => {
-      if (!vacantIds.has(item.vacantId)) {
-        vacantIds.set(item.vacantId, 0)
+    tabelChildren.forEach((child) => {
+      if (!vacantIds.has(child.vacantId)) {
+        vacantIds.set(child.vacantId, 0)
       }
-      vacantIds.set(item.vacantId, vacantIds.get(item.vacantId)! + 1)
+      vacantIds.set(child.vacantId, vacantIds.get(child.vacantId)! + 1)
     })
     const walk = (node: VacantTreeNode) => {
       if (vacantIds.has(node.id)) {
@@ -132,19 +146,38 @@ export const TabelCreateForm = ({
       walk(vacant)
     })
     return vacantNodes
-  }, [selectedMainZarplata, vacants])
+  }, [tabelChildren, vacants])
 
   const isAllSelected = useMemo(() => {
     if (!mainZarplataQuery.data?.length) return false
     return mainZarplataQuery?.data?.every((item) => selectedIds.includes(item.id)) ?? false
   }, [mainZarplataQuery?.data, selectedIds])
   const handleSelectAll = useCallback(() => {
+    const prev = form.getValues('tabelChildren')
     if (isAllSelected) {
-      setSelectedMainZarplata([])
+      form.setValue(
+        'tabelChildren',
+        prev.filter((item) => mainZarplataQuery.data?.some((row) => row.id !== item.mainZarplataId))
+      )
     } else {
-      setSelectedMainZarplata(mainZarplataQuery.data ?? [])
+      const missingChildren = mainZarplataQuery.data?.filter(
+        (row) => !prev.some((item) => item.mainZarplataId === row.id)
+      )
+      form.setValue('tabelChildren', [
+        ...prev,
+        ...(missingChildren ?? []).map((row) => ({
+          mainZarplataId: row.id,
+          vacantId: row.vacantId,
+          rabDni: 0,
+          otrabDni: 0,
+          noch: 0,
+          prazdnik: 0,
+          pererabodka: 0,
+          kazarma: 0
+        }))
+      ])
     }
-  }, [isAllSelected, mainZarplataQuery.data])
+  }, [form, isAllSelected, mainZarplataQuery.data])
 
   return (
     <Form {...form}>
@@ -252,7 +285,7 @@ export const TabelCreateForm = ({
                 <TabsTrigger value={TabelFormTabs.SELECT}>{t('select')}</TabsTrigger>
                 <TabsTrigger value={TabelFormTabs.SELECTED}>
                   {t('selected')}
-                  <Badge className="-m-2 ml-2">{selectedMainZarplata.length}</Badge>
+                  <Badge className="-m-2 ml-2">{form.watch('tabelChildren').length}</Badge>
                 </TabsTrigger>
               </TabsList>
             </Tabs>
@@ -274,7 +307,7 @@ export const TabelCreateForm = ({
             {activeTab === TabelFormTabs.SELECTED && (
               <TabelVacantsFilter
                 selectedVacants={selectedVacants}
-                selectedMainZarplata={selectedMainZarplata}
+                selectedCount={form.watch('tabelChildren')?.length ?? 0}
                 visibleVacant={visibleVacant}
                 setVisibleVacant={setVisibleVacant}
               />
@@ -293,16 +326,16 @@ export const TabelCreateForm = ({
             {activeTab === TabelFormTabs.SELECTED && (
               <div className="relative w-full overflow-auto scrollbar pl-px">
                 {mainZarplataQuery.isFetching && <LoadingOverlay />}
-                <MainZarplataTable
-                  data={
-                    visibleVacant
-                      ? (selectedMainZarplata.filter(
-                          (mainZarplata) => mainZarplata.vacantId === visibleVacant
-                        ) ?? [])
-                      : selectedMainZarplata
+                <EditableTable
+                  form={form}
+                  name="tabelChildren"
+                  columnDefs={TabelEditableColumnDefs as any}
+                  onDelete={createEditorDeleteHandler({
+                    form
+                  })}
+                  isRowVisible={({ row }) =>
+                    visibleVacant ? row.vacantId === visibleVacant : true
                   }
-                  selectedIds={selectedIds}
-                  onClickRow={handleClickRow}
                 />
               </div>
             )}

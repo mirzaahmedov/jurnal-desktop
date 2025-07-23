@@ -16,11 +16,23 @@ export class NachislenieService {
   }
 
   static async getById(
-    ctx: QueryFunctionContext<[typeof NachislenieService.QueryKeys.GetById, number]>
+    ctx: QueryFunctionContext<
+      [
+        typeof NachislenieService.QueryKeys.GetById,
+        number,
+        {
+          vacantId?: number
+        }
+      ]
+    >
   ) {
     const id = ctx.queryKey[1]
+    const params = ctx.queryKey[2] || {}
     const res = await zarplataApiNew.get<NachislenieDetails[]>(
-      `${NachislenieService.endpoint}/${id}`
+      `${NachislenieService.endpoint}/${id}`,
+      {
+        params
+      }
     )
     return res.data
   }
@@ -32,17 +44,15 @@ export class NachislenieService {
         {
           page: number
           limit: number
+          vacantId: number
         }
       ]
     >
   ) {
     const params = ctx.queryKey[1]
-    const res = await zarplataApiNew.get<ZarplataApiResponse<Nachislenie[]>>(
-      `${NachislenieService.endpoint}`,
-      {
-        params
-      }
-    )
+    const res = await zarplataApiNew.get<Nachislenie[]>(`${NachislenieService.endpoint}`, {
+      params
+    })
     return res.data
   }
 

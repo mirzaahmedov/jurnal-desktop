@@ -2,7 +2,7 @@ import type { DialogTriggerProps } from 'react-aria-components'
 
 import { useState } from 'react'
 
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
@@ -26,10 +26,12 @@ import { defaultValues } from '../config'
 import { NachislenieService } from '../service'
 
 export interface NachislenieCreateDialogProps extends Omit<DialogTriggerProps, 'children'> {
+  vacantId?: number
   mainSchetId: number
   spravochnikBudjetNameId: number
 }
 export const NachislenieCreateDialog = ({
+  vacantId,
   mainSchetId,
   spravochnikBudjetNameId,
   ...props
@@ -38,6 +40,8 @@ export const NachislenieCreateDialog = ({
 
   const [search, setSearch] = useState<string>('')
 
+  const queryClient = useQueryClient()
+
   const { data: tabels, isFetching } = useQuery({
     queryKey: [
       TabelService.QueryKeys.GetAll,
@@ -45,20 +49,25 @@ export const NachislenieCreateDialog = ({
         page: 1,
         limit: 10,
         budjetId: spravochnikBudjetNameId,
+        vacantId: vacantId ?? 0,
         docNum: search ? search : undefined,
         status: false
       }
     ],
-    queryFn: TabelService.getAll
+    queryFn: TabelService.getAll,
+    enabled: props?.isOpen
   })
   const { mutate: createNachislenie, isPending } = useMutation({
     mutationFn: NachislenieService.create,
     onSuccess: () => {
       toast.success(t('create_success'))
+      queryClient.invalidateQueries({
+        queryKey: [NachislenieService.QueryKeys.GetByVacantId]
+      })
       props?.onOpenChange?.(false)
     },
-    onError: () => {
-      toast.error(t('create_error'))
+    onError: (res) => {
+      toast.error(res?.message ?? t('create_failed'))
     }
   })
 
@@ -172,7 +181,7 @@ export const NachislenieCreateDialog = ({
                   {isFetching ? <LoadingOverlay /> : null}
                   <GenericTable
                     columnDefs={TabelColumnDefs}
-                    data={tabels?.data ?? []}
+                    data={tabels ?? []}
                     selectedIds={form.watch('tabelMainId') ? [form.watch('tabelMainId')] : []}
                     onClickRow={(value) => form.setValue('tabelMainId', value.id)}
                     className="table-generic-xs"

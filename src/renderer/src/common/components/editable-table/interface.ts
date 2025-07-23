@@ -2,7 +2,13 @@ import type { EditorComponentType } from './editors'
 import type { ChangeContext } from './editors/interfaces'
 import type { Autocomplete } from '@/common/lib/types'
 import type { HTMLAttributes, ReactNode, RefObject, SyntheticEvent } from 'react'
-import type { ArrayPath, FieldArrayWithId, FieldErrors, UseFieldArrayReturn, UseFormReturn } from 'react-hook-form'
+import type {
+  ArrayPath,
+  FieldArrayWithId,
+  FieldErrors,
+  UseFieldArrayReturn,
+  UseFormReturn
+} from 'react-hook-form'
 
 export type TableRowField<T extends object, F extends ArrayPath<T>> = FieldArrayWithId<T, F, 'id'>
 export type InferRow<T extends object, F extends ArrayPath<T>> = T[F][number]
@@ -40,16 +46,16 @@ export interface EditableTableMethods {
 }
 
 export interface CreateHandlerArgs<T extends object, F extends ArrayPath<T>> {
-  fieldArray: UseFieldArrayReturn<T, F, "id">,
+  fieldArray: UseFieldArrayReturn<T, F, 'id'>
 }
 export interface DeleteHandlerArgs<T extends object, F extends ArrayPath<T>> {
   id: number
-  fieldArray: UseFieldArrayReturn<T, F, "id">
+  fieldArray: UseFieldArrayReturn<T, F, 'id'>
 }
 export interface DuplicateHandlerArgs<T extends object, F extends ArrayPath<T>> {
   index: number
   row: TableRowField<T, F>
-  fieldArray: UseFieldArrayReturn<T, F, "id">
+  fieldArray: UseFieldArrayReturn<T, F, 'id'>
 }
 
 export interface EditableTableProps<T extends object, F extends ArrayPath<NoInfer<T>>> {
@@ -76,12 +82,17 @@ export interface EditableTableProps<T extends object, F extends ArrayPath<NoInfe
     errors: FieldErrors<InferRow<T, F>>
   }) => Record<string, unknown>
   placeholder?: string
-  onDelete?(ctx: DeleteHandlerArgs<T, F>): void
-  onDuplicate?(ctx: DuplicateHandlerArgs<T, F>): void
-  onCreate?(args: CreateHandlerArgs<T, F>): void
-  onCellDoubleClick?: CellEventHandler<T, F>
+  onDelete?(ctx: DeleteHandlerArgs<NoInfer<T>, NoInfer<F>>): void
+  onDuplicate?(ctx: DuplicateHandlerArgs<NoInfer<T>, NoInfer<F>>): void
+  onCreate?(args: CreateHandlerArgs<NoInfer<T>, NoInfer<F>>): void
+  onCellDoubleClick?: CellEventHandler<NoInfer<T>, NoInfer<F>>
   params?: Record<string, unknown>
   footerRows?: ReactNode
   validate?(ctx: ChangeContext<InferRow<T, F>>): boolean
   methods?: RefObject<EditableTableMethods>
+  isRowVisible?: (args: {
+    row: FieldArrayWithId<T, F, 'id'>
+    index: number
+    rows: FieldArrayWithId<T, F, 'id'>[]
+  }) => boolean
 }

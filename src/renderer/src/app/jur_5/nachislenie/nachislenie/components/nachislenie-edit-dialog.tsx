@@ -39,7 +39,7 @@ export const NachislenieEditDialog = ({
   const { t } = useTranslation(['app'])
 
   const { data: nachislenie, isFetching } = useQuery({
-    queryKey: [NachislenieService.QueryKeys.GetById, selectedNachislenie.id],
+    queryKey: [NachislenieService.QueryKeys.GetById, selectedNachislenie.id, { vacantId: 0 }],
     queryFn: NachislenieService.getById,
     enabled: !!selectedNachislenie.id
   })

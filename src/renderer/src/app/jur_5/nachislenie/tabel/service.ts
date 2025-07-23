@@ -24,13 +24,14 @@ export class TabelService {
           year?: number
           month?: number
           budjetId?: number
+          vacantId?: number
           status?: boolean
         }
       ]
     >
   ) {
-    const { page, limit, docNum, year, month, budjetId, status } = ctx.queryKey[1]
-    const res = await zarplataApiNew.get<ZarplataApiResponse<Tabel[]>>(`${TabelService.endpoint}`, {
+    const { page, limit, docNum, year, month, budjetId, status, vacantId } = ctx.queryKey[1]
+    const res = await zarplataApiNew.get<Tabel[]>(`${TabelService.endpoint}`, {
       params: {
         PageIndex: page,
         PageSize: limit,
@@ -38,14 +39,20 @@ export class TabelService {
         year,
         month,
         budjet_name_id: budjetId,
-        status
+        status,
+        vacantId
       }
     })
     return res.data
   }
 
-  static async getById(ctx: QueryFunctionContext<[typeof TabelService.QueryKeys.GetById, number]>) {
+  static async getById(
+    ctx: QueryFunctionContext<
+      [typeof TabelService.QueryKeys.GetById, number, { vacantId?: number }]
+    >
+  ) {
     const id = ctx.queryKey[1]
+    const vacantId = ctx.queryKey[2]?.vacantId
     const res = await zarplataApiNew.get<
       Array<{
         id: number
@@ -53,7 +60,11 @@ export class TabelService {
         vacantName: string
         children: TabelProvodka[]
       }>
-    >(`${TabelService.endpoint}/${id}`)
+    >(`${TabelService.endpoint}/${id}`, {
+      params: {
+        vacantId
+      }
+    })
     return res.data
   }
 

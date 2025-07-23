@@ -1,5 +1,4 @@
 import type { VacantTreeNode } from '@/app/region-admin/vacant/vacant-tree'
-import type { MainZarplata } from '@/common/models'
 
 import { useTranslation } from 'react-i18next'
 
@@ -8,13 +7,13 @@ import { getVacantRayon } from '@/common/utils/zarplata'
 
 interface TabelVacantsFilterProps {
   selectedVacants: (VacantTreeNode & { _selectedCount: number })[]
-  selectedMainZarplata: MainZarplata[]
+  selectedCount: number
   visibleVacant: number | null
   setVisibleVacant: (vacantId: number | null) => void
 }
 export const TabelVacantsFilter = ({
   selectedVacants,
-  selectedMainZarplata,
+  selectedCount,
   visibleVacant,
   setVisibleVacant
 }: TabelVacantsFilterProps) => {
@@ -32,7 +31,7 @@ export const TabelVacantsFilter = ({
           }}
         >
           <span className="text-xs">{t('all')}</span>
-          <span className="text-xs">({selectedMainZarplata.length})</span>
+          <span className="text-xs">({selectedCount})</span>
         </li>
         {selectedVacants.map((vacant) => (
           <li

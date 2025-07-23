@@ -10,7 +10,6 @@ import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 
 import { LoadingOverlay } from '@/common/components'
-import { CollapsibleTable } from '@/common/components/collapsible-table'
 import { Button } from '@/common/components/jolly/button'
 import {
   DialogContent,
@@ -26,9 +25,11 @@ import { TabelProvodkaEditableTable } from './tabel-provodka-editable-table'
 
 export interface TabelEditDialogProps extends Omit<DialogTriggerProps, 'children'> {
   selectedTabelId?: number
+  selectedVacantId?: number
 }
 export const TabelEditDialog = ({
   selectedTabelId,
+  selectedVacantId,
   isOpen,
   onOpenChange
 }: TabelEditDialogProps) => {
@@ -39,13 +40,21 @@ export const TabelEditDialog = ({
 
   const queryClient = useQueryClient()
   const form = useForm({
-    defaultValues: { values: [] } as TabelDetailsFormValues
+    defaultValues: {
+      children: []
+    } as TabelDetailsFormValues
   })
 
   const { data: selectedTabel, isFetching } = useQuery({
-    queryKey: [TabelService.QueryKeys.GetById, selectedTabelId!],
+    queryKey: [
+      TabelService.QueryKeys.GetById,
+      selectedTabelId!,
+      {
+        vacantId: selectedVacantId!
+      }
+    ],
     queryFn: TabelService.getById,
-    enabled: !!selectedTabelId
+    enabled: !!selectedTabelId && !!selectedVacantId
   })
   const { mutateAsync: updateTabelProvodka, isPending } = useMutation({
     mutationFn: TabelService.updateChild,
@@ -58,7 +67,7 @@ export const TabelEditDialog = ({
   useEffect(() => {
     if (selectedTabel) {
       form.reset({
-        values: selectedTabel
+        children: selectedTabel
       })
     }
   }, [selectedTabel])
@@ -66,23 +75,14 @@ export const TabelEditDialog = ({
   const handleSubmit = async () => {
     try {
       setLoading(true)
-      const values = form.getValues('values')
+      const children = form.getValues('children')
 
       const updatedRows: TabelProvodka[] = []
-      values.forEach((vacant, rowIndex) => {
-        if (!form.formState.dirtyFields.values?.[rowIndex]) {
+      children.forEach((child, rowIndex) => {
+        if (!form.formState.dirtyFields.children?.[rowIndex]) {
           return
         }
-        vacant.children.forEach((child, childIndex) => {
-          if (!form.formState.dirtyFields.values?.[rowIndex]?.children?.[childIndex]) {
-            return
-          }
-          updatedRows.push({
-            ...child,
-            vacantId: vacant.vacantId,
-            vacantName: vacant.vacantName
-          } as TabelProvodka)
-        })
+        updatedRows.push(child as TabelProvodka)
       })
 
       const results = await Promise.allSettled(
@@ -139,31 +139,9 @@ export const TabelEditDialog = ({
               <DialogTitle>{t('tabel')}</DialogTitle>
             </DialogHeader>
             <div className="col-span-2 overflow-y-auto scrollbar">
-              <CollapsibleTable
-                data={form.watch('values')}
-                columnDefs={[
-                  {
-                    key: 'vacantId',
-                    header: 'id',
-                    width: 160,
-                    minWidth: 160
-                  },
-                  {
-                    key: 'vacantName',
-                    header: 'vacant'
-                  }
-                ]}
-                getRowId={(row) => row.vacantId}
-              >
-                {({ rowIndex }) => (
-                  <div className="pl-10">
-                    <TabelProvodkaEditableTable
-                      form={form}
-                      rowIndex={rowIndex}
-                    />
-                  </div>
-                )}
-              </CollapsibleTable>
+              <div className="pl-10">
+                <TabelProvodkaEditableTable form={form} />
+              </div>
             </div>
             <div className="flex items-center justify-end px-5">
               <Button

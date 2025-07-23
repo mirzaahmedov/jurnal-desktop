@@ -3,16 +3,23 @@ import type { EditableColumnDef } from '@/common/components/editable-table'
 import type { TabelProvodka } from '@/common/models/tabel'
 
 import { EditableTable, type EditableTableProps } from '@/common/components/editable-table'
-import { createNumberEditor } from '@/common/components/editable-table/editors'
-import { createMainZarplataEditor } from '@/common/components/editable-table/editors/main-zarplata'
+import { createNumberEditor, createTextEditor } from '@/common/components/editable-table/editors'
 
-export const columnDefs: EditableColumnDef<TabelProvodka>[] = [
+export const TabelEditableColumnDefs: EditableColumnDef<TabelProvodka>[] = [
   {
-    key: 'mainZarplataId',
+    key: 'mainZarplataName',
     header: 'employee',
-    width: 400,
-    Editor: createMainZarplataEditor({
-      withDoljnostName: true
+    minWidth: 230,
+    Editor: createTextEditor({
+      key: 'mainZarplataName'
+    })
+  },
+  {
+    key: 'dojlnostName',
+    header: 'doljnost',
+    minWidth: 230,
+    Editor: createTextEditor({
+      key: 'dojlnostName'
     })
   },
   {
@@ -59,16 +66,13 @@ export const columnDefs: EditableColumnDef<TabelProvodka>[] = [
   }
 ]
 
-export const TabelProvodkaEditableTable = ({
-  rowIndex,
-  ...props
-}: Omit<EditableTableProps<TabelDetailsFormValues, 'values'>, 'columnDefs' | 'name'> & {
-  rowIndex: number
-}) => {
+export const TabelProvodkaEditableTable = (
+  props: Omit<EditableTableProps<TabelDetailsFormValues, 'children'>, 'columnDefs' | 'name'>
+) => {
   return (
     <EditableTable
-      columnDefs={columnDefs as any}
-      name={`values.${rowIndex}.children` as any}
+      columnDefs={TabelEditableColumnDefs as any}
+      name="children"
       {...props}
     />
   )

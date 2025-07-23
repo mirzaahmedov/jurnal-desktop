@@ -52,7 +52,8 @@ export const EditableTable = <T extends object, F extends ArrayPath<NoInfer<T>>>
     validate,
     getEditorProps,
     getRowClassName,
-    methods
+    methods,
+    isRowVisible = () => true
   } = props
 
   const headerRef = useRef<HTMLTableSectionElement>(null)
@@ -252,26 +253,28 @@ export const EditableTable = <T extends object, F extends ArrayPath<NoInfer<T>>>
         </TableHeader>
         <TableBody>
           {Array.isArray(fields) && fields.length ? (
-            fields.map((field, index) => (
-              <EditableTableRowRenderer
-                key={field.id}
-                fieldId={field.id}
-                index={index}
-                tabIndex={tabIndex}
-                row={field as any}
-                rows={fields as any}
-                name={name}
-                form={form}
-                columnDefs={columnDefs}
-                errors={errors}
-                onCellDoubleClick={onCellDoubleClick}
-                params={params}
-                validate={validate}
-                getEditorProps={getEditorProps}
-                getRowClassName={getRowClassName}
-                actions={actions}
-              />
-            ))
+            fields.map((field, index) =>
+              isRowVisible({ row: field, index, rows: fields }) ? (
+                <EditableTableRowRenderer
+                  key={field.id}
+                  fieldId={field.id}
+                  index={index}
+                  tabIndex={tabIndex}
+                  row={field as any}
+                  rows={fields as any}
+                  name={name}
+                  form={form}
+                  columnDefs={columnDefs}
+                  errors={errors}
+                  onCellDoubleClick={onCellDoubleClick}
+                  params={params}
+                  validate={validate}
+                  getEditorProps={getEditorProps}
+                  getRowClassName={getRowClassName}
+                  actions={actions}
+                />
+              ) : null
+            )
           ) : (
             <EditableTableRow>
               <EditableTableCell

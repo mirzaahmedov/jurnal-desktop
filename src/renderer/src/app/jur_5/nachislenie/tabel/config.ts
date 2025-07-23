@@ -3,7 +3,10 @@ import { z } from 'zod'
 import { formatDate } from '@/common/lib/date'
 
 export const TabelProvodkaFormSchema = z.object({
+  vacantId: z.number(),
   mainZarplataId: z.number(),
+  mainZarplataName: z.string().optional(),
+  dojlnostName: z.string().optional(),
   rabDni: z.number().optional(),
   otrabDni: z.number().optional(),
   noch: z.number().optional(),
