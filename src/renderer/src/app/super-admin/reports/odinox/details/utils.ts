@@ -17,7 +17,7 @@ import {
 
 export interface OdinoxMeta {
   title: string
-  summa: number
+  title_summa: number
   summa_from: number
   summa_to: number
 }
@@ -37,7 +37,7 @@ export const transformGetByIdData = (types: OdinoxProvodka[], meta: OdinoxMeta) 
       id: -1,
       summa:
         type.type_name === OdinoxTypeName.BankPrixod
-          ? meta.summa
+          ? meta.title_summa
           : type.type_name === OdinoxTypeName.Saldo
             ? meta.summa_from
             : 0,

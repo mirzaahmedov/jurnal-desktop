@@ -32,11 +32,17 @@ export interface OdinoxDocumentsTrackerProps extends Omit<DialogTriggerProps, 'c
   onClose: VoidFunction
 }
 
-const isSmetaGrafik = (_values: unknown, sort_order: number): _values is OdinoxGrafik[] => {
+const isSmetaGrafik = (
+  _values: unknown,
+  sort_order?: number | string
+): _values is OdinoxGrafik[] => {
   return sort_order === 0 || sort_order === 5
 }
 
-const isRemaining = (_values: unknown, sort_order: number): _values is OdinoxRemaining[] => {
+const isRemaining = (
+  _values: unknown,
+  sort_order?: number | string
+): _values is OdinoxRemaining[] => {
   return sort_order === 4 || sort_order === 9
 }
 
@@ -48,7 +54,7 @@ export const OdinoxDocumentsTracker = ({ args, docs, onClose }: OdinoxDocumentsT
     >
       <DialogOverlay>
         <DialogContent className="w-full max-w-[1800px] h-full max-h-[900px] flex flex-col p-0 gap-0 overflow-hidden">
-          <div className="w-full h-full flex flex-col">
+          <div className="w-full h-full flex flex-col overflow-hidden">
             <DialogHeader className="p-5">
               <DialogTitle>
                 <Trans ns="app">
@@ -56,14 +62,19 @@ export const OdinoxDocumentsTracker = ({ args, docs, onClose }: OdinoxDocumentsT
                     ? null
                     : args?.sort_order === 0 || args?.sort_order === 5
                       ? 'pages.smeta_grafik'
-                      : (args?.sort_order > 0 && args?.sort_order < 4) ||
-                          (args?.sort_order > 6 && args?.sort_order < 10)
+                      : (typeof args.sort_order !== 'string' &&
+                            args?.sort_order > 0 &&
+                            args?.sort_order < 4) ||
+                          (typeof args.sort_order !== 'string' &&
+                            args?.sort_order > 6 &&
+                            args?.sort_order < 10) ||
+                          args.sort_order === ''
                         ? 'documents'
                         : 'remainder'}
                 </Trans>
               </DialogTitle>
             </DialogHeader>
-            <div className="w-full max-w-[1800px] flex-1 overflow-auto scrollbar">
+            <div className="w-full max-w-[1800px] flex-1 min-h-0 overflow-auto scrollbar">
               {!args ? null : isSmetaGrafik(docs, args?.sort_order) ? (
                 (docs.map((row) => row.smeta_grafik).filter((v) => !!v) ?? []).length === 0 ? (
                   <div className="flex flex-col items-center justify-center py-10 px-10">
@@ -91,10 +102,10 @@ export const OdinoxDocumentsTracker = ({ args, docs, onClose }: OdinoxDocumentsT
                       .map(
                         (row) =>
                           ({
-                            allocated_funds: formatNumber(row.grafik_data.summa),
+                            allocated_funds: formatNumber(row.grafik_data?.summa ?? 0),
                             funds_paid_by_ministry: '-',
                             kassa_rasxod_bank_rasxod: '-',
-                            real_expenses: formatNumber(row.jur1_jur2_rasxod_data?.summa),
+                            real_expenses: formatNumber(row.jur1_jur2_rasxod_data?.summa ?? 0),
                             remainder: formatNumber(row.summa)
                           }) satisfies RemainingRow
                       )
@@ -126,7 +137,7 @@ const getCommonColumns = (highlightedMonths: number[]) => {
         key: `oy_${i + 1}`,
         header: getMonthName(i + 1),
         className: highlightedMonths.includes(i + 1)
-          ? 'bg-brand/60 border-r-brand/80 text-white'
+          ? 'bg-brand/60 border-r-brand/50 text-white'
           : '',
         minWidth: 100,
         numeric: true
@@ -206,10 +217,15 @@ interface RemainingRow {
 }
 export const RemainingColumns: ColumnDef<RemainingRow>[] = [
   {
+    key: 'saldo',
+    header: 'saldo_for_month',
+    minWidth: 200
+  },
+  {
     key: 'allocated_funds',
     header: <Trans>allocated_funds</Trans>,
     minWidth: 200,
-    className: 'bg-brand/60 border-r-brand/80 text-white'
+    className: 'bg-brand/60 border-r-brand/50 text-white'
   },
   {
     key: 'funds_paid_by_ministry',
@@ -229,12 +245,12 @@ export const RemainingColumns: ColumnDef<RemainingRow>[] = [
     key: 'real_expenses',
     header: <Trans>real_expenses</Trans>,
     minWidth: 200,
-    className: 'bg-brand/60 border-r-brand/80 text-white'
+    className: 'bg-brand/60 border-r-brand/50 text-white'
   },
   {
     key: 'remainder',
     header: <Trans>remainder</Trans>,
     minWidth: 200,
-    className: 'bg-brand/60 border-r-brand/80 text-white'
+    className: 'bg-brand/60 border-r-brand/50 text-white'
   }
 ]

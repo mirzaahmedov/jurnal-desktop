@@ -34,6 +34,10 @@ export type OdinoxPayloadChild = Omit<OdinoxAutoFillSubChild, 'id' | 'smeta_graf
 export interface OdinoxPayload {
   month: number
   year: number
+  title: string
+  title_summa: number
+  summa_from: number
+  summa_to: number
   childs: Array<{
     type_id: number
     sub_childs: Array<OdinoxPayloadChild>
@@ -41,11 +45,12 @@ export interface OdinoxPayload {
 }
 export interface GetDocsArgs {
   need_data: OdinoxProvodka[]
-  smeta_id: number
+  smeta_id: number | string
   main_schet_id: number
   month: number
   year: number
-  sort_order: number
+  sort_order: number | string
+  title?: boolean
 }
 
 class OdinoxServiceBuilder extends CRUDService<Odinox, OdinoxPayload, OdinoxPayload, OdinoxMeta> {

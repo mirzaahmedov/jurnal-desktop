@@ -85,7 +85,7 @@ const AdminOdinoxDetailsPage = () => {
           odinox.data.childs,
           odinox.meta ?? {
             title: '',
-            summa: 0,
+            title_summa: 0,
             summa_from: 0,
             summa_to: 0
           }

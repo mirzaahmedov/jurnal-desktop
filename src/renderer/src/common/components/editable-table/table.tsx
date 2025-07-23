@@ -2,8 +2,10 @@ import type { EditableTableProps } from './interface'
 import type { ArrayPath, FieldArrayWithId, Path } from 'react-hook-form'
 
 import {
+  type CSSProperties,
   type HTMLAttributes,
   type ReactNode,
+  useEffect,
   useImperativeHandle,
   useMemo,
   useRef,
@@ -53,8 +55,11 @@ export const EditableTable = <T extends object, F extends ArrayPath<NoInfer<T>>>
     methods
   } = props
 
+  const headerRef = useRef<HTMLTableSectionElement>(null)
   const innerRef = useRef<HTMLTableElement>(null)
   const ref = tableRef || innerRef
+
+  const [headerHeight, setHeaderHeight] = useState(0)
 
   const { t } = useTranslation()
 
@@ -64,6 +69,24 @@ export const EditableTable = <T extends object, F extends ArrayPath<NoInfer<T>>>
   })
   const fields = fieldArray.fields
 
+  useEffect(() => {
+    const element = headerRef.current
+    if (!element) return
+
+    setHeaderHeight(element.offsetHeight)
+
+    const observer = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        if (entry.target === element) {
+          setHeaderHeight(entry.contentRect.height)
+        }
+      }
+    })
+
+    observer.observe(element)
+
+    return () => observer.disconnect()
+  }, [])
   useImperativeHandle(
     methods,
     () => ({
@@ -153,13 +176,21 @@ export const EditableTable = <T extends object, F extends ArrayPath<NoInfer<T>>>
           block: 'nearest'
         })
       }}
+      style={
+        {
+          '--editable-table-header-height': `${headerHeight}px`
+        } as CSSProperties
+      }
       className={cn('relative', divProps?.className)}
     >
       <Table
         ref={ref}
         className={cn('border border-slate-200', className)}
       >
-        <TableHeader className="sticky top-0 z-100 shadow-sm">
+        <TableHeader
+          ref={headerRef}
+          className="sticky top-0 z-100 shadow-sm"
+        >
           {Array.isArray(columnDefs)
             ? headerGroups.map((headerGroup, index) => (
                 <EditableTableRow key={index}>

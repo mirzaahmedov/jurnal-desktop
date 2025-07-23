@@ -1,4 +1,4 @@
-import type { EditableTableMethods } from '@/common/components/editable-table'
+import type { CellEventHandler, EditableTableMethods } from '@/common/components/editable-table'
 import type { OdinoxDocument } from '@/common/models'
 
 import { type KeyboardEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react'
@@ -20,7 +20,7 @@ import { DetailsView } from '@/common/views'
 
 import { OdinoxQueryKeys } from '../config'
 import { type GetDocsArgs, OdinoxService } from '../service'
-import { defaultValues } from './config'
+import { type OdinoxFormValues, defaultValues } from './config'
 import { OdinoxDocumentsTracker } from './documents-tracker'
 import { OdinoxTable } from './odinox-table'
 import { OdinoxProvodkaColumns } from './provodki'
@@ -81,17 +81,20 @@ const OdinoxDetailsPage = () => {
     mutationFn: OdinoxService.getAutofillData,
     onSuccess: (res) => {
       form.setValue('childs', res.data ?? [])
+      form.setValue('title', res?.meta?.title ?? '')
+      form.setValue('title_summa', res?.meta?.title_summa ?? 0)
+      form.setValue('summa_from', res?.meta?.summa_from ?? 0)
+      form.setValue('summa_to', res?.meta?.summa_to ?? 0)
       form.setValue(
         'rows',
         transformOdinoxAutoFillData(
           res.data ?? [],
-          res?.meta ??
-            ({
-              summa: 0,
-              title: '',
-              summa_from: 0,
-              summa_to: 0
-            } as any)
+          res?.meta ?? {
+            title_summa: 0,
+            title: '',
+            summa_from: 0,
+            summa_to: 0
+          }
         )
       )
     },
@@ -150,7 +153,7 @@ const OdinoxDetailsPage = () => {
         rows: transformGetByIdData(
           odinox.data.childs,
           odinox?.meta ?? {
-            summa: 0,
+            title_summa: 0,
             title: '',
             summa_from: 0,
             summa_to: 0
@@ -193,6 +196,10 @@ const OdinoxDetailsPage = () => {
       createOdinox({
         month: values.month,
         year: values.year,
+        title: values.title,
+        title_summa: values.title_summa,
+        summa_from: values.summa_from,
+        summa_to: values.summa_to,
         childs: values.childs
       })
     } else {
@@ -200,6 +207,10 @@ const OdinoxDetailsPage = () => {
         id: Number(id),
         month: values.month,
         year: values.year,
+        title: values.title,
+        title_summa: values.title_summa,
+        summa_from: values.summa_from,
+        summa_to: values.summa_to,
         childs: values.childs
       })
     }
@@ -221,9 +232,21 @@ const OdinoxDetailsPage = () => {
     }
   }
 
-  const handleCellDoubleClick = useCallback(
-    ({ row, column }) => {
+  const handleCellDoubleClick = useCallback<CellEventHandler<OdinoxFormValues, 'rows'>>(
+    ({ row, column, index }) => {
       const type = types?.data?.find((type) => type.name === column.key)
+      if (index === 0) {
+        getDocs({
+          title: true,
+          sort_order: '',
+          smeta_id: '',
+          month: form.getValues('month'),
+          year: form.getValues('year'),
+          need_data: [],
+          main_schet_id: main_schet_id!
+        })
+        return
+      }
       if (!type) {
         return
       }
