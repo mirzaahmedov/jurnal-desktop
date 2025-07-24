@@ -1,14 +1,15 @@
 import type { ColumnDef } from '@/common/components'
 import type { MainZarplata } from '@/common/models'
 
-import { IDCell } from '@/common/components/table/renderers/id'
+import { SelectCell } from '@/common/components/table/renderers/select'
 
 export const MainZarplataColumnDefs: ColumnDef<MainZarplata>[] = [
   {
     key: 'id',
-    width: 160,
-    minWidth: 160,
-    renderCell: IDCell
+    header: ' ',
+    width: 44,
+    minWidth: 44,
+    renderCell: SelectCell
   },
   {
     key: 'kartochka',

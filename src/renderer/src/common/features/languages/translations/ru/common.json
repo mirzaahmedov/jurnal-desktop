@@ -498,5 +498,6 @@
   "select_all": "Выбрать все",
   "deselect_all": "Снять выделение со всех",
   "saldo_for_month": "Сальдо на начало месяц",
-  "change_payment": "Изменить тип платежа"
+  "change_payment": "Изменить тип платежа",
+  "hide_empty_rows": "Скрыть пустые строки"
 }

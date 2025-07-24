@@ -32,7 +32,7 @@ import { useSelectedMonthStore } from '@/common/features/selected-month'
 import { useSpravochnik } from '@/common/features/spravochnik'
 import { useKeyUp, usePagination, useToggle } from '@/common/hooks'
 import { useLayout } from '@/common/layout'
-import { ISODateRegex, formatDate, parseDate, validateDate } from '@/common/lib/date'
+import { ISO_DATE_REGEX, formatDate, parseDate, validateDate } from '@/common/lib/date'
 import { formatLocaleDate, formatNumber } from '@/common/lib/format'
 import { capitalize } from '@/common/lib/string'
 import { ListView } from '@/common/views'
@@ -348,7 +348,7 @@ const MaterialWarehouseSaldoPage = () => {
                 }}
                 validate={(date) => {
                   if (!validateDate(date)) {
-                    if (ISODateRegex.test(date)) {
+                    if (ISO_DATE_REGEX.test(date)) {
                       toast.error(t('date_does_not_exist'))
                     }
                     return false

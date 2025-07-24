@@ -8,13 +8,11 @@ const NachisleniePage = () => {
   const [tabValue] = useNachislenieTab()
 
   return (
-    <div className="flex-1 min-h-0 p-5">
-      <div className="border rounded-lg flex-1 h-full overflow-hidden">
-        {tabValue === NachislenieTabOptions.Tabel ? <TabelsView /> : null}
-        {tabValue === NachislenieTabOptions.Nachislenie ? <Nachislenies /> : null}
-        {tabValue === NachislenieTabOptions.Reports ? <Reports /> : null}
-        {tabValue === NachislenieTabOptions.Vedemost ? <Vedemosts /> : null}
-      </div>
+    <div className="flex-1 overflow-hidden">
+      {tabValue === NachislenieTabOptions.Tabel ? <TabelsView /> : null}
+      {tabValue === NachislenieTabOptions.Nachislenie ? <Nachislenies /> : null}
+      {tabValue === NachislenieTabOptions.Reports ? <Reports /> : null}
+      {tabValue === NachislenieTabOptions.Vedemost ? <Vedemosts /> : null}
     </div>
   )
 }

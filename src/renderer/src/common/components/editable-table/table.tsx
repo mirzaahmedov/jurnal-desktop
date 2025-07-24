@@ -48,12 +48,12 @@ export const EditableTable = <T extends object, F extends ArrayPath<NoInfer<T>>>
     onDelete,
     onDuplicate,
     onCellDoubleClick,
-    params = {},
     validate,
     getEditorProps,
     getRowClassName,
-    methods,
-    isRowVisible = () => true
+    isRowVisible = () => true,
+    params = {},
+    methods
   } = props
 
   const headerRef = useRef<HTMLTableSectionElement>(null)

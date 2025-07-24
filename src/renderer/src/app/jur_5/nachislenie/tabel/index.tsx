@@ -4,13 +4,11 @@ import { useEffect, useState } from 'react'
 
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { Allotment } from 'allotment'
-import { PlusIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 
 import { TabelService } from '@/app/jur_5/nachislenie/tabel/service'
 import { GenericTable, LoadingOverlay } from '@/common/components'
-import { Button } from '@/common/components/jolly/button'
 import { useConfirm } from '@/common/features/confirm'
 import { useRequisitesStore } from '@/common/features/requisites'
 import { useRequisitesRedirect } from '@/common/features/requisites/use-main-schet-redirect'
@@ -100,24 +98,16 @@ export const TabelsView = () => {
         minSize={200}
         className="w-full bg-gray-50"
       >
-        <VacantTree
-          nodes={treeNodes}
-          selectedIds={selectedVacant ? [selectedVacant.id] : []}
-          onSelectNode={setSelectedVacant}
-        />
+        <div className="h-full overflow-y-auto scrollbar">
+          <VacantTree
+            nodes={treeNodes}
+            selectedIds={selectedVacant ? [selectedVacant.id] : []}
+            onSelectNode={setSelectedVacant}
+          />
+        </div>
       </Allotment.Pane>
       <Allotment.Pane className="relative w-full overflow-auto scrollbar pl-px">
         <div className="relative w-full overflow-auto scrollbar pl-px">
-          <div className="px-5 py-2.5 border-b text-end">
-            {budjet_id && main_schet_id ? (
-              <Button
-                IconStart={PlusIcon}
-                onClick={createToggle.open}
-              >
-                {t('add')}
-              </Button>
-            ) : null}
-          </div>
           {vacantsQuery.isFetching || isFetchingTabels || isDeleting ? <LoadingOverlay /> : null}
           <GenericTable
             data={tabels ?? []}

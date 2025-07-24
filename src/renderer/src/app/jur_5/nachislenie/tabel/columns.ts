@@ -1,29 +1,25 @@
 import type { ColumnDef } from '@/common/components'
 import type { Tabel } from '@/common/models/tabel'
 
-import { IDCell } from '@/common/components/table/renderers/id'
-
 export const TabelColumnDefs: ColumnDef<Tabel>[] = [
   {
-    key: 'id',
-    width: 160,
-    minWidth: 160,
-    renderCell: IDCell
-  },
-  {
     key: 'docNum',
-    header: 'doc_num'
+    header: 'doc_num',
+    width: 200
   },
   {
     key: 'docDate',
-    header: 'doc_date'
+    header: 'doc_date',
+    width: 200
   },
   {
     key: 'tabelYear',
-    header: 'year'
+    header: 'year',
+    width: 200
   },
   {
     key: 'tabelMonth',
-    header: 'month'
+    header: 'month',
+    width: 200
   }
 ]

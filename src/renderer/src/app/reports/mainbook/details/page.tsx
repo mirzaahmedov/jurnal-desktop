@@ -21,6 +21,7 @@ import {
 import { useSelectedMonthStore } from '@/common/features/selected-month'
 import { useLayout } from '@/common/layout'
 import { formatDate } from '@/common/lib/date'
+import { roundNumberToTwoDecimalPlaces } from '@/common/lib/utils'
 import { DetailsView } from '@/common/views'
 
 import { MainbookQueryKeys } from '../config'
@@ -141,7 +142,8 @@ const MainbookDetailsPage = () => {
     mutationKey: [MainbookQueryKeys.getAutofill],
     mutationFn: MainbookService.getAutofillData,
     onSuccess: (res) => {
-      form.setValue('childs', transformMainbookAutoFillData(res.data ?? []))
+      const childs = transformMainbookAutoFillData(res.data ?? [])
+      form.setValue('childs', childs)
       setEditable(false)
     },
     onError: () => {
@@ -189,10 +191,11 @@ const MainbookDetailsPage = () => {
       return
     }
     if (mainbook?.data) {
+      const childs = transformGetByIdData(mainbook.data.childs)
       form.reset({
         month: mainbook.data.month,
         year: mainbook.data.year,
-        childs: transformGetByIdData(mainbook.data.childs)
+        childs
       })
       if (mainbook?.data?.first) {
         setEditable(true)
@@ -292,11 +295,17 @@ const MainbookDetailsPage = () => {
     })
 
     const itogoRow = rows[rows.length - 1]
-    if (itogoRow?.['10_prixod'] !== itogoPrixod) {
-      form.setValue(`childs.${rows.length - 1}.10_prixod` as any, itogoPrixod)
+    if (itogoRow?.['10_prixod'] !== roundNumberToTwoDecimalPlaces(itogoPrixod)) {
+      form.setValue(
+        `childs.${rows.length - 1}.10_prixod` as any,
+        roundNumberToTwoDecimalPlaces(itogoPrixod)
+      )
     }
-    if (itogoRow?.['10_rasxod'] !== itogoRasxod) {
-      form.setValue(`childs.${rows.length - 1}.10_rasxod` as any, itogoRasxod)
+    if (itogoRow?.['10_rasxod'] !== roundNumberToTwoDecimalPlaces(itogoRasxod)) {
+      form.setValue(
+        `childs.${rows.length - 1}.10_rasxod` as any,
+        roundNumberToTwoDecimalPlaces(itogoRasxod)
+      )
     }
   }, [rows, form, isEditable, t])
 

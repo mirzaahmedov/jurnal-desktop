@@ -2,13 +2,13 @@ import { t } from 'i18next'
 import { toast } from 'react-toastify'
 
 import { useSelectedMonthStore } from '@/common/features/selected-month'
-import { ISODateRegex, formatDate, parseDate, validateDate } from '@/common/lib/date'
+import { ISO_DATE_REGEX, formatDate, parseDate, validateDate } from '@/common/lib/date'
 import { formatLocaleDate } from '@/common/lib/format'
 
 export const validateDateWithinSelectedMonth = (date: string) => {
   const { startDate, endDate } = useSelectedMonthStore.getState()
   if (!validateDate(date)) {
-    if (ISODateRegex.test(date)) {
+    if (ISO_DATE_REGEX.test(date)) {
       toast.error(t('date_does_not_exist'))
     }
     return false

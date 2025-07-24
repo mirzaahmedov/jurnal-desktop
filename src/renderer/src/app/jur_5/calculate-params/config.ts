@@ -1,5 +1,7 @@
 import { z } from 'zod'
 
+import { getWorkdaysInMonth } from '@/common/lib/date'
+
 export const CalculateParamsFormSchema = z.object({
   month: z.number(),
   year: z.number(),
@@ -25,18 +27,22 @@ export const CalculateParamsFormSchema = z.object({
 })
 export type CalculateParamsFormValues = z.infer<typeof CalculateParamsFormSchema>
 
+const today = new Date()
+const year = today.getFullYear()
+const month = today.getMonth() + 1
+
 export const defaultValues: CalculateParamsFormValues = {
-  month: 0,
-  year: 0,
+  month,
+  year,
   minZar: 0,
   mZpGod: 0,
   neobMin: 0,
-  dni5: 0,
-  chasi5: 0,
-  dni6: 0,
-  chasi6: 0,
-  dni7: 0,
-  chasi7: 0,
+  dni5: getWorkdaysInMonth(year, month, 5).workdays,
+  chasi5: getWorkdaysInMonth(year, month, 5).workhours,
+  dni6: getWorkdaysInMonth(year, month, 6).workdays,
+  chasi6: getWorkdaysInMonth(year, month, 6).workhours,
+  dni7: getWorkdaysInMonth(year, month, 7).workdays,
+  chasi7: getWorkdaysInMonth(year, month, 7).workhours,
   vrach: 0,
   medSes: 0,
   zaProezd: 0,

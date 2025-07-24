@@ -33,8 +33,8 @@ export const PayrollPayments = ({ mainZarplata }: PayrollPaymentsProps) => {
   const queryClient = useQueryClient()
 
   const { data: payments, isFetching: isFetchingPayments } = useQuery({
-    queryKey: [PayrollPaymentService.QueryKeys.GetByMainZarplataId, mainZarplata.id],
-    queryFn: PayrollPaymentService.getByMainZarplataId
+    queryKey: [PayrollPaymentService.QueryKeys.GetAll, mainZarplata.id],
+    queryFn: PayrollPaymentService.getAll
   })
 
   const { mutateAsync: createPayment, isPending: isCreatingPayment } = useMutation({
@@ -42,7 +42,7 @@ export const PayrollPayments = ({ mainZarplata }: PayrollPaymentsProps) => {
     onSuccess: () => {
       toast.success(t('create_success'))
       queryClient.invalidateQueries({
-        queryKey: [PayrollPaymentService.QueryKeys.GetByMainZarplataId]
+        queryKey: [PayrollPaymentService.QueryKeys.GetAll]
       })
       dialogToggle.close()
     },
@@ -55,7 +55,7 @@ export const PayrollPayments = ({ mainZarplata }: PayrollPaymentsProps) => {
     onSuccess: () => {
       toast.success(t('update_success'))
       queryClient.invalidateQueries({
-        queryKey: [PayrollPaymentService.QueryKeys.GetByMainZarplataId]
+        queryKey: [PayrollPaymentService.QueryKeys.GetAll]
       })
       dialogToggle.close()
     },
@@ -68,7 +68,7 @@ export const PayrollPayments = ({ mainZarplata }: PayrollPaymentsProps) => {
     onSuccess: () => {
       toast.success(t('delete_success'))
       queryClient.invalidateQueries({
-        queryKey: [PayrollPaymentService.QueryKeys.GetByMainZarplataId]
+        queryKey: [PayrollPaymentService.QueryKeys.GetAll]
       })
     },
     onError: () => {

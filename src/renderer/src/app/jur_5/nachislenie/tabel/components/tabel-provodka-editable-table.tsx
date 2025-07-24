@@ -7,19 +7,20 @@ import { createNumberEditor, createTextEditor } from '@/common/components/editab
 
 export const TabelEditableColumnDefs: EditableColumnDef<TabelProvodka>[] = [
   {
-    key: 'mainZarplataName',
+    key: 'fio',
     header: 'employee',
     minWidth: 230,
     Editor: createTextEditor({
-      key: 'mainZarplataName'
+      key: 'mainZarplataName',
+      readOnly: true
     })
   },
   {
-    key: 'dojlnostName',
-    header: 'doljnost',
+    key: 'doljnost',
     minWidth: 230,
     Editor: createTextEditor({
-      key: 'dojlnostName'
+      key: 'doljnost',
+      readOnly: true
     })
   },
   {

@@ -24,7 +24,7 @@ import {
   validateDateWithinSelectedMonth
 } from '@/common/features/selected-month'
 import { useSpravochnik } from '@/common/features/spravochnik'
-import { formatDate, getDaysCount, parseDate, withinMonth } from '@/common/lib/date'
+import { formatDate, getWorkdaysInPeriod, parseDate, withinMonth } from '@/common/lib/date'
 import { formatNumber } from '@/common/lib/format'
 import { TypeSchetOperatsii } from '@/common/models'
 import { DetailsView } from '@/common/views'
@@ -164,10 +164,8 @@ export const WorkTripDetails = ({ id }: WorkTripDetailsProps) => {
   const minimumWageSumma = minimumWage?.data?.summa ?? 0
   const daysCount =
     form.watch('from_date') && form.watch('to_date')
-      ? getDaysCount({
-          startDate: parseDate(form.watch('from_date')),
-          endDate: parseDate(form.watch('to_date'))
-        })
+      ? getWorkdaysInPeriod(parseDate(form.watch('from_date')), parseDate(form.watch('to_date')))
+          .totalDays
       : 0
 
   useEffect(() => {

@@ -1,5 +1,6 @@
-export const DateRegex = /^\d{1,2}.\d{1,2}.\d{4}$/
-export const ISODateRegex = /^\d{4}-\d{1,2}-\d{1,2}$/
+export const DATE_REGEX = /^\d{1,2}.\d{1,2}.\d{4}$/
+export const ISO_DATE_REGEX = /^\d{4}-\d{1,2}-\d{1,2}$/
+export const WORKHOURS_PER_DAY = 8
 
 export const getFirstDayOfMonth = (date: Date = new Date()) => {
   return new Date(date.getFullYear(), date.getMonth(), 1)
@@ -53,7 +54,7 @@ export const validateLocaleDate = (formatted: string): boolean => {
   const [day, month, year] = parts
 
   return (
-    DateRegex.test(formatted) &&
+    DATE_REGEX.test(formatted) &&
     !isNaN(date.getTime()) &&
     date.getDate() === day &&
     date.getMonth() + 1 === month &&
@@ -62,7 +63,7 @@ export const validateLocaleDate = (formatted: string): boolean => {
 }
 
 export const validateDate = (dateString: string): boolean => {
-  if (!dateString || !ISODateRegex.test(dateString)) {
+  if (!dateString || !ISO_DATE_REGEX.test(dateString)) {
     return false
   }
 
@@ -118,28 +119,12 @@ export enum Weekday {
   Saturday = 6
 }
 
-export interface GetDaysCountArgs {
-  startDate: Date
-  endDate: Date
-  excludedDays?: Weekday[]
+export interface DateDiff {
+  years: number
+  months: number
+  days: number
 }
-export const getDaysCount = ({ startDate, endDate, excludedDays = [] }: GetDaysCountArgs) => {
-  let count = 0
-
-  const current = new Date(startDate)
-
-  while (current <= endDate) {
-    const day = current.getDay()
-    if (!excludedDays.includes(day)) {
-      count++
-    }
-    current.setDate(current.getDate() + 1)
-  }
-
-  return count
-}
-
-export const calculateDateDifference = (startDate: Date, endDate: Date) => {
+export const getDateDifference = (startDate: Date, endDate: Date): DateDiff => {
   if (!(startDate instanceof Date)) startDate = new Date(startDate)
   if (!(endDate instanceof Date)) endDate = new Date(endDate)
 
@@ -158,5 +143,78 @@ export const calculateDateDifference = (startDate: Date, endDate: Date) => {
     months += 12
   }
 
-  return { years, months, days }
+  return {
+    years,
+    months,
+    days
+  }
+}
+
+export interface WorkStats {
+  totalDays: number
+  workdays: number
+  workhours: number
+  weekends: number
+}
+
+export const getWorkdaysInPeriod = (
+  startDate: Date,
+  endDate: Date,
+  workWeek: number = 5
+): WorkStats => {
+  const totalDays = Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)) + 1
+  let workdays = 0
+
+  for (let i = 0; i < totalDays; i++) {
+    const currentDate = new Date(
+      startDate.getFullYear(),
+      startDate.getMonth(),
+      startDate.getDate() + i
+    )
+    const dayOfWeek = currentDate.getDay()
+
+    if (
+      (workWeek === 5 && dayOfWeek !== Weekday.Sunday && dayOfWeek !== Weekday.Saturday) ||
+      (workWeek === 6 && dayOfWeek !== Weekday.Sunday) ||
+      workWeek === 7
+    ) {
+      workdays++
+    }
+  }
+
+  return {
+    totalDays,
+    workdays,
+    workhours: workdays * WORKHOURS_PER_DAY,
+    weekends: totalDays - workdays
+  }
+}
+
+export const getWorkdaysInMonth = (
+  year: number,
+  month: number,
+  workWeek: number = 5
+): WorkStats => {
+  const totalDays = new Date(year, month, 0).getDate()
+  let workdays = 0
+
+  for (let day = 1; day <= totalDays; day++) {
+    const date = new Date(year, month - 1, day)
+    const dayOfWeek = date.getDay()
+
+    if (
+      (workWeek === 5 && dayOfWeek !== 0 && dayOfWeek !== 6) ||
+      (workWeek === 6 && dayOfWeek !== 0) ||
+      workWeek === 7
+    ) {
+      workdays++
+    }
+  }
+
+  return {
+    totalDays,
+    workdays,
+    workhours: workdays * WORKHOURS_PER_DAY,
+    weekends: totalDays - workdays
+  }
 }

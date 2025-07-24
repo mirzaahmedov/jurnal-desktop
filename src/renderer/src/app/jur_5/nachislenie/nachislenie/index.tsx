@@ -95,12 +95,14 @@ export const Nachislenies = () => {
         minSize={200}
         className="w-full bg-gray-50"
       >
-        {vacantsQuery.isFetching ? <LoadingOverlay /> : null}
-        <VacantTree
-          nodes={treeNodes}
-          onSelectNode={setSelectedVacant}
-          selectedIds={selectedVacant ? [selectedVacant.id] : []}
-        />
+        <div className="h-full overflow-y-auto scrollbar">
+          {vacantsQuery.isFetching ? <LoadingOverlay /> : null}
+          <VacantTree
+            nodes={treeNodes}
+            onSelectNode={setSelectedVacant}
+            selectedIds={selectedVacant ? [selectedVacant.id] : []}
+          />
+        </div>
       </Allotment.Pane>
       <Allotment.Pane>
         <div className="h-full flex flex-col overflow-hidden pl-px">

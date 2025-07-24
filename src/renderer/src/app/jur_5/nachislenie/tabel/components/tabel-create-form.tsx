@@ -25,8 +25,8 @@ import { Input } from '@/common/components/ui/input'
 import { Tabs, TabsList, TabsTrigger } from '@/common/components/ui/tabs'
 import { YearSelect } from '@/common/components/year-select'
 import { parseDate } from '@/common/lib/date'
+import { getWorkdaysInMonth } from '@/common/lib/date'
 import { formatLocaleDate } from '@/common/lib/format'
-import { getWorkdaysInMonth } from '@/common/utils/zarplata'
 
 import { TabelFormSchema, type TabelFormValues, defaultValues } from '../config'
 import { TabelService } from '../service'
@@ -103,8 +103,8 @@ export const TabelCreateForm = ({
       } else {
         prev.push({
           mainZarplataId: row.id,
-          mainZarplataName: row.fio,
-          dojlnostName: row.doljnostName,
+          fio: row.fio,
+          doljnost: row.doljnostName,
           vacantId: row.vacantId,
           rabDni: getWorkdaysInMonth(
             form.getValues('tabelYear'),
@@ -155,9 +155,12 @@ export const TabelCreateForm = ({
   const handleSelectAll = useCallback(() => {
     const prev = form.getValues('tabelChildren')
     if (isAllSelected) {
+      console.log('Removing all selected rows')
       form.setValue(
         'tabelChildren',
-        prev.filter((item) => mainZarplataQuery.data?.some((row) => row.id !== item.mainZarplataId))
+        prev.filter(
+          (item) => !mainZarplataQuery.data?.find((row) => row.id === item.mainZarplataId)
+        )
       )
     } else {
       const missingChildren = mainZarplataQuery.data?.filter(
@@ -168,7 +171,13 @@ export const TabelCreateForm = ({
         ...(missingChildren ?? []).map((row) => ({
           mainZarplataId: row.id,
           vacantId: row.vacantId,
-          rabDni: 0,
+          fio: row.fio,
+          doljnost: row.doljnostName,
+          rabDni: getWorkdaysInMonth(
+            form.getValues('tabelYear'),
+            form.getValues('tabelMonth'),
+            parseInt(row.spravochnikZarplataGrafikRabotiName || '0')
+          ).workdays,
           otrabDni: 0,
           noch: 0,
           prazdnik: 0,
@@ -294,7 +303,7 @@ export const TabelCreateForm = ({
               <div className="w-full">
                 <Button
                   variant="ghost"
-                  className="flex items-center gap-2 hover:!bg-transparent"
+                  className="flex items-center h-auto py-1 px-0 gap-2 hover:!bg-transparent"
                   onClick={handleSelectAll}
                 >
                   <Checkbox isSelected={isAllSelected} />

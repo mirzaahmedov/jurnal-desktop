@@ -26,7 +26,7 @@ import { Textarea } from '@/common/components/ui/textarea'
 import { DissmisEmployee } from '@/common/features/main-zarplata/dismiss-main-zarplata-dialog'
 import { MainZarplataService } from '@/common/features/main-zarplata/service'
 import { SpravochnikInput, useSpravochnik } from '@/common/features/spravochnik'
-import { calculateDateDifference, formatDate, parseDate, parseLocaleDate } from '@/common/lib/date'
+import { formatDate, getDateDifference, parseDate, parseLocaleDate } from '@/common/lib/date'
 import { formatLocaleDate } from '@/common/lib/format'
 
 import { getVacantRayon } from '../common/utils/vacant'
@@ -297,7 +297,7 @@ export const MainZarplataForm = ({
                     {...field}
                     onChange={(dateString) => {
                       field.onChange(dateString)
-                      const { years, months, days } = calculateDateDifference(
+                      const { years, months, days } = getDateDifference(
                         parseDate(dateString),
                         new Date()
                       )

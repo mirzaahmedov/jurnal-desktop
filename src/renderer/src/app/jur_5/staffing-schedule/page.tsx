@@ -10,13 +10,13 @@ import { Edit, Plus, Trash2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 
-import { VacantTree, type VacantTreeNode } from '@/app/region-admin/vacant/vacant-tree'
 import { GenericTable, LoadingOverlay } from '@/common/components'
 import { Button } from '@/common/components/jolly/button'
 import { Pagination } from '@/common/components/pagination'
 import { useConfirm } from '@/common/features/confirm'
 import { VacantService } from '@/common/features/vacant/service'
 import { VacantDialog } from '@/common/features/vacant/ui/vacant-dialog'
+import { VacantTree, type VacantTreeNode } from '@/common/features/vacant/ui/vacant-tree'
 import { WorkplaceColumns } from '@/common/features/workplace/columns'
 import { WorkplaceService } from '@/common/features/workplace/service'
 import { WorkplaceDialog } from '@/common/features/workplace/workplace-dialog'
@@ -289,8 +289,10 @@ const StaffingTable = () => {
               <Plus className="btn-icon icon-start" /> {t('add')}
             </Button>
 
+            <div className="flex-1"></div>
+
             <Button
-              variant="outline"
+              variant="ghost"
               size="icon"
               isDisabled={!selectedVacant}
               onClick={() => {
@@ -303,12 +305,12 @@ const StaffingTable = () => {
             </Button>
 
             <Button
-              variant="destructive"
+              variant="ghost"
               isDisabled={!selectedVacant}
               size="icon"
               onClick={handleDeleteVacant}
             >
-              <Trash2 className="btn-icon" />
+              <Trash2 className="btn-icon text-destructive" />
             </Button>
           </div>
         </Allotment.Pane>

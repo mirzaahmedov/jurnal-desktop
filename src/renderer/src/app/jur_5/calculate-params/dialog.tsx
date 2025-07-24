@@ -23,7 +23,7 @@ import {
 import { MonthSelect } from '@/common/components/month-select'
 import { Form, FormField } from '@/common/components/ui/form'
 import { YearSelect } from '@/common/components/year-select'
-import { Weekday, getDaysCount, getFirstDayOfMonth, getLastDayOfMonth } from '@/common/lib/date'
+import { getWorkdaysInMonth } from '@/common/lib/date'
 
 import { CalculateParamsFormSchema, defaultValues } from './config'
 import { CalculateParamsService } from './service'
@@ -80,30 +80,12 @@ export const CalculateParamsDialog = ({ selected, ...props }: CalculateParamsDia
     const year = form.getValues('year')
     const month = form.getValues('month')
     if (year && month) {
-      const date = new Date(year, month - 1, 1)
-      const startDate = getFirstDayOfMonth(date)
-      const endDate = getLastDayOfMonth(date)
-      const days5 = getDaysCount({
-        startDate,
-        endDate,
-        excludedDays: [Weekday.Saturday, Weekday.Sunday]
-      })
-      const days6 = getDaysCount({
-        startDate,
-        endDate,
-        excludedDays: [Weekday.Sunday]
-      })
-      const days7 = getDaysCount({
-        startDate,
-        endDate
-      })
-
-      form.setValue('dni5', days5)
-      form.setValue('chasi5', days5 * 8)
-      form.setValue('dni6', days6)
-      form.setValue('chasi6', days6 * 8)
-      form.setValue('dni7', days7)
-      form.setValue('chasi7', days7 * 8)
+      form.setValue('dni5', getWorkdaysInMonth(year, month, 5).workdays)
+      form.setValue('chasi5', getWorkdaysInMonth(year, month, 5).workhours)
+      form.setValue('dni6', getWorkdaysInMonth(year, month, 6).workdays)
+      form.setValue('chasi6', getWorkdaysInMonth(year, month, 6).workhours)
+      form.setValue('dni7', getWorkdaysInMonth(year, month, 7).workdays)
+      form.setValue('chasi7', getWorkdaysInMonth(year, month, 7).workhours)
     }
   }
 

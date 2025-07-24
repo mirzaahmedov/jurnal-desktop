@@ -15,9 +15,9 @@ export class PaymentsService {
   static client = zarplataApiNew
 
   static QueryKeys = {
-    GetAll: 'payments/getAll',
-    GetById: 'payments/id/',
-    Update: 'payments/update'
+    GetAll: 'payments/GetAll',
+    GetById: 'payments/GetById',
+    Update: 'payments/Update'
   }
 
   static async getAll(

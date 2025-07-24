@@ -1,4 +1,4 @@
-import type { PayrollPaymentFormValues } from './config'
+import type { PayrollChangePaymentFormValues, PayrollPaymentFormValues } from './config'
 import type { PayrollPayment } from '@/common/models/payroll-payment'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 
@@ -8,15 +8,15 @@ export class PayrollPaymentService {
   static endpoint = 'PayrollPayment'
 
   static QueryKeys = {
-    GetByMainZarplataId: 'PayrollPayment/GetByMainZarplataId',
+    GetAll: 'PayrollPayment/GetAll',
     GetById: 'PayrollPayment/GetById',
     Create: 'PayrollPayment/Create',
     Update: 'PayrollPayment/Update',
     Delete: 'PayrollPayment/Delete'
   }
 
-  static async getByMainZarplataId(
-    ctx: QueryFunctionContext<[typeof PayrollPaymentService.QueryKeys.GetByMainZarplataId, number]>
+  static async getAll(
+    ctx: QueryFunctionContext<[typeof PayrollPaymentService.QueryKeys.GetAll, number]>
   ) {
     const mainZarplataId = ctx.queryKey[1]
     const res = await zarplataApiNew.get<ZarplataApiResponse<PayrollPayment[]>>(
@@ -44,7 +44,7 @@ export class PayrollPaymentService {
     return res.data
   }
 
-  static async changePayment(args: { isXarbiy: boolean; values: PayrollPaymentFormValues }) {
+  static async changePayment(args: { isXarbiy: boolean; values: PayrollChangePaymentFormValues }) {
     const { isXarbiy, values } = args
     const res = await zarplataApiNew.put(
       `${PayrollPaymentService.endpoint}/change-payments`,

@@ -54,7 +54,7 @@ export const TabelEditDialog = ({
       }
     ],
     queryFn: TabelService.getById,
-    enabled: !!selectedTabelId && !!selectedVacantId
+    enabled: !!selectedTabelId && !!selectedVacantId && isOpen
   })
   const { mutateAsync: updateTabelProvodka, isPending } = useMutation({
     mutationFn: TabelService.updateChild,
@@ -139,9 +139,7 @@ export const TabelEditDialog = ({
               <DialogTitle>{t('tabel')}</DialogTitle>
             </DialogHeader>
             <div className="col-span-2 overflow-y-auto scrollbar">
-              <div className="pl-10">
-                <TabelProvodkaEditableTable form={form} />
-              </div>
+              <TabelProvodkaEditableTable form={form} />
             </div>
             <div className="flex items-center justify-end px-5">
               <Button

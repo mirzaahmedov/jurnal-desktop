@@ -74,10 +74,7 @@ export const PassportInfoDialog = ({
     mutationFn: MainZarplataService.getPositionSalary,
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [
-          PayrollPaymentService.QueryKeys.GetByMainZarplataId,
-          selectedMainZarplata?.id ?? 0
-        ]
+        queryKey: [PayrollPaymentService.QueryKeys.GetAll, selectedMainZarplata?.id ?? 0]
       })
       queryClient.invalidateQueries({
         queryKey: [
