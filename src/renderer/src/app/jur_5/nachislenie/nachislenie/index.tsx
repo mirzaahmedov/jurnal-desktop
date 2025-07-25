@@ -124,12 +124,13 @@ export const Nachislenies = () => {
               onOpenChange={createToggle.setOpen}
               mainSchetId={main_schet_id}
               spravochnikBudjetNameId={budjet_id}
-              vacantId={selectedVacant?.id}
+              vacant={selectedVacant}
             />
-            {selectedNachislenie ? (
+            {selectedVacant && selectedNachislenie ? (
               <NachislenieEditDialog
                 isOpen={editToggle.isOpen}
                 onOpenChange={editToggle.setOpen}
+                vacant={selectedVacant}
                 selectedNachislenie={selectedNachislenie!}
               />
             ) : null}

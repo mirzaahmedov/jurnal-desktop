@@ -1,6 +1,6 @@
 import type { DialogTriggerProps } from 'react-aria-components'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Allotment } from 'allotment'
@@ -35,12 +35,12 @@ import { defaultValues } from '../config'
 import { NachislenieService } from '../service'
 
 export interface NachislenieCreateDialogProps extends Omit<DialogTriggerProps, 'children'> {
-  vacantId?: number
+  vacant: VacantTreeNode | undefined
   mainSchetId: number
   spravochnikBudjetNameId: number
 }
 export const NachislenieCreateDialog = ({
-  vacantId,
+  vacant,
   mainSchetId,
   spravochnikBudjetNameId,
   ...props
@@ -53,6 +53,12 @@ export const NachislenieCreateDialog = ({
 
   const queryClient = useQueryClient()
 
+  const { mutate: getMaxDocNum } = useMutation({
+    mutationFn: NachislenieService.getMaxDocNum,
+    onSuccess: (docNum) => {
+      form.setValue('docNum', docNum)
+    }
+  })
   const { data: tabels, isFetching } = useQuery({
     queryKey: [
       TabelService.QueryKeys.GetAll,
@@ -60,7 +66,7 @@ export const NachislenieCreateDialog = ({
         page: 1,
         limit: 10,
         budjetId: spravochnikBudjetNameId,
-        vacantId: vacantId ?? 0,
+        vacantId: selectedVacant?.id ?? 0,
         docNum: search ? search : undefined,
         status: false
       }
@@ -94,6 +100,14 @@ export const NachislenieCreateDialog = ({
       spravochnikBudjetNameId
     })
   })
+
+  useEffect(() => {
+    setSelectedVacant(vacant ?? null)
+  }, [vacant])
+
+  useEffect(() => {
+    getMaxDocNum()
+  }, [getMaxDocNum])
 
   return (
     <DialogTrigger {...props}>

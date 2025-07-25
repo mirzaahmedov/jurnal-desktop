@@ -1,5 +1,5 @@
 import type { NachislenieFormValues } from './config'
-import type { Nachislenie, NachislenieDetails, NachislenieSostav } from '@/common/models'
+import type { Nachislenie, NachislenieProvodka, NachislenieSostav } from '@/common/models'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 
 import { type ZarplataApiResponse, zarplataApiNew } from '@/common/lib/zarplata_new'
@@ -28,12 +28,17 @@ export class NachislenieService {
   ) {
     const id = ctx.queryKey[1]
     const params = ctx.queryKey[2] || {}
-    const res = await zarplataApiNew.get<NachislenieDetails[]>(
+    const res = await zarplataApiNew.get<NachislenieProvodka[]>(
       `${NachislenieService.endpoint}/${id}`,
       {
         params
       }
     )
+    return res.data
+  }
+
+  static async getMaxDocNum() {
+    const res = await zarplataApiNew.get<number>(`${NachislenieService.endpoint}/get-max-docNum`)
     return res.data
   }
 

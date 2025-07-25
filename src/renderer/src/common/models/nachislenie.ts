@@ -15,12 +15,7 @@ export interface Nachislenie {
   naRukiSum: number
 }
 
-export interface NachislenieDetails {
-  vacantId: number
-  vacantName: string
-  nachislenieChildren: NachislenieDetailsProvodka[]
-}
-interface NachislenieDetailsProvodka {
+export interface NachislenieProvodka {
   id: number
   mainZarplataId: number
   fio: string
