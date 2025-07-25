@@ -174,6 +174,10 @@ export const getWorkdaysInPeriod = (
     const dayOfWeek = currentDate.getDay()
 
     if (
+      (workWeek === 1 && dayOfWeek === Weekday.Monday) ||
+      (workWeek === 2 && dayOfWeek >= Weekday.Monday && dayOfWeek <= Weekday.Tuesday) ||
+      (workWeek === 3 && dayOfWeek >= Weekday.Monday && dayOfWeek <= Weekday.Wednesday) ||
+      (workWeek === 4 && dayOfWeek >= Weekday.Monday && dayOfWeek <= Weekday.Thursday) ||
       (workWeek === 5 && dayOfWeek !== Weekday.Sunday && dayOfWeek !== Weekday.Saturday) ||
       (workWeek === 6 && dayOfWeek !== Weekday.Sunday) ||
       workWeek === 7

@@ -3,7 +3,7 @@ import { useMemo } from 'react'
 import { useQuery } from '@tanstack/react-query'
 
 import { VacantService } from '@/common/features/vacant/service'
-import { arrayToTreeByRelations } from '@/common/lib/tree/relation-tree'
+import { arrayToTreeByRelations, flattenTree } from '@/common/lib/tree/relation-tree'
 
 export const useVacantTreeNodes = () => {
   const vacantsQuery = useQuery({
@@ -21,8 +21,13 @@ export const useVacantTreeNodes = () => {
     [vacantsQuery?.data]
   )
 
+  const flatNodes = useMemo(() => {
+    return flattenTree(treeNodes)
+  }, [treeNodes])
+
   return {
     treeNodes,
+    flatNodes,
     vacantsQuery
   }
 }

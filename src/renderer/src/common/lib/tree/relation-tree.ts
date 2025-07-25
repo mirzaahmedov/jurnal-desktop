@@ -55,3 +55,20 @@ export const arrayToTreeByRelations = <T extends object, I = unknown>({
 
   return root
 }
+
+export const flattenTree = <T, I>(tree: RelationTreeNode<T, I>[]): RelationTreeNode<T, I>[] => {
+  const result: RelationTreeNode<T, I>[] = []
+
+  const walk = (nodes: RelationTreeNode<T, I>[]) => {
+    for (const node of nodes) {
+      result.push(node)
+      if (node.children.length > 0) {
+        walk(node.children)
+      }
+    }
+  }
+
+  walk(tree)
+
+  return result
+}

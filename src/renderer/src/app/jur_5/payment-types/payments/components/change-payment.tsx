@@ -12,13 +12,17 @@ import { MainZarplataTable } from '@/app/jur_5/common/features/main-zarplata/mai
 import { LoadingOverlay, NumericInput } from '@/common/components'
 import { FormElement } from '@/common/components/form'
 import { Button } from '@/common/components/jolly/button'
+import { Checkbox } from '@/common/components/jolly/checkbox'
 import { Form, FormField } from '@/common/components/ui/form'
+import { Label } from '@/common/components/ui/label'
+import { RadioGroup, RadioGroupItem } from '@/common/components/ui/radio-group'
 import { Textarea } from '@/common/components/ui/textarea'
 import { MainZarplataService } from '@/common/features/main-zarplata/service'
 import { PayrollPaymentService } from '@/common/features/payroll-payment/service'
 import { useVacantTreeNodes } from '@/common/features/vacant/hooks/use-vacant-tree-nodes'
 import { VacantTree, type VacantTreeNode } from '@/common/features/vacant/ui/vacant-tree'
 import { useToggle } from '@/common/hooks'
+import { flattenTree } from '@/common/lib/tree/relation-tree'
 import { getVacantRayon } from '@/common/utils/zarplata'
 
 import { ChoosePaymentsDialog } from './choose-payments-dialog'
@@ -28,6 +32,7 @@ export const ChangePayment = () => {
 
   const form = useForm({
     defaultValues: {
+      type: 'all',
       percentage: 0,
       summa: 0,
       paymentId: 0
@@ -35,7 +40,7 @@ export const ChangePayment = () => {
   })
 
   const { t } = useTranslation(['app'])
-  const { treeNodes, vacantsQuery } = useVacantTreeNodes()
+  const { treeNodes, flatNodes, vacantsQuery } = useVacantTreeNodes()
 
   const [activeVacant, setActiveVacant] = useState<VacantTreeNode | null>(null)
   const [selectedPayment, setSelectedPayment] = useState<Payment>()
@@ -62,19 +67,9 @@ export const ChangePayment = () => {
     enabled: !!activeVacant
   })
 
-  const handleSelectNode = (node: VacantTreeNode) => {
-    setActiveVacant((prev) => (prev?.id === node.id ? null : node))
-    setSelectedVacants((prev) => {
-      if (prev.some((vacant) => vacant.id === node.id)) {
-        return prev.filter((vacant) => vacant.id !== node.id)
-      }
-      return [...prev, node]
-    })
-  }
-
   const handleSubmit = form.handleSubmit((values) => {
     changePayment({
-      isXarbiy: false,
+      isXarbiy: values.type === 'military',
       values: {
         paymentId: values.paymentId,
         payment: selectedPayment,
@@ -85,6 +80,51 @@ export const ChangePayment = () => {
     })
   })
 
+  const selectedIds = selectedVacants.map((vacant) => vacant.id)
+  const isAllSelected = flatNodes.every((vacant) =>
+    selectedVacants.some((selected) => selected.id === vacant.id)
+  )
+
+  const isTreeBranchAllSelected = (node: VacantTreeNode, selected: VacantTreeNode[]): boolean => {
+    if (!selected.find((s) => s.id === node.id)) {
+      return false
+    }
+    return node.children.every((child) => isTreeBranchAllSelected(child, selected))
+  }
+  // const isTreeBranchSelectedPartially = (
+  //   node: VacantTreeNode,
+  //   selected: VacantTreeNode[]
+  // ): boolean => {
+  //   if (selected.find((s) => s.id === node.id)) {
+  //     return true
+  //   }
+  //   return node.children.some((child) => isTreeBranchSelectedPartially(child, selected))
+  // }
+
+  const handleSelectNode = (node: VacantTreeNode) => {
+    setActiveVacant((prev) => (prev?.id === node.id ? null : node))
+    setSelectedVacants((prev) => {
+      if (isTreeBranchAllSelected(node, prev)) {
+        const flatChildNodes = flattenTree(node.children)
+        return prev.filter((p) => !flatChildNodes.some((c) => c.id === p.id) && p.id !== node.id)
+      } else {
+        const flatChildNodes = flattenTree(node.children)
+        return prev
+          .filter((p) => !flatChildNodes.some((c) => c.id === p.id) && p.id !== node.id)
+          .concat(flatChildNodes, [node])
+      }
+    })
+  }
+  const handleSelectAll = () => {
+    if (isAllSelected) {
+      setSelectedVacants([])
+    } else {
+      setSelectedVacants(flatNodes)
+    }
+  }
+
+  console.log({ selectedVacants })
+
   return (
     <Allotment>
       <Allotment.Pane
@@ -93,13 +133,31 @@ export const ChangePayment = () => {
         minSize={200}
         className="w-full bg-gray-50"
       >
-        <div className="h-full overflow-y-auto scrollbar">
-          {vacantsQuery.isFetching ? <LoadingOverlay /> : null}
-          <VacantTree
-            nodes={treeNodes}
-            selectedIds={selectedVacants.map((vacant) => vacant.id)}
-            onSelectNode={handleSelectNode}
-          />
+        <div className="h-full flex flex-col">
+          <div className="px-4 py-2 border-b">
+            <div className="flex items-center gap-2">
+              <Checkbox
+                id="select-all"
+                isSelected={isAllSelected}
+                isIndeterminate={!isAllSelected && selectedVacants.length > 0}
+                onChange={handleSelectAll}
+              />
+              <Label
+                htmlFor="select-all"
+                className="text-xs font-semibold"
+              >
+                {t('select_all')}
+              </Label>
+            </div>
+          </div>
+          <div className="flex-1 overflow-y-auto scrollbar">
+            {vacantsQuery.isFetching ? <LoadingOverlay /> : null}
+            <VacantTree
+              nodes={treeNodes}
+              selectedIds={selectedIds}
+              onSelectNode={handleSelectNode}
+            />
+          </div>
         </div>
       </Allotment.Pane>
       <Allotment.Pane>
@@ -124,13 +182,48 @@ export const ChangePayment = () => {
                     <FormElement label={t('payment')}>
                       <Textarea
                         readOnly
-                        rows={4}
+                        rows={3}
                         value={[selectedPayment?.name, selectedPayment?.nameUz]
                           .filter(Boolean)
                           .join(' - ')}
                         onDoubleClick={paymentToggle.open}
                       />
                     </FormElement>
+                  </div>
+                  <div className="w-full">
+                    <FormField
+                      control={form.control}
+                      name="type"
+                      render={({ field }) => (
+                        <RadioGroup
+                          value={field.value}
+                          onValueChange={field.onChange}
+                          className="flex items-center gap-5"
+                        >
+                          <div className="flex items-center gap-3">
+                            <RadioGroupItem
+                              value="all"
+                              id="all"
+                            />
+                            <Label htmlFor="all">{t('all')}</Label>
+                          </div>
+                          <div className="flex items-center gap-3">
+                            <RadioGroupItem
+                              value="military"
+                              id="military"
+                            />
+                            <Label htmlFor="military">{t('military')}</Label>
+                          </div>
+                          <div className="flex items-center gap-3">
+                            <RadioGroupItem
+                              value="civilian"
+                              id="civilian"
+                            />
+                            <Label htmlFor="civilian">{t('civilian')}</Label>
+                          </div>
+                        </RadioGroup>
+                      )}
+                    />
                   </div>
                   <FormField
                     name="percentage"

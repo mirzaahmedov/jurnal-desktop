@@ -4,14 +4,16 @@ import type { OrganSaldoProvodka } from '@/common/models'
 import { type KeyboardEvent, useEffect, useMemo, useRef, useState } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { Plus, RefreshCw } from 'lucide-react'
 import { useForm, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
+import { OrganizationDialog } from '@/app/region-spravochnik/organization/dialog'
+import { Button } from '@/common/components/jolly/button'
 import { MonthPicker } from '@/common/components/month-picker'
 import { SearchInput } from '@/common/components/search-input'
-import { Button } from '@/common/components/ui/button'
 import { useRequisitesStore } from '@/common/features/requisites'
 import { useRequisitesRedirect } from '@/common/features/requisites/use-main-schet-redirect'
 import {
@@ -20,8 +22,10 @@ import {
   handleSaldoResponseDates
 } from '@/common/features/saldo'
 import { useSelectedMonthStore } from '@/common/features/selected-month'
+import { useToggle } from '@/common/hooks'
 import { useLayout } from '@/common/layout'
 import { formatDate } from '@/common/lib/date'
+import { capitalize } from '@/common/lib/string'
 import { DetailsView } from '@/common/views'
 
 import { OrganSaldoQueryKeys, defaultValues } from '../config'
@@ -39,6 +43,7 @@ const OrganSaldoDetailsPage = () => {
   const navigate = useNavigate()
   const location = useLocation()
   const queryClient = useQueryClient()
+  const dialogToggle = useToggle()
   const setLayout = useLayout()
   const startDate = useSelectedMonthStore((store) => store.startDate)
 
@@ -299,42 +304,54 @@ const OrganSaldoDetailsPage = () => {
                     }
                   }}
                 />
-                {id !== 'create' &&
-                  (isEditable ? (
-                    <Button
-                      type="button"
-                      onClick={() => {
-                        autoFill({
-                          year,
-                          month,
-                          budjet_id: budjet_id!,
-                          main_schet_id: main_schet_id!,
-                          schet_id: jur3_schet_159_id!,
-                          first: true
-                        })
-                      }}
-                      isPending={isAutoFilling}
-                    >
-                      {t('update_data')}
-                    </Button>
-                  ) : (
-                    <Button
-                      type="button"
-                      onClick={() => {
-                        autoFill({
-                          year,
-                          month,
-                          budjet_id: budjet_id!,
-                          main_schet_id: main_schet_id!,
-                          schet_id: jur3_schet_159_id!,
-                          first: false
-                        })
-                      }}
-                      isPending={isAutoFilling}
-                    >
-                      {t('autofill')}
-                    </Button>
-                  ))}
+
+                {isEditable ? (
+                  <Button
+                    type="button"
+                    onPress={dialogToggle.open}
+                    IconStart={Plus}
+                    variant="outline"
+                  >
+                    {capitalize(t('create-something', { something: t('organization') }))}
+                  </Button>
+                ) : null}
+                {isEditable ? (
+                  <Button
+                    type="button"
+                    IconStart={RefreshCw}
+                    onClick={() => {
+                      autoFill({
+                        year,
+                        month,
+                        budjet_id: budjet_id!,
+                        main_schet_id: main_schet_id!,
+                        schet_id: jur3_schet_159_id!,
+                        first: true
+                      })
+                    }}
+                    isPending={isAutoFilling}
+                  >
+                    {t('update_data')}
+                  </Button>
+                ) : (
+                  <Button
+                    type="button"
+                    IconStart={RefreshCw}
+                    onClick={() => {
+                      autoFill({
+                        year,
+                        month,
+                        budjet_id: budjet_id!,
+                        main_schet_id: main_schet_id!,
+                        schet_id: jur3_schet_159_id!,
+                        first: false
+                      })
+                    }}
+                    isPending={isAutoFilling}
+                  >
+                    {t('autofill')}
+                  </Button>
+                )}
               </div>
             </div>
             <div className="overflow-auto scrollbar flex-1 relative">
@@ -350,13 +367,18 @@ const OrganSaldoDetailsPage = () => {
           <DetailsView.Footer>
             <Button
               type="submit"
-              disabled={isCreatingSaldo || isUpdatingSaldo}
+              isDisabled={isCreatingSaldo || isUpdatingSaldo}
               isPending={isCreatingSaldo || isUpdatingSaldo}
             >
               {t('save')}
             </Button>
           </DetailsView.Footer>
         </form>
+
+        <OrganizationDialog
+          open={dialogToggle.isOpen}
+          onOpenChange={dialogToggle.setOpen}
+        />
       </DetailsView.Content>
     </DetailsView>
   )

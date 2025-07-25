@@ -4,14 +4,16 @@ import type { PodotchetSaldoProvodka } from '@/common/models'
 import { type KeyboardEvent, useEffect, useMemo, useRef, useState } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { Plus, RefreshCw } from 'lucide-react'
 import { useForm, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
+import { PodotchetDialog } from '@/app/region-spravochnik/podotchet/dialog'
+import { Button } from '@/common/components/jolly/button'
 import { MonthPicker } from '@/common/components/month-picker'
 import { SearchInput } from '@/common/components/search-input'
-import { Button } from '@/common/components/ui/button'
 import { useRequisitesStore } from '@/common/features/requisites'
 import { useRequisitesRedirect } from '@/common/features/requisites/use-main-schet-redirect'
 import {
@@ -20,8 +22,10 @@ import {
   handleSaldoResponseDates
 } from '@/common/features/saldo'
 import { useSelectedMonthStore } from '@/common/features/selected-month'
+import { useToggle } from '@/common/hooks'
 import { useLayout } from '@/common/layout'
 import { formatDate } from '@/common/lib/date'
+import { capitalize } from '@/common/lib/string'
 import { DetailsView } from '@/common/views'
 
 import { PodotchetSaldoQueryKeys, defaultValues } from '../config'
@@ -39,8 +43,10 @@ const PodotchetSaldoDetailsPage = () => {
   const navigate = useNavigate()
   const location = useLocation()
   const queryClient = useQueryClient()
+  const dialogToggle = useToggle()
   const setLayout = useLayout()
   const startDate = useSelectedMonthStore((store) => store.startDate)
+
   const { queuedMonths } = usePodotchetSaldo()
 
   const [isEditable, setEditable] = useState(false)
@@ -194,7 +200,7 @@ const PodotchetSaldoDetailsPage = () => {
       title: id === 'create' ? t('create') : t('edit'),
       breadcrumbs: [
         {
-          title: t('pages.organization')
+          title: t('pages.podotchet')
         }
       ],
       onBack: () => {
@@ -306,42 +312,55 @@ const PodotchetSaldoDetailsPage = () => {
                     }
                   }}
                 />
-                {id !== 'create' &&
-                  (isEditable ? (
-                    <Button
-                      type="button"
-                      onClick={() => {
-                        autoFill({
-                          year,
-                          month,
-                          budjet_id: budjet_id!,
-                          main_schet_id: main_schet_id!,
-                          schet_id: jur4_schet_id!,
-                          first: true
-                        })
-                      }}
-                      isPending={isAutoFilling}
-                    >
-                      {t('update_data')}
-                    </Button>
-                  ) : (
-                    <Button
-                      type="button"
-                      onClick={() => {
-                        autoFill({
-                          year,
-                          month,
-                          budjet_id: budjet_id!,
-                          main_schet_id: main_schet_id!,
-                          schet_id: jur4_schet_id!,
-                          first: false
-                        })
-                      }}
-                      isPending={isAutoFilling}
-                    >
-                      {t('autofill')}
-                    </Button>
-                  ))}
+
+                {isEditable ? (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    IconStart={Plus}
+                    onPress={dialogToggle.open}
+                  >
+                    {capitalize(t('create-something', { something: t('podotchet-litso') }))}
+                  </Button>
+                ) : null}
+
+                {isEditable ? (
+                  <Button
+                    type="button"
+                    IconStart={RefreshCw}
+                    onClick={() => {
+                      autoFill({
+                        year,
+                        month,
+                        budjet_id: budjet_id!,
+                        main_schet_id: main_schet_id!,
+                        schet_id: jur4_schet_id!,
+                        first: true
+                      })
+                    }}
+                    isPending={isAutoFilling}
+                  >
+                    {t('update_data')}
+                  </Button>
+                ) : (
+                  <Button
+                    type="button"
+                    IconStart={RefreshCw}
+                    onClick={() => {
+                      autoFill({
+                        year,
+                        month,
+                        budjet_id: budjet_id!,
+                        main_schet_id: main_schet_id!,
+                        schet_id: jur4_schet_id!,
+                        first: false
+                      })
+                    }}
+                    isPending={isAutoFilling}
+                  >
+                    {t('autofill')}
+                  </Button>
+                )}
               </div>
             </div>
             <div className="overflow-auto scrollbar flex-1 relative">
@@ -357,13 +376,18 @@ const PodotchetSaldoDetailsPage = () => {
           <DetailsView.Footer>
             <Button
               type="submit"
-              disabled={isCreatingMainbook || isUpdatingMainbook}
+              isDisabled={isCreatingMainbook || isUpdatingMainbook}
               isPending={isCreatingMainbook || isUpdatingMainbook}
             >
               {t('save')}
             </Button>
           </DetailsView.Footer>
         </form>
+
+        <PodotchetDialog
+          open={dialogToggle.isOpen}
+          onOpenChange={dialogToggle.setOpen}
+        />
       </DetailsView.Content>
     </DetailsView>
   )

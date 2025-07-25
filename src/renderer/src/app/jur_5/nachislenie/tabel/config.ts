@@ -5,8 +5,8 @@ import { formatDate } from '@/common/lib/date'
 export const TabelProvodkaFormSchema = z.object({
   vacantId: z.number(),
   mainZarplataId: z.number(),
-  fio: z.string().optional(),
-  doljnost: z.string().optional(),
+  fio: z.string().optional().nullable(),
+  doljnost: z.string().optional().nullable(),
   rabDni: z.number().optional(),
   otrabDni: z.number().optional(),
   noch: z.number().optional(),

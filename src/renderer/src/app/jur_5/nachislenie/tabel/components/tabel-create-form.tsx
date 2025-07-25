@@ -188,6 +188,8 @@ export const TabelCreateForm = ({
     }
   }, [form, isAllSelected, mainZarplataQuery.data])
 
+  console.log({ errors: form.formState.errors })
+
   return (
     <Form {...form}>
       <form
