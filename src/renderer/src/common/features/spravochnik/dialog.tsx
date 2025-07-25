@@ -7,7 +7,7 @@ import { useQuery } from '@tanstack/react-query'
 import { Plus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { GenericTable, LoadingOverlay } from '@/common/components'
+import { GenericTable, LoadingOverlay, useTableSort } from '@/common/components'
 import {
   DialogContent,
   DialogHeader,
@@ -36,6 +36,7 @@ export const Spravochnik = ({ close, spravochnik }: SpravochnikProps) => {
   const [selected, setSelected] = useState<{ id: number } | undefined>(undefined)
 
   const { t } = useTranslation()
+  const { sorting, getColumnSorted, handleSort } = useTableSort()
 
   const dialogToggle = useToggle()
 
@@ -48,6 +49,7 @@ export const Spravochnik = ({ close, spravochnik }: SpravochnikProps) => {
         {
           page,
           limit: pageSize,
+          ...sorting,
           ...(spravochnik?.defaultFilters || {}),
           ...queryParams
         },
@@ -224,6 +226,8 @@ export const Spravochnik = ({ close, spravochnik }: SpravochnikProps) => {
                           close(spravochnik.id)
                           spravochnik.onClose?.()
                         }}
+                        getColumnSorted={getColumnSorted}
+                        onSort={handleSort}
                         disabledIds={spravochnik.disabledIds}
                         selectedIds={spravochnik.selectedId ? [spravochnik.selectedId] : []}
                         {...spravochnik.tableProps}

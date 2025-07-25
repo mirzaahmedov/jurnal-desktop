@@ -14,7 +14,7 @@ interface SpravochnikHookCallbacks<T> {
 
 export type SpravochnikHookOptions<T extends { id: number }> = SpravochnikHookCallbacks<T> &
   Omit<SpravochnikData<T>, 'id' | 'disabledIds'> & {
-    uniqueId?: string;
+    uniqueId?: string
     value?: number
     enabled?: boolean
     includeParamsInGetById?: boolean
@@ -98,6 +98,7 @@ export const useSpravochnik = <T extends { id: number }>(
       getRowId: options.getRowId,
       disabledIds: paramsRef.current.disabledIds,
       selectedId,
+      tableProps: options.tableProps,
       onClose: () => {
         callbacksRef.current.onClose?.()
         if (inputRef.current) {
@@ -127,6 +128,7 @@ export const useSpravochnik = <T extends { id: number }>(
     options.Dialog,
     options.queryKeys,
     options.getRowId,
+    options.tableProps,
     selectedId,
     open,
     close

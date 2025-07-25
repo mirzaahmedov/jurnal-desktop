@@ -35,6 +35,7 @@ export const createPodotchetSpravochnik = (config: Partial<SpravochnikHookOption
       columnDefs: PodotchetColumns,
       service: PodotchetService,
       queryKeys: PodotchetQueryKeys,
+      tableProps: { className: 'table-fixed w-full' },
       Dialog: PodotchetDialog,
       filters: [SpravochnikSearchField]
     } satisfies typeof config,
