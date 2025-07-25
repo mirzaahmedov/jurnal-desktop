@@ -1,7 +1,7 @@
 import type { EditableTableMethods } from '@/common/components/editable-table'
 import type { OrganSaldoProvodka } from '@/common/models'
 
-import { type KeyboardEvent, useEffect, useMemo, useRef, useState } from 'react'
+import { type KeyboardEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Plus, RefreshCw } from 'lucide-react'
@@ -14,6 +14,7 @@ import { OrganizationDialog } from '@/app/region-spravochnik/organization/dialog
 import { Button } from '@/common/components/jolly/button'
 import { MonthPicker } from '@/common/components/month-picker'
 import { SearchInput } from '@/common/components/search-input'
+import { Badge } from '@/common/components/ui/badge'
 import { useRequisitesStore } from '@/common/features/requisites'
 import { useRequisitesRedirect } from '@/common/features/requisites/use-main-schet-redirect'
 import {
@@ -27,7 +28,7 @@ import { useLayout } from '@/common/layout'
 import { formatDate } from '@/common/lib/date'
 import { DetailsView } from '@/common/views'
 
-import { OrganSaldoQueryKeys, defaultValues } from '../config'
+import { type OrganSaldoProvodkaFormValues, OrganSaldoQueryKeys, defaultValues } from '../config'
 import { OrganSaldoService } from '../service'
 import { useUslugiSaldo } from '../use-saldo'
 import { OrganSaldoTable } from './organ-saldo-table'
@@ -48,6 +49,7 @@ const OrganSaldoDetailsPage = () => {
 
   const [isEditable, setEditable] = useState(false)
   const [isRendering, setRendering] = useState(false)
+  const [isEmptyRowsHidden, setEmptyRowsHidden] = useState(false)
 
   const { t } = useTranslation(['app'])
   const { queuedMonths } = useUslugiSaldo()
@@ -263,7 +265,19 @@ const OrganSaldoDetailsPage = () => {
     }
   }, [rows, form, isEditable, t])
 
-  const columns = useMemo(() => getOrganSaldoProvodkaColumns(isEditable), [isEditable])
+  const columns = useMemo(() => {
+    return getOrganSaldoProvodkaColumns(isEditable)
+  }, [isEditable])
+
+  const isRowEmpty = (row: OrganSaldoProvodkaFormValues) => {
+    return !row.prixod && !row.rasxod
+  }
+  const isRowVisible = useCallback<(args: { index: number }) => boolean>(
+    ({ index }) => {
+      return isEmptyRowsHidden ? !isRowEmpty(form.getValues(`organizations.${index}`)) : true
+    },
+    [isEmptyRowsHidden, form]
+  )
 
   useEffect(() => {
     requestAnimationFrame(() => {
@@ -296,6 +310,16 @@ const OrganSaldoDetailsPage = () => {
             <div className="flex items-center justify-between gap-5 p-5 border-b">
               <SearchInput onKeyDown={handleSearch} />
               <div className="flex items-center gap-5">
+                <Button
+                  variant="ghost"
+                  onPress={() => setEmptyRowsHidden((prev) => !prev)}
+                >
+                  {isEmptyRowsHidden ? t('show_empty_rows') : t('hide_empty_rows')}{' '}
+                  <Badge className="ml-2.5 text-xs">
+                    {rows.slice(0, rows.length - 1).filter(isRowEmpty).length}
+                  </Badge>
+                </Button>
+
                 <MonthPicker
                   value={date}
                   onChange={(value) => {
@@ -371,6 +395,7 @@ const OrganSaldoDetailsPage = () => {
                 methods={tableMethods}
                 form={form}
                 name="organizations"
+                isRowVisible={isRowVisible}
               />
             </div>
           </div>

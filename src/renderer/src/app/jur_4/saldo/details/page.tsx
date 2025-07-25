@@ -1,7 +1,7 @@
 import type { EditableTableMethods } from '@/common/components/editable-table'
 import type { PodotchetSaldoProvodka } from '@/common/models'
 
-import { type KeyboardEvent, useEffect, useMemo, useRef, useState } from 'react'
+import { type KeyboardEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Plus, RefreshCw } from 'lucide-react'
@@ -14,6 +14,7 @@ import { PodotchetDialog } from '@/app/region-spravochnik/podotchet/dialog'
 import { Button } from '@/common/components/jolly/button'
 import { MonthPicker } from '@/common/components/month-picker'
 import { SearchInput } from '@/common/components/search-input'
+import { Badge } from '@/common/components/ui/badge'
 import { useRequisitesStore } from '@/common/features/requisites'
 import { useRequisitesRedirect } from '@/common/features/requisites/use-main-schet-redirect'
 import {
@@ -28,7 +29,11 @@ import { formatDate } from '@/common/lib/date'
 import { capitalize } from '@/common/lib/string'
 import { DetailsView } from '@/common/views'
 
-import { PodotchetSaldoQueryKeys, defaultValues } from '../config'
+import {
+  type PodotchetSaldoProvodkaFormValues,
+  PodotchetSaldoQueryKeys,
+  defaultValues
+} from '../config'
 import { PodotchetSaldoService } from '../service'
 import { usePodotchetSaldo } from '../use-saldo'
 import { PodotchetSaldoTable } from './podotchet-saldo-table'
@@ -50,6 +55,7 @@ const PodotchetSaldoDetailsPage = () => {
   const { queuedMonths } = usePodotchetSaldo()
 
   const [isEditable, setEditable] = useState(false)
+  const [isEmptyRowsHidden, setEmptyRowsHidden] = useState(false)
 
   const { t } = useTranslation(['app'])
   const { budjet_id, main_schet_id, jur4_schet_id } = useRequisitesStore()
@@ -247,6 +253,10 @@ const PodotchetSaldoDetailsPage = () => {
     }
   }
 
+  const isRowEmpty = (row: PodotchetSaldoProvodkaFormValues) => {
+    return !row.prixod && !row.rasxod
+  }
+
   const rows = useWatch({
     control: form.control,
     name: 'podotchets'
@@ -271,7 +281,15 @@ const PodotchetSaldoDetailsPage = () => {
     }
   }, [rows, form, isEditable, t])
 
-  const columns = useMemo(() => getPodochetSaldoProvodkaColumns(isEditable), [isEditable])
+  const isRowVisible = useCallback<(args: { index: number }) => boolean>(
+    ({ index }) => {
+      return isEmptyRowsHidden ? !isRowEmpty(form.getValues(`podotchets.${index}`)) : true
+    },
+    [isEmptyRowsHidden, form]
+  )
+  const columns = useMemo(() => {
+    return getPodochetSaldoProvodkaColumns(isEditable)
+  }, [isEditable])
 
   useEffect(() => {
     if (error) {
@@ -294,6 +312,16 @@ const PodotchetSaldoDetailsPage = () => {
             <div className="flex items-center justify-between gap-5 p-5 border-b">
               <SearchInput onKeyDown={handleSearch} />
               <div className="flex items-center gap-5">
+                <Button
+                  variant="ghost"
+                  onPress={() => setEmptyRowsHidden((prev) => !prev)}
+                >
+                  {isEmptyRowsHidden ? t('show_empty_rows') : t('hide_empty_rows')}{' '}
+                  <Badge className="ml-2.5 text-xs">
+                    {rows.slice(0, rows.length - 1).filter(isRowEmpty).length}
+                  </Badge>
+                </Button>
+
                 <MonthPicker
                   value={date}
                   onChange={(value) => {
@@ -369,6 +397,7 @@ const PodotchetSaldoDetailsPage = () => {
                 methods={tableMethods}
                 form={form}
                 name="podotchets"
+                isRowVisible={isRowVisible}
               />
             </div>
           </div>

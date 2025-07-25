@@ -187,6 +187,19 @@ const OrganMonitoringPage = () => {
                   buttonText={t('debitor_kreditor_report')}
                 />
 
+                <DownloadFile
+                  fileName={`${t('pages.organization')}:159_2169_${t('report')}_${startDate.getFullYear()}&${startDate.getMonth() + 1}.xlsx`}
+                  url="/159/monitoring/2169"
+                  buttonText={`2169 ${t('report')}`}
+                  params={{
+                    main_schet_id,
+                    schet_id: jur3_schet_159_id,
+                    year: startDate.getFullYear(),
+                    month: startDate.getMonth() + 1,
+                    excel: true
+                  }}
+                />
+
                 <Button
                   variant="ghost"
                   onClick={dailyReportToggle.open}
