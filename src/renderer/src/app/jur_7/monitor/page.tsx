@@ -208,6 +208,21 @@ export const MaterialMonitorPage = () => {
             >
               {t('akt')} {t('report').toLowerCase()}
             </Button>
+
+            <DownloadFile
+              fileName={`${t('pages.material-warehouse')}_2169_${t('report')}_${dates.from}&${dates.to}.xlsx`}
+              url="/jur_7/monitoring/2169"
+              buttonText={`2169 ${t('report')}`}
+              params={{
+                budjet_id,
+                main_schet_id,
+                from: dates.from,
+                to: dates.to,
+                year: startDate.getFullYear(),
+                month: startDate.getMonth() + 1,
+                excel: true
+              }}
+            />
           </ButtonGroup>
         </div>
 

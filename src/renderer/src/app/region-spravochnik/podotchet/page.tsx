@@ -6,7 +6,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 
-import { GenericTable } from '@/common/components'
+import { GenericTable, useTableSort } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
 import { SearchFilterDebounced } from '@/common/features/filters/search/search-filter-debounced'
 import { useSearchFilter } from '@/common/features/filters/search/search-filter-debounced'
@@ -31,12 +31,14 @@ const PodotchetPage = () => {
 
   const { confirm } = useConfirm()
   const { t } = useTranslation(['app'])
+  const { sorting, handleSort, getColumnSorted } = useTableSort()
 
   const { data: podotchets, isFetching } = useQuery({
     queryKey: [
       PodotchetQueryKeys.getAll,
       {
         ...pagination,
+        ...sorting,
         search
       }
     ],
@@ -86,6 +88,9 @@ const PodotchetPage = () => {
           columnDefs={PodotchetColumns}
           onEdit={handleClickEdit}
           onDelete={handleClickDelete}
+          getColumnSorted={getColumnSorted}
+          onSort={handleSort}
+          className="table-fixed w-full"
         />
       </ListView.Content>
       <ListView.Footer>

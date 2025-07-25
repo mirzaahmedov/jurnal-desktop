@@ -7,27 +7,38 @@ import { UserCell } from '@/common/components/table/renderers/user'
 export const PodotchetColumns: ColumnDef<Podotchet>[] = [
   {
     key: 'id',
+    sort: true,
+    width: 160,
+    maxWidth: 160,
     renderCell: IDCell
   },
   {
     key: 'name',
+    sort: true,
+    minWidth: 200,
+    width: '100%',
     header: 'fio'
   },
   {
-    key: 'rayon'
+    sort: true,
+    key: 'rayon',
+    width: 200
   },
   {
+    sort: true,
+    width: 200,
     key: 'position',
     header: 'doljnost'
   },
   {
+    width: 200,
+    sort: true,
     key: 'rank',
     header: 'military_rank'
   },
   {
-    fit: true,
     key: 'user_id',
-    minWidth: 200,
+    width: 200,
     header: 'created-by-user',
     renderCell: (row) => (
       <UserCell

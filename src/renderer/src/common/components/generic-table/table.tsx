@@ -107,7 +107,7 @@ export const GenericTable = <T extends object>(props: GenericTableProps<T>) => {
                   <GenericTableHead
                     rowSpan={headerGroups.length}
                     style={{
-                      width: `${(String(data.length).length ?? 1) + 1}ch`
+                      width: `${(String(data.length).length ?? 1) + 2}ch`
                     }}
                   ></GenericTableHead>
                 ) : null}
@@ -213,7 +213,7 @@ export const GenericTable = <T extends object>(props: GenericTableProps<T>) => {
                 )}
                 data-selected={selectedIds.includes(getRowId(row))}
               >
-                <GenericTableCell style={{ width: `${(String(data.length).length ?? 1) + 1}ch` }}>
+                <GenericTableCell style={{ width: `${(String(data.length).length ?? 1) + 2}ch` }}>
                   {rowIndex + 1}
                 </GenericTableCell>
                 {Array.isArray(columnDefs)
