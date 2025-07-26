@@ -284,7 +284,10 @@ const OdinoxDetailsPage = () => {
   }
   const isRowVisible = useCallback<(args: { index: number }) => boolean>(
     ({ index }) => {
-      return isEmptyRowsHidden ? !isRowEmpty(form.getValues(`rows.${index}`)) : true
+      const rows = form.getValues('rows')
+      return isEmptyRowsHidden && (index !== 0 || index !== rows.length - 1)
+        ? !isRowEmpty(rows[index])
+        : true
     },
     [isEmptyRowsHidden, form]
   )
@@ -310,7 +313,7 @@ const OdinoxDetailsPage = () => {
                 >
                   {isEmptyRowsHidden ? t('show_empty_rows') : t('hide_empty_rows')}{' '}
                   <Badge className="ml-2.5 text-xs">
-                    {rows.slice(0, rows.length - 1).filter(isRowEmpty).length}
+                    {rows.slice(0, rows.length - 2).filter(isRowEmpty).length}
                   </Badge>
                 </Button>
                 <MonthPicker
