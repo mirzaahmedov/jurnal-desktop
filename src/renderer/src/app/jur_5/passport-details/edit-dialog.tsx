@@ -61,6 +61,8 @@ export const PassportInfoDialog = ({
   const { t } = useTranslation(['app'])
 
   const [tabValue, setTabValue] = useState<PassportInfoTabs.Main>(PassportInfoTabs.Main)
+  const [paymentTotal, setPaymentTotal] = useState<number>(0)
+  const [deductionsTotal, setDeductionsTotal] = useState<number>(0)
 
   const queryClient = useQueryClient()
 
@@ -129,6 +131,7 @@ export const PassportInfoDialog = ({
                         vacant={vacant}
                         selectedMainZarplata={mainZarplata?.data}
                         onClose={() => props?.onOpenChange?.(false)}
+                        naRuki={paymentTotal - deductionsTotal}
                         workplace={
                           <EmployeeWorkplace
                             mainZarplata={mainZarplata.data}
@@ -158,8 +161,14 @@ export const PassportInfoDialog = ({
                         }
                         content={
                           <div className="col-span-full grid grid-cols-[repeat(auto-fit,minmax(600px,1fr))] gap-5">
-                            <PayrollPayments mainZarplata={mainZarplata?.data} />
-                            <PayrollDeductions mainZarplata={mainZarplata?.data} />
+                            <PayrollPayments
+                              mainZarplata={mainZarplata?.data}
+                              setPaymentsTotal={setPaymentTotal}
+                            />
+                            <PayrollDeductions
+                              mainZarplata={mainZarplata?.data}
+                              setDeductionsTotal={setDeductionsTotal}
+                            />
                           </div>
                         }
                         onCalculate={getPositionSalary}

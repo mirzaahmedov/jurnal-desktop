@@ -9,6 +9,9 @@ import { toast } from 'react-toastify'
 
 import { TabelService } from '@/app/jur_5/nachislenie/tabel/service'
 import { GenericTable, LoadingOverlay } from '@/common/components'
+import { MonthSelect } from '@/common/components/month-select'
+import { SearchInputDebounced } from '@/common/components/search-input-debounced'
+import { YearSelect } from '@/common/components/year-select'
 import { useConfirm } from '@/common/features/confirm'
 import { useRequisitesStore } from '@/common/features/requisites'
 import { useRequisitesRedirect } from '@/common/features/requisites/use-main-schet-redirect'
@@ -23,6 +26,8 @@ import { TabelColumnDefs } from './columns'
 import { TabelCreateDialog } from './components/tabel-create-dialog'
 import { TabelEditDialog } from './components/tabel-edit-dialog'
 
+const TabelColumnDefsWithoutSelect = TabelColumnDefs.filter((col) => col.key !== 'id')
+
 export const TabelsView = () => {
   useRequisitesRedirect('/' as any)
 
@@ -32,6 +37,10 @@ export const TabelsView = () => {
 
   const [selectedVacant, setSelectedVacant] = useState<VacantTreeNode>()
   const [selectedTabelId, setSelectedTabelId] = useState<number>()
+
+  const [docNum, setDocNum] = useState<string>('')
+  const [year, setYear] = useState<number>(new Date().getFullYear())
+  const [month, setMonth] = useState<number>(new Date().getMonth() + 1)
 
   const setLayout = useLayout()
   const editToggle = useToggle()
@@ -46,7 +55,10 @@ export const TabelsView = () => {
       {
         page: pagination.page,
         limit: pagination.limit,
-        vacantId: selectedVacant?.id
+        vacantId: selectedVacant?.id,
+        docNum: docNum ? docNum : undefined,
+        year: year || undefined,
+        month: month || undefined
       }
     ],
     queryFn: TabelService.getAll,
@@ -106,13 +118,33 @@ export const TabelsView = () => {
           />
         </div>
       </Allotment.Pane>
-      <Allotment.Pane className="relative w-full overflow-auto scrollbar pl-px">
-        <div className="relative w-full overflow-auto scrollbar pl-px">
+      <Allotment.Pane className="relative w-full pl-px flex flex-col">
+        <div className="p-2.5 flex items-center gap-2">
+          <SearchInputDebounced
+            value={docNum}
+            onValueChange={setDocNum}
+          />
+          <YearSelect
+            selectedKey={year}
+            onSelectionChange={(value) =>
+              setYear(value ? (value as number) : new Date().getFullYear())
+            }
+          />
+          <MonthSelect
+            selectedKey={month}
+            onSelectionChange={(value) =>
+              setMonth(value ? (value as number) : new Date().getMonth() + 1)
+            }
+            className="w-36"
+          />
+        </div>
+        <div className="flex-1 relative w-full overflow-auto scrollbar pl-px">
           {vacantsQuery.isFetching || isFetchingTabels || isDeleting ? <LoadingOverlay /> : null}
           <GenericTable
             data={tabels ?? []}
-            columnDefs={TabelColumnDefs}
+            columnDefs={TabelColumnDefsWithoutSelect}
             onEdit={handleRowEdit}
+            onDoubleClickRow={handleRowEdit}
             onDelete={handleRowDelete}
             className="table-generic-xs"
           />

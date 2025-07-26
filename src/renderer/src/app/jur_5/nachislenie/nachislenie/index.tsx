@@ -8,6 +8,9 @@ import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 
 import { GenericTable, LoadingOverlay } from '@/common/components'
+import { MonthSelect } from '@/common/components/month-select'
+import { SearchInputDebounced } from '@/common/components/search-input-debounced'
+import { YearSelect } from '@/common/components/year-select'
 import { useConfirm } from '@/common/features/confirm'
 import { useRequisitesStore } from '@/common/features/requisites'
 import { useVacantTreeNodes } from '@/common/features/vacant/hooks/use-vacant-tree-nodes'
@@ -30,6 +33,9 @@ export const Nachislenies = () => {
 
   const [selectedNachislenie, setSelectedNachislenie] = useState<Nachislenie | undefined>()
   const [selectedVacant, setSelectedVacant] = useState<VacantTreeNode>()
+  const [docNum, setDocNum] = useState<string>('')
+  const [year, setYear] = useState<number>(new Date().getFullYear())
+  const [month, setMonth] = useState<number>(new Date().getMonth() + 1)
 
   const setLayout = useLayout()
   const pagination = usePagination()
@@ -42,11 +48,15 @@ export const Nachislenies = () => {
       {
         page: pagination.page,
         limit: pagination.limit,
+        budjet_name_id: budjet_id!,
+        doc_num: docNum || undefined,
+        year: year || undefined,
+        month: month || undefined,
         vacantId: selectedVacant?.id ?? 0
       }
     ],
     queryFn: NachislenieService.getByVacantId,
-    enabled: !!selectedVacant
+    enabled: !!budjet_id && !!selectedVacant
   })
 
   const { mutate: deleteNachislenie, isPending: isDeleting } = useMutation({
@@ -106,12 +116,32 @@ export const Nachislenies = () => {
       </Allotment.Pane>
       <Allotment.Pane>
         <div className="h-full flex flex-col overflow-hidden pl-px">
-          <div className="flex-[2] relative w-full overflow-auto scrollbar">
+          <div className="p-2.5 flex items-center gap-2">
+            <SearchInputDebounced
+              value={docNum}
+              onValueChange={setDocNum}
+            />
+            <YearSelect
+              selectedKey={year}
+              onSelectionChange={(value) =>
+                setYear(value ? (value as number) : new Date().getFullYear())
+              }
+            />
+            <MonthSelect
+              selectedKey={month}
+              onSelectionChange={(value) =>
+                setMonth(value ? (value as number) : new Date().getMonth() + 1)
+              }
+              className="w-36"
+            />
+          </div>
+          <div className="flex-1 relative w-full overflow-auto scrollbar">
             {isFetchingNachislenie || isDeleting ? <LoadingOverlay /> : null}
             <GenericTable
               data={nachislenie ?? []}
               columnDefs={NachislenieColumns}
               onEdit={handleRowEdit}
+              onDoubleClickRow={handleRowEdit}
               onDelete={handleRowDelete}
               className="table-generic-xs"
             />

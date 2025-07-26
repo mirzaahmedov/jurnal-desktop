@@ -500,5 +500,6 @@
   "change_payment": "Тўлов турини ўзгартириш",
   "show_empty_rows": "Бўш қаторларни кўрсатиш",
   "hide_empty_rows": "Бўш қаторларни яшириш",
-  "civilian": "Фуқаро"
+  "civilian": "Фуқаро",
+  "employee_count": "Ходимлар сони"
 }

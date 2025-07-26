@@ -3,7 +3,7 @@ import type { MainZarplata } from '@/common/models'
 import type { PayrollPayment } from '@/common/models/payroll-payment'
 import type { UseFormReturn } from 'react-hook-form'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Plus } from 'lucide-react'
@@ -22,8 +22,9 @@ import { PayrollPaymentService } from './service'
 
 export interface PayrollPaymentsProps {
   mainZarplata: MainZarplata
+  setPaymentsTotal?: (total: number) => void
 }
-export const PayrollPayments = ({ mainZarplata }: PayrollPaymentsProps) => {
+export const PayrollPayments = ({ mainZarplata, setPaymentsTotal }: PayrollPaymentsProps) => {
   const { t } = useTranslation()
   const { confirm } = useConfirm()
 
@@ -111,6 +112,10 @@ export const PayrollPayments = ({ mainZarplata }: PayrollPaymentsProps) => {
       }).then(() => form.reset())
     }
   }
+
+  useEffect(() => {
+    setPaymentsTotal?.(payments?.totalCount ?? 0)
+  }, [payments?.totalCount, setPaymentsTotal])
 
   return (
     <>

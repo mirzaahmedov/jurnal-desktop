@@ -18,7 +18,7 @@ import {
 import { Pagination } from '@/common/components/pagination'
 import { Button } from '@/common/components/ui/button'
 import { useToggle } from '@/common/hooks'
-import { extendObject } from '@/common/lib/utils'
+import { cn, extendObject } from '@/common/lib/utils'
 import { normalizeEmptyFields } from '@/common/lib/validation'
 
 type SpravochnikProps = {
@@ -161,7 +161,10 @@ export const Spravochnik = ({ close, spravochnik }: SpravochnikProps) => {
         }}
       >
         <DialogOverlay>
-          <DialogContent className="max-w-screen-2xl w-full h-3/5 p-0">
+          <DialogContent
+            {...spravochnik.dialogProps}
+            className={cn('max-w-screen-2xl w-full h-3/5 p-0', spravochnik.dialogProps?.className)}
+          >
             <div
               ref={(elem) => elem?.focus()}
               onKeyDown={handleKeyDown}

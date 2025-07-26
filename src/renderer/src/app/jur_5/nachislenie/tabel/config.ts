@@ -21,6 +21,7 @@ export const TabelFormSchema = z.object({
   tabelMonth: z.number(),
   docNum: z.number(),
   docDate: z.string().nonempty(),
+  rayon: z.string(),
   tabelChildren: z.array(TabelProvodkaFormSchema)
 })
 export type TabelFormValues = z.infer<typeof TabelFormSchema>
@@ -33,6 +34,7 @@ export const defaultValues: TabelFormValues = {
   tabelMonth: new Date().getMonth() + 1,
   docNum: 0,
   docDate: formatDate(new Date()),
+  rayon: '',
   tabelChildren: []
 }
 

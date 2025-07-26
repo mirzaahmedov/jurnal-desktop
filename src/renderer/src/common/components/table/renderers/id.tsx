@@ -20,10 +20,10 @@ const IDCellComponent = memo(
     const checked = getRowSelected
       ? getRowSelected({
           row,
-          selectedIds: Array.isArray(selectedIds) ? selectedIds : [],
+          selectedIds: Array.isArray(selectedIds) ? selectedIds?.map(String) : [],
           getRowId: getRowId ?? defaultGetRowId
         })
-      : selectedIds?.includes(id)
+      : selectedIds?.map(String)?.includes(String(id))
 
     useEffect(() => {
       if (!inputRef.current) return

@@ -88,7 +88,7 @@ export const TabelCreateDialog = ({
                   mainSchetId={mainSchetId}
                   onSubmit={createTabel}
                   isPending={isCreating}
-                  vacantId={selectedVacant?.id}
+                  vacant={selectedVacant}
                   vacants={treeNodes}
                 />
               </Allotment.Pane>

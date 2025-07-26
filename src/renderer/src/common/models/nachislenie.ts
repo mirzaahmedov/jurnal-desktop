@@ -23,6 +23,9 @@ export interface NachislenieProvodka {
   doljnostName: string
   nachisleniePayrollPayments: PayrollPayment[]
   nachisleniePayrollDeductions: PayrollDeduction[]
+  totalNachislenie: number
+  totalUderjanie: number
+  totalNaruki: number
 }
 
 export interface NachislenieSostav {

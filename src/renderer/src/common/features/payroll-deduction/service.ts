@@ -1,4 +1,4 @@
-import type { PayrollDeductionFormValues } from './config'
+import type { PayrollDeductionChangePaymentFormValues, PayrollDeductionFormValues } from './config'
 import type { PayrollDeduction } from '@/common/models/payroll-deduction'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 
@@ -13,6 +13,23 @@ export class PayrollDeductionService {
     Create: 'PayrollDeduction/Create',
     Update: 'PayrollDeduction/Update',
     Delete: 'PayrollDeduction/Delete'
+  }
+
+  static async changePayment(args: {
+    isXarbiy: boolean
+    values: PayrollDeductionChangePaymentFormValues
+  }) {
+    const { isXarbiy, values } = args
+    const res = await zarplataApiNew.put(
+      `${PayrollDeductionService.endpoint}/change-payments`,
+      values,
+      {
+        params: {
+          isXarbiy
+        }
+      }
+    )
+    return res.data
   }
 
   static async getByMainZarplataId(

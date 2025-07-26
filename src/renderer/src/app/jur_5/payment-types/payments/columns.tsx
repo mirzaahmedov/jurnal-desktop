@@ -7,7 +7,7 @@ import { t } from 'i18next'
 import { toast } from 'react-toastify'
 
 import { Spinner } from '@/common/components'
-import { IDCell } from '@/common/components/table/renderers/id'
+import { SelectCell } from '@/common/components/table/renderers/select'
 import { Checkbox } from '@/common/components/ui/checkbox'
 
 import { PaymentsService } from './service'
@@ -54,8 +54,9 @@ const CheckboxCell = ({ row, field }: CheckboxCellProps) => {
 export const PaymentColumnDefs: ColumnDef<Payment>[] = [
   {
     key: 'id',
-    minWidth: 120,
-    renderCell: IDCell
+    header: ' ',
+    fit: true,
+    renderCell: SelectCell
   },
   {
     key: 'code'

@@ -23,10 +23,12 @@ import { Badge } from '@/common/components/ui/badge'
 import { Form, FormField } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
 import { Tabs, TabsList, TabsTrigger } from '@/common/components/ui/tabs'
+import { Textarea } from '@/common/components/ui/textarea'
 import { YearSelect } from '@/common/components/year-select'
 import { parseDate } from '@/common/lib/date'
 import { getWorkdaysInMonth } from '@/common/lib/date'
 import { formatLocaleDate } from '@/common/lib/format'
+import { getVacantRayon } from '@/common/utils/zarplata'
 
 import { TabelFormSchema, type TabelFormValues, defaultValues } from '../config'
 import { TabelService } from '../service'
@@ -42,7 +44,7 @@ export interface TabelCreateFormProps {
   budjetId: number
   mainSchetId: number
   vacants: VacantTreeNode[]
-  vacantId: number | undefined
+  vacant: VacantTreeNode | undefined
   isPending?: boolean
   onSubmit: (values: TabelFormValues) => void
 }
@@ -50,7 +52,7 @@ export const TabelCreateForm = ({
   budjetId,
   mainSchetId,
   vacants,
-  vacantId,
+  vacant,
   isPending,
   onSubmit
 }: TabelCreateFormProps) => {
@@ -65,7 +67,7 @@ export const TabelCreateForm = ({
   const [visibleVacant, setVisibleVacant] = useState<number | null>(null)
 
   const mainZarplataQuery = useMainZarplataList({
-    vacantId
+    vacantId: vacant?.id ?? 0
   })
   const { mutate: getMaxDocNum } = useMutation({
     mutationFn: TabelService.getMaxDocNum,
@@ -188,7 +190,10 @@ export const TabelCreateForm = ({
     }
   }, [form, isAllSelected, mainZarplataQuery.data])
 
-  console.log({ errors: form.formState.errors })
+  const rayon = vacant ? getVacantRayon(vacant) : ''
+  useEffect(() => {
+    form.setValue('rayon', rayon)
+  }, [form, rayon])
 
   return (
     <Form {...form}>
@@ -250,7 +255,7 @@ export const TabelCreateForm = ({
               )}
             />
 
-            <div className="flex items-center gap-5">
+            <div className="flex-1 flex items-center gap-5">
               <FormField
                 control={form.control}
                 name="tabelYear"
@@ -282,6 +287,19 @@ export const TabelCreateForm = ({
                       className="w-32"
                     />
                   </FormElement>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="rayon"
+                render={({ field }) => (
+                  <Textarea
+                    {...field}
+                    placeholder={t('rayon')}
+                    className="flex-1 min-w-60"
+                    rows={2}
+                  />
                 )}
               />
             </div>

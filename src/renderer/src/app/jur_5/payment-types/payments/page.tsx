@@ -7,16 +7,25 @@ import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 
 import { GenericTable } from '@/common/components'
+import { Input } from '@/common/components/ui/input'
 import { useConfirm } from '@/common/features/confirm'
-import { useLocationState, usePagination, useToggle } from '@/common/hooks'
+import { useDebounceValue, usePagination, useToggle } from '@/common/hooks'
 import { useLayout } from '@/common/layout'
 import { DetailsView, ListView } from '@/common/views'
 
 import { PaymentColumnDefs } from './columns'
-import { ChangePayment } from './components/change-payment'
+import { PaymentsChangePayment } from './components/change-payment'
 import { PaymentsDialog } from './dialog'
-import { PaymentFilter, PaymentFilterTabOption } from './filters'
+import {
+  PaymentFilter,
+  PaymentFilterTabOption,
+  useCodeFilter,
+  useNameFilter,
+  useTabFilter
+} from './filters'
 import { PaymentsService } from './service'
+
+const ColumnDefs = PaymentColumnDefs.filter((column) => column.key !== 'id')
 
 const PaymentsPage = () => {
   const setLayout = useLayout()
@@ -27,15 +36,22 @@ const PaymentsPage = () => {
   const { confirm } = useConfirm()
   const { t } = useTranslation(['app'])
 
-  const [tabValue] = useLocationState('tab', PaymentFilterTabOption.All)
+  const [tabValue] = useTabFilter()
+  const [name, setName] = useNameFilter()
+  const [code, setCode] = useCodeFilter()
   const [selectedPayment, setSelectedPayment] = useState<Payment>()
+
+  const [nameDebounced] = useDebounceValue(name)
+  const [codeDebounced] = useDebounceValue(code)
 
   const { data: payments, isFetching } = useQuery({
     queryKey: [
       PaymentsService.QueryKeys.GetAll,
       {
         page: pagination.page,
-        limit: pagination.limit
+        limit: pagination.limit,
+        name: nameDebounced || undefined,
+        code: codeDebounced || undefined
       }
     ],
     queryFn: PaymentsService.getAll
@@ -91,15 +107,29 @@ const PaymentsPage = () => {
   return tabValue === PaymentFilterTabOption.ChangePayment ? (
     <DetailsView>
       <DetailsView.Content>
-        <ChangePayment />
+        <PaymentsChangePayment />
       </DetailsView.Content>
     </DetailsView>
   ) : (
     <ListView>
+      <div className="p-5 flex items-center justify-start gap-5">
+        <Input
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder={t('name')}
+          className="w-64"
+        />
+        <Input
+          value={code}
+          onChange={(e) => setCode(e.target.value)}
+          placeholder={t('code')}
+          className="w-64"
+        />
+      </div>
       <ListView.Content isLoading={isFetching || isDeleting}>
         <GenericTable
           data={payments?.data ?? []}
-          columnDefs={PaymentColumnDefs}
+          columnDefs={ColumnDefs}
           className="table-generic-xs"
           onEdit={handleRowEdit}
           onDelete={handleRowDelete}

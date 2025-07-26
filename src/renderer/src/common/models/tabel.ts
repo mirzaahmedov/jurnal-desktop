@@ -6,6 +6,7 @@ export interface Tabel {
   tabelMonth: number
   docNum: number
   docDate: string
+  rayon: string
   children: TabelProvodka[]
   tabelChildren: TabelProvodka[]
 }

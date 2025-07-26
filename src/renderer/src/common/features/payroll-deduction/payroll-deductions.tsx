@@ -3,7 +3,7 @@ import type { MainZarplata } from '@/common/models'
 import type { PayrollDeduction } from '@/common/models/payroll-deduction'
 import type { UseFormReturn } from 'react-hook-form'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Plus } from 'lucide-react'
@@ -22,8 +22,9 @@ import { PayrollDeductionService } from './service'
 
 export interface PayrollDeductionsProps {
   mainZarplata: MainZarplata
+  setDeductionsTotal?: (total: number) => void
 }
-export const PayrollDeductions = ({ mainZarplata }: PayrollDeductionsProps) => {
+export const PayrollDeductions = ({ mainZarplata, setDeductionsTotal }: PayrollDeductionsProps) => {
   const { t } = useTranslation()
   const { confirm } = useConfirm()
 
@@ -111,6 +112,10 @@ export const PayrollDeductions = ({ mainZarplata }: PayrollDeductionsProps) => {
       }).then(() => form.reset())
     }
   }
+
+  useEffect(() => {
+    setDeductionsTotal?.(payments?.totalCount ?? 0)
+  }, [setDeductionsTotal, payments?.totalCount])
 
   return (
     <>

@@ -9,6 +9,7 @@ import { getMultiApiResponse, getSingleApiResponse } from '@/common/lib/zarplata
 import { type ZarplataApiResponse, zarplataApiNew } from '@/common/lib/zarplata_new'
 
 import { PaymentColumnDefs } from './columns'
+import { PaymentsSpravochnikFilter } from './filters'
 
 export class PaymentsService {
   static endpoint = ApiEndpoints.zarplata_payments
@@ -22,16 +23,21 @@ export class PaymentsService {
 
   static async getAll(
     ctx: QueryFunctionContext<
-      [typeof PaymentsService.QueryKeys.GetAll, { page: number; limit: number }]
+      [
+        typeof PaymentsService.QueryKeys.GetAll,
+        { page: number; limit: number; name?: string; code?: string }
+      ]
     >
   ) {
-    const { page, limit } = ctx.queryKey[1]
+    const { page, limit, name, code } = ctx.queryKey[1]
     const res = await PaymentsService.client.get<ZarplataApiResponse<Payment[]>>(
       PaymentsService.endpoint,
       {
         params: {
           PageIndex: page,
-          PageSize: limit
+          PageSize: limit,
+          name,
+          code
         }
       }
     )
@@ -75,7 +81,11 @@ export const createPaymentSpravochnik = (config: Partial<SpravochnikHookOptions<
     {
       endpoint: ApiEndpoints.zarplata_spravochnik,
       columnDefs: PaymentColumnDefs,
-      service: PaymentsService
+      service: PaymentsService,
+      dialogProps: {
+        className: 'max-w-full h-[800px]'
+      },
+      filters: [PaymentsSpravochnikFilter]
     } satisfies typeof config,
     config
   )

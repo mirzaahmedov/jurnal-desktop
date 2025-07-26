@@ -7,13 +7,13 @@ import { Input } from '@/common/components/ui/input'
 import { Tabs, TabsList, TabsTrigger } from '@/common/components/ui/tabs'
 import { useLocationState } from '@/common/hooks'
 
-export enum PaymentFilterTabOption {
+export enum DeductionFilterTabOption {
   All = 'all',
   ChangePayment = 'change_payment'
 }
 
 export const useTabFilter = () => {
-  return useLocationState('tabValue', PaymentFilterTabOption.All)
+  return useLocationState('tabValue', DeductionFilterTabOption.All)
 }
 export const useNameFilter = () => {
   return useLocationState<string | undefined>('name', undefined)
@@ -22,7 +22,7 @@ export const useCodeFilter = () => {
   return useLocationState<string | undefined>('code', undefined)
 }
 
-export const PaymentFilter = () => {
+export const DeductionFilter = () => {
   const { t } = useTranslation(['app'])
 
   const [tabValue, setTabValue] = useTabFilter()
@@ -30,11 +30,11 @@ export const PaymentFilter = () => {
   return (
     <Tabs
       value={tabValue}
-      onValueChange={(value) => setTabValue(value as PaymentFilterTabOption)}
+      onValueChange={(value) => setTabValue(value as DeductionFilterTabOption)}
     >
       <TabsList>
-        <TabsTrigger value={PaymentFilterTabOption.All}>{t('all')}</TabsTrigger>
-        <TabsTrigger value={PaymentFilterTabOption.ChangePayment}>
+        <TabsTrigger value={DeductionFilterTabOption.All}>{t('all')}</TabsTrigger>
+        <TabsTrigger value={DeductionFilterTabOption.ChangePayment}>
           {t('change_payment')}
         </TabsTrigger>
       </TabsList>
@@ -42,14 +42,14 @@ export const PaymentFilter = () => {
   )
 }
 
-type PaymentsSpravochnikFilterProps = InputHTMLAttributes<HTMLInputElement> & {
+type DeductionSpravochnikFilterProps = InputHTMLAttributes<HTMLInputElement> & {
   getValue: (key: string) => string | undefined
   setValue: (key: string, value: string) => void
 }
-export const PaymentsSpravochnikFilter = ({
+export const DeductionSpravochnikFilter = ({
   getValue,
   setValue
-}: PaymentsSpravochnikFilterProps) => {
+}: DeductionSpravochnikFilterProps) => {
   const { t } = useTranslation(['app'])
 
   const name = getValue('name') || ''

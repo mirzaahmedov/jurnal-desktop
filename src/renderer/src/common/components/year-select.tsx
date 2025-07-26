@@ -81,7 +81,8 @@ export const YearSelect = ({ selectedKey, onSelectionChange, ...props }: YearSel
         if (!open && !inputValue) {
           setInputValue(selectedKey ? String(selectedKey) : '')
         } else if (!open) {
-          onSelectionChange?.(inputValue)
+          const year = Number(inputValue ? inputValue : 0)
+          onSelectionChange?.(year)
         }
       }}
       onFocus={() => {

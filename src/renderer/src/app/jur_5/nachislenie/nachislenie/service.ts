@@ -1,10 +1,8 @@
 import type { NachislenieFormValues } from './config'
-import type { Nachislenie, NachislenieProvodka, NachislenieSostav } from '@/common/models'
+import type { Nachislenie, NachislenieProvodka } from '@/common/models'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 
 import { type ZarplataApiResponse, zarplataApiNew } from '@/common/lib/zarplata_new'
-
-import { getMockingNachislenieSostav } from './mocking'
 
 export class NachislenieService {
   static endpoint = 'Nachislenie'
@@ -49,6 +47,10 @@ export class NachislenieService {
         {
           page: number
           limit: number
+          year?: number
+          month?: number
+          doc_num?: string
+          budjet_name_id: number
           vacantId: number
         }
       ]
@@ -82,26 +84,5 @@ export class NachislenieService {
       `${NachislenieService.endpoint}/${id}`
     )
     return res.data
-  }
-}
-
-export class NachislenieSostavService {
-  static endpoint = 'NachislenieSostav'
-
-  static QueryKeys = {
-    GetAll: 'nachislenie-sostav/all',
-    GetByVacantId: 'nachislenie-sostav/vacantId'
-  }
-
-  static async getByVacantId() {
-    return new Promise<{
-      data: NachislenieSostav[]
-    }>((resolve) => {
-      setTimeout(() => {
-        resolve({
-          data: getMockingNachislenieSostav()
-        })
-      }, 1000)
-    })
   }
 }

@@ -34,6 +34,14 @@ import { formatLocaleDate } from '@/common/lib/format'
 import { defaultValues } from '../config'
 import { NachislenieService } from '../service'
 
+const ChooseTabelColumnDefs = [
+  ...TabelColumnDefs,
+  {
+    key: 'rayon',
+    minWidth: 200
+  } satisfies (typeof TabelColumnDefs)[0]
+]
+
 export interface NachislenieCreateDialogProps extends Omit<DialogTriggerProps, 'children'> {
   vacant: VacantTreeNode | undefined
   mainSchetId: number
@@ -226,7 +234,7 @@ export const NachislenieCreateDialog = ({
                       <div className="flex-1 overflow-y-auto scrollbar">
                         {isFetching ? <LoadingOverlay /> : null}
                         <GenericTable
-                          columnDefs={TabelColumnDefs}
+                          columnDefs={ChooseTabelColumnDefs}
                           data={tabels ?? []}
                           selectedIds={form.watch('tabelMainId') ? [form.watch('tabelMainId')] : []}
                           onClickRow={(value) => form.setValue('tabelMainId', value.id)}

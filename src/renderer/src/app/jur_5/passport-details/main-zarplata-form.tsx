@@ -15,6 +15,8 @@ import {
   ZarplataSpravochnikService,
   createZarplataSpravochnik
 } from '@/app/super-admin/zarplata/spravochnik/service'
+import placeholderImage from '@/common/assets/images/profile_placeholder.png'
+import { NumericInput } from '@/common/components'
 import { FormElement } from '@/common/components/form'
 import { JollyDatePicker } from '@/common/components/jolly-date-picker'
 import { Button } from '@/common/components/jolly/button'
@@ -41,6 +43,7 @@ export interface MainZarplataFormProps {
   onCalculate?: (id: number) => void
   onCreate?: (user: MainZarplata) => void
   onClose?: VoidFunction
+  naRuki?: number
 }
 export const MainZarplataForm = ({
   isCalculating = false,
@@ -50,7 +53,8 @@ export const MainZarplataForm = ({
   workplace,
   onCalculate,
   onCreate,
-  onClose
+  onClose,
+  naRuki
 }: MainZarplataFormProps) => {
   const { t } = useTranslation()
 
@@ -164,7 +168,7 @@ export const MainZarplataForm = ({
             <div className="flex flex-col items-center gap-5">
               <div className="border w-[200px] h-[calc(200px/3*4)] bg-gray-100 rounded-lg">
                 <img
-                  src="/images/profile_placeholder.png"
+                  src={placeholderImage}
                   alt="Profile placeholder"
                   className="w-full h-full object-cover object-center"
                 />
@@ -369,6 +373,17 @@ export const MainZarplataForm = ({
                 )}
               />
             </div>
+            {naRuki !== undefined ? (
+              <FormElement
+                direction="column"
+                label={t('na_ruki')}
+              >
+                <NumericInput
+                  readOnly
+                  value={naRuki}
+                />
+              </FormElement>
+            ) : null}
           </div>
           <div className="max-[1400px]:col-span-full max-[1400px]:grid place-items-center">
             {workplace}

@@ -9,6 +9,7 @@ import { getMultiApiResponse, getSingleApiResponse } from '@/common/lib/zarplata
 import { type ZarplataApiResponse, zarplataApiNew } from '@/common/lib/zarplata_new'
 
 import { DeductionColumnDefs } from './columns'
+import { DeductionSpravochnikFilter } from './filters'
 
 export class DeductionsService {
   static endpoint = ApiEndpoints.zarplata_deductions
@@ -22,16 +23,21 @@ export class DeductionsService {
 
   static async getAll(
     ctx: QueryFunctionContext<
-      [typeof DeductionsService.QueryKeys.GetAll, { page: number; limit: number }]
+      [
+        typeof DeductionsService.QueryKeys.GetAll,
+        { page: number; limit: number; name?: string; code?: string }
+      ]
     >
   ) {
-    const { page, limit } = ctx.queryKey[1]
+    const { page, limit, name, code } = ctx.queryKey[1]
     const res = await DeductionsService.client.get<ZarplataApiResponse<Deduction[]>>(
       DeductionsService.endpoint,
       {
         params: {
           PageIndex: page,
-          PageSize: limit
+          PageSize: limit,
+          name,
+          code
         }
       }
     )
@@ -77,7 +83,11 @@ export const createDeductionSpravochnik = (config: Partial<SpravochnikHookOption
     {
       endpoint: ApiEndpoints.zarplata_spravochnik,
       columnDefs: DeductionColumnDefs,
-      service: DeductionsService
+      service: DeductionsService,
+      dialogProps: {
+        className: 'max-w-full h-[800px]'
+      },
+      filters: [DeductionSpravochnikFilter]
     } satisfies typeof config,
     config
   )

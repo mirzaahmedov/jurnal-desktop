@@ -1,62 +1,38 @@
 import type { ColumnDef } from '@/common/components'
-import type { Nachislenie, NachislenieSostav } from '@/common/models'
+import type { Nachislenie } from '@/common/models'
 
-import { IDCell } from '@/common/components/table/renderers/id'
+import { MonthNameCell } from '@/common/components/table/renderers/month-name'
 import { SummaCell } from '@/common/components/table/renderers/summa'
-
-export const NachislenieSostavColumns: ColumnDef<NachislenieSostav>[] = [
-  {
-    key: 'id',
-    width: 160,
-    minWidth: 160,
-    renderCell: IDCell
-  },
-  {
-    key: 'foiz',
-    width: 100
-  },
-  {
-    key: 'summa',
-    width: 250
-  },
-  {
-    key: 'nachislenieName',
-    header: 'nachislenie'
-  },
-  {
-    key: 'nachislenieTypeCode',
-    header: 'type',
-    width: 200
-  }
-]
 
 export const NachislenieColumns: ColumnDef<Nachislenie>[] = [
   {
-    key: 'id',
-    width: 160,
-    minWidth: 160,
-    renderCell: IDCell
-  },
-  {
     key: 'docNum',
     header: 'doc_num',
-    width: 150,
-    minWidth: 150
+    width: 100,
+    minWidth: 100
   },
   {
     key: 'docDate',
     header: 'doc_date',
-    minWidth: 150
+    minWidth: 100
+  },
+  {
+    numeric: true,
+    key: 'naRukiSum',
+    header: 'na_ruki',
+    minWidth: 150,
+    renderCell: ({ naRukiSum }) => <SummaCell summa={naRukiSum} />
   },
   {
     key: 'nachislenieYear',
     header: 'year',
-    minWidth: 150
+    minWidth: 80
   },
   {
     key: 'nachislenieMonth',
     header: 'month',
-    minWidth: 200
+    renderCell: (row) => <MonthNameCell monthNumber={row.nachislenieMonth} />,
+    minWidth: 100
   },
   {
     key: 'nachislenieSum',
@@ -71,8 +47,9 @@ export const NachislenieColumns: ColumnDef<Nachislenie>[] = [
     renderCell: ({ uderjanieSum }) => <SummaCell summa={uderjanieSum} />
   },
   {
+    fit: true,
     key: 'total',
-    header: 'total',
-    minWidth: 150
+    header: 'employee_count',
+    minWidth: 100
   }
 ]

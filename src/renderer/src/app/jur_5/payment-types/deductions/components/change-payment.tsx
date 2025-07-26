@@ -1,4 +1,4 @@
-import type { Payment } from '@/common/models/payments'
+import type { Deduction } from '@/common/models/deduction'
 
 import { useState } from 'react'
 
@@ -18,24 +18,24 @@ import { Label } from '@/common/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/common/components/ui/radio-group'
 import { Textarea } from '@/common/components/ui/textarea'
 import { MainZarplataService } from '@/common/features/main-zarplata/service'
-import { PayrollPaymentService } from '@/common/features/payroll-payment/service'
+import { PayrollDeductionService } from '@/common/features/payroll-deduction/service'
 import { useVacantTreeNodes } from '@/common/features/vacant/hooks/use-vacant-tree-nodes'
 import { VacantTree, type VacantTreeNode } from '@/common/features/vacant/ui/vacant-tree'
 import { useToggle } from '@/common/hooks'
 import { flattenTree } from '@/common/lib/tree/relation-tree'
 import { getVacantRayon } from '@/common/utils/zarplata'
 
-import { PaymentsChoosePaymentsDialog } from './choose-payments-dialog'
+import { DeductionsChoosePaymentsDialog } from './choose-payments-dialog'
 
-export const PaymentsChangePayment = () => {
-  const paymentToggle = useToggle()
+export const DeductionsChangePayment = () => {
+  const deductionToggle = useToggle()
 
   const form = useForm({
     defaultValues: {
       type: 'all',
       percentage: 0,
       summa: 0,
-      paymentId: 0
+      deductionId: 0
     }
   })
 
@@ -43,14 +43,14 @@ export const PaymentsChangePayment = () => {
   const { treeNodes, flatNodes, vacantsQuery } = useVacantTreeNodes()
 
   const [activeVacant, setActiveVacant] = useState<VacantTreeNode | null>(null)
-  const [selectedPayment, setSelectedPayment] = useState<Payment>()
+  const [selectedDeduction, setSelectedDeduction] = useState<Deduction>()
   const [selectedVacants, setSelectedVacants] = useState<VacantTreeNode[]>([])
 
   const { mutate: changePayment, isPending } = useMutation({
-    mutationFn: PayrollPaymentService.changePayment,
+    mutationFn: PayrollDeductionService.changePayment,
     onSuccess: () => {
       form.reset()
-      setSelectedPayment(undefined)
+      setSelectedDeduction(undefined)
       setSelectedVacants([])
       setActiveVacant(null)
       toast.success(t('update_success'))
@@ -71,8 +71,8 @@ export const PaymentsChangePayment = () => {
     changePayment({
       isXarbiy: values.type === 'military',
       values: {
-        paymentId: values.paymentId,
-        payment: selectedPayment,
+        deductionId: values.deductionId,
+        payment: selectedDeduction,
         vacants: selectedVacants.map((vacant) => ({ vacantId: vacant.id })),
         percentage: values.percentage,
         summa: values.summa
@@ -172,10 +172,8 @@ export const PaymentsChangePayment = () => {
                       <Textarea
                         readOnly
                         rows={2}
-                        value={[selectedPayment?.name, selectedPayment?.nameUz]
-                          .filter(Boolean)
-                          .join(' - ')}
-                        onDoubleClick={paymentToggle.open}
+                        value={[selectedDeduction?.name].filter(Boolean).join(' - ')}
+                        onDoubleClick={deductionToggle.open}
                       />
                     </FormElement>
                   </div>
@@ -254,7 +252,7 @@ export const PaymentsChangePayment = () => {
                   />
                   <Button
                     isPending={isPending}
-                    isDisabled={isPending || !selectedVacants.length || !form.watch('paymentId')}
+                    isDisabled={isPending || !selectedVacants.length || !form.watch('deductionId')}
                     type="submit"
                   >
                     {t('save')}
@@ -263,14 +261,14 @@ export const PaymentsChangePayment = () => {
               </form>
             </Form>
           </div>
-          <PaymentsChoosePaymentsDialog
-            isOpen={paymentToggle.isOpen}
-            onOpenChange={paymentToggle.setOpen}
-            selectedPaymentId={form.watch('paymentId')}
-            onSelect={(payment) => {
-              form.setValue('paymentId', payment.id)
-              setSelectedPayment(payment)
-              paymentToggle.close()
+          <DeductionsChoosePaymentsDialog
+            isOpen={deductionToggle.isOpen}
+            onOpenChange={deductionToggle.setOpen}
+            selectedDeductionId={form.watch('deductionId')}
+            onSelect={(deduction) => {
+              form.setValue('deductionId', deduction.id)
+              setSelectedDeduction(deduction)
+              deductionToggle.close()
             }}
           />
         </div>

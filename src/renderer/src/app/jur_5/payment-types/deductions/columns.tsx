@@ -1,13 +1,14 @@
 import type { ColumnDef } from '@/common/components'
 import type { Deduction } from '@/common/models/deduction'
 
-import { IDCell } from '@/common/components/table/renderers/id'
+import { SelectCell } from '@/common/components/table/renderers/select'
 
 export const DeductionColumnDefs: ColumnDef<Deduction>[] = [
   {
     key: 'id',
-    minWidth: 120,
-    renderCell: IDCell
+    fit: true,
+    header: ' ',
+    renderCell: SelectCell
   },
   {
     key: 'code'

@@ -1,5 +1,6 @@
 import type { ColumnDef } from '@/common/components'
 import type { GenericTableProps } from '@/common/components/generic-table/interface'
+import type { DialogContentProps } from '@/common/components/jolly/dialog'
 import type { ApiEndpoints, CRUDService } from '@/common/features/crud'
 import type { useToggle } from '@/common/hooks'
 import type { DialogProps } from '@radix-ui/react-dialog'
@@ -57,6 +58,7 @@ export type SpravochnikData<T extends object> = {
   Dialog?: ComponentType<SpravochnikDialogProps>
   CustomTable?: ComponentType<SpravochnikTableProps<T>>
   tableProps?: Partial<GenericTableProps<T>>
+  dialogProps?: Partial<DialogContentProps>
 }
 export type SpravochnikStore<T extends object> = {
   isOpen: (id: string) => boolean

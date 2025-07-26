@@ -14,10 +14,7 @@ export const MainZarplataColumnDefs: ColumnDef<MainZarplata>[] = [
     header: 'doljnost'
   },
   {
-    key: 'xarbiy',
+    key: 'spravochikZarplataZvanieName',
     header: 'military_rank'
-  },
-  {
-    key: 'status'
   }
 ]

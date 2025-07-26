@@ -499,5 +499,6 @@
   "change_payment": "To'lov turini o'zgartirish",
   "show_empty_rows": "Bo'sh qatorlarni ko'rsatish",
   "hide_empty_rows": "Bo‘sh qatorlarni yashirish",
-  "civilian": "Fuqaro"
+  "civilian": "Fuqaro",
+  "employee_count": "Xodimlar soni"
 }

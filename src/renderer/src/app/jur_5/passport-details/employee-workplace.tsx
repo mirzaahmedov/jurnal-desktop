@@ -15,6 +15,7 @@ import { Textarea } from '@/common/components/ui/textarea'
 import { MainZarplataService } from '@/common/features/main-zarplata/service'
 import { WorkplaceService } from '@/common/features/workplace/service'
 import { useToggle } from '@/common/hooks'
+import { formatDate, parseLocaleDate } from '@/common/lib/date'
 
 import { ZarplataStavkaOptions } from '../common/data'
 import { AssignEmployeePositionDialog } from './assign-employee-position-dialog'
@@ -102,7 +103,7 @@ export const EmployeeWorkplace = ({ workplace, mainZarplata }: EmployeeWorkplace
           >
             <JollyDatePicker
               readOnly
-              value={workplace?.doljnostPrikazDate ?? ''}
+              value={formatDate(parseLocaleDate(workplace?.doljnostPrikazDate ?? ''))}
               className=""
               containerProps={{
                 className: 'min-w-36'

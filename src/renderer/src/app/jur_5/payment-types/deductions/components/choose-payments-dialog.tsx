@@ -1,4 +1,4 @@
-import type { Payment } from '@/common/models/payments'
+import type { Deduction } from '@/common/models/deduction'
 import type { DialogTriggerProps } from 'react-aria-components'
 
 import { useState } from 'react'
@@ -16,26 +16,26 @@ import {
 } from '@/common/components/jolly/dialog'
 import { Pagination } from '@/common/components/pagination'
 
-import { PaymentColumnDefs } from '../columns'
-import { PaymentsService } from '../service'
+import { DeductionColumnDefs } from '../columns'
+import { DeductionsService } from '../service'
 
-export interface PaymentsChoosePaymentsDialogProps extends Omit<DialogTriggerProps, 'children'> {
-  selectedPaymentId: number | undefined
-  onSelect?: (payment: Payment) => void
+export interface DeductionsChoosePaymentsDialogProps extends Omit<DialogTriggerProps, 'children'> {
+  selectedDeductionId: number | undefined
+  onSelect?: (payment: Deduction) => void
 }
-export const PaymentsChoosePaymentsDialog = ({
-  selectedPaymentId,
+export const DeductionsChoosePaymentsDialog = ({
+  selectedDeductionId,
   onSelect,
   ...props
-}: PaymentsChoosePaymentsDialogProps) => {
+}: DeductionsChoosePaymentsDialogProps) => {
   const [page, setPage] = useState(1)
   const [limit, setLimit] = useState(10)
 
   const { t } = useTranslation(['app'])
 
-  const { data: payments, isFetching } = useQuery({
-    queryKey: [PaymentsService.QueryKeys.GetAll, { page, limit }],
-    queryFn: PaymentsService.getAll
+  const { data: deductions, isFetching } = useQuery({
+    queryKey: [DeductionsService.QueryKeys.GetAll, { page, limit }],
+    queryFn: DeductionsService.getAll
   })
 
   return (
@@ -44,14 +44,14 @@ export const PaymentsChoosePaymentsDialog = ({
         <DialogContent className="w-full max-w-9xl h-full max-h-[800px]">
           <div className="h-full flex flex-col w-full overflow-hidden">
             <DialogHeader>
-              <DialogTitle>{t('payment')}</DialogTitle>
+              <DialogTitle>{t('deduction')}</DialogTitle>
             </DialogHeader>
             <div className="relative flex-1 overflow-auto scrollbar">
               {isFetching ? <LoadingOverlay /> : null}
               <GenericTable
-                columnDefs={PaymentColumnDefs}
-                data={payments?.data ?? []}
-                selectedIds={selectedPaymentId ? [selectedPaymentId] : []}
+                columnDefs={DeductionColumnDefs}
+                data={deductions?.data ?? []}
+                selectedIds={selectedDeductionId ? [selectedDeductionId] : []}
                 onClickRow={(row) => onSelect?.(row)}
               />
             </div>
@@ -59,8 +59,8 @@ export const PaymentsChoosePaymentsDialog = ({
               <Pagination
                 page={page}
                 limit={limit}
-                pageCount={payments?.meta?.pageCount ?? 0}
-                count={payments?.meta?.count ?? 0}
+                pageCount={deductions?.meta?.pageCount ?? 0}
+                count={deductions?.meta?.count ?? 0}
                 onChange={({ page, limit }) => {
                   if (page) {
                     setPage(page)

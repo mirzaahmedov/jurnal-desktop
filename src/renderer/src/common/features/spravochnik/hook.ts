@@ -99,6 +99,7 @@ export const useSpravochnik = <T extends { id: number }>(
       disabledIds: paramsRef.current.disabledIds,
       selectedId,
       tableProps: options.tableProps,
+      dialogProps: options.dialogProps,
       onClose: () => {
         callbacksRef.current.onClose?.()
         if (inputRef.current) {
@@ -129,6 +130,7 @@ export const useSpravochnik = <T extends { id: number }>(
     options.queryKeys,
     options.getRowId,
     options.tableProps,
+    options.dialogProps,
     selectedId,
     open,
     close

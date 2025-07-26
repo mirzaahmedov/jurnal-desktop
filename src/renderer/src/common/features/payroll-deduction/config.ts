@@ -14,3 +14,18 @@ export const defaultValues: PayrollDeductionFormValues = {
   summa: 0,
   deductionId: 0
 }
+
+export const PayrollDeductionChangePaymentFormSchema = z.object({
+  vacants: z.array(
+    z.object({
+      vacantId: z.number()
+    })
+  ),
+  deductionId: z.number(),
+  payment: z.any(),
+  percentage: z.number(),
+  summa: z.number()
+})
+export type PayrollDeductionChangePaymentFormValues = z.infer<
+  typeof PayrollDeductionChangePaymentFormSchema
+>
