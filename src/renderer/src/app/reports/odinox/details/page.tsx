@@ -1,10 +1,11 @@
+import type { OdinoxTableRow } from './interfaces'
 import type { CellEventHandler, EditableTableMethods } from '@/common/components/editable-table'
 import type { OdinoxDocument } from '@/common/models'
 
 import { type KeyboardEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { useForm } from 'react-hook-form'
+import { useForm, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
@@ -12,6 +13,7 @@ import { toast } from 'react-toastify'
 import { Button } from '@/common/components/jolly/button'
 import { MonthPicker } from '@/common/components/month-picker'
 import { SearchInput } from '@/common/components/search-input'
+import { Badge } from '@/common/components/ui/badge'
 import { useRequisitesStore } from '@/common/features/requisites'
 import { useRequisitesRedirect } from '@/common/features/requisites/use-main-schet-redirect'
 import { useLayout } from '@/common/layout'
@@ -36,6 +38,7 @@ const OdinoxDetailsPage = () => {
   const queryClient = useQueryClient()
   const setLayout = useLayout()
 
+  const [isEmptyRowsHidden, setEmptyRowsHidden] = useState(false)
   const [selected, setSelected] = useState<{
     docs: OdinoxDocument[]
     args: GetDocsArgs
@@ -262,6 +265,30 @@ const OdinoxDetailsPage = () => {
     [form, types, main_schet_id]
   )
 
+  const rows = useWatch({
+    control: form.control,
+    name: 'rows'
+  })
+  const isRowEmpty = (row: OdinoxTableRow) => {
+    return Object.entries(row).every(([key, value]) => {
+      if (
+        key === 'smeta_id' ||
+        key === 'smeta_name' ||
+        key === 'smeta_number' ||
+        key === 'group_number'
+      ) {
+        return true
+      }
+      return value === 0 || value === '' || value === null
+    })
+  }
+  const isRowVisible = useCallback<(args: { index: number }) => boolean>(
+    ({ index }) => {
+      return isEmptyRowsHidden ? !isRowEmpty(form.getValues(`rows.${index}`)) : true
+    },
+    [isEmptyRowsHidden, form]
+  )
+
   return (
     <DetailsView className="h-full">
       <DetailsView.Content
@@ -277,6 +304,15 @@ const OdinoxDetailsPage = () => {
             <div className="flex items-center justify-between gap-5 p-5 border-b">
               <SearchInput onKeyDown={handleSearch} />
               <div className="flex items-center gap-5">
+                <Button
+                  variant="ghost"
+                  onPress={() => setEmptyRowsHidden((prev) => !prev)}
+                >
+                  {isEmptyRowsHidden ? t('show_empty_rows') : t('hide_empty_rows')}{' '}
+                  <Badge className="ml-2.5 text-xs">
+                    {rows.slice(0, rows.length - 1).filter(isRowEmpty).length}
+                  </Badge>
+                </Button>
                 <MonthPicker
                   popoverProps={{
                     placement: 'bottom end'
@@ -319,6 +355,7 @@ const OdinoxDetailsPage = () => {
                 form={form}
                 name="rows"
                 onCellDoubleClick={handleCellDoubleClick}
+                isRowVisible={isRowVisible}
               />
             </div>
           </div>
