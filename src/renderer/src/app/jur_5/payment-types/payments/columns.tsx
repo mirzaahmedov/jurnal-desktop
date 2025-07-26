@@ -13,11 +13,13 @@ import { Checkbox } from '@/common/components/ui/checkbox'
 import { PaymentsService } from './service'
 
 interface CheckboxCellProps {
+  isMutable?: boolean
   row: Payment
   field: keyof Payment & string
 }
-const CheckboxCell = ({ row, field }: CheckboxCellProps) => {
+const CheckboxCell = ({ isMutable = true, row, field }: CheckboxCellProps) => {
   const queryClient = useQueryClient()
+
   const { mutate: updatePayment, isPending: isUpdating } = useMutation({
     mutationKey: [PaymentsService.QueryKeys.Update, row.id],
     mutationFn: PaymentsService.update,
@@ -42,16 +44,20 @@ const CheckboxCell = ({ row, field }: CheckboxCellProps) => {
 
   return isUpdating ? (
     <Spinner />
-  ) : (
+  ) : isMutable ? (
     <Checkbox
       checked={Boolean(row[field])}
       disabled={isUpdating}
       onCheckedChange={handleCheckedChange}
     />
+  ) : (
+    <Checkbox checked={Boolean(row[field])} />
   )
 }
 
-export const PaymentColumnDefs: ColumnDef<Payment>[] = [
+export const PaymentColumnDefs: (args: { isMutable: boolean }) => ColumnDef<Payment>[] = ({
+  isMutable = true
+}) => [
   {
     key: 'id',
     header: ' ',
@@ -79,6 +85,7 @@ export const PaymentColumnDefs: ColumnDef<Payment>[] = [
       <CheckboxCell
         row={row}
         field="isINPSTaxable"
+        isMutable={isMutable}
       />
     )
   },
@@ -91,6 +98,7 @@ export const PaymentColumnDefs: ColumnDef<Payment>[] = [
       <CheckboxCell
         row={row}
         field="isUnionDeductible"
+        isMutable={isMutable}
       />
     )
   },
@@ -103,6 +111,7 @@ export const PaymentColumnDefs: ColumnDef<Payment>[] = [
       <CheckboxCell
         row={row}
         field="isAlimonyDeductible"
+        isMutable={isMutable}
       />
     )
   },
@@ -115,6 +124,7 @@ export const PaymentColumnDefs: ColumnDef<Payment>[] = [
       <CheckboxCell
         row={row}
         field="isIncomeTaxDeductible"
+        isMutable={isMutable}
       />
     )
   },
@@ -127,6 +137,7 @@ export const PaymentColumnDefs: ColumnDef<Payment>[] = [
       <CheckboxCell
         row={row}
         field="isUSTDeductible"
+        isMutable={isMutable}
       />
     )
   },

@@ -49,7 +49,7 @@ export const PaymentsChoosePaymentsDialog = ({
             <div className="relative flex-1 overflow-auto scrollbar">
               {isFetching ? <LoadingOverlay /> : null}
               <GenericTable
-                columnDefs={PaymentColumnDefs}
+                columnDefs={PaymentColumnDefs({ isMutable: false })}
                 data={payments?.data ?? []}
                 selectedIds={selectedPaymentId ? [selectedPaymentId] : []}
                 onClickRow={(row) => onSelect?.(row)}

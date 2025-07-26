@@ -25,7 +25,7 @@ import {
 } from './filters'
 import { PaymentsService } from './service'
 
-const ColumnDefs = PaymentColumnDefs.filter((column) => column.key !== 'id')
+const ColumnDefs = PaymentColumnDefs({ isMutable: true }).filter((column) => column.key !== 'id')
 
 const PaymentsPage = () => {
   const setLayout = useLayout()

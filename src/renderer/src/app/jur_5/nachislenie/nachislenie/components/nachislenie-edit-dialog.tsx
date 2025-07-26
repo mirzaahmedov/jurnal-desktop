@@ -170,19 +170,22 @@ export const NachislenieEditDialog = ({
                       key: 'kartochka'
                     },
                     {
-                      key: 'totalNaruki',
-                      header: 'na_ruki',
-                      renderCell: ({ totalNaruki }) => <SummaCell summa={totalNaruki} />
+                      width: 200,
+                      key: 'totalNachislenie',
+                      header: 'nachislenie',
+                      renderCell: ({ totalNachislenie }) => <SummaCell summa={totalNachislenie} />
                     },
                     {
+                      width: 200,
                       key: 'totalUderjanie',
                       header: 'uderjanie',
                       renderCell: ({ totalUderjanie }) => <SummaCell summa={totalUderjanie} />
                     },
                     {
-                      key: 'totalNachislenie',
-                      header: 'nachislenie',
-                      renderCell: ({ totalNachislenie }) => <SummaCell summa={totalNachislenie} />
+                      width: 200,
+                      key: 'totalNaruki',
+                      header: 'na_ruki',
+                      renderCell: ({ totalNaruki }) => <SummaCell summa={totalNaruki} />
                     }
                   ]}
                   classNames={{

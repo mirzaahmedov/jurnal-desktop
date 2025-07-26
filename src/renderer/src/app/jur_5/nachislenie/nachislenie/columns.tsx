@@ -17,13 +17,6 @@ export const NachislenieColumns: ColumnDef<Nachislenie>[] = [
     minWidth: 100
   },
   {
-    numeric: true,
-    key: 'naRukiSum',
-    header: 'na_ruki',
-    minWidth: 150,
-    renderCell: ({ naRukiSum }) => <SummaCell summa={naRukiSum} />
-  },
-  {
     key: 'nachislenieYear',
     header: 'year',
     minWidth: 80
@@ -35,16 +28,25 @@ export const NachislenieColumns: ColumnDef<Nachislenie>[] = [
     minWidth: 100
   },
   {
+    numeric: true,
     key: 'nachislenieSum',
-    header: 'summa',
+    header: 'nachislenie',
     minWidth: 150,
     renderCell: ({ nachislenieSum }) => <SummaCell summa={nachislenieSum} />
   },
   {
+    numeric: true,
     key: 'uderjanieSum',
     header: 'uderjanie',
     minWidth: 150,
     renderCell: ({ uderjanieSum }) => <SummaCell summa={uderjanieSum} />
+  },
+  {
+    numeric: true,
+    key: 'naRukiSum',
+    header: 'na_ruki',
+    minWidth: 150,
+    renderCell: ({ naRukiSum }) => <SummaCell summa={naRukiSum} />
   },
   {
     fit: true,
