@@ -502,5 +502,7 @@
   "hide_empty_rows": "Бўш қаторларни яшириш",
   "civilian": "Фуқаро",
   "employee_count": "Ходимлар сони",
-  "count": "Сони"
+  "count": "Сони",
+  "by_contract": "Шартнома бўйича",
+  "by_smeta": "Смета бўйича"
 }

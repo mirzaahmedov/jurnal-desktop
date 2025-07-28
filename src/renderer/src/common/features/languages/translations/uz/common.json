@@ -501,5 +501,7 @@
   "hide_empty_rows": "Bo‘sh qatorlarni yashirish",
   "civilian": "Fuqaro",
   "employee_count": "Xodimlar soni",
-  "count": "Soni"
+  "count": "Soni",
+  "by_contract": "Shartnoma bo‘yicha",
+  "by_smeta": "Smeta bo‘yicha"
 }

@@ -115,7 +115,7 @@ const BankMonitorPage = () => {
               </Button>
 
               <DownloadFile
-                fileName={`банк-шапка-отчет_${dates.from}&${dates.to}.xlsx`}
+                fileName={`${t('pages.bank')}-${t('report')}_${dates.from}&${dates.to}.xlsx`}
                 url="bank/monitoring/cap"
                 buttonText={t('cap-report')}
                 params={{
@@ -126,6 +126,30 @@ const BankMonitorPage = () => {
                   to: dates.to,
                   year: startDate.getFullYear(),
                   month: startDate.getMonth() + 1,
+                  excel: true
+                }}
+              />
+
+              <DownloadFile
+                fileName={`${t('pages.bank')}-${t('by_contract')}_${dates.from}&${dates.to}.xlsx`}
+                url="/bank/monitoring/by-contract"
+                buttonText={t('by_contract')}
+                params={{
+                  main_schet_id,
+                  from: dates.from,
+                  to: dates.to,
+                  excel: true
+                }}
+              />
+
+              <DownloadFile
+                fileName={`${t('pages.bank')}-${t('by_smeta')}_${dates.from}&${dates.to}.xlsx`}
+                url="/bank/monitoring/by-smeta"
+                buttonText={t('by_smeta')}
+                params={{
+                  main_schet_id,
+                  from: dates.from,
+                  to: dates.to,
                   excel: true
                 }}
               />
