@@ -43,7 +43,7 @@ export class WorkplaceService {
       `${WorkplaceService.endpoint}/${id}`
     )
     return getSingleApiResponse({
-      response: res.data
+      response: res.data?.data
     })
   }
 

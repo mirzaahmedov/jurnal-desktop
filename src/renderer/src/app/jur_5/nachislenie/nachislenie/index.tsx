@@ -9,6 +9,7 @@ import { toast } from 'react-toastify'
 
 import { GenericTable, LoadingOverlay } from '@/common/components'
 import { MonthSelect } from '@/common/components/month-select'
+import { Pagination } from '@/common/components/pagination'
 import { SearchInputDebounced } from '@/common/components/search-input-debounced'
 import { YearSelect } from '@/common/components/year-select'
 import { useConfirm } from '@/common/features/confirm'
@@ -106,7 +107,7 @@ export const Nachislenies = () => {
       <Allotment.Pane
         preferredSize={300}
         maxSize={600}
-        minSize={200}
+        minSize={300}
         className="w-full bg-gray-50"
       >
         <div className="h-full flex flex-col">
@@ -149,12 +150,19 @@ export const Nachislenies = () => {
           <div className="flex-1 relative w-full overflow-auto scrollbar">
             {isFetchingNachislenie || isDeleting ? <LoadingOverlay /> : null}
             <GenericTable
-              data={nachislenie ?? []}
+              data={nachislenie?.data ?? []}
               columnDefs={NachislenieColumns}
               onEdit={handleRowEdit}
               onDoubleClickRow={handleRowEdit}
               onDelete={handleRowDelete}
               className="table-generic-xs"
+            />
+          </div>
+          <div className="p-5">
+            <Pagination
+              {...pagination}
+              count={nachislenie?.meta?.count ?? 0}
+              pageCount={nachislenie?.meta?.pageCount ?? 0}
             />
           </div>
         </div>

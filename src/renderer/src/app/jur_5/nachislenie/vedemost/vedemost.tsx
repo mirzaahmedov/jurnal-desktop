@@ -1,59 +1,64 @@
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 
 import { useQuery } from '@tanstack/react-query'
 import { Allotment } from 'allotment'
 
 import { NachislenieService } from '@/app/jur_5/nachislenie/nachislenie/service'
-import { VacantTree, type VacantTreeNode } from '@/app/region-admin/vacant/vacant-tree'
 import { GenericTable, LoadingOverlay } from '@/common/components'
-import { VacantService } from '@/common/features/vacant/service'
-import { arrayToTreeByRelations } from '@/common/lib/tree/relation-tree'
+import { useRequisitesStore } from '@/common/features/requisites'
+import { useVacantTreeNodes } from '@/common/features/vacant/hooks/use-vacant-tree-nodes'
+import {
+  VacantTree,
+  type VacantTreeNode,
+  VacantTreeSearch
+} from '@/common/features/vacant/ui/vacant-tree'
+import { usePagination } from '@/common/hooks'
 
 import { VedemostColumnDefs } from './columns'
 
 export const Vedemosts = () => {
+  const pagination = usePagination()
+
   const [selectedVacant, setSelectedVacant] = useState<VacantTreeNode | null>(null)
 
-  const { data: vacants, isFetching: isFetchingVacants } = useQuery({
-    queryKey: [VacantService.QueryKeys.GetAll, { page: 1, limit: 100000000000000 }],
-    queryFn: VacantService.getAll
-  })
+  const { budjet_id } = useRequisitesStore()
+  const { filteredTreeNodes, search, setSearch, vacantsQuery } = useVacantTreeNodes()
   const { data: vedemost, isFetching: isFetchingVedemost } = useQuery({
     queryKey: [
       NachislenieService.QueryKeys.GetByVacantId,
       {
-        vacantId: selectedVacant?.id ?? 0
+        page: pagination.page,
+        limit: pagination.limit,
+        vacantId: selectedVacant?.id ?? 0,
+        budjet_name_id: budjet_id!
       }
     ],
     queryFn: NachislenieService.getByVacantId,
     enabled: !!selectedVacant
   })
 
-  const treeNodes = useMemo(
-    () =>
-      arrayToTreeByRelations({
-        array: vacants?.data ?? [],
-        getId: (node) => node.id,
-        getParentId: (node) => node.parentId
-      }),
-    [vacants]
-  )
-
   return (
     <Allotment className="h-full">
       <Allotment.Pane
         preferredSize={300}
         maxSize={600}
-        minSize={200}
+        minSize={300}
         className="w-full bg-gray-50"
       >
-        <div className="relative overflow-auto scrollbar h-full">
-          {isFetchingVacants ? <LoadingOverlay /> : null}
-          <VacantTree
-            nodes={treeNodes}
-            selectedIds={selectedVacant ? [selectedVacant.id] : []}
-            onSelectNode={setSelectedVacant}
+        <div className="relative h-full flex flex-col">
+          {vacantsQuery.isFetching ? <LoadingOverlay /> : null}
+          <VacantTreeSearch
+            search={search}
+            onValueChange={setSearch}
+            treeNodes={filteredTreeNodes}
           />
+          <div className="flex-1 overflow-auto scrollbar">
+            <VacantTree
+              nodes={filteredTreeNodes}
+              selectedIds={selectedVacant ? [selectedVacant.id] : []}
+              onSelectNode={setSelectedVacant}
+            />
+          </div>
         </div>
       </Allotment.Pane>
       <Allotment.Pane>

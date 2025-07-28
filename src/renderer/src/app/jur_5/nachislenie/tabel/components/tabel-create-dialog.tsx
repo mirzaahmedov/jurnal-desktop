@@ -74,7 +74,7 @@ export const TabelCreateDialog = ({
               <Allotment.Pane
                 preferredSize={300}
                 maxSize={600}
-                minSize={200}
+                minSize={300}
                 className="w-full bg-gray-50"
               >
                 <div className="relative h-full flex flex-col">

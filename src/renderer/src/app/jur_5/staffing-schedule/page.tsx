@@ -248,7 +248,7 @@ const StaffingTable = () => {
         <Allotment.Pane
           preferredSize={300}
           maxSize={600}
-          minSize={200}
+          minSize={300}
           className="w-full divide-y flex flex-col bg-gray-50"
         >
           <div className="flex-1 min-h-0 flex flex-col">

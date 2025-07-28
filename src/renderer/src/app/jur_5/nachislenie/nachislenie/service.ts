@@ -2,6 +2,7 @@ import type { NachislenieFormValues } from './config'
 import type { Nachislenie, NachislenieProvodka } from '@/common/models'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 
+import { getMultiApiResponse } from '@/common/lib/zarplata'
 import { type ZarplataApiResponse, zarplataApiNew } from '@/common/lib/zarplata_new'
 
 export class NachislenieService {
@@ -57,10 +58,17 @@ export class NachislenieService {
     >
   ) {
     const params = ctx.queryKey[1]
-    const res = await zarplataApiNew.get<Nachislenie[]>(`${NachislenieService.endpoint}`, {
-      params
+    const res = await zarplataApiNew.get<ZarplataApiResponse<Nachislenie[]>>(
+      `${NachislenieService.endpoint}`,
+      {
+        params
+      }
+    )
+    return getMultiApiResponse({
+      response: res.data,
+      page: params.page,
+      limit: params.limit
     })
-    return res.data
   }
 
   static async create(values: NachislenieFormValues) {

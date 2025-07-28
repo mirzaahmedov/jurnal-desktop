@@ -138,7 +138,7 @@ export const NachislenieCreateDialog = ({
               <Allotment.Pane
                 preferredSize={300}
                 maxSize={600}
-                minSize={200}
+                minSize={300}
                 className="w-full bg-gray-50"
               >
                 <div className="h-full flex flex-col">
@@ -251,7 +251,7 @@ export const NachislenieCreateDialog = ({
                         {isFetching ? <LoadingOverlay /> : null}
                         <GenericTable
                           columnDefs={ChooseTabelColumnDefs}
-                          data={tabels ?? []}
+                          data={tabels?.data ?? []}
                           selectedIds={form.watch('tabelMainId') ? [form.watch('tabelMainId')] : []}
                           onClickRow={(value) => form.setValue('tabelMainId', value.id)}
                           className="table-generic-xs"

@@ -10,6 +10,7 @@ import { toast } from 'react-toastify'
 import { TabelService } from '@/app/jur_5/nachislenie/tabel/service'
 import { GenericTable, LoadingOverlay } from '@/common/components'
 import { MonthSelect } from '@/common/components/month-select'
+import { Pagination } from '@/common/components/pagination'
 import { SearchInputDebounced } from '@/common/components/search-input-debounced'
 import { YearSelect } from '@/common/components/year-select'
 import { useConfirm } from '@/common/features/confirm'
@@ -111,7 +112,7 @@ export const TabelsView = () => {
       <Allotment.Pane
         preferredSize={300}
         maxSize={600}
-        minSize={200}
+        minSize={300}
         className="w-full bg-gray-50"
       >
         <div className="h-full flex flex-col">
@@ -152,7 +153,7 @@ export const TabelsView = () => {
         <div className="flex-1 relative w-full overflow-auto scrollbar pl-px">
           {vacantsQuery.isFetching || isFetchingTabels || isDeleting ? <LoadingOverlay /> : null}
           <GenericTable
-            data={tabels ?? []}
+            data={tabels?.data ?? []}
             columnDefs={TabelColumnDefsWithoutSelect}
             onEdit={handleRowEdit}
             onDoubleClickRow={handleRowEdit}
@@ -177,6 +178,13 @@ export const TabelsView = () => {
               />
             </>
           ) : null}
+        </div>
+        <div className="p-5">
+          <Pagination
+            {...pagination}
+            count={tabels?.meta?.count ?? 0}
+            pageCount={tabels?.meta?.pageCount ?? 0}
+          />
         </div>
       </Allotment.Pane>
     </Allotment>

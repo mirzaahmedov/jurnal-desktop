@@ -2,7 +2,7 @@ import type { MainZarplata } from '@/common/models'
 import type { Workplace } from '@/common/models/workplace'
 import type { DialogTriggerProps } from 'react-aria-components'
 
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useQuery } from '@tanstack/react-query'
@@ -11,7 +11,6 @@ import { CheckCircle } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
-import { VacantTree, type VacantTreeNode } from '@/app/region-admin/vacant/vacant-tree'
 import { GenericTable, LoadingOverlay } from '@/common/components'
 import { FormElement } from '@/common/components/form'
 import { JollyDatePicker } from '@/common/components/jolly-date-picker'
@@ -27,12 +26,16 @@ import { Pagination } from '@/common/components/pagination'
 import { Form, FormField } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
 import { Textarea } from '@/common/components/ui/textarea'
-import { VacantService } from '@/common/features/vacant/service'
+import { useVacantTreeNodes } from '@/common/features/vacant/hooks/use-vacant-tree-nodes'
+import {
+  VacantTree,
+  type VacantTreeNode,
+  VacantTreeSearch
+} from '@/common/features/vacant/ui/vacant-tree'
 import { WorkplaceColumns } from '@/common/features/workplace/columns'
 import { WorkplaceService } from '@/common/features/workplace/service'
 import { usePagination } from '@/common/hooks'
 import { formatLocaleDate } from '@/common/lib/format'
-import { arrayToTreeByRelations } from '@/common/lib/tree/relation-tree'
 
 import {
   AssignPositionFormSchema,
@@ -60,10 +63,7 @@ export const AssignEmployeePositionDialog = ({
     resolver: zodResolver(AssignPositionFormSchema)
   })
 
-  const { data: vacants, isFetching: isFetchingVacants } = useQuery({
-    queryKey: [VacantService.QueryKeys.GetAll, { page: 1, limit: 100000000000000 }],
-    queryFn: VacantService.getAll
-  })
+  const { filteredTreeNodes, search, setSearch, vacantsQuery } = useVacantTreeNodes()
 
   const { data: workplaces, isFetching: isFetchingWorkplaces } = useQuery({
     queryKey: [
@@ -78,16 +78,6 @@ export const AssignEmployeePositionDialog = ({
     placeholderData: undefined,
     enabled: !!selectedVacant
   })
-
-  const treeNodes = useMemo(
-    () =>
-      arrayToTreeByRelations({
-        array: vacants?.data ?? [],
-        getId: (node) => node.id,
-        getParentId: (node) => node.parentId
-      }),
-    [vacants]
-  )
 
   const handleSubmit = form.handleSubmit((values) => {
     if (!selectedWorkplace) return
@@ -112,18 +102,25 @@ export const AssignEmployeePositionDialog = ({
               <Allotment.Pane
                 preferredSize={300}
                 maxSize={600}
-                minSize={200}
-                className="w-full divide-y flex flex-col"
+                minSize={300}
+                className="w-full divide-y bg-gray-50"
               >
-                <div className="relative flex-1 overflow-auto scrollbar">
-                  {isFetchingVacants ? <LoadingOverlay /> : null}
-                  <VacantTree
-                    nodes={treeNodes}
-                    selectedIds={selectedVacant ? [selectedVacant.id] : []}
-                    onSelectNode={(vacant) => {
-                      setSelectedVacant(vacant)
-                    }}
+                <div className="relative h-full flex flex-col">
+                  {vacantsQuery.isFetching ? <LoadingOverlay /> : null}
+                  <VacantTreeSearch
+                    search={search}
+                    onValueChange={setSearch}
+                    treeNodes={filteredTreeNodes}
                   />
+                  <div className="flex-1 overflow-auto scrollbar">
+                    <VacantTree
+                      nodes={filteredTreeNodes}
+                      selectedIds={selectedVacant ? [selectedVacant.id] : []}
+                      onSelectNode={(vacant) => {
+                        setSelectedVacant(vacant)
+                      }}
+                    />
+                  </div>
                 </div>
               </Allotment.Pane>
               <Allotment.Pane>
@@ -150,15 +147,15 @@ export const AssignEmployeePositionDialog = ({
                       pageCount={workplaces?.meta?.pageCount ?? 0}
                     />
                   </div>
-                  <div className="border-t p-5">
+                  <div className="border-t p-5 bg-gray-100">
                     <Form {...form}>
-                      <form className="grid grid-cols-3 items-start gap-5">
-                        <div className="space-y-2 w-full max-w-md">
+                      <form className="grid grid-cols-2 items-start gap-5 mx-auto w-full max-w-6xl">
+                        <div className="space-y-2 w-full">
                           <Textarea
                             readOnly
                             value={mainZarplata?.rayon ?? ''}
                             className="bg-white w-full"
-                            rows={4}
+                            rows={3}
                           />
                           <FormElement
                             controlled={false}
@@ -173,7 +170,7 @@ export const AssignEmployeePositionDialog = ({
                           </FormElement>
                         </div>
 
-                        <div className="flex flex-col justify-between w-full max-w-md">
+                        <div className="flex flex-col justify-between w-full">
                           <FormElement
                             controlled={false}
                             label={t('employee')}

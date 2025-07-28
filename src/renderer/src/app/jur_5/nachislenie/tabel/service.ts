@@ -3,6 +3,7 @@ import type { ZarplataApiResponse } from '@/common/lib/zarplata_new'
 import type { Tabel, TabelProvodka } from '@/common/models/tabel'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 
+import { getMultiApiResponse } from '@/common/lib/zarplata'
 import { zarplataApiNew } from '@/common/lib/zarplata_new'
 
 export class TabelService {
@@ -31,7 +32,7 @@ export class TabelService {
     >
   ) {
     const { page, limit, docNum, year, month, budjetId, status, vacantId } = ctx.queryKey[1]
-    const res = await zarplataApiNew.get<Tabel[]>(`${TabelService.endpoint}`, {
+    const res = await zarplataApiNew.get<ZarplataApiResponse<Tabel[]>>(`${TabelService.endpoint}`, {
       params: {
         PageIndex: page,
         PageSize: limit,
@@ -43,7 +44,11 @@ export class TabelService {
         vacantId
       }
     })
-    return res.data
+    return getMultiApiResponse({
+      page,
+      limit,
+      response: res.data
+    })
   }
 
   static async getById(
