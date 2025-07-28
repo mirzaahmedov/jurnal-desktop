@@ -35,7 +35,7 @@ import { WarehouseMonitorService } from './service'
 import { TurnoverReportDialog } from './turnover-report-dialog'
 import { ViewModal } from './view-modal'
 
-export const MaterialMonitorPage = () => {
+const MaterialMonitorPage = () => {
   const dates = useDates()
   const pagination = usePagination()
 
@@ -359,3 +359,5 @@ export const MaterialMonitorPage = () => {
     </ListView>
   )
 }
+
+export default MaterialMonitorPage

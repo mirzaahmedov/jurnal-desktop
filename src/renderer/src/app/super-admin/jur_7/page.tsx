@@ -20,7 +20,7 @@ import { AdminMaterialRegionColumnDefs } from './columns'
 import { AdminMaterialService } from './service'
 import { ViewModal } from './view-modal'
 
-export const AdminMaterialPage = () => {
+const AdminMaterialPage = () => {
   const viewToggle = useToggle()
   const setLayout = useLayout()
   const defaultDate = useSettingsStore((state) => state.default_end_date)
@@ -81,3 +81,5 @@ export const AdminMaterialPage = () => {
     </ListView>
   )
 }
+
+export default AdminMaterialPage

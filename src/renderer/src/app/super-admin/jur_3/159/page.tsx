@@ -20,7 +20,7 @@ import { AdminOrgan159RegionColumnDefs } from './columns'
 import { AdminOrgan159Service } from './service'
 import { ViewModal } from './view-modal'
 
-export const AdminOrgan159Page = () => {
+const AdminOrgan159Page = () => {
   const viewToggle = useToggle()
   const setLayout = useLayout()
   const defaultDate = useSettingsStore((state) => state.default_end_date)
@@ -85,3 +85,5 @@ export const AdminOrgan159Page = () => {
     </ListView>
   )
 }
+
+export default AdminOrgan159Page

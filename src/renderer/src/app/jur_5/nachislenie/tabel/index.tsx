@@ -16,7 +16,11 @@ import { useConfirm } from '@/common/features/confirm'
 import { useRequisitesStore } from '@/common/features/requisites'
 import { useRequisitesRedirect } from '@/common/features/requisites/use-main-schet-redirect'
 import { useVacantTreeNodes } from '@/common/features/vacant/hooks/use-vacant-tree-nodes'
-import { VacantTree, type VacantTreeNode } from '@/common/features/vacant/ui/vacant-tree'
+import {
+  VacantTree,
+  type VacantTreeNode,
+  VacantTreeSearch
+} from '@/common/features/vacant/ui/vacant-tree'
 import { usePagination, useToggle } from '@/common/hooks'
 import { useLayout } from '@/common/layout'
 import { queryClient } from '@/common/lib/query-client'
@@ -47,7 +51,7 @@ export const TabelsView = () => {
   const createToggle = useToggle()
   const pagination = usePagination()
 
-  const { treeNodes, vacantsQuery } = useVacantTreeNodes()
+  const { filteredTreeNodes, search, setSearch, vacantsQuery } = useVacantTreeNodes()
 
   const { data: tabels, isFetching: isFetchingTabels } = useQuery({
     queryKey: [
@@ -110,12 +114,19 @@ export const TabelsView = () => {
         minSize={200}
         className="w-full bg-gray-50"
       >
-        <div className="h-full overflow-y-auto scrollbar">
-          <VacantTree
-            nodes={treeNodes}
-            selectedIds={selectedVacant ? [selectedVacant.id] : []}
-            onSelectNode={setSelectedVacant}
+        <div className="h-full flex flex-col">
+          <VacantTreeSearch
+            search={search}
+            onValueChange={setSearch}
+            treeNodes={filteredTreeNodes}
           />
+          <div className="overflow-y-auto scrollbar">
+            <VacantTree
+              nodes={filteredTreeNodes}
+              selectedIds={selectedVacant ? [selectedVacant.id] : []}
+              onSelectNode={setSelectedVacant}
+            />
+          </div>
         </div>
       </Allotment.Pane>
       <Allotment.Pane className="relative w-full pl-px flex flex-col">

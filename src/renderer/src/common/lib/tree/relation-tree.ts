@@ -72,3 +72,33 @@ export const flattenTree = <T, I>(tree: RelationTreeNode<T, I>[]): RelationTreeN
 
   return result
 }
+
+export const searchTreeNodes = <T, I>(
+  tree: RelationTreeNode<T, I>[],
+  search: string,
+  getName: (item: T) => string
+): RelationTreeNode<T, I>[] => {
+  if (!search) {
+    return tree
+  }
+
+  const lowerSearch = search.toLowerCase()
+
+  const filterNodes = (nodes: RelationTreeNode<T, I>[]): RelationTreeNode<T, I>[] => {
+    return nodes.reduce((acc: RelationTreeNode<T, I>[], node) => {
+      const nameMatch = getName(node).toLowerCase().includes(lowerSearch)
+      const children = filterNodes(node.children)
+
+      if (nameMatch || children.length > 0) {
+        acc.push({
+          ...node,
+          children
+        })
+      }
+
+      return acc
+    }, [])
+  }
+
+  return filterNodes(tree)
+}

@@ -501,5 +501,6 @@
   "show_empty_rows": "Бўш қаторларни кўрсатиш",
   "hide_empty_rows": "Бўш қаторларни яшириш",
   "civilian": "Фуқаро",
-  "employee_count": "Ходимлар сони"
+  "employee_count": "Ходимлар сони",
+  "count": "Сони"
 }

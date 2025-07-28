@@ -16,7 +16,11 @@ import {
   DialogTrigger
 } from '@/common/components/jolly/dialog'
 import { useVacantTreeNodes } from '@/common/features/vacant/hooks/use-vacant-tree-nodes'
-import { VacantTree, type VacantTreeNode } from '@/common/features/vacant/ui/vacant-tree'
+import {
+  VacantTree,
+  type VacantTreeNode,
+  VacantTreeSearch
+} from '@/common/features/vacant/ui/vacant-tree'
 
 import { TabelService } from '../service'
 import { TabelCreateForm } from './tabel-create-form'
@@ -33,7 +37,7 @@ export const TabelCreateDialog = ({
   ...props
 }: TabelCreateDialogProps) => {
   const { t } = useTranslation(['app'])
-  const { treeNodes, vacantsQuery } = useVacantTreeNodes()
+  const { search, setSearch, filteredTreeNodes, vacantsQuery } = useVacantTreeNodes()
 
   const [selectedVacant, setSelectedVacant] = useState<VacantTreeNode | undefined>(defaultVacant)
 
@@ -73,13 +77,20 @@ export const TabelCreateDialog = ({
                 minSize={200}
                 className="w-full bg-gray-50"
               >
-                <div className="relative overflow-auto scrollbar h-full">
+                <div className="relative h-full flex flex-col">
                   {vacantsQuery.isFetching ? <LoadingOverlay /> : null}
-                  <VacantTree
-                    nodes={treeNodes}
-                    selectedIds={selectedVacant ? [selectedVacant.id] : []}
-                    onSelectNode={setSelectedVacant}
+                  <VacantTreeSearch
+                    search={search}
+                    onValueChange={setSearch}
+                    treeNodes={filteredTreeNodes}
                   />
+                  <div className="flex-1 overflow-auto scrollbar">
+                    <VacantTree
+                      nodes={filteredTreeNodes}
+                      selectedIds={selectedVacant ? [selectedVacant.id] : []}
+                      onSelectNode={setSelectedVacant}
+                    />
+                  </div>
                 </div>
               </Allotment.Pane>
               <Allotment.Pane>
@@ -89,7 +100,7 @@ export const TabelCreateDialog = ({
                   onSubmit={createTabel}
                   isPending={isCreating}
                   vacant={selectedVacant}
-                  vacants={treeNodes}
+                  vacants={filteredTreeNodes}
                 />
               </Allotment.Pane>
             </Allotment>

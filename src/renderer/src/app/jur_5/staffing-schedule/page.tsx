@@ -2,7 +2,7 @@ import type { VacantFormValues } from '@/common/features/vacant/config'
 import type { WorkplaceFormValues } from '@/common/features/workplace/config'
 import type { Workplace } from '@/common/models/workplace'
 
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Allotment } from 'allotment'
@@ -14,16 +14,20 @@ import { GenericTable, LoadingOverlay } from '@/common/components'
 import { Button } from '@/common/components/jolly/button'
 import { Pagination } from '@/common/components/pagination'
 import { useConfirm } from '@/common/features/confirm'
+import { useVacantTreeNodes } from '@/common/features/vacant/hooks/use-vacant-tree-nodes'
 import { VacantService } from '@/common/features/vacant/service'
 import { VacantDialog } from '@/common/features/vacant/ui/vacant-dialog'
-import { VacantTree, type VacantTreeNode } from '@/common/features/vacant/ui/vacant-tree'
+import {
+  VacantTree,
+  type VacantTreeNode,
+  VacantTreeSearch
+} from '@/common/features/vacant/ui/vacant-tree'
 import { WorkplaceColumns } from '@/common/features/workplace/columns'
 import { WorkplaceService } from '@/common/features/workplace/service'
 import { WorkplaceDialog } from '@/common/features/workplace/workplace-dialog'
 import { useZarplataStore } from '@/common/features/zarplata/store'
 import { usePagination, useToggle } from '@/common/hooks'
 import { useLayout } from '@/common/layout'
-import { arrayToTreeByRelations } from '@/common/lib/tree/relation-tree'
 
 import { CalculateParamsService } from '../calculate-params/service'
 import { useCalculateParamsGuard } from '../common/hooks/use-calculate-params-guard'
@@ -55,10 +59,7 @@ const StaffingTable = () => {
     enabled: !!calculateParamsId
   })
 
-  const { data: vacants, isFetching: isFetchingVacants } = useQuery({
-    queryKey: [VacantService.QueryKeys.GetAll, { page: 1, limit: 100000000000000 }],
-    queryFn: VacantService.getAll
-  })
+  const { filteredTreeNodes, search, setSearch, vacantsQuery } = useVacantTreeNodes()
 
   const { mutate: createVacant, isPending: isCreatingVacant } = useMutation({
     mutationFn: VacantService.create,
@@ -223,16 +224,6 @@ const StaffingTable = () => {
     })
   }
 
-  const treeNodes = useMemo(
-    () =>
-      arrayToTreeByRelations({
-        array: vacants?.data ?? [],
-        getId: (node) => node.id,
-        getParentId: (node) => node.parentId
-      }),
-    [vacants]
-  )
-
   useEffect(() => {
     setLayout({
       title: t('pages.staffing_table'),
@@ -260,17 +251,24 @@ const StaffingTable = () => {
           minSize={200}
           className="w-full divide-y flex flex-col bg-gray-50"
         >
-          <div className="relative flex-1 overflow-auto scrollbar">
-            {isCreatingVacant || isUpdatingVacant || isDeletingVacant || isFetchingVacants ? (
+          <div className="flex-1 min-h-0 flex flex-col">
+            {isCreatingVacant || isUpdatingVacant || isDeletingVacant || vacantsQuery.isFetching ? (
               <LoadingOverlay />
             ) : null}
-            <VacantTree
-              nodes={treeNodes}
-              selectedIds={selectedVacant ? [selectedVacant.id] : []}
-              onSelectNode={(vacant) => {
-                setSelectedVacant(vacant)
-              }}
+            <VacantTreeSearch
+              search={search}
+              treeNodes={filteredTreeNodes}
+              onValueChange={setSearch}
             />
+            <div className="relative flex-1 overflow-auto scrollbar">
+              <VacantTree
+                nodes={filteredTreeNodes}
+                selectedIds={selectedVacant ? [selectedVacant.id] : []}
+                onSelectNode={(vacant) => {
+                  setSelectedVacant(vacant)
+                }}
+              />
+            </div>
           </div>
           <div className="text-center p-5 flex items-center justify-center flex-wrap gap-2">
             <Button

@@ -1,7 +1,7 @@
 import type { Workplace } from '@/common/models/workplace'
 
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { CopyPlus, Plus } from 'lucide-react'
+import { CopyPlus } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
@@ -21,7 +21,7 @@ export const WorkplaceDuplicate = ({ values }: WorkplaceDuplicateProps) => {
   const { t } = useTranslation(['app'])
   const queryClient = useQueryClient()
 
-  const { mutate: createWorkplace, isPending } = useMutation({
+  const { mutateAsync: createWorkplace, isPending } = useMutation({
     mutationFn: WorkplaceService.createWorkplace,
     onError: () => {
       toast.error(t('create_failed'))
@@ -36,9 +36,7 @@ export const WorkplaceDuplicate = ({ values }: WorkplaceDuplicateProps) => {
   })
   const handleSubmit = form.handleSubmit(async ({ count }) => {
     const results = await Promise.allSettled(
-      Array.from({ length: count }).map(() => {
-        createWorkplace(values)
-      })
+      Array.from({ length: count }).map(() => createWorkplace(values))
     )
     if (results.some((result) => result.status === 'rejected')) {
       toast.error(t('update_failed_some'))
@@ -48,6 +46,7 @@ export const WorkplaceDuplicate = ({ values }: WorkplaceDuplicateProps) => {
     })
     popoverToggle.close()
   })
+
   return (
     <PopoverTrigger
       isOpen={popoverToggle.isOpen}
@@ -67,7 +66,7 @@ export const WorkplaceDuplicate = ({ values }: WorkplaceDuplicateProps) => {
                 control={form.control}
                 name="count"
                 render={({ field }) => (
-                  <FormElement label="Count">
+                  <FormElement label={t('count')}>
                     <Input
                       type="number"
                       {...field}
@@ -81,7 +80,7 @@ export const WorkplaceDuplicate = ({ values }: WorkplaceDuplicateProps) => {
                 className="w-full"
                 isPending={isPending}
               >
-                <Plus className="btn-icon icon-start" /> {t('add')}
+                {t('add')}
               </Button>
             </form>
           </Form>

@@ -83,12 +83,15 @@ const DeductionsPage = () => {
         }
       ],
       content: DeductionFilter,
-      onCreate: () => {
-        setSelectedPayment(undefined)
-        dialogToggle.open()
-      }
+      onCreate:
+        tabValue === DeductionFilterTabOption.All
+          ? () => {
+              setSelectedPayment(undefined)
+              dialogToggle.open()
+            }
+          : undefined
     })
-  }, [setLayout, t])
+  }, [setLayout, t, tabValue])
 
   const handleRowEdit = (row: Deduction) => {
     setSelectedPayment(row)

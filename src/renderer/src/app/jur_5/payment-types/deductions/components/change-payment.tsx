@@ -20,7 +20,11 @@ import { Textarea } from '@/common/components/ui/textarea'
 import { MainZarplataService } from '@/common/features/main-zarplata/service'
 import { PayrollDeductionService } from '@/common/features/payroll-deduction/service'
 import { useVacantTreeNodes } from '@/common/features/vacant/hooks/use-vacant-tree-nodes'
-import { VacantTree, type VacantTreeNode } from '@/common/features/vacant/ui/vacant-tree'
+import {
+  VacantTree,
+  type VacantTreeNode,
+  VacantTreeSearch
+} from '@/common/features/vacant/ui/vacant-tree'
 import { useToggle } from '@/common/hooks'
 import { flattenTree } from '@/common/lib/tree/relation-tree'
 import { getVacantRayon } from '@/common/utils/zarplata'
@@ -40,7 +44,8 @@ export const DeductionsChangePayment = () => {
   })
 
   const { t } = useTranslation(['app'])
-  const { treeNodes, flatNodes, vacantsQuery } = useVacantTreeNodes()
+  const { filteredTreeNodes, flatFilteredNodes, search, setSearch, vacantsQuery } =
+    useVacantTreeNodes()
 
   const [activeVacant, setActiveVacant] = useState<VacantTreeNode | null>(null)
   const [selectedDeduction, setSelectedDeduction] = useState<Deduction>()
@@ -81,7 +86,7 @@ export const DeductionsChangePayment = () => {
   })
 
   const selectedIds = selectedVacants.map((vacant) => vacant.id)
-  const isAllSelected = flatNodes.every((vacant) =>
+  const isAllSelected = flatFilteredNodes.every((vacant) =>
     selectedVacants.some((selected) => selected.id === vacant.id)
   )
 
@@ -110,7 +115,7 @@ export const DeductionsChangePayment = () => {
     if (isAllSelected) {
       setSelectedVacants([])
     } else {
-      setSelectedVacants(flatNodes)
+      setSelectedVacants(flatFilteredNodes)
     }
   }
 
@@ -123,6 +128,11 @@ export const DeductionsChangePayment = () => {
         className="w-full bg-gray-50"
       >
         <div className="h-full flex flex-col">
+          <VacantTreeSearch
+            search={search}
+            onValueChange={setSearch}
+            treeNodes={filteredTreeNodes}
+          />
           <div className="px-4 py-2 border-b">
             <div className="flex items-center gap-2">
               <Checkbox
@@ -142,7 +152,7 @@ export const DeductionsChangePayment = () => {
           <div className="flex-1 overflow-y-auto scrollbar">
             {vacantsQuery.isFetching ? <LoadingOverlay /> : null}
             <VacantTree
-              nodes={treeNodes}
+              nodes={filteredTreeNodes}
               selectedIds={selectedIds}
               onSelectNode={handleSelectNode}
             />

@@ -500,5 +500,6 @@
   "show_empty_rows": "Bo'sh qatorlarni ko'rsatish",
   "hide_empty_rows": "Bo‘sh qatorlarni yashirish",
   "civilian": "Fuqaro",
-  "employee_count": "Xodimlar soni"
+  "employee_count": "Xodimlar soni",
+  "count": "Soni"
 }

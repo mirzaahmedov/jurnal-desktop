@@ -1,9 +1,9 @@
 import type { Vacant } from '@/common/models/vacant'
-import type { FC, HTMLAttributes } from 'react'
+
+import { type FC, type HTMLAttributes } from 'react'
 
 import { CaretDownIcon } from '@radix-ui/react-icons'
-import { create } from 'zustand'
-import { persist } from 'zustand/middleware'
+import { FolderDown, FolderMinus, Search } from 'lucide-react'
 
 import { EmptyList } from '@/common/components/empty-states'
 import { Checkbox } from '@/common/components/jolly/checkbox'
@@ -13,51 +13,75 @@ import {
   CollapsibleContent,
   CollapsibleTrigger
 } from '@/common/components/ui/collapsible'
+import { Input } from '@/common/components/ui/input'
 import { type RelationTreeNode } from '@/common/lib/tree/relation-tree'
 import { cn } from '@/common/lib/utils'
 
+import { useVacantTreeState } from '../hooks/use-vacant-tree-state'
+import { useVacantTreeViewStore } from '../hooks/use-vacant-tree-view-store'
+
 export type VacantTreeNode = RelationTreeNode<Vacant, number | null>
 
-const useVacantTreeViewStore = create(
-  persist<{
-    nodesState: Record<number, boolean>
-    toggleNodeState: (id: number) => void
-    setNodeState: (id: number, state: boolean) => void
-    resetNodeStates: VoidFunction
-  }>(
-    (set) => ({
-      nodesState: {} as Record<number, boolean>,
-      toggleNodeState: (id: number) =>
-        set((state) => ({
-          nodesState: {
-            ...state.nodesState,
-            [id]: !state.nodesState[id]
-          }
-        })),
-      setNodeState: (id: number, state: boolean) =>
-        set((prev) => ({
-          nodesState: {
-            ...prev.nodesState,
-            [id]: state
-          }
-        })),
-      resetNodeStates: () => set({ nodesState: {} })
-    }),
-    {
-      name: 'vacant-tree-view-state'
-    }
-  )
-)
+export interface VacantTreeSearchProps {
+  search: string
+  treeNodes: VacantTreeNode[]
+  onValueChange: (search: string) => void
+}
+export const VacantTreeSearch = ({ search, treeNodes, onValueChange }: VacantTreeSearchProps) => {
+  const { foldAll, unfoldAll } = useVacantTreeState({ treeNodes })
 
-export interface VacantTreeProps {
+  return (
+    <div className="pl-4 pr-2 py-2 border-b">
+      <div className="flex items-center gap-2">
+        <div className="relative">
+          <Input
+            value={search}
+            onChange={(e) => onValueChange(e.target.value)}
+            className={cn('h-8', search && 'bg-brand/10')}
+          />
+          <Search className="absolute right-0.5 top-1.5 btn-icon icon-start text-gray-600/40" />
+        </div>
+        <div className="flex">
+          <Button
+            size="icon"
+            variant="ghost"
+            onClick={unfoldAll}
+            className="size-8"
+          >
+            <FolderDown className="btn-icon" />
+          </Button>
+          <Button
+            size="icon"
+            variant="ghost"
+            onClick={foldAll}
+            className="size-8"
+          >
+            <FolderMinus className="btn-icon" />
+          </Button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export interface VacantTreeProps extends HTMLAttributes<HTMLUListElement> {
   nodes: VacantTreeNode[]
   selectedIds: number[]
   onSelectNode: (node: VacantTreeNode) => void
 }
 
-export const VacantTree = ({ nodes, selectedIds, onSelectNode }: VacantTreeProps) => {
+export const VacantTree = ({
+  nodes,
+  selectedIds,
+  onSelectNode,
+  className,
+  ...props
+}: VacantTreeProps) => {
   return (
-    <ul className="text-xs font-semibold">
+    <ul
+      className={cn('text-xs font-semibold flex-1', className)}
+      {...props}
+    >
       {nodes?.length ? (
         nodes.map((node, index) => (
           <TreeNode

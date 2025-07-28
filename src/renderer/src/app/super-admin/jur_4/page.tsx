@@ -20,7 +20,7 @@ import { AdminPodotchetRegionColumnDefs } from './columns'
 import { AdminPodotchetService } from './service'
 import { ViewModal } from './view-modal'
 
-export const AdminPodotchetPage = () => {
+const AdminPodotchetPage = () => {
   const viewToggle = useToggle()
   const setLayout = useLayout()
   const defaultDate = useSettingsStore((state) => state.default_end_date)
@@ -85,3 +85,5 @@ export const AdminPodotchetPage = () => {
     </ListView>
   )
 }
+
+export default AdminPodotchetPage

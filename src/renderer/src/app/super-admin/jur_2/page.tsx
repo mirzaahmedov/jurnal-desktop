@@ -20,7 +20,7 @@ import { AdminBankRegionColumnDefs } from './columns'
 import { AdminBankService } from './service'
 import { ViewModal } from './view-modal'
 
-export const AdminBankPage = () => {
+const AdminBankPage = () => {
   const viewToggle = useToggle()
   const setLayout = useLayout()
   const defaultDate = useSettingsStore((state) => state.default_end_date)
@@ -85,3 +85,5 @@ export const AdminBankPage = () => {
     </ListView>
   )
 }
+
+export default AdminBankPage

@@ -20,7 +20,7 @@ import { AdminKassaRegionColumnDefs } from './columns'
 import { AdminKassaService } from './service'
 import { ViewModal } from './view-modal'
 
-export const AdminKassaPage = () => {
+const AdminKassaPage = () => {
   const viewToggle = useToggle()
   const setLayout = useLayout()
   const defaultDate = useSettingsStore((state) => state.default_end_date)
@@ -85,3 +85,5 @@ export const AdminKassaPage = () => {
     </ListView>
   )
 }
+
+export default AdminKassaPage

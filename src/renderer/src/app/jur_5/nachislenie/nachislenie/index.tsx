@@ -14,7 +14,11 @@ import { YearSelect } from '@/common/components/year-select'
 import { useConfirm } from '@/common/features/confirm'
 import { useRequisitesStore } from '@/common/features/requisites'
 import { useVacantTreeNodes } from '@/common/features/vacant/hooks/use-vacant-tree-nodes'
-import { VacantTree, type VacantTreeNode } from '@/common/features/vacant/ui/vacant-tree'
+import {
+  VacantTree,
+  type VacantTreeNode,
+  VacantTreeSearch
+} from '@/common/features/vacant/ui/vacant-tree'
 import { usePagination, useToggle } from '@/common/hooks'
 import { useLayout } from '@/common/layout'
 import { queryClient } from '@/common/lib/query-client'
@@ -29,7 +33,7 @@ export const Nachislenies = () => {
   const { t } = useTranslation(['app'])
   const { confirm } = useConfirm()
   const { main_schet_id, budjet_id } = useRequisitesStore()
-  const { treeNodes, vacantsQuery } = useVacantTreeNodes()
+  const { filteredTreeNodes, search, setSearch, vacantsQuery } = useVacantTreeNodes()
 
   const [selectedNachislenie, setSelectedNachislenie] = useState<Nachislenie | undefined>()
   const [selectedVacant, setSelectedVacant] = useState<VacantTreeNode>()
@@ -105,13 +109,20 @@ export const Nachislenies = () => {
         minSize={200}
         className="w-full bg-gray-50"
       >
-        <div className="h-full overflow-y-auto scrollbar">
+        <div className="h-full flex flex-col">
           {vacantsQuery.isFetching ? <LoadingOverlay /> : null}
-          <VacantTree
-            nodes={treeNodes}
-            onSelectNode={setSelectedVacant}
-            selectedIds={selectedVacant ? [selectedVacant.id] : []}
+          <VacantTreeSearch
+            search={search}
+            onValueChange={setSearch}
+            treeNodes={filteredTreeNodes}
           />
+          <div className="flex-1 overflow-y-auto scrollbar">
+            <VacantTree
+              nodes={filteredTreeNodes}
+              onSelectNode={setSelectedVacant}
+              selectedIds={selectedVacant ? [selectedVacant.id] : []}
+            />
+          </div>
         </div>
       </Allotment.Pane>
       <Allotment.Pane>

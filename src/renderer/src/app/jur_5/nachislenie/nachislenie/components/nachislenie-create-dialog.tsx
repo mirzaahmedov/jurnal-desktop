@@ -27,7 +27,11 @@ import { Form, FormField } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
 import { YearSelect } from '@/common/components/year-select'
 import { useVacantTreeNodes } from '@/common/features/vacant/hooks/use-vacant-tree-nodes'
-import { VacantTree, type VacantTreeNode } from '@/common/features/vacant/ui/vacant-tree'
+import {
+  VacantTree,
+  type VacantTreeNode,
+  VacantTreeSearch
+} from '@/common/features/vacant/ui/vacant-tree'
 import { parseDate } from '@/common/lib/date'
 import { formatLocaleDate } from '@/common/lib/format'
 
@@ -54,7 +58,12 @@ export const NachislenieCreateDialog = ({
   ...props
 }: NachislenieCreateDialogProps) => {
   const { t } = useTranslation(['app'])
-  const { treeNodes, vacantsQuery } = useVacantTreeNodes()
+  const {
+    filteredTreeNodes,
+    search: searchVacant,
+    setSearch: setVacantSearch,
+    vacantsQuery
+  } = useVacantTreeNodes()
 
   const [search, setSearch] = useState<string>('')
   const [selectedVacant, setSelectedVacant] = useState<VacantTreeNode | null>(null)
@@ -132,13 +141,20 @@ export const NachislenieCreateDialog = ({
                 minSize={200}
                 className="w-full bg-gray-50"
               >
-                <div className="h-full overflow-y-auto scrollbar">
+                <div className="h-full flex flex-col">
                   {vacantsQuery.isFetching ? <LoadingOverlay /> : null}
-                  <VacantTree
-                    nodes={treeNodes}
-                    selectedIds={selectedVacant ? [selectedVacant?.id] : []}
-                    onSelectNode={setSelectedVacant}
+                  <VacantTreeSearch
+                    search={searchVacant}
+                    onValueChange={setVacantSearch}
+                    treeNodes={filteredTreeNodes}
                   />
+                  <div className="flex-1 overflow-y-auto scrollbar">
+                    <VacantTree
+                      nodes={filteredTreeNodes}
+                      selectedIds={selectedVacant ? [selectedVacant?.id] : []}
+                      onSelectNode={setSelectedVacant}
+                    />
+                  </div>
                 </div>
               </Allotment.Pane>
               <Allotment.Pane>

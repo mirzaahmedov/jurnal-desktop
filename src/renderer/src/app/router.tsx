@@ -8,19 +8,20 @@ import { useAuthenticationStore } from '@/common/features/auth'
 import { BudjetSelectedGuard, MainSchetSelectedGuard } from '@/common/features/requisites'
 import { DuplicateSchetsGuard } from '@/common/features/requisites/guards/duplicate-schets-guard'
 
-import DashboardPage from './dashboard/page'
-import { MaterialMonitorPage } from './jur_7/monitor/page'
-import MaterialCreatePage from './jur_7/saldo/create/page'
-import PrixodSchetPage from './jur_8/schet/page'
 import SigninPage from './sign-in'
-import AdminDashboardPage from './super-admin/dashboard/page'
-import { AdminKassaPage } from './super-admin/jur_1/page'
-import { AdminBankPage } from './super-admin/jur_2/page'
-import { AdminOrgan152Page } from './super-admin/jur_3/152/page'
-import { AdminOrgan159Page } from './super-admin/jur_3/159/page'
-import { AdminPodotchetPage } from './super-admin/jur_4/page'
-import { AdminMaterialPage } from './super-admin/jur_7/page'
-import DistancePage from './super-admin/spravochnik/distance/page'
+
+const AdminKassaPage = lazy(() => import('./super-admin/jur_1/page'))
+const AdminBankPage = lazy(() => import('./super-admin/jur_2/page'))
+const AdminOrgan152Page = lazy(() => import('./super-admin/jur_3/152/page'))
+const AdminOrgan159Page = lazy(() => import('./super-admin/jur_3/159/page'))
+const AdminPodotchetPage = lazy(() => import('./super-admin/jur_4/page'))
+const AdminMaterialPage = lazy(() => import('./super-admin/jur_7/page'))
+const MaterialMonitorPage = lazy(() => import('./jur_7/monitor/page'))
+const PrixodSchetPage = lazy(() => import('./jur_8/schet/page'))
+const MaterialCreatePage = lazy(() => import('./jur_7/saldo/create/page'))
+const DashboardPage = lazy(() => import('./dashboard/page'))
+const AdminDashboardPage = lazy(() => import('./super-admin/dashboard/page'))
+const DistancePage = lazy(() => import('./super-admin/spravochnik/distance/page'))
 
 const CalculateParamsPage = lazy(() => import('./jur_5/calculate-params/page'))
 const PassportInfoPage = lazy(() => import('./jur_5/passport-details/page'))
@@ -683,7 +684,13 @@ export const routes: RouteObject[] = [
           },
           {
             path: 'nachislenie',
-            element: <NachisleniePage />
+            element: <MainSchetSelectedGuard />,
+            children: [
+              {
+                index: true,
+                element: <NachisleniePage />
+              }
+            ]
           }
         ]
       },

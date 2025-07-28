@@ -84,12 +84,15 @@ const PaymentsPage = () => {
         }
       ],
       content: PaymentFilter,
-      onCreate: () => {
-        setSelectedPayment(undefined)
-        dialogToggle.open()
-      }
+      onCreate:
+        tabValue === PaymentFilterTabOption.All
+          ? () => {
+              setSelectedPayment(undefined)
+              dialogToggle.open()
+            }
+          : undefined
     })
-  }, [setLayout, t])
+  }, [setLayout, t, tabValue])
 
   const handleRowEdit = (row: Payment) => {
     setSelectedPayment(row)

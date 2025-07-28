@@ -1,21 +1,24 @@
 import type { MainZarplata } from '@/common/models'
 
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { Allotment } from 'allotment'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 
-import { VacantTree, type VacantTreeNode } from '@/app/region-admin/vacant/vacant-tree'
 import { GenericTable, LoadingOverlay } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
 import { MainZarplataService } from '@/common/features/main-zarplata/service'
-import { VacantService } from '@/common/features/vacant/service'
+import { useVacantTreeNodes } from '@/common/features/vacant/hooks/use-vacant-tree-nodes'
+import {
+  VacantTree,
+  type VacantTreeNode,
+  VacantTreeSearch
+} from '@/common/features/vacant/ui/vacant-tree'
 import { useToggle } from '@/common/hooks'
 import { useLayout } from '@/common/layout'
 import { queryClient } from '@/common/lib/query-client'
-import { arrayToTreeByRelations } from '@/common/lib/tree/relation-tree'
 
 import { MainZarplataColumnDefs } from './columns'
 import { PassportInfoCreateDialog } from './create-dialog'
@@ -33,10 +36,7 @@ const PassportDetailsPage = () => {
   const { t } = useTranslation(['app'])
   const { confirm } = useConfirm()
 
-  const { data: vacants, isFetching: isFetchingVacants } = useQuery({
-    queryKey: [VacantService.QueryKeys.GetAll, { page: 1, limit: 100000000000000 }],
-    queryFn: VacantService.getAll
-  })
+  const { filteredTreeNodes, search, setSearch, vacantsQuery } = useVacantTreeNodes()
   const { data: mainZarplata, isFetching: isFetchingMainZarplata } = useQuery({
     queryKey: [
       MainZarplataService.QueryKeys.GetByVacantId,
@@ -72,16 +72,6 @@ const PassportDetailsPage = () => {
     })
   }, [t, setLayout, selectedVacant])
 
-  const treeNodes = useMemo(
-    () =>
-      arrayToTreeByRelations({
-        array: vacants?.data ?? [],
-        getId: (node) => node.id,
-        getParentId: (node) => node.parentId
-      }),
-    [vacants]
-  )
-
   const handleRowEdit = (row: MainZarplata) => {
     setSelectedUser(row)
     editDialogToggle.open()
@@ -100,16 +90,23 @@ const PassportDetailsPage = () => {
         <Allotment.Pane
           preferredSize={300}
           maxSize={600}
-          minSize={200}
+          minSize={300}
           className="w-full bg-gray-50"
         >
-          <div className="relative overflow-auto scrollbar h-full">
-            {isFetchingVacants ? <LoadingOverlay /> : null}
-            <VacantTree
-              nodes={treeNodes}
-              selectedIds={selectedVacant ? [selectedVacant.id] : []}
-              onSelectNode={setSelectedVacant}
+          <div className="h-full flex flex-col">
+            {vacantsQuery.isFetching ? <LoadingOverlay /> : null}
+            <VacantTreeSearch
+              search={search}
+              onValueChange={setSearch}
+              treeNodes={filteredTreeNodes}
             />
+            <div className="relative overflow-auto scrollbar flex-1">
+              <VacantTree
+                nodes={filteredTreeNodes}
+                selectedIds={selectedVacant ? [selectedVacant.id] : []}
+                onSelectNode={setSelectedVacant}
+              />
+            </div>
           </div>
         </Allotment.Pane>
         <Allotment.Pane>
