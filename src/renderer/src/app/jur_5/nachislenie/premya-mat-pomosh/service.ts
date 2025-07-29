@@ -1,5 +1,10 @@
 import type { NachislenieOthersFormValues } from './config'
-import type { Nachislenie, NachislenieOthers, NachislenieProvodka } from '@/common/models'
+import type {
+  NachislenieOthers,
+  NachislenieOthersPayment,
+  NachislenieOthersProvodka,
+  NachislenieProvodka
+} from '@/common/models'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 
 import { getMultiApiResponse } from '@/common/lib/zarplata'
@@ -11,7 +16,9 @@ export class NachislenieOthersService {
   static QueryKeys = {
     GetAll: 'nachislenie_others/all',
     GetById: 'nachislenie_others/:id',
-    GetByVacantId: 'nachislenie_others/vacantId'
+    GetByVacantId: 'nachislenie_others/vacantId',
+    GetChildren: 'nachislenie_others/children',
+    GetPayments: 'nachislenie_others/payments'
   }
 
   static async getAll(
@@ -66,6 +73,24 @@ export class NachislenieOthersService {
     return res.data
   }
 
+  static async getChildren(
+    ctx: QueryFunctionContext<[typeof NachislenieOthersService.QueryKeys.GetChildren, number]>
+  ) {
+    const res = await zarplataApiNew.get<NachislenieOthersProvodka[]>(
+      `${NachislenieOthersService.endpoint}/children/${ctx.queryKey[1]}`
+    )
+    return res.data
+  }
+
+  static async getPayments(
+    ctx: QueryFunctionContext<[typeof NachislenieOthersService.QueryKeys.GetChildren, number]>
+  ) {
+    const res = await zarplataApiNew.get<NachislenieOthersPayment[]>(
+      `${NachislenieOthersService.endpoint}/payments/${ctx.queryKey[1]}`
+    )
+    return res.data
+  }
+
   static async getMaxDocNum() {
     const res = await zarplataApiNew.get<number>(
       `${NachislenieOthersService.endpoint}/get-max-docNum`
@@ -74,7 +99,7 @@ export class NachislenieOthersService {
   }
 
   static async create(values: NachislenieOthersFormValues) {
-    const res = await zarplataApiNew.post<ZarplataApiResponse<Nachislenie[]>>(
+    const res = await zarplataApiNew.post<ZarplataApiResponse<NachislenieOthers[]>>(
       `${NachislenieOthersService.endpoint}`,
       values
     )
@@ -82,7 +107,7 @@ export class NachislenieOthersService {
   }
 
   static async update(args: { id: number; values: NachislenieOthersFormValues }) {
-    const res = await zarplataApiNew.put<ZarplataApiResponse<Nachislenie[]>>(
+    const res = await zarplataApiNew.put<ZarplataApiResponse<NachislenieOthers[]>>(
       `${NachislenieOthersService.endpoint}/${args.id}`,
       args.values
     )
@@ -90,7 +115,7 @@ export class NachislenieOthersService {
   }
 
   static async delete(id: number) {
-    const res = await zarplataApiNew.delete<ZarplataApiResponse<Nachislenie[]>>(
+    const res = await zarplataApiNew.delete<ZarplataApiResponse<NachislenieOthers[]>>(
       `${NachislenieOthersService.endpoint}/${id}`
     )
     return res.data

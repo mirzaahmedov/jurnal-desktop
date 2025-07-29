@@ -30,7 +30,6 @@ import {
 import { JollySelect, SelectItem } from '@/common/components/jolly/select'
 import { MonthSelect } from '@/common/components/month-select'
 import { Pagination } from '@/common/components/pagination'
-import { SearchInputDebounced } from '@/common/components/search-input-debounced'
 import { Badge } from '@/common/components/ui/badge'
 import { Form, FormField } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
@@ -64,7 +63,6 @@ export const PremyaMatPomoshCreateDialog = (props: PremyaMatPomoshCreateDialogPr
   const [tabValue, setTabValue] = useState<CreateDialogTabOption>(
     CreateDialogTabOption.MainZarplata
   )
-  const [searchValue, setSearchValue] = useState<string>('')
   const [selectedVacant, setSelectedVacant] = useState<VacantTreeNode | undefined>(undefined)
   const [selectedMainZarplata, setSelectedMainZarplata] = useState<MainZarplata[]>([])
   const [selectedPayments, setSelectedPayments] = useState<Payment[]>([])
@@ -117,7 +115,12 @@ export const PremyaMatPomoshCreateDialog = (props: PremyaMatPomoshCreateDialogPr
       childCreatDtos: selectedMainZarplata.map((item) => ({
         mainZarplataId: item.id
       })),
-      payments: undefined
+      payments:
+        values.paymentType === '%'
+          ? selectedPayments.map((payment) => ({
+              paymentId: payment.id
+            }))
+          : []
     })
   })
 
@@ -377,29 +380,21 @@ export const PremyaMatPomoshCreateDialog = (props: PremyaMatPomoshCreateDialogPr
                         value={CreateDialogTabOption.MainZarplata}
                         className="w-full flex-1 min-h-0"
                       >
-                        <div className="h-full rounded-lg border p-2.5 flex flex-col gap-2.5">
-                          <div>
-                            <SearchInputDebounced
-                              value={searchValue}
-                              onValueChange={setSearchValue}
-                            />
-                          </div>
-                          <div className="flex-1 overflow-y-auto scrollbar">
-                            {mainZarplataQuery.isFetching ? <LoadingOverlay /> : null}
-                            <MainZarplataTable
-                              data={mainZarplataQuery?.data ?? []}
-                              selectedIds={selectedMainZarplata.map((item) => item.id)}
-                              onClickRow={(item) => {
-                                setSelectedMainZarplata((prev) => {
-                                  if (prev.some((i) => i.id === item.id)) {
-                                    return prev.filter((i) => i.id !== item.id)
-                                  }
-                                  return [...prev, item]
-                                })
-                              }}
-                              className="table-generic-xs"
-                            />
-                          </div>
+                        <div className="h-full flex flex-col gap-2.5 overflow-y-auto scrollbar">
+                          {mainZarplataQuery.isFetching ? <LoadingOverlay /> : null}
+                          <MainZarplataTable
+                            data={mainZarplataQuery?.data ?? []}
+                            selectedIds={selectedMainZarplata.map((item) => item.id)}
+                            onClickRow={(item) => {
+                              setSelectedMainZarplata((prev) => {
+                                if (prev.some((i) => i.id === item.id)) {
+                                  return prev.filter((i) => i.id !== item.id)
+                                }
+                                return [...prev, item]
+                              })
+                            }}
+                            className="table-generic-xs"
+                          />
                         </div>
                       </TabsContent>
                       <TabsContent

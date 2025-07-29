@@ -1,5 +1,6 @@
 import type { RawCreateParams, RefinementCtx, ZodErrorMap, ZodTypeAny } from 'zod'
 
+import { t } from 'i18next'
 import { toast } from 'react-toastify'
 import { z } from 'zod'
 
@@ -9,13 +10,13 @@ export const zodErrorMap: ZodErrorMap = (issue, ctx) => {
   switch (issue.code) {
     case 'invalid_type': {
       return {
-        message: errors.required
+        message: t(errors.required)
       }
     }
     case 'too_small': {
       if (issue.minimum === 1) {
         return {
-          message: errors.required
+          message: t(errors.required)
         }
       }
       return {

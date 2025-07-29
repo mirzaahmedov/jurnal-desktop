@@ -198,74 +198,78 @@ export const NachislenieEditDialog = ({
                     <div className="relative overflow-hidden py-5 flex flex-col gap-2.5">
                       <div className="p-5 rounded-lg border">
                         <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-5">
-                          <GenericTable
-                            data={row?.nachisleniePayrollPayments ?? []}
-                            columnDefs={[
-                              {
-                                key: 'name'
-                              },
-                              {
-                                key: 'percentage',
-                                header: 'foiz'
-                              },
-                              {
-                                key: 'summa',
-                                renderCell: (row) => <SummaCell summa={row.summa} />,
-                                numeric: true
+                          <div>
+                            <GenericTable
+                              data={row?.nachisleniePayrollPayments ?? []}
+                              columnDefs={[
+                                {
+                                  key: 'name'
+                                },
+                                {
+                                  key: 'percentage',
+                                  header: 'foiz'
+                                },
+                                {
+                                  key: 'summa',
+                                  renderCell: (row) => <SummaCell summa={row.summa} />,
+                                  numeric: true
+                                }
+                              ]}
+                              className="table-generic-xs border-t border-l"
+                              footer={
+                                <FooterRow>
+                                  <FooterCell
+                                    title={t('total')}
+                                    colSpan={3}
+                                  />
+                                  <FooterCell
+                                    content={formatNumber(
+                                      row?.nachisleniePayrollPayments?.reduce(
+                                        (result, { summa }) => result + (summa ?? 0),
+                                        0
+                                      )
+                                    )}
+                                  />
+                                </FooterRow>
                               }
-                            ]}
-                            className="table-generic-xs border-t border-l"
-                            footer={
-                              <FooterRow>
-                                <FooterCell
-                                  title={t('total')}
-                                  colSpan={3}
-                                />
-                                <FooterCell
-                                  content={formatNumber(
-                                    row?.nachisleniePayrollPayments?.reduce(
-                                      (result, { summa }) => result + (summa ?? 0),
-                                      0
-                                    )
-                                  )}
-                                />
-                              </FooterRow>
-                            }
-                          />
-                          <GenericTable
-                            data={row?.nachisleniePayrollDeductions ?? []}
-                            columnDefs={[
-                              {
-                                key: 'name'
-                              },
-                              {
-                                key: 'percentage',
-                                header: 'foiz'
-                              },
-                              {
-                                key: 'summa',
-                                renderCell: (row) => <SummaCell summa={row.summa} />,
-                                numeric: true
+                            />
+                          </div>
+                          <div>
+                            <GenericTable
+                              data={row?.nachisleniePayrollDeductions ?? []}
+                              columnDefs={[
+                                {
+                                  key: 'name'
+                                },
+                                {
+                                  key: 'percentage',
+                                  header: 'foiz'
+                                },
+                                {
+                                  key: 'summa',
+                                  renderCell: (row) => <SummaCell summa={row.summa} />,
+                                  numeric: true
+                                }
+                              ]}
+                              className="table-generic-xs border-t border-l"
+                              footer={
+                                <FooterRow>
+                                  <FooterCell
+                                    title={t('total')}
+                                    colSpan={3}
+                                  />
+                                  <FooterCell
+                                    content={formatNumber(
+                                      row?.nachisleniePayrollDeductions?.reduce(
+                                        (result, { summa }) => result + (summa ?? 0),
+                                        0
+                                      )
+                                    )}
+                                  />
+                                </FooterRow>
                               }
-                            ]}
-                            className="table-generic-xs border-t border-l"
-                            footer={
-                              <FooterRow>
-                                <FooterCell
-                                  title={t('total')}
-                                  colSpan={3}
-                                />
-                                <FooterCell
-                                  content={formatNumber(
-                                    row?.nachisleniePayrollDeductions?.reduce(
-                                      (result, { summa }) => result + (summa ?? 0),
-                                      0
-                                    )
-                                  )}
-                                />
-                              </FooterRow>
-                            }
-                          />
+                            />
+                          </div>
                         </div>
                       </div>
                     </div>

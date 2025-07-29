@@ -111,6 +111,7 @@ export const PaymentsDialog = ({ selectedPayment, ...props }: PaymentsDialogProp
                         direction="column"
                       >
                         <NumericInput
+                          readOnly={!!selectedPayment}
                           ref={field.ref}
                           value={field.value}
                           onValueChange={(values) => field.onChange(values.floatValue)}

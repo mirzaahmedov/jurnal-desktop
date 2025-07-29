@@ -1,6 +1,6 @@
 import type { NachislenieOthers } from '@/common/models'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
@@ -14,13 +14,17 @@ import { useLayout } from '@/common/layout'
 import { NachislenieTabs } from '../nachislenie-tabs'
 import { NachislenieOthersColumnDefs } from './columns'
 import { PremyaMatPomoshCreateDialog } from './components/premya-create-dialog'
+import { PremyaMatPomoshViewDialog } from './components/premya-view-dialog'
 import { NachislenieOthersService } from './service'
 
 export const PremyaMatPomosh = () => {
+  const editToggle = useToggle()
   const createToggle = useToggle()
   const pagination = usePagination()
   const queryClient = useQueryClient()
   const setLayout = useLayout()
+
+  const [selectedPremya, setSelectedPremya] = useState<NachislenieOthers | undefined>(undefined)
 
   const { t } = useTranslation(['app'])
   const { budjet_id } = useRequisitesStore()
@@ -64,6 +68,10 @@ export const PremyaMatPomosh = () => {
       onConfirm: () => deleteMutation.mutate(row.id)
     })
   }
+  const handleEdit = (row: NachislenieOthers) => {
+    setSelectedPremya(row)
+    editToggle.open()
+  }
 
   return (
     <div className="relative w-full overflow-auto scrollbar pl-px">
@@ -72,11 +80,17 @@ export const PremyaMatPomosh = () => {
         data={nachislenieOthers?.data ?? []}
         columnDefs={NachislenieOthersColumnDefs}
         onDelete={handleDelete}
+        onEdit={handleEdit}
         className="table-generic-xs"
       />
       <PremyaMatPomoshCreateDialog
         isOpen={createToggle.isOpen}
         onOpenChange={createToggle.setOpen}
+      />
+      <PremyaMatPomoshViewDialog
+        isOpen={editToggle.isOpen}
+        onOpenChange={editToggle.setOpen}
+        selectedPremya={selectedPremya}
       />
     </div>
   )

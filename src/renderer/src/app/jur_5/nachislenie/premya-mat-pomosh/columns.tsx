@@ -1,6 +1,10 @@
 import type { ColumnDef } from '@/common/components'
 import type { NachislenieOthers } from '@/common/models'
 
+import { t } from 'i18next'
+
+import { SummaCell } from '@/common/components/table/renderers/summa'
+
 export const NachislenieOthersColumnDefs: ColumnDef<NachislenieOthers>[] = [
   {
     key: 'docNum',
@@ -19,11 +23,17 @@ export const NachislenieOthersColumnDefs: ColumnDef<NachislenieOthers>[] = [
     header: 'month'
   },
   {
-    key: 'type'
+    key: 'type',
+    renderCell: (row) => t(row.type)
+  },
+  {
+    key: 'paymentType',
+    header: 'payment_type',
+    renderCell: (row) => t(row.paymentType)
   },
   {
     key: 'amount',
-    header: 'summa'
+    renderCell: (row) => <SummaCell summa={row.amount} />
   },
   {
     key: 'givenDocDate',

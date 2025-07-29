@@ -48,3 +48,17 @@ export interface NachislenieOthers {
     paymentId: number
   }>
 }
+
+export interface NachislenieOthersProvodka {
+  id: number
+  mainZarplataId: number
+  fio: string
+  kartochka: string
+  doljnostName: string
+  summa: number
+}
+
+export interface NachislenieOthersPayment {
+  paymentId: number
+  paymentName: string
+}

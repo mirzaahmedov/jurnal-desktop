@@ -56,7 +56,7 @@ export const InternalProvodkaFormSchema = withPreprocessor(
     debet_sub_schet: z.string(),
     kredit_schet: z.string(),
     kredit_sub_schet: z.string(),
-    data_pereotsenka: z.string(),
+    data_pereotsenka: z.string().optional(),
     prixod_dates: z.array(z.object({ date: z.string() })).optional()
   })
 )

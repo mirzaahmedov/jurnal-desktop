@@ -4,6 +4,8 @@ import { useEffect, useRef, useState } from 'react'
 
 import { useTranslation } from 'react-i18next'
 
+import { cn } from '@/common/lib/utils'
+
 import { ComboboxItem, JollyComboBox, type JollyComboBoxProps } from './jolly/combobox'
 
 interface YearOption {
@@ -22,7 +24,12 @@ for (let i = currentYear - 5; i <= currentYear + 5; i++) {
 }
 
 export interface YearSelectProps extends Omit<JollyComboBoxProps<YearOption>, 'children'> {}
-export const YearSelect = ({ selectedKey, onSelectionChange, ...props }: YearSelectProps) => {
+export const YearSelect = ({
+  selectedKey,
+  onSelectionChange,
+  className,
+  ...props
+}: YearSelectProps) => {
   const isFocused = useRef(false)
 
   const [inputValue, setInputValue] = useState(selectedKey ? String(selectedKey) : '')
@@ -95,7 +102,7 @@ export const YearSelect = ({ selectedKey, onSelectionChange, ...props }: YearSel
       defaultFilter={(optionText, filterText) => {
         return optionText.toLowerCase().startsWith(filterText.toLowerCase())
       }}
-      className="gap-0 w-24"
+      className={cn('gap-0 w-24', className)}
     >
       {(item) => <ComboboxItem id={item.value}>{item.label}</ComboboxItem>}
     </JollyComboBox>

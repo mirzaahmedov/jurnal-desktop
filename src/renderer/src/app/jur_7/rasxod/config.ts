@@ -53,7 +53,7 @@ export const RasxodProvodkaFormSchema = withPreprocessor(
     iznos_summa: z.number().optional(),
     iznos_schet: z.string().optional(),
     iznos_sub_schet: z.string().optional(),
-    data_pereotsenka: z.string(),
+    data_pereotsenka: z.string().optional(),
     prixod_dates: z.array(z.object({ date: z.string() })).optional()
   })
 )

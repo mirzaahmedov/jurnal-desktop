@@ -110,6 +110,7 @@ export const DeductionsDialog = ({ selectedPayment, ...props }: DeductionsDialog
                         direction="column"
                       >
                         <NumericInput
+                          readOnly={!!selectedPayment}
                           ref={field.ref}
                           value={field.value}
                           onValueChange={(values) => field.onChange(values.floatValue)}
