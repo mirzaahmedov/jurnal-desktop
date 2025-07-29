@@ -4,13 +4,14 @@ import { useEffect, useState } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Allotment } from 'allotment'
+import { RefreshCw } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 
 import { TabelColumnDefs } from '@/app/jur_5/nachislenie/tabel/columns'
 import { TabelService } from '@/app/jur_5/nachislenie/tabel/service'
-import { GenericTable, LoadingOverlay } from '@/common/components'
+import { GenericTable, LoadingOverlay, Spinner } from '@/common/components'
 import { FormElement } from '@/common/components/form'
 import { JollyDatePicker } from '@/common/components/jolly-date-picker'
 import { Button } from '@/common/components/jolly/button'
@@ -173,10 +174,28 @@ export const NachislenieCreateDialog = ({
                             direction="column"
                             label={t('doc_num')}
                           >
-                            <Input
-                              type="number"
-                              {...field}
-                            />
+                            <div className="flex items-center gap-1">
+                              <Input
+                                readOnly
+                                {...field}
+                              />
+                              <Button
+                                type="button"
+                                size="icon"
+                                className="size-10 flex-shrink-0"
+                                variant="outline"
+                                isDisabled={isPending}
+                                onClick={() => {
+                                  getMaxDocNum()
+                                }}
+                              >
+                                {isPending ? (
+                                  <Spinner className="size-5 border-2" />
+                                ) : (
+                                  <RefreshCw />
+                                )}
+                              </Button>
+                            </div>
                           </FormElement>
                         )}
                       />

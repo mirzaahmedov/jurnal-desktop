@@ -3,11 +3,12 @@ import type { MainZarplata } from '@/common/models'
 import type { Payment } from '@/common/models/payments'
 import type { DialogTriggerProps } from 'react-aria-components'
 
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Allotment } from 'allotment'
+import { RefreshCw } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
@@ -15,11 +16,12 @@ import { MainZarplataTable } from '@/app/jur_5/common/features/main-zarplata/mai
 import { useMainZarplataList } from '@/app/jur_5/common/features/main-zarplata/use-fetchers'
 import { PaymentColumnDefs } from '@/app/jur_5/payment-types/payments/columns'
 import { PaymentsService } from '@/app/jur_5/payment-types/payments/service'
-import { GenericTable, LoadingOverlay, NumericInput } from '@/common/components'
+import { GenericTable, LoadingOverlay, NumericInput, Spinner } from '@/common/components'
 import { FormElement } from '@/common/components/form'
 import { Debouncer } from '@/common/components/hoc/debouncer'
 import { JollyDatePicker } from '@/common/components/jolly-date-picker'
 import { Button } from '@/common/components/jolly/button'
+import { Checkbox } from '@/common/components/jolly/checkbox'
 import {
   DialogContent,
   DialogHeader,
@@ -41,6 +43,7 @@ import { useVacantTreeNodes } from '@/common/features/vacant/hooks/use-vacant-tr
 import { VacantTree, VacantTreeSearch } from '@/common/features/vacant/ui/vacant-tree'
 import { parseDate } from '@/common/lib/date'
 import { formatLocaleDate } from '@/common/lib/format'
+import { cn } from '@/common/lib/utils'
 
 import { NachislenieOthersFormSchema, defaultValues } from '../config'
 import { NachislenieOthersService } from '../service'
@@ -139,6 +142,26 @@ export const PremyaMatPomoshCreateDialog = (props: PremyaMatPomoshCreateDialogPr
 
   const isPercent = form.watch('paymentType') === '%'
 
+  const isAllSelected = useMemo(() => {
+    if (!mainZarplataQuery?.data?.length) return false
+    return (
+      mainZarplataQuery?.data?.every((item) =>
+        selectedMainZarplata.find((selected) => selected.id === item.id)
+      ) ?? false
+    )
+  }, [mainZarplataQuery?.data, selectedMainZarplata])
+  const handleSelectAll = useCallback(() => {
+    setSelectedMainZarplata((prev) => {
+      if (isAllSelected) {
+        return prev.filter((item) => !mainZarplataQuery?.data?.find((i) => i.id === item.id))
+      }
+      return [
+        ...prev,
+        ...(mainZarplataQuery?.data ?? []).filter((item) => !prev.find((i) => i.id === item.id))
+      ]
+    })
+  }, [form, isAllSelected, mainZarplataQuery.data])
+
   return (
     <DialogTrigger {...props}>
       <DialogOverlay>
@@ -186,10 +209,28 @@ export const PremyaMatPomoshCreateDialog = (props: PremyaMatPomoshCreateDialogPr
                             direction="column"
                             label={t('doc_num')}
                           >
-                            <Input
-                              type="number"
-                              {...field}
-                            />
+                            <div className="flex items-center gap-1">
+                              <Input
+                                readOnly
+                                {...field}
+                              />
+                              <Button
+                                type="button"
+                                size="icon"
+                                className="size-10 flex-shrink-0"
+                                variant="outline"
+                                isDisabled={docNumMutation.isPending}
+                                onClick={() => {
+                                  docNumMutation.mutate()
+                                }}
+                              >
+                                {docNumMutation.isPending ? (
+                                  <Spinner className="size-5 border-2" />
+                                ) : (
+                                  <RefreshCw />
+                                )}
+                              </Button>
+                            </div>
                           </FormElement>
                         )}
                       />
@@ -368,6 +409,7 @@ export const PremyaMatPomoshCreateDialog = (props: PremyaMatPomoshCreateDialogPr
                         <TabsList>
                           <TabsTrigger value={CreateDialogTabOption.MainZarplata}>
                             {t('employees')}
+                            <Badge className="ml-2 -my-2">{selectedMainZarplata.length}</Badge>
                           </TabsTrigger>
                           <TabsTrigger value={CreateDialogTabOption.Payments}>
                             {t('payments')}
@@ -378,8 +420,26 @@ export const PremyaMatPomoshCreateDialog = (props: PremyaMatPomoshCreateDialogPr
 
                       <TabsContent
                         value={CreateDialogTabOption.MainZarplata}
-                        className="w-full flex-1 min-h-0"
+                        className={cn(
+                          'w-full flex-1 min-h-0 flex flex-col',
+                          tabValue !== CreateDialogTabOption.MainZarplata && 'hidden'
+                        )}
                       >
+                        <div className="w-full py-2">
+                          <Button
+                            variant="ghost"
+                            className="flex items-center h-auto py-1 px-0 gap-2 hover:!bg-transparent"
+                            onClick={handleSelectAll}
+                          >
+                            <Checkbox
+                              isSelected={isAllSelected}
+                              className="pointer-events-none"
+                            />
+                            <span className="text-xs">
+                              {isAllSelected ? t('deselect_all') : t('select_all')}
+                            </span>
+                          </Button>
+                        </div>
                         <div className="h-full flex flex-col gap-2.5 overflow-y-auto scrollbar">
                           {mainZarplataQuery.isFetching ? <LoadingOverlay /> : null}
                           <MainZarplataTable
@@ -399,7 +459,10 @@ export const PremyaMatPomoshCreateDialog = (props: PremyaMatPomoshCreateDialogPr
                       </TabsContent>
                       <TabsContent
                         value={CreateDialogTabOption.Payments}
-                        className="flex-1 w-full min-h-0"
+                        className={cn(
+                          'flex-1 w-full min-h-0',
+                          tabValue !== CreateDialogTabOption.Payments && 'hidden'
+                        )}
                       >
                         <div className="h-full rounded-lg border p-2.5 flex flex-col gap-2.5">
                           <div className="flex items-center justify-start gap-2.5">

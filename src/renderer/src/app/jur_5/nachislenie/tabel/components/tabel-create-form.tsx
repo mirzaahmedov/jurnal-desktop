@@ -326,7 +326,10 @@ export const TabelCreateForm = ({
                   className="flex items-center h-auto py-1 px-0 gap-2 hover:!bg-transparent"
                   onClick={handleSelectAll}
                 >
-                  <Checkbox isSelected={isAllSelected} />
+                  <Checkbox
+                    isSelected={isAllSelected}
+                    className="pointer-events-none"
+                  />
                   <span className="text-xs">
                     {isAllSelected ? t('deselect_all') : t('select_all')}
                   </span>
