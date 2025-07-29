@@ -52,6 +52,11 @@ export const SearchInput = ({
           className
         )}
         {...props}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault()
+          }
+        }}
       />
       <Search
         {...iconProps}

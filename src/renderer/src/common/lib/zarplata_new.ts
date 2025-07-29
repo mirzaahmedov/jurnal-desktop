@@ -4,7 +4,7 @@ import { useAuthenticationStore } from '@/common/features/auth'
 
 export const baseURL = import.meta.env.DEV
   ? 'http://192.168.77.9:8089/api'
-  : 'https://nafaqa.fizmasoft.uz/zarplata/api'
+  : 'http://192.168.77.9:8089/api'
 
 export interface ZarplataPaginationParams {
   PageIndex: number

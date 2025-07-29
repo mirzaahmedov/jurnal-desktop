@@ -1,6 +1,6 @@
 {
   "name": "jurnal.desktop",
-  "version": "1.0.330",
+  "version": "1.0.331",
   "description": "An Electron application with React and TypeScript",
   "main": "./out/main/index.js",
   "author": "example.com",

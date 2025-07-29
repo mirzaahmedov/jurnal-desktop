@@ -470,6 +470,7 @@
   "employee": "Xodim",
   "employment": "Mehnat daftarchasi",
   "payment": "To'lov",
+  "payments": "To'lovlar",
   "untill_now": "Hozirgacha",
   "payroll_payments": "Ish haqi to'lovlari",
   "payroll_deductions": "Ish haqi ushlanmalari",
@@ -501,7 +502,14 @@
   "hide_empty_rows": "Bo‘sh qatorlarni yashirish",
   "civilian": "Fuqaro",
   "employee_count": "Xodimlar soni",
+  "employees": "Xodimlar",
   "count": "Soni",
   "by_contract": "Shartnoma bo‘yicha",
-  "by_smeta": "Smeta bo‘yicha"
+  "by_smeta": "Smeta bo‘yicha",
+  "premya_mat_pomosh": "Premiya va Mat. yordam",
+  "given_doc_date": "Hujjat berilgan sana",
+  "premya": "Premiya",
+  "mat_pomosh": "Mat. yordam",
+  "payment_type": "To'lov turi",
+  "amount": "Miqdor"
 }

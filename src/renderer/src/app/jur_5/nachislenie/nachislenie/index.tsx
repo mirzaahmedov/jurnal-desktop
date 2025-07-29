@@ -49,7 +49,7 @@ export const Nachislenies = () => {
 
   const { data: nachislenie, isFetching: isFetchingNachislenie } = useQuery({
     queryKey: [
-      NachislenieService.QueryKeys.GetByVacantId,
+      NachislenieService.QueryKeys.getAll,
       {
         page: pagination.page,
         limit: pagination.limit,
@@ -60,7 +60,7 @@ export const Nachislenies = () => {
         vacantId: selectedVacant?.id ?? 0
       }
     ],
-    queryFn: NachislenieService.getByVacantId,
+    queryFn: NachislenieService.getAll,
     enabled: !!budjet_id && !!selectedVacant
   })
 
@@ -69,7 +69,7 @@ export const Nachislenies = () => {
     onSuccess: () => {
       toast.success(t('delete_success'))
       queryClient.invalidateQueries({
-        queryKey: [NachislenieService.QueryKeys.GetByVacantId]
+        queryKey: [NachislenieService.QueryKeys.getAll]
       })
     },
     onError: (res: { message: string }) => {

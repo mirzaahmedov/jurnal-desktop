@@ -96,7 +96,7 @@ export const NachislenieCreateDialog = ({
     onSuccess: () => {
       toast.success(t('create_success'))
       queryClient.invalidateQueries({
-        queryKey: [NachislenieService.QueryKeys.GetByVacantId]
+        queryKey: [NachislenieService.QueryKeys.getAll]
       })
       props?.onOpenChange?.(false)
     },

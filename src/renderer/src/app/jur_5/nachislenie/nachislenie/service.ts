@@ -11,7 +11,7 @@ export class NachislenieService {
   static QueryKeys = {
     GetAll: 'nachislenie/all',
     GetById: 'nachislenie/:id',
-    GetByVacantId: 'nachislenie/vacantId'
+    getAll: 'nachislenie/vacantId'
   }
 
   static async getById(
@@ -41,10 +41,10 @@ export class NachislenieService {
     return res.data
   }
 
-  static async getByVacantId(
+  static async getAll(
     ctx: QueryFunctionContext<
       [
-        typeof NachislenieService.QueryKeys.GetByVacantId,
+        typeof NachislenieService.QueryKeys.getAll,
         {
           page: number
           limit: number

@@ -471,6 +471,7 @@
   "employee": "Ходим",
   "employment": "Меҳнат дафтарчаси",
   "payment": "Тўлов",
+  "payments": "Тўловлар",
   "untill_now": "Ҳозиргача",
   "payroll_payments": "Иш ҳақи тўловлари",
   "payroll_deductions": "Иш ҳақи ушланмалари",
@@ -502,7 +503,14 @@
   "hide_empty_rows": "Бўш қаторларни яшириш",
   "civilian": "Фуқаро",
   "employee_count": "Ходимлар сони",
+  "employees": "Ходимлар",
   "count": "Сони",
   "by_contract": "Шартнома бўйича",
-  "by_smeta": "Смета бўйича"
+  "by_smeta": "Смета бўйича",
+  "premya_mat_pomosh": "Премия ва Мат. ёрдам",
+  "given_doc_date": "Ҳужжат берилган сана",
+  "premya": "Премия",
+  "mat_pomosh": "Мат. ёрдам",
+  "payment_type": "Тўлов тури",
+  "amount": "Миқдор"
 }

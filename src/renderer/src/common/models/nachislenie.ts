@@ -28,12 +28,23 @@ export interface NachislenieProvodka {
   totalNaruki: number
 }
 
-export interface NachislenieSostav {
+export interface NachislenieOthers {
   id: number
-  mainZarplataId: number
-  foiz: number
-  summa: number
-  nachislenieName: string
-  nachislenieTypeCode: number
-  spravochnikZarpaltaNachislenieId: number
+  spravochnikBudjetNameId: number
+  mainSchetId: number
+  nachislenieYear: number
+  nachislenieMonth: number
+  docNum: number
+  docDate: string
+  givenDocDate: string
+  description: string
+  paymentType: string
+  amount: number
+  type: string
+  childCreatDtos: Array<{
+    mainZarplataId: number
+  }>
+  payments: Array<{
+    paymentId: number
+  }>
 }

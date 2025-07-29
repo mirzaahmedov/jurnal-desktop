@@ -152,6 +152,7 @@ function JollySelect<T extends object>({
   className,
   triggerClassName,
   items,
+  placeholder = '',
   ...props
 }: JollySelectProps<T>) {
   return (
@@ -159,6 +160,7 @@ function JollySelect<T extends object>({
       className={composeRenderProps(className, (className) =>
         cn('group flex flex-col gap-2', className)
       )}
+      placeholder={placeholder}
       {...props}
     >
       {label ? <Label>{label}</Label> : null}

@@ -472,6 +472,7 @@
   "employee": "Сотрудник",
   "employment": "Трудовая книжка",
   "payment": "Платеж",
+  "payments": "Платежи",
   "untill_now": "До настоящего времени",
   "payroll_payments": "Выплаты заработной платы",
   "payroll_deductions": "Удержания из заработной платы",
@@ -503,7 +504,14 @@
   "hide_empty_rows": "Скрыть пустые строки",
   "civilian": "Гражданский",
   "employee_count": "Количество сотрудников",
+  "employees": "Сотрудники",
   "count": "Количество",
+  "amount": "Значение",
   "by_contract": "По контракту",
-  "by_smeta": "По смете"
+  "by_smeta": "По смете",
+  "premya_mat_pomosh": "Премия и Мат. помощь",
+  "given_doc_date": "Дата выдачи документа",
+  "premya": "Премия",
+  "mat_pomosh": "Мат. помощь",
+  "payment_type": "Тип платежа"
 }

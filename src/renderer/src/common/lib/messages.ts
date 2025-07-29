@@ -1,3 +1,5 @@
+import { t } from 'i18next'
+
 export const errors = {
-  required: 'Обязательное поле'
+  required: t('required_field')
 }
