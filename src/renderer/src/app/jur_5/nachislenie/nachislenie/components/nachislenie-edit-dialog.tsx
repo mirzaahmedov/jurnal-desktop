@@ -24,6 +24,7 @@ import { SummaCell } from '@/common/components/table/renderers/summa'
 import { Form, FormField } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
 import { YearSelect } from '@/common/components/year-select'
+import { DownloadFile } from '@/common/features/file'
 import { formatDate, parseDate, parseLocaleDate } from '@/common/lib/date'
 import { formatNumber } from '@/common/lib/format'
 
@@ -153,6 +154,16 @@ export const NachislenieEditDialog = ({
                         />
                       </FormElement>
                     )}
+                  />
+
+                  <DownloadFile
+                    isZarplata
+                    url="Nachislenie/vedemost"
+                    params={{
+                      mainId: selectedNachislenie.id
+                    }}
+                    fileName={`vedemost_${selectedNachislenie.docNum}.xlsx`}
+                    buttonText={t('vedemost')}
                   />
                 </div>
 

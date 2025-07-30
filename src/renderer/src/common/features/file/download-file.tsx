@@ -1,4 +1,5 @@
 import type { ButtonProps } from '@/common/components/jolly/button'
+import type { AxiosResponse } from 'axios'
 
 import { useMutation } from '@tanstack/react-query'
 import { Download, Loader2 } from 'lucide-react'
@@ -7,17 +8,20 @@ import { Button } from '@/common/components/jolly/button'
 import { useSettingsStore } from '@/common/features/settings'
 import { useToggle } from '@/common/hooks'
 import { http } from '@/common/lib/http'
+import { zarplataApiNew } from '@/common/lib/zarplata_new'
 
 import { useDownloadsManagerStore } from '../downloads-manager/store'
 import { SelectReportTitleAlert } from './select-report-title-alert'
 
 export type DownloadFileProps = ButtonProps & {
+  isZarplata?: boolean
   url: string
   params: Record<string, any>
   fileName: string
   buttonText?: string
 }
 export const DownloadFile = ({
+  isZarplata = false,
   url,
   params,
   fileName,
@@ -32,10 +36,18 @@ export const DownloadFile = ({
   const { mutate: downloadFile, isPending: isDownloadingFile } = useMutation({
     mutationFn: async () => {
       try {
-        const res = await http.get(url, {
-          responseType: 'arraybuffer',
-          params
-        })
+        let res: AxiosResponse<any, any>
+        if (isZarplata) {
+          res = await zarplataApiNew.get(url, {
+            responseType: 'arraybuffer',
+            params
+          })
+        } else {
+          res = await http.get(url, {
+            responseType: 'arraybuffer',
+            params
+          })
+        }
         const [name, ext] = fileName.split('.')
 
         const file = await window.downloader.saveFile({
