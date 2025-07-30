@@ -5,18 +5,18 @@ import { useTranslation } from 'react-i18next'
 import { cn } from '@/common/lib/utils'
 import { getVacantRayon } from '@/common/utils/zarplata'
 
-interface TabelVacantsFilterProps {
+interface SelectedVacantsFilterProps {
   selectedVacants: (VacantTreeNode & { _selectedCount: number })[]
   selectedCount: number
   visibleVacant: number | null
   setVisibleVacant: (vacantId: number | null) => void
 }
-export const TabelVacantsFilter = ({
+export const SelectedVacantsFilter = ({
   selectedVacants,
   selectedCount,
   visibleVacant,
   setVisibleVacant
-}: TabelVacantsFilterProps) => {
+}: SelectedVacantsFilterProps) => {
   const { t } = useTranslation(['app'])
   return (
     <div>

@@ -257,7 +257,7 @@ export const GenericTable = <T extends object>(props: GenericTableProps<T>) => {
 
                 {onDelete || onEdit || onView || actions ? (
                   <GenericTableCell
-                    className="py-1 sticky right-0 bg-inherit shadow-sm border-l"
+                    className="sticky right-0 bg-inherit shadow-sm border-l !py-px"
                     style={{
                       width: actionsWidth,
                       minWidth: actionsWidth,

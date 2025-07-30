@@ -16,9 +16,9 @@ export const defaultValues: PayrollPaymentFormValues = {
 }
 
 export const PayrollChangePaymentFormSchema = z.object({
-  vacants: z.array(
+  mains: z.array(
     z.object({
-      vacantId: z.number()
+      mainZarplataId: z.number()
     })
   ),
   paymentId: z.number(),

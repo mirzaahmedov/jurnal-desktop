@@ -254,7 +254,7 @@ const RasxodDetails = ({ id, onSuccess }: RasxodDetailsProps) => {
                       }
                     : undefined
                 }
-                documentType={DocumentType.JUR7_PRIXOD}
+                documentType={DocumentType.JUR7_RASXOD}
                 autoGenerate={id === 'create'}
               />
               <div className="grid grid-cols-2 pb-7">

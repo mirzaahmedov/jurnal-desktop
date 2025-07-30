@@ -32,8 +32,8 @@ import { getVacantRayon } from '@/common/utils/zarplata'
 
 import { TabelFormSchema, type TabelFormValues, defaultValues } from '../config'
 import { TabelService } from '../service'
+import { SelectedVacantsFilter } from './selected-vacants-filter'
 import { TabelEditableColumnDefs } from './tabel-provodka-editable-table'
-import { TabelVacantsFilter } from './tabel-vacants-filter'
 
 enum TabelFormTabs {
   SELECT = 'select',
@@ -337,7 +337,7 @@ export const TabelCreateForm = ({
               </div>
             )}
             {activeTab === TabelFormTabs.SELECTED && (
-              <TabelVacantsFilter
+              <SelectedVacantsFilter
                 selectedVacants={selectedVacants}
                 selectedCount={form.watch('tabelChildren')?.length ?? 0}
                 visibleVacant={visibleVacant}

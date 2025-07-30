@@ -1,6 +1,7 @@
+import type { MainZarplata } from '@/common/models'
 import type { Payment } from '@/common/models/payments'
 
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { Allotment } from 'allotment'
@@ -16,6 +17,7 @@ import { Checkbox } from '@/common/components/jolly/checkbox'
 import { Form, FormField } from '@/common/components/ui/form'
 import { Label } from '@/common/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/common/components/ui/radio-group'
+import { Tabs, TabsList, TabsTrigger } from '@/common/components/ui/tabs'
 import { Textarea } from '@/common/components/ui/textarea'
 import { MainZarplataService } from '@/common/features/main-zarplata/service'
 import { PayrollPaymentService } from '@/common/features/payroll-payment/service'
@@ -26,10 +28,15 @@ import {
   VacantTreeSearch
 } from '@/common/features/vacant/ui/vacant-tree'
 import { useToggle } from '@/common/hooks'
-import { flattenTree } from '@/common/lib/tree/relation-tree'
 import { getVacantRayon } from '@/common/utils/zarplata'
 
 import { PaymentsChoosePaymentsDialog } from './choose-payments-dialog'
+import { SelectedVacantsFilter } from './selected-vacants-filter'
+
+enum PaymentsChangePaymentOptions {
+  ALL = 'all',
+  SELECTED = 'selected'
+}
 
 export const PaymentsChangePayment = () => {
   const paymentToggle = useToggle()
@@ -44,32 +51,33 @@ export const PaymentsChangePayment = () => {
   })
 
   const { t } = useTranslation(['app'])
-  const { filteredTreeNodes, search, setSearch, flatFilteredNodes, vacantsQuery } =
-    useVacantTreeNodes()
+  const { filteredTreeNodes, search, setSearch, vacantsQuery } = useVacantTreeNodes()
 
-  const [activeVacant, setActiveVacant] = useState<VacantTreeNode | null>(null)
+  const [tabValue, setTabValue] = useState(PaymentsChangePaymentOptions.ALL)
   const [selectedPayment, setSelectedPayment] = useState<Payment>()
-  const [selectedVacants, setSelectedVacants] = useState<VacantTreeNode[]>([])
+  const [selectedVacant, setSelectedVacant] = useState<VacantTreeNode>()
+  const [selectedMainZarplata, setSelectedMainZarplata] = useState<MainZarplata[]>([])
+  const [visibleVacant, setVisibleVacant] = useState<number | null>(null)
 
   const { mutate: changePayment, isPending } = useMutation({
     mutationFn: PayrollPaymentService.changePayment,
     onSuccess: () => {
       form.reset()
       setSelectedPayment(undefined)
-      setSelectedVacants([])
-      setActiveVacant(null)
+      setSelectedVacant(undefined)
+      setSelectedMainZarplata([])
       toast.success(t('update_success'))
     }
   })
-  const { data: mainZarplata, isFetching: isFetchingMainZarplata } = useQuery({
+  const mainZarplataQuery = useQuery({
     queryKey: [
       MainZarplataService.QueryKeys.GetByVacantId,
       {
-        vacantId: activeVacant?.id ?? 0
+        vacantId: selectedVacant?.id ?? 0
       }
     ],
     queryFn: MainZarplataService.getByVacantId,
-    enabled: !!activeVacant
+    enabled: !!selectedVacant
   })
 
   const handleSubmit = form.handleSubmit((values) => {
@@ -78,44 +86,65 @@ export const PaymentsChangePayment = () => {
       values: {
         paymentId: values.paymentId,
         payment: selectedPayment,
-        vacants: selectedVacants.map((vacant) => ({ vacantId: vacant.id })),
+        mains: selectedMainZarplata.map((mainZarplata) => ({ mainZarplataId: mainZarplata.id })),
         percentage: values.percentage,
         summa: values.summa
       }
     })
   })
 
-  const selectedIds = selectedVacants.map((vacant) => vacant.id)
-  const isAllSelected = flatFilteredNodes.every((vacant) =>
-    selectedVacants.some((selected) => selected.id === vacant.id)
-  )
-
-  const isTreeBranchAllSelected = (node: VacantTreeNode, selected: VacantTreeNode[]): boolean => {
-    if (!selected.find((s) => s.id === node.id)) {
-      return false
-    }
-    return node.children.every((child) => isTreeBranchAllSelected(child, selected))
-  }
-
-  const handleSelectNode = (node: VacantTreeNode) => {
-    setActiveVacant((prev) => (prev?.id === node.id ? null : node))
-    setSelectedVacants((prev) => {
-      if (isTreeBranchAllSelected(node, prev)) {
-        const flatChildNodes = flattenTree(node.children)
-        return prev.filter((p) => !flatChildNodes.some((c) => c.id === p.id) && p.id !== node.id)
-      } else {
-        const flatChildNodes = flattenTree(node.children)
-        return prev
-          .filter((p) => !flatChildNodes.some((c) => c.id === p.id) && p.id !== node.id)
-          .concat(flatChildNodes, [node])
+  const selectedVacants = useMemo(() => {
+    const vacantIds = new Map<number, number>()
+    const vacantNodes: (VacantTreeNode & { _selectedCount: number })[] = []
+    selectedMainZarplata.forEach((child) => {
+      if (!vacantIds.has(child.vacantId)) {
+        vacantIds.set(child.vacantId, 0)
       }
+      vacantIds.set(child.vacantId, vacantIds.get(child.vacantId)! + 1)
     })
+    const walk = (node: VacantTreeNode) => {
+      if (vacantIds.has(node.id)) {
+        vacantNodes.push({
+          ...node,
+          _selectedCount: vacantIds.get(node.id) ?? 0
+        })
+      }
+      node.children.forEach(walk)
+    }
+    filteredTreeNodes.forEach((vacant) => {
+      walk(vacant)
+    })
+    return vacantNodes
+  }, [selectedMainZarplata, filteredTreeNodes])
+
+  const selectedIds = selectedMainZarplata.map((mainZarplata) => mainZarplata.id)
+  const isAllSelected =
+    mainZarplataQuery?.data?.every((vacant) =>
+      selectedMainZarplata.some((selected) => selected.id === vacant.id)
+    ) ?? false
+
+  const handleSelectNode = (node: MainZarplata) => {
+    setSelectedMainZarplata((prev) => {
+      const isSelected = selectedIds.includes(node.id)
+      if (isSelected) {
+        return prev.filter((m) => m.id !== node.id)
+      }
+      return [...prev, node]
+    })
+  }
+  const handleDeselectNode = (node: MainZarplata) => {
+    setSelectedMainZarplata((prev) => prev.filter((m) => m.id !== node.id))
   }
   const handleSelectAll = () => {
     if (isAllSelected) {
-      setSelectedVacants([])
+      setSelectedMainZarplata([])
     } else {
-      setSelectedVacants(flatFilteredNodes)
+      setSelectedMainZarplata((prev) => {
+        return [
+          ...prev,
+          ...((mainZarplataQuery?.data ?? [])?.filter((m) => !selectedIds.includes(m.id)) ?? [])
+        ]
+      })
     }
   }
 
@@ -133,28 +162,12 @@ export const PaymentsChangePayment = () => {
             treeNodes={filteredTreeNodes}
             onValueChange={setSearch}
           />
-          <div className="px-4 py-2 border-b">
-            <div className="flex items-center gap-2">
-              <Checkbox
-                id="select-all"
-                isSelected={isAllSelected}
-                isIndeterminate={!isAllSelected && selectedVacants.length > 0}
-                onChange={handleSelectAll}
-              />
-              <Label
-                htmlFor="select-all"
-                className="text-xs font-semibold"
-              >
-                {t('select_all')}
-              </Label>
-            </div>
-          </div>
           <div className="flex-1 overflow-y-auto scrollbar">
             {vacantsQuery.isFetching ? <LoadingOverlay /> : null}
             <VacantTree
               nodes={filteredTreeNodes}
-              selectedIds={selectedIds}
-              onSelectNode={handleSelectNode}
+              selectedIds={selectedVacant ? [selectedVacant.id] : []}
+              onSelectNode={setSelectedVacant}
             />
           </div>
         </div>
@@ -163,13 +176,77 @@ export const PaymentsChangePayment = () => {
         <div className="ml-px h-full overflow-hidden flex flex-col">
           <div className="border-b p-5">
             <h5 className="text-xs font-bold text-gray-600">
-              {activeVacant ? getVacantRayon(activeVacant) : null}
+              {selectedVacant ? getVacantRayon(selectedVacant) : null}
             </h5>
           </div>
-          {isFetchingMainZarplata ? <LoadingOverlay /> : null}
-          <div className="flex-1 overflow-auto scrollbar">
-            <MainZarplataTable data={mainZarplata ?? []} />
+
+          <div className="px-4 py-1 flex flex-wrap justify-between items-center border-b">
+            {tabValue === PaymentsChangePaymentOptions.ALL ? (
+              <div className="flex items-center gap-2">
+                <Checkbox
+                  id="select-all"
+                  isSelected={isAllSelected}
+                  isIndeterminate={
+                    !isAllSelected && !!selectedMainZarplata.some((m) => selectedIds.includes(m.id))
+                  }
+                  onChange={handleSelectAll}
+                />
+                <Label
+                  htmlFor="select-all"
+                  className="text-xs font-semibold text-gray-600"
+                >
+                  {t('select_all')}
+                </Label>
+              </div>
+            ) : null}
+            {tabValue === PaymentsChangePaymentOptions.SELECTED && (
+              <SelectedVacantsFilter
+                selectedVacants={selectedVacants}
+                selectedCount={selectedMainZarplata?.length ?? 0}
+                visibleVacant={visibleVacant}
+                setVisibleVacant={setVisibleVacant}
+              />
+            )}
+
+            <Tabs
+              value={tabValue}
+              onValueChange={(value) => setTabValue(value as PaymentsChangePaymentOptions)}
+              className="px-4 py-1"
+            >
+              <TabsList>
+                <TabsTrigger value={PaymentsChangePaymentOptions.ALL}>{t('all')}</TabsTrigger>
+                <TabsTrigger value={PaymentsChangePaymentOptions.SELECTED}>
+                  {t('selected')}
+                </TabsTrigger>
+              </TabsList>
+            </Tabs>
           </div>
+
+          {tabValue === PaymentsChangePaymentOptions.ALL ? (
+            <>
+              {mainZarplataQuery.isFetching ? <LoadingOverlay /> : null}
+              <div className="flex-1 overflow-auto scrollbar">
+                <MainZarplataTable
+                  data={mainZarplataQuery.data ?? []}
+                  selectedIds={selectedIds}
+                  onClickRow={handleSelectNode}
+                />
+              </div>
+            </>
+          ) : null}
+          {tabValue === PaymentsChangePaymentOptions.SELECTED ? (
+            <div className="flex-1 overflow-auto scrollbar">
+              <MainZarplataTable
+                data={
+                  visibleVacant
+                    ? selectedMainZarplata?.filter((m) => m.vacantId === visibleVacant)
+                    : selectedMainZarplata
+                }
+                onDelete={handleDeselectNode}
+              />
+            </div>
+          ) : null}
+
           <div className="border-r border-t bg-gray-100">
             <Form {...form}>
               <form
@@ -264,7 +341,9 @@ export const PaymentsChangePayment = () => {
                   />
                   <Button
                     isPending={isPending}
-                    isDisabled={isPending || !selectedVacants.length || !form.watch('paymentId')}
+                    isDisabled={
+                      isPending || !selectedMainZarplata.length || !form.watch('paymentId')
+                    }
                     type="submit"
                   >
                     {t('save')}
