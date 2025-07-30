@@ -44,15 +44,20 @@ export const WorkTripDetails = ({ id }: WorkTripDetailsProps) => {
   const queryClient = useQueryClient()
   const navigate = useNavigate()
 
-  const { startDate } = useSelectedMonthStore()
+  const { startDate, endDate } = useSelectedMonthStore()
 
   const { t } = useTranslation(['app'])
   const { main_schet_id, jur4_schet_id } = useRequisitesStore()
 
+  const defaultDate = () =>
+    startDate <= new Date() && new Date() <= endDate
+      ? formatDate(new Date())
+      : formatDate(startDate)
+
   const form = useForm({
     defaultValues: {
       ...defaultValues,
-      doc_date: formatDate(startDate)
+      doc_date: defaultDate()
     },
     resolver: zodResolver(WorkTripFormSchema)
   })
@@ -148,7 +153,7 @@ export const WorkTripDetails = ({ id }: WorkTripDetailsProps) => {
     } else {
       form.reset({
         ...defaultValues,
-        doc_date: formatDate(useSelectedMonthStore.getState().startDate)
+        doc_date: defaultDate()
       })
     }
   }, [workTrip?.data, form])
@@ -157,7 +162,7 @@ export const WorkTripDetails = ({ id }: WorkTripDetailsProps) => {
       !form.getValues('doc_date') ||
       !withinMonth(parseDate(form.getValues('doc_date')), startDate)
     ) {
-      form.setValue('doc_date', formatDate(startDate))
+      form.setValue('doc_date', defaultDate())
     }
   }, [form, startDate])
 

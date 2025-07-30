@@ -59,19 +59,23 @@ const BankPrixodDetailsPage = () => {
   const navigate = useNavigate()
   const main_schet_id = useRequisitesStore((state) => state.main_schet_id)
   const setLayout = useLayout()
-  const startDate = useSelectedMonthStore((store) => store.startDate)
 
   const { t } = useTranslation(['app'])
   const { queuedMonths } = useBankSaldo()
+  const { startDate, endDate } = useSelectedMonthStore()
   const { snippets, addSnippet, removeSnippet } = useSnippets({
     ns: 'bank_prixod'
   })
+
+  const now = new Date()
+  const defaultDate = () =>
+    startDate <= now && now <= endDate ? formatDate(now) : formatDate(startDate)
 
   const form = useForm({
     resolver: zodResolver(BankPrixodFormSchema),
     defaultValues: {
       ...defaultValues,
-      doc_date: formatDate(startDate)
+      doc_date: defaultDate()
     }
   })
 
@@ -255,7 +259,7 @@ const BankPrixodDetailsPage = () => {
     if (id === 'create') {
       form.reset({
         ...defaultValues,
-        doc_date: formatDate(startDate)
+        doc_date: defaultDate()
       })
       return
     }
@@ -280,7 +284,7 @@ const BankPrixodDetailsPage = () => {
                     id === 'create'
                       ? {
                           fromMonth: startDate,
-                          toMonth: startDate
+                          toMonth: endDate
                         }
                       : undefined
                   }

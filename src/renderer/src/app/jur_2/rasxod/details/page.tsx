@@ -76,7 +76,7 @@ const BankRasxodDetailsPage = () => {
   const location = useLocation() as Location<{ original?: BankRasxod }>
 
   const main_schet_id = useRequisitesStore((state) => state.main_schet_id)
-  const startDate = useSelectedMonthStore((store) => store.startDate)
+  const { startDate, endDate } = useSelectedMonthStore()
   const setLayout = useLayout()
 
   const original = location.state?.original
@@ -89,11 +89,16 @@ const BankRasxodDetailsPage = () => {
     ns: 'bank_rasxod'
   })
 
+  const defaultDate = () =>
+    startDate <= new Date() && new Date() <= endDate
+      ? formatDate(new Date())
+      : formatDate(startDate)
+
   const form = useForm({
     resolver: zodResolver(BankRasxodFormSchema),
     defaultValues: {
       ...defaultValues,
-      doc_date: original?.doc_date ?? formatDate(startDate) ?? defaultValues.doc_date,
+      doc_date: original?.doc_date ?? defaultDate() ?? defaultValues.doc_date,
       id_shartnomalar_organization:
         original?.id_shartnomalar_organization ?? defaultValues.id_shartnomalar_organization,
       id_spravochnik_organization:
@@ -353,7 +358,7 @@ const BankRasxodDetailsPage = () => {
                     id === 'create'
                       ? {
                           fromMonth: startDate,
-                          toMonth: startDate
+                          toMonth: endDate
                         }
                       : undefined
                   }

@@ -66,19 +66,23 @@ export interface KassaPrixodDetailsProps {
 export const KassaPrixodDetails = ({ id, onSuccess }: KassaPrixodDetailsProps) => {
   const queryClient = useQueryClient()
   const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
-  const startDate = useSelectedMonthStore((store) => store.startDate)
 
   const { t } = useTranslation(['app'])
   const { queuedMonths } = useKassaSaldo()
+  const { startDate, endDate } = useSelectedMonthStore()
   const { snippets, addSnippet, removeSnippet } = useSnippets({
     ns: 'kassa_prixod'
   })
+
+  const now = new Date()
+  const defaultDate = () =>
+    startDate <= now && now <= endDate ? formatDate(now) : formatDate(startDate)
 
   const form = useForm({
     resolver: zodResolver(KassaPrixodFormSchema),
     defaultValues: {
       ...defaultValues,
-      doc_date: formatDate(startDate)
+      doc_date: defaultDate()
     }
   })
 
@@ -255,7 +259,7 @@ export const KassaPrixodDetails = ({ id, onSuccess }: KassaPrixodDetailsProps) =
     if (id === 'create' || !prixod?.data) {
       form.reset({
         ...defaultValues,
-        doc_date: formatDate(startDate)
+        doc_date: defaultDate()
       })
       return
     }
@@ -296,7 +300,7 @@ export const KassaPrixodDetails = ({ id, onSuccess }: KassaPrixodDetailsProps) =
                     id === 'create'
                       ? {
                           fromMonth: startDate,
-                          toMonth: startDate
+                          toMonth: endDate
                         }
                       : undefined
                   }

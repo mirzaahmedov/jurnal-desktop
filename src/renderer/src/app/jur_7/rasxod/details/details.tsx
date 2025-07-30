@@ -57,10 +57,15 @@ const RasxodDetails = ({ id, onSuccess }: RasxodDetailsProps) => {
     ns: 'jur7_rasxod'
   })
 
+  const defaultDate = () =>
+    startDate <= new Date() && new Date() <= endDate
+      ? formatDate(new Date())
+      : formatDate(startDate)
+
   const form = useForm({
     defaultValues: {
       ...defaultValues,
-      doc_date: formatDate(startDate)
+      doc_date: defaultDate()
     },
     resolver: zodResolver(RasxodFormSchema)
   })
@@ -191,7 +196,7 @@ const RasxodDetails = ({ id, onSuccess }: RasxodDetailsProps) => {
     const docDate = parseDate(form.watch('doc_date'))
 
     if (!docDate || !withinMonth(docDate, startDate)) {
-      form.setValue('doc_date', formatDate(startDate))
+      form.setValue('doc_date', defaultDate())
     }
   }, [id, startDate, form])
 

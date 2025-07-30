@@ -51,6 +51,11 @@ const InternalDetails = ({ id, onSuccess: onSuccess }: InternalDetailsProps) => 
     ns: 'jur7_internal'
   })
 
+  const defaultDate = () =>
+    startDate <= new Date() && new Date() <= endDate
+      ? formatDate(new Date())
+      : formatDate(startDate)
+
   const { data: internal, isFetching } = useQuery({
     queryKey: [
       WarehouseInternalQueryKeys.getById,
@@ -111,7 +116,7 @@ const InternalDetails = ({ id, onSuccess: onSuccess }: InternalDetailsProps) => 
   const form = useForm({
     defaultValues: {
       ...defaultValues,
-      doc_date: formatDate(startDate)
+      doc_date: defaultDate()
     },
     resolver: zodResolver(InternalFormSchema)
   })
@@ -179,7 +184,7 @@ const InternalDetails = ({ id, onSuccess: onSuccess }: InternalDetailsProps) => 
     const docDate = parseDate(form.watch('doc_date'))
 
     if (!docDate || !withinMonth(docDate, startDate)) {
-      form.setValue('doc_date', formatDate(startDate))
+      form.setValue('doc_date', defaultDate())
     }
   }, [id, startDate, form])
 

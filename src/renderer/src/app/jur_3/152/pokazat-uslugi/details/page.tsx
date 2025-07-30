@@ -62,6 +62,7 @@ const PokazatUslugiDetailsPage = () => {
   const { t } = useTranslation(['app'])
   const { main_schet_id, jur3_schet_152_id } = useRequisitesStore()
   const { queuedMonths } = useUslugiSaldo()
+  const { startDate, endDate } = useSelectedMonthStore()
   const { snippets, addSnippet, removeSnippet } = useSnippets({
     ns: 'pokazat-uslugi'
   })
@@ -69,13 +70,17 @@ const PokazatUslugiDetailsPage = () => {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const setLayout = useLayout()
-  const startDate = useSelectedMonthStore((store) => store.startDate)
+
+  const defaultDate = () =>
+    startDate <= new Date() && new Date() <= endDate
+      ? formatDate(new Date())
+      : formatDate(startDate)
 
   const form = useForm({
     resolver: zodResolver(PokazatUslugiFormSchema),
     defaultValues: {
       ...defaultValues,
-      doc_date: formatDate(startDate)
+      doc_date: defaultDate()
     }
   })
 
@@ -255,7 +260,7 @@ const PokazatUslugiDetailsPage = () => {
     if (id === 'create') {
       form.reset({
         ...defaultValues,
-        doc_date: formatDate(startDate)
+        doc_date: defaultDate()
       })
       return
     }
@@ -292,7 +297,7 @@ const PokazatUslugiDetailsPage = () => {
                   id === 'create'
                     ? {
                         fromMonth: startDate,
-                        toMonth: startDate
+                        toMonth: endDate
                       }
                     : undefined
                 }

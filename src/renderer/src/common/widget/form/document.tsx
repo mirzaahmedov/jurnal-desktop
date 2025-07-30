@@ -9,14 +9,13 @@ import { useTranslation } from 'react-i18next'
 
 import { Fieldset, Spinner } from '@/common/components'
 import { FormElement } from '@/common/components/form'
+import { JollyDatePicker } from '@/common/components/jolly-date-picker'
 import { Button } from '@/common/components/ui/button'
 import { FormField } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
 import { type DocumentType, useGenerateDocumentNumber } from '@/common/features/doc-num'
 import { formatDate, parseDate } from '@/common/lib/date'
 import { cn } from '@/common/lib/utils'
-
-import { JollyDatePicker } from '../../components/jolly-date-picker'
 
 interface RequiredDocumentFields {
   doc_num: string
@@ -63,10 +62,14 @@ export const DocumentFields: FormEditableFieldsComponent<
       if (date < calendarProps.fromMonth) {
         form.setValue('doc_date' as any, formatDate(calendarProps.fromMonth) as any)
       }
-    } else if (doc_date && calendarProps?.toMonth) {
+    }
+    if (doc_date && calendarProps?.toMonth) {
       const date = parseDate(doc_date)
       if (date > calendarProps.toMonth) {
-        form.setValue('doc_date' as any, formatDate(calendarProps.toMonth) as any)
+        form.setValue(
+          'doc_date' as any,
+          formatDate(calendarProps.fromMonth ?? calendarProps.toMonth) as any
+        )
       }
     }
   }, [form, calendarProps?.fromMonth, calendarProps?.toMonth])

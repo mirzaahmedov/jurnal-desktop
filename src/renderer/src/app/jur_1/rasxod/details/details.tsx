@@ -72,7 +72,12 @@ export const KassaRasxodDetails = ({ id, onSuccess }: KassaRasxodDetailsProps) =
 
   const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
   const queryClient = useQueryClient()
-  const startDate = useSelectedMonthStore((store) => store.startDate)
+
+  const { startDate, endDate } = useSelectedMonthStore()
+
+  const now = new Date()
+  const defaultDate = () =>
+    startDate <= now && now <= endDate ? formatDate(now) : formatDate(startDate)
 
   const year = startDate.getFullYear()
   const month = startDate.getMonth() + 1
@@ -81,7 +86,7 @@ export const KassaRasxodDetails = ({ id, onSuccess }: KassaRasxodDetailsProps) =
     resolver: zodResolver(KassaRasxodFormSchema),
     defaultValues: {
       ...defaultValues,
-      doc_date: formatDate(startDate)
+      doc_date: defaultDate()
     }
   })
 
@@ -279,7 +284,7 @@ export const KassaRasxodDetails = ({ id, onSuccess }: KassaRasxodDetailsProps) =
     if (id === 'create' || !rasxod?.data) {
       form.reset({
         ...defaultValues,
-        doc_date: formatDate(startDate)
+        doc_date: defaultDate()
       })
       return
     }
@@ -320,7 +325,7 @@ export const KassaRasxodDetails = ({ id, onSuccess }: KassaRasxodDetailsProps) =
                     id === 'create'
                       ? {
                           fromMonth: startDate,
-                          toMonth: startDate
+                          toMonth: endDate
                         }
                       : undefined
                   }

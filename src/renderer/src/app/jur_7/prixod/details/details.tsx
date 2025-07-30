@@ -71,6 +71,11 @@ const PrixodDetails = ({ id, onSuccess }: PrixodDetailsProps) => {
     ns: 'jur7_prixod'
   })
 
+  const defaultDate = () =>
+    startDate <= new Date() && new Date() <= endDate
+      ? formatDate(new Date())
+      : formatDate(startDate)
+
   const { data: prixod, isFetching } = useQuery({
     queryKey: [
       MaterialPrixodQueryKeys.getById,
@@ -140,7 +145,7 @@ const PrixodDetails = ({ id, onSuccess }: PrixodDetailsProps) => {
   const form = useForm({
     defaultValues: {
       ...defaultValues,
-      doc_date: formatDate(startDate)
+      doc_date: defaultDate()
     },
     resolver: zodResolver(MaterialPrixodFormSchema)
   })
@@ -235,7 +240,7 @@ const PrixodDetails = ({ id, onSuccess }: PrixodDetailsProps) => {
     const docDate = parseDate(form.watch('doc_date'))
 
     if (!docDate || !withinMonth(docDate, startDate)) {
-      form.setValue('doc_date', formatDate(startDate))
+      form.setValue('doc_date', defaultDate())
     }
   }, [id, startDate, form])
 

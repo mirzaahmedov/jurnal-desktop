@@ -48,10 +48,10 @@ const AvansDetailsPage = () => {
 
   const navigate = useNavigate()
   const queryClient = useQueryClient()
-  const startDate = useSelectedMonthStore((store) => store.startDate)
   const setLayout = useLayout()
 
   const { main_schet_id, jur4_schet_id } = useRequisitesStore()
+  const { startDate, endDate } = useSelectedMonthStore()
 
   const { t } = useTranslation(['app'])
   const { queuedMonths } = usePodotchetSaldo()
@@ -59,11 +59,16 @@ const AvansDetailsPage = () => {
     ns: 'avans'
   })
 
+  const defaultDate = () =>
+    startDate <= new Date() && new Date() <= endDate
+      ? formatDate(new Date())
+      : formatDate(startDate)
+
   const form = useForm({
     resolver: zodResolver(AvansFormSchema),
     defaultValues: {
       ...defaultValues,
-      doc_date: formatDate(startDate)
+      doc_date: defaultDate()
     }
   })
 
@@ -208,7 +213,7 @@ const AvansDetailsPage = () => {
     if (id === 'create') {
       form.reset({
         ...defaultValues,
-        doc_date: formatDate(startDate)
+        doc_date: defaultDate()
       })
       return
     }
@@ -242,7 +247,7 @@ const AvansDetailsPage = () => {
                     id === 'create'
                       ? {
                           fromMonth: startDate,
-                          toMonth: startDate
+                          toMonth: endDate
                         }
                       : undefined
                   }

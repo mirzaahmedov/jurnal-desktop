@@ -65,13 +65,18 @@ const AktDetailsPage = () => {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const setLayout = useLayout()
-  const startDate = useSelectedMonthStore((store) => store.startDate)
+  const { startDate, endDate } = useSelectedMonthStore()
+
+  const defaultDate = () =>
+    startDate <= new Date() && new Date() <= endDate
+      ? formatDate(new Date())
+      : formatDate(startDate)
 
   const form = useForm({
     resolver: zodResolver(AktFormSchema),
     defaultValues: {
       ...defaultValues,
-      doc_date: formatDate(startDate)
+      doc_date: defaultDate()
     }
   })
 
@@ -256,7 +261,7 @@ const AktDetailsPage = () => {
     if (id === 'create') {
       form.reset({
         ...defaultValues,
-        doc_date: formatDate(startDate)
+        doc_date: defaultDate()
       })
     }
 
@@ -290,7 +295,7 @@ const AktDetailsPage = () => {
                     id === 'create'
                       ? {
                           fromMonth: startDate,
-                          toMonth: startDate
+                          toMonth: endDate
                         }
                       : undefined
                   }
