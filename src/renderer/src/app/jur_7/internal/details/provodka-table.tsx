@@ -264,6 +264,9 @@ const Provodka = ({ rowIndex, onOpenDialog, onRemove, form, tabIndex }: Provodka
     name: `childs.${rowIndex}.iznos`
   })
 
+  console.log('debet_schet', form.watch(`childs.${rowIndex}.debet_schet`))
+  console.log('debet_sub_schet', form.watch(`childs.${rowIndex}.debet_sub_schet`))
+
   return (
     <EditableTableRow key={rowIndex}>
       <NaimenovanieCells
@@ -495,10 +498,7 @@ const Provodka = ({ rowIndex, onOpenDialog, onRemove, form, tabIndex }: Provodka
             render={({ field, fieldState }) => (
               <SchetEditor
                 value={field.value || ''}
-                onChange={(value) => {
-                  field.onChange(value)
-                  handleChangeChildField(rowIndex, 'debet_sub_schet', '')
-                }}
+                onChange={field.onChange}
                 error={fieldState.error}
                 tabIndex={tabIndex}
                 className="w-24"

@@ -16,7 +16,7 @@ export class PayrollDeductionService {
   }
 
   static async changePayment(args: {
-    isXarbiy: boolean
+    isXarbiy: boolean | undefined
     values: PayrollDeductionChangePaymentFormValues
   }) {
     const { isXarbiy, values } = args

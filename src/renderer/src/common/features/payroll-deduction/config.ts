@@ -16,9 +16,9 @@ export const defaultValues: PayrollDeductionFormValues = {
 }
 
 export const PayrollDeductionChangePaymentFormSchema = z.object({
-  vacants: z.array(
+  mains: z.array(
     z.object({
-      vacantId: z.number()
+      mainZarplataId: z.number()
     })
   ),
   deductionId: z.number(),

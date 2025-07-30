@@ -82,7 +82,7 @@ export const PaymentsChangePayment = () => {
 
   const handleSubmit = form.handleSubmit((values) => {
     changePayment({
-      isXarbiy: values.type === 'military',
+      isXarbiy: values.type === 'military' ? true : values.type === 'civilian' ? false : undefined,
       values: {
         paymentId: values.paymentId,
         payment: selectedPayment,
@@ -137,7 +137,9 @@ export const PaymentsChangePayment = () => {
   }
   const handleSelectAll = () => {
     if (isAllSelected) {
-      setSelectedMainZarplata([])
+      setSelectedMainZarplata((prev) =>
+        prev.filter((m) => !mainZarplataQuery?.data?.some((vacant) => vacant.id === m.id))
+      )
     } else {
       setSelectedMainZarplata((prev) => {
         return [

@@ -10,11 +10,8 @@ import {
   OperatsiiService,
   operatsiiQueryKeys
 } from '@/app/super-admin/operatsii'
-import {
-  ComboboxItem,
-  JollyComboBox,
-  type JollyComboBoxProps
-} from '@/common/components/jolly/combobox'
+import { AutoComplete } from '@/common/components/auto-complete-new'
+import { ComboboxItem, type JollyComboBoxProps } from '@/common/components/jolly/combobox'
 import { useEventCallback } from '@/common/hooks'
 import { cn } from '@/common/lib/utils'
 import { TypeSchetOperatsii } from '@/common/models'
@@ -62,19 +59,14 @@ export const SchetEditor = ({
     if (isFetching) {
       return
     }
-    if (options.find((option) => option.schet === value)) {
-      setInputValue(value)
-    } else {
-      setInputValue('')
-      onChangeEvent('')
-    }
+    setInputValue(value ?? '')
+    onChangeEvent(value ?? '')
   }, [value, isFetching, options])
 
   return (
-    <JollyComboBox
+    <AutoComplete
       items={filteredOptions}
       isDisabled={isFetching}
-      allowsEmptyCollection
       className={cn('gap-0 w-32', className)}
       tabIndex={tabIndex}
       selectedKey={value}
@@ -82,7 +74,6 @@ export const SchetEditor = ({
       onInputChange={setInputValue}
       onSelectionChange={(key) => {
         onChange((key as string) || '')
-        setInputValue((key as string) || '')
       }}
       editor={editor}
       error={!!error?.message}
@@ -93,6 +84,6 @@ export const SchetEditor = ({
           {item.schet} ({item.schet6})
         </ComboboxItem>
       )}
-    </JollyComboBox>
+    </AutoComplete>
   )
 }

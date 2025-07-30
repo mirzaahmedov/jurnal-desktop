@@ -6,11 +6,12 @@ import { useQuery } from '@tanstack/react-query'
 import { useFilter } from 'react-aria-components'
 
 import { OperatsiiService, operatsiiQueryKeys } from '@/app/super-admin/operatsii'
+import { AutoComplete } from '@/common/components/auto-complete-new'
 import { useEventCallback } from '@/common/hooks'
 import { cn } from '@/common/lib/utils'
 import { type Operatsii, TypeSchetOperatsii } from '@/common/models'
 
-import { ComboboxItem, JollyComboBox, type JollyComboBoxProps } from '../../jolly/combobox'
+import { ComboboxItem, type JollyComboBoxProps } from '../../jolly/combobox'
 
 export const SubSchetEditor = ({
   tabIndex,
@@ -35,7 +36,11 @@ export const SubSchetEditor = ({
     sensitivity: 'base'
   })
 
-  const { data: schetOptions, isFetching } = useQuery({
+  const {
+    data: schetOptions,
+    isFetching,
+    isFetchedAfterMount
+  } = useQuery({
     queryKey: [
       operatsiiQueryKeys.getAll,
       {
@@ -54,29 +59,23 @@ export const SubSchetEditor = ({
   }, [options, inputValue, startsWith])
 
   useEffect(() => {
-    if (isFetching) {
+    if (isFetching || !isFetchedAfterMount || !schet) {
       return
     }
 
-    if (options.find((option) => option.sub_schet === value)) {
-      setInputValue(value)
-    } else {
-      setInputValue('')
-      onChangeEvent('')
-    }
-  }, [value, isFetching, options])
+    setInputValue(value ?? '')
+    onChangeEvent(value ?? '')
+  }, [value, schet, isFetching, isFetchedAfterMount, options])
 
   return (
-    <JollyComboBox
+    <AutoComplete
       items={filteredOptions}
-      isDisabled={isFetching}
-      allowsEmptyCollection
+      isDisabled={isFetching || !schet}
       className={cn('gap-0 w-32', className)}
       tabIndex={tabIndex}
       selectedKey={value}
       onSelectionChange={(key) => {
         onChange((key as string) || '')
-        setInputValue((key as string) || '')
       }}
       editor={editor}
       error={!!error?.message}
@@ -85,6 +84,6 @@ export const SubSchetEditor = ({
       {...props}
     >
       {(item) => <ComboboxItem id={item.sub_schet}>{item.sub_schet}</ComboboxItem>}
-    </JollyComboBox>
+    </AutoComplete>
   )
 }
