@@ -18,6 +18,7 @@ export const SpravochnikSearchField = ({
       id={id ?? name}
       value={getValue(name) ?? ''}
       onChange={(e) => setValue(name, e.target.value)}
+      clearInput={() => setValue(name, '')}
       {...props}
     />
   )

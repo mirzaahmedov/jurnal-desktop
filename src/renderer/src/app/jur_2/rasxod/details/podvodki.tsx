@@ -2,7 +2,7 @@ import type { BankRasxodPodvodkaFormValues } from '../service'
 import type { EditableColumnDef } from '@/common/components/editable-table'
 
 import {
-  createOperatsiiEditor,
+  createOperatsiiNewEditor,
   createPodotchetEditor,
   createPodrazdelenieEditor,
   createStaffEditor,
@@ -15,7 +15,7 @@ export const podvodkaColumns: EditableColumnDef<BankRasxodPodvodkaFormValues>[] 
   {
     key: 'spravochnik_operatsii_id',
     header: 'provodka',
-    Editor: createOperatsiiEditor({
+    Editor: createOperatsiiNewEditor({
       type_schet: TypeSchetOperatsii.BANK_RASXOD,
       field: 'spravochnik_operatsii_id'
     })

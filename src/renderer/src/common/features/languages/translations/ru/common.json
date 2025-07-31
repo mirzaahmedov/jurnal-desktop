@@ -519,5 +519,6 @@
   "premya": "Премия",
   "mat_pomosh": "Мат. помощь",
   "payment_type": "Тип платежа",
-  "percentage_of_contract": "Процент от договора"
+  "percentage_of_contract": "Процент от договора",
+  "calculate": "Рассчитать"
 }

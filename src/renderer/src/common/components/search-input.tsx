@@ -1,6 +1,6 @@
 import { type HTMLAttributes, type InputHTMLAttributes, useRef } from 'react'
 
-import { type LucideProps, Search } from 'lucide-react'
+import { CircleX, type LucideProps, Search } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { Input } from '@/common/components/ui/input'
@@ -8,18 +8,21 @@ import { cn } from '@/common/lib/utils'
 
 import { useKeyUp } from '../hooks'
 import { HotKey } from './hot-key'
+import { Button } from './jolly/button'
 
 export interface SearchInputProps extends InputHTMLAttributes<HTMLInputElement> {
   containerProps?: HTMLAttributes<HTMLDivElement>
   iconProps?: LucideProps
   debounceMS?: number
   hotKey?: string
+  clearInput?: VoidFunction
 }
 export const SearchInput = ({
   className,
   containerProps,
   iconProps,
   hotKey = '/',
+  clearInput,
   ...props
 }: SearchInputProps) => {
   const inputRef = useRef<HTMLInputElement>(null)
@@ -66,10 +69,22 @@ export const SearchInput = ({
         )}
       />
 
-      <div className="absolute right-2.5 top-1/2 -translate-y-1/2 space-x-1 z-50 pointer-events-none">
-        <HotKey>CTRL</HotKey>
-        <HotKey>{hotKey}</HotKey>
-      </div>
+      {props.value && clearInput ? (
+        <Button
+          type="submit"
+          size="icon"
+          variant="ghost"
+          className="absolute right-2 top-1/2 -translate-y-1/2 z-50 pointer-events-auto size-8"
+          onClick={clearInput}
+        >
+          <CircleX className="btn-icon" />
+        </Button>
+      ) : (
+        <div className="absolute right-2.5 top-1/2 -translate-y-1/2 space-x-1 z-50 pointer-events-none">
+          <HotKey>CTRL</HotKey>
+          <HotKey>{hotKey}</HotKey>
+        </div>
+      )}
     </div>
   )
 }

@@ -16,13 +16,14 @@ export const AutoComplete = <T extends object>({
   const onInputChangeEvent = useEventCallback(onInputChange)
 
   useEffect(() => {
+    console.log('running useEffect')
     if (selectedKey) {
       onInputChangeEvent?.((selectedKey as string) || '')
     } else {
       onInputChangeEvent?.('')
     }
   }, [selectedKey, onInputChangeEvent])
-  // Ensure that inputValue is a
+
   return (
     <JollyComboBox
       allowsCustomValue

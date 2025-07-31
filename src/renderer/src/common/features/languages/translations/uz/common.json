@@ -517,5 +517,6 @@
   "mat_pomosh": "Mat. yordam",
   "payment_type": "To'lov turi",
   "amount": "Miqdor",
-  "percentage_of_contract": "Shartnoma foizi"
+  "percentage_of_contract": "Shartnoma foizi",
+  "calculate": "Hisoblash"
 }

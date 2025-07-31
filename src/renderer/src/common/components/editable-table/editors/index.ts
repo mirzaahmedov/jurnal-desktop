@@ -1,6 +1,7 @@
 export type { EditorComponent as EditorComponentType } from './interfaces'
 
 export * from './operatsii'
+export * from './operatsii_new'
 export * from './summa'
 export * from './type-operatsii'
 export * from './sostav'

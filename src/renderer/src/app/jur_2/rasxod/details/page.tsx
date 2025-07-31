@@ -128,9 +128,8 @@ const BankRasxodDetailsPage = () => {
     })
   )
 
-  const updateSummaFromContract = (contractSumma: number) => {
+  const updateSummaFromContract = (contractSumma: number, percentage: number) => {
     const children = form.getValues('childs')
-    const percentage = form.getValues('percentage') ?? 0
     const summa = percentage !== 0 ? contractSumma * (percentage / 100) : contractSumma
     if (children.length === 0) {
       form.setValue('childs', [{ spravochnik_operatsii_id: 0, summa }])
@@ -144,11 +143,10 @@ const BankRasxodDetailsPage = () => {
       value: form.watch('id_shartnomalar_organization'),
       onChange: (value, contract) => {
         form.setValue('id_shartnomalar_organization', value, { shouldValidate: true })
-        form.setValue('contract_summa', contract?.summa ? Number(contract?.summa) : 0, {
-          shouldValidate: true
-        })
         if (contract) {
-          updateSummaFromContract(contract?.summa ? Number(contract?.summa) : 0)
+          form.setValue('percentage', 100)
+          form.setValue('contract_summa', contract.summa ? Number(contract.summa) : 0)
+          updateSummaFromContract(contract.summa ? Number(contract.summa) : 0, 100)
         }
 
         changeOpisanieContract({
@@ -298,11 +296,18 @@ const BankRasxodDetailsPage = () => {
     sub_schet: row.sub_schet
   }))
 
-  const summa = form.watch('summa')
+  const summa = form.watch('summa') ?? 0
+
   const reminder = monitor?.meta
     ? (monitor?.meta?.summa_to ?? 0) - (summa ?? 0) + (rasxod?.data?.summa ?? 0)
     : 0
 
+  useEffect(() => {
+    const contractSumma = form.watch('contract_summa') ?? 0
+    if (summa) {
+      form.setValue('percentage', (summa / contractSumma) * 100)
+    }
+  }, [summa])
   useEffect(() => {
     const summa =
       podvodki
@@ -358,6 +363,18 @@ const BankRasxodDetailsPage = () => {
   useEffect(() => {
     form.setValue('organization_porucheniya_name', organSpravochnik.selected?.name ?? '')
   }, [form, organSpravochnik.selected])
+  useEffect(() => {
+    const shartnoma = shartnomaSpravochnik.selected
+    const grafik_id = form.watch('shartnoma_grafik_id')
+    if (shartnoma && grafik_id) {
+      const grafik = shartnoma.grafiks?.find((g) => g.id === grafik_id)
+      form.getValues('childs').forEach((child, index) => {
+        if (!child.spravochnik_operatsii_id) {
+          form.setValue(`childs.${index}.sub_schet`, grafik?.smeta.smeta_number)
+        }
+      })
+    }
+  }, [shartnomaSpravochnik.selected, form.watch('shartnoma_grafik_id')])
 
   return (
     <DetailsView>
@@ -402,15 +419,18 @@ const BankRasxodDetailsPage = () => {
 
               <div className="grid grid-cols-2 gap-10">
                 <SummaFields
-                  percentage={form.watch('childs').length === 1}
+                  percent={form.watch('childs').length === 1}
                   data={{
                     summa: form.watch('summa'),
-                    percentage: form.watch('percentage'),
+                    percent: form.watch('percentage'),
                     contractSumma: form.watch('contract_summa')
                   }}
                   onChangePercentage={(value) => {
+                    const contractSumma = form.watch('contract_summa') ?? 0
                     form.setValue('percentage', value, { shouldValidate: true })
-                    updateSummaFromContract(form.watch('contract_summa') ?? 0)
+                    if (value) {
+                      updateSummaFromContract(contractSumma, value)
+                    }
                   }}
                 />
                 <ShartnomaFields
@@ -433,7 +453,7 @@ const BankRasxodDetailsPage = () => {
               </div>
             </div>
 
-            <DetailsView.Footer className="flex flex-row gap-5">
+            <DetailsView.Footer className="flex flex-row gap-10">
               <DetailsView.Create
                 isDisabled={reminder < 0 || isFetchingMonitor || isFetching}
                 isPending={isCreating || isUpdating}
@@ -454,7 +474,7 @@ const BankRasxodDetailsPage = () => {
         </Form>
         <Fieldset
           name={t('provodka')}
-          className="flex-1 mt-5 pb-24 bg-slate-50"
+          className="flex-1 mt-5 pb-24 bg-slate-50 border-t"
         >
           <EditableTable
             tabIndex={6}

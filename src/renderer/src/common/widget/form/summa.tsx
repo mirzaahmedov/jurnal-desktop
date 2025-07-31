@@ -14,15 +14,24 @@ export const SummaFields: FormFieldsComponent<
     summa?: number
     contractSumma?: number
     dialog?: boolean
-    percentage?: number
+    percent?: number
   },
   HTMLInputElement,
   {
     dialog?: boolean
-    percentage?: boolean
+    percent?: boolean
+    percentReadOnly?: boolean
     onChangePercentage?: (value: number) => void
   }
-> = ({ data, dialog = false, percentage = 0, name, onChangePercentage, ...props }) => {
+> = ({
+  data,
+  dialog = false,
+  percent = false,
+  percentReadOnly = false,
+  name,
+  onChangePercentage,
+  ...props
+}) => {
   const { t, i18n } = useTranslation()
   return (
     <Fieldset
@@ -50,19 +59,21 @@ export const SummaFields: FormFieldsComponent<
           value={numberToWords(data?.summa ?? 0, i18n.language)}
         />
 
-        {percentage ? (
-          <div className="mt-2 w-full flex items-center gap-2 flex-wrap">
-            <FormElement label={t('shartnoma_summa')}>
+        {percent && data?.contractSumma ? (
+          <div className="mt-2 w-full flex items-start gap-5 flex-wrap">
+            <FormElement label={t('shartnoma')}>
               <NumericInput
                 readOnly
                 tabIndex={-1}
-                value={data?.contractSumma ?? 0}
+                value={data.contractSumma ?? 0}
+                className="w-48"
               />
             </FormElement>
             <FormElement label={t('payment_percent')}>
               <NumericInput
+                readOnly={percentReadOnly}
                 tabIndex={-1}
-                value={data?.percentage ?? 0}
+                value={data?.percent ?? 0}
                 onValueChange={(values) => onChangePercentage?.(values.floatValue ?? 0)}
                 className="w-32"
               />
