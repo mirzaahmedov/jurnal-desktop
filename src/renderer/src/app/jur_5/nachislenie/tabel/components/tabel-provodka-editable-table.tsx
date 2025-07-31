@@ -39,28 +39,28 @@ export const TabelEditableColumnDefs: EditableColumnDef<TabelProvodka>[] = [
   },
   {
     key: 'prazdnik',
-    header: 'holiday',
+    header: 'holiday_hours',
     Editor: createNumberEditor({
       key: 'prazdnik'
     })
   },
   {
     key: 'kazarma',
-    header: 'kazarma',
+    header: 'kazarma_hours',
     Editor: createNumberEditor({
       key: 'kazarma'
     })
   },
   {
     key: 'noch',
-    header: 'night_shift',
+    header: 'night_shift_hours',
     Editor: createNumberEditor({
       key: 'noch'
     })
   },
   {
     key: 'pererabodka',
-    header: 'overtime',
+    header: 'overtime_hours',
     Editor: createNumberEditor({
       key: 'pererabodka'
     })

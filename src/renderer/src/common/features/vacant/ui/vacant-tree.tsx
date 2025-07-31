@@ -136,7 +136,7 @@ const TreeNode = ({ node, nodes, index, selectedIds, onSelect, level = 1 }: Tree
                 : false
           }
           className={cn(
-            level > 1 && 'tree_node pl-3 ml-2',
+            level > 1 && 'tree_node pl-3 ml-4',
             index === nodes.length - 1 && 'last_node border-b-0'
           )}
         ></TreeNodeHeader>

@@ -17,18 +17,12 @@ import {
   DialogTitle,
   DialogTrigger
 } from '@/common/components/jolly/dialog'
+import { JollySelect, SelectItem } from '@/common/components/jolly/select'
 import { pageSizeOptions } from '@/common/components/pagination'
 import { SearchInputDebounced } from '@/common/components/search-input-debounced'
 import { IDCell } from '@/common/components/table/renderers/id'
 import { Badge } from '@/common/components/ui/badge'
 import { Button } from '@/common/components/ui/button'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue
-} from '@/common/components/ui/select'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/common/components/ui/tabs'
 import { useRequisitesStore } from '@/common/features/requisites'
 import { usePagination } from '@/common/hooks'
@@ -233,26 +227,15 @@ export const SaldoProductSpravochnikDialog = ({
                             {t('pagination.page_size')}
                           </span>
                           <div className="w-20">
-                            <Select
-                              value={String(pagination.limit)}
-                              onValueChange={(value) =>
+                            <JollySelect
+                              items={pageSizeOptions}
+                              selectedKey={pagination.limit}
+                              onSelectionChange={(value) =>
                                 pagination.onChange({ limit: Number(value) })
                               }
                             >
-                              <SelectTrigger>
-                                <SelectValue placeholder={String(pagination.limit)} />
-                              </SelectTrigger>
-                              <SelectContent>
-                                {pageSizeOptions.map((item) => (
-                                  <SelectItem
-                                    key={item.value}
-                                    value={String(item.value)}
-                                  >
-                                    {item.value}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
+                              {(item) => <SelectItem id={item.value}>{item.value}</SelectItem>}
+                            </JollySelect>
                           </div>
                         </div>
                       </div>

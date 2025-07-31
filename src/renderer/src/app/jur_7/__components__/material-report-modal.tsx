@@ -22,6 +22,7 @@ export interface MaterialReportModalProps extends Omit<DialogTriggerProps, 'chil
   main_schet_id: number
   budjet_id: number
   to: string
+  from: string
   year: number
   month: number
 }
@@ -33,6 +34,7 @@ export const MaterialReportModal = ({
   budjet_id,
   main_schet_id,
   to,
+  from,
   year,
   month
 }: MaterialReportModalProps) => {
@@ -68,10 +70,11 @@ export const MaterialReportModal = ({
           <DialogFooter>
             {withDefault && (
               <DownloadFile
-                fileName={`${t('material')}_${to}.xlsx`}
+                fileName={`${t('material')}_${to}:${from}.xlsx`}
                 url="/jur_7/monitoring/material/report"
                 params={{
                   to,
+                  from,
                   year,
                   month,
                   budjet_id,
@@ -84,10 +87,11 @@ export const MaterialReportModal = ({
             )}
             {withIznos && (
               <DownloadFile
-                fileName={`${t('material')}_${t('iznos')}_${to}.xlsx`}
+                fileName={`${t('material')}_${t('iznos')}_${to}:${from}.xlsx`}
                 url="/jur_7/monitoring/material/report"
                 params={{
                   to,
+                  from,
                   year,
                   month,
                   budjet_id,

@@ -57,6 +57,7 @@
   "inn": "INN",
   "inps": "INPS",
   "shartnoma": "Shartnoma",
+  "shartnoma_summa": "Shartnoma summa",
   "shartnoma-number": "№ shartnoma",
   "shartnoma-date": "Shartnoma sanasi",
   "payed": "To'langan",
@@ -487,10 +488,14 @@
   "card_number": "Karta raqami",
   "enabled": "Faol",
   "holiday": "Bayram",
+  "holiday_hours": "Bayram (Soat)",
   "kazarma": "Kazarma",
+  "kazarma_hours": "Kazarma (Soat)",
   "night_shift": "Tungi smena",
-  "worked_days": "Ishlangan kunlar",
+  "night_shift_hours": "Tungi smena (Soat)",
   "overtime": "Qo'shimcha ish",
+  "overtime_hours": "Qo'shimcha ish (Soat)",
+  "worked_days": "Ishlangan kunlar",
   "select": "Tanlash",
   "selected": "Tanlangan",
   "update_failed_some": "Yangilashda xato: ba'zi ma'lumotlar yangilanmadi",
@@ -511,5 +516,6 @@
   "premya": "Premiya",
   "mat_pomosh": "Mat. yordam",
   "payment_type": "To'lov turi",
-  "amount": "Miqdor"
+  "amount": "Miqdor",
+  "percentage_of_contract": "Shartnoma foizi"
 }

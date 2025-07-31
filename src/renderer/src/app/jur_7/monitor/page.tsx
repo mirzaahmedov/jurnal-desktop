@@ -14,10 +14,7 @@ import {
 } from '@/common/features/filters/search/search-filter-debounced'
 import { useRequisitesStore } from '@/common/features/requisites'
 import { SaldoNamespace, handleSaldoErrorDates } from '@/common/features/saldo'
-import {
-  useSelectedMonthStore,
-  validateDateWithinSelectedMonth
-} from '@/common/features/selected-month'
+import { useSelectedMonthStore } from '@/common/features/selected-month'
 import { useSettingsStore } from '@/common/features/settings'
 import { useDates, usePagination, useToggle } from '@/common/hooks'
 import { useLayout } from '@/common/layout'
@@ -94,20 +91,11 @@ const MaterialMonitorPage = () => {
     }
   }, [error])
 
-  console.log('isOpen: ', aktToggle.isOpen)
-
   return (
     <ListView>
       <ListView.Header>
         <div className="w-full grid grid-cols-[repeat(auto-fit,minmax(400px,1fr))] gap-5">
-          <ListView.RangeDatePicker
-            {...dates}
-            validateDate={validateDateWithinSelectedMonth}
-            calendarProps={{
-              fromMonth: startDate,
-              toMonth: startDate
-            }}
-          />
+          <ListView.RangeDatePicker {...dates} />
 
           <ButtonGroup
             borderStyle="dashed"
@@ -321,6 +309,7 @@ const MaterialMonitorPage = () => {
         budjet_id={budjet_id!}
         main_schet_id={main_schet_id!}
         to={dates.to}
+        from={dates.from}
         year={startDate.getFullYear()}
         month={startDate.getMonth() + 1}
       />

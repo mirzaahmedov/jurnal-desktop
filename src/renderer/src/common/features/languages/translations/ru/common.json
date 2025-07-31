@@ -57,6 +57,7 @@
   "inn": "ИНН",
   "inps": "ИНПС",
   "shartnoma": "Договор",
+  "shartnoma_summa": "Сумма договора",
   "shartnoma-number": "№ договора",
   "shartnoma-date": "Дата договора",
   "payed": "Оплачено",
@@ -489,10 +490,14 @@
   "card_number": "Номер карты",
   "enabled": "Включено",
   "holiday": "Праздник",
+  "holiday_hours": "Праздник (Ч.)",
   "kazarma": "Казарма",
+  "kazarma_hours": "Казарма (Ч.)",
   "night_shift": "Ночная смена",
-  "worked_days": "Отработанные дни",
+  "night_shift_hours": "Ночная смена (Ч.)",
   "overtime": "Переработка",
+  "overtime_hours": "Переработка (Ч.)",
+  "worked_days": "Отработанные дни",
   "select": "Выбрать",
   "selected": "Выбранный",
   "update_failed_some": "Обновление не удалось: некоторые данные не были обновлены",
@@ -513,5 +518,6 @@
   "given_doc_date": "Дата выдачи документа",
   "premya": "Премия",
   "mat_pomosh": "Мат. помощь",
-  "payment_type": "Тип платежа"
+  "payment_type": "Тип платежа",
+  "percentage_of_contract": "Процент от договора"
 }

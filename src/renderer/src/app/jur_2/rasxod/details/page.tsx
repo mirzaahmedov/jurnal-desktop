@@ -76,18 +76,18 @@ const BankRasxodDetailsPage = () => {
   const location = useLocation() as Location<{ original?: BankRasxod }>
 
   const main_schet_id = useRequisitesStore((state) => state.main_schet_id)
-  const { startDate, endDate } = useSelectedMonthStore()
   const setLayout = useLayout()
 
-  const original = location.state?.original
-  const year = startDate.getFullYear()
-  const month = startDate.getMonth() + 1
-
   const { t } = useTranslation(['app'])
+  const { startDate, endDate } = useSelectedMonthStore()
   const { queuedMonths } = useBankSaldo()
   const { snippets, addSnippet, removeSnippet } = useSnippets({
     ns: 'bank_rasxod'
   })
+
+  const original = location.state?.original
+  const year = startDate.getFullYear()
+  const month = startDate.getMonth() + 1
 
   const defaultDate = () =>
     startDate <= new Date() && new Date() <= endDate
@@ -128,11 +128,29 @@ const BankRasxodDetailsPage = () => {
     })
   )
 
+  const updateSummaFromContract = (contractSumma: number) => {
+    const children = form.getValues('childs')
+    const percentage = form.getValues('percentage') ?? 0
+    const summa = percentage !== 0 ? contractSumma * (percentage / 100) : contractSumma
+    if (children.length === 0) {
+      form.setValue('childs', [{ spravochnik_operatsii_id: 0, summa }])
+    } else if (children.length === 1) {
+      form.setValue(`childs.${0}.summa`, summa)
+    }
+  }
+
   const shartnomaSpravochnik = useSpravochnik(
     createShartnomaSpravochnik({
       value: form.watch('id_shartnomalar_organization'),
       onChange: (value, contract) => {
         form.setValue('id_shartnomalar_organization', value, { shouldValidate: true })
+        form.setValue('contract_summa', contract?.summa ? Number(contract?.summa) : 0, {
+          shouldValidate: true
+        })
+        if (contract) {
+          updateSummaFromContract(contract?.summa ? Number(contract?.summa) : 0)
+        }
+
         changeOpisanieContract({
           form,
           contract
@@ -383,7 +401,18 @@ const BankRasxodDetailsPage = () => {
               </div>
 
               <div className="grid grid-cols-2 gap-10">
-                <SummaFields data={{ summa: form.watch('summa') }} />
+                <SummaFields
+                  percentage={form.watch('childs').length === 1}
+                  data={{
+                    summa: form.watch('summa'),
+                    percentage: form.watch('percentage'),
+                    contractSumma: form.watch('contract_summa')
+                  }}
+                  onChangePercentage={(value) => {
+                    form.setValue('percentage', value, { shouldValidate: true })
+                    updateSummaFromContract(form.watch('contract_summa') ?? 0)
+                  }}
+                />
                 <ShartnomaFields
                   tabIndex={3}
                   disabled={!form.watch('id_spravochnik_organization')}

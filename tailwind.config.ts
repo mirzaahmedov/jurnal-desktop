@@ -76,7 +76,8 @@ const ui = plugin(function ({ addUtilities }) {
     },
 
     '.tree_node': {
-      position: 'relative'
+      position: 'relative',
+      fontSize: '0.9em'
     },
     '.tree_node::before, .tree_node::after': {
       content: '""',

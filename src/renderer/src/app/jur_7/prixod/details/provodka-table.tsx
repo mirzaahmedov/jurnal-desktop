@@ -821,6 +821,9 @@ const NaimenovanieCells = ({
         onChangeField(index, 'iznos_schet', iznos ? (group?.schet ?? '') : '')
         onChangeField(index, 'iznos_sub_schet', iznos ? (group?.provodka_subschet ?? '') : '')
         onChangeField(index, 'iznos_start', iznos ? (form.watch('doc_date') ?? '') : '')
+      },
+      params: {
+        ignoreAccess: true
       }
     })
   )

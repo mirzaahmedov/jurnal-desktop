@@ -90,6 +90,7 @@ const CalculateParamsPage = () => {
           onDelete={handleDelete}
           selectedIds={calcParamsId ? [calcParamsId] : []}
           onDoubleClickRow={(row) => setCalcParamsId(row.id)}
+          className="table-generic-xs"
         />
       </ListView.Content>
       <ListView.Footer>

@@ -57,6 +57,7 @@
   "inn": "ИНН",
   "inps": "ИНПС",
   "shartnoma": "Шартнома",
+  "shartnoma_summa": "Шартнома сумма",
   "shartnoma-number": "№ шартнома",
   "shartnoma-date": "Шартнома санаси",
   "payed": "Тўланган",
@@ -488,10 +489,14 @@
   "card_number": "Карта рақами",
   "enabled": "Фаол",
   "holiday": "Байрам",
+  "holiday_hours": "Байрам (Соат)",
   "kazarma": "Казарма",
+  "kazarma_hours": "Казарма (Соат)",
   "night_shift": "Тунги смена",
-  "worked_days": "Ишланган кунлар",
+  "night_shift_hours": "Тунги смена (Соат)",
   "overtime": "Қўшимча иш",
+  "overtime_hours": "Қўшимча иш (Соат)",
+  "worked_days": "Ишланган кунлар",
   "select": "Танлаш",
   "selected": "Танланган",
   "update_failed_some": "Янгилашда хатолик юз берди: баъзи маълумотлар янгиланмади",
@@ -512,5 +517,6 @@
   "premya": "Премия",
   "mat_pomosh": "Мат. ёрдам",
   "payment_type": "Тўлов тури",
-  "amount": "Миқдор"
+  "amount": "Миқдор",
+  "percentage_of_contract": "Шартнома фоизи"
 }
