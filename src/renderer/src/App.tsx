@@ -7,7 +7,7 @@ import { ToastContainer } from 'react-toastify'
 import { router } from './app/router'
 import { ConfirmationDialog } from './common/features/confirm'
 import { initLocales } from './common/features/languages'
-import { UpdateManager } from './common/features/update-manager'
+import { ApplicationUpdateManager } from './common/features/update-manager'
 import { queryClient } from './common/lib/query-client'
 
 initLocales()
@@ -38,7 +38,7 @@ function App() {
         }}
       />
       <ConfirmationDialog />
-      <UpdateManager />
+      <ApplicationUpdateManager />
     </QueryClientProvider>
   )
 }

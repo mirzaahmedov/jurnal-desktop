@@ -12,7 +12,7 @@ import { createShartnomaSpravochnik } from '@/app/jur_3/shartnoma'
 import { createOrganizationSpravochnik } from '@/app/region-spravochnik/organization'
 import { createPodotchetSpravochnik } from '@/app/region-spravochnik/podotchet'
 import { Fieldset } from '@/common/components'
-import { EditableTable } from '@/common/components/editable-table'
+import { EditableTable } from '@/common/components/editable-table-v2'
 import {
   createEditorCreateHandler,
   createEditorDeleteHandler

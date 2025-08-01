@@ -1,2 +1,2 @@
-export * from './update-manager'
+export * from './application-update-manager'
 export * from './store'

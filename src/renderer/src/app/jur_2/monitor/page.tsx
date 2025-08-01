@@ -105,7 +105,10 @@ const BankMonitorPage = () => {
             }}
           />
           {main_schet_id && report_title_id ? (
-            <ButtonGroup borderStyle="dashed">
+            <ButtonGroup
+              borderStyle="dashed"
+              className="max-w-2xl"
+            >
               <Button
                 variant="ghost"
                 onClick={dailyReportToggle.open}

@@ -480,6 +480,7 @@ const BankRasxodDetailsPage = () => {
             tabIndex={6}
             form={form}
             name="childs"
+            height={400}
             columnDefs={podvodkaColumns}
             errors={form.formState.errors.childs}
             onCreate={createEditorCreateHandler({

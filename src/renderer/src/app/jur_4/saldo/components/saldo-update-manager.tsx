@@ -7,16 +7,17 @@ import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
 import { LoadingOverlay } from '@/common/components'
-import { MonthPicker } from '@/common/components/month-picker'
+import { Button } from '@/common/components/jolly/button'
 import {
-  AlertDialog,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle
-} from '@/common/components/ui/alert-dialog'
-import { Button } from '@/common/components/ui/button'
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogOverlay,
+  DialogTitle,
+  DialogTrigger
+} from '@/common/components/jolly/dialog'
+import { MonthPicker } from '@/common/components/month-picker'
 import { useToggle } from '@/common/hooks'
 
 import { PodotchetMonitorQueryKeys } from '../../monitor/config'
@@ -121,8 +122,8 @@ export const PodotchetSaldoUpdateManager = () => {
   }
 
   return (
-    <AlertDialog
-      open={dialogToggle.isOpen}
+    <DialogTrigger
+      isOpen={dialogToggle.isOpen}
       onOpenChange={(open) => {
         if (!open) {
           form.reset({
@@ -139,65 +140,73 @@ export const PodotchetSaldoUpdateManager = () => {
         dialogToggle.setOpen(open)
       }}
     >
-      <AlertDialogContent className="w-full max-w-[1690px] h-full max-h-[900px] p-0 flex flex-col gap-0">
-        <AlertDialogHeader className="p-5 flex flex-row items-start justify-between gap-10">
-          <div>
-            <AlertDialogTitle className="text-xl font-bold">
-              {queuedMonths.length === 0 ? t('action-successful') : t('saldo_update_required')}
-            </AlertDialogTitle>
-            <AlertDialogDescription className="mt-2">
-              {queuedMonths.length > 0
-                ? t('please_update_saldo_to_continue')
-                : t('you_can_continue_working_now')}
-            </AlertDialogDescription>
-          </div>
-          <MonthPicker
-            readOnly
-            value={`${form.watch('year')}-${form.watch('month')}-01`}
-            onChange={() => {}}
-          />
-        </AlertDialogHeader>
-
-        <div
-          className="flex-1 overflow-auto scrollbar relative"
-          ref={scrollElementRef}
+      <DialogOverlay>
+        <DialogContent
+          isDismissable={false}
+          closeButton={false}
+          className="w-full max-w-[1690px] h-full max-h-[900px] p-0 gap-0"
         >
-          {isAutofilling ? <LoadingOverlay /> : null}
-          {queuedMonths.length === 0 ? (
-            <div className="flex h-full flex-col">
-              <div className="flex-1 grid place-items-center">
-                <div className="flex flex-col items-center gap-2.5">
-                  <SuccessIcon width={250} />
-                </div>
+          <div className="h-full flex flex-col">
+            <DialogHeader className="p-5 flex flex-row items-start justify-between gap-10">
+              <div>
+                <DialogTitle className="text-xl font-bold">
+                  {queuedMonths.length === 0 ? t('action-successful') : t('saldo_update_required')}
+                </DialogTitle>
+                <DialogDescription className="mt-2">
+                  {queuedMonths.length > 0
+                    ? t('please_update_saldo_to_continue')
+                    : t('you_can_continue_working_now')}
+                </DialogDescription>
               </div>
-            </div>
-          ) : (
-            <PodotchetSaldoTable
-              columnDefs={columnDefs}
-              form={form}
-              name="podotchets"
-            />
-          )}
-        </div>
+              <MonthPicker
+                readOnly
+                value={`${form.watch('year')}-${form.watch('month')}-01`}
+                onChange={() => {}}
+              />
+            </DialogHeader>
 
-        <AlertDialogFooter className="flex items-center justify-end p-5 gap-5456  ">
-          {queuedMonths.length === 0 ? (
-            <AlertDialogCancel asChild>
-              <Button variant="outline">{t('close')}</Button>
-            </AlertDialogCancel>
-          ) : (
-            <Button
-              isPending={isUpdating}
-              disabled={isUpdating}
-              onClick={handleUpdate}
+            <div
+              className="flex-1 overflow-auto scrollbar relative"
+              ref={scrollElementRef}
             >
-              {t('next')}
-              <ArrowRight className="btn-icon" />
-            </Button>
-          )}
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
+              {isAutofilling ? <LoadingOverlay /> : null}
+              {queuedMonths.length === 0 ? (
+                <div className="flex h-full flex-col">
+                  <div className="flex-1 grid place-items-center">
+                    <div className="flex flex-col items-center gap-2.5">
+                      <SuccessIcon width={250} />
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <PodotchetSaldoTable
+                  columnDefs={columnDefs}
+                  form={form}
+                  name="podotchets"
+                />
+              )}
+            </div>
+
+            <DialogFooter className="flex items-center justify-end p-5 gap-5456  ">
+              {queuedMonths.length === 0 ? (
+                <AlertDialogCancel asChild>
+                  <Button variant="outline">{t('close')}</Button>
+                </AlertDialogCancel>
+              ) : (
+                <Button
+                  isPending={isUpdating}
+                  isDisabled={isUpdating}
+                  onClick={handleUpdate}
+                >
+                  {t('next')}
+                  <ArrowRight className="btn-icon icon-end" />
+                </Button>
+              )}
+            </DialogFooter>
+          </div>
+        </DialogContent>
+      </DialogOverlay>
+    </DialogTrigger>
   )
 }
 

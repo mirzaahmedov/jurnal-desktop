@@ -68,7 +68,7 @@ export const createOperatsiiEditor = <T extends object, F extends ArrayPath<T>>(
       sensitivity: 'base'
     })
 
-    const { data: schetOptions, isLoading: isLoadingSchetOptions } = useQuery({
+    const { data: schetOptions, isFetching: isFetchingSchetOptions } = useQuery({
       queryKey: [
         operatsiiQueryKeys.getSchetOptions,
         {
@@ -78,7 +78,7 @@ export const createOperatsiiEditor = <T extends object, F extends ArrayPath<T>>(
       queryFn: OperatsiiService.getSchetOptions
     })
 
-    const { data: operatsiiOptions, isLoading } = useQuery({
+    const { data: operatsiiOptions, isFetching } = useQuery({
       queryKey: [
         operatsiiQueryKeys.getAll,
         {
@@ -110,11 +110,10 @@ export const createOperatsiiEditor = <T extends object, F extends ArrayPath<T>>(
 
       setSchetInputValue(schet ?? '')
       setSubschetInputValue(sub_schet ?? '')
-      setDebouncedSchetInputValue(schet ?? '')
       handleChangeField('schet', schet ?? '')
       handleChangeField('schet_6', schet6 ?? '')
       handleChangeField('sub_schet', sub_schet ?? '')
-    }, [operatsiiSpravochnik.selected?.id])
+    }, [operatsiiSpravochnik.selected])
 
     useEffect(() => {
       if (filteredOperatsiiOptions.length === 1) {
@@ -125,7 +124,6 @@ export const createOperatsiiEditor = <T extends object, F extends ArrayPath<T>>(
 
     useEffect(() => {
       setSchetInputValue(schet ?? '')
-      setDebouncedSchetInputValue(schet ?? '')
     }, [schet])
     useEffect(() => {
       setSubschetInputValue(sub_schet ?? '')
@@ -133,14 +131,14 @@ export const createOperatsiiEditor = <T extends object, F extends ArrayPath<T>>(
 
     return (
       <div
-        className="w-full flex divide-x"
+        className="w-full grid grid-cols-[1fr_1fr_auto] divide-x"
         onDoubleClick={operatsiiSpravochnik.open}
       >
         <AutoComplete
           editor
           error={!!error}
           tabIndex={tabIndex}
-          isDisabled={isLoadingSchetOptions}
+          isDisabled={isFetchingSchetOptions}
           inputValue={schetInputValue}
           onInputChange={setSchetInputValue}
           selectedKey={schet || ''}
@@ -150,7 +148,7 @@ export const createOperatsiiEditor = <T extends object, F extends ArrayPath<T>>(
             }
             handleChangeField('schet', (value as string) || '')
           }}
-          className="border-none flex-1"
+          className="border-none min-w-24"
           placeholder={t('schet')}
           items={filteredSchetOptions}
         >
@@ -168,7 +166,7 @@ export const createOperatsiiEditor = <T extends object, F extends ArrayPath<T>>(
           error={!!error}
           tabIndex={tabIndex}
           allowsEmptyCollection
-          isDisabled={isLoading}
+          isDisabled={isFetching}
           inputValue={subschetInputValue}
           onInputChange={setSubschetInputValue}
           menuTrigger="focus"
@@ -181,8 +179,8 @@ export const createOperatsiiEditor = <T extends object, F extends ArrayPath<T>>(
               handleChangeField('sub_schet', selectedOperatsii.sub_schet)
             }
           }}
-          className="flex-1"
           placeholder={t('subschet')}
+          className="min-w-48"
           items={filteredOperatsiiOptions}
         >
           {(item) => (

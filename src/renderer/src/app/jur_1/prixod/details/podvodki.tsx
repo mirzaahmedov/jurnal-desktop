@@ -14,6 +14,7 @@ export const podvodkaColumns: EditableColumnDef<KassaPrixodProvodkaFormValues>[]
   {
     key: 'spravochnik_operatsii_id',
     header: 'provodka',
+    width: 400,
     Editor: createOperatsiiEditor({
       type_schet: TypeSchetOperatsii.KASSA_PRIXOD,
       field: 'spravochnik_operatsii_id'

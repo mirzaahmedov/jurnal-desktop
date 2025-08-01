@@ -76,8 +76,11 @@ export const ConfirmationDialog = () => {
         }
       }}
     >
-      <DialogOverlay isDismissable={false}>
-        <DialogContent>
+      <DialogOverlay>
+        <DialogContent
+          closeButton={false}
+          isDismissable={false}
+        >
           <DialogHeader>
             <DialogTitle className="text-base">{title}</DialogTitle>
             <DialogDescription>{description}</DialogDescription>

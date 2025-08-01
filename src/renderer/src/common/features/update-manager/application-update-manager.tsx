@@ -19,10 +19,10 @@ import { useUpdateManagerStore } from './store'
 
 const ipcRenderer = window.electron.ipcRenderer
 
-type UpdateStatus = 'available' | 'downloading' | 'downloaded' | 'error'
+type ApplicationUpdateStatus = 'available' | 'downloading' | 'downloaded' | 'error'
 
-export const UpdateManager = () => {
-  const [status, setStatus] = useState<UpdateStatus>()
+export const ApplicationUpdateManager = () => {
+  const [status, setStatus] = useState<ApplicationUpdateStatus>()
   const [progress, setProgress] = useState(0)
 
   const { setAvailable, setRestarting } = useUpdateManagerStore()
@@ -115,7 +115,7 @@ export const UpdateManager = () => {
 }
 
 type AlertIconProps = {
-  type: UpdateStatus
+  type: ApplicationUpdateStatus
 }
 const AlertIcon = ({ type }: AlertIconProps) => {
   let Icon = Check
