@@ -4,8 +4,8 @@ import { ArrowDownLeft } from 'lucide-react'
 import { Trans } from 'react-i18next'
 
 import { DataList } from '@/common/components/data-list'
-import { Button } from '@/common/components/ui/button'
-import { Popover, PopoverContent, PopoverTrigger } from '@/common/components/ui/popover'
+import { Button } from '@/common/components/jolly/button'
+import { Popover, PopoverDialog, PopoverTrigger } from '@/common/components/jolly/popover'
 
 export interface ExpandableListProps<T> {
   items: T[]
@@ -29,29 +29,27 @@ export const ExpandableList = <T,>({ items, renderHeader, renderItem }: Expandab
         />
       </div>
       {items.length > 2 ? (
-        <Popover>
-          <div className="w-full">
-            <PopoverTrigger asChild>
-              <Button
-                variant="link"
-                className="p-0 text-xs text-brand gap-0.5"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <ArrowDownLeft className="size-4" />
-                <Trans>view_all</Trans>
-              </Button>
-            </PopoverTrigger>
-          </div>
-          <PopoverContent align="end">
-            <DataList
-              renderHeader={renderHeader}
-              items={items.map((item, index) => ({
-                name: index + 1,
-                value: renderItem(item)
-              }))}
-            />
-          </PopoverContent>
-        </Popover>
+        <PopoverTrigger>
+          <Button
+            variant="link"
+            className="p-0 text-xs text-brand gap-0.5"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <ArrowDownLeft className="size-4" />
+            <Trans>view_all</Trans>
+          </Button>
+          <Popover placement="end">
+            <PopoverDialog>
+              <DataList
+                renderHeader={renderHeader}
+                items={items.map((item, index) => ({
+                  name: index + 1,
+                  value: renderItem(item)
+                }))}
+              />
+            </PopoverDialog>
+          </Popover>
+        </PopoverTrigger>
       ) : null}
     </div>
   )

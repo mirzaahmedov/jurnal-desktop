@@ -6,7 +6,7 @@ import { useQuery } from '@tanstack/react-query'
 import { useFilter } from 'react-aria-components'
 
 import { OperatsiiService, operatsiiQueryKeys } from '@/app/super-admin/operatsii'
-import { AutoComplete } from '@/common/components/auto-complete-new'
+import { AutoComplete } from '@/common/components/auto-complete'
 import { useEventCallback } from '@/common/hooks'
 import { cn } from '@/common/lib/utils'
 import { type Operatsii, TypeSchetOperatsii } from '@/common/models'

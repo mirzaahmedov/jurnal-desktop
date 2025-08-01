@@ -10,7 +10,7 @@ import {
   OperatsiiService,
   operatsiiQueryKeys
 } from '@/app/super-admin/operatsii'
-import { AutoComplete } from '@/common/components/auto-complete-new'
+import { AutoComplete } from '@/common/components/auto-complete'
 import { ComboboxItem, type JollyComboBoxProps } from '@/common/components/jolly/combobox'
 import { useEventCallback } from '@/common/hooks'
 import { cn } from '@/common/lib/utils'

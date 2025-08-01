@@ -7,7 +7,7 @@ import { type UseFormReturn, useFieldArray } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
 import { useAsyncListBank } from '@/app/super-admin/bank/service'
-import { AutoComplete } from '@/common/components/auto-complete-new'
+import { AutoComplete } from '@/common/components/auto-complete'
 import { FormElement } from '@/common/components/form'
 import { ComboboxItem } from '@/common/components/jolly/combobox'
 import { Button } from '@/common/components/ui/button'

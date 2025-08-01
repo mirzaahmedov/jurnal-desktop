@@ -50,7 +50,7 @@ export const BankRasxodColumns: ColumnDef<BankRasxod>[] = [
             #{row.spravochnik_organization_inn}
           </Copyable>
         }
-        hoverContent={
+        tooltipContent={
           <DataList
             items={[
               {

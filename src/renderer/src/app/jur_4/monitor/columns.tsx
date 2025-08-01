@@ -42,7 +42,7 @@ export const PodotchetMonitorColumns: ColumnDef<PodotchetMonitor>[] = [
       <HoverInfoCell
         title={row.podotchet_name}
         secondaryText={row.podotchet_rayon}
-        hoverContent={
+        tooltipContent={
           <DataList
             items={[
               {

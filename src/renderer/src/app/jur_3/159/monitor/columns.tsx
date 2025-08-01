@@ -41,7 +41,7 @@ export const OrganMonitorColumns: ColumnDef<OrganizationMonitor>[] = [
       <HoverInfoCell
         title={row.organ_name}
         secondaryText={<Copyable value={row.organ_inn}>#{row.organ_inn}</Copyable>}
-        hoverContent={
+        tooltipContent={
           <DataList
             items={[
               {
@@ -81,7 +81,7 @@ export const OrganMonitorColumns: ColumnDef<OrganizationMonitor>[] = [
           ) : undefined
         }
         secondaryText={formatLocaleDate(row.shartnoma_doc_date)}
-        hoverContent={
+        tooltipContent={
           <DataList
             items={[
               {

@@ -15,7 +15,7 @@ export const UserCell = ({ id, fio, login }: UserCellProps) => {
     <HoverInfoCell
       title={fio}
       secondaryText={`@${login}`}
-      hoverContent={
+      tooltipContent={
         <DataList
           items={[
             {

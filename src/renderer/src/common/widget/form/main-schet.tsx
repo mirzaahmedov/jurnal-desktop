@@ -25,7 +25,7 @@ export const MainSchetFields = ({ name, main_schet, ...props }: MainSchetFieldsP
         <Input
           readOnly
           tabIndex={-1}
-          value={main_schet?.tashkilot_nomi}
+          value={main_schet?.tashkilot_nomi ?? ''}
         />
       </FormElement>
 
@@ -36,7 +36,7 @@ export const MainSchetFields = ({ name, main_schet, ...props }: MainSchetFieldsP
         <Input
           readOnly
           tabIndex={-1}
-          value={main_schet?.tashkilot_bank}
+          value={main_schet?.tashkilot_bank ?? ''}
         />
       </FormElement>
 
@@ -47,7 +47,7 @@ export const MainSchetFields = ({ name, main_schet, ...props }: MainSchetFieldsP
         <Input
           readOnly
           tabIndex={-1}
-          value={main_schet?.tashkilot_mfo}
+          value={main_schet?.tashkilot_mfo ?? ''}
         />
       </FormElement>
 
@@ -58,7 +58,7 @@ export const MainSchetFields = ({ name, main_schet, ...props }: MainSchetFieldsP
         <Input
           readOnly
           tabIndex={-1}
-          value={main_schet?.tashkilot_inn}
+          value={main_schet?.tashkilot_inn ?? ''}
         />
       </FormElement>
 
@@ -69,7 +69,7 @@ export const MainSchetFields = ({ name, main_schet, ...props }: MainSchetFieldsP
         <Input
           readOnly
           tabIndex={-1}
-          value={main_schet?.account_number}
+          value={main_schet?.account_number ?? ''}
         />
       </FormElement>
 
@@ -80,7 +80,7 @@ export const MainSchetFields = ({ name, main_schet, ...props }: MainSchetFieldsP
         <Input
           readOnly
           tabIndex={-1}
-          value={main_schet?.gazna_number}
+          value={main_schet?.gazna_number ?? ''}
         />
       </FormElement>
     </Fieldset>

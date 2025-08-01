@@ -46,7 +46,7 @@ export const AktColumns: ColumnDef<Akt>[] = [
             #{row.spravochnik_organization_inn}
           </Copyable>
         }
-        hoverContent={
+        tooltipContent={
           <DataList
             items={[
               {
@@ -87,7 +87,7 @@ export const AktColumns: ColumnDef<Akt>[] = [
         <HoverInfoCell
           title={`№ ${row.shartnomalar_organization_doc_num}`}
           secondaryText={formatLocaleDate(row.shartnomalar_organization_doc_date)}
-          hoverContent={
+          tooltipContent={
             <DataList
               items={[
                 {

@@ -12,7 +12,7 @@ import { toast } from 'react-toastify'
 
 import { useAsyncListBank } from '@/app/super-admin/bank/service'
 import { BudjetSelect } from '@/app/super-admin/budjet/budjet-select'
-import { AutoComplete } from '@/common/components/auto-complete-new'
+import { AutoComplete } from '@/common/components/auto-complete'
 import { FormElement } from '@/common/components/form'
 import { ComboboxItem } from '@/common/components/jolly/combobox'
 import {

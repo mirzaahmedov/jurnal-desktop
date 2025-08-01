@@ -1,9 +1,12 @@
 import type { EditorComponent } from './interfaces'
 import type { TypeSchetOperatsii } from '@/common/models'
+import type { ArrayPath, UseFormReturn } from 'react-hook-form'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 import { useQuery } from '@tanstack/react-query'
+import { CircleX } from 'lucide-react'
+import { useFilter } from 'react-aria-components'
 import { useTranslation } from 'react-i18next'
 
 import {
@@ -12,40 +15,42 @@ import {
   operatsiiQueryKeys
 } from '@/app/super-admin/operatsii'
 import { AutoComplete } from '@/common/components/auto-complete'
-import { SpravochnikInput, useSpravochnik } from '@/common/features/spravochnik'
-import { useDebounceValue } from '@/common/hooks'
+import { Button } from '@/common/components/jolly/button'
+import { ComboboxItem, JollyComboBox } from '@/common/components/jolly/combobox'
+import { useSpravochnik } from '@/common/features/spravochnik'
+import { useDebounceValue, useEventCallback } from '@/common/hooks'
 
-type Filter<T extends object> = { [K in keyof T]: T[K] extends number ? K : never }
-
-export const withEditorProps = <Options extends object>(
-  editorConstructor: <T extends object, Field extends keyof Filter<T> & string>(
-    options: Options & { field: Field }
-  ) => EditorComponent<T>
-) => {
-  return editorConstructor
-}
-
-export const createOperatsiiEditor = withEditorProps<{
+export const createOperatsiiEditor = <T extends object, F extends ArrayPath<T>>({
+  field,
+  type_schet
+}: {
+  field: keyof T[F][number] & string
   type_schet?: TypeSchetOperatsii
-}>(({ field, type_schet }) => {
+}): EditorComponent<T, F> => {
   return ({ tabIndex, id, value, errors, onChange, form }) => {
-    const error = errors?.[field as keyof typeof errors]
+    const error = (errors as any)?.[field]
 
-    const inputRef = useRef<HTMLInputElement>(null)
-    const editorState = useRef<{
-      clickedOutside: boolean
-    }>({
-      clickedOutside: false
-    })
+    const typedForm = form as unknown as UseFormReturn<{
+      childs: Array<{
+        schet?: string
+        schet_6?: string
+        sub_schet?: string
+      }>
+    }>
+    const schet = typedForm.watch(`childs.${id}.schet`)
+    // const schet_6 = typedForm.watch(`childs.${id}.schet_6`)
+    const sub_schet = typedForm.watch(`childs.${id}.sub_schet`)
 
-    const [schet, setSchet] = useState<string>()
-    const [schet6, setSchet6] = useState<string>()
-    const [subschet, setSubschet] = useState<string>()
+    const [schetInputValue, setSchetInputValue] = useState<string>('')
+    const [subschetInputValue, setSubschetInputValue] = useState<string>('')
+    const [debouncedSchetInputValue, setDebouncedSchetInputValue] =
+      useDebounceValue(schetInputValue)
 
-    const [debouncedSchet] = useDebounceValue(schet)
+    const handleChangeField = (field: 'schet' | 'schet_6' | 'sub_schet', value: string) => {
+      typedForm.setValue(`childs.${id}.${field}`, value)
+    }
 
-    const { t } = useTranslation()
-
+    const onChangeEvent = useEventCallback(onChange)
     const operatsiiSpravochnik = useSpravochnik(
       createOperatsiiSpravochnik({
         value: value as number | undefined,
@@ -58,6 +63,11 @@ export const createOperatsiiEditor = withEditorProps<{
       })
     )
 
+    const { t } = useTranslation()
+    const { startsWith } = useFilter({
+      sensitivity: 'base'
+    })
+
     const { data: schetOptions, isFetching: isFetchingSchetOptions } = useQuery({
       queryKey: [
         operatsiiQueryKeys.getSchetOptions,
@@ -67,173 +77,136 @@ export const createOperatsiiEditor = withEditorProps<{
       ],
       queryFn: OperatsiiService.getSchetOptions
     })
-    const filteredSchetOptions =
-      schetOptions?.data?.filter((o) => o.schet?.includes(schet ?? '')) ?? []
 
     const { data: operatsiiOptions, isFetching } = useQuery({
       queryKey: [
         operatsiiQueryKeys.getAll,
         {
           type_schet,
-          schet: debouncedSchet ? debouncedSchet : undefined
+          schet: debouncedSchetInputValue ? debouncedSchetInputValue : undefined
         }
       ],
       queryFn: OperatsiiService.getAll,
-      enabled: !!schet && !operatsiiSpravochnik.selected
+      enabled: !!debouncedSchetInputValue
     })
-    const filteredOperatsiiOptions =
-      operatsiiOptions?.data?.filter((o) => o.sub_schet?.includes(subschet ?? '')) ?? []
+
+    const filteredSchetOptions = useMemo(
+      () => schetOptions?.data?.filter((option) => startsWith(option.schet, schetInputValue)) ?? [],
+      [schetOptions, schetInputValue]
+    )
+    const filteredOperatsiiOptions = useMemo(
+      () =>
+        operatsiiOptions?.data?.filter((option) =>
+          startsWith(option.sub_schet, subschetInputValue)
+        ) ?? [],
+      [operatsiiOptions, subschetInputValue]
+    )
 
     useEffect(() => {
-      if (operatsiiSpravochnik.selected) {
-        setSchet(operatsiiSpravochnik.selected?.schet)
-        setSubschet(operatsiiSpravochnik.selected?.sub_schet)
-        setSchet6(operatsiiSpravochnik.selected?.schet6)
-        form.setValue(`childs.${id}.schet`, operatsiiSpravochnik.selected?.schet)
-        form.setValue(`childs.${id}.sub_schet`, operatsiiSpravochnik.selected?.sub_schet)
+      if (!operatsiiSpravochnik.selected) {
+        return
       }
+      const { schet, schet6, sub_schet } = operatsiiSpravochnik.selected
+
+      setSchetInputValue(schet ?? '')
+      setSubschetInputValue(sub_schet ?? '')
+      handleChangeField('schet', schet ?? '')
+      handleChangeField('schet_6', schet6 ?? '')
+      handleChangeField('sub_schet', sub_schet ?? '')
     }, [operatsiiSpravochnik.selected])
 
-    console.log({
-      schet6,
-      filteredSchetOptions
-    })
+    useEffect(() => {
+      if (filteredOperatsiiOptions.length === 1) {
+        const operatsii = filteredOperatsiiOptions[0]
+        onChangeEvent?.(operatsii?.id ?? 0)
+      }
+    }, [filteredOperatsiiOptions, onChangeEvent])
+
+    useEffect(() => {
+      setSchetInputValue(schet ?? '')
+    }, [schet])
+    useEffect(() => {
+      setSubschetInputValue(sub_schet ?? '')
+    }, [sub_schet])
 
     return (
-      <div className="w-full grid grid-cols-2">
+      <div
+        className="w-full grid grid-cols-[1fr_1fr_auto] divide-x"
+        onDoubleClick={operatsiiSpravochnik.open}
+      >
         <AutoComplete
-          autoSelectSingleResult={false}
-          isFetching={isFetchingSchetOptions}
-          options={filteredSchetOptions}
-          disabled={!!operatsiiSpravochnik.selected || !schet}
-          getOptionLabel={(option) => `${option.schet} (${option.schet6 ?? ''})`}
-          getOptionValue={(option) => option.schet}
-          onSelect={(option) => {
-            setSchet(option.schet)
-            setSchet6(option.schet6)
-            inputRef.current?.focus()
+          editor
+          error={!!error}
+          tabIndex={tabIndex}
+          isDisabled={isFetchingSchetOptions}
+          inputValue={schetInputValue}
+          onInputChange={setSchetInputValue}
+          selectedKey={schet || ''}
+          onSelectionChange={(value) => {
+            if (operatsiiSpravochnik.selected && operatsiiSpravochnik.selected.schet !== value) {
+              onChange?.(0)
+            }
+            handleChangeField('schet', (value as string) || '')
           }}
-          className="border-r"
-          popoverProps={{
-            onCloseAutoFocus: (e) => e.preventDefault()
-          }}
+          className="border-none min-w-24"
+          placeholder={t('schet')}
+          items={filteredSchetOptions}
         >
-          {({ open, close }) => (
-            <div className="relative">
-              <SpravochnikInput
-                {...operatsiiSpravochnik}
-                readOnly={false}
-                clear={() => {
-                  operatsiiSpravochnik.clear()
-                  setSchet('')
-                  setSchet6('')
-                  setSubschet('')
-                }}
-                editor
-                type="text"
-                tabIndex={tabIndex}
-                error={!!error}
-                name={`${field}-schet`}
-                placeholder={t('schet')}
-                onChange={(e) => {
-                  operatsiiSpravochnik.clear()
-                  setSchet(e.target.value)
-                  setSubschet(undefined)
-
-                  const selectedOption = schetOptions?.data?.find((o) => o.schet === e.target.value)
-                  if (selectedOption) {
-                    setSchet6(selectedOption.schet6)
-                  } else {
-                    setSchet6('')
-                  }
-                }}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
-                    e.preventDefault()
-                  }
-                }}
-                onFocus={open}
-                onBlur={close}
-                getInputValue={() => schet ?? ''}
-                onMouseDown={(e) => e.stopPropagation()}
-              />
-              {schet ? (
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">
-                  <span className="opacity-0">{schet}</span> ({schet6})
-                </span>
-              ) : null}
-            </div>
-          )}
+          {filteredSchetOptions.map((item) => (
+            <ComboboxItem
+              id={item.schet}
+              key={`${item.schet}-${item.schet6}`}
+            >
+              {item.schet}({item.schet6})
+            </ComboboxItem>
+          ))}
         </AutoComplete>
-        <AutoComplete
-          autoSelectSingleResult={false}
-          isFetching={isFetching}
-          options={filteredOperatsiiOptions ?? []}
-          disabled={(!!operatsiiSpravochnik.selected && subschet !== undefined) || !schet}
-          value={value?.toString()}
-          getOptionLabel={(option) => (
-            <div>
-              {option.sub_schet} - {option.name}
-            </div>
-          )}
-          getOptionValue={(option) => option.id.toString()}
-          onSelect={(option) => {
-            if (value !== option.id) {
-              onChange?.(option.id)
-              setSchet(option.schet)
-              setSubschet(option.sub_schet)
+        <JollyComboBox
+          editor
+          error={!!error}
+          tabIndex={tabIndex}
+          allowsEmptyCollection
+          isDisabled={isFetching}
+          inputValue={subschetInputValue}
+          onInputChange={setSubschetInputValue}
+          menuTrigger="focus"
+          selectedKey={(value as string) ?? ''}
+          onSelectionChange={(value) => {
+            onChange?.(value)
+            const selectedOperatsii = operatsiiOptions?.data?.find((option) => option.id === value)
+            if (selectedOperatsii) {
+              setSubschetInputValue(selectedOperatsii.sub_schet)
+              handleChangeField('sub_schet', selectedOperatsii.sub_schet)
             }
           }}
-          popoverProps={{
-            className: 'w-[600px]',
-            onCloseAutoFocus: (e) => {
-              if (editorState.current.clickedOutside) {
-                e.preventDefault()
-                editorState.current.clickedOutside = false
-              }
-            },
-            onInteractOutside: () => {
-              editorState.current.clickedOutside = true
-            }
+          placeholder={t('subschet')}
+          className="min-w-48"
+          items={filteredOperatsiiOptions}
+        >
+          {(item) => (
+            <ComboboxItem id={item.id}>
+              {item.sub_schet} - {item.name}
+            </ComboboxItem>
+          )}
+        </JollyComboBox>
+        <Button
+          type="button"
+          size="icon"
+          variant="ghost"
+          className="text-slate-400 hover:text-red-500"
+          onPress={() => {
+            operatsiiSpravochnik.clear()
+            setSchetInputValue('')
+            setSubschetInputValue('')
+            setDebouncedSchetInputValue('')
+            handleChangeField('schet', '')
+            handleChangeField('schet_6', '')
+            handleChangeField('sub_schet', '')
           }}
         >
-          {({ open, close }) => (
-            <SpravochnikInput
-              {...operatsiiSpravochnik}
-              clear={() => {
-                operatsiiSpravochnik.clear()
-                setSchet('')
-                setSubschet('')
-              }}
-              editor
-              readOnly={false}
-              type="text"
-              inputRef={inputRef}
-              tabIndex={tabIndex}
-              error={!!error}
-              data-error={false}
-              name={`${field}-subschet`}
-              placeholder={t('subschet')}
-              onChange={(e) => {
-                setSubschet(e.target.value)
-                operatsiiSpravochnik.clear()
-              }}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  e.preventDefault()
-                }
-              }}
-              getInputValue={() => {
-                return subschet ?? ''
-              }}
-              onFocus={open}
-              onBlur={close}
-              className="w-full"
-              onMouseDown={(e) => e.stopPropagation()}
-            />
-          )}
-        </AutoComplete>
+          <CircleX />
+        </Button>
       </div>
     )
   }
-})
+}

@@ -33,7 +33,7 @@ export const WorkTripColumnDefs: ColumnDef<WorkTrip>[] = [
     renderCell: (row) => (
       <HoverInfoCell
         title={<SummaCell summa={row.summa} />}
-        hoverContent={
+        tooltipContent={
           <DataList
             items={[
               {
@@ -79,7 +79,7 @@ export const WorkTripColumnDefs: ColumnDef<WorkTrip>[] = [
       <HoverInfoCell
         title={row.worker_name}
         secondaryText={row.worker_rayon}
-        hoverContent={
+        tooltipContent={
           <DataList
             items={[
               {

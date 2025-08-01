@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { PatternFormat } from 'react-number-format'
 
 import { useAsyncListBank } from '@/app/super-admin/bank/service'
-import { AutoComplete } from '@/common/components/auto-complete-new'
+import { AutoComplete } from '@/common/components/auto-complete'
 import { FormElement } from '@/common/components/form'
 import { Button } from '@/common/components/jolly/button'
 import { ComboboxItem } from '@/common/components/jolly/combobox'

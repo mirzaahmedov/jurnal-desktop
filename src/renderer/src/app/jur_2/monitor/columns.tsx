@@ -45,7 +45,7 @@ export const BankMonitorColumns: ColumnDef<BankMonitoringType>[] = [
             #{row.spravochnik_organization_inn}
           </Copyable>
         }
-        hoverContent={
+        tooltipContent={
           <DataList
             items={[
               {

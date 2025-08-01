@@ -18,7 +18,7 @@ export const columnDefs: ColumnDef<User>[] = [
       <HoverInfoCell
         title={row.fio}
         secondaryText={`@${row.login}`}
-        hoverContent={
+        tooltipContent={
           <DataList
             items={[
               {

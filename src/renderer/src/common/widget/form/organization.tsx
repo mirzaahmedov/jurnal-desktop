@@ -41,8 +41,6 @@ export const OrganizationFields: FormSpravochnikFieldsComponent<
     }
   }, [spravochnikProps.selected])
 
-  console.log({ tabIndex })
-
   return (
     <SpravochnikFields
       {...props}

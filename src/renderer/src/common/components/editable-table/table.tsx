@@ -190,7 +190,7 @@ export const EditableTable = <T extends object, F extends ArrayPath<NoInfer<T>>>
       >
         <TableHeader
           ref={headerRef}
-          className="sticky top-0 z-100 shadow-sm"
+          className="sticky top-0 z-[99] shadow-sm"
         >
           {Array.isArray(columnDefs)
             ? headerGroups.map((headerGroup, index) => (

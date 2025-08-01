@@ -48,7 +48,7 @@ export const ShartnomaColumns: ColumnDef<Shartnoma>[] = [
       <HoverInfoCell
         title={row.organization?.name}
         secondaryText={<Copyable value={row.organization?.inn}>#{row.organization?.inn}</Copyable>}
-        hoverContent={
+        tooltipContent={
           <DataList
             items={[
               {

@@ -41,7 +41,7 @@ export const avansColumns: ColumnDef<Avans>[] = [
       <HoverInfoCell
         title={row.spravochnik_podotchet_litso_name}
         secondaryText={row.spravochnik_podotchet_litso_rayon}
-        hoverContent={
+        tooltipContent={
           <DataList
             items={[
               {

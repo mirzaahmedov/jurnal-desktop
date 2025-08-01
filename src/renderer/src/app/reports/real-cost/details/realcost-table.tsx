@@ -10,6 +10,7 @@ import {
   useRef
 } from 'react'
 
+import { Pressable } from 'react-aria-components'
 import { Trans, useTranslation } from 'react-i18next'
 
 import { NumericInput, type NumericInputProps } from '@/common/components'
@@ -20,14 +21,9 @@ import {
   EditableTableRow
 } from '@/common/components/editable-table/components'
 import { EmptyList } from '@/common/components/empty-states'
+import { Tooltip, TooltipTrigger } from '@/common/components/jolly/tooltip'
 import { Input, type InputProps } from '@/common/components/ui/input'
 import { Table, TableBody, TableFooter, TableHeader } from '@/common/components/ui/table'
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger
-} from '@/common/components/ui/tooltip'
 import { inputVariants } from '@/common/features/spravochnik'
 import { formatLocaleDate } from '@/common/lib/format'
 import { cn } from '@/common/lib/utils'
@@ -363,30 +359,28 @@ const Row = ({ index, row, rows, highlightedRow, onCellDoubleClick, ...props }: 
 
       <EditableTableCell style={{ width: 140 }}>
         {row.organ_inn ? (
-          <TooltipProvider>
-            <Tooltip delayDuration={200}>
-              <TooltipTrigger>
-                <TextEditor
-                  value={row.doc_num ? `${row?.doc_num} / ${formatLocaleDate(row?.doc_date)}` : ''}
-                  readOnly
-                />
-              </TooltipTrigger>
-              <TooltipContent className="bg-white text-slate-600 shadow-xl p-5">
-                <DataList
-                  items={[
-                    {
-                      name: <Trans>name</Trans>,
-                      value: row.organ_name
-                    },
-                    {
-                      name: <Trans>inn</Trans>,
-                      value: row.organ_inn
-                    }
-                  ]}
-                />
-              </TooltipContent>
+          <TooltipTrigger delay={100}>
+            <Pressable>
+              <TextEditor
+                value={row.doc_num ? `${row?.doc_num} / ${formatLocaleDate(row?.doc_date)}` : ''}
+                readOnly
+              />
+            </Pressable>
+            <Tooltip className="bg-white text-slate-600 shadow-xl p-5">
+              <DataList
+                items={[
+                  {
+                    name: <Trans>name</Trans>,
+                    value: row.organ_name
+                  },
+                  {
+                    name: <Trans>inn</Trans>,
+                    value: row.organ_inn
+                  }
+                ]}
+              />
             </Tooltip>
-          </TooltipProvider>
+          </TooltipTrigger>
         ) : (
           <TextEditor
             value={row.doc_num ? `${row?.doc_num} / ${formatLocaleDate(row?.doc_date)}` : ''}
@@ -467,34 +461,32 @@ const Row = ({ index, row, rows, highlightedRow, onCellDoubleClick, ...props }: 
       )}
       <EditableTableCell style={{ width: 140 }}>
         {row.organ_inn_year ? (
-          <TooltipProvider>
-            <Tooltip delayDuration={200}>
-              <TooltipTrigger>
-                <TextEditor
-                  value={
-                    row.doc_num_year
-                      ? `${row?.doc_num_year} / ${formatLocaleDate(row?.doc_date_year)}`
-                      : ''
+          <TooltipTrigger delay={100}>
+            <Pressable>
+              <TextEditor
+                value={
+                  row.doc_num_year
+                    ? `${row?.doc_num_year} / ${formatLocaleDate(row?.doc_date_year)}`
+                    : ''
+                }
+                readOnly
+              />
+            </Pressable>
+            <Tooltip className="bg-white text-slate-600 shadow-xl p-5">
+              <DataList
+                items={[
+                  {
+                    name: <Trans>name</Trans>,
+                    value: row.organ_name_year
+                  },
+                  {
+                    name: <Trans>inn</Trans>,
+                    value: row.organ_inn_year
                   }
-                  readOnly
-                />
-              </TooltipTrigger>
-              <TooltipContent className="bg-white text-slate-600 shadow-xl p-5">
-                <DataList
-                  items={[
-                    {
-                      name: <Trans>name</Trans>,
-                      value: row.organ_name_year
-                    },
-                    {
-                      name: <Trans>inn</Trans>,
-                      value: row.organ_inn_year
-                    }
-                  ]}
-                />
-              </TooltipContent>
+                ]}
+              />
             </Tooltip>
-          </TooltipProvider>
+          </TooltipTrigger>
         ) : (
           <TextEditor
             value={

@@ -1,4 +1,4 @@
-import type { AktProvodkaFormValues } from '../config'
+import type { AktFormValues } from '../config'
 import type { EditableColumnDef } from '@/common/components/editable-table'
 
 import {
@@ -13,7 +13,7 @@ import { inputVariants } from '@/common/features/spravochnik'
 import { cn } from '@/common/lib/utils'
 import { TypeSchetOperatsii } from '@/common/models'
 
-export const provodkaColumns: EditableColumnDef<AktProvodkaFormValues>[] = [
+export const provodkaColumns: EditableColumnDef<AktFormValues, 'childs'>[] = [
   {
     key: 'spravochnik_operatsii_id',
     header: 'provodka',

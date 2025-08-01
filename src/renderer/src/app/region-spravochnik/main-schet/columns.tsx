@@ -72,7 +72,7 @@ export const MainSchetColumns: ColumnDef<MainSchet>[] = [
         <HoverInfoCell
           title={row.tashkilot_nomi}
           secondaryText={row.tashkilot_inn}
-          hoverContent={
+          tooltipContent={
             <DataList
               items={[
                 {

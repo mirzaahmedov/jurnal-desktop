@@ -1,14 +1,8 @@
-import type { TooltipContentProps } from '@radix-ui/react-tooltip'
 import type { HTMLAttributes, ReactNode } from 'react'
 
-import { Portal } from '@radix-ui/react-tooltip'
+import { Pressable, type TooltipProps } from 'react-aria-components'
 
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger
-} from '@/common/components/ui/tooltip'
+import { Tooltip, TooltipTrigger } from '@/common/components/jolly/tooltip'
 import { cn } from '@/common/lib/utils'
 
 export interface HoverInfoCellProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title'> {
@@ -16,58 +10,49 @@ export interface HoverInfoCellProps extends Omit<HTMLAttributes<HTMLDivElement>,
   secondaryText?: ReactNode
   titleProps?: HTMLAttributes<HTMLHeadingElement>
   secondaryTextProps?: HTMLAttributes<HTMLHeadingElement>
-  hoverContent?: ReactNode
-  hoverContentProps?: TooltipContentProps
+  tooltipContent?: ReactNode
+  tooltipProps?: TooltipProps
 }
 export const HoverInfoCell = ({
   title,
   secondaryText,
   titleProps,
   secondaryTextProps,
-  hoverContent,
-  hoverContentProps = {},
+  tooltipContent,
+  tooltipProps = {},
   ...props
 }: HoverInfoCellProps) => {
   return (
-    <TooltipProvider>
-      <Tooltip delayDuration={100}>
-        <TooltipTrigger asChild>
-          <div {...props}>
-            <h6
-              {...titleProps}
-              className={cn('text-sm font-bold leading-none', titleProps?.className)}
-            >
-              {title}
-            </h6>
-            {secondaryText ? (
-              <p
-                {...secondaryTextProps}
-                className={cn(
-                  'mt-2 text-brand text-xs font-bold leading-none h-3',
-                  secondaryTextProps?.className
-                )}
-              >
-                {secondaryText}
-              </p>
-            ) : null}
-          </div>
-        </TooltipTrigger>
-        {hoverContent ? (
-          <Portal>
-            <TooltipContent
-              align="center"
-              onClick={(e) => e.stopPropagation()}
-              {...hoverContentProps}
+    <TooltipTrigger delay={100}>
+      <Pressable>
+        <div {...props}>
+          <h6
+            {...titleProps}
+            className={cn('text-sm font-bold leading-none', titleProps?.className)}
+          >
+            {title}
+          </h6>
+          {secondaryText ? (
+            <p
+              {...secondaryTextProps}
               className={cn(
-                'bg-white shadow-xl p-5 min-w-96 max-w-2xl',
-                hoverContentProps.className
+                'mt-2 text-brand text-xs font-bold leading-none h-3',
+                secondaryTextProps?.className
               )}
             >
-              {hoverContent}
-            </TooltipContent>
-          </Portal>
-        ) : null}
-      </Tooltip>
-    </TooltipProvider>
+              {secondaryText}
+            </p>
+          ) : null}
+        </div>
+      </Pressable>
+      {tooltipContent ? (
+        <Tooltip
+          {...tooltipProps}
+          className={cn('bg-white shadow-xl p-5 min-w-96 max-w-2xl', tooltipProps.className)}
+        >
+          {tooltipContent}
+        </Tooltip>
+      ) : null}
+    </TooltipTrigger>
   )
 }

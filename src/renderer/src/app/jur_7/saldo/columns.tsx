@@ -17,7 +17,7 @@ export const CommonWarehouseSaldoProductColumns: ColumnDef<SaldoProduct>[] = [
     renderCell: (row) => (
       <HoverInfoCell
         title={<span className="text-xs">{row.name}</span>}
-        hoverContent={
+        tooltipContent={
           <DataList
             className="min-w-52"
             items={[
@@ -67,7 +67,7 @@ export const CommonWarehouseSaldoProductColumns: ColumnDef<SaldoProduct>[] = [
       <HoverInfoCell
         title={row.fio}
         secondaryText={<Copyable value={row.responsible_id}>#{row.responsible_id}</Copyable>}
-        hoverContent={null}
+        tooltipContent={null}
       />
     )
   },
@@ -78,7 +78,7 @@ export const CommonWarehouseSaldoProductColumns: ColumnDef<SaldoProduct>[] = [
     renderCell: (row) => (
       <HoverInfoCell
         title={<span className="text-xs line-clamp-3">{row.group_name}</span>}
-        hoverContent={
+        tooltipContent={
           <DataList
             items={[
               {
