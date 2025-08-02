@@ -14,7 +14,7 @@ export class VacantService {
 
   static async getAll(
     ctx: QueryFunctionContext<
-      [typeof VacantService.QueryKeys.GetAll, { page?: number; limit?: number }]
+      [typeof VacantService.QueryKeys.GetAll, { page?: number; limit?: number; spId: number }]
     >
   ) {
     const res = await zarplataApiNew.get<ZarplataApiResponse<Vacant[]>>(

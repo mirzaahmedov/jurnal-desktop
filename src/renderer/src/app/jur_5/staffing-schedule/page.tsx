@@ -14,6 +14,8 @@ import { GenericTable, LoadingOverlay } from '@/common/components'
 import { Button } from '@/common/components/jolly/button'
 import { Pagination } from '@/common/components/pagination'
 import { useConfirm } from '@/common/features/confirm'
+import { useRequisitesStore } from '@/common/features/requisites'
+import { useRequisitesRedirect } from '@/common/features/requisites/use-main-schet-redirect'
 import { useVacantTreeNodes } from '@/common/features/vacant/hooks/use-vacant-tree-nodes'
 import { VacantService } from '@/common/features/vacant/service'
 import { VacantDialog } from '@/common/features/vacant/ui/vacant-dialog'
@@ -35,6 +37,7 @@ import { WorkplaceDuplicate } from './workplace-duplicate'
 
 const StaffingTable = () => {
   useCalculateParamsGuard()
+  useRequisitesRedirect(-1)
 
   const [selectedVacant, setSelectedVacant] = useState<VacantTreeNode>()
   const [vacantData, setVacantData] = useState<VacantTreeNode>()
@@ -44,6 +47,7 @@ const StaffingTable = () => {
 
   const calculateParamsId = useZarplataStore((store) => store.calculateParamsId)
 
+  const budjetId = useRequisitesStore((store) => store.budjet_id)
   const pagination = usePagination()
   const vacantDialogToggle = useToggle()
   const workplaceDialogToggle = useToggle()
@@ -162,12 +166,16 @@ const StaffingTable = () => {
   })
 
   const handleSubmitVacant = (values: VacantFormValues) => {
+    if (!budjetId) {
+      return
+    }
     if (vacantData) {
       updateVacant({
         id: vacantData.id,
         values: {
           name: values.name,
-          parentId: values.parentId ?? null
+          parentId: values.parentId ?? null,
+          spravochnikBudhetNameId: vacantData.spravochnikBudhetNameId
         }
       })
       setVacantData(undefined)
@@ -180,7 +188,8 @@ const StaffingTable = () => {
     } else {
       createVacant({
         name: values.name,
-        parentId: null
+        parentId: null,
+        spravochnikBudhetNameId: budjetId
       })
     }
   }

@@ -3,4 +3,5 @@ export interface Vacant {
   name: string
   parentId: null | number
   userId: number
+  spravochnikBudhetNameId: number
 }

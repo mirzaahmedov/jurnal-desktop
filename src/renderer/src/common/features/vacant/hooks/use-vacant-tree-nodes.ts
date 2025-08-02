@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 
 import { useQuery } from '@tanstack/react-query'
 
+import { useRequisitesStore } from '@/common/features/requisites'
 import { VacantService } from '@/common/features/vacant/service'
 import {
   arrayToTreeByRelations,
@@ -12,11 +13,16 @@ import {
 import { useVacantTreeState } from './use-vacant-tree-state'
 
 export const useVacantTreeNodes = () => {
+  const budjetId = useRequisitesStore((store) => store.budjet_id)
   const [search, setSearch] = useState('')
 
   const vacantsQuery = useQuery({
-    queryKey: [VacantService.QueryKeys.GetAll, { page: 1, limit: 100000000000000 }],
-    queryFn: VacantService.getAll
+    queryKey: [
+      VacantService.QueryKeys.GetAll,
+      { page: 1, limit: 100000000000000, spId: budjetId! }
+    ],
+    queryFn: VacantService.getAll,
+    enabled: !!budjetId
   })
 
   const treeNodes = useMemo(

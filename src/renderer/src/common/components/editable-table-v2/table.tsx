@@ -32,6 +32,9 @@ interface TableAction {
   render: (args: { rowIndex: number; row: any; rows: any[] }) => ReactNode
 }
 
+const ITEM_HEIGHT = 48
+const MIN_ROWS = 1
+
 export const EditableTable = <T extends object, F extends ArrayPath<NoInfer<T>>>(
   props: EditableTableProps<T, F>
 ) => {
@@ -54,6 +57,7 @@ export const EditableTable = <T extends object, F extends ArrayPath<NoInfer<T>>>
     getEditorProps,
     getRowClassName,
     isRowVisible = () => true,
+    disableHeader = false,
     params = {},
     methods
   } = props
@@ -204,73 +208,75 @@ export const EditableTable = <T extends object, F extends ArrayPath<NoInfer<T>>>
     >
       <div className="relative w-full flex-1 overflow-x-auto">
         <div>
-          <div
-            ref={headerRef}
-            className={cn('w-full shadow-sm scrollbar', isScrollable && 'overflow-y-scroll ')}
-          >
-            {Array.isArray(columnDefs)
-              ? headerGroups.map((headerGroup, index) => (
-                  <EditableTableRow key={index}>
-                    {index === 0 ? (
-                      <EditableTableHead
-                        key="line_number"
-                        className="px-3"
-                        rowSpan={headerGroups.length}
-                        style={{
-                          width: 100
-                        }}
-                      ></EditableTableHead>
-                    ) : null}
-                    {Array.isArray(headerGroup)
-                      ? headerGroup.map((column) => {
-                          const {
-                            _colSpan,
-                            _rowSpan,
-                            key,
-                            header,
-                            headerClassName,
-                            width,
-                            minWidth,
-                            maxWidth
-                          } = column
-                          return (
-                            <EditableTableHead
-                              key={String(key)}
-                              colSpan={_colSpan}
-                              rowSpan={_rowSpan}
-                              className={headerClassName}
-                              style={{
-                                flex: !width ? '1' : undefined,
-                                width,
-                                minWidth,
-                                maxWidth
-                              }}
-                            >
-                              {!header
-                                ? t(key.toString())
-                                : typeof header === 'string'
-                                  ? t(header)
-                                  : null}
-                            </EditableTableHead>
-                          )
-                        })
-                      : null}
+          {!disableHeader ? (
+            <div
+              ref={headerRef}
+              className={cn('w-full shadow-sm scrollbar', isScrollable && 'overflow-y-scroll ')}
+            >
+              {Array.isArray(columnDefs)
+                ? headerGroups.map((headerGroup, index) => (
+                    <EditableTableRow key={index}>
+                      {index === 0 ? (
+                        <EditableTableHead
+                          key="line_number"
+                          className="px-3"
+                          rowSpan={headerGroups.length}
+                          style={{
+                            width: 100
+                          }}
+                        ></EditableTableHead>
+                      ) : null}
+                      {Array.isArray(headerGroup)
+                        ? headerGroup.map((column) => {
+                            const {
+                              _colSpan,
+                              _rowSpan,
+                              key,
+                              header,
+                              headerClassName,
+                              width,
+                              minWidth,
+                              maxWidth
+                            } = column
+                            return (
+                              <EditableTableHead
+                                key={String(key)}
+                                colSpan={_colSpan}
+                                rowSpan={_rowSpan}
+                                className={headerClassName}
+                                style={{
+                                  flex: !width ? '1' : undefined,
+                                  width,
+                                  minWidth,
+                                  maxWidth
+                                }}
+                              >
+                                {!header
+                                  ? t(key.toString())
+                                  : typeof header === 'string'
+                                    ? t(header)
+                                    : null}
+                              </EditableTableHead>
+                            )
+                          })
+                        : null}
 
-                    {index === 0
-                      ? actions.map((action, actionIndex) => (
-                          <EditableTableHead
-                            key={action.key}
-                            className={cn(actionIndex === 0 && 'border-l')}
-                            style={{
-                              width: 100
-                            }}
-                          ></EditableTableHead>
-                        ))
-                      : null}
-                  </EditableTableRow>
-                ))
-              : null}
-          </div>
+                      {index === 0
+                        ? actions.map((action, actionIndex) => (
+                            <EditableTableHead
+                              key={action.key}
+                              className={cn(actionIndex === 0 && 'border-l')}
+                              style={{
+                                width: 100
+                              }}
+                            ></EditableTableHead>
+                          ))
+                        : null}
+                    </EditableTableRow>
+                  ))
+                : null}
+            </div>
+          ) : null}
 
           <div
             className="flex-1 max-h-[480px]"
@@ -279,13 +285,15 @@ export const EditableTable = <T extends object, F extends ArrayPath<NoInfer<T>>>
             }}
           >
             <AutoSizer disableWidth>
-              {({ height }) =>
-                Array.isArray(fields) && fields.length ? (
+              {({ height }) => {
+                const desiredHeight = Math.min(height, ITEM_HEIGHT * fields.length)
+                const minHeight = ITEM_HEIGHT * MIN_ROWS
+                return Array.isArray(fields) && fields.length ? (
                   <FixedSizeList
                     outerRef={setScrollerRef}
                     itemCount={fields.length}
                     itemSize={48}
-                    height={height}
+                    height={Math.max(desiredHeight, minHeight)}
                     width="100%"
                     itemKey={(index) => fields[index].id}
                     itemData={{
@@ -304,7 +312,7 @@ export const EditableTable = <T extends object, F extends ArrayPath<NoInfer<T>>>
                       lineNumberWidth,
                       actionsWidth
                     }}
-                    className="scrollbar"
+                    className="scrollbar overflow-scroll"
                   >
                     {Row}
                   </FixedSizeList>
@@ -319,7 +327,7 @@ export const EditableTable = <T extends object, F extends ArrayPath<NoInfer<T>>>
                     </EmptyList>
                   </div>
                 )
-              }
+              }}
             </AutoSizer>
           </div>
         </div>

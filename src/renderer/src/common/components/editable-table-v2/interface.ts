@@ -68,6 +68,7 @@ export interface EditableTableProps<T extends object, F extends ArrayPath<NoInfe
   className?: string
   divProps?: HTMLAttributes<HTMLDivElement>
   errors?: FieldErrors<{ childs: InferRow<T, F>[] }>['childs']
+  disableHeader?: boolean
   getRowClassName?: (args: {
     index: number
     row: FieldArrayWithId<T, F, 'id'>
