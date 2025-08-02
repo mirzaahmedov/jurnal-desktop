@@ -184,6 +184,9 @@ export const createOperatsiiEditor = <T extends object, F extends ArrayPath<T>>(
           className="flex-1"
           placeholder={t('subschet')}
           items={filteredOperatsiiOptions}
+          popoverProps={{
+            className: 'w-[300px]'
+          }}
         >
           {(item) => (
             <ComboboxItem id={item.id}>
@@ -195,7 +198,7 @@ export const createOperatsiiEditor = <T extends object, F extends ArrayPath<T>>(
           type="button"
           size="icon"
           variant="ghost"
-          className="text-slate-400 hover:text-red-500"
+          className="text-slate-400 hover:text-red-500 rounded-none"
           onPress={() => {
             operatsiiSpravochnik.clear()
             setSchetInputValue('')

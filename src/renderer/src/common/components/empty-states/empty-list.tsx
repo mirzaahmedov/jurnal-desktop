@@ -16,7 +16,7 @@ export const EmptyList = ({ children, className, iconProps, ...props }: EmptyLis
       {...props}
     >
       <EmptyFolder {...iconProps} />
-      <p className="text-slate-400">{children ?? t('nothing-found')}</p>
+      <p className="text-slate-400 text-sm">{children ?? t('nothing-found')}</p>
     </div>
   )
 }

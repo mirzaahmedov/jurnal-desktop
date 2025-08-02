@@ -4,7 +4,6 @@ import type { ArrayPath, FieldArrayWithId, Path } from 'react-hook-form'
 import {
   type HTMLAttributes,
   type ReactNode,
-  forwardRef,
   useImperativeHandle,
   useMemo,
   useRef,
@@ -18,31 +17,14 @@ import AutoSizer from 'react-virtualized-auto-sizer'
 import { FixedSizeList, type ListChildComponentProps } from 'react-window'
 
 import { Button } from '@/common/components/ui/button'
-import { Table, TableBody, TableFooter, TableHeader } from '@/common/components/ui/table'
 import { useEventCallback } from '@/common/hooks'
+import { useIsScrollable } from '@/common/hooks/use-is-scrollable'
 import { cn } from '@/common/lib/utils'
 
 import { EmptyList } from '../empty-states'
 import { getHeaderGroups } from '../generic-table/utils'
 import { EditableTableCell, EditableTableHead, EditableTableRow } from './components'
 import { getAccessorColumns } from './utils'
-
-const Outer = forwardRef<HTMLDivElement>((props, ref) => (
-  <div
-    {...props}
-    ref={ref}
-    className="w-full scrollbar"
-  />
-))
-
-const Inner = forwardRef<HTMLTableSectionElement>((props, ref) => (
-  <Table className={cn('w-full table-fixed border border-slate-200')}>
-    <TableBody
-      {...props}
-      ref={ref}
-    />
-  </Table>
-))
 
 interface TableAction {
   key: string
@@ -81,6 +63,7 @@ export const EditableTable = <T extends object, F extends ArrayPath<NoInfer<T>>>
   const ref = tableRef || innerRef
 
   const { t } = useTranslation()
+  const { setElementRef: setScrollerRef, isScrollable } = useIsScrollable()
 
   const fieldArray = useFieldArray({
     control: form.control,
@@ -178,6 +161,32 @@ export const EditableTable = <T extends object, F extends ArrayPath<NoInfer<T>>>
   const lineNumberWidth = fields.length.toString().length * 20 + 20
   const actionsWidth = actions.length * 53
 
+  // const OuterElement = useMemo(
+  //   () =>
+  //     forwardRef<HTMLDivElement>((props, ref) => (
+  //       <div
+  //         {...props}
+  //         ref={ref}
+  //         className="w-full scrollbar"
+  //       />
+  //     )),
+  //   []
+  // )
+  // const InnerElement = useMemo(
+  //   () =>
+  //     forwardRef<HTMLTableSectionElement>((props, ref) => (
+  //       <Table className={cn('w-full table-fixed border border-slate-200')}>
+  //         <TableBody
+  //           {...props}
+  //           ref={ref}
+  //         />
+  //       </Table>
+  //     )),
+  //   []
+  // )
+
+  console.log({ isScrollable })
+
   return (
     <div
       {...divProps}
@@ -191,150 +200,147 @@ export const EditableTable = <T extends object, F extends ArrayPath<NoInfer<T>>>
           block: 'nearest'
         })
       }}
-      className={cn('relative', divProps?.className)}
+      className={cn('relative bg-white flex flex-col', divProps?.className)}
     >
-      <Table className={cn('w-full table-fixed border border-slate-200', className)}>
-        <TableHeader
-          ref={headerRef}
-          className="w-full shadow-sm"
-        >
-          {Array.isArray(columnDefs)
-            ? headerGroups.map((headerGroup, index) => (
-                <EditableTableRow key={index}>
-                  {index === 0 ? (
-                    <EditableTableHead
-                      key="line_number"
-                      className="px-3"
-                      rowSpan={headerGroups.length}
-                      style={{ width: lineNumberWidth }}
-                    ></EditableTableHead>
-                  ) : null}
-                  {Array.isArray(headerGroup)
-                    ? headerGroup.map((column) => {
-                        const {
-                          _colSpan,
-                          _rowSpan,
-                          key,
-                          header,
-                          width,
-                          minWidth,
-                          maxWidth,
-                          headerClassName
-                        } = column
-                        return (
+      <div className="relative w-full flex-1 overflow-x-auto">
+        <div>
+          <div
+            ref={headerRef}
+            className={cn('w-full shadow-sm scrollbar', isScrollable && 'overflow-y-scroll ')}
+          >
+            {Array.isArray(columnDefs)
+              ? headerGroups.map((headerGroup, index) => (
+                  <EditableTableRow key={index}>
+                    {index === 0 ? (
+                      <EditableTableHead
+                        key="line_number"
+                        className="px-3"
+                        rowSpan={headerGroups.length}
+                        style={{
+                          width: 100
+                        }}
+                      ></EditableTableHead>
+                    ) : null}
+                    {Array.isArray(headerGroup)
+                      ? headerGroup.map((column) => {
+                          const {
+                            _colSpan,
+                            _rowSpan,
+                            key,
+                            header,
+                            headerClassName,
+                            width,
+                            minWidth,
+                            maxWidth
+                          } = column
+                          return (
+                            <EditableTableHead
+                              key={String(key)}
+                              colSpan={_colSpan}
+                              rowSpan={_rowSpan}
+                              className={headerClassName}
+                              style={{
+                                flex: !width ? '1' : undefined,
+                                width,
+                                minWidth,
+                                maxWidth
+                              }}
+                            >
+                              {!header
+                                ? t(key.toString())
+                                : typeof header === 'string'
+                                  ? t(header)
+                                  : null}
+                            </EditableTableHead>
+                          )
+                        })
+                      : null}
+
+                    {index === 0
+                      ? actions.map((action, actionIndex) => (
                           <EditableTableHead
-                            key={String(key)}
+                            key={action.key}
+                            className={cn(actionIndex === 0 && 'border-l')}
                             style={{
-                              width: width ?? '100%',
-                              minWidth,
-                              maxWidth
+                              width: 100
                             }}
-                            colSpan={_colSpan}
-                            rowSpan={_rowSpan}
-                            className={headerClassName}
-                          >
-                            {!header
-                              ? t(key.toString())
-                              : typeof header === 'string'
-                                ? t(header)
-                                : null}
-                          </EditableTableHead>
-                        )
-                      })
-                    : null}
+                          ></EditableTableHead>
+                        ))
+                      : null}
+                  </EditableTableRow>
+                ))
+              : null}
+          </div>
 
-                  {index === 0
-                    ? actions.map((action, actionIndex) => (
-                        <EditableTableHead
-                          key={action.key}
-                          className={cn(actionIndex === 0 && 'border-l')}
-                          style={{
-                            right: (actions.length - actionIndex - 1) * 53,
-                            width: actionsWidth
-                          }}
-                        ></EditableTableHead>
-                      ))
-                    : null}
-                </EditableTableRow>
-              ))
-            : null}
-        </TableHeader>
-      </Table>
-
-      <AutoSizer disableHeight>
-        {({ width }) =>
-          Array.isArray(fields) && fields.length ? (
-            <FixedSizeList
-              itemCount={fields.length}
-              itemSize={48}
-              height={height ?? 400}
-              width={width}
-              outerElementType={Outer}
-              innerElementType={Inner}
-              itemKey={(index) => fields[index].id}
-              itemData={{
-                fields,
-                tabIndex,
-                name,
-                form,
-                columnDefs,
-                errors,
-                onCellDoubleClickCallback,
-                params,
-                validateCallback,
-                getEditorPropsCallback,
-                getRowClassNameCallback,
-                actions,
-                lineNumberWidth,
-                actionsWidth
-              }}
-            >
-              {Row}
-            </FixedSizeList>
-          ) : (
-            <EditableTableRow>
-              <EditableTableCell
-                colSpan={100}
-                className="text-center py-5"
-              >
-                <EmptyList
-                  iconProps={{
-                    className: 'w-40'
-                  }}
-                >
-                  {placeholder}
-                </EmptyList>
-              </EditableTableCell>
-            </EditableTableRow>
-          )
-        }
-      </AutoSizer>
-
-      <Table className={cn('w-full table-fixed border border-slate-200', className)}>
-        {typeof onCreate === 'function' || props.footerRows ? (
-          <TableFooter>
-            {props.footerRows}
-            {typeof onCreate === 'function' ? (
-              <EditableTableRow focusable={false}>
-                <EditableTableCell
-                  className="w-full"
-                  colSpan={100}
-                >
-                  <Button
-                    tabIndex={tabIndex}
-                    type="button"
-                    variant="ghost"
-                    className="w-full hover:bg-slate-50 text-brand hover:text-brand"
-                    onClick={() => onCreate({ fieldArray })}
+          <div
+            className="flex-1 max-h-[480px]"
+            style={{
+              height: fields.length * 48
+            }}
+          >
+            <AutoSizer disableWidth>
+              {({ height }) =>
+                Array.isArray(fields) && fields.length ? (
+                  <FixedSizeList
+                    outerRef={setScrollerRef}
+                    itemCount={fields.length}
+                    itemSize={48}
+                    height={height}
+                    width="100%"
+                    itemKey={(index) => fields[index].id}
+                    itemData={{
+                      fields,
+                      tabIndex,
+                      name,
+                      form,
+                      columnDefs,
+                      errors,
+                      onCellDoubleClickCallback,
+                      params,
+                      validateCallback,
+                      getEditorPropsCallback,
+                      getRowClassNameCallback,
+                      actions,
+                      lineNumberWidth,
+                      actionsWidth
+                    }}
+                    className="scrollbar"
                   >
-                    <CirclePlus className="btn-icon icon-start" /> {t('add')}
-                  </Button>
-                </EditableTableCell>
-              </EditableTableRow>
-            ) : null}
-          </TableFooter>
-        ) : null}
-      </Table>
+                    {Row}
+                  </FixedSizeList>
+                ) : (
+                  <div>
+                    <EmptyList
+                      iconProps={{
+                        className: 'w-40'
+                      }}
+                    >
+                      {placeholder}
+                    </EmptyList>
+                  </div>
+                )
+              }
+            </AutoSizer>
+          </div>
+        </div>
+      </div>
+
+      {typeof onCreate === 'function' || props.footerRows ? (
+        <div>
+          {props.footerRows}
+          {typeof onCreate === 'function' ? (
+            <Button
+              tabIndex={tabIndex}
+              type="button"
+              variant="ghost"
+              className="w-full hover:bg-slate-50 border text-brand hover:text-brand rounded-none"
+              onClick={() => onCreate({ fieldArray })}
+            >
+              <CirclePlus className="btn-icon icon-start" /> {t('add')}
+            </Button>
+          ) : null}
+        </div>
+      ) : null}
     </div>
   )
 }
@@ -359,9 +365,9 @@ const Row = ({ index, style, data }: ListChildComponentProps<any>) => {
       getEditorProps={data.getEditorPropsCallback}
       getRowClassName={data.getRowClassNameCallback}
       actions={data.actions}
-      style={style}
       lineNumberWidth={data.lineNumberWidth}
       actionsWidth={data.actionsWidth}
+      style={style}
     />
   )
 }
@@ -405,13 +411,11 @@ const EditableTableRowRenderer = <T extends object, R extends T[ArrayPath<NoInfe
   getEditorProps,
   getRowClassName,
   actions,
-  lineNumberWidth,
-  actionsWidth,
   ...props
 }: EditableTableRowRendererProps<T, R>) => {
   const [state, setState] = useState<Record<string, unknown>>({})
 
-  const accessorColumns = useMemo(() => getAccessorColumns(columnDefs), [columnDefs])
+  const columns = useMemo(() => getAccessorColumns(columnDefs), [columnDefs])
 
   return (
     <EditableTableRow
@@ -424,14 +428,14 @@ const EditableTableRowRenderer = <T extends object, R extends T[ArrayPath<NoInfe
         key="line_number"
         className="px-3 font-medium text-slate-500"
         style={{
-          width: lineNumberWidth
+          width: 100
         }}
       >
         {index + 1}
       </EditableTableCell>
       {Array.isArray(columnDefs)
-        ? accessorColumns.map((column) => {
-            const { key, Editor, width, minWidth, maxWidth, className } = column
+        ? columns.map((column) => {
+            const { key, Editor, className, width, minWidth, maxWidth } = column
             return (
               <Controller
                 key={String(key)}
@@ -440,8 +444,6 @@ const EditableTableRowRenderer = <T extends object, R extends T[ArrayPath<NoInfe
                 render={({ field }) => {
                   return (
                     <EditableTableCell
-                      style={{ width, minWidth, maxWidth }}
-                      className={cn('align-middle', className)}
                       onDoubleClick={(event) => {
                         onCellDoubleClick?.({
                           column,
@@ -452,6 +454,13 @@ const EditableTableRowRenderer = <T extends object, R extends T[ArrayPath<NoInfe
                           event,
                           index
                         })
+                      }}
+                      className={className}
+                      style={{
+                        flex: !width ? '1' : undefined,
+                        width,
+                        minWidth,
+                        maxWidth
                       }}
                     >
                       <Editor
@@ -494,8 +503,7 @@ const EditableTableRowRenderer = <T extends object, R extends T[ArrayPath<NoInfe
           key={action.key}
           className={cn('z-50', actionIndex === 0 && 'border-l')}
           style={{
-            right: (actions.length - actionIndex - 1) * 53,
-            width: actionsWidth
+            width: 100
           }}
         >
           {action.render({ rowIndex: index, row, rows })}
