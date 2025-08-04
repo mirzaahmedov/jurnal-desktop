@@ -1,38 +1,44 @@
 import type { FormFieldsComponent } from './types'
 
+import { useEffect, useState } from 'react'
+
+import { Calculator } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { Fieldset, NumericInput } from '@/common/components'
 import { FormElement } from '@/common/components/form'
+import { Button } from '@/common/components/jolly/button'
+import { Popover, PopoverDialog, PopoverTrigger } from '@/common/components/jolly/popover'
 import { Input } from '@/common/components/ui/input'
 import { Textarea } from '@/common/components/ui/textarea'
+import { useToggle } from '@/common/hooks'
 import { formatNumber } from '@/common/lib/format'
 import { cn, numberToWords } from '@/common/lib/utils'
 
 export const SummaFields: FormFieldsComponent<
   {
     summa?: number
-    contractSumma?: number
+    summaContarct?: number
     dialog?: boolean
-    percent?: number
   },
   HTMLInputElement,
   {
     dialog?: boolean
-    percent?: boolean
-    percentReadOnly?: boolean
-    onChangePercentage?: (value: number) => void
+    onSubmitSumma?: (value: number) => void
   }
-> = ({
-  data,
-  dialog = false,
-  percent = false,
-  percentReadOnly = false,
-  name,
-  onChangePercentage,
-  ...props
-}) => {
+> = ({ data, dialog = false, onSubmitSumma, name, ...props }) => {
   const { t, i18n } = useTranslation()
+
+  const [percent, setPercent] = useState(0)
+
+  const popoverToggle = useToggle()
+
+  useEffect(() => {
+    if (!popoverToggle.isOpen) {
+      setPercent(100)
+    }
+  }, [popoverToggle.isOpen])
+
   return (
     <Fieldset
       {...props}
@@ -59,25 +65,51 @@ export const SummaFields: FormFieldsComponent<
           value={numberToWords(data?.summa ?? 0, i18n.language)}
         />
 
-        {percent && data?.contractSumma ? (
+        {data?.summaContarct ? (
           <div className="mt-2 w-full flex items-start gap-5 flex-wrap">
             <FormElement label={t('shartnoma')}>
               <NumericInput
                 readOnly
                 tabIndex={-1}
-                value={data.contractSumma ?? 0}
+                value={data.summaContarct ?? 0}
                 className="w-48"
               />
             </FormElement>
-            <FormElement label={t('payment_percent')}>
-              <NumericInput
-                readOnly={percentReadOnly}
-                tabIndex={-1}
-                value={data?.percent ?? 0}
-                onValueChange={(values) => onChangePercentage?.(values.floatValue ?? 0)}
-                className="w-32"
-              />
-            </FormElement>
+            <PopoverTrigger
+              isOpen={popoverToggle.isOpen}
+              onOpenChange={popoverToggle.setOpen}
+            >
+              <Button
+                variant="outline"
+                size="icon"
+                onPress={popoverToggle.open}
+              >
+                <Calculator className="btn-icon" />
+              </Button>
+              <Popover>
+                <PopoverDialog>
+                  <FormElement label={t('payment_percent')}>
+                    <NumericInput
+                      tabIndex={-1}
+                      value={percent}
+                      onValueChange={(values) => setPercent?.(values.floatValue ?? 0)}
+                      className="w-32"
+                    />
+                  </FormElement>
+                  <div className="flex justify-end">
+                    <Button
+                      isDisabled={percent === 0}
+                      type="button"
+                      onPress={() => {
+                        onSubmitSumma?.(((data?.summaContarct ?? 0) * percent) / 100)
+                      }}
+                    >
+                      {t('confirm')}
+                    </Button>
+                  </div>
+                </PopoverDialog>
+              </Popover>
+            </PopoverTrigger>
           </div>
         ) : null}
       </div>

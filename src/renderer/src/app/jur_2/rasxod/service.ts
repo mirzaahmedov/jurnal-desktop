@@ -43,7 +43,6 @@ export const BankRasxodFormSchema = withPreprocessor(
     summa: z.number().optional(),
     tulanmagan_summa: z.number().optional(),
     contract_summa: z.number().optional(),
-    percentage: z.number().optional(),
     opisanie: z.string().optional(),
     rukovoditel: z.string().optional().nullable(),
     glav_buxgalter: z.string().optional().nullable(),

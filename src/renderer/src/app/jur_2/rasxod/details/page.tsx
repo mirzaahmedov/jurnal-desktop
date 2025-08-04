@@ -128,9 +128,8 @@ const BankRasxodDetailsPage = () => {
     })
   )
 
-  const updateSummaFromContract = (contractSumma: number, percentage: number) => {
+  const applyContractSumma = (summa: number) => {
     const children = form.getValues('childs')
-    const summa = percentage !== 0 ? contractSumma * (percentage / 100) : contractSumma
     if (children.length === 0) {
       form.setValue('childs', [{ spravochnik_operatsii_id: 0, summa }])
     } else if (children.length === 1) {
@@ -144,9 +143,8 @@ const BankRasxodDetailsPage = () => {
       onChange: (value, contract) => {
         form.setValue('id_shartnomalar_organization', value, { shouldValidate: true })
         if (contract) {
-          form.setValue('percentage', 100)
           form.setValue('contract_summa', contract.summa ? Number(contract.summa) : 0)
-          updateSummaFromContract(contract.summa ? Number(contract.summa) : 0, 100)
+          applyContractSumma(contract.summa ? Number(contract.summa) : 0)
         }
 
         changeOpisanieContract({
@@ -297,17 +295,10 @@ const BankRasxodDetailsPage = () => {
   }))
 
   const summa = form.watch('summa') ?? 0
-
   const reminder = monitor?.meta
     ? (monitor?.meta?.summa_to ?? 0) - (summa ?? 0) + (rasxod?.data?.summa ?? 0)
     : 0
 
-  useEffect(() => {
-    const contractSumma = form.watch('contract_summa') ?? 0
-    if (summa) {
-      form.setValue('percentage', (summa / contractSumma) * 100)
-    }
-  }, [summa])
   useEffect(() => {
     const summa =
       podvodki
@@ -419,18 +410,12 @@ const BankRasxodDetailsPage = () => {
 
               <div className="grid grid-cols-2 gap-10">
                 <SummaFields
-                  percent={form.watch('childs').length === 1}
                   data={{
                     summa: form.watch('summa'),
-                    percent: form.watch('percentage'),
-                    contractSumma: form.watch('contract_summa')
+                    summaContarct: form.watch('contract_summa')
                   }}
-                  onChangePercentage={(value) => {
-                    const contractSumma = form.watch('contract_summa') ?? 0
-                    form.setValue('percentage', value, { shouldValidate: true })
-                    if (value) {
-                      updateSummaFromContract(contractSumma, value)
-                    }
+                  onSubmitSumma={(summa) => {
+                    applyContractSumma(summa)
                   }}
                 />
                 <ShartnomaFields

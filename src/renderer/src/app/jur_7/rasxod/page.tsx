@@ -133,6 +133,7 @@ const Jurnal7RasxodPage = () => {
         <Button
           variant="ghost"
           IconStart={Download}
+          onPress={dialogToggle.open}
         >
           {t('report')}
         </Button>

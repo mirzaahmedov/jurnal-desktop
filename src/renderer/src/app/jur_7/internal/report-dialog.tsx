@@ -78,7 +78,7 @@ export const ReportDialog = ({
           <DialogFooter>
             <DownloadFile
               isDisabled={!budjet_id || !main_schet_id}
-              url="/jur_7/doc_rasxod/report"
+              url="/jur_7/internal/report"
               fileName={`${t('report')}-${t('internal')}-${dates.from}-${dates.to}.xlsx`}
               params={{
                 from: dates.from,

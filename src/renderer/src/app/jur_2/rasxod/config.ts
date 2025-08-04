@@ -13,7 +13,6 @@ export const defaultValues: BankRasxodFormValues = {
   doc_date: '',
   opisanie: '',
   summa: 0,
-  percentage: 0,
   id_spravochnik_organization: 0,
   organization_by_raschet_schet_id: 0,
   contract_summa: 0,

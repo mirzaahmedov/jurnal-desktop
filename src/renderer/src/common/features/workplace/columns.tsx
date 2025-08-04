@@ -27,6 +27,10 @@ export const WorkplaceColumns: ColumnDef<Workplace>[] = [
   },
   {
     minWidth: 300,
+    key: 'fio'
+  },
+  {
+    minWidth: 200,
     key: 'spravochnikZarpaltaDoljnostName',
     header: 'doljnost'
   },
@@ -48,11 +52,13 @@ export const WorkplaceColumns: ColumnDef<Workplace>[] = [
     key: 'oklad'
   },
   {
+    minWidth: 50,
     key: 'prOk',
     header: 'pr_ok',
     className: 'text-center'
   },
   {
+    minWidth: 50,
     key: 'stavka',
     className: 'text-center'
   },
@@ -63,7 +69,7 @@ export const WorkplaceColumns: ColumnDef<Workplace>[] = [
     header: 'prikaz_oklad'
   },
   {
-    minWidth: 200,
+    minWidth: 100,
     key: 'spravochnikZarplataIstochnikFinanceName',
     header: 'source_of_finance'
   },
