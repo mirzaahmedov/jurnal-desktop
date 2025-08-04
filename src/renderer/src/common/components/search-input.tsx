@@ -59,6 +59,7 @@ export const SearchInput = ({
           if (e.key === 'Enter') {
             e.preventDefault()
           }
+          props.onKeyDown?.(e)
         }}
       />
       <Search

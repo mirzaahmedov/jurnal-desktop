@@ -1,5 +1,3 @@
-import type { OdinoxPayloadChild } from '../service'
-import type { OdinoxFormValues } from './config'
 import type { EditableColumnDef } from '@/common/components/editable-table'
 import type { OdinoxProvodka } from '@/common/models'
 
@@ -18,6 +16,7 @@ import {
 export interface OdinoxMeta {
   title: string
   title_summa: number
+  title_rasxod_summa: number
   summa_from: number
   summa_to: number
 }
@@ -33,28 +32,34 @@ export const transformGetByIdData = (types: OdinoxProvodka[], meta: OdinoxMeta) 
   >()
 
   types.forEach((type) => {
-    type.sub_childs.unshift({
-      id: -1,
-      summa:
-        type.type_name === OdinoxTypeName.BankPrixod
-          ? meta.title_summa
-          : type.type_name === OdinoxTypeName.Saldo
-            ? meta.summa_from
-            : 0,
-      smeta_id: -1,
-      smeta_name: meta.title,
-      smeta_number: '',
-      group_number: ''
-    } as OdinoxAutoFillSubChild)
-    type.sub_childs.push({
-      id: 0,
-      summa: type.type_name === OdinoxTypeName.Saldo ? meta.summa_to : type.summa,
-      smeta_name: t('total'),
-      smeta_number: '',
-      group_number: '',
-      smeta_id: 0
-    })
-    type.sub_childs.forEach((smeta) => {
+    const sub_childs = [
+      {
+        id: -1,
+        summa:
+          type.type_name === OdinoxTypeName.BankPrixod
+            ? meta.title_summa
+            : type.type_name === OdinoxTypeName.Saldo
+              ? meta.summa_from
+              : type.type_name === OdinoxTypeName.Jur1_2
+                ? meta.title_rasxod_summa
+                : 0,
+        smeta_id: -1,
+        smeta_name: meta.title,
+        smeta_number: '',
+        group_number: ''
+      },
+      ...type.sub_childs,
+      {
+        id: 0,
+        summa: type.type_name === OdinoxTypeName.Saldo ? meta.summa_to : type.summa,
+        smeta_name: t('total'),
+        smeta_number: '',
+        group_number: '',
+        smeta_id: 0
+      }
+    ]
+
+    sub_childs.forEach((smeta) => {
       if (!smetaMap.has(smeta.smeta_id)) {
         smetaMap.set(smeta.smeta_id, [])
       }
@@ -81,35 +86,6 @@ export const transformGetByIdData = (types: OdinoxProvodka[], meta: OdinoxMeta) 
   })
 
   return rows
-}
-
-export const transformOdinoxAutoFillDataToSave = (
-  types: OdinoxType[],
-  values: OdinoxFormValues
-) => {
-  const payload: {
-    name: string
-    type_id: number
-    sub_childs: OdinoxPayloadChild[]
-  }[] = []
-
-  types?.forEach((type) => {
-    payload.push({
-      type_id: type.id,
-      name: type.name,
-      sub_childs: values.childs.map((row) => {
-        return {
-          smeta_id: row.smeta_id,
-          smeta_name: row.smeta_name,
-          smeta_number: row.smeta_number,
-          group_number: row.group_number,
-          summa: row[type.name] ? Number(row[type.name]) : 0
-        } satisfies OdinoxPayloadChild
-      })
-    })
-  })
-
-  return payload
 }
 
 export const getOdinoxColumns = (types: OdinoxType[]) => {

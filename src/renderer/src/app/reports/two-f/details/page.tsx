@@ -1,6 +1,6 @@
-import type { OdinoxTableRow } from './interfaces'
+import type { TwoFTableRow } from './interfaces'
 import type { CellEventHandler, EditableTableMethods } from '@/common/components/editable-table'
-import type { OdinoxDocument } from '@/common/models'
+import type { TwoFDocument } from '@/common/models'
 
 import { type KeyboardEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
@@ -20,15 +20,15 @@ import { useLayout } from '@/common/layout'
 import { formatDate } from '@/common/lib/date'
 import { DetailsView } from '@/common/views'
 
-import { OdinoxQueryKeys } from '../config'
-import { type GetDocsArgs, OdinoxService } from '../service'
-import { type OdinoxFormValues, defaultValues } from './config'
-import { OdinoxDocumentsTracker } from './documents-tracker'
-import { OdinoxTable } from './odinox-table'
-import { OdinoxProvodkaColumns } from './provodki'
-import { getOdinoxColumns, transformGetByIdData, transformOdinoxAutoFillData } from './utils'
+import { TwoFQueryKeys } from '../config'
+import { type GetDocsArgs, TwoFService } from '../service'
+import { type TwoFFormValues, defaultValues } from './config'
+import { TwoFDocumentsTracker } from './documents-tracker'
+import { TwoFTable } from './odinox-table'
+import { TwoFProvodkaColumns } from './provodki'
+import { getTwoFColumns, transformGetByIdData, transformTwoFAutoFillData } from './utils'
 
-const OdinoxDetailsPage = () => {
+const TwoFDetailsPage = () => {
   const { id } = useParams()
   useRequisitesRedirect(-1, id !== 'create')
 
@@ -40,7 +40,7 @@ const OdinoxDetailsPage = () => {
 
   const [isEmptyRowsHidden, setEmptyRowsHidden] = useState(false)
   const [selected, setSelected] = useState<{
-    docs: OdinoxDocument[]
+    docs: TwoFDocument[]
     args: GetDocsArgs
   }>()
 
@@ -57,31 +57,31 @@ const OdinoxDetailsPage = () => {
 
   const { data: odinox, isFetching } = useQuery({
     queryKey: [
-      OdinoxQueryKeys.getById,
+      TwoFQueryKeys.getById,
       Number(id),
       {
         budjet_id,
         main_schet_id
       }
     ],
-    queryFn: OdinoxService.getById,
+    queryFn: TwoFService.getById,
     enabled: id !== 'create' && !!budjet_id && !!main_schet_id
   })
   const { data: types, isFetching: isFetchingTypes } = useQuery({
     queryKey: [
-      OdinoxQueryKeys.getTypes,
+      TwoFQueryKeys.getTypes,
       {
         budjet_id: budjet_id!,
         main_schet_id: main_schet_id!
       }
     ],
-    queryFn: OdinoxService.getTypes,
+    queryFn: TwoFService.getTypes,
     enabled: !!budjet_id
   })
 
   const { isPending: isAutoFilling, mutate: autoFill } = useMutation({
-    mutationKey: [OdinoxQueryKeys.getAutofill],
-    mutationFn: OdinoxService.getAutofillData,
+    mutationKey: [TwoFQueryKeys.getAutofill],
+    mutationFn: TwoFService.getAutofillData,
     onSuccess: (res) => {
       form.setValue('childs', res.data ?? [])
       form.setValue('title', res?.meta?.title ?? '')
@@ -91,7 +91,7 @@ const OdinoxDetailsPage = () => {
       form.setValue('summa_to', res?.meta?.summa_to ?? 0)
       form.setValue(
         'rows',
-        transformOdinoxAutoFillData(
+        transformTwoFAutoFillData(
           res.data ?? [],
           res?.meta ?? {
             title_rasxod_summa: 0,
@@ -109,8 +109,8 @@ const OdinoxDetailsPage = () => {
     }
   })
   const { mutate: getDocs } = useMutation({
-    mutationKey: [OdinoxQueryKeys.getDocs],
-    mutationFn: OdinoxService.getDocs,
+    mutationKey: [TwoFQueryKeys.getDocs],
+    mutationFn: TwoFService.getDocs,
     onSuccess: (res, args) => {
       setSelected({
         docs: Array.isArray(res.data) ? res.data : [],
@@ -122,22 +122,22 @@ const OdinoxDetailsPage = () => {
     }
   })
 
-  const { mutate: createOdinox, isPending: isCreatingOdinox } = useMutation({
-    mutationFn: OdinoxService.create,
+  const { mutate: createTwoF, isPending: isCreatingTwoF } = useMutation({
+    mutationFn: TwoFService.create,
     onSuccess: (res) => {
       toast.success(res?.message)
       queryClient.invalidateQueries({
-        queryKey: [OdinoxQueryKeys.getAll]
+        queryKey: [TwoFQueryKeys.getAll]
       })
       navigate(-1)
     }
   })
-  const { mutate: updateOdinox, isPending: isUpdatingOdinox } = useMutation({
-    mutationFn: OdinoxService.update,
+  const { mutate: updateTwoF, isPending: isUpdatingTwoF } = useMutation({
+    mutationFn: TwoFService.update,
     onSuccess: (res) => {
       toast.success(res?.message)
       queryClient.invalidateQueries({
-        queryKey: [OdinoxQueryKeys.getAll]
+        queryKey: [TwoFQueryKeys.getAll]
       })
       navigate(-1)
     }
@@ -155,11 +155,11 @@ const OdinoxDetailsPage = () => {
       form.reset({
         month: odinox.data.month,
         year: odinox.data.year,
-        title: odinox.meta?.title ?? '',
         summa_from: odinox.meta?.summa_from ?? 0,
         summa_to: odinox.meta?.summa_to ?? 0,
-        title_summa: odinox?.meta?.title_summa ?? 0,
-        title_rasxod_summa: odinox?.meta?.title_rasxod_summa ?? 0,
+        title: odinox.meta?.title ?? '',
+        title_summa: odinox.meta?.title_summa ?? 0,
+        title_rasxod_summa: odinox.meta?.title_rasxod_summa ?? 0,
         rows: transformGetByIdData(
           odinox.data.childs,
           odinox?.meta ?? {
@@ -179,7 +179,7 @@ const OdinoxDetailsPage = () => {
       title: id === 'create' ? t('create') : t('edit'),
       breadcrumbs: [
         {
-          title: t('pages.odinox')
+          title: t('pages.two-f')
         }
       ],
       onBack: () => {
@@ -198,13 +198,13 @@ const OdinoxDetailsPage = () => {
   }, [id, year, month, budjet_id])
 
   const columns = useMemo(
-    () => [...OdinoxProvodkaColumns, ...getOdinoxColumns(types?.data ?? [])],
+    () => [...TwoFProvodkaColumns, ...getTwoFColumns(types?.data ?? [])],
     [types]
   )
 
   const onSubmit = form.handleSubmit((values) => {
     if (id === 'create') {
-      createOdinox({
+      createTwoF({
         month: values.month,
         year: values.year,
         title: values.title,
@@ -215,7 +215,7 @@ const OdinoxDetailsPage = () => {
         childs: values.childs
       })
     } else {
-      updateOdinox({
+      updateTwoF({
         id: Number(id),
         month: values.month,
         year: values.year,
@@ -234,6 +234,8 @@ const OdinoxDetailsPage = () => {
       e.stopPropagation()
       e.preventDefault()
 
+      console.log('running')
+
       const value = e.currentTarget.value
       if (value.length > 0) {
         const rows = form.getValues('rows')
@@ -245,7 +247,7 @@ const OdinoxDetailsPage = () => {
     }
   }
 
-  const handleCellDoubleClick = useCallback<CellEventHandler<OdinoxFormValues, 'rows'>>(
+  const handleCellDoubleClick = useCallback<CellEventHandler<TwoFFormValues, 'rows'>>(
     ({ row, column, index }) => {
       const type = types?.data?.find((type) => type.name === column.key)
       if (index === 0) {
@@ -279,7 +281,7 @@ const OdinoxDetailsPage = () => {
     control: form.control,
     name: 'rows'
   })
-  const isRowEmpty = (row: OdinoxTableRow) => {
+  const isRowEmpty = (row: TwoFTableRow) => {
     return Object.entries(row).every(([key, value]) => {
       if (
         key === 'smeta_id' ||
@@ -362,7 +364,7 @@ const OdinoxDetailsPage = () => {
               </div>
             </div>
             <div className="overflow-auto scrollbar flex-1 relative">
-              <OdinoxTable
+              <TwoFTable
                 columns={columns}
                 methods={tableMethods}
                 form={form}
@@ -376,14 +378,14 @@ const OdinoxDetailsPage = () => {
           <DetailsView.Footer>
             <Button
               type="submit"
-              isPending={isCreatingOdinox || isUpdatingOdinox}
+              isPending={isCreatingTwoF || isUpdatingTwoF}
             >
               {t('save')}
             </Button>
           </DetailsView.Footer>
         </form>
       </DetailsView.Content>
-      <OdinoxDocumentsTracker
+      <TwoFDocumentsTracker
         docs={selected?.docs ?? []}
         args={selected?.args}
         onClose={() => setSelected(undefined)}
@@ -392,4 +394,4 @@ const OdinoxDetailsPage = () => {
   )
 }
 
-export default OdinoxDetailsPage
+export default TwoFDetailsPage

@@ -1,5 +1,5 @@
 import type { EditableColumnDef } from '@/common/components/editable-table'
-import type { OdinoxProvodka } from '@/common/models'
+import type { TwoFProvodka } from '@/common/models'
 
 import { t } from 'i18next'
 
@@ -7,14 +7,13 @@ import { createNumberEditor } from '@/common/components/editable-table/editors'
 import { cn } from '@/common/lib/utils'
 
 import {
-  type OdinoxAutoFill,
-  type OdinoxAutoFillSubChild,
-  type OdinoxTableRow,
-  type OdinoxType,
-  OdinoxTypeName
+  type TwoFAutoFillSubChild,
+  type TwoFTableRow,
+  type TwoFType,
+  TwoFTypeName
 } from './interfaces'
 
-export interface OdinoxMeta {
+export interface TwoFMeta {
   title: string
   title_summa: number
   title_rasxod_summa: number
@@ -22,13 +21,13 @@ export interface OdinoxMeta {
   summa_to: number
 }
 
-export const transformOdinoxAutoFillData = (types: OdinoxAutoFill[], meta: OdinoxMeta) => {
+export const transformGetByIdData = (types: TwoFProvodka[], meta: TwoFMeta) => {
   const smetaMap = new Map<
     number,
     {
       type_id: number
       type_name: string
-      smeta: OdinoxAutoFillSubChild
+      smeta: TwoFAutoFillSubChild
     }[]
   >()
 
@@ -37,11 +36,11 @@ export const transformOdinoxAutoFillData = (types: OdinoxAutoFill[], meta: Odino
       {
         id: -1,
         summa:
-          type.name === OdinoxTypeName.BankPrixod
+          type.type_name === TwoFTypeName.BankPrixod
             ? meta.title_summa
-            : type.name === OdinoxTypeName.Saldo
+            : type.type_name === TwoFTypeName.Saldo
               ? meta.summa_from
-              : type.name === OdinoxTypeName.Jur1_2
+              : type.type_name === TwoFTypeName.Jur1_2
                 ? meta.title_rasxod_summa
                 : 0,
         smeta_id: -1,
@@ -52,78 +51,11 @@ export const transformOdinoxAutoFillData = (types: OdinoxAutoFill[], meta: Odino
       ...type.sub_childs,
       {
         id: 0,
-        summa: type.name === OdinoxTypeName.Saldo ? meta.summa_to : type.summa,
-        smeta_id: 0,
+        summa: type.type_name === TwoFTypeName.Saldo ? meta.summa_to : type.summa,
         smeta_name: t('total'),
         smeta_number: '',
-        group_number: ''
-      }
-    ]
-
-    sub_childs.forEach((smeta) => {
-      if (!smetaMap.has(smeta.smeta_id)) {
-        smetaMap.set(smeta.smeta_id, [])
-      }
-      smetaMap.get(smeta.smeta_id)?.push({
-        type_id: type.id,
-        type_name: type.name,
-        smeta
-      })
-    })
-  })
-
-  const rows: OdinoxTableRow[] = []
-  smetaMap.forEach((types) => {
-    const row = {} as OdinoxTableRow
-    types.forEach(({ type_name, smeta }) => {
-      row[type_name] = smeta.summa
-
-      row.smeta_id = smeta.smeta_id
-      row.smeta_name = smeta.smeta_name
-      row.smeta_number = smeta.smeta_number
-      row.group_number = smeta.group_number
-    })
-    rows.push(row)
-  })
-
-  return rows
-}
-
-export const transformGetByIdData = (types: OdinoxProvodka[], meta: OdinoxMeta) => {
-  const smetaMap = new Map<
-    number,
-    {
-      type_id: number
-      type_name: string
-      smeta: OdinoxAutoFillSubChild
-    }[]
-  >()
-
-  types.forEach((type) => {
-    const sub_childs = [
-      {
-        id: -1,
-        summa:
-          type.type_name === OdinoxTypeName.BankPrixod
-            ? meta.title_summa
-            : type.type_name === OdinoxTypeName.Saldo
-              ? meta.summa_from
-              : type.type_name === OdinoxTypeName.Jur1_2
-                ? meta.title_rasxod_summa
-                : 0,
-        smeta_id: -1,
-        smeta_name: meta.title,
-        smeta_number: '',
-        group_number: ''
-      },
-      ...type.sub_childs,
-      {
-        id: 0,
-        summa: type.type_name === OdinoxTypeName.Saldo ? meta.summa_to : type.summa,
-        smeta_id: 0,
-        smeta_name: t('total'),
-        smeta_number: '',
-        group_number: ''
+        group_number: '',
+        smeta_id: 0
       }
     ]
 
@@ -139,9 +71,9 @@ export const transformGetByIdData = (types: OdinoxProvodka[], meta: OdinoxMeta) 
     })
   })
 
-  const rows: OdinoxTableRow[] = []
+  const rows: TwoFTableRow[] = []
   smetaMap.forEach((types) => {
-    const row = {} as OdinoxTableRow
+    const row = {} as TwoFTableRow
     types.forEach(({ type_name, smeta }) => {
       row[type_name] = smeta.summa
 
@@ -156,17 +88,17 @@ export const transformGetByIdData = (types: OdinoxProvodka[], meta: OdinoxMeta) 
   return rows
 }
 
-export const getOdinoxColumns = (types: OdinoxType[]) => {
-  const getColumns = (type: OdinoxType) => {
+export const getTwoFColumns = (types: TwoFType[]) => {
+  const getColumns = (type: TwoFType) => {
     return {
       key: type.name,
-      header: type.name.startsWith(OdinoxTypeName.Grafik)
+      header: type.name.startsWith(TwoFTypeName.Grafik)
         ? t('allocated_funds')
-        : type.name.startsWith(OdinoxTypeName.BankPrixod)
+        : type.name.startsWith(TwoFTypeName.BankPrixod)
           ? t('funds_paid_by_ministry')
-          : type.name.startsWith(OdinoxTypeName.Jur1_2)
+          : type.name.startsWith(TwoFTypeName.Jur1_2)
             ? `${t('provodka_type.bank_rasxod')}, ${t('provodka_type.bank_prixod')}, ${t('provodka_type.kassa_prixod')}`
-            : type.name.startsWith(OdinoxTypeName.Jur3)
+            : type.name.startsWith(TwoFTypeName.Jur3)
               ? t('real_expenses')
               : type.name.startsWith('remaining')
                 ? t('remainder')

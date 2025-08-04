@@ -5,9 +5,9 @@ import { RouterProvider } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify'
 
 import { router } from './app/router'
+import { ApplicationUpdateManager } from './common/features/application-update-manager'
 import { ConfirmationDialog } from './common/features/confirm'
 import { initLocales } from './common/features/languages'
-import { ApplicationUpdateManager } from './common/features/update-manager'
 import { queryClient } from './common/lib/query-client'
 
 initLocales()

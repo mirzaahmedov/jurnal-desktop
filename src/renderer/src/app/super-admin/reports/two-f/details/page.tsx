@@ -8,8 +8,8 @@ import { useTranslation } from 'react-i18next'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
-import { OdinoxQueryKeys } from '@/app/reports/odinox/config'
-import { OdinoxService } from '@/app/reports/odinox/service'
+import { TwoFQueryKeys } from '@/app/reports/two-f/config'
+import { TwoFService } from '@/app/reports/two-f/service'
 import { MonthPicker } from '@/common/components/month-picker'
 import { SearchInput } from '@/common/components/search-input'
 import { Button } from '@/common/components/ui/button'
@@ -20,14 +20,14 @@ import { formatDate } from '@/common/lib/date'
 import { ReportStatus } from '@/common/models'
 import { DetailsView } from '@/common/views'
 
-import { AdminOdinoxQueryKeys } from '../config'
-import { AdminOdinoxService } from '../service'
+import { AdminTwoFQueryKeys } from '../config'
+import { AdminTwoFService } from '../service'
 import { defaultValues } from './config'
-import { OdinoxTable } from './odinox-table'
-import { OdinoxProvodkaColumns } from './provodki'
-import { getOdinoxColumns, transformGetByIdData } from './utils'
+import { TwoFTable } from './odinox-table'
+import { TwoFProvodkaColumns } from './provodki'
+import { getTwoFColumns, transformGetByIdData } from './utils'
 
-const AdminOdinoxDetailsPage = () => {
+const AdminTwoFDetailsPage = () => {
   const { id } = useParams()
   useRequisitesRedirect(-1, id !== 'create')
 
@@ -49,21 +49,21 @@ const AdminOdinoxDetailsPage = () => {
   })
 
   const { data: odinox, isFetching } = useQuery({
-    queryKey: [AdminOdinoxQueryKeys.getById, Number(id)],
-    queryFn: AdminOdinoxService.getById,
+    queryKey: [AdminTwoFQueryKeys.getById, Number(id)],
+    queryFn: AdminTwoFService.getById,
     enabled: id !== 'create'
   })
   const { data: types, isFetching: isFetchingTypes } = useQuery({
-    queryKey: [OdinoxQueryKeys.getTypes, {}],
-    queryFn: OdinoxService.getTypes
+    queryKey: [TwoFQueryKeys.getTypes, {}],
+    queryFn: TwoFService.getTypes
   })
 
-  const { mutate: updateOdinox, isPending: isUpdatingOdinox } = useMutation({
-    mutationFn: AdminOdinoxService.update,
+  const { mutate: updateTwoF, isPending: isUpdatingTwoF } = useMutation({
+    mutationFn: AdminTwoFService.update,
     onSuccess: (res) => {
       toast.success(res?.message)
       queryClient.invalidateQueries({
-        queryKey: [AdminOdinoxQueryKeys.getAll]
+        queryKey: [AdminTwoFQueryKeys.getAll]
       })
       navigate(-1)
     }
@@ -104,7 +104,7 @@ const AdminOdinoxDetailsPage = () => {
       title: id === 'create' ? t('create') : t('edit'),
       breadcrumbs: [
         {
-          title: t('pages.odinox')
+          title: t('pages.two-f')
         }
       ],
       onBack: () => {
@@ -114,7 +114,7 @@ const AdminOdinoxDetailsPage = () => {
   }, [setLayout, navigate, t, id])
 
   const columns = useMemo(
-    () => [...OdinoxProvodkaColumns, ...getOdinoxColumns(types?.data ?? [])],
+    () => [...TwoFProvodkaColumns, ...getTwoFColumns(types?.data ?? [])],
     [types]
   )
 
@@ -138,7 +138,7 @@ const AdminOdinoxDetailsPage = () => {
     confirm({
       title: t('reject_report'),
       onConfirm: () => {
-        updateOdinox({
+        updateTwoF({
           id: Number(id),
           status: ReportStatus.REJECT
         })
@@ -149,7 +149,7 @@ const AdminOdinoxDetailsPage = () => {
     confirm({
       title: t('accept_report'),
       onConfirm: () => {
-        updateOdinox({
+        updateTwoF({
           id: Number(id),
           status: ReportStatus.ACCEPT
         })
@@ -178,7 +178,7 @@ const AdminOdinoxDetailsPage = () => {
             </div>
           </div>
           <div className="overflow-auto scrollbar flex-1 relative">
-            <OdinoxTable
+            <TwoFTable
               columns={columns}
               methods={tableMethods}
               form={form}
@@ -189,14 +189,14 @@ const AdminOdinoxDetailsPage = () => {
 
         <DetailsView.Footer className="flex gap-5">
           <Button
-            disabled={isUpdatingOdinox}
+            disabled={isUpdatingTwoF}
             type="button"
             onClick={handleAccept}
           >
             {t('accept')}
           </Button>
           <Button
-            disabled={isUpdatingOdinox}
+            disabled={isUpdatingTwoF}
             type="button"
             variant="destructive"
             onClick={handleReject}
@@ -209,4 +209,4 @@ const AdminOdinoxDetailsPage = () => {
   )
 }
 
-export default AdminOdinoxDetailsPage
+export default AdminTwoFDetailsPage

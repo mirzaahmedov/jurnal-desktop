@@ -1,4 +1,4 @@
-import type { OdinoxTableRow } from './interfaces'
+import type { TwoFTableRow } from './interfaces'
 
 export const defaultValues = {
   year: new Date().getFullYear(),
@@ -8,7 +8,7 @@ export const defaultValues = {
   title_rasxod_summa: 0,
   summa_from: 0,
   summa_to: 0,
-  childs: [] as OdinoxTableRow[]
+  childs: [] as TwoFTableRow[]
 }
 
-export type OdinoxFormValues = typeof defaultValues
+export type TwoFFormValues = typeof defaultValues

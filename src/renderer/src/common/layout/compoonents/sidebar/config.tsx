@@ -535,6 +535,11 @@ export const getNavElements = (t: TFunction): NavElement[] => {
               icon: Table2
             },
             {
+              path: 'two-f',
+              title: t('pages.two-f'),
+              icon: Table2
+            },
+            {
               path: 'realcost',
               title: t('pages.realcost'),
               icon: WalletCards
@@ -644,10 +649,17 @@ export const getNavElements = (t: TFunction): NavElement[] => {
           icon: Book
         }
       : null,
-    !is_super_admin && (permissions.smeta_grafik || is_admin)
+    !is_super_admin && (permissions.odinox || is_admin)
       ? {
           path: '/odinox',
           title: t('pages.odinox'),
+          icon: Table2
+        }
+      : null,
+    !is_super_admin && (permissions.odinox || is_admin)
+      ? {
+          path: '/two-f',
+          title: t('pages.two-f'),
           icon: Table2
         }
       : null,

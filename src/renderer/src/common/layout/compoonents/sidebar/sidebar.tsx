@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next'
 import { Spinner } from '@/common/components'
 import { Button } from '@/common/components/jolly/button'
 import { Badge } from '@/common/components/ui/badge'
-import { useUpdateManagerStore } from '@/common/features/update-manager'
+import { useUpdateManagerStore } from '@/common/features/application-update-manager'
 import { useKeyUp } from '@/common/hooks'
 import { cn } from '@/common/lib/utils'
 

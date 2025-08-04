@@ -72,6 +72,8 @@ export enum ApiEndpoints {
   admin_realcost = 'admin/real/cost',
   odinox = 'odinox',
   admin_odinox = 'admin/odinox',
+  two_f = 'f2',
+  admin_two_f = 'admin/f2',
   raschet_schet = 'spravochnik/organization/account_number',
   raschet_schet_gazna = 'spravochnik/organization/gazna',
   report_title = 'admin/spravochnik/report_title',

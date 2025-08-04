@@ -1,16 +1,16 @@
 import type {
-  OdinoxAutoFill,
-  OdinoxAutoFillSubChild,
-  OdinoxType,
-  OdinoxUniqueSchet
+  TwoFAutoFill,
+  TwoFAutoFillSubChild,
+  TwoFType,
+  TwoFUniqueSchet
 } from './details/interfaces'
-import type { OdinoxMeta } from './details/utils'
+import type { TwoFMeta } from './details/utils'
 import type {
   ApiResponse,
-  Odinox,
-  OdinoxDocument,
-  OdinoxDocumentInfo,
-  OdinoxProvodka
+  TwoF,
+  TwoFDocument,
+  TwoFDocumentInfo,
+  TwoFProvodka
 } from '@/common/models'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 
@@ -30,22 +30,22 @@ export enum DocType {
   RemainingYear = 9
 }
 
-export type OdinoxPayloadChild = Omit<OdinoxAutoFillSubChild, 'id' | 'smeta_grafik'>
-export interface OdinoxPayload {
+export type TwoFPayloadChild = Omit<TwoFAutoFillSubChild, 'id' | 'smeta_grafik'>
+export interface TwoFPayload {
   month: number
   year: number
   title: string
   title_summa: number
-  title_rasxod_summa: number
   summa_from: number
   summa_to: number
+  title_rasxod_summa: number
   childs: Array<{
     type_id: number
-    sub_childs: Array<OdinoxPayloadChild>
+    sub_childs: Array<TwoFPayloadChild>
   }>
 }
 export interface GetDocsArgs {
-  need_data: OdinoxProvodka[]
+  need_data: TwoFProvodka[]
   smeta_id: number | string
   main_schet_id: number
   month: number
@@ -54,10 +54,10 @@ export interface GetDocsArgs {
   title?: boolean
 }
 
-class OdinoxServiceBuilder extends CRUDService<Odinox, OdinoxPayload, OdinoxPayload, OdinoxMeta> {
+class TwoFServiceBuilder extends CRUDService<TwoF, TwoFPayload, TwoFPayload, TwoFMeta> {
   constructor() {
     super({
-      endpoint: ApiEndpoints.odinox
+      endpoint: ApiEndpoints.two_f
     })
 
     this.getDocs = this.getDocs.bind(this)
@@ -70,7 +70,7 @@ class OdinoxServiceBuilder extends CRUDService<Odinox, OdinoxPayload, OdinoxPayl
 
   async getDocs(values: GetDocsArgs) {
     const { need_data, ...params } = values
-    const res = await this.client.post<ApiResponse<OdinoxDocument[], { summa: number }>>(
+    const res = await this.client.post<ApiResponse<TwoFDocument[], { summa: number }>>(
       `${this.endpoint}/docs`,
       {
         need_data
@@ -82,7 +82,7 @@ class OdinoxServiceBuilder extends CRUDService<Odinox, OdinoxPayload, OdinoxPayl
     return res.data
   }
   async getAutofillData(params: { month: number; year: number; main_schet_id: number }) {
-    const res = await this.client.get<ApiResponse<OdinoxAutoFill[], OdinoxMeta>>(
+    const res = await this.client.get<ApiResponse<TwoFAutoFill[], TwoFMeta>>(
       `${this.endpoint}/data`,
       {
         params
@@ -95,7 +95,7 @@ class OdinoxServiceBuilder extends CRUDService<Odinox, OdinoxPayload, OdinoxPayl
     ctx: QueryFunctionContext<[string, { budjet_id?: number; main_schet_id?: number }]>
   ) {
     const params = ctx.queryKey[1]
-    const res = await this.client.get<ApiResponse<OdinoxType[]>>(`${this.endpoint}/type`, {
+    const res = await this.client.get<ApiResponse<TwoFType[]>>(`${this.endpoint}/type`, {
       params
     })
     return res.data
@@ -114,7 +114,7 @@ class OdinoxServiceBuilder extends CRUDService<Odinox, OdinoxPayload, OdinoxPayl
   async getUniqueSchets(params: { budjet_id: number; main_schet_id: number }) {
     const res = await this.client.get<
       ApiResponse<{
-        schets: OdinoxUniqueSchet[]
+        schets: TwoFUniqueSchet[]
       }>
     >(`${this.endpoint}/unique`, {
       headers: {
@@ -143,7 +143,7 @@ class OdinoxServiceBuilder extends CRUDService<Odinox, OdinoxPayload, OdinoxPayl
     >
   ) {
     const params = ctx.queryKey[1]
-    const res = await this.client.get<ApiResponse<OdinoxDocumentInfo[], { summa: number }>>(
+    const res = await this.client.get<ApiResponse<TwoFDocumentInfo[], { summa: number }>>(
       `${this.endpoint}/docs`,
       {
         params
@@ -153,4 +153,4 @@ class OdinoxServiceBuilder extends CRUDService<Odinox, OdinoxPayload, OdinoxPayl
   }
 }
 
-export const OdinoxService = new OdinoxServiceBuilder().use(main_schet())
+export const TwoFService = new TwoFServiceBuilder().use(main_schet())

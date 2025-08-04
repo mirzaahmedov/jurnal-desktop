@@ -8,6 +8,7 @@ export const defaultValues = {
   title_summa: 0,
   summa_from: 0,
   summa_to: 0,
+  title_rasxod_summa: 0,
   childs: [] as OdinoxProvodka[],
   rows: [] as OdinoxTableRow[]
 }

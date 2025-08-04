@@ -40,8 +40,22 @@ const baseURL = import.meta.env.DEV
       : 'http://10.50.0.140:3006'
 // 'http://10.50.0.140/backend'
 
+const customParamsSerializer = (params: Record<string, any>) => {
+  const searchParams = new URLSearchParams()
+
+  for (const [key, value] of Object.entries(params)) {
+    if (value === undefined) continue // keep default behavior for undefined
+    searchParams.append(key, value === null ? 'null' : value)
+  }
+
+  return searchParams.toString()
+}
+
 export const http = axios.create({
-  baseURL
+  baseURL,
+  paramsSerializer: {
+    serialize: customParamsSerializer
+  }
 })
 
 http.interceptors.request.use(

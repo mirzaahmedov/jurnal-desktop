@@ -14,7 +14,6 @@ import {
   createOperatsiiSpravochnik,
   operatsiiQueryKeys
 } from '@/app/super-admin/operatsii'
-import { AutoComplete } from '@/common/components/auto-complete'
 import { Button } from '@/common/components/jolly/button'
 import { ComboboxItem, JollyComboBox } from '@/common/components/jolly/combobox'
 import { useSpravochnik } from '@/common/features/spravochnik'
@@ -38,13 +37,10 @@ export const createOperatsiiEditor = <T extends object, F extends ArrayPath<T>>(
       }>
     }>
     const schet = typedForm.watch(`childs.${id}.schet`)
-    // const schet_6 = typedForm.watch(`childs.${id}.schet_6`)
     const sub_schet = typedForm.watch(`childs.${id}.sub_schet`)
 
-    const [schetInputValue, setSchetInputValue] = useState<string>('')
     const [subschetInputValue, setSubschetInputValue] = useState<string>('')
-    const [debouncedSchetInputValue, setDebouncedSchetInputValue] =
-      useDebounceValue(schetInputValue)
+    const [debouncedSchetInputValue, setDebouncedSchetInputValue] = useDebounceValue(schet)
 
     const handleChangeField = (field: 'schet' | 'schet_6' | 'sub_schet', value: string) => {
       typedForm.setValue(`childs.${id}.${field}`, value)
@@ -83,17 +79,18 @@ export const createOperatsiiEditor = <T extends object, F extends ArrayPath<T>>(
         operatsiiQueryKeys.getAll,
         {
           type_schet,
-          schet: debouncedSchetInputValue ? debouncedSchetInputValue : undefined
+          schet: debouncedSchetInputValue
+            ? decodeSchetOption(debouncedSchetInputValue).schet || undefined
+            : undefined,
+          schet6: debouncedSchetInputValue
+            ? decodeSchetOption(debouncedSchetInputValue).schet6 || null
+            : null
         }
       ],
       queryFn: OperatsiiService.getAll,
       enabled: !!debouncedSchetInputValue
     })
 
-    const filteredSchetOptions = useMemo(
-      () => schetOptions?.data?.filter((option) => startsWith(option.schet, schetInputValue)) ?? [],
-      [schetOptions, schetInputValue]
-    )
     const filteredOperatsiiOptions = useMemo(
       () =>
         operatsiiOptions?.data?.filter((option) =>
@@ -108,10 +105,9 @@ export const createOperatsiiEditor = <T extends object, F extends ArrayPath<T>>(
       }
       const { schet, schet6, sub_schet } = operatsiiSpravochnik.selected
 
-      setSchetInputValue(schet ?? '')
       setSubschetInputValue(sub_schet ?? '')
       setDebouncedSchetInputValue(schet ?? '')
-      handleChangeField('schet', schet ?? '')
+      handleChangeField('schet', schet ? encodeSchetOption(schet, schet6) : '')
       handleChangeField('schet_6', schet6 ?? '')
       handleChangeField('sub_schet', sub_schet ?? '')
     }, [operatsiiSpravochnik.selected?.id])
@@ -124,45 +120,48 @@ export const createOperatsiiEditor = <T extends object, F extends ArrayPath<T>>(
     }, [filteredOperatsiiOptions, onChangeEvent])
 
     useEffect(() => {
-      setSchetInputValue(schet ?? '')
       setDebouncedSchetInputValue(schet ?? '')
     }, [schet])
     useEffect(() => {
       setSubschetInputValue(sub_schet ?? '')
     }, [sub_schet])
 
+    console.log({ schet, debouncedSchetInputValue })
+
     return (
       <div
         className="w-full flex divide-x"
         onDoubleClick={operatsiiSpravochnik.open}
       >
-        <AutoComplete
+        <JollyComboBox
           editor
           error={!!error}
           tabIndex={tabIndex}
           isDisabled={isLoadingSchetOptions}
-          inputValue={schetInputValue}
-          onInputChange={setSchetInputValue}
+          menuTrigger="focus"
           selectedKey={schet || ''}
           onSelectionChange={(value) => {
-            if (operatsiiSpravochnik.selected && operatsiiSpravochnik.selected.schet !== value) {
+            if (
+              operatsiiSpravochnik.selected &&
+              encodeSchetOption(
+                operatsiiSpravochnik.selected.schet,
+                operatsiiSpravochnik.selected.schet6
+              ) !== value
+            ) {
               onChange?.(0)
             }
             handleChangeField('schet', (value as string) || '')
           }}
           className="border-none flex-1"
           placeholder={t('schet')}
-          items={filteredSchetOptions}
+          defaultItems={schetOptions?.data ?? []}
         >
-          {filteredSchetOptions.map((item) => (
-            <ComboboxItem
-              id={item.schet}
-              key={`${item.schet}-${item.schet6}`}
-            >
-              {item.schet}({item.schet6})
+          {(item) => (
+            <ComboboxItem id={encodeSchetOption(item.schet, item.schet6)}>
+              {encodeSchetOption(item.schet, item.schet6)}
             </ComboboxItem>
-          ))}
-        </AutoComplete>
+          )}
+        </JollyComboBox>
         <JollyComboBox
           editor
           error={!!error}
@@ -172,6 +171,7 @@ export const createOperatsiiEditor = <T extends object, F extends ArrayPath<T>>(
           inputValue={subschetInputValue}
           onInputChange={setSubschetInputValue}
           menuTrigger="focus"
+          formValue="text"
           selectedKey={(value as string) ?? ''}
           onSelectionChange={(value) => {
             onChange?.(value)
@@ -201,7 +201,6 @@ export const createOperatsiiEditor = <T extends object, F extends ArrayPath<T>>(
           className="text-slate-400 hover:text-red-500 rounded-none"
           onPress={() => {
             operatsiiSpravochnik.clear()
-            setSchetInputValue('')
             setSubschetInputValue('')
             setDebouncedSchetInputValue('')
             handleChangeField('schet', '')
@@ -213,5 +212,21 @@ export const createOperatsiiEditor = <T extends object, F extends ArrayPath<T>>(
         </Button>
       </div>
     )
+  }
+}
+
+const encodeSchetOption = (schet: string, schet6: string) => {
+  return `${schet ?? ''}(${schet6 ?? ''})`
+}
+const decodeSchetOption = (
+  value: string
+): {
+  schet: string
+  schet6: string
+} => {
+  const parts = value?.split('(')
+  return {
+    schet: parts[0] ?? '',
+    schet6: parts[1]?.replace(')', '') ?? ''
   }
 }

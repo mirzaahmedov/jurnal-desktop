@@ -78,10 +78,16 @@ const KassaRasxodPage = lazy(() => import('./jur_1/rasxod/page'))
 
 const MainbookPage = lazy(() => import('./reports/mainbook/page'))
 const MainbookDetailsPage = lazy(() => import('./reports/mainbook/details/page'))
+
 const OdinoxPage = lazy(() => import('./reports/odinox/page'))
 const OdinoxDetailsPage = lazy(() => import('./reports/odinox/details/page'))
+const TwoFPage = lazy(() => import('./reports/two-f/page'))
+const TwoFDetailsPage = lazy(() => import('./reports/two-f/details/page'))
 const AdminOdinoxPage = lazy(() => import('./super-admin/reports/odinox/page'))
 const AdminOdinoxDetailsPage = lazy(() => import('./super-admin/reports/odinox/details/page'))
+const AdminTwoFPage = lazy(() => import('./super-admin/reports/two-f/page'))
+const AdminTwoFDetailsPage = lazy(() => import('./super-admin/reports/two-f/details/page'))
+
 const RealCostPage = lazy(() => import('./reports/real-cost/page'))
 const RealCostDetailsPage = lazy(() => import('./reports/real-cost/details/page'))
 const AdminRealCostPage = lazy(() => import('./super-admin/reports/realcost/page'))
@@ -412,6 +418,14 @@ export const routes: RouteObject[] = [
             element: <AdminOdinoxDetailsPage />
           },
           {
+            path: 'two-f',
+            element: <AdminTwoFPage />
+          },
+          {
+            path: 'two-f/:id',
+            element: <AdminTwoFDetailsPage />
+          },
+          {
             path: 'realcost',
             element: <AdminRealCostPage />
           },
@@ -621,6 +635,20 @@ export const routes: RouteObject[] = [
           {
             path: ':id',
             element: <OdinoxDetailsPage />
+          }
+        ]
+      },
+      {
+        path: 'two-f',
+        element: <MainSchetSelectedGuard />,
+        children: [
+          {
+            index: true,
+            element: <TwoFPage />
+          },
+          {
+            path: ':id',
+            element: <TwoFDetailsPage />
           }
         ]
       },

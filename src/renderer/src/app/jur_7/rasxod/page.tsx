@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { Eye } from 'lucide-react'
+import { Download, Eye } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
@@ -17,7 +17,7 @@ import {
 import { useRequisitesStore } from '@/common/features/requisites'
 import { useSelectedMonthStore } from '@/common/features/selected-month'
 import { validateDateWithinSelectedMonth } from '@/common/features/selected-month'
-import { useDates, usePagination } from '@/common/hooks'
+import { useDates, usePagination, useToggle } from '@/common/hooks'
 import { useLayout } from '@/common/layout'
 import { formatDate } from '@/common/lib/date'
 import { formatNumber } from '@/common/lib/format'
@@ -28,12 +28,14 @@ import { SaldoQueryKeys } from '../saldo'
 import { useMaterialSaldo } from '../saldo/use-saldo'
 import { rasxodColumns } from './columns'
 import { WarehouseRasxodQueryKeys } from './config'
+import { ReportDialog } from './report-dialog'
 import { WarehouseRasxodService } from './service'
 import { WarehouseRasxodViewDialog } from './view-dialog'
 
 const Jurnal7RasxodPage = () => {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
+  const dialogToggle = useToggle()
   const pagination = usePagination()
   const setLayout = useLayout()
 
@@ -119,7 +121,7 @@ const Jurnal7RasxodPage = () => {
 
   return (
     <ListView>
-      <ListView.Header>
+      <ListView.Header className="flex justify-between">
         <ListView.RangeDatePicker
           {...dates}
           validateDate={validateDateWithinSelectedMonth}
@@ -128,6 +130,12 @@ const Jurnal7RasxodPage = () => {
             toMonth: endDate
           }}
         />
+        <Button
+          variant="ghost"
+          IconStart={Download}
+        >
+          {t('report')}
+        </Button>
       </ListView.Header>
       <ListView.Content isLoading={isFetching || isPending}>
         <GenericTable
@@ -174,6 +182,12 @@ const Jurnal7RasxodPage = () => {
       <WarehouseRasxodViewDialog
         selectedId={selectedId}
         onClose={() => setSelectedId(null)}
+      />
+      <ReportDialog
+        isOpen={dialogToggle.isOpen}
+        onOpenChange={dialogToggle.setOpen}
+        budjet_id={budjet_id!}
+        main_schet_id={main_schet_id!}
       />
     </ListView>
   )
