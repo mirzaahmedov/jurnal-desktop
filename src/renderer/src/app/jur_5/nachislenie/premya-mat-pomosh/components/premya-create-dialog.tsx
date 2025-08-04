@@ -168,7 +168,7 @@ export const PremyaMatPomoshCreateDialog = (props: PremyaMatPomoshCreateDialogPr
         <DialogContent className="w-full max-w-full h-full p-0">
           <div className="overflow-hidden h-full flex flex-col">
             <DialogHeader className="p-5">
-              <DialogTitle>{t('nachislenie')}</DialogTitle>
+              <DialogTitle>{t('premya_mat_pomosh')}</DialogTitle>
             </DialogHeader>
             <Allotment className="flex-1 min-h-0">
               <Allotment.Pane
@@ -355,7 +355,8 @@ export const PremyaMatPomoshCreateDialog = (props: PremyaMatPomoshCreateDialogPr
                               onBlur={field.onBlur}
                               items={[
                                 { label: '%', value: '%' },
-                                { label: t('summa'), value: 'summa' }
+                                { label: t('summa'), value: 'summa' },
+                                { label: t('nachislenie'), value: 'nachislenie' }
                               ]}
                               selectedKey={field.value}
                               onSelectionChange={(selectedKey) => {

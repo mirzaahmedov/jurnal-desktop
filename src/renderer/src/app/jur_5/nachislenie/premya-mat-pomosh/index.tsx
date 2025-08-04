@@ -52,7 +52,7 @@ export const PremyaMatPomosh = () => {
 
   useEffect(() => {
     setLayout({
-      title: t('nachislenie'),
+      title: t('premya_mat_pomosh'),
       breadcrumbs: [
         {
           title: t('pages.zarplata')
