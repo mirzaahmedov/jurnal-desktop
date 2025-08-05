@@ -106,7 +106,7 @@ export const createOperatsiiEditor = <T extends object, F extends ArrayPath<T>>(
       const { schet, schet6, sub_schet } = operatsiiSpravochnik.selected
 
       setSubschetInputValue(sub_schet ?? '')
-      setDebouncedSchetInputValue(schet ?? '')
+      setDebouncedSchetInputValue(schet ? encodeSchetOption(schet, schet6) : '')
       handleChangeField('schet', schet ? encodeSchetOption(schet, schet6) : '')
       handleChangeField('schet_6', schet6 ?? '')
       handleChangeField('sub_schet', sub_schet ?? '')
@@ -147,8 +147,11 @@ export const createOperatsiiEditor = <T extends object, F extends ArrayPath<T>>(
               ) !== value
             ) {
               onChange?.(0)
+              handleChangeField('sub_schet', '')
+              setSubschetInputValue('')
             }
             handleChangeField('schet', (value as string) || '')
+            setDebouncedSchetInputValue((value as string) || '')
           }}
           className="border-none flex-1"
           placeholder={t('schet')}
