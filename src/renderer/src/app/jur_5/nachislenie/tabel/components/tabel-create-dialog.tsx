@@ -37,7 +37,7 @@ export const TabelCreateDialog = ({
   ...props
 }: TabelCreateDialogProps) => {
   const { t } = useTranslation(['app'])
-  const { search, setSearch, filteredTreeNodes, vacantsQuery } = useVacantTreeNodes()
+  const { search, setSearch, treeNodes, filteredTreeNodes, vacantsQuery } = useVacantTreeNodes()
 
   const [selectedVacant, setSelectedVacant] = useState<VacantTreeNode | undefined>(defaultVacant)
 
@@ -100,7 +100,7 @@ export const TabelCreateDialog = ({
                   onSubmit={createTabel}
                   isPending={isCreating}
                   vacant={selectedVacant}
-                  vacants={filteredTreeNodes}
+                  vacants={treeNodes}
                 />
               </Allotment.Pane>
             </Allotment>

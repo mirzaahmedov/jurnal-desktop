@@ -9,8 +9,10 @@ import { RefreshCw } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
+import { SelectedVacantsFilter } from '@/app/jur_5/common/components/selected-vacants-filter'
 import { MainZarplataTable } from '@/app/jur_5/common/features/main-zarplata/main-zarplata-table'
 import { useMainZarplataList } from '@/app/jur_5/common/features/main-zarplata/use-fetchers'
+import { useVacantFilters } from '@/app/jur_5/common/hooks/use-selected-vacant-filters'
 import { LoadingOverlay, Spinner } from '@/common/components'
 import { EditableTable } from '@/common/components/editable-table'
 import { createEditorDeleteHandler } from '@/common/components/editable-table/helpers'
@@ -32,7 +34,6 @@ import { getVacantRayon } from '@/common/utils/zarplata'
 
 import { TabelFormSchema, type TabelFormValues, defaultValues } from '../config'
 import { TabelService } from '../service'
-import { SelectedVacantsFilter } from './selected-vacants-filter'
 import { TabelEditableColumnDefs } from './tabel-provodka-editable-table'
 
 enum TabelFormTabs {
@@ -66,8 +67,14 @@ export const TabelCreateForm = ({
   const [activeTab, setActiveTab] = useState<TabelFormTabs>(TabelFormTabs.SELECT)
   const [visibleVacant, setVisibleVacant] = useState<number | null>(null)
 
+  const tabelChildren = form.watch('tabelChildren')
   const mainZarplataQuery = useMainZarplataList({
     vacantId: vacant?.id ?? 0
+  })
+  const filterOptions = useVacantFilters({
+    vacants,
+    selectedItems: tabelChildren,
+    getItemVacantId: (item) => item.vacantId
   })
   const { mutate: getMaxDocNum } = useMutation({
     mutationFn: TabelService.getMaxDocNum,
@@ -89,7 +96,6 @@ export const TabelCreateForm = ({
     getMaxDocNum()
   }, [getMaxDocNum])
 
-  const tabelChildren = form.watch('tabelChildren')
   const selectedIds = useMemo(() => {
     return tabelChildren.map((item) => item.mainZarplataId)
   }, [tabelChildren])
@@ -126,30 +132,6 @@ export const TabelCreateForm = ({
     [form]
   )
 
-  const selectedVacants = useMemo(() => {
-    const vacantIds = new Map<number, number>()
-    const vacantNodes: (VacantTreeNode & { _selectedCount: number })[] = []
-    tabelChildren.forEach((child) => {
-      if (!vacantIds.has(child.vacantId)) {
-        vacantIds.set(child.vacantId, 0)
-      }
-      vacantIds.set(child.vacantId, vacantIds.get(child.vacantId)! + 1)
-    })
-    const walk = (node: VacantTreeNode) => {
-      if (vacantIds.has(node.id)) {
-        vacantNodes.push({
-          ...node,
-          _selectedCount: vacantIds.get(node.id) ?? 0
-        })
-      }
-      node.children.forEach(walk)
-    }
-    vacants.forEach((vacant) => {
-      walk(vacant)
-    })
-    return vacantNodes
-  }, [tabelChildren, vacants])
-
   const isAllSelected = useMemo(() => {
     if (!mainZarplataQuery.data?.length) return false
     return mainZarplataQuery?.data?.every((item) => selectedIds.includes(item.id)) ?? false
@@ -157,7 +139,6 @@ export const TabelCreateForm = ({
   const handleSelectAll = useCallback(() => {
     const prev = form.getValues('tabelChildren')
     if (isAllSelected) {
-      console.log('Removing all selected rows')
       form.setValue(
         'tabelChildren',
         prev.filter(
@@ -338,7 +319,7 @@ export const TabelCreateForm = ({
             )}
             {activeTab === TabelFormTabs.SELECTED && (
               <SelectedVacantsFilter
-                selectedVacants={selectedVacants}
+                selectedVacants={filterOptions}
                 selectedCount={form.watch('tabelChildren')?.length ?? 0}
                 visibleVacant={visibleVacant}
                 setVisibleVacant={setVisibleVacant}

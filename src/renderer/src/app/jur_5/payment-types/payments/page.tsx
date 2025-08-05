@@ -33,9 +33,6 @@ const PaymentsPage = () => {
   const dialogToggle = useToggle()
   const queryClient = useQueryClient()
 
-  const { confirm } = useConfirm()
-  const { t } = useTranslation(['app'])
-
   const [tabValue] = useTabFilter()
   const [name, setName] = useNameFilter()
   const [code, setCode] = useCodeFilter()
@@ -43,6 +40,9 @@ const PaymentsPage = () => {
 
   const [nameDebounced] = useDebounceValue(name)
   const [codeDebounced] = useDebounceValue(code)
+
+  const { confirm } = useConfirm()
+  const { t } = useTranslation(['app'])
 
   const { data: payments, isFetching } = useQuery({
     queryKey: [

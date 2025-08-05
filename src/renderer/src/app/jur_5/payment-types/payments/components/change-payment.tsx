@@ -1,7 +1,7 @@
 import type { MainZarplata } from '@/common/models'
 import type { Payment } from '@/common/models/payments'
 
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { Allotment } from 'allotment'
@@ -9,7 +9,9 @@ import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 
+import { SelectedVacantsFilter } from '@/app/jur_5/common/components/selected-vacants-filter'
 import { MainZarplataTable } from '@/app/jur_5/common/features/main-zarplata/main-zarplata-table'
+import { useVacantFilters } from '@/app/jur_5/common/hooks/use-selected-vacant-filters'
 import { LoadingOverlay, NumericInput } from '@/common/components'
 import { FormElement } from '@/common/components/form'
 import { Button } from '@/common/components/jolly/button'
@@ -31,7 +33,6 @@ import { useToggle } from '@/common/hooks'
 import { getVacantRayon } from '@/common/utils/zarplata'
 
 import { PaymentsChoosePaymentsDialog } from './choose-payments-dialog'
-import { SelectedVacantsFilter } from './selected-vacants-filter'
 
 enum PaymentsChangePaymentOptions {
   ALL = 'all',
@@ -51,7 +52,7 @@ export const PaymentsChangePayment = () => {
   })
 
   const { t } = useTranslation(['app'])
-  const { filteredTreeNodes, search, setSearch, vacantsQuery } = useVacantTreeNodes()
+  const { search, setSearch, treeNodes, filteredTreeNodes, vacantsQuery } = useVacantTreeNodes()
 
   const [tabValue, setTabValue] = useState(PaymentsChangePaymentOptions.ALL)
   const [selectedPayment, setSelectedPayment] = useState<Payment>()
@@ -93,29 +94,11 @@ export const PaymentsChangePayment = () => {
     })
   })
 
-  const selectedVacants = useMemo(() => {
-    const vacantIds = new Map<number, number>()
-    const vacantNodes: (VacantTreeNode & { _selectedCount: number })[] = []
-    selectedMainZarplata.forEach((child) => {
-      if (!vacantIds.has(child.vacantId)) {
-        vacantIds.set(child.vacantId, 0)
-      }
-      vacantIds.set(child.vacantId, vacantIds.get(child.vacantId)! + 1)
-    })
-    const walk = (node: VacantTreeNode) => {
-      if (vacantIds.has(node.id)) {
-        vacantNodes.push({
-          ...node,
-          _selectedCount: vacantIds.get(node.id) ?? 0
-        })
-      }
-      node.children.forEach(walk)
-    }
-    filteredTreeNodes.forEach((vacant) => {
-      walk(vacant)
-    })
-    return vacantNodes
-  }, [selectedMainZarplata, filteredTreeNodes])
+  const filterOptions = useVacantFilters({
+    vacants: treeNodes,
+    selectedItems: selectedMainZarplata,
+    getItemVacantId: (item) => item.vacantId
+  })
 
   const selectedIds = selectedMainZarplata.map((mainZarplata) => mainZarplata.id)
   const isAllSelected =
@@ -203,7 +186,7 @@ export const PaymentsChangePayment = () => {
             ) : null}
             {tabValue === PaymentsChangePaymentOptions.SELECTED && (
               <SelectedVacantsFilter
-                selectedVacants={selectedVacants}
+                selectedVacants={filterOptions}
                 selectedCount={selectedMainZarplata?.length ?? 0}
                 visibleVacant={visibleVacant}
                 setVisibleVacant={setVisibleVacant}

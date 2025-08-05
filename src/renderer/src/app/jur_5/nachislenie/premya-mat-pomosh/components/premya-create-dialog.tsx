@@ -50,7 +50,8 @@ import { NachislenieOthersService } from '../service'
 
 export enum CreateDialogTabOption {
   MainZarplata = 'mainZarplata',
-  Payments = 'payments'
+  Payments = 'payments',
+  Selected = 'selected'
 }
 
 export interface PremyaMatPomoshCreateDialogProps extends Omit<DialogTriggerProps, 'children'> {}
@@ -406,18 +407,22 @@ export const PremyaMatPomoshCreateDialog = (props: PremyaMatPomoshCreateDialogPr
                       onValueChange={(value) => setTabValue(value as CreateDialogTabOption)}
                       className="flex-1 w-full min-h-0 flex flex-col items-start overflow-hidden"
                     >
-                      {isPercent ? (
-                        <TabsList>
-                          <TabsTrigger value={CreateDialogTabOption.MainZarplata}>
-                            {t('employees')}
-                            <Badge className="ml-2 -my-2">{selectedMainZarplata.length}</Badge>
-                          </TabsTrigger>
-                          <TabsTrigger value={CreateDialogTabOption.Payments}>
-                            {t('payments')}
-                            <Badge className="ml-2 -my-2">{selectedPayments.length}</Badge>
-                          </TabsTrigger>
-                        </TabsList>
-                      ) : null}
+                      <TabsList>
+                        <TabsTrigger value={CreateDialogTabOption.MainZarplata}>
+                          {t('employees')}
+                        </TabsTrigger>
+                        <TabsTrigger value={CreateDialogTabOption.Selected}>
+                          {t('selected')}
+                          <Badge className="ml-2 -my-2">{selectedMainZarplata.length}</Badge>
+                        </TabsTrigger>
+                        <TabsTrigger
+                          disabled={!isPercent}
+                          value={CreateDialogTabOption.Payments}
+                        >
+                          {t('payments')}
+                          <Badge className="ml-2 -my-2">{selectedPayments.length}</Badge>
+                        </TabsTrigger>
+                      </TabsList>
 
                       <TabsContent
                         value={CreateDialogTabOption.MainZarplata}
@@ -458,6 +463,28 @@ export const PremyaMatPomoshCreateDialog = (props: PremyaMatPomoshCreateDialogPr
                           />
                         </div>
                       </TabsContent>
+
+                      <TabsContent
+                        value={CreateDialogTabOption.Selected}
+                        className={cn(
+                          'w-full flex-1 min-h-0 flex flex-col',
+                          tabValue !== CreateDialogTabOption.Selected && 'hidden'
+                        )}
+                      >
+                        <div className="h-full flex flex-col gap-2.5 overflow-y-auto scrollbar">
+                          {mainZarplataQuery.isFetching ? <LoadingOverlay /> : null}
+                          <MainZarplataTable
+                            data={selectedMainZarplata ?? []}
+                            onDelete={(item) => {
+                              setSelectedMainZarplata((prev) => {
+                                return prev.filter((p) => p.id !== item.id)
+                              })
+                            }}
+                            className="table-generic-xs"
+                          />
+                        </div>
+                      </TabsContent>
+
                       <TabsContent
                         value={CreateDialogTabOption.Payments}
                         className={cn(

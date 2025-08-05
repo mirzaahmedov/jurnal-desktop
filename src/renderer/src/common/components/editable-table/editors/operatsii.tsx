@@ -126,8 +126,6 @@ export const createOperatsiiEditor = <T extends object, F extends ArrayPath<T>>(
       setSubschetInputValue(sub_schet ?? '')
     }, [sub_schet])
 
-    console.log({ schet, debouncedSchetInputValue })
-
     return (
       <div
         className="w-full flex divide-x"

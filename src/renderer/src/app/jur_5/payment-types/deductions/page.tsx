@@ -32,8 +32,6 @@ const DeductionsPage = () => {
   const pagination = usePagination()
   const dialogToggle = useToggle()
   const queryClient = useQueryClient()
-  const { confirm } = useConfirm()
-  const { t } = useTranslation(['app'])
 
   const [name, setName] = useNameFilter()
   const [code, setCode] = useCodeFilter()
@@ -42,6 +40,9 @@ const DeductionsPage = () => {
 
   const [nameDebounced] = useDebounceValue(name)
   const [codeDebounced] = useDebounceValue(code)
+
+  const { confirm } = useConfirm()
+  const { t } = useTranslation(['app'])
 
   const { data: deductions, isFetching } = useQuery({
     queryKey: [
