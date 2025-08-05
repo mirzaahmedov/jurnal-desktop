@@ -1,6 +1,6 @@
 import type { Shartnoma } from '@/common/models'
 
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
@@ -53,6 +53,7 @@ export const ShartnomaForm = ({
   const queryClient = useQueryClient()
   const id = selected?.id
 
+  const [itogo, setItogo] = useState(0)
   const [tabValue, setTabValue] = useState<TabOption>(TabOption.DETAILS)
 
   const { t } = useTranslation()
@@ -65,7 +66,7 @@ export const ShartnomaForm = ({
     defaultValues: {
       ...defaultValues,
       ...original,
-      grafiks: defaultValues.grafiks
+      grafiks: [...defaultValues.grafiks]
     }
   })
 
@@ -149,18 +150,22 @@ export const ShartnomaForm = ({
   )
 
   useEffect(() => {
+    console.log('grafiks', selected, selected?.grafiks)
     if (!selected) {
       if (original) {
         form.reset({
           ...original,
-          grafiks: defaultValues.grafiks
+          grafiks: [...defaultValues.grafiks]
         })
       } else {
-        form.reset(defaultValues)
+        form.reset({ ...defaultValues })
       }
       return
     }
-    form.reset(selected)
+    form.reset({
+      ...selected,
+      grafiks: [...(selected.grafiks ?? defaultValues.grafiks)]
+    })
   }, [form, original, selected, id])
 
   const errors = form.formState.errors
@@ -177,29 +182,30 @@ export const ShartnomaForm = ({
     }
   }, [organId])
 
-  const grafiks = useWatch({
-    control: form.control,
-    name: 'grafiks'
+  const formValues = useWatch({
+    control: form.control
   })
-  const itogo = useMemo(() => {
-    return grafiks?.reduce(
-      (result, grafik) =>
-        result +
-        ((grafik?.oy_1 ?? 0) +
-          (grafik?.oy_2 ?? 0) +
-          (grafik?.oy_3 ?? 0) +
-          (grafik?.oy_4 ?? 0) +
-          (grafik?.oy_5 ?? 0) +
-          (grafik?.oy_6 ?? 0) +
-          (grafik?.oy_7 ?? 0) +
-          (grafik?.oy_8 ?? 0) +
-          (grafik?.oy_9 ?? 0) +
-          (grafik?.oy_10 ?? 0) +
-          (grafik?.oy_11 ?? 0) +
-          (grafik?.oy_12 ?? 0)),
-      0
+  useEffect(() => {
+    setItogo(
+      formValues?.grafiks?.reduce(
+        (result, grafik) =>
+          result +
+          ((grafik?.oy_1 ?? 0) +
+            (grafik?.oy_2 ?? 0) +
+            (grafik?.oy_3 ?? 0) +
+            (grafik?.oy_4 ?? 0) +
+            (grafik?.oy_5 ?? 0) +
+            (grafik?.oy_6 ?? 0) +
+            (grafik?.oy_7 ?? 0) +
+            (grafik?.oy_8 ?? 0) +
+            (grafik?.oy_9 ?? 0) +
+            (grafik?.oy_10 ?? 0) +
+            (grafik?.oy_11 ?? 0) +
+            (grafik?.oy_12 ?? 0)),
+        0
+      ) ?? 0
     )
-  }, [grafiks])
+  }, [formValues])
 
   return (
     <Form {...form}>

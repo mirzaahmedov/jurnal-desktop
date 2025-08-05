@@ -20,7 +20,7 @@ export const TransactionParty = ({
   bank,
   mfo
 }: TransactionPartyProps) => {
-  const { t } = useTranslation(['porucheniya'], { lng: 'uz' })
+  const { t } = useTranslation(['porucheniya'])
   return (
     <Flex
       direction="column"

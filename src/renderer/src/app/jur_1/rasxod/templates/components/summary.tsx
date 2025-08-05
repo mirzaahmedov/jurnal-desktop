@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next'
+
 import { Field, Flex, Label, Value } from '@/common/components/pdf'
 
 type SummaryProps = {
@@ -7,6 +9,8 @@ type SummaryProps = {
   summaWords: string
 }
 const Summary = ({ fio, operation, summa, summaWords }: SummaryProps) => {
+  const { t } = useTranslation(['pdf-reports'])
+
   return (
     <Flex>
       <Flex.Item>
@@ -16,15 +20,15 @@ const Summary = ({ fio, operation, summa, summaWords }: SummaryProps) => {
           style={{ gap: 4 }}
         >
           <Field>
-            <Label>ФИО:</Label>
+            <Label>{t('fio')}:</Label>
             <Value>{fio}</Value>
           </Field>
           <Field>
-            <Label>Видать</Label>
+            <Label>{t('to_give')}</Label>
             <Value style={{ fontWeight: 'normal' }}>{operation}</Value>
           </Field>
           <Field>
-            <Label>В Сумме:</Label>
+            <Label>{t('in_summa')}:</Label>
             <Value>{summaWords}</Value>
           </Field>
         </Flex>
@@ -32,7 +36,7 @@ const Summary = ({ fio, operation, summa, summaWords }: SummaryProps) => {
       <Flex.Item>
         <Flex justifyContent="center">
           <Field>
-            <Label>Сумма:</Label>
+            <Label>{t('summa')}:</Label>
             <Value style={{ fontSize: 16 }}>{summa}</Value>
           </Field>
         </Flex>

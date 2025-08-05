@@ -9,7 +9,7 @@ type SignaturesProps = {
   podpis: Podpis[]
 }
 export const Signatures = ({ podpis }: SignaturesProps) => {
-  const { t } = useTranslation(['porucheniya'], { lng: 'uz' })
+  const { t } = useTranslation(['porucheniya'])
   return (
     <>
       <Flex alignItems="flex-start">

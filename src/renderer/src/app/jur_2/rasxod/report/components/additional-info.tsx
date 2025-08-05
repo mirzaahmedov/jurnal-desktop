@@ -18,7 +18,7 @@ export const AdditionalInfo = ({
   creditor_raschet_gazna,
   opisanie
 }: AdditionalInfoProps) => {
-  const { t } = useTranslation(['porucheniya'], { lng: 'uz' })
+  const { t } = useTranslation(['porucheniya'])
 
   return (
     <Flex

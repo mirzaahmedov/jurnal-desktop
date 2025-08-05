@@ -38,7 +38,7 @@ export const ShartnomaSmetaGrafiksTable = ({
   const [widths, setWidths] = useState(singlePage ? [15, 60, 25] : [10, 75, 15])
   const [innerWidths] = useState([100, 100, 100, 100, 100, 100, 100])
 
-  const { t } = useTranslation()
+  const { t } = useTranslation(['pdf-reports'])
 
   useEffect(() => {
     setWidths(singlePage ? [15, 60, 25] : [10, 75, 15])
@@ -49,11 +49,12 @@ export const ShartnomaSmetaGrafiksTable = ({
       <Table>
         <Table.Row>
           <Table.Column style={{ width: percentage(widths[0]) }}>
-            <ScheduleCell>{year} yil oylar nomi</ScheduleCell>
+            <ScheduleCell>{t('months_of_year', { year })}</ScheduleCell>
           </Table.Column>
           <Table.Column
             style={{
-              width: percentage(widths[1])
+              width: percentage(widths[1]),
+              minHeight: 25
             }}
           >
             <Table.Row>
@@ -63,10 +64,10 @@ export const ShartnomaSmetaGrafiksTable = ({
                   textAlign: 'center'
                 }}
               >
-                Xarajat turlari
+                {t('expense_types')}
               </ScheduleCell>
             </Table.Row>
-            <Table.Row style={{ borderBottom: 'none', height: 12 }}>
+            <Table.Row style={{ borderBottom: 'none', flex: 1 }}>
               {grafiks?.map((grafik, index) => (
                 <Table.Column
                   key={index}
@@ -75,8 +76,8 @@ export const ShartnomaSmetaGrafiksTable = ({
                     borderRightWidth: index === grafiks.length - 1 ? 0 : 1
                   }}
                 >
-                  <ScheduleCell style={{ height: '100%' }}>
-                    ST: {grafik?.smeta?.smeta_number}
+                  <ScheduleCell>
+                    {t('st')}: {grafik?.smeta?.smeta_number}
                   </ScheduleCell>
                 </Table.Column>
               ))}
@@ -101,13 +102,13 @@ export const ShartnomaSmetaGrafiksTable = ({
               width: percentage(widths[2])
             }}
           >
-            Jami
+            {t('total')}
           </ScheduleCell>
         </Table.Row>
         {monthNames.map(({ name, label }) => (
           <ScheduleRow
             key={name}
-            name={t(label, { lng: 'uz' })}
+            name={t(label)}
             field={name}
             grafiks={grafiks}
             widths={widths}
@@ -115,7 +116,7 @@ export const ShartnomaSmetaGrafiksTable = ({
           />
         ))}
         <ScheduleRow
-          name="Jami"
+          name={t('total')}
           field="itogo"
           grafiks={grafiks}
           widths={widths}

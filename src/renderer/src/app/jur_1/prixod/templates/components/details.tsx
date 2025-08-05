@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next'
+
 import { Field, Flex, Label, Value } from '@/common/components/pdf'
 
 type DetailsProps = {
@@ -9,6 +11,7 @@ type DetailsProps = {
   summaWords: string
 }
 const Details = ({ type = 'order', fio, workplace, opisanie, summa, summaWords }: DetailsProps) => {
+  const { t } = useTranslation(['pdf-reports'])
   return (
     <Flex
       direction="column"
@@ -18,11 +21,11 @@ const Details = ({ type = 'order', fio, workplace, opisanie, summa, summaWords }
       }}
     >
       <Field style={{ flexWrap: 'wrap' }}>
-        <Label>Принято от:</Label>
+        <Label>{t('received_from')}:</Label>
         <Value style={{ textDecoration: 'underline' }}>{fio}</Value>
       </Field>
       <Field style={{ flexWrap: 'wrap' }}>
-        <Label>Место работы:</Label>
+        <Label>{t('workplace')}:</Label>
         <Value
           style={{
             fontWeight: 'normal',
@@ -33,7 +36,7 @@ const Details = ({ type = 'order', fio, workplace, opisanie, summa, summaWords }
         </Value>
       </Field>
       <Field style={{ flexWrap: 'wrap' }}>
-        <Label>Примечания:</Label>
+        <Label>{t('notes')}:</Label>
         <Value
           style={{
             fontWeight: 'normal',
@@ -44,7 +47,7 @@ const Details = ({ type = 'order', fio, workplace, opisanie, summa, summaWords }
         </Value>
       </Field>
       <Field style={{ flexWrap: 'wrap' }}>
-        <Label>В сумме:</Label>
+        <Label>{t('in_summa')}:</Label>
         <Value style={{ textDecoration: 'underline' }}>{summa}</Value>
       </Field>
       <Field style={{ flexWrap: 'wrap' }}>

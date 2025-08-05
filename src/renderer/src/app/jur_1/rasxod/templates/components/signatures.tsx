@@ -1,8 +1,10 @@
 import { Text, View } from '@react-pdf/renderer'
+import { useTranslation } from 'react-i18next'
 
 import { Blank, Field, Flex, Label } from '@/common/components/pdf'
 
 const Signatures = () => {
+  const { t } = useTranslation(['pdf-reports', 'podpis'])
   return (
     <View
       style={{
@@ -14,29 +16,29 @@ const Signatures = () => {
       <Flex>
         <Flex.Item>
           <Field>
-            <Label>Подпись</Label>
+            <Label>{t('podpis')}</Label>
             <Blank
               fullWidth
-              helpText="распоряделителя кредитов"
+              helpText={t('appropriator_funds')}
             />
           </Field>
         </Flex.Item>
         <Flex.Item>
           <Field>
-            <Label>Подпись</Label>
+            <Label>{t('podpis')}</Label>
             <Blank
               fullWidth
-              helpText="гл. или ст. бухгалтер"
+              helpText={t('podpis:doljnost.glav_buxgalter')}
             />
           </Field>
         </Flex.Item>
       </Flex>
 
       <Field>
-        <Label>Получил</Label>
+        <Label>{t('received')}</Label>
         <Blank
           fullWidth
-          helpText="сумма прописью"
+          helpText={t('summa_words')}
         />
       </Field>
 
@@ -44,7 +46,7 @@ const Signatures = () => {
         <Flex.Item>
           <View>
             <Field>
-              <Label>Роспись</Label>
+              <Label>{t('acknowledgment')}</Label>
               <Blank fullWidth />
             </Field>
           </View>
@@ -57,7 +59,7 @@ const Signatures = () => {
               letterSpacing: 0.5
             }}
           >
-            Выдал
+            {t('gave')}
           </Text>
         </Flex.Item>
       </Flex>
@@ -66,9 +68,9 @@ const Signatures = () => {
         <Flex.Item>
           <Flex>
             <Field>
-              <Label>"</Label>
+              <Label>&quot;</Label>
               <Blank style={{ width: 20 }} />
-              <Label>"</Label>
+              <Label>&quot;</Label>
             </Field>
             <Field>
               <Blank style={{ width: 100 }} />
@@ -76,13 +78,13 @@ const Signatures = () => {
             <Field>
               <Label>20</Label>
               <Blank style={{ width: 20 }} />
-              <Label>г.</Label>
+              <Label>{t('year_short')}</Label>
             </Field>
           </Flex>
         </Flex.Item>
         <Flex.Item>
           <Field>
-            <Label>Кассир</Label>
+            <Label>{t('podpis:doljnost.kassir')}</Label>
             <Blank style={{ width: 200 }} />
           </Field>
         </Flex.Item>

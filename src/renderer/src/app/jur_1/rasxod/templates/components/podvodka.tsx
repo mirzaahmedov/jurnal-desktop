@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next'
+
 import { Blank, Field, Flex, Label, Table } from '@/common/components/pdf'
 
 const columnWidths = [160, 100, 220, 100]
@@ -14,6 +16,7 @@ interface PodvodkaTableProps {
   podvodkaList: PodvodkaType[]
 }
 const PodvodkaTable = ({ podvodkaList }: PodvodkaTableProps) => {
+  const { t, i18n } = useTranslation(['pdf-reports'])
   return (
     <Table>
       <Table.Row>
@@ -30,7 +33,7 @@ const PodvodkaTable = ({ podvodkaList }: PodvodkaTableProps) => {
               letterSpacing: 2
             }}
           >
-            Приложение
+            {t('application')}
           </Table.Cell>
         </Table.Column>
 
@@ -40,7 +43,7 @@ const PodvodkaTable = ({ podvodkaList }: PodvodkaTableProps) => {
             justifyContent: 'center'
           }}
         >
-          <Table.Cell>За что</Table.Cell>
+          <Table.Cell>{t('for_what')}</Table.Cell>
         </Table.Column>
 
         <Table.Column style={{ flex: 1 }}>
@@ -49,14 +52,14 @@ const PodvodkaTable = ({ podvodkaList }: PodvodkaTableProps) => {
               <Table.CellView>
                 <Flex>
                   <Field>
-                    <Label>Проводка №</Label>
+                    <Label>{t('provodka')} №</Label>
                     <Blank style={{ width: 40 }} />
                   </Field>
                   <Field>
                     <Blank style={{ width: 80 }} />
                     <Label>20</Label>
                     <Blank style={{ width: 20 }} />
-                    <Label>г.</Label>
+                    <Label>{t('year_short')}</Label>
                   </Field>
                 </Flex>
               </Table.CellView>
@@ -67,25 +70,25 @@ const PodvodkaTable = ({ podvodkaList }: PodvodkaTableProps) => {
             <Table.Column style={{ flex: 1 }}>
               <Table.Row>
                 <Table.Column style={{ flex: 1 }}>
-                  <Table.Cell style={{ paddingVertical: 1 }}>Дебет</Table.Cell>
+                  <Table.Cell style={{ paddingVertical: 1 }}>{t('debet')}</Table.Cell>
                 </Table.Column>
                 <Table.Column style={{ flex: 1, border: 0 }}>
-                  <Table.Cell style={{ paddingVertical: 1 }}>Кредит</Table.Cell>
+                  <Table.Cell style={{ paddingVertical: 1 }}>{t('credit')}</Table.Cell>
                 </Table.Column>
               </Table.Row>
 
               <Table.Row style={{ border: 0 }}>
                 <Table.Column style={{ flex: 1 }}>
-                  <Table.Cell style={{ paddingVertical: 1 }}>счет</Table.Cell>
+                  <Table.Cell style={{ paddingVertical: 1 }}>{t('schet').toLowerCase()}</Table.Cell>
                 </Table.Column>
                 <Table.Column style={{ flex: 1 }}>
-                  <Table.Cell style={{ paddingVertical: 1 }}>карт.</Table.Cell>
+                  <Table.Cell style={{ paddingVertical: 1 }}>{t('card_short')}</Table.Cell>
                 </Table.Column>
                 <Table.Column style={{ flex: 1 }}>
-                  <Table.Cell style={{ paddingVertical: 1 }}>счет</Table.Cell>
+                  <Table.Cell style={{ paddingVertical: 1 }}>{t('schet').toLowerCase()}</Table.Cell>
                 </Table.Column>
                 <Table.Column style={{ flex: 1, border: 0 }}>
-                  <Table.Cell style={{ paddingVertical: 1 }}>карт.</Table.Cell>
+                  <Table.Cell style={{ paddingVertical: 1 }}>{t('card_short')}</Table.Cell>
                 </Table.Column>
               </Table.Row>
             </Table.Column>
@@ -96,7 +99,7 @@ const PodvodkaTable = ({ podvodkaList }: PodvodkaTableProps) => {
                 justifyContent: 'center'
               }}
             >
-              <Table.Cell>Сумма</Table.Cell>
+              <Table.Cell>{t('summa')}</Table.Cell>
             </Table.Column>
           </Table.Row>
         </Table.Column>
@@ -115,17 +118,28 @@ const PodvodkaTable = ({ podvodkaList }: PodvodkaTableProps) => {
             }}
           >
             <Field>
-              <Label>Доверенность №</Label>
+              <Label>{t('dovernost')} №</Label>
               <Blank fullWidth />
             </Field>
             <Field>
-              <Label>от</Label>
-              <Blank fullWidth />
-              <Label>20</Label>
-              <Blank style={{ width: 25 }} />
+              {i18n.language === 'ru' ? (
+                <>
+                  <Label>{t('from_date', { date: '' }).trim()}</Label>
+                  <Blank fullWidth />
+                  <Label>20</Label>
+                  <Blank style={{ width: 25 }} />
+                </>
+              ) : (
+                <>
+                  <Blank fullWidth />
+                  <Label>20</Label>
+                  <Blank style={{ width: 25 }} />
+                  <Label>{t('from_date', { date: '' }).trim()}</Label>
+                </>
+              )}
             </Field>
             <Field>
-              <Label>Паспорт серии</Label>
+              <Label>{t('passport_series')}</Label>
               <Blank fullWidth />
             </Field>
             <Field>
@@ -133,7 +147,7 @@ const PodvodkaTable = ({ podvodkaList }: PodvodkaTableProps) => {
               <Blank fullWidth />
             </Field>
             <Field>
-              <Label>выдан</Label>
+              <Label>{t('given')}</Label>
               <Blank fullWidth />
             </Field>
           </Table.CellView>

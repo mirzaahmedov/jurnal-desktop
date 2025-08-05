@@ -1,4 +1,5 @@
 import { Text, View } from '@react-pdf/renderer'
+import { useTranslation } from 'react-i18next'
 
 import { Flex, Table } from '@/common/components/pdf'
 import { formatNumber, unformatNumber } from '@/common/lib/format'
@@ -17,6 +18,7 @@ interface PodvodkaTableProps {
   podvodkaList: PodvodkaType[]
 }
 const PodvodkaTable = ({ podvodkaList }: PodvodkaTableProps) => {
+  const { t } = useTranslation(['pdf-reports'])
   return (
     <View>
       <Table>
@@ -27,7 +29,7 @@ const PodvodkaTable = ({ podvodkaList }: PodvodkaTableProps) => {
               justifyContent: 'center'
             }}
           >
-            <Table.Cell>За что</Table.Cell>
+            <Table.Cell>{t('for_what')}</Table.Cell>
           </Table.Column>
 
           <Table.Column style={{ flex: 1 }}>
@@ -35,25 +37,33 @@ const PodvodkaTable = ({ podvodkaList }: PodvodkaTableProps) => {
               <Table.Column style={{ flex: 1 }}>
                 <Table.Row>
                   <Table.Column style={{ flex: 1 }}>
-                    <Table.Cell style={{ paddingVertical: 1 }}>Дебет</Table.Cell>
+                    <Table.Cell style={{ paddingVertical: 1 }}>{t('debet')}</Table.Cell>
                   </Table.Column>
                   <Table.Column style={{ flex: 1, border: 0 }}>
-                    <Table.Cell style={{ paddingVertical: 1 }}>Кредит</Table.Cell>
+                    <Table.Cell style={{ paddingVertical: 1 }}>{t('kredit')}</Table.Cell>
                   </Table.Column>
                 </Table.Row>
 
                 <Table.Row style={{ border: 0 }}>
                   <Table.Column style={{ flex: 1 }}>
-                    <Table.Cell style={{ paddingVertical: 1 }}>счет</Table.Cell>
+                    <Table.Cell style={{ paddingVertical: 1 }}>
+                      {t('schet').toLowerCase()}
+                    </Table.Cell>
                   </Table.Column>
                   <Table.Column style={{ flex: 1 }}>
-                    <Table.Cell style={{ paddingVertical: 1 }}>карт.</Table.Cell>
+                    <Table.Cell style={{ paddingVertical: 1 }}>
+                      {t('card_short').toLowerCase()}
+                    </Table.Cell>
                   </Table.Column>
                   <Table.Column style={{ flex: 1 }}>
-                    <Table.Cell style={{ paddingVertical: 1 }}>счет</Table.Cell>
+                    <Table.Cell style={{ paddingVertical: 1 }}>
+                      {t('schet').toLowerCase()}
+                    </Table.Cell>
                   </Table.Column>
                   <Table.Column style={{ flex: 1, border: 0 }}>
-                    <Table.Cell style={{ paddingVertical: 1 }}>карт.</Table.Cell>
+                    <Table.Cell style={{ paddingVertical: 1 }}>
+                      {t('card_short').toLowerCase()}
+                    </Table.Cell>
                   </Table.Column>
                 </Table.Row>
               </Table.Column>
@@ -64,7 +74,7 @@ const PodvodkaTable = ({ podvodkaList }: PodvodkaTableProps) => {
                   justifyContent: 'center'
                 }}
               >
-                <Table.Cell>Сумма</Table.Cell>
+                <Table.Cell>{t('summa')}</Table.Cell>
               </Table.Column>
             </Table.Row>
           </Table.Column>
@@ -100,7 +110,7 @@ const PodvodkaTable = ({ podvodkaList }: PodvodkaTableProps) => {
                 fontStyle: 'italic'
               }}
             >
-              Итого:
+              {t('total')}:
             </Text>
             <Text style={{ fontWeight: 'bold' }}>
               {formatNumber(

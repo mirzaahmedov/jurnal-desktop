@@ -1,6 +1,8 @@
 import { StyleSheet, Text } from '@react-pdf/renderer'
+import { useTranslation } from 'react-i18next'
 
 import { Flex } from '@/common/components/pdf'
+import { formatLocaleDate } from '@/common/lib/format'
 
 type DocumentInfoProps = {
   contractDetails: string
@@ -16,6 +18,7 @@ export const DocumentInfo = ({
   subchapter,
   chapter
 }: DocumentInfoProps) => {
+  const { t } = useTranslation(['pdf-reports'])
   return (
     <>
       <Text style={styles.description}>{contractDetails}</Text>
@@ -28,15 +31,15 @@ export const DocumentInfo = ({
             style={{ maxWidth: 250, gap: 2 }}
           >
             <Flex>
-              <Text style={{ flex: 1 }}>Boʻlim</Text>
+              <Text style={{ flex: 1 }}>{t('section')}</Text>
               <Text style={{ flex: 1 }}>{section}</Text>
             </Flex>
             <Flex>
-              <Text style={{ flex: 1 }}>Kichik boʻlim</Text>
+              <Text style={{ flex: 1 }}>{t('subchapter')}</Text>
               <Text style={{ flex: 1 }}>{subchapter}</Text>
             </Flex>
             <Flex>
-              <Text style={{ flex: 1 }}>Bob</Text>
+              <Text style={{ flex: 1 }}>{t('chapter')}</Text>
               <Text style={{ flex: 1 }}>{chapter}</Text>
             </Flex>
           </Flex>
@@ -48,7 +51,7 @@ export const DocumentInfo = ({
               textAlign: 'center'
             }}
           >
-            ds1 {createdDate}y.
+            {t('ds1_date', { date: formatLocaleDate(createdDate) })}
           </Text>
         </Flex.Item>
       </Flex>

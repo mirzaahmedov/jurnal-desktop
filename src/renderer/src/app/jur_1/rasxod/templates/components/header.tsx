@@ -1,26 +1,26 @@
 import { StyleSheet, Text } from '@react-pdf/renderer'
+import { useTranslation } from 'react-i18next'
 
 import { Flex } from '@/common/components/pdf'
+import { formatLocaleDate } from '@/common/lib/format'
 
 type HeaderProps = {
   doc_num: string
   doc_date: string
 }
 const Header = ({ doc_num, doc_date }: HeaderProps) => {
+  const { t } = useTranslation(['pdf-reports'])
   return (
     <Flex>
       <Flex.Item>
         <Text style={styles.name}>
-          Расходный кассовый ордер № <Text style={styles.doc_num}>{doc_num}</Text>
+          {t('rasxod_order')} № <Text style={styles.doc_num}>{doc_num}</Text>
         </Text>
       </Flex.Item>
       <Flex.Item>
         <Text style={styles.doc_date}>
-          от{' '}
-          {new Date(doc_date).toLocaleDateString('ru', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
+          {t('from_date', {
+            date: formatLocaleDate(doc_date)
           })}
         </Text>
       </Flex.Item>

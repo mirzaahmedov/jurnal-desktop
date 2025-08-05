@@ -95,7 +95,7 @@ export const ShartnomaSmetaGrafikGeneratePDFDocumentDialog = ({
         summaTotal
       })
     )
-  }, [form, percentageValue, paymentDate, summaValue, summaTotal])
+  }, [open, form, percentageValue, paymentDate, summaValue, summaTotal])
 
   useEffect(() => {
     form.setValue(
@@ -108,7 +108,7 @@ export const ShartnomaSmetaGrafikGeneratePDFDocumentDialog = ({
         summa: summaTotal
       })
     )
-  }, [form, main_schet, organization, doc_date, doc_num, summaTotal])
+  }, [open, form, main_schet, organization, doc_date, doc_num, summaTotal])
 
   useEffect(() => {
     form.setValue('singlePage', grafiks.length <= 3)
@@ -122,6 +122,12 @@ export const ShartnomaSmetaGrafikGeneratePDFDocumentDialog = ({
       })) ?? [],
     [grafiks]
   )
+
+  useEffect(() => {
+    if (!open) {
+      form.reset()
+    }
+  }, [form, open])
 
   return (
     <DialogTrigger

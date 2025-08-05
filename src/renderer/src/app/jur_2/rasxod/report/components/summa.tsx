@@ -6,7 +6,7 @@ type SummaProps = {
   summa: string
 }
 const Summa = ({ summa }: SummaProps) => {
-  const { t } = useTranslation(['porucheniya'], { lng: 'uz' })
+  const { t } = useTranslation(['porucheniya'])
   return (
     <Flex>
       <Label style={{ width: 115 }}>{t('summa')}</Label>

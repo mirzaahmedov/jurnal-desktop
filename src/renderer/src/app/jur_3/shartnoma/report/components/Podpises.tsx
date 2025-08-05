@@ -1,6 +1,7 @@
 import type { Podpis } from '@/common/models'
 
 import { StyleSheet, Text, View } from '@react-pdf/renderer'
+import { useTranslation } from 'react-i18next'
 
 import { Blank, Field, Flex, Label } from '@/common/components/pdf'
 import { splitArrayToChunks } from '@/common/lib/array'
@@ -10,6 +11,7 @@ interface PodpisProps {
   podpises: Podpis[]
 }
 export const Podpises = ({ year, podpises }: PodpisProps) => {
+  const { t } = useTranslation(['pdf-reports'])
   return (
     <Flex
       direction="column"
@@ -47,13 +49,13 @@ export const Podpises = ({ year, podpises }: PodpisProps) => {
       <Flex>
         <Flex.Item>
           <Field style={{ alignItems: 'flex-end' }}>
-            <Label>Gʻaznachilik boʻlimi {'\n'}xodimi qabul qildi</Label>
+            <Label>{t('received_by_treasure_department_employee')}</Label>
             <Blank />
           </Field>
         </Flex.Item>
         <Flex.Item>
           <Field style={{ alignItems: 'flex-end' }}>
-            <Label>Byudjetdan mablagʻ oluvchi {'\n'}xodimi qabul qildi</Label>
+            <Label>{t('received_by_budget_recipient_employee')}</Label>
             <Blank />
           </Field>
         </Flex.Item>
@@ -71,7 +73,7 @@ export const Podpises = ({ year, podpises }: PodpisProps) => {
               <Blank style={{ width: 30 }} />
               <Text>&quot;</Text>
               <Blank style={{ width: 80 }} />
-              <Text>{year}y.</Text>
+              <Text>{t('year_y', { year })}</Text>
             </Flex>
           </Flex.Item>
         ))}
