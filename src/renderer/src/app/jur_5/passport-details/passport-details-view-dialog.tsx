@@ -22,12 +22,11 @@ import { PayrollDeductionService } from '@/common/features/payroll-deduction/ser
 import { PayrollPayments } from '@/common/features/payroll-payment/payroll-payments'
 import { PayrollPaymentService } from '@/common/features/payroll-payment/service'
 
-import { BankCard } from './bank_card/bank-card'
-import { DopOplataDocuments } from './dop-oplata/dop-oplata-documents'
-import { EmployeeWorkplace } from './employee-workplace'
+import { DopOplataContainer } from './dop-oplata'
 import { Employments } from './employment/employment'
 import { MainZarplataForm } from './main-zarplata-form'
 import { OtdelniyRaschets } from './otdelniy-raschet/page'
+import { EmployeeWorkplace } from './passport-details-employee-workplace'
 
 export enum PassportInfoTabs {
   Main = 'main',
@@ -43,21 +42,20 @@ const tabOptions = [
   PassportInfoTabs.Main,
   PassportInfoTabs.Employment,
   PassportInfoTabs.Deduction,
-  PassportInfoTabs.BankCard,
   PassportInfoTabs.AdditionalDocument,
   PassportInfoTabs.OtdelniyRaschet,
   PassportInfoTabs.Payroll
 ]
 
-export interface PassportInfoDialogProps extends Omit<DialogTriggerProps, 'children'> {
+export interface PassportDetailsViewDialogProps extends Omit<DialogTriggerProps, 'children'> {
   vacant: VacantTreeNode
   selectedMainZarplata: MainZarplata | undefined
 }
-export const PassportInfoDialog = ({
+export const PassportDetailsViewDialog = ({
   vacant,
   selectedMainZarplata,
   ...props
-}: PassportInfoDialogProps) => {
+}: PassportDetailsViewDialogProps) => {
   const { t } = useTranslation(['app'])
 
   const [tabValue, setTabValue] = useState<PassportInfoTabs.Main>(PassportInfoTabs.Main)
@@ -124,7 +122,7 @@ export const PassportInfoDialog = ({
                 <div className="border rounded-lg flex-1 h-full overflow-hidden">
                   <TabsContent
                     value={PassportInfoTabs.Main}
-                    className="h-full overflow-hidden scrollbar"
+                    className="h-full overflow-hidden scrollbar py-5"
                   >
                     {mainZarplata?.data ? (
                       <MainZarplataForm
@@ -189,7 +187,7 @@ export const PassportInfoDialog = ({
                     className="mt-0"
                   >
                     {mainZarplata?.data ? (
-                      <DopOplataDocuments mainZarplata={mainZarplata?.data} />
+                      <DopOplataContainer mainZarplata={mainZarplata?.data} />
                     ) : null}
                   </TabsContent>
                   <TabsContent
@@ -199,12 +197,6 @@ export const PassportInfoDialog = ({
                     {mainZarplata?.data ? (
                       <OtdelniyRaschets mainZarplata={mainZarplata.data} />
                     ) : null}
-                  </TabsContent>
-                  <TabsContent
-                    value={PassportInfoTabs.BankCard}
-                    className="mt-0"
-                  >
-                    {mainZarplata?.data ? <BankCard /> : null}
                   </TabsContent>
                 </div>
               </Tabs>

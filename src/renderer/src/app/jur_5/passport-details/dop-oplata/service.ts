@@ -1,37 +1,38 @@
+import type { DopOplataFormValues } from './config'
 import type { DopOplata } from '@/common/models/dop-oplata'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 
-import { type ZarplataApiResponse, zarplataApiNew } from '@/common/lib/zarplata_new'
+import { zarplataApiNew } from '@/common/lib/zarplata_new'
 
 export class DopOplataService {
-  static endpoint = 'DopOplata'
+  static endpoint = 'AdditionalPaymenyt'
 
   static QueryKeys = {
-    GetByMainZarplataId: 'DopOplata/get-by-mainId'
+    GetByMainZarplataId: 'AdditionalPaymenyt/get-by-mainId'
   }
 
-  static async getByMainZarplataId(
+  static async getAll(
     ctx: QueryFunctionContext<[typeof DopOplataService.QueryKeys.GetByMainZarplataId, number]>
   ) {
     const mainZarplataId = ctx.queryKey[1]
-    const res = await zarplataApiNew.get<ZarplataApiResponse<DopOplata[]>>(
-      `${this.endpoint}/get-by-mainId/${mainZarplataId}`
+    const res = await zarplataApiNew.get<DopOplata[]>(
+      `${DopOplataService.endpoint}/get-by-mainId/${mainZarplataId}`
     )
     return res.data
   }
 
-  static async create(values: any) {
-    const res = await zarplataApiNew.post(`${this.endpoint}`, values)
+  static async create(values: DopOplataFormValues) {
+    const res = await zarplataApiNew.post(`${DopOplataService.endpoint}`, values)
     return res.data
   }
 
-  static async update(id: number, values: any) {
-    const res = await zarplataApiNew.put(`${this.endpoint}/${id}`, values)
+  static async update(args: { id: number; values: DopOplataFormValues }) {
+    const res = await zarplataApiNew.put(`${DopOplataService.endpoint}/${args.id}`, args.values)
     return res.data
   }
 
   static async delete(id: number) {
-    const res = await zarplataApiNew.delete(`${this.endpoint}/${id}`)
+    const res = await zarplataApiNew.delete(`${DopOplataService.endpoint}/${id}`)
     return res.data
   }
 }

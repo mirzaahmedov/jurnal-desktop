@@ -13,7 +13,7 @@ import { ListView } from '@/common/views'
 
 import { AdminRealCostColumns } from './columns'
 import { AdminRealCostQueryKeys } from './config'
-import { AdminRealCostFilters, useYearFilter } from './filters'
+import { AdminRealCostFilters, useMonthFilter, useYearFilter } from './filters'
 import { AdminRealCostService } from './service'
 
 const AdminRealCostPage = () => {
@@ -22,6 +22,7 @@ const AdminRealCostPage = () => {
   const setLayout = useLayout()
 
   const [year] = useYearFilter()
+  const [month] = useMonthFilter()
 
   const { t } = useTranslation(['app'])
 
@@ -31,7 +32,8 @@ const AdminRealCostPage = () => {
       {
         page: pagination.page,
         limit: pagination.limit,
-        year
+        year,
+        month
       }
     ],
     queryFn: AdminRealCostService.getAll

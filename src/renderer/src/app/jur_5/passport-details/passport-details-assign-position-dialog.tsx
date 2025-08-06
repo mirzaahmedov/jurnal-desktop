@@ -43,15 +43,16 @@ import {
   defaultAssignPositionValues
 } from './config'
 
-export interface AssignEmployeePositionDialogProps extends Omit<DialogTriggerProps, 'children'> {
+export interface PassportDetailsAssignPositionDialogProps
+  extends Omit<DialogTriggerProps, 'children'> {
   mainZarplata?: MainZarplata
   onSubmit?: (values: AssignPositionFormValues) => void
 }
-export const AssignEmployeePositionDialog = ({
+export const PassportDetailsAssignPositionDialog = ({
   mainZarplata,
   onSubmit,
   ...props
-}: AssignEmployeePositionDialogProps) => {
+}: PassportDetailsAssignPositionDialogProps) => {
   const { t } = useTranslation(['app'])
 
   const [selectedVacant, setSelectedVacant] = useState<VacantTreeNode | null>(null)

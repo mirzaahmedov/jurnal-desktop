@@ -48,6 +48,11 @@ export const PDFSaver = ({
                   el.remove()
                 })
 
+                const visibleElements = clonedDoc?.querySelectorAll('.pdf-visible')
+                visibleElements?.forEach((el) => {
+                  el.classList.remove('hidden')
+                })
+
                 const textareas = clonedDoc.querySelectorAll('textarea')
 
                 textareas.forEach((ta) => {

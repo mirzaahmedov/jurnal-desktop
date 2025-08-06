@@ -55,8 +55,8 @@ const CheckboxCell = ({ isMutable = true, row, field }: CheckboxCellProps) => {
   )
 }
 
-export const PaymentColumnDefs: (args: { isMutable: boolean }) => ColumnDef<Payment>[] = ({
-  isMutable = true
+export const PaymentColumnDefs: (args: { isEditable: boolean }) => ColumnDef<Payment>[] = ({
+  isEditable = true
 }) => [
   {
     key: 'id',
@@ -85,7 +85,7 @@ export const PaymentColumnDefs: (args: { isMutable: boolean }) => ColumnDef<Paym
       <CheckboxCell
         row={row}
         field="isINPSTaxable"
-        isMutable={isMutable}
+        isMutable={isEditable}
       />
     )
   },
@@ -98,7 +98,7 @@ export const PaymentColumnDefs: (args: { isMutable: boolean }) => ColumnDef<Paym
       <CheckboxCell
         row={row}
         field="isUnionDeductible"
-        isMutable={isMutable}
+        isMutable={isEditable}
       />
     )
   },
@@ -111,7 +111,7 @@ export const PaymentColumnDefs: (args: { isMutable: boolean }) => ColumnDef<Paym
       <CheckboxCell
         row={row}
         field="isAlimonyDeductible"
-        isMutable={isMutable}
+        isMutable={isEditable}
       />
     )
   },
@@ -124,7 +124,7 @@ export const PaymentColumnDefs: (args: { isMutable: boolean }) => ColumnDef<Paym
       <CheckboxCell
         row={row}
         field="isIncomeTaxDeductible"
-        isMutable={isMutable}
+        isMutable={isEditable}
       />
     )
   },
@@ -137,7 +137,7 @@ export const PaymentColumnDefs: (args: { isMutable: boolean }) => ColumnDef<Paym
       <CheckboxCell
         row={row}
         field="isUSTDeductible"
-        isMutable={isMutable}
+        isMutable={isEditable}
       />
     )
   },

@@ -46,6 +46,12 @@ export const DissmisEmployee = ({ mainZarplataId, isPending, ...props }: Dismiss
       form.reset()
       dialogToggle.close()
       queryClient.invalidateQueries({
+        queryKey: [MainZarplataService.QueryKeys.GetByVacantId]
+      })
+      queryClient.invalidateQueries({
+        queryKey: [MainZarplataService.QueryKeys.GetAll]
+      })
+      queryClient.invalidateQueries({
         queryKey: [MainZarplataService.QueryKeys.GetById, mainZarplataId]
       })
     }

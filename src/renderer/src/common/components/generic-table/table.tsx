@@ -319,8 +319,9 @@ export const GenericTable = <T extends object>(props: GenericTableProps<T>) => {
               className="w-full text-center py-14 text-slate-400"
             >
               <EmptyList
+                className="py-5"
                 iconProps={{
-                  className: 'w-64'
+                  className: 'w-48'
                 }}
               >
                 {placeholder}

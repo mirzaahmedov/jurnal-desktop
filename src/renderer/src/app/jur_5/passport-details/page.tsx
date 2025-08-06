@@ -21,8 +21,8 @@ import { useLayout } from '@/common/layout'
 import { queryClient } from '@/common/lib/query-client'
 
 import { MainZarplataColumnDefs } from './columns'
-import { PassportInfoCreateDialog } from './create-dialog'
-import { PassportInfoDialog } from './edit-dialog'
+import { PassportInfoCreateDialog } from './passport-details-create-dialog'
+import { PassportDetailsViewDialog } from './passport-details-view-dialog'
 
 const PassportDetailsPage = () => {
   const setLayout = useLayout()
@@ -110,20 +110,21 @@ const PassportDetailsPage = () => {
           </div>
         </Allotment.Pane>
         <Allotment.Pane>
-          <div className="relative w-full overflow-auto scrollbar pl-px">
+          <div className="relative h-full w-full overflow-auto scrollbar pl-px">
             {isFetchingMainZarplata || isDeleting ? <LoadingOverlay /> : null}
             <GenericTable
               data={mainZarplata ?? []}
               columnDefs={MainZarplataColumnDefs}
               onEdit={handleRowEdit}
               onDelete={handleRowDelete}
+              className="table-generic-xs"
             />
           </div>
         </Allotment.Pane>
       </Allotment>
 
       {selectedVacant ? (
-        <PassportInfoDialog
+        <PassportDetailsViewDialog
           isOpen={editDialogToggle.isOpen}
           onOpenChange={editDialogToggle.setOpen}
           selectedMainZarplata={selectedUser}

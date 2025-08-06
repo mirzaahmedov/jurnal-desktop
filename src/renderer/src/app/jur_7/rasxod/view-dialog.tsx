@@ -73,22 +73,46 @@ const provodkaColumns: ColumnDef<MaterialRasxodProvodka>[] = [
   },
   {
     key: 'iznos',
+    headerClassName: 'hidden pdf-visible',
+    className: 'hidden pdf-visible',
+    columns: [
+      {
+        numeric: true,
+        key: 'iznos_summa',
+        headerClassName: 'hidden pdf-visible',
+        className: 'hidden pdf-visible',
+        header: 'summa'
+      }
+    ]
+  },
+  {
+    key: 'iznos',
+    className: 'pdf-hidden',
+    headerClassName: 'pdf-hidden',
     columns: [
       {
         key: 'iznos',
+        className: 'pdf-hidden',
+        headerClassName: 'pdf-hidden',
         renderCell: (row) => <Checkbox checked={row.iznos} />
       },
       {
         numeric: true,
         key: 'iznos_summa',
+        className: 'pdf-hidden',
+        headerClassName: 'pdf-hidden',
         header: 'summa'
       },
       {
         key: 'iznos_schet',
+        className: 'pdf-hidden',
+        headerClassName: 'pdf-hidden',
         header: 'schet'
       },
       {
         key: 'iznos_sub_schet',
+        className: 'pdf-hidden',
+        headerClassName: 'pdf-hidden',
         header: 'subschet'
       }
     ]

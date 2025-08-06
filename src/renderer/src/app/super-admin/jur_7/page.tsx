@@ -15,7 +15,7 @@ import { useToggle } from '@/common/hooks/use-toggle'
 import { useLayout } from '@/common/layout'
 import { ListView } from '@/common/views'
 
-import { EndDatePicker } from '../components/range-date-picker'
+import { EndDatePicker } from '../components/end-date-picker'
 import { AdminMaterialRegionColumnDefs } from './columns'
 import { AdminMaterialService } from './service'
 import { ViewModal } from './view-modal'
@@ -77,6 +77,7 @@ const AdminMaterialPage = () => {
         selected={selected}
         isOpen={viewToggle.isOpen}
         onOpenChange={viewToggle.setOpen}
+        to={to}
       />
     </ListView>
   )

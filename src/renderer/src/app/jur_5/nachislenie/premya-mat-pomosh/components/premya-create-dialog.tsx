@@ -522,9 +522,9 @@ export const PremyaMatPomoshCreateDialog = (props: PremyaMatPomoshCreateDialogPr
                             </Debouncer>
                           </div>
                           <div className="flex-1 min-h-0 overflow-y-auto scrollbar">
-                            {mainZarplataQuery.isFetching ? <LoadingOverlay /> : null}
+                            {paymentsQuery.isFetching ? <LoadingOverlay /> : null}
                             <GenericTable
-                              columnDefs={PaymentColumnDefs({ isMutable: false })}
+                              columnDefs={PaymentColumnDefs({ isEditable: false })}
                               data={paymentsQuery?.data?.data ?? []}
                               selectedIds={selectedPayments.map((item) => item.id)}
                               onClickRow={(item) => {

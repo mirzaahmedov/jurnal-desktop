@@ -15,7 +15,7 @@ import { useToggle } from '@/common/hooks/use-toggle'
 import { useLayout } from '@/common/layout'
 import { ListView } from '@/common/views'
 
-import { EndDatePicker } from '../components/range-date-picker'
+import { EndDatePicker } from '../components/end-date-picker'
 import { AdminBankRegionColumnDefs } from './columns'
 import { AdminBankService } from './service'
 import { ViewModal } from './view-modal'

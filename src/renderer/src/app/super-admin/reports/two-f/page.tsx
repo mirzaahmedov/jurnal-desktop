@@ -13,7 +13,7 @@ import { ListView } from '@/common/views'
 
 import { AdminTwoFColumns } from './columns'
 import { AdminTwoFQueryKeys } from './config'
-import { AdminTwoFFilters, useYearFilter } from './filters'
+import { AdminTwoFFilters, useMonthFilter, useYearFilter } from './filters'
 import { AdminTwoFService } from './service'
 
 const AdminTwoFPage = () => {
@@ -22,6 +22,7 @@ const AdminTwoFPage = () => {
   const setLayout = useLayout()
 
   const [year] = useYearFilter()
+  const [month] = useMonthFilter()
 
   const { t } = useTranslation(['app'])
 
@@ -31,7 +32,8 @@ const AdminTwoFPage = () => {
       {
         page: pagination.page,
         limit: pagination.limit,
-        year
+        year,
+        month
       }
     ],
     queryFn: AdminTwoFService.getAll

@@ -80,7 +80,7 @@ export const createPaymentSpravochnik = (config: Partial<SpravochnikHookOptions<
   return extendObject(
     {
       endpoint: ApiEndpoints.zarplata_spravochnik,
-      columnDefs: PaymentColumnDefs({ isMutable: false }),
+      columnDefs: PaymentColumnDefs({ isEditable: false }),
       service: PaymentsService,
       dialogProps: {
         className: 'max-w-full h-[800px]'

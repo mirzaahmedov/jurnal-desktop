@@ -73,7 +73,7 @@ const PodvodkaTable = ({ podvodkaList }: PodvodkaTableProps) => {
                   <Table.Cell style={{ paddingVertical: 1 }}>{t('debet')}</Table.Cell>
                 </Table.Column>
                 <Table.Column style={{ flex: 1, border: 0 }}>
-                  <Table.Cell style={{ paddingVertical: 1 }}>{t('credit')}</Table.Cell>
+                  <Table.Cell style={{ paddingVertical: 1 }}>{t('kredit')}</Table.Cell>
                 </Table.Column>
               </Table.Row>
 

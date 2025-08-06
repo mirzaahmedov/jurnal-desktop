@@ -8,18 +8,22 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Calculator } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import { PatternFormat } from 'react-number-format'
 import { toast } from 'react-toastify'
 
+import { useAsyncListBank } from '@/app/super-admin/bank/service'
 import { ZarplataSpravochnikType } from '@/app/super-admin/zarplata/spravochnik/config'
 import {
   ZarplataSpravochnikService,
   createZarplataSpravochnik
 } from '@/app/super-admin/zarplata/spravochnik/service'
 import placeholderImage from '@/common/assets/images/profile_placeholder.png'
-import { NumericInput } from '@/common/components'
+import { Fieldset, NumericInput } from '@/common/components'
+import { AutoComplete } from '@/common/components/auto-complete'
 import { FormElement } from '@/common/components/form'
 import { JollyDatePicker } from '@/common/components/jolly-date-picker'
 import { Button } from '@/common/components/jolly/button'
+import { ComboboxItem } from '@/common/components/jolly/combobox'
 import { JollySelect, SelectItem } from '@/common/components/jolly/select'
 import { Checkbox } from '@/common/components/ui/checkbox'
 import { Form, FormField } from '@/common/components/ui/form'
@@ -30,6 +34,8 @@ import { MainZarplataService } from '@/common/features/main-zarplata/service'
 import { SpravochnikInput, useSpravochnik } from '@/common/features/spravochnik'
 import { formatDate, getDateDifference, parseDate, parseLocaleDate } from '@/common/lib/date'
 import { formatLocaleDate } from '@/common/lib/format'
+import { normalizeSpaces } from '@/common/lib/text'
+import { cn } from '@/common/lib/utils'
 
 import { getVacantRayon } from '../common/utils/vacant'
 import { MainZarplataFormSchema, defaultValues } from './config'
@@ -58,6 +64,7 @@ export const MainZarplataForm = ({
 }: MainZarplataFormProps) => {
   const { t } = useTranslation()
 
+  const bankList = useAsyncListBank()
   const queryClient = useQueryClient()
   const form = useForm({
     resolver: zodResolver(MainZarplataFormSchema),
@@ -161,10 +168,15 @@ export const MainZarplataForm = ({
     <Form {...form}>
       <form
         onSubmit={handleSubmit}
-        className="h-full py-5 px-0 flex flex-col"
+        className="h-full px-0 flex flex-col"
       >
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2.5 justify-center flex-1 overflow-auto scrollbar px-5 pb-5">
-          <div className="px-10 max-[1000px]:col-span-full">
+        <div className="grid grid-cols-12 gap-2.5 justify-center flex-1 overflow-auto scrollbar px-2.5 pb-5">
+          <div
+            className={cn(
+              'col-span-4 max-[1000px]:col-span-full',
+              workplace && 'max-[1400px]:col-span-6 '
+            )}
+          >
             <div className="flex flex-col items-center gap-5">
               <div className="border w-[200px] h-[calc(200px/3*4)] bg-gray-100 rounded-lg">
                 <img
@@ -192,9 +204,90 @@ export const MainZarplataForm = ({
                   <DissmisEmployee mainZarplataId={selectedMainZarplata.id} />
                 ) : null}
               </div>
+
+              <div className="rounded-xl bg-gradient-to-br from-neutral-200 to-neutral-300 border-2 border-neutral-300 px-2 py-0 shadow-md font-sans flex flex-col justify-between">
+                <Fieldset
+                  name={t('bank_card')}
+                  className="gap-2.5"
+                  legendProps={{
+                    className: 'text-inherit uppercase m-2.5'
+                  }}
+                >
+                  <FormField
+                    control={form.control}
+                    name="bank"
+                    render={({ field }) => (
+                      <FormElement
+                        grid="2:5"
+                        label={t('bank')}
+                      >
+                        <AutoComplete
+                          items={bankList.items}
+                          inputValue={bankList.filterText}
+                          onInputChange={bankList.setFilterText}
+                          selectedKey={field.value}
+                          onSelectionChange={(key) => {
+                            field.onChange(key)
+                          }}
+                        >
+                          {(item) => (
+                            <ComboboxItem id={item.bank_name}>
+                              {item.mfo} - {normalizeSpaces(item.bank_name)}
+                            </ComboboxItem>
+                          )}
+                        </AutoComplete>
+                      </FormElement>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="raschetSchet"
+                    render={({ field }) => (
+                      <FormElement
+                        grid="2:5"
+                        label={t('card_number')}
+                      >
+                        <PatternFormat
+                          format="#### #### #### ####"
+                          customInput={Input}
+                          mask="_"
+                          getInputRef={field.ref}
+                          value={field.value}
+                          onValueChange={(values) => {
+                            field.onChange(values.value)
+                          }}
+                          onBlur={field.onBlur}
+                          placeholder="0000 0000 0000 0000"
+                          className="font-mono text-base"
+                        />
+                      </FormElement>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="fioDop"
+                    render={({ field }) => (
+                      <FormElement
+                        grid="2:5"
+                        label={t('fio')}
+                      >
+                        <Input
+                          {...field}
+                          placeholder={t('fio')}
+                        />
+                      </FormElement>
+                    )}
+                  />
+                </Fieldset>
+              </div>
             </div>
           </div>
-          <div className="col-span-2 flex-1 p-2.5 grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] content-center gap-2">
+          <div
+            className={cn(
+              'col-span-full lg:col-span-8 flex-1 p-2.5 grid grid-cols-[repeat(auto-fit,minmax(350px,1fr))] content-center gap-2.5',
+              workplace && 'lg:col-span-5 max-[1400px]:col-span-6'
+            )}
+          >
             <div>
               <FormField
                 control={form.control}
@@ -385,14 +478,14 @@ export const MainZarplataForm = ({
               </FormElement>
             ) : null}
           </div>
-          <div className="max-[1400px]:col-span-full max-[1400px]:grid place-items-center">
+
+          <div className="max-[1400px]:col-span-full col-span-3 max-[1400px]:grid place-items-center">
             {workplace}
           </div>
-
           <div className="col-span-full">{content}</div>
         </div>
 
-        <div className="w-full pt-5 border-t">
+        <div className={cn('w-full pt-5 border-t', workplace && 'p-5')}>
           <Button
             type="submit"
             isPending={isCreating || isUpdating}

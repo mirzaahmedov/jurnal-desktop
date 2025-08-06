@@ -1,67 +1,69 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
-import logo from '@resources/logo.svg'
-import { useQuery } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
 
-import { MainSchetQueryKeys, MainSchetService } from '@/app/region-spravochnik/main-schet'
-import { useRequisitesStore } from '@/common/features/requisites'
+import { JollyDatePicker } from '@/common/components/jolly-date-picker'
 import { useLayout } from '@/common/layout'
+import { formatDate } from '@/common/lib/date'
+
+import { BudjetSelect } from '../budjet/budjet-select'
+import { AdminDashboardKassa } from './components/admin-dashboard-kassa'
+import { AdminDashboardPodotchetTable } from './components/admin-dashboard-podotchet-table'
+import { RegionSelect } from './components/region-select'
 
 const AdminDashboardPage = () => {
   const setLayout = useLayout()
 
-  const { main_schet_id } = useRequisitesStore()
+  const { t } = useTranslation(['app'])
 
-  const { data: main_schet, isFetching } = useQuery({
-    queryKey: [MainSchetQueryKeys.getById, main_schet_id],
-    queryFn: MainSchetService.getById,
-    enabled: !!main_schet_id
-  })
+  const [date, setDate] = useState(formatDate(new Date()))
+  const [regionId, setRegionId] = useState<number>()
+  const [budjetId, setBudjetId] = useState<number>()
 
   useEffect(() => {
     setLayout({
-      title: ''
+      title: t('pages.main')
     })
-  }, [setLayout])
-
-  const schet = main_schet?.data
+  }, [setLayout, t])
 
   return (
-    <div className="relative flex-1 flex flex-col items-center justify-center py-10 overflow-hidden bg-green-50">
-      <img
-        src={logo}
-        alt="MCHS Logo"
-        className="absolute top-0 left-0 bottom-0 right-0 w-full h-full opacity-20"
-      />
-      {isFetching ? (
-        <div className="flex justify-center">
-          <div className="text-lg text-gray-600">Загрузка...</div>
+    <div className="p-5 h-full overflow-y-auto scrollbar">
+      <div className="flex items-center gap-5 justify-between">
+        <JollyDatePicker
+          value={date ?? ''}
+          onChange={setDate}
+        />
+        <RegionSelect
+          selectedKey={regionId ?? null}
+          onSelectionChange={(value) => setRegionId(value ? (value as number) : undefined)}
+        />
+        <BudjetSelect
+          selectedKey={budjetId ?? null}
+          onSelectionChange={(value) => setBudjetId(value ? (value as number) : undefined)}
+        />
+      </div>
+
+      <div>
+        <div className="flex flex-col gap-5 py-5">
+          <div className="grid grid-cols-1 min-[1200px]:grid-cols-2 gap-5">
+            <AdminDashboardKassa
+              date={date}
+              budjetId={budjetId}
+            />
+            <AdminDashboardKassa
+              date={date}
+              budjetId={budjetId}
+            />
+          </div>
+          <div>
+            <AdminDashboardPodotchetTable
+              date={date}
+              region_id={regionId}
+              budjet_id={budjetId}
+            />
+          </div>
         </div>
-      ) : (
-        <div className="w-full max-w-2xl p-6">
-          <h1>
-            <span className="text-3xl font-bold">Реквизиты</span>
-          </h1>
-          <ul className="space-y-3">
-            {[
-              { label: 'Наименование', value: schet?.account_name },
-              { label: 'Номер', value: schet?.account_number },
-              { label: 'Названия организации', value: schet?.tashkilot_nomi },
-              { label: 'Банк', value: schet?.tashkilot_bank },
-              { label: 'ИНН', value: schet?.tashkilot_inn },
-              { label: 'МФО', value: schet?.tashkilot_mfo }
-            ].map(({ label, value }) => (
-              <li
-                key={label}
-                className="flex pb-2 last:border-b-0 last:pb-0 text-2xl text-black"
-              >
-                <span className="font-bold min-w-96">{label}:</span>
-                <span className="font-bold">{value}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+      </div>
     </div>
   )
 }

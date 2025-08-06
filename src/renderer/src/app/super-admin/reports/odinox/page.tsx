@@ -13,7 +13,7 @@ import { ListView } from '@/common/views'
 
 import { AdminOdinoxColumns } from './columns'
 import { AdminOdinoxQueryKeys } from './config'
-import { AdminOdinoxFilters, useYearFilter } from './filters'
+import { AdminOdinoxFilters, useMonthFilter, useYearFilter } from './filters'
 import { AdminOdinoxService } from './service'
 
 const AdminOdinoxPage = () => {
@@ -22,6 +22,7 @@ const AdminOdinoxPage = () => {
   const setLayout = useLayout()
 
   const [year] = useYearFilter()
+  const [month] = useMonthFilter()
 
   const { t } = useTranslation(['app'])
 
@@ -31,7 +32,8 @@ const AdminOdinoxPage = () => {
       {
         page: pagination.page,
         limit: pagination.limit,
-        year
+        year,
+        month
       }
     ],
     queryFn: AdminOdinoxService.getAll

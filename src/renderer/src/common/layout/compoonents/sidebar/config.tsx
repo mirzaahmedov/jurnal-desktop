@@ -117,7 +117,7 @@ export const getNavElements = (t: TFunction): NavElement[] => {
     !is_super_admin && (permissions.kassa || is_admin)
       ? {
           path: '/kassa',
-          title: `№1 - МО (${t('pages.kassa')})`,
+          title: `1-${t('pages.memorial_order').toLowerCase()} — ${t('pages.jur_1').toLowerCase()}`,
           icon: BadgeDollarSign,
           children: [
             {
@@ -152,7 +152,7 @@ export const getNavElements = (t: TFunction): NavElement[] => {
     !is_super_admin && (permissions.bank || is_admin)
       ? {
           path: '/bank',
-          title: `№2 - МО (${t('pages.bank')})`,
+          title: `2-${t('pages.memorial_order').toLowerCase()} — ${t('pages.jur_2').toLowerCase()}`,
           icon: Landmark,
           children: [
             {
@@ -184,10 +184,64 @@ export const getNavElements = (t: TFunction): NavElement[] => {
           ]
         }
       : null,
+
+    !is_super_admin
+      ? {
+          path: '/jur-5',
+          title: `5-${t('pages.memorial_order').toLowerCase()} — ${t('pages.jur_5').toLowerCase()}`,
+          icon: Receipt,
+          children: [
+            {
+              path: 'staffing_table',
+              title: t('pages.staffing_table'),
+              icon: SquareCheck
+            },
+            {
+              path: 'calculate-params',
+              title: t('pages.calc_parameters'),
+              icon: Settings
+            },
+            {
+              path: 'passport-info',
+              title: t('pages.passport_details'),
+              icon: IdCard
+            },
+            {
+              path: 'nachislenie',
+              title: t('pages.nachislenie'),
+              icon: Calculator
+            },
+            {
+              path: 'payment-type',
+              title: t('pages.payment_type'),
+              icon: Folder,
+              children: [
+                {
+                  path: 'payments',
+                  title: t('pages.payments'),
+                  icon: ReceiptText
+                },
+                {
+                  path: 'deductions',
+                  title: t('pages.deductions'),
+                  icon: ReceiptText
+                }
+              ]
+            },
+            {
+              displayOnly: true,
+              path: '',
+              title: <CalculateParamsDialog />,
+              icon: null
+            }
+          ]
+        }
+      : null,
+
     !is_super_admin && (permissions.jur3 || is_admin)
       ? {
           path: '/organization',
-          title: `№3 - МО (${t('pages.organization')})`,
+          title: `6-${t('pages.memorial_order').toLowerCase()} — ${t('pages.jur_6').toLowerCase()}`,
           icon: Building2,
           children: [
             {
@@ -245,7 +299,7 @@ export const getNavElements = (t: TFunction): NavElement[] => {
     !is_super_admin && (permissions.jur4 || is_admin)
       ? {
           path: '/accountable',
-          title: `№4 - МО (${t('pages.podotchet')})`,
+          title: `8-${t('pages.memorial_order').toLowerCase()} — ${t('pages.jur_8').toLowerCase()}`,
           icon: UserSquare,
           children: [
             {
@@ -271,63 +325,12 @@ export const getNavElements = (t: TFunction): NavElement[] => {
           ]
         }
       : null,
-    !is_super_admin
-      ? {
-          path: '/jur-5',
-          title: `№5 - МО (${t('pages.zarplata')})`,
-          icon: Receipt,
-          children: [
-            {
-              path: 'staffing_table',
-              title: t('pages.staffing_table'),
-              icon: SquareCheck
-            },
-            {
-              path: 'calculate-params',
-              title: t('pages.calc_parameters'),
-              icon: Settings
-            },
-            {
-              path: 'passport-info',
-              title: t('pages.passport_details'),
-              icon: IdCard
-            },
-            {
-              path: 'nachislenie',
-              title: t('pages.nachislenie'),
-              icon: Calculator
-            },
-            {
-              path: 'payment-type',
-              title: t('pages.payment_type'),
-              icon: Folder,
-              children: [
-                {
-                  path: 'payments',
-                  title: t('pages.payments'),
-                  icon: ReceiptText
-                },
-                {
-                  path: 'deductions',
-                  title: t('pages.deductions'),
-                  icon: ReceiptText
-                }
-              ]
-            },
-            {
-              displayOnly: true,
-              path: '',
-              title: <CalculateParamsDialog />,
-              icon: null
-            }
-          ]
-        }
-      : null,
+
     !is_super_admin && (permissions.jur7 || is_admin)
       ? {
           icon: NotepadText,
           path: '/journal-7',
-          title: `№7 - МО (${t('pages.material-warehouse')})`,
+          title: `9-${t('pages.memorial_order').toLowerCase()} — ${t('pages.jur_9').toLowerCase()}`,
           children: [
             {
               icon: SquareActivity,
@@ -382,7 +385,7 @@ export const getNavElements = (t: TFunction): NavElement[] => {
       ? {
           icon: NotepadText,
           path: '/jur_8',
-          title: `№8 - МО (${t('pages.jur8')})`,
+          title: t('pages.jur_8_old').toLowerCase(),
           children: [
             {
               icon: SquareActivity,

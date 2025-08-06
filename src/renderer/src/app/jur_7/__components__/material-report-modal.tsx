@@ -2,6 +2,7 @@ import type { DialogTriggerProps } from 'react-aria-components'
 
 import { useTranslation } from 'react-i18next'
 
+import { createOperatsiiSpravochnik } from '@/app/super-admin/operatsii'
 import {
   DialogContent,
   DialogFooter,
@@ -13,6 +14,7 @@ import {
 import { Label } from '@/common/components/ui/label'
 import { DownloadFile } from '@/common/features/file'
 import { SpravochnikInput, useSpravochnik } from '@/common/features/spravochnik'
+import { TypeSchetOperatsii } from '@/common/models'
 
 import { createResponsibleSpravochnik } from '../responsible/service'
 
@@ -41,6 +43,9 @@ export const MaterialReportModal = ({
   const { t } = useTranslation(['app'])
 
   const responsibleSpravochnik = useSpravochnik(createResponsibleSpravochnik({}))
+  const operatsiiSpravochnik = useSpravochnik(
+    createOperatsiiSpravochnik({ params: { type_schet: TypeSchetOperatsii.JUR7 } })
+  )
 
   return (
     <DialogTrigger
@@ -64,7 +69,15 @@ export const MaterialReportModal = ({
             <SpravochnikInput
               {...responsibleSpravochnik}
               placeholder={t('responsible')}
-              getInputValue={(selected) => selected?.fio ?? ''}
+              getInputValue={(selected) => selected?.fio ?? '-'}
+            />
+            <Label className="font-medium">{t('operatsii')}</Label>
+            <SpravochnikInput
+              {...operatsiiSpravochnik}
+              placeholder={t('operatsii')}
+              getInputValue={(selected) =>
+                selected ? `${selected.schet} (${selected.schet6 ?? ''}) - ${selected.name}` : '-'
+              }
             />
           </div>
           <DialogFooter>
@@ -80,6 +93,7 @@ export const MaterialReportModal = ({
                   budjet_id,
                   main_schet_id,
                   responsible_id: responsibleSpravochnik.selected?.id || undefined,
+                  schet: operatsiiSpravochnik.selected?.schet || undefined,
                   excel: true
                 }}
                 buttonText={t('material')}
@@ -97,6 +111,7 @@ export const MaterialReportModal = ({
                   budjet_id,
                   main_schet_id,
                   responsible_id: responsibleSpravochnik.selected?.id || undefined,
+                  schet: operatsiiSpravochnik.selected?.schet || undefined,
                   excel: true,
                   iznos: true
                 }}

@@ -18,7 +18,7 @@ import { useToggle } from '@/common/hooks'
 import { formatDate, parseLocaleDate } from '@/common/lib/date'
 
 import { ZarplataStavkaOptions } from '../common/data'
-import { AssignEmployeePositionDialog } from './assign-employee-position-dialog'
+import { PassportDetailsAssignPositionDialog } from './passport-details-assign-position-dialog'
 
 export interface EmployeeWorkplaceProps {
   workplace: Pick<
@@ -46,10 +46,16 @@ export const EmployeeWorkplace = ({ workplace, mainZarplata }: EmployeeWorkplace
         queryKey: [MainZarplataService.QueryKeys.GetAll]
       })
       queryClient.invalidateQueries({
+        queryKey: [MainZarplataService.QueryKeys.GetByVacantId]
+      })
+      queryClient.invalidateQueries({
         queryKey: [MainZarplataService.QueryKeys.GetById, values.id]
       })
       queryClient.invalidateQueries({
         queryKey: [WorkplaceService.QueryKeys.GetAll]
+      })
+      queryClient.invalidateQueries({
+        queryKey: [WorkplaceService.QueryKeys.GetByVacantId]
       })
       queryClient.invalidateQueries({
         queryKey: [WorkplaceService.QueryKeys.GetById, values.workplaceId]
@@ -150,7 +156,7 @@ export const EmployeeWorkplace = ({ workplace, mainZarplata }: EmployeeWorkplace
           </FormElement>
         </div>
       </Fieldset>
-      <AssignEmployeePositionDialog
+      <PassportDetailsAssignPositionDialog
         isOpen={dialogToggle.isOpen}
         onOpenChange={dialogToggle.setOpen}
         mainZarplata={mainZarplata}
