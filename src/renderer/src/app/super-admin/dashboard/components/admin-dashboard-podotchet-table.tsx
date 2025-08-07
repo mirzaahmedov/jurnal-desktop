@@ -30,7 +30,7 @@ export const AdminDashboardPodotchetTable = ({
 }: AdminDashboardPodotchetTableProps) => {
   const { t } = useTranslation()
 
-  const [podotchets, setPodotchets] = useState<AdminDashboardPodotchet[]>()
+  const [podotchets, setPodotchets] = useState<AdminDashboardPodotchet['podotchets']>()
 
   const podotchetsQuery = useQuery({
     queryKey: [
@@ -48,27 +48,29 @@ export const AdminDashboardPodotchetTable = ({
   return (
     <>
       <Card className="relative">
-        <CardHeader className="py-3">
+        <CardHeader className="pt-3 pb-0">
           <CardTitle className="text-base">{t('podotchet-litso')}</CardTitle>
         </CardHeader>
         {podotchetsQuery.isFetching ? <LoadingOverlay /> : null}
-        <CardContent className="p-0 max-h-[400px] overflow-x-auto scrollbar">
-          <GenericTable
-            columnDefs={[
-              {
-                minWidth: 500,
-                key: 'name'
-              },
-              {
-                minWidth: 300,
-                key: 'summa',
-                renderCell: (row) => <SummaCell summa={row.summa ?? 0} />
-              }
-            ]}
-            data={podotchetsQuery.data?.data ?? []}
-            className="table-generic-xs"
-            onClickRow={(row) => setPodotchets(row.podotchets)}
-          />
+        <CardContent className="p-5 max-h-[400px] overflow-hidden flex">
+          <div className="flex-1 overflow-x-auto scrollbar">
+            <GenericTable
+              columnDefs={[
+                {
+                  minWidth: 500,
+                  key: 'name'
+                },
+                {
+                  minWidth: 300,
+                  key: 'summa',
+                  renderCell: (row) => <SummaCell summa={row.summa ?? 0} />
+                }
+              ]}
+              data={podotchetsQuery.data?.data ?? []}
+              className="table-generic-xs"
+              onClickRow={(row) => setPodotchets(row.podotchets)}
+            />
+          </div>
         </CardContent>
       </Card>
 
@@ -82,42 +84,44 @@ export const AdminDashboardPodotchetTable = ({
       >
         <DialogOverlay>
           <DialogContent className="w-full max-w-9xl h-full max-h-[800px]">
-            <DialogHeader>
-              <DialogTitle>{t('podotchet-litso')}</DialogTitle>
-            </DialogHeader>
-            <div className="overflow-y-auto scrollbar">
-              <GenericTable
-                columnDefs={[
-                  {
-                    key: 'name'
-                  },
-                  {
-                    key: 'rayon'
-                  },
-                  {
-                    key: 'position',
-                    header: 'doljnost'
-                  },
-                  {
-                    key: 'rank',
-                    header: 'military_rank'
-                  },
-                  {
-                    key: 'prixod',
-                    renderCell: (row) => <SummaCell summa={row.summa.prixod_sum} />
-                  },
-                  {
-                    key: 'rasxod',
-                    renderCell: (row) => <SummaCell summa={row.summa.rasxod_sum} />
-                  },
-                  {
-                    key: 'summa',
-                    renderCell: (row) => <SummaCell summa={row.summa.summa} />
-                  }
-                ]}
-                data={podotchets ?? []}
-                className="table-generic-xs"
-              />
+            <div className="h-full flex flex-col gap-5 overflow-hidden">
+              <DialogHeader>
+                <DialogTitle>{t('podotchet-litso')}</DialogTitle>
+              </DialogHeader>
+              <div className="flex-1 overflow-y-auto scrollbar">
+                <GenericTable
+                  columnDefs={[
+                    {
+                      key: 'name'
+                    },
+                    {
+                      key: 'rayon'
+                    },
+                    {
+                      key: 'position',
+                      header: 'doljnost'
+                    },
+                    {
+                      key: 'rank',
+                      header: 'military_rank'
+                    },
+                    {
+                      key: 'prixod',
+                      renderCell: (row) => <SummaCell summa={row.summa.prixod_sum} />
+                    },
+                    {
+                      key: 'rasxod',
+                      renderCell: (row) => <SummaCell summa={row.summa.rasxod_sum} />
+                    },
+                    {
+                      key: 'summa',
+                      renderCell: (row) => <SummaCell summa={row.summa.summa} />
+                    }
+                  ]}
+                  data={podotchets ?? []}
+                  className="table-generic-xs"
+                />
+              </div>
             </div>
           </DialogContent>
         </DialogOverlay>

@@ -1,42 +1,13 @@
-import type { AdminDashboardRegion } from './model'
+import type { AdminDashboardBank, AdminDashboardKassa, AdminDashboardPodotchet } from './model'
 import type { ApiResponse } from '@/common/models'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 
 import { http } from '@/common/lib/http'
 
-export const getDashboardBudjetOptionsQuery = async () => {
-  const res = await http.get<ApiResponse<any[]>>('admin/dashboard/budjet')
-  return res.data
-}
-
 interface DashboardCommonParams {
   to: string
-  region_id: number
-  budjet_id: number
-}
-
-export const getDashboardKassaQuery = async (
-  ctx: QueryFunctionContext<[string, DashboardCommonParams]>
-) => {
-  const { to } = ctx.queryKey[1]
-  const res = await http.get<ApiResponse<any[]>>('admin/dashboard/kassa', {
-    params: {
-      to
-    }
-  })
-  return res.data?.data?.[0]?.main_schets
-}
-
-export const getDashboardBankQuery = async (
-  ctx: QueryFunctionContext<[string, DashboardCommonParams]>
-) => {
-  const { to } = ctx.queryKey[1]
-  const res = await http.get<ApiResponse<any[]>>('admin/dashboard/bank', {
-    params: {
-      to
-    }
-  })
-  return res.data?.data?.[0]?.main_schets
+  region_id: number | undefined
+  budjet_id: number | undefined
 }
 
 export class AdminDashboardService {
@@ -44,16 +15,33 @@ export class AdminDashboardService {
 
   static QueryKeys = {
     Kassa: 'admin/dashboard/kassa',
+    Bank: 'admin/dashboard/bank',
     Podotchets: 'admin/dashboard/podotchet'
   }
 
   static async getKassa(ctx: QueryFunctionContext<[string, DashboardCommonParams]>) {
     const { to } = ctx.queryKey[1]
-    const res = await http.get<ApiResponse<any[]>>(`${AdminDashboardService.endpoint}/kassa`, {
-      params: {
-        to
+    const res = await http.get<ApiResponse<AdminDashboardKassa[]>>(
+      `${AdminDashboardService.endpoint}/kassa`,
+      {
+        params: {
+          to
+        }
       }
-    })
+    )
+    return res.data?.data
+  }
+
+  static async getBank(ctx: QueryFunctionContext<[string, DashboardCommonParams]>) {
+    const { to } = ctx.queryKey[1]
+    const res = await http.get<ApiResponse<AdminDashboardBank[]>>(
+      `${AdminDashboardService.endpoint}/bank`,
+      {
+        params: {
+          to
+        }
+      }
+    )
     return res.data?.data
   }
 
@@ -70,7 +58,7 @@ export class AdminDashboardService {
     >
   ) {
     const { to, region_id, budjet_id } = ctx.queryKey[1]
-    const res = await http.get<ApiResponse<AdminDashboardRegion[]>>(
+    const res = await http.get<ApiResponse<AdminDashboardPodotchet[]>>(
       `${AdminDashboardService.endpoint}/podotchet`,
       {
         params: {

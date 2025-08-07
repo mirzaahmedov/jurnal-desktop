@@ -2,7 +2,7 @@ import type { ApiResponse } from '@/common/models'
 
 import axios from 'axios'
 
-export const baseURL = 'https://nafaqa.fizmasoft.uz/zarplata/api'
+export const baseURL = 'http://10.50.0.140:8091/api'
 
 export interface PaginationParams {
   PageIndex: number

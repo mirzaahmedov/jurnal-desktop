@@ -1,146 +1,215 @@
-import type { ApiResponse, Bank } from '@/common/models'
+import type { AdminDashboardBank, AdminDashboardKassa } from '@/app/super-admin/dashboard/model'
 
 import { useState } from 'react'
 
-import { useAsyncList } from 'react-stately'
+import { useQuery } from '@tanstack/react-query'
+import { ArrowLeft } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
-import {
-  ComboboxItem,
-  JollyComboBox,
-  type JollyComboBoxProps
-} from '@/common/components/jolly/combobox'
-import { ApiEndpoints } from '@/common/features/crud'
-import { http } from '@/common/lib/http'
+import { AdminDashboardPieChartContainer } from '@/app/super-admin/dashboard/components/admin-dashboard-pie-chart-container'
+import { AdminDashboardRegionsList } from '@/app/super-admin/dashboard/components/admin-dashboard-regions-list'
+import { AdminDashboardService } from '@/app/super-admin/dashboard/service'
+import { JollyDatePicker } from '@/common/components/jolly-date-picker'
+import { Button } from '@/common/components/jolly/button'
+import { Badge } from '@/common/components/ui/badge'
+import { Card, CardContent, CardHeader, CardTitle } from '@/common/components/ui/card'
+import { formatDate } from '@/common/lib/date'
 
-// type User = {
-//   name: string
-//   email: string
-//   age: number
-//   country: string
-// }
-// const users: User[] = [
-//   {
-//     name: 'Alice Johnson',
-//     email: 'alice.johnson@example.com',
-//     age: 28,
-//     country: 'USA'
-//   },
-//   {
-//     name: 'Bob Smith',
-//     email: 'bob.smith@example.com',
-//     age: 35,
-//     country: 'Canada'
-//   },
-//   {
-//     name: 'Charlie Brown',
-//     email: 'charlie.brown@example.com',
-//     age: 22,
-//     country: 'UK'
-//   },
-//   {
-//     name: 'Diana Prince',
-//     email: 'diana.prince@example.com',
-//     age: 31,
-//     country: 'France'
-//   },
-//   {
-//     name: 'Ethan Hunt',
-//     email: 'ethan.hunt@example.com',
-//     age: 40,
-//     country: 'Germany'
-//   }
-// ]
+import { AdminDashboardPodotchetTable } from '../super-admin/dashboard/components/admin-dashboard-podotchet-table'
 
-// const columnDefs: ColumnDef<User>[] = [
-//   {
-//     key: 'name',
-//     header: 'Name',
-//     render: TextEditor
-//   },
-//   {
-//     key: 'email',
-//     header: 'Email',
-//     render: TextEditor
-//   }
-// ]
+const CARD_HEIGHT = 550
 
 const DemoPage = () => {
-  const [value, setValue] = useState<string>('')
-  // const form = useForm({
-  //   defaultValues: {
-  //     users
-  //   }
-  // })
+  const [date, setDate] = useState(formatDate(new Date()))
 
-  const bankList = useAsyncList<Bank>({
-    async load({ signal, filterText }) {
-      const response = await http.get<ApiResponse<Bank[]>>(ApiEndpoints.spravochnik_bank, {
-        signal,
-        params: {
-          search: filterText ? filterText : undefined
-        }
-      })
-      return {
-        items: response.data.data ?? []
-      }
-    }
+  const [isKassaMaximized, setKassaMaximized] = useState(false)
+  const [isBankMaximized, setBankMaximized] = useState(false)
+
+  const [selectedKassa, setSelectedKassa] = useState<AdminDashboardKassa>()
+  const [selectedBank, setSelectedBank] = useState<AdminDashboardBank>()
+
+  const { t } = useTranslation(['dashboard'])
+
+  const dashboardKassaQuery = useQuery({
+    queryKey: [
+      AdminDashboardService.QueryKeys.Kassa,
+      { to: date, region_id: undefined, budjet_id: undefined }
+    ],
+    queryFn: AdminDashboardService.getKassa
+  })
+  const dashboardBankQuery = useQuery({
+    queryKey: [
+      AdminDashboardService.QueryKeys.Bank,
+      { to: date, region_id: undefined, budjet_id: undefined }
+    ],
+    queryFn: AdminDashboardService.getBank
   })
 
-  console.log('selectedValue', value)
-
   return (
-    <div className="p-10">
-      <AutoComplete
-        inputValue={bankList.filterText}
-        onInputChange={bankList.setFilterText}
-        selectedKey={value}
-        onSelectionChange={setValue as any}
-        items={bankList.items}
-      >
-        {(item) => (
-          <ComboboxItem id={item.mfo}>
-            {item.mfo} - {item.bank_name}
-          </ComboboxItem>
-        )}
-      </AutoComplete>
+    <div className="p-10 flex-1 flex flex-col gap-5 overflow-y-auto scrollbar">
+      <div className="flex items-center gap-5 justify-between">
+        <JollyDatePicker
+          value={date ?? ''}
+          onChange={setDate}
+        />
+      </div>
+      <div className="grid grid-cols-2 gap-5">
+        <div
+          style={{
+            height: CARD_HEIGHT
+          }}
+        >
+          <Card
+            style={{
+              height: !isKassaMaximized ? CARD_HEIGHT : undefined
+            }}
+            className="flex flex-col overflow-hidden relative z-100"
+          >
+            <CardHeader className="w-full flex flex-row items-center gap-5 space-y-0">
+              {selectedKassa ? (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setSelectedKassa(undefined)}
+                  className="-my-20"
+                >
+                  <ArrowLeft />
+                </Button>
+              ) : null}
+              <CardTitle className="flex-1">{t('kassa')}</CardTitle>
+              {selectedKassa ? (
+                <Badge
+                  variant="secondary"
+                  className="rounded-lg uppercase"
+                >
+                  {selectedKassa.name}
+                </Badge>
+              ) : null}
+            </CardHeader>
+            <CardContent className="flex-1 min-h-0 flex flex-col">
+              {selectedKassa ? (
+                <AdminDashboardPieChartContainer
+                  items={selectedKassa.budjets.flatMap((budjet) =>
+                    budjet.main_schets.map((item) => ({
+                      ...item,
+                      name: item.account_number,
+                      summa: item.kassa.summa
+                    }))
+                  )}
+                />
+              ) : (
+                <AdminDashboardPieChartContainer
+                  items={dashboardKassaQuery.data ?? []}
+                  onSelect={(item) => setSelectedKassa({ ...item })}
+                />
+              )}
+              {selectedKassa ? (
+                <AdminDashboardRegionsList
+                  items={selectedKassa.budjets.flatMap((budjet) =>
+                    budjet.main_schets.map((item) => ({
+                      ...item,
+                      name: item.account_number,
+                      summa: item.kassa.summa
+                    }))
+                  )}
+                  isMaximized={isKassaMaximized}
+                  setMaximized={setKassaMaximized}
+                  onToggleMaximized={() => setKassaMaximized((prev) => !prev)}
+                />
+              ) : (
+                <AdminDashboardRegionsList
+                  items={dashboardKassaQuery.data ?? []}
+                  isMaximized={isKassaMaximized}
+                  setMaximized={setKassaMaximized}
+                  onToggleMaximized={() => setKassaMaximized((prev) => !prev)}
+                  onSelect={setSelectedKassa}
+                />
+              )}
+            </CardContent>
+          </Card>
+        </div>
+
+        <div
+          style={{
+            height: CARD_HEIGHT
+          }}
+        >
+          <Card
+            style={{
+              height: !isBankMaximized ? CARD_HEIGHT : undefined
+            }}
+            className="flex flex-col overflow-hidden relative z-100"
+          >
+            <CardHeader className="w-full flex flex-row items-center gap-5 space-y-0">
+              {selectedBank ? (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setSelectedBank(undefined)}
+                  className="-my-20"
+                >
+                  <ArrowLeft />
+                </Button>
+              ) : null}
+              <CardTitle className="flex-1">{t('bank')}</CardTitle>
+              {selectedBank ? (
+                <Badge
+                  variant="secondary"
+                  className="rounded-lg uppercase"
+                >
+                  {selectedBank.name}
+                </Badge>
+              ) : null}
+            </CardHeader>
+            <CardContent className="flex-1 min-h-0 flex flex-col">
+              {selectedBank ? (
+                <AdminDashboardPieChartContainer
+                  items={selectedBank.budjets.flatMap((budjet) =>
+                    budjet.main_schets.map((item) => ({
+                      ...item,
+                      name: item.account_number,
+                      summa: item.bank.summa
+                    }))
+                  )}
+                />
+              ) : (
+                <AdminDashboardPieChartContainer
+                  items={dashboardBankQuery.data ?? []}
+                  onSelect={(item) => setSelectedBank({ ...item })}
+                />
+              )}
+
+              {selectedBank ? (
+                <AdminDashboardRegionsList
+                  items={selectedBank.budjets.flatMap((budjet) =>
+                    budjet.main_schets.map((item) => ({
+                      ...item,
+                      name: item.account_number,
+                      summa: item.bank.summa
+                    }))
+                  )}
+                  isMaximized={isBankMaximized}
+                  onToggleMaximized={() => setBankMaximized((prev) => !prev)}
+                  setMaximized={setBankMaximized}
+                />
+              ) : (
+                <AdminDashboardRegionsList
+                  items={dashboardBankQuery.data ?? []}
+                  isMaximized={isBankMaximized}
+                  onToggleMaximized={() => setBankMaximized((prev) => !prev)}
+                  setMaximized={setBankMaximized}
+                  onSelect={setSelectedBank}
+                />
+              )}
+            </CardContent>
+          </Card>
+        </div>
+
+        <div className="col-span-full">
+          <AdminDashboardPodotchetTable date={date} />
+        </div>
+      </div>
     </div>
-  )
-}
-
-const AutoComplete = <T extends object>({
-  inputValue,
-  onInputChange,
-  selectedKey,
-  onSelectionChange,
-  items,
-  children,
-  ...props
-}: JollyComboBoxProps<T>) => {
-  return (
-    <JollyComboBox
-      allowsCustomValue
-      allowsEmptyCollection
-      menuTrigger="focus"
-      formValue="text"
-      selectedKey={selectedKey}
-      onSelectionChange={(key) => {
-        if (key) {
-          onInputChange?.((key as string) || '')
-          onSelectionChange?.(key as string)
-        }
-      }}
-      items={items}
-      inputValue={inputValue}
-      onOpenChange={(open) => {
-        if (!open) {
-          onSelectionChange?.(inputValue || '')
-        }
-      }}
-      onInputChange={onInputChange}
-      {...props}
-    >
-      {children}
-    </JollyComboBox>
   )
 }
 
