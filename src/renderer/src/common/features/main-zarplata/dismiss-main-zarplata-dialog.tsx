@@ -4,8 +4,6 @@ import { UserX } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
-import { ZarplataSpravochnikType } from '@/app/super-admin/zarplata/spravochnik/config'
-import { createZarplataSpravochnik } from '@/app/super-admin/zarplata/spravochnik/service'
 import { FormElement } from '@/common/components/form'
 import { JollyDatePicker } from '@/common/components/jolly-date-picker'
 import { Button, type ButtonProps } from '@/common/components/jolly/button'
@@ -22,7 +20,6 @@ import { Input } from '@/common/components/ui/input'
 import { useToggle } from '@/common/hooks'
 import { formatLocaleDate } from '@/common/lib/format'
 
-import { useSpravochnik } from '../spravochnik'
 import { DismissEmployeeFormSchema, defaultDismissEmployeeValues } from './config'
 import { MainZarplataService } from './service'
 
@@ -61,21 +58,9 @@ export const DissmisEmployee = ({ mainZarplataId, isPending, ...props }: Dismiss
     dismissEmployee({
       mainId: mainZarplataId,
       prikazFinish: values.prikazFinish,
-      dateFinish: formatLocaleDate(values.dateFinish),
-      doljnost: values.doljnost
+      dateFinish: formatLocaleDate(values.dateFinish)
     })
   })
-
-  const doljnostSpravochnik = useSpravochnik(
-    createZarplataSpravochnik({
-      onChange: (_, selected) => {
-        form.setValue('doljnost', selected ? selected.name : '')
-      },
-      params: {
-        types_type_code: ZarplataSpravochnikType.Doljnost
-      }
-    })
-  )
 
   return (
     <DialogTrigger
@@ -100,24 +85,6 @@ export const DissmisEmployee = ({ mainZarplataId, isPending, ...props }: Dismiss
               className="flex flex-col gap-4 mt-10"
             >
               <div className="grid grid-cols-[repeat(auto-fit,minmax(400px,1fr))] gap-5">
-                <FormField
-                  control={form.control}
-                  name="doljnost"
-                  render={({ field }) => (
-                    <FormElement
-                      grid="1:2"
-                      label={t('doljnost')}
-                    >
-                      <Input
-                        ref={field.ref}
-                        value={field.value}
-                        onChange={field.onChange}
-                        onBlur={field.onBlur}
-                        onDoubleClick={doljnostSpravochnik.open}
-                      />
-                    </FormElement>
-                  )}
-                />
                 <FormField
                   control={form.control}
                   name="prikazFinish"

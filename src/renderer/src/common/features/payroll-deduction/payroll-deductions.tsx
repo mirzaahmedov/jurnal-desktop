@@ -17,7 +17,7 @@ import { useToggle } from '@/common/hooks'
 import { formatNumber } from '@/common/lib/format'
 
 import { useConfirm } from '../confirm'
-import { PayrollDeductionDialog } from './payroll-deduction-dialog'
+import { DeductionType, PayrollDeductionDialog } from './payroll-deduction-dialog'
 import { PayrollDeductionService } from './service'
 
 export interface PayrollDeductionsProps {
@@ -95,21 +95,43 @@ export const PayrollDeductions = ({ mainZarplata, setDeductionsTotal }: PayrollD
 
   const handlePaymentSubmit = (
     values: PayrollDeductionFormValues,
+    deductionType: DeductionType,
     form: UseFormReturn<PayrollDeductionFormValues>
   ) => {
     if (selectedPayment) {
       updatePayment({
         id: selectedPayment.id,
-        values: {
-          ...values,
-          mainZarplataId: mainZarplata.id
-        }
+        values:
+          deductionType === DeductionType.Percentage
+            ? {
+                deductionId: values.deductionId,
+                percentage: values.percentage,
+                summa: 0,
+                mainZarplataId: mainZarplata.id
+              }
+            : {
+                deductionId: values.deductionId,
+                summa: values.summa,
+                percentage: 0,
+                mainZarplataId: mainZarplata.id
+              }
       }).then(() => form.reset())
     } else {
-      createPayment({
-        ...values,
-        mainZarplataId: mainZarplata.id
-      }).then(() => form.reset())
+      createPayment(
+        deductionType === DeductionType.Percentage
+          ? {
+              deductionId: values.deductionId,
+              percentage: values.percentage,
+              summa: 0,
+              mainZarplataId: mainZarplata.id
+            }
+          : {
+              deductionId: values.deductionId,
+              summa: values.summa,
+              percentage: 0,
+              mainZarplataId: mainZarplata.id
+            }
+      ).then(() => form.reset())
     }
   }
 

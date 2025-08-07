@@ -1,7 +1,7 @@
 import type { PayrollDeduction } from '@/common/models/payroll-deduction'
 import type { DialogTriggerProps } from 'react-aria-components'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { type UseFormReturn, useForm } from 'react-hook-form'
@@ -20,6 +20,8 @@ import {
   DialogTrigger
 } from '@/common/components/jolly/dialog'
 import { Form, FormField } from '@/common/components/ui/form'
+import { Label } from '@/common/components/ui/label'
+import { RadioGroup, RadioGroupItem } from '@/common/components/ui/radio-group'
 import { capitalize } from '@/common/lib/string'
 
 import { SpravochnikInput, useSpravochnik } from '../spravochnik'
@@ -29,10 +31,16 @@ import {
   defaultValues
 } from './config'
 
+export enum DeductionType {
+  Percentage = 'percentage',
+  Summa = 'summa'
+}
+
 export interface PayrollDeductionDialogProps extends Omit<DialogTriggerProps, 'children'> {
   selected: PayrollDeduction | undefined
   onSubmit: (
     values: PayrollDeductionFormValues,
+    deductionType: DeductionType,
     form: UseFormReturn<PayrollDeductionFormValues>
   ) => void
 }
@@ -43,6 +51,8 @@ export const PayrollDeductionDialog = ({
 }: PayrollDeductionDialogProps) => {
   const { t } = useTranslation()
 
+  const [deductionType, setDeductionType] = useState(DeductionType.Percentage)
+
   const form = useForm({
     defaultValues,
     resolver: zodResolver(PayrollDeductionFormSchema)
@@ -51,20 +61,21 @@ export const PayrollDeductionDialog = ({
   useEffect(() => {
     if (selected) {
       form.reset(selected)
+      setDeductionType(selected.percentage ? DeductionType.Percentage : DeductionType.Summa)
     } else {
       form.reset(defaultValues)
     }
   }, [selected])
 
   const handleSubmit = form.handleSubmit((values) => {
-    onSubmit(values, form)
+    onSubmit(values, deductionType, form)
   })
 
   const deductionSpravochnik = useSpravochnik(
     createDeductionSpravochnik({
       value: form.watch('deductionId'),
       onChange: (value) => {
-        form.setValue('deductionId', value ?? 0)
+        form.setValue('deductionId', value ?? 0, { shouldValidate: true })
       }
     })
   )
@@ -102,42 +113,74 @@ export const PayrollDeductionDialog = ({
                     </FormElement>
                   )}
                 />
-                <FormField
-                  control={form.control}
-                  name="percentage"
-                  render={({ field }) => (
-                    <FormElement
-                      grid="1:2"
-                      label={t('foiz')}
-                    >
-                      <NumericInput
-                        ref={field.ref}
-                        value={field.value}
-                        isAllowed={(value) => {
-                          const floatValue = value.floatValue ?? 0
-                          return floatValue >= 0 && floatValue <= 100
-                        }}
-                        onValueChange={(values) => field.onChange(values.floatValue ?? 0)}
+
+                {deductionType === DeductionType.Percentage ? (
+                  <FormField
+                    key={DeductionType.Percentage}
+                    control={form.control}
+                    name="percentage"
+                    render={({ field }) => (
+                      <FormElement
+                        grid="1:2"
+                        label={t('foiz')}
+                      >
+                        <NumericInput
+                          ref={field.ref}
+                          value={field.value}
+                          isAllowed={(value) => {
+                            const floatValue = value.floatValue ?? 0
+                            return floatValue >= 0 && floatValue <= 100
+                          }}
+                          onValueChange={(values) => {
+                            field.onChange(values.floatValue ?? 0)
+                          }}
+                        />
+                      </FormElement>
+                    )}
+                  />
+                ) : (
+                  <FormField
+                    key={DeductionType.Summa}
+                    control={form.control}
+                    name="summa"
+                    render={({ field }) => (
+                      <FormElement
+                        grid="1:2"
+                        label={t('summa')}
+                      >
+                        <NumericInput
+                          ref={field.ref}
+                          value={field.value}
+                          onValueChange={(values) => field.onChange(values.floatValue)}
+                          onBlur={field.onBlur}
+                        />
+                      </FormElement>
+                    )}
+                  />
+                )}
+
+                <div>
+                  <RadioGroup
+                    value={deductionType}
+                    onValueChange={(value) => setDeductionType(value as DeductionType)}
+                    className="flex items-center justify-end gap-10 mb-5"
+                  >
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem
+                        value={DeductionType.Percentage}
+                        id={DeductionType.Percentage}
                       />
-                    </FormElement>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="summa"
-                  render={({ field }) => (
-                    <FormElement
-                      grid="1:2"
-                      label={t('summa')}
-                    >
-                      <NumericInput
-                        ref={field.ref}
-                        value={field.value}
-                        onValueChange={(values) => field.onChange(values.floatValue)}
+                      <Label htmlFor={DeductionType.Percentage}>{t('foiz')}</Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem
+                        value={DeductionType.Summa}
+                        id={DeductionType.Summa}
                       />
-                    </FormElement>
-                  )}
-                />
+                      <Label htmlFor={DeductionType.Summa}>{t('summa')}</Label>
+                    </div>
+                  </RadioGroup>
+                </div>
               </div>
               <DialogFooter>
                 <Button

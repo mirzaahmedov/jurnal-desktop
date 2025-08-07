@@ -8,7 +8,6 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Calculator } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import { PatternFormat } from 'react-number-format'
 import { toast } from 'react-toastify'
 
 import { useAsyncListBank } from '@/app/super-admin/bank/service'
@@ -170,10 +169,10 @@ export const MainZarplataForm = ({
         onSubmit={handleSubmit}
         className="h-full px-0 flex flex-col"
       >
-        <div className="grid grid-cols-12 gap-2.5 justify-center flex-1 overflow-auto scrollbar px-2.5 pb-5">
+        <div className="grid grid-cols-12 gap-2.5 flex-1 overflow-auto justify-center items-start scrollbar px-2.5 pb-5">
           <div
             className={cn(
-              'col-span-4 max-[1000px]:col-span-full',
+              'col-span-3 max-[1000px]:col-span-full',
               workplace && 'max-[1400px]:col-span-6 '
             )}
           >
@@ -204,88 +203,12 @@ export const MainZarplataForm = ({
                   <DissmisEmployee mainZarplataId={selectedMainZarplata.id} />
                 ) : null}
               </div>
-
-              <div className="rounded-xl bg-gradient-to-br from-neutral-200 to-neutral-300 border-2 border-neutral-300 px-2 py-0 shadow-md font-sans flex flex-col justify-between">
-                <Fieldset
-                  name={t('bank_card')}
-                  className="gap-2.5"
-                  legendProps={{
-                    className: 'text-inherit uppercase m-2.5'
-                  }}
-                >
-                  <FormField
-                    control={form.control}
-                    name="bank"
-                    render={({ field }) => (
-                      <FormElement
-                        grid="2:5"
-                        label={t('bank')}
-                      >
-                        <AutoComplete
-                          items={bankList.items}
-                          inputValue={bankList.filterText}
-                          onInputChange={bankList.setFilterText}
-                          selectedKey={field.value}
-                          onSelectionChange={(key) => {
-                            field.onChange(key)
-                          }}
-                        >
-                          {(item) => (
-                            <ComboboxItem id={item.bank_name}>
-                              {item.mfo} - {normalizeSpaces(item.bank_name)}
-                            </ComboboxItem>
-                          )}
-                        </AutoComplete>
-                      </FormElement>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="raschetSchet"
-                    render={({ field }) => (
-                      <FormElement
-                        grid="2:5"
-                        label={t('card_number')}
-                      >
-                        <PatternFormat
-                          format="#### #### #### ####"
-                          customInput={Input}
-                          mask="_"
-                          getInputRef={field.ref}
-                          value={field.value}
-                          onValueChange={(values) => {
-                            field.onChange(values.value)
-                          }}
-                          onBlur={field.onBlur}
-                          placeholder="0000 0000 0000 0000"
-                          className="font-mono text-base"
-                        />
-                      </FormElement>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="fioDop"
-                    render={({ field }) => (
-                      <FormElement
-                        grid="2:5"
-                        label={t('fio')}
-                      >
-                        <Input
-                          {...field}
-                          placeholder={t('fio')}
-                        />
-                      </FormElement>
-                    )}
-                  />
-                </Fieldset>
-              </div>
             </div>
           </div>
           <div
             className={cn(
-              'col-span-full lg:col-span-8 flex-1 p-2.5 grid grid-cols-[repeat(auto-fit,minmax(350px,1fr))] content-center gap-2.5',
-              workplace && 'lg:col-span-5 max-[1400px]:col-span-6'
+              'col-span-full lg:col-span-9 flex-1 p-2.5 grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] content-center gap-2.5',
+              workplace && 'lg:col-span-6 max-[1400px]:col-span-6'
             )}
           >
             <div>
@@ -481,6 +404,73 @@ export const MainZarplataForm = ({
 
           <div className="max-[1400px]:col-span-full col-span-3 max-[1400px]:grid place-items-center">
             {workplace}
+
+            <div className="rounded-xl bg-gradient-to-br from-gray-200 to-gray-300 border-2 border-gray-300 p-0 shadow-md font-sans flex flex-col justify-between my-5">
+              <Fieldset
+                name={t('bank_card')}
+                className="gap-2.5 p-4"
+                legendProps={{
+                  className: 'text-inherit uppercase m-1'
+                }}
+              >
+                <FormField
+                  control={form.control}
+                  name="bank"
+                  render={({ field }) => (
+                    <FormElement
+                      grid="2:5"
+                      label={t('bank')}
+                    >
+                      <AutoComplete
+                        items={bankList.items}
+                        inputValue={bankList.filterText}
+                        onInputChange={bankList.setFilterText}
+                        selectedKey={field.value}
+                        onSelectionChange={(key) => {
+                          field.onChange(key)
+                        }}
+                      >
+                        {(item) => (
+                          <ComboboxItem id={item.bank_name}>
+                            {item.mfo} - {normalizeSpaces(item.bank_name)}
+                          </ComboboxItem>
+                        )}
+                      </AutoComplete>
+                    </FormElement>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="raschetSchet"
+                  render={({ field }) => (
+                    <FormElement
+                      grid="2:5"
+                      label={t('card_number')}
+                    >
+                      <Input
+                        {...field}
+                        value={field.value ?? ''}
+                      />
+                    </FormElement>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="fioDop"
+                  render={({ field }) => (
+                    <FormElement
+                      grid="2:5"
+                      label={t('fio')}
+                    >
+                      <Input
+                        {...field}
+                        placeholder={t('fio')}
+                      />
+                    </FormElement>
+                  )}
+                />
+              </Fieldset>
+            </div>
           </div>
           <div className="col-span-full">{content}</div>
         </div>

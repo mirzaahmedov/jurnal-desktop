@@ -17,7 +17,7 @@ import { useToggle } from '@/common/hooks'
 import { formatNumber } from '@/common/lib/format'
 
 import { useConfirm } from '../confirm'
-import { PayrollPaymentDialog } from './payroll-payment-dialog'
+import { PaymentType, PayrollPaymentDialog } from './payroll-payment-dialog'
 import { PayrollPaymentService } from './service'
 
 export interface PayrollPaymentsProps {
@@ -95,21 +95,43 @@ export const PayrollPayments = ({ mainZarplata, setPaymentsTotal }: PayrollPayme
 
   const handlePaymentSubmit = (
     values: PayrollPaymentFormValues,
+    paymentType: PaymentType,
     form: UseFormReturn<PayrollPaymentFormValues>
   ) => {
     if (selectedPayment) {
       updatePayment({
         id: selectedPayment.id,
-        values: {
-          ...values,
-          mainZarplataId: mainZarplata.id
-        }
+        values:
+          paymentType === PaymentType.Percentage
+            ? {
+                percentage: values.percentage,
+                summa: 0,
+                paymentId: values.paymentId,
+                mainZarplataId: mainZarplata.id
+              }
+            : {
+                summa: values.summa,
+                percentage: 0,
+                paymentId: values.paymentId,
+                mainZarplataId: mainZarplata.id
+              }
       }).then(() => form.reset())
     } else {
-      createPayment({
-        ...values,
-        mainZarplataId: mainZarplata.id
-      }).then(() => form.reset())
+      createPayment(
+        paymentType === PaymentType.Percentage
+          ? {
+              percentage: values.percentage,
+              summa: 0,
+              paymentId: values.paymentId,
+              mainZarplataId: mainZarplata.id
+            }
+          : {
+              summa: values.summa,
+              percentage: 0,
+              paymentId: values.paymentId,
+              mainZarplataId: mainZarplata.id
+            }
+      ).then(() => form.reset())
     }
   }
 
@@ -171,7 +193,6 @@ export const PayrollPayments = ({ mainZarplata, setPaymentsTotal }: PayrollPayme
         onOpenChange={dialogToggle.setOpen}
         selected={selectedPayment}
         onSubmit={handlePaymentSubmit}
-        doljnostOklad={mainZarplata.doljnostOklad ?? 0}
       />
     </>
   )

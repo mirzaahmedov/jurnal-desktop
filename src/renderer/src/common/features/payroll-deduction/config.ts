@@ -4,7 +4,7 @@ export const PayrollDeductionFormSchema = z.object({
   mainZarplataId: z.number(),
   percentage: z.number(),
   summa: z.number(),
-  deductionId: z.number()
+  deductionId: z.number().min(1)
 })
 export type PayrollDeductionFormValues = z.infer<typeof PayrollDeductionFormSchema>
 

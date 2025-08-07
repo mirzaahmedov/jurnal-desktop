@@ -1,7 +1,7 @@
 import type { PayrollPayment } from '@/common/models/payroll-payment'
 import type { DialogTriggerProps } from 'react-aria-components'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { type UseFormReturn, useForm } from 'react-hook-form'
@@ -20,26 +20,34 @@ import {
   DialogTrigger
 } from '@/common/components/jolly/dialog'
 import { Form, FormField } from '@/common/components/ui/form'
+import { Label } from '@/common/components/ui/label'
+import { RadioGroup, RadioGroupItem } from '@/common/components/ui/radio-group'
 import { capitalize } from '@/common/lib/string'
 
 import { SpravochnikInput, useSpravochnik } from '../spravochnik'
 import { PayrollPaymentFormSchema, type PayrollPaymentFormValues, defaultValues } from './config'
 
+export enum PaymentType {
+  Percentage = 'percentage',
+  Summa = 'summa'
+}
+
 export interface PayrollPaymentDialogProps extends Omit<DialogTriggerProps, 'children'> {
   selected: PayrollPayment | undefined
-  doljnostOklad: number
   onSubmit: (
     values: PayrollPaymentFormValues,
+    paymentType: PaymentType,
     form: UseFormReturn<PayrollPaymentFormValues>
   ) => void
 }
 export const PayrollPaymentDialog = ({
   selected,
-  doljnostOklad,
   onSubmit,
   ...props
 }: PayrollPaymentDialogProps) => {
   const { t } = useTranslation()
+
+  const [paymentType, setPaymentType] = useState(PaymentType.Percentage)
 
   const form = useForm({
     defaultValues,
@@ -48,6 +56,7 @@ export const PayrollPaymentDialog = ({
 
   useEffect(() => {
     if (selected) {
+      setPaymentType(selected.percentage ? PaymentType.Percentage : PaymentType.Summa)
       form.reset(selected)
     } else {
       form.reset(defaultValues)
@@ -55,14 +64,14 @@ export const PayrollPaymentDialog = ({
   }, [selected])
 
   const handleSubmit = form.handleSubmit((values) => {
-    onSubmit(values, form)
+    onSubmit(values, paymentType, form)
   })
 
   const paymentSpravochnik = useSpravochnik(
     createPaymentSpravochnik({
       value: form.watch('paymentId'),
       onChange: (value) => {
-        form.setValue('paymentId', value ?? 0)
+        form.setValue('paymentId', value ?? 0, { shouldValidate: true })
       }
     })
   )
@@ -100,46 +109,73 @@ export const PayrollPaymentDialog = ({
                     </FormElement>
                   )}
                 />
-                <FormField
-                  control={form.control}
-                  name="percentage"
-                  render={({ field }) => (
-                    <FormElement
-                      grid="1:2"
-                      label={t('foiz')}
-                    >
-                      <NumericInput
-                        ref={field.ref}
-                        value={field.value}
-                        isAllowed={(value) => {
-                          const floatValue = value.floatValue ?? 0
-                          return floatValue >= 0 && floatValue <= 100
-                        }}
-                        onValueChange={(values) => {
-                          const percentageValue = values.floatValue ?? 0
-                          field.onChange(percentageValue)
-                          form.setValue('summa', (doljnostOklad * percentageValue) / 100)
-                        }}
+
+                {paymentType === PaymentType.Percentage ? (
+                  <FormField
+                    key={PaymentType.Percentage}
+                    control={form.control}
+                    name="percentage"
+                    render={({ field }) => (
+                      <FormElement
+                        grid="1:2"
+                        label={t('foiz')}
+                      >
+                        <NumericInput
+                          ref={field.ref}
+                          value={field.value}
+                          isAllowed={(value) => {
+                            const floatValue = value.floatValue ?? 0
+                            return floatValue >= 0 && floatValue <= 100
+                          }}
+                          onValueChange={(values) => {
+                            field.onChange(values.floatValue ?? 0)
+                          }}
+                        />
+                      </FormElement>
+                    )}
+                  />
+                ) : (
+                  <FormField
+                    key={PaymentType.Summa}
+                    control={form.control}
+                    name="summa"
+                    render={({ field }) => (
+                      <FormElement
+                        grid="1:2"
+                        label={t('summa')}
+                      >
+                        <NumericInput
+                          ref={field.ref}
+                          value={field.value}
+                          onValueChange={(values) => field.onChange(values.floatValue)}
+                          onBlur={field.onBlur}
+                        />
+                      </FormElement>
+                    )}
+                  />
+                )}
+                <div>
+                  <RadioGroup
+                    value={paymentType}
+                    onValueChange={(value) => setPaymentType(value as PaymentType)}
+                    className="flex items-center justify-end gap-10 mb-5"
+                  >
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem
+                        value={PaymentType.Percentage}
+                        id={PaymentType.Percentage}
                       />
-                    </FormElement>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="summa"
-                  render={({ field }) => (
-                    <FormElement
-                      grid="1:2"
-                      label={t('summa')}
-                    >
-                      <NumericInput
-                        ref={field.ref}
-                        value={field.value}
-                        onValueChange={(values) => field.onChange(values.floatValue)}
+                      <Label htmlFor={PaymentType.Percentage}>{t('foiz')}</Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem
+                        value={PaymentType.Summa}
+                        id={PaymentType.Summa}
                       />
-                    </FormElement>
-                  )}
-                />
+                      <Label htmlFor={PaymentType.Summa}>{t('summa')}</Label>
+                    </div>
+                  </RadioGroup>
+                </div>
               </div>
               <DialogFooter>
                 <Button

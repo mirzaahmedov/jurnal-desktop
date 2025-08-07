@@ -116,18 +116,12 @@ export class MainZarplataService {
     await zarplataApiNew.delete(`${MainZarplataService.endpoint}/${id}`)
   }
 
-  static async dismissEmployee(args: {
-    mainId: number
-    doljnost: string
-    prikazFinish: string
-    dateFinish: string
-  }) {
+  static async dismissEmployee(args: { mainId: number; prikazFinish: string; dateFinish: string }) {
     const res = await zarplataApiNew.put<MainZarplata>(
       `${MainZarplataService.endpoint}/dismiss/${args.mainId}`,
       {},
       {
         params: {
-          doljnost: args.doljnost,
           prikazFinish: args.prikazFinish,
           dateFinish: args.dateFinish
         }
