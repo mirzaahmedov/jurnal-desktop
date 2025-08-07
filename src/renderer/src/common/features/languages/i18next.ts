@@ -7,6 +7,7 @@ import { capitalize } from '@/common/lib/string'
 import appCyrl from './translations/cyrl/app.json'
 import commonCyrl from './translations/cyrl/common.json'
 import dashboardCyrl from './translations/cyrl/dashboard.json'
+import integrationCyrl from './translations/cyrl/integration.json'
 import pdfReportsCyrl from './translations/cyrl/pdf-reports.json'
 import podotchetCyrl from './translations/cyrl/podotchet.json'
 import podpisCyrl from './translations/cyrl/podpis.json'
@@ -17,6 +18,7 @@ import userCyrl from './translations/cyrl/user.json'
 import appRU from './translations/ru/app.json'
 import commonRU from './translations/ru/common.json'
 import dashboardRU from './translations/ru/dashboard.json'
+import integrationRU from './translations/ru/integration.json'
 import pdfReportsRU from './translations/ru/pdf-reports.json'
 import podotchetRU from './translations/ru/podotchet.json'
 import podpisRU from './translations/ru/podpis.json'
@@ -27,6 +29,7 @@ import userRU from './translations/ru/user.json'
 import appUZ from './translations/uz/app.json'
 import commonUZ from './translations/uz/common.json'
 import dashboardUZ from './translations/uz/dashboard.json'
+import integrationUZ from './translations/uz/integration.json'
 import pdfReportsUZ from './translations/uz/pdf-reports.json'
 import podotchetUZ from './translations/uz/podotchet.json'
 import podpisUZ from './translations/uz/podpis.json'
@@ -69,7 +72,8 @@ export const initLocales = () => {
         'sign-in': signInRU,
         'pdf-reports': pdfReportsRU,
         user: userRU,
-        report: reportRU
+        report: reportRU,
+        integration: integrationRU
       },
       uz: {
         app: appUZ,
@@ -81,7 +85,8 @@ export const initLocales = () => {
         'sign-in': signInUZ,
         'pdf-reports': pdfReportsUZ,
         user: userUZ,
-        report: reportUZ
+        report: reportUZ,
+        integration: integrationUZ
       },
       cyrl: {
         app: appCyrl,
@@ -93,7 +98,8 @@ export const initLocales = () => {
         'sign-in': signInCyrl,
         'pdf-reports': pdfReportsCyrl,
         user: userCyrl,
-        report: reportCyrl
+        report: reportCyrl,
+        integration: integrationCyrl
       }
     },
 

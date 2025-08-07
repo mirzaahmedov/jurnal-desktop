@@ -182,7 +182,8 @@ const StaffingTable = () => {
     } else if (vacantParent) {
       createVacant({
         name: values.name,
-        parentId: vacantParent.id
+        parentId: vacantParent.id,
+        spravochnikBudhetNameId: budjetId
       })
       setVacantParent(undefined)
     } else {

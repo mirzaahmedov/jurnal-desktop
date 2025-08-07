@@ -1,6 +1,8 @@
 import type { SpravochnikHookOptions } from '@/common/features/spravochnik'
 import type { ApiResponse, Organization } from '@/common/models'
 
+import { t } from 'i18next'
+
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 import { SpravochnikSearchField } from '@/common/features/filters/search/search-filter-spravochnik'
 import { extendObject } from '@/common/lib/utils'
@@ -41,7 +43,7 @@ export const createOrganizationSpravochnik = (
 ) => {
   return extendObject(
     {
-      title: 'Выберите организацию',
+      title: t('choose-something', { something: t('organization') }),
       endpoint: ApiEndpoints.organization,
       columnDefs: OrganizationColumns,
       service: OrganizationService,
