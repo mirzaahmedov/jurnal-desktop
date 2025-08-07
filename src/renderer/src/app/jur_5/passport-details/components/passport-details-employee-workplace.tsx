@@ -17,7 +17,7 @@ import { WorkplaceService } from '@/common/features/workplace/service'
 import { useToggle } from '@/common/hooks'
 import { formatDate, parseLocaleDate } from '@/common/lib/date'
 
-import { ZarplataStavkaOptions } from '../common/data'
+import { ZarplataStavkaOptions } from '../../common/data'
 import { PassportDetailsAssignPositionDialog } from './passport-details-assign-position-dialog'
 
 export interface EmployeeWorkplaceProps {

@@ -3,7 +3,8 @@ import { z } from 'zod'
 export const VacantFormSchema = z.object({
   name: z.string().nonempty(),
   parentId: z.number().optional().nullable(),
-  spravochnikBudhetNameId: z.number().optional()
+  spravochnikBudhetNameId: z.number().optional(),
+  spravochnikBudjetNameId: z.number().optional()
 })
 export type VacantFormValues = z.infer<typeof VacantFormSchema>
 

@@ -5,6 +5,7 @@ import { type ReactNode, useEffect } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import Transliterator from 'lotin-kirill'
 import { Calculator } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -36,8 +37,10 @@ import { formatLocaleDate } from '@/common/lib/format'
 import { normalizeSpaces } from '@/common/lib/text'
 import { cn } from '@/common/lib/utils'
 
-import { getVacantRayon } from '../common/utils/vacant'
-import { MainZarplataFormSchema, defaultValues } from './config'
+import { getVacantRayon } from '../../common/utils/vacant'
+import { MainZarplataFormSchema, defaultValues } from '../config'
+
+const transliterator = new Transliterator()
 
 export interface MainZarplataFormProps {
   isCalculating?: boolean
@@ -269,7 +272,13 @@ export const MainZarplataForm = ({
                   direction="column"
                   label={t('fio')}
                 >
-                  <Input {...field} />
+                  <Input
+                    {...field}
+                    onChange={(e) => {
+                      form.setValue('fioDop', transliterator.textToLatin(e.target.value ?? ''))
+                      field.onChange(e)
+                    }}
+                  />
                 </FormElement>
               )}
             />

@@ -473,17 +473,17 @@ export const getNavElements = (t: TFunction): NavElement[] => {
             },
             {
               path: 'jur_1',
-              title: `№1 - МО (${t('pages.kassa')})`,
+              title: `1-${t('pages.memorial_order').toLowerCase()} — ${t('pages.jur_1').toLowerCase()}`,
               icon: BadgeDollarSign
             },
             {
               path: 'jur_2',
-              title: `№2 - МО (${t('pages.bank')})`,
+              title: `2-${t('pages.memorial_order').toLowerCase()} — ${t('pages.jur_2').toLowerCase()}`,
               icon: Landmark
             },
             {
               path: '/jur_3',
-              title: `№3 - МО (${t('pages.organization')})`,
+              title: `6-${t('pages.memorial_order').toLowerCase()} — ${t('pages.jur_6').toLowerCase()}`,
               icon: Building2,
               children: [
                 {
@@ -500,13 +500,13 @@ export const getNavElements = (t: TFunction): NavElement[] => {
             },
             {
               path: '/jur_4',
-              title: `№4 - МО (${t('pages.podotchet')})`,
+              title: `8-${t('pages.memorial_order').toLowerCase()} — ${t('pages.jur_8').toLowerCase()}`,
               icon: UserSquare
             },
             {
               icon: NotepadText,
               path: '/jur_7',
-              title: `№7 - МО (${t('pages.material-warehouse')})`
+              title: `9-${t('pages.memorial_order').toLowerCase()} — ${t('pages.jur_9').toLowerCase()}`
             },
 
             {

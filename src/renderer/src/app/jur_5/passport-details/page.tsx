@@ -21,8 +21,8 @@ import { useLayout } from '@/common/layout'
 import { queryClient } from '@/common/lib/query-client'
 
 import { MainZarplataColumnDefs } from './columns'
-import { PassportInfoCreateDialog } from './passport-details-create-dialog'
-import { PassportDetailsViewDialog } from './passport-details-view-dialog'
+import { PassportInfoCreateDialog } from './components/passport-details-create-dialog'
+import { PassportDetailsViewDialog } from './components/passport-details-view-dialog'
 
 const PassportDetailsPage = () => {
   const setLayout = useLayout()

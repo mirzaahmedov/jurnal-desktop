@@ -10,7 +10,12 @@ import {
   DialogTitle,
   DialogTrigger
 } from '@/common/components/jolly/dialog'
+import { Label } from '@/common/components/jolly/field'
 import { DownloadFile } from '@/common/features/file'
+import { SpravochnikInput, useSpravochnik } from '@/common/features/spravochnik'
+import { TypeSchetOperatsii } from '@/common/models'
+
+import { createOperatsiiSpravochnik } from '../operatsii'
 
 export interface MaterialReportModalProps extends Omit<DialogTriggerProps, 'children'> {
   main_schet_id: number
@@ -34,6 +39,10 @@ export const MaterialReportModal = ({
 }: MaterialReportModalProps) => {
   const { t } = useTranslation(['app'])
 
+  const operatsiiSpravochnik = useSpravochnik(
+    createOperatsiiSpravochnik({ params: { type_schet: TypeSchetOperatsii.JUR7 } })
+  )
+
   return (
     <DialogTrigger
       isOpen={isOpen}
@@ -51,6 +60,16 @@ export const MaterialReportModal = ({
           <DialogHeader>
             <DialogTitle>{t('material')}</DialogTitle>
           </DialogHeader>
+          <div>
+            <Label className="font-medium">{t('operatsii')}</Label>
+            <SpravochnikInput
+              {...operatsiiSpravochnik}
+              placeholder={t('operatsii')}
+              getInputValue={(selected) =>
+                selected ? `${selected.schet} (${selected.schet6 ?? ''}) - ${selected.name}` : '-'
+              }
+            />
+          </div>
           <DialogFooter>
             <DownloadFile
               fileName={`${t('material')}_${to}:${from}.xlsx`}
@@ -63,6 +82,7 @@ export const MaterialReportModal = ({
                 region_id,
                 budjet_id,
                 main_schet_id,
+                schet: operatsiiSpravochnik.selected?.schet || undefined,
                 excel: true
               }}
               buttonText={t('material')}
@@ -78,6 +98,7 @@ export const MaterialReportModal = ({
                 region_id,
                 budjet_id,
                 main_schet_id,
+                schet: operatsiiSpravochnik.selected?.schet || undefined,
                 excel: true,
                 iznos: true
               }}

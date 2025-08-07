@@ -22,8 +22,8 @@ import { PayrollDeductionService } from '@/common/features/payroll-deduction/ser
 import { PayrollPayments } from '@/common/features/payroll-payment/payroll-payments'
 import { PayrollPaymentService } from '@/common/features/payroll-payment/service'
 
-import { DopOplataContainer } from './dop-oplata'
-import { Employments } from './employment/employment'
+import { DopOplataContainer } from '../dop-oplata'
+import { Employments } from '../employment/employment'
 import { MainZarplataForm } from './main-zarplata-form'
 import { EmployeeWorkplace } from './passport-details-employee-workplace'
 

@@ -41,7 +41,7 @@ import {
   AssignPositionFormSchema,
   type AssignPositionFormValues,
   defaultAssignPositionValues
-} from './config'
+} from '../config'
 
 export interface PassportDetailsAssignPositionDialogProps
   extends Omit<DialogTriggerProps, 'children'> {
