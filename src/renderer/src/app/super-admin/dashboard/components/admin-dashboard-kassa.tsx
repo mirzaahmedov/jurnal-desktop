@@ -22,6 +22,8 @@ export interface AdminDashboardKassaProps {
 export const AdminDashboardKassa = ({ budjetId, date }: AdminDashboardKassaProps) => {
   const { t } = useTranslation(['dashboard'])
 
+  console.log({ date, budjetId })
+
   const { data } = useQuery({
     queryKey: [
       AdminDashboardService.QueryKeys.Kassa,

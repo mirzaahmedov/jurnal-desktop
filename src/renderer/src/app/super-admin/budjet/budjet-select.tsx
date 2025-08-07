@@ -16,7 +16,7 @@ export interface BudjetSelectProps extends Omit<JollySelectProps<Budjet>, 'child
 }
 export const BudjetSelect = ({
   withOptionAll = false,
-  withFirstOptionSelected,
+  withFirstOptionSelected = false,
   ...props
 }: BudjetSelectProps) => {
   const { t } = useTranslation()

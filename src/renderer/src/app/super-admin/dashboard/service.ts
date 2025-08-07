@@ -54,7 +54,7 @@ export class AdminDashboardService {
         to
       }
     })
-    return res.data?.data?.[0]?.main_schets
+    return res.data?.data
   }
 
   static async getPodotchets(

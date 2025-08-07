@@ -51,7 +51,7 @@ const renderNavElement = (elem: null | NavElement, isCollapsed: boolean, rootPat
             >
               {elem.icon && <elem.icon className="size-5 flex-shrink-0" />}
               {!isCollapsed ? (
-                <span className="font-bold text-sm text-start">{elem.title}</span>
+                <span className="font-semibold text-sm text-start">{elem.title}</span>
               ) : null}
             </span>
           </AccordionTrigger>
@@ -81,7 +81,7 @@ const renderNavElement = (elem: null | NavElement, isCollapsed: boolean, rootPat
           title={String(elem.title)}
         >
           {elem.icon && <elem.icon className="size-5 flex-shrink-0" />}
-          <span className={cn('w-full font-bold text-sm break-words', isCollapsed && 'hidden')}>
+          <span className={cn('w-full font-semibold text-sm break-words', isCollapsed && 'hidden')}>
             {elem.title}
           </span>
         </div>
@@ -99,7 +99,7 @@ const renderNavElement = (elem: null | NavElement, isCollapsed: boolean, rootPat
           title={String(elem.title)}
         >
           {elem.icon && <elem.icon className="size-5 flex-shrink-0" />}
-          <span className={cn('font-bold text-sm break-words', isCollapsed && 'hidden')}>
+          <span className={cn('font-semibold text-sm break-words', isCollapsed && 'hidden')}>
             {elem.title}
           </span>
         </NavLink>

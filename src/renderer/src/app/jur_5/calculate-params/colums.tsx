@@ -3,13 +3,13 @@ import type { CalculateParams } from '@/common/models/calculate-params'
 
 import { Trans } from 'react-i18next'
 
-import { IDCell } from '@/common/components/table/renderers/id'
 import { MonthNameCell } from '@/common/components/table/renderers/month-name'
+import { SelectCell } from '@/common/components/table/renderers/select'
 
 export const columnDefs: ColumnDef<CalculateParams>[] = [
   {
     key: 'id',
-    renderCell: IDCell,
+    renderCell: SelectCell,
     minWidth: 160,
     width: 160
   },
