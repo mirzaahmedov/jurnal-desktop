@@ -169,7 +169,8 @@ export const DeductionsChangePayment = () => {
                   id="select-all"
                   isSelected={isAllSelected}
                   isIndeterminate={
-                    !isAllSelected && !!selectedMainZarplata.some((m) => selectedIds.includes(m.id))
+                    !isAllSelected &&
+                    !!mainZarplataQuery.data?.some((m) => selectedIds.includes(m.id))
                   }
                   onChange={handleSelectAll}
                 />
