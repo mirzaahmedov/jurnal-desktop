@@ -11,7 +11,6 @@ import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 
-import { useAsyncListBank } from '@/app/super-admin/bank/service'
 import { ZarplataSpravochnikType } from '@/app/super-admin/zarplata/spravochnik/config'
 import {
   ZarplataSpravochnikService,
@@ -19,11 +18,9 @@ import {
 } from '@/app/super-admin/zarplata/spravochnik/service'
 import placeholderImage from '@/common/assets/images/profile_placeholder.png'
 import { Fieldset, NumericInput } from '@/common/components'
-import { AutoComplete } from '@/common/components/auto-complete'
 import { FormElement } from '@/common/components/form'
 import { JollyDatePicker } from '@/common/components/jolly-date-picker'
 import { Button } from '@/common/components/jolly/button'
-import { ComboboxItem } from '@/common/components/jolly/combobox'
 import { JollySelect, SelectItem } from '@/common/components/jolly/select'
 import { Checkbox } from '@/common/components/ui/checkbox'
 import { Form, FormField } from '@/common/components/ui/form'
@@ -34,7 +31,6 @@ import { MainZarplataService } from '@/common/features/main-zarplata/service'
 import { SpravochnikInput, useSpravochnik } from '@/common/features/spravochnik'
 import { formatDate, getDateDifference, parseDate, parseLocaleDate } from '@/common/lib/date'
 import { formatLocaleDate } from '@/common/lib/format'
-import { normalizeSpaces } from '@/common/lib/text'
 import { cn } from '@/common/lib/utils'
 
 import { getVacantRayon } from '../../common/utils/vacant'
@@ -66,7 +62,6 @@ export const MainZarplataForm = ({
 }: MainZarplataFormProps) => {
   const { t } = useTranslation()
 
-  const bankList = useAsyncListBank()
   const queryClient = useQueryClient()
   const form = useForm({
     resolver: zodResolver(MainZarplataFormSchema),
@@ -430,21 +425,10 @@ export const MainZarplataForm = ({
                       grid="2:5"
                       label={t('bank')}
                     >
-                      <AutoComplete
-                        items={bankList.items}
-                        inputValue={bankList.filterText}
-                        onInputChange={bankList.setFilterText}
-                        selectedKey={field.value}
-                        onSelectionChange={(key) => {
-                          field.onChange(key)
-                        }}
-                      >
-                        {(item) => (
-                          <ComboboxItem id={item.bank_name}>
-                            {item.mfo} - {normalizeSpaces(item.bank_name)}
-                          </ComboboxItem>
-                        )}
-                      </AutoComplete>
+                      <Input
+                        {...field}
+                        value={field.value ?? ''}
+                      />
                     </FormElement>
                   )}
                 />

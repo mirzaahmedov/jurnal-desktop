@@ -1,17 +1,20 @@
 import type { Podpis } from '@/common/models'
 
 import { StyleSheet, Text, View } from '@react-pdf/renderer'
+import Transliterator from 'lotin-kirill'
 import { useTranslation } from 'react-i18next'
 
 import { Blank, Field, Flex, Label } from '@/common/components/pdf'
 import { splitArrayToChunks } from '@/common/lib/array'
+
+const transliterator = new Transliterator()
 
 interface PodpisProps {
   year: number
   podpises: Podpis[]
 }
 export const Podpises = ({ year, podpises }: PodpisProps) => {
-  const { t } = useTranslation(['pdf-reports'])
+  const { t, i18n } = useTranslation(['pdf-reports'])
   return (
     <Flex
       direction="column"
@@ -19,7 +22,7 @@ export const Podpises = ({ year, podpises }: PodpisProps) => {
       style={{ marginTop: 30 }}
     >
       <Flex alignItems="flex-start">
-        <Text>M.U.</Text>
+        <Text>{t('m_u')}</Text>
         <View style={styles.podpis_container}>
           {splitArrayToChunks(
             podpises.sort((a, b) => a.numeric_poryadok - b.numeric_poryadok),
@@ -36,8 +39,16 @@ export const Podpises = ({ year, podpises }: PodpisProps) => {
                       key={podpis.numeric_poryadok}
                       style={styles.podpis}
                     >
-                      <Text>{podpis.doljnost_name}</Text>
-                      <Text style={{ fontWeight: 'bold' }}>{podpis.fio_name}</Text>
+                      <Text>
+                        {i18n.language === 'uz'
+                          ? podpis.doljnost_name
+                          : transliterator.textToCyrillic(podpis.doljnost_name)}
+                      </Text>
+                      <Text style={{ fontWeight: 'bold' }}>
+                        {i18n.language === 'uz'
+                          ? podpis.fio_name
+                          : transliterator.textToCyrillic(podpis.fio_name)}
+                      </Text>
                     </View>
                   )
                 })}

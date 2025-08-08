@@ -119,7 +119,11 @@ export const TabelCreateForm = ({
             form.getValues('tabelMonth'),
             parseInt(row.spravochnikZarplataGrafikRabotiName || '0')
           ).workdays,
-          otrabDni: 0,
+          otrabDni: getWorkdaysInMonth(
+            form.getValues('tabelYear'),
+            form.getValues('tabelMonth'),
+            parseInt(row.spravochnikZarplataGrafikRabotiName || '0')
+          ).workdays,
           noch: 0,
           prazdnik: 0,
           pererabodka: 0,

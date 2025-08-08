@@ -5,7 +5,7 @@ import { useMutation } from '@tanstack/react-query'
 import { Download, Loader2 } from 'lucide-react'
 
 import { Button } from '@/common/components/jolly/button'
-import { useSettingsStore } from '@/common/features/settings'
+// import { useSettingsStore } from '@/common/features/settings'
 import { useToggle } from '@/common/hooks'
 import { http } from '@/common/lib/http'
 import { zarplataApiNew } from '@/common/lib/zarplata_new'
@@ -29,7 +29,7 @@ export const DownloadFile = ({
   ...props
 }: DownloadFileProps) => {
   const alertToggle = useToggle()
-  const report_title_id = useSettingsStore((store) => store.report_title_id)
+  // const report_title_id = useSettingsStore((store) => store.report_title_id)
 
   const addFile = useDownloadsManagerStore((store) => store.addFile)
 
@@ -71,10 +71,10 @@ export const DownloadFile = ({
   })
 
   const handleDownloadFile = () => {
-    if (!report_title_id) {
-      alertToggle.open()
-      return
-    }
+    // if (!report_title_id) {
+    //   alertToggle.open()
+    //   return
+    // }
     downloadFile()
   }
 

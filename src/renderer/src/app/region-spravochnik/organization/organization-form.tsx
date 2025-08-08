@@ -1,7 +1,7 @@
 import type { OrganizationFormValues } from './config'
 import type { SoliqOrganization } from '@/common/features/integrations/soliq/model'
 
-import { type FormEventHandler, type ReactNode, useEffect, useState } from 'react'
+import { type FormEventHandler, type ReactNode, useEffect, useRef, useState } from 'react'
 
 import { useMutation } from '@tanstack/react-query'
 import { Plus, Trash } from 'lucide-react'
@@ -9,7 +9,7 @@ import { type UseFormReturn, useFieldArray } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
 import { useAsyncListBank } from '@/app/super-admin/bank/service'
-import { AutoComplete } from '@/common/components/auto-complete'
+import { AutoComplete, type AutoCompleteMethods } from '@/common/components/auto-complete'
 import { FormElement } from '@/common/components/form'
 import { ComboboxItem } from '@/common/components/jolly/combobox'
 import { Button } from '@/common/components/ui/button'
@@ -25,6 +25,9 @@ interface OrganizationFormProps {
   formActions: ReactNode
 }
 export const OrganizationForm = ({ form, formActions, onSubmit }: OrganizationFormProps) => {
+  const autoCompleteMethods = useRef<AutoCompleteMethods>(null)
+  const callbackRef = useRef<VoidFunction>()
+
   const mfoBankList = useAsyncListBank()
   const nameBankList = useAsyncListBank()
 
@@ -65,6 +68,13 @@ export const OrganizationForm = ({ form, formActions, onSubmit }: OrganizationFo
       findOrganizationByInnMutation.mutate(form.watch('inn'))
     }
   }, [form.watch('inn')])
+
+  useEffect(() => {
+    if (callbackRef.current) {
+      callbackRef.current?.()
+      callbackRef.current = undefined
+    }
+  }, [mfoBankList.items])
 
   return (
     <>
@@ -109,6 +119,7 @@ export const OrganizationForm = ({ form, formActions, onSubmit }: OrganizationFo
                   label={t('mfo')}
                 >
                   <AutoComplete
+                    methods={autoCompleteMethods}
                     items={mfoBankList.items}
                     inputValue={mfoBankList.filterText}
                     onInputChange={mfoBankList.setFilterText}
@@ -278,6 +289,7 @@ export const OrganizationForm = ({ form, formActions, onSubmit }: OrganizationFo
           if (!foundOrganization) {
             return
           }
+          form.setValue('mfo', foundOrganization.mfo)
           form.setValue('name', foundOrganization.name)
           form.setValue('okonx', foundOrganization.okonx)
           form.setValue('account_numbers', [
@@ -286,6 +298,10 @@ export const OrganizationForm = ({ form, formActions, onSubmit }: OrganizationFo
             }
           ])
           setFoundOrganization(undefined)
+          callbackRef.current = () => {
+            console.log('running')
+            autoCompleteMethods.current?.select(foundOrganization.mfo)
+          }
         }}
       />
     </>

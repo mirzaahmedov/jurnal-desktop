@@ -1,10 +1,21 @@
-import { useEffect } from 'react'
+import type { Key } from 'react-aria-components'
+
+import { type RefObject, useEffect, useImperativeHandle } from 'react'
 
 import { useEventCallback } from '@/common/hooks'
 
 import { JollyComboBox, type JollyComboBoxProps } from './jolly/combobox'
 
+export interface AutoCompleteMethods {
+  select: (key: Key) => void
+}
+
+export interface AutoCompleteProps<T extends object> extends JollyComboBoxProps<T> {
+  methods?: RefObject<AutoCompleteMethods>
+}
+
 export const AutoComplete = <T extends object>({
+  methods,
   inputValue,
   onInputChange,
   selectedKey,
@@ -12,8 +23,20 @@ export const AutoComplete = <T extends object>({
   items,
   children,
   ...props
-}: JollyComboBoxProps<T>) => {
+}: AutoCompleteProps<T>) => {
   const onInputChangeEvent = useEventCallback(onInputChange)
+  const onSelectionChangeEvent = useEventCallback(onSelectionChange)
+
+  useImperativeHandle(
+    methods,
+    () => ({
+      select: (key) => {
+        onInputChangeEvent?.((key as string) || '')
+        onSelectionChangeEvent?.((key as string) || '')
+      }
+    }),
+    [onInputChangeEvent, onSelectionChangeEvent]
+  )
 
   useEffect(() => {
     if (selectedKey) {
