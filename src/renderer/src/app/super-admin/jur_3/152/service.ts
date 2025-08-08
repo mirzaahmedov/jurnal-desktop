@@ -4,6 +4,14 @@ import type { QueryFunctionContext } from '@tanstack/react-query'
 
 import { http } from '@/common/lib/http'
 
+interface AdminOrgan152Meta {
+  summa_from: number
+  summa_to: number
+  prixod: number
+  rasxod: number
+  total: number
+}
+
 export class AdminOrgan152Service {
   static QueryKeys = {
     GetAll: '/admin/jur3-152'
@@ -15,7 +23,7 @@ export class AdminOrgan152Service {
     >
   ) {
     const params = ctx.queryKey[1]
-    const res = await http.get<ApiResponse<AdminOrgan152[]>>('/admin/jur3-152', {
+    const res = await http.get<ApiResponse<AdminOrgan152[], AdminOrgan152Meta>>('/admin/jur3-152', {
       params
     })
     return res.data

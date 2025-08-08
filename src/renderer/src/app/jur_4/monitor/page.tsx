@@ -128,7 +128,10 @@ const PodotchetMonitorPage = () => {
             />
           </div>
 
-          <ButtonGroup borderStyle="dashed">
+          <ButtonGroup
+            borderStyle="dashed"
+            className="w-full max-w-3xl"
+          >
             <DownloadFile
               fileName={`дебитор-кредитор_отчет-${dates.to}.xlsx`}
               url="podotchet/monitoring/prixod/rasxod/"
@@ -143,6 +146,7 @@ const PodotchetMonitorPage = () => {
               }}
               buttonText={t('debitor_kreditor_report')}
             />
+
             <Button
               variant="ghost"
               onPress={() => {
@@ -187,6 +191,23 @@ const PodotchetMonitorPage = () => {
                 report_title_id
               }}
             />
+
+            <DownloadFile
+              fileName={`${t('pages.podotchet')}_2169_${t('report')}_${startDate.getFullYear()}&${startDate.getMonth() + 1}.xlsx`}
+              url="/podotchet/monitoring/2169"
+              buttonText={`2169 ${t('report')}`}
+              params={{
+                budjet_id,
+                main_schet_id,
+                schet_id: jur4_schet_id,
+                report_title_id,
+                from: dates.from,
+                to: dates.to,
+                year: startDate.getFullYear(),
+                month: startDate.getMonth() + 1,
+                excel: true
+              }}
+            />
           </ButtonGroup>
         </div>
         <ListView.RangeDatePicker
@@ -209,7 +230,7 @@ const PodotchetMonitorPage = () => {
         <GenericTable
           columnDefs={PodotchetMonitorColumns}
           data={monitoring?.data ?? []}
-          getRowKey={(row) => `${row.type}-${row.id}`}
+          getRowKey={(row) => `${row.type}-${row.id}-${row.child ?? ''}`}
           getColumnSorted={getColumnSorted}
           onSort={handleSort}
           onView={(row) => setSelected(row)}

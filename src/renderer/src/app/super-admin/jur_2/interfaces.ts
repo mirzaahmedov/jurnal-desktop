@@ -3,6 +3,8 @@ export interface AdminBank {
   name: string
   main_schets: AdminBankMainSchet[]
   summa_from: number
+  prixod: number
+  rasxod: number
   summa_to: number
 }
 
@@ -39,5 +41,7 @@ export interface AdminBankMainSchet {
     date_saldo: string
   }
   summa_from: number
+  prixod: number
+  rasxod: number
   summa_to: number
 }

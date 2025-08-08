@@ -17,7 +17,7 @@ export const FooterRow = ({ children, className, ...props }: FooterRowProps) => 
   )
 }
 
-export type FooterCellProps = TdHTMLAttributes<HTMLTableCellElement> & {
+export type FooterCellProps = Omit<TdHTMLAttributes<HTMLTableCellElement>, 'content'> & {
   title?: string
   content?: ReactNode
   contentClassName?: string

@@ -3,6 +3,8 @@ export interface AdminKassa {
   name: string
   main_schets: AdminKassaMainSchet[]
   summa_from: number
+  prixod: number
+  rasxod: number
   summa_to: number
 }
 
@@ -39,5 +41,7 @@ export interface AdminKassaMainSchet {
     date_saldo: string
   }
   summa_from: number
+  prixod: number
+  rasxod: number
   summa_to: number
 }

@@ -3,6 +3,8 @@ export interface AdminOrgan152 {
   name: string
   main_schets: AdminOrgan152MainSchet[]
   summa_from: number
+  prixod: number
+  rasxod: number
   summa_to: number
 }
 
@@ -23,6 +25,8 @@ export interface AdminOrgan152MainSchet {
     schet: string
   }>
   summa_from: number
+  prixod: number
+  rasxod: number
   summa_to: number
 }
 
@@ -63,5 +67,7 @@ export interface AdminOrgan152Schet {
     summa: number
   }
   summa_from: number
+  prixod: number
+  rasxod: number
   summa_to: number
 }

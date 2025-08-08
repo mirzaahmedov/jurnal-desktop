@@ -13,6 +13,7 @@ export interface PodotchetMonitor {
   login: string
   fio: string
   user_id: number
+  child?: number
   provodki_schet: string
   provodki_sub_schet: string
   type: ProvodkaType

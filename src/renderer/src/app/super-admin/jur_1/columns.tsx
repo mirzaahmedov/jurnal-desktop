@@ -9,7 +9,7 @@ export const AdminKassaRegionColumnDefs: ColumnDef<AdminKassa>[] = [
   },
   {
     numeric: true,
-    minWidth: 300,
+    minWidth: 200,
     key: 'summa_from',
     renderCell: (row) => (
       <SummaCell
@@ -20,7 +20,19 @@ export const AdminKassaRegionColumnDefs: ColumnDef<AdminKassa>[] = [
   },
   {
     numeric: true,
-    minWidth: 300,
+    minWidth: 200,
+    key: 'prixod',
+    renderCell: (row) => <SummaCell summa={row.prixod} />
+  },
+  {
+    numeric: true,
+    minWidth: 200,
+    key: 'rasxod',
+    renderCell: (row) => <SummaCell summa={row.rasxod} />
+  },
+  {
+    numeric: true,
+    minWidth: 200,
     key: 'summa_to',
     renderCell: (row) => (
       <SummaCell
@@ -48,7 +60,7 @@ export const AdminKassaMainSchetColumnDefs: ColumnDef<AdminKassaMainSchet>[] = [
   {
     numeric: true,
     key: 'summa_from',
-    minWidth: 300,
+    minWidth: 200,
     renderCell: (row) => (
       <SummaCell
         withColor
@@ -58,8 +70,20 @@ export const AdminKassaMainSchetColumnDefs: ColumnDef<AdminKassaMainSchet>[] = [
   },
   {
     numeric: true,
+    key: 'prixod',
+    minWidth: 200,
+    renderCell: (row) => <SummaCell summa={row.prixod} />
+  },
+  {
+    numeric: true,
+    key: 'rasxod',
+    minWidth: 200,
+    renderCell: (row) => <SummaCell summa={row.rasxod} />
+  },
+  {
+    numeric: true,
     key: 'summa_to',
-    minWidth: 300,
+    minWidth: 200,
     renderCell: (row) => (
       <SummaCell
         withColor
