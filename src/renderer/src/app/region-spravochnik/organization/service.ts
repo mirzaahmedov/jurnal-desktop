@@ -43,7 +43,7 @@ export const createOrganizationSpravochnik = (
 ) => {
   return extendObject(
     {
-      title: t('choose-something', { something: t('organization') }),
+      title: t('choose', { what: t('organization') }),
       endpoint: ApiEndpoints.organization,
       columnDefs: OrganizationColumns,
       service: OrganizationService,

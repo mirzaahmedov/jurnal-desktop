@@ -34,6 +34,7 @@ export const ConfirmationDialog = () => {
 
   const {
     isOpen,
+    danger,
     title = t('sure_to_delete'),
     withPassword: password,
     description,
@@ -80,6 +81,7 @@ export const ConfirmationDialog = () => {
         <DialogContent
           closeButton={false}
           isDismissable={false}
+          isKeyboardDismissDisabled={true}
         >
           <DialogHeader>
             <DialogTitle className="text-base">{title}</DialogTitle>
@@ -127,7 +129,7 @@ export const ConfirmationDialog = () => {
               {t('cancel')}
             </Button>
             <Button
-              variant="destructive"
+              variant={danger ? 'destructive' : 'default'}
               onPress={handleConfirm}
               className="text-xs"
             >

@@ -163,7 +163,10 @@ export const Spravochnik = ({ close, spravochnik }: SpravochnikProps) => {
         <DialogOverlay>
           <DialogContent
             {...spravochnik.dialogProps}
-            className={cn('max-w-screen-2xl w-full h-3/5 p-0', spravochnik.dialogProps?.className)}
+            className={cn(
+              'max-w-screen-2xl w-full h-full max-h-[600px] p-0',
+              spravochnik.dialogProps?.className
+            )}
           >
             <div
               ref={(elem) => elem?.focus()}

@@ -298,6 +298,7 @@
   "refresh_page": "Sahifani yangilash",
   "unsaved_changes_want_to_exit": "Saqlanmagan o‘zgarishlar mavjud. Chiqishni xohlaysizmi?",
   "sure_to_delete": "O'chirishni tasdiqlaysizmi?",
+  "sure_to_update": "Siz haqiqatan ham yangilashni xohlaysizmi?",
   "sure_to_delete_all": "Barcha ma'lumotlarni o‘chirmoqchimisiz? Tasdiqlash uchun parol kerak.",
   "date": "Sana",
   "date_of_birth": "Tug'ilgan sana",

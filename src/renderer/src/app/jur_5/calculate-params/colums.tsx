@@ -9,9 +9,8 @@ import { SelectCell } from '@/common/components/table/renderers/select'
 export const columnDefs: ColumnDef<CalculateParams>[] = [
   {
     key: 'id',
-    renderCell: SelectCell,
-    minWidth: 160,
-    width: 160
+    header: ' ',
+    renderCell: SelectCell
   },
 
   {

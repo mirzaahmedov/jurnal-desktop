@@ -108,7 +108,7 @@ export const OrganizationDialog = ({
       onOpenChange={onOpenChange}
     >
       <DialogOverlay>
-        <DialogContent className="max-w-2xl max-h-[80%] flex flex-col">
+        <DialogContent className="max-w-2xl h-full max-h-[800px] flex flex-col">
           <DialogHeader>
             <DialogTitle>
               {selected

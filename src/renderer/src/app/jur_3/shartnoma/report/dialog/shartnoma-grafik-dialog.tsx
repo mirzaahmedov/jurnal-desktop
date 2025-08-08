@@ -326,19 +326,14 @@ export const ShartnomaSmetaGrafikGeneratePDFDocumentDialog = ({
           </Form>
           <div className="grid place-content-center border-t border-slate-200 pt-5">
             <GenerateFile
-              isDisabled={
-                form.watch('section') === 0 ||
-                form.watch('subchapter') === 0 ||
-                form.watch('chapter') === 0
-              }
               fileName={`${t('payment-schedule')}_${doc_num}.pdf`}
               buttonText={t('payment-schedule')}
             >
               <ShartnomaGrafikPDFDocument
                 singlePage={form.watch('singlePage')}
-                section={form.watch('section').toString()}
-                subchapter={form.watch('subchapter').toString()}
-                chapter={form.watch('chapter').toString()}
+                section={(form.watch('section') || '').toString()}
+                subchapter={(form.watch('subchapter') || '').toString()}
+                chapter={(form.watch('chapter') || '').toString()}
                 createdDate={formatDate(new Date())}
                 grafiks={grafiksData}
                 paymentDetails={form.watch('payment_details')}

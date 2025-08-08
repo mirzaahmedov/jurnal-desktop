@@ -9,6 +9,7 @@ import { toast } from 'react-toastify'
 import { Spinner } from '@/common/components'
 import { SelectCell } from '@/common/components/table/renderers/select'
 import { Checkbox } from '@/common/components/ui/checkbox'
+import { useConfirm } from '@/common/features/confirm'
 
 import { PaymentsService } from './service'
 
@@ -19,6 +20,7 @@ interface CheckboxCellProps {
 }
 const CheckboxCell = ({ isMutable = true, row, field }: CheckboxCellProps) => {
   const queryClient = useQueryClient()
+  const { confirm } = useConfirm()
 
   const { mutate: updatePayment, isPending: isUpdating } = useMutation({
     mutationKey: [PaymentsService.QueryKeys.Update, row.id],
@@ -36,9 +38,15 @@ const CheckboxCell = ({ isMutable = true, row, field }: CheckboxCellProps) => {
   })
 
   const handleCheckedChange = (checked: CheckedState) => {
-    updatePayment({
-      ...row,
-      [field]: checked
+    confirm({
+      title: t('sure_to_update'),
+      danger: false,
+      onConfirm: () => {
+        updatePayment({
+          ...row,
+          [field]: checked
+        })
+      }
     })
   }
 

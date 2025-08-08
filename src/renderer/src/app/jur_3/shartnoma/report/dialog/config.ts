@@ -6,9 +6,9 @@ import { DocumentOrientation } from '@/common/widget/form'
 
 export const ReportDialogFormSchema = withPreprocessor(
   z.object({
-    section: z.number(),
-    subchapter: z.number(),
-    chapter: z.number(),
+    section: z.number().optional(),
+    subchapter: z.number().optional(),
+    chapter: z.number().optional(),
     percentage: z.string(),
     summa_value: z.number(),
     payment_date: z.string().optional(),

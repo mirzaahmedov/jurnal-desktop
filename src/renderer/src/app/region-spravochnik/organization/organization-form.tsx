@@ -54,7 +54,9 @@ export const OrganizationForm = ({ form, formActions, onSubmit }: OrganizationFo
   const findOrganizationByInnMutation = useMutation({
     mutationFn: SoliqIntegrationService.findOrganizationByInn,
     onSuccess: (res) => {
-      setFoundOrganization(res.data)
+      if (res.data) {
+        setFoundOrganization(res.data)
+      }
     }
   })
 
@@ -71,7 +73,7 @@ export const OrganizationForm = ({ form, formActions, onSubmit }: OrganizationFo
           onSubmit={onSubmit}
           className="flex-1 flex flex-col overflow-y-hidden p-1"
         >
-          <div className="flex-1 grid gap-6 py-4 px-1 overflow-y-auto noscroll-bar">
+          <div className="flex-1 grid gap-6 py-4 px-1 overflow-y-auto scrollbar">
             <FormField
               name="name"
               control={form.control}
