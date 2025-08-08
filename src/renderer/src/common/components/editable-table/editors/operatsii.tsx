@@ -225,7 +225,7 @@ const decodeSchetOption = (
   schet: string
   schet6: string
 } => {
-  const parts = value?.split('(')
+  const parts = value?.split?.('(') ?? []
   return {
     schet: parts[0] ?? '',
     schet6: parts[1]?.replace(')', '') ?? ''

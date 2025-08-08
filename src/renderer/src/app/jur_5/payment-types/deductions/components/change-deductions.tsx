@@ -32,7 +32,7 @@ import {
 import { useToggle } from '@/common/hooks'
 import { getVacantRayon } from '@/common/utils/zarplata'
 
-import { DeductionsChoosePaymentsDialog } from './choose-payments-dialog'
+import { ChooseDeductionsDialog } from './choose-deductions-dialog'
 
 enum PaymentsChangePaymentOptions {
   ALL = 'all',
@@ -60,8 +60,8 @@ export const DeductionsChangePayment = () => {
   const [selectedMainZarplata, setSelectedMainZarplata] = useState<MainZarplata[]>([])
   const [visibleVacant, setVisibleVacant] = useState<number | null>(null)
 
-  const { mutate: changePayment, isPending } = useMutation({
-    mutationFn: PayrollDeductionService.changePayment,
+  const changeDeductionsMutation = useMutation({
+    mutationFn: PayrollDeductionService.changeDeductions,
     onSuccess: () => {
       form.reset()
       setSelectedDeduction(undefined)
@@ -70,6 +70,17 @@ export const DeductionsChangePayment = () => {
       toast.success(t('update_success'))
     }
   })
+  const deleteDeductionsMutation = useMutation({
+    mutationFn: PayrollDeductionService.deleteDeductions,
+    onSuccess: () => {
+      form.reset()
+      setSelectedDeduction(undefined)
+      setSelectedVacant(undefined)
+      setSelectedMainZarplata([])
+      toast.success(t('update_success'))
+    }
+  })
+
   const mainZarplataQuery = useQuery({
     queryKey: [
       MainZarplataService.QueryKeys.GetByVacantId,
@@ -82,17 +93,37 @@ export const DeductionsChangePayment = () => {
   })
 
   const handleSubmit = form.handleSubmit((values) => {
-    changePayment({
+    if (!selectedDeduction) {
+      return
+    }
+    changeDeductionsMutation.mutate({
       isXarbiy: values.type === 'military' ? true : values.type === 'civilian' ? false : undefined,
       values: {
         deductionId: values.deductionId,
-        payment: selectedDeduction,
+        code: selectedDeduction.code,
         mains: selectedMainZarplata.map((mainZarplata) => ({ mainZarplataId: mainZarplata.id })),
         percentage: values.percentage,
         summa: values.summa
       }
     })
   })
+
+  const handleDeleteDeductions = () => {
+    if (!selectedDeduction) {
+      return
+    }
+    const values = form.getValues()
+    deleteDeductionsMutation.mutate({
+      isXarbiy: values.type === 'military' ? true : values.type === 'civilian' ? false : undefined,
+      values: {
+        deductionId: values.deductionId,
+        code: selectedDeduction.code,
+        mains: selectedMainZarplata.map((mainZarplata) => ({ mainZarplataId: mainZarplata.id })),
+        percentage: values.percentage,
+        summa: values.summa
+      }
+    })
+  }
 
   const selectedIds = selectedMainZarplata.map((mainZarplata) => mainZarplata.id)
   const isAllSelected =
@@ -237,7 +268,7 @@ export const DeductionsChangePayment = () => {
                 onSubmit={handleSubmit}
                 className="px-5 py-5"
               >
-                <div className="flex flex-wrap gap-x-10 gap-y-2.5">
+                <div className="flex flex-wrap gap-x-5 gap-y-2.5">
                   <div className="w-full">
                     <FormElement label={t('payment')}>
                       <Textarea
@@ -321,20 +352,37 @@ export const DeductionsChangePayment = () => {
                       </FormElement>
                     )}
                   />
-                  <Button
-                    isPending={isPending}
-                    isDisabled={
-                      isPending || !selectedMainZarplata.length || !form.watch('deductionId')
-                    }
-                    type="submit"
-                  >
-                    {t('save')}
-                  </Button>
+                  <div className="space-x-1">
+                    <Button
+                      isPending={changeDeductionsMutation.isPending}
+                      isDisabled={
+                        changeDeductionsMutation.isPending ||
+                        !selectedMainZarplata.length ||
+                        !form.watch('deductionId')
+                      }
+                      type="submit"
+                    >
+                      {t('save')}
+                    </Button>
+                    <Button
+                      variant="destructive"
+                      isPending={deleteDeductionsMutation.isPending}
+                      isDisabled={
+                        deleteDeductionsMutation.isPending ||
+                        !selectedMainZarplata.length ||
+                        !form.watch('deductionId')
+                      }
+                      type="button"
+                      onPress={handleDeleteDeductions}
+                    >
+                      {t('delete')}
+                    </Button>
+                  </div>
                 </div>
               </form>
             </Form>
           </div>
-          <DeductionsChoosePaymentsDialog
+          <ChooseDeductionsDialog
             isOpen={deductionToggle.isOpen}
             onOpenChange={deductionToggle.setOpen}
             selectedDeductionId={form.watch('deductionId')}

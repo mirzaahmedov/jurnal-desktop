@@ -149,7 +149,13 @@ export const WorkTripDetails = ({ id }: WorkTripDetailsProps) => {
   }, [childs, form])
   useEffect(() => {
     if (workTrip?.data) {
-      form.reset(workTrip?.data)
+      form.reset({
+        ...workTrip.data,
+        childs: workTrip.data?.childs?.map?.((trip) => ({
+          ...trip,
+          schet: ''
+        }))
+      })
     } else {
       form.reset({
         ...defaultValues,

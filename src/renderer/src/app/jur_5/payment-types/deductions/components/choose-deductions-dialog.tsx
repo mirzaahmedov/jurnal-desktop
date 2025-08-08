@@ -19,15 +19,15 @@ import { Pagination } from '@/common/components/pagination'
 import { DeductionColumnDefs } from '../columns'
 import { DeductionsService } from '../service'
 
-export interface DeductionsChoosePaymentsDialogProps extends Omit<DialogTriggerProps, 'children'> {
+export interface ChooseDeductionsDialogProps extends Omit<DialogTriggerProps, 'children'> {
   selectedDeductionId: number | undefined
   onSelect?: (payment: Deduction) => void
 }
-export const DeductionsChoosePaymentsDialog = ({
+export const ChooseDeductionsDialog = ({
   selectedDeductionId,
   onSelect,
   ...props
-}: DeductionsChoosePaymentsDialogProps) => {
+}: ChooseDeductionsDialogProps) => {
   const [page, setPage] = useState(1)
   const [limit, setLimit] = useState(10)
 

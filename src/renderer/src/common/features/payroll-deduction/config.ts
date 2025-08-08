@@ -15,7 +15,7 @@ export const defaultValues: PayrollDeductionFormValues = {
   deductionId: 0
 }
 
-export const PayrollDeductionChangePaymentFormSchema = z.object({
+export const PayrollDeductionChangeDeductionsFormSchema = z.object({
   mains: z.array(
     z.object({
       mainZarplataId: z.number()
@@ -23,9 +23,10 @@ export const PayrollDeductionChangePaymentFormSchema = z.object({
   ),
   deductionId: z.number(),
   payment: z.any(),
+  code: z.number(),
   percentage: z.number(),
   summa: z.number()
 })
-export type PayrollDeductionChangePaymentFormValues = z.infer<
-  typeof PayrollDeductionChangePaymentFormSchema
+export type PayrollDeductionChangeDeductionsFormValues = z.infer<
+  typeof PayrollDeductionChangeDeductionsFormSchema
 >

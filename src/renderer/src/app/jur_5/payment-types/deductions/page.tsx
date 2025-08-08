@@ -14,7 +14,7 @@ import { useLayout } from '@/common/layout'
 import { DetailsView, ListView } from '@/common/views'
 
 import { DeductionColumnDefs } from './columns'
-import { DeductionsChangePayment } from './components/change-payment'
+import { DeductionsChangePayment } from './components/change-deductions'
 import { DeductionsDialog } from './dialog'
 import {
   DeductionFilter,

@@ -60,8 +60,8 @@ export const PaymentsChangePayment = () => {
   const [selectedMainZarplata, setSelectedMainZarplata] = useState<MainZarplata[]>([])
   const [visibleVacant, setVisibleVacant] = useState<number | null>(null)
 
-  const { mutate: changePayment, isPending } = useMutation({
-    mutationFn: PayrollPaymentService.changePayment,
+  const changePaymentsMutation = useMutation({
+    mutationFn: PayrollPaymentService.changePayments,
     onSuccess: () => {
       form.reset()
       setSelectedPayment(undefined)
@@ -70,6 +70,17 @@ export const PaymentsChangePayment = () => {
       toast.success(t('update_success'))
     }
   })
+  const deletePaymentsMutation = useMutation({
+    mutationFn: PayrollPaymentService.deletePayments,
+    onSuccess: () => {
+      form.reset()
+      setSelectedPayment(undefined)
+      setSelectedVacant(undefined)
+      setSelectedMainZarplata([])
+      toast.success(t('update_success'))
+    }
+  })
+
   const mainZarplataQuery = useQuery({
     queryKey: [
       MainZarplataService.QueryKeys.GetByVacantId,
@@ -82,7 +93,7 @@ export const PaymentsChangePayment = () => {
   })
 
   const handleSubmit = form.handleSubmit((values) => {
-    changePayment({
+    changePaymentsMutation.mutate({
       isXarbiy: values.type === 'military' ? true : values.type === 'civilian' ? false : undefined,
       values: {
         paymentId: values.paymentId,
@@ -93,6 +104,22 @@ export const PaymentsChangePayment = () => {
       }
     })
   })
+
+  const handleDeletePayments = () => {
+    if (!selectedPayment) {
+      return
+    }
+    const values = form.getValues()
+    deletePaymentsMutation.mutate({
+      isXarbiy: values.type === 'military' ? true : values.type === 'civilian' ? false : undefined,
+      values: {
+        paymentId: values.paymentId,
+        mains: selectedMainZarplata.map((mainZarplata) => ({ mainZarplataId: mainZarplata.id })),
+        percentage: values.percentage,
+        summa: values.summa
+      }
+    })
+  }
 
   const filterOptions = useVacantFilters({
     vacants: treeNodes,
@@ -239,7 +266,7 @@ export const PaymentsChangePayment = () => {
                 onSubmit={handleSubmit}
                 className="px-5 py-5"
               >
-                <div className="flex flex-wrap gap-x-10 gap-y-2.5">
+                <div className="flex flex-wrap gap-x-5 gap-y-2.5">
                   <div className="w-full">
                     <FormElement label={t('payment')}>
                       <Textarea
@@ -325,15 +352,32 @@ export const PaymentsChangePayment = () => {
                       </FormElement>
                     )}
                   />
-                  <Button
-                    isPending={isPending}
-                    isDisabled={
-                      isPending || !selectedMainZarplata.length || !form.watch('paymentId')
-                    }
-                    type="submit"
-                  >
-                    {t('save')}
-                  </Button>
+                  <div className="space-x-1">
+                    <Button
+                      isPending={changePaymentsMutation.isPending}
+                      isDisabled={
+                        changePaymentsMutation.isPending ||
+                        !selectedMainZarplata.length ||
+                        !form.watch('paymentId')
+                      }
+                      type="submit"
+                    >
+                      {t('save')}
+                    </Button>
+                    <Button
+                      variant="destructive"
+                      isPending={deletePaymentsMutation.isPending}
+                      isDisabled={
+                        deletePaymentsMutation.isPending ||
+                        !selectedMainZarplata.length ||
+                        !form.watch('paymentId')
+                      }
+                      type="button"
+                      onPress={handleDeletePayments}
+                    >
+                      {t('delete')}
+                    </Button>
+                  </div>
                 </div>
               </form>
             </Form>

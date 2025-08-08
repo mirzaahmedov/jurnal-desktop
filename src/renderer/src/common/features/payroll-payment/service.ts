@@ -44,13 +44,30 @@ export class PayrollPaymentService {
     return res.data
   }
 
-  static async changePayment(args: {
+  static async changePayments(args: {
     isXarbiy: boolean | undefined
     values: PayrollChangePaymentFormValues
   }) {
     const { isXarbiy, values } = args
     const res = await zarplataApiNew.put(
       `${PayrollPaymentService.endpoint}/change-payments`,
+      values,
+      {
+        params: {
+          isXarbiy
+        }
+      }
+    )
+    return res.data
+  }
+
+  static async deletePayments(args: {
+    isXarbiy: boolean | undefined
+    values: PayrollChangePaymentFormValues
+  }) {
+    const { isXarbiy, values } = args
+    const res = await zarplataApiNew.put(
+      `${PayrollPaymentService.endpoint}/delete-payments`,
       values,
       {
         params: {
