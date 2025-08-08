@@ -254,7 +254,11 @@ const StaffingTable = () => {
 
   return (
     <>
-      <Allotment className="h-full">
+      <Allotment
+        proportionalLayout={false}
+        defaultSizes={[300, 0]}
+        className="h-full"
+      >
         <Allotment.Pane
           preferredSize={300}
           maxSize={600}
@@ -262,9 +266,7 @@ const StaffingTable = () => {
           className="w-full divide-y flex flex-col bg-gray-50"
         >
           <div className="flex-1 min-h-0 flex flex-col">
-            {isCreatingVacant || isUpdatingVacant || isDeletingVacant || vacantsQuery.isFetching ? (
-              <LoadingOverlay />
-            ) : null}
+            {vacantsQuery.isPending ? <LoadingOverlay /> : null}
             <VacantTreeSearch
               search={search}
               treeNodes={filteredTreeNodes}
@@ -282,6 +284,8 @@ const StaffingTable = () => {
           </div>
           <div className="text-center p-5 flex items-center justify-center flex-wrap gap-2">
             <Button
+              isPending={isCreatingVacant}
+              isDisabled={isCreatingVacant}
               onClick={() => {
                 if (selectedVacant) {
                   setVacantParent(selectedVacant)
@@ -302,7 +306,8 @@ const StaffingTable = () => {
             <Button
               variant="ghost"
               size="icon"
-              isDisabled={!selectedVacant}
+              isDisabled={!selectedVacant || isUpdatingVacant}
+              isPending={isUpdatingVacant}
               onClick={() => {
                 setVacantData(selectedVacant)
                 setVacantParent(undefined)
@@ -314,7 +319,8 @@ const StaffingTable = () => {
 
             <Button
               variant="ghost"
-              isDisabled={!selectedVacant}
+              isDisabled={!selectedVacant || isDeletingVacant}
+              isPending={isDeletingVacant}
               size="icon"
               onClick={handleDeleteVacant}
             >

@@ -103,15 +103,18 @@ export const Nachislenies = () => {
   }, [t, setLayout, createToggle.open])
 
   return (
-    <Allotment>
+    <Allotment
+      proportionalLayout={false}
+      defaultSizes={[300, 0]}
+    >
       <Allotment.Pane
         preferredSize={300}
         maxSize={600}
         minSize={300}
-        className="w-full bg-gray-50"
+        className="bg-gray-50"
       >
         <div className="h-full flex flex-col">
-          {vacantsQuery.isFetching ? <LoadingOverlay /> : null}
+          {vacantsQuery.isPending ? <LoadingOverlay /> : null}
           <VacantTreeSearch
             search={search}
             onValueChange={setSearch}

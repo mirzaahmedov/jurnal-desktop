@@ -11,7 +11,8 @@ export class TabelService {
 
   static QueryKeys = {
     GetAll: 'Tabel/all',
-    GetById: 'Tabel/:id'
+    GetById: 'Tabel/:id',
+    MadeVacants: 'Tabel/made-vacants'
   }
 
   static async getAll(
@@ -70,6 +71,32 @@ export class TabelService {
         vacantId
       }
     })
+    return res.data
+  }
+
+  static async getVacantsMade(
+    ctx: QueryFunctionContext<
+      [
+        typeof TabelService.QueryKeys.MadeVacants,
+        {
+          year: number
+          month: number
+          budjetId: number
+        }
+      ]
+    >
+  ) {
+    const { year, month, budjetId } = ctx.queryKey[1]
+    const res = await zarplataApiNew.get<{ vacantId: number[] }>(
+      `${TabelService.endpoint}/made-vacants`,
+      {
+        params: {
+          year,
+          month,
+          budjet_name_id: budjetId
+        }
+      }
+    )
     return res.data
   }
 

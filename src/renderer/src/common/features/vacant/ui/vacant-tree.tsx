@@ -1,6 +1,5 @@
 import type { Vacant } from '@/common/models/vacant'
-
-import { type FC, type HTMLAttributes } from 'react'
+import type { FC, HTMLAttributes, ReactNode } from 'react'
 
 import { CaretDownIcon } from '@radix-ui/react-icons'
 import { FolderDown, FolderMinus, Search } from 'lucide-react'
@@ -68,12 +67,14 @@ export interface VacantTreeProps extends HTMLAttributes<HTMLUListElement> {
   nodes: VacantTreeNode[]
   selectedIds: number[]
   onSelectNode: (node: VacantTreeNode) => void
+  renderNodeExtra?: (node: VacantTreeNode) => ReactNode
 }
 
 export const VacantTree = ({
   nodes,
   selectedIds,
   onSelectNode,
+  renderNodeExtra,
   className,
   ...props
 }: VacantTreeProps) => {
@@ -89,6 +90,7 @@ export const VacantTree = ({
             node={node}
             selectedIds={selectedIds}
             onSelect={onSelectNode}
+            renderNodeExtra={renderNodeExtra}
             nodes={nodes}
             index={index}
           />
@@ -112,9 +114,18 @@ interface TreeNodeProps {
   node: VacantTreeNode
   selectedIds: number[]
   onSelect: (node: VacantTreeNode) => void
+  renderNodeExtra?: (node: VacantTreeNode) => ReactNode
   level?: number
 }
-const TreeNode = ({ node, nodes, index, selectedIds, onSelect, level = 1 }: TreeNodeProps) => {
+const TreeNode = ({
+  node,
+  nodes,
+  index,
+  selectedIds,
+  onSelect,
+  renderNodeExtra,
+  level = 1
+}: TreeNodeProps) => {
   const { nodesState, setNodeState } = useVacantTreeViewStore()
 
   if (!node.children.length) {
@@ -139,7 +150,9 @@ const TreeNode = ({ node, nodes, index, selectedIds, onSelect, level = 1 }: Tree
             level > 1 && 'tree_node pl-3 ml-4',
             index === nodes.length - 1 && 'last_node border-b-0'
           )}
-        ></TreeNodeHeader>
+        >
+          {renderNodeExtra?.(node)}
+        </TreeNodeHeader>
       </li>
     )
   }
@@ -175,6 +188,7 @@ const TreeNode = ({ node, nodes, index, selectedIds, onSelect, level = 1 }: Tree
             index === nodes.length - 1 && 'last_node'
           )}
         >
+          {renderNodeExtra?.(node)}
           <CollapsibleTrigger asChild>
             <Button
               size="icon"
@@ -198,6 +212,7 @@ const TreeNode = ({ node, nodes, index, selectedIds, onSelect, level = 1 }: Tree
               level={level + 1}
               selectedIds={selectedIds}
               onSelect={onSelect}
+              renderNodeExtra={renderNodeExtra}
               nodes={node.children}
               index={index}
             />
@@ -222,7 +237,7 @@ const TreeNodeHeader: FC<TreeNodeHeaderProps> = ({
   return (
     <div
       className={cn(
-        'flex items-center gap-2.5 py-2.5 px-4 cursor-pointer hover:bg-slate-50 border-b',
+        'relative flex items-center gap-2.5 py-2.5 px-4 cursor-pointer hover:bg-slate-50 border-b',
         className
       )}
       {...props}

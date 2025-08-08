@@ -58,7 +58,6 @@ export const TabelEditDialog = ({
   })
   const { mutateAsync: updateTabelProvodka, isPending } = useMutation({
     mutationFn: TabelService.updateChild,
-    onSuccess: () => {},
     onError: () => {
       toast.error(t('update_failed'))
     }

@@ -50,6 +50,9 @@ export const TabelCreateDialog = ({
       queryClient.invalidateQueries({
         queryKey: [TabelService.QueryKeys.GetAll]
       })
+      queryClient.invalidateQueries({
+        queryKey: [TabelService.QueryKeys.MadeVacants]
+      })
       props.onOpenChange?.(false)
     },
     onError: () => {

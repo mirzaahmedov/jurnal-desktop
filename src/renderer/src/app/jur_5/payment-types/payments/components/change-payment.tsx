@@ -161,21 +161,24 @@ export const PaymentsChangePayment = () => {
   }
 
   return (
-    <Allotment>
+    <Allotment
+      proportionalLayout={false}
+      defaultSizes={[300, 0]}
+    >
       <Allotment.Pane
         preferredSize={300}
         maxSize={600}
         minSize={300}
         className="w-full bg-gray-50"
       >
-        <div className="h-full flex flex-col">
+        <div className="relative h-full flex flex-col">
           <VacantTreeSearch
             search={search}
             treeNodes={filteredTreeNodes}
             onValueChange={setSearch}
           />
           <div className="flex-1 overflow-y-auto scrollbar">
-            {vacantsQuery.isFetching ? <LoadingOverlay /> : null}
+            {vacantsQuery.isPending ? <LoadingOverlay /> : null}
             <VacantTree
               nodes={filteredTreeNodes}
               selectedIds={selectedVacant ? [selectedVacant.id] : []}

@@ -51,8 +51,22 @@ export const TabelsView = () => {
   const editToggle = useToggle()
   const createToggle = useToggle()
   const pagination = usePagination()
+  const budjetId = useRequisitesStore((store) => store.budjet_id)
 
   const { filteredTreeNodes, search, setSearch, vacantsQuery } = useVacantTreeNodes()
+
+  const tabelsMadeQuery = useQuery({
+    queryKey: [
+      TabelService.QueryKeys.MadeVacants,
+      {
+        year,
+        month,
+        budjetId: budjetId!
+      }
+    ],
+    queryFn: TabelService.getVacantsMade,
+    enabled: !!budjetId
+  })
 
   const { data: tabels, isFetching: isFetchingTabels } = useQuery({
     queryKey: [
@@ -75,6 +89,9 @@ export const TabelsView = () => {
       toast.success(t('delete_success'))
       queryClient.invalidateQueries({
         queryKey: [TabelService.QueryKeys.GetAll]
+      })
+      queryClient.invalidateQueries({
+        queryKey: [TabelService.QueryKeys.MadeVacants]
       })
     },
     onError: (res: { message: string }) => {
@@ -108,24 +125,33 @@ export const TabelsView = () => {
   }, [t, setLayout, createToggle.open])
 
   return (
-    <Allotment>
+    <Allotment
+      proportionalLayout={false}
+      defaultSizes={[300, 0]}
+    >
       <Allotment.Pane
         preferredSize={300}
         maxSize={600}
         minSize={300}
-        className="w-full bg-gray-50"
+        className="bg-gray-50"
       >
-        <div className="h-full flex flex-col">
+        <div className="relative h-full flex flex-col">
           <VacantTreeSearch
             search={search}
             onValueChange={setSearch}
             treeNodes={filteredTreeNodes}
           />
           <div className="overflow-y-auto scrollbar">
+            {vacantsQuery.isPending ? <LoadingOverlay /> : null}
             <VacantTree
               nodes={filteredTreeNodes}
               selectedIds={selectedVacant ? [selectedVacant.id] : []}
               onSelectNode={setSelectedVacant}
+              renderNodeExtra={(node) =>
+                tabelsMadeQuery.data?.vacantId?.includes?.(node.id) ? (
+                  <span className="size-2.5 bg-brand rounded-full inline-block absolute right-1 top-1"></span>
+                ) : null
+              }
             />
           </div>
         </div>
@@ -151,7 +177,7 @@ export const TabelsView = () => {
           />
         </div>
         <div className="flex-1 relative w-full overflow-auto scrollbar pl-px">
-          {vacantsQuery.isFetching || isFetchingTabels || isDeleting ? <LoadingOverlay /> : null}
+          {isFetchingTabels || isDeleting ? <LoadingOverlay /> : null}
           <GenericTable
             data={tabels?.data ?? []}
             columnDefs={TabelColumnDefsWithoutSelect}
