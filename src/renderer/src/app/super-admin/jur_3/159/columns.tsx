@@ -10,7 +10,7 @@ export const AdminOrgan159RegionColumnDefs: ColumnDef<AdminOrgan159>[] = [
   },
   {
     numeric: true,
-    minWidth: 300,
+    minWidth: 200,
     key: 'summa_from',
     renderCell: (row) => (
       <SummaCell
@@ -21,7 +21,19 @@ export const AdminOrgan159RegionColumnDefs: ColumnDef<AdminOrgan159>[] = [
   },
   {
     numeric: true,
-    minWidth: 300,
+    minWidth: 200,
+    key: 'prixod',
+    renderCell: (row) => <SummaCell summa={row.prixod} />
+  },
+  {
+    numeric: true,
+    minWidth: 200,
+    key: 'rasxod',
+    renderCell: (row) => <SummaCell summa={row.rasxod} />
+  },
+  {
+    numeric: true,
+    minWidth: 200,
     key: 'summa_to',
     renderCell: (row) => (
       <SummaCell
@@ -39,13 +51,12 @@ export const AdminOrgan159MainSchetColumnDefs: CollapsibleColumnDef<AdminOrgan15
   },
   {
     key: 'budjet_name',
-    header: 'budjet',
-    width: 400
+    header: 'budjet'
   },
   {
     numeric: true,
     key: 'summa_from',
-    width: 300,
+    width: 200,
     renderCell: (row) => (
       <SummaCell
         withColor
@@ -55,8 +66,20 @@ export const AdminOrgan159MainSchetColumnDefs: CollapsibleColumnDef<AdminOrgan15
   },
   {
     numeric: true,
+    width: 200,
+    key: 'prixod',
+    renderCell: (row) => <SummaCell summa={row.prixod} />
+  },
+  {
+    numeric: true,
+    width: 200,
+    key: 'rasxod',
+    renderCell: (row) => <SummaCell summa={row.rasxod} />
+  },
+  {
+    numeric: true,
     key: 'summa_to',
-    width: 300,
+    width: 200,
     renderCell: (row) => (
       <SummaCell
         withColor
@@ -75,7 +98,7 @@ export const AdminOrgan159SchetColumnDefs: ColumnDef<AdminOrgan159Schet>[] = [
     numeric: true,
     key: 'summa_from',
     header: 'summa_from',
-    minWidth: 300,
+    minWidth: 200,
     renderCell: (row) => (
       <SummaCell
         withColor
@@ -85,9 +108,21 @@ export const AdminOrgan159SchetColumnDefs: ColumnDef<AdminOrgan159Schet>[] = [
   },
   {
     numeric: true,
+    width: 200,
+    key: 'prixod',
+    renderCell: (row) => <SummaCell summa={row.prixod} />
+  },
+  {
+    numeric: true,
+    width: 200,
+    key: 'rasxod',
+    renderCell: (row) => <SummaCell summa={row.rasxod} />
+  },
+  {
+    numeric: true,
     key: 'summa_to',
     header: 'summa_to',
-    minWidth: 300,
+    minWidth: 200,
     renderCell: (row) => (
       <SummaCell
         withColor

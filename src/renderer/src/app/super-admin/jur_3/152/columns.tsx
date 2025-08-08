@@ -51,12 +51,12 @@ export const AdminOrgan152MainSchetColumnDefs: CollapsibleColumnDef<AdminOrgan15
   },
   {
     key: 'budjet_name',
-    header: 'budjet',
-    width: 400
+    header: 'budjet'
   },
   {
     numeric: true,
     key: 'summa_from',
+    minWidth: 200,
     width: 200,
     renderCell: (row) => (
       <SummaCell
@@ -68,18 +68,21 @@ export const AdminOrgan152MainSchetColumnDefs: CollapsibleColumnDef<AdminOrgan15
   {
     numeric: true,
     minWidth: 200,
+    width: 200,
     key: 'prixod',
     renderCell: (row) => <SummaCell summa={row.prixod} />
   },
   {
     numeric: true,
     minWidth: 200,
+    width: 200,
     key: 'rasxod',
     renderCell: (row) => <SummaCell summa={row.rasxod} />
   },
   {
     numeric: true,
     key: 'summa_to',
+    minWidth: 200,
     width: 200,
     renderCell: (row) => (
       <SummaCell

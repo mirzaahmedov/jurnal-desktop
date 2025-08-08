@@ -3,6 +3,8 @@ export interface AdminPodotchet {
   name: string
   main_schets: AdminPodotchetMainSchet[]
   summa_from: number
+  prixod: number
+  rasxod: number
   summa_to: number
 }
 
@@ -23,6 +25,8 @@ export interface AdminPodotchetMainSchet {
     schet: string
   }>
   summa_from: number
+  prixod: number
+  rasxod: number
   summa_to: number
 }
 
@@ -63,5 +67,7 @@ export interface AdminPodotchetSchet {
     summa: number
   }
   summa_from: number
+  prixod: number
+  rasxod: number
   summa_to: number
 }

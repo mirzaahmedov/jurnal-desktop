@@ -4,6 +4,14 @@ import type { QueryFunctionContext } from '@tanstack/react-query'
 
 import { http } from '@/common/lib/http'
 
+interface AdminPodotchetMeta {
+  summa_from: number
+  summa_to: number
+  prixod: number
+  rasxod: number
+  total: number
+}
+
 export class AdminPodotchetService {
   static QueryKeys = {
     GetAll: '/admin/jur4'
@@ -15,7 +23,7 @@ export class AdminPodotchetService {
     >
   ) {
     const params = ctx.queryKey[1]
-    const res = await http.get<ApiResponse<AdminPodotchet[]>>('/admin/jur4', {
+    const res = await http.get<ApiResponse<AdminPodotchet[], AdminPodotchetMeta>>('/admin/jur4', {
       params
     })
     return res.data

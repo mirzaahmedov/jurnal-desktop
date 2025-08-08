@@ -9,7 +9,7 @@ export const AdminMaterialRegionColumnDefs: ColumnDef<AdminMaterial>[] = [
   },
   {
     numeric: true,
-    minWidth: 300,
+    minWidth: 200,
     key: 'summa_from',
     renderCell: (row) => (
       <SummaCell
@@ -20,7 +20,19 @@ export const AdminMaterialRegionColumnDefs: ColumnDef<AdminMaterial>[] = [
   },
   {
     numeric: true,
-    minWidth: 300,
+    minWidth: 200,
+    key: 'prixod',
+    renderCell: (row) => <SummaCell summa={row.prixod} />
+  },
+  {
+    numeric: true,
+    minWidth: 200,
+    key: 'rasxod',
+    renderCell: (row) => <SummaCell summa={row.rasxod} />
+  },
+  {
+    numeric: true,
+    minWidth: 200,
     key: 'summa_to',
     renderCell: (row) => (
       <SummaCell
@@ -44,7 +56,7 @@ export const AdminMaterialMainSchetColumnDefs: ColumnDef<AdminMaterialMainSchet>
   {
     numeric: true,
     key: 'summa_from',
-    width: 300,
+    width: 200,
     renderCell: (row) => (
       <SummaCell
         withColor
@@ -54,8 +66,20 @@ export const AdminMaterialMainSchetColumnDefs: ColumnDef<AdminMaterialMainSchet>
   },
   {
     numeric: true,
+    minWidth: 200,
+    key: 'prixod',
+    renderCell: (row) => <SummaCell summa={row.prixod} />
+  },
+  {
+    numeric: true,
+    minWidth: 200,
+    key: 'rasxod',
+    renderCell: (row) => <SummaCell summa={row.rasxod} />
+  },
+  {
+    numeric: true,
     key: 'summa_to',
-    width: 300,
+    width: 200,
     renderCell: (row) => (
       <SummaCell
         withColor
@@ -74,7 +98,7 @@ export const AdminMaterialMainSchetColumnDefs: ColumnDef<AdminMaterialMainSchet>
 //     numeric: true,
 //     key: 'summa_from',
 //     header: 'summa_from',
-//     minWidth: 300,
+//     minWidth: 200,
 //     renderCell: (row) => (
 //       <SummaCell
 //         withColor
@@ -86,7 +110,7 @@ export const AdminMaterialMainSchetColumnDefs: ColumnDef<AdminMaterialMainSchet>
 //     numeric: true,
 //     key: 'summa_to',
 //     header: 'summa_to',
-//     minWidth: 300,
+//     minWidth: 200,
 //     renderCell: (row) => (
 //       <SummaCell
 //         withColor

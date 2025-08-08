@@ -5,7 +5,8 @@ import { useEffect, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 
-import { GenericTable } from '@/common/components'
+import { FooterCell, FooterRow, GenericTable } from '@/common/components'
+import { SummaCell } from '@/common/components/table/renderers/summa'
 import {
   SearchFilterDebounced,
   useSearchFilter
@@ -13,6 +14,7 @@ import {
 import { useSettingsStore } from '@/common/features/settings'
 import { useToggle } from '@/common/hooks/use-toggle'
 import { useLayout } from '@/common/layout'
+import { formatNumber } from '@/common/lib/format'
 import { ListView } from '@/common/views'
 
 import { EndDatePicker } from '../../components/end-date-picker'
@@ -74,6 +76,30 @@ const AdminOrgan159Page = () => {
           data={regions?.data ?? []}
           columnDefs={AdminOrgan159RegionColumnDefs}
           onClickRow={handleClickRow}
+          footer={
+            <FooterRow className="sticky bottom-0">
+              <FooterCell
+                colSpan={3}
+                title={t('total')}
+                content={
+                  <SummaCell
+                    withColor
+                    summa={regions?.meta?.summa_from ?? 0}
+                  />
+                }
+              />
+              <FooterCell content={formatNumber(regions?.meta?.prixod ?? 0)} />
+              <FooterCell content={formatNumber(regions?.meta?.rasxod ?? 0)} />
+              <FooterCell
+                content={
+                  <SummaCell
+                    withColor
+                    summa={regions?.meta?.summa_to ?? 0}
+                  />
+                }
+              />
+            </FooterRow>
+          }
         />
       </ListView.Content>
 

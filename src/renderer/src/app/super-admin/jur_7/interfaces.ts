@@ -3,6 +3,8 @@ export interface AdminMaterial {
   name: string
   main_schets: AdminMaterialMainSchet[]
   summa_from: number
+  prixod: number
+  rasxod: number
   summa_to: number
 }
 
@@ -48,5 +50,7 @@ export interface AdminMaterialMainSchet {
     total: number
   }
   summa_from: number
+  prixod: number
+  rasxod: number
   summa_to: number
 }

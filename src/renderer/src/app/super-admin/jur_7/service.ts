@@ -4,6 +4,14 @@ import type { QueryFunctionContext } from '@tanstack/react-query'
 
 import { http } from '@/common/lib/http'
 
+interface AdminMaterialMeta {
+  summa_from: number
+  summa_to: number
+  prixod: number
+  rasxod: number
+  total: number
+}
+
 export class AdminMaterialService {
   static QueryKeys = {
     GetAll: '/admin/jur7'
@@ -15,7 +23,7 @@ export class AdminMaterialService {
     >
   ) {
     const params = ctx.queryKey[1]
-    const res = await http.get<ApiResponse<AdminMaterial[]>>('/admin/jur7', {
+    const res = await http.get<ApiResponse<AdminMaterial[], AdminMaterialMeta>>('/admin/jur7', {
       params
     })
     return res.data
