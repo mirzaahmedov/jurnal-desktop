@@ -14,8 +14,10 @@ import { AdminBankMainSchetColumnDefs } from './columns'
 
 export interface ViewModalProps extends Omit<DialogTriggerProps, 'children'> {
   selected: AdminBank | null
+  from: string
+  to: string
 }
-export const ViewModal = ({ selected, ...props }: ViewModalProps) => {
+export const ViewModal = ({ selected, from, to, ...props }: ViewModalProps) => {
   return (
     <DialogTrigger {...props}>
       <DialogOverlay>
@@ -27,6 +29,11 @@ export const ViewModal = ({ selected, ...props }: ViewModalProps) => {
             <GenericTable
               columnDefs={AdminBankMainSchetColumnDefs}
               data={selected?.main_schets ?? []}
+              params={{
+                from,
+                to,
+                regionId: selected?.id
+              }}
             />
           </div>
         </DialogContent>

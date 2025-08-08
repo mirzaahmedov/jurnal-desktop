@@ -21,13 +21,15 @@ export interface DailyReportDialogProps extends Omit<DialogTriggerProps, 'childr
   main_schet_id: number
   budjet_id: number
   report_title_id: number
+  region_id?: number
 }
 export const DailyReportDialog = ({
   isOpen,
   onOpenChange,
   budjet_id,
   main_schet_id,
-  report_title_id
+  report_title_id,
+  region_id
 }: DailyReportDialogProps) => {
   const defaultDates = useDates()
 
@@ -96,6 +98,7 @@ export const DailyReportDialog = ({
                 to: dates.to,
                 year,
                 month,
+                region_id,
                 excel: true
               }}
               variant="default"
