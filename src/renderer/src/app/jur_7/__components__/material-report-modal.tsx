@@ -19,6 +19,7 @@ import { TypeSchetOperatsii } from '@/common/models'
 import { createResponsibleSpravochnik } from '../responsible/service'
 
 export interface MaterialReportModalProps extends Omit<DialogTriggerProps, 'children'> {
+  withResponsible?: boolean
   withDefault?: boolean
   withIznos?: boolean
   main_schet_id: number
@@ -27,8 +28,10 @@ export interface MaterialReportModalProps extends Omit<DialogTriggerProps, 'chil
   from: string
   year: number
   month: number
+  region_id?: number
 }
 export const MaterialReportModal = ({
+  withResponsible = true,
   withDefault = true,
   withIznos = false,
   isOpen,
@@ -38,7 +41,8 @@ export const MaterialReportModal = ({
   to,
   from,
   year,
-  month
+  month,
+  region_id
 }: MaterialReportModalProps) => {
   const { t } = useTranslation(['app'])
 
@@ -65,12 +69,16 @@ export const MaterialReportModal = ({
             <DialogTitle>{t('material')}</DialogTitle>
           </DialogHeader>
           <div className="flex flex-col gap-2 mt-2.5">
-            <Label className="font-medium">{t('responsible')}</Label>
-            <SpravochnikInput
-              {...responsibleSpravochnik}
-              placeholder={t('responsible')}
-              getInputValue={(selected) => selected?.fio ?? '-'}
-            />
+            {withResponsible ? (
+              <>
+                <Label className="font-medium">{t('responsible')}</Label>
+                <SpravochnikInput
+                  {...responsibleSpravochnik}
+                  placeholder={t('responsible')}
+                  getInputValue={(selected) => selected?.fio ?? '-'}
+                />
+              </>
+            ) : null}
             <Label className="font-medium">{t('operatsii')}</Label>
             <SpravochnikInput
               {...operatsiiSpravochnik}
@@ -92,8 +100,11 @@ export const MaterialReportModal = ({
                   month,
                   budjet_id,
                   main_schet_id,
-                  responsible_id: responsibleSpravochnik.selected?.id || undefined,
+                  responsible_id: withResponsible
+                    ? responsibleSpravochnik.selected?.id || undefined
+                    : undefined,
                   schet: operatsiiSpravochnik.selected?.schet || undefined,
+                  region_id,
                   excel: true
                 }}
                 buttonText={t('material')}
@@ -110,7 +121,10 @@ export const MaterialReportModal = ({
                   month,
                   budjet_id,
                   main_schet_id,
-                  responsible_id: responsibleSpravochnik.selected?.id || undefined,
+                  responsible_id: withResponsible
+                    ? responsibleSpravochnik.selected?.id || undefined
+                    : undefined,
+                  region_id,
                   schet: operatsiiSpravochnik.selected?.schet || undefined,
                   excel: true,
                   iznos: true

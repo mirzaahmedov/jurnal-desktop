@@ -19,30 +19,36 @@ import { useDates } from '@/common/hooks'
 export interface DailyReportDialogProps extends Omit<DialogTriggerProps, 'children'> {
   main_schet_id: number
   budjet_id: number
+  region_id?: number
+  defaultFrom?: string
+  defaultTo?: string
 }
 export const DailyReportDialog = ({
   isOpen,
   onOpenChange,
   budjet_id,
-  main_schet_id
+  main_schet_id,
+  region_id,
+  defaultFrom,
+  defaultTo
 }: DailyReportDialogProps) => {
   const defaultDates = useDates()
 
   const { t } = useTranslation(['app'])
 
   const [dates, setDates] = useState({
-    from: defaultDates.from,
-    to: defaultDates.to
+    from: defaultFrom || defaultDates.from,
+    to: defaultTo || defaultDates.to
   })
 
   useEffect(() => {
     if (isOpen) {
       setDates({
-        from: defaultDates.from,
-        to: defaultDates.to
+        from: defaultFrom || defaultDates.from,
+        to: defaultTo || defaultDates.to
       })
     }
-  }, [isOpen])
+  }, [isOpen, defaultFrom, defaultTo])
 
   return (
     <DialogTrigger
@@ -86,6 +92,7 @@ export const DailyReportDialog = ({
                 to: dates.to,
                 page: 1,
                 limit: 1000000000000,
+                region_id,
                 budjet_id,
                 main_schet_id,
                 excel: true

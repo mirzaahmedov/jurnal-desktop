@@ -26,6 +26,7 @@ export interface AktReportDialogProps extends Omit<DialogTriggerProps, 'children
   month: number
   budjet_id: number
   main_schet_id: number
+  region_id?: number
 }
 export const AktReportDialog = ({
   to,
@@ -33,6 +34,7 @@ export const AktReportDialog = ({
   month,
   budjet_id,
   main_schet_id,
+  region_id,
   ...props
 }: AktReportDialogProps) => {
   const { t } = useTranslation()
@@ -91,6 +93,7 @@ export const AktReportDialog = ({
                     budjet_id,
                     main_schet_id,
                     excel: true,
+                    region_id,
                     responsible_id: form.watch('responsible_id')
                   }}
                   variant="default"

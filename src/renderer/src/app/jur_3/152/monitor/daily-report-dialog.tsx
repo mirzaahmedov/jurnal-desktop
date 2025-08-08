@@ -22,6 +22,9 @@ export interface DailyReportDialogProps extends Omit<DialogTriggerProps, 'childr
   budjet_id: number
   schet_id: number
   report_title_id: number
+  region_id?: number
+  defaultFrom?: string
+  defaultTo?: string
 }
 export const DailyReportDialog = ({
   isOpen,
@@ -29,15 +32,18 @@ export const DailyReportDialog = ({
   budjet_id,
   main_schet_id,
   schet_id,
-  report_title_id
+  region_id,
+  report_title_id,
+  defaultFrom,
+  defaultTo
 }: DailyReportDialogProps) => {
   const defaultDates = useDates()
 
   const { t } = useTranslation(['app'])
 
   const [dates, setDates] = useState({
-    from: defaultDates.from,
-    to: defaultDates.to
+    from: defaultFrom || defaultDates.from,
+    to: defaultTo || defaultDates.to
   })
 
   const date = parseDate(dates.from)
@@ -47,11 +53,11 @@ export const DailyReportDialog = ({
   useEffect(() => {
     if (isOpen) {
       setDates({
-        from: defaultDates.from,
-        to: defaultDates.to
+        from: defaultFrom || defaultDates.from,
+        to: defaultTo || defaultDates.to
       })
     }
-  }, [isOpen])
+  }, [isOpen, defaultFrom, defaultTo])
 
   return (
     <DialogTrigger
@@ -93,6 +99,7 @@ export const DailyReportDialog = ({
               params={{
                 main_schet_id,
                 budjet_id,
+                region_id,
                 report_title_id,
                 from: dates.from,
                 to: dates.to,

@@ -249,6 +249,8 @@ const ReportsContainer = ({
         main_schet_id={main_schet_id!}
         report_title_id={reportTitleId!}
         region_id={regionId}
+        defaultFrom={from}
+        defaultTo={to}
       />
     </>
   )

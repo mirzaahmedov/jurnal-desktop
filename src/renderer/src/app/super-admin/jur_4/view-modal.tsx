@@ -15,8 +15,10 @@ import { AdminPodotchetMainSchetColumnDefs, AdminPodotchetSchetColumnDefs } from
 
 export interface ViewModalProps extends Omit<DialogTriggerProps, 'children'> {
   selected: AdminPodotchet | null
+  from: string
+  to: string
 }
-export const ViewModal = ({ selected, ...props }: ViewModalProps) => {
+export const ViewModal = ({ selected, from, to, ...props }: ViewModalProps) => {
   return (
     <DialogTrigger {...props}>
       <DialogOverlay>
@@ -35,6 +37,13 @@ export const ViewModal = ({ selected, ...props }: ViewModalProps) => {
                   <GenericTable
                     columnDefs={AdminPodotchetSchetColumnDefs}
                     data={row.jur4_schets ?? []}
+                    params={{
+                      from,
+                      to,
+                      regionId: selected?.id,
+                      mainSchetId: row.id,
+                      budjetId: row.budjet_id
+                    }}
                   />
                 </div>
               )}

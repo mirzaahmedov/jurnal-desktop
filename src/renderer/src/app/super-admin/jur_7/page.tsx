@@ -14,6 +14,7 @@ import {
 import { useSettingsStore } from '@/common/features/settings'
 import { useToggle } from '@/common/hooks/use-toggle'
 import { useLayout } from '@/common/layout'
+import { formatDate, getFirstDayOfMonth, parseDate } from '@/common/lib/date'
 import { formatNumber } from '@/common/lib/format'
 import { ListView } from '@/common/views'
 
@@ -103,6 +104,7 @@ const AdminMaterialPage = () => {
         selected={selected}
         isOpen={viewToggle.isOpen}
         onOpenChange={viewToggle.setOpen}
+        from={formatDate(getFirstDayOfMonth(parseDate(to)))}
         to={to}
       />
     </ListView>

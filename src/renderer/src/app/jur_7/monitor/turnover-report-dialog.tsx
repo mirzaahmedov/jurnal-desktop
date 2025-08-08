@@ -21,18 +21,22 @@ import { SpravochnikInput, useSpravochnik } from '@/common/features/spravochnik'
 import { createResponsibleSpravochnik } from '../responsible/service'
 
 export interface TurnoverReportDialogProps extends Omit<DialogTriggerProps, 'children'> {
+  withResponsible?: boolean
   to: string
   year: number
   month: number
   budjet_id: number
   main_schet_id: number
+  region_id?: number
 }
 export const TurnoverReportDialog = ({
+  withResponsible = true,
   to,
   year,
   month,
   budjet_id,
   main_schet_id,
+  region_id,
   ...props
 }: TurnoverReportDialogProps) => {
   const { t } = useTranslation()
@@ -63,18 +67,20 @@ export const TurnoverReportDialog = ({
               onSubmit={form.handleSubmit(() => {})}
               className="space-y-4 mt-2.5"
             >
-              <FormElement
-                direction="column"
-                label={t('responsible')}
-              >
-                <SpravochnikInput
-                  readOnly
-                  {...responsibleSpravochnik}
-                  getInputValue={(value) =>
-                    value ? `${value.fio} (${value.spravochnik_podrazdelenie_jur7_name})` : ''
-                  }
-                />
-              </FormElement>
+              {withResponsible ? (
+                <FormElement
+                  direction="column"
+                  label={t('responsible')}
+                >
+                  <SpravochnikInput
+                    readOnly
+                    {...responsibleSpravochnik}
+                    getInputValue={(value) =>
+                      value ? `${value.fio} (${value.spravochnik_podrazdelenie_jur7_name})` : ''
+                    }
+                  />
+                </FormElement>
+              ) : null}
 
               <DialogFooter>
                 <DownloadFile
@@ -87,7 +93,10 @@ export const TurnoverReportDialog = ({
                     month,
                     budjet_id,
                     main_schet_id,
-                    responsible_id: form.watch('responsible_id') || undefined,
+                    responsible_id: withResponsible
+                      ? form.watch('responsible_id') || undefined
+                      : undefined,
+                    region_id,
                     excel: true,
                     iznos: true
                   }}

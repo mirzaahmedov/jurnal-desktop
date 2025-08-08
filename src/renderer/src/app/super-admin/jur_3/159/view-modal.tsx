@@ -15,8 +15,10 @@ import { AdminOrgan159MainSchetColumnDefs, AdminOrgan159SchetColumnDefs } from '
 
 export interface ViewModalProps extends Omit<DialogTriggerProps, 'children'> {
   selected: AdminOrgan159 | null
+  from: string
+  to: string
 }
-export const ViewModal = ({ selected, ...props }: ViewModalProps) => {
+export const ViewModal = ({ selected, from, to, ...props }: ViewModalProps) => {
   return (
     <DialogTrigger {...props}>
       <DialogOverlay>
@@ -35,6 +37,13 @@ export const ViewModal = ({ selected, ...props }: ViewModalProps) => {
                   <GenericTable
                     columnDefs={AdminOrgan159SchetColumnDefs}
                     data={row.jur3_schets_159 ?? []}
+                    params={{
+                      from,
+                      to,
+                      regionId: selected?.id,
+                      mainSchetId: row.id,
+                      budjetId: row.budjet_id
+                    }}
                   />
                 </div>
               )}
