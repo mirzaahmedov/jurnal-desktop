@@ -10,8 +10,9 @@ export class NachislenieService {
 
   static QueryKeys = {
     GetAll: 'nachislenie/all',
+    MadeVacants: 'nachislenie/made-vacants',
     GetById: 'nachislenie/:id',
-    getAll: 'nachislenie/vacantId'
+    GetVacantId: 'nachislenie/:vacantId'
   }
 
   static async getById(
@@ -41,10 +42,36 @@ export class NachislenieService {
     return res.data
   }
 
+  static async getVacantsMade(
+    ctx: QueryFunctionContext<
+      [
+        typeof NachislenieService.QueryKeys.MadeVacants,
+        {
+          year: number
+          month: number
+          budjetId: number
+        }
+      ]
+    >
+  ) {
+    const { year, month, budjetId } = ctx.queryKey[1]
+    const res = await zarplataApiNew.get<{ vacantId: number[] }>(
+      `${NachislenieService.endpoint}/made-vacants`,
+      {
+        params: {
+          year,
+          month,
+          budjet_name_id: budjetId
+        }
+      }
+    )
+    return res.data
+  }
+
   static async getAll(
     ctx: QueryFunctionContext<
       [
-        typeof NachislenieService.QueryKeys.getAll,
+        typeof NachislenieService.QueryKeys.GetVacantId,
         {
           page: number
           limit: number

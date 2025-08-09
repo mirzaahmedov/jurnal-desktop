@@ -111,7 +111,10 @@ export const NachislenieCreateDialog = ({
     onSuccess: () => {
       toast.success(t('create_success'))
       queryClient.invalidateQueries({
-        queryKey: [NachislenieService.QueryKeys.getAll]
+        queryKey: [NachislenieService.QueryKeys.GetVacantId]
+      })
+      queryClient.invalidateQueries({
+        queryKey: [NachislenieService.QueryKeys.MadeVacants]
       })
       props?.onOpenChange?.(false)
     },
@@ -134,8 +137,10 @@ export const NachislenieCreateDialog = ({
   }, [vacant])
 
   useEffect(() => {
-    getMaxDocNum()
-  }, [getMaxDocNum])
+    if (props.isOpen) {
+      getMaxDocNum()
+    }
+  }, [getMaxDocNum, props.isOpen])
 
   return (
     <DialogTrigger {...props}>

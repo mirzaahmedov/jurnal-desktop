@@ -47,9 +47,22 @@ export const Nachislenies = () => {
   const editToggle = useToggle()
   const createToggle = useToggle()
 
+  const nachislenieMadeQuery = useQuery({
+    queryKey: [
+      NachislenieService.QueryKeys.MadeVacants,
+      {
+        year: year,
+        month: month,
+        budjetId: budjet_id!
+      }
+    ],
+    queryFn: NachislenieService.getVacantsMade,
+    enabled: !!budjet_id
+  })
+
   const { data: nachislenie, isFetching: isFetchingNachislenie } = useQuery({
     queryKey: [
-      NachislenieService.QueryKeys.getAll,
+      NachislenieService.QueryKeys.GetVacantId,
       {
         page: pagination.page,
         limit: pagination.limit,
@@ -69,7 +82,10 @@ export const Nachislenies = () => {
     onSuccess: () => {
       toast.success(t('delete_success'))
       queryClient.invalidateQueries({
-        queryKey: [NachislenieService.QueryKeys.getAll]
+        queryKey: [NachislenieService.QueryKeys.GetVacantId]
+      })
+      queryClient.invalidateQueries({
+        queryKey: [NachislenieService.QueryKeys.MadeVacants]
       })
     },
     onError: (res: { message: string }) => {
@@ -125,6 +141,11 @@ export const Nachislenies = () => {
               nodes={filteredTreeNodes}
               onSelectNode={setSelectedVacant}
               selectedIds={selectedVacant ? [selectedVacant.id] : []}
+              renderNodeExtra={(node) =>
+                nachislenieMadeQuery.data?.vacantId?.includes?.(node.id) ? (
+                  <span className="size-2.5 bg-brand rounded-full inline-block absolute right-1 top-1"></span>
+                ) : null
+              }
             />
           </div>
         </div>
