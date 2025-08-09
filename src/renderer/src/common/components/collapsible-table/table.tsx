@@ -1,7 +1,7 @@
 import type { CollapsibleTableProps } from './interfaces'
 
 import { CaretDownIcon } from '@radix-ui/react-icons'
-import { Pencil, Trash2 } from 'lucide-react'
+import { Eye, Pencil, Trash2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import {
@@ -36,6 +36,7 @@ export const CollapsibleTable = <T extends object, C extends object = T>({
   children,
   getChildRows,
   onClickRow,
+  onView,
   onEdit,
   onDelete,
   classNames,
@@ -73,7 +74,7 @@ export const CollapsibleTable = <T extends object, C extends object = T>({
                 </GenericTableHead>
               )
             })}
-            {onEdit || onDelete ? (
+            {onEdit || onDelete || onView ? (
               <GenericTableHead
                 key="actions"
                 className="w-32"
@@ -105,6 +106,7 @@ export const CollapsibleTable = <T extends object, C extends object = T>({
                   children,
                   getChildRows,
                   onClickRow,
+                  onView,
                   onEdit,
                   onDelete,
                   openRows,
@@ -150,6 +152,7 @@ const CollapsibleItem = <T extends object, C extends object>({
     getChildRows,
     children,
     onClickRow,
+    onView,
     onEdit,
     onDelete,
     disabledIds,
@@ -190,9 +193,22 @@ const CollapsibleItem = <T extends object, C extends object>({
             </GenericTableCell>
           )
         })}
-        {onEdit || onDelete ? (
+        {onEdit || onDelete || onView ? (
           <GenericTableCell className="py-1 w-32">
             <div className="flex items-center whitespace-nowrap w-full gap-1">
+              {onView && (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    onView(row)
+                  }}
+                >
+                  <Eye className="size-4" />
+                </Button>
+              )}
               {onEdit ? (
                 <Button
                   variant="ghost"
@@ -291,9 +307,22 @@ const CollapsibleItem = <T extends object, C extends object>({
               </GenericTableCell>
             )
           })}
-          {onEdit || onDelete ? (
+          {onEdit || onDelete || onView ? (
             <GenericTableCell className="py-1 w-32">
               <div className="flex items-center whitespace-nowrap w-full gap-1">
+                {onView && (
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      onView(row)
+                    }}
+                  >
+                    <Eye className="size-4" />
+                  </Button>
+                )}
                 {onEdit ? (
                   <Button
                     variant="ghost"

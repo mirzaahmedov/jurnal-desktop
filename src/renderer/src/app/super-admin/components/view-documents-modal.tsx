@@ -23,6 +23,7 @@ import {
 import { Pagination } from '@/common/components/pagination'
 import { ProvodkaBadge } from '@/common/components/provodka-badge'
 import { HoverInfoCell } from '@/common/components/table/renderers'
+import { ProvodkaCell } from '@/common/components/table/renderers/provodka-operatsii'
 import { SummaCell } from '@/common/components/table/renderers/summa'
 import { UserCell } from '@/common/components/table/renderers/user'
 import { Badge } from '@/common/components/ui/badge'
@@ -100,6 +101,11 @@ export const ViewDocumentsModal: FC<ViewDocumentsModalProps> = ({ type, docs, ..
                           key: 'rasxod_sum',
                           header: 'rasxod',
                           renderCell: (row) => <SummaCell summa={row.rasxod_sum} />
+                        },
+                        {
+                          minWidth: 200,
+                          key: 'provodka',
+                          renderCell: (row) => <ProvodkaCell provodki={row.provodki_array} />
                         }
                       ])
                     : type === AdminDocumentsType.Bank
@@ -162,6 +168,11 @@ export const ViewDocumentsModal: FC<ViewDocumentsModalProps> = ({ type, docs, ..
                             key: 'rasxod_sum',
                             header: 'rasxod',
                             renderCell: (row) => <SummaCell summa={row.rasxod_sum} />
+                          },
+                          {
+                            minWidth: 200,
+                            key: 'provodka',
+                            renderCell: (row) => <ProvodkaCell provodki={row.provodki_array} />
                           }
                         ])
                       : type === AdminDocumentsType.Organ152
@@ -222,6 +233,20 @@ export const ViewDocumentsModal: FC<ViewDocumentsModalProps> = ({ type, docs, ..
                               key: 'summa_rasxod',
                               header: 'rasxod',
                               renderCell: (row) => <SummaCell summa={row.summa_rasxod} />
+                            },
+                            {
+                              minWidth: 200,
+                              key: 'provodka',
+                              renderCell: (row) => (
+                                <ProvodkaCell
+                                  provodki={[
+                                    {
+                                      provodki_schet: row.provodki_schet,
+                                      provodki_sub_schet: row.provodki_sub_schet
+                                    }
+                                  ]}
+                                />
+                              )
                             }
                           ])
                         : type === AdminDocumentsType.Organ159
@@ -282,6 +307,20 @@ export const ViewDocumentsModal: FC<ViewDocumentsModalProps> = ({ type, docs, ..
                                 key: 'summa_rasxod',
                                 header: 'rasxod',
                                 renderCell: (row) => <SummaCell summa={row.summa_rasxod} />
+                              },
+                              {
+                                minWidth: 200,
+                                key: 'provodka',
+                                renderCell: (row) => (
+                                  <ProvodkaCell
+                                    provodki={[
+                                      {
+                                        provodki_schet: row.provodki_schet,
+                                        provodki_sub_schet: row.provodki_sub_schet
+                                      }
+                                    ]}
+                                  />
+                                )
                               }
                             ])
                           : type === AdminDocumentsType.Podotchet
@@ -340,6 +379,20 @@ export const ViewDocumentsModal: FC<ViewDocumentsModalProps> = ({ type, docs, ..
                                   key: 'rasxod_sum',
                                   header: 'rasxod',
                                   renderCell: (row) => <SummaCell summa={row.rasxod_sum} />
+                                },
+                                {
+                                  minWidth: 200,
+                                  key: 'provodka',
+                                  renderCell: (row) => (
+                                    <ProvodkaCell
+                                      provodki={[
+                                        {
+                                          provodki_schet: row.provodki_schet,
+                                          provodki_sub_schet: row.provodki_sub_schet
+                                        }
+                                      ]}
+                                    />
+                                  )
                                 }
                               ])
                             : ([

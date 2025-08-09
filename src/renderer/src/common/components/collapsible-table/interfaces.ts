@@ -24,6 +24,7 @@ interface CommonCollapsibleTableProps<T extends object> {
   getRowKey?: (row: T, rowIndex: number) => string | number
   getRowSelected?: GetRowSelectedFn<T>
   onClickRow?: (row: T) => void
+  onView?(row: T): void
   onEdit?: (row: T) => void
   onDelete?: (row: T) => void
   openRows?: (string | number)[]

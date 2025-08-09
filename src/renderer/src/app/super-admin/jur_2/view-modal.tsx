@@ -14,6 +14,7 @@ import {
 
 import { AdminDocumentsType, ViewDocumentsModal } from '../components/view-documents-modal'
 import { AdminBankMainSchetColumnDefs } from './columns'
+import { AdminBankReports } from './reports'
 
 export interface ViewModalProps extends Omit<DialogTriggerProps, 'children'> {
   selected: AdminBank | null
@@ -40,9 +41,15 @@ export const ViewModal = ({ selected, from, to, ...props }: ViewModalProps) => {
                   to,
                   regionId: selected?.id
                 }}
-                onDoubleClickRow={(row) => {
+                onView={(row) => {
                   setDocs(row.docs)
                 }}
+                actions={(row, tableProps) => (
+                  <AdminBankReports
+                    row={row}
+                    tableProps={tableProps}
+                  />
+                )}
               />
             </div>
           </DialogContent>

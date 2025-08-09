@@ -1,4 +1,4 @@
-import type { AdminKassa } from './interfaces'
+import type { AdminKassa, AdminKassaDocument } from './interfaces'
 
 import { useEffect, useState } from 'react'
 
@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next'
 
 import { FooterCell, FooterRow, GenericTable } from '@/common/components'
 import { SummaCell } from '@/common/components/table/renderers/summa'
+import { DownloadFile } from '@/common/features/file'
 import {
   SearchFilterDebounced,
   useSearchFilter
@@ -19,6 +20,7 @@ import { formatNumber } from '@/common/lib/format'
 import { ListView } from '@/common/views'
 
 import { EndDatePicker } from '../components/end-date-picker'
+import { AdminDocumentsType, ViewDocumentsModal } from '../components/view-documents-modal'
 import { AdminKassaRegionColumnDefs } from './columns'
 import { AdminKassaService } from './service'
 import { ViewModal } from './view-modal'
@@ -29,10 +31,13 @@ const AdminKassaPage = () => {
   const defaultDate = useSettingsStore((state) => state.default_end_date)
 
   const [search] = useSearchFilter()
+  const [docs, setDocs] = useState<AdminKassaDocument[]>()
   const [selected, setSelected] = useState<AdminKassa | null>(null)
   const [to, setTo] = useState(defaultDate)
 
   const { t } = useTranslation(['app'])
+
+  const from = formatDate(getFirstDayOfMonth(parseDate(to)))
 
   const {
     data: regions,
@@ -65,11 +70,21 @@ const AdminKassaPage = () => {
 
   return (
     <ListView>
-      <ListView.Header>
+      <ListView.Header className="flex justify-between">
         <EndDatePicker
           value={to}
           onChange={setTo}
           refetch={refetch}
+        />
+        <DownloadFile
+          url="/admin/jur1/cap?"
+          fileName={`${t('pages.kassa')}_${t('cap')}_${from}:${to}.xlsx`}
+          params={{
+            from: from,
+            to: to,
+            excel: true
+          }}
+          buttonText={t('cap')}
         />
       </ListView.Header>
       <ListView.Content isLoading={isFetching}>
@@ -77,6 +92,9 @@ const AdminKassaPage = () => {
           data={regions?.data ?? []}
           columnDefs={AdminKassaRegionColumnDefs}
           onClickRow={handleClickRow}
+          onView={(row) => {
+            setDocs(row.docs)
+          }}
           footer={
             <FooterRow className="sticky bottom-0">
               <FooterCell
@@ -108,8 +126,19 @@ const AdminKassaPage = () => {
         selected={selected}
         isOpen={viewToggle.isOpen}
         onOpenChange={viewToggle.setOpen}
-        from={formatDate(getFirstDayOfMonth(parseDate(to)))}
+        from={from}
         to={to}
+      />
+
+      <ViewDocumentsModal
+        type={AdminDocumentsType.Kassa}
+        isOpen={!!docs}
+        onOpenChange={(isOpen) => {
+          if (!isOpen) {
+            setDocs(undefined)
+          }
+        }}
+        docs={docs ?? []}
       />
     </ListView>
   )

@@ -1,4 +1,4 @@
-import type { AdminMaterial } from './interfaces'
+import type { AdminMaterial, AdminMaterialDocument } from './interfaces'
 
 import { useEffect, useState } from 'react'
 
@@ -19,6 +19,7 @@ import { formatNumber } from '@/common/lib/format'
 import { ListView } from '@/common/views'
 
 import { EndDatePicker } from '../components/end-date-picker'
+import { AdminDocumentsType, ViewDocumentsModal } from '../components/view-documents-modal'
 import { AdminMaterialRegionColumnDefs } from './columns'
 import { AdminMaterialService } from './service'
 import { ViewModal } from './view-modal'
@@ -27,7 +28,9 @@ const AdminMaterialPage = () => {
   const viewToggle = useToggle()
   const setLayout = useLayout()
   const defaultDate = useSettingsStore((state) => state.default_end_date)
+
   const [search] = useSearchFilter()
+  const [docs, setDocs] = useState<AdminMaterialDocument[]>()
   const [selected, setSelected] = useState<AdminMaterial | null>(null)
   const [to, setTo] = useState(defaultDate)
 
@@ -73,6 +76,7 @@ const AdminMaterialPage = () => {
           data={regions?.data ?? []}
           columnDefs={AdminMaterialRegionColumnDefs}
           onClickRow={handleClickRow}
+          onView={(row) => setDocs(row.docs)}
           footer={
             <FooterRow className="sticky bottom-0">
               <FooterCell
@@ -106,6 +110,16 @@ const AdminMaterialPage = () => {
         onOpenChange={viewToggle.setOpen}
         from={formatDate(getFirstDayOfMonth(parseDate(to)))}
         to={to}
+      />
+      <ViewDocumentsModal
+        type={AdminDocumentsType.Material}
+        isOpen={!!docs}
+        onOpenChange={(isOpen) => {
+          if (!isOpen) {
+            setDocs(undefined)
+          }
+        }}
+        docs={docs ?? []}
       />
     </ListView>
   )

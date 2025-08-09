@@ -15,6 +15,7 @@ import {
 
 import { AdminDocumentsType, ViewDocumentsModal } from '../components/view-documents-modal'
 import { AdminPodotchetMainSchetColumnDefs, AdminPodotchetSchetColumnDefs } from './columns'
+import { AdminPodotchetReports } from './reports'
 
 export interface ViewModalProps extends Omit<DialogTriggerProps, 'children'> {
   selected: AdminPodotchet | null
@@ -37,6 +38,7 @@ export const ViewModal = ({ selected, from, to, ...props }: ViewModalProps) => {
                 columnDefs={AdminPodotchetMainSchetColumnDefs}
                 data={selected?.main_schets ?? []}
                 getRowId={(row) => row.id.toString()}
+                onView={(row) => setDocs(row.docs)}
               >
                 {({ row }) => (
                   <div className="pl-10">
@@ -50,9 +52,15 @@ export const ViewModal = ({ selected, from, to, ...props }: ViewModalProps) => {
                         mainSchetId: row.id,
                         budjetId: row.budjet_id
                       }}
-                      onDoubleClickRow={(row) => {
+                      onView={(row) => {
                         setDocs(row.docs)
                       }}
+                      actions={(row, tableProps) => (
+                        <AdminPodotchetReports
+                          row={row}
+                          tableProps={tableProps}
+                        />
+                      )}
                     />
                   </div>
                 )}
@@ -61,6 +69,7 @@ export const ViewModal = ({ selected, from, to, ...props }: ViewModalProps) => {
           </DialogContent>
         </DialogOverlay>
       </DialogTrigger>
+
       <ViewDocumentsModal
         type={AdminDocumentsType.Podotchet}
         isOpen={!!docs}

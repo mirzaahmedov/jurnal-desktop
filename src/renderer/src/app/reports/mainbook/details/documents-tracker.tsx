@@ -62,13 +62,13 @@ export const MainbookDocumentsTracker = ({
     <DialogTrigger {...props}>
       <DialogOverlay>
         <DialogContent className="w-full max-w-[1800px] h-full max-h-[900px] flex flex-col p-0 gap-0">
-          <div>
+          <div className="h-full flex flex-col">
             <DialogHeader className="p-5">
               <DialogTitle>
                 <Trans>documents</Trans>
               </DialogTitle>
             </DialogHeader>
-            <div className="flex-1">
+            <div className="flex-1 overflow-y-auto scrollbar">
               <GenericTable
                 data={documents?.data ?? []}
                 columnDefs={columns}

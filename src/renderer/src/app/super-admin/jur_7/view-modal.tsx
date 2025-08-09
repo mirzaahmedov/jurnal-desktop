@@ -41,7 +41,7 @@ export const ViewModal = ({ selected, from, to, ...props }: ViewModalProps) => {
                   to,
                   regionId: selected?.id
                 }}
-                onDoubleClickRow={(row) => {
+                onView={(row) => {
                   setDocs(row.docs)
                 }}
               />
@@ -49,6 +49,7 @@ export const ViewModal = ({ selected, from, to, ...props }: ViewModalProps) => {
           </DialogContent>
         </DialogOverlay>
       </DialogTrigger>
+
       <ViewDocumentsModal
         type={AdminDocumentsType.Material}
         isOpen={!!docs}

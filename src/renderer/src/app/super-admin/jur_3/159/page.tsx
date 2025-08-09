@@ -1,4 +1,4 @@
-import type { AdminOrgan159 } from './interfaces'
+import type { AdminOrgan159, AdminOrgan159Document } from './interfaces'
 
 import { useEffect, useState } from 'react'
 
@@ -19,6 +19,7 @@ import { formatNumber } from '@/common/lib/format'
 import { ListView } from '@/common/views'
 
 import { EndDatePicker } from '../../components/end-date-picker'
+import { AdminDocumentsType, ViewDocumentsModal } from '../../components/view-documents-modal'
 import { AdminOrgan159RegionColumnDefs } from './columns'
 import { AdminOrgan159Service } from './service'
 import { ViewModal } from './view-modal'
@@ -29,6 +30,7 @@ const AdminOrgan159Page = () => {
   const defaultDate = useSettingsStore((state) => state.default_end_date)
 
   const [search] = useSearchFilter()
+  const [docs, setDocs] = useState<AdminOrgan159Document[]>()
   const [selected, setSelected] = useState<AdminOrgan159 | null>(null)
   const [to, setTo] = useState(defaultDate)
 
@@ -77,6 +79,7 @@ const AdminOrgan159Page = () => {
           data={regions?.data ?? []}
           columnDefs={AdminOrgan159RegionColumnDefs}
           onClickRow={handleClickRow}
+          onView={(row) => setDocs(row.docs)}
           footer={
             <FooterRow className="sticky bottom-0">
               <FooterCell
@@ -110,6 +113,16 @@ const AdminOrgan159Page = () => {
         onOpenChange={viewToggle.setOpen}
         from={formatDate(getFirstDayOfMonth(parseDate(to)))}
         to={to}
+      />
+      <ViewDocumentsModal
+        type={AdminDocumentsType.Organ159}
+        isOpen={!!docs}
+        onOpenChange={(isOpen) => {
+          if (!isOpen) {
+            setDocs(undefined)
+          }
+        }}
+        docs={docs ?? []}
       />
     </ListView>
   )

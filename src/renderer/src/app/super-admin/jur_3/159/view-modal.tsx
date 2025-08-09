@@ -15,6 +15,7 @@ import {
 
 import { AdminDocumentsType, ViewDocumentsModal } from '../../components/view-documents-modal'
 import { AdminOrgan159MainSchetColumnDefs, AdminOrgan159SchetColumnDefs } from './columns'
+import { AdminOrgan159Reports } from './reports'
 
 export interface ViewModalProps extends Omit<DialogTriggerProps, 'children'> {
   selected: AdminOrgan159 | null
@@ -37,6 +38,7 @@ export const ViewModal = ({ selected, from, to, ...props }: ViewModalProps) => {
                 columnDefs={AdminOrgan159MainSchetColumnDefs}
                 data={selected?.main_schets ?? []}
                 getRowId={(row) => row.id.toString()}
+                onView={(row) => setDocs(row.docs)}
               >
                 {({ row }) => (
                   <div className="pl-10">
@@ -50,9 +52,13 @@ export const ViewModal = ({ selected, from, to, ...props }: ViewModalProps) => {
                         mainSchetId: row.id,
                         budjetId: row.budjet_id
                       }}
-                      onDoubleClickRow={(row) => {
-                        setDocs(row.docs)
-                      }}
+                      onView={(row) => setDocs(row.docs)}
+                      actions={(row, tableProps) => (
+                        <AdminOrgan159Reports
+                          row={row}
+                          tableProps={tableProps}
+                        />
+                      )}
                     />
                   </div>
                 )}
@@ -61,8 +67,9 @@ export const ViewModal = ({ selected, from, to, ...props }: ViewModalProps) => {
           </DialogContent>
         </DialogOverlay>
       </DialogTrigger>
+
       <ViewDocumentsModal
-        type={AdminDocumentsType.Organ152}
+        type={AdminDocumentsType.Organ159}
         isOpen={!!docs}
         onOpenChange={(isOpen) => {
           if (!isOpen) {

@@ -305,7 +305,7 @@ export const GenericTable = <T extends object>(props: GenericTableProps<T>) => {
                           <Trash2 className="size-4" />
                         </Button>
                       )}
-                      {actions?.(row)}
+                      {actions?.(row, props)}
                     </div>
                   </GenericTableCell>
                 ) : null}

@@ -14,6 +14,7 @@ import {
 
 import { AdminDocumentsType, ViewDocumentsModal } from '../components/view-documents-modal'
 import { AdminKassaMainSchetColumnDefs } from './columns'
+import { AdminKassaReports } from './reports'
 
 export interface ViewModalProps extends Omit<DialogTriggerProps, 'children'> {
   selected: AdminKassa | null
@@ -40,9 +41,15 @@ export const ViewModal = ({ selected, from, to, ...props }: ViewModalProps) => {
                   to,
                   regionId: selected?.id
                 }}
-                onDoubleClickRow={(row) => {
+                onView={(row) => {
                   setDocs(row.docs)
                 }}
+                actions={(row, tableProps) => (
+                  <AdminKassaReports
+                    row={row}
+                    tableProps={tableProps}
+                  />
+                )}
               />
             </div>
           </DialogContent>

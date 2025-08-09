@@ -1,4 +1,4 @@
-import type { AdminPodotchet } from './interfaces'
+import type { AdminPodotchet, AdminPodotchetDocument } from './interfaces'
 
 import { useEffect, useState } from 'react'
 
@@ -19,6 +19,7 @@ import { formatNumber } from '@/common/lib/format'
 import { ListView } from '@/common/views'
 
 import { EndDatePicker } from '../components/end-date-picker'
+import { AdminDocumentsType, ViewDocumentsModal } from '../components/view-documents-modal'
 import { AdminPodotchetRegionColumnDefs } from './columns'
 import { AdminPodotchetService } from './service'
 import { ViewModal } from './view-modal'
@@ -29,6 +30,7 @@ const AdminPodotchetPage = () => {
   const defaultDate = useSettingsStore((state) => state.default_end_date)
 
   const [search] = useSearchFilter()
+  const [docs, setDocs] = useState<AdminPodotchetDocument[]>()
   const [selected, setSelected] = useState<AdminPodotchet | null>(null)
   const [to, setTo] = useState(defaultDate)
 
@@ -77,6 +79,7 @@ const AdminPodotchetPage = () => {
           data={regions?.data ?? []}
           columnDefs={AdminPodotchetRegionColumnDefs}
           onClickRow={handleClickRow}
+          onView={(row) => setDocs(row.docs)}
           footer={
             <FooterRow className="sticky bottom-0">
               <FooterCell
@@ -110,6 +113,16 @@ const AdminPodotchetPage = () => {
         onOpenChange={viewToggle.setOpen}
         from={formatDate(getFirstDayOfMonth(parseDate(to)))}
         to={to}
+      />
+      <ViewDocumentsModal
+        type={AdminDocumentsType.Podotchet}
+        isOpen={!!docs}
+        onOpenChange={(isOpen) => {
+          if (!isOpen) {
+            setDocs(undefined)
+          }
+        }}
+        docs={docs ?? []}
       />
     </ListView>
   )
