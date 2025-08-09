@@ -1,7 +1,7 @@
 import type { VacantTreeNode } from '@/app/region-admin/vacant/vacant-tree'
 import type { MainZarplata } from '@/common/models'
 
-import { type ReactNode, useEffect } from 'react'
+import { type ReactNode, useEffect, useState } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
@@ -17,7 +17,7 @@ import {
   createZarplataSpravochnik
 } from '@/app/super-admin/zarplata/spravochnik/service'
 import placeholderImage from '@/common/assets/images/profile_placeholder.png'
-import { Fieldset, NumericInput } from '@/common/components'
+import { Fieldset, LoadingOverlay, NumericInput } from '@/common/components'
 import { FormElement } from '@/common/components/form'
 import { JollyDatePicker } from '@/common/components/jolly-date-picker'
 import { Button } from '@/common/components/jolly/button'
@@ -26,6 +26,7 @@ import { Checkbox } from '@/common/components/ui/checkbox'
 import { Form, FormField } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
 import { Textarea } from '@/common/components/ui/textarea'
+import { PersonService } from '@/common/features/integrations/person/service'
 import { DissmisEmployee } from '@/common/features/main-zarplata/dismiss-main-zarplata-dialog'
 import { MainZarplataService } from '@/common/features/main-zarplata/service'
 import { SpravochnikInput, useSpravochnik } from '@/common/features/spravochnik'
@@ -62,10 +63,32 @@ export const MainZarplataForm = ({
 }: MainZarplataFormProps) => {
   const { t } = useTranslation()
 
+  const [profileImage, setProfileImage] = useState<string>()
+
   const queryClient = useQueryClient()
   const form = useForm({
     resolver: zodResolver(MainZarplataFormSchema),
     defaultValues
+  })
+
+  const getPersonByPnflMutation = useMutation({
+    mutationFn: PersonService.getByPnfl,
+    onSuccess: (res) => {
+      try {
+        if (res?.data?.length && res?.data?.[0]?.photo) {
+          setProfileImage(res?.data?.[0].photo ?? undefined)
+        } else {
+          setProfileImage(undefined)
+        }
+      } catch (error) {
+        console.log(error)
+        setProfileImage(undefined)
+      }
+    },
+    onError: (error) => {
+      console.log({ error })
+      setProfileImage(undefined)
+    }
   })
 
   const { data: grafiks } = useQuery({
@@ -161,6 +184,20 @@ export const MainZarplataForm = ({
     form.setValue('rayon', getVacantRayon(vacant))
   }, [vacant])
 
+  const pnfl = form.watch('inps')
+  const dateBirth = form.watch('dateBirth')
+
+  useEffect(() => {
+    if (pnfl?.length === 14 && dateBirth) {
+      getPersonByPnflMutation.mutate({
+        pinpp: pnfl,
+        birth_date: dateBirth
+      })
+    } else {
+      setProfileImage(undefined)
+    }
+  }, [pnfl, dateBirth])
+
   return (
     <Form {...form}>
       <form
@@ -175,12 +212,21 @@ export const MainZarplataForm = ({
             )}
           >
             <div className="flex flex-col items-center gap-5">
-              <div className="border w-[200px] h-[calc(200px/3*4)] bg-gray-100 rounded-lg">
-                <img
-                  src={placeholderImage}
-                  alt="Profile placeholder"
-                  className="w-full h-full object-cover object-center"
-                />
+              <div className="border w-[200px] h-[calc(200px/3*4)] bg-gray-100 rounded-lg relative">
+                {getPersonByPnflMutation.isPending ? <LoadingOverlay /> : null}
+                {profileImage ? (
+                  <img
+                    src={`data:image/png;base64,${profileImage}`}
+                    alt="Profile picture"
+                    className="w-full h-full object-cover object-center rounded-md"
+                  />
+                ) : (
+                  <img
+                    src={placeholderImage}
+                    alt="Profile placeholder"
+                    className="w-full h-full object-cover object-center rounded-md"
+                  />
+                )}
               </div>
               <TimeElapsed
                 years={form.watch('visNa1Year') ?? 0}
