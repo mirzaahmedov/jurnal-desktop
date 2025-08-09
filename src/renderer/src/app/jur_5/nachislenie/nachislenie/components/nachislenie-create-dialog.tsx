@@ -308,6 +308,7 @@ export const NachislenieCreateDialog = ({
                       <Button
                         type="submit"
                         isPending={isPending}
+                        isDisabled={!organSpravochnik.selected}
                       >
                         {t('save')}
                       </Button>

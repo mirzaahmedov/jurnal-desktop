@@ -24,10 +24,18 @@ export class ZarplataSpravochnikService {
 
   static async getAll(
     ctx: QueryFunctionContext<
-      [string, { types_type_code: number; name?: string; page?: number; limit?: number }]
+      [
+        string,
+        {
+          types_type_code: number
+          search?: string
+          page?: number
+          limit?: number
+        }
+      ]
     >
   ): Promise<ApiResponse<Zarplata.Spravochnik[]>> {
-    const { types_type_code, name, page, limit } = ctx.queryKey[1]
+    const { types_type_code, search, page, limit } = ctx.queryKey[1]
 
     const res = await zarplataApiNew.get<ZarplataApiResponse<Zarplata.Spravochnik[]>>(
       `${ZarplataSpravochnikService.Endpoint}/get-sp/${types_type_code}`,
@@ -35,7 +43,7 @@ export class ZarplataSpravochnikService {
         params: {
           PageIndex: page,
           PageSize: limit,
-          search: name
+          search: search
         }
       }
     )

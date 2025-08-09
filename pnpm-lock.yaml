@@ -173,6 +173,9 @@ importers:
       millify:
         specifier: ^6.1.0
         version: 6.1.0
+      paginate-array:
+        specifier: ^2.1.0
+        version: 2.1.0
       qs:
         specifier: ^6.14.0
         version: 6.14.0
@@ -4610,6 +4613,9 @@ packages:
 
   package-json-from-dist@1.0.1:
     resolution: {integrity: sha512-UEZIS3/by4OC8vL3P2dTXRETpebLI2NiI5vIrjaD/5UtrkFX/tNbwjTSRAGC/+7CAo2pIcBaRgWmcBBHcsaCIw==}
+
+  paginate-array@2.1.0:
+    resolution: {integrity: sha512-rY2Bo4AsD3YU8WcHwWjxZLBunTM5UYQlBAMTIaDPBWINJ59L6DL9S1DqtW5RQdRctBEdm7k06QKCIvUNDGhclg==}
 
   pako@0.2.9:
     resolution: {integrity: sha512-NUcwaKxUxWrZLpDG+z/xZaCgQITkA/Dv4V/T6bw7VON6l1Xz/VnrBqrYjZQ12TamKHzITTfOEIYUj48y2KXImA==}
@@ -11077,6 +11083,8 @@ snapshots:
       aggregate-error: 3.1.0
 
   package-json-from-dist@1.0.1: {}
+
+  paginate-array@2.1.0: {}
 
   pako@0.2.9: {}
 
