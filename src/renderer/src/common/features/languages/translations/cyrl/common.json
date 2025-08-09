@@ -523,5 +523,9 @@
   "amount": "Миқдор",
   "percentage_of_contract": "Шартнома фоизи",
   "calculate": "Ҳисоблаш",
-  "coefficient": "Коэффициент"
+  "calculate_all": "Барча учун ҳисоблаш",
+  "coefficient": "Коэффициент",
+  "update": "Янгилаш",
+  "update_all": "Барчасини янгилаш",
+  "aggregated_report": "Жамланма ҳисобот"
 }

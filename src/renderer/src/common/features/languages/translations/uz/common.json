@@ -522,5 +522,9 @@
   "amount": "Miqdor",
   "percentage_of_contract": "Shartnoma foizi",
   "calculate": "Hisoblash",
-  "coefficient": "Koeffitsient"
+  "calculate_for_all": "Barcha uchun hisoblash",
+  "coefficient": "Koeffitsient",
+  "update": "Yangilash",
+  "update_all": "Barchasini yangilash",
+  "aggregated_report": "Jamlanma hisobot"
 }

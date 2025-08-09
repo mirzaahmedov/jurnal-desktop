@@ -70,6 +70,15 @@ export const PaymentsChangePayment = () => {
       toast.success(t('update_success'))
     }
   })
+  // const changePaymentsAllMutation = useMutation({
+  //   mutationFn: PayrollPaymentService.changePaymentsAll,
+  //   onSuccess: () => {
+  //     form.reset()
+  //     setSelectedPayment(undefined)
+  //     toast.success(t('update_success'))
+  //   }
+  // })
+
   const deletePaymentsMutation = useMutation({
     mutationFn: PayrollPaymentService.deletePayments,
     onSuccess: () => {
@@ -80,6 +89,15 @@ export const PaymentsChangePayment = () => {
       toast.success(t('update_success'))
     }
   })
+
+  // const deletePaymentsAllMutation = useMutation({
+  //   mutationFn: PayrollPaymentService.deletePaymentsAll,
+  //   onSuccess: () => {
+  //     form.reset()
+  //     setSelectedPayment(undefined)
+  //     toast.success(t('update_success'))
+  //   }
+  // })
 
   const mainZarplataQuery = useQuery({
     queryKey: [
@@ -105,6 +123,19 @@ export const PaymentsChangePayment = () => {
     })
   })
 
+  // const handleChangePaymentsAll = () => {
+  //   const values = form.getValues()
+  //   changePaymentsAllMutation.mutate({
+  //     isXarbiy: values.type === 'military' ? true : values.type === 'civilian' ? false : undefined,
+  //     values: {
+  //       paymentId: values.paymentId,
+  //       payment: selectedPayment,
+  //       percentage: values.percentage,
+  //       summa: values.summa
+  //     }
+  //   })
+  // }
+
   const handleDeletePayments = () => {
     if (!selectedPayment) {
       return
@@ -120,6 +151,21 @@ export const PaymentsChangePayment = () => {
       }
     })
   }
+
+  // const handleDeletePaymentsAll = () => {
+  //   if (!selectedPayment) {
+  //     return
+  //   }
+  //   const values = form.getValues()
+  //   deletePaymentsAllMutation.mutate({
+  //     isXarbiy: values.type === 'military' ? true : values.type === 'civilian' ? false : undefined,
+  //     values: {
+  //       paymentId: values.paymentId,
+  //       percentage: values.percentage,
+  //       summa: values.summa
+  //     }
+  //   })
+  // }
 
   const filterOptions = useVacantFilters({
     vacants: treeNodes,
@@ -281,40 +327,41 @@ export const PaymentsChangePayment = () => {
                         onDoubleClick={paymentToggle.open}
                       />
                     </FormElement>
+                    <FormField
+                      control={form.control}
+                      name="type"
+                      render={({ field }) => (
+                        <RadioGroup
+                          value={field.value}
+                          onValueChange={field.onChange}
+                          className="flex items-center gap-5 my-2.5"
+                        >
+                          <div className="flex items-center gap-3">
+                            <RadioGroupItem
+                              value="all"
+                              id="all"
+                            />
+                            <Label htmlFor="all">{t('all')}</Label>
+                          </div>
+                          <div className="flex items-center gap-3">
+                            <RadioGroupItem
+                              value="military"
+                              id="military"
+                            />
+                            <Label htmlFor="military">{t('military')}</Label>
+                          </div>
+                          <div className="flex items-center gap-3">
+                            <RadioGroupItem
+                              value="civilian"
+                              id="civilian"
+                            />
+                            <Label htmlFor="civilian">{t('civilian')}</Label>
+                          </div>
+                        </RadioGroup>
+                      )}
+                    />
                   </div>
-                  <FormField
-                    control={form.control}
-                    name="type"
-                    render={({ field }) => (
-                      <RadioGroup
-                        value={field.value}
-                        onValueChange={field.onChange}
-                        className="flex items-center gap-5"
-                      >
-                        <div className="flex items-center gap-3">
-                          <RadioGroupItem
-                            value="all"
-                            id="all"
-                          />
-                          <Label htmlFor="all">{t('all')}</Label>
-                        </div>
-                        <div className="flex items-center gap-3">
-                          <RadioGroupItem
-                            value="military"
-                            id="military"
-                          />
-                          <Label htmlFor="military">{t('military')}</Label>
-                        </div>
-                        <div className="flex items-center gap-3">
-                          <RadioGroupItem
-                            value="civilian"
-                            id="civilian"
-                          />
-                          <Label htmlFor="civilian">{t('civilian')}</Label>
-                        </div>
-                      </RadioGroup>
-                    )}
-                  />
+
                   <FormField
                     name="percentage"
                     control={form.control}
@@ -365,8 +412,18 @@ export const PaymentsChangePayment = () => {
                       }
                       type="submit"
                     >
-                      {t('save')}
+                      {t('update')}
                     </Button>
+
+                    {/* <Button
+                      isPending={changePaymentsAllMutation.isPending}
+                      isDisabled={changePaymentsAllMutation.isPending || !form.watch('paymentId')}
+                      type="submit"
+                      onPress={handleChangePaymentsAll}
+                    >
+                      {t('update_all')}
+                    </Button> */}
+
                     <Button
                       variant="destructive"
                       isPending={deletePaymentsMutation.isPending}
@@ -380,6 +437,16 @@ export const PaymentsChangePayment = () => {
                     >
                       {t('delete')}
                     </Button>
+
+                    {/* <Button
+                      variant="destructive"
+                      isPending={deletePaymentsAllMutation.isPending}
+                      isDisabled={deletePaymentsAllMutation.isPending || !form.watch('paymentId')}
+                      type="button"
+                      onPress={handleDeletePaymentsAll}
+                    >
+                      {t('delete_all')}
+                    </Button> */}
                   </div>
                 </div>
               </form>

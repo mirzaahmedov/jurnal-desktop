@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next'
 
 import { FooterCell, FooterRow, GenericTable } from '@/common/components'
 import { SummaCell } from '@/common/components/table/renderers/summa'
+import { DownloadFile } from '@/common/features/file'
 import {
   SearchFilterDebounced,
   useSearchFilter
@@ -35,6 +36,8 @@ const AdminOrgan152Page = () => {
   const [to, setTo] = useState(defaultDate)
 
   const { t } = useTranslation(['app'])
+
+  const from = formatDate(getFirstDayOfMonth(parseDate(to)))
 
   const {
     data: regions,
@@ -67,11 +70,22 @@ const AdminOrgan152Page = () => {
 
   return (
     <ListView>
-      <ListView.Header>
+      <ListView.Header className="flex justify-between">
         <EndDatePicker
           value={to}
           onChange={setTo}
           refetch={refetch}
+        />
+
+        <DownloadFile
+          url="/admin/jur3-152/cap?"
+          fileName={`${t('pages.bank')}_${t('cap')}_${from}:${to}.xlsx`}
+          params={{
+            from: from,
+            to: to,
+            excel: true
+          }}
+          buttonText={t('cap')}
         />
       </ListView.Header>
       <ListView.Content isLoading={isFetching}>
@@ -113,7 +127,7 @@ const AdminOrgan152Page = () => {
         selected={selected}
         isOpen={viewToggle.isOpen}
         onOpenChange={viewToggle.setOpen}
-        from={formatDate(getFirstDayOfMonth(parseDate(to)))}
+        from={from}
         to={to}
       />
 

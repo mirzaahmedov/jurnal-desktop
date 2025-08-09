@@ -35,6 +35,23 @@ export class PayrollDeductionService {
     return res.data
   }
 
+  static async changeDeductionsAll(args: {
+    isXarbiy: boolean | undefined
+    values: Omit<PayrollDeductionChangeDeductionsFormValues, 'mains'>
+  }) {
+    const { isXarbiy, values } = args
+    const res = await zarplataApiNew.put(
+      `${PayrollDeductionService.endpoint}/change-deductions-all`,
+      values,
+      {
+        params: {
+          isXarbiy
+        }
+      }
+    )
+    return res.data
+  }
+
   static async deleteDeductions(args: {
     isXarbiy: boolean | undefined
     values: PayrollDeductionChangeDeductionsFormValues
@@ -42,6 +59,23 @@ export class PayrollDeductionService {
     const { isXarbiy, values } = args
     const res = await zarplataApiNew.put(
       `${PayrollDeductionService.endpoint}/delete-deductions`,
+      values,
+      {
+        params: {
+          isXarbiy
+        }
+      }
+    )
+    return res.data
+  }
+
+  static async deleteDeductionsAll(args: {
+    isXarbiy: boolean | undefined
+    values: Omit<PayrollDeductionChangeDeductionsFormValues, 'mains'>
+  }) {
+    const { isXarbiy, values } = args
+    const res = await zarplataApiNew.put(
+      `${PayrollDeductionService.endpoint}/delete-deductions-all`,
       values,
       {
         params: {

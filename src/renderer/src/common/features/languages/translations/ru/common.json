@@ -524,5 +524,9 @@
   "payment_type": "Тип платежа",
   "percentage_of_contract": "Процент от договора",
   "calculate": "Рассчитать",
-  "coefficient": "Коэффициент"
+  "calculate_all": "Рассчитайте для каждого",
+  "coefficient": "Коэффициент",
+  "update": "Обновить",
+  "update_all": "Обновить все",
+  "aggregated_report": "Сводный отчёт"
 }

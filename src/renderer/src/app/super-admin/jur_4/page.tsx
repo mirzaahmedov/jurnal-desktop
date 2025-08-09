@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next'
 
 import { FooterCell, FooterRow, GenericTable } from '@/common/components'
 import { SummaCell } from '@/common/components/table/renderers/summa'
+import { DownloadFile } from '@/common/features/file'
 import {
   SearchFilterDebounced,
   useSearchFilter
@@ -33,6 +34,8 @@ const AdminPodotchetPage = () => {
   const [docs, setDocs] = useState<AdminPodotchetDocument[]>()
   const [selected, setSelected] = useState<AdminPodotchet | null>(null)
   const [to, setTo] = useState(defaultDate)
+
+  const from = formatDate(getFirstDayOfMonth(parseDate(to)))
 
   const { t } = useTranslation(['app'])
 
@@ -67,11 +70,22 @@ const AdminPodotchetPage = () => {
 
   return (
     <ListView>
-      <ListView.Header>
+      <ListView.Header className="flex justify-between">
         <EndDatePicker
           value={to}
           onChange={setTo}
           refetch={refetch}
+        />
+
+        <DownloadFile
+          url="/admin/jur3-159/cap?"
+          fileName={`${t('pages.bank')}_${t('cap')}_${from}:${to}.xlsx`}
+          params={{
+            from: from,
+            to: to,
+            excel: true
+          }}
+          buttonText={t('cap')}
         />
       </ListView.Header>
       <ListView.Content isLoading={isFetching}>
@@ -111,7 +125,7 @@ const AdminPodotchetPage = () => {
         selected={selected}
         isOpen={viewToggle.isOpen}
         onOpenChange={viewToggle.setOpen}
-        from={formatDate(getFirstDayOfMonth(parseDate(to)))}
+        from={from}
         to={to}
       />
       <ViewDocumentsModal

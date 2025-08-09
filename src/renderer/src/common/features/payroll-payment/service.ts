@@ -78,6 +78,40 @@ export class PayrollPaymentService {
     return res.data
   }
 
+  static async changePaymentsAll(args: {
+    isXarbiy: boolean | undefined
+    values: Omit<PayrollChangePaymentFormValues, 'mains'>
+  }) {
+    const { isXarbiy, values } = args
+    const res = await zarplataApiNew.put(
+      `${PayrollPaymentService.endpoint}/change-payments-all`,
+      values,
+      {
+        params: {
+          isXarbiy
+        }
+      }
+    )
+    return res.data
+  }
+
+  static async deletePaymentsAll(args: {
+    isXarbiy: boolean | undefined
+    values: Omit<PayrollChangePaymentFormValues, 'mains'>
+  }) {
+    const { isXarbiy, values } = args
+    const res = await zarplataApiNew.put(
+      `${PayrollPaymentService.endpoint}/delete-payments-all`,
+      values,
+      {
+        params: {
+          isXarbiy
+        }
+      }
+    )
+    return res.data
+  }
+
   static async delete(id: number) {
     const res = await zarplataApiNew.delete<PayrollPayment>(
       `${PayrollPaymentService.endpoint}/${id}`

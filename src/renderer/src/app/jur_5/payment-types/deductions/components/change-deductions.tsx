@@ -70,6 +70,15 @@ export const DeductionsChangePayment = () => {
       toast.success(t('update_success'))
     }
   })
+  const changeDeductionsAllMutation = useMutation({
+    mutationFn: PayrollDeductionService.changeDeductionsAll,
+    onSuccess: () => {
+      form.reset()
+      setSelectedDeduction(undefined)
+      toast.success(t('update_success'))
+    }
+  })
+
   const deleteDeductionsMutation = useMutation({
     mutationFn: PayrollDeductionService.deleteDeductions,
     onSuccess: () => {
@@ -77,6 +86,14 @@ export const DeductionsChangePayment = () => {
       setSelectedDeduction(undefined)
       setSelectedVacant(undefined)
       setSelectedMainZarplata([])
+      toast.success(t('update_success'))
+    }
+  })
+  const deleteDeductionsAllMutation = useMutation({
+    mutationFn: PayrollDeductionService.deleteDeductionsAll,
+    onSuccess: () => {
+      form.reset()
+      setSelectedDeduction(undefined)
       toast.success(t('update_success'))
     }
   })
@@ -108,6 +125,22 @@ export const DeductionsChangePayment = () => {
     })
   })
 
+  const handleChangeDeductionsAll = () => {
+    if (!selectedDeduction) {
+      return
+    }
+    const values = form.getValues()
+    changeDeductionsAllMutation.mutate({
+      isXarbiy: values.type === 'military' ? true : values.type === 'civilian' ? false : undefined,
+      values: {
+        deductionId: values.deductionId,
+        code: selectedDeduction.code,
+        percentage: values.percentage,
+        summa: values.summa
+      }
+    })
+  }
+
   const handleDeleteDeductions = () => {
     if (!selectedDeduction) {
       return
@@ -119,6 +152,22 @@ export const DeductionsChangePayment = () => {
         deductionId: values.deductionId,
         code: selectedDeduction.code,
         mains: selectedMainZarplata.map((mainZarplata) => ({ mainZarplataId: mainZarplata.id })),
+        percentage: values.percentage,
+        summa: values.summa
+      }
+    })
+  }
+
+  const handleDeleteDeductionsAll = () => {
+    if (!selectedDeduction) {
+      return
+    }
+    const values = form.getValues()
+    deleteDeductionsAllMutation.mutate({
+      isXarbiy: values.type === 'military' ? true : values.type === 'civilian' ? false : undefined,
+      values: {
+        deductionId: values.deductionId,
+        code: selectedDeduction.code,
         percentage: values.percentage,
         summa: values.summa
       }
@@ -281,40 +330,40 @@ export const DeductionsChangePayment = () => {
                         onDoubleClick={deductionToggle.open}
                       />
                     </FormElement>
+                    <FormField
+                      control={form.control}
+                      name="type"
+                      render={({ field }) => (
+                        <RadioGroup
+                          value={field.value}
+                          onValueChange={field.onChange}
+                          className="flex items-center gap-5 my-2.5"
+                        >
+                          <div className="flex items-center gap-3">
+                            <RadioGroupItem
+                              value="all"
+                              id="all"
+                            />
+                            <Label htmlFor="all">{t('all')}</Label>
+                          </div>
+                          <div className="flex items-center gap-3">
+                            <RadioGroupItem
+                              value="military"
+                              id="military"
+                            />
+                            <Label htmlFor="military">{t('military')}</Label>
+                          </div>
+                          <div className="flex items-center gap-3">
+                            <RadioGroupItem
+                              value="civilian"
+                              id="civilian"
+                            />
+                            <Label htmlFor="civilian">{t('civilian')}</Label>
+                          </div>
+                        </RadioGroup>
+                      )}
+                    />
                   </div>
-                  <FormField
-                    control={form.control}
-                    name="type"
-                    render={({ field }) => (
-                      <RadioGroup
-                        value={field.value}
-                        onValueChange={field.onChange}
-                        className="flex items-center gap-5"
-                      >
-                        <div className="flex items-center gap-3">
-                          <RadioGroupItem
-                            value="all"
-                            id="all"
-                          />
-                          <Label htmlFor="all">{t('all')}</Label>
-                        </div>
-                        <div className="flex items-center gap-3">
-                          <RadioGroupItem
-                            value="military"
-                            id="military"
-                          />
-                          <Label htmlFor="military">{t('military')}</Label>
-                        </div>
-                        <div className="flex items-center gap-3">
-                          <RadioGroupItem
-                            value="civilian"
-                            id="civilian"
-                          />
-                          <Label htmlFor="civilian">{t('civilian')}</Label>
-                        </div>
-                      </RadioGroup>
-                    )}
-                  />
                   <FormField
                     name="percentage"
                     control={form.control}
@@ -355,7 +404,7 @@ export const DeductionsChangePayment = () => {
                       </FormElement>
                     )}
                   />
-                  <div className="space-x-1">
+                  <div className="flex flex-wrap items-start gap-2.5">
                     <Button
                       isPending={changeDeductionsMutation.isPending}
                       isDisabled={
@@ -365,8 +414,19 @@ export const DeductionsChangePayment = () => {
                       }
                       type="submit"
                     >
-                      {t('save')}
+                      {t('update')}
                     </Button>
+                    <Button
+                      isPending={changeDeductionsAllMutation.isPending}
+                      isDisabled={
+                        changeDeductionsAllMutation.isPending || !form.watch('deductionId')
+                      }
+                      type="button"
+                      onClick={handleChangeDeductionsAll}
+                    >
+                      {t('update_all')}
+                    </Button>
+
                     <Button
                       variant="destructive"
                       isPending={deleteDeductionsMutation.isPending}
@@ -379,6 +439,17 @@ export const DeductionsChangePayment = () => {
                       onPress={handleDeleteDeductions}
                     >
                       {t('delete')}
+                    </Button>
+                    <Button
+                      variant="destructive"
+                      isPending={deleteDeductionsAllMutation.isPending}
+                      isDisabled={
+                        deleteDeductionsAllMutation.isPending || !form.watch('deductionId')
+                      }
+                      type="button"
+                      onPress={handleDeleteDeductionsAll}
+                    >
+                      {t('delete_all')}
                     </Button>
                   </div>
                 </div>

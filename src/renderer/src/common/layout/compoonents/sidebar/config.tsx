@@ -63,7 +63,7 @@ import { BankSaldoController } from '@/app/jur_2/saldo/components/saldo-controll
 import { WarehouseSaldoController } from '@/app/jur_7/saldo/components/saldo-controller'
 import { AdminRoles } from '@/app/super-admin/role'
 import { useAuthenticationStore } from '@/common/features/auth'
-import { CalculateParamsDialog } from '@/common/features/zarplata/calculate-params-dialog'
+import { ZarplataActions } from '@/common/features/zarplata/zarplata-actions'
 import { omitEmptyArrayElements } from '@/common/lib/validation'
 
 export type NavElement = {
@@ -213,7 +213,7 @@ export const getNavElements = (t: TFunction): NavElement[] => {
             {
               displayOnly: true,
               path: '',
-              title: <CalculateParamsDialog />,
+              title: <ZarplataActions />,
               icon: null
             }
           ]

@@ -162,8 +162,17 @@ export const NachislenieEditDialog = ({
                     params={{
                       mainId: selectedNachislenie.id
                     }}
-                    fileName={`vedemost_${selectedNachislenie.docNum}.xlsx`}
+                    fileName={`zarplata_vedemost_${selectedNachislenie.docNum}.xlsx`}
                     buttonText={t('vedemost')}
+                  />
+                  <DownloadFile
+                    isZarplata
+                    url="Excel/svod-otchet"
+                    params={{
+                      mainId: selectedNachislenie.id
+                    }}
+                    fileName={`zarplata_svod_${selectedNachislenie.docNum}.xlsx`}
+                    buttonText={t('aggregated_report')}
                   />
                 </div>
 

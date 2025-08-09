@@ -91,6 +91,25 @@ export class MainZarplataService {
     return res.data
   }
 
+  static async calculateSalaryById(
+    values: Array<{
+      mainZarplataId: number
+    }>
+  ) {
+    const res = await zarplataApiNew.put<ZarplataApiResponse<MainZarplataCalculation[]>>(
+      `${MainZarplataService.endpoint}/calculate-by-ids`,
+      values
+    )
+    return res.data
+  }
+
+  static async calculateSalaryAll() {
+    const res = await zarplataApiNew.put<ZarplataApiResponse<MainZarplataCalculation[]>>(
+      `${MainZarplataService.endpoint}/calculate-all`
+    )
+    return res.data
+  }
+
   static async create(values: MainZarplataFormValues): Promise<ApiResponse<MainZarplata>> {
     const res = await zarplataApiNew.post<MainZarplata>(MainZarplataService.endpoint, values)
     return getSingleApiResponse({
