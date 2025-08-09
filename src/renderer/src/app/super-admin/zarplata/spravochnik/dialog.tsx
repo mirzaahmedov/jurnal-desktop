@@ -221,7 +221,7 @@ export const ZarplataSpravochnikDialog = ({
                   )}
                 />
 
-                {typeCode === ZarplataSpravochnikType.Zvanie ? (
+                {form.watch('typesTypeCode') === ZarplataSpravochnikType.Zvanie ? (
                   <FormField
                     name="sena1"
                     control={form.control}

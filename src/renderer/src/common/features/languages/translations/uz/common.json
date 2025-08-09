@@ -314,7 +314,8 @@
     "jur7_rasxod": "7-Jurnal xarajat",
     "jur7_internal": "7-Jurnal ichki aylanma",
     "saldo_rasxod": "Saldo xarajat",
-    "saldo_prixod": "Saldo kirim"
+    "saldo_prixod": "Saldo kirim",
+    "work_trip": "Xizmat safari"
   },
   "language": "Til",
   "zoom": "Masshtab",
@@ -520,5 +521,6 @@
   "payment_type": "To'lov turi",
   "amount": "Miqdor",
   "percentage_of_contract": "Shartnoma foizi",
-  "calculate": "Hisoblash"
+  "calculate": "Hisoblash",
+  "coefficient": "Koeffitsient"
 }

@@ -314,7 +314,8 @@
     "jur7_rasxod": "7-Журнал харажат",
     "jur7_internal": "7-Журнал ички айланма",
     "saldo_rasxod": "Салдо харажат",
-    "saldo_prixod": "Салдо кирим"
+    "saldo_prixod": "Салдо кирим",
+    "work_trip": "Хизмат сафари"
   },
   "language": "Тил",
   "zoom": "Масштаб",
@@ -521,5 +522,6 @@
   "payment_type": "Тўлов тури",
   "amount": "Миқдор",
   "percentage_of_contract": "Шартнома фоизи",
-  "calculate": "Ҳисоблаш"
+  "calculate": "Ҳисоблаш",
+  "coefficient": "Коэффициент"
 }

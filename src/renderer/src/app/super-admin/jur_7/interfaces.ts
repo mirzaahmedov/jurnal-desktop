@@ -6,6 +6,7 @@ export interface AdminMaterial {
   prixod: number
   rasxod: number
   summa_to: number
+  docs: AdminMaterialDocument[]
 }
 
 export interface AdminMaterialMainSchet {
@@ -53,4 +54,18 @@ export interface AdminMaterialMainSchet {
   prixod: number
   rasxod: number
   summa_to: number
+  docs: AdminMaterialDocument[]
+}
+
+export interface AdminMaterialDocument {
+  kol: number
+  summa: number
+  iznos_summa: number
+  responsible_id: number
+  type: string
+  kredit_schet: string
+  kredit_sub_schet: string
+  debet_schet: string
+  debet_sub_schet: string
+  product_id: string
 }

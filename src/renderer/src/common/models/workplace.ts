@@ -3,7 +3,7 @@ export interface Workplace {
   vacantId: number
   rayon: string
   prOk: string
-  koef: number
+  razryad: number
   oklad: number
   poryadNum: number
   stavka: number

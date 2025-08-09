@@ -684,6 +684,7 @@ export const routes: RouteObject[] = [
       },
       {
         path: 'jur-5',
+        element: <MainSchetSelectedGuard />,
         children: [
           {
             path: 'calculate-params',
@@ -712,13 +713,7 @@ export const routes: RouteObject[] = [
           },
           {
             path: 'nachislenie',
-            element: <MainSchetSelectedGuard />,
-            children: [
-              {
-                index: true,
-                element: <NachisleniePage />
-              }
-            ]
+            element: <NachisleniePage />
           }
         ]
       },

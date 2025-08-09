@@ -1,5 +1,8 @@
 export const ZarplataStavkaOptions = [
   {
+    value: 0.25
+  },
+  {
     value: 0.5
   },
   {

@@ -25,7 +25,11 @@ export class WorkplaceService {
     const res = await zarplataApiNew.get<ZarplataApiResponse<Workplace[]>>(
       `${WorkplaceService.endpoint}`,
       {
-        params
+        params: {
+          ...params,
+          PageIndex: params.page,
+          PageSize: params.limit
+        }
       }
     )
     return getMultiApiResponse({

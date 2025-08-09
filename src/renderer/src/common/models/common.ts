@@ -6,7 +6,7 @@ export enum ProvodkaType {
   SHOW_SERVICE = 'show_service',
   AKT = 'akt',
   AVANS = 'avans',
-  // avans_(work_trip) = "avans_(work_trip)",
+  AVANS_WORK_TRIP = 'avans_(work_trip)',
   PODOTCHET_SALDO_RASXOD = 'podotchet_saldo_rasxod',
   PODOTCHET_SALDO_PRIXOD = 'podotchet_saldo_prixod',
   ORGAN_SALDO_RASXOD = 'organ_saldo_rasxod',

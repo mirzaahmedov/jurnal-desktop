@@ -167,13 +167,13 @@ export const WorkplaceDialog = ({
                   render={({ field }) => (
                     <FormElement
                       grid="1:2"
-                      label={t('net')}
+                      label={t('coefficient')}
                     >
                       <NumericInput
                         ref={field.ref}
                         value={field.value}
+                        decimalScale={undefined}
                         onValueChange={(values) => {
-                          console.log('running setka onValueChange', values)
                           const value = values.floatValue ?? 0
                           field.onChange(value)
                           form.setValue('oklad', value * minimumWage)
@@ -183,7 +183,7 @@ export const WorkplaceDialog = ({
                     </FormElement>
                   )}
                 />
-                <FormField
+                {/* <FormField
                   control={form.control}
                   name="koef"
                   render={({ field }) => (
@@ -198,7 +198,7 @@ export const WorkplaceDialog = ({
                       />
                     </FormElement>
                   )}
-                />
+                /> */}
 
                 <FormField
                   control={form.control}

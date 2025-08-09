@@ -38,14 +38,14 @@ export const WorkplaceColumns: ColumnDef<Workplace>[] = [
     numeric: true,
     minWidth: 130,
     key: 'setka',
-    header: 'net'
+    header: 'coefficient'
   },
-  {
-    numeric: true,
-    minWidth: 130,
-    key: 'koef',
-    header: 'razryad'
-  },
+  // {
+  //   numeric: true,
+  //   minWidth: 130,
+  //   key: 'koef',
+  //   header: 'razryad'
+  // },
   {
     numeric: true,
     minWidth: 130,

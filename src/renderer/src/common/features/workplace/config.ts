@@ -3,7 +3,7 @@ import { z } from 'zod'
 export const WorkplaceFormSchema = z.object({
   vacantId: z.number(),
   prOk: z.string(),
-  koef: z.number(),
+  razryad: z.number().optional(),
   setka: z.number(),
   rayon: z.string(),
   oklad: z.number(),
@@ -21,7 +21,6 @@ export type WorkplaceFormValues = z.infer<typeof WorkplaceFormSchema>
 export const defaultValues: WorkplaceFormValues = {
   vacantId: 0,
   prOk: '',
-  koef: 0,
   setka: 0,
   rayon: '',
   oklad: 0,

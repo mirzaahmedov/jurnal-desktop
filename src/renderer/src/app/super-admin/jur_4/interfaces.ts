@@ -1,3 +1,5 @@
+import type { ProvodkaType } from '@/common/models'
+
 export interface AdminPodotchet {
   id: number
   name: string
@@ -6,6 +8,7 @@ export interface AdminPodotchet {
   prixod: number
   rasxod: number
   summa_to: number
+  docs: AdminPodotchetDocument[]
 }
 
 export interface AdminPodotchetMainSchet {
@@ -19,15 +22,16 @@ export interface AdminPodotchetMainSchet {
     id: number
     schet: string
   }>
-  jur3_schets_152: AdminPodotchetSchet[]
-  jur4_schets: Array<{
+  jur3_schets_152: Array<{
     id: number
     schet: string
   }>
+  jur4_schets: AdminPodotchetSchet[]
   summa_from: number
   prixod: number
   rasxod: number
   summa_to: number
+  docs: AdminPodotchetDocument[]
 }
 
 export interface AdminPodotchetSchet {
@@ -70,4 +74,27 @@ export interface AdminPodotchetSchet {
   prixod: number
   rasxod: number
   summa_to: number
+  docs: AdminPodotchetDocument[]
+}
+
+export interface AdminPodotchetDocument {
+  id: number
+  doc_num: string
+  doc_date: string
+  prixod_sum: number
+  rasxod_sum: number
+  opisanie: string
+  podotchet_id: number
+  podotchet_name: string
+  podotchet_rayon: string
+  login: string
+  fio: string
+  user_id: number
+  provodki_schet: string
+  provodki_sub_schet: string
+  type: ProvodkaType
+  combined_doc_date: string
+  combined_id: number
+  combined_doc_num: string
+  child: number
 }

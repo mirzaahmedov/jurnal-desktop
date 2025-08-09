@@ -1,3 +1,5 @@
+import type { ProvodkaType } from '@/common/models'
+
 export interface AdminOrgan159 {
   id: number
   name: string
@@ -6,6 +8,7 @@ export interface AdminOrgan159 {
   prixod: number
   rasxod: number
   summa_to: number
+  docs: AdminOrgan159Document[]
 }
 
 export interface AdminOrgan159MainSchet {
@@ -15,11 +18,11 @@ export interface AdminOrgan159MainSchet {
   jur2_schet: string
   budjet_name: string
   budjet_id: number
-  jur3_schets_159: Array<{
+  jur3_schets_152: Array<{
     id: number
     schet: string
   }>
-  jur3_schets_152: AdminOrgan159Schet[]
+  jur3_schets_159: AdminOrgan159Schet[]
   jur4_schets: Array<{
     id: number
     schet: string
@@ -28,6 +31,7 @@ export interface AdminOrgan159MainSchet {
   prixod: number
   rasxod: number
   summa_to: number
+  docs: AdminOrgan159Document[]
 }
 
 export interface AdminOrgan159Schet {
@@ -70,4 +74,30 @@ export interface AdminOrgan159Schet {
   prixod: number
   rasxod: number
   summa_to: number
+  docs: AdminOrgan159Document[]
+}
+
+export interface AdminOrgan159Document {
+  id: number
+  doc_num: string
+  doc_date: string
+  opisanie: string
+  summa_rasxod: number
+  summa_prixod: number
+  shartnoma_id: number
+  shartnoma_doc_num: string
+  shartnoma_doc_date: string
+  smeta_number: null
+  organ_id: number
+  organ_name: string
+  organ_inn: string
+  user_id: number
+  login: string
+  fio: string
+  provodki_schet: string
+  provodki_sub_schet: string
+  type: ProvodkaType
+  combined_doc_date: string
+  combined_id: number
+  combined_doc_num: string
 }

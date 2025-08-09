@@ -6,6 +6,7 @@ export interface AdminBank {
   prixod: number
   rasxod: number
   summa_to: number
+  docs: AdminBankDocument[]
 }
 
 export interface AdminBankMainSchet {
@@ -44,4 +45,32 @@ export interface AdminBankMainSchet {
   prixod: number
   rasxod: number
   summa_to: number
+  docs: AdminBankDocument[]
+}
+
+export interface AdminBankDocument {
+  id: number
+  doc_num: string
+  doc_date: string
+  prixod_sum: number
+  rasxod_sum: number
+  id_spravochnik_organization: number
+  spravochnik_organization_name: string
+  spravochnik_organization_raschet_schet: null
+  spravochnik_organization_inn: string
+  id_shartnomalar_organization: null
+  shartnomalar_doc_num: null
+  shartnomalar_doc_date: null
+  opisanie: string
+  combined_doc_date: string
+  combined_id: number
+  combined_doc_num: string
+  login: string
+  fio: string
+  user_id: number
+  provodki_array: Array<{
+    provodki_schet: string
+    provodki_sub_schet: string
+  }>
+  type: string
 }

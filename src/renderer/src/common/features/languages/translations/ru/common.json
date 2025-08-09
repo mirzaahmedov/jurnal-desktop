@@ -315,7 +315,8 @@
     "jur7_rasxod": "Журнал 7 расход",
     "jur7_internal": "Журнал 7 внутренний",
     "saldo_rasxod": "Сальдо расход",
-    "saldo_prixod": "Сальдо приход"
+    "saldo_prixod": "Сальдо приход",
+    "work_trip": "Деловая поездка"
   },
   "language": "Язык",
   "zoom": "Масштаб",
@@ -522,5 +523,6 @@
   "mat_pomosh": "Мат. помощь",
   "payment_type": "Тип платежа",
   "percentage_of_contract": "Процент от договора",
-  "calculate": "Рассчитать"
+  "calculate": "Рассчитать",
+  "coefficient": "Коэффициент"
 }
