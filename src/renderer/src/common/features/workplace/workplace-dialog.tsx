@@ -107,6 +107,8 @@ export const WorkplaceDialog = ({
     }
   }, [vacant, selected])
 
+  console.log({ errors: form.formState.errors })
+
   return (
     <DialogTrigger {...props}>
       <DialogOverlay>

@@ -3,7 +3,7 @@ import { z } from 'zod'
 export const WorkplaceFormSchema = z.object({
   vacantId: z.number(),
   prOk: z.string(),
-  razryad: z.number().optional(),
+  razryad: z.number().optional().nullable(),
   setka: z.number(),
   rayon: z.string(),
   oklad: z.number(),
