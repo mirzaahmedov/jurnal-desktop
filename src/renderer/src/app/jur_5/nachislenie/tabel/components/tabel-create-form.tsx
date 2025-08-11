@@ -13,7 +13,7 @@ import { SelectedVacantsFilter } from '@/app/jur_5/common/components/selected-va
 import { MainZarplataTable } from '@/app/jur_5/common/features/main-zarplata/main-zarplata-table'
 import { useMainZarplataList } from '@/app/jur_5/common/features/main-zarplata/use-fetchers'
 import { useVacantFilters } from '@/app/jur_5/common/hooks/use-selected-vacant-filters'
-import { LoadingOverlay, Spinner } from '@/common/components'
+import { LoadingOverlay, NumericInput, Spinner } from '@/common/components'
 import { EditableTable } from '@/common/components/editable-table'
 import { createEditorDeleteHandler } from '@/common/components/editable-table/helpers'
 import { FormElement } from '@/common/components/form'
@@ -23,12 +23,10 @@ import { Checkbox } from '@/common/components/jolly/checkbox'
 import { MonthSelect } from '@/common/components/month-select'
 import { Badge } from '@/common/components/ui/badge'
 import { Form, FormField } from '@/common/components/ui/form'
-import { Input } from '@/common/components/ui/input'
 import { Tabs, TabsList, TabsTrigger } from '@/common/components/ui/tabs'
 import { Textarea } from '@/common/components/ui/textarea'
 import { YearSelect } from '@/common/components/year-select'
-import { parseDate } from '@/common/lib/date'
-import { getWorkdaysInMonth } from '@/common/lib/date'
+import { getWorkdaysInMonth, parseDate } from '@/common/lib/date'
 import { formatLocaleDate } from '@/common/lib/format'
 import { getVacantRayon } from '@/common/utils/zarplata'
 
@@ -201,9 +199,10 @@ export const TabelCreateForm = ({
                   label={t('doc_num')}
                 >
                   <div className="flex items-center gap-1">
-                    <Input
-                      readOnly
+                    <NumericInput
                       {...field}
+                      onChange={undefined}
+                      onValueChange={(values) => field.onChange(values.floatValue ?? 0)}
                     />
                     <Button
                       type="button"

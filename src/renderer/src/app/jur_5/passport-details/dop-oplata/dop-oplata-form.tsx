@@ -154,9 +154,7 @@ export const DopOplataForm = ({ mainZarplata, selected, onFinish }: DopOplataFor
                     value={field.value}
                     onValueChange={(values) => field.onChange(values.floatValue ?? 0)}
                     allowNegative={false}
-                    isAllowed={(values) =>
-                      (values.floatValue ?? 0) >= 0 && (values.floatValue ?? 0) <= 100
-                    }
+                    decimalScale={undefined}
                   />
                 </FormElement>
               )}

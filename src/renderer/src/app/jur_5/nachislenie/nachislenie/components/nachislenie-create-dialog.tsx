@@ -12,7 +12,7 @@ import { toast } from 'react-toastify'
 import { TabelColumnDefs } from '@/app/jur_5/nachislenie/tabel/columns'
 import { TabelService } from '@/app/jur_5/nachislenie/tabel/service'
 import { createOrganizationSpravochnik } from '@/app/region-spravochnik/organization'
-import { GenericTable, LoadingOverlay, Spinner } from '@/common/components'
+import { GenericTable, LoadingOverlay, NumericInput, Spinner } from '@/common/components'
 import { FormElement } from '@/common/components/form'
 import { JollyDatePicker } from '@/common/components/jolly-date-picker'
 import { Button } from '@/common/components/jolly/button'
@@ -26,7 +26,6 @@ import {
 import { MonthSelect } from '@/common/components/month-select'
 import { SearchInputDebounced } from '@/common/components/search-input-debounced'
 import { Form, FormField } from '@/common/components/ui/form'
-import { Input } from '@/common/components/ui/input'
 import { YearSelect } from '@/common/components/year-select'
 import { SpravochnikInput, useSpravochnik } from '@/common/features/spravochnik'
 import { useVacantTreeNodes } from '@/common/features/vacant/hooks/use-vacant-tree-nodes'
@@ -190,9 +189,10 @@ export const NachislenieCreateDialog = ({
                             label={t('doc_num')}
                           >
                             <div className="flex items-center gap-1">
-                              <Input
-                                readOnly
+                              <NumericInput
                                 {...field}
+                                onChange={undefined}
+                                onValueChange={(values) => field.onChange(values.floatValue ?? 0)}
                               />
                               <Button
                                 type="button"

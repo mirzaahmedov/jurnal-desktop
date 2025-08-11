@@ -374,7 +374,7 @@ export const DeductionsChangePayment = () => {
                           onBlur={field.onBlur}
                           value={field.value}
                           allowNegative={false}
-                          isAllowed={(values) => (values.floatValue ?? 0) <= 100}
+                          decimalScale={undefined}
                           onValueChange={(values) => {
                             if (values.floatValue) {
                               form.setValue('summa', 0)

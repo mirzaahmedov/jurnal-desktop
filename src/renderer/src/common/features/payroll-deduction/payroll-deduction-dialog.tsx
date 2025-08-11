@@ -127,10 +127,8 @@ export const PayrollDeductionDialog = ({
                         <NumericInput
                           ref={field.ref}
                           value={field.value}
-                          isAllowed={(value) => {
-                            const floatValue = value.floatValue ?? 0
-                            return floatValue >= 0 && floatValue <= 100
-                          }}
+                          decimalScale={undefined}
+                          allowNegative={false}
                           onValueChange={(values) => {
                             field.onChange(values.floatValue ?? 0)
                           }}

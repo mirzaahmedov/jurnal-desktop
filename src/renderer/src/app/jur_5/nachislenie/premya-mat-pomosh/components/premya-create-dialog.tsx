@@ -211,9 +211,10 @@ export const PremyaMatPomoshCreateDialog = (props: PremyaMatPomoshCreateDialogPr
                             label={t('doc_num')}
                           >
                             <div className="flex items-center gap-1">
-                              <Input
-                                readOnly
+                              <NumericInput
                                 {...field}
+                                onChange={undefined}
+                                onValueChange={(values) => field.onChange(values.floatValue ?? 0)}
                               />
                               <Button
                                 type="button"
@@ -388,14 +389,12 @@ export const PremyaMatPomoshCreateDialog = (props: PremyaMatPomoshCreateDialogPr
                             label={t('amount')}
                           >
                             <NumericInput
-                              isAllowed={(values) =>
-                                !isPercent ? true : (values.floatValue ?? 0) <= 100
-                              }
                               allowNegative={false}
                               ref={field.ref}
                               value={field.value}
                               onValueChange={(values) => field.onChange(values.floatValue ?? 0)}
                               onBlur={field.onBlur}
+                              decimalScale={undefined}
                             />
                           </FormElement>
                         )}
