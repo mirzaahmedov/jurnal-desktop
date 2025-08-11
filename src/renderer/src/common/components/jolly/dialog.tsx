@@ -45,9 +45,21 @@ const sheetVariants = cva(
 
 const DialogTrigger = AriaDialogTrigger
 
-const DialogOverlay = ({ className, isDismissable = true, ...props }: AriaModalOverlayProps) => (
+const DialogOverlay = ({
+  className,
+  isDismissable = true,
+  shouldCloseOnInteractOutside,
+  ...props
+}: AriaModalOverlayProps) => (
   <AriaModalOverlay
     isDismissable={isDismissable}
+    shouldCloseOnInteractOutside={(element) => {
+      const toastContainer = document.querySelector('.toast-container')
+      if (toastContainer?.contains(element)) {
+        return false
+      }
+      return shouldCloseOnInteractOutside?.(element) ?? true
+    }}
     className={composeRenderProps(className, (className) =>
       cn(
         'fixed inset-0 z-100 bg-black/50',

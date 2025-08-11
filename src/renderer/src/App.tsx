@@ -32,6 +32,7 @@ function App() {
       <RouterProvider router={router} />
       <ToastContainer
         position="bottom-right"
+        toastClassName="toast-container"
         toastStyle={{
           width: 400,
           pointerEvents: 'auto'

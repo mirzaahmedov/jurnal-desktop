@@ -111,14 +111,17 @@ export const getMainbookColumns = (types: MainbookType[], isEditable = false) =>
       return [
         {
           key: type.id,
-          header: jurNum
-            ? t('reports_common.mo-nth', { nth: jurNum })
-            : t(`reports_common.${type.name}`),
+          header:
+            jurNum && jurNum !== '8'
+              ? t('reports_common.mo-nth', { nth: getMainbookJournalName(jurNum) })
+              : jurNum === '8'
+                ? t(`pages.jur_8_old_short`, { ns: 'app' })
+                : t(`reports_common.${type.name}`),
           headerClassName: 'text-center',
           columns: [
             {
               key: `${type.id}_prixod`,
-              header: t('prixod'),
+              header: t('debet'),
               headerClassName: 'text-center',
               minWidth: type.id === 10 && isEditable ? 160 : undefined,
               Editor: createNumberEditor({
@@ -132,7 +135,7 @@ export const getMainbookColumns = (types: MainbookType[], isEditable = false) =>
             },
             {
               key: `${type.id}_rasxod`,
-              header: t('rasxod'),
+              header: t('kredit'),
               headerClassName: 'text-center',
               minWidth: type.id === 10 && isEditable ? 160 : undefined,
               Editor: createNumberEditor({
@@ -149,4 +152,19 @@ export const getMainbookColumns = (types: MainbookType[], isEditable = false) =>
       ] as EditableColumnDef<any>[]
     }) ?? []
   )
+}
+
+const getMainbookJournalName = (jurNum: string) => {
+  switch (true) {
+    case jurNum === '3':
+      return '6'
+    case jurNum === '3a':
+      return '6a'
+    case jurNum === '4':
+      return '8'
+    case jurNum === '7':
+      return '9'
+    default:
+      return jurNum
+  }
 }
