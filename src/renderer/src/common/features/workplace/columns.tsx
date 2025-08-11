@@ -11,6 +11,7 @@ import { createZarplataSpravochnik } from '@/app/super-admin/zarplata/spravochni
 import { Button } from '@/common/components/jolly/button'
 import { IDCell } from '@/common/components/table/renderers/id'
 import { useSpravochnik } from '@/common/features/spravochnik'
+import { formatNumber } from '@/common/lib/format'
 
 import { WorkplaceService } from './service'
 
@@ -38,7 +39,8 @@ export const WorkplaceColumns: ColumnDef<Workplace>[] = [
     numeric: true,
     minWidth: 130,
     key: 'setka',
-    header: 'coefficient'
+    header: 'coefficient',
+    renderCell: (row) => formatNumber(row.setka ?? 0, 2, 10)
   },
   // {
   //   numeric: true,
