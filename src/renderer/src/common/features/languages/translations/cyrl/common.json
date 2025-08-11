@@ -527,5 +527,6 @@
   "coefficient": "Коэффициент",
   "update": "Янгилаш",
   "update_all": "Барчасини янгилаш",
-  "aggregated_report": "Жамланма ҳисобот"
+  "aggregated_report": "Жамланма ҳисобот",
+  "action-successful": "Муваффақиятли бажарилди"
 }

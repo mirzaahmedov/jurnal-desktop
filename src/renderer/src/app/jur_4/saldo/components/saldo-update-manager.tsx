@@ -1,6 +1,5 @@
 import { type SVGAttributes, useEffect, useRef } from 'react'
 
-import { AlertDialogCancel } from '@radix-ui/react-alert-dialog'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { ArrowRight } from 'lucide-react'
 import { useForm } from 'react-hook-form'
@@ -140,13 +139,15 @@ export const PodotchetSaldoUpdateManager = () => {
         dialogToggle.setOpen(open)
       }}
     >
-      <DialogOverlay>
+      <DialogOverlay
+        isDismissable={false}
+        isKeyboardDismissDisabled={false}
+      >
         <DialogContent
-          isDismissable={false}
           closeButton={false}
           className="w-full max-w-[1690px] h-full max-h-[900px] p-0 gap-0"
         >
-          <div className="h-full flex flex-col">
+          <div className="h-full flex flex-col overflow-hidden">
             <DialogHeader className="p-5 flex flex-row items-start justify-between gap-10">
               <div>
                 <DialogTitle className="text-xl font-bold">
@@ -166,7 +167,7 @@ export const PodotchetSaldoUpdateManager = () => {
             </DialogHeader>
 
             <div
-              className="flex-1 overflow-auto scrollbar relative"
+              className="flex-1 min-h-0 overflow-auto scrollbar relative"
               ref={scrollElementRef}
             >
               {isAutofilling ? <LoadingOverlay /> : null}
@@ -187,11 +188,14 @@ export const PodotchetSaldoUpdateManager = () => {
               )}
             </div>
 
-            <DialogFooter className="flex items-center justify-end p-5 gap-5456  ">
+            <DialogFooter className="flex items-center justify-end p-5 gap-5">
               {queuedMonths.length === 0 ? (
-                <AlertDialogCancel asChild>
-                  <Button variant="outline">{t('close')}</Button>
-                </AlertDialogCancel>
+                <Button
+                  variant="outline"
+                  onClick={dialogToggle.close}
+                >
+                  {t('close')}
+                </Button>
               ) : (
                 <Button
                   isPending={isUpdating}

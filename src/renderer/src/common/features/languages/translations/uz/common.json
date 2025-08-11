@@ -526,5 +526,6 @@
   "coefficient": "Koeffitsient",
   "update": "Yangilash",
   "update_all": "Barchasini yangilash",
-  "aggregated_report": "Jamlanma hisobot"
+  "aggregated_report": "Jamlanma hisobot",
+  "action-successful": "Muvaffaqiyatli bajarildi"
 }

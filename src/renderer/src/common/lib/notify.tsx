@@ -56,17 +56,19 @@ export const ErrorToastContent = ({
         {details ? <CopyButton details={details} /> : null}
         {refetch ? (
           <Button
+            type="button"
             variant="ghost"
             size="icon"
-            onClick={refetch}
+            onClick={() => refetch()}
           >
             <Repeat className="size-4" />
           </Button>
         ) : null}
         <Button
+          type="button"
           variant="ghost"
           size="icon"
-          onClick={closeToast}
+          onClick={() => closeToast()}
         >
           <X className="size-4" />
         </Button>
