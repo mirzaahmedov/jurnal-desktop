@@ -58,16 +58,18 @@ export class MainZarplataService {
         typeof MainZarplataService.QueryKeys.GetByVacantId,
         {
           vacantId: number
+          ostanovit?: boolean
         }
       ]
     >
   ) {
-    const { vacantId } = ctx.queryKey[1]
+    const { vacantId, ostanovit } = ctx.queryKey[1]
     const res = await zarplataApiNew.get<MainZarplata[]>(
       `${MainZarplataService.endpoint}/get-by-vacantId`,
       {
         params: {
-          vacantId
+          vacantId,
+          ostanovit
         }
       }
     )

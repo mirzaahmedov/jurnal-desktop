@@ -67,7 +67,8 @@ export const TabelCreateForm = ({
 
   const tabelChildren = form.watch('tabelChildren')
   const mainZarplataQuery = useMainZarplataList({
-    vacantId: vacant?.id ?? 0
+    vacantId: vacant?.id ?? 0,
+    ostanovit: true
   })
   const filterOptions = useVacantFilters({
     vacants,
