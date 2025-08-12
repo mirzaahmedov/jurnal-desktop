@@ -144,7 +144,7 @@ const FinancialReceiptDetailsPage = () => {
       title: id === 'create' ? t('create') : t('edit'),
       breadcrumbs: [
         {
-          title: t('pages.jur8')
+          title: t('pages.jur_8_old')
         }
       ],
       onBack: () => {

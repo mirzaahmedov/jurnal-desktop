@@ -17,7 +17,6 @@ export type VideoModuleFormValues = z.infer<typeof VideoModuleFormSchema>
 
 export const VideoFormSchema = z.object({
   name: z.string().nonempty(),
-  status: z.boolean(),
   sort_order: z.coerce.number()
 })
 export type VideoFormValues = z.infer<typeof VideoFormSchema>

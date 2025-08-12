@@ -60,7 +60,7 @@ const FinancialReceiptPage = () => {
       title: t('pages.monitoring'),
       breadcrumbs: [
         {
-          title: t('pages.jur8')
+          title: t('pages.jur_8_old')
         }
       ],
       content: FinancialReceiptFilters,

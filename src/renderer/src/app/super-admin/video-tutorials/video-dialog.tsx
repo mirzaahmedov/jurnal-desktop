@@ -90,7 +90,6 @@ export const VideoDialog = ({ open, onOpenChange, selected, moduleId }: VideoDia
     formData.append('file', file)
     formData.append('name', values.name)
     formData.append('sort_order', values.sort_order.toString())
-    formData.append('status', values.status.toString())
     formData.append('module_id', moduleId.toString())
 
     if (selected) {
@@ -111,8 +110,7 @@ export const VideoDialog = ({ open, onOpenChange, selected, moduleId }: VideoDia
 
     form.reset({
       name: selected.name,
-      sort_order: selected.sort_order,
-      status: selected.status
+      sort_order: selected.sort_order
     })
   }, [form, selected])
 
@@ -133,9 +131,7 @@ export const VideoDialog = ({ open, onOpenChange, selected, moduleId }: VideoDia
         <DialogContent className="max-w-xl">
           <DialogHeader>
             <DialogTitle>
-              {selected
-                ? capitalize(t('update-something', { something: t('video') }))
-                : capitalize(t('create-something', { something: t('video') }))}
+              {selected ? t('video') : capitalize(t('create-something', { something: t('video') }))}
             </DialogTitle>
           </DialogHeader>
           <Form {...form}>
@@ -236,6 +232,5 @@ export const VideoDialog = ({ open, onOpenChange, selected, moduleId }: VideoDia
 
 const defaultValues: VideoFormValues = {
   name: '',
-  sort_order: 1,
-  status: true
+  sort_order: 1
 }

@@ -31,7 +31,7 @@ export const VideoGrid = ({
   })
 
   return (
-    <div className="relative h-full">
+    <div className="relative h-full overflow-y-auto scrollbar">
       <ul className="grid grid-cols-1 p-5 xl:grid-cols-2 2xl:grid-cols-3">
         {loading || isFetching ? <LoadingOverlay /> : null}
         {Array.isArray(videos?.data) ? (
