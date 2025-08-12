@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next'
 
 import { FooterCell, FooterRow, GenericTable } from '@/common/components'
 import { SummaCell } from '@/common/components/table/renderers/summa'
+import { DownloadFile } from '@/common/features/file'
 import {
   SearchFilterDebounced,
   useSearchFilter
@@ -33,6 +34,8 @@ const AdminMaterialPage = () => {
   const [docs, setDocs] = useState<AdminMaterialDocument[]>()
   const [selected, setSelected] = useState<AdminMaterial | null>(null)
   const [to, setTo] = useState(defaultDate)
+
+  const from = formatDate(getFirstDayOfMonth(parseDate(to)))
 
   const { t } = useTranslation(['app'])
 
@@ -64,11 +67,22 @@ const AdminMaterialPage = () => {
 
   return (
     <ListView>
-      <ListView.Header>
+      <ListView.Header className="flex justify-between">
         <EndDatePicker
           value={to}
           onChange={setTo}
           refetch={refetch}
+        />
+
+        <DownloadFile
+          url="/admin/jur7/by-schets-regions"
+          params={{
+            from: from,
+            to: to,
+            excel: true
+          }}
+          fileName={`${t('pages.material-warehouse')}_${t('summarized_report')}_${from}_${to}.xlsx`}
+          buttonText={t('summarized_report')}
         />
       </ListView.Header>
       <ListView.Content isLoading={isFetching}>
@@ -108,7 +122,7 @@ const AdminMaterialPage = () => {
         selected={selected}
         isOpen={viewToggle.isOpen}
         onOpenChange={viewToggle.setOpen}
-        from={formatDate(getFirstDayOfMonth(parseDate(to)))}
+        from={from}
         to={to}
       />
       <ViewDocumentsModal
