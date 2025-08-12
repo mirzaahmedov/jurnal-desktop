@@ -76,17 +76,28 @@ const AdminOrgan152Page = () => {
           onChange={setTo}
           refetch={refetch}
         />
-
-        <DownloadFile
-          url="/admin/jur3-152/cap?"
-          fileName={`${t('pages.bank')}_${t('cap')}_${from}:${to}.xlsx`}
-          params={{
-            from: from,
-            to: to,
-            excel: true
-          }}
-          buttonText={t('cap')}
-        />
+        <div className="flex items-center">
+          <DownloadFile
+            url="/admin/jur3-152/cap"
+            fileName={`${t('pages.organization')}_${t('cap')}_${from}:${to}.xlsx`}
+            params={{
+              from: from,
+              to: to,
+              excel: true
+            }}
+            buttonText={t('cap')}
+          />
+          <DownloadFile
+            url="/admin/jur3-152/by-schet"
+            fileName={`${t('pages.organization')}_${t('summarized_report')}_${from}:${to}.xlsx`}
+            params={{
+              from: from,
+              to: to,
+              excel: true
+            }}
+            buttonText={t('summarized_report')}
+          />
+        </div>
       </ListView.Header>
       <ListView.Content isLoading={isFetching}>
         <GenericTable

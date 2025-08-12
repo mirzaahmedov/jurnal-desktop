@@ -15,6 +15,7 @@ import {
 
 import { AdminDocumentsType, ViewDocumentsModal } from '../components/view-documents-modal'
 import { AdminMaterialMainSchetColumnDefs } from './columns'
+import { AdminMaterialReports } from './reports'
 
 export interface ViewModalProps extends Omit<DialogTriggerProps, 'children'> {
   selected: AdminMaterial | null
@@ -44,6 +45,12 @@ export const ViewModal = ({ selected, from, to, ...props }: ViewModalProps) => {
                 onView={(row) => {
                   setDocs(row.docs)
                 }}
+                actions={(row, tableProps) => (
+                  <AdminMaterialReports
+                    row={row}
+                    tableProps={tableProps}
+                  />
+                )}
               />
             </div>
           </DialogContent>

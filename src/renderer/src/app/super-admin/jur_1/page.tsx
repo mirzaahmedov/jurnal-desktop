@@ -76,16 +76,28 @@ const AdminKassaPage = () => {
           onChange={setTo}
           refetch={refetch}
         />
-        <DownloadFile
-          url="/admin/jur1/cap?"
-          fileName={`${t('pages.kassa')}_${t('cap')}_${from}:${to}.xlsx`}
-          params={{
-            from: from,
-            to: to,
-            excel: true
-          }}
-          buttonText={t('cap')}
-        />
+        <div className="flex items-center gap-2.5">
+          <DownloadFile
+            url="/admin/jur1/cap?"
+            fileName={`${t('pages.kassa')}_${t('cap')}_${from}:${to}.xlsx`}
+            params={{
+              from: from,
+              to: to,
+              excel: true
+            }}
+            buttonText={t('cap')}
+          />
+          <DownloadFile
+            url="/admin/jur1/by-schet"
+            fileName={`${t('pages.kassa')}_${t('summary_report')}.xlsx`}
+            params={{
+              from: from,
+              to: to,
+              excel: true
+            }}
+            buttonText={t('summarized_report')}
+          />
+        </div>
       </ListView.Header>
       <ListView.Content isLoading={isFetching}>
         <GenericTable

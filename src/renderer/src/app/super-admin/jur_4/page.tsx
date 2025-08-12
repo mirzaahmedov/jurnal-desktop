@@ -77,16 +77,18 @@ const AdminPodotchetPage = () => {
           refetch={refetch}
         />
 
-        <DownloadFile
-          url="/admin/jur3-159/cap?"
-          fileName={`${t('pages.bank')}_${t('cap')}_${from}:${to}.xlsx`}
-          params={{
-            from: from,
-            to: to,
-            excel: true
-          }}
-          buttonText={t('cap')}
-        />
+        <div className="flex items-center">
+          <DownloadFile
+            url="/admin/jur4/cap"
+            fileName={`${t('pages.podotchet')}_${t('cap')}_${from}:${to}.xlsx`}
+            params={{
+              from: from,
+              to: to,
+              excel: true
+            }}
+            buttonText={t('cap')}
+          />
+        </div>
       </ListView.Header>
       <ListView.Content isLoading={isFetching}>
         <GenericTable

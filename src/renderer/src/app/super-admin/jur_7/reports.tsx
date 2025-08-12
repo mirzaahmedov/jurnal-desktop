@@ -87,7 +87,7 @@ export const AdminMaterialReports = ({
 
               <DownloadFile
                 fileName={`material_${t('cap')}_${date.getMonth() + 1}-${date.getFullYear()}.xlsx`}
-                url="/jur_7/monitoring/cap/report"
+                url="/admin/jur7/cap/report"
                 params={{
                   month: date.getMonth() + 1,
                   year: date.getFullYear(),
@@ -96,7 +96,6 @@ export const AdminMaterialReports = ({
                   budjet_id,
                   main_schet_id,
                   report_title_id: reportTitleId,
-                  region_id: regionId,
                   excel: true
                 }}
                 buttonText={t('cap')}

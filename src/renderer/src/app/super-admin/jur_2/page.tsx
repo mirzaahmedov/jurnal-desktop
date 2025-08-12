@@ -76,16 +76,28 @@ const AdminBankPage = () => {
           onChange={setTo}
           refetch={refetch}
         />
-        <DownloadFile
-          url="/admin/jur2/cap?"
-          fileName={`${t('pages.bank')}_${t('cap')}_${from}:${to}.xlsx`}
-          params={{
-            from: from,
-            to: to,
-            excel: true
-          }}
-          buttonText={t('cap')}
-        />
+        <div>
+          <DownloadFile
+            url="/admin/jur2/cap?"
+            fileName={`${t('pages.bank')}_${t('cap')}_${from}:${to}.xlsx`}
+            params={{
+              from: from,
+              to: to,
+              excel: true
+            }}
+            buttonText={t('cap')}
+          />
+          <DownloadFile
+            url="/admin/jur2/by-schet"
+            fileName={`${t('pages.bank')}_${t('summarized_report')}_${from}:${to}.xlsx`}
+            params={{
+              from: from,
+              to: to,
+              excel: true
+            }}
+            buttonText={t('summarized_report')}
+          />
+        </div>
       </ListView.Header>
       <ListView.Content isLoading={isFetching}>
         <GenericTable
