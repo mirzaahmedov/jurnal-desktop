@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next'
 
 import { MaterialReportModal } from '@/app/jur_7/__components__/material-report-modal'
 import { DailyReportDialog } from '@/app/jur_7/monitor/daily-report-dialog'
-import { TurnoverReportDialog } from '@/app/jur_7/monitor/turnover-report-dialog'
+import { SummarizedReportDialog } from '@/app/jur_7/monitor/summarized-report-dialog'
 import { Button } from '@/common/components/jolly/button'
 import { Popover, PopoverDialog, PopoverTrigger } from '@/common/components/jolly/popover'
 import { DownloadFile } from '@/common/features/file'
@@ -194,7 +194,7 @@ export const AdminMaterialReports = ({
         region_id={regionId}
       />
 
-      <TurnoverReportDialog
+      <SummarizedReportDialog
         withResponsible={false}
         isOpen={turnoverToggle.isOpen}
         onOpenChange={turnoverToggle.setOpen}

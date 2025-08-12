@@ -29,7 +29,7 @@ import { columns } from './columns'
 import { WarehouseMonitorQueryKeys } from './config'
 import { DailyReportDialog } from './daily-report-dialog'
 import { WarehouseMonitorService } from './service'
-import { TurnoverReportDialog } from './turnover-report-dialog'
+import { SummarizedReportDialog } from './summarized-report-dialog'
 import { ViewModal } from './view-modal'
 
 const MaterialMonitorPage = () => {
@@ -152,7 +152,7 @@ const MaterialMonitorPage = () => {
             </Button>
 
             <DownloadFile
-              fileName={`${t('summarized_circulation')}(${t('year')})_${startDate.getMonth() + 1}-${startDate.getFullYear()}.xlsx`}
+              fileName={`${t('summarized_circulation')}_${t('year')})_${startDate.getMonth() + 1}-${startDate.getFullYear()}.xlsx`}
               url="/jur_7/monitoring/schet"
               params={{
                 month: startDate.getMonth() + 1,
@@ -184,7 +184,7 @@ const MaterialMonitorPage = () => {
                 turnoverToggle.open()
               }}
             >
-              {t('summarized_circulation')}
+              {t('summarized_circulation')} ({t('by_responsible')})
             </Button>
 
             <Button
@@ -324,7 +324,7 @@ const MaterialMonitorPage = () => {
         month={startDate.getMonth() + 1}
       />
 
-      <TurnoverReportDialog
+      <SummarizedReportDialog
         isOpen={turnoverToggle.isOpen}
         onOpenChange={turnoverToggle.setOpen}
         budjet_id={budjet_id!}

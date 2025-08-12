@@ -528,5 +528,6 @@
   "coefficient": "Коэффициент",
   "update": "Обновить",
   "update_all": "Обновить все",
-  "aggregated_report": "Сводный отчёт"
+  "aggregated_report": "Сводный отчёт",
+  "by_responsible": "По ответственным лицам"
 }

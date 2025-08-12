@@ -527,5 +527,6 @@
   "update": "Yangilash",
   "update_all": "Barchasini yangilash",
   "aggregated_report": "Jamlanma hisobot",
-  "action-successful": "Muvaffaqiyatli bajarildi"
+  "action-successful": "Muvaffaqiyatli bajarildi",
+  "by_responsible": "Javobgar shaxslar kesimida"
 }

@@ -20,7 +20,7 @@ import { SpravochnikInput, useSpravochnik } from '@/common/features/spravochnik'
 
 import { createResponsibleSpravochnik } from '../responsible/service'
 
-export interface TurnoverReportDialogProps extends Omit<DialogTriggerProps, 'children'> {
+export interface SummarizedReportDialogProps extends Omit<DialogTriggerProps, 'children'> {
   withResponsible?: boolean
   to: string
   year: number
@@ -29,7 +29,7 @@ export interface TurnoverReportDialogProps extends Omit<DialogTriggerProps, 'chi
   main_schet_id: number
   region_id?: number
 }
-export const TurnoverReportDialog = ({
+export const SummarizedReportDialog = ({
   withResponsible = true,
   to,
   year,
@@ -38,7 +38,7 @@ export const TurnoverReportDialog = ({
   main_schet_id,
   region_id,
   ...props
-}: TurnoverReportDialogProps) => {
+}: SummarizedReportDialogProps) => {
   const { t } = useTranslation()
 
   const form = useForm({
@@ -85,8 +85,8 @@ export const TurnoverReportDialog = ({
               <DialogFooter>
                 <DownloadFile
                   url="jur_7/monitoring/turnover/report"
-                  fileName={`${t('summarized_circulation')}_${month}-${year}.xlsx`}
-                  buttonText={`${t('summarized_circulation')} ${t('report').toLowerCase()}`}
+                  fileName={`${t('summarized_circulation')}_${t('by_responsible')}_${month}-${year}.xlsx`}
+                  buttonText={`${t('summarized_circulation')} (${t('by_responsible')})`}
                   params={{
                     to,
                     year,

@@ -88,6 +88,16 @@ const AdminPodotchetPage = () => {
             }}
             buttonText={t('cap')}
           />
+          <DownloadFile
+            url="/admin/jur4/by-schet"
+            fileName={`${t('pages.podotchet')}_${t('summarized_report')}_${from}:${to}.xlsx`}
+            params={{
+              from: from,
+              to: to,
+              excel: true
+            }}
+            buttonText={t('summarized_report')}
+          />
         </div>
       </ListView.Header>
       <ListView.Content isLoading={isFetching}>
