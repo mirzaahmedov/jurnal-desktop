@@ -10,12 +10,13 @@ import { AlertTriangle } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import {
-  AlertDialog,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogHeader,
-  AlertDialogTitle
-} from '@/common/components/ui/alert-dialog'
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogOverlay,
+  DialogTitle,
+  DialogTrigger
+} from '@/common/components/jolly/dialog'
 import { Button } from '@/common/components/ui/button'
 import { useEventCallback, useToggle } from '@/common/hooks'
 import { cn } from '@/common/lib/utils'
@@ -54,125 +55,138 @@ export const SaldoUpdateManager = ({
   }, [queue, dialogToggle.open])
 
   return (
-    <AlertDialog open={dialogToggle.isOpen}>
-      <AlertDialogContent className="w-full max-w-4xl p-10 min-h-96 h-full max-h-[500px] flex flex-col gap-10">
-        <AlertDialogHeader>
-          <AlertDialogTitle className="text-xl font-bold">
-            {queue.length === 0 ? t('action-successful') : t('saldo_update_required')}
-          </AlertDialogTitle>
-          <AlertDialogDescription>
-            {queue.length > 0
-              ? t('please_update_saldo_to_continue')
-              : t('you_can_continue_working_now')}
-          </AlertDialogDescription>
-        </AlertDialogHeader>
+    <DialogTrigger isOpen={dialogToggle.isOpen}>
+      <DialogOverlay
+        isDismissable={false}
+        isKeyboardDismissDisabled={false}
+      >
+        <DialogContent
+          closeButton={false}
+          isDismissable={false}
+          isKeyboardDismissDisabled={false}
+          className="w-full max-w-4xl p-10 min-h-96 h-full max-h-[500px] flex flex-col gap-10"
+        >
+          <DialogHeader>
+            <DialogTitle className="text-xl font-bold">
+              {queue.length === 0 ? t('action-successful') : t('saldo_update_required')}
+            </DialogTitle>
+            <DialogDescription>
+              {queue.length > 0
+                ? t('please_update_saldo_to_continue')
+                : t('you_can_continue_working_now')}
+            </DialogDescription>
+          </DialogHeader>
 
-        <div className="flex-1 flex items-start">
-          <ul className="col-span-2 flex flex-col gap-2">
-            {completed.map((m) => (
-              <li
-                key={`${m.year}-${m.month}`}
-                className="text-brand font-bold"
-              >
-                {format(new Date(m.year, m.month - 1), 'yyyy MMMM', {
-                  locale: i18n.language === 'ru' ? ru : uz
-                })}{' '}
-                ✓
-              </li>
-            ))}
-            {queue.map((m, i) => (
-              <li
-                key={`${m.year}-${m.month}`}
-                className={cn('font-medium text-slate-500', i === 0 && 'font-bold text-foreground')}
-              >
-                {format(new Date(m.year, m.month - 1), 'yyyy MMMM', {
-                  locale: i18n.language === 'ru' ? ru : uz
-                })}{' '}
-                {i === 0 ? (
-                  <CaretLeftIcon className="align-middle inline-block size-6 text-slate-500" />
-                ) : null}
-              </li>
-            ))}
-          </ul>
-          <div className="flex-1 h-full">
-            {pending ? (
-              <div className="h-full flex items-center justify-center">
-                <div className="flex flex-col items-center gap-10">
-                  <div className="loader"></div>
-                  <h4 className="text-sm font-medium text-slate-500 max-w-xs">
-                    {t('recomputing_saldo')}
-                  </h4>
-                </div>
-              </div>
-            ) : error ? (
-              <div className="flex h-full flex-col">
-                <div className="flex-1 grid place-items-center">
-                  <div className="flex flex-col items-center gap-2.5">
-                    <ErrorIcon />
+          <div className="flex-1 flex items-start">
+            <ul className="col-span-2 flex flex-col gap-2">
+              {completed.map((m) => (
+                <li
+                  key={`${m.year}-${m.month}`}
+                  className="text-brand font-bold"
+                >
+                  {format(new Date(m.year, m.month - 1), 'yyyy MMMM', {
+                    locale: i18n.language === 'ru' ? ru : uz
+                  })}{' '}
+                  ✓
+                </li>
+              ))}
+              {queue.map((m, i) => (
+                <li
+                  key={`${m.year}-${m.month}`}
+                  className={cn(
+                    'font-medium text-slate-500',
+                    i === 0 && 'font-bold text-foreground'
+                  )}
+                >
+                  {format(new Date(m.year, m.month - 1), 'yyyy MMMM', {
+                    locale: i18n.language === 'ru' ? ru : uz
+                  })}{' '}
+                  {i === 0 ? (
+                    <CaretLeftIcon className="align-middle inline-block size-6 text-slate-500" />
+                  ) : null}
+                </li>
+              ))}
+            </ul>
+            <div className="flex-1 h-full">
+              {pending ? (
+                <div className="h-full flex items-center justify-center">
+                  <div className="flex flex-col items-center gap-10">
+                    <div className="loader"></div>
                     <h4 className="text-sm font-medium text-slate-500 max-w-xs">
-                      {error?.message}
+                      {t('recomputing_saldo')}
                     </h4>
                   </div>
                 </div>
-                <div className="flex justify-end gap-5">
-                  <Button
-                    type="button"
-                    disabled={queue.length === 0}
-                    onClick={() => {
-                      onConfirm?.(queue[0])
-                    }}
-                  >
-                    {t('retry')}
-                  </Button>
-                  <Button
-                    variant="outline"
-                    onClick={() => {
-                      dialogToggle.close()
-                    }}
-                  >
-                    {t('close')}
-                  </Button>
-                </div>
-              </div>
-            ) : queue.length === 0 ? (
-              <div className="flex h-full flex-col">
-                <div className="flex-1 grid place-items-center">
-                  <div className="flex flex-col items-center gap-2.5">
-                    <SuccessIcon width={250} />
+              ) : error ? (
+                <div className="flex h-full flex-col">
+                  <div className="flex-1 grid place-items-center">
+                    <div className="flex flex-col items-center gap-2.5">
+                      <ErrorIcon />
+                      <h4 className="text-sm font-medium text-slate-500 max-w-xs">
+                        {error?.message}
+                      </h4>
+                    </div>
+                  </div>
+                  <div className="flex justify-end gap-5">
+                    <Button
+                      type="button"
+                      disabled={queue.length === 0}
+                      onClick={() => {
+                        onConfirm?.(queue[0])
+                      }}
+                    >
+                      {t('retry')}
+                    </Button>
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        dialogToggle.close()
+                      }}
+                    >
+                      {t('close')}
+                    </Button>
                   </div>
                 </div>
-                <div className="flex justify-end">
-                  <Button
-                    variant="outline"
-                    onClick={() => {
-                      dialogToggle.close()
-                    }}
-                  >
-                    {t('close')}
-                  </Button>
+              ) : queue.length === 0 ? (
+                <div className="flex h-full flex-col">
+                  <div className="flex-1 grid place-items-center">
+                    <div className="flex flex-col items-center gap-2.5">
+                      <SuccessIcon width={250} />
+                    </div>
+                  </div>
+                  <div className="flex justify-end">
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        dialogToggle.close()
+                      }}
+                    >
+                      {t('close')}
+                    </Button>
+                  </div>
                 </div>
-              </div>
-            ) : (
-              <div className="flex h-full flex-col">
-                <div className="flex-1 grid place-items-center">
-                  <AlertIcon width={250} />
+              ) : (
+                <div className="flex h-full flex-col">
+                  <div className="flex-1 grid place-items-center">
+                    <AlertIcon width={250} />
+                  </div>
+                  <div className="flex justify-end">
+                    <Button
+                      disabled={queue.length === 0}
+                      onClick={() => {
+                        onConfirm?.(queue[0])
+                      }}
+                    >
+                      {t('continue')}
+                    </Button>
+                  </div>
                 </div>
-                <div className="flex justify-end">
-                  <Button
-                    disabled={queue.length === 0}
-                    onClick={() => {
-                      onConfirm?.(queue[0])
-                    }}
-                  >
-                    {t('continue')}
-                  </Button>
-                </div>
-              </div>
-            )}
+              )}
+            </div>
           </div>
-        </div>
-      </AlertDialogContent>
-    </AlertDialog>
+        </DialogContent>
+      </DialogOverlay>
+    </DialogTrigger>
   )
 }
 
