@@ -1,6 +1,6 @@
 import type { WorkTrip } from '@/common/models'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
@@ -24,6 +24,7 @@ import { ListView } from '@/common/views'
 import { WorkTripColumnDefs } from './columns'
 import { WorkTripQueryKeys } from './config'
 import { WorkTripService } from './service'
+import { WorkTripViewDialog } from './view-dialog'
 
 const WorkTripPage = () => {
   const dates = useDates()
@@ -33,6 +34,8 @@ const WorkTripPage = () => {
   const queryClient = useQueryClient()
 
   const [search] = useSearchFilter()
+
+  const [selectedId, setSelectedId] = useState<number | null>(null)
 
   const { t } = useTranslation(['app'])
   const { main_schet_id, jur4_schet_id } = useRequisitesStore()
@@ -86,6 +89,9 @@ const WorkTripPage = () => {
       }
     })
   }
+  const handleView = (row: WorkTrip) => {
+    setSelectedId(row.id)
+  }
 
   return (
     <ListView>
@@ -105,6 +111,7 @@ const WorkTripPage = () => {
           data={workTrips?.data ?? []}
           onDelete={handleDelete}
           onEdit={handleEdit}
+          onView={handleView}
         />
       </ListView.Content>
       <ListView.Footer>
@@ -114,6 +121,11 @@ const WorkTripPage = () => {
           count={workTrips?.meta?.count ?? 0}
         />
       </ListView.Footer>
+
+      <WorkTripViewDialog
+        selectedId={selectedId}
+        onClose={() => setSelectedId(null)}
+      />
     </ListView>
   )
 }

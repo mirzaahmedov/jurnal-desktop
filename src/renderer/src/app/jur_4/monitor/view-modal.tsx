@@ -10,6 +10,8 @@ import { WarehousePrixodViewDialog } from '@/app/jur_7/prixod/view-dialog'
 import { WarehouseRasxodViewDialog } from '@/app/jur_7/rasxod/view-dialog'
 import { ProvodkaType } from '@/common/models'
 
+import { WorkTripViewDialog } from '../work-trip/view-dialog'
+
 export interface ViewModalProps {
   selected: any
   onClose: VoidFunction
@@ -37,6 +39,8 @@ export const ViewModal = ({ selected, onClose }: ViewModalProps) => {
       return <AktViewDialog {...props} />
     case ProvodkaType.AVANS:
       return <AvansViewDialog {...props} />
+    case ProvodkaType.AVANS_WORK_TRIP:
+      return <WorkTripViewDialog {...props} />
     case ProvodkaType.JUR7_RASXOD:
       return <WarehouseRasxodViewDialog {...props} />
     case ProvodkaType.JUR7_PRIXOD:

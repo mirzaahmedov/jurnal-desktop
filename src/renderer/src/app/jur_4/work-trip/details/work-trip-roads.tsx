@@ -63,10 +63,6 @@ export const WorkTripRoads = ({ form, minimumWageSumma }: WorkTripRoadsProps) =>
     })
   }, [roads, minimumWageSumma])
 
-  console.log({
-    values: form.watch()
-  })
-
   return (
     <div className="space-y-1 py-2">
       {fields.map((field, index) => (

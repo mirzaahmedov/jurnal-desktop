@@ -87,7 +87,7 @@ export const SummaFields: FormFieldsComponent<
                 <Calculator className="btn-icon" />
               </Button>
               <Popover>
-                <PopoverDialog>
+                <PopoverDialog className="p-5">
                   <FormElement label={t('payment_percent')}>
                     <NumericInput
                       tabIndex={-1}
@@ -96,15 +96,16 @@ export const SummaFields: FormFieldsComponent<
                       className="w-32"
                     />
                   </FormElement>
-                  <div className="flex justify-end">
+                  <div className="flex justify-end mt-5">
                     <Button
                       isDisabled={percent === 0}
                       type="button"
+                      IconStart={Calculator}
                       onPress={() => {
                         onSubmitSumma?.(((data?.summaContarct ?? 0) * percent) / 100)
                       }}
                     >
-                      {t('confirm')}
+                      {t('calculate')}
                     </Button>
                   </div>
                 </PopoverDialog>

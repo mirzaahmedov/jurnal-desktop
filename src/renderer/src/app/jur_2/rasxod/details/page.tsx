@@ -1,5 +1,5 @@
 import type { BankRasxodFormValues, BankRasxodPodvodkaFormValues } from '../service'
-import type { BankRasxod } from '@/common/models'
+import type { BankRasxod, Shartnoma } from '@/common/models'
 
 import { useEffect } from 'react'
 
@@ -45,7 +45,7 @@ import { useSnippets } from '@/common/features/snippents/use-snippets'
 import { useSpravochnik } from '@/common/features/spravochnik'
 import { useToggle } from '@/common/hooks'
 import { useLayout } from '@/common/layout'
-import { formatDate } from '@/common/lib/date'
+import { formatDate, parseDate } from '@/common/lib/date'
 import { normalizeEmptyFields } from '@/common/lib/validation'
 import { DetailsView } from '@/common/views'
 import {
@@ -140,16 +140,18 @@ const BankRasxodDetailsPage = () => {
   const shartnomaSpravochnik = useSpravochnik(
     createShartnomaSpravochnik({
       value: form.watch('id_shartnomalar_organization'),
-      onChange: (value, contract) => {
+      onChange: (value, shartnoma) => {
         form.setValue('id_shartnomalar_organization', value, { shouldValidate: true })
-        if (contract) {
-          form.setValue('contract_summa', contract.summa ? Number(contract.summa) : 0)
-          applyContractSumma(contract.summa ? Number(contract.summa) : 0)
+
+        if (form.getValues('id_shartnomalar_organization') !== value) {
+          handleShartnomaSummaUpdate({
+            shartnoma: shartnoma
+          })
         }
 
         changeOpisanieContract({
           form,
-          contract
+          contract: shartnoma
         })
       },
       params: {
@@ -354,18 +356,53 @@ const BankRasxodDetailsPage = () => {
   useEffect(() => {
     form.setValue('organization_porucheniya_name', organSpravochnik.selected?.name ?? '')
   }, [form, organSpravochnik.selected])
+
+  const docDate = form.watch('doc_date')
+  const grafikId = form.watch('shartnoma_grafik_id')
+  const shartnoma = shartnomaSpravochnik.selected
+
   useEffect(() => {
-    const shartnoma = shartnomaSpravochnik.selected
-    const grafik_id = form.watch('shartnoma_grafik_id')
-    if (shartnoma && grafik_id) {
-      const grafik = shartnoma.grafiks?.find((g) => g.id === grafik_id)
-      form.getValues('childs').forEach((child, index) => {
-        if (!child.spravochnik_operatsii_id) {
-          form.setValue(`childs.${index}.sub_schet`, grafik?.smeta.smeta_number)
-        }
-      })
+    if (!shartnoma || !grafikId) {
+      return
     }
-  }, [shartnomaSpravochnik.selected, form.watch('shartnoma_grafik_id')])
+
+    const grafik = shartnoma.grafiks?.find((g) => g.id === grafikId)
+    form.getValues('childs').forEach((child, index) => {
+      if (!child.spravochnik_operatsii_id) {
+        form.setValue(`childs.${index}.sub_schet`, grafik?.smeta.smeta_number)
+      }
+    })
+  }, [shartnoma, grafikId])
+
+  const handleShartnomaSummaUpdate = (args: { grafikId?: number; shartnoma?: Shartnoma }) => {
+    const { shartnoma, grafikId } = args
+    if (!docDate || !shartnoma) {
+      return
+    }
+
+    const monthIndex = parseDate(docDate).getMonth() + 1
+    if (grafikId) {
+      const grafik = shartnoma.grafiks?.find((item) => item.id === grafikId)
+      if (grafik) {
+        const summaMonth = grafik[`oy_${monthIndex}`]
+        form.setValue('contract_summa', summaMonth)
+        applyContractSumma(summaMonth ? Number(summaMonth) : 0)
+      }
+    } else {
+      if (Array.isArray(shartnoma.grafiks) && shartnoma.grafiks.length) {
+        const summaMonth = shartnoma.grafiks.reduce((result, item) => {
+          return result + item[`oy_${monthIndex}`]
+        }, 0)
+        form.setValue('contract_summa', summaMonth)
+        applyContractSumma(summaMonth ? Number(summaMonth) : 0)
+      } else {
+        form.setValue('contract_summa', Number(shartnoma.summa))
+        applyContractSumma(shartnoma.summa ? Number(shartnoma.summa) : 0)
+      }
+    }
+  }
+
+  console.log({ summa: form.watch('contract_summa') })
 
   return (
     <DetailsView>
@@ -424,6 +461,12 @@ const BankRasxodDetailsPage = () => {
                   spravochnik={shartnomaSpravochnik}
                   form={form as any}
                   error={form.formState.errors.id_shartnomalar_organization}
+                  onGrafikSelected={(grafikId) => {
+                    handleShartnomaSummaUpdate({
+                      shartnoma: shartnoma,
+                      grafikId: grafikId
+                    })
+                  }}
                 />
               </div>
 
