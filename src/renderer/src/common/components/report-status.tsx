@@ -22,7 +22,7 @@ export const ReportStatus = ({ status }: ReportStatusProps) => {
           variant="secondary"
           className="bg-emerald-100 text-emerald-500"
         >
-          {t('recieved')}
+          {t('received')}
         </Badge>
       )
     case ReportStatusType.REJECT:

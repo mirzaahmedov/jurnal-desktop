@@ -22,6 +22,8 @@ export interface MaterialPrixodProduct {
 }
 
 export interface MaterialPrixodProvodka {
+  id: number
+  name?: string
   naimenovanie_tovarov_jur7_id: number
   serial_num: string
   inventar_num: string

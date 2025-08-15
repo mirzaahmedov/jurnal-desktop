@@ -22,6 +22,7 @@ import { Form } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
 import { Textarea } from '@/common/components/ui/textarea'
 import { YearSelect } from '@/common/components/year-select'
+import { DownloadFile } from '@/common/features/file'
 import { formatDate, parseLocaleDate } from '@/common/lib/date'
 
 import { defaultValues } from '../config'
@@ -62,106 +63,122 @@ export const PremyaMatPomoshViewDialog = ({
               <DialogTitle>{t('premya_mat_pomosh')}</DialogTitle>
             </DialogHeader>
 
-            <Form {...form}>
-              <form
-                onSubmit={handleSubmit}
-                className="flex flex-wrap p-5 gap-2.5 max-w-7xl"
-              >
-                <FormElement
-                  label={t('doc_num')}
-                  direction="column"
+            <div className="flex items-center">
+              <Form {...form}>
+                <form
+                  onSubmit={handleSubmit}
+                  className="flex flex-wrap p-5 gap-2.5 max-w-7xl"
                 >
-                  <Input
-                    readOnly
-                    value={selectedPremya?.docNum}
+                  <FormElement
+                    label={t('doc_num')}
+                    direction="column"
+                  >
+                    <Input
+                      readOnly
+                      value={selectedPremya?.docNum}
+                    />
+                  </FormElement>
+                  <FormElement
+                    label={t('doc_date')}
+                    direction="column"
+                  >
+                    <JollyDatePicker
+                      readOnly
+                      value={
+                        selectedPremya?.docDate
+                          ? formatDate(parseLocaleDate(selectedPremya?.docDate ?? ''))
+                          : ''
+                      }
+                    />
+                  </FormElement>
+                  <FormElement
+                    label={t('year')}
+                    direction="column"
+                  >
+                    <YearSelect
+                      isReadOnly
+                      selectedKey={selectedPremya?.nachislenieYear ?? ''}
+                      className="w-40"
+                    />
+                  </FormElement>
+                  <FormElement
+                    label={t('month')}
+                    direction="column"
+                  >
+                    <MonthSelect
+                      isReadOnly
+                      selectedKey={selectedPremya?.nachislenieMonth ?? ''}
+                      className="w-48"
+                    />
+                  </FormElement>
+                  <FormElement
+                    label={t('given_doc_date')}
+                    direction="column"
+                  >
+                    <JollyDatePicker
+                      readOnly
+                      value={
+                        selectedPremya?.givenDocDate
+                          ? formatDate(parseLocaleDate(selectedPremya?.givenDocDate ?? ''))
+                          : ''
+                      }
+                    />
+                  </FormElement>
+                  <FormElement
+                    label={t('type')}
+                    direction="column"
+                  >
+                    <Input
+                      readOnly
+                      value={t(selectedPremya?.type ?? '')}
+                    />
+                  </FormElement>
+                  <FormElement
+                    label={t('payment_type')}
+                    direction="column"
+                  >
+                    <Input
+                      readOnly
+                      value={t(selectedPremya?.paymentType ?? '')}
+                    />
+                  </FormElement>
+                  <FormElement
+                    label={t('amount')}
+                    direction="column"
+                  >
+                    <NumericInput
+                      readOnly
+                      value={selectedPremya?.amount ?? 0}
+                    />
+                  </FormElement>
+                  <FormElement
+                    label={t('opisanie')}
+                    direction="column"
+                    className="w-full max-w-md"
+                  >
+                    <Textarea
+                      readOnly
+                      rows={3}
+                      value={selectedPremya?.description ?? ''}
+                    />
+                  </FormElement>
+                </form>
+              </Form>
+
+              <div className="px-5">
+                {selectedPremya ? (
+                  <DownloadFile
+                    isZarplata
+                    url="Excel/mat-pomoch"
+                    params={{
+                      mainId: selectedPremya.id
+                    }}
+                    buttonText={t('vedemost')}
+                    fileName={`vedemost_premya_mat_pomosh_${selectedPremya.docNum}.xlsx`}
                   />
-                </FormElement>
-                <FormElement
-                  label={t('doc_date')}
-                  direction="column"
-                >
-                  <JollyDatePicker
-                    readOnly
-                    value={
-                      selectedPremya?.docDate
-                        ? formatDate(parseLocaleDate(selectedPremya?.docDate ?? ''))
-                        : ''
-                    }
-                  />
-                </FormElement>
-                <FormElement
-                  label={t('year')}
-                  direction="column"
-                >
-                  <YearSelect
-                    isReadOnly
-                    selectedKey={selectedPremya?.nachislenieYear ?? ''}
-                    className="w-40"
-                  />
-                </FormElement>
-                <FormElement
-                  label={t('month')}
-                  direction="column"
-                >
-                  <MonthSelect
-                    isReadOnly
-                    selectedKey={selectedPremya?.nachislenieMonth ?? ''}
-                    className="w-48"
-                  />
-                </FormElement>
-                <FormElement
-                  label={t('given_doc_date')}
-                  direction="column"
-                >
-                  <JollyDatePicker
-                    readOnly
-                    value={
-                      selectedPremya?.givenDocDate
-                        ? formatDate(parseLocaleDate(selectedPremya?.givenDocDate ?? ''))
-                        : ''
-                    }
-                  />
-                </FormElement>
-                <FormElement
-                  label={t('type')}
-                  direction="column"
-                >
-                  <Input
-                    readOnly
-                    value={t(selectedPremya?.type ?? '')}
-                  />
-                </FormElement>
-                <FormElement
-                  label={t('payment_type')}
-                  direction="column"
-                >
-                  <Input
-                    readOnly
-                    value={t(selectedPremya?.paymentType ?? '')}
-                  />
-                </FormElement>
-                <FormElement
-                  label={t('amount')}
-                  direction="column"
-                >
-                  <NumericInput
-                    readOnly
-                    value={selectedPremya?.amount ?? 0}
-                  />
-                </FormElement>
-                <FormElement
-                  label={t('opisanie')}
-                  direction="column"
-                  className="w-full max-w-md"
-                >
-                  <Textarea
-                    readOnly
-                    rows={3}
-                    value={selectedPremya?.description ?? ''}
-                  />
-                </FormElement>
-              </form>
-            </Form>
+                ) : null}
+              </div>
+            </div>
 
             <div className="flex-1 min-h-0 grid grid-cols-[repeat(auto-fit,minmax(550px,1fr))] gap-5 p-5">
               <div className="h-full min-h-[400px] overflow-auto scrollbar">

@@ -332,11 +332,13 @@ export const PremyaMatPomoshCreateDialog = (props: PremyaMatPomoshCreateDialogPr
                               onBlur={field.onBlur}
                               items={[
                                 { label: t('premya'), value: 'premya' },
-                                { label: t('mat_pomosh'), value: 'mat_pomosh' }
+                                { label: t('mat_pomosh'), value: 'mat_pomosh' },
+                                { label: t('avans'), value: 'avans' },
+                                { label: t('otdelniy_raschet'), value: 'otdelniy_raschet' }
                               ]}
                               selectedKey={field.value}
                               onSelectionChange={field.onChange}
-                              className="w-40"
+                              className="w-56"
                             >
                               {(item) => <SelectItem id={item.value}>{item.label}</SelectItem>}
                             </JollySelect>

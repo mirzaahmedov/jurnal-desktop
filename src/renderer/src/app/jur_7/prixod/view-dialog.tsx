@@ -21,10 +21,12 @@ import { Textarea } from '@/common/components/ui/textarea'
 import { ApiEndpoints } from '@/common/features/crud'
 import { DownloadFile } from '@/common/features/file'
 import { useRequisitesStore } from '@/common/features/requisites'
+import { useToggle } from '@/common/hooks'
 import { formatLocaleDate, formatNumber } from '@/common/lib/format'
 import { numberToWords } from '@/common/lib/utils'
 
 import { TotalsOverview } from '../__components__/totals-overview'
+import { AktPriyomDialog } from './akt-priyom/dialog'
 import { MaterialPrixodQueryKeys } from './config'
 import { MaterialPrixodService } from './service'
 
@@ -127,6 +129,8 @@ export const WarehousePrixodViewDialog = ({
 }: WarehousePrixodViewDialogProps) => {
   const { t, i18n } = useTranslation(['app', 'report'])
   const { budjet_id, main_schet_id } = useRequisitesStore()
+
+  const aktToggle = useToggle()
 
   const { data: prixod, isFetching } = useQuery({
     queryKey: [MaterialPrixodQueryKeys.getById, selectedId!],
@@ -319,6 +323,13 @@ export const WarehousePrixodViewDialog = ({
                   </div>
                 ) : null}
                 <DialogFooter className="pdf-hidden">
+                  <Button
+                    variant="ghost"
+                    IconStart={Download}
+                    onClick={aktToggle.open}
+                  >
+                    {t('receive_akt')}
+                  </Button>
                   <DownloadFile
                     url={`${ApiEndpoints.jur7_prixod}/${data?.id}`}
                     fileName={`${t('pages.material-warehouse')}_${t('prixod')}_${t('receive_akt')}_№${data?.doc_num}.xlsx`}
@@ -341,6 +352,17 @@ export const WarehousePrixodViewDialog = ({
               </div>
             )}
           </PDFSaver>
+
+          {data ? (
+            <AktPriyomDialog
+              isOpen={aktToggle.isOpen}
+              onOpenChange={aktToggle.setOpen}
+              docNum={data?.doc_num}
+              docDate={data?.doc_date}
+              dovernost={data.doverennost ?? ''}
+              products={data.childs}
+            />
+          ) : null}
         </DialogContent>
       </DialogOverlay>
     </DialogTrigger>

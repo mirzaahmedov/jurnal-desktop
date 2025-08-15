@@ -12,7 +12,7 @@ export const Header: FC<{
     <View>
       <View style={styles.container}>
         <Text style={styles.title}>
-          {t('receive_akt')} {docNum}
+          {t('receive_akt')} <Text style={{ textDecoration: 'underline' }}>{docNum}</Text>
         </Text>
       </View>
       <Text style={styles.headerText}>{headerText}</Text>

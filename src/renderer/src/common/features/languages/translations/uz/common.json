@@ -207,7 +207,7 @@
   "action": "Amaliyot",
   "creator": "Qo'shuvchi",
   "sent": "Yuborildi",
-  "recieved": "Qabul qildi",
+  "received": "Qabul qildi",
   "rejected": "Rad etildi",
   "accept": "Qabul qilish",
   "reject": "Rad etish",
@@ -528,5 +528,9 @@
   "update_all": "Barchasini yangilash",
   "aggregated_report": "Jamlanma hisobot",
   "action-successful": "Muvaffaqiyatli bajarildi",
-  "by_responsible": "Javobgar shaxslar kesimida"
+  "by_responsible": "Javobgar shaxslar kesimida",
+  "avans": "Avans",
+  "comission_boss": "Komissiya raisi",
+  "commission_members": "Komissiya a'zolari",
+  "commission_secretary": "Komissiya kotibi"
 }

@@ -5,6 +5,7 @@ import { cn } from '@/common/lib/utils'
 import { FormControl, FormDescription, FormItem, FormLabel, FormMessage } from '../ui/form'
 
 export type FormElementProps = PropsWithChildren<{
+  hideDescription?: boolean
   controlled?: boolean
   error?: boolean
   label: ReactNode
@@ -19,6 +20,7 @@ export type FormElementProps = PropsWithChildren<{
 }>
 export const FormElement = (props: FormElementProps) => {
   const {
+    hideDescription = false,
     controlled = true,
     error = false,
     label,
@@ -76,7 +78,9 @@ export const FormElement = (props: FormElementProps) => {
           {message ? <FormMessage>{message}</FormMessage> : <FormMessage />}
         </div>
       </div>
-      {description ? <FormDescription>{description}</FormDescription> : <FormDescription />}
+      {!hideDescription ? (
+        <>{description ? <FormDescription>{description}</FormDescription> : <FormDescription />}</>
+      ) : null}
     </FormItem>
   )
 }

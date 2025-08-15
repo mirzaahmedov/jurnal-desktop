@@ -207,7 +207,7 @@
   "action": "Действия",
   "creator": "Создатель",
   "sent": "Отправлено",
-  "recieved": "Получено",
+  "received": "Получено",
   "rejected": "Отказано",
   "accept": "Принять",
   "reject": "Отклонить",
@@ -529,5 +529,9 @@
   "update": "Обновить",
   "update_all": "Обновить все",
   "aggregated_report": "Сводный отчёт",
-  "by_responsible": "По ответственным лицам"
+  "by_responsible": "По ответственным лицам",
+  "avans": "Aванс",
+  "commission_boss": "Председатель комиссии",
+  "commission_members": "Члены комиссии",
+  "commission_secretary": "Секретарь комиссии"
 }

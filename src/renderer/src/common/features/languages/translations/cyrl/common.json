@@ -207,7 +207,7 @@
   "action": "Амалиёт",
   "creator": "Қўшувчи",
   "sent": "Юборилди",
-  "recieved": "Қабул қилди",
+  "received": "Қабул қилди",
   "rejected": "Рад этилди",
   "accept": "Қабул қилиш",
   "reject": "Рад этиш",
@@ -529,5 +529,9 @@
   "update_all": "Барчасини янгилаш",
   "aggregated_report": "Жамланма ҳисобот",
   "action-successful": "Муваффақиятли бажарилди",
-  "by_responsible": "Жавобгар шахслар кесимида"
+  "by_responsible": "Жавобгар шахслар кесимида",
+  "avans": "Аванс",
+  "commission_boss": "Комиссия раҳбари",
+  "commission_members": "Комиссия аъзолари",
+  "commission_secretary": "Комиссия котиби"
 }
