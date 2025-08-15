@@ -6,7 +6,7 @@ import type { UseFormReturn } from 'react-hook-form'
 import { useEffect, useState } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { Plus } from 'lucide-react'
+import { Plus, View } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 
@@ -29,16 +29,17 @@ export const PayrollDeductions = ({ mainZarplata, setDeductionsTotal }: PayrollD
   const { confirm } = useConfirm()
 
   const [selectedPayment, setSelectedPayment] = useState<PayrollDeduction | undefined>()
+  const [alimentData, setAlimentData] = useState<PayrollDeduction | undefined>()
 
   const dialogToggle = useToggle()
   const queryClient = useQueryClient()
 
-  const { data: payments, isFetching: isFetchingPayments } = useQuery({
+  const { data: deductions, isFetching: isFetchingDeductions } = useQuery({
     queryKey: [PayrollDeductionService.QueryKeys.GetByMainZarplataId, mainZarplata.id],
     queryFn: PayrollDeductionService.getByMainZarplataId
   })
 
-  const { mutateAsync: createPayment, isPending: isCreatingPayment } = useMutation({
+  const { mutateAsync: createDeduction, isPending: isCreatingDeduction } = useMutation({
     mutationFn: PayrollDeductionService.create,
     onSuccess: () => {
       toast.success(t('create_success'))
@@ -51,7 +52,7 @@ export const PayrollDeductions = ({ mainZarplata, setDeductionsTotal }: PayrollD
       toast.error(t('create_failed'))
     }
   })
-  const { mutateAsync: updatePayment, isPending: isUpdatingPayment } = useMutation({
+  const { mutateAsync: updateDeduction, isPending: isUpdatingDeduction } = useMutation({
     mutationFn: PayrollDeductionService.update,
     onSuccess: () => {
       toast.success(t('update_success'))
@@ -64,7 +65,7 @@ export const PayrollDeductions = ({ mainZarplata, setDeductionsTotal }: PayrollD
       toast.error(t('update_failed'))
     }
   })
-  const { mutate: deletePayment, isPending: isDeletingPayment } = useMutation({
+  const { mutate: deleteDeduction, isPending: isDeletingDeduction } = useMutation({
     mutationFn: PayrollDeductionService.delete,
     onSuccess: () => {
       toast.success(t('delete_success'))
@@ -77,29 +78,29 @@ export const PayrollDeductions = ({ mainZarplata, setDeductionsTotal }: PayrollD
     }
   })
 
-  const handlePaymentCreate = () => {
+  const handleDeductionCreate = () => {
     setSelectedPayment(undefined)
     dialogToggle.open()
   }
-  const handlePaymentEdit = (payment: PayrollDeduction) => {
+  const handleDeductionEdit = (payment: PayrollDeduction) => {
     setSelectedPayment(payment)
     dialogToggle.open()
   }
-  const handlePaymentDelete = (payment: PayrollDeduction) => {
+  const handleDeductionDelete = (payment: PayrollDeduction) => {
     confirm({
       onConfirm: () => {
-        deletePayment(payment.id)
+        deleteDeduction(payment.id)
       }
     })
   }
 
-  const handlePaymentSubmit = (
+  const handleDeductionSubmit = (
     values: PayrollDeductionFormValues,
     deductionType: DeductionType,
     form: UseFormReturn<PayrollDeductionFormValues>
   ) => {
     if (selectedPayment) {
-      updatePayment({
+      updateDeduction({
         id: selectedPayment.id,
         values:
           deductionType === DeductionType.Percentage
@@ -117,7 +118,7 @@ export const PayrollDeductions = ({ mainZarplata, setDeductionsTotal }: PayrollD
               }
       }).then(() => form.reset())
     } else {
-      createPayment(
+      createDeduction(
         deductionType === DeductionType.Percentage
           ? {
               deductionId: values.deductionId,
@@ -136,8 +137,8 @@ export const PayrollDeductions = ({ mainZarplata, setDeductionsTotal }: PayrollD
   }
 
   useEffect(() => {
-    setDeductionsTotal?.(payments?.totalCount ?? 0)
-  }, [setDeductionsTotal, payments?.totalCount])
+    setDeductionsTotal?.(deductions?.totalCount ?? 0)
+  }, [setDeductionsTotal, deductions?.totalCount])
 
   return (
     <>
@@ -145,10 +146,12 @@ export const PayrollDeductions = ({ mainZarplata, setDeductionsTotal }: PayrollD
         <div className="p-2.5 text-xs uppercase font-bold text-gray-600">
           {t('payroll_deductions')}
         </div>
-        {isFetchingPayments || isUpdatingPayment || isDeletingPayment ? <LoadingOverlay /> : null}
+        {isFetchingDeductions || isUpdatingDeduction || isDeletingDeduction ? (
+          <LoadingOverlay />
+        ) : null}
         <div className="flex-1 overflow-auto scrollbar">
           <GenericTable
-            data={payments?.data ?? []}
+            data={deductions?.data ?? []}
             columnDefs={[
               {
                 key: 'name'
@@ -164,15 +167,27 @@ export const PayrollDeductions = ({ mainZarplata, setDeductionsTotal }: PayrollD
               }
             ]}
             className="table-generic-xs border-t border-l max-h-[400px] overflow-auto scrollbar"
-            onEdit={handlePaymentEdit}
-            onDelete={handlePaymentDelete}
+            onEdit={handleDeductionEdit}
+            onDelete={handleDeductionDelete}
+            actions={(row) =>
+              row.code === 1 ? (
+                <div>
+                  <Button
+                    variant="ghost"
+                    onClick={() => setAlimentData?.(row)}
+                  >
+                    <View />
+                  </Button>
+                </div>
+              ) : null
+            }
             footer={
               <FooterRow>
                 <FooterCell
                   title={t('total')}
                   colSpan={3}
                 />
-                <FooterCell content={formatNumber(payments?.totalCount ?? 0)} />
+                <FooterCell content={formatNumber(deductions?.totalCount ?? 0)} />
               </FooterRow>
             }
           />
@@ -180,8 +195,8 @@ export const PayrollDeductions = ({ mainZarplata, setDeductionsTotal }: PayrollD
         <div className="text-end p-2.5">
           <Button
             className="mt-2"
-            isPending={isCreatingPayment}
-            onClick={handlePaymentCreate}
+            isPending={isCreatingDeduction}
+            onClick={handleDeductionCreate}
           >
             <Plus className="btn-icon icon-start" /> {t('add')}
           </Button>
@@ -192,7 +207,7 @@ export const PayrollDeductions = ({ mainZarplata, setDeductionsTotal }: PayrollD
         isOpen={dialogToggle.isOpen}
         onOpenChange={dialogToggle.setOpen}
         selected={selectedPayment}
-        onSubmit={handlePaymentSubmit}
+        onSubmit={handleDeductionSubmit}
       />
     </>
   )
