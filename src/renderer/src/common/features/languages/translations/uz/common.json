@@ -406,7 +406,7 @@
   "writeoff_akt": "Hisobdan chiqarish akti",
   "notice": "Eslatma",
   "request_release": "Materiallarni chiqarish uchun so'rov",
-  "recieve_akt": "Qabul qilish akti",
+  "receive_akt": "Qabul qilish akti",
   "download_as_pdf": "PDF-ga yuklash",
   "errors": {
     "no_distance": "Masofa topilmadi"

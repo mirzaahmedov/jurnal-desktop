@@ -407,7 +407,7 @@
   "writeoff_akt": "Акт списания",
   "notice": "Извещение",
   "request_release": "Требование на отпуск материалов",
-  "recieve_akt": "Приемный акт",
+  "receive_akt": "Приемный акт",
   "download_as_pdf": "Загрузить как PDF",
   "errors": {
     "no_distance": "Расстояние не было найдено"

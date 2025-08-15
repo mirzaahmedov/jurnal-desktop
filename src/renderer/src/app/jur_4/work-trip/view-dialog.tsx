@@ -21,6 +21,7 @@ import { LabeledValue } from '@/common/components/labeled-value'
 import { PDFSaver } from '@/common/components/pdf-saver'
 import { Input } from '@/common/components/ui/input'
 import { Textarea } from '@/common/components/ui/textarea'
+import { DownloadFile } from '@/common/features/file'
 import { useRequisitesStore } from '@/common/features/requisites'
 import { getWorkdaysInPeriod, parseDate } from '@/common/lib/date'
 import { formatLocaleDate, formatNumber } from '@/common/lib/format'
@@ -56,6 +57,7 @@ export const WorkTripViewDialog = ({ selectedId, onClose }: WorkTripViewDialogPr
   const { t, i18n } = useTranslation(['app', 'report'])
 
   const mainSchetId = useRequisitesStore((store) => store.main_schet_id)
+  const schetId = useRequisitesStore((store) => store.jur4_schet_id)
 
   const mainSchetQuery = useQuery({
     queryKey: [MainSchetQueryKeys.getById, mainSchetId],
@@ -246,7 +248,7 @@ export const WorkTripViewDialog = ({ selectedId, onClose }: WorkTripViewDialogPr
                       </Fieldset>
                     </div>
 
-                    <div className="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))]">
+                    <div className="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] divide-x">
                       <Fieldset name={t('summa')}>
                         <div className="grid grid-cols-3 gap-5">
                           <LabeledValue
@@ -291,14 +293,26 @@ export const WorkTripViewDialog = ({ selectedId, onClose }: WorkTripViewDialogPr
                 ) : null}
                 <DialogFooter className="pdf-hidden border-t pt-5">
                   {mainSchet && workTrip ? (
-                    <Button
-                      variant="ghost"
-                      IconStart={Download}
-                      isPending={isPending}
-                      onPress={savePDF}
-                    >
-                      {t('download_as_pdf')}
-                    </Button>
+                    <div className="flex items-center gap-2.5">
+                      <DownloadFile
+                        fileName={`${t('pages.work_trip')}_${t('report')}.xlsx`}
+                        url={`/work-trip/${workTrip.id}`}
+                        params={{
+                          main_schet_id: mainSchetId,
+                          schet_id: schetId,
+                          excel: true
+                        }}
+                        buttonText={t('report')}
+                      />
+                      <Button
+                        variant="ghost"
+                        IconStart={Download}
+                        isPending={isPending}
+                        onPress={savePDF}
+                      >
+                        {t('download_as_pdf')}
+                      </Button>
+                    </div>
                   ) : null}
                 </DialogFooter>
               </div>

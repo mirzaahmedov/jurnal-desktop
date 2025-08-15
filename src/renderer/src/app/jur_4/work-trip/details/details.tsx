@@ -246,10 +246,6 @@ export const WorkTripDetails = ({ id }: WorkTripDetailsProps) => {
     }
   }, [hotels])
 
-  console.log({ hotels })
-  console.log({ errors: form.formState.errors })
-  console.log({ values: form.watch() })
-
   return (
     <DetailsView>
       <DetailsView.Content isLoading={isFetching || isFetchingMinimumWage}>

@@ -1,31 +1,20 @@
-// const childs: RasxodProvodkaFormValues[] = [
-//   {
-//     name: 'Mahsulot nomi',
-//     inventar_num: '10000',
-//     edin: 'juft',
-//     kol: 4,
-//     sena: 1000000
-//   }
-// ]
+import { PDFViewer } from '@react-pdf/renderer'
+
+import { AktPriyomReport } from './akt-priyom/akt-priyom'
 
 const DemoPage = () => {
   return (
     <div className="p-10 flex-1 flex flex-col gap-5 overflow-y-auto scrollbar">
-      <table>
-        <thead>
-          <tr>№</tr>
-          <tr>Наименование</tr>
-          <tr>Инв. №</tr>
-          <tr>Ед.изм</tr>
-          <tr>Треб</tr>
-          <tr>Отпущ</tr>
-          <tr>Цена</tr>
-          <tr>Сумма</tr>
-          <tr>Дебет</tr>
-          <tr>Кредит</tr>
-        </thead>
-        <tbody></tbody>
-      </table>
+      <PDFViewer className="h-full">
+        <AktPriyomReport
+          docNum="4F000"
+          docDate="10-10-2024"
+          dovernost="F012999"
+          headerText="Hello World"
+          podpises={[]}
+          products={[]}
+        />
+      </PDFViewer>
     </div>
   )
 }

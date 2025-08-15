@@ -6,6 +6,7 @@ import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
 import { type ColumnDef, GenericTable, NumericInput } from '@/common/components'
+import { CollapsibleTable } from '@/common/components/collapsible-table'
 import { FormElement } from '@/common/components/form'
 import { JollyDatePicker } from '@/common/components/jolly-date-picker'
 import {
@@ -50,9 +51,7 @@ export const PremyaMatPomoshViewDialog = ({
     enabled: !!selectedPremya?.id
   })
 
-  const handleSubmit = form.handleSubmit((values) => {
-    console.log({ values })
-  })
+  const handleSubmit = form.handleSubmit(() => {})
 
   return (
     <DialogTrigger {...props}>
@@ -166,8 +165,9 @@ export const PremyaMatPomoshViewDialog = ({
 
             <div className="flex-1 min-h-0 grid grid-cols-[repeat(auto-fit,minmax(550px,1fr))] gap-5 p-5">
               <div className="h-full min-h-[400px] overflow-auto scrollbar">
-                <GenericTable
+                <CollapsibleTable
                   data={childrenQuery?.data ?? []}
+                  getRowId={(row) => row.id}
                   columnDefs={
                     [
                       {
@@ -188,7 +188,29 @@ export const PremyaMatPomoshViewDialog = ({
                     ] satisfies ColumnDef<NachislenieOthersProvodka>[]
                   }
                   className="table-generic-xs"
-                />
+                >
+                  {({ row }) => (
+                    <div className="p-2.5">
+                      <GenericTable
+                        columnDefs={[
+                          {
+                            key: 'name'
+                          },
+                          {
+                            key: 'percentage',
+                            header: 'foiz'
+                          },
+                          {
+                            key: 'summa',
+                            renderCell: (row) => <SummaCell summa={row.summa} />,
+                            numeric: true
+                          }
+                        ]}
+                        data={row.deductions ?? []}
+                      />
+                    </div>
+                  )}
+                </CollapsibleTable>
               </div>
               <div className="h-full min-h-[400px] overflow-auto scrollbar">
                 <GenericTable

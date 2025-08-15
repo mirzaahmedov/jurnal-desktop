@@ -56,6 +56,7 @@ export interface NachislenieOthersProvodka {
   kartochka: string
   doljnostName: string
   summa: number
+  deductions: PayrollDeduction[]
 }
 
 export interface NachislenieOthersPayment {
