@@ -10,6 +10,7 @@ import {
 import { createNumberEditor } from '@/common/components/editable-table/editors/number'
 import { Input } from '@/common/components/ui/input'
 import { inputVariants } from '@/common/features/spravochnik'
+import { formatNumber } from '@/common/lib/format'
 import { cn } from '@/common/lib/utils'
 import { TypeSchetOperatsii } from '@/common/models'
 
@@ -39,7 +40,7 @@ export const provodkaColumns: EditableColumnDef<AktFormValues, 'childs'>[] = [
         <Input
           className={cn(inputVariants({ editor: true, nonfocus: true }), 'text-right')}
           readOnly
-          value={(kol || 0) * (sena || 0)}
+          value={formatNumber((kol || 0) * (sena || 0))}
         />
       )
     }
@@ -58,7 +59,7 @@ export const provodkaColumns: EditableColumnDef<AktFormValues, 'childs'>[] = [
         <Input
           className={cn(inputVariants({ editor: true, nonfocus: true }), 'text-right')}
           readOnly
-          value={((kol || 0) * (sena || 0) * (nds_foiz || 0)) / 100}
+          value={formatNumber(((kol || 0) * (sena || 0) * (nds_foiz || 0)) / 100)}
         />
       )
     }
@@ -73,7 +74,9 @@ export const provodkaColumns: EditableColumnDef<AktFormValues, 'childs'>[] = [
         <Input
           className={cn(inputVariants({ editor: true, nonfocus: true }), 'text-right')}
           readOnly
-          value={(kol || 0) * (sena || 0) + ((kol || 0) * (sena || 0) * (nds_foiz || 0)) / 100}
+          value={formatNumber(
+            (kol || 0) * (sena || 0) + ((kol || 0) * (sena || 0) * (nds_foiz || 0)) / 100
+          )}
         />
       )
     }

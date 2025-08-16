@@ -13,6 +13,7 @@ const TooltipTrigger = AriaTooltipTrigger
 
 const Tooltip = ({ className, offset = 4, ...props }: AriaTooltipProps) => (
   <AriaTooltip
+    data-tooltip
     offset={offset}
     className={composeRenderProps(className, (className) =>
       cn(

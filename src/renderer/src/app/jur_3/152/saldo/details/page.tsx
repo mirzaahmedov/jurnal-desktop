@@ -33,6 +33,7 @@ import { OrganSaldoService } from '../service'
 import { useUslugiSaldo } from '../use-saldo'
 import { OrganSaldoTable } from './organ-saldo-table'
 import { getOrganSaldoProvodkaColumns } from './provodki'
+import { SaldoSubChildsDialog } from './saldo-sub-childs-dialog'
 import { calculateTotal } from './utils'
 
 const OrganSaldoDetailsPage = () => {
@@ -46,6 +47,9 @@ const OrganSaldoDetailsPage = () => {
   const queryClient = useQueryClient()
   const setLayout = useLayout()
   const startDate = useSelectedMonthStore((store) => store.startDate)
+
+  const [selectedRowIndex, setSelectedRowIndex] = useState<number>()
+  const [selectedOrganName, setSelectedOrganName] = useState('')
 
   const [isEditable, setEditable] = useState(false)
   const [isRendering, setRendering] = useState(false)
@@ -267,9 +271,7 @@ const OrganSaldoDetailsPage = () => {
     }
   }, [rows, form, isEditable, t])
 
-  const columns = useMemo(() => {
-    return getOrganSaldoProvodkaColumns(isEditable)
-  }, [isEditable])
+  const columns = useMemo(() => getOrganSaldoProvodkaColumns(false), [isEditable])
 
   const isRowEmpty = (row: OrganSaldoProvodkaFormValues) => {
     return !row.prixod && !row.rasxod
@@ -398,6 +400,10 @@ const OrganSaldoDetailsPage = () => {
                 form={form}
                 name="organizations"
                 isRowVisible={isRowVisible}
+                onCellDoubleClick={({ index, row }) => {
+                  setSelectedRowIndex(index)
+                  setSelectedOrganName(row.name ?? '')
+                }}
               />
             </div>
           </div>
@@ -415,6 +421,20 @@ const OrganSaldoDetailsPage = () => {
         <OrganizationDialog
           open={dialogToggle.isOpen}
           onOpenChange={dialogToggle.setOpen}
+        />
+
+        <SaldoSubChildsDialog
+          isOpen={selectedRowIndex !== undefined}
+          onOpenChange={(isOpen) => {
+            if (!isOpen) {
+              setSelectedRowIndex(undefined)
+              setSelectedOrganName('')
+            }
+          }}
+          organName={selectedOrganName}
+          form={form}
+          rowIndex={selectedRowIndex}
+          isEditable={isEditable}
         />
       </DetailsView.Content>
     </DetailsView>

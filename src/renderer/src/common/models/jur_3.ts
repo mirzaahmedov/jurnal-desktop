@@ -1,3 +1,15 @@
+export interface OrganSaldoSubChild {
+  id: number
+  parent_id: number
+  prixod: number
+  rasxod: number
+  created_at: string
+  updated_at: string
+  isdeleted: boolean
+  contract_id: number
+  summa: number
+}
+
 export interface OrganSaldoProvodka {
   id: number
   parent_id: number
@@ -11,6 +23,7 @@ export interface OrganSaldoProvodka {
   bank_klient: string
   mfo: string
   inn: string
+  sub_childs: OrganSaldoSubChild[]
   _total: boolean
 }
 export interface OrganSaldo {

@@ -6,3 +6,12 @@ export interface PayrollDeduction {
   summa: number
   deductionId: number
 }
+
+export interface AlimentDeduction {
+  id: number
+  mainZarplataId: number
+  deductionId: number
+  poluchatelFio: string
+  cardNumber: string
+  organizationId: number
+}

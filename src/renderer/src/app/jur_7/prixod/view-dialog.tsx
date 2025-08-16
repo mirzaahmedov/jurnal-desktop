@@ -328,12 +328,12 @@ export const WarehousePrixodViewDialog = ({
                     IconStart={Download}
                     onClick={aktToggle.open}
                   >
-                    {t('receive_akt')}
+                    {t('receive_akt')} (PDF)
                   </Button>
                   <DownloadFile
                     url={`${ApiEndpoints.jur7_prixod}/${data?.id}`}
                     fileName={`${t('pages.material-warehouse')}_${t('prixod')}_${t('receive_akt')}_№${data?.doc_num}.xlsx`}
-                    buttonText={t('receive_akt')}
+                    buttonText={`${t('receive_akt')} (Excel)`}
                     params={{
                       budjet_id,
                       main_schet_id,

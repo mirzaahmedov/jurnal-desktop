@@ -6,6 +6,7 @@ import { useQuery } from '@tanstack/react-query'
 import { Download } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
+import { createShartnomaSpravochnik } from '@/app/jur_3/shartnoma'
 import { createOrganizationSpravochnik } from '@/app/region-spravochnik/organization'
 import {
   ChooseSpravochnik,
@@ -32,7 +33,7 @@ import { useSettingsStore } from '@/common/features/settings'
 import { useSpravochnik } from '@/common/features/spravochnik'
 import { useDates, usePagination, useToggle } from '@/common/hooks'
 import { useLayout } from '@/common/layout'
-import { formatNumber } from '@/common/lib/format'
+import { formatLocaleDate, formatNumber } from '@/common/lib/format'
 import { ListView } from '@/common/views'
 
 import { useUslugiSaldo } from '../saldo/use-saldo'
@@ -40,7 +41,7 @@ import { AktSverkiDialog } from './akt-sverka'
 import { OrganMonitorColumns } from './columns'
 import { OrganMonitorQueryKeys } from './config'
 import { DailyReportDialog } from './daily-report-dialog'
-import { useOrganFilter } from './filters'
+import { useContractFilter, useOrganFilter } from './filters'
 import { OrganMonitoringService } from './service'
 import { ViewModal } from './view-modal'
 
@@ -53,6 +54,7 @@ const OrganMonitoringPage = () => {
   const setLayout = useLayout()
 
   const [organId, setOrganId] = useOrganFilter()
+  const [contractId, setContractId] = useContractFilter()
   const [selected, setSelected] = useState<OrganizationMonitor | null>(null)
   const [search] = useSearchFilter()
 
@@ -72,6 +74,20 @@ const OrganMonitoringPage = () => {
       }
     })
   )
+  const shartnomaSpravochnik = useSpravochnik(
+    createShartnomaSpravochnik({
+      value: contractId,
+      onChange: (id) => {
+        pagination.onChange({
+          page: 1
+        })
+        setContractId(id)
+      },
+      params: {
+        organ_id: organId ? organId : undefined
+      }
+    })
+  )
 
   const {
     data: monitoring,
@@ -84,6 +100,7 @@ const OrganMonitoringPage = () => {
         main_schet_id,
         schet_id: jur3_schet_152_id,
         organ_id: organId ? organId : undefined,
+        contract_id: contractId ? contractId : undefined,
         search,
         year: startDate.getFullYear(),
         month: startDate.getMonth() + 1,
@@ -119,7 +136,7 @@ const OrganMonitoringPage = () => {
       <ListView.Header>
         <div className="w-full space-y-5 flex flex-col items-start">
           <div className="w-full flex flex-row items-center justify-between">
-            <div className="flex flex-row items-center gap-5">
+            <div className="flex flex-row items-center gap-2.5">
               <ChooseSpravochnik
                 spravochnik={organSpravochnik}
                 placeholder={t('choose', {
@@ -134,6 +151,31 @@ const OrganMonitoringPage = () => {
                     value: selected?.account_numbers.map((a) => a.raschet_schet).join(',')
                   },
                   { name: t('bank'), value: selected?.bank_klient }
+                ]}
+              />
+              <ChooseSpravochnik
+                spravochnik={shartnomaSpravochnik}
+                placeholder={t('choose', {
+                  what: t('shartnoma')
+                })}
+                getName={(selected) =>
+                  selected ? `№${selected.doc_num} - ${formatLocaleDate(selected.doc_date)}` : ''
+                }
+                getElements={(selected) => [
+                  { name: t('doc_num'), value: selected?.doc_num },
+                  { name: t('doc_date'), value: formatLocaleDate(selected?.doc_date) },
+                  {
+                    name: t('smeta'),
+                    value: selected?.grafiks
+                      .map((a) => a?.smeta?.smeta_number)
+                      .filter(Boolean)
+                      .join(',')
+                  },
+                  {
+                    name: t('summa'),
+                    value: formatNumber(selected.summa ? Number(selected?.summa) : 0)
+                  },
+                  { name: t('organization'), value: selected?.organization?.name }
                 ]}
               />
             </div>

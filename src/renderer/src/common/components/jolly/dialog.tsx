@@ -45,6 +45,10 @@ const sheetVariants = cva(
 
 const DialogTrigger = AriaDialogTrigger
 
+const isInsideTooltipContainer = (element: Element) => {
+  return element.closest('[data-tooltip]') !== null
+}
+
 const DialogOverlay = ({
   className,
   isDismissable = true,
@@ -56,6 +60,9 @@ const DialogOverlay = ({
     shouldCloseOnInteractOutside={(element) => {
       const toastContainer = document.querySelector('.toast-container')
       if (toastContainer?.contains(element)) {
+        return false
+      }
+      if (isInsideTooltipContainer(element)) {
         return false
       }
       return shouldCloseOnInteractOutside?.(element) ?? true

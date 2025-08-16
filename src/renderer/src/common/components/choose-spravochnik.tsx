@@ -18,12 +18,12 @@ export const ChooseSpravochnik = <T,>(props: ChooseSpravochnikProps<T>) => {
   const { disabled, spravochnik, placeholder, getName, getElements } = props
 
   return (
-    <div className="border-2 border-slate-100 rounded-xl flex flex-wrap justify-between items-center gap-20">
+    <div className="border-2 border-slate-100 rounded-xl w-72 flex flex-wrap justify-between items-center gap-20">
       {spravochnik?.selected ? (
         <PopoverTrigger>
           <Pressable isDisabled={disabled}>
-            <div className="px-5 py-2.5 flex items-center gap-10">
-              <h3 className="text-xs text-foreground/90 text-md leading-none font-bold">
+            <div className="px-5 pr-2.5 py-2.5 flex items-center gap-2.5 w-full cursor-pointer">
+              <h3 className="flex-1 text-xs text-foreground/90 text-md leading-tight font-bold">
                 {getName(spravochnik.selected)}
               </h3>
 
@@ -34,7 +34,7 @@ export const ChooseSpravochnik = <T,>(props: ChooseSpravochnikProps<T>) => {
                   onPress={() => {
                     spravochnik.clear()
                   }}
-                  className="hover:text-destructive text-slate-400"
+                  className="text-destructive hover:!text-destructive"
                 >
                   <CircleX className="btn-icon icon-start !mr-0" />
                 </Button>
@@ -72,8 +72,8 @@ export const ChooseSpravochnik = <T,>(props: ChooseSpravochnikProps<T>) => {
           </Popover>
         </PopoverTrigger>
       ) : (
-        <div className="px-5 py-2.5 self-stretch flex items-center gap-10">
-          <h6 className="text-sm text-slate-500">{placeholder}</h6>
+        <div className="px-5 pr-2.5 py-2.5 w-full self-stretch flex items-center gap-10">
+          <h6 className="text-sm text-slate-500 flex-1 leading-tight">{placeholder}</h6>
           <Button
             variant="ghost"
             size="icon"

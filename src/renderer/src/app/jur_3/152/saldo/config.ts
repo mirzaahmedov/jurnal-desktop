@@ -15,6 +15,12 @@ export const OrganSaldoQueryKeys = {
   clean: 'organ-saldo/152/delete'
 }
 
+export const OrganSaldoSubChildFormSchema = z.object({
+  prixod: z.number(),
+  rasxod: z.number(),
+  contract_id: z.number(),
+  summa: z.number()
+})
 export const OrganSaldoProvodkaFormSchema = z.object({
   _total: z.boolean().optional(),
   organization_id: z.number(),
@@ -23,7 +29,8 @@ export const OrganSaldoProvodkaFormSchema = z.object({
   rasxod: z.number(),
   bank_klient: z.string().optional(),
   mfo: z.string().optional(),
-  inn: z.string().optional()
+  inn: z.string().optional(),
+  sub_childs: z.array(OrganSaldoSubChildFormSchema)
 })
 export const OrganSaldoFormSchema = z.object({
   year: z.number(),

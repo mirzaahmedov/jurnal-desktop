@@ -12,13 +12,14 @@ export type EditorComponent<T extends object, F extends ArrayPath<T>> = FC<{
   tabIndex?: number
   inputRef: Ref<HTMLInputElement>
   id: number
-  fieldId: string;
+  fieldId: string
   row: TableRowField<T, F>
   rows: TableRowField<T, F>[]
   form: UseFormReturn<T>
   col: EditableColumnDef<T>
   max?: number
   errors?: FieldErrors<T>
+  name: F
   value: unknown
   onChange?: (value: unknown) => void
   state: Record<string, unknown>

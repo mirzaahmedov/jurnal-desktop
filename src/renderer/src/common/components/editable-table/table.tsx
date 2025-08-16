@@ -407,6 +407,7 @@ const EditableTableRowRenderer = <T extends object, R extends T[ArrayPath<NoInfe
                         rows={rows as any}
                         col={column}
                         form={form as any}
+                        name={name}
                         value={field.value}
                         onChange={field.onChange}
                         errors={errors?.[index] as FieldErrors<R>}

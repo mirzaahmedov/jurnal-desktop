@@ -94,7 +94,7 @@ export const createOperatsiiEditor = <T extends object, F extends ArrayPath<T>>(
     const filteredOperatsiiOptions = useMemo(
       () =>
         operatsiiOptions?.data?.filter((option) =>
-          startsWith(option.sub_schet, subschetInputValue)
+          startsWith(option.sub_schet ?? '', subschetInputValue ?? '')
         ) ?? [],
       [operatsiiOptions, subschetInputValue]
     )

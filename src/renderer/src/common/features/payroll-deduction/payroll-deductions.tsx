@@ -6,7 +6,7 @@ import type { UseFormReturn } from 'react-hook-form'
 import { useEffect, useState } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { Plus, View } from 'lucide-react'
+import { Eye, Plus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 
@@ -17,6 +17,7 @@ import { useToggle } from '@/common/hooks'
 import { formatNumber } from '@/common/lib/format'
 
 import { useConfirm } from '../confirm'
+import { AlimentDeductionsDialog } from './aliment-deductions/aliment-deductions-modal'
 import { DeductionType, PayrollDeductionDialog } from './payroll-deduction-dialog'
 import { PayrollDeductionService } from './service'
 
@@ -173,10 +174,11 @@ export const PayrollDeductions = ({ mainZarplata, setDeductionsTotal }: PayrollD
               row.code === 1 ? (
                 <div>
                   <Button
+                    size="icon"
                     variant="ghost"
                     onClick={() => setAlimentData?.(row)}
                   >
-                    <View />
+                    <Eye className="btn-icon" />
                   </Button>
                 </div>
               ) : null
@@ -208,6 +210,17 @@ export const PayrollDeductions = ({ mainZarplata, setDeductionsTotal }: PayrollD
         onOpenChange={dialogToggle.setOpen}
         selected={selectedPayment}
         onSubmit={handleDeductionSubmit}
+      />
+
+      <AlimentDeductionsDialog
+        deductionId={alimentData?.deductionId ?? 0}
+        mainZarplataId={alimentData?.mainZarplataId ?? 0}
+        isOpen={!!alimentData}
+        onOpenChange={(isOpen) => {
+          if (!isOpen) {
+            setAlimentData(undefined)
+          }
+        }}
       />
     </>
   )
