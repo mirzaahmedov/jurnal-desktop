@@ -66,24 +66,24 @@ import { useAuthenticationStore } from '@/common/features/auth'
 import { ZarplataActions } from '@/common/features/zarplata/zarplata-actions'
 import { omitEmptyArrayElements } from '@/common/lib/validation'
 
-export type NavElement = {
+export interface INavElement {
   props?: HTMLAttributes<HTMLDivElement>
   displayOnly?: boolean
   title: ReactNode
   className?: string
   path: string
   icon: ComponentType<any> | null
-  children?: NavElement[]
+  children?: INavElement[]
 }
 
-export const getNavElements = (t: TFunction): NavElement[] => {
+export const getNavElements = (t: TFunction): INavElement[] => {
   const user = useAuthenticationStore.getState().user
   const permissions = user?.access_object ?? ({} as RoleAccess)
 
   const is_super_admin = user?.role_name === AdminRoles.super_admin
   const is_admin = user?.role_name === AdminRoles.region_admin
 
-  return omitEmptyArrayElements<NavElement>([
+  return omitEmptyArrayElements<INavElement>([
     {
       path: is_super_admin ? '/admin/dashboard' : '/region/dashboard',
       title: t('pages.main'),

@@ -14,11 +14,13 @@ import {
 } from '@/common/components/jolly/dialog'
 import { MonthNameCell } from '@/common/components/table/renderers/month-name'
 
+import { useRequisitesStore } from '../requisites'
 import { CalculateEmployeeSalaries } from './calculate-employee-salaries'
 import { useZarplataStore } from './store'
 
 export const ZarplataActions = () => {
   const calculateParamsId = useZarplataStore((store) => store.calculateParamsId)
+  const mainSchetId = useRequisitesStore((store) => store.main_schet_id)
   const { t } = useTranslation(['app'])
 
   const { data: calcParams } = useQuery({
@@ -127,7 +129,10 @@ export const ZarplataActions = () => {
         </DialogOverlay>
       </DialogTrigger>
       <DialogTrigger>
-        <Button className="w-full">
+        <Button
+          className="w-full"
+          isDisabled={!mainSchetId}
+        >
           <Calculator className="btn-icon icon-start" /> {t('calculate_salary')}
         </Button>
         <DialogOverlay>

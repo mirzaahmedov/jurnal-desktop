@@ -158,6 +158,18 @@ const BankMonitorPage = () => {
               />
 
               <DownloadFile
+                fileName={`${t('pages.bank')}_${t('by_smeta')}_${dates.from}&${dates.to}.xlsx`}
+                url="bank/monitoring/by-smeta2"
+                buttonText={t('by_smeta') + ' (2)'}
+                params={{
+                  main_schet_id,
+                  from: dates.from,
+                  to: dates.to,
+                  excel: true
+                }}
+              />
+
+              <DownloadFile
                 fileName={`${t('pages.bank')}_${t('cap_prixod_rasxod')}_${dates.from}&${dates.to}.xlsx`}
                 url="bank/monitoring/by-schet"
                 buttonText={t('cap_prixod_rasxod')}

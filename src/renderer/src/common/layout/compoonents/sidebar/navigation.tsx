@@ -7,7 +7,7 @@ import {
   AccordionItem,
   AccordionTrigger
 } from '@/common/components/ui/accordion'
-import { type NavElement, getNavElements } from '@/common/layout/compoonents/sidebar/config'
+import { type INavElement, getNavElements } from '@/common/layout/compoonents/sidebar/config'
 import { cn } from '@/common/lib/utils'
 
 const normalizePath = (path: string) => {
@@ -26,7 +26,7 @@ export const Navigation = ({ isCollapsed }: NavigationStore) => {
   )
 }
 
-const renderNavElement = (elem: null | NavElement, isCollapsed: boolean, rootPath = '') => {
+const renderNavElement = (elem: null | INavElement, isCollapsed: boolean, rootPath = '') => {
   if (!elem) {
     return null
   }
