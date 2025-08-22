@@ -537,5 +537,6 @@
   "for_contract": "{{docDate}} yildagi, №{{docNum}} sonli shartnomasiga",
   "contract_deadline": "(**)- Yuqoridagi ko'rsatilgan summadan oyiga % joriy oyning ___ sanasigacha oylik ravishda oldindan to'lanishi lozim.",
   "contract_deadline_static": "Yuqoridagi ko'rsatilgan summadan so'm yoki shartnomaning umumiy summasidan oyida to'lanishi lozim.",
-  "with": "bilan"
+  "with": "bilan",
+  "from_date_value": "от {{date}}"
 }

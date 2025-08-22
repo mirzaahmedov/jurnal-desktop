@@ -3,17 +3,20 @@ import type { FC } from 'react'
 import { StyleSheet, Text, View } from '@react-pdf/renderer'
 import { useTranslation } from 'react-i18next'
 
+// 😃😃 Header 😃😃
 export const Header: FC<{
+  regionName: string
   docNum: string
   headerText: string
-}> = ({ docNum, headerText }) => {
+}> = ({ regionName, docNum, headerText }) => {
   const { t } = useTranslation()
   return (
     <View>
-      <View style={styles.container}>
-        <Text style={styles.title}>
-          {t('receive_akt')} <Text style={{ textDecoration: 'underline' }}>{docNum}</Text>
-        </Text>
+      <Text style={styles.regionName}>{regionName}</Text>
+      <View style={styles.titleContainer}>
+        <Text style={styles.title}>{t('receive_akt')}</Text>
+        <Text style={styles.title}>№</Text>
+        <Text style={styles.title}>{docNum}</Text>
       </View>
       <Text style={styles.headerText}>{headerText}</Text>
     </View>
@@ -21,14 +24,23 @@ export const Header: FC<{
 }
 
 const styles = StyleSheet.create({
-  container: {
+  regionName: {
+    fontStyle: 'italic',
+    color: 'blue',
+    textDecoration: 'underline'
+  },
+  titleContainer: {
     display: 'flex',
+    flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    gap: 10
   },
   title: {
     fontSize: 16,
-    fontWeight: 'semibold'
+    fontWeight: 'semibold',
+    fontStyle: 'italic',
+    textTransform: 'uppercase'
   },
   headerText: {
     marginTop: 20,

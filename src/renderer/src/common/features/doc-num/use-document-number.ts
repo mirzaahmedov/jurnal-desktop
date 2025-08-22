@@ -19,10 +19,14 @@ export const useGenerateDocumentNumber = ({
   onChange,
   enabled
 }: UseGenerateDocumentNumberParams) => {
-  const main_schet_id = useRequisitesStore(store => store.main_schet_id)
+  const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
   const onChangeEvent = useEventCallback(onChange)
 
-  const { mutate: getDocumentNumber, isPending } = useMutation({
+  const {
+    mutate: getDocumentNumber,
+    mutateAsync: fetchDocumentNumberAsync,
+    isPending
+  } = useMutation({
     mutationFn: DocumentNumberService.getDocumentNumber,
     onSuccess: (doc_num) => {
       onChangeEvent(doc_num)
@@ -42,5 +46,6 @@ export const useGenerateDocumentNumber = ({
   return {
     isPending,
     refetch,
+    fetchDocumentNumberAsync
   }
 }

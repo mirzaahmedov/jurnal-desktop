@@ -14,6 +14,7 @@ import { Button } from '@/common/components/ui/button'
 import { FormField } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
 import { type DocumentType, useGenerateDocumentNumber } from '@/common/features/doc-num'
+import { useRequisitesStore } from '@/common/features/requisites'
 import { formatDate, parseDate } from '@/common/lib/date'
 import { cn } from '@/common/lib/utils'
 
@@ -44,14 +45,12 @@ export const DocumentFields: FormEditableFieldsComponent<
 }) => {
   const { t } = useTranslation()
 
-  const { refetch, isPending } = useGenerateDocumentNumber({
+  const typedForm = form as unknown as UseFormReturn<RequiredDocumentFields>
+  const mainSchetId = useRequisitesStore((store) => store.main_schet_id)
+
+  const { isPending, fetchDocumentNumberAsync } = useGenerateDocumentNumber({
     documentType: documentType!,
-    onChange: (doc_num) => {
-      ;(form as unknown as UseFormReturn<RequiredDocumentFields>).setValue(
-        'doc_num',
-        doc_num ? doc_num.toString() : ''
-      )
-    },
+    onChange: () => {},
     enabled: autoGenerate && !!documentType
   })
 
@@ -73,6 +72,22 @@ export const DocumentFields: FormEditableFieldsComponent<
       }
     }
   }, [form, calendarProps?.fromMonth, calendarProps?.toMonth])
+
+  useEffect(() => {
+    if (!documentType) {
+      return
+    }
+    fetchDocumentNumberAsync({
+      type: documentType,
+      main_schet_id: mainSchetId
+    }).then((docNum) => {
+      const prevDocNum = typedForm.watch()
+      if (prevDocNum || !docNum) {
+        return
+      }
+      typedForm.setValue('doc_num', docNum ? docNum.toString() : '')
+    })
+  }, [fetchDocumentNumberAsync, documentType, mainSchetId])
 
   return (
     <Fieldset
@@ -105,7 +120,18 @@ export const DocumentFields: FormEditableFieldsComponent<
                     variant="outline"
                     disabled={isPending}
                     onClick={() => {
-                      refetch()
+                      if (!documentType) {
+                        return
+                      }
+                      fetchDocumentNumberAsync({
+                        type: documentType,
+                        main_schet_id: mainSchetId
+                      }).then((docNum) => {
+                        if (!docNum) {
+                          return
+                        }
+                        typedForm.setValue('doc_num', docNum ? docNum.toString() : '')
+                      })
                     }}
                   >
                     {isPending ? <Spinner className="size-5 border-2" /> : <RefreshCw />}
