@@ -41,11 +41,11 @@ import {
 } from '@/common/models'
 import { DocumentOrientation, DocumentPaddingFields } from '@/common/widget/form'
 
-import { ShartnomaGrafikPDFDocument } from '../shartnoma-grafik'
-import { ReportDialogFormSchema, defaultValues } from './config'
-import { buildContractDetailsText, buildContractPaymentDetailsText } from './utils'
+import { ReportDialogFormSchema, defaultValues } from './report/dialog/config'
+import { buildContractDetailsText, buildContractPaymentDetailsText } from './report/dialog/utils'
+import { ShartnomaGrafikPDFDocument } from './report/shartnoma-grafik'
 
-export interface ShartnomaSmetaGrafikGeneratePDFDocumentDialogProps {
+export interface ShartnomaGrafikPDFDialogProps {
   grafiks: ShartnomaGrafik[]
   doc_date: string
   doc_num: string
@@ -54,7 +54,7 @@ export interface ShartnomaSmetaGrafikGeneratePDFDocumentDialogProps {
   organization: Organization
   onChange: (open: boolean) => void
 }
-export const ShartnomaSmetaGrafikGeneratePDFDocumentDialog = ({
+export const ShartnomaGrafikPDFDialog = ({
   grafiks,
   doc_date,
   doc_num,
@@ -62,7 +62,7 @@ export const ShartnomaSmetaGrafikGeneratePDFDocumentDialog = ({
   organization,
   open,
   onChange
-}: ShartnomaSmetaGrafikGeneratePDFDocumentDialogProps) => {
+}: ShartnomaGrafikPDFDialogProps) => {
   const { t } = useTranslation(['podpis'])
 
   const form = useForm({

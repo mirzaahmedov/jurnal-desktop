@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 
 import { useQuery } from '@tanstack/react-query'
 import { DownloadIcon } from 'lucide-react'
@@ -8,15 +8,20 @@ import { type Location, useLocation, useNavigate, useParams } from 'react-router
 import { MainSchetQueryKeys, MainSchetService } from '@/app/region-spravochnik/main-schet'
 import { OrganizationQueryKeys, OrganizationService } from '@/app/region-spravochnik/organization'
 import { Button } from '@/common/components/ui/button'
+import { GenerateFile } from '@/common/features/file'
+import { usePodpis } from '@/common/features/podpis'
 import { useRequisitesStore } from '@/common/features/requisites'
 import { useRequisitesRedirect } from '@/common/features/requisites/use-main-schet-redirect'
 import { useToggle } from '@/common/hooks'
 import { useLayout } from '@/common/layout'
+import { calculateAnnualTotalSum, roundNumberToTwoDecimalPlaces } from '@/common/lib/utils'
+import { PodpisTypeDocument } from '@/common/models'
 import { DetailsView } from '@/common/views'
 
 import { type LocationState, ShartnomaQueryKeys } from '../config'
-import { ShartnomaSmetaGrafikGeneratePDFDocumentDialog } from '../report/dialog/shartnoma-grafik-dialog'
+import { ShartnomaGrafikPDFV2 } from '../report-v2'
 import { ContractService } from '../service'
+import { ShartnomaGrafikPDFDialog } from '../shartnoma-grafik-pdf-dialog'
 import { ShartnomaForm } from './shartnoma-form'
 
 const ShartnomaDetailsPage = () => {
@@ -27,6 +32,7 @@ const ShartnomaDetailsPage = () => {
   const reportToggle = useToggle()
 
   const location = useLocation() as Location<LocationState>
+  const podpis = usePodpis(PodpisTypeDocument.SHARTNOMA_GRAFIK_OPLATI, true)
 
   const original = location.state?.original
   const organId = location.state?.organId
@@ -76,6 +82,15 @@ const ShartnomaDetailsPage = () => {
     })
   }, [navigate, setLayout, id, t])
 
+  const summaTotal = useMemo(() => {
+    return roundNumberToTwoDecimalPlaces(
+      shartnoma?.data?.grafiks?.reduce(
+        (result, grafik) => result + calculateAnnualTotalSum(grafik),
+        0
+      ) ?? 0
+    )
+  }, [shartnoma?.data?.grafiks])
+
   return (
     <DetailsView>
       <DetailsView.Content isLoading={isFetching}>
@@ -100,10 +115,28 @@ const ShartnomaDetailsPage = () => {
             <DownloadIcon className="btn-icon icon-start" />
             {t('payment-schedule')}
           </Button>
+
+          {id !== 'create' && main_schet?.data && organization?.data && shartnoma?.data ? (
+            <GenerateFile
+              fileName={`${t('payment-schedule')}_v2_${shartnoma.data.doc_num}.pdf`}
+              buttonText={t('payment-schedule') + ' (2)'}
+            >
+              <ShartnomaGrafikPDFV2
+                docNum={shartnoma.data.doc_num}
+                docDate={shartnoma.data.doc_date}
+                grafiks={shartnoma.data.grafiks}
+                podpis={podpis}
+                organName={organization.data.name ?? ''}
+                regionName={main_schet.data.tashkilot_nomi ?? ''}
+                summaValue={summaTotal}
+              />
+            </GenerateFile>
+          ) : null}
         </DetailsView.Footer>
       ) : null}
+
       {id !== 'create' && main_schet?.data && organization?.data && shartnoma?.data ? (
-        <ShartnomaSmetaGrafikGeneratePDFDocumentDialog
+        <ShartnomaGrafikPDFDialog
           open={reportToggle.isOpen}
           onChange={reportToggle.setOpen}
           grafiks={shartnoma.data.grafiks}

@@ -1,6 +1,6 @@
 {
   "name": "jurnal.desktop",
-  "version": "1.0.390",
+  "version": "1.0.391",
   "description": "An Electron application with React and TypeScript",
   "main": "./out/main/index.js",
   "author": "example.com",
@@ -62,6 +62,8 @@
     "@tanstack/react-table": "^8.21.2",
     "@tanstack/react-virtual": "^3.13.2",
     "@welldone-software/why-did-you-render": "^10.0.1",
+    "ag-grid-community": "^34.1.1",
+    "ag-grid-react": "^34.1.1",
     "allotment": "^1.20.4",
     "app-builder-lib": "^25.1.8",
     "axios": "^1.7.9",

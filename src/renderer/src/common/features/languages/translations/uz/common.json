@@ -24,6 +24,7 @@
   "created-by-user": "Foydalanuvhchi tomonidan yaratildi",
   "accepted-by-user": "Foydalanuvhchi tomonidan qabul qilindi",
   "total": "Jami",
+  "total_summa": "Umumiy summa",
   "total_page": "Jami sahifa bo'yicha",
   "total_period": "Jami davr bo'yicha",
   "summa": "Summa",
@@ -532,5 +533,9 @@
   "avans": "Avans",
   "comission_boss": "Komissiya raisi",
   "commission_members": "Komissiya a'zolari",
-  "commission_secretary": "Komissiya kotibi"
+  "commission_secretary": "Komissiya kotibi",
+  "for_contract": "{{docDate}} yildagi, №{{docNum}} sonli shartnomasiga",
+  "contract_deadline": "(**)- Yuqoridagi ko'rsatilgan summadan oyiga % joriy oyning ___ sanasigacha oylik ravishda oldindan to'lanishi lozim.",
+  "contract_deadline_static": "Yuqoridagi ko'rsatilgan summadan so'm yoki shartnomaning umumiy summasidan oyida to'lanishi lozim.",
+  "with": "bilan"
 }

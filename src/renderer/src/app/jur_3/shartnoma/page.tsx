@@ -25,6 +25,7 @@ import { ListView } from '@/common/views'
 import { ShartnomaColumns } from './columns'
 import { ShartnomaQueryKeys } from './config'
 import { ContractService } from './service'
+import { ShartnomaBySmetaDialog } from './shartnoma-by-smeta-dialog'
 
 const ShartnomaPage = () => {
   const { confirm } = useConfirm()
@@ -129,6 +130,7 @@ const ShartnomaPage = () => {
               { name: t('bank'), value: selected?.bank_klient }
             ]}
           />
+          <ShartnomaBySmetaDialog />
         </div>
       </ListView.Header>
       <ListView.Content isLoading={isFetching || isPending}>
