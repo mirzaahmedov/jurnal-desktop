@@ -13,7 +13,9 @@ import { MainZarplataTable } from '@/app/jur_5/common/features/main-zarplata/mai
 import { useVacantFilters } from '@/app/jur_5/common/hooks/use-selected-vacant-filters'
 import { LoadingOverlay } from '@/common/components'
 import { Button } from '@/common/components/jolly/button'
+import { Checkbox } from '@/common/components/jolly/checkbox'
 import { Badge } from '@/common/components/ui/badge'
+import { Label } from '@/common/components/ui/label'
 import { Tabs, TabsList, TabsTrigger } from '@/common/components/ui/tabs'
 
 import { MainZarplataService } from '../main-zarplata/service'
@@ -97,6 +99,26 @@ export const CalculateEmployeeSalaries = () => {
     getItemVacantId: (item) => item.vacantId
   })
 
+  const selectedIds = selectedMainZarplata.map((mainZarplata) => mainZarplata.id)
+  const isAllSelected =
+    mainZarplataQuery?.data?.every((vacant) =>
+      selectedMainZarplata.some((selected) => selected.id === vacant.id)
+    ) ?? false
+
+  const handleSelectAll = () => {
+    if (isAllSelected) {
+      setSelectedMainZarplata((prev) =>
+        prev.filter((m) => !mainZarplataQuery?.data?.some((vacant) => vacant.id === m.id))
+      )
+    } else {
+      setSelectedMainZarplata((prev) => {
+        const newSelected =
+          mainZarplataQuery?.data?.filter((vacant) => !prev.some((m) => m.id === vacant.id)) ?? []
+        return [...prev, ...newSelected]
+      })
+    }
+  }
+
   return (
     <Allotment
       proportionalLayout={false}
@@ -142,32 +164,51 @@ export const CalculateEmployeeSalaries = () => {
             </Tabs>
           </div>
 
-          <div className="px-2.5 pb-2.5">
-            {activeTab === TabOptions.SELECTED && (
+          {activeTab === TabOptions.SELECTED && (
+            <div className="px-2.5 pb-2.5">
               <SelectedVacantsFilter
                 selectedVacants={filterOptions}
                 selectedCount={selectedMainZarplata.length ?? 0}
                 visibleVacant={visibleVacant}
                 setVisibleVacant={setVisibleVacant}
               />
-            )}
-          </div>
+            </div>
+          )}
 
           {activeTab === TabOptions.ALL ? (
-            <div className="relative flex-1 w-full overflow-auto scrollbar pl-px">
-              {mainZarplataQuery.isFetching ? <LoadingOverlay /> : null}
-              <MainZarplataTable
-                data={mainZarplataQuery.data ?? []}
-                selectedIds={selectedMainZarplata.map((mainZarplata) => mainZarplata.id)}
-                onClickRow={(row) => {
-                  setSelectedMainZarplata((prev) => {
-                    if (prev.find((p) => p.id === row.id)) {
-                      return prev.filter((p) => p.id !== row.id)
-                    }
-                    return [...prev, row]
-                  })
-                }}
-              />
+            <div className="flex-1 min-h-0 overflow-hidden flex flex-col gap-2">
+              <div className="px-2.5 flex items-center gap-2">
+                <Checkbox
+                  id="select-all"
+                  isSelected={isAllSelected}
+                  isIndeterminate={
+                    !isAllSelected &&
+                    !!mainZarplataQuery.data?.some((m) => selectedIds.includes(m.id))
+                  }
+                  onChange={handleSelectAll}
+                />
+                <Label
+                  htmlFor="select-all"
+                  className="text-xs font-semibold text-gray-600"
+                >
+                  {t('select_all')}
+                </Label>
+              </div>
+              <div className="relative flex-1 w-full overflow-auto scrollbar pl-px">
+                {mainZarplataQuery.isFetching ? <LoadingOverlay /> : null}
+                <MainZarplataTable
+                  data={mainZarplataQuery.data ?? []}
+                  selectedIds={selectedMainZarplata.map((mainZarplata) => mainZarplata.id)}
+                  onClickRow={(row) => {
+                    setSelectedMainZarplata((prev) => {
+                      if (prev.find((p) => p.id === row.id)) {
+                        return prev.filter((p) => p.id !== row.id)
+                      }
+                      return [...prev, row]
+                    })
+                  }}
+                />
+              </div>
             </div>
           ) : (
             <div className="relative flex-1 w-full overflow-auto scrollbar pl-px">
