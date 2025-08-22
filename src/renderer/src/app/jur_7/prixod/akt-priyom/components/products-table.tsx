@@ -1,7 +1,7 @@
 import type { MaterialPrixodProvodka } from '@/common/models'
 import type { FC } from 'react'
 
-import { StyleSheet, View } from '@react-pdf/renderer'
+import { StyleSheet, Text, View } from '@react-pdf/renderer'
 import { useTranslation } from 'react-i18next'
 
 import { Table } from '@/common/components/pdf'
@@ -62,10 +62,18 @@ export const ProductsTable: FC<{
               <Table.Cell>{formatNumber(product.summa)}</Table.Cell>
             </Table.Column>
             <Table.Column style={{ width: columnWidths[5] }}>
-              <Table.Cell>{product.debet_schet}</Table.Cell>
+              <Table.Cell>
+                {product.debet_schet}
+                {' - '}
+                <Text style={styles.subSchetValue}>{product.debet_sub_schet}</Text>
+              </Table.Cell>
             </Table.Column>
             <Table.Column style={{ width: columnWidths[6] }}>
-              <Table.Cell>{product.kredit_schet}</Table.Cell>
+              <Table.Cell>
+                {product.kredit_schet}
+                {' - '}
+                <Text style={styles.subSchetValue}>{product.kredit_sub_schet}</Text>
+              </Table.Cell>
             </Table.Column>
             <Table.Column style={{ width: columnWidths[7] }}>
               <Table.Cell>{formatLocaleDate(product.data_pereotsenka)}</Table.Cell>
@@ -81,5 +89,8 @@ const styles = StyleSheet.create({
   container: {
     marginTop: 20,
     fontSize: 9
+  },
+  subSchetValue: {
+    fontSize: 8
   }
 })

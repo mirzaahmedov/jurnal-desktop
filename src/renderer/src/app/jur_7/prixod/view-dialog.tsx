@@ -359,6 +359,9 @@ export const WarehousePrixodViewDialog = ({
               onOpenChange={aktToggle.setOpen}
               docNum={data?.doc_num}
               docDate={data?.doc_date}
+              organName={data?.organ?.name ?? ''}
+              receiverName={data?.responsible ?? ''}
+              note={data?.opisanie ?? ''}
               dovernost={data.doverennost ?? ''}
               products={data.childs}
             />

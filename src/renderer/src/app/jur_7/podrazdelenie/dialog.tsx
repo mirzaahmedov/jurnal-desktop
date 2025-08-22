@@ -14,6 +14,7 @@ import {
   DialogContent,
   DialogFooter,
   DialogHeader,
+  DialogOverlay,
   DialogTitle,
   DialogTrigger
 } from '@/common/components/jolly/dialog'
@@ -94,42 +95,44 @@ export const WarehousePodrazdelenieDialog = ({
       isOpen={isOpen}
       onOpenChange={onOpenChange}
     >
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>
-            {selected
-              ? t('podrazdelenie')
-              : t('create-something', { something: t('podrazdelenie') })}
-          </DialogTitle>
-        </DialogHeader>
-        <Form {...form}>
-          <form
-            onSubmit={onSubmit}
-            className="mt-5"
-          >
-            <FormField
-              name="name"
-              control={form.control}
-              render={({ field }) => (
-                <FormElement
-                  direction="column"
-                  label={t('name')}
+      <DialogOverlay>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>
+              {selected
+                ? t('podrazdelenie')
+                : t('create-something', { something: t('podrazdelenie') })}
+            </DialogTitle>
+          </DialogHeader>
+          <Form {...form}>
+            <form
+              onSubmit={onSubmit}
+              className="mt-5"
+            >
+              <FormField
+                name="name"
+                control={form.control}
+                render={({ field }) => (
+                  <FormElement
+                    direction="column"
+                    label={t('name')}
+                  >
+                    <Input {...field} />
+                  </FormElement>
+                )}
+              />
+              <DialogFooter className="mt-5">
+                <Button
+                  type="submit"
+                  disabled={isCreating || isUpdating}
                 >
-                  <Input {...field} />
-                </FormElement>
-              )}
-            />
-            <DialogFooter className="mt-5">
-              <Button
-                type="submit"
-                disabled={isCreating || isUpdating}
-              >
-                {t('save')}
-              </Button>
-            </DialogFooter>
-          </form>
-        </Form>
-      </DialogContent>
+                  {t('save')}
+                </Button>
+              </DialogFooter>
+            </form>
+          </Form>
+        </DialogContent>
+      </DialogOverlay>
     </DialogTrigger>
   )
 }

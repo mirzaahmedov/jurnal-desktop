@@ -181,6 +181,8 @@
   "district": "Tuman",
   "from_where": "Qayerdan",
   "to_where": "Qayerga",
+  "from_who": "Kimdan",
+  "to_whom": "Kimga",
   "distance": "Masofa (km)",
   "day_summa": "Kunlik summa",
   "hotel_summa": "Mehmonxona summa",
@@ -538,5 +540,8 @@
   "contract_deadline": "(**)- Yuqoridagi ko'rsatilgan summadan oyiga % joriy oyning ___ sanasigacha oylik ravishda oldindan to'lanishi lozim.",
   "contract_deadline_static": "Yuqoridagi ko'rsatilgan summadan so'm yoki shartnomaning umumiy summasidan oyida to'lanishi lozim.",
   "with": "bilan",
-  "from_date_value": "от {{date}}"
+  "from_date_value": "{{date}} dan",
+  "note": "Izoh",
+  "received_by": "Qabul qildi",
+  "released_by": "Berdi"
 }

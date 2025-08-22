@@ -23,6 +23,6 @@ export const createMainSchetSpravochnik = (config: SpravochnikHookOptions<MainSc
       service: MainSchetService,
       filters: [SpravochnikSearchField]
     } satisfies typeof config,
-    config
+    config as any
   )
 }

@@ -4,7 +4,8 @@ export enum PodpisTypeDocument {
   AKT_SVERKA = 'akt_sverka',
   DAYS_REPORT = 'daysReport',
   CAP = 'cap',
-  JUR7_MATERIAL = 'jur7_material'
+  JUR7_MATERIAL = 'jur7_material',
+  JUR7_AKT_PRIYOM = 'jur7_akt_priyom'
 }
 
 export interface Podpis {

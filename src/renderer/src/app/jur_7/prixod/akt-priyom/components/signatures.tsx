@@ -1,81 +1,55 @@
+import type { Podpis } from '@/common/models'
 import type { FC } from 'react'
 
 import { StyleSheet, Text, View } from '@react-pdf/renderer'
+import Transliterator from 'lotin-kirill'
 import { useTranslation } from 'react-i18next'
 
-export interface CommissionMember {
-  fio: string
-  military_rank: string
-}
+const transliterator = new Transliterator()
 
 export const Signatures: FC<{
-  commissionBoss: CommissionMember[]
-  commissionMembers: CommissionMember[]
-  commissionSecretary: CommissionMember[]
-}> = ({ commissionBoss, commissionMembers, commissionSecretary }) => {
-  const { t } = useTranslation()
+  podpis: Podpis[]
+}> = (props) => {
+  const { podpis } = props
+  const { t, i18n } = useTranslation()
 
   return (
     <View style={{ marginTop: 20 }}>
-      <View style={styles.sectionWrapper}>
-        <View style={styles.sectionLabelWrapper}>
-          <Text>{t('commission_boss')}:</Text>
+      {podpis.map((p) => (
+        <View
+          key={p.id}
+          style={styles.signatureContainer}
+        >
+          <View>
+            <Text>
+              {i18n.language === 'uz'
+                ? p.doljnost_name
+                : transliterator.textToCyrillic(p.doljnost_name)}
+            </Text>
+          </View>
+          <View>
+            <Text style={{ fontWeight: 'bold', textAlign: 'right' }}>
+              {i18n.language === 'uz' ? p.fio_name : transliterator.textToCyrillic(p.fio_name)}
+            </Text>
+          </View>
         </View>
-        <View style={styles.membersListWrapper}>
-          {commissionBoss.map((member, index) => (
-            <View
-              key={index}
-              style={styles.memberWrapper}
-            >
-              <Text style={{ flex: 1, fontWeight: 'semibold' }}>{member.military_rank}</Text>
-              <Text style={{ flex: 2 }}>{member.fio}</Text>
-            </View>
-          ))}
-        </View>
-      </View>
+      ))}
 
-      <View style={styles.sectionWrapper}>
-        <View style={styles.sectionLabelWrapper}>
-          <Text>{t('commission_members')}:</Text>
+      <View style={styles.signatureContainer}>
+        <View style={styles.blankWrapper}>
+          <View>
+            <Text>{t('released_by')}:</Text>
+          </View>
+          <View style={{ width: 140, borderBottom: '1px solid black' }}>
+            <Text> </Text>
+          </View>
         </View>
-        <View style={styles.membersListWrapper}>
-          {commissionMembers.map((member, index) => (
-            <View
-              key={index}
-              style={styles.memberWrapper}
-            >
-              <Text style={{ flex: 1, fontWeight: 'semibold' }}>{member.military_rank}</Text>
-              <Text style={{ flex: 2 }}>{member.fio}</Text>
-            </View>
-          ))}
-        </View>
-      </View>
-
-      <View style={styles.sectionWrapper}>
-        <View style={styles.sectionLabelWrapper}>
-          <Text>{t('commission_secretary')}:</Text>
-        </View>
-        <View style={styles.membersListWrapper}>
-          {commissionSecretary.map((member, index) => (
-            <View
-              key={index}
-              style={styles.memberWrapper}
-            >
-              <Text style={{ flex: 1, fontWeight: 'semibold' }}>{member.military_rank}</Text>
-              <Text style={{ flex: 2 }}>{member.fio}</Text>
-            </View>
-          ))}
-        </View>
-      </View>
-
-      <View style={[styles.sectionWrapper, { marginTop: 30, alignItems: 'flex-end' }]}>
-        <View style={styles.sectionLabelWrapper}>
-          <Text>{t('received')}:</Text>
-        </View>
-        <View style={styles.membersListWrapper}>
-          <View style={styles.memberWrapper}>
-            <View style={{ flex: 1, fontWeight: 'semibold' }}> </View>
-            <View style={{ flex: 2, borderBottom: '1px solid black' }}> </View>
+        <View style={styles.blankWrapper}>
+          <View>
+            <Text>{t('received_by')}:</Text>
+          </View>
+          <View style={{ width: 140, borderBottom: '1px solid black' }}>
+            <Text> </Text>
           </View>
         </View>
       </View>
@@ -84,25 +58,18 @@ export const Signatures: FC<{
 }
 
 const styles = StyleSheet.create({
-  sectionWrapper: {
-    marginTop: 15,
-    fontSize: 11,
-    display: 'flex',
-    flexDirection: 'row'
-  },
-  sectionLabelWrapper: {
-    width: 200
-  },
-  sectionLabel: {},
-  membersListWrapper: {
-    flex: 1,
-    display: 'flex',
-    flexDirection: 'column',
-    gap: 5
-  },
-  memberWrapper: {
+  signatureContainer: {
     display: 'flex',
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
+    gap: 10,
+    marginTop: 15
+  },
+  blankWrapper: {
+    flex: 1,
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5
   }
 })

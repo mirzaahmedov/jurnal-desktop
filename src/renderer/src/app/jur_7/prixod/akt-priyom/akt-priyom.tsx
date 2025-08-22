@@ -1,25 +1,26 @@
-import type { MaterialPrixodProvodka } from '@/common/models'
+import type { MaterialPrixodProvodka, Podpis } from '@/common/models'
 import type { FC } from 'react'
 
 import { Document, Page, StyleSheet } from '@react-pdf/renderer'
 
 import { registerFonts } from '@/common/lib/pdf'
 
-import { Footer } from './components/footer'
 import { Header } from './components/header'
 import { ProductsTable } from './components/products-table'
-import { type CommissionMember, Signatures } from './components/signatures'
+import { Signatures } from './components/signatures'
 
 registerFonts()
 
 export interface AktPriyomReportProps {
   docNum: string
   docDate: string
+  regionName: string
+  organName: string
+  receiverName: string
+  note: string
   headerText: string
   products: MaterialPrixodProvodka[]
-  commissionBoss: CommissionMember[]
-  commissionMembers: CommissionMember[]
-  commissionSecretary: CommissionMember[]
+  podpis: Podpis[]
   dovernost: string
 }
 export const AktPriyomReport: FC<AktPriyomReportProps> = ({
@@ -27,10 +28,11 @@ export const AktPriyomReport: FC<AktPriyomReportProps> = ({
   docDate,
   headerText,
   products,
-  commissionBoss,
-  commissionMembers,
-  commissionSecretary,
-  dovernost
+  regionName,
+  organName,
+  receiverName,
+  note,
+  podpis
 }) => {
   return (
     <Document>
@@ -39,19 +41,16 @@ export const AktPriyomReport: FC<AktPriyomReportProps> = ({
         style={styles.page}
       >
         <Header
+          regionName={regionName}
           docNum={docNum}
+          docDate={docDate}
+          organName={organName}
+          receiverName={receiverName}
+          note={note}
           headerText={headerText}
         />
         <ProductsTable products={products ?? []} />
-        <Signatures
-          commissionBoss={commissionBoss ?? []}
-          commissionMembers={commissionMembers ?? []}
-          commissionSecretary={commissionSecretary ?? []}
-        />
-        <Footer
-          docDate={docDate}
-          dovernost={dovernost}
-        />
+        <Signatures podpis={podpis ?? []} />
       </Page>
     </Document>
   )
