@@ -7,6 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
+import { BudjetSelect } from '@/app/super-admin/budjet/budjet-select'
 import { Button } from '@/common/components/jolly/button'
 import {
   DialogContent,
@@ -38,7 +39,8 @@ export const VacantDialog = ({ vacant, onSubmit, ...props }: VacantDialogProps) 
     if (vacant) {
       form.reset({
         name: vacant.name,
-        parentId: vacant.parentId ?? null
+        parentId: vacant.parentId ?? null,
+        spravochnikBudjetNameId: vacant.spravochnikBudjetNameId ?? 0
       })
     } else {
       form.reset(defaultValues)
@@ -75,6 +77,23 @@ export const VacantDialog = ({ vacant, onSubmit, ...props }: VacantDialogProps) 
                   />
                 )}
               />
+
+              {vacant ? (
+                <FormField
+                  control={form.control}
+                  name="spravochnikBudjetNameId"
+                  render={({ field }) => (
+                    <BudjetSelect
+                      inputRef={field.ref}
+                      onBlur={field.onBlur}
+                      selectedKey={field.value ?? null}
+                      onSelectionChange={(value) => field.onChange(value ?? 0)}
+                      className="w-full"
+                    />
+                  )}
+                />
+              ) : null}
+
               <DialogFooter>
                 <Button type="submit">{t('save')}</Button>
               </DialogFooter>

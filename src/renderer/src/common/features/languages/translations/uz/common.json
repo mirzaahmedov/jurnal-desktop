@@ -543,5 +543,6 @@
   "from_date_value": "{{date}} dan",
   "note": "Izoh",
   "received_by": "Qabul qildi",
-  "released_by": "Berdi"
+  "released_by": "Berdi",
+  "other_vedemost": "Boshqa vedemostlar"
 }

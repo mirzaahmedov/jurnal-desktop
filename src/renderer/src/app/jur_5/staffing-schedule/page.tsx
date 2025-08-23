@@ -175,7 +175,7 @@ const StaffingTable = () => {
         values: {
           name: values.name,
           parentId: values.parentId ?? null,
-          spravochnikBudjetNameId: budjetId
+          spravochnikBudjetNameId: values.spravochnikBudjetNameId
         }
       })
       setVacantData(undefined)
@@ -183,14 +183,14 @@ const StaffingTable = () => {
       createVacant({
         name: values.name,
         parentId: vacantParent.id,
-        spravochnikBudhetNameId: budjetId
+        spravochnikBudjetNameId: budjetId
       })
       setVacantParent(undefined)
     } else {
       createVacant({
         name: values.name,
         parentId: null,
-        spravochnikBudhetNameId: budjetId
+        spravochnikBudjetNameId: budjetId
       })
     }
   }

@@ -6,15 +6,14 @@ import { useLocationState } from '@/common/hooks'
 export enum NachislenieTabOptions {
   Tabel = 'tabel',
   Nachislenie = 'nachislenie',
-  PremyaMatPomosh = 'premya_mat_pomosh',
+  OtherVedemost = 'other_vedemost',
   Vedemost = 'vedemost'
 }
 
 const tabOptions = [
   NachislenieTabOptions.Tabel,
   NachislenieTabOptions.Nachislenie,
-  NachislenieTabOptions.PremyaMatPomosh
-  // NachislenieTabOptions.Vedemost
+  NachislenieTabOptions.OtherVedemost
 ]
 
 export const useNachislenieTab = () => {

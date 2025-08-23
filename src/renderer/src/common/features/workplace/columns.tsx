@@ -131,7 +131,7 @@ const ZarplataSostavCell: FC<{
         isPending={workplaceUpdateMutation.isPending}
         isDisabled={workplaceUpdateMutation.isPending}
       >
-        <Pencil className="btn-icon" />
+        <Pencil className="btn-icon icon-sm" />
       </Button>
     </div>
   )

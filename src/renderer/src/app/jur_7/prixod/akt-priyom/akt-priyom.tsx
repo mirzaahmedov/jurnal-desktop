@@ -61,6 +61,6 @@ const styles = StyleSheet.create({
     fontFamily: 'Tinos',
     fontSize: 10,
     paddingHorizontal: 20,
-    paddingVertical: 20
+    paddingVertical: 40
   }
 })

@@ -10,7 +10,7 @@ const NachisleniePage = () => {
     <div className="flex-1 overflow-hidden">
       {tabValue === NachislenieTabOptions.Tabel ? <TabelsView /> : null}
       {tabValue === NachislenieTabOptions.Nachislenie ? <Nachislenies /> : null}
-      {tabValue === NachislenieTabOptions.PremyaMatPomosh ? <PremyaMatPomosh /> : null}
+      {tabValue === NachislenieTabOptions.OtherVedemost ? <PremyaMatPomosh /> : null}
     </div>
   )
 }

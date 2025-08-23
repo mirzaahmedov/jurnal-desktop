@@ -51,7 +51,7 @@ export const DocumentFields: FormEditableFieldsComponent<
   const { isPending, fetchDocumentNumberAsync } = useGenerateDocumentNumber({
     documentType: documentType!,
     onChange: () => {},
-    enabled: autoGenerate && !!documentType
+    enabled: false
   })
 
   useEffect(() => {
@@ -74,20 +74,20 @@ export const DocumentFields: FormEditableFieldsComponent<
   }, [form, calendarProps?.fromMonth, calendarProps?.toMonth])
 
   useEffect(() => {
-    if (!documentType) {
+    if (!documentType || !autoGenerate) {
       return
     }
     fetchDocumentNumberAsync({
       type: documentType,
       main_schet_id: mainSchetId
     }).then((docNum) => {
-      const prevDocNum = typedForm.watch()
+      const prevDocNum = typedForm.getValues('doc_num')
       if (prevDocNum || !docNum) {
         return
       }
       typedForm.setValue('doc_num', docNum ? docNum.toString() : '')
     })
-  }, [fetchDocumentNumberAsync, documentType, mainSchetId])
+  }, [fetchDocumentNumberAsync, documentType, mainSchetId, autoGenerate])
 
   return (
     <Fieldset

@@ -544,5 +544,6 @@
   "from_date_value": "{{date}} дан",
   "note": "Изоҳ",
   "received_by": "Қабул қилди",
-  "released_by": "Берди"
+  "released_by": "Берди",
+  "other_vedemost": "Бошқа ведемостлар"
 }

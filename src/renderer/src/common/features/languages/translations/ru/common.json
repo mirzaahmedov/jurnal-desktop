@@ -544,5 +544,6 @@
   "from_date_value": "от {{date}}",
   "note": "Примечание",
   "received_by": "Получил",
-  "released_by": "Отпустил"
+  "released_by": "Отпустил",
+  "other_vedemost": "Другие ведомости"
 }
