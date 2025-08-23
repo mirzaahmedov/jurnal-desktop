@@ -107,7 +107,7 @@ export const ProductsTable: FC<{
           <Text style={styles.summaryHeader}>
             {t('debet')} {t('schet').toLowerCase()}
           </Text>
-          <Text style={[styles.summaryHeader, { width: 80 }]}>
+          <Text style={styles.summaryHeader}>
             {t('debet')} {t('subschet').toLowerCase()}
           </Text>
           <Text style={styles.summaryHeader}>
@@ -115,13 +115,13 @@ export const ProductsTable: FC<{
           </Text>
           <Text style={styles.summaryHeader}>{t('summa')}</Text>
         </Table.Row>
-        {products.map((product) => (
+        {groupAndSumProvodka(products ?? [])?.map((product) => (
           <Table.Row
             key={product.id}
             style={styles.summaryRow}
           >
             <Text style={styles.summaryCell}>{product.debet_schet}</Text>
-            <Text style={[styles.summaryCell, { width: 80 }]}>{product.debet_sub_schet}</Text>
+            <Text style={styles.summaryCell}>{product.debet_sub_schet}</Text>
             <Text style={styles.summaryCell}>{product.kredit_schet}</Text>
             <Text style={styles.summaryCell}>{formatNumber(product.summa)}</Text>
           </Table.Row>
@@ -129,6 +129,34 @@ export const ProductsTable: FC<{
       </View>
     </View>
   )
+}
+
+const groupAndSumProvodka = (products: MaterialPrixodProvodka[]) => {
+  const grouped = products.reduce(
+    (result, item) => {
+      const key = `${item.debet_schet}_${item.debet_sub_schet}_${item.kredit_schet}`
+      if (result[key]) {
+        result[key].summa += item.summa
+      } else {
+        result[key] = { ...item }
+      }
+      return result
+    },
+    {} as Record<string, MaterialPrixodProvodka>
+  )
+
+  return Object.values(grouped).sort((a, b) => {
+    if (a.debet_schet !== b.debet_schet) {
+      return a.debet_schet.localeCompare(b.debet_schet)
+    }
+    if (a.debet_sub_schet !== b.debet_sub_schet) {
+      return a.debet_sub_schet.localeCompare(b.debet_sub_schet)
+    }
+    if (a.kredit_schet !== b.kredit_schet) {
+      return a.kredit_schet.localeCompare(b.kredit_schet)
+    }
+    return 0
+  })
 }
 
 const styles = StyleSheet.create({
@@ -155,12 +183,12 @@ const styles = StyleSheet.create({
     paddingVertical: 5
   },
   summaryHeader: {
-    width: 60,
+    width: 80,
     fontWeight: 'bold',
     fontStyle: 'italic'
   },
   summaryCell: {
-    width: 60,
+    width: 80,
     fontStyle: 'italic'
   }
 })
