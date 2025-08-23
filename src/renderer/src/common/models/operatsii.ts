@@ -2,7 +2,7 @@ export type Operatsii = {
   id: number
   name: string
   schet: string
-  schet6: string
+  schet6: string | null
   sub_schet: string
   type_schet: Exclude<TypeSchetOperatsii, TypeSchetOperatsii.ALL>
   smeta_id: number

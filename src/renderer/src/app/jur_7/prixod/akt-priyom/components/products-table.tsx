@@ -52,7 +52,7 @@ export const ProductsTable: FC<{
               <Table.Cell style={{ textAlign: 'left' }}>{product.name}</Table.Cell>
             </Table.Column>
             <Table.Column style={{ width: columnWidths[1] }}>
-              <Table.Cell>{product.edin}</Table.Cell>
+              <Table.Cell style={{ fontSize: 6 }}>{product.edin}</Table.Cell>
             </Table.Column>
             <Table.Column style={{ width: columnWidths[2] }}>
               <Table.Cell>{formatNumber(product.kol, 0)}</Table.Cell>

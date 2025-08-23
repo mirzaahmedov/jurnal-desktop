@@ -66,6 +66,7 @@
   "director": "Руководитель",
   "main_accountant": "Глав Бухгалтер",
   "sum": "сўм",
+  "penny": "тийин",
   "balance": "Баланс",
   "tax": "Налог",
   "porucheniya": "Поручения",
@@ -545,5 +546,8 @@
   "note": "Примечание",
   "received_by": "Получил",
   "released_by": "Отпустил",
-  "other_vedemost": "Другие ведомости"
+  "other_vedemost": "Другие ведомости",
+  "article": "Статья",
+  "avans_report": "Авансовый отчёты",
+  "report_sum_send_and_received": "Отчет был передан и принят на эту сумму."
 }

@@ -15,25 +15,27 @@ export const Signatures: FC<{
 
   return (
     <View style={{ marginTop: 20 }}>
-      {podpis.map((p) => (
-        <View
-          key={p.id}
-          style={styles.signatureContainer}
-        >
-          <View>
-            <Text>
-              {i18n.language === 'uz'
-                ? p.doljnost_name
-                : transliterator.textToCyrillic(p.doljnost_name)}
-            </Text>
+      {podpis
+        ?.sort((a, b) => a.numeric_poryadok - b.numeric_poryadok)
+        ?.map((p) => (
+          <View
+            key={p.id}
+            style={styles.signatureContainer}
+          >
+            <View>
+              <Text>
+                {i18n.language === 'uz'
+                  ? p.doljnost_name
+                  : transliterator.textToCyrillic(p.doljnost_name)}
+              </Text>
+            </View>
+            <View>
+              <Text style={{ fontWeight: 'bold', textAlign: 'right' }}>
+                {i18n.language === 'uz' ? p.fio_name : transliterator.textToCyrillic(p.fio_name)}
+              </Text>
+            </View>
           </View>
-          <View>
-            <Text style={{ fontWeight: 'bold', textAlign: 'right' }}>
-              {i18n.language === 'uz' ? p.fio_name : transliterator.textToCyrillic(p.fio_name)}
-            </Text>
-          </View>
-        </View>
-      ))}
+        ))}
 
       <View style={styles.signatureContainer}>
         <View style={styles.blankWrapper}>

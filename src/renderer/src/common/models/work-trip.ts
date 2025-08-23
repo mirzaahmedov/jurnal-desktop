@@ -19,6 +19,7 @@ export interface WorkTrip {
   childs: WorkTripChild[]
 }
 export interface WorkTripChild {
+  id: number
   schet_id: number
   schet: Operatsii
   summa: number

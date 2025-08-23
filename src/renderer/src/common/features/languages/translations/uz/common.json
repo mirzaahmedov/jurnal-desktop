@@ -66,6 +66,7 @@
   "director": "Rahbar",
   "main_accountant": "Bosh hisobchi",
   "sum": "soʻm",
+  "penny": "tiyin",
   "balance": "Balans",
   "tax": "Soliq",
   "porucheniya": "Porucheniya",
@@ -544,5 +545,8 @@
   "note": "Izoh",
   "received_by": "Qabul qildi",
   "released_by": "Berdi",
-  "other_vedemost": "Boshqa vedemostlar"
+  "other_vedemost": "Boshqa vedemostlar",
+  "article": "Modda",
+  "avans_report": "Boʻnak hisoboti",
+  "report_sum_send_and_received": "Hisobot ushbu summaga oʻtkazildi va qabul qilindi"
 }

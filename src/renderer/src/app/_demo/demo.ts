@@ -1,3 +1,5 @@
+import { TypeSchetOperatsii } from '@/common/models'
+
 export const workTrip = {
   id: 9,
   user_id: 44,
@@ -47,7 +49,7 @@ export const workTrip = {
         name: 'Xizmat safari puli',
         schet: '231',
         sub_schet: '411221',
-        type_schet: 'work_trip',
+        type_schet: TypeSchetOperatsii.WORK_TRIP,
         smeta_id: null,
         created_at: '2028-06-26T15:28:36.430166',
         updated_at: '2028-06-26T15:28:36.430166',

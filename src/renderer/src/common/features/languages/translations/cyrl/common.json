@@ -66,6 +66,7 @@
   "director": "Раҳбар",
   "main_accountant": "Бош ҳисобчи",
   "sum": "сўм",
+  "penny": "тийин",
   "balance": "Баланс",
   "tax": "Солиқ",
   "porucheniya": "Поручения",
@@ -545,5 +546,8 @@
   "note": "Изоҳ",
   "received_by": "Қабул қилди",
   "released_by": "Берди",
-  "other_vedemost": "Бошқа ведемостлар"
+  "other_vedemost": "Бошқа ведемостлар",
+  "article": "Модда",
+  "avans_report": "Бўнак ҳисоботи",
+  "report_sum_send_and_received": "Ҳисобот ушбу суммага ўтказилди ва қабул қилинди"
 }
