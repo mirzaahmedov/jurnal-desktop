@@ -5,7 +5,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { type MonthValue, SaldoUpdateManager } from '@/common/features/saldo'
 
 import { IznosQueryKeys } from '../../iznos/config'
-import { SaldoQueryKeys } from '../config'
+import { MaterialSaldoQueryKeys } from '../config'
 import { MaterialSaldoService } from '../service'
 import { useMaterialSaldo } from '../use-saldo'
 
@@ -21,7 +21,7 @@ export const MaterialWarehouseSaldoUpdateManager = () => {
     isPending,
     error
   } = useMutation({
-    mutationKey: [SaldoQueryKeys.create],
+    mutationKey: [MaterialSaldoQueryKeys.create],
     mutationFn: MaterialSaldoService.create,
     onSuccess(_, values) {
       const newQueue = dequeueMonth(values)
@@ -32,7 +32,7 @@ export const MaterialWarehouseSaldoUpdateManager = () => {
       }
 
       queryClient.invalidateQueries({
-        queryKey: [SaldoQueryKeys.getAll]
+        queryKey: [MaterialSaldoQueryKeys.getAll]
       })
       queryClient.invalidateQueries({
         queryKey: [IznosQueryKeys.getAll]

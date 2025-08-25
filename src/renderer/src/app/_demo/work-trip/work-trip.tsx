@@ -18,8 +18,9 @@ export const WorkTripReport: FC<{
   workerFIO: string
   podpis: Podpis[]
   roads: WorkTripRoad[]
+  year: number
 }> = (props) => {
-  const { provodki, regionName, workerPosition, workerRank, workerFIO, podpis, roads } = props
+  const { provodki, regionName, workerPosition, workerRank, workerFIO, podpis, roads, year } = props
 
   return (
     <Document>
@@ -38,6 +39,7 @@ export const WorkTripReport: FC<{
           workerRank={workerRank}
           workerFIO={workerFIO}
           roads={roads}
+          year={year}
         />
       </Page>
     </Document>

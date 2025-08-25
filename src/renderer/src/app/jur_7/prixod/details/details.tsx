@@ -13,7 +13,7 @@ import { toast } from 'react-toastify'
 import { createShartnomaSpravochnik } from '@/app/jur_3/shartnoma'
 import { IznosQueryKeys } from '@/app/jur_7/iznos/config'
 import { createResponsibleSpravochnik } from '@/app/jur_7/responsible/service'
-import { SaldoQueryKeys } from '@/app/jur_7/saldo'
+import { MaterialSaldoQueryKeys } from '@/app/jur_7/saldo'
 import { handleOstatokExistingDocumentError, handleOstatokResponse } from '@/app/jur_7/saldo/utils'
 import { createOrganizationSpravochnik } from '@/app/region-spravochnik/organization'
 import { Form } from '@/common/components/ui/form'
@@ -97,10 +97,10 @@ const PrixodDetails = ({ id, onSuccess }: PrixodDetailsProps) => {
         queryKey: [MaterialPrixodQueryKeys.getAll]
       })
       queryClient.invalidateQueries({
-        queryKey: [SaldoQueryKeys.check]
+        queryKey: [MaterialSaldoQueryKeys.check]
       })
       queryClient.invalidateQueries({
-        queryKey: [SaldoQueryKeys.getAll]
+        queryKey: [MaterialSaldoQueryKeys.getAll]
       })
       queryClient.invalidateQueries({
         queryKey: [IznosQueryKeys.getAll]
@@ -118,10 +118,10 @@ const PrixodDetails = ({ id, onSuccess }: PrixodDetailsProps) => {
         queryKey: [MaterialPrixodQueryKeys.getAll]
       })
       queryClient.invalidateQueries({
-        queryKey: [SaldoQueryKeys.check]
+        queryKey: [MaterialSaldoQueryKeys.check]
       })
       queryClient.invalidateQueries({
-        queryKey: [SaldoQueryKeys.getAll]
+        queryKey: [MaterialSaldoQueryKeys.getAll]
       })
       queryClient.invalidateQueries({
         queryKey: [IznosQueryKeys.getAll]

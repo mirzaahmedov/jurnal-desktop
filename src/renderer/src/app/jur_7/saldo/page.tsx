@@ -3,7 +3,7 @@ import type { SaldoProduct } from '@/common/models'
 import { useEffect, useState } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { CalendarDays, CircleArrowDown, Download, Trash2 } from 'lucide-react'
+import { ArrowRightLeft, CalendarDays, CircleArrowDown, Download, Trash2 } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
@@ -32,7 +32,13 @@ import { useSelectedMonthStore } from '@/common/features/selected-month'
 import { useSpravochnik } from '@/common/features/spravochnik'
 import { useKeyUp, usePagination, useToggle } from '@/common/hooks'
 import { useLayout } from '@/common/layout'
-import { ISO_DATE_REGEX, formatDate, parseDate, validateDate } from '@/common/lib/date'
+import {
+  ISO_DATE_REGEX,
+  formatDate,
+  getFirstDayOfMonth,
+  parseDate,
+  validateDate
+} from '@/common/lib/date'
 import { formatLocaleDate, formatNumber } from '@/common/lib/format'
 import { capitalize } from '@/common/lib/string'
 import { ListView } from '@/common/views'
@@ -40,11 +46,12 @@ import { ListView } from '@/common/views'
 import { MaterialReportModal } from '../__components__/material-report-modal'
 import { IznosQueryKeys } from '../iznos/config'
 import { createResponsibleSpravochnik } from '../responsible/service'
-import { CommonWarehouseSaldoProductColumns } from './columns'
+import { CommonMaterialSaldoProductColumns } from './columns'
 import { DeleteExistingDocumentsAlert } from './components/delete-existing-document-alert'
 import { DeleteExistingSaldoAlert } from './components/delete-existing-saldo-alert'
+import { GroupTransfer } from './components/group-transfer'
 import { MonthlySaldoTrackerDialog } from './components/monthly-saldo-tracker-dialog'
-import { SaldoQueryKeys, defaultValues } from './config'
+import { MaterialSaldoQueryKeys, defaultValues } from './config'
 import { MaterialSaldoProductService, MaterialSaldoService } from './service'
 import { useMaterialSaldo } from './use-saldo'
 import {
@@ -62,8 +69,8 @@ const columns = [
     width: 160,
     renderCell: (row) => <Checkbox checked={row.iznos} />
   },
-  ...CommonWarehouseSaldoProductColumns
-] satisfies typeof CommonWarehouseSaldoProductColumns
+  ...CommonMaterialSaldoProductColumns
+] satisfies typeof CommonMaterialSaldoProductColumns
 
 const MaterialWarehouseSaldoPage = () => {
   const { startDate, endDate, setSelectedMonth } = useSelectedMonthStore()
@@ -87,6 +94,7 @@ const MaterialWarehouseSaldoPage = () => {
   const [isModifiable, setModifiable] = useState(false)
   const [search] = useSearchFilter()
 
+  const transferToggle = useToggle()
   const trackerToggle = useToggle()
   const materialToggle = useToggle()
   const queryClient = useQueryClient()
@@ -121,7 +129,7 @@ const MaterialWarehouseSaldoPage = () => {
     error: saldoError
   } = useQuery({
     queryKey: [
-      SaldoQueryKeys.getAll,
+      MaterialSaldoQueryKeys.getAll,
       {
         page: pagination.page,
         limit: pagination.limit,
@@ -139,17 +147,17 @@ const MaterialWarehouseSaldoPage = () => {
   })
 
   const { mutate: deleteMonth, isPending: isDeletingMonth } = useMutation({
-    mutationKey: [SaldoQueryKeys.deleteMonth],
+    mutationKey: [MaterialSaldoQueryKeys.deleteMonth],
     mutationFn: MaterialSaldoService.deleteMonth,
     onSuccess(res) {
       queryClient.invalidateQueries({
-        queryKey: [SaldoQueryKeys.getAll]
+        queryKey: [MaterialSaldoQueryKeys.getAll]
       })
       queryClient.invalidateQueries({
         queryKey: [IznosQueryKeys.getAll]
       })
       queryClient.invalidateQueries({
-        queryKey: [SaldoQueryKeys.check]
+        queryKey: [MaterialSaldoQueryKeys.check]
       })
       handleOstatokResponse(res)
       toast.success(res?.message)
@@ -168,17 +176,17 @@ const MaterialWarehouseSaldoPage = () => {
     }
   })
   const { mutate: deleteOne, isPending: isDeleting } = useMutation({
-    mutationKey: [SaldoQueryKeys.deleteOne],
+    mutationKey: [MaterialSaldoQueryKeys.deleteOne],
     mutationFn: MaterialSaldoService.deleteOne,
     onSuccess(res) {
       queryClient.invalidateQueries({
-        queryKey: [SaldoQueryKeys.getAll]
+        queryKey: [MaterialSaldoQueryKeys.getAll]
       })
       queryClient.invalidateQueries({
         queryKey: [IznosQueryKeys.getAll]
       })
       queryClient.invalidateQueries({
-        queryKey: [SaldoQueryKeys.check]
+        queryKey: [MaterialSaldoQueryKeys.check]
       })
       handleOstatokResponse(res)
       toast.success(res?.message)
@@ -198,17 +206,17 @@ const MaterialWarehouseSaldoPage = () => {
   })
 
   const { mutate: cleanSaldo } = useMutation({
-    mutationKey: [SaldoQueryKeys.clean],
+    mutationKey: [MaterialSaldoQueryKeys.clean],
     mutationFn: MaterialSaldoService.cleanSaldo,
     onSuccess(res) {
       queryClient.invalidateQueries({
-        queryKey: [SaldoQueryKeys.getAll]
+        queryKey: [MaterialSaldoQueryKeys.getAll]
       })
       queryClient.invalidateQueries({
         queryKey: [IznosQueryKeys.getAll]
       })
       queryClient.invalidateQueries({
-        queryKey: [SaldoQueryKeys.check]
+        queryKey: [MaterialSaldoQueryKeys.check]
       })
       toast.success(res?.message)
     }
@@ -417,13 +425,13 @@ const MaterialWarehouseSaldoPage = () => {
             }}
             onSuccess={() => {
               queryClient.invalidateQueries({
-                queryKey: [SaldoQueryKeys.getAll]
+                queryKey: [MaterialSaldoQueryKeys.getAll]
               })
               queryClient.invalidateQueries({
                 queryKey: [IznosQueryKeys.getAll]
               })
               queryClient.invalidateQueries({
-                queryKey: [SaldoQueryKeys.check]
+                queryKey: [MaterialSaldoQueryKeys.check]
               })
             }}
             onError={(error) => {
@@ -447,6 +455,13 @@ const MaterialWarehouseSaldoPage = () => {
               }
             }}
           />
+
+          <Button
+            onPress={transferToggle.open}
+            IconStart={ArrowRightLeft}
+          >
+            {t('transfer_to_new_group')}
+          </Button>
         </ButtonGroup>
       </div>
       <ListView.Content isLoading={isFetching || isDeletingMonth || isDeleting || isCheckingCreate}>
@@ -511,7 +526,7 @@ const MaterialWarehouseSaldoPage = () => {
           product={deleteExistingDocumentError.product}
           onRemove={() => {
             queryClient.invalidateQueries({
-              queryKey: [SaldoQueryKeys.getAll]
+              queryKey: [MaterialSaldoQueryKeys.getAll]
             })
           }}
         />
@@ -558,6 +573,7 @@ const MaterialWarehouseSaldoPage = () => {
         onOpenChange={materialToggle.setOpen}
         budjet_id={budjet_id!}
         main_schet_id={main_schet_id!}
+        from={formatDate(getFirstDayOfMonth(startDate))}
         to={formatDate(selectedDate!)}
         year={startDate.getFullYear()}
         month={startDate.getMonth() + 1}
@@ -570,6 +586,12 @@ const MaterialWarehouseSaldoPage = () => {
           {...pagination}
         />
       </ListView.Footer>
+
+      <GroupTransfer
+        isOpen={transferToggle.isOpen}
+        onOpenChange={transferToggle.setOpen}
+        defaultDate={startDate}
+      />
     </ListView>
   )
 }

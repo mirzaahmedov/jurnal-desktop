@@ -11,6 +11,8 @@ import { toast } from 'react-toastify'
 
 import { createSmetaSpravochnik } from '@/app/super-admin/smeta'
 import { NumericInput } from '@/common/components'
+import { FormElement } from '@/common/components/form'
+import { Checkbox } from '@/common/components/jolly/checkbox'
 import {
   DialogContent,
   DialogFooter,
@@ -123,6 +125,8 @@ export const ZarplataSpravochnikDialog = ({
     form.reset(selected)
   }, [form, selected, isOpen, typeCode])
 
+  const typeCodeValue = form.watch('typesTypeCode')
+
   return (
     <DialogTrigger
       isOpen={isOpen}
@@ -140,6 +144,26 @@ export const ZarplataSpravochnikDialog = ({
           <Form {...form}>
             <form onSubmit={onSubmit}>
               <div className="grid gap-4 py-4">
+                <FormField
+                  name="typeCode"
+                  control={form.control}
+                  render={({ field }) => (
+                    <FormItem>
+                      <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1">
+                        <FormLabel className="text-right col-span-2">{t('type_code')}</FormLabel>
+                        <FormControl>
+                          <Input
+                            className="col-span-4"
+                            type="number"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage className="text-end col-span-6" />
+                      </div>
+                    </FormItem>
+                  )}
+                />
+
                 <FormField
                   name="name"
                   control={form.control}
@@ -221,7 +245,7 @@ export const ZarplataSpravochnikDialog = ({
                   )}
                 />
 
-                {form.watch('typesTypeCode') === ZarplataSpravochnikType.Zvanie ? (
+                {typeCodeValue === ZarplataSpravochnikType.Zvanie ? (
                   <FormField
                     name="sena1"
                     control={form.control}
@@ -271,6 +295,25 @@ export const ZarplataSpravochnikDialog = ({
                     </FormItem>
                   )}
                 /> */}
+
+                {typeCodeValue === ZarplataSpravochnikType.Doljnost ? (
+                  <FormField
+                    control={form.control}
+                    name="isPoek"
+                    render={({ field }) => (
+                      <FormElement
+                        label={t('poek')}
+                        grid="2:4"
+                      >
+                        <Checkbox
+                          isSelected={field.value ?? undefined}
+                          onChange={field.onChange}
+                          onBlur={field.onBlur}
+                        />
+                      </FormElement>
+                    )}
+                  />
+                ) : null}
               </div>
               <DialogFooter>
                 <Button

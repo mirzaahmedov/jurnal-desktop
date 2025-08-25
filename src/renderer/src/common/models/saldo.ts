@@ -33,6 +33,8 @@ export interface SaldoProduct {
   month: number
   isdeleted: boolean
   type: string
+  user_id: number
+  login: string
   prixodData: Array<{
     docNum: string
     docDate: string

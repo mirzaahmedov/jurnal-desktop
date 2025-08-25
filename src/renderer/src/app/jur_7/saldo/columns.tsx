@@ -10,7 +10,7 @@ import { UserCell } from '@/common/components/table/renderers/user'
 import { Badge } from '@/common/components/ui/badge'
 import { formatLocaleDate, formatNumber } from '@/common/lib/format'
 
-export const CommonWarehouseSaldoProductColumns: ColumnDef<SaldoProduct>[] = [
+export const CommonMaterialSaldoProductColumns: ColumnDef<SaldoProduct>[] = [
   {
     key: 'name',
     minWidth: 400,

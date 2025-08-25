@@ -6,8 +6,8 @@ import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
 import { createResponsibleSpravochnik } from '@/app/jur_7/responsible/service'
-import { CommonWarehouseSaldoProductColumns } from '@/app/jur_7/saldo/columns'
-import { SaldoQueryKeys, defaultValues } from '@/app/jur_7/saldo/config'
+import { CommonMaterialSaldoProductColumns } from '@/app/jur_7/saldo/columns'
+import { MaterialSaldoQueryKeys, defaultValues } from '@/app/jur_7/saldo/config'
 import { createGroupSpravochnik } from '@/app/super-admin/group/service'
 import { ChooseSpravochnik, GenericTable } from '@/common/components'
 import { JollyDatePicker } from '@/common/components/jolly-date-picker'
@@ -44,7 +44,7 @@ const MaterialWarehouseSaldoPage = () => {
 
   const { data: saldos, isFetching } = useQuery({
     queryKey: [
-      SaldoQueryKeys.getAll,
+      MaterialSaldoQueryKeys.getAll,
       {
         page: pagination.page,
         limit: pagination.limit,
@@ -121,7 +121,7 @@ const MaterialWarehouseSaldoPage = () => {
       </div>
       <ListView.Content isLoading={isFetching}>
         <GenericTable
-          columnDefs={CommonWarehouseSaldoProductColumns}
+          columnDefs={CommonMaterialSaldoProductColumns}
           data={saldos?.data ?? []}
           getRowId={(row) => row.product_id}
           getRowKey={(row) => row.id}

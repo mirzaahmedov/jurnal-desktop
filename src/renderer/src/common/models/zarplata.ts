@@ -12,6 +12,7 @@ export namespace Zarplata {
     sena2: any
     schet: any
     subSchet: any
+    isPoek: boolean
   }
   export interface SpravochnikType {
     id: number

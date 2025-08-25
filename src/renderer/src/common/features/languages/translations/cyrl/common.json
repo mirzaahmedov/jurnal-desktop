@@ -549,5 +549,9 @@
   "other_vedemost": "Бошқа ведемостлар",
   "article": "Модда",
   "avans_report": "Бўнак ҳисоботи",
-  "report_sum_send_and_received": "Ҳисобот ушбу суммага ўтказилди ва қабул қилинди"
+  "report_sum_send_and_received": "Ҳисобот ушбу суммага ўтказилди ва қабул қилинди",
+  "transfer_to_new_group": "Янги гуруҳга ўтказиш",
+  "type_code": "Тур коди",
+  "select_new_group": "Янги гуруҳни танлаш",
+  "taken": "Олинган"
 }

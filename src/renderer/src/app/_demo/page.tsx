@@ -1,6 +1,7 @@
 import { PDFViewer } from '@react-pdf/renderer'
 
 import { usePodpis } from '@/common/features/podpis'
+import { parseDate } from '@/common/lib/date'
 import { PodpisTypeDocument } from '@/common/models'
 
 import { useMainSchetQuery } from '../region-spravochnik/main-schet/use-main-schet-query'
@@ -22,6 +23,7 @@ const DemoPage = () => {
           workerFIO={workTrip.worker.name}
           regionName={mainSchetQuery.data?.data?.tashkilot_nomi ?? ''}
           podpis={podpis}
+          year={parseDate(workTrip.doc_date).getFullYear()}
         />
       </PDFViewer>
     </div>

@@ -8,7 +8,7 @@ import { useSelectedMonthStore } from '@/common/features/selected-month'
 import { SelectedMonth } from '@/common/layout/compoonents/selected-month'
 
 import { IznosQueryKeys } from '../../iznos/config'
-import { SaldoQueryKeys } from '../config'
+import { MaterialSaldoQueryKeys } from '../config'
 import { MaterialSaldoService } from '../service'
 import { useMaterialSaldo } from '../use-saldo'
 
@@ -32,7 +32,7 @@ export const WarehouseSaldoController = () => {
     isFetched
   } = useQuery({
     queryKey: [
-      SaldoQueryKeys.check,
+      MaterialSaldoQueryKeys.check,
       {
         year,
         month,
@@ -48,7 +48,7 @@ export const WarehouseSaldoController = () => {
   })
 
   const { mutate: createSaldo, isPending } = useMutation({
-    mutationKey: [SaldoQueryKeys.create],
+    mutationKey: [MaterialSaldoQueryKeys.create],
     mutationFn: MaterialSaldoService.create,
     onSuccess(res, values) {
       toast.success(res?.message)
@@ -56,10 +56,10 @@ export const WarehouseSaldoController = () => {
       dequeueMonth(values)
 
       queryClient.invalidateQueries({
-        queryKey: [SaldoQueryKeys.getAll]
+        queryKey: [MaterialSaldoQueryKeys.getAll]
       })
       queryClient.invalidateQueries({
-        queryKey: [SaldoQueryKeys.check]
+        queryKey: [MaterialSaldoQueryKeys.check]
       })
       queryClient.invalidateQueries({
         queryKey: [IznosQueryKeys.getAll]

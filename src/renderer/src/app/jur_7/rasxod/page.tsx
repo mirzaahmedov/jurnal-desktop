@@ -24,7 +24,7 @@ import { formatNumber } from '@/common/lib/format'
 import { ListView } from '@/common/views'
 
 import { IznosQueryKeys } from '../iznos/config'
-import { SaldoQueryKeys } from '../saldo'
+import { MaterialSaldoQueryKeys } from '../saldo'
 import { useMaterialSaldo } from '../saldo/use-saldo'
 import { rasxodColumns } from './columns'
 import { WarehouseRasxodQueryKeys } from './config'
@@ -65,10 +65,10 @@ const Jurnal7RasxodPage = () => {
           queryKey: [WarehouseRasxodQueryKeys.getAll]
         })
         queryClient.invalidateQueries({
-          queryKey: [SaldoQueryKeys.check]
+          queryKey: [MaterialSaldoQueryKeys.check]
         })
         queryClient.invalidateQueries({
-          queryKey: [SaldoQueryKeys.getAll]
+          queryKey: [MaterialSaldoQueryKeys.getAll]
         })
         queryClient.invalidateQueries({
           queryKey: [IznosQueryKeys.getAll]

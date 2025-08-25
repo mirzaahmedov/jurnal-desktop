@@ -27,8 +27,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/common/components/ui
 import { useRequisitesStore } from '@/common/features/requisites'
 import { usePagination } from '@/common/hooks'
 
-import { CommonWarehouseSaldoProductColumns } from '../columns'
-import { SaldoQueryKeys } from '../config'
+import { CommonMaterialSaldoProductColumns } from '../columns'
+import { MaterialSaldoQueryKeys } from '../config'
 import { MaterialSaldoProductService } from '../service'
 
 const columns = [
@@ -37,8 +37,8 @@ const columns = [
     renderCell: IDCell,
     width: 160
   },
-  ...CommonWarehouseSaldoProductColumns
-] satisfies typeof CommonWarehouseSaldoProductColumns
+  ...CommonMaterialSaldoProductColumns
+] satisfies typeof CommonMaterialSaldoProductColumns
 
 enum TabOption {
   ALL = 'ALL',
@@ -70,7 +70,7 @@ export const SaldoProductSpravochnikDialog = ({
 
   const { data: products, isFetching } = useQuery({
     queryKey: [
-      SaldoQueryKeys.getAll,
+      MaterialSaldoQueryKeys.getAll,
       {
         to,
         page: pagination.page,
@@ -133,7 +133,7 @@ export const SaldoProductSpravochnikDialog = ({
               {isFetching ? <LoadingOverlay /> : null}
               <div className="flex-1 overflow-auto scrollbar">
                 <GenericTable
-                  columnDefs={CommonWarehouseSaldoProductColumns}
+                  columnDefs={CommonMaterialSaldoProductColumns}
                   data={selectedRows ?? []}
                   getRowId={(row) => row.product_id}
                   onDelete={(organization) => {

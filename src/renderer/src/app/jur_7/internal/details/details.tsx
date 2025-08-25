@@ -9,7 +9,7 @@ import { toast } from 'react-toastify'
 
 import { IznosQueryKeys } from '@/app/jur_7/iznos/config'
 import { createResponsibleSpravochnik } from '@/app/jur_7/responsible/service'
-import { SaldoQueryKeys } from '@/app/jur_7/saldo'
+import { MaterialSaldoQueryKeys } from '@/app/jur_7/saldo'
 import { handleOstatokResponse } from '@/app/jur_7/saldo/utils'
 import { Form } from '@/common/components/ui/form'
 import { DocumentType } from '@/common/features/doc-num'
@@ -78,10 +78,10 @@ const InternalDetails = ({ id, onSuccess: onSuccess }: InternalDetailsProps) => 
       })
 
       queryClient.invalidateQueries({
-        queryKey: [SaldoQueryKeys.check]
+        queryKey: [MaterialSaldoQueryKeys.check]
       })
       queryClient.invalidateQueries({
-        queryKey: [SaldoQueryKeys.getAll]
+        queryKey: [MaterialSaldoQueryKeys.getAll]
       })
       queryClient.invalidateQueries({
         queryKey: [IznosQueryKeys.getAll]
@@ -100,10 +100,10 @@ const InternalDetails = ({ id, onSuccess: onSuccess }: InternalDetailsProps) => 
       })
 
       queryClient.invalidateQueries({
-        queryKey: [SaldoQueryKeys.check]
+        queryKey: [MaterialSaldoQueryKeys.check]
       })
       queryClient.invalidateQueries({
-        queryKey: [SaldoQueryKeys.getAll]
+        queryKey: [MaterialSaldoQueryKeys.getAll]
       })
       queryClient.invalidateQueries({
         queryKey: [IznosQueryKeys.getAll]

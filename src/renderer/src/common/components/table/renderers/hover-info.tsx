@@ -24,7 +24,7 @@ export const HoverInfoCell = ({
 }: HoverInfoCellProps) => {
   return (
     <TooltipTrigger delay={100}>
-      <Pressable>
+      <Pressable onPress={(e) => e.continuePropagation()}>
         <div {...props}>
           <h6
             {...titleProps}
@@ -48,6 +48,7 @@ export const HoverInfoCell = ({
       {tooltipContent ? (
         <Tooltip
           {...tooltipProps}
+          crossOffset={0}
           className={cn('bg-white shadow-xl p-5 min-w-96 max-w-2xl', tooltipProps.className)}
         >
           {tooltipContent}

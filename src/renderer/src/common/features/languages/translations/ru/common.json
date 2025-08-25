@@ -549,5 +549,9 @@
   "other_vedemost": "Другие ведомости",
   "article": "Статья",
   "avans_report": "Авансовый отчёты",
-  "report_sum_send_and_received": "Отчет был передан и принят на эту сумму."
+  "report_sum_send_and_received": "Отчет был передан и принят на эту сумму.",
+  "transfer_to_new_group": "Перевод в новую группу",
+  "type_code": "Код типа",
+  "select_new_group": "Выберите новую группу",
+  "taken": "Полученный"
 }

@@ -1,3 +1,4 @@
+import type { ZarplataSpravochnikFormValues, ZarplataSpravochnikType } from './config'
 import type { SpravochnikHookOptions } from '@/common/features/spravochnik'
 import type { ApiResponse, Zarplata } from '@/common/models'
 import type { QueryFunctionContext } from '@tanstack/react-query'
@@ -8,8 +9,7 @@ import { extendObject } from '@/common/lib/utils'
 import { getMultiApiResponse, getSingleApiResponse } from '@/common/lib/zarplata'
 import { type ZarplataApiResponse, zarplataApiNew } from '@/common/lib/zarplata_new'
 
-import { ZarplataSpravochnikDialogColumnDefs, ZarplataSpravochnikZvanieColumnDefs } from './columns'
-import { type ZarplataSpravochnikFormValues, ZarplataSpravochnikType } from './config'
+import { getZarplataSpravochnikDialogColumnDefs } from './columns'
 
 export class ZarplataSpravochnikService {
   static Endpoint = ApiEndpoints.zarplata_spravochnik
@@ -102,10 +102,9 @@ export const createZarplataSpravochnik = (
   return extendObject(
     {
       endpoint: ApiEndpoints.zarplata_spravochnik,
-      columnDefs:
-        config.params?.types_type_code === ZarplataSpravochnikType.Zvanie
-          ? ZarplataSpravochnikZvanieColumnDefs
-          : ZarplataSpravochnikDialogColumnDefs,
+      columnDefs: getZarplataSpravochnikDialogColumnDefs(
+        config.params?.types_type_code as ZarplataSpravochnikType
+      ),
       service: ZarplataSpravochnikService,
       filters: [SpravochnikSearchField]
     } satisfies typeof config,

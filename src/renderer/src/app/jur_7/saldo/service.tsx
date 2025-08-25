@@ -47,6 +47,7 @@ class MaterialSaldoServiceBuilder extends CRUDService<never, SaldoFormValues> {
     this.checkSaldo = this.checkSaldo.bind(this)
     this.checkCreate = this.checkCreate.bind(this)
     this.getMonthlySaldo = this.getMonthlySaldo.bind(this)
+    this.transferProducts = this.transferProducts.bind(this)
   }
 
   async checkCreate(values: { main_schet_id: number; year: number; month: number }) {
@@ -165,6 +166,20 @@ class MaterialSaldoServiceBuilder extends CRUDService<never, SaldoFormValues> {
           main_schet_id
         }
       }
+    )
+    return res.data
+  }
+
+  async transferProducts(values: {
+    data: Array<{
+      product_id: number
+      old_group_id: number
+      new_group_id: number
+    }>
+  }) {
+    const res = await this.client.put<ApiResponse<boolean>>(
+      `${this.endpoint}/transfer-group`,
+      values
     )
     return res.data
   }

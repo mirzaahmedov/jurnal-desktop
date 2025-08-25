@@ -34,7 +34,7 @@ import { formatNumber } from '@/common/lib/format'
 import { ListView } from '@/common/views'
 
 import { IznosQueryKeys } from '../iznos/config'
-import { SaldoQueryKeys } from '../saldo'
+import { MaterialSaldoQueryKeys } from '../saldo'
 import { useMaterialSaldo } from '../saldo/use-saldo'
 import { prixodColumns } from './columns'
 import { MaterialPrixodQueryKeys } from './config'
@@ -80,10 +80,10 @@ const WarehousePrixodPage = () => {
           queryKey: [MaterialPrixodQueryKeys.getAll]
         })
         queryClient.invalidateQueries({
-          queryKey: [SaldoQueryKeys.check]
+          queryKey: [MaterialSaldoQueryKeys.check]
         })
         queryClient.invalidateQueries({
-          queryKey: [SaldoQueryKeys.getAll]
+          queryKey: [MaterialSaldoQueryKeys.getAll]
         })
         queryClient.invalidateQueries({
           queryKey: [IznosQueryKeys.getAll]

@@ -17,7 +17,7 @@ import { useRequisitesStore } from '@/common/features/requisites'
 import { MonthlySaldoTracker } from '@/common/features/saldo'
 import { useSelectedMonthStore } from '@/common/features/selected-month'
 
-import { SaldoQueryKeys } from '../config'
+import { MaterialSaldoQueryKeys } from '../config'
 import { MaterialSaldoService } from '../service'
 
 export interface MonthlySaldoTrackerDialogProps extends Omit<DialogTriggerProps, 'children'> {
@@ -35,7 +35,7 @@ export const MonthlySaldoTrackerDialog = ({
   const { t } = useTranslation()
   const { data: saldoMonths, isFetching } = useQuery({
     queryKey: [
-      SaldoQueryKeys.getMonthlySaldo,
+      MaterialSaldoQueryKeys.getMonthlySaldo,
       {
         year: year,
         budjet_id: budjet_id!,

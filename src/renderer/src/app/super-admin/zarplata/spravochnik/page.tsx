@@ -14,7 +14,7 @@ import { useLayout } from '@/common/layout'
 import { queryClient } from '@/common/lib/query-client'
 import { ListView } from '@/common/views'
 
-import { ZarplataSpravochnikColumnDefs } from './columns'
+import { getZarplataSpravochnikColumnDefs } from './columns'
 import { ZarplataSpravochnikDialog } from './dialog'
 import { SpravochnikFilters, useTypeFilter } from './filters'
 import { ZarplataSpravochnikService } from './service'
@@ -94,7 +94,7 @@ const ZarplataSpravochnikPage = () => {
       <ListView.Content isLoading={isFetching || isPending}>
         <GenericTable
           data={spravochniks?.data ?? []}
-          columnDefs={ZarplataSpravochnikColumnDefs}
+          columnDefs={getZarplataSpravochnikColumnDefs(typeCode!)}
           onEdit={handleEdit}
           onDelete={handleDelete}
         />

@@ -1,7 +1,7 @@
 import type { AlimentDeductionFormValues } from './config'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 
-import { http } from '@/common/lib/http'
+import { zarplataApiNew } from '@/common/lib/zarplata_new'
 
 export class AlimentDeductionService {
   static endpoint = 'AlimentDeduction'
@@ -17,7 +17,7 @@ export class AlimentDeductionService {
     >
   ) {
     const { mainId } = ctx.queryKey[1]
-    const res = await http.get(AlimentDeductionService.endpoint, {
+    const res = await zarplataApiNew.get(AlimentDeductionService.endpoint, {
       params: {
         mainId
       }
@@ -26,23 +26,23 @@ export class AlimentDeductionService {
   }
 
   static async getById(id: number) {
-    const res = await http.get(`${AlimentDeductionService.endpoint}/${id}`)
+    const res = await zarplataApiNew.get(`${AlimentDeductionService.endpoint}/${id}`)
     return res.data
   }
 
   static async create(values: AlimentDeductionFormValues) {
-    const res = await http.post(AlimentDeductionService.endpoint, values)
+    const res = await zarplataApiNew.post(AlimentDeductionService.endpoint, values)
     return res.data
   }
 
   static async update(args: { id: number; values: AlimentDeductionFormValues }) {
     const { id, values } = args
-    const res = await http.put(`${AlimentDeductionService.endpoint}/${id}`, values)
+    const res = await zarplataApiNew.put(`${AlimentDeductionService.endpoint}/${id}`, values)
     return res.data
   }
 
   static async delete(id: number) {
-    const res = await http.delete(`${AlimentDeductionService.endpoint}/${id}`)
+    const res = await zarplataApiNew.delete(`${AlimentDeductionService.endpoint}/${id}`)
     return res.data
   }
 }
