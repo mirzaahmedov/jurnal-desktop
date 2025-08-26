@@ -8,17 +8,17 @@ export const WorkTripChildSchema = z.object({
 
 export const WorkTripRoadSchema = z.object({
   road_ticket_number: z.string().optional(),
-  from_region_id: z.number().min(1),
-  to_region_id: z.number().min(1),
+  from_region_id: z.number(),
+  to_region_id: z.number(),
   km: z.number(),
-  road_summa: z.number().min(1)
+  road_summa: z.number()
 })
 
 export const WorkTripHotelSchema = z.object({
-  hostel_ticket_number: z.string().nonempty(),
-  day: z.number().min(1),
-  day_summa: z.number().min(1),
-  hostel_summa: z.number().min(1)
+  hostel_ticket_number: z.string(),
+  day: z.number(),
+  day_summa: z.number(),
+  hostel_summa: z.number()
 })
 
 export const WorkTripFormSchema = z.object({
@@ -34,8 +34,18 @@ export const WorkTripFormSchema = z.object({
   comment: z.string(),
   worker_id: z.number().min(1),
   childs: z.array(WorkTripChildSchema),
-  road: z.array(WorkTripRoadSchema),
-  hotel: z.array(WorkTripHotelSchema)
+  road: z.array(WorkTripRoadSchema).transform((roads) => {
+    if (roads.length < 2 && !roads[0].road_summa) {
+      return []
+    }
+    return roads
+  }),
+  hotel: z.array(WorkTripHotelSchema).transform((hotels) => {
+    if (hotels.length < 2 && !hotels[0].hostel_summa) {
+      return []
+    }
+    return hotels
+  })
 })
 
 export type WorkTripFormValues = z.infer<typeof WorkTripFormSchema>
