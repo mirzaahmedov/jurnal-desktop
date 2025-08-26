@@ -30,7 +30,12 @@ export const ShartnomaFields: FormSpravochnikFieldsComponent<
 
   const selected = spravochnikProps.selected
   useEffect(() => {
-    if (!selected || selected.grafiks?.find((item) => item.id === grafikId)) {
+    if (!selected) {
+      return
+    }
+
+    if (selected.grafiks?.find((item) => item.id === grafikId)) {
+      onGrafikSelected?.(grafikId!)
       return
     }
 
