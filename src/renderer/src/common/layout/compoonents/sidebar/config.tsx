@@ -367,7 +367,7 @@ export const getNavElements = (t: TFunction): INavElement[] => {
       ? {
           icon: NotepadText,
           path: '/jur_8',
-          title: t('pages.jur_8_old').toLowerCase(),
+          title: t('pages.jur_8_old'),
           children: [
             {
               icon: SquareActivity,

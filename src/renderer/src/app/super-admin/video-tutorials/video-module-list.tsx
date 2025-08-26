@@ -142,7 +142,7 @@ export const VideoModuleList = ({
                 <li
                   key={videoModule.id}
                   className={cn(
-                    'flex items-center gap-3 h-11 px-4 m-1.5 cursor-pointer hover:bg-slate-50 text-slate-600 transition-colors rounded-md',
+                    'flex items-center gap-3 px-4 py-2 m-1.5 cursor-pointer hover:bg-slate-50 text-slate-600 transition-colors rounded-md',
                     selectedId === videoModule.id && 'text-brand bg-brand/5 hover:bg-brand/5'
                   )}
                   onClick={() => onSelect?.(videoModule)}
@@ -161,6 +161,7 @@ export const VideoModuleList = ({
                           variant="ghost"
                           size="icon"
                           disabled={isDeletingVideoModule}
+                          className="-my-2"
                         >
                           <Ellipsis className="btn-icon" />
                         </Button>
