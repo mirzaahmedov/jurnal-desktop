@@ -22,6 +22,7 @@ export const WorkTripHotelSchema = z.object({
 })
 
 export const WorkTripFormSchema = z.object({
+  minimum_wage_id: z.number().min(1),
   doc_num: z.string().nonempty(),
   doc_date: z.string().nonempty(),
   from_date: z.string().nonempty(),
@@ -46,6 +47,7 @@ export const WorkTripQueryKeys = {
 }
 
 export const defaultValues: WorkTripFormValues = {
+  minimum_wage_id: 0,
   doc_num: '',
   doc_date: '',
   from_date: '',

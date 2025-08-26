@@ -21,8 +21,8 @@ const MinimumWagePage = () => {
   const { t } = useTranslation(['app'])
 
   const { data: minimumWage, isFetching } = useQuery({
-    queryKey: [MinimumWageService.QueryKeys.GetWage],
-    queryFn: MinimumWageService.getWage
+    queryKey: [MinimumWageService.QueryKeys.GetAll],
+    queryFn: MinimumWageService.getAll
   })
 
   useEffect(() => {
@@ -43,7 +43,7 @@ const MinimumWagePage = () => {
     <ListView>
       <ListView.Content isLoading={isFetching}>
         <GenericTable
-          data={minimumWage?.data ? [minimumWage?.data] : []}
+          data={minimumWage?.data ?? []}
           columnDefs={columnDefs}
           onEdit={(row) => {
             setSelected(row)

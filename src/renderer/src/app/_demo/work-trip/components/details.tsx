@@ -95,7 +95,12 @@ export const Details: FC<{
         <Text>хужжат илова қилинади.</Text>
       </View>
 
-      <View style={[styles.flexRow, { marginTop: 10, alignItems: 'flex-start' }]}>
+      <View
+        style={[
+          styles.flexRow,
+          { marginTop: 10, alignItems: 'flex-start', justifyContent: 'space-between' }
+        ]}
+      >
         <View style={[styles.flexRow, { gap: 1 }]}>
           <Text>&quot;</Text>
           <Text style={styles.blank}>{' '.repeat(8)}</Text>
@@ -104,9 +109,9 @@ export const Details: FC<{
         </View>
 
         <Text style={styles.boldValue}>{year}</Text>
-        <View style={{ flex: 1 }}>
-          <Text style={[styles.blank, { width: '100%' }]}>{' '.repeat(8)}</Text>
-          <Text style={styles.subText}>(хисобдор шахснинг имзоси)</Text>
+        <View>
+          <Text style={[styles.blank, { width: 230 }]}>{' '.repeat(8)}</Text>
+          <Text style={[styles.subText, { width: 230 }]}>(хисобдор шахснинг имзоси)</Text>
         </View>
       </View>
 
@@ -129,6 +134,30 @@ export const Details: FC<{
           <Text style={styles.blank}>{' '.repeat(40)}</Text>
         </View>
 
+        <Text style={styles.boldValue}>{year}</Text>
+
+        <View style={[styles.flexRow, { gap: 1 }]}>
+          <Text style={styles.blank}>{' '.repeat(12)}</Text>
+          <Text>сонли кирим ордери билан</Text>
+        </View>
+
+        <View style={{ flex: 1 }}>
+          <Text style={[styles.blank, { width: '100%' }]}>{' '.repeat(8)}</Text>
+          <Text style={[styles.subText, { width: '100%' }]}>(газначининг имзоси)</Text>
+        </View>
+      </View>
+      <View style={[styles.flexRow, { marginTop: 10, alignItems: 'flex-start' }]}>
+        <Text>Охирги хисоб китобга</Text>
+
+        <View style={{ flex: 1 }}>
+          <Text style={[styles.boldValue, { textAlign: 'center' }]}>
+            Бир юз кирк етти минг беш юз
+          </Text>
+          <View style={[styles.divider, { width: '100%' }]}></View>
+          <Text style={styles.subText}>(ёзма ҳолда)</Text>
+        </View>
+      </View>
+      <View style={[styles.flexRow, { marginTop: 10, alignItems: 'flex-start' }]}>
         <View style={[styles.flexRow, { gap: 1 }]}>
           <Text>&quot;</Text>
           <Text style={styles.blank}>{' '.repeat(8)}</Text>
@@ -137,10 +166,6 @@ export const Details: FC<{
         </View>
 
         <Text style={styles.boldValue}>{year}</Text>
-        <View style={{ flex: 1 }}>
-          <Text style={[styles.blank, { width: '100%' }]}>{' '.repeat(8)}</Text>
-          <Text style={styles.subText}>(хисобдор шахснинг имзоси)</Text>
-        </View>
       </View>
     </>
   )

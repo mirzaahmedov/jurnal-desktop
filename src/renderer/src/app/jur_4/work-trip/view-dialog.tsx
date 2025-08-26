@@ -69,8 +69,8 @@ export const WorkTripViewDialog = ({ selectedId, onClose }: WorkTripViewDialogPr
     enabled: !!selectedId
   })
   const minimumWageQuery = useQuery({
-    queryKey: [MinimumWageService.QueryKeys.GetWage],
-    queryFn: MinimumWageService.getWage
+    queryKey: [MinimumWageService.QueryKeys.GetAll],
+    queryFn: MinimumWageService.getAll
   })
 
   const mainSchet = mainSchetQuery?.data?.data

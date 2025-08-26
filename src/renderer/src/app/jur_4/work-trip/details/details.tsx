@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
@@ -14,6 +14,7 @@ import { Fieldset, NumericInput } from '@/common/components'
 import { EditableTable } from '@/common/components/editable-table'
 import { FormElement } from '@/common/components/form'
 import { JollyDatePicker } from '@/common/components/jolly-date-picker'
+import { JollySelect, SelectItem } from '@/common/components/jolly/select'
 import { Form, FormField } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
 import { Textarea } from '@/common/components/ui/textarea'
@@ -43,6 +44,8 @@ export interface WorkTripDetailsProps {
 export const WorkTripDetails = ({ id }: WorkTripDetailsProps) => {
   const queryClient = useQueryClient()
   const navigate = useNavigate()
+
+  const [minimumWageSumma, setMinimumWageSumma] = useState<number>(0)
 
   const { startDate, endDate } = useSelectedMonthStore()
 
@@ -105,10 +108,11 @@ export const WorkTripDetails = ({ id }: WorkTripDetailsProps) => {
     queryFn: WorkTripService.getById,
     enabled: id !== 'create'
   })
-  const { data: minimumWage, isFetching: isFetchingMinimumWage } = useQuery({
-    queryKey: [MinimumWageService.QueryKeys.GetWage],
-    queryFn: MinimumWageService.getWage
+  const minimumWagesQuery = useQuery({
+    queryKey: [MinimumWageService.QueryKeys.GetAll],
+    queryFn: MinimumWageService.getAll
   })
+  const minimumWageQueryData = minimumWagesQuery.data?.data ?? []
 
   const { data: operatsii } = useQuery({
     queryKey: [
@@ -172,7 +176,6 @@ export const WorkTripDetails = ({ id }: WorkTripDetailsProps) => {
     }
   }, [form, startDate])
 
-  const minimumWageSumma = minimumWage?.data?.summa ?? 0
   const daysCount =
     form.watch('from_date') && form.watch('to_date')
       ? getWorkdaysInPeriod(parseDate(form.watch('from_date')), parseDate(form.watch('to_date')))
@@ -246,9 +249,25 @@ export const WorkTripDetails = ({ id }: WorkTripDetailsProps) => {
     }
   }, [hotels])
 
+  const minimumWageId = form.watch('minimum_wage_id')
+  useEffect(() => {
+    if (!Array.isArray(minimumWageQueryData) || minimumWageQueryData.length === 0) {
+      return
+    }
+    if (minimumWageId) {
+      const currentWage = minimumWageQueryData.find((item) => item.id === minimumWageId)
+      setMinimumWageSumma(currentWage?.summa ?? 0)
+      form.setValue('minimum_wage_id', currentWage?.id ?? 0)
+    } else {
+      const currentWage = minimumWageQueryData[minimumWageQueryData.length - 1]
+      setMinimumWageSumma(currentWage.summa)
+      form.setValue('minimum_wage_id', currentWage.id)
+    }
+  }, [form, minimumWageQueryData, minimumWageId])
+
   return (
     <DetailsView>
-      <DetailsView.Content isLoading={isFetching || isFetchingMinimumWage}>
+      <DetailsView.Content isLoading={isFetching || minimumWagesQuery.isFetching}>
         <Form {...form}>
           <form onSubmit={handleSubmit}>
             <div className="divide-y">
@@ -273,9 +292,27 @@ export const WorkTripDetails = ({ id }: WorkTripDetailsProps) => {
                   label={t('pages.bhm')}
                   className="mb-7 mx-5"
                 >
-                  <Input
-                    readOnly
-                    value={formatNumber(minimumWageSumma)}
+                  <FormField
+                    control={form.control}
+                    name="minimum_wage_id"
+                    render={({ field }) => (
+                      <JollySelect
+                        items={minimumWageQueryData}
+                        selectedKey={field.value}
+                        onSelectionChange={(value) => {
+                          field.onChange(value)
+                          const currentWage = minimumWageQueryData.find((item) => item.id === value)
+                          if (currentWage) {
+                            setMinimumWageSumma(currentWage.summa)
+                          }
+                        }}
+                        onBlur={field.onBlur}
+                        inputRef={field.ref}
+                        className="w-48"
+                      >
+                        {(item) => <SelectItem id={item.id}>{formatNumber(item.summa)}</SelectItem>}
+                      </JollySelect>
+                    )}
                   />
                 </FormElement>
               </div>

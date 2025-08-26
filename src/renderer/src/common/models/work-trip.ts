@@ -2,6 +2,7 @@ import type { Operatsii } from './operatsii'
 
 export interface WorkTrip {
   id: number
+  minimum_wage_id: number
   doc_num: string
   doc_date: string
   from_date: string

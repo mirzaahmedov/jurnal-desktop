@@ -34,7 +34,7 @@ export const MinimumWageEditModal = ({ selected, ...props }: MinimumWageEditModa
     mutationFn: MinimumWageService.update,
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [MinimumWageService.QueryKeys.GetWage]
+        queryKey: [MinimumWageService.QueryKeys.GetAll]
       })
       props.onOpenChange?.(false)
     }
@@ -47,7 +47,11 @@ export const MinimumWageEditModal = ({ selected, ...props }: MinimumWageEditModa
   })
 
   const handleSubmit = form.handleSubmit((values) => {
+    if (!selected) {
+      return
+    }
     updateMinimumWage({
+      id: selected.id,
       summa: values.summa
     })
   })
