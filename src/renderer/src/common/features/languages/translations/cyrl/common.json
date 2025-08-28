@@ -555,5 +555,7 @@
   "select_new_group": "Янги гуруҳни танлаш",
   "taken": "Олинган",
   "starts": "Бошланади",
-  "replace_doljnost": "Лавозимни алмаштириш"
+  "replace_doljnost": "Лавозимни алмаштириш",
+  "podoxod": "Подоход",
+  "are_you_sure_to_calculate": "Сиз ҳақиқатан ҳам окладни ҳисоблашни хоҳлайсизми?"
 }

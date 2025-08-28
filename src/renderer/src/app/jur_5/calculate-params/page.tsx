@@ -13,7 +13,7 @@ import { usePagination, useToggle } from '@/common/hooks'
 import { useLayout } from '@/common/layout'
 import { ListView } from '@/common/views'
 
-import { columnDefs } from './colums'
+import { CalculateParamsColumnDefs } from './colums'
 import { CalculateParamsDialog } from './dialog'
 import { CalculateParamsService } from './service'
 
@@ -85,7 +85,7 @@ const CalculateParamsPage = () => {
       <ListView.Content isLoading={isFetching || isDeleting}>
         <GenericTable
           data={calcParameters?.data ?? []}
-          columnDefs={columnDefs}
+          columnDefs={CalculateParamsColumnDefs}
           onEdit={handleEdit}
           onDelete={handleDelete}
           selectedIds={calcParamsId ? [calcParamsId] : []}

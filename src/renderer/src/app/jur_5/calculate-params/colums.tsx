@@ -6,7 +6,7 @@ import { Trans } from 'react-i18next'
 import { MonthNameCell } from '@/common/components/table/renderers/month-name'
 import { SelectCell } from '@/common/components/table/renderers/select'
 
-export const columnDefs: ColumnDef<CalculateParams>[] = [
+export const CalculateParamsColumnDefs: ColumnDef<CalculateParams>[] = [
   {
     key: 'id',
     header: ' ',

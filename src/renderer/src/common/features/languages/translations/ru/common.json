@@ -555,5 +555,7 @@
   "select_new_group": "Выберите новую группу",
   "taken": "Полученный",
   "starts": "Начинается",
-  "replace_doljnost": "Заменить должность"
+  "replace_doljnost": "Заменить должность",
+  "podoxod": "Подоход",
+  "are_you_sure_to_calculate": "Вы уверены, что хотите рассчитать оклад?"
 }

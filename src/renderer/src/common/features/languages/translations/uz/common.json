@@ -554,5 +554,7 @@
   "select_new_group": "Yangi guruhni tanlash",
   "taken": "Olingan",
   "starts": "Boshlanadi",
-  "replace_doljnost": "Lavozimni almashtirish"
+  "replace_doljnost": "Lavozimni almashtirish",
+  "podoxod": "Podoxod",
+  "are_you_sure_to_calculate": "Siz haqiqatan ham okladni hisoblashni xohlaysizmi?"
 }

@@ -25,6 +25,7 @@ import { Form, FormField } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
 import { YearSelect } from '@/common/components/year-select'
 import { DownloadFile } from '@/common/features/file'
+import { useRequisitesStore } from '@/common/features/requisites'
 import { formatDate, parseDate, parseLocaleDate } from '@/common/lib/date'
 import { formatNumber } from '@/common/lib/format'
 
@@ -41,6 +42,8 @@ export const NachislenieEditDialog = ({
   ...props
 }: NachislenieEditDialogProps) => {
   const { t } = useTranslation(['app'])
+
+  const budjetId = useRequisitesStore((store) => store.budjet_id)
 
   const { data: nachislenie, isFetching } = useQuery({
     queryKey: [
@@ -156,24 +159,57 @@ export const NachislenieEditDialog = ({
                     )}
                   />
 
-                  <DownloadFile
-                    isZarplata
-                    url="Nachislenie/vedemost"
-                    params={{
-                      mainId: selectedNachislenie.id
-                    }}
-                    fileName={`zarplata_vedemost_${selectedNachislenie.docNum}.xlsx`}
-                    buttonText={t('vedemost')}
-                  />
-                  <DownloadFile
-                    isZarplata
-                    url="Excel/svod-otchet"
-                    params={{
-                      mainId: selectedNachislenie.id
-                    }}
-                    fileName={`zarplata_svod_${selectedNachislenie.docNum}.xlsx`}
-                    buttonText={t('aggregated_report')}
-                  />
+                  <div className="flex flex-wrap items-center gap-1">
+                    <DownloadFile
+                      isZarplata
+                      url="Nachislenie/vedemost"
+                      params={{
+                        mainId: selectedNachislenie.id
+                      }}
+                      fileName={`zarplata_vedemost_${selectedNachislenie.docNum}.xlsx`}
+                      buttonText={t('vedemost')}
+                    />
+                    <DownloadFile
+                      isZarplata
+                      url="Excel/svod-otchet"
+                      params={{
+                        mainId: selectedNachislenie.id
+                      }}
+                      fileName={`zarplata_svod_${selectedNachislenie.docNum}.xlsx`}
+                      buttonText={t('aggregated_report')}
+                    />
+                    <DownloadFile
+                      isZarplata
+                      url="Excel/inps-otchet"
+                      params={{
+                        spBudnameId: budjetId,
+                        year: form.watch('nachislenieYear'),
+                        month: form.watch('nachislenieMonth')
+                      }}
+                      fileName={`inps_${selectedNachislenie.docNum}.xlsx`}
+                      buttonText={t('inps')}
+                    />
+                    <DownloadFile
+                      isZarplata
+                      url="Excel/podoxod-otchet"
+                      params={{
+                        spBudnameId: budjetId,
+                        year: form.watch('nachislenieYear'),
+                        month: form.watch('nachislenieMonth')
+                      }}
+                      fileName={`podoxod_${selectedNachislenie.docNum}.xlsx`}
+                      buttonText={t('podoxod')}
+                    />
+                    <DownloadFile
+                      isZarplata
+                      url="Excel/plastik-otchet"
+                      params={{
+                        mainId: selectedNachislenie.id
+                      }}
+                      fileName={`plastik_${selectedNachislenie.docNum}.xlsx`}
+                      buttonText={t('plastik')}
+                    />
+                  </div>
                 </div>
 
                 <CollapsibleTable

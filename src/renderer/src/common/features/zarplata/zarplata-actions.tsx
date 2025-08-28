@@ -1,3 +1,5 @@
+import { useState } from 'react'
+
 import { useQuery } from '@tanstack/react-query'
 import { Calculator, Info } from 'lucide-react'
 import { Trans, useTranslation } from 'react-i18next'
@@ -13,14 +15,24 @@ import {
   DialogTrigger
 } from '@/common/components/jolly/dialog'
 import { MonthNameCell } from '@/common/components/table/renderers/month-name'
+import { Tabs, TabsList, TabsTrigger } from '@/common/components/ui/tabs'
 
 import { useRequisitesStore } from '../requisites'
 import { CalculateEmployeeSalaries } from './calculate-employee-salaries'
+import { CalculateOklad } from './calculate-oklad'
 import { useZarplataStore } from './store'
+
+enum TabOption {
+  Nachislenie = 'nachislenie',
+  Oklad = 'oklad'
+}
 
 export const ZarplataActions = () => {
   const calculateParamsId = useZarplataStore((store) => store.calculateParamsId)
   const mainSchetId = useRequisitesStore((store) => store.main_schet_id)
+
+  const [tabValue, setTabValue] = useState(TabOption.Nachislenie)
+
   const { t } = useTranslation(['app'])
 
   const { data: calcParams } = useQuery({
@@ -137,12 +149,25 @@ export const ZarplataActions = () => {
         </Button>
         <DialogOverlay>
           <DialogContent className="w-full max-w-full h-full max-h-[800px]">
-            <div className="flex flex-col gap-5">
+            <div className="flex flex-col gap-5 overflow-hidden">
               <DialogHeader>
                 <DialogTitle>{t('calculate_salary')}</DialogTitle>
+                <Tabs
+                  value={tabValue}
+                  onValueChange={(value) => setTabValue(value as TabOption)}
+                >
+                  <TabsList>
+                    <TabsTrigger value={TabOption.Nachislenie}>{t('nachislenie')}</TabsTrigger>
+                    <TabsTrigger value={TabOption.Oklad}>{t('oklad')}</TabsTrigger>
+                  </TabsList>
+                </Tabs>
               </DialogHeader>
-              <div className="flex-1 min-h-0">
-                <CalculateEmployeeSalaries />
+              <div className="w-full flex-1 min-h-0 overflow-hidden">
+                {tabValue === TabOption.Nachislenie ? (
+                  <CalculateEmployeeSalaries />
+                ) : (
+                  <CalculateOklad />
+                )}
               </div>
             </div>
           </DialogContent>
