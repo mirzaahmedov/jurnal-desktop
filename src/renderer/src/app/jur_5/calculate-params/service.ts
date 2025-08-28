@@ -71,7 +71,10 @@ export class CalculateParamsService {
   static async calculateOklad(id: number) {
     const res = await zarplataApiNew.put<{ message: string }>(
       `${CalculateParamsService.endpoint}/calculate-oklad`,
-      { id }
+      undefined,
+      {
+        params: { id }
+      }
     )
     return res.data
   }
