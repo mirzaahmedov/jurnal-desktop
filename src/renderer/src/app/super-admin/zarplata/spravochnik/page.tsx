@@ -3,10 +3,12 @@ import type { Zarplata } from '@/common/models'
 import { useEffect, useState } from 'react'
 
 import { useMutation, useQuery } from '@tanstack/react-query'
+import { RefreshCcw } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 
 import { GenericTable } from '@/common/components'
+import { Button } from '@/common/components/jolly/button'
 import { useConfirm } from '@/common/features/confirm'
 import { useSearchFilter } from '@/common/features/filters/search/search-filter-debounced'
 import { usePagination, useToggle } from '@/common/hooks'
@@ -17,6 +19,7 @@ import { ListView } from '@/common/views'
 import { getZarplataSpravochnikColumnDefs } from './columns'
 import { ZarplataSpravochnikDialog } from './dialog'
 import { SpravochnikFilters, useTypeFilter } from './filters'
+import { ReplaceDoljnostDialog } from './replace-doljnost-dialog'
 import { ZarplataSpravochnikService } from './service'
 
 const { QueryKeys } = ZarplataSpravochnikService
@@ -30,6 +33,7 @@ const ZarplataSpravochnikPage = () => {
 
   const pagination = usePagination()
   const dialogToggle = useToggle()
+  const replaceDoljnostToggle = useToggle()
   const setLayout = useLayout()
 
   const { confirm } = useConfirm()
@@ -91,6 +95,14 @@ const ZarplataSpravochnikPage = () => {
 
   return (
     <ListView>
+      <ListView.Header>
+        <Button
+          IconStart={RefreshCcw}
+          onPress={replaceDoljnostToggle.open}
+        >
+          {t('replace_doljnost')}
+        </Button>
+      </ListView.Header>
       <ListView.Content isLoading={isFetching || isPending}>
         <GenericTable
           data={spravochniks?.data ?? []}
@@ -110,6 +122,10 @@ const ZarplataSpravochnikPage = () => {
         selected={selected}
         isOpen={dialogToggle.isOpen}
         onOpenChange={dialogToggle.setOpen}
+      />
+      <ReplaceDoljnostDialog
+        isOpen={replaceDoljnostToggle.isOpen}
+        onOpenChange={replaceDoljnostToggle.setOpen}
       />
     </ListView>
   )

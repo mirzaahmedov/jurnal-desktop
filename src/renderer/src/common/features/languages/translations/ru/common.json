@@ -553,5 +553,7 @@
   "transfer_to_new_group": "Перевод в новую группу",
   "type_code": "Код типа",
   "select_new_group": "Выберите новую группу",
-  "taken": "Полученный"
+  "taken": "Полученный",
+  "starts": "Начинается",
+  "replace_doljnost": "Заменить должность"
 }

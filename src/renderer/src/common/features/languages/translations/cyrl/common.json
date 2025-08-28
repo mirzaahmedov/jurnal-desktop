@@ -553,5 +553,7 @@
   "transfer_to_new_group": "Янги гуруҳга ўтказиш",
   "type_code": "Тур коди",
   "select_new_group": "Янги гуруҳни танлаш",
-  "taken": "Олинган"
+  "taken": "Олинган",
+  "starts": "Бошланади",
+  "replace_doljnost": "Лавозимни алмаштириш"
 }

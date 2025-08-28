@@ -94,6 +94,19 @@ export class ZarplataSpravochnikService {
     )
     return res.data
   }
+
+  static async replaceDoljnost({ fromIds, toId }: { fromIds: number[]; toId: number }) {
+    const res = await zarplataApiNew.put<void>(
+      `${ZarplataSpravochnikService.Endpoint}/replace-doljnost`,
+      fromIds,
+      {
+        params: {
+          newId: toId
+        }
+      }
+    )
+    return res.data
+  }
 }
 
 export const createZarplataSpravochnik = (

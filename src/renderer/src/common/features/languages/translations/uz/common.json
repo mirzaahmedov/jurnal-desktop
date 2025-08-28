@@ -552,5 +552,7 @@
   "transfer_to_new_group": "Yangi guruhga o'tkazish",
   "type_code": "Tur kodi",
   "select_new_group": "Yangi guruhni tanlash",
-  "taken": "Olingan"
+  "taken": "Olingan",
+  "starts": "Boshlanadi",
+  "replace_doljnost": "Lavozimni almashtirish"
 }

@@ -3,6 +3,7 @@ import type { Zarplata } from '@/common/models'
 
 import { Checkbox } from '@/common/components/jolly/checkbox'
 import { IDCell } from '@/common/components/table/renderers/id'
+import { SelectCell } from '@/common/components/table/renderers/select'
 
 import { ZarplataSpravochnikType } from './config'
 
@@ -107,12 +108,31 @@ export const ZarplataSpravochnikDialogColumnDefs: ColumnDef<Zarplata.Spravochnik
 ]
 
 export const getZarplataSpravochnikColumnDefs = (
-  typeCode: ZarplataSpravochnikType
+  typeCode: ZarplataSpravochnikType,
+  selectable = false
 ): ColumnDef<Zarplata.Spravochnik>[] => {
   switch (typeCode) {
     case ZarplataSpravochnikType.Doljnost:
+      if (selectable) {
+        return [
+          {
+            key: 'id',
+            renderCell: SelectCell
+          },
+          ...ZarplataSpravochnikDoljnostColumnDefs
+        ]
+      }
       return ZarplataSpravochnikDoljnostColumnDefs
     default:
+      if (selectable) {
+        return [
+          {
+            key: 'id',
+            renderCell: SelectCell
+          },
+          ...ZarplataSpravochnikZvanieColumnDefs
+        ]
+      }
       return ZarplataSpravochnikZvanieColumnDefs
   }
 }

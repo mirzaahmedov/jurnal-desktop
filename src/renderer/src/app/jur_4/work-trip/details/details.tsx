@@ -26,7 +26,7 @@ import {
 } from '@/common/features/selected-month'
 import { useSpravochnik } from '@/common/features/spravochnik'
 import { formatDate, getWorkdaysInPeriod, parseDate, withinMonth } from '@/common/lib/date'
-import { formatNumber } from '@/common/lib/format'
+import { formatLocaleDate, formatNumber } from '@/common/lib/format'
 import { TypeSchetOperatsii } from '@/common/models'
 import { DetailsView } from '@/common/views'
 import { DocumentFields, PodotchetFields, SummaFields } from '@/common/widget/form'
@@ -308,9 +308,15 @@ export const WorkTripDetails = ({ id }: WorkTripDetailsProps) => {
                         }}
                         onBlur={field.onBlur}
                         inputRef={field.ref}
-                        className="w-48"
+                        className="w-full max-w-[500px]"
                       >
-                        {(item) => <SelectItem id={item.id}>{formatNumber(item.summa)}</SelectItem>}
+                        {(item) => (
+                          <SelectItem id={item.id}>
+                            №{item.doc_num} {formatLocaleDate(item.doc_date)} -{' '}
+                            {formatNumber(item.summa)} {t('starts').toLowerCase()}{' '}
+                            {formatLocaleDate(item.start)}
+                          </SelectItem>
+                        )}
                       </JollySelect>
                     )}
                   />

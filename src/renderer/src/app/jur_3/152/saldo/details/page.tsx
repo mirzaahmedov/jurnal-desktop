@@ -28,7 +28,7 @@ import { useLayout } from '@/common/layout'
 import { formatDate } from '@/common/lib/date'
 import { DetailsView } from '@/common/views'
 
-import { type OrganSaldoProvodkaFormValues, OrganSaldoQueryKeys, defaultValues } from '../config'
+import { type OrganSaldoFormValues, type OrganSaldoProvodkaFormValues, OrganSaldoQueryKeys, defaultValues } from '../config'
 import { OrganSaldoService } from '../service'
 import { useUslugiSaldo } from '../use-saldo'
 import { OrganSaldoTable } from './organ-saldo-table'
@@ -59,7 +59,7 @@ const OrganSaldoDetailsPage = () => {
   const { queuedMonths } = useUslugiSaldo()
   const { budjet_id, main_schet_id, jur3_schet_152_id } = useRequisitesStore()
 
-  const form = useForm({
+  const form = useForm<OrganSaldoFormValues>({
     defaultValues: {
       ...defaultValues,
       year: location.state?.year ?? startDate.getFullYear(),

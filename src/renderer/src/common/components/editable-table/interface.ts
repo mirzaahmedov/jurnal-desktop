@@ -61,7 +61,7 @@ export interface DuplicateHandlerArgs<T extends object, F extends ArrayPath<T>> 
 export interface EditableTableProps<T extends object, F extends ArrayPath<NoInfer<T>>> {
   tableRef?: RefObject<HTMLTableElement>
   tabIndex?: number
-  form: UseFormReturn<T>
+  form: UseFormReturn<NoInfer<T>>
   name: F
   columnDefs: EditableColumnDef<InferRow<T, F>>[]
   className?: string

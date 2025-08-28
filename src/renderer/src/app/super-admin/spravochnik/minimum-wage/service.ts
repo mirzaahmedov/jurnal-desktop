@@ -2,7 +2,10 @@ import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 
 export interface MinimumWage {
   id: number
+  doc_num: string
+  doc_date: string
   summa: number
+  start: string
   created_at: string
   updated_at: string
   isdeleted: boolean

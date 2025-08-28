@@ -2,7 +2,9 @@ import { useEffect } from 'react'
 
 import { ArrowLeft, ArrowRight } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
-import Paginate from 'react-paginate'
+import Paginate, { type ReactPaginateProps } from 'react-paginate'
+
+import { cn } from '@/common/lib/utils'
 
 import { useEventCallback } from '../hooks'
 import { JollySelect, SelectItem } from './jolly/select'
@@ -27,6 +29,8 @@ export interface PaginationProps extends PaginationValues {
   pageCount: number
   count: number
   onChange: (values: Partial<PaginationValues>) => void
+  className?: string
+  paginateProps?: Partial<ReactPaginateProps>
 }
 export const Pagination = ({
   disablePageSize = false,
@@ -34,7 +38,9 @@ export const Pagination = ({
   limit,
   count,
   pageCount,
-  onChange
+  onChange,
+  className,
+  paginateProps
 }: PaginationProps) => {
   const { t } = useTranslation()
 
@@ -49,9 +55,8 @@ export const Pagination = ({
   }, [pageCountValue, pageValue, onChangeEvent])
 
   return (
-    <div className="flex items-center justify-start flex-wrap gap-x-20 gap-y-5">
+    <div className={cn('flex items-center justify-start flex-wrap gap-x-20 gap-y-5', className)}>
       <Paginate
-        className="flex gap-4"
         pageRangeDisplayed={2}
         breakLabel="..."
         forcePage={pageValue - 1}
@@ -83,6 +88,8 @@ export const Pagination = ({
           </Button>
         }
         pageCount={pageCountValue}
+        {...paginateProps}
+        className={cn('flex gap-4', paginateProps?.className)}
       />
       {!disablePageSize && count ? (
         <div className="flex items-center gap-10">
