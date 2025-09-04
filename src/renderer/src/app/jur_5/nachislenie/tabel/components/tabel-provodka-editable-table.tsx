@@ -1,11 +1,11 @@
+import type { TabelFormValues } from '../config'
 import type { TabelDetailsFormValues } from '../interfaces'
 import type { EditableColumnDef } from '@/common/components/editable-table'
-import type { TabelProvodka } from '@/common/models/tabel'
 
 import { EditableTable, type EditableTableProps } from '@/common/components/editable-table'
 import { createNumberEditor, createTextEditor } from '@/common/components/editable-table/editors'
 
-export const TabelEditableColumnDefs: EditableColumnDef<TabelProvodka>[] = [
+export const TabelEditableColumnDefs: EditableColumnDef<TabelFormValues, 'tabelChildren'>[] = [
   {
     key: 'fio',
     header: 'employee',
@@ -30,11 +30,19 @@ export const TabelEditableColumnDefs: EditableColumnDef<TabelProvodka>[] = [
       key: 'rabDni'
     })
   },
+
   {
     key: 'otrabDni',
     header: 'worked_days',
     Editor: createNumberEditor({
       key: 'otrabDni'
+    })
+  },
+  {
+    key: 'noch',
+    header: 'night_shift_hours',
+    Editor: createNumberEditor({
+      key: 'noch'
     })
   },
   {
@@ -49,13 +57,6 @@ export const TabelEditableColumnDefs: EditableColumnDef<TabelProvodka>[] = [
     header: 'kazarma_hours',
     Editor: createNumberEditor({
       key: 'kazarma'
-    })
-  },
-  {
-    key: 'noch',
-    header: 'night_shift_hours',
-    Editor: createNumberEditor({
-      key: 'noch'
     })
   },
   {

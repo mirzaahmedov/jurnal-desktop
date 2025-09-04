@@ -57,7 +57,7 @@ export const TabelCreateForm = ({
 }: TabelCreateFormProps) => {
   const { t } = useTranslation(['app'])
 
-  const form = useForm({
+  const form = useForm<TabelFormValues>({
     defaultValues,
     resolver: zodResolver(TabelFormSchema)
   })
@@ -68,7 +68,9 @@ export const TabelCreateForm = ({
   const tabelChildren = form.watch('tabelChildren')
   const mainZarplataQuery = useMainZarplataList({
     vacantId: vacant?.id ?? 0,
-    ostanovit: false
+    ostanovit: false,
+    year: form.watch('tabelYear'),
+    month: form.watch('tabelMonth')
   })
   const filterOptions = useVacantFilters({
     vacants,
@@ -113,16 +115,22 @@ export const TabelCreateForm = ({
           fio: row.fio,
           doljnost: row.doljnostName,
           vacantId: row.vacantId,
-          rabDni: getWorkdaysInMonth(
-            form.getValues('tabelYear'),
-            form.getValues('tabelMonth'),
-            parseInt(row.spravochnikZarplataGrafikRabotiName || '0')
-          ).workdays,
-          otrabDni: getWorkdaysInMonth(
-            form.getValues('tabelYear'),
-            form.getValues('tabelMonth'),
-            parseInt(row.spravochnikZarplataGrafikRabotiName || '0')
-          ).workdays,
+          rabDni:
+            typeof row.day === 'number'
+              ? row.day
+              : getWorkdaysInMonth(
+                  form.getValues('tabelYear'),
+                  form.getValues('tabelMonth'),
+                  parseInt(row.spravochnikZarplataGrafikRabotiName || '0')
+                ).workdays,
+          otrabDni:
+            typeof row.day === 'number'
+              ? row.day
+              : getWorkdaysInMonth(
+                  form.getValues('tabelYear'),
+                  form.getValues('tabelMonth'),
+                  parseInt(row.spravochnikZarplataGrafikRabotiName || '0')
+                ).workdays,
           noch: 0,
           prazdnik: 0,
           pererabodka: 0,
@@ -159,16 +167,22 @@ export const TabelCreateForm = ({
           vacantId: row.vacantId,
           fio: row.fio,
           doljnost: row.doljnostName,
-          rabDni: getWorkdaysInMonth(
-            form.getValues('tabelYear'),
-            form.getValues('tabelMonth'),
-            parseInt(row.spravochnikZarplataGrafikRabotiName || '0')
-          ).workdays,
-          otrabDni: getWorkdaysInMonth(
-            form.getValues('tabelYear'),
-            form.getValues('tabelMonth'),
-            parseInt(row.spravochnikZarplataGrafikRabotiName || '0')
-          ).workdays,
+          rabDni:
+            typeof row.day === 'number'
+              ? row.day
+              : getWorkdaysInMonth(
+                  form.getValues('tabelYear'),
+                  form.getValues('tabelMonth'),
+                  parseInt(row.spravochnikZarplataGrafikRabotiName || '0')
+                ).workdays,
+          otrabDni:
+            typeof row.day === 'number'
+              ? row.day
+              : getWorkdaysInMonth(
+                  form.getValues('tabelYear'),
+                  form.getValues('tabelMonth'),
+                  parseInt(row.spravochnikZarplataGrafikRabotiName || '0')
+                ).workdays,
           noch: 0,
           prazdnik: 0,
           pererabodka: 0,
@@ -189,7 +203,7 @@ export const TabelCreateForm = ({
         onSubmit={handleSubmit}
         className="relative h-full flex flex-col overflow-hidden divide-y"
       >
-        <div className="flex-1 min-h-0 overflow-y-auto scrollbar p-5">
+        <div className="flex-1 min-h-0 p-5 flex flex-col">
           <div className="flex flex-wrap gap-5">
             <FormField
               control={form.control}
@@ -237,6 +251,7 @@ export const TabelCreateForm = ({
                         const date = parseDate(value)
                         form.setValue('tabelYear', date.getFullYear())
                         form.setValue('tabelMonth', date.getMonth() + 1)
+                        form.setValue('tabelChildren', [])
                       }
                     }}
                   />
@@ -294,10 +309,11 @@ export const TabelCreateForm = ({
             </div>
           </div>
 
-          <div className="flex items-center justify-between flex-wrap gap-5 py-2.5">
+          <div className="flex-1 min-h-0 flex flex-col items-center justify-between gap-5 py-2.5">
             <Tabs
               value={activeTab}
               onValueChange={(value) => setActiveTab(value as TabelFormTabs)}
+              className="w-full"
             >
               <TabsList>
                 <TabsTrigger value={TabelFormTabs.SELECT}>{t('select')}</TabsTrigger>
@@ -326,16 +342,18 @@ export const TabelCreateForm = ({
               </div>
             )}
             {activeTab === TabelFormTabs.SELECTED && (
-              <SelectedVacantsFilter
-                selectedVacants={filterOptions}
-                selectedCount={form.watch('tabelChildren')?.length ?? 0}
-                visibleVacant={visibleVacant}
-                setVisibleVacant={setVisibleVacant}
-              />
+              <div className="w-full">
+                <SelectedVacantsFilter
+                  selectedVacants={filterOptions}
+                  selectedCount={form.watch('tabelChildren')?.length ?? 0}
+                  visibleVacant={visibleVacant}
+                  setVisibleVacant={setVisibleVacant}
+                />
+              </div>
             )}
 
             {activeTab === TabelFormTabs.SELECT && (
-              <div className="relative w-full overflow-auto scrollbar pl-px">
+              <div className="relative w-full h-full overflow-auto scrollbar pl-px">
                 {mainZarplataQuery.isFetching && <LoadingOverlay />}
                 <MainZarplataTable
                   data={mainZarplataQuery.data ?? []}
@@ -350,7 +368,7 @@ export const TabelCreateForm = ({
                 <EditableTable
                   form={form}
                   name="tabelChildren"
-                  columnDefs={TabelEditableColumnDefs as any}
+                  columnDefs={TabelEditableColumnDefs}
                   onDelete={createEditorDeleteHandler({
                     form
                   })}
@@ -367,6 +385,7 @@ export const TabelCreateForm = ({
           <Button
             type="submit"
             isPending={isPending}
+            isDisabled={tabelChildren.length === 0 || isPending}
           >
             {t('save')}
           </Button>

@@ -24,6 +24,7 @@ export interface MainZarplata {
   nachaloSlujbi: string
   visNa1Year: number
   month1: number
+  day: number | null
   day1: number
   itogo: number
   workplaceId: number
