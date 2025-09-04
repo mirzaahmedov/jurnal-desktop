@@ -1,10 +1,14 @@
 import type { AlimentDeduction } from '@/common/models/payroll-deduction'
 import type { DialogTriggerProps } from 'react-aria-components'
 
-import { useMutation } from '@tanstack/react-query'
+import { useEffect } from 'react'
+
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import { toast } from 'react-toastify'
 
+import { createDeductionSpravochnik } from '@/app/jur_5/payment-types/deductions/service'
 import { createOrganizationSpravochnik } from '@/app/region-spravochnik/organization'
 import { FormElement } from '@/common/components/form'
 import { Button } from '@/common/components/jolly/button'
@@ -36,10 +40,17 @@ export const AlimentDeductionDialog = ({
 }: AlimentDeductionDialogProps) => {
   const { t } = useTranslation(['app'])
 
+  const queryClient = useQueryClient()
   const form = useForm({
     defaultValues: defaultValues
   })
 
+  const deductionSpravochnik = useSpravochnik(
+    createDeductionSpravochnik({
+      value: form.watch('deductionId'),
+      onChange: (value) => form.setValue('deductionId', value ?? 0, { shouldValidate: true })
+    })
+  )
   const organSpravochnik = useSpravochnik(
     createOrganizationSpravochnik({
       value: form.watch('organizationId'),
@@ -48,11 +59,25 @@ export const AlimentDeductionDialog = ({
   )
 
   const alimentDeductionCreateMutation = useMutation({
-    mutationFn: AlimentDeductionService.create
+    mutationFn: AlimentDeductionService.create,
+    onSuccess: () => {
+      props?.onOpenChange?.(false)
+      toast.success(t('create_success'))
+      queryClient.invalidateQueries({
+        queryKey: [AlimentDeductionService.QueryKeys.GetAll, { mainId: mainZarplataId }]
+      })
+    }
   })
 
   const alimentDeductionUpdateMutation = useMutation({
-    mutationFn: AlimentDeductionService.update
+    mutationFn: AlimentDeductionService.update,
+    onSuccess: () => {
+      props?.onOpenChange?.(false)
+      toast.success(t('update_success'))
+      queryClient.invalidateQueries({
+        queryKey: [AlimentDeductionService.QueryKeys.GetAll, { mainId: mainZarplataId }]
+      })
+    }
   })
 
   const handleSubmit = () => {
@@ -73,6 +98,20 @@ export const AlimentDeductionDialog = ({
       })
     }
   }
+
+  useEffect(() => {
+    if (alimentDeductionData) {
+      form.reset({
+        cardNumber: alimentDeductionData.cardNumber,
+        poluchatelFio: alimentDeductionData.poluchatelFio,
+        organizationId: alimentDeductionData.organizationId,
+        deductionId: alimentDeductionData.deductionId,
+        mainZarplataId: alimentDeductionData.mainZarplataId
+      })
+    } else {
+      form.reset(defaultValues)
+    }
+  }, [alimentDeductionData])
 
   return (
     <DialogTrigger {...props}>
@@ -115,6 +154,15 @@ export const AlimentDeductionDialog = ({
                   >
                     <SpravochnikInput
                       {...organSpravochnik}
+                      getInputValue={(selected) => selected?.name ?? ''}
+                    />
+                  </FormElement>
+                  <FormElement
+                    label={t('deduction')}
+                    grid="2:4"
+                  >
+                    <SpravochnikInput
+                      {...deductionSpravochnik}
                       getInputValue={(selected) => selected?.name ?? ''}
                     />
                   </FormElement>

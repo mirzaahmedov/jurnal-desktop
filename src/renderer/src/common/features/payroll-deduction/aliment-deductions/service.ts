@@ -1,4 +1,5 @@
 import type { AlimentDeductionFormValues } from './config'
+import type { AlimentDeduction } from '@/common/models/payroll-deduction'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 
 import { zarplataApiNew } from '@/common/lib/zarplata_new'
@@ -17,7 +18,7 @@ export class AlimentDeductionService {
     >
   ) {
     const { mainId } = ctx.queryKey[1]
-    const res = await zarplataApiNew.get(AlimentDeductionService.endpoint, {
+    const res = await zarplataApiNew.get<AlimentDeduction[]>(AlimentDeductionService.endpoint, {
       params: {
         mainId
       }

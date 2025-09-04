@@ -1,9 +1,9 @@
 import type { VacantTreeNode } from '@/common/features/vacant/ui/vacant-tree'
-import type { MainZarplata } from '@/common/models'
+import type { MainZarplata, MainZarplataMatPomoch } from '@/common/models'
 import type { Payment } from '@/common/models/payments'
 import type { DialogTriggerProps } from 'react-aria-components'
 
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { type FC, useCallback, useEffect, useMemo, useState } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
@@ -16,7 +16,13 @@ import { MainZarplataTable } from '@/app/jur_5/common/features/main-zarplata/mai
 import { useMainZarplataList } from '@/app/jur_5/common/features/main-zarplata/use-fetchers'
 import { PaymentColumnDefs } from '@/app/jur_5/payment-types/payments/columns'
 import { PaymentsService } from '@/app/jur_5/payment-types/payments/service'
-import { GenericTable, LoadingOverlay, NumericInput, Spinner } from '@/common/components'
+import {
+  type ColumnDef,
+  GenericTable,
+  LoadingOverlay,
+  NumericInput,
+  Spinner
+} from '@/common/components'
 import { FormElement } from '@/common/components/form'
 import { Debouncer } from '@/common/components/hoc/debouncer'
 import { JollyDatePicker } from '@/common/components/jolly-date-picker'
@@ -32,12 +38,14 @@ import {
 import { JollySelect, SelectItem } from '@/common/components/jolly/select'
 import { MonthSelect } from '@/common/components/month-select'
 import { Pagination } from '@/common/components/pagination'
+import { SummaCell } from '@/common/components/table/renderers/summa'
 import { Badge } from '@/common/components/ui/badge'
 import { Form, FormField } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/common/components/ui/tabs'
 import { Textarea } from '@/common/components/ui/textarea'
 import { YearSelect } from '@/common/components/year-select'
+import { MainZarplataService } from '@/common/features/main-zarplata/service'
 import { useRequisitesStore } from '@/common/features/requisites'
 import { useVacantTreeNodes } from '@/common/features/vacant/hooks/use-vacant-tree-nodes'
 import { VacantTree, VacantTreeSearch } from '@/common/features/vacant/ui/vacant-tree'
@@ -69,6 +77,7 @@ export const PremyaMatPomoshCreateDialog = (props: PremyaMatPomoshCreateDialogPr
   )
   const [selectedVacant, setSelectedVacant] = useState<VacantTreeNode | undefined>(undefined)
   const [selectedMainZarplata, setSelectedMainZarplata] = useState<MainZarplata[]>([])
+  const [matPomochId, setPomochId] = useState<number | null>(null)
   const [selectedPayments, setSelectedPayments] = useState<Payment[]>([])
 
   const queryClient = useQueryClient()
@@ -77,7 +86,8 @@ export const PremyaMatPomoshCreateDialog = (props: PremyaMatPomoshCreateDialogPr
     resolver: zodResolver(NachislenieOthersFormSchema)
   })
   const mainZarplataQuery = useMainZarplataList({
-    vacantId: selectedVacant?.id
+    vacantId: selectedVacant?.id,
+    year: form.watch('nachislenieYear')
   })
   const paymentsQuery = useQuery({
     queryKey: [
@@ -164,411 +174,488 @@ export const PremyaMatPomoshCreateDialog = (props: PremyaMatPomoshCreateDialogPr
   }, [form, isAllSelected, mainZarplataQuery.data])
 
   return (
-    <DialogTrigger {...props}>
-      <DialogOverlay>
-        <DialogContent className="w-full max-w-full h-full p-0">
-          <div className="overflow-hidden h-full flex flex-col">
-            <DialogHeader className="p-5">
-              <DialogTitle>{t('premya_mat_pomosh')}</DialogTitle>
-            </DialogHeader>
-            <Allotment className="flex-1 min-h-0">
-              <Allotment.Pane
-                preferredSize={300}
-                maxSize={600}
-                minSize={300}
-                className="w-full bg-gray-50"
-              >
-                <div className="h-full flex flex-col">
-                  {vacantsQuery.isFetching ? <LoadingOverlay /> : null}
-                  <VacantTreeSearch
-                    search={search}
-                    onValueChange={setSearch}
-                    treeNodes={filteredTreeNodes}
-                  />
-                  <div className="flex-1 overflow-y-auto scrollbar">
-                    <VacantTree
-                      nodes={filteredTreeNodes}
-                      selectedIds={selectedVacant ? [selectedVacant?.id] : []}
-                      onSelectNode={setSelectedVacant}
+    <>
+      <DialogTrigger {...props}>
+        <DialogOverlay>
+          <DialogContent className="w-full max-w-full h-full p-0">
+            <div className="overflow-hidden h-full flex flex-col">
+              <DialogHeader className="p-5">
+                <DialogTitle>{t('premya_mat_pomosh')}</DialogTitle>
+              </DialogHeader>
+              <Allotment className="flex-1 min-h-0">
+                <Allotment.Pane
+                  preferredSize={300}
+                  maxSize={600}
+                  minSize={300}
+                  className="w-full bg-gray-50"
+                >
+                  <div className="h-full flex flex-col">
+                    {vacantsQuery.isFetching ? <LoadingOverlay /> : null}
+                    <VacantTreeSearch
+                      search={search}
+                      onValueChange={setSearch}
+                      treeNodes={filteredTreeNodes}
                     />
-                  </div>
-                </div>
-              </Allotment.Pane>
-              <Allotment.Pane>
-                <Form {...form}>
-                  <form
-                    noValidate
-                    onSubmit={handleSubmit}
-                    className="pl-5 h-full flex flex-col gap-2.5"
-                  >
-                    <div className="flex flex-wrap gap-x-5">
-                      <FormField
-                        control={form.control}
-                        name="docNum"
-                        render={({ field }) => (
-                          <FormElement
-                            direction="column"
-                            label={t('doc_num')}
-                          >
-                            <div className="flex items-center gap-1">
-                              <NumericInput
-                                {...field}
-                                onChange={undefined}
-                                onValueChange={(values) => field.onChange(values.floatValue ?? 0)}
-                              />
-                              <Button
-                                type="button"
-                                size="icon"
-                                className="size-10 flex-shrink-0"
-                                variant="outline"
-                                isDisabled={docNumMutation.isPending}
-                                onClick={() => {
-                                  docNumMutation.mutate()
-                                }}
-                              >
-                                {docNumMutation.isPending ? (
-                                  <Spinner className="size-5 border-2" />
-                                ) : (
-                                  <RefreshCw />
-                                )}
-                              </Button>
-                            </div>
-                          </FormElement>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name="docDate"
-                        render={({ field }) => (
-                          <FormElement
-                            direction="column"
-                            label={t('doc_date')}
-                          >
-                            <JollyDatePicker
-                              {...field}
-                              onChange={(value) => {
-                                field.onChange(value)
-                                if (value) {
-                                  const date = parseDate(value)
-                                  form.setValue('nachislenieYear', date.getFullYear())
-                                  form.setValue('nachislenieMonth', date.getMonth() + 1)
-                                }
-                              }}
-                            />
-                          </FormElement>
-                        )}
-                      />
-
-                      <FormField
-                        control={form.control}
-                        name="nachislenieYear"
-                        render={({ field }) => (
-                          <FormElement
-                            direction="column"
-                            label={t('year')}
-                          >
-                            <YearSelect
-                              isReadOnly
-                              selectedKey={field.value}
-                              onSelectionChange={field.onChange}
-                            />
-                          </FormElement>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name="nachislenieMonth"
-                        render={({ field }) => (
-                          <FormElement
-                            direction="column"
-                            label={t('month')}
-                          >
-                            <MonthSelect
-                              isReadOnly
-                              selectedKey={field.value}
-                              onSelectionChange={field.onChange}
-                              className="w-32"
-                            />
-                          </FormElement>
-                        )}
-                      />
-
-                      <FormField
-                        control={form.control}
-                        name="givenDocDate"
-                        render={({ field }) => (
-                          <FormElement
-                            direction="column"
-                            label={t('given_doc_date')}
-                          >
-                            <JollyDatePicker {...field} />
-                          </FormElement>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name="description"
-                        render={({ field }) => (
-                          <FormElement
-                            direction="column"
-                            label={t('opisanie')}
-                            className="w-full max-w-lg"
-                          >
-                            <Textarea {...field} />
-                          </FormElement>
-                        )}
-                      />
-
-                      <FormField
-                        control={form.control}
-                        name="type"
-                        render={({ field }) => (
-                          <FormElement
-                            direction="column"
-                            label={t('type')}
-                          >
-                            <JollySelect
-                              inputRef={field.ref}
-                              onBlur={field.onBlur}
-                              items={[
-                                { label: t('premya'), value: 'premya' },
-                                { label: t('mat_pomosh'), value: 'mat_pomosh' },
-                                { label: t('avans'), value: 'avans' },
-                                { label: t('otdelniy_raschet'), value: 'otdelniy_raschet' }
-                              ]}
-                              selectedKey={field.value}
-                              onSelectionChange={field.onChange}
-                              className="w-56"
-                            >
-                              {(item) => <SelectItem id={item.value}>{item.label}</SelectItem>}
-                            </JollySelect>
-                          </FormElement>
-                        )}
-                      />
-
-                      <FormField
-                        control={form.control}
-                        name="paymentType"
-                        render={({ field }) => (
-                          <FormElement
-                            direction="column"
-                            label={t('payment_type')}
-                          >
-                            <JollySelect
-                              inputRef={field.ref}
-                              onBlur={field.onBlur}
-                              items={[
-                                { label: '%', value: '%' },
-                                { label: t('summa'), value: 'summa' },
-                                { label: t('nachislenie'), value: 'nachislenie' }
-                              ]}
-                              selectedKey={field.value}
-                              onSelectionChange={(selectedKey) => {
-                                if (selectedKey === '%') {
-                                  setTabValue(CreateDialogTabOption.Payments)
-                                  form.setValue('amount', 0)
-                                } else {
-                                  setTabValue(CreateDialogTabOption.MainZarplata)
-                                  form.setValue('amount', 0)
-                                  setSelectedPayments([])
-                                }
-                                field.onChange(selectedKey as string)
-                              }}
-                              className="w-40"
-                            >
-                              {(item) => <SelectItem id={item.value}>{item.label}</SelectItem>}
-                            </JollySelect>
-                          </FormElement>
-                        )}
-                      />
-
-                      <FormField
-                        control={form.control}
-                        name="amount"
-                        render={({ field }) => (
-                          <FormElement
-                            direction="column"
-                            label={t('amount')}
-                          >
-                            <NumericInput
-                              allowNegative={false}
-                              ref={field.ref}
-                              value={field.value}
-                              onValueChange={(values) => field.onChange(values.floatValue ?? 0)}
-                              onBlur={field.onBlur}
-                              decimalScale={undefined}
-                            />
-                          </FormElement>
-                        )}
+                    <div className="flex-1 overflow-y-auto scrollbar">
+                      <VacantTree
+                        nodes={filteredTreeNodes}
+                        selectedIds={selectedVacant ? [selectedVacant?.id] : []}
+                        onSelectNode={setSelectedVacant}
                       />
                     </div>
-
-                    <Tabs
-                      value={tabValue}
-                      onValueChange={(value) => setTabValue(value as CreateDialogTabOption)}
-                      className="flex-1 w-full min-h-0 flex flex-col items-start overflow-hidden"
+                  </div>
+                </Allotment.Pane>
+                <Allotment.Pane>
+                  <Form {...form}>
+                    <form
+                      noValidate
+                      onSubmit={handleSubmit}
+                      className="pl-5 h-full flex flex-col gap-2.5"
                     >
-                      <TabsList>
-                        <TabsTrigger value={CreateDialogTabOption.MainZarplata}>
-                          {t('employees')}
-                        </TabsTrigger>
-                        <TabsTrigger value={CreateDialogTabOption.Selected}>
-                          {t('selected')}
-                          <Badge className="ml-2 -my-2">{selectedMainZarplata.length}</Badge>
-                        </TabsTrigger>
-                        <TabsTrigger
-                          disabled={!isPercent}
-                          value={CreateDialogTabOption.Payments}
-                        >
-                          {t('payments')}
-                          <Badge className="ml-2 -my-2">{selectedPayments.length}</Badge>
-                        </TabsTrigger>
-                      </TabsList>
+                      <div className="flex flex-wrap gap-x-5">
+                        <FormField
+                          control={form.control}
+                          name="docNum"
+                          render={({ field }) => (
+                            <FormElement
+                              direction="column"
+                              label={t('doc_num')}
+                            >
+                              <div className="flex items-center gap-1">
+                                <NumericInput
+                                  {...field}
+                                  onChange={undefined}
+                                  onValueChange={(values) => field.onChange(values.floatValue ?? 0)}
+                                />
+                                <Button
+                                  type="button"
+                                  size="icon"
+                                  className="size-10 flex-shrink-0"
+                                  variant="outline"
+                                  isDisabled={docNumMutation.isPending}
+                                  onClick={() => {
+                                    docNumMutation.mutate()
+                                  }}
+                                >
+                                  {docNumMutation.isPending ? (
+                                    <Spinner className="size-5 border-2" />
+                                  ) : (
+                                    <RefreshCw />
+                                  )}
+                                </Button>
+                              </div>
+                            </FormElement>
+                          )}
+                        />
+                        <FormField
+                          control={form.control}
+                          name="docDate"
+                          render={({ field }) => (
+                            <FormElement
+                              direction="column"
+                              label={t('doc_date')}
+                            >
+                              <JollyDatePicker
+                                {...field}
+                                onChange={(value) => {
+                                  field.onChange(value)
+                                  if (value) {
+                                    const date = parseDate(value)
+                                    form.setValue('nachislenieYear', date.getFullYear())
+                                    form.setValue('nachislenieMonth', date.getMonth() + 1)
+                                  }
+                                }}
+                              />
+                            </FormElement>
+                          )}
+                        />
 
-                      <TabsContent
-                        value={CreateDialogTabOption.MainZarplata}
-                        className={cn(
-                          'w-full flex-1 min-h-0 flex flex-col',
-                          tabValue !== CreateDialogTabOption.MainZarplata && 'hidden'
-                        )}
+                        <FormField
+                          control={form.control}
+                          name="nachislenieYear"
+                          render={({ field }) => (
+                            <FormElement
+                              direction="column"
+                              label={t('year')}
+                            >
+                              <YearSelect
+                                isReadOnly
+                                selectedKey={field.value}
+                                onSelectionChange={field.onChange}
+                              />
+                            </FormElement>
+                          )}
+                        />
+                        <FormField
+                          control={form.control}
+                          name="nachislenieMonth"
+                          render={({ field }) => (
+                            <FormElement
+                              direction="column"
+                              label={t('month')}
+                            >
+                              <MonthSelect
+                                isReadOnly
+                                selectedKey={field.value}
+                                onSelectionChange={field.onChange}
+                                className="w-32"
+                              />
+                            </FormElement>
+                          )}
+                        />
+
+                        <FormField
+                          control={form.control}
+                          name="givenDocDate"
+                          render={({ field }) => (
+                            <FormElement
+                              direction="column"
+                              label={t('given_doc_date')}
+                            >
+                              <JollyDatePicker {...field} />
+                            </FormElement>
+                          )}
+                        />
+                        <FormField
+                          control={form.control}
+                          name="description"
+                          render={({ field }) => (
+                            <FormElement
+                              direction="column"
+                              label={t('opisanie')}
+                              className="w-full max-w-lg"
+                            >
+                              <Textarea {...field} />
+                            </FormElement>
+                          )}
+                        />
+
+                        <FormField
+                          control={form.control}
+                          name="type"
+                          render={({ field }) => (
+                            <FormElement
+                              direction="column"
+                              label={t('type')}
+                            >
+                              <JollySelect
+                                inputRef={field.ref}
+                                onBlur={field.onBlur}
+                                items={[
+                                  { label: t('premya'), value: 'premya' },
+                                  { label: t('mat_pomosh'), value: 'mat_pomosh' },
+                                  { label: t('avans'), value: 'avans' },
+                                  { label: t('otdelniy_raschet'), value: 'otdelniy_raschet' }
+                                ]}
+                                selectedKey={field.value}
+                                onSelectionChange={field.onChange}
+                                className="w-56"
+                              >
+                                {(item) => <SelectItem id={item.value}>{item.label}</SelectItem>}
+                              </JollySelect>
+                            </FormElement>
+                          )}
+                        />
+
+                        <FormField
+                          control={form.control}
+                          name="paymentType"
+                          render={({ field }) => (
+                            <FormElement
+                              direction="column"
+                              label={t('payment_type')}
+                            >
+                              <JollySelect
+                                inputRef={field.ref}
+                                onBlur={field.onBlur}
+                                items={[
+                                  { label: '%', value: '%' },
+                                  { label: t('summa'), value: 'summa' },
+                                  { label: t('nachislenie'), value: 'nachislenie' }
+                                ]}
+                                selectedKey={field.value}
+                                onSelectionChange={(selectedKey) => {
+                                  if (selectedKey === '%') {
+                                    setTabValue(CreateDialogTabOption.Payments)
+                                    form.setValue('amount', 0)
+                                  } else {
+                                    setTabValue(CreateDialogTabOption.MainZarplata)
+                                    form.setValue('amount', 0)
+                                    setSelectedPayments([])
+                                  }
+                                  field.onChange(selectedKey as string)
+                                }}
+                                className="w-40"
+                              >
+                                {(item) => <SelectItem id={item.value}>{item.label}</SelectItem>}
+                              </JollySelect>
+                            </FormElement>
+                          )}
+                        />
+
+                        <FormField
+                          control={form.control}
+                          name="amount"
+                          render={({ field }) => (
+                            <FormElement
+                              direction="column"
+                              label={t('amount')}
+                            >
+                              <NumericInput
+                                allowNegative={false}
+                                ref={field.ref}
+                                value={field.value}
+                                onValueChange={(values) => field.onChange(values.floatValue ?? 0)}
+                                onBlur={field.onBlur}
+                                decimalScale={undefined}
+                              />
+                            </FormElement>
+                          )}
+                        />
+                      </div>
+
+                      <Tabs
+                        value={tabValue}
+                        onValueChange={(value) => setTabValue(value as CreateDialogTabOption)}
+                        className="flex-1 w-full min-h-0 flex flex-col items-start overflow-hidden"
                       >
-                        <div className="w-full py-2">
-                          <Button
-                            variant="ghost"
-                            className="flex items-center h-auto py-1 px-0 gap-2 hover:!bg-transparent"
-                            onClick={handleSelectAll}
+                        <TabsList>
+                          <TabsTrigger value={CreateDialogTabOption.MainZarplata}>
+                            {t('employees')}
+                          </TabsTrigger>
+                          <TabsTrigger value={CreateDialogTabOption.Selected}>
+                            {t('selected')}
+                            <Badge className="ml-2 -my-2">{selectedMainZarplata.length}</Badge>
+                          </TabsTrigger>
+                          <TabsTrigger
+                            disabled={!isPercent}
+                            value={CreateDialogTabOption.Payments}
                           >
-                            <Checkbox
-                              isSelected={isAllSelected}
-                              className="pointer-events-none"
-                            />
-                            <span className="text-xs">
-                              {isAllSelected ? t('deselect_all') : t('select_all')}
-                            </span>
-                          </Button>
-                        </div>
-                        <div className="h-full flex flex-col gap-2.5 overflow-y-auto scrollbar">
-                          {mainZarplataQuery.isFetching ? <LoadingOverlay /> : null}
-                          <MainZarplataTable
-                            data={mainZarplataQuery?.data ?? []}
-                            selectedIds={selectedMainZarplata.map((item) => item.id)}
-                            onClickRow={(item) => {
-                              setSelectedMainZarplata((prev) => {
-                                if (prev.some((i) => i.id === item.id)) {
-                                  return prev.filter((i) => i.id !== item.id)
-                                }
-                                return [...prev, item]
-                              })
-                            }}
-                            className="table-generic-xs"
-                          />
-                        </div>
-                      </TabsContent>
+                            {t('payments')}
+                            <Badge className="ml-2 -my-2">{selectedPayments.length}</Badge>
+                          </TabsTrigger>
+                        </TabsList>
 
-                      <TabsContent
-                        value={CreateDialogTabOption.Selected}
-                        className={cn(
-                          'w-full flex-1 min-h-0 flex flex-col',
-                          tabValue !== CreateDialogTabOption.Selected && 'hidden'
-                        )}
-                      >
-                        <div className="h-full flex flex-col gap-2.5 overflow-y-auto scrollbar">
-                          {mainZarplataQuery.isFetching ? <LoadingOverlay /> : null}
-                          <MainZarplataTable
-                            data={selectedMainZarplata ?? []}
-                            onDelete={(item) => {
-                              setSelectedMainZarplata((prev) => {
-                                return prev.filter((p) => p.id !== item.id)
-                              })
-                            }}
-                            className="table-generic-xs"
-                          />
-                        </div>
-                      </TabsContent>
-
-                      <TabsContent
-                        value={CreateDialogTabOption.Payments}
-                        className={cn(
-                          'flex-1 w-full min-h-0',
-                          tabValue !== CreateDialogTabOption.Payments && 'hidden'
-                        )}
-                      >
-                        <div className="h-full rounded-lg border p-2.5 flex flex-col gap-2.5">
-                          <div className="flex items-center justify-start gap-2.5">
-                            <Debouncer
-                              value={paymentName}
-                              onChange={setPaymentName}
+                        <TabsContent
+                          value={CreateDialogTabOption.MainZarplata}
+                          className={cn(
+                            'w-full flex-1 min-h-0 flex flex-col',
+                            tabValue !== CreateDialogTabOption.MainZarplata && 'hidden'
+                          )}
+                        >
+                          <div className="w-full py-2">
+                            <Button
+                              variant="ghost"
+                              className="flex items-center h-auto py-1 px-0 gap-2 hover:!bg-transparent"
+                              onClick={handleSelectAll}
                             >
-                              {({ value, onChange }) => (
-                                <Input
-                                  value={value}
-                                  onChange={(e) => onChange(e.target.value)}
-                                  placeholder={t('name')}
-                                  className="w-64"
-                                />
-                              )}
-                            </Debouncer>
-                            <Debouncer
-                              value={paymentCode}
-                              onChange={setPaymentCode}
-                            >
-                              {({ value, onChange }) => (
-                                <Input
-                                  value={value}
-                                  onChange={(e) => onChange(e.target.value)}
-                                  placeholder={t('code')}
-                                  className="w-64"
-                                />
-                              )}
-                            </Debouncer>
+                              <Checkbox
+                                isSelected={isAllSelected}
+                                className="pointer-events-none"
+                              />
+                              <span className="text-xs">
+                                {isAllSelected ? t('deselect_all') : t('select_all')}
+                              </span>
+                            </Button>
                           </div>
-                          <div className="flex-1 min-h-0 overflow-y-auto scrollbar">
-                            {paymentsQuery.isFetching ? <LoadingOverlay /> : null}
-                            <GenericTable
-                              columnDefs={PaymentColumnDefs({ isEditable: false })}
-                              data={paymentsQuery?.data?.data ?? []}
-                              selectedIds={selectedPayments.map((item) => item.id)}
+                          <div className="h-full flex flex-col gap-2.5 overflow-y-auto scrollbar">
+                            {mainZarplataQuery.isFetching ? <LoadingOverlay /> : null}
+                            <MainZarplataTable
+                              enableMatPomoch
+                              data={mainZarplataQuery?.data ?? []}
+                              selectedIds={selectedMainZarplata.map((item) => item.id)}
                               onClickRow={(item) => {
-                                setSelectedPayments((prev) => {
+                                setSelectedMainZarplata((prev) => {
                                   if (prev.some((i) => i.id === item.id)) {
                                     return prev.filter((i) => i.id !== item.id)
                                   }
                                   return [...prev, item]
                                 })
                               }}
+                              onViewMatPomoch={(item) => {
+                                setPomochId(item.id)
+                              }}
                               className="table-generic-xs"
                             />
                           </div>
-                          <Pagination
-                            page={paymentPage}
-                            limit={paymentLimit}
-                            count={paymentsQuery?.data?.meta?.count ?? 0}
-                            pageCount={paymentsQuery?.data?.meta?.pageCount ?? 0}
-                            onChange={(values) => {
-                              if (values.page) {
-                                setPaymentPage(values.page)
-                              }
-                              if (values.limit) {
-                                setPaymentLimit(values.limit)
-                              }
-                            }}
-                          />
-                        </div>
-                      </TabsContent>
-                    </Tabs>
+                        </TabsContent>
 
-                    <div className="p-5 text-end">
-                      <Button
-                        type="submit"
-                        isPending={createMutation.isPending}
-                      >
-                        {t('save')}
-                      </Button>
-                    </div>
-                  </form>
-                </Form>
-              </Allotment.Pane>
-            </Allotment>
+                        <TabsContent
+                          value={CreateDialogTabOption.Selected}
+                          className={cn(
+                            'w-full flex-1 min-h-0 flex flex-col',
+                            tabValue !== CreateDialogTabOption.Selected && 'hidden'
+                          )}
+                        >
+                          <div className="h-full flex flex-col gap-2.5 overflow-y-auto scrollbar">
+                            {mainZarplataQuery.isFetching ? <LoadingOverlay /> : null}
+                            <MainZarplataTable
+                              enableMatPomoch
+                              data={selectedMainZarplata ?? []}
+                              onDelete={(item) => {
+                                setSelectedMainZarplata((prev) => {
+                                  return prev.filter((p) => p.id !== item.id)
+                                })
+                              }}
+                              onViewMatPomoch={(item) => {
+                                setPomochId(item.id)
+                              }}
+                              className="table-generic-xs"
+                            />
+                          </div>
+                        </TabsContent>
+
+                        <TabsContent
+                          value={CreateDialogTabOption.Payments}
+                          className={cn(
+                            'flex-1 w-full min-h-0',
+                            tabValue !== CreateDialogTabOption.Payments && 'hidden'
+                          )}
+                        >
+                          <div className="h-full rounded-lg border p-2.5 flex flex-col gap-2.5">
+                            <div className="flex items-center justify-start gap-2.5">
+                              <Debouncer
+                                value={paymentName}
+                                onChange={setPaymentName}
+                              >
+                                {({ value, onChange }) => (
+                                  <Input
+                                    value={value}
+                                    onChange={(e) => onChange(e.target.value)}
+                                    placeholder={t('name')}
+                                    className="w-64"
+                                  />
+                                )}
+                              </Debouncer>
+                              <Debouncer
+                                value={paymentCode}
+                                onChange={setPaymentCode}
+                              >
+                                {({ value, onChange }) => (
+                                  <Input
+                                    value={value}
+                                    onChange={(e) => onChange(e.target.value)}
+                                    placeholder={t('code')}
+                                    className="w-64"
+                                  />
+                                )}
+                              </Debouncer>
+                            </div>
+                            <div className="flex-1 min-h-0 overflow-y-auto scrollbar">
+                              {paymentsQuery.isFetching ? <LoadingOverlay /> : null}
+                              <GenericTable
+                                columnDefs={PaymentColumnDefs({ isEditable: false })}
+                                data={paymentsQuery?.data?.data ?? []}
+                                selectedIds={selectedPayments.map((item) => item.id)}
+                                onClickRow={(item) => {
+                                  setSelectedPayments((prev) => {
+                                    if (prev.some((i) => i.id === item.id)) {
+                                      return prev.filter((i) => i.id !== item.id)
+                                    }
+                                    return [...prev, item]
+                                  })
+                                }}
+                                className="table-generic-xs"
+                              />
+                            </div>
+                            <Pagination
+                              page={paymentPage}
+                              limit={paymentLimit}
+                              count={paymentsQuery?.data?.meta?.count ?? 0}
+                              pageCount={paymentsQuery?.data?.meta?.pageCount ?? 0}
+                              onChange={(values) => {
+                                if (values.page) {
+                                  setPaymentPage(values.page)
+                                }
+                                if (values.limit) {
+                                  setPaymentLimit(values.limit)
+                                }
+                              }}
+                            />
+                          </div>
+                        </TabsContent>
+                      </Tabs>
+
+                      <div className="p-5 text-end">
+                        <Button
+                          type="submit"
+                          isPending={createMutation.isPending}
+                        >
+                          {t('save')}
+                        </Button>
+                      </div>
+                    </form>
+                  </Form>
+                </Allotment.Pane>
+              </Allotment>
+            </div>
+          </DialogContent>
+        </DialogOverlay>
+      </DialogTrigger>
+      <MatPomochDialog
+        isOpen={!!matPomochId}
+        onOpenChange={(open) => {
+          if (!open) {
+            setPomochId(null)
+          }
+        }}
+        mainZarplataId={matPomochId!}
+      />
+    </>
+  )
+}
+
+export interface MatPomochDialogProps extends Omit<DialogTriggerProps, 'children'> {
+  mainZarplataId: number
+}
+const MatPomochDialog: FC<MatPomochDialogProps> = ({ mainZarplataId, ...props }) => {
+  const { t } = useTranslation(['app'])
+
+  const matPomochQuery = useQuery({
+    queryKey: [MainZarplataService.QueryKeys.GetMatPomoch, mainZarplataId],
+    queryFn: MainZarplataService.getMatPomoch
+  })
+
+  return (
+    <DialogTrigger {...props}>
+      <DialogOverlay>
+        <DialogContent className="h-full max-h-[800px] w-full max-w-7xl p-0">
+          <div className="flex flex-col">
+            <DialogHeader className="p-5">
+              <DialogTitle>{t('have_taken_material_help')}</DialogTitle>
+            </DialogHeader>
+            <div className="flex-1 min-h-0 overflow-y-auto scrollbar">
+              {matPomochQuery.isFetching ? <LoadingOverlay /> : null}
+              <GenericTable
+                columnDefs={
+                  [
+                    {
+                      key: 'docNum',
+                      header: 'doc_num'
+                    },
+                    {
+                      key: 'docDate',
+                      header: 'doc_date',
+                      renderCell: (row) => formatLocaleDate(row.docDate)
+                    },
+                    {
+                      width: 400,
+                      numeric: true,
+                      key: 'summa',
+                      header: 'summa',
+                      renderCell: (row) => <SummaCell summa={row.summa} />
+                    },
+                    {
+                      key: '',
+                      header: ' ',
+                      renderCell: () => null
+                    }
+                  ] satisfies ColumnDef<MainZarplataMatPomoch>[]
+                }
+                data={matPomochQuery?.data ?? []}
+                className="table-generic-xs"
+              />
+            </div>
           </div>
         </DialogContent>
       </DialogOverlay>

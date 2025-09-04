@@ -17,7 +17,7 @@ import { useToggle } from '@/common/hooks'
 import { formatNumber } from '@/common/lib/format'
 
 import { useConfirm } from '../confirm'
-import { AlimentDeductionsDialog } from './aliment-deductions/aliment-deductions-modal'
+import { AlimentDeductionsDialog } from './aliment-deductions'
 import { DeductionType, PayrollDeductionDialog } from './payroll-deduction-dialog'
 import { PayrollDeductionService } from './service'
 

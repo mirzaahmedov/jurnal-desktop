@@ -28,6 +28,7 @@ export interface MainZarplata {
   day1: number
   itogo: number
   workplaceId: number
+  isMatPomoch: boolean | null
   doljnostName: string
   doljnostOklad: number
   doljnostPrikazNum: string
@@ -44,4 +45,14 @@ export interface MainZarplataCalculation {
   paymentId: number
   code: number
   name: string
+}
+
+export interface MainZarplataMatPomoch {
+  id: number
+  nachislenieYear: number
+  nachislenieMonth: number
+  docNum: number
+  docDate: string
+  type: string
+  summa: number
 }

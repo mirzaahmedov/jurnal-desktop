@@ -1,6 +1,11 @@
 import type { SpravochnikHookOptions } from '../spravochnik'
 import type { MainZarplataFormValues } from '@/app/jur_5/passport-details/config'
-import type { ApiResponse, MainZarplata, MainZarplataCalculation } from '@/common/models'
+import type {
+  ApiResponse,
+  MainZarplata,
+  MainZarplataCalculation,
+  MainZarplataMatPomoch
+} from '@/common/models'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 
 import { t } from 'i18next'
@@ -20,6 +25,7 @@ export class MainZarplataService {
   static QueryKeys = {
     GetAll: 'main_zarplata/getAll',
     GetByVacantId: 'main_zarplata/getByVacantId',
+    GetMatPomoch: 'main_zarplata/getMatPomoch',
     GetById: 'main_zarplata/getById'
   }
 
@@ -149,6 +155,21 @@ export class MainZarplataService {
         params: {
           prikazFinish: args.prikazFinish,
           dateFinish: args.dateFinish
+        }
+      }
+    )
+    return res.data
+  }
+
+  static async getMatPomoch(
+    ctx: QueryFunctionContext<[typeof MainZarplataService.QueryKeys.GetMatPomoch, number]>
+  ) {
+    const mainZarplataId = ctx.queryKey[1]
+    const res = await zarplataApiNew.get<MainZarplataMatPomoch[]>(
+      `${MainZarplataService.endpoint}/get-matPomoch`,
+      {
+        params: {
+          mainZarplataId
         }
       }
     )
