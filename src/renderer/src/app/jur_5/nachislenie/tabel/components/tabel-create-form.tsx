@@ -363,9 +363,10 @@ export const TabelCreateForm = ({
               </div>
             )}
             {activeTab === TabelFormTabs.SELECTED && (
-              <div className="relative w-full overflow-auto scrollbar pl-px">
+              <div className="relative w-full h-full overflow-auto scrollbar pl-px">
                 {mainZarplataQuery.isFetching && <LoadingOverlay />}
                 <EditableTable
+                  keyboardNavigation
                   form={form}
                   name="tabelChildren"
                   columnDefs={TabelEditableColumnDefs}

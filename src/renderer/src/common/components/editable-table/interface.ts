@@ -59,6 +59,7 @@ export interface DuplicateHandlerArgs<T extends object, F extends ArrayPath<T>> 
 }
 
 export interface EditableTableProps<T extends object, F extends ArrayPath<NoInfer<T>>> {
+  keyboardNavigation?: boolean
   tableRef?: RefObject<HTMLTableElement>
   tabIndex?: number
   form: UseFormReturn<NoInfer<T>>

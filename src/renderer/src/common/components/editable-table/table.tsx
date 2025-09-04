@@ -35,6 +35,7 @@ export const EditableTable = <T extends object, F extends ArrayPath<NoInfer<T>>>
   props: EditableTableProps<T, F>
 ) => {
   const {
+    keyboardNavigation = false,
     tableRef,
     tabIndex,
     name,
@@ -176,6 +177,41 @@ export const EditableTable = <T extends object, F extends ArrayPath<NoInfer<T>>>
           behavior: 'smooth',
           block: 'nearest'
         })
+      }}
+      onKeyUp={(e) => {
+        if (!keyboardNavigation) return
+        if (e.target instanceof HTMLInputElement && e.key.startsWith('Arrow')) {
+          e.preventDefault()
+          const rowElement = e.target.closest('tr[data-rowindex]')
+          const cellElement = e.target.closest('td[data-cellindex]')
+
+          if (!rowElement || !cellElement) return
+
+          let rowIndex = Number(rowElement.getAttribute('data-rowindex') || 0)
+          let cellIndex = Number(cellElement.getAttribute('data-cellindex') || 0)
+
+          switch (e.key) {
+            case 'ArrowDown':
+              rowIndex += 1
+              break
+            case 'ArrowUp':
+              rowIndex -= 1
+              break
+            case 'ArrowLeft':
+              cellIndex -= 1
+              break
+            case 'ArrowRight':
+              cellIndex += 1
+              break
+          }
+
+          const nextRowElement = ref.current?.querySelector(`tr[data-rowindex="${rowIndex}"]`)
+          const nextCellElement = nextRowElement?.querySelector(`td[data-cellindex="${cellIndex}"]`)
+
+          if (nextCellElement) {
+            nextCellElement.querySelector('input')?.focus()
+          }
+        }
       }}
       style={
         {
@@ -374,7 +410,7 @@ const EditableTableRowRenderer = <T extends object, R extends T[ArrayPath<NoInfe
         {index + 1}
       </EditableTableCell>
       {Array.isArray(columnDefs)
-        ? accessorColumns.map((column) => {
+        ? accessorColumns.map((column, columnIndex) => {
             const { key, Editor, width, minWidth, maxWidth, className } = column
             return (
               <Controller
@@ -386,6 +422,7 @@ const EditableTableRowRenderer = <T extends object, R extends T[ArrayPath<NoInfe
                     <EditableTableCell
                       style={{ width, minWidth, maxWidth }}
                       className={className}
+                      data-cellindex={columnIndex}
                       onDoubleClick={(event) => {
                         onCellDoubleClick?.({
                           column,
