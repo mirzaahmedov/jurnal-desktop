@@ -44,7 +44,7 @@ export const NumericInput = forwardRef<HTMLInputElement, NumericInputProps>(
             forwardedRef.current = ref
           }
         }}
-        allowNegative
+        allowNegative={false}
         allowLeadingZeros={false}
         thousandSeparator=" "
         decimalSeparator=","

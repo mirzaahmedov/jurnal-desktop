@@ -3,8 +3,11 @@ import { z } from 'zod'
 export const DopOplataFormSchema = z.object({
   mainZarplataId: z.number(),
   paymentId: z.number(),
-  from: z.string(),
-  to: z.string(),
+  from: z.string().nonempty(),
+  to: z.string().nonempty(),
+  day: z.number().min(1),
+  daySumma: z.number(),
+  deductionIds: z.array(z.number()),
   percentage: z.number(),
   summa: z.number()
 })
@@ -15,6 +18,9 @@ export const defaultValues: DopOplataFormValues = {
   paymentId: 0,
   from: '',
   to: '',
+  day: 0,
+  daySumma: 0,
   percentage: 0,
-  summa: 0
+  summa: 0,
+  deductionIds: []
 }

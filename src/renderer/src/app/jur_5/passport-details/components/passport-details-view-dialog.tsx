@@ -24,6 +24,7 @@ import { PayrollPaymentService } from '@/common/features/payroll-payment/service
 
 import { DopOplataContainer } from '../dop-oplata'
 import { Employments } from '../employment/employment'
+import { OtdelniyRaschetContainer } from '../otdelniy-raschet'
 import { MainZarplataForm } from './main-zarplata-form'
 import { EmployeeWorkplace } from './passport-details-employee-workplace'
 
@@ -31,14 +32,16 @@ export enum PassportInfoTabs {
   Main = 'main',
   Employment = 'employment',
   AdditionalDocument = 'dop-oplata',
-  Payroll = 'payroll'
+  Payroll = 'payroll',
+  SeperateCalculation = 'seperate-calculation'
 }
 
 const tabOptions = [
   PassportInfoTabs.Main,
   PassportInfoTabs.Employment,
   PassportInfoTabs.AdditionalDocument,
-  PassportInfoTabs.Payroll
+  PassportInfoTabs.Payroll,
+  PassportInfoTabs.SeperateCalculation
 ]
 
 export interface PassportDetailsViewDialogProps extends Omit<DialogTriggerProps, 'children'> {
@@ -182,6 +185,15 @@ export const PassportDetailsViewDialog = ({
                   >
                     {mainZarplata?.data ? (
                       <DopOplataContainer mainZarplata={mainZarplata?.data} />
+                    ) : null}
+                  </TabsContent>
+
+                  <TabsContent
+                    value={PassportInfoTabs.SeperateCalculation}
+                    className="mt-0"
+                  >
+                    {mainZarplata?.data ? (
+                      <OtdelniyRaschetContainer mainZarplata={mainZarplata?.data} />
                     ) : null}
                   </TabsContent>
                 </div>
