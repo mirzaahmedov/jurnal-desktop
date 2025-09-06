@@ -134,11 +134,14 @@ export const DopOplataForm = ({ mainZarplata, selected, onFinish }: DopOplataFor
 
   useEffect(() => {
     if (selected) {
+      const deductionIds = selected.additionalDeductions.map((d) => d.id)
       form.reset({
         ...selected,
+        deductionIds,
         from: formatDate(parseLocaleDate(selected.from)),
         to: formatDate(parseLocaleDate(selected.to))
       })
+      setDeductionsIds(deductionIds)
     } else {
       form.reset({
         ...defaultValues
@@ -147,7 +150,9 @@ export const DopOplataForm = ({ mainZarplata, selected, onFinish }: DopOplataFor
   }, [form, selected])
 
   useEffect(() => {
-    form.setValue('percentage', 0)
+    if (isVacationPayment) {
+      form.setValue('percentage', 0)
+    }
   }, [form, isVacationPayment])
 
   return (

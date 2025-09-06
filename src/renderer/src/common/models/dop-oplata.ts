@@ -1,3 +1,5 @@
+import type { Deduction } from './deduction'
+
 export interface DopOplata {
   id: number
   mainZarplataId: number
@@ -7,4 +9,5 @@ export interface DopOplata {
   to: string
   percentage: number
   summa: number
+  additionalDeductions: Deduction[]
 }

@@ -25,6 +25,7 @@ import { PayrollPaymentService } from '@/common/features/payroll-payment/service
 import { DopOplataContainer } from '../dop-oplata'
 import { Employments } from '../employment/employment'
 import { OtdelniyRaschetContainer } from '../otdelniy-raschet'
+import { Payroll } from '../payroll'
 import { MainZarplataForm } from './main-zarplata-form'
 import { EmployeeWorkplace } from './passport-details-employee-workplace'
 
@@ -185,6 +186,15 @@ export const PassportDetailsViewDialog = ({
                   >
                     {mainZarplata?.data ? (
                       <DopOplataContainer mainZarplata={mainZarplata?.data} />
+                    ) : null}
+                  </TabsContent>
+
+                  <TabsContent
+                    value={PassportInfoTabs.Payroll}
+                    className="mt-0"
+                  >
+                    {mainZarplata?.data ? (
+                      <Payroll mainZarplataId={mainZarplata?.data?.id} />
                     ) : null}
                   </TabsContent>
 

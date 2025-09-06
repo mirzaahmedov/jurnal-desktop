@@ -56,3 +56,23 @@ export interface MainZarplataMatPomoch {
   type: string
   summa: number
 }
+
+export interface MainZarplataNachislenie {
+  year: number
+  month: number
+  docNum: number
+  docDate: string
+  nachislenieSum: number
+  uderjanieSum: number
+  naRukiSum: number
+  type: string
+  payments: Payment[]
+  deductions: Payment[]
+}
+
+interface Payment {
+  id: number
+  summa: number
+  percentage: number
+  name: string
+}

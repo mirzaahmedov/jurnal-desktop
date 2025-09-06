@@ -4,7 +4,8 @@ import type {
   ApiResponse,
   MainZarplata,
   MainZarplataCalculation,
-  MainZarplataMatPomoch
+  MainZarplataMatPomoch,
+  MainZarplataNachislenie
 } from '@/common/models'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 
@@ -26,6 +27,7 @@ export class MainZarplataService {
     GetAll: 'main_zarplata/getAll',
     GetByVacantId: 'main_zarplata/getByVacantId',
     GetMatPomoch: 'main_zarplata/getMatPomoch',
+    GetNachislenies: 'main_zarplata/getNachislenies',
     GetById: 'main_zarplata/getById'
   }
 
@@ -170,6 +172,26 @@ export class MainZarplataService {
       {
         params: {
           mainZarplataId
+        }
+      }
+    )
+    return res.data
+  }
+
+  static async getNachislenies(
+    ctx: QueryFunctionContext<
+      [typeof MainZarplataService.QueryKeys.GetMatPomoch, number, { year?: number; month?: number }]
+    >
+  ) {
+    const mainZarplataId = ctx.queryKey[1]
+    const { year, month } = ctx.queryKey[2]
+    const res = await zarplataApiNew.get<MainZarplataNachislenie[]>(
+      `${MainZarplataService.endpoint}/get-nachislenies`,
+      {
+        params: {
+          mainZarplataId,
+          year,
+          month
         }
       }
     )
