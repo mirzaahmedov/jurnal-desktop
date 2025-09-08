@@ -3,7 +3,7 @@ import type {
   SpravochnikHookOptions,
   SpravochnikTableProps
 } from '@/common/features/spravochnik'
-import type { Shartnoma } from '@/common/models'
+import type { ApiResponseMeta, Shartnoma } from '@/common/models'
 
 import { t } from 'i18next'
 import { CopyPlus } from 'lucide-react'
@@ -31,7 +31,15 @@ import { ShartnomaColumns } from './columns'
 import { ShartnomaQueryKeys } from './config'
 import { ShartnomaForm } from './details/shartnoma-form'
 
-export const ContractService = new CRUDService<Shartnoma, ShartnomaFormValues>({
+export const ContractService = new CRUDService<
+  Shartnoma,
+  ShartnomaFormValues,
+  ShartnomaFormValues,
+  ApiResponseMeta & {
+    summa: number
+    page_summa: number
+  }
+>({
   endpoint: ApiEndpoints.shartnoma
 })
   .use(budjet())

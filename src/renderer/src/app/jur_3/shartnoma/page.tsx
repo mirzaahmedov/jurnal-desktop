@@ -10,7 +10,13 @@ import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
 import { createOrganizationSpravochnik } from '@/app/region-spravochnik/organization'
-import { ChooseSpravochnik, GenericTable, useTableSort } from '@/common/components'
+import {
+  ChooseSpravochnik,
+  FooterCell,
+  FooterRow,
+  GenericTable,
+  useTableSort
+} from '@/common/components'
 import { Button } from '@/common/components/ui/button'
 import { useConfirm } from '@/common/features/confirm'
 import { SearchFilterDebounced } from '@/common/features/filters/search/search-filter-debounced'
@@ -20,6 +26,7 @@ import { useSpravochnik } from '@/common/features/spravochnik'
 import { usePagination } from '@/common/hooks'
 import { useLocationState } from '@/common/hooks/use-location-state'
 import { useLayout } from '@/common/layout'
+import { formatNumber } from '@/common/lib/format'
 import { ListView } from '@/common/views'
 
 import { ShartnomaColumns } from './columns'
@@ -159,6 +166,34 @@ const ShartnomaPage = () => {
               <CopyPlus className="size-4" />
             </Button>
           )}
+          footer={
+            <>
+              <FooterRow>
+                <FooterCell
+                  title={t('total_page')}
+                  colSpan={6}
+                />
+                <FooterCell
+                  content={formatNumber(contracts?.meta?.page_summa ?? 0)}
+                  colSpan={1}
+                />
+              </FooterRow>
+              {(contracts?.meta?.pageCount ?? 0) > 1 ? (
+                <>
+                  <FooterRow>
+                    <FooterCell
+                      title={t('total_period')}
+                      colSpan={6}
+                    />
+                    <FooterCell
+                      content={formatNumber(contracts?.meta?.summa ?? 0)}
+                      colSpan={1}
+                    />
+                  </FooterRow>
+                </>
+              ) : null}
+            </>
+          }
         />
       </ListView.Content>
       <ListView.Footer>
