@@ -32,9 +32,9 @@ export const MainZarplataTable = ({
           renderCell: (row) => (
             <div className="flex items-center gap-2.5">
               {row.isMatPomoch ? (
-                <span className="font-bold">{t('yes')}</span>
+                <span className="font-bold text-emerald-500">{t('yes')}</span>
               ) : (
-                <span className="font-bold">{t('no')}</span>
+                <span className="font-bold text-red-500">{t('no')}</span>
               )}
               <Button
                 size="icon"

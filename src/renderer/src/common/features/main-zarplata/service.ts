@@ -11,7 +11,6 @@ import type { QueryFunctionContext } from '@tanstack/react-query'
 
 import { t } from 'i18next'
 
-import { getUserId } from '@/common/features/auth'
 import { ApiEndpoints } from '@/common/features/crud'
 import { capitalize } from '@/common/lib/string'
 import { extendObject } from '@/common/lib/utils'
@@ -38,11 +37,12 @@ export class MainZarplataService {
         {
           page: number
           limit: number
+          search: string
         }
       ]
     >
   ): Promise<ApiResponse<MainZarplata[]>> {
-    const { page, limit } = ctx.queryKey[1]
+    const { page, limit, search } = ctx.queryKey[1]
     const res = await zarplataApiNew.get<{
       totalCount: number
       data: MainZarplata[]
@@ -50,7 +50,7 @@ export class MainZarplataService {
       params: {
         PageIndex: page,
         PageSize: limit || 10,
-        userId: getUserId()
+        search
       }
     })
     return getMultiApiResponse({

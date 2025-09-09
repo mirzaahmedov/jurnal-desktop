@@ -8,7 +8,12 @@ import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 
 import { GenericTable, LoadingOverlay } from '@/common/components'
+import { Pagination } from '@/common/components/pagination'
 import { useConfirm } from '@/common/features/confirm'
+import {
+  SearchFilterDebounced,
+  useSearchFilter
+} from '@/common/features/filters/search/search-filter-debounced'
 import { MainZarplataService } from '@/common/features/main-zarplata/service'
 import { useVacantTreeNodes } from '@/common/features/vacant/hooks/use-vacant-tree-nodes'
 import {
@@ -16,7 +21,7 @@ import {
   type VacantTreeNode,
   VacantTreeSearch
 } from '@/common/features/vacant/ui/vacant-tree'
-import { useToggle } from '@/common/hooks'
+import { usePagination, useToggle } from '@/common/hooks'
 import { useLayout } from '@/common/layout'
 import { queryClient } from '@/common/lib/query-client'
 
@@ -27,11 +32,14 @@ import { PassportDetailsViewDialog } from './components/passport-details-view-di
 const PassportDetailsPage = () => {
   const setLayout = useLayout()
 
+  const pagination = usePagination()
   const createDialogToggle = useToggle()
   const editDialogToggle = useToggle()
 
   const [selectedVacant, setSelectedVacant] = useState<VacantTreeNode | null>(null)
   const [selectedUser, setSelectedUser] = useState<MainZarplata | undefined>()
+
+  const [searchFilter] = useSearchFilter()
 
   const { t } = useTranslation(['app'])
   const { confirm } = useConfirm()
@@ -45,8 +53,21 @@ const PassportDetailsPage = () => {
       }
     ],
     queryFn: MainZarplataService.getByVacantId,
-    enabled: !!selectedVacant
+    enabled: !!selectedVacant || !searchFilter
   })
+  const { data: mainZarplataSearch, isFetching: isFetchingMainZarplataSearch } = useQuery({
+    queryKey: [
+      MainZarplataService.QueryKeys.GetAll,
+      {
+        search: searchFilter ?? '',
+        page: pagination.page,
+        limit: pagination.limit
+      }
+    ],
+    queryFn: MainZarplataService.getAll,
+    enabled: !!searchFilter
+  })
+
   const { mutate: deleteMainZarplata, isPending: isDeleting } = useMutation({
     mutationFn: MainZarplataService.delete,
     onSuccess: () => {
@@ -68,6 +89,7 @@ const PassportDetailsPage = () => {
           title: t('pages.zarplata')
         }
       ],
+      content: SearchFilterDebounced,
       onCreate: selectedVacant ? createDialogToggle.open : undefined
     })
   }, [t, setLayout, selectedVacant])
@@ -113,17 +135,28 @@ const PassportDetailsPage = () => {
             </div>
           </div>
         </Allotment.Pane>
-        <Allotment.Pane>
+        <Allotment.Pane className="flex flex-col h-full">
           <div className="relative h-full w-full overflow-auto scrollbar pl-px">
-            {isFetchingMainZarplata || isDeleting ? <LoadingOverlay /> : null}
+            {isFetchingMainZarplata || isFetchingMainZarplataSearch || isDeleting ? (
+              <LoadingOverlay />
+            ) : null}
             <GenericTable
-              data={mainZarplata ?? []}
+              data={searchFilter ? (mainZarplataSearch?.data ?? []) : (mainZarplata ?? [])}
               columnDefs={MainZarplataColumnDefs}
               onEdit={handleRowEdit}
               onDelete={handleRowDelete}
               className="table-generic-xs"
             />
           </div>
+          {searchFilter ? (
+            <div className="p-5">
+              <Pagination
+                {...pagination}
+                pageCount={mainZarplataSearch?.meta?.pageCount ?? 0}
+                count={mainZarplataSearch?.meta?.count ?? 0}
+              />
+            </div>
+          ) : null}
         </Allotment.Pane>
       </Allotment>
 

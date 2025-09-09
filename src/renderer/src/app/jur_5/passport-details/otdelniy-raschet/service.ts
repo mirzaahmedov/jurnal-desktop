@@ -1,4 +1,8 @@
 import type { OtdelniyRaschetFormValues } from './config'
+import type {
+  OtdelniyRaschetDeductionDto,
+  OtdelniyRaschetPaymentDto
+} from '@/common/models/otdelniy-raschet'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 
 import { zarplataApiNew } from '@/common/lib/zarplata_new'
@@ -21,6 +25,8 @@ export interface OtdelniyRaschet {
   kazarma: number
   createdAt?: string
   updatedAt?: string
+  otdelniyRaschetPaymentDtos: OtdelniyRaschetPaymentDto[]
+  otdelniyRaschetDeductionDtos: OtdelniyRaschetDeductionDto[]
 }
 
 export class OtdelniyRaschetService {
@@ -31,11 +37,21 @@ export class OtdelniyRaschetService {
   }
 
   static async getAll(
-    ctx: QueryFunctionContext<[typeof OtdelniyRaschetService.QueryKeys.GetByMainZarplataId, number]>
+    ctx: QueryFunctionContext<
+      [
+        typeof OtdelniyRaschetService.QueryKeys.GetByMainZarplataId,
+        number,
+        {
+          year: number
+          month: number
+        }
+      ]
+    >
   ) {
     const mainZarplataId = ctx.queryKey[1]
+    const { year, month } = ctx.queryKey[2]
     const res = await zarplataApiNew.get<OtdelniyRaschet[]>(
-      `${OtdelniyRaschetService.endpoint}/${mainZarplataId}`
+      `${OtdelniyRaschetService.endpoint}/${mainZarplataId}?year=${year}&month=${month}`
     )
     return res.data
   }
