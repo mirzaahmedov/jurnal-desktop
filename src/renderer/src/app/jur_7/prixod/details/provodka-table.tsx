@@ -60,7 +60,7 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
 
   const spravochnikToggle = useToggle()
 
-  const { fields, append, insert, remove } = useFieldArray({
+  const { fields, append, insert, remove, replace } = useFieldArray({
     control: form.control,
     name: 'childs'
   })
@@ -109,42 +109,42 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
             onSelect={(products) => {
               const prevChilds = form.getValues('childs').slice(0, rowIndex)
               const nextChilds = form.getValues('childs').slice(rowIndex + 1)
-              form.setValue(
-                'childs',
-                [
-                  ...prevChilds,
-                  ...products.map((p) => {
-                    const group = p.group
-                    const iznos = group && group?.iznos_foiz > 0
-                    return {
-                      product_id: p.id,
-                      group_jur7_id: p.group_jur7_id,
-                      name: p.name,
-                      group_number: group.group_number ?? group?.name ?? '',
-                      unit_id: p.unit_id,
-                      inventar_num: p.inventar_num,
-                      serial_num: p.serial_num,
-                      kol: 0,
-                      sena: 0,
-                      summa: 0,
-                      iznos: iznos,
-                      debet_schet: group?.schet ?? '',
-                      debet_sub_schet: group?.provodka_subschet ?? '',
-                      kredit_schet: '',
-                      kredit_sub_schet: group?.provodka_subschet ?? '',
-                      data_pereotsenka: form.getValues('doc_date'),
-                      eski_iznos_summa: 0,
-                      iznos_schet: iznos ? (group?.schet ?? '') : '',
-                      iznos_sub_schet: iznos ? (group?.provodka_subschet ?? '') : '',
-                      iznos_start: iznos ? form.getValues('doc_date') : ''
-                    } satisfies MaterialPrixodProvodkaFormValues
-                  }),
-                  ...nextChilds
-                ],
-                {
-                  shouldValidate: true
-                }
-              )
+
+              const newChilds = [
+                ...prevChilds,
+                ...products.map((product) => {
+                  const group = product.group
+                  const iznos = group && group?.iznos_foiz > 0
+                  return {
+                    product_id: product.id,
+                    group_jur7_id: product.group_jur7_id,
+                    name: product.name,
+                    group_number: group.group_number ?? group?.name ?? '',
+                    unit_id: product.unit_id,
+                    inventar_num: product.inventar_num,
+                    serial_num: product.serial_num,
+                    kol: 0,
+                    sena: 0,
+                    summa: 0,
+                    iznos: iznos,
+                    debet_schet: group?.schet ?? '',
+                    debet_sub_schet: group?.provodka_subschet ?? '',
+                    kredit_schet: '',
+                    kredit_sub_schet: group?.provodka_subschet ?? '',
+                    data_pereotsenka: form.getValues('doc_date'),
+                    eski_iznos_summa: 0,
+                    iznos_schet: iznos ? (group?.schet ?? '') : '',
+                    iznos_sub_schet: iznos ? (group?.provodka_subschet ?? '') : '',
+                    iznos_start: iznos ? form.getValues('doc_date') : ''
+                  } satisfies MaterialPrixodProvodkaFormValues
+                }),
+                ...nextChilds
+              ]
+
+              form.setValue('childs', newChilds, {
+                shouldValidate: true
+              })
+              replace(newChilds)
             }}
           />
           <Table
@@ -271,9 +271,9 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
                 fields.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE).map((row, rowIndex) => {
                   const index = (page - 1) * PAGE_SIZE + rowIndex
                   const errors = form.formState.errors.childs?.[index] || {}
-                  const isExisting = !!row.product_id
+                  const isExisting = !!form.watch(`childs.${index}.product_id`)
                   return (
-                    <EditableTableRow key={index}>
+                    <EditableTableRow key={row.id}>
                       <EditableTableCell className="px-3 font-medium">
                         {index + 1}
                       </EditableTableCell>
@@ -836,6 +836,8 @@ const NaimenovanieCells = ({
     }
   }
 
+  console.log('rerendering')
+
   return (
     <>
       <EditableTableCell>
@@ -859,19 +861,22 @@ const NaimenovanieCells = ({
           <Controller
             control={form.control}
             name={`childs.${index}.name`}
-            render={({ field, fieldState }) => (
-              <Input
-                tabIndex={tabIndex}
-                error={!!fieldState.error}
-                value={field.value || ''}
-                onChange={(e) => {
-                  field.onChange(e.target.value)
-                }}
-                editor
-                onDoubleClick={handleOpenModal}
-                readOnly={isExisting}
-              />
-            )}
+            render={({ field, fieldState }) => {
+              console.log({ fieldValue: field.value, isExisting })
+              return (
+                <Input
+                  tabIndex={tabIndex}
+                  error={!!fieldState.error}
+                  value={field.value || ''}
+                  onChange={(e) => {
+                    field.onChange(e.target.value)
+                  }}
+                  editor
+                  onDoubleClick={handleOpenModal}
+                  readOnly={isExisting}
+                />
+              )
+            }}
           />
 
           <Button

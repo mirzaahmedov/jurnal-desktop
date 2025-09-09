@@ -54,7 +54,7 @@ const ProductColumnDefs: ColumnDef<MaterialPrixodProduct>[] = [
     header: 'inventar-num'
   },
   {
-    key: 'edin',
+    key: 'unit',
     header: 'ei'
   }
 ]

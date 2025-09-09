@@ -45,6 +45,7 @@ export const defaultValues: MaterialPrixodFormValues = {
 
 export const MaterialPrixodProvodkaFormSchema = withPreprocessor(
   z.object({
+    id: z.any().optional(),
     name: z.string(),
     unit_id: z.number(),
     group_jur7_id: z.number(),
