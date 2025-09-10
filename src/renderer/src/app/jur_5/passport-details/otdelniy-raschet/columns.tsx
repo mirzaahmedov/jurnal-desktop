@@ -1,5 +1,5 @@
-import type { OtdelniyRaschet } from './service'
 import type { ColumnDef } from '@/common/components'
+import type { OtdelniyRaschet } from '@/common/models/otdelniy-raschet'
 
 export const DopOplataColumnDefs: ColumnDef<OtdelniyRaschet>[] = [
   {
@@ -15,7 +15,7 @@ export const DopOplataColumnDefs: ColumnDef<OtdelniyRaschet>[] = [
     header: 'year'
   },
   {
-    key: 'nachislenieYear',
+    key: 'nachislenieMonth',
     header: 'month'
   },
   {

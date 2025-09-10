@@ -1,0 +1,6 @@
+export { MainZarplataInfo } from './main-zarplata-info'
+export { MainZarplataForm } from './main-zarplata-form'
+export { PassportDetailsAssignPositionDialog } from './passport-details-assign-position-dialog'
+export { PassportInfoCreateDialog } from './passport-details-create-dialog'
+export { EmployeeWorkplace } from './passport-details-employee-workplace'
+export { PassportDetailsViewDialog } from './passport-details-view-dialog'

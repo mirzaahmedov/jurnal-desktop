@@ -475,6 +475,7 @@
   "order_finish": "Lavozimdan olib tashlash to'g'risida buyruq",
   "order_date": "Buyruq sanasi",
   "calculate_salary": "Ish haqini hisoblash",
+  "recalculate_salary": "Ish haqini qayta hisoblash",
   "employee": "Xodim",
   "employment": "Mehnat daftarchasi",
   "payment": "To'lov",
@@ -562,5 +563,7 @@
   "no": "Yo'q",
   "seperate-calculation": "Alohida hisob-kitob",
   "view": "Ko'rish",
-  "percentage": "Foiz"
+  "percentage": "Foiz",
+  "select_vacant_first": "Avval vakantni tanlang",
+  "position_salary_only": "Faqat lavozim maoshidan foiz oladigan to‘lov"
 }

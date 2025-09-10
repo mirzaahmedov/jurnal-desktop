@@ -282,6 +282,22 @@ export const PaymentsDialog = ({ selectedPayment, ...props }: PaymentsDialogProp
                     />
                   </div> */}
 
+                  <div className="col-span-full flex justify-end">
+                    <FormField
+                      control={form.control}
+                      name="typePayment"
+                      render={({ field }) => (
+                        <FormElement label={t('position_salary_only')}>
+                          <Checkbox
+                            ref={field.ref}
+                            checked={field.value}
+                            onCheckedChange={(checked) => field.onChange(checked)}
+                          />
+                        </FormElement>
+                      )}
+                    />
+                  </div>
+
                   <DialogFooter className="col-span-full">
                     <Button
                       type="submit"

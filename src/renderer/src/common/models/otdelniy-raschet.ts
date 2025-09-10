@@ -15,6 +15,8 @@ export interface OtdelniyRaschet {
   kazarma: number
   createdAt?: string
   updatedAt?: string
+  nachislenieSum: number
+  uderjanieSum: number
   otdelniyRaschetPaymentDtos: OtdelniyRaschetPaymentDto[]
   otdelniyRaschetDeductionDtos: OtdelniyRaschetDeductionDto[]
 }

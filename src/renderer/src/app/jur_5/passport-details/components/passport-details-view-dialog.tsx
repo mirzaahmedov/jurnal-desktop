@@ -1,5 +1,4 @@
 import type { VacantTreeNode } from '@/app/region-admin/vacant/vacant-tree'
-import type { MainZarplata } from '@/common/models'
 import type { DialogTriggerProps } from 'react-aria-components'
 
 import { useEffect, useState } from 'react'
@@ -46,12 +45,12 @@ const tabOptions = [
 ]
 
 export interface PassportDetailsViewDialogProps extends Omit<DialogTriggerProps, 'children'> {
-  vacant: VacantTreeNode
-  selectedMainZarplata: MainZarplata | undefined
+  vacant: VacantTreeNode | null
+  mainZarplataId: number | null
 }
 export const PassportDetailsViewDialog = ({
   vacant,
-  selectedMainZarplata,
+  mainZarplataId,
   ...props
 }: PassportDetailsViewDialogProps) => {
   const { t } = useTranslation(['app'])
@@ -63,22 +62,19 @@ export const PassportDetailsViewDialog = ({
   const queryClient = useQueryClient()
 
   const { data: mainZarplata, isFetching: isFetchingMainZarplata } = useQuery({
-    queryKey: [MainZarplataService.QueryKeys.GetById, selectedMainZarplata?.id ?? 0],
+    queryKey: [MainZarplataService.QueryKeys.GetById, mainZarplataId ?? 0],
     queryFn: MainZarplataService.getById,
-    enabled: props?.isOpen || !!selectedMainZarplata?.id
+    enabled: props?.isOpen || !!mainZarplataId
   })
 
   const { mutate: getPositionSalary, isPending: isCalculating } = useMutation({
     mutationFn: MainZarplataService.getPositionSalary,
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [PayrollPaymentService.QueryKeys.GetAll, selectedMainZarplata?.id ?? 0]
+        queryKey: [PayrollPaymentService.QueryKeys.GetAll, mainZarplataId ?? 0]
       })
       queryClient.invalidateQueries({
-        queryKey: [
-          PayrollDeductionService.QueryKeys.GetByMainZarplataId,
-          selectedMainZarplata?.id ?? 0
-        ]
+        queryKey: [PayrollDeductionService.QueryKeys.GetByMainZarplataId, mainZarplataId ?? 0]
       })
     }
   })

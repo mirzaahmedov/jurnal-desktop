@@ -14,7 +14,8 @@ export const PaymentFormSchema = z.object({
   creditAccount: z.string(),
   subAccount: z.string(),
   sourceFund: z.string(),
-  calculationFormula: z.string()
+  calculationFormula: z.string(),
+  typePayment: z.boolean().default(false)
 })
 
 export type PaymentFormValues = z.infer<typeof PaymentFormSchema>
@@ -33,5 +34,6 @@ export const defaultValues: PaymentFormValues = {
   creditAccount: '',
   subAccount: '',
   sourceFund: '',
-  calculationFormula: ''
+  calculationFormula: '',
+  typePayment: false
 }

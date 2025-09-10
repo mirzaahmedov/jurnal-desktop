@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next'
 import { Table } from '@/common/components/pdf'
 import { formatLocaleDate, formatNumber } from '@/common/lib/format'
 
-const columnWidths = [160, 40, 60, 60, 70, 70, 70, 70]
+const columnWidths = [160, 40, 40, 60, 70, 70, 70, 60]
 
 export const ProductsTable: FC<{
   products: MaterialPrixodProvodka[]

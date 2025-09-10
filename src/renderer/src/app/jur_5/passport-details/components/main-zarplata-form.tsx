@@ -41,7 +41,7 @@ const transliterator = new Transliterator()
 
 export interface MainZarplataFormProps {
   isCalculating?: boolean
-  vacant: VacantTreeNode
+  vacant: VacantTreeNode | null
   selectedMainZarplata?: MainZarplata | undefined
   content?: ReactNode
   workplace?: ReactNode
@@ -156,10 +156,14 @@ export const MainZarplataForm = ({
           ...values,
           dateBirth: formatLocaleDate(values.dateBirth),
           nachaloSlujbi: formatLocaleDate(values.nachaloSlujbi),
-          vacantId: vacant.id
+          vacantId: selectedMainZarplata.vacantId
         }
       })
     } else {
+      if (!vacant) {
+        toast.error(t('select_vacant_first'))
+        return
+      }
       createMainZarplata({
         ...values,
         dateBirth: formatLocaleDate(values.dateBirth),
@@ -181,7 +185,11 @@ export const MainZarplataForm = ({
     }
   }, [selectedMainZarplata, vacant, form])
   useEffect(() => {
-    form.setValue('rayon', getVacantRayon(vacant))
+    if (vacant) {
+      form.setValue('rayon', getVacantRayon(vacant))
+    } else {
+      form.setValue('rayon', '')
+    }
   }, [vacant])
 
   const pnfl = form.watch('inps')

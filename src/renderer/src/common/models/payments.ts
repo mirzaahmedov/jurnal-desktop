@@ -13,4 +13,5 @@ export interface Payment {
   subAccount: string
   sourceFund: string
   calculationFormula: string
+  typePayment: boolean
 }

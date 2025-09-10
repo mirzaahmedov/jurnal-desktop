@@ -7,8 +7,8 @@ export const ZarplataSpravochnikFormSchema = z.object({
   foiz: z.number().optional().nullable(),
   sena1: z.number().optional().nullable(),
   sena2: z.number().optional().nullable(),
-  schet: z.string().optional(),
-  subSchet: z.string().optional(),
+  schet: z.string().optional().nullable(),
+  subSchet: z.string().optional().nullable(),
   isPoek: z.boolean().optional().nullable()
 })
 export type ZarplataSpravochnikFormValues = z.infer<typeof ZarplataSpravochnikFormSchema>

@@ -20,8 +20,8 @@ export type OtdelniyRaschetFormValues = z.infer<typeof OtdelniyRaschetFormSchema
 export const defaultValues: OtdelniyRaschetFormValues = {
   spravochnikBudjetNameId: 0,
   mainSchetId: 0,
-  nachislenieYear: 0,
-  nachislenieMonth: 0,
+  nachislenieYear: new Date().getFullYear(),
+  nachislenieMonth: new Date().getMonth() + 1,
   docNum: 0,
   docDate: '',
   mainZarplataId: 0,

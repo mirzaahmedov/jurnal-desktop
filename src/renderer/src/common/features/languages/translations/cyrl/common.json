@@ -476,6 +476,7 @@
   "order_finish": "Лавозимдан олиб ташлаш тўғрисида буйруқ",
   "order_date": "Буйруқ санаси",
   "calculate_salary": "Иш ҳақини ҳисоблаш",
+  "recalculate_salary": "Иш ҳақини қайта ҳисоблаш",
   "employee": "Ходим",
   "employment": "Меҳнат дафтарчаси",
   "payment": "Тўлов",
@@ -563,5 +564,7 @@
   "no": "Йўқ",
   "seperate-calculation": "Алоҳида ҳисоб-китоб",
   "view": "Кўриш",
-  "percentage": "Фоиз"
+  "percentage": "Фоиз",
+  "select_vacant_first": "Аввал вакантни танланг",
+  "position_salary_only": "Фақат лавозим маошидан фоиз оладиган тўлов"
 }

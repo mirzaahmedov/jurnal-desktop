@@ -1,4 +1,5 @@
 import type { OtdelniyRaschetFormValues } from './config'
+import type { OtdelniyRaschetPaymentFormValues } from './otdelniy-raschet-payments-dialog'
 import type { OtdelniyRaschet } from '@/common/models/otdelniy-raschet'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 
@@ -8,6 +9,7 @@ export class OtdelniyRaschetService {
   static endpoint = 'OtdelniyRaschet'
 
   static QueryKeys = {
+    GetById: 'OtdelniyRaschet/get-by-id',
     GetByMainZarplataId: 'OtdelniyRaschet/get-by-mainId'
   }
 
@@ -31,21 +33,60 @@ export class OtdelniyRaschetService {
     return res.data
   }
 
+  static async getById(id: number) {
+    const res = await zarplataApiNew.get<OtdelniyRaschet>(
+      `${OtdelniyRaschetService.endpoint}/getById/${id}`
+    )
+    return res.data
+  }
+
   static async create(values: OtdelniyRaschetFormValues) {
     const res = await zarplataApiNew.post(`${OtdelniyRaschetService.endpoint}`, values)
     return res.data
   }
 
-  static async update(args: { id: number; values: OtdelniyRaschetFormValues }) {
-    const res = await zarplataApiNew.put(
-      `${OtdelniyRaschetService.endpoint}/${args.id}`,
-      args.values
-    )
+  static async update(args: {
+    id: number
+    values: {
+      spravochnikBudjetNameId: number
+      mainSchetId: number
+      nachislenieYear: number
+      nachislenieMonth: number
+      docNum: number
+      docDate: string
+      mainZarplataId: number
+      rabDni: number
+      otrabDni: number
+      noch: number
+      prazdnik: number
+      pererabodka: number
+      kazarma: number
+    }
+  }) {
+    const res = await zarplataApiNew.put(`${OtdelniyRaschetService.endpoint}/update`, args.values, {
+      params: {
+        mainId: args.id
+      }
+    })
     return res.data
   }
 
   static async delete(id: number) {
     const res = await zarplataApiNew.delete(`${OtdelniyRaschetService.endpoint}/${id}`)
+    return res.data
+  }
+
+  static async createPayment(values: OtdelniyRaschetPaymentFormValues) {
+    const res = await zarplataApiNew.post(`${OtdelniyRaschetService.endpoint}/creat-payment`, {
+      ...values
+    })
+    return res.data
+  }
+
+  static async createDeduction(values: OtdelniyRaschetPaymentFormValues) {
+    const res = await zarplataApiNew.post(`${OtdelniyRaschetService.endpoint}/creat-deduction`, {
+      ...values
+    })
     return res.data
   }
 }

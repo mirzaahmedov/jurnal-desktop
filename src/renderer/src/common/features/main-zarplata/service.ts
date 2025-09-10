@@ -89,10 +89,21 @@ export class MainZarplataService {
   }
 
   static async getById(
-    ctx: QueryFunctionContext<[string, number]>
+    ctx: QueryFunctionContext<[string, number, { year: number; month: number }?]>
   ): Promise<ApiResponse<MainZarplata>> {
     const id = ctx.queryKey[1]
-    const res = await zarplataApiNew.get<MainZarplata>(`${MainZarplataService.endpoint}/${id}`)
+    const { year, month } = ctx.queryKey[2] ?? {}
+    const res = await zarplataApiNew.get<MainZarplata>(
+      `${MainZarplataService.endpoint}/${id}`,
+      year && month
+        ? {
+            params: {
+              year,
+              month
+            }
+          }
+        : {}
+    )
     return getSingleApiResponse({
       response: res.data
     })

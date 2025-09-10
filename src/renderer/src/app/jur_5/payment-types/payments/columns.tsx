@@ -170,10 +170,18 @@ export const PaymentColumnDefs: (args: { isEditable: boolean }) => ColumnDef<Pay
   {
     key: 'sourceFund',
     header: 'main_fund'
+  },
+  {
+    width: 100,
+    minWidth: 100,
+    key: 'typePayment',
+    header: 'position_salary_only',
+    renderCell: (row) => (
+      <CheckboxCell
+        row={row}
+        field="typePayment"
+        isMutable={isEditable}
+      />
+    )
   }
-  // {
-  //   minWidth: 300,
-  //   key: 'calculationFormula',
-  //   header: 'calc_formula'
-  // }
 ]

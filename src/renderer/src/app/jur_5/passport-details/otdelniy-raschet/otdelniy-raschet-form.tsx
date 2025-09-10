@@ -1,5 +1,7 @@
 import type { MainZarplata } from '@/common/models'
 
+import { useEffect } from 'react'
+
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
@@ -13,6 +15,7 @@ import { Button } from '@/common/components/jolly/button'
 import { MonthSelect } from '@/common/components/month-select'
 import { Form, FormField } from '@/common/components/ui/form'
 import { YearSelect } from '@/common/components/year-select'
+import { MainZarplataService } from '@/common/features/main-zarplata/service'
 import { useRequisitesStore } from '@/common/features/requisites'
 import { useRequisitesRedirect } from '@/common/features/requisites/use-main-schet-redirect'
 import { formatLocaleDate } from '@/common/lib/format'
@@ -35,6 +38,10 @@ export const OtdelniyRaschetForm = ({ mainZarplata, onFinish }: OtdelniyRaschetF
   const form = useForm({
     defaultValues,
     resolver: zodResolver(OtdelniyRaschetFormSchema)
+  })
+
+  const getMainZarplatMutation = useMutation({
+    mutationFn: MainZarplataService.getById
   })
 
   const otdelniyRaschetCreateMutation = useMutation({
@@ -60,7 +67,24 @@ export const OtdelniyRaschetForm = ({ mainZarplata, onFinish }: OtdelniyRaschetF
     })
   })
 
-  console.log({ values: form.watch() })
+  const year = form.watch('nachislenieYear')
+  const month = form.watch('nachislenieMonth')
+  useEffect(() => {
+    if (year && month && mainZarplata.id) {
+      getMainZarplatMutation.mutate(
+        {
+          queryKey: [MainZarplataService.QueryKeys.GetById, mainZarplata.id, { year, month }]
+        } as any,
+        {
+          onSuccess: (res) => {
+            const { day } = res.data ?? {}
+            form.setValue('rabDni', day ?? 0)
+            form.setValue('otrabDni', day ?? 0)
+          }
+        }
+      )
+    }
+  }, [year, month])
 
   return (
     <div className="h-full relative flex flex-col gap-5 p-5">
@@ -72,7 +96,7 @@ export const OtdelniyRaschetForm = ({ mainZarplata, onFinish }: OtdelniyRaschetF
           className="h-full space-y-6 flex flex-col"
         >
           <div className="flex-1 overflow-x-visible overflow-y-auto scrollbar">
-            <div className="grid grid-cols-[repeat(auto-fit,minmax(350px,1fr))] gap-6">
+            <div className="grid grid-cols-[repeat(auto-fit,minmax(350px,1fr))] gap-6 p-1">
               <FormField
                 control={form.control}
                 name="nachislenieYear"

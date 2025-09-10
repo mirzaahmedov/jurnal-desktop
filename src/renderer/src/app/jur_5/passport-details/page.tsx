@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { Allotment } from 'allotment'
 import { useTranslation } from 'react-i18next'
+import { useSearchParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
 import { GenericTable, LoadingOverlay } from '@/common/components'
@@ -34,10 +35,13 @@ const PassportDetailsPage = () => {
 
   const pagination = usePagination()
   const createDialogToggle = useToggle()
-  const editDialogToggle = useToggle()
 
   const [selectedVacant, setSelectedVacant] = useState<VacantTreeNode | null>(null)
-  const [selectedUser, setSelectedUser] = useState<MainZarplata | undefined>()
+  const [searchParams, setSearchParams] = useSearchParams()
+
+  const mainZarplataId = searchParams.get('mainZarplataId')
+    ? Number(searchParams.get('mainZarplataId'))
+    : null
 
   const [searchFilter] = useSearchFilter()
 
@@ -95,8 +99,7 @@ const PassportDetailsPage = () => {
   }, [t, setLayout, selectedVacant])
 
   const handleRowEdit = (row: MainZarplata) => {
-    setSelectedUser(row)
-    editDialogToggle.open()
+    setSearchParams({ mainZarplataId: row.id.toString() })
   }
   const handleRowDelete = (row: MainZarplata) => {
     confirm({
@@ -105,6 +108,8 @@ const PassportDetailsPage = () => {
       }
     })
   }
+
+  console.log({ mainZarplataId })
 
   return (
     <>
@@ -160,14 +165,16 @@ const PassportDetailsPage = () => {
         </Allotment.Pane>
       </Allotment>
 
-      {selectedVacant ? (
-        <PassportDetailsViewDialog
-          isOpen={editDialogToggle.isOpen}
-          onOpenChange={editDialogToggle.setOpen}
-          selectedMainZarplata={selectedUser}
-          vacant={selectedVacant}
-        />
-      ) : null}
+      <PassportDetailsViewDialog
+        isOpen={!!mainZarplataId}
+        onOpenChange={(open) => {
+          if (!open) {
+            setSearchParams({})
+          }
+        }}
+        mainZarplataId={mainZarplataId}
+        vacant={selectedVacant}
+      />
 
       {selectedVacant ? (
         <PassportInfoCreateDialog
@@ -176,8 +183,7 @@ const PassportDetailsPage = () => {
           selectedUser={undefined}
           vacant={selectedVacant}
           onCreate={(user) => {
-            setSelectedUser(user)
-            editDialogToggle.open()
+            setSearchParams({ mainZarplataId: user.id.toString() })
             createDialogToggle.close()
           }}
         />
