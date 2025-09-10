@@ -1,13 +1,20 @@
 export interface OtdelniyRaschet {
   id: number
-  prikazNum: string
-  prikazDate: string
-  opisanie: string
-  forMonth: string
-  forYear: string
-  summa: string
+  spravochnikBudjetNameId: number
+  mainSchetId: number
+  nachislenieYear: number
+  nachislenieMonth: number
+  docNum: number
+  docDate: string
   mainZarplataId: number
-  vacantId: number
+  rabDni: number
+  otrabDni: number
+  noch: number
+  prazdnik: number
+  pererabodka: number
+  kazarma: number
+  createdAt?: string
+  updatedAt?: string
   otdelniyRaschetPaymentDtos: OtdelniyRaschetPaymentDto[]
   otdelniyRaschetDeductionDtos: OtdelniyRaschetDeductionDto[]
 }

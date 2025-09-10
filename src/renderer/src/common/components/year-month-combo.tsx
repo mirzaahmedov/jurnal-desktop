@@ -8,10 +8,10 @@ import { Button } from './jolly/button'
 import { MonthPicker } from './month-picker'
 
 export interface YearMonthComboProps {
-  year: number | undefined
-  month: number | undefined
-  onYearChange: (year: number | undefined) => void
-  onMonthChange: (month: number | undefined) => void
+  year: number
+  month: number
+  onYearChange: (year: number) => void
+  onMonthChange: (month: number) => void
 }
 
 export const YearMonthCombo: FC<YearMonthComboProps> = ({
@@ -20,17 +20,15 @@ export const YearMonthCombo: FC<YearMonthComboProps> = ({
   onYearChange,
   onMonthChange
 }) => {
-  const date = year && month ? new Date(year, month - 1) : null
+  const date = year && month ? new Date(year, month - 1) : new Date()
   const dateString = year && month ? formatDate(new Date(year, month - 1)) : ''
 
   const handleMonthChange = (value: string) => {
-    const date = parseDate(value)
+    const date = value ? parseDate(value) : new Date()
+
     if (date) {
       onYearChange(date.getFullYear())
       onMonthChange(date.getMonth() + 1)
-    } else {
-      onYearChange(undefined)
-      onMonthChange(undefined)
     }
   }
 

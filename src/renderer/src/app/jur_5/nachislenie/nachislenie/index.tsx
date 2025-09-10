@@ -8,10 +8,9 @@ import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 
 import { GenericTable, LoadingOverlay } from '@/common/components'
-import { MonthSelect } from '@/common/components/month-select'
 import { Pagination } from '@/common/components/pagination'
 import { SearchInputDebounced } from '@/common/components/search-input-debounced'
-import { YearSelect } from '@/common/components/year-select'
+import { YearMonthCombo } from '@/common/components/year-month-combo'
 import { useConfirm } from '@/common/features/confirm'
 import { useRequisitesStore } from '@/common/features/requisites'
 import { useVacantTreeNodes } from '@/common/features/vacant/hooks/use-vacant-tree-nodes'
@@ -157,18 +156,11 @@ export const Nachislenies = () => {
               value={docNum}
               onValueChange={setDocNum}
             />
-            <YearSelect
-              selectedKey={year}
-              onSelectionChange={(value) =>
-                setYear(value ? (value as number) : new Date().getFullYear())
-              }
-            />
-            <MonthSelect
-              selectedKey={month}
-              onSelectionChange={(value) =>
-                setMonth(value ? (value as number) : new Date().getMonth() + 1)
-              }
-              className="w-36"
+            <YearMonthCombo
+              year={year}
+              onYearChange={setYear}
+              month={month}
+              onMonthChange={setMonth}
             />
           </div>
           <div className="flex-1 relative w-full overflow-auto scrollbar">

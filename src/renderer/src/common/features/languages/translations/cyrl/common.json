@@ -561,5 +561,7 @@
   "have_taken_material_help": "Материал ёрдам олган",
   "yes": "Ҳа",
   "no": "Йўқ",
-  "seperate-calculation": "Алоҳида ҳисоб-китоб"
+  "seperate-calculation": "Алоҳида ҳисоб-китоб",
+  "view": "Кўриш",
+  "percentage": "Фоиз"
 }

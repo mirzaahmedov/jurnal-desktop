@@ -5,9 +5,8 @@ import { useTranslation } from 'react-i18next'
 
 import { FooterCell, FooterRow, GenericTable, LoadingOverlay } from '@/common/components'
 import { CollapsibleTable } from '@/common/components/collapsible-table'
-import { MonthSelect } from '@/common/components/month-select'
 import { SummaCell } from '@/common/components/table/renderers/summa'
-import { YearSelect } from '@/common/components/year-select'
+import { YearMonthCombo } from '@/common/components/year-month-combo'
 import { MainZarplataService } from '@/common/features/main-zarplata/service'
 import { formatNumber } from '@/common/lib/format'
 
@@ -37,16 +36,14 @@ export const Payroll: FC<PayrollProps> = ({ mainZarplataId }) => {
   return (
     <div className="h-full flex flex-col">
       <div className="flex items-center gap-5 p-5">
-        <YearSelect
-          selectedKey={year}
-          onSelectionChange={(value) => setYear(value ? Number(value) : new Date().getFullYear())}
-        />
-        <MonthSelect
-          selectedKey={month}
-          onSelectionChange={(value) => setMonth(value ? Number(value) : new Date().getMonth() + 1)}
+        <YearMonthCombo
+          year={year}
+          onYearChange={setYear}
+          month={month}
+          onMonthChange={setMonth}
         />
       </div>
-      <div className="flex-1 overflow-y-auto scrollbar">
+      <div className="relative flex-1 overflow-y-auto scrollbar">
         {nachislenieQuery.isFetching ? <LoadingOverlay /> : null}
         <CollapsibleTable
           data={nachislenies ?? []}

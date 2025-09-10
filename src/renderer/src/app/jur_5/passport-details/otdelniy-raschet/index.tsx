@@ -1,4 +1,5 @@
 import type { MainZarplata } from '@/common/models'
+import type { OtdelniyRaschet } from '@/common/models/otdelniy-raschet'
 
 import { useState } from 'react'
 
@@ -17,7 +18,7 @@ import { ListView } from '@/common/views'
 import { DopOplataColumnDefs } from './columns'
 import { OtdelniyRaschetDetails } from './otdelniy-raschet-details'
 import { OtdelniyRaschetDialog } from './otdelniy-raschet-dialog'
-import { type OtdelniyRaschet, OtdelniyRaschetService } from './service'
+import { OtdelniyRaschetService } from './service'
 
 interface OtdelniyRaschetContainerProps {
   mainZarplata: MainZarplata
@@ -26,20 +27,27 @@ export const OtdelniyRaschetContainer = ({ mainZarplata }: OtdelniyRaschetContai
   const { t } = useTranslation()
   const { confirm } = useConfirm()
 
-  const [year, setYear] = useState<number | undefined>(undefined)
-  const [month, setMonth] = useState<number | undefined>(undefined)
-  const [otdelniyRaschetData, setOtdelniyRaschetData] = useState<OtdelniyRaschet | null>(null)
+  const [year, setYear] = useState<number>(new Date().getFullYear())
+  const [month, setMonth] = useState<number>(new Date().getMonth() + 1)
+  const [currentIndex, setCurrentIndex] = useState(0)
 
   const dialogToggle = useToggle()
   const queryClient = useQueryClient()
   const viewToggle = useToggle()
 
-  const dopOplataQuery = useQuery({
-    queryKey: [OtdelniyRaschetService.QueryKeys.GetByMainZarplataId, mainZarplata.id],
+  const otdelniyRaschetQuery = useQuery({
+    queryKey: [
+      OtdelniyRaschetService.QueryKeys.GetByMainZarplataId,
+      mainZarplata.id,
+      {
+        year,
+        month
+      }
+    ],
     queryFn: OtdelniyRaschetService.getAll
   })
 
-  const dopOplataDeleteMutation = useMutation({
+  const otdelniyRaschetDeleteMutation = useMutation({
     mutationFn: OtdelniyRaschetService.delete,
     onSuccess: () => {
       queryClient.invalidateQueries({
@@ -52,7 +60,7 @@ export const OtdelniyRaschetContainer = ({ mainZarplata }: OtdelniyRaschetContai
   const handleOtdelniyRaschetDelete = (row: OtdelniyRaschet) => {
     confirm({
       onConfirm() {
-        dopOplataDeleteMutation.mutate(row.id)
+        otdelniyRaschetDeleteMutation.mutate(row.id)
       }
     })
   }
@@ -61,8 +69,7 @@ export const OtdelniyRaschetContainer = ({ mainZarplata }: OtdelniyRaschetContai
     dialogToggle.open()
   }
 
-  const handleOtdelniyRaschetView = (row: OtdelniyRaschet) => {
-    setOtdelniyRaschetData(row)
+  const handleOtdelniyRaschetView = () => {
     viewToggle.open()
   }
 
@@ -79,13 +86,13 @@ export const OtdelniyRaschetContainer = ({ mainZarplata }: OtdelniyRaschetContai
           <Plus className="btn-icon icon-start" /> {t('add')}
         </Button>
       </ListView.Header>
-      <ListView.Content isLoading={dopOplataQuery.isFetching}>
+      <ListView.Content isLoading={otdelniyRaschetQuery.isFetching}>
         <GenericTable
           columnDefs={DopOplataColumnDefs}
-          data={dopOplataQuery.data ?? []}
+          data={otdelniyRaschetQuery.data ?? []}
           className="table-generic-xs"
           onDelete={handleOtdelniyRaschetDelete}
-          onView={handleOtdelniyRaschetView}
+          onEdit={handleOtdelniyRaschetView}
         />
       </ListView.Content>
 
@@ -98,8 +105,10 @@ export const OtdelniyRaschetContainer = ({ mainZarplata }: OtdelniyRaschetContai
       <OtdelniyRaschetDetails
         isOpen={viewToggle.isOpen}
         onOpenChange={viewToggle.setOpen}
-        payments={otdelniyRaschetData?.otdelniyRaschetPaymentDtos ?? []}
-        deductions={otdelniyRaschetData?.otdelniyRaschetDeductionDtos ?? []}
+        mainZarplata={mainZarplata}
+        items={otdelniyRaschetQuery.data ?? []}
+        currentIndex={currentIndex}
+        onIndexChange={setCurrentIndex}
       />
     </ListView>
   )

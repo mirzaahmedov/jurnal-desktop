@@ -560,5 +560,7 @@
   "have_taken_material_help": "Material yordam olgan",
   "yes": "Ha",
   "no": "Yo'q",
-  "seperate-calculation": "Alohida hisob-kitob"
+  "seperate-calculation": "Alohida hisob-kitob",
+  "view": "Ko'rish",
+  "percentage": "Foiz"
 }

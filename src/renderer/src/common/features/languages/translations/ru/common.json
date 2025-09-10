@@ -561,5 +561,7 @@
   "have_taken_material_help": "Получил материальную помощь",
   "yes": "Да",
   "no": "Нет",
-  "seperate-calculation": "Отдельный расчет"
+  "seperate-calculation": "Отдельный расчет",
+  "view": "Просмотр",
+  "percentage": "Процент"
 }
