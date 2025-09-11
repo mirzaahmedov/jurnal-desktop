@@ -15,10 +15,13 @@ import {
 import { OtdelniyRaschetForm } from './otdelniy-raschet-form'
 import { OtdelniyRaschetService } from './service'
 
-export interface OtdelniyRaschetDialogProps extends Omit<DialogTriggerProps, 'children'> {
+export interface OtdelniyRaschetCreateDialogProps extends Omit<DialogTriggerProps, 'children'> {
   mainZarplata: MainZarplata
 }
-export const OtdelniyRaschetDialog = ({ mainZarplata, ...props }: OtdelniyRaschetDialogProps) => {
+export const OtdelniyRaschetCreateDialog = ({
+  mainZarplata,
+  ...props
+}: OtdelniyRaschetCreateDialogProps) => {
   const queryClient = useQueryClient()
 
   const { t } = useTranslation(['app'])

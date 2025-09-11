@@ -119,12 +119,15 @@ export const PodpisDialog = ({ selected, isOpen, onOpenChange }: PodpisDialogPro
                     label={t('doljnost')}
                   >
                     <JollyComboBox
-                      defaultItems={positions}
+                      allowsCustomValue
+                      allowsEmptyCollection
                       placeholder={t('doljnost')}
-                      selectedKey={field.value}
-                      onSelectionChange={(value) => field.onChange(value)}
+                      defaultItems={positions}
+                      menuTrigger="focus"
+                      inputValue={field.value}
+                      onInputChange={field.onChange}
                     >
-                      {(item) => <ComboboxItem id={item.name}>{item.name}</ComboboxItem>}
+                      {(item) => <ComboboxItem id={item.id}>{item.name}</ComboboxItem>}
                     </JollyComboBox>
                   </FormElement>
                 )}

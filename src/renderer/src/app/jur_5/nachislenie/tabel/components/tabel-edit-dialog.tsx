@@ -131,14 +131,17 @@ export const TabelEditDialog = ({
       }}
     >
       <DialogOverlay>
-        <DialogContent className="w-full max-w-8xl h-full max-h-[800px] px-0">
+        <DialogContent className="w-full max-w-full h-full max-h-[800px] px-0">
           <div className="flex flex-col h-full overflow-hidden gap-5 relative">
             {isFetching || isPending ? <LoadingOverlay /> : null}
             <DialogHeader className="px-5">
               <DialogTitle>{t('tabel')}</DialogTitle>
             </DialogHeader>
             <div className="col-span-2 overflow-y-auto scrollbar">
-              <TabelProvodkaEditableTable form={form} />
+              <TabelProvodkaEditableTable
+                form={form}
+                keyboardNavigation
+              />
             </div>
             <div className="flex items-center justify-end px-5">
               <Button

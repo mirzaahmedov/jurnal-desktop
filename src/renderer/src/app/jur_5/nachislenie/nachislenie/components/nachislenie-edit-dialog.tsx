@@ -1,10 +1,10 @@
 import type { VacantTreeNode } from '@/common/features/vacant/ui/vacant-tree'
-import type { Nachislenie } from '@/common/models'
 import type { DialogTriggerProps } from 'react-aria-components'
 
 import { type FC, useEffect, useState } from 'react'
 
 import { useQuery } from '@tanstack/react-query'
+import { Plus } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
@@ -12,6 +12,7 @@ import { FooterCell, FooterRow, GenericTable, LoadingOverlay } from '@/common/co
 import { CollapsibleTable } from '@/common/components/collapsible-table'
 import { FormElement } from '@/common/components/form'
 import { JollyDatePicker } from '@/common/components/jolly-date-picker'
+import { Button } from '@/common/components/jolly/button'
 import {
   DialogContent,
   DialogHeader,
@@ -23,12 +24,14 @@ import { MonthSelect } from '@/common/components/month-select'
 import { SummaCell } from '@/common/components/table/renderers/summa'
 import { Form, FormField } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
-// import { Tabs, TabsList, TabsTrigger } from '@/common/components/ui/tabs'
+import { Tabs, TabsList, TabsTrigger } from '@/common/components/ui/tabs'
 import { YearSelect } from '@/common/components/year-select'
 import { DownloadFile } from '@/common/features/file'
 import { useRequisitesStore } from '@/common/features/requisites'
+import { useToggle } from '@/common/hooks'
 import { formatDate, parseDate, parseLocaleDate } from '@/common/lib/date'
 import { formatNumber } from '@/common/lib/format'
+import { NachislenieProvodka } from '@/common/models'
 
 import { defaultValues } from '../config'
 import { NachislenieService } from '../service'
@@ -39,11 +42,11 @@ enum TabOptions {
 }
 
 export interface NachislenieEditDialogProps extends Omit<DialogTriggerProps, 'children'> {
-  selectedNachislenie: Nachislenie
+  nachislenieId: number
   vacant: VacantTreeNode
 }
 export const NachislenieEditDialog = ({
-  selectedNachislenie,
+  nachislenieId,
   vacant,
   ...props
 }: NachislenieEditDialogProps) => {
@@ -53,28 +56,25 @@ export const NachislenieEditDialog = ({
 
   const [tabValue, setTabValue] = useState(TabOptions.View)
 
-  const { data: nachislenie, isFetching } = useQuery({
-    queryKey: [
-      NachislenieService.QueryKeys.GetById,
-      selectedNachislenie.id,
-      { vacantId: vacant.id }
-    ],
+  const nachislenieQuery = useQuery({
+    queryKey: [NachislenieService.QueryKeys.GetById, nachislenieId, { vacantId: vacant.id }],
     queryFn: NachislenieService.getById,
-    enabled: !!selectedNachislenie.id
+    enabled: !!nachislenieId
   })
+  const nachislenieData = nachislenieQuery?.data ?? []
 
   const form = useForm({
     defaultValues
   })
 
-  useEffect(() => {
-    if (selectedNachislenie) {
-      form.reset({
-        ...selectedNachislenie,
-        docDate: formatDate(parseLocaleDate(selectedNachislenie.docDate))
-      })
-    }
-  }, [form, selectedNachislenie])
+  // useEffect(() => {
+  //   if (selectedNachislenie) {
+  //     form.reset({
+  //       ...selectedNachislenie,
+  //       docDate: formatDate(parseLocaleDate(selectedNachislenie.docDate))
+  //     })
+  //   }
+  // }, [form, selectedNachislenie])
 
   const Header = () => {
     return (
@@ -160,7 +160,7 @@ export const NachislenieEditDialog = ({
           </form>
         </Form>
 
-        <div className="ml-auto flex flex-wrap items-center gap-1">
+        {/* <div className="ml-auto flex flex-wrap items-center gap-1">
           <DownloadFile
             isZarplata
             url="Nachislenie/vedemost"
@@ -210,7 +210,7 @@ export const NachislenieEditDialog = ({
             fileName={`plastik_${selectedNachislenie.docNum}.xlsx`}
             buttonText={t('plastik')}
           />
-        </div>
+        </div> */}
       </div>
     )
   }
@@ -222,7 +222,7 @@ export const NachislenieEditDialog = ({
           <div className="h-full flex flex-col overflow-hidden">
             <DialogHeader className="flex flex-row items-center gap-10">
               <DialogTitle>{t('nachislenie')}</DialogTitle>
-              {/* <Tabs
+              <Tabs
                 value={tabValue}
                 onValueChange={(value) => setTabValue(value as TabOptions)}
               >
@@ -230,17 +230,17 @@ export const NachislenieEditDialog = ({
                   <TabsTrigger value={TabOptions.View}>{t('view')}</TabsTrigger>
                   <TabsTrigger value={TabOptions.Update}>{t('update')}</TabsTrigger>
                 </TabsList>
-              </Tabs> */}
+              </Tabs>
             </DialogHeader>
 
             {tabValue === TabOptions.View && (
               <div className="relative mt-5 flex-1 mih-h-0 flex flex-col gap-5 overflow-hidden">
                 <Header />
                 <div className="relative overflow-y-auto scrollbar">
-                  {isFetching ? <LoadingOverlay /> : null}
+                  {nachislenieQuery.isFetching ? <LoadingOverlay /> : null}
 
                   <CollapsibleTable
-                    data={nachislenie ?? []}
+                    data={nachislenieData ?? []}
                     columnDefs={[
                       {
                         key: 'fio'
@@ -363,7 +363,7 @@ export const NachislenieEditDialog = ({
             )}
             {tabValue === TabOptions.Update && (
               <NachislenieUpdateForm
-                selectedNachislenie={selectedNachislenie}
+                nachislenieData={nachislenieData}
                 vacant={vacant}
               />
             )}
@@ -375,39 +375,32 @@ export const NachislenieEditDialog = ({
 }
 
 export interface NachislenieUpdateFormProps extends Omit<DialogTriggerProps, 'children'> {
-  selectedNachislenie: Nachislenie
+  nachislenieData: NachislenieProvodka[]
   vacant: VacantTreeNode
 }
-const NachislenieUpdateForm: FC<NachislenieUpdateFormProps> = ({ selectedNachislenie, vacant }) => {
+const NachislenieUpdateForm: FC<NachislenieUpdateFormProps> = ({ nachislenieData, vacant }) => {
   const budjetId = useRequisitesStore((store) => store.budjet_id)
+  const paymentToggle = useToggle()
+  const deductionToggle = useToggle()
 
   const { t } = useTranslation(['app'])
 
   const [currentIndex, setCurrentIndex] = useState(0)
 
-  const { data: nachislenie, isFetching } = useQuery({
-    queryKey: [
-      NachislenieService.QueryKeys.GetById,
-      selectedNachislenie.id,
-      { vacantId: vacant.id }
-    ],
-    queryFn: NachislenieService.getById,
-    enabled: !!selectedNachislenie.id
-  })
-  const currentNachislenie = nachislenie?.[currentIndex]
+  const nachislenie = nachislenieData?.[currentIndex]
 
   const form = useForm({
     defaultValues
   })
 
-  useEffect(() => {
-    if (selectedNachislenie) {
-      form.reset({
-        ...selectedNachislenie,
-        docDate: formatDate(parseLocaleDate(selectedNachislenie.docDate))
-      })
-    }
-  }, [form, selectedNachislenie])
+  // useEffect(() => {
+  //   if (nachislenieData) {
+  //     form.reset({
+  //       ...nachislenieData,
+  //       docDate: formatDate(parseLocaleDate(nachislenieData.docDate))
+  //     })
+  //   }
+  // }, [form, nachislenieData])
 
   return (
     <Form {...form}>
@@ -416,8 +409,6 @@ const NachislenieUpdateForm: FC<NachislenieUpdateFormProps> = ({ selectedNachisl
         onSubmit={form.handleSubmit(console.log)}
         className="relative mt-5 flex-1 h-full flex flex-col gap-5 overflow-y-auto scrollbar"
       >
-        {isFetching ? <LoadingOverlay /> : null}
-
         <div className="flex items-center gap-5">
           <FormField
             control={form.control}
@@ -497,18 +488,18 @@ const NachislenieUpdateForm: FC<NachislenieUpdateFormProps> = ({ selectedNachisl
               isZarplata
               url="Nachislenie/vedemost"
               params={{
-                mainId: selectedNachislenie.id
+                mainId: nachislenieData.id
               }}
-              fileName={`zarplata_vedemost_${selectedNachislenie.docNum}.xlsx`}
+              fileName={`zarplata_vedemost_${nachislenieData.docNum}.xlsx`}
               buttonText={t('vedemost')}
             />
             <DownloadFile
               isZarplata
               url="Excel/svod-otchet"
               params={{
-                mainId: selectedNachislenie.id
+                mainId: nachislenieData.id
               }}
-              fileName={`zarplata_svod_${selectedNachislenie.docNum}.xlsx`}
+              fileName={`zarplata_svod_${nachislenieData.docNum}.xlsx`}
               buttonText={t('aggregated_report')}
             />
             <DownloadFile
@@ -519,7 +510,7 @@ const NachislenieUpdateForm: FC<NachislenieUpdateFormProps> = ({ selectedNachisl
                 year: form.watch('nachislenieYear'),
                 month: form.watch('nachislenieMonth')
               }}
-              fileName={`inps_${selectedNachislenie.docNum}.xlsx`}
+              fileName={`inps_${nachislenieData.docNum}.xlsx`}
               buttonText={t('inps')}
             />
             <DownloadFile
@@ -530,96 +521,102 @@ const NachislenieUpdateForm: FC<NachislenieUpdateFormProps> = ({ selectedNachisl
                 year: form.watch('nachislenieYear'),
                 month: form.watch('nachislenieMonth')
               }}
-              fileName={`podoxod_${selectedNachislenie.docNum}.xlsx`}
+              fileName={`podoxod_${nachislenieData.docNum}.xlsx`}
               buttonText={t('podoxod')}
             />
             <DownloadFile
               isZarplata
               url="Excel/plastik-otchet"
               params={{
-                mainId: selectedNachislenie.id
+                mainId: nachislenieData.id
               }}
-              fileName={`plastik_${selectedNachislenie.docNum}.xlsx`}
+              fileName={`plastik_${nachislenieData.docNum}.xlsx`}
               buttonText={t('plastik')}
             />
           </div>
         </div>
 
         <div className="relative overflow-hidden py-5 flex flex-col gap-2.5">
-          <div className="p-5 rounded-lg border">
-            <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-5">
-              <div>
+          <div className="flex-1 grid grid-cols-[repeat(auto-fit,minmax(500px,1fr))] px-5 gap-5">
+            <div className="bg-teal-700 p-5 rounded-xl h-full flex flex-col">
+              <div className="flex items-center justify-between gap-5 mb-4">
+                <h2 className="text-xl text-white font-medium mb-2">{t('nachislenie')}</h2>
+                <Button
+                  className="-my-10"
+                  onPress={paymentToggle.open}
+                >
+                  <Plus className="btn-icon icon-start" /> {t('add')}
+                </Button>
+              </div>
+              <div className="flex-1 overflow-auto scrollbar">
                 <GenericTable
-                  data={currentNachislenie?.nachisleniePayrollPayments ?? []}
+                  data={nachislenie?.nachisleniePayrollPayments ?? []}
                   columnDefs={[
                     {
-                      key: 'name'
+                      key: 'paymentName',
+                      header: 'name'
                     },
                     {
                       key: 'percentage',
                       header: 'foiz'
                     },
                     {
+                      numeric: true,
                       key: 'summa',
-                      renderCell: (row) => <SummaCell summa={row.summa} />,
-                      numeric: true
+                      renderCell: (row) => <SummaCell summa={row.summa} />
                     }
                   ]}
-                  className="table-generic-xs border-t border-l"
+                  className="table-generic-xs shadow-md rounded overflow-hidden"
                   footer={
                     <FooterRow>
                       <FooterCell
                         title={t('total')}
-                        colSpan={3}
-                      />
-                      <FooterCell
-                        content={formatNumber(
-                          currentNachislenie?.nachisleniePayrollPayments?.reduce(
-                            (result, { summa }) => result + (summa ?? 0),
-                            0
-                          ) ?? 0
-                        )}
+                        content={formatNumber(nachislenie?.nachislenieSum ?? 0)}
+                        colSpan={6}
                       />
                     </FooterRow>
                   }
                 />
               </div>
-              <div>
-                <GenericTable
-                  data={currentNachislenie?.nachisleniePayrollDeductions ?? []}
-                  columnDefs={[
-                    {
-                      key: 'name'
-                    },
-                    {
-                      key: 'percentage',
-                      header: 'foiz'
-                    },
-                    {
-                      key: 'summa',
-                      renderCell: (row) => <SummaCell summa={row.summa} />,
-                      numeric: true
-                    }
-                  ]}
-                  className="table-generic-xs border-t border-l"
-                  footer={
-                    <FooterRow>
-                      <FooterCell
-                        title={t('total')}
-                        colSpan={3}
-                      />
-                      <FooterCell
-                        content={formatNumber(
-                          currentNachislenie?.nachisleniePayrollDeductions?.reduce(
-                            (result, { summa }) => result + (summa ?? 0),
-                            0
-                          ) ?? 0
-                        )}
-                      />
-                    </FooterRow>
-                  }
-                />
+            </div>
+            <div className="bg-teal-700 p-5 rounded-xl">
+              <div className="flex items-center justify-between gap-5 mb-4">
+                <h2 className="text-xl text-white font-medium mb-2">{t('uderjanie')}</h2>
+                <Button
+                  className="-my-10"
+                  onPress={deductionToggle.open}
+                >
+                  <Plus className="btn-icon icon-start" /> {t('add')}
+                </Button>
               </div>
+              <GenericTable
+                data={nachislenie?.nachisleniePayrollDeductions ?? []}
+                columnDefs={[
+                  {
+                    key: 'deductionName',
+                    header: 'name'
+                  },
+                  {
+                    key: 'percentage',
+                    header: 'foiz'
+                  },
+                  {
+                    numeric: true,
+                    key: 'summa',
+                    renderCell: (row) => <SummaCell summa={row.summa} />
+                  }
+                ]}
+                className="table-generic-xs shadow-md rounded overflow-hidden"
+                footer={
+                  <FooterRow>
+                    <FooterCell
+                      title={t('total')}
+                      colSpan={3}
+                    />
+                    <FooterCell content={formatNumber(nachislenie?.uderjanieSum ?? 0)} />
+                  </FooterRow>
+                }
+              />
             </div>
           </div>
         </div>

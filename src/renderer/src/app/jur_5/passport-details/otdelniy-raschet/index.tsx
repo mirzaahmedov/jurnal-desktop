@@ -16,8 +16,8 @@ import { useToggle } from '@/common/hooks'
 import { ListView } from '@/common/views'
 
 import { DopOplataColumnDefs } from './columns'
+import { OtdelniyRaschetCreateDialog } from './otdelniy-raschet-create-dialog'
 import { OtdelniyRaschetDetails } from './otdelniy-raschet-details'
-import { OtdelniyRaschetDialog } from './otdelniy-raschet-dialog'
 import { OtdelniyRaschetService } from './service'
 
 interface OtdelniyRaschetContainerProps {
@@ -96,7 +96,7 @@ export const OtdelniyRaschetContainer = ({ mainZarplata }: OtdelniyRaschetContai
         />
       </ListView.Content>
 
-      <OtdelniyRaschetDialog
+      <OtdelniyRaschetCreateDialog
         isOpen={dialogToggle.isOpen}
         onOpenChange={dialogToggle.setOpen}
         mainZarplata={mainZarplata}

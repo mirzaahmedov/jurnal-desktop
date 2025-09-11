@@ -1,14 +1,13 @@
 import type { ColumnDef } from '@/common/components'
 import type { Payment } from '@/common/models/payments'
-import type { CheckedState } from '@radix-ui/react-checkbox'
 
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { t } from 'i18next'
 import { toast } from 'react-toastify'
 
 import { Spinner } from '@/common/components'
+import { Checkbox } from '@/common/components/jolly/checkbox'
 import { SelectCell } from '@/common/components/table/renderers/select'
-import { Checkbox } from '@/common/components/ui/checkbox'
 import { useConfirm } from '@/common/features/confirm'
 
 import { PaymentsService } from './service'
@@ -37,7 +36,7 @@ const CheckboxCell = ({ isMutable = true, row, field }: CheckboxCellProps) => {
     }
   })
 
-  const handleCheckedChange = (checked: CheckedState) => {
+  const handleCheckedChange = (checked: boolean) => {
     confirm({
       title: t('sure_to_update'),
       danger: false,
@@ -54,12 +53,12 @@ const CheckboxCell = ({ isMutable = true, row, field }: CheckboxCellProps) => {
     <Spinner />
   ) : isMutable ? (
     <Checkbox
-      checked={Boolean(row[field])}
-      disabled={isUpdating}
-      onCheckedChange={handleCheckedChange}
+      isSelected={Boolean(row[field])}
+      isDisabled={isUpdating}
+      onChange={handleCheckedChange}
     />
   ) : (
-    <Checkbox checked={Boolean(row[field])} />
+    <Checkbox isSelected={Boolean(row[field])} />
   )
 }
 

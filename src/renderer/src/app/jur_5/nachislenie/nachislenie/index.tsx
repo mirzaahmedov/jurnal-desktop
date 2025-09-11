@@ -196,7 +196,7 @@ export const Nachislenies = () => {
                 isOpen={editToggle.isOpen}
                 onOpenChange={editToggle.setOpen}
                 vacant={selectedVacant}
-                selectedNachislenie={selectedNachislenie!}
+                nachislenieId={selectedNachislenie.id!}
               />
             ) : null}
           </>

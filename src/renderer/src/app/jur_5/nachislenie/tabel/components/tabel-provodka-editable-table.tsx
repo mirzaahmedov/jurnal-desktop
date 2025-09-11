@@ -9,7 +9,7 @@ export const TabelEditableColumnDefs: EditableColumnDef<TabelFormValues, 'tabelC
   {
     key: 'fio',
     header: 'employee',
-    minWidth: 230,
+    minWidth: 350,
     Editor: createTextEditor({
       key: 'mainZarplataName',
       readOnly: true

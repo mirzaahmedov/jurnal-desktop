@@ -82,6 +82,7 @@ export const getNavElements = (t: TFunction): INavElement[] => {
 
   const is_super_admin = user?.role_name === AdminRoles.super_admin
   const is_admin = user?.role_name === AdminRoles.region_admin
+  const is_revisor = user?.login === 'revizor'
 
   return omitEmptyArrayElements<INavElement>([
     {
@@ -460,17 +461,19 @@ export const getNavElements = (t: TFunction): INavElement[] => {
           path: '/admin',
           title: t('pages.admin'),
           icon: UserCog,
-          children: [
+          children: omitEmptyArrayElements<INavElement>([
             {
               path: 'video-tutorials',
               title: t('pages.video_tutorials'),
               icon: FileVideo
             },
-            {
-              path: 'user',
-              title: t('pages.user'),
-              icon: Users
-            },
+            !is_revisor
+              ? {
+                  path: 'user',
+                  title: t('pages.user'),
+                  icon: Users
+                }
+              : null,
             {
               path: 'jur_1',
               title: `1-${t('pages.memorial_order').toLowerCase()} — ${t('pages.jur_1').toLowerCase()}`,
@@ -529,95 +532,98 @@ export const getNavElements = (t: TFunction): INavElement[] => {
               title: t('pages.realcost'),
               icon: WalletCards
             },
-
-            {
-              path: 'logs',
-              title: t('pages.logs'),
-              icon: FileClock
-            },
-            {
-              path: '',
-              title: t('pages.spravochnik'),
-              icon: NotebookTabs,
-              children: [
-                {
-                  path: 'report-title',
-                  title: t('pages.report_title'),
-                  icon: LetterText
-                },
-                {
-                  path: 'prixod-schets',
-                  title: t('pages.prixod_schets'),
-                  icon: Percent
-                },
-                {
-                  path: 'pereotsenka',
-                  title: t('pages.pereotsenka'),
-                  icon: ChartCandlestick
-                },
-                {
-                  path: 'group',
-                  title: t('pages.group'),
-                  icon: Group
-                },
-                {
-                  path: 'bank',
-                  title: t('pages.bank'),
-                  icon: Building
-                },
-                {
-                  path: 'region',
-                  title: t('pages.region'),
-                  icon: LayoutGrid
-                },
-                {
-                  path: 'role',
-                  title: t('pages.role'),
-                  icon: MonitorCog
-                },
-                {
-                  path: 'smeta',
-                  title: t('pages.smeta'),
-                  icon: CircleFadingPlus
-                },
-                {
-                  path: 'budget',
-                  title: t('pages.budjets'),
-                  icon: CircleDollarSign
-                },
-                {
-                  path: 'operation',
-                  title: t('pages.operatsii'),
-                  icon: Percent
-                },
-                {
-                  path: 'unit',
-                  title: t('pages.edin'),
-                  icon: Weight
-                },
-                {
-                  path: 'zarplata/spravochnik',
-                  title: t('pages.zarplata'),
-                  icon: AppWindow
-                },
-                {
-                  path: 'spravochnik/minimum-wage',
-                  title: t('pages.bhm'),
-                  icon: DollarSign
-                },
-                {
-                  path: 'spravochnik/distance',
-                  title: t('pages.distance'),
-                  icon: Ruler
-                },
-                {
-                  path: 'spravochnik/position',
-                  title: t('pages.position'),
-                  icon: BriefcaseBusiness
+            !is_revisor
+              ? {
+                  path: 'logs',
+                  title: t('pages.logs'),
+                  icon: FileClock
                 }
-              ]
-            }
-          ]
+              : null,
+            !is_revisor
+              ? {
+                  path: '',
+                  title: t('pages.spravochnik'),
+                  icon: NotebookTabs,
+                  children: [
+                    {
+                      path: 'report-title',
+                      title: t('pages.report_title'),
+                      icon: LetterText
+                    },
+                    {
+                      path: 'prixod-schets',
+                      title: t('pages.prixod_schets'),
+                      icon: Percent
+                    },
+                    {
+                      path: 'pereotsenka',
+                      title: t('pages.pereotsenka'),
+                      icon: ChartCandlestick
+                    },
+                    {
+                      path: 'group',
+                      title: t('pages.group'),
+                      icon: Group
+                    },
+                    {
+                      path: 'bank',
+                      title: t('pages.bank'),
+                      icon: Building
+                    },
+                    {
+                      path: 'region',
+                      title: t('pages.region'),
+                      icon: LayoutGrid
+                    },
+                    {
+                      path: 'role',
+                      title: t('pages.role'),
+                      icon: MonitorCog
+                    },
+                    {
+                      path: 'smeta',
+                      title: t('pages.smeta'),
+                      icon: CircleFadingPlus
+                    },
+                    {
+                      path: 'budget',
+                      title: t('pages.budjets'),
+                      icon: CircleDollarSign
+                    },
+                    {
+                      path: 'operation',
+                      title: t('pages.operatsii'),
+                      icon: Percent
+                    },
+                    {
+                      path: 'unit',
+                      title: t('pages.edin'),
+                      icon: Weight
+                    },
+                    {
+                      path: 'zarplata/spravochnik',
+                      title: t('pages.zarplata'),
+                      icon: AppWindow
+                    },
+                    {
+                      path: 'spravochnik/minimum-wage',
+                      title: t('pages.bhm'),
+                      icon: DollarSign
+                    },
+                    {
+                      path: 'spravochnik/distance',
+                      title: t('pages.distance'),
+                      icon: Ruler
+                    },
+                    {
+                      path: 'spravochnik/position',
+                      title: t('pages.position'),
+                      icon: BriefcaseBusiness
+                    }
+                  ]
+                }
+              : null
+          ])
         }
       : null,
     !is_super_admin && (permissions.smeta_grafik || is_admin)

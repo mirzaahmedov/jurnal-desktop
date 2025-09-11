@@ -37,12 +37,21 @@ export const SaldoSubChildsDialog: FC<SaldoSubChildsDialogProps> = ({
     disabled: !isEditable || rowIndex === undefined
   })
   useEffect(() => {
-    if (rowIndex === undefined || !rows) {
+    const newValues = form.getValues(`organizations.${rowIndex!}.sub_childs`)
+    if (rowIndex === undefined || !newValues) {
       return
     }
 
-    const summaPrixod = rows?.reduce((acc, row) => acc + row.prixod, 0) ?? 0
-    const summaRasxod = rows?.reduce((acc, row) => acc + row.rasxod, 0) ?? 0
+    const summaPrixod = newValues?.reduce((acc, row) => acc + row.prixod, 0) ?? 0
+    const summaRasxod = newValues?.reduce((acc, row) => acc + row.rasxod, 0) ?? 0
+
+    if (
+      summaPrixod === form.getValues(`organizations.${rowIndex}.prixod`) &&
+      summaRasxod === form.getValues(`organizations.${rowIndex}.rasxod`)
+    ) {
+      return
+    }
+
     form.setValue(`organizations.${rowIndex}.prixod`, summaPrixod)
     form.setValue(`organizations.${rowIndex}.rasxod`, summaRasxod)
   }, [rowIndex, rows])

@@ -1,5 +1,7 @@
 import { z } from 'zod'
 
+import { formatDate } from '@/common/lib/date'
+
 export const OtdelniyRaschetFormSchema = z.object({
   spravochnikBudjetNameId: z.number(),
   mainSchetId: z.number(),
@@ -23,7 +25,7 @@ export const defaultValues: OtdelniyRaschetFormValues = {
   nachislenieYear: new Date().getFullYear(),
   nachislenieMonth: new Date().getMonth() + 1,
   docNum: 0,
-  docDate: '',
+  docDate: formatDate(new Date()),
   mainZarplataId: 0,
   rabDni: 0,
   otrabDni: 0,

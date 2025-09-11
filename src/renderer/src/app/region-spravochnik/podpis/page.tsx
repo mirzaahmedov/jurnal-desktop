@@ -8,7 +8,6 @@ import { toast } from 'react-toastify'
 
 import { GenericTable } from '@/common/components'
 import { useConfirm } from '@/common/features/confirm'
-import { SearchFilterDebounced } from '@/common/features/filters/search/search-filter-debounced'
 import { useSearchFilter } from '@/common/features/filters/search/search-filter-debounced'
 import { usePagination } from '@/common/hooks'
 import { useToggle } from '@/common/hooks/use-toggle'
@@ -18,10 +17,13 @@ import { ListView } from '@/common/views'
 import { podpisColumns } from './columns'
 import { PodpisQueryKeys } from './config'
 import { PodpisDialog } from './dialog'
+import { PodpisFilters, usePodpisTypeFilter } from './filters'
 import { PodpisService } from './service'
 
 const PodpisPage = () => {
   const [selected, setSelected] = useState<Podpis>()
+  const [search] = useSearchFilter()
+  const [podpisType] = usePodpisTypeFilter()
 
   const dialogToggle = useToggle()
   const queryClient = useQueryClient()
@@ -29,7 +31,6 @@ const PodpisPage = () => {
   const setLayout = useLayout()
 
   const { confirm } = useConfirm()
-  const [search] = useSearchFilter()
   const { t } = useTranslation(['app'])
 
   const { data: podpisi, isFetching } = useQuery({
@@ -37,6 +38,7 @@ const PodpisPage = () => {
       PodpisQueryKeys.getAll,
       {
         search,
+        type: podpisType,
         ...pagination
       }
     ],
@@ -68,7 +70,7 @@ const PodpisPage = () => {
   useEffect(() => {
     setLayout({
       title: t('pages.podpis'),
-      content: SearchFilterDebounced,
+      content: PodpisFilters,
       breadcrumbs: [
         {
           title: t('pages.spravochnik')

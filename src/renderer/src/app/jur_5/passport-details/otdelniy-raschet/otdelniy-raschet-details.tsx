@@ -223,7 +223,10 @@ export const OtdelniyRaschetDetails: FC<OtdelniyRaschetDetailsProps> = ({
                         onIndexChange={onIndexChange}
                         itemsCount={items.length}
                       />
-                      <Button onPress={handleCalculateSalary}>
+                      <Button
+                        onPress={handleCalculateSalary}
+                        isPending={otdelniyRaschetCalculateMutation.isPending}
+                      >
                         <Sigma className="btn-icon icon-start" /> {t('recalculate_salary')}
                       </Button>
                     </div>

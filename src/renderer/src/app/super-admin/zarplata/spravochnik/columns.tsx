@@ -1,11 +1,70 @@
-import type { ColumnDef } from '@/common/components'
 import type { Zarplata } from '@/common/models'
 
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { t } from 'i18next'
+import { toast } from 'react-toastify'
+
+import { type ColumnDef, Spinner } from '@/common/components'
 import { Checkbox } from '@/common/components/jolly/checkbox'
 import { IDCell } from '@/common/components/table/renderers/id'
 import { SelectCell } from '@/common/components/table/renderers/select'
+import { useConfirm } from '@/common/features/confirm'
 
 import { ZarplataSpravochnikType } from './config'
+import { ZarplataSpravochnikService } from './service'
+
+interface CheckboxCellProps {
+  isEditable?: boolean
+  row: Zarplata.Spravochnik
+  field: keyof Zarplata.Spravochnik & string
+}
+const CheckboxCell = ({ isEditable = true, row, field }: CheckboxCellProps) => {
+  const queryClient = useQueryClient()
+  const { confirm } = useConfirm()
+
+  const updateMutation = useMutation({
+    mutationKey: [ZarplataSpravochnikService.QueryKeys.Update, row.id],
+    mutationFn: ZarplataSpravochnikService.update,
+    onSuccess: () => {
+      toast.success(t('update_success'))
+      queryClient.invalidateQueries({
+        queryKey: [ZarplataSpravochnikService.QueryKeys.GetAll]
+      })
+    },
+    onError: (error) => {
+      console.log(error)
+      toast.error(t('update_failed'))
+    }
+  })
+
+  const handleCheckedChange = (value: boolean) => {
+    confirm({
+      title: t('sure_to_update'),
+      danger: false,
+      onConfirm: () => {
+        updateMutation.mutate({
+          id: row.id,
+          values: {
+            ...row,
+            [field]: value
+          }
+        })
+      }
+    })
+  }
+
+  return updateMutation.isPending ? (
+    <Spinner />
+  ) : isEditable ? (
+    <Checkbox
+      isSelected={Boolean(row[field])}
+      isDisabled={updateMutation.isPending}
+      onChange={handleCheckedChange}
+    />
+  ) : (
+    <Checkbox isSelected={Boolean(row[field])} />
+  )
+}
 
 export const ZarplataSpravochnikColumnDefs: ColumnDef<Zarplata.Spravochnik>[] = [
   {
@@ -40,7 +99,9 @@ export const ZarplataSpravochnikColumnDefs: ColumnDef<Zarplata.Spravochnik>[] = 
   }
 ]
 
-export const ZarplataSpravochnikDoljnostColumnDefs: ColumnDef<Zarplata.Spravochnik>[] = [
+export const ZarplataSpravochnikDoljnostColumnDefs: (
+  isMutable?: boolean
+) => ColumnDef<Zarplata.Spravochnik>[] = (isEditable) => [
   {
     key: 'typeCode',
     header: 'type_code',
@@ -58,9 +119,10 @@ export const ZarplataSpravochnikDoljnostColumnDefs: ColumnDef<Zarplata.Spravochn
     key: 'isPoek',
     header: 'poek',
     renderCell: (row) => (
-      <Checkbox
-        isReadOnly
-        isSelected={row.isPoek}
+      <CheckboxCell
+        row={row}
+        field="isPoek"
+        isEditable={isEditable}
       />
     )
   }
@@ -119,10 +181,10 @@ export const getZarplataSpravochnikColumnDefs = (
             key: 'id',
             renderCell: SelectCell
           },
-          ...ZarplataSpravochnikDoljnostColumnDefs
+          ...ZarplataSpravochnikDoljnostColumnDefs(false)
         ]
       }
-      return ZarplataSpravochnikDoljnostColumnDefs
+      return ZarplataSpravochnikDoljnostColumnDefs(true)
     default:
       if (selectable) {
         return [
@@ -141,7 +203,7 @@ export const getZarplataSpravochnikDialogColumnDefs = (
 ): ColumnDef<Zarplata.Spravochnik>[] => {
   switch (typeCode) {
     case ZarplataSpravochnikType.Doljnost:
-      return ZarplataSpravochnikDoljnostColumnDefs
+      return ZarplataSpravochnikDoljnostColumnDefs(false)
     case ZarplataSpravochnikType.Zvanie:
       return ZarplataSpravochnikZvanieColumnDefs
     default:
