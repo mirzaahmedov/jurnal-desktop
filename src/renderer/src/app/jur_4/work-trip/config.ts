@@ -34,18 +34,8 @@ export const WorkTripFormSchema = z.object({
   comment: z.string(),
   worker_id: z.number().min(1),
   childs: z.array(WorkTripChildSchema),
-  road: z.array(WorkTripRoadSchema).transform((roads) => {
-    if (roads.length < 2 && !roads[0].road_summa) {
-      return []
-    }
-    return roads
-  }),
-  hotel: z.array(WorkTripHotelSchema).transform((hotels) => {
-    if (hotels.length < 2 && !hotels[0].hostel_summa) {
-      return []
-    }
-    return hotels
-  }),
+  road: z.array(WorkTripRoadSchema).catch([]),
+  hotel: z.array(WorkTripHotelSchema).catch([]),
   day: z.array(
     z.object({
       minimum_wage_id: z.number(),

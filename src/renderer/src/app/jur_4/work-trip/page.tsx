@@ -13,6 +13,7 @@ import {
   useSearchFilter
 } from '@/common/features/filters/search/search-filter-debounced'
 import { useRequisitesStore } from '@/common/features/requisites'
+import { SaldoNamespace, handleSaldoErrorDates } from '@/common/features/saldo'
 import {
   useSelectedMonthStore,
   validateDateWithinSelectedMonth
@@ -42,7 +43,11 @@ const WorkTripPage = () => {
   const { startDate } = useSelectedMonthStore()
   const { confirm } = useConfirm()
 
-  const { data: workTrips, isFetching: isFetchingWorkTrips } = useQuery({
+  const {
+    data: workTrips,
+    isFetching: isFetchingWorkTrips,
+    error
+  } = useQuery({
     queryKey: [
       WorkTripQueryKeys.GetAll,
       {
@@ -62,6 +67,9 @@ const WorkTripPage = () => {
       queryClient.invalidateQueries({
         queryKey: [WorkTripQueryKeys.GetAll]
       })
+    },
+    onError(err) {
+      handleSaldoErrorDates(SaldoNamespace.JUR_4, err)
     }
   })
 
@@ -92,6 +100,12 @@ const WorkTripPage = () => {
   const handleView = (row: WorkTrip) => {
     setSelectedId(row.id)
   }
+
+  useEffect(() => {
+    if (error) {
+      handleSaldoErrorDates(SaldoNamespace.JUR_4, error)
+    }
+  }, [error])
 
   return (
     <ListView>
