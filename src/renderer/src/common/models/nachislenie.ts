@@ -1,5 +1,4 @@
 import type { PayrollDeduction } from './payroll-deduction'
-import type { PayrollPayment } from './payroll-payment'
 
 export interface Nachislenie {
   id: number
@@ -21,11 +20,34 @@ export interface NachislenieProvodka {
   fio: string
   kartochka: string
   doljnostName: string
-  nachisleniePayrollPayments: PayrollPayment[]
-  nachisleniePayrollDeductions: PayrollDeduction[]
   totalNachislenie: number
   totalUderjanie: number
   totalNaruki: number
+  tabel: NachislenieTabel
+  nachisleniePayrollPayments: Array<{
+    id: number
+    summa: number
+    percentage: number
+    name: string
+  }>
+  nachisleniePayrollDeductions: Array<{
+    id: number
+    summa: number
+    percentage: number
+    name: string
+  }>
+}
+export interface NachislenieTabel {
+  id: number
+  mainZarplataId: number
+  fio: null
+  doljnost: null
+  rabDni: number
+  otrabDni: number
+  noch: number
+  prazdnik: number
+  pererabodka: number
+  kazarma: number
 }
 
 export interface NachislenieOthers {

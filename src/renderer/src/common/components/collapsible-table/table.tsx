@@ -30,6 +30,7 @@ export const CollapsibleTable = <T extends object, C extends object = T>({
   selectedIds,
   className,
   params,
+  actions,
   getRowId,
   getRowKey,
   getRowSelected,
@@ -74,7 +75,7 @@ export const CollapsibleTable = <T extends object, C extends object = T>({
                 </GenericTableHead>
               )
             })}
-            {onEdit || onDelete || onView ? (
+            {onEdit || onDelete || onView || actions ? (
               <GenericTableHead
                 key="actions"
                 className="w-32"
@@ -110,7 +111,8 @@ export const CollapsibleTable = <T extends object, C extends object = T>({
                   onEdit,
                   onDelete,
                   openRows,
-                  onOpenRowsChange
+                  onOpenRowsChange,
+                  actions
                 } as any
               }
             />
@@ -159,7 +161,8 @@ const CollapsibleItem = <T extends object, C extends object>({
     selectedIds,
     width,
     openRows,
-    onOpenRowsChange
+    onOpenRowsChange,
+    actions
   } = tableProps
 
   const collapsibleToggle = useToggle()
@@ -193,7 +196,7 @@ const CollapsibleItem = <T extends object, C extends object>({
             </GenericTableCell>
           )
         })}
-        {onEdit || onDelete || onView ? (
+        {onEdit || onDelete || onView || actions ? (
           <GenericTableCell className="py-1 w-32">
             <div className="flex items-center whitespace-nowrap w-full gap-1">
               {onView && (
@@ -234,6 +237,7 @@ const CollapsibleItem = <T extends object, C extends object>({
                   <Trash2 className="size-4" />
                 </Button>
               ) : null}
+              {actions?.(row)}
             </div>
           </GenericTableCell>
         ) : null}
@@ -307,7 +311,7 @@ const CollapsibleItem = <T extends object, C extends object>({
               </GenericTableCell>
             )
           })}
-          {onEdit || onDelete || onView ? (
+          {onEdit || onDelete || onView || actions ? (
             <GenericTableCell className="py-1 w-32">
               <div className="flex items-center whitespace-nowrap w-full gap-1">
                 {onView && (
@@ -348,6 +352,7 @@ const CollapsibleItem = <T extends object, C extends object>({
                     <Trash2 className="size-4" />
                   </Button>
                 ) : null}
+                {actions?.(row)}
               </div>
             </GenericTableCell>
           ) : null}

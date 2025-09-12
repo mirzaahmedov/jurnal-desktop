@@ -29,6 +29,7 @@ interface CommonCollapsibleTableProps<T extends object> {
   onDelete?: (row: T) => void
   openRows?: (string | number)[]
   onOpenRowsChange?: (openRows: (string | number)[]) => void
+  actions?: (row: T) => ReactNode
   classNames?: {
     header?: string
   }

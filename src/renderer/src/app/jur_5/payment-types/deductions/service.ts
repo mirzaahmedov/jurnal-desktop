@@ -85,7 +85,7 @@ export const createDeductionSpravochnik = (config: Partial<SpravochnikHookOption
       columnDefs: DeductionColumnDefs,
       service: DeductionsService,
       dialogProps: {
-        className: 'max-w-full h-[800px]'
+        className: 'max-w-full h-full max-h-[800px]'
       },
       filters: [DeductionSpravochnikFilter]
     } satisfies typeof config,

@@ -10,7 +10,14 @@ export const NachislenieFormSchema = z.object({
   nachislenieYear: z.number(),
   nachislenieMonth: z.number(),
   docNum: z.number(),
-  docDate: z.string()
+  docDate: z.string(),
+  // Tabel fields
+  rabDni: z.number(),
+  otrabDni: z.number(),
+  noch: z.number(),
+  prazdnik: z.number(),
+  pererabodka: z.number(),
+  kazarma: z.number()
 })
 export type NachislenieFormValues = z.infer<typeof NachislenieFormSchema>
 
@@ -22,5 +29,12 @@ export const defaultValues: NachislenieFormValues = {
   nachislenieYear: new Date().getFullYear(),
   nachislenieMonth: new Date().getMonth() + 1,
   docNum: 0,
-  docDate: formatDate(new Date())
+  docDate: formatDate(new Date()),
+  // Tabel default values
+  rabDni: 0,
+  otrabDni: 0,
+  noch: 0,
+  prazdnik: 0,
+  pererabodka: 0,
+  kazarma: 0
 }

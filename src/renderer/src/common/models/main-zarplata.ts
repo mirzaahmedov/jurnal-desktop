@@ -29,12 +29,14 @@ export interface MainZarplata {
   itogo: number
   workplaceId: number
   isMatPomoch: boolean | null
+  isPoek: boolean | null
   doljnostName: string
   doljnostOklad: number
   doljnostPrikazNum: string
   doljnostPrikazDate: string
   spravochnikZarplataIstochnikFinanceId: number
   spravochnikZarplataIstochnikFinanceName: string
+  spravochnikDoljnostId: number
 }
 
 export interface MainZarplataCalculation {

@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { Allotment } from 'allotment'
 import { useTranslation } from 'react-i18next'
+import { useLocation, useSearchParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
 import { GenericTable, LoadingOverlay } from '@/common/components'
@@ -35,7 +36,7 @@ export const Nachislenies = () => {
   const { main_schet_id, budjet_id } = useRequisitesStore()
   const { filteredTreeNodes, search, setSearch, vacantsQuery } = useVacantTreeNodes()
 
-  const [selectedNachislenie, setSelectedNachislenie] = useState<Nachislenie | undefined>()
+  const [searchParams, setSearchParams] = useSearchParams()
   const [selectedVacant, setSelectedVacant] = useState<VacantTreeNode>()
   const [docNum, setDocNum] = useState<string>('')
   const [year, setYear] = useState<number>(new Date().getFullYear())
@@ -43,8 +44,14 @@ export const Nachislenies = () => {
 
   const setLayout = useLayout()
   const pagination = usePagination()
-  const editToggle = useToggle()
   const createToggle = useToggle()
+  const location = useLocation()
+
+  const nachislenieId = searchParams.get('nachislenieId')
+    ? Number(searchParams.get('nachislenieId'))
+    : undefined
+
+  console.log({ nachislenieId, location })
 
   const nachislenieMadeQuery = useQuery({
     queryKey: [
@@ -93,8 +100,9 @@ export const Nachislenies = () => {
   })
 
   const handleRowEdit = (row: Nachislenie) => {
-    setSelectedNachislenie(row)
-    editToggle.open()
+    setSearchParams({
+      nachislenieId: row.id.toString()
+    })
   }
   const handleRowDelete = (row: Nachislenie) => {
     confirm({
@@ -191,14 +199,16 @@ export const Nachislenies = () => {
               spravochnikBudjetNameId={budjet_id}
               vacant={selectedVacant}
             />
-            {selectedVacant && selectedNachislenie ? (
-              <NachislenieEditDialog
-                isOpen={editToggle.isOpen}
-                onOpenChange={editToggle.setOpen}
-                vacant={selectedVacant}
-                nachislenieId={selectedNachislenie.id!}
-              />
-            ) : null}
+            <NachislenieEditDialog
+              isOpen={!!nachislenieId}
+              onOpenChange={(open) => {
+                if (!open) {
+                  setSearchParams({})
+                }
+              }}
+              vacant={selectedVacant}
+              nachislenieId={nachislenieId}
+            />
           </>
         ) : null}
       </Allotment.Pane>

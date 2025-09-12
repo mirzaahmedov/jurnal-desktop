@@ -38,7 +38,7 @@ export const ContentStepper: FC<ContentStepperProps> = ({
   }
 
   return (
-    <div className="w-fit flex flex-row items-center gap-4 bg-gray-100 rounded-lg px-4 py-3">
+    <div className="w-fit flex flex-row items-center gap-4 rounded-lg px-4 py-3">
       <Button
         onClick={handlePrev}
         variant="ghost"

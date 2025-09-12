@@ -40,12 +40,15 @@ export const WorkTripRoads = ({ form, minimumWageSumma }: WorkTripRoadsProps) =>
     name: 'road'
   })
 
-  const roads = useWatch({
+  const roadKms = useWatch({
     control: form.control,
-    name: 'road'
+    name: fields.map((_, index) => `road.${index}.km`) as any
   })
 
   useEffect(() => {
+    console.log('minimumWageSumma', minimumWageSumma)
+    console.log('roadKms', roadKms)
+    const roads = form.getValues('road')
     roads.forEach((road, index) => {
       if (road.road_ticket_number) {
         return
@@ -54,14 +57,21 @@ export const WorkTripRoads = ({ form, minimumWageSumma }: WorkTripRoadsProps) =>
         distanceKM: road.km,
         minimumWageSumma: minimumWageSumma
       })
+      console.log(
+        'calculated roadSumma',
+        roadSumma,
+        'for index',
+        index,
+        'actual summa ' + road.road_summa
+      )
       if (roadSumma !== road.road_summa) {
         form.setValue(`road.${index}.road_summa`, roadSumma, {
           shouldValidate: true
         })
       }
-      console.log('road summa', roadSumma)
+      // console.log('road summa', roadSumma)
     })
-  }, [roads, minimumWageSumma])
+  }, [minimumWageSumma, roadKms])
 
   return (
     <div className="space-y-1 py-2">

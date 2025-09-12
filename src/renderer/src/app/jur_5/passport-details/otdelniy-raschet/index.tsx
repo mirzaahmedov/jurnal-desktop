@@ -22,8 +22,12 @@ import { OtdelniyRaschetService } from './service'
 
 interface OtdelniyRaschetContainerProps {
   mainZarplata: MainZarplata
+  navigateHome: () => void
 }
-export const OtdelniyRaschetContainer = ({ mainZarplata }: OtdelniyRaschetContainerProps) => {
+export const OtdelniyRaschetContainer = ({
+  mainZarplata,
+  navigateHome
+}: OtdelniyRaschetContainerProps) => {
   const { t } = useTranslation()
   const { confirm } = useConfirm()
 
@@ -109,6 +113,7 @@ export const OtdelniyRaschetContainer = ({ mainZarplata }: OtdelniyRaschetContai
         items={otdelniyRaschetQuery.data ?? []}
         currentIndex={currentIndex}
         onIndexChange={setCurrentIndex}
+        navigateHome={navigateHome}
       />
     </ListView>
   )

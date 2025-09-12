@@ -29,7 +29,7 @@ export const OtdelniyRaschetCreateDialog = ({
   return (
     <DialogTrigger {...props}>
       <DialogOverlay>
-        <DialogContent className="w-full max-w-4xl h-full max-h-[700px] px-0">
+        <DialogContent className="w-full max-w-5xl h-full max-h-[800px] px-0">
           <div className="flex flex-col h-full overflow-hidden gap-5">
             <DialogHeader className="px-5">
               <DialogTitle>{t('otdelniy_raschet')}</DialogTitle>

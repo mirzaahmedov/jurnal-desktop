@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { Allotment } from 'allotment'
 import { useTranslation } from 'react-i18next'
-import { useSearchParams } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
 import { GenericTable, LoadingOverlay } from '@/common/components'
@@ -33,12 +33,14 @@ import { PassportDetailsViewDialog } from './components/passport-details-view-di
 const PassportDetailsPage = () => {
   const setLayout = useLayout()
 
+  const navigate = useNavigate()
   const pagination = usePagination()
   const createDialogToggle = useToggle()
 
   const [selectedVacant, setSelectedVacant] = useState<VacantTreeNode | null>(null)
   const [searchParams, setSearchParams] = useSearchParams()
 
+  const backUrl = searchParams.get('backUrl')
   const mainZarplataId = searchParams.get('mainZarplataId')
     ? Number(searchParams.get('mainZarplataId'))
     : null
@@ -109,8 +111,6 @@ const PassportDetailsPage = () => {
     })
   }
 
-  console.log({ mainZarplataId })
-
   return (
     <>
       <Allotment
@@ -170,6 +170,10 @@ const PassportDetailsPage = () => {
         onOpenChange={(open) => {
           if (!open) {
             setSearchParams({})
+            if (backUrl) {
+              console.log(backUrl)
+              navigate(backUrl)
+            }
           }
         }}
         mainZarplataId={mainZarplataId}

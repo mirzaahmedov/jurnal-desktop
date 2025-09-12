@@ -1,6 +1,10 @@
+import type {
+  OtdelniyRaschetDeductionDto,
+  OtdelniyRaschetPaymentDto
+} from '@/common/models/otdelniy-raschet'
 import type { DialogTriggerProps } from 'react-aria-components'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
@@ -35,11 +39,15 @@ export enum PaymentType {
 
 export interface OtdelniyRaschetPaymentDialogProps extends Omit<DialogTriggerProps, 'children'> {
   isDeduction?: boolean
+  paymentData: OtdelniyRaschetPaymentDto | OtdelniyRaschetDeductionDto | undefined
+  mainZarplataId: number
   otdelniyRaschetMainId?: number | null
 }
 export const OtdelniyRaschetPaymentDialog = ({
   isDeduction = false,
+  paymentData,
   otdelniyRaschetMainId,
+  mainZarplataId,
   ...props
 }: OtdelniyRaschetPaymentDialogProps) => {
   const { t } = useTranslation()
@@ -81,6 +89,34 @@ export const OtdelniyRaschetPaymentDialog = ({
       toast.error(t('create_failed'))
     }
   })
+  const updatePaymentMutation = useMutation({
+    mutationFn: OtdelniyRaschetService.updatePayment,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [OtdelniyRaschetService.QueryKeys.GetById, otdelniyRaschetMainId]
+      })
+      form.reset(defaultValues)
+      toast.success(t('update_success'))
+      closeDialog()
+    },
+    onError: () => {
+      toast.error(t('update_failed'))
+    }
+  })
+  const updateDeductionMutation = useMutation({
+    mutationFn: OtdelniyRaschetService.updateDeduction,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [OtdelniyRaschetService.QueryKeys.GetById, otdelniyRaschetMainId]
+      })
+      form.reset(defaultValues)
+      toast.success(t('update_success'))
+      closeDialog()
+    },
+    onError: () => {
+      toast.error(t('update_failed'))
+    }
+  })
 
   const paymentSpravochnik = useSpravochnik(
     createPaymentSpravochnik({
@@ -101,23 +137,67 @@ export const OtdelniyRaschetPaymentDialog = ({
 
   const handleSubmit = form.handleSubmit((values) => {
     if (isDeduction) {
-      createDeductionMutation.mutate({
-        deductionId: values.deductionId,
-        percentage: paymentType === PaymentType.Percentage ? values.percentage : 0,
-        summa: paymentType === PaymentType.Summa ? values.summa : 0,
-        otdelniyRaschetMainId: otdelniyRaschetMainId ?? 0,
-        paymentId: null
-      })
+      if (paymentData && 'id' in paymentData) {
+        updateDeductionMutation.mutate({
+          id: paymentData.id,
+          values: {
+            deductionId: values.deductionId,
+            percentage: paymentType === PaymentType.Percentage ? values.percentage : 0,
+            summa: paymentType === PaymentType.Summa ? values.summa : 0,
+            otdelniyRaschetMainId: otdelniyRaschetMainId ?? 0,
+            mainZarplataId: mainZarplataId,
+            paymentId: null
+          }
+        })
+      } else {
+        createDeductionMutation.mutate({
+          deductionId: values.deductionId,
+          percentage: paymentType === PaymentType.Percentage ? values.percentage : 0,
+          summa: paymentType === PaymentType.Summa ? values.summa : 0,
+          otdelniyRaschetMainId: otdelniyRaschetMainId ?? 0,
+          mainZarplataId: mainZarplataId,
+          paymentId: null
+        })
+      }
     } else {
-      createPaymentMutation.mutate({
-        paymentId: values.paymentId,
-        percentage: paymentType === PaymentType.Percentage ? values.percentage : 0,
-        summa: paymentType === PaymentType.Summa ? values.summa : 0,
-        otdelniyRaschetMainId: otdelniyRaschetMainId ?? 0,
-        deductionId: null
-      })
+      if (paymentData && 'id' in paymentData) {
+        updatePaymentMutation.mutate({
+          id: paymentData.id,
+          values: {
+            paymentId: values.paymentId,
+            percentage: paymentType === PaymentType.Percentage ? values.percentage : 0,
+            summa: paymentType === PaymentType.Summa ? values.summa : 0,
+            otdelniyRaschetMainId: otdelniyRaschetMainId ?? 0,
+            mainZarplataId: mainZarplataId,
+            deductionId: null
+          }
+        })
+      } else {
+        createPaymentMutation.mutate({
+          paymentId: values.paymentId,
+          percentage: paymentType === PaymentType.Percentage ? values.percentage : 0,
+          summa: paymentType === PaymentType.Summa ? values.summa : 0,
+          otdelniyRaschetMainId: otdelniyRaschetMainId ?? 0,
+          mainZarplataId: mainZarplataId,
+          deductionId: null
+        })
+      }
     }
   })
+
+  useEffect(() => {
+    if (paymentData) {
+      form.reset(paymentData)
+      if (paymentData.summa) {
+        setPaymentType(PaymentType.Summa)
+      } else {
+        setPaymentType(PaymentType.Percentage)
+      }
+    } else {
+      form.reset(defaultValues)
+      setPaymentType(PaymentType.Percentage)
+    }
+  }, [form, paymentData])
 
   return (
     <DialogTrigger {...props}>
@@ -249,7 +329,8 @@ const OtdelniyRaschetPaymentFormSchema = z.object({
   percentage: z.number().min(0).max(100),
   summa: z.number().min(0),
   paymentId: z.number().min(1).nullable(),
-  deductionId: z.number().min(1).nullable()
+  deductionId: z.number().min(1).nullable(),
+  mainZarplataId: z.number().optional().nullable()
 })
 export type OtdelniyRaschetPaymentFormValues = z.infer<typeof OtdelniyRaschetPaymentFormSchema>
 

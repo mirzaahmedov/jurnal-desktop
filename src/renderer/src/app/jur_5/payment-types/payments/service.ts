@@ -83,7 +83,7 @@ export const createPaymentSpravochnik = (config: Partial<SpravochnikHookOptions<
       columnDefs: PaymentColumnDefs({ isEditable: false }),
       service: PaymentsService,
       dialogProps: {
-        className: 'max-w-full h-[800px]'
+        className: 'max-w-full h-full max-h-[800px]'
       },
       filters: [PaymentsSpravochnikFilter]
     } satisfies typeof config,

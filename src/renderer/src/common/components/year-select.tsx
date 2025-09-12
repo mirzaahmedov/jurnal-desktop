@@ -79,6 +79,7 @@ export const YearSelect = ({
       {...props}
       allowsCustomValue
       formValue="text"
+      menuTrigger="focus"
       placeholder={t('year')}
       selectedKey={selectedKey}
       inputValue={inputValue}

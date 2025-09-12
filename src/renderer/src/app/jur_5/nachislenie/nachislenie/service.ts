@@ -12,7 +12,19 @@ export class NachislenieService {
     GetAll: 'nachislenie/all',
     MadeVacants: 'nachislenie/made-vacants',
     GetById: 'nachislenie/:id',
+    GetMainById: 'nachislenie/:mainId',
+    GetChildById: 'nachislenie/get-by-child-id',
     GetVacantId: 'nachislenie/:vacantId'
+  }
+
+  static async getMainById(
+    ctx: QueryFunctionContext<[typeof NachislenieService.QueryKeys.GetById, number]>
+  ) {
+    const mainId = ctx.queryKey[1]
+    const res = await zarplataApiNew.get<NachislenieProvodka[]>(
+      `${NachislenieService.endpoint}/get-main/${mainId}`
+    )
+    return res.data
   }
 
   static async getById(
@@ -98,6 +110,28 @@ export class NachislenieService {
     })
   }
 
+  static async updateChild(
+    childId: number,
+    values: {
+      id: number
+      mainZarplataId: number
+      fio: string
+      doljnost: string
+      rabDni: number
+      otrabDni: number
+      noch: number
+      prazdnik: number
+      pererabodka: number
+      kazarma: number
+    }
+  ) {
+    const res = await zarplataApiNew.put<ZarplataApiResponse<Nachislenie[]>>(
+      `${NachislenieService.endpoint}/update-child/${childId}`,
+      values
+    )
+    return res.data
+  }
+
   static async create(values: NachislenieFormValues) {
     const res = await zarplataApiNew.post<ZarplataApiResponse<Nachislenie[]>>(
       `${NachislenieService.endpoint}`,
@@ -117,6 +151,13 @@ export class NachislenieService {
   static async delete(id: number) {
     const res = await zarplataApiNew.delete<ZarplataApiResponse<Nachislenie[]>>(
       `${NachislenieService.endpoint}/${id}`
+    )
+    return res.data
+  }
+
+  static async getChildById(childId: number) {
+    const res = await zarplataApiNew.get<NachislenieProvodka>(
+      `${NachislenieService.endpoint}/getByChildId/${childId}`
     )
     return res.data
   }

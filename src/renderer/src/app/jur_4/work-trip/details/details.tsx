@@ -10,13 +10,12 @@ import { toast } from 'react-toastify'
 import { createPodotchetSpravochnik } from '@/app/region-spravochnik/podotchet'
 import { OperatsiiService, operatsiiQueryKeys } from '@/app/super-admin/operatsii'
 import { MinimumWageService } from '@/app/super-admin/spravochnik/minimum-wage/service'
-import { Fieldset, NumericInput } from '@/common/components'
+import { Fieldset } from '@/common/components'
 import { EditableTable } from '@/common/components/editable-table'
 import { FormElement } from '@/common/components/form'
 import { JollyDatePicker } from '@/common/components/jolly-date-picker'
 import { JollySelect, SelectItem } from '@/common/components/jolly/select'
 import { Form, FormField } from '@/common/components/ui/form'
-import { Input } from '@/common/components/ui/input'
 import { Textarea } from '@/common/components/ui/textarea'
 import { DocumentType } from '@/common/features/doc-num'
 import { useRequisitesStore } from '@/common/features/requisites'
@@ -25,7 +24,7 @@ import {
   validateDateWithinSelectedMonth
 } from '@/common/features/selected-month'
 import { useSpravochnik } from '@/common/features/spravochnik'
-import { formatDate, getWorkdaysInPeriod, parseDate, withinMonth } from '@/common/lib/date'
+import { formatDate, parseDate, withinMonth } from '@/common/lib/date'
 import { formatLocaleDate, formatNumber } from '@/common/lib/format'
 import { TypeSchetOperatsii } from '@/common/models'
 import { DetailsView } from '@/common/views'
@@ -34,7 +33,7 @@ import { DocumentFields, PodotchetFields, SummaFields } from '@/common/widget/fo
 import { WorkTripFormSchema, WorkTripQueryKeys, defaultValues } from '../config'
 import { WorkTripService } from '../service'
 import { WorkTripProvodkaColumns } from './provodki'
-import { calcDailySumma } from './utils'
+import { WorkTripDays } from './work-trip-day'
 import { WorkTripHotels } from './work-trip-hotels'
 import { WorkTripRoads } from './work-trip-roads'
 
@@ -108,11 +107,6 @@ export const WorkTripDetails = ({ id }: WorkTripDetailsProps) => {
     queryFn: WorkTripService.getById,
     enabled: id !== 'create'
   })
-  const minimumWagesQuery = useQuery({
-    queryKey: [MinimumWageService.QueryKeys.GetAll],
-    queryFn: MinimumWageService.getAll
-  })
-  const minimumWageQueryData = minimumWagesQuery.data?.data ?? []
 
   const { data: operatsii } = useQuery({
     queryKey: [
@@ -132,6 +126,11 @@ export const WorkTripDetails = ({ id }: WorkTripDetailsProps) => {
       onChange: (value) => form.setValue('worker_id', value ?? 0)
     })
   )
+  const minimumWagesQuery = useQuery({
+    queryKey: [MinimumWageService.QueryKeys.GetAll],
+    queryFn: MinimumWageService.getAll
+  })
+  const minimumWageQueryData = minimumWagesQuery.data?.data ?? []
 
   const handleSubmit = form.handleSubmit((values) => {
     if (id === 'create') {
@@ -176,12 +175,6 @@ export const WorkTripDetails = ({ id }: WorkTripDetailsProps) => {
     }
   }, [form, startDate])
 
-  const daysCount =
-    form.watch('from_date') && form.watch('to_date')
-      ? getWorkdaysInPeriod(parseDate(form.watch('from_date')), parseDate(form.watch('to_date')))
-          .totalDays
-      : 0
-
   useEffect(() => {
     const firstOperatsii = operatsii?.data?.[0]
     if (firstOperatsii) {
@@ -194,24 +187,6 @@ export const WorkTripDetails = ({ id }: WorkTripDetailsProps) => {
       )
     }
   }, [form, operatsii?.data])
-  useEffect(() => {
-    const daySumma = calcDailySumma({
-      minimumWageSumma,
-      daysCount
-    })
-    form.setValue('day_summa', daySumma)
-    form.setValue(
-      'childs',
-      form.getValues('childs').map((child) =>
-        child.type === 'day'
-          ? {
-              ...child,
-              summa: daySumma
-            }
-          : child
-      )
-    )
-  }, [minimumWageSumma, daysCount])
 
   const roads = useWatch({
     control: form.control,
@@ -256,10 +231,16 @@ export const WorkTripDetails = ({ id }: WorkTripDetailsProps) => {
     }
     if (minimumWageId) {
       const currentWage = minimumWageQueryData.find((item) => item.id === minimumWageId)
+      if (!currentWage || currentWage.id === minimumWageId) {
+        return
+      }
       setMinimumWageSumma(currentWage?.summa ?? 0)
       form.setValue('minimum_wage_id', currentWage?.id ?? 0)
     } else {
       const currentWage = minimumWageQueryData[minimumWageQueryData.length - 1]
+      if (!currentWage || currentWage.id === minimumWageId) {
+        return
+      }
       setMinimumWageSumma(currentWage.summa)
       form.setValue('minimum_wage_id', currentWage.id)
     }
@@ -312,8 +293,8 @@ export const WorkTripDetails = ({ id }: WorkTripDetailsProps) => {
                       >
                         {(item) => (
                           <SelectItem id={item.id}>
-                            №{item.doc_num} {formatLocaleDate(item.doc_date)} -{' '}
-                            {formatNumber(item.summa)} {t('starts').toLowerCase()}{' '}
+                            {formatNumber(item.summa)} №{item.doc_num}{' '}
+                            {formatLocaleDate(item.doc_date)} - {t('starts').toLowerCase()}{' '}
                             {formatLocaleDate(item.start)}
                           </SelectItem>
                         )}
@@ -369,46 +350,10 @@ export const WorkTripDetails = ({ id }: WorkTripDetailsProps) => {
                   name={t('daily_expense')}
                   className="col-span-12 gap-2 md:col-span-6 2xl:col-span-2"
                 >
-                  <FormField
-                    control={form.control}
-                    name="day_summa"
-                    render={({ field }) => (
-                      <FormElement
-                        label={t('summa')}
-                        direction="row"
-                        divProps={{
-                          className: 'items-start'
-                        }}
-                      >
-                        <div>
-                          <NumericInput
-                            readOnly
-                            value={field.value}
-                            onValueChange={(values) => {
-                              field.onChange(values.floatValue)
-                            }}
-                          />
-                          <div className="text-xs font-semibold text-slate-500 mt-2 flex flex-col justify-between items-end gap-1">
-                            <p>
-                              [{t('pages.bhm').toLowerCase()}] * 0.1 * [{t('days').toLowerCase()}]
-                            </p>
-                            <p>
-                              {formatNumber(minimumWageSumma)} * 0.1 * {daysCount}
-                            </p>
-                          </div>
-                        </div>
-                      </FormElement>
-                    )}
+                  <WorkTripDays
+                    form={form}
+                    minimumWageQueryData={minimumWageQueryData}
                   />
-                  <FormElement
-                    label={t('days')}
-                    direction="column"
-                  >
-                    <Input
-                      readOnly
-                      value={daysCount}
-                    />
-                  </FormElement>
                 </Fieldset>
                 <Fieldset
                   name={t('road_expense')}

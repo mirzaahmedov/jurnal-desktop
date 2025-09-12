@@ -139,6 +139,10 @@ export const PorucheniyaDialog = ({
               selectedKey={gaznaId || null}
               onSelectionChange={(value) => {
                 setGaznaId((value as number) ?? undefined)
+                const item = organSpravochnik.selected?.gaznas?.find((a) => a.id === value)
+                if (item) {
+                  setGaznaNumber(item.raschet_schet_gazna)
+                }
               }}
               className="flex-1"
               placeholder=""

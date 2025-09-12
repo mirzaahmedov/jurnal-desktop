@@ -4,11 +4,12 @@ import { useEffect } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
+import { RefreshCw } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 
-import { LoadingOverlay, NumericInput } from '@/common/components'
+import { LoadingOverlay, NumericInput, Spinner } from '@/common/components'
 import { FormElement } from '@/common/components/form'
 import { JollyDatePicker } from '@/common/components/jolly-date-picker'
 import { Button } from '@/common/components/jolly/button'
@@ -20,6 +21,7 @@ import { useRequisitesStore } from '@/common/features/requisites'
 import { useRequisitesRedirect } from '@/common/features/requisites/use-main-schet-redirect'
 import { formatLocaleDate } from '@/common/lib/format'
 
+import { MainZarplataInfo } from '../components'
 import { OtdelniyRaschetFormSchema, defaultValues } from './config'
 import { OtdelniyRaschetService } from './service'
 
@@ -38,6 +40,13 @@ export const OtdelniyRaschetForm = ({ mainZarplata, onFinish }: OtdelniyRaschetF
   const form = useForm({
     defaultValues,
     resolver: zodResolver(OtdelniyRaschetFormSchema)
+  })
+
+  const getMaxDocNumMutation = useMutation({
+    mutationFn: OtdelniyRaschetService.getMaxDocNum,
+    onSuccess: (docNum) => {
+      form.setValue('docNum', docNum)
+    }
   })
 
   const getMainZarplatMutation = useMutation({
@@ -86,202 +95,242 @@ export const OtdelniyRaschetForm = ({ mainZarplata, onFinish }: OtdelniyRaschetF
     }
   }, [year, month])
 
+  useEffect(() => {
+    getMaxDocNumMutation.mutate()
+  }, [getMaxDocNumMutation.mutate])
+
   return (
-    <div className="h-full relative flex flex-col gap-5 p-5">
+    <div className="flex-1 min-h-0 relative flex flex-col gap-5 px-5">
       {otdelniyRaschetCreateMutation.isPending ? <LoadingOverlay /> : null}
 
       <Form {...form}>
         <form
           onSubmit={handleSubmit}
-          className="h-full space-y-6 flex flex-col"
+          className="min-h-0 flex-1 flex flex-col gap-8"
         >
-          <div className="flex-1 overflow-x-visible overflow-y-auto scrollbar">
-            <div className="grid grid-cols-[repeat(auto-fit,minmax(350px,1fr))] gap-6 p-1">
-              <FormField
-                control={form.control}
-                name="nachislenieYear"
-                render={({ field }) => (
-                  <FormElement
-                    label={t('year')}
-                    direction="column"
-                    hideDescription
-                  >
-                    <YearSelect
-                      {...field}
-                      selectedKey={field.value}
-                      onSelectionChange={(value) => field.onChange(value ?? 0)}
-                      className="w-full"
-                    />
-                  </FormElement>
-                )}
-              />
+          <div className="flex-1 overflow-x-visible overflow-y-auto scrollbar bg-gray-100">
+            <MainZarplataInfo mainZarplataId={mainZarplata.id} />
+            <div className="p-5 ">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <FormField
+                  control={form.control}
+                  name="docNum"
+                  render={({ field }) => (
+                    <FormElement
+                      label={t('doc_num')}
+                      direction="column"
+                      hideDescription
+                    >
+                      <div className="flex items-center gap-2">
+                        <NumericInput
+                          {...field}
+                          onChange={undefined}
+                          onValueChange={(values) => field.onChange(values.floatValue ?? 0)}
+                          className="w-full"
+                        />
+                        <Button
+                          type="button"
+                          size="icon"
+                          className="size-10 flex-shrink-0"
+                          variant="ghost"
+                          isDisabled={getMaxDocNumMutation.isPending}
+                          onClick={() => {
+                            getMaxDocNumMutation.mutate()
+                          }}
+                          aria-label={t('refresh_doc_num')}
+                        >
+                          {getMaxDocNumMutation.isPending ? (
+                            <Spinner className="size-5 border-2" />
+                          ) : (
+                            <RefreshCw />
+                          )}
+                        </Button>
+                      </div>
+                    </FormElement>
+                  )}
+                />
 
-              <FormField
-                control={form.control}
-                name="nachislenieMonth"
-                render={({ field }) => (
-                  <FormElement
-                    label={t('month')}
-                    direction="column"
-                    hideDescription
-                  >
-                    <MonthSelect
-                      {...field}
-                      selectedKey={field.value}
-                      onSelectionChange={(value) => field.onChange(value ?? 0)}
-                      className="w-full"
-                    />
-                  </FormElement>
-                )}
-              />
+                <FormField
+                  control={form.control}
+                  name="docDate"
+                  render={({ field }) => (
+                    <FormElement
+                      label={t('doc_date')}
+                      direction="column"
+                      hideDescription
+                    >
+                      <JollyDatePicker
+                        {...field}
+                        className="w-full"
+                      />
+                    </FormElement>
+                  )}
+                />
 
-              <FormField
-                control={form.control}
-                name="docNum"
-                render={({ field }) => (
-                  <FormElement
-                    label={t('doc_num')}
-                    direction="column"
-                    hideDescription
-                  >
-                    <NumericInput
-                      value={field.value}
-                      onValueChange={(values) => field.onChange(values.floatValue ?? 0)}
-                      className="w-full"
-                    />
-                  </FormElement>
-                )}
-              />
+                <FormField
+                  control={form.control}
+                  name="nachislenieYear"
+                  render={({ field }) => (
+                    <FormElement
+                      label={t('year')}
+                      direction="column"
+                      hideDescription
+                    >
+                      <YearSelect
+                        {...field}
+                        selectedKey={field.value}
+                        onSelectionChange={(value) => field.onChange(value ?? 0)}
+                        className="w-full"
+                      />
+                    </FormElement>
+                  )}
+                />
 
-              <FormField
-                control={form.control}
-                name="docDate"
-                render={({ field }) => (
-                  <FormElement
-                    label={t('doc_date')}
-                    direction="column"
-                    hideDescription
-                  >
-                    <JollyDatePicker
-                      {...field}
-                      className="w-full"
-                    />
-                  </FormElement>
-                )}
-              />
+                <FormField
+                  control={form.control}
+                  name="nachislenieMonth"
+                  render={({ field }) => (
+                    <FormElement
+                      label={t('month')}
+                      direction="column"
+                      hideDescription
+                    >
+                      <MonthSelect
+                        {...field}
+                        selectedKey={field.value}
+                        onSelectionChange={(value) => field.onChange(value ?? 0)}
+                        className="w-full"
+                      />
+                    </FormElement>
+                  )}
+                />
+              </div>
 
-              <FormField
-                control={form.control}
-                name="rabDni"
-                render={({ field }) => (
-                  <FormElement
-                    label={t('workdays')}
-                    direction="column"
-                    hideDescription
-                  >
-                    <NumericInput
-                      value={field.value}
-                      onValueChange={(values) => field.onChange(values.floatValue ?? 0)}
-                      className="w-full"
-                    />
-                  </FormElement>
-                )}
-              />
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mt-5 p-5 py-10 rounded-xl border border-gray-200 bg-white">
+                <FormField
+                  control={form.control}
+                  name="rabDni"
+                  render={({ field }) => (
+                    <FormElement
+                      label={t('workdays')}
+                      direction="column"
+                      hideDescription
+                    >
+                      <NumericInput
+                        value={field.value}
+                        onValueChange={(values) => field.onChange(values.floatValue ?? 0)}
+                        className="w-full"
+                        min={0}
+                      />
+                    </FormElement>
+                  )}
+                />
 
-              <FormField
-                control={form.control}
-                name="otrabDni"
-                render={({ field }) => (
-                  <FormElement
-                    label={t('worked_days')}
-                    direction="column"
-                    hideDescription
-                  >
-                    <NumericInput
-                      value={field.value}
-                      onValueChange={(values) => field.onChange(values.floatValue ?? 0)}
-                      className="w-full"
-                    />
-                  </FormElement>
-                )}
-              />
+                <FormField
+                  control={form.control}
+                  name="otrabDni"
+                  render={({ field }) => (
+                    <FormElement
+                      label={t('worked_days')}
+                      direction="column"
+                      hideDescription
+                    >
+                      <NumericInput
+                        value={field.value}
+                        onValueChange={(values) => field.onChange(values.floatValue ?? 0)}
+                        className="w-full"
+                        min={0}
+                      />
+                    </FormElement>
+                  )}
+                />
 
-              <FormField
-                control={form.control}
-                name="noch"
-                render={({ field }) => (
-                  <FormElement
-                    label={t('night_shift')}
-                    direction="column"
-                    hideDescription
-                  >
-                    <NumericInput
-                      value={field.value}
-                      onValueChange={(values) => field.onChange(values.floatValue ?? 0)}
-                      className="w-full"
-                    />
-                  </FormElement>
-                )}
-              />
+                <FormField
+                  control={form.control}
+                  name="noch"
+                  render={({ field }) => (
+                    <FormElement
+                      label={t('night_shift')}
+                      direction="column"
+                      hideDescription
+                    >
+                      <NumericInput
+                        value={field.value}
+                        onValueChange={(values) => field.onChange(values.floatValue ?? 0)}
+                        className="w-full"
+                        min={0}
+                      />
+                    </FormElement>
+                  )}
+                />
 
-              <FormField
-                control={form.control}
-                name="prazdnik"
-                render={({ field }) => (
-                  <FormElement
-                    label={t('holiday')}
-                    direction="column"
-                    hideDescription
-                  >
-                    <NumericInput
-                      value={field.value}
-                      onValueChange={(values) => field.onChange(values.floatValue ?? 0)}
-                      className="w-full"
-                    />
-                  </FormElement>
-                )}
-              />
+                <FormField
+                  control={form.control}
+                  name="prazdnik"
+                  render={({ field }) => (
+                    <FormElement
+                      label={t('holiday')}
+                      direction="column"
+                      hideDescription
+                    >
+                      <NumericInput
+                        value={field.value}
+                        onValueChange={(values) => field.onChange(values.floatValue ?? 0)}
+                        className="w-full"
+                        min={0}
+                      />
+                    </FormElement>
+                  )}
+                />
 
-              <FormField
-                control={form.control}
-                name="pererabodka"
-                render={({ field }) => (
-                  <FormElement
-                    label={t('overtime')}
-                    direction="column"
-                    hideDescription
-                  >
-                    <NumericInput
-                      value={field.value}
-                      onValueChange={(values) => field.onChange(values.floatValue ?? 0)}
-                      className="w-full"
-                    />
-                  </FormElement>
-                )}
-              />
+                <FormField
+                  control={form.control}
+                  name="pererabodka"
+                  render={({ field }) => (
+                    <FormElement
+                      label={t('overtime')}
+                      direction="column"
+                      hideDescription
+                    >
+                      <NumericInput
+                        value={field.value}
+                        onValueChange={(values) => field.onChange(values.floatValue ?? 0)}
+                        className="w-full"
+                        min={0}
+                      />
+                    </FormElement>
+                  )}
+                />
 
-              <FormField
-                control={form.control}
-                name="kazarma"
-                render={({ field }) => (
-                  <FormElement
-                    label={t('kazarma')}
-                    direction="column"
-                    hideDescription
-                  >
-                    <NumericInput
-                      value={field.value}
-                      onValueChange={(values) => field.onChange(values.floatValue ?? 0)}
-                      className="w-full"
-                    />
-                  </FormElement>
-                )}
-              />
+                <FormField
+                  control={form.control}
+                  name="kazarma"
+                  render={({ field }) => (
+                    <FormElement
+                      label={t('kazarma')}
+                      direction="column"
+                      hideDescription
+                    >
+                      <NumericInput
+                        value={field.value}
+                        onValueChange={(values) => field.onChange(values.floatValue ?? 0)}
+                        className="w-full"
+                        min={0}
+                      />
+                    </FormElement>
+                  )}
+                />
+              </div>
             </div>
           </div>
 
-          <div className="flex justify-end gap-3 pt-6 border-t">
-            <Button type="submit">{t('save')}</Button>
+          <div className="flex justify-end gap-4 pt-8 border-t">
+            <Button
+              type="submit"
+              isPending={otdelniyRaschetCreateMutation.isPending}
+            >
+              {t('save')}
+            </Button>
           </div>
         </form>
       </Form>

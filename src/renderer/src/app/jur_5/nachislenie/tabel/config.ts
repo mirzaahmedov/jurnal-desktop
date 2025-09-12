@@ -12,7 +12,9 @@ export const TabelProvodkaFormSchema = z.object({
   noch: z.number().optional(),
   prazdnik: z.number().optional(),
   pererabodka: z.number().optional(),
-  kazarma: z.number().optional()
+  kazarma: z.number().optional(),
+  isPoek: z.boolean().nullable(),
+  spravochnikDoljnostId: z.number().nullable().optional()
 })
 export const TabelFormSchema = z.object({
   spravochnikBudjetNameId: z.number(),

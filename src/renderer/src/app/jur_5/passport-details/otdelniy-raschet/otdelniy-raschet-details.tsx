@@ -1,8 +1,12 @@
 import type { MainZarplata } from '@/common/models'
-import type { OtdelniyRaschet } from '@/common/models/otdelniy-raschet'
+import type {
+  OtdelniyRaschet,
+  OtdelniyRaschetDeductionDto,
+  OtdelniyRaschetPaymentDto
+} from '@/common/models/otdelniy-raschet'
 import type { DialogTriggerProps } from 'react-aria-components'
 
-import { type FC, useEffect } from 'react'
+import { type FC, useEffect, useState } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
@@ -32,6 +36,7 @@ import { MonthSelect } from '@/common/components/month-select'
 import { SummaCell } from '@/common/components/table/renderers/summa'
 import { Form, FormField } from '@/common/components/ui/form'
 import { YearSelect } from '@/common/components/year-select'
+import { useConfirm } from '@/common/features/confirm'
 import { useRequisitesRedirect } from '@/common/features/requisites/use-main-schet-redirect'
 import { useToggle } from '@/common/hooks'
 import { formatDate, parseLocaleDate } from '@/common/lib/date'
@@ -47,17 +52,20 @@ export interface OtdelniyRaschetDetailsProps extends Omit<DialogTriggerProps, 'c
   items: OtdelniyRaschet[]
   currentIndex: number
   onIndexChange: (index: number) => void
+  navigateHome: () => void
 }
 export const OtdelniyRaschetDetails: FC<OtdelniyRaschetDetailsProps> = ({
   items,
   currentIndex,
   onIndexChange,
   mainZarplata,
+  navigateHome,
   ...props
 }) => {
   useRequisitesRedirect(-1)
 
   const { t } = useTranslation()
+  const { confirm } = useConfirm()
 
   const form = useForm({
     defaultValues,
@@ -79,12 +87,34 @@ export const OtdelniyRaschetDetails: FC<OtdelniyRaschetDetailsProps> = ({
       })
     }
   })
+
+  const deletePaymentMutation = useMutation({
+    mutationFn: OtdelniyRaschetService.deletePayment,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [OtdelniyRaschetService.QueryKeys.GetById, currentItem?.id]
+      })
+    }
+  })
+
+  const deleteDeductionMutation = useMutation({
+    mutationFn: OtdelniyRaschetService.deleteDeduction,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [OtdelniyRaschetService.QueryKeys.GetById, currentItem?.id]
+      })
+    }
+  })
+
   const otdelniyRaschet = otdelniyRaschetQuery?.data ?? ({} as OtdelniyRaschet)
   const payments = otdelniyRaschet?.otdelniyRaschetPaymentDtos ?? []
   const deductions = otdelniyRaschet?.otdelniyRaschetDeductionDtos ?? []
 
   const paymentToggle = useToggle()
   const deductionToggle = useToggle()
+
+  const [paymentData, setPaymentData] = useState<OtdelniyRaschetPaymentDto>()
+  const [deductionData, setDeductionData] = useState<OtdelniyRaschetDeductionDto>()
 
   const handleCalculateSalary = () => {
     const values = form.getValues()
@@ -118,7 +148,10 @@ export const OtdelniyRaschetDetails: FC<OtdelniyRaschetDetailsProps> = ({
                 <DialogTitle>{t('otdelniy_raschet')}</DialogTitle>
               </DialogHeader>
               <div className="flex-1 min-h-0 flex flex-col overflow-auto scrollbar relative bg-gray-100">
-                <MainZarplataInfo mainZarplata={mainZarplata} />
+                <MainZarplataInfo
+                  mainZarplataId={mainZarplata.id}
+                  onNavigate={navigateHome}
+                />
                 {otdelniyRaschetQuery.isLoading ? (
                   <LoadingOverlay />
                 ) : !otdelniyRaschet ? (
@@ -139,7 +172,10 @@ export const OtdelniyRaschetDetails: FC<OtdelniyRaschetDetailsProps> = ({
                           </h2>
                           <Button
                             className="-my-10"
-                            onPress={paymentToggle.open}
+                            onPress={() => {
+                              setPaymentData(undefined)
+                              paymentToggle.open()
+                            }}
                           >
                             <Plus className="btn-icon icon-start" /> {t('add')}
                           </Button>
@@ -163,13 +199,27 @@ export const OtdelniyRaschetDetails: FC<OtdelniyRaschetDetailsProps> = ({
                               }
                             ]}
                             className="table-generic-xs shadow-md rounded overflow-hidden"
+                            onEdit={(row) => {
+                              setPaymentData(row)
+                              paymentToggle.open()
+                            }}
+                            onDelete={(row) => {
+                              confirm({
+                                onConfirm: () => {
+                                  deletePaymentMutation.mutate(row.id)
+                                }
+                              })
+                            }}
                             footer={
                               <FooterRow>
                                 <FooterCell
                                   title={t('total')}
-                                  content={formatNumber(otdelniyRaschet?.nachislenieSum ?? 0)}
-                                  colSpan={6}
+                                  colSpan={3}
                                 />
+                                <FooterCell
+                                  content={formatNumber(otdelniyRaschet?.nachislenieSum ?? 0)}
+                                />
+                                <FooterCell />
                               </FooterRow>
                             }
                           />
@@ -180,7 +230,10 @@ export const OtdelniyRaschetDetails: FC<OtdelniyRaschetDetailsProps> = ({
                           <h2 className="text-xl text-white font-medium mb-2">{t('uderjanie')}</h2>
                           <Button
                             className="-my-10"
-                            onPress={deductionToggle.open}
+                            onPress={() => {
+                              setDeductionData(undefined)
+                              deductionToggle.open()
+                            }}
                           >
                             <Plus className="btn-icon icon-start" /> {t('add')}
                           </Button>
@@ -203,6 +256,17 @@ export const OtdelniyRaschetDetails: FC<OtdelniyRaschetDetailsProps> = ({
                             }
                           ]}
                           className="table-generic-xs shadow-md rounded overflow-hidden"
+                          onEdit={(row) => {
+                            setDeductionData(row)
+                            deductionToggle.open()
+                          }}
+                          onDelete={(row) => {
+                            confirm({
+                              onConfirm: () => {
+                                deleteDeductionMutation.mutate(row.id)
+                              }
+                            })
+                          }}
                           footer={
                             <FooterRow>
                               <FooterCell
@@ -212,17 +276,16 @@ export const OtdelniyRaschetDetails: FC<OtdelniyRaschetDetailsProps> = ({
                               <FooterCell
                                 content={formatNumber(otdelniyRaschet?.uderjanieSum ?? 0)}
                               />
+                              <FooterCell />
                             </FooterRow>
                           }
                         />
                       </div>
                     </div>
-                    <div className="p-5 flex items-center justify-between border-t">
-                      <ContentStepper
-                        currentIndex={currentIndex}
-                        onIndexChange={onIndexChange}
-                        itemsCount={items.length}
-                      />
+                    <div className="flex items-center gap-10 px-5 py-5">
+                      <h3 className="font-bold">
+                        {t('na_ruki')}: {otdelniyRaschet.naRukiSum}
+                      </h3>
                       <Button
                         onPress={handleCalculateSalary}
                         isPending={otdelniyRaschetCalculateMutation.isPending}
@@ -233,18 +296,30 @@ export const OtdelniyRaschetDetails: FC<OtdelniyRaschetDetailsProps> = ({
                   </>
                 )}
               </div>
+
+              <div className="p-5 flex items-center justify-between border-t">
+                <ContentStepper
+                  currentIndex={currentIndex}
+                  onIndexChange={onIndexChange}
+                  itemsCount={items.length}
+                />
+              </div>
             </div>
           </DialogContent>
         </DialogOverlay>
       </DialogTrigger>
       <OtdelniyRaschetPaymentDialog
+        mainZarplataId={mainZarplata.id}
         otdelniyRaschetMainId={otdelniyRaschet.id}
+        paymentData={paymentData}
         isOpen={paymentToggle.isOpen}
         onOpenChange={paymentToggle.setOpen}
       />
       <OtdelniyRaschetPaymentDialog
         isDeduction
+        mainZarplataId={mainZarplata.id}
         otdelniyRaschetMainId={otdelniyRaschet.id}
+        paymentData={deductionData}
         isOpen={deductionToggle.isOpen}
         onOpenChange={deductionToggle.setOpen}
       />

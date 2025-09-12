@@ -89,4 +89,51 @@ export class OtdelniyRaschetService {
     })
     return res.data
   }
+
+  static async updatePayment(args: { id: number; values: OtdelniyRaschetPaymentFormValues }) {
+    const res = await zarplataApiNew.put(
+      `${OtdelniyRaschetService.endpoint}/update-payment`,
+      args.values,
+      {
+        params: {
+          id: args.id
+        }
+      }
+    )
+    return res.data
+  }
+
+  static async deletePayment(id: number) {
+    const res = await zarplataApiNew.delete(
+      `${OtdelniyRaschetService.endpoint}/delete-payment/${id}`
+    )
+    return res.data
+  }
+
+  static async updateDeduction(args: { id: number; values: OtdelniyRaschetPaymentFormValues }) {
+    const res = await zarplataApiNew.put(
+      `${OtdelniyRaschetService.endpoint}/update-deduction`,
+      args.values,
+      {
+        params: {
+          id: args.id
+        }
+      }
+    )
+    return res.data
+  }
+
+  static async deleteDeduction(id: number) {
+    const res = await zarplataApiNew.delete(
+      `${OtdelniyRaschetService.endpoint}/delete-deduction/${id}`
+    )
+    return res.data
+  }
+
+  static async getMaxDocNum() {
+    const res = await zarplataApiNew.get<number>(
+      `${OtdelniyRaschetService.endpoint}/get-max-docNum`
+    )
+    return res.data
+  }
 }

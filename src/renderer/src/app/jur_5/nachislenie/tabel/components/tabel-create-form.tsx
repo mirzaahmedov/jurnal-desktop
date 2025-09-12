@@ -115,6 +115,8 @@ export const TabelCreateForm = ({
           fio: row.fio,
           doljnost: row.doljnostName,
           vacantId: row.vacantId,
+          isPoek: row.isPoek,
+          spravochnikDoljnostId: row.spravochnikDoljnostId,
           rabDni:
             typeof row.day === 'number'
               ? row.day
@@ -167,6 +169,8 @@ export const TabelCreateForm = ({
           vacantId: row.vacantId,
           fio: row.fio,
           doljnost: row.doljnostName,
+          isPoek: row.isPoek,
+          spravochnikDoljnostId: row.spravochnikDoljnostId,
           rabDni:
             typeof row.day === 'number'
               ? row.day
@@ -196,6 +200,8 @@ export const TabelCreateForm = ({
   useEffect(() => {
     form.setValue('rayon', rayon)
   }, [form, rayon])
+
+  console.log({ values: form.watch('tabelChildren') })
 
   return (
     <Form {...form}>
@@ -367,9 +373,9 @@ export const TabelCreateForm = ({
                 {mainZarplataQuery.isFetching && <LoadingOverlay />}
                 <EditableTable
                   keyboardNavigation
-                  form={form}
+                  form={form as any}
                   name="tabelChildren"
-                  columnDefs={TabelEditableColumnDefs}
+                  columnDefs={TabelEditableColumnDefs as any}
                   onDelete={createEditorDeleteHandler({
                     form
                   })}

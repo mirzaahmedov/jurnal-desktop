@@ -16,8 +16,8 @@ export interface MainZarplataTableProps extends Partial<GenericTableProps<MainZa
   onViewMatPomoch?: (row: MainZarplata) => void
 }
 export const MainZarplataTable = ({
-  enableMatPomoch,
   data,
+  enableMatPomoch,
   onViewMatPomoch,
   ...props
 }: MainZarplataTableProps) => {

@@ -45,7 +45,15 @@ export const WorkTripFormSchema = z.object({
       return []
     }
     return hotels
-  })
+  }),
+  day: z.array(
+    z.object({
+      minimum_wage_id: z.number(),
+      day: z.number(),
+      summa: z.number(),
+      minWageSumma: z.any().optional().nullable()
+    })
+  )
 })
 
 export type WorkTripFormValues = z.infer<typeof WorkTripFormSchema>
@@ -100,6 +108,13 @@ export const defaultValues: WorkTripFormValues = {
       day: 0,
       day_summa: 0,
       hostel_summa: 0
+    }
+  ],
+  day: [
+    {
+      minimum_wage_id: 0,
+      day: 0,
+      summa: 0
     }
   ]
 }

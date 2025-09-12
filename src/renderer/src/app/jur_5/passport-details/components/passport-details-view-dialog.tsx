@@ -199,7 +199,10 @@ export const PassportDetailsViewDialog = ({
                     className="mt-0"
                   >
                     {mainZarplata?.data ? (
-                      <OtdelniyRaschetContainer mainZarplata={mainZarplata?.data} />
+                      <OtdelniyRaschetContainer
+                        mainZarplata={mainZarplata?.data}
+                        navigateHome={() => setTabValue(PassportInfoTabs.Main)}
+                      />
                     ) : null}
                   </TabsContent>
                 </div>

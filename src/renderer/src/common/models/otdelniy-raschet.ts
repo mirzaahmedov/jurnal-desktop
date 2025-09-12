@@ -10,6 +10,7 @@ export interface OtdelniyRaschet {
   rabDni: number
   otrabDni: number
   noch: number
+  naRukiSum: number
   prazdnik: number
   pererabodka: number
   kazarma: number
