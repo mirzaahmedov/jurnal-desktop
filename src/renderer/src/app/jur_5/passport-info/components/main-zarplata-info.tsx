@@ -3,30 +3,24 @@ import type { HTMLAttributes } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { BookUser } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
-import { useLocation, useNavigate } from 'react-router-dom'
 
 import { Spinner } from '@/common/components'
 import { Button } from '@/common/components/jolly/button'
 import { LabeledValue } from '@/common/components/labeled-value'
 import { Badge } from '@/common/components/ui/badge'
 import { MainZarplataService } from '@/common/features/main-zarplata/service'
+import { PassportInfoTabs, useZarplataStore } from '@/common/features/zarplata/store'
 import { formatNumber } from '@/common/lib/format'
 import { cn } from '@/common/lib/utils'
 
 export interface MainZarplataInfoProps extends HTMLAttributes<HTMLDivElement> {
   mainZarplataId: number
-  onNavigate?: () => void
 }
 
-export const MainZarplataInfo = ({
-  mainZarplataId,
-  onNavigate,
-  ...props
-}: MainZarplataInfoProps) => {
+export const MainZarplataInfo = ({ mainZarplataId, ...props }: MainZarplataInfoProps) => {
   const { t } = useTranslation()
+  const { openMainZarplataView, setCurrentTab } = useZarplataStore()
 
-  const navigate = useNavigate()
-  const location = useLocation()
   const mainZarplataQuery = useQuery({
     queryKey: [MainZarplataService.QueryKeys.GetById, mainZarplataId],
     queryFn: MainZarplataService.getById
@@ -62,10 +56,8 @@ export const MainZarplataInfo = ({
 
           <Button
             onClick={() => {
-              navigate(
-                `/jur-5/passport-info?mainZarplataId=${mainZarplata?.id}&backUrl=${location.pathname}${location.search}`
-              )
-              onNavigate?.()
+              openMainZarplataView(mainZarplataId)
+              setCurrentTab(PassportInfoTabs.Main)
             }}
             variant="outline"
             size="icon"

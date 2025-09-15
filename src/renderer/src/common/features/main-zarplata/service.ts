@@ -1,5 +1,5 @@
 import type { SpravochnikHookOptions } from '../spravochnik'
-import type { MainZarplataFormValues } from '@/app/jur_5/passport-details/config'
+import type { MainZarplataFormValues } from '@/app/jur_5/passport-info/config'
 import type {
   ApiResponse,
   MainZarplata,

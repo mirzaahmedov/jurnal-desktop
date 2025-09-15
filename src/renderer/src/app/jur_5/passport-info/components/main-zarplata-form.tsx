@@ -110,6 +110,9 @@ export const MainZarplataForm = ({
         queryKey: [MainZarplataService.QueryKeys.GetAll]
       })
       queryClient.invalidateQueries({
+        queryKey: [MainZarplataService.QueryKeys.GetByVacantId]
+      })
+      queryClient.invalidateQueries({
         queryKey: [MainZarplataService.QueryKeys.GetById, selectedMainZarplata?.id ?? 0]
       })
       onClose?.()
@@ -129,9 +132,11 @@ export const MainZarplataForm = ({
         queryKey: [MainZarplataService.QueryKeys.GetAll]
       })
       queryClient.invalidateQueries({
+        queryKey: [MainZarplataService.QueryKeys.GetByVacantId]
+      })
+      queryClient.invalidateQueries({
         queryKey: [MainZarplataService.QueryKeys.GetById, selectedMainZarplata?.id ?? 0]
       })
-      onClose?.()
     },
     onError: () => {
       toast.error(t('update_failed'))
@@ -185,12 +190,16 @@ export const MainZarplataForm = ({
     }
   }, [selectedMainZarplata, vacant, form])
   useEffect(() => {
+    if (selectedMainZarplata) {
+      return
+    }
+
     if (vacant) {
       form.setValue('rayon', getVacantRayon(vacant))
     } else {
       form.setValue('rayon', '')
     }
-  }, [vacant])
+  }, [selectedMainZarplata, vacant])
 
   const pnfl = form.watch('inps')
   const dateBirth = form.watch('dateBirth')

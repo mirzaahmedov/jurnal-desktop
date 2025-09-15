@@ -1,6 +1,7 @@
 import type { ApiResponse } from '@/common/models'
 
 import axios from 'axios'
+import { toast } from 'react-toastify'
 
 // export const baseURL = 'http://10.50.0.140:8091/api'
 export const baseURL =
@@ -54,3 +55,21 @@ export const getSingleApiResponse = <T>({ response }: { response: T }): ApiRespo
     data: response
   } as ApiResponse<T>
 }
+
+zarplataApi.interceptors.response.use(
+  (response) => {
+    return response
+  },
+  (error) => {
+    if (axios.isAxiosError(error)) {
+      // Handle Axios errors
+      const message = error.response?.data?.message || error.message || 'An error occurred'
+      toast.error(message)
+      return Promise.reject(new Error(message))
+    } else {
+      // Handle non-Axios errors
+      toast.error('An unexpected error occurred')
+      return Promise.reject(new Error('An unexpected error occurred'))
+    }
+  }
+)

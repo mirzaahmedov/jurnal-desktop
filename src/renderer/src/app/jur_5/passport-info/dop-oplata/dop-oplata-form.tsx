@@ -121,7 +121,7 @@ export const DopOplataForm = ({ mainZarplata, selected, onFinish }: DopOplataFor
     if (isVacationPayment) {
       return daySumma * day
     }
-    return daySumma * day * (percentage ?? 1)
+    return (daySumma * day * (percentage ?? 1)) / 100
   }
 
   const handleSelectDeduction = (deduction: Deduction) => {

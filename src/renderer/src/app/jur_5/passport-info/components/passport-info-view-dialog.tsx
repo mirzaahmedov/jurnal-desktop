@@ -1,4 +1,5 @@
 import type { VacantTreeNode } from '@/app/region-admin/vacant/vacant-tree'
+import type { MainZarplata } from '@/common/models'
 import type { DialogTriggerProps } from 'react-aria-components'
 
 import { useEffect, useState } from 'react'
@@ -7,6 +8,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 
 import { LoadingOverlay } from '@/common/components'
+import { ContentStepper } from '@/common/components/content-stepper'
 import {
   DialogContent,
   DialogHeader,
@@ -20,21 +22,14 @@ import { PayrollDeductions } from '@/common/features/payroll-deduction/payroll-d
 import { PayrollDeductionService } from '@/common/features/payroll-deduction/service'
 import { PayrollPayments } from '@/common/features/payroll-payment/payroll-payments'
 import { PayrollPaymentService } from '@/common/features/payroll-payment/service'
+import { PassportInfoTabs, useZarplataStore } from '@/common/features/zarplata/store'
 
 import { DopOplataContainer } from '../dop-oplata'
 import { Employments } from '../employment/employment'
 import { OtdelniyRaschetContainer } from '../otdelniy-raschet'
 import { Payroll } from '../payroll'
 import { MainZarplataForm } from './main-zarplata-form'
-import { EmployeeWorkplace } from './passport-details-employee-workplace'
-
-export enum PassportInfoTabs {
-  Main = 'main',
-  Employment = 'employment',
-  AdditionalDocument = 'dop-oplata',
-  Payroll = 'payroll',
-  SeperateCalculation = 'seperate-calculation'
-}
+import { EmployeeWorkplace } from './passport-info-employee-workplace'
 
 const tabOptions = [
   PassportInfoTabs.Main,
@@ -44,18 +39,22 @@ const tabOptions = [
   PassportInfoTabs.SeperateCalculation
 ]
 
-export interface PassportDetailsViewDialogProps extends Omit<DialogTriggerProps, 'children'> {
+export interface PassportInfoViewDialogProps extends Omit<DialogTriggerProps, 'children'> {
   vacant: VacantTreeNode | null
   mainZarplataId: number | null
+  items: MainZarplata[]
+  onNavigateItem?: (index: number) => void
 }
-export const PassportDetailsViewDialog = ({
+export const PassportInfoViewDialog = ({
   vacant,
   mainZarplataId,
+  items,
+  onNavigateItem,
   ...props
-}: PassportDetailsViewDialogProps) => {
+}: PassportInfoViewDialogProps) => {
   const { t } = useTranslation(['app'])
+  const { currentTab, setCurrentTab } = useZarplataStore()
 
-  const [tabValue, setTabValue] = useState<PassportInfoTabs.Main>(PassportInfoTabs.Main)
   const [paymentTotal, setPaymentTotal] = useState<number>(0)
   const [deductionsTotal, setDeductionsTotal] = useState<number>(0)
 
@@ -81,7 +80,7 @@ export const PassportDetailsViewDialog = ({
 
   useEffect(() => {
     if (!props.isOpen) {
-      setTabValue(PassportInfoTabs.Main)
+      setCurrentTab(PassportInfoTabs.Main)
     }
   }, [props.isOpen])
 
@@ -89,15 +88,15 @@ export const PassportDetailsViewDialog = ({
     <>
       <DialogTrigger {...props}>
         <DialogOverlay>
-          <DialogContent className="max-w-full h-full max-h-[1000px]">
+          <DialogContent className="relative max-w-full h-full max-h-full">
+            {isFetchingMainZarplata ? <LoadingOverlay /> : null}
             <div className="h-full flex flex-col space-y-5 overflow-hidden relative">
-              {isFetchingMainZarplata ? <LoadingOverlay /> : null}
               <DialogHeader>
                 <DialogTitle>{t('pages.passport_details')}</DialogTitle>
               </DialogHeader>
               <Tabs
-                value={tabValue}
-                onValueChange={(value) => setTabValue(value as any)}
+                value={currentTab}
+                onValueChange={(value) => setCurrentTab(value as any)}
                 className="flex min-h-0 flex-1 w-full gap-5 overflow-hidden"
               >
                 <div className="h-full overflow-hidden">
@@ -201,12 +200,21 @@ export const PassportDetailsViewDialog = ({
                     {mainZarplata?.data ? (
                       <OtdelniyRaschetContainer
                         mainZarplata={mainZarplata?.data}
-                        navigateHome={() => setTabValue(PassportInfoTabs.Main)}
+                        navigateHome={() => setCurrentTab(PassportInfoTabs.Main)}
                       />
                     ) : null}
                   </TabsContent>
                 </div>
               </Tabs>
+              {items && onNavigateItem ? (
+                <div>
+                  <ContentStepper
+                    currentIndex={items.findIndex((i) => i.id === mainZarplataId)}
+                    onIndexChange={onNavigateItem}
+                    itemsCount={items.length}
+                  />
+                </div>
+              ) : null}
             </div>
           </DialogContent>
         </DialogOverlay>

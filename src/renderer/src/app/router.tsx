@@ -24,7 +24,7 @@ const AdminDashboardPage = lazy(() => import('./super-admin/dashboard/page'))
 const DistancePage = lazy(() => import('./super-admin/spravochnik/distance/page'))
 
 const CalculateParamsPage = lazy(() => import('./jur_5/calculate-params/page'))
-const PassportInfoPage = lazy(() => import('./jur_5/passport-details/page'))
+const PassportInfoPage = lazy(() => import('./jur_5/passport-info/page'))
 const StaffingTable = lazy(() => import('./jur_5/staffing-schedule/page'))
 const PaymentsPage = lazy(() => import('./jur_5/payment-types/payments/page'))
 const DeductionsPage = lazy(() => import('./jur_5/payment-types/deductions/page'))

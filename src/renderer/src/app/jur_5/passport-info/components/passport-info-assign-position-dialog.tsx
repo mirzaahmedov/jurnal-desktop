@@ -7,10 +7,11 @@ import { useState } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useQuery } from '@tanstack/react-query'
 import { Allotment } from 'allotment'
-import { CheckCircle } from 'lucide-react'
+import { UserCheck } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
+import { BudjetSelect } from '@/app/super-admin/budjet/budjet-select'
 import { GenericTable, LoadingOverlay } from '@/common/components'
 import { FormElement } from '@/common/components/form'
 import { JollyDatePicker } from '@/common/components/jolly-date-picker'
@@ -43,18 +44,19 @@ import {
   defaultAssignPositionValues
 } from '../config'
 
-export interface PassportDetailsAssignPositionDialogProps
+export interface PassportInfoAssignPositionDialogProps
   extends Omit<DialogTriggerProps, 'children'> {
   mainZarplata?: MainZarplata
   onSubmit?: (values: AssignPositionFormValues) => void
 }
-export const PassportDetailsAssignPositionDialog = ({
+export const PassportInfoAssignPositionDialog = ({
   mainZarplata,
   onSubmit,
   ...props
-}: PassportDetailsAssignPositionDialogProps) => {
+}: PassportInfoAssignPositionDialogProps) => {
   const { t } = useTranslation(['app'])
 
+  const [budjetId, setBudjetId] = useState<number>()
   const [selectedVacant, setSelectedVacant] = useState<VacantTreeNode | null>(null)
   const [selectedWorkplace, setSelectedWorkplace] = useState<Workplace | null>(null)
 
@@ -64,7 +66,7 @@ export const PassportDetailsAssignPositionDialog = ({
     resolver: zodResolver(AssignPositionFormSchema)
   })
 
-  const { filteredTreeNodes, search, setSearch, vacantsQuery } = useVacantTreeNodes()
+  const { filteredTreeNodes, search, setSearch, vacantsQuery } = useVacantTreeNodes(budjetId)
 
   const { data: workplaces, isFetching: isFetchingWorkplaces } = useQuery({
     queryKey: [
@@ -95,8 +97,12 @@ export const PassportDetailsAssignPositionDialog = ({
       <DialogOverlay>
         <DialogContent className="max-w-full h-full max-h-[1000px] p-0">
           <div className="h-full flex flex-col divide-y">
-            <DialogHeader className="p-5">
+            <DialogHeader className="p-5 flex flex-row items-center gap-10 py-2.5">
               <DialogTitle>{t('assign_to_position')}</DialogTitle>
+              <BudjetSelect
+                selectedKey={budjetId}
+                onSelectionChange={(value) => setBudjetId(value as number)}
+              />
             </DialogHeader>
 
             <Allotment className="h-full divide-x">
@@ -124,7 +130,7 @@ export const PassportDetailsAssignPositionDialog = ({
                   </div>
                 </div>
               </Allotment.Pane>
-              <Allotment.Pane>
+              <Allotment.Pane className="pl-px">
                 <div className="h-full flex flex-col">
                   <div className="relative flex-1 w-full overflow-auto scrollbar">
                     {isFetchingWorkplaces ? <LoadingOverlay /> : null}
@@ -218,7 +224,7 @@ export const PassportDetailsAssignPositionDialog = ({
                               type="button"
                               onClick={handleSubmit}
                             >
-                              <CheckCircle className="btn-icon icon-start" />
+                              <UserCheck className="btn-icon icon-start" />
                               {t('assign_to_position')}
                             </Button>
                           </div>

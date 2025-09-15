@@ -79,9 +79,7 @@ export const CollapsibleTable = <T extends object, C extends object = T>({
               <GenericTableHead
                 key="actions"
                 className="w-32"
-              >
-                {t('actions')}
-              </GenericTableHead>
+              ></GenericTableHead>
             ) : null}
           </GenericTableRow>
         </TableHeader>

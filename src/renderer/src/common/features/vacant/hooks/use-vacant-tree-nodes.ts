@@ -12,14 +12,18 @@ import {
 
 import { useVacantTreeState } from './use-vacant-tree-state'
 
-export const useVacantTreeNodes = () => {
+export const useVacantTreeNodes = (selectedBudjetId?: number) => {
   const budjetId = useRequisitesStore((store) => store.budjet_id)
   const [search, setSearch] = useState('')
 
   const vacantsQuery = useQuery({
     queryKey: [
       VacantService.QueryKeys.GetAll,
-      { page: 1, limit: 100000000000000, spId: budjetId! }
+      {
+        page: 1,
+        limit: 100000000000000,
+        spId: selectedBudjetId ?? budjetId!
+      }
     ],
     queryFn: VacantService.getAll,
     enabled: !!budjetId

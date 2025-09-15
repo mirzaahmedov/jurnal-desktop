@@ -18,12 +18,12 @@ import { MainZarplataForm } from './main-zarplata-form'
 export interface PassportInfoCreateDialogProps extends Omit<DialogTriggerProps, 'children'> {
   vacant: VacantTreeNode
   selectedUser: MainZarplata | undefined
-  onCreate?: (user: MainZarplata) => void
+  onCreateSuccess?: (user: MainZarplata) => void
 }
 export const PassportInfoCreateDialog = ({
   vacant,
   selectedUser,
-  onCreate,
+  onCreateSuccess,
   ...props
 }: PassportInfoCreateDialogProps) => {
   const { t } = useTranslation(['app'])
@@ -43,7 +43,7 @@ export const PassportInfoCreateDialog = ({
               <MainZarplataForm
                 vacant={vacant}
                 selectedMainZarplata={selectedUser}
-                onCreate={onCreate}
+                onCreate={onCreateSuccess}
                 onClose={() => props?.onOpenChange?.(false)}
               />
             </div>

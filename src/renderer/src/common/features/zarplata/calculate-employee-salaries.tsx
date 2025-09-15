@@ -46,7 +46,8 @@ export const CalculateEmployeeSalaries = () => {
     queryKey: [
       MainZarplataService.QueryKeys.GetByVacantId,
       {
-        vacantId: selectedVacant?.id ?? 0
+        vacantId: selectedVacant?.id ?? 0,
+        ostanovit: false
       }
     ],
     queryFn: MainZarplataService.getByVacantId,

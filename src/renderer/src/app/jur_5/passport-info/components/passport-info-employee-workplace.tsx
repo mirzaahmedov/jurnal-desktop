@@ -18,7 +18,7 @@ import { useToggle } from '@/common/hooks'
 import { formatDate, parseLocaleDate } from '@/common/lib/date'
 
 import { ZarplataStavkaOptions } from '../../common/data'
-import { PassportDetailsAssignPositionDialog } from './passport-details-assign-position-dialog'
+import { PassportInfoAssignPositionDialog } from './passport-info-assign-position-dialog'
 
 export interface EmployeeWorkplaceProps {
   workplace: Pick<
@@ -156,7 +156,7 @@ export const EmployeeWorkplace = ({ workplace, mainZarplata }: EmployeeWorkplace
           </FormElement>
         </div>
       </Fieldset>
-      <PassportDetailsAssignPositionDialog
+      <PassportInfoAssignPositionDialog
         isOpen={dialogToggle.isOpen}
         onOpenChange={dialogToggle.setOpen}
         mainZarplata={mainZarplata}

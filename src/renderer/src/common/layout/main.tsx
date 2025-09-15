@@ -17,6 +17,7 @@ import { SpravochnikProvider } from '@/common/features/spravochnik'
 
 import { Footer } from './compoonents/footer'
 import { Header } from './compoonents/header'
+import { PassportInfoProvider } from './compoonents/passport-info-provider'
 import { Sidebar } from './compoonents/sidebar/sidebar'
 
 const MainLayout = () => {
@@ -52,6 +53,8 @@ const MainLayout = () => {
       <MaterialWarehouseSaldoUpdateManager />
       <MainbookSaldoUpdateManager />
       <ConstantsProvider />
+
+      <PassportInfoProvider />
     </div>
   )
 }

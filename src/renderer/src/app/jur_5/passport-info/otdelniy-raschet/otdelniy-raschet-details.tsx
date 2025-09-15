@@ -52,14 +52,12 @@ export interface OtdelniyRaschetDetailsProps extends Omit<DialogTriggerProps, 'c
   items: OtdelniyRaschet[]
   currentIndex: number
   onIndexChange: (index: number) => void
-  navigateHome: () => void
 }
 export const OtdelniyRaschetDetails: FC<OtdelniyRaschetDetailsProps> = ({
   items,
   currentIndex,
   onIndexChange,
   mainZarplata,
-  navigateHome,
   ...props
 }) => {
   useRequisitesRedirect(-1)
@@ -148,10 +146,7 @@ export const OtdelniyRaschetDetails: FC<OtdelniyRaschetDetailsProps> = ({
                 <DialogTitle>{t('otdelniy_raschet')}</DialogTitle>
               </DialogHeader>
               <div className="flex-1 min-h-0 flex flex-col overflow-auto scrollbar relative bg-gray-100">
-                <MainZarplataInfo
-                  mainZarplataId={mainZarplata.id}
-                  onNavigate={navigateHome}
-                />
+                <MainZarplataInfo mainZarplataId={mainZarplata.id} />
                 {otdelniyRaschetQuery.isLoading ? (
                   <LoadingOverlay />
                 ) : !otdelniyRaschet ? (

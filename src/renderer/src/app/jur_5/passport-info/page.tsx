@@ -5,7 +5,6 @@ import { useEffect, useState } from 'react'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { Allotment } from 'allotment'
 import { useTranslation } from 'react-i18next'
-import { useNavigate, useSearchParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
 import { GenericTable, LoadingOverlay } from '@/common/components'
@@ -22,33 +21,26 @@ import {
   type VacantTreeNode,
   VacantTreeSearch
 } from '@/common/features/vacant/ui/vacant-tree'
+import { useZarplataStore } from '@/common/features/zarplata/store'
 import { usePagination, useToggle } from '@/common/hooks'
 import { useLayout } from '@/common/layout'
 import { queryClient } from '@/common/lib/query-client'
 
 import { MainZarplataColumnDefs } from './columns'
-import { PassportInfoCreateDialog } from './components/passport-details-create-dialog'
-import { PassportDetailsViewDialog } from './components/passport-details-view-dialog'
+import { PassportInfoCreateDialog } from './components/passport-info-create-dialog'
 
 const PassportDetailsPage = () => {
   const setLayout = useLayout()
 
-  const navigate = useNavigate()
   const pagination = usePagination()
   const createDialogToggle = useToggle()
 
-  const [selectedVacant, setSelectedVacant] = useState<VacantTreeNode | null>(null)
-  const [searchParams, setSearchParams] = useSearchParams()
-
-  const backUrl = searchParams.get('backUrl')
-  const mainZarplataId = searchParams.get('mainZarplataId')
-    ? Number(searchParams.get('mainZarplataId'))
-    : null
-
   const [searchFilter] = useSearchFilter()
+  const [selectedVacant, setSelectedVacant] = useState<VacantTreeNode | null>(null)
 
   const { t } = useTranslation(['app'])
   const { confirm } = useConfirm()
+  const { openMainZarplataView } = useZarplataStore()
 
   const { filteredTreeNodes, search, setSearch, vacantsQuery } = useVacantTreeNodes()
   const { data: mainZarplata, isFetching: isFetchingMainZarplata } = useQuery({
@@ -73,6 +65,8 @@ const PassportDetailsPage = () => {
     queryFn: MainZarplataService.getAll,
     enabled: !!searchFilter
   })
+
+  const mainZarplataItems = searchFilter ? (mainZarplataSearch?.data ?? []) : (mainZarplata ?? [])
 
   const { mutate: deleteMainZarplata, isPending: isDeleting } = useMutation({
     mutationFn: MainZarplataService.delete,
@@ -101,7 +95,7 @@ const PassportDetailsPage = () => {
   }, [t, setLayout, selectedVacant])
 
   const handleRowEdit = (row: MainZarplata) => {
-    setSearchParams({ mainZarplataId: row.id.toString() })
+    openMainZarplataView?.(row.id, mainZarplataItems)
   }
   const handleRowDelete = (row: MainZarplata) => {
     confirm({
@@ -146,10 +140,16 @@ const PassportDetailsPage = () => {
               <LoadingOverlay />
             ) : null}
             <GenericTable
-              data={searchFilter ? (mainZarplataSearch?.data ?? []) : (mainZarplata ?? [])}
+              data={mainZarplataItems}
               columnDefs={MainZarplataColumnDefs}
               onEdit={handleRowEdit}
               onDelete={handleRowDelete}
+              getRowClassName={(row) => {
+                if (row.ostanovitRaschet) {
+                  return 'bg-red-50 hover:bg-red-50'
+                }
+                return ''
+              }}
               className="table-generic-xs"
             />
           </div>
@@ -165,29 +165,14 @@ const PassportDetailsPage = () => {
         </Allotment.Pane>
       </Allotment>
 
-      <PassportDetailsViewDialog
-        isOpen={!!mainZarplataId}
-        onOpenChange={(open) => {
-          if (!open) {
-            setSearchParams({})
-            if (backUrl) {
-              console.log(backUrl)
-              navigate(backUrl)
-            }
-          }
-        }}
-        mainZarplataId={mainZarplataId}
-        vacant={selectedVacant}
-      />
-
       {selectedVacant ? (
         <PassportInfoCreateDialog
           isOpen={createDialogToggle.isOpen}
           onOpenChange={createDialogToggle.setOpen}
           selectedUser={undefined}
           vacant={selectedVacant}
-          onCreate={(user) => {
-            setSearchParams({ mainZarplataId: user.id.toString() })
+          onCreateSuccess={(mainZarplata) => {
+            openMainZarplataView(mainZarplata.id)
             createDialogToggle.close()
           }}
         />

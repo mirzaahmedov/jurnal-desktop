@@ -35,11 +35,12 @@ export const ZarplataActions = () => {
 
   const { t } = useTranslation(['app'])
 
-  const { data: calcParams } = useQuery({
+  const calculateParamsQuery = useQuery({
     queryKey: [CalculateParamsService.QueryKeys.GetById, calculateParamsId],
     queryFn: CalculateParamsService.getCalcParametersById,
     enabled: !!calculateParamsId
   })
+  const calculateParams = calculateParamsQuery.data
 
   return (
     <div className="flex flex-col gap-2.5">
@@ -55,28 +56,28 @@ export const ZarplataActions = () => {
             <DialogHeader>
               <DialogTitle>{t('pages.calc_parameters')}</DialogTitle>
             </DialogHeader>
-            {calcParams ? (
+            {calculateParams ? (
               <DataList
                 items={[
                   {
                     name: <Trans>year</Trans>,
-                    value: calcParams.year
+                    value: calculateParams.year
                   },
                   {
                     name: <Trans>month</Trans>,
-                    value: <MonthNameCell monthNumber={calcParams.month} />
+                    value: <MonthNameCell monthNumber={calculateParams.month} />
                   },
                   {
                     name: <Trans>min_salary</Trans>,
-                    value: calcParams.minZar
+                    value: calculateParams.minZar
                   },
                   {
                     name: <Trans>min_salary_year</Trans>,
-                    value: calcParams.mZpGod
+                    value: calculateParams.mZpGod
                   },
                   {
                     name: <Trans>min_salary_nontax</Trans>,
-                    value: calcParams.neobMin
+                    value: calculateParams.neobMin
                   },
                   {
                     name: (
@@ -84,7 +85,7 @@ export const ZarplataActions = () => {
                         <Trans>days</Trans> (5)
                       </>
                     ),
-                    value: calcParams.dni5
+                    value: calculateParams.dni5
                   },
                   {
                     name: (
@@ -92,7 +93,7 @@ export const ZarplataActions = () => {
                         <Trans>hours</Trans> (5)
                       </>
                     ),
-                    value: calcParams.chasi5
+                    value: calculateParams.chasi5
                   },
                   {
                     name: (
@@ -100,7 +101,7 @@ export const ZarplataActions = () => {
                         <Trans>days</Trans> (6)
                       </>
                     ),
-                    value: calcParams.dni6
+                    value: calculateParams.dni6
                   },
                   {
                     name: (
@@ -108,7 +109,7 @@ export const ZarplataActions = () => {
                         <Trans>hours</Trans> (6)
                       </>
                     ),
-                    value: calcParams.chasi6
+                    value: calculateParams.chasi6
                   },
                   {
                     name: (
@@ -116,7 +117,7 @@ export const ZarplataActions = () => {
                         <Trans>days</Trans> (7)
                       </>
                     ),
-                    value: calcParams.dni7
+                    value: calculateParams.dni7
                   },
                   {
                     name: (
@@ -124,15 +125,15 @@ export const ZarplataActions = () => {
                         <Trans>hours</Trans> (7)
                       </>
                     ),
-                    value: calcParams.chasi7
+                    value: calculateParams.chasi7
                   },
                   {
                     name: <Trans>for_ride</Trans>,
-                    value: calcParams.zaProezd
+                    value: calculateParams.zaProezd
                   },
                   {
                     name: <Trans>poek</Trans>,
-                    value: calcParams.poek
+                    value: calculateParams.poek
                   }
                 ]}
               />

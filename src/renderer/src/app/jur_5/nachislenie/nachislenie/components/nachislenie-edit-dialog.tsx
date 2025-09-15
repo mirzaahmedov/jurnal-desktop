@@ -8,10 +8,9 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { BookUser, Sigma } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import { useLocation, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
-import { MainZarplataInfo } from '@/app/jur_5/passport-details/components'
+import { MainZarplataInfo } from '@/app/jur_5/passport-info/components'
 import {
   FooterCell,
   FooterRow,
@@ -39,6 +38,7 @@ import { Tabs, TabsList, TabsTrigger } from '@/common/components/ui/tabs'
 import { YearSelect } from '@/common/components/year-select'
 import { DownloadFile } from '@/common/features/file'
 import { useRequisitesStore } from '@/common/features/requisites'
+import { useZarplataStore } from '@/common/features/zarplata/store'
 import { formatDate, parseDate, parseLocaleDate } from '@/common/lib/date'
 import { formatNumber } from '@/common/lib/format'
 
@@ -60,6 +60,7 @@ export const NachislenieEditDialog = ({
   ...props
 }: NachislenieEditDialogProps) => {
   const { t } = useTranslation(['app'])
+  const { openMainZarplataView } = useZarplataStore()
 
   const [tabValue, setTabValue] = useState(TabOptions.View)
 
@@ -78,8 +79,6 @@ export const NachislenieEditDialog = ({
   })
   const nachislenieProvodka = nachislenieQuery?.data ?? []
 
-  const location = useLocation()
-  const navigate = useNavigate()
   const form = useForm<{
     docNum: string
     docDate: string
@@ -309,9 +308,7 @@ export const NachislenieEditDialog = ({
                         size="icon"
                         variant="ghost"
                         onPress={() => {
-                          navigate(
-                            `/jur-5/passport-info?mainZarplataId=${row.mainZarplataId}&backUrl=${location.pathname}${location.search}`
-                          )
+                          openMainZarplataView(row.mainZarplataId)
                         }}
                         className="-my-5"
                       >
