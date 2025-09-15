@@ -11,7 +11,7 @@ export class PayrollDeductionService {
   static endpoint = 'PayrollDeduction'
 
   static QueryKeys = {
-    GetByMainZarplataId: 'PayrollDeduction/GetByMainZarplataId',
+    GetAll: 'PayrollDeduction/GetAll',
     GetById: 'PayrollDeduction/GetById',
     Create: 'PayrollDeduction/Create',
     Update: 'PayrollDeduction/Update',
@@ -87,9 +87,7 @@ export class PayrollDeductionService {
   }
 
   static async getByMainZarplataId(
-    ctx: QueryFunctionContext<
-      [typeof PayrollDeductionService.QueryKeys.GetByMainZarplataId, number]
-    >
+    ctx: QueryFunctionContext<[typeof PayrollDeductionService.QueryKeys.GetAll, number]>
   ) {
     const mainZarplataId = ctx.queryKey[1]
     const res = await zarplataApiNew.get<ZarplataApiResponse<PayrollDeduction[]>>(

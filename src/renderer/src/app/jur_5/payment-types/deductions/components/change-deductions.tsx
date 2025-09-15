@@ -3,7 +3,7 @@ import type { Deduction } from '@/common/models/deduction'
 
 import { useState } from 'react'
 
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Allotment } from 'allotment'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -21,8 +21,10 @@ import { Label } from '@/common/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/common/components/ui/radio-group'
 import { Tabs, TabsList, TabsTrigger } from '@/common/components/ui/tabs'
 import { Textarea } from '@/common/components/ui/textarea'
+import { useConfirm } from '@/common/features/confirm'
 import { MainZarplataService } from '@/common/features/main-zarplata/service'
 import { PayrollDeductionService } from '@/common/features/payroll-deduction/service'
+import { PayrollPaymentService } from '@/common/features/payroll-payment/service'
 import { useVacantTreeNodes } from '@/common/features/vacant/hooks/use-vacant-tree-nodes'
 import {
   VacantTree,
@@ -41,6 +43,7 @@ enum PaymentsChangePaymentOptions {
 
 export const DeductionsChangePayment = () => {
   const deductionToggle = useToggle()
+  const queryClient = useQueryClient()
 
   const form = useForm({
     defaultValues: {
@@ -52,6 +55,7 @@ export const DeductionsChangePayment = () => {
   })
 
   const { t } = useTranslation(['app'])
+  const { confirm } = useConfirm()
   const { treeNodes, filteredTreeNodes, search, setSearch, vacantsQuery } = useVacantTreeNodes()
 
   const [tabValue, setTabValue] = useState(PaymentsChangePaymentOptions.ALL)
@@ -59,6 +63,38 @@ export const DeductionsChangePayment = () => {
   const [selectedVacant, setSelectedVacant] = useState<VacantTreeNode>()
   const [selectedMainZarplata, setSelectedMainZarplata] = useState<MainZarplata[]>([])
   const [visibleVacant, setVisibleVacant] = useState<number | null>(null)
+
+  const calculateSalaryByIdsMutation = useMutation({
+    mutationFn: MainZarplataService.calculateSalaryById,
+    onSuccess: () => {
+      toast.success(t('update_success'))
+      queryClient.invalidateQueries({
+        queryKey: [PayrollPaymentService.QueryKeys.GetAll]
+      })
+      queryClient.invalidateQueries({
+        queryKey: [PayrollDeductionService.QueryKeys.GetAll]
+      })
+    },
+    onError: () => {
+      toast.error(t('update_failed'))
+    }
+  })
+
+  const calculateSalaryAllMutation = useMutation({
+    mutationFn: MainZarplataService.calculateSalaryAll,
+    onSuccess: () => {
+      toast.success(t('update_success'))
+      queryClient.invalidateQueries({
+        queryKey: [PayrollPaymentService.QueryKeys.GetAll]
+      })
+      queryClient.invalidateQueries({
+        queryKey: [PayrollDeductionService.QueryKeys.GetAll]
+      })
+    },
+    onError: () => {
+      toast.error(t('update_failed'))
+    }
+  })
 
   const changeDeductionsMutation = useMutation({
     mutationFn: PayrollDeductionService.changeDeductions,
@@ -113,16 +149,30 @@ export const DeductionsChangePayment = () => {
     if (!selectedDeduction) {
       return
     }
-    changeDeductionsMutation.mutate({
-      isXarbiy: values.type === 'military' ? true : values.type === 'civilian' ? false : undefined,
-      values: {
-        deductionId: values.deductionId,
-        code: selectedDeduction.code,
-        mains: selectedMainZarplata.map((mainZarplata) => ({ mainZarplataId: mainZarplata.id })),
-        percentage: values.percentage,
-        summa: values.summa
+    changeDeductionsMutation.mutate(
+      {
+        isXarbiy:
+          values.type === 'military' ? true : values.type === 'civilian' ? false : undefined,
+        values: {
+          deductionId: values.deductionId,
+          code: selectedDeduction.code,
+          mains: selectedMainZarplata.map((mainZarplata) => ({ mainZarplataId: mainZarplata.id })),
+          percentage: values.percentage,
+          summa: values.summa
+        }
+      },
+      {
+        onSuccess: (_, values) => {
+          confirm({
+            title: t('should_calculate_payroll'),
+            danger: false,
+            onConfirm: () => {
+              calculateSalaryByIdsMutation.mutate(values.values.mains)
+            }
+          })
+        }
       }
-    })
+    )
   })
 
   const handleChangeDeductionsAll = () => {
@@ -130,15 +180,29 @@ export const DeductionsChangePayment = () => {
       return
     }
     const values = form.getValues()
-    changeDeductionsAllMutation.mutate({
-      isXarbiy: values.type === 'military' ? true : values.type === 'civilian' ? false : undefined,
-      values: {
-        deductionId: values.deductionId,
-        code: selectedDeduction.code,
-        percentage: values.percentage,
-        summa: values.summa
+    changeDeductionsAllMutation.mutate(
+      {
+        isXarbiy:
+          values.type === 'military' ? true : values.type === 'civilian' ? false : undefined,
+        values: {
+          deductionId: values.deductionId,
+          code: selectedDeduction.code,
+          percentage: values.percentage,
+          summa: values.summa
+        }
+      },
+      {
+        onSuccess: () => {
+          confirm({
+            title: t('should_calculate_payroll'),
+            danger: false,
+            onConfirm: () => {
+              calculateSalaryAllMutation.mutate()
+            }
+          })
+        }
       }
-    })
+    )
   }
 
   const handleDeleteDeductions = () => {
@@ -146,16 +210,30 @@ export const DeductionsChangePayment = () => {
       return
     }
     const values = form.getValues()
-    deleteDeductionsMutation.mutate({
-      isXarbiy: values.type === 'military' ? true : values.type === 'civilian' ? false : undefined,
-      values: {
-        deductionId: values.deductionId,
-        code: selectedDeduction.code,
-        mains: selectedMainZarplata.map((mainZarplata) => ({ mainZarplataId: mainZarplata.id })),
-        percentage: values.percentage,
-        summa: values.summa
+    deleteDeductionsMutation.mutate(
+      {
+        isXarbiy:
+          values.type === 'military' ? true : values.type === 'civilian' ? false : undefined,
+        values: {
+          deductionId: values.deductionId,
+          code: selectedDeduction.code,
+          mains: selectedMainZarplata.map((mainZarplata) => ({ mainZarplataId: mainZarplata.id })),
+          percentage: values.percentage,
+          summa: values.summa
+        }
+      },
+      {
+        onSuccess: (_, values) => {
+          confirm({
+            title: t('should_calculate_payroll'),
+            danger: false,
+            onConfirm: () => {
+              calculateSalaryByIdsMutation.mutate(values.values.mains)
+            }
+          })
+        }
       }
-    })
+    )
   }
 
   const handleDeleteDeductionsAll = () => {
@@ -163,15 +241,29 @@ export const DeductionsChangePayment = () => {
       return
     }
     const values = form.getValues()
-    deleteDeductionsAllMutation.mutate({
-      isXarbiy: values.type === 'military' ? true : values.type === 'civilian' ? false : undefined,
-      values: {
-        deductionId: values.deductionId,
-        code: selectedDeduction.code,
-        percentage: values.percentage,
-        summa: values.summa
+    deleteDeductionsAllMutation.mutate(
+      {
+        isXarbiy:
+          values.type === 'military' ? true : values.type === 'civilian' ? false : undefined,
+        values: {
+          deductionId: values.deductionId,
+          code: selectedDeduction.code,
+          percentage: values.percentage,
+          summa: values.summa
+        }
+      },
+      {
+        onSuccess: () => {
+          confirm({
+            title: t('should_calculate_payroll'),
+            danger: false,
+            onConfirm: () => {
+              calculateSalaryAllMutation.mutate()
+            }
+          })
+        }
       }
-    })
+    )
   }
 
   const selectedIds = selectedMainZarplata.map((mainZarplata) => mainZarplata.id)
@@ -330,80 +422,85 @@ export const DeductionsChangePayment = () => {
                         onDoubleClick={deductionToggle.open}
                       />
                     </FormElement>
-                    <FormField
-                      control={form.control}
-                      name="type"
-                      render={({ field }) => (
-                        <RadioGroup
-                          value={field.value}
-                          onValueChange={field.onChange}
-                          className="flex items-center gap-5 my-2.5"
-                        >
-                          <div className="flex items-center gap-3">
-                            <RadioGroupItem
-                              value="all"
-                              id="all"
+                    <div className="flex items-center gap-5">
+                      <FormField
+                        control={form.control}
+                        name="type"
+                        render={({ field }) => (
+                          <RadioGroup
+                            value={field.value}
+                            onValueChange={field.onChange}
+                            className="flex items-center gap-5 my-2.5"
+                          >
+                            <div className="flex items-center gap-3">
+                              <RadioGroupItem
+                                value="all"
+                                id="all"
+                              />
+                              <Label htmlFor="all">{t('all')}</Label>
+                            </div>
+                            <div className="flex items-center gap-3">
+                              <RadioGroupItem
+                                value="military"
+                                id="military"
+                              />
+                              <Label htmlFor="military">{t('military')}</Label>
+                            </div>
+                            <div className="flex items-center gap-3">
+                              <RadioGroupItem
+                                value="civilian"
+                                id="civilian"
+                              />
+                              <Label htmlFor="civilian">{t('civilian')}</Label>
+                            </div>
+                          </RadioGroup>
+                        )}
+                      />
+                      <FormField
+                        name="percentage"
+                        control={form.control}
+                        render={({ field }) => (
+                          <FormElement
+                            label={`${t('payment_percent')} (%)`}
+                            className="ml-auto"
+                          >
+                            <NumericInput
+                              ref={field.ref}
+                              onBlur={field.onBlur}
+                              value={field.value}
+                              allowNegative={false}
+                              decimalScale={undefined}
+                              onValueChange={(values) => {
+                                if (values.floatValue) {
+                                  form.setValue('summa', 0)
+                                }
+                                field.onChange(values.floatValue ?? 0)
+                              }}
                             />
-                            <Label htmlFor="all">{t('all')}</Label>
-                          </div>
-                          <div className="flex items-center gap-3">
-                            <RadioGroupItem
-                              value="military"
-                              id="military"
+                          </FormElement>
+                        )}
+                      />
+                      <FormField
+                        name="summa"
+                        control={form.control}
+                        render={({ field }) => (
+                          <FormElement label={t('summa')}>
+                            <NumericInput
+                              ref={field.ref}
+                              onBlur={field.onBlur}
+                              value={field.value}
+                              onValueChange={(values) => {
+                                if (values.floatValue) {
+                                  form.setValue('percentage', 0)
+                                }
+                                field.onChange(values.floatValue ?? 0)
+                              }}
                             />
-                            <Label htmlFor="military">{t('military')}</Label>
-                          </div>
-                          <div className="flex items-center gap-3">
-                            <RadioGroupItem
-                              value="civilian"
-                              id="civilian"
-                            />
-                            <Label htmlFor="civilian">{t('civilian')}</Label>
-                          </div>
-                        </RadioGroup>
-                      )}
-                    />
+                          </FormElement>
+                        )}
+                      />
+                    </div>
                   </div>
-                  <FormField
-                    name="percentage"
-                    control={form.control}
-                    render={({ field }) => (
-                      <FormElement label={`${t('payment_percent')} (%)`}>
-                        <NumericInput
-                          ref={field.ref}
-                          onBlur={field.onBlur}
-                          value={field.value}
-                          allowNegative={false}
-                          decimalScale={undefined}
-                          onValueChange={(values) => {
-                            if (values.floatValue) {
-                              form.setValue('summa', 0)
-                            }
-                            field.onChange(values.floatValue ?? 0)
-                          }}
-                        />
-                      </FormElement>
-                    )}
-                  />
-                  <FormField
-                    name="summa"
-                    control={form.control}
-                    render={({ field }) => (
-                      <FormElement label={t('summa')}>
-                        <NumericInput
-                          ref={field.ref}
-                          onBlur={field.onBlur}
-                          value={field.value}
-                          onValueChange={(values) => {
-                            if (values.floatValue) {
-                              form.setValue('percentage', 0)
-                            }
-                            field.onChange(values.floatValue ?? 0)
-                          }}
-                        />
-                      </FormElement>
-                    )}
-                  />
                   <div className="flex flex-wrap items-start gap-2.5">
                     <Button
                       isPending={changeDeductionsMutation.isPending}

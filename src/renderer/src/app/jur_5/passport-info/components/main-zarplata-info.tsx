@@ -47,7 +47,7 @@ export const MainZarplataInfo = ({ mainZarplataId, ...props }: MainZarplataInfoP
             {mainZarplata?.ostanovitRaschet && (
               <Badge
                 variant="destructive"
-                className="bg-red-100 text-red-800"
+                className="bg-rose-100 text-rose-600 shadow-none hover:bg-rose-100"
               >
                 {t('calculation_stopped')}
               </Badge>

@@ -73,7 +73,7 @@ export const PassportInfoViewDialog = ({
         queryKey: [PayrollPaymentService.QueryKeys.GetAll, mainZarplataId ?? 0]
       })
       queryClient.invalidateQueries({
-        queryKey: [PayrollDeductionService.QueryKeys.GetByMainZarplataId, mainZarplataId ?? 0]
+        queryKey: [PayrollDeductionService.QueryKeys.GetAll, mainZarplataId ?? 0]
       })
     }
   })

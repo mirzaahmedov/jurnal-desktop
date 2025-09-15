@@ -483,6 +483,8 @@
   "untill_now": "Hozirgacha",
   "payroll_payments": "Ish haqi to'lovlari",
   "payroll_deductions": "Ish haqi ushlanmalari",
+  "should_calculate_payroll": "Ish haqi hisoblansinmi?",
+  "calculation_stopped": "Hisoblash to'xtatildi",
   "size": "O'lcham",
   "deadline": "Muddat",
   "stop": "To'xtatish",

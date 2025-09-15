@@ -7,6 +7,7 @@ export interface OtdelniyRaschet {
   docNum: number
   docDate: string
   mainZarplataId: number
+  doljnostSum: number
   rabDni: number
   otrabDni: number
   noch: number

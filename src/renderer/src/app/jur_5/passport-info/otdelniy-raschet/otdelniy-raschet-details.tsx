@@ -309,6 +309,7 @@ export const OtdelniyRaschetDetails: FC<OtdelniyRaschetDetailsProps> = ({
         paymentData={paymentData}
         isOpen={paymentToggle.isOpen}
         onOpenChange={paymentToggle.setOpen}
+        okladSumma={otdelniyRaschet.doljnostSum}
       />
       <OtdelniyRaschetPaymentDialog
         isDeduction

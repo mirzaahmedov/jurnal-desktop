@@ -41,12 +41,14 @@ export interface OtdelniyRaschetPaymentDialogProps extends Omit<DialogTriggerPro
   isDeduction?: boolean
   paymentData: OtdelniyRaschetPaymentDto | OtdelniyRaschetDeductionDto | undefined
   mainZarplataId: number
+  okladSumma?: number
   otdelniyRaschetMainId?: number | null
 }
 export const OtdelniyRaschetPaymentDialog = ({
   isDeduction = false,
   paymentData,
   otdelniyRaschetMainId,
+  okladSumma,
   mainZarplataId,
   ...props
 }: OtdelniyRaschetPaymentDialogProps) => {
@@ -135,6 +137,8 @@ export const OtdelniyRaschetPaymentDialog = ({
     })
   )
 
+  const isTypePayment = paymentSpravochnik.selected?.typePayment === true
+
   const handleSubmit = form.handleSubmit((values) => {
     if (isDeduction) {
       if (paymentData && 'id' in paymentData) {
@@ -166,7 +170,7 @@ export const OtdelniyRaschetPaymentDialog = ({
           values: {
             paymentId: values.paymentId,
             percentage: paymentType === PaymentType.Percentage ? values.percentage : 0,
-            summa: paymentType === PaymentType.Summa ? values.summa : 0,
+            summa: paymentType === PaymentType.Summa || isTypePayment ? values.summa : 0,
             otdelniyRaschetMainId: otdelniyRaschetMainId ?? 0,
             mainZarplataId: mainZarplataId,
             deductionId: null
@@ -176,7 +180,7 @@ export const OtdelniyRaschetPaymentDialog = ({
         createPaymentMutation.mutate({
           paymentId: values.paymentId,
           percentage: paymentType === PaymentType.Percentage ? values.percentage : 0,
-          summa: paymentType === PaymentType.Summa ? values.summa : 0,
+          summa: paymentType === PaymentType.Summa || isTypePayment ? values.summa : 0,
           otdelniyRaschetMainId: otdelniyRaschetMainId ?? 0,
           mainZarplataId: mainZarplataId,
           deductionId: null
@@ -248,27 +252,41 @@ export const OtdelniyRaschetPaymentDialog = ({
               )}
 
               {paymentType === PaymentType.Percentage ? (
-                <FormField
-                  key={PaymentType.Percentage}
-                  control={form.control}
-                  name="percentage"
-                  render={({ field }) => (
-                    <FormElement
-                      grid="1:2"
-                      label={t('foiz')}
-                    >
-                      <NumericInput
-                        ref={field.ref}
-                        value={field.value}
-                        allowNegative={false}
-                        decimalScale={undefined}
-                        onValueChange={(values) => {
-                          field.onChange(values.floatValue ?? 0)
-                        }}
-                      />
-                    </FormElement>
+                <>
+                  <FormField
+                    key={PaymentType.Percentage}
+                    control={form.control}
+                    name="percentage"
+                    render={({ field }) => (
+                      <FormElement
+                        grid="1:2"
+                        label={t('foiz')}
+                      >
+                        <NumericInput
+                          ref={field.ref}
+                          value={field.value}
+                          allowNegative={false}
+                          decimalScale={undefined}
+                          onValueChange={(values) => {
+                            field.onChange(values.floatValue ?? 0)
+                            if (isTypePayment) {
+                              const calculatedSum =
+                                ((values.floatValue ?? 0) / 100) * (okladSumma ?? 0)
+                              form.setValue('summa', calculatedSum, { shouldValidate: true })
+                            }
+                          }}
+                        />
+                      </FormElement>
+                    )}
+                  />
+                  {isTypePayment === true && (
+                    <div>
+                      <Label className="text-muted-foreground">
+                        {t('summa')}: {form.watch('summa')}
+                      </Label>
+                    </div>
                   )}
-                />
+                </>
               ) : (
                 <FormField
                   key={PaymentType.Summa}

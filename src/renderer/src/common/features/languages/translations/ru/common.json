@@ -485,6 +485,8 @@
   "untill_now": "До настоящего времени",
   "payroll_payments": "Выплаты заработной платы",
   "payroll_deductions": "Удержания из заработной платы",
+  "should_calculate_payroll": "Следует ли рассчитать зарплату?",
+  "calculation_stopped": "Расчет остановлен",
   "size": "Размер",
   "deadline": "Срок",
   "stop": "Остановить",

@@ -3,7 +3,7 @@ import type { Payment } from '@/common/models/payments'
 
 import { useState } from 'react'
 
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Allotment } from 'allotment'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -21,7 +21,9 @@ import { Label } from '@/common/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/common/components/ui/radio-group'
 import { Tabs, TabsList, TabsTrigger } from '@/common/components/ui/tabs'
 import { Textarea } from '@/common/components/ui/textarea'
+import { useConfirm } from '@/common/features/confirm'
 import { MainZarplataService } from '@/common/features/main-zarplata/service'
+import { PayrollDeductionService } from '@/common/features/payroll-deduction/service'
 import { PayrollPaymentService } from '@/common/features/payroll-payment/service'
 import { useVacantTreeNodes } from '@/common/features/vacant/hooks/use-vacant-tree-nodes'
 import {
@@ -41,6 +43,7 @@ enum PaymentsChangePaymentOptions {
 
 export const PaymentsChangePayment = () => {
   const paymentToggle = useToggle()
+  const queryClient = useQueryClient()
 
   const form = useForm({
     defaultValues: {
@@ -52,6 +55,7 @@ export const PaymentsChangePayment = () => {
   })
 
   const { t } = useTranslation(['app'])
+  const { confirm } = useConfirm()
   const { search, setSearch, treeNodes, filteredTreeNodes, vacantsQuery } = useVacantTreeNodes()
 
   const [tabValue, setTabValue] = useState(PaymentsChangePaymentOptions.ALL)
@@ -99,6 +103,21 @@ export const PaymentsChangePayment = () => {
   //   }
   // })
 
+  const calculateSalaryByIdsMutation = useMutation({
+    mutationFn: MainZarplataService.calculateSalaryById,
+    onSuccess: () => {
+      toast.success(t('update_success'))
+      queryClient.invalidateQueries({
+        queryKey: [PayrollPaymentService.QueryKeys.GetAll]
+      })
+      queryClient.invalidateQueries({
+        queryKey: [PayrollDeductionService.QueryKeys.GetAll]
+      })
+    },
+    onError: () => {
+      toast.error(t('update_failed'))
+    }
+  })
   const mainZarplataQuery = useQuery({
     queryKey: [
       MainZarplataService.QueryKeys.GetByVacantId,
@@ -111,16 +130,30 @@ export const PaymentsChangePayment = () => {
   })
 
   const handleSubmit = form.handleSubmit((values) => {
-    changePaymentsMutation.mutate({
-      isXarbiy: values.type === 'military' ? true : values.type === 'civilian' ? false : undefined,
-      values: {
-        paymentId: values.paymentId,
-        payment: selectedPayment,
-        mains: selectedMainZarplata.map((mainZarplata) => ({ mainZarplataId: mainZarplata.id })),
-        percentage: values.percentage,
-        summa: values.summa
+    changePaymentsMutation.mutate(
+      {
+        isXarbiy:
+          values.type === 'military' ? true : values.type === 'civilian' ? false : undefined,
+        values: {
+          paymentId: values.paymentId,
+          payment: selectedPayment,
+          mains: selectedMainZarplata.map((mainZarplata) => ({ mainZarplataId: mainZarplata.id })),
+          percentage: values.percentage,
+          summa: values.summa
+        }
+      },
+      {
+        onSuccess: (_, values) => {
+          confirm({
+            danger: false,
+            title: t('should_calculate_payroll'),
+            onConfirm: () => {
+              calculateSalaryByIdsMutation.mutate(values.values.mains)
+            }
+          })
+        }
       }
-    })
+    )
   })
 
   // const handleChangePaymentsAll = () => {
@@ -141,15 +174,29 @@ export const PaymentsChangePayment = () => {
       return
     }
     const values = form.getValues()
-    deletePaymentsMutation.mutate({
-      isXarbiy: values.type === 'military' ? true : values.type === 'civilian' ? false : undefined,
-      values: {
-        paymentId: values.paymentId,
-        mains: selectedMainZarplata.map((mainZarplata) => ({ mainZarplataId: mainZarplata.id })),
-        percentage: values.percentage,
-        summa: values.summa
+    deletePaymentsMutation.mutate(
+      {
+        isXarbiy:
+          values.type === 'military' ? true : values.type === 'civilian' ? false : undefined,
+        values: {
+          paymentId: values.paymentId,
+          mains: selectedMainZarplata.map((mainZarplata) => ({ mainZarplataId: mainZarplata.id })),
+          percentage: values.percentage,
+          summa: values.summa
+        }
+      },
+      {
+        onSuccess: (_, values) => {
+          confirm({
+            danger: false,
+            title: t('should_calculate_payroll'),
+            onConfirm: () => {
+              calculateSalaryByIdsMutation.mutate(values.values.mains)
+            }
+          })
+        }
       }
-    })
+    )
   }
 
   // const handleDeletePaymentsAll = () => {

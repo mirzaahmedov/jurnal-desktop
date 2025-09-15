@@ -36,7 +36,7 @@ export const PayrollDeductions = ({ mainZarplata, setDeductionsTotal }: PayrollD
   const queryClient = useQueryClient()
 
   const { data: deductions, isFetching: isFetchingDeductions } = useQuery({
-    queryKey: [PayrollDeductionService.QueryKeys.GetByMainZarplataId, mainZarplata.id],
+    queryKey: [PayrollDeductionService.QueryKeys.GetAll, mainZarplata.id],
     queryFn: PayrollDeductionService.getByMainZarplataId
   })
 
@@ -45,7 +45,7 @@ export const PayrollDeductions = ({ mainZarplata, setDeductionsTotal }: PayrollD
     onSuccess: () => {
       toast.success(t('create_success'))
       queryClient.invalidateQueries({
-        queryKey: [PayrollDeductionService.QueryKeys.GetByMainZarplataId]
+        queryKey: [PayrollDeductionService.QueryKeys.GetAll]
       })
       dialogToggle.close()
     },
@@ -58,7 +58,7 @@ export const PayrollDeductions = ({ mainZarplata, setDeductionsTotal }: PayrollD
     onSuccess: () => {
       toast.success(t('update_success'))
       queryClient.invalidateQueries({
-        queryKey: [PayrollDeductionService.QueryKeys.GetByMainZarplataId]
+        queryKey: [PayrollDeductionService.QueryKeys.GetAll]
       })
       dialogToggle.close()
     },
@@ -71,7 +71,7 @@ export const PayrollDeductions = ({ mainZarplata, setDeductionsTotal }: PayrollD
     onSuccess: () => {
       toast.success(t('delete_success'))
       queryClient.invalidateQueries({
-        queryKey: [PayrollDeductionService.QueryKeys.GetByMainZarplataId]
+        queryKey: [PayrollDeductionService.QueryKeys.GetAll]
       })
     },
     onError: () => {

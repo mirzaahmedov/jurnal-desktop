@@ -57,12 +57,12 @@ export const CalculateEmployeeSalaries = () => {
   const calculateSalaryByIdsMutation = useMutation({
     mutationFn: MainZarplataService.calculateSalaryById,
     onSuccess: () => {
-      toast.success(t('update_successful'))
+      toast.success(t('update_success'))
       queryClient.invalidateQueries({
         queryKey: [PayrollPaymentService.QueryKeys.GetAll]
       })
       queryClient.invalidateQueries({
-        queryKey: [PayrollDeductionService.QueryKeys.GetByMainZarplataId]
+        queryKey: [PayrollDeductionService.QueryKeys.GetAll]
       })
     },
     onError: () => {
@@ -72,12 +72,12 @@ export const CalculateEmployeeSalaries = () => {
   const calculateSalaryAllMutation = useMutation({
     mutationFn: MainZarplataService.calculateSalaryAll,
     onSuccess: () => {
-      toast.success(t('update_successful'))
+      toast.success(t('update_success'))
       queryClient.invalidateQueries({
         queryKey: [PayrollPaymentService.QueryKeys.GetAll]
       })
       queryClient.invalidateQueries({
-        queryKey: [PayrollDeductionService.QueryKeys.GetByMainZarplataId]
+        queryKey: [PayrollDeductionService.QueryKeys.GetAll]
       })
     },
     onError: () => {

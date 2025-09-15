@@ -484,6 +484,8 @@
   "untill_now": "Ҳозиргача",
   "payroll_payments": "Иш ҳақи тўловлари",
   "payroll_deductions": "Иш ҳақи ушланмалари",
+  "should_calculate_payroll": "Иш ҳақи ҳисоблансинми?",
+  "calculation_stopped": "Ҳисоблаш тўхтатилди",
   "size": "Ўлчам",
   "deadline": "Муддат",
   "stop": "Тўхтатиш",
