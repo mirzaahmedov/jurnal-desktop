@@ -168,7 +168,7 @@ export const getNavElements = (t: TFunction): INavElement[] => {
         }
       : null,
 
-    !is_super_admin
+    !is_super_admin && (permissions.zarplata || is_admin)
       ? {
           path: '/jur-5',
           title: `5-${t('pages.memorial_order').toLowerCase()} — ${t('pages.jur_5').toLowerCase()}`,

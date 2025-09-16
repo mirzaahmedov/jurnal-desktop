@@ -2,7 +2,7 @@ import type { DayPickerSingleProps } from 'react-day-picker'
 
 import { useEffect } from 'react'
 
-import { CircleArrowDown } from 'lucide-react'
+import { ChevronLeft, ChevronRight, CircleArrowDown } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
@@ -53,12 +53,39 @@ export const RangeDatePicker = ({
     })
   }, [form, from, to])
 
+  const handleNextDay = (field: 'from' | 'to', amount: number) => {
+    const date = new Date(form.getValues(field))
+    date.setDate(date.getDate() + amount)
+    const newDate = date.toISOString().split('T')[0]
+    if (!validateDate || validateDate(newDate)) {
+      form.setValue(field, newDate)
+      return
+    }
+  }
+  const handlePrevDay = (field: 'from' | 'to', amount: number) => {
+    const date = new Date(form.getValues(field))
+    date.setDate(date.getDate() - amount)
+    const newDate = date.toISOString().split('T')[0]
+    if (!validateDate || validateDate(newDate)) {
+      form.setValue(field, newDate)
+      return
+    }
+  }
+
   return (
     <Form {...form}>
       <form
-        className="flex items-center flex-wrap gap-5 gap-y-2.5"
+        className="flex items-center flex-wrap gap-x-1 gap-y-2.5"
         onSubmit={onSubmit}
       >
+        <Button
+          type="button"
+          variant="outline"
+          size="icon"
+          onPress={() => handlePrevDay('from', 1)}
+        >
+          <ChevronLeft className="btn-icon" />
+        </Button>
         <FormField
           control={form.control}
           name="from"
@@ -67,11 +94,28 @@ export const RangeDatePicker = ({
               autoFocus
               validate={validateDate}
               calendarProps={calendarProps}
+              containerProps={{ className: 'w-36 min-w-36' }}
               {...field}
             />
           )}
         />
-        -
+        <Button
+          type="button"
+          variant="outline"
+          size="icon"
+          onPress={() => handleNextDay('from', 1)}
+        >
+          <ChevronRight className="btn-icon" />
+        </Button>
+        <b className="mx-0.5">-</b>
+        <Button
+          type="button"
+          variant="outline"
+          size="icon"
+          onPress={() => handlePrevDay('to', 1)}
+        >
+          <ChevronLeft className="btn-icon" />
+        </Button>
         <FormField
           control={form.control}
           name="to"
@@ -79,10 +123,19 @@ export const RangeDatePicker = ({
             <JollyDatePicker
               validate={validateDate}
               calendarProps={calendarProps}
+              containerProps={{ className: 'w-36 min-w-36' }}
               {...field}
             />
           )}
         />
+        <Button
+          type="button"
+          variant="outline"
+          size="icon"
+          onPress={() => handleNextDay('to', 1)}
+        >
+          <ChevronRight className="btn-icon" />
+        </Button>
         <div className="space-x-1">
           <Button type="submit">
             <CircleArrowDown className="btn-icon icon-start" />

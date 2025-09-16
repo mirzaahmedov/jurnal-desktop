@@ -12,5 +12,6 @@ export interface RoleAccess {
   main_book: boolean
   smeta_grafik: boolean
   odinox: boolean
+  zarplata: boolean
   role_name: string
 }

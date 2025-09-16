@@ -43,7 +43,12 @@ export const useZarplataStore = create(
         })
     }),
     {
-      name: 'zarplata-store'
+      name: 'zarplata-store',
+      partialize: (state) => {
+        return Object.fromEntries(
+          Object.entries(state).filter(([key]) => key === 'calculateParamsId')
+        ) as ZarplataStore
+      }
     }
   )
 )

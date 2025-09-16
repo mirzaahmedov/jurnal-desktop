@@ -18,6 +18,7 @@ export const RoleAccessFormSchema = z.object({
   jur5: z.boolean(),
   jur7: z.boolean(),
   jur8: z.boolean(),
+  zarplata: z.boolean(),
   spravochnik: z.boolean(),
   region: z.boolean(),
   smeta_grafik: z.boolean(),
@@ -47,7 +48,7 @@ export const roleAccessOptions: Array<{
     label: <Trans ns="app">pages.podotchet</Trans>
   },
   {
-    key: 'jur5',
+    key: 'zarplata',
     label: <Trans ns="app">pages.zarplata</Trans>
   },
   {

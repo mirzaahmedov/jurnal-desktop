@@ -14,6 +14,7 @@ export type SmetaForm = z.infer<typeof SmetaFormSchema>
 
 export const SmetaQueryKeys = {
   getAll: 'smeta/all',
+  getSmetaNumbers: 'smeta/numbers',
   getById: 'smeta',
   create: 'smeta/create',
   update: 'smeta/update',

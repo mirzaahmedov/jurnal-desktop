@@ -1,6 +1,6 @@
 import type { SmetaForm } from './config'
 import type { SpravochnikHookOptions } from '@/common/features/spravochnik'
-import type { Smeta } from '@/common/models'
+import type { ApiResponse, Smeta } from '@/common/models'
 
 import { useMemo } from 'react'
 
@@ -17,9 +17,22 @@ import { extendObject } from '@/common/lib/utils'
 import { SmetaColumns } from './columns'
 import { SmetaGroupFilter } from './filter'
 
-export const smetaService = new CRUDService<Smeta, SmetaForm>({
-  endpoint: ApiEndpoints.smeta
-}).forRequest((type, ctx) => {
+export class SmetaCRUDService extends CRUDService<Smeta, SmetaForm> {
+  constructor() {
+    super({
+      endpoint: ApiEndpoints.smeta
+    })
+
+    this.getSmetaNumbers = this.getSmetaNumbers.bind(this)
+  }
+
+  async getSmetaNumbers() {
+    const response = await this.client.get<ApiResponse<string[]>>('/smeta/smeta-number')
+    return response.data
+  }
+}
+
+export const smetaService = new SmetaCRUDService().forRequest((type, ctx) => {
   if (type === 'getAll') {
     const params = ctx.config.params ?? {}
     if (params.group_number === 'all') {
