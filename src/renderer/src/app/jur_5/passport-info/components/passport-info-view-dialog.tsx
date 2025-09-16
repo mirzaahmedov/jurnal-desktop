@@ -5,10 +5,12 @@ import type { DialogTriggerProps } from 'react-aria-components'
 import { useEffect, useState } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { Search } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { LoadingOverlay } from '@/common/components'
 import { ContentStepper } from '@/common/components/content-stepper'
+import { ComboboxItem, JollyComboBox } from '@/common/components/jolly/combobox'
 import {
   DialogContent,
   DialogHeader,
@@ -23,6 +25,7 @@ import { PayrollDeductionService } from '@/common/features/payroll-deduction/ser
 import { PayrollPayments } from '@/common/features/payroll-payment/payroll-payments'
 import { PayrollPaymentService } from '@/common/features/payroll-payment/service'
 import { PassportInfoTabs, useZarplataStore } from '@/common/features/zarplata/store'
+import { useToggle } from '@/common/hooks'
 
 import { DopOplataContainer } from '../dop-oplata'
 import { Employments } from '../employment/employment'
@@ -55,9 +58,11 @@ export const PassportInfoViewDialog = ({
   const { t } = useTranslation(['app'])
   const { currentTab, setCurrentTab } = useZarplataStore()
 
+  const [comboValue, setComboValue] = useState(null)
   const [paymentTotal, setPaymentTotal] = useState<number>(0)
   const [deductionsTotal, setDeductionsTotal] = useState<number>(0)
 
+  const comboModal = useToggle()
   const queryClient = useQueryClient()
 
   const { data: mainZarplata, isFetching: isFetchingMainZarplata } = useQuery({
@@ -84,6 +89,14 @@ export const PassportInfoViewDialog = ({
     }
   }, [props.isOpen])
 
+  const handleSearchMainZarplata = (value: number | null) => {
+    if (value) {
+      onNavigateItem?.(items.findIndex((i) => i.id === value) ?? 0)
+    }
+    setComboValue(null)
+    comboModal.close()
+  }
+
   return (
     <>
       <DialogTrigger {...props}>
@@ -91,8 +104,37 @@ export const PassportInfoViewDialog = ({
           <DialogContent className="relative max-w-full h-full max-h-full">
             {isFetchingMainZarplata ? <LoadingOverlay /> : null}
             <div className="h-full flex flex-col space-y-5 overflow-hidden relative">
-              <DialogHeader>
-                <DialogTitle>{t('pages.passport_details')}</DialogTitle>
+              <DialogHeader className="flex flex-row items-center gap-10">
+                <div className="space-y-1">
+                  <DialogTitle>{t('pages.passport_details')}</DialogTitle>
+                  <div className="font-bold text-sm text-brand">
+                    {t('rayon')}: {mainZarplata?.data?.rayon}
+                  </div>
+                </div>
+                <div className="flex items-center bg-gray-100 rounded-md">
+                  <JollyComboBox
+                    hideLabel
+                    defaultItems={items}
+                    selectedKey={comboValue}
+                    menuTrigger="focus"
+                    inputProps={{
+                      onClick: () => comboModal.open()
+                    }}
+                    onOpenChange={comboModal.setOpen}
+                    onSelectionChange={(value) =>
+                      handleSearchMainZarplata(value ? Number(value) : null)
+                    }
+                    popoverProps={{
+                      isOpen: comboModal.isOpen
+                    }}
+                    className="mt-0"
+                  >
+                    {(item) => <ComboboxItem id={item.id}>{item.fio}</ComboboxItem>}
+                  </JollyComboBox>
+                  <div className="size-10 grid place-items-center">
+                    <Search className="btn-icon text-gray-400" />
+                  </div>
+                </div>
               </DialogHeader>
               <Tabs
                 value={currentTab}

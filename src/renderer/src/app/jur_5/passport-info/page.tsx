@@ -146,7 +146,7 @@ const PassportDetailsPage = () => {
               onDelete={handleRowDelete}
               getRowClassName={(row) => {
                 if (row.ostanovitRaschet) {
-                  return 'bg-red-50 hover:bg-red-50'
+                  return 'bg-red-50 hover:bg-red-50 even:bg-red-50 even:hover:bg-red-50 [&_*]:text-red-600 [&_*]:border-red-200'
                 }
                 return ''
               }}

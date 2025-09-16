@@ -1,17 +1,16 @@
 import type { EditorComponent } from './interfaces'
-import type { TypeSchetOperatsii } from '@/common/models'
+import type { Operatsii, TypeSchetOperatsii } from '@/common/models'
 
 import { type FC, useEffect, useMemo, useState } from 'react'
 
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useMutation, useQuery } from '@tanstack/react-query'
-import { CircleX } from 'lucide-react'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { CircleX, Plus } from 'lucide-react'
 import { type DialogTriggerProps, useFilter } from 'react-aria-components'
 import { type ArrayPath, type UseFormReturn, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import { toast } from 'react-toastify'
 
 import {
-  OperatsiiFormSchema,
   type OperatsiiFormValues,
   OperatsiiService,
   createOperatsiiSpravochnik,
@@ -32,7 +31,7 @@ import {
 import { Form, FormField } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
 import { useSpravochnik } from '@/common/features/spravochnik'
-import { useDebounceValue, useEventCallback, useToggle } from '@/common/hooks'
+import { useDebounceValue, useEventCallback } from '@/common/hooks'
 import { capitalize } from '@/common/lib/string'
 
 export const createOperatsiiEditor = <T extends object, F extends ArrayPath<T>>({
@@ -44,8 +43,6 @@ export const createOperatsiiEditor = <T extends object, F extends ArrayPath<T>>(
 }): EditorComponent<T, F> => {
   return ({ tabIndex, id, value, errors, onChange, form }) => {
     const error = (errors as any)?.[field]
-
-    const quickAddModal = useToggle()
 
     const typedForm = form as unknown as UseFormReturn<{
       childs: Array<{
@@ -145,113 +142,108 @@ export const createOperatsiiEditor = <T extends object, F extends ArrayPath<T>>(
       setSubschetInputValue(sub_schet ?? '')
     }, [sub_schet])
 
-    useEffect(() => {
-      if (isLoading || !schet) {
-        return
-      }
-
-      if (filteredOperatsiiOptions.length === 0) {
-        quickAddModal.open()
-      }
-    }, [filteredOperatsiiOptions, schet, isLoading, quickAddModal])
-
     return (
-      <>
-        <div
-          className="w-full flex divide-x"
-          onDoubleClick={operatsiiSpravochnik.open}
-        >
-          <JollyComboBox
-            editor
-            error={!!error}
-            tabIndex={tabIndex}
-            isDisabled={isLoadingSchetOptions}
-            menuTrigger="focus"
-            selectedKey={schet || ''}
-            onSelectionChange={(value) => {
-              if (
-                operatsiiSpravochnik.selected &&
-                encodeSchetOption(
-                  operatsiiSpravochnik.selected.schet,
-                  operatsiiSpravochnik.selected.schet6
-                ) !== value
-              ) {
-                onChange?.(0)
-                handleChangeField('sub_schet', '')
+      <div className="flex items-center gap-px p-px">
+        <div>
+          <div
+            className="w-full flex divide-x"
+            onDoubleClick={operatsiiSpravochnik.open}
+          >
+            <JollyComboBox
+              editor
+              error={!!error}
+              tabIndex={tabIndex}
+              isDisabled={isLoadingSchetOptions}
+              menuTrigger="focus"
+              selectedKey={schet || ''}
+              onSelectionChange={(value) => {
+                if (
+                  operatsiiSpravochnik.selected &&
+                  encodeSchetOption(
+                    operatsiiSpravochnik.selected.schet,
+                    operatsiiSpravochnik.selected.schet6
+                  ) !== value
+                ) {
+                  onChange?.(0)
+                  handleChangeField('sub_schet', '')
+                  setSubschetInputValue('')
+                }
+                handleChangeField('schet', (value as string) || '')
+                setDebouncedSchetInputValue((value as string) || '')
+              }}
+              className="border-none flex-1"
+              placeholder={t('schet')}
+              defaultItems={schetOptions?.data ?? []}
+            >
+              {(item) => (
+                <ComboboxItem id={encodeSchetOption(item.schet, item.schet6)}>
+                  {encodeSchetOption(item.schet, item.schet6)}
+                </ComboboxItem>
+              )}
+            </JollyComboBox>
+            <JollyComboBox
+              editor
+              error={!!error}
+              tabIndex={tabIndex}
+              allowsEmptyCollection
+              isDisabled={isLoading}
+              inputValue={subschetInputValue}
+              onInputChange={setSubschetInputValue}
+              menuTrigger="focus"
+              formValue="text"
+              selectedKey={(value as string) ?? ''}
+              onSelectionChange={(value) => {
+                onChange?.(value)
+                const selectedOperatsii = operatsiiOptions?.data?.find(
+                  (option) => option.id === value
+                )
+                if (selectedOperatsii) {
+                  setSubschetInputValue(selectedOperatsii.sub_schet)
+                  handleChangeField('sub_schet', selectedOperatsii.sub_schet)
+                }
+              }}
+              className="flex-1"
+              placeholder={t('subschet')}
+              items={filteredOperatsiiOptions}
+              popoverProps={{
+                className: 'w-[300px]'
+              }}
+              renderEmptyState={() => (
+                <div className="py-5 flex flex-col items-center">
+                  {t('operatsii_not_found_want_to_create')}
+                  <OperatsiiQuickAdd
+                    type_schet={type_schet!}
+                    schet={schet || ''}
+                    schet6={schet6 || ''}
+                  />
+                </div>
+              )}
+            >
+              {(item) => (
+                <ComboboxItem id={item.id}>
+                  {item.sub_schet} - {item.name}
+                </ComboboxItem>
+              )}
+            </JollyComboBox>
+            <Button
+              type="button"
+              size="icon"
+              variant="ghost"
+              className="text-slate-400 hover:text-red-500 rounded-none"
+              onPress={() => {
+                operatsiiSpravochnik.clear()
                 setSubschetInputValue('')
-              }
-              handleChangeField('schet', (value as string) || '')
-              setDebouncedSchetInputValue((value as string) || '')
-            }}
-            className="border-none flex-1"
-            placeholder={t('schet')}
-            defaultItems={schetOptions?.data ?? []}
-          >
-            {(item) => (
-              <ComboboxItem id={encodeSchetOption(item.schet, item.schet6)}>
-                {encodeSchetOption(item.schet, item.schet6)}
-              </ComboboxItem>
-            )}
-          </JollyComboBox>
-          <JollyComboBox
-            editor
-            error={!!error}
-            tabIndex={tabIndex}
-            allowsEmptyCollection
-            isDisabled={isLoading}
-            inputValue={subschetInputValue}
-            onInputChange={setSubschetInputValue}
-            menuTrigger="focus"
-            formValue="text"
-            selectedKey={(value as string) ?? ''}
-            onSelectionChange={(value) => {
-              onChange?.(value)
-              const selectedOperatsii = operatsiiOptions?.data?.find(
-                (option) => option.id === value
-              )
-              if (selectedOperatsii) {
-                setSubschetInputValue(selectedOperatsii.sub_schet)
-                handleChangeField('sub_schet', selectedOperatsii.sub_schet)
-              }
-            }}
-            className="flex-1"
-            placeholder={t('subschet')}
-            items={filteredOperatsiiOptions}
-            popoverProps={{
-              className: 'w-[300px]'
-            }}
-          >
-            {(item) => (
-              <ComboboxItem id={item.id}>
-                {item.sub_schet} - {item.name}
-              </ComboboxItem>
-            )}
-          </JollyComboBox>
-          <Button
-            type="button"
-            size="icon"
-            variant="ghost"
-            className="text-slate-400 hover:text-red-500 rounded-none"
-            onPress={() => {
-              operatsiiSpravochnik.clear()
-              setSubschetInputValue('')
-              setDebouncedSchetInputValue('')
-              handleChangeField('schet', '')
-              handleChangeField('schet_6', '')
-              handleChangeField('sub_schet', '')
-            }}
-          >
-            <CircleX />
-          </Button>
+                setDebouncedSchetInputValue('')
+                handleChangeField('schet', '')
+                handleChangeField('schet_6', '')
+                handleChangeField('sub_schet', '')
+              }}
+            >
+              <CircleX />
+            </Button>
+          </div>
         </div>
-        <OperatsiiQuickAdd
-          type_schet={type_schet!}
-          schet={schet || ''}
-          schet6={schet6 || ''}
-          isOpen={quickAddModal.isOpen}
-          onOpenChange={quickAddModal.setOpen}
-        />
-      </>
+      </div>
     )
   }
 }
@@ -260,6 +252,7 @@ export interface OperatsiiQuickAddProps extends Omit<DialogTriggerProps, 'childr
   type_schet: TypeSchetOperatsii
   schet: string
   schet6: string
+  onCreateSuccess?: (operatsii: Operatsii) => void
 }
 export const OperatsiiQuickAdd: FC<OperatsiiQuickAddProps> = ({
   type_schet,
@@ -269,6 +262,7 @@ export const OperatsiiQuickAdd: FC<OperatsiiQuickAddProps> = ({
 }) => {
   const { t } = useTranslation()
 
+  const queryClient = useQueryClient()
   const form = useForm({
     defaultValues: {
       name: '',
@@ -276,8 +270,7 @@ export const OperatsiiQuickAdd: FC<OperatsiiQuickAddProps> = ({
       schet6: '',
       sub_schet: '',
       type_schet
-    } as OperatsiiFormValues,
-    resolver: zodResolver(OperatsiiFormSchema)
+    } as OperatsiiFormValues
   })
   const smetaNumbersQuery = useQuery({
     queryKey: [SmetaQueryKeys.getSmetaNumbers],
@@ -285,17 +278,37 @@ export const OperatsiiQuickAdd: FC<OperatsiiQuickAddProps> = ({
   })
 
   const createOperatsiiMutation = useMutation({
-    mutationFn: OperatsiiService.create
+    mutationFn: OperatsiiService.create,
+    onSuccess: () => {
+      toast.success(t('create_success'))
+      queryClient.invalidateQueries({
+        queryKey: [operatsiiQueryKeys.getAll]
+      })
+      props.onOpenChange?.(false)
+    }
   })
 
   const handleSubmit = form.handleSubmit((values) => {
     createOperatsiiMutation.mutate(values)
   })
 
+  useEffect(() => {
+    form.setValue('schet', schet)
+  }, [form, schet])
+  useEffect(() => {
+    form.setValue('schet6', schet6)
+  }, [form, schet6])
+
   const smetaNumberOptions = smetaNumbersQuery.data?.data ?? []
 
   return (
     <DialogTrigger {...props}>
+      <Button
+        size="icon"
+        className="flex-shrink-0"
+      >
+        <Plus />
+      </Button>
       <DialogOverlay>
         <DialogContent className="max-w-xl">
           <DialogHeader>
@@ -328,15 +341,18 @@ export const OperatsiiQuickAdd: FC<OperatsiiQuickAddProps> = ({
                   />
                 </FormElement>
 
-                <FormElement
-                  label={t('schet_6_digit')}
-                  grid="2:4"
-                >
-                  <Input
-                    readOnly
-                    value={schet6}
-                  />
-                </FormElement>
+                <FormField
+                  control={form.control}
+                  name="schet6"
+                  render={({ field }) => (
+                    <FormElement
+                      label={t('schet_6_digit')}
+                      grid="2:4"
+                    >
+                      <Input {...field} />
+                    </FormElement>
+                  )}
+                />
 
                 <FormField
                   name="sub_schet"
@@ -353,6 +369,7 @@ export const OperatsiiQuickAdd: FC<OperatsiiQuickAddProps> = ({
                         defaultItems={smetaNumberOptions.map((value) => ({
                           value
                         }))}
+                        menuTrigger="focus"
                       >
                         {(item) => <ComboboxItem id={item.value}>{item.value}</ComboboxItem>}
                       </JollyComboBox>

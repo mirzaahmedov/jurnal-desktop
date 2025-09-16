@@ -11,6 +11,7 @@ import {
   type ListBoxProps as AriaListBoxProps,
   type PopoverProps as AriaPopoverProps,
   type ValidationResult as AriaValidationResult,
+  type ListBoxRenderProps,
   Text,
   composeRenderProps
 } from 'react-aria-components'
@@ -87,6 +88,7 @@ const comboboxVariants = cva('group flex flex-col gap-2', {
 interface JollyComboBoxProps<T extends object>
   extends Omit<AriaComboBoxProps<T>, 'children'>,
     VariantProps<typeof comboboxVariants> {
+  hideLabel?: boolean
   label?: string
   placeholder?: string
   description?: string | null
@@ -96,9 +98,11 @@ interface JollyComboBoxProps<T extends object>
   tabIndex?: number
   editor?: boolean
   children: React.ReactNode | ((item: T) => React.ReactNode)
+  renderEmptyState?: (props: ListBoxRenderProps) => React.ReactNode
 }
 function JollyComboBox<T extends object>({
   label,
+  hideLabel = false,
   description,
   placeholder,
   errorMessage,
@@ -109,6 +113,7 @@ function JollyComboBox<T extends object>({
   tabIndex,
   error,
   editor = false,
+  renderEmptyState,
   ...props
 }: JollyComboBoxProps<T>) {
   return (
@@ -118,7 +123,7 @@ function JollyComboBox<T extends object>({
       )}
       {...props}
     >
-      <Label>{label}</Label>
+      {!hideLabel && <Label>{label}</Label>}
       <FieldGroup
         className="p-0"
         error={error}
@@ -152,11 +157,15 @@ function JollyComboBox<T extends object>({
       <FieldError>{errorMessage}</FieldError>
       <ComboboxPopover {...popoverProps}>
         <ComboboxListBox
-          renderEmptyState={() => (
-            <div className="text-center text-xs px-5 py-5 grid place-content-center">
-              <EmptyList className="w-full max-w-32" />
-            </div>
-          )}
+          renderEmptyState={(props) =>
+            renderEmptyState ? (
+              renderEmptyState?.(props)
+            ) : (
+              <div className="text-center text-xs px-5 py-5 grid place-content-center">
+                <EmptyList className="w-full max-w-32" />
+              </div>
+            )
+          }
         >
           {children}
         </ComboboxListBox>
