@@ -95,6 +95,14 @@
     "deductions": "Удержания",
     "staffing_table": "Штатное расписание"
   },
+  "app": {
+    "settings": "Настройки",
+    "logout": "Выйти",
+    "downloads": "Загрузки",
+    "open_in_new_window": "Открыть в новом окне",
+    "change_requisites": "Изменить реквизиты",
+    "refresh_page": "Обновить страницу"
+  },
   "locales": {
     "uz": "Узбекский",
     "ru": "Русский",

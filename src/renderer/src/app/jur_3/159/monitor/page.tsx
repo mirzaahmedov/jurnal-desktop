@@ -135,7 +135,7 @@ const OrganMonitoringPage = () => {
     <ListView>
       <ListView.Header>
         <div className="w-full space-y-5 flex flex-col items-start">
-          <div className="w-full flex flex-row items-center justify-between">
+          <div className="w-full flex flex-row items-center justify-between gap-10">
             <div className="flex flex-row items-center gap-5">
               <ChooseSpravochnik
                 spravochnik={organSpravochnik}
@@ -242,6 +242,20 @@ const OrganMonitoringPage = () => {
                     excel: true
                   }}
                 />
+
+                {organSpravochnik.selected ? (
+                  <DownloadFile
+                    url="/159/monitoring/report-by-organ"
+                    params={{
+                      main_schet_id,
+                      schet_id: jur3_schet_159_id,
+                      organization_id: organSpravochnik.selected.id,
+                      excel: true
+                    }}
+                    fileName={`159_${t('organization')}_${organSpravochnik.selected.name}.xlsx`}
+                    buttonText={t('litsevoy_karta')}
+                  />
+                ) : null}
 
                 <Button
                   variant="ghost"

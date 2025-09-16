@@ -481,7 +481,7 @@ const BankRasxodDetailsPage = () => {
               </div>
             </div>
 
-            <DetailsView.Footer className="flex flex-row gap-10">
+            <DetailsView.Footer className="flex flex-row gap-5">
               <DetailsView.Create
                 isDisabled={reminder < 0 || isFetchingMonitor || isFetching}
                 isPending={isCreating || isUpdating}

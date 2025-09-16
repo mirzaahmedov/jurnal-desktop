@@ -45,6 +45,7 @@
   "save": "Сақлаш",
   "type-operatsii": "Операция тури",
   "operatsii": "Операция",
+  "operatsii_not_found_want_to_create": "Операциялар топилмади. Янги операция яратмоқчимисиз?",
   "sostav": "Состав",
   "podrazdelenie": "Бўлинма",
   "about-counteragent": "Контрагент ҳақида",
@@ -568,5 +569,6 @@
   "view": "Кўриш",
   "percentage": "Фоиз",
   "select_vacant_first": "Аввал вакантни танланг",
-  "position_salary_only": "Фақат лавозим маошидан фоиз оладиган тўлов"
+  "position_salary_only": "Фақат лавозим маошидан фоиз оладиган тўлов",
+  "litsevoy_karta": "Шахсий карта"
 }

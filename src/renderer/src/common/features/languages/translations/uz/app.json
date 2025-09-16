@@ -95,6 +95,14 @@
     "deductions": "Ushlanmalar",
     "staffing_table": "Shtat jadvali"
   },
+  "app": {
+    "settings": "Sozlamalar",
+    "logout": "Chiqish",
+    "downloads": "Yuklamalar",
+    "open_in_new_window": "Yangi oynada ochish",
+    "change_requisites": "Rekvizitlarni o'zgartirish",
+    "refresh_page": "Sahifani yangilash"
+  },
   "locales": {
     "uz": "Oʻzbekcha",
     "ru": "Ruscha",

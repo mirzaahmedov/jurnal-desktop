@@ -95,6 +95,14 @@
     "deductions": "Ушланмалар",
     "staffing_table": "Штат жадвали"
   },
+  "app": {
+    "settings": "Созламалар",
+    "logout": "Чиқиш",
+    "downloads": "Юкламалар",
+    "open_in_new_window": "Янги ойнада очиш",
+    "change_requisites": "Реквизитларни ўзгартириш",
+    "refresh_page": "Саҳифани янгилаш"
+  },
   "locales": {
     "uz": "Ўзбекча",
     "ru": "Русча",

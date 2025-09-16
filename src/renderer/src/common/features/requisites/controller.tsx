@@ -2,12 +2,13 @@ import { useMemo } from 'react'
 
 import { useQuery } from '@tanstack/react-query'
 import { RefreshCw } from 'lucide-react'
-import { Trans } from 'react-i18next'
+import { Trans, useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router-dom'
 
 import { MainSchetQueryKeys, MainSchetService } from '@/app/region-spravochnik/main-schet'
+import { Button } from '@/common/components/jolly/button'
+import { Tooltip, TooltipTrigger } from '@/common/components/jolly/tooltip'
 import { StepperSelector } from '@/common/components/stepper-selector'
-import { Button } from '@/common/components/ui/button'
 import { useToggle } from '@/common/hooks'
 import { cn } from '@/common/lib/utils'
 
@@ -24,6 +25,8 @@ export const RequisitesController = () => {
     jur4_schet_id,
     setRequisites
   } = useRequisitesStore()
+
+  const { t } = useTranslation(['app'])
 
   const location = useLocation()
   const dialogToggle = useToggle()
@@ -47,13 +50,16 @@ export const RequisitesController = () => {
   return (
     <>
       <div className="flex items-center gap-0 mr-1">
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={dialogToggle.open}
-        >
-          <RefreshCw />
-        </Button>
+        <TooltipTrigger delay={300}>
+          <Button
+            variant="ghost"
+            size="icon"
+            onPress={dialogToggle.open}
+          >
+            <RefreshCw />
+          </Button>
+          <Tooltip>{t('app.change_requisites')}</Tooltip>
+        </TooltipTrigger>
         <div
           className="flex flex-col gap-0.5 cursor-pointer"
           onClick={infoToggle.open}

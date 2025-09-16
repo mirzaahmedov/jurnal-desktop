@@ -1,31 +1,36 @@
 import { CircleArrowDown } from 'lucide-react'
-import { Trans } from 'react-i18next'
+import { Trans, useTranslation } from 'react-i18next'
 
 import { EmptyList } from '@/common/components/empty-states'
 import { Button } from '@/common/components/jolly/button'
 import { Popover, PopoverDialog, PopoverTrigger } from '@/common/components/jolly/popover'
+import { Tooltip, TooltipTrigger } from '@/common/components/jolly/tooltip'
 import { Badge } from '@/common/components/ui/badge'
 
 import { FileItem } from './file-item'
 import { useDownloadsManagerStore } from './store'
 
 export const Downloads = () => {
+  const { t } = useTranslation(['app'])
   const { files, removeFile, clearFiles } = useDownloadsManagerStore()
 
   return (
     <PopoverTrigger>
-      <Button
-        variant="ghost"
-        size="icon"
-        className="relative"
-      >
-        <CircleArrowDown className="icon icon-md" />
-        {files.length ? (
-          <Badge className="absolute top-0 right-0 text-2xs px-1.5 min-w-5 h-5">
-            {files.length}
-          </Badge>
-        ) : null}
-      </Button>
+      <TooltipTrigger delay={300}>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="relative"
+        >
+          <CircleArrowDown className="icon icon-md" />
+          {files.length ? (
+            <Badge className="absolute top-0 right-0 text-2xs px-1.5 min-w-5 h-5">
+              {files.length}
+            </Badge>
+          ) : null}
+        </Button>
+        <Tooltip>{t('app.downloads')}</Tooltip>
+      </TooltipTrigger>
       <Popover
         placement="top end"
         className=""

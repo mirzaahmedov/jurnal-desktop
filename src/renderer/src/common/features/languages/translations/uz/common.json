@@ -45,6 +45,7 @@
   "save": "Saqlash",
   "type-operatsii": "Operatsiya turi",
   "operatsii": "Operatsiya",
+  "operatsii_not_found_want_to_create": "Operatsiyalar topilmadi. Yangi operatsiya yaratmoqchimisiz?",
   "sostav": "Sostav",
   "podrazdelenie": "Bo'linma",
   "about-counteragent": "Kontragent haqida",
@@ -567,5 +568,6 @@
   "view": "Ko'rish",
   "percentage": "Foiz",
   "select_vacant_first": "Avval vakantni tanlang",
-  "position_salary_only": "Faqat lavozim maoshidan foiz oladigan to‘lov"
+  "position_salary_only": "Faqat lavozim maoshidan foiz oladigan to‘lov",
+  "litsevoy_karta": "Litsevaya karta"
 }

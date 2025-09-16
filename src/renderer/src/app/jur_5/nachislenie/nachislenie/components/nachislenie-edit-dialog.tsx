@@ -470,7 +470,7 @@ const NachislenieUpdateForm: FC<NachislenieUpdateFormProps> = ({ nachislenieProv
         onSubmit={form.handleSubmit(console.log)}
         className="relative flex-1 h-full flex flex-col gap-5 overflow-y-auto scrollbar"
       >
-        <div className="relative overflow-hidden flex flex-col">
+        <div className="relative flex flex-col">
           {nachislenie ? <MainZarplataInfo mainZarplataId={nachislenie?.mainZarplataId} /> : null}
           <div className="p-5">
             <div className="flex items-center flex-wrap gap-4">

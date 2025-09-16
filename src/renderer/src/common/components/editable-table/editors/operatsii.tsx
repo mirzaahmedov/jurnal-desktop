@@ -31,7 +31,7 @@ import {
 import { Form, FormField } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
 import { useSpravochnik } from '@/common/features/spravochnik'
-import { useDebounceValue, useEventCallback } from '@/common/hooks'
+import { useDebounceValue, useEventCallback, useToggle } from '@/common/hooks'
 import { capitalize } from '@/common/lib/string'
 
 export const createOperatsiiEditor = <T extends object, F extends ArrayPath<T>>({
@@ -54,6 +54,9 @@ export const createOperatsiiEditor = <T extends object, F extends ArrayPath<T>>(
     const schet = typedForm.watch(`childs.${id}.schet`)
     const schet6 = typedForm.watch(`childs.${id}.schet_6`)
     const sub_schet = typedForm.watch(`childs.${id}.sub_schet`)
+
+    const comboToggle = useToggle()
+    const addModalToggle = useToggle()
 
     const [subschetInputValue, setSubschetInputValue] = useState<string>('')
     const [debouncedSchetInputValue, setDebouncedSchetInputValue] = useDebounceValue(schet)
@@ -205,19 +208,33 @@ export const createOperatsiiEditor = <T extends object, F extends ArrayPath<T>>(
               className="flex-1"
               placeholder={t('subschet')}
               items={filteredOperatsiiOptions}
+              onOpenChange={comboToggle.setOpen}
               popoverProps={{
-                className: 'w-[300px]'
+                className: 'w-[300px]',
+                isOpen: comboToggle.isOpen
               }}
-              renderEmptyState={() => (
-                <div className="py-5 flex flex-col items-center">
-                  {t('operatsii_not_found_want_to_create')}
-                  <OperatsiiQuickAdd
-                    type_schet={type_schet!}
-                    schet={schet || ''}
-                    schet6={schet6 || ''}
-                  />
-                </div>
-              )}
+              renderEmptyState={
+                schet
+                  ? () => (
+                      <div className="p-5 flex flex-col gap-2.5 items-center">
+                        <p className="text-center font-medium text-gray-600">
+                          {t('operatsii_not_found_want_to_create')}
+                        </p>
+
+                        <Button
+                          className="flex-shrink-0"
+                          IconStart={Plus}
+                          onPress={() => {
+                            addModalToggle.open()
+                            comboToggle.close()
+                          }}
+                        >
+                          {t('add')}
+                        </Button>
+                      </div>
+                    )
+                  : undefined
+              }
             >
               {(item) => (
                 <ComboboxItem id={item.id}>
@@ -243,6 +260,23 @@ export const createOperatsiiEditor = <T extends object, F extends ArrayPath<T>>(
             </Button>
           </div>
         </div>
+        <OperatsiiQuickAdd
+          type_schet={type_schet!}
+          schet={schet || ''}
+          schet6={schet6 || ''}
+          isOpen={addModalToggle.isOpen}
+          onOpenChange={addModalToggle.setOpen}
+          onCreateSuccess={(operatsii) => {
+            onChange?.(operatsii.id)
+            setSubschetInputValue(operatsii.sub_schet || '')
+            handleChangeField('schet', operatsii.schet || '')
+            handleChangeField('schet_6', operatsii.schet6 || '')
+            handleChangeField('sub_schet', operatsii.sub_schet || '')
+          }}
+          onOpen={() => {
+            comboToggle.close()
+          }}
+        />
       </div>
     )
   }
@@ -252,12 +286,15 @@ export interface OperatsiiQuickAddProps extends Omit<DialogTriggerProps, 'childr
   type_schet: TypeSchetOperatsii
   schet: string
   schet6: string
+  onOpen?: () => void
   onCreateSuccess?: (operatsii: Operatsii) => void
 }
 export const OperatsiiQuickAdd: FC<OperatsiiQuickAddProps> = ({
   type_schet,
   schet,
   schet6,
+  onOpen,
+  onCreateSuccess,
   ...props
 }) => {
   const { t } = useTranslation()
@@ -279,21 +316,25 @@ export const OperatsiiQuickAdd: FC<OperatsiiQuickAddProps> = ({
 
   const createOperatsiiMutation = useMutation({
     mutationFn: OperatsiiService.create,
-    onSuccess: () => {
+    onSuccess: (res) => {
       toast.success(t('create_success'))
       queryClient.invalidateQueries({
         queryKey: [operatsiiQueryKeys.getAll]
       })
       props.onOpenChange?.(false)
+      onCreateSuccess?.(res.data as unknown as Operatsii)
     }
   })
 
   const handleSubmit = form.handleSubmit((values) => {
-    createOperatsiiMutation.mutate(values)
+    createOperatsiiMutation.mutate({
+      ...values,
+      schet6: values.schet6 || null
+    })
   })
 
   useEffect(() => {
-    form.setValue('schet', schet)
+    form.setValue('schet', schet.trim().replace(/\(.*\)$/, ''))
   }, [form, schet])
   useEffect(() => {
     form.setValue('schet6', schet6)
@@ -302,13 +343,15 @@ export const OperatsiiQuickAdd: FC<OperatsiiQuickAddProps> = ({
   const smetaNumberOptions = smetaNumbersQuery.data?.data ?? []
 
   return (
-    <DialogTrigger {...props}>
-      <Button
-        size="icon"
-        className="flex-shrink-0"
-      >
-        <Plus />
-      </Button>
+    <DialogTrigger
+      {...props}
+      onOpenChange={(isOpen) => {
+        if (isOpen) {
+          onOpen?.()
+        }
+        props.onOpenChange?.(isOpen)
+      }}
+    >
       <DialogOverlay>
         <DialogContent className="max-w-xl">
           <DialogHeader>
@@ -331,15 +374,22 @@ export const OperatsiiQuickAdd: FC<OperatsiiQuickAddProps> = ({
                     </FormElement>
                   )}
                 />
-                <FormElement
-                  label={t('schet')}
-                  grid="2:4"
-                >
-                  <Input
-                    readOnly
-                    value={schet}
-                  />
-                </FormElement>
+
+                <FormField
+                  control={form.control}
+                  name="schet"
+                  render={({ field }) => (
+                    <FormElement
+                      label={t('schet')}
+                      grid="2:4"
+                    >
+                      <Input
+                        readOnly
+                        value={field.value}
+                      />
+                    </FormElement>
+                  )}
+                />
 
                 <FormField
                   control={form.control}
@@ -349,7 +399,10 @@ export const OperatsiiQuickAdd: FC<OperatsiiQuickAddProps> = ({
                       label={t('schet_6_digit')}
                       grid="2:4"
                     >
-                      <Input {...field} />
+                      <Input
+                        {...field}
+                        value={field.value ?? ''}
+                      />
                     </FormElement>
                   )}
                 />

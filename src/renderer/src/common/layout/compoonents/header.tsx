@@ -7,8 +7,9 @@ import { Link, useLocation } from 'react-router-dom'
 
 import { Button } from '@/common/components/jolly/button'
 import { Popover, PopoverDialog, PopoverTrigger } from '@/common/components/jolly/popover'
+import { Tooltip, TooltipTrigger } from '@/common/components/jolly/tooltip'
 import { NewWindowLauncher } from '@/common/components/new-window-launcher'
-import { Reload } from '@/common/components/reload'
+import { RefreshPage } from '@/common/components/reload'
 import { useAuthenticationStore } from '@/common/features/auth'
 import { Downloads } from '@/common/features/downloads-manager'
 import { RequisitesController } from '@/common/features/requisites'
@@ -21,7 +22,7 @@ import { Settings } from './settings'
 import { UserProfile } from './user-profile'
 
 export const Header = () => {
-  const { t } = useTranslation()
+  const { t } = useTranslation(['app'])
   const { title, content: Content, enableSaldo, breadcrumbs, onCreate, onBack } = useLayoutStore()
   const { user, setUser } = useAuthenticationStore()
   const { setElementRef, width } = useElementWidth()
@@ -91,7 +92,7 @@ export const Header = () => {
       <div className={cn('flex items-center', !width || (width < 1400 && 'hidden'))}>
         <Settings />
         <Downloads />
-        <Reload />
+        <RefreshPage />
         <NewWindowLauncher />
       </div>
 
@@ -108,7 +109,7 @@ export const Header = () => {
               <div className="flex items-center">
                 <Settings />
                 <Downloads />
-                <Reload />
+                <RefreshPage />
                 <NewWindowLauncher />
               </div>
             </PopoverDialog>
@@ -117,13 +118,16 @@ export const Header = () => {
       ) : null}
 
       {user ? <UserProfile user={user} /> : null}
-      <Button
-        variant="ghost"
-        size="icon"
-        onPress={handleLogout}
-      >
-        <LogOut className="btn-icon icon-md" />
-      </Button>
+      <TooltipTrigger delay={300}>
+        <Button
+          variant="ghost"
+          size="icon"
+          onPress={handleLogout}
+        >
+          <LogOut className="btn-icon icon-md" />
+        </Button>
+        <Tooltip>{t('app.logout')}</Tooltip>
+      </TooltipTrigger>
     </header>
   )
 }
