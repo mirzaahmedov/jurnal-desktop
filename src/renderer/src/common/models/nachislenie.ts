@@ -16,6 +16,7 @@ export interface Nachislenie {
 
 export interface NachislenieProvodka {
   id: number
+  docNum: number
   mainZarplataId: number
   fio: string
   kartochka: string
@@ -29,12 +30,16 @@ export interface NachislenieProvodka {
     summa: number
     percentage: number
     name: string
+    paymentId: number
+    mainZarplataId: number
   }>
   nachisleniePayrollDeductions: Array<{
     id: number
     summa: number
     percentage: number
     name: string
+    deductionId: number
+    mainZarplataId: number
   }>
 }
 export interface NachislenieTabel {
@@ -84,4 +89,20 @@ export interface NachislenieOthersProvodka {
 export interface NachislenieOthersPayment {
   paymentId: number
   paymentName: string
+}
+
+export interface NachislenieDeductionDto {
+  id: number
+  mainZarplataId: number
+  percentage: number
+  summa: number
+  deductionId: number
+}
+
+export interface NachisleniePaymentDto {
+  id: number
+  mainZarplataId: number
+  percentage: number
+  summa: number
+  paymentId: number
 }

@@ -1,3 +1,4 @@
+import type { NachisleniePaymentFormValues } from './components/nachislenie-payments-dialog'
 import type { NachislenieFormValues } from './config'
 import type { Nachislenie, NachislenieProvodka } from '@/common/models'
 import type { QueryFunctionContext } from '@tanstack/react-query'
@@ -21,7 +22,7 @@ export class NachislenieService {
     ctx: QueryFunctionContext<[typeof NachislenieService.QueryKeys.GetById, number]>
   ) {
     const mainId = ctx.queryKey[1]
-    const res = await zarplataApiNew.get<NachislenieProvodka[]>(
+    const res = await zarplataApiNew.get<Nachislenie>(
       `${NachislenieService.endpoint}/get-main/${mainId}`
     )
     return res.data
@@ -159,6 +160,56 @@ export class NachislenieService {
     const res = await zarplataApiNew.get<NachislenieProvodka>(
       `${NachislenieService.endpoint}/getByChildId/${childId}`
     )
+    return res.data
+  }
+
+  static async createPayment(values: NachisleniePaymentFormValues) {
+    const res = await zarplataApiNew.post(`${NachislenieService.endpoint}/creat-payment`, {
+      ...values
+    })
+    return res.data
+  }
+
+  static async createDeduction(values: NachisleniePaymentFormValues) {
+    const res = await zarplataApiNew.post(`${NachislenieService.endpoint}/creat-deduction`, {
+      ...values
+    })
+    return res.data
+  }
+
+  static async updatePayment(args: { id: number; values: NachisleniePaymentFormValues }) {
+    const res = await zarplataApiNew.put(
+      `${NachislenieService.endpoint}/update-payment`,
+      args.values,
+      {
+        params: {
+          id: args.id
+        }
+      }
+    )
+    return res.data
+  }
+
+  static async deletePayment(id: number) {
+    const res = await zarplataApiNew.delete(`${NachislenieService.endpoint}/delete-payment/${id}`)
+    return res.data
+  }
+
+  static async updateDeduction(args: { id: number; values: NachisleniePaymentFormValues }) {
+    const res = await zarplataApiNew.put(
+      `${NachislenieService.endpoint}/update-deduction`,
+      args.values,
+      {
+        params: {
+          id: args.id
+        }
+      }
+    )
+    return res.data
+  }
+
+  static async deleteDeduction(id: number) {
+    const res = await zarplataApiNew.delete(`${NachislenieService.endpoint}/delete-deduction/${id}`)
     return res.data
   }
 }
