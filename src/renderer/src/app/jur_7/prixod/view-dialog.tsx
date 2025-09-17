@@ -18,15 +18,14 @@ import { LabeledValue } from '@/common/components/labeled-value'
 import { PDFSaver } from '@/common/components/pdf-saver'
 import { Checkbox } from '@/common/components/ui/checkbox'
 import { Textarea } from '@/common/components/ui/textarea'
-import { ApiEndpoints } from '@/common/features/crud'
-import { DownloadFile } from '@/common/features/file'
 import { useRequisitesStore } from '@/common/features/requisites'
 import { useToggle } from '@/common/hooks'
 import { formatLocaleDate, formatNumber } from '@/common/lib/format'
 import { numberToWords } from '@/common/lib/utils'
 
 import { TotalsOverview } from '../__components__/totals-overview'
-import { AktPriyomDialog } from './akt-priyom/dialog'
+import { AktPriyomExcelDialog } from './akt-priyom-excel/dialog'
+import { AktPriyomPDFDialog } from './akt-priyom-pdf/dialog'
 import { MaterialPrixodQueryKeys } from './config'
 import { MaterialPrixodService } from './service'
 
@@ -128,9 +127,12 @@ export const WarehousePrixodViewDialog = ({
   onClose
 }: WarehousePrixodViewDialogProps) => {
   const { t, i18n } = useTranslation(['app', 'report'])
-  const { budjet_id, main_schet_id } = useRequisitesStore()
 
-  const aktToggle = useToggle()
+  const budjetId = useRequisitesStore((store) => store.budjet_id)
+  const mainSchetId = useRequisitesStore((store) => store.main_schet_id)
+
+  const aktPDFToggle = useToggle()
+  const aktExcelToggle = useToggle()
 
   const { data: prixod, isFetching } = useQuery({
     queryKey: [MaterialPrixodQueryKeys.getById, selectedId!],
@@ -326,20 +328,17 @@ export const WarehousePrixodViewDialog = ({
                   <Button
                     variant="ghost"
                     IconStart={Download}
-                    onClick={aktToggle.open}
+                    onClick={aktPDFToggle.open}
                   >
                     {t('receive_akt')} (PDF)
                   </Button>
-                  <DownloadFile
-                    url={`${ApiEndpoints.jur7_prixod}/${data?.id}`}
-                    fileName={`${t('pages.material-warehouse')}_${t('prixod')}_${t('receive_akt')}_№${data?.doc_num}.xlsx`}
-                    buttonText={`${t('receive_akt')} (Excel)`}
-                    params={{
-                      budjet_id,
-                      main_schet_id,
-                      akt: true
-                    }}
-                  />
+                  <Button
+                    variant="ghost"
+                    IconStart={Download}
+                    onClick={aktPDFToggle.open}
+                  >
+                    {t('receive_akt')} (PDF)
+                  </Button>
                   <Button
                     variant="ghost"
                     IconStart={Download}
@@ -354,17 +353,27 @@ export const WarehousePrixodViewDialog = ({
           </PDFSaver>
 
           {data ? (
-            <AktPriyomDialog
-              isOpen={aktToggle.isOpen}
-              onOpenChange={aktToggle.setOpen}
-              docNum={data?.doc_num}
-              docDate={data?.doc_date}
-              organName={data?.organ?.name ?? ''}
-              receiverName={data?.responsible ?? ''}
-              note={data?.opisanie ?? ''}
-              dovernost={data.doverennost ?? ''}
-              products={data.childs}
-            />
+            <>
+              <AktPriyomPDFDialog
+                isOpen={aktPDFToggle.isOpen}
+                onOpenChange={aktPDFToggle.setOpen}
+                docNum={data?.doc_num}
+                docDate={data?.doc_date}
+                organName={data?.organ?.name ?? ''}
+                receiverName={data?.responsible ?? ''}
+                note={data?.opisanie ?? ''}
+                dovernost={data.doverennost ?? ''}
+                products={data.childs}
+              />
+              <AktPriyomExcelDialog
+                isOpen={aktExcelToggle.isOpen}
+                onOpenChange={aktExcelToggle.setOpen}
+                id={data?.id}
+                docNum={data?.doc_num}
+                budjetId={budjetId ?? 0}
+                mainSchetId={mainSchetId ?? 0}
+              />
+            </>
           ) : null}
         </DialogContent>
       </DialogOverlay>

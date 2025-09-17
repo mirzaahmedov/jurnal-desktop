@@ -23,11 +23,11 @@ import { type MaterialPrixodProvodka, PodpisTypeDocument } from '@/common/models
 
 import { AktPriyomReport } from './akt-priyom'
 
-interface IMaterialAktPriyomStore {
+export interface IMaterialAktPriyomStore {
   headerText: string
   setHeaderText: (values: string) => void
 }
-const useMaterialAktPriyomStore = create(
+export const useMaterialAktPriyomStore = create(
   persist<IMaterialAktPriyomStore>(
     (set) => ({
       headerText: `Харид килинган моддий товарларни кабул килиш буйича комиссия раиси: Бошкарма бошлигининг уринбосари майор М.Мансуров, комиссия аъзолари; Шахсий хавфсизлик бўлими бош инспектори майор А.Толлиев, Хизмат ва жанговор тайоргарликни ташкил этиш бўлими бошлиги подполковник А.Айдаров, Радиацион, кимёовий ва тиббий-биологик мухофазани ташкил этиш бўлими бошлиги майор С.Шодиев, комиссия котиби; Моддий -техник таъминот бўлими бошлиги капитан Н. Узакбаев.`,
@@ -43,7 +43,7 @@ const useMaterialAktPriyomStore = create(
   )
 )
 
-interface AktPriyomDialogProps extends Omit<DialogTriggerProps, 'children'> {
+interface AktPriyomPDFDialogProps extends Omit<DialogTriggerProps, 'children'> {
   docNum: string
   docDate: string
   organName: string
@@ -52,7 +52,7 @@ interface AktPriyomDialogProps extends Omit<DialogTriggerProps, 'children'> {
   dovernost: string
   products: MaterialPrixodProvodka[]
 }
-export const AktPriyomDialog: FC<AktPriyomDialogProps> = ({
+export const AktPriyomPDFDialog: FC<AktPriyomPDFDialogProps> = ({
   docNum,
   docDate,
   dovernost,

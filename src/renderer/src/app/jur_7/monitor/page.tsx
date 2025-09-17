@@ -28,6 +28,7 @@ import { columns } from './columns'
 import { WarehouseMonitorQueryKeys } from './config'
 import { DailyReportDialog } from './daily-report-dialog'
 import { InventarizationDialog } from './inventarization-dialog'
+import { PriyemSdachiDialog } from './priyem-sdachi-dialog'
 import { WarehouseMonitorService } from './service'
 import { SummarizedReportDialog } from './summarized-report-dialog'
 import { ViewModal } from './view-modal'
@@ -111,7 +112,6 @@ const MaterialMonitorPage = () => {
               <Download className="btn-icon !size-4 icon-start" />
               {t('daily-report')}
             </Button>
-
             <DownloadFile
               fileName={`material_${t('cap')}_${startDate.getMonth() + 1}-${startDate.getFullYear()}.xlsx`}
               url="/jur_7/monitoring/cap/report"
@@ -126,6 +126,14 @@ const MaterialMonitorPage = () => {
                 excel: true
               }}
               buttonText={t('cap')}
+            />
+            <PriyemSdachiDialog
+              budjet_id={budjet_id!}
+              main_schet_id={main_schet_id!}
+              from={dates.from}
+              to={dates.to}
+              year={startDate.getFullYear()}
+              month={startDate.getMonth() + 1}
             />
 
             <DownloadFile
@@ -143,14 +151,12 @@ const MaterialMonitorPage = () => {
                 excel: true
               }}
             />
-
             <Button
               variant="ghost"
               onClick={materialToggle.open}
             >
               <Download className="btn-icon icon-start icon-sm" /> {t('material')}
             </Button>
-
             <DownloadFile
               fileName={`${t('summarized_circulation')}_${t('year')})_${startDate.getMonth() + 1}-${startDate.getFullYear()}.xlsx`}
               url="/jur_7/monitoring/schet"
@@ -163,7 +169,6 @@ const MaterialMonitorPage = () => {
               }}
               buttonText={`${t('summarized_circulation')} (${t('year')})`}
             />
-
             <DownloadFile
               fileName={`${t('summarized_circulation')}(${t('month')})_${startDate.getMonth() + 1}-${startDate.getFullYear()}.xlsx`}
               url="/jur_7/monitoring/schet"
@@ -176,7 +181,6 @@ const MaterialMonitorPage = () => {
               }}
               buttonText={`${t('summarized_circulation')} (${t('month')})`}
             />
-
             <Button
               IconStart={Download}
               variant="ghost"
@@ -186,7 +190,6 @@ const MaterialMonitorPage = () => {
             >
               {t('summarized_circulation')} ({t('by_responsible')})
             </Button>
-
             <Button
               IconStart={Download}
               variant="ghost"
@@ -196,7 +199,6 @@ const MaterialMonitorPage = () => {
             >
               {t('inventarization')}
             </Button>
-
             <DownloadFile
               fileName={`${t('pages.material-warehouse')}_2169_${t('report')}_${dates.from}&${dates.to}.xlsx`}
               url="/jur_7/monitoring/2169"
@@ -213,13 +215,6 @@ const MaterialMonitorPage = () => {
             />
           </ButtonGroup>
         </div>
-
-        <SummaTotal className="pt-5">
-          <SummaTotal.Value
-            name={t('remainder-from')}
-            value={formatNumber(monitoring?.meta?.from_summa ?? 0)}
-          />
-        </SummaTotal>
       </ListView.Header>
       <ListView.Content isLoading={isFetching}>
         <GenericTable
