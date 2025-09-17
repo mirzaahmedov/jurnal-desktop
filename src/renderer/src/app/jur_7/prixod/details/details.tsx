@@ -71,6 +71,21 @@ const PrixodDetails = ({ id, onSuccess }: PrixodDetailsProps) => {
     ns: 'jur7_prixod'
   })
 
+  const invalidateQueries = () => {
+    queryClient.invalidateQueries({
+      queryKey: [MaterialPrixodQueryKeys.getAll]
+    })
+    queryClient.invalidateQueries({
+      queryKey: [MaterialSaldoQueryKeys.check]
+    })
+    queryClient.invalidateQueries({
+      queryKey: [MaterialSaldoQueryKeys.getAll]
+    })
+    queryClient.invalidateQueries({
+      queryKey: [IznosQueryKeys.getAll]
+    })
+  }
+
   const defaultDate = () =>
     startDate <= new Date() && new Date() <= endDate
       ? formatDate(new Date())
@@ -93,18 +108,7 @@ const PrixodDetails = ({ id, onSuccess }: PrixodDetailsProps) => {
       toast.success(res?.message)
       handleOstatokResponse(res)
 
-      queryClient.invalidateQueries({
-        queryKey: [MaterialPrixodQueryKeys.getAll]
-      })
-      queryClient.invalidateQueries({
-        queryKey: [MaterialSaldoQueryKeys.check]
-      })
-      queryClient.invalidateQueries({
-        queryKey: [MaterialSaldoQueryKeys.getAll]
-      })
-      queryClient.invalidateQueries({
-        queryKey: [IznosQueryKeys.getAll]
-      })
+      invalidateQueries()
 
       onSuccess?.()
     }
@@ -114,18 +118,7 @@ const PrixodDetails = ({ id, onSuccess }: PrixodDetailsProps) => {
       toast.success(res?.message)
       handleOstatokResponse(res)
 
-      queryClient.invalidateQueries({
-        queryKey: [MaterialPrixodQueryKeys.getAll]
-      })
-      queryClient.invalidateQueries({
-        queryKey: [MaterialSaldoQueryKeys.check]
-      })
-      queryClient.invalidateQueries({
-        queryKey: [MaterialSaldoQueryKeys.getAll]
-      })
-      queryClient.invalidateQueries({
-        queryKey: [IznosQueryKeys.getAll]
-      })
+      invalidateQueries()
 
       onSuccess?.()
     },

@@ -28,6 +28,7 @@ export const defaultValues: RasxodFormValues = {
   doc_date: '',
   opisanie: '',
   doverennost: '',
+  kimga_id: 0,
   kimdan_id: 0,
   childs: [defaultProvodkaValues]
 }
@@ -65,6 +66,7 @@ export const RasxodFormSchema = withPreprocessor(
     opisanie: z.string().optional(),
     doverennost: z.string().optional(),
     kimdan_id: z.number(),
+    kimga_id: z.number(),
     childs: z.array(RasxodProvodkaFormSchema).superRefine((childs, ctx) => {
       childs.forEach((child, index) => {
         if (child.max_kol && child.kol > child.max_kol) {

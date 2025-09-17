@@ -11,6 +11,7 @@ import { IznosQueryKeys } from '@/app/jur_7/iznos/config'
 import { createResponsibleSpravochnik } from '@/app/jur_7/responsible/service'
 import { MaterialSaldoQueryKeys } from '@/app/jur_7/saldo'
 import { handleOstatokResponse } from '@/app/jur_7/saldo/utils'
+import { createOrganizationSpravochnik } from '@/app/region-spravochnik/organization'
 import { Form } from '@/common/components/ui/form'
 import { DocumentType } from '@/common/features/doc-num'
 import { useRequisitesStore } from '@/common/features/requisites'
@@ -27,6 +28,7 @@ import {
   DocumentFields,
   DoverennostFields,
   OpisanieFields,
+  OrganizationFields,
   ResponsibleFields,
   SummaFields
 } from '@/common/widget/form'
@@ -56,6 +58,21 @@ const RasxodDetails = ({ id, onSuccess }: RasxodDetailsProps) => {
   const { snippets, addSnippet, removeSnippet } = useSnippets({
     ns: 'jur7_rasxod'
   })
+
+  const invalidateQueries = () => {
+    queryClient.invalidateQueries({
+      queryKey: [WarehouseRasxodQueryKeys.getAll]
+    })
+    queryClient.invalidateQueries({
+      queryKey: [MaterialSaldoQueryKeys.check]
+    })
+    queryClient.invalidateQueries({
+      queryKey: [MaterialSaldoQueryKeys.getAll]
+    })
+    queryClient.invalidateQueries({
+      queryKey: [IznosQueryKeys.getAll]
+    })
+  }
 
   const defaultDate = () =>
     startDate <= new Date() && new Date() <= endDate
@@ -87,18 +104,7 @@ const RasxodDetails = ({ id, onSuccess }: RasxodDetailsProps) => {
       toast.success(res?.message)
       handleOstatokResponse(res)
 
-      queryClient.invalidateQueries({
-        queryKey: [WarehouseRasxodQueryKeys.getAll]
-      })
-      queryClient.invalidateQueries({
-        queryKey: [MaterialSaldoQueryKeys.check]
-      })
-      queryClient.invalidateQueries({
-        queryKey: [MaterialSaldoQueryKeys.getAll]
-      })
-      queryClient.invalidateQueries({
-        queryKey: [IznosQueryKeys.getAll]
-      })
+      invalidateQueries()
 
       onSuccess?.()
     }
@@ -108,18 +114,7 @@ const RasxodDetails = ({ id, onSuccess }: RasxodDetailsProps) => {
       toast.success(res?.message)
       handleOstatokResponse(res)
 
-      queryClient.invalidateQueries({
-        queryKey: [WarehouseRasxodQueryKeys.getAll]
-      })
-      queryClient.invalidateQueries({
-        queryKey: [MaterialSaldoQueryKeys.check]
-      })
-      queryClient.invalidateQueries({
-        queryKey: [MaterialSaldoQueryKeys.getAll]
-      })
-      queryClient.invalidateQueries({
-        queryKey: [IznosQueryKeys.getAll]
-      })
+      invalidateQueries()
 
       onSuccess?.()
     }
@@ -131,6 +126,15 @@ const RasxodDetails = ({ id, onSuccess }: RasxodDetailsProps) => {
       onChange: (value) => {
         form.setValue('kimdan_id', value ?? 0)
         form.trigger('kimdan_id')
+      }
+    })
+  )
+
+  const orgSpravochnik = useSpravochnik(
+    createOrganizationSpravochnik({
+      value: form.watch('kimga_id'),
+      onChange: (value) => {
+        form.setValue('kimga_id', value ?? 0, { shouldValidate: true })
       }
     })
   )
@@ -245,7 +249,10 @@ const RasxodDetails = ({ id, onSuccess }: RasxodDetailsProps) => {
     <DetailsView>
       <DetailsView.Content isLoading={isFetching}>
         <Form {...form}>
-          <form onSubmit={onSubmit}>
+          <form
+            onSubmit={onSubmit}
+            className="divide-y"
+          >
             <div className="grid grid-cols-2 items-end">
               <DocumentFields
                 tabIndex={1}
@@ -269,27 +276,38 @@ const RasxodDetails = ({ id, onSuccess }: RasxodDetailsProps) => {
                 />
               </div>
             </div>
-            <div className="grid grid-cols-2">
+            <div className="grid grid-cols-2 divide-x">
               <ResponsibleFields
                 tabIndex={3}
                 name={t('from-who')}
                 spravochnik={responsibleSpravochnik}
                 error={form.formState.errors.kimdan_id}
               />
+
+              <OrganizationFields
+                tabIndex={4}
+                name={t('to-whom')}
+                spravochnik={orgSpravochnik}
+                form={form as any}
+                error={form.formState.errors.kimdan_id}
+                className="bg-gray-50"
+              />
+            </div>
+            <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-4">
               <SummaFields
                 data={{
                   summa
                 }}
               />
-            </div>
-            <div className="p-5">
-              <OpisanieFields
-                tabIndex={4}
-                form={form}
-                snippets={snippets}
-                addSnippet={addSnippet}
-                removeSnippet={removeSnippet}
-              />
+              <div className="py-5">
+                <OpisanieFields
+                  tabIndex={4}
+                  form={form}
+                  snippets={snippets}
+                  addSnippet={addSnippet}
+                  removeSnippet={removeSnippet}
+                />
+              </div>
             </div>
             <DetailsView.Footer>
               <DetailsView.Create isDisabled={isCreating || isUpdating} />

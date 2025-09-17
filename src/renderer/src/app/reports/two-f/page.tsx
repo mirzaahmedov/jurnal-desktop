@@ -116,7 +116,7 @@ const TwoFPage = () => {
               >
                 <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
                   <DownloadFile
-                    url={`/2f/${row.id}`}
+                    url={`/f2/${row.id}`}
                     fileName={`${t('pages.odinox')}_${row.month}-${row.year}.xlsx`}
                     buttonText={t('download')}
                     params={{

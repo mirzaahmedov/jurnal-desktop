@@ -32,7 +32,7 @@ export const AktPriyomExcelDialog: FC<AktPriyomExcelDialogProps> = ({
   mainSchetId,
   ...props
 }) => {
-  const { t } = useTranslation()
+  const { t } = useTranslation(['app'])
   const { headerText, setHeaderText } = useMaterialAktPriyomStore()
 
   const form = useForm({
@@ -82,7 +82,7 @@ export const AktPriyomExcelDialog: FC<AktPriyomExcelDialogProps> = ({
               params={{
                 budjet_id: budjetId,
                 main_schet_id: mainSchetId,
-                comment: headerTextValue,
+                _comment: headerTextValue,
                 akt: true
               }}
             />

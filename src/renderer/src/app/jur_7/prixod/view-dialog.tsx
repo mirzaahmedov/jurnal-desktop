@@ -328,9 +328,9 @@ export const WarehousePrixodViewDialog = ({
                   <Button
                     variant="ghost"
                     IconStart={Download}
-                    onClick={aktPDFToggle.open}
+                    onClick={aktExcelToggle.open}
                   >
-                    {t('receive_akt')} (PDF)
+                    {t('receive_akt')} (Excel)
                   </Button>
                   <Button
                     variant="ghost"

@@ -48,7 +48,9 @@ export const DownloadFile = ({
             params
           })
         }
-        const [name, ext] = fileName.split('.')
+        const nameParts = fileName.split('.')
+        const name = nameParts.slice(0, -1).join('__')
+        const ext = nameParts.slice(-1)[0]
 
         const file = await window.downloader.saveFile({
           fileName: `${name}___${Date.now()}.${ext}`,
