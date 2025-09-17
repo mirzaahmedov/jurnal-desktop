@@ -39,12 +39,14 @@ export interface NachisleniePaymentDialogProps extends Omit<DialogTriggerProps, 
   paymentData: NachisleniePaymentDto | NachislenieDeductionDto | undefined
   mainZarplataId: number
   okladSumma?: number
-  otdelniyRaschetMainId?: number | null
+  nachislenieId: number
+  childId: number
 }
 export const NachisleniePaymentDialog = ({
   isDeduction = false,
   paymentData,
-  otdelniyRaschetMainId,
+  nachislenieId,
+  childId,
   okladSumma,
   mainZarplataId,
   ...props
@@ -60,12 +62,20 @@ export const NachisleniePaymentDialog = ({
 
   const closeDialog = () => props.onOpenChange?.(false)
 
+  const invalidateQueries = () => {
+    queryClient.invalidateQueries({
+      queryKey: [NachislenieService.QueryKeys.GetById, nachislenieId]
+    })
+    queryClient.invalidateQueries({
+      queryKey: [NachislenieService.QueryKeys.GetChildById, childId]
+    })
+  }
+
   const createPaymentMutation = useMutation({
     mutationFn: NachislenieService.createPayment,
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: [NachislenieService.QueryKeys.GetById, otdelniyRaschetMainId]
-      })
+      invalidateQueries()
+
       form.reset(defaultValues)
       toast.success(t('create_success'))
       closeDialog()
@@ -77,9 +87,8 @@ export const NachisleniePaymentDialog = ({
   const createDeductionMutation = useMutation({
     mutationFn: NachislenieService.createDeduction,
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: [NachislenieService.QueryKeys.GetById, otdelniyRaschetMainId]
-      })
+      invalidateQueries()
+
       form.reset(defaultValues)
       toast.success(t('create_success'))
       closeDialog()
@@ -91,9 +100,8 @@ export const NachisleniePaymentDialog = ({
   const updatePaymentMutation = useMutation({
     mutationFn: NachislenieService.updatePayment,
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: [NachislenieService.QueryKeys.GetById, otdelniyRaschetMainId]
-      })
+      invalidateQueries()
+
       form.reset(defaultValues)
       toast.success(t('update_success'))
       closeDialog()
@@ -105,9 +113,8 @@ export const NachisleniePaymentDialog = ({
   const updateDeductionMutation = useMutation({
     mutationFn: NachislenieService.updateDeduction,
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: [NachislenieService.QueryKeys.GetById, otdelniyRaschetMainId]
-      })
+      invalidateQueries()
+
       form.reset(defaultValues)
       toast.success(t('update_success'))
       closeDialog()

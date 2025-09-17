@@ -418,7 +418,10 @@ export const NachislenieEditDialog = ({
                   <div className="px-5">
                     <Header />
                   </div>
-                  <NachislenieUpdateForm nachislenieProvodka={nachislenieProvodka} />
+                  <NachislenieUpdateForm
+                    nachislenieProvodka={nachislenieProvodka}
+                    nachislenieMainId={nachislenieData?.id ?? 0}
+                  />
                 </div>
               )}
             </div>
@@ -430,9 +433,13 @@ export const NachislenieEditDialog = ({
 }
 
 export interface NachislenieUpdateFormProps extends Omit<DialogTriggerProps, 'children'> {
+  nachislenieMainId: number
   nachislenieProvodka: NachislenieProvodka[]
 }
-const NachislenieUpdateForm: FC<NachislenieUpdateFormProps> = ({ nachislenieProvodka }) => {
+const NachislenieUpdateForm: FC<NachislenieUpdateFormProps> = ({
+  nachislenieMainId,
+  nachislenieProvodka
+}) => {
   const { t } = useTranslation(['app'])
   const { confirm } = useConfirm()
 
@@ -770,13 +777,16 @@ const NachislenieUpdateForm: FC<NachislenieUpdateFormProps> = ({ nachislenieProv
         <>
           <NachisleniePaymentDialog
             mainZarplataId={nachislenie?.mainZarplataId}
-            otdelniyRaschetMainId={nachislenie?.id}
+            nachislenieId={nachislenieMainId}
+            childId={nachislenie.id}
             paymentData={paymentData}
             isOpen={paymentToggle.isOpen}
             onOpenChange={paymentToggle.setOpen}
           />
           <NachisleniePaymentDialog
             isDeduction
+            nachislenieId={nachislenieMainId}
+            childId={nachislenie.id}
             mainZarplataId={nachislenie?.mainZarplataId}
             paymentData={deductionData}
             isOpen={deductionToggle.isOpen}
