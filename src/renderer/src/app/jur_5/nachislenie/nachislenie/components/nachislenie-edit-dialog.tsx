@@ -37,8 +37,6 @@ import { Input } from '@/common/components/ui/input'
 import { Tabs, TabsList, TabsTrigger } from '@/common/components/ui/tabs'
 import { YearSelect } from '@/common/components/year-select'
 import { useConfirm } from '@/common/features/confirm'
-import { DownloadFile } from '@/common/features/file'
-import { useRequisitesStore } from '@/common/features/requisites'
 import { useZarplataStore } from '@/common/features/zarplata/store'
 import { useToggle } from '@/common/hooks'
 import { formatDate, parseDate, parseLocaleDate } from '@/common/lib/date'
@@ -70,8 +68,6 @@ export const NachislenieEditDialog = ({
   const { openMainZarplataView } = useZarplataStore()
 
   const [tabValue, setTabValue] = useState(TabOptions.View)
-
-  const budjetId = useRequisitesStore((store) => store.budjet_id)
 
   const nachislenieMainQuery = useQuery({
     queryKey: [NachislenieService.QueryKeys.GetMainById, nachislenieId!],
@@ -192,60 +188,6 @@ export const NachislenieEditDialog = ({
             />
           </form>
         </Form>
-
-        <div className="ml-auto flex flex-wrap items-center gap-1">
-          <DownloadFile
-            isZarplata
-            url="Nachislenie/vedemost"
-            params={{
-              mainId: nachislenieData?.id
-            }}
-            fileName={`zarplata_vedemost_${nachislenieData?.docNum}.xlsx`}
-            buttonText={t('vedemost')}
-          />
-          <DownloadFile
-            isZarplata
-            url="Excel/svod-otchet"
-            params={{
-              mainId: nachislenieData?.id
-            }}
-            fileName={`zarplata_svod_${nachislenieData?.docNum}.xlsx`}
-            buttonText={t('aggregated_report')}
-          />
-          <DownloadFile
-            isZarplata
-            url="Excel/inps-otchet"
-            params={{
-              spBudnameId: budjetId,
-              year: form.watch('nachislenieYear'),
-              month: form.watch('nachislenieMonth')
-            }}
-            fileName={`inps_${nachislenieData?.docNum}.xlsx`}
-            buttonText={t('inps')}
-          />
-          <DownloadFile
-            isZarplata
-            url="Excel/podoxod-otchet"
-            params={{
-              spBudnameId: budjetId,
-              year: form.watch('nachislenieYear'),
-              month: form.watch('nachislenieMonth')
-            }}
-            fileName={`podoxod_${nachislenieData?.docNum}.xlsx`}
-            buttonText={t('podoxod')}
-          />
-          <DownloadFile
-            isZarplata
-            url="Excel/plastik-otchet"
-            params={{
-              spBudnameId: budjetId,
-              year: form.watch('nachislenieYear'),
-              month: form.watch('nachislenieMonth')
-            }}
-            fileName={`plastik_${nachislenieData?.docNum}.xlsx`}
-            buttonText={t('plastik')}
-          />
-        </div>
       </div>
     )
   }
@@ -460,18 +402,26 @@ const NachislenieUpdateForm: FC<NachislenieUpdateFormProps> = ({
   const deletePaymentMutation = useMutation({
     mutationFn: NachislenieService.deletePayment,
     onSuccess: () => {
+      toast.success(t('delete_success'))
       queryClient.invalidateQueries({
-        queryKey: [NachislenieService.QueryKeys.GetById, currentNachislenie?.id]
+        queryKey: [NachislenieService.QueryKeys.GetChildById, currentNachislenie?.id]
       })
+    },
+    onError: () => {
+      toast.error(t('delete_failed'))
     }
   })
 
   const deleteDeductionMutation = useMutation({
     mutationFn: NachislenieService.deleteDeduction,
     onSuccess: () => {
+      toast.success(t('delete_success'))
       queryClient.invalidateQueries({
-        queryKey: [NachislenieService.QueryKeys.GetById, currentNachislenie?.id]
+        queryKey: [NachislenieService.QueryKeys.GetChildById, currentNachislenie?.id]
       })
+    },
+    onError: () => {
+      toast.error(t('delete_failed'))
     }
   })
 
@@ -503,6 +453,22 @@ const NachislenieUpdateForm: FC<NachislenieUpdateFormProps> = ({
     }
   })
 
+  const calculateChild = useMutation({
+    mutationFn: (childId: number) => NachislenieService.calculateChild(childId),
+    onSuccess: () => {
+      toast.success(t('update_success'))
+      queryClient.invalidateQueries({
+        queryKey: [NachislenieService.QueryKeys.GetChildById, currentNachislenie?.id]
+      })
+      queryClient.invalidateQueries({
+        queryKey: [NachislenieService.QueryKeys.GetById, currentNachislenie?.id]
+      })
+    },
+    onError: () => {
+      toast.error(t('update_failed'))
+    }
+  })
+
   const form = useForm({
     defaultValues
   })
@@ -518,7 +484,7 @@ const NachislenieUpdateForm: FC<NachislenieUpdateFormProps> = ({
           <div className="relative flex flex-col">
             {nachislenie ? <MainZarplataInfo mainZarplataId={nachislenie?.mainZarplataId} /> : null}
             <div className="p-5">
-              <div className="flex items-center flex-wrap gap-4">
+              <div className="flex items-end flex-wrap gap-4">
                 <FormField
                   control={form.control}
                   name="rabDni"
@@ -632,6 +598,28 @@ const NachislenieUpdateForm: FC<NachislenieUpdateFormProps> = ({
                     </FormElement>
                   )}
                 />
+
+                <Button
+                  type="button"
+                  onPress={() => {
+                    updateChildNachislenie.mutate({
+                      id: nachislenie?.tabel.id ?? 0,
+                      doljnost: nachislenie?.doljnostName ?? '',
+                      fio: nachislenie?.fio ?? '',
+                      kazarma: form.getValues('kazarma'),
+                      noch: form.getValues('noch'),
+                      rabDni: form.getValues('rabDni'),
+                      otrabDni: form.getValues('otrabDni'),
+                      prazdnik: form.getValues('prazdnik'),
+                      pererabodka: form.getValues('pererabodka'),
+                      mainZarplataId: nachislenie?.mainZarplataId ?? 0
+                    })
+                  }}
+                  className="ml-auto"
+                  isPending={updateChildNachislenie.isPending}
+                >
+                  <Sigma className="btn-icon icon-start" /> {t('recalculate_from_passport')}
+                </Button>
               </div>
             </div>
             <div className="flex-1 px-5 grid grid-cols-[repeat(auto-fit,minmax(500px,1fr))] gap-5">
@@ -744,31 +732,25 @@ const NachislenieUpdateForm: FC<NachislenieUpdateFormProps> = ({
                 />
               </div>
             </div>
+            <div className="px-5 mt-5 flex items-center gap-10">
+              <h6 className="font-bold">
+                {t('na_ruki')}: {formatNumber(nachislenie?.totalNaruki ?? 0)}
+              </h6>
+              <Button
+                onPress={() => {
+                  calculateChild.mutate(nachislenie?.id ?? 0)
+                }}
+                isPending={calculateChild.isPending}
+              >
+                <Sigma className="btn-icon icon-start" /> {t('recalculate_salary')}
+              </Button>
+            </div>
             <div className="mt-5 pr-5 flex items-center justify-between">
               <ContentStepper
                 currentIndex={currentIndex}
                 onIndexChange={setCurrentIndex}
                 itemsCount={nachislenieProvodka.length}
               />
-              <Button
-                onPress={() => {
-                  updateChildNachislenie.mutate({
-                    id: nachislenie?.tabel.id ?? 0,
-                    doljnost: nachislenie?.doljnostName ?? '',
-                    fio: nachislenie?.fio ?? '',
-                    kazarma: form.getValues('kazarma'),
-                    noch: form.getValues('noch'),
-                    rabDni: form.getValues('rabDni'),
-                    otrabDni: form.getValues('otrabDni'),
-                    prazdnik: form.getValues('prazdnik'),
-                    pererabodka: form.getValues('pererabodka'),
-                    mainZarplataId: nachislenie?.mainZarplataId ?? 0
-                  })
-                }}
-                isPending={updateChildNachislenie.isPending}
-              >
-                <Sigma className="btn-icon icon-start" /> {t('recalculate_salary')}
-              </Button>
             </div>
           </div>
         </form>

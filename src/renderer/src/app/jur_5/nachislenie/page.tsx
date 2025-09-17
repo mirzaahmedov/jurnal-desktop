@@ -1,6 +1,7 @@
 import { Nachislenies } from './nachislenie'
 import { NachislenieTabOptions, useNachislenieTab } from './nachislenie-tabs'
 import { PremyaMatPomosh } from './premya-mat-pomosh'
+import { NachislenieReports } from './reports'
 import { TabelsView } from './tabel'
 
 const NachisleniePage = () => {
@@ -11,6 +12,7 @@ const NachisleniePage = () => {
       {tabValue === NachislenieTabOptions.Tabel ? <TabelsView /> : null}
       {tabValue === NachislenieTabOptions.Nachislenie ? <Nachislenies /> : null}
       {tabValue === NachislenieTabOptions.OtherVedemost ? <PremyaMatPomosh /> : null}
+      {tabValue === NachislenieTabOptions.Reports ? <NachislenieReports /> : null}
     </div>
   )
 }

@@ -571,5 +571,6 @@
   "position_salary_only": "Faqat lavozim maoshidan foiz oladigan to‘lov",
   "litsevoy_karta": "Litsevaya karta",
   "inventarization": "Inventarizatsiya",
-  "priyem_sdachi": "Qabul qilish va topshirish"
+  "priyem_sdachi": "Qabul qilish va topshirish",
+  "recalculate_from_passport": "Pasportdan qayta hisoblash"
 }

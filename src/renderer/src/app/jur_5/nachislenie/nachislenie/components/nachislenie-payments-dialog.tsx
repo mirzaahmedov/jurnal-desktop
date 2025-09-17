@@ -141,7 +141,7 @@ export const NachisleniePaymentDialog = ({
     })
   )
 
-  const isTypePayment = paymentSpravochnik.selected?.typePayment === true
+  const isOklad = paymentSpravochnik.selected?.isOklad === true
 
   const handleSubmit = form.handleSubmit((values) => {
     if (isDeduction) {
@@ -162,7 +162,8 @@ export const NachisleniePaymentDialog = ({
           percentage: paymentType === PaymentType.Percentage ? values.percentage : 0,
           summa: paymentType === PaymentType.Summa ? values.summa : 0,
           mainZarplataId: mainZarplataId,
-          paymentId: null
+          paymentId: null,
+          childId
         })
       }
     } else {
@@ -172,7 +173,7 @@ export const NachisleniePaymentDialog = ({
           values: {
             paymentId: values.paymentId,
             percentage: paymentType === PaymentType.Percentage ? values.percentage : 0,
-            summa: paymentType === PaymentType.Summa || isTypePayment ? values.summa : 0,
+            summa: paymentType === PaymentType.Summa || isOklad ? values.summa : 0,
             mainZarplataId: mainZarplataId,
             deductionId: null
           }
@@ -181,15 +182,17 @@ export const NachisleniePaymentDialog = ({
         createPaymentMutation.mutate({
           paymentId: values.paymentId,
           percentage: paymentType === PaymentType.Percentage ? values.percentage : 0,
-          summa: paymentType === PaymentType.Summa || isTypePayment ? values.summa : 0,
+          summa: paymentType === PaymentType.Summa || isOklad ? values.summa : 0,
           mainZarplataId: mainZarplataId,
-          deductionId: null
+          deductionId: null,
+          childId
         })
       }
     }
   })
 
   useEffect(() => {
+    console.log('paymentData', paymentData)
     if (paymentData) {
       form.reset(paymentData)
       if (paymentData.summa) {
@@ -269,7 +272,7 @@ export const NachisleniePaymentDialog = ({
                           decimalScale={undefined}
                           onValueChange={(values) => {
                             field.onChange(values.floatValue ?? 0)
-                            if (isTypePayment) {
+                            if (isOklad) {
                               const calculatedSum =
                                 ((values.floatValue ?? 0) / 100) * (okladSumma ?? 0)
                               form.setValue('summa', calculatedSum, { shouldValidate: true })
@@ -279,7 +282,7 @@ export const NachisleniePaymentDialog = ({
                       </FormElement>
                     )}
                   />
-                  {isTypePayment === true && (
+                  {isOklad === true && (
                     <div>
                       <Label className="text-muted-foreground">
                         {t('summa')}: {form.watch('summa')}

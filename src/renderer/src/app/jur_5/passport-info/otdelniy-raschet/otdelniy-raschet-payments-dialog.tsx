@@ -137,7 +137,7 @@ export const OtdelniyRaschetPaymentDialog = ({
     })
   )
 
-  const isTypePayment = paymentSpravochnik.selected?.typePayment === true
+  const isOklad = paymentSpravochnik.selected?.isOklad === true
 
   const handleSubmit = form.handleSubmit((values) => {
     if (isDeduction) {
@@ -170,7 +170,7 @@ export const OtdelniyRaschetPaymentDialog = ({
           values: {
             paymentId: values.paymentId,
             percentage: paymentType === PaymentType.Percentage ? values.percentage : 0,
-            summa: paymentType === PaymentType.Summa || isTypePayment ? values.summa : 0,
+            summa: paymentType === PaymentType.Summa || isOklad ? values.summa : 0,
             otdelniyRaschetMainId: otdelniyRaschetMainId ?? 0,
             mainZarplataId: mainZarplataId,
             deductionId: null
@@ -180,7 +180,7 @@ export const OtdelniyRaschetPaymentDialog = ({
         createPaymentMutation.mutate({
           paymentId: values.paymentId,
           percentage: paymentType === PaymentType.Percentage ? values.percentage : 0,
-          summa: paymentType === PaymentType.Summa || isTypePayment ? values.summa : 0,
+          summa: paymentType === PaymentType.Summa || isOklad ? values.summa : 0,
           otdelniyRaschetMainId: otdelniyRaschetMainId ?? 0,
           mainZarplataId: mainZarplataId,
           deductionId: null
@@ -269,7 +269,7 @@ export const OtdelniyRaschetPaymentDialog = ({
                           decimalScale={undefined}
                           onValueChange={(values) => {
                             field.onChange(values.floatValue ?? 0)
-                            if (isTypePayment) {
+                            if (isOklad) {
                               const calculatedSum =
                                 ((values.floatValue ?? 0) / 100) * (okladSumma ?? 0)
                               form.setValue('summa', calculatedSum, { shouldValidate: true })
@@ -279,7 +279,7 @@ export const OtdelniyRaschetPaymentDialog = ({
                       </FormElement>
                     )}
                   />
-                  {isTypePayment === true && (
+                  {isOklad === true && (
                     <div>
                       <Label className="text-muted-foreground">
                         {t('summa')}: {form.watch('summa')}

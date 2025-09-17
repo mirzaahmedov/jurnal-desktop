@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { Allotment } from 'allotment'
 import { useTranslation } from 'react-i18next'
-import { useLocation, useSearchParams } from 'react-router-dom'
+import { useSearchParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
 import { GenericTable, LoadingOverlay } from '@/common/components'
@@ -45,13 +45,10 @@ export const Nachislenies = () => {
   const setLayout = useLayout()
   const pagination = usePagination()
   const createToggle = useToggle()
-  const location = useLocation()
 
   const nachislenieId = searchParams.get('nachislenieId')
     ? Number(searchParams.get('nachislenieId'))
     : undefined
-
-  console.log({ nachislenieId, location })
 
   const nachislenieMadeQuery = useQuery({
     queryKey: [

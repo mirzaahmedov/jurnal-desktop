@@ -285,7 +285,7 @@ export const PaymentsDialog = ({ selectedPayment, ...props }: PaymentsDialogProp
                   <div className="col-span-full flex justify-end">
                     <FormField
                       control={form.control}
-                      name="typePayment"
+                      name="isOklad"
                       render={({ field }) => (
                         <FormElement label={t('position_salary_only')}>
                           <Checkbox

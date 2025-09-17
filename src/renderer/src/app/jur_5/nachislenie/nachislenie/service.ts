@@ -163,29 +163,43 @@ export class NachislenieService {
     return res.data
   }
 
-  static async createPayment(values: NachisleniePaymentFormValues) {
-    const res = await zarplataApiNew.post(`${NachislenieService.endpoint}/creat-payment`, {
-      ...values
-    })
+  static async createPayment({
+    childId,
+    ...values
+  }: NachisleniePaymentFormValues & { childId: number }) {
+    const res = await zarplataApiNew.post(
+      `${NachislenieService.endpoint}/creat-payment`,
+      {
+        ...values
+      },
+      {
+        params: {
+          childId
+        }
+      }
+    )
     return res.data
   }
 
-  static async createDeduction(values: NachisleniePaymentFormValues) {
-    const res = await zarplataApiNew.post(`${NachislenieService.endpoint}/creat-deduction`, {
-      ...values
-    })
+  static async createDeduction(values: NachisleniePaymentFormValues & { childId: number }) {
+    const res = await zarplataApiNew.post(
+      `${NachislenieService.endpoint}/creat-deduction`,
+      {
+        ...values
+      },
+      {
+        params: {
+          childId: values.childId
+        }
+      }
+    )
     return res.data
   }
 
   static async updatePayment(args: { id: number; values: NachisleniePaymentFormValues }) {
     const res = await zarplataApiNew.put(
-      `${NachislenieService.endpoint}/update-payment`,
-      args.values,
-      {
-        params: {
-          id: args.id
-        }
-      }
+      `${NachislenieService.endpoint}/update-payment/${args.id}`,
+      args.values
     )
     return res.data
   }
@@ -197,19 +211,21 @@ export class NachislenieService {
 
   static async updateDeduction(args: { id: number; values: NachisleniePaymentFormValues }) {
     const res = await zarplataApiNew.put(
-      `${NachislenieService.endpoint}/update-deduction`,
-      args.values,
-      {
-        params: {
-          id: args.id
-        }
-      }
+      `${NachislenieService.endpoint}/update-deduction/${args.id}`,
+      args.values
     )
     return res.data
   }
 
   static async deleteDeduction(id: number) {
     const res = await zarplataApiNew.delete(`${NachislenieService.endpoint}/delete-deduction/${id}`)
+    return res.data
+  }
+
+  static async calculateChild(childId: number) {
+    const res = await zarplataApiNew.put(
+      `${NachislenieService.endpoint}/calculate-child/${childId}`
+    )
     return res.data
   }
 }

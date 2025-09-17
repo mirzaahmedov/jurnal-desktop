@@ -572,5 +572,6 @@
   "position_salary_only": "Платёж, который берётся только как процент от должностного оклада",
   "litsevoy_karta": "Лицевaя карта",
   "inventarization": "Инвентаризация",
-  "priyem_sdachi": "Прием сдачи"
+  "priyem_sdachi": "Прием сдачи",
+  "recalculate_from_passport": "Пересчитать по паспорту"
 }

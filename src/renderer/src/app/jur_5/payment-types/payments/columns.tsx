@@ -173,12 +173,12 @@ export const PaymentColumnDefs: (args: { isEditable: boolean }) => ColumnDef<Pay
   {
     width: 100,
     minWidth: 100,
-    key: 'typePayment',
+    key: 'isOklad',
     header: 'position_salary_only',
     renderCell: (row) => (
       <CheckboxCell
         row={row}
-        field="typePayment"
+        field="isOklad"
         isMutable={isEditable}
       />
     )
