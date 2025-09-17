@@ -5,6 +5,9 @@ import { ArrowRight } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
+import { AvansService } from '@/app/jur_4/avans/service'
+import { PodotchetMonitorQueryKeys } from '@/app/jur_4/monitor/config'
+import { WorkTripService } from '@/app/jur_4/work-trip/service'
 import { LoadingOverlay } from '@/common/components'
 import { Button } from '@/common/components/jolly/button'
 import {
@@ -19,7 +22,6 @@ import {
 import { MonthPicker } from '@/common/components/month-picker'
 import { useToggle } from '@/common/hooks'
 
-import { PodotchetMonitorQueryKeys } from '../../monitor/config'
 import { PodotchetSaldoQueryKeys, defaultValues } from '../config'
 import { PodotchetSaldoTable } from '../details/podotchet-saldo-table'
 import { getPodochetSaldoProvodkaColumns } from '../details/provodki'
@@ -42,6 +44,21 @@ export const PodotchetSaldoUpdateManager = () => {
   const form = useForm({
     defaultValues
   })
+
+  const invalidateQueries = () => {
+    queryClient.invalidateQueries({
+      queryKey: [PodotchetSaldoQueryKeys.getAll]
+    })
+    queryClient.invalidateQueries({
+      queryKey: [PodotchetMonitorQueryKeys.getAll]
+    })
+    queryClient.invalidateQueries({
+      queryKey: [AvansService.getAll]
+    })
+    queryClient.invalidateQueries({
+      queryKey: [WorkTripService.getAll]
+    })
+  }
 
   const { mutate: autofill, isPending: isAutofilling } = useMutation({
     mutationKey: [PodotchetSaldoQueryKeys.getAutofill],
@@ -73,13 +90,7 @@ export const PodotchetSaldoUpdateManager = () => {
     mutationFn: PodotchetSaldoService.update,
     onSuccess(_, values) {
       dequeueMonth(values as any)
-
-      queryClient.invalidateQueries({
-        queryKey: [PodotchetSaldoQueryKeys.getAll]
-      })
-      queryClient.invalidateQueries({
-        queryKey: [PodotchetMonitorQueryKeys.getAll]
-      })
+      invalidateQueries()
     }
   })
 
@@ -129,12 +140,7 @@ export const PodotchetSaldoUpdateManager = () => {
             ...defaultValues,
             podotchets: []
           })
-          queryClient.invalidateQueries({
-            queryKey: [PodotchetSaldoQueryKeys.getAll]
-          })
-          queryClient.invalidateQueries({
-            queryKey: [PodotchetMonitorQueryKeys.getAll]
-          })
+          invalidateQueries()
         }
         dialogToggle.setOpen(open)
       }}

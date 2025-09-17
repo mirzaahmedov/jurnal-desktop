@@ -342,6 +342,8 @@ export const OperatsiiQuickAdd: FC<OperatsiiQuickAddProps> = ({
 
   const smetaNumberOptions = smetaNumbersQuery.data?.data ?? []
 
+  console.log(form.watch('sub_schet'))
+
   return (
     <DialogTrigger
       {...props}
@@ -417,14 +419,22 @@ export const OperatsiiQuickAdd: FC<OperatsiiQuickAddProps> = ({
                     >
                       <JollyComboBox
                         onBlur={field.onBlur}
-                        selectedKey={field.value}
-                        onSelectionChange={(value) => field.onChange(value as any)}
-                        defaultItems={smetaNumberOptions.map((value) => ({
-                          value
-                        }))}
+                        selectedKey={field.value || null}
+                        onSelectionChange={(value) => {
+                          console.log(value)
+                          field.onChange(value)
+                        }}
+                        defaultItems={smetaNumberOptions}
                         menuTrigger="focus"
                       >
-                        {(item) => <ComboboxItem id={item.value}>{item.value}</ComboboxItem>}
+                        {(item) => (
+                          <ComboboxItem
+                            textValue={item.smeta_number}
+                            id={item.smeta_number}
+                          >
+                            {item.smeta_number} - {item.smeta_name}
+                          </ComboboxItem>
+                        )}
                       </JollyComboBox>
                     </FormElement>
                   )}

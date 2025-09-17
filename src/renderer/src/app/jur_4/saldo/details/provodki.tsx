@@ -36,5 +36,17 @@ export const getPodochetSaldoProvodkaColumns = (isEditable: boolean) =>
         defaultValue: 0,
         readOnly: !isEditable
       })
+    },
+    {
+      width: 250,
+      key: 'summa',
+      Editor: createNumberEditor({
+        key: 'summa',
+        defaultValue: 0,
+        readOnly: true,
+        inputProps: {
+          allowNegative: true
+        }
+      })
     }
   ] satisfies EditableColumnDef<PodotchetSaldoProvodkaFormValues>[]

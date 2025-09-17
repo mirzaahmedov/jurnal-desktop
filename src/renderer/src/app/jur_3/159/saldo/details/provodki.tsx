@@ -2,7 +2,7 @@ import type { OrganSaldoFormValues } from '../config'
 import type { EditableColumnDef } from '@/common/components/editable-table'
 
 import { createNumberEditor, createTextEditor } from '@/common/components/editable-table/editors'
-import { Badge } from '@/common/components/ui/badge';
+import { Badge } from '@/common/components/ui/badge'
 
 export const getOrganSaldoProvodkaColumns = (isEditable: boolean) =>
   [
@@ -65,15 +65,27 @@ export const getOrganSaldoProvodkaColumns = (isEditable: boolean) =>
       })
     },
     {
-      key: "sub_childs",
-      header: " ",
+      width: 250,
+      key: 'summa',
+      Editor: createNumberEditor({
+        key: 'summa',
+        defaultValue: 0,
+        readOnly: !isEditable,
+        inputProps: {
+          allowNegative: true
+        }
+      })
+    },
+    {
+      key: 'sub_childs',
+      header: ' ',
       Editor: ({ row }) => {
-        const count = row.sub_childs?.length ?? 0;
+        const count = row.sub_childs?.length ?? 0
         return (
-          <div className='px-2.5'> 
-            <Badge variant={count > 0 ? "default" : "secondary"}>{count}</Badge>
+          <div className="px-2.5">
+            <Badge variant={count > 0 ? 'default' : 'secondary'}>{count}</Badge>
           </div>
         )
       }
     }
-  ] satisfies EditableColumnDef<OrganSaldoFormValues, "organizations">[]
+  ] satisfies EditableColumnDef<OrganSaldoFormValues, 'organizations'>[]

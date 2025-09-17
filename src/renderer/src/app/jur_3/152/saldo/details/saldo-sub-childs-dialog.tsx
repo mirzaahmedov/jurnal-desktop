@@ -44,6 +44,7 @@ export const SaldoSubChildsDialog: FC<SaldoSubChildsDialogProps> = ({
 
     const summaPrixod = newValues?.reduce((acc, row) => acc + row.prixod, 0) ?? 0
     const summaRasxod = newValues?.reduce((acc, row) => acc + row.rasxod, 0) ?? 0
+    const summaTotal = summaPrixod - summaRasxod
 
     if (
       summaPrixod === form.getValues(`organizations.${rowIndex}.prixod`) &&
@@ -54,6 +55,7 @@ export const SaldoSubChildsDialog: FC<SaldoSubChildsDialogProps> = ({
 
     form.setValue(`organizations.${rowIndex}.prixod`, summaPrixod)
     form.setValue(`organizations.${rowIndex}.rasxod`, summaRasxod)
+    form.setValue(`organizations.${rowIndex}.summa`, summaTotal)
   }, [rowIndex, rows])
 
   return (

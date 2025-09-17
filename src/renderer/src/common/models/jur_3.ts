@@ -19,6 +19,7 @@ export interface OrganSaldoProvodka {
   isdeleted: boolean
   prixod: number
   rasxod: number
+  summa: number
   name: string
   bank_klient: string
   mfo: string

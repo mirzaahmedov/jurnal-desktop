@@ -28,7 +28,12 @@ import { useLayout } from '@/common/layout'
 import { formatDate } from '@/common/lib/date'
 import { DetailsView } from '@/common/views'
 
-import { type OrganSaldoFormValues, type OrganSaldoProvodkaFormValues, OrganSaldoQueryKeys, defaultValues } from '../config'
+import {
+  type OrganSaldoFormValues,
+  type OrganSaldoProvodkaFormValues,
+  OrganSaldoQueryKeys,
+  defaultValues
+} from '../config'
 import { OrganSaldoService } from '../service'
 import { useUslugiSaldo } from '../use-saldo'
 import { OrganSaldoTable } from './organ-saldo-table'
@@ -114,7 +119,10 @@ const OrganSaldoDetailsPage = () => {
       let data: OrganSaldoProvodka[] = []
 
       if (!isEditable) {
-        data = res?.data ?? []
+        data = (res?.data ?? []).map((item) => ({
+          ...item,
+          summa: (item.prixod ?? 0) - (item.rasxod ?? 0)
+        }))
       } else {
         const prevData = form.getValues('organizations')
         const newData = res?.data ?? []
@@ -124,7 +132,8 @@ const OrganSaldoDetailsPage = () => {
           return {
             ...item,
             prixod: prev?.prixod ?? 0,
-            rasxod: prev?.rasxod ?? 0
+            rasxod: prev?.rasxod ?? 0,
+            summa: prev?.summa ?? 0
           } satisfies OrganSaldoProvodka
         })
       }
@@ -135,7 +144,8 @@ const OrganSaldoDetailsPage = () => {
           _total: true,
           name: t('total'),
           prixod: total.prixod,
-          rasxod: total.rasxod
+          rasxod: total.rasxod,
+          summa: total.prixod - total.rasxod
         } as OrganSaldoProvodka)
       }
       form.setValue('organizations', data)
@@ -182,7 +192,8 @@ const OrganSaldoDetailsPage = () => {
           _total: true,
           name: t('total'),
           prixod: total.prixod,
-          rasxod: total.rasxod
+          rasxod: total.rasxod,
+          summa: total.prixod - total.rasxod
         } as OrganSaldoProvodka)
       }
       form.reset({
@@ -265,6 +276,9 @@ const OrganSaldoDetailsPage = () => {
     }
     if (Number(totalRow?.rasxod) !== Number(total.rasxod)) {
       form.setValue(`organizations.${rows.length - 1}.rasxod`, total.rasxod)
+    }
+    if (Number(totalRow?.summa) !== Number(total.prixod - total.rasxod)) {
+      form.setValue(`organizations.${rows.length - 1}.summa`, total.prixod - total.rasxod)
     }
     if (totalRow?.name !== name) {
       form.setValue(`organizations.${rows.length - 1}.name`, name)

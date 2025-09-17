@@ -21,7 +21,8 @@ export const PodotchetSaldoProvodkaFormSchema = z.object({
   name: z.string().optional(),
   rayon: z.string().optional(),
   prixod: z.number(),
-  rasxod: z.number()
+  rasxod: z.number(),
+  summa: z.number().optional().nullable()
 })
 export const PodotchetSaldoFormSchema = z.object({
   year: z.number(),

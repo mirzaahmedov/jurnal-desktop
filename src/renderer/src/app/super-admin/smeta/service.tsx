@@ -17,6 +17,11 @@ import { extendObject } from '@/common/lib/utils'
 import { SmetaColumns } from './columns'
 import { SmetaGroupFilter } from './filter'
 
+export interface SmetaNumberOption {
+  smeta_number: string
+  smeta_name: string
+}
+
 export class SmetaCRUDService extends CRUDService<Smeta, SmetaForm> {
   constructor() {
     super({
@@ -27,7 +32,7 @@ export class SmetaCRUDService extends CRUDService<Smeta, SmetaForm> {
   }
 
   async getSmetaNumbers() {
-    const response = await this.client.get<ApiResponse<string[]>>('/smeta/smeta-number')
+    const response = await this.client.get<ApiResponse<SmetaNumberOption[]>>('/smeta/smeta-number')
     return response.data
   }
 }

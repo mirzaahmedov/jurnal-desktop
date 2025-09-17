@@ -19,6 +19,9 @@ import { useKeyUp } from '@/common/hooks'
 import { useLayout } from '@/common/layout'
 import { ListView } from '@/common/views'
 
+import { AvansService } from '../avans/service'
+import { PodotchetMonitorQueryKeys } from '../monitor/config'
+import { WorkTripService } from '../work-trip/service'
 import { PodotchetSaldoColumns } from './columns'
 import { PodotchetSaldoQueryKeys } from './config'
 import { PodotchetSaldoFilters, useYearFilter } from './filters'
@@ -37,6 +40,21 @@ const PodotchetSaldoPage = () => {
   const { t } = useTranslation(['app'])
   const { queuedMonths } = usePodotchetSaldo()
   const { budjet_id, main_schet_id, jur4_schet_id } = useRequisitesStore()
+
+  const invalidateQueries = () => {
+    queryClient.invalidateQueries({
+      queryKey: [PodotchetMonitorQueryKeys.getAll]
+    })
+    queryClient.invalidateQueries({
+      queryKey: [PodotchetSaldoQueryKeys.getAll]
+    })
+    queryClient.invalidateQueries({
+      queryKey: [AvansService.getAll]
+    })
+    queryClient.invalidateQueries({
+      queryKey: [WorkTripService.getAll]
+    })
+  }
 
   const {
     data: saldo,
@@ -60,9 +78,7 @@ const PodotchetSaldoPage = () => {
     mutationFn: PodotchetSaldoService.cleanSaldo,
     onSuccess(res) {
       toast.success(res?.message)
-      queryClient.invalidateQueries({
-        queryKey: [PodotchetSaldoQueryKeys.getAll]
-      })
+      invalidateQueries()
       handleSaldoResponseDates(SaldoNamespace.JUR_4, res)
     },
     onError(error) {
@@ -74,9 +90,7 @@ const PodotchetSaldoPage = () => {
     mutationFn: PodotchetSaldoService.delete,
     onSuccess(res) {
       toast.success(res?.message)
-      queryClient.invalidateQueries({
-        queryKey: [PodotchetSaldoQueryKeys.getAll]
-      })
+      invalidateQueries()
       handleSaldoResponseDates(SaldoNamespace.JUR_4, res)
     },
     onError(error) {

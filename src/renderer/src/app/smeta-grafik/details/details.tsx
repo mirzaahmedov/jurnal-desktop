@@ -212,55 +212,61 @@ export const SmetaGrafikDetails = ({ id, year, isEditable }: SmetaGrafikDetailsP
 
   return (
     <DetailsView>
-      <DetailsView.Content isLoading={isFetching || isLoadingByOrderNumber}>
+      <DetailsView.Content
+        isLoading={isFetching || isLoadingByOrderNumber}
+        className="overflow-hidden flex-1"
+      >
         <Form {...form}>
           <form
             onSubmit={onSubmit}
             noValidate
+            className="h-full flex flex-col overflow-hidden"
           >
-            <div className="p-5 flex items-start gap-5">
-              <FormField
-                control={form.control}
-                name="year"
-                render={({ field }) => (
-                  <FormElement
-                    label={t('year')}
-                    direction="column"
-                  >
-                    <YearSelect
-                      isReadOnly={id !== 'create'}
-                      selectedKey={field.value}
-                      onSelectionChange={field.onChange}
-                      className="w-24 gap-0 mt-2"
-                    />
-                  </FormElement>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="command"
-                render={({ field }) => (
-                  <FormElement
-                    label={t('decree')}
-                    direction="column"
-                  >
-                    <Textarea
-                      rows={4}
-                      cols={60}
-                      value={field.value}
-                      onChange={field.onChange}
-                      className="mt-2"
-                    />
-                  </FormElement>
-                )}
-              />
-            </div>
-
-            <div className="p-5">
+            <div className="p-5 flex items-end justify-between gap-5">
               <SearchInput onKeyDown={handleSearch} />
+
+              <div className="flex gap-5">
+                <FormField
+                  control={form.control}
+                  name="year"
+                  render={({ field }) => (
+                    <FormElement
+                      label={t('year')}
+                      direction="column"
+                    >
+                      <YearSelect
+                        isReadOnly={id !== 'create'}
+                        selectedKey={field.value}
+                        onSelectionChange={field.onChange}
+                        className="w-24 gap-0 mt-2"
+                      />
+                    </FormElement>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="command"
+                  render={({ field }) => (
+                    <FormElement
+                      label={t('decree')}
+                      direction="column"
+                      hideDescription
+                    >
+                      <Textarea
+                        rows={4}
+                        cols={60}
+                        value={field.value}
+                        onChange={field.onChange}
+                        className="mt-2"
+                      />
+                    </FormElement>
+                  )}
+                />
+              </div>
             </div>
-            <div className="w-full overflow-x-auto scrollbar pb-24">
+
+            <div className="w-full overflow-x-auto scrollbar mb-24">
               <EditableTable
                 tableRef={tableRef}
                 tabIndex={5}
@@ -319,7 +325,10 @@ export const SmetaGrafikDetails = ({ id, year, isEditable }: SmetaGrafikDetailsP
                   })
                 }}
                 footerRows={
-                  <EditableTableRow focusable={false}>
+                  <EditableTableRow
+                    focusable={false}
+                    className="sticky bottom-0 z-50 shadow-[0_-1px_0px_rgba(0,0,0,0.1)]"
+                  >
                     <EditableTableCell></EditableTableCell>
                     <EditableTableCell className="sticky left-0 z-50">
                       <Input

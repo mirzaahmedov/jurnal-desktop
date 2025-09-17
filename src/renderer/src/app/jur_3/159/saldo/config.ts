@@ -30,6 +30,7 @@ export const OrganSaldoProvodkaFormSchema = z.object({
   inn: z.string().optional(),
   prixod: z.number(),
   rasxod: z.number(),
+  summa: z.number().optional().nullable(),
   sub_childs: z.array(OrganSaldoSubChildFormSchema)
 })
 export const OrganSaldoFormSchema = z.object({
