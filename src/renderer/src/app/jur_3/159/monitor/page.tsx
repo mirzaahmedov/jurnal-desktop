@@ -37,6 +37,7 @@ import { formatLocaleDate, formatNumber } from '@/common/lib/format'
 import { ListView } from '@/common/views'
 
 import { useAktSaldo } from '../saldo/use-saldo'
+import { AktSverkiDialog } from './akt-sverka'
 import { OrganMonitorColumns } from './columns'
 import { OrganMonitorQueryKeys } from './config'
 import { DailyReportDialog } from './daily-report-dialog'
@@ -254,6 +255,20 @@ const OrganMonitoringPage = () => {
                     }}
                     fileName={`159_${t('organization')}_${organSpravochnik.selected.name}.xlsx`}
                     buttonText={t('litsevoy_karta')}
+                  />
+                ) : null}
+
+                {organId ? (
+                  <AktSverkiDialog
+                    organId={organId}
+                    budjetId={budjet_id!}
+                    mainSchetId={main_schet_id}
+                    schetId={jur3_schet_159_id!}
+                    reportTitleId={report_title_id!}
+                    from={dates.from}
+                    to={dates.to}
+                    year={startDate.getFullYear()}
+                    month={startDate.getMonth() + 1}
                   />
                 ) : null}
 

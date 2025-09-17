@@ -570,5 +570,6 @@
   "percentage": "Процент",
   "select_vacant_first": "Сначала выберите вакантную должность",
   "position_salary_only": "Платёж, который берётся только как процент от должностного оклада",
-  "litsevoy_karta": "Лицевaя карта"
+  "litsevoy_karta": "Лицевaя карта",
+  "inventarization": "Инвентаризация"
 }

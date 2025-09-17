@@ -46,8 +46,6 @@ export const WorkTripRoads = ({ form, minimumWageSumma }: WorkTripRoadsProps) =>
   })
 
   useEffect(() => {
-    console.log('minimumWageSumma', minimumWageSumma)
-    console.log('roadKms', roadKms)
     const roads = form.getValues('road')
     roads.forEach((road, index) => {
       if (road.road_ticket_number) {
@@ -57,19 +55,11 @@ export const WorkTripRoads = ({ form, minimumWageSumma }: WorkTripRoadsProps) =>
         distanceKM: road.km,
         minimumWageSumma: minimumWageSumma
       })
-      console.log(
-        'calculated roadSumma',
-        roadSumma,
-        'for index',
-        index,
-        'actual summa ' + road.road_summa
-      )
       if (roadSumma !== road.road_summa) {
         form.setValue(`road.${index}.road_summa`, roadSumma, {
           shouldValidate: true
         })
       }
-      // console.log('road summa', roadSumma)
     })
   }, [minimumWageSumma, roadKms])
 
@@ -99,6 +89,7 @@ export const WorkTripRoads = ({ form, minimumWageSumma }: WorkTripRoadsProps) =>
                           to_region_id: form.getValues(`road.${index}.to_region_id`)
                         }).then((km) => {
                           form.setValue(`road.${index}.km`, km)
+                          form.setValue(`road.${index}.calc_km`, km)
                           form.setValue(`road.${index}.road_summa`, minimumWageSumma * 0.001 * km, {
                             shouldValidate: true
                           })
@@ -137,6 +128,10 @@ export const WorkTripRoads = ({ form, minimumWageSumma }: WorkTripRoadsProps) =>
                           from_region_id: form.getValues(`road.${index}.from_region_id`)
                         }).then((km) => {
                           form.setValue(`road.${index}.km`, km)
+                          form.setValue(`road.${index}.calc_km`, km)
+                          form.setValue(`road.${index}.road_summa`, minimumWageSumma * 0.001 * km, {
+                            shouldValidate: true
+                          })
                         })
                       }
                       field.onChange(to_region_id)
@@ -161,9 +156,19 @@ export const WorkTripRoads = ({ form, minimumWageSumma }: WorkTripRoadsProps) =>
                   <div className="flex items-center gap-2">
                     <FormLabel>{t('distance')}</FormLabel>
                     <NumericInput
-                      readOnly
-                      className="w-24"
+                      className={t(
+                        'w-24',
+                        form.watch(`road.${index}.calc_km`) &&
+                          form.watch(`road.${index}.calc_km`) !== field.value
+                          ? 'bg-amber-100 focus-visible:ring-amber-500'
+                          : ''
+                      )}
                       value={field.value}
+                      onValueChange={(values) => {
+                        field.onChange(values.floatValue ?? 0)
+                      }}
+                      ref={field.ref}
+                      onBlur={field.onBlur}
                     />
                   </div>
                 )}

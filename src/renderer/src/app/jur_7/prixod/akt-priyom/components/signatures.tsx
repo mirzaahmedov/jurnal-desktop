@@ -40,14 +40,6 @@ export const Signatures: FC<{
       <View style={styles.signatureContainer}>
         <View style={styles.blankWrapper}>
           <View>
-            <Text>{t('released_by')}:</Text>
-          </View>
-          <View style={{ width: 140, borderBottom: '1px solid black' }}>
-            <Text> </Text>
-          </View>
-        </View>
-        <View style={styles.blankWrapper}>
-          <View>
             <Text>{t('received_by')}:</Text>
           </View>
           <View style={{ width: 140, borderBottom: '1px solid black' }}>

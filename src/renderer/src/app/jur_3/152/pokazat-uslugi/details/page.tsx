@@ -9,6 +9,7 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
+import { calcSummaNDS } from '@/app/jur_3/159/akt/details/utils'
 import { createShartnomaSpravochnik } from '@/app/jur_3/shartnoma'
 import { createOrganizationSpravochnik } from '@/app/region-spravochnik/organization'
 import { Fieldset } from '@/common/components'
@@ -249,10 +250,18 @@ const PokazatUslugiDetailsPage = () => {
   }, [setLayout, navigate, id, t])
 
   useEffect(() => {
-    const summa =
-      podvodki
-        .filter((podvodka) => !isNaN(podvodka.kol!) && !isNaN(podvodka.sena!))
-        .reduce((acc, curr) => acc + curr.kol! * curr.sena!, 0) ?? 0
+    const summa = podvodki
+      .filter((podvodka) => !isNaN(podvodka.kol!) && !isNaN(podvodka.sena!))
+      .reduce(
+        (result, item) =>
+          result +
+          calcSummaNDS({
+            kol: item.kol,
+            nds_foiz: item.nds_foiz,
+            sena: item.sena
+          }),
+        0
+      )
     form.setValue('summa', summa)
   }, [form, podvodki])
 

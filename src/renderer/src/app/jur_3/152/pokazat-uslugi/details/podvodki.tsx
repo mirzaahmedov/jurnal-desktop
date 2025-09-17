@@ -1,6 +1,8 @@
 import type { PokazatUslugiFormValues } from '../config'
 import type { EditableColumnDef } from '@/common/components/editable-table'
 
+import { calcSummaNDS } from '@/app/jur_3/159/akt/details/utils'
+import { NumericInput } from '@/common/components'
 import {
   createNumberEditor,
   createOperatsiiEditor,
@@ -8,10 +10,8 @@ import {
   createStaffEditor,
   createTypeOperatsiiEditor
 } from '@/common/components/editable-table/editors'
-import { Input } from '@/common/components/ui/input'
-import { inputVariants } from '@/common/features/spravochnik'
 import { formatNumber } from '@/common/lib/format'
-import { cn } from '@/common/lib/utils'
+import { calcSena, calcSumma } from '@/common/lib/pricing'
 import { TypeSchetOperatsii } from '@/common/models'
 
 export const podvodkaColumns: EditableColumnDef<PokazatUslugiFormValues, 'childs'>[] = [
@@ -25,29 +25,66 @@ export const podvodkaColumns: EditableColumnDef<PokazatUslugiFormValues, 'childs
   },
   {
     key: 'kol',
-    Editor: createNumberEditor({ key: 'kol', inputProps: { allowNegative: false } })
+    Editor: ({ id, form, value, onChange }) => {
+      return (
+        <NumericInput
+          editor
+          value={(value as number) ?? 0}
+          onValueChange={(values, event) => {
+            const summa = calcSumma(value as number, form.getValues(`childs.${id}.sena`))
+            if (event.source === 'event') {
+              form.setValue(`childs.${id}.summa`, summa)
+            }
+            onChange?.(values.floatValue ?? 0)
+          }}
+        />
+      )
+    }
   },
   {
     key: 'sena',
-    Editor: createNumberEditor({ key: 'sena', inputProps: { allowNegative: false } })
+    Editor: ({ id, form, value, onChange }) => {
+      return (
+        <NumericInput
+          editor
+          value={(value as number) ?? 0}
+          onValueChange={(values, event) => {
+            const summa = calcSumma(form.getValues(`childs.${id}.kol`), value as number)
+            if (event.source === 'event') {
+              form.setValue(`childs.${id}.summa`, summa)
+            }
+            onChange?.(values.floatValue ?? 0)
+          }}
+        />
+      )
+    }
   },
   {
     key: 'summa',
-    Editor: ({ id, form }) => {
-      const kol = form.getValues(`childs.${id}.kol`)
-      const sena = form.getValues(`childs.${id}.sena`)
+    Editor: ({ id, value, onChange, form }) => {
       return (
-        <Input
-          className={cn(inputVariants({ editor: true, nonfocus: true }), 'text-right')}
-          readOnly
-          value={formatNumber((kol || 0) * (sena || 0) || 0, 0)}
+        <NumericInput
+          editor
+          value={(value as number) ?? 0}
+          onValueChange={(values, event) => {
+            const sena = calcSena(values.floatValue ?? 0, form.getValues(`childs.${id}.kol`))
+            if (event.source === 'event') {
+              form.setValue(`childs.${id}.sena`, sena)
+            }
+            onChange?.(values.floatValue ?? 0)
+          }}
         />
       )
     }
   },
   {
     key: 'nds_foiz',
-    Editor: createNumberEditor({ key: 'nds_foiz', max: 99, inputProps: { allowNegative: false } })
+    Editor: createNumberEditor({
+      key: 'nds_foiz',
+      inputProps: {
+        allowNegative: false
+      }
+    })
   },
   {
     key: 'nds_summa',
@@ -56,10 +93,10 @@ export const podvodkaColumns: EditableColumnDef<PokazatUslugiFormValues, 'childs
       const sena = form.getValues(`childs.${id}.sena`)
       const nds_foiz = form.getValues(`childs.${id}.nds_foiz`)
       return (
-        <Input
-          className={cn(inputVariants({ editor: true, nonfocus: true }), 'text-right')}
+        <NumericInput
+          editor
           readOnly
-          value={((kol || 0) * (sena || 0) * (nds_foiz || 0)) / 100 || ''}
+          value={formatNumber(((kol || 0) * (sena || 0) * (nds_foiz || 0)) / 100)}
         />
       )
     }
@@ -71,13 +108,10 @@ export const podvodkaColumns: EditableColumnDef<PokazatUslugiFormValues, 'childs
       const sena = form.getValues(`childs.${id}.sena`)
       const nds_foiz = form.getValues(`childs.${id}.nds_foiz`)
       return (
-        <Input
-          className={cn(inputVariants({ editor: true, nonfocus: true }), 'text-right')}
+        <NumericInput
+          editor
           readOnly
-          value={formatNumber(
-            (kol || 0) * (sena || 0) + ((kol || 0) * (sena || 0) * (nds_foiz || 0)) / 100 || 0,
-            0
-          )}
+          value={calcSummaNDS({ kol, sena, nds_foiz })}
         />
       )
     }

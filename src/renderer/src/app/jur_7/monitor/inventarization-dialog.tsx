@@ -20,7 +20,7 @@ import { SpravochnikInput, useSpravochnik } from '@/common/features/spravochnik'
 
 import { createResponsibleSpravochnik } from '../responsible/service'
 
-export interface AktReportDialogProps extends Omit<DialogTriggerProps, 'children'> {
+export interface InventarizationDialogProps extends Omit<DialogTriggerProps, 'children'> {
   to: string
   year: number
   month: number
@@ -28,7 +28,7 @@ export interface AktReportDialogProps extends Omit<DialogTriggerProps, 'children
   main_schet_id: number
   region_id?: number
 }
-export const AktReportDialog = ({
+export const InventarizationDialog = ({
   to,
   year,
   month,
@@ -36,7 +36,7 @@ export const AktReportDialog = ({
   main_schet_id,
   region_id,
   ...props
-}: AktReportDialogProps) => {
+}: InventarizationDialogProps) => {
   const { t } = useTranslation()
 
   const form = useForm({
@@ -58,9 +58,7 @@ export const AktReportDialog = ({
       <DialogOverlay>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>
-              {t('akt')} {t('report').toLowerCase()}
-            </DialogTitle>
+            <DialogTitle>{t('inventarization')}</DialogTitle>
           </DialogHeader>
           <Form {...form}>
             <form
@@ -84,7 +82,7 @@ export const AktReportDialog = ({
                 <DownloadFile
                   url={`/jur_7/monitoring/act/report`}
                   fileName={`${t('akt')} ${t('report').toLowerCase()}.xlsx`}
-                  buttonText={`${t('akt')} ${t('report').toLowerCase()}`}
+                  buttonText={t('download')}
                   isDisabled={!form.watch('responsible_id')}
                   params={{
                     to,

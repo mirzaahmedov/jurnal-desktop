@@ -24,10 +24,10 @@ import { ListView } from '@/common/views'
 
 import { MaterialReportModal } from '../__components__/material-report-modal'
 import { useMaterialSaldo } from '../saldo/use-saldo'
-import { AktReportDialog } from './akt-report-dialog'
 import { columns } from './columns'
 import { WarehouseMonitorQueryKeys } from './config'
 import { DailyReportDialog } from './daily-report-dialog'
+import { InventarizationDialog } from './inventarization-dialog'
 import { WarehouseMonitorService } from './service'
 import { SummarizedReportDialog } from './summarized-report-dialog'
 import { ViewModal } from './view-modal'
@@ -194,7 +194,7 @@ const MaterialMonitorPage = () => {
                 aktToggle.open()
               }}
             >
-              {t('akt')} {t('report').toLowerCase()}
+              {t('inventarization')}
             </Button>
 
             <DownloadFile
@@ -314,7 +314,7 @@ const MaterialMonitorPage = () => {
         month={startDate.getMonth() + 1}
       />
 
-      <AktReportDialog
+      <InventarizationDialog
         isOpen={aktToggle.isOpen}
         onOpenChange={aktToggle.setOpen}
         budjet_id={budjet_id!}

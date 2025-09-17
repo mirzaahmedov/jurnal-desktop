@@ -69,3 +69,15 @@ export const changeOpisanieSchetFaktura = ({
     `хамда ${formatLocaleDate(doc_date)} йил № ${doc_num} сонли хисоб фактура `
   )
 }
+
+export const calcSummaNDS = ({
+  kol,
+  sena,
+  nds_foiz
+}: {
+  kol: number | null | undefined
+  sena: number | null | undefined
+  nds_foiz: number | null | undefined
+}) => {
+  return (kol || 0) * (sena || 0) + ((kol || 0) * (sena || 0) * (nds_foiz || 0)) / 100
+}

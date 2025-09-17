@@ -15,6 +15,7 @@ export const AktProvodkaFormSchema = withPreprocessor(
     spravochnik_operatsii_id: z.number(),
     kol: z.number().min(1),
     sena: z.number().min(1),
+    summa: z.number().nullable().optional(),
     nds_foiz: z.number().optional(),
     id_spravochnik_podrazdelenie: z.number().optional(),
     id_spravochnik_sostav: z.number().optional(),

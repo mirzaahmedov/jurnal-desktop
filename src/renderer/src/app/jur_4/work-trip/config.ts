@@ -11,6 +11,7 @@ export const WorkTripRoadSchema = z.object({
   from_region_id: z.number(),
   to_region_id: z.number(),
   km: z.number(),
+  calc_km: z.number().optional().nullable(),
   road_summa: z.number()
 })
 

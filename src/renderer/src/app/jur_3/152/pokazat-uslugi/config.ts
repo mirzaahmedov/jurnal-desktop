@@ -13,8 +13,9 @@ export const PokazatUslugiQueryKeys = {
 export const PokazatUslugiProvodkaFormSchema = withPreprocessor(
   z.object({
     spravochnik_operatsii_id: z.number(),
-    kol: z.number().optional(),
-    sena: z.number().optional(),
+    kol: z.number(),
+    sena: z.number(),
+    summa: z.number().optional(),
     nds_foiz: z.number().optional(),
     id_spravochnik_podrazdelenie: z.number().optional(),
     id_spravochnik_sostav: z.number().optional(),

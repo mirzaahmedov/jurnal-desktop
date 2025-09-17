@@ -48,7 +48,7 @@ import { useAktSaldo } from '../../saldo/use-saldo'
 import { AktFormSchema, AktProvodkaFormSchema, AktQueryKeys, defaultValues } from '../config'
 import { AktService } from '../service'
 import { provodkaColumns } from './provodki'
-import { changeOpisanieContract, changeOpisanieSchetFaktura } from './utils'
+import { calcSummaNDS, changeOpisanieContract, changeOpisanieSchetFaktura } from './utils'
 
 const AktDetailsPage = () => {
   const { id } = useParams()
@@ -253,7 +253,16 @@ const AktDetailsPage = () => {
     const summa =
       provodki
         .filter((podvodka) => !isNaN(Number(podvodka?.kol)) && !isNaN(Number(podvodka?.sena)))
-        .reduce((acc, curr) => acc + (curr?.kol || 0) * (curr?.sena || 0), 0) ?? 0
+        .reduce(
+          (acc, item) =>
+            acc +
+            calcSummaNDS({
+              kol: item.kol,
+              nds_foiz: item.nds_foiz,
+              sena: item.sena
+            }),
+          0
+        ) ?? 0
     form.setValue('summa', summa)
   }, [form, provodki])
 

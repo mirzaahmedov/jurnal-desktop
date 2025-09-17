@@ -39,13 +39,14 @@ export const PodotchetSaldoUpdateManager = () => {
 
   const { t } = useTranslation()
 
-  const { queuedMonths, dequeueMonth } = usePodotchetSaldo()
+  const { queuedMonths, dequeueMonth, clearQueue } = usePodotchetSaldo()
 
   const form = useForm({
     defaultValues
   })
 
   const invalidateQueries = () => {
+    clearQueue()
     queryClient.invalidateQueries({
       queryKey: [PodotchetSaldoQueryKeys.getAll]
     })
