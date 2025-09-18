@@ -1,4 +1,4 @@
-import type { SaldoProduct } from '@/common/models'
+import type { MaterialSaldoProduct } from '@/common/models'
 
 import { Trans } from 'react-i18next'
 
@@ -12,7 +12,7 @@ import { UserCell } from '@/common/components/table/renderers/user'
 import { getMonthName } from '@/common/lib/date'
 import { formatLocaleDate, formatNumber } from '@/common/lib/format'
 
-export const IznosColumns: ColumnDef<SaldoProduct>[] = [
+export const IznosColumns: ColumnDef<MaterialSaldoProduct>[] = [
   {
     key: 'id',
     renderCell: IDCell,

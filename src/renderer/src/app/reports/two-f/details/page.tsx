@@ -18,6 +18,7 @@ import { useRequisitesStore } from '@/common/features/requisites'
 import { useRequisitesRedirect } from '@/common/features/requisites/use-main-schet-redirect'
 import { useLayout } from '@/common/layout'
 import { formatDate } from '@/common/lib/date'
+import { cn, roundNumberToTwoDecimalPlaces } from '@/common/lib/utils'
 import { DetailsView } from '@/common/views'
 
 import { TwoFQueryKeys } from '../config'
@@ -26,7 +27,12 @@ import { type TwoFFormValues, defaultValues } from './config'
 import { TwoFDocumentsTracker } from './documents-tracker'
 import { TwoFTable } from './odinox-table'
 import { TwoFProvodkaColumns } from './provodki'
-import { getTwoFColumns, transformGetByIdData, transformTwoFAutoFillData } from './utils'
+import {
+  getTwoFColumns,
+  transformGetByIdData,
+  transformRowsToPayload,
+  transformTwoFAutoFillData
+} from './utils'
 
 const TwoFDetailsPage = () => {
   const { id } = useParams()
@@ -39,6 +45,7 @@ const TwoFDetailsPage = () => {
   const setLayout = useLayout()
 
   const [isEmptyRowsHidden, setEmptyRowsHidden] = useState(false)
+  const [isEditable, setEditable] = useState(true)
   const [selected, setSelected] = useState<{
     docs: TwoFDocument[]
     args: GetDocsArgs
@@ -52,6 +59,14 @@ const TwoFDetailsPage = () => {
       ...defaultValues,
       year: location.state?.year ?? new Date().getFullYear(),
       month: new Date().getMonth() + 1
+    }
+  })
+
+  const { isPending: isCheckingSaldo, mutate: checkSaldo } = useMutation({
+    mutationKey: [TwoFQueryKeys.getCheckSaldo],
+    mutationFn: TwoFService.getSaldoCheck,
+    onSuccess: (res) => {
+      setEditable(!res.data?.length)
     }
   })
 
@@ -198,11 +213,13 @@ const TwoFDetailsPage = () => {
   }, [id, year, month, budjet_id])
 
   const columns = useMemo(
-    () => [...TwoFProvodkaColumns, ...getTwoFColumns(types?.data ?? [])],
-    [types]
+    () => [...TwoFProvodkaColumns, ...getTwoFColumns(types?.data ?? [], isEditable)],
+    [types, isEditable]
   )
 
   const onSubmit = form.handleSubmit((values) => {
+    const payload = transformRowsToPayload(values.rows, types?.data ?? [])
+
     if (id === 'create') {
       createTwoF({
         month: values.month,
@@ -212,7 +229,7 @@ const TwoFDetailsPage = () => {
         title_rasxod_summa: values.title_rasxod_summa,
         summa_from: values.summa_from,
         summa_to: values.summa_to,
-        childs: values.childs
+        childs: payload
       })
     } else {
       updateTwoF({
@@ -224,7 +241,7 @@ const TwoFDetailsPage = () => {
         title_rasxod_summa: values.title_rasxod_summa,
         summa_from: values.summa_from,
         summa_to: values.summa_to,
-        childs: values.childs
+        childs: payload
       })
     }
   })
@@ -233,8 +250,6 @@ const TwoFDetailsPage = () => {
     if (e.key === 'Enter') {
       e.stopPropagation()
       e.preventDefault()
-
-      console.log('running')
 
       const value = e.currentTarget.value
       if (value.length > 0) {
@@ -304,10 +319,39 @@ const TwoFDetailsPage = () => {
     [isEmptyRowsHidden, form]
   )
 
+  useEffect(() => {
+    if (!budjet_id || !main_schet_id) {
+      return
+    }
+    if (id === 'create') {
+      checkSaldo({
+        budjet_id,
+        main_schet_id
+      })
+    }
+  }, [id, checkSaldo, budjet_id, main_schet_id])
+  useEffect(() => {
+    const rowValues = form.getValues('rows')
+
+    if (!rowValues.length) {
+      return
+    }
+
+    const totalValues = rowValues[rowValues.length - 1]
+    const result = roundNumberToTwoDecimalPlaces(
+      rowValues
+        .slice(1, rowValues.length - 1)
+        .reduce((result, row) => result + (Number(row['end_saldo']) || 0), 0)
+    )
+    if (totalValues['end_saldo'] !== result) {
+      form.setValue(`rows.${rowValues.length - 1}.${'end_saldo'}`, result)
+    }
+  }, [form, rows])
+
   return (
     <DetailsView className="h-full">
       <DetailsView.Content
-        isLoading={isFetching || isAutoFilling || isFetchingTypes}
+        isLoading={isFetching || isCheckingSaldo || isAutoFilling || isFetchingTypes}
         className="overflow-hidden h-full pb-20"
       >
         <form
@@ -363,7 +407,12 @@ const TwoFDetailsPage = () => {
                 ) : null}
               </div>
             </div>
-            <div className="overflow-auto scrollbar flex-1 relative">
+            <div
+              className={cn(
+                'overflow-auto scrollbar flex-1 relative',
+                isUpdatingTwoF || isCreatingTwoF ? 'pointer-events-none opacity-70' : ''
+              )}
+            >
               <TwoFTable
                 columns={columns}
                 methods={tableMethods}

@@ -102,7 +102,7 @@ class TwoFServiceBuilder extends CRUDService<TwoF, TwoFPayload, TwoFPayload, Two
   }
 
   async getSaldoCheck(params: { budjet_id: number; main_schet_id: number }) {
-    const res = await this.client.get<ApiResponse<unknown>>(`${this.endpoint}/check`, {
+    const res = await this.client.get<ApiResponse<unknown[]>>(`${this.endpoint}/check`, {
       headers: {
         'notify-error': false
       },

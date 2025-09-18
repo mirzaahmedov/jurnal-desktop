@@ -1,4 +1,4 @@
-import type { SaldoProduct } from '@/common/models'
+import type { MaterialSaldoProduct } from '@/common/models'
 import type { DialogProps } from '@radix-ui/react-dialog'
 
 import { useEffect, useMemo, useState } from 'react'
@@ -49,7 +49,7 @@ export interface SaldoProductSpravochnikDialogProps extends DialogProps {
   responsible_id: number
   to: string
   disabledIds: (number | string)[]
-  onSelect: (selected: SaldoProduct[]) => void
+  onSelect: (selected: MaterialSaldoProduct[]) => void
 }
 export const SaldoProductSpravochnikDialog = ({
   open,
@@ -64,7 +64,7 @@ export const SaldoProductSpravochnikDialog = ({
 
   const [search, setSearch] = useState('')
   const [tabValue, setTabValue] = useState(TabOption.ALL)
-  const [selectedRows, setSelectedRows] = useState<SaldoProduct[]>([])
+  const [selectedRows, setSelectedRows] = useState<MaterialSaldoProduct[]>([])
 
   const { t } = useTranslation()
 

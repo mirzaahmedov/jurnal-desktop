@@ -1,4 +1,4 @@
-import type { SaldoProduct } from '@/common/models/saldo'
+import type { MaterialSaldoProduct } from '@/common/models/saldo'
 
 import { Trans } from 'react-i18next'
 
@@ -10,7 +10,7 @@ import { UserCell } from '@/common/components/table/renderers/user'
 import { Badge } from '@/common/components/ui/badge'
 import { formatLocaleDate, formatNumber } from '@/common/lib/format'
 
-export const CommonMaterialSaldoProductColumns: ColumnDef<SaldoProduct>[] = [
+export const CommonMaterialSaldoProductColumns: ColumnDef<MaterialSaldoProduct>[] = [
   {
     key: 'name',
     minWidth: 400,

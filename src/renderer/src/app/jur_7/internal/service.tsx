@@ -1,5 +1,5 @@
 import type { InternalFormValues } from './config'
-import type { ApiResponseMeta, WarehouseInternal } from '@/common/models'
+import type { ApiResponseMeta, MaterialInternal } from '@/common/models'
 
 import { useMutation } from '@tanstack/react-query'
 
@@ -13,7 +13,7 @@ interface InternalMeta extends ApiResponseMeta {
 }
 
 export const WarehouseInternalService = new CRUDService<
-  WarehouseInternal,
+  MaterialInternal,
   InternalFormValues,
   InternalFormValues,
   InternalMeta

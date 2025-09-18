@@ -1,7 +1,7 @@
 import { WarehouseInternalViewDialog } from '@/app/jur_7/internal/view-dialog'
 import { WarehousePrixodViewDialog } from '@/app/jur_7/prixod/view-dialog'
 import { WarehouseRasxodViewDialog } from '@/app/jur_7/rasxod/view-dialog'
-import { WarehouseMonitoringType } from '@/common/models'
+import { MaterialMonitoringType } from '@/common/models'
 
 export interface ViewModalProps {
   selected: any
@@ -16,11 +16,11 @@ export const ViewModal = ({ selected, onClose }: ViewModalProps) => {
   }
 
   switch (selected?.type) {
-    case WarehouseMonitoringType.rasxod:
+    case MaterialMonitoringType.rasxod:
       return <WarehouseRasxodViewDialog {...props} />
-    case WarehouseMonitoringType.prixod:
+    case MaterialMonitoringType.prixod:
       return <WarehousePrixodViewDialog {...props} />
-    case WarehouseMonitoringType.internal:
+    case MaterialMonitoringType.internal:
       return <WarehouseInternalViewDialog {...props} />
 
     default:

@@ -19,7 +19,7 @@ import { useSettingsStore } from '@/common/features/settings'
 import { useDates, usePagination, useToggle } from '@/common/hooks'
 import { useLayout } from '@/common/layout'
 import { formatNumber } from '@/common/lib/format'
-import { type WarehouseMonitoring } from '@/common/models'
+import { type MaterialMonitoring } from '@/common/models'
 import { ListView } from '@/common/views'
 
 import { MaterialReportModal } from '../__components__/material-report-modal'
@@ -47,7 +47,7 @@ const MaterialMonitorPage = () => {
   const setLayout = useLayout()
 
   const [search] = useSearchFilter()
-  const [selected, setSelected] = useState<WarehouseMonitoring | null>(null)
+  const [selected, setSelected] = useState<MaterialMonitoring | null>(null)
 
   const { t } = useTranslation(['app'])
   const { budjet_id, main_schet_id } = useRequisitesStore()

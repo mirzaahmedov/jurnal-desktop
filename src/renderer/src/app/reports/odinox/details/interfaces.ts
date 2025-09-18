@@ -4,7 +4,7 @@ export interface OdinoxAutoFillSubChild {
   smeta_number: string
   group_number: string
   smeta_id: number
-  summa: number
+  summa: number | string
 }
 export interface OdinoxAutoFill {
   id: number

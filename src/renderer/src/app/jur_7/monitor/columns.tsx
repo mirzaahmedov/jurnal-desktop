@@ -8,9 +8,9 @@ import { UserCell } from '@/common/components/table/renderers/user'
 import { Badge } from '@/common/components/ui/badge'
 import { formatLocaleDate } from '@/common/lib/format'
 import { cn } from '@/common/lib/utils'
-import { type WarehouseMonitoring, WarehouseMonitoringType } from '@/common/models'
+import { type MaterialMonitoring, MaterialMonitoringType } from '@/common/models'
 
-export const columns: ColumnDef<WarehouseMonitoring>[] = [
+export const columns: ColumnDef<MaterialMonitoring>[] = [
   {
     sort: true,
     key: 'id',
@@ -38,13 +38,13 @@ export const columns: ColumnDef<WarehouseMonitoring>[] = [
     renderCell: (row) => (
       <Badge
         className={cn(
-          row.type === WarehouseMonitoringType.prixod && 'bg-emerald-500',
-          row.type === WarehouseMonitoringType.rasxod && 'bg-red-500'
+          row.type === MaterialMonitoringType.prixod && 'bg-emerald-500',
+          row.type === MaterialMonitoringType.rasxod && 'bg-red-500'
         )}
       >
-        {row.type === WarehouseMonitoringType.prixod ? (
+        {row.type === MaterialMonitoringType.prixod ? (
           <Trans>prixod</Trans>
-        ) : row.type === WarehouseMonitoringType.rasxod ? (
+        ) : row.type === MaterialMonitoringType.rasxod ? (
           <Trans>rasxod</Trans>
         ) : (
           <Trans>internal</Trans>

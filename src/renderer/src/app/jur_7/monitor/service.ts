@@ -1,4 +1,4 @@
-import type { ApiResponseMeta, WarehouseMonitoring } from '@/common/models'
+import type { ApiResponseMeta, MaterialMonitoring } from '@/common/models'
 
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 
@@ -12,7 +12,7 @@ interface MonitoringMeta extends ApiResponseMeta {
 }
 
 export const WarehouseMonitorService = new CRUDService<
-  WarehouseMonitoring,
+  MaterialMonitoring,
   never,
   never,
   MonitoringMeta

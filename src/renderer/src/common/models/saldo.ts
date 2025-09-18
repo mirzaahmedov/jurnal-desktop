@@ -1,10 +1,10 @@
-export enum SaldoType {
+export enum MaterialSaldoType {
   Import = 'import',
   Saldo = 'saldo',
   Prixod = 'prixod'
 }
 
-export interface SaldoProduct {
+export interface MaterialSaldoProduct {
   id: number
   eski_iznos_summa: number
   region_id: number
@@ -35,6 +35,7 @@ export interface SaldoProduct {
   type: string
   user_id: number
   login: string
+  history: MaterialProductHistory[]
   prixodData: Array<{
     docNum: string
     docDate: string
@@ -65,4 +66,16 @@ export interface SaldoProduct {
     sena: number
     month_iznos: number
   }
+}
+
+export interface MaterialProductHistory {
+  responsible_id: number
+  naimenovanie_tovarov_jur7_id: string
+  product_id: string
+  type: string
+  kol: number
+  summa: number
+  iznos_summa: number
+  to: null
+  from: string
 }

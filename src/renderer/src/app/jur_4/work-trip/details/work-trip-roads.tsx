@@ -1,6 +1,6 @@
 import type { WorkTripFormValues } from '../config'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 import { useMutation } from '@tanstack/react-query'
 import { ArrowRight, Calculator, Plus, Trash2 } from 'lucide-react'
@@ -45,6 +45,38 @@ export const WorkTripRoads = ({ form, minimumWageSumma }: WorkTripRoadsProps) =>
     name: fields.map((_, index) => `road.${index}.km`) as any
   })
 
+  const [warnings, setWarnings] = useState<boolean[]>([])
+
+  const handleChangeWarning = (index: number, value: boolean) => {
+    setWarnings((prev) => {
+      const newWarnings = [...prev]
+      newWarnings[index] = value
+      return newWarnings
+    })
+  }
+
+  useEffect(() => {
+    fields.map((field, index) => {
+      setWarnings(Array.from({ length: fields.length }, () => false))
+      if (field.from_region_id && field.to_region_id) {
+        getDistanceKM({
+          from_region_id: field.from_region_id,
+          to_region_id: field.to_region_id
+        }).then((km) => {
+          if (km !== field.km) {
+            const oldValue = form.getValues(`road.${index}.km`)
+            if (oldValue !== km) {
+              setWarnings((prev) => {
+                const newWarnings = [...prev]
+                newWarnings[index] = true
+                return newWarnings
+              })
+            }
+          }
+        })
+      }
+    })
+  }, [fields])
   useEffect(() => {
     const roads = form.getValues('road')
     roads.forEach((road, index) => {
@@ -89,7 +121,6 @@ export const WorkTripRoads = ({ form, minimumWageSumma }: WorkTripRoadsProps) =>
                           to_region_id: form.getValues(`road.${index}.to_region_id`)
                         }).then((km) => {
                           form.setValue(`road.${index}.km`, km)
-                          form.setValue(`road.${index}.calc_km`, km)
                           form.setValue(`road.${index}.road_summa`, minimumWageSumma * 0.001 * km, {
                             shouldValidate: true
                           })
@@ -128,7 +159,6 @@ export const WorkTripRoads = ({ form, minimumWageSumma }: WorkTripRoadsProps) =>
                           from_region_id: form.getValues(`road.${index}.from_region_id`)
                         }).then((km) => {
                           form.setValue(`road.${index}.km`, km)
-                          form.setValue(`road.${index}.calc_km`, km)
                           form.setValue(`road.${index}.road_summa`, minimumWageSumma * 0.001 * km, {
                             shouldValidate: true
                           })
@@ -158,13 +188,15 @@ export const WorkTripRoads = ({ form, minimumWageSumma }: WorkTripRoadsProps) =>
                     <NumericInput
                       className={t(
                         'w-24',
-                        form.watch(`road.${index}.calc_km`) &&
-                          form.watch(`road.${index}.calc_km`) !== field.value
-                          ? 'bg-amber-100 focus-visible:ring-amber-500'
-                          : ''
+                        warnings[index] ? 'bg-amber-100 focus-visible:ring-amber-500' : ''
                       )}
                       value={field.value}
-                      onValueChange={(values) => {
+                      onValueChange={(values, event) => {
+                        if (event.source === 'event') {
+                          handleChangeWarning(index, true)
+                        } else {
+                          handleChangeWarning(index, false)
+                        }
                         field.onChange(values.floatValue ?? 0)
                       }}
                       ref={field.ref}

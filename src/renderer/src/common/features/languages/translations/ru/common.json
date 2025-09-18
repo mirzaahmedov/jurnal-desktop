@@ -573,5 +573,6 @@
   "litsevoy_karta": "Лицевaя карта",
   "inventarization": "Инвентаризация",
   "priyem_sdachi": "Прием сдачи",
-  "recalculate_from_passport": "Пересчитать по паспорту"
+  "recalculate_from_passport": "Пересчитать по паспорту",
+  "material_product_history": "История движения материалов"
 }

@@ -1,7 +1,7 @@
 import type { SaldoFormValues } from './config'
 import type { MaterialCreateProvodkaFormValues } from './create/config'
 import type { MonthValue } from '@/common/features/saldo'
-import type { ApiResponse, ApiResponseMeta, SaldoProduct } from '@/common/models'
+import type { ApiResponse, ApiResponseMeta, MaterialSaldoProduct } from '@/common/models'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
@@ -203,7 +203,12 @@ export const MaterialSaldoService = new MaterialSaldoServiceBuilder()
     return {}
   })
 
-export const MaterialSaldoProductService = new CRUDService<SaldoProduct, null, null, MaterialMeta>({
+export const MaterialSaldoProductService = new CRUDService<
+  MaterialSaldoProduct,
+  null,
+  null,
+  MaterialMeta
+>({
   endpoint: ApiEndpoints.saldo_product
 })
   .use(budjet())

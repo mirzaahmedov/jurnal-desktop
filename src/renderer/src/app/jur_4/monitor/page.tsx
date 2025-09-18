@@ -208,6 +208,20 @@ const PodotchetMonitorPage = () => {
                 excel: true
               }}
             />
+
+            {podotchetSpravochnik.selected ? (
+              <DownloadFile
+                url="/podotchet/monitoring/by-podotchet/?"
+                fileName={`${t('litsevoy_karta')}_${podotchetSpravochnik.selected?.fio}.xlsx`}
+                buttonText={`${t('litsevoy_karta')}`}
+                params={{
+                  main_schet_id,
+                  schet_id: jur4_schet_id,
+                  podotchet_id: podotchetId,
+                  excel: true
+                }}
+              />
+            ) : null}
           </ButtonGroup>
         </div>
         <ListView.RangeDatePicker

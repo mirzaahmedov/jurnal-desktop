@@ -1,6 +1,6 @@
 import type { Group } from './group'
 import type { Organization } from './organization'
-import type { SaldoProduct } from './saldo'
+import type { MaterialSaldoProduct } from './saldo'
 import type { Shartnoma } from './shartnoma'
 import type { ShartnomaGrafik } from './shartnoma-grafik'
 
@@ -87,7 +87,7 @@ export interface MaterialRasxodProvodka {
   iznos_summa: number
   iznos: boolean
   budjet_id: any
-  product: SaldoProduct
+  product: MaterialSaldoProduct
   group: Group
 }
 
@@ -111,7 +111,7 @@ export interface MaterialRasxod {
   }>
 }
 
-export interface WarehouseInternalProvodka {
+export interface MaterialInternalProvodka {
   naimenovanie_tovarov_jur7_id: number
   kol: number
   sena: number
@@ -125,10 +125,10 @@ export interface WarehouseInternalProvodka {
   kredit_schet: string
   kredit_sub_schet: string
   data_pereotsenka: string
-  product: SaldoProduct
+  product: MaterialSaldoProduct
   group: Group
 }
-export interface WarehouseInternal {
+export interface MaterialInternal {
   id: number
   doc_num: string
   doc_date: string
@@ -145,10 +145,10 @@ export interface WarehouseInternal {
   kimga_podraz_name: string
 
   doverennost?: string
-  childs: WarehouseInternalProvodka[]
+  childs: MaterialInternalProvodka[]
 }
 
-export interface WarehouseMonitoring {
+export interface MaterialMonitoring {
   id: number
   doc_num: string
   doc_date: string
@@ -166,7 +166,7 @@ export interface WarehouseMonitoring {
   kredit_sub_schet: string
   debet_schet: string
   debet_sub_schet: string
-  type: WarehouseMonitoringType
+  type: MaterialMonitoringType
   combined_doc_date: string
   combined_id: number
   combined_doc_num: string
@@ -178,7 +178,7 @@ export interface WarehouseMonitoring {
   }>
 }
 
-export enum WarehouseMonitoringType {
+export enum MaterialMonitoringType {
   prixod = 'prixod',
   rasxod = 'rasxod',
   internal = 'internal'

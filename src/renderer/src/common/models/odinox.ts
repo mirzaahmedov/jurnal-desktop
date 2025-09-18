@@ -29,7 +29,7 @@ export interface OdinoxProvodka {
   sub_childs: Array<{
     id: number
     smeta_id: number
-    summa: number
+    summa: number | string
     smeta_name: string
     smeta_number: string
     group_number: string

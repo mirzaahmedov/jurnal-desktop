@@ -36,30 +36,6 @@ export const NachislenieReports = () => {
         <div className="flex items-center flex-wrap justify-end mt-10 gap-2.5">
           <DownloadFile
             isZarplata
-            url="Nachislenie/vedemost"
-            params={{
-              spBudnameId: budjetId,
-              year,
-              month
-            }}
-            fileName={`zarplata_vedemost_${year}_${month}.xlsx`}
-            buttonText={t('vedemost')}
-            variant="default"
-          />
-          <DownloadFile
-            isZarplata
-            url="Excel/svod-otchet"
-            params={{
-              spBudnameId: budjetId,
-              year,
-              month
-            }}
-            fileName={`zarplata_svod_${year}_${month}.xlsx`}
-            buttonText={t('aggregated_report')}
-            variant="default"
-          />
-          <DownloadFile
-            isZarplata
             url="Excel/inps-otchet"
             params={{
               spBudnameId: budjetId,

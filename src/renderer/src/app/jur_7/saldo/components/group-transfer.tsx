@@ -1,4 +1,4 @@
-import type { SaldoProduct } from '@/common/models'
+import type { MaterialSaldoProduct } from '@/common/models'
 import type { DialogTriggerProps } from 'react-aria-components'
 
 import { type FC, useCallback, useEffect, useMemo, useState } from 'react'
@@ -68,7 +68,7 @@ export const GroupTransfer: FC<GroupTransferProps> = (props) => {
 
   const [tabValue, setTabValue] = useState(GroupTransferTabs.All)
   const [targetGroupId, setTargetGroupId] = useState<number | null>(null)
-  const [selectedProducts, setSelectedProducts] = useState<SaldoProduct[]>([])
+  const [selectedProducts, setSelectedProducts] = useState<MaterialSaldoProduct[]>([])
   const [selectedDate, setSelectedDate] = useState<undefined | Date>(startDate)
   const [search, setSearch] = useState('')
   const [pagination, setPagination] = useState({
@@ -156,7 +156,7 @@ export const GroupTransfer: FC<GroupTransferProps> = (props) => {
       }
     })
   }, [form, isAllSelected, productsData])
-  const handleSelectRow = (row: SaldoProduct) => {
+  const handleSelectRow = (row: MaterialSaldoProduct) => {
     if (selectedProducts.find((p) => p.product_id === row.product_id)) {
       setSelectedProducts((prev) => prev.filter((e) => e.product_id !== row.product_id))
       return

@@ -18,6 +18,7 @@ import { useRequisitesStore } from '@/common/features/requisites'
 import { useRequisitesRedirect } from '@/common/features/requisites/use-main-schet-redirect'
 import { useLayout } from '@/common/layout'
 import { formatDate } from '@/common/lib/date'
+import { cn, roundNumberToTwoDecimalPlaces } from '@/common/lib/utils'
 import { DetailsView } from '@/common/views'
 
 import { OdinoxQueryKeys } from '../config'
@@ -26,7 +27,12 @@ import { type OdinoxFormValues, defaultValues } from './config'
 import { OdinoxDocumentsTracker } from './documents-tracker'
 import { OdinoxTable } from './odinox-table'
 import { OdinoxProvodkaColumns } from './provodki'
-import { getOdinoxColumns, transformGetByIdData, transformOdinoxAutoFillData } from './utils'
+import {
+  getOdinoxColumns,
+  transformGetByIdData,
+  transformOdinoxAutoFillData,
+  transformRowsToPayload
+} from './utils'
 
 const OdinoxDetailsPage = () => {
   const { id } = useParams()
@@ -39,6 +45,7 @@ const OdinoxDetailsPage = () => {
   const setLayout = useLayout()
 
   const [isEmptyRowsHidden, setEmptyRowsHidden] = useState(false)
+  const [isEditable, setEditable] = useState(false)
   const [selected, setSelected] = useState<{
     docs: OdinoxDocument[]
     args: GetDocsArgs
@@ -55,6 +62,13 @@ const OdinoxDetailsPage = () => {
     }
   })
 
+  const { isPending: isCheckingSaldo, mutate: checkSaldo } = useMutation({
+    mutationKey: [OdinoxQueryKeys.getCheckSaldo],
+    mutationFn: OdinoxService.getSaldoCheck,
+    onSuccess: (res) => {
+      setEditable(!res.data?.length)
+    }
+  })
   const { data: odinox, isFetching } = useQuery({
     queryKey: [
       OdinoxQueryKeys.getById,
@@ -198,11 +212,24 @@ const OdinoxDetailsPage = () => {
   }, [id, year, month, budjet_id])
 
   const columns = useMemo(
-    () => [...OdinoxProvodkaColumns, ...getOdinoxColumns(types?.data ?? [])],
-    [types]
+    () => [...OdinoxProvodkaColumns, ...getOdinoxColumns(types?.data ?? [], isEditable)],
+    [types, isEditable]
   )
 
+  useEffect(() => {
+    if (!budjet_id || !main_schet_id) {
+      return
+    }
+    if (id === 'create') {
+      checkSaldo({
+        main_schet_id,
+        budjet_id
+      })
+    }
+  }, [id, checkSaldo, budjet_id, main_schet_id])
+
   const onSubmit = form.handleSubmit((values) => {
+    const payload = transformRowsToPayload(values.rows, types?.data ?? [])
     if (id === 'create') {
       createOdinox({
         month: values.month,
@@ -212,7 +239,7 @@ const OdinoxDetailsPage = () => {
         title_rasxod_summa: values.title_rasxod_summa,
         summa_from: values.summa_from,
         summa_to: values.summa_to,
-        childs: values.childs
+        childs: payload
       })
     } else {
       updateOdinox({
@@ -224,7 +251,7 @@ const OdinoxDetailsPage = () => {
         title_rasxod_summa: values.title_rasxod_summa,
         summa_from: values.summa_from,
         summa_to: values.summa_to,
-        childs: values.childs
+        childs: payload
       })
     }
   })
@@ -302,10 +329,28 @@ const OdinoxDetailsPage = () => {
     [isEmptyRowsHidden, form]
   )
 
+  useEffect(() => {
+    const rowValues = form.getValues('rows')
+
+    if (!rowValues.length) {
+      return
+    }
+
+    const totalValues = rowValues[rowValues.length - 1]
+    const result = roundNumberToTwoDecimalPlaces(
+      rowValues
+        .slice(1, rowValues.length - 1)
+        .reduce((result, row) => result + (Number(row['end_saldo']) || 0), 0)
+    )
+    if (totalValues['end_saldo'] !== result) {
+      form.setValue(`rows.${rowValues.length - 1}.${'end_saldo'}`, result)
+    }
+  }, [form, rows])
+
   return (
     <DetailsView className="h-full">
       <DetailsView.Content
-        isLoading={isFetching || isAutoFilling || isFetchingTypes}
+        isLoading={isFetching || isCheckingSaldo || isAutoFilling || isFetchingTypes}
         className="overflow-hidden h-full pb-20"
       >
         <form
@@ -361,7 +406,12 @@ const OdinoxDetailsPage = () => {
                 ) : null}
               </div>
             </div>
-            <div className="overflow-auto scrollbar flex-1 relative">
+            <div
+              className={cn(
+                'overflow-auto scrollbar flex-1 relative',
+                isUpdatingOdinox || isCreatingOdinox ? 'pointer-events-none opacity-70' : ''
+              )}
+            >
               <OdinoxTable
                 columns={columns}
                 methods={tableMethods}

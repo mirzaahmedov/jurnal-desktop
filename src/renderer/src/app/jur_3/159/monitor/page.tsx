@@ -272,6 +272,21 @@ const OrganMonitoringPage = () => {
                   />
                 ) : null}
 
+                <DownloadFile
+                  url="/159/monitoring/svod"
+                  params={{
+                    month: startDate.getMonth() + 1,
+                    year: startDate.getFullYear(),
+                    main_schet_id,
+                    schet_id: jur3_schet_159_id,
+                    from: dates.from,
+                    to: dates.to,
+                    excel: true
+                  }}
+                  buttonText={t('summarized_report')}
+                  fileName={`159_${t('summarized_report')}_${dates.from}&${dates.to}.xlsx`}
+                />
+
                 <Button
                   variant="ghost"
                   onClick={dailyReportToggle.open}

@@ -51,6 +51,15 @@ export const WorkTripDetails = ({ id }: WorkTripDetailsProps) => {
   const { t } = useTranslation(['app'])
   const { main_schet_id, jur4_schet_id } = useRequisitesStore()
 
+  const invalidateQueries = () => {
+    queryClient.invalidateQueries({
+      queryKey: [WorkTripQueryKeys.GetAll]
+    })
+    queryClient.invalidateQueries({
+      queryKey: [WorkTripQueryKeys.GetById, id]
+    })
+  }
+
   const defaultDate = () =>
     startDate <= new Date() && new Date() <= endDate
       ? formatDate(new Date())
@@ -68,14 +77,7 @@ export const WorkTripDetails = ({ id }: WorkTripDetailsProps) => {
     mutationFn: WorkTripService.create,
     onSuccess: (res) => {
       toast.success(res.message)
-
-      queryClient.invalidateQueries({
-        queryKey: [WorkTripQueryKeys.GetAll]
-      })
-      queryClient.invalidateQueries({
-        queryKey: [WorkTripQueryKeys.GetById, id]
-      })
-
+      invalidateQueries()
       navigate(-1)
     }
   })
@@ -83,14 +85,7 @@ export const WorkTripDetails = ({ id }: WorkTripDetailsProps) => {
     mutationFn: WorkTripService.update,
     onSuccess: (res) => {
       toast.success(res.message)
-
-      queryClient.invalidateQueries({
-        queryKey: [WorkTripQueryKeys.GetAll]
-      })
-      queryClient.invalidateQueries({
-        queryKey: [WorkTripQueryKeys.GetById, id]
-      })
-
+      invalidateQueries()
       navigate(-1)
     }
   })

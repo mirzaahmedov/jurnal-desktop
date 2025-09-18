@@ -37,6 +37,7 @@ import { Input } from '@/common/components/ui/input'
 import { Tabs, TabsList, TabsTrigger } from '@/common/components/ui/tabs'
 import { YearSelect } from '@/common/components/year-select'
 import { useConfirm } from '@/common/features/confirm'
+import { DownloadFile } from '@/common/features/file'
 import { useZarplataStore } from '@/common/features/zarplata/store'
 import { useToggle } from '@/common/hooks'
 import { formatDate, parseDate, parseLocaleDate } from '@/common/lib/date'
@@ -188,6 +189,29 @@ export const NachislenieEditDialog = ({
             />
           </form>
         </Form>
+
+        {nachislenieData ? (
+          <div className="flex items-center gap-2.5 ml-auto">
+            <DownloadFile
+              isZarplata
+              url="Nachislenie/vedemost"
+              params={{
+                mainId: nachislenieId
+              }}
+              fileName={`zarplata_vedemost_${nachislenieData?.docNum}_${nachislenieData?.docDate}.xlsx`}
+              buttonText={t('vedemost')}
+            />
+            <DownloadFile
+              isZarplata
+              url="Excel/svod-otchet"
+              params={{
+                mainId: nachislenieId
+              }}
+              fileName={`zarplata_svod_${nachislenieData?.docNum}_${nachislenieData?.docDate}.xlsx`}
+              buttonText={t('aggregated_report')}
+            />
+          </div>
+        ) : null}
       </div>
     )
   }

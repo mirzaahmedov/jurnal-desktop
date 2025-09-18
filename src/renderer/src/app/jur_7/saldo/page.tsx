@@ -1,9 +1,16 @@
-import type { SaldoProduct } from '@/common/models'
+import type { MaterialProductHistory, MaterialSaldoProduct } from '@/common/models'
 
 import { useEffect, useState } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { ArrowRightLeft, CalendarDays, CircleArrowDown, Download, Trash2 } from 'lucide-react'
+import {
+  ArrowRightLeft,
+  CalendarDays,
+  CircleArrowDown,
+  Download,
+  History,
+  Trash2
+} from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
@@ -50,6 +57,7 @@ import { CommonMaterialSaldoProductColumns } from './columns'
 import { DeleteExistingDocumentsAlert } from './components/delete-existing-document-alert'
 import { DeleteExistingSaldoAlert } from './components/delete-existing-saldo-alert'
 import { GroupTransfer } from './components/group-transfer'
+import { MaterialProductHistoryDialog } from './components/material-product-history-dialog'
 import { MonthlySaldoTrackerDialog } from './components/monthly-saldo-tracker-dialog'
 import { MaterialSaldoQueryKeys, defaultValues } from './config'
 import { MaterialSaldoProductService, MaterialSaldoService } from './service'
@@ -79,7 +87,7 @@ const MaterialWarehouseSaldoPage = () => {
   const [deleteExistingDocumentError, setDeleteExistingDocumentError] = useState<{
     message: string
     docs: OstatokDeleteExistingDocument[]
-    product?: SaldoProduct
+    product?: MaterialSaldoProduct
   }>()
   const [deleteExistingSaldoError, setDeleteExistingSaldoError] = useState<{
     message: string
@@ -90,12 +98,14 @@ const MaterialWarehouseSaldoPage = () => {
     result: ImportValidationErrorRow
   }>()
 
+  const [history, setHistory] = useState<MaterialProductHistory[]>([])
   const [selectedDate, setSelectedDate] = useState<undefined | Date>(startDate)
   const [isModifiable, setModifiable] = useState(false)
   const [search] = useSearchFilter()
 
   const transferToggle = useToggle()
   const trackerToggle = useToggle()
+  const historyToggle = useToggle()
   const materialToggle = useToggle()
   const queryClient = useQueryClient()
   const pagination = usePagination()
@@ -112,6 +122,18 @@ const MaterialWarehouseSaldoPage = () => {
 
   const groupSpravochnik = useSpravochnik(createGroupSpravochnik({}))
   const responsibleSpravochnik = useSpravochnik(createResponsibleSpravochnik({}))
+
+  const invalidateQueries = () => {
+    queryClient.invalidateQueries({
+      queryKey: [MaterialSaldoQueryKeys.getAll]
+    })
+    queryClient.invalidateQueries({
+      queryKey: [IznosQueryKeys.getAll]
+    })
+    queryClient.invalidateQueries({
+      queryKey: [MaterialSaldoQueryKeys.check]
+    })
+  }
 
   const { mutate: checkCreate, isPending: isCheckingCreate } = useMutation({
     mutationFn: MaterialSaldoService.checkCreate,
@@ -150,15 +172,7 @@ const MaterialWarehouseSaldoPage = () => {
     mutationKey: [MaterialSaldoQueryKeys.deleteMonth],
     mutationFn: MaterialSaldoService.deleteMonth,
     onSuccess(res) {
-      queryClient.invalidateQueries({
-        queryKey: [MaterialSaldoQueryKeys.getAll]
-      })
-      queryClient.invalidateQueries({
-        queryKey: [IznosQueryKeys.getAll]
-      })
-      queryClient.invalidateQueries({
-        queryKey: [MaterialSaldoQueryKeys.check]
-      })
+      invalidateQueries()
       handleOstatokResponse(res)
       toast.success(res?.message)
     },
@@ -179,15 +193,7 @@ const MaterialWarehouseSaldoPage = () => {
     mutationKey: [MaterialSaldoQueryKeys.deleteOne],
     mutationFn: MaterialSaldoService.deleteOne,
     onSuccess(res) {
-      queryClient.invalidateQueries({
-        queryKey: [MaterialSaldoQueryKeys.getAll]
-      })
-      queryClient.invalidateQueries({
-        queryKey: [IznosQueryKeys.getAll]
-      })
-      queryClient.invalidateQueries({
-        queryKey: [MaterialSaldoQueryKeys.check]
-      })
+      invalidateQueries()
       handleOstatokResponse(res)
       toast.success(res?.message)
     },
@@ -209,15 +215,7 @@ const MaterialWarehouseSaldoPage = () => {
     mutationKey: [MaterialSaldoQueryKeys.clean],
     mutationFn: MaterialSaldoService.cleanSaldo,
     onSuccess(res) {
-      queryClient.invalidateQueries({
-        queryKey: [MaterialSaldoQueryKeys.getAll]
-      })
-      queryClient.invalidateQueries({
-        queryKey: [IznosQueryKeys.getAll]
-      })
-      queryClient.invalidateQueries({
-        queryKey: [MaterialSaldoQueryKeys.check]
-      })
+      invalidateQueries()
       toast.success(res?.message)
     }
   })
@@ -281,7 +279,7 @@ const MaterialWarehouseSaldoPage = () => {
       }
     })
   }
-  const handleDeleteOne = (row: SaldoProduct) => {
+  const handleDeleteOne = (row: MaterialSaldoProduct) => {
     confirm({
       onConfirm() {
         deleteOne({
@@ -424,15 +422,7 @@ const MaterialWarehouseSaldoPage = () => {
               main_schet_id
             }}
             onSuccess={() => {
-              queryClient.invalidateQueries({
-                queryKey: [MaterialSaldoQueryKeys.getAll]
-              })
-              queryClient.invalidateQueries({
-                queryKey: [IznosQueryKeys.getAll]
-              })
-              queryClient.invalidateQueries({
-                queryKey: [MaterialSaldoQueryKeys.check]
-              })
+              invalidateQueries()
             }}
             onError={(error) => {
               const result = handleImportValidationError(error)
@@ -471,6 +461,20 @@ const MaterialWarehouseSaldoPage = () => {
           getRowId={(row) => row.product_id}
           getRowKey={(row) => row.id}
           onDelete={isModifiable ? handleDeleteOne : undefined}
+          actions={(row) =>
+            row.history?.length ? (
+              <Button
+                onClick={() => {
+                  setHistory(row.history)
+                  historyToggle.open()
+                }}
+                variant="ghost"
+                size="icon"
+              >
+                <History className="btn-icon" />
+              </Button>
+            ) : null
+          }
           footer={
             <>
               <FooterRow>
@@ -577,6 +581,17 @@ const MaterialWarehouseSaldoPage = () => {
         to={formatDate(selectedDate!)}
         year={startDate.getFullYear()}
         month={startDate.getMonth() + 1}
+      />
+
+      <MaterialProductHistoryDialog
+        isOpen={historyToggle.isOpen}
+        onOpenChange={(open) => {
+          if (!open) {
+            setHistory([])
+          }
+          historyToggle.setOpen(open)
+        }}
+        history={history}
       />
 
       <ListView.Footer>

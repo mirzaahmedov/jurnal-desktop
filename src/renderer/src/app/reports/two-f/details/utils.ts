@@ -42,11 +42,9 @@ export const transformTwoFAutoFillData = (
         summa:
           type.name === TwoFTypeName.BankPrixod
             ? meta.title_summa
-            : type.name === TwoFTypeName.Saldo
-              ? meta.summa_from
-              : type.name === TwoFTypeName.Jur1_2
-                ? meta.title_rasxod_summa
-                : 0,
+            : type.name === TwoFTypeName.Jur1_2
+              ? meta.title_rasxod_summa
+              : 0,
         smeta_id: -1,
         smeta_name: meta.title,
         smeta_number: '',
@@ -55,7 +53,7 @@ export const transformTwoFAutoFillData = (
       ...type.sub_childs,
       {
         id: 0,
-        summa: type.name === TwoFTypeName.Saldo ? meta.summa_to : type.summa,
+        summa: type.summa,
         smeta_id: 0,
         smeta_name: t('total'),
         smeta_number: '',
@@ -112,11 +110,9 @@ export const transformGetByIdData = (
         summa:
           type.type_name === TwoFTypeName.BankPrixod
             ? meta.title_summa
-            : type.type_name === TwoFTypeName.Saldo
-              ? meta.summa_from
-              : type.type_name === TwoFTypeName.Jur1_2
-                ? meta.title_rasxod_summa
-                : 0,
+            : type.type_name === TwoFTypeName.Jur1_2
+              ? meta.title_rasxod_summa
+              : 0,
         smeta_id: -1,
         smeta_name: meta.title,
         smeta_number: '',
@@ -125,7 +121,7 @@ export const transformGetByIdData = (
       ...type.sub_childs,
       {
         id: 0,
-        summa: type.type_name === TwoFTypeName.Saldo ? meta.summa_to : type.summa,
+        summa: type.summa,
         smeta_id: 0,
         smeta_name: t('total'),
         smeta_number: '',
@@ -162,7 +158,31 @@ export const transformGetByIdData = (
   return rows
 }
 
-export const getTwoFColumns = (types: TwoFType[]) => {
+export const transformRowsToPayload = (rows: TwoFTableRow[], types: TwoFType[]) => {
+  const dataRows = rows.slice(1, rows.length - 1)
+  const payload: TwoFProvodka[] = []
+
+  types.forEach((type) => {
+    payload.push({
+      type_id: type.id,
+      sort_order: type.sort_order,
+      type_name: type.name,
+      summa: 0,
+      sub_childs: dataRows.map((row) => ({
+        id: row.smeta_id ?? 0,
+        smeta_id: row.smeta_id ?? 0,
+        smeta_name: row.smeta_name ?? '',
+        smeta_number: row.smeta_number ?? '',
+        group_number: row.group_number ?? '',
+        summa: row[type.name] ? Number(row[type.name]) : 0
+      }))
+    })
+  })
+
+  return payload
+}
+
+export const getTwoFColumns = (types: TwoFType[], isEditable: boolean) => {
   const getColumns = (type: TwoFType) => {
     return {
       key: type.name,
@@ -186,7 +206,8 @@ export const getTwoFColumns = (types: TwoFType[]) => {
       minWidth: 120,
       Editor: createNumberEditor({
         key: type.name,
-        readOnly: true,
+        readOnly: !isEditable || type.sort_order !== 10,
+        isReadOnly: ({ id, rows }) => id === 0 || id === rows.length - 1,
         defaultValue: 0,
         inputProps: {
           adjustWidth: true

@@ -36,7 +36,7 @@ const isSmetaGrafik = (
   _values: unknown,
   sort_order?: number | string
 ): _values is OdinoxGrafik[] => {
-  return sort_order === 0 || sort_order === 5
+  return sort_order === 0 || sort_order === 5 || sort_order === -1 || sort_order === 10
 }
 
 const isRemaining = (

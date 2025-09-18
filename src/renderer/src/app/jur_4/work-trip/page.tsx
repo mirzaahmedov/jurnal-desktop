@@ -22,6 +22,7 @@ import { useDates, usePagination } from '@/common/hooks'
 import { useLayout } from '@/common/layout'
 import { ListView } from '@/common/views'
 
+import { usePodotchetSaldo } from '../saldo/use-saldo'
 import { WorkTripColumnDefs } from './columns'
 import { WorkTripQueryKeys } from './config'
 import { WorkTripService } from './service'
@@ -40,6 +41,7 @@ const WorkTripPage = () => {
 
   const { t } = useTranslation(['app'])
   const { main_schet_id, jur4_schet_id } = useRequisitesStore()
+  const { queuedMonths } = usePodotchetSaldo()
   const { startDate } = useSelectedMonthStore()
   const { confirm } = useConfirm()
 
@@ -58,7 +60,8 @@ const WorkTripPage = () => {
         schet_id: jur4_schet_id
       }
     ],
-    queryFn: WorkTripService.getAll
+    queryFn: WorkTripService.getAll,
+    enabled: !queuedMonths.length
   })
 
   const { mutate: deleteWorkTrip } = useMutation({

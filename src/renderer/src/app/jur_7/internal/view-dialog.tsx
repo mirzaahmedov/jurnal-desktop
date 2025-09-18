@@ -1,4 +1,4 @@
-import type { WarehouseInternalProvodka } from '@/common/models'
+import type { MaterialInternalProvodka } from '@/common/models'
 
 import { useQuery } from '@tanstack/react-query'
 import { Download } from 'lucide-react'
@@ -28,7 +28,7 @@ import { TotalsOverview } from '../__components__/totals-overview'
 import { WarehouseInternalQueryKeys } from './config'
 import { WarehouseInternalService } from './service'
 
-const provodkaColumns: ColumnDef<WarehouseInternalProvodka>[] = [
+const provodkaColumns: ColumnDef<MaterialInternalProvodka>[] = [
   {
     key: 'code',
     renderCell: (row) => row.product?.id

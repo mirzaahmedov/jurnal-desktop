@@ -39,11 +39,9 @@ export const transformOdinoxAutoFillData = (types: OdinoxAutoFill[], meta: Odino
         summa:
           type.name === OdinoxTypeName.BankPrixod
             ? meta.title_summa
-            : type.name === OdinoxTypeName.Saldo
-              ? meta.summa_from
-              : type.name === OdinoxTypeName.Jur1_2
-                ? meta.title_rasxod_summa
-                : 0,
+            : type.name === OdinoxTypeName.Jur1_2
+              ? meta.title_rasxod_summa
+              : 0,
         smeta_id: -1,
         smeta_name: meta.title,
         smeta_number: '',
@@ -52,7 +50,7 @@ export const transformOdinoxAutoFillData = (types: OdinoxAutoFill[], meta: Odino
       ...type.sub_childs,
       {
         id: 0,
-        summa: type.name === OdinoxTypeName.Saldo ? meta.summa_to : type.summa,
+        summa: type.summa,
         smeta_id: 0,
         smeta_name: t('total'),
         smeta_number: '',
@@ -106,11 +104,9 @@ export const transformGetByIdData = (types: OdinoxProvodka[], meta: OdinoxMeta) 
         summa:
           type.type_name === OdinoxTypeName.BankPrixod
             ? meta.title_summa
-            : type.type_name === OdinoxTypeName.Saldo
-              ? meta.summa_from
-              : type.type_name === OdinoxTypeName.Jur1_2
-                ? meta.title_rasxod_summa
-                : 0,
+            : type.type_name === OdinoxTypeName.Jur1_2
+              ? meta.title_rasxod_summa
+              : 0,
         smeta_id: -1,
         smeta_name: meta.title,
         smeta_number: '',
@@ -119,7 +115,7 @@ export const transformGetByIdData = (types: OdinoxProvodka[], meta: OdinoxMeta) 
       ...type.sub_childs,
       {
         id: 0,
-        summa: type.type_name === OdinoxTypeName.Saldo ? meta.summa_to : type.summa,
+        summa: type.summa,
         smeta_id: 0,
         smeta_name: t('total'),
         smeta_number: '',
@@ -156,7 +152,32 @@ export const transformGetByIdData = (types: OdinoxProvodka[], meta: OdinoxMeta) 
   return rows
 }
 
-export const getOdinoxColumns = (types: OdinoxType[]) => {
+export const transformRowsToPayload = (rows: OdinoxTableRow[], types: OdinoxType[]) => {
+  const dataRows = rows.slice(1, rows.length - 1)
+  const payload: OdinoxProvodka[] = []
+
+  types.forEach((type) => {
+    const provodka: OdinoxProvodka = {
+      type_id: type.id,
+      sort_order: type.sort_order,
+      type_name: type.name,
+      summa: 0,
+      sub_childs: dataRows.map((row) => ({
+        id: row.smeta_id ?? 0,
+        smeta_id: row.smeta_id ?? 0,
+        smeta_name: row.smeta_name ?? '',
+        smeta_number: row.smeta_number ?? '',
+        group_number: row.group_number ?? '',
+        summa: row[type.name] ?? 0
+      }))
+    }
+    payload.push(provodka)
+  })
+
+  return payload
+}
+
+export const getOdinoxColumns = (types: OdinoxType[], isEditable: boolean) => {
   const getColumns = (type: OdinoxType) => {
     return {
       key: type.name,
@@ -180,7 +201,8 @@ export const getOdinoxColumns = (types: OdinoxType[]) => {
       minWidth: 120,
       Editor: createNumberEditor({
         key: type.name,
-        readOnly: true,
+        readOnly: !isEditable || type.sort_order !== 10,
+        isReadOnly: ({ id, rows }) => id === 0 || id === rows.length - 1,
         defaultValue: 0,
         inputProps: {
           adjustWidth: true

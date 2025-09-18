@@ -1,5 +1,5 @@
 import type { OstatokDeleteExistingDocument } from '../utils'
-import type { SaldoProduct } from '@/common/models'
+import type { MaterialSaldoProduct } from '@/common/models'
 import type { DialogProps } from '@radix-ui/react-dialog'
 import type { TFunction } from 'i18next'
 
@@ -36,8 +36,8 @@ import { formatLocaleDate, formatNumber } from '@/common/lib/format'
 export interface DeleteExistingDocumentsAlertProps extends DialogProps {
   message: string
   docs: OstatokDeleteExistingDocument[]
-  product?: SaldoProduct
-  onRemove?: (product?: SaldoProduct) => void
+  product?: MaterialSaldoProduct
+  onRemove?: (product?: MaterialSaldoProduct) => void
 }
 export const DeleteExistingDocumentsAlert = ({
   docs,
@@ -177,7 +177,7 @@ export const DeleteExistingDocumentsAlert = ({
   )
 }
 
-const getProductFields = (t: TFunction, product: SaldoProduct = {} as any) => {
+const getProductFields = (t: TFunction, product: MaterialSaldoProduct = {} as any) => {
   return [
     {
       name: t('code'),
