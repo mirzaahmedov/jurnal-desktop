@@ -5,7 +5,7 @@ import type { DialogTriggerProps } from 'react-aria-components'
 import { type FC, useEffect, useState } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { BookUser, Plus, Sigma } from 'lucide-react'
+import { BookUser, Plus, Search, Sigma } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
@@ -23,6 +23,7 @@ import { ContentStepper } from '@/common/components/content-stepper'
 import { FormElement } from '@/common/components/form'
 import { JollyDatePicker } from '@/common/components/jolly-date-picker'
 import { Button } from '@/common/components/jolly/button'
+import { ComboboxItem, JollyComboBox } from '@/common/components/jolly/combobox'
 import {
   DialogContent,
   DialogHeader,
@@ -69,6 +70,10 @@ export const NachislenieEditDialog = ({
   const { openMainZarplataView } = useZarplataStore()
 
   const [tabValue, setTabValue] = useState(TabOptions.View)
+  const [comboValue, setComboValue] = useState(null)
+  const [currentIndex, setCurrentIndex] = useState(0)
+
+  const comboModal = useToggle()
 
   const nachislenieMainQuery = useQuery({
     queryKey: [NachislenieService.QueryKeys.GetMainById, nachislenieId!],
@@ -105,6 +110,14 @@ export const NachislenieEditDialog = ({
       })
     }
   }, [form, nachislenieData])
+
+  const handleSearchMainZarplata = (value: number | null) => {
+    if (value) {
+      setCurrentIndex(nachislenieProvodka.findIndex((i) => i.id === value) ?? 0)
+    }
+    setComboValue(null)
+    comboModal.close()
+  }
 
   const Header = () => {
     return (
@@ -233,6 +246,33 @@ export const NachislenieEditDialog = ({
                     <TabsTrigger value={TabOptions.Update}>{t('update')}</TabsTrigger>
                   </TabsList>
                 </Tabs>
+
+                {tabValue === TabOptions.Update && (
+                  <div className="flex items-center bg-gray-100 rounded-md">
+                    <JollyComboBox
+                      hideLabel
+                      defaultItems={nachislenieProvodka}
+                      selectedKey={comboValue}
+                      menuTrigger="focus"
+                      inputProps={{
+                        onClick: () => comboModal.open()
+                      }}
+                      onOpenChange={comboModal.setOpen}
+                      onSelectionChange={(value) =>
+                        handleSearchMainZarplata(value ? Number(value) : null)
+                      }
+                      popoverProps={{
+                        isOpen: comboModal.isOpen
+                      }}
+                      className="mt-0"
+                    >
+                      {(item) => <ComboboxItem id={item.id}>{item.fio}</ComboboxItem>}
+                    </JollyComboBox>
+                    <div className="size-10 grid place-items-center">
+                      <Search className="btn-icon text-gray-400" />
+                    </div>
+                  </div>
+                )}
               </DialogHeader>
 
               {tabValue === TabOptions.View && (
@@ -385,6 +425,8 @@ export const NachislenieEditDialog = ({
                     <Header />
                   </div>
                   <NachislenieUpdateForm
+                    currentIndex={currentIndex}
+                    onNavigateItem={setCurrentIndex}
                     nachislenieProvodka={nachislenieProvodka}
                     nachislenieMainId={nachislenieData?.id ?? 0}
                   />
@@ -399,17 +441,20 @@ export const NachislenieEditDialog = ({
 }
 
 export interface NachislenieUpdateFormProps extends Omit<DialogTriggerProps, 'children'> {
+  currentIndex: number
+  onNavigateItem: (index: number) => void
   nachislenieMainId: number
   nachislenieProvodka: NachislenieProvodka[]
 }
 const NachislenieUpdateForm: FC<NachislenieUpdateFormProps> = ({
+  currentIndex,
+  onNavigateItem,
   nachislenieMainId,
   nachislenieProvodka
 }) => {
   const { t } = useTranslation(['app'])
   const { confirm } = useConfirm()
 
-  const [currentIndex, setCurrentIndex] = useState(0)
   const [paymentData, setPaymentData] = useState<NachisleniePaymentDto>()
   const [deductionData, setDeductionData] = useState<NachislenieDeductionDto>()
 
@@ -772,7 +817,7 @@ const NachislenieUpdateForm: FC<NachislenieUpdateFormProps> = ({
             <div className="mt-5 pr-5 flex items-center justify-between">
               <ContentStepper
                 currentIndex={currentIndex}
-                onIndexChange={setCurrentIndex}
+                onIndexChange={onNavigateItem}
                 itemsCount={nachislenieProvodka.length}
               />
             </div>
