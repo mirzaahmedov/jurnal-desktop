@@ -4,7 +4,7 @@ import type { GenericTableProps } from '@/common/components'
 import { Download } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { MaterialReportModal } from '@/app/jur_7/__components__/material-report-modal'
+import { MaterialReportModal } from '@/app/jur_7/components/material-report-modal'
 import { DailyReportDialog } from '@/app/jur_7/monitor/daily-report-dialog'
 import { SummarizedReportDialog } from '@/app/jur_7/monitor/summarized-report-dialog'
 import { Button } from '@/common/components/jolly/button'

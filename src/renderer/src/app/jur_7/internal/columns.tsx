@@ -5,7 +5,7 @@ import { IDCell } from '@/common/components/table/renderers/id'
 import { UserCell } from '@/common/components/table/renderers/user'
 import { formatLocaleDate, formatNumber } from '@/common/lib/format'
 
-import { ExpandableProvodka } from '../__components__/expandable-provodka'
+import { ExpandableProvodka } from '../components/expandable-provodka'
 
 export const internalColumns: ColumnDef<Internal>[] = [
   {

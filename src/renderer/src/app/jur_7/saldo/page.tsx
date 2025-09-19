@@ -1,16 +1,9 @@
-import type { MaterialProductHistory, MaterialSaldoProduct } from '@/common/models'
+import type { MaterialSaldoProduct } from '@/common/models'
 
 import { useEffect, useState } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import {
-  ArrowRightLeft,
-  CalendarDays,
-  CircleArrowDown,
-  Download,
-  History,
-  Trash2
-} from 'lucide-react'
+import { ArrowRightLeft, CalendarDays, CircleArrowDown, Download, Trash2 } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
@@ -50,14 +43,14 @@ import { formatLocaleDate, formatNumber } from '@/common/lib/format'
 import { capitalize } from '@/common/lib/string'
 import { ListView } from '@/common/views'
 
-import { MaterialReportModal } from '../__components__/material-report-modal'
+import { MaterialReportModal } from '../components/material-report-modal'
 import { IznosQueryKeys } from '../iznos/config'
 import { createResponsibleSpravochnik } from '../responsible/service'
 import { CommonMaterialSaldoProductColumns } from './columns'
 import { DeleteExistingDocumentsAlert } from './components/delete-existing-document-alert'
 import { DeleteExistingSaldoAlert } from './components/delete-existing-saldo-alert'
 import { GroupTransfer } from './components/group-transfer'
-import { MaterialProductHistoryDialog } from './components/material-product-history-dialog'
+import { MaterialProductDetailsDialog } from './components/material-product-details'
 import { MonthlySaldoTrackerDialog } from './components/monthly-saldo-tracker-dialog'
 import { MaterialSaldoQueryKeys, defaultValues } from './config'
 import { MaterialSaldoProductService, MaterialSaldoService } from './service'
@@ -98,14 +91,14 @@ const MaterialWarehouseSaldoPage = () => {
     result: ImportValidationErrorRow
   }>()
 
-  const [history, setHistory] = useState<MaterialProductHistory[]>([])
+  const [productData, setProductData] = useState<MaterialSaldoProduct>()
   const [selectedDate, setSelectedDate] = useState<undefined | Date>(startDate)
   const [isModifiable, setModifiable] = useState(false)
   const [search] = useSearchFilter()
 
   const transferToggle = useToggle()
   const trackerToggle = useToggle()
-  const historyToggle = useToggle()
+  const detailsToggle = useToggle()
   const materialToggle = useToggle()
   const queryClient = useQueryClient()
   const pagination = usePagination()
@@ -461,20 +454,12 @@ const MaterialWarehouseSaldoPage = () => {
           getRowId={(row) => row.product_id}
           getRowKey={(row) => row.id}
           onDelete={isModifiable ? handleDeleteOne : undefined}
-          actions={(row) =>
-            row.history?.length ? (
-              <Button
-                onClick={() => {
-                  setHistory(row.history)
-                  historyToggle.open()
-                }}
-                variant="ghost"
-                size="icon"
-              >
-                <History className="btn-icon" />
-              </Button>
-            ) : null
-          }
+          params={{
+            onClickTitle: (row: MaterialSaldoProduct) => {
+              setProductData(row)
+              detailsToggle.open()
+            }
+          }}
           footer={
             <>
               <FooterRow>
@@ -583,16 +568,18 @@ const MaterialWarehouseSaldoPage = () => {
         month={startDate.getMonth() + 1}
       />
 
-      <MaterialProductHistoryDialog
-        isOpen={historyToggle.isOpen}
-        onOpenChange={(open) => {
-          if (!open) {
-            setHistory([])
-          }
-          historyToggle.setOpen(open)
-        }}
-        history={history}
-      />
+      {productData ? (
+        <MaterialProductDetailsDialog
+          isOpen={detailsToggle.isOpen}
+          onOpenChange={(open) => {
+            if (!open) {
+              setProductData(undefined)
+            }
+            detailsToggle.setOpen(open)
+          }}
+          data={productData}
+        />
+      ) : null}
 
       <ListView.Footer>
         <ListView.Pagination

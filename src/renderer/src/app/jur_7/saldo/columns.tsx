@@ -14,9 +14,17 @@ export const CommonMaterialSaldoProductColumns: ColumnDef<MaterialSaldoProduct>[
   {
     key: 'name',
     minWidth: 400,
-    renderCell: (row) => (
+    renderCell: (row, _, props) => (
       <HoverInfoCell
-        title={<span className="text-xs">{row.name}</span>}
+        onClick={() =>
+          typeof props.params?.onClickTitle === 'function'
+            ? props.params?.onClickTitle(row)
+            : undefined
+        }
+        title={<span className="text-xs hover:text-brand transition-colors">{row.name}</span>}
+        tooltipProps={{
+          placement: 'right'
+        }}
         tooltipContent={
           <DataList
             className="min-w-52"

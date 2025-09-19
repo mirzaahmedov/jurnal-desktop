@@ -22,7 +22,7 @@ import { formatNumber } from '@/common/lib/format'
 import { type MaterialMonitoring } from '@/common/models'
 import { ListView } from '@/common/views'
 
-import { MaterialReportModal } from '../__components__/material-report-modal'
+import { MaterialReportModal } from '../components/material-report-modal'
 import { useMaterialSaldo } from '../saldo/use-saldo'
 import { columns } from './columns'
 import { WarehouseMonitorQueryKeys } from './config'

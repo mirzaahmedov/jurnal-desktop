@@ -7,10 +7,12 @@ import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 
+import { TotalsOverview } from '@/app/jur_7/components/totals-overview'
 import { IznosQueryKeys } from '@/app/jur_7/iznos/config'
 import { createResponsibleSpravochnik } from '@/app/jur_7/responsible/service'
 import { MaterialSaldoQueryKeys } from '@/app/jur_7/saldo'
 import { handleOstatokResponse } from '@/app/jur_7/saldo/utils'
+import { changeOpisanieSchetFaktura } from '@/app/jur_7/utils/opisanie'
 import { Form } from '@/common/components/ui/form'
 import { DocumentType } from '@/common/features/doc-num'
 import { useRequisitesStore } from '@/common/features/requisites'
@@ -30,11 +32,9 @@ import {
   SummaFields
 } from '@/common/widget/form'
 
-import { TotalsOverview } from '../../__components__/totals-overview'
 import { InternalFormSchema, WarehouseInternalQueryKeys, defaultValues } from '../config'
 import { WarehouseInternalService, useInternalCreate, useInternalUpdate } from '../service'
 import { ProvodkaTable } from './provodka-table'
-import { changeOpisanieSchetFaktura } from './utils'
 
 interface InternalDetailsProps {
   id: string | undefined

@@ -26,7 +26,7 @@ import { formatDate, parseDate } from '@/common/lib/date'
 import { formatNumber } from '@/common/lib/format'
 import { ListView } from '@/common/views'
 
-import { MaterialReportModal } from '../__components__/material-report-modal'
+import { MaterialReportModal } from '../components/material-report-modal'
 import { createResponsibleSpravochnik } from '../responsible/service'
 import { MaterialSaldoProductService, defaultValues } from '../saldo'
 import { useMaterialSaldo } from '../saldo/use-saldo'

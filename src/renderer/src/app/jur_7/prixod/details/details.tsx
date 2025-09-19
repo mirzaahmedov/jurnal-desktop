@@ -11,10 +11,12 @@ import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 
 import { createShartnomaSpravochnik } from '@/app/jur_3/shartnoma'
+import { TotalsOverview } from '@/app/jur_7/components/totals-overview'
 import { IznosQueryKeys } from '@/app/jur_7/iznos/config'
 import { createResponsibleSpravochnik } from '@/app/jur_7/responsible/service'
 import { MaterialSaldoQueryKeys } from '@/app/jur_7/saldo'
 import { handleOstatokExistingDocumentError, handleOstatokResponse } from '@/app/jur_7/saldo/utils'
+import { changeOpisanieDovernost, changeOpisanieSchetFaktura } from '@/app/jur_7/utils/opisanie'
 import { createOrganizationSpravochnik } from '@/app/region-spravochnik/organization'
 import { Form } from '@/common/components/ui/form'
 import { DocumentType } from '@/common/features/doc-num'
@@ -39,13 +41,11 @@ import {
   SummaFields
 } from '@/common/widget/form'
 
-import { TotalsOverview } from '../../__components__/totals-overview'
 import { MaterialPrixodFormSchema, MaterialPrixodQueryKeys, defaultValues } from '../config'
 import { MaterialPrixodService, usePrixodCreate, usePrixodUpdate } from '../service'
 import { ApplyAllInputs } from './apply-all-inputs'
 import { ExistingDocumentsAlert } from './existing-document-alert'
 import { ProvodkaTable } from './provodka-table'
-import { changeOpisanieContract, changeOpisanieSchetFaktura } from './utils'
 
 interface PrixodDetailsProps {
   id: string | undefined
@@ -170,12 +170,8 @@ const PrixodDetails = ({ id, onSuccess }: PrixodDetailsProps) => {
   const shartnomaSpravochnik = useSpravochnik(
     createShartnomaSpravochnik({
       value: form.watch('id_shartnomalar_organization'),
-      onChange: (value, contract) => {
+      onChange: (value) => {
         form.setValue('id_shartnomalar_organization', value, { shouldValidate: true })
-        changeOpisanieContract({
-          form,
-          contract
-        })
       },
       params: {
         organ_id: form.watch('kimdan_id')
@@ -196,7 +192,10 @@ const PrixodDetails = ({ id, onSuccess }: PrixodDetailsProps) => {
     if (!Array.isArray(values.childs)) {
       return
     }
-    return values.childs.reduce((acc, { summa = 0 }) => acc + summa, 0)
+    return values.childs.reduce(
+      (acc, { summa = 0, nds_foiz = 0 }) => acc + summa + (summa * nds_foiz) / 100,
+      0
+    )
   }, [values])
 
   useEffect(() => {
@@ -275,6 +274,14 @@ const PrixodDetails = ({ id, onSuccess }: PrixodDetailsProps) => {
       doc_date: form.watch('doc_date')
     })
   }, [form, form.watch('doc_num'), form.watch('doc_date')])
+
+  const dovernost = form.watch('doverennost')
+  useEffect(() => {
+    changeOpisanieDovernost({
+      form,
+      dovernost: dovernost || ''
+    })
+  }, [form, dovernost])
 
   return (
     <DetailsView>

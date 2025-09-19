@@ -407,7 +407,6 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
                             render={({ field, fieldState }) => (
                               <NumericInput
                                 adjustWidth
-                                isAllowed={(values) => (values.floatValue ?? 0) <= 99}
                                 value={field.value || ''}
                                 onValueChange={(values) => {
                                   field.onChange(values.floatValue ?? 0)
@@ -427,16 +426,13 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
                             control={form.control}
                             name={`childs.${index}.nds_foiz`}
                             render={({ field }) => {
-                              const kol = form.watch(`childs.${index}.kol`) || 0
-                              const sena = form.watch(`childs.${index}.sena`) || 0
+                              const summa = form.watch(`childs.${index}.summa`) || 0
                               return (
                                 <NumericInput
                                   readOnly
                                   adjustWidth
                                   value={
-                                    field.value
-                                      ? ((kol || 0) * (sena || 0) * (field.value || 0)) / 100 || 0
-                                      : 0
+                                    field.value ? ((summa || 0) * (field.value || 0)) / 100 || 0 : 0
                                   }
                                   editor
                                   className={inputVariants({
@@ -456,16 +452,14 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
                             control={form.control}
                             name={`childs.${index}.nds_foiz`}
                             render={({ field }) => {
-                              const kol = form.watch(`childs.${index}.kol`) || 0
-                              const sena = form.watch(`childs.${index}.sena`) || 0
+                              const summa = form.watch(`childs.${index}.summa`) || 0
                               return (
                                 <NumericInput
                                   readOnly
                                   adjustWidth
                                   value={
                                     field.value
-                                      ? (kol || 0) * (sena || 0) +
-                                          ((kol || 0) * (sena || 0) * (field.value || 0)) / 100 || 0
+                                      ? summa + ((field.value || 0) * (summa || 0)) / 100 || 0
                                       : 0
                                   }
                                   className={inputVariants({

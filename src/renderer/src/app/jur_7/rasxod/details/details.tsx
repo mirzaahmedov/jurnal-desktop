@@ -7,10 +7,12 @@ import { useForm, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 
+import { TotalsOverview } from '@/app/jur_7/components/totals-overview'
 import { IznosQueryKeys } from '@/app/jur_7/iznos/config'
 import { createResponsibleSpravochnik } from '@/app/jur_7/responsible/service'
 import { MaterialSaldoQueryKeys } from '@/app/jur_7/saldo'
 import { handleOstatokResponse } from '@/app/jur_7/saldo/utils'
+import { changeOpisanieDovernost, changeOpisanieSchetFaktura } from '@/app/jur_7/utils/opisanie'
 import { createOrganizationSpravochnik } from '@/app/region-spravochnik/organization'
 import { Form } from '@/common/components/ui/form'
 import { DocumentType } from '@/common/features/doc-num'
@@ -33,12 +35,10 @@ import {
   SummaFields
 } from '@/common/widget/form'
 
-import { TotalsOverview } from '../../__components__/totals-overview'
 import { RasxodFormSchema, WarehouseRasxodQueryKeys, defaultValues } from '../config'
 import { WarehouseRasxodService, useRasxodCreate, useRasxodUpdate } from '../service'
 import { ApplyAllInputs } from './apply-all-inputs'
 import { ProvodkaTable } from './provodka-table'
-import { changeOpisaniePowerOfAttorney, changeOpisanieSchetFaktura } from './utils'
 
 interface RasxodDetailsProps {
   id: string | undefined
@@ -238,10 +238,12 @@ const RasxodDetails = ({ id, onSuccess }: RasxodDetailsProps) => {
       doc_date: form.watch('doc_date')
     })
   }, [form, form.watch('doc_num'), form.watch('doc_date')])
+
+  const dovernost = form.watch('doverennost')
   useEffect(() => {
-    changeOpisaniePowerOfAttorney({
+    changeOpisanieDovernost({
       form,
-      attorney: form.watch('doverennost') ?? ''
+      dovernost: dovernost ?? ''
     })
   }, [form, form.watch('doverennost')])
 

@@ -23,7 +23,7 @@ import { useToggle } from '@/common/hooks'
 import { formatLocaleDate, formatNumber } from '@/common/lib/format'
 import { numberToWords } from '@/common/lib/utils'
 
-import { TotalsOverview } from '../__components__/totals-overview'
+import { TotalsOverview } from '../components/totals-overview'
 import { AktPriyomExcelDialog } from './akt-priyom-excel/dialog'
 import { AktPriyomPDFDialog } from './akt-priyom-pdf/dialog'
 import { MaterialPrixodQueryKeys } from './config'

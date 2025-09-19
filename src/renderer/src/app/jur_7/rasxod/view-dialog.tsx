@@ -25,7 +25,7 @@ import { useRequisitesStore } from '@/common/features/requisites'
 import { formatLocaleDate, formatNumber } from '@/common/lib/format'
 import { numberToWords } from '@/common/lib/utils'
 
-import { TotalsOverview } from '../__components__/totals-overview'
+import { TotalsOverview } from '../components/totals-overview'
 import { WarehouseRasxodQueryKeys } from './config'
 import { WarehouseRasxodService } from './service'
 import { MaterialSpisaniePDFDocument } from './templates/material-spisanie/document'

@@ -1,43 +1,32 @@
-import type { MaterialPrixodFormValues } from '../config'
-import type { Shartnoma } from '@/common/models'
 import type { UseFormReturn } from 'react-hook-form'
 
 import { formatLocaleDate } from '@/common/lib/format'
 
-const shartnomaRegExp = /\d{2}\.\d{2}\.\d{4} йил кунги № (.*?) шартнома /
+const dovernostRegExp = /^(.*?) ишончнома /
 const schetFaktura = /хамда \d{2}\.\d{2}\.\d{4} йил № (.*?) сонли хисоб фактура /
 
-export interface ChangeOpisanieContractArgs {
-  form: UseFormReturn<MaterialPrixodFormValues>
-  contract: Shartnoma | undefined
+export interface ChangeOpisanieDovernostArgs {
+  form: UseFormReturn<any>
+  dovernost: string
 }
-export const changeOpisanieContract = ({ form, contract }: ChangeOpisanieContractArgs) => {
-  if (!contract) {
-    form.setValue('opisanie', form.getValues('opisanie')?.replace(shartnomaRegExp, '') ?? '')
+export const changeOpisanieDovernost = ({ form, dovernost }: ChangeOpisanieDovernostArgs) => {
+  if (!dovernost) {
+    form.setValue('opisanie', form.getValues('opisanie')?.replace(dovernostRegExp, '') ?? '')
     return
   }
 
-  if (shartnomaRegExp.test(form.getValues('opisanie') || '')) {
+  if (dovernostRegExp.test(form.getValues('opisanie') || '')) {
     form.setValue(
       'opisanie',
-      form
-        .getValues('opisanie')
-        ?.replace(
-          shartnomaRegExp,
-          `${formatLocaleDate(contract.doc_date)} йил кунги № ${contract.doc_num} шартнома `
-        ) ?? ''
+      form.getValues('opisanie')?.replace(dovernostRegExp, `${dovernost} ишончнома `) ?? ''
     )
     return
   }
-  form.setValue(
-    'opisanie',
-    `${formatLocaleDate(contract.doc_date)} йил кунги № ${contract.doc_num} шартнома ` +
-      (form.getValues('opisanie') ?? '')
-  )
+  form.setValue('opisanie', `${dovernost} ишончнома ` + (form.getValues('opisanie') ?? ''))
 }
 
 export interface ChangeOpisanieSchetFakturaArgs {
-  form: UseFormReturn<MaterialPrixodFormValues>
+  form: UseFormReturn<any>
   doc_num: string
   doc_date: string
 }
