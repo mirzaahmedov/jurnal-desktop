@@ -126,6 +126,7 @@ export class NachislenieService {
       kazarma: number
     }
   ) {
+    console.log('running')
     const res = await zarplataApiNew.put<ZarplataApiResponse<Nachislenie[]>>(
       `${NachislenieService.endpoint}/update-child/${childId}`,
       values

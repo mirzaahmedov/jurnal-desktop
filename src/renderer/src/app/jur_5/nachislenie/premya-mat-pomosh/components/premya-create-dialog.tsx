@@ -392,7 +392,6 @@ export const PremyaMatPomoshCreateDialog = (props: PremyaMatPomoshCreateDialogPr
                               label={t('amount')}
                             >
                               <NumericInput
-                                allowNegative={false}
                                 ref={field.ref}
                                 value={field.value}
                                 onValueChange={(values) => field.onChange(values.floatValue ?? 0)}

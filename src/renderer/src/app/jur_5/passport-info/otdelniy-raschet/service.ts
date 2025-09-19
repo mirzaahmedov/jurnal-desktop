@@ -136,4 +136,17 @@ export class OtdelniyRaschetService {
     )
     return res.data
   }
+
+  static async calculateChild(mainId: number) {
+    const res = await zarplataApiNew.put(
+      `${OtdelniyRaschetService.endpoint}/calculate`,
+      {},
+      {
+        params: {
+          mainId
+        }
+      }
+    )
+    return res.data
+  }
 }

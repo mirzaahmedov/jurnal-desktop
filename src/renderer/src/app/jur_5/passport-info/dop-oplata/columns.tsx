@@ -19,6 +19,10 @@ export const DopOplataColumnDefs: ColumnDef<DopOplata>[] = [
     header: 'end_date'
   },
   {
+    key: 'day',
+    header: 'days'
+  },
+  {
     key: 'summa',
     renderCell: (row) => <SummaCell summa={row.summa ?? 0} />
   },

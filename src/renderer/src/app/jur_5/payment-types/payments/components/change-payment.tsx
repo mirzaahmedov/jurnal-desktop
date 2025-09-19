@@ -418,7 +418,6 @@ export const PaymentsChangePayment = () => {
                           ref={field.ref}
                           onBlur={field.onBlur}
                           value={field.value}
-                          allowNegative={false}
                           decimalScale={undefined}
                           onValueChange={(values) => {
                             if (values.floatValue) {

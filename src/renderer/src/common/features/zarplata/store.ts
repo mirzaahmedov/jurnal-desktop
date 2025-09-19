@@ -8,7 +8,8 @@ export enum PassportInfoTabs {
   Employment = 'employment',
   AdditionalDocument = 'dop-oplata',
   Payroll = 'payroll',
-  SeperateCalculation = 'seperate-calculation'
+  SeperateCalculation = 'seperate-calculation',
+  BankCard = 'bank_card'
 }
 
 interface ZarplataStore {

@@ -13,6 +13,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Plus, Sigma } from 'lucide-react'
 import { type UseFormReturn, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import { toast } from 'react-toastify'
 
 import {
   FooterCell,
@@ -77,12 +78,30 @@ export const OtdelniyRaschetDetails: FC<OtdelniyRaschetDetailsProps> = ({
     queryFn: () => OtdelniyRaschetService.getById(currentItem?.id ?? 0),
     enabled: !!currentItem?.id
   })
-  const otdelniyRaschetCalculateMutation = useMutation({
+
+  const updateOtdelniyRaschet = useMutation({
     mutationFn: OtdelniyRaschetService.update,
     onSuccess: () => {
+      toast.success(t('update_success'))
       queryClient.invalidateQueries({
         queryKey: [OtdelniyRaschetService.QueryKeys.GetById, currentItem?.id]
       })
+    },
+    onError: () => {
+      toast.error(t('update_failed'))
+    }
+  })
+
+  const calculateChild = useMutation({
+    mutationFn: (childId: number) => OtdelniyRaschetService.calculateChild(childId),
+    onSuccess: () => {
+      toast.success(t('update_success'))
+      queryClient.invalidateQueries({
+        queryKey: [OtdelniyRaschetService.QueryKeys.GetById, currentItem?.id]
+      })
+    },
+    onError: () => {
+      toast.error(t('update_failed'))
     }
   })
 
@@ -114,9 +133,9 @@ export const OtdelniyRaschetDetails: FC<OtdelniyRaschetDetailsProps> = ({
   const [paymentData, setPaymentData] = useState<OtdelniyRaschetPaymentDto>()
   const [deductionData, setDeductionData] = useState<OtdelniyRaschetDeductionDto>()
 
-  const handleCalculateSalary = () => {
+  const handleCalculateSalaryByPassport = () => {
     const values = form.getValues()
-    otdelniyRaschetCalculateMutation.mutate({
+    updateOtdelniyRaschet.mutate({
       id: otdelniyRaschet.id,
       values: {
         docDate: formatLocaleDate(values.docDate),
@@ -159,6 +178,17 @@ export const OtdelniyRaschetDetails: FC<OtdelniyRaschetDetailsProps> = ({
                       form={form}
                       otdelniyRaschet={otdelniyRaschet}
                     />
+                    <div className="px-5 pb-5 flex justify-end">
+                      <Button
+                        type="button"
+                        onPress={handleCalculateSalaryByPassport}
+                        className="ml-auto"
+                        isPending={updateOtdelniyRaschet.isPending}
+                      >
+                        <Sigma className="btn-icon icon-start" /> {t('recalculate_from_passport')}
+                      </Button>
+                    </div>
+
                     <div className="flex-1 grid grid-cols-[repeat(auto-fit,minmax(500px,1fr))] px-5 gap-5">
                       <div className="bg-teal-700 p-5 rounded-xl h-full flex flex-col">
                         <div className="flex items-center justify-between gap-5 mb-4">
@@ -277,13 +307,15 @@ export const OtdelniyRaschetDetails: FC<OtdelniyRaschetDetailsProps> = ({
                         />
                       </div>
                     </div>
-                    <div className="flex items-center gap-10 px-5 py-5">
-                      <h3 className="font-bold">
-                        {t('na_ruki')}: {otdelniyRaschet.naRukiSum}
-                      </h3>
+                    <div className="px-5 my-5 flex items-center gap-10">
+                      <h6 className="font-bold">
+                        {t('na_ruki')}: {formatNumber(otdelniyRaschet?.naRukiSum ?? 0)}
+                      </h6>
                       <Button
-                        onPress={handleCalculateSalary}
-                        isPending={otdelniyRaschetCalculateMutation.isPending}
+                        onPress={() => {
+                          calculateChild.mutate(otdelniyRaschet?.id ?? 0)
+                        }}
+                        isPending={calculateChild.isPending}
                       >
                         <Sigma className="btn-icon icon-start" /> {t('recalculate_salary')}
                       </Button>

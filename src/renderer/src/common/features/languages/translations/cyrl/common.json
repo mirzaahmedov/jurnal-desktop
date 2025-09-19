@@ -574,5 +574,7 @@
   "inventarization": "Инвентаризация",
   "priyem_sdachi": "Қабул қилиш ва топшириш",
   "recalculate_from_passport": "Паспортдан қайта ҳисоблаш",
-  "material_product_history": "Материал ҳаракат тарихи"
+  "material_product_history": "Материал ҳаракат тарихи",
+  "category_num": "Категория рақами",
+  "category_name": "Категория номи"
 }

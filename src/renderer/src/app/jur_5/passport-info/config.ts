@@ -26,7 +26,9 @@ export const MainZarplataFormSchema = z.object({
   doljnostName: z.string().optional().nullable(),
   doljnostPrikazNum: z.string().optional().nullable(),
   doljnostPrikazDate: z.string().optional().nullable(),
-  spravochnikZarplataIstochnikFinanceId: z.number().optional().nullable()
+  spravochnikZarplataIstochnikFinanceId: z.number().optional().nullable(),
+  categoryName: z.string().optional().nullable(),
+  categoryNum: z.string().optional().nullable()
 })
 export type MainZarplataFormValues = z.infer<typeof MainZarplataFormSchema>
 

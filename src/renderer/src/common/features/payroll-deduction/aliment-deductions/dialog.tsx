@@ -8,7 +8,6 @@ import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 
-import { createDeductionSpravochnik } from '@/app/jur_5/payment-types/deductions/service'
 import { createOrganizationSpravochnik } from '@/app/region-spravochnik/organization'
 import { FormElement } from '@/common/components/form'
 import { Button } from '@/common/components/jolly/button'
@@ -45,12 +44,6 @@ export const AlimentDeductionDialog = ({
     defaultValues: defaultValues
   })
 
-  const deductionSpravochnik = useSpravochnik(
-    createDeductionSpravochnik({
-      value: form.watch('deductionId'),
-      onChange: (value) => form.setValue('deductionId', value ?? 0, { shouldValidate: true })
-    })
-  )
   const organSpravochnik = useSpravochnik(
     createOrganizationSpravochnik({
       value: form.watch('organizationId'),
@@ -86,7 +79,10 @@ export const AlimentDeductionDialog = ({
     if (alimentDeductionData) {
       alimentDeductionUpdateMutation.mutate({
         id: alimentDeductionData.id,
-        values
+        values: {
+          ...values,
+          deductionId
+        }
       })
     } else {
       alimentDeductionCreateMutation.mutate({
@@ -154,15 +150,6 @@ export const AlimentDeductionDialog = ({
                   >
                     <SpravochnikInput
                       {...organSpravochnik}
-                      getInputValue={(selected) => selected?.name ?? ''}
-                    />
-                  </FormElement>
-                  <FormElement
-                    label={t('deduction')}
-                    grid="2:4"
-                  >
-                    <SpravochnikInput
-                      {...deductionSpravochnik}
                       getInputValue={(selected) => selected?.name ?? ''}
                     />
                   </FormElement>

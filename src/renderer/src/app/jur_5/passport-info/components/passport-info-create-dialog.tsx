@@ -31,7 +31,7 @@ export const PassportInfoCreateDialog = ({
   return (
     <DialogTrigger {...props}>
       <DialogOverlay>
-        <DialogContent className="max-w-9xl h-full max-h-[800px]">
+        <DialogContent className="max-w-9xl h-full max-h-full">
           <div className="h-full flex flex-col space-y-5 overflow-hidden">
             <DialogHeader>
               <DialogTitle>
@@ -42,7 +42,7 @@ export const PassportInfoCreateDialog = ({
             <div className="min-h-0 flex-1 overflow-hidden">
               <MainZarplataForm
                 vacant={vacant}
-                selectedMainZarplata={selectedUser}
+                mainZarplataData={selectedUser}
                 onCreate={onCreateSuccess}
                 onClose={() => props?.onOpenChange?.(false)}
               />

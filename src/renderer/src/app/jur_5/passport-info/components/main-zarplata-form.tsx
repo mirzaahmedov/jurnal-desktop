@@ -17,7 +17,7 @@ import {
   createZarplataSpravochnik
 } from '@/app/super-admin/zarplata/spravochnik/service'
 import placeholderImage from '@/common/assets/images/profile_placeholder.png'
-import { Fieldset, LoadingOverlay, NumericInput } from '@/common/components'
+import { LoadingOverlay, NumericInput } from '@/common/components'
 import { FormElement } from '@/common/components/form'
 import { JollyDatePicker } from '@/common/components/jolly-date-picker'
 import { Button } from '@/common/components/jolly/button'
@@ -35,6 +35,7 @@ import { formatLocaleDate } from '@/common/lib/format'
 import { cn } from '@/common/lib/utils'
 
 import { getVacantRayon } from '../../common/utils/vacant'
+import { BankCardForm } from '../bank-card/bank-card-form'
 import { MainZarplataFormSchema, defaultValues } from '../config'
 
 const transliterator = new Transliterator()
@@ -42,7 +43,7 @@ const transliterator = new Transliterator()
 export interface MainZarplataFormProps {
   isCalculating?: boolean
   vacant: VacantTreeNode | null
-  selectedMainZarplata?: MainZarplata | undefined
+  mainZarplataData?: MainZarplata | undefined
   content?: ReactNode
   workplace?: ReactNode
   onCalculate?: (id: number) => void
@@ -53,7 +54,7 @@ export interface MainZarplataFormProps {
 export const MainZarplataForm = ({
   isCalculating = false,
   vacant,
-  selectedMainZarplata,
+  mainZarplataData,
   content,
   workplace,
   onCalculate,
@@ -113,7 +114,7 @@ export const MainZarplataForm = ({
         queryKey: [MainZarplataService.QueryKeys.GetByVacantId]
       })
       queryClient.invalidateQueries({
-        queryKey: [MainZarplataService.QueryKeys.GetById, selectedMainZarplata?.id ?? 0]
+        queryKey: [MainZarplataService.QueryKeys.GetById, mainZarplataData?.id ?? 0]
       })
       onClose?.()
       if (res?.data) {
@@ -135,7 +136,7 @@ export const MainZarplataForm = ({
         queryKey: [MainZarplataService.QueryKeys.GetByVacantId]
       })
       queryClient.invalidateQueries({
-        queryKey: [MainZarplataService.QueryKeys.GetById, selectedMainZarplata?.id ?? 0]
+        queryKey: [MainZarplataService.QueryKeys.GetById, mainZarplataData?.id ?? 0]
       })
     },
     onError: () => {
@@ -154,14 +155,14 @@ export const MainZarplataForm = ({
   )
 
   const handleSubmit = form.handleSubmit((values) => {
-    if (selectedMainZarplata) {
+    if (mainZarplataData) {
       updateMainZarplata({
-        id: selectedMainZarplata.id,
+        id: mainZarplataData.id,
         values: {
           ...values,
           dateBirth: formatLocaleDate(values.dateBirth),
           nachaloSlujbi: formatLocaleDate(values.nachaloSlujbi),
-          vacantId: selectedMainZarplata.vacantId
+          vacantId: mainZarplataData.vacantId
         }
       })
     } else {
@@ -179,18 +180,18 @@ export const MainZarplataForm = ({
   })
 
   useEffect(() => {
-    if (selectedMainZarplata) {
+    if (mainZarplataData) {
       form.reset({
-        ...selectedMainZarplata,
-        dateBirth: formatDate(parseLocaleDate(selectedMainZarplata.dateBirth)),
-        nachaloSlujbi: formatDate(parseLocaleDate(selectedMainZarplata.nachaloSlujbi))
+        ...mainZarplataData,
+        dateBirth: formatDate(parseLocaleDate(mainZarplataData.dateBirth)),
+        nachaloSlujbi: formatDate(parseLocaleDate(mainZarplataData.nachaloSlujbi))
       })
     } else {
       form.reset(defaultValues)
     }
-  }, [selectedMainZarplata, vacant, form])
+  }, [mainZarplataData, vacant, form])
   useEffect(() => {
-    if (selectedMainZarplata) {
+    if (mainZarplataData) {
       return
     }
 
@@ -199,7 +200,7 @@ export const MainZarplataForm = ({
     } else {
       form.setValue('rayon', '')
     }
-  }, [selectedMainZarplata, vacant])
+  }, [mainZarplataData, vacant])
 
   const pnfl = form.watch('inps')
   const dateBirth = form.watch('dateBirth')
@@ -253,16 +254,14 @@ export const MainZarplataForm = ({
               <div className="flex flex-col gap-2 py-1">
                 {onCalculate ? (
                   <Button
-                    onClick={() => onCalculate?.(selectedMainZarplata?.id ?? 0)}
-                    isDisabled={!selectedMainZarplata || isCalculating || isUpdating || isCreating}
+                    onClick={() => onCalculate?.(mainZarplataData?.id ?? 0)}
+                    isDisabled={!mainZarplataData || isCalculating || isUpdating || isCreating}
                     className="mb-2"
                   >
                     <Calculator className="btn-icon icon-start" /> {t('calculate_salary')}
                   </Button>
                 ) : null}
-                {selectedMainZarplata ? (
-                  <DissmisEmployee mainZarplataId={selectedMainZarplata.id} />
-                ) : null}
+                {mainZarplataData ? <DissmisEmployee mainZarplataId={mainZarplataData.id} /> : null}
               </div>
             </div>
           </div>
@@ -456,6 +455,7 @@ export const MainZarplataForm = ({
                 )}
               />
             </div>
+
             {naRuki !== undefined ? (
               <FormElement
                 direction="column"
@@ -467,66 +467,43 @@ export const MainZarplataForm = ({
                 />
               </FormElement>
             ) : null}
+            <FormField
+              control={form.control}
+              name="categoryNum"
+              render={({ field }) => (
+                <FormElement
+                  direction="column"
+                  label={t('category_num')}
+                >
+                  <Input
+                    {...field}
+                    value={field.value ?? ''}
+                  />
+                </FormElement>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="categoryName"
+              render={({ field }) => (
+                <FormElement
+                  direction="column"
+                  label={t('category_name')}
+                >
+                  <Input
+                    {...field}
+                    value={field.value ?? ''}
+                  />
+                </FormElement>
+              )}
+            />
           </div>
 
           <div className="max-[1400px]:col-span-full col-span-3 max-[1400px]:grid place-items-center">
             {workplace}
-
-            <div className="rounded-xl bg-gradient-to-br from-gray-200 to-gray-300 border-2 border-gray-300 p-0 shadow-md font-sans flex flex-col justify-between my-5">
-              <Fieldset
-                name={t('bank_card')}
-                className="gap-2.5 p-4"
-                legendProps={{
-                  className: 'text-inherit uppercase m-1'
-                }}
-              >
-                <FormField
-                  control={form.control}
-                  name="bank"
-                  render={({ field }) => (
-                    <FormElement
-                      grid="2:5"
-                      label={t('bank')}
-                    >
-                      <Input
-                        {...field}
-                        value={field.value ?? ''}
-                      />
-                    </FormElement>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="raschetSchet"
-                  render={({ field }) => (
-                    <FormElement
-                      grid="2:5"
-                      label={t('card_number')}
-                    >
-                      <Input
-                        {...field}
-                        value={field.value ?? ''}
-                      />
-                    </FormElement>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="fioDop"
-                  render={({ field }) => (
-                    <FormElement
-                      grid="2:5"
-                      label={t('fio')}
-                    >
-                      <Input
-                        {...field}
-                        placeholder={t('fio')}
-                      />
-                    </FormElement>
-                  )}
-                />
-              </Fieldset>
-            </div>
+          </div>
+          <div className="col-span-full">
+            {!mainZarplataData ? <BankCardForm form={form} /> : null}
           </div>
           <div className="col-span-full">{content}</div>
         </div>

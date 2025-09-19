@@ -27,6 +27,7 @@ import { PayrollPaymentService } from '@/common/features/payroll-payment/service
 import { PassportInfoTabs, useZarplataStore } from '@/common/features/zarplata/store'
 import { useToggle } from '@/common/hooks'
 
+import { BankCard } from '../bank-card'
 import { DopOplataContainer } from '../dop-oplata'
 import { Employments } from '../employment/employment'
 import { OtdelniyRaschetContainer } from '../otdelniy-raschet'
@@ -39,7 +40,8 @@ const tabOptions = [
   PassportInfoTabs.Employment,
   PassportInfoTabs.AdditionalDocument,
   PassportInfoTabs.Payroll,
-  PassportInfoTabs.SeperateCalculation
+  PassportInfoTabs.SeperateCalculation,
+  PassportInfoTabs.BankCard
 ]
 
 export interface PassportInfoViewDialogProps extends Omit<DialogTriggerProps, 'children'> {
@@ -157,12 +159,12 @@ export const PassportInfoViewDialog = ({
                 <div className="border rounded-lg flex-1 h-full overflow-hidden">
                   <TabsContent
                     value={PassportInfoTabs.Main}
-                    className="h-full overflow-hidden scrollbar py-5"
+                    className="h-full overflow-hidden scrollbar py-2.5"
                   >
                     {mainZarplata?.data ? (
                       <MainZarplataForm
                         vacant={vacant}
-                        selectedMainZarplata={mainZarplata?.data}
+                        mainZarplataData={mainZarplata?.data}
                         onClose={() => props?.onOpenChange?.(false)}
                         naRuki={paymentTotal - deductionsTotal}
                         workplace={
@@ -245,6 +247,13 @@ export const PassportInfoViewDialog = ({
                         navigateHome={() => setCurrentTab(PassportInfoTabs.Main)}
                       />
                     ) : null}
+                  </TabsContent>
+
+                  <TabsContent
+                    value={PassportInfoTabs.BankCard}
+                    className="mt-0 h-full overflow-hidden"
+                  >
+                    {mainZarplata?.data ? <BankCard mainZarplataData={mainZarplata.data} /> : null}
                   </TabsContent>
                 </div>
               </Tabs>

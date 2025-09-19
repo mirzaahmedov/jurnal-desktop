@@ -268,7 +268,6 @@ export const NachisleniePaymentDialog = ({
                         <NumericInput
                           ref={field.ref}
                           value={field.value}
-                          allowNegative={false}
                           decimalScale={undefined}
                           onValueChange={(values) => {
                             field.onChange(values.floatValue ?? 0)

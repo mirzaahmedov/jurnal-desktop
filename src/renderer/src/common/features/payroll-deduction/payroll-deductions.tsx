@@ -171,7 +171,7 @@ export const PayrollDeductions = ({ mainZarplata, setDeductionsTotal }: PayrollD
             onEdit={handleDeductionEdit}
             onDelete={handleDeductionDelete}
             actions={(row) =>
-              row.code === 1 ? (
+              row.name.includes('Алимент') ? (
                 <div>
                   <Button
                     size="icon"

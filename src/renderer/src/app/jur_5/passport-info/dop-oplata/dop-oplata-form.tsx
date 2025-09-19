@@ -1,5 +1,4 @@
 import type { MainZarplata } from '@/common/models'
-import type { Deduction } from '@/common/models/deduction'
 import type { DopOplata } from '@/common/models/dop-oplata'
 import type { Payment } from '@/common/models/payments'
 
@@ -21,11 +20,9 @@ import { Button } from '@/common/components/jolly/button'
 import { Pagination } from '@/common/components/pagination'
 import { Form, FormField } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
-import { useToggle } from '@/common/hooks'
 import { formatDate, parseLocaleDate } from '@/common/lib/date'
 import { formatLocaleDate } from '@/common/lib/format'
 
-import { ChooseMultipleDeductionsDialog } from '../../payment-types/deductions/components/choose-multiple-deductions-dialog'
 import { DopOplataFormSchema, defaultValues } from './config'
 import { DopOplataService } from './service'
 
@@ -41,10 +38,8 @@ export const DopOplataForm = ({ mainZarplata, selected, onFinish }: DopOplataFor
   const [limit, setLimit] = useState(10)
   const [name, setName] = useState('')
   const [code, setCode] = useState('')
-  const [deductionIds, setDeductionsIds] = useState<number[]>([])
   const [paymentData, setPaymentData] = useState<Payment | null>(null)
 
-  const deductionsToggle = useToggle()
   const form = useForm({
     defaultValues,
     resolver: zodResolver(DopOplataFormSchema)
@@ -87,18 +82,12 @@ export const DopOplataForm = ({ mainZarplata, selected, onFinish }: DopOplataFor
     }
   })
 
-  const handleSubmit = form.handleSubmit(() => {
-    deductionsToggle.open()
-  })
-
-  const handleApplyDeductions = () => {
-    const values = form.getValues()
+  const handleSubmit = form.handleSubmit((values) => {
     if (selected) {
       dopOplataUpdateMutation.mutate({
         id: selected.id,
         values: {
           ...values,
-          deductionIds,
           from: formatLocaleDate(values.from),
           to: formatLocaleDate(values.to),
           mainZarplataId: mainZarplata?.id
@@ -108,40 +97,21 @@ export const DopOplataForm = ({ mainZarplata, selected, onFinish }: DopOplataFor
     }
     dopOplataCreateMutation.mutate({
       ...values,
-      deductionIds,
       from: formatLocaleDate(values.from),
       to: formatLocaleDate(values.to),
       mainZarplataId: mainZarplata?.id
     })
-  }
+  })
 
   const isVacationPayment = paymentData?.code === 32
 
-  const calculateSumma = (day: number, daySumma: number, percentage?: number) => {
-    if (isVacationPayment) {
-      return daySumma * day
-    }
-    return (daySumma * day * (percentage ?? 1)) / 100
-  }
-
-  const handleSelectDeduction = (deduction: Deduction) => {
-    if (deductionIds.includes(deduction.id)) {
-      setDeductionsIds((prev) => prev.filter((d) => d !== deduction.id))
-      return
-    }
-    setDeductionsIds((prev) => [...prev, deduction.id])
-  }
-
   useEffect(() => {
     if (selected) {
-      const deductionIds = selected.additionalDeductions.map((d) => d.id)
       form.reset({
         ...selected,
-        deductionIds,
         from: formatDate(parseLocaleDate(selected.from)),
         to: formatDate(parseLocaleDate(selected.to))
       })
-      setDeductionsIds(deductionIds)
     } else {
       form.reset({
         ...defaultValues
@@ -216,12 +186,7 @@ export const DopOplataForm = ({ mainZarplata, selected, onFinish }: DopOplataFor
                         value={field.value}
                         onValueChange={(values) => {
                           field.onChange(values.floatValue ?? 0)
-                          const daySumma = form.getValues('daySumma')
-                          const percentage = form.getValues('percentage')
-                          const summa = calculateSumma(values.floatValue ?? 0, daySumma, percentage)
-                          form.setValue('summa', summa, { shouldValidate: true })
                         }}
-                        allowNegative={false}
                         decimalScale={undefined}
                         className="w-24"
                       />
@@ -229,7 +194,7 @@ export const DopOplataForm = ({ mainZarplata, selected, onFinish }: DopOplataFor
                   )}
                 />
 
-                <FormField
+                {/* <FormField
                   control={form.control}
                   name="daySumma"
                   render={({ field }) => (
@@ -251,14 +216,13 @@ export const DopOplataForm = ({ mainZarplata, selected, onFinish }: DopOplataFor
                           const summa = calculateSumma(days, values.floatValue ?? 0, percentage)
                           form.setValue('summa', summa, { shouldValidate: true })
                         }}
-                        allowNegative={false}
                         decimalScale={undefined}
                       />
                     </FormElement>
                   )}
-                />
+                /> */}
 
-                {!isVacationPayment ? (
+                {/* {!isVacationPayment ? (
                   <FormField
                     control={form.control}
                     name="percentage"
@@ -280,14 +244,13 @@ export const DopOplataForm = ({ mainZarplata, selected, onFinish }: DopOplataFor
                             const summa = calculateSumma(days, daySumma, values.floatValue ?? 0)
                             form.setValue('summa', summa, { shouldValidate: true })
                           }}
-                          allowNegative={false}
                           decimalScale={undefined}
                           className="w-24"
                         />
                       </FormElement>
                     )}
                   />
-                ) : null}
+                ) : null} */}
 
                 <FormField
                   control={form.control}
@@ -299,8 +262,6 @@ export const DopOplataForm = ({ mainZarplata, selected, onFinish }: DopOplataFor
                       hideDescription
                     >
                       <NumericInput
-                        readOnly
-                        disabled={field.disabled}
                         name={field.name}
                         ref={field.ref}
                         onBlur={field.onBlur}
@@ -380,19 +341,6 @@ export const DopOplataForm = ({ mainZarplata, selected, onFinish }: DopOplataFor
           </div>
         </form>
       </Form>
-      <ChooseMultipleDeductionsDialog
-        isOpen={deductionsToggle.isOpen}
-        onOpenChange={(open) => {
-          if (!open) {
-            setDeductionsIds([])
-          }
-          deductionsToggle.setOpen(open)
-        }}
-        deductionIds={deductionIds}
-        onSelect={handleSelectDeduction}
-        onSubmit={handleApplyDeductions}
-        isSubmitting={dopOplataCreateMutation.isPending || dopOplataUpdateMutation.isPending}
-      />
     </>
   )
 }

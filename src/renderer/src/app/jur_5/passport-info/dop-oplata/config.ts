@@ -5,10 +5,8 @@ export const DopOplataFormSchema = z.object({
   paymentId: z.number(),
   from: z.string().nonempty(),
   to: z.string().nonempty(),
-  day: z.number().min(1),
-  daySumma: z.number(),
-  deductionIds: z.array(z.number()),
-  percentage: z.number(),
+  day: z.number().min(1).nullable().optional(),
+  percentage: z.number().optional().nullable(),
   summa: z.number()
 })
 export type DopOplataFormValues = z.infer<typeof DopOplataFormSchema>
@@ -19,8 +17,6 @@ export const defaultValues: DopOplataFormValues = {
   from: '',
   to: '',
   day: 0,
-  daySumma: 0,
   percentage: 0,
-  summa: 0,
-  deductionIds: []
+  summa: 0
 }

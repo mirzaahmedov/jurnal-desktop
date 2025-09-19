@@ -1,6 +1,7 @@
 export interface PayrollDeduction {
   id: number
   code: number
+  name: string
   mainZarplataId: number
   percentage: number
   summa: number
