@@ -25,6 +25,7 @@ export interface NachislenieProvodka {
   totalUderjanie: number
   totalNaruki: number
   tabel: NachislenieTabel
+  nachislenieMainId: number
   nachisleniePayrollPayments: Array<{
     id: number
     summa: number

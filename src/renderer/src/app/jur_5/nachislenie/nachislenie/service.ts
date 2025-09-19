@@ -159,7 +159,27 @@ export class NachislenieService {
 
   static async getChildById(childId: number) {
     const res = await zarplataApiNew.get<NachislenieProvodka>(
-      `${NachislenieService.endpoint}/getByChildId/${childId}`
+      `${NachislenieService.endpoint}/getByChildId`,
+      {
+        params: {
+          childId
+        }
+      }
+    )
+    return res.data
+  }
+
+  static async getChildByDates(args: { mainZarplataId: number; year: number; month: number }) {
+    const { year, month, mainZarplataId } = args
+    const res = await zarplataApiNew.get<NachislenieProvodka>(
+      `${NachislenieService.endpoint}/getByChildId`,
+      {
+        params: {
+          mainZarplataId,
+          year,
+          month
+        }
+      }
     )
     return res.data
   }

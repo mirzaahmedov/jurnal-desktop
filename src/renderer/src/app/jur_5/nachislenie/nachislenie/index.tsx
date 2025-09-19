@@ -205,6 +205,8 @@ export const Nachislenies = () => {
               }}
               vacant={selectedVacant}
               nachislenieId={nachislenieId}
+              onYearChange={(year) => setYear(year)}
+              onMonthChange={(month) => setMonth(month)}
             />
           </>
         ) : null}

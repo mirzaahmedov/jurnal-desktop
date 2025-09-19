@@ -8,6 +8,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { BookUser, Plus, Search, Sigma } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import { useSearchParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
 import { MainZarplataInfo } from '@/app/jur_5/passport-info/components'
@@ -41,7 +42,7 @@ import { useConfirm } from '@/common/features/confirm'
 import { DownloadFile } from '@/common/features/file'
 import { useZarplataStore } from '@/common/features/zarplata/store'
 import { useToggle } from '@/common/hooks'
-import { formatDate, parseDate, parseLocaleDate } from '@/common/lib/date'
+import { formatDate, parseLocaleDate } from '@/common/lib/date'
 import { formatNumber } from '@/common/lib/format'
 import {
   type NachislenieDeductionDto,
@@ -60,10 +61,14 @@ enum TabOptions {
 export interface NachislenieEditDialogProps extends Omit<DialogTriggerProps, 'children'> {
   nachislenieId: number | undefined
   vacant: VacantTreeNode | undefined
+  onYearChange?: (year: number) => void
+  onMonthChange?: (month: number) => void
 }
 export const NachislenieEditDialog = ({
   nachislenieId,
   vacant,
+  onYearChange,
+  onMonthChange,
   ...props
 }: NachislenieEditDialogProps) => {
   const { t } = useTranslation(['app'])
@@ -71,7 +76,8 @@ export const NachislenieEditDialog = ({
 
   const [tabValue, setTabValue] = useState(TabOptions.View)
   const [comboValue, setComboValue] = useState(null)
-  const [currentIndex, setCurrentIndex] = useState(0)
+  const [mainZarplataId, setMainZarplataId] = useState<number | null>(null)
+  const [, setSearchParams] = useSearchParams()
 
   const comboModal = useToggle()
 
@@ -87,6 +93,13 @@ export const NachislenieEditDialog = ({
     enabled: !!nachislenieId
   })
   const nachislenieProvodka = nachislenieQuery?.data ?? []
+
+  const currentIndex =
+    nachislenieProvodka.findIndex((i) => i.mainZarplataId === mainZarplataId) ?? 0
+
+  const getChildByDates = useMutation({
+    mutationFn: NachislenieService.getChildByDates
+  })
 
   const form = useForm<{
     docNum: number
@@ -110,13 +123,42 @@ export const NachislenieEditDialog = ({
       })
     }
   }, [form, nachislenieData])
+  useEffect(() => {
+    if (nachislenieProvodka?.findIndex((i) => i.mainZarplataId === mainZarplataId) !== -1) {
+      return
+    }
+    if (nachislenieProvodka.length) {
+      setMainZarplataId(nachislenieProvodka[0].mainZarplataId)
+    }
+  }, [nachislenieProvodka, mainZarplataId])
 
-  const handleSearchMainZarplata = (value: number | null) => {
-    if (value) {
-      setCurrentIndex(nachislenieProvodka.findIndex((i) => i.id === value) ?? 0)
+  const handleSearchMainZarplata = (id: number | null) => {
+    if (id) {
+      setMainZarplataId(id)
     }
     setComboValue(null)
     comboModal.close()
+  }
+
+  const handleChangeDates = ({ year, month }: { year: number; month: number }) => {
+    const nachislenie = nachislenieProvodka?.[currentIndex]
+    if (!nachislenie?.mainZarplataId || !year || !month) return
+    getChildByDates.mutate(
+      {
+        year,
+        month,
+        mainZarplataId: nachislenie.mainZarplataId
+      },
+      {
+        onSuccess: (res) => {
+          setSearchParams({
+            nachislenieId: res.nachislenieMainId.toString()
+          })
+          onYearChange?.(year)
+          onMonthChange?.(month)
+        }
+      }
+    )
   }
 
   const Header = () => {
@@ -155,14 +197,6 @@ export const NachislenieEditDialog = ({
                   <JollyDatePicker
                     {...field}
                     readOnly
-                    onChange={(value) => {
-                      field.onChange(value)
-                      if (value) {
-                        const date = parseDate(value)
-                        form.setValue('nachislenieYear', date.getFullYear())
-                        form.setValue('nachislenieMonth', date.getMonth() + 1)
-                      }
-                    }}
                   />
                 </FormElement>
               )}
@@ -176,9 +210,15 @@ export const NachislenieEditDialog = ({
                   label={t('year')}
                 >
                   <YearSelect
-                    isReadOnly
                     selectedKey={field.value}
-                    onSelectionChange={field.onChange}
+                    onSelectionChange={(value) => {
+                      const year = value ? Number(value) : 0
+                      field.onChange(year)
+                      handleChangeDates({
+                        year,
+                        month: form.getValues('nachislenieMonth') ?? 0
+                      })
+                    }}
                   />
                 </FormElement>
               )}
@@ -192,9 +232,11 @@ export const NachislenieEditDialog = ({
                   label={t('month')}
                 >
                   <MonthSelect
-                    isReadOnly
                     selectedKey={field.value}
-                    onSelectionChange={field.onChange}
+                    onSelectionChange={(value) => {
+                      const month = value ? Number(value) : 0
+                      handleChangeDates({ year: form.getValues('nachislenieYear') ?? 0, month })
+                    }}
                     className="w-32"
                   />
                 </FormElement>
@@ -266,7 +308,7 @@ export const NachislenieEditDialog = ({
                       }}
                       className="mt-0"
                     >
-                      {(item) => <ComboboxItem id={item.id}>{item.fio}</ComboboxItem>}
+                      {(item) => <ComboboxItem id={item.mainZarplataId}>{item.fio}</ComboboxItem>}
                     </JollyComboBox>
                     <div className="size-10 grid place-items-center">
                       <Search className="btn-icon text-gray-400" />
@@ -426,7 +468,9 @@ export const NachislenieEditDialog = ({
                   </div>
                   <NachislenieUpdateForm
                     currentIndex={currentIndex}
-                    onNavigateItem={setCurrentIndex}
+                    onNavigateItem={(index) => {
+                      setMainZarplataId(nachislenieProvodka?.[index]?.mainZarplataId ?? null)
+                    }}
                     nachislenieProvodka={nachislenieProvodka}
                     nachislenieMainId={nachislenieData?.id ?? 0}
                   />
