@@ -34,7 +34,6 @@ import {
   type VacantTreeNode,
   VacantTreeSearch
 } from '@/common/features/vacant/ui/vacant-tree'
-import { parseDate } from '@/common/lib/date'
 import { formatLocaleDate } from '@/common/lib/format'
 
 import { defaultValues } from '../config'
@@ -222,17 +221,7 @@ export const NachislenieCreateDialog = ({
                             direction="column"
                             label={t('doc_date')}
                           >
-                            <JollyDatePicker
-                              {...field}
-                              onChange={(value) => {
-                                field.onChange(value)
-                                if (value) {
-                                  const date = parseDate(value)
-                                  form.setValue('nachislenieYear', date.getFullYear())
-                                  form.setValue('nachislenieMonth', date.getMonth() + 1)
-                                }
-                              }}
-                            />
+                            <JollyDatePicker {...field} />
                           </FormElement>
                         )}
                       />
@@ -247,7 +236,6 @@ export const NachislenieCreateDialog = ({
                               label={t('year')}
                             >
                               <YearSelect
-                                isReadOnly
                                 selectedKey={field.value}
                                 onSelectionChange={field.onChange}
                               />
@@ -263,7 +251,6 @@ export const NachislenieCreateDialog = ({
                               label={t('month')}
                             >
                               <MonthSelect
-                                isReadOnly
                                 selectedKey={field.value}
                                 onSelectionChange={field.onChange}
                                 className="w-32"

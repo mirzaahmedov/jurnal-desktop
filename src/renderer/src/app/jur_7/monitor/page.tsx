@@ -97,7 +97,6 @@ const MaterialMonitorPage = () => {
       <ListView.Header>
         <div className="w-full grid grid-cols-[repeat(auto-fit,minmax(400px,1fr))] gap-5">
           <ListView.RangeDatePicker {...dates} />
-
           <ButtonGroup
             borderStyle="dashed"
             className="text-end"

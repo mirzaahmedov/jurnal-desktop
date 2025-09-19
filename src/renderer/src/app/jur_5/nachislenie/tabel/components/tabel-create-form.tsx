@@ -26,7 +26,7 @@ import { Form, FormField } from '@/common/components/ui/form'
 import { Tabs, TabsList, TabsTrigger } from '@/common/components/ui/tabs'
 import { Textarea } from '@/common/components/ui/textarea'
 import { YearSelect } from '@/common/components/year-select'
-import { getWorkdaysInMonth, parseDate } from '@/common/lib/date'
+import { getWorkdaysInMonth } from '@/common/lib/date'
 import { formatLocaleDate } from '@/common/lib/format'
 import { getVacantRayon } from '@/common/utils/zarplata'
 
@@ -253,12 +253,7 @@ export const TabelCreateForm = ({
                     {...field}
                     onChange={(value) => {
                       field.onChange(value)
-                      if (value) {
-                        const date = parseDate(value)
-                        form.setValue('tabelYear', date.getFullYear())
-                        form.setValue('tabelMonth', date.getMonth() + 1)
-                        form.setValue('tabelChildren', [])
-                      }
+                      form.setValue('tabelChildren', [])
                     }}
                   />
                 </FormElement>
@@ -275,7 +270,6 @@ export const TabelCreateForm = ({
                     label={t('year')}
                   >
                     <YearSelect
-                      isReadOnly
                       selectedKey={field.value}
                       onSelectionChange={field.onChange}
                     />
@@ -291,7 +285,6 @@ export const TabelCreateForm = ({
                     label={t('month')}
                   >
                     <MonthSelect
-                      isReadOnly
                       selectedKey={field.value}
                       onSelectionChange={field.onChange}
                       className="w-32"

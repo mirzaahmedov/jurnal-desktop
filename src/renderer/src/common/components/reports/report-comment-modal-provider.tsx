@@ -1,5 +1,6 @@
-import type { FC, ReactNode } from 'react'
 import type { DialogTriggerProps } from 'react-aria-components'
+
+import { type FC, type ReactNode, useEffect } from 'react'
 
 import { Download } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
@@ -59,6 +60,7 @@ export interface ReportCommentModalContextProps extends Omit<DialogTriggerProps,
   buttonText: string
   beforeContent?: ReactNode
   afterContent?: ReactNode
+  defaultValue?: string
 }
 export const ReportCommentModalProvider: FC<ReportCommentModalContextProps> = ({
   reportId,
@@ -67,6 +69,7 @@ export const ReportCommentModalProvider: FC<ReportCommentModalContextProps> = ({
   reportTitle,
   beforeContent,
   afterContent,
+  defaultValue = '',
   ...props
 }) => {
   const comments = useReportCommentsStore((store) => store.comments)
@@ -78,6 +81,12 @@ export const ReportCommentModalProvider: FC<ReportCommentModalContextProps> = ({
   const handleChangeComment = (value: string) => {
     setComment(reportId, value)
   }
+
+  useEffect(() => {
+    if (!useReportCommentsStore.getState().comments[reportId]) {
+      setComment(reportId, defaultValue)
+    }
+  }, [defaultValue, reportId, setComment])
 
   return (
     <DialogTrigger {...props}>

@@ -49,7 +49,6 @@ import { MainZarplataService } from '@/common/features/main-zarplata/service'
 import { useRequisitesStore } from '@/common/features/requisites'
 import { useVacantTreeNodes } from '@/common/features/vacant/hooks/use-vacant-tree-nodes'
 import { VacantTree, VacantTreeSearch } from '@/common/features/vacant/ui/vacant-tree'
-import { parseDate } from '@/common/lib/date'
 import { formatLocaleDate } from '@/common/lib/format'
 import { cn } from '@/common/lib/utils'
 
@@ -257,14 +256,7 @@ export const PremyaMatPomoshCreateDialog = (props: PremyaMatPomoshCreateDialogPr
                             >
                               <JollyDatePicker
                                 {...field}
-                                onChange={(value) => {
-                                  field.onChange(value)
-                                  if (value) {
-                                    const date = parseDate(value)
-                                    form.setValue('nachislenieYear', date.getFullYear())
-                                    form.setValue('nachislenieMonth', date.getMonth() + 1)
-                                  }
-                                }}
+                                onChange={field.onChange}
                               />
                             </FormElement>
                           )}
@@ -279,7 +271,6 @@ export const PremyaMatPomoshCreateDialog = (props: PremyaMatPomoshCreateDialogPr
                               label={t('year')}
                             >
                               <YearSelect
-                                isReadOnly
                                 selectedKey={field.value}
                                 onSelectionChange={field.onChange}
                               />
@@ -295,7 +286,6 @@ export const PremyaMatPomoshCreateDialog = (props: PremyaMatPomoshCreateDialogPr
                               label={t('month')}
                             >
                               <MonthSelect
-                                isReadOnly
                                 selectedKey={field.value}
                                 onSelectionChange={field.onChange}
                                 className="w-32"
