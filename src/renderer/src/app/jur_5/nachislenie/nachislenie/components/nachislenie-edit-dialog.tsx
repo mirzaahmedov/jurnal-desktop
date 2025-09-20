@@ -5,7 +5,7 @@ import type { DialogTriggerProps } from 'react-aria-components'
 import { type FC, useEffect, useState } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { BookUser, Plus, Search, Sigma } from 'lucide-react'
+import { BookUser, Download, Plus, Search, Sigma } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router-dom'
@@ -33,6 +33,7 @@ import {
   DialogTrigger
 } from '@/common/components/jolly/dialog'
 import { MonthSelect } from '@/common/components/month-select'
+import { PDFSaver } from '@/common/components/pdf-saver'
 import { SummaCell } from '@/common/components/table/renderers/summa'
 import { Form, FormField } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
@@ -246,7 +247,7 @@ export const NachislenieEditDialog = ({
         </Form>
 
         {nachislenieData ? (
-          <div className="flex items-center gap-2.5 ml-auto">
+          <div className="flex items-center gap-2.5 ml-auto pdf-hidden">
             <DownloadFile
               isZarplata
               url="Nachislenie/vedemost"
@@ -480,19 +481,30 @@ export const NachislenieEditDialog = ({
                 </div>
               )}
               {tabValue === TabOptions.Update && (
-                <div className="relative mt-5 flex-1 mih-h-0 flex flex-col gap-5 overflow-hidden">
-                  <div className="px-5">
-                    <Header />
-                  </div>
-                  <NachislenieUpdateForm
-                    currentIndex={currentIndex}
-                    onNavigateItem={(index) => {
-                      setMainZarplataId(nachislenieProvodka?.[index]?.mainZarplataId ?? null)
-                    }}
-                    nachislenieProvodka={nachislenieProvodka}
-                    nachislenieMainId={nachislenieData?.id ?? 0}
-                  />
-                </div>
+                <PDFSaver
+                  filename={`nachislenie_${nachislenieData?.docNum}_${nachislenieData?.docDate}.pdf`}
+                >
+                  {({ ref, isPending, savePDF }) => (
+                    <div
+                      ref={ref}
+                      className="relative mt-5 flex-1 mih-h-0 flex flex-col gap-5 overflow-hidden"
+                    >
+                      <div className="px-5">
+                        <Header />
+                      </div>
+                      <NachislenieUpdateForm
+                        currentIndex={currentIndex}
+                        onNavigateItem={(index) => {
+                          setMainZarplataId(nachislenieProvodka?.[index]?.mainZarplataId ?? null)
+                        }}
+                        nachislenieProvodka={nachislenieProvodka}
+                        nachislenieMainId={nachislenieData?.id ?? 0}
+                        isDownloading={isPending}
+                        downloadPDF={savePDF}
+                      />
+                    </div>
+                  )}
+                </PDFSaver>
               )}
             </div>
           </DialogContent>
@@ -507,12 +519,16 @@ export interface NachislenieUpdateFormProps extends Omit<DialogTriggerProps, 'ch
   onNavigateItem: (index: number) => void
   nachislenieMainId: number
   nachislenieProvodka: NachislenieProvodka[]
+  isDownloading: boolean
+  downloadPDF: () => void
 }
 const NachislenieUpdateForm: FC<NachislenieUpdateFormProps> = ({
   currentIndex,
   onNavigateItem,
   nachislenieMainId,
-  nachislenieProvodka
+  nachislenieProvodka,
+  isDownloading,
+  downloadPDF
 }) => {
   const { t } = useTranslation(['app'])
   const { confirm } = useConfirm()
@@ -731,6 +747,16 @@ const NachislenieUpdateForm: FC<NachislenieUpdateFormProps> = ({
                 />
 
                 <Button
+                  onClick={downloadPDF}
+                  isDisabled={isDownloading}
+                  variant="ghost"
+                  className="pdf-hidden"
+                  IconStart={Download}
+                >
+                  {t('download_as_pdf')}
+                </Button>
+
+                <Button
                   type="button"
                   onPress={() => {
                     updateChildNachislenie.mutate({
@@ -746,7 +772,7 @@ const NachislenieUpdateForm: FC<NachislenieUpdateFormProps> = ({
                       mainZarplataId: nachislenie?.mainZarplataId ?? 0
                     })
                   }}
-                  className="ml-auto"
+                  className="ml-auto pdf-hidden"
                   isPending={updateChildNachislenie.isPending}
                 >
                   <Sigma className="btn-icon icon-start" /> {t('recalculate_from_passport')}
@@ -872,11 +898,12 @@ const NachislenieUpdateForm: FC<NachislenieUpdateFormProps> = ({
                   calculateChild.mutate(nachislenie?.id ?? 0)
                 }}
                 isPending={calculateChild.isPending}
+                className="pdf-hidden"
               >
                 <Sigma className="btn-icon icon-start" /> {t('recalculate_salary')}
               </Button>
             </div>
-            <div className="mt-5 pr-5 flex items-center justify-between">
+            <div className="mt-5 pr-5 flex items-center justify-between pdf-hidden">
               <ContentStepper
                 currentIndex={currentIndex}
                 onIndexChange={onNavigateItem}

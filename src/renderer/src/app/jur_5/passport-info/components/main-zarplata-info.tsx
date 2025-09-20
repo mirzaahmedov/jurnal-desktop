@@ -61,6 +61,7 @@ export const MainZarplataInfo = ({ mainZarplataId, ...props }: MainZarplataInfoP
             }}
             variant="outline"
             size="icon"
+            className="pdf-hidden"
           >
             <BookUser className="btn-icon" />
           </Button>
