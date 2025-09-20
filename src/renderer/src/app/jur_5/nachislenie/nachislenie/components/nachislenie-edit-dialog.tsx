@@ -639,6 +639,7 @@ const NachislenieUpdateForm: FC<NachislenieUpdateFormProps> = ({
                     <FormElement
                       label={t('workdays')}
                       direction="column"
+                      className="max-w-32"
                       hideDescription
                     >
                       <NumericInput
@@ -658,6 +659,7 @@ const NachislenieUpdateForm: FC<NachislenieUpdateFormProps> = ({
                     <FormElement
                       label={t('worked_days')}
                       direction="column"
+                      className="max-w-32"
                       hideDescription
                     >
                       <NumericInput
@@ -677,6 +679,7 @@ const NachislenieUpdateForm: FC<NachislenieUpdateFormProps> = ({
                     <FormElement
                       label={t('night_shift')}
                       direction="column"
+                      className="max-w-32"
                       hideDescription
                     >
                       <NumericInput
@@ -696,6 +699,7 @@ const NachislenieUpdateForm: FC<NachislenieUpdateFormProps> = ({
                     <FormElement
                       label={t('holiday')}
                       direction="column"
+                      className="max-w-32"
                       hideDescription
                     >
                       <NumericInput
@@ -715,6 +719,7 @@ const NachislenieUpdateForm: FC<NachislenieUpdateFormProps> = ({
                     <FormElement
                       label={t('overtime')}
                       direction="column"
+                      className="max-w-32"
                       hideDescription
                     >
                       <NumericInput
@@ -734,6 +739,7 @@ const NachislenieUpdateForm: FC<NachislenieUpdateFormProps> = ({
                     <FormElement
                       label={t('kazarma')}
                       direction="column"
+                      className="max-w-32"
                       hideDescription
                     >
                       <NumericInput
@@ -784,7 +790,7 @@ const NachislenieUpdateForm: FC<NachislenieUpdateFormProps> = ({
                 <div className="flex items-center justify-between gap-5 mb-4">
                   <h2 className="text-xl text-white font-medium mb-2">{t('nachislenie')}</h2>
                   <Button
-                    className="-my-10"
+                    className="-my-10 pdf-hidden"
                     onPress={() => {
                       setPaymentData(undefined)
                       paymentToggle.open()
@@ -839,7 +845,7 @@ const NachislenieUpdateForm: FC<NachislenieUpdateFormProps> = ({
                 <div className="flex items-center justify-between gap-5 mb-4">
                   <h2 className="text-xl text-white font-medium mb-2">{t('uderjanie')}</h2>
                   <Button
-                    className="-my-10"
+                    className="-my-10 pdf-hidden"
                     onPress={() => {
                       setDeductionData(undefined)
                       deductionToggle.open()
